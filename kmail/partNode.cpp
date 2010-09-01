@@ -30,7 +30,10 @@
 */
 
 #include <config.h>
+
 #include "partNode.h"
+#include "kmreaderwin.h"
+
 #include <klocale.h>
 #include <kdebug.h>
 #include "kmmimeparttree.h"
@@ -64,12 +67,14 @@ partNode::partNode()
     mEncodedOk( false ),
     mDeleteDwBodyPart( false ),
     mMimePartTreeItem( 0 ),
-    mBodyPartMemento( 0 )
+    mBodyPartMementoMap(),
+    mReader( 0 ),
+    mDisplayedEmbedded( false )
 {
   adjustDefaultType( this );
 }
 
-partNode::partNode( DwBodyPart* dwPart, int explicitType, int explicitSubType,
+partNode::partNode( KMReaderWin * win, DwBodyPart* dwPart, int explicitType, int explicitSubType,
 		    bool deleteDwBodyPart )
   : mRoot( 0 ), mNext( 0 ), mChild( 0 ),
     mWasProcessed( false ),
@@ -80,13 +85,15 @@ partNode::partNode( DwBodyPart* dwPart, int explicitType, int explicitSubType,
     mEncodedOk( false ),
     mDeleteDwBodyPart( deleteDwBodyPart ),
     mMimePartTreeItem( 0 ),
-    mBodyPartMemento( 0 )
+    mBodyPartMementoMap(),
+    mReader( win ),
+    mDisplayedEmbedded( false ),
+    mDisplayedHidden( false )
 {
   if ( explicitType != DwMime::kTypeUnknown ) {
     mType    = explicitType;     // this happens e.g. for the Root Node
     mSubType = explicitSubType;  // representing the _whole_ message
   } else {
-//    kdDebug(5006) << "\n        partNode::partNode()      explicitType == DwMime::kTypeUnknown\n" << endl;
     if(dwPart && dwPart->hasHeaders() && dwPart->Headers().HasContentType()) {
       mType    = (!dwPart->Headers().ContentType().Type())?DwMime::kTypeUnknown:dwPart->Headers().ContentType().Type();
       mSubType = dwPart->Headers().ContentType().Subtype();
@@ -95,17 +102,9 @@ partNode::partNode( DwBodyPart* dwPart, int explicitType, int explicitSubType,
       mSubType = DwMime::kSubtypeUnknown;
     }
   }
-#ifdef DEBUG
-  {
-    DwString type, subType;
-    DwTypeEnumToStr( mType, type );
-    DwSubtypeEnumToStr( mSubType, subType );
-    kdDebug(5006) << "\npartNode::partNode()   " << type.c_str() << "/" << subType.c_str() << "\n" << endl;
-  }
-#endif
 }
 
-partNode * partNode::fromMessage( const KMMessage * msg ) {
+partNode * partNode::fromMessage( const KMMessage * msg, KMReaderWin * win ) {
   if ( !msg )
     return 0;
 
@@ -124,11 +123,11 @@ partNode * partNode::fromMessage( const KMMessage * msg ) {
   // as just another DwBodyPart...
   DwBodyPart * mainBody = new DwBodyPart( *msg->getTopLevelPart() );
 
-  partNode * root = new partNode( mainBody, mainType, mainSubType, true );
+  partNode * root = new partNode( win, mainBody, mainType, mainSubType, true );
   root->buildObjectTree();
 
   root->setFromAddress( msg->from() );
-  root->dump();
+  //root->dump();
   return root;
 }
 
@@ -142,7 +141,9 @@ partNode::partNode( bool deleteDwBodyPart, DwBodyPart* dwPart )
     mEncodedOk( false ),
     mDeleteDwBodyPart( deleteDwBodyPart ),
     mMimePartTreeItem( 0 ),
-    mBodyPartMemento( 0 )
+    mBodyPartMementoMap(),
+    mReader( 0 ),
+    mDisplayedEmbedded( false )
 {
   if ( dwPart && dwPart->hasHeaders() && dwPart->Headers().HasContentType() ) {
     mType    = (!dwPart->Headers().ContentType().Type())?DwMime::kTypeUnknown:dwPart->Headers().ContentType().Type();
@@ -159,13 +160,16 @@ partNode::~partNode() {
   mDwPart = 0;
   delete mChild; mChild = 0;
   delete mNext; mNext = 0;
-  delete mBodyPartMemento; mBodyPartMemento = 0;
+  for ( std::map<TQCString,KMail::Interface::BodyPartMemento*>::const_iterator it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end() ; it != end ; ++it )
+      delete it->second;
+  mBodyPartMementoMap.clear();
 }
 
 #ifndef NDEBUG
 void partNode::dump( int chars ) const {
-  kdDebug(5006) << TQString().fill( ' ', chars ) << "+ "
-		<< typeString() << '/' << subTypeString() << endl;
+  kdDebug(5006) << nodeId() << " " << TQString().fill( ' ', chars ) << "+ "
+                << typeString() << '/' << subTypeString() << " embedded:" << mDisplayedEmbedded
+                << " address:" << this << endl;
   if ( mChild )
     mChild->dump( chars + 1 );
   if ( mNext )
@@ -194,7 +198,7 @@ void partNode::buildObjectTree( bool processSiblings )
     while( curNode && curNode->dwPart() ) {
         //dive into multipart messages
         while( DwMime::kTypeMultipart == curNode->type() ) {
-            partNode * newNode = new partNode( curNode->dwPart()->Body().FirstBodyPart() );
+            partNode * newNode = new partNode( mReader, curNode->dwPart()->Body().FirstBodyPart() );
             curNode->setFirstChild( newNode );
             curNode = newNode;
         }
@@ -210,7 +214,7 @@ void partNode::buildObjectTree( bool processSiblings )
             return;
         // store next node
         if( curNode && curNode->dwPart() && curNode->dwPart()->Next() ) {
-            partNode* nextNode = new partNode( curNode->dwPart()->Next() );
+            partNode* nextNode = new partNode( mReader, curNode->dwPart()->Next() );
             curNode->setNext( nextNode );
             curNode = nextNode;
         } else
@@ -230,10 +234,26 @@ TQCString partNode::subTypeString() const {
   return s.c_str();
 }
 
+const partNode* partNode::topLevelParent() const {
+  const partNode *ret = this;
+  while ( ret->parentNode() )
+    ret = ret->parentNode();
+  return ret;
+}
+
 int partNode::childCount() const {
   int count = 0;
   for ( partNode * child = firstChild() ; child ; child = child->nextSibling() )
     ++ count;
+  return count;
+}
+
+int partNode::totalChildCount() const {
+  int count = 0;
+  for ( partNode * child = firstChild() ; child ; child = child->nextSibling() ) {
+    ++count;
+    count += child->totalChildCount();
+  }
   return count;
 }
 
@@ -292,8 +312,6 @@ KMMsgEncryptionState partNode::overallEncryptionState() const
         }
     }
 
-//kdDebug(5006) << "\n\n  KMMsgEncryptionState: " << myState << endl;
-
     return myState;
 }
 
@@ -335,9 +353,22 @@ KMMsgSignatureState  partNode::overallSignatureState() const
         }
     }
 
-//kdDebug(5006) << "\n\n  KMMsgSignatureState: " << myState << endl;
-
     return myState;
+}
+
+TQCString partNode::path() const
+{
+    if ( !parentNode() )
+        return ':';
+    const partNode * p = parentNode();
+
+    // count number of siblings with the same type as us:
+    int nth = 0;
+    for ( const partNode * c = p->firstChild() ; c != this ; c = c->nextSibling() )
+        if ( c->type() == type() && c->subType() == subType() )
+            ++nth;
+
+    return p->path() + TQCString().sprintf( ":%X/%X[%X]", type(), subType(), nth );
 }
 
 
@@ -392,13 +423,6 @@ int partNode::calcNodeIdOrFindNode( int &curId, const partNode* findNode, int fi
 
 partNode* partNode::findType( int type, int subType, bool deep, bool wide )
 {
-#ifndef NDEBUG
-  DwString typeStr, subTypeStr;
-  DwTypeEnumToStr( mType, typeStr );
-  DwSubtypeEnumToStr( mSubType, subTypeStr );
-  kdDebug(5006) << "partNode::findType() is looking at " << typeStr.c_str()
-                << "/" << subTypeStr.c_str() << endl;
-#endif
     if(    (mType != DwMime::kTypeUnknown)
            && (    (type == DwMime::kTypeUnknown)
                    || (type == mType) )
@@ -471,11 +495,11 @@ void partNode::fillMimePartTree( KMMimePartTreeItem* parentItem,
         else
             cntType = "text/plain";
         if( cntDesc.isEmpty() )
-            cntDesc = msgPart().contentDescription();
-        if( cntDesc.isEmpty() )
             cntDesc = msgPart().name().stripWhiteSpace();
         if( cntDesc.isEmpty() )
             cntDesc = msgPart().fileName();
+        if( cntDesc.isEmpty() )
+            cntDesc = msgPart().contentDescription();
         if( cntDesc.isEmpty() ) {
             if( mRoot && mRoot->mRoot )
                 cntDesc = i18n("internal part");
@@ -494,8 +518,6 @@ void partNode::fillMimePartTree( KMMimePartTreeItem* parentItem,
     // remove linebreak+whitespace from folded Content-Description
     cntDesc.replace( TQRegExp("\\n\\s*"), " " );
 
-kdDebug(5006) << "      Inserting one item into MimePartTree" << endl;
-kdDebug(5006) << "                Content-Type: " << cntType << endl;
     if( parentItem )
       mMimePartTreeItem = new KMMimePartTreeItem( parentItem,
                                                   this,
@@ -547,6 +569,13 @@ bool partNode::isAttachment() const
   if ( !dwPart()->hasHeaders() )
     return false;
   DwHeaders& headers = dwPart()->Headers();
+  if ( headers.HasContentType() &&
+       headers.ContentType().Type() == DwMime::kTypeMessage &&
+       headers.ContentType().Subtype() == DwMime::kSubtypeRfc822 ) {
+    // Messages are always attachments. Normally message attachments created from KMail have a content
+    // disposition, but some mail clients omit that.
+    return true;
+  }
   if( !headers.HasContentDisposition() )
     return false;
   return ( headers.ContentDisposition().DispositionType()
@@ -591,6 +620,47 @@ bool partNode::isFirstTextPart() const {
   return false; // make comiler happy
 }
 
+bool partNode::isToltecMessage() const
+{
+  if ( type() != DwMime::kTypeMultipart || subType() != DwMime::kSubtypeMixed )
+    return false;
+
+  if ( childCount() != 3 )
+    return false;
+
+  const DwField* library = dwPart()->Headers().FindField( "X-Library" );
+  if ( !library )
+    return false;
+
+  if ( !library->FieldBody() ||
+       TQString( library->FieldBody()->AsString().c_str() ) != TQString( "Toltec" ) )
+    return false;
+
+  const DwField* kolabType = dwPart()->Headers().FindField( "X-Kolab-Type" );
+  if ( !kolabType )
+    return false;
+
+  if ( !kolabType->FieldBody() ||
+       !TQString( kolabType->FieldBody()->AsString().c_str() ).startsWith( "application/x-vnd.kolab" ) )
+    return false;
+
+  return true;
+}
+
+bool partNode::isInEncapsulatedMessage() const
+{
+  const partNode * const topLevel = topLevelParent();
+  const partNode *cur = this;
+  while ( cur && cur != topLevel ) {
+    const bool parentIsMessage = cur->parentNode() &&
+                                 cur->parentNode()->msgPart().typeStr().lower() == "message";
+    if ( parentIsMessage && cur->parentNode() != topLevel )
+      return true;
+    cur = cur->parentNode();
+  }
+  return false;
+}
+
 bool partNode::hasContentDispositionInline() const
 {
   if( !dwPart() )
@@ -609,4 +679,98 @@ const TQString& partNode::trueFromAddress() const
   while( node->mFromAddress.isEmpty() && node->mRoot )
     node = node->mRoot;
   return node->mFromAddress;
+}
+
+KMail::Interface::BodyPartMemento * partNode::bodyPartMemento( const TQCString & which ) const
+{
+    if ( const KMReaderWin * r = reader() )
+        return r->bodyPartMemento( this, which );
+    else
+        return internalBodyPartMemento( which );
+}
+
+KMail::Interface::BodyPartMemento * partNode::internalBodyPartMemento( const TQCString & which ) const
+{
+    assert( !reader() );
+
+    const std::map<TQCString,KMail::Interface::BodyPartMemento*>::const_iterator it = mBodyPartMementoMap.find( which.lower() );
+    return it != mBodyPartMementoMap.end() ? it->second : 0 ;
+}
+
+void partNode::setBodyPartMemento( const TQCString & which, KMail::Interface::BodyPartMemento * memento )
+{
+    if ( KMReaderWin * r = reader() )
+        r->setBodyPartMemento( this, which, memento );
+    else
+        internalSetBodyPartMemento( which, memento );
+}
+
+void partNode::internalSetBodyPartMemento( const TQCString & which, KMail::Interface::BodyPartMemento * memento )
+{
+    assert( !reader() );
+
+    const std::map<TQCString,KMail::Interface::BodyPartMemento*>::iterator it = mBodyPartMementoMap.lower_bound( which.lower() );
+    if ( it != mBodyPartMementoMap.end() && it->first == which.lower() ) {
+        delete it->second;
+        if ( memento ) {
+            it->second = memento;
+        }
+        else {
+            mBodyPartMementoMap.erase( it );
+        }
+    } else {
+        mBodyPartMementoMap.insert( it, std::make_pair( which.lower(), memento ) );
+    }
+}
+
+bool partNode::isDisplayedEmbedded() const
+{
+  return mDisplayedEmbedded;
+}
+
+void partNode::setDisplayedEmbedded( bool displayedEmbedded )
+{
+  mDisplayedEmbedded = displayedEmbedded;
+}
+
+bool partNode::isDisplayedHidden() const
+{
+  return mDisplayedHidden;
+}
+
+void partNode::setDisplayedHidden( bool displayedHidden )
+{
+  mDisplayedHidden = displayedHidden;
+}
+
+
+TQString partNode::asHREF( const TQString &place ) const
+{
+  return TQString( "attachment:%1?place=%2" ).arg( nodeId() ).arg( place );
+}
+
+partNode::AttachmentDisplayInfo partNode::attachmentDisplayInfo() const
+{
+  AttachmentDisplayInfo info;
+  info.icon = msgPart().iconName( KIcon::Small );
+  info.label = msgPart().name().stripWhiteSpace();
+  if ( info.label.isEmpty() )
+    info.label = msgPart().fileName();
+  if ( info.label.isEmpty() )
+    info.label = msgPart().contentDescription();
+  bool typeBlacklisted = msgPart().typeStr().lower() == "multipart";
+  if ( !typeBlacklisted && msgPart().typeStr().lower() == "application" ) {
+    typeBlacklisted = msgPart().subtypeStr() == "pgp-encrypted"
+        || msgPart().subtypeStr().lower() == "pgp-signature"
+        || msgPart().subtypeStr().lower() == "pkcs7-mime"
+        || msgPart().subtypeStr().lower() == "pkcs7-signature";
+  }
+  typeBlacklisted = typeBlacklisted || this == topLevelParent();
+  bool firstTextChildOfEncapsulatedMsg = msgPart().typeStr().lower() == "text" &&
+                                         msgPart().subtypeStr().lower() == "plain" &&
+                                         parentNode() &&
+                                         parentNode()->msgPart().typeStr().lower() == "message";
+  typeBlacklisted = typeBlacklisted || firstTextChildOfEncapsulatedMsg;
+  info.displayInHeader = !info.label.isEmpty() && !info.icon.isEmpty() && !typeBlacklisted;
+  return info;
 }

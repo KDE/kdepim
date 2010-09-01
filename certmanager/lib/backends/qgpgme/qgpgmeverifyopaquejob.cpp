@@ -84,7 +84,10 @@ GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec( const TQByteArray &
 }
 
 void Kleo::QGpgMEVerifyOpaqueJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->verificationResult(), mOutDataDataProvider->data() );
+  const GpgME::VerificationResult res = mCtx->verificationResult();
+  const TQByteArray plainText = mOutDataDataProvider->data();
+  getAuditLog();
+  emit result( res, plainText );
 }
 
 

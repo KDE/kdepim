@@ -225,7 +225,7 @@ View::View( Part *part, TQWidget *parent, ActionManagerImpl* actionManager, cons
     setFocusPolicy(TQWidget::StrongFocus);
 
     TQVBoxLayout *lt = new TQVBoxLayout( this );
-    
+
     m_horizontalSplitter = new TQSplitter(TQSplitter::Horizontal, this);
 
     m_horizontalSplitter->setOpaqueResize(true);
@@ -260,7 +260,7 @@ View::View( Part *part, TQWidget *parent, ActionManagerImpl* actionManager, cons
 
     connect(m_tagNodeListView, TQT_SIGNAL(signalContextMenu(KListView*, TreeNode*, const TQPoint&)), this, TQT_SLOT(slotFeedTreeContextMenu(KListView*, TreeNode*, const TQPoint&)));
 
-    
+
     ProgressManager::self()->setFeedList(m_feedList);
 
     m_tabs = new TabWidget(m_horizontalSplitter);
@@ -321,8 +321,12 @@ View::View( Part *part, TQWidget *parent, ActionManagerImpl* actionManager, cons
     connectFrame(m_mainFrame);
     m_tabs->addFrame(m_mainFrame);
 
-    m_horizontalSplitter->setSizes( Settings::splitter1Sizes() );
-    m_articleSplitter->setSizes( Settings::splitter2Sizes() );
+    const TQValueList<int> sp1sizes = Settings::splitter1Sizes();
+    if ( sp1sizes.count() >= m_horizontalSplitter->sizes().count() )
+        m_horizontalSplitter->setSizes( sp1sizes );
+    const TQValueList<int> sp2sizes = Settings::splitter2Sizes();
+    if ( sp2sizes.count() >= m_articleSplitter->sizes().count() )
+        m_articleSplitter->setSizes( sp2sizes );
 
     KConfig *conf = Settings::self()->config();
     conf->setGroup("General");
@@ -374,7 +378,7 @@ void View::slotSettingsChanged()
 {
     // if tagging is hidden, show only feed list
     m_listTabWidget->setViewMode(Settings::showTaggingGUI() ? ListTabWidget::verticalTabs : ListTabWidget::single);
-    
+
 }
 
 void View::slotOnShutdown()
@@ -406,8 +410,12 @@ void View::slotOnShutdown()
 
 void View::saveSettings()
 {
-    Settings::setSplitter1Sizes( m_horizontalSplitter->sizes() );
-    Settings::setSplitter2Sizes( m_articleSplitter->sizes() );
+    const TQValueList<int> spl1 = m_horizontalSplitter->sizes();
+    if ( spl1.contains( 0 ) == 0 )
+        Settings::setSplitter1Sizes( spl1 );
+    const TQValueList<int> spl2 = m_articleSplitter->sizes();
+    if ( spl2.contains( 0 ) == 0 )
+        Settings::setSplitter2Sizes( spl2 );
     Settings::setViewMode( m_viewMode );
     Settings::writeConfig();
 }
@@ -415,7 +423,7 @@ void View::saveSettings()
 void View::slotOpenNewTab(const KURL& url, bool background)
 {
     PageViewer* page = new PageViewer(this, "page");
-    
+
     connect( m_part, TQT_SIGNAL(signalSettingsChanged()), page, TQT_SLOT(slotPaletteOrFontChanged()));
 
     connect( page, TQT_SIGNAL(setTabIcon(const TQPixmap&)),
@@ -822,7 +830,7 @@ void View::slotOpenURL(const KURL& url, Viewer* currentViewer, BrowserRun::Openi
     else
     {
          KParts::URLArgs args = currentViewer ? currentViewer->browserExtension()->urlArgs() : KParts::URLArgs();
-            
+
         BrowserRun* r = new BrowserRun(this, currentViewer, url, args, mode);
         connect(r, TQT_SIGNAL(signalOpenInViewer(const KURL&, Akregator::Viewer*, Akregator::BrowserRun::OpeningMode)),
             this, TQT_SLOT(slotOpenURLReply(const KURL&, Akregator::Viewer*, Akregator::BrowserRun::OpeningMode)));
@@ -832,7 +840,7 @@ void View::slotOpenURL(const KURL& url, Viewer* currentViewer, BrowserRun::Openi
 //TODO: KDE4 remove this ugly ugly hack
 void View::slotUrlClickedInViewer(const KURL& url, Viewer* viewer, bool newTab, bool background)
 {
-    
+
     if (!newTab)
     {
         slotOpenURL(url, viewer, BrowserRun::CURRENT_TAB);
@@ -983,7 +991,7 @@ void View::slotNextUnreadArticle()
 {
     if (m_viewMode == CombinedView)
         m_listTabWidget->activeView()->slotNextUnreadFeed();
-    
+
     TreeNode* sel = m_listTabWidget->activeView()->selectedNode();
     if (sel && sel->unread() > 0)
         m_articleList->slotNextUnreadArticle();
@@ -995,7 +1003,7 @@ void View::slotPrevUnreadArticle()
 {
     if (m_viewMode == CombinedView)
         m_listTabWidget->activeView()->slotPrevUnreadFeed();
-    
+
     TreeNode* sel = m_listTabWidget->activeView()->selectedNode();
     if (sel && sel->unread() > 0)
         m_articleList->slotPreviousUnreadArticle();
@@ -1211,8 +1219,8 @@ void View::slotOpenCurrentArticle()
         link = article.link();
     else if (article.guidIsPermaLink())
         link = KURL(article.guid());
-    
-    if (link.isValid()) 
+
+    if (link.isValid())
     {
         slotOpenURL(link, 0L, BrowserRun::NEW_TAB_FOREGROUND);
     }
@@ -1236,8 +1244,8 @@ void View::slotOpenCurrentArticleBackgroundTab()
         link = article.link();
     else if (article.guidIsPermaLink())
         link = KURL(article.guid());
-    
-    if (link.isValid()) 
+
+    if (link.isValid())
     {
         slotOpenURL(link, 0L, BrowserRun::NEW_TAB_BACKGROUND);
     }
@@ -1307,7 +1315,7 @@ void View::slotArticleDelete()
             msg = i18n("<qt>Are you sure you want to delete article <b>%1</b>?</qt>").arg(TQStyleSheet::escape(articles.first().title()));
             break;
         default:
-            msg = i18n("<qt>Are you sure you want to delete the selected article?</qt>", 
+            msg = i18n("<qt>Are you sure you want to delete the selected article?</qt>",
 		"<qt>Are you sure you want to delete the %n selected articles?</qt>",
 		articles.count());
     }
@@ -1386,7 +1394,7 @@ void View::slotTextToSpeechRequest()
     else
     {
         TQString selectedText = static_cast<PageViewer *>(m_currentFrame->part())->selectedText();
-        
+
         if (!selectedText.isEmpty())
             SpeechClient::self()->slotSpeak(selectedText, "en");
     }
@@ -1439,7 +1447,7 @@ void View::slotMouseOverInfo(const KFileItem *kifi)
 
 void View::readProperties(KConfig* config)
 {
-    
+
     if (!Settings::resetQuickFilterOnNodeChange())
     {
         m_searchBar->slotSetText(config->readEntry("searchLine"));
@@ -1447,7 +1455,7 @@ void View::readProperties(KConfig* config)
         if (statusfilter != -1)
             m_searchBar->slotSetStatus(statusfilter);
     }
-    
+
     int selectedID = config->readNumEntry("selectedNodeID", -1);
     if (selectedID != -1)
     {
@@ -1471,7 +1479,7 @@ void View::saveProperties(KConfig* config)
     // save filter settings
     config->writeEntry("searchLine", m_searchBar->text());
     config->writeEntry("searchCombo", m_searchBar->status());
-    
+
     TreeNode* sel = m_listTabWidget->activeView()->selectedNode();
 
     if (sel)

@@ -68,6 +68,12 @@ void CalDavJob::setTasksErrorString(const TQString& err, const long number) {
     mTasksErrorNumber = number;
 }
 
+void CalDavJob::setJournalsErrorString(const TQString& err, const long number) {
+    mJournalsError = true;
+    mJournalsErrorString = err;
+    mJournalsErrorNumber = number;
+}
+
 void CalDavJob::processError(const caldav_error* err) {
     TQString error_string;
 
@@ -100,6 +106,22 @@ void CalDavJob::processTasksError(const caldav_error* err) {
     setTasksErrorString(error_string, code);
 }
 
+void CalDavJob::processJournalsError(const caldav_error* err) {
+    TQString error_string;
+
+    long code = err->code;
+
+    if (-401 == code) { // unauthorized
+        error_string = i18n("Unauthorized. Username or password incorrect.");
+    } else if (-599 <= code && code <= -300) {
+        error_string = i18n("HTTP error %1. Please ensure that the URL is a valid CalDAV resource.").arg(-code);
+    } else {
+        error_string = err->str;
+    }
+
+    setJournalsErrorString(error_string, code);
+}
+
 
 void CalDavJob::run() {
     log("cleaning job");
@@ -107,6 +129,7 @@ void CalDavJob::run() {
 
     int res = OK;
     int tasksres = OK;
+    int journalsres = OK;
 
     runtime_info* caldav_runtime = caldav_get_runtime_info();
 
@@ -129,6 +152,14 @@ void CalDavJob::run() {
     if (OK != tasksres) {
         log("tasks job failed");
         processTasksError(caldav_runtime->error);
+    }
+
+    log("running journals job");
+    journalsres = runJournalsJob(caldav_runtime);
+
+    if (OK != journalsres) {
+        log("journals job failed");
+        processJournalsError(caldav_runtime->error);
     }
 
     caldav_free_runtime_info(&caldav_runtime);

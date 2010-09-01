@@ -20,15 +20,19 @@
 
 #include <config.h>
 
-#include <klocale.h>
-#include <kglobal.h>
 #include <tqpopupmenu.h>
 #include <tqpushbutton.h>
 #include <tqtextedit.h>
+#include <tqlabel.h>
 #include <tqlineedit.h>
 #include <tqtoolbox.h>
-#include <kdebug.h>
+#include <tqtooltip.h>
+#include <tqwhatsthis.h>
 #include <tqfont.h>
+
+#include <kdebug.h>
+#include <klocale.h>
+#include <kglobal.h>
 #include <kiconloader.h>
 #include <kpushbutton.h>
 #include <klistview.h>
@@ -44,11 +48,14 @@
 #include "globalsettings.h"
 #include "kmkernel.h"
 #include "kmmainwidget.h"
+#include "kmfawidgets.h"
 
 #include "customtemplates.h"
 
 CustomTemplates::CustomTemplates( TQWidget *parent, const char *name )
-  :CustomTemplatesBase( parent, name ), mCurrentItem( 0 )
+  :CustomTemplatesBase( parent, name ),
+   mCurrentItem( 0 ),
+   mBlockChangeSignal( false )
 {
   TQFont f = KGlobalSettings::fixedFont();
   mEdit->setFont( f );
@@ -61,7 +68,13 @@ CustomTemplates::CustomTemplates( TQWidget *parent, const char *name )
 
   mEditFrame->setEnabled( false );
 
+  connect( mName, TQT_SIGNAL( textChanged ( const TQString &) ),
+           this, TQT_SLOT( slotNameChanged( const TQString & ) ) );
   connect( mEdit, TQT_SIGNAL( textChanged() ),
+           this, TQT_SLOT( slotTextChanged( void ) ) );
+  connect( mToEdit, TQT_SIGNAL( textChanged(const TQString&) ),
+           this, TQT_SLOT( slotTextChanged( void ) ) );
+  connect( mCCEdit, TQT_SIGNAL( textChanged(const TQString&) ),
            this, TQT_SLOT( slotTextChanged( void ) ) );
 
   connect( mInsertCommand, TQT_SIGNAL( insertCommand(TQString, int) ),
@@ -105,6 +118,29 @@ CustomTemplates::CustomTemplates( TQWidget *parent, const char *name )
             "You cannot bind keyboard shortcut to <i>Universal</i> templates.</p>"
             "</qt>" );
   mHelp->setText( i18n( "<a href=\"whatsthis:%1\">How does this work?</a>" ).arg( help ) );
+
+  const TQString toToolTip = i18n( "Additional recipients of the message when forwarding" );
+  const TQString ccToolTip = i18n( "Additional recipients who get a copy of the message when forwarding" );
+  const TQString toWhatsThis = i18n( "When using this template for forwarding, the default recipients are those you enter here. This is a comma-separated list of mail addresses." );
+  const TQString ccWhatsThis = i18n( "When using this template for forwarding, the recipients you enter here will by default get a copy of this message. This is a comma-separated list of mail addresses." );
+
+  // We only want to set the tooltip/whatsthis to the lineedit, not the complete widget,
+  // so we use the name here to find the lineedit. This is similar to what KMFilterActionForward
+  // does.
+  KLineEdit *ccLineEdit = dynamic_cast<KLineEdit*>( mCCEdit->child( "addressEdit" ) );
+  KLineEdit *toLineEdit = dynamic_cast<KLineEdit*>( mToEdit->child( "addressEdit" ) );
+  Q_ASSERT( ccLineEdit && toLineEdit );
+
+  TQToolTip::add( mCCLabel, ccToolTip );
+  TQToolTip::add( ccLineEdit, ccToolTip );
+  TQToolTip::add( mToLabel, toToolTip );
+  TQToolTip::add( toLineEdit, toToolTip );
+  TQWhatsThis::add( mCCLabel, ccWhatsThis );
+  TQWhatsThis::add( ccLineEdit, ccWhatsThis );
+  TQWhatsThis::add( mToLabel, toWhatsThis );
+  TQWhatsThis::add( toLineEdit, toWhatsThis );
+
+  slotNameChanged( mName->text() );
 }
 
 CustomTemplates::~CustomTemplates()
@@ -116,6 +152,19 @@ CustomTemplates::~CustomTemplates()
       delete vitem;
     }
   }
+}
+
+void CustomTemplates::setRecipientsEditsEnabled( bool enabled )
+{
+  mToEdit->setHidden( !enabled );
+  mCCEdit->setHidden( !enabled );
+  mToLabel->setHidden( !enabled );
+  mCCLabel->setHidden( !enabled );
+}
+
+void CustomTemplates::slotNameChanged( const TQString& text )
+{
+  mAdd->setEnabled( !text.isEmpty() );
 }
 
 TQString CustomTemplates::indexToType( int index )
@@ -141,7 +190,8 @@ TQString CustomTemplates::indexToType( int index )
 
 void CustomTemplates::slotTextChanged()
 {
-  emit changed();
+  if ( !mBlockChangeSignal )
+    emit changed();
 }
 
 void CustomTemplates::load()
@@ -155,7 +205,7 @@ void CustomTemplates::load()
     CustomTemplateItem *vitem =
       new CustomTemplateItem( *it, t.content(),
         shortcut,
-        static_cast<Type>( t.type() ) );
+        static_cast<Type>( t.type() ), t.to(), t.cC() );
     mItemList.insert( *it, vitem );
     TQListViewItem *item = new TQListViewItem( mList, typeStr, *it, t.content() );
     switch ( t.type() ) {
@@ -178,11 +228,22 @@ void CustomTemplates::load()
 
 void CustomTemplates::save()
 {
+  // Before saving the new templates, delete the old ones. That needs to be done before
+  // saving, since otherwise a new template with the new name wouldn't get saved.
+  for ( TQStringList::const_iterator it = mItemsToDelete.constBegin();
+        it != mItemsToDelete.constEnd(); ++it ) {
+    CTemplates t( (*it) );
+    const TQString configGroup = t.currentGroup();
+    kmkernel->config()->deleteGroup( configGroup );
+  }
+
   if ( mCurrentItem ) {
     CustomTemplateItem *vitem = mItemList[ mCurrentItem->text( 1 ) ];
     if ( vitem ) {
       vitem->mContent = mEdit->text();
       vitem->mShortcut = mKeyButton->shortcut();
+      vitem->mTo = mToEdit->text();
+      vitem->mCC = mCCEdit->text();
     }
   }
   TQStringList list;
@@ -191,8 +252,7 @@ void CustomTemplates::save()
     list.append( (*lit)->text( 1 ) );
     ++lit;
   }
-  TQDictIterator<CustomTemplateItem> it( mItemList );
-  for ( ; it.current() ; ++it ) {
+  for ( TQDictIterator<CustomTemplateItem> it( mItemList ); it.current() ; ++it ) {
     // list.append( (*it)->mName );
     CTemplates t( (*it)->mName );
     TQString &content = (*it)->mContent;
@@ -202,6 +262,8 @@ void CustomTemplates::save()
     t.setContent( content );
     t.setShortcut( (*it)->mShortcut.toString() );
     t.setType( (*it)->mType );
+    t.setTo( (*it)->mTo );
+    t.setCC( (*it)->mCC );
     t.writeConfig();
   }
   GlobalSettings::self()->setCustomTemplates( list );
@@ -229,13 +291,15 @@ void CustomTemplates::slotAddClicked()
   if ( !str.isEmpty() ) {
     CustomTemplateItem *vitem = mItemList[ str ];
     if ( !vitem ) {
-      vitem = new CustomTemplateItem( str, "", KShortcut::null(), TUniversal );
+      vitem = new CustomTemplateItem( str, "", KShortcut::null(), TUniversal,
+                                      TQString(), TQString() );
       mItemList.insert( str, vitem );
       TQListViewItem *item =
         new TQListViewItem( mList, indexToType( TUniversal ), str, "" );
       mList->setSelected( item, true );
       mKeyButton->setEnabled( false );
-      emit changed();
+      if ( !mBlockChangeSignal )
+        emit changed();
     }
   }
 }
@@ -243,13 +307,14 @@ void CustomTemplates::slotAddClicked()
 void CustomTemplates::slotRemoveClicked()
 {
   if ( mCurrentItem ) {
-    CustomTemplateItem *vitem = mItemList.take( mCurrentItem->text( 1 ) );
-    if ( vitem ) {
-      delete vitem;
-    }
+    const TQString templateName = mCurrentItem->text( 1 );
+    mItemsToDelete.append( templateName );
+    CustomTemplateItem *vitem = mItemList.take( templateName );
+    delete vitem;
     delete mCurrentItem;
     mCurrentItem = 0;
-    emit changed();
+    if ( !mBlockChangeSignal )
+      emit changed();
   }
 }
 
@@ -268,16 +333,14 @@ void CustomTemplates::slotListSelectionChanged()
     mCurrentItem = item;
     CustomTemplateItem *vitem = mItemList[ mCurrentItem->text( 1 ) ];
     if ( vitem ) {
-      // avoid emit changed()
-      disconnect( mEdit, TQT_SIGNAL( textChanged() ),
-                  this, TQT_SLOT( slotTextChanged( void ) ) );
 
+      mBlockChangeSignal = true;
       mEdit->setText( vitem->mContent );
       mKeyButton->setShortcut( vitem->mShortcut, false );
       mType->setCurrentItem( vitem->mType );
-
-      connect( mEdit, TQT_SIGNAL( textChanged() ),
-              this, TQT_SLOT( slotTextChanged( void ) ) );
+      mToEdit->setText( vitem->mTo );
+      mCCEdit->setText( vitem->mCC );
+      mBlockChangeSignal = false;
 
       if ( vitem->mType == TUniversal )
       {
@@ -285,11 +348,15 @@ void CustomTemplates::slotListSelectionChanged()
       } else {
         mKeyButton->setEnabled( true );
       }
+      setRecipientsEditsEnabled( vitem->mType == TForward ||
+                                 vitem->mType == TUniversal );
     }
   } else {
     mEditFrame->setEnabled( false );
     mCurrentItem = 0;
     mEdit->clear();
+    mToEdit->clear();
+    mCCEdit->clear();
     mKeyButton->setShortcut( KShortcut::null(), false );
     mType->setCurrentItem( 0 );
   }
@@ -324,8 +391,14 @@ void CustomTemplates::slotTypeActivated( int index )
     } else {
       mKeyButton->setEnabled( true );
     }
-    emit changed();
+
+    setRecipientsEditsEnabled( vitem->mType == TForward ||
+                               vitem->mType == TUniversal );
+    if ( !mBlockChangeSignal )
+      emit changed();
   }
+  else
+    setRecipientsEditsEnabled( false );
 }
 
 void CustomTemplates::slotShortcutCaptured( const KShortcut &shortcut )
@@ -369,7 +442,8 @@ void CustomTemplates::slotShortcutCaptured( const KShortcut &shortcut )
   }
   if ( assign ) {
     mKeyButton->setShortcut( sc, false );
-    emit changed();
+    if ( !mBlockChangeSignal )
+      emit changed();
   }
 }
 

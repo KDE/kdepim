@@ -108,7 +108,6 @@ bool Note::richText() const
 bool Note::loadAttribute( TQDomElement& element )
 {
   TQString tagName = element.tagName();
-
   if ( tagName == "summary" )
     setSummary( element.text() );
   else if ( tagName == "foreground-color" )
@@ -136,8 +135,10 @@ bool Note::saveAttributes( TQDomElement& element ) const
 #endif
 
   writeString( element, "summary", summary() );
-  writeString( element, "foreground-color", colorToString( foregroundColor() ) );
-  writeString( element, "background-color", colorToString( backgroundColor() ) );
+  if ( foregroundColor().isValid() )
+    writeString( element, "foreground-color", colorToString( foregroundColor() ) );
+  if ( backgroundColor().isValid() )
+    writeString( element, "background-color", colorToString( backgroundColor() ) );
   writeString( element, "knotes-richtext", mRichText ? "true" : "false" );
 
   return true;
@@ -183,11 +184,27 @@ void Note::setFields( const KCal::Journal* journal )
 {
   KolabBase::setFields( journal );
 
-  // TODO: background and foreground
   setSummary( journal->summary() );
-  setBackgroundColor( journal->customProperty( "KNotes", "BgColor" ) );
-  setForegroundColor( journal->customProperty( "KNotes", "FgColor" ) );
-  setRichText( journal->customProperty( "KNotes", "RichText" ) == "true" );
+
+  TQString property = journal->customProperty( "KNotes", "BgColor" );
+  if ( !property.isNull() ) {
+    setBackgroundColor( property );
+  } else {
+    setBackgroundColor( "yellow" );
+  }
+  property = journal->customProperty( "KNotes", "FgColor" );
+  if ( !property.isNull() ) {
+    setForegroundColor( property );
+  } else {
+    setForegroundColor( "black" );
+  }
+
+  property = journal->customProperty( "KNotes", "RichText" );
+  if ( !property.isNull() ) {
+    setRichText( property == "true" ? true : false );
+  } else {
+    setRichText( "false" );
+  }
 }
 
 void Note::saveTo( KCal::Journal* journal )
@@ -196,10 +213,12 @@ void Note::saveTo( KCal::Journal* journal )
 
   // TODO: background and foreground
   journal->setSummary( summary() );
-  journal->setCustomProperty( "KNotes", "FgColor",
-                              colorToString( foregroundColor() ) );
-  journal->setCustomProperty( "KNotes", "BgColor",
-                              colorToString( backgroundColor() ) );
+  if ( foregroundColor().isValid() )
+    journal->setCustomProperty( "KNotes", "FgColor",
+                                colorToString( foregroundColor() ) );
+  if ( backgroundColor().isValid() )
+    journal->setCustomProperty( "KNotes", "BgColor",
+                                colorToString( backgroundColor() ) );
   journal->setCustomProperty( "KNotes", "RichText",
                               richText() ? "true" : "false" );
 }

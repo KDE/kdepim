@@ -86,6 +86,7 @@
 #include <gpgmepp/context.h>
 
 #include <algorithm>
+#include <sstream>
 #include <memory>
 
 // ## keep default values in sync with configuredialog.cpp, Security::CryptoTab::setup()
@@ -612,11 +613,8 @@ void MessageComposer::chiasmusEncryptAllAttachments() {
     part->setTypeStr( "application" );
     part->setSubtypeStr( "vnd.de.bund.bsi.chiasmus" );
     part->setName( filename + ".xia" );
-    // this is taken from kmmsgpartdlg.cpp:
-    TQCString encoding = KMMsgBase::autoDetectCharset( part->charset(), KMMessage::preferredCharsets(), filename );
-    if ( encoding.isEmpty() )
-      encoding = "utf-8";
-    const TQCString enc_name = KMMsgBase::encodeRFC2231String( filename + ".xia", encoding );
+    const TQCString enc_name = KMMsgBase::encodeRFC2231StringAutoDetectCharset(
+        filename + ".xia", part->charset() );
     const TQCString cDisp = "attachment;\n\tfilename"
                            + ( TQString( enc_name ) != filename + ".xia"
                                ? "*=" + enc_name
@@ -2146,8 +2144,14 @@ void MessageComposer::pgpSignedMsg( const TQByteArray& cText, Kleo::CryptoMessag
   mSignature = TQByteArray();
 
   const std::vector<GpgME::Key> signingKeys = mKeyResolver->signingKeys( format );
-
-  assert( !signingKeys.empty() );
+  if ( signingKeys.empty() ) {
+    KMessageBox::sorry( mComposeWin,
+			i18n("This message could not be signed, "
+			     "since no valid signing keys have been found; "
+			     "this should actually never happen, "
+			     "please report this bug.") );
+    return;
+  }
 
   // TODO: ASync call? Likely, yes :-)
   const Kleo::CryptoBackendFactory * cpf = Kleo::CryptoBackendFactory::instance();
@@ -2171,6 +2175,11 @@ void MessageComposer::pgpSignedMsg( const TQByteArray& cText, Kleo::CryptoMessag
   TQByteArray signature;
   const GpgME::SigningResult res =
     job->exec( signingKeys, cText, signingMode( format ), signature );
+  {
+      std::stringstream ss;
+      ss << res;
+      kdDebug(5006) << ss.str().c_str() << endl;
+  }
   if ( res.error().isCanceled() ) {
     kdDebug() << "signing was canceled by user" << endl;
     return;
@@ -2182,6 +2191,7 @@ void MessageComposer::pgpSignedMsg( const TQByteArray& cText, Kleo::CryptoMessag
   }
 
   if ( GlobalSettings::showGnuPGAuditLogAfterSuccessfulSignEncrypt() )
+      if ( Kleo::MessageBox::showAuditLogButton( job.get() ) )
       Kleo::MessageBox::auditLog( 0, job.get(), i18n("GnuPG Audit Log for Signing Operation") );
 
   mSignature = signature;
@@ -2219,6 +2229,11 @@ Kpgp::Result MessageComposer::pgpEncryptedMsg( TQByteArray & encryptedBody,
 
   const GpgME::EncryptionResult res =
     job->exec( encryptionKeys, cText, true /* we do ownertrust ourselves */, encryptedBody );
+  {
+      std::stringstream ss;
+      ss << res;
+      kdDebug(5006) << ss.str().c_str() << endl;
+  }
   if ( res.error().isCanceled() ) {
     kdDebug() << "encryption was canceled by user" << endl;
     return Kpgp::Canceled;
@@ -2230,6 +2245,7 @@ Kpgp::Result MessageComposer::pgpEncryptedMsg( TQByteArray & encryptedBody,
   }
 
   if ( GlobalSettings::showGnuPGAuditLogAfterSuccessfulSignEncrypt() )
+      if ( Kleo::MessageBox::showAuditLogButton( job.get() ) )
       Kleo::MessageBox::auditLog( 0, job.get(), i18n("GnuPG Audit Log for Encryption Operation") );
 
   return Kpgp::Ok;
@@ -2261,6 +2277,11 @@ Kpgp::Result MessageComposer::pgpSignedAndEncryptedMsg( TQByteArray & encryptedB
 
   const std::pair<GpgME::SigningResult,GpgME::EncryptionResult> res =
     job->exec( signingKeys, encryptionKeys, cText, false, encryptedBody );
+  {
+      std::stringstream ss;
+      ss << res.first << '\n' << res.second;
+      kdDebug(5006) << ss.str().c_str() << endl;
+  }
   if ( res.first.error().isCanceled() || res.second.error().isCanceled() ) {
     kdDebug() << "encrypt/sign was canceled by user" << endl;
     return Kpgp::Canceled;
@@ -2275,6 +2296,7 @@ Kpgp::Result MessageComposer::pgpSignedAndEncryptedMsg( TQByteArray & encryptedB
   }
 
   if ( GlobalSettings::showGnuPGAuditLogAfterSuccessfulSignEncrypt() )
+      if ( Kleo::MessageBox::showAuditLogButton( job.get() ) )
       Kleo::MessageBox::auditLog( 0, job.get(), i18n("GnuPG Audit Log for Encryption Operation") );
 
   return Kpgp::Ok;

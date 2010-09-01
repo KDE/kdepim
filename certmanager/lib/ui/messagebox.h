@@ -40,6 +40,7 @@ namespace GpgME {
     class EncryptionResult;
     class DecryptionResult;
     class VerificationResult;
+    class Error;
 }
 
 namespace Kleo {
@@ -72,6 +73,8 @@ namespace Kleo {
         static void auditLog( TQWidget * parent, const Kleo::Job * job );
         static void auditLog( TQWidget * parent, const TQString & log, const TQString & caption );
         static void auditLog( TQWidget * parent, const TQString & log );
+
+        static bool showAuditLogButton( const Kleo::Job * job );
 
     private:
         static void make( TQWidget * parent, TQMessageBox::Icon icon, const TQString & text, const Kleo::Job * job, const TQString & caption, int options );

@@ -35,7 +35,8 @@ class KOEditorAlarms : public KDialogBase
 {
     Q_OBJECT
   public:
-    KOEditorAlarms( KCal::Alarm::List *alarms, TQWidget *parent = 0,
+    KOEditorAlarms( const TQCString &type,
+                    KCal::Alarm::List *alarms, TQWidget *parent = 0,
                     const char *name = 0 );
     ~KOEditorAlarms();
 
@@ -46,11 +47,14 @@ class KOEditorAlarms : public KDialogBase
     void slotRemove();
     void changed();
     void selectionChanged( TQListViewItem *listviewitem );
+
   protected:
     void init();
     void readAlarm( KCal::Alarm *alarm );
     void writeAlarm( KCal::Alarm *alarm );
+
   private:
+    TQCString mType; // as in the Incidence::type
     KCal::Alarm::List *mAlarms;
     KOEditorAlarms_base *mWidget;
     bool mInitializing;

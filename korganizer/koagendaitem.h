@@ -34,6 +34,7 @@ class TQDragEnterEvent;
 class TQDropEvent;
 
 namespace KCal {
+class Calendar;
 class Incidence;
 }
 using namespace KCal;
@@ -75,8 +76,10 @@ class KOAgendaItem : public TQWidget, public KOrg::CellItem
 {
     Q_OBJECT
   public:
-    KOAgendaItem(Incidence *incidence, const TQDate &qd, TQWidget *parent, const char *name=0,
-                 WFlags f=0 );
+    KOAgendaItem( Calendar *calendar, Incidence *incidence, const TQDate &qd,
+                  TQWidget *parent,
+                  int itemPos, int itemCount,
+                  const char *name = 0, WFlags f = 0 );
 
     int cellXLeft() const { return mCellXLeft; }
     int cellXRight() const { return mCellXRight; }
@@ -84,6 +87,9 @@ class KOAgendaItem : public TQWidget, public KOrg::CellItem
     int cellYBottom() const { return mCellYBottom; }
     int cellHeight() const;
     int cellWidth() const;
+
+    int itemPos() const { return mItemPos; }
+    int itemCount() const { return mItemCount; }
 
     void setCellXY(int X, int YTop, int YBottom);
     void setCellY(int YTop, int YBottom);
@@ -173,15 +179,19 @@ class KOAgendaItem : public TQWidget, public KOrg::CellItem
   private:
     int mCellXLeft, mCellXRight;
     int mCellYTop, mCellYBottom;
-    int mSubCell;  // subcell number of this item
-    int mSubCells;  // Total number of subcells in cell of this item
 
+    Calendar *mCalendar;
     Incidence *mIncidence; // corresponding event or todo
     TQDate mDate; //date this events occurs (for recurrence)
     TQString mLabelText;
     bool mIconAlarm, mIconRecur, mIconReadonly;
     bool mIconReply, mIconGroup, mIconGroupTentative;
-    bool mIconOrganizer;
+    bool mIconOrganizer, mSpecialEvent;
+
+    // For incidences that expand through more than 1 day
+    // Will be 1 for single day incidences
+    int mItemPos;
+    int mItemCount;
 
     // Multi item pointers
     MultiItemInfo* mMultiItemInfo;

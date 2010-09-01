@@ -1,6 +1,6 @@
 /***************************************************************************
  *   snippet feature from kdevelop/plugins/snippet/                        *
- *                                                                         * 
+ *                                                                         *
  *   Copyright (C) 2007 by Robert Gruber                                   *
  *   rgruber@users.sourceforge.net                                         *
  *                                                                         *
@@ -14,6 +14,7 @@
 #include "snippetdlg.h"
 
 #include <kdialog.h>
+#include <klineedit.h>
 #include <klocale.h>
 
 #include <tqlabel.h>
@@ -42,6 +43,12 @@ SnippetDlg::SnippetDlg( KActionCollection* ac, TQWidget* parent, const char* nam
     connect( keyButton, TQT_SIGNAL( capturedShortcut( const KShortcut& ) ),
              this, TQT_SLOT( slotCapturedShortcut( const KShortcut& ) ) );
 
+    btnAdd->setEnabled( false );
+    connect( snippetName, TQT_SIGNAL(textChanged(const TQString &)),
+             this, TQT_SLOT(slotTextChanged(const TQString &)) );
+    connect( snippetName, TQT_SIGNAL(returnPressed()),
+             this, TQT_SLOT(slotReturnPressed()) );
+
     layout3->addWidget( textLabel3, 7, 0 );
     layout3->addWidget( keyButton, 7, 1 );
 
@@ -68,7 +75,7 @@ SnippetDlg::~SnippetDlg()
  */
 void SnippetDlg::languageChange()
 {
-    textLabel3->setText( tr2i18n( "Sh&ortcut:" ) );
+    textLabel3->setText( i18n( "Sh&ortcut:" ) );
 }
 
 static bool shortcutIsValid( const KActionCollection* actionCollection, const KShortcut &sc )
@@ -103,6 +110,18 @@ void SnippetDlg::setShowShortcut( bool show )
 {
     textLabel3->setShown( show );
     keyButton->setShown( show );
+}
+
+void SnippetDlg::slotTextChanged( const TQString &text )
+{
+  btnAdd->setEnabled( !text.isEmpty() );
+}
+
+void SnippetDlg::slotReturnPressed()
+{
+  if ( !snippetName->text().isEmpty() ) {
+    accept();
+  }
 }
 
 #include "snippetdlg.moc"

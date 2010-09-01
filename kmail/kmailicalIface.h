@@ -128,9 +128,15 @@ k_dcop:
   virtual bool removeSubresource( const TQString& resource ) = 0;
 
   /**
+   * Returns the number of dimap folders in the account manager.
+   */
+  virtual int dimapAccounts() = 0;
+
+  /**
    * Causes all resource folders of the given type to be synced with the server.
    */
   virtual bool triggerSync( const TQString & ) = 0;
+  virtual void changeResourceUIName( const TQString &folderPath, const TQString &newName ) = 0;
 
 k_dcop_signals:
   void incidenceAdded( const TQString& type, const TQString& folder,

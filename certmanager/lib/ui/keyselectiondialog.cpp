@@ -61,6 +61,8 @@
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <kprocess.h>
+#include <kactivelabel.h>
+#include <kurl.h>
 
 // Qt
 #include <tqcheckbox.h>
@@ -85,7 +87,12 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
   if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys ) {
     if ( key.isInvalid() )
-      kdDebug() << "key is invalid - ignoring" << endl;
+        if ( key.keyListMode() & GpgME::Context::Validate ) {
+            kdDebug() << "key is invalid" << endl;
+            return false;
+        } else {
+            kdDebug() << "key is invalid - ignoring" << endl;
+        }
     if ( key.isExpired() ) {
       kdDebug() << "key is expired" << endl;
       return false;
@@ -309,6 +316,28 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const TQString & title,
 
 Kleo::KeySelectionDialog::KeySelectionDialog( const TQString & title,
 					      const TQString & text,
+                                              const TQString & initialQuery,
+					      const std::vector<GpgME::Key> & selectedKeys,
+					      unsigned int keyUsage,
+					      bool extendedSelection,
+					      bool rememberChoice,
+					      TQWidget * parent, const char * name,
+					      bool modal )
+  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel|Help, Ok ),
+    mOpenPGPBackend( 0 ),
+    mSMIMEBackend( 0 ),
+    mRememberCB( 0 ),
+    mSelectedKeys( selectedKeys ),
+    mKeyUsage( keyUsage ),
+    mSearchText( initialQuery ),
+    mInitialQuery( initialQuery ),
+    mCurrentContextMenuItem( 0 )
+{
+  init( rememberChoice, extendedSelection, text, initialQuery );
+}
+
+Kleo::KeySelectionDialog::KeySelectionDialog( const TQString & title,
+					      const TQString & text,
 					      const TQString & initialQuery,
 					      unsigned int keyUsage,
 					      bool extendedSelection,
@@ -321,6 +350,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const TQString & title,
     mRememberCB( 0 ),
     mKeyUsage( keyUsage ),
     mSearchText( initialQuery ),
+    mInitialQuery( initialQuery ),
     mCurrentContextMenuItem( 0 )
 {
   init( rememberChoice, extendedSelection, text, initialQuery );
@@ -340,10 +370,25 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mTopLayout = new TQVBoxLayout( page, 0, spacingHint() );
 
   if ( !text.isEmpty() ) {
-    TQLabel* textLabel = new TQLabel( text, page );
-    textLabel->setAlignment( textLabel->alignment() | Qt::WordBreak );
-    mTopLayout->addWidget( textLabel );
+    if ( text.startsWith( "<qt>" ) ) {
+      KActiveLabel *textLabel = new KActiveLabel( text, page );
+      disconnect( textLabel, TQT_SIGNAL(linkClicked(const TQString&)), textLabel, TQT_SLOT(openLink(const TQString&)) );
+      connect( textLabel, TQT_SIGNAL(linkClicked(const TQString&)), TQT_SLOT(slotStartCertificateManager(const TQString&)) );
+      textLabel->setAlignment( textLabel->alignment() | TQt::WordBreak );
+      mTopLayout->addWidget( textLabel );
+    } else {
+      KActiveLabel *textLabel = new KActiveLabel( text, page );
+      textLabel->setAlignment( textLabel->alignment() | TQt::WordBreak );
+      mTopLayout->addWidget( textLabel );
+    }
   }
+
+  TQPushButton * const searchExternalPB
+      = new TQPushButton( i18n("Search for &External Certificates"), page );
+  mTopLayout->addWidget( searchExternalPB, 0, TQt::AlignLeft );
+  connect( searchExternalPB, TQT_SIGNAL(clicked()), this, TQT_SLOT(slotStartSearchForExternalCertificates()) );
+  if ( initialQuery.isEmpty() )
+      searchExternalPB->hide();
 
   TQHBoxLayout * hlay = new TQHBoxLayout( mTopLayout ); // inherits spacing
   TQLineEdit * le = new TQLineEdit( page );
@@ -500,10 +545,12 @@ void Kleo::KeySelectionDialog::slotHelp()
     emit helpClicked();
 }
 
-void Kleo::KeySelectionDialog::slotStartCertificateManager()
+void Kleo::KeySelectionDialog::slotStartCertificateManager( const TQString &query )
 {
   KProcess certManagerProc;
   certManagerProc << "kleopatra";
+  if ( !query.isEmpty() )
+    certManagerProc << "--external" << "--query" << KURL::decode_string( query );
 
   if( !certManagerProc.start( KProcess::DontCare ) )
     KMessageBox::error( this, i18n( "Could not start certificate manager; "

@@ -36,7 +36,6 @@ class OverViewPage : public QWidget
     void showWizardEGroupware();
     void showWizardKolab();
     void showWizardSlox();
-    void showWizardGroupwise();
     void showWizardExchange();
 
   signals:

@@ -210,9 +210,12 @@ bool ResourceKolabBase::kmailRemoveSubresource( const TQString& resource )
   return mConnection->kmailRemoveSubresource( resource );
 }
 
-TQString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
+TQString ResourceKolabBase::findWritableResource( const ResourceType &type,
+                                                 const ResourceMap& resources,
                                                  const TQString& text )
 {
+  mErrorCode = NoError;
+
   // I have to use the label (shown in the dialog) as key here. But given how the
   // label is made up, it should be unique. If it's not, well the dialog would suck anyway...
   TQMap<TQString, TQString> possible;
@@ -227,7 +230,33 @@ TQString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
 
   if ( possible.isEmpty() ) { // None found!!
     kdWarning(5650) << "No writable resource found!" << endl;
-    KMessageBox::error( 0, i18n( "No writable resource was found, saving will not be possible. Reconfigure KMail first." ) );
+
+    TQString errorText;
+    switch( type ) {
+      case Events:
+        errorText = i18n( "You have no writable event folders so saving will not be possible.\n"
+                          "Please create or activate at least one writable event folder and try again." );
+        break;
+      case Tasks:
+        errorText = i18n( "You have no writable task folders so saving will not be possible.\n"
+                          "Please create or activate at least one writable task folder and try again." );
+        break;
+      case Incidences:
+        errorText = i18n( "You have no writable calendar folder so saving will not be possible.\n"
+                          "Please create or activate at least one writable calendar folder and try again." );
+        break;
+      case Notes:
+        errorText = i18n( "You have no writable notes folders so saving will not be possible.\n"
+                          "Please create or activate at least one writable notes folder and try again." );
+        break;
+      case Contacts:
+        errorText = i18n( "You have no writable addressbook folder so saving will not be possible.\n"
+                          "Please create or activate at least one writable addressbook folder and try again." );
+        break;
+    }
+
+    KMessageBox::error( 0, errorText );
+    mErrorCode = NoWritableFound;
     return TQString::null;
   }
   if ( possible.count() == 1 )
@@ -242,8 +271,11 @@ TQString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
   // Several found, ask the user
   TQString chosenLabel = KPIM::FolderSelectDialog::getItem( i18n( "Select Resource Folder" ),
                                                            t, possible.keys() );
-  if ( chosenLabel.isEmpty() ) // cancelled
+  if ( chosenLabel.isEmpty() ) {
+    // cancelled
+    mErrorCode = UserCancel;
     return TQString::null;
+  }
   return possible[chosenLabel];
 }
 

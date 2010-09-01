@@ -102,6 +102,9 @@ public:
   /** Is this subresource active? */
   bool subresourceActive( const TQString& ) const;
 
+  /** Is this subresource writable? */
+  bool subresourceWritable( const TQString& ) const;
+
 signals:
   void signalSubresourceAdded( Resource*, const TQString&, const TQString& );
   void signalSubresourceRemoved( Resource*, const TQString&, const TQString& );

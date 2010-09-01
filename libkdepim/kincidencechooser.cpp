@@ -77,9 +77,9 @@ KIncidenceChooser::KIncidenceChooser(TQWidget *parent, char *name) :
     topLayout->addWidget( new TQLabel ( i18n("Last modified:"), topFrame) ,iii,0);
     mMod1lab = new TQLabel ( "Set Last modified", topFrame);
     topLayout->addWidget(mMod1lab,iii,1);
-    showDetails1 = new TQPushButton( i18n("Show Details"),topFrame );
-    connect ( showDetails1, TQT_SIGNAL( clicked()), this, TQT_SLOT (showIncidence1() ) );
-    topLayout->addWidget(showDetails1,iii,2);
+    mShowDetails1 = new TQPushButton( i18n("Show Details"),topFrame );
+    connect ( mShowDetails1, TQT_SIGNAL( clicked()), this, TQT_SLOT (showIncidence1() ) );
+    topLayout->addWidget(mShowDetails1,iii,2);
     ++iii;
 
     mInc2lab = new TQLabel ( "Local incidence", topFrame);
@@ -90,19 +90,19 @@ KIncidenceChooser::KIncidenceChooser(TQWidget *parent, char *name) :
     topLayout->addWidget( new TQLabel ( i18n("Last modified:"), topFrame) ,iii,0);
     mMod2lab = new TQLabel ( "Set Last modified", topFrame);
     topLayout->addWidget(mMod2lab,iii,1);
-    showDetails2 = new TQPushButton( i18n("Show Details"), topFrame);
-    connect ( showDetails2, TQT_SIGNAL( clicked()), this, TQT_SLOT (showIncidence2() ) );
-    topLayout->addWidget(showDetails2,iii,2);
+    mShowDetails2 = new TQPushButton( i18n("Show Details"), topFrame);
+    connect ( mShowDetails2, TQT_SIGNAL( clicked()), this, TQT_SLOT (showIncidence2() ) );
+    topLayout->addWidget(mShowDetails2,iii,2);
     ++iii;
     //
 #if 0
     // commented out for now, because the diff code has too many bugs
-    diffBut = new TQPushButton( i18n("Show Differences"), topFrame );
-    connect ( diffBut, TQT_SIGNAL( clicked()), this, TQT_SLOT ( showDiff() ) );
-    topLayout->addMultiCellWidget(diffBut, iii,iii,0,2);
+    mDiffBut = new TQPushButton( i18n("Show Differences"), topFrame );
+    connect ( mDiffBut, TQT_SIGNAL( clicked()), this, TQT_SLOT ( showDiff() ) );
+    topLayout->addMultiCellWidget(mDiffBut, iii,iii,0,2);
     ++iii;
 #else
-    diffBut = 0;
+    mDiffBut = 0;
 #endif
     mBg = new TQButtonGroup ( 1,  Qt::Horizontal, i18n("Sync Preferences"), topFrame);
     topLayout->addMultiCellWidget(mBg, iii,iii,0,2);
@@ -116,7 +116,7 @@ KIncidenceChooser::KIncidenceChooser(TQWidget *parent, char *name) :
     mTbL = 0;
     mTbN =  0;
     mDisplayDiff = 0;
-    choosedIncidence = 0;
+    mSelIncidence = 0;
     button = new TQPushButton( i18n("Apply This to All Conflicts of This Sync"), topFrame );
     connect ( button, TQT_SIGNAL( clicked()), this, TQT_SLOT ( setSyncMode() ) );
     topLayout->addMultiCellWidget(button, iii,iii,0,2);
@@ -142,7 +142,7 @@ void KIncidenceChooser::setIncidence( KCal::Incidence* local ,KCal::Incidence* r
 KCal::Incidence* KIncidenceChooser::getIncidence( )
 {
 
-    KCal::Incidence* retval = choosedIncidence;
+    KCal::Incidence* retval = mSelIncidence;
     if ( chooseMode == KIncidenceChooser::local )
         retval = mInc1;
     else  if ( chooseMode == KIncidenceChooser::remote )
@@ -185,21 +185,21 @@ void KIncidenceChooser::setLabels()
     if ( inc->type() == "Event" ) {
         des->setText( i18n( "Local Event") );
         sum->setText( inc->summary().left( 30 ));
-        if ( diffBut )
-            diffBut->setEnabled( true );
+        if ( mDiffBut )
+            mDiffBut->setEnabled( true );
     }
     else if ( inc->type() == "Todo" ) {
         des->setText( i18n( "Local Todo") );
         sum->setText( inc->summary().left( 30 ));
-        if ( diffBut )
-            diffBut->setEnabled( true );
+        if ( mDiffBut )
+            mDiffBut->setEnabled( true );
 
     }
     else if ( inc->type() == "Journal" ) {
         des->setText( i18n( "Local Journal") );
         sum->setText( inc->description().left( 30 ));
-        if ( diffBut )
-            diffBut->setEnabled( false );
+        if ( mDiffBut )
+            mDiffBut->setEnabled( false );
     }
     mMod1lab->setText( KGlobal::locale()->formatDateTime(inc->lastModified() ));
     inc = mInc2;
@@ -226,10 +226,10 @@ void KIncidenceChooser::showIncidence1()
 {
     if ( mTbL ) {
         if ( mTbL->isVisible() ) {
-            showDetails1->setText( i18n("Show Details"));
+            mShowDetails1->setText( i18n("Show Details"));
             mTbL->hide();
         } else {
-            showDetails1->setText( i18n("Hide Details"));
+            mShowDetails1->setText( i18n("Hide Details"));
             mTbL->show();
             mTbL->raise();
         }
@@ -242,7 +242,7 @@ void KIncidenceChooser::showIncidence1()
     mTbL->setMainWidget( textBrowser );
     textBrowser->setText( KCal::IncidenceFormatter::extensiveDisplayString( mInc1 )  );
     mTbL->setMinimumSize( 400, 400 );
-    showDetails1->setText( i18n("Hide Details"));
+    mShowDetails1->setText( i18n("Hide Details"));
     mTbL->show();
     mTbL->raise();
 }
@@ -251,9 +251,9 @@ void KIncidenceChooser::detailsDialogClosed()
 {
     KDialogBase* dialog = static_cast<KDialogBase *>( const_cast<TQObject *>( sender() ) );
     if ( dialog == mTbL )
-        showDetails1->setText( i18n( "Show details..." ) );
+        mShowDetails1->setText( i18n( "Show details..." ) );
     else
-        showDetails2->setText( i18n( "Show details..." ) );
+        mShowDetails2->setText( i18n( "Show details..." ) );
 }
 
 void KIncidenceChooser::showDiff()
@@ -282,10 +282,10 @@ void KIncidenceChooser::showIncidence2()
 {
    if ( mTbN ) {
         if ( mTbN->isVisible() ) {
-            showDetails2->setText( i18n("Show Details"));
+            mShowDetails2->setText( i18n("Show Details"));
             mTbN->hide();
         } else {
-            showDetails2->setText( i18n("Hide Details"));
+            mShowDetails2->setText( i18n("Hide Details"));
             mTbN->show();
             mTbN->raise();
         }
@@ -298,27 +298,27 @@ void KIncidenceChooser::showIncidence2()
     mTbN->setMainWidget( textBrowser );
     textBrowser->setText( KCal::IncidenceFormatter::extensiveDisplayString( mInc2 ) );
     mTbN->setMinimumSize( 400, 400 );
-    showDetails2->setText( i18n("Hide Details"));
+    mShowDetails2->setText( i18n("Hide Details"));
     mTbN->show();
     mTbN->raise();
 }
 
 void KIncidenceChooser::takeIncidence1()
 {
-    choosedIncidence = mInc1;
+    mSelIncidence = mInc1;
     TQDialog::accept();
 }
 
 void KIncidenceChooser::takeIncidence2()
 {
-    choosedIncidence = mInc2;
+    mSelIncidence = mInc2;
     TQDialog::accept();
 }
 
 void KIncidenceChooser::takeBoth()
 {
 
-    choosedIncidence = 0;
+    mSelIncidence = 0;
     TQDialog::accept();
 }
 

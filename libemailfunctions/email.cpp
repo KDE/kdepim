@@ -685,7 +685,7 @@ bool KPIM::getNameAndMail(const TQString& aStr, TQString& name, TQString& mail)
       }else if( bInQuotesOutsideOfEmail ){
         if( cQuotes == c )
           bInQuotesOutsideOfEmail = false;
-        else
+        else if ( c != '\\' )
           name.prepend( c );
       }else{
         // found the start of this addressee ?
@@ -695,8 +695,9 @@ bool KPIM::getNameAndMail(const TQString& aStr, TQString& name, TQString& mail)
         if( iMailStart ){
           if( cQuotes == c )
             bInQuotesOutsideOfEmail = true; // end of quoted text found
-          else
+          else {
             name.prepend( c );
+          }
         }else{
           switch( c ){
             case '<':
@@ -751,7 +752,7 @@ bool KPIM::getNameAndMail(const TQString& aStr, TQString& name, TQString& mail)
       }else if( bInQuotesOutsideOfEmail ){
         if( cQuotes == c )
           bInQuotesOutsideOfEmail = false;
-        else
+        else  if ( c != '\\' )
           name.append( c );
       }else{
         // found the end of this addressee ?
@@ -809,16 +810,22 @@ TQString KPIM::normalizedAddress( const TQString & displayName,
                                  const TQString & addrSpec,
                                  const TQString & comment )
 {
-  if ( displayName.isEmpty() && comment.isEmpty() )
+  TQString realDisplayName = displayName;
+  realDisplayName.remove( TQChar( 0x202D ) );
+  realDisplayName.remove( TQChar( 0x202E ) );
+  realDisplayName.remove( TQChar( 0x202A ) );
+  realDisplayName.remove( TQChar( 0x202B ) );
+
+  if ( realDisplayName.isEmpty() && comment.isEmpty() )
     return addrSpec;
   else if ( comment.isEmpty() )
-    return quoteNameIfNecessary( displayName ) + " <" + addrSpec + ">";
-  else if ( displayName.isEmpty() ) {
+    return quoteNameIfNecessary( realDisplayName ) + " <" + addrSpec + ">";
+  else if ( realDisplayName.isEmpty() ) {
     TQString commentStr = comment;
     return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + ">";
   }
   else
-    return displayName + " (" + comment + ") <" + addrSpec + ">";
+    return realDisplayName + " (" + comment + ") <" + addrSpec + ">";
 }
 
 

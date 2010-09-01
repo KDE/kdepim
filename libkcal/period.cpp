@@ -51,6 +51,14 @@ bool Period::operator<( const Period& other )
   return start() < other.start();
 }
 
+bool Period::operator==( const Period &other ) const
+{
+  return
+    mStart == other.mStart &&
+    mEnd == other.mEnd &&
+    mHasDuration == other.mHasDuration;
+}
+
 TQDateTime Period::start() const
 {
   return mStart;

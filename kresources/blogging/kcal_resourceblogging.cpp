@@ -38,7 +38,11 @@ ResourceBlogging::ResourceBlogging( const KConfig *config )
   : ResourceGroupwareBase( config )
 {
   init();
-  if ( config ) readConfig( config );
+  if ( config ) {
+    readConfig( config );
+  } else {
+    setResourceName( i18n( "Blogs" ) );
+  }
 }
 
 void ResourceBlogging::init()

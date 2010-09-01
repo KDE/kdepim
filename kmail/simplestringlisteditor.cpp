@@ -166,6 +166,15 @@ TQStringList SimpleStringListEditor::stringList() const {
   return result;
 }
 
+bool SimpleStringListEditor::containsString( const TQString & str ) {
+  for ( TQListBoxItem * item = mListBox->firstItem() ;
+	item ; item = item->next() ) {
+    if ( item->text() == str )
+      return true;
+  }
+  return false;
+}
+
 void SimpleStringListEditor::setButtonText( ButtonCode button,
 					    const TQString & text ) {
   switch ( button ) {
@@ -207,9 +216,10 @@ void SimpleStringListEditor::slotAdd() {
 					    &ok, this );
   // let the user verify the string before adding
   emit aboutToAdd( newEntry );
-  if ( ok && !newEntry.isEmpty() )
-    mListBox->insertItem( newEntry );
-  emit changed();
+  if ( ok && !newEntry.isEmpty() && !containsString( newEntry )) {
+      mListBox->insertItem( newEntry );
+      emit changed();
+  }
 }
 
 void SimpleStringListEditor::slotRemove() {

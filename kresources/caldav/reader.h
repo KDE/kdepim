@@ -78,18 +78,28 @@ public:
         return mTasksData;
     }
 
+    /**
+     * @return downloaded journal data in iCal format.
+     */
+    TQString journalsData() const {
+        return mJournalsData;
+    }
+
 protected:
 
     virtual int runJob(runtime_info* caldavRuntime);
     virtual int runTasksJob(runtime_info* caldavRuntime);
+    virtual int runJournalsJob(runtime_info* caldavRuntime);
 
     virtual void cleanJob();
     virtual void cleanTasksJob();
+    virtual void cleanJournalsJob();
 
 private:
 
     TQString mData;
     TQString mTasksData;
+    TQString mJournalsData;
     bool mGetAll;
     TQDateTime mTimeStart;
     TQDateTime mTimeEnd;

@@ -14,6 +14,8 @@
 #include "kmmimeparttree.h" // Needed for friend declaration.
 #include "interfaces/observer.h"
 
+#include <map>
+
 class TQFrame;
 class TQSplitter;
 class TQHBox;
@@ -42,6 +44,7 @@ class KMMessagePart;
 namespace KMail {
   namespace Interface {
     class Observable;
+    class BodyPartMemento;
   }
   class PartMetaData;
   class ObjectTreeParser;
@@ -139,7 +142,20 @@ public:
 
   /** Set the message that shall be shown. If msg is 0, an empty page is
       displayed. */
-  virtual void setMsg(KMMessage* msg, bool force = false);
+  virtual void setMsg( KMMessage* msg, bool force = false, bool updateOnly = false );
+
+  /**
+   * This should be called when setting a message that was constructed from another message, which
+   * is the case when viewing encapsulated messages in the seperate reader window.
+   * We need to know the serial number of the original message, and at which part index the encapsulated
+   * message was at that original message, so that deleting and editing attachments can work on the
+   * original message.
+   *
+   * This is a HACK. There really shouldn't be a copy of the original mail.
+   *
+   * @see slotDeleteAttachment, slotEditAttachment, fillCommandInfo
+   */
+  void setOriginalMsg( unsigned long serNumOfOriginalMessage, int nodeIdOffset );
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
@@ -210,8 +226,12 @@ public:
   /** Enable the displaying of messages again after an URL was displayed */
   void enableMsgDisplay();
 
-  /** View message part of type message/RFC822 in extra viewer window. */
-  void atmViewMsg(KMMessagePart* msgPart);
+  /**
+   * View message part of type message/RFC822 in extra viewer window.
+   * @param msgPart the part to display
+   * @param nodeId the part index of the message part that is displayed
+   */
+  void atmViewMsg( KMMessagePart* msgPart, int nodeId );
 
   bool atBottom() const;
 
@@ -266,6 +286,7 @@ public:
   KMMessage* message(KMFolder** folder=0) const;
 
   void openAttachment( int id, const TQString & name );
+  void saveAttachment( const KURL &tempFileName );
 
   void emitUrlClicked( const KURL & url, int button ) {
     emit urlClicked( url, button );
@@ -301,6 +322,27 @@ public:
 
   /* show or hide the list that points to the attachments */
   void setShowAttachmentQuicklist( bool showAttachmentQuicklist = true ) { mShowAttachmentQuicklist = showAttachmentQuicklist; }
+
+  // This controls whether a Toltec invitation is shown in its raw form or as a replacement text.
+  // This can be toggled with the "kmail:showRawToltecMail" link.
+  bool showRawToltecMail() const { return mShowRawToltecMail; }
+  void setShowRawToltecMail( bool showRawToltecMail ) { mShowRawToltecMail = showRawToltecMail; }
+
+  /* retrieve BodyPartMemento of id \a which for partNode \a node */
+  KMail::Interface::BodyPartMemento * bodyPartMemento( const partNode * node, const TQCString & which ) const;
+
+  /* set/replace BodyPartMemento \a memento of id \a which for
+     partNode \a node. If there was a BodyPartMemento registered
+     already, replaces (deletes) that one. */
+  void setBodyPartMemento( const partNode * node, const TQCString & which, KMail::Interface::BodyPartMemento * memento );
+
+  /// Scrolls to the given attachment and marks it with a yellow border
+  void scrollToAttachment( const partNode *node );
+
+private:
+  /* deletes all BodyPartMementos. Use this when skipping to another
+     message (as opposed to re-loading the same one again). */
+  void clearBodyPartMementos();
 
 signals:
   /** Emitted after parsing of a message to have it stored
@@ -383,6 +425,15 @@ public slots:
   void slotLevelQuote( int l );
   void slotTouchMessage();
 
+  /**
+   * Find the node ID and the message of the attachment that should be edited or deleted.
+   * This is used when setOriginalMsg() was called before, in that case we want to operate
+   * on the original message instead of our copy.
+   *
+   * @see setOriginalMsg
+   */
+  void fillCommandInfo( partNode *node, KMMessage **msg, int *nodeId );
+
   void slotDeleteAttachment( partNode* node );
   void slotEditAttachment( partNode* node );
 
@@ -402,11 +453,18 @@ protected slots:
   void slotSmartAttachments();
   void slotInlineAttachments();
   void slotHideAttachments();
+  void slotHeaderOnlyAttachments();
 
   /** Some attachment operations. */
   void slotAtmView( int id, const TQString& name );
   void slotDelayedResize();
   void slotHandleAttachment( int );
+
+  /** Helper functions used to change message selection in the message list after deleting
+   *  an attachment, see slotDeleteAttachment()
+   */
+  void disconnectMsgAdded();
+  void msgAdded( TQListViewItem *item );
 
 protected:
   /** reimplemented in order to update the frame width in case of a changed
@@ -432,7 +490,7 @@ protected:
 
   /** Creates a nice mail header depending on the current selected
     header style. */
-  TQString writeMsgHeader(KMMessage* aMsg, bool hasVCard=false, bool topLevel=false);
+  TQString writeMsgHeader(KMMessage* aMsg, partNode *vCardNode = 0, bool topLevel=false );
 
   /** Writes the given message part to a temporary file and returns the
       name of this file or TQString::null if writing failed.
@@ -485,6 +543,11 @@ private:
   int mAtmCurrent;
   TQString mAtmCurrentName;
   KMMessage *mMessage;
+
+  // See setOriginalMsg() for an explaination for those two.
+  unsigned long mSerNumOfOriginalMessage;
+  int mNodeIdOffset;
+
   // widgets:
   TQSplitter * mSplitter;
   TQHBox *mBox;
@@ -507,7 +570,6 @@ private:
   bool mMsgDisplay;
   bool mNoMDNsWhenEncrypted;
   unsigned long mLastSerNum;
-  KMMsgStatus mLastStatus;
 
   KMail::CSSHelper * mCSSHelper;
   bool mUseFixedFont;
@@ -526,19 +588,29 @@ private:
   KAction *mMailToComposeAction, *mMailToReplyAction, *mMailToForwardAction,
       *mAddAddrBookAction, *mOpenAddrBookAction, *mCopyAction, *mCopyURLAction,
       *mUrlOpenAction, *mUrlSaveAsAction, *mAddBookmarksAction, *mStartIMChatAction, *mSelectAllAction;
+  KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction;
-  KURL mUrlClicked;
+
+  KURL mHoveredUrl;
+  KURL mClickedUrl;
+  TQPoint mLastClickPosition;
+  TQString mLastClickImagePath;
+  bool mCanStartDrag;
+
   KMail::HtmlWriter * mHtmlWriter;
+  std::map<TQCString,KMail::Interface::BodyPartMemento*> mBodyPartMementoMap;
   // an attachment should be updated
   bool mAtmUpdate;
   int mChoice;
   unsigned long mWaitingForSerNum;
   float mSavedRelativePosition;
-	int mLevelQuote;
+  int mLevelQuote;
   bool mDecrytMessageOverwrite;
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
+  bool mShowRawToltecMail;
+  bool mExternalWindow;
 };
 
 

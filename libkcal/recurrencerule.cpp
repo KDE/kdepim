@@ -32,6 +32,8 @@
 
 using namespace KCal;
 
+// Maximum number of intervals to process
+const int LOOP_LIMIT = 10000;
 
 // FIXME: If Qt is ever changed so that TQDateTime:::addSecs takes into account
 //        DST shifts, we need to use our own addSecs method, too, since we
@@ -774,6 +776,8 @@ void RecurrenceRule::setWeekStart( short weekStart )
 
 void RecurrenceRule::buildConstraints()
 {
+  mTimedRepetition = 0;
+  mNoByRules = mBySetPos.isEmpty();
   mConstraints.clear();
   Constraint con;
   if ( mWeekStart > 0 ) con.weekstart = mWeekStart;
@@ -785,6 +789,7 @@ void RecurrenceRule::buildConstraints()
 
   #define intConstraint( list, element ) \
   if ( !list.isEmpty() ) { \
+    mNoByRules = false; \
     for ( it = mConstraints.constBegin(); it != mConstraints.constEnd(); ++it ) { \
       for ( intit = list.constBegin(); intit != list.constEnd(); ++intit ) { \
         con = (*it); \
@@ -806,6 +811,7 @@ void RecurrenceRule::buildConstraints()
   #undef intConstraint
 
   if ( !mByDays.isEmpty() ) {
+    mNoByRules = false;
     for ( it = mConstraints.constBegin(); it != mConstraints.constEnd(); ++it ) {
       TQValueList<WDayPos>::const_iterator dayit;
       for ( dayit = mByDays.constBegin(); dayit != mByDays.constEnd(); ++dayit ) {
@@ -866,12 +872,28 @@ void RecurrenceRule::buildConstraints()
   }
   #undef fixConstraint
 
-  Constraint::List::Iterator conit = mConstraints.begin();
-  while ( conit != mConstraints.end() ) {
-    if ( (*conit).isConsistent( mPeriod ) ) {
-      ++conit;
-    } else {
-      conit = mConstraints.remove( conit );
+  if ( mNoByRules ) {
+    switch ( mPeriod ) {
+      case rHourly:
+        mTimedRepetition = mFrequency * 3600;
+        break;
+      case rMinutely:
+        mTimedRepetition = mFrequency * 60;
+        break;
+      case rSecondly:
+        mTimedRepetition = mFrequency;
+        break;
+      default:
+        break;
+    }
+  } else {
+    Constraint::List::Iterator conit = mConstraints.begin();
+    while ( conit != mConstraints.end() ) {
+      if ( (*conit).isConsistent( mPeriod ) ) {
+        ++conit;
+      } else {
+        conit = mConstraints.remove( conit );
+      }
     }
   }
 }
@@ -941,81 +963,179 @@ bool RecurrenceRule::dateMatchesRules( const TQDateTime &qdt ) const
 
 bool RecurrenceRule::recursOn( const TQDate &qd ) const
 {
-//  kdDebug(5800) << "         RecurrenceRule::recursOn: " << qd << endl;
-  if ( qd < startDt().date() ) return false;
+  int i, iend;
+  if ( doesFloat() ) {
+    // It's a date-only rule, so it has no time specification.
+    if ( qd < mDateStart.date() ) {
+      return false;
+    }
+    // Start date is only included if it really matches
+    TQDate endDate;
+    if ( mDuration >= 0 ) {
+      endDate =  endDt().date();
+      if ( qd > endDate ) {
+        return false;
+      }
+    }
+
+    // The date must be in an appropriate interval (getNextValidDateInterval),
+    // Plus it must match at least one of the constraints
+    bool match = false;
+    for ( i = 0, iend = mConstraints.count();  i < iend && !match;  ++i ) {
+      match = mConstraints[i].matches( qd, recurrenceType() );
+    }
+    if ( !match ) {
+      return false;
+    }
+
+    TQDateTime start( qd, TQTime( 0, 0, 0 ) );
+    Constraint interval( getNextValidDateInterval( start, recurrenceType() ) );
+    // Constraint::matches is quite efficient, so first check if it can occur at
+    // all before we calculate all actual dates.
+    if ( !interval.matches( qd, recurrenceType() ) ) {
+      return false;
+    }
+    // We really need to obtain the list of dates in this interval, since
+    // otherwise BYSETPOS will not work (i.e. the date will match the interval,
+    // but BYSETPOS selects only one of these matching dates!
+    TQDateTime end = start.addDays(1);
+    do {
+      DateTimeList dts = datesForInterval( interval, recurrenceType() );
+      for ( i = 0, iend = dts.count();  i < iend;  ++i ) {
+        if ( dts[i].date() >= qd ) {
+          return dts[i].date() == qd;
+        }
+      }
+      interval.increase( recurrenceType(), frequency() );
+    } while ( interval.intervalDateTime( recurrenceType() ) < end );
+    return false;
+  }
+
+  // It's a date-time rule, so we need to take the time specification into account.
+  TQDateTime start( qd, TQTime( 0, 0, 0 ) );
+  TQDateTime end = start.addDays( 1 );
+  if ( end < mDateStart ) {
+    return false;
+  }
+  if ( start < mDateStart ) {
+    start = mDateStart;
+  }
+
   // Start date is only included if it really matches
-//   if ( qd == startDt().date() ) return true;
-  if ( mDuration >= 0 && qd > endDt().date() ) return false;
+  if ( mDuration >= 0 ) {
+    TQDateTime endRecur = endDt();
+    if ( endRecur.isValid() ) {
+      if ( start > endRecur ) {
+        return false;
+      }
+      if ( end > endRecur ) {
+        end = endRecur;    // limit end-of-day time to end of recurrence rule
+      }
+    }
+  }
+
+  if ( mTimedRepetition ) {
+    // It's a simple sub-daily recurrence with no constraints
+    int n = static_cast<int>( ( mDateStart.secsTo( start ) - 1 ) % mTimedRepetition );
+    return start.addSecs( mTimedRepetition - n ) < end;
+  }
+
+  // Find the start and end dates in the time spec for the rule
+  TQDate startDay = start.date();
+  TQDate endDay = end.addSecs( -1 ).date();
+  int dayCount = startDay.daysTo( endDay ) + 1;
 
   // The date must be in an appropriate interval (getNextValidDateInterval),
   // Plus it must match at least one of the constraints
   bool match = false;
-  for ( Constraint::List::ConstIterator it = mConstraints.begin();
-        it!=mConstraints.end(); ++it ) {
-    match = match  || ( (*it).matches( qd, recurrenceType() ) );
+  for ( i = 0, iend = mConstraints.count();  i < iend && !match;  ++i ) {
+    match = mConstraints[i].matches( startDay, recurrenceType() );
+    for ( int day = 1;  day < dayCount && !match;  ++day ) {
+      match = mConstraints[i].matches( startDay.addDays( day ), recurrenceType() );
+    }
   }
-  if ( !match ) return false;
-  TQDateTime tmp( qd, TQTime( 0, 0, 0 ) );
-  Constraint interval( getNextValidDateInterval( tmp, recurrenceType() ) );
+  if ( !match ) {
+    return false;
+  }
+
+  Constraint interval( getNextValidDateInterval( start, recurrenceType() ) );
   // Constraint::matches is quite efficient, so first check if it can occur at
   // all before we calculate all actual dates.
-  if ( !interval.matches( qd, recurrenceType() ) ) return false;
+  match = false;
+  Constraint intervalm = interval;
+  do {
+    match = intervalm.matches( startDay, recurrenceType() );
+    for ( int day = 1;  day < dayCount && !match;  ++day ) {
+      match = intervalm.matches( startDay.addDays( day ), recurrenceType() );
+    }
+    if ( match ) {
+      break;
+    }
+    intervalm.increase( recurrenceType(), frequency() );
+  } while ( intervalm.intervalDateTime( recurrenceType() ) < end );
+  if ( !match ) {
+    return false;
+  }
+
   // We really need to obtain the list of dates in this interval, since
   // otherwise BYSETPOS will not work (i.e. the date will match the interval,
   // but BYSETPOS selects only one of these matching dates!
-  DateTimeList times = datesForInterval( interval, recurrenceType() );
-  DateTimeList::ConstIterator it = times.begin();
-  while ( ( it != times.end() ) && ( (*it).date() < qd ) )
-    ++it;
-  if ( it != times.end() ) {
-    // If we are beyond the end...
-    if ( mDuration >= 0 && (*it) > endDt() )
-      return false;
-    if ( (*it).date() == qd )
-      return true;
+  do {
+    DateTimeList dts = datesForInterval( interval, recurrenceType() );
+    int i = findGE( dts, start, 0 );
+    if ( i >= 0 ) {
+      return dts[i] < end;
+    }
+    interval.increase( recurrenceType(), frequency() );
+  } while ( interval.intervalDateTime( recurrenceType() ) < end );
+
+  return false;
+}
+
+bool RecurrenceRule::recursAt( const TQDateTime &dt ) const
+{
+  if ( doesFloat() ) {
+    return recursOn( dt.date() );
+  }
+  if ( dt < mDateStart ) {
+    return false;
+  }
+  // Start date is only included if it really matches
+  if ( mDuration >= 0 && dt > endDt() ) {
+    return false;
+  }
+
+  if ( mTimedRepetition ) {
+    // It's a simple sub-daily recurrence with no constraints
+    return !( mDateStart.secsTo( dt ) % mTimedRepetition );
+  }
+
+  // The date must be in an appropriate interval (getNextValidDateInterval),
+  // Plus it must match at least one of the constraints
+  if ( !dateMatchesRules( dt ) ) {
+    return false;
+  }
+  // if it recurs every interval, speed things up...
+//   if ( d->mFrequency == 1 && d->mBySetPos.isEmpty() && d->mByDays.isEmpty() ) return true;
+  Constraint interval( getNextValidDateInterval( dt, recurrenceType() ) );
+  // TODO_Recurrence: Does this work with BySetPos???
+  if ( interval.matches( dt, recurrenceType() ) ) {
+    return true;
   }
   return false;
 }
 
-
-bool RecurrenceRule::recursAt( const TQDateTime &qd ) const
-{
-// kdDebug(5800) << "         RecurrenceRule::recursAt: " << qd << endl;
-  if ( doesFloat() ) return recursOn( qd.date() );
-  if ( qd < startDt() ) return false;
-  // Start date is only included if it really matches
-//   if ( qd == startDt() ) return true;
-  if ( mDuration >= 0 && qd > endDt() ) return false;
-
-  // The date must be in an appropriate interval (getNextValidDateInterval),
-  // Plus it must match at least one of the constraints
-  bool match = dateMatchesRules( qd );
-  if ( !match ) return false;
-  // if it recurs every interval, speed things up...
-//   if ( mFrequency == 1 && mBySetPos.isEmpty() && mByDays.isEmpty() ) return true;
-  Constraint interval( getNextValidDateInterval( qd, recurrenceType() ) );
-  // TODO_Recurrence: Does this work with BySetPos???
-  if ( interval.matches( qd, recurrenceType() ) ) return true;
-
-  return false;
-}
-
-
 TimeList RecurrenceRule::recurTimesOn( const TQDate &date ) const
 {
-// kdDebug(5800) << "         RecurrenceRule::recurTimesOn: " << date << endl;
   TimeList lst;
-  if ( !recursOn( date ) ) return lst;
-
-  if ( doesFloat() ) return lst;
-
-  TQDateTime dt( date, TQTime( 0, 0, 0 ) );
-  bool valid = dt.isValid() && ( dt.date() == date );
-  while ( valid ) {
-    // TODO: Add a flag so that the date is never increased!
-    dt = getNextDate( dt );
-    valid = dt.isValid() && ( dt.date() == date );
-    if ( valid ) lst.append( dt.time() );
+  if ( doesFloat() ) {
+    return lst;
+  }
+  TQDateTime start( date, TQTime( 0, 0, 0 ) );
+  TQDateTime end = start.addDays( 1 ).addSecs( -1 );
+  DateTimeList dts = timesInInterval( start, end );   // returns between start and end inclusive
+  for ( int i = 0, iend = dts.count();  i < iend;  ++i ) {
+    lst += dts[i].time();
   }
   return lst;
 }
@@ -1148,6 +1268,104 @@ TQDateTime RecurrenceRule::getNextDate( const TQDateTime &preDate ) const
     ++loopnr;
   }
   return TQDateTime();
+}
+
+DateTimeList RecurrenceRule::timesInInterval( const TQDateTime &dtStart,
+                                              const TQDateTime &dtEnd ) const
+{
+  TQDateTime start = dtStart;
+  TQDateTime end = dtEnd;
+  DateTimeList result;
+  if ( end < mDateStart ) {
+    return result;    // before start of recurrence
+  }
+  TQDateTime enddt = end;
+  if ( mDuration >= 0 ) {
+    TQDateTime endRecur = endDt();
+    if ( endRecur.isValid() ) {
+      if ( start > endRecur ) {
+        return result;    // beyond end of recurrence
+      }
+      if ( end > endRecur ) {
+        enddt = endRecur;    // limit end time to end of recurrence rule
+      }
+    }
+  }
+
+  if ( mTimedRepetition ) {
+    // It's a simple sub-daily recurrence with no constraints
+    int n = static_cast<int>( ( mDateStart.secsTo( start ) - 1 ) % mTimedRepetition );
+    TQDateTime dt = start.addSecs( mTimedRepetition - n );
+    if ( dt < enddt ) {
+      n = static_cast<int>( ( dt.secsTo( enddt ) - 1 ) / mTimedRepetition ) + 1;
+      // limit n by a sane value else we can "explode".
+      n = QMIN( n, LOOP_LIMIT );
+      for ( int i = 0;  i < n;  dt = dt.addSecs( mTimedRepetition ), ++i ) {
+        result += dt;
+      }
+    }
+    return result;
+  }
+
+  TQDateTime st = start;
+  bool done = false;
+  if ( mDuration > 0 ) {
+    if ( !mCached ) {
+      buildCache();
+    }
+    if ( mCachedDateEnd.isValid() && start > mCachedDateEnd ) {
+      return result;    // beyond end of recurrence
+    }
+    int i = findGE( mCachedDates, start, 0 );
+    if ( i >= 0 ) {
+      int iend = findGT( mCachedDates, enddt, i );
+      if ( iend < 0 ) {
+        iend = mCachedDates.count();
+      } else {
+        done = true;
+      }
+      while ( i < iend ) {
+        result += mCachedDates[i++];
+      }
+    }
+    if ( mCachedDateEnd.isValid() ) {
+      done = true;
+    } else if ( !result.isEmpty() ) {
+      result += TQDateTime();    // indicate that the returned list is incomplete
+      done = true;
+    }
+    if ( done ) {
+      return result;
+    }
+    // We don't have any result yet, but we reached the end of the incomplete cache
+    st = mCachedLastDate.addSecs( 1 );
+  }
+
+  Constraint interval( getNextValidDateInterval( st, recurrenceType() ) );
+  int loop = 0;
+  do {
+    DateTimeList dts = datesForInterval( interval, recurrenceType() );
+    int i = 0;
+    int iend = dts.count();
+    if ( loop == 0 ) {
+      i = findGE( dts, st, 0 );
+      if ( i < 0 ) {
+        i = iend;
+      }
+    }
+    int j = findGT( dts, enddt, i );
+    if ( j >= 0 ) {
+      iend = j;
+      loop = LOOP_LIMIT;
+    }
+    while ( i < iend ) {
+      result += dts[i++];
+    }
+    // Increase the interval.
+    interval.increase( recurrenceType(), frequency() );
+  } while ( ++loop < LOOP_LIMIT &&
+            interval.intervalDateTime( recurrenceType() ) < end );
+  return result;
 }
 
 RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const TQDateTime &preDate, PeriodType type ) const

@@ -38,6 +38,11 @@ void CalDavReader::cleanTasksJob() {
     mTasksData = "";
 }
 
+void CalDavReader::cleanJournalsJob() {
+    CalDavJob::cleanJob();
+    mJournalsData = "";
+}
+
 int CalDavReader::runJob(runtime_info* RT) {
     kdDebug() << "reader::run, url: " << url();
 
@@ -102,6 +107,40 @@ int CalDavReader::runTasksJob(runtime_info* RT) {
     }
 
     return tasksres;
+}
+
+int CalDavReader::runJournalsJob(runtime_info* RT) {
+    kdDebug() << "reader::run, journalsUrl: " << journalsUrl();
+
+    response* result = caldav_get_response();
+    CALDAV_RESPONSE journalsres = OK;
+
+    if ((OK == journalsres) && (journalsUrl() != "")) {
+      kdDebug() << "reader::run, url: " << journalsUrl();
+
+      if (mGetAll) {
+          kdDebug() << "getting all objects";
+          journalsres = caldav_tasks_getall_object(result, std::string(journalsUrl().ascii()).c_str(), RT);
+      } else {
+          kdDebug() << "getting object from the specified time range";
+          journalsres = caldav_tasks_get_object(result, mTimeStart.toTime_t(), mTimeEnd.toTime_t(), std::string(journalsUrl().ascii()).c_str(), RT);
+      }
+
+      if (OK == journalsres) {
+          kdDebug() << "success";
+          if (result->msg) {
+              mJournalsData = result->msg;
+          } else {
+              kdDebug() << "empty collection";
+              // empty collection
+              mJournalsData = "";
+          }
+      }
+
+      caldav_free_response(&result);
+    }
+
+    return journalsres;
 }
 
 // EOF ========================================================================

@@ -91,6 +91,7 @@ protected slots:
   void slotSelectionChanged();
 
 protected:
+  bool containsString( const TQString & str );
   TQListBox      *mListBox;
   TQPushButton   *mAddButton;
   TQPushButton   *mRemoveButton;

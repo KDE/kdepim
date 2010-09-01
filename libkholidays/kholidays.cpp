@@ -90,7 +90,7 @@ TQString KHolidays::location() const
 TQString KHolidays::shortText( const TQDate &date )
 {
   TQValueList<KHoliday> lst = getHolidays( date );
-  if ( !lst.isEmpty() ) 
+  if ( !lst.isEmpty() )
     return lst.first().text;
   else return TQString::null;
 }
@@ -116,7 +116,7 @@ bool KHolidays::parseFile( const TQDate &date )
 TQString KHolidays::getHoliday( const TQDate &date )
 {
   TQValueList<KHoliday> lst = getHolidays( date );
-  if ( !lst.isEmpty() ) 
+  if ( !lst.isEmpty() )
     return lst.first().text;
   else return TQString::null;
 }
@@ -124,6 +124,10 @@ TQString KHolidays::getHoliday( const TQDate &date )
 TQValueList<KHoliday> KHolidays::getHolidays( const TQDate &date )
 {
   TQValueList<KHoliday> list;
+  if ( !date.isValid() ) {
+    return list;
+  }
+
   if ( !parseFile( date ) ) return list;
   struct holiday *hd = &holidays[date.dayOfYear()-1];
   while ( hd ) {

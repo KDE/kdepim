@@ -179,21 +179,6 @@ void KMAcctCachedImap::cancelMailCheck()
   }
 }
 
-//-----------------------------------------------------------------------------
-void KMAcctCachedImap::killJobsForItem(KMFolderTreeItem * fti)
-{
-  TQMap<KIO::Job *, jobData>::Iterator it = mapJobData.begin();
-  while (it != mapJobData.end())
-  {
-    if (it.data().parent == fti->folder())
-    {
-      killAllJobs();
-      break;
-    }
-    else ++it;
-  }
-}
-
 // Reimplemented from ImapAccountBase because we only check one folder at a time
 void KMAcctCachedImap::slotCheckQueuedFolders()
 {
@@ -217,7 +202,12 @@ void KMAcctCachedImap::processNewMail( bool /*interactive*/ )
   else {
     KMFolder* f = mMailCheckFolders.front();
     mMailCheckFolders.pop_front();
-    processNewMail( static_cast<KMFolderCachedImap *>( f->storage() ), false );
+
+    // Only check mail if the folder really exists, it might have been removed by the sync in
+    // the meantime.
+    if ( f ) {
+      processNewMail( static_cast<KMFolderCachedImap *>( f->storage() ), !checkingSingleFolder() );
+    }
   }
 }
 
@@ -234,7 +224,7 @@ void KMAcctCachedImap::processNewMail( KMFolderCachedImap* folder,
   mNoopTimer.stop();
 
   // reset namespace todo
-  if ( folder == mFolder ) {
+  if ( folder == mFolder && !namespaces().isEmpty() ) {
     TQStringList nsToList = namespaces()[PersonalNS];
     TQStringList otherNSToCheck = namespaces()[OtherUsersNS];
     otherNSToCheck += namespaces()[SharedNS];
@@ -361,8 +351,8 @@ void KMAcctCachedImap::invalidateIMAPFolders( KMFolderCachedImap* folder )
   TQStringList strList;
   TQValueList<TQGuardedPtr<KMFolder> > folderList;
   kmkernel->dimapFolderMgr()->createFolderList( &strList, &folderList,
-						folder->folder()->child(), TQString::null,
-						false );
+                                                folder->folder()->child(), TQString::null,
+                                                false );
   TQValueList<TQGuardedPtr<KMFolder> >::Iterator it;
   mCountLastUnread = 0;
   mUnreadBeforeCheck.clear();
@@ -374,13 +364,12 @@ void KMAcctCachedImap::invalidateIMAPFolders( KMFolderCachedImap* folder )
       // This invalidates the folder completely
       cfolder->setUidValidity("INVALID");
       cfolder->writeUidCache();
-      processNewMailSingleFolder( f );
     }
   }
   folder->setUidValidity("INVALID");
   folder->writeUidCache();
 
-  processNewMailSingleFolder( folder->folder() );
+  processNewMailInFolder( folder->folder(), Recursive );
 }
 
 //-----------------------------------------------------------------------------
@@ -462,7 +451,7 @@ void KMAcctCachedImap::slotProgressItemCanceled( ProgressItem* )
   }
 }
 
-FolderStorage* const KMAcctCachedImap::rootFolder() const
+FolderStorage* KMAcctCachedImap::rootFolder() const
 {
   return mFolder;
 }

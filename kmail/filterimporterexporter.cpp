@@ -38,74 +38,105 @@
 #include <kfiledialog.h>
 #include <kdialogbase.h>
 #include <klistview.h>
+#include <kpushbutton.h>
 
 #include <tqregexp.h>
+#include <tqlayout.h>
 
 
 using namespace KMail;
 
-class FilterSelectionDialog : public KDialogBase
+FilterSelectionDialog::FilterSelectionDialog( TQWidget * parent )
+  :KDialogBase( parent, "filterselection", true, i18n("Select Filters"), Ok|Cancel, Ok, true ),
+   wasCancelled( false )
 {
-public:
-    FilterSelectionDialog( TQWidget * parent = 0 )
-        :KDialogBase( parent, "filterselection", true, i18n("Select Filters"), Ok|Cancel, Ok, true ),
-        wasCancelled( false )
-    {
-        filtersListView = new KListView( this );
-        setMainWidget(filtersListView);
-        filtersListView->setSorting( -1 );
-        filtersListView->setSelectionMode( TQListView::NoSelection );
-        filtersListView->addColumn( i18n("Filters"), 300 );
-        filtersListView->setFullWidth( true );
-        resize( 300, 350 );
-    }
+  TQWidget *w = new TQWidget( this );
+  TQVBoxLayout *top = new TQVBoxLayout( w );
 
-    virtual ~FilterSelectionDialog()
-    {
-    }
-    
-    virtual void slotCancel()
-    {
-        wasCancelled = true;
-        KDialogBase::slotCancel();
-    }
-    
-    bool cancelled()
-    {
-        return wasCancelled;
-    }
+  filtersListView = new KListView( w );
+  top->addWidget( filtersListView );
+  setMainWidget(w);
+  filtersListView->setSorting( -1 );
+  filtersListView->setSelectionMode( TQListView::NoSelection );
+  filtersListView->addColumn( i18n("Filters"), 300 );
+  filtersListView->setFullWidth( true );
+  TQHBoxLayout *buttonLayout = new TQHBoxLayout( this );
+  top->addLayout( buttonLayout );
+  selectAllButton = new KPushButton( i18n( "Select All" ), w );
+  buttonLayout->addWidget( selectAllButton );
+  unselectAllButton = new KPushButton( i18n( "Unselect All" ), w );
+  buttonLayout->addWidget( unselectAllButton );
+  connect( selectAllButton, TQT_SIGNAL( clicked() ), this, TQT_SLOT( slotSelectAllButton() ) );
+  connect( unselectAllButton, TQT_SIGNAL( clicked() ), this, TQT_SLOT( slotUnselectAllButton() ) );
+  resize( 300, 350 );
+}
 
-    void setFilters( const TQValueList<KMFilter*>& filters )
-    {
-        originalFilters = filters;
-        filtersListView->clear();
-        TQValueListConstIterator<KMFilter*> it = filters.constEnd();
-        while ( it != filters.constBegin() ) {
-            --it;
-            KMFilter* filter = *it;
-            TQCheckListItem* item = new TQCheckListItem( filtersListView, filter->name(), TQCheckListItem::CheckBox );
-            item->setOn( true );
-        }
-    }
-    
-    TQValueList<KMFilter*> selectedFilters() const
-    {
-        TQValueList<KMFilter*> filters;
-        TQListViewItemIterator it( filtersListView );
-        int i = 0;
-        while( it.current() ) {
-            TQCheckListItem* item = static_cast<TQCheckListItem*>( it.current() );
-            if ( item->isOn() )
-                filters << originalFilters[i];
-            ++i; ++it;
-        }
-        return filters;
-    }
-private:
-    KListView *filtersListView;
-    TQValueList<KMFilter*> originalFilters;
-    bool wasCancelled;
-};
+FilterSelectionDialog::~FilterSelectionDialog()
+{
+}
+
+void FilterSelectionDialog::slotCancel()
+{
+  wasCancelled = true;
+  KDialogBase::slotCancel();
+}
+
+bool FilterSelectionDialog::cancelled()
+{
+  return wasCancelled;
+}
+
+void FilterSelectionDialog::setFilters( const TQValueList<KMFilter*>& filters )
+{
+  if ( filters.isEmpty() )
+  {
+    enableButtonOK( false );
+    return;
+  }
+  originalFilters = filters;
+  filtersListView->clear();
+  TQValueListConstIterator<KMFilter*> it = filters.constEnd();
+  while ( it != filters.constBegin() ) {
+    --it;
+    KMFilter* filter = *it;
+    TQCheckListItem* item = new TQCheckListItem( filtersListView, filter->name(), TQCheckListItem::CheckBox );
+    item->setOn( true );
+  }
+}
+
+TQValueList<KMFilter*> FilterSelectionDialog::selectedFilters() const
+{
+  TQValueList<KMFilter*> filters;
+  TQListViewItemIterator it( filtersListView );
+  int i = 0;
+  while( it.current() ) {
+    TQCheckListItem* item = static_cast<TQCheckListItem*>( it.current() );
+    if ( item->isOn() )
+      filters << originalFilters[i];
+    ++i; ++it;
+  }
+  return filters;
+}
+
+void FilterSelectionDialog::slotUnselectAllButton()
+{
+  TQListViewItemIterator it( filtersListView );
+  while( it.current() ) {
+    TQCheckListItem* item = static_cast<TQCheckListItem*>( it.current() );
+    item->setOn( false );
+    ++it;
+  }
+}
+
+void FilterSelectionDialog::slotSelectAllButton()
+{
+  TQListViewItemIterator it( filtersListView );
+  while( it.current() ) {
+    TQCheckListItem* item = static_cast<TQCheckListItem*>( it.current() );
+    item->setOn( true );
+    ++it;
+  }
+}
 
 /* static */
 TQValueList<KMFilter*> FilterImporterExporter::readFiltersFromConfig( KConfig* config, bool bPopFilter )
@@ -116,7 +147,7 @@ TQValueList<KMFilter*> FilterImporterExporter::readFiltersFromConfig( KConfig* c
       numFilters = config->readNumEntry("popfilters",0);
     else
       numFilters = config->readNumEntry("filters",0);
-    
+
     TQValueList<KMFilter*> filters;
     for ( int i=0 ; i < numFilters ; ++i ) {
       TQString grpName;
@@ -136,7 +167,7 @@ TQValueList<KMFilter*> FilterImporterExporter::readFiltersFromConfig( KConfig* c
     return filters;
 }
 
-/* static */ 
+/* static */
 void FilterImporterExporter::writeFiltersToConfig( const TQValueList<KMFilter*>& filters, KConfig* config, bool bPopFilter )
 {
     // first, delete all groups:
@@ -145,7 +176,7 @@ void FilterImporterExporter::writeFiltersToConfig( const TQValueList<KMFilter*>&
     for ( TQStringList::Iterator it = filterGroups.begin() ;
           it != filterGroups.end() ; ++it )
       config->deleteGroup( *it );
-    
+
     int i = 0;
     for ( TQValueListConstIterator<KMFilter*> it = filters.constBegin() ;
           it != filters.constEnd() ; ++it ) {
@@ -180,9 +211,9 @@ FilterImporterExporter::~FilterImporterExporter()
 TQValueList<KMFilter*> FilterImporterExporter::importFilters()
 {
     TQString fileName = KFileDialog::getOpenFileName( TQDir::homeDirPath(), TQString::null, mParent, i18n("Import Filters") );
-    if ( fileName.isEmpty() ) 
+    if ( fileName.isEmpty() )
         return TQValueList<KMFilter*>(); // cancel
-    
+
     { // scoping
         TQFile f( fileName );
         if ( !f.open( IO_ReadOnly ) ) {
@@ -190,7 +221,7 @@ TQValueList<KMFilter*> FilterImporterExporter::importFilters()
             return TQValueList<KMFilter*>();
         }
     }
-    
+
     KConfig config( fileName );
     TQValueList<KMFilter*> imported = readFiltersFromConfig( &config, mPopFilter );
     FilterSelectionDialog dlg( mParent );
@@ -202,10 +233,10 @@ TQValueList<KMFilter*> FilterImporterExporter::importFilters()
 void FilterImporterExporter::exportFilters(const TQValueList<KMFilter*> & filters )
 {
     KURL saveUrl = KFileDialog::getSaveURL( TQDir::homeDirPath(), TQString::null, mParent, i18n("Export Filters") );
-    
+
     if ( saveUrl.isEmpty() || !Util::checkOverwrite( saveUrl, mParent ) )
       return;
-    
+
     KConfig config( saveUrl.path() );
     FilterSelectionDialog dlg( mParent );
     dlg.setFilters( filters );
@@ -214,3 +245,4 @@ void FilterImporterExporter::exportFilters(const TQValueList<KMFilter*> & filter
         writeFiltersToConfig( dlg.selectedFilters(), &config, mPopFilter );
 }
 
+#include "filterimporterexporter.moc"

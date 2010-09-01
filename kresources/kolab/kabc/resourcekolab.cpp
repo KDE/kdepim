@@ -79,9 +79,12 @@ static const char* s_inlineMimeType = "text/x-vcard";
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),
     Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
-    mCachedSubresource( TQString::null ), mLocked( false )
+    mCachedSubresource( TQString::null ), mCachedSubresourceNotFound( false ), mLocked( false )
 {
   setType( "imap" );
+  if ( !config ) {
+    setResourceName( i18n( "Kolab Server" ) );
+  }
 }
 
 KABC::ResourceKolab::~ResourceKolab()
@@ -124,14 +127,7 @@ bool KABC::ResourceKolab::doOpen()
 
 void KABC::ResourceKolab::doClose()
 {
-  KConfig config( configFile() );
-
-  Kolab::ResourceMap::ConstIterator it;
-  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it ) {
-    config.setGroup( it.key() );
-    config.writeEntry( "Active", it.data().active() );
-    config.writeEntry( "CompletionWeight", it.data().completionWeight() );
-  }
+  writeConfig();
 }
 
 KABC::Ticket * KABC::ResourceKolab::requestSaveTicket()
@@ -149,6 +145,7 @@ void KABC::ResourceKolab::releaseSaveTicket( Ticket* ticket )
 {
   mLocked = false;
   mCachedSubresource = TQString::null;
+  mCachedSubresourceNotFound = false;
   delete ticket;
 }
 
@@ -163,7 +160,11 @@ TQString KABC::ResourceKolab::loadContact( const TQString& contactData,
     contact.saveTo( &addr );
   } else {
     KABC::VCardConverter converter;
+#if defined(KABC_VCARD_ENCODING_FIX)
+    addr = converter.parseVCardRaw( contactData.utf8() );
+#else
     addr = converter.parseVCard( contactData );
+#endif
   }
 
   addr.setResource( this );
@@ -301,11 +302,11 @@ void AttachmentList::updatePictureAttachment( const TQImage& image, const TQStri
 {
   assert( !name.isEmpty() );
   if ( !image.isNull() ) {
-    KTempFile* tempFile = new KTempFile;
-    image.save( tempFile->file(), "PNG" );
-    tempFile->close();
+    KTempFile tempFile;
+    image.save( tempFile.file(), "PNG" );
+    tempFile.close();
     KURL url;
-    url.setPath( tempFile->name() );
+    url.setPath( tempFile.name() );
     kdDebug(5650) << "picture saved to " << url.path() << endl;
     addAttachment( url.url(), name, "image/png" );
   } else {
@@ -317,11 +318,11 @@ void AttachmentList::updateAttachment( const TQByteArray& data, const TQString& 
 {
   assert( !name.isEmpty() );
   if ( !data.isNull() ) {
-    KTempFile* tempFile = new KTempFile;
-    tempFile->file()->writeBlock( data );
-    tempFile->close();
+    KTempFile tempFile;
+    tempFile.file()->writeBlock( data );
+    tempFile.close();
     KURL url;
-    url.setPath( tempFile->name() );
+    url.setPath( tempFile.name() );
     kdDebug(5650) << "data saved to " << url.path() << endl;
     addAttachment( url.url(), name, mimetype );
   } else {
@@ -342,14 +343,20 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     }
     sernum = mUidMap[ uid ].serialNumber();
   } else {
-    if ( !mCachedSubresource.isNull() ) {
+    if ( !mCachedSubresource.isNull() || mCachedSubresourceNotFound ) {
       subResource = mCachedSubresource;
     } else {
-      subResource = findWritableResource( mSubResources );
+      subResource = findWritableResource( Kolab::Contacts, mSubResources );
       // We were locked, remember the subresource we are working with until
       // we are unlocked
-      if ( mLocked )
+      if ( mLocked ) {
         mCachedSubresource = subResource;
+
+        // If the subresource is empty here, it means findWritableResource() failed, for example
+        // because the user cancelled the resource selection dialog. Remember that, so we avoid
+        // asking multiple times when locked.
+        mCachedSubresourceNotFound = subResource.isEmpty();
+      }
     }
     if ( subResource.isEmpty() )
       return false;
@@ -374,7 +381,11 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   } else {
     mimetype = s_inlineMimeType;
     KABC::VCardConverter converter;
+#if defined(KABC_VCARD_ENCODING_FIX)
+    data = TQString::fromUtf8( converter.createVCardRaw( addr ) );
+#else
     data = converter.createVCard( addr );
+#endif
     subject.prepend( "vCard " ); // as per kolab1 spec
   }
   bool rc = kmailUpdate( subResource, sernum, data, mimetype, subject,
@@ -652,6 +663,7 @@ void KABC::ResourceKolab::setSubresourceActive( const TQString &subresource, boo
   } else {
     kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
   }
+  writeConfig();
 }
 
 
@@ -665,6 +677,18 @@ bool KABC::ResourceKolab::addSubresource( const TQString& label, const TQString&
 bool KABC::ResourceKolab::removeSubresource( const TQString& id )
 {
   return kmailRemoveSubresource( id );
+}
+
+void KABC::ResourceKolab::writeConfig()
+{
+  KConfig config( configFile() );
+
+  Kolab::ResourceMap::ConstIterator it;
+  for ( it = mSubResources.constBegin(); it != mSubResources.constEnd(); ++it ) {
+    config.setGroup( it.key() );
+    config.writeEntry( "Active", it.data().active() );
+    config.writeEntry( "CompletionWeight", it.data().completionWeight() );
+  }
 }
 
 #include "resourcekolab.moc"

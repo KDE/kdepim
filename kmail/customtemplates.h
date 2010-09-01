@@ -26,6 +26,8 @@
 #include "customtemplates_base.h"
 #include "templatesinsertcommand.h"
 
+#include <kshortcut.h>
+
 struct CustomTemplateItem;
 typedef TQDict<CustomTemplateItem> CustomTemplateItemList;
 class KShortcut;
@@ -59,19 +61,28 @@ class CustomTemplates : public CustomTemplatesBase
     void slotListSelectionChanged();
     void slotTypeActivated( int index );
     void slotShortcutCaptured( const KShortcut &shortcut );
-
+  void slotNameChanged( const TQString& );
   signals:
 
     void changed();
 
   protected:
 
+    void setRecipientsEditsEnabled( bool enabled );
+
     TQListViewItem *mCurrentItem;
     CustomTemplateItemList mItemList;
+
+    /// These templates will be deleted when we're saving.
+    TQStringList mItemsToDelete;
 
     TQPixmap mReplyPix;
     TQPixmap mReplyAllPix;
     TQPixmap mForwardPix;
+
+    /// Whether or not to emit the changed() signal. This is useful to disable when loading
+    /// templates, which changes the UI without user action
+    bool mBlockChangeSignal;
 
 };
 
@@ -81,12 +92,15 @@ struct CustomTemplateItem
   CustomTemplateItem( const TQString &name,
                       const TQString &content,
                       KShortcut &shortcut,
-                      CustomTemplates::Type type ) :
-    mName( name ), mContent( content ), mShortcut(shortcut), mType( type ) {}
+                      CustomTemplates::Type type,
+                      TQString to, TQString cc ) :
+    mName( name ), mContent( content ), mShortcut(shortcut), mType( type ),
+    mTo( to ), mCC( cc ) {}
 
   TQString mName, mContent;
   KShortcut mShortcut;
   CustomTemplates::Type mType;
+  TQString mTo, mCC;
 };
 
 #endif // CUSTOMTEMPLATES_H

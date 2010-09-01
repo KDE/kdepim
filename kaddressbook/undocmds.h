@@ -32,6 +32,8 @@
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+#include <kabc/vcardparser.h> // for KABC_VCARD_ENCODING_FIX define
+
 #include <kcommand.h>
 
 #include "kablock.h"
@@ -48,9 +50,9 @@ class Command : public KCommand
   protected:
     KABC::AddressBook *addressBook() const { return mAddressBook; }
     KABLock *lock() const { return KABLock::self( mAddressBook ); }
-
+  bool resourceExist( KABC::Resource *resource );
   private:
-    KABC::AddressBook *mAddressBook;
+    KABC::AddressBook* mAddressBook;
 };
 
 class DeleteCommand : public Command
@@ -94,7 +96,11 @@ class CutCommand : public Command
   private:
     KABC::Addressee::List mAddresseeList;
     TQStringList mUIDList;
+#if defined(KABC_VCARD_ENCODING_FIX)
+    TQByteArray mClipText;
+#else
     TQString mClipText;
+#endif
     TQString mOldText;
 };
 
@@ -127,4 +133,37 @@ class EditCommand : public Command
     KABC::Addressee mNewAddressee;
 };
 
+class CopyToCommand : public Command
+{
+    public:
+        CopyToCommand( KABC::AddressBook *addressBook, const TQStringList &uidList,
+                               KABC::Resource *resource );
+
+        virtual TQString name() const;
+        virtual void unexecute();
+        virtual void execute();
+
+    private:
+        KABC::Addressee::List mAddresseeList;
+        TQStringList mUIDList;
+        KABC::Resource *mResource;
+};
+
+class MoveToCommand : public Command
+{
+    public:
+        MoveToCommand( KAB::Core *core, const TQStringList &uidList,
+                               KABC::Resource *resource );
+
+        virtual TQString name() const;
+        virtual void unexecute();
+        virtual void execute();
+        void moveContactTo( KABC::Resource *resource );
+
+    private:
+        KABC::Addressee::List mAddresseeList;
+        TQStringList mUIDList;
+        KABC::Resource *mResource;
+        KAB::Core *mCore;
+};
 #endif

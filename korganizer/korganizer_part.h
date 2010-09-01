@@ -51,6 +51,8 @@ namespace KOrg {
 class CalendarViewBase;
 }
 
+class TQDate;
+
 class KOrganizerPart: public KParts::ReadOnlyPart,
                       public KOrg::MainWindow
 {
@@ -81,10 +83,12 @@ class KOrganizerPart: public KParts::ReadOnlyPart,
     virtual KActionCollection *getActionCollection() const { return actionCollection(); }
     virtual void showStatusMessage( const TQString &message );
 
+    virtual bool isCurrentlyActivePart();
+
     void setTitle();
 
   public slots:
-    void slotChangeInfo( Incidence * );
+    void slotChangeInfo( Incidence *incidence, const TQDate & );
 
   protected:
     virtual bool openFile();

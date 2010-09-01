@@ -39,7 +39,15 @@ class EditorWatcher : public QObject
 {
   Q_OBJECT
   public:
-    EditorWatcher( const KURL &url, const TQString &mimeType, bool openWith, TQObject *parent = 0 );
+    /**
+     * Constructs an EditorWatcher.
+     * @param parent the parent object of this EditorWatcher, which will take care of deleting
+     *               this EditorWatcher if the parent is deleted.
+     * @param parentWidget the parent widget of this EditorWatcher, which will be used as the parent
+     *                     widget for message dialogs.
+     */
+    EditorWatcher( const KURL &url, const TQString &mimeType, bool openWith,
+                   TQObject *parent, TQWidget *parentWidget );
     bool start();
     bool fileChanged() const { return mFileModified; }
   signals:
@@ -55,6 +63,7 @@ class EditorWatcher : public QObject
     TQString mMimeType;
     bool mOpenWith;
     KProcess *mEditor;
+    TQWidget *mParentWidget;
 
     int mInotifyFd;
     int mInotifyWatch;

@@ -39,7 +39,6 @@ FilterThunderbird::FilterThunderbird(void) :
 /** Destructor. */
 FilterThunderbird::~FilterThunderbird(void)
 {
-    endImport();
 }
 
 /** Recursive import of Evolution's mboxes. */
@@ -60,6 +59,7 @@ void FilterThunderbird::import(FilterInfo *info)
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     mailDir  = kfd->selectedFile();
+    delete kfd;
 
     if (mailDir.isEmpty()) {
         info->alert(i18n("No directory selected."));

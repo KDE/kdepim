@@ -71,12 +71,11 @@ void KAB::DistributionListNg::ListBox::dropEvent( TQDropEvent *event )
     if ( !item || index( item ) == 0 )
         return;
 
-    TQString vcards;
-    if ( !KVCardDrag::decode( event, vcards ) )
+    KABC::Addressee::List list;
+    if ( !KVCardDrag::decode( event, list ) )
         return;
 
-    KABC::VCardConverter converter;
-    emit dropped( item->text(), converter.parseVCards( vcards ) );
+    emit dropped( item->text(), list );
 }
 
 namespace KAB {
@@ -154,6 +153,7 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, TQWidget *pare
              this, TQT_SLOT( contactsDropped( const TQString &, const KABC::Addressee::List & ) ) );
     connect( mListBox, TQT_SIGNAL( highlighted( int ) ),
              this, TQT_SLOT( itemSelected( int ) ) );
+    connect( mListBox, TQT_SIGNAL(doubleClicked(TQListBoxItem*)), TQT_SLOT(editSelectedDistributionList()) );
     layout->addWidget( mListBox );
 
     connect( core, TQT_SIGNAL( contactsUpdated() ),
@@ -172,7 +172,7 @@ void KAB::DistributionListNg::MainWidget::contextMenuRequested( TQListBoxItem *i
 {
     TQGuardedPtr<KPopupMenu> menu = new KPopupMenu( this );
     menu->insertItem( i18n( "New Distribution List..." ), core(), TQT_SLOT( newDistributionList() ) );
-    if ( item )
+    if ( item && ( item->text() !=i18n( "All Contacts" ) ) )
     {
         menu->insertItem( i18n( "Edit..." ), this, TQT_SLOT( editSelectedDistributionList() ) );
         menu->insertItem( i18n( "Delete" ), this, TQT_SLOT( deleteSelectedDistributionList() ) );

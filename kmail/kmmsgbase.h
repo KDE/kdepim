@@ -57,7 +57,9 @@ enum MsgStatus
     KMMsgStatusSpam =              0x00002000,
     KMMsgStatusHam =               0x00004000,
     KMMsgStatusHasAttach =         0x00008000,
-    KMMsgStatusHasNoAttach =       0x00010000
+    KMMsgStatusHasNoAttach =       0x00010000,
+    KMMsgStatusHasInvitation =     0x00020000,
+    KMMsgStatusHasNoInvitation =   0x00040000
 };
 
 typedef uint KMMsgStatus;
@@ -132,6 +134,13 @@ typedef enum
   KMMsgAttachmentUnknown
 } KMMsgAttachmentState;
 
+/** Flags for invitation state */
+typedef enum
+{
+  KMMsgHasInvitation,
+  KMMsgHasNoInvitation,
+  KMMsgInvitationUnknown
+} KMMsgInvitationState;
 
 class KMMsgBase
 {
@@ -250,7 +259,9 @@ public:
   /** Important header fields of the message that are also kept in the index. */
   virtual TQString subject(void) const = 0;
   virtual TQString fromStrip(void) const = 0;
+  virtual TQString from() const = 0;
   virtual TQString toStrip(void) const = 0;
+  virtual TQString to() const = 0;
   virtual TQString replyToIdMD5(void) const = 0;
   virtual TQString msgIdMD5(void) const = 0;
   virtual TQString replyToAuxIdMD5() const = 0;
@@ -353,11 +364,18 @@ public:
   static TQCString encodeRFC2231String(const TQString& aStr,
     const TQCString& charset);
 
+  /**
+   * Just like encodeRFC2231String, only that the encoding is auto-detected.
+   * @param defaultCharset If given, this will be the prefered charset
+   */
+  static TQCString encodeRFC2231StringAutoDetectCharset( const TQString &str,
+                                                        const TQCString &defaultCharset = "" );
+
   /** Decode given string as described in RFC2231 */
   static TQString decodeRFC2231String(const TQCString& aStr);
   /** Extract a given param from the RFC2231-encoded header field, in particular
       concatenate possibly multiple entries, which are given as paramname*0=..;
-      paramname*1=..; ... or paramname*0*=..; paramname*1*=..; ... and return 
+      paramname*1=..; ... or paramname*0*=..; paramname*1*=..; ... and return
       their value as one string. That string will still be encoded */
   static TQCString extractRFC2231HeaderField( const TQCString &aStr, const TQCString &field );
 
@@ -384,6 +402,9 @@ public:
 
   /** Return if the message has at least one attachment */
   virtual KMMsgAttachmentState attachmentState() const;
+
+  /** Return if the message contains an invitation */
+  virtual KMMsgInvitationState invitationState() const;
 
   /** Check for prefixes @p prefixRegExps in @p str. If none
       is found, @p newPrefix + ' ' is prepended to @p str and the
@@ -439,9 +460,9 @@ public:
   {
     MsgNoPart = 0,
     //unicode strings
-    MsgFromPart = 1,
+    MsgFromStripPart = 1,
     MsgSubjectPart = 2,
-    MsgToPart = 3,
+    MsgToStripPart = 3,
     MsgReplyToIdMD5Part = 4,
     MsgIdMD5Part = 5,
     MsgXMarkPart = 6,
@@ -459,7 +480,9 @@ public:
     // and another unsigned long
     MsgStatusPart = 16,
     MsgSizeServerPart = 17,
-    MsgUIDPart = 18
+    MsgUIDPart = 18,
+    MsgToPart = 19,
+    MsgFromPart = 20
   };
   /** access to long msgparts */
   off_t getLongPart(MsgPartType) const;

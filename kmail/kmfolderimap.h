@@ -24,6 +24,7 @@
 #ifndef kmfolderimap_h
 #define kmfolderimap_h
 
+#include "acljobs.h"
 #include "kmacctimap.h"
 #include "kmfoldermbox.h"
 #include "kmmsgbase.h"
@@ -65,8 +66,8 @@ public:
   KMMsgMetaData(KMMsgStatus aStatus, Q_UINT32 aSerNum)
     :mStatus(aStatus), mSerNum(aSerNum) {}
   ~KMMsgMetaData() {};
-  const KMMsgStatus status() const { return mStatus; }
-  const Q_UINT32 serNum() const { return mSerNum; }
+  KMMsgStatus status() const { return mStatus; }
+  Q_UINT32 serNum() const { return mSerNum; }
 private:
   KMMsgStatus mStatus;
   Q_UINT32 mSerNum;
@@ -91,7 +92,7 @@ public:
     imapFinished = 3
   };
 
-  virtual imapState getContentState() { return mContentState; }
+  virtual imapState getContentState() const { return mContentState; }
   virtual void setContentState(imapState state) { mContentState = state; }
 
   virtual imapState getSubfolderState() { return mSubfolderState; }
@@ -250,7 +251,7 @@ public:
   /**
    * Get the serial number for the given UID (if available)
    */
-   const ulong serNumForUID( ulong uid );
+   ulong serNumForUID( ulong uid );
 
   /**
    * Save the metadata for the UID
@@ -294,15 +295,18 @@ public:
 
   /// Is the folder readonly?
   bool isReadOnly() const { return KMFolderMbox::isReadOnly() || mReadOnly; }
+  bool canDeleteMessages() const;
 
   /**
    * The user's rights on this folder - see bitfield in ACLJobs namespace.
-   * @return 0 when not known yet
+   * Note that the returned value is only valid if userRightsState() returns Ok, so
+   * that should be checked first.
    */
   unsigned int userRights() const { return mUserRights; }
+  KMail::ACLJobs::ACLFetchState userRightsState() const { return mUserRightsState; }
 
   /** Set the user's rights on this folder - called by getUserRights */
-  void setUserRights( unsigned int userRights );
+  void setUserRights( unsigned int userRights, KMail::ACLJobs::ACLFetchState userRightsState );
 
   /**
     * Search for messages
@@ -320,6 +324,8 @@ public:
 
   /** Returns the IMAP flags that can be stored on the server. */
   int permanentFlags() const { return mPermanentFlags; }
+
+  virtual bool mailCheckInProgress() const;
 
 signals:
   void folderComplete(KMFolderImap *folder, bool success);
@@ -515,6 +521,7 @@ protected:
   // the current uidvalidity
   TQString mUidValidity;
   unsigned int mUserRights;
+  KMail::ACLJobs::ACLFetchState mUserRightsState;
 
 private:
   // if we're checking validity currently

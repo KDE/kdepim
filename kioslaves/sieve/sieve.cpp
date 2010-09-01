@@ -39,6 +39,7 @@ extern "C" {
 #include <kurl.h>
 #include <kmdcodec.h>
 #include <kglobal.h>
+#include <kmessagebox.h>
 
 #include <tqcstring.h>
 #include <tqregexp.h>
@@ -46,6 +47,7 @@ extern "C" {
 #include <cstdlib>
 using std::exit;
 #include <sys/stat.h>
+#include <cassert>
 
 #include <kdepimmacros.h>
 
@@ -193,6 +195,7 @@ kio_sieveProtocol::kio_sieveProtocol(const TQCString &pool_socket, const TQCStri
 	, m_connMode(NORMAL)
 	, m_supportsTLS(false)
 	, m_shouldBeConnected(false)
+        , m_allowUnencrypted(false)
 {
 }
 
@@ -274,7 +277,7 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 			setMetaData("tlsSupported", "true");
 
 		} else {
-			ksDebug() << "Unrecognised key " << r.getKey() << endl;
+			ksDebug() << "Unrecognised key." << endl;
 		}
 	}
 
@@ -288,7 +291,7 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 
 /* ---------------------------------------------------------------------------------- */
 /**
- * Checks if connection parameters (currently - auth method) have changed.
+ * Checks if connection parameters have changed.
  * If it it, close the current connection
  */
 void kio_sieveProtocol::changeCheck( const KURL &url )
@@ -316,6 +319,14 @@ void kio_sieveProtocol::changeCheck( const KURL &url )
 		if ( isConnectionValid() )
 			disconnect();
 	}
+
+        // For TLS, only disconnect if we are unencrypted and are
+        // no longer allowed (otherwise, it's still fine):
+        const bool allowUnencryptedNow = url.queryItem("x-allow-unencrypted") == "true" ;
+        if ( m_allowUnencrypted && !allowUnencryptedNow )
+            if ( isConnectionValid() )
+                disconnect();
+        m_allowUnencrypted = allowUnencryptedNow;
 }
 
 /* ---------------------------------------------------------------------------------- */
@@ -349,8 +360,25 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 	}
 
 	// Attempt to start TLS
+	if ( !m_allowUnencrypted && !canUseTLS() ) {
+            error( ERR_SLAVE_DEFINED, i18n("Can not use TLS. Please enable TLS in the KDE cryptography setting.") );
+            disconnect();
+            return false;
+        }
+
+        if ( !m_allowUnencrypted && useTLSIfAvailable && canUseTLS() && !m_supportsTLS &&
+             messageBox( WarningContinueCancel,
+                         i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
+                              "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
+                         i18n("Server Does Not Advertise TLS"), i18n("&Start TLS nonetheless"), i18n("&Cancel") ) != KMessageBox::Continue )
+        {
+            error( ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server.") );
+            disconnect();
+            return false;
+        }
+
 	// FIXME find a test server and test that this works
-	if (useTLSIfAvailable && m_supportsTLS && canUseTLS()) {
+	if (useTLSIfAvailable && canUseTLS()) {
 		sendData("STARTTLS");
 		if (operationSuccessful()) {
 			ksDebug() << "TLS has been accepted. Starting TLS..." << endl
@@ -362,14 +390,30 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 				parseCapabilities( requestCapabilitiesAfterStartTLS() );
 			} else {
 				ksDebug() << "TLS initiation failed, code " << retval << endl;
-				disconnect(true);
-				return connect(false);
-				// error(ERR_INTERNAL, i18n("TLS initiation failed."));
+				if ( m_allowUnencrypted ) {
+                                    disconnect(true);
+                                    return connect(false);
+                                }
+                                if ( retval != -3 )
+                                    messageBox( Information,
+                                                i18n("Your Sieve server claims to support TLS, "
+                                                     "but negotiation was unsuccessful."),
+                                                i18n("Connection Failed") );
+                                disconnect(true);
+                                return false;
 			}
+		} else if ( !m_allowUnencrypted ) {
+			ksDebug() << "Server incapable of TLS." << endl;
+			disconnect();
+			error( ERR_SLAVE_DEFINED, i18n("The server does not seem to support TLS. "
+                                                       "Disable TLS if you want to connect without encryption.") );
+			return false;
 		} else
 			ksDebug() << "Server incapable of TLS. Transmitted documents will be unencrypted." << endl;
 	} else
 		ksDebug() << "We are incapable of TLS. Transmitted documents will be unencrypted." << endl;
+
+        assert( m_allowUnencrypted || usingTLS() );
 
 	infoMessage(i18n("Authenticating user..."));
 	if (!authenticate()) {
@@ -637,7 +681,7 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 						i18n("The script did not upload successfully.\n"
 							"This is probably due to errors in the script.\n"
 							"The server responded:\n%1").arg(r.getKey()));
-			} else 
+			} else
 				error(ERR_INTERNAL_SERVER,
 					i18n("The script did not upload successfully.\n"
 						"The script may contain errors."));

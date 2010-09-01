@@ -28,10 +28,10 @@
 
 class TQWidget;
 class TQBoxLayout;
+class TQHBox;
 class TQLineEdit;
 class TQLabel;
 class TQCheckBox;
-class TQWidgetStack;
 class TQSpinBox;
 class TQPushButton;
 class TQComboBox;
@@ -41,8 +41,8 @@ class KURL;
 class KOEditorAttachments;
 
 namespace KCal {
-class Incidence;
-class Calendar;
+  class Incidence;
+  class Calendar;
 }
 using namespace KCal;
 
@@ -77,10 +77,10 @@ class KOEditorGeneral : public QObject
 
     /** Set widgets to default values */
     void setDefaults(bool allDay);
-    /** Read event object and setup widgets accordingly */
-    void readIncidence(Incidence *event, Calendar *calendar);
-    /** Write event settings to event object */
-    void writeIncidence(Incidence *);
+    /** Read incidence object and setup widgets accordingly */
+    void readIncidence( Incidence *incidence, Calendar *calendar );
+    /** Write incidence settings to incidence object */
+    void writeIncidence( Incidence *incidence );
 
     /** Check if the input is valid. */
     bool validateInput() { return true; }
@@ -96,14 +96,14 @@ class KOEditorGeneral : public QObject
   public slots:
     void setCategories(const TQStringList &categories);
     void selectCategories();
+    void setType( const TQCString &type );
     void addAttachments( const TQStringList &attachments,
                          const TQStringList& mimeTypes = TQStringList(),
                          bool inlineAttachment = false );
 
-
   protected slots:
     void editAlarms();
-    void updateAlarmWidgets();
+    void updateAlarmWidgets( Incidence *incidence );
     void updateDefaultAlarmTime();
     void updateAttendeeSummary( int count );
 
@@ -112,19 +112,19 @@ class KOEditorGeneral : public QObject
     void updateCategoryConfig();
     void focusReceivedSignal();
     void openURL( const KURL & );
-  protected:
-    Alarm *alarmFromSimplePage() const;
 
+  protected:
     TQLineEdit               *mSummaryEdit;
     TQLineEdit               *mLocationEdit;
     TQLabel                  *mAttendeeSummaryLabel;
+    TQLabel                  *mRecEditLabel;
+    TQPushButton             *mRecEditButton;
     TQLabel                  *mAlarmBell;
-    TQWidgetStack            *mAlarmStack;
     TQLabel                  *mAlarmInfoLabel;
     TQCheckBox               *mAlarmButton;
     TQSpinBox                *mAlarmTimeEdit;
     TQComboBox               *mAlarmIncrCombo;
-    TQPushButton             *mAlarmEditButton;
+    TQPushButton             *mAlarmAdvancedButton;
     KTextEdit               *mDescriptionEdit;
     TQLabel                  *mOwnerLabel;
     TQComboBox               *mSecrecyCombo;
@@ -133,10 +133,14 @@ class KOEditorGeneral : public QObject
     KOEditorAttachments     *mAttachments;
     TQLabel                  *mResourceLabel;
 
-    enum AlarmStackPages { SimpleAlarmPage, AdvancedAlarmLabel };
-
   private:
+    Alarm *alarmFromSimplePage( Incidence *incidence ) const;
+    bool isSimpleAlarm( Alarm *alarm ) const;
+
+    bool mAlarmIsSimple;
+    TQHBox *mSimpleAlarmBox;
     TQStringList mCategories;
+    TQCString mType; // as in Incidence::type()
     KCal::Alarm::List mAlarmList;
 };
 

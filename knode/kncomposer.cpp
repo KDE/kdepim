@@ -2069,7 +2069,7 @@ bool KNComposer::Editor::eventFilter(TQObject*o, TQEvent* e)
         }
         else
         {
-          p.insertItem( TQString::fromLatin1("No Suggestions"), -2 );
+          p.insertItem( i18n( "No Suggestions" ), -2 );
         }
 
         //Execute the popup inline

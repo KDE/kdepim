@@ -30,6 +30,7 @@
 #include <tqlayout.h>
 #include <tqvbox.h>
 #include <tqobjectlist.h>
+#include <tqheader.h>
 
 #define FOREACH_VIEW(av) \
 for(TQValueList<KOAgendaView*>::ConstIterator it = mAgendaViews.constBegin(); \
@@ -39,20 +40,23 @@ for(TQValueList<KOAgendaView*>::ConstIterator it = mAgendaViews.constBegin(); \
 
 using namespace KOrg;
 
-MultiAgendaView::MultiAgendaView(Calendar * cal, TQWidget * parent, const char *name ) :
+MultiAgendaView::MultiAgendaView( Calendar * cal, CalendarView *calendarView,
+                                 TQWidget * parent, const char *name ) :
     AgendaView( cal, parent, name ),
+    mSelectedAgendaView( 0 ),
     mLastMovedSplitter( 0 ),
     mUpdateOnShow( false ),
-    mPendingChanges( true )
+    mPendingChanges( true ),
+    mCalendarView( calendarView )
 {
   TQBoxLayout *topLevelLayout = new TQHBoxLayout( this );
 
   TQFontMetrics fm( font() );
-  int topLabelHeight = 2 * fm.height();
+  int topLabelHeight = 2 * fm.height() + fm.lineSpacing();
 
   TQVBox *topSideBox = new TQVBox( this );
-  TQWidget *topSideSpacer = new TQWidget( topSideBox );
-  topSideSpacer->setFixedHeight( topLabelHeight );
+  mLeftTopSpacer = new TQWidget( topSideBox );
+  mLeftTopSpacer->setFixedHeight( topLabelHeight );
   mLeftSplitter = new TQSplitter( Qt::Vertical, topSideBox );
   mLeftSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
   TQLabel *label = new TQLabel( i18n("All Day"), mLeftSplitter );
@@ -75,8 +79,8 @@ MultiAgendaView::MultiAgendaView(Calendar * cal, TQWidget * parent, const char *
   mScrollView->addChild( mTopBox );
 
   topSideBox = new TQVBox( this );
-  topSideSpacer = new TQWidget( topSideBox );
-  topSideSpacer->setFixedHeight( topLabelHeight );
+  mRightTopSpacer = new TQWidget( topSideBox );
+  mRightTopSpacer->setFixedHeight( topLabelHeight );
   mRightSplitter = new TQSplitter( Qt::Vertical, topSideBox );
   mRightSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
   new TQWidget( mRightSplitter );
@@ -96,8 +100,10 @@ MultiAgendaView::MultiAgendaView(Calendar * cal, TQWidget * parent, const char *
 
 void MultiAgendaView::recreateViews()
 {
-  if ( !mPendingChanges )
+  if ( !mPendingChanges ) {
     return;
+  }
+
   mPendingChanges = false;
 
   deleteViews();
@@ -105,9 +111,10 @@ void MultiAgendaView::recreateViews()
   CalendarResources *calres = dynamic_cast<CalendarResources*>( calendar() );
   if ( !calres ) {
     // fallback to single-agenda
-    KOAgendaView* av = new KOAgendaView( calendar(), mTopBox );
+    KOAgendaView* av = new KOAgendaView( calendar(), mCalendarView, mTopBox );
     mAgendaViews.append( av );
     mAgendaWidgets.append( av );
+    mSelectedAgendaView = av;
     av->show();
   } else {
     CalendarResourceManager *manager = calres->resourceManager();
@@ -116,8 +123,11 @@ void MultiAgendaView::recreateViews()
         TQStringList subResources = (*it)->subresources();
         for ( TQStringList::ConstIterator subit = subResources.constBegin(); subit != subResources.constEnd(); ++subit ) {
           TQString type = (*it)->subresourceType( *subit );
-          if ( !(*it)->subresourceActive( *subit ) || (!type.isEmpty() && type != "event") )
+
+          if ( !(*it)->subresourceActive( *subit ) || (!type.isEmpty() && type != "event") ) {
             continue;
+          }
+
           addView( (*it)->labelForSubresource( *subit ), *it, *subit );
         }
       } else {
@@ -127,19 +137,14 @@ void MultiAgendaView::recreateViews()
   }
 
   // no resources activated, so stop here to avoid crashing somewhere down the line, TODO: show a nice message instead
-  if ( mAgendaViews.isEmpty() )
+  if ( mAgendaViews.isEmpty() ) {
     return;
+  }
 
   setupViews();
   TQTimer::singleShot( 0, this, TQT_SLOT(slotResizeScrollView()) );
   mTimeLabels->updateConfig();
 
-  TQScrollBar *scrollBar = mAgendaViews.first()->agenda()->verticalScrollBar();
-  mScrollBar->setMinValue( scrollBar->minValue() );
-  mScrollBar->setMaxValue( scrollBar->maxValue() );
-  mScrollBar->setLineStep( scrollBar->lineStep() );
-  mScrollBar->setPageStep( scrollBar->pageStep() );
-  mScrollBar->setValue( scrollBar->value() );
   connect( mTimeLabels->verticalScrollBar(), TQT_SIGNAL(valueChanged(int)),
            mScrollBar, TQT_SLOT(setValue(int)) );
   connect( mScrollBar, TQT_SIGNAL(valueChanged(int)),
@@ -147,7 +152,20 @@ void MultiAgendaView::recreateViews()
 
   installSplitterEventFilter( mLeftSplitter );
   installSplitterEventFilter( mRightSplitter );
-  resizeSplitters();
+
+  TQValueList<int> sizes = KOGlobals::self()->config()->readIntListEntry( "Separator AgendaView" );
+  if ( sizes.count() != 2 ) {
+    sizes = mLeftSplitter->sizes();
+  }
+  FOREACH_VIEW( agenda ) {
+    agenda->splitter()->setSizes( sizes );
+  }
+  mLeftSplitter->setSizes( sizes );
+  mRightSplitter->setSizes( sizes );
+
+  TQTimer::singleShot( 0, this, TQT_SLOT(setupScrollBar()) );
+
+  mTimeLabels->positionChanged();
 }
 
 void MultiAgendaView::deleteViews()
@@ -159,59 +177,87 @@ void MultiAgendaView::deleteViews()
   mAgendaViews.clear();
   mAgendaWidgets.clear();
   mLastMovedSplitter = 0;
+  mSelectedAgendaView = 0;
 }
 
 void MultiAgendaView::setupViews()
 {
   FOREACH_VIEW( agenda ) {
-    connect( agenda, TQT_SIGNAL( newEventSignal() ),
-             TQT_SIGNAL( newEventSignal() ) );
-    connect( agenda, TQT_SIGNAL( editIncidenceSignal( Incidence * ) ),
-             TQT_SIGNAL( editIncidenceSignal( Incidence * ) ) );
-    connect( agenda, TQT_SIGNAL( showIncidenceSignal( Incidence * ) ),
-             TQT_SIGNAL( showIncidenceSignal( Incidence * ) ) );
-    connect( agenda, TQT_SIGNAL( deleteIncidenceSignal( Incidence * ) ),
-             TQT_SIGNAL( deleteIncidenceSignal( Incidence * ) ) );
-    connect( agenda, TQT_SIGNAL( startMultiModify( const TQString & ) ),
-             TQT_SIGNAL( startMultiModify( const TQString & ) ) );
-    connect( agenda, TQT_SIGNAL( endMultiModify() ),
-             TQT_SIGNAL( endMultiModify() ) );
+    if ( !agenda->readOnly() ) {
+      connect( agenda,
+               TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &)),
+               TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &)) );
+      connect( agenda,
+               TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDate &)),
+               TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDate &)) );
+      connect( agenda,
+               TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDateTime &)),
+               TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDateTime &)) );
+      connect( agenda,
+               TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDateTime &,const TQDateTime &)),
+               TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDateTime &,const TQDateTime&)) );
 
-    connect( agenda, TQT_SIGNAL( incidenceSelected( Incidence * ) ),
-             TQT_SIGNAL( incidenceSelected( Incidence * ) ) );
+      connect( agenda,
+               TQT_SIGNAL(newTodoSignal(ResourceCalendar *,const TQString &,const TQDate &)),
+               TQT_SIGNAL(newTodoSignal(ResourceCalendar *,const TQString &,const TQDate &)) );
 
-    connect( agenda, TQT_SIGNAL(cutIncidenceSignal(Incidence*)),
-             TQT_SIGNAL(cutIncidenceSignal(Incidence*)) );
-    connect( agenda, TQT_SIGNAL(copyIncidenceSignal(Incidence*)),
+      connect( agenda,
+               TQT_SIGNAL(editIncidenceSignal(Incidence *,const TQDate &)),
+               TQT_SIGNAL(editIncidenceSignal(Incidence *,const TQDate &)) );
+      connect( agenda,
+               TQT_SIGNAL(deleteIncidenceSignal(Incidence *)),
+               TQT_SIGNAL(deleteIncidenceSignal(Incidence *)) );
+      connect( agenda,
+               TQT_SIGNAL(startMultiModify(const TQString &)),
+               TQT_SIGNAL(startMultiModify(const TQString &)) );
+      connect( agenda,
+               TQT_SIGNAL(endMultiModify()),
+               TQT_SIGNAL(endMultiModify()) );
+
+      connect( agenda,
+               TQT_SIGNAL(cutIncidenceSignal(Incidence*)),
+               TQT_SIGNAL(cutIncidenceSignal(Incidence*)) );
+      connect( agenda,
+               TQT_SIGNAL(pasteIncidenceSignal()),
+               TQT_SIGNAL(pasteIncidenceSignal()) );
+      connect( agenda,
+               TQT_SIGNAL(toggleAlarmSignal(Incidence*)),
+               TQT_SIGNAL(toggleAlarmSignal(Incidence*)) );
+      connect( agenda,
+               TQT_SIGNAL(dissociateOccurrenceSignal(Incidence*, const TQDate&)),
+               TQT_SIGNAL(dissociateOccurrenceSignal(Incidence*, const TQDate&)) );
+      connect( agenda,
+               TQT_SIGNAL(dissociateFutureOccurrenceSignal(Incidence*, const TQDate&)),
+               TQT_SIGNAL(dissociateFutureOccurrenceSignal(Incidence*, const TQDate&)) );
+    }
+
+    connect( agenda,
+             TQT_SIGNAL(copyIncidenceSignal(Incidence*)),
              TQT_SIGNAL(copyIncidenceSignal(Incidence*)) );
-    connect( agenda, TQT_SIGNAL(pasteIncidenceSignal()),
-             TQT_SIGNAL(pasteIncidenceSignal()) );
-    connect( agenda, TQT_SIGNAL(toggleAlarmSignal(Incidence*)),
-             TQT_SIGNAL(toggleAlarmSignal(Incidence*)) );
-    connect( agenda, TQT_SIGNAL(dissociateOccurrenceSignal(Incidence*, const TQDate&)),
-             TQT_SIGNAL(dissociateOccurrenceSignal(Incidence*, const TQDate&)) );
-    connect( agenda, TQT_SIGNAL(dissociateFutureOccurrenceSignal(Incidence*, const TQDate&)),
-             TQT_SIGNAL(dissociateFutureOccurrenceSignal(Incidence*, const TQDate&)) );
-
-    connect( agenda, TQT_SIGNAL(newEventSignal(const TQDate&)),
-             TQT_SIGNAL(newEventSignal(const TQDate&)) );
-    connect( agenda, TQT_SIGNAL(newEventSignal(const TQDateTime&)),
-             TQT_SIGNAL(newEventSignal(const TQDateTime&)) );
-    connect( agenda, TQT_SIGNAL(newEventSignal(const TQDateTime&, const TQDateTime&)),
-             TQT_SIGNAL(newEventSignal(const TQDateTime&, const TQDateTime&)) );
-    connect( agenda, TQT_SIGNAL(newTodoSignal(const TQDate&)),
-             TQT_SIGNAL(newTodoSignal(const TQDate&)) );
-
-    connect( agenda, TQT_SIGNAL(incidenceSelected(Incidence*)),
+    connect( agenda,
+             TQT_SIGNAL(showIncidenceSignal(Incidence *,const TQDate &)),
+             TQT_SIGNAL(showIncidenceSignal(Incidence *,const TQDate &)) );
+    connect( agenda,
+             TQT_SIGNAL(incidenceSelected(Incidence *,const TQDate &)),
+             TQT_SIGNAL(incidenceSelected(Incidence *,const TQDate &)) );
+    connect( agenda,
+             TQT_SIGNAL(incidenceSelected(Incidence*,const TQDate &)),
              TQT_SLOT(slotSelectionChanged()) );
 
-    connect( agenda, TQT_SIGNAL(timeSpanSelectionChanged()),
+    connect( agenda,
+             TQT_SIGNAL(timeSpanSelectionChanged()),
              TQT_SLOT(slotClearTimeSpanSelection()) );
 
-    disconnect( agenda->agenda(), TQT_SIGNAL(zoomView(const int,const TQPoint&,const Qt::Orientation)), agenda, 0 );
-    connect( agenda->agenda(), TQT_SIGNAL(zoomView(const int,const TQPoint&,const Qt::Orientation)),
+    disconnect( agenda->agenda(),
+                TQT_SIGNAL(zoomView(const int,const TQPoint&,const Qt::Orientation)),
+                agenda, 0 );
+    connect( agenda->agenda(),
+             TQT_SIGNAL(zoomView(const int,const TQPoint&,const Qt::Orientation)),
              TQT_SLOT(zoomView(const int,const TQPoint&,const Qt::Orientation)) );
   }
+
+  KOAgenda *anAgenda = mAgendaViews.first()->agenda();
+  connect( anAgenda, TQT_SIGNAL(lowerYChanged(int) ), TQT_SLOT(resizeSpacers(int)) );
 
   FOREACH_VIEW( agenda ) {
     agenda->readSettings();
@@ -237,11 +283,11 @@ Incidence::List MultiAgendaView::selectedIncidences()
   return list;
 }
 
-DateList MultiAgendaView::selectedDates()
+DateList MultiAgendaView::selectedIncidenceDates()
 {
   DateList list;
   FOREACH_VIEW(agendaView) {
-    list += agendaView->selectedDates();
+    list += agendaView->selectedIncidenceDates();
   }
   return list;
 }
@@ -262,10 +308,10 @@ void MultiAgendaView::showDates(const TQDate & start, const TQDate & end)
     agendaView->showDates( start, end );
 }
 
-void MultiAgendaView::showIncidences(const Incidence::List & incidenceList)
+void MultiAgendaView::showIncidences(const Incidence::List & incidenceList, const TQDate &date)
 {
   FOREACH_VIEW( agendaView )
-    agendaView->showIncidences( incidenceList );
+    agendaView->showIncidences( incidenceList, date );
 }
 
 void MultiAgendaView::updateView()
@@ -326,12 +372,35 @@ void MultiAgendaView::finishTypeAhead()
     agenda->finishTypeAhead();
 }
 
-void MultiAgendaView::addView( const TQString &label, KCal::ResourceCalendar * res, const TQString & subRes )
+void MultiAgendaView::addView( const TQString &label, ResourceCalendar *res, const TQString &subRes )
 {
+  bool readOnlyView = false;
+
   TQVBox *box = new TQVBox( mTopBox );
-  TQLabel *l = new TQLabel( label, box );
-  l->setAlignment( AlignVCenter | AlignHCenter );
-  KOAgendaView* av = new KOAgendaView( calendar(), box, 0, true );
+
+  // First, the calendar folder title
+  TQHeader *title = new TQHeader( 1, box );
+  title->setClickEnabled( false );
+  title->setStretchEnabled( true );
+  if ( res->readOnly() || !res->subresourceWritable( subRes ) ) {
+    readOnlyView = true;
+    title->setLabel( 0, TQIconSet( KOGlobals::self()->smallIcon( "readonlyevent" ) ), label );
+  } else {
+    TQColor resColor;
+    if ( subRes.isEmpty() ) {
+      resColor = *KOPrefs::instance()->resourceColor( res->identifier() );
+    } else {
+      resColor = *KOPrefs::instance()->resourceColor( subRes );
+    }
+    TQFontMetrics fm = fontMetrics();
+    TQPixmap px( fm.height(), fm.height() );
+    px.fill( resColor );
+    title->setLabel( 0, TQIconSet( px, TQIconSet::Small ), label );
+  }
+
+  // Now, the sub agenda view
+  KOAgendaView* av = new KOAgendaView( calendar(), mCalendarView, box, 0, true );
+  av->setReadOnly( readOnlyView );
   av->setResource( res, subRes );
   av->setIncidenceChanger( mChanger );
   av->agenda()->setVScrollBarMode( TQScrollView::AlwaysOff );
@@ -345,6 +414,7 @@ void MultiAgendaView::addView( const TQString &label, KCal::ResourceCalendar * r
   connect( mTimeLabels->verticalScrollBar(), TQT_SIGNAL(valueChanged(int)),
            av, TQT_SLOT(setContentsPos(int)) );
 
+  av->installEventFilter( this );
   installSplitterEventFilter( av->splitter() );
 }
 
@@ -387,10 +457,10 @@ void MultiAgendaView::updateConfig()
     agenda->updateConfig();
 }
 
-// KDE4: not needed anymore, TQSplitter has a moved signal there
 bool MultiAgendaView::eventFilter(TQObject * obj, TQEvent * event)
 {
   if ( obj->className() == TQCString("QSplitterHandle") ) {
+    // KDE4: not needed anymore, TQSplitter has a moved signal there
     if ( (event->type() == TQEvent::MouseMove && KGlobalSettings::opaqueResize())
            || event->type() == TQEvent::MouseButtonRelease ) {
       FOREACH_VIEW( agenda ) {
@@ -404,7 +474,20 @@ bool MultiAgendaView::eventFilter(TQObject * obj, TQEvent * event)
       TQTimer::singleShot( 0, this, TQT_SLOT(resizeSplitters()) );
     }
   }
+
+  if ( obj->className() == TQCString( "KOAgendaView" ) ) {
+    if ( event->type() == TQEvent::MouseButtonRelease ||
+         event->type() == TQEvent::MouseButtonPress ) {
+      mSelectedAgendaView = (KOAgendaView *)obj;
+    }
+  }
+
   return AgendaView::eventFilter( obj, event );
+}
+
+KOAgendaView *MultiAgendaView::selectedAgendaView()
+{
+  return mSelectedAgendaView;
 }
 
 void MultiAgendaView::resizeSplitters()
@@ -420,6 +503,21 @@ void MultiAgendaView::resizeSplitters()
     mLeftSplitter->setSizes( mLastMovedSplitter->sizes() );
   if ( mLastMovedSplitter != mRightSplitter )
     mRightSplitter->setSizes( mLastMovedSplitter->sizes() );
+}
+
+void MultiAgendaView::resizeSpacers( int newY )
+{
+  // this slot is needed because the Agenda view's day labels frame height
+  // can change depending if holidays are shown. When this happens, all
+  // the widgets move down except the timelabels, so we need to change
+  // the top spacer height accordingly to move the timelabels up/down.
+  // kolab/issue2656
+  Q_UNUSED( newY );
+  TQFontMetrics fm( font() );
+  int topLabelHeight = mAgendaViews.first()->dayLabels()->height() +
+                       fm.height() + mLeftSplitter->handleWidth();
+  mLeftTopSpacer->setFixedHeight( topLabelHeight );
+  mRightTopSpacer->setFixedHeight( topLabelHeight );
 }
 
 void MultiAgendaView::zoomView( const int delta, const TQPoint & pos, const Qt::Orientation ori )
@@ -477,8 +575,45 @@ void MultiAgendaView::show()
 void MultiAgendaView::resourcesChanged()
 {
   mPendingChanges = true;
+
+  kdDebug() << "mAgendaViews.size is " << mAgendaViews.size()
+            << "; mAgendaWidgets.size is " << mAgendaWidgets.size()
+            << "; mSelectedAgendaView is " << mSelectedAgendaView
+            << endl;
+
+  if ( mSelectedAgendaView ) {
+    ResourceCalendar *res = mSelectedAgendaView->resourceCalendar();
+    if ( res ) {
+      if ( res->canHaveSubresources() ) {
+        TQString subRes = mSelectedAgendaView->subResourceCalendar();
+        if ( !res->subresourceWritable( subRes ) ||
+             !res->subresourceActive( subRes ) ) {
+          mSelectedAgendaView = 0;
+        }
+      } else {
+        if ( res->readOnly() || !res->isActive() ) {
+          mSelectedAgendaView = 0;
+        }
+      }
+    } else {
+      mSelectedAgendaView = 0;
+    }
+  }
+
   FOREACH_VIEW( agenda )
     agenda->resourcesChanged();
+}
+
+void MultiAgendaView::setupScrollBar()
+{
+  if ( !mAgendaViews.isEmpty() && mAgendaViews.first()->agenda() ) {
+    TQScrollBar *scrollBar = mAgendaViews.first()->agenda()->verticalScrollBar();
+    mScrollBar->setMinValue( scrollBar->minValue() );
+    mScrollBar->setMaxValue( scrollBar->maxValue() );
+    mScrollBar->setLineStep( scrollBar->lineStep() );
+    mScrollBar->setPageStep( scrollBar->pageStep() );
+    mScrollBar->setValue( scrollBar->value() );
+  }
 }
 
 #include "multiagendaview.moc"

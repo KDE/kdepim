@@ -32,6 +32,7 @@
 
 #include <config.h>
 
+#include "acljobs.h"
 #include "kmfolderdia.h"
 #include "kmacctfolder.h"
 #include "kmfoldermgr.h"
@@ -247,20 +248,20 @@ static void addLine( TQWidget *parent, TQVBoxLayout* layout )
 KMail::FolderDiaGeneralTab::FolderDiaGeneralTab( KMFolderDialog* dlg,
                                                  const TQString& aName,
                                                  TQWidget* parent, const char* name )
-  : FolderDiaTab( parent, name ), mDlg( dlg )
+  : FolderDiaTab( parent, name ),
+  mSharedSeenFlagsCheckBox( 0 ),
+  mDlg( dlg )
 {
 
-
-  mIsLocalSystemFolder = mDlg->folder()->isSystemFolder() &&
-       mDlg->folder()->folderType() != KMFolderTypeImap &&
-       mDlg->folder()->folderType() != KMFolderTypeCachedImap;
+  mIsLocalSystemFolder = mDlg->folder()->isSystemFolder();
+  mIsResourceFolder = kmkernel->iCalIface().isStandardResourceFolder( mDlg->folder() );
 
   TQLabel *label;
 
   TQVBoxLayout *topLayout = new TQVBoxLayout( this, 0, KDialog::spacingHint() );
 
-  // Musn't be able to edit details for a system folder.
-  if ( !mIsLocalSystemFolder ) {
+  // Musn't be able to edit details for a non-resource, system folder.
+  if ( !mIsLocalSystemFolder || mIsResourceFolder ) {
 
     TQHBoxLayout *hl = new TQHBoxLayout( topLayout );
     hl->setSpacing( KDialog::spacingHint() );
@@ -268,9 +269,65 @@ KMail::FolderDiaGeneralTab::FolderDiaGeneralTab( KMFolderDialog* dlg,
     label = new TQLabel( i18n("&Name:"), this );
     hl->addWidget( label );
 
+    // Determine if we are allowed to rename this folder. Only possible if the folder supports
+    // ACLs.
+    bool nameChangeAllowed = true;
+    if ( mDlg->folder() && mDlg->parentFolder() &&
+         mDlg->folder()->storage() && mDlg->parentFolder()->storage() &&
+         ( mDlg->folder()->folderType() == KMFolderTypeCachedImap ||
+           mDlg->folder()->folderType() == KMFolderTypeImap ) ) {
+      ImapAccountBase *account = 0;
+      KMFolderCachedImap *dimap = 0;
+      KMFolderImap *imap = 0;
+      if ( mDlg->folder()->folderType() == KMFolderTypeCachedImap ) {
+        dimap = static_cast<KMFolderCachedImap*>( mDlg->folder()->storage() );
+        account = dynamic_cast<ImapAccountBase*>( dimap->account() );
+      }
+      if ( mDlg->folder()->folderType() == KMFolderTypeImap ) {
+        imap = static_cast<KMFolderImap*>( mDlg->folder()->storage() );
+        account = dynamic_cast<ImapAccountBase*>( imap->account() );
+      }
+
+      if ( account && account->hasACLSupport() ) {
+        int parentRights = -1;
+        int folderRights = -1;
+        bool parentRightsOk = false;
+        bool folderRightsOk = false;
+        if ( imap ) {
+          KMFolderImap * const parent = dynamic_cast<KMFolderImap*>( mDlg->parentFolder()->storage() );
+          folderRights = imap->userRights();
+          folderRightsOk = imap->userRightsState() == KMail::ACLJobs::Ok;
+          if ( parent ) {
+            parentRights = parent->userRights();
+            parentRightsOk = parent->userRightsState() == KMail::ACLJobs::Ok;
+          }
+        } else if ( dimap ) {
+          KMFolderCachedImap * const parent = dynamic_cast<KMFolderCachedImap*>( mDlg->parentFolder()->storage() );
+          folderRights = dimap->userRights();
+          folderRightsOk = dimap->userRightsState() == KMail::ACLJobs::Ok;
+          if ( parent ) {
+            parentRights = parent->userRights();
+            parentRightsOk = parent->userRightsState() == KMail::ACLJobs::Ok;
+          }
+        }
+
+        // For renaming, we need support for deleting the mailbox and then re-creating it.
+        if ( parentRightsOk && folderRightsOk &&
+             ( !( parentRights & KMail::ACLJobs::Create ) || !( folderRights & KMail::ACLJobs::Delete ) ) ) {
+          nameChangeAllowed = false;
+        }
+      }
+    }
+
     mNameEdit = new KLineEdit( this );
-    if( !mDlg->folder() )
-            mNameEdit->setFocus();
+    if( !mDlg->folder() && nameChangeAllowed )
+      mNameEdit->setFocus();
+    mNameEdit->setEnabled( nameChangeAllowed );
+    if ( !nameChangeAllowed ) {
+      TQToolTip::add( mNameEdit, i18n( "Not enough permissions to rename this folder.\n"
+                                      "The parent folder doesn't have write support.\n"
+                                      "A sync is needed after changing the permissions." ) );
+    }
     mNameEdit->setText( mDlg->folder() ? mDlg->folder()->label() : i18n("unnamed") );
     if (!aName.isEmpty())
             mNameEdit->setText(aName);
@@ -433,9 +490,10 @@ KMail::FolderDiaGeneralTab::FolderDiaGeneralTab( KMFolderDialog* dlg,
         "automatically. Identities can be set up in the main configuration "
         "dialog. (Settings -> Configure KMail)") );
 
-
   // folder contents
-  if ( !mIsLocalSystemFolder && kmkernel->iCalIface().isEnabled() ) {
+  if ( ( !mIsLocalSystemFolder || mIsResourceFolder ) &&
+       kmkernel->iCalIface().isEnabled() &&
+       mDlg->folder() && mDlg->folder()->folderType() != KMFolderTypeImap ) {
     // Only do make this settable, if the IMAP resource is enabled
     // and it's not the personal folders (those must not be changed)
     ++row;
@@ -455,12 +513,12 @@ KMail::FolderDiaGeneralTab::FolderDiaGeneralTab( KMFolderDialog* dlg,
       mContentsComboBox->setCurrentItem( mDlg->folder()->storage()->contentsType() );
     connect ( mContentsComboBox, TQT_SIGNAL ( activated( int ) ),
               this, TQT_SLOT( slotFolderContentsSelectionChanged( int ) ) );
-    if ( mDlg->folder()->isReadOnly() )
+    if ( mDlg->folder()->isReadOnly() || mIsResourceFolder )
       mContentsComboBox->setEnabled( false );
   } else {
     mContentsComboBox = 0;
   }
-  
+
   mIncidencesForComboBox = 0;
   mAlarmsBlockedCheckBox = 0;
 
@@ -478,7 +536,7 @@ KMail::FolderDiaGeneralTab::FolderDiaGeneralTab( KMFolderDialog* dlg,
     label->setBuddy( mIncidencesForComboBox );
     gl->addWidget( mIncidencesForComboBox, row, 1 );
 
-    const TQString whatsThisForMyOwnFolders = 
+    const TQString whatsThisForMyOwnFolders =
       i18n( "This setting defines which users sharing "
           "this folder should get \"busy\" periods in their freebusy lists "
           "and should see the alarms for the events or tasks in this folder. "
@@ -499,13 +557,10 @@ KMail::FolderDiaGeneralTab::FolderDiaGeneralTab( KMFolderDialog* dlg,
     mIncidencesForComboBox->insertItem( i18n( "All Readers of This Folder" ) );
     ++row;
     const TQString whatsThisForReadOnlyFolders =
-      i18n( "This setting allows you to disable alarms for folders shared by "
-          "others. ");
+      i18n( "This setting allows you to disable alarms for folders shared by others. ");
     mAlarmsBlockedCheckBox = new TQCheckBox( this );
-    gl->addWidget( mAlarmsBlockedCheckBox, row, 0 );
-    label = new TQLabel( i18n( "Block free/&busy and alarms locally" ), this );
-    gl->addWidget( label, row, 1 );
-    label->setBuddy( mAlarmsBlockedCheckBox );
+    mAlarmsBlockedCheckBox->setText( i18n( "Block alarms locally" ) );
+    gl->addMultiCellWidget( mAlarmsBlockedCheckBox, row, row, 0, 1);
     TQWhatsThis::add( mAlarmsBlockedCheckBox, whatsThisForReadOnlyFolders );
 
     if ( mDlg->folder()->storage()->contentsType() != KMail::ContentsTypeCalendar
@@ -513,6 +568,17 @@ KMail::FolderDiaGeneralTab::FolderDiaGeneralTab( KMFolderDialog* dlg,
         mIncidencesForComboBox->setEnabled( false );
         mAlarmsBlockedCheckBox->setEnabled( false );
     }
+  }
+
+  if ( mDlg->folder()->folderType() == KMFolderTypeCachedImap ) {
+    kdDebug() << k_funcinfo << mDlg->folder()->folderType() << endl;
+    mSharedSeenFlagsCheckBox = new TQCheckBox( this );
+    mSharedSeenFlagsCheckBox->setText( i18n( "Share unread state with all users" ) );
+    ++row;
+    gl->addMultiCellWidget( mSharedSeenFlagsCheckBox, row, row, 0, 1 );
+    TQWhatsThis::add( mSharedSeenFlagsCheckBox, i18n( "If enabled, the unread state of messages in this folder will be the same "
+        "for all users having access to this folders. If disabled (the default), every user with access to this folder has her "
+        "own unread state." ) );
   }
   topLayout->addStretch( 100 ); // eat all superfluous space
 
@@ -568,6 +634,16 @@ void FolderDiaGeneralTab::initializeWithValuesFromFolder( KMFolder* folder ) {
     KMFolderCachedImap* dimap = static_cast<KMFolderCachedImap *>( folder->storage() );
     mAlarmsBlockedCheckBox->setChecked( dimap->alarmsBlocked() );
   }
+  if ( mSharedSeenFlagsCheckBox ) {
+    KMFolderCachedImap *dimap = static_cast<KMFolderCachedImap*>( folder->storage() );
+    ImapAccountBase *account = dynamic_cast<ImapAccountBase*>( dimap->account() );
+    mSharedSeenFlagsCheckBox->setChecked( dimap->sharedSeenFlags() );
+    mSharedSeenFlagsCheckBox->setDisabled( folder->isReadOnly() );
+    if ( account && account->hasCapability( "x-kmail-sharedseen" ) )
+      mSharedSeenFlagsCheckBox->show();
+    else
+      mSharedSeenFlagsCheckBox->hide();
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -614,11 +690,13 @@ bool FolderDiaGeneralTab::save()
   folder->setPutRepliesInSameFolder( mKeepRepliesInSameFolderCheckBox->isChecked() );
 
   TQString fldName, oldFldName;
-  if ( !mIsLocalSystemFolder )
-  {
-    TQString acctName;
-    oldFldName = mDlg->folder()->name();
+  KMFolderCachedImap* dimap = 0;
+  if ( folder->folderType() == KMFolderTypeCachedImap )
+    dimap = static_cast<KMFolderCachedImap *>( mDlg->folder()->storage() );
 
+  if ( !mIsLocalSystemFolder || mIsResourceFolder )
+  {
+    oldFldName = mDlg->folder()->name();
     if (!mNameEdit->text().isEmpty())
       fldName = mNameEdit->text();
     else
@@ -641,11 +719,11 @@ bool FolderDiaGeneralTab::save()
         folder->setIconPaths( "", "" );
       }
     }
-    if ( folder->useCustomIcons() &&
+    if ( folder->useCustomIcons() && (
         (( mNormalIconButton->icon() != folder->normalIconPath() ) &&
          ( !mNormalIconButton->icon().isEmpty())) ||
         (( mUnreadIconButton->icon() != folder->unreadIconPath() ) &&
-         ( !mUnreadIconButton->icon().isEmpty())) ) {
+         ( !mUnreadIconButton->icon().isEmpty())) ) ) {
       folder->setIconPaths( mNormalIconButton->icon(), mUnreadIconButton->icon() );
     }
 
@@ -656,8 +734,7 @@ bool FolderDiaGeneralTab::save()
       folder->storage()->setContentsType( type );
     }
 
-    if ( folder->folderType() == KMFolderTypeCachedImap ) {
-      KMFolderCachedImap* dimap = static_cast<KMFolderCachedImap *>( mDlg->folder()->storage() );
+    if ( dimap ) {
       if ( mIncidencesForComboBox ) {
         KMFolderCachedImap::IncidencesFor incfor = KMFolderCachedImap::IncForAdmins;
         incfor = static_cast<KMFolderCachedImap::IncidencesFor>( mIncidencesForComboBox->currentItem() );
@@ -678,9 +755,23 @@ bool FolderDiaGeneralTab::save()
       imapFolder->setIncludeInMailCheck(
           mNewMailCheckBox->isChecked() );
     }
-    // make sure everything is on disk, connected slots will call readConfig()
-    // when creating a new folder.
-    folder->storage()->writeConfig();
+  }
+
+  if ( dimap && mSharedSeenFlagsCheckBox &&
+       mSharedSeenFlagsCheckBox->isChecked() != dimap->sharedSeenFlags() ) {
+    dimap->setSharedSeenFlags( mSharedSeenFlagsCheckBox->isChecked() );
+    dimap->writeConfig();
+  }
+
+  // make sure everything is on disk, connected slots will call readConfig()
+  // when creating a new folder.
+  folder->storage()->writeConfig();
+
+  TQString msg;
+  if ( !folder->isValidName( fldName, msg ) ) {
+    KMessageBox::sorry( this, msg );
+    return false;
+  } else {
     // Renamed an existing folder? We don't check for oldName == newName on
     // purpose here. The folder might be pending renaming on the next dimap
     // sync already, in which case the old name would still be around and
@@ -694,6 +785,7 @@ bool FolderDiaGeneralTab::save()
       kmkernel->folderMgr()->contentsChanged();
     }
   }
+
   return true;
 }
 
@@ -708,9 +800,8 @@ KMail::FolderDiaTemplatesTab::FolderDiaTemplatesTab( KMFolderDialog* dlg,
   : FolderDiaTab( parent, 0 ), mDlg( dlg )
 {
 
-  mIsLocalSystemFolder = mDlg->folder()->isSystemFolder() &&
-       mDlg->folder()->folderType() != KMFolderTypeImap &&
-       mDlg->folder()->folderType() != KMFolderTypeCachedImap;
+  mIsLocalSystemFolder = mDlg->folder()->isSystemFolder();
+
 
   TQVBoxLayout *topLayout = new TQVBoxLayout( this, 0, KDialog::spacingHint() );
 

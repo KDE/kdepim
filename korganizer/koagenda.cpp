@@ -58,11 +58,12 @@
 #include <libkcal/vcaldrag.h>
 #include <libkcal/calendar.h>
 #include <libkcal/calendarresources.h>
+#include <libkcal/calhelper.h>
 #include <math.h>
 
 ////////////////////////////////////////////////////////////////////////////
-MarcusBains::MarcusBains(KOAgenda *_agenda,const char *name)
-    : TQFrame(_agenda->viewport(),name), agenda(_agenda)
+MarcusBains::MarcusBains(KOAgenda *_agenda,const char *name )
+    : TQFrame(_agenda->viewport(), name), agenda(_agenda)
 {
   setLineWidth(0);
   setMargin(0);
@@ -80,7 +81,8 @@ MarcusBains::MarcusBains(KOAgenda *_agenda,const char *name)
 
   agenda->addChild(mTimeBox);
 
-  oldToday = -1;
+  mOldTime = TQTime( 0, 0 );
+  mOldToday = -1;
 }
 
 MarcusBains::~MarcusBains()
@@ -99,33 +101,41 @@ int MarcusBains::todayColumn()
     if((*it) == currentDate)
       return KOGlobals::self()->reverseLayout() ?
              agenda->columns() - 1 - col : col;
-      ++col;
+    ++col;
   }
 
   return -1;
 }
 
-void MarcusBains::updateLocation(bool recalculate)
+void MarcusBains::updateLocation()
+{
+  updateLocationRecalc();
+}
+
+void MarcusBains::updateLocationRecalc( bool recalculate )
 {
   TQTime tim = TQTime::currentTime();
-  if((tim.hour() == 0) && (oldTime.hour()==23))
+  if((tim.hour() == 0) && (mOldTime.hour()==23))
     recalculate = true;
 
   int mins = tim.hour()*60 + tim.minute();
   int minutesPerCell = 24 * 60 / agenda->rows();
   int y = int( mins * agenda->gridSpacingY() / minutesPerCell );
-  int today = recalculate ? todayColumn() : oldToday;
+  int today = recalculate ? todayColumn() : mOldToday;
   int x = int( agenda->gridSpacingX() * today );
-  bool disabled = !(KOPrefs::instance()->mMarcusBainsEnabled);
 
-  oldTime = tim;
-  oldToday = today;
+  mOldTime = tim;
+  mOldToday = today;
 
-  if(disabled || (today<0)) {
+  bool hideIt = !( KOPrefs::instance()->mMarcusBainsEnabled );
+
+  if ( !isHidden() && ( hideIt || ( today < 0 ) ) ) {
     hide();
     mTimeBox->hide();
     return;
-  } else {
+  }
+
+  if ( isHidden() && !hideIt ) {
     show();
     mTimeBox->show();
   }
@@ -137,8 +147,12 @@ void MarcusBains::updateLocation(bool recalculate)
   if(recalculate)
     mTimeBox->setFont(KOPrefs::instance()->mMarcusBainsFont);
 
-  mTimeBox->setText(KGlobal::locale()->formatTime(tim, KOPrefs::instance()->mMarcusBainsShowSeconds));
-  mTimeBox->adjustSize();
+  TQString timeStr = KGlobal::locale()->formatTime(tim, KOPrefs::instance()->mMarcusBainsShowSeconds);
+  TQFontMetrics fm = fontMetrics();
+  mTimeBox->setText( timeStr );
+  TQSize sz( fm.width( timeStr + ' ' ), fm.height() );
+  mTimeBox->setFixedSize( sz );
+
   if (y-mTimeBox->height()>=0) y-=mTimeBox->height(); else y++;
   if (x-mTimeBox->width()+agenda->gridSpacingX() > 0)
     x += int( agenda->gridSpacingX() - mTimeBox->width() - 1 );
@@ -157,13 +171,19 @@ void MarcusBains::updateLocation(bool recalculate)
 /*
   Create an agenda widget with rows rows and columns columns.
 */
-KOAgenda::KOAgenda( int columns, int rows, int rowSize, TQWidget *parent,
-                    const char *name, WFlags f )
+KOAgenda::KOAgenda( int columns, int rows, int rowSize, CalendarView *calendarView,
+                    TQWidget *parent, const char *name, WFlags f )
   : TQScrollView( parent, name, f ), mChanger( 0 )
 {
   mColumns = columns;
   mRows = rows;
   mGridSpacingY = rowSize;
+  if ( mGridSpacingY < 4 || mGridSpacingY > 30 ) {
+    mGridSpacingY = 10;
+  }
+
+  mCalendarView = calendarView;
+
   mAllDayMode = false;
 
   init();
@@ -175,13 +195,14 @@ KOAgenda::KOAgenda( int columns, int rows, int rowSize, TQWidget *parent,
   Create an agenda widget with columns columns and one row. This is used for
   all-day events.
 */
-KOAgenda::KOAgenda( int columns, TQWidget *parent, const char *name, WFlags f )
-  : TQScrollView( parent, name, f )
+KOAgenda::KOAgenda( int columns, CalendarView *calendarView, TQWidget *parent,
+                    const char *name, WFlags f ) : TQScrollView( parent, name, f )
 {
   mColumns = columns;
   mRows = 1;
   mGridSpacingY = 24;
   mAllDayMode = true;
+  mCalendarView = calendarView;
   setVScrollBarMode( AlwaysOff );
 
   init();
@@ -214,6 +235,16 @@ const TQString KOAgenda::lastSelectedUid() const
 void KOAgenda::init()
 {
   mGridSpacingX = 100;
+  mDesiredGridSpacingY = KOPrefs::instance()->mHourSize;
+  if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
+    mDesiredGridSpacingY = 10;
+  }
+
+ // make sure that there are not more than 24 per day
+  mGridSpacingY = (double)height() / (double)mRows;
+  if ( mGridSpacingY < mDesiredGridSpacingY ) {
+    mGridSpacingY = mDesiredGridSpacingY;
+  }
 
   mResizeBorderWidth = 8;
   mScrollBorderWidth = 8;
@@ -243,6 +274,7 @@ void KOAgenda::init()
   mClickedItem = 0;
 
   mActionItem = 0;
+  mResPair = qMakePair( static_cast<ResourceCalendar *>( 0 ), TQString() );
   mActionType = NOP;
   mItemMoved = false;
 
@@ -317,7 +349,7 @@ void KOAgenda::clearSelection()
 
 void KOAgenda::marcus_bains()
 {
-    if(mMarcusBains) mMarcusBains->updateLocation(true);
+  if(mMarcusBains) mMarcusBains->updateLocationRecalc( true );
 }
 
 
@@ -510,7 +542,8 @@ bool KOAgenda::eventFilter_key( TQObject *, TQKeyEvent *ke )
 
 void KOAgenda::emitNewEventForSelection()
 {
-  emit newEventSignal();
+  QPair<ResourceCalendar *, TQString>p = mCalendarView->viewSubResourceCalendar();
+  emit newEventSignal( p.first, p.second );
 }
 
 void KOAgenda::finishTypeAhead()
@@ -572,14 +605,17 @@ bool KOAgenda::eventFilter_mouse(TQObject *object, TQMouseEvent *me)
 
   switch (me->type())  {
     case TQEvent::MouseButtonPress:
-//        kdDebug(5850) << "koagenda: filtered button press" << endl;
+//      kdDebug(5850) << "koagenda: filtered button press" << endl;
       if (object != viewport()) {
         if (me->button() == RightButton) {
           mClickedItem = dynamic_cast<KOAgendaItem *>(object);
           if (mClickedItem) {
             selectItem(mClickedItem);
-            emit showIncidencePopupSignal( mClickedItem->incidence(),
+            emit showIncidencePopupSignal( mCalendar,
+                                           mClickedItem->incidence(),
                                            mClickedItem->itemDate() );
+          } else {
+            return TQScrollView::eventFilter( object, me ); // pass through for use by multiagenda
           }
         } else {
           KOAgendaItem* item = dynamic_cast<KOAgendaItem *>(object);
@@ -587,8 +623,10 @@ bool KOAgenda::eventFilter_mouse(TQObject *object, TQMouseEvent *me)
             Incidence *incidence = item->incidence();
             if ( incidence->isReadOnly() ) {
               mActionItem = 0;
+              mResPair = qMakePair( static_cast<ResourceCalendar *>( 0 ), TQString() );
             } else {
               mActionItem = item;
+              mResPair = CalHelper::incSubResourceCalendar( mCalendar, incidence );
               startItemAction(viewportPos);
             }
             // Warning: do selectItem() as late as possible, since all
@@ -596,11 +634,12 @@ bool KOAgenda::eventFilter_mouse(TQObject *object, TQMouseEvent *me)
             // this filter being run again and mActionItem being set to
             // null.
             selectItem( item );
+          } else {
+            return TQScrollView::eventFilter( object, me ); // pass through for use by multiagenda
           }
         }
       } else {
-        if (me->button() == RightButton)
-        {
+        if ( me->button() == RightButton ) {
           // if mouse pointer is not in selection, select the cell below the cursor
           TQPoint gpos = contentsToGrid( viewportToContents( viewportPos ) );
           if ( !ptInSelection( gpos ) ) {
@@ -612,18 +651,18 @@ bool KOAgenda::eventFilter_mouse(TQObject *object, TQMouseEvent *me)
             updateContents();
           }
           showNewEventPopupSignal();
-        }
-        else
-        {
+        } else {
           // if mouse pointer is in selection, don't change selection
           TQPoint gpos = contentsToGrid( viewportToContents( viewportPos ) );
           if ( !ptInSelection( gpos ) ) {
             selectItem(0);
             mActionItem = 0;
+            mResPair = qMakePair( static_cast<ResourceCalendar *>( 0 ), TQString() );
             setCursor(arrowCursor);
             startSelectAction(viewportPos);
           }
         }
+        return TQScrollView::eventFilter( object, me ); // pass through for use by multiagenda
       }
       break;
 
@@ -668,29 +707,30 @@ bool KOAgenda::eventFilter_mouse(TQObject *object, TQMouseEvent *me)
           } // If we have an action item
         } // If move item && !read only
       } else {
-          if ( mActionType == SELECT ) {
-            performSelectAction( viewportPos );
+        if ( mActionType == SELECT ) {
+          performSelectAction( viewportPos );
 
-            // show cursor at end of timespan
-            if ( ((mStartCell.y() < mEndCell.y()) && (mEndCell.x() >= mStartCell.x())) ||
-                 (mEndCell.x() > mStartCell.x()) )
-              indicatorPos = gridToContents( TQPoint(mEndCell.x(), mEndCell.y()+1) );
-            else
-              indicatorPos = gridToContents( mEndCell );
-          }
+          // show cursor at end of timespan
+          if ( ((mStartCell.y() < mEndCell.y()) && (mEndCell.x() >= mStartCell.x())) ||
+               (mEndCell.x() > mStartCell.x()) )
+            indicatorPos = gridToContents( TQPoint(mEndCell.x(), mEndCell.y()+1) );
+          else
+            indicatorPos = gridToContents( mEndCell );
         }
+      }
       emit mousePosSignal( indicatorPos );
       break; }
 
     case TQEvent::MouseButtonDblClick:
       if (object == viewport()) {
         selectItem(0);
-        emit newEventSignal();
+        QPair<ResourceCalendar *, TQString>p = mCalendarView->viewSubResourceCalendar();
+        emit newEventSignal( p.first, p.second );
       } else {
-        KOAgendaItem *doubleClickedItem = dynamic_cast<KOAgendaItem *>(object);
-        if (doubleClickedItem) {
-          selectItem(doubleClickedItem);
-          emit editIncidenceSignal(doubleClickedItem->incidence());
+        KOAgendaItem *doubleClickedItem = dynamic_cast<KOAgendaItem *>( object );
+        if ( doubleClickedItem ) {
+          selectItem( doubleClickedItem );
+          emit editIncidenceSignal( doubleClickedItem->incidence(), doubleClickedItem->itemDate() );
         }
       }
       break;
@@ -878,10 +918,9 @@ void KOAgenda::performItemAction(const TQPoint& viewportPos)
       emit startDragSignal( mActionItem->incidence() );
       setCursor( arrowCursor );
       mActionItem = 0;
+      mResPair = qMakePair( static_cast<ResourceCalendar *>( 0 ), TQString() );
       mActionType = NOP;
       mItemMoved = false;
-      if ( mItemMoved && mChanger )
-        mChanger->endChange( mActionItem->incidence() );
       return;
     }
   } else {
@@ -902,7 +941,8 @@ void KOAgenda::performItemAction(const TQPoint& viewportPos)
   // Move or resize item if necessary
   if ( mEndCell != gpos ) {
     if ( !mItemMoved ) {
-      if ( !mChanger || !mChanger->beginChange( mActionItem->incidence() ) ) {
+      if ( !mChanger ||
+           !mChanger->beginChange( mActionItem->incidence(), mResPair.first, mResPair.second ) ) {
         KMessageBox::information( this, i18n("Unable to lock item for "
                              "modification. You cannot make any changes."),
                              i18n("Locking Failed"), "AgendaLockingFailed" );
@@ -912,6 +952,7 @@ void KOAgenda::performItemAction(const TQPoint& viewportPos)
         placeSubCells( mActionItem );
         setCursor( arrowCursor );
         mActionItem = 0;
+        mResPair = qMakePair( static_cast<ResourceCalendar *>( 0 ), TQString() );
         mActionType = NOP;
         mItemMoved = false;
         return;
@@ -951,7 +992,7 @@ void KOAgenda::performItemAction(const TQPoint& viewportPos)
               addChild( newFirst, cpos.x(), cpos.y() );
             } else {
               newFirst = insertItem( moveItem->incidence(), moveItem->itemDate(),
-                moveItem->cellXLeft()-1, rows()+newY, rows()-1 ) ;
+                moveItem->cellXLeft()-1, rows()+newY, rows()-1, moveItem->itemPos(), moveItem->itemCount() ) ;
             }
             if (newFirst) newFirst->show();
             moveItem->prependMoveItem(newFirst);
@@ -996,7 +1037,7 @@ void KOAgenda::performItemAction(const TQPoint& viewportPos)
               addChild( newLast, cpos.x(), cpos.y() );
             } else {
               newLast = insertItem( moveItem->incidence(), moveItem->itemDate(),
-                moveItem->cellXLeft()+1, 0, newY-rows()-1 ) ;
+                moveItem->cellXLeft()+1, 0, newY-rows()-1, moveItem->itemPos(), moveItem->itemCount() ) ;
             }
             moveItem->appendMoveItem( newLast );
             newLast->show();
@@ -1046,98 +1087,45 @@ void KOAgenda::endItemAction()
   bool multiModify = false;
   // FIXME: do the cloning here...
   Incidence* inc = mActionItem->incidence();
-  // Store modification information in case it is needed to recreate the changes with a new actionitem...
-  int mai_xl = mActionItem->cellXLeft();
-  int mai_xr = mActionItem->cellXRight();
-  int mai_yt = mActionItem->cellYTop();
-  int mai_yb = mActionItem->cellYBottom();
-  Incidence* newInc;
+
+  if ( mStartCell.x() == mEndCell.x() && mStartCell.y() == mEndCell.y() ) {
+    // not really moved, so stop any change
+    if ( mItemMoved ) {
+      mItemMoved = false;
+      mChanger->endChange( inc, mResPair.first, mResPair.second );
+    }
+  }
 
   if ( mItemMoved ) {
-    bool modify = true;
+    Incidence *incToChange = inc;
     if ( mActionItem->incidence()->doesRecur() ) {
-      int res = KOMessageBox::fourBtnMsgBox( this, TQMessageBox::Question,
-          i18n("The item you try to change is a recurring item. Shall the changes "
-               "be applied only to this single occurrence, only to the future items, "
-               "or to all items in the recurrence?"),
-          i18n("Changing Recurring Item"),
-          i18n("Only &This Item"), i18n("Only &Future Items"), i18n("&All Occurrences") );
-      switch ( res ) {
-        case KMessageBox::Ok: // All occurrences
-            // Moving the whole sequene of events is handled by the itemModified below.
-            modify = true;
-            break;
-        // FIXME: The following two cases do the following bad things:
-        // 1. Pop up a message box asking which resource to save the disassociated event to (!)
-        // 2. Crash at mActionItem->endMove(); below.
-        case KMessageBox::Yes: { // Just this occurrence
-            // Dissociate this occurrence:
-            // create clone of event, set relation to old event, set cloned event
-            // for mActionItem, add exception date to old event, changeIncidence
-            // for the old event, remove the recurrence from the new copy and then just
-            // go on with the newly adjusted mActionItem and let the usual code take
-            // care of the new time!
-            modify = true;
-            multiModify = true;
-            emit startMultiModify( i18n("Dissociate event from recurrence") );
-            Incidence* oldInc = mActionItem->incidence();
-            Incidence* oldIncSaved = mActionItem->incidence()->clone();
-            newInc = mCalendar->dissociateOccurrence(
-                oldInc, mActionItem->itemDate() );
-            if ( newInc ) {
-              // don't recreate items, they already have the correct position
-              emit enableAgendaUpdate( false );
-              mActionItem->dissociateFromMultiItem();
-              mActionItem->setIncidence( newInc );
-              bool success = mChanger->addIncidence( newInc, this );
-              emit enableAgendaUpdate( true );
-              if ( success ) {
-                mChanger->changeIncidence( oldIncSaved, oldInc );
-              }
-            } else {
-              KMessageBox::sorry( this, i18n("Unable to add the exception item to the "
-                  "calendar. No change will be done."), i18n("Error Occurred") );
-            }
-            delete oldIncSaved;
-            break; }
-        case KMessageBox::No/*Future*/: { // All future occurrences
-            // Dissociate this occurrence:
-            // create clone of event, set relation to old event, set cloned event
-            // for mActionItem, add recurrence end date to old event, changeIncidence
-            // for the old event, adjust the recurrence for the new copy and then just
-            // go on with the newly adjusted mActionItem and let the usual code take
-            // care of the new time!
-            modify = true;
-            multiModify = true;
-            emit startMultiModify( i18n("Split future recurrences") );
-            Incidence* oldInc = mActionItem->incidence();
-            Incidence* oldIncSaved = mActionItem->incidence()->clone();
-            newInc = mCalendar->dissociateOccurrence(
-                oldInc, mActionItem->itemDate(), false );
-            if ( newInc ) {
-              emit enableAgendaUpdate( false );
-              mActionItem->dissociateFromMultiItem();
-              mActionItem->setIncidence( newInc );
-              bool success = mChanger->addIncidence( newInc, this );
-              emit enableAgendaUpdate( true );
-              if ( success ) {
-                mChanger->changeIncidence( oldIncSaved, oldInc );
-              }
-            } else {
-              KMessageBox::sorry( this, i18n("Unable to add the future items to the "
-                  "calendar. No change will be done."), i18n("Error Occurred") );
-            }
-            delete oldIncSaved;
-            break; }
-        default:
-          modify = false;
-          mActionItem->resetMove();
-          placeSubCells( mActionItem );
-      }
-    }
+      Incidence* oldIncSaved = inc->clone();
+      KOGlobals::WhichOccurrences chosenOption;
+      incToChange = mCalendarView->singleOccurrenceOrAll( inc,
+                                                          KOGlobals::EDIT,
+                                                          chosenOption,
+                                                          mActionItem->itemDate() );
 
-    if ( modify ) {
-      if ( multiModify ) {
+      if ( chosenOption == KOGlobals::ONLY_THIS_ONE ||
+           chosenOption == KOGlobals::ONLY_FUTURE ) {
+
+        // Store modification information in case it is needed to recreate the changes with a new actionitem...
+        int mai_xl = mActionItem->cellXLeft();
+        int mai_xr = mActionItem->cellXRight();
+        int mai_yt = mActionItem->cellYTop();
+        int mai_yb = mActionItem->cellYBottom(); 
+
+        multiModify = true;
+        enableAgendaUpdate( false );
+
+        mChanger->addIncidence( incToChange, mResPair.first, mResPair.second, this );
+        enableAgendaUpdate( true );
+        KOGlobals::WhatChanged wc = chosenOption == KOGlobals::ONLY_THIS_ONE ?
+                                    KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY :
+                                    KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE;
+
+        mChanger->changeIncidence( oldIncSaved, inc, wc, this );
+
         // mActionItem does not exist any more, seeing as we just got done deleting it
         // (by deleting/replacing the original incidence it was created from through
         // user modification of said incidence) above!
@@ -1146,7 +1134,7 @@ void KOAgenda::endItemAction()
 
         KOAgendaItem *koai_insertedItem;
         for ( koai_insertedItem = mItems.first(); koai_insertedItem; koai_insertedItem = mItems.next() ) {
-          if (koai_insertedItem->incidence() == newInc) {
+          if (koai_insertedItem->incidence() == incToChange) {
             selectItem( koai_insertedItem );
             mSelectedItem->startMove();
             mSelectedItem->setCellY(mai_yt, mai_yb);
@@ -1157,15 +1145,12 @@ void KOAgenda::endItemAction()
           }
         }
 
-//         mActionItem->startMove();
-//         mActionItem->setCellY(mai_yt, mai_yb);
-//         mActionItem->setCellX(mai_xl, mai_xr);
-//         mActionItem->endMove();
+        mActionItem->dissociateFromMultiItem();
+        mActionItem->setIncidence( incToChange );
       }
     }
 
-    if ( modify ) {
-//       if ( !multiModify ) {
+    if ( incToChange ) {
         mActionItem->endMove();
         KOAgendaItem *placeItem = mActionItem->firstMultiItem();
         if  ( !placeItem ) {
@@ -1187,17 +1172,27 @@ void KOAgenda::endItemAction()
 
         // Notify about change
         // the agenda view will apply the changes to the actual Incidence*!
+        mChanger->endChange( inc, mResPair.first, mResPair.second );
         emit itemModified( modif );
-//       }
+    } else {
+
+      mActionItem->resetMove();
+      placeSubCells( mActionItem );
+
+      // the item was moved, but not further modified, since it's not recurring
+      // make sure the view updates anyhow, with the right item
+      mChanger->endChange( inc, mResPair.first, mResPair.second );
+      emit itemModified( mActionItem );
     }
-    // FIXME: If the change failed, we need to update the view!
-    mChanger->endChange( inc );
   }
 
   mActionItem = 0;
+  mResPair = qMakePair( static_cast<ResourceCalendar *>( 0 ), TQString() );
   mItemMoved = false;
 
-  if ( multiModify ) emit endMultiModify();
+  if ( multiModify ) {
+    emit endMultiModify();
+  }
 
   kdDebug(5850) << "KOAgenda::endItemAction() done" << endl;
 }
@@ -1280,7 +1275,7 @@ void KOAgenda::placeAgendaItem( KOAgendaItem *item, double subCellWidth )
   TQPoint pt = gridToContents( TQPoint( item->cellXLeft(), item->cellYTop() ) );
   // right lower corner
   TQPoint pt1 = gridToContents( TQPoint( item->cellXLeft() + item->cellWidth(),
-      item->cellYBottom()+1 ) );
+                                   item->cellYBottom()+1 ) );
 
   double subCellPos = item->subCell() * subCellWidth;
 
@@ -1594,23 +1589,16 @@ void KOAgenda::setStartTime( const TQTime &startHour )
   Insert KOAgendaItem into agenda.
 */
 KOAgendaItem *KOAgenda::insertItem( Incidence *incidence, const TQDate &qd, int X,
-                                    int YTop, int YBottom )
+                                    int YTop, int YBottom, int itemPos, int itemCount )
 {
-#if 0
-  kdDebug(5850) << "KOAgenda::insertItem:" << incidence->summary() << "-"
-                << qd.toString() << " ;top, bottom:" << YTop << "," << YBottom
-                << endl;
-#endif
-
   if ( mAllDayMode ) {
     kdDebug(5850) << "KOAgenda: calling insertItem in all-day mode is illegal." << endl;
     return 0;
   }
 
-
   mActionType = NOP;
 
-  KOAgendaItem *agendaItem = new KOAgendaItem( incidence, qd, viewport() );
+  KOAgendaItem *agendaItem = new KOAgendaItem( mCalendar, incidence, qd, viewport(), itemPos, itemCount );
   connect( agendaItem, TQT_SIGNAL( removeAgendaItem( KOAgendaItem * ) ),
            TQT_SLOT( removeAgendaItem( KOAgendaItem * ) ) );
   connect( agendaItem, TQT_SIGNAL( showAgendaItem( KOAgendaItem * ) ),
@@ -1655,7 +1643,7 @@ KOAgendaItem *KOAgenda::insertAllDayItem( Incidence *event, const TQDate &qd,
 
   mActionType = NOP;
 
-  KOAgendaItem *agendaItem = new KOAgendaItem( event, qd, viewport() );
+  KOAgendaItem *agendaItem = new KOAgendaItem( mCalendar, event, qd, viewport(), 1, 1 );
   connect( agendaItem, TQT_SIGNAL( removeAgendaItem( KOAgendaItem* ) ),
            TQT_SLOT( removeAgendaItem( KOAgendaItem* ) ) );
   connect( agendaItem, TQT_SIGNAL( showAgendaItem( KOAgendaItem* ) ),
@@ -1683,10 +1671,10 @@ KOAgendaItem *KOAgenda::insertAllDayItem( Incidence *event, const TQDate &qd,
 }
 
 
-void KOAgenda::insertMultiItem (Event *event,const TQDate &qd,int XBegin,int XEnd,
-                                int YTop,int YBottom)
+void KOAgenda::insertMultiItem( Event *event, const TQDate &qd, int XBegin, int XEnd,
+                                int YTop, int YBottom )
 {
-  if (mAllDayMode) {
+  if ( mAllDayMode ) {
     kdDebug(5850) << "KOAgenda: calling insertMultiItem in all-day mode is illegal." << endl;
     return;
   }
@@ -1698,40 +1686,50 @@ void KOAgenda::insertMultiItem (Event *event,const TQDate &qd,int XBegin,int XEn
   int count = 0;
   KOAgendaItem *current = 0;
   TQPtrList<KOAgendaItem> multiItems;
-  int visibleCount = mSelectedDates.first().daysTo(mSelectedDates.last());
+  const int visibleCount = mSelectedDates.first().daysTo( mSelectedDates.last() );
   for ( cellX = XBegin; cellX <= XEnd; ++cellX ) {
     ++count;
     //Only add the items that are visible.
-    if( cellX >=0 && cellX <= visibleCount ) {
-      if ( cellX == XBegin ) cellYTop = YTop;
-      else cellYTop = 0;
-      if ( cellX == XEnd ) cellYBottom = YBottom;
-      else cellYBottom = rows() - 1;
+    if( cellX >= 0 && cellX <= visibleCount ) {
+      if ( cellX == XBegin ) {
+        cellYTop = YTop;
+      } else {
+        cellYTop = 0;
+      }
+
+      if ( cellX == XEnd ) {
+        cellYBottom = YBottom;
+      } else {
+        cellYBottom = rows() - 1;
+      }
+
       newtext = TQString("(%1/%2): ").arg( count ).arg( width );
       newtext.append( event->summary() );
 
-      current = insertItem( event, qd, cellX, cellYTop, cellYBottom );
+      current = insertItem( event, qd, cellX, cellYTop, cellYBottom, count, width );
       current->setText( newtext );
       multiItems.append( current );
     }
   }
+  TQPtrList<KOAgendaItem>::iterator it = multiItems.begin();
+  TQPtrList<KOAgendaItem>::iterator e = multiItems.end();
 
-  KOAgendaItem *next = 0;
-  KOAgendaItem *prev = 0;
-  KOAgendaItem *last = multiItems.last();
-  KOAgendaItem *first = multiItems.first();
-  KOAgendaItem *setFirst,*setLast;
-  current = first;
-  while (current) {
-    next = multiItems.next();
-    if (current == first) setFirst = 0;
-    else setFirst = first;
-    if (current == last) setLast = 0;
-    else setLast = last;
+  if ( it != e ) { // .first asserts if the list is empty
+    KOAgendaItem *first = multiItems.first();
+    KOAgendaItem *last = multiItems.last();
+    KOAgendaItem *prev = 0, *next = 0;
 
-    current->setMultiItem(setFirst, prev, next, setLast);
-    prev=current;
-    current = next;
+    while ( it != e ) {
+      KOAgendaItem *item = *it;
+      ++it;
+      next = ( it == e ) ? 0 : (*it);
+      if ( item ) {
+        item->setMultiItem( ( item == first ) ? 0 : first,
+                            prev, next,
+                            ( item == last ) ? 0 : last );
+      }
+      prev = item;
+    }
   }
 
   marcus_bains();
@@ -1760,11 +1758,15 @@ void KOAgenda::removeIncidence( Incidence *incidence )
 
 void KOAgenda::showAgendaItem( KOAgendaItem *agendaItem )
 {
-  if ( !agendaItem ) return;
+  if ( !agendaItem ) {
+    return;
+  }
+
   agendaItem->hide();
   addChild( agendaItem );
-  if ( !mItems.containsRef( agendaItem ) )
+  if ( !mItems.containsRef( agendaItem ) ) {
     mItems.append( agendaItem );
+  }
   placeSubCells( agendaItem );
 
   agendaItem->show();
@@ -1777,8 +1779,9 @@ bool KOAgenda::removeAgendaItem( KOAgendaItem *item )
   KOAgendaItem *thisItem = item;
   TQPtrList<KOAgendaItem> conflictItems = thisItem->conflictItems();
   removeChild( thisItem );
+
   int pos = mItems.find( thisItem );
-  if ( pos>=0 ) {
+  if ( pos >= 0 ) {
     mItems.take( pos );
     taken = true;
   }
@@ -1843,22 +1846,23 @@ void KOAgenda::resizeEvent ( TQResizeEvent *ev )
 void KOAgenda::resizeAllContents()
 {
   double subCellWidth;
-  KOAgendaItem *item;
-  if (mAllDayMode) {
-    for ( item=mItems.first(); item != 0; item=mItems.next() ) {
-      subCellWidth = calcSubCellWidth( item );
-      placeAgendaItem( item, subCellWidth );
-    }
-  } else {
-    for ( item=mItems.first(); item != 0; item=mItems.next() ) {
-      subCellWidth = calcSubCellWidth( item );
-      placeAgendaItem( item, subCellWidth );
+  if ( mItems.count() > 0 ) {
+    KOAgendaItem *item;
+    if (mAllDayMode) {
+      for ( item=mItems.first(); item != 0; item=mItems.next() ) {
+        subCellWidth = calcSubCellWidth( item );
+        placeAgendaItem( item, subCellWidth );
+      }
+    } else {
+      for ( item=mItems.first(); item != 0; item=mItems.next() ) {
+        subCellWidth = calcSubCellWidth( item );
+        placeAgendaItem( item, subCellWidth );
+      }
     }
   }
   checkScrollBoundaries();
   marcus_bains();
 }
-
 
 void KOAgenda::scrollUp()
 {
@@ -1886,15 +1890,23 @@ int KOAgenda::minimumWidth() const
 void KOAgenda::updateConfig()
 {
   double oldGridSpacingY = mGridSpacingY;
+
   mDesiredGridSpacingY = KOPrefs::instance()->mHourSize;
- // make sure that there are not more than 24 per day
-  mGridSpacingY = (double)height()/(double)mRows;
-  if (mGridSpacingY<mDesiredGridSpacingY) mGridSpacingY=mDesiredGridSpacingY;
+  if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
+    mDesiredGridSpacingY = 10;
+  }
+
+  // make sure that there are not more than 24 per day
+  mGridSpacingY = (double)height() / (double)mRows;
+  if ( mGridSpacingY < mDesiredGridSpacingY ) {
+    mGridSpacingY = mDesiredGridSpacingY;
+  }
 
   //can be two doubles equal?, it's better to compare them with an epsilon
-  if ( fabs( oldGridSpacingY - mGridSpacingY ) > 0.1 )
+  if ( fabs( oldGridSpacingY - mGridSpacingY ) > 0.1 ) {
     resizeContents( int( mGridSpacingX * mColumns ),
-                  int( mGridSpacingY * mRows ) );
+                    int( mGridSpacingY * mRows ) );
+  }
 
   calculateWorkingHours();
 
@@ -1941,7 +1953,9 @@ int KOAgenda::visibleContentsYMax()
 
 void KOAgenda::deselectItem()
 {
-  if (mSelectedItem.isNull()) return;
+  if ( mSelectedItem.isNull() ) {
+    return;
+  }
   mSelectedItem->select(false);
   mSelectedItem = 0;
 }
@@ -1951,15 +1965,14 @@ void KOAgenda::selectItem(KOAgendaItem *item)
   if ((KOAgendaItem *)mSelectedItem == item) return;
   deselectItem();
   if (item == 0) {
-    emit incidenceSelected( 0 );
+    emit incidenceSelected( 0, TQDate() );
     return;
   }
   mSelectedItem = item;
   mSelectedItem->select();
-  Incidence *incidence = mSelectedItem->incidence();
-  assert( incidence );
-  mSelectedUid = incidence->uid();
-  emit incidenceSelected( incidence );
+  assert( mSelectedItem->incidence() );
+  mSelectedUid = mSelectedItem->incidence()->uid();
+  emit incidenceSelected( mSelectedItem->incidence(), mSelectedItem->itemDate() );
 }
 
 void KOAgenda::selectItemByUID( const TQString& uid )

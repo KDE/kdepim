@@ -228,11 +228,15 @@ void KODayMatrix::recalculateToday()
   updateView( mStartDate );
 }
 
+void KODayMatrix::setUpdateNeeded()
+{
+  mPendingChanges = true;
+}
+
 void KODayMatrix::updateView( const TQDate &actdate )
 {
  kdDebug(5850) << "KODayMatrix::updateView() " << actdate << ", day start="<<mStartDate<< endl;
  if ( !actdate.isValid() ) return;
-
   //flag to indicate if the starting day of the matrix has changed by this call
   bool daychanged = false;
 
@@ -340,16 +344,19 @@ int KODayMatrix::getDayIndexFrom( int x, int y )
 
 void KODayMatrix::calendarIncidenceAdded(Incidence * incidence)
 {
+  Q_UNUSED( incidence );
   mPendingChanges = true;
 }
 
 void KODayMatrix::calendarIncidenceChanged(Incidence * incidence)
 {
+  Q_UNUSED( incidence );
   mPendingChanges = true;
 }
 
-void KODayMatrix::calendarIncidenceRemoved(Incidence * incidence)
+void KODayMatrix::calendarIncidenceDeleted(Incidence * incidence)
 {
+  Q_UNUSED( incidence );
   mPendingChanges = true;
 }
 
@@ -406,7 +413,7 @@ void KODayMatrix::mouseMoveEvent( TQMouseEvent *e )
 
   if (mSelInit > tmp) {
     mSelEnd = mSelInit;
-    if (tmp != mSelStart) {
+    if ( tmp != mSelStart ) {
       mSelStart = tmp;
       repaint();
     }
@@ -414,7 +421,7 @@ void KODayMatrix::mouseMoveEvent( TQMouseEvent *e )
     mSelStart = mSelInit;
 
     //repaint only if selection has changed
-    if (tmp != mSelEnd) {
+    if ( tmp != mSelEnd ) {
       mSelEnd = tmp;
       repaint();
     }
@@ -669,8 +676,7 @@ void KODayMatrix::paintEvent( TQPaintEvent * )
     }
 
     // draw selected days with special color
-    // DO NOT specially highlight holidays in selection !
-    if (i >= mSelStart && i <= mSelEnd) {
+    if ( i >= mSelStart && i <= mSelEnd && !holiday ) {
       p.setPen( TQColor( "white" ) );
     }
 
@@ -678,7 +684,7 @@ void KODayMatrix::paintEvent( TQPaintEvent * )
               Qt::AlignHCenter | Qt::AlignVCenter,  mDayLabels[i]);
 
     // reset color to actual color
-    if (holiday) {
+    if ( holiday ) {
       p.setPen(actcol);
     }
     // reset bold font to plain font
@@ -689,7 +695,7 @@ void KODayMatrix::paintEvent( TQPaintEvent * )
     }
   }
   p.end();
-  bitBlt(  this, 0, 0, &pm );
+  bitBlt( this, 0, 0, &pm );
 }
 
 // ----------------------------------------------------------------------------
@@ -701,4 +707,23 @@ void KODayMatrix::resizeEvent( TQResizeEvent * )
   TQRect sz = frameRect();
   mDaySize.setHeight( sz.height() * 7 / NUMDAYS );
   mDaySize.setWidth( sz.width() / 7 );
+}
+
+/* static */
+QPair<TQDate,TQDate> KODayMatrix::matrixLimits( const TQDate &month )
+{
+  const KCalendarSystem *calSys = KOGlobals::self()->calendarSystem();
+  TQDate d = month;
+  calSys->setYMD( d, calSys->year( month ), calSys->month( month ), 1 );
+
+  const int dayOfWeek = calSys->dayOfWeek( d );
+  const int weekstart = KGlobal::locale()->weekStartDay();
+
+  d = d.addDays( weekstart - dayOfWeek );
+
+  if ( dayOfWeek == weekstart ) {
+    d = d.addDays( -7 ); // Start on the second line
+  }
+
+  return qMakePair( d, d.addDays( NUMDAYS-1 ) );
 }

@@ -145,8 +145,7 @@ bool KAddressbookPlugin::isRunningStandalone()
 
 bool KAddressbookPlugin::canDecodeDrag( TQMimeSource *mimeSource )
 {
-  return TQTextDrag::canDecode( mimeSource ) ||
-    KPIM::MailListDrag::canDecode( mimeSource );
+  return KPIM::MailListDrag::canDecode( mimeSource );
 }
 
 #include <dcopref.h>

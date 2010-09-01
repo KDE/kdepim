@@ -36,12 +36,14 @@ class KNoScrollListBox;
 class KOMonthCellToolTip : public QToolTip
 {
   public:
-    KOMonthCellToolTip (TQWidget* parent, KNoScrollListBox* lv );
+    KOMonthCellToolTip (TQWidget* parent, Calendar *calendar, const TQDate &date, KNoScrollListBox* lv );
 
   protected:
     void maybeTip( const TQPoint & pos);
 
   private:
+    Calendar *mCalendar;
+    TQDate mDate;
     KNoScrollListBox* eventlist;
 };
 
@@ -107,6 +109,8 @@ class MonthViewItem: public QListBoxItem
     bool mReply;
 
     TQPixmap mEventPixmap;
+    TQPixmap mBirthdayPixmap;
+    TQPixmap mAnniversaryPixmap;
     TQPixmap mTodoPixmap;
     TQPixmap mTodoDonePixmap;
     TQPixmap mAlarmPixmap;
@@ -117,6 +121,7 @@ class MonthViewItem: public QListBoxItem
     TQDateTime mDateTime;
 
     Incidence *mIncidence;
+    TQColor catColor() const;
 };
 
 
@@ -137,6 +142,9 @@ class MonthViewCell : public QWidget
     void setDate( const TQDate & );
     /** @return Date of cell */
     TQDate date() const;
+
+    /** @return MonthView parent */
+    KOMonthView *monthView() { return mMonthView; }
 
     /**
       Set this cell as primary if @p primary is true. A primary cell belongs
@@ -184,7 +192,6 @@ class MonthViewCell : public QWidget
 
     void deselect();
 
-    void setCalendar( Calendar*cal ) { mCalendar = cal; }
   signals:
     void defaultAction( Incidence * );
     /**
@@ -192,7 +199,8 @@ class MonthViewCell : public QWidget
       will pop up.
       @param date The date of the event we want create.
     */
-    void newEventSignal( const TQDate &date );
+    void newEventSignal( ResourceCalendar *res,const TQString &subResource,
+                         const TQDate &date );
 
   public slots:
     void select();
@@ -207,8 +215,6 @@ class MonthViewCell : public QWidget
 
   private:
     KOMonthView *mMonthView;
-  // We need the calendar for paint the ResourceColor
-    Calendar *mCalendar;
 
     TQDate mDate;
     bool mPrimary;
@@ -217,6 +223,8 @@ class MonthViewCell : public QWidget
 
     TQLabel *mLabel;
     KNoScrollListBox *mItemList;
+
+    bool isSelected;
 
     TQSize mLabelSize;
 //    TQPalette mOriginalPalette;
@@ -249,7 +257,11 @@ class KOMonthView: public KOEventView
     virtual Incidence::List selectedIncidences();
 
     /** Returns dates of the currently selected events */
-    virtual DateList selectedDates();
+    virtual DateList selectedIncidenceDates();
+
+    virtual TQDateTime selectionStart();
+
+    virtual TQDateTime selectionEnd();
 
     virtual bool eventDurationHint(TQDateTime &startDt, TQDateTime &endDt, bool &allDay);
 
@@ -257,14 +269,14 @@ class KOMonthView: public KOEventView
     virtual void updateView();
     virtual void updateConfig();
     virtual void showDates(const TQDate &start, const TQDate &end);
-    virtual void showIncidences( const Incidence::List &incidenceList );
+    virtual void showIncidences( const Incidence::List &incidenceList, const TQDate &date );
 
     void changeIncidenceDisplay(Incidence *, int);
     void changeIncidenceDisplayAdded(Incidence *, MonthViewCell::CreateItemVisitor&);
 
     void clearSelection();
 
-    void showEventContextMenu( Incidence *, const TQDate & );
+    void showEventContextMenu( Calendar *, Incidence *, const TQDate & );
     void showGeneralContextMenu();
 
     void setSelectedCell( MonthViewCell * );
@@ -279,6 +291,8 @@ class KOMonthView: public KOEventView
     void updateDayLabels();
 
   private:
+    void showLabel( bool show );
+      
     class GetDateVisitor;
     int mDaysPerWeek;
     int mNumWeeks;

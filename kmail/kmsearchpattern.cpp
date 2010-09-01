@@ -27,6 +27,8 @@ using KMail::FilterLog;
 
 #include <mimelib/string.h>
 #include <mimelib/boyermor.h>
+#include <mimelib/field.h>
+#include <mimelib/headers.h>
 
 #include <assert.h>
 
@@ -58,7 +60,8 @@ static struct _statusNames statusNames[] = {
   { "To Do", KMMsgStatusTodo },
   { "Spam", KMMsgStatusSpam },
   { "Ham", KMMsgStatusHam },
-  { "Has Attachment", KMMsgStatusHasAttach }
+  { "Has Attachment", KMMsgStatusHasAttach },
+  { "Invitation", KMMsgStatusHasInvitation }
 };
 
 static const int numStatusNames = sizeof statusNames / sizeof ( struct _statusNames );
@@ -280,7 +283,7 @@ bool KMSearchRuleString::matches( const DwString & aStr, KMMessage & msg,
       start += headerLen;
       size_t stop = aStr.find( '\n', start );
       char ch = '\0';
-      while ( stop != DwString::npos && ( ch = aStr.at( stop + 1 ) ) == ' ' || ch == '\t' )
+      while ( stop != DwString::npos && ( ( ch = aStr.at( stop + 1 ) ) == ' ' || ch == '\t' ) )
         stop = aStr.find( '\n', stop + 1 );
       const int len = stop == DwString::npos ? aStr.length() - start : stop - start ;
       const TQCString codedValue( aStr.data() + start, len + 1 );
@@ -333,7 +336,19 @@ bool KMSearchRuleString::matches( const KMMessage * msg ) const
   bool logContents = true;
 
   if( field() == "<message>" ) {
-    msgContents = msg->asString();
+
+    // When searching in the complete message, we can't simply use msg->asString() here,
+    // as that wouldn't decode the body. Therefore we use the decoded body and all decoded
+    // header fields and add all to the one big search string.
+    msgContents += msg->bodyToUnicode();
+    const DwHeaders& headers = msg->headers();
+    const DwField * dwField = headers.FirstField();
+    while( dwField != 0 ) {
+      const char * const fieldName = dwField->FieldNameStr().c_str();
+      const TQString fieldValue = msg->headerFields( fieldName ).join( " " );
+      msgContents += " " + fieldValue;
+      dwField = dwField->Next();
+    }
     logContents = false;
   } else if ( field() == "<body>" ) {
     msgContents = msg->bodyToUnicode();

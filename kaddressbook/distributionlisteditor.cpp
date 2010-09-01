@@ -28,10 +28,11 @@
 #include <libemailfunctions/email.h>
 
 #include <kabc/addressbook.h>
+#include <kabc/resource.h>
 
 #include <kapplication.h>
 #include <kdialogbase.h>
-#include <kglobal.h> 
+#include <kglobal.h>
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -41,6 +42,7 @@
 #include <tqlayout.h>
 #include <tqsignalmapper.h>
 #include <tqtoolbutton.h>
+#include <tqguardedptr.h>
 
 class KPIM::DistributionListEditor::EditorWidgetPrivate
 {
@@ -55,6 +57,7 @@ public:
     TQWidget* memberListWidget;
     TQVBoxLayout* addresseeLayout;
     TQValueList<KPIM::DistributionListEditor::Line*> addressees;
+    TQGuardedPtr<KABC::Resource> resource;
     KPIM::DistributionList distributionList;
     KPIM::DistributionListEditor::Line* addLineForEntry( const KPIM::DistributionList::Entry& entry );
     int lastLineId;
@@ -94,7 +97,7 @@ void KPIM::DistributionListEditor::Line::setEntry( const KPIM::DistributionList:
 {
     m_uid = entry.addressee.uid();
     m_initialText = entry.addressee.fullEmail( entry.email );
-    m_lineEdit->setText( m_initialText ); 
+    m_lineEdit->setText( m_initialText );
 }
 
 KABC::Addressee KPIM::DistributionListEditor::Line::findAddressee( const TQString& name, const TQString& email ) const
@@ -105,7 +108,7 @@ KABC::Addressee KPIM::DistributionListEditor::Line::findAddressee( const TQStrin
     typedef KABC::Addressee::List List;
     const List byEmail = m_addressBook->findByEmail( email );
     if ( !byEmail.isEmpty() )
-    {        
+    {
         const List::ConstIterator end = byEmail.end();
         for ( List::ConstIterator it = byEmail.begin(); it != end; ++it )
         {
@@ -138,7 +141,7 @@ KPIM::DistributionList::Entry KPIM::DistributionListEditor::Line::entry() const
             res.addressee = addr;
     }
     if ( res.addressee.isEmpty() )
-        res.addressee = findAddressee( name, email ); 
+        res.addressee = findAddressee( name, email );
     res.email = res.addressee.preferredEmail() != email ? email : TQString();
     return res;
 }
@@ -146,18 +149,19 @@ KPIM::DistributionList::Entry KPIM::DistributionListEditor::Line::entry() const
 
 KPIM::DistributionListEditor::LineEdit::LineEdit( TQWidget* parent ) : KPIM::AddresseeLineEdit( parent )
 {
+  allowDistributionLists( false );
 }
 
 
-KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* book,  TQWidget* parent ) 
+KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* book,  TQWidget* parent )
     : KDialogBase( parent, /*name=*/0, /*modal=*/ true, /*caption=*/TQString(), KDialogBase::Ok|KDialogBase::Cancel ), d( new DistributionListEditor::EditorWidgetPrivate )
 {
     d->addressBook = book;
     Q_ASSERT( d->addressBook );
     d->lastLineId = 0;
     d->mapper = new TQSignalMapper( this );
-    connect( d->mapper, TQT_SIGNAL( mapped( int ) ), 
-             this, TQT_SLOT( lineTextChanged( int ) ) ); 
+    connect( d->mapper, TQT_SIGNAL( mapped( int ) ),
+             this, TQT_SLOT( lineTextChanged( int ) ) );
     setCaption( i18n( "Edit Distribution List" ) );
     TQWidget* main = new TQWidget( this );
     TQVBoxLayout* mainLayout = new TQVBoxLayout( main );
@@ -192,12 +196,12 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     memberLayout->addStretch();
     d->scrollView->addChild( d->memberListWidget );
     d->scrollView->setResizePolicy( TQScrollView::AutoOneFit );
-    
+
     setMainWidget( main );
 
     KPIM::DistributionListEditor::Line* const last = d->addLineForEntry( KPIM::DistributionList::Entry() );
     const TQSize hint = sizeHint();
-    resize( hint.width() * 1.5, hint.height() );
+    resize( hint.width() * 3L/2, hint.height() );
 }
 
 KPIM::DistributionListEditor::EditorWidget::~EditorWidget()
@@ -217,6 +221,7 @@ void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM
 {
     d->distListUid = list.uid();
     d->nameLineEdit->setText( list.name() );
+    d->resource = list.resource();
 
     using KPIM::DistributionListEditor::Line;
     typedef TQValueList<Line*>::ConstIterator ListIterator;
@@ -238,12 +243,12 @@ void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM
 }
 
 KPIM::DistributionListEditor::Line* KPIM::DistributionListEditor::EditorWidgetPrivate::addLineForEntry( const KPIM::DistributionList::Entry& entry )
-{  
+{
     KPIM::DistributionListEditor::Line* line = new KPIM::DistributionListEditor::Line( addressBook, memberListWidget );
     line->setEntry( entry );
     addresseeLayout->addWidget( line );
     addressees.append( line );
-    TQObject::connect( line, TQT_SIGNAL( textChanged() ), 
+    TQObject::connect( line, TQT_SIGNAL( textChanged() ),
                       mapper, TQT_SLOT( map() ) );
     mapper->setMapping( line, ++lastLineId );
     line->setShown( true );
@@ -256,23 +261,39 @@ void KPIM::DistributionListEditor::EditorWidget::slotOk()
     const KPIM::DistributionList existing = KPIM::DistributionList::findByName( d->addressBook, name );
     if ( !existing.isEmpty() && existing.uid() != d->distListUid )
     {
-        KMessageBox::error( this, i18n( "A distribution list with the name %1 already exists. Please choose another name." ).arg( name ), i18n( "Name in Use" ) ); 
+        KMessageBox::error( this, i18n( "A distribution list with the name %1 already exists. Please choose another name." ).arg( name ), i18n( "Name in Use" ) );
+        return;
+    }
+
+    KABC::Ticket *ticket = d->resource->requestSaveTicket();
+    if ( !ticket ) {
+        kdWarning(5720) << "Unable to get save ticket!" << endl;
         return;
     }
 
     KPIM::DistributionList list;
     list.setUid( d->distListUid.isNull() ? KApplication::randomString( 10 ) :d->distListUid );
     list.setName( name );
+    list.setResource( d->resource );
     typedef TQValueList<KPIM::DistributionListEditor::Line*>::ConstIterator ListIterator;
     for ( ListIterator it = d->addressees.begin(), end = d->addressees.end(); it != end; ++it )
-    { 
+    {
         const KPIM::DistributionList::Entry entry = (*it)->entry();
         if ( entry.addressee.isEmpty() )
             continue;
         list.insertEntry( entry.addressee, entry.email );
     }
     d->distributionList = list;
-    accept();
+
+    d->addressBook->insertAddressee( d->distributionList );
+    if ( !d->resource->save( ticket ) ) {
+        kdWarning(5720) << "Unable to save dist list!" << endl;
+    }
+    d->resource->releaseSaveTicket( ticket );
+
+    if ( !KPIM::DistributionList::findByName( d->addressBook, name ).isEmpty() ) {
+        accept();
+    }
 }
 
 KPIM::DistributionList KPIM::DistributionListEditor::EditorWidget::distributionList() const

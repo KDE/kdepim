@@ -42,13 +42,20 @@ class KDE_EXPORT KOEventViewerDialog : public KDialogBase
 {
     Q_OBJECT
   public:
-    KOEventViewerDialog( TQWidget *parent = 0, const char *name = 0,
-                         bool compact = false );
+    explicit KOEventViewerDialog( Calendar *calendar, TQWidget *parent = 0,
+                                  const char *name = 0, bool compact = false );
     virtual ~KOEventViewerDialog();
 
-    void setIncidence( Incidence *incidence ) { mEventViewer->setIncidence( incidence ); }
-    void appendIncidence( Incidence *incidence ) { mEventViewer->appendIncidence( incidence ); }
+    void setIncidence( Incidence *incidence, const TQDate &date  )
+    {
+      mEventViewer->setIncidence( incidence, date );
+    }
+    void appendIncidence( Incidence *incidence, const TQDate &date )
+    {
+      mEventViewer->appendIncidence( incidence, date );
+    }
 
+    void setCalendar( Calendar *calendar );
     void addText( const TQString &text );
 
   private:

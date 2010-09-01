@@ -593,7 +593,8 @@ ExceptionsWidget::ExceptionsWidget( TQWidget *parent, const char *name ) :
   mExceptionDateEdit->setDate( TQDate::currentDate() );
   boxLayout->addWidget( mExceptionDateEdit, 0, 0 );
 
-  TQPushButton *addExceptionButton = new TQPushButton( i18n("&Add"), box );
+  TQPushButton *addExceptionButton = new TQPushButton(
+      i18n( "Add a new recurrence to the recurrence list", "&Add" ), box );
   TQWhatsThis::add( addExceptionButton,
        i18n("Add this date as an exception "
       "to the recurrence rules for this event or to-do.") );
@@ -1073,6 +1074,9 @@ KOEditorRecurrence::KOEditorRecurrence( TQWidget* parent, const char *name ) :
     mExceptionsButton = 0;
     topLayout->addWidget( mExceptionsWidget, 3, 1 );
   }
+
+  // set some initial defaults for the saved recurrence
+  mSaveRec.setDuration( -1 ); // never ending
 }
 
 KOEditorRecurrence::~KOEditorRecurrence()
@@ -1083,6 +1087,7 @@ void KOEditorRecurrence::setRecurrenceEnabled( bool enabled )
 {
 //  kdDebug(5850) << "KOEditorRecurrence::setRecurrenceEnabled(): " << (enabled ? "on" : "off") << endl;
 
+  mEnabledCheck->setChecked( enabled );
   mTimeGroupBox->setEnabled( enabled );
   mRuleBox->setEnabled( enabled );
   if ( mRecurrenceRangeWidget ) mRecurrenceRangeWidget->setEnabled( enabled );
@@ -1147,9 +1152,7 @@ void KOEditorRecurrence::setDefaults( const TQDateTime &from, const TQDateTime &
 {
   setDateTimes( from, to );
 
-  bool enabled = false;
-  mEnabledCheck->setChecked( enabled );
-  setRecurrenceEnabled( enabled );
+  setRecurrenceEnabled( false );
 
   mRecurrenceRange->setDefaults( from );
 
@@ -1200,8 +1203,6 @@ void KOEditorRecurrence::readIncidence(Incidence *incidence)
     f = r->frequency();
   }
 
-
-  mEnabledCheck->setChecked( recurs );
   setRecurrenceEnabled( recurs );
 
   int recurrenceType = RecurrenceChooser::Weekly;
@@ -1438,10 +1439,218 @@ bool KOEditorRecurrence::doesRecur()
   return mEnabledCheck->isChecked();
 }
 
+void KOEditorRecurrence::saveValues()
+{
+  int duration = mRecurrenceRange->duration();
+  TQDate endDate;
+  if ( duration == 0 ) {
+    endDate = mRecurrenceRange->endDate();
+  }
 
-KOEditorRecurrenceDialog::KOEditorRecurrenceDialog(TQWidget * parent) :
-    KDialogBase( parent, 0, false, i18n("Recurrence"), Ok )
+  int recurrenceType = mRecurrenceChooser->type();
+  if ( recurrenceType == RecurrenceChooser::Daily ) {
+    mSaveRec.setDaily( mDaily->frequency() );
+  } else if ( recurrenceType == RecurrenceChooser::Weekly ) {
+    mSaveRec.setWeekly( mWeekly->frequency(), mWeekly->days() );
+  } else if ( recurrenceType == RecurrenceChooser::Monthly ) {
+    mSaveRec.setMonthly( mMonthly->frequency() );
+
+    if ( mMonthly->byPos() ) {
+      int pos = mMonthly->count();
+
+      TQBitArray days( 7 );
+      days.fill( false );
+      days.setBit( mMonthly->weekday() - 1 );
+      mSaveRec.addMonthlyPos( pos, days );
+    } else {
+      // it's by day
+      mSaveRec.addMonthlyDate( mMonthly->day() );
+    }
+  } else if ( recurrenceType == RecurrenceChooser::Yearly ) {
+    mSaveRec.setYearly( mYearly->frequency() );
+
+    switch ( mYearly->getType() ) {
+    case RecurYearly::byMonth:
+      mSaveRec.addYearlyDate( mYearly->monthDay() );
+      mSaveRec.addYearlyMonth( mYearly->month() );
+      break;
+
+    case RecurYearly::byPos:
+    {
+      mSaveRec.addYearlyMonth( mYearly->posMonth() );
+      TQBitArray days( 7 );
+      days.fill( false );
+      days.setBit( mYearly->posWeekday() - 1 );
+      mSaveRec.addYearlyPos( mYearly->posCount(), days );
+      break;
+    }
+
+    case RecurYearly::byDay:
+      mSaveRec.addYearlyDay( mYearly->day() );
+      break;
+    }
+  }
+
+ if ( duration > 0 ) {
+    mSaveRec.setDuration( duration );
+  } else if ( duration == 0 ) {
+    mSaveRec.setEndDate( endDate );
+  }
+
+  mSaveRec.setExDates( mExceptions->dates() );
+}
+
+void KOEditorRecurrence::restoreValues()
+{
+  TQBitArray rDays( 7 );
+  int day = 0;
+  int count = 0;
+  int month = 0;
+
+  if ( mSaveRec.startDateTime().isValid() && mSaveRec.endDateTime().isValid() ) {
+    setDefaults( mSaveRec.startDateTime(), mSaveRec.endDateTime(), mSaveRec.doesFloat() );
+  }
+
+  int recurrenceType;
+  switch ( mSaveRec.recurrenceType() ) {
+  case Recurrence::rNone:
+    recurrenceType = RecurrenceChooser::Weekly;
+    break;
+
+  case Recurrence::rDaily:
+    recurrenceType = RecurrenceChooser::Daily;
+    mDaily->setFrequency( mSaveRec.frequency() );
+    break;
+
+  case Recurrence::rWeekly:
+    recurrenceType = RecurrenceChooser::Weekly;
+
+    mWeekly->setFrequency( mSaveRec.frequency() );
+    mWeekly->setDays( mSaveRec.days() );
+    break;
+
+  case Recurrence::rMonthlyPos:
+  {
+    // TODO: we only handle one possibility in the list right now,
+    // so I have hardcoded calls with first().  If we make the GUI
+    // more extended, this can be changed.
+    recurrenceType = RecurrenceChooser::Monthly;
+
+    TQValueList<RecurrenceRule::WDayPos> rmp = mSaveRec.monthPositions();
+    if ( !rmp.isEmpty() ) {
+      mMonthly->setByPos( rmp.first().pos(), rmp.first().day() );
+    }
+    mMonthly->setFrequency( mSaveRec.frequency() );
+    break;
+  }
+
+  case Recurrence::rMonthlyDay:
+  {
+    recurrenceType = RecurrenceChooser::Monthly;
+
+    TQValueList<int> rmd = mSaveRec.monthDays();
+    // check if we have any setting for which day (vcs import is broken and
+    // does not set any day, thus we need to check)
+    if ( !rmd.isEmpty() ) {
+      day = rmd.first();
+    }
+    if ( day > 0 ) {
+      mMonthly->setByDay( day );
+      mMonthly->setFrequency( mSaveRec.frequency() );
+    }
+    break;
+  }
+
+  case Recurrence::rYearlyMonth:
+  {
+    recurrenceType = RecurrenceChooser::Yearly;
+
+    TQValueList<int> rmd = mSaveRec.yearDates();
+    if ( !rmd.isEmpty() ) {
+      day = rmd.first();
+    }
+    rmd = mSaveRec.yearMonths();
+    if ( !rmd.isEmpty() ) {
+      month = rmd.first();
+    }
+    if ( day > 0 && month > 0 ) {
+      mYearly->setByMonth( day, month );
+      mYearly->setFrequency( mSaveRec.frequency() );
+    }
+    break;
+  }
+
+  case Recurrence::rYearlyPos:
+  {
+    recurrenceType = RecurrenceChooser::Yearly;
+
+    TQValueList<int> months = mSaveRec.yearMonths();
+    if ( !months.isEmpty() ) {
+      month = months.first();
+    }
+    TQValueList<RecurrenceRule::WDayPos> pos = mSaveRec.yearPositions();
+    if ( !pos.isEmpty() ) {
+      count = pos.first().pos();
+      day = pos.first().day();
+    }
+    if ( count > 0 && day > 0 && month > 0 ) {
+      mYearly->setByPos( count, day, month );
+      mYearly->setFrequency( mSaveRec.frequency() );
+    }
+    break;
+  }
+
+  case Recurrence::rYearlyDay:
+  {
+    recurrenceType = RecurrenceChooser::Yearly;
+
+    TQValueList<int> days = mSaveRec.yearDays();
+    if ( !days.isEmpty() ) {
+      day = days.first();
+    }
+    if ( day > 0 ) {
+      mYearly->setByDay( day );
+      mYearly->setFrequency( mSaveRec.frequency() );
+    }
+    break;
+  }
+  default:
+    break;
+  }
+
+  mRecurrenceChooser->setType( recurrenceType );
+  showCurrentRule( recurrenceType );
+
+  if ( mSaveRec.startDateTime().isValid() ) {
+    mRecurrenceRange->setDateTimes( mSaveRec.startDateTime() );
+  }
+
+  mRecurrenceRange->setDuration( mSaveRec.duration() );
+  if ( mSaveRec.duration() == 0 && mSaveRec.endDate().isValid() ) {
+    mRecurrenceRange->setEndDate( mSaveRec.endDate() );
+  }
+
+  mExceptions->setDates( mSaveRec.exDates() );
+}
+
+KOEditorRecurrenceDialog::KOEditorRecurrenceDialog(TQWidget * parent)
+  : KDialogBase( parent, 0, false, i18n("Recurrence"), Ok|Cancel ), mRecurEnabled( false )
 {
   mRecurrence = new KOEditorRecurrence( this );
   setMainWidget( mRecurrence );
+}
+
+void KOEditorRecurrenceDialog::slotOk()
+{
+  mRecurEnabled = mRecurrence->doesRecur();
+  mRecurrence->saveValues();
+  emit okClicked(); // tell the incidence editor to update the recurrenceString
+  accept();
+}
+
+void KOEditorRecurrenceDialog::slotCancel()
+{
+  mRecurrence->setRecurrenceEnabled( mRecurEnabled );
+  mRecurrence->restoreValues();
+  reject();
 }

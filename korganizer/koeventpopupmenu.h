@@ -31,6 +31,7 @@
 #include <tqdatetime.h>
 
 namespace KCal {
+class Calendar;
 class Incidence;
 }
 using namespace KCal;
@@ -46,7 +47,7 @@ class KOEventPopupMenu : public TQPopupMenu {
 
 
   public slots:
-    void showIncidencePopup( Incidence *, const TQDate & );
+    void showIncidencePopup( Calendar *, Incidence *, const TQDate & );
 
   protected slots:
     void popupShow();
@@ -62,17 +63,19 @@ class KOEventPopupMenu : public TQPopupMenu {
     void forward();
 
   signals:
-    void editIncidenceSignal(Incidence *);
-    void showIncidenceSignal(Incidence *);
-    void deleteIncidenceSignal(Incidence *);
-    void cutIncidenceSignal(Incidence *);
-    void copyIncidenceSignal(Incidence *);
+    void configChanged();
+    void editIncidenceSignal( Incidence *, const TQDate & );
+    void showIncidenceSignal( Incidence *, const TQDate & );
+    void deleteIncidenceSignal( Incidence * );
+    void cutIncidenceSignal( Incidence * );
+    void copyIncidenceSignal( Incidence * );
     void pasteIncidenceSignal();
-    void toggleAlarmSignal(Incidence *);
+    void toggleAlarmSignal( Incidence * );
     void dissociateOccurrenceSignal( Incidence *, const TQDate & );
     void dissociateFutureOccurrenceSignal( Incidence *, const TQDate & );
 
   private:
+    Calendar *mCalendar;
     Incidence *mCurrentIncidence;
     TQDate mCurrentDate;
 

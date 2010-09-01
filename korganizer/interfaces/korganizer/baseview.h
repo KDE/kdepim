@@ -2,7 +2,7 @@
     This file is part of the KOrganizer interfaces.
 
     Copyright (c) 1999,2001,2003 Cornelius Schumacher <schumacher@kde.org>
-		Copyright (C) 2004           Reinhold Kainhofer   <reinhold@kainhofer.com>
+    Copyright (C) 2004           Reinhold Kainhofer   <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -38,17 +38,19 @@
 
 using namespace KCal;
 
-namespace KCal { class Calendar; }
+namespace KCal {
+  class Calendar;
+  class ResourceCalendar;
+}
 
 namespace KOrg {
 
-
 /**
-  This class provides an interface for all views being displayed within the main
-  calendar view. It has functions to update the view, to specify date range and
-  other display parameter and to return selected objects. An important class,
-  which inherits KOBaseView is KOEventView, which provides the interface for all
-  views of event data like the agenda or the month view.
+  This class provides an interface for all views being displayed within the
+  main calendar view. It has functions to update the view, to specify date
+  range and other display parameter and to return selected objects. An
+  important class, which inherits KOBaseView is KOEventView, which provides
+  the interface for all views of event data like the agenda or the month view.
 
   @short Base class for calendar views
   @author Preston Brown, Cornelius Schumacher
@@ -56,7 +58,7 @@ namespace KOrg {
 */
 class KDE_EXPORT BaseView : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     /**
       Constructs a view.
@@ -66,20 +68,40 @@ class KDE_EXPORT BaseView : public QWidget
       @param parent parent widget.
       @param name   name of this widget.
     */
-    BaseView( Calendar *cal, TQWidget *parent = 0,
-              const char *name = 0 )
-      : TQWidget( parent, name ), mCalendar( cal ), mChanger( 0 ) {}
+    BaseView( Calendar *cal, TQWidget *parent = 0, const char *name = 0 )
+      : TQWidget( parent, name ),
+        mReadOnly( false ), mCalendar( cal ), mResource( 0 ), mChanger( 0 ) {}
 
     /**
       Destructor.  Views will do view-specific cleanups here.
     */
     virtual ~BaseView() {}
 
+    /** Flag indicating if the view is read-only */
+    void setReadOnly( bool readonly ) { mReadOnly = readonly; }
+    bool readOnly() { return mReadOnly; }
+
     virtual void setCalendar( Calendar *cal ) { mCalendar = cal; }
     /**
       Return calendar object of this view.
     */
     virtual Calendar *calendar() { return mCalendar; }
+
+    virtual void setResource( ResourceCalendar *res, const TQString &subResource )
+    {
+      mResource = res;
+      mSubResource = subResource;
+    }
+
+    /**
+      Return resourceCalendar of this view.
+    */
+    ResourceCalendar *resourceCalendar() { return mResource; }
+
+    /**
+      Return subResourceCalendar of this view.
+    */
+    TQString subResourceCalendar() const { return mSubResource; }
 
     /**
       @return a list of selected events.  Most views can probably only
@@ -93,7 +115,19 @@ class KDE_EXPORT BaseView : public QWidget
       select a single event at a time, but some may be able to select
       more than one.
     */
-    virtual DateList selectedDates() = 0;
+    virtual DateList selectedIncidenceDates() = 0;
+
+    /**
+      Returns the start of the selection, or an invalid TQDateTime if there is no selection
+      or the view doesn't support selecting cells.
+    */
+    virtual TQDateTime selectionStart() { return TQDateTime(); }
+
+    /**
+       Returns the end of the selection, or an invalid TQDateTime if there is no selection
+       or the view doesn't support selecting cells.
+     */
+    virtual TQDateTime selectionEnd() { return TQDateTime(); }
 
     virtual CalPrinterBase::PrintType printType()
     {
@@ -107,6 +141,11 @@ class KDE_EXPORT BaseView : public QWidget
 
     /** Return if this view is a view for displaying events. */
     virtual bool isEventView() { return false; }
+
+    /** Returns true if the view supports navigation through the date navigator
+        ( selecting a date range, changing month, changing year, etc. )
+     */
+    virtual bool supportsDateNavigation() const { return false; }
 
   public slots:
     /**
@@ -124,8 +163,9 @@ class KDE_EXPORT BaseView : public QWidget
       show all given events.
 
       @param incidenceList a list of incidences to show.
+      @param date is the TQDate on which the incidences are being shown.
     */
-    virtual void showIncidences( const Incidence::List &incidenceList ) = 0;
+    virtual void showIncidences( const Incidence::List &incidenceList, const TQDate &date ) = 0;
 
     /**
       Updates the current display to reflect changes that may have happened
@@ -166,19 +206,19 @@ class KDE_EXPORT BaseView : public QWidget
     virtual bool eventDurationHint(TQDateTime &/*startDt*/, TQDateTime &/*endDt*/, bool &/*allDay*/) { return false; }
 
   signals:
-    void incidenceSelected( Incidence * );
+    void incidenceSelected( Incidence *, const TQDate & );
 
     /**
      * instructs the receiver to show the incidence in read-only mode.
      */
-    void showIncidenceSignal(Incidence *);
+    void showIncidenceSignal( Incidence *, const TQDate & );
 
     /**
      * instructs the receiver to begin editing the incidence specified in
      * some manner.  Doesn't make sense to connect to more than one
      * receiver.
      */
-    void editIncidenceSignal(Incidence *);
+    void editIncidenceSignal( Incidence *, const TQDate & );
 
     /**
      * instructs the receiver to delete the Incidence in some manner; some
@@ -220,31 +260,40 @@ class KDE_EXPORT BaseView : public QWidget
      * instructs the receiver to create a new event.  Doesn't make
      * sense to connect to more than one receiver.
      */
-    void newEventSignal();
+    void newEventSignal( ResourceCalendar *res, const TQString &subResource );
     /**
      * instructs the receiver to create a new event with the specified beginning
      * time. Doesn't make sense to connect to more than one receiver.
      */
-    void newEventSignal( const TQDate & );
+    void newEventSignal( ResourceCalendar *res, const TQString &subResource,
+                         const TQDate & );
     /**
      * instructs the receiver to create a new event with the specified beginning
      * time. Doesn't make sense to connect to more than one receiver.
      */
-    void newEventSignal( const TQDateTime & );
+    void newEventSignal( ResourceCalendar *res, const TQString &subResource,
+                         const TQDateTime & );
     /**
      * instructs the receiver to create a new event, with the specified
      * beginning end ending times.  Doesn't make sense to connect to more
      * than one receiver.
      */
-    void newEventSignal( const TQDateTime &, const TQDateTime & );
+    void newEventSignal( ResourceCalendar *res, const TQString &subResource,
+                         const TQDateTime &, const TQDateTime & );
 
-    void newTodoSignal( const TQDate & );
+    void newTodoSignal( ResourceCalendar *res,const TQString &subResource,
+                        const TQDate & );
     void newSubTodoSignal( Todo * );
 
-    void newJournalSignal( const TQDate & );
+    void newJournalSignal( ResourceCalendar *res,const TQString &subResource,
+                           const TQDate & );
 
   private:
+    bool mReadOnly;
     Calendar *mCalendar;
+    ResourceCalendar *mResource;
+    TQString mSubResource;
+
   protected:
     IncidenceChangerBase *mChanger;
 };

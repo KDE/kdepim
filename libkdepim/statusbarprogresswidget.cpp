@@ -105,6 +105,8 @@ StatusbarProgressWidget::StatusbarProgressWidget( ProgressDialog* progressDialog
             this, TQT_SLOT( slotProgressItemAdded( KPIM::ProgressItem * ) ) );
   connect ( ProgressManager::instance(), TQT_SIGNAL( progressItemCompleted( KPIM::ProgressItem * ) ),
             this, TQT_SLOT( slotProgressItemCompleted( KPIM::ProgressItem * ) ) );
+  connect ( ProgressManager::instance(), TQT_SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
+            this, TQT_SLOT( updateBusyMode() ) );
 
   connect ( progressDialog, TQT_SIGNAL( visibilityChanged( bool )),
             this, TQT_SLOT( slotProgressDialogVisible( bool ) ) );
@@ -119,9 +121,8 @@ StatusbarProgressWidget::StatusbarProgressWidget( ProgressDialog* progressDialog
 // In slot..Added we can only end up in 1 or N.
 // In slot..Removed we can end up in 0, 1, or we can stay in N if we were already.
 
-void StatusbarProgressWidget::slotProgressItemAdded( ProgressItem *item )
+void StatusbarProgressWidget::updateBusyMode()
 {
-  if ( item->parent() ) return; // we are only interested in top level items
   connectSingleItem(); // if going to 1 item
   if ( mCurrentItem ) { // Exactly one item
     delete mBusyTimer;
@@ -136,6 +137,14 @@ void StatusbarProgressWidget::slotProgressItemAdded( ProgressItem *item )
       mDelayTimer->start( 1000, true );
     }
   }
+}
+
+void StatusbarProgressWidget::slotProgressItemAdded( ProgressItem *item )
+{
+  if ( item->parent() )
+    return; // we are only interested in top level items
+
+  updateBusyMode();
 }
 
 void StatusbarProgressWidget::slotProgressItemCompleted( ProgressItem *item )

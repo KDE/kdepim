@@ -73,8 +73,8 @@ KOGroupware *KOGroupware::instance()
 }
 
 
- KOGroupware::KOGroupware( CalendarView* view, KCal::CalendarResources* cal )
-   : TQObject( 0, "kmgroupware_instance" ), mView( view ), mCalendar( cal )
+KOGroupware::KOGroupware( CalendarView* view, KCal::CalendarResources* cal )
+   : TQObject( 0, "kmgroupware_instance" ), mView( view ), mCalendar( cal ), mDoNotNotify( false )
 {
   // Set up the dir watch of the three incoming dirs
   KDirWatch* watcher = KDirWatch::self();
@@ -105,10 +105,8 @@ void KOGroupware::slotViewNewIncidenceChanger( IncidenceChangerBase* changer )
     // Call slot perhapsUploadFB if an incidence was added, changed or removed
     connect( changer, TQT_SIGNAL( incidenceAdded( Incidence* ) ),
              mFreeBusyManager, TQT_SLOT( slotPerhapsUploadFB() ) );
-    connect( changer, TQT_SIGNAL( incidenceChanged( Incidence*, Incidence*, int ) ),
+    connect( changer, TQT_SIGNAL( incidenceChanged( Incidence*, Incidence*, KOGlobals::WhatChanged ) ),
              mFreeBusyManager, TQT_SLOT( slotPerhapsUploadFB() ) );
-    connect( changer, TQT_SIGNAL( incidenceChanged( Incidence*, Incidence* ) ),
-             mFreeBusyManager, TQT_SLOT( slotPerhapsUploadFB() ) ) ;
     connect( changer, TQT_SIGNAL( incidenceDeleted( Incidence * ) ),
              mFreeBusyManager, TQT_SLOT( slotPerhapsUploadFB() ) );
 }
@@ -179,6 +177,10 @@ void KOGroupware::incomingDirChanged( const TQString& path )
   KCal::ScheduleMessage::Status status = message->status();
   KCal::Incidence* incidence =
     dynamic_cast<KCal::Incidence*>( message->event() );
+  if(!incidence) {
+    delete message;
+    return;
+  }
   KCal::MailScheduler scheduler( mCalendar );
   if ( action.startsWith( "accepted" ) || action.startsWith( "tentative" )
        || action.startsWith( "delegated" ) || action.startsWith( "counter" ) ) {
@@ -200,10 +202,10 @@ void KOGroupware::incomingDirChanged( const TQString& path )
       }
     }
     if ( KOPrefs::instance()->outlookCompatCounterProposals() || !action.startsWith( "counter" ) )
-      scheduler.acceptTransaction( incidence, method, status );
+      scheduler.acceptTransaction( incidence, method, status, receiver );
   } else if ( action.startsWith( "cancel" ) )
     // Delete the old incidence, if one is present
-    scheduler.acceptTransaction( incidence, KCal::Scheduler::Cancel, status );
+    scheduler.acceptTransaction( incidence, KCal::Scheduler::Cancel, status, receiver );
   else if ( action.startsWith( "reply" ) ) {
     if ( method != Scheduler::Counter ) {
       scheduler.acceptTransaction( incidence, method, status );
@@ -211,13 +213,13 @@ void KOGroupware::incomingDirChanged( const TQString& path )
       // accept counter proposal
       scheduler.acceptCounterProposal( incidence );
       // send update to all attendees
-      sendICalMessage( mView, Scheduler::Request, incidence );
+      sendICalMessage( mView, Scheduler::Request, incidence, KOGlobals::INCIDENCEEDITED, false );
     }
   } else
     kdError(5850) << "Unknown incoming action " << action << endl;
 
   if ( action.startsWith( "counter" ) ) {
-    mView->editIncidence( incidence, true );
+    mView->editIncidence( incidence, TQDate(), true );
     KOIncidenceEditor *tmp = mView->editorDialog( incidence );
     tmp->selectInvitationCounterProposal( true );
   }
@@ -238,8 +240,9 @@ class KOInvitationFormatterHelper : public InvitationFormatterHelper
  */
 bool KOGroupware::sendICalMessage( TQWidget* parent,
                                    KCal::Scheduler::Method method,
-                                   Incidence* incidence, bool isDeleting,
-                                   bool statusChanged )
+                                   Incidence* incidence,
+                                   KOGlobals::HowChanged action,
+                                   bool attendeeStatusChanged )
 {
   // If there are no attendees, don't bother
   if( incidence->attendees().isEmpty() )
@@ -267,16 +270,48 @@ bool KOGroupware::sendICalMessage( TQWidget* parent,
      * mail. */
     if ( incidence->attendees().count() > 1
         || incidence->attendees().first()->email() != incidence->organizer().email() ) {
-      TQString type;
-      if( incidence->type() == "Event") type = i18n("event");
-      else if( incidence->type() == "Todo" ) type = i18n("task");
-      else if( incidence->type() == "Journal" ) type = i18n("journal entry");
-      else type = incidence->type();
-      TQString txt = i18n( "This %1 includes other people. "
-          "Should email be sent out to the attendees?" )
-        .arg( type );
-      rc = KMessageBox::questionYesNoCancel( parent, txt,
-          i18n("Group Scheduling Email"), i18n("Send Email"), i18n("Do Not Send") );
+
+      TQString txt;
+      switch( action ) {
+      case KOGlobals::INCIDENCEEDITED:
+        txt = i18n( "You changed the invitation \"%1\".\n"
+                    "Do you want to email the attendees an update message?" ).
+              arg( incidence->summary() );
+        break;
+      case KOGlobals::INCIDENCEDELETED:
+        Q_ASSERT( incidence->type() == "Event" || incidence->type() == "Todo" );
+        if ( incidence->type() == "Event" ) {
+          txt = i18n( "You removed the invitation \"%1\".\n"
+                      "Do you want to email the attendees that the event is canceled?" ).
+                arg( incidence->summary() );
+        } else if ( incidence->type() == "Todo" ) {
+          txt = i18n( "You removed the invitation \"%1\".\n"
+                      "Do you want to email the attendees that the todo is canceled?" ).
+                arg( incidence->summary() );
+        }
+        break;
+      case KOGlobals::INCIDENCEADDED:
+        if ( incidence->type() == "Event" ) {
+          txt = i18n( "The event \"%1\" includes other people.\n"
+                      "Do you want to email the invitation to the attendees?" ).
+                arg( incidence->summary() );
+        } else if ( incidence->type() == "Todo" ) {
+          txt = i18n( "The todo \"%1\" includes other people.\n"
+                      "Do you want to email the invitation to the attendees?" ).
+                arg( incidence->summary() );
+        } else {
+          txt = i18n( "This incidence includes other people. "
+                      "Should an email be sent to the attendees?" );
+        }
+        break;
+      default:
+        kdError() << "Unsupported HowChanged action" << int( action ) << endl;
+        break;
+      }
+
+      rc = KMessageBox::questionYesNo(
+             parent, txt, i18n( "Group Scheduling Email" ),
+             KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
     } else {
       return true;
     }
@@ -291,32 +326,49 @@ bool KOGroupware::sendICalMessage( TQWidget* parent,
     rc = KMessageBox::questionYesNo( parent, txt, TQString::null, i18n("Send Update"), i18n("Do Not Send") );
   } else if( incidence->type() == "Event" ) {
     TQString txt;
-    if ( statusChanged && method == Scheduler::Request ) {
-      txt = i18n( "Your status as an attendee of this event "
-          "changed. Do you want to send a status update to the "
-          "organizer of this event?" );
+    if ( attendeeStatusChanged && method == Scheduler::Request ) {
+      txt = i18n( "Your status as an attendee of this event changed. "
+                  "Do you want to send a status update to the event organizer?" );
       method = Scheduler::Reply;
       rc = KMessageBox::questionYesNo( parent, txt, TQString::null, i18n("Send Update"), i18n("Do Not Send") );
     } else {
-      if( isDeleting )
-        txt = i18n( "You are not the organizer of this event. "
-            "Deleting it will bring your calendar out of sync "
-            "with the organizers calendar. Do you really want "
-            "to delete it?" );
-      else
-        txt = i18n( "You are not the organizer of this event. "
-            "Editing it will bring your calendar out of sync "
-            "with the organizers calendar. Do you really want "
-            "to edit it?" );
-      rc = KMessageBox::warningYesNo( parent, txt );
-      return ( rc == KMessageBox::Yes );
+      if( action == KOGlobals::INCIDENCEDELETED ) {
+        const TQStringList myEmails = KOPrefs::instance()->allEmails();
+        bool askConfirmation = false;
+        for ( TQStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
+          TQString email = *it;
+          Attendee *me = incidence->attendeeByMail(email);
+          if (me && (me->status()==KCal::Attendee::Accepted || me->status()==KCal::Attendee::Delegated)) {
+            askConfirmation = true;
+            break;
+          }
+        }
+
+        if ( !askConfirmation ) {
+          return true;
+        }
+
+        txt = i18n( "You had previously accepted an invitation to this event. "
+                    "Do you want to send an updated response to the organizer "
+                    "declining the invitation?" );
+        rc = KMessageBox::questionYesNo(
+          parent, txt, i18n( "Group Scheduling Email" ),
+          KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+        setDoNotNotify( rc == KMessageBox::No );
+      } else {
+        txt = i18n( "You are not the organizer of this event. Editing it will "
+                    "bring your calendar out of sync with the organizer's calendar. "
+                    "Do you really want to edit it?" );
+        rc = KMessageBox::warningYesNo( parent, txt );
+        return ( rc == KMessageBox::Yes );
+      }
     }
   } else {
     kdWarning(5850) << "Groupware messages for Journals are not implemented yet!" << endl;
     return true;
   }
 
-  if( rc == KMessageBox::Yes ) {
+  if ( rc == KMessageBox::Yes ) {
     // We will be sending out a message here. Now make sure there is
     // some summary
     if( incidence->summary().isEmpty() )
@@ -327,10 +379,11 @@ bool KOGroupware::sendICalMessage( TQWidget* parent,
     scheduler.performTransaction( incidence, method );
 
     return true;
-  } else if( rc == KMessageBox::No )
+  } else if ( rc == KMessageBox::No ) {
     return true;
-  else
+  } else {
     return false;
+  }
 }
 
 void KOGroupware::sendCounterProposal(KCal::Calendar *calendar, KCal::Event * oldEvent, KCal::Event * newEvent) const
@@ -341,7 +394,9 @@ void KOGroupware::sendCounterProposal(KCal::Calendar *calendar, KCal::Event * ol
     Incidence* tmp = oldEvent->clone();
     tmp->setSummary( i18n("Counter proposal: %1").arg( newEvent->summary() ) );
     tmp->setDescription( newEvent->description() );
-    tmp->addComment( i18n("Proposed new meeting time: %1 - %2").arg( newEvent->dtStartStr(), newEvent->dtEndStr() ) );
+    tmp->addComment( i18n("Proposed new meeting time: %1 - %2").
+                     arg( IncidenceFormatter::dateToString( newEvent->dtStart() ),
+                          IncidenceFormatter::dateToString( newEvent->dtEnd() ) ) );
     KCal::MailScheduler scheduler( calendar );
     scheduler.performTransaction( tmp, Scheduler::Reply );
     delete tmp;

@@ -63,6 +63,12 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     virtual void setFont( const TQFont& );
     void allowSemiColonAsSeparator( bool );
 
+    /// Sets if distribution lists will be used for completion.
+    /// This is true by default.
+    /// Call this right after the constructor, before anything calls loadContacts(),
+    /// otherwise this has no effect.
+    void allowDistributionLists( bool allowDistLists );
+
   public slots:
     void cursorAtEnd();
     void enableCompletion( bool enable );
@@ -96,8 +102,10 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
      * Adds the name of a completion source to the internal list of
      * such sources and returns its index, such that that can be used
      * for insertion of items associated with that source.
+     * 
+     * If the source already exists, the weight will be updated.
      */
-    int addCompletionSource( const TQString& );
+    int addCompletionSource( const TQString&, int weight );
 
     /** return whether we are using sorted or weighted display */
     static KCompletion::CompOrder completionOrder();
@@ -120,6 +128,7 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     void init();
     void startLoadingLDAPEntries();
     void stopLDAPLookup();
+    void updateLDAPWeights();
 
     void setCompletedItems( const TQStringList& items, bool autoSuggest );
     void addCompletionItem( const TQString& string, int weight, int source, const TQStringList * keyWords=0 );
@@ -136,6 +145,7 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
     bool m_useSemiColonAsSeparator;
+    bool m_allowDistLists;
 
     //TQMap<TQString, KABC::Addressee> m_contactMap;
 
@@ -147,6 +157,7 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     static TQString *s_LDAPText;
     static AddresseeLineEdit *s_LDAPLineEdit;
     static TQStringList *s_completionSources;
+    static TQMap<int,int> *s_ldapClientToCompletionSourceMap;
 
     class AddresseeLineEditPrivate;
     AddresseeLineEditPrivate *d;

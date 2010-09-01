@@ -576,7 +576,14 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const TQV
         addr.setNote( i18n( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2" ).arg( d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
         addr.setResource( resource );
         mCore->addressBook()->insertAddressee( addr );
-        importedAddrs.append( addr.fullEmail() );
+        TQString displayString;
+        if ( !addr.fullEmail().isEmpty() ) {
+          displayString = addr.fullEmail();
+        }
+        else {
+          displayString = addr.formattedName();
+        }
+        importedAddrs.append( displayString );
         localAddrs.append( addr );
       } else {
         localAddrs.append( existing.first() );
@@ -595,14 +602,15 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const TQV
 void LDAPSearchDialog::slotUser2()
 {
 #ifdef KDEPIM_NEW_DISTRLISTS
-    KABC::Resource *resource = mCore->requestResource( this );
-    if ( !resource ) return;
-
     const TQValueList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
     if ( selectedItems.isEmpty() ) {
       KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ), i18n( "No Contacts Selected" ) );
       return;
     }
+	
+    KABC::Resource *resource = mCore->requestResource( this );
+    if ( !resource ) return;
+
     KPIM::DistributionList dist = selectDistributionList();
     if ( dist.isEmpty() )
       return;
@@ -628,6 +636,8 @@ void LDAPSearchDialog::slotUser1()
     KABC::Resource *resource = mCore->requestResource( this );
     if ( !resource ) return;
     const TQValueList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
+    if( selectedItems.isEmpty() )
+      return;
     importContactsUnlessTheyExist( selectedItems, resource );
 }
 

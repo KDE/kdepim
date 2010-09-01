@@ -89,7 +89,9 @@ void ResourceCalDavConfig::loadSettings( KRES::Resource *resource ) {
         mRememberPassword->setChecked(p->rememberPassword());
         mPassword->setText(p->password());
         mTasksUrl->setText(p->tasksUrl());
+        mJournalsUrl->setText(p->journalsUrl());
         mUseSTasks->setChecked(p->useSTasks());
+        mUseSJournals->setChecked(p->useSJournals());
 
         mReloadConfig->loadSettings(res);
         mSaveConfig->loadSettings(res);
@@ -110,6 +112,8 @@ void ResourceCalDavConfig::saveSettings( KRES::Resource *resource ) {
             p->setPassword(mPassword->text());
             p->setTasksUrl(mTasksUrl->text());
             p->setUseSTasks(mUseSTasks->isChecked());
+            p->setJournalsUrl(mJournalsUrl->text());
+            p->setUseSJournals(mUseSJournals->isChecked());
         }
     }
 }
@@ -128,33 +132,47 @@ void ResourceCalDavConfig::setupUI() {
     // Tasks URL
     TQLabel *tlabel = new TQLabel( i18n( "Tasks URL:" ), this );
     mTasksUrl = new TQLineEdit( this );
-    mainLayout->addWidget( tlabel, 2, 0 );
-    mainLayout->addWidget( mTasksUrl, 2, 1 );
+    mainLayout->addWidget( tlabel, 3, 0 );
+    mainLayout->addWidget( mTasksUrl, 3, 1 );
 
     // Use Task URL checkbox
     mUseSTasks = new TQCheckBox( i18n("Use separate Tasks URL"), this );
-    mainLayout->addWidget(mUseSTasks, 3, 0 );
+    mainLayout->addWidget(mUseSTasks, 2, 0 );
+
+    // Journals URL
+    TQLabel *jlabel = new TQLabel( i18n( "Journals URL:" ), this );
+    mJournalsUrl = new TQLineEdit( this );
+    mainLayout->addWidget( jlabel, 5, 0 );
+    mainLayout->addWidget( mJournalsUrl, 5, 1 );
+
+    // Use Journal URL checkbox
+    mUseSJournals = new TQCheckBox( i18n("Use separate Journals URL"), this );
+    mainLayout->addWidget(mUseSJournals, 4, 0 );
 
     // Username
     label = new TQLabel( i18n( "Username:" ), this );
     mUsername = new TQLineEdit( this );
-    mainLayout->addWidget( label, 4, 0 );
-    mainLayout->addWidget( mUsername, 4, 1 );
+    mainLayout->addWidget( label, 6, 0 );
+    mainLayout->addWidget( mUsername, 6, 1 );
 
     // Password
     label = new TQLabel( i18n( "Password:" ), this );
     mPassword = new TQLineEdit( this );
     mPassword->setEchoMode( TQLineEdit::Password );
-    mainLayout->addWidget( label, 5, 0 );
-    mainLayout->addWidget( mPassword, 5, 1 );
+    mainLayout->addWidget( label, 7, 0 );
+    mainLayout->addWidget( mPassword, 7, 1 );
 
     // Remember password checkbox
     mRememberPassword = new TQCheckBox( i18n("Remember password"), this );
-    mainLayout->addWidget(mRememberPassword, 6, 1);
+    mainLayout->addWidget(mRememberPassword, 8, 1);
 
     mTasksUrl->setEnabled(mUseSTasks->isChecked());
     connect( mUseSTasks, TQT_SIGNAL( toggled( bool ) ),
            TQT_SLOT( slotSTasksToggled( bool ) ) );
+
+    mJournalsUrl->setEnabled(mUseSJournals->isChecked());
+    connect( mUseSJournals, TQT_SIGNAL( toggled( bool ) ),
+           TQT_SLOT( slotSJournalsToggled( bool ) ) );
 
     // configs
     TQHBoxLayout* horizontal = new TQHBoxLayout(this);
@@ -179,6 +197,10 @@ void ResourceCalDavConfig::setupUI() {
 
 void ResourceCalDavConfig::slotSTasksToggled( bool enabled ) {
     mTasksUrl->setEnabled(enabled);
+}
+
+void ResourceCalDavConfig::slotSJournalsToggled( bool enabled ) {
+    mJournalsUrl->setEnabled(enabled);
 }
 
 // EOF ========================================================================

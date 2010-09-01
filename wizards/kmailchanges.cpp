@@ -243,10 +243,11 @@ void CreateDisconnectedImapAccount::apply()
   c.setGroup( TQString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
 
-  if ( mEnableSavePassword ) {
-    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    c.writeEntry( "store-passwd", true );
-  }
+  c.setGroup(  "AccountWizard"  );
+  c.writeEntry(  "ShowOnStartup" , false );
+
+  c.setGroup( "Composer" );
+  c.writeEntry( "default-transport", mAccountName );
 
   c.setGroup( TQString("Transport %1").arg( transportId ) );
   c.writeEntry( "name", mAccountName );
@@ -295,7 +296,7 @@ void CreateDisconnectedImapAccount::apply()
 
     KPIM::Identity& identity = identityManager.newFromScratch( accountName );
     identity.setFullName( mRealName );
-    identity.setEmailAddr( mEmail );
+    identity.setPrimaryEmailAddress( mEmail );
     identityManager.commit();
   }
 
@@ -360,6 +361,11 @@ void CreateOnlineImapAccount::apply()
 
   c.setGroup( TQString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
+
+
+  c.setGroup(  "AccountWizard" );
+  c.writeEntry(  "ShowOnStartup" , false );
+
 }
 
 bool CreateImapAccount::writeToWallet(const TQString & type, int id)

@@ -71,20 +71,24 @@ void KOJournalView::appendJournal( Journal*journal, const TQDate &dt)
     entry->setDate( dt );
     entry->setIncidenceChanger( mChanger );
     entry->show();
-    connect( this, TQT_SIGNAL(flushEntries()), entry, TQT_SIGNAL(flushEntries()) );
-    connect( this, TQT_SIGNAL(setIncidenceChangerSignal( IncidenceChangerBase * ) ),
-             entry, TQT_SLOT(setIncidenceChanger( IncidenceChangerBase * ) ) );
-    connect( this, TQT_SIGNAL( journalEdited( Journal* ) ),
-             entry, TQT_SLOT( journalEdited( Journal* ) ) );
-    connect( this, TQT_SIGNAL( journalDeleted( Journal* ) ),
-             entry, TQT_SLOT( journalDeleted( Journal* ) ) );
+    connect( this, TQT_SIGNAL(flushEntries()),
+             entry, TQT_SIGNAL(flushEntries()) );
 
-    connect( entry, TQT_SIGNAL( editIncidence( Incidence* ) ),
-             this, TQT_SIGNAL( editIncidenceSignal( Incidence* ) ) );
-    connect( entry, TQT_SIGNAL( deleteIncidence( Incidence* ) ),
-             this, TQT_SIGNAL( deleteIncidenceSignal( Incidence* ) ) );
-    connect( entry, TQT_SIGNAL( newJournal( const TQDate & ) ),
-             this, TQT_SIGNAL( newJournalSignal( const TQDate & ) ) );
+    connect( this, TQT_SIGNAL(setIncidenceChangerSignal(IncidenceChangerBase *)),
+             entry, TQT_SLOT(setIncidenceChanger( IncidenceChangerBase *)) );
+
+    connect( this, TQT_SIGNAL(journalEdited(Journal *)),
+             entry, TQT_SLOT(journalEdited(Journal *)) );
+    connect( this, TQT_SIGNAL(journalDeleted(Journal *)),
+             entry, TQT_SLOT(journalDeleted(Journal *)) );
+
+    connect( entry, TQT_SIGNAL(editIncidence(Incidence *,const TQDate &)),
+             this, TQT_SIGNAL(editIncidenceSignal(Incidence *,const TQDate &)) );
+    connect( entry, TQT_SIGNAL(deleteIncidence(Incidence *)),
+             this, TQT_SIGNAL(deleteIncidenceSignal(Incidence *)) );
+
+    connect( entry, TQT_SIGNAL(newJournal(ResourceCalendar *,const TQString &,const TQDate &)),
+             this, TQT_SIGNAL(newJournalSignal(ResourceCalendar *,const TQString &,const TQDate &)) );
     mEntries.insert( dt, entry );
   }
 
@@ -134,16 +138,18 @@ void KOJournalView::flushView()
   emit flushEntries();
 }
 
-void KOJournalView::showDates(const TQDate &start, const TQDate &end)
+void KOJournalView::showDates( const TQDate &start, const TQDate &end )
 {
 //  kdDebug(5850) << "KOJournalView::showDates(): "<<start.toString().latin1()<<" - "<<end.toString().latin1() << endl;
   clearEntries();
-  if ( end<start ) return;
+  if ( end < start ) {
+    return;
+  }
 
   Journal::List::ConstIterator it;
   Journal::List jnls;
-  TQDate d=start;
-  for ( TQDate d=start; d<=end; d=d.addDays(1) ) {
+  TQDate d = start;
+  for ( TQDate d = start; d <= end; d = d.addDays( 1 ) ) {
     jnls = calendar()->journals( d );
     for ( it = jnls.begin(); it != jnls.end(); ++it ) {
       appendJournal( *it, d );
@@ -155,15 +161,17 @@ void KOJournalView::showDates(const TQDate &start, const TQDate &end)
   }
 }
 
-void KOJournalView::showIncidences( const Incidence::List &incidences )
+void KOJournalView::showIncidences( const Incidence::List &incidences, const TQDate & )
 {
 //  kdDebug(5850) << "KOJournalView::showIncidences(): "<< endl;
   clearEntries();
   Incidence::List::const_iterator it;
-  for ( it=incidences.constBegin(); it!=incidences.constEnd(); ++it) {
-    if ((*it) && ( (*it)->type()=="Journal" ) ) {
-      Journal*j = static_cast<Journal*>(*it);
-      if ( j ) appendJournal( j, j->dtStart().date() );
+  for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
+    if ( (*it) && ( (*it)->type() == "Journal" ) ) {
+      Journal *j = static_cast<Journal*>(*it);
+      if ( j ) {
+	appendJournal( j, j->dtStart().date() );
+      }
     }
   }
 }
@@ -202,7 +210,8 @@ void KOJournalView::setIncidenceChanger( IncidenceChangerBase *changer )
 
 void KOJournalView::newJournal()
 {
-  emit newJournalSignal( TQDate::currentDate() );
+  emit newJournalSignal( 0/*ResourceCalendar*/, TQString()/*subResource*/,
+                         TQDate::currentDate() );
 }
 
 #include "kojournalview.moc"

@@ -130,7 +130,8 @@ class FreeBusyItem : public KDGanttViewTaskItem
 
 void FreeBusyItem::updateItem()
 {
-  setListViewText( 0, mAttendee->fullName() );
+  TQString text = mAttendee->name() + " <" + mAttendee->email() + '>';
+  setListViewText( 0, text );
   switch ( mAttendee->status() ) {
     case Attendee::Accepted:
       setPixmap( 0, KOGlobals::self()->smallIcon( "ok" ) );
@@ -166,17 +167,34 @@ void FreeBusyItem::setFreeBusyPeriods( FreeBusy* fb )
     TQValueList<KCal::Period> busyPeriods = fb->busyPeriods();
     for( TQValueList<KCal::Period>::Iterator it = busyPeriods.begin();
 	 it != busyPeriods.end(); ++it ) {
-      KDGanttViewTaskItem* newSubItem = new KDGanttViewTaskItem( this );
-      newSubItem->setStartTime( (*it).start() );
-      newSubItem->setEndTime( (*it).end() );
+      Period per = *it;
+
+      KDGanttViewTaskItem *newSubItem = new KDGanttViewTaskItem( this );
+      newSubItem->setStartTime( per.start() );
+      newSubItem->setEndTime( per.end() );
       newSubItem->setColors( Qt::red, Qt::red, Qt::red );
-      TQString toolTip;
-      if ( !(*it).summary().isEmpty() )
-        toolTip += "<b>" + (*it).summary() + "</b><br/>";
-      if ( !(*it).location().isEmpty() )
-        toolTip += i18n( "Location: %1" ).arg( (*it).location() );
-      if ( !toolTip.isEmpty() )
-        newSubItem->setTooltipText( toolTip );
+
+      TQString toolTip = "<qt>";
+      toolTip += "<b>" + i18n( "Freebusy Period" ) + "</b>";
+      toolTip += "<br>----------------------<br>";
+      if ( !per.summary().isEmpty() ) {
+        toolTip += "<i>" + i18n( "Summary:" ) + "</i>" + "&nbsp;";
+        toolTip += per.summary();
+        toolTip += "<br>";
+      }
+      if ( !per.location().isEmpty() ) {
+        toolTip += "<i>" + i18n( "Location:" ) + "</i>" + "&nbsp;";
+        toolTip += per.location();
+        toolTip += "<br>";
+      }
+      toolTip += "<i>" + i18n( "Start:" ) + "</i>" + "&nbsp;";
+      toolTip += KGlobal::locale()->formatDateTime( per.start() );
+      toolTip += "<br>";
+      toolTip += "<i>" + i18n( "End:" ) + "</i>" + "&nbsp;";
+      toolTip += KGlobal::locale()->formatDateTime( per.end() );
+      toolTip += "<br>";
+      toolTip += "</qt>";
+      newSubItem->setTooltipText( toolTip );
     }
     setFreeBusy( fb );
     setShowNoInformation( false );
@@ -529,12 +547,18 @@ void KOEditorFreeBusy::slotPickDate()
           i18n( "The meeting already has suitable start/end times." ), TQString::null,
           "MeetingTimeOKFreeBusy" );
     } else {
-      emit dateTimesChanged( start, end );
-      slotUpdateGanttView( start, end );
-      KMessageBox::information( this,
-          i18n( "The meeting has been moved to\nStart: %1\nEnd: %2." )
-          .arg( start.toString() ).arg( end.toString() ), TQString::null,
-          "MeetingMovedFreeBusy" );
+      if ( KMessageBox::questionYesNo(
+             this,
+             i18n( "<qt>The next available time slot for the meeting is:<br>"
+                   "Start: %1<br>End: %2<br>"
+                   "Would you like to move the meeting to this time slot?</qt>" ).
+             arg( start.toString(), end.toString() ),
+             TQString::null,
+             KStdGuiItem::yes(), KStdGuiItem::no(),
+             "MeetingMovedFreeBusy" ) == KMessageBox::Yes ) {
+        emit dateTimesChanged( start, end );
+        slotUpdateGanttView( start, end );
+      }
     }
   } else
     KMessageBox::sorry( this, i18n( "No suitable date found." ) );
@@ -664,6 +688,7 @@ void KOEditorFreeBusy::updateStatusSummary()
     case Attendee::Delegated:
     case Attendee::Completed:
     case Attendee::InProcess:
+    case Attendee::None:
       /* just to shut up the compiler */
       break;
     }
@@ -803,6 +828,12 @@ void KOEditorFreeBusy::removeAttendee()
   if ( !item )
     return;
 
+  FreeBusyItem *nextSelectedItem = static_cast<FreeBusyItem*>( item->nextSibling() );
+  if( mGanttView->childCount() == 1 )
+      nextSelectedItem = 0;
+  if( mGanttView->childCount() > 1 && item == mGanttView->lastItem() )
+      nextSelectedItem = static_cast<FreeBusyItem*>(  mGanttView->firstChild() );
+
   Attendee *delA = new Attendee( item->attendee()->name(), item->attendee()->email(),
                                  item->attendee()->RSVP(), item->attendee()->status(),
                                  item->attendee()->role(), item->attendee()->uid() );
@@ -810,6 +841,8 @@ void KOEditorFreeBusy::removeAttendee()
   delete item;
 
   updateStatusSummary();
+  if( nextSelectedItem )
+      mGanttView->setSelected( nextSelectedItem, true );
   updateAttendeeInput();
   emit updateAttendeeSummary( mGanttView->childCount() );
 }
@@ -821,6 +854,32 @@ void KOEditorFreeBusy::clearSelection() const
     mGanttView->setSelected( item, false );
   mGanttView->repaint();
   item->repaint();
+}
+
+void KOEditorFreeBusy::setSelected( int index )
+{
+  int count = 0;
+  for( KDGanttViewItem *it = mGanttView->firstChild(); it; it = it->nextSibling() ) {
+    FreeBusyItem *item = static_cast<FreeBusyItem*>( it );
+    if ( count == index ) {
+      mGanttView->setSelected( item, true );
+      return;
+    }
+    count++;
+  }
+}
+
+int KOEditorFreeBusy::selectedIndex()
+{
+  int index = 0;
+  for ( KDGanttViewItem *it = mGanttView->firstChild(); it; it = it->nextSibling() ) {
+    FreeBusyItem *item = static_cast<FreeBusyItem*>( it );
+    if ( item->isSelected() ) {
+      break;
+    }
+    index++;
+  }
+  return index;
 }
 
 void KOEditorFreeBusy::changeStatusForMe(KCal::Attendee::PartStat status)
@@ -911,6 +970,7 @@ void KOEditorFreeBusy::slotOrganizerChanged(const TQString & newOrganizer)
     if (!newOrganizerAttendee) {
       Attendee *a = new Attendee( name, email, true );
       insertAttendee( a, false );
+      mnewAttendees.append( a );
       updateAttendee();
     }
   }
@@ -926,6 +986,18 @@ bool KOEditorFreeBusy::eventFilter( TQObject *watched, TQEvent *event )
   } else {
     return KOAttendeeEditor::eventFilter( watched, event );
   }
+}
+
+TQListViewItem* KOEditorFreeBusy::hasExampleAttendee() const
+{
+  for ( FreeBusyItem *item = static_cast<FreeBusyItem *>( mGanttView->firstChild() ); item;
+        item = static_cast<FreeBusyItem*>( item->nextSibling() ) ) {
+    Attendee *attendee = item->attendee();
+    Q_ASSERT( attendee );
+    if ( isExampleAttendee( attendee ) )
+        return item;
+  }
+  return 0;
 }
 
 #include "koeditorfreebusy.moc"

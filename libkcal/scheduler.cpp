@@ -25,12 +25,15 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 
+#include "calhelper.h"
 #include "event.h"
 #include "todo.h"
 #include "freebusy.h"
 #include "icalformat.h"
 #include "calendar.h"
+#include "calendarresources.h"
 #include "freebusycache.h"
+#include "assignmentvisitor.h"
 
 #include "scheduler.h"
 
@@ -94,7 +97,10 @@ FreeBusyCache *Scheduler::freeBusyCache() const
   return d->mFreeBusyCache;
 }
 
-bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,ScheduleMessage::Status status)
+bool Scheduler::acceptTransaction( IncidenceBase *incidence,
+                                   Method method,
+                                   ScheduleMessage::Status status,
+                                   const TQString &attendee )
 {
   kdDebug(5800) << "Scheduler::acceptTransaction, method="
                 << methodName( method ) << endl;
@@ -103,11 +109,11 @@ bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,Schedul
     case Publish:
       return acceptPublish(incidence, status, method);
     case Request:
-      return acceptRequest(incidence, status);
+      return acceptRequest( incidence, status, attendee );
     case Add:
       return acceptAdd(incidence, status);
     case Cancel:
-      return acceptCancel(incidence, status);
+      return acceptCancel(incidence, status,  attendee );
     case Declinecounter:
       return acceptDeclineCounter(incidence, status);
     case Reply:
@@ -185,24 +191,28 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
 
   bool res = false;
   kdDebug(5800) << "Scheduler::acceptPublish, status="
-            << ScheduleMessage::statusName( status ) << endl;
+                << ScheduleMessage::statusName( status ) << endl;
   Incidence *newInc = static_cast<Incidence *>( newIncBase );
   Incidence *calInc = mCalendar->incidence( newIncBase->uid() );
   switch ( status ) {
     case ScheduleMessage::Unknown:
     case ScheduleMessage::PublishNew:
     case ScheduleMessage::PublishUpdate:
-      res = true;
-      if ( calInc ) {
+      if ( calInc && newInc ) {
         if ( (newInc->revision() > calInc->revision()) ||
              (newInc->revision() == calInc->revision() &&
                newInc->lastModified() > calInc->lastModified() ) ) {
-          mCalendar->deleteIncidence( calInc );
-        } else
-          res = false;
+          AssignmentVisitor visitor;
+          const TQString oldUid = calInc->uid();
+          if ( !visitor.assign( calInc, newInc ) ) {
+            kdError(5800) << "assigning different incidence types" << endl;
+          } else {
+            calInc->setUid( oldUid );
+            calInc->setSchedulingID( newInc->uid() );
+            res = true;
+          }
+        }
       }
-      if ( res )
-        mCalendar->addIncidence( newInc );
       break;
     case ScheduleMessage::Obsolete:
       res = true;
@@ -214,36 +224,169 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
   return res;
 }
 
-bool Scheduler::acceptRequest(IncidenceBase *newIncBase, ScheduleMessage::Status /* status */)
+bool Scheduler::acceptRequest( IncidenceBase *incidence,
+                               ScheduleMessage::Status status,
+                               const TQString &attendee )
 {
-  if (newIncBase->type()=="FreeBusy") {
+  Incidence *inc = static_cast<Incidence *>(incidence);
+  if ( !inc )
+    return false;
+  if (inc->type()=="FreeBusy") {
     // reply to this request is handled in korganizer's incomingdialog
     return true;
   }
-  Incidence *newInc = dynamic_cast<Incidence *>( newIncBase );
-  if ( newInc ) {
-    bool res = true;
-    Incidence *exInc = mCalendar->incidenceFromSchedulingID( newIncBase->uid() );
-    if ( exInc ) {
-      res = false;
-      if ( (newInc->revision() > exInc->revision()) ||
-           (newInc->revision() == exInc->revision() &&
-             newInc->lastModified()>exInc->lastModified()) ) {
-        mCalendar->deleteIncidence( exInc );
-        res = true;
-      }
-    }
-    if ( res ) {
-      // Move the uid to be the schedulingID and make a unique UID
-      newInc->setSchedulingID( newInc->uid() );
-      newInc->setUid( CalFormat::createUniqueId() );
 
-      mCalendar->addIncidence(newInc);
+  const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
+  kdDebug(5800) << "Scheduler::acceptRequest status=" << ScheduleMessage::statusName( status ) << ": found " << existingIncidences.count() << " incidences with schedulingID " << inc->schedulingID() << endl;
+  Incidence::List::ConstIterator incit = existingIncidences.begin();
+  for ( ; incit != existingIncidences.end() ; ++incit ) {
+    Incidence* const i = *incit;
+    kdDebug(5800) << "Considering this found event ("
+                  << ( i->isReadOnly() ? "readonly" : "readwrite" )
+                  << ") :" << mFormat->toString( i ) << endl;
+    // If it's readonly, we can't possible update it.
+    if ( i->isReadOnly() )
+      continue;
+    if ( i->revision() <= inc->revision() ) {
+      // The new incidence might be an update for the found one
+      bool isUpdate = true;
+      // Code for new invitations:
+      // If you think we could check the value of "status" to be RequestNew: we can't.
+      // It comes from a similar check inside libical, where the event is compared to
+      // other events in the calendar. But if we have another version of the event around
+      // (e.g. shared folder for a group), the status could be RequestNew, Obsolete or Updated.
+      kdDebug(5800) << "looking in " << i->uid() << "'s attendees" << endl;
+      // This is supposed to be a new request, not an update - however we want to update
+      // the existing one to handle the "clicking more than once on the invitation" case.
+      // So check the attendee status of the attendee.
+      const KCal::Attendee::List attendees = i->attendees();
+      KCal::Attendee::List::ConstIterator ait;
+      for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
+        if( (*ait)->email() == attendee && (*ait)->status() == Attendee::NeedsAction ) {
+          // This incidence wasn't created by me - it's probably in a shared folder
+          // and meant for someone else, ignore it.
+          kdDebug(5800) << "ignoring " << i->uid() << " since I'm still NeedsAction there" << endl;
+          isUpdate = false;
+          break;
+        }
+      }
+      if ( isUpdate ) {
+        if ( i->revision() == inc->revision() &&
+             i->lastModified() > inc->lastModified() ) {
+          // This isn't an update - the found incidence was modified more recently
+          kdDebug(5800) << "This isn't an update - the found incidence was modified more recently" << endl;
+          deleteTransaction(incidence);
+          return false;
+        }
+        kdDebug(5800) << "replacing existing incidence " << i->uid() << endl;
+        bool res = true;
+        AssignmentVisitor visitor;
+        const TQString oldUid = i->uid();
+        if ( !visitor.assign( i, inc ) ) {
+          kdError(5800) << "assigning different incidence types" << endl;
+          res = false;
+        } else {
+          i->setUid( oldUid );
+          i->setSchedulingID( inc->uid() );
+        }
+        deleteTransaction( incidence );
+        return res;
+      }
+    } else {
+      // This isn't an update - the found incidence has a bigger revision number
+      kdDebug(5800) << "This isn't an update - the found incidence has a bigger revision number" << endl;
+      deleteTransaction(incidence);
+      return false;
     }
-    deleteTransaction( newIncBase );
-    return res;
   }
-  return false;
+
+  // Move the uid to be the schedulingID and make a unique UID
+  inc->setSchedulingID( inc->uid() );
+  inc->setUid( CalFormat::createUniqueId() );
+  // notify the user in case this is an update and we didn't find the to-be-updated incidence
+  if ( existingIncidences.count() == 0 && inc->revision() > 0 ) {
+    KMessageBox::information(
+      0,
+      i18n( "<qt>"
+            "You accepted an invitation update, but an earlier version of the "
+            "item could not be found in your calendar.<p>"
+            "This may have occurred because:<ul>"
+            "<li>the organizer did not include you in the original invitation</li>"
+            "<li>you did not accept the original invitation yet</li>"
+            "<li>you deleted the original invitation from your calendar</li>"
+            "<li>you no longer have access to the calendar containing the invitation</li>"
+            "</ul>"
+            "This is not a problem, but we thought you should know.</qt>" ),
+      i18n( "Cannot find invitation to be updated" ), "AcceptCantFindIncidence" );
+  }
+  kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID()
+                << " and uid=" << inc->uid() << endl;
+
+  CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
+  if( stdcal && !stdcal->hasCalendarResources() ) {
+    KMessageBox::sorry(
+      0,
+      i18n( "No calendars found, unable to save the invitation." ) );
+    return false;
+  }
+
+  // FIXME: This is a nasty hack, since we need to set a parent for the
+  //        resource selection dialog. However, we don't have any UI methods
+  //        in the calendar, only in the CalendarResources::DestinationPolicy
+  //        So we need to type-cast it and extract it from the CalendarResources
+  TQWidget *tmpparent = 0;
+  if ( stdcal ) {
+    tmpparent = stdcal->dialogParentWidget();
+    stdcal->setDialogParentWidget( 0 );
+  }
+
+TryAgain:
+  bool success = false;
+  if ( stdcal ) {
+    success = stdcal->addIncidence( inc );
+  } else {
+    success = mCalendar->addIncidence( inc );
+  }
+
+  if ( !success ) {
+    ErrorFormat *e = stdcal ? stdcal->exception() : 0;
+
+    if ( e && e->errorCode() == KCal::ErrorFormat::UserCancel &&
+         KMessageBox::warningYesNo(
+           0,
+           i18n( "You canceled the save operation. Therefore, the appointment will not be "
+                 "stored in your calendar even though you accepted the invitation. "
+                 "Are you certain you want to discard this invitation? " ),
+           i18n( "Discard this invitation?" ),
+           i18n( "Discard" ), i18n( "Go Back to Folder Selection" ) ) == KMessageBox::Yes ) {
+      KMessageBox::information(
+        0,
+        i18n( "The invitation \"%1\" was not saved to your calendar "
+              "but you are still listed as an attendee for that appointment.\n"
+              "If you mistakenly accepted the invitation or do not plan to attend, please notify "
+              "the organizer %2 and ask them to remove you from the attendee list.").
+        arg( inc->summary(),  inc->organizer().fullName() ) );
+      deleteTransaction( incidence );
+      return true;
+    } else {
+      goto TryAgain;
+    }
+
+    // We can have a failure if the user pressed [cancel] in the resource
+    // selectdialog, so check the exception.
+    if ( !e ||
+         ( e && ( e->errorCode() != KCal::ErrorFormat::UserCancel &&
+                  e->errorCode() != KCal::ErrorFormat::NoWritableFound ) ) ) {
+      TQString errMessage = i18n( "Unable to save %1 \"%2\"." ).
+                           arg( i18n( inc->type() ) ).
+                           arg( inc->summary() );
+      KMessageBox::sorry( 0, errMessage );
+    }
+    return false;
+  }
+
+  deleteTransaction( incidence );
+  return true;
 }
 
 bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
@@ -252,22 +395,131 @@ bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status /* st
   return false;
 }
 
-bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
+bool Scheduler::acceptCancel( IncidenceBase *incidence,
+                              ScheduleMessage::Status status,
+                              const TQString &attendee )
 {
+  Incidence *inc = static_cast<Incidence *>( incidence );
+  if ( !inc ) {
+    return false;
+  }
+
+  if ( inc->type() == "FreeBusy" ) {
+    // reply to this request is handled in korganizer's incomingdialog
+    return true;
+  }
+
+  const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
+  kdDebug(5800) << "Scheduler::acceptCancel="
+                << ScheduleMessage::statusName( status )
+                << ": found " << existingIncidences.count()
+                << " incidences with schedulingID " << inc->schedulingID()
+                << endl;
+
+  // Remove existing incidences that aren't stored in my calendar as we
+  // will never attempt to remove those -- even if we have write-access.
+  Incidence::List myExistingIncidences;
+  Incidence::List::ConstIterator incit = existingIncidences.begin();
+  for ( ; incit != existingIncidences.end() ; ++incit ) {
+    Incidence *i = *incit;
+    if ( CalHelper::isMyCalendarIncidence( mCalendar, i ) ) {
+      myExistingIncidences.append( i );
+    }
+  }
+
   bool ret = false;
-  const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
-  if ( toDelete ) {
-    Event *even = mCalendar->event(toDelete->uid());
-    if (even) {
-      mCalendar->deleteEvent(even);
-      ret = true;
-    } else {
-      Todo *todo = mCalendar->todo(toDelete->uid());
-      if (todo) {
-        mCalendar->deleteTodo(todo);
-        ret = true;
+  incit = myExistingIncidences.begin();
+  for ( ; incit != myExistingIncidences.end() ; ++incit ) {
+    Incidence *i = *incit;
+    kdDebug(5800) << "Considering this found event ("
+                  << ( i->isReadOnly() ? "readonly" : "readwrite" )
+                  << ") :" << mFormat->toString( i ) << endl;
+
+    // If it's readonly, we can't possible remove it.
+    if ( i->isReadOnly() ) {
+      continue;
+    }
+
+    // Code for new invitations:
+    // We cannot check the value of "status" to be RequestNew because
+    // "status" comes from a similar check inside libical, where the event
+    // is compared to other events in the calendar. But if we have another
+    // version of the event around (e.g. shared folder for a group), the
+    // status could be RequestNew, Obsolete or Updated.
+    kdDebug(5800) << "looking in " << i->uid() << "'s attendees" << endl;
+
+    // This is supposed to be a new request, not an update - however we want
+    // to update the existing one to handle the "clicking more than once
+    // on the invitation" case. So check the attendee status of the attendee.
+    bool isMine = true;
+    const KCal::Attendee::List attendees = i->attendees();
+    KCal::Attendee::List::ConstIterator ait;
+    for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
+      if ( (*ait)->email() == attendee &&
+           (*ait)->status() == Attendee::NeedsAction ) {
+        // This incidence wasn't created by me - it's probably in a shared
+        // folder and meant for someone else, ignore it.
+        kdDebug(5800) << "ignoring " << i->uid()
+                      << " since I'm still NeedsAction there" << endl;
+        isMine = false;
+        break;
       }
     }
+
+    if ( isMine ) {
+      kdDebug(5800) << "removing existing incidence " << i->uid() << endl;
+      if ( i->type() == "Event" ) {
+        Event *event = mCalendar->event( i->uid() );
+        ret = ( event && mCalendar->deleteEvent( event ) );
+      } else if ( i->type() == "Todo" ) {
+        Todo *todo = mCalendar->todo( i->uid() );
+        ret = ( todo && mCalendar->deleteTodo( todo ) );
+      }
+      deleteTransaction( incidence );
+      return ret;
+    }
+  }
+
+  // in case we didn't find the to-be-removed incidence
+  if ( myExistingIncidences.count() > 0 && inc->revision() > 0 ) {
+    KMessageBox::information(
+      0,
+      i18n( "The event or task could not be removed from your calendar. "
+            "Maybe it has already been deleted or is not owned by you. "
+            "Or it might belong to a read-only or disabled calendar." ) );
+  }
+  deleteTransaction( incidence );
+  return ret;
+}
+
+bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
+{
+  const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
+
+  bool ret = true;
+  if ( toDelete ) {
+    if ( toDelete->type() == "Event" ) {
+      Event *event = mCalendar->event( toDelete->uid() );
+      ret = ( event && mCalendar->deleteEvent( event ) );
+    } else if ( toDelete->type() == "Todo" ) {
+      Todo *todo = mCalendar->todo( toDelete->uid() );
+      ret = ( todo && mCalendar->deleteTodo( todo ) );
+    }
+  } else {
+    // only complain if we failed to determine the toDelete incidence
+    // on non-initial request.
+    Incidence *inc = static_cast<Incidence *>( incidence );
+    if ( inc->revision() > 0 ) {
+      ret = false;
+    }
+  }
+
+  if ( !ret ) {
+    KMessageBox::information(
+      0,
+      i18n( "The event or task to be canceled could not be removed from your calendar. "
+            "Maybe it has already been deleted or is not owned by you. "
+            "Or it might belong to a read-only or disabled calendar." ) );
   }
   deleteTransaction(incidence);
   return ret;
@@ -370,13 +622,25 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
 
     // send update about new participants
     if ( attendeeAdded ) {
+      bool sendMail = false;
+      if ( ev || to ) {
+        if ( KMessageBox::questionYesNo( 0, i18n( "An attendee was added to the incidence. "
+                                                  "Do you want to email the attendees an update message?" ),
+                                         i18n( "Attendee Added" ), i18n( "Send Messages" ),
+                                         i18n( "Do Not Send" ) ) == KMessageBox::Yes ) {
+          sendMail = true;
+        }
+      }
+
       if ( ev ) {
         ev->setRevision( ev->revision() + 1 );
-        performTransaction( ev, Scheduler::Request );
+        if ( sendMail )
+          performTransaction( ev, Scheduler::Request );
       }
       if ( to ) {
-        to->setRevision( ev->revision() + 1 );
-        performTransaction( to, Scheduler::Request );
+        to->setRevision( to->revision() + 1 );
+        if ( sendMail )
+          performTransaction( to, Scheduler::Request );
       }
     }
 

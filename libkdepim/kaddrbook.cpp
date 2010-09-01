@@ -207,34 +207,9 @@ bool KAddrBookExternal::addVCard( const KABC::Addressee& addressee, TQWidget *pa
 bool KAddrBookExternal::addAddressee( const KABC::Addressee& addr )
 {
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-
-#if KDE_IS_VERSION(3,4,89)
-  // This ugly hack will be removed in 4.0
-  while ( !addressBook->loadingHasFinished() ) {
-    TQApplication::eventLoop()->processEvents( TQEventLoop::ExcludeUserInput );
-
-    // use sleep here to reduce cpu usage
-    usleep( 100 );
-  }
-#endif
-
-  // Select a resource
-  TQPtrList<KABC::Resource> kabcResources = addressBook->resources();
-
-  TQPtrList<KRES::Resource> kresResources;
-  TQPtrListIterator<KABC::Resource> resIt( kabcResources );
-  KABC::Resource *kabcResource;
-  while ( ( kabcResource = resIt.current() ) != 0 ) {
-    ++resIt;
-    if ( !kabcResource->readOnly() ) {
-      KRES::Resource *res = static_cast<KRES::Resource*>( kabcResource );
-      if ( res )
-        kresResources.append( res );
-    }
-  }
-
-  kabcResource = static_cast<KABC::Resource*>( KRES::SelectDialog::getResource( kresResources, 0 ) );
-
+  KABC::Resource *kabcResource = selectResourceForSaving( addressBook );
+  if( !kabcResource ) 
+     return false;
   KABC::Ticket *ticket = addressBook->requestSaveTicket( kabcResource );
   bool saved = false;
   if ( ticket ) {
@@ -277,4 +252,34 @@ TQString KAddrBookExternal::expandDistributionList( const TQString& listName )
   }
 #endif
   return TQString::null;
+}
+
+KABC::Resource* KAddrBookExternal::selectResourceForSaving( KABC::AddressBook *addressBook )
+{
+#if KDE_IS_VERSION(3,4,89)
+  // This ugly hack will be removed in 4.0
+  while ( !addressBook->loadingHasFinished() ) {
+    TQApplication::eventLoop()->processEvents( TQEventLoop::ExcludeUserInput );
+
+    // use sleep here to reduce cpu usage
+    usleep( 100 );
+  }
+#endif
+
+  // Select a resource
+  TQPtrList<KABC::Resource> kabcResources = addressBook->resources();
+
+  TQPtrList<KRES::Resource> kresResources;
+  TQPtrListIterator<KABC::Resource> resIt( kabcResources );
+  KABC::Resource *kabcResource;
+  while ( ( kabcResource = resIt.current() ) != 0 ) {
+    ++resIt;
+    if ( !kabcResource->readOnly() ) {
+      KRES::Resource *res = static_cast<KRES::Resource*>( kabcResource );
+      if ( res )
+        kresResources.append( res );
+    }
+  }
+
+  return static_cast<KABC::Resource*>( KRES::SelectDialog::getResource( kresResources, 0 ) );
 }

@@ -72,7 +72,8 @@
 template <>
 CustomListViewItem<KCal::Attendee *>::~CustomListViewItem()
 {
-  delete mData;
+  // do not delete mData here
+//  delete mData;
 }
 
 template <>
@@ -152,18 +153,15 @@ void KOAttendeeListView::dropEvent( TQDropEvent *e )
 {
 #ifndef KORG_NODND
   TQString text;
-  TQString vcards;
 
 #ifndef KORG_NOKABC
-  if ( KVCardDrag::decode( e, vcards ) ) {
-    KABC::VCardConverter converter;
-
-    KABC::Addressee::List list = converter.parseVCards( vcards );
+  KABC::Addressee::List list;
+  if ( KVCardDrag::decode( e, list ) ) {
     KABC::Addressee::List::Iterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       TQString em( (*it).fullEmail() );
-      if (em.isEmpty()) {
-        em=(*it).realName();
+      if ( em.isEmpty() ) {
+        em = (*it).realName();
       }
       addAttendee( em );
     }
@@ -240,13 +238,22 @@ void KOEditorDetails::removeAttendee()
       static_cast<AttendeeListItem *>( mListView->selectedItem() );
   if ( !aItem ) return;
 
-  Attendee *delA = new Attendee( aItem->data()->name(), aItem->data()->email(),
-                                 aItem->data()->RSVP(), aItem->data()->status(),
-                                 aItem->data()->role(), aItem->data()->uid() );
-  mdelAttendees.append( delA );
+  AttendeeListItem *nextSelectedItem = static_cast<AttendeeListItem*>( aItem->nextSibling() );
+  if( mListView->childCount() == 1 )
+      nextSelectedItem = 0;
+  if( mListView->childCount() > 1 && aItem == mListView->lastItem() )
+      nextSelectedItem = static_cast<AttendeeListItem*>(  mListView->firstChild() );
 
+  Attendee *attendee = aItem->data();
+  Attendee *delA = new Attendee( attendee->name(), attendee->email(),
+                                 attendee->RSVP(), attendee->status(),
+                                 attendee->role(), attendee->uid() );
+  mdelAttendees.append( delA );
   delete aItem;
 
+  if( nextSelectedItem ) {
+      mListView->setSelected( nextSelectedItem, true );
+  }
   updateAttendeeInput();
   emit updateAttendeeSummary( mListView->childCount() );
 }
@@ -257,10 +264,23 @@ void KOEditorDetails::insertAttendee( Attendee *a, bool goodEmailAddress )
   Q_UNUSED( goodEmailAddress );
 
   // lastItem() is O(n), but for n very small that should be fine
-  AttendeeListItem *item = new AttendeeListItem( a, mListView,
-      static_cast<KListViewItem*>( mListView->lastItem() ) );
+  AttendeeListItem *item = new AttendeeListItem(
+    a, mListView, static_cast<KListViewItem*>( mListView->lastItem() ) );
   mListView->setSelected( item, true );
   emit updateAttendeeSummary( mListView->childCount() );
+}
+
+void KOEditorDetails::removeAttendee( Attendee *attendee )
+{
+  TQListViewItem *item;
+  for ( item = mListView->firstChild(); item;  item = item->nextSibling() ) {
+    AttendeeListItem *anItem = static_cast<AttendeeListItem *>( item );
+    Attendee *att = anItem->data();
+    if ( att == attendee ) {
+      delete anItem;
+      break;
+    }
+  }
 }
 
 void KOEditorDetails::setDefaults()
@@ -350,9 +370,34 @@ void KOEditorDetails::updateCurrentItem()
     item->updateItem();
 }
 
-void KOEditorDetails::slotInsertAttendee(Attendee * a)
+void KOEditorDetails::slotInsertAttendee( Attendee *a )
 {
   insertAttendee( a );
+  mnewAttendees.append( a );
+}
+
+void KOEditorDetails::setSelected( int index )
+{
+  int count = 0;
+  for ( TQListViewItemIterator it( mListView ); it.current(); ++it ) {
+    if ( count == index ) {
+      mListView->setSelected( *it, true );
+      return;
+    }
+    count++;
+  }
+}
+
+int KOEditorDetails::selectedIndex()
+{
+  int index = 0;
+  for ( TQListViewItemIterator it( mListView ); it.current(); ++it ) {
+    if ( mListView->isSelected( *it ) ) {
+      break;
+    }
+    index++;
+  }
+  return index;
 }
 
 void KOEditorDetails::changeStatusForMe(Attendee::PartStat status)
@@ -367,6 +412,18 @@ void KOEditorDetails::changeStatusForMe(Attendee::PartStat status)
       }
     }
   }
+}
+
+TQListViewItem* KOEditorDetails::hasExampleAttendee() const
+{
+  for ( TQListViewItemIterator it( mListView ); it.current(); ++it ) {
+    AttendeeListItem *item = static_cast<AttendeeListItem*>( it.current() );
+    Attendee *attendee = item->data();
+    Q_ASSERT( attendee );
+    if ( isExampleAttendee( attendee ) )
+        return item;
+  }
+  return 0;
 }
 
 #include "koeditordetails.moc"

@@ -69,6 +69,7 @@ HeaderListQuickSearch::HeaderListQuickSearch( TQWidget *parent,
   TQLabel *label = new TQLabel( i18n("Stat&us:"), parent, "kde toolbar widget" );
 
   mStatusCombo = new TQComboBox( parent, "quick search status combo box" );
+  mStatusCombo->setSizeLimit( 12 );
   mStatusCombo->insertItem( SmallIcon( "run" ), i18n("Any Status") );
 
   insertStatus( StatusUnread );
@@ -78,6 +79,7 @@ HeaderListQuickSearch::HeaderListQuickSearch( TQWidget *parent,
   insertStatus( StatusForwarded );
   insertStatus( StatusToDo );
   insertStatus( StatusHasAttachment );
+  insertStatus( StatusInvitation );
   insertStatus( StatusWatched );
   insertStatus( StatusIgnored );
   mStatusCombo->setCurrentItem( 0 );
@@ -91,7 +93,7 @@ HeaderListQuickSearch::HeaderListQuickSearch( TQWidget *parent,
                                             0, i18n( "Open Full Search" ) );
   connect( btn, TQT_SIGNAL( clicked() ), TQT_SIGNAL( requestFullSearch() ) );
 
-  /* Disable the signal connected by KListViewSearchLine since it will call 
+  /* Disable the signal connected by KListViewSearchLine since it will call
    * itemAdded during KMHeaders::readSortOrder() which will in turn result
    * in getMsgBaseForItem( item ) wanting to access items which are no longer
    * there. Rather rely on KMHeaders::msgAdded and its signal. */
@@ -149,6 +151,17 @@ bool HeaderListQuickSearch::itemMatches(const TQListViewItem *item, const TQStri
     if ( !msg || ! ( msg->status() & mStatus ) )
       return false;
   }
+
+  // The full email address is not visible, but we still want it to be searchable.
+  // KListViewSearchLine::itemMatches() only searches in visible columns.
+  const HeaderItem *headerItem = static_cast<const HeaderItem*>( item );
+  if ( headerItem->from().lower().contains( s.lower() ) ) {
+    return true;
+  }
+  if ( headerItem->to().lower().contains( s.lower() ) ) {
+    return true;
+  }
+
   return KListViewSearchLine::itemMatches(item, s);
 }
 

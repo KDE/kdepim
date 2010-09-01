@@ -45,10 +45,11 @@
 #include <tqwhatsthis.h>
 
 
-KOEditorGeneralJournal::KOEditorGeneralJournal( TQObject *parent,
+KOEditorGeneralJournal::KOEditorGeneralJournal( TQWidget *parent,
                                                 const char *name )
-  : TQObject( parent, name )
+  : KOEditorGeneral( parent, name )
 {
+  setType( "Journal" );
 }
 
 KOEditorGeneralJournal::~KOEditorGeneralJournal()
@@ -58,7 +59,7 @@ KOEditorGeneralJournal::~KOEditorGeneralJournal()
 void KOEditorGeneralJournal::initTitle( TQWidget *parent, TQBoxLayout *topLayout )
 {
   TQHBoxLayout *hbox = new TQHBoxLayout( topLayout );
-  
+
   TQString whatsThis = i18n("Sets the title of this journal.");
   TQLabel *summaryLabel = new TQLabel( i18n("T&itle:"), parent );
   TQWhatsThis::add( summaryLabel, whatsThis );
@@ -78,19 +79,19 @@ void KOEditorGeneralJournal::initDate( TQWidget *parent, TQBoxLayout *topLayout 
 {
 //  TQBoxLayout *dateLayout = new TQVBoxLayout(topLayout);
   TQBoxLayout *dateLayout = new TQHBoxLayout( topLayout );
-  
+
   mDateLabel = new TQLabel( i18n("&Date:"), parent);
   dateLayout->addWidget( mDateLabel );
 
   mDateEdit = new KDateEdit( parent );
   dateLayout->addWidget( mDateEdit );
   mDateLabel->setBuddy( mDateEdit );
-  
+
   dateLayout->addStretch();
-  
+
   mTimeCheckBox = new TQCheckBox( i18n("&Time: "), parent );
   dateLayout->addWidget( mTimeCheckBox );
-  
+
   mTimeEdit = new KTimeEdit( parent );
   dateLayout->addWidget( mTimeEdit );
   connect( mTimeCheckBox, TQT_SIGNAL(toggled(bool)),
@@ -135,7 +136,7 @@ void KOEditorGeneralJournal::setDefaults( const TQDate &date )
   setDate( date );
 }
 
-void KOEditorGeneralJournal::readJournal( Journal *journal, bool tmpl )
+void KOEditorGeneralJournal::readJournal( Journal *journal, const TQDate &, bool tmpl )
 {
   setSummary( journal->summary() );
   if ( !tmpl ) {
@@ -143,10 +144,10 @@ void KOEditorGeneralJournal::readJournal( Journal *journal, bool tmpl )
     if ( !journal->doesFloat() ) {
 kdDebug()<<"KOEditorGeneralJournal::readJournal, does not float, time="<<(journal->dtStart().time().toString())<<endl;
       setTime( journal->dtStart().time() );
-    } else { 
+    } else {
 kdDebug()<<"KOEditorGeneralJournal::readJournal, does float"<<endl;
       setTime( TQTime( -1, -1, -1 ) );
-    } 
+    }
   }
   setDescription( journal->description() );
 }
@@ -156,7 +157,7 @@ void KOEditorGeneralJournal::writeJournal( Journal *journal )
 //  kdDebug(5850) << "KOEditorGeneralJournal::writeIncidence()" << endl;
   journal->setSummary( mSummaryEdit->text() );
   journal->setDescription( mDescriptionEdit->text() );
-  
+
   TQDateTime tmpDT( mDateEdit->date(), TQTime(0,0,0) );
   bool hasTime = mTimeCheckBox->isChecked();
   journal->setFloats( !hasTime );

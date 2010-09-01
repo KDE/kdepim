@@ -32,6 +32,33 @@
 #include "knmainwidget.h"
 #include "knwidgets.h"
 
+KNGlobals::KNGlobals() :
+  mNetAccess( 0 ),
+  mCfgManager( 0 ),
+  mAccManager( 0 ),
+  mGrpManager( 0 ),
+  mArtManager( 0 ),
+  mFilManager( 0 ),
+  mFolManager( 0 ),
+  mMemManager( 0 )
+{
+}
+
+KNGlobals::~KNGlobals( )
+{
+#if 0
+// hmm.. something in here is causing an 'impossible' crash. let's ignore the cleanup then.
+  delete mNetAccess;
+  delete mCfgManager;
+  delete mAccManager;
+  delete mGrpManager;
+  delete mArtManager;
+  delete mFilManager;
+  delete mFolManager;
+  delete mMemManager;
+#endif
+}
+
 KConfig* KNGlobals::config()
 {
   if (!c_onfig) {

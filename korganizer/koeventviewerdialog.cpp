@@ -28,21 +28,20 @@
 
 #include <klocale.h>
 
-KOEventViewerDialog::KOEventViewerDialog( TQWidget *parent, const char *name,
-                                          bool compact )
+KOEventViewerDialog::KOEventViewerDialog( Calendar *calendar, TQWidget *parent,
+                                          const char *name, bool compact )
   : KDialogBase( parent, name, false, i18n("Event Viewer"), Ok, Ok, false,
                  i18n("Edit") )
 {
-  mEventViewer = new KOEventViewer( this );
+  mEventViewer = new KOEventViewer( calendar, this );
   setMainWidget( mEventViewer );
 
-  // FIXME: Set a sensible size (based on the content?).
   if ( compact ) {
     setFixedSize( 240,284 );
     move( 0, 15 );
   } else {
-    setMinimumSize( 300, 200 );
-    resize( 320, 300 );
+    setMinimumSize( 500, 500 );
+    resize( 520, 500 );
   }
   connect( this, TQT_SIGNAL(finished()), this, TQT_SLOT(delayedDestruct()) );
 }
@@ -51,9 +50,14 @@ KOEventViewerDialog::~KOEventViewerDialog()
 {
 }
 
+void KOEventViewerDialog::setCalendar( Calendar *calendar )
+{
+  mEventViewer->setCalendar( calendar );
+}
+
 void KOEventViewerDialog::addText( const TQString &text )
 {
-  mEventViewer->addText(text);
+  mEventViewer->addText( text );
 }
 
 #include "koeventviewerdialog.moc"

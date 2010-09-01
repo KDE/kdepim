@@ -70,14 +70,15 @@ void EventArchiver::runAuto( Calendar* calendar, TQWidget* widget, bool withGUI 
   run( calendar, limitDate, widget, withGUI, false );
 }
 
-void EventArchiver::run( Calendar* calendar, const TQDate& limitDate, TQWidget* widget, bool withGUI, bool errorIfNone )
+void EventArchiver::run( Calendar* calendar, const TQDate& limitDate, TQWidget* widget, bool withGUI,
+                         bool errorIfNone )
 {
   // We need to use rawEvents, otherwise events hidden by filters will not be archived.
   Incidence::List incidences;
   Event::List events;
   Todo::List todos;
   Journal::List journals;
-  
+
   if ( KOPrefs::instance()->mArchiveEvents ) {
     events = calendar->rawEvents(
       TQDate( 1769, 12, 1 ),
@@ -89,21 +90,37 @@ void EventArchiver::run( Calendar* calendar, const TQDate& limitDate, TQWidget* 
     Todo::List t = calendar->rawTodos();
     Todo::List::ConstIterator it;
     for( it = t.begin(); it != t.end(); ++it ) {
-      if ( (*it) && ( (*it)->isCompleted() ) &&  ( (*it)->completed().date() < limitDate ) ) {
+      const bool todoComplete = (*it) &&
+                                (*it)->isCompleted() &&
+                                ( (*it)->completed().date() < limitDate );
+
+      if ( todoComplete && !isSubTreeComplete( *it, limitDate ) ) {
+        // The to-do is complete but some sub-todos are not.
+        KMessageBox::information(
+          widget,
+          i18n( "Unable to archive to-do \"%1\" because at least one of its "
+                "sub-to-dos does not meet the archival requirements." ).arg( (*it)->summary() ),
+          i18n( "Archive To-do" ),
+          "UncompletedChildrenArchiveTodos" );
+      } else if ( todoComplete ) {
         todos.append( *it );
       }
     }
   }
-  
-  incidences = Calendar::mergeIncidenceList( events, todos, journals );
-  
 
-  kdDebug(5850) << "EventArchiver: archiving incidences before " << limitDate << " -> " << incidences.count() << " incidences found." << endl;
+  incidences = Calendar::mergeIncidenceList( events, todos, journals );
+
+
+  kdDebug(5850) << "EventArchiver: archiving incidences before " << limitDate << " -> "
+                << incidences.count() << " incidences found." << endl;
   if ( incidences.isEmpty() ) {
-    if ( withGUI && errorIfNone )
-      KMessageBox::information( widget, i18n("There are no items before %1")
-                          .arg(KGlobal::locale()->formatDate(limitDate)),
-                          "ArchiverNoIncidences" );
+    if ( withGUI && errorIfNone ) {
+      KMessageBox::information(
+        widget,
+        i18n( "There are no incidences available to archive before the specified cut-off date %1. "
+              "Archiving will not be performed." ).arg( KGlobal::locale()->formatDate( limitDate ) ),
+        "ArchiverNoIncidences" );
+    }
     return;
   }
 
@@ -220,6 +237,37 @@ void EventArchiver::archiveIncidences( Calendar* calendar, const TQDate& /*limit
     calendar->deleteIncidence( *it );
   }
   emit eventsDeleted();
+}
+
+bool EventArchiver::isSubTreeComplete( const Todo *todo, const TQDate &limitDate,
+                                       TQStringList checkedUids ) const
+{
+  if ( !todo || !todo->isCompleted() || todo->completed().date() >= limitDate ) {
+    return false;
+  }
+
+  // This QList is only to prevent infinit recursion
+  if ( checkedUids.contains( todo->uid() ) ) {
+    // Probably will never happen, calendar.cpp checks for this
+    kdWarning() << "To-do hierarchy loop detected!";
+    return false;
+  }
+
+  checkedUids.append( todo->uid() );
+
+  Incidence::List::ConstIterator it;
+  const Incidence::List relations = todo->relations();
+
+  for( it = relations.begin(); it != relations.end(); ++it ) {
+    if ( (*it)->type() == "Todo" ) {
+      const Todo *t = static_cast<const Todo*>( *it );
+      if ( !isSubTreeComplete( t, limitDate, checkedUids ) ) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 #include "eventarchiver.moc"

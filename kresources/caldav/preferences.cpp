@@ -234,9 +234,36 @@ TQString CalDavPrefs::getFullUrl() {
 
 TQString CalDavPrefs::getFullTasksUrl() {
     if (useSTasks() == 0)
-      return TQString();
+      return getFullUrl();
 
     TQUrl t(tasksUrl());
+    TQString safeURL;
+    int firstAt;
+
+    t.setUser(username());
+    t.setPassword(password());
+
+    safeURL = t.toString();
+
+    firstAt = safeURL.find("@") + 1;
+    while (safeURL.find("@", firstAt) != -1) {
+        safeURL.replace(safeURL.find("@", firstAt), 1, "%40");
+    }
+
+    // Unencode the username, as Zimbra stupidly rejects the %40
+    safeURL.replace("%40", "@");
+
+    // Encode any spaces, as libcaldav stupidly fails otherwise
+    safeURL.replace(" ", "%20");
+
+    return safeURL;
+}
+
+TQString CalDavPrefs::getFullJournalsUrl() {
+    if (useSJournals() == 0)
+      return getFullUrl();
+
+    TQUrl t(journalsUrl());
     TQString safeURL;
     int firstAt;
 

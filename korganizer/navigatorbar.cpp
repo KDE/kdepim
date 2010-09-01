@@ -60,55 +60,70 @@ NavigatorBar::NavigatorBar( TQWidget *parent, const char *name )
   tfont.setPointSize( 10 );
   tfont.setBold( false );
 
+  // Create a horizontal spacers
+  TQSpacerItem *frontSpacer = new TQSpacerItem( 50, 1, TQSizePolicy::Expanding );
+  TQSpacerItem *endSpacer = new TQSpacerItem( 50, 1, TQSizePolicy::Expanding );
+
   bool isRTL = KOGlobals::self()->reverseLayout();
 
   TQPixmap pix;
   // Create backward navigation buttons
-  mPrevYear = new TQPushButton( this );
   pix = KOGlobals::self()->smallIcon( isRTL ? "2rightarrow" : "2leftarrow" );
+  mPrevYear = new TQPushButton( this );
   mPrevYear->setPixmap( pix );
   mPrevYear->setSizePolicy( TQSizePolicy::Fixed, TQSizePolicy::Fixed );
-  TQToolTip::add( mPrevYear, i18n("Previous year") );
+  TQToolTip::add( mPrevYear, i18n( "Previous year" ) );
 
   pix = KOGlobals::self()->smallIcon( isRTL ? "1rightarrow" : "1leftarrow");
   mPrevMonth = new TQPushButton( this );
   mPrevMonth->setPixmap( pix );
   mPrevMonth->setSizePolicy( TQSizePolicy::Fixed, TQSizePolicy::Fixed );
-  TQToolTip::add( mPrevMonth, i18n("Previous month") );
+  TQToolTip::add( mPrevMonth, i18n( "Previous month" ) );
 
   // Create forward navigation buttons
   pix = KOGlobals::self()->smallIcon( isRTL ? "1leftarrow" : "1rightarrow");
   mNextMonth = new TQPushButton( this );
   mNextMonth->setPixmap( pix );
   mNextMonth->setSizePolicy( TQSizePolicy::Fixed, TQSizePolicy::Fixed );
-  TQToolTip::add( mNextMonth, i18n("Next month") );
+  TQToolTip::add( mNextMonth, i18n( "Next month" ) );
 
   pix = KOGlobals::self()->smallIcon( isRTL ? "2leftarrow" : "2rightarrow");
   mNextYear = new TQPushButton( this );
   mNextYear->setPixmap( pix );
   mNextYear->setSizePolicy( TQSizePolicy::Fixed, TQSizePolicy::Fixed );
-  TQToolTip::add( mNextYear, i18n("Next year") );
+  TQToolTip::add( mNextYear, i18n( "Next year" ) );
 
   // Create month name button
   mMonth = new ActiveLabel( this );
   mMonth->setFont( tfont );
   mMonth->setAlignment( AlignCenter );
   mMonth->setMinimumHeight( mPrevYear->sizeHint().height() );
-  TQToolTip::add( mMonth, i18n("Select a month") );
+  TQToolTip::add( mMonth, i18n( "Select a month" ) );
+
+  // Create year button
+  mYear = new ActiveLabel( this );
+  mYear->setFont( tfont );
+  mYear->setAlignment( AlignCenter );
+  mYear->setMinimumHeight( mPrevYear->sizeHint().height() );
+  TQToolTip::add( mYear, i18n( "Select a year" ) );
 
   // set up control frame layout
-  TQBoxLayout *ctrlLayout = new TQHBoxLayout( this, 0, 4 );
-  ctrlLayout->addWidget( mPrevYear, 3 );
-  ctrlLayout->addWidget( mPrevMonth, 3 );
-  ctrlLayout->addWidget( mMonth, 3 );
-  ctrlLayout->addWidget( mNextMonth, 3 );
-  ctrlLayout->addWidget( mNextYear, 3 );
+  TQHBoxLayout *ctrlLayout = new TQHBoxLayout( this );
+  ctrlLayout->addWidget( mPrevYear );
+  ctrlLayout->addWidget( mPrevMonth );
+  ctrlLayout->addItem( frontSpacer );
+  ctrlLayout->addWidget( mMonth );
+  ctrlLayout->addWidget( mYear );
+  ctrlLayout->addItem( endSpacer );
+  ctrlLayout->addWidget( mNextMonth );
+  ctrlLayout->addWidget( mNextYear );
 
-  connect( mPrevYear, TQT_SIGNAL( clicked() ), TQT_SIGNAL( goPrevYear() ) );
-  connect( mPrevMonth, TQT_SIGNAL( clicked() ), TQT_SIGNAL( goPrevMonth() ) );
-  connect( mNextMonth, TQT_SIGNAL( clicked() ), TQT_SIGNAL( goNextMonth() ) );
-  connect( mNextYear, TQT_SIGNAL( clicked() ), TQT_SIGNAL( goNextYear() ) );
-  connect( mMonth, TQT_SIGNAL( clicked() ), TQT_SLOT( selectMonth() ) );
+  connect( mPrevYear, TQT_SIGNAL( clicked() ), TQT_SIGNAL( prevYearClicked() ) );
+  connect( mPrevMonth, TQT_SIGNAL( clicked() ), TQT_SIGNAL( prevMonthClicked() ) );
+  connect( mNextMonth, TQT_SIGNAL( clicked() ), TQT_SIGNAL( nextMonthClicked() ) );
+  connect( mNextYear, TQT_SIGNAL( clicked() ), TQT_SIGNAL( nextYearClicked() ) );
+  connect( mMonth, TQT_SIGNAL( clicked() ), TQT_SLOT( selectMonthFromMenu() ) );
+  connect( mYear, TQT_SIGNAL( clicked() ), TQT_SLOT( selectYearFromMenu() ) );
 }
 
 NavigatorBar::~NavigatorBar()
@@ -142,29 +157,29 @@ void NavigatorBar::selectDates( const KCal::DateList &dateList )
 
     const KCalendarSystem *calSys = KOGlobals::self()->calendarSystem();
 
-    if ( !mHasMinWidth ) {
-      // Set minimum width to width of widest month name label
-      int i;
-      int maxwidth = 0;
+    // Set minimum width to width of widest month name label
+    int i;
+    int maxwidth = 0;
 
-      for( i = 1; i <= calSys->monthsInYear( mDate ); ++i ) {
-        int w = TQFontMetrics( mMonth->font() ).width( TQString("%1 8888")
-            .arg( calSys->monthName( i, calSys->year( mDate ) ) ) );
-        if ( w > maxwidth ) maxwidth = w;
+    for( i = 1; i <= calSys->monthsInYear( mDate ); ++i ) {
+      int w = TQFontMetrics( mMonth->font() ).
+              width( TQString( "%1" ).
+                     arg( calSys->monthName( i, calSys->year( mDate ) ) ) );
+      if ( w > maxwidth ) {
+        maxwidth = w;
       }
-      mMonth->setMinimumWidth( maxwidth );
-
-      mHasMinWidth = true;
     }
+    mMonth->setMinimumWidth( maxwidth );
 
-    // compute the label at the top of the navigator
-    mMonth->setText( i18n( "monthname year", "%1 %2" )
-                     .arg( calSys->monthName( mDate ) )
-                     .arg( calSys->year( mDate ) ) );
+    mHasMinWidth = true;
+
+    // set the label text at the top of the navigator
+    mMonth->setText( i18n( "monthname", "%1" ).arg( calSys->monthName( mDate ) ) );
+    mYear->setText( i18n( "4 digit year", "%1" ).arg( calSys->yearString( mDate, false ) ) );
   }
 }
 
-void NavigatorBar::selectMonth()
+void NavigatorBar::selectMonthFromMenu()
 {
   // every year can have different month names (in some calendar systems)
   const KCalendarSystem *calSys = KOGlobals::self()->calendarSystem();
@@ -185,7 +200,36 @@ void NavigatorBar::selectMonth()
     return;  // canceled
   }
 
-  emit goMonth( month );
+  emit monthSelected( month );
+
+  delete popup;
+}
+
+void NavigatorBar::selectYearFromMenu()
+{
+  const KCalendarSystem *calSys = KOGlobals::self()->calendarSystem();
+
+  int year = calSys->year( mDate );
+  int years = 11;  // odd number (show a few years ago -> a few years from now)
+  int minYear = year - ( years / 3 );
+
+  TQPopupMenu *popup = new TQPopupMenu( mYear );
+
+  TQString yearStr;
+  int y = minYear;
+  for ( int i=0; i < years; i++ ) {
+    popup->insertItem( yearStr.setNum( y ), i );
+    y++;
+  }
+  popup->setActiveItem( year - minYear );
+
+  if ( ( year = popup->exec( mYear->mapToGlobal( TQPoint( 0, 0 ) ),
+                             year - minYear ) ) == -1 ) {
+    delete popup;
+    return;  // canceled
+  }
+
+  emit yearSelected( year + minYear );
 
   delete popup;
 }

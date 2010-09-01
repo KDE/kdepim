@@ -25,6 +25,8 @@
 #define _KOEDITORGENERALTODO_H
 
 #include "koeditorgeneral.h"
+#include "koglobals.h"
+
 #include <tqdatetime.h>
 
 class KRestrictedLine;
@@ -54,30 +56,33 @@ class KOEditorGeneralTodo : public KOEditorGeneral
     /** Set widgets to default values */
     void setDefaults( const TQDateTime &due, bool allDay );
     /** Read todo object and setup widgets accordingly */
-    void readTodo(Todo *todo, Calendar *calendar);
+    void readTodo( Todo *todo, Calendar *calendar, const TQDate &date );
     /** Write todo settings to event object */
     void writeTodo(Todo *);
 
     /** Check if the input is valid. */
     bool validateInput();
 
+    void updateRecurrenceSummary( Todo *todo );
+
     /** The todo has been modified externally */
-    void modified (Todo*, int);
+    void modified( Todo *todo, KOGlobals::HowChanged modification );
 
   signals:
     void dueDateEditToggle( bool );
     void dateTimeStrChanged( const TQString & );
     void signalDateTimeChanged( const TQDateTime &, const TQDateTime & );
+    void editRecurrence();
 
   protected slots:
-    void completedChanged(int);
+    void completedChanged( int );
+    void completedChanged();
     void dateChanged();
     void startDateModified();
 
     void enableDueEdit( bool enable );
     void enableStartEdit( bool enable );
     void enableTimeEdits( bool enable );
-    void showAlarm();
 
   protected:
     void setCompletedDate();
@@ -92,6 +97,7 @@ class KOEditorGeneralTodo : public KOEditorGeneral
     TQCheckBox               *mDueCheck;
     KDateEdit               *mDueDateEdit;
     KTimeEdit               *mDueTimeEdit;
+    TQCheckBox               *mCompletedToggle;
     TQComboBox               *mCompletedCombo;
     TQLabel                  *mCompletedLabel;
     TQLabel                  *mPriorityLabel;
@@ -102,7 +108,7 @@ class KOEditorGeneralTodo : public KOEditorGeneral
 
     TQCheckBox               *mStartCheck;
 
-    TQDateTime mCompleted;
+    TQDateTime               mCompletedDateTime;
 };
 
 

@@ -772,7 +772,7 @@ void RecipientsPicker::pick( Recipient::Type type )
   kdDebug() << "RecipientsPicker::pick " << int( type ) << endl;
 
   int count = 0;
-  TQListViewItemIterator it( mRecipientList , 
+  TQListViewItemIterator it( mRecipientList ,
             TQListViewItemIterator::Visible | TQListViewItemIterator::Selected );
   for ( ; it.current(); ++it )
       ++count;
@@ -787,7 +787,7 @@ void RecipientsPicker::pick( Recipient::Type type )
     return;
   }
 
-  it = TQListViewItemIterator( mRecipientList , 
+  it = TQListViewItemIterator( mRecipientList ,
             TQListViewItemIterator::Visible | TQListViewItemIterator::Selected );
   for ( ; it.current(); ++it ) {
     RecipientViewItem *item = static_cast<RecipientViewItem *>( it.current() );
@@ -855,7 +855,7 @@ void RecipientsPicker::slotSearchLDAP()
 
 void RecipientsPicker::ldapSearchResult()
 {
-    TQStringList emails = TQStringList::split(',', mLdapSearchDialog->selectedEMails() );
+    TQStringList emails = KPIM::splitEmailAddrList( mLdapSearchDialog->selectedEMails() );
     TQStringList::iterator it( emails.begin() );
     TQStringList::iterator end( emails.end() );
     for ( ; it != end; ++it ){

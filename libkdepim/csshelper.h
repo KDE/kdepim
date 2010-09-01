@@ -67,6 +67,8 @@ class CSSHelper {
     void setBodyFont( const TQFont& font );
     void setPrintFont( const TQFont& font );
 
+    TQColor pgpWarnColor() const;
+
   protected:
     /** Recalculate PGP frame and body colors (should be called after changing
         color settings) */

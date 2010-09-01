@@ -65,7 +65,6 @@ SummaryWidget::SummaryWidget( KOrganizerPlugin *plugin, TQWidget *parent,
   mLayout->setRowStretch( 6, 1 );
 
   mCalendar = KOrg::StdCalendar::self();
-  mCalendar->load();
 
   connect( mCalendar, TQT_SIGNAL( calendarChanged() ), TQT_SLOT( updateView() ) );
   connect( mPlugin->core(), TQT_SIGNAL( dayChanged( const TQDate& ) ),
@@ -94,6 +93,8 @@ void SummaryWidget::updateView()
   TQLabel *label = 0;
   int counter = 0;
   TQPixmap pm = loader.loadIcon( "appointment", KIcon::Small );
+  TQPixmap pmb = loader.loadIcon( "calendarbirthday", KIcon::Small );
+  TQPixmap pma = loader.loadIcon( "calendaranniversary", KIcon::Small );
 
   TQDate dt;
   TQDate currentDate = TQDate::currentDate();
@@ -101,38 +102,22 @@ void SummaryWidget::updateView()
         dt<=currentDate.addDays( days - 1 );
         dt=dt.addDays(1) ) {
 
-    KCal::Event *ev;
-
-    KCal::Event::List events_orig = mCalendar->events( dt );
-    KCal::Event::List::ConstIterator it = events_orig.begin();
-
-    KCal::Event::List events;
-    events.setAutoDelete( true );
-    TQDateTime qdt;
-
-    // prevent implicitely sharing while finding recurring events
-    // replacing the TQDate with the currentDate
-    for ( ; it != events_orig.end(); ++it ) {
-      ev = (*it)->clone();
-      if ( ev->recursOn( dt ) ) {
-        qdt = ev->dtStart();
-        qdt.setDate( dt );
-        ev->setDtStart( qdt );
-      }
-      events.append( ev );
-    }
+    KCal::Event::List events = mCalendar->events( dt );
 
     // sort the events for this date by summary
-    events = KCal::Calendar::sortEvents( &events,
-                                         KCal::EventSortSummary,
-                                         KCal::SortDirectionAscending );
+    events = KCal::Calendar::sortEventsForDate( &events,
+                                                dt,
+                                                KCal::EventSortSummary,
+                                                KCal::SortDirectionAscending );
     // sort the events for this date by start date
-    events = KCal::Calendar::sortEvents( &events,
-                                         KCal::EventSortStartDate,
-                                         KCal::SortDirectionAscending );
+    events = KCal::Calendar::sortEventsForDate( &events,
+                                                dt,
+                                                KCal::EventSortStartDate,
+                                                KCal::SortDirectionAscending );
 
+    KCal::Event::List::ConstIterator it = events.begin();
     for ( it=events.begin(); it!=events.end(); ++it ) {
-      ev = *it;
+      KCal::Event *ev = *it;
 
       // Count number of days remaining in multiday event
       int span=1; int dayof=1;
@@ -156,7 +141,13 @@ void SummaryWidget::updateView()
 
       // Fill Appointment Pixmap Field
       label = new TQLabel( this );
-      label->setPixmap( pm );
+      if ( ev->categories().contains( "Birthday" ) ) {
+        label->setPixmap( pmb );
+      } else if ( ev->categories().contains( "Anniversary" ) ) {
+        label->setPixmap( pma );
+      } else {
+        label->setPixmap( pm );
+      }
       label->setMaximumWidth( label->minimumSizeHint().width() );
       label->setAlignment( AlignVCenter );
       mLayout->addWidget( label, counter, 0 );
@@ -167,7 +158,7 @@ void SummaryWidget::updateView()
       TQString datestr;
 
       // Modify event date for printing
-      TQDate sD = TQDate::TQDate( dt.year(), dt.month(), dt.day() );
+      TQDate sD = TQDate( dt.year(), dt.month(), dt.day() );
       if ( ( sD.month() == currentDate.month() ) &&
            ( sD.day()   == currentDate.day() ) ) {
         datestr = i18n( "Today" );
@@ -216,7 +207,7 @@ void SummaryWidget::updateView()
       connect( urlLabel, TQT_SIGNAL( rightClickedURL( const TQString& ) ),
                this, TQT_SLOT( popupMenu( const TQString& ) ) );
 
-      TQString tipText( KCal::IncidenceFormatter::toolTipString( ev, true ) );
+      TQString tipText( KCal::IncidenceFormatter::toolTipStr( mCalendar, ev, dt, true ) );
       if ( !tipText.isEmpty() ) {
         TQToolTip::add( urlLabel, tipText );
       }
@@ -227,10 +218,10 @@ void SummaryWidget::updateView()
         TQTime sET = ev->dtEnd().time();
         if ( ev->isMultiDay() ) {
           if ( ev->dtStart().date() < dt ) {
-            sST = TQTime::TQTime( 0, 0 );
+            sST = TQTime( 0, 0 );
           }
           if ( ev->dtEnd().date() > dt ) {
-            sET = TQTime::TQTime( 23, 59 );
+            sET = TQTime( 23, 59 );
           }
         }
         datestr = i18n( "Time from - to", "%1 - %2" )

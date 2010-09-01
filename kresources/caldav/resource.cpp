@@ -160,7 +160,7 @@ bool ResourceCalDav::doLoad() {
     emit resourceLoaded(this);
 
     log("starting download job");
-    startLoading(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl());
+    startLoading(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl(), mPrefs->getFullJournalsUrl());
 
     return true;
 }
@@ -189,7 +189,7 @@ bool ResourceCalDav::doSave() {
     }
 
     log("start writing job");
-    if (startWriting(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl()) == true) {
+    if (startWriting(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl(), mPrefs->getFullJournalsUrl()) == true) {
         log("clearing changes");
         // FIXME: Calling clearChanges() here is not the ideal way since the
         // upload might fail, but there is no other place to call it...
@@ -334,6 +334,7 @@ void ResourceCalDav::loadingQueuePop() {
 
     mLoader->setUrl(t->url);
     mLoader->setTasksUrl(t->tasksUrl);
+    mLoader->setJournalsUrl(t->journalsUrl);
     mLoader->setParent(this);
     mLoader->setType(0);
 
@@ -353,10 +354,11 @@ void ResourceCalDav::loadingQueuePop() {
     delete t;
 }
 
-void ResourceCalDav::startLoading(const TQString& url, const TQString& tasksUrl) {
+void ResourceCalDav::startLoading(const TQString& url, const TQString& tasksUrl, const TQString& journalsUrl) {
     LoadingTask *t = new LoadingTask;
     t->url = url;
     t->tasksUrl = tasksUrl;
+    t->journalsUrl = journalsUrl;
     loadingQueuePush(t);
 }
 
@@ -381,7 +383,7 @@ void ResourceCalDav::loadFinished() {
                 else {
                     // Set new password and try again
                     mPrefs->setPassword(TQString(newpass));
-                    startLoading(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl());
+                    startLoading(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl(), mPrefs->getFullJournalsUrl());
                 }
             }
             else {
@@ -429,7 +431,7 @@ void ResourceCalDav::loadFinished() {
 //                 else {
 //                     // Set new password and try again
 //                     mPrefs->setPassword(TQString(newpass));
-//                     startLoading(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl());
+//                     startLoading(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl(), mPrefs->getFullJournalsUrl());
 //                 }
             }
             else {
@@ -454,6 +456,54 @@ void ResourceCalDav::loadFinished() {
 
             log("trying to parse...");
             if (parseTasksData(tasksData)) {
+                // FIXME: The agenda view can crash when a change is
+                // made on a remote server and a reload is requested!
+                log("... parsing is ok");
+                log("clearing changes");
+                enableChangeNotification();
+                clearChanges();
+                emit resourceChanged(this);
+                emit resourceLoaded(this);
+            }
+        }
+    }
+
+    if (loader->journalsError()) {
+        if (loader->journalsErrorNumber() == -401) {
+            if (NULL != mPrefs) {
+//                 TQCString newpass;
+//                 if (KPasswordDialog::getPassword (newpass, TQString("<b>") + i18n("Remote authorization required") + TQString("</b><p>") + i18n("Please input the password for") + TQString(" ") + mPrefs->getusername(), NULL) != 1) {
+//                     log("load error: " + loader->journalsErrorString() );
+//                     loadError(TQString("[%1] ").arg(abs(loader->journalsErrorNumber())) + loader->journalsErrorString());
+//                 }
+//                 else {
+//                     // Set new password and try again
+//                     mPrefs->setPassword(TQString(newpass));
+//                     startLoading(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl(), mPrefs->getFullJournalsUrl());
+//                 }
+            }
+            else {
+                log("load error: " + loader->journalsErrorString() );
+                loadError(TQString("[%1] ").arg(abs(loader->journalsErrorNumber())) + loader->journalsErrorString());
+            }
+        }
+        else {
+            log("load error: " + loader->journalsErrorString() );
+            loadError(TQString("[%1] ").arg(abs(loader->journalsErrorNumber())) + loader->journalsErrorString());
+        }
+    } else {
+        log("successful journals load");
+        TQString journalsData = loader->journalsData();
+
+        if (!journalsData.isNull() && !journalsData.isEmpty()) {
+            // TODO: I don't know why, but some schedules on http://caldav-test.ioda.net/ (I used it for testing)
+            // have some lines separated by single \r rather than \n or \r\n.
+            // ICalFormat fails to parse that.
+            journalsData.replace("\r\n", "\n"); // to avoid \r\n becomes \n\n after the next line
+            journalsData.replace('\r', '\n');
+
+            log("trying to parse...");
+            if (parseJournalsData(journalsData)) {
                 // FIXME: The agenda view can crash when a change is
                 // made on a remote server and a reload is requested!
                 log("... parsing is ok");
@@ -602,6 +652,63 @@ bool ResourceCalDav::parseTasksData(const TQString& data) {
     return ret;
 }
 
+bool ResourceCalDav::parseJournalsData(const TQString& data) {
+    log("parseJournalsData()");
+
+    bool ret = true;
+
+    // check if the data is OK
+    // May be it's not efficient (parsing is done twice), but it should be safe
+    if (!checkData(data)) {
+        loadError(i18n("Parsing calendar data failed."));
+        return false;
+    }
+
+    log("clearing cache");
+    clearJournalsCache();
+
+    disableChangeNotification();
+
+    log("actually parsing the data");
+
+    ICalFormat ical;
+    if ( !ical.fromString( &mCalendar, data ) ) {
+        // this should never happen, but...
+        ret = false;
+    }
+
+    // debug code here -------------------------------------------------------
+#ifdef KCALDAV_DEBUG
+    const TQString fout_path = "/tmp/kcaldav_download_" + identifier() + ".tmp";
+
+    TQFile fout(fout_path);
+    if (fout.open(IO_WriteOnly | IO_Append)) {
+        TQTextStream sout(&fout);
+        sout << "---------- " << resourceName() << ": --------------------------------\n";
+        sout << data << "\n";
+        fout.close();
+    } else {
+        loadError(i18n("can't open file"));
+    }
+#endif // KCALDAV_DEBUG
+    // end of debug code ----------------------------------------------------
+
+    enableChangeNotification();
+
+    if (ret) {
+        log("parsing is ok");
+        //if ( !noReadOnlyOnLoad() && readOnly() ) {
+        if ( readOnly() ) {
+            log("ensuring read only flag honored");
+            ensureReadOnlyFlagHonored();
+        }
+        log("saving to cache");
+        saveCache();
+    }
+
+    return ret;
+}
+
 /*=========================================================================
 | WRITING METHODS
  ========================================================================*/
@@ -662,6 +769,7 @@ void ResourceCalDav::writingQueuePop() {
 
     mWriter->setUrl(t->url);
     mWriter->setTasksUrl(t->tasksUrl);
+    mWriter->setJournalsUrl(t->journalsUrl);
     mWriter->setParent(this);
     mWriter->setType(1);
 
@@ -688,6 +796,10 @@ void ResourceCalDav::writingQueuePop() {
     mWriter->setAddedTasksObjects(t->tasksAdded);
     mWriter->setChangedTasksObjects(t->tasksChanged);
     mWriter->setDeletedTasksObjects(t->tasksDeleted);
+
+    mWriter->setAddedJournalsObjects(t->journalsAdded);
+    mWriter->setChangedJournalsObjects(t->journalsChanged);
+    mWriter->setDeletedJournalsObjects(t->journalsDeleted);
 
     mWritingQueueReady = false;
 
@@ -719,7 +831,7 @@ void ResourceCalDav::releaseReadLockout() {
     readLockout = false;
 }
 
-bool ResourceCalDav::startWriting(const TQString& url, const TQString& tasksUrl) {
+bool ResourceCalDav::startWriting(const TQString& url, const TQString& tasksUrl, const TQString& journalsUrl) {
     log("startWriting: url = " + url);
 
     // WARNING: This will segfault if a separate read or write thread
@@ -757,16 +869,22 @@ bool ResourceCalDav::startWriting(const TQString& url, const TQString& tasksUrl)
 
         t->url = url;
         t->tasksUrl = tasksUrl;
+        t->journalsUrl = journalsUrl;
         t->added = "";
         t->changed = "";
         t->deleted = "";
         t->tasksAdded = "";
         t->tasksChanged = "";
         t->tasksDeleted = "";
+        t->journalsAdded = "";
+        t->journalsChanged = "";
+        t->journalsDeleted = "";
         if (getICalString(currentIncidence).contains("BEGIN:VEVENT") > 0)
           t->added = getICalString(currentIncidence);
         else if (getICalString(currentIncidence).contains("BEGIN:VTODO") > 0)
           t->tasksAdded = getICalString(currentIncidence);
+        else if (getICalString(currentIncidence).contains("BEGIN:VJOURNAL") > 0)
+          t->journalsAdded = getICalString(currentIncidence);
 
         writingQueuePush(t);
     }
@@ -785,11 +903,16 @@ bool ResourceCalDav::startWriting(const TQString& url, const TQString& tasksUrl)
         t->tasksAdded = "";
         t->tasksChanged = "";
         t->tasksDeleted = "";
+        t->journalsAdded = "";
+        t->journalsChanged = "";
+        t->journalsDeleted = "";
 
         if (getICalString(currentIncidence).contains("BEGIN:VEVENT") > 0)
           t->changed = getICalString(currentIncidence);
         else if (getICalString(currentIncidence).contains("BEGIN:VTODO") > 0)
           t->tasksChanged = getICalString(currentIncidence);
+        else if (getICalString(currentIncidence).contains("BEGIN:VJOURNAL") > 0)
+          t->journalsChanged = getICalString(currentIncidence);
 
         writingQueuePush(t);
     }
@@ -808,11 +931,16 @@ bool ResourceCalDav::startWriting(const TQString& url, const TQString& tasksUrl)
         t->tasksAdded = "";
         t->tasksChanged = "";
         t->tasksDeleted = "";
+        t->journalsAdded = "";
+        t->journalsChanged = "";
+        t->journalsDeleted = "";
 
         if (getICalString(currentIncidence).contains("BEGIN:VEVENT") > 0)
           t->deleted = getICalString(currentIncidence);
         else if (getICalString(currentIncidence).contains("BEGIN:VTODO") > 0)
           t->tasksDeleted = getICalString(currentIncidence);
+        else if (getICalString(currentIncidence).contains("BEGIN:VJOURNALS") > 0)
+          t->journalsDeleted = getICalString(currentIncidence);
 
         writingQueuePush(t);
     }
@@ -839,7 +967,7 @@ void ResourceCalDav::writingFinished() {
                 else {
                     // Set new password and try again
                     mPrefs->setPassword(TQString(newpass));
-                    startWriting(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl());
+                    startWriting(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl(), mPrefs->getFullJournalsUrl());
                 }
             }
             else {

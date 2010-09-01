@@ -110,7 +110,6 @@ void KMSystemTray::buildPopupMenu()
 {
   // Delete any previously created popup menu
   delete mPopupMenu;
-  mPopupMenu = 0;
 
   mPopupMenu = new KPopupMenu();
   KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
@@ -292,6 +291,9 @@ void KMSystemTray::foldersChanged()
 
       /** Check all new folders to see if we started with any new messages */
       updateNewMessageNotification(currentFolder);
+    }
+    else {
+        disconnect(currentFolder, TQT_SIGNAL(numUnreadMsgsChanged(KMFolder *)), this, TQT_SLOT(updateNewMessageNotification(KMFolder *)) );
     }
   }
 }
@@ -586,6 +588,11 @@ void KMSystemTray::selectedAccount(int id)
 
   ft->setCurrentItem(fldrIdx);
   ft->selectCurrentFolder();
+}
+
+bool KMSystemTray::hasUnreadMail() const
+{
+  return ( mCount != 0 );
 }
 
 #include "kmsystemtray.moc"

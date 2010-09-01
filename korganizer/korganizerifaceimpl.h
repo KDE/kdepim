@@ -55,6 +55,8 @@ public:
   void syncAllResources();
 
   bool editIncidence( const TQString &uid );
+  bool editIncidence( const TQString &uid, const TQDate &date );
+
   /** @reimp from KOrganizerIface::deleteIncidence() */
   bool deleteIncidence( const TQString &uid )  { return deleteIncidence( uid, false ); }
   /** @reimp from KOrganizerIface::deleteIncidence() */
@@ -68,6 +70,9 @@ public:
 
   /** @reimp from KOrganizerIface::saveToProfile() */
   void saveToProfile( const TQString& path ) const;
+
+  /** @reimp from KOrganizerIface::handleCommandLine() */
+  bool handleCommandLine();
 
 private:
   ActionManager* mActionManager;

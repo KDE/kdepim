@@ -34,10 +34,11 @@ AboutData::AboutData()
                 KAboutData::License_GPL,
                 "(c) 1997-1999 Preston Brown\n"
                 "(c) 2000-2004 Cornelius Schumacher\n"
-                "(c) 2004-2005 Reinhold Kainhofer", 0,
+                "(c) 2004-2005 Reinhold Kainhofer\n"
+                "(c) 2009-2010 Timothy Pearson", 0,
                 "http://korganizer.kde.org" )
 {
-  addAuthor("Timothy Pearson",I18N_NOOP("Current Maintainer"),
+  addAuthor("Timothy Pearson",I18N_NOOP("Current Developer/Maintainer"),
             "kb9vqf@pearsoncomputing.net");
   addAuthor("Reinhold Kainhofer",I18N_NOOP("Previous maintainer"),
             "reinhold@kainhofer.com");

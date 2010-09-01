@@ -129,11 +129,11 @@ DImapTroubleShootDialog::DImapTroubleShootDialog( TQWidget* parent,
                       "and all its subfolders.</p>" );
   topLayout->addWidget( new TQLabel( txt, page ) );
 
-  TQButtonGroup *group = new TQButtonGroup( 0 );
+  mButtonGroup = new TQButtonGroup( 0 );
 
   mIndexButton = new TQRadioButton( page );
   mIndexButton->setText( i18n( "Rebuild &Index" ) );
-  group->insert( mIndexButton );
+  mButtonGroup->insert( mIndexButton );
   topLayout->addWidget( mIndexButton );
 
   TQHBox *hbox = new TQHBox( page );
@@ -148,15 +148,16 @@ DImapTroubleShootDialog::DImapTroubleShootDialog( TQWidget* parent,
 
   mCacheButton = new TQRadioButton( page );
   mCacheButton->setText( i18n( "Refresh &Cache" ) );
-  group->insert( mCacheButton );
+  mButtonGroup->insert( mCacheButton );
   topLayout->addWidget( mCacheButton );
 
   enableButtonSeparator( true );
 
   connect ( mIndexButton, TQT_SIGNAL(toggled(bool)), mIndexScope, TQT_SLOT(setEnabled(bool)) );
   connect ( mIndexButton, TQT_SIGNAL(toggled(bool)), scopeLabel, TQT_SLOT(setEnabled(bool)) );
-
+  connect( mButtonGroup, TQT_SIGNAL( clicked( int ) ), TQT_SLOT( slotChanged() ) );
   connect( this, TQT_SIGNAL( okClicked () ), this, TQT_SLOT( slotDone() ) );
+  enableButtonOK( false );
 }
 
 int DImapTroubleShootDialog::run()
@@ -164,6 +165,11 @@ int DImapTroubleShootDialog::run()
   DImapTroubleShootDialog d;
   d.exec();
   return d.rc;
+}
+
+void DImapTroubleShootDialog::slotChanged()
+{
+  enableButtonOK( mButtonGroup->selected() != 0 );
 }
 
 void DImapTroubleShootDialog::slotDone()
@@ -181,17 +187,24 @@ KMFolderCachedImap::KMFolderCachedImap( KMFolder* folder, const char* aName )
     mSyncState( SYNC_STATE_INITIAL ), mContentState( imapNoInformation ),
     mSubfolderState( imapNoInformation ),
     mIncidencesFor( IncForAdmins ),
+    mSharedSeenFlags( false ),
     mIsSelected( false ),
     mCheckFlags( true ), mReadOnly( false ), mAccount( NULL ), uidMapDirty( true ),
     uidWriteTimer( -1 ), mLastUid( 0 ), mTentativeHighestUid( 0 ),
     mFoundAnIMAPDigest( false ),
-    mUserRights( 0 ), mOldUserRights( 0 ), mSilentUpload( false ),
+    mUserRights( 0 ), mOldUserRights( 0 ), mUserRightsState( KMail::ACLJobs::NotFetchedYet ),
+    mACLListState( KMail::ACLJobs::NotFetchedYet ),
+    mSilentUpload( false ),
     /*mHoldSyncs( false ),*/
     mFolderRemoved( false ),
     mRecurse( true ),
-    mStatusChangedLocally( false ), mAnnotationFolderTypeChanged( false ),
-    mIncidencesForChanged( false ), mPersonalNamespacesCheckDone( true ),
-    mQuotaInfo(), mAlarmsBlocked( false ),
+    mQuotaOnly( false ),
+    mAnnotationFolderTypeChanged( false ),
+    mIncidencesForChanged( false ),
+    mSharedSeenFlagsChanged( false ),
+    mStatusChangedLocally( false ),
+    mPersonalNamespacesCheckDone( true ),
+    mQuotaInfo(), mSomeSubFolderCloseToQuotaChanged( false ), mAlarmsBlocked( false ),
     mRescueCommandCount( 0 ),
     mPermanentFlags( 31 ) // assume standard flags by default (see imap4/imapinfo.h for bit fields values)
 {
@@ -215,6 +228,7 @@ KMFolderCachedImap::KMFolderCachedImap( KMFolder* folder, const char* aName )
 KMFolderCachedImap::~KMFolderCachedImap()
 {
   if (kmkernel->undoStack()) kmkernel->undoStack()->folderDestroyed( folder() );
+  writeConfig();
 }
 
 void KMFolderCachedImap::reallyDoClose( const char* owner )
@@ -231,7 +245,7 @@ void KMFolderCachedImap::initializeFrom( KMFolderCachedImap* parent )
   // Now that we have an account, tell it that this folder was created:
   // if this folder was just removed, then we don't really want to remove it from the server.
   mAccount->removeDeletedFolder( imapPath() );
-  setUserRights( parent->userRights() );
+  setUserRights( parent->userRights(), parent->userRightsState() );
 }
 
 void KMFolderCachedImap::readConfig()
@@ -262,8 +276,11 @@ void KMFolderCachedImap::readConfig()
   mAlarmsBlocked = config->readBoolEntry( "AlarmsBlocked", false );
 //  kdDebug(5006) << ( mImapPath.isEmpty() ? label() : mImapPath )
 //                << " readConfig: mIncidencesFor=" << mIncidencesFor << endl;
+  mSharedSeenFlags = config->readBoolEntry( "SharedSeenFlags", false );
 
-  mUserRights = config->readNumEntry( "UserRights", 0 ); // default is we don't know
+  mUserRights = config->readNumEntry( "UserRights", 0 );
+  mUserRightsState = static_cast<KMail::ACLJobs::ACLFetchState>(
+      config->readNumEntry( "UserRightsState", KMail::ACLJobs::NotFetchedYet ) );
   mOldUserRights = mUserRights;
 
   int storageQuotaUsage = config->readNumEntry( "StorageQuotaUsage", -1 );
@@ -283,19 +300,25 @@ void KMFolderCachedImap::readConfig()
 
   mStatusChangedLocally =
     config->readBoolEntry( "StatusChangedLocally", false );
+  TQStringList uidsChanged = config->readListEntry( "UIDStatusChangedLocally" );
+  for ( TQStringList::iterator it = uidsChanged.begin(); it != uidsChanged.end(); it++ ) {
+    mUIDsOfLocallyChangedStatuses.insert( ( *it ).toUInt() );
+  }
 
   mAnnotationFolderTypeChanged = config->readBoolEntry( "AnnotationFolderTypeChanged", false );
   mIncidencesForChanged = config->readBoolEntry( "IncidencesForChanged", false );
+  mSharedSeenFlagsChanged = config->readBoolEntry( "SharedSeenFlagsChanged", false );
+
   if ( mImapPath.isEmpty() ) {
     mImapPathCreation = config->readEntry("ImapPathCreation");
   }
 
-  TQStringList uids = config->readListEntry( "UIDSDeletedSinceLastSync" );
+  TQStringList delUids = config->readListEntry( "UIDSDeletedSinceLastSync" );
 #if MAIL_LOSS_DEBUGGING
   kdDebug( 5006 ) << "READING IN UIDSDeletedSinceLastSync: " << folder()->prettyURL() << endl << uids << endl;
 #endif
-  for ( TQStringList::iterator it = uids.begin(); it != uids.end(); it++ ) {
-      mDeletedUIDsSinceLastSync.insert( (*it).toULong(), 0);
+  for ( TQStringList::iterator it = delUids.begin(); it != delUids.end(); it++ ) {
+    mDeletedUIDsSinceLastSync.insert( (*it).toULong(), 0);
   }
 }
 
@@ -311,7 +334,15 @@ void KMFolderCachedImap::writeConfig()
   configGroup.writeEntry( "NoContent", mNoContent );
   configGroup.writeEntry( "ReadOnly", mReadOnly );
   configGroup.writeEntry( "FolderAttributes", mFolderAttributes );
-  configGroup.writeEntry( "StatusChangedLocally", mStatusChangedLocally );
+
+  // StatusChangedLocally is always false, as we use UIDStatusChangedLocally now
+  configGroup.writeEntry( "StatusChangedLocally", false );
+  TQStringList uidsToWrite;
+  for( std::set<ulong>::iterator it = mUIDsOfLocallyChangedStatuses.begin();
+       it != mUIDsOfLocallyChangedStatuses.end(); it++ ) {
+    uidsToWrite.append( TQString::number( (*it) ) );
+  }
+  configGroup.writeEntry( "UIDStatusChangedLocally", uidsToWrite );
   if ( !mImapPathCreation.isEmpty() ) {
     if ( mImapPath.isEmpty() ) {
       configGroup.writeEntry( "ImapPathCreation", mImapPathCreation );
@@ -346,7 +377,12 @@ void KMFolderCachedImap::writeConfigKeysWhichShouldNotGetOverwrittenByReadConfig
     configGroup.writeEntry( "IncidencesForChanged", mIncidencesForChanged );
     configGroup.writeEntry( "IncidencesFor", incidencesForToString( mIncidencesFor ) );
     configGroup.writeEntry( "AlarmsBlocked", mAlarmsBlocked );
-    configGroup.writeEntry( "UserRights", mUserRights );
+    configGroup.writeEntry( "SharedSeenFlags", mSharedSeenFlags );
+    configGroup.writeEntry( "SharedSeenFlagsChanged", mSharedSeenFlagsChanged );
+    if ( mUserRightsState != KMail::ACLJobs::FetchFailed ) { // No point in overwriting valid results with invalid ones
+      configGroup.writeEntry( "UserRights", mUserRights );
+      configGroup.writeEntry( "UserRightsState", mUserRightsState );
+    }
 
     configGroup.deleteEntry( "StorageQuotaUsage");
     configGroup.deleteEntry( "StorageQuotaRoot");
@@ -503,11 +539,22 @@ int KMFolderCachedImap::addMsgInternal( KMMessage* msg, bool newMail,
   // Add the message
   rc = KMFolderMaildir::addMsg(msg, index_return);
 
-  if( newMail && ( imapPath() == "/INBOX/" || ( !GlobalSettings::self()->filterOnlyDIMAPInbox()
-      && (userRights() <= 0 || userRights() & ACLJobs::Administer )
+  if( newMail && ( imapPath() == "/INBOX/" ||
+      ( ( mUserRights != ACLJobs::Ok || userRights() & ACLJobs::Administer)
       && (contentsType() == ContentsTypeMail || GlobalSettings::self()->filterGroupwareFolders()) ) ) )
-    // This is a new message. Filter it
-    mAccount->processNewMsg( msg );
+  {
+    // This is a new message. Filter it - maybe
+    bool filter = false;
+    if ( GlobalSettings::filterSourceFolders().isEmpty() ) {
+      if ( imapPath() == "/INBOX/" )
+        filter = true;
+    } else {
+      if ( GlobalSettings::filterSourceFolders().contains( folder()->id() ) )
+        filter = true;
+    }
+    if ( filter )
+      mAccount->processNewMsg( msg );
+  }
 
   return rc;
 }
@@ -534,6 +581,9 @@ void KMFolderCachedImap::rememberDeletion( int idx )
 /* Reimplemented from KMFolderMaildir */
 void KMFolderCachedImap::removeMsg(int idx, bool imapQuiet)
 {
+  if ( contentsType() != ContentsTypeMail ) {
+    kdDebug(5006) << k_funcinfo << "Deleting message with idx " << idx << " in folder " << label() << endl;
+  }
   uidMapDirty = true;
   rememberDeletion( idx );
   // Remove it from disk
@@ -556,17 +606,19 @@ bool KMFolderCachedImap::canRemoveFolder() const {
 int KMFolderCachedImap::rename( const TQString& aName,
                                 KMFolderDir* /*aParent*/ )
 {
+  if ( account() == 0 || imapPath().isEmpty() ) {
+    // This can happen when creating a folder and then renaming it without syncing before,
+    // see https://issues.kolab.org/issue3658
+    TQString err = i18n("You must synchronize with the server before renaming IMAP folders.");
+    KMessageBox::error( 0, err );
+    return -1;
+  }
+
   TQString oldName = mAccount->renamedFolder( imapPath() );
   if ( oldName.isEmpty() ) oldName = name();
   if ( aName == oldName )
     // Stupid user trying to rename it to it's old name :)
     return 0;
-
-  if( account() == 0 || imapPath().isEmpty() ) { // I don't think any of this can happen anymore
-    TQString err = i18n("You must synchronize with the server before renaming IMAP folders.");
-    KMessageBox::error( 0, err );
-    return -1;
-  }
 
   // Make the change appear to the user with setLabel, but we'll do the change
   // on the server during the next sync. The name() is the name at the time of
@@ -719,7 +771,7 @@ void KMFolderCachedImap::slotTroubleshoot()
   }
 }
 
-void KMFolderCachedImap::serverSync( bool recurse )
+void KMFolderCachedImap::serverSync( bool recurse, bool quotaOnly )
 {
   if( mSyncState != SYNC_STATE_INITIAL ) {
     if( KMessageBox::warningYesNo( 0, i18n("Folder %1 is not in initial sync state (state was %2). Do you want to reset it to initial sync state and sync anyway?" ).arg( imapPath() ).arg( mSyncState ), TQString::null, i18n("Reset && Sync"), KStdGuiItem::cancel() ) == KMessageBox::Yes ) {
@@ -728,6 +780,7 @@ void KMFolderCachedImap::serverSync( bool recurse )
   }
 
   mRecurse = recurse;
+  mQuotaOnly = quotaOnly;
   assert( account() );
 
   ProgressItem *progressItem = mAccount->mailCheckProgressItem();
@@ -756,31 +809,33 @@ void KMFolderCachedImap::serverSync( bool recurse )
 TQString KMFolderCachedImap::state2String( int state ) const
 {
   switch( state ) {
-  case SYNC_STATE_INITIAL:           return "SYNC_STATE_INITIAL";
-  case SYNC_STATE_GET_USERRIGHTS:    return "SYNC_STATE_GET_USERRIGHTS";
-  case SYNC_STATE_PUT_MESSAGES:      return "SYNC_STATE_PUT_MESSAGES";
-  case SYNC_STATE_UPLOAD_FLAGS:      return "SYNC_STATE_UPLOAD_FLAGS";
-  case SYNC_STATE_CREATE_SUBFOLDERS: return "SYNC_STATE_CREATE_SUBFOLDERS";
-  case SYNC_STATE_LIST_SUBFOLDERS:   return "SYNC_STATE_LIST_SUBFOLDERS";
-  case SYNC_STATE_LIST_NAMESPACES:   return "SYNC_STATE_LIST_NAMESPACES";
-  case SYNC_STATE_LIST_SUBFOLDERS2:  return "SYNC_STATE_LIST_SUBFOLDERS2";
-  case SYNC_STATE_DELETE_SUBFOLDERS: return "SYNC_STATE_DELETE_SUBFOLDERS";
-  case SYNC_STATE_LIST_MESSAGES:     return "SYNC_STATE_LIST_MESSAGES";
-  case SYNC_STATE_DELETE_MESSAGES:   return "SYNC_STATE_DELETE_MESSAGES";
-  case SYNC_STATE_GET_MESSAGES:      return "SYNC_STATE_GET_MESSAGES";
-  case SYNC_STATE_EXPUNGE_MESSAGES:  return "SYNC_STATE_EXPUNGE_MESSAGES";
-  case SYNC_STATE_HANDLE_INBOX:      return "SYNC_STATE_HANDLE_INBOX";
-  case SYNC_STATE_TEST_ANNOTATIONS:  return "SYNC_STATE_TEST_ANNOTATIONS";
-  case SYNC_STATE_GET_ANNOTATIONS:   return "SYNC_STATE_GET_ANNOTATIONS";
-  case SYNC_STATE_SET_ANNOTATIONS:   return "SYNC_STATE_SET_ANNOTATIONS";
-  case SYNC_STATE_GET_ACLS:          return "SYNC_STATE_GET_ACLS";
-  case SYNC_STATE_SET_ACLS:          return "SYNC_STATE_SET_ACLS";
-  case SYNC_STATE_GET_QUOTA:         return "SYNC_STATE_GET_QUOTA";
-  case SYNC_STATE_FIND_SUBFOLDERS:   return "SYNC_STATE_FIND_SUBFOLDERS";
-  case SYNC_STATE_SYNC_SUBFOLDERS:   return "SYNC_STATE_SYNC_SUBFOLDERS";
-  case SYNC_STATE_RENAME_FOLDER:     return "SYNC_STATE_RENAME_FOLDER";
-  case SYNC_STATE_CHECK_UIDVALIDITY: return "SYNC_STATE_CHECK_UIDVALIDITY";
-  default:                           return "Unknown state";
+  case SYNC_STATE_INITIAL:             return "SYNC_STATE_INITIAL";
+  case SYNC_STATE_GET_USERRIGHTS:      return "SYNC_STATE_GET_USERRIGHTS";
+  case SYNC_STATE_PUT_MESSAGES:        return "SYNC_STATE_PUT_MESSAGES";
+  case SYNC_STATE_UPLOAD_FLAGS:        return "SYNC_STATE_UPLOAD_FLAGS";
+  case SYNC_STATE_CREATE_SUBFOLDERS:   return "SYNC_STATE_CREATE_SUBFOLDERS";
+  case SYNC_STATE_LIST_SUBFOLDERS:     return "SYNC_STATE_LIST_SUBFOLDERS";
+  case SYNC_STATE_LIST_NAMESPACES:     return "SYNC_STATE_LIST_NAMESPACES";
+  case SYNC_STATE_LIST_SUBFOLDERS2:    return "SYNC_STATE_LIST_SUBFOLDERS2";
+  case SYNC_STATE_DELETE_SUBFOLDERS:   return "SYNC_STATE_DELETE_SUBFOLDERS";
+  case SYNC_STATE_LIST_MESSAGES:       return "SYNC_STATE_LIST_MESSAGES";
+  case SYNC_STATE_DELETE_MESSAGES:     return "SYNC_STATE_DELETE_MESSAGES";
+  case SYNC_STATE_GET_MESSAGES:        return "SYNC_STATE_GET_MESSAGES";
+  case SYNC_STATE_EXPUNGE_MESSAGES:    return "SYNC_STATE_EXPUNGE_MESSAGES";
+  case SYNC_STATE_HANDLE_INBOX:        return "SYNC_STATE_HANDLE_INBOX";
+  case SYNC_STATE_TEST_ANNOTATIONS:    return "SYNC_STATE_TEST_ANNOTATIONS";
+  case SYNC_STATE_GET_ANNOTATIONS:     return "SYNC_STATE_GET_ANNOTATIONS";
+  case SYNC_STATE_SET_ANNOTATIONS:     return "SYNC_STATE_SET_ANNOTATIONS";
+  case SYNC_STATE_GET_ACLS:            return "SYNC_STATE_GET_ACLS";
+  case SYNC_STATE_SET_ACLS:            return "SYNC_STATE_SET_ACLS";
+  case SYNC_STATE_GET_QUOTA:           return "SYNC_STATE_GET_QUOTA";
+  case SYNC_STATE_FIND_SUBFOLDERS:     return "SYNC_STATE_FIND_SUBFOLDERS";
+  case SYNC_STATE_SYNC_SUBFOLDERS:     return "SYNC_STATE_SYNC_SUBFOLDERS";
+  case SYNC_STATE_RENAME_FOLDER:       return "SYNC_STATE_RENAME_FOLDER";
+  case SYNC_STATE_CHECK_UIDVALIDITY:   return "SYNC_STATE_CHECK_UIDVALIDITY";
+  case SYNC_STATE_CLOSE:               return "SYNC_STATE_CLOSE";
+  case SYNC_STATE_GET_SUBFOLDER_QUOTA: return "SYNC_STATE_GET_SUBFOLDER_QUOTA";
+  default:                             return "Unknown state";
   }
 }
 
@@ -866,11 +921,14 @@ void KMFolderCachedImap::serverSyncInternal()
 
 
   case SYNC_STATE_GET_USERRIGHTS:
+
+    // Now we have started the sync, emit changed() so that the folder tree can update the status
+    emit syncStateChanged();
     //kdDebug(5006) << "===== Syncing " << ( mImapPath.isEmpty() ? label() : mImapPath ) << endl;
 
     mSyncState = SYNC_STATE_RENAME_FOLDER;
 
-    if( !noContent() && mAccount->hasACLSupport() ) {
+    if( !mQuotaOnly && !noContent() && mAccount->hasACLSupport() ) {
       // Check the user's own rights. We do this every time in case they changed.
       mOldUserRights = mUserRights;
       newState( mProgress, i18n("Checking permissions"));
@@ -878,6 +936,14 @@ void KMFolderCachedImap::serverSyncInternal()
                this, TQT_SLOT( slotReceivedUserRights( KMFolder* ) ) );
       mAccount->getUserRights( folder(), imapPath() ); // after connecting, due to the INBOX case
       break;
+    }
+
+    else if ( !mQuotaOnly && noContent() && mAccount->hasACLSupport() ) {
+      // This is a no content folder. The server would simply say that mailbox does not exist when
+      // querying the rights for it. So pretend we have no rights.
+      mUserRights = 0;
+      mUserRightsState = KMail::ACLJobs::Ok;
+      writeConfigKeysWhichShouldNotGetOverwrittenByReadConfig();
     }
 
   case SYNC_STATE_RENAME_FOLDER:
@@ -890,7 +956,7 @@ void KMFolderCachedImap::serverSyncInternal()
       newState( mProgress, i18n("Renaming folder") );
       CachedImapJob *job = new CachedImapJob( newName, CachedImapJob::tRenameFolder, this );
       connect( job, TQT_SIGNAL( result(KMail::FolderJob *) ), this, TQT_SLOT( slotIncreaseProgress() ) );
-      connect( job, TQT_SIGNAL( finished() ), this, TQT_SLOT( serverSyncInternal() ) );
+      connect( job, TQT_SIGNAL( finished() ), this, TQT_SLOT( slotRenameFolderFinished() ) );
       job->start();
       break;
     }
@@ -898,7 +964,7 @@ void KMFolderCachedImap::serverSyncInternal()
 
   case SYNC_STATE_CHECK_UIDVALIDITY:
     mSyncState = SYNC_STATE_CREATE_SUBFOLDERS;
-    if( !noContent() ) {
+    if( !mQuotaOnly && !noContent() ) {
       checkUidValidity();
       break;
     }
@@ -906,33 +972,36 @@ void KMFolderCachedImap::serverSyncInternal()
 
   case SYNC_STATE_CREATE_SUBFOLDERS:
     mSyncState = SYNC_STATE_PUT_MESSAGES;
-    createNewFolders();
-    break;
+    if ( !mQuotaOnly ) {
+      createNewFolders();
+      break;
+    }
 
   case SYNC_STATE_PUT_MESSAGES:
     mSyncState = SYNC_STATE_UPLOAD_FLAGS;
-    if( !noContent() ) {
+    if( !mQuotaOnly && !noContent() ) {
       uploadNewMessages();
       break;
     }
     // Else carry on
   case SYNC_STATE_UPLOAD_FLAGS:
     mSyncState = SYNC_STATE_LIST_NAMESPACES;
-    if( !noContent() ) {
+    if( !mQuotaOnly && !noContent() ) {
        // We haven't downloaded messages yet, so we need to build the map.
        if( uidMapDirty )
          reloadUidMap();
        // Upload flags, unless we know from the ACL that we're not allowed
        // to do that or they did not change locally
-       if ( mUserRights <= 0 || ( mUserRights & (KMail::ACLJobs::WriteFlags ) ) ) {
-         if ( mStatusChangedLocally ) {
+       if ( mUserRightsState != KMail::ACLJobs::Ok ||
+            ( mUserRights & (KMail::ACLJobs::WriteFlags ) ) ) {
+         if ( !mUIDsOfLocallyChangedStatuses.empty() || mStatusChangedLocally ) {
            uploadFlags();
            break;
          } else {
            //kdDebug(5006) << "Skipping flags upload, folder unchanged: " << label() << endl;
          }
        } else if ( mUserRights & KMail::ACLJobs::WriteSeenFlag ) {
-         if ( mStatusChangedLocally ) {
+         if ( !mUIDsOfLocallyChangedStatuses.empty() || mStatusChangedLocally ) {
            uploadSeenFlags();
            break;
          }
@@ -941,7 +1010,7 @@ void KMFolderCachedImap::serverSyncInternal()
     // Else carry on
 
   case SYNC_STATE_LIST_NAMESPACES:
-    if ( this == mAccount->rootFolder() ) {
+    if ( !mQuotaOnly && this == mAccount->rootFolder() ) {
       listNamespaces();
       break;
     }
@@ -951,22 +1020,26 @@ void KMFolderCachedImap::serverSyncInternal()
   case SYNC_STATE_LIST_SUBFOLDERS:
     newState( mProgress, i18n("Retrieving folderlist"));
     mSyncState = SYNC_STATE_LIST_SUBFOLDERS2;
-    if( !listDirectory() ) {
-      mSyncState = SYNC_STATE_INITIAL;
-      KMessageBox::error(0, i18n("Error while retrieving the folderlist"));
+    if ( !mQuotaOnly ) {
+      if( !listDirectory() ) {
+        mSyncState = SYNC_STATE_INITIAL;
+        KMessageBox::error(0, i18n("Error while retrieving the folderlist"));
+      }
+      break;
     }
-    break;
 
   case SYNC_STATE_LIST_SUBFOLDERS2:
     mSyncState = SYNC_STATE_DELETE_SUBFOLDERS;
     mProgress += 10;
-    newState( mProgress, i18n("Retrieving subfolders"));
-    listDirectory2();
-    break;
+    if ( !mQuotaOnly ) {
+      newState( mProgress, i18n("Retrieving subfolders"));
+      listDirectory2();
+      break;
+    }
 
   case SYNC_STATE_DELETE_SUBFOLDERS:
     mSyncState = SYNC_STATE_LIST_MESSAGES;
-    if( !foldersForDeletionOnServer.isEmpty() ) {
+    if( !mQuotaOnly && !foldersForDeletionOnServer.isEmpty() ) {
       newState( mProgress, i18n("Deleting folders from server"));
       CachedImapJob* job = new CachedImapJob( foldersForDeletionOnServer,
                                                   CachedImapJob::tDeleteFolders, this );
@@ -981,7 +1054,7 @@ void KMFolderCachedImap::serverSyncInternal()
 
   case SYNC_STATE_LIST_MESSAGES:
     mSyncState = SYNC_STATE_DELETE_MESSAGES;
-    if( !noContent() ) {
+    if( !mQuotaOnly && !noContent() ) {
       newState( mProgress, i18n("Retrieving message list"));
       listMessages();
       break;
@@ -990,7 +1063,7 @@ void KMFolderCachedImap::serverSyncInternal()
 
   case SYNC_STATE_DELETE_MESSAGES:
     mSyncState = SYNC_STATE_EXPUNGE_MESSAGES;
-    if( !noContent() ) {
+    if( !mQuotaOnly && !noContent() ) {
       if( deleteMessages() ) {
         // Fine, we will continue with the next state
       } else {
@@ -1005,7 +1078,7 @@ void KMFolderCachedImap::serverSyncInternal()
 
   case SYNC_STATE_EXPUNGE_MESSAGES:
     mSyncState = SYNC_STATE_GET_MESSAGES;
-    if( !noContent() ) {
+    if( !mQuotaOnly && !noContent() ) {
       newState( mProgress, i18n("Expunging deleted messages"));
       CachedImapJob *job = new CachedImapJob( TQString::null,
                                               CachedImapJob::tExpungeFolder, this );
@@ -1018,9 +1091,9 @@ void KMFolderCachedImap::serverSyncInternal()
 
   case SYNC_STATE_GET_MESSAGES:
     mSyncState = SYNC_STATE_HANDLE_INBOX;
-    if( !noContent() ) {
+    if( !mQuotaOnly && !noContent() ) {
       if( !mMsgsForDownload.isEmpty() ) {
-        newState( mProgress, i18n("Retrieving new messages"));
+        newState( mProgress, i18n("Retrieving one new message","Retrieving %n new messages",mMsgsForDownload.size()));
         CachedImapJob *job = new CachedImapJob( mMsgsForDownload,
                                                 CachedImapJob::tGetMessage,
                                                 this );
@@ -1061,8 +1134,8 @@ void KMFolderCachedImap::serverSyncInternal()
   case SYNC_STATE_TEST_ANNOTATIONS:
     mSyncState = SYNC_STATE_GET_ANNOTATIONS;
     // The first folder with user rights to write annotations
-    if( !mAccount->annotationCheckPassed() &&
-         ( mUserRights <= 0 || ( mUserRights & ACLJobs::Administer ) )
+    if( !mQuotaOnly && !mAccount->annotationCheckPassed() &&
+         ( mUserRightsState != KMail::ACLJobs::Ok || ( mUserRights & ACLJobs::Administer ) )
          && !imapPath().isEmpty() && imapPath() != "/" ) {
       kdDebug(5006) << "Setting test attribute on folder: "<< folder()->prettyURL() << endl;
       newState( mProgress, i18n("Checking annotation support"));
@@ -1088,11 +1161,12 @@ void KMFolderCachedImap::serverSyncInternal()
   case SYNC_STATE_GET_ANNOTATIONS: {
 #define KOLAB_FOLDERTYPE "/vendor/kolab/folder-type"
 #define KOLAB_INCIDENCESFOR "/vendor/kolab/incidences-for"
+#define KOLAB_SHAREDSEEN "/vendor/cmu/cyrus-imapd/sharedseen"
 //#define KOLAB_FOLDERTYPE "/comment"  //for testing, while cyrus-imap doesn't support /vendor/*
     mSyncState = SYNC_STATE_SET_ANNOTATIONS;
 
     bool needToGetInitialAnnotations = false;
-    if ( !noContent() ) {
+    if ( !mQuotaOnly && !noContent() ) {
       // for a folder we didn't create ourselves: get annotation from server
       if ( mAnnotationFolderType == "FROMSERVER" ) {
         needToGetInitialAnnotations = true;
@@ -1104,13 +1178,15 @@ void KMFolderCachedImap::serverSyncInternal()
 
     // First retrieve the annotation, so that we know we have to set it if it's not set.
     // On the other hand, if the user changed the contentstype, there's no need to get first.
-    if ( !noContent() && mAccount->hasAnnotationSupport() &&
+    if ( !mQuotaOnly && !noContent() && mAccount->hasAnnotationSupport() &&
         ( kmkernel->iCalIface().isEnabled() || needToGetInitialAnnotations ) ) {
       TQStringList annotations; // list of annotations to be fetched
       if ( !mAnnotationFolderTypeChanged || mAnnotationFolderType.isEmpty() )
         annotations << KOLAB_FOLDERTYPE;
       if ( !mIncidencesForChanged )
         annotations << KOLAB_INCIDENCESFOR;
+      if ( !mSharedSeenFlagsChanged )
+        annotations << KOLAB_SHAREDSEEN;
       if ( !annotations.isEmpty() ) {
         newState( mProgress, i18n("Retrieving annotations"));
         KURL url = mAccount->getUrl();
@@ -1132,8 +1208,8 @@ void KMFolderCachedImap::serverSyncInternal()
   case SYNC_STATE_SET_ANNOTATIONS:
 
     mSyncState = SYNC_STATE_SET_ACLS;
-    if ( !noContent() && mAccount->hasAnnotationSupport() &&
-         ( mUserRights <= 0 || ( mUserRights & ACLJobs::Administer ) ) ) {
+    if ( !mQuotaOnly && !noContent() && mAccount->hasAnnotationSupport() &&
+         ( mUserRightsState != KMail::ACLJobs::Ok || ( mUserRights & ACLJobs::Administer ) ) ) {
       newState( mProgress, i18n("Setting annotations"));
       KURL url = mAccount->getUrl();
       url.setPath( imapPath() );
@@ -1148,6 +1224,12 @@ void KMFolderCachedImap::serverSyncInternal()
         KMail::AnnotationAttribute attr( KOLAB_INCIDENCESFOR, "value.shared", val );
         annotations.append( attr );
         kdDebug(5006) << "Setting incidences-for annotation for " << label() << " to " << val << endl;
+      }
+      if ( mSharedSeenFlagsChanged ) {
+        const TQString val = mSharedSeenFlags ? "true" : "false";
+        KMail::AnnotationAttribute attr( KOLAB_SHAREDSEEN, "value.shared", val );
+        annotations.append( attr );
+        kdDebug(5006) << k_funcinfo << "Setting sharedseen annotation for " << label() << " to " << val << endl;
       }
       if ( !annotations.isEmpty() ) {
         KIO::Job* job =
@@ -1167,8 +1249,8 @@ void KMFolderCachedImap::serverSyncInternal()
   case SYNC_STATE_SET_ACLS:
     mSyncState = SYNC_STATE_GET_ACLS;
 
-    if( !noContent() && mAccount->hasACLSupport() &&
-      ( mUserRights <= 0 || ( mUserRights & ACLJobs::Administer ) ) ) {
+    if( !mQuotaOnly && !noContent() && mAccount->hasACLSupport() &&
+      ( mUserRightsState != KMail::ACLJobs::Ok || ( mUserRights & ACLJobs::Administer ) ) ) {
       bool hasChangedACLs = false;
       ACLList::ConstIterator it = mACLList.begin();
       for ( ; it != mACLList.end() && !hasChangedACLs; ++it ) {
@@ -1191,19 +1273,36 @@ void KMFolderCachedImap::serverSyncInternal()
     }
 
   case SYNC_STATE_GET_ACLS:
-    mSyncState = SYNC_STATE_GET_QUOTA;
+    mSyncState = SYNC_STATE_FIND_SUBFOLDERS;
 
-    if( !noContent() && mAccount->hasACLSupport() ) {
+    if( !mQuotaOnly && !noContent() && mAccount->hasACLSupport() ) {
       newState( mProgress, i18n( "Retrieving permissions" ) );
       mAccount->getACL( folder(), mImapPath );
       connect( mAccount, TQT_SIGNAL(receivedACL( KMFolder*, KIO::Job*, const KMail::ACLList& )),
                this, TQT_SLOT(slotReceivedACL( KMFolder*, KIO::Job*, const KMail::ACLList& )) );
       break;
     }
+  case SYNC_STATE_FIND_SUBFOLDERS:
+    {
+      mSyncState = SYNC_STATE_SYNC_SUBFOLDERS;
+      mSomeSubFolderCloseToQuotaChanged = false;
+      buildSubFolderList();
+    }
+
+    // Carry on
+  case SYNC_STATE_SYNC_SUBFOLDERS:
+    syncNextSubFolder( false );
+    break;
+  case SYNC_STATE_GET_SUBFOLDER_QUOTA:
+
+    // Sync the subfolders again, so that the quota information is updated for all. This state is
+    // only entered if the close to quota property of one subfolder changed in the previous state.
+    syncNextSubFolder( true );
+    break;
   case SYNC_STATE_GET_QUOTA:
-    // Continue with the subfolders
-    mSyncState = SYNC_STATE_FIND_SUBFOLDERS;
+    mSyncState = SYNC_STATE_CLOSE;
     if( !noContent() && mAccount->hasQuotaSupport() ) {
+      mProgress = 98;
       newState( mProgress, i18n("Getting quota information"));
       KURL url = mAccount->getUrl();
       url.setPath( imapPath() );
@@ -1216,77 +1315,112 @@ void KMFolderCachedImap::serverSyncInternal()
           TQT_SLOT(slotQuotaResult(KIO::Job *)) );
       break;
     }
-  case SYNC_STATE_FIND_SUBFOLDERS:
+  case SYNC_STATE_CLOSE:
     {
-      mProgress = 98;
-      newState( mProgress, i18n("Updating cache file"));
-
-      mSyncState = SYNC_STATE_SYNC_SUBFOLDERS;
-      mSubfoldersForSync.clear();
-      mCurrentSubfolder = 0;
-      if( folder() && folder()->child() ) {
-        KMFolderNode *node = folder()->child()->first();
-        while( node ) {
-          if( !node->isDir() ) {
-            KMFolderCachedImap* storage = static_cast<KMFolderCachedImap*>(static_cast<KMFolder*>(node)->storage());
-            // Only sync folders that have been accepted by the server
-            if ( !storage->imapPath().isEmpty()
-                 // and that were not just deleted from it
-                 && !foldersForDeletionOnServer.contains( storage->imapPath() ) ) {
-              mSubfoldersForSync << storage;
-            } else {
-              kdDebug(5006) << "Do not add " << storage->label()
-                << " to synclist" << endl;
-            }
-          }
-          node = folder()->child()->next();
-        }
-      }
-
-    // All done for this folder.
-    mProgress = 100; // all done
-    newState( mProgress, i18n("Synchronization done"));
+      mProgress = 100; // all done
+      newState( mProgress, i18n("Synchronization done"));
       KURL url = mAccount->getUrl();
       url.setPath( imapPath() );
       kmkernel->iCalIface().folderSynced( folder(), url );
-    }
 
-    if ( !mRecurse ) // "check mail for this folder" only
-      mSubfoldersForSync.clear();
-
-    // Carry on
-  case SYNC_STATE_SYNC_SUBFOLDERS:
-    {
-      if( mCurrentSubfolder ) {
-        disconnect( mCurrentSubfolder, TQT_SIGNAL( folderComplete(KMFolderCachedImap*, bool) ),
-                    this, TQT_SLOT( slotSubFolderComplete(KMFolderCachedImap*, bool) ) );
-        mCurrentSubfolder = 0;
-      }
-
-      if( mSubfoldersForSync.isEmpty() ) {
-        mSyncState = SYNC_STATE_INITIAL;
-        mAccount->addUnreadMsgCount( this, countUnread() ); // before closing
-        close("cachedimap");
-        emit folderComplete( this, true );
-      } else {
-        mCurrentSubfolder = mSubfoldersForSync.front();
-        mSubfoldersForSync.pop_front();
-        connect( mCurrentSubfolder, TQT_SIGNAL( folderComplete(KMFolderCachedImap*, bool) ),
-                 this, TQT_SLOT( slotSubFolderComplete(KMFolderCachedImap*, bool) ) );
-
-        //kdDebug(5006) << "Sync'ing subfolder " << mCurrentSubfolder->imapPath() << endl;
-        assert( !mCurrentSubfolder->imapPath().isEmpty() );
-        mCurrentSubfolder->setAccount( account() );
-        bool recurse = mCurrentSubfolder->noChildren() ? false : true;
-        mCurrentSubfolder->serverSync( recurse );
-      }
+      mSyncState = SYNC_STATE_INITIAL;
+      mAccount->addUnreadMsgCount( this, countUnread() ); // before closing
+      close( "cachedimap" );
+      emit syncStateChanged();
+      emit folderComplete( this, true );
     }
     break;
 
   default:
     kdDebug(5006) << "KMFolderCachedImap::serverSyncInternal() WARNING: no such state "
-              << mSyncState << endl;
+                  << mSyncState << endl;
   }
+}
+
+void KMFolderCachedImap::syncNextSubFolder( bool secondSync )
+{
+  if( mCurrentSubfolder ) {
+    disconnectSubFolderSignals();
+  }
+
+  if( mSubfoldersForSync.isEmpty() ) {
+
+    // Sync finished, and a close to quota property of an subfolder changed, therefore go into
+    // the SYNC_STATE_GET_SUBFOLDER_QUOTA state and sync again
+    if ( mSomeSubFolderCloseToQuotaChanged && mRecurse && !secondSync ) {
+      buildSubFolderList();
+      mSyncState = SYNC_STATE_GET_SUBFOLDER_QUOTA;
+      serverSyncInternal();
+    }
+
+    else {
+
+      // Quota checking has to come after syncing subfolder, otherwise the quota information would
+      // be outdated, since the subfolders can change in size during the syncing.
+      // https://issues.kolab.org/issue4066
+      mSyncState = SYNC_STATE_GET_QUOTA;
+      serverSyncInternal();
+    }
+  } else {
+    mCurrentSubfolder = mSubfoldersForSync.front();
+    mSubfoldersForSync.pop_front();
+    if ( mCurrentSubfolder ) {
+      connect( mCurrentSubfolder, TQT_SIGNAL( folderComplete(KMFolderCachedImap*, bool) ),
+               this, TQT_SLOT( slotSubFolderComplete(KMFolderCachedImap*, bool) ) );
+      connect( mCurrentSubfolder, TQT_SIGNAL( closeToQuotaChanged() ),
+               this, TQT_SLOT( slotSubFolderCloseToQuotaChanged() ) );
+
+      //kdDebug(5006) << "Sync'ing subfolder " << mCurrentSubfolder->imapPath() << endl;
+      assert( !mCurrentSubfolder->imapPath().isEmpty() );
+      mCurrentSubfolder->setAccount( account() );
+      const bool recurse = mCurrentSubfolder->noChildren() ? false : true;
+      const bool quotaOnly = secondSync || mQuotaOnly;
+      mCurrentSubfolder->serverSync( recurse, quotaOnly );
+    }
+    else {
+      // mCurrentSubfolder is empty, probably because it was deleted while syncing. Go on with the
+      // next subfolder instead.
+      syncNextSubFolder( secondSync );
+    }
+  }
+}
+
+void KMFolderCachedImap::buildSubFolderList()
+{
+  mSubfoldersForSync.clear();
+  mCurrentSubfolder = 0;
+  if( folder() && folder()->child() ) {
+    KMFolderNode *node = folder()->child()->first();
+    while( node ) {
+      if( !node->isDir() ) {
+        KMFolderCachedImap* storage = static_cast<KMFolderCachedImap*>(static_cast<KMFolder*>(node)->storage());
+        const bool folderIsNew = mNewlyCreatedSubfolders.contains( TQGuardedPtr<KMFolderCachedImap>( storage ) );
+        // Only sync folders that have been accepted by the server
+        if ( !storage->imapPath().isEmpty()
+             // and that were not just deleted from it
+             && !foldersForDeletionOnServer.contains( storage->imapPath() ) ) {
+          if ( mRecurse || folderIsNew ) {
+            mSubfoldersForSync << storage;
+          }
+        } else {
+          kdDebug(5006) << "Do not add " << storage->label()
+                        << " to synclist" << endl;
+        }
+      }
+      node = folder()->child()->next();
+    }
+  }
+
+  mNewlyCreatedSubfolders.clear();
+}
+
+void KMFolderCachedImap::disconnectSubFolderSignals()
+{
+  disconnect( mCurrentSubfolder, TQT_SIGNAL( folderComplete(KMFolderCachedImap*, bool) ),
+              this, TQT_SLOT( slotSubFolderComplete(KMFolderCachedImap*, bool) ) );
+  disconnect( mCurrentSubfolder, TQT_SIGNAL( closeToQuotaChanged() ),
+              this, TQT_SLOT( slotSubFolderCloseToQuotaChanged() ) );
+  mCurrentSubfolder = 0;
 }
 
 /* Connected to the imap account's connectionResult signal.
@@ -1326,7 +1460,7 @@ void KMFolderCachedImap::uploadNewMessages()
 {
   TQValueList<unsigned long> newMsgs = findNewMessages();
   if( !newMsgs.isEmpty() ) {
-    if ( mUserRights <= 0 || ( mUserRights & ( KMail::ACLJobs::Insert ) ) ) {
+    if ( mUserRightsState != KMail::ACLJobs::Ok || ( mUserRights & ( KMail::ACLJobs::Insert ) ) ) {
       newState( mProgress, i18n("Uploading messages to server"));
       CachedImapJob *job = new CachedImapJob( newMsgs, CachedImapJob::tPutMessage, this );
       connect( job, TQT_SIGNAL( progress( unsigned long, unsigned long) ),
@@ -1377,6 +1511,11 @@ void KMFolderCachedImap::uploadFlags()
       if( !msg || msg->UID() == 0 )
         // Either not a valid message or not one that is on the server yet
         continue;
+      if ( mUIDsOfLocallyChangedStatuses.find( msg->UID() ) == mUIDsOfLocallyChangedStatuses.end()
+           && !mStatusChangedLocally ) {
+        // This message has not had its status changed locally
+        continue;
+      }
 
       TQString flags = KMFolderImap::statusToFlags(msg->status(), mPermanentFlags);
       // Collect uids for each typem of flags.
@@ -1419,6 +1558,12 @@ void KMFolderCachedImap::uploadSeenFlags()
       if( !msg || msg->UID() == 0 )
         // Either not a valid message or not one that is on the server yet
         continue;
+
+      if ( mUIDsOfLocallyChangedStatuses.find( msg->UID() ) == mUIDsOfLocallyChangedStatuses.end()
+           && !mStatusChangedLocally ) {
+        // This message has not had its status changed locally
+        continue;
+      }
 
       if ( msg->status() & KMMsgStatusOld || msg->status() & KMMsgStatusRead )
         seenUids.append( msg->UID() );
@@ -1476,13 +1621,21 @@ void KMFolderCachedImap::slotImapStatusChanged(KMFolder* folder, const TQString&
 void KMFolderCachedImap::setStatus( int idx, KMMsgStatus status, bool toggle)
 {
   KMFolderMaildir::setStatus( idx, status, toggle );
-  mStatusChangedLocally = true;
+  const KMMsgBase *msg = getMsgBase( idx );
+  Q_ASSERT( msg );
+  if ( msg )
+    mUIDsOfLocallyChangedStatuses.insert( msg->UID() );
 }
 
 void KMFolderCachedImap::setStatus(TQValueList<int>& ids, KMMsgStatus status, bool toggle)
 {
   KMFolderMaildir::setStatus(ids, status, toggle);
-  mStatusChangedLocally = true;
+  for (TQValueList<int>::iterator it = ids.begin(); it != ids.end(); it++ ) {
+    const KMMsgBase *msg = getMsgBase( *it );
+    Q_ASSERT( msg );
+    if ( msg )
+      mUIDsOfLocallyChangedStatuses.insert( msg->UID() );
+  }
 }
 
 /* Upload new folders to server */
@@ -1528,7 +1681,7 @@ TQValueList<KMFolderCachedImap*> KMFolderCachedImap::findNewFolders()
 bool KMFolderCachedImap::deleteMessages()
 {
   /* Delete messages from cache that are gone from the server */
-  TQPtrList<KMMessage> msgsForDeletion;
+  TQPtrList<KMMsgBase> msgsForDeletion;
 
   // It is not possible to just go over all indices and remove
   // them one by one because the index list can get resized under
@@ -1540,11 +1693,15 @@ bool KMFolderCachedImap::deleteMessages()
     ulong uid ( it.key() );
     if( uid!=0 && !uidsOnServer.find( uid ) ) {
       uids << TQString::number( uid );
-      msgsForDeletion.append( getMsg( *it ) );
+      msgsForDeletion.append( getMsgBase( *it ) );
     }
   }
 
   if( !msgsForDeletion.isEmpty() ) {
+    if ( contentsType() != ContentsTypeMail ) {
+      kdDebug(5006) << k_funcinfo << label() << " Going to locally delete " << msgsForDeletion.count()
+                    << " messages, with the uids " << uids.join( "," ) << endl;
+    }
 #if MAIL_LOSS_DEBUGGING
       if ( KMessageBox::warningYesNo(
              0, i18n( "<qt><p>Mails on the server in folder <b>%1</b> were deleted. "
@@ -1554,7 +1711,7 @@ bool KMFolderCachedImap::deleteMessages()
         removeMsg( msgsForDeletion );
   }
 
-  if ( mUserRights > 0 && !( mUserRights & KMail::ACLJobs::Delete ) )
+  if ( mUserRightsState == KMail::ACLJobs::Ok && !( mUserRights & KMail::ACLJobs::Delete ) )
     return false;
 
   /* Delete messages from the server that we dont have anymore */
@@ -1688,7 +1845,7 @@ void KMFolderCachedImap::slotGetMessagesData(KIO::Job * job, const TQByteArray &
     // updated when selecting the folder again, which might not happen if using
     // RMB / Check Mail in this folder. We don't need two (potentially conflicting)
     // sources for the readonly setting, in any case.
-    if (a != -1 && mUserRights == -1 ) {
+    if (a != -1 && mUserRightsState != KMail::ACLJobs::Ok ) {
       int b = (*it).cdata.find("\r\n", a + 12);
       const TQString access = (*it).cdata.mid(a + 12, b - a - 12);
       setReadOnly( access == "Read only" );
@@ -1751,7 +1908,7 @@ void KMFolderCachedImap::slotGetMessagesData(KIO::Job * job, const TQByteArray &
 #endif
           // double check we deleted it since the last sync
            if ( mDeletedUIDsSinceLastSync.contains(uid) ) {
-               if ( mUserRights <= 0 || ( mUserRights & KMail::ACLJobs::Delete ) ) {
+               if ( mUserRightsState != KMail::ACLJobs::Ok || ( mUserRights & KMail::ACLJobs::Delete ) ) {
 #if MAIL_LOSS_DEBUGGING
                    kdDebug(5006) << "message with uid " << uid << " is gone from local cache. Must be deleted on server!!!" << endl;
 #endif
@@ -1821,7 +1978,8 @@ void KMFolderCachedImap::getMessagesResult( KMail::FolderJob *job, bool lastSet 
   } else {
     if( lastSet ) { // always true here (this comes from online-imap...)
       mContentState = imapFinished;
-      mStatusChangedLocally = false; // we are up to date again
+      mUIDsOfLocallyChangedStatuses.clear(); // we are up to date again
+      mStatusChangedLocally = false;
     }
   }
   serverSyncInternal();
@@ -1830,10 +1988,13 @@ void KMFolderCachedImap::getMessagesResult( KMail::FolderJob *job, bool lastSet 
 void KMFolderCachedImap::slotProgress(unsigned long done, unsigned long total)
 {
   int progressSpan = 100 - 5 - mProgress;
-  //kdDebug(5006) << "KMFolderCachedImap::slotProgress done=" << done << " total=" << total << "=> mProgress=" << mProgress + ( progressSpan * done ) / total << endl;
+  int additionalProgress = ( total == 0 ) ?
+                           progressSpan :
+                           ( progressSpan * done ) / total;
+
   // Progress info while retrieving new emails
   // (going from mProgress to mProgress+progressSpan)
-  newState( mProgress + (progressSpan * done) / total, TQString::null );
+  newState( mProgress + additionalProgress, TQString::null );
 }
 
 void KMFolderCachedImap::setAccount(KMAcctCachedImap *aAccount)
@@ -2010,7 +2171,7 @@ void KMFolderCachedImap::slotListResult( const TQStringList& folderNames,
   mSubfolderMimeTypes = folderMimeTypes;
   mSubfolderState = imapFinished;
   mSubfolderAttributes = folderAttributes;
-  kdDebug(5006) << "##### setting subfolder attributes: " << mSubfolderAttributes << endl;
+  //kdDebug(5006) << "##### setting subfolder attributes: " << mSubfolderAttributes << endl;
 
   folder()->createChildFolder();
   KMFolderNode *node = folder()->child()->first();
@@ -2209,6 +2370,7 @@ void KMFolderCachedImap::createFoldersNewOnServerAndFinishListing( const TQValue
       f->setNoChildren(mSubfolderMimeTypes[idx] == "message/digest");
       f->setImapPath(mSubfolderPaths[idx]);
       f->mFolderAttributes = mSubfolderAttributes[idx];
+      mNewlyCreatedSubfolders.append( TQGuardedPtr<KMFolderCachedImap>( f ) );
       kdDebug(5006) << " ####### Attributes: " << f->mFolderAttributes <<endl;
       //kdDebug(5006) << subfolderPath << ": mAnnotationFolderType set to FROMSERVER" << endl;
       kmkernel->dimapFolderMgr()->contentsChanged();
@@ -2267,15 +2429,23 @@ void KMFolderCachedImap::slotSubFolderComplete(KMFolderCachedImap* sub, bool suc
     // success == false means the sync was aborted.
     if ( mCurrentSubfolder ) {
       Q_ASSERT( sub == mCurrentSubfolder );
-      disconnect( mCurrentSubfolder, TQT_SIGNAL( folderComplete(KMFolderCachedImap*, bool) ),
-                  this, TQT_SLOT( slotSubFolderComplete(KMFolderCachedImap*, bool) ) );
-      mCurrentSubfolder = 0;
+      disconnectSubFolderSignals();
     }
 
+    // Next step would be to check quota limits and then to close the folder, but don't bother with
+    // both and close the folder right here, since we aborted.
     mSubfoldersForSync.clear();
     mSyncState = SYNC_STATE_INITIAL;
     close("cachedimap");
+    emit syncStateChanged();
     emit folderComplete( this, false );
+  }
+}
+
+void KMFolderCachedImap::slotSubFolderCloseToQuotaChanged()
+{
+  if ( !mQuotaOnly ) {
+    mSomeSubFolderCloseToQuotaChanged = true;
   }
 }
 
@@ -2312,9 +2482,10 @@ KMFolderCachedImap::doCreateJob( TQPtrList<KMMessage>& msgList, const TQString& 
 }
 
 void
-KMFolderCachedImap::setUserRights( unsigned int userRights )
+KMFolderCachedImap::setUserRights( unsigned int userRights, KMail::ACLJobs::ACLFetchState state )
 {
   mUserRights = userRights;
+  mUserRightsState = state;
   writeConfigKeysWhichShouldNotGetOverwrittenByReadConfig();
 }
 
@@ -2324,10 +2495,9 @@ KMFolderCachedImap::slotReceivedUserRights( KMFolder* folder )
   if ( folder->storage() == this ) {
     disconnect( mAccount, TQT_SIGNAL( receivedUserRights( KMFolder* ) ),
                 this, TQT_SLOT( slotReceivedUserRights( KMFolder* ) ) );
-    if ( mUserRights == 0 ) // didn't work
-      mUserRights = -1; // error code (used in folderdia)
-    else
+    if ( mUserRightsState == KMail::ACLJobs::Ok ) {
       setReadOnly( ( mUserRights & KMail::ACLJobs::Insert ) == 0 );
+    }
     mProgress += 5;
     serverSyncInternal();
   }
@@ -2343,11 +2513,12 @@ KMFolderCachedImap::setReadOnly( bool readOnly )
 }
 
 void
-KMFolderCachedImap::slotReceivedACL( KMFolder* folder, KIO::Job*, const KMail::ACLList& aclList )
+KMFolderCachedImap::slotReceivedACL( KMFolder* folder, KIO::Job* job, const KMail::ACLList& aclList )
 {
   if ( folder->storage() == this ) {
     disconnect( mAccount, TQT_SIGNAL(receivedACL( KMFolder*, KIO::Job*, const KMail::ACLList& )),
                 this, TQT_SLOT(slotReceivedACL( KMFolder*, KIO::Job*, const KMail::ACLList& )) );
+    mACLListState = job->error() ? KMail::ACLJobs::FetchFailed : KMail::ACLJobs::Ok;
     mACLList = aclList;
     serverSyncInternal();
   }
@@ -2362,8 +2533,12 @@ KMFolderCachedImap::slotStorageQuotaResult( const QuotaInfo& info )
 void KMFolderCachedImap::setQuotaInfo( const QuotaInfo & info )
 {
     if ( info != mQuotaInfo ) {
+      const bool wasCloseToQuota = isCloseToQuota();
       mQuotaInfo = info;
       writeConfigKeysWhichShouldNotGetOverwrittenByReadConfig();
+      if ( wasCloseToQuota != isCloseToQuota() ) {
+        emit closeToQuotaChanged();
+      }
       emit folderSizeChanged();
     }
 }
@@ -2372,6 +2547,7 @@ void
 KMFolderCachedImap::setACLList( const ACLList& arr )
 {
   mACLList = arr;
+  mACLListState = KMail::ACLJobs::Ok;
 }
 
 void
@@ -2413,6 +2589,7 @@ void KMFolderCachedImap::resetSyncState()
 {
   if ( mSyncState == SYNC_STATE_INITIAL ) return;
   mSubfoldersForSync.clear();
+  mNewlyCreatedSubfolders.clear();
   mSyncState = SYNC_STATE_INITIAL;
   close("cachedimap");
   // Don't use newState here, it would revert to mProgress (which is < current value when listing messages)
@@ -2421,6 +2598,7 @@ void KMFolderCachedImap::resetSyncState()
   if (progressItem)
      progressItem->setStatus( str );
   emit statusMsg( str );
+  emit syncStateChanged();
 }
 
 void KMFolderCachedImap::slotIncreaseProgress()
@@ -2472,6 +2650,16 @@ void KMFolderCachedImap::setImapPath(const TQString &path)
   mImapPath = path;
 }
 
+static bool isFolderTypeKnownToUs( const TQString &type )
+{
+  for ( uint i = 0 ; i <= ContentsTypeLast; ++i ) {
+    FolderContentsType contentsType = static_cast<KMail::FolderContentsType>( i );
+    if ( type == KMailICalIfaceImpl::annotationForContentsType( contentsType ) )
+      return true;
+  }
+  return false;
+}
+
 // mAnnotationFolderType is the annotation as known to the server (and stored in kmailrc)
 // It is updated from the folder contents type and whether it's a standard resource folder.
 // This happens during the syncing phase and during initFolder for a new folder.
@@ -2493,12 +2681,18 @@ void KMFolderCachedImap::updateAnnotationFolderType()
     newType = KMailICalIfaceImpl::annotationForContentsType( mContentsType );
     if ( kmkernel->iCalIface().isStandardResourceFolder( folder() ) )
       newSubType = "default";
-    else
-      newSubType = oldSubType; // preserve unknown subtypes, like drafts etc. And preserve ".default" too.
+    else if ( oldSubType != "default" )
+      newSubType = oldSubType; // preserve unknown subtypes, like drafts etc.
   }
 
+  // We do not want to overwrite custom folder types (which we treat as mail folders).
+  // So only overwrite custom folder types if the user changed the folder type himself to something
+  // other than mail.
+  const bool changingTypeAllowed = isFolderTypeKnownToUs( oldType ) ||
+                                   ( mContentsType != ContentsTypeMail );
+
   //kdDebug(5006) << mImapPath << ": updateAnnotationFolderType: " << newType << " " << newSubType << endl;
-  if ( newType != oldType || newSubType != oldSubType ) {
+  if ( ( newType != oldType || newSubType != oldSubType ) && changingTypeAllowed ) {
     mAnnotationFolderType = newType + ( newSubType.isEmpty() ? TQString::null : "."+newSubType );
     mAnnotationFolderTypeChanged = true; // force a "set annotation" on next sync
     kdDebug(5006) << mImapPath << ": updateAnnotationFolderType: '" << mAnnotationFolderType << "', was (" << oldType << " " << oldSubType << ") => mAnnotationFolderTypeChanged set to TRUE" << endl;
@@ -2512,6 +2706,14 @@ void KMFolderCachedImap::setIncidencesFor( IncidencesFor incfor )
   if ( mIncidencesFor != incfor ) {
     mIncidencesFor = incfor;
     mIncidencesForChanged = true;
+  }
+}
+
+void KMFolderCachedImap::setSharedSeenFlags(bool b)
+{
+  if ( mSharedSeenFlags != b ) {
+    mSharedSeenFlags = b;
+    mSharedSeenFlagsChanged = true;
   }
 }
 
@@ -2559,16 +2761,21 @@ void KMFolderCachedImap::slotAnnotationResult(const TQString& entry, const TQStr
           if ( contentsType != ContentsTypeMail )
             markUnreadAsRead();
 
-          // Ensure that further readConfig()s don't lose mAnnotationFolderType
-          writeConfigKeysWhichShouldNotGetOverwrittenByReadConfig();
           break;
         }
       }
-      if ( !foundKnownType && !mReadOnly ) {
-        //kdDebug(5006) << "slotGetAnnotationResult: no known type of annotation found, will need to set it" << endl;
-        // Case 4: server has strange content-type, set it to what we need
-        mAnnotationFolderTypeChanged = true;
+      if ( !foundKnownType ) {
+        //kdDebug(5006) << "slotGetAnnotationResult: no known type of annotation found, leaving it untouched" << endl;
+
+        // Case 4: Server has strange content-type. We must not overwrite it, see https://issues.kolab.org/issue2069.
+        //         Treat the content-type as mail until we change it ourselves.
+        mAnnotationFolderTypeChanged = false;
+        mAnnotationFolderType = value;
+        setContentsType( ContentsTypeMail );
       }
+
+      // Ensure that further readConfig()s don't lose mAnnotationFolderType
+      writeConfigKeysWhichShouldNotGetOverwrittenByReadConfig();
       // TODO handle subtype (inbox, drafts, sentitems, junkemail)
     }
     else if ( !mReadOnly ) {
@@ -2580,6 +2787,10 @@ void KMFolderCachedImap::slotAnnotationResult(const TQString& entry, const TQStr
     if ( found ) {
       mIncidencesFor = incidencesForFromString( value );
       Q_ASSERT( mIncidencesForChanged == false );
+    }
+  } else if ( entry == KOLAB_SHAREDSEEN ) {
+    if ( found ) {
+      mSharedSeenFlags = value == "true";
     }
   }
 }
@@ -2700,6 +2911,8 @@ KMFolderCachedImap::slotAnnotationChanged( const TQString& entry, const TQString
     // The incidences-for changed, we must trigger the freebusy creation.
     // HACK: in theory we would need a new enum value for this.
     kmkernel->iCalIface().addFolderChange( folder(), KMailICalIfaceImpl::ACL );
+  } else if ( entry == KOLAB_SHAREDSEEN ) {
+    mSharedSeenFlagsChanged = false;
   }
 }
 
@@ -2987,6 +3200,29 @@ void KMFolderCachedImap::slotRescueDone(KMCommand * command)
   }
   mToBeDeletedAfterRescue.clear();
   serverSyncInternal();
+}
+
+void KMFolderCachedImap::slotRenameFolderFinished()
+{
+  // The syncing code assumes the folder was opened by us, and later closes it. So better
+  // make sure the reference count is correct, since the folder was force-closed by the rename.
+  // Otherwise bad things can happen, see https://issues.kolab.org/issue3853.
+  open( "cachedimap" );
+  serverSyncInternal();
+}
+
+bool KMFolderCachedImap::canDeleteMessages() const
+{
+  if ( isReadOnly() )
+    return false;
+  if ( mUserRightsState == KMail::ACLJobs::Ok && !(userRights() & ACLJobs::Delete) )
+    return false;
+  return true;
+}
+
+bool KMFolderCachedImap::mailCheckInProgress() const
+{
+  return mSyncState != SYNC_STATE_INITIAL;
 }
 
 #include "kmfoldercachedimap.moc"

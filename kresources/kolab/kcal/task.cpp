@@ -38,6 +38,41 @@
 
 using namespace Kolab;
 
+// Kolab Storage Specification:
+//    "The priority can be a number between 1 and 5, with 1 being the highest priority."
+// iCalendar (RFC 2445):
+//    "The priority is specified as an integer in the range
+//     zero to nine. A value of zero specifies an
+//     undefined priority. A value of one is the
+//     highest priority. A value of nine is the lowest
+//     priority."
+
+static int kcalPriorityToKolab( const int kcalPriority )
+{
+  if ( kcalPriority >= 0 && kcalPriority <= 9 ) {
+    // We'll map undefined (0) to 3 (default)
+    //                                   0  1  2  3  4  5  6  7  8  9
+    static const int priorityMap[10] = { 3, 1, 1, 2, 2, 3, 3, 4, 4, 5 };
+    return priorityMap[kcalPriority];
+  }
+  else {
+    kdWarning() << "kcalPriorityToKolab(): Got invalid priority " << kcalPriority << endl;
+    return 3;
+  }
+}
+
+static int kolabPrioritytoKCal( const int kolabPriority )
+{
+  if ( kolabPriority >= 1 && kolabPriority <= 5 ) {
+    //                                  1  2  3  4  5
+    static const int priorityMap[5] = { 1, 3, 5, 7, 9 };
+    return priorityMap[kolabPriority - 1];
+  }
+  else {
+    kdWarning() << "kolabPrioritytoKCal(): Got invalid priority " << kolabPriority << endl;
+    return 5;
+  }
+}
 
 KCal::Todo* Task::xmlToTask( const TQString& xml, const TQString& tz, KCal::ResourceKolab *res,
                              const TQString& subResource, Q_UINT32 sernum )
@@ -115,6 +150,26 @@ void Task::setDueDate( const TQDateTime& date )
 {
   mDueDate = date;
   mHasDueDate = true;
+  mFloatingStatus = HasTime;
+}
+
+void Task::setDueDate( const TQDate &date )
+{
+  mDueDate = date;
+  mHasDueDate = true;
+  mFloatingStatus = AllDay;
+}
+
+
+void Task::setDueDate( const TQString &date )
+{
+  if ( date.length() > 10 ) {
+    // This is a date + time
+     setDueDate( stringToDateTime( date ) );
+  } else {
+     // This is only a date
+    setDueDate( stringToDate( date ) );
+  }
 }
 
 TQDateTime Task::dueDate() const
@@ -159,10 +214,18 @@ bool Task::loadAttribute( TQDomElement& element )
 
   if ( tagName == "priority" ) {
     bool ok;
-    int priority = element.text().toInt( &ok );
-    if ( !ok || priority < 0 || priority > 9 )
-      priority = 5;
-    setPriority( priority );
+    mKolabPriorityFromDom = element.text().toInt( &ok );
+    if ( !ok || mKolabPriorityFromDom < 1 || mKolabPriorityFromDom > 5 ) {
+      kdWarning() << "loadAttribute(): Invalid \"priority\" value: " << element.text() << endl;
+      mKolabPriorityFromDom = -1;
+    }
+  } else if ( tagName == "x-kcal-priority" ) {
+    bool ok;
+    mKCalPriorityFromDom = element.text().toInt( &ok );
+    if ( !ok || mKCalPriorityFromDom < 0 || mKCalPriorityFromDom > 9 ) {
+      kdWarning() << "loadAttribute(): Invalid \"x-kcal-priority\" value: " << element.text() << endl;
+      mKCalPriorityFromDom = -1;
+    }
   } else if ( tagName == "completed" ) {
     bool ok;
     int percent = element.text().toInt( &ok );
@@ -182,13 +245,13 @@ bool Task::loadAttribute( TQDomElement& element )
     else
       // Default
       setStatus( KCal::Incidence::StatusNone );
-  } else if ( tagName == "due-date" )
-    setDueDate( stringToDateTime( element.text() ) );
-  else if ( tagName == "parent" )
+  } else if ( tagName == "due-date" ) {
+    setDueDate( element.text() );
+  } else if ( tagName == "parent" ) {
     setParent( element.text() );
-  else if ( tagName == "x-completed-date" )
+  } else if ( tagName == "x-completed-date" ) {
     setCompletedDate( stringToDateTime( element.text() ) );
-  else if ( tagName == "start-date" ) {
+  } else if ( tagName == "start-date" ) {
     setHasStartDate( true );
     setStartDate( element.text() );
   } else
@@ -203,7 +266,11 @@ bool Task::saveAttributes( TQDomElement& element ) const
   // Save the base class elements
   Incidence::saveAttributes( element );
 
-  writeString( element, "priority", TQString::number( priority() ) );
+  // We need to save x-kcal-priority as well, since the Kolab priority can only save values from
+  // 1 to 5, but we have values from 0 to 9, and do not want to loose them
+  writeString( element, "priority", TQString::number( kcalPriorityToKolab( priority() ) ) );
+  writeString( element, "x-kcal-priority", TQString::number( priority() ) );
+
   writeString( element, "completed", TQString::number( percentCompleted() ) );
 
   switch( status() ) {
@@ -232,14 +299,21 @@ bool Task::saveAttributes( TQDomElement& element ) const
     break;
   }
 
-  if ( hasDueDate() )
-    writeString( element, "due-date", dateTimeToString( dueDate() ) );
+  if ( hasDueDate() ) {
+    if ( mFloatingStatus == HasTime ) {
+      writeString( element, "due-date", dateTimeToString( dueDate() ) );
+    } else {
+      writeString( element, "due-date", dateToString( dueDate().date() ) );
+    }
+  }
 
-  if ( !parent().isNull() )
+  if ( !parent().isNull() ) {
     writeString( element, "parent", parent() );
+  }
 
-  if ( hasCompletedDate() && percentCompleted() == 100)
+  if ( hasCompletedDate() && percentCompleted() == 100 ) {
     writeString( element, "x-completed-date", dateTimeToString( completedDate() ) );
+  }
 
   return true;
 }
@@ -247,6 +321,9 @@ bool Task::saveAttributes( TQDomElement& element ) const
 
 bool Task::loadXML( const TQDomDocument& document )
 {
+  mKolabPriorityFromDom = -1;
+  mKCalPriorityFromDom = -1;
+
   TQDomElement top = document.documentElement();
 
   if ( top.tagName() != "task" ) {
@@ -269,6 +346,7 @@ bool Task::loadXML( const TQDomDocument& document )
   }
 
   loadAttachments();
+  decideAndSetPriority();
   return true;
 }
 
@@ -278,7 +356,7 @@ TQString Task::saveXML() const
   TQDomElement element = document.createElement( "task" );
   element.setAttribute( "version", "1.0" );
   saveAttributes( element );
-  if ( !hasStartDate() ) {
+  if ( !hasStartDate() && startDate().isValid() ) {
     // events and journals always have a start date, but tasks don't.
     // Remove the entry done by the inherited save above, because we
     // don't have one.
@@ -299,21 +377,68 @@ void Task::setFields( const KCal::Todo* task )
   setStatus( task->status() );
   setHasStartDate( task->hasStartDate() );
 
-  if ( task->hasDueDate() )
+  if ( task->hasDueDate() ) {
     setDueDate( localToUTC( task->dtDue() ) );
-  else
+    if ( task->doesFloat() ) {
+      // This is a floating task. Don't timezone move this one
+      mFloatingStatus = AllDay;
+      setDueDate( task->dtDue().date() );
+    } else {
+      mFloatingStatus = HasTime;
+      setDueDate( localToUTC( task->dtDue() ) );
+    }
+  } else {
     mHasDueDate = false;
-  if ( task->relatedTo() )
-    setParent( task->relatedTo()->uid() );
-  else if ( !task->relatedToUid().isEmpty() )
-    setParent( task->relatedToUid() );
-  else
-    setParent( TQString::null );
+  }
 
-  if ( task->hasCompletedDate() && task->percentComplete() == 100 )
+  if ( task->relatedTo() ) {
+    setParent( task->relatedTo()->uid() );
+  } else if ( !task->relatedToUid().isEmpty() ) {
+    setParent( task->relatedToUid( ) );
+  } else {
+    setParent( TQString::null );
+  }
+
+  if ( task->hasCompletedDate() && task->percentComplete() == 100 ) {
     setCompletedDate( localToUTC( task->completed() ) );
-  else
+  } else {
     mHasCompletedDate = false;
+  }
+}
+
+void Task::decideAndSetPriority()
+{
+  // If we have both Kolab and KCal values in the XML, we prefer the KCal value, but only if the
+  // values are still in sync
+  if  ( mKolabPriorityFromDom != -1 && mKCalPriorityFromDom != -1 ) {
+    const bool inSync = ( kcalPriorityToKolab( mKCalPriorityFromDom ) == mKolabPriorityFromDom );
+    if ( inSync ) {
+      setPriority( mKCalPriorityFromDom );
+    }
+    else {
+      // Out of sync, some other client changed the Kolab priority, so we have to ignore our
+      // KCal priority
+      setPriority( kolabPrioritytoKCal( mKolabPriorityFromDom ) );
+    }
+  }
+
+  // Only KCal priority set, use that.
+  else if ( mKolabPriorityFromDom == -1 && mKCalPriorityFromDom != -1 ) {
+    kdWarning() << "decideAndSetPriority(): No Kolab priority found, only the KCal priority!" << endl;
+    setPriority( mKCalPriorityFromDom );
+  }
+
+  // Only Kolab priority set, use that
+  else if ( mKolabPriorityFromDom != -1 && mKCalPriorityFromDom == -1 ) {
+    setPriority( kolabPrioritytoKCal( mKolabPriorityFromDom ) );
+  }
+
+  // No priority set, use the default
+  else {
+    // According the RFC 2445, we should use 0 here, for undefined priority, but AFAIK KOrganizer
+    // doesn't support that, so we'll use 5.
+    setPriority( 5 );
+  }
 }
 
 void Task::saveTo( KCal::Todo* task )

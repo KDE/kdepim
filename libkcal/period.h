@@ -42,6 +42,24 @@ class KDE_EXPORT Period
     /** Returns true if this element is smaller than the @param other one */
     bool operator<( const Period& other );
 
+    /**
+      Returns true if this period is equal to the @p other one.
+      Even if their start and end times are the same, two periods are
+      considered not equal if one is defined in terms of a duration and the
+      other in terms of a start and end time.
+
+      @param other the other period to compare
+    */
+    bool operator==( const Period &other ) const;
+
+    /**
+      Returns true if this period is not equal to the @p other one.
+
+      @param other the other period to compare
+      @see operator==()
+    */
+    bool operator!=( const Period &other ) const  { return !operator==( other ); }
+
     TQDateTime start() const;
     TQDateTime end() const;
     Duration duration();

@@ -31,6 +31,7 @@
 #ifdef KDEPIM_NEW_DISTRLISTS
 #include <libkdepim/distributionlist.h>
 #endif
+#include <libkdepim/kaddrbook.h>
 
 #include <klistview.h>
 #include <klocale.h>
@@ -153,8 +154,6 @@ void DistributionListDialog::slotUser1()
 {
   bool isEmpty = true;
 
-  KABC::AddressBook *ab = KABC::StdAddressBook::self( true );
-
   TQListViewItem *i = mRecipientsList->firstChild();
   while( i ) {
     DistributionListItem *item = static_cast<DistributionListItem *>( i );
@@ -188,6 +187,8 @@ void DistributionListDialog::slotUser1()
       return;
   }
 
+  KABC::AddressBook *ab = KABC::StdAddressBook::self( true );
+
 #ifdef KDEPIM_NEW_DISTRLISTS
   if ( !KPIM::DistributionList::findByName( ab, name ).isEmpty() ) {
 #else
@@ -196,6 +197,18 @@ void DistributionListDialog::slotUser1()
     KMessageBox::information( this,
       i18n( "<qt>Distribution list with the given name <b>%1</b> "
         "already exists. Please select a different name.</qt>" ).arg( name ) );
+    return;
+  }
+
+  KABC::Resource* const resource = KAddrBookExternal::selectResourceForSaving( ab );
+  if ( !resource )
+    return;
+
+  // Ask for a save ticket here, we use it for inserting the recipients into the addressbook and
+  // also for saving the addressbook, see https://issues.kolab.org/issue4281
+  KABC::Ticket *ticket = ab->requestSaveTicket( resource );
+  if ( !ticket ) {
+    kdWarning(5006) << "Unable to get save ticket!" << endl;
     return;
   }
 
@@ -209,7 +222,7 @@ void DistributionListDialog::slotUser1()
     if ( item->isOn() ) {
       kdDebug() << "  " << item->addressee().fullEmail() << endl;
       if ( item->isTransient() ) {
-        ab->insertAddressee( item->addressee() );
+        resource->insertAddressee( item->addressee() );
       }
       if ( item->email() == item->addressee().preferredEmail() ) {
         dlist.insertEntry( item->addressee() );
@@ -220,7 +233,7 @@ void DistributionListDialog::slotUser1()
     i = i->nextSibling();
   }
 
-  ab->insertAddressee( dlist );
+  resource->insertAddressee( dlist );
 #else
   KABC::DistributionList *dlist = new KABC::DistributionList( &manager, name );
   i = mRecipientsList->firstChild();
@@ -229,7 +242,7 @@ void DistributionListDialog::slotUser1()
     if ( item->isOn() ) {
       kdDebug() << "  " << item->addressee().fullEmail() << endl;
       if ( item->isTransient() ) {
-        ab->insertAddressee( item->addressee() );
+        resource->insertAddressee( item->addressee() );
       }
       if ( item->email() == item->addressee().preferredEmail() ) {
         dlist->insertEntry( item->addressee() );
@@ -241,21 +254,23 @@ void DistributionListDialog::slotUser1()
   }
 #endif
 
-  // FIXME: Ask the user which resource to save to instead of the default
-  bool saveError = true;
-  KABC::Ticket *ticket = ab->requestSaveTicket( 0 /*default resource */ );
-  if ( ticket )
-    if ( ab->save( ticket ) )
-      saveError = false;
-    else
-      ab->releaseSaveTicket( ticket );
-
-  if ( saveError )
+  if ( !ab->save( ticket ) ) {
     kdWarning(5006) << k_funcinfo << " Couldn't save new addresses in the distribution list just created to the address book" << endl;
+    ab->releaseSaveTicket( ticket );
+    return;
+  }
 
 #ifndef KDEPIM_NEW_DISTRLISTS
   manager.save();
 #endif
 
-  close();
+  // Only accept when the dist list is really in the addressbook, since we can't detect if the 
+  // user aborted saving in another way, since insertAddressee() lacks a return code.
+#ifdef KDEPIM_NEW_DISTRLISTS
+  if ( !KPIM::DistributionList::findByName( ab, name ).isEmpty() ) {
+#else
+  if ( manager.list( name ) ) {
+#endif
+    accept();
+  }
 }

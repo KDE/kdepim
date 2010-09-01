@@ -72,7 +72,9 @@ GpgME::Error Kleo::QGpgMEExportJob::start( const TQStringList & pats ) {
 }
 
 void Kleo::QGpgMEExportJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  emit result( error, mOutDataDataProvider->data() );
+  const TQByteArray data = mOutDataDataProvider->data();
+  getAuditLog();
+  emit result( error, data );
 }
 
 #include "qgpgmeexportjob.moc"

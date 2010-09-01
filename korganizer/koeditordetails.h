@@ -95,16 +95,21 @@ class KOEditorDetails : public KOAttendeeEditor
     /** Returns whether at least one attendee was added */
     bool hasAttendees();
 
-    void insertAttendee( Attendee*, bool goodEmailAddress = true );
+    void insertAttendee( Attendee *a, bool goodEmailAddress = true );
+    void removeAttendee( Attendee *a );
 
   protected slots:
     void removeAttendee();
     void slotInsertAttendee( Attendee *a );
 
   protected:
+    void setSelected ( int index );
+    int selectedIndex();
     void changeStatusForMe( Attendee::PartStat status );
 
     KCal::Attendee* currentAttendee() const;
+    /* reimpl */
+    TQListViewItem* hasExampleAttendee() const;
     void updateCurrentItem();
 
   private:

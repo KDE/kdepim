@@ -57,17 +57,19 @@ class KOWhatsNextView : public KOrg::BaseView
 
     virtual int currentDateCount();
     virtual Incidence::List selectedIncidences() { return Incidence::List(); }
-    DateList selectedDates() { return DateList(); }
+    DateList selectedIncidenceDates() { return DateList(); }
+
+    bool supportsDateNavigation() const { return true; }
 
   public slots:
     virtual void updateView();
     virtual void showDates(const TQDate &start, const TQDate &end);
-    virtual void showIncidences( const Incidence::List &incidenceList );
+    virtual void showIncidences( const Incidence::List &incidenceList, const TQDate &date );
 
     void changeIncidenceDisplay(Incidence *, int);
 
   protected:
-    void appendEvent( Incidence *, const TQDateTime &start = TQDateTime(), 
+    void appendEvent( Incidence *, const TQDateTime &start = TQDateTime(),
                       const TQDateTime &end = TQDateTime() );
     void appendTodo( Incidence * );
 

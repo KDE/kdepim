@@ -33,19 +33,24 @@
 some improvements by Mikolaj Machowski
 */
 
-void KOIncidenceToolTip::add ( TQWidget * widget, Incidence *incidence,
-                               TQToolTipGroup * group, const TQString & longText )
+void KOIncidenceToolTip::add ( TQWidget *widget, Calendar *calendar,
+                               Incidence *incidence, const TQDate &date,
+                               TQToolTipGroup *group, const TQString &longText )
 {
-  if ( !widget || !incidence ) return;
-  TQToolTip::add(widget, IncidenceFormatter::toolTipString( incidence ), group, longText);
+  if ( !widget || !incidence ) {
+    return;
+  }
+  TQToolTip::add( widget, IncidenceFormatter::toolTipStr( calendar, incidence, date ), group, longText );
 }
 
-void KOIncidenceToolTip::add(KOAgendaItem * item, Incidence * incidence, TQToolTipGroup * group)
+void KOIncidenceToolTip::add( KOAgendaItem *item, Calendar *calendar,
+                              Incidence *incidence, const TQDate &date,
+                              TQToolTipGroup *group )
 {
   Q_UNUSED( incidence );
   Q_UNUSED( group );
   TQToolTip::remove( item );
-  new KOIncidenceToolTip( item );
+  new KOIncidenceToolTip( item, calendar, date );
 }
 
 void KOIncidenceToolTip::maybeTip(const TQPoint & pos)
@@ -55,6 +60,6 @@ void KOIncidenceToolTip::maybeTip(const TQPoint & pos)
   if ( !item )
     return;
   if ( !mText )
-    mText = IncidenceFormatter::toolTipString( item->incidence() );
+    mText = IncidenceFormatter::toolTipStr( mCalendar, item->incidence(), mDate );
   tip( TQRect( TQPoint( 0, 0 ), item->size() ), mText );
 }

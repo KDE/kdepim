@@ -1,0 +1,84 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=Akregator/Plugin
+Comment=Plugin for Akregator
+Comment[af]=Inprop module vir Akregator
+Comment[be]=Утулка для Akregator
+Comment[bg]=Приставка за Akregator
+Comment[br]=Lugent evit Akregator
+Comment[ca]=Endollable per a l'Akregator
+Comment[cs]=Modul pro Akregator
+Comment[de]=Modul für Akregator
+Comment[el]=Πρόσθετο για το Akregator
+Comment[eo]=Kromprogramo por Akregator
+Comment[es]=Extensión para Akregator
+Comment[et]=Akregatori plugin
+Comment[eu]=Akregator-en plugina
+Comment[fa]=وصله برای Akregator
+Comment[fi]=Liitännäinen Akregatoriin
+Comment[fr]=Module pour Akregator
+Comment[fy]=Plugin foar Akregator
+Comment[ga]=Breiseán Akregator
+Comment[gl]=Extensión para Akregator
+Comment[he]=תוסף עבור Akregator
+Comment[hu]=Akregator bővítőmodul
+Comment[is]=Íforrit fyrir Akregator
+Comment[it]=Plugin per Akregator
+Comment[ja]=Akregator 用プラグイン
+Comment[kk]=Akregator-дың плагин модулі
+Comment[km]=កម្មវិធី​ជំនួយ Akregator
+Comment[ko]=Akregator 플러그인
+Comment[lt]=Akregator skirtas priedas
+Comment[mk]=Приклучок за Akregator
+Comment[ms]=Plugin untuk Akregator
+Comment[nb]=Programtillegg for Akregator
+Comment[nds]=Moduul för Akregator
+Comment[ne]=एक्रिगेटरका लागि प्लगइन
+Comment[nl]=Plugin voor Akregator
+Comment[nn]=Programtillegg til Akregator
+Comment[pl]=Wtyczka dla Akregatora
+Comment[pt]='Plugin' para o Akregator
+Comment[pt_BR]=Plug-in para o Akregator
+Comment[ru]=Модуль Akregator
+Comment[se]=Lassemoduvla Akregatorii
+Comment[sk]=Modul pre Akregator
+Comment[sl]=Vstavek za Akregator
+Comment[sr]=Прикључак за Akregator
+Comment[sr@Latn]=Priključak za Akregator
+Comment[sv]=Insticksprogram för Akregator
+Comment[tr]=Akregator Eklentisi
+Comment[uk]=Втулок для Akregator
+Comment[uz]=Akregator учун плагин
+Comment[zh_CN]=Akregator 插件
+Comment[zh_TW]=Akregator 外掛程式
+
+
+# Type of plugin, e.g. "storage".
+[PropertyDef::X-KDE-akregator-plugintype]
+Type=QString
+
+# Internal name for identification, not translated.
+[PropertyDef::X-KDE-akregator-name]
+Type=QString
+
+# List of authors.
+[PropertyDef::X-KDE-akregator-authors]
+Type=QStringList
+
+# List of author's email addresses.
+[PropertyDef::X-KDE-akregator-email]
+Type=QStringList
+
+# Priority of the plugin. When KTrader returns multiple offers, the one with the highest rank is chosen.
+# Range: 0 (disabled) - 255 (highest)
+[PropertyDef::X-KDE-akregator-rank]
+Type=int
+
+# Version of the plugin.
+[PropertyDef::X-KDE-akregator-version]
+Type=int
+
+# Version of the framework this plugin is compatible with.
+# Must be bumped after making incompatible changes.
+[PropertyDef::X-KDE-akregator-framework-version]
+Type=int

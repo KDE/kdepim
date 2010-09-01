@@ -62,13 +62,15 @@
 //--------------------------------------------------------------------------
 
 KOMonthCellToolTip::KOMonthCellToolTip( TQWidget *parent,
+                                        Calendar *calendar,
+                                        const TQDate &date,
                                         KNoScrollListBox *lv )
-  : TQToolTip( parent )
+  : TQToolTip( parent ), mCalendar( calendar ), mDate( date )
 {
   eventlist = lv;
 }
 
-void KOMonthCellToolTip::maybeTip( const TQPoint & pos )
+void KOMonthCellToolTip::maybeTip( const TQPoint &pos )
 {
   TQRect r;
   TQListBoxItem *it = eventlist->itemAt( pos );
@@ -78,7 +80,7 @@ void KOMonthCellToolTip::maybeTip( const TQPoint & pos )
     /* Calculate the rectangle. */
     r=eventlist->itemRect( it );
     /* Show the tip */
-    TQString tipText( IncidenceFormatter::toolTipString( i->incidence() ) );
+    TQString tipText( IncidenceFormatter::toolTipStr( mCalendar, i->incidence(), mDate ) );
     if ( !tipText.isEmpty() ) {
       tip( r, tipText );
     }
@@ -199,19 +201,40 @@ MonthViewItem::MonthViewItem( Incidence *incidence, const TQDateTime &qd,
   mDateTime = qd;
 
   mEventPixmap     = KOGlobals::self()->smallIcon( "appointment" );
+  mBirthdayPixmap  = KOGlobals::self()->smallIcon( "calendarbirthday" );
+  mAnniversaryPixmap= KOGlobals::self()->smallIcon( "calendaranniversary" );
   mTodoPixmap      = KOGlobals::self()->smallIcon( "todo" );
   mTodoDonePixmap  = KOGlobals::self()->smallIcon( "checkedbox" );
   mAlarmPixmap     = KOGlobals::self()->smallIcon( "bell" );
   mRecurPixmap     = KOGlobals::self()->smallIcon( "recur" );
   mReplyPixmap     = KOGlobals::self()->smallIcon( "mail_reply" );
 
-  mResourceColor = TQColor();
   mEvent     = false;
   mTodo      = false;
   mTodoDone  = false;
   mRecur     = false;
   mAlarm     = false;
   mReply     = false;
+}
+
+TQColor MonthViewItem::catColor() const
+{
+  TQColor retColor;
+  if ( !mIncidence ) {
+    return retColor;
+  }
+
+  TQStringList categories = mIncidence->categories();
+  TQString cat;
+  if ( !categories.isEmpty() ) {
+    cat = categories.first();
+  }
+  if ( cat.isEmpty() ) {
+    retColor = KOPrefs::instance()->unsetCategoryColor();
+  } else {
+    retColor = *( KOPrefs::instance()->categoryColor( cat ) );
+  }
+  return retColor;
 }
 
 void MonthViewItem::paint( TQPainter *p )
@@ -222,25 +245,86 @@ void MonthViewItem::paint( TQPainter *p )
   bool sel = selected();
 #endif
 
-  TQColor bgColor = palette().color( TQPalette::Normal,
-            sel ? TQColorGroup::Highlight : TQColorGroup::Background );
-  int offset=0;
-  if ( KOPrefs::instance()->monthViewUsesResourceColor() &&
-    mResourceColor.isValid() ) {
-    p->setBackgroundColor( mResourceColor );
-    p->eraseRect( 0, 0, listBox()->maxItemWidth(), height( listBox() ) );
-    offset=2;
+  TQColor bgColor = TQColor(); // Default invalid color;
+  if ( mIncidence && mTodo ) {
+    if ( static_cast<Todo*>( mIncidence )->isOverdue() ) {
+      bgColor = KOPrefs::instance()->todoOverdueColor();
+    } else if ( static_cast<Todo*>( mIncidence )->dtDue().date() == TQDate::currentDate() ) {
+      bgColor = KOPrefs::instance()->todoDueTodayColor();
+    }
   }
-  if ( KOPrefs::instance()->monthViewUsesCategoryColor() ) {
-    p->setBackgroundColor( bgColor );
-    p->eraseRect( offset, offset, listBox()->maxItemWidth()-2*offset, height( listBox() )-2*offset );
+
+  if ( !bgColor.isValid() ) {
+    if ( KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemResourceOnly ||
+         KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemResourceInsideCategoryOutside ) {
+      bgColor = resourceColor();
+    } else {
+      bgColor = catColor();
+    }
+
+    if ( !bgColor.isValid() ) {
+      bgColor = palette().color( TQPalette::Normal,
+                                 sel ? TQColorGroup::Highlight :
+                                       TQColorGroup::Background );
+    }
   }
+
+  TQColor frameColor;
+  if ( KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemResourceOnly ||
+       KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemCategoryInsideResourceOutside ) {
+    frameColor = resourceColor();
+  } else {
+    frameColor = catColor();
+  }
+
+  if ( mIncidence ) {
+    if ( mIncidence->categories().isEmpty() &&
+         KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemResourceInsideCategoryOutside ) {
+      frameColor = bgColor;
+    }
+
+    if ( mIncidence->categories().isEmpty() &&
+         KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemCategoryInsideResourceOutside ) {
+      bgColor = frameColor;
+    }
+  }
+
+  if ( !frameColor.isValid() ) {
+    frameColor = palette().color( TQPalette::Normal,
+                                  sel ? TQColorGroup::Highlight :
+                                        TQColorGroup::Foreground );
+  } else {
+    frameColor = frameColor.dark( 115 );
+  }
+
+  // draw the box for the item
+  p->setBackgroundColor( frameColor );
+  p->eraseRect( 0, 0, listBox()->maxItemWidth(), height( listBox() ) );
+  int offset = 2;
+  p->setBackgroundColor( bgColor );
+  p->eraseRect( offset, offset, listBox()->maxItemWidth()-2*offset, height( listBox() )-2*offset );
+
   int x = 3;
-// Do NOT put on the event pixmap because it takes up too much space
-//  if ( mEvent ) {
-//    p->drawPixmap( x, 0, mEventPixmap );
-//    x += mEventPixmap.width() + 2;
-//  }
+
+  bool specialEvent = false;
+  if ( mEvent ) {
+    if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+      specialEvent = true;
+      if ( mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+        p->drawPixmap( x, 0, mAnniversaryPixmap );
+        x += mAnniversaryPixmap.width() + 2;
+      } else {
+        p->drawPixmap( x, 0, mBirthdayPixmap );
+        x += mBirthdayPixmap.width() + 2;
+      }
+    // Do NOT put on the event pixmap because it takes up too much space
+    //} else {
+    //  p->drawPixmap( x, 0, mEventPixmap );
+    //  x += mEventPixmap.width() + 2;
+    //
+    }
+  }
+
   if ( mTodo ) {
     p->drawPixmap( x, 0, mTodoPixmap );
     x += mTodoPixmap.width() + 2;
@@ -249,11 +333,11 @@ void MonthViewItem::paint( TQPainter *p )
     p->drawPixmap( x, 0, mTodoDonePixmap );
     x += mTodoPixmap.width() + 2;
   }
-  if ( mRecur ) {
+  if ( mRecur && !specialEvent ) {
     p->drawPixmap( x, 0, mRecurPixmap );
     x += mRecurPixmap.width() + 2;
   }
-  if ( mAlarm ) {
+  if ( mAlarm && !specialEvent ) {
     p->drawPixmap( x, 0, mAlarmPixmap );
     x += mAlarmPixmap.width() + 2;
   }
@@ -300,7 +384,8 @@ int MonthViewItem::width( const TQListBox *lb ) const
 
 MonthViewCell::MonthViewCell( KOMonthView *parent)
   : TQWidget( parent ),
-    mMonthView( parent ), mPrimary( false ), mHoliday( false )
+    mMonthView( parent ), mPrimary( false ), mHoliday( false ),
+    isSelected( false )
 {
   TQVBoxLayout *topLayout = new TQVBoxLayout( this );
 
@@ -313,9 +398,6 @@ MonthViewCell::MonthViewCell( KOMonthView *parent)
   mItemList->setMinimumSize( 10, 10 );
   mItemList->setFrameStyle( TQFrame::Panel | TQFrame::Plain );
   mItemList->setLineWidth( 1 );
-
-  new KOMonthCellToolTip( mItemList->viewport(),
-                          static_cast<KNoScrollListBox *>( mItemList ) );
 
   topLayout->addWidget( mItemList );
 
@@ -357,6 +439,11 @@ void MonthViewCell::setDate( const TQDate &date )
   }
   mLabel->setText( text );
 
+  new KOMonthCellToolTip( mItemList->viewport(),
+                          monthView()->calendar(),
+                          mDate,
+                          static_cast<KNoScrollListBox *>( mItemList ) );
+
   resizeEvent( 0 );
 }
 
@@ -368,10 +455,11 @@ TQDate MonthViewCell::date() const
 void MonthViewCell::setFrameWidth()
 {
   // show current day with a thicker frame
-  if ( mDate == TQDate::currentDate() )
+  if ( mDate == TQDate::currentDate() ) {
     mItemList->setLineWidth( 3 );
-  else
+  } else if ( !isSelected ) {
     mItemList->setLineWidth( 1 );
+  }
 }
 
 void MonthViewCell::setPrimary( bool primary )
@@ -490,13 +578,16 @@ class MonthViewCell::CreateItemVisitor :
 
       mItem = new MonthViewItem( event, dt, text );
       mItem->setEvent( true );
-      if (KOPrefs::instance()->monthViewUsesCategoryColor()) {
+      if ( KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemCategoryOnly ||
+           KOPrefs::instance()->monthItemColors() == KOPrefs::MonthItemCategoryInsideResourceOutside ) {
         TQStringList categories = event->categories();
         TQString cat = categories.first();
         if (cat.isEmpty()) {
-          mItem->setPalette(TQPalette(KOPrefs::instance()->mEventColor, KOPrefs::instance()->mEventColor));
+          mItem->setPalette(TQPalette(KOPrefs::instance()->unsetCategoryColor(),
+                                     KOPrefs::instance()->unsetCategoryColor()) );
         } else {
-          mItem->setPalette(TQPalette(*(KOPrefs::instance()->categoryColor(cat)), *(KOPrefs::instance()->categoryColor(cat))));
+          mItem->setPalette(TQPalette(*(KOPrefs::instance()->categoryColor(cat)),
+                                     *(KOPrefs::instance()->categoryColor(cat))));
         }
       } else {
         mItem->setPalette( mStandardPalette );
@@ -514,7 +605,8 @@ class MonthViewCell::CreateItemVisitor :
       if ( !KOPrefs::instance()->showAllDayTodo() )
         return false;
       TQDateTime dt( mDate );
-      if ( todo->hasDueDate() && !todo->doesFloat() ) {
+      if ( todo->hasDueDate() && !todo->doesFloat() &&
+           todo->dtDue().time() != TQTime( 0,0 ) && todo->dtDue().time().isValid() ) {
         text += KGlobal::locale()->formatTime( todo->dtDue().time() );
         text += ' ';
         dt.setTime( todo->dtDue().time() );
@@ -547,9 +639,9 @@ void MonthViewCell::addIncidence( Incidence *incidence, CreateItemVisitor& v, in
       item->setAlarm( incidence->isAlarmEnabled() );
       item->setRecur( incidence->recurrenceType() );
 
-      TQColor resourceColor = KOHelper::resourceColor( mCalendar, incidence );
+      TQColor resourceColor = KOHelper::resourceColor( monthView()->calendar(), incidence );
       if ( !resourceColor.isValid() )
-        resourceColor = KOPrefs::instance()->mEventColor;
+        resourceColor = KOPrefs::instance()->unsetCategoryColor();
       item->setResourceColor( resourceColor );
 
       // FIXME: Find the correct position (time-wise) to insert the item.
@@ -661,6 +753,9 @@ TQDate MonthViewCell::selectedIncidenceDate()
 
 void MonthViewCell::select()
 {
+
+  isSelected = true;
+
   // setSelectedCell will deselect currently selected cells
   mMonthView->setSelectedCell( this );
 
@@ -676,6 +771,8 @@ void MonthViewCell::select()
 
 void MonthViewCell::deselect()
 {
+  isSelected = false;
+
   mItemList->clearSelection();
   mItemList->setFrameStyle( TQFrame::Plain | TQFrame::Panel );
   setFrameWidth();
@@ -693,7 +790,7 @@ void MonthViewCell::defaultAction( TQListBoxItem *item )
   select();
 
   if ( !item ) {
-    emit newEventSignal( date() );
+    emit newEventSignal( 0/*ResourceCalendar*/, TQString()/*subResource*/, date() );
   } else {
     MonthViewItem *eventItem = static_cast<MonthViewItem *>( item );
     Incidence *incidence = eventItem->incidence();
@@ -708,9 +805,10 @@ void MonthViewCell::contextMenu( TQListBoxItem *item )
   if ( item ) {
     MonthViewItem *eventItem = static_cast<MonthViewItem *>( item );
     Incidence *incidence = eventItem->incidence();
-    if ( incidence ) mMonthView->showEventContextMenu( incidence, date() );
-  }
-  else {
+    if ( incidence ) {
+      mMonthView->showEventContextMenu( monthView()->calendar(), incidence, mDate );
+    }
+  }  else {
     mMonthView->showGeneralContextMenu();
   }
 }
@@ -764,14 +862,13 @@ KOMonthView::KOMonthView( Calendar *calendar, TQWidget *parent, const char *name
   for( row = 0; row < mNumWeeks; ++row ) {
     for( col = 0; col < mDaysPerWeek; ++col ) {
       MonthViewCell *cell = new MonthViewCell( this );
-      cell->setCalendar(calendar);
       mCells.insert( row * mDaysPerWeek + col, cell );
       dayLayout->addWidget( cell, row + 2, col );
 
-      connect( cell, TQT_SIGNAL( defaultAction( Incidence * ) ),
-               TQT_SLOT( defaultAction( Incidence * ) ) );
-      connect( cell, TQT_SIGNAL( newEventSignal( const TQDate & ) ),
-               TQT_SIGNAL( newEventSignal( const TQDate & ) ) );
+      connect( cell, TQT_SIGNAL(defaultAction(Incidence *)),
+               TQT_SLOT(defaultAction(Incidence *)) );
+      connect( cell, TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDate &)),
+               TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDate &)) );
     }
     dayLayout->setRowStretch( row + 2, 1 );
   }
@@ -780,7 +877,7 @@ KOMonthView::KOMonthView( Calendar *calendar, TQWidget *parent, const char *name
 
   updateConfig();
 
-  emit incidenceSelected( 0 );
+  emit incidenceSelected( 0, TQDate() );
 }
 
 KOMonthView::~KOMonthView()
@@ -810,7 +907,7 @@ Incidence::List KOMonthView::selectedIncidences()
   return selected;
 }
 
-DateList KOMonthView::selectedDates()
+DateList KOMonthView::selectedIncidenceDates()
 {
   DateList selected;
 
@@ -851,6 +948,8 @@ void KOMonthView::updateConfig()
   for ( uint i = 0; i < mCells.count(); ++i ) {
     mCells[i]->updateConfig();
   }
+
+  showLabel( !KOPrefs::instance()->fullViewMonth() );
 }
 
 void KOMonthView::updateDayLabels()
@@ -883,11 +982,8 @@ void KOMonthView::showDates( const TQDate &start, const TQDate & )
   mLabel->setText( i18n( "monthname year", "%1 %2" )
                    .arg( calSys->monthName( start ) )
                    .arg( calSys->year( start ) ) );
-  if ( !KOPrefs::instance()->fullViewMonth() ) {
-    mLabel->show();
-  } else {
-    mLabel->hide();
-  }
+
+  showLabel( !KOPrefs::instance()->fullViewMonth() );
 
   bool primary = false;
   uint i;
@@ -899,8 +995,9 @@ void KOMonthView::showDates( const TQDate &start, const TQDate & )
 
     mCells[i]->setDate( date );
     mDateToCell[ date ] = mCells[ i ];
-    if( date == start )
+    if( date == start ) {
       mCells[i]->select();
+    }
 
     mCells[i]->setPrimary( primary );
 
@@ -916,7 +1013,22 @@ void KOMonthView::showDates( const TQDate &start, const TQDate & )
   updateView();
 }
 
-void KOMonthView::showIncidences( const Incidence::List & )
+TQDateTime KOMonthView::selectionStart()
+{
+  if ( mSelectedCell) {
+    return TQDateTime( mSelectedCell->date() );
+  } else {
+    return TQDateTime();
+  }
+}
+
+TQDateTime KOMonthView::selectionEnd()
+{
+  // Only one cell can be selected (for now)
+  return selectionStart();
+}
+
+void KOMonthView::showIncidences( const Incidence::List &, const TQDate & )
 {
   kdDebug(5850) << "KOMonthView::showIncidences( const Incidence::List & ) is not implemented yet." << endl;
 }
@@ -941,8 +1053,14 @@ class KOMonthView::GetDateVisitor : public IncidenceBase::Visitor
     }
     bool visit( Todo *todo ) {
       if ( todo->hasDueDate() ) {
-        mStartDate = todo->dtDue();
-        mEndDate = todo->dtDue();
+        if ( todo->dtDue().time() != TQTime( 0, 0 ) &&
+             todo->dtDue().time().isValid() ) {
+          mStartDate = todo->dtDue();
+          mEndDate = todo->dtDue();
+        } else {
+          mStartDate = TQDateTime( todo->dtDue().date(), TQTime( 23,59 ) );
+          mEndDate = mStartDate;
+        }
       }// else
 //         return false;
       return true;
@@ -1048,9 +1166,9 @@ void KOMonthView::resizeEvent( TQResizeEvent * )
   }
 }
 
-void KOMonthView::showEventContextMenu( Incidence *incidence, const TQDate &qd )
+void KOMonthView::showEventContextMenu( Calendar *cal, Incidence *incidence, const TQDate &qd )
 {
-  mEventContextMenu->showIncidencePopup( incidence, qd );
+  mEventContextMenu->showIncidencePopup( cal, incidence, qd );
 }
 
 void KOMonthView::showGeneralContextMenu()
@@ -1066,18 +1184,26 @@ void KOMonthView::setSelectedCell( MonthViewCell *cell )
   mSelectedCell = cell;
 
   if ( !mSelectedCell )
-    emit incidenceSelected( 0 );
+    emit incidenceSelected( 0, TQDate() );
   else
-    emit incidenceSelected( mSelectedCell->selectedIncidence() );
+    if ( selectedIncidenceDates().isEmpty() ) {
+      emit incidenceSelected( mSelectedCell->selectedIncidence(), TQDate() );
+    } else {
+      emit incidenceSelected( mSelectedCell->selectedIncidence(), selectedIncidenceDates().first() );
+    }
 }
 
 void KOMonthView::processSelectionChange()
 {
   Incidence::List incidences = selectedIncidences();
   if (incidences.count() > 0) {
-    emit incidenceSelected( incidences.first() );
+    if ( selectedIncidenceDates().isEmpty() ) {
+      emit incidenceSelected( incidences.first(), TQDate() );
+    } else {
+      emit incidenceSelected( incidences.first(), selectedIncidenceDates().first() );
+    }
   } else {
-    emit incidenceSelected( 0 );
+    emit incidenceSelected( 0, TQDate() );
   }
 }
 
@@ -1086,5 +1212,14 @@ void KOMonthView::clearSelection()
   if ( mSelectedCell ) {
     mSelectedCell->deselect();
     mSelectedCell = 0;
+  }
+}
+
+void KOMonthView::showLabel( bool show )
+{
+  if ( show ) {
+    mLabel->show();
+  } else {
+    mLabel->hide();
   }
 }

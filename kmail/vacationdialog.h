@@ -46,6 +46,9 @@ namespace KMail {
     bool activateVacation() const;
     virtual void setActivateVacation( bool activate );
 
+    bool domainCheck() const;
+    virtual void setDomainCheck( bool check );
+
     TQString messageText() const;
     virtual void setMessageText( const TQString & text );
 
@@ -55,14 +58,14 @@ namespace KMail {
     KMime::Types::AddrSpecList mailAliases() const;
     virtual void setMailAliases( const KMime::Types::AddrSpecList & aliases );
     virtual void setMailAliases( const TQString & aliases );
- 
+
     TQString domainName() const;
     virtual void setDomainName( const TQString & domain );
 
     bool sendForSpam() const;
     virtual void setSendForSpam( bool enable );
 
-    
+
   private slots:
     void slotIntervalSpinChanged( int value );
 

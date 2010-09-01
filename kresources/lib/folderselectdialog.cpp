@@ -39,7 +39,7 @@ using namespace KPIM;
 
 FolderSelectDialog::FolderSelectDialog( const TQString& caption, const TQString& label,
                                         const TQStringList& list )
-  : KDialogBase(0, 0, true, caption, Ok, Ok, true)
+  : KDialogBase(0, 0, true, caption, Ok|Cancel, Ok, true)
 {
   TQFrame* frame = makeMainWidget();
   TQVBoxLayout* layout = new TQVBoxLayout( frame, 0, spacingHint() );
@@ -81,3 +81,8 @@ void FolderSelectDialog::closeEvent(TQCloseEvent *event)
 {
   event->ignore();
 }
+
+void FolderSelectDialog::reject()
+{
+}
+

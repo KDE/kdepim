@@ -34,7 +34,6 @@ FilterPlain::FilterPlain() :
 
 FilterPlain::~FilterPlain()
 {
-    endImport();
 }
 
 void FilterPlain::import(FilterInfo *info)

@@ -24,23 +24,58 @@
 
 #include "urihandler.h"
 
+#include <libkcal/attachment.h>
+#include <libkcal/attachmenthandler.h>
+#include <libkcal/calendarresources.h>
+#include <libkcal/incidence.h>
+using namespace KCal;
+
 #ifndef KORG_NODCOP
 #include <dcopclient.h>
 #include "kmailIface_stub.h"
 #endif
 
-#include <kiconloader.h>
-#include <krun.h>
 #include <kapplication.h>
+#include <kiconloader.h>
+#include <klocale.h>
+#include <kfiledialog.h>
+#include <kmessagebox.h>
+#include <kmimetype.h>
 #include <kprocess.h>
+#include <krun.h>
+#include <ktempfile.h>
 #include <kdebug.h>
+#include <kio/netaccess.h>
 
-bool UriHandler::process( const TQString &uri )
+#include <tqfile.h>
+
+TQString UriHandler::attachmentNameFromUri( const TQString &uri )
+{
+  TQString tmp;
+  if ( uri.startsWith( "ATTACH:" ) ) {
+    tmp = uri.mid( 9 ).section( ':', -1, -1 );
+  }
+  return tmp;
+}
+
+TQString UriHandler::uidFromUri( const TQString &uri )
+{
+  TQString tmp;
+  if ( uri.startsWith( "ATTACH:" ) ) {
+    tmp = uri.mid( 9 ).section( ':', 0, 0 );
+  } else if ( uri.startsWith( "uid:" ) ) {
+    tmp = uri.mid( 6 );
+  }
+  return tmp;
+}
+
+bool UriHandler::process( TQWidget *parent, const TQString &uri )
 {
   kdDebug(5850) << "UriHandler::process(): " << uri << endl;
 
 #ifndef KORG_NODCOP
   if ( uri.startsWith( "kmail:" ) ) {
+
     // make sure kmail is running or the part is shown
     kapp->startServiceByDesktopPath("kmail");
 
@@ -53,10 +88,15 @@ bool UriHandler::process( const TQString &uri )
     KMailIface_stub kmailIface( "kmail", "KMailIface" );
     kmailIface.showMail( serialNumberStr.toUInt(), TQString() );
     return true;
+
   } else if ( uri.startsWith( "mailto:" ) ) {
+
     KApplication::kApplication()->invokeMailer( uri.mid(7), TQString::null );
     return true;
+
   } else if ( uri.startsWith( "uid:" ) ) {
+
+    TQString uid = uidFromUri( uri );
     DCOPClient *client = KApplication::kApplication()->dcopClient();
     const TQByteArray noParamData;
     const TQByteArray paramData;
@@ -66,27 +106,31 @@ bool UriHandler::process( const TQString &uri )
                                         "interfaces()",  noParamData,
                                         replyTypeStr, replyData );
     if ( foundAbbrowser ) {
-      //KAddressbook is already running, so just DCOP to it to bring up the contact editor
+      // KAddressbook is already running, so just DCOP to it to bring up the contact editor
 #if KDE_IS_VERSION( 3, 2, 90 )
       kapp->updateRemoteUserTimestamp("kaddressbook");
 #endif
       DCOPRef kaddressbook( "kaddressbook", "KAddressBookIface" );
-      kaddressbook.send( "showContactEditor", uri.mid( 6 ) );
+      kaddressbook.send( "showContactEditor", uid );
       return true;
     } else {
-      /*
-        KaddressBook is not already running.  Pass it the UID of the contact via the command line while starting it - its neater.
-        We start it without its main interface
-      */
+      // KaddressBook is not already running.
+      // Pass it the UID of the contact via the command line while starting it - its neater.
+      // We start it without its main interface
       TQString iconPath = KGlobal::iconLoader()->iconPath( "go", KIcon::Small );
       TQString tmpStr = "kaddressbook --editor-only --uid ";
-      tmpStr += KProcess::quote( uri.mid( 6 ) );
+      tmpStr += KProcess::quote( uid );
       KRun::runCommand( tmpStr, "KAddressBook", iconPath );
       return true;
     }
-  }
-  else {  // no special URI, let KDE handle it
-    new KRun(KURL( uri ));
+
+  } else if ( uri.startsWith( "ATTACH:" ) ) {
+
+    // a calendar incidence attachment
+    return AttachmentHandler::view( parent, attachmentNameFromUri( uri ), uidFromUri( uri ) );
+
+  } else {  // no special URI, let KDE handle it
+    new KRun( KURL( uri ) );
   }
 #endif
 

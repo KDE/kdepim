@@ -30,6 +30,7 @@
 #include <tqobjectlist.h>
 #include <tqfile.h>
 #include <tqcheckbox.h>
+#include <tqtimer.h>
 
 #include <kapplication.h>
 #include <kdebug.h>
@@ -84,7 +85,8 @@ KNote::KNote( TQDomDocument buildDoc, Journal *j, TQWidget *parent, const char *
   : TQFrame( parent, name, WStyle_Customize | WStyle_NoBorder | WDestructiveClose ),
     m_label( 0 ), m_pushpin( 0 ), m_fold( 0 ), m_button( 0 ), m_tool( 0 ), m_editor( 0 ),
     m_config( 0 ), m_journal( j ), m_find( 0 ),
-    m_kwinConf( KSharedConfig::openConfig( "kwinrc", true ) )
+    m_kwinConf( KSharedConfig::openConfig( "kwinrc", true ) ),
+    m_busy( 0 ), m_deleteWhenIdle( false ), m_blockEmitDataChanged( false )
 {
     setAcceptDrops( true );
     actionCollection()->setWidget( this );
@@ -105,7 +107,7 @@ KNote::KNote( TQDomDocument buildDoc, Journal *j, TQWidget *parent, const char *
     // create the menu items for the note - not the editor...
     // rename, mail, print, save as, insert date, alarm, close, delete, new note
     new KAction( i18n("New"), "filenew", 0,
-        this, TQT_SIGNAL(sigRequestNewNote()), actionCollection(), "new_note" );
+        this,TQT_SLOT(slotRequestNewNote()) , actionCollection(), "new_note" );
     new KAction( i18n("Rename..."), "text", 0,
         this, TQT_SLOT(slotRename()), actionCollection(), "rename_note" );
     m_readOnly = new KToggleAction( i18n("Lock"), "lock" , 0,
@@ -159,6 +161,7 @@ KNote::KNote( TQDomDocument buildDoc, Journal *j, TQWidget *parent, const char *
 
     // create the note editor
     m_editor = new KNoteEdit( actionCollection(), this );
+    m_editor->setNote( this );
     m_editor->installEventFilter( this ); // receive events (for modified)
     m_editor->viewport()->installEventFilter( this );
     connect( m_editor, TQT_SIGNAL(contentsMoving( int, int )), this, TQT_SLOT(slotUpdateViewport( int, int )));
@@ -369,11 +372,27 @@ KNote::~KNote()
     delete m_config;
 }
 
+void KNote::slotRequestNewNote()
+{
+    //Be sure to save before to request a new note
+    saveConfig();
+    saveData();
+    emit sigRequestNewNote();
+}
+
+void KNote::changeJournal(KCal::Journal *journal)
+{
+   m_journal = journal;
+   m_editor->setText( m_journal->description() );
+   m_label->setText( m_journal->summary() );
+   updateLabelAlignment();
+}
 
 // -------------------- public slots -------------------- //
 
 void KNote::slotKill( bool force )
 {
+    m_blockEmitDataChanged = true;
     if ( !force &&
          KMessageBox::warningContinueCancel( this,
              i18n("<qt>Do you really want to delete note <b>%1</b>?</qt>").arg( m_label->text() ),
@@ -382,9 +401,10 @@ void KNote::slotKill( bool force )
          )
          != KMessageBox::Continue )
     {
+	m_blockEmitDataChanged = false;
         return;
     }
-
+    aboutToEnterEventLoop();
     // delete the configuration first, then the corresponding file
     delete m_config;
     m_config = 0;
@@ -396,21 +416,24 @@ void KNote::slotKill( bool force )
         kdError(5500) << "Can't remove the note config: " << configFile << endl;
 
     emit sigKillNote( m_journal );
+    eventLoopLeft();
+
 }
 
 
 // -------------------- public member functions -------------------- //
 
-void KNote::saveData()
+void KNote::saveData(bool update)
 {
     m_journal->setSummary( m_label->text() );
     m_journal->setDescription( m_editor->text() );
     m_journal->setCustomProperty( "KNotes", "FgColor", m_config->fgColor().name() );
     m_journal->setCustomProperty( "KNotes", "BgColor", m_config->bgColor().name() );
     m_journal->setCustomProperty( "KNotes", "RichText", m_config->richText() ? "true" : "false" );
-
-    emit sigDataChanged();
+    if(update) {
+    emit sigDataChanged( noteId() );
     m_editor->setModified( false );
+    }
 }
 
 void KNote::saveConfig() const
@@ -498,7 +521,7 @@ void KNote::setColor( const TQColor& fg, const TQColor& bg )
     m_config->setBgColor( bg );
 
     m_journal->updated();  // because setCustomProperty() doesn't call it!!
-    emit sigDataChanged();
+    emit sigDataChanged(noteId());
     m_config->writeConfig();
 
     TQPalette newpalette = palette();
@@ -684,11 +707,16 @@ void KNote::setStyle( int style )
 
 void KNote::slotRename()
 {
+    m_blockEmitDataChanged = true;
     // pop up dialog to get the new name
     bool ok;
+    aboutToEnterEventLoop();
+    TQString oldName = m_label->text();
     TQString newName = KInputDialog::getText( TQString::null,
         i18n("Please enter the new name:"), m_label->text(), &ok, this );
-    if ( !ok ) // handle cancel
+    eventLoopLeft();
+    m_blockEmitDataChanged = false;
+    if ( !ok || ( oldName == newName) ) // handle cancel
         return;
 
     setName( newName );
@@ -711,6 +739,21 @@ void KNote::slotUpdateReadOnly()
     actionCollection()->action( "edit_cut" )->setEnabled( !readOnly && m_editor->hasSelectedText() );
     actionCollection()->action( "edit_paste" )->setEnabled( !readOnly );
     actionCollection()->action( "edit_clear" )->setEnabled( !readOnly );
+    actionCollection()->action( "rename_note" )->setEnabled( !readOnly );
+
+    actionCollection()->action( "format_bold" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_italic" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_underline" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_strikeout" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_alignleft" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_aligncenter" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_alignright" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_alignblock" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_list" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_super" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_sub" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_size" )->setEnabled( !readOnly );
+    actionCollection()->action( "format_color" )->setEnabled( !readOnly );
 
     updateFocus();
 }
@@ -724,7 +767,7 @@ void KNote::slotClose()
     m_editor->clearFocus();
     m_config->setHideNote( true );
     m_config->setPosition( pos() );
-
+    m_config->writeConfig();
     // just hide the note so it's still available from the dock window
     hide();
 }
@@ -736,11 +779,15 @@ void KNote::slotInsDate()
 
 void KNote::slotSetAlarm()
 {
+    m_blockEmitDataChanged = true;
     KNoteAlarmDlg dlg( name(), this );
     dlg.setIncidence( m_journal );
 
+    aboutToEnterEventLoop();
     if ( dlg.exec() == TQDialog::Accepted )
-        emit sigDataChanged();
+        emit sigDataChanged(noteId());
+    eventLoopLeft();
+    m_blockEmitDataChanged = false;
 }
 
 void KNote::slotPreferences()
@@ -760,11 +807,12 @@ void KNote::slotSend()
 {
     // pop up dialog to get the IP
     KNoteHostDlg hostDlg( i18n("Send \"%1\"").arg( name() ), this );
+    aboutToEnterEventLoop();
     bool ok = (hostDlg.exec() == TQDialog::Accepted);
-    TQString host = hostDlg.host();
-
+    eventLoopLeft();
     if ( !ok ) // handle cancel
         return;
+    TQString host = hostDlg.host();
 
     if ( host.isEmpty() )
     {
@@ -782,11 +830,11 @@ void KNote::slotSend()
 void KNote::slotMail()
 {
     // get the mail action command
-    TQStringList cmd_list = TQStringList::split( TQChar(' '), KNotesGlobalConfig::mailAction() );
+    const TQStringList cmd_list = TQStringList::split( TQChar(' '), KNotesGlobalConfig::mailAction() );
 
     KProcess mail;
-    for ( TQStringList::Iterator it = cmd_list.begin();
-        it != cmd_list.end(); ++it )
+    for ( TQStringList::ConstIterator it = cmd_list.constBegin();
+        it != cmd_list.constEnd(); ++it )
     {
         if ( *it == "%f" )
             mail << plainText().local8Bit();  // convert rich text to plain text
@@ -802,8 +850,6 @@ void KNote::slotMail()
 
 void KNote::slotPrint()
 {
-    saveData();
-
     TQString content;
     if ( m_editor->textFormat() == PlainText )
         content = TQStyleSheet::convertFromPlainText( m_editor->text() );
@@ -821,6 +867,7 @@ void KNote::slotPrint()
 
 void KNote::slotSaveAs()
 {
+    m_blockEmitDataChanged = true;
     TQCheckBox *convert = 0;
 
     if ( m_editor->textFormat() == RichText )
@@ -832,12 +879,16 @@ void KNote::slotSaveAs()
     KFileDialog dlg( TQString::null, TQString::null, this, "filedialog", true, convert );
     dlg.setOperationMode( KFileDialog::Saving );
     dlg.setCaption( i18n("Save As") );
+    aboutToEnterEventLoop();
     dlg.exec();
+    eventLoopLeft();
 
     TQString fileName = dlg.selectedFile();
     if ( fileName.isEmpty() )
+    {
+	m_blockEmitDataChanged = false;
         return;
-
+    }
     TQFile file( fileName );
 
     if ( file.exists() &&
@@ -845,6 +896,7 @@ void KNote::slotSaveAs()
                            "Are you sure you want to overwrite it?</qt>").arg( TQFileInfo(file).fileName() ) )
          != KMessageBox::Continue )
     {
+	m_blockEmitDataChanged = false;
         return;
     }
 
@@ -857,6 +909,7 @@ void KNote::slotSaveAs()
         else
             stream << text();
     }
+    m_blockEmitDataChanged = false;
 }
 
 void KNote::slotPopupActionToDesktop( int id )
@@ -993,19 +1046,20 @@ void KNote::updateFocus()
     {
         m_label->setBackgroundColor( palette().active().shadow() );
         m_button->show();
-        m_editor->cornerWidget()->show();
 
         if ( !m_editor->isReadOnly() )
         {
             if ( m_tool && m_tool->isHidden() && m_editor->textFormat() == TQTextEdit::RichText )
             {
                 m_tool->show();
+		m_editor->cornerWidget()->show();
                 setGeometry( x(), y(), width(), height() + m_tool->height() );
             }
         }
         else if ( m_tool && !m_tool->isHidden() )
         {
             m_tool->hide();
+	    m_editor->cornerWidget()->hide();
             setGeometry( x(), y(), width(), height() - m_tool->height() );
             updateLayout();     // to update the minimum height
         }
@@ -1210,8 +1264,9 @@ void KNote::resizeEvent( TQResizeEvent *qre )
     updateLayout();
 }
 
-void KNote::closeEvent( TQCloseEvent * )
+void KNote::closeEvent( TQCloseEvent *event )
 {
+    event->ignore(); //We don't want to close (and delete the widget). Just hide it
     slotClose();
 }
 
@@ -1268,8 +1323,10 @@ bool KNote::eventFilter( TQObject *o, TQEvent *ev )
         TQMouseEvent *e = (TQMouseEvent *)ev;
 
         if ( ev->type() == TQEvent::MouseButtonDblClick )
-            slotRename();
-
+	{
+	    if( !m_editor->isReadOnly())
+               slotRename();
+        }
         if ( ev->type() == TQEvent::MouseButtonPress &&
              (e->button() == LeftButton || e->button() == MidButton))
         {
@@ -1301,21 +1358,21 @@ bool KNote::eventFilter( TQObject *o, TQEvent *ev )
         return false;
     }
 
-    if ( o == m_editor )
-    {
-        if ( ev->type() == TQEvent::FocusOut )
-        {
+    if ( o == m_editor ) {
+        if ( ev->type() == TQEvent::FocusOut ) {
             TQFocusEvent *fe = static_cast<TQFocusEvent *>(ev);
             if ( fe->reason() != TQFocusEvent::Popup &&
-                 fe->reason() != TQFocusEvent::Mouse )
-            {
+                 fe->reason() != TQFocusEvent::Mouse ) {
                 updateFocus();
-                if ( m_editor->isModified() )
-                    saveData();
+                if ( isModified() ) {
+			saveConfig();
+                        if ( !m_blockEmitDataChanged )
+                            saveData();
+		}
             }
-        }
-        else if ( ev->type() == TQEvent::FocusIn )
+        } else if ( ev->type() == TQEvent::FocusIn ) {
             updateFocus();
+        }
 
         return false;
     }
@@ -1332,6 +1389,31 @@ bool KNote::eventFilter( TQObject *o, TQEvent *ev )
     }
 
     return false;
+}
+
+void KNote::slotSaveData()
+{
+    saveData();
+}
+
+void KNote::deleteWhenIdle()
+{
+  if ( m_busy <= 0 )
+    deleteLater();
+  else
+    m_deleteWhenIdle = true;
+}
+
+void KNote::aboutToEnterEventLoop()
+{
+  ++m_busy;
+}
+
+void KNote::eventLoopLeft()
+{
+  --m_busy;
+  if ( m_busy <= 0 && m_deleteWhenIdle )
+    deleteLater();
 }
 
 

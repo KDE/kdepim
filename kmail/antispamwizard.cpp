@@ -34,7 +34,6 @@
 #include "kmfilteraction.h"
 #include "kmfiltermgr.h"
 #include "kmkernel.h"
-#include "kmfolderseldlg.h"
 #include "kmfoldertree.h"
 #include "kmmainwin.h"
 #include "networkaccount.h"
@@ -428,7 +427,13 @@ void AntiSpamWizard::accept()
     classHamFilter->setConfigureShortcut( true );
     classHamFilter->setConfigureToolbar( true );
     filterList.append( classHamFilter );
-  }
+    }
+
+    /* Now that all the filters have been added to the list, tell
+     * the filter manager about it. That will emit filterListUpdate
+     * which will result in the filter list in kmmainwidget being
+     * initialized. This should happend only once. */
+    KMKernel::self()->filterMgr()->appendFilters( filterList );
 
   /* Now that all the filters have been added to the list, tell
    * the filter manager about it. That will emit filterListUpdate
@@ -834,9 +839,8 @@ ASWizPage::ASWizPage( TQWidget * parent, const char * name,
     banner = *bannerName;
 
   mLayout = new TQHBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
-  mPixmap = new TQPixmap( UserIcon(banner) );
   mBannerLabel = new TQLabel( this );
-  mBannerLabel->setPixmap( *mPixmap );
+  mBannerLabel->setPixmap( UserIcon(banner) );
   mBannerLabel->setScaledContents( false );
   mBannerLabel->setFrameShape( TQFrame::StyledPanel );
   mBannerLabel->setFrameShadow( TQFrame::Sunken );

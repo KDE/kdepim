@@ -31,19 +31,21 @@
 #ifndef KCAL_CALENDAR_H
 #define KCAL_CALENDAR_H
 
-#include <tqobject.h>
-#include <tqstring.h>
-#include <tqdatetime.h>
-#include <tqptrlist.h>
-#include <tqdict.h>
-#include <kdepimmacros.h>
-
+#include "exceptions.h"
 #include "customproperties.h"
 #include "event.h"
 #include "todo.h"
 #include "journal.h"
 #include "kcalversion.h"
 #include "person.h"
+
+#include <kdepimmacros.h>
+
+#include <tqobject.h>
+#include <tqstring.h>
+#include <tqdatetime.h>
+#include <tqptrlist.h>
+#include <tqdict.h>
 
 /**
    @namespace KCal
@@ -205,6 +207,17 @@ class LIBKCAL_EXPORT Calendar : public TQObject, public CustomProperties,
        @return the string containing the Product ID
     */
     TQString productId();
+
+    /**
+      Clears the exception status.
+    */
+    void clearException();
+
+    /**
+      Returns an exception, if there is any, containing information about the
+      last error that occurred.
+    */
+    ErrorFormat *exception() const;
 
     /**
        Set the owner of the Calendar.
@@ -472,6 +485,22 @@ class LIBKCAL_EXPORT Calendar : public TQObject, public CustomProperties,
     static Event::List sortEvents( Event::List *eventList,
                                    EventSortField sortField,
                                    SortDirection sortDirection );
+
+    /**
+       Sort a list of Events that occur on a specified date.
+
+       @param eventList is a pointer to a list of Events occurring on @p date.
+       @param date is the date.
+       @param sortField specifies the EventSortField.
+       @param sortDirection specifies the SortDirection.
+
+       @return a list of Events sorted as specified.
+    */
+    static Event::List sortEventsForDate( Event::List *eventList,
+                                          const TQDate &date,
+                                          EventSortField sortField,
+                                          SortDirection sortDirection );
+
     /**
        Return a sorted, filtered list of all Events for this Calendar.
 
@@ -755,6 +784,30 @@ class LIBKCAL_EXPORT Calendar : public TQObject, public CustomProperties,
     */
     virtual Journal *journal( const TQString &uid ) = 0;
 
+    /**
+      Emits the beginBatchAdding() signal.
+
+      This should be called before adding a batch of incidences with
+      addIncidence( Incidence *), addTodo( Todo *), addEvent( Event *)
+      or addJournal( Journal *). Some Calendars are connected to this
+      signal, e.g: CalendarResources uses it to know a series of
+      incidenceAdds are related so the user isn't prompted multiple
+      times which resource to save the incidence to
+
+      @since 4.4
+    */
+    void beginBatchAdding();
+
+    /**
+      Emits the endBatchAdding() signal.
+
+      Used with beginBatchAdding(). Should be called after
+      adding all incidences.
+
+      @since 4.4
+    */
+    void endBatchAdding();
+
 // Relations Specific Methods //
 
     /**
@@ -879,7 +932,25 @@ class LIBKCAL_EXPORT Calendar : public TQObject, public CustomProperties,
      */
     void calendarLoaded();
 
+    /**
+      @see beginBatchAdding()
+      @since 4.4
+     */
+    void batchAddingBegins();
+
+    /**
+      @see endBatchAdding()
+      @since 4.4
+     */
+    void batchAddingEnds();
+
   protected:
+    /**
+       Sets information about the last error occurred.
+       The previous exception is freed.
+     */
+    void setException( ErrorFormat *e );
+
     /**
        The Observer interface. So far not implemented.
 
@@ -941,6 +1012,7 @@ class LIBKCAL_EXPORT Calendar : public TQObject, public CustomProperties,
     //      returning static Alarm::List
 
   private:
+
     /**
        Intialize a Calendar object with starting values.
     */
@@ -964,6 +1036,7 @@ class LIBKCAL_EXPORT Calendar : public TQObject, public CustomProperties,
     TQDict<Incidence> mOrphans;
     TQDict<Incidence> mOrphanUids;
 
+    ErrorFormat *mException;
     class Private;
     Private *d;
   };

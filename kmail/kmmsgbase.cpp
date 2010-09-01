@@ -243,6 +243,14 @@ void KMMsgBase::setStatus(const KMMsgStatus aStatus, int idx)
       mStatus &= ~KMMsgStatusHasAttach;
       mStatus |= KMMsgStatusHasNoAttach;
       break;
+    case KMMsgStatusHasInvitation:
+      mStatus &= ~KMMsgStatusHasNoInvitation;
+      mStatus |= KMMsgStatusHasInvitation;
+      break;
+    case KMMsgStatusHasNoInvitation:
+      mStatus &= ~KMMsgStatusHasInvitation;
+      mStatus |= KMMsgStatusHasNoInvitation;
+      break;
     default:
       mStatus = aStatus;
       break;
@@ -658,7 +666,8 @@ TQString KMMsgBase::decodeRFC2047String(const TQCString& aStr, TQCString prefCha
     return TQString::null;
 
   if ( str.find( "=?" ) < 0 ) {
-    if ( !prefCharset.isEmpty() ) {
+    if ( !prefCharset.isEmpty() &&
+         kmkernel->isCodecAsciiCompatible( KMMsgBase::codecForName( prefCharset ) ) ) {
       if ( prefCharset == "us-ascii" ) {
         // isn`t this foolproof?
         return KMMsgBase::codecForName( "utf-8" )->toUnicode( str );
@@ -666,9 +675,15 @@ TQString KMMsgBase::decodeRFC2047String(const TQCString& aStr, TQCString prefCha
         return KMMsgBase::codecForName( prefCharset )->toUnicode( str );
       }
     } else {
-      return KMMsgBase::codecForName( GlobalSettings::self()->
+      if ( kmkernel->isCodecAsciiCompatible( KMMsgBase::codecForName(
+               GlobalSettings::self()->fallbackCharacterEncoding().latin1() ) ) ) {
+        return KMMsgBase::codecForName( GlobalSettings::self()->
                                       fallbackCharacterEncoding().latin1() )->toUnicode( str );
+      }
     }
+
+    // Not RFC2047 encoded, and codec not ascii-compatible -> interpret as ascii
+    return TQString::fromAscii( str );
   }
 
   TQString result;
@@ -917,6 +932,16 @@ TQCString KMMsgBase::encodeRFC2231String( const TQString& _str,
   return result;
 }
 
+//-----------------------------------------------------------------------------
+TQCString KMMsgBase::encodeRFC2231StringAutoDetectCharset( const TQString &str,
+                                                          const TQCString &defaultCharset )
+{
+  TQCString encoding = KMMsgBase::autoDetectCharset( defaultCharset,
+                                                    KMMessage::preferredCharsets(), str );
+  if ( encoding.isEmpty() )
+    encoding = "utf-8";
+  return KMMsgBase::encodeRFC2231String( str, encoding );
+}
 
 //-----------------------------------------------------------------------------
 TQString KMMsgBase::decodeRFC2231String(const TQCString& _str)
@@ -1075,6 +1100,18 @@ KMMsgAttachmentState KMMsgBase::attachmentState() const
     return KMMsgHasNoAttachment;
   else
     return KMMsgAttachmentUnknown;
+}
+
+
+KMMsgInvitationState KMMsgBase::invitationState() const
+{
+  KMMsgStatus st = status();
+  if (st & KMMsgStatusHasInvitation)
+    return KMMsgHasInvitation;
+  else if (st & KMMsgStatusHasNoInvitation)
+    return KMMsgHasNoInvitation;
+  else
+    return KMMsgInvitationUnknown;
 }
 
 //-----------------------------------------------------------------------------
@@ -1340,11 +1377,11 @@ const uchar *KMMsgBase::asIndexString(int &length) const
 
   //these are completely arbitrary order
   tmp_str = fromStrip().stripWhiteSpace();
-  STORE_DATA_LEN(MsgFromPart, tmp_str.unicode(), tmp_str.length() * 2, true);
+  STORE_DATA_LEN(MsgFromStripPart, tmp_str.unicode(), tmp_str.length() * 2, true);
   tmp_str = subject().stripWhiteSpace();
   STORE_DATA_LEN(MsgSubjectPart, tmp_str.unicode(), tmp_str.length() * 2, true);
   tmp_str = toStrip().stripWhiteSpace();
-  STORE_DATA_LEN(MsgToPart, tmp_str.unicode(), tmp_str.length() * 2, true);
+  STORE_DATA_LEN(MsgToStripPart, tmp_str.unicode(), tmp_str.length() * 2, true);
   tmp_str = replyToIdMD5().stripWhiteSpace();
   STORE_DATA_LEN(MsgReplyToIdMD5Part, tmp_str.unicode(), tmp_str.length() * 2, true);
   tmp_str = xmark().stripWhiteSpace();
@@ -1375,6 +1412,12 @@ const uchar *KMMsgBase::asIndexString(int &length) const
   STORE_DATA(MsgSizeServerPart, tmp);
   tmp = UID();
   STORE_DATA(MsgUIDPart, tmp);
+
+  tmp_str = from();
+  STORE_DATA_LEN( MsgFromPart, tmp_str.unicode(), tmp_str.length() * 2, true );
+
+  tmp_str = to();
+  STORE_DATA_LEN( MsgToPart, tmp_str.unicode(), tmp_str.length() * 2, true );
 
   return ret;
 }

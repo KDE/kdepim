@@ -224,6 +224,11 @@ void TransactionItem::setCrypto( bool on )
   mSSLLabel->setState( mSSLLabel->lastState() );
 }
 
+void TransactionItem::setTotalSteps( int totalSteps )
+{
+  mProgress->setTotalSteps( totalSteps );
+}
+
 void TransactionItem::slotItemCanceled()
 {
   if ( mItem )
@@ -279,6 +284,8 @@ ProgressDialog::ProgressDialog( TQWidget* alignWidget, TQWidget* parent, const c
               this, TQT_SLOT( slotTransactionLabel( KPIM::ProgressItem*, const TQString& ) ) );
     connect ( pm, TQT_SIGNAL( progressItemUsesCrypto(KPIM::ProgressItem*, bool) ),
               this, TQT_SLOT( slotTransactionUsesCrypto( KPIM::ProgressItem*, bool ) ) );
+    connect ( pm, TQT_SIGNAL( progressItemUsesBusyIndicator(KPIM::ProgressItem*, bool) ),
+              this, TQT_SLOT( slotTransactionUsesBusyIndicator( KPIM::ProgressItem*, bool ) ) );
     connect ( pm, TQT_SIGNAL( showProgressDialog() ),
               this, TQT_SLOT( slotShow() ) );
 }
@@ -372,6 +379,17 @@ void ProgressDialog::slotTransactionUsesCrypto( ProgressItem *item,
      TransactionItem *ti = mTransactionsToListviewItems[ item ];
      ti->setCrypto( value );
    }
+}
+
+void ProgressDialog::slotTransactionUsesBusyIndicator( KPIM::ProgressItem *item, bool value )
+{
+  if ( mTransactionsToListviewItems.contains( item ) ) {
+     TransactionItem *ti = mTransactionsToListviewItems[ item ];
+     if ( value )
+       ti->setTotalSteps( 0 );
+     else
+       ti->setTotalSteps( 100 );
+  }
 }
 
 void ProgressDialog::slotShow()

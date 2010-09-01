@@ -88,7 +88,7 @@ KCal::ListBase<KCal::Incidence> KOTimelineView::selectedIncidences()
 }
 
 /*virtual*/
-KCal::DateList KOTimelineView::selectedDates()
+KCal::DateList KOTimelineView::selectedIncidenceDates()
 {
     return KCal::DateList();
 }
@@ -120,7 +120,7 @@ void KOTimelineView::showDates(const TQDate& start, const TQDate& end)
   TimelineItem *item = 0;
   CalendarResources *calres = dynamic_cast<CalendarResources*>( calendar() );
   if ( !calres ) {
-    item = new TimelineItem( i18n("Calendar"), mGantt );
+    item = new TimelineItem( i18n("Calendar"), calendar(), mGantt );
     mCalendarItemMap[0][TQString()] = item;
   } else {
     CalendarResourceManager *manager = calres->resourceManager();
@@ -132,7 +132,7 @@ void KOTimelineView::showDates(const TQDate& start, const TQDate& end)
           TQString type = (*it)->subresourceType( *subit );
           if ( !(*it)->subresourceActive( *subit ) || (!type.isEmpty() && type != "event") )
             continue;
-          item = new TimelineItem( (*it)->labelForSubresource( *subit ), mGantt );
+          item = new TimelineItem( (*it)->labelForSubresource( *subit ), calendar(), mGantt );
           resourceColor = *KOPrefs::instance()->resourceColor( (*it)->identifier() );
           TQColor subrescol = *KOPrefs::instance()->resourceColor( *subit );
           if ( subrescol.isValid() )
@@ -142,7 +142,7 @@ void KOTimelineView::showDates(const TQDate& start, const TQDate& end)
           mCalendarItemMap[*it][*subit] = item;
         }
       } else {
-        item = new TimelineItem( (*it)->resourceName(), mGantt );
+        item = new TimelineItem( (*it)->resourceName(), calendar(), mGantt );
         if ( resourceColor.isValid() )
           item->setColors( resourceColor, resourceColor, resourceColor );
         mCalendarItemMap[*it][TQString()] = item;
@@ -163,7 +163,7 @@ void KOTimelineView::showDates(const TQDate& start, const TQDate& end)
 }
 
 /*virtual*/
-void KOTimelineView::showIncidences(const KCal::ListBase<KCal::Incidence>&)
+void KOTimelineView::showIncidences(const KCal::ListBase<KCal::Incidence>&, const TQDate &)
 {
 }
 
@@ -198,14 +198,15 @@ void KOTimelineView::itemSelected( KDGanttViewItem *item )
 {
   TimelineSubItem *tlitem = dynamic_cast<TimelineSubItem*>( item );
   if ( tlitem )
-    emit incidenceSelected( tlitem->incidence() );
+    emit incidenceSelected( tlitem->incidence(), tlitem->originalStart().date() );
 }
 
 void KOTimelineView::itemDoubleClicked( KDGanttViewItem *item )
 {
   TimelineSubItem *tlitem = dynamic_cast<TimelineSubItem*>( item );
-  if ( tlitem )
-    emit editIncidenceSignal( tlitem->incidence() );
+  if ( tlitem ) {
+    emit editIncidenceSignal( tlitem->incidence(), TQDate() );
+  }
 }
 
 void KOTimelineView::itemRightClicked( KDGanttViewItem *item )
@@ -218,7 +219,7 @@ void KOTimelineView::itemRightClicked( KDGanttViewItem *item )
   }
   if ( !mEventPopup )
     mEventPopup = eventPopup();
-  mEventPopup->showIncidencePopup( tlitem->incidence(), TQDate() );
+  mEventPopup->showIncidencePopup( calendar(), tlitem->incidence(), TQDate() );
 }
 
 bool KOTimelineView::eventDurationHint(TQDateTime & startDt, TQDateTime & endDt, bool & allDay)
@@ -233,7 +234,7 @@ bool KOTimelineView::eventDurationHint(TQDateTime & startDt, TQDateTime & endDt,
 void KOTimelineView::newEventWithHint( const TQDateTime& dt )
 {
   mHintDate = dt;
-  emit newEventSignal( dt );
+  emit newEventSignal( 0/*ResourceCalendar*/, TQString()/*subResource*/, dt );
 }
 
 TimelineItem * KOTimelineView::calendarItemForIncidence(KCal::Incidence * incidence)
@@ -323,7 +324,7 @@ void KOTimelineView::itemMoved(KDGanttViewItem * item)
   if ( !tlit )
     return;
   Incidence *i = tlit->incidence();
-  mChanger->beginChange( i );
+  mChanger->beginChange( i, 0, TQString() );
   TQDateTime newStart = tlit->startTime();
   if ( i->doesFloat() )
     newStart = TQDateTime( newStart.date() );
@@ -341,7 +342,7 @@ void KOTimelineView::itemMoved(KDGanttViewItem * item)
   i->setDuration( duration );
   TimelineItem *parent = static_cast<TimelineItem*>( tlit->parent() );
   parent->moveItems( i, tlit->originalStart().secsTo( newStart ), duration + allDayOffset );
-  mChanger->endChange( i );
+  mChanger->endChange( i, 0, TQString() );
 }
 
 void KOTimelineView::overscale(KDGanttView::Scale scale)

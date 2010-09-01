@@ -48,6 +48,7 @@ using KMail::FolderRequester;
 #include "kmfolder.h"
 #include "templatesconfiguration.h"
 #include "templatesconfiguration_kfg.h"
+#include "simplestringlisteditor.h"
 
 // other kdepim headers:
 // libkdepim
@@ -76,6 +77,8 @@ using KMail::FolderRequester;
 #include <tqpushbutton.h>
 #include <tqcheckbox.h>
 #include <tqcombobox.h>
+#include <tqgroupbox.h>
+#include <tqtextedit.h>
 
 // other headers:
 #include <gpgmepp/key.h>
@@ -107,7 +110,7 @@ namespace KMail {
 
     tab = new TQWidget( tabWidget );
     tabWidget->addTab( tab, i18n("&General") );
-    glay = new TQGridLayout( tab, 4, 2, marginHint(), spacingHint() );
+    glay = new TQGridLayout( tab, 5, 2, marginHint(), spacingHint() );
     glay->setRowStretch( 3, 1 );
     glay->setColStretch( 1, 1 );
 
@@ -140,18 +143,39 @@ namespace KMail {
     TQWhatsThis::add( mOrganizationEdit, msg );
 
     // "Email Address" line edit and label:
-    // (row 3: spacer)
     ++row;
     mEmailEdit = new KLineEdit( tab );
     glay->addWidget( mEmailEdit, row, 1 );
     label = new TQLabel( mEmailEdit, i18n("&Email address:"), tab );
     glay->addWidget( label, row, 0 );
     msg = i18n("<qt><h3>Email address</h3>"
-               "<p>This field should have your full email address.</p>"
+               "<p>This field should have your full email address</p>"
+               "<p>This address is the primary one, used for all outgoing mail. "
+               "If you have more than one address, either create a new identity, "
+               "or add additional alias addresses in the field below.</p>"
                "<p>If you leave this blank, or get it wrong, people "
                "will have trouble replying to you.</p></qt>");
     TQWhatsThis::add( label, msg );
     TQWhatsThis::add( mEmailEdit, msg );
+
+    // "Email Aliases" string list edit and label:
+    ++row;
+    mAliasEdit = new SimpleStringListEditor( tab );
+    glay->addMultiCellWidget( mAliasEdit, row, row+1, 1, 1 );
+    label = new TQLabel( mAliasEdit, i18n("Email a&liases:"), tab );
+    glay->addWidget( label, row, 0, TQt::AlignTop );
+    msg = i18n("<qt><h3>Email aliases</h3>"
+               "<p>This field contains alias addresses that should also "
+               "be considered as belonging to this identity (as opposed "
+               "to representing a different identity).</p>"
+               "<p>Example:</p>"
+               "<table>"
+               "<tr><th>Primary address:</th><td>first.last@example.org</td></tr>"
+               "<tr><th>Aliases:</th><td>first@example.org<br>last@example.org</td></tr>"
+               "</table>"
+               "<p>Type one alias address per line.</p></qt>");
+    TQWhatsThis::add( label, msg );
+    TQWhatsThis::add( mAliasEdit, msg );
 
     //
     // Tab Widget: Cryptography
@@ -499,6 +523,15 @@ void IdentityDialog::slotOk() {
       return;
     }
 
+    const TQStringList aliases = mAliasEdit->stringList();
+    for ( TQStringList::const_iterator it = aliases.begin(), end = aliases.end() ; it != end ; ++it ) {
+      if ( !isValidSimpleEmailAddress( *it ) ) {
+        TQString errorMsg( simpleEmailAddressErrorMsg());
+        KMessageBox::sorry( this, errorMsg, i18n("Invalid Email Alias \"%1\"").arg( *it ) );
+        return;
+      }
+    }
+
     if ( !validateAddresses( mReplyToEdit->text().stripWhiteSpace() ) ) {
       return;
     }
@@ -584,7 +617,8 @@ void IdentityDialog::slotOk() {
     // "General" tab:
     mNameEdit->setText( ident.fullName() );
     mOrganizationEdit->setText( ident.organization() );
-    mEmailEdit->setText( ident.emailAddr() );
+    mEmailEdit->setText( ident.primaryEmailAddress() );
+    mAliasEdit->setStringList( ident.emailAliases() );
 
     // "Cryptography" tab:
     mPGPSigningKeyRequester->setFingerprint( ident.pgpSigningKey() );
@@ -652,7 +686,9 @@ void IdentityDialog::slotOk() {
     ident.setFullName( mNameEdit->text() );
     ident.setOrganization( mOrganizationEdit->text() );
     TQString email = mEmailEdit->text();
-    ident.setEmailAddr( email );
+    ident.setPrimaryEmailAddress( email );
+    const TQStringList aliases = mAliasEdit->stringList();
+    ident.setEmailAliases( aliases );
     // "Cryptography" tab:
     ident.setPGPSigningKey( mPGPSigningKeyRequester->fingerprint().latin1() );
     ident.setPGPEncryptionKey( mPGPEncryptionKeyRequester->fingerprint().latin1() );

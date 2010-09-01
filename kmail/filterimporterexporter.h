@@ -31,10 +31,11 @@
 #define __FILTERIMPORTEREXPORTER_H__
 
 #include <tqvaluelist.h>
-
+#include <kdialogbase.h>
 class KMFilter;
 class KConfig;
 class TQWidget;
+class KPushButton;
 
 namespace KMail
 {
@@ -48,21 +49,43 @@ class FilterImporterExporter
 public:
       FilterImporterExporter( TQWidget* parent, bool popFilter = false );
       virtual ~FilterImporterExporter();
-      
-      /** Export the given filter rules to a file which 
+
+      /** Export the given filter rules to a file which
        * is asked from the user. The list to export is also
        * presented for confirmation/selection. */
       void exportFilters( const TQValueList<KMFilter*> & );
-      
+
       /** Import filters. Ask the user where to import them from
        * and which filters to import. */
       TQValueList<KMFilter*> importFilters();
-      
+
       static void writeFiltersToConfig( const TQValueList<KMFilter*>& filters, KConfig* config, bool bPopFilter );
       static TQValueList<KMFilter*> readFiltersFromConfig( KConfig* config, bool bPopFilter );
 private:
       TQWidget* mParent;
       bool mPopFilter;
+};
+class FilterSelectionDialog : public KDialogBase
+{
+  Q_OBJECT
+public:
+  FilterSelectionDialog( TQWidget * parent = 0 );
+
+  virtual ~FilterSelectionDialog();
+  virtual void slotCancel();
+  bool cancelled();
+  void setFilters( const TQValueList<KMFilter*>& filters );
+
+  TQValueList<KMFilter*> selectedFilters() const;
+public slots:
+  void slotUnselectAllButton();
+  void slotSelectAllButton();
+private:
+  KListView *filtersListView;
+  TQValueList<KMFilter*> originalFilters;
+  bool wasCancelled;
+  KPushButton *selectAllButton;
+  KPushButton *unselectAllButton;
 };
 
 }

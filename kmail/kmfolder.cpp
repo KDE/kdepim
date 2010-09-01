@@ -124,6 +124,10 @@ KMFolder::KMFolder( KMFolderDir* aParent, const TQString& aFolderName,
            TQT_SIGNAL( numUnreadMsgsChanged( KMFolder* ) ) );
   connect( mStorage, TQT_SIGNAL( removed( KMFolder*, bool ) ),
            TQT_SIGNAL( removed( KMFolder*, bool ) ) );
+  connect( mStorage, TQT_SIGNAL(noContentChanged()),
+           TQT_SIGNAL(noContentChanged()) );
+  connect( mStorage, TQT_SIGNAL(syncStateChanged()),
+           TQT_SIGNAL(syncStateChanged()) );
 
   connect( mStorage, TQT_SIGNAL( contentsTypeChanged( KMail::FolderContentsType ) ),
                 this, TQT_SLOT( slotContentsTypeChanged( KMail::FolderContentsType ) ) );
@@ -559,6 +563,21 @@ bool KMFolder::isReadOnly() const
   return mStorage->isReadOnly();
 }
 
+bool KMFolder::mailCheckInProgress() const
+{
+  return mStorage->mailCheckInProgress();
+}
+
+bool KMFolder::isWritable() const
+{
+  return !mStorage->isReadOnly() && mStorage->canDeleteMessages();
+}
+
+bool KMFolder::canDeleteMessages() const
+{
+  return mStorage->canDeleteMessages();
+}
+
 TQString KMFolder::label() const
 {
   if ( !mSystemLabel.isEmpty() )
@@ -877,5 +896,44 @@ void KMFolder::slotFolderSizeChanged()
   }
 }
 
+bool KMFolder::isValidName( const TQString &folderName, TQString &message )
+{
+  KMFolderType fldType = folderType();
+
+  // names of local folders must not contain a '/'
+  if ( folderName.find( '/' ) != -1 &&
+       fldType != KMFolderTypeImap &&
+       fldType != KMFolderTypeCachedImap ) {
+    message = i18n( "Folder names cannot contain the / (slash) character; please choose another folder name." );
+    return false;
+  }
+
+  // folder names must not start with a '.'
+  if ( folderName.startsWith( "." ) ) {
+    message = i18n( "Folder names cannot start with a . (dot) character; please choose another folder name." );
+    return false;
+  }
+
+  // names of IMAP folders must not contain the folder delimiter
+  if ( fldType == KMFolderTypeImap || fldType == KMFolderTypeCachedImap ) {
+    TQString delimiter;
+    if ( fldType == KMFolderTypeImap ) {
+      KMAcctImap *ai = static_cast<KMFolderImap*>( mStorage )->account();
+      if ( ai ) {
+        delimiter = ai->delimiterForFolder( mStorage );
+      }
+    } else {
+      KMAcctCachedImap *ai = static_cast<KMFolderCachedImap*>( mStorage )->account();
+      if ( ai ) {
+        delimiter = ai->delimiterForFolder( mStorage );
+      }
+    }
+    if ( !delimiter.isEmpty() && folderName.find( delimiter ) != -1 ) {
+      message = i18n( "Your IMAP server does not allow the character '%1'; please choose another folder name." ).arg( delimiter );
+      return false;
+    }
+  }
+  return true;
+}
 
 #include "kmfolder.moc"

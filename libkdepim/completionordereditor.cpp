@@ -27,6 +27,7 @@
  *  you do not wish to do so, delete this exception statement from
  *  your version.
  */
+#include <config.h> // FOR KDEPIM_NEW_DISTRLISTS
 
 #include "completionordereditor.h"
 #include "ldapclient.h"
@@ -54,11 +55,11 @@ Several items are used in addresseelineedit's completion object:
   LDAP servers, KABC resources (imap and non-imap), Recent addresses (in kmail only).
 
 The default completion weights are as follow:
+  Recent addresses (kmail) : 10  (see kmail/kmlineeditspell.cpp)
   LDAP: 50, 49, 48 etc.          (see ldapclient.cpp)
   KABC non-imap resources: 60    (see addresseelineedit.cpp and SimpleCompletionItem here)
   Distribution lists: 60         (see addresseelineedit.cpp and SimpleCompletionItem here)
   KABC imap resources: 80        (see kresources/imap/kabc/resourceimap.cpp)
-  Recent addresses (kmail) : 120 (see kmail/kmcomposewin.cpp)
 
 This dialog allows to change those weights, by showing one item per:
  - LDAP server
@@ -99,21 +100,21 @@ private:
 
 void LDAPCompletionItem::save( CompletionOrderEditor* )
 {
-  KConfig config( "kabldaprc" );
-  config.setGroup( "LDAP" );
-  config.writeEntry( TQString( "SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
-                     mWeight );
-  config.sync();
+  KConfig * config = LdapSearch::config();
+  config->setGroup( "LDAP" );
+  config->writeEntry( TQString( "SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
+                      mWeight );
+  config->sync();
 }
 
 // A simple item saved into kpimcompletionorder (no subresources, just name/identifier/weight)
 class SimpleCompletionItem : public CompletionItem
 {
 public:
-  SimpleCompletionItem( CompletionOrderEditor* editor, const TQString& label, const TQString& identifier )
+  SimpleCompletionItem( CompletionOrderEditor* editor, const TQString& label, const TQString& identifier, int weight )
     : mLabel( label ), mIdentifier( identifier ) {
       KConfigGroup group( editor->configFile(), "CompletionWeights" );
-      mWeight = group.readNumEntry( mIdentifier, 60 );
+      mWeight = group.readNumEntry( mIdentifier, weight );
     }
   virtual TQString label() const { return mLabel; }
   virtual int completionWeight() const { return mWeight; }
@@ -195,14 +196,16 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
       }
     } else { // non-IMAP KABC resource
       mItems.append( new SimpleCompletionItem( this, (*resit)->resourceName(),
-                                               (*resit)->identifier() ) );
+                                               (*resit)->identifier(), 60 ) );
     }
   }
 
 #ifndef KDEPIM_NEW_DISTRLISTS // new distr lists are normal contact, so no separate item if using them
   // Add an item for distribution lists
-  mItems.append( new SimpleCompletionItem( this, i18n( "Distribution Lists" ), "DistributionLists" ) );
+  mItems.append( new SimpleCompletionItem( this, i18n( "Distribution Lists" ), "DistributionLists" ), 60 );
 #endif
+
+  mItems.append( new SimpleCompletionItem( this, i18n( "Recent Addresses" ), "Recent Addresses", 10 ) );
 
   // Now sort the items, then create the GUI
   mItems.sort();

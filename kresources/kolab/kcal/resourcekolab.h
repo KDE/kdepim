@@ -70,8 +70,9 @@ public:
   void doClose();
 
   // The libkcal functions. See the resource for descriptions
-  bool addEvent( KCal::Event* anEvent );
-  bool deleteEvent( KCal::Event* );
+  KDE_DEPRECATED bool addEvent( KCal::Event *event );
+  bool addEvent( KCal::Event *event, const TQString &subResource );
+  bool deleteEvent( KCal::Event * );
   KCal::Event* event( const TQString &UniqueStr );
   KCal::Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Event::List rawEventsForDate(
@@ -82,15 +83,17 @@ public:
   KCal::Event::List rawEvents( const TQDate& start, const TQDate& end,
                                bool inclusive = false );
 
-  bool addTodo( KCal::Todo* todo );
-  bool deleteTodo( KCal::Todo* );
-  KCal::Todo* todo( const TQString& uid );
+  KDE_DEPRECATED bool addTodo( KCal::Todo * todo );
+  bool addTodo( KCal::Todo *todo, const TQString &subResource );
+  bool deleteTodo( KCal::Todo * );
+  KCal::Todo* todo( const TQString &uid );
   KCal::Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Todo::List rawTodosForDate( const TQDate& date );
 
-  bool addJournal( KCal::Journal* );
-  bool deleteJournal( KCal::Journal* );
-  KCal::Journal* journal( const TQString& uid );
+  KDE_DEPRECATED bool addJournal( KCal::Journal * );
+  bool addJournal( KCal::Journal *, const TQString &subResource );
+  bool deleteJournal( KCal::Journal * );
+  KCal::Journal* journal( const TQString &uid );
   KCal::Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Journal::List rawJournalsForDate( const TQDate &date );
 
@@ -128,6 +131,9 @@ public:
   /** (De)activate the subresource */
   virtual void setSubresourceActive( const TQString &, bool );
 
+  /** Is this subresource writable? */
+  bool subresourceWritable( const TQString& ) const;
+
   /** What is the label for this subresource? */
   virtual const TQString labelForSubresource( const TQString& resource ) const;
 
@@ -140,10 +146,16 @@ public:
 
   KABC::Lock* lock();
 
+  void beginAddingIncidences();
+
+  void endAddingIncidences();
+
 signals:
   void useGlobalMode();
 protected slots:
   void slotEmitResourceChanged();
+  void writeConfig();
+
 protected:
   /**
    * Return list of alarms which are relevant for the current user. These
@@ -157,7 +169,11 @@ private:
   void addIncidence( const char* mimetype, const TQString& xml,
                      const TQString& subResource, Q_UINT32 sernum );
 
-  bool addIncidence( KCal::Incidence* i, const TQString& subresource,
+
+  /**
+     Caller guarantees i is not null.
+   */
+  bool addIncidence( KCal::Incidence *i, const TQString& subresource,
                      Q_UINT32 sernum );
 
   void addEvent( const TQString& xml, const TQString& subresource,
@@ -215,6 +231,36 @@ private:
    */
   TQMap<TQString, TQString> mNewIncidencesMap;
   int mProgressDialogIncidenceLimit;
+
+  /**
+   * If a user has a subresource for viewing another user's folder then it can happen
+   * that addIncidence(...) adds an incidence with an already existing UID.
+   *
+   * When this happens, addIncidence(...) sets a new random UID and stores the
+   * original UID using incidence->setSchedulingID(uid) because KCal doesn't
+   * allow two incidences to have the same UID.
+   *
+   * This map keeps track of the generated UIDs (which are local) so we can delete the
+   * right incidence inside fromKMailDelIncidence(...) whenever we sync.
+   *
+   * The key is originalUID,subResource and the value is the fake UID.
+   */
+  TQMap< QPair<TQString, TQString>, TQString > mOriginalUID2fakeUID;
+
+  bool mBatchAddingInProgress;
+  TQMap<Kolab::ResourceType,TQString> mLastUsedResources;
+
+  /**
+     Indexed by uid, it holds the last known revision of an incidence.
+     If we receive an update where the incidence still has the same
+     revision as the last known, we ignore it and don't send it to kmail,
+     because shortly after, IncidenceChanger will increment the revision
+     and that will trigger another update.
+
+     If we didn't discard the first update, kmail would have been updated twice.
+  */
+  TQMap<TQString,int> mLastKnownRevisions;
+
 };
 
 struct TemporarySilencer {

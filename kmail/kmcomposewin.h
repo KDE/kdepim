@@ -96,7 +96,7 @@ namespace GpgME {
 }
 
 //-----------------------------------------------------------------------------
-class KMComposeWin : public KMail::Composer, virtual public MailComposerIface
+class KMComposeWin : public KMail::Composer, public MailComposerIface
 {
   Q_OBJECT
   friend class ::KMEdit;
@@ -160,6 +160,32 @@ public: // kmkernel, kmcommands, callback
 	       bool allowDecryption=FALSE, bool isModified=FALSE);
 
    void disableWordWrap();
+
+  /** Don't check if there are too many recipients for a mail,
+   * eg. when sending out invitations.
+   */
+  void disableRecipientNumberCheck();
+
+  /** Don't check for forgotten attachments for a mail,
+   * eg. when sending out invitations.
+   */
+  void disableForgottenAttachmentsCheck();
+
+  /**
+   * Ignore the "sticky" setting of the transport combo box and prefer the X-KMail-Transport
+   * header field of the message instead.
+   * Do the same for the identity combo box, don't obey the "sticky" setting but use the
+   * X-KMail-Identity header field instead.
+   *
+   * This is useful when sending out invitations, since you don't see the GUI and want the
+   * identity and transport to be set to the values stored in the messages.
+   */
+  void ignoreStickyFields();
+
+   /**
+    * Returns @c true while the message composing is in progress.
+    */
+   bool isComposing() const { return mComposer != 0; }
 
 private: // kmedit
   /**
@@ -524,14 +550,22 @@ private:
    */
 
   void rethinkHeaderLine( int aValue, int aMask, int& aRow,
-                          const TQString &aLabelStr, TQLabel* aLbl,
+                          TQLabel* aLbl,
                           TQLineEdit* aEdt, TQPushButton* aBtn = 0,
                           const TQString &toolTip = TQString::null,
                           const TQString &whatsThis = TQString::null );
 
   void rethinkHeaderLine( int value, int mask, int& row,
-                          const TQString& labelStr, TQLabel* lbl,
-                          TQComboBox* cbx, TQCheckBox *chk );
+                          TQLabel* lbl, TQComboBox* cbx, TQCheckBox *chk );
+
+  /**
+   * Checks how many recipients are and warns if there are too many.
+   * @return true, if the user accepted the warning and the message should be sent
+   */
+  bool checkRecipientNumber() const;
+
+
+  bool checkTransport() const;
 
   /**
    * Initialization methods
@@ -691,11 +725,13 @@ private:
    */
   void setTransport( const TQString & transport );
 
+  enum SignaturePlacement { Append, Prepend, AtCursor };
+
   /**
    * Helper to insert the signature of the current identy at the
    * beginning or end of the editor.
    */
-  void insertSignature( bool append = true, int pos = 0 );
+  void insertSignature( SignaturePlacement placement = Append );
 private slots:
    /**
     * Compress an attachemnt with the given index
@@ -717,11 +753,12 @@ private:
   TQLabel    *mLblIdentity, *mLblTransport, *mLblFcc;
   TQLabel    *mLblFrom, *mLblReplyTo, *mLblTo, *mLblCc, *mLblBcc, *mLblSubject;
   TQLabel    *mDictionaryLabel;
-  TQCheckBox *mBtnIdentity, *mBtnTransport, *mBtnFcc;
+  TQCheckBox *mBtnIdentity, *mBtnDictionary, *mBtnTransport, *mBtnFcc;
   TQPushButton *mBtnTo, *mBtnCc, *mBtnBcc, /* *mBtnFrom, */ *mBtnReplyTo;
   bool mSpellCheckInProgress;
   bool mDone;
   bool mAtmModified;
+  TQListViewItem *mAtmSelectNew;
 
   KMEdit* mEditor;
   TQGridLayout* mGrid;
@@ -906,6 +943,11 @@ private:
    *   accidentally moving the cursor.
    */
   bool mPreserveUserCursorPosition;
+
+  bool mPreventFccOverwrite;
+  bool mCheckForRecipients;
+  bool mCheckForForgottenAttachments;
+  bool mIgnoreStickyFields;
 };
 
 #endif

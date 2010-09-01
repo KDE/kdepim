@@ -41,7 +41,6 @@
 
 #include "koprefs.h"
 #include "koeditorgeneralevent.h"
-#include "koeditoralarms.h"
 #include "koeditorrecurrence.h"
 #include "koeditordetails.h"
 #include "koeditorfreebusy.h"
@@ -66,7 +65,6 @@ KOEventEditor::~KOEventEditor()
 void KOEventEditor::init()
 {
   setupGeneral();
-//  setupAlarmsTab();
   setupRecurrence();
   setupFreeBusy();
   setupDesignerTabs( "event" );
@@ -111,7 +109,9 @@ void KOEventEditor::reload()
 {
   kdDebug(5850) << "KOEventEditor::reload()" << endl;
 
-  if ( mEvent ) readEvent( mEvent, mCalendar );
+  if ( mEvent ) {
+    readEvent( mEvent, mCalendar, TQDate() );
+  }
 }
 
 void KOEventEditor::setupGeneral()
@@ -129,9 +129,6 @@ void KOEventEditor::setupGeneral()
 
     mGeneral->initHeader( topFrame, topLayout );
     mGeneral->initTime(topFrame,topLayout);
-//    TQBoxLayout *alarmLineLayout = new TQHBoxLayout(topLayout);
-    mGeneral->initAlarm(topFrame,topLayout);
-    mGeneral->enableAlarm( false );
 
     topLayout->addStretch( 1 );
 
@@ -166,27 +163,15 @@ void KOEventEditor::setupGeneral()
   mGeneral->finishSetup();
 }
 
-void KOEventEditor::modified (int /*modification*/)
+void KOEventEditor::modified()
 {
-  // Play dump, just reload the event. This dialog has become so complicated
+  // Play dumb, just reload the event. This dialog has become so complicated
   // that there is no point in trying to be smart here...
   reload();
 }
 
 void KOEventEditor::setupRecurrence()
 {
-#if 0
-  TQFrame *topFrame = addPage( i18n("Rec&urrence") );
-
-  TQWhatsThis::add( topFrame,
-        i18n("The Recurrence tab allows you to set options on "
-       "how often this event recurs.") );
-
-  TQBoxLayout *topLayout = new TQVBoxLayout( topFrame );
-
-  mRecurrence = new KOEditorRecurrence( topFrame );
-  topLayout->addWidget( mRecurrence );
-#endif
   mRecurrenceDialog = new KOEditorRecurrenceDialog( this );
   mRecurrenceDialog->hide();
   mRecurrence = mRecurrenceDialog->editor();
@@ -205,7 +190,9 @@ void KOEventEditor::setupFreeBusy()
   topLayout->addWidget( mFreeBusy );
 }
 
-void KOEventEditor::editIncidence( Incidence *incidence, Calendar *calendar )
+void KOEventEditor::editIncidence( Incidence *incidence,
+                                   const TQDate &date,
+                                   Calendar *calendar )
 {
   Event*event = dynamic_cast<Event*>(incidence);
   if ( event ) {
@@ -213,7 +200,9 @@ void KOEventEditor::editIncidence( Incidence *incidence, Calendar *calendar )
 
     mEvent = event;
     mCalendar = calendar;
-    readEvent( mEvent, mCalendar );
+
+    const TQDate &dt = mRecurIncidence && date.isValid() ? date : incidence->dtStart().date();
+    readEvent( mEvent, mCalendar, dt );
   }
 
   setCaption( i18n("Edit Event") );
@@ -263,9 +252,12 @@ void KOEventEditor::loadDefaults()
 
 bool KOEventEditor::processInput()
 {
-  kdDebug(5850) << "KOEventEditor::processInput()" << endl;
+  kdDebug(5850) << "KOEventEditor::processInput(); event is " << mEvent << endl;
 
-  if ( !validateInput() || !mChanger ) return false;
+  if ( !validateInput() || !mChanger ) {
+    kdDebug(5850) << " mChanger is " << mChanger << endl;
+    return false;
+  }
 
   TQGuardedPtr<KOEditorFreeBusy> freeBusy( mFreeBusy );
 
@@ -280,11 +272,12 @@ bool KOEventEditor::processInput()
 
     if( *event == *mEvent ) {
       // Don't do anything
-      kdDebug(5850) << "Event not changed\n";
-      if ( mIsCounter )
+      kdDebug(5850) << "Event not changed" << endl;
+      if ( mIsCounter ) {
         KMessageBox::information( this, i18n("You didn't change the event, thus no counter proposal has been sent to the organizer."), i18n("No changes") );
+      }
     } else {
-      kdDebug(5850) << "Event changed\n";
+      kdDebug(5850) << "Event changed" << endl;
       //IncidenceChanger::assignIncidence( mEvent, event );
       writeEvent( mEvent );
       if ( mIsCounter ) {
@@ -293,9 +286,17 @@ bool KOEventEditor::processInput()
         Event *event = mEvent->clone();
         event->clearAttendees();
         event->setSummary( i18n("My counter proposal for: %1").arg( mEvent->summary() ) );
-        mChanger->addIncidence( event );
+        mChanger->addIncidence( event, mResource, mSubResource, this );
       } else {
-        mChanger->changeIncidence( oldEvent, mEvent );
+        if ( mRecurIncidence && mRecurIncidenceAfterDissoc ) {
+          mChanger->addIncidence( mEvent, mResource, mSubResource, this );
+
+          mChanger->changeIncidence( mRecurIncidence, mRecurIncidenceAfterDissoc,
+                                     KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE, this );
+
+        } else {
+          mChanger->changeIncidence( oldEvent, mEvent, KOGlobals::NOTHING_MODIFIED, this );
+        }
       }
     }
     delete event;
@@ -307,14 +308,16 @@ bool KOEventEditor::processInput()
                           KOPrefs::instance()->email() ) );
     writeEvent( mEvent );
     // NOTE: triggered by addIncidence, the kolab resource might open a non-modal dialog (parent is not available in the resource) to select a resource folder. Thus the user can close this dialog before addIncidence() returns.
-    if ( !mChanger->addIncidence( mEvent, this ) ) {
+    if ( !mChanger->addIncidence( mEvent, mResource, mSubResource, this ) ) {
       delete mEvent;
       mEvent = 0;
       return false;
     }
   }
   // if "this" was deleted, freeBusy is 0 (being a guardedptr)
-  if ( freeBusy ) freeBusy->cancelReload();
+  if ( freeBusy ) {
+    freeBusy->cancelReload();
+  }
 
   return true;
 }
@@ -324,6 +327,11 @@ void KOEventEditor::processCancel()
   kdDebug(5850) << "KOEventEditor::processCancel()" << endl;
 
   if ( mFreeBusy ) mFreeBusy->cancelReload();
+
+  if ( mRecurIncidence && mRecurIncidenceAfterDissoc ) {
+    *mRecurIncidenceAfterDissoc = *mRecurIncidence;
+  }
+
 }
 
 void KOEventEditor::deleteEvent()
@@ -336,11 +344,11 @@ void KOEventEditor::deleteEvent()
   reject();
 }
 
-void KOEventEditor::readEvent( Event *event, Calendar *calendar, bool tmpl )
+void KOEventEditor::readEvent( Event *event, Calendar *calendar, const TQDate &date, bool tmpl )
 {
-  mGeneral->readEvent( event, calendar, tmpl );
+  mGeneral->readEvent( event, calendar, date, tmpl );
   mRecurrence->readIncidence( event );
-//  mAlarms->readIncidence( event );
+
   if ( mFreeBusy ) {
     mFreeBusy->readEvent( event );
     mFreeBusy->triggerReload();
@@ -368,11 +376,14 @@ void KOEventEditor::writeEvent( Event *event )
 
 bool KOEventEditor::validateInput()
 {
-  if ( !mGeneral->validateInput() ) return false;
-  if ( !mDetails->validateInput() ) return false;
-  if ( !mRecurrence->validateInput() ) return false;
-
-  return true;
+  if ( !mGeneral->validateInput() ||
+       !mDetails->validateInput() ||
+       !mRecurrence->validateInput() ) {
+    kdDebug(5850) << "ValidateInput returns false" << endl;
+    return false;
+  } else {
+    return true;
+  }
 }
 
 int KOEventEditor::msgItemDelete()
@@ -390,7 +401,7 @@ void KOEventEditor::loadTemplate( /*const*/ CalendarLocal& cal )
         i18n("Template does not contain a valid event.") );
   } else {
     kdDebug(5850) << "KOEventEditor::slotLoadTemplate(): readTemplate" << endl;
-    readEvent( events.first(), 0, true );
+    readEvent( events.first(), 0, TQDate(), true );
   }
 }
 
@@ -414,9 +425,9 @@ TQObject *KOEventEditor::typeAheadReceiver() const
 
 void KOEventEditor::updateRecurrenceSummary()
 {
-  Event *ev =  new Event();
+  Event *ev = new Event();
   writeEvent( ev );
-  mGeneral->updateRecurrenceSummary( IncidenceFormatter::recurrenceString( ev ) );
+  mGeneral->updateRecurrenceSummary( ev );
   delete ev;
 }
 

@@ -29,6 +29,7 @@
 #include "koglobals.h"
 #include "navigatorbar.h"
 #include "kdatenavigator.h"
+#include "kodaymatrix.h"
 
 #include <kcalendarsystem.h>
 #include <kdialog.h>
@@ -79,12 +80,14 @@ void DateNavigatorContainer::connectNavigatorView( KDateNavigator *v )
   connect( v, TQT_SIGNAL( goPrevious() ), TQT_SIGNAL( goPrevious() ) );
   connect( v, TQT_SIGNAL( goNext() ), TQT_SIGNAL( goNext() ) );
 
-  connect( v, TQT_SIGNAL( goNextMonth() ), TQT_SIGNAL( goNextMonth() ) );
-  connect( v, TQT_SIGNAL( goPrevMonth() ), TQT_SIGNAL( goPrevMonth() ) );
-  connect( v, TQT_SIGNAL( goNextYear() ), TQT_SIGNAL( goNextYear() ) );
-  connect( v, TQT_SIGNAL( goPrevYear() ), TQT_SIGNAL( goPrevYear() ) );
+  connect( v, TQT_SIGNAL( nextYearClicked() ), TQT_SIGNAL( nextYearClicked() ) );
+  connect( v, TQT_SIGNAL( prevYearClicked() ), TQT_SIGNAL( prevYearClicked() ) );
 
-  connect( v, TQT_SIGNAL( goMonth( int ) ), TQT_SIGNAL( goMonth( int ) ) );
+  connect( v, TQT_SIGNAL( prevMonthClicked() ), this, TQT_SLOT( goPrevMonth() ) );
+  connect( v, TQT_SIGNAL( nextMonthClicked() ), this, TQT_SLOT( goNextMonth() ) );
+
+  connect( v, TQT_SIGNAL( monthSelected( int ) ), TQT_SIGNAL( monthSelected( int ) ) );
+  connect( v, TQT_SIGNAL( yearSelected( int ) ), TQT_SIGNAL( yearSelected( int ) ) );
 }
 
 void DateNavigatorContainer::setCalendar( Calendar *cal )
@@ -118,12 +121,21 @@ void DateNavigatorContainer::updateToday()
   }
 }
 
+void DateNavigatorContainer::setUpdateNeeded()
+{
+  mNavigatorView->setUpdateNeeded();
+  KDateNavigator *n;
+  for ( n = mExtraViews.first(); n; n = mExtraViews.next() ) {
+    n->setUpdateNeeded();
+  }
+}
+
 void DateNavigatorContainer::updateView()
 {
   mNavigatorView->updateView();
   KDateNavigator *n;
-  for( n = mExtraViews.first(); n; n = mExtraViews.next() ) {
-    n->updateView();
+  for ( n = mExtraViews.first(); n; n = mExtraViews.next() ) {
+    n->setUpdateNeeded();
   }
 }
 
@@ -136,7 +148,7 @@ void DateNavigatorContainer::updateConfig()
   }
 }
 
-void DateNavigatorContainer::selectDates( const DateList &dateList )
+void DateNavigatorContainer::selectDates( const DateList &dateList, const TQDate &preferredMonth )
 {
   if ( !dateList.isEmpty() ) {
     TQDate start( dateList.first() );
@@ -151,11 +163,24 @@ void DateNavigatorContainer::selectDates( const DateList &dateList )
       navlast = mNavigatorView->endDate();
       navsecond = navfirst;
     }
+
+    const KCalendarSystem *calSys = KOGlobals::self()->calendarSystem();
+
+    // If the datelist crosses months we won't know which month to show
+    // so we read what's in preferredMonth
+    const bool changingMonth = ( preferredMonth.isValid()  &&
+                                 calSys->month( mNavigatorView->month() ) != calSys->month( preferredMonth ) );
+
     if ( start < navfirst // <- start should always be visible
          // end is not visible and we have a spare month at the beginning:
-         || ( end > navlast && start >= navsecond ) ) {
-      // Change the shown months so that the beginning of the date list is visible
-      setBaseDates( start );
+         || ( end > navlast && start >= navsecond )
+         || changingMonth ) {
+
+      if ( preferredMonth.isValid() ) {
+        setBaseDates( preferredMonth );
+      } else {
+        setBaseDates( start );
+      }
     }
 
     mNavigatorView->selectDates( dateList );
@@ -202,7 +227,9 @@ void DateNavigatorContainer::resizeAllContents()
   if ( horizontalCount != mHorizontalCount ||
        verticalCount != mVerticalCount ) {
     uint count = horizontalCount * verticalCount;
-    if ( count == 0 ) return;
+    if ( count == 0 ) {
+      return;
+    }
 
     while ( count > ( mExtraViews.count() + 1 ) ) {
       KDateNavigator *n = new KDateNavigator( this );
@@ -228,22 +255,30 @@ void DateNavigatorContainer::resizeAllContents()
   int width = (size().width() - margin*2) / horizontalCount;
 
   NavigatorBar *bar = mNavigatorView->navigatorBar();
-  if ( horizontalCount > 1 ) bar->showButtons( true, false );
-  else bar->showButtons( true, true );
+  if ( horizontalCount > 1 ) {
+    bar->showButtons( true, false );
+  } else {
+    bar->showButtons( true, true );
+  }
 
   mNavigatorView->setGeometry(
       ( ( (KOGlobals::self()->reverseLayout())?(horizontalCount-1):0) * width ) + margin,
         margin, width, height );
+
   for( uint i = 0; i < mExtraViews.count(); ++i ) {
     int x = ( i + 1 ) % horizontalCount;
     int y = ( i + 1 ) / horizontalCount;
 
     KDateNavigator *view = mExtraViews.at( i );
     bar = view->navigatorBar();
-    if ( y > 0 ) bar->showButtons( false, false );
-    else {
-        if ( x + 1 == horizontalCount ) bar->showButtons( false, true );
-        else bar->showButtons( false, false );
+    if ( y > 0 ) {
+      bar->showButtons( false, false );
+    } else {
+      if ( x + 1 == horizontalCount ) {
+        bar->showButtons( false, true );
+      } else {
+        bar->showButtons( false, false );
+      }
     }
     view->setGeometry(
         ( ( (KOGlobals::self()->reverseLayout())?(horizontalCount-1-x):x) * width ) + margin,
@@ -261,6 +296,43 @@ TQSize DateNavigatorContainer::sizeHint() const
 {
   int margin = KDialog::spacingHint() * 2;
   return mNavigatorView->sizeHint() + TQSize( margin, margin );
+}
+
+void DateNavigatorContainer::goNextMonth()
+{
+  const QPair<TQDate,TQDate> p = dateLimits( 1 );
+
+  emit nextMonthClicked( mNavigatorView->month(),
+                         p.first,
+                         p.second);
+}
+
+void DateNavigatorContainer::goPrevMonth()
+{
+  const QPair<TQDate,TQDate> p = dateLimits( -1 );
+
+  emit prevMonthClicked( mNavigatorView->month(),
+                         p.first,
+                         p.second );
+}
+
+QPair<TQDate,TQDate> DateNavigatorContainer::dateLimits( int offset )
+{
+  const KCalendarSystem *calSys = KOGlobals::self()->calendarSystem();
+  TQDate firstMonth, lastMonth;
+  if ( mExtraViews.isEmpty() ) {
+    lastMonth = mNavigatorView->month();
+  } else {
+    lastMonth = mExtraViews.last()->month();
+  }
+
+  firstMonth = calSys->addMonths( mNavigatorView->month(), offset );
+  lastMonth = calSys->addMonths( lastMonth, offset );
+
+  QPair<TQDate,TQDate> firstMonthBoundary = KODayMatrix::matrixLimits( firstMonth );
+  QPair<TQDate,TQDate> lastMonthBoundary = KODayMatrix::matrixLimits( lastMonth );
+
+  return qMakePair( firstMonthBoundary.first, lastMonthBoundary.second );
 }
 
 #include "datenavigatorcontainer.moc"

@@ -25,6 +25,10 @@ public:
   TQString text() const { return mLineEdit->text(); }
   void setText( const TQString & aString ) { mLineEdit->setText( aString ); }
 
+signals:
+  // Forwarded from the internal text edit
+  void textChanged(const TQString&);
+
 protected slots:
   void slotAddrBook();
 

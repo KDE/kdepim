@@ -133,6 +133,15 @@ public:
   /** Read color options and set palette. */
   virtual void readColorConfig(void);
 
+  /**
+   * Same as KListView::restoreLayout(), only that this does _not_ restore the sort order.
+   * This is useful since restoreLayout() doesn't restore the sort order correctly, as
+   * KListView doesn't know about our extended sort order like date of arrival.
+   *
+   * Note that if you want to restore the sort order correctly, call readConfig().
+   */
+  void restoreColumnLayout( KConfig *config, const TQString &group );
+
   /** Return the current message */
   virtual KMMessage* currentMsg();
   /** Return the current list view item */
@@ -196,6 +205,9 @@ public:
     @param serNum A message serial number.
   */
   bool isMessageCut( Q_UINT32 serNum ) const;
+
+  /** Write global config options. */
+  virtual void writeConfig(void);
 
 signals:
   /** emitted when the list view item corresponding to this message
@@ -294,8 +306,8 @@ protected:
     *pixFullySigned, *pixPartiallySigned, *pixUndefinedSigned,
     *pixFullyEncrypted, *pixPartiallyEncrypted, *pixUndefinedEncrypted,
     *pixFiller, *pixEncryptionProblematic,
-    *pixSignatureProblematic, *pixAttachment,
-    *pixReadFwd, *pixReadReplied, *pixReadFwdReplied,*pixTodo;
+    *pixSignatureProblematic, *pixAttachment, *pixInvitation,
+    *pixReadFwd, *pixReadReplied, *pixReadFwdReplied, *pixTodo;
 
   /** Look for color changes */
   virtual bool event(TQEvent *e);
@@ -320,9 +332,6 @@ protected:
 
   /** Write per-folder config options. */
   virtual void writeFolderConfig(void);
-
-  /** Write global config options. */
-  virtual void writeConfig(void);
 
   /** Handle shift and control selection */
   virtual void contentsMousePressEvent(TQMouseEvent*);
@@ -389,6 +398,7 @@ private:
   NestingPolicy nestingPolicy;
   int mSortCol;
   bool mSortDescending;
+  bool mIgnoreSortOrderChanges;
 
   struct {
       uint ascending : 1;

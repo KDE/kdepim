@@ -86,11 +86,13 @@ protected:
     struct LoadingTask {
         TQString url;
         TQString tasksUrl;
+        TQString journalsUrl;
     };
 
     struct WritingTask {
         TQString url;
         TQString tasksUrl;
+        TQString journalsUrl;
 
         TQString added;
         TQString changed;
@@ -99,6 +101,10 @@ protected:
         TQString tasksAdded;
         TQString tasksChanged;
         TQString tasksDeleted;
+
+        TQString journalsAdded;
+        TQString journalsChanged;
+        TQString journalsDeleted;
     };
 
 
@@ -129,8 +135,9 @@ protected:
      * Initiates calendar loading process.
      * @param url URL to load calendar data from.
      * @param tasksUrl URL to load task data from.
+     * @param journalsUrl URL to load journal data from.
      */
-    void startLoading(const TQString& url, const TQString& tasksUrl);
+    void startLoading(const TQString& url, const TQString& tasksUrl, const TQString& journalsUrl);
 
     /**
      * Checks if the data is correct and can be parsed.
@@ -148,18 +155,26 @@ protected:
 
     /**
      * Parses the data and adds tasks to the calendar.
-     * Unlike @ref parseData, this function does NOT clear the cache.
      * @param data calendar data.
      * @return true on success, false on fail.
      */
     bool parseTasksData(const TQString& data);
 
     /**
+     * Parses the data and adds journals to the calendar.
+     * @param data calendar data.
+     * @return true on success, false on fail.
+     */
+    bool parseJournalsData(const TQString& data);
+
+    /**
      * Initiates calendar writing process.
-     * @param url URL to save calendar data to.
+     * @param url URL to save event data to.
+     * @param tasksUrl URL to save task data to.
+     * @param journalsUrl URL to save journal data to.
      * @return true if write was queued successfully, false if not
      */
-    bool startWriting(const TQString& url, const TQString& tasksUrl);
+    bool startWriting(const TQString& url, const TQString& tasksUrl, const TQString& journalsUrl);
 
     /**
      * Returns a list of incidences as a valid iCalendar string.

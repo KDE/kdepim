@@ -23,6 +23,7 @@
 */
 
 #include "incidencechanger.h"
+#include "koglobals.h"
 #include "koprefs.h"
 #include "kogroupware.h"
 #include "mailscheduler.h"
@@ -33,24 +34,36 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 
-
-
-bool IncidenceChanger::beginChange( Incidence * incidence )
+bool IncidenceChanger::beginChange( Incidence *incidence,
+                                    ResourceCalendar *res, const TQString &subRes )
 {
-  if ( !incidence ) return false;
-kdDebug(5850)<<"IncidenceChanger::beginChange for incidence \""<<incidence->summary()<<"\""<<endl;
-  return mCalendar->beginChange( incidence );
+  if ( !incidence ) {
+    return false;
+  }
+
+  kdDebug(5850) << "IncidenceChanger::beginChange for incidence \""
+                << incidence->summary() << "\"" << endl;
+
+  CalendarResources *calRes = dynamic_cast<CalendarResources*>( mCalendar );
+  if ( !calRes ) {
+    return false;
+  }
+
+  return calRes->beginChange( incidence, res, subRes );
 }
 
-bool IncidenceChanger::sendGroupwareMessage( Incidence *incidence, KCal::Scheduler::Method method, bool deleting )
+bool IncidenceChanger::sendGroupwareMessage( Incidence *incidence,
+                                             KCal::Scheduler::Method method,
+                                             KOGlobals::HowChanged action,
+                                             TQWidget *parent )
 {
   if ( KOPrefs::instance()->thatIsMe( incidence->organizer().email() ) && incidence->attendeeCount()>0
       && !KOPrefs::instance()->mUseGroupwareCommunication ) {
     emit schedule( method, incidence );
     return true;
   } else if( KOPrefs::instance()->mUseGroupwareCommunication ) {
-  // FIXME: Find a widget to use as parent, instead of 0
-    return KOGroupware::instance()->sendICalMessage( 0, method, incidence, deleting );
+    return
+      KOGroupware::instance()->sendICalMessage( parent, method, incidence, action, false );
   }
   return true;
 }
@@ -66,7 +79,7 @@ void IncidenceChanger::cancelAttendees( Incidence *incidence )
       // them?", which isn't helpful at all in this situation. Afterwards, it
       // would only call the MailScheduler::performTransaction, so do this
       // manually.
-      // FIXME: Groupware schedulling should be factored out to it's own class
+      // FIXME: Groupware scheduling should be factored out to it's own class
       //        anyway
       KCal::MailScheduler scheduler( mCalendar );
       scheduler.performTransaction( incidence, Scheduler::Cancel );
@@ -74,23 +87,36 @@ void IncidenceChanger::cancelAttendees( Incidence *incidence )
   }
 }
 
-bool IncidenceChanger::endChange( Incidence *incidence )
+bool IncidenceChanger::endChange( Incidence *incidence,
+                                  ResourceCalendar *res, const TQString &subRes )
 {
   // FIXME: if that's a groupware incidence, and I'm not the organizer,
   // send out a mail to the organizer with a counterproposal instead
   // of actually changing the incidence. Then no locking is needed.
   // FIXME: if that's a groupware incidence, and the incidence was
   // never locked, we can't unlock it with endChange().
-  if ( !incidence ) return false;
-  // kdDebug(5850)<<"IncidenceChanger::endChange for incidence \""<<incidence->summary()<<"\""<<endl;
-  return mCalendar->endChange( incidence );
+
+  if ( !incidence ) {
+    return false;
+  }
+
+  kdDebug(5850) << "IncidenceChanger::endChange for incidence \""
+                << incidence->summary() << "\"" << endl;
+
+  CalendarResources *calRes = dynamic_cast<CalendarResources*>( mCalendar );
+  if ( !calRes ) {
+    return false;
+  }
+
+  return calRes->endChange( incidence, res, subRes );
 }
 
-bool IncidenceChanger::deleteIncidence( Incidence *incidence )
+bool IncidenceChanger::deleteIncidence( Incidence *incidence, TQWidget *parent )
 {
   if ( !incidence ) return true;
 kdDebug(5850)<<"IncidenceChanger::deleteIncidence for incidence \""<<incidence->summary()<<"\""<<endl;
-  bool doDelete = sendGroupwareMessage( incidence, KCal::Scheduler::Cancel );
+  bool doDelete = sendGroupwareMessage( incidence, KCal::Scheduler::Cancel,
+                                        KOGlobals::INCIDENCEDELETED, parent );
   if( doDelete ) {
     // @TODO: let Calendar::deleteIncidence do the locking...
     Incidence* tmp = incidence->clone();
@@ -113,29 +139,52 @@ kdDebug(5850)<<"IncidenceChanger::deleteIncidence for incidence \""<<incidence->
         }
       }
 
-      if ( notifyOrganizer ) {
+      if ( !KOGroupware::instance()->doNotNotify() && notifyOrganizer ) {
           KCal::MailScheduler scheduler( mCalendar );
           scheduler.performTransaction( tmp, Scheduler::Reply );
       }
+      //reset the doNotNotify flag
+      KOGroupware::instance()->setDoNotNotify( false );
     }
-  }
-  emit incidenceDeleted( incidence );
-  return doDelete;
-}
-
-bool IncidenceChanger::cutIncidence( Incidence *incidence )
-{
-  if ( !incidence ) return true;
-kdDebug(5850)<<"IncidenceChanger::deleteIncidence for incidence \""<<incidence->summary()<<"\""<<endl;
-  bool doDelete = sendGroupwareMessage( incidence, KCal::Scheduler::Cancel );
-  if( doDelete ) {
-    // @TODO: the factory needs to do the locking!
-    DndFactory factory( mCalendar );
-    emit incidenceToBeDeleted( incidence );
-    factory.cutIncidence( incidence );
     emit incidenceDeleted( incidence );
   }
   return doDelete;
+}
+
+bool IncidenceChanger::cutIncidences( const Incidence::List &incidences,
+                                      TQWidget *parent )
+{
+  Incidence::List::ConstIterator it;
+  bool doDelete = true;
+  Incidence::List incsToCut;
+  for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
+    if ( *it ) {
+      doDelete = sendGroupwareMessage( *it, KCal::Scheduler::Cancel,
+                                       KOGlobals::INCIDENCEDELETED, parent );
+      if ( doDelete ) {
+        emit incidenceToBeDeleted( *it );
+        incsToCut.append( *it );
+      }
+    }
+  }
+
+  DndFactory factory( mCalendar );
+
+  if ( factory.cutIncidences( incsToCut ) ) {
+    for ( it = incsToCut.constBegin(); it != incsToCut.constEnd(); ++it ) {
+      emit incidenceDeleted( *it );
+    }
+    return !incsToCut.isEmpty();
+  } else {
+    return false;
+  }
+}
+
+bool IncidenceChanger::cutIncidence( Incidence *incidence, TQWidget *parent )
+{
+  Incidence::List incidences;
+  incidences.append( incidence );
+  return cutIncidences( incidences, parent );
 }
 
 class IncidenceChanger::ComparisonVisitor : public IncidenceBase::Visitor
@@ -277,37 +326,35 @@ bool IncidenceChanger::myAttendeeStatusChanged( Incidence *oldInc, Incidence *ne
 }
 
 bool IncidenceChanger::changeIncidence( Incidence *oldinc, Incidence *newinc,
-                                        int action )
+                                        KOGlobals::WhatChanged action,
+                                        TQWidget *parent )
 {
 kdDebug(5850)<<"IncidenceChanger::changeIncidence for incidence \""<<newinc->summary()<<"\" ( old one was \""<<oldinc->summary()<<"\")"<<endl;
-  if( incidencesEqual( newinc, oldinc ) ) {
+  if ( incidencesEqual( newinc, oldinc ) ) {
     // Don't do anything
     kdDebug(5850) << "Incidence not changed\n";
   } else {
     kdDebug(5850) << "Incidence changed\n";
-    bool statusChanged = myAttendeeStatusChanged( oldinc, newinc );
+    bool attendeeStatusChanged = myAttendeeStatusChanged( oldinc, newinc );
     int revision = newinc->revision();
     newinc->setRevision( revision + 1 );
     // FIXME: Use a generic method for this! Ideally, have an interface class
     //        for group scheduling. Each implementation could then just do what
     //        it wants with the event. If no groupware is used,use the null
     //        pattern...
-    bool revert = KOPrefs::instance()->mUseGroupwareCommunication;
-    if ( revert &&
-        KOGroupware::instance()->sendICalMessage( 0,
-                                                  KCal::Scheduler::Request,
-                                                  newinc, false, statusChanged ) ) {
+    bool success = true;
+    if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
+      success = KOGroupware::instance()->sendICalMessage(
+        parent,
+        KCal::Scheduler::Request,
+        newinc, KOGlobals::INCIDENCEEDITED, attendeeStatusChanged );
+    }
+
+    if ( success ) {
       // Accept the event changes
-      revert = false;
-    }
-
-    if ( action<0 ) {
-      emit incidenceChanged( oldinc, newinc );
-    } else {
       emit incidenceChanged( oldinc, newinc, action );
-    }
-
-    if ( revert ) {
+    } else {
+      // revert changes
       assignIncidence( newinc, oldinc );
       return false;
     }
@@ -315,41 +362,97 @@ kdDebug(5850)<<"IncidenceChanger::changeIncidence for incidence \""<<newinc->sum
   return true;
 }
 
-bool IncidenceChanger::addIncidence( Incidence *incidence, TQWidget *parent )
+bool IncidenceChanger::addIncidence( Incidence *incidence,
+                                     ResourceCalendar *res, const TQString &subRes,
+                                     TQWidget *parent )
 {
-kdDebug(5850)<<"IncidenceChanger::addIncidence for incidence \""<<incidence->summary()<<"\""<<endl;
-  if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
-    if ( !KOGroupware::instance()->sendICalMessage( parent,
-                                                    KCal::Scheduler::Request,
-                                                    incidence ) ) {
-      kdError() << "sendIcalMessage failed." << endl;
-    }
+  CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
+  if( stdcal && !stdcal->hasCalendarResources() ) {
+    KMessageBox::sorry(
+      parent,
+      i18n( "No calendars found, unable to save %1 \"%2\"." ).
+      arg( i18n( incidence->type() ) ).
+      arg( incidence->summary() ) );
+    kdDebug(5850) << "IncidenceChanger: No calendars found" << endl;
+    return false;
   }
+
   // FIXME: This is a nasty hack, since we need to set a parent for the
   //        resource selection dialog. However, we don't have any UI methods
   //        in the calendar, only in the CalendarResources::DestinationPolicy
   //        So we need to type-cast it and extract it from the CalendarResources
-  CalendarResources *stdcal = dynamic_cast<CalendarResources*>(mCalendar);
   TQWidget *tmpparent = 0;
   if ( stdcal ) {
     tmpparent = stdcal->dialogParentWidget();
     stdcal->setDialogParentWidget( parent );
   }
-  bool success = mCalendar->addIncidence( incidence );
-  if ( stdcal ) {
-    // Reset the parent widget, otherwise we'll end up with pointers to deleted
-    // widgets sooner or later
-    stdcal->setDialogParentWidget( tmpparent );
+
+  // If a ResourceCalendar isn't provided, then try to compute one
+  // along with any subResource from the incidence.
+  ResourceCalendar *pRes = res;
+  TQString pSubRes = subRes;
+  TQString pResName;
+  if ( !pRes ) {
+    if ( stdcal ) {
+      pRes = stdcal->resource( incidence );
+      if ( pRes ) {
+        pResName = pRes->resourceName();
+        if ( pRes->canHaveSubresources() ) {
+          pSubRes = pRes->subresourceIdentifier( incidence );
+          pResName = pRes->labelForSubresource( pSubRes );
+        }
+      }
+    }
   }
+
+  bool success = false;
+  if ( stdcal && pRes && !pRes->readOnly() && pRes->subresourceWritable( pSubRes ) ) {
+    success = stdcal->addIncidence( incidence, pRes, pSubRes );
+  } else {
+    success = mCalendar->addIncidence( incidence );
+  }
+
   if ( !success ) {
-    KMessageBox::sorry( parent, i18n("Unable to save %1 \"%2\".")
-                        .arg( i18n( incidence->type() ) )
-                        .arg( incidence->summary() ) );
+    // We can have a failure if the user pressed [cancel] in the resource
+    // selectdialog, so check the exception.
+    ErrorFormat *e = stdcal ? stdcal->exception() : 0;
+    if ( !e ||
+         ( e && ( e->errorCode() != KCal::ErrorFormat::UserCancel &&
+                  e->errorCode() != KCal::ErrorFormat::NoWritableFound ) ) ) {
+      TQString errMessage;
+      if ( pResName.isEmpty() ) {
+        errMessage = i18n( "Unable to save %1 \"%2\"." ).
+                     arg( i18n( incidence->type() ) ).
+                     arg( incidence->summary() );
+      } else {
+        errMessage = i18n( "Unable to save %1 \"%2\" to calendar %3." ).
+                     arg( i18n( incidence->type() ) ).
+                     arg( incidence->summary() ).
+                     arg( pResName );
+      }
+      KMessageBox::sorry( parent, errMessage );
+    }
+    kdDebug(5850) << "IncidenceChanger: Can't add incidence" << endl;
     return false;
   }
+
+  if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
+    if ( !KOGroupware::instance()->sendICalMessage(
+           parent,
+           KCal::Scheduler::Request,
+           incidence, KOGlobals::INCIDENCEADDED, false ) ) {
+      KMessageBox::sorry(
+        parent,
+        i18n( "Attempt to send the scheduling message failed. "
+              "Please check your Group Scheduling settings. "
+              "Contact your system administrator for more help.") );
+    }
+  }
+
   emit incidenceAdded( incidence );
   return true;
 }
+
 
 #include "incidencechanger.moc"
 #include "incidencechangerbase.moc"

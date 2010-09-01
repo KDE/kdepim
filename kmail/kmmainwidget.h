@@ -201,7 +201,12 @@ public slots:
   /** Select the folder and jump to the next unread msg */
   void folderSelectedUnread( KMFolder* );
 
-  void slotMsgSelected(KMMessage*);
+  void slotMsgSelected( KMMessage * );
+  /**
+    Open a separate viewer window containing the specified message.
+  */
+  void slotMsgActivated( KMMessage * );
+
   void slotMsgChanged();
 
   /** Change the current folder, select a message in the current folder */
@@ -283,6 +288,7 @@ protected slots:
   void slotExpireAll();
   void slotInvalidateIMAPFolders();
   void slotMarkAllAsRead();
+  void slotArchiveFolder();
   void slotRemoveFolder();
   void slotEmptyFolder();
   void slotCompactFolder();
@@ -360,7 +366,6 @@ protected slots:
 
   /** etc. */
   void slotDisplayCurrentMessage();
-  void slotMsgActivated( KMMessage* );
 
   void slotShowNewFromTemplate();
   void slotNewFromTemplate( int );
@@ -377,6 +382,9 @@ protected slots:
   /** Enable or disable the "mark all as read" action. Needs to happen more
    * often the the other updates and is therefor in its own method. */
   void updateMarkAsReadAction();
+
+  /** Settings menu */
+  void slotToggleShowQuickSearch();
 
   /** XML-GUI stuff */
   void slotEditNotifications();
@@ -427,6 +435,13 @@ private:
    */
   TQString findCurrentImapPath();
 
+  /**
+   * This function adds or updates the actions of the forward action menu, taking the
+   * preference whether to forward inline or as attachment by default into account.
+   * This has to be called when that preference config has been changed.
+   */
+  void setupForwardActions();
+
   void setupFolderView();
 
 private slots:
@@ -439,7 +454,8 @@ private:
     *mDeleteThreadAction, *mSaveAsAction, *mUseAction,
     *mSendAgainAction, *mApplyAllFiltersAction, *mFindInMessageAction,
     *mSaveAttachmentsAction, *mOpenAction, *mViewSourceAction,
-    *mFavoritesCheckMailAction;
+    *mFavoritesCheckMailAction,
+    *mMoveMsgToFolderAction;
   // Composition actions
   KAction *mPrintAction,
     *mForwardInlineAction, *mForwardAttachedAction, *mForwardDigestAction,
@@ -476,8 +492,8 @@ private:
   KToggleAction* mTotalColumnToggle;
   KToggleAction* mSizeColumnToggle;
 
-  TQVBox        *mSearchAndTree;
-  TQHBox        *mFolderQuickSearch;
+  KToggleAction *mToggleShowQuickSearchAction;
+
   KMFolderTree *mFolderTree;
   KMail::FavoriteFolderView *mFavoriteFolderView;
   TQWidget      *mFolderView;
@@ -513,8 +529,6 @@ private:
        mFolderHtmlPref, mFolderHtmlLoadExtPref, mFolderThreadPref,
        mFolderThreadSubjPref, mReaderWindowActive, mReaderWindowBelow;
   bool mEnableFavoriteFolderView;
-  bool mEnableFolderQuickSearch;
-  bool mEnableQuickSearch;
 
 //  TQPopupMenu *mMessageMenu;
   KMail::SearchWindow *mSearchWin;
@@ -523,7 +537,7 @@ private:
       *mCompactFolderAction, *mRefreshFolderAction, *mEmptyFolderAction,
       *mMarkAllAsReadAction, *mFolderMailingListPropertiesAction,
       *mFolderShortCutCommandAction, *mTroubleshootFolderAction,
-      *mRemoveDuplicatesAction;
+      *mRemoveDuplicatesAction, *mArchiveFolderAction;
   KToggleAction *mPreferHtmlAction, *mPreferHtmlLoadExtAction, *mThreadMessagesAction;
   KToggleAction *mThreadBySubjectAction;
   KToggleAction *mFolderAction, *mHeaderAction, *mMimeAction;

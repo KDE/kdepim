@@ -34,6 +34,8 @@
 #include <tqwidgetstack.h>
 #include <tqregexp.h>
 #include <tqvbox.h>
+#include <tqtooltip.h>
+#include <tqwhatsthis.h>
 
 #include <kabc/addresseelist.h>
 #include <kabc/errorhandler.h>
@@ -277,7 +279,23 @@ KABC::Resource *KABCore::requestResource( TQWidget *parent )
   KABC::Resource *resource;
   while ( ( resource = resIt.current() ) != 0 ) {
     ++resIt;
-    if ( !resource->readOnly() ) {
+    bool writable = false;
+    if ( resource->inherits( "KPIM::ResourceABC" ) ) {
+      KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( resource );
+      const TQStringList subresources = resAbc->subresources();
+      for ( TQStringList::ConstIterator it = subresources.begin(); it != subresources.end(); ++it ) {
+        if ( resAbc->subresourceActive(*it) && resAbc->subresourceWritable(*it) ) {
+          writable = true;
+          break;
+        }
+      }
+    } else {
+      if ( !resource->readOnly() ) {
+        writable = true;
+      }
+    }
+
+    if ( writable ) {
       KRES::Resource *res = resource; // downcast
       kresResources.append( res );
     }
@@ -401,7 +419,7 @@ void KABCore::setContactSelected( const TQString &uid )
   mActionDelete->setEnabled( someSelected && writable );
   // the "edit" dialog doubles as the details dialog and it knows when the addressee is read-only
   // (### this does not make much sense from the user perspective!)
-  mActionEditAddressee->setEnabled( singleSelected );
+  mActionEditAddressee->setEnabled( singleSelected && !mExtensionManager->isQuickEditVisible());
   mActionCopyAddresseeTo->setEnabled( someSelected && moreThanOneResource );
   mActionMoveAddresseeTo->setEnabled( someSelected && moreThanOneResource && writable );
   mActionMail->setEnabled( someSelected );
@@ -413,9 +431,18 @@ void KABCore::setContactSelected( const TQString &uid )
 
   if ( mReadWrite ) {
     QClipboard *cb = TQApplication::clipboard();
+#if defined(KABC_VCARD_ENCODING_FIX)
+    const TQMimeSource *data = cb->data( QClipboard::Clipboard );
+    list = AddresseeUtil::clipboardToAddressees( data->encodedData( "text/x-vcard" ) );
+#else
     list = AddresseeUtil::clipboardToAddressees( cb->text() );
+#endif
     mActionPaste->setEnabled( !list.isEmpty() );
   }
+#ifdef KDEPIM_NEW_DISTRLISTS
+  mAddDistListButton->setEnabled( writable );
+  mRemoveDistListButton->setEnabled( someSelected && writable );
+#endif
 }
 
 void KABCore::sendMail()
@@ -495,10 +522,20 @@ void KABCore::deleteContacts( const TQStringList &uids )
       ++it;
     }
 
-    if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this contact?",
-                                                 "Do you really want to delete these %n contacts?", uids.count() ),
-                                                 names, TQString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
+    if ( KMessageBox::warningContinueCancelList(
+           mWidget,
+           i18n( "<qt>"
+                 "Do you really want to delete this contact from your addressbook?<br>"
+                 "<b>Note:</b>The contact will be also removed from all distribution lists."
+                 "</qt>",
+                 "<qt>"
+                 "Do you really want to delete these %n contacts from your addressbook?<br>"
+                 "<b>Note:</b>The contacts will be also removed from all distribution lists."
+                 "</qt>",
+                 uids.count() ),
+           names, TQString::null, KStdGuiItem::del() ) == KMessageBox::Cancel ) {
       return;
+    }
 
     DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
     mCommandHistory->addCommand( command );
@@ -513,12 +550,15 @@ void KABCore::copyContacts()
 {
   KABC::Addressee::List addrList = mViewManager->selectedAddressees();
 
+#if defined(KABC_VCARD_ENCODING_FIX)
+  TQByteArray clipText = AddresseeUtil::addresseesToClipboard( addrList );
+  QClipboard *cb = TQApplication::clipboard();
+  cb->setText( TQString::fromUtf8( clipText.data() ) );
+#else
   TQString clipText = AddresseeUtil::addresseesToClipboard( addrList );
-
-  kdDebug(5720) << "KABCore::copyContacts: " << clipText << endl;
-
   QClipboard *cb = TQApplication::clipboard();
   cb->setText( clipText );
+#endif
 }
 
 void KABCore::cutContacts()
@@ -536,9 +576,12 @@ void KABCore::cutContacts()
 void KABCore::pasteContacts()
 {
   QClipboard *cb = TQApplication::clipboard();
-
+#if defined(KABC_VCARD_ENCODING_FIX)
+  const TQMimeSource *data = cb->data( QClipboard::Clipboard );
+  KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( data->encodedData( "text/x-vcard" ) );
+#else
   KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( cb->text() );
-
+#endif
   pasteContacts( list );
 }
 
@@ -667,6 +710,10 @@ void KABCore::contactModified( const KABC::Addressee &addr )
 void KABCore::newDistributionList()
 {
 #ifdef KDEPIM_NEW_DISTRLISTS
+  KABC::Resource *resource = requestResource( mWidget );
+  if ( !resource )
+    return;
+
   TQString name = i18n( "New Distribution List" );
   const KPIM::DistributionList distList = KPIM::DistributionList::findByName( addressBook(), name );
   if ( !distList.isEmpty() ) {
@@ -680,6 +727,7 @@ void KABCore::newDistributionList()
   KPIM::DistributionList list;
   list.setUid( KApplication::randomString( 10 ) );
   list.setName( name );
+  list.setResource( resource );
   editDistributionList( list );
 #endif
 }
@@ -827,27 +875,14 @@ void KABCore::storeContactIn( const TQString &uid, bool copy /*false*/ )
   if ( !resource )
     return;
 
-  KABLock::self( mAddressBook )->lock( resource );
-  TQStringList::Iterator it( uidList.begin() );
-  const TQStringList::Iterator endIt( uidList.end() );
-  while ( it != endIt ) {
-    KABC::Addressee addr = mAddressBook->findByUid( *it++ );
-    if ( !addr.isEmpty() ) {
-      KABC::Addressee newAddr( addr );
-      // We need to set a new uid, otherwise the insert below is
-      // ignored. This is bad for syncing, but unavoidable, afaiks
-      newAddr.setUid( KApplication::randomString( 10 ) );
-      newAddr.setResource( resource );
-      addressBook()->insertAddressee( newAddr );
-      const bool inserted = addressBook()->find( newAddr ) != addressBook()->end();
-      if ( !copy && inserted ) {
-          KABLock::self( mAddressBook )->lock( addr.resource() );
-          addressBook()->removeAddressee( addr );
-          KABLock::self( mAddressBook )->unlock( addr.resource() );
-      }
-    }
+  if ( copy ) {
+    CopyToCommand *command = new CopyToCommand( mAddressBook, uidList, resource );
+    mCommandHistory->addCommand( command );
   }
-  KABLock::self( mAddressBook )->unlock( resource );
+  else {
+    MoveToCommand *command = new MoveToCommand( this, uidList, resource );
+    mCommandHistory->addCommand( command );
+  }
 
   addressBookChanged();
   setModified( true );
@@ -1201,19 +1236,30 @@ void KABCore::initGUI()
   buttonLayout->setSpacing( KDialog::spacingHint() );
   buttonLayout->addStretch( 1 );
 
-  KPushButton *addDistListButton = new KPushButton( mDistListButtonWidget );
-  addDistListButton->setText( i18n( "Add" ) );
-  connect( addDistListButton, TQT_SIGNAL( clicked() ),
+  mAddDistListButton = new KPushButton( mDistListButtonWidget );
+  mAddDistListButton->setEnabled( false );
+  mAddDistListButton->setText( i18n( "Add" ) );
+  TQToolTip::add( mAddDistListButton, i18n( "Add contacts to the distribution list" ) );
+  TQWhatsThis::add( mAddDistListButton,
+                   i18n( "Click this button if you want to add more contacts to "
+                         "the current distribution list. You will be shown a dialog that allows "
+                         "to enter a list of existing contacts to this distribution list." ) );
+  connect( mAddDistListButton, TQT_SIGNAL( clicked() ),
            this, TQT_SLOT( editSelectedDistributionList() ) );
-  buttonLayout->addWidget( addDistListButton );
+  buttonLayout->addWidget( mAddDistListButton );
   mDistListButtonWidget->setShown( false );
   viewLayout->addWidget( mDistListButtonWidget );
 
-  KPushButton *removeDistListButton = new KPushButton( mDistListButtonWidget );
-  removeDistListButton->setText( i18n( "Remove" ) );
-  connect( removeDistListButton, TQT_SIGNAL( clicked() ),
+  mRemoveDistListButton = new KPushButton( mDistListButtonWidget );
+  mRemoveDistListButton->setEnabled( false );
+  mRemoveDistListButton->setText( i18n( "Remove" ) );
+  TQToolTip::add( mRemoveDistListButton, i18n( "Remove contacts from the distribution list" ) );
+  TQWhatsThis::add( mRemoveDistListButton,
+                   i18n( "Click this button if you want to remove the selected contacts from "
+                         "the current distribution list." ) );
+  connect( mRemoveDistListButton, TQT_SIGNAL( clicked() ),
            this, TQT_SLOT( removeSelectedContactsFromDistList() ) );
-  buttonLayout->addWidget( removeDistListButton );
+  buttonLayout->addWidget( mRemoveDistListButton );
 #endif
 
   mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
@@ -1566,8 +1612,42 @@ void KABCore::removeSelectedContactsFromDistList()
   const TQStringList uids = selectedUIDs();
   if ( uids.isEmpty() )
       return;
-  for ( TQStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
-      dist.removeEntry ( *it );
+
+  TQStringList names;
+  TQStringList::ConstIterator it = uids.begin();
+  const TQStringList::ConstIterator endIt( uids.end() );
+  while ( it != endIt ) {
+    KABC::Addressee addr = mAddressBook->findByUid( *it );
+    names.append( addr.realName().isEmpty() ? addr.preferredEmail() : addr.realName() );
+    ++it;
+  }
+
+  if ( KMessageBox::warningContinueCancelList(
+         mWidget,
+         i18n( "<qt>"
+               "Do you really want to remove this contact from the %1 distribution list?<br>"
+               "<b>Note:</b>The contact will be not be removed from your addressbook nor from "
+               "any other distribution list."
+               "</qt>",
+               "<qt>"
+               "Do you really want to remove these %n contacts from the %1 distribution list?<br>"
+               "<b>Note:</b>The contacts will be not be removed from your addressbook nor from "
+               "any other distribution list."
+               "</qt>",
+               uids.count() ).arg( mSelectedDistributionList ),
+         names, TQString::null, KStdGuiItem::del() ) == KMessageBox::Cancel ) {
+    return;
+  }
+
+  for ( TQStringList::ConstIterator uidIt = uids.begin(); uidIt != uids.end(); ++uidIt ) {
+    typedef KPIM::DistributionList::Entry::List EntryList;
+    const EntryList entries = dist.entries( addressBook() );
+    for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
+      if ( (*it).addressee.uid() == (*uidIt) ) {
+        dist.removeEntry( (*it).addressee, (*it).email );
+        break;
+      }
+    }
   }
   addressBook()->insertAddressee( dist );
   setModified();
@@ -1631,7 +1711,6 @@ void KABCore::editDistributionList( const KPIM::DistributionList &dist )
   if ( dlg->exec() == TQDialog::Accepted && dlg ) {
     const KPIM::DistributionList newDist = dlg->distributionList();
     if ( newDist != dist ) {
-      addressBook()->insertAddressee( newDist );
       setModified();
     }
   }
@@ -1648,15 +1727,21 @@ void KABCore::setSelectedDistributionList( const TQString &name )
 {
   mSelectedDistributionList = name;
   mSearchManager->setSelectedDistributionList( name );
-  mViewHeaderLabel->setText( name.isNull() ? i18n( "Contacts" ) : i18n( "Distribution List: %1" ).arg( name ) );
+  mViewHeaderLabel->setText( name.isNull() ?
+                             i18n( "Contacts" ) :
+                             i18n( "Distribution List: %1" ).arg( name ) );
   mDistListButtonWidget->setShown( !mSelectedDistributionList.isNull() );
   if ( !name.isNull() ) {
     mDetailsStack->raiseWidget( mDistListEntryView );
+    if ( selectedUIDs().isEmpty() ) {
+      mViewManager->setFirstSelected( true );
+    }
     const TQStringList selectedUids = selectedUIDs();
     showDistributionListEntry( selectedUids.isEmpty() ? TQString() : selectedUids.first() );
+  } else {
+    mDetailsStack->raiseWidget( mExtensionManager->activeDetailsWidget() ?
+                                mExtensionManager->activeDetailsWidget() : mDetailsWidget );
   }
-  else
-    mDetailsStack->raiseWidget( mExtensionManager->activeDetailsWidget() ? mExtensionManager->activeDetailsWidget() : mDetailsWidget );
 }
 
 TQStringList KABCore::distributionListNames() const

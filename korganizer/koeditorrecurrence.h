@@ -297,6 +297,9 @@ class KOEditorRecurrence : public QWidget
 
     bool doesRecur();
 
+    void saveValues();
+    void restoreValues();
+
   public slots:
     void setRecurrenceEnabled( bool );
     void setDateTimes( const TQDateTime &start, const TQDateTime &end );
@@ -311,6 +314,7 @@ class KOEditorRecurrence : public QWidget
     void showRecurrenceRangeDialog();
 
   private:
+    Recurrence mSaveRec;
     TQCheckBox *mEnabledCheck;
 
     TQGroupBox *mTimeGroupBox;
@@ -345,8 +349,13 @@ class KOEditorRecurrenceDialog : public KDialogBase
     KOEditorRecurrenceDialog( TQWidget *parent );
     KOEditorRecurrence* editor() const { return mRecurrence; }
 
+  protected slots:
+    void slotOk();
+    void slotCancel();
+
   private:
     KOEditorRecurrence *mRecurrence;
+    bool mRecurEnabled;
 };
 
 #endif

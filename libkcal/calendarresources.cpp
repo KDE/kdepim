@@ -55,6 +55,35 @@
 
 using namespace KCal;
 
+
+class CalendarResources::Private {
+  public:
+
+  Private() : mLastUsedResource( 0 ), mBatchAddingInProgress( false )
+  {
+  }
+
+  ResourceCalendar *mLastUsedResource;
+  bool mBatchAddingInProgress;
+};
+
+bool CalendarResources::DestinationPolicy::hasCalendarResources(  )
+{
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = resourceManager()->activeBegin();
+        it != resourceManager()->activeEnd(); ++it ) {
+    if ( !(*it)->readOnly() ) {
+      //Insert the first the Standard resource to get be the default selected.
+      if ( resourceManager()->standardResource() == *it ) {
+        return true;
+      } else {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 ResourceCalendar
 *CalendarResources::StandardDestinationPolicy::destination( Incidence * )
 {
@@ -85,7 +114,7 @@ ResourceCalendar
 
 CalendarResources::CalendarResources( const TQString &timeZoneId,
                                       const TQString &family )
-  : Calendar( timeZoneId )
+  : Calendar( timeZoneId ), d( new Private() )
 {
   init( family );
 }
@@ -100,6 +129,10 @@ void CalendarResources::init( const TQString &family )
   mStandardPolicy = new StandardDestinationPolicy( mManager );
   mAskPolicy = new AskDestinationPolicy( mManager );
   mDestinationPolicy = mStandardPolicy;
+  mPendingDeleteFromResourceMap = false;
+
+  connect( this, TQT_SIGNAL(batchAddingBegins()), this, TQT_SLOT(beginAddingIncidences()) );
+  connect( this, TQT_SIGNAL(batchAddingEnds()), this, TQT_SLOT(endAddingIncidences()) );
 }
 
 CalendarResources::~CalendarResources()
@@ -158,6 +191,7 @@ void CalendarResources::load()
   }
 
   mOpen = true;
+  emit calendarLoaded();
 }
 
 bool CalendarResources::reload( const TQString &tz )
@@ -276,7 +310,8 @@ bool CalendarResources::isSaving()
 }
 
 bool CalendarResources::addIncidence( Incidence *incidence,
-                                      ResourceCalendar *resource )
+                                      ResourceCalendar *resource,
+                                      const TQString &subresource )
 {
   // FIXME: Use proper locking via begin/endChange!
   bool validRes = false;
@@ -285,52 +320,90 @@ bool CalendarResources::addIncidence( Incidence *incidence,
     if ( (*it) == resource )
       validRes = true;
   }
+
+  kdDebug(5800)<< "CalendarResources: validRes is " << validRes << endl;
+
   ResourceCalendar *oldResource = 0;
   if ( mResourceMap.contains( incidence ) ) {
     oldResource = mResourceMap[incidence];
   }
   mResourceMap[incidence] = resource;
-  if ( validRes && beginChange( incidence ) &&
-       resource->addIncidence( incidence ) ) {
-//    mResourceMap[incidence] = resource;
+  if ( validRes && beginChange( incidence, resource, subresource ) &&
+       resource->addIncidence( incidence, subresource ) ) {
+    // mResourceMap[incidence] = resource;
     incidence->registerObserver( this );
     notifyIncidenceAdded( incidence );
     setModified( true );
-    endChange( incidence );
+    endChange( incidence, resource, subresource );
     return true;
   } else {
-    if ( oldResource )
+    if ( oldResource ) {
       mResourceMap[incidence] = oldResource;
-    else
+    } else {
       mResourceMap.remove( incidence );
+    }
   }
 
   return false;
 }
 
+bool CalendarResources::addIncidence( Incidence *incidence,
+                                      ResourceCalendar *resource )
+{
+  return addIncidence( incidence, resource, TQString() );
+}
+
 bool CalendarResources::addIncidence( Incidence *incidence )
 {
-  kdDebug(5800) << "CalendarResources::addIncidence" << this << endl;
+  kdDebug(5800) << "CalendarResources::addIncidence "
+                << incidence->summary()
+                << "; addingInProgress = " << d->mBatchAddingInProgress
+                << "; lastUsedResource = " << d->mLastUsedResource
+                << endl;
 
-  ResourceCalendar *resource = mDestinationPolicy->destination( incidence );
+  clearException();
+
+  ResourceCalendar *resource = d->mLastUsedResource;
+
+  if ( !d->mBatchAddingInProgress || d->mLastUsedResource == 0 ) {
+    resource = mDestinationPolicy->destination( incidence );
+    d->mLastUsedResource = resource;
+
+    if ( resource && d->mBatchAddingInProgress ) {
+      d->mLastUsedResource->beginAddingIncidences();
+    }
+  }
 
   if ( resource ) {
-    mResourceMap[ incidence ] = resource;
+    kdDebug(5800) << "CalendarResources:: resource= "
+                  << resource->resourceName()
+                  << " with id = " << resource->identifier()
+                  << " with type = " << resource->type()
+                  << endl;
+    mResourceMap[incidence] = resource;
 
-    if ( beginChange( incidence ) && resource->addIncidence( incidence ) ) {
+    if ( beginChange( incidence, resource, TQString() ) &&
+         resource->addIncidence( incidence ) ) {
       incidence->registerObserver( this );
       notifyIncidenceAdded( incidence );
 
-
       mResourceMap[ incidence ] = resource;
       setModified( true );
-      endChange( incidence );
+      endChange( incidence, resource, TQString() );
       return true;
     } else {
+      if ( resource->exception() ) {
+        setException( new ErrorFormat( resource->exception()->errorCode() ) );
+      }
+
+      // the incidence isn't going to be added, do cleanup:
       mResourceMap.remove( incidence );
+      d->mLastUsedResource->endAddingIncidences();
+      d->mLastUsedResource = 0;
     }
-  } else
-    kdDebug(5800) << "CalendarResources::addIncidence(): no resource" << endl;
+  } else {
+    setException( new ErrorFormat( ErrorFormat::UserCancel ) );
+  }
 
   return false;
 }
@@ -343,7 +416,13 @@ bool CalendarResources::addEvent( Event *event )
 
 bool CalendarResources::addEvent( Event *Event, ResourceCalendar *resource )
 {
-  return addIncidence( Event, resource );
+  return addIncidence( Event, resource, TQString() );
+}
+
+bool CalendarResources::addEvent( Event *Event, ResourceCalendar *resource,
+                                  const TQString &subresource )
+{
+  return addIncidence( Event, resource, subresource );
 }
 
 bool CalendarResources::deleteEvent( Event *event )
@@ -354,13 +433,17 @@ bool CalendarResources::deleteEvent( Event *event )
   if ( mResourceMap.find( event ) != mResourceMap.end() ) {
     status = mResourceMap[event]->deleteEvent( event );
     if ( status )
-      mResourceMap.remove( event );
+      mPendingDeleteFromResourceMap = true;
   } else {
     status = false;
     CalendarResourceManager::ActiveIterator it;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
       status = (*it)->deleteEvent( event ) || status;
     }
+  }
+
+  if ( status ) {
+    notifyIncidenceDeleted( event );
   }
 
   setModified( status );
@@ -390,7 +473,13 @@ bool CalendarResources::addTodo( Todo *todo )
 
 bool CalendarResources::addTodo( Todo *todo, ResourceCalendar *resource )
 {
-  return addIncidence( todo, resource );
+  return addIncidence( todo, resource, TQString() );
+}
+
+bool CalendarResources::addTodo( Todo *todo, ResourceCalendar *resource,
+                                 const TQString &subresource )
+{
+  return addIncidence( todo, resource, subresource );
 }
 
 bool CalendarResources::deleteTodo( Todo *todo )
@@ -401,7 +490,7 @@ bool CalendarResources::deleteTodo( Todo *todo )
   if ( mResourceMap.find( todo ) != mResourceMap.end() ) {
     status = mResourceMap[todo]->deleteTodo( todo );
     if ( status )
-      mResourceMap.remove( todo );
+      mPendingDeleteFromResourceMap = true;
   } else {
     CalendarResourceManager::ActiveIterator it;
     status = false;
@@ -494,6 +583,11 @@ Alarm::List CalendarResources::alarms( const TQDateTime &from,
   return result;
 }
 
+bool CalendarResources::hasCalendarResources()
+{
+  return mDestinationPolicy->hasCalendarResources();
+}
+
 /****************************** PROTECTED METHODS ****************************/
 
 Event::List CalendarResources::rawEventsForDate( const TQDate &date,
@@ -510,7 +604,7 @@ Event::List CalendarResources::rawEventsForDate( const TQDate &date,
       mResourceMap[ *it2 ] = *it;
     }
   }
-  return sortEvents( &result, sortField, sortDirection );
+  return sortEventsForDate( &result, date, sortField, sortDirection );
 }
 
 Event::List CalendarResources::rawEvents( const TQDate &start, const TQDate &end,
@@ -574,6 +668,19 @@ bool CalendarResources::addJournal( Journal *journal )
   return addIncidence( journal );
 }
 
+bool CalendarResources::addJournal( Journal *journal, ResourceCalendar *resource )
+{
+  return addIncidence( journal, resource, TQString() );
+}
+
+
+bool CalendarResources::addJournal( Journal *journal, ResourceCalendar *resource,
+                                    const TQString &subresource )
+{
+  return addIncidence( journal, resource, subresource );
+}
+
+
 bool CalendarResources::deleteJournal( Journal *journal )
 {
   kdDebug(5800) << "CalendarResources::deleteJournal" << endl;
@@ -582,7 +689,7 @@ bool CalendarResources::deleteJournal( Journal *journal )
   if ( mResourceMap.find( journal ) != mResourceMap.end() ) {
     status = mResourceMap[journal]->deleteJournal( journal );
     if ( status )
-      mResourceMap.remove( journal );
+      mPendingDeleteFromResourceMap = true;
   } else {
     CalendarResourceManager::ActiveIterator it;
     status = false;
@@ -593,13 +700,6 @@ bool CalendarResources::deleteJournal( Journal *journal )
 
   setModified( status );
   return status;
-}
-
-bool CalendarResources::addJournal( Journal *journal,
-                                    ResourceCalendar *resource
-  )
-{
-  return addIncidence( journal, resource );
 }
 
 Journal *CalendarResources::journal( const TQString &uid )
@@ -762,28 +862,40 @@ void CalendarResources::releaseSaveTicket( Ticket *ticket )
 
 bool CalendarResources::beginChange( Incidence *incidence )
 {
+  return beginChange( incidence, 0, TQString() );
+}
+
+bool CalendarResources::beginChange( Incidence *incidence,
+                                     ResourceCalendar *res,
+                                     const TQString &subres )
+{
+  Q_UNUSED( subres ); // possible future use
+
   kdDebug(5800) << "CalendarResources::beginChange()" << endl;
 
-  ResourceCalendar *r = resource( incidence );
-  if ( !r ) {
-    r = mDestinationPolicy->destination( incidence );
-    if ( !r ) {
+  if ( !res ) {
+    res = resource( incidence );
+  }
+  if ( !res ) {
+    res = mDestinationPolicy->destination( incidence );
+    if ( !res ) {
       kdError() << "Unable to get destination resource." << endl;
       return false;
     }
-    mResourceMap[ incidence ] = r;
+    mResourceMap[ incidence ] = res;
   }
+  mPendingDeleteFromResourceMap = false;
 
-  int count = incrementChangeCount( r );
+  int count = incrementChangeCount( res );
   if ( count == 1 ) {
-    Ticket *ticket = requestSaveTicket( r );
+    Ticket *ticket = requestSaveTicket( res );
     if ( !ticket ) {
       kdDebug(5800) << "CalendarResources::beginChange(): unable to get ticket."
                     << endl;
-      decrementChangeCount( r );
+      decrementChangeCount( res );
       return false;
     } else {
-      mTickets[ r ] = ticket;
+      mTickets[ res ] = ticket;
     }
   }
 
@@ -792,24 +904,58 @@ bool CalendarResources::beginChange( Incidence *incidence )
 
 bool CalendarResources::endChange( Incidence *incidence )
 {
+  return endChange( incidence, 0, TQString() );
+}
+
+bool CalendarResources::endChange( Incidence *incidence,
+                                   ResourceCalendar *res,
+                                   const TQString &subres )
+{
+  Q_UNUSED( subres ); // possible future use
+
   kdDebug(5800) << "CalendarResource::endChange()" << endl;
 
-  ResourceCalendar *r = resource( incidence );
-  if ( !r )
+  if ( !res ) {
+    res = resource( incidence );
+  }
+  if ( !res )
     return false;
 
-  int count = decrementChangeCount( r );
+  int count = decrementChangeCount( res );
+
+  if ( mPendingDeleteFromResourceMap ) {
+    mResourceMap.remove( incidence );
+    mPendingDeleteFromResourceMap = false;
+  }
 
   if ( count == 0 ) {
-    bool ok = save( mTickets[ r ], incidence );
+    bool ok = save( mTickets[ res ], incidence );
     if ( ok ) {
-      mTickets.remove( r );
+      mTickets.remove( res );
     } else {
       return false;
     }
   }
 
   return true;
+}
+
+void CalendarResources::beginAddingIncidences()
+{
+  kdDebug(5800) << "CalendarResources: beginAddingIncidences() " << endl;
+  d->mBatchAddingInProgress = true;
+}
+
+void CalendarResources::endAddingIncidences()
+{
+  kdDebug(5800) << "CalendarResources: endAddingIncidences() " << endl;
+  d->mBatchAddingInProgress = false;
+
+  if ( d->mLastUsedResource ) {
+    d->mLastUsedResource->endAddingIncidences();
+  }
+
+  d->mLastUsedResource = 0;
 }
 
 int CalendarResources::incrementChangeCount( ResourceCalendar *r )

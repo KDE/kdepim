@@ -78,7 +78,7 @@ namespace KMail {
 
       void slotUser1();
       void slotUser2();
-
+      void slotEmailChanged( const TQString & );
     private:
       TQLabel      *mLabelTo;
       KMLineEdit  *mEditTo;

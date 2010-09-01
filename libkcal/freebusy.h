@@ -47,7 +47,7 @@ class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
     FreeBusy( PeriodList busyPeriods );
 
     ~FreeBusy();
-    
+
     TQCString type() const { return "FreeBusy"; }
 
     virtual TQDateTime dtEnd() const;
@@ -65,7 +65,14 @@ class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
     void sortList();
 
     void merge( FreeBusy *freebusy );
-    
+
+    /**
+      Compare this with @p freebusy for equality.
+
+      @param freebusy is the FreeBusy to compare.
+    */
+    bool operator==( const FreeBusy &freebusy ) const;
+
   private:
     bool accept( Visitor &v ) { return v.visit( this ); }
     //This is used for creating a freebusy object for the current user

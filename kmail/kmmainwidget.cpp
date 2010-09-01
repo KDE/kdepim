@@ -18,15 +18,13 @@
 #include <tqhbox.h>
 #include <tqvbox.h>
 #include <tqpopupmenu.h>
-#include <tqpushbutton.h>
 #include <tqptrlist.h>
+#include <tqsignalmapper.h>
+#include <tqvaluevector.h>
+#include <tqstylesheet.h>
 
 #include <kopenwith.h>
-
 #include <kmessagebox.h>
-#include <klistviewsearchline.h>
-#include <kiconloader.h>
-
 #include <kpopupmenu.h>
 #include <kaccelmanager.h>
 #include <kglobalsettings.h>
@@ -44,8 +42,6 @@
 #include <kaddrbook.h>
 #include <kaccel.h>
 #include <kstringhandler.h>
-
-#include <tqvaluevector.h>
 
 #include "globalsettings.h"
 #include "kcursorsaver.h"
@@ -80,9 +76,6 @@ using KMail::ImapAccountBase;
 #include "vacation.h"
 using KMail::Vacation;
 #include "favoritefolderview.h"
-
-#include <tqsignalmapper.h>
-
 #include "subscriptiondialog.h"
 using KMail::SubscriptionDialog;
 #include "localsubscriptiondialog.h"
@@ -106,6 +99,9 @@ using KMail::HeaderListQuickSearch;
 #include "kmheaders.h"
 #include "mailinglistpropertiesdialog.h"
 #include "templateparser.h"
+#include "archivefolderdialog.h"
+#include "folderutil.h"
+#include "csshelper.h"
 
 #if !defined(NDEBUG)
     #include "sievedebugdialog.h"
@@ -129,7 +125,6 @@ using KMime::Types::AddrSpecList;
 using KPIM::ProgressManager;
 
 #include "managesievescriptsdialog.h"
-#include <tqstylesheet.h>
 
 #include "customtemplates.h"
 #include "customtemplates_kfg.h"
@@ -150,6 +145,7 @@ KMMainWidget::KMMainWidget(TQWidget *parent, const char *name,
     mFolderViewParent( 0 ),
     mFolderViewSplitter( 0 ),
     mQuickSearchLine( 0 ),
+    mArchiveFolderAction( 0 ),
     mShowBusySplashTimer( 0 ),
     mShowingOfflineScreen( false ),
     mMsgActions( 0 ),
@@ -226,6 +222,8 @@ KMMainWidget::KMMainWidget(TQWidget *parent, const char *name,
       this, TQT_SLOT(slotChangeCaption(TQListViewItem*)));
   connect(mFolderTree, TQT_SIGNAL(selectionChanged()),
           TQT_SLOT(updateFolderMenu()) );
+  connect( mFolderTree, TQT_SIGNAL(syncStateChanged()),
+           TQT_SLOT(updateFolderMenu()) );
 
   connect(kmkernel->folderMgr(), TQT_SIGNAL(folderRemoved(KMFolder*)),
           this, TQT_SLOT(slotFolderRemoved(KMFolder*)));
@@ -300,8 +298,6 @@ void KMMainWidget::readPreConfig(void)
   mHtmlPref = reader.readBoolEntry( "htmlMail", false );
   mHtmlLoadExtPref = reader.readBoolEntry( "htmlLoadExternal", false );
   mEnableFavoriteFolderView = GlobalSettings::self()->enableFavoriteFolderView();
-  mEnableFolderQuickSearch = GlobalSettings::self()->enableFolderQuickSearch();
-  mEnableQuickSearch = GlobalSettings::self()->quickSearchActive();
 }
 
 
@@ -344,8 +340,6 @@ void KMMainWidget::readConfig(void)
   bool oldReaderWindowActive = mReaderWindowActive;
   bool oldReaderWindowBelow = mReaderWindowBelow;
   bool oldFavoriteFolderView = mEnableFavoriteFolderView;
-  bool oldFolderQuickSearch = mEnableFolderQuickSearch;
-  bool oldQuickSearch = mEnableQuickSearch;
 
   TQString str;
   TQSize siz;
@@ -360,9 +354,7 @@ void KMMainWidget::readConfig(void)
     bool layoutChanged = ( oldLongFolderList != mLongFolderList )
                     || ( oldReaderWindowActive != mReaderWindowActive )
                     || ( oldReaderWindowBelow != mReaderWindowBelow )
-                    || ( oldFavoriteFolderView != mEnableFavoriteFolderView )
-                    || ( oldFolderQuickSearch != mEnableFolderQuickSearch )
-                    || ( oldQuickSearch != mEnableQuickSearch );
+                    || ( oldFavoriteFolderView != mEnableFavoriteFolderView );
 
 
     if( layoutChanged ) {
@@ -450,7 +442,7 @@ void KMMainWidget::readConfig(void)
     mMsgView->readConfig();
 
   mHeaders->readConfig();
-  mHeaders->restoreLayout(KMKernel::config(), "Header-Geometry");
+  mHeaders->restoreColumnLayout( KMKernel::config(), "Header-Geometry" );
 
   if ( mFolderViewSplitter && !GlobalSettings::self()->folderViewSplitterPosition().isEmpty() ) {
     mFolderViewSplitter->setSizes( GlobalSettings::self()->folderViewSplitterPosition() );
@@ -493,9 +485,7 @@ void KMMainWidget::readConfig(void)
     bool layoutChanged = ( oldLongFolderList != mLongFolderList )
                     || ( oldReaderWindowActive != mReaderWindowActive )
                     || ( oldReaderWindowBelow != mReaderWindowBelow )
-                    || ( oldFavoriteFolderView != mEnableFavoriteFolderView )
-                    || ( oldFolderQuickSearch != mEnableFolderQuickSearch )
-                    || ( oldQuickSearch != mEnableQuickSearch );
+                    || ( oldFavoriteFolderView != mEnableFavoriteFolderView );
     if ( layoutChanged ) {
       activatePanners();
     }
@@ -671,10 +661,10 @@ void KMMainWidget::createWidgets(void)
 
   KAction *action;
 
-  action = new KAction( i18n("Move Message to Folder"), Key_M, this,
+  mMoveMsgToFolderAction = new KAction( i18n("Move Message to Folder"), Key_M, this,
                TQT_SLOT(slotMoveMsg()), actionCollection(),
                "move_message_to_folder" );
-  action->plugAccel( actionCollection()->kaccel() );
+  mMoveMsgToFolderAction->plugAccel( actionCollection()->kaccel() );
 
   action = new KAction( i18n("Copy Message to Folder"), Key_C, this,
                TQT_SLOT(slotCopyMsg()), actionCollection(),
@@ -697,25 +687,9 @@ void KMMainWidget::createWidgets(void)
     folderTreeParent = mFolderViewSplitter;
     mFolderView = mFolderViewSplitter;
   }
-
-  // the "folder tree" consists of a quicksearch input field and the tree itself
-  mSearchAndTree = new TQVBox(folderTreeParent);
-  mFolderQuickSearch = new TQHBox(mSearchAndTree);
-  TQPushButton *clear = new TQPushButton(TQApplication::reverseLayout()
-                                       ? SmallIcon("clear_left")
-                                       : SmallIcon("locationbar_erase"), "", mFolderQuickSearch);
-  clear->setFlat(true);
-  KListViewSearchLine *search = new KListViewSearchLine(mFolderQuickSearch);
-  mFolderTree = new KMFolderTree(this, mSearchAndTree, "folderTree");
-  search->setListView(mFolderTree);
-  connect(clear, TQT_SIGNAL(clicked()), search, TQT_SLOT(clear()));
-
-  if ( !GlobalSettings::enableFolderQuickSearch() ) {
-    mFolderQuickSearch->hide();
-  }
-
+  mFolderTree = new KMFolderTree(this, folderTreeParent, "folderTree");
   if ( !GlobalSettings::enableFavoriteFolderView() ) {
-     mFolderView = mSearchAndTree;
+     mFolderView = mFolderTree;
   }
   connect( mFolderTree, TQT_SIGNAL(folderSelected(KMFolder*)),
             mFavoriteFolderView, TQT_SLOT(folderTreeSelectionChanged(KMFolder*)) );
@@ -1020,14 +994,12 @@ void KMMainWidget::slotCompose()
 
   if ( mFolder ) {
       msg->initHeader( mFolder->identity() );
-      TemplateParser parser( msg, TemplateParser::NewMessage,
-	"", false, false, false, false );
+      TemplateParser parser( msg, TemplateParser::NewMessage );
       parser.process( NULL, mFolder );
       win = KMail::makeComposer( msg, mFolder->identity() );
   } else {
       msg->initHeader();
-      TemplateParser parser( msg, TemplateParser::NewMessage,
-	"", false, false, false, false );
+      TemplateParser parser( msg, TemplateParser::NewMessage );
       parser.process( NULL, NULL );
       win = KMail::makeComposer( msg );
   }
@@ -1128,6 +1100,9 @@ void KMMainWidget::modifyFolder( KMFolderTreeItem* folderItem )
                         i18n("Properties of Folder %1").arg( folder->label() ) );
   props.exec();
   updateFolderMenu();
+  //Kolab issue 2152
+  if ( mSystemTray )
+    mSystemTray->foldersChanged();
 }
 
 //-----------------------------------------------------------------------------
@@ -1204,6 +1179,13 @@ void KMMainWidget::slotEmptyFolder()
   mEmptyFolderAction->setEnabled( false );
 }
 
+//-----------------------------------------------------------------------------
+void KMMainWidget::slotArchiveFolder()
+{
+  KMail::ArchiveFolderDialog archiveDialog;
+  archiveDialog.setFolder( mFolder );
+  archiveDialog.exec();
+}
 
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotRemoveFolder()
@@ -1214,6 +1196,13 @@ void KMMainWidget::slotRemoveFolder()
   if ( !mFolder ) return;
   if ( mFolder->isSystemFolder() ) return;
   if ( mFolder->isReadOnly() ) return;
+  if ( mFolder->mailCheckInProgress() ) {
+    KMessageBox::sorry( this, i18n( "It is not possible to delete this folder right now because it "
+                                    "is being syncronized. Please wait until the syncronization of "
+                                    "this folder is complete and then try again." ),
+                              i18n( "Unable to delete folder" ) );
+    return;
+  }
 
   TQString title;
   if ( mFolder->folderType() == KMFolderTypeSearch ) {
@@ -1259,32 +1248,7 @@ void KMMainWidget::slotRemoveFolder()
                                          KGuiItem( i18n("&Delete"), "editdelete"))
       == KMessageBox::Continue)
   {
-    if ( mFolder->hasAccounts() ) {
-      // this folder has an account, so we need to change that to the inbox
-      for ( AccountList::Iterator it (mFolder->acctList()->begin() ),
-             end( mFolder->acctList()->end() ); it != end; ++it ) {
-        (*it)->setFolder( kmkernel->inboxFolder() );
-        KMessageBox::information(this,
-            i18n("<qt>The folder you deleted was associated with the account "
-              "<b>%1</b> which delivered mail into it. The folder the account "
-              "delivers new mail into was reset to the main Inbox folder.</qt>").arg( (*it)->name()));
-      }
-    }
-    if (mFolder->folderType() == KMFolderTypeImap)
-      kmkernel->imapFolderMgr()->remove(mFolder);
-    else if (mFolder->folderType() == KMFolderTypeCachedImap) {
-      // Deleted by user -> tell the account (see KMFolderCachedImap::listDirectory2)
-      KMFolderCachedImap* storage = static_cast<KMFolderCachedImap*>( mFolder->storage() );
-      KMAcctCachedImap* acct = storage->account();
-      if ( acct )
-        acct->addDeletedFolder( mFolder );
-
-      kmkernel->dimapFolderMgr()->remove(mFolder);
-    }
-    else if (mFolder->folderType() == KMFolderTypeSearch)
-      kmkernel->searchFolderMgr()->remove(mFolder);
-    else
-      kmkernel->folderMgr()->remove(mFolder);
+    KMail::FolderUtil::deleteFolder( mFolder, this );
   }
 }
 
@@ -1328,7 +1292,7 @@ void KMMainWidget::slotRefreshFolder()
       imap->getAndCheckFolder();
     } else if ( mFolder->folderType() == KMFolderTypeCachedImap ) {
       KMFolderCachedImap* f = static_cast<KMFolderCachedImap*>( mFolder->storage() );
-      f->account()->processNewMailSingleFolder( mFolder );
+      f->account()->processNewMailInFolder( mFolder );
     }
   }
 }
@@ -1441,6 +1405,18 @@ void KMMainWidget::slotToggleSubjectThreading()
 {
   mFolderThreadSubjPref = !mFolderThreadSubjPref;
   mHeaders->setSubjectThreading(mFolderThreadSubjPref);
+}
+
+//-----------------------------------------------------------------------------
+void KMMainWidget::slotToggleShowQuickSearch()
+{
+  GlobalSettings::self()->setQuickSearchActive( !GlobalSettings::self()->quickSearchActive() );
+  if ( GlobalSettings::self()->quickSearchActive() )
+    mSearchToolBar->show();
+  else {
+    mQuickSearchLine->reset();
+    mSearchToolBar->hide();
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -1670,6 +1646,7 @@ void KMMainWidget::slotUndo()
 {
     mHeaders->undo();
     updateMessageActions();
+    updateFolderMenu();
 }
 
 //-----------------------------------------------------------------------------
@@ -1827,22 +1804,69 @@ void KMMainWidget::slotCopyMsg()
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotPrintMsg()
 {
+  KMMessage *msg = mHeaders->currentMsg();
+  if ( !msg ) {
+    return;
+  }
+
   bool htmlOverride = mMsgView ? mMsgView->htmlOverride() : false;
   bool htmlLoadExtOverride = mMsgView ? mMsgView->htmlLoadExtOverride() : false;
   KConfigGroup reader( KMKernel::config(), "Reader" );
   bool useFixedFont = mMsgView ? mMsgView->isFixedFont()
                                : reader.readBoolEntry( "useFixedFont", false );
-  KMCommand *command =
-    new KMPrintCommand( this, mHeaders->currentMsg(),
+
+  const HeaderStyle *style;
+  const HeaderStrategy *strategy;
+  if ( mMsgView ) {
+    style = mMsgView->headerStyle();
+    strategy = mMsgView->headerStrategy();
+  } else {
+    style = HeaderStyle::create( reader.readEntry( "header-style", "fancy" ) );
+    strategy = HeaderStrategy::create( reader.readEntry( "header-set-displayed", "rich" ) );
+  }
+
+  KMPrintCommand *command =
+    new KMPrintCommand( this, msg,
+                        style, strategy,
                         htmlOverride, htmlLoadExtOverride,
                         useFixedFont, overrideEncoding() );
+  if ( mMsgView )
+    command->setOverrideFont( mMsgView->cssHelper()->bodyFont( mMsgView->isFixedFont(), true /*printing*/ ) );
+
   command->start();
+}
+
+//-----------------------------------------------------------------------------
+void KMMainWidget::setupForwardActions()
+{
+  disconnect( mForwardActionMenu, TQT_SIGNAL( activated() ), 0, 0 );
+  mForwardActionMenu->remove( mForwardInlineAction );
+  mForwardActionMenu->remove( mForwardAttachedAction );
+
+  if ( GlobalSettings::self()->forwardingInlineByDefault() ) {
+    mForwardActionMenu->insert( mForwardInlineAction, 0 );
+    mForwardActionMenu->insert( mForwardAttachedAction, 1 );
+    mForwardInlineAction->setShortcut( Key_F );
+    mForwardAttachedAction->setShortcut( SHIFT+Key_F );
+    connect( mForwardActionMenu, TQT_SIGNAL(activated()), this,
+            TQT_SLOT(slotForwardInlineMsg()) );
+
+  } else {
+    mForwardActionMenu->insert( mForwardAttachedAction, 0 );
+    mForwardActionMenu->insert( mForwardInlineAction, 1 );
+    mForwardInlineAction->setShortcut( SHIFT+Key_F );
+    mForwardAttachedAction->setShortcut( Key_F );
+    connect( mForwardActionMenu, TQT_SIGNAL(activated()), this,
+            TQT_SLOT(slotForwardAttachedMsg()) );
+  }
 }
 
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotConfigChanged()
 {
   readConfig();
+  setupForwardActions();
+  setupForwardingActionsList();
 }
 
 //-----------------------------------------------------------------------------
@@ -1888,6 +1912,7 @@ void KMMainWidget::slotOnlineStatus()
     kmkernel->stopNetworkJobs();
   } else {
     kmkernel->resumeNetworkJobs();
+    slotCheckVacation();
   }
 }
 
@@ -2396,9 +2421,7 @@ void KMMainWidget::slotMsgPopup(KMMessage&, const KURL &aUrl, const TQPoint& aPo
     if ( mFolder->isTemplates() ) {
       mUseAction->plug( menu );
     } else {
-
-      if ( !mFolder->isSent() )
-        mMsgActions->replyMenu()->plug( menu );
+      mMsgActions->replyMenu()->plug( menu );
       mForwardActionMenu->plug( menu );
     }
     editAction()->plug(menu);
@@ -2790,6 +2813,10 @@ void KMMainWidget::setupActions()
   mRemoveFolderAction = new KAction( "foo" /*set in updateFolderMenu*/, "editdelete", 0, this,
 		      TQT_SLOT(slotRemoveFolder()), actionCollection(), "delete_folder" );
 
+  mArchiveFolderAction = new KAction( i18n( "&Archive Folder..." ), "filesave", 0, this,
+                                      TQT_SLOT( slotArchiveFolder() ), actionCollection(),
+                                      "archive_folder" );
+
   mPreferHtmlAction = new KToggleAction( i18n("Prefer &HTML to Plain Text"), 0, this,
 		      TQT_SLOT(slotOverrideHtml()), actionCollection(), "prefer_html" );
 
@@ -2862,22 +2889,7 @@ void KMMainWidget::setupActions()
                                  "message_forward_redirect" );
 
 
-      if ( GlobalSettings::self()->forwardingInlineByDefault() ) {
-          mForwardActionMenu->insert( mForwardInlineAction );
-          mForwardActionMenu->insert( mForwardAttachedAction );
-          mForwardInlineAction->setShortcut( Key_F );
-          mForwardAttachedAction->setShortcut( SHIFT+Key_F );
-          connect( mForwardActionMenu, TQT_SIGNAL(activated()), this,
-                   TQT_SLOT(slotForwardInlineMsg()) );
-
-      } else {
-          mForwardActionMenu->insert( mForwardAttachedAction );
-          mForwardActionMenu->insert( mForwardInlineAction );
-          mForwardInlineAction->setShortcut( SHIFT+Key_F );
-          mForwardAttachedAction->setShortcut( Key_F );
-          connect( mForwardActionMenu, TQT_SIGNAL(activated()), this,
-                   TQT_SLOT(slotForwardAttachedMsg()) );
-      }
+      setupForwardActions();
 
       mForwardActionMenu->insert( mForwardDigestAction );
       mForwardActionMenu->insert( mRedirectAction );
@@ -3114,6 +3126,13 @@ void KMMainWidget::setupActions()
                          actionCollection(), "go_next_unread_text" );
 
   //----- Settings Menu
+  mToggleShowQuickSearchAction = new KToggleAction(i18n("Show Quick Search"), TQString::null,
+                                       0, this, TQT_SLOT(slotToggleShowQuickSearch()),
+                                       actionCollection(), "show_quick_search");
+  mToggleShowQuickSearchAction->setChecked( GlobalSettings::self()->quickSearchActive() );
+  mToggleShowQuickSearchAction->setWhatsThis(
+        i18n( GlobalSettings::self()->quickSearchActiveItem()->whatsThis().utf8() ) );
+
   (void) new KAction( i18n("Configure &Filters..."), 0, this,
  		      TQT_SLOT(slotFilter()), actionCollection(), "filter" );
   (void) new KAction( i18n("Configure &POP Filters..."), 0, this,
@@ -3337,8 +3356,8 @@ void KMMainWidget::updateMessageActions()
     mMarkThreadAsUnreadAction->setEnabled( thread_actions );
     mToggleThreadTodoAction->setEnabled( thread_actions && flags_available );
     mToggleThreadFlagAction->setEnabled( thread_actions && flags_available );
-    mTrashThreadAction->setEnabled( thread_actions && !mFolder->isReadOnly() );
-    mDeleteThreadAction->setEnabled( thread_actions && !mFolder->isReadOnly() );
+    mTrashThreadAction->setEnabled( thread_actions && mFolder->canDeleteMessages() );
+    mDeleteThreadAction->setEnabled( thread_actions && mFolder->canDeleteMessages() );
 
     if (mFolder && mHeaders && mHeaders->currentMsg()) {
       if (thread_actions) {
@@ -3349,29 +3368,30 @@ void KMMainWidget::updateMessageActions()
       }
     }
 
-    mMoveActionMenu->setEnabled( mass_actions && !mFolder->isReadOnly() );
+    mMoveActionMenu->setEnabled( mass_actions && mFolder->canDeleteMessages() );
+    mMoveMsgToFolderAction->setEnabled( mass_actions && mFolder->canDeleteMessages() );
     mCopyActionMenu->setEnabled( mass_actions );
-    mTrashAction->setEnabled( mass_actions && !mFolder->isReadOnly() );
-    mDeleteAction->setEnabled( mass_actions && !mFolder->isReadOnly() );
-    mFindInMessageAction->setEnabled( mass_actions );
-    mForwardInlineAction->setEnabled( mass_actions );
-    mForwardAttachedAction->setEnabled( mass_actions );
-    mForwardDigestAction->setEnabled( count > 1 || parent_thread );
+    mTrashAction->setEnabled( mass_actions && mFolder->canDeleteMessages() );
+    mDeleteAction->setEnabled( mass_actions && mFolder->canDeleteMessages() );
+    mFindInMessageAction->setEnabled( mass_actions && !kmkernel->folderIsTemplates( mFolder ) );
+    mForwardInlineAction->setEnabled( mass_actions && !kmkernel->folderIsTemplates( mFolder ));
+    mForwardAttachedAction->setEnabled( mass_actions && !kmkernel->folderIsTemplates( mFolder ) );
+    mForwardDigestAction->setEnabled( ( count > 1 || parent_thread ) && !kmkernel->folderIsTemplates( mFolder ) );
 
-    forwardMenu()->setEnabled( mass_actions );
+    forwardMenu()->setEnabled( mass_actions && !kmkernel->folderIsTemplates( mFolder ));
 
     bool single_actions = count == 1;
     mUseAction->setEnabled( single_actions &&
                             kmkernel->folderIsTemplates( mFolder ) );
     filterMenu()->setEnabled( single_actions );
-    redirectAction()->setEnabled( single_actions );
+    redirectAction()->setEnabled( single_actions && !kmkernel->folderIsTemplates( mFolder ) );
     printAction()->setEnabled( single_actions );
     viewSourceAction()->setEnabled( single_actions );
 
     mSendAgainAction->setEnabled( single_actions
-          && ( mHeaders->currentMsg() && mHeaders->currentMsg()->isSent() )
-          || ( mFolder && mHeaders->currentMsg() &&
-               kmkernel->folderIsSentMailFolder( mFolder ) ) );
+          && ( ( mHeaders->currentMsg() && mHeaders->currentMsg()->isSent() )
+          ||   ( mFolder && mHeaders->currentMsg() &&
+                 kmkernel->folderIsSentMailFolder( mFolder ) ) ) );
     mSaveAsAction->setEnabled( mass_actions );
     bool mails = mFolder && mFolder->count();
     bool enable_goto_unread = mails
@@ -3426,13 +3446,27 @@ void KMMainWidget::updateFolderMenu()
                                                            || ( cachedImap && knownImapPath ) ) && !multiFolder );
   if ( mTroubleshootFolderAction )
     mTroubleshootFolderAction->setEnabled( folderWithContent && ( cachedImap && knownImapPath ) && !multiFolder );
-  mEmptyFolderAction->setEnabled( folderWithContent && ( mFolder->count() > 0 ) && !mFolder->isReadOnly() && !multiFolder );
-  mEmptyFolderAction->setText( (mFolder && kmkernel->folderIsTrash(mFolder))
-    ? i18n("E&mpty Trash") : i18n("&Move All Messages to Trash") );
-  mRemoveFolderAction->setEnabled( mFolder && !mFolder->isSystemFolder() && !mFolder->isReadOnly() && !multiFolder);
-  mRemoveFolderAction->setText( mFolder && mFolder->folderType() == KMFolderTypeSearch
-        ? i18n("&Delete Search") : i18n("&Delete Folder") );
-  mExpireFolderAction->setEnabled( mFolder && mFolder->isAutoExpire() && !multiFolder );
+
+  mEmptyFolderAction->setEnabled( folderWithContent &&
+                                  ( mFolder->count() > 0 ) && mFolder->canDeleteMessages() &&
+                                  !multiFolder );
+  mEmptyFolderAction->setText( ( mFolder && kmkernel->folderIsTrash( mFolder ) ) ?
+                               i18n( "E&mpty Trash" ) :
+                               i18n( "&Move All Messages to Trash" ) );
+
+  mRemoveFolderAction->setEnabled( mFolder &&
+                                   !mFolder->isSystemFolder() &&
+                                   mFolder->canDeleteMessages() &&
+                                   !multiFolder && !mFolder->noContent() &&
+                                   !mFolder->mailCheckInProgress() );
+  mRemoveFolderAction->setText( mFolder &&
+                                mFolder->folderType() == KMFolderTypeSearch ?
+                                i18n( "&Delete Search" ) :
+                                i18n( "&Delete Folder" ) );
+
+  if ( mArchiveFolderAction )
+    mArchiveFolderAction->setEnabled( mFolder && !multiFolder );
+  mExpireFolderAction->setEnabled( mFolder && mFolder->isAutoExpire() && !multiFolder && mFolder->canDeleteMessages() );
   updateMarkAsReadAction();
   // the visual ones only make sense if we are showing a message list
   mPreferHtmlAction->setEnabled( mHeaders->folder() ? true : false );
@@ -3447,8 +3481,8 @@ void KMMainWidget::updateFolderMenu()
       mHeaders->folder() ? ( mThreadMessagesAction->isChecked()) : false );
   mThreadBySubjectAction->setChecked( mFolderThreadSubjPref );
 
-  mNewFolderAction->setEnabled( !multiFolder );
-  mRemoveDuplicatesAction->setEnabled( !multiFolder );
+  mNewFolderAction->setEnabled( !multiFolder && ( mFolder && mFolder->folderType() != KMFolderTypeSearch ));
+  mRemoveDuplicatesAction->setEnabled( !multiFolder && mFolder && mFolder->canDeleteMessages() );
   mFolderShortCutCommandAction->setEnabled( !multiFolder );
 }
 
@@ -3849,6 +3883,7 @@ void KMMainWidget::slotFolderTreeColumnsChanged()
   mTotalColumnToggle->setChecked( mFolderTree->isTotalActive() );
   mUnreadColumnToggle->setChecked( mFolderTree->isUnreadActive() );
   mSizeColumnToggle->setChecked( mFolderTree->isSizeActive() );
+  mUnreadTextToggle->setChecked( !mFolderTree->isUnreadActive() );
 }
 
 void KMMainWidget::toggleSystemTray()
@@ -3896,6 +3931,7 @@ void KMMainWidget::updateFileMenu()
 
   actionCollection()->action("check_mail")->setEnabled( actList.size() > 0 );
   actionCollection()->action("check_mail_in")->setEnabled( actList.size() > 0 );
+  actionCollection()->action("favorite_check_mail")->setEnabled( actList.size() > 0 );
 }
 
 
@@ -3934,17 +3970,17 @@ void KMMainWidget::setupFolderView()
 {
   if ( GlobalSettings::self()->enableFavoriteFolderView() ) {
     mFolderView = mFolderViewSplitter;
-    mSearchAndTree->reparent( mFolderViewSplitter, 0, TQPoint( 0, 0 ) );
+    mFolderTree->reparent( mFolderViewSplitter, 0, TQPoint( 0, 0 ) );
     mFolderViewSplitter->show();
     mFavoriteFolderView->show();
   } else {
-    mFolderView = mSearchAndTree;
+    mFolderView = mFolderTree;
     mFolderViewSplitter->hide();
     mFavoriteFolderView->hide();
   }
   mFolderView->reparent( mFolderViewParent, 0, TQPoint( 0, 0 ) );
   mFolderViewParent->moveToFirst( mFolderView );
-  mSearchAndTree->show();
+  mFolderTree->show();
 }
 
 

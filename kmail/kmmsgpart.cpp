@@ -284,6 +284,9 @@ void KMMessagePart::setBodyEncodedBinary(const TQByteArray& aStr)
       assert( codec );
       // Nice: We can use the convenience function :-)
       mBody = codec->encode( aStr );
+      // QP encoding does CRLF -> LF conversion, which can change the size after decoding again
+      // and a size mismatch triggers an assert in various other methods
+      mBodyDecodedSize = -1;
       break;
     }
   default:
@@ -585,7 +588,7 @@ TQString KMMessagePart::fileName(void) const
     const TQCString str = mContentDisposition.mid(startOfFilename,
                                 endOfFilename-startOfFilename+1)
                            .stripWhiteSpace();
-    return KMMsgBase::decodeRFC2047String(str, charset());
+    return KMMsgBase::decodeRFC2047String(str);
   }
 
   return TQString::null;

@@ -20,6 +20,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#include <tqaction.h>
 #include <tqcombobox.h>
 #include <tqdockarea.h>
 #include <tqguardedptr.h>
@@ -122,6 +123,27 @@ void MainWindow::initGUI()
   connect( helpMenu, TQT_SIGNAL( showAboutApplication() ),
            TQT_SLOT( showAboutDialog() ) );
 
+  KTrader::OfferList offers = KTrader::self()->query(
+      TQString::fromLatin1( "Kontact/Plugin" ),
+      TQString( "[X-KDE-KontactPluginVersion] == %1" ).arg( KONTACT_PLUGIN_VERSION ) );
+  mPluginInfos = KPluginInfo::fromServices( offers, Prefs::self()->config(), "Plugins" );
+
+  KPluginInfo::List::Iterator it;
+  for ( it = mPluginInfos.begin(); it != mPluginInfos.end(); ++it ) {
+    (*it)->load();
+
+    KAction *action = new KAction( (*it)->name(), (*it)->icon(), KShortcut(),
+                                   this, TQT_SLOT(slotActionTriggered()),
+                                   actionCollection(), (*it)->pluginName().latin1() );
+    action->setName( (*it)->pluginName().latin1() );
+    action->setWhatsThis( i18n( "Switch to plugin %1" ).arg( (*it)->name() ) );
+
+    TQVariant hasPartProp = (*it)->property( "X-KDE-KontactPluginHasPart" );
+    if ( !hasPartProp.isValid() || hasPartProp.toBool() ) {
+      mActionPlugins.append( action );
+    }
+  }
+
   KStdAction::keyBindings( this, TQT_SLOT( configureShortcuts() ), actionCollection() );
   KStdAction::configureToolbars( this, TQT_SLOT( configureToolbars() ), actionCollection() );
   setXMLFile( "kontactui.rc" );
@@ -130,38 +152,27 @@ void MainWindow::initGUI()
 
   createGUI( 0 );
 
+  loadPlugins();
+
   resize( 700, 520 ); // initial size to prevent a scrollbar in sidepane
   setAutoSaveSettings();
 
-  connect( Kontact::ProfileManager::self(), TQT_SIGNAL( profileLoaded( const TQString& ) ), 
+  connect( Kontact::ProfileManager::self(), TQT_SIGNAL( profileLoaded( const TQString& ) ),
            this, TQT_SLOT( slotLoadProfile( const TQString& ) ) );
-  connect( Kontact::ProfileManager::self(), TQT_SIGNAL( saveToProfileRequested( const TQString& ) ), 
+  connect( Kontact::ProfileManager::self(), TQT_SIGNAL( saveToProfileRequested( const TQString& ) ),
            this, TQT_SLOT( slotSaveToProfile( const TQString& ) ) );
 }
 
 
 void MainWindow::initObject()
 {
-  KTrader::OfferList offers = KTrader::self()->query(
-      TQString::fromLatin1( "Kontact/Plugin" ),
-      TQString( "[X-KDE-KontactPluginVersion] == %1" ).arg( KONTACT_PLUGIN_VERSION ) );
-  mPluginInfos = KPluginInfo::fromServices( offers, Prefs::self()->config(), "Plugins" );
-
-  KPluginInfo::List::Iterator it;
-  for ( it = mPluginInfos.begin(); it != mPluginInfos.end(); ++it ) {
-    ( *it )->load();
-  }
-
   // prepare the part manager
   mPartManager = new KParts::PartManager( this );
   connect( mPartManager, TQT_SIGNAL( activePartChanged( KParts::Part* ) ),
            this, TQT_SLOT( slotActivePartChanged( KParts::Part* ) ) );
 
-  loadPlugins();
-
   if ( mSidePane ) {
     mSidePane->updatePlugins();
-    plugActionList( "navigator_actionlist", mSidePane->actions() );
   }
 
   KSettings::Dispatcher::self()->registerInstance( instance(), this,
@@ -239,8 +250,6 @@ void MainWindow::initWidgets()
   TQValueList<int> sizes;
   sizes << 0;
   mSplitter->setSizes(sizes);
-
-  mSidePane->setActionCollection( actionCollection() );
 
   connect( mSidePane, TQT_SIGNAL( pluginSelected( Kontact::Plugin * ) ),
            TQT_SLOT( selectPlugin( Kontact::Plugin * ) ) );
@@ -348,9 +357,7 @@ void MainWindow::setupActions()
                actionCollection(), "help_introduction" );
   new KAction( i18n( "&Tip of the Day" ), 0, this, TQT_SLOT( slotShowTip() ),
                actionCollection(), "help_tipofday" );
-  new KAction( i18n( "&Request Feature..." ), 0, this, TQT_SLOT( slotRequestFeature() ),
-               actionCollection(), "help_requestfeature" );
-  
+
   KWidgetAction* spacerAction = new KWidgetAction( new TQWidget( this ), "SpacerAction", "", 0, 0, actionCollection(), "navigator_spacer_item" );
   spacerAction->setAutoSized( true );
 }
@@ -387,7 +394,7 @@ void MainWindow::slotSaveToProfile( const TQString& id )
   ::copyConfigEntry( cfg, &profile, "MainWindow Toolbar navigatorToolBar", "Hidden", "true" );
   ::copyConfigEntry( cfg, &profile, "View", "SidePaneSplitter" );
   ::copyConfigEntry( cfg, &profile, "Icons", "Theme" );
-  
+
   for ( PluginList::Iterator it = mPlugins.begin(); it != mPlugins.end(); ++it ) {
     if ( !(*it)->isRunningStandalone() ) {
         (*it)->part();
@@ -461,6 +468,61 @@ Plugin *MainWindow::pluginFromInfo( const KPluginInfo *info )
   return 0;
 }
 
+Plugin *MainWindow::pluginFromAction( const KAction *action )
+{
+  PluginList::ConstIterator end = mPlugins.end();
+  for ( PluginList::ConstIterator it = mPlugins.begin(); it != end; ++it ) {
+    if ( (*it)->identifier() == action->name() ) {
+      return *it;
+    }
+  }
+  return 0;
+}
+
+bool MainWindow::isPluginLoadedByAction( const KAction *action )
+{
+  KPluginInfo::List::ConstIterator it;
+  for ( it = mPluginInfos.begin(); it != mPluginInfos.end(); ++it ) {
+    if ( !(*it)->isPluginEnabled() )
+      continue;
+    if ( isPluginLoaded( *it ) ) {
+      Plugin *plugin = pluginFromInfo( *it );
+      if ( plugin ) {
+        if ( plugin->identifier() == action->name() ) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+void MainWindow::sortActionsByWeight()
+{
+  TQPtrList<KAction> sorted;
+
+  TQPtrListIterator<KAction> eit( mActionPlugins );
+  KAction *action;
+  while ( ( action = eit.current() ) != 0 ) {
+    ++eit;
+    TQPtrListIterator<KAction> sortIt( sorted );
+    uint at = 0;
+    KAction *saction;
+    Plugin *p1 = pluginFromAction( action );
+    while ( ( saction = sortIt.current() ) != 0 ) {
+      Plugin *p2 = pluginFromAction( saction );
+      if ( p1 && p2 && p1->weight() >= p2->weight() ) {
+        ++sortIt;
+        ++at;
+      } else {
+        break;
+      }
+    }
+    sorted.insert( at, action );
+  }
+  mActionPlugins = sorted;
+}
+
 void MainWindow::loadPlugins()
 {
   TQPtrList<Plugin> plugins;
@@ -523,6 +585,9 @@ void MainWindow::loadPlugins()
     for ( action = actionList->first(); action; action = actionList->next() ) {
       kdDebug(5600) << "Plugging " << action->name() << endl;
       action->plug( mNewActions->popupMenu() );
+      if ( action->name() == plugin->identifier() ) {
+        mPluginAction.insert( plugin, action );
+      }
     }
 
     if ( mSyncActionsEnabled ) {
@@ -534,6 +599,7 @@ void MainWindow::loadPlugins()
     }
     addPlugin( plugin );
   }
+  updateShortcuts();
 
   mNewActions->setEnabled( mPlugins.size() != 0 );
   if ( mSyncActionsEnabled )
@@ -542,24 +608,47 @@ void MainWindow::loadPlugins()
 
 void MainWindow::unloadPlugins()
 {
-  KPluginInfo::List::ConstIterator end = mPluginInfos.end();
+  KPluginInfo::List::ConstIterator end = mPluginInfos.constEnd();
   KPluginInfo::List::ConstIterator it;
-  for ( it = mPluginInfos.begin(); it != end; ++it ) {
+  for ( it = mPluginInfos.constBegin(); it != end; ++it ) {
     if ( !(*it)->isPluginEnabled() )
       removePlugin( *it );
   }
 }
 
+void MainWindow::updateShortcuts()
+{
+  TQPtrList<KAction> loadedActions;
+
+  sortActionsByWeight();
+
+  TQPtrListIterator<KAction> it( mActionPlugins );
+  int i = 1;
+  KAction *action;
+  while ( ( action = it.current() ) != 0 ) {
+    ++it;
+    if ( isPluginLoadedByAction( action ) ) {
+      loadedActions.append( action );
+      TQString shortcut = TQString( "CTRL+%1" ).arg( i );
+      action->setShortcut( KShortcut( shortcut ) );
+      i++;
+    } else {
+      action->setShortcut( KShortcut() );
+    }
+  }
+  unplugActionList( "navigator_actionlist" );
+  factory()->plugActionList( this, TQString( "navigator_actionlist" ), loadedActions );
+}
+
 bool MainWindow::removePlugin( const KPluginInfo *info )
 {
   PluginList::Iterator end = mPlugins.end();
-  for ( PluginList::Iterator it = mPlugins.begin(); it != end; ++it )
+  for ( PluginList::Iterator it = mPlugins.begin(); it != end; ++it ) {
     if ( ( *it )->identifier() == info->pluginName() ) {
       Plugin *plugin = *it;
 
       KAction *action;
       TQPtrList<KAction> *actionList = plugin->newActions();
-
       for ( action = actionList->first(); action; action = actionList->next() ) {
         kdDebug(5600) << "Unplugging " << action->name() << endl;
         action->unplug( mNewActions->popupMenu() );
@@ -577,8 +666,12 @@ bool MainWindow::removePlugin( const KPluginInfo *info )
       if ( mCurrentPlugin == plugin )
         mCurrentPlugin = 0;
 
-      delete plugin; // removes the part automatically
+      plugin->deleteLater(); // removes the part automatically
       mPlugins.remove( it );
+
+      if ( plugin->showInSideBar() ) {
+        mPluginAction.remove( plugin );
+      }
 
       if ( mCurrentPlugin == 0 ) {
         PluginList::Iterator it;
@@ -589,10 +682,9 @@ bool MainWindow::removePlugin( const KPluginInfo *info )
           }
         }
       }
-
       return true;
     }
-
+  }
   return false;
 }
 
@@ -674,6 +766,15 @@ KToolBar* Kontact::MainWindow::findToolBar(const char* name)
   return static_cast<KToolBar *>(child(name, "KToolBar"));
 }
 
+void MainWindow::slotActionTriggered()
+{
+  const KAction *actionSender = static_cast<const KAction*>( sender() );
+  TQString identifier = actionSender->name();
+  if ( !identifier.isEmpty() ) {
+    selectPlugin( identifier );
+  }
+}
+
 void MainWindow::selectPlugin( Kontact::Plugin *plugin )
 {
   if ( !plugin )
@@ -713,8 +814,9 @@ void MainWindow::selectPlugin( Kontact::Plugin *plugin )
     }
   }
 
-  if ( mSidePane )
-    mSidePane->selectPlugin( plugin );
+  if ( mSidePane ) {
+    mSidePane->selectPlugin( plugin->identifier() );
+  }
 
   plugin->select();
 
@@ -832,12 +934,6 @@ void MainWindow::slotShowTip()
   showTip( true );
 }
 
-void MainWindow::slotRequestFeature()
-{
-  if ( kapp )
-    kapp->invokeBrowser( "http://kontact.org/shopping" );
-}
-
 void MainWindow::slotShowIntroduction()
 {
   mPartsStack->raiseWidget( 0 ); // ###
@@ -915,11 +1011,10 @@ int MainWindow::startServiceFor( const TQString& serviceType,
 
 void MainWindow::pluginsChanged()
 {
-  unplugActionList( "navigator_actionlist" );
   unloadPlugins();
   loadPlugins();
   mSidePane->updatePlugins();
-  plugActionList( "navigator_actionlist", mSidePane->actions() );
+  updateShortcuts();
 }
 
 void MainWindow::updateConfig()
@@ -965,9 +1060,13 @@ void MainWindow::configureToolbars()
 
 void MainWindow::slotNewToolbarConfig()
 {
-  if ( mCurrentPlugin && mCurrentPlugin->part() )
+  if ( mCurrentPlugin && mCurrentPlugin->part() ) {
     createGUI( mCurrentPlugin->part() );
-  applyMainWindowSettings( KGlobal::config(), "MainWindow" );
+  }
+  if ( mCurrentPlugin ) {
+    applyMainWindowSettings( KGlobal::config(), "MainWindow" );
+  }
+  updateShortcuts(); // for the plugActionList call
 }
 
 void MainWindow::slotOpenUrl( const KURL &url )
@@ -980,8 +1079,16 @@ void MainWindow::slotOpenUrl( const KURL &url )
       KRun::runCommand( "groupwarewizard" );
       slotQuit();
     }
-  } else
+    if ( url.path().startsWith( "/help" ) ) {
+      TQString app( "kontact" );
+      if ( !url.query().isEmpty() ) {
+        app = url.query().mid( 1 );
+      }
+      kapp->invokeHelp( TQString::null, app );
+    }
+  } else {
     new KRun( url, this );
+  }
 }
 
 void MainWindow::readProperties( KConfig *config )
@@ -1073,11 +1180,11 @@ TQString MainWindow::introductionString()
       "<p style=\"margin-bottom: 0px\"> <a href=\"%1\">Skip this introduction</a></p>" )
       .arg( kapp->aboutData()->version() )
       .arg( i18n( "Kontact handles your e-mail, addressbook, calendar, to-do list and more." ) )
-      .arg( "help:/kontact" )
+      .arg( "exec:/help?kontact" )
       .arg( iconSize )
       .arg( iconSize )
       .arg( handbook_icon_path )
-      .arg( "help:/kontact" )
+      .arg( "exec:/help?kontact" )
       .arg( i18n( "Read Manual" ) )
       .arg( i18n( "Learn more about Kontact and its components" ) )
       .arg( "http://kontact.org" )

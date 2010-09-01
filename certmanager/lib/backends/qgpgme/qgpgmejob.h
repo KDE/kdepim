@@ -37,6 +37,7 @@
 #include <gpgmepp/interfaces/passphraseprovider.h>
 
 #include <gpgmepp/key.h>
+#include <gpgmepp/context.h>
 
 #include <tqcstring.h>
 #include <tqstring.h>
@@ -45,8 +46,6 @@
 #include <kdepimmacros.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
   class Data;
 }
 
@@ -120,6 +119,7 @@ namespace Kleo {
     virtual void doEmitDoneSignal() = 0;
     void doSlotCancel();
     TQString auditLogAsHtml() const { return mAuditLogAsHtml; }
+    GpgME::Error auditLogError() const { return mAuditLogError; }
 
   private:
     /*! \reimp from GpgME::ProgressProvider */
@@ -146,6 +146,7 @@ namespace Kleo {
     unsigned int mNumPatterns;
     unsigned int mChunkSize;
     unsigned int mPatternStartIndex, mPatternEndIndex;
+    GpgME::Error mAuditLogError;
     TQString mAuditLogAsHtml;
   };
 
@@ -154,7 +155,7 @@ namespace Kleo {
 #define make_slot_cancel private: void slotCancel() { QGpgMEJob::doSlotCancel(); }
 #define make_progress_emitter private: void doEmitProgressSignal( const TQString & what, int cur, int tot ) { emit progress( what, cur, tot ); }
 #define make_done_emitter private: void doEmitDoneSignal() { emit done(); }
-#define make_auditLogAsHtml private: TQString auditLogAsHtml() const { return QGpgMEJob::auditLogAsHtml(); }
+#define make_auditLogAsHtml private: TQString auditLogAsHtml() const { return QGpgMEJob::auditLogAsHtml(); } GpgME::Error auditLogError() const { return QGpgMEJob::auditLogError(); }
 #define QGPGME_JOB make_slot_cancel make_progress_emitter make_done_emitter make_auditLogAsHtml
 
 #endif // __KLEO_QGPGMEJOB_H__

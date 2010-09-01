@@ -50,10 +50,10 @@ class KOTimelineView : public KOEventView
     ~KOTimelineView();
 
     virtual KCal::ListBase<KCal::Incidence> selectedIncidences();
-    virtual KCal::DateList selectedDates();
+    virtual KCal::DateList selectedIncidenceDates();
     virtual int currentDateCount();
     virtual void showDates(const TQDate&, const TQDate&);
-    virtual void showIncidences(const KCal::ListBase<KCal::Incidence>&);
+    virtual void showIncidences(const KCal::ListBase<KCal::Incidence>&, const TQDate &date);
     virtual void updateView();
     virtual void changeIncidenceDisplay(KCal::Incidence* incidence, int mode);
     virtual int maxDatesHint() { return 0; }

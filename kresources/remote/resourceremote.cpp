@@ -56,6 +56,8 @@ ResourceRemote::ResourceRemote( const KConfig *config )
 {
   if ( config ) {
     readConfig( config );
+  } else {
+    setResourceName( i18n( "Remote Calendar" ) );
   }
 
   init();

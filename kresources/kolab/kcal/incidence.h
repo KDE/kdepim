@@ -41,6 +41,7 @@ class TQDomElement;
 namespace KCal {
   class Incidence;
   class Recurrence;
+  class Alarm;
   class Attachment;
   class ResourceKolab;
 }
@@ -115,9 +116,6 @@ public:
   void setInternalUID( const TQString& iuid );
   TQString internalUID() const;
 
-  virtual void setRevision( int );
-  virtual int revision() const;
-
   // Load the attributes of this class
   virtual bool loadAttribute( TQDomElement& );
 
@@ -135,6 +133,9 @@ protected:
                               const Attendee& attendee ) const;
   void saveAttendees( TQDomElement& element ) const;
   void saveAttachments( TQDomElement& element ) const;
+
+  void loadAlarms( const TQDomElement& element );
+  void saveAlarms( TQDomElement& element ) const;
 
   void loadRecurrence( const TQDomElement& element );
   void saveRecurrence( TQDomElement& element ) const;
@@ -154,9 +155,9 @@ protected:
   bool mHasAlarm;
   Recurrence mRecurrence;
   TQValueList<Attendee> mAttendees;
+  TQValueList<KCal::Alarm*> mAlarms;
   TQValueList<KCal::Attachment*> mAttachments;
   TQString mInternalUID;
-  int mRevision;
 
   struct Custom {
     TQCString key;

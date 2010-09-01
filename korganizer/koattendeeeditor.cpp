@@ -18,6 +18,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#include <config.h> // for KDEPIM_NEW_DISTRLISTS
+
 #include "koattendeeeditor.h"
 #include "koprefs.h"
 #include "koglobals.h"
@@ -32,8 +34,16 @@
 
 #include <libemailfunctions/email.h>
 
+#ifdef KDEPIM_NEW_DISTRLISTS
+#include "distributionlist.h"
+#else
+#include <kabc/distributionlist.h>
+#endif
+#include <kabc/stdaddressbook.h>
+
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include <tqcheckbox.h>
 #include <tqcombobox.h>
@@ -101,6 +111,7 @@ void KOAttendeeEditor::initEditWidgets(TQWidget * parent, TQBoxLayout * layout)
   mNameEdit->installEventFilter( this );
   connect( mNameEdit, TQT_SIGNAL( textChanged( const TQString & ) ),
            TQT_SLOT( updateAttendee() ) );
+  connect( mNameEdit, TQT_SIGNAL(returnPressed()), TQT_SLOT(expandAttendee()) );
   topLayout->addMultiCellWidget( mNameEdit, 0, 0, 1, 2 );
 
   whatsThis = i18n("Edits the role of the attendee selected "
@@ -206,20 +217,6 @@ void KOAttendeeEditor::openAddressBook()
   }
   delete dia;
   return;
-#if 0
-    // old code
-    KABC::Addressee a = KABC::AddresseeDialog::getAddressee(this);
-    if (!a.isEmpty()) {
-        // If this is myself, I don't want to get a response but instead
-        // assume I will be available
-        bool myself = KOPrefs::instance()->thatIsMe( a.preferredEmail() );
-        KCal::Attendee::PartStat partStat =
-            myself ? KCal::Attendee::Accepted : KCal::Attendee::NeedsAction;
-        insertAttendee( new Attendee( a.realName(), a.preferredEmail(),
-                                      !myself, partStat,
-                                      KCal::Attendee::ReqParticipant, a.uid() ) );
-    }
-#endif
 #endif
 }
 
@@ -236,12 +233,13 @@ void KOAttendeeEditor::insertAttendeeFromAddressee(const KABC::Addressee &a, con
     rsvp = false;
   }
   Attendee *newAt = new Attendee( a.realName(),
-                               a.preferredEmail(),
-                               !myself, partStat,
-                               at ? at->role() : Attendee::ReqParticipant,
-                               a.uid() );
+                                  a.preferredEmail(),
+                                  !myself, partStat,
+                                  at ? at->role() : Attendee::ReqParticipant,
+                                  a.uid() );
   newAt->setRSVP( rsvp );
   insertAttendee( newAt, true );
+  mnewAttendees.append( newAt );
 }
 
 void KOAttendeeEditor::fillOrganizerCombo()
@@ -260,10 +258,21 @@ void KOAttendeeEditor::fillOrganizerCombo()
 
 void KOAttendeeEditor::addNewAttendee()
 {
+  // check if there's still an unchanged example entry, and if so
+  // suggest to edit that first
+  if ( TQListViewItem* item = hasExampleAttendee() ) {
+      KMessageBox::information( this,
+          i18n( "Please edit the example attendee, before adding more." ), TQString::null,
+          "EditExistingExampleAttendeeFirst" );
+      // make sure the example attendee is selected
+      item->setSelected( true );
+      item->listView()->setCurrentItem( item );
+      return;
+  }
   Attendee *a = new Attendee( i18n("Firstname Lastname"),
                               i18n("name") + "@example.net", true );
   insertAttendee( a, false );
-  mnewAttendees.append(a);
+  mnewAttendees.append( a );
   updateAttendeeInput();
   // We don't want the hint again
   mNameEdit->setClickMessage( "" );
@@ -275,7 +284,7 @@ void KOAttendeeEditor::readEvent(KCal::Incidence * incidence)
 {
   mdelAttendees.clear();
   mnewAttendees.clear();
-  if ( KOPrefs::instance()->thatIsMe( incidence->organizer().email() ) ) {
+  if ( KOPrefs::instance()->thatIsMe( incidence->organizer().email() ) || incidence->organizer().isEmpty() ) {
     if ( !mOrganizerCombo ) {
       mOrganizerCombo = new TQComboBox( mOrganizerHBox );
       fillOrganizerCombo();
@@ -305,8 +314,36 @@ void KOAttendeeEditor::readEvent(KCal::Incidence * incidence)
 
   Attendee::List al = incidence->attendees();
   Attendee::List::ConstIterator it;
-  for( it = al.begin(); it != al.end(); ++it )
-    insertAttendee( new Attendee( **it ), true );
+  Attendee *first = 0;
+  for( it = al.begin(); it != al.end(); ++it ) {
+    Attendee *a = new Attendee( **it );
+    if ( !first ) {
+      first = a;
+    }
+    insertAttendee( a, true );
+  }
+
+  // Set the initial editing values to the first attendee in the list.
+  if ( first ) {
+    // Don't update the item here, the user didn't edit it, so it's not needed.
+    // Also, AttendeeEditor's subclasses didn't set the current Item at this point
+    // so if updateAttendee is called now what will happen is that a random item
+    // will get the text of "first".
+    mDisableItemUpdate = true;
+
+    setSelected( 0 );
+    mNameEdit->setText( first->fullName() );
+    mUid = first->uid();
+    mRoleCombo->setCurrentItem( first->role() );
+    if ( first->status() != KCal::Attendee::None ) {
+      mStatusCombo->setCurrentItem( first->status() );
+    } else {
+      mStatusCombo->setCurrentItem( KCal::Attendee::NeedsAction );
+    }
+    mRsvpButton->setChecked( first->RSVP() );
+    mRsvpButton->setEnabled( true );
+    mDisableItemUpdate = false;
+  }
 }
 
 void KOAttendeeEditor::writeEvent(KCal::Incidence * incidence)
@@ -338,15 +375,39 @@ void KOAttendeeEditor::clearAttendeeInput()
   mDelegateLabel->setText( TQString() );
 }
 
+void KOAttendeeEditor::expandAttendee()
+{
+  KABC::Addressee::List aList = expandDistList( mNameEdit->text() );
+  if ( !aList.isEmpty() ) {
+    int index = selectedIndex();
+    for ( KABC::Addressee::List::iterator itr = aList.begin(); itr != aList.end(); ++itr ) {
+      insertAttendeeFromAddressee( (*itr) );
+    }
+    setSelected( index );
+    removeAttendee( currentAttendee() );
+  }
+}
+
 void KOAttendeeEditor::updateAttendee()
 {
   Attendee *a = currentAttendee();
   if ( !a || mDisableItemUpdate )
     return;
 
-  TQString name;
-  TQString email;
-  KPIM::getNameAndMail(mNameEdit->text(), name, email);
+  TQString text = mNameEdit->text();
+  if ( !mNameEdit->text().startsWith( "\"" ) ) {
+    // Quote the text as it might contain commas and other quotable chars.
+    text = KPIM::quoteNameIfNecessary( text );
+  }
+
+  TQString name, email;
+  if ( KPIM::getNameAndMail( text, name, email ) ) {
+    name.remove( '"' );
+    email.remove( '"' ).remove( '>' );
+  } else {
+    name = TQString();
+    email = mNameEdit->text();
+  }
 
   bool iAmTheOrganizer = mOrganizerCombo &&
     KOPrefs::instance()->thatIsMe( mOrganizerCombo->currentText() );
@@ -356,7 +417,6 @@ void KOAttendeeEditor::updateAttendee()
     bool wasMyself =
       KPIM::compareEmail( a->email(), mOrganizerCombo->currentText(), false );
     if ( myself ) {
-      mStatusCombo->setCurrentItem( KCal::Attendee::Accepted );
       mRsvpButton->setChecked( false );
       mRsvpButton->setEnabled( false );
     } else if ( wasMyself ) {
@@ -380,16 +440,37 @@ void KOAttendeeEditor::fillAttendeeInput( KCal::Attendee *a )
 {
   mDisableItemUpdate = true;
 
-  TQString name = a->name();
-  if (!a->email().isEmpty()) {
-    name = KPIM::quoteNameIfNecessary( name );
-    name += " <" + a->email() + ">";
+  TQString tname, temail;
+  TQString username = a->name();
+  if ( !a->email().isEmpty() ) {
+    username = KPIM::quoteNameIfNecessary( username );
+
+    KPIM::getNameAndMail( username, tname, temail ); // ignore return value
+                                                     // which is always false
+    tname += " <" + a->email() + '>';
   }
-  mNameEdit->setText(name);
+
+  bool myself = KOPrefs::instance()->thatIsMe( a->email() );
+  bool sameAsOrganizer = mOrganizerCombo &&
+          KPIM::compareEmail( a->email(),
+                                   mOrganizerCombo->currentText(), false );
+  KCal::Attendee::PartStat partStat = a->status();
+  bool rsvp = a->RSVP();
+
+  if ( myself && sameAsOrganizer && a->status() == KCal::Attendee::None ) {
+      partStat = KCal::Attendee::Accepted;
+      rsvp = false;
+  }
+
+  mNameEdit->setText(tname);
   mUid = a->uid();
   mRoleCombo->setCurrentItem(a->role());
-  mStatusCombo->setCurrentItem(a->status());
-  mRsvpButton->setChecked(a->RSVP());
+  if ( partStat != KCal::Attendee::None ) {
+    mStatusCombo->setCurrentItem( partStat );
+  } else {
+    mStatusCombo->setCurrentItem( KCal::Attendee::NeedsAction );
+  }
+  mRsvpButton->setChecked( rsvp );
 
   mDisableItemUpdate = false;
   setEnableAttendeeInput( true );
@@ -402,6 +483,9 @@ void KOAttendeeEditor::fillAttendeeInput( KCal::Attendee *a )
     else
       mDelegateLabel->setText( i18n( "Not delegated" ) );
   }
+  if( myself )
+    mRsvpButton->setEnabled( false );
+
 }
 
 void KOAttendeeEditor::updateAttendeeInput()
@@ -418,17 +502,24 @@ void KOAttendeeEditor::updateAttendeeInput()
 void KOAttendeeEditor::cancelAttendeeEvent( KCal::Incidence *incidence )
 {
   incidence->clearAttendees();
-  Attendee * att;
-  for (att=mdelAttendees.first();att;att=mdelAttendees.next()) {
+
+  if ( mdelAttendees.isEmpty() ) {
+    return;
+  }
+
+  Attendee *att;
+  for ( att = mdelAttendees.first(); att; att = mdelAttendees.next() ) {
     bool isNewAttendee = false;
-    for (Attendee *newAtt=mnewAttendees.first();newAtt;newAtt=mnewAttendees.next()) {
-      if (*att==*newAtt) {
-        isNewAttendee = true;
-        break;
+    if ( !mnewAttendees.isEmpty() ) {
+      for ( Attendee *newAtt = mnewAttendees.first(); newAtt; newAtt = mnewAttendees.next() ) {
+        if ( *att == *newAtt ) {
+          isNewAttendee = true;
+          break;
+        }
       }
     }
-    if (!isNewAttendee) {
-      incidence->addAttendee(new Attendee(*att));
+    if ( !isNewAttendee ) {
+      incidence->addAttendee( new Attendee( *att ) );
     }
   }
   mdelAttendees.clear();
@@ -453,5 +544,52 @@ bool KOAttendeeEditor::eventFilter(TQObject *watched, TQEvent *ev)
 
   return TQWidget::eventFilter( watched, ev );
 }
+
+bool KOAttendeeEditor::isExampleAttendee( const KCal::Attendee* attendee ) const
+{
+    if ( !attendee ) return false;
+    if ( attendee->name() == i18n( "Firstname Lastname" )
+        && attendee->email().endsWith( "example.net" ) ) {
+        return true;
+    }
+    return false;
+}
+
+KABC::Addressee::List KOAttendeeEditor::expandDistList( const TQString &text )  const
+{
+  KABC::Addressee::List aList;
+  KABC::AddressBook *abook = KABC::StdAddressBook::self( true );
+
+#ifdef KDEPIM_NEW_DISTRLISTS
+  const TQValueList<KPIM::DistributionList::Entry> eList =
+    KPIM::DistributionList::findByName( abook, text ).entries( abook );
+  TQValueList<KPIM::DistributionList::Entry>::ConstIterator eit;
+  for ( eit = eList.begin(); eit != eList.end(); ++eit ) {
+    KABC::Addressee a = (*eit).addressee;
+    if ( !a.preferredEmail().isEmpty() && aList.find( a ) == aList.end() ) {
+      aList.append( a ) ;
+    }
+  }
+
+#else
+  KABC::DistributionListManager manager( abook );
+  manager.load();
+  const TQStringList dList = manager.listNames();
+  for ( TQStringList::ConstIterator it = dList.begin(); it != dList.end(); ++it ) {
+    if ( (*it) == text ) {
+      const TQValueList<KABC::DistributionList::Entry> eList = manager.list( *it )->entries();
+      TQValueList<KABC::DistributionList::Entry>::ConstIterator eit;
+      for ( eit = eList.begin(); eit != eList.end(); ++eit ) {
+        KABC::Addressee a = (*eit).addressee;
+        if ( !a.preferredEmail().isEmpty() && aList.find( a ) == aList.end() ) {
+          aList.append( a ) ;
+        }
+      }
+    }
+  }
+#endif
+  return aList;
+}
+
 
 #include "koattendeeeditor.moc"

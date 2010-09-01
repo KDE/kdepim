@@ -26,19 +26,56 @@
 #define KOEDITORATTACHMENTS_H
 
 #include <tqwidget.h>
+#include <tqmap.h>
+#include <kdialogbase.h>
+#include <kmimetype.h>
 #include <kurl.h>
+#include <kiconview.h>
+
+#include <set>
+
+class AttachmentListItem;
+class AttachmentIconView;
 
 namespace KCal {
 class Incidence;
 class Attachment;
 }
 
+class TQCheckBox;
 class TQIconViewItem;
-class AttachmentIconView;
+class TQLabel;
 class TQMimeSource;
 class TQPushButton;
 class TQPopupMenu;
+
 class KAction;
+class KLineEdit;
+class KURLRequester;
+class KTempDir;
+
+class AttachmentEditDialog : public KDialogBase
+{
+  Q_OBJECT
+  public:
+    AttachmentEditDialog( AttachmentListItem *item, TQWidget *parent=0 );
+
+    void accept();
+
+  protected slots:
+    void urlSelected( const TQString &url );
+    void urlChanged( const TQString & url );
+    virtual void slotApply();
+
+  private:
+    friend class KOEditorAttachments;
+    KMimeType::Ptr mMimeType;
+    AttachmentListItem *mItem;
+    TQLabel *mTypeLabel, *mIcon;
+    TQCheckBox *mInline;
+    KLineEdit *mLabelEdit;
+    KURLRequester *mURLRequester;
+};
 
 class KOEditorAttachments : public QWidget
 {
@@ -48,9 +85,14 @@ class KOEditorAttachments : public QWidget
                          const char *name = 0 );
     ~KOEditorAttachments();
 
-    void addAttachment( const KURL &uri,
-                        const TQString &mimeType = TQString::null, bool asUri = true );
+    void addUriAttachment( const TQString &uri,
+                           const TQString &mimeType = TQString(),
+                           const TQString &label = TQString(),
+                           bool inLine = false );
     void addAttachment( KCal::Attachment *attachment );
+    void addDataAttachment( const TQByteArray &data,
+                            const TQString &mimeType = TQString(),
+                            const TQString &label = TQString() );
 
     /** Set widgets to default values */
     void setDefaults();
@@ -63,29 +105,75 @@ class KOEditorAttachments : public QWidget
 
   protected slots:
     void showAttachment( TQIconViewItem *item );
+    void saveAttachment( TQIconViewItem *item );
     void slotAdd();
     void slotAddData();
     void slotEdit();
     void slotRemove();
     void slotShow();
+    void slotSaveAs();
     void dragEnterEvent( TQDragEnterEvent *event );
+    void dragMoveEvent( TQDragMoveEvent *event );
     void dropEvent( TQDropEvent *event );
     void slotCopy();
     void slotCut();
     void slotPaste();
     void selectionChanged();
     void contextMenu( TQIconViewItem* item, const TQPoint &pos );
+
   signals:
     void openURL( const KURL &url );
+
+  protected:
+    enum {
+      DRAG_COPY = 0,
+      DRAG_LINK = 1,
+      DRAG_CANCEL = 2
+    };
 
   private:
     friend class AttachmentIconView;
     void handlePasteOrDrop( TQMimeSource* source );
-
+    TQString randomString( int length ) const;
     AttachmentIconView *mAttachments;
     TQPushButton *mRemoveBtn;
     TQPopupMenu *mContextMenu, *mAddMenu;
-    KAction *mOpenAction, *mCopyAction, *mCutAction;
+    KAction *mOpenAction;
+    KAction *mSaveAsAction;
+    KAction *mCopyAction;
+    KAction *mCutAction;
+    KAction *mDeleteAction;
+    KAction *mEditAction;
+};
+
+
+class AttachmentIconView : public KIconView
+{
+  Q_OBJECT
+
+  friend class KOEditorAttachments;
+  public:
+    AttachmentIconView( KOEditorAttachments* parent=0 );
+    KURL tempFileForAttachment( KCal::Attachment *attachment );
+    TQDragObject *mimeData();
+    ~AttachmentIconView();
+
+  protected:
+    TQDragObject * dragObject();
+
+    void dragMoveEvent( TQDragMoveEvent *event );
+    void contentsDragMoveEvent( TQDragMoveEvent *event );
+    void contentsDragEnterEvent( TQDragEnterEvent *event );
+    void dragEnterEvent( TQDragEnterEvent *event );
+
+  protected slots:
+
+    void handleDrop( TQDropEvent *event, const TQValueList<TQIconDragItem> & list );
+
+  private:
+    std::set<KTempDir*> mTempDirs;
+    TQMap<KCal::Attachment *, KURL> mTempFiles;
+    KOEditorAttachments* mParent;
 };
 
 #endif

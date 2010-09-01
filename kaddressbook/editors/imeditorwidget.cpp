@@ -362,6 +362,8 @@ void IMEditorWidget::slotAdd()
 
 void IMEditorWidget::slotEdit()
 {
+  if( mReadOnly )
+    return;
   TQListViewItemIterator it( mWidget->lvAddresses, TQListViewItemIterator::Selected );
 
   // Just edit the first one selected.

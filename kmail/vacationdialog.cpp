@@ -71,7 +71,9 @@ namespace KMail {
 
     // "Resent only after" spinbox and label:
     ++row;
-    mIntervalSpin = new KIntSpinBox( 1, 356, 1, 7, 10, plainPage(), "mIntervalSpin" );
+    int defDayInterval = 7; //default day interval
+    mIntervalSpin = new KIntSpinBox( 1, 356, 1, defDayInterval, 10, plainPage(), "mIntervalSpin" );
+    mIntervalSpin->setSuffix( i18n(" day", " days", defDayInterval) );
     connect(mIntervalSpin, TQT_SIGNAL( valueChanged( int )), TQT_SLOT( slotIntervalSpinChanged( int ) ) );
     glay->addWidget( new TQLabel( mIntervalSpin, i18n("&Resend notification only after:"), plainPage() ), row, 0 );
     glay->addWidget( mIntervalSpin, row, 1 );
@@ -168,27 +170,39 @@ namespace KMail {
   }
 
   void VacationDialog::setDomainName( const TQString & domain ) {
-    mDomainEdit->setText( domain );
-    if ( !domain.isEmpty() )
+    if ( !domain.isEmpty() ) {
+      mDomainEdit->setText( domain );
       mDomainCheck->setChecked( true );
+    }
   }
 
-  bool VacationDialog::sendForSpam() const {
+  bool VacationDialog::domainCheck() const
+  {
+    return mDomainCheck->isChecked();
+  }
+
+  void VacationDialog::setDomainCheck( bool check )
+  {
+    mDomainCheck->setChecked( check );
+  }
+
+  bool VacationDialog::sendForSpam() const
+  {
     return !mSpamCheck->isChecked();
   }
 
-  void VacationDialog::setSendForSpam( bool enable ) {
+  void VacationDialog::setSendForSpam( bool enable )
+  {
     mSpamCheck->setChecked( !enable );
   }
 
-
   /* virtual*/
-  void KMail::VacationDialog::enableDomainAndSendForSpam( bool enable ) {
-      mDomainCheck->setEnabled( enable );
-      mDomainEdit->setEnabled( enable );
-      mSpamCheck->setEnabled( enable );
+  void KMail::VacationDialog::enableDomainAndSendForSpam( bool enable )
+  {
+    mDomainCheck->setEnabled( enable );
+    mDomainEdit->setEnabled( enable && mDomainCheck->isChecked() );
+    mSpamCheck->setEnabled( enable );
   }
-
 
 } // namespace KMail
 

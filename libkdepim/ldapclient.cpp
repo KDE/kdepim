@@ -349,6 +349,22 @@ LdapSearch::LdapSearch()
           TQT_SLOT(slotFileChanged(const TQString&)));
 }
 
+void LdapSearch::readWeighForClient( LdapClient *client, KConfig *config, int clientNumber )
+{
+  const int completionWeight = config->readNumEntry( TQString( "SelectedCompletionWeight%1" ).arg( clientNumber ), -1 );
+  if ( completionWeight != -1 )
+    client->setCompletionWeight( completionWeight );
+}
+
+void LdapSearch::updateCompletionWeights()
+{
+  KConfig *config = KPIM::LdapSearch::config();
+  config->setGroup( "LDAP" );
+  for ( uint i = 0; i < mClients.size(); i++ ) {
+    readWeighForClient( mClients[i], config, i );
+  }
+}
+
 void LdapSearch::readConfig()
 {
   cancelSearch();
@@ -371,9 +387,7 @@ void LdapSearch::readConfig()
       if ( !server.host().isEmpty() ) mNoLDAPLookup = false;
       ldapClient->setServer( server );
 
-      int completionWeight = config->readNumEntry( TQString( "SelectedCompletionWeight%1" ).arg( j ), -1 );
-      if ( completionWeight != -1 )
-        ldapClient->setCompletionWeight( completionWeight );
+      readWeighForClient( ldapClient, config, j );
 
       TQStringList attrs;
       // note: we need "objectClass" to detect distribution lists
@@ -499,7 +513,7 @@ void LdapSearch::makeSearchData( TQStringList& ret, LdapResultList& resList )
     bool wasCN = false;
     bool wasDC = false;
 
-    kdDebug(5300) << "\n\nLdapSearch::makeSearchData()\n\n" << endl;
+    //kdDebug(5300) << "\n\nLdapSearch::makeSearchData()\n\n" << endl;
 
     LdapAttrMap::ConstIterator it2;
     for ( it2 = (*it1).attrs.begin(); it2 != (*it1).attrs.end(); ++it2 ) {
@@ -508,7 +522,7 @@ void LdapSearch::makeSearchData( TQStringList& ret, LdapResultList& resList )
       if( len > 0 && '\0' == val[len-1] )
         --len;
       const TQString tmp = TQString::fromUtf8( val, len );
-      kdDebug(5300) << "      key: \"" << it2.key() << "\" value: \"" << tmp << "\"" << endl;
+      //kdDebug(5300) << "      key: \"" << it2.key() << "\" value: \"" << tmp << "\"" << endl;
       if ( it2.key() == "cn" ) {
         name = tmp;
         if( mail.isEmpty() )
@@ -551,7 +565,7 @@ void LdapSearch::makeSearchData( TQStringList& ret, LdapResultList& resList )
     if( mails.isEmpty()) {
       if ( !mail.isEmpty() ) mails.append( mail );
       if( isDistributionList ) {
-        kdDebug(5300) << "\n\nLdapSearch::makeSearchData() found a list: " << name << "\n\n" << endl;
+        //kdDebug(5300) << "\n\nLdapSearch::makeSearchData() found a list: " << name << "\n\n" << endl;
         ret.append( name );
         // following lines commented out for bugfixing kolab issue #177:
         //
@@ -568,14 +582,14 @@ void LdapSearch::makeSearchData( TQStringList& ret, LdapResultList& resList )
         //mail.prepend( name );
         //mail = name;
       } else {
-        kdDebug(5300) << "LdapSearch::makeSearchData() found BAD ENTRY: \"" << name << "\"" << endl;
+        //kdDebug(5300) << "LdapSearch::makeSearchData() found BAD ENTRY: \"" << name << "\"" << endl;
         continue; // nothing, bad entry
       }
     } else if ( name.isEmpty() ) {
-      kdDebug(5300) << "LdapSearch::makeSearchData() mail: \"" << mail << "\"" << endl;
+      //kdDebug(5300) << "LdapSearch::makeSearchData() mail: \"" << mail << "\"" << endl;
       ret.append( mail );
     } else {
-      kdDebug(5300) << "LdapSearch::makeSearchData() name: \"" << name << "\"  mail: \"" << mail << "\"" << endl;
+      //kdDebug(5300) << "LdapSearch::makeSearchData() name: \"" << name << "\"  mail: \"" << mail << "\"" << endl;
       ret.append( TQString( "%1 <%2>" ).arg( name ).arg( mail ) );
     }
 

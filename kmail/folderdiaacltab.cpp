@@ -30,7 +30,7 @@
  *  your version.
  */
 
-#include <config.h>
+#include <config.h> // FOR KDEPIM_NEW_DISTRLISTS
 
 #include "folderdiaacltab.h"
 #include "acljobs.h"
@@ -90,7 +90,7 @@ KMail::ACLEntryDialog::ACLEntryDialog( IMAPUserIdFormat userIdFormat, const TQSt
 {
   TQWidget *page = new TQWidget( this );
   setMainWidget(page);
-  TQGridLayout *topLayout = new TQGridLayout( page, 3 /*rows*/, 3 /*cols*/, 0, spacingHint() );
+  TQGridLayout *topLayout = new TQGridLayout( page, 4 /*rows*/, 3 /*cols*/, 0, spacingHint() );
 
   TQLabel *label = new TQLabel( i18n( "&User identifier:" ), page );
   topLayout->addWidget( label, 0, 0 );
@@ -100,7 +100,7 @@ KMail::ACLEntryDialog::ACLEntryDialog( IMAPUserIdFormat userIdFormat, const TQSt
   label->setBuddy( mUserIdLineEdit );
   TQWhatsThis::add( mUserIdLineEdit, i18n( "The User Identifier is the login of the user on the IMAP server. This can be a simple user name or the full email address of the user; the login for your own account on the server will tell you which one it is." ) );
 
-  TQPushButton* kabBtn = new TQPushButton( "...", page );
+  TQPushButton* kabBtn = new TQPushButton( i18n( "Se&lect..." ), page );
   topLayout->addWidget( kabBtn, 0, 2 );
 
   mButtonGroup = new TQVButtonGroup( i18n( "Permissions" ), page );
@@ -114,6 +114,9 @@ KMail::ACLEntryDialog::ACLEntryDialog( IMAPUserIdFormat userIdFormat, const TQSt
     mButtonGroup->insert( cb, standardPermissions[i].permissions );
   }
   topLayout->setRowStretch(2, 10);
+
+  TQLabel *noteLabel = new TQLabel( i18n( "<b>Note: </b>Renaming requires write permissions on the parent folder." ), page );
+  topLayout->addMultiCellWidget( noteLabel, 2, 2, 0, 2 );
 
   connect( mUserIdLineEdit, TQT_SIGNAL( textChanged( const TQString& ) ), TQT_SLOT( slotChanged() ) );
   connect( kabBtn, TQT_SIGNAL( clicked() ), TQT_SLOT( slotSelectAddresses() ) );
@@ -178,12 +181,7 @@ TQString KMail::ACLEntryDialog::userId() const
 
 TQStringList KMail::ACLEntryDialog::userIds() const
 {
-  TQStringList lst = TQStringList::split( ",", mUserIdLineEdit->text() );
-  for( TQStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
-    // Strip white space (in particular, due to ", ")
-    *it = (*it).stripWhiteSpace();
-  }
-  return lst;
+  return KPIM::splitEmailAddrList( mUserIdLineEdit->text() );
 }
 
 unsigned int KMail::ACLEntryDialog::permissions() const
@@ -319,6 +317,7 @@ KMail::FolderDiaACLTab::FolderDiaACLTab( KMFolderDialog* dlg, TQWidget* parent, 
   : FolderDiaTab( parent, name ),
     mImapAccount( 0 ),
     mUserRights( 0 ),
+    mUserRightsState( KMail::ACLJobs::NotFetchedYet ),
     mDlg( dlg ),
     mChanged( false ), mAccepting( false ), mSaving( false )
 {
@@ -344,7 +343,7 @@ KMail::FolderDiaACLTab::FolderDiaACLTab( KMFolderDialog* dlg, TQWidget* parent, 
 	   TQT_SLOT(slotEditACL(TQListViewItem*)) );
   connect( mListView, TQT_SIGNAL(returnPressed(TQListViewItem*)),
 	   TQT_SLOT(slotEditACL(TQListViewItem*)) );
-  connect( mListView, TQT_SIGNAL(selectionChanged(TQListViewItem*)),
+  connect( mListView, TQT_SIGNAL(currentChanged(TQListViewItem*)),
 	   TQT_SLOT(slotSelectionChanged(TQListViewItem*)) );
 
   TQVBox* buttonBox = new TQVBox( mACLWidget );
@@ -381,12 +380,14 @@ void KMail::FolderDiaACLTab::initializeWithValuesFromFolder( KMFolder* folder )
     mImapPath = folderImap->imapPath();
     mImapAccount = folderImap->account();
     mUserRights = folderImap->userRights();
+    mUserRightsState = folderImap->userRightsState();
   }
   else if ( mFolderType == KMFolderTypeCachedImap ) {
     KMFolderCachedImap* folderImap = static_cast<KMFolderCachedImap*>( folder->storage() );
     mImapPath = folderImap->imapPath();
     mImapAccount = folderImap->account();
     mUserRights = folderImap->userRights();
+    mUserRightsState = folderImap->userRightsState();
   }
   else
     assert( 0 ); // see KMFolderDialog constructor
@@ -422,13 +423,16 @@ void KMail::FolderDiaACLTab::load()
   if ( mFolderType == KMFolderTypeCachedImap ) {
     KMFolder* folder = mDlg->folder() ? mDlg->folder() : mDlg->parentFolder();
     KMFolderCachedImap* folderImap = static_cast<KMFolderCachedImap*>( folder->storage() );
-    if ( mUserRights == -1 ) { // error
-      mLabel->setText( i18n( "Error retrieving user permissions." ) );
-    } else if ( mUserRights == 0 /* can't happen anymore*/ || folderImap->aclList().isEmpty() ) {
-      /* We either synced, or we read user rights from the config, so we can
-         assume the server supports acls and an empty list means we haven't
-         synced yet. */
-      mLabel->setText( i18n( "Information not retrieved from server yet, please use \"Check Mail\"." ) );
+    if ( mUserRightsState == KMail::ACLJobs::FetchFailed ||
+         folderImap->aclListState() == KMail::ACLJobs::FetchFailed ) {
+      TQString text = i18n( "Error retrieving user permissions." );
+      if ( mUserRightsState == KMail::ACLJobs::Ok ) {
+        text += "\n" + i18n( "You might not have enough permissions to see the permissions of this folder." );
+      }
+      mLabel->setText( text );
+    } else if ( mUserRightsState == KMail::ACLJobs::NotFetchedYet ||
+                folderImap->aclListState() == KMail::ACLJobs::NotFetchedYet ) {
+      mLabel->setText( i18n( "Information not retrieved from server, you need to use \"Check Mail\" and have administrative privileges on the folder."));
     } else {
       loadFinished( folderImap->aclList() );
     }
@@ -474,7 +478,7 @@ void KMail::FolderDiaACLTab::slotConnectionResult( int errorCode, const TQString
     return;
   }
 
-  if ( mUserRights == 0 ) {
+  if ( mUserRightsState != KMail::ACLJobs::Ok ) {
     connect( mImapAccount, TQT_SIGNAL( receivedUserRights( KMFolder* ) ),
              this, TQT_SLOT( slotReceivedUserRights( KMFolder* ) ) );
     KMFolder* folder = mDlg->folder() ? mDlg->folder() : mDlg->parentFolder();
@@ -494,6 +498,7 @@ void KMail::FolderDiaACLTab::slotReceivedUserRights( KMFolder* folder )
   if ( folder == mDlg->folder() ? mDlg->folder() : mDlg->parentFolder() ) {
     KMFolderImap* folderImap = static_cast<KMFolderImap*>( folder->storage() );
     mUserRights = folderImap->userRights();
+    mUserRightsState = folderImap->userRightsState();
     startListing();
   }
 }

@@ -85,6 +85,7 @@ TQPixmap* KMHeaders::pixUndefinedEncrypted = 0;
 TQPixmap* KMHeaders::pixEncryptionProblematic = 0;
 TQPixmap* KMHeaders::pixSignatureProblematic = 0;
 TQPixmap* KMHeaders::pixAttachment = 0;
+TQPixmap* KMHeaders::pixInvitation = 0;
 TQPixmap* KMHeaders::pixReadFwd = 0;
 TQPixmap* KMHeaders::pixReadReplied = 0;
 TQPixmap* KMHeaders::pixReadFwdReplied = 0;
@@ -93,7 +94,8 @@ TQPixmap* KMHeaders::pixReadFwdReplied = 0;
 //-----------------------------------------------------------------------------
 KMHeaders::KMHeaders(KMMainWidget *aOwner, TQWidget *parent,
                      const char *name) :
-  KListView(parent, name)
+  KListView( parent, name ),
+  mIgnoreSortOrderChanges( false )
 {
   static bool pixmapsLoaded = false;
   //qInitImageIO();
@@ -131,6 +133,7 @@ KMHeaders::KMHeaders(KMMainWidget *aOwner, TQWidget *parent,
   mPopup->insertItem(i18n("Important"),       KPaintInfo::COL_IMPORTANT);
   mPopup->insertItem(i18n("Action Item"),     KPaintInfo::COL_TODO);
   mPopup->insertItem(i18n("Attachment"),      KPaintInfo::COL_ATTACHMENT);
+  mPopup->insertItem(i18n("Invitation"),      KPaintInfo::COL_INVITATION);
   mPopup->insertItem(i18n("Spam/Ham"),        KPaintInfo::COL_SPAM_HAM);
   mPopup->insertItem(i18n("Watched/Ignored"), KPaintInfo::COL_WATCHED_IGNORED);
   mPopup->insertItem(i18n("Signature"),       KPaintInfo::COL_SIGNED);
@@ -169,6 +172,7 @@ KMHeaders::KMHeaders(KMMainWidget *aOwner, TQWidget *parent,
     pixEncryptionProblematic = new TQPixmap( UserIcon( "kmmsgencryptionproblematic" ) );
     pixSignatureProblematic  = new TQPixmap( UserIcon( "kmmsgsignatureproblematic"  ) );
     pixAttachment            = new TQPixmap( UserIcon( "kmmsgattachment"            ) );
+    pixInvitation            = new TQPixmap( UserIcon( "kmmsginvitation"            ) );
     pixReadFwd               = new TQPixmap( UserIcon( "kmmsgread_fwd"              ) );
     pixReadReplied           = new TQPixmap( UserIcon( "kmmsgread_replied"          ) );
     pixReadFwdReplied        = new TQPixmap( UserIcon( "kmmsgread_fwd_replied"      ) );
@@ -187,6 +191,7 @@ KMHeaders::KMHeaders(KMMainWidget *aOwner, TQWidget *parent,
   mPaintInfo.importantCol      = addColumn( *pixFlag          , "", 0 );
   mPaintInfo.todoCol           = addColumn( *pixTodo          , "", 0 );
   mPaintInfo.attachmentCol     = addColumn( *pixAttachment    , "", 0 );
+  mPaintInfo.invitationCol     = addColumn( *pixInvitation    , "", 0 );
   mPaintInfo.spamHamCol        = addColumn( *pixSpam          , "", 0 );
   mPaintInfo.watchedIgnoredCol = addColumn( *pixWatched       , "", 0 );
   mPaintInfo.signedCol         = addColumn( *pixFullySigned   , "", 0 );
@@ -272,6 +277,15 @@ void KMHeaders::slotToggleColumn(int id, int mode)
     {
       show  = &mPaintInfo.showAttachment;
       col   = &mPaintInfo.attachmentCol;
+      width = pixAttachment->width() + 8;
+      if ( *col == header()->mapToIndex( *col ) )
+        moveToCol = 0;
+      break;
+    }
+    case KPaintInfo::COL_INVITATION:
+    {
+      show  = &mPaintInfo.showInvitation;
+      col   = &mPaintInfo.invitationCol;
       width = pixAttachment->width() + 8;
       if ( *col == header()->mapToIndex( *col ) )
         moveToCol = 0;
@@ -475,6 +489,9 @@ void KMHeaders::readConfig (void)
     show = config->readBoolEntry("showAttachmentColumn");
     slotToggleColumn(KPaintInfo::COL_ATTACHMENT, show);
 
+    show = config->readBoolEntry("showInvitationColumn");
+    slotToggleColumn(KPaintInfo::COL_INVITATION, show);
+
     show = config->readBoolEntry("showImportantColumn");
     slotToggleColumn(KPaintInfo::COL_IMPORTANT, show);
 
@@ -501,6 +518,7 @@ void KMHeaders::readConfig (void)
 
     mPaintInfo.showCryptoIcons = config->readBoolEntry( "showCryptoIcons", false );
     mPaintInfo.showAttachmentIcon = config->readBoolEntry( "showAttachmentIcon", true );
+    mPaintInfo.showInvitationIcon = config->readBoolEntry( "showInvitationIcon", false );
 
     KMime::DateFormatter::FormatType t =
       (KMime::DateFormatter::FormatType) config->readNumEntry("dateFormat", KMime::DateFormatter::Fancy ) ;
@@ -538,6 +556,16 @@ void KMHeaders::readConfig (void)
   }
 }
 
+//-----------------------------------------------------------------------------
+void KMHeaders::restoreColumnLayout( KConfig *config, const TQString &group )
+{
+  // KListView::restoreLayout() will call setSorting(), which is reimplemented by us.
+  // We don't want to change the sort order, so we set a flag here that is checked in
+  // setSorting().
+  mIgnoreSortOrderChanges = true;
+  restoreLayout( config, group );
+  mIgnoreSortOrderChanges = false;
+}
 
 //-----------------------------------------------------------------------------
 void KMHeaders::reset()
@@ -593,7 +621,7 @@ void KMHeaders::readFolderConfig (void)
   mCurrentItem = config->readNumEntry("Current", 0);
   mCurrentItemSerNum = config->readNumEntry("CurrentSerialNum", 0);
 
-  mPaintInfo.orderOfArrival = config->readBoolEntry( "OrderOfArrival", true );
+  mPaintInfo.orderOfArrival = config->readBoolEntry( "OrderOfArrival", false );
   mPaintInfo.status = config->readBoolEntry( "Status", false );
 
   { //area for config group "Geometry"
@@ -636,6 +664,7 @@ void KMHeaders::writeConfig (void)
   KConfigGroupSaver saver(config, "General");
   config->writeEntry("showMessageSize"         , mPaintInfo.showSize);
   config->writeEntry("showAttachmentColumn"    , mPaintInfo.showAttachment);
+  config->writeEntry("showInvitationColumn"    , mPaintInfo.showInvitation);
   config->writeEntry("showImportantColumn"     , mPaintInfo.showImportant);
   config->writeEntry("showTodoColumn"          , mPaintInfo.showTodo);
   config->writeEntry("showSpamHamColumn"       , mPaintInfo.showSpamHam);
@@ -792,9 +821,19 @@ void KMHeaders::msgChanged()
     clear();
     return;
   }
-  int i = topItemIndex();
-  int cur = currentItemIndex();
   if (!isUpdatesEnabled()) return;
+
+  // Remember selected messages, current message and some scrollbar data, as we have to restore it
+  const TQValueList<int> oldSelectedItems = selectedItems();
+  const int oldCurrentItemIndex = currentItemIndex();
+  const bool scrollbarAtTop = verticalScrollBar() &&
+                              verticalScrollBar()->value() == verticalScrollBar()->minValue();
+  const bool scrollbarAtBottom = verticalScrollBar() &&
+                                 verticalScrollBar()->value() == verticalScrollBar()->maxValue();
+  const HeaderItem * const oldFirstVisibleItem = dynamic_cast<HeaderItem*>( itemAt( TQPoint( 0, 0 ) ) );
+  const int oldOffsetOfFirstVisibleItem = itemRect( oldFirstVisibleItem ).y();
+  const uint oldSerNumOfFirstVisibleItem = oldFirstVisibleItem ? oldFirstVisibleItem->msgSerNum() : 0;
+
   TQString msgIdMD5;
   TQListViewItem *item = currentItem();
   HeaderItem *hi = dynamic_cast<HeaderItem*>(item);
@@ -808,27 +847,26 @@ void KMHeaders::msgChanged()
   // prevent IMAP messages from scrolling to top
   disconnect(this,TQT_SIGNAL(currentChanged(TQListViewItem*)),
              this,TQT_SLOT(highlightMessage(TQListViewItem*)));
-  // remember all selected messages
-  TQValueList<int> curItems = selectedItems();
+
   updateMessageList(); // do not change the selection
-  // restore the old state, but move up when there are unread message just out of view
-  HeaderItem *topOfList = mItems[i];
-  item = firstChild();
-  TQListViewItem *unreadItem = 0;
-  while(item && item != topOfList) {
-    KMMsgBase *msg = mFolder->getMsgBase( static_cast<HeaderItem*>(item)->msgId() );
-    if ( msg->isUnread() || msg->isNew() ) {
-      if ( !unreadItem )
-        unreadItem = item;
-    } else
-      unreadItem = 0;
-    item = item->itemBelow();
+
+  // Restore scrollbar state and selected and current messages
+  setCurrentMsg( oldCurrentItemIndex );
+  setSelectedByIndex( oldSelectedItems, true );
+  if ( scrollbarAtTop ) {
+    setContentsPos( 0, 0 );
+  } else if ( scrollbarAtBottom ) {
+    setContentsPos( 0, contentsHeight() );
+  } else if ( oldSerNumOfFirstVisibleItem > 0 ) {
+    for ( uint i = 0; i < mItems.size(); ++i ) {
+      const KMMsgBase * const mMsgBase = mFolder->getMsgBase( i );
+      if ( mMsgBase->getMsgSerNum() == oldSerNumOfFirstVisibleItem ) {
+        setContentsPos( 0, itemPos( mItems[i] ) - oldOffsetOfFirstVisibleItem );
+        break;
+      }
+    }
   }
-  if(unreadItem == 0)
-      unreadItem = topOfList;
-  setContentsPos( 0, itemPos( unreadItem ));
-  setCurrentMsg( cur );
-  setSelectedByIndex( curItems, true );
+
   connect(this,TQT_SIGNAL(currentChanged(TQListViewItem*)),
           this,TQT_SLOT(highlightMessage(TQListViewItem*)));
 
@@ -1909,8 +1947,8 @@ void KMHeaders::findUnreadAux( HeaderItem*& item,
       if (!msgBase) continue;
       if (msgBase->isUnread() || msgBase->isNew())
         foundUnreadMessage = true;
-      if (!onlyNew && (msgBase->isUnread() || msgBase->isNew())
-          || onlyNew && msgBase->isNew())
+      if ( ( !onlyNew && (msgBase->isUnread() || msgBase->isNew()) )
+          || ( onlyNew && msgBase->isNew() ) )
         lastUnread = newItem;
       if (newItem == item) break;
       newItem = static_cast<HeaderItem*>(newItem->itemBelow());
@@ -1941,11 +1979,14 @@ int KMHeaders::findUnread(bool aDirNext, int aStartAt, bool onlyNew, bool accept
     if (!item)
       return -1;
 
-    if ( !acceptCurrent )
-        if (aDirNext)
+    if ( !acceptCurrent ) {
+        if (aDirNext) {
             item = static_cast<HeaderItem*>(item->itemBelow());
-        else
+        }
+        else {
             item = static_cast<HeaderItem*>(item->itemAbove());
+        }
+    }
   }
 
   pitem =  item;
@@ -2413,9 +2454,7 @@ void KMHeaders::slotRMB()
      mOwner->useAction()->plug( menu );
   } else {
     // show most used actions
-    if( !mFolder->isSent() ) {
-      mOwner->messageActions()->replyMenu()->plug( menu );
-    }
+    mOwner->messageActions()->replyMenu()->plug( menu );
     mOwner->forwardMenu()->plug( menu );
     if( mOwner->sendAgainAction()->isEnabled() ) {
       mOwner->sendAgainAction()->plug( menu );
@@ -2430,7 +2469,7 @@ void KMHeaders::slotRMB()
       &mMenuToFolder, msgCopyMenu );
   menu->insertItem(i18n("&Copy To"), msgCopyMenu);
 
-  if ( mFolder->isReadOnly() ) {
+  if ( !mFolder->canDeleteMessages() ) {
     int id = menu->insertItem( i18n("&Move To") );
     menu->setItemEnabled( id, false );
   } else {
@@ -2577,6 +2616,9 @@ const KMMsgBase* KMHeaders::getMsgBaseForItem( const TQListViewItem *item ) cons
 //-----------------------------------------------------------------------------
 void KMHeaders::setSorting( int column, bool ascending )
 {
+  if ( mIgnoreSortOrderChanges )
+    return;
+
   if (column != -1) {
   // carsten: really needed?
 //    if (column != mSortCol)
@@ -2659,7 +2701,9 @@ void KMHeaders::folderCleared()
 
 void KMHeaders::folderClosed()
 {
-    mFolder->open( "kmheaders" );
+  if ( mFolder->open( "kmheaders" ) == 0 )
+    updateMessageList();
+  else
     folderCleared();
 }
 
@@ -3027,6 +3071,8 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
     bool jumpToUnread = (GlobalSettings::self()->actionEnterFolder() ==
                          GlobalSettings::EnumActionEnterFolder::SelectFirstUnreadNew) ||
                         forceJumpToUnread;
+    HeaderItem *oldestItem = 0;
+    HeaderItem *newestItem = 0;
     TQMemArray<SortCacheItem *> sortCache(mFolder->count());
     bool error = false;
 
@@ -3330,6 +3376,16 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
             {
               unread_exists = true;
             }
+
+            if ( !oldestItem || mFolder->getMsgBase( oldestItem->msgId() )->date() >
+                  mFolder->getMsgBase( new_kci->id() )->date() ) {
+              oldestItem = khi;
+            }
+
+            if ( !newestItem || mFolder->getMsgBase( newestItem->msgId() )->date() <
+                  mFolder->getMsgBase( new_kci->id() )->date() ) {
+              newestItem = khi;
+            }
         }
         // If we are sorting by date and ascending the top level items are sorted
         // ascending and the threads themselves are sorted descending. One wants
@@ -3379,10 +3435,12 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
         }
     }
 
-    //show a message
+    // Select a message, depending on the "When entering a folder:" setting
     CREATE_TIMER(selection);
     START_TIMER(selection);
     if(set_selection) {
+
+        // Search for the id of the first unread/new item, should there be any
         int first_unread = -1;
         if (unread_exists) {
             HeaderItem *item = static_cast<HeaderItem*>(firstChild());
@@ -3401,19 +3459,33 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
             }
         }
 
+        // No unread message to select, so either select the newest, oldest or lastest selected
         if(first_unread == -1 ) {
-            setTopItemByIndex(mTopItem);
-            if ( mCurrentItem >= 0 )
+            setTopItemByIndex( mTopItem );
+
+            if ( GlobalSettings::self()->actionEnterFolder() ==
+                 GlobalSettings::EnumActionEnterFolder::SelectNewest && newestItem != 0 ) {
+              setCurrentItemByIndex( newestItem->msgId() );
+            }
+            else if ( GlobalSettings::self()->actionEnterFolder() ==
+                      GlobalSettings::EnumActionEnterFolder::SelectOldest && oldestItem != 0 ) {
+              setCurrentItemByIndex( oldestItem->msgId() );
+            }
+            else if ( mCurrentItem >= 0 )
               setCurrentItemByIndex( mCurrentItem );
             else if ( mCurrentItemSerNum > 0 )
               setCurrentItemBySerialNum( mCurrentItemSerNum );
             else
               setCurrentItemByIndex( 0 );
+
+        // There is an unread item to select, so select it
         } else {
             setCurrentItemByIndex(first_unread);
             makeHeaderVisible();
             center( contentsX(), itemPos(mItems[first_unread]), 0, 9.0 );
         }
+
+    // we are told to not change the selection
     } else {
         // only reset the selection if we have no current item
         if (mCurrentItem <= 0) {
@@ -3503,7 +3575,7 @@ void KMHeaders::updateActions()
     cut->setEnabled( false );
   } else {
     copy->setEnabled( true );
-    if ( folder() && folder()->isReadOnly() )
+    if ( folder() && !folder()->canDeleteMessages() )
       cut->setEnabled( false );
     else
       cut->setEnabled( true );
@@ -3534,7 +3606,9 @@ TQValueList< Q_UINT32 > KMHeaders::selectedSernums()
     if ( it.current()->isSelected() && it.current()->isVisible() ) {
       HeaderItem* item = static_cast<HeaderItem*>( it.current() );
       KMMsgBase *msgBase = mFolder->getMsgBase( item->msgId() );
-      list.append( msgBase->getMsgSerNum() );
+      if ( msgBase ) {
+        list.append( msgBase->getMsgSerNum() );
+      }
     }
   }
   return list;
@@ -3558,7 +3632,9 @@ TQValueList< Q_UINT32 > KMHeaders::selectedVisibleSernums()
       }
       HeaderItem *item = static_cast<HeaderItem*>(it.current());
       KMMsgBase *msgBase = mFolder->getMsgBase( item->msgId() );
-      list.append( msgBase->getMsgSerNum() );
+      if ( msgBase ) {
+        list.append( msgBase->getMsgSerNum() );
+      }
     }
     ++it;
   }

@@ -309,7 +309,8 @@ void FavoriteFolderView::dropped(TQDropEvent * e, TQListViewItem * after)
       KMFolderTreeItem *fti = static_cast<KMFolderTreeItem*>( it.current() );
       if ( !fti->folder() )
         continue;
-      afterItem = addFolder( fti->folder(), prettyName( fti ), afterItem );
+      if( !mFolderToItem.contains( fti->folder() ) )
+         afterItem = addFolder( fti->folder(), prettyName( fti ), afterItem );
     }
     e->accept();
   }
@@ -323,20 +324,25 @@ void FavoriteFolderView::contextMenu(TQListViewItem * item, const TQPoint & poin
   mContextMenuItem = fti;
   KPopupMenu contextMenu;
   if ( fti && fti->folder() ) {
-    contextMenu.insertItem( SmallIconSet("editdelete"), i18n("Remove From Favorites"),
-                            this, TQT_SLOT(removeFolder()) );
-    contextMenu.insertItem( SmallIconSet("edit"), i18n("Rename Favorite"), this, TQT_SLOT(renameFolder()) );
-    contextMenu.insertSeparator();
-
     mainWidget()->action("mark_all_as_read")->plug( &contextMenu );
     if ( fti->folder()->folderType() == KMFolderTypeImap || fti->folder()->folderType() == KMFolderTypeCachedImap )
       mainWidget()->action("refresh_folder")->plug( &contextMenu );
     if ( fti->folder()->isMailingListEnabled() )
       mainWidget()->action("post_message")->plug( &contextMenu );
+    mainWidget()->action("search_messages")->plug( &contextMenu );
+    if ( fti->folder()->canDeleteMessages() && ( fti->folder()->count() > 0 ) )
+       mainWidget()->action("empty")->plug( &contextMenu );
+    contextMenu.insertSeparator();
 
     contextMenu.insertItem( SmallIconSet("configure_shortcuts"), i18n("&Assign Shortcut..."), fti, TQT_SLOT(assignShortcut()) );
     contextMenu.insertItem( i18n("Expire..."), fti, TQT_SLOT(slotShowExpiryProperties()) );
     mainWidget()->action("modify")->plug( &contextMenu );
+    contextMenu.insertSeparator();
+
+    contextMenu.insertItem( SmallIconSet("editdelete"), i18n("Remove From Favorites"),
+                            this, TQT_SLOT(removeFolder()) );
+    contextMenu.insertItem( SmallIconSet("edit"), i18n("Rename Favorite"), this, TQT_SLOT(renameFolder()) );
+
   } else {
     contextMenu.insertItem( SmallIconSet("bookmark_add"), i18n("Add Favorite Folder..."),
                             this, TQT_SLOT(addFolder()) );
@@ -346,8 +352,13 @@ void FavoriteFolderView::contextMenu(TQListViewItem * item, const TQPoint & poin
 
 void FavoriteFolderView::removeFolder()
 {
+  KMFolderTreeItem *fti = mContextMenuItem;
+  KMFolder *folder = 0;
+  if( fti )
+    folder = fti->folder();
   delete mContextMenuItem;
   mContextMenuItem = 0;
+  removeFromFolderToItemMap(folder);
   notifyInstancesOnChange();
 }
 
@@ -446,6 +457,9 @@ void FavoriteFolderView::addFolder()
   KMFolder *folder = dlg.folder();
   if ( !folder )
     return;
+  if ( mFolderToItem.contains( folder ) )
+    return;
+
   KMFolderTreeItem *fti = findFolderTreeItem( folder );
   addFolder( folder, fti ? prettyName( fti ) : folder->label() );
 }
@@ -454,7 +468,8 @@ void KMail::FavoriteFolderView::addFolder(KMFolderTreeItem * fti)
 {
   if ( !fti || !fti->folder() )
     return;
-  addFolder( fti->folder(), prettyName( fti ) );
+  if ( !mFolderToItem.contains( fti->folder()  ) )
+    addFolder( fti->folder(), prettyName( fti ) );
 }
 
 KMFolderTreeItem * FavoriteFolderView::findFolderTreeItem(KMFolder * folder) const
@@ -485,7 +500,7 @@ void FavoriteFolderView::checkMail()
         imap->getAndCheckFolder();
       } else if ( fti->folder()->folderType() == KMFolderTypeCachedImap ) {
         KMFolderCachedImap* f = static_cast<KMFolderCachedImap*>( fti->folder()->storage() );
-        f->account()->processNewMailSingleFolder( fti->folder() );
+        f->account()->processNewMailInFolder( fti->folder() );
       }
     }
   }

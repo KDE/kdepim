@@ -46,10 +46,15 @@
 #include <klocale.h>
 #include <ksavefile.h>
 #include <kguiitem.h>
+#include <kdebug.h>
 
 #include <tqtextedit.h>
 #include <tqtextstream.h>
 #include <tqvbox.h>
+#include <tqapplication.h>
+#include <tqstylesheet.h>
+
+#include <gpg-error.h>
 
 using namespace Kleo;
 using namespace GpgME;
@@ -74,6 +79,7 @@ public:
     explicit AuditLogViewer( const TQString & log, TQWidget * parent=0, const char * name=0, WFlags f=0 )
         : KDialogBase( parent, name, false, i18n("View GnuPG Audit Log"),
                        Close|User1|User2, Close, false, KGuiItem_save(), KGuiItem_copy() ),
+          m_log( /* sic */ ),
           m_textEdit( new TQTextEdit( this, "m_textEdit" ) )
     {
         setWFlags( f );
@@ -85,7 +91,18 @@ public:
     ~AuditLogViewer() {}
 
     void setAuditLog( const TQString & log ) {
-        m_textEdit->setText( log );
+        if ( log == m_log )
+            return;
+        m_log = log;
+        m_textEdit->setText( "<qt>" + log + "</qt>" );
+        const TQRect rect = m_textEdit->paragraphRect( 0 );
+        kdDebug() << "setAuditLog: rect = " << rect << endl;
+        if ( !rect.isValid() )
+            return;
+        TQSize maxSize = qApp->desktop()->screenGeometry( this ).size() * 2 / 3 ;
+        if ( !maxSize.isValid() )
+            maxSize = TQSize( 640, 480 );
+        m_textEdit->setMinimumSize( rect.size().boundedTo( maxSize ) );
     }
 
 private:
@@ -98,7 +115,12 @@ private:
         KSaveFile file( fileName );
 
         if ( TQTextStream * const s = file.textStream() ) {
-            *s << m_textEdit->text() << endl;
+            *s << "<html><head>";
+            if ( !caption().isEmpty() )
+                *s << "\n<title>" << /*TQt*/TQStyleSheet::escape( caption() ) << "</title>\n";
+            *s << "</head><body>\n"
+               << m_log
+               << "\n</body></html>" << endl;
             file.close();
         }
 
@@ -114,6 +136,7 @@ private:
     }
 
 private:
+    TQString m_log;
     TQTextEdit * m_textEdit;
 };
 
@@ -125,13 +148,23 @@ void MessageBox::auditLog( TQWidget * parent, const Job * job, const TQString & 
     if ( !job )
         return;
 
-    if ( !GpgME::hasFeature( AuditLogFeature ) ) {
+    if ( !GpgME::hasFeature( AuditLogFeature ) || !job->isAuditLogSupported() ) {
         KMessageBox::information( parent, i18n("Your system does not have support for GnuPG Audit Logs"),
                                   i18n("System Error") );
         return;
     }
 
+    const GpgME::Error err = job->auditLogError();
+
+    if ( err.code() != GPG_ERR_NO_DATA ) {
+        KMessageBox::information( parent, i18n("An error occurred while trying to retrieve the GnuPG Audit Log:\n%1")
+                                  .arg( TQString::fromLocal8Bit( err.asString() ) ),
+                                  i18n("GnuPG Audit Log Error") );
+        return;
+    }
+
     const TQString log = job->auditLogAsHtml();
+
     if ( log.isEmpty() ) {
         KMessageBox::information( parent, i18n("No GnuPG Audit Log available for this operation."),
                                   i18n("No GnuPG Audit Log") );
@@ -143,7 +176,7 @@ void MessageBox::auditLog( TQWidget * parent, const Job * job, const TQString & 
 
 // static
 void MessageBox::auditLog( TQWidget * parent, const TQString & log, const TQString & caption ) {
-    AuditLogViewer * const alv = new AuditLogViewer( "<qt>" + log + "</qt>", parent, "alv", Qt::WDestructiveClose );
+    AuditLogViewer * const alv = new AuditLogViewer( log, parent, "alv", Qt::WDestructiveClose );
     alv->setCaption( caption );
     alv->show();
 }
@@ -247,8 +280,34 @@ void MessageBox::error( TQWidget * parent, const SigningResult & sresult, const 
 }
 
 // static
+bool MessageBox::showAuditLogButton( const Kleo::Job * job ) {
+    if ( !job ) {
+        kdDebug() << "not showing audit log button (no job instance)" << endl;
+        return false;
+    }
+    if ( !GpgME::hasFeature( GpgME::AuditLogFeature ) ) {
+        kdDebug() << "not showing audit log button (gpgme too old)" << endl;
+        return false;
+    }
+    if ( !job->isAuditLogSupported() ) {
+        kdDebug() << "not showing audit log button (not supported)" << endl;
+        return false;
+    }
+    if ( job->auditLogError().code() == GPG_ERR_NO_DATA ) {
+        kdDebug() << "not showing audit log button (GPG_ERR_NO_DATA)" << endl;
+        return false;
+    }
+    if ( !job->auditLogError() && job->auditLogAsHtml().isEmpty() ) {
+        kdDebug() << "not showing audit log button (success, but result empty)" << endl;
+        return false;
+    }
+    return true;
+}
+
+
+// static
 void MessageBox::make( TQWidget * parent, TQMessageBox::Icon icon, const TQString & text, const Job * job, const TQString & caption, int options ) {
-    KDialogBase * dialog = GpgME::hasFeature( GpgME::AuditLogFeature )
+    KDialogBase * dialog = showAuditLogButton( job )
         ? new KDialogBase( caption, KDialogBase::Yes | KDialogBase::No,
                            KDialogBase::Yes, KDialogBase::Yes,
                            parent, "error", true, true,

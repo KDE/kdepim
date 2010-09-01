@@ -128,8 +128,8 @@ void JournalDateEntry::addJournal( Journal *j )
            entry, TQT_SLOT( flushEntry() ) );
   connect( entry, TQT_SIGNAL( deleteIncidence( Incidence* ) ),
            this, TQT_SIGNAL( deleteIncidence( Incidence* ) ) );
-  connect( entry, TQT_SIGNAL( editIncidence( Incidence* ) ),
-           this, TQT_SIGNAL( editIncidence( Incidence* ) ) );
+  connect( entry, TQT_SIGNAL( editIncidence( Incidence*, const TQDate& ) ),
+           this, TQT_SIGNAL( editIncidence( Incidence*, const TQDate& ) ) );
 }
 
 Journal::List JournalDateEntry::journals() const
@@ -151,7 +151,7 @@ void JournalDateEntry::setIncidenceChanger( IncidenceChangerBase *changer )
 
 void JournalDateEntry::emitNewJournal()
 {
-  emit newJournal( mDate );
+  emit newJournal( 0/*ResourceCalendar*/, TQString()/*subResource*/, mDate );
 }
 
 void JournalDateEntry::journalEdited( Journal *journal )
@@ -271,8 +271,9 @@ void JournalEntry::deleteItem()
 void JournalEntry::editItem()
 {
   writeJournal();
-  if ( mJournal )
-    emit editIncidence( mJournal );
+  if ( mJournal ) {
+    emit editIncidence( mJournal, mJournal->dtStart().date() );
+  }
 }
 
 void JournalEntry::printItem()
@@ -381,17 +382,17 @@ void JournalEntry::writeJournal()
     newJournal = true;
     mJournal = new Journal;
     writeJournalPrivate( mJournal );
-    if ( !mChanger->addIncidence( mJournal, this ) ) {
+    if ( !mChanger->addIncidence( mJournal, 0, TQString(), this ) ) {
       KODialogManager::errorSaveIncidence( this, mJournal );
       delete mJournal;
       mJournal = 0;
     }
   } else {
     oldJournal = mJournal->clone();
-    if ( mChanger->beginChange( mJournal ) ) {
+    if ( mChanger->beginChange( mJournal, 0, TQString() ) ) {
       writeJournalPrivate( mJournal );
-      mChanger->changeIncidence( oldJournal, mJournal, KOGlobals::DESCRIPTION_MODIFIED );
-      mChanger->endChange( mJournal );
+      mChanger->changeIncidence( oldJournal, mJournal, KOGlobals::DESCRIPTION_MODIFIED, this );
+      mChanger->endChange( mJournal, 0, TQString() );
     }
     delete oldJournal;
   }

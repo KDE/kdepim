@@ -35,6 +35,7 @@
 #include <kiconloader.h>
 #include <kmessagebox.h>
 
+#include <libkcal/calhelper.h>
 #include <libkcal/icaldrag.h>
 #include <libkcal/vcaldrag.h>
 #include <libkcal/dndfactory.h>
@@ -63,9 +64,10 @@ using namespace KOrg;
 #include "calprinter.h"
 #endif
 
-KOTodoListViewToolTip::KOTodoListViewToolTip (TQWidget* parent,
-                                              KOTodoListView* lv )
-  :TQToolTip(parent)
+KOTodoListViewToolTip::KOTodoListViewToolTip (TQWidget *parent,
+                                              Calendar *calendar,
+                                              KOTodoListView *lv )
+  :TQToolTip(parent), mCalendar( calendar )
 {
   todolist=lv;
 }
@@ -88,7 +90,7 @@ void KOTodoListViewToolTip::maybeTip( const TQPoint & pos)
     r.setRight(headerPos + todolist->header()->sectionSize(col));
 
     /* Show the tip */
-    TQString tipText( IncidenceFormatter::toolTipString( i->todo() ) );;
+    TQString tipText( IncidenceFormatter::toolTipStr( mCalendar, i->todo(), TQDate(), true ) );;
     if ( !tipText.isEmpty() ) {
       tip(r, tipText);
     }
@@ -103,14 +105,10 @@ KOTodoListView::KOTodoListView( TQWidget *parent, const char *name )
 {
   mOldCurrent = 0;
   mMousePressed = false;
-
-  /* Create a Tooltip */
-  tooltip = new KOTodoListViewToolTip( viewport(), this );
 }
 
 KOTodoListView::~KOTodoListView()
 {
-  delete tooltip;
 }
 
 void KOTodoListView::setCalendar( Calendar *cal )
@@ -222,11 +220,12 @@ void KOTodoListView::contentsDropEvent( TQDropEvent *e )
         }
         to = to->relatedTo();
       }
+
       Todo*oldTodo = existingTodo->clone();
-      if ( mChanger->beginChange( existingTodo ) ) {
+      if ( mChanger->beginChange( existingTodo, 0, TQString() ) ) {
         existingTodo->setRelatedTo( destinationEvent );
-        mChanger->changeIncidence( oldTodo, existingTodo, KOGlobals::RELATION_MODIFIED );
-        mChanger->endChange( existingTodo );
+        mChanger->changeIncidence( oldTodo, existingTodo, KOGlobals::RELATION_MODIFIED, this );
+        mChanger->endChange( existingTodo, 0, TQString() );
       } else {
         KMessageBox::sorry( this, i18n("Unable to change to-do's parent, "
                             "because the to-do cannot be locked.") );
@@ -236,14 +235,13 @@ void KOTodoListView::contentsDropEvent( TQDropEvent *e )
     } else {
 //      kdDebug(5850) << "Drop new Todo" << endl;
       todo->setRelatedTo(destinationEvent);
-      if ( !mChanger->addIncidence( todo, this ) ) {
+      if ( !mChanger->addIncidence( todo, 0, TQString(), this ) ) {
         KODialogManager::errorSaveIncidence( this, todo );
         delete todo;
         return;
       }
     }
-  }
-  else {
+  } else {
     TQString text;
     KOTodoViewItem *todoi = dynamic_cast<KOTodoViewItem *>(itemAt( contentsToViewport(e->pos()) ));
     if ( ! todoi ) {
@@ -256,7 +254,7 @@ void KOTodoListView::contentsDropEvent( TQDropEvent *e )
       //TQListViewItem *qlvi = itemAt( contentsToViewport(e->pos()) );
       kdDebug(5850) << "Dropped : " << text << endl;
       Todo*todo = todoi->todo();
-      if( mChanger->beginChange( todo ) ) {
+      if( mChanger->beginChange( todo, 0, TQString() ) ) {
         Todo*oldtodo = todo->clone();
 
         if( text.startsWith( "file:" ) ) {
@@ -273,8 +271,9 @@ void KOTodoListView::contentsDropEvent( TQDropEvent *e )
             }
           }
         }
-        mChanger->changeIncidence( oldtodo, todo );
-        mChanger->endChange( todo );
+        //FIXME: attendees or attachment added, so there is something modified
+        mChanger->changeIncidence( oldtodo, todo, KOGlobals::NOTHING_MODIFIED, this );
+        mChanger->endChange( todo, 0, TQString() );
       } else {
         KMessageBox::sorry( this, i18n("Unable to add attendees to the to-do, "
             "because the to-do cannot be locked.") );
@@ -393,6 +392,7 @@ KOTodoView::KOTodoView( Calendar *calendar, TQWidget *parent, const char* name)
   mTodoListView->addColumn( i18n("Due Date/Time") );
   mTodoListView->setColumnAlignment( eDueDateColumn, AlignLeft );
   mTodoListView->addColumn( i18n("Categories") );
+  mTodoListView->addColumn( i18n( "Calendar" ) );
 #if 0
   mTodoListView->addColumn( i18n("Sort Id") );
   mTodoListView->setColumnAlignment( 4, AlignHCenter );
@@ -408,6 +408,7 @@ KOTodoView::KOTodoView( Calendar *calendar, TQWidget *parent, const char* name)
   mTodoListView->setColumnWidthMode( ePercentColumn, TQListView::Manual );
   mTodoListView->setColumnWidthMode( eDueDateColumn, TQListView::Manual );
   mTodoListView->setColumnWidthMode( eCategoriesColumn, TQListView::Manual );
+  mTodoListView->setColumnWidthMode( eFolderColumn, TQListView::Manual );
 #if 0
   mTodoListView->setColumnWidthMode( eDescriptionColumn, TQListView::Manual );
 #endif
@@ -461,7 +462,7 @@ KOTodoView::KOTodoView( Calendar *calendar, TQWidget *parent, const char* name)
                              TQT_SLOT (deleteTodo()), 0, ePopupDelete );
   mItemPopupMenu->insertSeparator();
   mItemPopupMenu->insertItem(KOGlobals::self()->smallIconSet("todo"), i18n("New &To-do..."), this,
-                             TQT_SLOT (newTodo()));
+                             TQT_SLOT (newTodo()) );
   mItemPopupMenu->insertItem(i18n("New Su&b-to-do..."), this,
                              TQT_SLOT (newSubTodo()));
   mItemPopupMenu->insertItem( i18n("&Make this To-do Independent"), this,
@@ -482,7 +483,7 @@ KOTodoView::KOTodoView( Calendar *calendar, TQWidget *parent, const char* name)
 
   mPopupMenu = new TQPopupMenu(this);
   mPopupMenu->insertItem(KOGlobals::self()->smallIconSet("todo"), i18n("&New To-do..."), this,
-                         TQT_SLOT (newTodo()));
+                         TQT_SLOT(newTodo()) );
   mPopupMenu->insertItem(i18n("delete completed to-dos","&Purge Completed"),
                          this, TQT_SLOT(purgeCompleted()));
 
@@ -514,6 +515,8 @@ KOTodoView::KOTodoView( Calendar *calendar, TQWidget *parent, const char* name)
            TQT_SLOT( processSelectionChange() ) );
   connect( mQuickAdd, TQT_SIGNAL( returnPressed () ),
            TQT_SLOT( addQuickTodo() ) );
+
+  new KOTodoListViewToolTip( mTodoListView->viewport(), calendar, mTodoListView );
 }
 
 KOTodoView::~KOTodoView()
@@ -742,24 +745,21 @@ void KOTodoView::showDates(const TQDate &, const TQDate &)
 {
 }
 
-void KOTodoView::showIncidences( const Incidence::List & )
+void KOTodoView::showIncidences( const Incidence::List &, const TQDate & )
 {
   kdDebug(5850) << "KOTodoView::showIncidences( const Incidence::List & ): not yet implemented" << endl;
 }
 
 CalPrinterBase::PrintType KOTodoView::printType()
 {
-  if ( mTodoListView->selectedItem() ) {
-    return CalPrinterBase::Incidence;
-  } else {
-    return CalPrinterBase::Todolist;
-  }
+  return CalPrinterBase::Todolist;
 }
 
 void KOTodoView::editItem( TQListViewItem *item )
 {
-  if (item)
-    emit editIncidenceSignal( static_cast<KOTodoViewItem *>( item )->todo() );
+  if ( item ) {
+    emit editIncidenceSignal( static_cast<KOTodoViewItem *>( item )->todo(), TQDate () );
+  }
 }
 
 void KOTodoView::editItem( TQListViewItem *item, const TQPoint &, int )
@@ -769,8 +769,9 @@ void KOTodoView::editItem( TQListViewItem *item, const TQPoint &, int )
 
 void KOTodoView::showItem( TQListViewItem *item )
 {
-  if (item)
-    emit showIncidenceSignal( static_cast<KOTodoViewItem *>( item )->todo() );
+  if ( item ) {
+    emit showIncidenceSignal( static_cast<KOTodoViewItem *>( item )->todo(), TQDate() );
+  }
 }
 
 void KOTodoView::showItem( TQListViewItem *item, const TQPoint &, int )
@@ -830,7 +831,8 @@ void KOTodoView::popupMenu( TQListViewItem *item, const TQPoint &, int column )
 void KOTodoView::newTodo()
 {
   kdDebug() << k_funcinfo << endl;
-  emit newTodoSignal( TQDate::currentDate().addDays(7) );
+  emit newTodoSignal( 0/*ResourceCalendar*/, TQString()/*subResource*/,
+                      TQDate::currentDate().addDays(7) );
 }
 
 void KOTodoView::newSubTodo()
@@ -860,8 +862,15 @@ void KOTodoView::printTodo()
   Incidence::List selectedIncidences;
   selectedIncidences.append( mActiveItem->todo() );
 
+  TQDateTime todoDate;
+  if ( mActiveItem->todo() && mActiveItem->todo()->hasStartDate() ) {
+    todoDate = mActiveItem->todo()->dtStart();
+  } else {
+    todoDate = mActiveItem->todo()->dtDue();
+  }
+
   printer.print( KOrg::CalPrinterBase::Incidence,
-                 TQDate(), TQDate(), selectedIncidences );
+                 todoDate.date(), todoDate.date(), selectedIncidences );
 #endif
 }
 
@@ -877,13 +886,13 @@ void KOTodoView::setNewPriority(int index)
   if ( !mActiveItem || !mChanger ) return;
   Todo *todo = mActiveItem->todo();
   if ( !todo->isReadOnly () &&
-       mChanger->beginChange( todo ) ) {
+       mChanger->beginChange( todo, 0, TQString() ) ) {
     Todo *oldTodo = todo->clone();
     todo->setPriority(mPriority[index]);
     mActiveItem->construct();
 
-    mChanger->changeIncidence( oldTodo, todo, KOGlobals::PRIORITY_MODIFIED );
-    mChanger->endChange( todo );
+    mChanger->changeIncidence( oldTodo, todo, KOGlobals::PRIORITY_MODIFIED, this );
+    mChanger->endChange( todo, 0, TQString() );
     delete oldTodo;
   }
 }
@@ -895,7 +904,8 @@ void KOTodoView::setNewPercentage( KOTodoViewItem *item, int percentage )
   Todo *todo = item->todo();
   if ( !todo ) return;
 
-  if ( !todo->isReadOnly () && mChanger->beginChange( todo ) ) {
+  if ( !todo->isReadOnly () &&
+       mChanger->beginChange( todo, 0, TQString() ) ) {
     Todo *oldTodo = todo->clone();
 
 /*  Old code to make sub-items's percentage related to this one's:
@@ -910,18 +920,20 @@ void KOTodoView::setNewPercentage( KOTodoViewItem *item, int percentage )
       todo->setCompleted( TQDateTime::currentDateTime() );
       // If the todo does recur, it doesn't get set as completed. However, the
       // item is still checked. Uncheck it again.
-      if ( !todo->isCompleted() ) item->setState( TQCheckListItem::Off );
-      else todo->setPercentComplete( percentage );
+      if ( !todo->isCompleted() ) {
+        item->setState( TQCheckListItem::Off );
+      }
     } else {
-      todo->setCompleted( false );
       todo->setPercentComplete( percentage );
     }
     item->construct();
     if ( todo->doesRecur() && percentage == 100 )
-      mChanger->changeIncidence( oldTodo, todo, KOGlobals::COMPLETION_MODIFIED_WITH_RECURRENCE );
+      mChanger->changeIncidence( oldTodo, todo,
+                                 KOGlobals::COMPLETION_MODIFIED_WITH_RECURRENCE, this );
     else
-      mChanger->changeIncidence( oldTodo, todo, KOGlobals::COMPLETION_MODIFIED );
-    mChanger->endChange( todo );
+      mChanger->changeIncidence( oldTodo, todo,
+                                 KOGlobals::COMPLETION_MODIFIED, this );
+    mChanger->endChange( todo, 0, TQString() );
     delete oldTodo;
   } else {
     item->construct();
@@ -940,24 +952,22 @@ void KOTodoView::setNewDate( TQDate date )
   Todo *todo = mActiveItem->todo();
   if ( !todo ) return;
 
-  if ( !todo->isReadOnly() && mChanger->beginChange( todo ) ) {
+  if ( !todo->isReadOnly() && mChanger->beginChange( todo, 0, TQString() ) ) {
     Todo *oldTodo = todo->clone();
 
     TQDateTime dt;
     dt.setDate( date );
 
-    if ( !todo->doesFloat() )
+    if ( !todo->doesFloat() ) {
       dt.setTime( todo->dtDue().time() );
+    }
 
-    if ( date.isNull() )
-      todo->setHasDueDate( false );
-    else if ( !todo->hasDueDate() )
-      todo->setHasDueDate( true );
+    todo->setHasDueDate( !date.isNull() );
     todo->setDtDue( dt );
 
     mActiveItem->construct();
-    mChanger->changeIncidence( oldTodo, todo, KOGlobals::COMPLETION_MODIFIED );
-    mChanger->endChange( todo );
+    mChanger->changeIncidence( oldTodo, todo, KOGlobals::COMPLETION_MODIFIED, this );
+    mChanger->endChange( todo, 0, TQString() );
     delete oldTodo;
   } else {
     kdDebug(5850) << "No active item, active item is read-only, or locking failed" << endl;
@@ -969,19 +979,24 @@ void KOTodoView::copyTodoToDate( TQDate date )
   TQDateTime dt( date );
 
   if ( mActiveItem && mChanger ) {
-    Todo *newTodo = mActiveItem->todo()->clone();
+    Todo *oldTodo = mActiveItem->todo();
+    Todo *newTodo = oldTodo->clone();
     newTodo->recreate();
 
-   newTodo->setHasDueDate( !date.isNull() );
-   newTodo->setDtDue( dt );
-   newTodo->setPercentComplete( 0 );
+    newTodo->setHasDueDate( !date.isNull() );
 
-   // avoid forking
-   if ( newTodo->doesRecur() )
-     newTodo->recurrence()->unsetRecurs();
+    if ( oldTodo->hasDueDate() && !oldTodo->doesFloat() ) {
+      dt.setTime( oldTodo->dtDue().time() );
+    }
 
-   mChanger->addIncidence( newTodo, this );
- }
+    newTodo->setDtDue( dt );
+    newTodo->setPercentComplete( 0 );
+
+    QPair<ResourceCalendar *, TQString>p =
+      CalHelper::incSubResourceCalendar( calendar(), mActiveItem->todo() );
+
+    mChanger->addIncidence( newTodo, p.first, p.second, this );
+  }
 }
 
 TQPopupMenu *KOTodoView::getCategoryPopupMenu( KOTodoViewItem *todoItem )
@@ -1011,7 +1026,7 @@ void KOTodoView::changedCategories(int index)
   Todo *todo = mActiveItem->todo();
   if ( !todo ) return;
 
-  if ( !todo->isReadOnly() && mChanger->beginChange( todo ) ) {
+  if ( !todo->isReadOnly() && mChanger->beginChange( todo, 0, TQString() ) ) {
     Todo *oldTodo = todo->clone();
 
     TQStringList categories = todo->categories ();
@@ -1022,8 +1037,8 @@ void KOTodoView::changedCategories(int index)
     categories.sort();
     todo->setCategories( categories );
     mActiveItem->construct();
-    mChanger->changeIncidence( oldTodo, todo, KOGlobals::CATEGORY_MODIFIED );
-    mChanger->endChange( todo );
+    mChanger->changeIncidence( oldTodo, todo, KOGlobals::CATEGORY_MODIFIED, this );
+    mChanger->endChange( todo, 0, TQString() );
     delete oldTodo;
   } else {
     kdDebug(5850) << "No active item, active item is read-only, or locking failed" << endl;
@@ -1082,9 +1097,13 @@ void KOTodoView::processSelectionChange()
     static_cast<KOTodoViewItem *>( mTodoListView->selectedItem() );
 
   if ( !item ) {
-    emit incidenceSelected( 0 );
+    emit incidenceSelected( 0, TQDate() );
   } else {
-    emit incidenceSelected( item->todo() );
+    if ( selectedIncidenceDates().isEmpty() ) {
+      emit incidenceSelected( item->todo(), TQDate() );
+    } else {
+      emit incidenceSelected( item->todo(), selectedIncidenceDates().first() );
+    }
   }
 }
 
@@ -1105,8 +1124,7 @@ void KOTodoView::addQuickTodo()
     todo->setSummary( mQuickAdd->text() );
     todo->setOrganizer( Person( KOPrefs::instance()->fullName(),
                         KOPrefs::instance()->email() ) );
-    if ( !mChanger->addIncidence( todo, this ) ) {
-      KODialogManager::errorSaveIncidence( this, todo );
+    if ( !mChanger->addIncidence( todo, 0, TQString(), this ) ) {
       delete todo;
       return;
     }

@@ -236,21 +236,19 @@ void Kleo::QGpgMEJob::createOutData() {
 
 static const unsigned int GetAuditLogFlags = GpgME::Context::AuditLogWithHelp|GpgME::Context::HtmlAuditLog;
 
-static TQString audit_log_as_html( GpgME::Context * ctx ) {
-    if ( !ctx )
-        return TQString();
+static TQString audit_log_as_html( GpgME::Context * ctx, GpgME::Error & err ) {
+    assert( ctx );
     QGpgME::QByteArrayDataProvider dp;
     GpgME::Data data( &dp );
     assert( !data.isNull() );
-    if ( const GpgME::Error err = ctx->getAuditLog( data, GetAuditLogFlags ) )
+    if ( ( err = ctx->getAuditLog( data, GetAuditLogFlags ) ) )
         return TQString();
-    else
-        return TQString::fromUtf8( dp.data().data() );
+    const TQByteArray ba = dp.data();
+    return TQString::fromUtf8( ba.data(), ba.size() );
 }
 
 void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
   if ( context == mCtx ) {
-    getAuditLog();
     doEmitDoneSignal();
     doOperationDoneEvent( e );
     mThis->deleteLater();
@@ -258,7 +256,9 @@ void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const 
 }
 
 void Kleo::QGpgMEJob::getAuditLog() {
-    mAuditLogAsHtml = audit_log_as_html( mCtx );
+    if ( !mCtx )
+        return;
+    mAuditLogAsHtml = audit_log_as_html( mCtx, mAuditLogError );
 }
 
 void Kleo::QGpgMEJob::doSlotCancel() {

@@ -44,20 +44,24 @@
 #include <tqwhatsthis.h>
 
 #include <kcolorbutton.h>
+#include <kcombobox.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kmessagebox.h>
 #include <kiconloader.h>
+#include <knuminput.h>
 #include <kemailsettings.h>
 #include <kcalendarsystem.h>
 #include <ktrader.h>
 #include <kpushbutton.h>
 #include <kocore.h>
-#include <libkcal/calendarresources.h>
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 #include <kholidays.h>
+#include <kurlrequester.h>
+
+#include <libkcal/calendarresources.h>
 
 #if defined(USE_SOLARIS)
 #include <sys/param.h>
@@ -315,21 +319,46 @@ class KOPrefsDialogTime : public KPrefsModule
       topLayout->addWidget( defaultDuration->label(), 4, 0 );
       topLayout->addWidget( defaultDuration->timeEdit(), 4, 1 );
 
-      TQStringList alarmList;
-      alarmList << i18n( "1 minute" ) << i18n( "5 minutes" )
-                << i18n( "10 minutes" ) << i18n( "15 minutes" )
-                << i18n( "30 minutes" );
-      TQLabel *alarmLabel = new TQLabel( i18n( "Default reminder time:" ), topFrame);
-      topLayout->addWidget( alarmLabel, 5, 0 );
-      TQWhatsThis::add( alarmLabel,
-                       i18n( "Enter the default reminder time here." ) );
-      mAlarmTimeCombo = new TQComboBox( topFrame );
-      TQWhatsThis::add( mAlarmTimeCombo,
-                       i18n( "Enter the default reminder time here." ) );
-      connect( mAlarmTimeCombo, TQT_SIGNAL( activated( int ) ),
-               TQT_SLOT( slotWidChanged() ) );
-      mAlarmTimeCombo->insertStringList( alarmList );
-      topLayout->addWidget( mAlarmTimeCombo, 5, 1 );
+      TQGroupBox *remindersGroupBox = new TQGroupBox( 1, Horizontal,
+                                                    i18n( "Reminders" ),
+                                                    topFrame );
+      topLayout->addMultiCellWidget( remindersGroupBox, 5, 5, 0, 1 );
+
+      TQHBox *remindersBox = new TQHBox( remindersGroupBox );
+      new TQLabel( i18n( "Default reminder time:" ), remindersBox );
+
+      mReminderTimeSpin  = new KIntSpinBox( remindersBox );
+      connect( mReminderTimeSpin, TQT_SIGNAL(valueChanged(int)), TQT_SLOT(slotWidChanged()) );
+
+      mReminderUnitsCombo = new KComboBox( remindersBox );
+      connect( mReminderUnitsCombo, TQT_SIGNAL(activated(int)), TQT_SLOT(slotWidChanged()) );
+      mReminderUnitsCombo->insertItem( i18n( "minute(s)" ) );
+      mReminderUnitsCombo->insertItem( i18n( "hour(s)" ) );
+      mReminderUnitsCombo->insertItem( i18n( "day(s)" ) );
+
+      TQHBox *audioFileRemindersBox = new TQHBox( remindersGroupBox );
+
+      TQCheckBox *cb = addWidBool( KOPrefs::instance()->defaultAudioFileRemindersItem(),
+                                  audioFileRemindersBox )->checkBox();
+      cb->setText( TQString::null );
+
+      if ( KOPrefs::instance()->audioFilePathItem()->value().isEmpty() ) {
+        TQString defAudioFile = KGlobal::dirs()->findResourceDir( "sound", "KDE-Sys-Warning.ogg");
+        KOPrefs::instance()->audioFilePathItem()->setValue( defAudioFile + "KDE-Sys-Warning.ogg"  );
+      }
+      TQString filter = i18n( "*.ogg *.wav *.mp3 *.wma *.flac *.aiff *.raw *.au *.ra|"
+                             "Audio Files (*.ogg *.wav *.mp3 *.wma *.flac *.aiff *.raw *.au *.ra)" );
+      KURLRequester *rq = addWidPath( KOPrefs::instance()->audioFilePathItem(),
+                                      audioFileRemindersBox, filter )->urlRequester();
+      rq->setEnabled( cb->isChecked() );
+      connect( cb, TQT_SIGNAL(toggled(bool)),
+               rq, TQT_SLOT(setEnabled( bool)) );
+
+      TQHBox *eventRemindersBox = new TQHBox( remindersGroupBox );
+      addWidBool( KOPrefs::instance()->defaultEventRemindersItem(), eventRemindersBox )->checkBox();
+
+      TQHBox *todoRemindersBox = new TQHBox( remindersGroupBox );
+      addWidBool( KOPrefs::instance()->defaultTodoRemindersItem(), todoRemindersBox )->checkBox();
 
       TQLabel *alarmDefaultLabel = new TQLabel( i18n( "Enable reminders by default:" ), topFrame);
       topLayout->addWidget( alarmDefaultLabel, 6, 0 );
@@ -386,8 +415,9 @@ class KOPrefsDialogTime : public KPrefsModule
       setCombo( mTimeZoneCombo,
                 i18n( KOPrefs::instance()->mTimeZoneId.utf8() ) );
 
-      mAlarmTimeCombo->setCurrentItem( KOPrefs::instance()->mAlarmTime );
-      mAlarmTimeDefaultCheckBox->setChecked ( KOPrefs::instance()->mAlarmsEnabledByDefault );
+      mReminderTimeSpin->setValue( KOPrefs::instance()->mReminderTime );
+      mReminderUnitsCombo->setCurrentItem( KOPrefs::instance()->mReminderTimeUnits );
+
       for ( int i = 0; i < 7; ++i ) {
         mWorkDays[i]->setChecked( (1<<i) & (KOPrefs::instance()->mWorkWeekMask) );
       }
@@ -409,8 +439,9 @@ class KOPrefsDialogTime : public KPrefsModule
                                        TQString::null :
                                        mRegionMap[mHolidayCombo->currentText()];
 
-      KOPrefs::instance()->mAlarmTime = mAlarmTimeCombo->currentItem();
-      KOPrefs::instance()->mAlarmsEnabledByDefault = mAlarmTimeDefaultCheckBox->isChecked();
+      KOPrefs::instance()->mReminderTime = mReminderTimeSpin->value();
+      KOPrefs::instance()->mReminderTimeUnits = mReminderUnitsCombo->currentItem();
+
       int mask = 0;
       for ( int i = 0; i < 7; ++i ) {
         if (mWorkDays[i]->isChecked()) mask = mask | (1<<i);
@@ -440,7 +471,8 @@ class KOPrefsDialogTime : public KPrefsModule
     TQStringList   tzonenames;
     TQComboBox    *mHolidayCombo;
     TQMap<TQString,TQString> mRegionMap;
-    TQComboBox    *mAlarmTimeCombo;
+    KIntSpinBox  *mReminderTimeSpin;
+    KComboBox    *mReminderUnitsCombo;
     TQCheckBox    *mAlarmTimeDefaultCheckBox;
     TQCheckBox    *mWorkDays[7];
 };
@@ -483,6 +515,7 @@ class KOPrefsDialogViews : public KPrefsModule
                                                topFrame );
       addWidBool( KOPrefs::instance()->dailyRecurItem(), dateNavGroup );
       addWidBool( KOPrefs::instance()->weeklyRecurItem(), dateNavGroup );
+      addWidBool( KOPrefs::instance()->weekNumbersShowWorkItem(), dateNavGroup );
       topLayout->addWidget( dateNavGroup );
 
 
@@ -520,20 +553,14 @@ class KOPrefsDialogViews : public KPrefsModule
 
       topLayout->addWidget( agendaGroup );
 
-      /*** Month and Todo view groups side by side, to save space. ***/
-      TQHBoxLayout *hbox = new TQHBoxLayout();
-      topLayout->addLayout( hbox );
-
       /*** Month View Group ***/
       TQGroupBox *monthGroup = new TQGroupBox( 1, Horizontal,
                                              i18n("Month View"),
                                              topFrame );
       addWidBool( KOPrefs::instance()->enableMonthScrollItem(), monthGroup );
       addWidBool( KOPrefs::instance()->fullViewMonthItem(), monthGroup );
-      addWidBool( KOPrefs::instance()->monthViewUsesCategoryColorItem(),
-                      monthGroup );
-      addWidBool( KOPrefs::instance()->monthViewUsesResourceColorItem(), monthGroup );
-      hbox->addWidget( monthGroup );
+      addWidCombo( KOPrefs::instance()->monthItemColorsItem(), monthGroup );
+      topLayout->addWidget( monthGroup );
 
 
       /*** Todo View Group ***/
@@ -542,7 +569,7 @@ class KOPrefsDialogViews : public KPrefsModule
                                             topFrame );
       addWidBool( KOPrefs::instance()->fullViewTodoItem(), todoGroup );
       addWidBool( KOPrefs::instance()->recordTodosInJournalsItem(), todoGroup );
-      hbox->addWidget( todoGroup );
+      topLayout->addWidget( todoGroup );
 
       topLayout->addStretch( 1 );
 
@@ -642,39 +669,41 @@ KOPrefsDialogColors::KOPrefsDialogColors( TQWidget *parent, const char *name )
   topLayout->addWidget(highlightColor->label(),1,0);
   topLayout->addWidget(highlightColor->button(),1,1);
 
-  KPrefsWidColor *eventColor =
-      addWidColor( KOPrefs::instance()->eventColorItem(), topFrame );
-  topLayout->addWidget(eventColor->label(),2,0);
-  topLayout->addWidget(eventColor->button(),2,1);
-
   // agenda view background color
   KPrefsWidColor *agendaBgColor =
       addWidColor( KOPrefs::instance()->agendaBgColorItem(), topFrame );
-  topLayout->addWidget(agendaBgColor->label(),3,0);
-  topLayout->addWidget(agendaBgColor->button(),3,1);
+  topLayout->addWidget(agendaBgColor->label(),2,0);
+  topLayout->addWidget(agendaBgColor->button(),2,1);
 
   // working hours color
   KPrefsWidColor *workingHoursColor =
       addWidColor( KOPrefs::instance()->workingHoursColorItem(), topFrame );
-  topLayout->addWidget(workingHoursColor->label(),4,0);
-  topLayout->addWidget(workingHoursColor->button(),4,1);
+  topLayout->addWidget(workingHoursColor->label(),3,0);
+  topLayout->addWidget(workingHoursColor->button(),3,1);
 
   // Todo due today color
   KPrefsWidColor *todoDueTodayColor =
       addWidColor( KOPrefs::instance()->todoDueTodayColorItem(), topFrame );
-  topLayout->addWidget(todoDueTodayColor->label(),5,0);
-  topLayout->addWidget(todoDueTodayColor->button(),5,1);
+  topLayout->addWidget(todoDueTodayColor->label(),4,0);
+  topLayout->addWidget(todoDueTodayColor->button(),4,1);
 
   // Todo overdue color
   KPrefsWidColor *todoOverdueColor =
       addWidColor( KOPrefs::instance()->todoOverdueColorItem(), topFrame );
-  topLayout->addWidget(todoOverdueColor->label(),6,0);
-  topLayout->addWidget(todoOverdueColor->button(),6,1);
+  topLayout->addWidget(todoOverdueColor->label(),5,0);
+  topLayout->addWidget(todoOverdueColor->button(),5,1);
+
+  // "No Category" color
+  KPrefsWidColor *unsetCategoryColor =
+    addWidColor( KOPrefs::instance()->unsetCategoryColorItem(), topFrame );
+  topLayout->addWidget( unsetCategoryColor->label(), 6, 0 );
+  topLayout->addWidget( unsetCategoryColor->button(), 6, 1 );
 
   // categories colors
   TQGroupBox *categoryGroup = new TQGroupBox(1,Horizontal,i18n("Categories"),
                                            topFrame);
   topLayout->addMultiCellWidget(categoryGroup,7,7,0,1);
+
 
   mCategoryCombo = new TQComboBox(categoryGroup);
   mCategoryCombo->insertStringList(KOPrefs::instance()->mCustomCategories);
@@ -1031,6 +1060,11 @@ void KOPrefsDialogGroupwareScheduling::usrWriteConfig()
   KOPrefs::instance()->mFreeBusyRetrieveUser = mGroupwarePage->retrieveUser->text();
   KOPrefs::instance()->mFreeBusyRetrievePassword = mGroupwarePage->retrievePassword->text();
   KOPrefs::instance()->mFreeBusyRetrieveSavePassword = mGroupwarePage->retrieveSavePassword->isChecked();
+
+  // clear the url cache for our user
+  TQString configFile = locateLocal( "data", "korganizer/freebusyurls" );
+  KConfig cfg( configFile );
+  cfg.deleteGroup( KOPrefs::instance()->email() );
 }
 
 extern "C"

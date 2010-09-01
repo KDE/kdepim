@@ -1,5 +1,5 @@
 /* ldapsearchdialogimpl.h - LDAP access
- *      Copyright (C) 2002 Klarälvdalens Datakonsult AB
+ *      Copyright (C) 2002 Klar�vdalens Datakonsult AB
  *
  *      Author: Steffen Hansen <hansen@kde.org>
  *

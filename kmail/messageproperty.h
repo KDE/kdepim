@@ -91,6 +91,7 @@ public:
   static bool transferInProgress( const KMMsgBase* );
   static void setTransferInProgress( Q_UINT32, bool, bool = false );
   static bool transferInProgress( Q_UINT32 );
+
   /** Some properties, namely complete, transferInProgress, and
       serialCache must be forgotten when a message class instance is
       destructed or assigned a new value */
@@ -99,10 +100,13 @@ public:
 private:
   // The folder a message is to be moved into once filtering is finished if any
   static TQMap<Q_UINT32, TQGuardedPtr<KMFolder> > sFolders;
+
   // The action scheduler currently processing a message if any
   static TQMap<Q_UINT32, TQGuardedPtr<ActionScheduler> > sHandlers;
+
   // The transferInProgres state of a message if any.
   static TQMap<Q_UINT32, int > sTransfers;
+
   // The cached serial number of a message if any.
   static TQMap<const KMMsgBase*, long > sSerialCache;
 };

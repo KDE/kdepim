@@ -94,6 +94,7 @@ KMFolderMbox::~KMFolderMbox()
 //-----------------------------------------------------------------------------
 int KMFolderMbox::open(const char *owner)
 {
+  Q_UNUSED( owner );
   int rc = 0;
 
   mOpenCount++;
@@ -258,6 +259,7 @@ int KMFolderMbox::create()
 //-----------------------------------------------------------------------------
 void KMFolderMbox::reallyDoClose(const char* owner)
 {
+  Q_UNUSED( owner );
   if (mAutoCreateIndex)
   {
       if (KMFolderIndex::IndexOk != indexStatus()) {
@@ -521,6 +523,9 @@ int KMFolderMbox::unlock()
 //-----------------------------------------------------------------------------
 KMFolderIndex::IndexStatus KMFolderMbox::indexStatus()
 {
+  if ( !mCompactable )
+    return KMFolderIndex::IndexCorrupt;
+
   TQFileInfo contInfo(location());
   TQFileInfo indInfo(indexLocation());
 
@@ -1065,9 +1070,12 @@ if( fileD1.open( IO_WriteOnly ) ) {
   ++mTotalMsgs;
   mSize = -1;
 
-  if ( aMsg->attachmentState() == KMMsgAttachmentUnknown &&
-       aMsg->readyToShow() )
+  if ( aMsg->attachmentState() == KMMsgAttachmentUnknown && aMsg->readyToShow() ) {
     aMsg->updateAttachmentState();
+  }
+  if ( aMsg->invitationState() == KMMsgInvitationUnknown && aMsg->readyToShow() ) {
+    aMsg->updateInvitationState();
+  }
 
   // store information about the position in the folder file in the message
   aMsg->setParent(folder());
@@ -1095,13 +1103,13 @@ if( fileD1.open( IO_WriteOnly ) ) {
     revert = ftell(mIndexStream);
 
     KMMsgBase * mb = &aMsg->toMsgBase();
-        int len;
-        const uchar *buffer = mb->asIndexString(len);
-        fwrite(&len,sizeof(len), 1, mIndexStream);
-        mb->setIndexOffset( ftell(mIndexStream) );
-        mb->setIndexLength( len );
-        if(fwrite(buffer, len, 1, mIndexStream) != 1)
-            kdDebug(5006) << "Whoa! " << __FILE__ << ":" << __LINE__ << endl;
+    int len;
+    const uchar *buffer = mb->asIndexString(len);
+    fwrite(&len,sizeof(len), 1, mIndexStream);
+    mb->setIndexOffset( ftell(mIndexStream) );
+    mb->setIndexLength( len );
+    if(fwrite(buffer, len, 1, mIndexStream) != 1)
+      kdDebug(5006) << "Whoa! " << __FILE__ << ":" << __LINE__ << endl;
 
     fflush(mIndexStream);
     error = ferror(mIndexStream);

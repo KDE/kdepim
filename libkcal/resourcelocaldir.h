@@ -94,6 +94,7 @@ class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
 
     KABC::Lock *mLock;
 
+    TQPtrList<Incidence>mDeletedIncidences;
     class Private;
     Private *d;
 };

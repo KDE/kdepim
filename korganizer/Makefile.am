@@ -90,7 +90,7 @@ libkorganizer_la_SOURCES = komessagebox.cpp \
 	koeventview.cpp \
 	korganizeriface.skel kcalendariface.skel \
 	filtereditdialog.cpp filteredit_base.ui \
-	kowhatsnextview.cpp kocounterdialog.cpp \
+	kowhatsnextview.cpp \
 	kojournalview.cpp journalentry.cpp \
 	kocore.cpp mailscheduler.cpp \
 	kodaymatrix.cpp docprefs.cpp statusdialog.cpp\
@@ -101,6 +101,7 @@ libkorganizer_la_SOURCES = komessagebox.cpp \
 	koprefs_base.kcfgc \
 	koincidencetooltip.cpp aboutdata.cpp \
 	importdialog.cpp \
+	previewdialog.cpp \
 	korganizerifaceimpl.cpp \
 	freebusymanager.cpp freebusyurldialog.cpp \
 	eventarchiver.cpp koidentitymanager.cpp \
@@ -174,10 +175,10 @@ KDE_ICON = AUTO
 META_INCLUDES = $(srcdir)/interfaces/korganizer
 
 messages: rc.cpp
-	$(PREPARETIPS) > tips.txt
+	$(PREPARETIPS) > tips.cpp
 	$(EXTRACTRC) `find . -name "*.rc" -o -name "*.ui" -o -name "*.kcfg"` >> rc.cpp
-	$(XGETTEXT) `find . -name "*.cpp" -o -name "*.h" -o -name "*.txt"` -o $(podir)/korganizer.pot
-	rm -f tips.txt
+	$(XGETTEXT) `find . -name "*.cpp" -o -name "*.h"` -o $(podir)/korganizer.pot
+	rm -f tips.cpp
 
 xdg_apps_DATA = korganizer.desktop
 

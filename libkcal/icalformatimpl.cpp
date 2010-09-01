@@ -55,6 +55,7 @@ static TQDateTime ICalDate2TQDate(const icaltimetype& t)
   return TQDateTime(TQDate(year,t.month,t.day), TQTime(t.hour,t.minute,t.second));
 }
 
+/*
 static void _dumpIcaltime( const icaltimetype& t)
 {
   kdDebug(5800) << "--- Y: " << t.year << " M: " << t.month << " D: " << t.day
@@ -63,6 +64,16 @@ static void _dumpIcaltime( const icaltimetype& t)
       << endl;
   kdDebug(5800) << "--- isUtc: " << icaltime_is_utc( t )<< endl;
   kdDebug(5800) << "--- zoneId: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) )<< endl;
+}
+*/
+
+static TQString quoteForParam( const TQString &text )
+{
+  TQString tmp = text;
+  tmp.remove( '"' );
+  if ( tmp.contains( ';' ) || tmp.contains( ':' ) || tmp.contains( ',' ) )
+    return tmp; // libical quotes in this case already, see icalparameter_as_ical_string()
+  return TQString::fromLatin1( "\"" ) + tmp + TQString::fromLatin1( "\"" );
 }
 
 const int gSecondsPerMinute = 60;
@@ -565,7 +576,7 @@ icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
   icalproperty *p = icalproperty_new_organizer("MAILTO:" + organizer.email().utf8());
 
   if (!organizer.name().isEmpty()) {
-    icalproperty_add_parameter( p, icalparameter_new_cn(organizer.name().utf8()) );
+    icalproperty_add_parameter( p, icalparameter_new_cn(quoteForParam(organizer.name()).utf8()) );
   }
   // TODO: Write dir, sent-by and language
 
@@ -578,7 +589,7 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
   icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().utf8());
 
   if (!attendee->name().isEmpty()) {
-    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name().utf8()));
+    icalproperty_add_parameter(p,icalparameter_new_cn(quoteForParam(attendee->name()).utf8()));
   }
 
 
@@ -649,14 +660,15 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
   return p;
 }
 
-icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
+icalproperty *ICalFormatImpl::writeAttachment( Attachment *att )
 {
   icalattach *attach;
-  if (att->isUri())
-      attach = icalattach_new_from_url( att->uri().utf8().data());
-  else
-      attach = icalattach_new_from_data ( (unsigned char *)att->data(), 0, 0);
-  icalproperty *p = icalproperty_new_attach(attach);
+  if ( att->isUri() ) {
+    attach = icalattach_new_from_url( att->uri().utf8().data() );
+  } else {
+    attach = icalattach_new_from_data ( (unsigned char *)att->data(), 0, 0 );
+  }
+  icalproperty *p = icalproperty_new_attach( attach );
 
   if ( !att->mimeType().isEmpty() ) {
     icalproperty_add_parameter( p,
@@ -853,7 +865,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
       for (TQValueList<Person>::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
         icalproperty *p = icalproperty_new_attendee("MAILTO:" + (*ad).email().utf8());
         if (!(*ad).name().isEmpty()) {
-          icalproperty_add_parameter(p,icalparameter_new_cn((*ad).name().utf8()));
+          icalproperty_add_parameter(p,icalparameter_new_cn(quoteForParam((*ad).name()).utf8()));
         }
         icalcomponent_add_property(a,p);
       }
@@ -892,7 +904,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
       offset = alarm->startOffset();
     else
       offset = alarm->endOffset();
-    trigger.duration = icaldurationtype_from_int( offset.asSeconds() );
+    trigger.duration = writeICalDuration( offset.asSeconds() );
   }
   icalproperty *p = icalproperty_new_trigger(trigger);
   if ( alarm->hasEndOffset() )
@@ -903,7 +915,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
   if (alarm->repeatCount()) {
     icalcomponent_add_property(a,icalproperty_new_repeat(alarm->repeatCount()));
     icalcomponent_add_property(a,icalproperty_new_duration(
-                             icaldurationtype_from_int(alarm->snoozeTime()*60)));
+                                 writeICalDuration(alarm->snoozeTime().value())));
   }
 
   // Custom properties
@@ -1000,9 +1012,9 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
 
   readIncidence( vevent, tz, event);
 
-  icalproperty *p = icalcomponent_get_first_property(vevent,ICAL_ANY_PROPERTY);
+  icalproperty *p = icalcomponent_get_first_property( vevent, ICAL_ANY_PROPERTY );
 
-//  int intvalue;
+  // int intvalue;
   icaltimetype icaltime;
 
   TQStringList categories;
@@ -1010,16 +1022,19 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
 
   bool dtEndProcessed = false;
 
-  while (p) {
-    icalproperty_kind kind = icalproperty_isa(p);
-    switch (kind) {
+  while ( p ) {
+    icalproperty_kind kind = icalproperty_isa( p );
+    switch ( kind ) {
 
       case ICAL_DTEND_PROPERTY:  // start date and time
-        icaltime = icalproperty_get_dtend(p);
-        if (icaltime.is_date) {
+        icaltime = icalproperty_get_dtend( p );
+        if ( icaltime.is_date ) {
           // End date is non-inclusive
           TQDate endDate = readICalDate( icaltime ).addDays( -1 );
-          if ( mCompat ) mCompat->fixFloatingEnd( endDate );
+          if ( mCompat ) {
+            mCompat->fixFloatingEnd( endDate );
+          }
+
           if ( endDate < event->dtStart().date() ) {
             endDate = event->dtStart().date();
           }
@@ -1032,26 +1047,26 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
         break;
 
       case ICAL_RELATEDTO_PROPERTY:  // related event (parent)
-        event->setRelatedToUid(TQString::fromUtf8(icalproperty_get_relatedto(p)));
-        mEventsRelate.append(event);
+        event->setRelatedToUid( TQString::fromUtf8( icalproperty_get_relatedto( p ) ) );
+        mEventsRelate.append( event );
         break;
 
-
       case ICAL_TRANSP_PROPERTY:  // Transparency
-        transparency = icalproperty_get_transp(p);
-        if( transparency == ICAL_TRANSP_TRANSPARENT )
+        transparency = icalproperty_get_transp( p );
+        if ( transparency == ICAL_TRANSP_TRANSPARENT ) {
           event->setTransparency( Event::Transparent );
-        else
+        } else {
           event->setTransparency( Event::Opaque );
+        }
         break;
 
       default:
-//        kdDebug(5800) << "ICALFormat::readEvent(): Unknown property: " << kind
-//                  << endl;
+        //  kdDebug(5800) << "ICALFormat::readEvent(): Unknown property: " << kind
+        //                << endl;
         break;
     }
 
-    p = icalcomponent_get_next_property(vevent,ICAL_ANY_PROPERTY);
+    p = icalcomponent_get_next_property( vevent, ICAL_ANY_PROPERTY );
   }
 
   // according to rfc2445 the dtend shouldn't be written when it equals
@@ -1060,13 +1075,15 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
     event->setDtEnd( event->dtStart() );
   }
 
-  TQString msade = event->nonKDECustomProperty("X-MICROSOFT-CDO-ALLDAYEVENT");
-  if (!msade.isEmpty()) {
-    bool floats = (msade == TQString::fromLatin1("TRUE"));
+  const TQString msade = event->nonKDECustomProperty("X-MICROSOFT-CDO-ALLDAYEVENT");
+  if ( !msade.isEmpty() ) {
+    const bool floats = ( msade == TQString::fromLatin1("TRUE") );
     event->setFloats(floats);
   }
 
-  if ( mCompat ) mCompat->fixEmptySummary( event );
+  if ( mCompat ) {
+    mCompat->fixEmptySummary( event );
+  }
 
   return event;
 }
@@ -1096,7 +1113,8 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
         freebusy->setDtEnd(readICalDateTime(p, icaltime));
         break;
 
-      case ICAL_FREEBUSY_PROPERTY: { //Any FreeBusy Times
+      case ICAL_FREEBUSY_PROPERTY:  //Any FreeBusy Times
+      {
         icalperiodtype icalperiod = icalproperty_get_freebusy(p);
         TQDateTime period_start = readICalDateTime(p, icalperiod.start);
         Period period;
@@ -1107,12 +1125,21 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
           Duration duration = readICalDuration( icalperiod.duration );
           period = Period(period_start, duration);
         }
-        TQCString param = icalproperty_get_parameter_as_string( p, "X-SUMMARY" );
-        period.setSummary( TQString::fromUtf8( KCodecs::base64Decode( param ) ) );
-        param = icalproperty_get_parameter_as_string( p, "X-LOCATION" );
-        period.setLocation( TQString::fromUtf8( KCodecs::base64Decode( param ) ) );
+        icalparameter *param = icalproperty_get_first_parameter( p, ICAL_X_PARAMETER );
+        while ( param ) {
+          if ( strncmp( icalparameter_get_xname( param ), "X-SUMMARY", 9 ) == 0 ) {
+            period.setSummary( TQString::fromUtf8(
+                                 KCodecs::base64Decode( icalparameter_get_xvalue( param ) ) ) );
+          }
+          if ( strncmp( icalparameter_get_xname( param ), "X-LOCATION", 10 ) == 0 ) {
+            period.setLocation( TQString::fromUtf8(
+                                  KCodecs::base64Decode( icalparameter_get_xvalue( param ) ) ) );
+          }
+          param = icalproperty_get_next_parameter( p, ICAL_X_PARAMETER );
+        }
         periods.append( period );
-        break;}
+        break;
+      }
 
       default:
 //        kdDebug(5800) << "ICalFormatImpl::readFreeBusy(): Unknown property: "
@@ -1256,31 +1283,70 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
 {
   Attachment *attachment = 0;
 
-  icalvalue_kind value_kind = icalvalue_isa(icalproperty_get_value(attach));
+  const char *p;
+  icalvalue *value = icalproperty_get_value( attach );
 
-  if ( value_kind == ICAL_ATTACH_VALUE || value_kind == ICAL_BINARY_VALUE ) {
-    icalattach *a = icalproperty_get_attach(attach);
-
-    int isurl = icalattach_get_is_url (a);
-    if (isurl == 0)
-      attachment = new Attachment((const char*)icalattach_get_data(a));
-    else {
-      attachment = new Attachment(TQString::fromUtf8(icalattach_get_url(a)));
+  switch( icalvalue_isa( value ) ) {
+  case ICAL_ATTACH_VALUE:
+  {
+    icalattach *a = icalproperty_get_attach( attach );
+    if ( !icalattach_get_is_url( a ) ) {
+      p = (const char *)icalattach_get_data( a );
+      if ( p ) {
+        attachment = new Attachment( p );
+      }
+    } else {
+      p = icalattach_get_url( a );
+      if ( p ) {
+        attachment = new Attachment( TQString::fromUtf8( p ) );
+      }
     }
+    break;
   }
-  else if ( value_kind == ICAL_URI_VALUE ) {
-    attachment = new Attachment(TQString::fromUtf8(icalvalue_get_uri(icalproperty_get_value(attach))));
+  case ICAL_BINARY_VALUE:
+  {
+    icalattach *a = icalproperty_get_attach( attach );
+    p = (const char *)icalattach_get_data( a );
+    if ( p ) {
+      attachment = new Attachment( p );
+    }
+    break;
+  }
+  case ICAL_URI_VALUE:
+    p = icalvalue_get_uri( value );
+    attachment = new Attachment( TQString::fromUtf8( p ) );
+    break;
+  default:
+    break;
   }
 
-  icalparameter *p = icalproperty_get_first_parameter(attach, ICAL_FMTTYPE_PARAMETER);
-  if (p && attachment)
-    attachment->setMimeType(TQString(icalparameter_get_fmttype(p)));
+ if ( attachment ) {
+    icalparameter *p =
+      icalproperty_get_first_parameter( attach, ICAL_FMTTYPE_PARAMETER );
+    if ( p ) {
+      attachment->setMimeType( TQString( icalparameter_get_fmttype( p ) ) );
+    }
 
-  p = icalproperty_get_first_parameter(attach,ICAL_X_PARAMETER);
-  while (p) {
-   if ( strncmp (icalparameter_get_xname(p), "X-LABEL", 7) == 0 )
-     attachment->setLabel( icalparameter_get_xvalue(p) );
-    p = icalproperty_get_next_parameter(attach, ICAL_X_PARAMETER);
+    p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
+    while ( p ) {
+      TQString xname = TQString( icalparameter_get_xname( p ) ).upper();
+      TQString xvalue = TQString::fromUtf8( icalparameter_get_xvalue( p ) );
+      if ( xname == "X-CONTENT-DISPOSITION" ) {
+        attachment->setShowInline( xvalue.lower() == "inline" );
+      }
+      if ( xname == "X-LABEL" ) {
+        attachment->setLabel( xvalue );
+      }
+      p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
+    }
+
+    p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
+    while ( p ) {
+      if ( strncmp( icalparameter_get_xname( p ), "X-LABEL", 7 ) == 0 ) {
+        attachment->setLabel( TQString::fromUtf8( icalparameter_get_xvalue( p ) ) );
+      }
+      p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
+    }
   }
 
   return attachment;
@@ -1482,32 +1548,48 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
 {
   icalproperty *p = icalcomponent_get_first_property(parent,ICAL_ANY_PROPERTY);
 
-  while (p) {
-    icalproperty_kind kind = icalproperty_isa(p);
+  bool uidProcessed = false;
+
+  while ( p ) {
+    icalproperty_kind kind = icalproperty_isa( p );
     switch (kind) {
 
       case ICAL_UID_PROPERTY:  // unique id
-        incidenceBase->setUid(TQString::fromUtf8(icalproperty_get_uid(p)));
+        uidProcessed = true;
+        incidenceBase->setUid( TQString::fromUtf8(icalproperty_get_uid( p ) ) );
         break;
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
-        incidenceBase->setOrganizer( readOrganizer(p));
+        incidenceBase->setOrganizer( readOrganizer( p ) );
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
-        incidenceBase->addAttendee(readAttendee(p));
+        incidenceBase->addAttendee( readAttendee( p ) );
         break;
 
       case ICAL_COMMENT_PROPERTY:
         incidenceBase->addComment(
-            TQString::fromUtf8(icalproperty_get_comment(p)));
+            TQString::fromUtf8( icalproperty_get_comment( p ) ) );
         break;
 
       default:
         break;
     }
 
-    p = icalcomponent_get_next_property(parent,ICAL_ANY_PROPERTY);
+    p = icalcomponent_get_next_property( parent, ICAL_ANY_PROPERTY );
+  }
+
+  if ( !uidProcessed ) {
+    kdWarning() << "The incidence didn't have any UID! Report a bug "
+                << "to the application that generated this file."
+                << endl;
+
+    // Our in-memory incidence has a random uid generated in Event's ctor.
+    // Make it empty so it matches what's in the file:
+    incidenceBase->setUid( TQString() );
+
+    // Otherwise, next time we read the file, this function will return
+    // an event with another random uid and we will have two events in the calendar.
   }
 
   // kpilot stuff
@@ -1736,7 +1818,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       }
       case ICAL_DURATION_PROPERTY: {
         icaldurationtype duration = icalproperty_get_duration(p);
-        ialarm->setSnoozeTime(icaldurationtype_as_int(duration)/60);
+        ialarm->setSnoozeTime( readICalDuration( duration ) );
         break;
       }
       case ICAL_REPEAT_PROPERTY:
@@ -1937,13 +2019,16 @@ TQDate ICalFormatImpl::readICalDate(icaltimetype t)
 
 icaldurationtype ICalFormatImpl::writeICalDuration(int seconds)
 {
+  // should be able to use icaldurationtype_from_int(), except we know
+  // that some older tools do not properly support weeks. So we never
+  // set a week duration, only days
+
   icaldurationtype d;
 
   d.is_neg  = (seconds<0)?1:0;
   if (seconds<0) seconds = -seconds;
 
-  d.weeks    = seconds / gSecondsPerWeek;
-  seconds   %= gSecondsPerWeek;
+  d.weeks    = 0;
   d.days     = seconds / gSecondsPerDay;
   seconds   %= gSecondsPerDay;
   d.hours    = seconds / gSecondsPerHour;
@@ -2001,7 +2086,7 @@ icalcomponent *ICalFormatImpl::createCalendarComponent(Calendar *cal)
 // take a raw vcalendar (i.e. from a file on disk, clipboard, etc. etc.
 // and break it down from its tree-like format into the dictionary format
 // that is used internally in the ICalFormatImpl.
-bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
+bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
 {
   // this function will populate the caldict dictionary and other event
   // lists. It turns vevents into Events and then inserts them.
@@ -2031,6 +2116,14 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     return false;
   } else {
     const char *version = icalproperty_get_version(p);
+    if ( !version ) {
+      kdDebug(5800) << "No VERSION property found" << endl;
+      mParent->setException( new ErrorFormat(
+                               ErrorFormat::CalVersionUnknown,
+                               i18n( "No VERSION property found" ) ) );
+      return false;
+    }
+
 //    kdDebug(5800) << "VCALENDAR version: '" << version << "'" << endl;
 
     if (strcmp(version,"1.0") == 0) {
@@ -2071,7 +2164,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
         TQString originalUid = todo->uid();
         todo->setUid(originalUid + QString("-recur-%1").arg(todo->recurrenceID().toTime_t()));
         if (!cal->todo(todo->uid())) {
-          cal->addTodo(todo);
+          if ( !cal->addTodo( todo ) ) {
+            cal->endBatchAdding();
+            // If the user pressed cancel, return true, it's not an error.
+            return cal->exception() && cal->exception()->errorCode() == ErrorFormat::UserCancel;
+          }
           if (!cal->event(originalUid)) {
             printf("FIXME! [WARNING] Parent for child event does not yet exist!\n\r");
           }
@@ -2085,7 +2182,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
       }
       else {
         if (!cal->todo(todo->uid())) {
-          cal->addTodo(todo);
+          if ( !cal->addTodo( todo ) ) {
+            cal->endBatchAdding();
+            // If the user pressed cancel, return true, it's not an error.
+            return cal->exception() && cal->exception()->errorCode() == ErrorFormat::UserCancel;
+          }
         } else {
           delete todo;
           mTodosRelate.remove( todo );
@@ -2119,7 +2220,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
       }
       else {
         if (!cal->event(event->uid())) {
-          cal->addEvent(event);
+        if ( !cal->addEvent( event ) ) {
+          cal->endBatchAdding();
+          // If the user pressed cancel, return true, it's not an error.
+          return cal->exception() && cal->exception()->errorCode() == ErrorFormat::UserCancel;
+        }
         } else {
           delete event;
           mEventsRelate.remove( event );
@@ -2153,7 +2258,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
       }
       else {
         if (!cal->journal(journal->uid())) {
-          cal->addJournal(journal);
+        if ( !cal->addJournal(journal) ) {
+          cal->endBatchAdding();
+          // If the user pressed cancel, return true, it's not an error.
+          return cal->exception() && cal->exception()->errorCode() == ErrorFormat::UserCancel;
+        }
         } else {
           delete journal;
         }
@@ -2161,6 +2270,8 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     }
     c = icalcomponent_get_next_component(calendar,ICAL_VJOURNAL_COMPONENT);
   }
+
+  cal->endBatchAdding();
 
   // Post-Process list of events with relations, put Event objects in relation
   Event::List::ConstIterator eIt;

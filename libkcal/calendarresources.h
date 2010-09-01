@@ -80,7 +80,7 @@ class LIBKCAL_EXPORT CalendarResources :
         virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
         virtual TQWidget *parent() { return mParent; }
         virtual void setParent( TQWidget *newparent ) { mParent = newparent; }
-
+        bool hasCalendarResources();
       protected:
         CalendarResourceManager *resourceManager()
          { return mManager; }
@@ -268,20 +268,20 @@ class LIBKCAL_EXPORT CalendarResources :
        Resource which is queried.
     */
     void setAskDestinationPolicy();
-    
-    /** 
+
+    /**
        Returns the current parent for new dialogs. This is a bad hack, but we need
        to properly set the parent for the resource selection dialog. Otherwise
-       the dialog will not be modal to the editor dialog in korganizer and 
+       the dialog will not be modal to the editor dialog in korganizer and
        the user can still work in the editor dialog (and thus crash korganizer).
-       Afterwards we need to reset it (to avoid pointers to widgets that are 
+       Afterwards we need to reset it (to avoid pointers to widgets that are
        already deleted) so we also need the accessor
     */
     TQWidget *dialogParentWidget();
-    /** 
+    /**
        Set the widget parent for new dialogs. This is a bad hack, but we need
        to properly set the parent for the resource selection dialog. Otherwise
-       the dialog will not be modal to the editor dialog in korganizer and 
+       the dialog will not be modal to the editor dialog in korganizer and
        the user can still work in the editor dialog (and thus crash korganizer).
     */
     void setDialogParentWidget( TQWidget *parent );
@@ -333,22 +333,70 @@ class LIBKCAL_EXPORT CalendarResources :
        @param resource is a pointer to the ResourceCalendar to be added to.
 
        @return true if the Incidence was successfully inserted; false otherwise.
+       @deprecated use
+       addIncidence(Incidence *,ResourceCalendar *,const TQString &) instead.
     */
-    bool addIncidence( Incidence *incidence, ResourceCalendar *resource );
+    KDE_DEPRECATED bool addIncidence( Incidence *incidence, ResourceCalendar *resource );
+
+    /**
+       Insert an Incidence into a Calendar Resource.
+
+       @param incidence is a pointer to the Incidence to insert.
+       @param resource is a pointer to the ResourceCalendar to be added to.
+       @param subresource is the subresource name, which may not be used
+       by some calendar resources.
+
+       @return true if the Incidence was successfully inserted; false otherwise.
+    */
+    bool addIncidence( Incidence *incidence,
+                       ResourceCalendar *resource, const TQString &subresource );
 
     /**
        Flag that a change to a Calendar Incidence is starting.
-
        @param incidence is a pointer to the Incidence that will be changing.
+
+       @return false if the resource could not be computed or if a ticket
+       request fails; true otherwise.
     */
-    bool beginChange( Incidence *incidence );
+    KDE_DEPRECATED bool beginChange( Incidence *incidence );
+
+    /**
+       Flag that a change to a Calendar Incidence is starting.
+       @param incidence is a pointer to the Incidence that will be changing.
+       @param resource is a pointer to the ResourceCalendar that @p incidence
+       belongs to; if this is 0 then the resource is queried via the
+       DestinationPolicy.
+       @param subresource is the @p Incidence subresource name, which may not
+       be used by some calendar resources.
+
+       @return false if the resource could not be computed or if a ticket
+       request fails; true otherwise.
+    */
+    bool beginChange( Incidence *incidence, ResourceCalendar *resource, const TQString &subresource );
 
     /**
        Flag that a change to a Calendar Incidence has completed.
-
        @param incidence is a pointer to the Incidence that was changed.
+
+       @return false if the resource could not be computed or if a ticket
+       save fails; true otherwise.
     */
-    bool endChange( Incidence *incidence );
+    KDE_DEPRECATED bool endChange( Incidence *incidence );
+
+    /**
+       Flag that a change to a Calendar Incidence has completed.
+       @param incidence is a pointer to the Incidence that was changed.
+       @param resource is a pointer to the ResourceCalendar that @p incidence
+       belongs to; if this is 0 then the resource is queried via the
+       DestinationPolicy.
+       @param subresource is the @p Incidence subresource name, which may not
+       be used by some calendar resources.
+
+       @return false if the resource could not be computed or if a ticket
+       save fails; true otherwise.
+    */
+    bool endChange( Incidence *incidence,
+                    ResourceCalendar *resource, const TQString &subresource );
 
 // Event Specific Methods //
 
@@ -372,10 +420,25 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return true if the Event was successfully inserted; false otherwise.
 
-       @note In most cases use
-       addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
+       @deprecated use
+       addIncidence(Incidence *,ResourceCalendar *,const TQString&) instead.
     */
-    bool addEvent( Event *event, ResourceCalendar *resource );
+    KDE_DEPRECATED bool addEvent( Event *event, ResourceCalendar *resource );
+
+    /**
+       Insert an Event into a Calendar Resource.
+
+       @param event is a pointer to the Event to insert.
+       @param resource is a pointer to the ResourceCalendar to be added to.
+       @param subresource is the subresource name, which may not be used
+       by some calendar resources.
+
+       @return true if the Event was successfully inserted; false otherwise.
+
+       @note In most cases use
+       addIncidence(Incidence *,ResourceCalendar *,const TQString &) instead.
+    */
+    bool addEvent( Event *event, ResourceCalendar *resource, const TQString &subresource );
 
     /**
        Remove an Event from the Calendar.
@@ -474,10 +537,25 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return true if the Todo was successfully inserted; false otherwise.
 
-       @note In most cases use
-       addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
+       @deprecated use
+       addIncidence(Incidence *,ResourceCalendar *,const TQString &) instead.
     */
-    bool addTodo( Todo *todo, ResourceCalendar *resource );
+    KDE_DEPRECATED bool addTodo( Todo *todo, ResourceCalendar *resource );
+
+    /**
+       Insert an Todo into a Calendar Resource.
+
+       @param todo is a pointer to the Todo to insert.
+       @param resource is a pointer to the ResourceCalendar to be added to.
+       @param subresource is the subresource name, which may not be used
+       by some calendar resources.
+
+       @return true if the Todo was successfully inserted; false otherwise.
+
+       @note In most cases use
+       addIncidence(Incidence *, ResourceCalendar *,const TQString &) instead.
+    */
+    bool addTodo( Todo *todo, ResourceCalendar *resource, const TQString &subresource );
 
     /**
        Remove an Todo from the Calendar.
@@ -544,10 +622,25 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return true if the Journal was successfully inserted; false otherwise.
 
-       @note In most cases use
-       addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
+       @deprecated use
+       addIncidence(Incidence *,ResourceCalendar *,const TQString &) instead.
     */
-    bool addJournal( Journal *journal, ResourceCalendar *resource );
+    KDE_DEPRECATED bool addJournal( Journal *journal, ResourceCalendar *resource );
+
+    /**
+       Insert a Journal into a Calendar Resource.
+
+       @param journal is a pointer to the Journal to insert.
+       @param resource is a pointer to the ResourceCalendar to be added to.
+       @param subresource is the subresource name, which may not be used
+       by some calendar resources.
+
+       @return true if the Journal was successfully inserted; false otherwise.
+
+       @note In most cases use
+       addIncidence(Incidence *,ResourceCalendar *,const TQString &) instead.
+    */
+    bool addJournal( Journal *journal, ResourceCalendar *resource, const TQString &subresource );
 
     /**
        Remove a Journal from the Calendar.
@@ -622,6 +715,8 @@ class LIBKCAL_EXPORT CalendarResources :
      */
     void setTimeZoneIdViewOnly( const TQString& tz );
 
+  //issue 2508
+    bool hasCalendarResources();
   signals:
     /**
        Signal that the Resource has been modified.
@@ -684,7 +779,22 @@ class LIBKCAL_EXPORT CalendarResources :
     void slotLoadError( ResourceCalendar *resource, const TQString &err );
     void slotSaveError( ResourceCalendar *resource, const TQString &err );
 
+    /**
+      All addIncidence( Incidence * ), addTodo( Todo * ) addEvent( Event * )
+      and addJournal( Journal * ) calls made between beginAddingIncidences()
+      and endAddingIncidences() will only ask the user to choose a resource once.
+      @since 4.4
+    */
+    void beginAddingIncidences();
+
+    /**
+      @see beginAddingIncidences()
+      @since 4.4
+    */
+    void endAddingIncidences();
+
   private:
+
     /**
        Initialize the Resource object with starting values.
     */
@@ -698,6 +808,7 @@ class LIBKCAL_EXPORT CalendarResources :
     DestinationPolicy *mDestinationPolicy;
     StandardDestinationPolicy *mStandardPolicy;
     AskDestinationPolicy *mAskPolicy;
+    bool mPendingDeleteFromResourceMap;
 
     TQMap<ResourceCalendar *, Ticket *> mTickets;
     TQMap<ResourceCalendar *, int> mChangeCounts;

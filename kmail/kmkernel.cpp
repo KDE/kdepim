@@ -23,6 +23,7 @@ using KPIM::BroadcastStatus;
 #include "kmacctcachedimap.h"
 #include "kmfiltermgr.h"
 #include "kmfilteraction.h"
+#include "kmheaders.h"
 #define REALLY_WANT_KMSENDER
 #include "kmsender.h"
 #undef REALLY_WANT_KMSENDER
@@ -43,6 +44,7 @@ using KRecentAddress::RecentAddresses;
 #include "kmcommands.h"
 #include "kmsystemtray.h"
 #include "transportmanager.h"
+#include "importarchivedialog.h"
 
 #include <kwin.h>
 #include "kmailicalifaceimpl.h"
@@ -91,6 +93,7 @@ using KWallet::Wallet;
 #include <kstartupinfo.h>
 
 KMKernel *KMKernel::mySelf = 0;
+static bool s_askingToGoOnline = false;
 
 /********************************************************************/
 /*                     Constructor and destructor                   */
@@ -316,12 +319,16 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
 /********************************************************************/
 void KMKernel::checkMail () //might create a new reader but won't show!!
 {
+  if ( !kmkernel->askToGoOnline() )
+    return;
   kmkernel->acctMgr()->checkMail(false);
 }
 
 TQStringList KMKernel::accounts()
 {
-  return kmkernel->acctMgr()->getAccounts();
+  if( kmkernel->acctMgr() )
+     return kmkernel->acctMgr()->getAccounts();
+  return TQStringList();
 }
 
 void KMKernel::checkAccount (const TQString &account) //might create a new reader but won't show!!
@@ -399,8 +406,7 @@ int KMKernel::openComposer (const TQString &to, const TQString &cc,
     if( !str.isEmpty() ) {
       msg->setBody( TQString::fromLocal8Bit( str ).utf8() );
     } else {
-      TemplateParser parser( msg, TemplateParser::NewMessage,
-	"", false, false, false, false );
+      TemplateParser parser( msg, TemplateParser::NewMessage );
       parser.process( NULL, NULL );
     }
   }
@@ -410,8 +416,7 @@ int KMKernel::openComposer (const TQString &to, const TQString &cc,
   }
   else
   {
-    TemplateParser parser( msg, TemplateParser::NewMessage,
-      "", false, false, false, false );
+    TemplateParser parser( msg, TemplateParser::NewMessage );
     parser.process( NULL, NULL );
   }
 
@@ -481,6 +486,27 @@ int KMKernel::openComposer (const TQString &to, const TQString &cc,
                             const TQCString &attachContDisp,
                             const TQCString &attachCharset )
 {
+  kdDebug(5006) << "KMKernel::openComposer called (deprecated version)" << endl;
+  return openComposer ( to, cc, bcc, subject, body, hidden,
+                        attachName, attachCte, attachData,
+                        attachType, attachSubType, attachParamAttr,
+                        attachParamValue, attachContDisp, attachCharset, 0 );
+}
+
+int KMKernel::openComposer (const TQString &to, const TQString &cc,
+                            const TQString &bcc, const TQString &subject,
+                            const TQString &body, int hidden,
+                            const TQString &attachName,
+                            const TQCString &attachCte,
+                            const TQCString &attachData,
+                            const TQCString &attachType,
+                            const TQCString &attachSubType,
+                            const TQCString &attachParamAttr,
+                            const TQString &attachParamValue,
+                            const TQCString &attachContDisp,
+                            const TQCString &attachCharset,
+                            unsigned int identity )
+{
   kdDebug(5006) << "KMKernel::openComposer()" << endl;
 
   KMMessage *msg = new KMMessage;
@@ -491,11 +517,11 @@ int KMKernel::openComposer (const TQString &to, const TQString &cc,
   if ( !bcc.isEmpty() ) msg->setBcc(bcc);
   if ( !subject.isEmpty() ) msg->setSubject(subject);
   if ( !to.isEmpty() ) msg->setTo(to);
+  if ( identity > 0 ) msg->setHeaderField( "X-KMail-Identity", TQString::number( identity ) );
   if ( !body.isEmpty() ) {
     msg->setBody(body.utf8());
   } else {
-    TemplateParser parser( msg, TemplateParser::NewMessage,
-      "", false, false, false, false );
+    TemplateParser parser( msg, TemplateParser::NewMessage );
     parser.process( NULL, NULL );
   }
 
@@ -557,6 +583,11 @@ int KMKernel::openComposer (const TQString &to, const TQString &cc,
   if ( msgPart )
     cWin->addAttach(msgPart);
 
+  if ( isICalInvitation ) {
+    cWin->disableRecipientNumberCheck();
+    cWin->disableForgottenAttachmentsCheck();
+  }
+
   if ( hidden == 0 && !iCalAutoSend ) {
     cWin->show();
     // Activate window - doing this instead of KWin::activateWindow(cWin->winId());
@@ -597,8 +628,7 @@ DCOPRef KMKernel::openComposer(const TQString &to, const TQString &cc,
   if (!body.isEmpty()) {
     msg->setBody(body.utf8());
   } else {
-    TemplateParser parser( msg, TemplateParser::NewMessage,
-      "", false, false, false, false );
+    TemplateParser parser( msg, TemplateParser::NewMessage );
     parser.process( NULL, NULL );
   }
 
@@ -644,13 +674,11 @@ DCOPRef KMKernel::newMessage(const TQString &to,
   if (!bcc.isEmpty()) msg->setBcc(bcc);
 
   if ( useFolderId ) {
-    TemplateParser parser( msg, TemplateParser::NewMessage,
-      "", false, false, false, false );
+    TemplateParser parser( msg, TemplateParser::NewMessage );
     parser.process( NULL, folder );
     win = makeComposer( msg, id );
   } else {
-    TemplateParser parser( msg, TemplateParser::NewMessage,
-      "", false, false, false, false );
+    TemplateParser parser( msg, TemplateParser::NewMessage );
     parser.process( NULL, folder );
     win = makeComposer( msg );
   }
@@ -1053,6 +1081,14 @@ int KMKernel::dcopAddMessage_fastImport( const TQString & foldername,
   return retval;
 }
 
+void KMKernel::showImportArchiveDialog()
+{
+  KMMainWidget *mainWidget = getKMMainWidget();
+  KMail::ImportArchiveDialog *importDialog = new KMail::ImportArchiveDialog( mainWidget, WDestructiveClose );
+  importDialog->setFolder( mainWidget->folderTree()->currentFolder() );
+  importDialog->show();
+}
+
 TQStringList KMKernel::folderList() const
 {
   TQStringList folders;
@@ -1235,7 +1271,13 @@ bool KMKernel::isOffline()
 
 bool KMKernel::askToGoOnline()
 {
+  // already asking means we are offline and need to wait anyhow
+  if ( s_askingToGoOnline ) {
+    return false;
+  }
+
   if ( kmkernel->isOffline() ) {
+    s_askingToGoOnline = true;
     int rc =
     KMessageBox::questionYesNo( KMKernel::self()->mainWin(),
                                 i18n("KMail is currently in offline mode. "
@@ -1244,6 +1286,7 @@ bool KMKernel::askToGoOnline()
                                 i18n("Work Online"),
                                 i18n("Work Offline"));
 
+    s_askingToGoOnline = false;
     if( rc == KMessageBox::No ) {
       return false;
     } else {
@@ -1336,27 +1379,34 @@ void KMKernel::testDir(const char *_name)
 // Open a composer for each message found in the dead.letter folder
 void KMKernel::recoverDeadLetters()
 {
-  const TQString pathName = localDataPath();
-  TQDir dir( pathName );
-  if ( !dir.exists( "autosave" ) )
-    return;
-
-  KMFolder folder( 0, pathName + "autosave", KMFolderTypeMaildir, false /* no index */ );
-  KMFolderOpener openFolder( &folder, "recover" );
-  if ( !folder.isOpened() ) {
-    perror( "cannot open autosave folder" );
+  TQDir dir( localDataPath() + "autosave/cur" );
+  if ( !dir.exists() ) {
+    kdWarning(5006) << "Autosave directory " << dir.path() << " not found!" << endl;
     return;
   }
 
-  const int num = folder.count();
-  for ( int i = 0; i < num; i++ ) {
-    KMMessage *msg = folder.take( 0 );
-    if ( msg ) {
-      KMail::Composer * win = KMail::makeComposer();
-      win->setMsg( msg, false, false, true );
-      win->setAutoSaveFilename( msg->fileName() );
-      win->show();
+  const TQStringList entryList = dir.entryList( TQDir::Files | TQDir::NoSymLinks, TQDir::Unsorted );
+  for ( unsigned int i = 0; i < entryList.size(); i++ ) {
+    const TQString fileName = entryList[i];
+    TQFile file( dir.path() + '/' + fileName );
+    if ( !file.open( IO_ReadOnly ) ) {
+      kdWarning(5006) << "Unable to open autosave file " << fileName << endl;
+      continue;
     }
+    const TQByteArray msgData = file.readAll();
+    file.close();
+
+    if ( msgData.isEmpty() ) {
+      kdWarning(5006) << "autosave file " << fileName << " is empty!" << endl;
+      continue;
+    }
+
+    KMMessage *msg = new KMMessage(); // Composer will take ownership
+    msg->fromByteArray( msgData );
+    KMail::Composer * win = KMail::makeComposer();
+    win->setMsg( msg, false, false, true );
+    win->setAutoSaveFilename( fileName );
+    win->show();
   }
 }
 
@@ -1475,6 +1525,7 @@ void KMKernel::init()
   the_folderMgr     = new KMFolderMgr(foldersPath);
   the_imapFolderMgr = new KMFolderMgr( KMFolderImap::cacheLocation(), KMImapDir);
   the_dimapFolderMgr = new KMFolderMgr( KMFolderCachedImap::cacheLocation(), KMDImapDir);
+  recreateCorruptIndexFiles();
 
   the_searchFolderMgr = new KMFolderMgr(locateLocal("data","kmail/search"), KMSearchDir);
   KMFolder *lsf = the_searchFolderMgr->find( i18n("Last Search") );
@@ -1533,6 +1584,20 @@ void KMKernel::init()
 #else
   mBackgroundTasksTimer->start( 5 * 60000, true ); // 5 minutes, singleshot
 #endif
+
+  TQTextCodec *codec;
+  for ( int i = 0; ( codec = TQTextCodec::codecForIndex ( i ) ); i++ ) {
+    const TQString asciiString( "azAZ19,.-#+!?=()&" );
+    const TQCString encodedString = codec->fromUnicode( asciiString );
+    if ( TQString::fromAscii( encodedString ) != asciiString ) {
+      mNonAsciiCompatibleCodecs.append( codec );
+    }
+  }
+}
+
+bool KMKernel::isCodecAsciiCompatible( const TQTextCodec *codec )
+{
+  return !mNonAsciiCompatibleCodecs.contains( codec );
 }
 
 void KMKernel::readConfig()
@@ -1622,6 +1687,43 @@ void KMKernel::cleanupImapFolders()
     cfld->close("kmkernel");
   }
   the_dimapFolderMgr->quiet( false );
+}
+
+void KMKernel::recreateCorruptIndexFiles()
+{
+  TQValueList<TQGuardedPtr<KMFolder> > folders;
+  TQValueList<KMFolderIndex*> foldersWithBrokenIndex;
+  TQStringList strList;
+  the_folderMgr->createFolderList( &strList, &folders );
+  the_imapFolderMgr->createFolderList( &strList, &folders );
+  the_dimapFolderMgr->createFolderList( &strList, &folders );
+  for ( int i = 0; folders.at(i) != folders.end(); i++ ) {
+    KMFolder * const folder = *folders.at(i);
+    if ( !folder || folder->isDir() || folder->isOpened() )
+      continue;
+    KMFolderIndex * const index = dynamic_cast<KMFolderIndex*>( folder->storage() );
+    if ( index && index->indexStatus() != KMFolderIndex::IndexOk ) {
+      foldersWithBrokenIndex.append( index );
+    }
+  }
+
+  if ( !foldersWithBrokenIndex.isEmpty() ) {
+    TQStringList folderNames;
+    for ( uint i = 0; i < foldersWithBrokenIndex.size(); i++ ) {
+      folderNames << foldersWithBrokenIndex[i]->label();
+    }
+
+    KMessageBox::informationList( 0, i18n( "There is a problem with the mail index of the following "
+                                           "folders, the indices will now be regenerated.\n"
+                                           "This can happen because the index files are out of date, missing or corrupted.\n"
+                                           "Contact your administrator if this happens frequently.\n"
+                                           "Some information, like status flags, might get lost." ),
+                                  folderNames, i18n( "Problem with mail indices" ) );
+
+    for ( uint i = 0; i < foldersWithBrokenIndex.size(); i++ ) {
+      foldersWithBrokenIndex[i]->silentlyRecreateIndex();
+    }
+  }
 }
 
 bool KMKernel::doSessionManagement()
@@ -1865,9 +1967,17 @@ void KMKernel::dumpDeadLetters()
   if ( !KMainWindow::memberList )
     return;
 
-  for ( TQPtrListIterator<KMainWindow> it(*KMainWindow::memberList) ; it.current() != 0; ++it )
-    if ( KMail::Composer * win = ::qt_cast<KMail::Composer*>( it.current() ) )
+  for ( TQPtrListIterator<KMainWindow> it(*KMainWindow::memberList) ; it.current() != 0; ++it ) {
+    if ( KMail::Composer * win = ::qt_cast<KMail::Composer*>( it.current() ) ) {
       win->autoSaveMessage();
+      // saving the message has to be finished right here, we are called from a dtor,
+      // therefore we have no chance to finish this later
+      // yes, this is ugly and potentially dangerous, but the alternative is losing
+      // currently composed messages...
+      while ( win->isComposing() )
+        qApp->processEvents();
+    }
+  }
 }
 
 
@@ -1955,7 +2065,7 @@ void KMKernel::slotShowConfigurationDialog()
 {
   if( !mConfigureDialog ) {
     mConfigureDialog = new ConfigureDialog( 0, "configure", false );
-    connect( mConfigureDialog, TQT_SIGNAL( configCommitted() ),
+    connect( mConfigureDialog, TQT_SIGNAL( configChanged() ),
              this, TQT_SLOT( slotConfigChanged() ) );
   }
 
@@ -1967,9 +2077,11 @@ void KMKernel::slotShowConfigurationDialog()
     KMMainWin * win = new KMMainWin;
     win->show();
   }
-
   if( mConfigureDialog->isHidden() )
+  {
+    getKMMainWidget()->headers()->writeConfig();
     mConfigureDialog->show();
+  }
   else
     mConfigureDialog->raise();
 }
@@ -2326,7 +2438,7 @@ bool KMKernel::canQueryClose()
   if ( systray->mode() == GlobalSettings::EnumSystemTrayPolicy::ShowAlways ) {
     systray->hideKMail();
     return false;
-  } else if ( systray->mode() == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) {
+  } else if ( ( systray->mode() == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ) && ( systray->hasUnreadMail() )) {
     systray->show();
     systray->hideKMail();
     return false;

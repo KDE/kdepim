@@ -70,14 +70,17 @@ KOAlarmClient::KOAlarmClient( TQObject *parent, const char *name )
   // load reminders that were active when quitting
   config->setGroup( "General" );
   int numReminders = config->readNumEntry( "Reminders", 0 );
-  for ( int i=1; i<=numReminders; ++i )
-  {
+  for ( int i = 1; i <= numReminders; ++i ) {
     TQString group( TQString( "Incidence-%1" ).arg( i ) );
     config->setGroup( group );
     TQString uid = config->readEntry( "UID" );
     TQDateTime dt = config->readDateTimeEntry( "RemindAt" );
-    if ( !uid.isEmpty() )
-      createReminder( mCalendar->incidence( uid ), dt );
+    if ( !uid.isEmpty() ) {
+      Incidence *i = mCalendar->incidence( uid );
+      if ( i && !i->alarms().isEmpty() ) {
+        createReminder( mCalendar, i, dt, TQString() );
+      }
+    }
     config->deleteGroup( group );
   }
   config->setGroup( "General" );
@@ -115,24 +118,27 @@ void KOAlarmClient::checkAlarms()
   for( it = alarms.begin(); it != alarms.end(); ++it ) {
     kdDebug(5891) << "REMINDER: " << (*it)->parent()->summary() << endl;
     Incidence *incidence = mCalendar->incidence( (*it)->parent()->uid() );
-    createReminder( incidence, TQDateTime::currentDateTime() );
+    createReminder( mCalendar, incidence, from, (*it)->text() );
   }
 }
 
-void KOAlarmClient::createReminder( KCal::Incidence *incidence, TQDateTime dt )
+void KOAlarmClient::createReminder( KCal::CalendarResources *calendar,
+                                    KCal::Incidence *incidence,
+                                    const TQDateTime &dt,
+                                    const TQString &displayText )
 {
   if ( !incidence )
     return;
 
   if ( !mDialog ) {
-    mDialog = new AlarmDialog();
+    mDialog = new AlarmDialog( calendar );
     connect( mDialog, TQT_SIGNAL(reminderCount(int)), mDocker, TQT_SLOT(slotUpdate(int)) );
     connect( mDocker, TQT_SIGNAL(suspendAllSignal()), mDialog, TQT_SLOT(suspendAll()) );
     connect( mDocker, TQT_SIGNAL(dismissAllSignal()), mDialog, TQT_SLOT(dismissAll()) );
     connect( this, TQT_SIGNAL( saveAllSignal() ), mDialog, TQT_SLOT( slotSave() ) );
   }
 
-  mDialog->addIncidence( incidence, dt );
+  mDialog->addIncidence( incidence, dt, displayText );
   mDialog->wakeUp();
   saveLastCheckTime();
 }

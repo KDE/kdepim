@@ -27,24 +27,26 @@
 #include <kurldrag.h>
 #include <kstdaction.h>
 #include <kcolordialog.h>
-
+#include <tqpopupmenu.h>
+#include <kiconloader.h>
 #include "knoteedit.h"
+#include "knote.h"
 
 static const short SEP = 5;
 static const short ICON_SIZE = 10;
 
 
 KNoteEdit::KNoteEdit( KActionCollection *actions, TQWidget *parent, const char *name )
-    : KTextEdit( parent, name )
+    : KTextEdit( parent, name ), m_note( 0 )
 {
     setAcceptDrops( true );
     setWordWrap( WidgetWidth );
     setWrapPolicy( AtWhiteSpace );
     setLinkUnderline( true );
-
+    setCheckSpellingEnabled(false);
     // create the actions for the RMB menu
-    KAction* undo = KStdAction::undo( this, TQT_SLOT(undo()), actions );
-    KAction* redo = KStdAction::redo( this, TQT_SLOT(redo()), actions );
+    undo = KStdAction::undo( this, TQT_SLOT(undo()), actions );
+    redo = KStdAction::redo( this, TQT_SLOT(redo()), actions );
     undo->setEnabled( isUndoAvailable() );
     redo->setEnabled( isRedoAvailable() );
 
@@ -56,10 +58,10 @@ KNoteEdit::KNoteEdit( KActionCollection *actions, TQWidget *parent, const char *
     m_copy->setEnabled( false );
     m_paste->setEnabled( true );
 
-    connect( this, TQT_SIGNAL(undoAvailable(bool)), undo, TQT_SLOT(setEnabled(bool)) );
-    connect( this, TQT_SIGNAL(redoAvailable(bool)), redo, TQT_SLOT(setEnabled(bool)) );
+    connect( this, TQT_SIGNAL(undoAvailable(bool)), this, TQT_SLOT(setEnabledUndo(bool)) );
+    connect( this, TQT_SIGNAL(redoAvailable(bool)), this, TQT_SLOT(setEnabledRedo(bool)) );
 
-    connect( this, TQT_SIGNAL(copyAvailable(bool)), m_cut, TQT_SLOT(setEnabled(bool)) );
+    connect( this, TQT_SIGNAL(copyAvailable(bool)), this, TQT_SLOT( slotCutEnabled( bool ) ) );
     connect( this, TQT_SIGNAL(copyAvailable(bool)), m_copy, TQT_SLOT(setEnabled(bool)) );
 
     new KAction( KStdGuiItem::clear(), 0, this, TQT_SLOT(clear()), actions, "edit_clear" );
@@ -154,6 +156,21 @@ KNoteEdit::KNoteEdit( KActionCollection *actions, TQWidget *parent, const char *
 
 KNoteEdit::~KNoteEdit()
 {
+}
+
+void KNoteEdit::setEnabledRedo( bool b )
+{
+    redo->setEnabled( b && !isReadOnly() );
+}
+
+void KNoteEdit::setEnabledUndo( bool b )
+{
+    undo->setEnabled( b && !isReadOnly() );
+}
+
+void KNoteEdit::slotCutEnabled( bool b )
+{
+    m_cut->setEnabled( b && !isReadOnly() );
 }
 
 void KNoteEdit::setText( const TQString& text )
@@ -269,10 +286,14 @@ void KNoteEdit::textStrikeOut( bool s )
 
 void KNoteEdit::textColor()
 {
+    if ( m_note )
+        m_note->blockEmitDataChanged( true );
     TQColor c = color();
     int ret = KColorDialog::getColor( c, this );
     if ( ret == TQDialog::Accepted )
         setTextColor( c );
+    if ( m_note )
+        m_note->blockEmitDataChanged( false );
 }
 
 void KNoteEdit::textAlignLeft()
@@ -347,13 +368,17 @@ void KNoteEdit::contentsDropEvent( TQDropEvent *e )
     KURL::List list;
 
     if ( KURLDrag::decode( e, list ) )
-        for ( KURL::List::Iterator it = list.begin(); it != list.end(); ++it )
+    {
+	KURL::List::ConstIterator begin = list.constBegin();
+	KURL::List::ConstIterator end = list.constEnd();
+        for ( KURL::List::ConstIterator it = begin; it != end; ++it )
         {
-            if ( it != list.begin() )
+            if ( it != begin )
                 insert( ", " );
 
             insert( (*it).prettyURL() );
         }
+    }
     else
         KTextEdit::contentsDropEvent( e );
 }
@@ -490,6 +515,43 @@ void KNoteEdit::disableRichTextActions()
 
 //    m_textIncreaseIndent->setEnabled( false );
 //    m_textDecreaseIndent->setEnabled( false );
+}
+
+void KNoteEdit::slotAllowTab()
+{
+    setTabChangesFocus(!tabChangesFocus());
+}
+
+TQPopupMenu *KNoteEdit::createPopupMenu( const TQPoint &pos )
+{
+    enum { IdUndo, IdRedo, IdSep1, IdCut, IdCopy, IdPaste, IdClear, IdSep2, IdSelectAll };
+
+    TQPopupMenu *menu = TQTextEdit::createPopupMenu( pos );
+
+    if ( isReadOnly() )
+      menu->changeItem( menu->idAt(0), SmallIconSet("editcopy"), menu->text( menu->idAt(0) ) );
+    else {
+      int id = menu->idAt(0);
+      menu->changeItem( id - IdUndo, SmallIconSet("undo"), menu->text( id - IdUndo) );
+      menu->changeItem( id - IdRedo, SmallIconSet("redo"), menu->text( id - IdRedo) );
+      menu->changeItem( id - IdCut, SmallIconSet("editcut"), menu->text( id - IdCut) );
+      menu->changeItem( id - IdCopy, SmallIconSet("editcopy"), menu->text( id - IdCopy) );
+      menu->changeItem( id - IdPaste, SmallIconSet("editpaste"), menu->text( id - IdPaste) );
+      menu->changeItem( id - IdClear, SmallIconSet("editclear"), menu->text( id - IdClear) );
+
+        menu->insertSeparator();
+        id = menu->insertItem( SmallIconSet( "spellcheck" ), i18n( "Check Spelling..." ),
+                                   this, TQT_SLOT( checkSpelling() ) );
+
+        if( text().isEmpty() )
+            menu->setItemEnabled( id, false );
+
+	menu->insertSeparator();
+	id=menu->insertItem(i18n("Allow Tabulations"),this,TQT_SLOT(slotAllowTab()));
+	menu->setItemChecked(id, !tabChangesFocus());
+    }
+
+    return menu;
 }
 
 #include "knoteedit.moc"

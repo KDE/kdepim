@@ -45,6 +45,7 @@
 
 KOEventPopupMenu::KOEventPopupMenu()
 {
+  mCalendar = 0;
   mCurrentIncidence = 0;
   mCurrentDate = TQDate();
   mHasAdditionalItems = false;
@@ -89,8 +90,9 @@ KOEventPopupMenu::KOEventPopupMenu()
               this, TQT_SLOT(forward()) );
 }
 
-void KOEventPopupMenu::showIncidencePopup( Incidence *incidence, const TQDate &qd )
+void KOEventPopupMenu::showIncidencePopup( Calendar *cal, Incidence *incidence, const TQDate &qd )
 {
+  mCalendar = cal;
   mCurrentIncidence = incidence;
   mCurrentDate = qd;
 
@@ -123,19 +125,23 @@ void KOEventPopupMenu::addAdditionalItem(const TQIconSet &icon,const TQString &t
 
 void KOEventPopupMenu::popupShow()
 {
-  if (mCurrentIncidence) emit showIncidenceSignal(mCurrentIncidence);
+  if ( mCurrentIncidence ) {
+    emit showIncidenceSignal( mCurrentIncidence, mCurrentDate );
+  }
 }
 
 void KOEventPopupMenu::popupEdit()
 {
-  if (mCurrentIncidence) emit editIncidenceSignal(mCurrentIncidence);
+  if ( mCurrentIncidence ) {
+    emit editIncidenceSignal( mCurrentIncidence, mCurrentDate );
+  }
 }
 
 void KOEventPopupMenu::print()
 {
 #ifndef KORG_NOPRINTER
   KOCoreHelper helper;
-  CalPrinter printer( this, 0, &helper );
+  CalPrinter printer( this, mCalendar, &helper );
   connect( this, TQT_SIGNAL(configChanged()), &printer, TQT_SLOT(updateConfig()) );
 
   Incidence::List selectedIncidences;

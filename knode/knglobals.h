@@ -51,6 +51,9 @@ namespace KNode {
     (knode.h isn't include everywhere) */
 class KDE_EXPORT KNGlobals {
   public:
+    KNGlobals();
+    ~KNGlobals();
+
     /** topWidget == top, used for message boxes, */
     TQWidget               *topWidget;
     /** no need to include knode.h everywhere */

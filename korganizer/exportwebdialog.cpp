@@ -85,6 +85,7 @@ ExportWebDialog::ExportWebDialog( HTMLExportSettings *settings, TQWidget *parent
   connect( this, TQT_SIGNAL( cancelClicked() ), TQT_SLOT( reject() ) );
 
   readConfig();
+  updateState();
 }
 
 ExportWebDialog::~ExportWebDialog()
@@ -139,16 +140,18 @@ void ExportWebDialog::setupGeneralPage()
   mGeneralPage = addPage( i18n("General") );
   TQVBoxLayout *topLayout = new TQVBoxLayout(mGeneralPage, 10);
 
-  TQGroupBox *rangeGroup = new TQHGroupBox( i18n("Date Range"), mGeneralPage );
-  topLayout->addWidget( rangeGroup );
-  addWidDate( mSettings->dateStartItem(), rangeGroup );
-  addWidDate( mSettings->dateEndItem(), rangeGroup );
+  mDateRangeBox = new TQHGroupBox( i18n("Date Range"), mGeneralPage );
+  topLayout->addWidget( mDateRangeBox );
+  addWidDate( mSettings->dateStartItem(), mDateRangeBox );
+  addWidDate( mSettings->dateEndItem(), mDateRangeBox );
 
   TQButtonGroup *typeGroup = new TQVButtonGroup( i18n("View Type"), mGeneralPage );
   topLayout->addWidget( typeGroup );
 //  addWidBool( mSettings->weekViewItem(), typeGroup );
-  addWidBool( mSettings->monthViewItem(), typeGroup );
-  addWidBool( mSettings->eventViewItem(), typeGroup );
+  mMonthViewCheckBox = addWidBool( mSettings->monthViewItem(), typeGroup )->checkBox();
+  connect( mMonthViewCheckBox, TQT_SIGNAL(toggled(bool)), TQT_SLOT(updateState()) );
+  mEventListCheckBox = addWidBool( mSettings->eventViewItem(), typeGroup )->checkBox();
+  connect( mEventListCheckBox, TQT_SIGNAL(toggled(bool)), TQT_SLOT(updateState()) );
   addWidBool( mSettings->todoViewItem(), typeGroup );
 //  addWidBool( mSettings->journalViewItem(), typeGroup );
 //  addWidBool( mSettings->freeBusyViewItem(), typeGroup );
@@ -255,3 +258,11 @@ void ExportWebDialog::setupAdvancedPage()
   topLayout->addStretch(1);
 }
 */
+
+void ExportWebDialog::updateState()
+{
+  const bool exportEvents = mMonthViewCheckBox->isChecked() || mEventListCheckBox->isChecked();
+  mDateRangeBox->setEnabled( exportEvents );
+  mEventPage->setEnabled( exportEvents );
+}
+

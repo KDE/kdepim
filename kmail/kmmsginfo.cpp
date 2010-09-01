@@ -18,16 +18,17 @@ class KMMsgInfo::KMMsgInfoPrivate
 {
 public:
     enum {
-        SUBJECT_SET = 0x01, TO_SET = 0x02, REPLYTO_SET = 0x04, MSGID_SET=0x08,
+        SUBJECT_SET = 0x01, TOSTRIP_SET = 0x02, REPLYTO_SET = 0x04, MSGID_SET=0x08,
         DATE_SET = 0x10, OFFSET_SET = 0x20, SIZE_SET = 0x40, SIZESERVER_SET = 0x80,
-        XMARK_SET=0x100, FROM_SET=0x200, FILE_SET=0x400, ENCRYPTION_SET=0x800,
+        XMARK_SET=0x100, FROMSTRIP_SET=0x200, FILE_SET=0x400, ENCRYPTION_SET=0x800,
         SIGNATURE_SET=0x1000, MDN_SET=0x2000, REPLYTOAUX_SET = 0x4000,
         STRIPPEDSUBJECT_SET = 0x8000,  UID_SET = 0x10000,
+        TO_SET = 0x20000, FROM_SET = 0x40000,
 
         ALL_SET = 0xFFFFFF, NONE_SET = 0x000000
     };
     uint modifiers;
-    TQString subject, from, to, replyToIdMD5, replyToAuxIdMD5,
+    TQString subject, fromStrip, toStrip, replyToIdMD5, replyToAuxIdMD5,
             strippedSubjectMD5, msgIdMD5, xmark, file;
     off_t folderOffset;
     size_t msgSize, msgSizeServer;
@@ -36,6 +37,7 @@ public:
     KMMsgSignatureState signatureState;
     KMMsgMDNSentState mdnSentState;
     ulong UID;
+    TQString to, from;
 
     KMMsgInfoPrivate() : modifiers(NONE_SET) { }
     KMMsgInfoPrivate& operator=(const KMMsgInfoPrivate& other) {
@@ -48,17 +50,17 @@ public:
             modifiers |= STRIPPEDSUBJECT_SET;
             strippedSubjectMD5 = other.strippedSubjectMD5;
         }
-        if (other.modifiers & FROM_SET) {
-            modifiers |= FROM_SET;
-            from = other.from;
+        if (other.modifiers & FROMSTRIP_SET) {
+            modifiers |= FROMSTRIP_SET;
+            fromStrip = other.fromStrip;
         }
         if (other.modifiers & FILE_SET) {
             modifiers |= FILE_SET;
-            file = other.from;
+            file = other.file;
         }
-        if (other.modifiers & TO_SET) {
-            modifiers |= TO_SET;
-            to = other.to;
+        if (other.modifiers & TOSTRIP_SET) {
+            modifiers |= TOSTRIP_SET;
+            toStrip = other.toStrip;
         }
         if (other.modifiers & REPLYTO_SET) {
             modifiers |= REPLYTO_SET;
@@ -109,6 +111,14 @@ public:
             modifiers |= UID_SET;
             UID = other.UID;
         }
+        if (other.modifiers & TO_SET) {
+            modifiers |= TO_SET;
+            to = other.to;
+        }
+        if (other.modifiers & FROM_SET) {
+            modifiers |= FROM_SET;
+            from = other.from;
+        }
         return *this;
     }
 };
@@ -157,8 +167,8 @@ KMMsgInfo& KMMsgInfo::operator=(const KMMessage& msg)
         kd = new KMMsgInfoPrivate;
     kd->modifiers = KMMsgInfoPrivate::ALL_SET;
     kd->subject = msg.subject();
-    kd->from = msg.fromStrip();
-    kd->to = msg.toStrip();
+    kd->fromStrip = msg.fromStrip();
+    kd->toStrip = msg.toStrip();
     kd->replyToIdMD5 = msg.replyToIdMD5();
     kd->replyToAuxIdMD5 = msg.replyToAuxIdMD5();
     kd->strippedSubjectMD5 = msg.strippedSubjectMD5();
@@ -174,6 +184,8 @@ KMMsgInfo& KMMsgInfo::operator=(const KMMessage& msg)
     kd->mdnSentState = msg.mdnSentState();
     kd->msgSizeServer = msg.msgSizeServer();
     kd->UID = msg.UID();
+    kd->to = msg.to();
+    kd->from = msg.from();
     return *this;
 }
 
@@ -187,8 +199,8 @@ void KMMsgInfo::init(const TQCString& aSubject, const TQCString& aFrom,
                      KMMsgSignatureState signatureState,
                      KMMsgMDNSentState mdnSentState,
                      const TQCString& prefCharset,
-             off_t aFolderOffset, size_t aMsgSize,
-             size_t aMsgSizeServer, ulong aUID)
+                     off_t aFolderOffset, size_t aMsgSize,
+                     size_t aMsgSizeServer, ulong aUID)
 {
     mIndexOffset = 0;
     mIndexLength = 0;
@@ -196,8 +208,8 @@ void KMMsgInfo::init(const TQCString& aSubject, const TQCString& aFrom,
         kd = new KMMsgInfoPrivate;
     kd->modifiers = KMMsgInfoPrivate::ALL_SET;
     kd->subject = decodeRFC2047String(aSubject, prefCharset);
-    kd->from = decodeRFC2047String( KMMessage::stripEmailAddr( aFrom ), prefCharset );
-    kd->to = decodeRFC2047String( KMMessage::stripEmailAddr( aTo ), prefCharset );
+    kd->fromStrip = decodeRFC2047String( KMMessage::stripEmailAddr( aFrom ), prefCharset );
+    kd->toStrip = decodeRFC2047String( KMMessage::stripEmailAddr( aTo ), prefCharset );
     kd->replyToIdMD5 = base64EncodedMD5( replyToId );
     kd->replyToAuxIdMD5 = base64EncodedMD5( replyToAuxId );
     kd->strippedSubjectMD5 = base64EncodedMD5( KMMessage::stripOffPrefixes( kd->subject ), true /*utf8*/ );
@@ -213,7 +225,9 @@ void KMMsgInfo::init(const TQCString& aSubject, const TQCString& aFrom,
     kd->mdnSentState = mdnSentState;
     kd->msgSizeServer = aMsgSizeServer;
     kd->UID = aUID;
-    mDirty     = false;
+    kd->to = aTo;
+    kd->from = aFrom;
+    mDirty = false;
 }
 
 void KMMsgInfo::init(const TQCString& aSubject, const TQCString& aFrom,
@@ -245,14 +259,22 @@ TQString KMMsgInfo::subject(void) const
     return getStringPart(MsgSubjectPart);
 }
 
-
 //-----------------------------------------------------------------------------
 TQString KMMsgInfo::fromStrip(void) const
 {
+    if (kd && kd->modifiers & KMMsgInfoPrivate::FROMSTRIP_SET)
+        return kd->fromStrip;
+    return getStringPart(MsgFromStripPart);
+}
+
+//-----------------------------------------------------------------------------
+TQString KMMsgInfo::from() const
+{
     if (kd && kd->modifiers & KMMsgInfoPrivate::FROM_SET)
         return kd->from;
-    return getStringPart(MsgFromPart);
+    return getStringPart( MsgFromPart );
 }
+
 
 //-----------------------------------------------------------------------------
 TQString KMMsgInfo::fileName(void) const
@@ -266,9 +288,17 @@ TQString KMMsgInfo::fileName(void) const
 //-----------------------------------------------------------------------------
 TQString KMMsgInfo::toStrip(void) const
 {
+    if (kd && kd->modifiers & KMMsgInfoPrivate::TOSTRIP_SET)
+        return kd->toStrip;
+    return getStringPart(MsgToStripPart);
+}
+
+//-----------------------------------------------------------------------------
+TQString KMMsgInfo::to() const
+{
     if (kd && kd->modifiers & KMMsgInfoPrivate::TO_SET)
         return kd->to;
-    return getStringPart(MsgToPart);
+    return getStringPart( MsgToPart );
 }
 
 //-----------------------------------------------------------------------------
@@ -656,6 +686,24 @@ void KMMsgInfo::setDate(time_t aUnixTime)
     mDirty = true;
 }
 
+void KMMsgInfo::setFrom( const TQString &from )
+{
+  if ( !kd )
+    kd = new KMMsgInfoPrivate;
+  kd->modifiers |= KMMsgInfoPrivate::FROM_SET;
+  kd->from = from;
+  mDirty = true;
+}
+
+void KMMsgInfo::setTo( const TQString &to )
+{
+  if ( !kd )
+    kd = new KMMsgInfoPrivate;
+  kd->modifiers |= KMMsgInfoPrivate::TO_SET;
+  kd->to = to;
+  mDirty = true;
+}
+
 //--- For compatability with old index files
 void KMMsgInfo::compat_fromOldIndexString(const TQCString& str, bool toUtf8)
 {
@@ -671,8 +719,8 @@ void KMMsgInfo::compat_fromOldIndexString(const TQCString& str, bool toUtf8)
     mStatus = (KMMsgStatus)str.at(0);
     if (toUtf8) {
         kd->subject = str.mid(37, 100).stripWhiteSpace();
-        kd->from = str.mid(138, 50).stripWhiteSpace();
-        kd->to = str.mid(189, 50).stripWhiteSpace();
+        kd->fromStrip = str.mid(138, 50).stripWhiteSpace();
+        kd->toStrip = str.mid(189, 50).stripWhiteSpace();
     } else {
         start = offset = str.data() + 37;
         while (*start == ' ' && start - offset < 100) start++;
@@ -680,11 +728,11 @@ void KMMsgInfo::compat_fromOldIndexString(const TQCString& str, bool toUtf8)
             100 - (start - offset)), 100 - (start - offset));
         start = offset = str.data() + 138;
         while (*start == ' ' && start - offset < 50) start++;
-        kd->from = TQString::fromUtf8(str.mid(start - str.data(),
+        kd->fromStrip = TQString::fromUtf8(str.mid(start - str.data(),
             50 - (start - offset)), 50 - (start - offset));
         start = offset = str.data() + 189;
         while (*start == ' ' && start - offset < 50) start++;
-        kd->to = TQString::fromUtf8(str.mid(start - str.data(),
+        kd->toStrip = TQString::fromUtf8(str.mid(start - str.data(),
             50 - (start - offset)), 50 - (start - offset));
     }
     kd->replyToIdMD5 = str.mid(240, 22).stripWhiteSpace();

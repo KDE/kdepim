@@ -31,8 +31,8 @@
 using namespace KOrg;
 using namespace KCal;
 
-TimelineItem::TimelineItem( const TQString &label, KDGanttView * parent) :
-    KDGanttViewTaskItem( parent )
+TimelineItem::TimelineItem( const TQString &label, KCal::Calendar *calendar, KDGanttView * parent) :
+    KDGanttViewTaskItem( parent ), mCalendar( calendar )
 {
   setListViewText( 0, label );
   setDisplaySubitemsAsGroup( true );
@@ -56,7 +56,7 @@ void TimelineItem::insertIncidence(KCal::Incidence * incidence, const TQDateTime
     if ( (*it)->startTime() == start && (*it)->endTime() == end )
       return;
 
-  TimelineSubItem * item = new TimelineSubItem( incidence, this );
+  TimelineSubItem * item = new TimelineSubItem( mCalendar, incidence, this );
   TQColor c1, c2, c3;
   colors( c1, c2, c3 );
   item->setColors( c1, c2, c3 );
@@ -91,14 +91,16 @@ void TimelineItem::moveItems(KCal::Incidence * incidence, int delta, int duratio
 }
 
 
-TimelineSubItem::TimelineSubItem(KCal::Incidence * incidence, TimelineItem * parent) :
+TimelineSubItem::TimelineSubItem( KCal::Calendar *calendar,
+                                  KCal::Incidence *incidence, TimelineItem *parent) :
     KDGanttViewTaskItem( parent ),
     mIncidence( incidence ),
     mLeft( 0 ),
     mRight( 0 ),
     mMarkerWidth( 0 )
 {
-  setTooltipText( IncidenceFormatter::toolTipString( incidence ) );
+  setTooltipText( IncidenceFormatter::toolTipStr( calendar, incidence,
+                                                  originalStart().date(), true ) );
   if ( !incidence->isReadOnly() ) {
     setMoveable( true );
     setResizeable( true );

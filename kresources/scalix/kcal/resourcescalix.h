@@ -70,6 +70,7 @@ public:
 
   // The libkcal functions. See the resource for descriptions
   bool addEvent( KCal::Event* anEvent );
+  bool addEvent( KCal::Event* anEvent, const TQString &subresource );
   bool deleteEvent( KCal::Event* );
   KCal::Event* event( const TQString &UniqueStr );
   KCal::Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
@@ -82,12 +83,14 @@ public:
                                bool inclusive = false );
 
   bool addTodo( KCal::Todo* todo );
+  bool addTodo( KCal::Todo* todo, const TQString &subresource );
   bool deleteTodo( KCal::Todo* );
   KCal::Todo* todo( const TQString& uid );
   KCal::Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Todo::List rawTodosForDate( const TQDate& date );
 
   bool addJournal( KCal::Journal* );
+  bool addJournal( KCal::Journal* journal, const TQString &subresource );
   bool deleteJournal( KCal::Journal* );
   KCal::Journal* journal( const TQString& uid );
   KCal::Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );

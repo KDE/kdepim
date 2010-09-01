@@ -39,6 +39,8 @@ namespace KMail {
   class Composer;
   class FolderJob;
   class EditorWatcher;
+  class HeaderStyle;
+  class HeaderStrategy;
 }
 namespace GpgME { class Error; }
 namespace Kleo { class SpecialJob; }
@@ -83,9 +85,11 @@ public slots:
   void slotProgress( unsigned long done, unsigned long total );
 
 signals:
+
+  /// @param result The status of the command.
   void messagesTransfered( KMCommand::Result result );
-  /** Emitted when the command has completed.
-   * @param result The status of the command. */
+
+  /// Emitted when the command has completed.
   void completed( KMCommand *command );
 
 protected:
@@ -342,6 +346,7 @@ private:
   static const int MAX_CHUNK_SIZE = 64*1024;
   KURL mUrl;
   TQValueList<unsigned long> mMsgList;
+  TQValueList<KMMsgBase *> mUngetMsgs;
   unsigned int mMsgListIndex;
   KMMessage *mStandAloneMessage;
   TQByteArray mData;
@@ -601,8 +606,10 @@ class KDE_EXPORT KMPrintCommand : public KMCommand
 
 public:
   KMPrintCommand( TQWidget *parent, KMMessage *msg,
-                  bool htmlOverride=false,
-                  bool htmlLoadExtOverride=false,
+                  const KMail::HeaderStyle *headerStyle = 0,
+                  const KMail::HeaderStrategy *headerStrategy = 0,
+                  bool htmlOverride = false,
+                  bool htmlLoadExtOverride = false,
                   bool useFixedFont = false,
                   const TQString & encoding = TQString() );
 
@@ -611,6 +618,8 @@ public:
 private:
   virtual Result execute();
 
+  const KMail::HeaderStyle *mHeaderStyle;
+  const KMail::HeaderStrategy *mHeaderStrategy;
   bool mHtmlOverride;
   bool mHtmlLoadExtOverride;
   bool mUseFixedFont;
@@ -1036,11 +1045,11 @@ class KDE_EXPORT AttachmentModifyCommand : public KMCommand
   Q_OBJECT
   public:
     AttachmentModifyCommand( partNode *node, KMMessage *msg, TQWidget *parent );
+    AttachmentModifyCommand( int nodeId, KMMessage *msg, TQWidget *parent );
     ~AttachmentModifyCommand();
 
   protected:
     void storeChangedMessage( KMMessage* msg );
-    DwBodyPart* findPart( KMMessage* msg, int index );
     virtual Result doAttachmentModify() = 0;
 
   protected:
@@ -1049,7 +1058,6 @@ class KDE_EXPORT AttachmentModifyCommand : public KMCommand
 
   private:
     Result execute();
-    DwBodyPart* findPartInternal( DwEntity* root, int index, int &accu );
 
   private slots:
     void messageStoreResult( KMFolderImap* folder, bool success );
@@ -1064,6 +1072,7 @@ class KDE_EXPORT KMDeleteAttachmentCommand : public AttachmentModifyCommand
   Q_OBJECT
   public:
     KMDeleteAttachmentCommand( partNode *node, KMMessage *msg, TQWidget *parent );
+    KMDeleteAttachmentCommand( int nodeId, KMMessage *msg, TQWidget *parent );
     ~KMDeleteAttachmentCommand();
 
   protected:
@@ -1076,6 +1085,7 @@ class KDE_EXPORT KMEditAttachmentCommand : public AttachmentModifyCommand
   Q_OBJECT
   public:
     KMEditAttachmentCommand( partNode *node, KMMessage *msg, TQWidget *parent );
+    KMEditAttachmentCommand( int nodeId, KMMessage *msg, TQWidget *parent );
     ~KMEditAttachmentCommand();
 
   protected:

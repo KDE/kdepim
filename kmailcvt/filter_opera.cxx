@@ -37,7 +37,6 @@ FilterOpera::FilterOpera() :
 
 FilterOpera::~FilterOpera()
 {
-    endImport();
 }
 
 void FilterOpera::import(FilterInfo *info)
@@ -55,6 +54,7 @@ void FilterOpera::import(FilterInfo *info)
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     TQString operaDir = kfd->selectedFile();
+    delete kfd;
 
     if (operaDir.isEmpty()) {
         info->alert(i18n("No directory selected."));

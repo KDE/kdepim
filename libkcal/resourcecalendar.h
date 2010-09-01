@@ -36,6 +36,7 @@
 #include "event.h"
 #include "journal.h"
 #include "calendar.h"
+#include "exceptions.h"
 
 #include <kresources/resource.h>
 #include <kresources/manager.h>
@@ -55,10 +56,27 @@ class CalFormat;
 */
 class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     ResourceCalendar( const KConfig * );
     virtual ~ResourceCalendar();
+
+    /**
+      Clears the exception status.
+    */
+    void clearException();
+
+    /**
+      Set exception for this object. This is used by the functions of this
+      class to report errors.
+    */
+    void setException( ErrorFormat *error );
+
+    /**
+      Returns an exception, if there is any, containing information about the
+      last error that occurred.
+    */
+    ErrorFormat *exception();
 
     void setResolveConflict( bool b);
 
@@ -123,8 +141,14 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Add incidence to resource.
+      @deprecated use addIncidence(Incidence *,const TQString &) instead.
     */
-    virtual bool addIncidence( Incidence * );
+    virtual KDE_DEPRECATED bool addIncidence( Incidence * );
+
+    /**
+      Add incidence to resource and subresource.
+    */
+    virtual bool addIncidence( Incidence *, const TQString &subresource );
 
     /**
       Delete incidence from resource.
@@ -139,8 +163,10 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Add event to resource.
+      @deprecated use addEvent(Event *,const TQString&) instead.
     */
-    virtual bool addEvent( Event *event ) = 0;
+    virtual KDE_DEPRECATED bool addEvent( Event *event ) = 0;
+    virtual bool addEvent( Event *event, const TQString &subresource ) = 0;
 
     /**
       Delete event from this resource.
@@ -241,8 +267,11 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
   public:
     /**
       Add a todo to the todolist.
+      @deprecated use addTodo(Todo *,const TQString &) instead.
     */
-    virtual bool addTodo( Todo *todo ) = 0;
+    virtual KDE_DEPRECATED bool addTodo( Todo *todo ) = 0;
+    virtual bool addTodo( Todo *todo,  const TQString &subresource ) = 0;
+
     /**
       Remove a todo from the todolist.
     */
@@ -265,8 +294,10 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Add a Journal entry to the resource.
+      @deprecated use addJournal(Journal *,const TQString &) instead.
     */
-    virtual bool addJournal( Journal * ) = 0;
+    virtual KDE_DEPRECATED bool addJournal( Journal * ) = 0;
+    virtual bool addJournal( Journal *journal, const TQString &subresource ) = 0;
 
     /**
       Remove a Journal entry from calendar.
@@ -324,6 +355,11 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual bool subresourceActive( const TQString& ) const { return true; }
 
     /**
+      Is this subresource writable or not?
+    */
+    virtual bool subresourceWritable( const TQString& ) const;
+
+    /**
       What is the label for this subresource?
      */
     virtual const TQString labelForSubresource( const TQString& resource ) const
@@ -359,6 +395,18 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
      * TQString() if unknown/mixed.
      */
     virtual TQString subresourceType( const TQString &resource );
+
+    /**
+     * Called when we starting adding a batch of incidences.
+     * So we don't show the same warnings for each incidence.
+     */
+    virtual void beginAddingIncidences();
+
+    /**
+     * Called when we finish adding a batch of incidences.
+     * @see beginAddingIncidences()
+     */
+    virtual void endAddingIncidences();
 
   public slots:
     /**
@@ -401,6 +449,8 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
   private:
     bool mReceivedLoadError;
     bool mReceivedSaveError;
+
+    ErrorFormat *mException;
 
     class Private;
     Private *d;

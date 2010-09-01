@@ -27,6 +27,7 @@
 
 namespace KCal
 {
+class Calendar;
 class Incidence;
 }
 using namespace KCal;
@@ -39,19 +40,24 @@ class KOAgendaItem;
 class KOIncidenceToolTip : public QToolTip
 {
   public:
-    KOIncidenceToolTip(TQWidget * widget, TQToolTipGroup * group = 0 ):TQToolTip (widget, group),mText(0) {}
+    KOIncidenceToolTip( TQWidget *widget, Calendar *calendar, const TQDate &date, TQToolTipGroup *group = 0 )
+      : TQToolTip (widget, group), mCalendar( calendar ), mDate( date ), mText(0) {}
 /*    ~KOIncidenceToolTip();*/
 
   public:
-    static void add ( TQWidget * widget, Incidence *incidence,
-        TQToolTipGroup * group = 0, const TQString & longText = "" );
-    static void add( KOAgendaItem *item, Incidence *incidence = 0,
+    static void add ( TQWidget *widget, Calendar *calendar,
+                      Incidence *incidence, const TQDate &date=TQDate(),
+                      TQToolTipGroup *group = 0, const TQString &longText = "" );
+    static void add( KOAgendaItem *item, Calendar *calendar,
+                     Incidence *incidence = 0, const TQDate &date=TQDate(),
                      TQToolTipGroup *group = 0 );
 
     /* reimplmented from TQToolTip */
     void maybeTip( const TQPoint &pos );
 
   private:
+    Calendar *mCalendar;
+    TQDate mDate;
     TQString mText;
 };
 

@@ -72,8 +72,8 @@ bool KNotesLegacy::convert( CalendarLocal *calendar )
     bool converted = false;
 
     TQDir noteDir( KGlobal::dirs()->saveLocation( "appdata", "notes/" ) );
-    TQStringList notes = noteDir.entryList( TQDir::Files, TQDir::Name );
-    for ( TQStringList::Iterator note = notes.begin(); note != notes.end(); note++ )
+    const TQStringList notes = noteDir.entryList( TQDir::Files, TQDir::Name );
+    for ( TQStringList::ConstIterator note = notes.constBegin(); note != notes.constEnd(); ++note )
     {
         TQString file = noteDir.absFilePath( *note );
         KSimpleConfig* test = new KSimpleConfig( file );
@@ -82,7 +82,6 @@ bool KNotesLegacy::convert( CalendarLocal *calendar )
 
         if ( version < 3.0 )
         {
-            delete test;
 
             // create the new note
             Journal *journal = new Journal();
@@ -109,8 +108,8 @@ bool KNotesLegacy::convert( CalendarLocal *calendar )
             test->writeEntry( "ShowInTaskbar", (state & NET::SkipTaskbar) ? false : true );
             test->writeEntry( "KeepAbove", (state & NET::KeepAbove) ? true : false );
             test->deleteEntry( "state" );
-            delete test;
         }
+        delete test;	
     }
 
     return converted;

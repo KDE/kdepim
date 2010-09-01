@@ -41,7 +41,7 @@ ProgressItem::ProgressItem(
        :mId( id ), mLabel( label ), mStatus( status ), mParent( parent ),
         mCanBeCanceled( canBeCanceled ), mProgress( 0 ), mTotal( 0 ),
         mCompleted( 0 ), mWaitingForKids( false ), mCanceled( false ),
-        mUsesCrypto( usesCrypto )
+        mUsesCrypto( usesCrypto ), mUsesBusyIndicator( false )
     {}
 
 ProgressItem::~ProgressItem()
@@ -123,6 +123,12 @@ void ProgressItem::setUsesCrypto( bool v )
   emit progressItemUsesCrypto( this, v );
 }
 
+void ProgressItem::setUsesBusyIndicator( bool useBusyIndicator )
+{
+  mUsesBusyIndicator = useBusyIndicator;
+  emit progressItemUsesBusyIndicator( this, useBusyIndicator );
+}
+
 // ======================================
 
 ProgressManager::ProgressManager() :TQObject() {
@@ -170,6 +176,8 @@ ProgressItem* ProgressManager::createProgressItemImpl(
                this, TQT_SIGNAL( progressItemLabel(KPIM::ProgressItem*, const TQString&) ) );
      connect ( t, TQT_SIGNAL( progressItemUsesCrypto(KPIM::ProgressItem*, bool) ),
                this, TQT_SIGNAL( progressItemUsesCrypto(KPIM::ProgressItem*, bool) ) );
+     connect ( t, TQT_SIGNAL( progressItemUsesBusyIndicator(KPIM::ProgressItem*, bool) ),
+               this, TQT_SIGNAL( progressItemUsesBusyIndicator(KPIM::ProgressItem*, bool) ) );
 
      emit progressItemAdded( t );
    } else {
@@ -212,7 +220,12 @@ ProgressItem* ProgressManager::singleItem() const
   ProgressItem *item = 0;
   TQDictIterator< ProgressItem > it( mTransactions );
   for ( ; it.current(); ++it ) {
-    if ( !(*it)->parent() ) { // if it's a top level one, only those count
+
+    // No single item for progress possible, as one of them is a busy indicator one.
+    if ( (*it)->usesBusyIndicator() )
+      return 0;
+
+    if ( !(*it)->parent() ) {             // if it's a top level one, only those count
       if ( item )
         return 0; // we found more than one
       else

@@ -48,12 +48,14 @@
 
 using namespace KMail;
 
-EditorWatcher::EditorWatcher(const KURL & url, const TQString &mimeType, bool openWith, TQObject * parent) :
+EditorWatcher::EditorWatcher(const KURL & url, const TQString &mimeType, bool openWith,
+                             TQObject * parent, TQWidget *parentWidget) :
     TQObject( parent ),
     mUrl( url ),
     mMimeType( mimeType ),
     mOpenWith( openWith ),
     mEditor( 0 ),
+    mParentWidget( parentWidget ),
     mHaveInotify( false ),
     mFileOpen( false ),
     mEditorRunning( false ),
@@ -154,8 +156,13 @@ void EditorWatcher::checkEditDone()
   // nobody can edit that fast, we seem to be unable to detect
   // when the editor will be closed
   if ( mEditTime.elapsed() <= 3000 ) {
-    KMessageBox::error( 0, i18n("KMail is unable to detect when the choosen editor is closed. "
-         "To avoid data loss, editing the attachment will be aborted."), i18n("Unable to edit attachment") );
+    KMessageBox::information(
+      mParentWidget,
+      i18n( "KMail is unable to detect when the chosen editor is closed. "
+            "To avoid data loss, editing the attachment will be aborted." ),
+      i18n( "Unable to edit attachment" ),
+      "UnableToEditAttachment" );
+
   }
 
   emit editDone( this );

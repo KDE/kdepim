@@ -88,6 +88,7 @@ public slots:
   void slotShowExpiryProperties();
   void slotIconsChanged();
   void slotNameChanged();
+  void slotNoContentChanged();
   void updateCount();
 
 protected:
@@ -114,9 +115,6 @@ public:
 
   /** Save config options */
   void writeConfig();
-
-  /** Get/refresh the folder tree */
-  virtual void reload(bool openFolders = false);
 
   /** Recusively add folders in a folder directory to a listview item. */
   virtual void addDirectory( KMFolderDir *fdir, KMFolderTreeItem* parent );
@@ -178,6 +176,9 @@ signals:
   /** The selected folder has changed to go to an unread message */
   void folderSelectedUnread( KMFolder * );
 
+  /** The sync state of the _selected_ folder has changed */
+  void syncStateChanged();
+
   /** unread/total/size column has changed */
   void columnsChanged();
 
@@ -188,6 +189,9 @@ signals:
   void nameChanged( KMFolderTreeItem * );
 
 public slots:
+  /** Get/refresh the folder tree */
+  virtual void reload(bool openFolders = false);
+
   /** Select the next folder with unread messages */
   void nextUnreadFolder();
 
@@ -230,6 +234,9 @@ public slots:
 
   /** Pastes a previously copied/cutted folder below the currently selected folder. */
   void pasteFolder();
+
+  /** Reload the folder tree (using a single shot timer) */
+  void delayedReload();
 
 protected slots:
   //  void slotRMB(int, int);
@@ -281,6 +288,8 @@ protected slots:
 
   /** Updates copy/cut/paste actions */
   void updateCopyActions();
+
+  void slotSyncStateChanged();
 
 protected:
   virtual void contentsMousePressEvent( TQMouseEvent *e );

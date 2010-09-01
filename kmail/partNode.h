@@ -45,8 +45,12 @@
 #include <kio/global.h>
 #include <kdebug.h>
 
+#include <map>
+
 class KMMimePartTreeItem;
 class KMMimePartTree;
+
+class KMReaderWin;
 
 /*
  ===========================================================================
@@ -67,13 +71,21 @@ class partNode
     int calcNodeIdOrFindNode( int& curId, const partNode* calcNode,
                               int findId, partNode** findNode );
 
-public:
-    static partNode * fromMessage( const KMMessage * msg );
-
-    partNode( DwBodyPart* dwPart,
+    partNode( KMReaderWin * win, DwBodyPart* dwPart,
               int explicitType    = DwMime::kTypeUnknown,
               int explicitSubType = DwMime::kSubtypeUnknown,
 	      bool deleteDwBodyPart = false );
+
+public:
+
+    struct AttachmentDisplayInfo
+    {
+      TQString label;
+      TQString icon;
+      bool displayInHeader;
+    };
+
+    static partNode * fromMessage( const KMMessage * msg, KMReaderWin * win=0 );
 
     partNode( bool deleteDwBodyPart,
               DwBodyPart* dwPart );
@@ -151,6 +163,11 @@ public:
         return mSignatureState;
     }
 
+    // path is a hierarchical path to this partNode. It is designed to
+    // be stable under decryption, where new child nodes are
+    // added. Treat it as an opaque string.
+    TQCString path() const;
+
     int nodeId() const;  // node ids start at 1 (this is the top level root node)
 
     partNode* findId( int id );  // returns the node which has the given id (or 0, resp.)
@@ -202,7 +219,7 @@ public:
         mMimePartTreeItem = item;
     }
 
-    KMMimePartTreeItem* mimePartTreeItem() {
+    KMMimePartTreeItem* mimePartTreeItem() const {
         return mMimePartTreeItem;
     }
 
@@ -217,23 +234,52 @@ public:
     */
     bool isFirstTextPart() const;
 
+    bool isToltecMessage() const;
+
+    /**
+     * @return true if this node is a child or an encapsulated message
+     */
+    bool isInEncapsulatedMessage() const;
+
     bool hasContentDispositionInline() const;
 
     TQString contentTypeParameter( const char * name ) const;
 
     const TQString& trueFromAddress() const;
 
+    const partNode * topLevelParent() const;
     partNode * parentNode() const { return mRoot; }
     partNode * nextSibling() const { return mNext; }
     partNode * firstChild() const { return mChild; }
     partNode * next( bool allowChildren=true ) const;
     int childCount() const;
+    int totalChildCount() const;
     bool processed() const { return mWasProcessed; }
 
-    KMail::Interface::BodyPartMemento * bodyPartMemento() const { return mBodyPartMemento; };
-    void setBodyPartMemento( KMail::Interface::BodyPartMemento * memento ) {
-        mBodyPartMemento = memento;
-    };
+    KMail::Interface::BodyPartMemento * bodyPartMemento( const TQCString & which ) const;
+    void setBodyPartMemento( const TQCString & which, KMail::Interface::BodyPartMemento * memento );
+
+    // A flag to remember if the node was embedded. This is useful for attachment nodes, the reader
+    // needs to know if they were displayed inline or not.
+    bool isDisplayedEmbedded() const;
+    void setDisplayedEmbedded( bool displayedEmbedded );
+
+    // Same as above, but this time determines if the node was hidden or not
+    bool isDisplayedHidden() const;
+    void setDisplayedHidden( bool displayedHidden );
+
+    // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
+    // UrlHandlerManager.
+    TQString asHREF( const TQString &place ) const;
+
+    AttachmentDisplayInfo attachmentDisplayInfo() const;
+
+private:
+    KMReaderWin * reader() const {
+        return mReader ? mReader : mRoot ? mRoot->reader() : 0 ;
+    }
+    KMail::Interface::BodyPartMemento * internalBodyPartMemento( const TQCString & ) const;
+    void internalSetBodyPartMemento( const TQCString & which, KMail::Interface::BodyPartMemento * memento );
 
 private:
     partNode*     mRoot;
@@ -253,7 +299,10 @@ private:
     bool          mEncodedOk;
     bool          mDeleteDwBodyPart;
     KMMimePartTreeItem* mMimePartTreeItem;
-    KMail::Interface::BodyPartMemento * mBodyPartMemento;
+    std::map<TQCString,KMail::Interface::BodyPartMemento*> mBodyPartMementoMap;
+    KMReaderWin * mReader;
+    bool mDisplayedEmbedded;
+    bool mDisplayedHidden;
 };
 
 #endif

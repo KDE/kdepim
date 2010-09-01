@@ -510,6 +510,12 @@ bool ResourceScalix::addEvent( KCal::Event* event )
     return addIncidence( event, TQString::null, 0 );
 }
 
+bool ResourceScalix::addEvent( KCal::Event *event, const TQString &subresource )
+{
+  Q_UNUSED( subresource ); // ResourceScalix does not support subresources
+  return this->addEvent( event );
+}
+
 bool ResourceScalix::deleteIncidence( KCal::Incidence* incidence )
 {
   if ( incidence->isReadOnly() ) return false;
@@ -572,6 +578,12 @@ bool ResourceScalix::addTodo( KCal::Todo* todo )
     return addIncidence( todo, TQString::null, 0 );
 }
 
+bool ResourceScalix::addTodo( KCal::Todo *todo, const TQString &subresource )
+{
+  Q_UNUSED( subresource ); // ResourceScalix does not support subresources
+  return this->addTodo( todo );
+}
+
 bool ResourceScalix::deleteTodo( KCal::Todo* todo )
 {
   return deleteIncidence( todo );
@@ -598,6 +610,12 @@ bool ResourceScalix::addJournal( KCal::Journal* journal )
     return true; //noop
   else
     return addIncidence( journal, TQString::null, 0 );
+}
+
+bool ResourceScalix::addJournal( KCal::Journal *journal, const TQString &subresource )
+{
+  Q_UNUSED( subresource ); // ResourceScalix does not support subresources
+  return this->addJournal( journal );
 }
 
 bool ResourceScalix::deleteJournal( KCal::Journal* journal )

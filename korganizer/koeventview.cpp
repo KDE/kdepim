@@ -60,25 +60,25 @@ KOEventView::~KOEventView()
 KOEventPopupMenu *KOEventView::eventPopup()
 {
   KOEventPopupMenu *eventPopup = new KOEventPopupMenu;
-  
-  connect(eventPopup,TQT_SIGNAL(editIncidenceSignal(Incidence *)),
-                     TQT_SIGNAL(editIncidenceSignal(Incidence *)));
-  connect(eventPopup,TQT_SIGNAL(showIncidenceSignal(Incidence *)),
-                     TQT_SIGNAL(showIncidenceSignal(Incidence *)));
-  connect(eventPopup,TQT_SIGNAL(deleteIncidenceSignal(Incidence *)),
-                     TQT_SIGNAL(deleteIncidenceSignal(Incidence *)));
-  connect(eventPopup,TQT_SIGNAL(cutIncidenceSignal(Incidence *)),
-                     TQT_SIGNAL(cutIncidenceSignal(Incidence *)));
-  connect(eventPopup,TQT_SIGNAL(copyIncidenceSignal(Incidence *)),
-                     TQT_SIGNAL(copyIncidenceSignal(Incidence *)));
-  connect(eventPopup,TQT_SIGNAL(pasteIncidenceSignal()),
-                     TQT_SIGNAL(pasteIncidenceSignal()));
-  connect(eventPopup,TQT_SIGNAL(toggleAlarmSignal(Incidence *)),
-                     TQT_SIGNAL(toggleAlarmSignal(Incidence*)));
-  connect(eventPopup,TQT_SIGNAL(dissociateOccurrenceSignal( Incidence *, const TQDate & )),
-                     TQT_SIGNAL(dissociateOccurrenceSignal( Incidence *, const TQDate & )));
-  connect(eventPopup,TQT_SIGNAL(dissociateFutureOccurrenceSignal( Incidence *, const TQDate & )),
-                     TQT_SIGNAL(dissociateFutureOccurrenceSignal( Incidence *, const TQDate & )));
+
+  connect( eventPopup, TQT_SIGNAL(editIncidenceSignal(Incidence *,const TQDate &)),
+           TQT_SIGNAL(editIncidenceSignal(Incidence *,const TQDate &)) );
+  connect( eventPopup, TQT_SIGNAL(showIncidenceSignal(Incidence *,const TQDate &)),
+           TQT_SIGNAL(showIncidenceSignal(Incidence *,const TQDate &)) );
+  connect( eventPopup, TQT_SIGNAL(deleteIncidenceSignal(Incidence *)),
+           TQT_SIGNAL(deleteIncidenceSignal(Incidence *)) );
+  connect( eventPopup, TQT_SIGNAL(cutIncidenceSignal(Incidence *)),
+           TQT_SIGNAL(cutIncidenceSignal(Incidence *)) );
+  connect( eventPopup, TQT_SIGNAL(copyIncidenceSignal(Incidence *)),
+           TQT_SIGNAL(copyIncidenceSignal(Incidence *)) );
+  connect( eventPopup, TQT_SIGNAL(pasteIncidenceSignal()),
+           TQT_SIGNAL(pasteIncidenceSignal()) );
+  connect( eventPopup, TQT_SIGNAL(toggleAlarmSignal(Incidence *)),
+           TQT_SIGNAL(toggleAlarmSignal(Incidence*)) );
+  connect( eventPopup, TQT_SIGNAL(dissociateOccurrenceSignal(Incidence *,const TQDate &)),
+           TQT_SIGNAL(dissociateOccurrenceSignal(Incidence *,const TQDate &)) );
+  connect( eventPopup, TQT_SIGNAL(dissociateFutureOccurrenceSignal(Incidence *,const TQDate &)),
+           TQT_SIGNAL(dissociateFutureOccurrenceSignal(Incidence *,const TQDate &)) );
 
   return eventPopup;
 }
@@ -102,14 +102,14 @@ TQPopupMenu *KOEventView::newEventPopup()
 
 void KOEventView::popupShow()
 {
-  emit showIncidenceSignal(mCurrentIncidence);
+  emit showIncidenceSignal(mCurrentIncidence,  TQDate() );
 }
 
 //---------------------------------------------------------------------------
 
 void KOEventView::popupEdit()
 {
-  emit editIncidenceSignal(mCurrentIncidence);
+  emit editIncidenceSignal( mCurrentIncidence, TQDate() );
 }
 
 //---------------------------------------------------------------------------
@@ -137,14 +137,16 @@ void KOEventView::popupCopy()
 
 void KOEventView::showNewEventPopup()
 {
-  TQPopupMenu *popup = newEventPopup();
-  if ( !popup ) {
-    kdError() << "KOEventView::showNewEventPopup(): popup creation failed"
-              << endl;
-    return;
-  }
+  if ( !readOnly() ) {
+    TQPopupMenu *popup = newEventPopup();
+    if ( !popup ) {
+      kdError() << "KOEventView::showNewEventPopup(): popup creation failed"
+                << endl;
+      return;
+    }
 
-  popup->popup( TQCursor::pos() );
+    popup->popup( TQCursor::pos() );
+  }
 }
 
 //---------------------------------------------------------------------------
@@ -157,10 +159,11 @@ void KOEventView::defaultAction( Incidence *incidence )
 
   kdDebug(5850) << "  type: " << incidence->type() << endl;
 
-  if ( incidence->isReadOnly() )
-    emit showIncidenceSignal(incidence);
-  else
-    emit editIncidenceSignal(incidence);
+  if ( incidence->isReadOnly() ) {
+    emit showIncidenceSignal( incidence, TQDate() );
+  } else {
+    emit editIncidenceSignal( incidence, TQDate() );
+  }
 }
 
 //---------------------------------------------------------------------------

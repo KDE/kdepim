@@ -128,7 +128,7 @@ bool ResourceLocalDir::doLoad()
   TQString dirName = mURL.path();
 
   if ( !( KStandardDirs::exists( dirName ) || KStandardDirs::exists( dirName + "/") ) ) {
-    kdDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName 
+    kdDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName
                   << "' doesn't exist yet. Creating it..." << endl;
     // Create the directory. Use 0775 to allow group-writable if the umask
     // allows it (permissions will be 0775 & ~umask). This is desired e.g. for
@@ -139,7 +139,7 @@ bool ResourceLocalDir::doLoad()
   // The directory exists. Now try to open (the files in) it.
   kdDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
   TQFileInfo dirInfo( dirName );
-  if ( !( dirInfo.isDir() && dirInfo.isReadable() && 
+  if ( !( dirInfo.isDir() && dirInfo.isReadable() &&
           ( dirInfo.isWritable() || readOnly() ) ) )
     return false;
 
@@ -193,6 +193,11 @@ bool ResourceLocalDir::doSave()
 
 bool ResourceLocalDir::doSave( Incidence *incidence )
 {
+  if ( mDeletedIncidences.contains( incidence ) ) {
+    mDeletedIncidences.remove( incidence );
+    return true;
+  }
+
   mDirWatch.stopScan();  // do prohibit the dirty() signal and a following reload()
 
   TQString fileName = mURL.path() + "/" + incidence->uid();
@@ -231,28 +236,46 @@ void ResourceLocalDir::reload( const TQString &file )
 bool ResourceLocalDir::deleteEvent(Event *event)
 {
   kdDebug(5800) << "ResourceLocalDir::deleteEvent" << endl;
-  if ( deleteIncidenceFile(event) )
-    return( mCalendar.deleteEvent( event ) );
-  else
-    return( false );
+  if ( deleteIncidenceFile(event) ) {
+    if ( mCalendar.deleteEvent( event ) ) {
+      mDeletedIncidences.append( event );
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 
 bool ResourceLocalDir::deleteTodo(Todo *todo)
 {
-  if ( deleteIncidenceFile(todo) )
-    return( mCalendar.deleteTodo( todo ) );
-  else
-    return( false );
+  if ( deleteIncidenceFile(todo) ) {
+    if ( mCalendar.deleteTodo( todo ) ) {
+      mDeletedIncidences.append( todo );
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 
 bool ResourceLocalDir::deleteJournal( Journal *journal )
 {
-  if ( deleteIncidenceFile( journal ) )
-    return( mCalendar.deleteJournal( journal ) );
-  else
-    return( false );
+  if ( deleteIncidenceFile( journal ) ) {
+    if ( mCalendar.deleteJournal( journal ) ) {
+      mDeletedIncidences.append( journal );
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 

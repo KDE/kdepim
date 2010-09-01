@@ -28,12 +28,24 @@
 #include <klocale.h>
 #include <kapplication.h>
 
+#include <kabc/resource.h>
+
 #include "addresseeutil.h"
 #include "addresseeconfig.h"
 #include "core.h"
 #include "kablock.h"
 
 #include "undocmds.h"
+
+bool Command::resourceExist( KABC::Resource *resource )
+{
+  TQPtrList<KABC::Resource>  lst = addressBook()->resources();
+  for ( Resource *res = lst.first(); res; res = lst.next() ) {
+    if ( res == resource )
+      return true;
+  }
+  return false;
+}
 
 DeleteCommand::DeleteCommand( KABC::AddressBook *addressBook,
                               const TQStringList &uidList)
@@ -57,7 +69,8 @@ void DeleteCommand::unexecute()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->insertAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 
@@ -81,7 +94,8 @@ void DeleteCommand::execute()
   KABC::Addressee::List::ConstIterator addrIt;
   const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.end() );
   for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
-    addressBook()->removeAddressee( *addrIt );
+    if ( resourceExist( ( *addrIt ).resource() ) )
+      addressBook()->removeAddressee( *addrIt );
     lock()->unlock( (*addrIt).resource() );
   }
 }
@@ -107,7 +121,8 @@ void PasteCommand::unexecute()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->removeAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->removeAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 }
@@ -126,20 +141,19 @@ void PasteCommand::execute()
   KABC::Addressee::List::Iterator it;
   const KABC::Addressee::List::Iterator endIt( mAddresseeList.end() );
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    /**
-       We have to set a new uid for the contact, otherwise insertAddressee()
-       ignore it.
-     */
-    (*it).setUid( KApplication::randomString( 10 ) );
-    uids.append( (*it).uid() );
-    addressBook()->insertAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) ) {
+
+      /**
+         We have to set a new uid for the contact, otherwise insertAddressee()
+         ignore it.
+      */
+      (*it).setUid( KApplication::randomString( 10 ) );
+      uids.append( (*it).uid() );
+      addressBook()->insertAddressee( *it );
+    }
     lock()->unlock( (*it).resource() );
   }
 
-  TQStringList::ConstIterator uidIt;
-  const TQStringList::ConstIterator uidEndIt( uids.end() );
-  for ( uidIt = uids.begin(); uidIt != uidEndIt; ++uidIt )
-    mCore->editContact( *uidIt );
 }
 
 
@@ -163,7 +177,8 @@ void NewCommand::unexecute()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->removeAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->removeAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 }
@@ -178,7 +193,8 @@ void NewCommand::execute()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->insertAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 }
@@ -199,16 +215,22 @@ TQString EditCommand::name() const
 
 void EditCommand::unexecute()
 {
-  lock()->lock( mOldAddressee.resource() );
-  addressBook()->insertAddressee( mOldAddressee );
-  lock()->unlock( mOldAddressee.resource() );
+  if ( resourceExist( mOldAddressee.resource() ) )
+  {
+    lock()->lock( mOldAddressee.resource() );
+    addressBook()->insertAddressee( mOldAddressee );
+    lock()->unlock( mOldAddressee.resource() );
+  }
 }
 
 void EditCommand::execute()
 {
-  lock()->lock( mNewAddressee.resource() );
-  addressBook()->insertAddressee( mNewAddressee );
-  lock()->unlock( mNewAddressee.resource() );
+  if ( resourceExist( mNewAddressee.resource() ) )
+  {
+    lock()->lock( mNewAddressee.resource() );
+    addressBook()->insertAddressee( mNewAddressee );
+    lock()->unlock( mNewAddressee.resource() );
+  }
 }
 
 
@@ -232,7 +254,8 @@ void CutCommand::unexecute()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->insertAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 
@@ -258,7 +281,8 @@ void CutCommand::execute()
   KABC::Addressee::List::ConstIterator addrIt;
   const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.end() );
   for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
-    addressBook()->removeAddressee( *addrIt );
+    if ( resourceExist( ( *addrIt ).resource() ) )
+      addressBook()->removeAddressee( *addrIt );
     lock()->unlock( addr.resource() );
   }
 
@@ -268,5 +292,115 @@ void CutCommand::execute()
   QClipboard *cb = TQApplication::clipboard();
   mOldText = cb->text();
   kapp->processEvents();
+#if defined(KABC_VCARD_ENCODING_FIX)
+  cb->setText( TQString::fromUtf8( mClipText.data() ) );
+#else
   cb->setText( mClipText );
+#endif
+}
+
+CopyToCommand::CopyToCommand( KABC::AddressBook *addressBook, const TQStringList &uidList,
+                                              KABC::Resource *resource )
+    : Command( addressBook ), mUIDList( uidList ), mResource( resource )
+{
+}
+
+TQString CopyToCommand::name() const
+{
+    return i18n( "Copy Contact To", "Copy %n Contacts To", mUIDList.count() );
+}
+
+void CopyToCommand::unexecute()
+{
+    KABC::Addressee::List::ConstIterator it;
+    const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
+    //For copy : just remove it from the "copied to" resource.
+    // lock resources
+    for ( it = mAddresseeList.begin(); it != endIt; ++it )
+        lock()->lock( (*it).resource() );
+
+    for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
+      if ( resourceExist( ( *it ).resource() ) )
+        addressBook()->removeAddressee( *it );
+      lock()->unlock( (*it).resource() );
+    }
+}
+
+void CopyToCommand::execute()
+{
+  KABLock::self( addressBook() )->lock( mResource );
+  TQStringList::Iterator it( mUIDList.begin() );
+  const TQStringList::Iterator endIt( mUIDList.end() );
+  while ( it != endIt ) {
+    KABC::Addressee addr = addressBook()->findByUid( *it++ );
+    if ( !addr.isEmpty() ) {
+      KABC::Addressee newAddr( addr );
+      // We need to set a new uid, otherwise the insert below is
+      // ignored. This is bad for syncing, but unavoidable, afaiks
+      newAddr.setUid( KApplication::randomString( 10 ) );
+      newAddr.setResource( mResource );
+      if ( resourceExist( newAddr.resource() ) )
+        addressBook()->insertAddressee( newAddr );
+      mAddresseeList.append( newAddr );
+    }
+  }
+  KABLock::self( addressBook() )->unlock( mResource );
+
+}
+
+MoveToCommand::MoveToCommand( KAB::Core *core, const TQStringList &uidList,
+                                              KABC::Resource *resource )
+    : Command( core->addressBook() ), mUIDList( uidList ), mResource( resource ), mCore( core )
+{
+}
+
+TQString MoveToCommand::name() const
+{
+    return i18n( "Move Contact To", "Move %n Contacts To", mUIDList.count() );
+}
+
+void MoveToCommand::unexecute()
+{
+  //For move : remove it from the "copied to" resource and insert it back to "copied from" resource.
+    KABC::Resource *resource = mCore->requestResource( mCore->widget() );
+    if ( !resource )
+      return;
+    moveContactTo( resource );
+}
+
+void MoveToCommand::execute()
+{
+    moveContactTo( mResource );
+}
+
+void MoveToCommand::moveContactTo( KABC::Resource *resource )
+{
+    KABLock::self( addressBook() )->lock( resource );
+    TQStringList::Iterator it( mUIDList.begin() );
+    const TQStringList::Iterator endIt( mUIDList.end() );
+    while ( it != endIt ) {
+        KABC::Addressee addr = addressBook()->findByUid( *it++ );
+        if ( !addr.isEmpty() ) {
+            KABC::Addressee newAddr( addr );
+      // We need to set a new uid, otherwise the insert below is
+      // ignored. This is bad for syncing, but unavoidable, afaiks
+            TQString uid = KApplication::randomString( 10 );
+            newAddr.setUid( uid );
+            newAddr.setResource( resource );
+            if ( resourceExist( newAddr.resource() ) )
+              addressBook()->insertAddressee( newAddr );
+            mAddresseeList.append( newAddr );
+            mUIDList.append( uid );
+            const bool inserted = addressBook()->find( newAddr ) != addressBook()->end();
+            if ( inserted ) {
+              if ( resourceExist( addr.resource() ) ) {
+                KABLock::self( addressBook() )->lock( addr.resource() );
+                addressBook()->removeAddressee( addr );
+                KABLock::self( addressBook() )->unlock( addr.resource() );
+              }
+            }
+        }
+    }
+    KABLock::self( addressBook() )->unlock( resource );
+
 }

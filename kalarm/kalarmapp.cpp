@@ -1631,13 +1631,11 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
 				if (win)
 					win->setRecreating();    // prevent post-alarm actions
 				delete win;
-				KAlarm::cancelScreenSaver();
 				(new MessageWin(event, alarm, reschedule, allowDefer))->show();
 			}
 			else
 			{
 				// Raise the existing message window and replay any sound
-				KAlarm::cancelScreenSaver();
 				win->repeat(alarm);    // N.B. this reschedules the alarm
 			}
 			break;

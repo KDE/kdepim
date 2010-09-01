@@ -25,8 +25,11 @@
 
 static const char vcard_mime_string[] = "text/x-vcard";
 
-KVCardDrag::KVCardDrag( const TQString &content, TQWidget *dragsource,
-                        const char *name )
+#if defined(KABC_VCARD_ENCODING_FIX)
+KVCardDrag::KVCardDrag( const TQByteArray &content, TQWidget *dragsource, const char *name )
+#else
+KVCardDrag::KVCardDrag( const TQString &content, TQWidget *dragsource, const char *name )
+#endif
   : TQStoredDrag( vcard_mime_string, dragsource, name )
 {
   setVCard( content );
@@ -35,28 +38,60 @@ KVCardDrag::KVCardDrag( const TQString &content, TQWidget *dragsource,
 KVCardDrag::KVCardDrag( TQWidget *dragsource, const char *name )
   : TQStoredDrag( vcard_mime_string, dragsource, name )
 {
+#if defined(KABC_VCARD_ENCODING_FIX)
+  setVCard( TQByteArray() );
+#else
   setVCard( TQString::null );
+#endif
 }
 
+#if defined(KABC_VCARD_ENCODING_FIX)
+void KVCardDrag::setVCard( const TQByteArray &content )
+{
+  setEncodedData( content );
+}
+#else
 void KVCardDrag::setVCard( const TQString &content )
 {
   setEncodedData( content.utf8() );
 }
+#endif
 
 bool KVCardDrag::canDecode( TQMimeSource *e )
 {
   return e->provides( vcard_mime_string );
 }
 
+#if defined(KABC_VCARD_ENCODING_FIX)
+bool KVCardDrag::decode( TQMimeSource *e, TQByteArray &content )
+{
+  if ( !canDecode( e ) ) {
+    return false;
+  }
+  content = e->encodedData( vcard_mime_string );
+  return true;
+}
+#else
 bool KVCardDrag::decode( TQMimeSource *e, TQString &content )
 {
+  if ( !canDecode( e ) ) {
+    return false;
+  }
   content = TQString::fromUtf8( e->encodedData( vcard_mime_string ) );
   return true;
 }
+#endif
 
 bool KVCardDrag::decode( TQMimeSource *e, KABC::Addressee::List& addressees )
 {
+  if ( !canDecode( e ) ) {
+    return false;
+  }
+#if defined(KABC_VCARD_ENCODING_FIX)
+  addressees = KABC::VCardConverter().parseVCardsRaw( e->encodedData( vcard_mime_string ).data() );
+#else
   addressees = KABC::VCardConverter().parseVCards( e->encodedData( vcard_mime_string ) );
+#endif
   return true;
 }
 

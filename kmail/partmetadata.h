@@ -18,6 +18,7 @@
 #define _KMAIL_PARTMETADATA_H_
 
 #include <gpgmepp/verificationresult.h>
+#include <gpgmepp/context.h>
 
 #include <kpgp.h>
 #include <tqstring.h>
@@ -34,6 +35,7 @@ namespace KMail {
         isGoodSignature( false ),
         isEncrypted( false ),
         isDecryptable( false ),
+        inProgress( false ),
         technicalProblem( false ),
         isEncapsulatedRfc822Message( false )
     {
@@ -50,10 +52,12 @@ namespace KMail {
     TQDateTime creationTime;
     TQString decryptionError;
     TQString auditLog;
+    GpgME::Error auditLogError;
     bool isSigned : 1;
     bool isGoodSignature : 1;
     bool isEncrypted : 1;
     bool isDecryptable : 1;
+    bool inProgress : 1;
     bool technicalProblem : 1;
     bool isEncapsulatedRfc822Message : 1;
   };

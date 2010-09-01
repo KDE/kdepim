@@ -70,7 +70,8 @@ KNoteAlarmDlg::KNoteAlarmDlg( const TQString& caption, TQWidget *parent, const c
     TQLabel *in_min = new TQLabel( i18n("hours/minutes"), in );
 
     label_in->setEnabled( false ); // TODO
-
+    in->hide(); //show it and enable it when feature will implement
+ 
     connect( m_buttons, TQT_SIGNAL(clicked( int )), TQT_SLOT(slotButtonChanged( int )) );
 }
 

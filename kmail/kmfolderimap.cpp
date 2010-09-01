@@ -49,6 +49,7 @@ using KMail::ListJob;
 using KMail::SearchJob;
 #include "renamejob.h"
 using KMail::RenameJob;
+#include "acljobs.h"
 
 #include <kdebug.h>
 #include <kio/scheduler.h>
@@ -73,6 +74,7 @@ KMFolderImap::KMFolderImap(KMFolder* folder, const char* aName)
   mCheckMail = true;
   mCheckingValidity = false;
   mUserRights = 0;
+  mUserRightsState = KMail::ACLJobs::NotFetchedYet;
   mAlreadyRemoved = false;
   mHasChildren = ChildrenUnknown;
   mMailCheckProgressItem = 0;
@@ -108,12 +110,6 @@ KMFolderImap::~KMFolderImap()
 //-----------------------------------------------------------------------------
 void KMFolderImap::reallyDoClose(const char* owner)
 {
-  if (isSelected()) {
-      kdWarning(5006) << "Trying to close the selected folder " << label() <<
-          " - ignoring!" << endl;
-      return;
-  }
-
   // FIXME is this still needed?
   if (account())
     account()->ignoreJobsForFolder( folder() );
@@ -334,8 +330,6 @@ void KMFolderImap::addMsgQuiet(KMMessage* aMsg)
     int idx = aFolder->find( aMsg );
     assert( idx != -1 );
     aFolder->take( idx );
-  } else {
-    kdDebug(5006) << k_funcinfo << "no parent" << endl;
   }
   if ( !account()->hasCapability("uidplus") ) {
     // Remember the status with the MD5 as key
@@ -1000,6 +994,13 @@ void KMFolderImap::initializeFrom( KMFolderImap* parent, TQString folderPath,
 }
 
 //-----------------------------------------------------------------------------
+bool KMFolderImap::mailCheckInProgress() const
+{
+  return getContentState() != imapNoInformation &&
+         getContentState() != imapFinished;
+}
+
+//-----------------------------------------------------------------------------
 void KMFolderImap::setChildrenState( TQString attributes )
 {
   // update children state
@@ -1188,7 +1189,7 @@ void KMFolderImap::getAndCheckFolder(bool force)
     return getFolder(force);
 
   if ( account() )
-    account()->processNewMailSingleFolder( folder() );
+    account()->processNewMailInFolder( folder() );
   if (force) {
     // force an update
     mCheckFlags = true;
@@ -2261,10 +2262,10 @@ int KMFolderImap::expungeContents()
 
 //-----------------------------------------------------------------------------
 void
-KMFolderImap::setUserRights( unsigned int userRights )
+KMFolderImap::setUserRights( unsigned int userRights, KMail::ACLJobs::ACLFetchState userRightsState )
 {
   mUserRights = userRights;
-  kdDebug(5006) << imapPath() << " setUserRights: " << userRights << endl;
+  mUserRightsState = userRightsState;
 }
 
 //-----------------------------------------------------------------------------
@@ -2392,7 +2393,7 @@ bool KMFolderImap::isMoveable() const
 }
 
 //-----------------------------------------------------------------------------
-const ulong KMFolderImap::serNumForUID( ulong uid )
+ulong KMFolderImap::serNumForUID( ulong uid )
 {
   if ( mUidMetaDataMap.find( uid ) ) {
     KMMsgMetaData *md = mUidMetaDataMap[uid];
@@ -2429,6 +2430,15 @@ void KMFolderImap::finishMailCheck( const char *dbg, imapState state )
   mContentState = state;
   emit folderComplete( this, mContentState == imapFinished );
   close(dbg);
+}
+
+bool KMFolderImap::canDeleteMessages() const
+{
+  if ( isReadOnly() )
+    return false;
+  if ( mUserRightsState == KMail::ACLJobs::Ok && !(mUserRights & KMail::ACLJobs::Delete) )
+    return false;
+  return true;
 }
 
 #include "kmfolderimap.moc"

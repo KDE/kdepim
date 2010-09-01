@@ -7,20 +7,61 @@
 
 #include <kdeversion.h>
 #include <keditcl.h>
+#include <kspell.h>
+#include <ksyntaxhighlighter.h>
 #include <tqmap.h>
 #include <tqstringlist.h>
 #include <tqclipboard.h>
 
 class KMComposeWin;
 class KSpellConfig;
-class KSpell;
 class SpellingFilter;
 class KTempFile;
-class KDictSpellingHighlighter;
 class KDirWatch;
 class KProcess;
 class TQPopupMenu;
 
+/**
+ * Reimplemented to make writePersonalDictionary() public, which we call everytime after
+ * adding a word to the dictionary (for safety's sake and because the highlighter needs to reload
+ * the personal word list, and for that, it needs to be written to disc)
+ */
+class KMSpell : public KSpell
+{
+  public:
+
+    KMSpell( TQObject *receiver, const char *slot, KSpellConfig *spellConfig );
+    using KSpell::writePersonalDictionary;
+};
+
+/**
+ * Reimplemented to add support for ignored words
+ */
+class KMSyntaxHighter : public KDictSpellingHighlighter
+{
+  public:
+
+    KMSyntaxHighter( TQTextEdit *textEdit,
+                     bool spellCheckingActive = true,
+                     bool autoEnable = true,
+                     const TQColor& spellColor = red,
+                     bool colorQuoting = false,
+                     const TQColor& QuoteColor0 = black,
+                     const TQColor& QuoteColor1 = TQColor( 0x00, 0x80, 0x00 ),
+                     const TQColor& QuoteColor2 = TQColor( 0x00, 0x70, 0x00 ),
+                     const TQColor& QuoteColor3 = TQColor( 0x00, 0x60, 0x00 ),
+                     KSpellConfig *spellConfig = 0 );
+
+    /** Reimplemented */
+    virtual bool isMisspelled( const TQString &word );
+
+    void ignoreWord( const TQString &word );
+
+    TQStringList ignoredWords() const;
+
+  private:
+    TQStringList mIgnoredWords;
+};
 
 class KMEdit : public KEdit {
   Q_OBJECT
@@ -74,12 +115,15 @@ public:
   /** set cursor to absolute position pos */
   void setCursorPositionFromStart(unsigned int pos);
 
+  int indexOfCurrentLineStart( int paragraph, int index );
+
 signals:
   void spellcheck_done(int result);
   void attachPNGImageData(const TQByteArray &image);
   void pasteImage();
   void focusUp();
   void focusChanged( bool );
+  void selectionAvailable( bool );
   void insertSnippet();
 public slots:
   void initializeAutoSpellChecking();
@@ -100,11 +144,29 @@ protected:
    */
   bool eventFilter(TQObject*, TQEvent*);
   void keyPressEvent( TQKeyEvent* );
-  
+
   void contentsMouseReleaseEvent( TQMouseEvent * e );
+
+  /// Reimplemented to select words under the cursor on double-clicks in our way,
+  /// not the broken TQt way (https://issues.kolab.org/issue4089)
+  virtual void contentsMouseDoubleClickEvent( TQMouseEvent *e );
 
 private slots:
   void slotExternalEditorTempFileChanged( const TQString & fileName );
+  void slotSelectionChanged() {
+    // use !text.isEmpty() here, as null-selections exist, but make no sense
+    emit selectionAvailable( !selectedText().isEmpty() );
+  }
+
+  /// Called when mSpeller is ready to rumble. Does nothing, but KSpell requires a slot as otherwise
+  /// it will show a dialog itself, which we want to avoid.
+  void spellerReady( KSpell *speller );
+
+  /// Called when mSpeller died for some reason.
+  void spellerDied();
+
+  /// Re-creates the spellers, called when the dictionary is changed
+  void createSpellers();
 
 private:
   void killExternalEditor();
@@ -112,7 +174,14 @@ private:
 private:
   KMComposeWin* mComposer;
 
-  KSpell *mKSpell;
+  // This is the speller used for the spellcheck dialog. It is only active as long as the spellcheck
+  // dialog is shown
+  KSpell *mKSpellForDialog;
+
+  // This is the speller used when right-clicking a word and choosing "add to dictionary". It lives
+  // as long as the composer lives.
+  KMSpell *mSpeller;
+
   KSpellConfig *mSpellConfig;
   TQMap<TQString,TQStringList> mReplacements;
   SpellingFilter* mSpellingFilter;
@@ -122,7 +191,7 @@ private:
   bool      mUseExtEditor;
   TQString   mExtEditor;
   bool      mWasModifiedBeforeSpellCheck;
-  KDictSpellingHighlighter *mSpellChecker;
+  KMSyntaxHighter *mHighlighter;
   bool mSpellLineEdit;
   QClipboard::Mode mPasteMode;
 };

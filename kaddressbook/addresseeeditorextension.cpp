@@ -22,6 +22,7 @@
 */
 
 #include <tqlayout.h>
+#include <tqtimer.h>
 
 #include <klocale.h>
 
@@ -52,15 +53,20 @@ AddresseeEditorExtension::~AddresseeEditorExtension()
 void AddresseeEditorExtension::contactsSelectionChanged()
 {
   const KABC::Addressee::List selectedAddressees = selectedContacts();
-  KABC::Addressee::List addressees;
-
+  KABC::Addressee::List modifiedAddress;
   if ( mAddresseeEditor->dirty() ) {
     mAddresseeEditor->save();
     addressees.append( mAddresseeEditor->addressee() );
-    emit modified( addressees );
+    modifiedAddress = addressees;
+    TQTimer::singleShot(0, this, TQT_SLOT(emitModifiedAddresses()));
   }
 
   mAddresseeEditor->setAddressee( selectedAddressees[ 0 ] );
+}
+
+void AddresseeEditorExtension::emitModifiedAddresses()
+{
+  emit modified( addressees );
 }
 
 TQString AddresseeEditorExtension::title() const

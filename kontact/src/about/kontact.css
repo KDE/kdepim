@@ -1,0 +1,23 @@
+
+#headerR {
+  position: absolute;
+  right: 0px;
+  width: 430px;
+  height: 131px;
+  background-image: url(top-right-kontact.png);
+}
+
+#title {
+  right: 125px;
+}
+
+#tagline {
+  right: 125px;
+}
+
+#subtext {
+  font-style: italic;
+}
+
+/* vim:set sw=2 et nocindent smartindent: */
+

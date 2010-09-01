@@ -37,15 +37,13 @@ static ParseList parseCustom( const TQString& str )
     if ( (*it).isEmpty() )
       continue;
     // parse "uid,email"
-    TQStringList helpList = TQStringList::split( ',', (*it) );
+    TQStringList helpList = TQStringList::split( ',', (*it), true );
     Q_ASSERT( !helpList.isEmpty() );
     if ( helpList.isEmpty() )
       continue;
-    const TQString uid = helpList.first();
-    TQString email;
     Q_ASSERT( helpList.count() < 3 ); // 1 or 2 items, but not more
-    if ( helpList.count() == 2 )
-      email = helpList.last();
+    const TQString uid = helpList.first();
+    const TQString email = helpList.last();
     res.append( qMakePair( uid, email ) );
   }
   return res;

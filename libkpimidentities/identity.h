@@ -206,8 +206,19 @@ public:
   void setPreferredCryptoMessageFormat( Kleo::CryptoMessageFormat format ) { mPreferredCryptoMessageFormat = format; }
 
   /** email address (without the user name - only name\@host) */
-  TQString emailAddr() const { return mEmailAddr; }
-  void setEmailAddr(const TQString&);
+  KDE_DEPRECATED TQString emailAddr() const { return primaryEmailAddress(); }
+  KDE_DEPRECATED void setEmailAddr( const TQString & email ) { setPrimaryEmailAddress( email ); }
+
+  /** primary email address (without the user name - only name\@host).
+      The primary email address is used for all outgoing mail. */
+  TQString primaryEmailAddress() const { return mEmailAddr; }
+  void setPrimaryEmailAddress( const TQString & email );
+
+  /** email address aliases */
+  const TQStringList & emailAliases() const { return mEmailAliases; }
+  void setEmailAliases( const TQStringList & );
+
+  bool matchesEmailAddress( const TQString & addr ) const;
 
   /** vCard to attach to outgoing emails */
   TQString vCardFile() const { return mVCardFile; }
@@ -295,6 +306,7 @@ protected:
   // and operator>> accordingly:
   uint mUoid;
   TQString mIdentity, mFullName, mEmailAddr, mOrganization;
+  TQStringList mEmailAliases;
   TQString mReplyToAddr;
   TQString mBcc;
   TQString mVCardFile;

@@ -85,8 +85,8 @@ FolderStorage::FolderStorage( KMFolder* folder, const char* aName )
 
   mHasChildren = HasNoChildren;
   mContentsType = KMail::ContentsTypeMail;
- 
-  connect(this, TQT_SIGNAL(closed(KMFolder*)), mFolder, TQT_SIGNAL(closed()));  
+
+  connect(this, TQT_SIGNAL(closed(KMFolder*)), mFolder, TQT_SIGNAL(closed()));
 }
 
 //-----------------------------------------------------------------------------
@@ -477,11 +477,11 @@ void FolderStorage::take(TQPtrList<KMMessage> msgList)
 KMMessage* FolderStorage::getMsg(int idx)
 {
   if ( mOpenCount <= 0 ) {
-    kdWarning(5006) << "FolderStorage::getMsg was called on a closed folder: " << folder()->prettyURL() << endl; 
+    kdWarning(5006) << "FolderStorage::getMsg was called on a closed folder: " << folder()->prettyURL() << endl;
     return 0;
   }
-  if ( idx < 0 || idx >= count() ) { 
-    kdWarning(5006) << "FolderStorage::getMsg was asked for an invalid index. idx =" << idx << " count()=" << count() << endl; 
+  if ( idx < 0 || idx >= count() ) {
+    kdWarning(5006) << "FolderStorage::getMsg was asked for an invalid index. idx =" << idx << " count()=" << count() << endl;
     return 0;
   }
 
@@ -502,6 +502,10 @@ KMMessage* FolderStorage::getMsg(int idx)
       if (mCompactable && (!msg || (msg->subject().isEmpty() != mbSubject.isEmpty()))) {
         kdDebug(5006) << "Error: " << location() <<
           " Index file is inconsistent with folder file. This should never happen." << endl;
+
+        // We can't recreate the index at this point, since that would invalidate the current
+        // message list and delete KMMsgBase or KMMessage objects that are in use.
+        // Do it later in KMFolderIndex::readIndexHeader() instead.
         mCompactable = false; // Don't compact
         writeConfig();
       }
@@ -522,11 +526,16 @@ KMMessage* FolderStorage::getMsg(int idx)
 //-----------------------------------------------------------------------------
 KMMessage* FolderStorage::readTemporaryMsg(int idx)
 {
-  if(!(idx >= 0 && idx <= count()))
+  if(!(idx >= 0 && idx <= count())) {
+    kdDebug(5006) << k_funcinfo << "Invalid index " << idx << "!" << endl;
     return 0;
+  }
 
   KMMsgBase* mb = getMsgBase(idx);
-  if (!mb) return 0;
+  if (!mb) {
+    kdDebug(5006) << k_funcinfo << "getMsgBase() for " << idx << " failed!" << endl;
+    return 0;
+  }
 
   unsigned long sernum = mb->getMsgSerNum();
 
@@ -542,7 +551,11 @@ KMMessage* FolderStorage::readTemporaryMsg(int idx)
     msg = new KMMessage(*(KMMsgInfo*)mb);
     msg->setMsgSerNum(sernum); // before fromDwString so that readyToShow uses the right sernum
     msg->setComplete( true );
-    msg->fromDwString(getDwString(idx));
+    const DwString msgString = getDwString( idx );
+    if ( msgString.size() <= 0 ) {
+      kdDebug(5006) << k_funcinfo << " Calling getDwString() failed!" << endl;
+    }
+    msg->fromDwString( msgString );
   }
   msg->setEnableUndo(undo);
   return msg;
@@ -914,7 +927,7 @@ void FolderStorage::readConfig()
   mCompactable = config->readBoolEntry("Compactable", true);
   if ( mSize == -1 )
       mSize = config->readNum64Entry("FolderSize", -1);
-  
+
   int type = config->readNumEntry( "ContentsType", 0 );
   if ( type < 0 || type > KMail::ContentsTypeLast ) type = 0;
   setContentsType( static_cast<KMail::FolderContentsType>( type ) );
@@ -1171,6 +1184,24 @@ bool FolderStorage::isMoveable() const
 KMAccount* FolderStorage::account() const
 {
     return 0;
+}
+
+bool FolderStorage::mailCheckInProgress() const
+{
+  return false;
+}
+
+bool FolderStorage::canDeleteMessages() const
+{
+  return !isReadOnly();
+}
+
+void FolderStorage::setNoContent(bool aNoContent)
+{
+  const bool changed = aNoContent != mNoContent;
+  mNoContent = aNoContent;
+  if ( changed )
+    emit noContentChanged();
 }
 
 #include "folderstorage.moc"

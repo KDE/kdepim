@@ -10,15 +10,17 @@ libkcal_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 2:0:0 $(LIB_QT
 libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
                      -lical -licalss \
                      $(top_builddir)/ktnef/lib/libktnef.la \
+                     ../libkmime/libkmime.la \
                      ../libemailfunctions/libemailfunctions.la \
                      -lkresources -lkabc
 
 libkcal_la_SOURCES = \
+        assignmentvisitor.cpp comparisonvisitor.cpp \
 	incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
 	freebusy.cpp attendee.cpp attachment.cpp recurrencerule.cpp recurrence.cpp alarm.cpp \
 	customproperties.cpp calendar.cpp calendarlocal.cpp \
 	calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
-	incidenceformatter.cpp \
+	incidenceformatter.cpp calhelper.cpp calselectdialog.cpp \
 	vcaldrag.cpp icaldrag.cpp \
 	exceptions.cpp \
 	scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \
@@ -34,18 +36,20 @@ libkcal_la_SOURCES = \
 	qtopiaformat.cpp \
 	htmlexportsettings.kcfgc htmlexport.cpp calendarnull.cpp \
 	freebusyurlstore.cpp \
-	confirmsavedialog.cpp
+	confirmsavedialog.cpp \
+	attachmenthandler.cpp
 
 libkcalincludedir = $(includedir)/libkcal
 libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
   calendarlocal.h calendarnull.h calendarresources.h calfilter.h calformat.h \
   calstorage.h customproperties.h dndfactory.h duration.h event.h \
   exceptions.h filestorage.h freebusy.h htmlexportsettings.h htmlexport.h icaldrag.h icalformat.h \
-  incidencebase.h incidence.h incidenceformatter.h journal.h kcalversion.h listbase.h period.h person.h \
+  incidencebase.h incidence.h incidenceformatter.h calhelper.h calselectdialog.h \
+  journal.h kcalversion.h listbase.h period.h person.h \
   qtopiaformat.h recurrencerule.h recurrence.h resourcecached.h resourcecalendar.h \
   resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h \
   resourcelocal.h scheduler.h libkcal_export.h \
-  todo.h vcaldrag.h vcalformat.h
+  todo.h vcaldrag.h vcalformat.h attachmenthandler.h
 
 kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la 
 

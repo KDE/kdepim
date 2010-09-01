@@ -29,7 +29,29 @@ class KMFolder;
 class TQObject;
 class KProcess;
 
-class TemplateParser : public QObject
+/**
+ * The TemplateParser transforms a message with a given template.
+ *
+ * A template contains text and commands, such as %QUOTE or %ODATE, which will be
+ * replaced with the real values in process().
+ *
+ * The message given in the constructor is the message that is being transformed.
+ * The message text will be replaced by the processed text of the template, but other
+ * properties, such as the attachments or the subject, are preserved.
+ *
+ * There are two different kind of commands: Those that work on the message that is
+ * to be transformed and those that work on an 'original message'.
+ * Those that work on the message that is to be transformed have no special prefix, e.g.
+ * '%DATE'. Those that work on the original message have an 'O' prefix, for example
+ * '%ODATE'.
+ * This means that the %DATE command will take the date of the message passed in the
+ * constructor, the message which is to be transformed, whereas the %ODATE command will
+ * take the date of the message that is being passed in process(), the original message.
+ *
+ * TODO: What is the usecase of the commands that work on the message to be transformed?
+ *       In general you only use the commands that work on the original message...
+ */
+class TemplateParser : public TQObject
 {
   Q_OBJECT
 
@@ -44,16 +66,43 @@ class TemplateParser : public QObject
     static const int PipeTimeout = 15;
 
   public:
-    TemplateParser( KMMessage *amsg, const Mode amode, const TQString aselection,
-                    bool aSmartQuote, bool anoQuote, bool aallowDecryption,
-                    bool aselectionIsBody );
+    TemplateParser( KMMessage *amsg, const Mode amode );
+    ~TemplateParser();
 
-    virtual void process( KMMessage *aorig_msg, KMFolder *afolder = NULL, bool append = false );
+    /**
+     * Sets the selection. If this is set, only the selection will be added to commands such
+     * as %QUOTE. Otherwise, the whole message is quoted.
+     * If this is not called at all, the whole message is quoted as well.
+     * Call this before calling process().
+     */
+    void setSelection( const TQString &selection );
+
+    /**
+     * Sets whether the template parser is allowed to decrypt the original message when needing
+     * its message text, for example for the %QUOTE command.
+     * If true, it will tell the ObjectTreeParser it uses internally to decrypt the message,
+     * and that will possibly show a password request dialog to the user.
+     *
+     * The default is false.
+     */
+    void setAllowDecryption( const bool allowDecryption );
+
+    virtual void process( KMMessage *aorig_msg, KMFolder *afolder = 0, bool append = false );
     virtual void process( const TQString &tmplName, KMMessage *aorig_msg,
-                          KMFolder *afolder = NULL, bool append = false );
+                          KMFolder *afolder = 0, bool append = false );
     virtual void processWithTemplate( const TQString &tmpl );
+
+    /// This finds the template to use. Either the one from the folder, identity or
+    /// finally the global template.
+    /// This also reads the To and CC address of the template
+    /// @return the contents of the template
     virtual TQString findTemplate();
+
+    /// Finds the template with the given name.
+    /// This also reads the To and CC address of the template
+    /// @return the contents of the template
     virtual TQString findCustomTemplate( const TQString &tmpl );
+
     virtual TQString pipe( const TQString &cmd, const TQString &buf );
 
     virtual TQString getFName( const TQString &str );
@@ -66,16 +115,48 @@ class TemplateParser : public QObject
     KMMessage *mMsg;
     KMMessage *mOrigMsg;
     TQString mSelection;
-    bool mSmartQuote;
-    bool mNoQuote;
     bool mAllowDecryption;
-    bool mSelectionIsBody;
     int mPipeRc;
     TQString mPipeOut;
     TQString mPipeErr;
     bool mDebug;
     TQString mQuoteString;
     bool mAppend;
+    TQString mTo, mCC;
+    partNode *mOrigRoot;
+
+    /**
+     * If there was a text selection set in the constructor, that will be returned.
+     * Otherwise, returns the plain text of the original message, as in KMMessage::asPlainText().
+     * The only difference is that this uses the cached object tree from parsedObjectTree()
+     *
+     * @param allowSelectionOnly if false, it will always return the complete mail text
+     */
+    TQString messageText( bool allowSelectionOnly );
+
+    /**
+     * Returns the parsed object tree of the original message.
+     * The result is cached in mOrigRoot, therefore calling this multiple times will only parse
+     * the tree once.
+     */
+    partNode* parsedObjectTree();
+
+    /**
+     * Called by processWithTemplate(). This adds the completely processed body to
+     * the message.
+     *
+     * In append mode, this will simply append the text to the body.
+     *
+     * Otherwise, the content of the old message is deleted and replaced with @p body.
+     * Attachments of the original message are also added back to the new message. 
+     */
+    void addProcessedBodyToMessage( const TQString &body );
+
+    /**
+     * Determines whether the signature should be stripped when getting the text of the original
+     * message, e.g. for commands such as %QUOTE
+     */
+    bool shouldStripSignature() const;
 
     int parseQuotes( const TQString &prefix, const TQString &str,
                      TQString &quote ) const;

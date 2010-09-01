@@ -20,6 +20,7 @@
 #define KORG_MULTIAGENDAVIEW_H_H
 
 #include "agendaview.h"
+#include "calendarview.h"
 
 class TQScrollView;
 class TQHBox;
@@ -41,11 +42,14 @@ class MultiAgendaView : public AgendaView
 {
   Q_OBJECT
   public:
-    explicit MultiAgendaView( Calendar* cal, TQWidget *parent = 0, const char *name = 0 );
+    explicit MultiAgendaView( Calendar* cal, CalendarView *calendarView,
+                              TQWidget *parent = 0, const char *name = 0 );
     ~MultiAgendaView();
 
+    KOAgendaView *selectedAgendaView();
+    void deSelectAgendaView() { mSelectedAgendaView = 0; }
     Incidence::List selectedIncidences();
-    DateList selectedDates();
+    DateList selectedIncidenceDates();
     int currentDateCount();
     int maxDatesHint();
 
@@ -55,7 +59,7 @@ class MultiAgendaView : public AgendaView
 
   public slots:
     void showDates( const TQDate &start, const TQDate &end );
-    void showIncidences( const Incidence::List &incidenceList );
+    void showIncidences( const Incidence::List &incidenceList, const TQDate &date );
     void updateView();
     void changeIncidenceDisplay( Incidence *incidence, int mode );
     void updateConfig();
@@ -84,10 +88,13 @@ class MultiAgendaView : public AgendaView
     void slotSelectionChanged();
     void slotClearTimeSpanSelection();
     void resizeSplitters();
+    void resizeSpacers( int );
+    void setupScrollBar();
     void zoomView( const int delta, const TQPoint &pos, const Qt::Orientation ori );
     void slotResizeScrollView();
 
   private:
+    KOAgendaView *mSelectedAgendaView;
     TQValueList<KOAgendaView*> mAgendaViews;
     TQValueList<TQWidget*> mAgendaWidgets;
     TQHBox *mTopBox;
@@ -96,10 +103,12 @@ class MultiAgendaView : public AgendaView
     TQSplitter *mLeftSplitter, *mRightSplitter;
     TQSplitter *mLastMovedSplitter;
     TQScrollBar *mScrollBar;
+    TQWidget *mLeftTopSpacer, *mRightTopSpacer;
     TQWidget *mLeftBottomSpacer, *mRightBottomSpacer;
     TQDate mStartDate, mEndDate;
     bool mUpdateOnShow;
     bool mPendingChanges;
+    CalendarView *mCalendarView;
 };
 
 }

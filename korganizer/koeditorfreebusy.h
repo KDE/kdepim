@@ -93,8 +93,12 @@ class KOEditorFreeBusy : public KOAttendeeEditor
   protected:
     void timerEvent( TQTimerEvent* );
     KCal::Attendee* currentAttendee() const;
+    /* reimpl */
+    TQListViewItem* hasExampleAttendee() const;
     void updateCurrentItem();
     void clearSelection() const;
+    void setSelected ( int index );
+    int selectedIndex();
     void changeStatusForMe( KCal::Attendee::PartStat status );
     virtual bool eventFilter( TQObject *watched, TQEvent *event );
 

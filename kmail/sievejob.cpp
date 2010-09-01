@@ -275,6 +275,12 @@ namespace KMail {
     return new SieveJob( url, TQString::null, commands );
   }
 
+  SieveJob * SieveJob::desactivate( const KURL & url ) {
+    TQValueStack<Command> commands;
+    commands.push( Deactivate );
+    return new SieveJob( url, TQString(), commands );
+  }
+
   SieveJob * SieveJob::activate( const KURL & url ) {
     TQValueStack<Command> commands;
     commands.push( Activate );

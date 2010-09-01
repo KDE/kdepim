@@ -47,6 +47,8 @@
 #include "cachedimapjob.h"
 #include "quotajobs.h"
 
+#include <set>
+
 using KMail::FolderJob;
 using KMail::QuotaInfo;
 class KMCommand;
@@ -79,10 +81,11 @@ public:
 
 private slots:
   void slotDone();
-
+  void slotChanged();
 private:
   TQRadioButton *mIndexButton, *mCacheButton;
   TQComboBox *mIndexScope;
+  TQButtonGroup *mButtonGroup;
   int rc;
 };
 
@@ -122,7 +125,7 @@ public:
   virtual void remove();
 
   /** Synchronize this folder and it's subfolders with the server */
-  virtual void serverSync( bool recurse );
+  virtual void serverSync( bool recurse, bool quotaOnly = false );
 
   /**  Force the sync state to be done. */
   void resetSyncState( );
@@ -138,7 +141,7 @@ public:
 
   enum imapState { imapNoInformation=0, imapInProgress=1, imapFinished=2 };
 
-  virtual imapState getContentState() { return mContentState; }
+  virtual imapState getContentState() const { return mContentState; }
   virtual void setContentState(imapState state) { mContentState = state; }
 
   virtual imapState getSubfolderState() { return mSubfolderState; }
@@ -206,11 +209,12 @@ public:
 
   /* Reimplemented from KMFolderMaildir */
   virtual void removeMsg(int i, bool imapQuiet = false);
-  virtual void removeMsg(TQPtrList<KMMessage> msgList, bool imapQuiet = false)
+  virtual void removeMsg( const TQPtrList<KMMsgBase> & msgList, bool imapQuiet = false)
     { FolderStorage::removeMsg(msgList, imapQuiet); }
 
   /// Is the folder readonly?
   bool isReadOnly() const { return KMFolderMaildir::isReadOnly() || mReadOnly; }
+  bool canDeleteMessages() const;
 
 
   /**
@@ -249,12 +253,14 @@ public:
 
   /**
    * The user's rights on this folder - see bitfield in ACLJobs namespace.
-   * @return 0 when not known yet, -1 if there was an error fetching them
+   * Note that the returned value is only valid if userRightsState() returns Ok, so
+   * that should be checked first.
    */
   int userRights() const { return mUserRights; }
+  KMail::ACLJobs::ACLFetchState userRightsState() const { return mUserRightsState; }
 
   /// Set the user's rights on this folder - called by getUserRights
-  void setUserRights( unsigned int userRights );
+  void setUserRights( unsigned int userRights, KMail::ACLJobs::ACLFetchState state  );
 
   /**
    * The quota information for this folder.
@@ -271,6 +277,7 @@ public:
   /// Return the list of ACL for this folder
   typedef TQValueVector<KMail::ACLListEntry> ACLList;
   const ACLList& aclList() const { return mACLList; }
+  KMail::ACLJobs::ACLFetchState aclListState() const { return mACLListState; };
 
   /// Set the list of ACL for this folder (for FolderDiaACLTab)
   void setACLList( const ACLList& arr );
@@ -298,6 +305,11 @@ public:
   /// For the folder properties dialog
   void setIncidencesFor( IncidencesFor incfor );
 
+  /** Returns wether the seen flag is shared among all users or every users has her own seen flags (default). */
+  bool sharedSeenFlags() const { return mSharedSeenFlags; }
+  /** Enable shared seen flags (requires server support). */
+  void setSharedSeenFlags( bool b );
+
   /** Returns true if this folder can be moved */
   virtual bool isMoveable() const;
 
@@ -324,6 +336,8 @@ public:
 
   TQString folderAttributes() const { return mFolderAttributes; }
 
+  virtual bool mailCheckInProgress() const;
+
 protected slots:
   void slotGetMessagesData(KIO::Job * job, const TQByteArray & data);
   void getMessagesResult(KMail::FolderJob *, bool lastSet);
@@ -333,6 +347,7 @@ protected slots:
 
   //virtual void slotCheckValidityResult(KIO::Job * job);
   void slotSubFolderComplete(KMFolderCachedImap*, bool);
+  void slotSubFolderCloseToQuotaChanged();
 
   // Connected to the imap account
   void slotConnectionResult( int errorCode, const TQString& errorMsg );
@@ -426,15 +441,16 @@ private slots:
   void slotUpdateLastUid();
   void slotFolderDeletionOnServerFinished();
   void slotRescueDone( KMCommand* command );
+  void slotRenameFolderFinished();
 
 signals:
   void folderComplete(KMFolderCachedImap *folder, bool success);
   void listComplete( KMFolderCachedImap* );
 
-  /** emitted when we enter the state "state" and
-     have to process "number" items (for example messages
-  */
-  void syncState( int state, int number );
+  /**
+   * Emitted when isCloseToQuota() changes during syncing
+   */
+  void closeToQuotaChanged();
 
 private:
   void setReadOnly( bool readOnly );
@@ -447,6 +463,24 @@ private:
   KMCommand* rescueUnsyncedMessages();
   /** Recursive helper function calling the above method. */
   void rescueUnsyncedMessagesAndDeleteFolder( KMFolder *folder, bool root = true );
+
+  /**
+   * Small helper function that disconnects the signals from the current subfolder, which where
+   * connected when starting the sync of that subfolder
+   */
+  void disconnectSubFolderSignals();
+
+  /**
+   * Sync the next subfolder in the list of subfolders (mSubfoldersForSync).
+   * When finished, this will switch either to the state SYNC_STATE_GET_SUBFOLDER_QUOTA or
+   * to SYNC_STATE_GET_QUOTA.
+   */
+  void syncNextSubFolder( bool secondSync );
+
+  /**
+   * Creates the mSubfoldersForSync list
+   */
+  void buildSubFolderList();
 
   /** State variable for the synchronization mechanism */
   enum {
@@ -473,7 +507,9 @@ private:
     SYNC_STATE_FIND_SUBFOLDERS,
     SYNC_STATE_SYNC_SUBFOLDERS,
     SYNC_STATE_CHECK_UIDVALIDITY,
-    SYNC_STATE_RENAME_FOLDER
+    SYNC_STATE_RENAME_FOLDER,
+    SYNC_STATE_CLOSE,
+    SYNC_STATE_GET_SUBFOLDER_QUOTA
   } mSyncState;
 
   int mProgress;
@@ -487,6 +523,7 @@ private:
   TQString     mFolderAttributes;
   TQString     mAnnotationFolderType;
   IncidencesFor mIncidencesFor;
+  bool mSharedSeenFlags;
 
   bool        mHasInbox;
   bool        mIsSelected;
@@ -500,7 +537,7 @@ private:
   TQValueList<ulong> mUidsForDownload;
   TQStringList       foldersForDeletionOnServer;
 
-  TQValueList<KMFolderCachedImap*> mSubfoldersForSync;
+  TQValueList< TQGuardedPtr<KMFolderCachedImap> > mSubfoldersForSync;
   KMFolderCachedImap* mCurrentSubfolder;
 
   /** Mapping uid -> index
@@ -533,21 +570,36 @@ private:
   bool mFoundAnIMAPDigest;
 
   int mUserRights, mOldUserRights;
+  KMail::ACLJobs::ACLFetchState mUserRightsState;
   ACLList mACLList;
+  KMail::ACLJobs::ACLFetchState mACLListState;
 
   bool mSilentUpload;
   bool mFolderRemoved;
   //bool mHoldSyncs;
   bool mRecurse;
-  /** Set to true by setStatus. Indicates that the client has changed
-      the status of at least one mail. The mail flags will therefore be
-      uploaded to the server, overwriting the server's notion of the status
-      of the mails in this folder. */
-  bool mStatusChangedLocally;
+  bool mQuotaOnly;
+
   /// Set to true when the foldertype annotation needs to be set on the next sync
   bool mAnnotationFolderTypeChanged;
   /// Set to true when the "incidences-for" annotation needs to be set on the next sync
   bool mIncidencesForChanged;
+  /// Set to true when the "sharedseen" annotation needs to be set on the next sync
+  bool mSharedSeenFlagsChanged;
+
+ /**
+  * UIDs added by setStatus. Indicates that the client has changed
+  * the status of those mails. The mail flags for changed mails will be
+  * uploaded to the server, overwriting the server's notion of the status
+  * of the mails in this folder.
+  */
+  std::set<ulong> mUIDsOfLocallyChangedStatuses;
+
+ /**
+  * Same as above, but uploads the flags of all mails, even if not all changed.
+  * Only still here for config compatibility.
+  */
+  bool mStatusChangedLocally;
 
   TQStringList mNamespacesToList;
   int mNamespacesToCheck;
@@ -555,12 +607,18 @@ private:
   TQString mImapPathCreation;
 
   QuotaInfo mQuotaInfo;
+
+  /// This is set during syncing of the current subfolder. If true, it means the closeToQuota info
+  /// for the current subfolder has changed during syncing
+  bool mSomeSubFolderCloseToQuotaChanged;
+
   TQMap<ulong,void*> mDeletedUIDsSinceLastSync;
   bool mAlarmsBlocked;
 
   TQValueList<KMFolder*> mToBeDeletedAfterRescue;
   int mRescueCommandCount;
 
+  TQValueList< TQGuardedPtr<KMFolderCachedImap> > mNewlyCreatedSubfolders;
   int mPermanentFlags;
 };
 

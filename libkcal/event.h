@@ -72,21 +72,24 @@ class LIBKCAL_EXPORT Event : public Incidence
     /**
       Return end time as string formatted according to the users locale
       settings.
+      @deprecated use IncidenceFormatter::timeToString()
     */
-    TQString dtEndTimeStr() const;
+    TQString KDE_DEPRECATED dtEndTimeStr() const;
     /**
       Return end date as string formatted according to the users locale
       settings.
 
       @param shortfmt if true return string in short format, if false return
                       long format
+      @deprecated use IncidenceFormatter::dateToString()
     */
-    TQString dtEndDateStr( bool shortfmt = true ) const;
+    TQString KDE_DEPRECATED dtEndDateStr( bool shortfmt = true ) const;
     /**
       Return end date and time as string formatted according to the users locale
       settings.
+      @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    TQString dtEndStr() const;
+    TQString KDE_DEPRECATED dtEndStr() const;
 
     /**
       Set whether the event has an end date/time.

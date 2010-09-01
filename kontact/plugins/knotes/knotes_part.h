@@ -96,6 +96,7 @@ class KNotesPart : public KParts::ReadOnlyPart, virtual public KNotesIface
 
     KNotesResourceManager *mManager;
     TQDict<KNotesIconViewItem> mNoteList;
+  TQString mOldName;
 };
 
 #endif

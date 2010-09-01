@@ -1,0 +1,369 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>CustomTemplatesBase</class>
+<widget class="QWidget">
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>589</width>
+            <height>463</height>
+        </rect>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget" row="0" column="0">
+            <property name="name">
+                <cstring>layout9</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout8</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <widget class="KLineEdit">
+                            <property name="name">
+                                <cstring>mName</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>100</width>
+                                    <height>0</height>
+                                </size>
+                            </property>
+                        </widget>
+                        <widget class="KPushButton">
+                            <property name="name">
+                                <cstring>mAdd</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                        <widget class="KPushButton">
+                            <property name="name">
+                                <cstring>mRemove</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QListView">
+                    <column>
+                        <property name="text">
+                            <string>Type</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
+                    <column>
+                        <property name="text">
+                            <string>Name</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
+                    <property name="name">
+                        <cstring>mList</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>7</vsizetype>
+                            <horstretch>3</horstretch>
+                            <verstretch>1</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="allColumnsShowFocus">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                        <widget class="KActiveLabel" >
+                            <property name="name">
+                                <cstring>mHelp</cstring>
+                            </property>
+                            <property name="text">
+                                <string>How does this work?</string>
+                            </property>
+                        </widget>
+            </vbox>
+        </widget>
+        <widget class="QFrame" row="0" column="1">
+            <property name="name">
+                <cstring>mEditFrame</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>7</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>12</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Raised</enum>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout8</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout6</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>mToLabel</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>To:</string>
+                                    </property>
+                                </widget>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>mCCLabel</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>CC:</string>
+                                    </property>
+                                </widget>
+                            </vbox>
+                        </widget>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout7</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="KMFilterActionWithAddressWidget">
+                                    <property name="name">
+                                        <cstring>mToEdit</cstring>
+                                    </property>
+                                </widget>
+                                <widget class="KMFilterActionWithAddressWidget">
+                                    <property name="name">
+                                        <cstring>mCCEdit</cstring>
+                                    </property>
+                                </widget>
+                            </vbox>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QTextEdit">
+                    <property name="name">
+                        <cstring>mEdit</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>7</vsizetype>
+                            <horstretch>3</horstretch>
+                            <verstretch>1</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="textFormat">
+                        <enum>PlainText</enum>
+                    </property>
+                    <property name="wordWrap">
+                        <enum>NoWrap</enum>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout4</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QComboBox" row="1" column="2">
+                            <item>
+                                <property name="text">
+                                    <string>Universal</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Reply</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Reply to All</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Forward</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>mType</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="0" column="1">
+                            <property name="name">
+                                <cstring>textLabel1_2</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Shortc&amp;ut:</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignRight</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>mKeyButton</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="1">
+                            <property name="name">
+                                <cstring>textLabel1</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>5</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Template type:</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignRight</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>mType</cstring>
+                            </property>
+                        </widget>
+                        <widget class="TemplatesInsertCommand" row="1" column="0">
+                            <property name="name">
+                                <cstring>mInsertCommand</cstring>
+                            </property>
+                        </widget>
+                        <widget class="KKeyButton" row="0" column="2">
+                            <property name="name">
+                                <cstring>mKeyButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>None</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<customwidgets>
+    <customwidget>
+        <class>TemplatesInsertCommand</class>
+        <header location="local">templatesinsertcommand.h</header>
+        <sizehint>
+            <width>50</width>
+            <height>10</height>
+        </sizehint>
+        <container>0</container>
+        <sizepolicy>
+            <hordata>5</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image0</pixmap>
+        <signal>insertCommand(int)</signal>
+    </customwidget>
+    <customwidget>
+        <class>KMFilterActionWithAddressWidget</class>
+        <header location="local">kmfawidgets.h</header>
+        <sizehint>
+            <width>50</width>
+            <height>10</height>
+        </sizehint>
+        <container>1</container>
+        <sizepolicy>
+            <hordata>7</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image1</pixmap>
+    </customwidget>
+</customwidgets>
+<images>
+    <image name="image0">
+        <data format="PNG" length="749">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000002b449444154388d8d93cd6b546714c67fef7bdf3b73274e9c38662621ed8015c1e2108248c0108a642145ba68699bb6db16ff9fe0a6bb6ea4d84d29143f02a15463e9255634a3259ac8cc6092b1d76063e27c6466ee9df79e2e4293545df481036771f8719e737894effbacacac481886044140100484618888f0baacb5d46a354aa512a9548aa9a9290c8088901bf648650c83efb8d858a11d500ab402d903f478f77992cd8665697183b9b9399c7abd2ef97c9e23435b34e557bafa21e255d96eac53fbabcadfdb351c6f9dfe7c95e4c02a99dc0bd6aa4d2acb21d65a4cb95ca650283078acc956f3313b3bf0dbf598fb0b1d6c14a11d80046367937cf4a5473617e1261522b20be876bbb4db6d6cdc210a85f96b11776fb719ffa09fe2e97edc3ea83c82f91b75882d5f5c3c8c5275feb5aeadb50028a578fa44515a6873fee30c9f7de3303a11622343e1b8e1f3afb32c2e74f8f30f8b567aefb07b9d52b05aeea15582f1730e26d1e3f1a2cb956fb7b973ab45f18c6168c4a1bcbc437ce041fb28146127e6504648a5358fee7bfcf85d8b663de4bd137d64872c99a309765abbb36f00b403d97c82ad97f06cd5f0e06e485f9fc389f7d3ccfdfc82eb5760633d64a49020e1eeaf60f6004a3839aab87353337fa3c5f94ffac90ec6284771f99270f587e7648e68c6260c8b0baf014404010ac734173e3dc44fdf6ff2ea65c4a9d31e6e029aaf62b4b24491627b53ffc782711c872008a8376274bac7c48786ecd030bfffd260e95e1301f2232e17be1ae6c952847284cd8dde3e20994c522a9530991ef94217e34618a7c3e8b8a6d548a2b5e6701632d90ea7c634cf9ed6a92e8728a5766b7a7a5a6667678969ef06480004943ab0e8c14009b607221ad775c1f77d8ac5a2a4d369715d578c31ffab3ccf935c2e27caf77d2a958accccccb0b6b646b7db7d6b940fca18c3c0c000939393fc038f463fba9bedfea40000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="PNG" length="1002">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b000003b149444154388dad945f4c5b551cc73fe7dc4b7b4bcba0762d45c43114323599ee6192609c51d883892ce083f1718b3ebb185f8dc91e972cf39d2d2a2f1af664b6f1e0fe3863a0718969700eb0c52142da0242a1bd6d696f7bcff101585203ceb8fd9ece39f99dcff9fe7edf939f88c562ec465f5f9fe609442c161362173c3e3eae7b7a7ac8e7f36432196cdbfe4f907c3e4f2291201e8fe338cec3737357e9e8e828aded1e229d650e1f2d51754b082110124c13a4dc5ea341eb9dc284c0558a853f3ce8cb0677ef500fde7d39d2596679e326597b8e9abb85d7a770ab16ab6983ec5a05b487a70e36f0f4e10afe408d6a558310980108478dba4a1e8233990c5d474b64ed39aa3a8fe5f3317fbf81dbd70bccfeb205947632fd74f6589c1c6ea2f70d03a58ba0c1f2c9bdc1b66de3b8256a6e11cbe7e3ee1d181b590124fe2693aeee08d223c82c3a2c24b7b874bec8f26288774f7bd054504aef0dde6e99c0eb83f9fb266323cb80a27fb0958141836044605a2ee5523393371cc646fee2da37195aa35d0c0c5b4859ac03d7e91712dcaac5adab3650a3ff9d08ef7dd8404bb48869e5d958b5b87dadc4c9a1464e9f0d0326df7ebd86bd2e310cb1bf62d384d59441f2d70a070e1c60e09489929b988681bdd9cc97170bcc4c65595f71f8e0e3301337fc24a7732467831875a47f289652b0be5e4151e6d07316c1b0c0340d8ab92023e76d66a6b2840e36d2fb7a13fee632475e6edc367ea98a90fb98b7dd6310ca0328a44761582e1bab41befabcc0ec940d28bc5e93b68e064cab84e1d9beaeb48934eac1f53b01c1b000fca496aa54b61a99fcde61662a4b4b4b23d1680be9d426173e4df3602a48ea411989a4fd590f52a8fd156b05ed9d350e3defe3cfdf4b4c7ce770ea7d3fb9f520afbe1620daeee5c26735d20b9b9cfb6811a754a439e4e5c5639a4caa1e5caf586bfc0197b78702005cb9b4cae4cd3267ce8638fe964bd72b393e39d74928d242617303a756a37f284447770dcdbffc6384a05a85de1306e9a52057c7527c7131c3c42d3f475eb2303c82d4fc3276d6811db37efeb148723082d9b08f79f97c1e5729109a9a28307cc622d2d6cdf52b2b24efe548dedb00142009862cfa879ee1a71f6cec928353511472fbf4389148b0b0e0c108081412458dfe21c9f11351e67e7358595468246d1d1e5e38a6e9e851bc39d84ab502a669331dafec0d8ec7e3e8cb06e1a881d727d1ae40180a434a8c9db129a54126ad48a7358c2b4c5352c8c374bcccdab2bb37d8719cba79fab8211f9df218e0582c261e95f8bfc04f1a1e8bc5c4dfe0a190172af6a9690000000049454e44ae426082</data>
+    </image>
+</images>
+<slots>
+    <slot>mAdd_clicked()</slot>
+    <slot>mRemove_clicked()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kmfawidgets.h</includehint>
+    <includehint>kmfawidgets.h</includehint>
+    <includehint>templatesinsertcommand.h</includehint>
+    <includehint>kkeybutton.h</includehint>
+    <includehint>kactivelabel.h</includehint>
+</includehints>
+</UI>

@@ -75,7 +75,7 @@ bool ResourceLocal::load()
 
     KCal::Journal::List notes = mCalendar.journals();
     KCal::Journal::List::ConstIterator it;
-    for ( it = notes.begin(); it != notes.end(); ++it )
+    for ( it = notes.constBegin(); it != notes.constEnd(); ++it )
         manager()->registerNote( this, *it );
 
     return true;
@@ -98,14 +98,12 @@ bool ResourceLocal::save()
 
 bool ResourceLocal::addNote( KCal::Journal *journal )
 {
-    mCalendar.addJournal( journal );
-    return true;
+    return mCalendar.addJournal( journal );
 }
 
 bool ResourceLocal::deleteNote( KCal::Journal *journal )
 {
-    mCalendar.deleteJournal( journal );
-    return true;
+    return mCalendar.deleteJournal( journal );
 }
 
 KCal::Alarm::List ResourceLocal::alarms( const TQDateTime& from, const TQDateTime& to )
@@ -113,11 +111,11 @@ KCal::Alarm::List ResourceLocal::alarms( const TQDateTime& from, const TQDateTim
     KCal::Alarm::List alarms;
     KCal::Journal::List notes = mCalendar.journals();
     KCal::Journal::List::ConstIterator note;
-    for ( note = notes.begin(); note != notes.end(); ++note )
+    for ( note = notes.constBegin(); note != notes.constEnd(); ++note )
     {
         TQDateTime preTime = from.addSecs( -1 );
         KCal::Alarm::List::ConstIterator it;
-        for( it = (*note)->alarms().begin(); it != (*note)->alarms().end(); ++it )
+        for( it = (*note)->alarms().constBegin(); it != (*note)->alarms().constEnd(); ++it )
         {
             if ( (*it)->enabled() )
             {

@@ -4,7 +4,7 @@
 
 #include <klocale.h>
 #include <kprinter.h>
-
+#include <kdebug.h>
 #include <tqfont.h>
 #include <tqpaintdevicemetrics.h>
 #include <tqpainter.h>
@@ -79,6 +79,9 @@ void KNotePrinter::doPrint( KPrinter& printer, TQPainter& painter,
             metrics.width() - marginX * 2,
             metrics.height() - marginY * 2 );
 
+    kdDebug()<<" content :"<<content<<endl;
+    kdDebug()<<" m_styleSheet :"<<m_styleSheet<<endl;
+    //kdDebug()<<" m_font :"<<m_font;
     TQSimpleRichText text( content, m_font, m_context,
             m_styleSheet, m_mimeSourceFactory,
             body.height() /*, linkColor, linkUnderline? */ );
@@ -136,8 +139,8 @@ void KNotePrinter::printNotes( const TQValueList<KCal::Journal*>& journals ) con
     TQPainter painter;
     painter.begin( &printer );
     TQString content;
-    TQValueListConstIterator<KCal::Journal*> it( journals.begin() );
-    TQValueListConstIterator<KCal::Journal*> end( journals.end() );
+    TQValueListConstIterator<KCal::Journal*> it( journals.constBegin() );
+    TQValueListConstIterator<KCal::Journal*> end( journals.constEnd() );
     while ( it != end ) {
         KCal::Journal *j = *it;
         it++;

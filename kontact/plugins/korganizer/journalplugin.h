@@ -40,7 +40,7 @@ class JournalPlugin : public Kontact::Plugin
 
     virtual bool createDCOPInterface( const TQString& serviceType );
     virtual bool isRunningStandalone();
-    int weight() const { return 500; }
+    int weight() const { return 525; }
 
     virtual TQStringList invisibleToolbarActions() const;
 

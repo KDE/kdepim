@@ -161,22 +161,18 @@ bool TodoPlugin::isRunningStandalone()
 
 void TodoPlugin::processDropEvent( TQDropEvent *event )
 {
-  TQString text;
-
-  KABC::VCardConverter converter;
-  if ( KVCardDrag::canDecode( event ) && KVCardDrag::decode( event, text ) ) {
-    KABC::Addressee::List contacts = converter.parseVCards( text );
-    KABC::Addressee::List::Iterator it;
-
+  KABC::Addressee::List list;
+  if ( KVCardDrag::decode( event, list ) ) {
     TQStringList attendees;
-    for ( it = contacts.begin(); it != contacts.end(); ++it ) {
+    KABC::Addressee::List::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
       TQString email = (*it).fullEmail();
-      if ( email.isEmpty() )
+      if ( email.isEmpty() ) {
         attendees.append( (*it).realName() + "<>" );
-      else
+      } else {
         attendees.append( email );
+      }
     }
-
     interface()->openTodoEditor( i18n( "Meeting" ), TQString::null, TQString::null,
                                  attendees );
     return;
@@ -185,17 +181,23 @@ void TodoPlugin::processDropEvent( TQDropEvent *event )
   if ( KCal::ICalDrag::canDecode( event) ) {
     KCal::CalendarLocal cal( KPimPrefs::timezone() );
     if ( KCal::ICalDrag::decode( event, &cal ) ) {
-      KCal::Journal::List journals = cal.journals();
-      if ( !journals.isEmpty() ) {
+      KCal::Incidence::List incidences = cal.incidences();
+      if ( !incidences.isEmpty() ) {
         event->accept();
-        KCal::Journal *j = journals.first();
-        interface()->openTodoEditor( i18n("Note: %1").arg( j->summary() ), j->description(), TQString() );
+        KCal::Incidence *i = incidences.first();
+        TQString summary;
+        if ( dynamic_cast<KCal::Journal*>( i ) )
+          summary = i18n( "Note: %1" ).arg( i->summary() );
+        else
+          summary = i->summary();
+        interface()->openTodoEditor( summary, i->description(), TQString() );
         return;
       }
       // else fall through to text decoding
     }
   }
 
+  TQString text;
   if ( TQTextDrag::decode( event, text ) ) {
     interface()->openTodoEditor( text );
     return;
@@ -217,8 +219,8 @@ void TodoPlugin::processDropEvent( TQDropEvent *event )
                     mail.messageId();
       tf.file()->writeBlock( event->encodedData( "message/rfc822" ) );
       tf.close();
-      interface()->openTodoEditor( i18n("Mail: %1").arg( mail.subject() ), txt,
-                                   uri, tf.name(), TQStringList(), "message/rfc822" );
+      interface()->openTodoEditor( i18n("Mail: %1").arg( mail.subject() ),
+                                   txt, uri, tf.name(), TQStringList(), "message/rfc822", false );
     }
     return;
   }

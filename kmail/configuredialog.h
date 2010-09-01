@@ -48,6 +48,7 @@ signals:
       included in the file.
   */
   void installProfile( KConfig *profile );
+  void configChanged();
 protected:
   void hideEvent( TQHideEvent *i );
 protected slots:

@@ -29,6 +29,8 @@
 #ifndef KMAIL_ANTISPAMWIZARD_H
 #define KMAIL_ANTISPAMWIZARD_H
 
+#include "simplefoldertree.h"
+
 #include <kconfig.h>
 #include <klistbox.h>
 #include <kwizard.h>
@@ -44,7 +46,6 @@ class TQLabel;
 
 namespace KMail {
 
-  class SimpleFolderTree;
   class FolderRequester;
 
   class ASWizInfoPage;
@@ -289,7 +290,6 @@ namespace KMail {
       TQBoxLayout *mLayout;
 
     private:
-      TQPixmap *mPixmap;
       TQLabel *mBannerLabel;
   };
 

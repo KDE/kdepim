@@ -52,6 +52,7 @@ using KMail::ISubject;
 using KMail::URLHandlerManager;
 #include "interfaces/observable.h"
 #include "util.h"
+#include "kmheaders.h"
 
 #include "broadcaststatus.h"
 
@@ -86,7 +87,7 @@ using KMail::TeeHtmlWriter;
 #include <dom/html_block.h>
 #include <dom/html_document.h>
 #include <dom/dom_string.h>
-
+#include <dom/dom_exception.h>
 
 #include <kapplication.h>
 // for the click on attachment stuff (dnaber):
@@ -208,81 +209,33 @@ void KMReaderWin::objectTreeToDecryptedMsg( partNode* node,
   kdDebug(5006) << TQString("-------------------------------------------------" ) << endl;
   kdDebug(5006) << TQString("KMReaderWin::objectTreeToDecryptedMsg( %1 )  START").arg( recCount ) << endl;
   if( node ) {
+
+    kdDebug(5006) << node->typeString() << '/' << node->subTypeString() << endl;
+
     partNode* curNode = node;
     partNode* dataNode = curNode;
     partNode * child = node->firstChild();
-    bool bIsMultipart = false;
+    const bool bIsMultipart = node->type() == DwMime::kTypeMultipart ;
+    bool bKeepPartAsIs = false;
 
     switch( curNode->type() ){
-      case DwMime::kTypeText: {
-kdDebug(5006) << "* text *" << endl;
-          switch( curNode->subType() ){
-          case DwMime::kSubtypeHtml:
-kdDebug(5006) << "html" << endl;
-            break;
-          case DwMime::kSubtypeXVCard:
-kdDebug(5006) << "v-card" << endl;
-            break;
-          case DwMime::kSubtypeRichtext:
-kdDebug(5006) << "rich text" << endl;
-            break;
-          case DwMime::kSubtypeEnriched:
-kdDebug(5006) << "enriched " << endl;
-            break;
-          case DwMime::kSubtypePlain:
-kdDebug(5006) << "plain " << endl;
-            break;
-          default:
-kdDebug(5006) << "default " << endl;
-            break;
-          }
-        }
-        break;
       case DwMime::kTypeMultipart: {
-kdDebug(5006) << "* multipart *" << endl;
-          bIsMultipart = true;
           switch( curNode->subType() ){
-          case DwMime::kSubtypeMixed:
-kdDebug(5006) << "mixed" << endl;
-            break;
-          case DwMime::kSubtypeAlternative:
-kdDebug(5006) << "alternative" << endl;
-            break;
-          case DwMime::kSubtypeDigest:
-kdDebug(5006) << "digest" << endl;
-            break;
-          case DwMime::kSubtypeParallel:
-kdDebug(5006) << "parallel" << endl;
-            break;
-          case DwMime::kSubtypeSigned:
-kdDebug(5006) << "signed" << endl;
-            break;
-          case DwMime::kSubtypeEncrypted: {
-kdDebug(5006) << "encrypted" << endl;
-              if ( child ) {
-                /*
-                    ATTENTION: This code is to be replaced by the new 'auto-detect' feature. --------------------------------------
-                */
-                partNode* data =
-                  child->findType( DwMime::kTypeApplication, DwMime::kSubtypeOctetStream, false, true );
-                if ( !data )
-                  data = child->findType( DwMime::kTypeApplication, DwMime::kSubtypePkcs7Mime, false, true );
-                if ( data && data->firstChild() )
-                  dataNode = data;
-              }
+          case DwMime::kSubtypeSigned: {
+              bKeepPartAsIs = true;
             }
             break;
-          default :
-kdDebug(5006) << "(  unknown subtype  )" << endl;
+          case DwMime::kSubtypeEncrypted: {
+              if ( child )
+                  dataNode = child;
+            }
             break;
           }
         }
         break;
       case DwMime::kTypeMessage: {
-kdDebug(5006) << "* message *" << endl;
           switch( curNode->subType() ){
           case DwMime::kSubtypeRfc822: {
-kdDebug(5006) << "RfC 822" << endl;
               if ( child )
                 dataNode = child;
             }
@@ -291,25 +244,19 @@ kdDebug(5006) << "RfC 822" << endl;
         }
         break;
       case DwMime::kTypeApplication: {
-kdDebug(5006) << "* application *" << endl;
           switch( curNode->subType() ){
-          case DwMime::kSubtypePostscript:
-kdDebug(5006) << "postscript" << endl;
-            break;
           case DwMime::kSubtypeOctetStream: {
-kdDebug(5006) << "octet stream" << endl;
               if ( child )
                 dataNode = child;
             }
             break;
-          case DwMime::kSubtypePgpEncrypted:
-kdDebug(5006) << "pgp encrypted" << endl;
-            break;
-          case DwMime::kSubtypePgpSignature:
-kdDebug(5006) << "pgp signed" << endl;
+          case DwMime::kSubtypePkcs7Signature: {
+              // note: subtype Pkcs7Signature specifies a signature part
+              //       which we do NOT want to remove!
+              bKeepPartAsIs = true;
+            }
             break;
           case DwMime::kSubtypePkcs7Mime: {
-kdDebug(5006) << "pkcs7 mime" << endl;
               // note: subtype Pkcs7Mime can also be signed
               //       and we do NOT want to remove the signature!
               if ( child && curNode->encryptionState() != KMMsgNotEncrypted )
@@ -318,39 +265,6 @@ kdDebug(5006) << "pkcs7 mime" << endl;
             break;
           }
         }
-        break;
-      case DwMime::kTypeImage: {
-kdDebug(5006) << "* image *" << endl;
-          switch( curNode->subType() ){
-          case DwMime::kSubtypeJpeg:
-kdDebug(5006) << "JPEG" << endl;
-            break;
-          case DwMime::kSubtypeGif:
-kdDebug(5006) << "GIF" << endl;
-            break;
-          }
-        }
-        break;
-      case DwMime::kTypeAudio: {
-kdDebug(5006) << "* audio *" << endl;
-          switch( curNode->subType() ){
-          case DwMime::kSubtypeBasic:
-kdDebug(5006) << "basic" << endl;
-            break;
-          }
-        }
-        break;
-      case DwMime::kTypeVideo: {
-kdDebug(5006) << "* video *" << endl;
-          switch( curNode->subType() ){
-          case DwMime::kSubtypeMpeg:
-kdDebug(5006) << "mpeg" << endl;
-            break;
-          }
-        }
-        break;
-      case DwMime::kTypeModel:
-kdDebug(5006) << "* model *" << endl;
         break;
     }
 
@@ -389,6 +303,10 @@ kdDebug(5006) << "              new Content-Type = " << headers->ContentType(   
         }
       }
 
+      if ( bKeepPartAsIs ) {
+          resultingData += dataNode->encodedBody();
+      } else {
+
       // B) Store the body of this part.
       if( headers && bIsMultipart && dataNode->firstChild() )  {
 kdDebug(5006) << "is valid Multipart, processing children:" << endl;
@@ -423,6 +341,7 @@ kdDebug(5006) << "Multipart processing children - DONE" << endl;
         // store simple part
 kdDebug(5006) << "is Simple part or invalid Multipart, storing body data .. DONE" << endl;
         resultingData += part->Body().AsString().c_str();
+      }
       }
     } else {
 kdDebug(5006) << "dataNode != curNode:  Replace curNode by dataNode." << endl;
@@ -488,6 +407,8 @@ KMReaderWin::KMReaderWin(TQWidget *aParent,
                          const char *aName,
                          int aFlags )
   : TQWidget(aParent, aName, aFlags | Qt::WDestructiveClose),
+    mSerNumOfOriginalMessage( 0 ),
+    mNodeIdOffset( -1 ),
     mAttachmentStrategy( 0 ),
     mHeaderStrategy( 0 ),
     mHeaderStyle( 0 ),
@@ -511,14 +432,18 @@ KMReaderWin::KMReaderWin(TQWidget *aParent,
     mAddBookmarksAction( 0 ),
     mStartIMChatAction( 0 ),
     mSelectAllAction( 0 ),
+    mHeaderOnlyAttachmentsAction( 0 ),
     mSelectEncodingAction( 0 ),
     mToggleFixFontAction( 0 ),
+    mCanStartDrag( false ),
     mHtmlWriter( 0 ),
     mSavedRelativePosition( 0 ),
     mDecrytMessageOverwrite( false ),
     mShowSignatureDetails( false ),
-    mShowAttachmentQuicklist( true )
+    mShowAttachmentQuicklist( true ),
+    mShowRawToltecMail( false )
 {
+  mExternalWindow  = (aParent == mainWindow );
   mSplitterSizes << 180 << 100;
   mMimeTreeMode = 1;
   mMimeTreeAtBottom = true;
@@ -526,7 +451,6 @@ KMReaderWin::KMReaderWin(TQWidget *aParent,
   mLastSerNum = 0;
   mWaitingForSerNum = 0;
   mMessage = 0;
-  mLastStatus = KMMsgStatusUnknown;
   mMsgDisplay = true;
   mPrinting = false;
   mShowColorbar = false;
@@ -642,6 +566,13 @@ void KMReaderWin::createActions( KActionCollection * ac ) {
   raction->setExclusiveGroup( "view_attachments_group" );
   attachmentMenu->insert( raction );
 
+  mHeaderOnlyAttachmentsAction = new KRadioAction( i18n( "View->attachments->", "In Header &Only" ), 0,
+                              this, TQT_SLOT( slotHeaderOnlyAttachments() ),
+                              ac, "view_attachments_headeronly" );
+  mHeaderOnlyAttachmentsAction->setToolTip( i18n( "Show Attachments only in the header of the mail" ) );
+  mHeaderOnlyAttachmentsAction->setExclusiveGroup( "view_attachments_group" );
+  attachmentMenu->insert( mHeaderOnlyAttachmentsAction );
+
   // Set Encoding submenu
   mSelectEncodingAction = new KSelectAction( i18n( "&Set Encoding" ), "charset", 0,
                                  this, TQT_SLOT( slotSetEncoding() ),
@@ -725,6 +656,8 @@ KRadioAction *KMReaderWin::actionForAttachmentStrategy( const AttachmentStrategy
     actionName = "view_attachments_inline";
   else if ( as == AttachmentStrategy::hidden() )
     actionName = "view_attachments_hide";
+  else if ( as == AttachmentStrategy::headerOnly() )
+    actionName = "view_attachments_headeronly";
 
   if ( actionName )
     return static_cast<KRadioAction*>(mActionCollection->action(actionName));
@@ -735,37 +668,46 @@ KRadioAction *KMReaderWin::actionForAttachmentStrategy( const AttachmentStrategy
 void KMReaderWin::slotEnterpriseHeaders() {
   setHeaderStyleAndStrategy( HeaderStyle::enterprise(),
                              HeaderStrategy::rich() );
+  if( !mExternalWindow )
+     writeConfig();
 }
 
 void KMReaderWin::slotFancyHeaders() {
   setHeaderStyleAndStrategy( HeaderStyle::fancy(),
                              HeaderStrategy::rich() );
+  if( !mExternalWindow )
+     writeConfig();
 }
 
 void KMReaderWin::slotBriefHeaders() {
   setHeaderStyleAndStrategy( HeaderStyle::brief(),
                              HeaderStrategy::brief() );
+  if( !mExternalWindow )
+     writeConfig();
 }
 
 void KMReaderWin::slotStandardHeaders() {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::standard());
+  writeConfig();
 }
 
 void KMReaderWin::slotLongHeaders() {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::rich() );
+  if( !mExternalWindow )
+     writeConfig();
 }
 
 void KMReaderWin::slotAllHeaders() {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::all() );
+  if( !mExternalWindow )
+     writeConfig();
 }
 
 void KMReaderWin::slotLevelQuote( int l )
 {
-  kdDebug( 5006 ) << "Old Level: " << mLevelQuote << " New Level: " << l << endl;
-
   mLevelQuote = l;
   saveRelativePosition();
   update(true);
@@ -820,6 +762,10 @@ void KMReaderWin::slotHideAttachments() {
   setAttachmentStrategy( AttachmentStrategy::hidden() );
 }
 
+void KMReaderWin::slotHeaderOnlyAttachments() {
+  setAttachmentStrategy( AttachmentStrategy::headerOnly() );
+}
+
 void KMReaderWin::slotCycleAttachmentStrategy() {
   setAttachmentStrategy( attachmentStrategy()->next() );
   KRadioAction * action = actionForAttachmentStrategy( attachmentStrategy() );
@@ -831,6 +777,7 @@ void KMReaderWin::slotCycleAttachmentStrategy() {
 //-----------------------------------------------------------------------------
 KMReaderWin::~KMReaderWin()
 {
+  clearBodyPartMementos();
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mCSSHelper;
   if (mAutoDelete) delete message();
@@ -846,7 +793,7 @@ void KMReaderWin::slotMessageArrived( KMMessage *msg )
     if ( msg->getMsgSerNum() == mWaitingForSerNum ) {
       setMsg( msg, true );
     } else {
-      kdDebug( 5006 ) <<  "KMReaderWin::slotMessageArrived - ignoring update" << endl;
+      //kdDebug( 5006 ) <<  "KMReaderWin::slotMessageArrived - ignoring update" << endl;
     }
   }
 }
@@ -856,7 +803,7 @@ void KMReaderWin::update( KMail::Interface::Observable * observable )
 {
   if ( !mAtmUpdate ) {
     // reparse the msg
-    kdDebug(5006) << "KMReaderWin::update - message" << endl;
+    //kdDebug(5006) << "KMReaderWin::update - message" << endl;
     updateReaderWin();
     return;
   }
@@ -1067,8 +1014,6 @@ void KMReaderWin::initHtmlWidget(void)
   connect(mViewer->browserExtension(),
           TQT_SIGNAL(createNewWindow(const KURL &, const KParts::URLArgs &)),this,
           TQT_SLOT(slotUrlOpen(const KURL &)));
-  connect(mViewer,TQT_SIGNAL(onURL(const TQString &)),this,
-          TQT_SLOT(slotUrlOn(const TQString &)));
   connect(mViewer,TQT_SIGNAL(popupMenu(const TQString &, const TQPoint &)),
           TQT_SLOT(slotUrlPopup(const TQString &, const TQPoint &)));
   connect( kmkernel->imProxy(), TQT_SIGNAL( sigContactPresenceChanged( const TQString & ) ),
@@ -1105,6 +1050,16 @@ void KMReaderWin::setHeaderStyleAndStrategy( const HeaderStyle * style,
 					     const HeaderStrategy * strategy ) {
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
+  if ( mHeaderOnlyAttachmentsAction ) {
+    const bool styleHasAttachmentQuickList = mHeaderStyle == HeaderStyle::fancy() ||
+                                             mHeaderStyle == HeaderStyle::enterprise();
+    mHeaderOnlyAttachmentsAction->setEnabled( styleHasAttachmentQuickList );
+    if ( !styleHasAttachmentQuickList && mAttachmentStrategy == AttachmentStrategy::headerOnly() ) {
+      // Style changed to something without an attachment quick list, need to change attachment
+      // strategy
+      setAttachmentStrategy( AttachmentStrategy::smart() );
+    }
+  }
   update( true );
 }
 
@@ -1150,7 +1105,6 @@ void KMReaderWin::setPrintFont( const TQFont& font )
 //-----------------------------------------------------------------------------
 const TQTextCodec * KMReaderWin::overrideCodec() const
 {
-  kdDebug(5006) << k_funcinfo << " mOverrideEncoding == '" << mOverrideEncoding << "'" << endl;
   if ( mOverrideEncoding.isEmpty() || mOverrideEncoding == "Auto" ) // Auto
     return 0;
   else
@@ -1179,15 +1133,25 @@ void KMReaderWin::readGlobalOverrideCodec()
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::setMsg(KMMessage* aMsg, bool force)
+void KMReaderWin::setOriginalMsg( unsigned long serNumOfOriginalMessage, int nodeIdOffset )
 {
-  if (aMsg)
-      kdDebug(5006) << "(" << aMsg->getMsgSerNum() << ", last " << mLastSerNum << ") " << aMsg->subject() << " "
-        << aMsg->fromStrip() << ", readyToShow " << (aMsg->readyToShow()) << endl;
+  mSerNumOfOriginalMessage = serNumOfOriginalMessage;
+  mNodeIdOffset = nodeIdOffset;
+}
 
-	//Reset the level quote if the msg has changed.
-  if (aMsg && aMsg->getMsgSerNum() != mLastSerNum ){
+//-----------------------------------------------------------------------------
+void KMReaderWin::setMsg( KMMessage* aMsg, bool force, bool updateOnly )
+{
+  if ( aMsg ) {
+    kdDebug(5006) << "(" << aMsg->getMsgSerNum() << ", last " << mLastSerNum << ") " << aMsg->subject() << " "
+                  << aMsg->fromStrip() << ", readyToShow " << (aMsg->readyToShow()) << endl;
+  }
+
+  // Reset message-transient state
+  if ( aMsg && aMsg->getMsgSerNum() != mLastSerNum && !updateOnly ){
     mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin()-1;
+    mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
+    clearBodyPartMementos();
   }
   if ( mPrinting )
     mLevelQuote = -1;
@@ -1234,14 +1198,11 @@ void KMReaderWin::setMsg(KMMessage* aMsg, bool force)
   if (aMsg) {
     aMsg->setOverrideCodec( overrideCodec() );
     aMsg->setDecodeHTML( htmlMail() );
-    mLastStatus = aMsg->status();
     // FIXME: workaround to disable DND for IMAP load-on-demand
     if ( !aMsg->isComplete() )
       mViewer->setDNDEnabled( false );
     else
       mViewer->setDNDEnabled( true );
-  } else {
-    mLastStatus = KMMsgStatusUnknown;
   }
 
   // only display the msg if it is complete
@@ -1522,17 +1483,16 @@ void KMReaderWin::displayMessage() {
   TQTimer::singleShot( 1, this, TQT_SLOT(injectAttachments()) );
 }
 
+static bool message_was_saved_decrypted_before( const KMMessage * msg ) {
+  if ( !msg )
+    return false;
+  //kdDebug(5006) << "msgId = " << msg->msgId() << endl;
+  return msg->msgId().stripWhiteSpace().startsWith( "<DecryptedMsg." );
+}
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::parseMsg(KMMessage* aMsg)
 {
-#ifndef NDEBUG
-  kdDebug( 5006 )
-    << "parseMsg(KMMessage* aMsg "
-    << ( aMsg == message() ? "==" : "!=" )
-    << " aMsg )" << endl;
-#endif
-
   KMMessagePart msgPart;
   TQCString subtype, contDisp;
   TQByteArray str;
@@ -1547,7 +1507,7 @@ void KMReaderWin::parseMsg(KMMessage* aMsg)
     return;
   } else
     delete mRootNode;
-  mRootNode = partNode::fromMessage( aMsg );
+  mRootNode = partNode::fromMessage( aMsg, this );
   const TQCString mainCntTypeStr = mRootNode->typeString() + '/' + mRootNode->subTypeString();
 
   TQString cntDesc = aMsg->subject();
@@ -1573,24 +1533,38 @@ void KMReaderWin::parseMsg(KMMessage* aMsg)
   if( vCardNode ) {
     // ### FIXME: We should only do this if the vCard belongs to the sender,
     // ### i.e. if the sender's email address is contained in the vCard.
-    const TQString vcard = vCardNode->msgPart().bodyToUnicode( overrideCodec() );
     KABC::VCardConverter t;
+#if defined(KABC_VCARD_ENCODING_FIX)
+    const TQByteArray vcard = vCardNode->msgPart().bodyDecodedBinary();
+    if ( !t.parseVCardsRaw( vcard.data() ).empty() ) {
+#else
+    const TQString vcard = vCardNode->msgPart().bodyToUnicode( overrideCodec() );
     if ( !t.parseVCards( vcard ).empty() ) {
+#endif
       hasVCard = true;
-      kdDebug(5006) << "FOUND A VALID VCARD" << endl;
       writeMessagePartToTempFile( &vCardNode->msgPart(), vCardNode->nodeId() );
     }
   }
-  htmlWriter()->queue( writeMsgHeader(aMsg, hasVCard, true ) );
+
+  if ( !mRootNode || !mRootNode->isToltecMessage() || mShowRawToltecMail ) {
+    htmlWriter()->queue( writeMsgHeader(aMsg, hasVCard ? vCardNode : 0, true ) );
+  }
 
   // show message content
   ObjectTreeParser otp( this );
+  otp.setAllowAsync( true );
+  otp.setShowRawToltecMail( mShowRawToltecMail );
   otp.parseObjectTree( mRootNode );
 
   // store encrypted/signed status information in the KMMessage
   //  - this can only be done *after* calling parseObjectTree()
   KMMsgEncryptionState encryptionState = mRootNode->overallEncryptionState();
   KMMsgSignatureState  signatureState  = mRootNode->overallSignatureState();
+  // Don't crash when switching message while GPG passphrase entry dialog is shown #53185
+  if (aMsg != message()) {
+    displayMessage();
+    return;
+  }
   aMsg->setEncryptionState( encryptionState );
   // Don't reset the signature state to "not signed" (e.g. if one canceled the
   // decryption of a signed messages which has already been decrypted before).
@@ -1618,22 +1592,23 @@ void KMReaderWin::parseMsg(KMMessage* aMsg)
 
 kdDebug(5006) << "\n\n\nKMReaderWin::parseMsg()  -  special post-encryption handling:\n1." << endl;
 kdDebug(5006) << "(aMsg == msg) = "                               << (aMsg == message()) << endl;
-kdDebug(5006) << "   (KMMsgStatusUnknown == mLastStatus) = "           << (KMMsgStatusUnknown == mLastStatus) << endl;
-kdDebug(5006) << "|| (KMMsgStatusNew     == mLastStatus) = "           << (KMMsgStatusNew     == mLastStatus) << endl;
-kdDebug(5006) << "|| (KMMsgStatusUnread  == mLastStatus) = "           << (KMMsgStatusUnread  == mLastStatus) << endl;
-kdDebug(5006) << "(mIdOfLastViewedMessage != aMsg->msgId()) = "    << (mIdOfLastViewedMessage != aMsg->msgId()) << endl;
+kdDebug(5006) << "aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() = " << (aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder()) << endl;
+kdDebug(5006) << "message_was_saved_decrypted_before( aMsg ) = " << message_was_saved_decrypted_before( aMsg ) << endl;
+kdDebug(5006) << "this->decryptMessage() = " << decryptMessage() << endl;
+kdDebug(5006) << "otp.hasPendingAsyncJobs() = " << otp.hasPendingAsyncJobs() << endl;
 kdDebug(5006) << "   (KMMsgFullyEncrypted == encryptionState) = "     << (KMMsgFullyEncrypted == encryptionState) << endl;
 kdDebug(5006) << "|| (KMMsgPartiallyEncrypted == encryptionState) = " << (KMMsgPartiallyEncrypted == encryptionState) << endl;
          // only proceed if we were called the normal way - not by
          // double click on the message (==not running in a separate window)
   if(    (aMsg == message())
+         // don't remove encryption in the outbox folder :)
+      && ( aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() )
          // only proceed if this message was not saved encryptedly before
-         // to make sure only *new* messages are saved in decrypted form
-      && (    (KMMsgStatusUnknown == mLastStatus)
-           || (KMMsgStatusNew     == mLastStatus)
-           || (KMMsgStatusUnread  == mLastStatus) )
-         // avoid endless recursions
-      && (mIdOfLastViewedMessage != aMsg->msgId())
+      && !message_was_saved_decrypted_before( aMsg )
+         // only proceed if the message has actually been decrypted
+      && decryptMessage()
+         // only proceed if no pending async jobs are running:
+      && !otp.hasPendingAsyncJobs()
          // only proceed if this message is (at least partially) encrypted
       && (    (KMMsgFullyEncrypted == encryptionState)
            || (KMMsgPartiallyEncrypted == encryptionState) ) ) {
@@ -1690,15 +1665,15 @@ kdDebug(5006) << "KMReaderWin  -  composing unencrypted message" << endl;
 
 
 //-----------------------------------------------------------------------------
-TQString KMReaderWin::writeMsgHeader(KMMessage* aMsg, bool hasVCard, bool topLevel)
+TQString KMReaderWin::writeMsgHeader( KMMessage* aMsg, partNode *vCardNode, bool topLevel )
 {
   kdFatal( !headerStyle(), 5006 )
     << "trying to writeMsgHeader() without a header style set!" << endl;
   kdFatal( !headerStrategy(), 5006 )
     << "trying to writeMsgHeader() without a header strategy set!" << endl;
   TQString href;
-  if (hasVCard)
-    href = TQString("file:") + KURL::encode_string( mTempFiles.last() );
+  if ( vCardNode )
+    href = vCardNode->asHREF( "body" );
 
   return headerStyle()->format( aMsg, headerStrategy(), href, mPrinting, topLevel );
 }
@@ -1763,10 +1738,14 @@ TQString KMReaderWin::createTempDir( const TQString &param )
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::showVCard( KMMessagePart * msgPart ) {
+void KMReaderWin::showVCard( KMMessagePart *msgPart )
+{
+#if defined(KABC_VCARD_ENCODING_FIX)
+  const TQByteArray vCard = msgPart->bodyDecodedBinary();
+#else
   const TQString vCard = msgPart->bodyToUnicode( overrideCodec() );
-
-  VCardViewer *vcv = new VCardViewer(this, vCard, "vCardDialog");
+#endif
+  VCardViewer *vcv = new VCardViewer( this, vCard, "vCardDialog" );
   vcv->show();
 }
 
@@ -1782,19 +1761,13 @@ void KMReaderWin::printMsg()
 int KMReaderWin::msgPartFromUrl(const KURL &aUrl)
 {
   if (aUrl.isEmpty()) return -1;
-
-  bool ok;
-  if ( aUrl.url().startsWith( "#att" ) ) {
-    int res = aUrl.url().mid( 4 ).toInt( &ok );
-    if ( ok ) return res;
-  }
-
   if (!aUrl.isLocalFile()) return -1;
 
   TQString path = aUrl.path();
   uint right = path.findRev('/');
   uint left = path.findRev('.', right);
 
+  bool ok;
   int res = path.mid(left + 1, right - left - 1).toInt(&ok);
   return (ok) ? res : -1;
 }
@@ -1910,7 +1883,8 @@ bool foundSMIMEData( const TQString aUrl,
 void KMReaderWin::slotUrlOn(const TQString &aUrl)
 {
   const KURL url(aUrl);
-  if ( url.protocol() == "kmail" || url.protocol() == "x-kmail"
+
+  if ( url.protocol() == "kmail" || url.protocol() == "x-kmail" || url.protocol() == "attachment"
        || (url.protocol().isEmpty() && url.path().isEmpty()) ) {
     mViewer->setDNDEnabled( false );
   } else {
@@ -1919,10 +1893,12 @@ void KMReaderWin::slotUrlOn(const TQString &aUrl)
 
   if ( aUrl.stripWhiteSpace().isEmpty() ) {
     KPIM::BroadcastStatus::instance()->reset();
+    mHoveredUrl = KURL();
+    mLastClickImagePath = TQString();
     return;
   }
 
-  mUrlClicked = url;
+  mHoveredUrl = url;
 
   const TQString msg = URLHandlerManager::instance()->statusBarMessage( url, this );
 
@@ -1934,7 +1910,7 @@ void KMReaderWin::slotUrlOn(const TQString &aUrl)
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlOpen(const KURL &aUrl, const KParts::URLArgs &)
 {
-  mUrlClicked = aUrl;
+  mClickedUrl = aUrl;
 
   if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
     return;
@@ -1947,15 +1923,41 @@ void KMReaderWin::slotUrlOpen(const KURL &aUrl, const KParts::URLArgs &)
 void KMReaderWin::slotUrlPopup(const TQString &aUrl, const TQPoint& aPos)
 {
   const KURL url( aUrl );
-  mUrlClicked = url;
+  mClickedUrl = url;
+
+  if ( url.protocol() == "mailto" ) {
+    mCopyURLAction->setText( i18n( "Copy Email Address" ) );
+  } else {
+    mCopyURLAction->setText( i18n( "Copy Link Address" ) );
+  }
 
   if ( URLHandlerManager::instance()->handleContextMenuRequest( url, aPos, this ) )
     return;
 
   if ( message() ) {
     kdWarning( 5006 ) << "KMReaderWin::slotUrlPopup(): Unhandled URL right-click!" << endl;
-    emit popupMenu( *message(), url, aPos );
+    emitPopupMenu( url, aPos );
   }
+}
+
+// Checks if the given node has a parent node that is a DIV which has an ID attribute
+// with the value specified here
+static bool hasParentDivWithId( const DOM::Node &start, const TQString &id )
+{
+  if ( start.isNull() )
+    return false;
+
+  if ( start.nodeName().string() == "div" ) {
+    for ( unsigned int i = 0; i < start.attributes().length(); i++ ) {
+      if ( start.attributes().item( i ).nodeName().string() == "id" &&
+           start.attributes().item( i ).nodeValue().string() == id )
+        return true;
+    }
+  }
+
+  if ( !start.parentNode().isNull() )
+    return hasParentDivWithId( start.parentNode(), id );
+  else return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1969,14 +1971,22 @@ void KMReaderWin::showAttachmentPopup( int id, const TQString & name, const TQPo
   menu->insertItem(i18n("to view something", "View"), 3);
   menu->insertItem(SmallIcon("filesaveas"),i18n("Save As..."), 4);
   menu->insertItem(SmallIcon("editcopy"), i18n("Copy"), 9 );
-  if ( GlobalSettings::self()->allowAttachmentEditing() )
+  const bool canChange = message()->parent() ? !message()->parent()->isReadOnly() : false;
+  if ( GlobalSettings::self()->allowAttachmentEditing() && canChange )
     menu->insertItem(SmallIcon("edit"), i18n("Edit Attachment"), 8 );
-  if ( GlobalSettings::self()->allowAttachmentDeletion() )
+  if ( GlobalSettings::self()->allowAttachmentDeletion() && canChange )
     menu->insertItem(SmallIcon("editdelete"), i18n("Delete Attachment"), 7 );
   if ( name.endsWith( ".xia", false ) &&
        Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" ) )
     menu->insertItem( i18n( "Decrypt With Chiasmus..." ), 6 );
   menu->insertItem(i18n("Properties"), 5);
+
+  const bool attachmentInHeader = hasParentDivWithId( mViewer->nodeUnderMouse(), "attachmentInjectionPoint" );
+  const bool hasScrollbar = mViewer->view()->verticalScrollBar()->isVisible();
+  if ( attachmentInHeader && hasScrollbar ) {
+    menu->insertItem( i18n("Scroll To"), 10 );
+  }
+
   connect(menu, TQT_SIGNAL(activated(int)), this, TQT_SLOT(slotHandleAttachment(int)));
   menu->exec( p ,0 );
   delete menu;
@@ -2032,6 +2042,8 @@ void KMReaderWin::slotHandleAttachment( int choice )
     urls.append( url );
     KURLDrag* drag = new KURLDrag( urls, this );
     TQApplication::clipboard()->setData( drag, QClipboard::Clipboard );
+  } else if ( choice == 10 ) { // Scroll To
+    scrollToAttachment( node );
   }
 }
 
@@ -2064,7 +2076,7 @@ void KMReaderWin::slotCopySelectedText()
 
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::atmViewMsg(KMMessagePart* aMsgPart)
+void KMReaderWin::atmViewMsg( KMMessagePart* aMsgPart, int nodeId )
 {
   assert(aMsgPart!=0);
   KMMessage* msg = new KMMessage;
@@ -2076,7 +2088,7 @@ void KMReaderWin::atmViewMsg(KMMessagePart* aMsgPart)
   msg->setUID(message()->UID());
   msg->setReadyToShow(true);
   KMReaderMainWin *win = new KMReaderMainWin();
-  win->showMsg( overrideEncoding(), msg );
+  win->showMsg( overrideEncoding(), msg, message()->getMsgSerNum(), nodeId );
   win->show();
 }
 
@@ -2168,6 +2180,7 @@ void KMReaderWin::setMsgPart( KMMessagePart* aMsgPart, bool aHTML,
       htmlWriter()->end();
       setCaption( i18n("View Attachment: %1").arg( pname ) );
       show();
+      delete iio;
   } else {
     htmlWriter()->begin( mCSSHelper->cssDefinitions( isFixedFont() ) );
     htmlWriter()->queue( mCSSHelper->htmlHead( isFixedFont() ) );
@@ -2208,7 +2221,7 @@ void KMReaderWin::slotAtmView( int id, const TQString& name )
     if (pname.isEmpty()) pname="unnamed";
     // image Attachment is saved already
     if (kasciistricmp(msgPart.typeStr(), "message")==0) {
-      atmViewMsg(&msgPart);
+      atmViewMsg( &msgPart,id );
     } else if ((kasciistricmp(msgPart.typeStr(), "text")==0) &&
 	       (kasciistricmp(msgPart.subtypeStr(), "x-vcard")==0)) {
       setMsgPart( &msgPart, htmlMail(), name, pname );
@@ -2239,7 +2252,7 @@ void KMReaderWin::openAttachment( int id, const TQString & name )
   KMMessagePart& msgPart = node->msgPart();
   if (kasciistricmp(msgPart.typeStr(), "message")==0)
   {
-    atmViewMsg(&msgPart);
+    atmViewMsg( &msgPart, id );
     return;
   }
 
@@ -2431,7 +2444,7 @@ void KMReaderWin::update( bool force )
 {
   KMMessage* msg = message();
   if ( msg )
-    setMsg( msg, force );
+    setMsg( msg, force, true /* updateOnly */ );
 }
 
 
@@ -2467,7 +2480,7 @@ void KMReaderWin::slotUrlClicked()
     identity = message()->parent()->identity();
   }
 
-  KMCommand *command = new KMUrlClickedCommand( mUrlClicked, identity, this,
+  KMCommand *command = new KMUrlClickedCommand( mClickedUrl, identity, this,
 						false, mainWidget );
   command->start();
 }
@@ -2475,14 +2488,14 @@ void KMReaderWin::slotUrlClicked()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoCompose()
 {
-  KMCommand *command = new KMMailtoComposeCommand( mUrlClicked, message() );
+  KMCommand *command = new KMMailtoComposeCommand( mClickedUrl, message() );
   command->start();
 }
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoForward()
 {
-  KMCommand *command = new KMMailtoForwardCommand( mMainWindow, mUrlClicked,
+  KMCommand *command = new KMMailtoForwardCommand( mMainWindow, mClickedUrl,
 						   message() );
   command->start();
 }
@@ -2490,7 +2503,7 @@ void KMReaderWin::slotMailtoForward()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoAddAddrBook()
 {
-  KMCommand *command = new KMMailtoAddAddrBookCommand( mUrlClicked,
+  KMCommand *command = new KMMailtoAddAddrBookCommand( mClickedUrl,
 						       mMainWindow);
   command->start();
 }
@@ -2498,7 +2511,7 @@ void KMReaderWin::slotMailtoAddAddrBook()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoOpenAddrBook()
 {
-  KMCommand *command = new KMMailtoOpenAddrBookCommand( mUrlClicked,
+  KMCommand *command = new KMMailtoOpenAddrBookCommand( mClickedUrl,
 							mMainWindow );
   command->start();
 }
@@ -2509,7 +2522,7 @@ void KMReaderWin::slotUrlCopy()
   // we don't necessarily need a mainWidget for KMUrlCopyCommand so
   // it doesn't matter if the dynamic_cast fails.
   KMCommand *command =
-    new KMUrlCopyCommand( mUrlClicked,
+    new KMUrlCopyCommand( mClickedUrl,
                           dynamic_cast<KMMainWidget*>( mMainWindow ) );
   command->start();
 }
@@ -2518,30 +2531,30 @@ void KMReaderWin::slotUrlCopy()
 void KMReaderWin::slotUrlOpen( const KURL &url )
 {
   if ( !url.isEmpty() )
-    mUrlClicked = url;
-  KMCommand *command = new KMUrlOpenCommand( mUrlClicked, this );
+    mClickedUrl = url;
+  KMCommand *command = new KMUrlOpenCommand( mClickedUrl, this );
   command->start();
 }
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotAddBookmarks()
 {
-    KMCommand *command = new KMAddBookmarksCommand( mUrlClicked, this );
+    KMCommand *command = new KMAddBookmarksCommand( mClickedUrl, this );
     command->start();
 }
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlSave()
 {
-  KMCommand *command = new KMUrlSaveCommand( mUrlClicked, mMainWindow );
+  KMCommand *command = new KMUrlSaveCommand( mClickedUrl, mMainWindow );
   command->start();
 }
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoReply()
 {
-  KMCommand *command = new KMMailtoReplyCommand( mMainWindow, mUrlClicked,
-    message(), copyText() );
+  KMCommand *command = new KMMailtoReplyCommand( mMainWindow, mClickedUrl,
+                                                 message(), copyText() );
   command->start();
 }
 
@@ -2585,6 +2598,14 @@ void KMReaderWin::slotSaveAttachments()
 }
 
 //-----------------------------------------------------------------------------
+void KMReaderWin::saveAttachment( const KURL &tempFileName )
+{
+  mAtmCurrent = msgPartFromUrl( tempFileName );
+  mAtmCurrentName = mClickedUrl.path();
+  slotHandleAttachment( KMHandleAttachmentCommand::Save ); // save
+}
+
+//-----------------------------------------------------------------------------
 void KMReaderWin::slotSaveMsg()
 {
   KMSaveMsgCommand *saveCommand = new KMSaveMsgCommand( mMainWindow, message() );
@@ -2597,8 +2618,33 @@ void KMReaderWin::slotSaveMsg()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotIMChat()
 {
-  KMCommand *command = new KMIMChatCommand( mUrlClicked, message() );
+  KMCommand *command = new KMIMChatCommand( mClickedUrl, message() );
   command->start();
+}
+
+//-----------------------------------------------------------------------------
+static TQString linkForNode( const DOM::Node &node )
+{
+  try {
+    if ( node.isNull() )
+      return TQString();
+
+    const DOM::NamedNodeMap attributes = node.attributes();
+    if ( !attributes.isNull() ) {
+      const DOM::Node href = attributes.getNamedItem( DOM::DOMString( "href" ) );
+      if ( !href.isNull() ) {
+        return href.nodeValue().string();
+      }
+    }
+    if ( !node.parentNode().isNull() ) {
+      return linkForNode( node.parentNode() );
+    } else {
+      return TQString();
+    }
+  } catch ( DOM::DOMException &e ) {
+    kdWarning(5006) << "Got an exception when trying to determine link under cursor!" << endl;
+    return TQString();
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -2608,15 +2654,85 @@ bool KMReaderWin::eventFilter( TQObject *, TQEvent *e )
     TQMouseEvent* me = static_cast<TQMouseEvent*>(e);
     if ( me->button() == LeftButton && ( me->state() & ShiftButton ) ) {
       // special processing for shift+click
-      mAtmCurrent = msgPartFromUrl( mUrlClicked );
-      if ( mAtmCurrent < 0 ) return false; // not an attachment
-      mAtmCurrentName = mUrlClicked.path();
-      slotHandleAttachment( KMHandleAttachmentCommand::Save ); // save
-      return true; // eat event
+      URLHandlerManager::instance()->handleShiftClick( mHoveredUrl, this );
+      return true;
+    }
+
+    if ( me->button() == LeftButton ) {
+
+      TQString imagePath;
+      const DOM::Node nodeUnderMouse = mViewer->nodeUnderMouse();
+      if ( !nodeUnderMouse.isNull() ) {
+        const DOM::NamedNodeMap attributes = nodeUnderMouse.attributes();
+        if ( !attributes.isNull() ) {
+          const DOM::Node src = attributes.getNamedItem( DOM::DOMString( "src" ) );
+          if ( !src.isNull() ) {
+            imagePath = src.nodeValue().string();
+          }
+        }
+      }
+
+      mCanStartDrag = URLHandlerManager::instance()->willHandleDrag( mHoveredUrl, imagePath, this );
+      mLastClickPosition = me->pos();
+      mLastClickImagePath = imagePath;
     }
   }
+
+  if ( e->type() ==  TQEvent::MouseButtonRelease ) {
+    mCanStartDrag = false;
+  }
+
+  if ( e->type() == TQEvent::MouseMove ) {
+    TQMouseEvent* me = static_cast<TQMouseEvent*>( e );
+
+    // Handle this ourselves instead of connecting to mViewer::onURL(), since KHTML misses some
+    // notifications in case we started a drag ourselves
+    slotUrlOn( linkForNode( mViewer->nodeUnderMouse() ) );
+
+    if ( ( mLastClickPosition - me->pos() ).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
+      if ( mCanStartDrag && ( !( mHoveredUrl.isEmpty() && mLastClickImagePath.isEmpty() ) ) ) {
+        if ( URLHandlerManager::instance()->handleDrag( mHoveredUrl, mLastClickImagePath, this ) ) {
+          mCanStartDrag = false;
+          slotUrlOn( TQString() );
+
+          // HACK: Send a mouse release event to the KHTMLView, as otherwise that will be missed in
+          //       case we started a drag. If the event is missed, the HTML view gets into a wrong
+          //       state, in which funny things like unsolicited drags start to happen.
+          TQMouseEvent mouseEvent( TQEvent::MouseButtonRelease, me->pos(), TQt::NoButton, TQt::NoButton );
+          static_cast<TQObject*>( mViewer->view() )->eventFilter( mViewer->view()->viewport(),
+                                                                 &mouseEvent );
+          return true;
+        }
+      }
+    }
+  }
+
   // standard event processing
   return false;
+}
+
+void KMReaderWin::fillCommandInfo( partNode *node, KMMessage **msg, int *nodeId )
+{
+  Q_ASSERT( msg && nodeId );
+
+  if ( mSerNumOfOriginalMessage != 0 ) {
+    KMFolder *folder = 0;
+    int index = -1;
+    KMMsgDict::instance()->getLocation( mSerNumOfOriginalMessage, &folder, &index );
+    if ( folder && index != -1 )
+      *msg = folder->getMsg( index );
+
+    if ( !( *msg ) ) {
+      kdWarning( 5006 ) << "Unable to find the original message, aborting attachment deletion!" << endl;
+      return;
+    }
+
+    *nodeId = node->nodeId() + mNodeIdOffset;
+  }
+  else {
+    *nodeId = node->nodeId();
+    *msg = message();
+  }
 }
 
 void KMReaderWin::slotDeleteAttachment(partNode * node)
@@ -2627,8 +2743,52 @@ void KMReaderWin::slotDeleteAttachment(partNode * node)
      != KMessageBox::Continue ) {
     return;
   }
-  KMDeleteAttachmentCommand* command = new KMDeleteAttachmentCommand( node, message(), this );
-  command->start();
+
+  int nodeId = -1;
+  KMMessage *msg = 0;
+  fillCommandInfo( node, &msg, &nodeId );
+  if ( msg && nodeId != -1 ) {
+    KMDeleteAttachmentCommand* command = new KMDeleteAttachmentCommand( nodeId, msg, this );
+    command->start();
+    connect( command, TQT_SIGNAL( completed( KMCommand * ) ),
+             this, TQT_SLOT( updateReaderWin() ) );
+    connect( command, TQT_SIGNAL( completed( KMCommand * ) ),
+             this, TQT_SLOT( disconnectMsgAdded() ) );
+
+    // ### HACK: Since the command will do delete + add, a new message will arrive. However, we don't
+    // want the selection to change. Therefore, as soon as a new message arrives, select it, and then
+    // disconnect.
+    // Of course the are races, another message can arrive before ours, but we take the risk.
+    // And it won't work properly with multiple main windows
+    const KMHeaders * const headers = KMKernel::self()->getKMMainWidget()->headers();
+    connect( headers, TQT_SIGNAL( msgAddedToListView( TQListViewItem* ) ),
+             this, TQT_SLOT( msgAdded( TQListViewItem* ) ) );
+  }
+
+  // If we are operating on a copy of parts of the message, make sure to update the copy as well.
+  if ( mSerNumOfOriginalMessage != 0 && message() ) {
+    message()->deleteBodyPart( node->nodeId() );
+    update( true );
+  }
+}
+
+void KMReaderWin::msgAdded( TQListViewItem *item )
+{
+  // A new message was added to the message list view. Select it.
+  // This is only connected right after we started a attachment delete command, so we expect a new
+  // message. Disconnect right afterwards, we only want this particular message to be selected.
+  disconnectMsgAdded();
+  KMHeaders * const headers = KMKernel::self()->getKMMainWidget()->headers();
+  headers->setCurrentItem( item );
+  headers->clearSelection();
+  headers->setSelected( item, true );
+}
+
+void KMReaderWin::disconnectMsgAdded()
+{
+  const KMHeaders *const headers = KMKernel::self()->getKMMainWidget()->headers();
+  disconnect( headers, TQT_SIGNAL( msgAddedToListView( TQListViewItem* ) ),
+              this, TQT_SLOT( msgAdded( TQListViewItem* ) ) );
 }
 
 void KMReaderWin::slotEditAttachment(partNode * node)
@@ -2639,8 +2799,16 @@ void KMReaderWin::slotEditAttachment(partNode * node)
         != KMessageBox::Continue ) {
     return;
   }
-  KMEditAttachmentCommand* command = new KMEditAttachmentCommand( node, message(), this );
-  command->start();
+
+  int nodeId = -1;
+  KMMessage *msg = 0;
+  fillCommandInfo( node, &msg, &nodeId );
+  if ( msg && nodeId != -1 ) {
+    KMEditAttachmentCommand* command = new KMEditAttachmentCommand( nodeId, msg, this );
+    command->start();
+  }
+
+  // FIXME: If we are operating on a copy of parts of the message, make sure to update the copy as well.
 }
 
 KMail::CSSHelper* KMReaderWin::cssHelper()
@@ -2653,6 +2821,42 @@ bool KMReaderWin::decryptMessage() const
   if ( !GlobalSettings::self()->alwaysDecrypt() )
     return mDecrytMessageOverwrite;
   return true;
+}
+
+void KMReaderWin::scrollToAttachment( const partNode *node )
+{
+  DOM::Document doc = mViewer->htmlDocument();
+
+  // The anchors for this are created in ObjectTreeParser::parseObjectTree()
+  mViewer->gotoAnchor( TQString::fromLatin1( "att%1" ).arg( node->nodeId() ) );
+
+  // Remove any old color markings which might be there
+  const partNode *root = node->topLevelParent();
+  for ( int i = 0; i <= root->totalChildCount() + 1; i++ ) {
+    DOM::Element attachmentDiv = doc.getElementById( TQString( "attachmentDiv%1" ).arg( i + 1 ) );
+    if ( !attachmentDiv.isNull() )
+      attachmentDiv.removeAttribute( "style" );
+  }
+
+  // Don't mark hidden nodes, that would just produce a strange yellow line
+  if ( node->isDisplayedHidden() )
+    return;
+
+  // Now, color the div of the attachment in yellow, so that the user sees what happened.
+  // We created a special marked div for this in writeAttachmentMarkHeader() in ObjectTreeParser,
+  // find and modify that now.
+  DOM::Element attachmentDiv = doc.getElementById( TQString( "attachmentDiv%1" ).arg( node->nodeId() ) );
+  if ( attachmentDiv.isNull() ) {
+    kdWarning( 5006 ) << "Could not find attachment div for attachment " << node->nodeId() << endl;
+    return;
+  }
+
+  attachmentDiv.setAttribute( "style", TQString( "border:2px solid %1" )
+      .arg( cssHelper()->pgpWarnColor().name() ) );
+
+  // Update rendering, otherwise the rendering is not updated when the user clicks on an attachment
+  // that causes scrolling and the open attachment dialog
+  doc.updateRendering();
 }
 
 void KMReaderWin::injectAttachments()
@@ -2668,30 +2872,33 @@ void KMReaderWin::injectAttachments()
   TQString visibility;
   TQString urlHandle;
   TQString imgSrc;
-  if( !showAttachmentQuicklist() )
-    {
-      urlHandle.append( "kmail:showAttachmentQuicklist" );
-      imgSrc.append( "attachmentQuicklistClosed.png" );
-    } else {
-      urlHandle.append( "kmail:hideAttachmentQuicklist" );
-      imgSrc.append( "attachmentQuicklistOpened.png" );
-    }
+  if( !showAttachmentQuicklist() ) {
+    urlHandle.append( "kmail:showAttachmentQuicklist" );
+    imgSrc.append( "attachmentQuicklistClosed.png" );
+  } else {
+    urlHandle.append( "kmail:hideAttachmentQuicklist" );
+    imgSrc.append( "attachmentQuicklistOpened.png" );
+  }
 
   TQString html = renderAttachments( mRootNode, TQApplication::palette().active().background() );
   if ( html.isEmpty() )
     return;
 
-    if ( headerStyle() == HeaderStyle::fancy() )
-      html.prepend( TQString::fromLatin1("<div style=\"float:left;\">%1&nbsp;</div>" ).arg(i18n("Attachments:")) );
+  TQString link("");
+  if ( headerStyle() == HeaderStyle::fancy() ) {
+    link += "<div style=\"text-align: left;\"><a href=\"" + urlHandle + "\"><img src=\"" +
+            imgpath + imgSrc + "\"/></a></div>";
+    html.prepend( link );
+    html.prepend( TQString::fromLatin1( "<div style=\"float:left;\">%1&nbsp;</div>" ).
+                  arg( i18n( "Attachments:" ) ) );
+  } else {
+    link += "<div style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"" +
+            imgpath + imgSrc + "\"/></a></div>";
+    html.prepend( link );
+  }
 
-    if ( headerStyle() == HeaderStyle::enterprise() ) {
-      TQString link("");
-      link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\""+imgpath+imgSrc+"\"/></a></div>";
-      html.prepend( link );
-    }
-
-    assert( injectionPoint.tagName() == "div" );
-    static_cast<DOM::HTMLElement>( injectionPoint ).setInnerHTML( html );  
+  assert( injectionPoint.tagName() == "div" );
+  static_cast<DOM::HTMLElement>( injectionPoint ).setInnerHTML( html );
 }
 
 static TQColor nextColor( const TQColor & c )
@@ -2712,54 +2919,112 @@ TQString KMReaderWin::renderAttachments(partNode * node, const TQColor &bgColor 
     if ( !subHtml.isEmpty() ) {
 
       TQString visibility;
-      if( !showAttachmentQuicklist() )
-	{
-	  visibility.append( "display:none;" );
-	}
+      if ( !showAttachmentQuicklist() ) {
+        visibility.append( "display:none;" );
+      }
 
       TQString margin;
       if ( node != mRootNode || headerStyle() != HeaderStyle::enterprise() )
         margin = "padding:2px; margin:2px; ";
-      if ( node->msgPart().typeStr() == "message" || node == mRootNode )
+      TQString align = "left";
+      if ( headerStyle() == HeaderStyle::enterprise() )
+        align = "right";
+      if ( node->msgPart().typeStr().lower() == "message" || node == mRootNode )
         html += TQString::fromLatin1("<div style=\"background:%1; %2"
-            "vertical-align:middle; float:left; %3\">").arg( bgColor.name() ).arg( margin ).arg( visibility );
+                "vertical-align:middle; float:%3; %4\">").arg( bgColor.name() ).arg( margin )
+                                                         .arg( align ).arg( visibility );
       html += subHtml;
-      if ( node->msgPart().typeStr() == "message" || node == mRootNode )
+      if ( node->msgPart().typeStr().lower() == "message" || node == mRootNode )
         html += "</div>";
     }
   } else {
-    TQString label, icon;
-    icon = node->msgPart().iconName( KIcon::Small );
-    label = node->msgPart().contentDescription();
-    if( label.isEmpty() )
-      label = node->msgPart().name().stripWhiteSpace();
-    if( label.isEmpty() )
-      label = node->msgPart().fileName();
-    bool typeBlacklisted = node->msgPart().typeStr() == "multipart";
-    if ( !typeBlacklisted && node->msgPart().typeStr() == "application" ) {
-      typeBlacklisted = node->msgPart().subtypeStr() == "pgp-encrypted"
-          || node->msgPart().subtypeStr() == "pgp-signature"
-          || node->msgPart().subtypeStr() == "pkcs7-mime"
-          || node->msgPart().subtypeStr() == "pkcs7-signature";
-    }
-    typeBlacklisted = typeBlacklisted || node == mRootNode;
-    if ( !label.isEmpty() && !icon.isEmpty() && !typeBlacklisted ) {
+    partNode::AttachmentDisplayInfo info = node->attachmentDisplayInfo();
+    if ( info.displayInHeader ) {
       html += "<div style=\"float:left;\">";
       html += TQString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
-      html += TQString::fromLatin1( "<a href=\"#att%1\">" ).arg( node->nodeId() );
-      html += "<img style=\"vertical-align:middle;\" src=\"" + icon + "\"/>&nbsp;";
+      TQString fileName = writeMessagePartToTempFile( &node->msgPart(), node->nodeId() );
+      TQString href = node->asHREF( "header" );
+      html += TQString::fromLatin1( "<a href=\"" ) + href +
+              TQString::fromLatin1( "\">" );
+      html += "<img style=\"vertical-align:middle;\" src=\"" + info.icon + "\"/>&nbsp;";
       if ( headerStyle() == HeaderStyle::enterprise() ) {
         TQFont bodyFont = mCSSHelper->bodyFont( isFixedFont() );
         TQFontMetrics fm( bodyFont );
-        html += KStringHandler::rPixelSqueeze( label, fm, 140 );
-      } else
-        html += label;
+        html += KStringHandler::rPixelSqueeze( info.label, fm, 140 );
+      } else if ( headerStyle() == HeaderStyle::fancy() ) {
+        TQFont bodyFont = mCSSHelper->bodyFont( isFixedFont() );
+        TQFontMetrics fm( bodyFont );
+        html += KStringHandler::rPixelSqueeze( info.label, fm, 640 );
+      } else {
+        html += info.label;
+      }
       html += "</a></span></div> ";
     }
   }
 
   html += renderAttachments( node->nextSibling(), nextColor ( bgColor ) );
   return html;
+}
+
+using namespace KMail::Interface;
+
+void KMReaderWin::setBodyPartMemento( const partNode * node, const TQCString & which, BodyPartMemento * memento )
+{
+  const TQCString index = node->path() + ':' + which.lower();
+
+  const std::map<TQCString,BodyPartMemento*>::iterator it = mBodyPartMementoMap.lower_bound( index );
+  if ( it != mBodyPartMementoMap.end() && it->first == index ) {
+
+    if ( memento && memento == it->second )
+      return;
+
+    delete it->second;
+
+    if ( memento ) {
+      it->second = memento;
+    }
+    else {
+      mBodyPartMementoMap.erase( it );
+    }
+
+  } else {
+    if ( memento ) {
+      mBodyPartMementoMap.insert( it, std::make_pair( index, memento ) );
+    }
+  }
+
+  if ( Observable * o = memento ? memento->asObservable() : 0 )
+    o->attach( this );
+}
+
+BodyPartMemento * KMReaderWin::bodyPartMemento( const partNode * node, const TQCString & which ) const
+{
+  const TQCString index = node->path() + ':' + which.lower();
+  const std::map<TQCString,BodyPartMemento*>::const_iterator it = mBodyPartMementoMap.find( index );
+  if ( it == mBodyPartMementoMap.end() ) {
+    return 0;
+  }
+  else {
+    return it->second;
+  }
+}
+
+static void detach_and_delete( BodyPartMemento * memento, KMReaderWin * obs ) {
+  if ( Observable * const o = memento ? memento->asObservable() : 0 )
+    o->detach( obs );
+  delete memento;
+}
+
+void KMReaderWin::clearBodyPartMementos()
+{
+  for ( std::map<TQCString,BodyPartMemento*>::const_iterator it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end() ; it != end ; ++it )
+    // Detach the memento from the reader. When cancelling it, it might trigger an update of the
+    // reader, which we are not interested in, and which is dangerous, since half the mementos are
+    // already deleted.
+    // https://issues.kolab.org/issue4187
+    detach_and_delete( it->second, this );
+
+  mBodyPartMementoMap.clear();
 }
 
 #include "kmreaderwin.moc"

@@ -117,7 +117,7 @@ class FreeBusyManager : public TQObject, public KCal::FreeBusyCache
     KURL freeBusyUrl( const TQString &email );
 
     /**
-      Return directory used for stroing free/busy information.
+      Return directory used for storing free/busy information.
     */
     TQString freeBusyDir();
 
@@ -173,7 +173,6 @@ class FreeBusyManager : public TQObject, public KCal::FreeBusyCache
     int mTimerID;
     bool mUploadingFreeBusy;
     bool mBrokenUrl;
-
 };
 
 #endif

@@ -43,19 +43,44 @@
 #include "kmkernel.h"
 #include <libkpimidentities/identity.h>
 #include <libkpimidentities/identitymanager.h>
+#include "partNode.h"
+#include "attachmentcollector.h"
+#include "objecttreeparser.h"
+#include "util.h"
 
 #include "templateparser.h"
+#include <mimelib/bodypart.h>
 
-TemplateParser::TemplateParser( KMMessage *amsg, const Mode amode,
-                                const TQString aselection,
-                                bool asmartQuote, bool anoQuote,
-                                bool aallowDecryption, bool aselectionIsBody ) :
-  mMode( amode ), mFolder( 0 ), mIdentity( 0 ), mSelection( aselection ),
-  mSmartQuote( asmartQuote ), mNoQuote( anoQuote ),
-  mAllowDecryption( aallowDecryption ), mSelectionIsBody( aselectionIsBody ),
-  mDebug( false ), mQuoteString( "> " ), mAppend( false )
+using namespace KMail;
+
+TemplateParser::TemplateParser( KMMessage *amsg, const Mode amode ) :
+  mMode( amode ), mFolder( 0 ), mIdentity( 0 ),
+  mAllowDecryption( false ),
+  mDebug( false ), mQuoteString( "> " ), mAppend( false ), mOrigRoot( 0 )
 {
   mMsg = amsg;
+}
+
+void TemplateParser::setSelection( const TQString &selection )
+{
+  mSelection = selection;
+}
+
+void TemplateParser::setAllowDecryption( const bool allowDecryption )
+{
+  mAllowDecryption = allowDecryption;
+}
+
+bool TemplateParser::shouldStripSignature() const
+{
+  // Only strip the signature when replying, it should be preserved when forwarding
+  return ( mMode == Reply || mMode == ReplyAll) && GlobalSettings::stripSignature();
+}
+
+TemplateParser::~TemplateParser()
+{
+  delete mOrigRoot;
+  mOrigRoot = 0;
 }
 
 int TemplateParser::parseQuotes( const TQString &prefix, const TQString &str,
@@ -279,36 +304,36 @@ void TemplateParser::processWithTemplate( const TQString &tmpl )
         int len = parseQuotes( "QUOTEPIPE=", cmd, q );
         i += len;
         TQString pipe_cmd = q;
-        if ( mOrigMsg && !mNoQuote ) {
-          TQString str = pipe( pipe_cmd, mSelection );
+        if ( mOrigMsg ) {
+          TQString str = pipe( pipe_cmd, messageText( false ) );
           TQString quote = mOrigMsg->asQuotedString( "", mQuoteString, str,
-                                                    mSmartQuote, mAllowDecryption );
+                                                    shouldStripSignature(), mAllowDecryption );
           body.append( quote );
         }
 
       } else if ( cmd.startsWith( "QUOTE" ) ) {
         kdDebug() << "Command: QUOTE" << endl;
         i += strlen( "QUOTE" );
-        if ( mOrigMsg && !mNoQuote ) {
-          TQString quote = mOrigMsg->asQuotedString( "", mQuoteString, mSelection,
-                                                    mSmartQuote, mAllowDecryption );
+        if ( mOrigMsg ) {
+          TQString quote = mOrigMsg->asQuotedString( "", mQuoteString, messageText( true ),
+                                                    shouldStripSignature(), mAllowDecryption );
           body.append( quote );
         }
 
       } else if ( cmd.startsWith( "QHEADERS" ) ) {
         kdDebug() << "Command: QHEADERS" << endl;
         i += strlen( "QHEADERS" );
-        if ( mOrigMsg && !mNoQuote ) {
+        if ( mOrigMsg ) {
           TQString quote = mOrigMsg->asQuotedString( "", mQuoteString,
                                                     mOrigMsg->headerAsSendableString(),
-                                                    mSmartQuote, false );
+                                                    false, false );
           body.append( quote );
         }
 
       } else if ( cmd.startsWith( "HEADERS" ) ) {
         kdDebug() << "Command: HEADERS" << endl;
         i += strlen( "HEADERS" );
-        if ( mOrigMsg && !mNoQuote ) {
+        if ( mOrigMsg ) {
           TQString str = mOrigMsg->headerAsSendableString();
           body.append( str );
         }
@@ -321,7 +346,7 @@ void TemplateParser::processWithTemplate( const TQString &tmpl )
         i += len;
         TQString pipe_cmd = q;
         if ( mOrigMsg ) {
-          TQString str = pipe(pipe_cmd, mSelection );
+          TQString str = pipe(pipe_cmd, messageText( false ) );
           body.append( str );
         }
 
@@ -363,7 +388,7 @@ void TemplateParser::processWithTemplate( const TQString &tmpl )
         kdDebug() << "Command: TEXT" << endl;
         i += strlen( "TEXT" );
         if ( mOrigMsg ) {
-          TQString quote = mOrigMsg->asPlainText( false, mAllowDecryption );
+          TQString quote = messageText( false );
           body.append( quote );
         }
 
@@ -379,9 +404,21 @@ void TemplateParser::processWithTemplate( const TQString &tmpl )
         kdDebug() << "Command: OTEXT" << endl;
         i += strlen( "OTEXT" );
         if ( mOrigMsg ) {
-          TQString quote = mOrigMsg->asPlainText( false, mAllowDecryption );
+          TQString quote = messageText( false );
           body.append( quote );
         }
+
+      } else if ( cmd.startsWith( "OADDRESSEESADDR" ) ) {
+        kdDebug() << "Command: OADDRESSEESADDR" << endl;
+        i += strlen( "OADDRESSEESADDR" );
+        const TQString to = mOrigMsg->to();
+        const TQString cc = mOrigMsg->cc();
+        if ( !to.isEmpty() )
+          body.append( i18n( "To:" ) + ' ' + to );
+        if ( !to.isEmpty() && !cc.isEmpty() )
+          body.append( '\n' );
+        if ( !cc.isEmpty() )
+          body.append( i18n( "CC:" ) + ' ' +  cc );
 
       } else if ( cmd.startsWith( "CCADDR" ) ) {
         kdDebug() << "Command: CCADDR" << endl;
@@ -829,20 +866,124 @@ void TemplateParser::processWithTemplate( const TQString &tmpl )
     }
   }
 
-  // kdDebug() << "Message body: " << body << endl;
+  addProcessedBodyToMessage( body );
+}
 
+TQString TemplateParser::messageText( bool allowSelectionOnly )
+{
+  if ( !mSelection.isEmpty() && allowSelectionOnly )
+    return mSelection;
+
+  // No selection text, therefore we need to parse the object tree ourselves to get
+  partNode *root = parsedObjectTree();
+  return mOrigMsg->asPlainTextFromObjectTree( root, shouldStripSignature(), mAllowDecryption );
+}
+
+partNode* TemplateParser::parsedObjectTree()
+{
+  if ( mOrigRoot )
+    return mOrigRoot;
+
+  mOrigRoot = partNode::fromMessage( mOrigMsg );
+  ObjectTreeParser otp; // all defaults are ok
+  otp.parseObjectTree( mOrigRoot );
+  return mOrigRoot;
+}
+
+void TemplateParser::addProcessedBodyToMessage( const TQString &body )
+{
   if ( mAppend ) {
+
+    // ### What happens here if the body is multipart or in some way encoded?
     TQCString msg_body = mMsg->body();
     msg_body.append( body.utf8() );
     mMsg->setBody( msg_body );
-  } else {
-    mMsg->setBodyFromUnicode( body );
+  }
+  else {
+
+    // Get the attachments of the original mail
+    partNode *root = parsedObjectTree();
+    AttachmentCollector ac;
+    ac.collectAttachmentsFrom( root );
+
+    // Now, delete the old content and set the new content, which
+    // is either only the new text or the new text with some attachments.
+    mMsg->deleteBodyParts();
+
+    // Set To and CC from the template
+    if ( mMode == Forward ) {
+      if ( !mTo.isEmpty() ) {
+        mMsg->setTo( mMsg->to() + ',' + mTo );
+      }
+      if ( !mCC.isEmpty() )
+        mMsg->setCc( mMsg->cc() + ',' + mCC );
+    }
+
+    // If we have no attachment, simply create a text/plain part and
+    // set the processed template text as the body
+    if ( ac.attachments().empty() || mMode != Forward ) {
+      mMsg->headers().ContentType().FromString( DwString() ); // to get rid of old boundary
+      mMsg->headers().ContentType().Parse();
+      mMsg->headers().ContentType().SetType( DwMime::kTypeText );
+      mMsg->headers().ContentType().SetSubtype( DwMime::kSubtypePlain );
+      mMsg->headers().Assemble();
+      mMsg->setBodyFromUnicode( body );
+      mMsg->assembleIfNeeded();
+    }
+
+    // If we have some attachments, create a multipart/mixed mail and
+    // add the normal body as well as the attachments
+    else
+    {
+      mMsg->headers().ContentType().SetType( DwMime::kTypeMultipart );
+      mMsg->headers().ContentType().SetSubtype( DwMime::kSubtypeMixed );
+      mMsg->headers().ContentType().CreateBoundary( 0 );
+
+      KMMessagePart textPart;
+      textPart.setBodyFromUnicode( body );
+      mMsg->addDwBodyPart( mMsg->createDWBodyPart( &textPart ) );
+      mMsg->assembleIfNeeded();
+
+      int attachmentNumber = 1;
+      for ( std::vector<partNode*>::const_iterator it = ac.attachments().begin();
+            it != ac.attachments().end(); ++it, attachmentNumber++ ) {
+
+        // When adding this body part, make sure to _not_ add the next bodypart
+        // as well, which mimelib would do, therefore creating a mail with many
+        // duplicate attachments (so many that KMail runs out of memory, in fact).
+        // Body::AddBodyPart is very misleading here...
+        ( *it )->dwPart()->SetNext( 0 );
+
+        DwBodyPart *cloned = static_cast<DwBodyPart*>( ( *it )->dwPart()->Clone() );
+
+        // If the content type has no name or filename parameter, add one, since otherwise the name
+        // would be empty in the attachment view of the composer, which looks confusing
+        if ( cloned->Headers().HasContentType() ) {
+          DwMediaType &ct = cloned->Headers().ContentType();
+
+          // Converting to a string here, since DwMediaType does not have a HasParameter() function
+          TQString ctStr = ct.AsString().c_str();
+          if ( !ctStr.lower().contains( "name=" ) && !ctStr.lower().contains( "filename=" ) ) {
+            DwParameter *nameParameter = new DwParameter;
+            nameParameter->SetAttribute( "name" );
+            nameParameter->SetValue( Util::dwString( KMMsgBase::encodeRFC2231StringAutoDetectCharset(
+                       i18n( "Attachment %1" ).arg( attachmentNumber ) ) ) );
+            ct.AddParameter( nameParameter );
+          }
+        }
+
+        mMsg->addDwBodyPart( cloned );
+        mMsg->assembleIfNeeded();
+      }
+    }
   }
 }
 
 TQString TemplateParser::findCustomTemplate( const TQString &tmplName )
 {
   CTemplates t( tmplName );
+  mTo = t.to();
+  mCC = t.cC();
   TQString content = t.content();
   if ( !content.isEmpty() ) {
     return content;

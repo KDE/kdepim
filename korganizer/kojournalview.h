@@ -25,8 +25,8 @@
 #define KOJOURNALVIEW_H
 
 #include <korganizer/baseview.h>
-#include "journalentry.h"
 
+class JournalDateEntry;
 class JournalEntry;
 class TQScrollView;
 class TQVBox;
@@ -48,7 +48,7 @@ class KOJournalView : public KOrg::BaseView
 
     virtual int currentDateCount();
     virtual Incidence::List selectedIncidences();
-    DateList selectedDates() { return DateList(); }
+    DateList selectedIncidenceDates() { return DateList(); }
     void appendJournal( Journal*journal, const TQDate &dt);
 
     CalPrinterBase::PrintType printType();
@@ -60,7 +60,7 @@ class KOJournalView : public KOrg::BaseView
     void flushView();
 
     void showDates( const TQDate &start, const TQDate &end );
-    void showIncidences( const Incidence::List &incidenceList );
+    void showIncidences( const Incidence::List &incidenceList, const TQDate &date );
 
     void changeIncidenceDisplay( Incidence *, int );
     void setIncidenceChanger( IncidenceChangerBase *changer );

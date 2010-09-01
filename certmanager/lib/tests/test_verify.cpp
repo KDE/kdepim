@@ -29,6 +29,7 @@
 */
 
 #include <config.h>
+#include <cstdlib>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/verifydetachedjob.h>

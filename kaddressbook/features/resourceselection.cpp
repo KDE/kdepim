@@ -251,7 +251,6 @@ void ResourceSelection::add()
     return;
   }
 
-  resource->setResourceName( i18n( "%1 address book" ).arg( type ) );
   resource->setAddressBook(core()->addressBook());
 
   KRES::ConfigDialog dlg( this, TQString( "contact" ), resource );
@@ -262,6 +261,7 @@ void ResourceSelection::add()
 
     mLastResource = resource->identifier();
     updateView();
+    currentChanged(mListView->currentItem() );
   } else {
     delete resource;
     resource = 0;
@@ -309,6 +309,7 @@ void ResourceSelection::remove()
   core()->addressBook()->emitAddressBookChanged();
 
   updateView();
+  currentChanged(mListView->currentItem() );
 }
 
 void ResourceSelection::currentChanged( TQListViewItem *item )

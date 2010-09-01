@@ -67,6 +67,7 @@ using KMail::AccountManager;
 
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <kinputdialog.h>
 #include <dcopclient.h>
 #include <kmessagebox.h>
 #include <kconfig.h>
@@ -74,6 +75,8 @@ using KMail::AccountManager;
 #include <ktempfile.h>
 
 using namespace KMail;
+
+TQMap<TQString, TQString> *KMailICalIfaceImpl::mSubResourceUINamesMap = new TQMap<TQString, TQString>;
 
 // Local helper methods
 static void vPartMicroParser( const TQString& str, TQString& s );
@@ -548,10 +551,12 @@ TQMap<Q_UINT32, TQString> KMailICalIfaceImpl::incidencesKolab( const TQString& m
 
   f->open( "incidences" );
 
+  kdDebug(5006) << k_funcinfo << "Getting incidences (" << mimetype << ") for folder " << f->label()
+                << ", starting with index " << startIndex << ", " << nbMessages << " messages." << endl;
+  kdDebug(5006) << "The folder has " << f->count() << " messages." << endl;
+
   int stopIndex = nbMessages == -1 ? f->count() :
                   QMIN( f->count(), startIndex + nbMessages );
-  kdDebug(5006) << "KMailICalIfaceImpl::incidencesKolab( " << mimetype << ", "
-                << resource << " ) from " << startIndex << " to " << stopIndex << endl;
 
   for(int i = startIndex; i < stopIndex; ++i) {
 #if 0
@@ -590,6 +595,8 @@ TQMap<Q_UINT32, TQString> KMailICalIfaceImpl::incidencesKolab( const TQString& m
 #else
       delete msg;
 #endif
+    } else {
+      kdDebug(5006) << k_funcinfo << " Unable to retrieve message " << i << " for incidence!" << endl;
     }
   }
   f->close( "incidences" );
@@ -652,10 +659,20 @@ static int dimapAccountCount()
   return count;
 }
 
+int KMailICalIfaceImpl::dimapAccounts()
+{
+  return dimapAccountCount();
+}
+
 static TQString subresourceLabelForPresentation( const KMFolder * folder )
 {
+    if( KMailICalIfaceImpl::getResourceMap()->contains( folder->location() ) ) {
+        return folder->label();
+    }
+
     TQString label = folder->prettyURL();
     TQStringList parts = TQStringList::split( TQString::fromLatin1("/"), label );
+
     // In the common special case of some other user's folder shared with us
     // the url looks like "Server Name/user/$USERNAME/Folder/Name". Make
     // those a bit nicer.
@@ -678,9 +695,15 @@ static TQString subresourceLabelForPresentation( const KMFolder * folder )
         remainder.pop_front();
         remainder.pop_front();
         if ( dimapAccountCount() > 1 ) {
+          // Fix kolab issue 2531 folder->storage() )->account() can be null
+          if( folder->storage() && static_cast<const KMFolderCachedImap*>( folder->storage() )->account() ) {
           label = i18n( "My %1 (%2)")
               .arg( remainder.join( TQString::fromLatin1("/") ),
                     static_cast<const KMFolderCachedImap*>( folder->storage() )->account()->name() );
+          } else {
+            label = i18n("My %1")
+              .arg( remainder.join( TQString::fromLatin1("/") ) );
+          }
         } else {
           label = i18n("My %1")
               .arg( remainder.join( TQString::fromLatin1("/") ) );
@@ -700,9 +723,9 @@ TQValueList<KMailICalIfaceImpl::SubResource> KMailICalIfaceImpl::subresourcesKol
   KMFolder* f = folderFromType( contentsType, TQString::null );
   if ( f ) {
     subResources.append( SubResource( f->location(), subresourceLabelForPresentation( f ),
-                                      !f->isReadOnly(), folderIsAlarmRelevant( f ) ) );
+                                      f->isWritable(), folderIsAlarmRelevant( f ) ) );
     kdDebug(5006) << "Adding(1) folder " << f->location() << "    " <<
-      ( f->isReadOnly() ? "readonly" : "" ) << endl;
+      ( !f->isWritable() ? "readonly" : "" ) << endl;
   }
 
   // get the extra ones
@@ -712,9 +735,9 @@ TQValueList<KMailICalIfaceImpl::SubResource> KMailICalIfaceImpl::subresourcesKol
     f = it.current()->folder;
     if ( f && f->storage()->contentsType() == t ) {
       subResources.append( SubResource( f->location(), subresourceLabelForPresentation( f ),
-                                        !f->isReadOnly(), folderIsAlarmRelevant( f ) ) );
+                                        f->isWritable(), folderIsAlarmRelevant( f ) ) );
       kdDebug(5006) << "Adding(2) folder " << f->location() << "     " <<
-              ( f->isReadOnly() ? "readonly" : "" ) << endl;
+              ( !f->isWritable() ? "readonly" : "" ) << endl;
     }
   }
 
@@ -743,7 +766,9 @@ bool KMailICalIfaceImpl::triggerSync( const TQString& contentsType )
       imap->getAndCheckFolder();
     } else if ( f->folderType() == KMFolderTypeCachedImap ) {
       KMFolderCachedImap* cached = static_cast<KMFolderCachedImap*>( f->storage() );
-      cached->account()->processNewMailSingleFolder( f );
+      if ( cached->account() ) {
+        cached->account()->processNewMailInFolder( f );
+      }
     }
   }
   return true;
@@ -758,7 +783,7 @@ bool KMailICalIfaceImpl::isWritableFolder( const TQString& type,
     // Definitely not writable
     return false;
 
-  return !f->isReadOnly();
+  return f->isWritable();
 }
 
 /* Used by the resource to query the storage format of the folder. */
@@ -1432,7 +1457,7 @@ void KMailICalIfaceImpl::folderContentsTypeChanged( KMFolder* folder,
   }
   // Tell about the new resource
   subresourceAdded( folderContentsType( contentsType ), location, subresourceLabelForPresentation(folder),
-                    !folder->isReadOnly(), folderIsAlarmRelevant( folder ) );
+                    folder->isWritable(), folderIsAlarmRelevant( folder ) );
 }
 
 KMFolder* KMailICalIfaceImpl::extraFolder( const TQString& type,
@@ -1577,8 +1602,7 @@ void KMailICalIfaceImpl::slotFolderPropertiesChanged( KMFolder* folder )
     subresourceDeleted( contentsTypeStr, location );
 
     subresourceAdded( contentsTypeStr, location, subresourceLabelForPresentation( folder ),
-                      !folder->isReadOnly(), folderIsAlarmRelevant( folder ) );
-
+                      folder->isWritable(), folderIsAlarmRelevant( folder ) );
   }
 }
 
@@ -1627,6 +1651,33 @@ KMFolder* KMailICalIfaceImpl::findResourceFolder( const TQString& resource )
 
   // No luck at all
   return 0;
+}
+
+void KMailICalIfaceImpl::changeResourceUIName( const TQString &folderPath, const TQString &newName )
+{
+  kdDebug() << "Folder path " << folderPath << endl;
+  KMFolder *f = findResourceFolder( folderPath );
+  if ( f ) {
+    KMailICalIfaceImpl::getResourceMap()->insert( folderPath, newName );
+    kmkernel->folderMgr()->renameFolder( f, newName );
+    KConfigGroup configGroup( kmkernel->config(), "Resource UINames" );
+    configGroup.writeEntry( folderPath, newName );
+  }
+}
+
+// Builds a folder list from the dimap and the local folder list.
+static void createFolderList( TQStringList &folderNames, TQValueList<TQGuardedPtr<KMFolder> > &folderList )
+{
+  TQStringList dimapFolderNames;
+  TQStringList localFolderNames;
+  TQValueList<TQGuardedPtr<KMFolder> > dimapFolderList;
+  TQValueList<TQGuardedPtr<KMFolder> > localFolderList;
+  kmkernel->dimapFolderMgr()->createFolderList( &dimapFolderNames, &dimapFolderList );
+  kmkernel->folderMgr()->createFolderList( &localFolderNames, &localFolderList );
+  folderNames += dimapFolderNames;
+  folderNames += localFolderNames;
+  folderList += dimapFolderList;
+  folderList += localFolderList;
 }
 
 /****************************
@@ -1790,22 +1841,22 @@ void KMailICalIfaceImpl::readConfig()
     if ( mNotes->folderType() == KMFolderTypeCachedImap )
       static_cast<KMFolderCachedImap *>( mNotes->storage() )->updateAnnotationFolderType();
 
-    // BEGIN TILL TODO The below only uses the dimap folder manager, which
-    // will fail for all other folder types. Adjust.
-
-    kdDebug(5006) << k_funcinfo << "mCalendar=" << mCalendar << " " << mCalendar->location() << endl;
-    kdDebug(5006) << k_funcinfo << "mContacts=" << mContacts << " " << mContacts->location() << endl;
-    kdDebug(5006) << k_funcinfo << "mNotes=" << mNotes << " " << mNotes->location() << endl;
+    //kdDebug(5006) << k_funcinfo << "mCalendar=" << mCalendar << " " << mCalendar->location() << endl;
+    //kdDebug(5006) << k_funcinfo << "mContacts=" << mContacts << " " << mContacts->location() << endl;
+    //kdDebug(5006) << k_funcinfo << "mNotes=" << mNotes << " " << mNotes->location() << endl;
 
     // Find all extra folders
     TQStringList folderNames;
     TQValueList<TQGuardedPtr<KMFolder> > folderList;
-    kmkernel->dimapFolderMgr()->createFolderList(&folderNames, &folderList);
-    for(TQValueList<TQGuardedPtr<KMFolder> >::iterator it = folderList.begin();
-        it != folderList.end(); ++it)
+    createFolderList( folderNames, folderList );
+    for( TQValueList<TQGuardedPtr<KMFolder> >::iterator it = folderList.begin();
+         it != folderList.end(); ++it )
     {
-      FolderStorage* storage = (*it)->storage();
-      if ( storage->contentsType() != 0 ) {
+      FolderStorage *storage = (*it)->storage();
+      KMFolderCachedImap* dimapStorage = dynamic_cast<KMFolderCachedImap*>( storage );
+      if ( storage && storage->contentsType() != 0 ) {
+        if ( dimapStorage )
+          dimapStorage->updateAnnotationFolderType();
         folderContentsTypeChanged( *it, storage->contentsType() );
       }
     }
@@ -1817,8 +1868,6 @@ void KMailICalIfaceImpl::readConfig()
     mExtraFolders.remove( mJournals->location() );
     mExtraFolders.remove( mContacts->location() );
     mExtraFolders.remove( mNotes->location() );
-
-    // END TILL TODO
 
     subresourceAdded( folderContentsType( KMail::ContentsTypeCalendar ), mCalendar->location(), mCalendar->label(), true, true );
     subresourceAdded( folderContentsType( KMail::ContentsTypeTask ), mTasks->location(), mTasks->label(), true, true );
@@ -1901,6 +1950,10 @@ void KMailICalIfaceImpl::readConfig()
     subresourceAdded( folderContentsType( KMail::ContentsTypeNote ), mNotes->location(), mNotes->label(), true, false );
   }
 
+  KConfig *config = kmkernel->config();
+  config->setGroup("Resource UINames");
+  *KMailICalIfaceImpl::mSubResourceUINamesMap =  config->entryMap( "Resource UINames" );
+
   reloadFolderTree();
 }
 
@@ -1930,6 +1983,19 @@ KMFolder* KMailICalIfaceImpl::initFolder( KMail::FolderContentsType contentsType
 
   // Find the folder
   StandardFolderSearchResult result = findStandardResourceFolder( mFolderParentDir, contentsType );
+
+  // deal with multiple default groupware folders
+  if ( result.folders.count() > 1 && result.found == StandardFolderSearchResult::FoundAndStandard ) {
+    TQStringList labels;
+    for ( TQValueList<KMFolder*>::ConstIterator it = result.folders.begin(); it != result.folders.end(); ++it )
+      labels << (*it)->prettyURL();
+    const TQString selected = KInputDialog::getItem( i18n("Default folder"),
+        i18n("There are multiple %1 default folders, please choose one:")
+        .arg( localizedDefaultFolderName( contentsType ) ), labels );
+    if ( !selected.isEmpty() )
+      result.folder = result.folders[ labels.findIndex( selected ) ];
+  }
+
   KMFolder* folder = result.folder;
 
   if ( !folder ) {
@@ -2125,21 +2191,22 @@ static void vPartMicroParser( const TQString& str, TQString& s )
 }
 
 // Returns the first child folder having the given annotation
-static KMFolder* findFolderByAnnotation( KMFolderDir* folderParentDir, const TQString& annotation )
+static TQValueList<KMFolder*> findFolderByAnnotation( KMFolderDir* folderParentDir, const TQString& annotation )
 {
-    TQPtrListIterator<KMFolderNode> it( *folderParentDir );
-    for ( ; it.current(); ++it ) {
-      if ( !it.current()->isDir() ) {
-        KMFolder* folder = static_cast<KMFolder *>( it.current() );
-        if ( folder->folderType() == KMFolderTypeCachedImap ) {
-          TQString folderAnnotation = static_cast<KMFolderCachedImap*>( folder->storage() )->annotationFolderType();
-          //kdDebug(5006) << "findStandardResourceFolder: " << folder->name() << " has annotation " << folderAnnotation << endl;
-          if ( folderAnnotation == annotation )
-            return folder;
-        }
+  TQValueList<KMFolder*> rv;
+  TQPtrListIterator<KMFolderNode> it( *folderParentDir );
+  for ( ; it.current(); ++it ) {
+    if ( !it.current()->isDir() ) {
+      KMFolder* folder = static_cast<KMFolder *>( it.current() );
+      if ( folder->folderType() == KMFolderTypeCachedImap ) {
+        TQString folderAnnotation = static_cast<KMFolderCachedImap*>( folder->storage() )->annotationFolderType();
+        //kdDebug(5006) << "findStandardResourceFolder: " << folder->name() << " has annotation " << folderAnnotation << endl;
+        if ( folderAnnotation == annotation )
+          rv.append( folder );
       }
     }
-    return 0;
+  }
+  return rv;
 }
 
 KMailICalIfaceImpl::StandardFolderSearchResult KMailICalIfaceImpl::findStandardResourceFolder( KMFolderDir* folderParentDir, KMail::FolderContentsType contentsType )
@@ -2147,14 +2214,14 @@ KMailICalIfaceImpl::StandardFolderSearchResult KMailICalIfaceImpl::findStandardR
   if ( GlobalSettings::self()->theIMAPResourceStorageFormat() == GlobalSettings::EnumTheIMAPResourceStorageFormat::XML )
   {
     // Look for a folder with an annotation like "event.default"
-    KMFolder* folder = findFolderByAnnotation( folderParentDir, TQString( s_folderContentsType[contentsType].annotation ) + ".default" );
-    if ( folder )
-      return StandardFolderSearchResult( folder, StandardFolderSearchResult::FoundAndStandard );
+    TQValueList<KMFolder*> folders = findFolderByAnnotation( folderParentDir, TQString( s_folderContentsType[contentsType].annotation ) + ".default" );
+    if ( !folders.isEmpty() )
+      return StandardFolderSearchResult( folders, StandardFolderSearchResult::FoundAndStandard );
 
     // Fallback: look for a folder with an annotation like "event"
-    folder = findFolderByAnnotation( folderParentDir, TQString( s_folderContentsType[contentsType].annotation ) );
-    if ( folder )
-      return StandardFolderSearchResult( folder, StandardFolderSearchResult::FoundByType );
+    folders = findFolderByAnnotation( folderParentDir, TQString( s_folderContentsType[contentsType].annotation ) );
+    if ( !folders.isEmpty() )
+      return StandardFolderSearchResult( folders, StandardFolderSearchResult::FoundByType );
 
     // Fallback: look for the folder by name (we'll need to change its type)
     KMFolderNode* node = folderParentDir->hasNamedFolder( localizedDefaultFolderName( contentsType ) );
@@ -2188,12 +2255,14 @@ bool KMailICalIfaceImpl::folderIsAlarmRelevant( const KMFolder *folder )
   if ( folder->folderType() == KMFolderTypeImap ) {
     const KMFolderImap *imapFolder = static_cast<const KMFolderImap*>( folder->storage() );
     administerRights =
-      imapFolder->userRights() <= 0 || imapFolder->userRights() & KMail::ACLJobs::Administer;
+      imapFolder->userRightsState() != KMail::ACLJobs::Ok ||
+      imapFolder->userRights() & KMail::ACLJobs::Administer;
   }
   if ( folder->folderType() == KMFolderTypeCachedImap ) {
     const KMFolderCachedImap *dimapFolder = static_cast<const KMFolderCachedImap*>( folder->storage() );
     administerRights =
-      dimapFolder->userRights() <= 0 || dimapFolder->userRights() & KMail::ACLJobs::Administer;
+      dimapFolder->userRightsState() != KMail::ACLJobs::Ok ||
+      dimapFolder->userRights() & KMail::ACLJobs::Administer;
     relevantForOwner = !dimapFolder->alarmsBlocked() && ( dimapFolder->incidencesFor () == KMFolderCachedImap::IncForAdmins );
     relevantForEveryone = !dimapFolder->alarmsBlocked() && ( dimapFolder->incidencesFor() == KMFolderCachedImap::IncForReaders );
   }
@@ -2226,6 +2295,12 @@ bool KMailICalIfaceImpl::addSubresource( const TQString& resource,
   KMFolder *folder = findResourceFolder( parent );
   KMFolderDir *parentFolderDir = !parent.isEmpty() && folder ? folder->createChildFolder(): mFolderParentDir;
   if ( !parentFolderDir || parentFolderDir->hasNamedFolder( resource ) ) return false;
+
+  TQString msg;
+  if ( parentFolderDir->owner() && !parentFolderDir->owner()->isValidName( resource, msg ) ) {
+    KMessageBox::error( 0, msg );
+    return false;
+  }
 
   KMFolderType type = mFolderType;
   if( type == KMFolderTypeUnknown ) type = KMFolderTypeMaildir;
@@ -2291,7 +2366,7 @@ void KMailICalIfaceImpl::syncFolder(KMFolder * folder) const
     else
       return;
   }
-  dimapFolder->account()->processNewMailSingleFolder( folder );
+  dimapFolder->account()->processNewMailInFolder( folder );
 }
 
 #include "kmailicalifaceimpl.moc"

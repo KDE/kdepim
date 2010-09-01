@@ -120,12 +120,12 @@ SearchDialog::SearchDialog(Calendar *calendar,TQWidget *parent)
   connect( this,TQT_SIGNAL(user1Clicked()),TQT_SLOT(doSearch()));
 
   // Propagate edit and delete event signals from event list view
-  connect( listView, TQT_SIGNAL( showIncidenceSignal( Incidence * ) ),
-          TQT_SIGNAL( showIncidenceSignal( Incidence *) ) );
-  connect( listView, TQT_SIGNAL( editIncidenceSignal( Incidence * ) ),
-          TQT_SIGNAL( editIncidenceSignal( Incidence * ) ) );
-  connect( listView, TQT_SIGNAL( deleteIncidenceSignal( Incidence * ) ),
-          TQT_SIGNAL( deleteIncidenceSignal( Incidence * ) ) );
+  connect( listView, TQT_SIGNAL(showIncidenceSignal(Incidence *,const TQDate &)),
+          TQT_SIGNAL(showIncidenceSignal(Incidence *,const TQDate &)) );
+  connect( listView, TQT_SIGNAL(editIncidenceSignal(Incidence *,const TQDate &)),
+           TQT_SIGNAL(editIncidenceSignal(Incidence *,const TQDate &)) );
+  connect( listView, TQT_SIGNAL(deleteIncidenceSignal(Incidence *)),
+           TQT_SIGNAL(deleteIncidenceSignal(Incidence *)) );
 }
 
 SearchDialog::~SearchDialog()
@@ -155,7 +155,7 @@ void SearchDialog::doSearch()
 
   search( re );
 
-  listView->showIncidences( mMatchedEvents );
+  listView->showIncidences( mMatchedEvents, TQDate() );
 
   if ( mMatchedEvents.count() == 0 ) {
     KMessageBox::information( this,
@@ -176,7 +176,7 @@ void SearchDialog::updateView()
     mMatchedEvents.clear();
   }
 
-  listView->showIncidences( mMatchedEvents );
+  listView->showIncidences( mMatchedEvents, TQDate() );
 }
 
 void SearchDialog::search( const TQRegExp &re )

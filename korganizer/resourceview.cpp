@@ -24,7 +24,10 @@
 */
 
 #include "resourceview.h"
+#include "koviewmanager.h"
+#include "multiagendaview.h"
 
+#include <dcopref.h>
 #include <kcolordialog.h>
 #include <kdialog.h>
 #include <klistview.h>
@@ -37,6 +40,7 @@
 #include <kresources/resource.h>
 #include <kresources/configdialog.h>
 #include <libkcal/calendarresources.h>
+#include <kconfig.h>
 
 #include <tqhbox.h>
 #include <tqheader.h>
@@ -45,6 +49,7 @@
 #include <tqpainter.h>
 #include <tqpushbutton.h>
 #include <tqpopupmenu.h>
+#include <tqregexp.h>
 #include <tqtooltip.h>
 #include <tqwhatsthis.h>
 
@@ -52,20 +57,53 @@
 
 using namespace KCal;
 
-ResourceViewFactory::ResourceViewFactory( KCal::CalendarResources *calendar,
-                                          CalendarView *view )
-  : mCalendar( calendar ), mView( view ), mResourceView( 0 )
+static TQString labelFromSubResName( ResourceCalendar *resource, const TQString &subRes )
+{
+
+  DCOPRef ref( "kmail", "KMailICalIface" );
+  DCOPReply reply = ref.call( "dimapAccounts" );
+  if ( !reply.isValid() ) {
+    kdDebug() << "DCOP Call dimapAccounts() failed " << endl;
+    return TQString();
+  }
+
+  TQString label;
+  if ( (int)reply > 1 ) {
+    if( resource && !resource->resourceName().isEmpty() ) {
+      label = i18n( "My %1 (%2)" ).arg( subRes, resource->resourceName() );
+    } else {
+      label = i18n( "My %1" ).arg( subRes );
+    }
+  } else {
+    label = i18n( "My %1" ).arg( subRes );
+  }
+  return label;
+}
+
+static TQString labelFromIdentifier( ResourceCalendar *resource, const TQString &identifier )
+{
+  TQString subResLabel;
+  if ( identifier.contains( "/.INBOX.directory/" ) ) { // my subresource
+    TQString subResName = identifier;
+    subResName.remove( TQRegExp( "^.*/\\.INBOX\\.directory/" ) );
+    subResLabel = labelFromSubResName( resource, subResName );
+  }
+  return subResLabel;
+}
+
+ResourceViewFactory::ResourceViewFactory( CalendarResources *calendar, CalendarView *view )
+  : mCalendar( calendar ), mCalendarView( view ), mResourceView( 0 )
 {
 }
 
 CalendarViewExtension *ResourceViewFactory::create( TQWidget *parent )
 {
-  mResourceView = new ResourceView( mCalendar, parent );
+  mResourceView = new ResourceView( mCalendar, mCalendarView, parent );
 
   TQObject::connect( mResourceView, TQT_SIGNAL( resourcesChanged() ),
-                    mView, TQT_SLOT( resourcesChanged() ) );
+                    mCalendarView, TQT_SLOT( resourcesChanged() ) );
   TQObject::connect( mResourceView, TQT_SIGNAL( resourcesChanged() ),
-                    mView, TQT_SLOT( updateCategories() ) );
+                    mCalendarView, TQT_SLOT( updateCategories() ) );
 
   TQObject::connect( mCalendar,
                     TQT_SIGNAL( signalResourceAdded( ResourceCalendar * ) ),
@@ -76,9 +114,9 @@ CalendarViewExtension *ResourceViewFactory::create( TQWidget *parent )
                     mResourceView,
                     TQT_SLOT( updateResourceItem( ResourceCalendar * ) ) );
   TQObject::connect( mCalendar, TQT_SIGNAL( signalResourceAdded( ResourceCalendar * ) ),
-                    mView, TQT_SLOT( updateCategories() ) );
+                    mCalendarView, TQT_SLOT( updateCategories() ) );
   TQObject::connect( mCalendar, TQT_SIGNAL( signalResourceModified( ResourceCalendar * ) ),
-                    mView, TQT_SLOT( updateCategories() ) );
+                    mCalendarView, TQT_SLOT( updateCategories() ) );
 
   return mResourceView;
 }
@@ -91,7 +129,7 @@ ResourceView *ResourceViewFactory::resourceView() const
 ResourceItem::ResourceItem( ResourceCalendar *resource, ResourceView *view,
                             KListView *parent )
   : TQCheckListItem( parent, resource->resourceName(), CheckBox ),
-    mResource( resource ), mView( view ), mBlockStateChange( false ),
+    mResource( resource ), mResourceView( view ), mBlockStateChange( false ),
     mIsSubresource( false ), mResourceIdentifier( TQString::null ),
     mSubItemsCreated( false ), mIsStandardResource( false )
 {
@@ -112,8 +150,11 @@ void ResourceItem::createSubresourceItems()
     // This resource has subresources
     TQStringList::ConstIterator it;
     for ( it=subresources.begin(); it!=subresources.end(); ++it ) {
-      ResourceItem *item = new ResourceItem( mResource, *it, mResource->labelForSubresource( *it ),
-                                             mView, this );
+      TQString text = labelFromIdentifier( mResource, *it );
+      if ( text.isEmpty() ) {
+        text = mResource->labelForSubresource( *it );
+      }
+      ResourceItem *item = new ResourceItem( mResource, *it, text, mResourceView, this );
       TQColor resourceColor = *KOPrefs::instance()->resourceColor( *it );
       item->setResourceColor( resourceColor );
       item->update();
@@ -122,16 +163,14 @@ void ResourceItem::createSubresourceItems()
   mSubItemsCreated = true;
 }
 
-ResourceItem::ResourceItem( KCal::ResourceCalendar *resource,
-                            const TQString& sub, const TQString& label,
-                            ResourceView *view, ResourceItem* parent )
-
+ResourceItem::ResourceItem( ResourceCalendar *resource, const TQString &identifier,
+                            const TQString &label, ResourceView *view, ResourceItem *parent )
   : TQCheckListItem( parent, label, CheckBox ), mResource( resource ),
-    mView( view ), mBlockStateChange( false ), mIsSubresource( true ),
+    mResourceView( view ), mBlockStateChange( false ), mIsSubresource( true ),
     mSubItemsCreated( false ), mIsStandardResource( false )
 {
   mResourceColor = TQColor();
-  mResourceIdentifier = sub;
+  mResourceIdentifier = identifier;
   setGuiState();
 }
 
@@ -159,10 +198,12 @@ void ResourceItem::stateChange( bool active )
           createSubresourceItems();
       }
     } else {
-      // mView->requestClose must be called before mResource->save() because
+      // mResourceView->requestClose must be called before mResource->save() because
       // save causes closeResource do be called.
-      mView->requestClose( mResource );
-      if ( mResource->save() ) mResource->setActive( false );
+      mResourceView->requestClose( mResource );
+      if ( mResource->save() ) {
+        mResource->setActive( false );
+      }
     }
 
     setOpen( mResource->isActive() && childCount() > 0 );
@@ -170,7 +211,7 @@ void ResourceItem::stateChange( bool active )
     setGuiState();
   }
 
-  mView->emitResourcesChanged();
+  mResourceView->emitResourcesChanged();
 }
 
 void ResourceItem::update()
@@ -216,9 +257,9 @@ void ResourceItem::paintCell(TQPainter *p, const TQColorGroup &cg,
 }
 
 
-ResourceView::ResourceView( KCal::CalendarResources *calendar,
-                            TQWidget *parent, const char *name )
-  : CalendarViewExtension( parent, name ), mCalendar( calendar )
+ResourceView::ResourceView( CalendarResources *calendar,
+                            CalendarView *view, TQWidget *parent, const char *name )
+  : CalendarViewExtension( parent, name ), mCalendar( calendar ), mCalendarView( view )
 {
   TQBoxLayout *topLayout = new TQVBoxLayout( this, 0, KDialog::spacingHint() );
 
@@ -305,9 +346,9 @@ void ResourceView::updateView()
 {
   mListView->clear();
 
-  KCal::CalendarResourceManager *manager = mCalendar->resourceManager();
+  CalendarResourceManager *manager = mCalendar->resourceManager();
 
-  KCal::CalendarResourceManager::Iterator it;
+  CalendarResourceManager::Iterator it;
   for( it = manager->begin(); it != manager->end(); ++it ) {
     addResourceItem( *it );
   }
@@ -322,44 +363,47 @@ void ResourceView::emitResourcesChanged()
 void ResourceView::addResource()
 {
   bool ok = false;
-  KCal::CalendarResourceManager *manager = mCalendar->resourceManager();
-  ResourceItem *i = static_cast<ResourceItem*>( mListView->selectedItem() );
-  if ( i && ( i->isSubresource() || i->resource()->canHaveSubresources() ) ) {
-    const TQString folderName = KInputDialog::getText( i18n( "Add Subresource" ),
-            i18n( "Please enter a name for the new subresource" ), TQString::null,
-            &ok, this );
+  CalendarResourceManager *manager = mCalendar->resourceManager();
+  ResourceItem *item = static_cast<ResourceItem*>( mListView->selectedItem() );
+  if ( item && ( item->isSubresource() || item->resource()->canHaveSubresources() ) ) {
+    const TQString folderName =
+      KInputDialog::getText( i18n( "Add Subresource" ),
+                             i18n( "Please enter a name for the new subresource" ), TQString::null,
+                             &ok, this );
     if ( !ok )
       return;
-    const TQString parentId = i->isSubresource() ? i->resourceIdentifier() : TQString:: null;
-    if ( !i->resource()->addSubresource( folderName, parentId ) ) {
-      KMessageBox::error( this, i18n("<qt>Unable to create subresource <b>%1</b>.</qt>")
-                                .arg( folderName ) );
+    const TQString parentId = item->isSubresource() ? item->resourceIdentifier() : TQString:: null;
+    if ( !item->resource()->addSubresource( folderName, parentId ) ) {
+      KMessageBox::error(
+        this,
+        i18n( "<qt>Unable to create subresource <b>%1</b>.</qt>" ).arg( folderName ) );
     }
     return;
   }
 
   TQStringList types = manager->resourceTypeNames();
   TQStringList descs = manager->resourceTypeDescriptions();
-  TQString desc = KInputDialog::getItem( i18n( "Resource Configuration" ),
-      i18n( "Please select type of the new resource:" ), descs, 0, false, &ok,
-            this );
-  if ( !ok )
+  TQString desc =
+    KInputDialog::getItem( i18n( "Resource Configuration" ),
+                           i18n( "Please select type of the new resource:" ),
+                           descs, 0, false, &ok, this );
+  if ( !ok ) {
     return;
+  }
 
   TQString type = types[ descs.findIndex( desc ) ];
 
   // Create new resource
   ResourceCalendar *resource = manager->createResource( type );
   if( !resource ) {
-    KMessageBox::error( this, i18n("<qt>Unable to create resource of type <b>%1</b>.</qt>")
-                              .arg( type ) );
+    KMessageBox::error(
+      this,
+      i18n( "<qt>Unable to create resource of type <b>%1</b>.</qt>" ).arg( type ) );
     return;
   }
 
-  resource->setResourceName( i18n("%1 resource").arg( type ) );
-
-  KRES::ConfigDialog *dlg = new KRES::ConfigDialog( this, TQString("calendar"), resource,
-                          "KRES::ConfigDialog" );
+  KRES::ConfigDialog *dlg =
+    new KRES::ConfigDialog( this, TQString( "calendar" ), resource, "KRES::ConfigDialog" );
 
   bool success = true;
   if ( !dlg || !dlg->exec() )
@@ -370,8 +414,7 @@ void ResourceView::addResource()
     if ( resource->isActive() && ( !resource->open() || !resource->load() ) ) {
       // ### There is a resourceLoadError() signal declared in ResourceCalendar
       //     but no subclass seems to make use of it. We could do better.
-      KMessageBox::error( this, i18n("Unable to create the resource.")
-                                .arg( type ) );
+      KMessageBox::error( this, i18n("Unable to create the resource.").arg( type ) );
       success = false;
     }
   }
@@ -396,7 +439,7 @@ void ResourceView::addResource()
 void ResourceView::addResourceItem( ResourceCalendar *resource )
 {
 
-  ResourceItem *item=new ResourceItem( resource, this, mListView );
+  ResourceItem *item = new ResourceItem( resource, this, mListView );
 
   // assign a color, but only if this is a resource that actually
   // hold items at top level
@@ -427,38 +470,47 @@ void ResourceView::addResourceItem( ResourceCalendar *resource )
 }
 
 // Add a new entry
-void ResourceView::slotSubresourceAdded( ResourceCalendar *calendar,
-                                         const TQString& /*type*/,
-                                         const TQString& resource,
-                                         const TQString& label)
+void ResourceView::slotSubresourceAdded( ResourceCalendar *resource,
+                                         const TQString &type,
+                                         const TQString &identifier,
+                                         const TQString &label )
 {
-  TQListViewItem *i = mListView->findItem( calendar->resourceName(), 0 );
-  if ( !i )
+  Q_UNUSED( type );
+
+  TQListViewItem *lvitem = mListView->findItem( resource->resourceName(), 0 );
+  if ( !lvitem )
     // Not found
     return;
 
-  if ( findItemByIdentifier( resource ) ) return;
+  if ( findItemByIdentifier( identifier ) ) return;
 
-  ResourceItem *item = static_cast<ResourceItem *>( i );
-  ResourceItem *newItem = new ResourceItem( calendar, resource, label, this, item );
-  TQColor resourceColor = *KOPrefs::instance()->resourceColor( resource );
+  TQString text = labelFromIdentifier( resource, identifier );
+  if ( text.isEmpty() ) {
+    text = label;
+  }
+  ResourceItem *item = static_cast<ResourceItem *>( lvitem );
+  ResourceItem *newItem = new ResourceItem( resource, identifier, text, this, item );
+  TQColor resourceColor = *KOPrefs::instance()->resourceColor( identifier );
   newItem->setResourceColor( resourceColor );
 }
 
 // Remove an entry
-void ResourceView::slotSubresourceRemoved( ResourceCalendar * /*calendar*/,
-                                           const TQString &/*type*/,
-                                           const TQString &resource )
+void ResourceView::slotSubresourceRemoved( ResourceCalendar *resource,
+                                           const TQString &type,
+                                           const TQString &identifier )
 {
-  delete findItemByIdentifier( resource );
+  Q_UNUSED( resource );
+  Q_UNUSED( type );
+
+  delete findItemByIdentifier( identifier );
   emit resourcesChanged();
 }
 
-void ResourceView::closeResource( ResourceCalendar *r )
+void ResourceView::closeResource( ResourceCalendar *resource )
 {
-  if ( mResourcesToClose.find( r ) >= 0 ) {
-    r->close();
-    mResourcesToClose.remove( r );
+  if ( mResourcesToClose.find( resource ) >= 0 ) {
+    resource->close();
+    mResourcesToClose.remove( resource );
   }
 }
 
@@ -482,31 +534,46 @@ void ResourceView::removeResource()
   ResourceItem *item = currentItem();
   if ( !item ) return;
 
-  const TQString warningMsg = item->isSubresource() ?
-        i18n("<qt>Do you really want to remove the subresource <b>%1</b>? "
-              "Note that its contents will be completely deleted. This "
-              "operation cannot be undone. </qt>").arg( item->text( 0 ) ) :
-        i18n("<qt>Do you really want to remove the resource <b>%1</b>?</qt>").arg( item->text( 0 ) );
+  // Do not allow a non-subresource folder to be removed if it is the standard resource.
+  if ( !item->isSubresource() ) {
+    if ( item->resource() == mCalendar->resourceManager()->standardResource() ) {
+      KMessageBox::sorry(
+        this,
+        i18n( "<qt>You may not delete your standard calendar resource.<p>"
+              "You can change the standard calendar resource in the "
+              "KDE Control Center using the KDE Resource settings under the "
+              "KDE Components area.</qt>" ) );
+      return;
+    }
+  }
 
-  int km = KMessageBox::warningContinueCancel( this, warningMsg, "",
-        KGuiItem( i18n("&Remove" ), "editdelete") );
-  if ( km == KMessageBox::Cancel ) return;
+  TQString moreInfo;
+  if ( item->resource()->type() == "imap" || item->resource()->type() == "scalix" ) {
+    moreInfo = i18n( "This is a groupware folder so you can always re-subscribe to the folder "
+                     "later as you desire." );
+  } else {
+    moreInfo = i18n( "The contents will not be removed so you can always re-add this calendar "
+                     "later as you desire." );
+  }
 
-// Don't be so restricitve
-#if 0
-  if ( item->resource() == mCalendar->resourceManager()->standardResource() ) {
-    KMessageBox::sorry( this,
-                        i18n( "You cannot delete your standard resource." ) );
+  int km =
+    KMessageBox::warningContinueCancel(
+      this,
+      i18n( "<qt>Do you really want to remove the calendar <b>%1</b>?<p><b>Note:</b> %2</qt>" ).
+      arg( item->text( 0 ), moreInfo ),
+      "", KGuiItem( i18n( "&Remove" ) ) );
+  if ( km == KMessageBox::Cancel ) {
     return;
   }
-#endif
+
   if ( item->isSubresource() ) {
     if ( !item->resource()->removeSubresource( item->resourceIdentifier() ) )
-      KMessageBox::sorry( this,
-              i18n ("<qt>Failed to remove the subresource <b>%1</b>. The "
-                  "reason could be that it is a built-in one which cannot "
-                  "be removed, or that the removal of the underlying storage "
-                  "folder failed.</qt>").arg( item->resource()->name() ) );
+      KMessageBox::sorry(
+        this,
+        i18n ("<qt>Failed to remove the subresource <b>%1</b>. The "
+              "reason could be that it is a built-in one which cannot "
+              "be removed, or that the removal of the underlying storage "
+              "folder failed.</qt>").arg( item->resource()->name() ) );
       return;
   } else {
     mCalendar->resourceManager()->remove( item->resource() );
@@ -520,62 +587,103 @@ void ResourceView::removeResource()
 
 void ResourceView::editResource()
 {
+  bool ok = false;
   ResourceItem *item = currentItem();
   if (!item) return;
   ResourceCalendar *resource = item->resource();
 
-  KRES::ConfigDialog dlg( this, TQString("calendar"), resource,
-                          "KRES::ConfigDialog" );
+  if ( item->isSubresource() ) {
+    if ( resource->type() == "imap" || resource->type() == "scalix" ) {
+      TQString identifier = item->resourceIdentifier();
+      if ( !identifier.contains( "/.INBOX.directory/" ) ) {
+        KMessageBox::sorry(
+          this,
+          i18n( "Cannot rename someone else's calendar folder." ) );
+        return;
+      }
 
-  if ( dlg.exec() ) {
-    item->setText( 0, resource->resourceName() );
+      TQString oldSubResourceName = identifier;
+      oldSubResourceName.remove( TQRegExp( "^.*/\\.INBOX\\.directory/" ) );
+      TQString newSubResourceName =
+        KInputDialog::getText(
+          i18n( "Rename Subresource" ),
+          i18n( "<qt>Enter a new name for the subresource<p>"
+                "<b>Note:</b> the new name will take affect after the next sync.</qt>" ),
+          oldSubResourceName, &ok, this );
+      if ( !ok ) {
+        return;
+      }
 
-    mCalendar->resourceManager()->change( resource );
+      DCOPRef ref( "kmail", "KMailICalIface" );
+      DCOPReply reply = ref.call( "changeResourceUIName", identifier, newSubResourceName );
+      if ( !reply.isValid() ) {
+        KMessageBox::sorry(
+          this,
+          i18n( "Communication with KMail failed when attempting to change the folder name." ) );
+        return;
+      }
+
+      item->setText( 0, labelFromSubResName( resource, newSubResourceName ) );
+
+      KOrg::BaseView *cV = mCalendarView->viewManager()->currentView();
+      if ( cV && cV == mCalendarView->viewManager()->multiAgendaView() ) {
+        mCalendarView->viewManager()->multiAgendaView()->deSelectAgendaView();
+      }
+    } else {
+      KMessageBox::sorry(
+        this,
+        i18n ("<qt>Cannot edit the subresource <b>%1</b>.</qt>").arg( item->resource()->name() ) );
+    }
+  } else {
+    KRES::ConfigDialog dlg( this, TQString("calendar"), resource, "KRES::ConfigDialog" );
+
+    if ( dlg.exec() ) {
+      item->setText( 0, resource->resourceName() );
+      mCalendar->resourceManager()->change( resource );
+    }
   }
   emitResourcesChanged();
 }
 
-void ResourceView::currentChanged( TQListViewItem *item )
+void ResourceView::currentChanged( TQListViewItem *lvitem )
 {
-   ResourceItem *i = currentItem();
-   if ( !item || i->isSubresource() ) {
-     mDeleteButton->setEnabled( false );
-     mEditButton->setEnabled( false );
-   } else {
-     mDeleteButton->setEnabled( true );
-     mEditButton->setEnabled( true );
-   }
-}
-
-ResourceItem *ResourceView::findItem( ResourceCalendar *r )
-{
-  TQListViewItem *item;
-  ResourceItem *i = 0;
-  for( item = mListView->firstChild(); item; item = item->nextSibling() ) {
-    i = static_cast<ResourceItem *>( item );
-    if ( i->resource() == r ) break;
+  ResourceItem *item = currentItem();
+  if ( !lvitem || item->isSubresource() ) {
+    mDeleteButton->setEnabled( false );
+    mEditButton->setEnabled( false );
+  } else {
+    mDeleteButton->setEnabled( true );
+    mEditButton->setEnabled( true );
   }
-  return i;
 }
 
-ResourceItem *ResourceView::findItemByIdentifier( const TQString& id )
+ResourceItem *ResourceView::findItem( ResourceCalendar *resource )
 {
-  TQListViewItem *item;
-  ResourceItem *i = 0;
-  for( item = mListView->firstChild(); item; item = item->itemBelow() ) {
-    i = static_cast<ResourceItem *>( item );
-    if ( i->resourceIdentifier() == id )
-       return i;
+  TQListViewItem *lvitem;
+  ResourceItem *item = 0;
+  for( lvitem = mListView->firstChild(); lvitem; lvitem = lvitem->nextSibling() ) {
+    item = static_cast<ResourceItem *>( lvitem );
+    if ( item->resource() == resource ) break;
+  }
+  return item;
+}
+
+ResourceItem *ResourceView::findItemByIdentifier( const TQString &identifier )
+{
+  TQListViewItem *lvitem;
+  ResourceItem *item = 0;
+  for ( lvitem = mListView->firstChild(); lvitem; lvitem = lvitem->itemBelow() ) {
+    item = static_cast<ResourceItem *>( lvitem );
+    if ( item->resourceIdentifier() == identifier )
+       return item;
   }
   return 0;
 }
 
-
-void ResourceView::contextMenuRequested ( TQListViewItem *i,
-                                          const TQPoint &pos, int )
+void ResourceView::contextMenuRequested ( TQListViewItem *lvitem, const TQPoint &pos, int )
 {
-  KCal::CalendarResourceManager *manager = mCalendar->resourceManager();
-  ResourceItem *item = static_cast<ResourceItem *>( i );
+  CalendarResourceManager *manager = mCalendar->resourceManager();
+  ResourceItem *item = static_cast<ResourceItem *>( lvitem );
 
   TQPopupMenu *menu = new TQPopupMenu( this );
   connect( menu, TQT_SIGNAL( aboutToHide() ), menu, TQT_SLOT( deleteLater() ) );
@@ -598,7 +706,14 @@ void ResourceView::contextMenuRequested ( TQListViewItem *i,
       menu->insertItem( i18n( "Resources Colors" ), assignMenu );
     }
 
-    menu->insertItem( i18n("&Edit..."), this, TQT_SLOT( editResource() ) );
+    if ( item->isSubresource() &&
+         ( item->resource()->type() == "imap" || item->resource()->type() == "scalix" ) ) {
+      if ( item->resourceIdentifier().contains( "/.INBOX.directory/" ) ) {
+        menu->insertItem( i18n("&Rename..."), this, TQT_SLOT( editResource() ) );
+      }
+    } else {
+      menu->insertItem( i18n("&Edit..."), this, TQT_SLOT( editResource() ) );
+    }
     menu->insertItem( i18n("&Remove"), this, TQT_SLOT( removeResource() ) );
     if ( item->resource() != manager->standardResource() ) {
       menu->insertSeparator();
@@ -620,7 +735,7 @@ void ResourceView::assignColor()
     return;
   // A color without initialized is a color invalid
   TQColor myColor;
-  KCal::ResourceCalendar *cal = item->resource();
+  ResourceCalendar *cal = item->resource();
 
   TQString identifier = cal->identifier();
   if ( item->isSubresource() )
@@ -641,13 +756,16 @@ void ResourceView::assignColor()
 void ResourceView::disableColor()
 {
   ResourceItem *item = currentItem();
-  if ( !item )
+  if ( !item ) {
     return;
+  }
+
   TQColor colorInvalid;
-  KCal::ResourceCalendar *cal = item->resource();
+  ResourceCalendar *cal = item->resource();
   TQString identifier = cal->identifier();
-  if ( item->isSubresource() )
+  if ( item->isSubresource() ) {
     identifier = item->resourceIdentifier();
+  }
   KOPrefs::instance()->setResourceColor( identifier, colorInvalid );
   item->setResourceColor( colorInvalid );
   item->update();
@@ -658,7 +776,12 @@ void ResourceView::showInfo()
   ResourceItem *item = currentItem();
   if ( !item ) return;
 
-  TQString txt = "<qt>" + item->resource()->infoText() + "</qt>";
+  TQString identifier;
+  if ( item->isSubresource() ) {
+    identifier = "<p>" + item->resourceIdentifier();
+  }
+
+  TQString txt = "<qt>" + item->resource()->infoText() + identifier + "</qt>";
   KMessageBox::information( this, txt );
 }
 
@@ -667,8 +790,8 @@ void ResourceView::reloadResource()
   ResourceItem *item = currentItem();
   if ( !item ) return;
 
-  ResourceCalendar *r = item->resource();
-  r->load();
+  ResourceCalendar *resource = item->resource();
+  resource->load();
 }
 
 void ResourceView::saveResource()
@@ -676,8 +799,8 @@ void ResourceView::saveResource()
   ResourceItem *item = currentItem();
   if ( !item ) return;
 
-  ResourceCalendar *r = item->resource();
-  r->save();
+  ResourceCalendar *resource = item->resource();
+  resource->save();
 }
 
 void ResourceView::setStandard()
@@ -685,9 +808,9 @@ void ResourceView::setStandard()
   ResourceItem *item = currentItem();
   if ( !item ) return;
 
-  ResourceCalendar *r = item->resource();
-  KCal::CalendarResourceManager *manager = mCalendar->resourceManager();
-  manager->setStandardResource( r );
+  ResourceCalendar *resource = item->resource();
+  CalendarResourceManager *manager = mCalendar->resourceManager();
+  manager->setStandardResource( resource );
   updateResourceList();
 }
 

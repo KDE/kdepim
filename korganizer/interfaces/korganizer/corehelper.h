@@ -37,8 +37,7 @@ class CoreHelper
   public:
     CoreHelper() {}
     virtual ~CoreHelper() {}
-    
-    virtual TQColor defaultEventColor() = 0;
+
     virtual TQColor textColor( const TQColor &bgColor ) = 0;
     virtual TQColor categoryColor( const TQStringList &cats ) = 0;
     virtual TQString holidayString( const TQDate &dt ) = 0;

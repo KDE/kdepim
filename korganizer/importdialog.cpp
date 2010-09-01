@@ -37,15 +37,15 @@
 
 using namespace KCal;
 
-ImportDialog::ImportDialog( const KURL &url, TQWidget *parent )
-  : KDialogBase( Plain, i18n("Import Calendar"), Ok | Cancel, Ok, parent,
+ImportDialog::ImportDialog( const KURL &url, TQWidget *parent, bool isPart )
+  : KDialogBase( Plain, i18n("Import Calendar/Event"), Ok | Cancel, Ok, parent,
                  0, true, true ),
     mUrl( url )
 {
   TQFrame *topFrame = plainPage();
   TQVBoxLayout *topLayout = new TQVBoxLayout( topFrame, 0, spacingHint() );
 
-  TQString txt = i18n("Import calendar at '%1' into KOrganizer.")
+  TQString txt = i18n("Import calendar/event at '%1' into KOrganizer.")
                 .arg( mUrl.prettyURL() );
 
   topLayout->addWidget( new TQLabel( txt, topFrame ) );
@@ -59,7 +59,7 @@ ImportDialog::ImportDialog( const KURL &url, TQWidget *parent )
   mMergeButton = new TQRadioButton( i18n("Merge into existing calendar"),
                                    radioBox );
 
-  mOpenButton = new TQRadioButton( i18n("Open in separate window"), radioBox );
+  mOpenButton = isPart ? 0 : new TQRadioButton( i18n("Open in separate window"), radioBox );
 
   mAddButton->setChecked( true );
 }
@@ -77,7 +77,7 @@ void ImportDialog::slotOk()
   } else if ( mMergeButton->isChecked() ) {
     // emit a signal to action manager to merge mUrl into the current calendar
     emit openURL( mUrl, true );
-  } else if ( mOpenButton->isChecked() ) {
+  } else if ( mOpenButton && mOpenButton->isChecked() ) {
     // emit a signal to the action manager to open mUrl in a separate window
     emit newWindow( mUrl );
   } else {

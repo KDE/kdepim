@@ -135,6 +135,9 @@ public:
                     const TQString &attachParamValue,
                     const TQCString &attachContDisp);
 
+  /** For backward compatibility
+   * @deprecated
+   */
   int openComposer (const TQString &to, const TQString &cc,
                     const TQString &bcc, const TQString &subject,
                     const TQString &body, int hidden,
@@ -147,6 +150,20 @@ public:
                     const TQString &attachParamValue,
                     const TQCString &attachContDisp,
                     const TQCString &attachCharset);
+
+  int openComposer (const TQString &to, const TQString &cc,
+                    const TQString &bcc, const TQString &subject,
+                    const TQString &body, int hidden,
+                    const TQString &attachName,
+                    const TQCString &attachCte,
+                    const TQCString &attachData,
+                    const TQCString &attachType,
+                    const TQCString &attachSubType,
+                    const TQCString &attachParamAttr,
+                    const TQString &attachParamValue,
+                    const TQCString &attachContDisp,
+                    const TQCString &attachCharset,
+                    unsigned int identity);
 
   DCOPRef openComposer(const TQString &to, const TQString &cc,
                        const TQString &bcc, const TQString &subject,
@@ -179,6 +196,7 @@ public:
                                 const TQString & MsgStatusFlags = TQString());
   int dcopAddMessage_fastImport(const TQString & foldername, const KURL & messagefile,
                                 const TQString & MsgStatusFlags = TQString());
+  void showImportArchiveDialog();
 
   TQStringList folderList() const;
   DCOPRef getFolder( const TQString& vpath );
@@ -235,6 +253,7 @@ public:
   void init();
   void readConfig();
   void cleanupImapFolders();
+  void recreateCorruptIndexFiles();
   void testDir(const char *_name);
   void recoverDeadLetters();
   void initFolders(KConfig* cfg);
@@ -389,6 +408,8 @@ public:
   void loadProfile( const TQString& path );
 
   void saveToProfile( const TQString& path ) const;
+
+  bool isCodecAsciiCompatible( const TQTextCodec *codec );
 public slots:
 
   /// Save contents of all open composer widnows to ~/dead.letter
@@ -488,6 +509,7 @@ private:
   bool mContextMenuShown;
 
   TQValueList<const KSystemTray*> systemTrayApplets;
+  TQValueList<const TQTextCodec*> mNonAsciiCompatibleCodecs;
 
   /* Weaver */
   KPIM::ThreadWeaver::Weaver *the_weaver;

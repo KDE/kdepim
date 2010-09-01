@@ -113,8 +113,8 @@ void EntryItem::reloadPixmap()
   if ( size != 0 )
     mPixmap = KGlobal::iconLoader()->loadIcon( mPlugin->icon(),
                                                KIcon::Desktop, size,
-                                               mPlugin->disabled() ? 
-                                                 KIcon::DisabledState 
+                                               mPlugin->disabled() ?
+                                                 KIcon::DisabledState
                                                : KIcon::DefaultState);
   else
     mPixmap = TQPixmap();
@@ -250,7 +250,7 @@ void EntryItem::setPaintActive( bool paintActive )
   mPaintActive = paintActive;
 }
 
-Navigator::Navigator( SidePaneBase *parent, const char *name )
+Navigator::Navigator( IconSidePane *parent, const char *name )
   : KListBox( parent, name ), mSidePane( parent ),
     mShowIcons( true ), mShowText( true )
 {
@@ -328,7 +328,6 @@ void Navigator::updatePlugins( TQValueList<Kontact::Plugin*> plugins_ )
   mActions.clear();
   mActions.setAutoDelete( false );
 
-  int counter = 0;
   int minWidth = 0;
   qBubbleSort( plugins );
   TQValueList<Kontact::PluginProxy>::ConstIterator end = plugins.end();
@@ -343,14 +342,6 @@ void Navigator::updatePlugins( TQValueList<Kontact::Plugin*> plugins_ )
 
     if ( item->width( this ) > minWidth )
       minWidth = item->width( this );
-
-    TQString name = TQString( "CTRL+%1" ).arg( counter + 1 );
-    KAction *action = new KAction( plugin->title(), plugin->icon(), KShortcut( name ),
-                                   mMapper, TQT_SLOT( map() ),
-                                   mSidePane->actionCollection(), name.latin1() );
-    mActions.append( action );
-    mMapper->setMapping( action, counter );
-    counter++;
   }
 
   parentWidget()->setFixedWidth( minWidth );

@@ -76,11 +76,6 @@ public:
   virtual void processNewMail( bool interactive );
 
   /**
-   * Kill all jobs related the the specified folder
-   */
-  void killJobsForItem(KMFolderTreeItem * fti);
-
-  /**
    * Kill the slave if any jobs are active
    */
   virtual void killAllJobs( bool disconnectSlave=false );
@@ -179,7 +174,7 @@ public:
   /**
    * Returns the root folder of this account
    */
-  virtual FolderStorage* const rootFolder() const;
+  virtual FolderStorage* rootFolder() const;
   
   /** return if the account passed the annotation test  */
   bool annotationCheckPassed(){ return mAnnotationCheckPassed;};

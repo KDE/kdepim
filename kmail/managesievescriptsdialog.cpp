@@ -83,10 +83,15 @@ static KURL findUrlForAccount( const KMail::ImapAccountBase * a ) {
     u.setPass( a->passwd() );
     u.setPort( sieve.port() );
     // Translate IMAP LOGIN to PLAIN:
-    u.setQuery( "x-mech=" + ( a->auth() == "*" ? "PLAIN" : a->auth() ) );
+    u.addQueryItem( "x-mech", a->auth() == "*" ? "PLAIN" : a->auth() );
+    if ( !a->useSSL() && !a->useTLS() )
+        u.addQueryItem( "x-allow-unencrypted", "true" );
     return u;
   } else {
-    return sieve.alternateURL();
+    KURL u = sieve.alternateURL();
+    if ( u.protocol().lower() == "sieve" && !a->useSSL() && !a->useTLS() && u.queryItem("x-allow-unencrypted").isEmpty() )
+        u.addQueryItem( "x-allow-unencrypted", "true" );
+    return u;
   }
 }
 
@@ -159,12 +164,27 @@ void KMail::ManageSieveScriptsDialog::slotContextMenuRequested( TQListViewItem *
     // script items:
     menu.insertItem( i18n( "Delete Script" ), this, TQT_SLOT(slotDeleteScript()) );
     menu.insertItem( i18n( "Edit Script..." ), this, TQT_SLOT(slotEditScript()) );
+    menu.insertItem( i18n( "Deactivate Script" ), this, TQT_SLOT(slotDeactivateScript()) );
   } else {
     // top-levels:
     menu.insertItem( i18n( "New Script..." ), this, TQT_SLOT(slotNewScript()) );
   }
   menu.exec( p );
   mContextMenuItem = 0;
+}
+
+
+void KMail::ManageSieveScriptsDialog::slotDeactivateScript() {
+  if ( !mContextMenuItem )
+    return;
+
+  TQCheckListItem * parent = qcli_cast( mContextMenuItem->parent() );
+  if ( !parent )
+    return;
+  if ( mContextMenuItem->isOn()) {
+    mSelectedItems[parent] = mContextMenuItem;
+    changeActiveScript( parent,false );
+  }
 }
 
 void KMail::ManageSieveScriptsDialog::slotSelectionChanged( TQListViewItem * i ) {
@@ -176,11 +196,11 @@ void KMail::ManageSieveScriptsDialog::slotSelectionChanged( TQListViewItem * i )
     return;
   if ( item->isOn() && mSelectedItems[parent] != item ) {
     mSelectedItems[parent] = item;
-    changeActiveScript( parent );
+    changeActiveScript( parent,true );
   }
 }
 
-void KMail::ManageSieveScriptsDialog::changeActiveScript( TQCheckListItem * item ) {
+void KMail::ManageSieveScriptsDialog::changeActiveScript( TQCheckListItem * item , bool activate) {
   if ( !item )
     return;
   if ( !mUrls.count( item ) )
@@ -194,8 +214,11 @@ void KMail::ManageSieveScriptsDialog::changeActiveScript( TQCheckListItem * item
   if ( !selected )
     return;
   u.setFileName( selected->text( 0 ) );
-
-  SieveJob * job = SieveJob::activate( u );
+  SieveJob * job;
+  if ( activate )
+    job = SieveJob::activate( u );
+  else
+    job = SieveJob::desactivate( u );
   connect( job, TQT_SIGNAL(result(KMail::SieveJob*,bool,const TQString&,bool)),
            this, TQT_SLOT(slotRefresh()) );
 }
@@ -235,7 +258,6 @@ void KMail::ManageSieveScriptsDialog::slotDeleteScript() {
                                    KStdGuiItem::del() )
        != KMessageBox::Continue )
     return;
-
   SieveJob * job = SieveJob::del( u );
   connect( job, TQT_SIGNAL(result(KMail::SieveJob*,bool,const TQString&,bool)),
            this, TQT_SLOT(slotRefresh()) );
@@ -295,14 +317,21 @@ KMail::SieveEditor::SieveEditor( TQWidget * parent, const char * name )
   TQVBoxLayout * vlay = new TQVBoxLayout( plainPage(), 0, spacingHint() );
   mTextEdit = new TQTextEdit( plainPage() );
   vlay->addWidget( mTextEdit );
+  mTextEdit->setFocus();
   mTextEdit->setTextFormat( TQTextEdit::PlainText );
   mTextEdit->setWordWrap( TQTextEdit::NoWrap );
   mTextEdit->setFont( KGlobalSettings::fixedFont() );
-
+  connect( mTextEdit, TQT_SIGNAL( textChanged () ), TQT_SLOT( slotTextChanged() ) );
   resize( 3 * sizeHint() );
 }
 
 KMail::SieveEditor::~SieveEditor() {}
+
+
+void KMail::SieveEditor::slotTextChanged()
+{
+  enableButtonOK( !script().isEmpty() );
+}
 
 void KMail::ManageSieveScriptsDialog::slotGetResult( KMail::SieveJob *, bool success, const TQString & script, bool isActive ) {
   if ( !success )
@@ -330,6 +359,7 @@ void KMail::ManageSieveScriptsDialog::slotSieveEditorOkClicked() {
 void KMail::ManageSieveScriptsDialog::slotSieveEditorCancelClicked() {
   mSieveEditor->deleteLater(); mSieveEditor = 0;
   mCurrentURL = KURL();
+  slotRefresh();
 }
 
 void KMail::ManageSieveScriptsDialog::slotPutResult( KMail::SieveJob *, bool success ) {

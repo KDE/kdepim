@@ -138,7 +138,11 @@ void MessageActions::setSelectedVisibleSernums(const TQValueList< Q_UINT32 > & s
 
 void MessageActions::updateActions()
 {
-  const bool singleMsg = (mCurrentMessage != 0);
+  bool singleMsg = (mCurrentMessage != 0);
+  if ( mCurrentMessage && mCurrentMessage->parent() ) {
+    if ( mCurrentMessage->parent()->isTemplates() )
+      singleMsg = false;
+  }
   const bool multiVisible = mVisibleSernums.count() > 0 || mCurrentMessage;
   const bool flagsAvailable = GlobalSettings::self()->allowLocalFlags() ||
       !((mCurrentMessage && mCurrentMessage->parent()) ? mCurrentMessage->parent()->isReadOnly() : true);
@@ -163,6 +167,18 @@ void MessageActions::updateActions()
 
   mEditAction->setEnabled( singleMsg );
 }
+
+template<typename T> void MessageActions::replyCommand()
+{
+  if ( !mCurrentMessage )
+    return;
+  const TQString text = mMessageView ? mMessageView->copyText() : "";
+  KMCommand *command = new T( mParent, mCurrentMessage, text );
+  connect( command, TQT_SIGNAL( completed( KMCommand * ) ),
+           this, TQT_SIGNAL( replyActionFinished() ) );
+  command->start();
+}
+
 
 void MessageActions::slotCreateTodo()
 {

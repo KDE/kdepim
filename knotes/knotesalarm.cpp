@@ -61,10 +61,11 @@ void KNotesAlarm::checkAlarms()
 
     KNotesGlobalConfig::self()->setAlarmsLastChecked( TQDateTime::currentDateTime() );
     TQValueList<KCal::Alarm *> alarms = m_manager->alarms( from, KNotesGlobalConfig::self()->alarmsLastChecked() );
-
+    if( alarms.isEmpty())
+        return;
     TQStringList notes;
     TQValueList<KCal::Alarm *>::ConstIterator it;
-    for ( it = alarms.begin(); it != alarms.end(); ++it )
+    for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it )
     {
         KCal::Incidence *incidence = (*it)->parent();
         notes += incidence->summary();

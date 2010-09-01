@@ -159,6 +159,8 @@ RecipientLine::RecipientLine( TQWidget *parent )
   TQToolTip::add( mCombo, i18n("Select type of recipient") );
 
   mEdit = new RecipientLineEdit( this );
+  TQToolTip::add( mEdit,
+                 i18n( "Set the list of email addresses to receive this message" ) );
   topLayout->addWidget( mEdit );
   connect( mEdit, TQT_SIGNAL( returnPressed() ), TQT_SLOT( slotReturnPressed() ) );
   connect( mEdit, TQT_SIGNAL( deleteMe() ), TQT_SLOT( slotPropagateDeletion() ) );
@@ -891,7 +893,8 @@ void RecipientsEditor::saveDistributionList()
 {
   DistributionListDialog *dlg = new DistributionListDialog( this );
   dlg->setRecipients( mRecipientsView->recipients() );
-  dlg->show();
+  dlg->exec();
+  delete dlg;
 }
 
 Recipient::List RecipientsEditor::recipients() const

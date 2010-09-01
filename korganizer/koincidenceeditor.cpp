@@ -45,6 +45,7 @@
 #include <libkcal/calendarlocal.h>
 #include <libkcal/incidence.h>
 #include <libkcal/icalformat.h>
+#include <libkcal/resourcecalendar.h>
 
 #include "koprefs.h"
 #include "koglobals.h"
@@ -58,7 +59,8 @@ KOIncidenceEditor::KOIncidenceEditor( const TQString &caption,
                                       Calendar *calendar, TQWidget *parent )
   : KDialogBase( Tabbed, caption, Ok | Apply | Cancel | Default, Ok,
                  parent, 0, false, false ),
-    mAttendeeEditor( 0 ), mIsCounter( false )
+    mAttendeeEditor( 0 ), mResource( 0 ), mIsCounter( false ), mIsCreateTask( false ),
+    mRecurIncidence( 0 ), mRecurIncidenceAfterDissoc( 0 )
 {
   // Set this to be the group leader for all subdialogs - this means
   // modal subdialogs will only affect this dialog, not the other windows
@@ -349,14 +351,14 @@ void KOIncidenceEditor::createEmbeddedURLPages( Incidence *i )
 void KOIncidenceEditor::openURL( const KURL &url )
 {
   TQString uri = url.url();
-  UriHandler::process( uri );
+  UriHandler::process( this, uri );
 }
 
 void KOIncidenceEditor::addAttachments( const TQStringList &attachments,
                                         const TQStringList &mimeTypes,
                                         bool inlineAttachments )
 {
-    emit signalAddAttachments( attachments, mimeTypes, inlineAttachments );
+  emit signalAddAttachments( attachments, mimeTypes, inlineAttachments );
 }
 
 void KOIncidenceEditor::addAttendees( const TQStringList &attendees )
@@ -365,7 +367,33 @@ void KOIncidenceEditor::addAttendees( const TQStringList &attendees )
   for ( it = attendees.begin(); it != attendees.end(); ++it ) {
     TQString name, email;
     KABC::Addressee::parseEmailAddress( *it, name, email );
-    mAttendeeEditor->insertAttendee( new Attendee( name, email ) );
+    mAttendeeEditor->insertAttendee( new Attendee( name, email, true, Attendee::NeedsAction ) );
+  }
+}
+
+void KOIncidenceEditor::setResource( ResourceCalendar *res, const TQString &subRes )
+{
+  TQString label;
+  if ( res ) {
+    if ( !res->subresources().isEmpty() && !subRes.isEmpty() ) {
+      label = res->labelForSubresource( subRes );
+    } else {
+      label = res->resourceName();
+    }
+  }
+
+  mResource = res;
+  mSubResource = subRes;
+}
+
+
+void KOIncidenceEditor::selectCreateTask( bool enable )
+{
+  mIsCreateTask = enable;
+  if ( mIsCreateTask ) {
+    setCaption( i18n( "Create to-do" ) );
+    setButtonOK( i18n( "Create to-do" ) );
+    showButtonApply( false );
   }
 }
 
@@ -375,8 +403,15 @@ void KOIncidenceEditor::selectInvitationCounterProposal(bool enable)
   if ( mIsCounter ) {
     setCaption( i18n( "Counter proposal" ) );
     setButtonOK( i18n( "Counter proposal" ) );
-    enableButtonApply( false );
+    showButtonApply( false );
   }
+}
+
+void KOIncidenceEditor::setRecurringIncidence ( Incidence *originalIncidence,
+                                                Incidence *incAfterDissociation )
+{
+  mRecurIncidence = originalIncidence;
+  mRecurIncidenceAfterDissoc = incAfterDissociation;
 }
 
 

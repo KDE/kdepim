@@ -123,13 +123,19 @@ void CalPrintJournal::print( TQPainter &p, int width, int height )
     }
   }
 
-  drawHeader( p, i18n("Journal entries"), TQDate(), TQDate(), TQRect( 0, 0, width, headerHeight() ) );
+  TQRect headerBox( 0, 0, width, headerHeight() );
+  TQRect footerBox( 0, height - footerHeight(), width, footerHeight() );
+  height -= footerHeight();
+
+  drawHeader( p, i18n("Journal entries"), TQDate(), TQDate(), headerBox );
   y = headerHeight() + 15;
 
   Journal::List::Iterator it = journals.begin();
   for ( ; it != journals.end(); ++it ) {
     drawJournal( *it, p, x, y, width, height );
   }
+
+  drawFooter( p, footerBox );
 }
 
 #endif

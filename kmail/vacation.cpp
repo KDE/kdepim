@@ -500,11 +500,15 @@ namespace KMail {
       u.setUser( a->login() );
       u.setPass( a->passwd() );
       u.setPort( sieve.port() );
-      u.setQuery( "x-mech=" + (a->auth() == "*" ? "PLAIN" : a->auth()) ); //translate IMAP LOGIN to PLAIN
+      u.addQueryItem( "x-mech", a->auth() == "*" ? "PLAIN" : a->auth() ); //translate IMAP LOGIN to PLAIN
+      if ( !a->useSSL() && !a->useTLS() )
+          u.addQueryItem( "x-allow-unencrypted", "true" );
       u.setFileName( sieve.vacationFileName() );
       return u;
     } else {
       KURL u = sieve.alternateURL();
+      if ( u.protocol().lower() == "sieve" && !a->useSSL() && !a->useTLS() && u.queryItem("x-allow-unencrypted").isEmpty() )
+          u.addQueryItem( "x-allow-unencrypted", "true" );
       u.setFileName( sieve.vacationFileName() );
       return u;
     }
@@ -579,9 +583,11 @@ namespace KMail {
   TQStringList Vacation::defaultMailAliases() {
     TQStringList sl;
     for ( KPIM::IdentityManager::ConstIterator it = kmkernel->identityManager()->begin() ;
-	  it != kmkernel->identityManager()->end() ; ++it )
-      if ( !(*it).emailAddr().isEmpty() )
-	sl.push_back( (*it).emailAddr() );
+	  it != kmkernel->identityManager()->end() ; ++it ) {
+      if ( !(*it).primaryEmailAddress().isEmpty() )
+	sl.push_back( (*it).primaryEmailAddress() );
+      sl += (*it).emailAliases();
+    }
     return sl;
   }
 
@@ -666,6 +672,7 @@ namespace KMail {
     mDialog->setMailAliases( defaultMailAliases().join(", ") );
     mDialog->setSendForSpam( defaultSendForSpam() );
     mDialog->setDomainName( defaultDomainName() );
+    mDialog->setDomainCheck( false );
   }
 
   void Vacation::slotDialogOk() {

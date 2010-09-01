@@ -113,9 +113,10 @@ protected slots:
   void renameSearchFolder();
   void openSearchFolder();
   void folderInvalidated(KMFolder *);
-  virtual bool slotShowMsg(TQListViewItem *);
-  void slotShowSelectedMsg();
-  void slotCurrentChanged(TQListViewItem *);
+  virtual bool slotShowMsg( TQListViewItem * );
+  void slotViewSelectedMsg();
+  virtual bool slotViewMsg( TQListViewItem * );
+  void slotCurrentChanged( TQListViewItem * );
   virtual void updateContextMenuActions();
   virtual void slotContextMenuRequested( TQListViewItem*, const TQPoint &, int );
   virtual void copySelectedToFolder( int menuId );
@@ -189,6 +190,9 @@ protected:
   KMSearchPattern *mSearchPattern;
 
   static const int MSGID_COLUMN;
+
+private:
+  KMMessage *indexToMessage( TQListViewItem *item );
 };
 
 } // namespace KMail

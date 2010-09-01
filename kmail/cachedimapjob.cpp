@@ -452,18 +452,21 @@ void CachedImapJob::slotPutMessageDataReq(KIO::Job *job, TQByteArray &data)
 }
 
 //----------------------------------------------------------------------------
-void CachedImapJob::slotPutMessageInfoData(KIO::Job *job, const TQString &data)
+void CachedImapJob::slotPutMessageInfoData( KIO::Job *job, const TQString &data )
 {
-  KMFolderCachedImap * imapFolder = static_cast<KMFolderCachedImap*>(mDestFolder->storage());
-  KMAcctCachedImap *account = imapFolder->account();
-  ImapAccountBase::JobIterator it = account->findJob( job );
-  if ( it == account->jobsEnd() ) return;
+  KMFolderCachedImap *imapFolder = static_cast<KMFolderCachedImap*>( mDestFolder->storage() );
+  if ( imapFolder ) {
+    KMAcctCachedImap *account = imapFolder->account();
+    ImapAccountBase::JobIterator it = account->findJob( job );
+    if ( it == account->jobsEnd() ) {
+      return;
+    }
 
-  if ( data.find("UID") != -1 && mMsg )
-  {
-    int uid = (data.right(data.length()-4)).toInt();
-    kdDebug( 5006 ) << k_funcinfo << "Server told us uid is: " << uid << endl;
-    mMsg->setUID( uid );
+    if ( data.find( "UID" ) != -1 && mMsg ) {
+      int uid = ( data.right( data.length() - 4 ) ).toInt();
+      kdDebug( 5006 ) << k_funcinfo << "Server told us uid is: " << uid << endl;
+      mMsg->setUID( uid );
+    }
   }
 }
 
@@ -728,20 +731,23 @@ void CachedImapJob::slotCheckUidValidityResult(KIO::Job * job)
 
 void CachedImapJob::renameFolder( const TQString &newName )
 {
+  mNewName = newName;
+
   // Set the source URL
   KURL urlSrc = mAccount->getUrl();
-  urlSrc.setPath( mFolder->imapPath() );
+  mOldImapPath = mFolder->imapPath();
+  urlSrc.setPath( mOldImapPath );
 
   // Set the destination URL - this is a bit trickier
   KURL urlDst = mAccount->getUrl();
-  TQString imapPath( mFolder->imapPath() );
+  mNewImapPath = mFolder->imapPath();
   // Destination url = old imappath - oldname + new name
-  imapPath.truncate( imapPath.length() - mFolder->folder()->name().length() - 1);
-  imapPath += newName + '/';
-  urlDst.setPath( imapPath );
+  mNewImapPath.truncate( mNewImapPath.length() - mFolder->folder()->name().length() - 1);
+  mNewImapPath += newName + '/';
+  urlDst.setPath( mNewImapPath );
 
   ImapAccountBase::jobData jd( newName, mFolder->folder() );
-  jd.path = imapPath;
+  jd.path = mNewImapPath;
 
   KIO::SimpleJob *simpleJob = KIO::rename( urlSrc, urlDst, false );
   KIO::Scheduler::assignJobToSlave( mAccount->slave(), simpleJob );
@@ -774,6 +780,70 @@ static void renameChildFolders( KMFolderDir* dir, const TQString& oldPath,
   }
 }
 
+void CachedImapJob::revertLabelChange()
+{
+  TQMap<TQString, KMAcctCachedImap::RenamedFolder>::ConstIterator renit = mAccount->renamedFolders().find( mFolder->imapPath() );
+  Q_ASSERT( renit != mAccount->renamedFolders().end() );
+  if ( renit != mAccount->renamedFolders().end() ) {
+    mFolder->folder()->setLabel( (*renit).mOldLabel );
+    mAccount->removeRenamedFolder( mFolder->imapPath() );
+    kmkernel->dimapFolderMgr()->contentsChanged();
+  }
+}
+
+void CachedImapJob::renameOnDisk()
+{
+  TQString oldName = mFolder->name();
+  TQString oldPath = mFolder->imapPath();
+  mAccount->removeRenamedFolder( oldPath );
+  mFolder->setImapPath( mNewImapPath );
+  mFolder->FolderStorage::rename( mNewName );
+
+  if( oldPath.endsWith( "/" ) ) oldPath.truncate( oldPath.length() -1 );
+  TQString newPath = mFolder->imapPath();
+  if( newPath.endsWith( "/" ) ) newPath.truncate( newPath.length() -1 );
+  renameChildFolders( mFolder->folder()->child(), oldPath, newPath );
+  kmkernel->dimapFolderMgr()->contentsChanged();
+}
+
+void CachedImapJob::slotSubscribtionChange1Failed( const TQString &errorMessage )
+{
+  KMessageBox::sorry( 0, i18n( "Error while trying to subscribe to the renamed folder %1.\n"
+                               "Renaming itself was successful, but the renamed folder might disappear "
+                               "from the folder list after the next sync since it is unsubscribed on the server.\n"
+                               "You can try to manually subscribe to the folder yourself.\n\n"
+                               "%2" )
+      .arg( mFolder->label() ).arg( errorMessage ) );
+  delete this;
+}
+
+void CachedImapJob::slotSubscribtionChange2Failed( const TQString &errorMessage )
+{
+  kdWarning(5006) << k_funcinfo << errorMessage << endl;
+  // Ignore this error, not something user-visible anyway
+  delete this;
+}
+
+void CachedImapJob::slotSubscribtionChange1Done( const TQString&, bool )
+{
+  disconnect( mAccount, TQT_SIGNAL( subscriptionChanged( const TQString&, bool ) ),
+              this, TQT_SLOT( slotSubscribtionChange1Done( const TQString&, bool ) ) );
+  connect( mAccount, TQT_SIGNAL( subscriptionChanged( const TQString&, bool ) ),
+           this, TQT_SLOT( slotSubscribtionChange2Done( const TQString&, bool ) ) );
+  disconnect( mAccount, TQT_SIGNAL( subscriptionChangeFailed( const TQString& ) ),
+              this, TQT_SLOT( slotSubscribtionChange1Failed( const TQString& ) ) );
+  connect( mAccount, TQT_SIGNAL( subscriptionChangeFailed( const TQString& ) ),
+           this, TQT_SLOT( slotSubscribtionChange2Failed( const TQString& ) ) );
+
+  mAccount->changeSubscription( false, mOldImapPath, true /* quiet */ );
+}
+
+void CachedImapJob::slotSubscribtionChange2Done( const TQString&, bool )
+{
+  // Finally done with everything!
+  delete this;
+}
+
 void CachedImapJob::slotRenameFolderResult( KIO::Job *job )
 {
   KMAcctCachedImap::JobIterator it = mAccount->findJob(job);
@@ -782,34 +852,25 @@ void CachedImapJob::slotRenameFolderResult( KIO::Job *job )
     return;
   }
 
-
   if( job->error() ) {
-    // Error, revert label change
-    TQMap<TQString, KMAcctCachedImap::RenamedFolder>::ConstIterator renit = mAccount->renamedFolders().find( mFolder->imapPath() );
-    Q_ASSERT( renit != mAccount->renamedFolders().end() );
-    if ( renit != mAccount->renamedFolders().end() ) {
-      mFolder->folder()->setLabel( (*renit).mOldLabel );
-      mAccount->removeRenamedFolder( mFolder->imapPath() );
-    }
-    mAccount->handleJobError( job, i18n( "Error while trying to rename folder %1" ).arg( mFolder->label() ) + '\n' );
+    revertLabelChange();
+    const TQString errorMessage = i18n( "Error while trying to rename folder %1" ).arg( mFolder->label() );
+    mAccount->handleJobError( job, errorMessage );
+    delete this;
   } else {
-    // Okay, the folder seems to be renamed on the server,
-    // now rename it on disk
-    TQString oldName = mFolder->name();
-    TQString oldPath = mFolder->imapPath();
-    mAccount->removeRenamedFolder( oldPath );
-    mFolder->setImapPath( (*it).path );
-    mFolder->FolderStorage::rename( (*it).url );
 
-    if( oldPath.endsWith( "/" ) ) oldPath.truncate( oldPath.length() -1 );
-    TQString newPath = mFolder->imapPath();
-    if( newPath.endsWith( "/" ) ) newPath.truncate( newPath.length() -1 );
-    renameChildFolders( mFolder->folder()->child(), oldPath, newPath );
-    kmkernel->dimapFolderMgr()->contentsChanged();
+    mAccount->removeJob( it );
+    renameOnDisk();
 
-    mAccount->removeJob(it);
+    // Okay, the folder seems to be renamed on the server and on disk.
+    // Now unsubscribe from the old folder name and subscribe to the new folder name,
+    // so that the folder doesn't suddenly disappear after renaming it
+    connect( mAccount, TQT_SIGNAL( subscriptionChangeFailed( const TQString& ) ),
+             this, TQT_SLOT( slotSubscribtionChange1Failed( const TQString& ) ) );
+    connect( mAccount, TQT_SIGNAL( subscriptionChanged( const TQString&, bool ) ),
+             this, TQT_SLOT( slotSubscribtionChange1Done( const TQString&, bool ) ) );
+    mAccount->changeSubscription( true, mNewImapPath, true /* quiet */ );
   }
-  delete this;
 }
 
 void CachedImapJob::slotListMessagesResult( KIO::Job * job )

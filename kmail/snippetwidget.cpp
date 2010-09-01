@@ -1,6 +1,6 @@
 /***************************************************************************
  *   snippet feature from kdevelop/plugins/snippet/                        *
- *                                                                         * 
+ *                                                                         *
  *   Copyright (C) 2007 by Robert Gruber                                   *
  *   rgruber@users.sourceforge.net                                         *
  *                                                                         *
@@ -168,7 +168,7 @@ void SnippetWidget::slotAddGroup()
   SnippetDlg dlg( mActionCollection, this, "SnippetDlg");
   dlg.setShowShortcut( false );
   dlg.snippetText->setEnabled(false);
-  dlg.snippetText->setText("GROUP");
+  dlg.snippetText->setText(i18n("GROUP"));
   dlg.setCaption(i18n("Add Group"));
   dlg.cbGroup->insertItem(i18n("All"));
   dlg.cbGroup->setCurrentText(i18n("All"));

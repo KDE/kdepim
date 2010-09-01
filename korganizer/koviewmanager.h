@@ -53,6 +53,16 @@ class KOViewManager : public QObject
 {
     Q_OBJECT
   public:
+
+    enum AgendaMode {
+      AGENDA_NONE,
+      AGENDA_DAY,
+      AGENDA_WORK_WEEK,
+      AGENDA_WEEK,
+      AGENDA_NEXTX,
+      AGENDA_OTHER // for example, showing 8 days
+    };
+
     KOViewManager( CalendarView * );
     virtual ~KOViewManager();
 
@@ -74,6 +84,7 @@ class KOViewManager : public QObject
     void updateView();
     void updateView( const TQDate &start, const TQDate &end );
 
+    void goMenu( bool enable );
     void raiseCurrentView();
 
     void connectView( KOrg::BaseView * );
@@ -84,7 +95,25 @@ class KOViewManager : public QObject
 
     KOAgendaView *agendaView() const { return mAgendaView; }
     KOrg::MultiAgendaView *multiAgendaView() const { return mAgendaSideBySideView; }
-    KOTodoView   *todoView() const { return mTodoView; }
+    KOTodoView *todoView() const { return mTodoView; }
+    KOMonthView *monthView() const { return mMonthView; }
+
+    void updateMultiCalendarDisplay();
+
+    /*
+    * Returns true if the agenda is the current view.
+    *
+    * Never use the pointer returned by agendaView()
+    * to know if agenda is selected, because agenda has other modes
+    * (tabbed, side by side). Use this function instead.
+    */
+    bool agendaIsSelected() const;
+
+    /**
+      If the agenda view is selected it returns the current range mode:
+      week, work week, day or nextX days
+    */
+    AgendaMode agendaMode() const { return mAgendaMode; }
 
   public slots:
     void showWhatsNextView();
@@ -129,6 +158,10 @@ class KOViewManager : public QObject
 
     KOrg::BaseView *mLastEventView;
     TQTabWidget *mAgendaViewTabs;
+    int mAgendaViewTabIndex;
+
+    AgendaMode mAgendaMode;
+
 };
 
 #endif

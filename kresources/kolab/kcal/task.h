@@ -86,7 +86,9 @@ public:
   virtual void setHasStartDate( bool );
   virtual bool hasStartDate() const;
 
-  virtual void setDueDate( const TQDateTime& date );
+  virtual void setDueDate( const TQDateTime &date );
+  virtual void setDueDate( const TQString &date );
+  virtual void setDueDate( const TQDate &date );
   virtual TQDateTime dueDate() const;
   virtual bool hasDueDate() const;
 
@@ -110,7 +112,19 @@ protected:
   // Read all known fields from this ical todo
   void setFields( const KCal::Todo* );
 
+  // This sets the priority of this task by looking at mKolabPriorityFromDom and
+  // mKCalPriorityFromDom.
+  void decideAndSetPriority();
+
+  // This is the KCal priority, not the Kolab priority.
+  // See kcalPriorityToKolab() and kolabPrioritytoKCal().
   int mPriority;
+
+  // Those priority values are the raw values read by loadAttribute().
+  // They will be converted later in decideAndSetPriority().
+  int mKolabPriorityFromDom;
+  int mKCalPriorityFromDom;
+
   int mPercentCompleted;
   KCal::Incidence::Status mStatus;
   TQString mParent;

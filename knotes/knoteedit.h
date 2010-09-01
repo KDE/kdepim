@@ -24,7 +24,7 @@
 #include <tqwidget.h>
 
 #include <ktextedit.h>
-
+class KNote;
 class TQFont;
 class TQColor;
 class TQPushButton;
@@ -41,7 +41,9 @@ class KNoteEdit : public KTextEdit
 public:
     KNoteEdit( KActionCollection *actions, TQWidget *parent=0, const char *name=0 );
     ~KNoteEdit();
-
+    void setNote( KNote *_note ) {
+        m_note = _note;
+    }
     void setText( const TQString& text );
     void setTextFont( const TQFont& font );
     void setTextColor( const TQColor& color );
@@ -67,10 +69,12 @@ public slots:
 
     //void textIncreaseIndent();
     //void textDecreaseIndent();
+    void slotCutEnabled( bool );
 
 protected:
     virtual void contentsDragEnterEvent( TQDragEnterEvent *e );
     virtual void contentsDropEvent( TQDropEvent *e );
+    virtual TQPopupMenu *createPopupMenu( const TQPoint &pos );
 
 private slots:
     void slotReturnPressed();
@@ -79,6 +83,10 @@ private slots:
     void colorChanged( const TQColor &c );
     void alignmentChanged( int a );
     void verticalAlignmentChanged( VerticalAlignment a );
+    void slotAllowTab();
+
+    void setEnabledRedo( bool b );
+    void setEnabledUndo( bool b );
 
 private:
     void autoIndent();
@@ -114,8 +122,10 @@ private:
     KAction         *m_textColor;
     KFontAction     *m_textFont;
     KFontSizeAction *m_textSize;
-
+    KAction* undo;
+    KAction* redo;
     bool m_autoIndentMode;
+    KNote           *m_note;
 };
 
 #endif

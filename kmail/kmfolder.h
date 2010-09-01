@@ -353,6 +353,13 @@ public:
 
   /** Is the folder read-only? */
   bool isReadOnly() const;
+  /** Can we write into and delete from this folder (on IMAP that's not necessarily !isReadOnly()) */
+  bool isWritable() const;
+
+  bool mailCheckInProgress() const;
+
+  /** Can messages in this folder be deleted? */
+  bool canDeleteMessages() const;
 
   /** Returns true if the folder is a kmail system folder. These are
     the folders 'inbox', 'outbox', 'sent', 'trash', 'drafts', 'templates'.
@@ -532,6 +539,13 @@ public:
   /** Sets the move-in-progress flag. */
   void setMoveInProgress( bool b ) { mMoveInProgress = b; }
 
+  /**
+  * Returns true if the name is valid for a child of this folder.
+  * If the name contains invalid characters then false is returned and message will contain
+  * an explanation that can be presented to the user.
+  */
+  bool isValidName( const TQString &folderName, TQString &message );
+
 signals:
   /** Emitted when the status, name, or associated accounts of this
     folder changed. */
@@ -589,6 +603,15 @@ signals:
 
   /** Emitted when the folder's size changes. */
   void folderSizeChanged( KMFolder * );
+
+  /** Emitted when the no content state changed. */
+  void noContentChanged();
+
+  /**
+   *  Emiitted when the sync state, i.e. mailCheckInProgress(), changes.
+   *  Currently only supported for disconnected IMAP.
+   */
+  void syncStateChanged();
 
 public slots:
   /** Incrementally update the index if possible else call writeIndex */

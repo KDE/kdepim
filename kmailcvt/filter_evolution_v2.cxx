@@ -39,7 +39,6 @@ FilterEvolution_v2::FilterEvolution_v2(void) :
 /** Destructor. */
 FilterEvolution_v2::~FilterEvolution_v2(void)
 {
-    endImport();
 }
 
 /** Recursive import of Evolution's mboxes. */
@@ -61,6 +60,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     mailDir = kfd->selectedFile();
+    delete kfd;
 
     if (mailDir.isEmpty()) {
         info->alert(i18n("No directory selected."));

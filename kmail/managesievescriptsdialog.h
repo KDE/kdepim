@@ -28,6 +28,7 @@ private slots:
   void slotSelectionChanged( TQListViewItem * );
   void slotNewScript();
   void slotEditScript();
+  void slotDeactivateScript();
   void slotDeleteScript();
   void slotGetResult( KMail::SieveJob *, bool, const TQString &, bool );
   void slotPutResult( KMail::SieveJob *, bool );
@@ -36,7 +37,7 @@ private slots:
 
 private:
   void killAllJobs();
-  void changeActiveScript( TQCheckListItem * );
+  void changeActiveScript( TQCheckListItem *, bool activate = true );
 
 private:
   TQListView * mListView;

@@ -187,8 +187,10 @@ namespace KMail {
      * Subscribe (@p subscribe = TRUE) / Unsubscribe the folder
      * identified by @p imapPath.
      * Emits subscriptionChanged signal on success.
+     * Emits subscriptionChangeFailed signal when it fails.
+     * @param quiet if false, an error message will be displayed if the job fails.
      */
-    void changeSubscription(bool subscribe, const TQString& imapPath);
+    void changeSubscription(bool subscribe, const TQString& imapPath, bool quiet = false );
 
     /**
      * Returns whether the account is locally subscribed to the
@@ -252,9 +254,10 @@ namespace KMail {
     virtual void cancelMailCheck();
 
     /**
-     * Init a new-mail-check for a single folder
+     * Init a new-mail-check for a single folder, and optionally its subfolders.
      */
-    void processNewMailSingleFolder(KMFolder* folder);
+    enum FolderListType { Single, Recursive };
+    void processNewMailInFolder( KMFolder* folder, FolderListType type = Single );
 
     /**
      * Return true if we are processing a mailcheck for a single folder
@@ -323,7 +326,7 @@ namespace KMail {
     /**
      * Returns the root folder of this account
      */
-    virtual FolderStorage* const rootFolder() const = 0;
+    virtual FolderStorage* rootFolder() const = 0;
 
     /**
      * Progress item for listDir
@@ -586,6 +589,12 @@ namespace KMail {
     void subscriptionChanged(const TQString& imapPath, bool subscribed);
 
     /**
+     * Emitted when changeSubscription() failed.
+     * @param errorMessage the error message that contains the reason for the failure
+     */
+    void subscriptionChangeFailed( const TQString &errorMessage );
+
+    /**
      * Emitted upon completion of the job for setting the status for a group of UIDs,
      * as a result of a setImapStatus call.
      * On error, if the user chooses abort (not continue), cont is set to false.
@@ -595,7 +604,8 @@ namespace KMail {
     /**
      * Emitted when the get-user-rights job is done,
      * as a result of a getUserRights call.
-     * Use userRights() to retrieve them, they will still be on 0 if the job failed.
+     * Use userRights() to retrieve them after using userRightsState() to see if the results are
+     * valid.
      */
     void receivedUserRights( KMFolder* folder );
 

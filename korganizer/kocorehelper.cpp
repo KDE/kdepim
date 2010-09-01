@@ -26,13 +26,17 @@
 #include "koglobals.h"
 
 
-TQColor KOCoreHelper::categoryColor( const TQStringList &categories ) 
+TQColor KOCoreHelper::categoryColor( const TQStringList &categories )
 {
+  if ( categories.isEmpty() ) {
+    return KOPrefs::instance()->unsetCategoryColor();
+  }
+
   // FIXME: Correctly treat events with multiple categories
   TQString cat = categories.first();
   TQColor bgColor;
   if (cat.isEmpty())
-    bgColor = defaultEventColor();
+    bgColor = KOPrefs::instance()->unsetCategoryColor();
   else
     bgColor = *( KOPrefs::instance()->categoryColor( cat ) );
   return bgColor;

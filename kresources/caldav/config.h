@@ -51,6 +51,7 @@ public slots:
     virtual void saveSettings(KRES::Resource *resource);
 
     void slotSTasksToggled( bool );
+    void slotSJournalsToggled( bool );
 
 protected:
 
@@ -60,9 +61,11 @@ private:
 
     TQLineEdit *mUrl;
     TQLineEdit *mTasksUrl;
+    TQLineEdit *mJournalsUrl;
     TQLineEdit *mUsername;
     TQLineEdit *mPassword;
     TQCheckBox *mUseSTasks;
+    TQCheckBox *mUseSJournals;
     TQCheckBox *mRememberPassword;
     CalDavReloadConfig* mReloadConfig;
     CalDavSaveConfig* mSaveConfig;

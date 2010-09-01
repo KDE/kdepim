@@ -70,12 +70,23 @@ KPIM::LdapSearch* AddresseeLineEdit::s_LDAPSearch = 0L;
 TQString* AddresseeLineEdit::s_LDAPText = 0L;
 AddresseeLineEdit* AddresseeLineEdit::s_LDAPLineEdit = 0L;
 
+// The weights associated with the completion sources in s_completionSources.
+// Both are maintained by addCompletionSource(), don't attempt to modifiy those yourself.
+TQMap<TQString,int>* s_completionSourceWeights = 0;
+
+// maps LDAP client indices to completion source indices
+// the assumption that they are always the first n indices in s_completion
+// does not hold when clients are added later on
+TQMap<int, int>* AddresseeLineEdit::s_ldapClientToCompletionSourceMap = 0;
+
 static KStaticDeleter<KMailCompletion> completionDeleter;
 static KStaticDeleter<KPIM::CompletionItemsMap> completionItemsDeleter;
 static KStaticDeleter<TQTimer> ldapTimerDeleter;
 static KStaticDeleter<KPIM::LdapSearch> ldapSearchDeleter;
 static KStaticDeleter<TQString> ldapTextDeleter;
 static KStaticDeleter<TQStringList> completionSourcesDeleter;
+static KStaticDeleter<TQMap<TQString,int> > completionSourceWeightsDeleter;
+static KStaticDeleter<TQMap<int, int> > ldapClientToCompletionSourceMapDeleter;
 
 // needs to be unique, but the actual name doesn't matter much
 static TQCString newLineEditDCOPObjectName()
@@ -100,7 +111,8 @@ static bool itemIsHeader( const TQListBoxItem* item )
 
 AddresseeLineEdit::AddresseeLineEdit( TQWidget* parent, bool useCompletion,
                                       const char *name )
-  : ClickLineEdit( parent, TQString::null, name ), DCOPObject( newLineEditDCOPObjectName() )
+  : ClickLineEdit( parent, TQString::null, name ), DCOPObject( newLineEditDCOPObjectName() ),
+    m_useSemiColonAsSeparator( false ), m_allowDistLists( true )
 {
   m_useCompletion = useCompletion;
   m_completionInitialized = false;
@@ -114,6 +126,18 @@ AddresseeLineEdit::AddresseeLineEdit( TQWidget* parent, bool useCompletion,
     s_addressesDirty = true;
 }
 
+void AddresseeLineEdit::updateLDAPWeights()
+{
+  /* Add completion sources for all ldap server, 0 to n. Added first so
+   * that they map to the ldapclient::clientNumber() */
+  s_LDAPSearch->updateCompletionWeights();
+  TQValueList< LdapClient* > clients =  s_LDAPSearch->clients();
+  int clientIndex = 0;
+  for ( TQValueList<LdapClient*>::iterator it = clients.begin(); it != clients.end(); ++it, ++clientIndex ) {
+    const int sourceIndex = addCompletionSource( "LDAP server: " + (*it)->server().host(), (*it)->completionWeight() );
+    s_ldapClientToCompletionSourceMap->insert( clientIndex, sourceIndex );
+  }
+}
 
 void AddresseeLineEdit::init()
 {
@@ -124,8 +148,9 @@ void AddresseeLineEdit::init()
 
     completionItemsDeleter.setObject( s_completionItemMap, new KPIM::CompletionItemsMap() );
     completionSourcesDeleter.setObject( s_completionSources, new TQStringList() );
+    completionSourceWeightsDeleter.setObject( s_completionSourceWeights, new TQMap<TQString,int> );
+    ldapClientToCompletionSourceMapDeleter.setObject( s_ldapClientToCompletionSourceMap, new TQMap<int,int> );
   }
-
 //  connect( s_completion, TQT_SIGNAL( match( const TQString& ) ),
 //           this, TQT_SLOT( slotMatched( const TQString& ) ) );
 
@@ -134,14 +159,10 @@ void AddresseeLineEdit::init()
       ldapTimerDeleter.setObject( s_LDAPTimer, new TQTimer( 0, "ldapTimerDeleter" ) );
       ldapSearchDeleter.setObject( s_LDAPSearch, new KPIM::LdapSearch );
       ldapTextDeleter.setObject( s_LDAPText, new TQString );
-
-      /* Add completion sources for all ldap server, 0 to n. Added first so
-       * that they map to the ldapclient::clientNumber() */
-      TQValueList< LdapClient* > clients =  s_LDAPSearch->clients();
-      for ( TQValueList<LdapClient*>::iterator it = clients.begin(); it != clients.end(); ++it ) {
-        addCompletionSource( "LDAP server: " + (*it)->server().host() );
-      }
     }
+
+    updateLDAPWeights();
+
     if ( !m_completionInitialized ) {
       setCompletionObject( s_completion, false );
       connect( this, TQT_SIGNAL( completion( const TQString& ) ),
@@ -187,6 +208,11 @@ void AddresseeLineEdit::allowSemiColonAsSeparator( bool useSemiColonAsSeparator 
   m_useSemiColonAsSeparator = useSemiColonAsSeparator;
 }
 
+void AddresseeLineEdit::allowDistributionLists( bool allowDistLists )
+{
+  m_allowDistLists = allowDistLists;
+}
+
 void AddresseeLineEdit::keyPressEvent( TQKeyEvent *e )
 {
   bool accept = false;
@@ -206,8 +232,14 @@ void AddresseeLineEdit::keyPressEvent( TQKeyEvent *e )
     }
   }
 
+  const TQString oldContent = text();
   if ( !accept )
     KLineEdit::keyPressEvent( e );
+
+  // if the text didn't change (eg. because a cursor navigation key was pressed)
+  // we don't need to trigger a new search
+  if ( oldContent == text() )
+    return;
 
   if ( e->isAccepted() ) {
     updateSearchString();
@@ -264,24 +296,25 @@ void AddresseeLineEdit::insert( const TQString &t )
 
   TQString contents = text();
   int start_sel = 0;
-  int end_sel = 0;
   int pos = cursorPosition( );
-  if ( getSelection( &start_sel, &end_sel ) ) {
+
+  if ( hasSelectedText() ) {
     // Cut away the selection.
-    if ( pos > end_sel )
-      pos -= (end_sel - start_sel);
-    else if ( pos > start_sel )
-      pos = start_sel;
-    contents = contents.left( start_sel ) + contents.right( end_sel + 1 );
+    start_sel = selectionStart();
+    pos = start_sel;
+    contents = contents.left( start_sel ) + contents.mid( start_sel + selectedText().length() );
   }
 
   int eot = contents.length();
-  while ((eot > 0) && contents[ eot - 1 ].isSpace() ) eot--;
-  if ( eot == 0 )
+  while ( ( eot > 0 ) && contents[ eot - 1 ].isSpace() ) {
+    eot--;
+  }
+  if ( eot == 0 ) {
     contents = TQString::null;
-  else if ( pos >= eot ) {
-    if ( contents[ eot - 1 ] == ',' )
+  } else if ( pos >= eot ) {
+    if ( contents[ eot - 1 ] == ',' ) {
       eot--;
+    }
     contents.truncate( eot );
     contents += ", ";
     pos = eot + 2;
@@ -324,35 +357,45 @@ void AddresseeLineEdit::mouseReleaseEvent( TQMouseEvent *e )
 void AddresseeLineEdit::dropEvent( TQDropEvent *e )
 {
   KURL::List uriList;
-  if ( !isReadOnly()
-       && KURLDrag::canDecode(e) && KURLDrag::decode( e, uriList ) ) {
-    TQString contents = text();
-    // remove trailing white space and comma
-    int eot = contents.length();
-    while ( ( eot > 0 ) && contents[ eot - 1 ].isSpace() )
-      eot--;
-    if ( eot == 0 )
-      contents = TQString::null;
-    else if ( contents[ eot - 1 ] == ',' ) {
-      eot--;
-      contents.truncate( eot );
-    }
-    bool mailtoURL = false;
-    // append the mailto URLs
-    for ( KURL::List::Iterator it = uriList.begin();
-          it != uriList.end(); ++it ) {
-      if ( !contents.isEmpty() )
-        contents.append( ", " );
-      KURL u( *it );
-      if ( u.protocol() == "mailto" ) {
-        mailtoURL = true;
-        contents.append( (*it).path() );
+  if ( !isReadOnly() ) {
+    if ( KURLDrag::canDecode(e) && KURLDrag::decode( e, uriList ) ) {
+      TQString contents = text();
+      // remove trailing white space and comma
+      int eot = contents.length();
+      while ( ( eot > 0 ) && contents[ eot - 1 ].isSpace() )
+        eot--;
+      if ( eot == 0 )
+        contents = TQString::null;
+      else if ( contents[ eot - 1 ] == ',' ) {
+        eot--;
+        contents.truncate( eot );
       }
-    }
-    if ( mailtoURL ) {
-      setText( contents );
-      setEdited( true );
-      return;
+      bool mailtoURL = false;
+      // append the mailto URLs
+      for ( KURL::List::Iterator it = uriList.begin();
+            it != uriList.end(); ++it ) {
+        if ( !contents.isEmpty() )
+          contents.append( ", " );
+        KURL u( *it );
+        if ( u.protocol() == "mailto" ) {
+          mailtoURL = true;
+          contents.append( (*it).path() );
+        }
+      }
+      if ( mailtoURL ) {
+        setText( contents );
+        setEdited( true );
+        return;
+      }
+    } else {
+      // Let's see if this drop contains a comma separated list of emails
+      TQString dropData = TQString::fromUtf8( e->encodedData( "text/plain" ) );
+      TQStringList addrs = splitEmailAddrList( dropData );
+      if ( addrs.count() > 0 ) {
+        setText( normalizeAddressesAndDecodeIDNs( dropData ) );
+        setEdited( true );
+        return;
+      }
     }
   }
 
@@ -526,21 +569,19 @@ void AddresseeLineEdit::loadContacts()
         TQString uid = (*it).uid();
         TQMap<TQString, TQString>::const_iterator wit = uidToResourceMap.find( uid );
         const TQString subresourceLabel = resabc->subresourceLabel( *wit );
-        int idx = s_completionSources->findIndex( subresourceLabel );
-        if ( idx == -1 ) {
-          s_completionSources->append( subresourceLabel );
-          idx = s_completionSources->size() -1;
-        }
-        int weight = ( wit != uidToResourceMap.end() ) ? resabc->subresourceCompletionWeight( *wit ) : 80;
+        const int weight = ( wit != uidToResourceMap.end() ) ? resabc->subresourceCompletionWeight( *wit ) : 80;
+        const int idx = addCompletionSource( subresourceLabel, weight );
+
         //kdDebug(5300) << (*it).fullEmail() << " subres=" << *wit << " weight=" << weight << endl;
         addContact( *it, weight, idx );
       }
     } else { // KABC non-imap resource
       int weight = config.readNumEntry( resource->identifier(), 60 );
-      s_completionSources->append( resource->resourceName() );
+      int sourceIndex = addCompletionSource( resource->resourceName(), weight );
       KABC::Resource::Iterator it;
-      for ( it = resource->begin(); it != resource->end(); ++it )
-        addContact( *it, weight, s_completionSources->size()-1 );
+      for ( it = resource->begin(); it != resource->end(); ++it ) {
+        addContact( *it, weight, sourceIndex );
+      }
     }
   }
 
@@ -577,12 +618,14 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight, int
   if ( KPIM::DistributionList::isDistributionList( addr ) ) {
     //kdDebug(5300) << "AddresseeLineEdit::addContact() distribution list \"" << addr.formattedName() << "\" weight=" << weight << endl;
 
-    //for CompletionAuto
-    addCompletionItem( addr.formattedName(), weight, source );
+    if ( m_allowDistLists ) {
+      //for CompletionAuto
+      addCompletionItem( addr.formattedName(), weight, source );
 
-    //for CompletionShell, CompletionPopup
-    TQStringList sl( addr.formattedName() );
-    addCompletionItem( addr.formattedName(), weight, source, &sl );
+      //for CompletionShell, CompletionPopup
+      TQStringList sl( addr.formattedName() );
+      addCompletionItem( addr.formattedName(), weight, source, &sl );
+    }
 
     return;
   }
@@ -730,6 +773,11 @@ void AddresseeLineEdit::addCompletionItem( const TQString& string, int weight, i
 
 void AddresseeLineEdit::slotStartLDAPLookup()
 {
+  KGlobalSettings::Completion  mode = completionMode();
+
+  if ( mode == KGlobalSettings::CompletionNone  )
+    return;
+
   if ( !s_LDAPSearch->isAvailable() ) {
     return;
   }
@@ -765,7 +813,7 @@ void AddresseeLineEdit::startLoadingLDAPEntries()
 
 void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList& adrs )
 {
-  if ( s_LDAPLineEdit != this )
+  if ( adrs.isEmpty() || s_LDAPLineEdit != this )
     return;
 
   for ( KPIM::LdapResultList::ConstIterator it = adrs.begin(); it != adrs.end(); ++it ) {
@@ -773,14 +821,20 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList& adrs )
     addr.setNameFromString( (*it).name );
     addr.setEmails( (*it).email );
 
-    addContact( addr, (*it).completionWeight, (*it ).clientNumber  );
+    if ( !s_ldapClientToCompletionSourceMap->contains( (*it).clientNumber ) )
+      updateLDAPWeights(); // we got results from a new source, so update the completion sources
+
+    addContact( addr, (*it).completionWeight, (*s_ldapClientToCompletionSourceMap)[ (*it ).clientNumber ]  );
   }
 
   if ( (hasFocus() || completionBox()->hasFocus() )
        && completionMode() != KGlobalSettings::CompletionNone
-       && completionMode() != KGlobalSettings::CompletionShell) {
+       && completionMode() != KGlobalSettings::CompletionShell ) {
     setText( m_previousAddresses + m_searchString );
-    doCompletion( m_lastSearchMode );
+    // only complete again if the user didn't change the selection while we were waiting
+    // otherwise the completion box will be closed
+    if ( m_searchString.stripWhiteSpace() != completionBox()->currentText().stripWhiteSpace() )
+      doCompletion( m_lastSearchMode );
   }
 }
 
@@ -881,6 +935,10 @@ void AddresseeLineEdit::slotEditCompletionOrder()
   init(); // for s_LDAPSearch
   CompletionOrderEditor editor( s_LDAPSearch, this );
   editor.exec();
+  if ( m_useCompletion ) {
+    updateLDAPWeights();
+    s_addressesDirty = true;
+  }
 }
 
 void KPIM::AddresseeLineEdit::slotIMAPCompletionOrderChanged()
@@ -902,15 +960,23 @@ void AddresseeLineEdit::updateSearchString()
 
   int n = -1;
   bool inQuote = false;
-  for ( uint i = 0; i < m_searchString.length(); ++i ) {
-    if ( m_searchString[ i ] == '"' )
+  uint searchStringLength = m_searchString.length();
+  for ( uint i = 0; i < searchStringLength; ++i ) {
+    if ( m_searchString[ i ] == '"' ) {
       inQuote = !inQuote;
-    if ( m_searchString[ i ] == '\\' && (i + 1) < m_searchString.length() && m_searchString[ i + 1 ] == '"' )
+    }
+    if ( m_searchString[ i ] == '\\' &&
+         (i + 1) < searchStringLength && m_searchString[ i + 1 ] == '"' ) {
       ++i;
-    if ( inQuote )
+    }
+    if ( inQuote ) {
       continue;
-    if ( m_searchString[ i ] == ',' || ( m_useSemiColonAsSeparator && m_searchString[ i ] == ';' ) )
+    }
+    if ( i < searchStringLength &&
+         ( m_searchString[ i ] == ',' ||
+           ( m_useSemiColonAsSeparator && m_searchString[ i ] == ';' ) ) ) {
       n = i;
+    }
   }
 
   if ( n >= 0 ) {
@@ -924,9 +990,7 @@ void AddresseeLineEdit::updateSearchString()
 
     m_previousAddresses = m_searchString.left( n );
     m_searchString = m_searchString.mid( n ).stripWhiteSpace();
-  }
-  else
-  {
+  } else {
     m_previousAddresses = TQString::null;
   }
 }
@@ -954,18 +1018,30 @@ KCompletion::CompOrder KPIM::AddresseeLineEdit::completionOrder()
     return KCompletion::Sorted;
 }
 
-int KPIM::AddresseeLineEdit::addCompletionSource( const TQString &source )
+int KPIM::AddresseeLineEdit::addCompletionSource( const TQString &source, int weight )
 {
-  s_completionSources->append( source );
-  return s_completionSources->size()-1;
+  TQMap<TQString,int>::iterator it = s_completionSourceWeights->find( source );
+  if ( it == s_completionSourceWeights->end() )
+    s_completionSourceWeights->insert( source, weight );
+  else
+    (*s_completionSourceWeights)[source] = weight;
+
+  int sourceIndex = s_completionSources->findIndex( source );
+  if ( sourceIndex == -1 ) {
+    s_completionSources->append( source );
+    return s_completionSources->size() - 1;
+  }
+  else
+    return sourceIndex;
 }
 
 bool KPIM::AddresseeLineEdit::eventFilter(TQObject *obj, TQEvent *e)
 {
   if ( obj == completionBox() ) {
-    if ( e->type() == TQEvent::MouseButtonPress
-      || e->type() == TQEvent::MouseMove
-      || e->type() == TQEvent::MouseButtonRelease ) {
+    if ( e->type() == TQEvent::MouseButtonPress ||
+         e->type() == TQEvent::MouseMove ||
+         e->type() == TQEvent::MouseButtonRelease ||
+         e->type() == TQEvent::MouseButtonDblClick ) {
       TQMouseEvent* me = static_cast<TQMouseEvent*>( e );
       // find list box item at the event position
       TQListBoxItem *item = completionBox()->itemAt( me->pos() );
@@ -1003,26 +1079,35 @@ bool KPIM::AddresseeLineEdit::eventFilter(TQObject *obj, TQEvent *e)
     }
   }
   if ( ( obj == this ) &&
-      ( e->type() == TQEvent::KeyPress ) &&
-      completionBox()->isVisible() ) {
+       ( e->type() == TQEvent::KeyPress || e->type() == TQEvent::KeyRelease ) &&
+       completionBox()->isVisible() ) {
     TQKeyEvent *ke = static_cast<TQKeyEvent*>( e );
-    unsigned int currentIndex = completionBox()->currentItem();
+    int currentIndex = completionBox()->currentItem();
+    if ( currentIndex < 0 ) {
+      return true;
+    }
+
     if ( ke->key() == Key_Up ) {
       //kdDebug() << "EVENTFILTER: Key_Up currentIndex=" << currentIndex << endl;
       // figure out if the item we would be moving to is one we want
       // to ignore. If so, go one further
-      TQListBoxItem *itemAbove = completionBox()->item( currentIndex - 1 );
+      TQListBoxItem *itemAbove = completionBox()->item( currentIndex );
       if ( itemAbove && itemIsHeader(itemAbove) ) {
         // there is a header above us, check if there is even further up
         // and if so go one up, so it'll be selected
-        if ( currentIndex > 1 && completionBox()->item( currentIndex - 2 ) ) {
+        if ( currentIndex > 0 && completionBox()->item( currentIndex - 1 ) ) {
           //kdDebug() << "EVENTFILTER: Key_Up -> skipping " << currentIndex - 1 << endl;
           completionBox()->setCurrentItem( itemAbove->prev() );
-          completionBox()->setSelected( currentIndex - 2, true );
-        } else if ( currentIndex == 1 ) {
+          completionBox()->setSelected( currentIndex - 1, true );
+        } else if ( currentIndex == 0 ) {
             // nothing to skip to, let's stay where we are, but make sure the
             // first header becomes visible, if we are the first real entry
             completionBox()->ensureVisible( 0, 0 );
+            //Kolab issue 2941: be sure to add email even if it's the only element.
+            if ( itemIsHeader( completionBox()->item( currentIndex ) ) ) {
+              currentIndex++;
+            }
+            completionBox()->setCurrentItem( itemAbove );
             completionBox()->setSelected( currentIndex, true );
         }
         return true;
@@ -1030,14 +1115,15 @@ bool KPIM::AddresseeLineEdit::eventFilter(TQObject *obj, TQEvent *e)
     } else if ( ke->key() == Key_Down  ) {
       // same strategy for downwards
       //kdDebug() << "EVENTFILTER: Key_Down. currentIndex=" << currentIndex << endl;
-      TQListBoxItem *itemBelow = completionBox()->item( currentIndex + 1 );
+      TQListBoxItem *itemBelow = completionBox()->item( currentIndex );
       if ( itemBelow && itemIsHeader( itemBelow ) ) {
-        if ( completionBox()->item( currentIndex + 2 ) ) {
+        if ( completionBox()->item( currentIndex + 1 ) ) {
           //kdDebug() << "EVENTFILTER: Key_Down -> skipping " << currentIndex+1 << endl;
           completionBox()->setCurrentItem( itemBelow->next() );
-          completionBox()->setSelected( currentIndex + 2, true );
+          completionBox()->setSelected( currentIndex + 1, true );
         } else {
           // nothing to skip to, let's stay where we are
+          completionBox()->setCurrentItem( itemBelow );
           completionBox()->setSelected( currentIndex, true );
         }
         return true;
@@ -1052,11 +1138,14 @@ bool KPIM::AddresseeLineEdit::eventFilter(TQObject *obj, TQEvent *e)
       TQListBoxItem *item = completionBox()->item( currentIndex );
       if ( item && itemIsHeader(item) ) {
         completionBox()->setSelected( currentIndex, true );
-      }
-    } else if ( ke->key() == Key_Tab || ke->key() == Key_Backtab ) {
-      /// first, find the header of teh current section
+       }
+    } else if ( e->type() == TQEvent::KeyRelease &&
+                ( ke->key() == Key_Tab || ke->key() == Key_Backtab ) ) {
+      //kdDebug() << "EVENTFILTER: Key_Tab. currentIndex=" << currentIndex << endl;
+      /// first, find the header of the current section
       TQListBoxItem *myHeader = 0;
-      int i = currentIndex;
+      const int iterationstep = ke->key() == Key_Tab ?  1 : -1;
+      int i = QMIN( QMAX( currentIndex - iterationstep, 0 ), completionBox()->count() - 1 );
       while ( i>=0 ) {
         if ( itemIsHeader( completionBox()->item(i) ) ) {
           myHeader = completionBox()->item( i );
@@ -1066,22 +1155,31 @@ bool KPIM::AddresseeLineEdit::eventFilter(TQObject *obj, TQEvent *e)
       }
       Q_ASSERT( myHeader ); // we should always be able to find a header
 
-      // find the next header (searching backwards, for Key_Backtab
+      // find the next header (searching backwards, for Key_Backtab)
       TQListBoxItem *nextHeader = 0;
-      const int iterationstep = ke->key() == Key_Tab ?  1 : -1;
       // when iterating forward, start at the currentindex, when backwards,
       // one up from our header, or at the end
-      uint j = ke->key() == Key_Tab ? currentIndex : i==0 ? completionBox()->count()-1 : (i-1) % completionBox()->count();
+      uint j;
+      if ( ke->key() == Key_Tab ) {
+        j = currentIndex;
+      } else {
+        i = completionBox()->index( myHeader );
+        if ( i == 0 ) {
+          j = completionBox()->count() - 1;
+        } else {
+          j = ( i - 1 ) % completionBox()->count();
+        }
+      }
       while ( ( nextHeader = completionBox()->item( j ) ) && nextHeader != myHeader ) {
           if ( itemIsHeader(nextHeader) ) {
-              break;
+            break;
           }
           j = (j + iterationstep) % completionBox()->count();
       }
       if ( nextHeader && nextHeader != myHeader ) {
         TQListBoxItem *item = completionBox()->item( j + 1 );
         if ( item && !itemIsHeader(item) ) {
-          completionBox()->setSelected( j+1, true );
+          completionBox()->setSelected( item, true );
           completionBox()->setCurrentItem( item );
           completionBox()->ensureCurrentVisible();
         }
@@ -1092,20 +1190,49 @@ bool KPIM::AddresseeLineEdit::eventFilter(TQObject *obj, TQEvent *e)
   return ClickLineEdit::eventFilter( obj, e );
 }
 
+class SourceWithWeight {
+  public:
+    int weight;           // the weight of the source
+    TQString sourceName;   // the name of the source, e.g. "LDAP Server"
+    int index;            // index into s_completionSources
+
+    bool operator< ( const SourceWithWeight &other ) {
+      if ( weight > other.weight )
+        return true;
+      if ( weight < other.weight )
+        return false;
+      return sourceName < other.sourceName;
+    }
+};
+
 const TQStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool fullSearch )
 {
   TQStringList items = fullSearch ?
     s_completion->allMatches( m_searchString )
     : s_completion->substringCompletion( m_searchString );
 
+  // For weighted mode, the algorithm is the following:
+  // In the first loop, we add each item to its section (there is one section per completion source)
+  // We also add spaces in front of the items.
+  // The sections are appended to the items list.
+  // In the second loop, we then walk through the sections and add all the items in there to the
+  // sorted item list, which is the final result.
+  //
+  // The algo for non-weighted mode is different.
+
   int lastSourceIndex = -1;
   unsigned int i = 0;
+
+  // Maps indices of the items list, which are section headers/source items,
+  // to a TQStringList which are the items of that section/source.
   TQMap<int, TQStringList> sections;
   TQStringList sortedItems;
   for ( TQStringList::Iterator it = items.begin(); it != items.end(); ++it, ++i ) {
     CompletionItemsMap::const_iterator cit = s_completionItemMap->find(*it);
-    if ( cit == s_completionItemMap->end() )continue;
+    if ( cit == s_completionItemMap->end() )
+      continue;
     int idx = (*cit).second;
+
     if ( s_completion->order() == KCompletion::Weighted ) {
       if ( lastSourceIndex == -1 || lastSourceIndex != idx ) {
         const TQString sourceLabel(  (*s_completionSources)[idx] );
@@ -1124,11 +1251,30 @@ const TQStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool ful
       sortedItems.append( *it );
     }
   }
+
   if ( s_completion->order() == KCompletion::Weighted ) {
-    for ( TQMap<int, TQStringList>::Iterator it( sections.begin() ), end( sections.end() ); it != end; ++it ) {
-      sortedItems.append( (*s_completionSources)[it.key()] );
-      for ( TQStringList::Iterator sit( (*it).begin() ), send( (*it).end() ); sit != send; ++sit ) {
-        sortedItems.append( *sit );
+
+    // Sort the sections
+    TQValueList<SourceWithWeight> sourcesAndWeights;
+    for ( uint i = 0; i < s_completionSources->size(); i++ ) {
+      SourceWithWeight sww;
+      sww.sourceName = (*s_completionSources)[i];
+      sww.weight = (*s_completionSourceWeights)[sww.sourceName];
+      sww.index = i;
+      sourcesAndWeights.append( sww );
+    }
+    qHeapSort( sourcesAndWeights );
+
+    // Add the sections and their items to the final sortedItems result list
+    for( uint i = 0; i < sourcesAndWeights.size(); i++ ) {
+      TQStringList sectionItems = sections[sourcesAndWeights[i].index];
+      if ( !sectionItems.isEmpty() ) {
+        sortedItems.append( sourcesAndWeights[i].sourceName );
+        TQStringList sectionItems = sections[sourcesAndWeights[i].index];
+        for ( TQStringList::Iterator sit( sectionItems.begin() ), send( sectionItems.end() );
+              sit != send; ++sit ) {
+          sortedItems.append( *sit );
+        }
       }
     }
   } else {

@@ -91,6 +91,7 @@ ResourceExchange::ResourceExchange( const KConfig *config )
     mCachedSeconds = config->readNumEntry( "ExchangeCacheTimeout", 600 );
     mAutoMailbox = config->readBoolEntry( "ExchangeAutoMailbox", true );
   } else {
+    setResourceName( i18n( "Exchange Server" ) );
     mAccount = new ExchangeAccount( "", "", "", "" );
     mCachedSeconds = 600;
   }
@@ -248,19 +249,26 @@ void ResourceExchange::slotMonitorError( int errorCode, const TQString& moreInfo
 }
 
 
-bool ResourceExchange::addEvent(Event *anEvent)
+bool ResourceExchange::addEvent( Event *event )
 {
+  return addEvent( event, TQString() );
+}
+
+bool ResourceExchange::addEvent( Event *event, const TQString &subresource )
+{
+  Q_UNUSED( subresource ); //subresources are not supported
+
   if( !mCache ) return false;
   kdDebug() << "ResourceExchange::addEvent" << endl;
 
   // FIXME: first check of upload finished successfully, only then
   // add to cache
-  mCache->addEvent( anEvent );
+  mCache->addEvent( event );
 
-  uploadEvent( anEvent );
-//  insertEvent(anEvent);
+  uploadEvent( event );
+//  insertEvent( event );
 
-  anEvent->registerObserver( this );
+  event->registerObserver( this );
 //  setModified( true );
 
   return true;
@@ -341,8 +349,14 @@ void ResourceExchange::unsubscribeEvents( const TQDate &/*start*/, const TQDate 
   kdDebug() << "ResourceExchange::unsubscribeEvents()" << endl;
 }
 
-bool ResourceExchange::addTodo(Todo */*todo*/)
+bool ResourceExchange::addTodo( Todo *todo )
 {
+  return addTodo( todo, TQString() );
+}
+
+bool ResourceExchange::addTodo( Todo */*todo*/, const TQString &subresource )
+{
+  Q_UNUSED( subresource ); //subresources are not supported
   // This resource doesn't handle todos yet!
   return false;
 /*  if( !mCache)
@@ -355,6 +369,7 @@ bool ResourceExchange::addTodo(Todo */*todo*/)
 
   return true;*/
 }
+
 
 bool ResourceExchange::deleteTodo(Todo */*todo*/)
 {
@@ -530,8 +545,15 @@ Event::List ResourceExchange::rawEvents( EventSortField sortField, SortDirection
   return mCache->rawEvents( sortField, sortDirection );
 }
 
-bool ResourceExchange::addJournal(Journal */*journal*/)
+bool ResourceExchange::addJournal( Journal *journal )
 {
+  return addJournal( journal, TQString() );
+}
+
+bool ResourceExchange::addJournal( Journal */*journal*/, const TQString &subresource )
+{
+  Q_UNUSED( subresource ); //subresources are not supported
+
   // This resource doesn't handle journals yet
   return false;
 /*  kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;

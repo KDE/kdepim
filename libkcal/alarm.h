@@ -2,6 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -58,6 +59,18 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     ~Alarm();
 
     /**
+      Returns an exact copy of this alarm. The returned object is owned by the caller.
+      @since 4.5
+    */
+    Alarm *clone();
+
+    /**
+      Copy operator.
+      @since 4.5
+    */
+    Alarm &operator=( const Alarm & );
+
+    /**
       Compare this alarm with another one.
     */
     bool operator==( const Alarm & ) const;
@@ -67,10 +80,11 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Set the type of the alarm.
       If the specified type is different from the current type of the alarm,
       the alarm's type-specific properties are initialised to null.
-      
+
       @param type type of alarm.
     */
     void setType( Type type );
+
     /**
       Return the type of the alarm.
     */
@@ -78,15 +92,17 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the alarm to be a display alarm.
-      
+
       @param text text to display when the alarm is triggered.
     */
     void setDisplayAlarm( const TQString &text = TQString::null );
+
     /**
       Set the text to be displayed when the alarm is triggered.
       Ignored if the alarm is not a display alarm.
     */
     void setText( const TQString &text );
+
     /**
       Return the text string that displays when the alarm is triggered.
     */
@@ -94,7 +110,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the alarm to be an audio alarm.
-      
+
       @param audioFile optional file to play when the alarm is triggered.
     */
     void setAudioAlarm( const TQString &audioFile = TQString::null );
@@ -105,14 +121,14 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setAudioFile( const TQString &audioFile );
     /**
       Return the name of the audio file for the alarm.
-      
+
       @return The audio file for the alarm, or TQString::null if not an audio alarm.
     */
     TQString audioFile() const;
 
     /**
       Set the alarm to be a procedure alarm.
-      
+
       @param programFile program to execute when the alarm is triggered.
       @param arguments arguments to supply to programFile.
     */
@@ -125,7 +141,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setProgramFile( const TQString &programFile );
     /**
       Return the name of the program file to execute when the alarm is triggered.
-      
+
       @return the program file name, or TQString::null if not a procedure alarm.
     */
     TQString programFile() const;
@@ -136,14 +152,14 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setProgramArguments( const TQString &arguments );
     /**
       Return the arguments to the program to run when the alarm is triggered.
-      
+
       @return the program arguments, or TQString::null if not a procedure alarm.
     */
     TQString programArguments() const;
 
     /**
       Set the alarm to be an email alarm.
-      
+
       @param subject subject line of email.
       @param text body of email.
       @param addressees email addresses of recipient(s).
@@ -210,7 +226,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setMailText( const TQString &text );
     /**
       Return the email body text.
-      
+
       @return the body text, or TQString::null if not an email alarm.
     */
     TQString mailText() const;
@@ -267,17 +283,17 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the interval between snoozes for the alarm.
-      
+
       @param alarmSnoozeTime the time in minutes between snoozes.
     */
-    void setSnoozeTime( int alarmSnoozeTime );
+    void setSnoozeTime( const Duration &alarmSnoozeTime );
 
     /**
       Get how long the alarm snooze interval is.
-      
+
       @return the number of minutes between snoozes.
     */
-    int snoozeTime() const;
+    Duration snoozeTime() const;
 
     /**
       Set how many times an alarm is to repeat itself after its initial
@@ -308,7 +324,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Get how long between the alarm's initial occurrence and its final repetition.
       @return the number of seconds between the initial occurrence and final repetition.
     */
-    int duration() const;
+    Duration duration() const;
 
     /**
       Toggles the value of alarm to be either on or off.
@@ -350,8 +366,8 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     TQValueList<Person> mMailAddresses; // who to mail for reminder
     TQString mMailSubject;        // subject of email
 
-    int mAlarmSnoozeTime;        // number of minutes after alarm to
-                                 // snooze before ringing again
+    Duration mAlarmSnoozeTime;   // how long after alarm to snooze before
+                                 // triggering again
     int mAlarmRepeatCount;       // number of times for alarm to repeat
                                  // after the initial time
 

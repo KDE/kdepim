@@ -198,6 +198,7 @@ namespace KMail {
     setOnlyLocallySubscribedFolders( config.readBoolEntry( "locally-subscribed-folders", false ) );
     setLoadOnDemand( config.readBoolEntry( "loadondemand", false ) );
     setListOnlyOpenFolders( config.readBoolEntry( "listOnlyOpenFolders", false ) );
+    mCapabilities = config.readListEntry( "capabilities", TQStringList() );
     // read namespaces
     nsMap map;
     TQStringList list = config.readListEntry( TQString::number( PersonalNS ) );
@@ -237,6 +238,7 @@ namespace KMail {
     config.writeEntry( "locally-subscribed-folders", onlyLocallySubscribedFolders() );
     config.writeEntry( "loadondemand", loadOnDemand() );
     config.writeEntry( "listOnlyOpenFolders", listOnlyOpenFolders() );
+    config.writeEntry( "capabilities", mCapabilities );
     TQString data;
     for ( nsMap::Iterator it = mNamespaces.begin(); it != mNamespaces.end(); ++it ) {
       if ( !it.data().isEmpty() ) {
@@ -357,7 +359,7 @@ namespace KMail {
   }
 
   //-----------------------------------------------------------------------------
-  void ImapAccountBase::changeSubscription( bool subscribe, const TQString& imapPath )
+  void ImapAccountBase::changeSubscription( bool subscribe, const TQString& imapPath, bool quiet )
   {
     // change the subscription of the folder
     KURL url = getUrl();
@@ -380,6 +382,7 @@ namespace KMail {
     // a bit of a hack to save one slot
     if (subscribe) jd.onlySubscribed = true;
     else jd.onlySubscribed = false;
+    jd.quiet = quiet;
     insertJob(job, jd);
 
     connect(job, TQT_SIGNAL(result(KIO::Job *)),
@@ -396,7 +399,9 @@ namespace KMail {
     TQString path = static_cast<KIO::SimpleJob*>(job)->url().path();
     if (job->error())
     {
-      handleJobError( job, i18n( "Error while trying to subscribe to %1:" ).arg( path ) + '\n' );
+      if ( !(*it).quiet )
+        handleJobError( job, i18n( "Error while trying to subscribe to %1:" ).arg( path ) + '\n' );
+      emit subscriptionChangeFailed( job->errorString() );
       // ## emit subscriptionChanged here in case anyone needs it to support continue/cancel
     }
     else
@@ -416,9 +421,9 @@ namespace KMail {
     // don't even allow removing one's own admin permission, so this code won't hurt either).
     if ( imapPath == "/INBOX/" ) {
       if ( parent->folderType() == KMFolderTypeImap )
-        static_cast<KMFolderImap*>( parent->storage() )->setUserRights( ACLJobs::All );
+        static_cast<KMFolderImap*>( parent->storage() )->setUserRights( ACLJobs::All, ACLJobs::Ok );
       else if ( parent->folderType() == KMFolderTypeCachedImap )
-        static_cast<KMFolderCachedImap*>( parent->storage() )->setUserRights( ACLJobs::All );
+        static_cast<KMFolderCachedImap*>( parent->storage() )->setUserRights( ACLJobs::All, ACLJobs::Ok );
       emit receivedUserRights( parent ); // warning, you need to connect first to get that one
       return;
     }
@@ -452,12 +457,15 @@ namespace KMail {
 #ifndef NDEBUG
       //kdDebug(5006) << "User Rights: " << ACLJobs::permissionsToString( job->permissions() ) << endl;
 #endif
-      // Store the permissions
-      if ( folder->folderType() == KMFolderTypeImap )
-        static_cast<KMFolderImap*>( folder->storage() )->setUserRights( job->permissions() );
-      else if ( folder->folderType() == KMFolderTypeCachedImap )
-        static_cast<KMFolderCachedImap*>( folder->storage() )->setUserRights( job->permissions() );
     }
+    // Store the permissions
+    if ( folder->folderType() == KMFolderTypeImap )
+      static_cast<KMFolderImap*>( folder->storage() )->setUserRights( job->permissions(),
+                         job->error() ? KMail::ACLJobs::FetchFailed : KMail::ACLJobs::Ok );
+    else if ( folder->folderType() == KMFolderTypeCachedImap )
+      static_cast<KMFolderCachedImap*>( folder->storage() )->setUserRights( job->permissions(),
+                         job->error() ? KMail::ACLJobs::FetchFailed : KMail::ACLJobs::Ok );
+
     if (mSlave) removeJob(job);
     emit receivedUserRights( folder );
   }
@@ -802,7 +810,7 @@ namespace KMail {
   //-----------------------------------------------------------------------------
   TQString ImapAccountBase::delimiterForNamespace( const TQString& prefix )
   {
-    kdDebug(5006) << "delimiterForNamespace " << prefix << endl;
+    //kdDebug(5006) << "delimiterForNamespace " << prefix << endl;
     // try to match exactly
     if ( mNamespaceToDelimiter.contains(prefix) ) {
       return mNamespaceToDelimiter[prefix];
@@ -826,7 +834,7 @@ namespace KMail {
       return mNamespaceToDelimiter[""];
     }
     // well, we tried
-    kdDebug(5006) << "delimiterForNamespace - not found" << endl;
+    //kdDebug(5006) << "delimiterForNamespace - not found" << endl;
     return TQString::null;
   }
 
@@ -893,17 +901,17 @@ namespace KMail {
       bool readOnly = false;
       if (it != mapJobData.end()) {
           const KMFolder * const folder = (*it).parent;
-          assert(folder);
+          if( !folder ) return _error;
           const KMFolderCachedImap * const imap = dynamic_cast<const KMFolderCachedImap*>( folder->storage() );
           if ( imap ) {
-              quotaAsString = imap->quotaInfo().toString();
+            quotaAsString = imap->quotaInfo().toString();
           }
           readOnly = folder->isReadOnly();
       }
       error = i18n("The folder is too close to its quota limit. (%1)").arg( quotaAsString );
       if ( readOnly ) {
           error += i18n("\nSince you do not have write privileges on this folder, "
-                  "please ask the owner of the folder to free up some space in it.");
+                        "please ask the owner of the folder to free up some space in it.");
       }
       return error;
   }
@@ -1015,12 +1023,12 @@ namespace KMail {
   }
 
   //-----------------------------------------------------------------------------
-  void ImapAccountBase::processNewMailSingleFolder(KMFolder* folder)
+  void ImapAccountBase::processNewMailInFolder( KMFolder* folder, FolderListType type /*= Single*/ )
   {
     if ( mFoldersQueuedForChecking.contains( folder ) )
       return;
-    mFoldersQueuedForChecking.append(folder);
-    mCheckingSingleFolder = true;
+    mFoldersQueuedForChecking.append( folder );
+    mCheckingSingleFolder = ( type == Single );
     if ( checkingMail() )
     {
       disconnect( this, TQT_SIGNAL( finishedCheck( bool, CheckStatus ) ),

@@ -36,6 +36,7 @@
 #include <kabc/addressee.h>
 #include <libkcal/journal.h>
 #include <libkdepim/kpimprefs.h>
+#include <libemailfunctions/email.h>
 #include <kdebug.h>
 #include <tqfile.h>
 
@@ -257,8 +258,16 @@ bool KolabBase::loadEmailAttribute( TQDomElement& element, Email& email )
       TQDomElement e = n.toElement();
       const TQString tagName = e.tagName();
 
-      if ( tagName == "display-name" )
-        email.displayName = e.text();
+      if ( tagName == "display-name" ) {
+        // Quote the text in case it contains commas or other quotable chars.
+        TQString tusername = KPIM::quoteNameIfNecessary( e.text() );
+
+        TQString tname, temail;
+        // ignore the return value because it will always be false since
+        // tusername does not contain "@domain".
+        KPIM::getNameAndMail( tusername, tname, temail );
+        email.displayName = tname;
+      }
       else if ( tagName == "smtp-address" )
         email.smtpAddress = e.text();
       else
@@ -411,7 +420,11 @@ TQString KolabBase::dateToString( const TQDate& date )
 TQDateTime KolabBase::stringToDateTime( const TQString& _date )
 {
   TQString date( _date );
-  if ( date.endsWith( "Z" ) )
+  //Deal with data from some clients that always append a Z to dates.
+  if ( date.endsWith( "ZZ" ) )
+    date.truncate( date.length() - 2 );
+  //In TQt3, TQt::ISODate cannot handle a trailing Z for UTC, so remove if found.
+  else if ( date.endsWith( "Z" ) )
     date.truncate( date.length() - 1 );
   return TQDateTime::fromString( date, Qt::ISODate );
 }

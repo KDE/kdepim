@@ -23,6 +23,7 @@
 
 #include <tqwidget.h>
 #include <libkcal/attendee.h>
+#include <kabc/addressee.h>
 
 class TQBoxLayout;
 class TQComboBox;
@@ -30,13 +31,10 @@ class TQCheckBox;
 class TQLabel;
 class TQPushButton;
 class TQHBox;
+class TQListViewItem;
 
 namespace KPIM {
   class AddresseeLineEdit;
-}
-
-namespace KABC {
-  class Addressee;
 }
 
 namespace KCal {
@@ -52,7 +50,8 @@ class KOAttendeeEditor : public QWidget
   public:
     KOAttendeeEditor( TQWidget *parent, const char *name = 0 );
 
-    virtual void insertAttendee( KCal::Attendee* attendee, bool fetchFB = true ) = 0;
+    virtual void insertAttendee( KCal::Attendee *attendee, bool fetchFB = true ) = 0;
+    virtual void removeAttendee( KCal::Attendee *attendee ) = 0;
 
     virtual void readEvent( KCal::Incidence *incidence );
     virtual void writeEvent( KCal::Incidence *incidence );
@@ -79,10 +78,13 @@ class KOAttendeeEditor : public QWidget
     void insertAttendeeFromAddressee( const KABC::Addressee &a, const KCal::Attendee* at=0 );
 
     void fillOrganizerCombo();
-
+    virtual TQListViewItem* hasExampleAttendee() const = 0;
+    bool isExampleAttendee( const KCal::Attendee* ) const;
     virtual KCal::Attendee* currentAttendee() const = 0;
     virtual void updateCurrentItem() = 0;
 
+    virtual void setSelected ( int index ) = 0;
+    virtual int selectedIndex() = 0;
     virtual void changeStatusForMe( KCal::Attendee::PartStat status ) = 0;
 
     virtual bool eventFilter( TQObject *, TQEvent *);
@@ -95,6 +97,7 @@ class KOAttendeeEditor : public QWidget
     void updateAttendeeInput();
     void clearAttendeeInput();
     void fillAttendeeInput( KCal::Attendee *a );
+    void expandAttendee();
     void updateAttendee();
 
   protected:
@@ -118,6 +121,7 @@ class KOAttendeeEditor : public QWidget
     TQPtrList<KCal::Attendee> mnewAttendees;
 
   private:
+    KABC::Addressee::List expandDistList( const TQString &text ) const;
     bool mDisableItemUpdate;
 };
 

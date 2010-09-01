@@ -26,6 +26,7 @@
 //
 // Widget showing one Journal entry
 
+#include <libkcal/resourcecalendar.h>
 #include <tqvbox.h>
 
 class TQLabel;
@@ -78,7 +79,7 @@ class JournalEntry : public TQWidget {
 
   signals:
     void deleteIncidence( Incidence * );
-    void editIncidence( Incidence * );
+    void editIncidence( Incidence *, const TQDate& );
 
   protected:
     void clearFields();
@@ -131,9 +132,9 @@ class JournalDateEntry : public TQVBox {
     void setIncidenceChangerSignal( IncidenceChangerBase *changer );
     void setDateSignal( const TQDate & );
     void flushEntries();
-    void editIncidence( Incidence * );
+    void editIncidence( Incidence *, const TQDate& );
     void deleteIncidence( Incidence * );
-    void newJournal( const TQDate & );
+    void newJournal( ResourceCalendar *, const TQString &, const TQDate & );
 
   public slots:
     void emitNewJournal();

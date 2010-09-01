@@ -24,8 +24,10 @@
 #ifndef URIHANDLER_H
 #define URIHANDLER_H
 
-#include <tqstring.h>
 #include <kdepimmacros.h>
+
+class TQString;
+class TQWidget;
 
 class KDE_EXPORT UriHandler
 {
@@ -33,7 +35,10 @@ class KDE_EXPORT UriHandler
     /**
       Process URI. Return true if handler handled the URI, otherwise false.
     */
-    static bool process( const TQString &uri );
+    static bool process( TQWidget *parent, const TQString &uri );
+
+    static TQString attachmentNameFromUri( const TQString &uri );
+    static TQString uidFromUri( const TQString &uri );
 };
 
 #endif

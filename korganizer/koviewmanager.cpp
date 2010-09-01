@@ -26,9 +26,12 @@
 #include <tqwidgetstack.h>
 #include <tqtabwidget.h>
 
+#include <libkcal/calendarresources.h>
+#include <kactioncollection.h>
 #include <kconfig.h>
 #include <kglobal.h>
 
+#include "actionmanager.h"
 #include "calendarview.h"
 #include "datenavigator.h"
 #include "kotodoview.h"
@@ -42,6 +45,7 @@
 #include "koglobals.h"
 #include "navigatorbar.h"
 #include "multiagendaview.h"
+#include <korganizer/mainwindow.h>
 
 #include "koviewmanager.h"
 #include "koviewmanager.moc"
@@ -62,6 +66,8 @@ KOViewManager::KOViewManager( CalendarView *mainView ) :
   mJournalView = 0;
   mTimelineView = 0;
   mAgendaViewTabs = 0;
+  mAgendaViewTabIndex = 0;
+  mAgendaMode = AGENDA_NONE;
 }
 
 KOViewManager::~KOViewManager()
@@ -85,7 +91,29 @@ void KOViewManager::readSettings(KConfig *config)
   else if (view == "Journal") showJournalView();
   else if (view == "Todo") showTodoView();
   else if (view == "Timeline") showTimelineView();
-  else showAgendaView();
+  else {
+    mAgendaMode = AgendaMode( config->readNumEntry( "Agenda Mode", AGENDA_OTHER ) );
+
+    switch ( mAgendaMode ) {
+      case AGENDA_WORK_WEEK:
+        showWorkWeekView();
+        break;
+      case AGENDA_WEEK:
+        showWeekView();
+        break;
+      case AGENDA_NEXTX:
+        showNextXView();
+        break;
+      case AGENDA_DAY:
+        showDayView();
+        break;
+      case AGENDA_NONE:
+        // Someone has been playing with the config file.
+      default:
+        mAgendaMode = AGENDA_OTHER;
+        showAgendaView();
+    }
+  }
 }
 
 void KOViewManager::writeSettings(KConfig *config)
@@ -99,7 +127,10 @@ void KOViewManager::writeSettings(KConfig *config)
   else if (mCurrentView == mJournalView) view = "Journal";
   else if (mCurrentView == mTodoView) view = "Todo";
   else if (mCurrentView == mTimelineView) view = "Timeline";
-  else view = "Agenda";
+  else {
+    view = "Agenda";
+    config->writeEntry( "Agenda Mode", mAgendaMode );
+  }
 
   config->writeEntry("Current View",view);
 
@@ -127,11 +158,35 @@ void KOViewManager::showView(KOrg::BaseView *view)
   if ( mAgendaView ) mAgendaView->deleteSelectedDateTime();
 
   raiseCurrentView();
-  mMainView->processIncidenceSelection( 0 );
+
+  mMainView->processIncidenceSelection( 0, TQDate() );
 
   mMainView->updateView();
 
   mMainView->adaptNavigationUnits();
+}
+
+void KOViewManager::goMenu( bool enable )
+{
+  KOrg::MainWindow *w = ActionManager::findInstance( KURL() );
+  if ( w ) {
+    KActionCollection *ac = w->getActionCollection();
+    if ( ac ) {
+      KAction *action;
+      action = ac->action( "go_today" );
+      if ( action ) {
+        action->setEnabled( enable );
+      }
+      action = ac->action( "go_previous" );
+      if ( action ) {
+        action->setEnabled( enable );
+      }
+      action = ac->action( "go_next" );
+      if ( action ) {
+        action->setEnabled( enable );
+      }
+    }
+  }
 }
 
 void KOViewManager::raiseCurrentView()
@@ -170,44 +225,46 @@ void KOViewManager::connectView(KOrg::BaseView *view)
   if (!view) return;
 
   // selecting an incidence
-  connect( view, TQT_SIGNAL( incidenceSelected( Incidence * ) ),
-           mMainView, TQT_SLOT( processMainViewSelection( Incidence * ) ) );
+  connect( view, TQT_SIGNAL( incidenceSelected( Incidence *,const TQDate & ) ),
+           mMainView, TQT_SLOT( processMainViewSelection( Incidence *,const TQDate & ) ) );
 
   // showing/editing/deleting an incidence. The calendar view takes care of the action.
-  connect(view, TQT_SIGNAL(showIncidenceSignal(Incidence *)),
-          mMainView, TQT_SLOT(showIncidence(Incidence *)));
-  connect(view, TQT_SIGNAL(editIncidenceSignal(Incidence *)),
-          mMainView, TQT_SLOT(editIncidence(Incidence *)));
-  connect(view, TQT_SIGNAL(deleteIncidenceSignal(Incidence *)),
-          mMainView, TQT_SLOT(deleteIncidence(Incidence *)));
-  connect(view, TQT_SIGNAL(copyIncidenceSignal(Incidence *)),
-          mMainView, TQT_SLOT(copyIncidence(Incidence *)));
-  connect(view, TQT_SIGNAL(cutIncidenceSignal(Incidence *)),
-          mMainView, TQT_SLOT(cutIncidence(Incidence *)));
-  connect(view, TQT_SIGNAL(pasteIncidenceSignal()),
-          mMainView, TQT_SLOT(pasteIncidence()));
-  connect(view, TQT_SIGNAL(toggleAlarmSignal(Incidence *)),
-          mMainView, TQT_SLOT(toggleAlarm(Incidence *)));
-  connect(view,TQT_SIGNAL(dissociateOccurrenceSignal( Incidence *, const TQDate & )),
-          mMainView, TQT_SLOT(dissociateOccurrence( Incidence *, const TQDate & )));
-  connect(view,TQT_SIGNAL(dissociateFutureOccurrenceSignal( Incidence *, const TQDate & )),
-          mMainView, TQT_SLOT(dissociateFutureOccurrence( Incidence *, const TQDate & )));
+  connect( view, TQT_SIGNAL(showIncidenceSignal(Incidence *,const TQDate &)),
+           mMainView, TQT_SLOT(showIncidence(Incidence *,const TQDate &)) );
+  connect( view, TQT_SIGNAL(editIncidenceSignal(Incidence *,const TQDate &)),
+           mMainView, TQT_SLOT(editIncidence(Incidence *,const TQDate &)) );
+  connect( view, TQT_SIGNAL(deleteIncidenceSignal(Incidence *)),
+           mMainView, TQT_SLOT(deleteIncidence(Incidence *)) );
+  connect( view, TQT_SIGNAL(copyIncidenceSignal(Incidence *)),
+           mMainView, TQT_SLOT(copyIncidence(Incidence *)) );
+  connect( view, TQT_SIGNAL(cutIncidenceSignal(Incidence *)),
+           mMainView, TQT_SLOT(cutIncidence(Incidence *)) );
+  connect( view, TQT_SIGNAL(pasteIncidenceSignal()),
+           mMainView, TQT_SLOT(pasteIncidence()));
+  connect( view, TQT_SIGNAL(toggleAlarmSignal(Incidence *)),
+           mMainView, TQT_SLOT(toggleAlarm(Incidence *)) );
+  connect( view,TQT_SIGNAL(dissociateOccurrenceSignal(Incidence *,const TQDate &)),
+           mMainView, TQT_SLOT(dissociateOccurrence(Incidence *,const TQDate &)) );
+  connect( view,TQT_SIGNAL(dissociateFutureOccurrenceSignal(Incidence *,const TQDate &)),
+           mMainView, TQT_SLOT(dissociateFutureOccurrence(Incidence *,const TQDate &)) );
 
   // signals to create new incidences
-  connect( view, TQT_SIGNAL( newEventSignal() ),
-           mMainView, TQT_SLOT( newEvent() ) );
-  connect( view, TQT_SIGNAL( newEventSignal( const TQDateTime & ) ),
-           mMainView, TQT_SLOT( newEvent( const TQDateTime & ) ) );
-  connect( view, TQT_SIGNAL( newEventSignal( const TQDateTime &, const TQDateTime & ) ),
-           mMainView, TQT_SLOT( newEvent( const TQDateTime &, const TQDateTime & ) ) );
-  connect( view, TQT_SIGNAL( newEventSignal( const TQDate & ) ),
-           mMainView, TQT_SLOT( newEvent( const TQDate & ) ) );
-  connect( view, TQT_SIGNAL( newTodoSignal( const TQDate & ) ),
-           mMainView, TQT_SLOT( newTodo( const TQDate & ) ) );
-  connect( view, TQT_SIGNAL( newSubTodoSignal( Todo * ) ),
-           mMainView, TQT_SLOT( newSubTodo( Todo *) ) );
-  connect( view, TQT_SIGNAL( newJournalSignal( const TQDate & ) ),
-           mMainView, TQT_SLOT( newJournal( const TQDate & ) ) );
+  connect( view, TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &)),
+           mMainView, TQT_SLOT(newEvent(ResourceCalendar *,const TQString &)) );
+  connect( view, TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDate &)),
+           mMainView, TQT_SLOT(newEvent(ResourceCalendar *,const TQString &,const TQDate &)) );
+  connect( view, TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDateTime &)),
+           mMainView, TQT_SLOT(newEvent(ResourceCalendar *,const TQString &,const TQDateTime &)) );
+  connect( view, TQT_SIGNAL(newEventSignal(ResourceCalendar *,const TQString &,const TQDateTime &,const TQDateTime &)),
+           mMainView, TQT_SLOT(newEvent(ResourceCalendar *,const TQString &,const TQDateTime &,const TQDateTime &)) );
+
+  connect( view, TQT_SIGNAL(newTodoSignal(ResourceCalendar *,const TQString &,const TQDate &)),
+           mMainView, TQT_SLOT(newTodo(ResourceCalendar *,const TQString &,const TQDate &)) );
+  connect( view, TQT_SIGNAL(newSubTodoSignal(Todo *)),
+           mMainView, TQT_SLOT(newSubTodo(Todo *)) );
+
+  connect( view, TQT_SIGNAL(newJournalSignal(ResourceCalendar *,const TQString &,const TQDate &)),
+           mMainView, TQT_SLOT(newJournal(ResourceCalendar *,const TQString &,const TQDate &)) );
 
   // reload settings
   connect(mMainView, TQT_SIGNAL(configChanged()), view, TQT_SLOT(updateConfig()));
@@ -235,7 +292,7 @@ void KOViewManager::connectTodoView( KOTodoView* todoView )
   connect( todoView, TQT_SIGNAL( unSubTodoSignal() ),
            mMainView, TQT_SLOT( todo_unsub() ) );
   connect( todoView, TQT_SIGNAL( unAllSubTodoSignal() ),
-           mMainView, TQT_SLOT( makeSubTodosIndependents() ) );
+           mMainView, TQT_SLOT( makeSubTodosIndependent() ) );
 }
 
 void KOViewManager::zoomInHorizontally()
@@ -272,6 +329,7 @@ void KOViewManager::showWhatsNextView()
                                          "KOViewManager::WhatsNextView");
     addView(mWhatsNextView);
   }
+  goMenu( true );
   showView(mWhatsNextView);
 }
 
@@ -281,14 +339,24 @@ void KOViewManager::showListView()
     mListView = new KOListView(mMainView->calendar(), mMainView->viewStack(), "KOViewManager::ListView");
     addView(mListView);
   }
+  goMenu( true );
   showView(mListView);
 }
 
 void KOViewManager::showAgendaView()
 {
-  const bool showBoth = KOPrefs::instance()->agendaViewCalendarDisplay() == KOPrefs::AllCalendarViews;
-  const bool showMerged = showBoth || KOPrefs::instance()->agendaViewCalendarDisplay() == KOPrefs::CalendarsMerged;
-  const bool showSideBySide = showBoth || KOPrefs::instance()->agendaViewCalendarDisplay() == KOPrefs::CalendarsSideBySide;
+  // If the user opens a local file, through menu->open ( for example ), then
+  // it doesn't make sense to use multiagenda.
+  CalendarResources *calres = dynamic_cast<CalendarResources*>( mMainView->calendar() );
+  bool isLocalFile = !calres;
+
+  int mode = KOPrefs::instance()->agendaViewCalendarDisplay();
+
+  const bool showBoth = ( mode == KOPrefs::AllCalendarViews && !isLocalFile );
+
+  const bool showMerged = showBoth || mode == KOPrefs::CalendarsMerged || isLocalFile;
+
+  const bool showSideBySide = !isLocalFile && ( showBoth || mode == KOPrefs::CalendarsSideBySide );
 
   TQWidget *parent = mMainView->viewStack();
   if ( !mAgendaViewTabs && showBoth ) {
@@ -296,10 +364,17 @@ void KOViewManager::showAgendaView()
     connect( mAgendaViewTabs, TQT_SIGNAL( currentChanged( TQWidget* ) ),
              this, TQT_SLOT( currentAgendaViewTabChanged( TQWidget* ) ) );
     parent = mAgendaViewTabs;
+
+    KConfig *config = KOGlobals::self()->config();
+    config->setGroup( "Views" );
+    mAgendaViewTabIndex = config->readNumEntry( "Agenda View Tab Index", 0 );
   }
 
   if ( !mAgendaView && showMerged ) {
-    mAgendaView = new KOAgendaView(mMainView->calendar(), parent, "KOViewManager::AgendaView");
+    mAgendaView = new KOAgendaView( mMainView->calendar(),
+                                    mMainView,
+                                    parent,
+                                    "KOViewManager::AgendaView" );
 
     addView(mAgendaView);
 
@@ -315,7 +390,7 @@ void KOViewManager::showAgendaView()
 
   if ( !mAgendaSideBySideView && showSideBySide ) {
     mAgendaSideBySideView =
-      new MultiAgendaView( mMainView->calendar(), parent,
+      new MultiAgendaView( mMainView->calendar(), mMainView, parent,
                         "KOViewManager::AgendaSideBySideView" );
 
     addView(mAgendaSideBySideView);
@@ -332,8 +407,9 @@ void KOViewManager::showAgendaView()
   if ( showBoth && mAgendaViewTabs ) {
     if ( mAgendaView && mAgendaViewTabs->indexOf( mAgendaView ) < 0 )
       mAgendaViewTabs->addTab( mAgendaView, i18n("Merged calendar") );
-    if ( mAgendaSideBySideView  && mAgendaViewTabs->indexOf( mAgendaSideBySideView ) < 0 )
+    if ( mAgendaSideBySideView && mAgendaViewTabs->indexOf( mAgendaSideBySideView ) < 0 )
       mAgendaViewTabs->addTab( mAgendaSideBySideView, i18n("Calendars Side by Side") );
+    mAgendaViewTabs->setCurrentPage( mAgendaViewTabIndex );
   } else {
     if ( mAgendaView && mMainView->viewStack()->id( mAgendaView ) < 0 )
       mMainView->viewStack()->addWidget( mAgendaView );
@@ -341,6 +417,7 @@ void KOViewManager::showAgendaView()
       mMainView->viewStack()->addWidget( mAgendaSideBySideView );
   }
 
+  goMenu( true );
   if ( mAgendaViewTabs && showBoth )
     showView( static_cast<KOrg::BaseView*>( mAgendaViewTabs->currentPage() ) );
   else if ( mAgendaView && showMerged )
@@ -351,24 +428,28 @@ void KOViewManager::showAgendaView()
 
 void KOViewManager::showDayView()
 {
+  mAgendaMode = AGENDA_DAY;
   showAgendaView();
   mMainView->dateNavigator()->selectDates( 1 );
 }
 
 void KOViewManager::showWorkWeekView()
 {
+  mAgendaMode = AGENDA_WORK_WEEK;
   showAgendaView();
   mMainView->dateNavigator()->selectWorkWeek();
 }
 
 void KOViewManager::showWeekView()
 {
+  mAgendaMode = AGENDA_WEEK;
   showAgendaView();
   mMainView->dateNavigator()->selectWeek();
 }
 
 void KOViewManager::showNextXView()
 {
+  mAgendaMode = AGENDA_NEXTX;
   showAgendaView();
   mMainView->dateNavigator()->selectDates( TQDate::currentDate(),
                                            KOPrefs::instance()->mNextXDays );
@@ -381,6 +462,7 @@ void KOViewManager::showMonthView()
     addView(mMonthView);
   }
 
+  goMenu( true );
   showView(mMonthView);
 }
 
@@ -397,6 +479,7 @@ void KOViewManager::showTodoView()
     mTodoView->restoreLayout( config, "Todo View" );
   }
 
+  goMenu( false );
   showView( mTodoView );
 }
 
@@ -408,6 +491,7 @@ void KOViewManager::showJournalView()
     addView(mJournalView);
   }
 
+  goMenu( true );
   showView(mJournalView);
 }
 
@@ -419,13 +503,18 @@ void KOViewManager::showTimelineView()
                                      "KOViewManager::TimelineView");
     addView(mTimelineView);
   }
+  goMenu( true );
   showView(mTimelineView);
 }
 
 void KOViewManager::showEventView()
 {
-  if ( mLastEventView ) showView( mLastEventView );
-  else showWeekView();
+  if ( mLastEventView ) {
+    goMenu( true );
+    showView( mLastEventView );
+  } else {
+    showWeekView();
+  }
 }
 
 Incidence *KOViewManager::currentSelection()
@@ -441,7 +530,7 @@ TQDate KOViewManager::currentSelectionDate()
 {
   TQDate qd;
   if (mCurrentView) {
-    DateList qvl = mCurrentView->selectedDates();
+    DateList qvl = mCurrentView->selectedIncidenceDates();
     if (!qvl.isEmpty()) qd = qvl.first();
   }
   return qd;
@@ -465,6 +554,11 @@ TQWidget* KOViewManager::widgetForView( KOrg::BaseView* view ) const
 
 void KOViewManager::currentAgendaViewTabChanged( TQWidget* widget )
 {
+  KConfig *config = KOGlobals::self()->config();
+  config->setGroup( "Views" );
+  config->writeEntry( "Agenda View Tab Index", mAgendaViewTabs->currentPageIndex() );
+
+  goMenu( true );
   showView( static_cast<KOrg::BaseView*>( widget ) );
 }
 
@@ -474,4 +568,20 @@ void KOViewManager::resourcesChanged()
     mAgendaView->resourcesChanged();
   if ( mAgendaSideBySideView )
     mAgendaSideBySideView->resourcesChanged();
+}
+
+void KOViewManager::updateMultiCalendarDisplay()
+{
+  if ( agendaIsSelected() ) {
+    showAgendaView();
+  } else {
+    updateView();
+  }
+}
+
+bool KOViewManager::agendaIsSelected() const
+{
+  return mCurrentView == mAgendaView            ||
+         mCurrentView == mAgendaSideBySideView  ||
+        ( mAgendaViewTabs && mCurrentView == mAgendaViewTabs->currentPage() );
 }

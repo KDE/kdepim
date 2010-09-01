@@ -118,6 +118,7 @@ namespace KMail {
   TQString BriefHeaderStyle::format( const KMMessage * message,
                                     const HeaderStrategy * strategy,
                                     const TQString & vCardName, bool printing, bool topLevel ) const {
+    Q_UNUSED( topLevel );
     if ( !message ) return TQString::null;
     if ( !strategy )
       strategy = HeaderStrategy::brief();
@@ -216,6 +217,7 @@ namespace KMail {
   TQString PlainHeaderStyle::format( const KMMessage * message,
                                     const HeaderStrategy * strategy,
                                     const TQString & vCardName, bool printing, bool topLevel ) const {
+    Q_UNUSED( topLevel );
     if ( !message ) return TQString::null;
     if ( !strategy )
       strategy = HeaderStrategy::rich();
@@ -416,6 +418,7 @@ namespace KMail {
   TQString FancyHeaderStyle::format( const KMMessage * message,
                                     const HeaderStrategy * strategy,
                                     const TQString & vCardName, bool printing, bool topLevel ) const {
+    Q_UNUSED( topLevel );
     if ( !message ) return TQString::null;
     if ( !strategy )
       strategy = HeaderStrategy::rich();
@@ -785,22 +788,9 @@ namespace KMail {
         // reverse colors for encapsulated
         if( !topLevel ){
             activeColorDark = activeColor.dark(50);
-            fontColor = qApp->palette().active().text();
-	    linkColor = "";
+            fontColor = TQColor(TQt::black);
+	    linkColor = "class =\"black\"";
         }
-
-	TQStringList headerParts;
-	if( strategy->showHeader( "to" ) )
-	    headerParts << KMMessage::emailAddrAsAnchor( message->to(), false, linkColor );
-
-	if ( strategy->showHeader( "cc" ) && !message->cc().isEmpty() )
-	    headerParts << i18n("CC: ") + KMMessage::emailAddrAsAnchor( message->cc(), true, linkColor );
-
-	if ( strategy->showHeader( "bcc" ) && !message->bcc().isEmpty() )
-	    headerParts << i18n("BCC: ") + KMMessage::emailAddrAsAnchor( message->bcc(), true, linkColor );
-
-	// remove all empty (modulo whitespace) entries and joins them via ", \n"
-	TQString headerPart = " " + headerParts.grep( TQRegExp( "\\S" ) ).join( ", " );
 
 	// Prepare the date string (when printing always use the localized date)
 	TQString dateString;
@@ -822,12 +812,12 @@ namespace KMail {
 	if(topLevel)
 	    headerStr +=
 		"<div style=\"position: fixed; top: 0px; left: 0px; background-color: #606060; "
-		"background-image: url("+imgpath+"shadow_left.png); width: 10px; min-height: 100%;\">&nbsp;</div>"
+		"width: 10px; min-height: 100%;\">&nbsp;</div>"
 		"<div style=\"position: fixed; top: 0px; right: 0px;  background-color: #606060; "
-		"background-image: url("+imgpath+"shadow_right.png); width: 10px; min-height: 100%;\">&nbsp;</div>";
+		"width: 10px; min-height: 100%;\">&nbsp;</div>";
 
 	headerStr += ""
-	    "<div style=\"margin-left: 8px; top: 0px;\"><span style=\"font-size: 10px; font-weight: bold;\">"+dateString+"</span></div>"
+	    "<div style=\"margin-left: 10px; top: 0px;\"><span style=\"font-size: 10px; font-weight: bold;\">"+dateString+"</span></div>"
 	    // #0057ae
 	    "<table style=\"background: "+activeColorDark.name()+"; border-collapse:collapse; top: 14px; min-width: 200px; \" cellpadding=0> \n"
 	    "  <tr> \n"
@@ -836,8 +826,15 @@ namespace KMail {
 	    "   <td style=\"min-width: 6px; background: url("+imgpath+"top_right.png); \"></td> </tr> \n"
 	    "   <tr> \n"
 	    "   <td style=\"min-width: 6px; max-width: 6px; background: url("+imgpath+"left.png); \"></td> \n"
-	    "   <td style=\"\"> \n"
-	    "    <table style=\"color: "+fontColor.name()+" ! important; margin: 1px; border-spacing: 0px;\" cellpadding=0> \n";
+	    "   <td style=\"\"> \n";
+
+  headerStr +=
+    "     <div class=\"noprint\" style=\"z-index: 1; float:right; position: relative; top: -35px; right: 20px ;\">\n"
+    "       <img src=\""+imgpath+"icon.png\">\n"
+    "     </div>\n";
+
+  headerStr +=
+    "     <table style=\"color: "+fontColor.name()+" ! important; margin: 1px; border-spacing: 0px;\" cellpadding=0> \n";
 
 	// subject
 	//strToHtml( message->subject() )
@@ -845,7 +842,7 @@ namespace KMail {
 	    headerStr +=
 		"     <tr> \n"
 		"      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; "+borderSettings+"\"></td> \n"
-		"      <td style=\"font-weight: bolder; font-size: 120%;"+borderSettings+"\">"+message->subject()+"</td> \n"
+		"      <td style=\"font-weight: bolder; font-size: 120%; padding-right: 91px; "+borderSettings+"\">"+message->subject()+"</td> \n"
 		"     </tr> \n";
 	}
 
@@ -858,7 +855,7 @@ namespace KMail {
 	    TQString fromPart = KMMessage::emailAddrAsAnchor( fromStr, true, linkColor );
 	    if ( !vCardName.isEmpty() )
 		fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\" "+linkColor+">" + i18n("[vCard]") + "</a>";
-	    //TDDO strategy date
+	    //TODO strategy date
 	    //if ( strategy->showHeader( "date" ) )
 	    headerStr +=
 		"     <tr> \n"
@@ -867,14 +864,35 @@ namespace KMail {
 		"     </tr> ";
 	}
 
-	// to, cc, bcc
-	headerStr +=
+	// to line
+	if( strategy->showHeader( "to" ) )
+          headerStr +=
 	    "     <tr> "
-	    "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; "+borderSettings+"\">"+i18n("To: ")+"</td> "
-	    "      <td style=\""+borderSettings+"\">"
-	    +headerPart+
+	    "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("To: ") + "</td> "
+	    "      <td style=\"" + borderSettings + "\">" +
+	    KMMessage::emailAddrAsAnchor( message->to(), false, linkColor ) +
 	    "      </td> "
-	    "     </tr> ";
+	    "     </tr>\n";
+
+        // cc line, if any
+	if ( strategy->showHeader( "cc" ) && !message->cc().isEmpty() )
+          headerStr +=
+	    "     <tr> "
+	    "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("CC: ") + "</td> "
+	    "      <td style=\"" + borderSettings + "\">" +
+	    KMMessage::emailAddrAsAnchor( message->cc(), false, linkColor ) +
+	    "      </td> "
+	    "     </tr>\n";
+
+        // bcc line, if any
+	if ( strategy->showHeader( "bcc" ) && !message->bcc().isEmpty() )
+          headerStr +=
+	    "     <tr> "
+	    "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("BCC: ") + "</td> "
+	    "      <td style=\"" + borderSettings + "\">" +
+	    KMMessage::emailAddrAsAnchor( message->bcc(), false, linkColor ) +
+	    "      </td> "
+	    "     </tr>\n";
 
 	// header-bottom
 	headerStr +=
@@ -893,25 +911,27 @@ namespace KMail {
 
     // kmail icon
     if(topLevel) {
-        headerStr +=
-        "<div class=\"noprint\" style=\"position: absolute; top: -14px; right: 30px; width: 91px; height: 91px;\">\n"
-        "<img style=\"float: right;\" src=\""+imgpath+"icon.png\">\n"
-        "</div>\n";
 
         // attachments
         headerStr +=
-        "<div class=\"noprint\" style=\"position: fixed; top: 60px; right: 20px; width: 91px; height: 200px;\">"
+        "<div class=\"noprint\" style=\"position: absolute; top: 60px; right: 20px; width: 91px; height: 200px;\">"
         "<div id=\"attachmentInjectionPoint\"></div>"
         "</div>\n";
     }
 
-	headerStr += "<div style=\"padding: 6px;\">";
+    if ( printing ) {
+      //provide a bit more left padding when printing
+      //kolab/issue3254 (printed mail cut at the left side)
+      headerStr += "<div style=\"padding: 6px; padding-left: 10px;\">";
+    } else {
+      headerStr += "<div style=\"padding: 6px;\">";
+    }
 
-	// TODO
-	// spam status
-	// ### iterate over the rest of strategy->headerToDisplay() (or
-	// ### all headers if DefaultPolicy == Display) (elsewhere, too)
-	return headerStr;
+    // TODO
+    // spam status
+    // ### iterate over the rest of strategy->headerToDisplay() (or
+    // ### all headers if DefaultPolicy == Display) (elsewhere, too)
+    return headerStr;
   }
 
 // #####################

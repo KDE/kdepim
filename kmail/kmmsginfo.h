@@ -68,7 +68,9 @@ public:
   /** Inherited methods (see KMMsgBase for description): */
   virtual TQString subject(void) const;
   virtual TQString fromStrip(void) const;
+  virtual TQString from() const;
   virtual TQString toStrip(void) const;
+  virtual TQString to() const;
   virtual TQString xmark(void) const;
   virtual TQString replyToIdMD5(void) const;
   virtual TQString replyToAuxIdMD5() const;
@@ -101,6 +103,8 @@ public:
   virtual void setSignatureState( const KMMsgSignatureState, int idx = -1 );
   virtual void setMDNSentState( const KMMsgMDNSentState, int idx = -1 );
   virtual void setUID(ulong);
+  virtual void setFrom( const TQString &from );
+  virtual void setTo( const TQString &to );
 
   /** Grr.. c++! */
   virtual void setStatus(const char* s1, const char* s2=0) { KMMsgBase::setStatus(s1, s2); }

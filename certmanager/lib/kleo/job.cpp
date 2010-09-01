@@ -52,8 +52,12 @@
 #include "refreshkeysjob.h"
 #include "specialjob.h"
 
+#include <gpgmepp/context.h>
+
 #include <tqapplication.h>
 #include <kdebug.h>
+
+#include <gpg-error.h>
 
 Kleo::Job::Job( TQObject * parent, const char * name )
   : TQObject( parent, name )
@@ -73,6 +77,16 @@ void Kleo::Job::showErrorDialog( TQWidget *, const TQString & ) const {
 TQString Kleo::Job::auditLogAsHtml() const {
     kdDebug() << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!" << endl;
     return TQString();
+}
+
+GpgME::Error Kleo::Job::auditLogError() const {
+    kdDebug() << "Kleo::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!" << endl;
+    return GpgME::Error( gpg_error( GPG_ERR_NOT_IMPLEMENTED ) );
+}
+
+bool Kleo::Job::isAuditLogSupported() const {
+    const GpgME::Error err = auditLogError();
+    return err.code() != GPG_ERR_NOT_IMPLEMENTED ;
 }
 
 #define make_job_subclass(x) \

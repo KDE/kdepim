@@ -118,6 +118,11 @@ class KODayMatrix: public TQFrame, public KCal::Calendar::Observer
      */
     ~KODayMatrix();
 
+    /** returns the first and last date of the 6*7 matrix that displays @p month
+     * @param month The month we want to get matrix boundaries
+     */
+    static QPair<TQDate,TQDate> matrixLimits( const TQDate &month );
+
     /**
       Associate a calendar with this day matrix. If there is a calendar, the day
       matrix will accept drops and days with events will be highlighted.
@@ -182,7 +187,9 @@ class KODayMatrix: public TQFrame, public KCal::Calendar::Observer
     /* reimplmented from KCal::Calendar::Observer */
     void calendarIncidenceAdded( Incidence *incidence );
     void calendarIncidenceChanged( Incidence *incidence );
-    void calendarIncidenceRemoved( Incidence *incidence );
+    void calendarIncidenceDeleted( Incidence *incidence );
+
+    void setUpdateNeeded();
 
   public slots:
     /** Recalculates all the flags of the days in the matrix like holidays or events

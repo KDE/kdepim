@@ -21,7 +21,7 @@
 #define KORGANIZERIFACE_H
 
 #include <dcopobject.h>
-
+#include <tqdatetime.h>
 
 class KOrganizerIface : virtual public DCOPObject
 {
@@ -35,6 +35,7 @@ class KOrganizerIface : virtual public DCOPObject
     virtual bool saveAsURL(const TQString &url) = 0;
     virtual TQString getCurrentURLasString() const = 0;
     virtual bool editIncidence(const TQString &uid) = 0;
+    virtual bool editIncidence( const TQString &uid, const TQDate &date ) = 0;
     virtual bool deleteIncidence(const TQString &uid) = 0;
     virtual void syncAllResources() = 0;
     /**
@@ -56,6 +57,13 @@ class KOrganizerIface : virtual public DCOPObject
 
     virtual void loadProfile( const TQString& path ) = 0;
     virtual void saveToProfile( const TQString& path ) const = 0;
+
+    /**
+     * DCOP-enabled for KOrganizerUniqueAppHandler in the kontact plugin
+     * Returns true if the command line was successfully handled
+     * false otherwise.
+     */
+    virtual bool handleCommandLine() = 0;
 };
 
 #endif

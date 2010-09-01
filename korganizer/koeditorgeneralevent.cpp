@@ -39,7 +39,6 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kiconloader.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
 #include <kstandarddirs.h>
@@ -52,6 +51,7 @@
 #include <libkdepim/kdateedit.h>
 
 #include "koprefs.h"
+#include "koglobals.h"
 
 #include "koeditorgeneralevent.h"
 #include "koeditorgeneralevent.moc"
@@ -78,18 +78,15 @@ void KOEditorGeneralEvent::finishSetup()
   TQWidget::setTabOrder( mStartTimeEdit, mEndDateEdit );
   TQWidget::setTabOrder( mEndDateEdit, mEndTimeEdit );
   TQWidget::setTabOrder( mEndTimeEdit, mAlldayEventCheckbox );
-  TQWidget::setTabOrder( mAlldayEventCheckbox, mAlarmButton );
+  TQWidget::setTabOrder( mAlldayEventCheckbox, mRecEditButton );
+  TQWidget::setTabOrder( mRecEditButton, mAlarmButton );
   TQWidget::setTabOrder( mAlarmButton, mAlarmTimeEdit );
   TQWidget::setTabOrder( mAlarmTimeEdit, mAlarmIncrCombo );
-//   TQWidget::setTabOrder( mAlarmIncrCombo, mAlarmSoundButton );
-  TQWidget::setTabOrder( mAlarmIncrCombo, mAlarmEditButton );
-//   TQWidget::setTabOrder( mAlarmSoundButton, mAlarmProgramButton );
-//   TQWidget::setTabOrder( mAlarmProgramButton, mFreeTimeCombo );
-  TQWidget::setTabOrder( mAlarmEditButton, mFreeTimeCombo );
+  TQWidget::setTabOrder( mAlarmIncrCombo, mAlarmAdvancedButton );
+  TQWidget::setTabOrder( mAlarmAdvancedButton, mFreeTimeCombo );
   TQWidget::setTabOrder( mFreeTimeCombo, mDescriptionEdit );
   TQWidget::setTabOrder( mDescriptionEdit, mCategoriesButton );
   TQWidget::setTabOrder( mCategoriesButton, mSecrecyCombo );
-//  TQWidget::setTabOrder( mSecrecyCombo, mDescriptionEdit );
 
   mSummaryEdit->setFocus();
 }
@@ -121,7 +118,6 @@ void KOEditorGeneralEvent::initTime(TQWidget *parent,TQBoxLayout *topLayout)
   mStartTimeEdit = new KTimeEdit(timeBoxFrame);
   layoutTimeBox->addWidget(mStartTimeEdit,0,2);
 
-
   mEndDateLabel = new TQLabel(i18n("&End:"),timeBoxFrame);
   layoutTimeBox->addWidget(mEndDateLabel,1,0);
 
@@ -151,16 +147,19 @@ void KOEditorGeneralEvent::initTime(TQWidget *parent,TQBoxLayout *topLayout)
   connect(mEndDateEdit, TQT_SIGNAL(dateChanged(const TQDate&)),
           this, TQT_SLOT(endDateChanged(const TQDate&)));
 
+  TQLabel *label = new TQLabel( i18n( "Recurrence:" ), timeBoxFrame );
+  layoutTimeBox->addWidget( label, 2, 0 );
   TQBoxLayout *recLayout = new TQHBoxLayout();
   layoutTimeBox->addMultiCellLayout( recLayout, 2, 2, 1, 4 );
-  mRecurrenceSummary = new TQLabel( TQString(), timeBoxFrame );
-  recLayout->addWidget( mRecurrenceSummary );
-  TQPushButton *recEditButton = new TQPushButton( i18n("Edit..."), timeBoxFrame );
-  recLayout->addWidget( recEditButton );
-  connect( recEditButton, TQT_SIGNAL(clicked()), TQT_SIGNAL(editRecurrence()) );
+  mRecEditButton = new TQPushButton( timeBoxFrame );
+  mRecEditButton->setIconSet( KOGlobals::self()->smallIconSet( "recur", 16 ) );
+  recLayout->addWidget( mRecEditButton );
+  connect( mRecEditButton, TQT_SIGNAL(clicked()), TQT_SIGNAL(editRecurrence()) );
+  mRecEditLabel = new TQLabel( TQString(), timeBoxFrame );
+  recLayout->addWidget( mRecEditLabel );
   recLayout->addStretch( 1 );
 
-  TQLabel *label = new TQLabel( i18n("Reminder:"), timeBoxFrame );
+  label = new TQLabel( i18n("Reminder:"), timeBoxFrame );
   layoutTimeBox->addWidget( label, 3, 0 );
   TQBoxLayout *alarmLineLayout = new TQHBoxLayout();
   layoutTimeBox->addMultiCellLayout( alarmLineLayout, 3, 3, 1, 4 );
@@ -230,7 +229,6 @@ void KOEditorGeneralEvent::timeStuffDisable(bool disable)
 void KOEditorGeneralEvent::associateTime(bool time)
 {
   timeStuffDisable(time);
-  //if(alarmButton->isChecked()) alarmStuffDisable(noTime);
   allDayChanged(time);
 }
 
@@ -317,7 +315,7 @@ void KOEditorGeneralEvent::setDefaults( const TQDateTime &from,
   setDateTimes(from,to);
 }
 
-void KOEditorGeneralEvent::readEvent( Event *event, Calendar *calendar, bool tmpl )
+void KOEditorGeneralEvent::readEvent( Event *event, Calendar *calendar, const TQDate &date, bool tmpl )
 {
   TQString tmpStr;
 
@@ -325,8 +323,26 @@ void KOEditorGeneralEvent::readEvent( Event *event, Calendar *calendar, bool tmp
   timeStuffDisable(event->doesFloat());
 
   if ( !tmpl ) {
+    TQDateTime startDT = event->dtStart();
+    TQDateTime endDT = event->dtEnd();
+    if ( event->doesRecur() && date.isValid() ) {
+      // Consider the active date when editing recurring Events.
+      TQDateTime kdt( date, TQTime( 0, 0, 0 ) );
+      const int eventLength = startDT.daysTo( endDT );
+      kdt = kdt.addSecs( -1 );
+      startDT.setDate( event->recurrence()->getNextDateTime( kdt ).date() );
+      if ( event->hasEndDate() ) {
+        endDT.setDate( startDT.addDays( eventLength ).date() );
+      } else {
+        if ( event->hasDuration() ) {
+          endDT = startDT.addSecs( event->duration() );
+        } else {
+          endDT = startDT;
+        }
+      }
+    }
     // the rest is for the events only
-    setDateTimes(event->dtStart(),event->dtEnd());
+    setDateTimes( startDT, endDT );
   }
 
   switch( event->transparency() ) {
@@ -338,11 +354,13 @@ void KOEditorGeneralEvent::readEvent( Event *event, Calendar *calendar, bool tmp
     break;
   }
 
-  mRecurrenceSummary->setText( IncidenceFormatter::recurrenceString( event ) );
+  updateRecurrenceSummary( event );
 
   Attendee *me = event->attendeeByMails( KOPrefs::instance()->allEmails() );
-  if ( me && (me->status() == Attendee::NeedsAction || me->status() == Attendee::Tentative ||
-       me->status() == Attendee::InProcess) ) {
+  if ( event->attendeeCount() > 1 &&
+       me && ( me->status() == Attendee::NeedsAction ||
+       me->status() == Attendee::Tentative ||
+       me->status() == Attendee::InProcess ) ) {
     mInvitationBar->show();
   } else {
     mInvitationBar->hide();
@@ -509,16 +527,22 @@ bool KOEditorGeneralEvent::validateInput()
     endDt.setTime(mEndTimeEdit->getTime());
   }
 
-  if (startDt > endDt) {
-    KMessageBox::sorry(0,i18n("The event ends before it starts.\n"
-                                 "Please correct dates and times."));
+  if ( startDt > endDt ) {
+    KMessageBox::sorry(
+      0,
+      i18n( "The event ends before it starts.\n"
+            "Please correct dates and times." ) );
     return false;
   }
 
   return KOEditorGeneral::validateInput();
 }
 
-void KOEditorGeneralEvent::updateRecurrenceSummary(const TQString & summary)
+void KOEditorGeneralEvent::updateRecurrenceSummary( Event *event )
 {
-  mRecurrenceSummary->setText( summary );
+  if ( event->doesRecur() ) {
+    mRecEditLabel->setText( IncidenceFormatter::recurrenceString( event ) );
+  } else {
+    mRecEditLabel->setText( TQString() );
+  }
 }

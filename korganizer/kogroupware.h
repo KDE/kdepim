@@ -37,12 +37,15 @@
 #ifndef KOGROUPWARE_H
 #define KOGROUPWARE_H
 
+#include "koglobals.h"
+
 #include <libkcal/calendarresources.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/scheduler.h>
-#include <tqstring.h>
 
 #include <kio/job.h>
+
+#include <tqstring.h>
 
 using namespace KCal;
 
@@ -72,9 +75,10 @@ class KOGroupware : public QObject
          Returns false if the user cancels the dialog, and true if the
          user presses Yes og or No.
     */
-    bool sendICalMessage( TQWidget* parent, KCal::Scheduler::Method method,
-                          Incidence* incidence, bool isDeleting = false,
-                          bool statusChanged = false );
+    bool sendICalMessage( TQWidget *parent, KCal::Scheduler::Method method,
+                          Incidence* incidence,
+                          KOGlobals::HowChanged action,
+                          bool attendeeStatusChanged );
 
     /**
       Send counter proposal message.
@@ -83,11 +87,13 @@ class KOGroupware : public QObject
     */
     void sendCounterProposal( KCal::Calendar* calendar, KCal::Event* oldEvent, KCal::Event *newEvent ) const;
 
-    // THIS IS THE ACTUAL KM/KO API
-    enum EventState { Accepted, ConditionallyAccepted, Declined, Request };
-
     // convert the TNEF attachment to a vCard or iCalendar part
     TQString msTNEFToVPart( const TQByteArray& tnef );
+
+    // DoNotNotify is a flag indicating that the user does not want
+    // updates sent back to the organizer.
+    void setDoNotNotify( bool notify ) { mDoNotNotify = notify; }
+    bool doNotNotify() { return mDoNotNotify; }
 
   private slots:
     /** Handle iCals given by KMail. */
@@ -106,6 +112,7 @@ class KOGroupware : public QObject
     CalendarView *mView;
     KCal::CalendarResources *mCalendar;
     static FreeBusyManager *mFreeBusyManager;
+    bool mDoNotNotify;
 };
 
 #endif

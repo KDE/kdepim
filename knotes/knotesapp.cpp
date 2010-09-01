@@ -121,7 +121,7 @@ KNotesApp::KNotesApp()
         this, TQT_SLOT(hideAllNotes()), actionCollection(), "hide_all_notes" );
     new KHelpMenu( this, kapp->aboutData(), false, actionCollection() );
 
-    KStdAction::find( this, TQT_SLOT(slotOpenFindDialog()), actionCollection() );
+    m_findAction = KStdAction::find( this, TQT_SLOT(slotOpenFindDialog()), actionCollection() );
     KStdAction::preferences( this, TQT_SLOT(slotPreferences()), actionCollection() );
     KStdAction::keyBindings( this, TQT_SLOT(slotConfigureAccels()), actionCollection() );
     //FIXME: no shortcut removing!?
@@ -188,7 +188,7 @@ KNotesApp::KNotesApp()
     {
         KCal::Journal::List notes = calendar.journals();
         KCal::Journal::List::ConstIterator it;
-        for ( it = notes.begin(); it != notes.end(); ++it )
+        for ( it = notes.constBegin(); it != notes.constEnd(); ++it )
             m_manager->addNewNote( *it );
 
         m_manager->save();
@@ -258,10 +258,9 @@ TQString KNotesApp::newNote( const TQString& name, const TQString& text )
     // the body of the note
     journal->setDescription( text );
 
-    m_manager->addNewNote( journal );
-
-    showNote( journal->uid() );
-
+    if ( m_manager->addNewNote( journal ) ) {
+        showNote( journal->uid() );
+    }
     return journal->uid();
 }
 
@@ -284,7 +283,6 @@ void KNotesApp::showAllNotes() const
     for ( ; *it; ++it )
     {
         (*it)->show();
-        (*it)->setFocus();
     }
 }
 
@@ -516,7 +514,7 @@ void KNotesApp::slotOpenFindDialog()
     findDia.setHasCursor( false );
     findDia.setSupportsBackwardsFind( false );
 
-    if ( findDia.exec() != TQDialog::Accepted )
+    if ( (findDia.exec() != TQDialog::Accepted) || findDia.pattern().isEmpty() )
         return;
 
     delete m_findPos;
@@ -596,6 +594,7 @@ void KNotesApp::slotConfigureAccels()
 
 void KNotesApp::slotNoteKilled( KCal::Journal *journal )
 {
+    m_noteUidModify="";
     m_manager->deleteNote( journal );
     saveNotes();
 }
@@ -606,7 +605,7 @@ void KNotesApp::slotQuit()
 
     for ( ; *it; ++it )
         if ( (*it)->isModified() )
-            (*it)->saveData();
+            (*it)->saveData(false);
 
     saveConfigs();
     kapp->quit();
@@ -625,6 +624,15 @@ void KNotesApp::showNote( KNote* note ) const
 
 void KNotesApp::createNote( KCal::Journal *journal )
 {
+  if( journal->uid() == m_noteUidModify)
+  {
+         KNote *note = m_noteList[m_noteUidModify];
+         if ( note )
+                 note->changeJournal(journal);
+
+         return;
+  }
+  m_noteUidModify = journal->uid();
     KNote *newNote = new KNote( m_noteGUI, journal, 0, journal->uid().utf8() );
     m_noteList.insert( newNote->noteId(), newNote );
 
@@ -633,7 +641,7 @@ void KNotesApp::createNote( KCal::Journal *journal )
     connect( newNote, TQT_SIGNAL(sigKillNote( KCal::Journal* )),
                         TQT_SLOT(slotNoteKilled( KCal::Journal* )) );
     connect( newNote, TQT_SIGNAL(sigNameChanged()), TQT_SLOT(updateNoteActions()) );
-    connect( newNote, TQT_SIGNAL(sigDataChanged()), TQT_SLOT(saveNotes()) );
+    connect( newNote, TQT_SIGNAL(sigDataChanged(const TQString &)), TQT_SLOT(saveNotes(const TQString &)) );
     connect( newNote, TQT_SIGNAL(sigColorChanged()), TQT_SLOT(updateNoteActions()) );
     connect( newNote, TQT_SIGNAL(sigFindFinished()), TQT_SLOT(slotFindNext()) );
 
@@ -644,9 +652,17 @@ void KNotesApp::createNote( KCal::Journal *journal )
 
 void KNotesApp::killNote( KCal::Journal *journal )
 {
+  if(m_noteUidModify == journal->uid())
+  {
+         return;
+  }
     // this kills the KNote object
-    m_noteList.remove( journal->uid() );
-    updateNoteActions();
+    KNote *note = m_noteList.take( journal->uid() );
+    if ( note )
+    {
+        note->deleteWhenIdle();
+        updateNoteActions();
+    }
 }
 
 void KNotesApp::acceptConnection()
@@ -659,6 +675,12 @@ void KNotesApp::acceptConnection()
         connect( recv, TQT_SIGNAL(sigNoteReceived( const TQString &, const TQString & )),
                  this, TQT_SLOT(newNote( const TQString &, const TQString & )) );
     }
+}
+
+void KNotesApp::saveNotes( const TQString & uid )
+{
+  m_noteUidModify = uid;
+  saveNotes();
 }
 
 void KNotesApp::saveNotes()
@@ -692,14 +714,21 @@ void KNotesApp::updateNoteActions()
         m_noteActions.append( action );
     }
 
-    m_noteActions.sort();
-
     if ( m_noteActions.isEmpty() )
     {
+        actionCollection()->action( "hide_all_notes" )->setEnabled( false );
+        actionCollection()->action( "show_all_notes" )->setEnabled( false );
+        m_findAction->setEnabled( false );
         KAction *action = new KAction( i18n("No Notes") );
         m_noteActions.append( action );
     }
-
+    else
+    {
+        actionCollection()->action( "hide_all_notes" )->setEnabled( true );
+        actionCollection()->action( "show_all_notes" )->setEnabled( true );
+        m_findAction->setEnabled( true );
+        m_noteActions.sort();
+    }
     plugActionList( "notes", m_noteActions );
 }
 

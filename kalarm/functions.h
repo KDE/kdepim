@@ -108,7 +108,6 @@ UpdateStatus        enableEvent(KAEvent&, AlarmListView* selectionView, bool ena
 void                displayUpdateError(TQWidget* parent, UpdateStatus, UpdateError, int nAlarms);
 void                displayKOrgUpdateError(TQWidget* parent, KOrgUpdateError, int nAlarms);
 
-void                cancelScreenSaver();
 TQString             stripAccel(const TQString&);
 
 int                 localeFirstDayOfWeek();

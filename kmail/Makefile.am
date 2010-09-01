@@ -1,5 +1,5 @@
 #KDE_OPTIONS = nofinal
-KDE_CXXFLAGS = $(USE_RTTI)
+KDE_CXXFLAGS = $(USE_RTTI) -fexceptions
 
 SUBDIRS = interfaces . about pics profiles avscripts tests
 
@@ -91,6 +91,7 @@ libkmailprivate_la_SOURCES = kmmessage.cpp kmmainwin.cpp configuredialog.cpp \
                 headerstrategy.cpp headerstyle.cpp khtmlparthtmlwriter.cpp \
                 filehtmlwriter.cpp teehtmlwriter.cpp \
                 mailcomposerIface.skel objecttreeparser.cpp \
+		objecttreeparser_p.cpp \
                 attachmentcollector.cpp \
                 bodypartformatter.cpp bodypartformatterfactory.cpp \
                 partNode.cpp \
@@ -150,7 +151,15 @@ libkmailprivate_la_SOURCES = kmmessage.cpp kmmainwin.cpp configuredialog.cpp \
                 snippetsettingsbase.ui \
                 scalix.cpp \
                 messageactions.cpp \
-                korghelper.cpp
+                korghelper.cpp \
+                foldersetselector.cpp \
+                stringutil.cpp \
+                treebase.cpp \
+                backupjob.cpp \
+                importjob.cpp \
+                folderutil.cpp \
+                archivefolderdialog.cpp \
+                importarchivedialog.cpp
 
 libkmailprivate_la_COMPILE_FIRST = globalsettings_base.h customtemplates_base.h templatesconfiguration_base.h
 
@@ -209,7 +218,7 @@ update_SCRIPTS = upgrade-transport.pl kmail-pgpidentity.pl \
                 kmail-3.3b1-misc.pl \
                 kmail-3.4-misc.pl \
                 kmail-3.4.1-update-status-filters.pl \
-               kmail-3.5-filter-icons.pl \
+                kmail-3.5-filter-icons.pl \
                 kmail-3.5-trigger-flag-migration.pl
 
 confdir = $(kde_confdir)
@@ -226,10 +235,10 @@ kde_services_DATA = kmail_config_misc.desktop kmail_config_appearance.desktop \
    kmail_config_security.desktop
 
 messages: rc.cpp
-	rm -f tips.txt
-	$(PREPARETIPS) > tips.txt
-	$(XGETTEXT) -ktranslate *.cpp *.txt *.h -o $(podir)/kmail.pot
-	rm -f tips.txt
+	rm -f tips.cpp
+	$(PREPARETIPS) > tips.cpp
+	$(XGETTEXT) -ktranslate *.cpp *.h -o $(podir)/kmail.pot
+	rm -f tips.cpp
 
 kde_kcfg_DATA = kmail.kcfg replyphrases.kcfg custommimeheader.kcfg \
 		templatesconfiguration_kfg.kcfg customtemplates_kfg.kcfg

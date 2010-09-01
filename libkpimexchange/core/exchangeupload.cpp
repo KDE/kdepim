@@ -33,7 +33,7 @@
 #include <kio/http.h>
 
 extern "C" {
-  #include <ical.h>
+  #include <libical/ical.h>
 }
 
 #include <libkcal/event.h>

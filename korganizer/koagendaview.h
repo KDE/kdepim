@@ -31,6 +31,7 @@
 #include <libkcal/calendar.h>
 
 #include "calprinter.h"
+#include "calendarview.h"
 
 #include "agendaview.h"
 
@@ -42,10 +43,6 @@ class KOAgenda;
 class KOAgendaItem;
 class TimeLabels;
 class KConfig;
-
-namespace KCal {
-  class ResourceCalendar;
-}
 
 namespace KOrg {
   class IncidenceChangerBase;
@@ -85,8 +82,11 @@ class KOAlternateLabel : public QLabel
 
     virtual TQSize minimumSizeHint() const;
 
+    enum TextType { Short = 0, Long = 1, Extensive = 2 };
+    TextType largestFittingTextType() const;
+    void setFixedType( TextType type );
+
   public slots:
-    void setText( const TQString & );
     void useShortText();
     void useLongText();
     void useExtensiveText();
@@ -107,10 +107,12 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
 {
     Q_OBJECT
   public:
-    KOAgendaView( Calendar *cal, TQWidget *parent = 0, const char *name = 0, bool isSideBySide = false );
+    KOAgendaView( Calendar *cal,
+                  CalendarView *calendarView,
+                  TQWidget *parent = 0,
+                  const char *name = 0,
+                  bool isSideBySide = false );
     virtual ~KOAgendaView();
-
-
 
     /** Returns maximum number of days supported by the koagendaview */
     virtual int maxDatesHint();
@@ -122,7 +124,7 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
     virtual Incidence::List selectedIncidences();
 
     /** returns the currently selected events */
-    virtual DateList selectedDates();
+    virtual DateList selectedIncidenceDates();
 
     /** return the default start/end date/time for new events   */
     virtual bool eventDurationHint(TQDateTime &startDt, TQDateTime &endDt, bool &allDay);
@@ -145,24 +147,22 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
 
     void setTypeAheadReceiver( TQObject * );
 
-    /** Show only incidences from the given resource. */
-    void setResource( KCal::ResourceCalendar *res, const TQString &subResource = TQString::null );
-
     KOAgenda* agenda() const { return mAgenda; }
     TQSplitter* splitter() const { return mSplitterAgenda; }
+    TQFrame *dayLabels() const { return mDayLabels; }
 
     /* reimplmented from KCal::Calendar::Observer */
     void calendarIncidenceAdded( Incidence *incidence );
     void calendarIncidenceChanged( Incidence *incidence );
-    void calendarIncidenceRemoved( Incidence *incidence );
+    void calendarIncidenceDeleted( Incidence *incidence );
 
   public slots:
     virtual void updateView();
     virtual void updateConfig();
     virtual void showDates( const TQDate &start, const TQDate &end );
-    virtual void showIncidences( const Incidence::List &incidenceList );
+    virtual void showIncidences( const Incidence::List &incidenceList, const TQDate &date );
 
-    void insertIncidence( Incidence *incidence, const TQDate &curDate, int curCol = -1 );
+    void insertIncidence( Incidence *incidence, const TQDate &curDate );
     void changeIncidenceDisplayAdded( Incidence *incidence );
     void changeIncidenceDisplay( Incidence *incidence, int mode );
 
@@ -215,7 +215,7 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
     void connectAgenda( KOAgenda*agenda, TQPopupMenu*popup, KOAgenda* otherAgenda );
 
     /** Create labels for the selected dates. */
-    void createDayLabels();
+    void createDayLabels( bool force );
 
     /**
       Set the masks on the agenda widgets indicating, which days are holidays.
@@ -231,6 +231,8 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
 
     void updateTimeBarWidth();
 
+    virtual void resizeEvent( TQResizeEvent *resizeEvent );
+
   protected slots:
     /** Update event belonging to agenda item */
     void updateEventDates( KOAgendaItem *item );
@@ -245,14 +247,18 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
     /** Updates data for selected timespan for all day event*/
     void newTimeSpanSelectedAllDay( const TQPoint &start, const TQPoint &end );
 
+    void updateDayLabelSizes();
+
   private:
     bool filterByResource( Incidence *incidence );
+    void displayIncidence( Incidence *incidence );
 
   private:
     // view widgets
     TQFrame *mDayLabels;
     TQHBox *mDayLabelsFrame;
     TQBoxLayout *mLayoutDayLabels;
+    TQPtrList<KOAlternateLabel> mDateDayLabels;
     TQFrame *mAllDayFrame;
     KOAgenda *mAllDayAgenda;
     KOAgenda *mAgenda;
@@ -262,6 +268,7 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
     TQPushButton *mExpandButton;
 
     DateList mSelectedDates;  // List of dates to be displayed
+    DateList mSaveSelectedDates; // Save the list of dates between updateViews
     int mViewType;
 
     KOEventPopupMenu *mAgendaPopup;
@@ -285,11 +292,16 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
 
     Incidence *mUpdateItem;
 
-    KCal::ResourceCalendar *mResource;
-    TQString mSubResource;
-
     bool mIsSideBySide;
     bool mPendingChanges;
+
+    // the current date is inserted into mSelectedDates in the constructor
+    // however whe should only show events when setDates is called, otherwise
+    // we see day view with current date for a few milisecs, then we see something else
+    // because someone called setDates with the real dates that should be displayed.
+    // Other solution would be not initializing mSelectedDates in the ctor, but that requires
+    // lots of changes in koagenda.cpp and koagendaview.cpp
+    bool mAreDatesInitialized;
 };
 
 #endif

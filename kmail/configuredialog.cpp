@@ -99,6 +99,7 @@ using KMime::DateFormatter;
 #include <kconfig.h>
 #include <kactivelabel.h>
 #include <kcmultidialog.h>
+#include <kcombobox.h>
 
 // Qt headers:
 #include <tqvalidator.h>
@@ -252,13 +253,15 @@ ConfigureDialog::~ConfigureDialog() {
 }
 
 void ConfigureDialog::slotApply() {
-  GlobalSettings::self()->writeConfig();
   KCMultiDialog::slotApply();
+  GlobalSettings::self()->writeConfig();
+  emit configChanged();
 }
 
 void ConfigureDialog::slotOk() {
-  GlobalSettings::self()->writeConfig();
   KCMultiDialog::slotOk();
+  GlobalSettings::self()->writeConfig();
+  emit configChanged();
 }
 
 void ConfigureDialog::slotUser2() {
@@ -767,7 +770,6 @@ void AccountsPage::SendingTab::slotSetDefaultTransport()
   } else {
     item->setText( 1, i18n( "sendmail (Default)" ));
   }
-
   GlobalSettings::self()->setDefaultTransport( item->text(0) );
 
 }
@@ -901,6 +903,10 @@ void AccountsPage::SendingTab::slotRemoveSelectedTransport()
   TQListViewItem *item = mTransportList->selectedItem();
   if ( !item ) return;
 
+  bool selectedTransportWasDefault = false;
+  if ( item->text( 0 ) == GlobalSettings::self()->defaultTransport() ) {
+      selectedTransportWasDefault = true;
+  }
   TQStringList changedIdents;
   KPIM::IdentityManager * im = kmkernel->identityManager();
   for ( KPIM::IdentityManager::Iterator it = im->modifyBegin(); it != im->modifyEnd(); ++it ) {
@@ -930,25 +936,25 @@ void AccountsPage::SendingTab::slotRemoveSelectedTransport()
 
   KMTransportInfo ti;
 
-  TQListViewItem *newCurrent = item->itemBelow();
-  if ( !newCurrent ) newCurrent = item->itemAbove();
-  //mTransportList->removeItem( item );
-  if ( newCurrent ) {
-    mTransportList->setCurrentItem( newCurrent );
-    mTransportList->setSelected( newCurrent, true );
-    GlobalSettings::self()->setDefaultTransport( newCurrent->text(0) );
-    ti.readConfig( KMTransportInfo::findTransport( newCurrent->text(0) ));
-    if ( item->text( 0 ) == GlobalSettings::self()->defaultTransport() ) {
+  if( selectedTransportWasDefault )
+  {
+    TQListViewItem *newCurrent = item->itemBelow();
+    if ( !newCurrent ) newCurrent = item->itemAbove();
+    //mTransportList->removeItem( item );
+    if ( newCurrent ) {
+      mTransportList->setCurrentItem( newCurrent );
+      mTransportList->setSelected( newCurrent, true );
+      GlobalSettings::self()->setDefaultTransport( newCurrent->text(0) );
+      ti.readConfig( KMTransportInfo::findTransport( newCurrent->text(0) ));
       if ( ti.type != "sendmail" ) {
         newCurrent->setText( 1, i18n("smtp (Default)") );
       } else {
         newCurrent->setText( 1, i18n("sendmail (Default)" ));
       }
+    } else {
+      GlobalSettings::self()->setDefaultTransport( TQString::null );
     }
-  } else {
-    GlobalSettings::self()->setDefaultTransport( TQString::null );
   }
-
   delete item;
   mTransportInfoList.remove( it );
 
@@ -1760,6 +1766,7 @@ AppearancePageColorsTab::AppearancePageColorsTab( TQWidget * parent, const char 
   mCloseToQuotaThreshold = new TQSpinBox( 0, 100, 1, this );
   connect( mCloseToQuotaThreshold, TQT_SIGNAL( valueChanged( int ) ),
            this, TQT_SLOT( slotEmitChanged( void ) ) );
+  mCloseToQuotaThreshold->setEnabled( false );
   mCloseToQuotaThreshold->setSuffix( i18n("%"));
   hbox->addWidget( mCloseToQuotaThreshold );
   hbox->addWidget( new TQWidget(this), 2 );
@@ -1771,6 +1778,8 @@ AppearancePageColorsTab::AppearancePageColorsTab( TQWidget * parent, const char 
            mRecycleColorCheck, TQT_SLOT(setEnabled(bool)) );
   connect( mCustomColorCheck, TQT_SIGNAL(toggled(bool)),
            l, TQT_SLOT(setEnabled(bool)) );
+  connect( mCustomColorCheck, TQT_SIGNAL(toggled(bool)),
+	   mCloseToQuotaThreshold, TQT_SLOT(setEnabled(bool)) );
 
   connect( mCustomColorCheck, TQT_SIGNAL( stateChanged( int ) ),
            this, TQT_SLOT( slotEmitChanged( void ) ) );
@@ -1909,10 +1918,6 @@ AppearancePageLayoutTab::AppearancePageLayoutTab( TQWidget * parent, const char 
   connect( mFavoriteFolderViewCB, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
   vlay->addWidget( mFavoriteFolderViewCB );
 
-  mFolderQuickSearchCB = new TQCheckBox( i18n("Show folder quick search field"), this );
-  connect( mFolderQuickSearchCB, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
-  vlay->addWidget( mFolderQuickSearchCB );
-
   // "show reader window" radio buttons:
   populateButtonGroup( mReaderWindowModeGroup = new TQVButtonGroup( this ), readerWindowMode );
   vlay->addWidget( mReaderWindowModeGroup );
@@ -1943,7 +1948,6 @@ void AppearancePage::LayoutTab::doLoadOther() {
   loadWidget( mMIMETreeModeGroup, reader, mimeTreeMode );
   loadWidget( mReaderWindowModeGroup, geometry, readerWindowMode );
   mFavoriteFolderViewCB->setChecked( GlobalSettings::self()->enableFavoriteFolderView() );
-  mFolderQuickSearchCB->setChecked( GlobalSettings::self()->enableFolderQuickSearch() );
 }
 
 void AppearancePage::LayoutTab::installProfile( KConfig * profile ) {
@@ -1965,7 +1969,6 @@ void AppearancePage::LayoutTab::save() {
   saveButtonGroup( mMIMETreeModeGroup, reader, mimeTreeMode );
   saveButtonGroup( mReaderWindowModeGroup, geometry, readerWindowMode );
   GlobalSettings::self()->setEnableFavoriteFolderView( mFavoriteFolderViewCB->isChecked() );
-  GlobalSettings::self()->setEnableFolderQuickSearch( mFolderQuickSearchCB->isChecked() );
 }
 
 //
@@ -2003,8 +2006,6 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( TQWidget * parent, const cha
   group = new TQVButtonGroup( i18n( "General Options" ), this );
   group->layout()->setSpacing( KDialog::spacingHint() );
 
-  mShowQuickSearch = new TQCheckBox( i18n("Show Quick Search"), group );
-
   mMessageSizeCheck = new TQCheckBox( i18n("Display messa&ge sizes"), group );
 
   mCryptoIconsCheck = new TQCheckBox( i18n( "Show crypto &icons" ), group );
@@ -2014,8 +2015,6 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( TQWidget * parent, const cha
   mNestedMessagesCheck =
     new TQCheckBox( i18n("&Threaded message list"), group );
 
-  connect( mShowQuickSearch, TQT_SIGNAL( stateChanged( int ) ),
-           this, TQT_SLOT( slotEmitChanged( void ) ) );
   connect( mMessageSizeCheck, TQT_SIGNAL( stateChanged( int ) ),
            this, TQT_SLOT( slotEmitChanged( void ) ) );
   connect( mAttachmentCheck, TQT_SIGNAL( stateChanged( int ) ),
@@ -2123,7 +2122,6 @@ void AppearancePage::HeadersTab::doLoadOther() {
   mMessageSizeCheck->setChecked( general.readBoolEntry( "showMessageSize", false ) );
   mCryptoIconsCheck->setChecked( general.readBoolEntry( "showCryptoIcons", false ) );
   mAttachmentCheck->setChecked( general.readBoolEntry( "showAttachmentIcon", true ) );
-  mShowQuickSearch->setChecked( GlobalSettings::self()->quickSearchActive() );
 
   // "Message Header Threading Options":
   int num = geometry.readNumEntry( "nestingPolicy", 3 );
@@ -2204,7 +2202,6 @@ void AppearancePage::HeadersTab::save() {
   general.writeEntry( "showMessageSize", mMessageSizeCheck->isChecked() );
   general.writeEntry( "showCryptoIcons", mCryptoIconsCheck->isChecked() );
   general.writeEntry( "showAttachmentIcon", mAttachmentCheck->isChecked() );
-  GlobalSettings::self()->setQuickSearchActive( mShowQuickSearch->isChecked() );
 
   int dateDisplayID = mDateDisplay->id( mDateDisplay->selected() );
   // check bounds:
@@ -2219,6 +2216,10 @@ void AppearancePage::HeadersTab::save() {
 // Message Window
 //
 
+
+static const BoolConfigEntry closeAfterReplyOrForward = {
+  "Reader", "CloseAfterReplyOrForward", I18N_NOOP("Close message window after replying or forwarding"), false
+};
 
 static const BoolConfigEntry showColorbarMode = {
   "Reader", "showColorbar", I18N_NOOP("Show HTML stat&us bar"), false
@@ -2250,6 +2251,15 @@ AppearancePageReaderTab::AppearancePageReaderTab( TQWidget * parent,
   : ConfigModuleTab( parent, name )
 {
   TQVBoxLayout *vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+
+  // "close message window after replying or forwarding" checkbox
+  populateCheckBox( mCloseAfterReplyOrForwardCheck = new TQCheckBox( this ),
+                    closeAfterReplyOrForward );
+  TQToolTip::add( mCloseAfterReplyOrForwardCheck,
+                 i18n( "Close the standalone message window after replying or forwarding the message" ) );
+  vlay->addWidget( mCloseAfterReplyOrForwardCheck );
+  connect( mCloseAfterReplyOrForwardCheck, TQT_SIGNAL ( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   // "show colorbar" check box:
   populateCheckBox( mShowColorbarCheck = new TQCheckBox( this ), showColorbarMode );
@@ -2403,6 +2413,7 @@ void AppearancePage::ReaderTab::readCurrentOverrideCodec()
 
 void AppearancePage::ReaderTab::doLoadFromGlobalSettings()
 {
+  mCloseAfterReplyOrForwardCheck->setChecked( GlobalSettings::self()->closeAfterReplyOrForward() );
   mShowEmoticonsCheck->setChecked( GlobalSettings::self()->showEmoticons() );
   mShrinkQuotesCheck->setChecked( GlobalSettings::self()->shrinkQuotes() );
   mShowExpandQuotesMark->setChecked( GlobalSettings::self()->showExpandQuotesMark() );
@@ -2423,6 +2434,7 @@ void AppearancePage::ReaderTab::save() {
   KConfigGroup reader( KMKernel::config(), "Reader" );
   saveCheckBox( mShowColorbarCheck, reader, showColorbarMode );
   saveCheckBox( mShowSpamStatusCheck, reader, showSpamStatusMode );
+  GlobalSettings::self()->setCloseAfterReplyOrForward( mCloseAfterReplyOrForwardCheck->isChecked() );
   GlobalSettings::self()->setShowEmoticons( mShowEmoticonsCheck->isChecked() );
   GlobalSettings::self()->setShrinkQuotes( mShrinkQuotesCheck->isChecked() );
   GlobalSettings::self()->setShowExpandQuotesMark( mShowExpandQuotesMark->isChecked() );
@@ -2439,6 +2451,7 @@ void AppearancePage::ReaderTab::save() {
 
 void AppearancePage::ReaderTab::installProfile( KConfig * /* profile */ ) {
   const KConfigGroup reader( KMKernel::config(), "Reader" );
+  loadProfile( mCloseAfterReplyOrForwardCheck, reader, closeAfterReplyOrForward );
   loadProfile( mShowColorbarCheck, reader, showColorbarMode );
   loadProfile( mShowSpamStatusCheck, reader, showSpamStatusMode );
   loadProfile( mShowEmoticonsCheck, reader, showEmoticons );
@@ -2605,8 +2618,27 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( TQWidget * parent, const char * 
   mSmartQuoteCheck = new TQCheckBox(
            GlobalSettings::self()->smartQuoteItem()->label(),
            this, "kcfg_SmartQuote" );
+  TQToolTip::add( mSmartQuoteCheck,
+                 i18n( "When replying, add quote signs in front of all lines of the quoted text,\n"
+                       "even when the line was created by adding an additional linebreak while\n"
+                       "word-wrapping the text." ) );
   vlay->addWidget( mSmartQuoteCheck );
   connect( mSmartQuoteCheck, TQT_SIGNAL( stateChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+
+  mQuoteSelectionOnlyCheck = new TQCheckBox( GlobalSettings::self()->quoteSelectionOnlyItem()->label(),
+                                            this, "kcfg_QuoteSelectionOnly" );
+  TQToolTip::add( mQuoteSelectionOnlyCheck,
+                 i18n( "When replying, only quote the selected text instead of the complete message "
+                       "when there is text selected in the message window." ) );
+  vlay->addWidget( mQuoteSelectionOnlyCheck );
+  connect( mQuoteSelectionOnlyCheck, TQT_SIGNAL( stateChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged(void) ) );
+
+  mStripSignatureCheck = new TQCheckBox( GlobalSettings::self()->stripSignatureItem()->label(),
+                                        this, "kcfg_StripSignature" );
+  vlay->addWidget( mStripSignatureCheck );
+  connect( mStripSignatureCheck, TQT_SIGNAL( stateChanged(int) ),
            this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   mAutoRequestMDNCheck = new TQCheckBox(
@@ -2645,6 +2677,41 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( TQWidget * parent, const char * 
   connect( mWordWrapCheck, TQT_SIGNAL(toggled(bool)),
            mWrapColumnSpin, TQT_SLOT(setEnabled(bool)) );
 
+  // a checkbox for "too many recipient warning" and a spinbox for the recipient threshold
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mRecipientCheck = new TQCheckBox(
+           GlobalSettings::self()->tooManyRecipientsItem()->label(),
+           this, "kcfg_TooManyRecipients" );
+  hlay->addWidget( mRecipientCheck );
+  connect( mRecipientCheck, TQT_SIGNAL( stateChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+
+  TQString recipientCheckWhatsthis =
+    i18n( GlobalSettings::self()->tooManyRecipientsItem()->whatsThis().utf8() );
+  TQWhatsThis::add( mRecipientCheck, recipientCheckWhatsthis );
+  TQToolTip::add( mRecipientCheck,
+                 i18n( "Warn if too many recipients are specified" ) );
+
+  mRecipientSpin = new KIntSpinBox( 1/*min*/, 100/*max*/, 1/*step*/,
+           5/*init*/, 10 /*base*/, this, "kcfg_RecipientThreshold" );
+  mRecipientSpin->setEnabled( false );
+  connect( mRecipientSpin, TQT_SIGNAL( valueChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+
+  TQString recipientWhatsthis =
+    i18n( GlobalSettings::self()->recipientThresholdItem()->whatsThis().utf8() );
+  TQWhatsThis::add( mRecipientSpin, recipientWhatsthis );
+  TQToolTip::add( mRecipientSpin,
+                 i18n( "Warn if more than this many recipients are specified" ) );
+
+
+  hlay->addWidget( mRecipientSpin );
+  hlay->addStretch( 1 );
+  // only enable the spinbox if the checkbox is checked:
+  connect( mRecipientCheck, TQT_SIGNAL(toggled(bool)),
+           mRecipientSpin, TQT_SLOT(setEnabled(bool)) );
+
+
   hlay = new TQHBoxLayout( vlay ); // inherits spacing
   mAutoSave = new KIntSpinBox( 0, 60, 1, 1, 10, this, "kcfg_AutosaveInterval" );
   label = new TQLabel( mAutoSave,
@@ -2655,6 +2722,20 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( TQWidget * parent, const char * 
   mAutoSave->setSuffix( i18n(" min") );
   hlay->addStretch( 1 );
   connect( mAutoSave, TQT_SIGNAL( valueChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mForwardTypeCombo = new KComboBox( false, this );
+  label = new TQLabel( mForwardTypeCombo,
+                      i18n( "Default Forwarding Type:" ),
+                      this );
+  mForwardTypeCombo->insertStringList( TQStringList()
+                                       << i18n( "Inline" )
+                                       << i18n( "As Attachment" ) );
+  hlay->addWidget( label );
+  hlay->addWidget( mForwardTypeCombo );
+  hlay->addStretch( 1 );
+  connect( mForwardTypeCombo, TQT_SIGNAL(activated(int)),
            this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   hlay = new TQHBoxLayout( vlay ); // inherits spacing
@@ -2721,11 +2802,19 @@ void ComposerPage::GeneralTab::doLoadFromGlobalSettings() {
            GlobalSettings::self()->autoTextSignature()=="auto" );
   mTopQuoteCheck->setChecked( GlobalSettings::self()->prependSignature() );
   mSmartQuoteCheck->setChecked( GlobalSettings::self()->smartQuote() );
+  mQuoteSelectionOnlyCheck->setChecked( GlobalSettings::self()->quoteSelectionOnly() );
+  mStripSignatureCheck->setChecked( GlobalSettings::self()->stripSignature() );
   mAutoRequestMDNCheck->setChecked( GlobalSettings::self()->requestMDN() );
   mWordWrapCheck->setChecked( GlobalSettings::self()->wordWrap() );
 
   mWrapColumnSpin->setValue( GlobalSettings::self()->lineWrapWidth() );
+  mRecipientCheck->setChecked( GlobalSettings::self()->tooManyRecipients() );
+  mRecipientSpin->setValue( GlobalSettings::self()->recipientThreshold() );
   mAutoSave->setValue( GlobalSettings::self()->autosaveInterval() );
+  if ( GlobalSettings::self()->forwardingInlineByDefault() )
+    mForwardTypeCombo->setCurrentItem( 0 );
+  else
+    mForwardTypeCombo->setCurrentItem( 1 );
 
   // editor group:
   mExternalEditorCheck->setChecked( GlobalSettings::self()->useExternalEditor() );
@@ -2744,12 +2833,20 @@ void ComposerPage::GeneralTab::installProfile( KConfig * profile ) {
     mTopQuoteCheck->setChecked( composer.readBoolEntry( "prepend-signature" ) );
   if ( composer.hasKey( "smart-quote" ) )
     mSmartQuoteCheck->setChecked( composer.readBoolEntry( "smart-quote" ) );
+  if ( composer.hasKey( "StripSignature" ) )
+    mStripSignatureCheck->setChecked( composer.readBoolEntry( "StripSignature" ) );
+  if ( composer.hasKey( "QuoteSelectionOnly" ) )
+    mQuoteSelectionOnlyCheck->setChecked( composer.readBoolEntry( "QuoteSelectionOnly" ) );
   if ( composer.hasKey( "request-mdn" ) )
     mAutoRequestMDNCheck->setChecked( composer.readBoolEntry( "request-mdn" ) );
   if ( composer.hasKey( "word-wrap" ) )
     mWordWrapCheck->setChecked( composer.readBoolEntry( "word-wrap" ) );
   if ( composer.hasKey( "break-at" ) )
     mWrapColumnSpin->setValue( composer.readNumEntry( "break-at" ) );
+  if ( composer.hasKey( "too-many-recipients" ) )
+    mRecipientCheck->setChecked( composer.readBoolEntry( "too-many-recipients" ) );
+  if ( composer.hasKey( "recipient-threshold" ) )
+    mRecipientSpin->setValue( composer.readNumEntry( "recipient-threshold" ) );
   if ( composer.hasKey( "autosave" ) )
     mAutoSave->setValue( composer.readNumEntry( "autosave" ) );
 
@@ -2765,11 +2862,16 @@ void ComposerPage::GeneralTab::save() {
          mAutoAppSignFileCheck->isChecked() ? "auto" : "manual" );
   GlobalSettings::self()->setPrependSignature( mTopQuoteCheck->isChecked());
   GlobalSettings::self()->setSmartQuote( mSmartQuoteCheck->isChecked() );
+  GlobalSettings::self()->setQuoteSelectionOnly( mQuoteSelectionOnlyCheck->isChecked() );
+  GlobalSettings::self()->setStripSignature( mStripSignatureCheck->isChecked() );
   GlobalSettings::self()->setRequestMDN( mAutoRequestMDNCheck->isChecked() );
   GlobalSettings::self()->setWordWrap( mWordWrapCheck->isChecked() );
 
   GlobalSettings::self()->setLineWrapWidth( mWrapColumnSpin->value() );
+  GlobalSettings::self()->setTooManyRecipients( mRecipientCheck->isChecked() );
+  GlobalSettings::self()->setRecipientThreshold( mRecipientSpin->value() );
   GlobalSettings::self()->setAutosaveInterval( mAutoSave->value() );
+  GlobalSettings::self()->setForwardingInlineByDefault( mForwardTypeCombo->currentItem() == 0 );
 
   // editor group:
   GlobalSettings::self()->setUseExternalEditor( mExternalEditorCheck->isChecked() );
@@ -4491,7 +4593,11 @@ MiscPageFolderTab::MiscPageFolderTab( TQWidget * parent, const char * name )
       << i18n("continuation of \"When entering a folder:\"",
               "Jump to First Unread or New Message")
       << i18n("continuation of \"When entering a folder:\"",
-              "Jump to Last Selected Message"));
+              "Jump to Last Selected Message")
+      << i18n("continuation of \"When entering a folder:\"",
+              "Jump to Newest Message")
+      << i18n("continuation of \"When entering a folder:\"",
+              "Jump to Oldest Message") );
   hlay->addWidget( label );
   hlay->addWidget( mActionEnterFolder, 1 );
   connect( mActionEnterFolder, TQT_SIGNAL( activated( int ) ),
@@ -4720,7 +4826,7 @@ MiscPageGroupwareTab::MiscPageGroupwareTab( TQWidget* parent, const char* name )
   mStorageFormatCombo = new TQComboBox( false, mBox );
   storageFormatLA->setBuddy( mStorageFormatCombo );
   TQStringList formatLst;
-  formatLst << i18n("Standard (Ical / Vcard)") << i18n("Kolab (XML)");
+  formatLst << i18n("Deprecated Kolab1 (iCal/vCard)") << i18n("Kolab2 (XML)");
   mStorageFormatCombo->insertStringList( formatLst );
   grid->addWidget( mStorageFormatCombo, 0, 1 );
   TQToolTip::add( mStorageFormatCombo, toolTip );
@@ -4806,8 +4912,8 @@ MiscPageGroupwareTab::MiscPageGroupwareTab( TQWidget* parent, const char* name )
                  i18n( "Synchronize groupware changes in disconnected IMAP folders immediately when being online." ) );
   connect( mSyncImmediately, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
   grid->addMultiCellWidget( mSyncImmediately, 4, 4, 0, 1 );
-  
-  mDeleteInvitations = new TQCheckBox( 
+
+  mDeleteInvitations = new TQCheckBox(
              i18n( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem()->label().utf8() ), mBox );
   TQWhatsThis::add( mDeleteInvitations, i18n( GlobalSettings::self()
              ->deleteInvitationEmailsAfterSendingReplyItem()->whatsThis().utf8() ) );
@@ -4844,10 +4950,17 @@ MiscPageGroupwareTab::MiscPageGroupwareTab( TQWidget* parent, const char* name )
            this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   mExchangeCompatibleInvitations = new TQCheckBox( i18n( "Exchange compatible invitation naming" ), gBox );
-  TQToolTip::add( mExchangeCompatibleInvitations, i18n( "Microsoft Outlook, when used in combination with a Microsoft Exchange server, has a problem understanding standards-compliant groupware e-mail. Turn this option on to send groupware invitations in a way that Microsoft Exchange understands." ) );
+  TQToolTip::add( mExchangeCompatibleInvitations, i18n( "Outlook(tm), when used in combination with a Microsoft Exchange server,\nhas a problem understanding standards-compliant groupware e-mail.\nTurn this option on to send groupware invitations and replies in an Exchange compatible way." ) );
   TQWhatsThis::add( mExchangeCompatibleInvitations, i18n( GlobalSettings::self()->
            exchangeCompatibleInvitationsItem()->whatsThis().utf8() ) );
   connect( mExchangeCompatibleInvitations, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+
+  mOutlookCompatibleInvitationComments = new TQCheckBox( i18n( "Outlook compatible invitation reply comments" ), gBox );
+  TQToolTip::add( mOutlookCompatibleInvitationComments, i18n( "Send invitation reply comments in a way that Microsoft Outlook(tm) understands." ) );
+  TQWhatsThis::add( mOutlookCompatibleInvitationComments, i18n( GlobalSettings::self()->
+           outlookCompatibleInvitationReplyCommentsItem()->whatsThis().utf8() ) );
+  connect( mOutlookCompatibleInvitationComments, TQT_SIGNAL( stateChanged( int ) ),
            this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   mAutomaticSending = new TQCheckBox( i18n( "Automatic invitation sending" ), gBox );
@@ -4896,6 +5009,8 @@ void MiscPage::GroupwareTab::doLoadFromGlobalSettings() {
   mLegacyBodyInvites->blockSignals( false );
 
   mExchangeCompatibleInvitations->setChecked( GlobalSettings::self()->exchangeCompatibleInvitations() );
+
+  mOutlookCompatibleInvitationComments->setChecked( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() );
 
   mAutomaticSending->setChecked( GlobalSettings::self()->automaticSending() );
   mAutomaticSending->setEnabled( !mLegacyBodyInvites->isChecked() );
@@ -4959,6 +5074,7 @@ void MiscPage::GroupwareTab::save() {
   groupware.writeEntry( "LegacyMangleFromToHeaders", mLegacyMangleFromTo->isChecked() );
   groupware.writeEntry( "LegacyBodyInvites", mLegacyBodyInvites->isChecked() );
   groupware.writeEntry( "ExchangeCompatibleInvitations", mExchangeCompatibleInvitations->isChecked() );
+  groupware.writeEntry( "OutlookCompatibleInvitationReplyComments", mOutlookCompatibleInvitationComments->isChecked() );
   groupware.writeEntry( "AutomaticSending", mAutomaticSending->isChecked() );
 
   if ( mEnableGwCB ) {
@@ -4967,6 +5083,7 @@ void MiscPage::GroupwareTab::save() {
   GlobalSettings::self()->setLegacyMangleFromToHeaders( mLegacyMangleFromTo->isChecked() );
   GlobalSettings::self()->setLegacyBodyInvites( mLegacyBodyInvites->isChecked() );
   GlobalSettings::self()->setExchangeCompatibleInvitations( mExchangeCompatibleInvitations->isChecked() );
+  GlobalSettings::self()->setOutlookCompatibleInvitationReplyComments( mOutlookCompatibleInvitationComments->isChecked() );
   GlobalSettings::self()->setAutomaticSending( mAutomaticSending->isChecked() );
 
   int format = mStorageFormatCombo->currentItem();

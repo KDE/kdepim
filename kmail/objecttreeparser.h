@@ -40,11 +40,17 @@
 #include <kleo/cryptobackend.h>
 #include <gpgmepp/verificationresult.h>
 
+#include <cassert>
+
 class KMReaderWin;
 class KMMessagePart;
 class TQString;
 class TQWidget;
 class partNode;
+
+namespace GpgME {
+  class Error;
+}
 
 namespace KMail {
 
@@ -110,6 +116,11 @@ namespace KMail {
                       KMail::CSSHelper * cssHelper=0 );
     virtual ~ObjectTreeParser();
 
+    void setAllowAsync( bool allow ) { assert( !mHasPendingAsyncJobs ); mAllowAsync = allow; }
+    bool allowAsync() const { return mAllowAsync; }
+
+    bool hasPendingAsyncJobs() const { return mHasPendingAsyncJobs; }
+
     TQCString rawReplyString() const { return mRawReplyString; }
 
     /*! @return the text of the message, ie. what would appear in the
@@ -140,6 +151,15 @@ namespace KMail {
       mIncludeSignatures = include;
     }
 
+    // Controls whether Toltec invitations are displayed in their raw form or as a replacement text,
+    // which is used in processToltecMail().
+    void setShowRawToltecMail( bool showRawToltecMail ) { mShowRawToltecMail = showRawToltecMail; }
+    bool showRawToltecMail() const { return mShowRawToltecMail; }
+
+    /// default text for processToltecMail(), which is used in kmail.kcfg, therefore it
+    /// needs to be static here.
+    static TQString defaultToltecReplacementText();
+
     const KMail::AttachmentStrategy * attachmentStrategy() const {
       return mAttachmentStrategy;
     }
@@ -161,16 +181,24 @@ namespace KMail {
 
     void defaultHandling( partNode * node, ProcessResult & result );
 
-    /** 1. Create a new partNode using 'content' data and Content-Description
-            found in 'cntDesc'.
-        2. Make this node the child of 'node'.
-        3. Insert the respective entries in the Mime Tree Viewer.
-        3. Parse the 'node' to display the content. */
+    /**
+     *  1. Create a new partNode using 'content' data and Content-Description
+     *      found in 'cntDesc'.
+     *  2. Make this node the child of 'node'.
+     *  3. Insert the respective entries in the Mime Tree Viewer.
+     *  3. Parse the 'node' to display the content.
+     *
+     * @param addToTextualContent If true, this will add the textual content of the parsed node
+     *                            to the textual content of the current object tree parser.
+     *                            Setting this to false is useful for encapsulated messages, as we
+     *                            do not want the text in those to appear in the editor
+     */
     //  Function will be replaced once KMime is alive.
     void insertAndParseNewChildNode( partNode & node,
                                      const char * content,
                                      const char * cntDesc,
-                                     bool append=false );
+                                     bool append=false,
+                                     bool addToTextualContent = true );
     /** if data is 0:
         Feeds the HTML widget with the contents of the opaque signed
             data found in partNode 'sign'.
@@ -186,8 +214,16 @@ namespace KMail {
                                            const TQString & fromAddress,
                                            bool doCheck=true,
                                            TQCString * cleartextData=0,
-                                           std::vector<GpgME::Signature> paramSignatures = std::vector<GpgME::Signature>(),
+                                           const std::vector<GpgME::Signature> & paramSignatures = std::vector<GpgME::Signature>(),
                                            bool hideErrors=false );
+
+    /** Writes out the block that we use when the node is encrypted,
+        but we're deferring decryption for later. */
+    void writeDeferredDecryptionBlock();
+
+    /** Writes out the block that we use when the node is encrypted,
+        but we've just kicked off async decryption. */
+    void writeDecryptionInProgressBlock();
 
     /** Returns the contents of the given multipart/encrypted
         object. Data is decypted.  May contain body parts. */
@@ -198,10 +234,23 @@ namespace KMail {
                         bool showWarning,
                         bool& passphraseError,
                         bool& actuallyEncrypted,
+                        bool& decryptionStarted,
                         TQString& aErrorText,
+                        GpgME::Error & auditLogError,
                         TQString& auditLog );
 
     bool processMailmanMessage( partNode * node );
+
+    /**
+     * This is called for all multipart/mixed nodes. It checks if that belongs to a Toltec mail,
+     * by checking various criteria.
+     * If it is a toltec mail, a special text, instead of the confusing toltec text, will be
+     * displayed.
+     *
+     * @return true if the mail was indeed a toltec mail, in which case the node should not be
+     *              processed further
+     */
+    bool processToltecMail( partNode * node );
 
     /** Checks whether @p str contains external references. To be precise,
         we only check whether @p str contains 'xxx="http[s]:' where xxx is
@@ -245,8 +294,14 @@ namespace KMail {
     TQString writeSigstatHeader( KMail::PartMetaData & part,
                                 const Kleo::CryptoBackend::Protocol * cryptProto,
                                 const TQString & fromAddress,
-                                const TQString & filename = TQString::null );
+                                partNode *node = 0 );
     TQString writeSigstatFooter( KMail::PartMetaData & part );
+
+    // The attachment mark is a div that is placed around the attchment. It is used for drawing
+    // a yellow border around the attachment when scrolling to it. When scrolling to it, the border
+    // color of the div is changed, see KMReaderWin::scrollToAttachment().
+    void writeAttachmentMarkHeader( partNode *node );
+    void writeAttachmentMarkFooter();
 
     void writeBodyStr( const TQCString & bodyString,
                        const TQTextCodec * aCodec,
@@ -281,6 +336,9 @@ namespace KMail {
     bool mShowOnlyOneMimePart;
     bool mKeepEncryptions;
     bool mIncludeSignatures;
+    bool mHasPendingAsyncJobs;
+    bool mAllowAsync;
+    bool mShowRawToltecMail;
     const KMail::AttachmentStrategy * mAttachmentStrategy;
     KMail::HtmlWriter * mHtmlWriter;
     KMail::CSSHelper * mCSSHelper;

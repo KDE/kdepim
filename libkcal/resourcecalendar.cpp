@@ -33,18 +33,38 @@
 using namespace KCal;
 
 ResourceCalendar::ResourceCalendar( const KConfig *config )
-    : KRES::Resource( config ),mResolveConflict( false )
+  : KRES::Resource( config ), mResolveConflict( false )
 {
+  mException = 0;
 }
 
 ResourceCalendar::~ResourceCalendar()
 {
+  delete mException;
+}
+
+void ResourceCalendar::clearException()
+{
+  delete mException;
+  mException = 0;
+}
+
+void ResourceCalendar::setException( ErrorFormat *exception )
+{
+  delete mException;
+  mException = exception;
+}
+
+ErrorFormat *ResourceCalendar::exception()
+{
+  return mException;
 }
 
 void ResourceCalendar::setResolveConflict( bool b)
 {
  mResolveConflict = b;
 }
+
 TQString ResourceCalendar::infoText() const
 {
   TQString txt;
@@ -81,6 +101,12 @@ Incidence *ResourceCalendar::incidence( const TQString &uid )
 bool ResourceCalendar::addIncidence( Incidence *incidence )
 {
   Incidence::AddVisitor<ResourceCalendar> v( this );
+  return incidence->accept( v );
+}
+
+bool ResourceCalendar::addIncidence( Incidence *incidence, const TQString &subresource )
+{
+  Incidence::AddSubResourceVisitor<ResourceCalendar> v( this, subresource );
   return incidence->accept( v );
 }
 
@@ -192,6 +218,8 @@ void ResourceCalendar::saveError( const TQString &err )
 
 bool ResourceCalendar::setValue( const TQString &key, const TQString &value )
 {
+  Q_UNUSED( key );
+  Q_UNUSED( value );
   return false;
 }
 
@@ -201,5 +229,21 @@ TQString ResourceCalendar::subresourceType( const TQString &resource )
   return TQString();
 }
 
+bool ResourceCalendar::subresourceWritable( const TQString &resource ) const
+{
+  if ( resource.isEmpty() ) {
+    return !readOnly();
+  } else {
+    return false;
+  }
+}
+
+void ResourceCalendar::beginAddingIncidences()
+{
+}
+
+void ResourceCalendar::endAddingIncidences()
+{
+}
 
 #include "resourcecalendar.moc"

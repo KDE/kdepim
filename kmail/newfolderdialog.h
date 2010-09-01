@@ -69,7 +69,7 @@ class NewFolderDialog : public KDialogBase
     TQHBoxLayout* mNamespacesHBox;
   protected slots:
     void slotOk();
-  void slotFolderNameChanged( const TQString & _text);
+    void slotFolderNameChanged( const TQString & _text);
 
   private:
     KMFolder* mFolder;

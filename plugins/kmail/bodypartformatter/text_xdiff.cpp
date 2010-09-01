@@ -59,7 +59,7 @@ namespace {
 
   class Formatter : public KMail::Interface::BodyPartFormatter {
   public:
-    Result format( KMail::Interface::BodyPart *bodyPart, KMail::HtmlWriter *writer ) const {
+    Result format( KMail::Interface::BodyPart *bodyPart, KMail::HtmlWriter *writer, KMail::Callback & ) const {
 
       if ( !writer ) return Ok;
 

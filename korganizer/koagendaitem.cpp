@@ -63,12 +63,16 @@ TQPixmap *KOAgendaItem::organizerPxmp = 0;
 
 //--------------------------------------------------------------------------
 
-KOAgendaItem::KOAgendaItem( Incidence *incidence, const TQDate &qd, TQWidget *parent,
+KOAgendaItem::KOAgendaItem( Calendar *calendar, Incidence *incidence,
+                            const TQDate &qd, TQWidget *parent,
+                            int itemPos, int itemCount,
                             const char *name, WFlags f ) :
-  TQWidget( parent, name, f ), mIncidence( incidence ), mDate( qd ),
+  TQWidget( parent, name, f ), mCalendar( calendar ), mIncidence( incidence ), mDate( qd ),
   mLabelText( mIncidence->summary() ), mIconAlarm( false ),
   mIconRecur( false ), mIconReadonly( false ), mIconReply( false ),
   mIconGroup( false ), mIconGroupTentative( false ), mIconOrganizer( false ),
+  mSpecialEvent( false ),
+  mItemPos( itemPos ), mItemCount( itemCount ),
   mMultiItemInfo( 0 ), mStartMoveInfo( 0 )
 {
   setBackgroundMode( Qt::NoBackground );
@@ -83,7 +87,7 @@ KOAgendaItem::KOAgendaItem( Incidence *incidence, const TQDate &qd, TQWidget *pa
   mSelected = true;
   select( false );
 
-  KOIncidenceToolTip::add( this, incidence, toolTipGroup() );
+  KOIncidenceToolTip::add( this, mCalendar, incidence, mDate, toolTipGroup() );
   setAcceptDrops( true );
 }
 
@@ -93,7 +97,7 @@ void KOAgendaItem::updateIcons()
   mIconReadonly = mIncidence->isReadOnly();
   mIconRecur = mIncidence->doesRecur();
   mIconAlarm = mIncidence->isAlarmEnabled();
-  if ( mIncidence->attendeeCount() > 0 ) {
+  if ( mIncidence->attendeeCount() > 1 ) {
     if ( KOPrefs::instance()->thatIsMe( mIncidence->organizer().email() ) ) {
       mIconReply = false;
       mIconGroup = false;
@@ -171,7 +175,6 @@ bool KOAgendaItem::setIncidence( Incidence *i )
   return true;
 }
 
-
 /*
   Return height of item in units of agenda cells
 */
@@ -217,10 +220,12 @@ void KOAgendaItem::setCellY( int YTop, int YBottom )
   mCellYBottom = YBottom;
 }
 
-void KOAgendaItem::setMultiItem(KOAgendaItem *first, KOAgendaItem *prev,
-                                KOAgendaItem *next, KOAgendaItem *last)
+void KOAgendaItem::setMultiItem( KOAgendaItem *first, KOAgendaItem *prev,
+                                 KOAgendaItem *next, KOAgendaItem *last )
 {
-  if (!mMultiItemInfo) mMultiItemInfo=new MultiItemInfo;
+  if ( !mMultiItemInfo ) {
+    mMultiItemInfo = new MultiItemInfo;
+  }
   mMultiItemInfo->mFirstMultiItem = first;
   mMultiItemInfo->mPrevMultiItem = prev;
   mMultiItemInfo->mNextMultiItem = next;
@@ -575,18 +580,16 @@ void KOAgendaItem::dropEvent( TQDropEvent *e )
   }
 
 #ifndef KORG_NOKABC
-  TQString vcards;
-  KABC::VCardConverter converter;
-
-  KVCardDrag::decode( e, vcards );
-  KABC::Addressee::List list = converter.parseVCards( vcards );
-  KABC::Addressee::List::Iterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    TQString em( (*it).fullEmail() );
-    if (em.isEmpty()) {
-      em=(*it).realName();
+  KABC::Addressee::List list;
+  if ( KVCardDrag::decode( e, list ) ) {
+    KABC::Addressee::List::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      TQString em( (*it).fullEmail() );
+      if ( em.isEmpty() ) {
+        em = (*it).realName();
+      }
+      addAttendee( em );
     }
-    addAttendee( em );
   }
 #else
   if( decoded ) {
@@ -665,11 +668,21 @@ static void conditionalPaint( TQPainter *p, bool cond, int &x, int ft,
 void KOAgendaItem::paintEventIcon( TQPainter *p, int &x, int ft )
 {
   if ( !mIncidence ) return;
-  static const TQPixmap eventPxmp =
-    KOGlobals::self()->smallIcon( "appointment" );
-  if ( mIncidence->type() != "Event" )
-    return;
-  conditionalPaint( p, true, x, ft, eventPxmp );
+
+  if ( mIncidence->type() == "Event" ) {
+    TQPixmap eventPxmp;
+    if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+      mSpecialEvent = true;
+      if ( mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+        eventPxmp = KOGlobals::self()->smallIcon( "calendaranniversary" );
+      } else {
+        eventPxmp = KOGlobals::self()->smallIcon( "calendarbirthday" );
+      }
+      conditionalPaint( p, true, x, ft, eventPxmp );
+    }
+    // per kolab/issue4349 we don't draw a regular appointment icon (to save space)
+  }
+
 }
 
 void KOAgendaItem::paintTodoIcon( TQPainter *p, int &x, int ft )
@@ -702,9 +715,11 @@ void KOAgendaItem::paintIcons( TQPainter *p, int &x, int ft )
 {
   paintEventIcon( p, x, ft );
   paintTodoIcon( p, x, ft );
-  paintAlarmIcon( p, x, ft );
-  conditionalPaint( p, mIconRecur,          x, ft, *recurPxmp );
-  conditionalPaint( p, mIconReadonly,       x, ft, *readonlyPxmp );
+  if ( !mSpecialEvent ) {
+    paintAlarmIcon( p, x, ft );
+  }
+  conditionalPaint( p, mIconRecur && !mSpecialEvent, x, ft, *recurPxmp );
+  conditionalPaint( p, mIconReadonly && !mSpecialEvent, x, ft, *readonlyPxmp );
   conditionalPaint( p, mIconReply,          x, ft, *replyPxmp );
   conditionalPaint( p, mIconGroup,          x, ft, *groupPxmp );
   conditionalPaint( p, mIconGroupTentative, x, ft, *groupPxmpTentative );
@@ -762,16 +777,13 @@ void KOAgendaItem::paintEvent( TQPaintEvent *ev )
   TQStringList categories = mIncidence->categories();
   TQString cat = categories.first();
   if (cat.isEmpty())
-    categoryColor = KOPrefs::instance()->mEventColor;
+    categoryColor = KOPrefs::instance()->unsetCategoryColor();
   else
     categoryColor = *(KOPrefs::instance()->categoryColor(cat));
 
   TQColor resourceColor = mResourceColor;
   if ( !resourceColor.isValid() )
     resourceColor = categoryColor;
-
-  if (!KOPrefs::instance()->hasCategoryColor(cat))
-      categoryColor = resourceColor;
 
   TQColor frameColor;
   if ( KOPrefs::instance()->agendaViewColors() == KOPrefs::ResourceOnly ||
@@ -788,6 +800,16 @@ void KOAgendaItem::paintEvent( TQPaintEvent *ev )
     } else {
       bgColor = categoryColor;
     }
+  }
+
+  if ( cat.isEmpty() &&
+       KOPrefs::instance()->agendaViewColors() == KOPrefs::ResourceInsideCategoryOutside ) {
+    frameColor = bgColor;
+  }
+
+  if ( cat.isEmpty() &&
+       KOPrefs::instance()->agendaViewColors() == KOPrefs::CategoryInsideResourceOutside ) {
+    bgColor = frameColor;
   }
 
   if ( mSelected ) {

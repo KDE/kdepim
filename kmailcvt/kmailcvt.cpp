@@ -17,7 +17,9 @@
 #include "kmailcvt.h"
 #include <kaboutapplication.h>
 #include <tqpushbutton.h>
-
+#include <dcopclient.h>
+#include <dcopref.h>
+#include <kdebug.h>
 #include "filters.hxx"
 
 KMailCVT::KMailCVT(TQWidget *parent, const char *name)
@@ -34,6 +36,19 @@ KMailCVT::KMailCVT(TQWidget *parent, const char *name)
 }
 
 KMailCVT::~KMailCVT() {
+  endImport();
+}
+
+void KMailCVT::endImport() {
+  if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
+    KApplication::startServiceByDesktopName( "kmail", TQString::null ); // Will wait until kmail is started
+
+  DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", TQString::null, TQString::null, TQString::null);
+  if ( !reply.isValid() )
+    return;
+  reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopResetAddMessage" );
+  if ( !reply.isValid() )
+    return;
 }
 
 void KMailCVT::next() {
@@ -41,24 +56,33 @@ void KMailCVT::next() {
 		// Save selected filter
 		Filter *selectedFilter = selfilterpage->getSelectedFilter();
 		// without filter don't go next
-		if (!selectedFilter)
+		if ( !selectedFilter )
 			return;
-		// Goto next page
-		KWizard::next();
-		// Disable back & finish
-		setBackEnabled( currentPage(), false );
-		setFinishEnabled( currentPage(), false );
-		// Start import
-		FilterInfo *info = new FilterInfo(importpage, this, selfilterpage->removeDupMsg_checked());
-		info->setStatusMsg(i18n("Import in progress"));
-		info->clear(); // Clear info from last time
-		selectedFilter->import(info);
-		info->setStatusMsg(i18n("Import finished"));
-		// Cleanup
-		delete info;
-		// Enable finish & back buttons
-		setFinishEnabled( currentPage(), true );
-		setBackEnabled( currentPage(), true );
+
+    if ( !selectedFilter->needsSecondPage() ) {
+      FilterInfo *info = new FilterInfo( importpage, this, selfilterpage->removeDupMsg_checked() );
+      selectedFilter->import( info );
+      accept();
+      delete info;
+    }
+    else {
+      // Goto next page
+      KWizard::next();
+      // Disable back & finish
+      setBackEnabled( currentPage(), false );
+      setFinishEnabled( currentPage(), false );
+      // Start import
+      FilterInfo *info = new FilterInfo(importpage, this, selfilterpage->removeDupMsg_checked());
+      info->setStatusMsg(i18n("Import in progress"));
+      info->clear(); // Clear info from last time
+      selectedFilter->import(info);
+      info->setStatusMsg(i18n("Import finished"));
+      // Cleanup
+      delete info;
+      // Enable finish & back buttons
+      setFinishEnabled( currentPage(), true );
+      setBackEnabled( currentPage(), true );
+    }
 	} else KWizard::next();
 }
 

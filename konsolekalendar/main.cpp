@@ -799,13 +799,13 @@ int main( int argc, char *argv[] )
   if ( !args->isSet( "time" )     && !args->isSet( "epoch-start" ) &&
        !args->isSet( "end-time" ) && !args->isSet( "epoch-end" ) ) {
     // set default start date/time
-    startdatetime = TQDateTime::TQDateTime( startdate, starttime );
+    startdatetime = TQDateTime( startdate, starttime );
     kdDebug() << "main | datetimestamp | "
               << "setting startdatetime from "
               << "default startdate (today) and starttime"
               << endl;
     // set default end date/time
-    enddatetime = TQDateTime::TQDateTime( enddate, endtime );
+    enddatetime = TQDateTime( enddate, endtime );
     kdDebug() << "main | datetimestamp | "
               << "setting enddatetime from "
               << "default enddate (today) and endtime"
@@ -814,13 +814,13 @@ int main( int argc, char *argv[] )
 
   // Set startdatetime, enddatetime if still necessary
   if ( startdatetime.isNull() ) {
-    startdatetime = TQDateTime::TQDateTime( startdate, starttime );
+    startdatetime = TQDateTime( startdate, starttime );
     kdDebug() << "main | datetimestamp | "
               << "setting startdatetime from startdate and starttime"
               << endl;
   }
   if ( enddatetime.isNull() ) {
-    enddatetime = TQDateTime::TQDateTime( enddate, endtime );
+    enddatetime = TQDateTime( enddate, endtime );
     kdDebug() << "main | datetimestamp | "
               << "setting enddatetime from enddate and endtime"
               << endl;

@@ -42,6 +42,10 @@
 
 #include <libkdepim/kvcarddrag.h>
 #include <libkdepim/maillistdrag.h>
+#include <libkdepim/kpimprefs.h>
+
+#include <libkcal/calendarlocal.h>
+#include <libkcal/icaldrag.h>
 
 #include "core.h"
 #include "summarywidget.h"
@@ -78,6 +82,11 @@ KOrganizerPlugin::~KOrganizerPlugin()
 
 Kontact::Summary *KOrganizerPlugin::createSummaryWidget( TQWidget *parent )
 {
+  // korg part must be loaded, otherwise when starting kontact on summary view
+  // it won't display our stuff.
+  // If the part is already loaded loadPart() is harmless and just returns
+  loadPart();
+
   return new SummaryWidget( this, parent );
 }
 
@@ -160,27 +169,43 @@ bool KOrganizerPlugin::canDecodeDrag( TQMimeSource *mimeSource )
 
 void KOrganizerPlugin::processDropEvent( TQDropEvent *event )
 {
-  TQString text;
-
-  KABC::VCardConverter converter;
-  if ( KVCardDrag::canDecode( event ) && KVCardDrag::decode( event, text ) ) {
-    KABC::Addressee::List contacts = converter.parseVCards( text );
-    KABC::Addressee::List::Iterator it;
-
+  KABC::Addressee::List list;
+  if ( KVCardDrag::decode( event, list ) ) {
     TQStringList attendees;
-    for ( it = contacts.begin(); it != contacts.end(); ++it ) {
+    KABC::Addressee::List::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
       TQString email = (*it).fullEmail();
-      if ( email.isEmpty() )
+      if ( email.isEmpty() ) {
         attendees.append( (*it).realName() + "<>" );
-      else
+      } else {
         attendees.append( email );
+      }
     }
-
     interface()->openEventEditor( i18n( "Meeting" ), TQString::null, TQString::null,
                                   attendees );
     return;
   }
 
+  if ( KCal::ICalDrag::canDecode( event) ) {
+      KCal::CalendarLocal cal( KPimPrefs::timezone() );
+      if ( KCal::ICalDrag::decode( event, &cal ) ) {
+          KCal::Incidence::List incidences = cal.incidences();
+          if ( !incidences.isEmpty() ) {
+              event->accept();
+              KCal::Incidence *i = incidences.first();
+              TQString summary;
+              if ( dynamic_cast<KCal::Journal*>( i ) )
+                  summary = i18n( "Note: %1" ).arg( i->summary() );
+              else
+                  summary = i->summary();
+              interface()->openEventEditor( summary, i->description(), TQString() );
+              return;
+          }
+      // else fall through to text decoding
+      }
+  }
+
+  TQString text;
   if ( TQTextDrag::decode( event, text ) ) {
     kdDebug(5602) << "DROP:" << text << endl;
     interface()->openEventEditor( text );

@@ -40,17 +40,21 @@
 #include "alarmclient.h"
 #include "mainwindow.h"
 #include <uniqueapphandler.h> // in ../interfaces
+#include "profilemanager.h"
 
 using namespace std;
 
 static const char description[] =
     I18N_NOOP( "KDE personal information manager" );
 
-static const char version[] = "1.2.9";
+static const char version[] = "1.2.9 (enterprise35 0.20100827.1168748)";
 
 class KontactApp : public KUniqueApplication {
   public:
-    KontactApp() : mMainWindow( 0 ), mSessionRestored( false ) {}
+    KontactApp() : mMainWindow( 0 ), mSessionRestored( false )
+    {
+      KGlobal::iconLoader()->addAppDir( "kdepim" );
+    }
     ~KontactApp() {}
 
     int newInstance();
@@ -84,6 +88,14 @@ static void listPlugins()
   }
 }
 
+static void listProfiles()
+{
+    TQValueList<Kontact::Profile> profiles = Kontact::ProfileManager::self()->profiles();
+    for( TQValueListIterator<Kontact::Profile> it = profiles.begin() ; it != profiles.end(); ++it ) {
+        cout << (*it).name().latin1() << endl;
+    }
+}
+
 int KontactApp::newInstance()
 {
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -111,6 +123,16 @@ int KontactApp::newInstance()
         mMainWindow->setActivePluginModule( moduleName );
     }
   }
+
+    if ( args->isSet( "profile" ) ) {
+        TQValueList<Kontact::Profile>  profiles = Kontact::ProfileManager::self()->profiles();
+        for( TQValueListIterator<Kontact::Profile> it = profiles.begin(); it != profiles.end(); ++it ){
+           if( args->getOption("profile") == (*it).name().latin1() ) {
+             Kontact::ProfileManager::self()->loadProfile( (*it).id() );
+             break;
+           }
+        }
+    }
 
   AlarmClient alarmclient;
   alarmclient.startDaemon();
@@ -140,6 +162,11 @@ int main( int argc, char **argv )
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   if ( args->isSet( "list" ) ) {
     listPlugins();
+    return 0;
+  }
+
+  if ( args->isSet( "listprofiles" ) ) {
+    listProfiles();
     return 0;
   }
 

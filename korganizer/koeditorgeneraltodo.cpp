@@ -38,13 +38,13 @@
 
 #include <kglobal.h>
 #include <klocale.h>
-#include <kiconloader.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kfiledialog.h>
 #include <ktextedit.h>
 
+#include <libkcal/incidenceformatter.h>
 #include <libkcal/todo.h>
 
 #include <libkdepim/kdateedit.h>
@@ -56,10 +56,10 @@
 #include "koeditorgeneraltodo.h"
 #include "koeditorgeneraltodo.moc"
 
-KOEditorGeneralTodo::KOEditorGeneralTodo(TQObject* parent,
-                                         const char* name)
-  : KOEditorGeneral( parent, name)
+KOEditorGeneralTodo::KOEditorGeneralTodo( TQObject *parent, const char *name )
+  : KOEditorGeneral( parent, name )
 {
+  setType( "Todo" );
 }
 
 KOEditorGeneralTodo::~KOEditorGeneralTodo()
@@ -76,19 +76,17 @@ void KOEditorGeneralTodo::finishSetup()
   TQWidget::setTabOrder( mDueCheck, mDueDateEdit );
   TQWidget::setTabOrder( mDueDateEdit, mDueTimeEdit );
   TQWidget::setTabOrder( mDueTimeEdit, mTimeButton );
-  TQWidget::setTabOrder( mTimeButton, mCompletedCombo );
+  TQWidget::setTabOrder( mTimeButton, mRecEditButton );
+  TQWidget::setTabOrder( mRecEditButton, mCompletedToggle );
+  TQWidget::setTabOrder( mCompletedToggle, mCompletedCombo );
   TQWidget::setTabOrder( mCompletedCombo, mPriorityCombo );
   TQWidget::setTabOrder( mPriorityCombo, mAlarmButton );
   TQWidget::setTabOrder( mAlarmButton, mAlarmTimeEdit );
   TQWidget::setTabOrder( mAlarmTimeEdit, mAlarmIncrCombo );
-//   TQWidget::setTabOrder( mAlarmIncrCombo, mAlarmSoundButton );
-  TQWidget::setTabOrder( mAlarmIncrCombo, mAlarmEditButton );
-//   TQWidget::setTabOrder( mAlarmSoundButton, mAlarmProgramButton );
-//   TQWidget::setTabOrder( mAlarmProgramButton, mDescriptionEdit );
-  TQWidget::setTabOrder( mAlarmEditButton, mDescriptionEdit );
+  TQWidget::setTabOrder( mAlarmIncrCombo, mAlarmAdvancedButton );
+  TQWidget::setTabOrder( mAlarmAdvancedButton, mDescriptionEdit );
   TQWidget::setTabOrder( mDescriptionEdit, mCategoriesButton );
   TQWidget::setTabOrder( mCategoriesButton, mSecrecyCombo );
-//  TQWidget::setTabOrder( mSecrecyCombo, mDescriptionEdit );
 
   mSummaryEdit->setFocus();
 }
@@ -134,7 +132,6 @@ void KOEditorGeneralTodo::initTime(TQWidget *parent,TQBoxLayout *topLayout)
   TQWhatsThis::add( mDueCheck, whatsThis );
   layoutTimeBox->addWidget(mDueCheck,1,0);
   connect(mDueCheck,TQT_SIGNAL(toggled(bool)),TQT_SLOT(enableDueEdit(bool)));
-  connect(mDueCheck,TQT_SIGNAL(toggled(bool)),TQT_SLOT(showAlarm()));
   connect(mDueCheck,TQT_SIGNAL(toggled(bool)),TQT_SIGNAL(dueDateEditToggle(bool)));
   connect(mDueCheck,TQT_SIGNAL(toggled(bool)),TQT_SLOT(dateChanged()));
 
@@ -153,13 +150,31 @@ void KOEditorGeneralTodo::initTime(TQWidget *parent,TQBoxLayout *topLayout)
   TQWhatsThis::add( mTimeButton,
                    i18n("Sets whether or not this to-do's start and due dates "
                         "have times associated with them.") );
-  layoutTimeBox->addMultiCellWidget(mTimeButton,2,2,0,2);
-
+  layoutTimeBox->addWidget( mTimeButton, 0, 3 );
   connect(mTimeButton,TQT_SIGNAL(toggled(bool)),TQT_SLOT(enableTimeEdits(bool)));
   connect(mTimeButton,TQT_SIGNAL(toggled(bool)),TQT_SLOT(dateChanged()));
 
+  TQLabel *label = new TQLabel( i18n( "Recurrence:" ), timeBoxFrame );
+  layoutTimeBox->addWidget( label, 3, 0 );
+  TQBoxLayout *recLayout = new TQHBoxLayout();
+  layoutTimeBox->addMultiCellLayout( recLayout, 3, 3, 1, 4 );
+  mRecEditButton = new TQPushButton( timeBoxFrame );
+  mRecEditButton->setIconSet( KOGlobals::self()->smallIconSet( "recur", 16 ) );
+  recLayout->addWidget( mRecEditButton );
+  connect( mRecEditButton, TQT_SIGNAL(clicked()), TQT_SIGNAL(editRecurrence()) );
+  mRecEditLabel = new TQLabel( TQString(), timeBoxFrame );
+  recLayout->addWidget( mRecEditLabel );
+  recLayout->addStretch( 1 );
+
+  label = new TQLabel( i18n("Reminder:"), timeBoxFrame );
+  layoutTimeBox->addWidget( label, 4, 0 );
+  TQBoxLayout *alarmLineLayout = new TQHBoxLayout();
+  layoutTimeBox->addMultiCellLayout( alarmLineLayout, 4, 4, 1, 4 );
+  initAlarm( timeBoxFrame, alarmLineLayout );
+  alarmLineLayout->addStretch( 1 );
+
   // some more layouting
-  layoutTimeBox->setColStretch(3,1);
+  layoutTimeBox->setColStretch( 3, 1 );
 
   TQBoxLayout *secLayout = new TQHBoxLayout();
   layoutTimeBox->addLayout( secLayout, 0, 4 );
@@ -167,54 +182,73 @@ void KOEditorGeneralTodo::initTime(TQWidget *parent,TQBoxLayout *topLayout)
 }
 
 
-void KOEditorGeneralTodo::initCompletion(TQWidget *parent, TQBoxLayout *topLayout)
+void KOEditorGeneralTodo::initCompletion( TQWidget *parent, TQBoxLayout *topLayout )
 {
-  TQString whatsThis = i18n("Sets the current completion status of this to-do "
-                           "as a percentage.");
-  mCompletedCombo = new TQComboBox(parent);
-  TQWhatsThis::add( mCompletedCombo, whatsThis );
-  for (int i = 0; i <= 100; i+=10) {
-    // xgettext:no-c-format
-    TQString label = i18n("Percent complete", "%1 %").arg (i);
-    mCompletedCombo->insertItem(label);
-  }
-  connect(mCompletedCombo,TQT_SIGNAL(activated(int)),TQT_SLOT(completedChanged(int)));
-  topLayout->addWidget(mCompletedCombo);
+  TQHBoxLayout *completionLayout = new TQHBoxLayout( topLayout );
 
-  mCompletedLabel = new TQLabel(i18n("co&mpleted"),parent);
-  topLayout->addWidget(mCompletedLabel);
-  mCompletedLabel->setBuddy( mCompletedCombo );
+  TQLabel *label = new TQLabel( i18n( "&Completed:" ), parent );
+  completionLayout->addWidget( label );
+
+  mCompletedToggle = new TQCheckBox( parent );
+  TQToolTip::add( mCompletedToggle,
+                 i18n( "Toggle between 0% and 100% complete" ) );
+  TQWhatsThis::add( mCompletedToggle,
+                   i18n( "Click this checkbox to toggle the completed percentage of the to-do "
+                         "between 0% or 100%" ) );
+  connect( mCompletedToggle, TQT_SIGNAL(clicked()), TQT_SLOT(completedChanged()) );
+  completionLayout->addWidget( mCompletedToggle );
+  label->setBuddy( mCompletedToggle );
+
+  mCompletedCombo = new TQComboBox( parent );
+  TQToolTip::add( mCompletedCombo,
+                 i18n( "Select the completed percentage" ) );
+  TQWhatsThis::add( mCompletedCombo,
+                   i18n( "Use this combobox to set the completion percentage of the to-do." ) );
+  for ( int i = 0; i <= 100; i+=10 ) {
+    // xgettext:no-c-format
+    TQString label = i18n( "Percent complete", "%1 %" ).arg( i );
+    mCompletedCombo->insertItem( label );
+  }
+  connect( mCompletedCombo, TQT_SIGNAL(activated(int)), TQT_SLOT(completedChanged(int)) );
+  completionLayout->addWidget( mCompletedCombo );
+
+  mCompletedLabel = new TQLabel( i18n( "completed on", "on" ), parent );
+  mCompletedLabel->hide();
+  completionLayout->addWidget( mCompletedLabel );
+
   mCompletionDateEdit = new KDateEdit( parent );
   mCompletionDateEdit->hide();
-  topLayout->addWidget( mCompletionDateEdit );
+  completionLayout->addWidget( mCompletionDateEdit );
+
   mCompletionTimeEdit = new KTimeEdit( parent, TQTime() );
   mCompletionTimeEdit->hide();
-  topLayout->addWidget( mCompletionTimeEdit );
+  completionLayout->addWidget( mCompletionTimeEdit );
 }
 
 void KOEditorGeneralTodo::initPriority(TQWidget *parent, TQBoxLayout *topLayout)
 {
-  TQString whatsThis = i18n("Sets the priority of this to-do on a scale "
-                           "from one to nine, with one being the highest "
-                           "priority, five being a medium priority, and "
-                           "nine being the lowest. In programs that have a "
-                           "different scale, the numbers will be adjusted "
-                           "to match the appropriate scale.");
-  TQLabel *priorityLabel = new TQLabel(i18n("&Priority:"),parent);
-  topLayout->addWidget(priorityLabel);
+  TQLabel *priorityLabel = new TQLabel( i18n( "&Priority:" ), parent );
+  topLayout->addWidget( priorityLabel );
 
-  mPriorityCombo = new TQComboBox(parent);
-  mPriorityCombo->insertItem(i18n("unspecified"));
-  mPriorityCombo->insertItem(i18n("1 (highest)"));
-  mPriorityCombo->insertItem(i18n("2"));
-  mPriorityCombo->insertItem(i18n("3"));
-  mPriorityCombo->insertItem(i18n("4"));
-  mPriorityCombo->insertItem(i18n("5 (medium)"));
-  mPriorityCombo->insertItem(i18n("6"));
-  mPriorityCombo->insertItem(i18n("7"));
-  mPriorityCombo->insertItem(i18n("8"));
-  mPriorityCombo->insertItem(i18n("9 (lowest)"));
-  topLayout->addWidget(mPriorityCombo);
+  mPriorityCombo = new TQComboBox( parent );
+  TQToolTip::add( mPriorityCombo,
+                 i18n( "Set the priority of the to-do" ) );
+  TQWhatsThis::add( mPriorityCombo,
+                   i18n( "Sets the priority of this to-do on a scale from one to nine, "
+                         "with one being the highest priority, five being a medium priority, "
+                         "and nine being the lowest. In programs that have a different scale, "
+                         "the numbers will be adjusted to match the appropriate scale." ) );
+  mPriorityCombo->insertItem( i18n( "unspecified" ) );
+  mPriorityCombo->insertItem( i18n( "1 (highest)" ) );
+  mPriorityCombo->insertItem( i18n( "2" ) );
+  mPriorityCombo->insertItem( i18n( "3" ) );
+  mPriorityCombo->insertItem( i18n( "4" ) );
+  mPriorityCombo->insertItem( i18n( "5 (medium)" ) );
+  mPriorityCombo->insertItem( i18n( "6" ) );
+  mPriorityCombo->insertItem( i18n( "7" ) );
+  mPriorityCombo->insertItem( i18n( "8" ) );
+  mPriorityCombo->insertItem( i18n( "9 (lowest)" ) );
+  topLayout->addWidget( mPriorityCombo );
   priorityLabel->setBuddy( mPriorityCombo );
 }
 
@@ -263,25 +297,29 @@ void KOEditorGeneralTodo::setDefaults( const TQDateTime &due, bool allDay )
   }
   mStartDateModified = false;
 
-  mPriorityCombo->setCurrentItem(5);
+  mPriorityCombo->setCurrentItem( 5 );
 
-  mCompletedCombo->setCurrentItem(0);
+  mCompletedToggle->setChecked( false );
+  mCompletedCombo->setCurrentItem( 0 );
 }
 
-void KOEditorGeneralTodo::readTodo(Todo *todo, Calendar *calendar)
+void KOEditorGeneralTodo::readTodo(Todo *todo, Calendar *calendar, const TQDate &date )
 {
   KOEditorGeneral::readIncidence(todo, calendar);
 
   TQDateTime dueDT;
 
   if (todo->hasDueDate()) {
-    enableAlarm( true );
     dueDT = todo->dtDue();
-    mDueDateEdit->setDate(todo->dtDue().date());
-    mDueTimeEdit->setTime(todo->dtDue().time());
+    if ( todo->doesRecur() && date.isValid() ) {
+      TQDateTime dt( date, TQTime( 0, 0, 0 ) );
+      dt = dt.addSecs( -1 );
+      dueDT.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
+    }
+    mDueDateEdit->setDate(dueDT.date());
+    mDueTimeEdit->setTime(dueDT.time());
     mDueCheck->setChecked(true);
   } else {
-    enableAlarm( false );
     mDueDateEdit->setEnabled(false);
     mDueTimeEdit->setEnabled(false);
     mDueDateEdit->setDate(TQDate::currentDate());
@@ -290,8 +328,13 @@ void KOEditorGeneralTodo::readTodo(Todo *todo, Calendar *calendar)
   }
 
   if (todo->hasStartDate()) {
-    mStartDateEdit->setDate(todo->dtStart().date());
-    mStartTimeEdit->setTime(todo->dtStart().time());
+    TQDateTime startDT = todo->dtStart();
+    if ( todo->doesRecur() && date.isValid() && todo->hasDueDate() ) {
+      int days = todo->dtStart( true ).daysTo( todo->dtDue( true ) );
+      startDT.setDate( date.addDays( -days ) );
+    }
+    mStartDateEdit->setDate(startDT.date());
+    mStartTimeEdit->setTime(startDT.time());
     mStartCheck->setChecked(true);
   } else {
     mStartDateEdit->setEnabled(false);
@@ -303,10 +346,13 @@ void KOEditorGeneralTodo::readTodo(Todo *todo, Calendar *calendar)
 
   mTimeButton->setChecked( !todo->doesFloat() );
 
+  updateRecurrenceSummary( todo );
+
   mAlreadyComplete = false;
-  mCompletedCombo->setCurrentItem(todo->percentComplete() / 10);
-  if (todo->isCompleted() && todo->hasCompletedDate()) {
-    mCompleted = todo->completed();
+  mCompletedCombo->setCurrentItem( todo->percentComplete() / 10 );
+  if ( todo->isCompleted() && todo->hasCompletedDate() ) {
+    mCompletedDateTime = todo->completed();
+    mCompletedToggle->setChecked( true );
     mAlreadyComplete = true;
   }
   setCompletedDate();
@@ -369,25 +415,25 @@ void KOEditorGeneralTodo::writeTodo(Todo *todo)
   if ( todo->doesRecur() && !mStartDateModified ) {
     todo->setDtDue( tmpDueDT );
   } else {
-      todo->setDtDue( tmpDueDT, true );
-      todo->setDtStart( tmpStartDT );
-      todo->setDtRecurrence( tmpDueDT );
+    todo->setDtDue( tmpDueDT, true );
+    todo->setDtStart( tmpStartDT );
+    todo->setDtRecurrence( tmpDueDT );
   }
 
   todo->setPriority( mPriorityCombo->currentItem() );
 
   // set completion state
-  todo->setPercentComplete(mCompletedCombo->currentItem() * 10);
+  todo->setPercentComplete( mCompletedCombo->currentItem() * 10 );
 
-  if (mCompletedCombo->currentItem() == 10 && mCompleted.isValid()) {
+  if (mCompletedCombo->currentItem() == 10 && mCompletedDateTime.isValid()) {
     TQDateTime completed( mCompletionDateEdit->date(),
                          mCompletionTimeEdit->getTime() );
-    int difference = mCompleted.secsTo( completed );
+    int difference = mCompletedDateTime.secsTo( completed );
     if ( (difference < 60) && (difference > -60) &&
-         (completed.time().minute() == mCompleted.time().minute() ) ) {
+         (completed.time().minute() == mCompletedDateTime.time().minute() ) ) {
       // completion time wasn't changed substantially (only the seconds
       // truncated, but that's an effect done by KTimeEdit automatically).
-      completed = mCompleted;
+      completed = mCompletedDateTime;
     }
     todo->setCompleted( completed );
   }
@@ -439,11 +485,6 @@ void KOEditorGeneralTodo::enableTimeEdits(bool enable)
   }
 }
 
-void KOEditorGeneralTodo::showAlarm()
-{
-  enableAlarm( mDueCheck->isChecked() );
-}
-
 bool KOEditorGeneralTodo::validateInput()
 {
   if (mDueCheck->isChecked()) {
@@ -491,10 +532,33 @@ bool KOEditorGeneralTodo::validateInput()
   return KOEditorGeneral::validateInput();
 }
 
-void KOEditorGeneralTodo::completedChanged(int index)
+void KOEditorGeneralTodo::updateRecurrenceSummary( Todo *todo )
 {
-  if (index == 10) {
-    mCompleted = TQDateTime::currentDateTime();
+  if ( todo->doesRecur() ) {
+    mRecEditLabel->setText( IncidenceFormatter::recurrenceString( todo ) );
+  } else {
+    mRecEditLabel->setText( TQString() );
+  }
+}
+
+void KOEditorGeneralTodo::completedChanged( int index )
+{
+  if ( index == 10 ) {
+    mCompletedToggle->setChecked( true );
+    mCompletedDateTime = TQDateTime::currentDateTime();
+  } else {
+    mCompletedToggle->setChecked( false );
+  }
+  setCompletedDate();
+}
+
+void KOEditorGeneralTodo::completedChanged()
+{
+  if ( mCompletedToggle->isChecked() ) {
+    mCompletedCombo->setCurrentItem( 10 );
+    mCompletedDateTime = TQDateTime::currentDateTime();
+  } else {
+    mCompletedCombo->setCurrentItem( 0 );
   }
   setCompletedDate();
 }
@@ -533,21 +597,20 @@ void KOEditorGeneralTodo::startDateModified()
 
 void KOEditorGeneralTodo::setCompletedDate()
 {
-  if (mCompletedCombo->currentItem() == 10 && mCompleted.isValid()) {
-    mCompletedLabel->setText(i18n("co&mpleted on"));
-//        .arg(KGlobal::locale()->formatDateTime(mCompleted)));
+  if ( mCompletedCombo->currentItem() == 10 && mCompletedDateTime.isValid() ) {
+    mCompletedLabel->show();
     mCompletionDateEdit->show();
     mCompletionTimeEdit->show();
-    mCompletionDateEdit->setDate( mCompleted.date() );
-    mCompletionTimeEdit->setTime( mCompleted.time() );
+    mCompletionDateEdit->setDate( mCompletedDateTime.date() );
+    mCompletionTimeEdit->setTime( mCompletedDateTime.time() );
   } else {
-    mCompletedLabel->setText(i18n("co&mpleted"));
+    mCompletedLabel->hide();
     mCompletionDateEdit->hide();
     mCompletionTimeEdit->hide();
   }
 }
 
-void KOEditorGeneralTodo::modified (Todo* todo, int modification)
+void KOEditorGeneralTodo::modified (Todo* todo, KOGlobals::HowChanged modification)
 {
   switch (modification) {
   case KOGlobals::PRIORITY_MODIFIED:
@@ -556,7 +619,8 @@ void KOEditorGeneralTodo::modified (Todo* todo, int modification)
   case KOGlobals::COMPLETION_MODIFIED:
     mCompletedCombo->setCurrentItem(todo->percentComplete() / 10);
     if (todo->isCompleted() && todo->hasCompletedDate()) {
-      mCompleted = todo->completed();
+      mCompletedDateTime = todo->completed();
+      mCompletedToggle->setChecked( true );
     }
     setCompletedDate();
     break;
@@ -565,7 +629,7 @@ void KOEditorGeneralTodo::modified (Todo* todo, int modification)
     break;
   case KOGlobals::UNKNOWN_MODIFIED: // fall through
   default:
-    readTodo( todo, 0 );
+    readTodo( todo, 0, TQDate() );
     break;
   }
 }

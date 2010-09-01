@@ -49,6 +49,7 @@ public:
 
 protected:
   virtual void closeEvent(TQCloseEvent *event);
+  void reject();
 private:
   KListBox* mListBox;
 };

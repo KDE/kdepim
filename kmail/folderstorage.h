@@ -106,8 +106,7 @@ public:
   virtual bool noContent() const { return mNoContent; }
 
   /** Specify, that the folder can't contain mails. */
-  virtual void setNoContent(bool aNoContent)
-    { mNoContent = aNoContent; }
+  virtual void setNoContent(bool aNoContent);
 
   /** Returns, if the folder can't have children */
   virtual bool noChildren() const { return mNoChildren; }
@@ -342,6 +341,9 @@ public:
   /** Is the folder read-only? */
   virtual bool isReadOnly() const = 0;
 
+  /** Can messages in this folder be deleted? */
+  virtual bool canDeleteMessages() const;
+
   /** Returns the label of the folder for visualization. */
   TQString label() const;
 
@@ -417,6 +419,8 @@ public:
 
   virtual KMAccount* account() const;
 
+  virtual bool mailCheckInProgress() const;
+
 signals:
   /** Emitted when the status, name, or associated accounts of this
     folder changed. */
@@ -432,7 +436,7 @@ signals:
 
   /** Emitted when the folder was closed and ticket owners have to reopen */
   void closed( KMFolder* );
-  
+
   /** Emitted when the serial numbers of this folder were invalidated. */
   void invalidated( KMFolder * );
 
@@ -450,6 +454,9 @@ signals:
 
   /** Emitted when the readonly status of the folder changes. */
   void readOnlyChanged(KMFolder*);
+
+  /** Emitted when the no content state of the folder changes. */
+  void noContentChanged();
 
   /** Emitted before a message is removed from the folder. */
   void msgRemoved(KMFolder*, Q_UINT32 sernum);
@@ -494,6 +501,11 @@ signals:
   /** Emitted when the folder's size changes. */
   void folderSizeChanged();
 
+  /**
+   *  Emiitted when the sync state, i.e. mailCheckInProgress(), changes.
+   *  Currently only supported for disconnected IMAP.
+   */
+  void syncStateChanged();
 
 public slots:
   /** Incrementally update the index if possible else call writeIndex */

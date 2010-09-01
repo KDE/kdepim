@@ -46,6 +46,8 @@ class KURL;
 
 namespace Kolab {
 
+enum ResourceType { Tasks, Events, Incidences, Contacts, Notes };
+
 class KMailConnection;
 
 /**
@@ -168,8 +170,16 @@ protected:
   TQString configFile( const TQString& type ) const;
 
   /// If only one of these is writable, return that. Otherwise return null.
-  TQString findWritableResource( const ResourceMap& resources,
+  TQString findWritableResource( const ResourceType &type,
+                                const ResourceMap& resources,
                                 const TQString& text = TQString::null );
+
+  enum ErrorCode {
+    NoError,
+    NoWritableFound,   /**< No writable resource is available */
+    UserCancel         /**< User canceled the operation */
+  };
+  ErrorCode mErrorCode;
 
   bool mSilent;
 

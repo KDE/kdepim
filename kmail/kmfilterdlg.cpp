@@ -15,6 +15,8 @@
 using KMail::AccountManager;
 #include "filterimporterexporter.h"
 using KMail::FilterImporterExporter;
+#include "foldersetselector.h"
+#include "globalsettings.h"
 
 // other KDE headers:
 #include <kmessagebox.h>
@@ -44,6 +46,8 @@ using KMail::FilterImporterExporter;
 
 // other headers:
 #include <assert.h>
+
+using namespace KMail;
 
 
 // What's this help texts
@@ -634,6 +638,14 @@ KMFilterListBox::KMFilterListBox( const TQString & title, TQWidget *parent, cons
   TQWhatsThis::add( mBtnDelete, i18n(_wt_filterlist_delete) );
   TQWhatsThis::add( mBtnRename, i18n(_wt_filterlist_rename) );
 
+  // third row
+  if ( !popFilter ) {
+    hb = new TQHBox( this );
+    hb->setSpacing( 4 );
+    TQPushButton *btn = new TQPushButton( i18n("Select Source Folders"), hb );
+    connect( btn, TQT_SIGNAL(clicked()), TQT_SLOT(slotSelectSourceFolders()) );
+  }
+
 
   //----------- now connect everything
   connect( mListBox, TQT_SIGNAL(highlighted(int)),
@@ -699,7 +711,7 @@ void KMFilterListBox::slotUpdateFilterName()
 
   if ( mFilterList.at(mIdxSelItem)->isAutoNaming() ) {
     // auto-naming of patterns
-    if ( p->first() && !p->first()->field().stripWhiteSpace().isEmpty() )
+    if ( !p->isEmpty() && p->first() && !p->first()->field().stripWhiteSpace().isEmpty() )
       shouldBeName = TQString( "<%1>: %2" ).arg( p->first()->field() ).arg( p->first()->contents() );
     else
       shouldBeName = "<" + i18n("unnamed") + ">";
@@ -953,6 +965,17 @@ void KMFilterListBox::slotRename()
   }
 
   slotUpdateFilterName();
+}
+
+void KMFilterListBox::slotSelectSourceFolders()
+{
+  FolderSetSelector dlg( kmkernel->getKMMainWidget()->folderTree(), this );
+  dlg.setCaption( i18n( "Select Folders to Filter" ) );
+  if ( !GlobalSettings::filterSourceFolders().isEmpty() )
+    dlg.setSelectedFolders( GlobalSettings::filterSourceFolders() );
+  if ( dlg.exec() == TQDialog::Accepted ) {
+    GlobalSettings::setFilterSourceFolders( dlg.selectedFolders() );
+  }
 }
 
 void KMFilterListBox::enableControls()

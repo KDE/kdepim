@@ -1007,7 +1007,7 @@ Module::getKpgp()
 {
   if (!kpgpObject)
   {
-      kdError(5100) << "there is no instance of kpgp available" << endl;
+    kpgpObject = new Module();
   }
   return kpgpObject;
 }

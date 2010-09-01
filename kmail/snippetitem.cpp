@@ -1,6 +1,6 @@
 /***************************************************************************
  *   snippet feature from kdevelop/plugins/snippet/                        *
- *                                                                         * 
+ *                                                                         *
  *   Copyright (C) 2007 by Robert Gruber                                   *
  *   rgruber@users.sourceforge.net                                         *
  *                                                                         *
@@ -23,6 +23,7 @@ SnippetItem::SnippetItem(TQListView * parent, TQString name, TQString text )
   strName = name;
   strText = text;
   iParent = -1;
+  setOpen( true );
 }
 
 SnippetItem::SnippetItem(TQListViewItem * parent, TQString name, TQString text)
@@ -31,6 +32,7 @@ SnippetItem::SnippetItem(TQListViewItem * parent, TQString name, TQString text)
   strName = name;
   strText = text;
   iParent = ((SnippetGroup *)parent)->getId();
+  setOpen( true );
 }
 
 SnippetItem::~SnippetItem()
@@ -86,7 +88,7 @@ void SnippetItem::resetParent()
 
 
 KAction* SnippetItem::getAction()
-{   
+{
     return action;
 }
 
@@ -128,7 +130,7 @@ Deklaration for class SnippetGroup
 int SnippetGroup::iMaxId = 1;
 
 SnippetGroup::SnippetGroup(TQListView * parent, TQString name, int id)
- : SnippetItem(parent, name, "GROUP")
+ : SnippetItem(parent, name, i18n("GROUP"))
 {
     if (id > 0) {
       iId = id;
@@ -146,7 +148,7 @@ SnippetGroup::~SnippetGroup()
 
 void SnippetGroup::setId(int id)
 {
-    iId = id; 
+    iId = id;
     if (iId >= iMaxId)
         iMaxId = iId+1;
 }

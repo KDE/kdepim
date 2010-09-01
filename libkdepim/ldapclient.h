@@ -256,6 +256,7 @@ class KDE_EXPORT LdapSearch : public QObject
     void startSearch( const TQString& txt );
     void cancelSearch();
     bool isAvailable() const;
+    void updateCompletionWeights();
 
     TQValueList< LdapClient* > clients() const { return mClients; }
 
@@ -276,6 +277,7 @@ class KDE_EXPORT LdapSearch : public QObject
     void slotFileChanged( const TQString& );
 
   private:
+    void readWeighForClient( LdapClient *client, KConfig *config, int clientNumber );
     void readConfig();
     void finish();
     void makeSearchData( TQStringList& ret, LdapResultList& resList );

@@ -2,6 +2,7 @@
     This file is part of the KOrganizer alarm daemon.
 
     Copyright (c) 2000,2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2009-2010 Klar�lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,11 +32,14 @@
 #include <tqpushbutton.h>
 #include <tqcstring.h>
 #include <tqdatastream.h>
+#include <tqsplitter.h>
 
+#include <dcopclient.h>
+#include <dcopref.h>
 #include <kapplication.h>
 #include <kconfig.h>
+#include <kdcopservicestarter.h>
 #include <kiconloader.h>
-#include <dcopclient.h>
 #include <klocale.h>
 #include <kprocess.h>
 #include <kaudioplayer.h>
@@ -48,64 +52,97 @@
 #include <klockfile.h>
 
 #include <libkcal/event.h>
+#include <libkcal/incidenceformatter.h>
 
 #include "koeventviewer.h"
 
 #include "alarmdialog.h"
 #include "alarmdialog.moc"
 
+static int defSuspendVal = 5;
+static int defSuspendUnit = 0; // 0=>minutes, 1=>hours, 2=>days, 3=>weeks
+
 class AlarmListItem : public KListViewItem
 {
   public:
-    AlarmListItem( Incidence *incidence, TQListView *parent ) :
-      KListViewItem( parent ),
-      mIncidence( incidence->clone() ),
-      mNotified( false )
-    {}
+    AlarmListItem( const TQString &uid, TQListView *parent )
+      : KListViewItem( parent ), mUid( uid ), mNotified( false )
+    {
+    }
 
     ~AlarmListItem()
     {
-      delete mIncidence;
     }
 
-    Incidence *mIncidence;
+    int compare( TQListViewItem *item, int iCol, bool bAscending ) const;
+
+    TQString mDisplayText;
+
+    TQString mUid;
     TQDateTime mRemindAt;
+    TQDateTime mHappening;
     bool mNotified;
 };
 
+int AlarmListItem::compare( TQListViewItem *item, int iCol, bool bAscending ) const
+{
+  if ( iCol == 1 ) {
+    AlarmListItem *pItem = static_cast<AlarmListItem *>( item );
+    return pItem->mHappening.secsTo( mHappening );
+  } else {
+    return KListViewItem::compare( item, iCol, bAscending );
+  }
+}
+
 typedef TQValueList<AlarmListItem*> ItemList;
 
-AlarmDialog::AlarmDialog( TQWidget *parent, const char *name )
-  : KDialogBase( Plain, WType_TopLevel | WStyle_Customize | WStyle_StaysOnTop |
-                 WStyle_DialogBorder,
-                 parent, name, false, i18n("Reminder"), Ok | User1 | User2 | User3, User1/*3*/,
-                 false, i18n("Dismiss all"), i18n("Edit..."), i18n("Suspend") ),
-                 mSuspendTimer(this)
+AlarmDialog::AlarmDialog( KCal::CalendarResources *calendar, TQWidget *parent, const char *name )
+  : KDialogBase( Plain,
+                 WType_TopLevel | WStyle_Customize | WStyle_StaysOnTop | WStyle_DialogBorder,
+                 parent, name, false, i18n("Reminder"),
+                 Ok | User1 | User2 | User3, NoDefault,
+                 false, i18n("Edit..."), i18n("Dismiss All"), i18n("Dismiss Reminder") ),
+                 mCalendar( calendar ), mSuspendTimer(this)
 {
+  // User1 => Edit...
+  // User2 => Dismiss All
+  // User3 => Dismiss Selected
+  //    Ok => Suspend
+
+  connect( calendar, TQT_SIGNAL(calendarChanged()),
+           this, TQT_SLOT(slotCalendarChanged()) );
+
   KGlobal::iconLoader()->addAppDir( "kdepim" );
-  setButtonOK( i18n( "Dismiss" ) );
+  setButtonOK( i18n( "Suspend" ) );
 
   TQWidget *topBox = plainPage();
   TQBoxLayout *topLayout = new TQVBoxLayout( topBox );
   topLayout->setSpacing( spacingHint() );
 
-  TQLabel *label = new TQLabel( i18n("The following events triggered reminders:"),
-                              topBox );
+  TQLabel *label = new TQLabel( i18n("The following items triggered reminders:"), topBox );
   topLayout->addWidget( label );
 
-  mIncidenceListView = new KListView( topBox );
+  mSplitter = new TQSplitter( TQt::Vertical, topBox );
+  mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
+  topLayout->addWidget( mSplitter );
+
+  mIncidenceListView = new KListView( mSplitter );
   mIncidenceListView->addColumn( i18n( "Summary" ) );
-  mIncidenceListView->addColumn( i18n( "Due" ) );
+  mIncidenceListView->addColumn( i18n( "Date, Time" ) );
+  mIncidenceListView->setSorting( 0, true );
+  mIncidenceListView->setSorting( 1, true );
+  mIncidenceListView->setSortColumn( 1 );
+  mIncidenceListView->setShowSortIndicator( true );
   mIncidenceListView->setAllColumnsShowFocus( true );
   mIncidenceListView->setSelectionMode( TQListView::Extended );
-  topLayout->addWidget( mIncidenceListView );
   connect( mIncidenceListView, TQT_SIGNAL(selectionChanged()), TQT_SLOT(updateButtons()) );
-  connect( mIncidenceListView, TQT_SIGNAL(doubleClicked(TQListViewItem*)), TQT_SLOT(slotUser2()) );
+  connect( mIncidenceListView, TQT_SIGNAL(doubleClicked(TQListViewItem*)), TQT_SLOT(edit()) );
   connect( mIncidenceListView, TQT_SIGNAL(currentChanged(TQListViewItem*)), TQT_SLOT(showDetails()) );
   connect( mIncidenceListView, TQT_SIGNAL(selectionChanged()), TQT_SLOT(showDetails()) );
 
-  mDetailView = new KOEventViewer( topBox );
-  topLayout->addWidget( mDetailView );
+  mDetailView = new KOEventViewer( mCalendar, mSplitter );
+  mDetailView->setFocus(); // set focus here to start with to make it harder
+                           // to hit return by mistake and dismiss a reminder.
 
   TQHBox *suspendBox = new TQHBox( topBox );
   suspendBox->setSpacing( spacingHint() );
@@ -113,7 +150,7 @@ AlarmDialog::AlarmDialog( TQWidget *parent, const char *name )
 
   TQLabel *l = new TQLabel( i18n("Suspend &duration:"), suspendBox );
   mSuspendSpin = new TQSpinBox( 1, 9999, 1, suspendBox );
-  mSuspendSpin->setValue( 5 );  // default suspend duration
+  mSuspendSpin->setValue( defSuspendVal );  // default suspend duration
   l->setBuddy( mSuspendSpin );
 
   mSuspendUnit = new KComboBox( suspendBox );
@@ -121,11 +158,14 @@ AlarmDialog::AlarmDialog( TQWidget *parent, const char *name )
   mSuspendUnit->insertItem( i18n("hour(s)") );
   mSuspendUnit->insertItem( i18n("day(s)") );
   mSuspendUnit->insertItem( i18n("week(s)") );
+  mSuspendUnit->setCurrentItem( defSuspendUnit );
+
   connect( &mSuspendTimer, TQT_SIGNAL(timeout()), TQT_SLOT(wakeUp()) );
 
-  // showButton( User2/*3*/, false );
+  setMainWidget( mIncidenceListView );
+  mIncidenceListView->setMinimumSize( 500, 50 );
 
-  setMinimumSize( 300, 200 );
+  readLayout();
 }
 
 AlarmDialog::~AlarmDialog()
@@ -133,26 +173,82 @@ AlarmDialog::~AlarmDialog()
   mIncidenceListView->clear();
 }
 
-void AlarmDialog::addIncidence( Incidence *incidence, const TQDateTime &reminderAt )
+AlarmListItem *AlarmDialog::searchByUid( const TQString &uid )
 {
-  AlarmListItem *item = new AlarmListItem( incidence, mIncidenceListView );
-  item->setText( 0, incidence->summary() );
-  item->mRemindAt = reminderAt;
-  Todo *todo;
-  if ( dynamic_cast<Event*>( incidence ) ) {
-    item->setPixmap( 0, SmallIcon( "appointment" ) );
-    if ( incidence->doesRecur() ) {
-      TQDateTime nextStart = incidence->recurrence()->getNextDateTime( reminderAt );
-      if ( nextStart.isValid() )
-        item->setText( 1, KGlobal::locale()->formatDateTime( nextStart ) );
+  AlarmListItem *found = 0;
+  for ( TQListViewItemIterator it( mIncidenceListView ) ; it.current() ; ) {
+    AlarmListItem *item = static_cast<AlarmListItem*>( it.current() );
+    if ( item->mUid == uid ) {
+      found = item;
+      break;
     }
-    if ( item->text( 1 ).isEmpty() )
-      item->setText( 1, incidence->dtStartStr() );
-  } else if ( (todo = dynamic_cast<Todo*>( incidence )) ) {
-    item->setPixmap( 0, SmallIcon( "todo" ) );
-    item->setText( 1, todo->dtDueStr() );
+    ++it;
   }
-  if ( activeCount() == 1 ) {// previously empty
+  return found;
+}
+
+static TQString etc = i18n( "elipsis", "..." );
+static TQString cleanSummary( const TQString &summary )
+{
+  uint maxLen = 45;
+  TQString retStr = summary;
+  retStr.replace( '\n', ' ' );
+  if ( retStr.length() > maxLen ) {
+    maxLen -= etc.length();
+    retStr = retStr.left( maxLen );
+    retStr += etc;
+  }
+  return retStr;
+}
+
+void AlarmDialog::readLayout()
+{
+  KConfig *config = kapp->config();
+  config->setGroup( "Layout" );
+  TQValueList<int> sizes = config->readIntListEntry( "SplitterSizes" );
+  if ( sizes.count() == 2 ) {
+    mSplitter->setSizes( sizes );
+  }
+  mSplitter->setCollapsible( mIncidenceListView, false );
+  mSplitter->setCollapsible( mDetailView, false );
+}
+
+void AlarmDialog::writeLayout()
+{
+  KConfig *config = kapp->config();
+  config->setGroup( "Layout" );
+  TQValueList<int> list = mSplitter->sizes();
+  config->writeEntry( "SplitterSizes", list );
+}
+
+void AlarmDialog::addIncidence( Incidence *incidence,
+                                const TQDateTime &reminderAt,
+                                const TQString &displayText )
+{
+  AlarmListItem *item = searchByUid( incidence->uid() );
+  if ( !item ) {
+    item = new AlarmListItem( incidence->uid(), mIncidenceListView );
+  }
+  item->mNotified = false;
+  item->mHappening = TQDateTime();
+  item->mRemindAt = reminderAt;
+  item->mDisplayText = displayText;
+  item->setText( 0, cleanSummary( incidence->summary() ) );
+  item->setText( 1, TQString() );
+
+  TQString displayStr;
+  const TQDateTime dateTime = triggerDateForIncidence( incidence, reminderAt, displayStr );
+
+  item->mHappening = dateTime;
+  item->setText( 1, displayStr );
+
+  if ( incidence->type() == "Event" ) {
+    item->setPixmap( 0, SmallIcon( "appointment" ) );
+  } else {
+    item->setPixmap( 0, SmallIcon( "todo" ) );
+  }
+
+  if ( activeCount() == 1 ) { // previously empty
     mIncidenceListView->clearSelection();
     item->setSelected( true );
   }
@@ -160,6 +256,26 @@ void AlarmDialog::addIncidence( Incidence *incidence, const TQDateTime &reminder
 }
 
 void AlarmDialog::slotOk()
+{
+  suspend();
+}
+
+void AlarmDialog::slotUser1()
+{
+  edit();
+}
+
+void AlarmDialog::slotUser2()
+{
+  dismissAll();
+}
+
+void AlarmDialog::slotUser3()
+{
+  dismissCurrent();
+}
+
+void AlarmDialog::dismissCurrent()
 {
   ItemList selection = selectedItems();
   for ( ItemList::Iterator it = selection.begin(); it != selection.end(); ++it ) {
@@ -169,18 +285,96 @@ void AlarmDialog::slotOk()
       (*it)->itemAbove()->setSelected( true );
     delete *it;
   }
-  if ( activeCount() == 0 )
+  if ( activeCount() == 0 ) {
+    writeLayout();
     accept();
-  else {
+  } else {
     updateButtons();
     showDetails();
   }
   emit reminderCount( activeCount() );
 }
 
-void AlarmDialog::slotUser1()
+void AlarmDialog::dismissAll()
 {
-  dismissAll();
+  for ( TQListViewItemIterator it( mIncidenceListView ) ; it.current() ; ) {
+    AlarmListItem *item = static_cast<AlarmListItem*>( it.current() );
+    if ( !item->isVisible() ) {
+      ++it;
+      continue;
+    }
+    mIncidenceListView->takeItem( item );
+    delete item;
+  }
+  setTimer();
+  writeLayout();
+  accept();
+  emit reminderCount( activeCount() );
+}
+
+void AlarmDialog::edit()
+{
+  ItemList selection = selectedItems();
+  if ( selection.count() != 1 ) {
+    return;
+  }
+  Incidence *incidence = mCalendar->incidence( selection.first()->mUid );
+  if ( !incidence ) {
+    return;
+  }
+  TQDate dt = selection.first()->mRemindAt.date();
+
+  if ( incidence->isReadOnly() ) {
+    KMessageBox::sorry(
+      this,
+      i18n( "\"%1\" is a read-only item so modifications are not possible." ).
+      arg( cleanSummary( incidence->summary() ) ) );
+    return;
+  }
+
+  if ( !ensureKorganizerRunning() ) {
+    KMessageBox::error(
+      this,
+      i18n( "Could not start KOrganizer so editing is not possible." ) );
+    return;
+  }
+
+  TQByteArray data;
+  TQDataStream arg( data, IO_WriteOnly );
+  arg << incidence->uid();
+  arg << dt;
+  //kdDebug(5890) << "editing incidence " << incidence->summary() << endl;
+  if ( !kapp->dcopClient()->send( "korganizer", "KOrganizerIface",
+                                  "editIncidence(TQString,TQDate)",
+                                  data ) ) {
+    KMessageBox::error(
+      this,
+      i18n( "An internal KOrganizer error occurred attempting to start the incidence editor" ) );
+    return;
+  }
+
+  // get desktop # where korganizer (or kontact) runs
+  TQByteArray replyData;
+  TQCString object, replyType;
+  object = kapp->dcopClient()->isApplicationRegistered( "kontact" ) ?
+           "kontact-mainwindow#1" : "KOrganizer MainWindow";
+  if (!kapp->dcopClient()->call( "korganizer", object,
+                            "getWinID()", 0, replyType, replyData, true, -1 ) ) {
+  }
+
+  if ( replyType == "int" ) {
+    int desktop, window;
+    TQDataStream ds( replyData, IO_ReadOnly );
+    ds >> window;
+    desktop = KWin::windowInfo( window ).desktop();
+
+    if ( KWin::currentDesktop() == desktop ) {
+      KWin::iconifyWindow( winId(), false );
+    } else {
+      KWin::setCurrentDesktop( desktop );
+    }
+    KWin::activateWindow( KWin::transientFor( window ) );
+  }
 }
 
 void AlarmDialog::suspend()
@@ -202,6 +396,7 @@ void AlarmDialog::suspend()
       break;
   }
 
+  AlarmListItem *selitem = 0;
   for ( TQListViewItemIterator it( mIncidenceListView ) ; it.current() ; ++it ) {
     AlarmListItem * item = static_cast<AlarmListItem*>( it.current() );
     if ( item->isSelected() && item->isVisible() ) {
@@ -209,13 +404,26 @@ void AlarmDialog::suspend()
       item->setSelected( false );
       item->mRemindAt = TQDateTime::currentDateTime().addSecs( unit * mSuspendSpin->value() );
       item->mNotified = false;
+      selitem = item;
+    }
+  }
+  if ( selitem ) {
+    if ( selitem->itemBelow() ) {
+      selitem->itemBelow()->setSelected( true );
+    } else if ( selitem->itemAbove() ) {
+      selitem->itemAbove()->setSelected( true );
     }
   }
 
+  // save suspended alarms too so they can be restored on restart
+  // kolab/issue4108
+  slotSave();
+
   setTimer();
-  if ( activeCount() == 0 )
+  if ( activeCount() == 0 ) {
+    writeLayout();
     accept();
-  else {
+  } else {
     updateButtons();
     showDetails();
   }
@@ -239,76 +447,37 @@ void AlarmDialog::setTimer()
   }
 }
 
-void AlarmDialog::slotUser2()
-{
-  ItemList selection = selectedItems();
-  if ( selection.count() != 1 )
-    return;
-  Incidence *incidence = selection.first()->mIncidence;
-
-  if ( !kapp->dcopClient()->isApplicationRegistered( "korganizer" ) ) {
-    if ( kapp->startServiceByDesktopName( "korganizer", TQString::null ) )
-      KMessageBox::error( 0, i18n("Could not start KOrganizer.") );
-  }
-
-  kapp->dcopClient()->send( "korganizer", "KOrganizerIface",
-                            "editIncidence(TQString)",
-                             incidence->uid() );
-
-  // get desktop # where korganizer (or kontact) runs
-  TQByteArray replyData;
-  TQCString object, replyType;
-  object = kapp->dcopClient()->isApplicationRegistered( "kontact" ) ?
-           "kontact-mainwindow#1" : "KOrganizer MainWindow";
-  if (!kapp->dcopClient()->call( "korganizer", object,
-                            "getWinID()", 0, replyType, replyData, true, -1 ) ) {
-  }
-
-  if ( replyType == "int" ) {
-    int desktop, window;
-    TQDataStream ds( replyData, IO_ReadOnly );
-    ds >> window;
-    desktop = KWin::windowInfo( window ).desktop();
-
-    if ( KWin::currentDesktop() == desktop ) {
-      KWin::iconifyWindow( winId(), false );
-    }
-    else
-      KWin::setCurrentDesktop( desktop );
-
-    KWin::activateWindow( KWin::transientFor( window ) );
-  }
-}
-
-void AlarmDialog::slotUser3()
-{
-  suspend();
-}
-
-void AlarmDialog::dismissAll()
-{
-  for ( TQListViewItemIterator it( mIncidenceListView ) ; it.current() ; ) {
-    AlarmListItem *item = static_cast<AlarmListItem*>( it.current() );
-    if ( !item->isVisible() ) {
-      ++it;
-      continue;
-    }
-    delete item;
-  }
-  setTimer();
-  accept();
-  emit reminderCount( activeCount() );
-}
-
 void AlarmDialog::show()
 {
+  mIncidenceListView->sort();
+
+  // select the first item that hasn't already been notified
   mIncidenceListView->clearSelection();
-  if ( mIncidenceListView->firstChild() )
-    mIncidenceListView->firstChild()->setSelected( true );
+  for ( TQListViewItemIterator it( mIncidenceListView ) ; it.current() ; ++it ) {
+    AlarmListItem *item = static_cast<AlarmListItem*>( it.current() );
+    if ( !item->mNotified ) {
+      (*it)->setSelected( true );
+      break;
+    }
+  }
+
   updateButtons();
+  showDetails();
+
+  // reset the default suspend time
+  mSuspendSpin->setValue( defSuspendVal );
+  mSuspendUnit->setCurrentItem( defSuspendUnit );
+
   KDialogBase::show();
-  KWin::setState( winId(), NET::KeepAbove );
+  KWin::deIconifyWindow( winId(), false );
+  KWin::setState( winId(), NET::KeepAbove | NET::DemandsAttention );
   KWin::setOnAllDesktops( winId(), true );
+  KWin::activateWindow( winId() );
+  raise();
+  setActiveWindow();
+  if ( isMinimized() ) {
+    showNormal();
+  }
   eventNotification();
 }
 
@@ -319,11 +488,16 @@ void AlarmDialog::eventNotification()
   TQValueList<AlarmListItem*> list;
   for ( TQListViewItemIterator it( mIncidenceListView ) ; it.current() ; ++it ) {
     AlarmListItem *item = static_cast<AlarmListItem*>( it.current() );
-    if ( !item->isVisible() || item->mNotified )
+    if ( !item->isVisible() || item->mNotified ) {
       continue;
+    }
+    Incidence *incidence = mCalendar->incidence( item->mUid );
+    if ( !incidence ) {
+      continue;
+    }
     found = true;
     item->mNotified = true;
-    Alarm::List alarms = item->mIncidence->alarms();
+    Alarm::List alarms = incidence->alarms();
     Alarm::List::ConstIterator it;
     for ( it = alarms.begin(); it != alarms.end(); ++it ) {
       Alarm *alarm = *it;
@@ -351,7 +525,13 @@ void AlarmDialog::wakeUp()
 {
   bool activeReminders = false;
   for ( TQListViewItemIterator it( mIncidenceListView ) ; it.current() ; ++it ) {
-    AlarmListItem * item = static_cast<AlarmListItem*>( it.current() );
+    AlarmListItem *item = static_cast<AlarmListItem*>( it.current() );
+    Incidence *incidence = mCalendar->incidence( item->mUid );
+    if ( !incidence ) {
+      delete item;
+      continue;
+    }
+
     if ( item->mRemindAt <= TQDateTime::currentDateTime() ) {
       if ( !item->isVisible() ) {
         item->setVisible( true );
@@ -381,9 +561,13 @@ void AlarmDialog::slotSave()
   int numReminders = config->readNumEntry("Reminders", 0);
 
   for ( TQListViewItemIterator it( mIncidenceListView ) ; it.current() ; ++it ) {
-    AlarmListItem * item = static_cast<AlarmListItem*>( it.current() );
-    config->setGroup( TQString("Incidence-%1").arg(numReminders) );
-    config->writeEntry( "UID", item->mIncidence->uid() );
+    AlarmListItem *item = static_cast<AlarmListItem*>( it.current() );
+    Incidence *incidence = mCalendar->incidence( item->mUid );
+    if ( !incidence ) {
+      continue;
+    }
+    config->setGroup( TQString("Incidence-%1").arg(numReminders + 1) );
+    config->writeEntry( "UID", incidence->uid() );
     config->writeEntry( "RemindAt", item->mRemindAt );
     ++numReminders;
   }
@@ -394,12 +578,19 @@ void AlarmDialog::slotSave()
   lock.data()->unlock();
 }
 
+void AlarmDialog::closeEvent( TQCloseEvent * )
+{
+  slotSave();
+  writeLayout();
+  accept();
+}
+
 void AlarmDialog::updateButtons()
 {
   ItemList selection = selectedItems();
-  enableButton( User2, selection.count() == 1 );
-  enableButton( Ok, selection.count() > 0 );
-  enableButton( User3, selection.count() > 0 );
+  enableButton( User1, selection.count() == 1 ); // can only edit 1 at a time
+  enableButton( User3, selection.count() > 0 );  // dismiss 1 or more
+  enableButton( Ok, selection.count() > 0 );     // suspend 1 or more
 }
 
 TQValueList< AlarmListItem * > AlarmDialog::selectedItems() const
@@ -437,8 +628,113 @@ void AlarmDialog::showDetails()
 {
   mDetailView->clearEvents( true );
   mDetailView->clear();
-  AlarmListItem *item = static_cast<AlarmListItem*>( mIncidenceListView->currentItem() );
+  AlarmListItem *item = static_cast<AlarmListItem*>( mIncidenceListView->selectedItems().first() );
   if ( !item || !item->isVisible() )
     return;
-  mDetailView->appendIncidence( item->mIncidence );
+
+  Incidence *incidence = mCalendar->incidence( item->mUid );
+  if ( !incidence ) {
+    return;
+  }
+
+  if ( !item->mDisplayText.isEmpty() ) {
+    TQString txt = "<qt><p><b>" + item->mDisplayText + "</b></p></qt>";
+    mDetailView->addText( txt );
+  }
+  item->setText( 0, cleanSummary( incidence->summary() ) );
+  mDetailView->appendIncidence( incidence, item->mRemindAt.date() );
+}
+
+bool AlarmDialog::ensureKorganizerRunning() const
+{
+  TQString error;
+  TQCString dcopService;
+
+  int result = KDCOPServiceStarter::self()->findServiceFor(
+    "DCOP/Organizer", TQString::null, TQString::null, &error, &dcopService );
+
+  if ( result == 0 ) {
+    // OK, so korganizer (or kontact) is running. Now ensure the object we
+    // want is available [that's not the case when kontact was already running,
+    // but korganizer not loaded into it...]
+    static const char* const dcopObjectId = "KOrganizerIface";
+    TQCString dummy;
+    if ( !kapp->dcopClient()->findObject(
+           dcopService, dcopObjectId, "", TQByteArray(), dummy, dummy ) ) {
+      DCOPRef ref( dcopService, dcopService ); // talk to KUniqueApplication or its kontact wrapper
+      DCOPReply reply = ref.call( "load()" );
+      if ( reply.isValid() && (bool)reply ) {
+        Q_ASSERT( kapp->dcopClient()->findObject(
+                    dcopService, dcopObjectId, "", TQByteArray(), dummy, dummy ) );
+      } else {
+        kdWarning() << "Error loading " << dcopService << endl;
+      }
+    }
+
+    // We don't do anything with it we just need it to be running
+    return true;
+
+  } else {
+    kdWarning() << "Couldn't start DCOP/Organizer: " << dcopService
+                << " " << error << endl;
+  }
+  return false;
+}
+
+/** static */
+TQDateTime AlarmDialog::triggerDateForIncidence( Incidence *incidence,
+                                                const TQDateTime &reminderAt,
+                                                TQString &displayStr )
+{
+  // Will be simplified in trunk, with roles.
+  TQDateTime result;
+
+  Alarm *alarm = incidence->alarms().first();
+
+  if ( incidence->doesRecur() ) {
+    result = incidence->recurrence()->getNextDateTime( reminderAt );
+    displayStr = KGlobal::locale()->formatDateTime( result );
+  }
+
+  if ( incidence->type() == "Event" ) {
+    if ( !result.isValid() ) {
+      Event *event = static_cast<Event *>( incidence );
+      result = alarm->hasStartOffset() ? event->dtStart() :
+                                         event->dtEnd();
+      displayStr = IncidenceFormatter::dateTimeToString( result, false, true );
+    }
+  } else if ( incidence->type() == "Todo" ) {
+    if ( !result.isValid() ) {
+      Todo *todo = static_cast<Todo *>( incidence );
+      result = alarm->hasStartOffset() && todo->dtStart().isValid() ? todo->dtStart():
+                                                                      todo->dtDue();
+     displayStr = IncidenceFormatter::dateTimeToString( result, false, true );
+    }
+  }
+
+  return result;
+}
+
+void AlarmDialog::slotCalendarChanged()
+{
+  Incidence::List incidences = mCalendar->incidences();
+  for ( Incidence::List::ConstIterator it = incidences.begin();
+        it != incidences.constEnd(); ++it ) {
+    Incidence *incidence = *it;
+    AlarmListItem *item = searchByUid( incidence->uid() );
+
+    if ( item ) {
+      TQString displayStr;
+      const TQDateTime dateTime = triggerDateForIncidence( incidence,
+                                                          item->mRemindAt,
+                                                          displayStr );
+
+      const TQString summary = cleanSummary( incidence->summary() );
+
+      if ( displayStr != item->text( 1 ) || summary != item->text( 0 ) ) {
+        item->setText( 1, displayStr );
+        item->setText( 0, summary );
+      }
+    }
+  }
 }

@@ -889,7 +889,8 @@ void CertManager::slotDirmngrExited() {
    This slot will import CRLs from a file.
 */
 void CertManager::importCRLFromFile() {
-  TQString filter = TQString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revocation List (*.crl *.arl *-crl.der *-arl.der)");
+  // loadcrl can only work with DER encoded files (verified with dirmngr 1.0.3)
+  TQString filter = TQString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revocation List, DER encoded (*.crl *.arl *-crl.der *-arl.der)");
   KURL url = KFileDialog::getOpenURL( TQString::null,
                                       filter,
                                       this,
@@ -1277,9 +1278,11 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const T
 
 void CertManager::slotExportSecretKey() {
   Kleo::KeySelectionDialog dlg( i18n("Secret Key Export"),
-				i18n("Select the secret key to export "
+				"<qt>" +
+                                i18n("Select the secret key to export "
 				     "(<b>Warning: The PKCS#12 format is insecure; "
-				     "exporting secret keys is discouraged</b>):"),
+				     "exporting secret keys is discouraged</b>):") +
+                                "</qt>",
 				std::vector<GpgME::Key>(),
 				Kleo::KeySelectionDialog::SecretKeys|Kleo::KeySelectionDialog::SMIMEKeys,
 				false /* no multiple selection */,

@@ -35,6 +35,7 @@
 
 #include <kabc/addressee.h>
 #include <kabc/stdaddressbook.h>
+#include <libkcal/freebusyurlstore.h>
 #include <libkdepim/distributionlist.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
@@ -222,15 +223,15 @@ TQString Contact::profession() const
   return mProfession;
 }
 
-// void Contact::setJobTitle( const TQString& title )
-// {
-//   mJobTitle = title;
-// }
+void Contact::setJobTitle( const TQString& title )
+{
+  mJobTitle = title;
+}
 
-// TQString Contact::jobTitle() const
-// {
-//   return mJobTitle;
-// }
+TQString Contact::jobTitle() const
+{
+  return mJobTitle;
+}
 
 void Contact::setManagerName( const TQString& name )
 {
@@ -485,6 +486,11 @@ void Contact::saveCustomAttributes( TQDomElement& element ) const
     if ( (*it).app == s_unhandledTagAppName ) {
       writeString( element, (*it).name, (*it).value );
     } else {
+      // skip writing the freebusyurl as it is a hack we need to remove eventually
+      if ( (*it).name == TQString::fromLatin1( "FreeBusyURL" ) ) {
+        continue;
+      }
+
       // Let's use attributes so that other tag-preserving-code doesn't need sub-elements
       TQDomElement e = element.ownerDocument().createElement( "x-custom" );
       element.appendChild( e );
@@ -659,7 +665,7 @@ bool Contact::loadAttribute( TQDomElement& element )
   case 'j':
     if ( tagName == "job-title" ) {
       // see saveAttributes: <job-title> is mapped to the Role field
-      setRole( element.text() );
+      setJobTitle( element.text() );
       return true;
     }
     break;
@@ -766,7 +772,6 @@ bool Contact::saveAttributes( TQDomElement& element ) const
 {
   // Save the base class elements
   KolabBase::saveAttributes( element );
-
   if ( mIsDistributionList ) {
     writeString( element, "display-name", fullName() );
     saveDistrListMembers( element );
@@ -779,11 +784,8 @@ bool Contact::saveAttributes( TQDomElement& element ) const
     writeString( element, "department", department() );
     writeString( element, "office-location", officeLocation() );
     writeString( element, "profession", profession() );
-    // <role> is gone; jobTitle() is not shown in the addresseeeditor,
-    // so let's bind <job-title> to role()
-    //writeString( element, "role", role() );
-    //writeString( element, "job-title", jobTitle() );
-    writeString( element, "job-title", role() );
+    writeString( element, "role", role() );
+    writeString( element, "job-title", jobTitle() );
     writeString( element, "manager-name", managerName() );
     writeString( element, "assistant", assistant() );
     writeString( element, "nick-name", nickName() );
@@ -891,28 +893,28 @@ static TQStringList phoneTypeToString( int /*KABC::PhoneNumber::Types*/ type )
     type = type & ~KABC::PhoneNumber::Work;
   }
 
-  // To support both "home1" and "home2", map Home+Pref to home1
+  // To support both "home1" and "home2", map Home+Pref to home2
   if ( ( type & KABC::PhoneNumber::Home ) && ( type & KABC::PhoneNumber::Pref ) )
   {
-      types << "home1";
+      types << "home2";
       type = type & ~KABC::PhoneNumber::Home;
       type = type & ~KABC::PhoneNumber::Pref;
   }
-  // To support both "business1" and "business2", map Work+Pref to business1
+  // To support both "business1" and "business2", map Work+Pref to business2
   if ( ( type & KABC::PhoneNumber::Work ) && ( type & KABC::PhoneNumber::Pref ) )
   {
-      types << "business1";
+      types << "business2";
       type = type & ~KABC::PhoneNumber::Work;
       type = type & ~KABC::PhoneNumber::Pref;
   }
 
 
   if ( type & KABC::PhoneNumber::Home )
-    types << "home2";
+    types << "home1";
   if ( type & KABC::PhoneNumber::Msg ) // Msg==messaging
     types << "company";
   if ( type & KABC::PhoneNumber::Work )
-    types << "business2";
+    types << "business1";
   if ( type & KABC::PhoneNumber::Pref )
     types << "primary";
   if ( type & KABC::PhoneNumber::Voice )
@@ -942,13 +944,13 @@ static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const TQString& typ
     return KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax;
   if ( type == "businessfax" )
     return KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax;
-  if ( type == "business1" )
-    return KABC::PhoneNumber::Work | KABC::PhoneNumber::Pref;
   if ( type == "business2" )
+    return KABC::PhoneNumber::Work | KABC::PhoneNumber::Pref;
+  if ( type == "business1" )
     return KABC::PhoneNumber::Work;
-  if ( type == "home1" )
-    return KABC::PhoneNumber::Home | KABC::PhoneNumber::Pref;
   if ( type == "home2" )
+    return KABC::PhoneNumber::Home | KABC::PhoneNumber::Pref;
+  if ( type == "home1" )
     return KABC::PhoneNumber::Home;
   if ( type == "company" )
     return KABC::PhoneNumber::Msg;
@@ -1019,11 +1021,15 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setOrganization( addressee->organization() );
   setWebPage( addressee->url().url() );
   setIMAddress( addressee->custom( "KADDRESSBOOK", "X-IMAddress" ) );
+#if KDE_IS_VERSION(3,5,8)
+  setDepartment( addressee->department());
+#else
   setDepartment( addressee->custom( "KADDRESSBOOK", "X-Department" ) );
+#endif
   setOfficeLocation( addressee->custom( "KADDRESSBOOK", "X-Office" ) );
   setProfession( addressee->custom( "KADDRESSBOOK", "X-Profession" ) );
   setRole( addressee->role() );
-  //setJobTitle( addressee->title() );
+  setJobTitle( addressee->title() );
   setManagerName( addressee->custom( "KADDRESSBOOK", "X-ManagersName" ) );
   setAssistant( addressee->custom( "KADDRESSBOOK", "X-AssistantsName" ) );
   setNickName( addressee->nickName() );
@@ -1129,6 +1135,11 @@ void Contact::setFields( const KABC::Addressee* addressee )
     }
   }
 
+  TQString url = KCal::FreeBusyUrlStore::self()->readUrl( addressee->preferredEmail() );
+  if ( !url.isEmpty() ) {
+    setFreeBusyUrl( url );
+  }
+
   // Those fields, although defined in Addressee, are not used in KDE
   // (e.g. not visible in kaddressbook/addresseeeditorwidget.cpp)
   // So it doesn't matter much if we don't have them in the XML.
@@ -1136,9 +1147,6 @@ void Contact::setFields( const KABC::Addressee* addressee )
 
   // Things KAddressBook can't handle, so they are saved as unhandled tags:
   // initials, children, gender, language
-
-  // TODO: Free/Busy URL. This is done rather awkward in KAddressBook -
-  // it stores it in a local file through a korganizer file :-(
 }
 
 // The loading is: xml -> Contact -> addressee, this is the second part
@@ -1173,11 +1181,15 @@ void Contact::saveTo( KABC::Addressee* addressee )
   addressee->setOrganization( organization() );
   addressee->setUrl( webPage() );
   addressee->insertCustom( "KADDRESSBOOK", "X-IMAddress", imAddress() );
+#if KDE_IS_VERSION(3,5,8)
+  addressee->setDepartment( department() );
+#else
   addressee->insertCustom( "KADDRESSBOOK", "X-Department", department() );
+#endif
   addressee->insertCustom( "KADDRESSBOOK", "X-Office", officeLocation() );
   addressee->insertCustom( "KADDRESSBOOK", "X-Profession", profession() );
   addressee->setRole( role() );
-  //addressee->setTitle( jobTitle() );
+  addressee->setTitle( jobTitle() );
   addressee->insertCustom( "KADDRESSBOOK", "X-ManagersName", managerName() );
   addressee->insertCustom( "KADDRESSBOOK", "X-AssistantsName", assistant() );
   addressee->setNickName( nickName() );

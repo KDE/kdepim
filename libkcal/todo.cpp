@@ -116,10 +116,13 @@ void Todo::setDtDue(const TQDateTime &dtDue, bool first )
 
 TQDateTime Todo::dtDue( bool first ) const
 {
-  if ( doesRecur() && !first && mDtRecurrence.isValid() )
+  if ( doesRecur() && !first && mDtRecurrence.isValid() ) {
     return mDtRecurrence;
-
-  return mDtDue;
+  } else if ( hasDueDate() ) {
+    return mDtDue;
+  } else {
+    return TQDateTime();
+  }
 }
 
 TQString Todo::dtDueTimeStr() const
@@ -173,10 +176,17 @@ void Todo::setHasStartDate(bool f)
 
 TQDateTime Todo::dtStart( bool first ) const
 {
-  if ( doesRecur() && !first )
-    return mDtRecurrence.addDays( dtDue( first ).daysTo( IncidenceBase::dtStart() ) );
-  else
+  if ( doesRecur() && !first ) {
+    TQDateTime dt = mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
+
+    // We want the dtStart's time, not dtDue's
+    dt.setTime( IncidenceBase::dtStart().time() );
+    return dt;
+  } else if ( hasStartDate() ) {
     return IncidenceBase::dtStart();
+  } else {
+    return TQDateTime();
+  }
 }
 
 void Todo::setDtStart( const TQDateTime &dtStart )
@@ -255,10 +265,14 @@ int Todo::percentComplete() const
   return mPercentComplete;
 }
 
-void Todo::setPercentComplete(int v)
+void Todo::setPercentComplete( int v )
 {
   mPercentComplete = v;
-  if ( v != 100 ) mHasCompletedDate = false;
+  if ( v != 100 ) {
+    mHasCompletedDate = false;
+    mCompleted = TQDateTime();
+  }
+
   updated();
 }
 
@@ -292,7 +306,8 @@ bool Todo::recurTodo()
 
       while ( !recursAt( nextDate ) || nextDate <= TQDateTime::currentDateTime() ) {
 
-        if ( !nextDate.isValid() || nextDate > endDateTime ) {
+        if ( !nextDate.isValid() ||
+             ( nextDate > endDateTime && r->duration() != -1 ) ) {
           return false;
         }
 

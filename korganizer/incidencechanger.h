@@ -26,33 +26,53 @@
 
 #include "korganizer/incidencechangerbase.h"
 
+namespace KCal {
+  class ResourceCalendar;
+}
+
 class IncidenceChanger : public KOrg::IncidenceChangerBase
 {
-Q_OBJECT
-public:
-  IncidenceChanger( Calendar*cal, TQObject *parent ) : IncidenceChangerBase( cal, parent ) {}
-  ~IncidenceChanger() {}
+  Q_OBJECT
+  public:
+    IncidenceChanger( Calendar *cal, TQObject *parent )
+      : IncidenceChangerBase( cal, parent ) {}
+    ~IncidenceChanger() {}
 
-  bool beginChange( Incidence * incidence );
-  bool sendGroupwareMessage( Incidence *incidence, KCal::Scheduler::Method method, bool deleting = false );
-  bool endChange( Incidence *incidence );
+    bool beginChange( Incidence *incidence,
+                      ResourceCalendar *res, const TQString &subRes );
 
-  bool addIncidence( Incidence *incidence, TQWidget *parent = 0 );
-  bool changeIncidence( Incidence *oldinc, Incidence *newinc, int action = -1 );
-  bool deleteIncidence( Incidence *incidence );
+    bool sendGroupwareMessage( Incidence *incidence,
+                               KCal::Scheduler::Method method,
+                               KOGlobals::HowChanged action,
+                               TQWidget *parent );
 
-  bool cutIncidence( Incidence *incidence );
-  static bool incidencesEqual( Incidence *inc1, Incidence *inc2 );
-  static bool assignIncidence( Incidence *inc1, Incidence *inc2 );
-public slots:
-  void cancelAttendees( Incidence *incidence );
+    bool endChange( Incidence *incidence,
+                    ResourceCalendar *res, const TQString &subRes );
 
-protected:
-  bool myAttendeeStatusChanged( Incidence *oldInc, Incidence *newInc );
+    bool addIncidence( Incidence *incidence,
+                       ResourceCalendar *res, const TQString &subRes,
+                       TQWidget *parent );
 
-private:
-  class ComparisonVisitor;
-  class AssignmentVisitor;
+    bool changeIncidence( Incidence *oldinc, Incidence *newinc,
+                          KOGlobals::WhatChanged, TQWidget *parent );
+
+    bool deleteIncidence( Incidence *incidence, TQWidget *parent );
+
+    bool cutIncidences( const Incidence::List &incidences, TQWidget *parent );
+    bool cutIncidence( Incidence *incidence, TQWidget *parent );
+
+    static bool incidencesEqual( Incidence *inc1, Incidence *inc2 );
+    static bool assignIncidence( Incidence *inc1, Incidence *inc2 );
+
+  public slots:
+    void cancelAttendees( Incidence *incidence );
+
+  protected:
+    bool myAttendeeStatusChanged( Incidence *oldInc, Incidence *newInc );
+
+  private:
+    class ComparisonVisitor;
+    class AssignmentVisitor;
 };
 
 #endif

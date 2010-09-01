@@ -161,7 +161,7 @@ TQTime KTimeEdit::getTime() const
       ok = false;
     }
   }
-  kdDebug(5300) << "KTimeEdit::getTime(): " << time.toString() << endl;
+  // kdDebug(5300) << "KTimeEdit::getTime(): " << time.toString() << endl;
   return time;
 }
 

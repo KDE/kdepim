@@ -60,12 +60,12 @@ class KOTodoEditor : public KOIncidenceEditor
     */
     void setTexts( const TQString &summary, const TQString &description = TQString::null );
     /** Edit an existing todo. */
-    void editIncidence(Incidence *incidence, Calendar* calendar);
+    void editIncidence(Incidence *incidence, const TQDate &date, Calendar* calendar);
 
     /** Set widgets to default values */
     void setDates( const TQDateTime &due, bool allDay = true, Todo *relatedTodo = 0 );
     /** Read event object and setup widgets accordingly */
-    void readTodo(Todo *todo, Calendar *calendar);
+    void readTodo(Todo *todo, Calendar *calendar,  const TQDate &date);
     /** Write event settings to event object */
     void writeTodo(Todo *);
 
@@ -76,12 +76,14 @@ class KOTodoEditor : public KOIncidenceEditor
     bool processInput();
 
     /** This todo has been modified externally */
-    void modified (int change=0);
+    void modified();
 
   protected slots:
     void loadDefaults();
     void deleteTodo();
+
     void slotSaveTemplate( const TQString & );
+    void updateRecurrenceSummary();
 
   protected:
     void loadTemplate( /*const*/ CalendarLocal& );
@@ -98,6 +100,7 @@ class KOTodoEditor : public KOIncidenceEditor
     Todo *mRelatedTodo;
 
     KOEditorGeneralTodo *mGeneral;
+    KOEditorRecurrenceDialog *mRecurrenceDialog;
     KOEditorRecurrence *mRecurrence;
 };
 

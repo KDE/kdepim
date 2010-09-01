@@ -42,6 +42,7 @@
 
 #include "kcursorsaver.h"
 #include "kleo_util.h"
+#include "stl_util.h"
 
 #include <libemailfunctions/email.h>
 #include <ui/keyselectiondialog.h>
@@ -103,7 +104,7 @@ static inline bool WithRespectToKeyID( const GpgME::Key & left, const GpgME::Key
   return qstrcmp( left.keyID(), right.keyID() ) == 0 ;
 }
 
-static bool ValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key ) {
+static bool ValidOpenPGPEncryptionKey( const GpgME::Key & key ) {
   if ( key.protocol() != GpgME::Context::OpenPGP ) {
     return false;
   }
@@ -119,9 +120,15 @@ static bool ValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key ) {
 #endif
   if ( key.isRevoked() || key.isExpired() || key.isDisabled() || !key.canEncrypt() )
     return false;
+  return true;
+}
+
+static bool ValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key ) {
+    if ( !ValidOpenPGPEncryptionKey( key ) )
+        return false;
   const std::vector<GpgME::UserID> uids = key.userIDs();
   for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it ) {
-    if ( !it->isRevoked() && it->validity() != GpgME::UserID::Marginal )
+    if ( !it->isRevoked() && it->validity() >= GpgME::UserID::Marginal )
       return true;
 #if 0
     else
@@ -134,10 +141,16 @@ static bool ValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key ) {
   return false;
 }
 
-static bool ValidTrustedSMIMEEncryptionKey( const GpgME::Key & key ) {
+static bool ValidSMIMEEncryptionKey( const GpgME::Key & key ) {
   if ( key.protocol() != GpgME::Context::CMS )
     return false;
   if ( key.isRevoked() || key.isExpired() || key.isDisabled() || !key.canEncrypt() )
+    return false;
+  return true;
+}
+
+static bool ValidTrustedSMIMEEncryptionKey( const GpgME::Key & key ) {
+  if ( !ValidSMIMEEncryptionKey( key ) )
     return false;
   return true;
 }
@@ -151,6 +164,17 @@ static inline bool ValidTrustedEncryptionKey( const GpgME::Key & key ) {
   default:
     return false;
   }
+}
+
+static inline bool ValidEncryptionKey( const GpgME::Key & key ) {
+    switch ( key.protocol() ) {
+    case GpgME::Context::OpenPGP:
+        return ValidOpenPGPEncryptionKey( key );
+    case GpgME::Context::CMS:
+        return ValidSMIMEEncryptionKey( key );
+    default:
+        return false;
+    }
 }
 
 static inline bool ValidSigningKey( const GpgME::Key & key ) {
@@ -171,12 +195,24 @@ static inline bool NotValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key )
   return !ValidTrustedOpenPGPEncryptionKey( key );
 }
 
+static inline bool NotValidOpenPGPEncryptionKey( const GpgME::Key & key ) {
+  return !ValidOpenPGPEncryptionKey( key );
+}
+
 static inline bool NotValidTrustedSMIMEEncryptionKey( const GpgME::Key & key ) {
   return !ValidTrustedSMIMEEncryptionKey( key );
 }
 
+static inline bool NotValidSMIMEEncryptionKey( const GpgME::Key & key ) {
+  return !ValidSMIMEEncryptionKey( key );
+}
+
 static inline bool NotValidTrustedEncryptionKey( const GpgME::Key & key ) {
   return !ValidTrustedEncryptionKey( key );
+}
+
+static inline bool NotValidEncryptionKey( const GpgME::Key & key ) {
+  return !ValidEncryptionKey( key );
 }
 
 static inline bool NotValidSigningKey( const GpgME::Key & key ) {
@@ -189,6 +225,40 @@ static inline bool NotValidOpenPGPSigningKey( const GpgME::Key & key ) {
 
 static inline bool NotValidSMIMESigningKey( const GpgME::Key & key ) {
   return !ValidSMIMESigningKey( key );
+}
+
+namespace {
+    struct ByTrustScore {
+        static int score( const GpgME::UserID & uid ) {
+            return uid.isRevoked() || uid.isInvalid() ? -1 : uid.validity() ;
+        }
+        bool operator()( const GpgME::UserID & lhs, const GpgME::UserID & rhs ) const {
+            return score( lhs ) < score( rhs ) ;
+        }
+    };
+}
+
+static std::vector<GpgME::UserID> matchingUIDs( const std::vector<GpgME::UserID> & uids, const TQString & address ) {
+    if ( address.isEmpty() )
+        return std::vector<GpgME::UserID>();
+
+    std::vector<GpgME::UserID> result;
+    result.reserve( uids.size() );
+    for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin(), end = uids.end() ; it != end ; ++it )
+        // PENDING(marc) check DN for an EMAIL, too, in case of X.509 certs... :/
+        if ( const char * email = it->email() )
+            if ( *email && TQString::fromUtf8( email ).stripWhiteSpace().lower() == address )
+                result.push_back( *it );
+    return result;
+}
+
+static GpgME::UserID findBestMatchUID( const GpgME::Key & key, const TQString & address ) {
+    const std::vector<GpgME::UserID> all = key.userIDs();
+    if ( all.empty() )
+        return GpgME::UserID();
+    const std::vector<GpgME::UserID> matching = matchingUIDs( all, address.lower() );
+    const std::vector<GpgME::UserID> & v = matching.empty() ? all : matching ;
+    return *std::max_element( v.begin(), v.end(), ByTrustScore() );
 }
 
 static TQStringList keysAsStrings( const std::vector<GpgME::Key>& keys ) {
@@ -205,35 +275,40 @@ static TQStringList keysAsStrings( const std::vector<GpgME::Key>& keys ) {
   return strings;
 }
 
-static inline std::vector<GpgME::Key> TrustedOrConfirmed( const std::vector<GpgME::Key> & keys ) {
+static std::vector<GpgME::Key> trustedOrConfirmed( const std::vector<GpgME::Key> & keys, const TQString & address, bool & canceled ) {
 
+  // PENDING(marc) work on UserIDs here?
   std::vector<GpgME::Key> fishies;
   std::vector<GpgME::Key> ickies;
+  std::vector<GpgME::Key> rewookies;
   std::vector<GpgME::Key>::const_iterator it = keys.begin();
   const std::vector<GpgME::Key>::const_iterator end = keys.end();
   for ( ; it != end ; it++ ) {
-    const GpgME::Key key = *it;
-    assert( ValidTrustedEncryptionKey( key ) );
-    const std::vector<GpgME::UserID> uids = key.userIDs();
-    for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it ) {
-      if ( !it->isRevoked()  && it->validity() == GpgME::UserID::Marginal ) {
+    const GpgME::Key & key = *it;
+    assert( ValidEncryptionKey( key ) );
+    const GpgME::UserID uid = findBestMatchUID( key, address );
+    if ( uid.isRevoked() ) {
+        rewookies.push_back( key );
+    }
+    if ( !uid.isRevoked()  && uid.validity() == GpgME::UserID::Marginal ) {
         fishies.push_back( key );
-        break;
-      }
-      if ( !it->isRevoked()  && it->validity() < GpgME::UserID::Never ) {
+    }
+    if ( !uid.isRevoked()  && uid.validity() < GpgME::UserID::Never ) {
         ickies.push_back( key );
-        break;
-      }
     }
   }
 
-  if ( fishies.empty() && ickies.empty() )
+  if ( fishies.empty() && ickies.empty() && rewookies.empty() )
     return keys;
 
   // if  some keys are not fully trusted, let the user confirm their use
-  TQString msg = i18n("One or more of your configured OpenPGP encryption "
-                      "keys or S/MIME certificates is not fully trusted "
-                      "for encryption.");
+  TQString msg = address.isEmpty()
+      ? i18n("One or more of your configured OpenPGP encryption "
+             "keys or S/MIME certificates is not fully trusted "
+             "for encryption.")
+      : i18n("One or more of the OpenPGP encryption keys or S/MIME "
+             "certificates for recipient \"%1\" is not fully trusted "
+             "for encryption.").arg(address) ;
 
   if ( !fishies.empty() ) {
     // certificates can't have marginal trust
@@ -244,6 +319,10 @@ static inline std::vector<GpgME::Key> TrustedOrConfirmed( const std::vector<GpgM
     msg += i18n( "\nThe following keys or certificates have unknown trust level: \n");
     msg += keysAsStrings( ickies ).join(",");
   }
+  if ( !rewookies.empty() ) {
+    msg += i18n( "\nThe following keys or certificates are <b>revoked</b>: \n");
+    msg += keysAsStrings( rewookies ).join(",");
+  }
 
   if( KMessageBox::warningContinueCancel( 0, msg, i18n("Not Fully Trusted Encryption Keys"),
                                               KStdGuiItem::cont(),
@@ -251,7 +330,8 @@ static inline std::vector<GpgME::Key> TrustedOrConfirmed( const std::vector<GpgM
           == KMessageBox::Continue )
     return keys;
   else
-    return std::vector<GpgME::Key>();
+    canceled = true;
+  return std::vector<GpgME::Key>();
 }
 
 namespace {
@@ -266,6 +346,20 @@ namespace {
 
     const Kleo::CryptoMessageFormat format;
   };
+
+  struct IsForFormat : std::unary_function<GpgME::Key,bool> {
+    explicit IsForFormat( Kleo::CryptoMessageFormat f )
+      : protocol( isOpenPGP( f ) ? GpgME::Context::OpenPGP :
+                  isSMIME( f )   ? GpgME::Context::CMS     :
+                  /* else */       GpgME::Context::Unknown ) {}
+
+    bool operator()( const GpgME::Key & key ) const {
+      return key.protocol() == protocol ;
+    }
+
+    const GpgME::Context::Protocol protocol;
+  };
+
 }
 
 
@@ -334,6 +428,11 @@ public:
   }
   void operator()( Item & item );
 
+  template <typename Container>
+  void process( Container & c ) {
+    *this = std::for_each( c.begin(), c.end(), *this );
+  }
+
 #define make_int_accessor(x) unsigned int num##x() const { return m##x; }
   make_int_accessor(NoKey)
   make_int_accessor(NeverEncrypt)
@@ -346,6 +445,7 @@ public:
 #undef make_int_accessor
 private:
   EncryptionPreference mDefaultPreference;
+  bool mNoOps;
   unsigned int mTotal;
   unsigned int mNoKey;
   unsigned int mNeverEncrypt, mUnknownPreference, mAlwaysEncrypt,
@@ -353,11 +453,13 @@ private:
 };
 
 void Kleo::KeyResolver::EncryptionPreferenceCounter::operator()( Item & item ) {
+  if ( _this ) {
   if ( item.needKeys )
     item.keys = _this->getEncryptionKeys( item.address, true );
   if ( item.keys.empty() ) {
     ++mNoKey;
     return;
+  }
   }
   switch ( !item.pref ? mDefaultPreference : item.pref ) {
 #define CASE(x) case Kleo::x: ++m##x; break
@@ -427,13 +529,13 @@ namespace {
   void EncryptionFormatPreferenceCounter::operator()( const Kleo::KeyResolver::Item & item ) {
     if ( item.format & (Kleo::InlineOpenPGPFormat|Kleo::OpenPGPMIMEFormat) &&
 	 std::find_if( item.keys.begin(), item.keys.end(),
-		       ValidTrustedOpenPGPEncryptionKey ) != item.keys.end() ) {
+		       ValidTrustedOpenPGPEncryptionKey ) != item.keys.end() ) {  // -= trusted?
       CASE(OpenPGPMIME);
       CASE(InlineOpenPGP);
     }
     if ( item.format & (Kleo::SMIMEFormat|Kleo::SMIMEOpaqueFormat) &&
 	 std::find_if( item.keys.begin(), item.keys.end(),
-		       ValidTrustedSMIMEEncryptionKey ) != item.keys.end() ) {
+		       ValidTrustedSMIMEEncryptionKey ) != item.keys.end() ) {    // -= trusted?
       CASE(SMIME);
       CASE(SMIMEOpaque);
     }
@@ -523,13 +625,108 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
   const GpgME::Subkey subkey = key.subkey(0);
   if ( d->alreadyWarnedFingerprints.count( subkey.fingerprint() ) )
     return Kpgp::Ok; // already warned about this one (and so about it's issuers)
-  d->alreadyWarnedFingerprints.insert( subkey.fingerprint() );
 
   if ( subkey.neverExpires() )
     return Kpgp::Ok;
   static const double secsPerDay = 24 * 60 * 60;
-  const int daysTillExpiry =
-    1 + int( ::difftime( subkey.expirationTime(), time(0) ) / secsPerDay );
+  const double secsTillExpiry = ::difftime( subkey.expirationTime(), time(0) );
+  if ( secsTillExpiry <= 0 ) {
+      const int daysSinceExpiry = 1 + int( -secsTillExpiry / secsPerDay );
+      kdDebug() << "Key 0x" << key.shortKeyID() << " expired less than "
+                << daysSinceExpiry << " days ago" << endl;
+      const TQString msg =
+          key.protocol() == GpgME::Context::OpenPGP
+          ? ( mine ? sign
+              ? i18n("<p>Your OpenPGP signing key</p><p align=center><b>%1</b> (KeyID 0x%2)</p>"
+                     "<p>expired less than a day ago.</p>",
+                     "<p>Your OpenPGP signing key</p><p align=center><b>%1</b> (KeyID 0x%2)</p>"
+                     "<p>expired %n days ago.</p>",
+                     daysSinceExpiry )
+              : i18n("<p>Your OpenPGP encryption key</p><p align=center><b>%1</b> (KeyID 0x%2)</p>"
+                     "<p>expired less than a day ago.</p>",
+                     "<p>Your OpenPGP encryption key</p><p align=center><b>%1</b> (KeyID 0x%2)</p>"
+                     "<p>expired %n days ago.</p>",
+                     daysSinceExpiry )
+              : i18n("<p>The OpenPGP key for</p><p align=center><b>%1</b> (KeyID 0x%2)</p>"
+                     "<p>expired less than a day ago.</p>",
+                     "<p>The OpenPGP key for</p><p align=center><b>%1</b> (KeyID 0x%2)</p>"
+                     "<p>expired %n days ago.</p>",
+                     daysSinceExpiry ) ).arg( TQString::fromUtf8( key.userID(0).id() ),
+					 key.shortKeyID() )
+          : ( ca
+              ? ( key.isRoot()
+                  ? ( mine ? sign
+                      ? i18n("<p>The root certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for your S/MIME signing certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired less than a day ago.</p>",
+                             "<p>The root certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for your S/MIME signing certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired %n days ago.</p>",
+                             daysSinceExpiry )
+                      : i18n("<p>The root certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for your S/MIME encryption certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired less than a day ago.</p>",
+                             "<p>The root certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for your S/MIME encryption certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired %n days ago.</p>",
+                             daysSinceExpiry )
+                      : i18n("<p>The root certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for S/MIME certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired less than a day ago.</p>",
+                             "<p>The root certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for S/MIME certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired %n days ago.</p>",
+                             daysSinceExpiry ) )
+                  : ( mine ? sign
+                      ? i18n("<p>The intermediate CA certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for your S/MIME signing certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired less than a day ago.</p>",
+                             "<p>The intermediate CA certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for your S/MIME signing certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired %n days ago.</p>",
+                             daysSinceExpiry )
+                      : i18n("<p>The intermediate CA certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for your S/MIME encryption certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired less than a day ago.</p>",
+                             "<p>The intermediate CA certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for your S/MIME encryption certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired %n days ago.</p>",
+                             daysSinceExpiry )
+                      : i18n("<p>The intermediate CA certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for S/MIME certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired less than a day ago.</p>",
+                             "<p>The intermediate CA certificate</p><p align=center><b>%3</b></p>"
+                             "<p>for S/MIME certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                             "<p>expired %n days ago.</p>",
+                             daysSinceExpiry ) ) ).arg( Kleo::DN( orig.userID(0).id() ).prettyDN(),
+                                                       orig.issuerSerial(),
+                                                       Kleo::DN( key.userID(0).id() ).prettyDN() )
+              : ( mine ? sign
+                  ? i18n("<p>Your S/MIME signing certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                         "<p>expired less than a day ago.</p>",
+                         "<p>Your S/MIME signing certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                         "<p>expired %n days ago.</p>",
+                         daysSinceExpiry )
+                  : i18n("<p>Your S/MIME encryption certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                         "<p>expired less than a day ago.</p>",
+                         "<p>Your S/MIME encryption certificate</p><p align=center><b>%1</b> (serial number %2)</p>"
+                         "<p>expired %n days ago.</p>",
+                         daysSinceExpiry )
+                  : i18n("<p>The S/MIME certificate for</p><p align=center><b>%1</b> (serial number %2)</p>"
+                         "<p>expired less than a day ago.</p>",
+                         "<p>The S/MIME certificate for</p><p align=center><b>%1</b> (serial number %2)</p>"
+                         "<p>expired %n days ago.</p>",
+                         daysSinceExpiry ) ).arg( Kleo::DN( key.userID(0).id() ).prettyDN(),
+                                                 key.issuerSerial() ) );
+      d->alreadyWarnedFingerprints.insert( subkey.fingerprint() );
+      if ( KMessageBox::warningContinueCancel( 0, msg,
+                                               key.protocol() == GpgME::Context::OpenPGP
+                                               ? i18n("OpenPGP Key Expired" )
+                                               : i18n("S/MIME Certificate Expired" ),
+                                               KStdGuiItem::cont(), dontAskAgainName ) == KMessageBox::Cancel )
+          return Kpgp::Canceled;
+  } else {
+  const int daysTillExpiry = 1 + int( secsTillExpiry / secsPerDay );
   kdDebug() << "Key 0x" << key.shortKeyID() << " expires in less than "
 	    << daysTillExpiry << " days" << endl;
   const int threshold =
@@ -629,6 +826,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
 		     "<p>expires in less than %n days.</p>",
 		     daysTillExpiry ) ).arg( Kleo::DN( key.userID(0).id() ).prettyDN(),
 					     key.issuerSerial() ) );
+    d->alreadyWarnedFingerprints.insert( subkey.fingerprint() );
     if ( KMessageBox::warningContinueCancel( 0, msg,
 					     key.protocol() == GpgME::Context::OpenPGP
 					     ? i18n("OpenPGP Key Expires Soon" )
@@ -636,6 +834,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
 					     KStdGuiItem::cont(), dontAskAgainName )
 	 == KMessageBox::Cancel )
       return Kpgp::Canceled;
+  }
   }
   if ( key.isRoot() )
     return Kpgp::Ok;
@@ -657,10 +856,10 @@ Kpgp::Result Kleo::KeyResolver::setEncryptToSelfKeys( const TQStringList & finge
   std::vector<GpgME::Key> keys = lookup( fingerprints );
   std::remove_copy_if( keys.begin(), keys.end(),
 		       std::back_inserter( d->mOpenPGPEncryptToSelfKeys ),
-		       NotValidTrustedOpenPGPEncryptionKey );
+		       NotValidTrustedOpenPGPEncryptionKey ); // -= trusted?
   std::remove_copy_if( keys.begin(), keys.end(),
 		       std::back_inserter( d->mSMIMEEncryptToSelfKeys ),
-		       NotValidTrustedSMIMEEncryptionKey );
+		       NotValidTrustedSMIMEEncryptionKey );   // -= trusted?
 
   if ( d->mOpenPGPEncryptToSelfKeys.size() + d->mSMIMEEncryptToSelfKeys.size()
        < keys.size() ) {
@@ -814,6 +1013,20 @@ Kleo::Action Kleo::KeyResolver::checkEncryptionPreferences( bool encryptionReque
        d->mOpenPGPEncryptToSelfKeys.empty() && d->mSMIMEEncryptToSelfKeys.empty() )
     return Impossible;
 
+  if ( !encryptionRequested && !mOpportunisticEncyption ) {
+    // try to minimize crypto ops (including key lookups) by only
+    // looking up keys when at least one the the encryption
+    // preferences needs it:
+    EncryptionPreferenceCounter count( 0, UnknownPreference );
+    count.process( d->mPrimaryEncryptionKeys );
+    count.process( d->mSecondaryEncryptionKeys );
+    if ( !count.numAlwaysEncrypt() &&
+         !count.numAlwaysAskForEncryption() && // this guy might not need a lookup, when declined, but it's too complex to implement that here
+         !count.numAlwaysEncryptIfPossible() &&
+         !count.numAskWheneverPossible() )
+        return DontDoIt;
+  }
+
   EncryptionPreferenceCounter count( this, mOpportunisticEncyption ? AskWheneverPossible : UnknownPreference );
   count = std::for_each( d->mPrimaryEncryptionKeys.begin(), d->mPrimaryEncryptionKeys.end(),
 			 count );
@@ -859,9 +1072,10 @@ Kpgp::Result Kleo::KeyResolver::resolveAllKeys( bool& signingRequested, bool& en
     result = resolveEncryptionKeys( signingRequested );
   if ( result != Kpgp::Ok )
     return result;
-  if ( signingRequested )
-    if ( encryptionRequested )
+  if ( signingRequested ) {
+    if ( encryptionRequested ) {
       result = resolveSigningKeysForEncryption();
+    }
     else {
       result = resolveSigningKeysForSigningOnly();
       if ( result == Kpgp::Failure ) {
@@ -869,6 +1083,7 @@ Kpgp::Result Kleo::KeyResolver::resolveAllKeys( bool& signingRequested, bool& en
         return Kpgp::Ok;
       }
     }
+  }
   return result;
 }
 
@@ -1334,10 +1549,10 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
 
   std::remove_copy_if( senderKeys.begin(), senderKeys.end(),
 		       std::back_inserter( d->mOpenPGPEncryptToSelfKeys ),
-		       NotValidTrustedOpenPGPEncryptionKey );
+		       NotValidTrustedOpenPGPEncryptionKey ); // -= trusted (see above, too)?
   std::remove_copy_if( senderKeys.begin(), senderKeys.end(),
 		       std::back_inserter( d->mSMIMEEncryptToSelfKeys ),
-		       NotValidTrustedSMIMEEncryptionKey );
+		       NotValidTrustedSMIMEEncryptionKey );   // -= trusted (see above, too)?
 
   return Kpgp::Ok;
 }
@@ -1364,16 +1579,21 @@ std::vector<GpgME::Key> Kleo::KeyResolver::signingKeys( CryptoMessageFormat f ) 
 
 
 std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const TQString & person, const TQString & msg, const std::vector<GpgME::Key> & selectedKeys ) const {
+  const bool opgp = containsOpenPGP( mCryptoMessageFormats );
+  const bool x509 = containsSMIME( mCryptoMessageFormats );
+
   Kleo::KeySelectionDialog dlg( i18n("Encryption Key Selection"),
-				msg, selectedKeys,
-				Kleo::KeySelectionDialog::ValidEncryptionKeys,
+				msg, KPIM::getEmailAddress(person), selectedKeys,
+                                Kleo::KeySelectionDialog::ValidEncryptionKeys
+                                & ~(opgp ? 0 : Kleo::KeySelectionDialog::OpenPGPKeys)
+                                & ~(x509 ? 0 : Kleo::KeySelectionDialog::SMIMEKeys),
 				true, true ); // multi-selection and "remember choice" box
 
   if ( dlg.exec() != TQDialog::Accepted )
     return std::vector<GpgME::Key>();
   std::vector<GpgME::Key> keys = dlg.selectedKeys();
   keys.erase( std::remove_if( keys.begin(), keys.end(),
-                                      NotValidTrustedEncryptionKey ),
+                              NotValidTrustedEncryptionKey ), // -= trusted?
                               keys.end() );
   if ( !keys.empty() && dlg.rememberSelection() )
     setKeysForAddress( person, dlg.pgpKeyFingerprints(), dlg.smimeFingerprints() );
@@ -1396,70 +1616,80 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const TQString & p
     if ( !keys.empty() ) {
       // Check if all of the keys are trusted and valid encryption keys
       if ( std::find_if( keys.begin(), keys.end(),
-                         NotValidTrustedEncryptionKey ) != keys.end() ) {
+                         NotValidTrustedEncryptionKey ) != keys.end() ) { // -= trusted?
 
         // not ok, let the user select: this is not conditional on !quiet,
         // since it's a bug in the configuration and the user should be
         // notified about it as early as possible:
         keys = selectKeys( person,
             i18n("if in your language something like "
-              "'key(s)' isn't possible please "
+              "'certificate(s)' isn't possible please "
               "use the plural in the translation",
               "There is a problem with the "
-              "encryption key(s) for \"%1\".\n\n"
-              "Please re-select the key(s) which should "
+              "encryption certificate(s) for \"%1\".\n\n"
+              "Please re-select the certificate(s) which should "
               "be used for this recipient.").arg(person),
             keys );
       }
-      keys = TrustedOrConfirmed( keys );
+      bool canceled = false;
+      keys = trustedOrConfirmed( keys, address, canceled );
+      if ( canceled )
+          return std::vector<GpgME::Key>();
 
       if ( !keys.empty() )
         return keys;
-      // hmmm, should we not return the keys in any case here?
+      // keys.empty() is considered cancel by callers, so go on
     }
   }
 
   // Now search all public keys for matching keys
   std::vector<GpgME::Key> matchingKeys = lookup( person );
   matchingKeys.erase( std::remove_if( matchingKeys.begin(), matchingKeys.end(),
-				      NotValidTrustedEncryptionKey ),
+				      NotValidEncryptionKey ),
 		      matchingKeys.end() );
   // if no keys match the complete address look for keys which match
   // the canonical mail address
   if ( matchingKeys.empty() ) {
     matchingKeys = lookup( address );
     matchingKeys.erase( std::remove_if( matchingKeys.begin(), matchingKeys.end(),
-					NotValidTrustedEncryptionKey ),
+					NotValidEncryptionKey ),
 			matchingKeys.end() );
   }
 
   // if called with quite == true (from EncryptionPreferenceCounter), we only want to
   // check if there are keys for this recipients, not (yet) their validity, so
   // don't show the untrusted encryption key warning in that case
+  bool canceled = false;
   if ( !quiet )
-    matchingKeys = TrustedOrConfirmed( matchingKeys );
+      matchingKeys = trustedOrConfirmed( matchingKeys, address, canceled );
+  if ( canceled )
+      return std::vector<GpgME::Key>();
   if ( quiet || matchingKeys.size() == 1 )
     return matchingKeys;
 
   // no match until now, or more than one key matches; let the user
   // choose the key(s)
   // FIXME: let user get the key from keyserver
-  return TrustedOrConfirmed( selectKeys( person,
+  return trustedOrConfirmed( selectKeys( person,
           matchingKeys.empty()
           ? i18n("if in your language something like "
-              "'key(s)' isn't possible please "
+              "'certificate(s)' isn't possible please "
               "use the plural in the translation",
-              "No valid and trusted encryption key was "
-              "found for \"%1\".\n\n"
-              "Select the key(s) which should "
-              "be used for this recipient.").arg(person)
+              "<qt>No valid and trusted encryption certificate was "
+              "found for \"%1\".<br/><br/>"
+              "Select the certificate(s) which should "
+              "be used for this recipient. If there is no suitable certificate in the list "
+              "you can also search for external certificates by clicking the button: search for external certificates.</qt>")
+             .arg( TQStyleSheet::escape(person) )
           : i18n("if in your language something like "
-              "'key(s)' isn't possible please "
+              "'certificate(s)' isn't possible please "
               "use the plural in the translation",
-              "More than one key matches \"%1\".\n\n"
-              "Select the key(s) which should "
-              "be used for this recipient.").arg(person),
-          matchingKeys ) );
+              "More than one certificate matches \"%1\".\n\n"
+              "Select the certificate(s) which should "
+              "be used for this recipient.").arg( TQStyleSheet::escape(person) ),
+          matchingKeys ), address, canceled );
+  // we can ignore 'canceled' here, since trustedOrConfirmed() returns
+  // an empty vector when canceled == true, and we'd just do the same
 }
 
 
@@ -1513,8 +1743,11 @@ void Kleo::KeyResolver::addKeys( const std::vector<Item> & items ) {
     SplitInfo si( it->address );
     CryptoMessageFormat f = AutoFormat;
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
-      if ( concreteCryptoMessageFormats[i] & it->format ) {
-        f = concreteCryptoMessageFormats[i];
+      const CryptoMessageFormat fmt = concreteCryptoMessageFormats[i];
+      if ( ( fmt & it->format ) &&
+           kdtools::any( it->keys.begin(), it->keys.end(), IsForFormat( fmt ) ) )
+      {
+        f = fmt;
         break;
       }
     }

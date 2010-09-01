@@ -28,6 +28,7 @@
 #include <kdialogbase.h>
 #include <kurl.h>
 
+class TQDate;
 class TQDateTime;
 
 namespace KPIM {
@@ -42,9 +43,10 @@ class KOEditorDetails;
 class KOAttendeeEditor;
 
 namespace KCal {
-class Calendar;
-class CalendarLocal;
-class Incidence;
+  class Calendar;
+  class CalendarLocal;
+  class Incidence;
+  class ResourceCalendar;
 }
 using namespace KCal;
 using namespace KOrg;
@@ -54,7 +56,7 @@ using namespace KOrg;
 */
 class KOIncidenceEditor : public KDialogBase
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     /**
       Construct new IncidenceEditor.
@@ -64,15 +66,31 @@ class KOIncidenceEditor : public KDialogBase
     virtual ~KOIncidenceEditor();
 
     /** This incidence has been modified externally */
-    virtual void modified (int /*change*/=0) {}
+    virtual void modified() {}
 
     virtual void reload() = 0;
 
+    virtual void setResource( ResourceCalendar *res, const TQString &subRes );
     virtual void selectInvitationCounterProposal( bool enable );
+    virtual void selectCreateTask( bool enable );
+
+    /**
+      This should be called when editing only one occurrence of a recurring incidence,
+      before showing the editor.
+
+      It gives the editor a pointer to the original incidence, which contains all occurrences
+      and a pointer to the original incidence already dissociated from the event (mEvent).
+
+      If the user presses ok/apply the changes made to the incAfterDissociation are commited
+      to the callendar through mChanger.
+
+      If the user presses cancel we restore originalIncidence and all dissociations are discarded
+    */
+    void setRecurringIncidence( Incidence *originalIncidence, Incidence *incAfterDissociation );
 
   public slots:
     /** Edit an existing todo. */
-    virtual void editIncidence(Incidence *, Calendar *) = 0;
+    virtual void editIncidence(Incidence *, const TQDate &, Calendar *) = 0;
     virtual void setIncidenceChanger( IncidenceChangerBase *changer ) {
         mChanger = changer; }
     /** Initialize editor. This function creates the tab widgets. */
@@ -87,7 +105,6 @@ class KOIncidenceEditor : public KDialogBase
       Adds attendees to the editor
     */
     void addAttendees( const TQStringList &attendees );
-
 
   signals:
     void deleteAttendee( Incidence * );
@@ -153,7 +170,14 @@ class KOIncidenceEditor : public KDialogBase
     TQMap<TQWidget*, KPIM::DesignerFields*> mDesignerFieldForWidget;
     TQPtrList<TQWidget> mEmbeddedURLPages;
     TQPtrList<TQWidget> mAttachedDesignerFields;
+    ResourceCalendar *mResource;
+    TQString mSubResource;
     bool mIsCounter;
+    bool mIsCreateTask;
+
+    Incidence *mRecurIncidence;
+    Incidence *mRecurIncidenceAfterDissoc;
+
 };
 
 #endif

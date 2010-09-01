@@ -394,9 +394,9 @@ void TemplatesConfiguration::importFromPhrases()
     "----------  %1  ----------\n"
     "\n"
     "Subject: %OFULLSUBJECT\n"
-    "Date: %ODATE\n"
+    "Date: %ODATE, %OTIMELONG\n"
     "From: %OFROMADDR\n"
-    "To: %OTOADDR\n"
+    "%OADDRESSEESADDR\n"
     "\n"
     "%TEXT\n"
     "-------------------------------------------------------\n"
@@ -509,38 +509,43 @@ void TemplatesConfiguration::slotInsertCommand( TQString cmd, int adjustCursor )
 TQString TemplatesConfiguration::defaultNewMessage() {
   return i18n(
     "%REM=\"Default new message template\"%-\n"
-    "%BLANK"
+    "%BLANK\n"
+    "%BLANK\n"
+    "%BLANK\n"
     );
 }
 
 TQString TemplatesConfiguration::defaultReply() {
   return i18n(
+    "%CURSOR\n"
+    "%BLANK\n"
     "%REM=\"Default reply template\"%-\n"
     "On %ODATEEN %OTIMELONGEN you wrote:\n"
     "%QUOTE\n"
-    "%CURSOR\n"
     );
 }
 
 TQString TemplatesConfiguration::defaultReplyAll() {
   return i18n(
+    "%CURSOR\n"
+    "%BLANK\n"
     "%REM=\"Default reply all template\"%-\n"
     "On %ODATEEN %OTIMELONGEN %OFROMNAME wrote:\n"
     "%QUOTE\n"
-    "%CURSOR\n"
     );
 }
 
-TQString TemplatesConfiguration::defaultForward() {
+TQString TemplatesConfiguration::defaultForward()
+{
   return i18n(
     "%REM=\"Default forward template\"%-\n"
     "\n"
     "----------  Forwarded Message  ----------\n"
     "\n"
     "Subject: %OFULLSUBJECT\n"
-    "Date: %ODATE\n"
+    "Date: %ODATE, %OTIMELONG\n"
     "From: %OFROMADDR\n"
-    "To: %OTOADDR\n"
+    "%OADDRESSEESADDR\n"
     "\n"
     "%TEXT\n"
     "-------------------------------------------------------\n"

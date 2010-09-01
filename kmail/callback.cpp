@@ -41,6 +41,7 @@
 #include "composer.h"
 #include "kmreaderwin.h"
 #include "secondarywindow.h"
+#include "transportmanager.h"
 
 #include <mimelib/enum.h>
 
@@ -56,6 +57,32 @@ Callback::Callback( KMMessage* msg, KMReaderWin* readerWin )
 {
 }
 
+TQString Callback::askForTransport( bool nullIdentity ) const
+{
+  const TQStringList transports = KMail::TransportManager::transportNames();
+  if ( transports.size() == 1 )
+    return transports.first();
+
+  const TQString defaultTransport = GlobalSettings::self()->defaultTransport();
+  const int defaultIndex = QMAX( 0, transports.findIndex( defaultTransport ) );
+
+  TQString text;
+  if ( nullIdentity )
+    text = i18n( "<qt>The receiver of this invitation doesn't match any of your identities.<br>"
+                 "Please select the transport which should be used to send your reply.</qt>" );
+  else
+    text = i18n( "<qt>The identity matching the receiver of this invitation doesn't have an "
+                 "associated transport configured.<br>"
+                 "Please select the transport which should be used to send your reply.</qt>");
+  bool ok;
+  const TQString transport = KInputDialog::getItem( i18n( "Select Transport" ), text,
+                                        transports, defaultIndex, FALSE, &ok, kmkernel->mainWin() );
+  if ( !ok )
+    return TQString();
+
+  return transport;
+}
+
 bool Callback::mailICal( const TQString& to, const TQString &iCal,
                          const TQString& subject, const TQString &status,
                          bool delMessage ) const
@@ -67,13 +94,13 @@ bool Callback::mailICal( const TQString& to, const TQString &iCal,
   msg->setSubject( subject );
   if ( GlobalSettings::self()->exchangeCompatibleInvitations() ) {
     if ( status == TQString("cancel") )
-      msg->setSubject( TQString("Declined: %1").arg(subject).replace("Answer: ","") );
+      msg->setSubject( i18n( "Declined: %1" ).arg(subject).replace("Answer: ","") );
     else if ( status == TQString("tentative") )
-      msg->setSubject(TQString("Tentative: %1").arg(subject).replace("Answer: ","") );
+      msg->setSubject( i18n( "Tentative: %1" ).arg(subject).replace("Answer: ","") );
     else if ( status == TQString("accepted") )
-      msg->setSubject( TQString("Accepted: %1").arg(subject).replace("Answer: ","") );
+      msg->setSubject( i18n( "Accepted: %1" ).arg(subject).replace("Answer: ","") );
     else if ( status == TQString("delegated") )
-      msg->setSubject( TQString("Delegated: %1").arg(subject).replace("Answer: ","") );
+      msg->setSubject( i18n( "Delegated: %1" ).arg(subject).replace("Answer: ","") );
   }
   msg->setTo( to );
   msg->setFrom( receiver() );
@@ -89,23 +116,40 @@ bool Callback::mailICal( const TQString& to, const TQString &iCal,
     * has been sent successfully. Set a link header which accomplishes that. */
     msg->link( mMsg, KMMsgStatusDeleted );
 
+  // Try and match the receiver with an identity.
+  // Setting the identity here is important, as that is used to select the correct
+  // transport later
+  const KPIM::Identity& identity = kmkernel->identityManager()->identityForAddress( receiver() );
+  const bool nullIdentity = ( identity == KPIM::Identity::null() );
+  if ( !nullIdentity ) {
+    msg->setHeaderField("X-KMail-Identity", TQString::number( identity.uoid() ));
+  }
+
+  const bool identityHasTransport = !identity.transport().isEmpty();
+  if ( !nullIdentity && identityHasTransport )
+    msg->setHeaderField( "X-KMail-Transport", identity.transport() );
+  else if ( !nullIdentity && identity.isDefault() )
+    msg->setHeaderField( "X-KMail-Transport", GlobalSettings::self()->defaultTransport() );
+  else {
+    const TQString transport = askForTransport( nullIdentity );
+    if ( transport.isEmpty() )
+      return false; // user canceled transport selection dialog
+    msg->setHeaderField( "X-KMail-Transport", transport );
+  }
+
   // Outlook will only understand the reply if the From: header is the
   // same as the To: header of the invitation message.
   KConfigGroup options( KMKernel::config(), "Groupware" );
   if( !options.readBoolEntry( "LegacyMangleFromToHeaders", true ) ) {
-    // Try and match the receiver with an identity
-    const KPIM::Identity& identity =
-      kmkernel->identityManager()->identityForAddress( receiver() );
     if( identity != KPIM::Identity::null() ) {
-      // Identity found. Use this
       msg->setFrom( identity.fullEmailAddr() );
-      msg->setHeaderField("X-KMail-Identity", TQString::number( identity.uoid() ));
     }
     // Remove BCC from identity on ical invitations (https://intevation.de/roundup/kolab/issue474)
     msg->setBcc( "" );
   }
 
   KMail::Composer * cWin = KMail::makeComposer();
+  cWin->ignoreStickyFields();
   cWin->setMsg( msg, false /* mayAutoSign */ );
   // cWin->setCharset( "", true );
   cWin->disableWordWrap();
@@ -126,6 +170,8 @@ bool Callback::mailICal( const TQString& to, const TQString &iCal,
     cWin->addAttach( msgPart );
   }
 
+  cWin->disableRecipientNumberCheck();
+  cWin->disableForgottenAttachmentsCheck();
   if ( options.readBoolEntry( "AutomaticSending", true ) ) {
     cWin->setAutoDeleteWindow(  true );
     cWin->slotSendNow();
@@ -170,7 +216,7 @@ TQString Callback::receiver() const
       selectMessage = i18n("<qt>None of your identities match the "
           "receiver of this message,<br>please "
           "choose which of the following addresses "
-          "is yours, if any:");
+          "is yours, if any, or select one of your identities to use in the reply:");
       addrs += kmkernel->identityManager()->allEmails();
     } else {
       selectMessage = i18n("<qt>Several of your identities match the "
@@ -179,10 +225,14 @@ TQString Callback::receiver() const
           "is yours:");
     }
 
+    // select default identity by default
+    const TQString defaultAddr = kmkernel->identityManager()->defaultIdentity().primaryEmailAddress();
+    const int defaultIndex = QMAX( 0, addrs.findIndex( defaultAddr ) );
+
     mReceiver =
       KInputDialog::getItem( i18n( "Select Address" ),
           selectMessage,
-          addrs+ccaddrs, 0, FALSE, &ok, kmkernel->mainWin() );
+          addrs+ccaddrs, defaultIndex, FALSE, &ok, kmkernel->mainWin() );
     if( !ok )
       mReceiver = TQString::null;
   }
@@ -211,6 +261,16 @@ bool Callback::askForComment( KCal::Attendee::PartStat status ) const
 bool Callback::deleteInvitationAfterReply() const
 {
     return GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply();
+}
+
+bool Callback::exchangeCompatibleInvitations() const
+{
+  return GlobalSettings::self()->exchangeCompatibleInvitations();
+}
+
+bool Callback::outlookCompatibleInvitationReplyComments() const
+{
+  return GlobalSettings::self()->outlookCompatibleInvitationReplyComments();
 }
 
 TQString Callback::sender() const

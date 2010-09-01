@@ -56,7 +56,8 @@ public:
            const char *name = 0 );
     ~KNote();
 
-    void saveData();
+    void changeJournal(KCal::Journal *);
+    void saveData( bool update = true);
     void saveConfig() const;
 
     TQString noteId() const;
@@ -82,6 +83,8 @@ public:
 
     static void setStyle( int style );
 
+    void deleteWhenIdle();
+    void blockEmitDataChanged( bool _b ) { m_blockEmitDataChanged = _b;}
 public slots:
     void slotKill( bool force = false );
 
@@ -89,7 +92,7 @@ signals:
     void sigRequestNewNote();
     void sigShowNextNote();
     void sigNameChanged();
-    void sigDataChanged();
+    void sigDataChanged(const TQString &);
     void sigColorChanged();
     void sigKillNote( KCal::Journal* );
 
@@ -107,6 +110,10 @@ protected:
     virtual bool eventFilter( TQObject*, TQEvent* );
 
     virtual bool focusNextPrevChild( bool );
+
+    /// Protect against deletion while we are running a sub-eventloop
+    void aboutToEnterEventLoop();
+    void eventLoopLeft();
 
 private slots:
     void slotRename();
@@ -133,7 +140,8 @@ private slots:
     void slotUpdateDesktopActions();
 
     void slotUpdateViewport( int, int );
-
+    void slotRequestNewNote();
+    void slotSaveData();
 private:
     void updateFocus();
     void updateMask();
@@ -170,6 +178,10 @@ private:
     KSharedConfig::Ptr m_kwinConf;
 
     static int s_ppOffset;
+
+    int m_busy;
+    bool m_deleteWhenIdle;
+    bool m_blockEmitDataChanged;
 };
 
 #endif

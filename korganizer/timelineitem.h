@@ -42,7 +42,7 @@ class TimelineSubItem;
 class TimelineItem : public KDGanttViewTaskItem
 {
   public:
-    TimelineItem( const TQString &label, KDGanttView* parent );
+    TimelineItem( const TQString &label, KCal::Calendar *calendar, KDGanttView* parent );
 
     void insertIncidence( KCal::Incidence *incidence,
                           const TQDateTime &start = TQDateTime(),
@@ -52,13 +52,14 @@ class TimelineItem : public KDGanttViewTaskItem
     void moveItems( KCal::Incidence* incidence, int delta, int duration );
 
   private:
+    KCal::Calendar *mCalendar;
     TQMap<KCal::Incidence*, TQValueList<TimelineSubItem*> > mItemMap;
 };
 
 class TimelineSubItem : public KDGanttViewTaskItem
 {
   public:
-    TimelineSubItem( KCal::Incidence *incidence, TimelineItem *parent );
+    TimelineSubItem( KCal::Calendar *calendar, KCal::Incidence *incidence, TimelineItem *parent );
     ~TimelineSubItem();
 
     KCal::Incidence* incidence() const { return mIncidence; }

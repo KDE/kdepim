@@ -125,6 +125,7 @@ private:
 private slots:
     void acceptConnection();
     void saveNotes();
+    void saveNotes( const TQString & uid );
     void updateNoteActions();
     void updateGlobalAccels();
     void updateNetworkListener();
@@ -159,6 +160,8 @@ private:
     KXMLGUIBuilder  *m_guiBuilder;
 
     TQDomDocument    m_noteGUI;
+    KAction         *m_findAction;
+    TQString m_noteUidModify;
 };
 
 #endif

@@ -24,6 +24,8 @@
 #ifndef KABCORE_H
 #define KABCORE_H
 
+#include <config.h> // FOR KDEPIM_NEW_DISTRLISTS
+
 #include <kabc/field.h>
 
 #include <tqdict.h>
@@ -48,6 +50,7 @@ class KAboutData;
 class KAction;
 class KActionCollection;
 class KConfig;
+class KPushButton;
 class KStatusBar;
 class KToggleAction;
 class KXMLGUIClient;
@@ -157,7 +160,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     /**
       sets the distribution list to display. If null, the regular
-      address book is to be displayed.  
+      address book is to be displayed.
      */
     virtual void setSelectedDistributionList( const TQString &name );
 #endif
@@ -308,7 +311,7 @@ class KDE_EXPORT KABCore : public KAB::Core
      */
     virtual void newContact();
 
-    /** 
+    /**
      DCOP METHOD: Opens distribution list editor to create a new distribution list
     */
     virtual void newDistributionList();
@@ -347,7 +350,7 @@ class KDE_EXPORT KABCore : public KAB::Core
      * If the adding to the new resource is successfull, the contact is
      * removed from the old one, unless the Copy flag is given. */
     void storeContactIn( const TQString &uid = TQString::null, bool copy = false );
-    
+
     /**
      * Lets the user chose a different resource for the selected contacts and
      * copies it there.
@@ -421,7 +424,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     void removeSelectedContactsFromDistList();
     void editSelectedDistributionList();
-    void sendMailToDistributionList( const TQString &id ); 
+    void sendMailToDistributionList( const TQString &id );
 
   private:
     void initGUI();
@@ -443,6 +446,8 @@ class KDE_EXPORT KABCore : public KAB::Core
 
 #ifdef KDEPIM_NEW_DISTRLISTS
     TQString mSelectedDistributionList;
+    KPushButton *mAddDistListButton;
+    KPushButton *mRemoveDistListButton;
     TQWidget *mDistListButtonWidget;
 #endif
 

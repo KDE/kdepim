@@ -113,6 +113,7 @@ public:
                                            const TQString& resource,
                                            int startIndex,
                                            int nbMessages );
+  int dimapAccounts();
 
   TQValueList<SubResource> subresourcesKolab( const TQString& contentsType );
 
@@ -223,6 +224,8 @@ public:
   bool isResourceQuiet() const;
   void setResourceQuiet(bool q);
 
+  static TQMap<TQString, TQString>* getResourceMap() { return mSubResourceUINamesMap; }
+
 public slots:
   /* (Re-)Read configuration file */
   void readConfig();
@@ -235,6 +238,7 @@ public slots:
   // Called when a folder is made readonly or readwrite, or renamed,
   // or any other similar change that affects the resources
   void slotFolderPropertiesChanged( KMFolder* folder );
+  void changeResourceUIName( const TQString &folderPath, const TQString &newName );
 
 private slots:
   void slotRefreshFolder( KMFolder* );
@@ -259,7 +263,10 @@ private:
     enum FoundEnum { FoundAndStandard, NotFound, FoundByType, FoundByName };
     StandardFolderSearchResult() : folder( 0 ) {}
     StandardFolderSearchResult( KMFolder* f, FoundEnum e ) : folder( f ), found( e ) {}
+    StandardFolderSearchResult( const TQValueList<KMFolder*> &f, FoundEnum e ) :
+        folder( f.first() ), folders( f ), found( e ) {}
     KMFolder* folder; // NotFound implies folder==0 of course.
+    TQValueList<KMFolder*> folders; // in case we found multiple default folders (which should not happen)
     FoundEnum found;
   };
 
@@ -341,6 +348,7 @@ private:
   TQMap<Q_UINT32, bool> mTheUnGetMes;
   TQMap<TQString, TQString> mPendingUpdates;
   TQMap<TQString, bool> mInTransit;
+  static TQMap<TQString, TQString> *mSubResourceUINamesMap;
 
 };
 

@@ -39,6 +39,8 @@
 
 #include <libkcal/journal.h>
 #include <korganizer/version.h>
+#include <libemailfunctions/email.h>
+
 #include <kdebug.h>
 #include <kmdcodec.h>
 #include <kurl.h>
@@ -50,7 +52,6 @@ using namespace Kolab;
 Incidence::Incidence( KCal::ResourceKolab *res, const TQString &subResource, Q_UINT32 sernum,
                       const TQString& tz )
   : KolabBase( tz ), mFloatingStatus( Unset ), mHasAlarm( false ),
-    mRevision( 0 ),
     mResource( res ),
     mSubResource( subResource ),
     mSernum( sernum )
@@ -163,16 +164,6 @@ TQString Incidence::internalUID() const
   return mInternalUID;
 }
 
-void Incidence::setRevision( int revision )
-{
-  mRevision = revision;
-}
-
-int Incidence::revision() const
-{
-  return mRevision;
-}
-
 bool Incidence::loadAttendeeAttribute( TQDomElement& element,
                                        Attendee& attendee )
 {
@@ -183,8 +174,16 @@ bool Incidence::loadAttendeeAttribute( TQDomElement& element,
       TQDomElement e = n.toElement();
       TQString tagName = e.tagName();
 
-      if ( tagName == "display-name" )
-        attendee.displayName = e.text();
+      if ( tagName == "display-name" ) {
+        // Quote the text in case it contains commas or other quotable chars.
+        TQString tusername = KPIM::quoteNameIfNecessary( e.text() );
+
+        TQString tname, temail;
+        // ignore the return value because it will always be false since
+        // tusername does not contain "@domain".
+        KPIM::getNameAndMail( tusername, tname, temail );
+        attendee.displayName = tname;
+      }
       else if ( tagName == "smtp-address" )
         attendee.smtpAddress = e.text();
       else if ( tagName == "status" )
@@ -249,6 +248,69 @@ void Incidence::saveAttachments( TQDomElement& element ) const
   }
 }
 
+void Incidence::saveAlarms( TQDomElement& element ) const
+{
+  if ( mAlarms.isEmpty() ) return;
+
+  TQDomElement list = element.ownerDocument().createElement( "advanced-alarms" );
+  element.appendChild( list );
+  for ( KCal::Alarm::List::ConstIterator it = mAlarms.constBegin(); it != mAlarms.constEnd(); ++it ) {
+    KCal::Alarm* a = *it;
+    TQDomElement e = list.ownerDocument().createElement( "alarm" );
+    list.appendChild( e );
+
+    writeString( e, "enabled", a->enabled() ? "1" : "0" );
+    if ( a->hasStartOffset() ) {
+      writeString( e, "start-offset", TQString::number( a->startOffset().asSeconds()/60 ) );
+    }
+    if ( a->hasEndOffset() ) {
+      writeString( e, "end-offset", TQString::number( a->endOffset().asSeconds()/60 ) );
+    }
+    if ( a->repeatCount() ) {
+      writeString( e, "repeat-count", TQString::number( a->repeatCount() ) );
+      writeString( e, "repeat-interval", TQString::number( a->snoozeTime() ) );
+    }
+
+    switch ( a->type() ) {
+    case KCal::Alarm::Invalid:
+      break;
+    case KCal::Alarm::Display:
+      e.setAttribute( "type", "display" );
+      writeString( e, "text", a->text() );
+      break;
+    case KCal::Alarm::Procedure:
+      e.setAttribute( "type", "procedure" );
+      writeString( e, "program", a->programFile() );
+      writeString( e, "arguments", a->programArguments() );
+      break;
+    case KCal::Alarm::Email:
+    {
+      e.setAttribute( "type", "email" );
+      TQDomElement addresses = e.ownerDocument().createElement( "addresses" );
+      e.appendChild( addresses );
+      for ( TQValueList<KCal::Person>::ConstIterator it = a->mailAddresses().constBegin(); it != a->mailAddresses().constEnd(); ++it ) {
+        writeString( addresses, "address", (*it).fullName() );
+      }
+      writeString( e, "subject", a->mailSubject() );
+      writeString( e, "mail-text", a->mailText() );
+      TQDomElement attachments = e.ownerDocument().createElement( "attachments" );
+      e.appendChild( attachments );
+      for ( TQStringList::ConstIterator it = a->mailAttachments().constBegin(); it != a->mailAttachments().constEnd(); ++it ) {
+        writeString( attachments, "attachment", *it );
+      }
+      break;
+    }
+    case KCal::Alarm::Audio:
+      e.setAttribute( "type", "audio" );
+      writeString( e, "file", a->audioFile() );
+      break;
+    default:
+      kdWarning() << "Unhandled alarm type:" << a->type() << endl;
+      break;
+    }
+  }
+}
+
 void Incidence::saveRecurrence( TQDomElement& element ) const
 {
   TQDomElement e = element.ownerDocument().createElement( "recurrence" );
@@ -289,8 +351,14 @@ void Incidence::loadRecurrence( const TQDomElement& element )
       TQDomElement e = n.toElement();
       TQString tagName = e.tagName();
 
-      if ( tagName == "interval" )
-        mRecurrence.interval = e.text().toInt();
+      if ( tagName == "interval" ) {
+        //kolab/issue4229, sometimes  the interval value can be empty
+        if ( e.text().isEmpty() || e.text().toInt() <= 0 ) {
+          mRecurrence.interval = 1;
+        } else {
+          mRecurrence.interval = e.text().toInt();
+        }
+      }
       else if ( tagName == "day" ) // can be present multiple times
         mRecurrence.days.append( e.text() );
       else if ( tagName == "daynumber" )
@@ -305,6 +373,118 @@ void Incidence::loadRecurrence( const TQDomElement& element )
       } else
         // TODO: Unhandled tag - save for later storage
         kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+    }
+  }
+}
+
+static void loadAddressesHelper( const TQDomElement& element, KCal::Alarm* a )
+{
+  for ( TQDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      TQDomElement e = n.toElement();
+      TQString tagName = e.tagName();
+
+      if ( tagName == "address" ) {
+        a->addMailAddress( KCal::Person( e.text() ) );
+      } else {
+        kdWarning() << "Unhandled tag" << tagName << endl;
+      }
+    }
+  }
+}
+
+static void loadAttachmentsHelper( const TQDomElement& element, KCal::Alarm* a )
+{
+  for ( TQDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      TQDomElement e = n.toElement();
+      TQString tagName = e.tagName();
+
+      if ( tagName == "attachment" ) {
+        a->addMailAttachment( e.text() );
+      } else {
+        kdWarning() << "Unhandled tag" << tagName << endl;
+      }
+    }
+  }
+}
+
+static void loadAlarmHelper( const TQDomElement& element, KCal::Alarm* a )
+{
+  for ( TQDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      TQDomElement e = n.toElement();
+      TQString tagName = e.tagName();
+
+      if ( tagName == "start-offset" ) {
+        a->setStartOffset( e.text().toInt()*60 );
+      } else if ( tagName == "end-offset" ) {
+        a->setEndOffset( e.text().toInt()*60 );
+      } else if ( tagName == "repeat-count" ) {
+        a->setRepeatCount( e.text().toInt() );
+      } else if ( tagName == "repeat-interval" ) {
+        a->setSnoozeTime( e.text().toInt() );
+      } else if ( tagName == "text" ) {
+        a->setText( e.text() );
+      } else if ( tagName == "program" ) {
+        a->setProgramFile( e.text() );
+      } else if ( tagName == "arguments" ) {
+        a->setProgramArguments( e.text() );
+      } else if ( tagName == "addresses" ) {
+        loadAddressesHelper( e, a );
+      } else if ( tagName == "subject" ) {
+        a->setMailSubject( e.text() );
+      } else if ( tagName == "mail-text" ) {
+        a->setMailText( e.text() );
+      } else if ( tagName == "attachments" ) {
+        loadAttachmentsHelper( e, a );
+      } else if ( tagName == "file" ) {
+        a->setAudioFile( e.text() );
+      } else if ( tagName == "enabled" ) {
+        a->setEnabled( e.text().toInt() != 0 );
+      } else {
+        kdWarning() << "Unhandled tag" << tagName << endl;
+      }
+    }
+  }
+}
+
+void Incidence::loadAlarms( const TQDomElement& element )
+{
+  for ( TQDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      TQDomElement e = n.toElement();
+      TQString tagName = e.tagName();
+
+      if ( tagName == "alarm" ) {
+        KCal::Alarm *a = new KCal::Alarm( 0 );
+        a->setEnabled( true ); // default to enabled, unless some XML attribute says otherwise.
+        TQString type = e.attribute( "type" );
+        if ( type == "display" ) {
+          a->setType( KCal::Alarm::Display );
+        } else if ( type == "procedure" ) {
+          a->setType( KCal::Alarm::Procedure );
+        } else if ( type == "email" ) {
+          a->setType( KCal::Alarm::Email );
+        } else if ( type == "audio" ) {
+          a->setType( KCal::Alarm::Audio );
+        } else {
+          kdWarning() << "Unhandled alarm type:" << type << endl;
+        }
+
+        loadAlarmHelper( e, a );
+        mAlarms << a;
+      } else {
+        kdWarning() << "Unhandled tag" << tagName << endl;
+      }
     }
   }
 }
@@ -340,20 +520,17 @@ bool Incidence::loadAttribute( TQDomElement& element )
   } else if ( tagName == "alarm" )
     // Alarms should be minutes before. Libkcal uses event time + alarm time
     setAlarm( - element.text().toInt() );
+  else if ( tagName == "advanced-alarms" )
+    loadAlarms( element );
   else if ( tagName == "x-kde-internaluid" )
     setInternalUID( element.text() );
-  else if ( tagName == "revision" ) {
-    bool ok;
-    int revision = element.text().toInt( &ok );
-    if ( ok )
-      setRevision( revision );
-  } else if ( tagName == "x-custom" )
+  else if ( tagName == "x-custom" )
     loadCustomAttributes( element );
   else {
     bool ok = KolabBase::loadAttribute( element );
     if ( !ok ) {
         // Unhandled tag - save for later storage
-        kdDebug() << "Saving unhandled tag " << element.tagName() << endl;
+        //kdDebug() << "Saving unhandled tag " << element.tagName() << endl;
         Custom c;
         c.key = TQCString( "X-KDE-KolabUnhandled-" ) + element.tagName().latin1();
         c.value = element.text();
@@ -385,8 +562,8 @@ bool Incidence::saveAttributes( TQDomElement& element ) const
     int alarmTime = qRound( -alarm() );
     writeString( element, "alarm", TQString::number( alarmTime ) );
   }
+  saveAlarms( element );
   writeString( element, "x-kde-internaluid", internalUID() );
-  writeString( element, "revision", TQString::number( revision() ) );
   saveCustomAttributes( element );
   return true;
 }
@@ -424,13 +601,15 @@ static KCal::Attendee::PartStat attendeeStringToStatus( const TQString& s )
     return KCal::Attendee::NeedsAction;
   if ( s == "tentative" )
     return KCal::Attendee::Tentative;
+  if ( s == "accepted" )
+    return KCal::Attendee::Accepted;
   if ( s == "declined" )
     return KCal::Attendee::Declined;
   if ( s == "delegated" )
     return KCal::Attendee::Delegated;
 
   // Default:
-  return KCal::Attendee::Accepted;
+  return KCal::Attendee::None;
 }
 
 static TQString attendeeStatusToString( KCal::Attendee::PartStat status )
@@ -649,6 +828,14 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     mAttachments.push_back( a );
   }
 
+  mAlarms.clear();
+
+  // Alarms
+  const KCal::Alarm::List alarms = incidence->alarms();
+  for ( KCal::Alarm::List::ConstIterator it = alarms.begin(); it != alarms.end(); ++it ) {
+    mAlarms.push_back( *it );
+  }
+
   if ( incidence->doesRecur() ) {
     setRecurrence( incidence->recurrence() );
     mRecurrence.exclusions = incidence->recurrence()->exDates();
@@ -711,10 +898,17 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   incidence->setSummary( summary() );
   incidence->setLocation( location() );
 
-  if ( mHasAlarm ) {
+  if ( mHasAlarm && mAlarms.isEmpty() ) {
     KCal::Alarm* alarm = incidence->newAlarm();
     alarm->setStartOffset( qRound( mAlarm * 60.0 ) );
     alarm->setEnabled( true );
+    alarm->setType( KCal::Alarm::Display );
+  } else if ( !mAlarms.isEmpty() ) {
+    for ( KCal::Alarm::List::ConstIterator it = mAlarms.constBegin(); it != mAlarms.constEnd(); ++it ) {
+      KCal::Alarm *alarm = *it;
+      alarm->setParent( incidence );
+      incidence->addAlarm( alarm );
+    }
   }
 
   if ( organizer().displayName.isEmpty() )
@@ -803,7 +997,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   if ( hasPilotSyncStatus() )
     incidence->setSyncStatus( pilotSyncStatus() );
 
-  for( TQValueList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
+  for( TQValueList<Custom>::ConstIterator it = mCustomList.constBegin(); it != mCustomList.constEnd(); ++it ) {
     incidence->setNonKDECustomProperty( (*it).key, (*it).value );
   }
 
@@ -836,7 +1030,7 @@ void Incidence::loadAttachments()
 
 TQString Incidence::productID() const
 {
-  return TQString( "KOrganizer " ) + korgVersion + ", Kolab resource";
+  return TQString( "KOrganizer %1, Kolab resource" ).arg( korgVersion );
 }
 
 // Unhandled KCal::Incidence fields:

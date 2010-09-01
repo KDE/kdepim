@@ -17,6 +17,7 @@
 #include <kstandarddirs.h>
 
 #include <tqlayout.h>
+#include <tqtooltip.h>
 
 //=============================================================================
 //
@@ -30,14 +31,18 @@ KMFilterActionWithAddressWidget::KMFilterActionWithAddressWidget( TQWidget* pare
   TQHBoxLayout *hbl = new TQHBoxLayout(this);
   hbl->setSpacing(4);
   mLineEdit = new KLineEdit(this);
+  mLineEdit->setName( "addressEdit" );
   hbl->addWidget( mLineEdit, 1 /*stretch*/ );
   mBtn = new TQPushButton( TQString::null ,this );
   mBtn->setPixmap( BarIcon( "contents", KIcon::SizeSmall ) );
   mBtn->setFixedHeight( mLineEdit->sizeHint().height() );
+  TQToolTip::add( mBtn, i18n( "Open Address Book" ) );
   hbl->addWidget( mBtn );
 
   connect( mBtn, TQT_SIGNAL(clicked()),
-	   this, TQT_SLOT(slotAddrBook()) );
+           this, TQT_SLOT(slotAddrBook()) );
+  connect( mLineEdit, TQT_SIGNAL( textChanged(const TQString&) ),
+           this, TQT_SIGNAL( textChanged(const TQString&) ) );
 }
 
 void KMFilterActionWithAddressWidget::slotAddrBook()

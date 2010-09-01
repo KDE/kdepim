@@ -224,6 +224,7 @@ int KMFolderMaildir::create()
 //-----------------------------------------------------------------------------
 void KMFolderMaildir::reallyDoClose(const char* owner)
 {
+  Q_UNUSED( owner );
   if (mAutoCreateIndex)
   {
       updateIndex();
@@ -465,9 +466,12 @@ if( fileD0.open( IO_WriteOnly ) ) {
   ++mTotalMsgs;
   mSize = -1;
 
-  if ( aMsg->attachmentState() == KMMsgAttachmentUnknown &&
-       aMsg->readyToShow() )
+  if ( aMsg->attachmentState() == KMMsgAttachmentUnknown && aMsg->readyToShow() ) {
     aMsg->updateAttachmentState();
+  }
+  if ( aMsg->invitationState() == KMMsgInvitationUnknown && aMsg->readyToShow() ) {
+    aMsg->updateInvitationState();
+  }
 
   // store information about the position in the folder file in the message
   aMsg->setParent(folder());
@@ -743,7 +747,7 @@ void KMFolderMaildir::readFileHeaderIntern(const TQString& dir, const TQString& 
     }
 
     // Is this a long header line?
-    if (inHeader && line[0] == '\t' || line[0] == ' ')
+    if (inHeader && ( line[0] == '\t' || line[0] == ' ' ) )
     {
       int i = 0;
       while (line[i] == '\t' || line[i] == ' ')
@@ -901,6 +905,9 @@ int KMFolderMaildir::createIndexFromContents()
 
 KMFolderIndex::IndexStatus KMFolderMaildir::indexStatus()
 {
+  if ( !mCompactable )
+    return KMFolderIndex::IndexCorrupt;
+
   TQFileInfo new_info(location() + "/new");
   TQFileInfo cur_info(location() + "/cur");
   TQFileInfo index_info(indexLocation());

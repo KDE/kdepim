@@ -63,6 +63,14 @@ class KDateNavigator: public QFrame
     NavigatorBar *navigatorBar() const { return mNavigatorBar; }
     TQDate startDate() const;
     TQDate endDate() const;
+    void setUpdateNeeded();
+
+    /**
+       Returns the current displayed month.
+       It's a TQDate instead of uint so it can be easily feed to KCalendarSystem's
+       functions.
+    */
+    TQDate month() const;
 
   public slots:
     void selectDates( const KCal::DateList & );
@@ -75,24 +83,24 @@ class KDateNavigator: public QFrame
     void datesSelected( const KCal::DateList & );
     void incidenceDropped( Incidence *, const TQDate & );
     void incidenceDroppedMove( Incidence *, const TQDate & );
-    void weekClicked( const TQDate &);
+    void weekClicked( const TQDate & );
 
     void goPrevious();
     void goNext();
+    void nextMonthClicked();
+    void prevMonthClicked();
+    void nextYearClicked();
+    void prevYearClicked();
 
-    void goNextMonth();
-    void goPrevMonth();
-    void goNextYear();
-    void goPrevYear();
-
-    void goMonth( int month );
+    void monthSelected( int month );
+    void yearSelected( int year );
 
   protected:
     void updateDates();
 
     void wheelEvent( TQWheelEvent * );
 
-    bool eventFilter( TQObject *,TQEvent * );
+    bool eventFilter( TQObject *, TQEvent * );
 
     void setShowWeekNums( bool enabled );
 

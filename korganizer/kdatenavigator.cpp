@@ -53,11 +53,12 @@ KDateNavigator::KDateNavigator( TQWidget *parent, const char *name )
   mNavigatorBar = new NavigatorBar( this );
   topLayout->addMultiCellWidget( mNavigatorBar, 0, 0, 0, 7 );
 
-  connect( mNavigatorBar, TQT_SIGNAL( goPrevYear() ), TQT_SIGNAL( goPrevYear() ) );
-  connect( mNavigatorBar, TQT_SIGNAL( goPrevMonth() ), TQT_SIGNAL( goPrevMonth() ) );
-  connect( mNavigatorBar, TQT_SIGNAL( goNextMonth() ), TQT_SIGNAL( goNextMonth() ) );
-  connect( mNavigatorBar, TQT_SIGNAL( goNextYear() ), TQT_SIGNAL( goNextYear() ) );
-  connect( mNavigatorBar, TQT_SIGNAL( goMonth( int ) ), TQT_SIGNAL( goMonth( int ) ) );
+  connect( mNavigatorBar, TQT_SIGNAL( prevYearClicked() ), TQT_SIGNAL( prevYearClicked() ) );
+  connect( mNavigatorBar, TQT_SIGNAL( prevMonthClicked() ), TQT_SIGNAL( prevMonthClicked() ) );
+  connect( mNavigatorBar, TQT_SIGNAL( nextMonthClicked() ), TQT_SIGNAL( nextMonthClicked() ) );
+  connect( mNavigatorBar, TQT_SIGNAL( nextYearClicked() ), TQT_SIGNAL( nextYearClicked() ) );
+  connect( mNavigatorBar, TQT_SIGNAL( monthSelected( int ) ), TQT_SIGNAL( monthSelected( int ) ) );
+  connect( mNavigatorBar, TQT_SIGNAL( yearSelected( int ) ), TQT_SIGNAL( yearSelected( int ) ) );
 
   int i;
   TQString generalFont = KGlobalSettings::generalFont().family();
@@ -136,6 +137,7 @@ void KDateNavigator::updateToday()
   mDayMatrix->recalculateToday();
   mDayMatrix->repaint();
 }
+
 TQDate KDateNavigator::startDate() const
 {
   // Find the first day of the week of the current month.
@@ -160,6 +162,7 @@ TQDate KDateNavigator::startDate() const
 
   return dayone;
 }
+
 TQDate KDateNavigator::endDate() const
 {
   return startDate().addDays( 6*7 );
@@ -202,6 +205,23 @@ void KDateNavigator::updateDayMatrix()
   mDayMatrix->repaint();
 }
 
+void KDateNavigator::setUpdateNeeded()
+{
+  mDayMatrix->setUpdateNeeded();
+}
+
+TQDate KDateNavigator::month() const
+{
+  TQDate firstCell = startDate();
+  const KCalendarSystem *calSys = KOGlobals::self()->calendarSystem();
+
+  if ( calSys->day( firstCell ) == 1 ) {
+    return firstCell;
+  } else {
+    calSys->setYMD( firstCell,  calSys->year( firstCell ), calSys->month( firstCell ), 1 );
+    return calSys->addMonths( firstCell, 1 );
+  }
+}
 
 void KDateNavigator::updateView()
 {
@@ -230,10 +250,11 @@ void KDateNavigator::updateConfig()
 void KDateNavigator::setShowWeekNums( bool enabled )
 {
   for( int i = 0; i < 6; i++ ) {
-    if( enabled )
+    if ( enabled ) {
       mWeeknos[i]->show();
-    else
+    } else {
       mWeeknos[i]->hide();
+    }
   }
 }
 
@@ -251,15 +272,18 @@ void KDateNavigator::selectDates( const DateList &dateList )
   }
 }
 
-void KDateNavigator::wheelEvent ( TQWheelEvent *e )
+void KDateNavigator::wheelEvent( TQWheelEvent *e )
 {
-  if( e->delta() > 0 ) emit goPrevious();
-  else emit goNext();
+  if ( e->delta() > 0 ) {
+    emit goPrevious();
+  } else {
+    emit goNext();
+  }
 
   e->accept();
 }
 
-bool KDateNavigator::eventFilter ( TQObject *o, TQEvent *e )
+bool KDateNavigator::eventFilter( TQObject *o, TQEvent *e )
 {
   if ( e->type() == TQEvent::MouseButtonPress ) {
     int i;

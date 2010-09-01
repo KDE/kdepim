@@ -137,6 +137,7 @@ private:
   TQComboBox *mContentsComboBox;
   TQComboBox *mIncidencesForComboBox;
   TQCheckBox *mAlarmsBlockedCheckBox;
+  TQCheckBox *mSharedSeenFlagsCheckBox;
   TQLabel      *mNormalIconLabel;
   KIconButton *mNormalIconButton;
   TQLabel      *mUnreadIconLabel;
@@ -151,6 +152,7 @@ private:
 
   KMFolderDialog* mDlg;
   bool mIsLocalSystemFolder;
+  bool mIsResourceFolder;
 };
 
 /**

@@ -49,38 +49,61 @@ class DateNavigator : public QObject
     void selectDate( const TQDate & );
 
     void selectDates( int count );
-    void selectDates( const TQDate &, int count );
+    void selectDates( const TQDate &, int count, const TQDate &preferredMonth = TQDate() );
 
     void selectWeek();
-    void selectWeek( const TQDate & );
+    void selectWeek( const TQDate &, const TQDate &preferredMonth = TQDate() );
 
     void selectWorkWeek();
     void selectWorkWeek( const TQDate & );
 
-    void selectWeekByDay( int weekDay, const TQDate & );
-   
+    void selectWeekByDay( int weekDay, const TQDate &, const TQDate &preferredMonth = TQDate() );
+
     void selectToday();
-   
+
     void selectPreviousYear();
-    void selectPreviousMonth();
+    void selectPreviousMonth( const TQDate &currentMonth = TQDate(),
+                              const TQDate &selectionLowerLimit = TQDate(),
+                              const TQDate &selectionUpperLimit = TQDate() );
     void selectPreviousWeek();
     void selectNextWeek();
-    void selectNextMonth();
+    void selectNextMonth( const TQDate &currentMonth = TQDate(),
+                          const TQDate &selectionLowerLimit = TQDate(),
+                          const TQDate &selectionUpperLimit = TQDate() );
     void selectNextYear();
-   
+
     void selectPrevious();
     void selectNext();
 
-    void selectMonth(int month);
-   
+    void selectMonth( int month );
+    void selectYear( int year );
+
   signals:
-    void datesSelected( const KCal::DateList & );
+    /* preferredMonth is useful when the datelist crosses months,
+       if valid, any month-like component should honour it
+    */
+    void datesSelected( const KCal::DateList &, const TQDate &preferredMonth );
 
   protected:
-    void emitSelected();
+    void emitSelected( const TQDate &preferredMonth = TQDate() );
 
   private:
+
+    /*
+      Selects next month if offset equals 1, or previous month
+      if offset equals -1.
+      Bigger offsets are accepted.
+    */
+    void shiftMonth( const TQDate &date,
+                     const TQDate &selectionLowerLimit,
+                     const TQDate &selectionUpperLimit,
+                     int offset );
+
     KCal::DateList mSelectedDates;
+
+    enum {
+      MAX_SELECTABLE_DAYS = 50
+    };
 };
 
 #endif

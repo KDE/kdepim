@@ -181,7 +181,6 @@ SearchWindow::SearchWindow(KMMainWidget* w, const char* name,
       } else {
           mChkbxAllFolders->setChecked(true);
       }
-      mFolder = searchFolder;
   }
   mPatternEdit->setSearchPattern( mSearchPattern );
   TQObjectList *list = mPatternEdit->queryList( 0, "mRuleField" );
@@ -237,13 +236,15 @@ SearchWindow::SearchWindow(KMMainWidget* w, const char* name,
 
   mLbxMatches->setDragEnabled( true );
 
-  connect(mLbxMatches, TQT_SIGNAL(doubleClicked(TQListViewItem *)),
-          this, TQT_SLOT(slotShowMsg(TQListViewItem *)));
-  connect(mLbxMatches, TQT_SIGNAL(currentChanged(TQListViewItem *)),
-          this, TQT_SLOT(slotCurrentChanged(TQListViewItem *)));
-  connect( mLbxMatches, TQT_SIGNAL( contextMenuRequested( TQListViewItem*, const TQPoint &, int )),
-           this, TQT_SLOT( slotContextMenuRequested( TQListViewItem*, const TQPoint &, int )));
-  vbl->addWidget(mLbxMatches);
+  connect( mLbxMatches, TQT_SIGNAL(clicked(TQListViewItem *)),
+           this, TQT_SLOT(slotShowMsg(TQListViewItem *)) );
+  connect( mLbxMatches, TQT_SIGNAL(doubleClicked(TQListViewItem *)),
+           this, TQT_SLOT(slotViewMsg(TQListViewItem *)) );
+  connect( mLbxMatches, TQT_SIGNAL(currentChanged(TQListViewItem *)),
+           this, TQT_SLOT(slotCurrentChanged(TQListViewItem *)) );
+  connect( mLbxMatches, TQT_SIGNAL(contextMenuRequested(TQListViewItem *,const TQPoint &,int)),
+           this, TQT_SLOT(slotContextMenuRequested(TQListViewItem *,const TQPoint &,int)) );
+  vbl->addWidget( mLbxMatches );
 
   TQHBoxLayout *hbl2 = new TQHBoxLayout( vbl, spacingHint(), "kmfs_hbl2" );
   mSearchFolderLbl = new TQLabel(i18n("Search folder &name:"), searchWidget);
@@ -269,7 +270,7 @@ SearchWindow::SearchWindow(KMMainWidget* w, const char* name,
   mSearchResultOpenBtn->setEnabled(false);
   hbl2->addWidget(mSearchResultOpenBtn);
   connect( mSearchResultOpenBtn, TQT_SIGNAL( clicked() ),
-           this, TQT_SLOT( slotShowSelectedMsg() ));
+           this, TQT_SLOT( slotViewSelectedMsg() ));
   mStatusBar = new KStatusBar(searchWidget);
   mStatusBar->insertFixedItem(i18n("AMiddleLengthText..."), 0, true);
   mStatusBar->changeItem(i18n("Ready."), 0);
@@ -472,6 +473,9 @@ void SearchWindow::slotSearch()
     mFetchingInProgress = 0;
 
     mSearchFolderOpenBtn->setEnabled(true);
+    if ( mSearchFolderEdt->text().isEmpty() ) {
+      mSearchFolderEdt->setText( i18n("Last Search") );
+    }
     mBtnSearch->setEnabled(false);
     mBtnStop->setEnabled(true);
 
@@ -486,8 +490,6 @@ void SearchWindow::slotSearch()
     // create one.
     if (!mFolder) {
       KMFolderMgr *mgr = kmkernel->searchFolderMgr();
-      if (mSearchFolderEdt->text().isEmpty())
-          mSearchFolderEdt->setText(i18n("Last Search"));
       TQString baseName = mSearchFolderEdt->text();
       TQString fullName = baseName;
       int count = 0;
@@ -630,12 +632,12 @@ void SearchWindow::closeEvent(TQCloseEvent *e)
 //-----------------------------------------------------------------------------
 void SearchWindow::scheduleRename( const TQString &s)
 {
-    if (!s.isEmpty() && s != i18n("Last Search")) {
+    if (!s.isEmpty() ) {
       mRenameTimer.start(250, true);
       mSearchFolderOpenBtn->setEnabled(false);
     } else {
       mRenameTimer.stop();
-      mSearchFolderOpenBtn->setEnabled(true);
+      mSearchFolderOpenBtn->setEnabled(!s.isEmpty());
     }
 }
 
@@ -656,11 +658,13 @@ void SearchWindow::renameSearchFolder()
             ++i;
         }
     }
-    mSearchFolderOpenBtn->setEnabled(true);
+    if ( mFolder )
+      mSearchFolderOpenBtn->setEnabled(true);
 }
 
 void SearchWindow::openSearchFolder()
 {
+  Q_ASSERT( mFolder );
     renameSearchFolder();
     mKMMainWidget->slotSelectFolder( mFolder->folder() );
     slotClose();
@@ -680,32 +684,51 @@ void SearchWindow::folderInvalidated(KMFolder *folder)
 }
 
 //-----------------------------------------------------------------------------
-bool SearchWindow::slotShowMsg(TQListViewItem *item)
+KMMessage *SearchWindow::indexToMessage( TQListViewItem *item )
 {
-    if(!item)
-        return false;
+  if( !item ) {
+    return 0;
+  }
 
-    KMFolder* folder;
-    int msgIndex;
-    KMMsgDict::instance()->getLocation(item->text(MSGID_COLUMN).toUInt(),
-                                   &folder, &msgIndex);
+  KMFolder *folder;
+  int msgIndex;
+  KMMsgDict::instance()->getLocation( item->text( MSGID_COLUMN ).toUInt(),
+                                      &folder, &msgIndex );
 
-    if (!folder || msgIndex < 0)
-        return false;
+  if ( !folder || msgIndex < 0 ) {
+    return 0;
+  }
 
-    mKMMainWidget->slotSelectFolder(folder);
-    KMMessage* message = folder->getMsg(msgIndex);
-    if (!message)
-        return false;
-
-    mKMMainWidget->slotSelectMessage(message);
-    return true;
+  mKMMainWidget->slotSelectFolder( folder );
+  return folder->getMsg( msgIndex );
 }
 
 //-----------------------------------------------------------------------------
-void SearchWindow::slotShowSelectedMsg()
+bool SearchWindow::slotShowMsg( TQListViewItem *item )
 {
-    slotShowMsg(mLbxMatches->currentItem());
+  KMMessage *message = indexToMessage( item );
+  if ( message ) {
+    mKMMainWidget->slotSelectMessage( message );
+    return true;
+  }
+  return false;
+}
+
+//-----------------------------------------------------------------------------
+void SearchWindow::slotViewSelectedMsg()
+{
+  slotViewMsg( mLbxMatches->currentItem() );
+}
+
+//-----------------------------------------------------------------------------
+bool SearchWindow::slotViewMsg( TQListViewItem *item )
+{
+  KMMessage *message = indexToMessage( item );
+  if ( message ) {
+    mKMMainWidget->slotMsgActivated( message );
+    return true;
+  }
+  return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -720,8 +743,8 @@ void SearchWindow::enableGUI()
     KMSearch const *search = (mFolder) ? (mFolder->search()) : 0;
     bool searching = (search) ? (search->running()) : false;
     actionButton(KDialogBase::Close)->setEnabled(!searching);
-    mCbxFolders->setEnabled(!searching);
-    mChkSubFolders->setEnabled(!searching);
+    mCbxFolders->setEnabled(!searching && !mChkbxAllFolders->isChecked());
+    mChkSubFolders->setEnabled(!searching && !mChkbxAllFolders->isChecked());
     mChkbxAllFolders->setEnabled(!searching);
     mChkbxSpecificFolders->setEnabled(!searching);
     mPatternEdit->setEnabled(!searching);

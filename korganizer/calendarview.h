@@ -33,7 +33,8 @@
 #include <libkcal/scheduler.h>
 #include <kdepimmacros.h>
 
-#include <korganizer/calendarviewbase.h>
+#include "koglobals.h"
+#include "interfaces/korganizer/calendarviewbase.h"
 
 class TQWidgetStack;
 class TQSplitter;
@@ -90,7 +91,6 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
     CalendarView( TQWidget *parent = 0, const char *name = 0 );
     virtual ~CalendarView();
 
-
     class CalendarViewVisitor : public IncidenceBase::Visitor
     {
       public:
@@ -112,9 +112,10 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
         bool visit( Journal *journal ) { return mView->deleteJournal( journal ); }
     };
 
-
     void setCalendar( Calendar * );
     Calendar *calendar();
+
+    QPair<ResourceCalendar *, TQString> viewSubResourceCalendar();
 
     KOrg::History *history() const { return mHistory; }
 
@@ -124,7 +125,7 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
     TQWidgetStack *viewStack() const { return mRightFrame; }
     TQWidget *leftFrame() const { return mLeftFrame; }
     NavigatorBar *navigatorBar() const { return mNavigatorBar; }
-    DateNavigator *dateNavigator() const { return mNavigator; }
+    DateNavigator *dateNavigator() const { return mDateNavigator; }
 
     KOIncidenceEditor *editorDialog( Incidence* ) const;
     IncidenceChangerBase *incidenceChanger() const { return mChanger; }
@@ -182,7 +183,7 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
       Emitted when an incidence gets selected. If the selection is cleared the
       signal is emitted with 0 as argument.
     */
-    void incidenceSelected( Incidence * );
+    void incidenceSelected( Incidence *incidence, const TQDate &date );
     /** Emitted, when a todoitem is selected or deselected.
         the connected slots enables/disables the corresponding menu items */
     void todoSelected( bool );
@@ -252,7 +253,8 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
 
     void showIncidence();
     void editIncidence();
-    bool editIncidence( const TQString& uid );
+    bool editIncidence( const TQString &uid );
+    bool editIncidence( const TQString &uid, const TQDate &date );
     void deleteIncidence();
 
     /**
@@ -265,29 +267,37 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
     */
     bool addIncidence( const TQString &ical );
 
-    void connectIncidenceEditor( KOIncidenceEditor * );
+    void connectIncidenceEditor( KOIncidenceEditor *editor );
 
     /** create new event without having a date hint. Takes current date as
      default hint. */
     void newEvent();
+    void newEvent( ResourceCalendar *res, const TQString &subRes );
     /** create an editeventwin with supplied date/time, and if bool is true,
      * make the event take all day. */
-    void newEvent( const TQDate &startDt );
-    void newEvent( const TQDateTime &startDt );
-    void newEvent( const TQDateTime &startDt, const TQDateTime &EndDt, bool allDay = false );
+    void newEvent( ResourceCalendar *res, const TQString &subRes,
+                   const TQDate &startDt );
+    void newEvent( ResourceCalendar *res, const TQString &subRes,
+                   const TQDateTime &startDt );
+    void newEvent( ResourceCalendar *res, const TQString &subRes,
+                   const TQDateTime &startDt, const TQDateTime &EndDt,
+                   bool allDay = false );
     /**
       Create new Event from given summary, description, attachment list and
       attendees list
     */
-    void newEvent( const TQString &summary, const TQString &description = TQString::null,
-                   const TQStringList &attachment = TQStringList(), const TQStringList &attendees = TQStringList(),
-                   const TQStringList &attachmentMimetypes = TQStringList(), bool inlineAttachment = false );
-    void newFloatingEvent();
+    void newEvent( ResourceCalendar *res, const TQString &subRes,
+                   const TQString &summary,
+                   const TQString &description = TQString::null,
+                   const TQStringList &attachment = TQStringList(),
+                   const TQStringList &attendees = TQStringList(),
+                   const TQStringList &attachmentMimetypes = TQStringList(),
+                   bool inlineAttachment = false );
 
     /** Create a read-only viewer dialog for the supplied incidence. It calls the correct showXXX method*/
-    void showIncidence( Incidence * );
+    void showIncidence( Incidence *, const TQDate & );
     /** Create an editor for the supplied incidence. It calls the correct editXXX method*/
-    bool editIncidence( Incidence *incidence, bool isCounter = false );
+    bool editIncidence( Incidence *incidence, const TQDate &date, bool isCounter = false );
     /**
       Delete the supplied incidence. It calls the correct deleteXXX method
       @param force If true, all recurrences and sub-todos (if applicable) will be
@@ -331,20 +341,29 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
 
     /** create new todo */
     void newTodo();
+    void newTodo( ResourceCalendar *res, const TQString &subRes );
     /** create new todo, due on date */
-    void newTodo( const TQDate &date );
+    void newTodo( ResourceCalendar *res, const TQString &subRes,
+                  const TQDate &date );
     /** create new todo with a parent todo */
     void newSubTodo();
     /** create new todo with a parent todo */
     void newSubTodo( Todo * );
 
-    void newTodo( const TQString &summary, const TQString &description = TQString::null,
-                  const TQStringList &attachments = TQStringList(), const TQStringList &attendees = TQStringList(),
-                  const TQStringList &attachmentMimetypes = TQStringList(), bool inlineAttachment = false );
+    void newTodo( ResourceCalendar *res, const TQString &subRes,
+                  const TQString &summary,
+                  const TQString &description = TQString::null,
+                  const TQStringList &attachments = TQStringList(),
+                  const TQStringList &attendees = TQStringList(),
+                  const TQStringList &attachmentMimetypes = TQStringList(),
+                  bool inlineAttachment = false, bool createTask = false );
 
     void newJournal();
-    void newJournal( const TQDate &date );
-    void newJournal( const TQString &text, const TQDate &date = TQDate() );
+    void newJournal( ResourceCalendar *res, const TQString &subRes );
+    void newJournal( ResourceCalendar *res, const TQString &subRes,
+                     const TQDate &date );
+    void newJournal( ResourceCalendar *res, const TQString &subRes,
+                     const TQString &text, const TQDate &date = TQDate() );
 
     void toggleAlarm( Incidence * );
     void dissociateOccurrence( Incidence *, const TQDate & );
@@ -379,8 +398,8 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
     void changeIncidenceDisplay( Incidence *, int );
 
     void incidenceAdded( Incidence * );
-    void incidenceChanged( Incidence *oldEvent, Incidence *newEvent );
-    void incidenceChanged( Incidence *oldEvent, Incidence *newEvent, int what );
+    void incidenceChanged( Incidence *oldEvent, Incidence *newEvent,
+                           KOGlobals::WhatChanged modification );
     void incidenceToBeDeleted( Incidence *incidence );
     void incidenceDeleted( Incidence * );
     void startMultiModify( const TQString &text );
@@ -434,14 +453,21 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
      */
     void appointment_delete();
 
-    /* frees a subtodo from it's relation, update the view */
+    /* frees the selected to-do's children from it's relation, update the view */
     void todo_unsub();
-    /* Free a subtodo from it's relation, without update the view */
-    bool todo_unsub( Todo *todo );
-    /** Make all sub-to-dos of todo independents, update the view*/
-    bool makeSubTodosIndependents ( );
-    /** Make all sub-to-dos of todo independents, not update the view*/
-    bool makeSubTodosIndependents ( Todo *todo );
+
+    /* frees an incidence's children from it's relation, without update the view
+       Works with any incidence type, although currently we only pass to-dos
+    */
+    bool incidence_unsub( Incidence *inc );
+
+    /** Make all sub-to-dos of the selected todo independent, update the view */
+    bool makeSubTodosIndependent ( );
+
+    /** Make all children of incidence independent, not update the view
+        Works with any incidence type, although currently we only pass to-dos
+    */
+    bool makeChildrenIndependent( Incidence *inc );
 
     /** Take ownership of selected event. */
     void takeOverEvent();
@@ -506,14 +532,12 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
 
     void dialogClosing( Incidence * );
 
-    void processMainViewSelection( Incidence * );
-    void processTodoListSelection( Incidence * );
+    void processMainViewSelection( Incidence *incidence, const TQDate &date );
+    void processTodoListSelection( Incidence *incidence, const TQDate &date );
 
-    void processIncidenceSelection( Incidence * );
+    void processIncidenceSelection( Incidence *incidence, const TQDate &date );
 
     void purgeCompleted();
-
-    void slotCalendarChanged();
 
     void slotAutoArchivingSettingsModified() { emit autoArchivingSettingsModified(); }
 
@@ -525,9 +549,20 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
 
     void resourcesChanged();
 
+    /**
+      The user clicked on a week number in the date navigator
+
+      Lets select a week or a work week depending on the user's
+      config option.
+    */
+    void selectWeek( const TQDate & );
+
   protected slots:
-    /** Select a view or adapt the current view to display the specified dates. */
-    void showDates( const KCal::DateList & );
+    /** Select a view or adapt the current view to display the specified dates.
+        preferredMonth is useful when the datelist crosses months, if valid,
+        any month-like component should honour this
+    */
+    void showDates( const KCal::DateList &, const TQDate &preferredMonth = TQDate() );
 
   public:
     // show a standard warning
@@ -539,7 +574,52 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
      */
     void adaptNavigationUnits();
 
-    //Attendee* getYourAttendee( Event *event );
+    /**
+      Returns the date of the selected incidence.
+
+      If the selected incidence is recurring, it will return
+      the date of the selected occurrence
+    */
+    TQDate activeIncidenceDate();
+
+    /**
+      Returns the best guess at the current active date in the view.
+      This has nothing to do with selected incidences, use activeIncidenceDate()
+      for that, for example, agenda supports time selection and incidence selection
+      and they can have diferent dates.
+
+      @param fallbackToToday If guessing doesn't work, some views will prefer
+      today to be returned instead of the first select date in the day matrix,
+      Journal view for example.
+    */
+    TQDate activeDate( bool fallbackToToday = false );
+
+    /**
+       Asks the user if he wants to edit only this occurrence, all
+       occurrences or only future occurrences, and then dissociates
+       the incidence if needed.
+
+       @param inc The recurring incidence that's about to be edited.
+       @param userAction Specifies what the user is doing with the occurrence,
+              like cutting, pasting or editing, it only influences the strings
+              in the message box.
+       @param chosenOption After calling this function, it will hold the user's
+              chosen option.
+       @param itemDate The date of the selected view item
+       @param commitToCalendar If true, mChanger is called and the dissociation
+              is saved to the calendar. If false, it's up to the caller to do that.
+
+       @return A pointer to the incidence that should be edited which is
+               0 if the user pressed cancel, inc if the user pressed
+               "All Occurrences", or points to a newly created incidence
+               when dissociation is involved in which case the caller
+               is responsible to add it to the calendar and freeing it.
+     **/
+    Incidence* singleOccurrenceOrAll( Incidence *inc,
+                                      KOGlobals::OccurrenceAction userAction,
+                                      KOGlobals::WhichOccurrences &chosenOption,
+                                      const TQDate &itemDate = TQDate(),
+                                      const bool commitToCalendar = false );
 
   protected:
     void setIncidenceChanger( IncidenceChangerBase *changer );
@@ -555,17 +635,32 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
         defaults, if invalid values are given) and allow the view to adjust the
         type. */
     void dateTimesForNewEvent( TQDateTime &startDt, TQDateTime &endDt, bool &allDay );
-    KOEventEditor *newEventEditor( const TQDateTime &startDtParam = TQDateTime(),
-         const TQDateTime &endDtParam = TQDateTime() , bool allDayParam = false );
+    KOEventEditor *newEventEditor( ResourceCalendar *res, const TQString &subRes,
+                                   const TQDateTime &startDtParam = TQDateTime(),
+                                   const TQDateTime &endDtParam = TQDateTime() ,
+                                   bool allDayParam = false );
 
   private:
     void init();
+
+    /**
+      Returns the incidence that should be sent to clipboard.
+      Usually it's just returns the selected incidence, but, if
+      the incidence is recurring, it will ask the user what he wants to
+      cut/paste and dissociate the incidence if necesssary.
+    **/
+    Incidence *incToSendToClipboard( bool cut );
 
     void calendarModified( bool, Calendar * );
     // Helper function for purgeCompleted that recursively purges a todo and
     // its subitems. If it cannot delete a completed todo (because it has
     // uncompleted subitems), notAllPurged is set to true.
     bool purgeCompletedSubTodos( Todo* todo, bool &notAllPurged );
+
+    /** Returns all incidences having inc has their parent (or grand parent, etc.)
+        inc is included in the list too.
+     */
+    void getIncidenceHierarchy( Incidence *inc, Incidence::List &incidences );
 
     KOrg::History *mHistory;
 
@@ -574,16 +669,18 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
     TQWidget      *mLeftFrame;
     TQWidgetStack *mRightFrame;
 
+    // This navigator bar is used when in full window month view
+    // It has nothing to do with the date navigator
     NavigatorBar *mNavigatorBar;
 
-    DateNavigatorContainer *mDateNavigator;
+    DateNavigatorContainer *mDateNavigatorContainer;
 
 
     TQPtrList<CalendarViewExtension> mExtensions;
 
     Calendar *mCalendar;
 
-    DateNavigator *mNavigator;
+    DateNavigator *mDateNavigator;
     DateChecker *mDateChecker;
 
     KOEventViewer *mEventViewer;
@@ -597,9 +694,9 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
     // various housekeeping variables.
     bool            mModified; // flag indicating if calendar is modified
     bool            mReadOnly; // flag indicating if calendar is read-only
-    TQDate mSaveSingleDate;
 
     Incidence *mSelectedIncidence;
+    TQDate mSaveDate;
 
     KOTodoView *mTodoList;
     TQMap<Incidence*,KOIncidenceEditor*> mDialogList;

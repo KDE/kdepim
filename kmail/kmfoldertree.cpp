@@ -126,7 +126,13 @@ TQPixmap KMFolderTreeItem::normalIcon(int size) const
       case Trash: icon = "trashcan_empty"; break;
       case Drafts: icon = "edit"; break;
       case Templates: icon = "filenew"; break;
-      default: icon = kmkernel->iCalIface().folderPixmap( type() ); break;
+      default:
+      {
+        //If not a resource folder don't try to use icalIface folder pixmap
+        if(kmkernel->iCalIface().isResourceFolder( mFolder ))
+          icon = kmkernel->iCalIface().folderPixmap( type() );
+        break;
+      }
     }
     // non-root search folders
     if ( protocol() == KMFolderTreeItem::Search ) {
@@ -177,7 +183,8 @@ TQPixmap KMFolderTreeItem::unreadIcon(int size) const
       pm = il->loadIcon( "folder_grey_open", KIcon::Small, size,
                          KIcon::DefaultState, 0, true );
     } else {
-      pm = il->loadIcon( kmkernel->iCalIface().folderPixmap( type() ),
+      if( kmkernel->iCalIface().isResourceFolder( mFolder ) )
+        pm = il->loadIcon( kmkernel->iCalIface().folderPixmap( type() ),
                          KIcon::Small, size, KIcon::DefaultState, 0, true );
       if ( pm.isNull() )
         pm = il->loadIcon( "folder_open", KIcon::Small, size,
@@ -245,8 +252,15 @@ void KMFolderTreeItem::slotIconsChanged()
 {
   kdDebug(5006) << k_funcinfo << endl;
   // this is prone to change, so better check
+  KFolderTreeItem::Type newType = type();
   if( kmkernel->iCalIface().isResourceFolder( mFolder ) )
-      setType( kmkernel->iCalIface().folderType(mFolder) );
+    newType = kmkernel->iCalIface().folderType(mFolder);
+
+  // reload the folder tree if the type changed, needed because of the
+  // various type-dependent folder hiding options
+  if ( type() != newType )
+    static_cast<KMFolderTree*>( listView() )->delayedReload();
+  setType( newType );
 
   if ( unreadCount() > 0 )
     setPixmap( 0, unreadIcon( iconSize() ) );
@@ -263,6 +277,12 @@ void KMFolderTreeItem::slotNameChanged()
   repaint();
 }
 
+void KMFolderTreeItem::slotNoContentChanged()
+{
+  // reload the folder tree if the no content state changed, needed because
+  // we hide no-content folders if their child nodes are hidden
+  TQTimer::singleShot( 0, static_cast<KMFolderTree*>( listView() ), TQT_SLOT(reload()) );
+}
 
 //-----------------------------------------------------------------------------
 bool KMFolderTreeItem::acceptDrag(TQDropEvent* e) const
@@ -333,7 +353,7 @@ void KMFolderTreeItem::assignShortcut()
               kmkernel->getKMMainWidget(),
               listView() );
   shorty->exec();
-  return;
+  delete shorty;
 }
 
 //-----------------------------------------------------------------------------
@@ -362,6 +382,7 @@ KMFolderTree::KMFolderTree( KMMainWidget *mainWidget, TQWidget *parent,
   oldSelected = 0;
   oldCurrent = 0;
   mLastItem = 0;
+  dropItem = 0;
   mMainWidget = mainWidget;
   mReloading = false;
   mCutFolder = false;
@@ -375,7 +396,7 @@ KMFolderTree::KMFolderTree( KMMainWidget *mainWidget, TQWidget *parent,
 
   int namecol = addColumn( i18n("Folder"), 250 );
   header()->setStretchEnabled( true, namecol );
-
+  setResizeMode( TQListView::NoColumn );
   // connect
   connectSignals();
 
@@ -595,6 +616,16 @@ void KMFolderTree::reload(bool openFolders)
     connect(fti->folder(),TQT_SIGNAL(nameChanged()),
             fti,TQT_SLOT(slotNameChanged()));
 
+    disconnect( fti->folder(), TQT_SIGNAL(noContentChanged()),
+                fti, TQT_SLOT(slotNoContentChanged()) );
+    connect( fti->folder(), TQT_SIGNAL(noContentChanged()),
+             fti, TQT_SLOT(slotNoContentChanged()) );
+
+    disconnect( fti->folder(), TQT_SIGNAL(syncStateChanged()),
+                this, TQT_SLOT(slotSyncStateChanged()) );
+    connect( fti->folder(), TQT_SIGNAL(syncStateChanged()),
+             this, TQT_SLOT(slotSyncStateChanged()) );
+
     // we want to be noticed of changes to update the unread/total columns
     disconnect(fti->folder(), TQT_SIGNAL(msgAdded(KMFolder*,Q_UINT32)),
         this,TQT_SLOT(slotUpdateCountsDelayed(KMFolder*)));
@@ -733,6 +764,8 @@ void KMFolderTree::addDirectory( KMFolderDir *fdir, KMFolderTreeItem* parent )
         // It is
         removeFromFolderToItemMap( folder );
         delete fti;
+        // still, it might change in the future, so we better check the change signals
+        connect ( folder, TQT_SIGNAL(noContentChanged()), TQT_SLOT(delayedReload()) );
         continue;
       }
 
@@ -986,7 +1019,6 @@ void KMFolderTree::doFolderSelected( TQListViewItem* qlvi, bool keepSelection )
   KMFolder* folder = 0;
   if (fti) folder = fti->folder();
 
-
   if (mLastItem && mLastItem != fti && mLastItem->folder()
      && (mLastItem->folder()->folderType() == KMFolderTypeImap))
   {
@@ -1059,7 +1091,7 @@ void KMFolderTree::slotContextMenuRequested( TQListViewItem *lvi,
     TQString createChild = i18n("&New Subfolder...");
     if (!fti->folder()) createChild = i18n("&New Folder...");
 
-    if (fti->folder() || (fti->text(0) != i18n("Searches")) && !multiFolder)
+    if ( ( fti->folder() || (fti->text(0) != i18n("Searches")) ) && !multiFolder)
         folderMenu->insertItem(SmallIconSet("folder_new"),
                                createChild, this,
                                TQT_SLOT(addChildFolder()));
@@ -1086,7 +1118,7 @@ void KMFolderTree::slotContextMenuRequested( TQListViewItem *lvi,
     folderToPopupMenu( CopyFolder, this, &mMenuToFolder, copyMenu );
     folderMenu->insertItem( i18n("&Copy Folder To"), copyMenu );
 
-    if ( fti->folder()->isMoveable() )
+    if ( fti->folder()->isMoveable() && fti->folder()->canDeleteMessages() )
     {
       TQPopupMenu *moveMenu = new TQPopupMenu( folderMenu );
       folderToPopupMenu( MoveFolder, this, &mMenuToFolder, moveMenu );
@@ -1100,6 +1132,8 @@ void KMFolderTree::slotContextMenuRequested( TQListViewItem *lvi,
     {
       if ( !multiFolder )
         mMainWidget->action("search_messages")->plug(folderMenu);
+
+      mMainWidget->action( "archive_folder" )->plug( folderMenu );
 
       mMainWidget->action("compact")->plug(folderMenu);
 
@@ -1123,7 +1157,7 @@ void KMFolderTree::slotContextMenuRequested( TQListViewItem *lvi,
        fti->folder()->folderType() == KMFolderTypeCachedImap ))
   {
     folderMenu->insertItem(SmallIconSet("bookmark_folder"),
-        i18n("Subscription..."), mMainWidget,
+        i18n("Serverside Subscription..."), mMainWidget,
         TQT_SLOT(slotSubscriptionDialog()));
     folderMenu->insertItem(SmallIcon("bookmark_folder"),
         i18n("Local Subscription..."), mMainWidget,
@@ -1157,7 +1191,7 @@ void KMFolderTree::slotContextMenuRequested( TQListViewItem *lvi,
         fti,
         TQT_SLOT(assignShortcut()));
 
-    if ( !fti->folder()->noContent() ) {
+    if ( !fti->folder()->noContent() && fti->folder()->canDeleteMessages() ) {
       folderMenu->insertItem( i18n("Expire..."), fti,
                               TQT_SLOT( slotShowExpiryProperties() ) );
     }
@@ -1215,12 +1249,14 @@ static bool folderHasCreateRights( const KMFolder *folder )
   bool createRights = true; // we don't have acls for local folders yet
   if ( folder && folder->folderType() == KMFolderTypeImap ) {
     const KMFolderImap *imapFolder = static_cast<const KMFolderImap*>( folder->storage() );
-    createRights = imapFolder->userRights() == 0 || // hack, we should get the acls
-      ( imapFolder->userRights() > 0 && ( imapFolder->userRights() & KMail::ACLJobs::Create ) );
+    createRights = imapFolder->userRightsState() != KMail::ACLJobs::Ok || // hack, we should get the acls
+      ( imapFolder->userRightsState() == KMail::ACLJobs::Ok &&
+        ( imapFolder->userRights() & KMail::ACLJobs::Create ) );
   } else if ( folder && folder->folderType() == KMFolderTypeCachedImap ) {
     const KMFolderCachedImap *dimapFolder = static_cast<const KMFolderCachedImap*>( folder->storage() );
-    createRights = dimapFolder->userRights() == 0 ||
-      ( dimapFolder->userRights() > 0 && ( dimapFolder->userRights() & KMail::ACLJobs::Create ) );
+    createRights = dimapFolder->userRightsState() != KMail::ACLJobs::Ok ||
+      ( dimapFolder->userRightsState() == KMail::ACLJobs::Ok &&
+        ( dimapFolder->userRights() & KMail::ACLJobs::Create ) );
   }
   return createRights;
 }
@@ -1241,8 +1277,7 @@ void KMFolderTree::addChildFolder( KMFolder *folder, TQWidget * parent )
     if (!aFolder->createChildFolder())
       return;
     if ( !folderHasCreateRights( aFolder ) ) {
-      // FIXME: change this message to "Cannot create folder under ..." or similar
-      const TQString message = i18n( "<qt>Cannot create folder <b>%1</b> because of insufficient "
+      const TQString message = i18n( "<qt>Cannot create folder under <b>%1</b> because of insufficient "
                                     "permissions on the server. If you think you should be able to create "
                                     "subfolders here, ask your administrator to grant you rights to do so."
                                     "</qt> " ).arg(aFolder->label());
@@ -1953,6 +1988,7 @@ void KMFolderTree::moveOrCopyFolder( TQValueList<TQGuardedPtr<KMFolder> > source
     if ( parent->hasNamedFolder( sourceFolderName ) || sourceFolderNames.contains( sourceFolderName ) ) {
       KMessageBox::error( this, i18n("<qt>Cannot move or copy folder <b>%1</b> here because a folder with the same name already exists.</qt>")
           .arg( sourceFolderName ) );
+      setDragEnabled( true );
       return;
     }
     sourceFolderNames.append( sourceFolderName );
@@ -1963,6 +1999,7 @@ void KMFolderTree::moveOrCopyFolder( TQValueList<TQGuardedPtr<KMFolder> > source
       if ( f->moveInProgress() ) {
         KMessageBox::error( this, i18n("<qt>Cannot move or copy folder <b>%1</b> because it is not completely copied itself.</qt>")
             .arg( sourceFolderName ) );
+        setDragEnabled( true );
         return;
       }
       if ( f->parent() )
@@ -1982,6 +2019,7 @@ void KMFolderTree::moveOrCopyFolder( TQValueList<TQGuardedPtr<KMFolder> > source
         if ( folderDir->findRef( source ) != -1 )
         {
           KMessageBox::error( this, message );
+          setDragEnabled( true );
           return;
         }
         folderDir = folderDir->parent();
@@ -1991,12 +2029,14 @@ void KMFolderTree::moveOrCopyFolder( TQValueList<TQGuardedPtr<KMFolder> > source
     if( source && source->child() && parent &&
         ( parent->path().find( source->child()->path() + "/" ) == 0 ) ) {
       KMessageBox::error( this, message );
+      setDragEnabled( true );
       return;
     }
 
     if( source && source->child()
         && ( parent == source->child() ) ) {
       KMessageBox::error( this, message );
+      setDragEnabled( true );
       return;
     }
   }
@@ -2013,6 +2053,7 @@ void KMFolderTree::moveOrCopyFolder( TQValueList<TQGuardedPtr<KMFolder> > source
       do {
         if ( parentDir == childDir || parentDir->findRef( childDir->owner() ) != -1 ) {
           KMessageBox::error( this, i18n("Moving the selected folders is not possible") );
+          setDragEnabled( true );
           return;
         }
         childDir = childDir->parent();
@@ -2106,6 +2147,23 @@ void KMFolderTree::updateCopyActions()
     paste->setEnabled( true );
 }
 
+void KMFolderTree::slotSyncStateChanged()
+{
+  // Only emit the signal when a selected folder changes, otherwise the folder menu is updated
+  // too often
+  TQValueList< TQGuardedPtr<KMFolder> > folders = selectedFolders();
+  TQValueList< TQGuardedPtr<KMFolder> >::const_iterator it = folders.constBegin();
+  TQValueList< TQGuardedPtr<KMFolder> >::const_iterator end = folders.constEnd();
+  while ( it != end ) {
+    TQGuardedPtr<KMFolder> folder = *it;
+    if ( folder == sender() ) {
+      emit syncStateChanged();
+      break;
+    }
+    ++it;
+  }
+}
+
 void KMFolderTree::slotAddToFavorites()
 {
   KMail::FavoriteFolderView *favView = mMainWidget->favoriteFolderView();
@@ -2121,6 +2179,11 @@ void KMFolderTree::slotUnhideLocalInbox()
   disconnect( kmkernel->inboxFolder(), TQT_SIGNAL(msgAdded(KMFolder*,Q_UINT32)),
               this, TQT_SLOT(slotUnhideLocalInbox()) );
   reload();
+}
+
+void KMFolderTree::delayedReload()
+{
+  TQTimer::singleShot( 0, this, TQT_SLOT(reload()) );
 }
 
 #include "kmfoldertree.moc"

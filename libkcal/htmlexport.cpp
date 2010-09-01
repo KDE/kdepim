@@ -34,6 +34,7 @@
 
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
+#include <libkcal/incidenceformatter.h>
 #include <libkcal/todo.h>
 
 #ifndef KORG_NOKABC
@@ -184,20 +185,23 @@ void HtmlExport::createMonthView(TQTextStream *ts)
 
         *ts << "</td></tr><tr><td valign=\"top\">";
 
-        Event::List events = mCalendar->events( start,
-                                                EventSortStartDate,
-                                                SortDirectionAscending );
-        if (events.count()) {
-          *ts << "<table>";
-          Event::List::ConstIterator it;
-          for( it = events.begin(); it != events.end(); ++it ) {
+        // Only print events within the from-to range
+        if ( start >= fromDate() && start <= toDate() ) {
+          Event::List events = mCalendar->events( start,
+                                                  EventSortStartDate,
+                                                  SortDirectionAscending );
+          if (events.count()) {
+            *ts << "<table>";
+            Event::List::ConstIterator it;
+            for( it = events.begin(); it != events.end(); ++it ) {
             if ( checkSecrecy( *it ) ) {
               createEvent( ts, *it, start, false );
             }
+            }
+            *ts << "</table>";
+          } else {
+            *ts << "&nbsp;";
           }
-          *ts << "</table>";
-        } else {
-          *ts << "&nbsp;";
         }
 
         *ts << "</td></tr></table></td>\n";
@@ -275,12 +279,16 @@ void HtmlExport::createEvent (TQTextStream *ts, Event *event,
     if (event->isMultiDay() && (event->dtStart().date() != date)) {
       *ts << "    <td>&nbsp;</td>\n";
     } else {
-      *ts << "    <td valign=\"top\">" << event->dtStartTimeStr() << "</td>\n";
+      *ts << "    <td valign=\"top\">"
+          << IncidenceFormatter::timeToString( event->dtStart(), true )
+          << "</td>\n";
     }
     if (event->isMultiDay() && (event->dtEnd().date() != date)) {
       *ts << "    <td>&nbsp;</td>\n";
     } else {
-      *ts << "    <td valign=\"top\">" << event->dtEndTimeStr() << "</td>\n";
+      *ts << "    <td valign=\"top\">"
+          << IncidenceFormatter::timeToString( event->dtEnd(), true )
+          << "</td>\n";
     }
   } else {
     *ts << "    <td>&nbsp;</td><td>&nbsp;</td>\n";
@@ -459,7 +467,7 @@ void HtmlExport::createTodo (TQTextStream *ts,Todo *todo)
     if (completed) *ts << " class=\"done\"";
     *ts << ">\n";
     if (todo->hasDueDate()) {
-      *ts << "    " << todo->dtDueDateStr() << "\n";
+      *ts << "    " << IncidenceFormatter::dateToString( todo->dtDue( true ) ) << "\n";
     } else {
       *ts << "    &nbsp;\n";
     }

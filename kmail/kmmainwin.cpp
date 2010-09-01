@@ -40,7 +40,7 @@ KMMainWin::KMMainWin(TQWidget *)
 		      actionCollection(), "new_mail_client" );
 
   mKMMainWidget = new KMMainWidget( this, "KMMainWidget", this, actionCollection() );
-  mKMMainWidget->resize( 725, 700 );
+  mKMMainWidget->resize( 450, 600 );
   setCentralWidget(mKMMainWidget);
   setupStatusBar();
   if (kmkernel->xmlGuiInstance())

@@ -88,12 +88,9 @@ KOPrefs::KOPrefs() :
 
   timeBarFontItem()->setDefaultValue( mDefaultTimeBarFont );
   monthViewFontItem()->setDefaultValue( mDefaultMonthViewFont );
-  eventColorItem()->setDefaultValue( mDefaultCategoryColor );
 
   // Load it now, not deep within some painting code
   mMyAddrBookMails = KABC::StdAddressBook::self()->whoAmI().emails();
-
-  mAlarmsEnabledByDefault = false;
 }
 
 
@@ -202,8 +199,8 @@ void KOPrefs::usrReadConfig()
 
   TQMapIterator<TQString, TQString> it3;
   for( it3 = map.begin(); it3 != map.end(); ++it3 ) {
-    kdDebug(5850)<< "KOPrefs::usrReadConfig: key: " << it3.key() << " value: "
-      << it3.data()<<endl;
+    // kdDebug(5850)<< "KOPrefs::usrReadConfig: key: " << it3.key() << " value: "
+    //  << it3.data()<<endl;
     setResourceColor( it3.key(), config()->readColorEntry( it3.key(),
       &mDefaultResourceColor ) );
   }
@@ -212,9 +209,6 @@ void KOPrefs::usrReadConfig()
   if (mTimeZoneId.isEmpty()) {
     setTimeZoneIdDefault();
   }
-
-  config()->setGroup("Event Dialogs");
-  mAlarmsEnabledByDefault = config()->readBoolEntry( "Alarm Enabled By Default" );
 
 #if 0
   config()->setGroup("FreeBusy");
@@ -256,9 +250,6 @@ void KOPrefs::usrWriteConfig()
     i->writeConfig( config() );
   }
 
-  config()->setGroup("Event Dialogs");
-  config()->writeEntry( "Alarm Enabled By Default", mAlarmsEnabledByDefault );
-
 #if 0
   if( mRememberRetrievePw )
     config()->writeEntry( "Retrieve Server Password", KStringHandler::obscure( mRetrievePassword ) );
@@ -292,8 +283,8 @@ bool KOPrefs::hasCategoryColor( const TQString& cat ) const
 
 void KOPrefs::setResourceColor ( const TQString &cal, const TQColor &color )
 {
-  kdDebug(5850)<<"KOPrefs::setResourceColor: " << cal << " color: "<<
-    color.name()<<endl;
+  // kdDebug(5850)<<"KOPrefs::setResourceColor: " << cal << " color: "<<
+  // color.name()<<endl;
   mResourceColors.replace( cal, new TQColor( color ) );
 }
 
@@ -327,12 +318,21 @@ TQColor* KOPrefs::resourceColor( const TQString &cal )
 
 TQString KOPrefs::fullName()
 {
+  TQString tusername;
   if ( mEmailControlCenter ) {
     KEMailSettings settings;
-    return settings.getSetting( KEMailSettings::RealName );
+    tusername = settings.getSetting( KEMailSettings::RealName );
   } else {
-    return userName();
+    tusername = userName();
   }
+
+  // Quote the username as it might contain commas and other quotable chars.
+  tusername = KPIM::quoteNameIfNecessary( tusername );
+
+  TQString tname, temail;
+  KPIM::getNameAndMail( tusername, tname, temail ); // ignore return value
+                                                    // which is always false
+  return tname;
 }
 
 TQString KOPrefs::email()
@@ -415,8 +415,11 @@ bool KOPrefs::thatIsMe( const TQString& _email )
 
   for ( KPIM::IdentityManager::ConstIterator it = KOCore::self()->identityManager()->begin();
         it != KOCore::self()->identityManager()->end(); ++it ) {
-    if ( email == (*it).emailAddr() )
+    if ( email == (*it).primaryEmailAddress() )
       return true;
+    const TQStringList & aliases = (*it).emailAliases();
+    if ( aliases.find( email ) != aliases.end() )
+        return true;
   }
 
   if ( mAdditionalMails.find( email ) != mAdditionalMails.end() )

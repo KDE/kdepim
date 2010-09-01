@@ -16,7 +16,8 @@ public:
 
   TQString script() const { return mTextEdit->text(); }
   void setScript( const TQString & script ) { mTextEdit->setText( script ); }
-
+private slots:
+  void slotTextChanged();
 private:
   TQTextEdit * mTextEdit;
 };

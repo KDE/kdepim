@@ -27,6 +27,7 @@
 #include <libkdepim/kprefsdialog.h>
 
 class HTMLExportSettings;
+class TQGroupBox;
 using namespace KCal;
 
 
@@ -70,6 +71,9 @@ class ExportWebDialog : public KDialogBase, public KPrefsWidManager
   protected:
     virtual void usrReadConfig() {}
     virtual void usrWriteConfig() {}
+
+  private slots:
+    void updateState();  
     
   private:
     HTMLExportSettings* mSettings;
@@ -79,6 +83,10 @@ class ExportWebDialog : public KDialogBase, public KPrefsWidManager
 //    TQFrame *mJournalPage;
 //    TQFrame *mFreeBusyPage;
 //    TQFrame *mAdvancedPage;
+
+    TQCheckBox *mMonthViewCheckBox;
+    TQCheckBox *mEventListCheckBox;
+    TQGroupBox *mDateRangeBox;
 };
 
 #endif // _EXPORTWEBDIALOG_H

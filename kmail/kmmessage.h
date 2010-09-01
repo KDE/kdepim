@@ -49,6 +49,7 @@ namespace KMail {
   class HeaderStrategy;
 }
 
+class DwEntity;
 class DwBodyPart;
 class DwMediaType;
 class DwHeaders;
@@ -161,8 +162,8 @@ public:
       required header fields with the proper values. The returned message
       is not stored in any folder. Marks this message as replied. */
   KMMessage* createReply( KMail::ReplyStrategy replyStrategy = KMail::ReplySmart,
-                          TQString selection=TQString::null, bool noQuote=false,
-                          bool allowDecryption=true, bool selectionIsBody=false,
+                          TQString selection=TQString::null, bool noQuote = false,
+                          bool allowDecryption = true,
                           const TQString &tmpl = TQString::null );
 
   /** Create a new message that is a redirect to this message, filling all
@@ -503,25 +504,46 @@ public:
        the header via headers() function) */
   void setNeedsAssembly();
 
-  /** Get or set the 'Content-Transfer-Encoding' header field
-      The member functions that involve enumerated types (ints)
-      will work only for well-known encodings. */
+  /**
+   * Assemble the internal message. This is done automatically in most
+   * cases, but sometimes still necessary to call this manually.
+   */
+  void assembleIfNeeded();
+
+  /**
+   * Get or set the 'Content-Transfer-Encoding' header field
+   * The member functions that involve enumerated types (ints)
+   * will work only for well-known encodings.
+   * Some functions take a DwEntity as second parameter, which
+   * specifies the body part or message of which the CTE will be changed or
+   * returned. If this is zero, the toplevel message will be taken.
+   */
   TQCString contentTransferEncodingStr() const;
-  int  contentTransferEncoding() const;
-  void setContentTransferEncodingStr(const TQCString& aStr);
-  void setContentTransferEncoding(int aCte);
+  int contentTransferEncoding( DwEntity *entity = 0 ) const;
+  void setContentTransferEncodingStr( const TQCString& cteString, DwEntity *entity = 0 );
+  void setContentTransferEncoding( int cte, DwEntity *entity = 0 );
 
-  /** Cte is short for ContentTransferEncoding.
-      These functions are an alternative to the ones with longer names. */
+  /**
+   * Cte is short for ContentTransferEncoding.
+   * These functions are an alternative to the ones with longer names.
+   */
   TQCString cteStr() const { return contentTransferEncodingStr(); }
-  int cte() const { return contentTransferEncoding(); }
-  void setCteStr(const TQCString& aStr) { setContentTransferEncodingStr(aStr); }
-  void setCte(int aCte) { setContentTransferEncoding(aCte); }
+  int cte( DwEntity *entity = 0 ) const { return contentTransferEncoding( entity ); }
+  void setCteStr( const TQCString& aStr, DwEntity *entity = 0 ) {
+    setContentTransferEncodingStr( aStr, entity );
+  }
+  void setCte( int aCte, DwEntity *entity = 0 ) {
+    setContentTransferEncoding( aCte, entity );
+  }
 
-  /** Sets this body part's content to @p str. @p str is subject to
-      automatic charset and CTE detection.
-   **/
-  void setBodyFromUnicode( const TQString & str );
+  /**
+   * Sets this body's content to @p str. @p str is subject to
+   * automatic charset and CTE detection.
+   *
+   * @param entity The body of this entity will be changed. If entity is 0,
+   *               the body of the whole message will be changed.
+   */
+  void setBodyFromUnicode( const TQString & str, DwEntity *entity = 0 );
 
   /** Returns the body part decoded to unicode.
    **/
@@ -538,11 +560,17 @@ public:
   /** Hack to enable structured body parts to be set as flat text... */
   void setMultiPartBody( const TQCString & aStr );
 
-  /** Set the message body, encoding it according to the current content
-      transfer encoding. The first method for null terminated strings,
-      the second for binary data */
-  void setBodyEncoded(const TQCString& aStr);
-  void setBodyEncodedBinary(const TQByteArray& aStr);
+  /**
+   * Set the message body, encoding it according to the current content
+   * transfer encoding. The first method for null terminated strings,
+   * the second for binary data.
+   *
+   * @param entity Specifies the body part or message of which the body will be
+   *               set. If this is 0, the body of the toplevel message will be
+   *               set.
+   */
+  void setBodyEncoded( const TQCString& aStr, DwEntity *entity = 0 );
+  void setBodyEncodedBinary( const TQByteArray& aStr, DwEntity *entity = 0 );
 
   /** Returns a list of content-transfer-encodings that can be used with
       the given result of the character frequency analysis of a message or
@@ -551,23 +579,29 @@ public:
                                                bool allow8Bit,
                                                bool willBeSigned );
 
-  /** Sets body, encoded in the best fitting
-    content-transfer-encoding, which is determined by character
-    frequency count.
+  /**
+   * Sets body, encoded in the best fitting
+   * content-transfer-encoding, which is determined by character
+   * frequency count.
+   *
+   * @param aBuf         input buffer
+   * @param allowedCte   return: list of allowed cte's
+   * @param allow8Bit    whether "8bit" is allowed as cte.
+   * @param willBeSigned whether "7bit"/"8bit" is allowed as cte according to RFC 3156
+   * @param entity       The body of this message or body part will get changed.
+   *                     If this is 0, the body of the toplevel message will be
+   *                     set.
+   */
+  void setBodyAndGuessCte( const TQByteArray& aBuf, TQValueList<int>& allowedCte,
+                           bool allow8Bit = false,
+                           bool willBeSigned = false,
+                           DwEntity *entity = 0 );
 
-    @param aBuf       input buffer
-    @param allowedCte return: list of allowed cte's
-    @param allow8Bit  whether "8bit" is allowed as cte.
-    @param willBeSigned whether "7bit"/"8bit" is allowed as cte according to RFC 3156
-  */
-  void setBodyAndGuessCte( const TQByteArray& aBuf,
-                                   TQValueList<int>& allowedCte,
-                                   bool allow8Bit = false,
-                                   bool willBeSigned = false );
   void setBodyAndGuessCte( const TQCString& aBuf,
-                                   TQValueList<int>& allowedCte,
-                                   bool allow8Bit = false,
-                                   bool willBeSigned = false );
+                           TQValueList<int>& allowedCte,
+                           bool allow8Bit = false,
+                           bool willBeSigned = false,
+                           DwEntity *entity = 0 );
 
   /** Returns a decoded version of the body from the current content transfer
       encoding. The first method returns a null terminated string, the second
@@ -626,6 +660,12 @@ public:
 
   /** Delete all body parts. */
   void deleteBodyParts();
+
+  /**
+   * Delete a body part with the specified part index.
+   * A dummy body part with the text "the attachment foo was deleted" will replace the old part.
+   */
+  bool deleteBodyPart( int partIndex );
 
   /** Set "Status" and "X-Status" fields of the message from the
    * internal message status. */
@@ -725,8 +765,15 @@ public:
   /** Get the message charset.*/
   TQCString charset() const;
 
-  /** Set the message charset. */
-  void setCharset(const TQCString& aStr);
+  /**
+   * Sets the charset of the message or a subpart of the message.
+   * Only call this when the message or the subpart has a textual mimetype.
+   *
+   * @param aStr the MIME-compliant charset name, like 'ISO-88519-15'.
+   * @param entity the body part or message of which the charset should be changed.
+   *               If this is 0, the charset of the toplevel message will be changed.
+   */
+  void setCharset( const TQCString& charset, DwEntity *entity = 0 );
 
   /** Get a TQTextCodec suitable for this message part */
   const TQTextCodec * codec() const;
@@ -822,7 +869,8 @@ public:
   /** Set if the message is ready to be shown */
   void setReadyToShow( bool v ) { mReadyToShow = v; }
 
-  void updateAttachmentState(DwBodyPart * part = 0);
+  void updateAttachmentState( DwBodyPart *part = 0 );
+  void updateInvitationState();
 
   /** Return, if the message should not be deleted */
   bool transferInProgress() const;
@@ -860,6 +908,15 @@ public:
       converting HTML to plain text if necessary. */
   TQString asPlainText( bool stripSignature, bool allowDecryption ) const;
 
+  /**
+   * Same as asPlainText(), only that this method expects an already parsed object tree as
+   * paramter.
+   * By passing an already parsed objecttree, this allows to share the objecttree and therefore
+   * reduce the amount of parsing (which can include decrypting, which can include a passphrase dialog)
+   */
+  TQString asPlainTextFromObjectTree( partNode *root, bool stripSignature,
+                                     bool allowDecryption ) const;
+
   /** Get stored cursor position */
   int getCursorPos() { return mCursorPos; };
   /** Set cursor position as offset from message start */
@@ -879,6 +936,8 @@ public:
   /** Delete this message as soon as it no longer in use. */
   void deleteWhenUnused();
 
+  DwBodyPart* findPart( int index );
+
 private:
 
   /** Initialization shared by the ctors. */
@@ -886,10 +945,12 @@ private:
   /** Assign the values of @param other to this message. Used in the copy c'tor. */
   void assign( const KMMessage& other );
 
+  DwBodyPart* findPartInternal( DwEntity* root, int index, int &accu );
+
   TQString mDrafts;
   TQString mTemplates;
   mutable DwMessage* mMsg;
-  mutable bool       mNeedsAssembly :1;
+  mutable bool mNeedsAssembly :1;
   bool mDecodeHTML :1;
   bool mReadyToShow :1;
   bool mComplete :1;

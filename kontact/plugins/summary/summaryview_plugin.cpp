@@ -39,8 +39,8 @@ SummaryView::SummaryView( Kontact::Core *core, const char *name, const TQStringL
 {
   setInstance( SummaryViewFactory::instance() );
 
-  mSyncAction = new KSelectAction( i18n( "Synchronize All" ), "reload", 0, this,
-                                   TQT_SLOT( doSync() ), actionCollection(),
+  mSyncAction = new KSelectAction( i18n( "Synchronize All" ), "reload", 0, 0, 
+                                   0, actionCollection(),
                                    "kontact_summary_sync" );
   connect( mSyncAction, TQT_SIGNAL( activated( const TQString& ) ), this, TQT_SLOT( syncAccount( const TQString& ) ) );
   connect( mSyncAction->popupMenu(), TQT_SIGNAL( aboutToShow() ), this, TQT_SLOT( fillSyncActionSubEntries() ) );
@@ -68,9 +68,12 @@ void SummaryView::fillSyncActionSubEntries()
 
 void SummaryView::syncAccount( const TQString& account )
 {
-  const TQString acc = account == i18n("All") ? TQString() : account;
-  DCOPRef ref( "kmail", "KMailIface" );
-  ref.send( "checkAccount", acc );
+  if ( account == i18n("All") ) {
+    doSync();
+  } else {
+    DCOPRef ref( "kmail", "KMailIface" );
+    ref.send( "checkAccount", account );
+  }
   fillSyncActionSubEntries();
 }
 

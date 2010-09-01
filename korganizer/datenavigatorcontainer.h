@@ -43,29 +43,53 @@ class DateNavigatorContainer: public QFrame
 
     TQSize minimumSizeHint() const;
     TQSize sizeHint() const;
-
+    void setUpdateNeeded();
   public slots:
-    void selectDates( const KCal::DateList & );
+    /**
+       preferredMonth is useful when the datelist crosses months, if different
+       from -1, it has the month that the kdatenavigator should show in case
+       of ambiguity
+    */
+    void selectDates( const KCal::DateList &, const TQDate &preferredMonth = TQDate() );
     void updateView();
     void updateConfig();
     void updateDayMatrix();
     void updateToday();
 
+    void goPrevMonth();
+    void goNextMonth();
+
   signals:
     void datesSelected( const KCal::DateList & );
     void incidenceDropped( Incidence *, const TQDate & );
     void incidenceDroppedMove( Incidence *, const TQDate & );
-    void weekClicked( const TQDate &);
+    void weekClicked( const TQDate & );
 
     void goPrevious();
     void goNext();
 
-    void goNextMonth();
-    void goPrevMonth();
-    void goNextYear();
-    void goPrevYear();
+    void nextYearClicked();
+    void prevYearClicked();
 
-    void goMonth( int month );
+    /** Signals that the previous month button has been clicked.
+
+        @param currentMonth The month displayed on the first KDateNavigator.
+               DateNavigator doesn't know anything abouts months, it just has
+               a list of selected dates, so we must send this.
+        @param selectionLowerLimit The first date of the first KDateNavigator.
+        @param selectionUpperLimit The last date of the last KDateNavigator.
+    */
+    void prevMonthClicked( const TQDate &currentMonth,
+                           const TQDate &selectionLowerLimit,
+                           const TQDate &selectionUpperLimit );
+
+    void nextMonthClicked( const TQDate &currentMonth,
+                           const TQDate &selectionLowerLimit,
+                           const TQDate &selectionUpperLimit );
+
+    void monthSelected( int month );
+
+    void yearSelected( int year );
 
   protected:
     void resizeEvent( TQResizeEvent * );
@@ -79,6 +103,15 @@ class DateNavigatorContainer: public QFrame
     void resizeAllContents();
 
   private:
+    /* Returns the first day of the first KDateNavigator, and the last day
+       of the last KDateNavigator.
+
+       @param monthOffset If you have two KDateNavigators displaying January and February
+       and want to know the boundaries of, for e.g. displaying February and March,
+       use monthOffset = 1.
+    */
+    QPair<TQDate,TQDate> dateLimits( int monthOffset = 0 );
+
     KDateNavigator *mNavigatorView;
 
     KCal::Calendar *mCalendar;

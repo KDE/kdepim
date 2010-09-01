@@ -49,7 +49,7 @@
 #include <libkcal/calendarlocal.h>
 
 extern "C" {
-  #include <ical.h>
+  #include <libical/ical.h>
 }
 
 #include "exchangeclient.h"

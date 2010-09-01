@@ -38,10 +38,14 @@
 #include <interfaces/bodyparturlhandler.h>
 #include <khtmlparthtmlwriter.h>
 
+#include <libkdepim/kfileio.h>
+
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendarresources.h>
+#include <libkcal/calhelper.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/attendee.h>
+#include <libkcal/attachmenthandler.h>
 #include <libkcal/incidence.h>
 #include <libkcal/incidenceformatter.h>
 
@@ -54,6 +58,7 @@
 #include <email.h>
 
 #include <kglobal.h>
+#include <kfiledialog.h>
 #include <kinputdialog.h>
 #include <klocale.h>
 #include <kstringhandler.h>
@@ -65,6 +70,11 @@
 #include <kstandarddirs.h>
 #include <kapplication.h>
 #include <ktempfile.h>
+#include <kmdcodec.h>
+#include <kmimetype.h>
+#include <kpopupmenu.h>
+#include <krun.h>
+#include <kio/netaccess.h>
 
 #include <tqurl.h>
 #include <tqdir.h>
@@ -86,10 +96,10 @@ class CalendarManager
   public:
     CalendarManager();
     ~CalendarManager();
-    static KCal::Calendar* calendar();
+    static Calendar* calendar();
 
   private:
-    KCal::CalendarResources* mCalendar;
+    CalendarResources* mCalendar;
     static CalendarManager* mSelf;
 };
 
@@ -130,7 +140,7 @@ CalendarManager::~CalendarManager()
   mSelf = 0;
 }
 
-KCal::Calendar* CalendarManager::calendar()
+Calendar* CalendarManager::calendar()
 {
   if ( !mSelf ) {
     sCalendarDeleter.setObject( mSelf, new CalendarManager() );
@@ -139,12 +149,12 @@ KCal::Calendar* CalendarManager::calendar()
 }
 
 
-class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
+class KMInvitationFormatterHelper : public InvitationFormatterHelper
 {
   public:
     KMInvitationFormatterHelper( KMail::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
     virtual TQString generateLinkURL( const TQString &id ) { return mBodyPart->makeLink( id ); }
-    KCal::Calendar* calendar() const { return CalendarManager::calendar(); }
+    Calendar* calendar() const { return CalendarManager::calendar(); }
   private:
     KMail::Interface::BodyPart *mBodyPart;
 };
@@ -153,7 +163,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
 {
   public:
     Result format( KMail::Interface::BodyPart *bodyPart,
-                   KMail::HtmlWriter *writer ) const
+                   KMail::HtmlWriter *writer, KMail::Callback &callback ) const
     {
       if ( !writer )
         // Guard against crashes in createReply()
@@ -163,14 +173,15 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       TQString source;
       /* If the bodypart does not have a charset specified, we need to fall back to
          utf8, not the KMail fallback encoding, so get the contents as binary and decode
-         explicitely. */
+         explicitly. */
       if ( bodyPart->contentTypeParameter( "charset").isEmpty() ) {
         const TQByteArray &ba = bodyPart->asBinary();
         source = TQString::fromUtf8(ba);
       } else {
         source = bodyPart->asText();
       }
-      TQString html = IncidenceFormatter::formatICalInvitation( source, &cl, &helper );
+      TQString html =
+        IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper, callback.sender() );
 
       if ( html.isEmpty() ) return AsIcon;
       writer->queue( html );
@@ -201,6 +212,25 @@ static TQString directoryForStatus( Attendee::PartStat status )
   return dir;
 }
 
+static Incidence *icalToString( const TQString &iCal )
+{
+  CalendarLocal calendar( KPimPrefs::timezone() ) ;
+  ICalFormat format;
+  ScheduleMessage *message =
+    format.parseScheduleMessage( &calendar, iCal );
+  if ( !message )
+    //TODO: Error message?
+    return 0;
+  return dynamic_cast<Incidence*>( message->event() );
+}
+
+static ScheduleMessage *icalToMessage( const TQString &iCal )
+{
+  CalendarLocal calendar( KPimPrefs::timezone() ) ;
+  ICalFormat format;
+  return format.parseScheduleMessage( &calendar, iCal );
+}
+
 class UrlHandler : public KMail::Interface::BodyPartURLHandler
 {
   public:
@@ -208,19 +238,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       kdDebug() << "UrlHandler() (iCalendar)" << endl;
     }
-
-    Incidence* icalToString( const TQString& iCal ) const
-    {
-      CalendarLocal calendar( KPimPrefs::timezone() ) ;
-      ICalFormat format;
-      ScheduleMessage *message =
-        format.parseScheduleMessage( &calendar, iCal );
-      if ( !message )
-        //TODO: Error message?
-        return 0;
-      return dynamic_cast<Incidence*>( message->event() );
-    }
-
 
     Attendee *findMyself( Incidence* incidence, const TQString& receiver ) const
     {
@@ -340,6 +357,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           break;
       }
 
+      // Set the organizer to the sender, if the ORGANIZER hasn't been set.
+      if ( incidence->organizer().isEmpty() ) {
+        TQString tname, temail;
+        KPIM::getNameAndMail( callback.sender(), tname, temail );
+        incidence->setOrganizer( Person( tname, temail ) );
+      }
+
       TQString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
@@ -347,7 +371,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return callback.mailICal( recv, msg, subject, statusString, type != Forward );
     }
 
-    void ensureKorganizerRunning() const
+    void ensureKorganizerRunning( bool switchTo ) const
     {
       TQString error;
       TQCString dcopService;
@@ -359,6 +383,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         TQCString dummy;
         if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", TQByteArray(), dummy, dummy ) ) {
           DCOPRef ref( dcopService, dcopService ); // talk to the KUniqueApplication or its kontact wrapper
+          if ( switchTo ) {
+            ref.call( "newInstance()" ); // activate korganizer window
+          }
+
           DCOPReply reply = ref.call( "load()" );
           if ( reply.isValid() && (bool)reply ) {
             kdDebug() << "Loaded " << dcopService << " successfully" << endl;
@@ -390,9 +418,124 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       // Now ensure that korganizer is running; otherwise start it, to prevent surprises
       // (https://intevation.de/roundup/kolab/issue758)
-      ensureKorganizerRunning();
+      ensureKorganizerRunning( false );
 
       return true;
+    }
+
+    bool cancelPastInvites( Incidence *incidence, const TQString &path ) const
+    {
+      TQString warnStr;
+      TQDateTime now = TQDateTime::currentDateTime();
+      TQDate today = now.date();
+      Event * const event = dynamic_cast<Event *>( incidence );
+      Todo * const todo = dynamic_cast<Todo *>( incidence );
+      if ( incidence->type() == "Event" ) {
+        Q_ASSERT( event );
+        if ( !event->doesFloat() ) {
+          if ( event->dtEnd() < now ) {
+            warnStr = i18n( "\"%1\" occurred already." ).arg( event->summary() );
+          } else if ( event->dtStart() <= now && now <= event->dtEnd() ) {
+            warnStr = i18n( "\"%1\" is currently in-progress." ).arg( event->summary() );
+          }
+        } else {
+          if ( event->dtEnd().date() < today ) {
+            warnStr = i18n( "\"%1\" occurred already." ).arg( event->summary() );
+          } else if ( event->dtStart().date() <= today && today <= event->dtEnd().date() ) {
+            warnStr = i18n( "\"%1\", happening all day today, is currently in-progress." ).
+                      arg( event->summary() );
+          }
+        }
+      } else if ( incidence->type() == "Todo" ) {
+        Q_ASSERT( todo );
+        if ( !todo->doesFloat() ) {
+          if ( todo->hasDueDate() ) {
+            if ( todo->dtDue() < now ) {
+              warnStr = i18n( "\"%1\" is past due." ).arg( todo->summary() );
+            } else if ( todo->hasStartDate() && todo->dtStart() <= now && now <= todo->dtDue() ) {
+              warnStr = i18n( "\"%1\" is currently in-progress." ).arg( todo->summary() );
+            }
+          } else if ( todo->hasStartDate() ) {
+            if ( todo->dtStart() < now ) {
+              warnStr = i18n( "\"%1\" has already started." ).arg( todo->summary() );
+            }
+          }
+        } else {
+          if ( todo->hasDueDate() ) {
+            if ( todo->dtDue().date() < today) {
+              warnStr = i18n( "\"%1\" is past due." ).arg( todo->summary() );
+            } else if ( todo->hasStartDate() &&
+                        todo->dtStart().date() <= today && today <= todo->dtDue().date() ) {
+              warnStr = i18n( "\"%1\", happening all-day today, is currently in-progress." ).
+                        arg( todo->summary() );
+            }
+          } else if ( todo->hasStartDate() ) {
+            if ( todo->dtStart().date() < today ) {
+              warnStr = i18n( "\"%1\", happening all day, has already started." ).
+                        arg( todo->summary() );
+            }
+          }
+        }
+      }
+
+      if ( !warnStr.isEmpty() ) {
+        TQString queryStr;
+        Q_ASSERT( event || todo );
+        if ( path == "accept" ) {
+          if ( event ) {
+            queryStr = i18n( "Do you still want to accept the invitation?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to accept the task?" );
+          }
+        } else if ( path == "accept_conditionally" ) {
+          if ( event ) {
+            queryStr = i18n( "Do you still want to send conditional acceptance of the invitation?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to send conditional acceptance of the task?" );
+          }
+        } else if ( path == "accept_counter" ) {
+          queryStr = i18n( "Do you still want to accept the counter proposal?" );
+        } else if ( path == "counter" ) {
+          queryStr = i18n( "Do you still want to send a counter proposal?" );
+        } else if ( path == "decline" ) {
+          queryStr = i18n( "Do you still want to send a decline response?" );
+        } else if ( path == "decline_counter" ) {
+          queryStr = i18n( "Do you still want to decline the counter proposal?" );
+        } else if ( path == "reply" ) {
+          queryStr = i18n( "Do you still want to record this reponse in your calendar?" );
+        } else if ( path == "delegate" ) {
+          if ( event ) {
+            queryStr = i18n( "Do you still want to delegate this invitation?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to delegate this task?" );
+          }
+        } else if ( path == "forward" ) {
+          if ( event ) {
+            queryStr = i18n( "Do you still want to forward this invitation?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to forward this task?" );
+          }
+        } else if ( path == "check_calendar" ) {
+          queryStr = i18n( "Do you still want to check your calendar?" );
+        } else if ( path == "record" ) {
+          if ( event ) {
+            queryStr = i18n( "Do you still want to record this invitation in your calendar?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to record this task in your calendar?" );
+          }
+        } else if ( path.startsWith( "ATTACH:" ) ) {
+          return false;
+        } else {
+          queryStr = i18n( "%1?" ).arg( path );
+        }
+
+        if ( KMessageBox::warningYesNo(
+               0,
+               i18n( "%1\n%2" ).arg( warnStr ).arg( queryStr ) ) == KMessageBox::No ) {
+          return true;
+        }
+      }
+      return false;
     }
 
     bool handleInvitation( const TQString& iCal, Attendee::PartStat status,
@@ -405,17 +548,22 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // Must be some error. Still return true though, since we did handle it
         return true;
 
-      // get comment for tentative acceptance
-      Incidence* incidence = icalToString( iCal );
+      Incidence *incidence = icalToString( iCal );
 
+      // get comment for tentative acceptance
       if ( callback.askForComment( status ) ) {
         bool ok = false;
         TQString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation"),
             i18n("Comment:"), TQString(), &ok );
         if ( !ok )
           return true;
-        if ( !comment.isEmpty() )
-          incidence->addComment( comment );
+        if ( !comment.isEmpty() ) {
+          if ( callback.outlookCompatibleInvitationReplyComments() ) {
+            incidence->setDescription( comment );
+          } else {
+            incidence->addComment( comment );
+          }
+        }
       }
 
       // First, save it for KOrganizer to handle
@@ -521,7 +669,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     void showCalendar( const TQDate &date ) const
     {
-      ensureKorganizerRunning();
+      ensureKorganizerRunning( true );
       // raise korganizer part in kontact or the korganizer app
       kapp->dcopClient()->send( "korganizer", "korganizer", "newInstance()", TQByteArray() );
       TQByteArray arg;
@@ -550,13 +698,17 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Incidence* incidence = icalToString( iCal );
       if ( callback.askForComment( Attendee::Declined ) ) {
         bool ok = false;
-        // ### string freeze
-        TQString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation") /* i18n("Decline Counter Proposal") */,
+        TQString comment = KInputDialog::getMultiLineText( i18n("Decline Counter Proposal"),
             i18n("Comment:"), TQString(), &ok );
         if ( !ok )
           return true;
-        if ( !comment.isEmpty() )
-          incidence->addComment( comment );
+        if ( !comment.isEmpty() ) {
+          if ( callback.outlookCompatibleInvitationReplyComments() ) {
+            incidence->setDescription( comment );
+          } else {
+            incidence->addComment( comment );
+          }
+        }
       }
       return mail( incidence, callback, Attendee::NeedsAction, Scheduler::Declinecounter,
                    callback.sender(), DeclineCounter );
@@ -576,17 +728,39 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool handleClick( KMail::Interface::BodyPart *part,
                       const TQString &path, KMail::Callback& c ) const
     {
+      if ( !CalHelper::hasMyWritableEventsFolders( "calendar" ) ) {
+        KMessageBox::error(
+          0,
+          i18n( "You have no writable calendar folders for invitations, "
+                "so storing or saving a response will not be possible.\n"
+                "Please create at least 1 writable events calendar and re-sync." ) );
+        return false;
+      }
+
+
+      // If the bodypart does not have a charset specified, we need to fall back to utf8,
+      // not the KMail fallback encoding, so get the contents as binary and decode explicitly.
       TQString iCal;
-      /* If the bodypart does not have a charset specified, we need to fall back to
-         utf8, not the KMail fallback encoding, so get the contents as binary and decode
-         explicitely. */
       if ( part->contentTypeParameter( "charset").isEmpty() ) {
         const TQByteArray &ba = part->asBinary();
         iCal = TQString::fromUtf8(ba);
       } else {
         iCal = part->asText();
       }
+      Incidence *incidence = icalToString( iCal );
+      if ( !incidence ) {
+        KMessageBox::sorry(
+          0,
+          i18n( "The calendar invitation stored in this email message is broken in some way. "
+                "Unable to continue." ) );
+        return false;
+      }
+
       bool result = false;
+      if ( cancelPastInvites( incidence, path ) ) {
+        return result;
+      }
+
       if ( path == "accept" )
         result = handleInvitation( iCal, Attendee::Accepted, c );
       if ( path == "accept_conditionally" )
@@ -603,7 +777,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( path == "delegate" )
         result = handleInvitation( iCal, Attendee::Delegated, c );
       if ( path == "forward" ) {
-        Incidence* incidence = icalToString( iCal );
         AttendeeSelector dlg;
         if ( dlg.exec() == TQDialog::Rejected )
           return true;
@@ -614,7 +787,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                        Scheduler::Request, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
-        Incidence* incidence = icalToString( iCal );
+        incidence = icalToString( iCal );
         showCalendar( incidence->dtStart().date() );
       }
       if ( path == "reply" || path == "cancel" || path == "accept_counter" ) {
@@ -626,16 +799,98 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           result = true;
         }
       }
-      if ( result )
-        c.closeIfSecondaryWindow();
+      if ( path == "record" ) {
+        incidence = icalToString( iCal );
+
+        int response =
+          KMessageBox::questionYesNoCancel(
+          0,
+          i18n( "The organizer is not expecting a reply to this invitation "
+                "but you can send them an email message if you desire.\n\n"
+                "Would you like to send the organizer a message regarding this invitation?\n"
+                "Press the [Cancel] button to cancel the recording operation." ),
+          i18n( "Send Email to Organizer" ),
+          KGuiItem( i18n( "Do Not Send" ) ),
+          KGuiItem( i18n( "Send EMail" ) ) );
+
+        TQString summary;
+        switch( response ) {
+        case KMessageBox::Cancel:
+          break;
+        case KMessageBox::No: // means "send email"
+          summary = incidence->summary();
+          if ( !summary.isEmpty() ) {
+            summary = i18n( "Re: %1" ).arg( summary );
+          }
+
+          KApplication::kApplication()->invokeMailer( incidence->organizer().email(), summary );
+          //fall through
+        case KMessageBox::Yes: // means "do not send"
+          if ( saveFile( "Receiver Not Searched", iCal, TQString( "reply" ) ) ) {
+            if ( c.deleteInvitationAfterReply() ) {
+              ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+              result = true;
+            }
+          }
+          showCalendar( incidence->dtStart().date() );
+          break;
+        }
+      }
+
+      if ( path == "delete" ) {
+        ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+        result = true;
+      }
+
+      if ( path.startsWith( "ATTACH:" ) ) {
+        TQString name = path;
+        name.remove( TQRegExp( "^ATTACH:" ) );
+        result = AttachmentHandler::view( 0, name, icalToMessage( iCal ) );
+      }
+
+      if ( result ) {
+        // do not close the secondary window if an attachment was opened (kolab/issue4317)
+        if ( !path.startsWith( "ATTACH:" ) ) {
+          c.closeIfSecondaryWindow();
+        }
+      }
       return result;
     }
 
-    bool handleContextMenuRequest( KMail::Interface::BodyPart *,
-                                   const TQString &,
-                                   const TQPoint & ) const
+    bool handleContextMenuRequest( KMail::Interface::BodyPart *part,
+                                   const TQString &path,
+                                   const TQPoint &point ) const
     {
-      return false;
+      TQString name = path;
+      if ( path.startsWith( "ATTACH:" ) ) {
+        name.remove( TQRegExp( "^ATTACH:" ) );
+      } else {
+        return false; //because it isn't an attachment inviation
+      }
+
+      TQString iCal;
+      if ( part->contentTypeParameter( "charset").isEmpty() ) {
+        const TQByteArray &ba = part->asBinary();
+        iCal = TQString::fromUtf8( ba );
+      } else {
+        iCal = part->asText();
+      }
+
+      KPopupMenu *menu = new KPopupMenu();
+      menu->insertItem( i18n( "Open Attachment" ), 0 );
+      menu->insertItem( i18n( "Save Attachment As..." ), 1 );
+
+      switch( menu->exec( point, 0 ) ) {
+      case 0: // open
+        AttachmentHandler::view( 0, name, icalToMessage( iCal ) );
+        break;
+      case 1: // save as
+        AttachmentHandler::saveAs( 0, name, icalToMessage( iCal ) );
+        break;
+      default:
+        break;
+      }
+      return true;
     }
 
     TQString statusBarMessage( KMail::Interface::BodyPart *,
@@ -643,31 +898,38 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       if ( !path.isEmpty() ) {
         if ( path == "accept" )
-          return i18n("Accept incidence");
+          return i18n("Accept invitation");
         if ( path == "accept_conditionally" )
-          return i18n( "Accept incidence conditionally" );
-// ### string freeze
-//        if ( path == "accept_counter" )
-//          return i18n( "Accept counter proposal" );
+          return i18n( "Accept invitation conditionally" );
+        if ( path == "accept_counter" )
+          return i18n( "Accept counter proposal" );
         if ( path == "counter" )
           return i18n( "Create a counter proposal..." );
         if ( path == "ignore" )
           return i18n( "Throw mail away" );
         if ( path == "decline" )
-          return i18n( "Decline incidence" );
-// ### string freeze
-//        if ( path == "decline_counter" )
-//          return i18n( "Decline counter proposal" );
+          return i18n( "Decline invitation" );
+        if ( path == "decline_counter" )
+          return i18n( "Decline counter proposal" );
         if ( path == "check_calendar" )
           return i18n("Check my calendar..." );
         if ( path == "reply" )
-          return i18n( "Enter incidence into my calendar" );
+          return i18n( "Record response into my calendar" );
+        if ( path == "record" )
+          return i18n( "Record invitation into my calendar" );
+        if ( path == "delete" )
+          return i18n( "Move this invitation to my trash folder" );
         if ( path == "delegate" )
-          return i18n( "Delegate incidence" );
+          return i18n( "Delegate invitation" );
         if ( path == "forward" )
-          return i18n( "Forward incidence" );
+          return i18n( "Forward invitation" );
         if ( path == "cancel" )
-          return i18n( "Remove incidence from my calendar" );
+          return i18n( "Remove invitation from my calendar" );
+        if ( path.startsWith( "ATTACH:" ) ) {
+          TQString name = path;
+          return i18n( "Open attachment \"%1\"" ).
+            arg( name.remove( TQRegExp( "^ATTACH:" ) ) );
+        }
       }
 
       return TQString::null;
@@ -679,19 +941,20 @@ class Plugin : public KMail::Interface::BodyPartFormatterPlugin
   public:
     const KMail::Interface::BodyPartFormatter *bodyPartFormatter( int idx ) const
     {
-      if ( idx == 0 ) return new Formatter();
+      if ( idx == 0 || idx == 1 ) return new Formatter();
       else return 0;
     }
 
     const char *type( int idx ) const
     {
-      if ( idx == 0 ) return "text";
+      if ( idx == 0 || idx == 1 ) return "text";
       else return 0;
     }
 
     const char *subtype( int idx ) const
     {
       if ( idx == 0 ) return "calendar";
+      if ( idx == 1 ) return "x-vcalendar";
       else return 0;
     }
 

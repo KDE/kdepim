@@ -39,6 +39,7 @@ struct KPaintInfo {
   {
     COL_SIZE,
     COL_ATTACHMENT,
+    COL_INVITATION,
     COL_IMPORTANT,
     COL_TODO,
     COL_SPAM_HAM,
@@ -55,8 +56,9 @@ struct KPaintInfo {
 
     showSize(false),
     showAttachment(false),
+    showInvitation(false),
     showImportant(false),
-    showTodo( false ),
+    showTodo(false),
     showSpamHam(false),
     showWatchedIgnored(false),
     showStatus(false),
@@ -73,6 +75,7 @@ struct KPaintInfo {
     dateCol(-1),
     sizeCol(-1),
     attachmentCol(-1),
+    invitationCol(-1),
     importantCol(-1),
     todoCol(-1),
     spamHamCol(-1),
@@ -84,7 +87,8 @@ struct KPaintInfo {
     orderOfArrival(false),
     status(false),
     showCryptoIcons(false),
-    showAttachmentIcon(false)
+    showAttachmentIcon(false),
+    showInvitationIcon(false)
     {}
 
   bool pixmapOn;
@@ -99,6 +103,7 @@ struct KPaintInfo {
 
   bool showSize;
   bool showAttachment;
+  bool showInvitation;
   bool showImportant;
   bool showTodo;
   bool showSpamHam;
@@ -117,6 +122,7 @@ struct KPaintInfo {
   int dateCol;
   int sizeCol;
   int attachmentCol;
+  int invitationCol;
   int importantCol;
   int todoCol;
   int spamHamCol;
@@ -129,6 +135,7 @@ struct KPaintInfo {
   bool status;
   bool showCryptoIcons;
   bool showAttachmentIcon;
+  bool showInvitationIcon;
 };
 
 //==========================================================================

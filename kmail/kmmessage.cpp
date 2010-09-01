@@ -415,7 +415,9 @@ void KMMessage::fromDwString(const DwString& str, bool aSetStatus)
     setSignatureStateChar(  headerField("X-KMail-SignatureState").at(0) );
     setMDNSentState( static_cast<KMMsgMDNSentState>( headerField("X-KMail-MDN-Sent").at(0).latin1() ) );
   }
-  if (attachmentState() == KMMsgAttachmentUnknown && readyToShow())
+  if ( invitationState() == KMMsgInvitationUnknown && readyToShow() )
+    updateInvitationState();
+  if ( attachmentState() == KMMsgAttachmentUnknown && readyToShow() )
     updateAttachmentState();
 
   mNeedsAssembly = false;
@@ -720,11 +722,6 @@ void KMMessage::parseTextStringFromDwPart( partNode * root,
   if ( !root ) return;
 
   isHTML = false;
-  // initialy parse the complete message to decrypt any encrypted parts
-  {
-    ObjectTreeParser otp( 0, 0, true, false, true );
-    otp.parseObjectTree( root );
-  }
   partNode * curNode = root->findType( DwMime::kTypeText,
                                DwMime::kSubtypeUnknown,
                                true,
@@ -743,15 +740,18 @@ void KMMessage::parseTextStringFromDwPart( partNode * root,
 
 //-----------------------------------------------------------------------------
 
-TQString KMMessage::asPlainText( bool aStripSignature, bool allowDecryption ) const {
+TQString KMMessage::asPlainTextFromObjectTree( partNode *root, bool aStripSignature,
+                                              bool allowDecryption ) const
+{
+  Q_ASSERT( root );
+  Q_ASSERT( root->processed() );
+
   TQCString parsedString;
   bool isHTML = false;
   const TQTextCodec * codec = 0;
 
-  partNode * root = partNode::fromMessage( this );
   if ( !root ) return TQString::null;
   parseTextStringFromDwPart( root, parsedString, codec, isHTML );
-  delete root;
 
   if ( mOverrideCodec || !codec )
     codec = this->codec();
@@ -767,27 +767,27 @@ TQString KMMessage::asPlainText( bool aStripSignature, bool allowDecryption ) co
     TQPtrList<Kpgp::Block> pgpBlocks;
     TQStrList nonPgpBlocks;
     if ( Kpgp::Module::prepareMessageForDecryption( parsedString,
-						    pgpBlocks,
-						    nonPgpBlocks ) ) {
+                pgpBlocks,
+                nonPgpBlocks ) ) {
       // Only decrypt/strip off the signature if there is only one OpenPGP
       // block in the message
       if ( pgpBlocks.count() == 1 ) {
-	Kpgp::Block * block = pgpBlocks.first();
-	if ( block->type() == Kpgp::PgpMessageBlock ||
-	     block->type() == Kpgp::ClearsignedBlock ) {
-	  if ( block->type() == Kpgp::PgpMessageBlock ) {
-	    // try to decrypt this OpenPGP block
-	    block->decrypt();
-	  } else {
-	    // strip off the signature
-	    block->verify();
-	    clearSigned = true;
-	  }
+        Kpgp::Block * block = pgpBlocks.first();
+        if ( block->type() == Kpgp::PgpMessageBlock ||
+             block->type() == Kpgp::ClearsignedBlock ) {
+          if ( block->type() == Kpgp::PgpMessageBlock ) {
+            // try to decrypt this OpenPGP block
+            block->decrypt();
+          } else {
+            // strip off the signature
+            block->verify();
+            clearSigned = true;
+          }
 
-	  result = codec->toUnicode( nonPgpBlocks.first() )
-	         + codec->toUnicode( block->text() )
-	         + codec->toUnicode( nonPgpBlocks.last() );
-	}
+          result = codec->toUnicode( nonPgpBlocks.first() )
+                 + codec->toUnicode( block->text() )
+                 + codec->toUnicode( nonPgpBlocks.last() );
+        }
       }
     }
   }
@@ -818,6 +818,21 @@ TQString KMMessage::asPlainText( bool aStripSignature, bool allowDecryption ) co
     return stripSignature( result, clearSigned );
   else
     return result;
+}
+
+//-----------------------------------------------------------------------------
+
+TQString KMMessage::asPlainText( bool aStripSignature, bool allowDecryption ) const
+{
+  partNode *root = partNode::fromMessage( this );
+  if ( !root )
+    return TQString::null;
+
+  ObjectTreeParser otp;
+  otp.parseObjectTree( root );
+  TQString result = asPlainTextFromObjectTree( root, aStripSignature, allowDecryption );
+  delete root;
+  return result;
 }
 
 TQString KMMessage::asQuotedString( const TQString& aHeaderStr,
@@ -852,11 +867,10 @@ KMMessage* KMMessage::createReply( KMail::ReplyStrategy replyStrategy,
                                    TQString selection /* = TQString::null */,
                                    bool noQuote /* = false */,
                                    bool allowDecryption /* = true */,
-                                   bool selectionIsBody /* = false */,
                                    const TQString &tmpl /* = TQString::null */ )
 {
   KMMessage* msg = new KMMessage;
-  TQString str, replyStr, mailingListStr, replyToStr, toStr;
+  TQString mailingListStr, replyToStr, toStr;
   TQStringList mailingListAddresses;
   TQCString refStr, headerName;
   bool replyAll = true;
@@ -881,8 +895,6 @@ KMMessage* KMMessage::createReply( KMail::ReplyStrategy replyStrategy,
   }
 
   // use the "On ... Joe User wrote:" header by default
-  replyStr = sReplyAllStr;
-
   switch( replyStrategy ) {
   case KMail::ReplySmart : {
     if ( !headerField( "Mail-Followup-To" ).isEmpty() ) {
@@ -898,7 +910,7 @@ KMMessage* KMMessage::createReply( KMail::ReplyStrategy replyStrategy,
     else {
       // doesn't seem to be a mailing list, reply to From: address
       toStr = from();
-      replyStr = sReplyStr; // reply to author, so use "On ... you wrote:"
+      //replyStr = sReplyStr; // reply to author, so use "On ... you wrote:"
       replyAll = false;
     }
     // strip all my addresses from the list of recipients
@@ -1028,7 +1040,6 @@ KMMessage* KMMessage::createReply( KMail::ReplyStrategy replyStrategy,
     else if ( !from().isEmpty() ) {
       toStr = from();
     }
-    replyStr = sReplyStr; // reply to author, so use "On ... you wrote:"
     replyAll = false;
     break;
   }
@@ -1056,15 +1067,20 @@ KMMessage* KMMessage::createReply( KMail::ReplyStrategy replyStrategy,
 //   }
 
   msg->setSubject( replySubject() );
-
-  TemplateParser parser( msg, (replyAll ? TemplateParser::ReplyAll : TemplateParser::Reply),
-    selection, sSmartQuote, noQuote, allowDecryption, selectionIsBody );
-  if ( !tmpl.isEmpty() ) {
-    parser.process( tmpl, this );
-  } else {
-    parser.process( this );
+  msg->setHeaderField( "X-KMail-QuotePrefix",
+		                         formatString( GlobalSettings::self()->quoteString() ) );
+  if( !noQuote ) {
+     TemplateParser parser( msg, ( replyAll ? TemplateParser::ReplyAll : TemplateParser::Reply ) );
+     parser.setAllowDecryption( allowDecryption );
+     if ( GlobalSettings::quoteSelectionOnly() ) {
+       parser.setSelection( selection );
+     }
+     if ( !tmpl.isEmpty() ) {
+       parser.process( tmpl, this );
+     } else {
+       parser.process( this );
+     }
   }
-
   // setStatus(KMMsgStatusReplied);
   msg->link(this, KMMsgStatusReplied);
 
@@ -1127,12 +1143,12 @@ KMMessage* KMMessage::createRedirect( const TQString &toStr )
   TQString strByWayOf = TQString("%1 (by way of %2 <%3>)")
     .arg( from() )
     .arg( ident.fullName() )
-    .arg( ident.emailAddr() );
+    .arg( ident.primaryEmailAddress() );
 
   // Resent-From: content
   TQString strFrom = TQString("%1 <%2>")
     .arg( ident.fullName() )
-    .arg( ident.emailAddr() );
+    .arg( ident.primaryEmailAddress() );
 
   // format the current date to be used in Resent-Date:
   TQString origDate = msg->headerField( "Date" );
@@ -1211,7 +1227,6 @@ void KMMessage::sanitizeHeaders( const TQStringList& whiteList )
 KMMessage* KMMessage::createForward( const TQString &tmpl /* = TQString::null */ )
 {
   KMMessage* msg = new KMMessage();
-  TQString id;
 
   // If this is a multipart mail or if the main part is only the text part,
   // Make an identical copy of the mail, minus headers, so attachments are
@@ -1222,8 +1237,7 @@ KMMessage* KMMessage::createForward( const TQString &tmpl /* = TQString::null */
     msg->fromDwString( this->asDwString() );
     // remember the type and subtype, initFromMessage sets the contents type to
     // text/plain, via initHeader, for unclear reasons
-    const int type = msg->type();
-    const int subtype = msg->subtype();
+    DwMediaType oldContentType = msg->mMsg->Headers().ContentType();
 
     msg->sanitizeHeaders();
 
@@ -1240,12 +1254,14 @@ KMMessage* KMMessage::createForward( const TQString &tmpl /* = TQString::null */
       }
     }
     msg->mMsg->Assemble();
-
     msg->initFromMessage( this );
+
     //restore type
-    msg->setType( type );
-    msg->setSubtype( subtype );
-  } else if( type() == DwMime::kTypeText && subtype() == DwMime::kSubtypeHtml ) {
+    msg->mMsg->Headers().ContentType().FromString( oldContentType.AsString() );
+    msg->mMsg->Headers().ContentType().Parse();
+    msg->mMsg->Assemble();
+  }
+  else if( type() == DwMime::kTypeText && subtype() == DwMime::kSubtypeHtml ) {
     // This is non-multipart html mail. Let`s make it text/plain and allow
     // template parser do the hard job.
     msg->initFromMessage( this );
@@ -1253,7 +1269,8 @@ KMMessage* KMMessage::createForward( const TQString &tmpl /* = TQString::null */
     msg->setSubtype( DwMime::kSubtypeHtml );
     msg->mNeedsAssembly = true;
     msg->cleanupHeader();
-  } else {
+  }
+  else {
     // This is a non-multipart, non-text mail (e.g. text/calendar). Construct
     // a multipart/mixed mail and add the original body as an attachment.
     msg->initFromMessage( this );
@@ -1287,9 +1304,7 @@ KMMessage* KMMessage::createForward( const TQString &tmpl /* = TQString::null */
 
   msg->setSubject( forwardSubject() );
 
-  TemplateParser parser( msg, TemplateParser::Forward,
-    asPlainText( false, false ),
-    false, false, false, false);
+  TemplateParser parser( msg, TemplateParser::Forward );
   if ( !tmpl.isEmpty() ) {
     parser.process( tmpl, this );
   } else {
@@ -1351,25 +1366,27 @@ static const int numMdnMessageBoxes
 
 
 static int requestAdviceOnMDN( const char * what ) {
-  for ( int i = 0 ; i < numMdnMessageBoxes ; ++i )
-    if ( !qstrcmp( what, mdnMessageBoxes[i].dontAskAgainID ) )
+  for ( int i = 0 ; i < numMdnMessageBoxes ; ++i ) {
+    if ( !qstrcmp( what, mdnMessageBoxes[i].dontAskAgainID ) ) {
       if ( mdnMessageBoxes[i].canDeny ) {
-	const KCursorSaver saver( TQCursor::ArrowCursor );
-	int answer = TQMessageBox::information( 0,
-			 i18n("Message Disposition Notification Request"),
-			 i18n( mdnMessageBoxes[i].text ),
-			 i18n("&Ignore"), i18n("Send \"&denied\""), i18n("&Send") );
-	return answer ? answer + 1 : 0 ; // map to "mode" in createMDN
+        const KCursorSaver saver( TQCursor::ArrowCursor );
+        int answer = TQMessageBox::information( 0,
+                                               i18n("Message Disposition Notification Request"),
+                                               i18n( mdnMessageBoxes[i].text ),
+                                               i18n("&Ignore"), i18n("Send \"&denied\""), i18n("&Send") );
+        return answer ? answer + 1 : 0 ; // map to "mode" in createMDN
       } else {
-	const KCursorSaver saver( TQCursor::ArrowCursor );
-	int answer = TQMessageBox::information( 0,
-			 i18n("Message Disposition Notification Request"),
-			 i18n( mdnMessageBoxes[i].text ),
-			 i18n("&Ignore"), i18n("&Send") );
-	return answer ? answer + 2 : 0 ; // map to "mode" in createMDN
+        const KCursorSaver saver( TQCursor::ArrowCursor );
+        int answer = TQMessageBox::information( 0,
+                                               i18n("Message Disposition Notification Request"),
+                                               i18n( mdnMessageBoxes[i].text ),
+                                               i18n("&Ignore"), i18n("&Send") );
+        return answer ? answer + 2 : 0 ; // map to "mode" in createMDN
       }
+    }
+  }
   kdWarning(5006) << "didn't find data for message box \""
-		  << what << "\"" << endl;
+                  << what << "\"" << endl;
   return 0;
 }
 
@@ -2487,28 +2504,38 @@ TQCString KMMessage::contentTransferEncodingStr() const
 
 
 //-----------------------------------------------------------------------------
-int KMMessage::contentTransferEncoding() const
+int KMMessage::contentTransferEncoding( DwEntity *entity ) const
 {
-  DwHeaders& header = mMsg->Headers();
-  if (header.HasContentTransferEncoding())
+  if ( !entity )
+    entity = mMsg;
+
+  DwHeaders& header = entity->Headers();
+  if ( header.HasContentTransferEncoding() )
     return header.ContentTransferEncoding().AsEnum();
   else return DwMime::kCteNull;
 }
 
 
 //-----------------------------------------------------------------------------
-void KMMessage::setContentTransferEncodingStr(const TQCString& aStr)
+void KMMessage::setContentTransferEncodingStr( const TQCString& cteString,
+                                               DwEntity *entity )
 {
-  mMsg->Headers().ContentTransferEncoding().FromString(aStr);
-  mMsg->Headers().ContentTransferEncoding().Parse();
+  if ( !entity )
+    entity = mMsg;
+
+  entity->Headers().ContentTransferEncoding().FromString( cteString );
+  entity->Headers().ContentTransferEncoding().Parse();
   mNeedsAssembly = true;
 }
 
 
 //-----------------------------------------------------------------------------
-void KMMessage::setContentTransferEncoding(int aCte)
+void KMMessage::setContentTransferEncoding( int cte, DwEntity *entity )
 {
-  mMsg->Headers().ContentTransferEncoding().FromEnum(aCte);
+  if ( !entity )
+    entity = mMsg;
+
+  entity->Headers().ContentTransferEncoding().FromEnum( cte );
   mNeedsAssembly = true;
 }
 
@@ -2526,6 +2553,16 @@ void KMMessage::setNeedsAssembly()
   mNeedsAssembly = true;
 }
 
+//-----------------------------------------------------------------------------
+void KMMessage::assembleIfNeeded()
+{
+  Q_ASSERT( mMsg );
+
+  if ( mNeedsAssembly ) {
+    mMsg->Assemble();
+    mNeedsAssembly = false;
+  }
+}
 
 //-----------------------------------------------------------------------------
 TQCString KMMessage::body() const
@@ -2646,22 +2683,16 @@ TQValueList<int> KMMessage::determineAllowedCtes( const CharFreq& cf,
 void KMMessage::setBodyAndGuessCte( const TQByteArray& aBuf,
                                     TQValueList<int> & allowedCte,
                                     bool allow8Bit,
-                                    bool willBeSigned )
+                                    bool willBeSigned,
+                                    DwEntity *entity )
 {
+  if ( !entity )
+    entity = mMsg;
+
   CharFreq cf( aBuf ); // it's safe to pass null arrays
-
   allowedCte = determineAllowedCtes( cf, allow8Bit, willBeSigned );
-
-#ifndef NDEBUG
-  DwString dwCte;
-  DwCteEnumToStr(allowedCte[0], dwCte);
-  kdDebug(5006) << "CharFreq returned " << cf.type() << "/"
-                << cf.printableRatio() << " and I chose "
-                << dwCte.c_str() << endl;
-#endif
-
-  setCte( allowedCte[0] ); // choose best fitting
-  setBodyEncodedBinary( aBuf );
+  setCte( allowedCte[0], entity ); // choose best fitting
+  setBodyEncodedBinary( aBuf, entity );
 }
 
 
@@ -2669,32 +2700,29 @@ void KMMessage::setBodyAndGuessCte( const TQByteArray& aBuf,
 void KMMessage::setBodyAndGuessCte( const TQCString& aBuf,
                                     TQValueList<int> & allowedCte,
                                     bool allow8Bit,
-                                    bool willBeSigned )
+                                    bool willBeSigned,
+                                    DwEntity *entity )
 {
+  if ( !entity )
+    entity = mMsg;
+
   CharFreq cf( aBuf.data(), aBuf.size()-1 ); // it's safe to pass null strings
-
   allowedCte = determineAllowedCtes( cf, allow8Bit, willBeSigned );
-
-#ifndef NDEBUG
-  DwString dwCte;
-  DwCteEnumToStr(allowedCte[0], dwCte);
-  kdDebug(5006) << "CharFreq returned " << cf.type() << "/"
-                << cf.printableRatio() << " and I chose "
-                << dwCte.c_str() << endl;
-#endif
-
-  setCte( allowedCte[0] ); // choose best fitting
-  setBodyEncoded( aBuf );
+  setCte( allowedCte[0], entity ); // choose best fitting
+  setBodyEncoded( aBuf, entity );
 }
 
 
 //-----------------------------------------------------------------------------
-void KMMessage::setBodyEncoded(const TQCString& aStr)
+void KMMessage::setBodyEncoded(const TQCString& aStr, DwEntity *entity )
 {
+  if ( !entity )
+    entity = mMsg;
+
   DwString dwSrc(aStr.data(), aStr.size()-1 /* not the trailing NUL */);
   DwString dwResult;
 
-  switch (cte())
+  switch (cte( entity ))
   {
   case DwMime::kCteBase64:
     DwEncodeBase64(dwSrc, dwResult);
@@ -2707,30 +2735,35 @@ void KMMessage::setBodyEncoded(const TQCString& aStr)
     break;
   }
 
-  mMsg->Body().FromString(dwResult);
+  entity->Body().FromString(dwResult);
   mNeedsAssembly = true;
 }
 
 //-----------------------------------------------------------------------------
-void KMMessage::setBodyEncodedBinary(const TQByteArray& aStr)
+void KMMessage::setBodyEncodedBinary( const TQByteArray& aStr, DwEntity *entity )
 {
+  if ( !entity )
+    entity = mMsg;
+
   DwString dwSrc(aStr.data(), aStr.size());
   DwString dwResult;
 
-  switch (cte())
+  switch ( cte( entity ) )
   {
   case DwMime::kCteBase64:
-    DwEncodeBase64(dwSrc, dwResult);
+    DwEncodeBase64( dwSrc, dwResult );
     break;
   case DwMime::kCteQuotedPrintable:
-    DwEncodeQuotedPrintable(dwSrc, dwResult);
+    DwEncodeQuotedPrintable( dwSrc, dwResult );
     break;
   default:
     dwResult = dwSrc;
     break;
   }
 
-  mMsg->Body().FromString(dwResult);
+  entity->Body().FromString( dwResult );
+  entity->Body().Parse();
+
   mNeedsAssembly = true;
 }
 
@@ -2752,6 +2785,7 @@ void KMMessage::setBody(const char* aStr)
   mNeedsAssembly = true;
 }
 
+//-----------------------------------------------------------------------------
 void KMMessage::setMultiPartBody( const TQCString & aStr ) {
   setBody( aStr );
   mMsg->Body().Parse();
@@ -3053,7 +3087,8 @@ void applyHeadersToMessagePart( DwHeaders& headers, KMMessagePart* aPart )
 
   // Content-description
   if (headers.HasContentDescription())
-    aPart->setContentDescription(headers.ContentDescription().AsString().c_str());
+    aPart->setContentDescription( KMMsgBase::decodeRFC2047String(
+                                    headers.ContentDescription().AsString().c_str() ) );
   else
     aPart->setContentDescription("");
 
@@ -3137,6 +3172,44 @@ void KMMessage::deleteBodyParts()
 }
 
 //-----------------------------------------------------------------------------
+
+bool KMMessage::deleteBodyPart( int partIndex )
+{
+  KMMessagePart part;
+  DwBodyPart *dwpart = findPart( partIndex );
+  if ( !dwpart )
+    return false;
+  KMMessage::bodyPart( dwpart, &part, true );
+  if ( !part.isComplete() )
+     return false;
+
+  DwBody *parentNode = dynamic_cast<DwBody*>( dwpart->Parent() );
+  if ( !parentNode )
+    return false;
+  parentNode->RemoveBodyPart( dwpart );
+
+  // add dummy part to show that a attachment has been deleted
+  KMMessagePart dummyPart;
+  dummyPart.duplicate( part );
+  TQString comment = i18n("This attachment has been deleted.");
+  if ( !part.fileName().isEmpty() )
+    comment = i18n( "The attachment '%1' has been deleted." ).arg( part.fileName() );
+  dummyPart.setContentDescription( comment );
+  dummyPart.setBodyEncodedBinary( TQByteArray() );
+  TQCString cd = dummyPart.contentDisposition();
+  if ( cd.find( "inline", 0, false ) == 0 ) {
+    cd.replace( 0, 10, "attachment" );
+    dummyPart.setContentDisposition( cd );
+  } else if ( cd.isEmpty() ) {
+    dummyPart.setContentDisposition( "attachment" );
+  }
+  DwBodyPart* newDwPart = createDWBodyPart( &dummyPart );
+  parentNode->AddBodyPart( newDwPart );
+  getTopLevelPart()->Assemble();
+  return true;
+}
+
+//-----------------------------------------------------------------------------
 DwBodyPart* KMMessage::createDWBodyPart(const KMMessagePart* aPart)
 {
   DwBodyPart* part = DwBodyPart::NewBodyPart(emptyString, 0);
@@ -3150,9 +3223,7 @@ DwBodyPart* KMMessage::createDWBodyPart(const KMMessagePart* aPart)
   TQCString cte      = aPart->cteStr();
   TQCString contDesc = aPart->contentDescriptionEncoded();
   TQCString contDisp = aPart->contentDisposition();
-  TQCString encoding = autoDetectCharset(charset, sPrefCharsets, aPart->name());
-  if (encoding.isEmpty()) encoding = "utf-8";
-  TQCString name     = KMMsgBase::encodeRFC2231String(aPart->name(), encoding);
+  TQCString name     = KMMsgBase::encodeRFC2231StringAutoDetectCharset( aPart->name(), charset );
   bool RFC2231encoded = aPart->name() != TQString(name);
   TQCString paramAttr  = aPart->parameterAttribute();
 
@@ -3229,12 +3300,8 @@ DwBodyPart* KMMessage::createDWBodyPart(const KMMessagePart* aPart)
 
   if (!paramAttr.isEmpty())
   {
-    TQCString encoding = autoDetectCharset(charset, sPrefCharsets,
-					  aPart->parameterValue());
-    if (encoding.isEmpty()) encoding = "utf-8";
     TQCString paramValue;
-    paramValue = KMMsgBase::encodeRFC2231String(aPart->parameterValue(),
-						encoding);
+    paramValue = KMMsgBase::encodeRFC2231StringAutoDetectCharset( aPart->parameterValue(), charset );
     DwParameter *param = new DwParameter;
     if (aPart->parameterValue() != TQString(paramValue))
     {
@@ -3771,24 +3838,41 @@ TQString KMMessage::emailAddrAsAnchor(const TQString& aEmail, bool stripped, con
     return aEmail;
 
   TQStringList addressList = KPIM::splitEmailAddrList( aEmail );
-
   TQString result;
 
   for( TQStringList::ConstIterator it = addressList.begin();
        ( it != addressList.end() );
        ++it ) {
     if( !(*it).isEmpty() ) {
-      TQString address = *it;
-      if(aLink) {
-	result += "<a href=\"mailto:"
-              + KMMessage::encodeMailtoUrl( address )
-	  + "\" "+cssStyle+">";
+
+      // Extract the name, mail and some pretty versions out of the mail address
+      TQString name, mail;
+      KPIM::getNameAndMail( *it, name, mail );
+      TQString pretty;
+      TQString prettyStripped;
+      if ( name.stripWhiteSpace().isEmpty() ) {
+        pretty = mail;
+        prettyStripped = mail;
+      } else {
+        pretty = KPIM::quoteNameIfNecessary( name ) + " <" + mail + ">";
+        prettyStripped = name;
       }
-      if( stripped )
-        address = KMMessage::stripEmailAddr( address );
-      result += KMMessage::quoteHtmlChars( address, true );
+
+      if(aLink) {
+        result += "<a href=\"mailto:"
+               + KMMessage::encodeMailtoUrl( pretty )
+               + "\" "+cssStyle+">";
+      }
+
+      if ( stripped ) {
+        result += KMMessage::quoteHtmlChars( prettyStripped, true );
+      }
+      else {
+        result += KMMessage::quoteHtmlChars( pretty, true );
+      }
+
       if(aLink)
-	result += "</a>, ";
+        result += "</a>, ";
     }
   }
   // cut of the trailing ", "
@@ -3799,7 +3883,6 @@ TQString KMMessage::emailAddrAsAnchor(const TQString& aEmail, bool stripped, con
   //              << "') returns:\n-->" << result << "<--" << endl;
   return result;
 }
-
 
 //-----------------------------------------------------------------------------
 //static
@@ -4023,7 +4106,7 @@ TQCString KMMessage::charset() const
 }
 
 //-----------------------------------------------------------------------------
-void KMMessage::setCharset(const TQCString& bStr)
+void KMMessage::setCharset( const TQCString &charset, DwEntity *entity )
 {
   kdWarning( type() != DwMime::kTypeText )
     << "KMMessage::setCharset(): trying to set a charset for a non-textual mimetype." << endl
@@ -4031,23 +4114,32 @@ void KMMessage::setCharset(const TQCString& bStr)
     << "====================================================================" << endl
     << kdBacktrace( 5 ) << endl
     << "====================================================================" << endl;
-  TQCString aStr = bStr;
-  KPIM::kAsciiToLower( aStr.data() );
-  DwMediaType &mType = dwContentType();
+
+  if ( !entity )
+    entity = mMsg;
+
+  DwMediaType &mType = entity->Headers().ContentType();
   mType.Parse();
-  DwParameter *param=mType.FirstParameter();
-  while(param)
+  DwParameter *param = mType.FirstParameter();
+  while( param ) {
+
     // FIXME use the mimelib functions here for comparison.
-    if (!kasciistricmp(param->Attribute().c_str(), "charset")) break;
-    else param=param->Next();
-  if (!param){
-    param=new DwParameter;
-    param->SetAttribute("charset");
-    mType.AddParameter(param);
+    if ( !kasciistricmp( param->Attribute().c_str(), "charset" ) )
+      break;
+
+    param = param->Next();
+  }
+  if ( !param ) {
+    param = new DwParameter;
+    param->SetAttribute( "charset" );
+    mType.AddParameter( param );
   }
   else
     mType.SetModified();
-  param->SetValue(DwString(aStr));
+
+  TQCString lowerCharset = charset;
+  KPIM::kAsciiToLower( lowerCharset.data() );
+  param->SetValue( DwString( lowerCharset ) );
   mType.Assemble();
 }
 
@@ -4078,7 +4170,8 @@ void KMMessage::setSignatureState(KMMsgSignatureState s, int idx)
     KMMsgBase::setSignatureState(s, idx);
 }
 
-void KMMessage::setMDNSentState( KMMsgMDNSentState status, int idx ) {
+void KMMessage::setMDNSentState( KMMsgMDNSentState status, int idx )
+{
   if ( mMDNSentState == status )
     return;
   if ( status == 0 )
@@ -4247,6 +4340,21 @@ void KMMessage::updateBodyPart(const TQString partSpecifier, const TQByteArray &
   }
 }
 
+void KMMessage::updateInvitationState()
+{
+  if ( mMsg && mMsg->hasHeaders() && mMsg->Headers().HasContentType() ) {
+    TQString cntType = mMsg->Headers().ContentType().TypeStr().c_str();
+    cntType += '/';
+    cntType += mMsg->Headers().ContentType().SubtypeStr().c_str();
+    if ( cntType.lower() == "text/calendar" ) {
+      setStatus( KMMsgStatusHasInvitation );
+      return;
+    }
+  }
+  setStatus( KMMsgStatusHasNoInvitation );
+  return;
+}
+
 //-----------------------------------------------------------------------------
 void KMMessage::updateAttachmentState( DwBodyPart* part )
 {
@@ -4268,6 +4376,18 @@ void KMMessage::updateAttachmentState( DwBodyPart* part )
       if ( filenameEmpty ) {
         // let's try if it is rfc 2231 encoded which mimelib can't handle
         filenameEmpty = KMMsgBase::decodeRFC2231String( KMMsgBase::extractRFC2231HeaderField( cd.AsString().c_str(), "filename" ) ).isEmpty();
+      }
+    }
+
+    // Filename still empty? Check if the content-type has a "name" parameter and try to use that as
+    // the attachment name
+    if ( filenameEmpty && part->Headers().HasContentType() ) {
+      DwMediaType contentType = part->Headers().ContentType();
+      filenameEmpty = contentType.Name().empty();
+      if ( filenameEmpty ) {
+        // let's try if it is rfc 2231 encoded which mimelib can't handle
+        filenameEmpty = KMMsgBase::decodeRFC2231String( KMMsgBase::extractRFC2231HeaderField(
+            contentType.AsString().c_str(), "name" ) ).isEmpty();
       }
     }
   }
@@ -4312,15 +4432,17 @@ void KMMessage::updateAttachmentState( DwBodyPart* part )
     setStatus( KMMsgStatusHasNoAttach );
 }
 
-void KMMessage::setBodyFromUnicode( const TQString & str ) {
+void KMMessage::setBodyFromUnicode( const TQString &str, DwEntity *entity )
+{
   TQCString encoding = KMMsgBase::autoDetectCharset( charset(), KMMessage::preferredCharsets(), str );
   if ( encoding.isEmpty() )
     encoding = "utf-8";
   const TQTextCodec * codec = KMMsgBase::codecForName( encoding );
   assert( codec );
   TQValueList<int> dummy;
-  setCharset( encoding );
-  setBodyAndGuessCte( codec->fromUnicode( str ), dummy, false /* no 8bit */ );
+  setCharset( encoding, entity );
+  setBodyAndGuessCte( codec->fromUnicode( str ), dummy, false /* no 8bit */,
+                      false, entity );
 }
 
 const TQTextCodec * KMMessage::codec() const {
@@ -4371,3 +4493,28 @@ void KMMessage::deleteWhenUnused()
 {
   sPendingDeletes << this;
 }
+
+DwBodyPart* KMMessage::findPart( int index )
+{
+  int accu = 0;
+  return findPartInternal( getTopLevelPart(), index, accu );
+}
+
+DwBodyPart* KMMessage::findPartInternal(DwEntity * root, int index, int & accu)
+{
+  accu++;
+  if ( index < accu ) // should not happen
+    return 0;
+  DwBodyPart *current = dynamic_cast<DwBodyPart*>( root );
+  if ( index == accu )
+    return current;
+  DwBodyPart *rv = 0;
+  if ( root->Body().FirstBodyPart() )
+    rv = findPartInternal( root->Body().FirstBodyPart(), index, accu );
+  if ( !rv && current && current->Next() )
+    rv = findPartInternal( current->Next(), index, accu );
+  if ( !rv && root->Body().Message() )
+    rv = findPartInternal( root->Body().Message(), index, accu );
+  return rv;
+}
+

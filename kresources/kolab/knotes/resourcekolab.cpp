@@ -41,6 +41,7 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
+#include <klocale.h>
 
 using namespace Kolab;
 
@@ -53,6 +54,9 @@ ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" ),
     mCalendar( TQString::fromLatin1("UTC") )
 {
+  if ( !config ) {
+    setResourceName( i18n( "Kolab Server" ) );
+  }
   setType( "imap" );
 }
 
@@ -73,7 +77,7 @@ bool ResourceKolab::doOpen()
   // Make the resource map from the folder list
   TQValueList<KMailICalIface::SubResource>::ConstIterator it;
   mSubResources.clear();
-  for ( it = subResources.begin(); it != subResources.end(); ++it ) {
+  for ( it = subResources.constBegin(); it != subResources.constEnd(); ++it ) {
     const TQString subResource = (*it).location;
     const bool active = config.readBoolEntry( subResource, true );
     mSubResources[ subResource ] = Kolab::SubResource( active, (*it).writable, (*it).label );
@@ -87,7 +91,7 @@ void ResourceKolab::doClose()
   KConfig config( configFile() );
   config.setGroup( configGroupName );
   Kolab::ResourceMap::ConstIterator it;
-  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it )
+  for ( it = mSubResources.constBegin(); it != mSubResources.constEnd(); ++it )
     config.writeEntry( it.key(), it.data().active() );
 }
 
@@ -113,8 +117,8 @@ bool ResourceKolab::loadSubResource( const TQString& subResource,
   // Populate with the new entries
   const bool silent = mSilent;
   mSilent = true;
-  TQMap<Q_UINT32, TQString>::Iterator it;
-  for ( it = lst.begin(); it != lst.end(); ++it ) {
+  TQMap<Q_UINT32, TQString>::ConstIterator it;
+  for ( it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     KCal::Journal* journal = addNote( it.data(), subResource, it.key(), mimetype );
     if ( !journal )
       kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
@@ -134,7 +138,7 @@ bool ResourceKolab::load()
 
   bool rc = true;
   Kolab::ResourceMap::ConstIterator itR;
-  for ( itR = mSubResources.begin(); itR != mSubResources.end(); ++itR ) {
+  for ( itR = mSubResources.constBegin(); itR != mSubResources.constEnd(); ++itR ) {
     if ( !itR.data().active() )
       // This subResource is disabled
       continue;
@@ -162,25 +166,35 @@ bool ResourceKolab::addNote( KCal::Journal* journal )
 KCal::Journal* ResourceKolab::addNote( const TQString& data, const TQString& subresource,
                              Q_UINT32 sernum, const TQString &mimetype )
 {
-  KCal::Journal* journal = 0;
-    // FIXME: This does not take into account the time zone!
-  KCal::ICalFormat formatter;
-  if ( mimetype == attachmentMimeType )
-    journal = Note::xmlToJournal( data );
-  else
-    journal = static_cast<KCal::Journal*>( formatter.fromString( data ) );
+  KCal::Journal *journal = 0;
 
+  // FIXME: This does not take into account the time zone!
+  KCal::ICalFormat formatter;
+  if ( mimetype == attachmentMimeType ) {
+    journal = Note::xmlToJournal( data );
+  } else {
+    journal = static_cast<KCal::Journal*>( formatter.fromString( data ) );
+  }
   Q_ASSERT( journal );
-  if( journal && !mUidMap.contains( journal->uid() ) )
-    if ( addNote( journal, subresource, sernum ) )
-      return journal;
-    else
-      delete journal;
-  return 0;
+
+  bool addedOk = journal &&
+                 !mUidMap.contains( journal->uid() ) &&
+                 addNote( journal, subresource, sernum );
+
+  // for debugging
+  if ( journal && mUidMap.contains( journal->uid() ) ) {
+    kdDebug(5500) << "mUidMap already contains " << journal->uid() << endl;
+  }
+
+  if ( !addedOk ) {
+    delete journal;
+    journal = 0;
+  }
+
+  return journal;
 }
 
-bool ResourceKolab::addNote( KCal::Journal* journal,
-                             const TQString& subresource, Q_UINT32 sernum )
+bool ResourceKolab::addNote( KCal::Journal *journal, const TQString &subresource, Q_UINT32 sernum )
 {
   kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal*, '" << subresource << "', " << sernum << " )\n";
 
@@ -188,12 +202,15 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
 
   // Find out if this note was previously stored in KMail
   bool newNote = subresource.isEmpty();
-  mCalendar.addJournal( journal );
-
-  TQString resource =
-    newNote ? findWritableResource( mSubResources ) : subresource;
-  if ( resource.isEmpty() ) // canceled
+  if ( !mCalendar.addJournal( journal ) ) {
     return false;
+  }
+
+  TQString resource = newNote ? findWritableResource( Kolab::Notes, mSubResources ) : subresource;
+  if ( resource.isEmpty() ) {
+    // canceled
+    return false;
+  }
 
   if ( !mSilent ) {
     TQString xml = Note::journalToXML( journal );
@@ -209,7 +226,6 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
     mUidMap[ journal->uid() ] = StorageReference( resource, sernum );
     return true;
   }
-
   return false;
 }
 
@@ -225,9 +241,7 @@ bool ResourceKolab::deleteNote( KCal::Journal* journal )
                           mUidMap[ uid ].serialNumber() );
   }
   mUidMap.remove( uid );
-  manager()->deleteNote( journal );
-  mCalendar.deleteJournal( journal );
-  return true;
+  return mCalendar.deleteJournal( journal );
 }
 
 KCal::Alarm::List ResourceKolab::alarms( const TQDateTime& from, const TQDateTime& to )
@@ -239,7 +253,7 @@ KCal::Alarm::List ResourceKolab::alarms( const TQDateTime& from, const TQDateTim
     {
         TQDateTime preTime = from.addSecs( -1 );
         KCal::Alarm::List::ConstIterator it;
-        for( it = (*note)->alarms().begin(); it != (*note)->alarms().end(); ++it )
+        for( it = (*note)->alarms().constBegin(); it != (*note)->alarms().constEnd(); ++it )
         {
             if ( (*it)->enabled() )
             {
@@ -261,7 +275,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
     subResource = mUidMap[ i->uid() ].resource();
     sernum = mUidMap[ i->uid() ].serialNumber();
   } else { // can this happen?
-    subResource = findWritableResource( mSubResources );
+    subResource = findWritableResource( Kolab::Notes, mSubResources );
     if ( subResource.isEmpty() ) // canceled
       return;
     sernum = 0;
@@ -313,8 +327,11 @@ void ResourceKolab::fromKMailDelIncidence( const TQString& type,
   const bool silent = mSilent;
   mSilent = true;
   KCal::Journal* j = mCalendar.journal( uid );
-  if( j )
-    deleteNote( j );
+  if ( j ) {
+    if ( deleteNote( j ) ) {
+      manager()->deleteNote( j );
+    }
+  }
   mSilent = silent;
 }
 
@@ -370,7 +387,7 @@ void ResourceKolab::fromKMailDelSubresource( const TQString& type,
   // Make a list of all uids to remove
   Kolab::UidMap::ConstIterator mapIt;
   TQStringList uids;
-  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
+  for ( mapIt = mUidMap.constBegin(); mapIt != mUidMap.constEnd(); ++mapIt )
     if ( mapIt.data().resource() == subResource )
       // We have a match
       uids << mapIt.key();
@@ -380,7 +397,7 @@ void ResourceKolab::fromKMailDelSubresource( const TQString& type,
     const bool silent = mSilent;
     mSilent = true;
     TQStringList::ConstIterator it;
-    for ( it = uids.begin(); it != uids.end(); ++it ) {
+    for ( it = uids.constBegin(); it != uids.constEnd(); ++it ) {
       KCal::Journal* j = mCalendar.journal( *it );
       if( j )
         deleteNote( j );
@@ -405,7 +422,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const TQMap<Q_UINT32, TQString>& m
     mimetype = attachmentMimeType;
   else
     mimetype = inlineMimeType;
-  for( TQMap<Q_UINT32, TQString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+  for( TQMap<Q_UINT32, TQString>::ConstIterator it = map.constBegin(); it != map.constEnd(); ++it ) {
     KCal::Journal* journal = addNote( it.data(), folder, it.key(), mimetype );
     if ( !journal )
       kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
@@ -433,5 +450,14 @@ bool ResourceKolab::subresourceActive( const TQString& res ) const
   return true;
 }
 
+bool ResourceKolab::subresourceWritable( const TQString& res ) const
+{
+  if ( mSubResources.contains( res ) ) {
+    return mSubResources[ res ].writable();
+  }
+
+  // Safe default bet:
+  return false;
+}
 
 #include "resourcekolab.moc"

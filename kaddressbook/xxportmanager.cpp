@@ -39,7 +39,7 @@
 #include "xxportmanager.h"
 
 KURL XXPortManager::importURL = KURL();
-TQString XXPortManager::importData = TQString::null;
+TQString XXPortManager::importData = TQString();
 
 XXPortManager::XXPortManager( KAB::Core *core, TQObject *parent, const char *name )
   : TQObject( parent, name ), mCore( core )

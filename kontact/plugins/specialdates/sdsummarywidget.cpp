@@ -127,7 +127,6 @@ SDSummaryWidget::SDSummaryWidget( Kontact::Plugin *plugin, TQWidget *parent,
     manager->setStandardResource( defaultResource );
   }
   mCalendar = KOrg::StdCalendar::self();
-  mCalendar->load();
 
   connect( mCalendar, TQT_SIGNAL( calendarChanged() ),
            this, TQT_SLOT( updateView() ) );
@@ -219,6 +218,8 @@ void SDSummaryWidget::updateView()
   mLabels.setAutoDelete( true );
   mLabels.clear();
   mLabels.setAutoDelete( false );
+
+  KIconLoader loader( "kdepim" );
 
   KABC::StdAddressBook *ab = KABC::StdAddressBook::self( true );
   TQValueList<SDEntry> dates;
@@ -391,9 +392,9 @@ void SDSummaryWidget::updateView()
       TQImage icon_img;
       TQString icon_name;
       KABC::Picture pic;
-      switch( (*addrIt).category ) {  // TODO: better icons
+      switch( (*addrIt).category ) {
       case CategoryBirthday:
-        icon_name = "cookie";
+        icon_name = "calendarbirthday";
         pic = (*addrIt).addressee.photo();
         if ( pic.isIntern() && !pic.data().isNull() ) {
           TQImage img = pic.data();
@@ -405,7 +406,7 @@ void SDSummaryWidget::updateView()
         }
         break;
       case CategoryAnniversary:
-        icon_name = "kdmconfig";
+        icon_name = "calendaranniversary";
         pic = (*addrIt).addressee.photo();
         if ( pic.isIntern() && !pic.data().isNull() ) {
           TQImage img = pic.data();
@@ -417,7 +418,7 @@ void SDSummaryWidget::updateView()
         }
         break;
       case CategoryHoliday:
-        icon_name = "kdmconfig"; break;
+        icon_name = "calendarholiday"; break;
       case CategoryOther:
         icon_name = "cookie"; break;
       }
@@ -438,8 +439,7 @@ void SDSummaryWidget::updateView()
 
       //Muck with the year -- change to the year 'daysTo' days away
       int year = currentDate.addDays( (*addrIt).daysTo ).year();
-      TQDate sD = TQDate::TQDate( year,
-                           (*addrIt).date.month(), (*addrIt).date.day() );
+      TQDate sD = TQDate( year, (*addrIt).date.month(), (*addrIt).date.day() );
 
       if ( (*addrIt).daysTo == 0 ) {
         datestr = i18n( "Today" );

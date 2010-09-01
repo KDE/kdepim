@@ -90,6 +90,7 @@ public:
   void setLabel( const TQString& );
   void setStatus( const TQString& );
   void setCrypto( bool );
+  void setTotalSteps( int totalSteps );
 
   ProgressItem* item() const { return mItem; }
 
@@ -132,6 +133,7 @@ void slotTransactionAdded( KPIM::ProgressItem *item );
   void slotTransactionStatus( KPIM::ProgressItem *item, const TQString& );
   void slotTransactionLabel( KPIM::ProgressItem *item, const TQString& );
   void slotTransactionUsesCrypto( KPIM::ProgressItem *item, bool );
+  void slotTransactionUsesBusyIndicator( KPIM::ProgressItem*, bool );
 
   void slotClose();
   void slotShow();

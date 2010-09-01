@@ -14,8 +14,18 @@
    <label>URL</label>
   </entry>
 
+  <entry key="JournalsUrl" type="String" >
+   <label>URL</label>
+  </entry>
+
   <entry key="UseSTasks" type="Bool" >
    <label>Use separate Tasks URL</label>
+   <default>false</default>
+  </entry>
+
+  <entry key="UseSJournals" type="Bool" >
+   <label>Use separate Journals URL</label>
+   <default>false</default>
   </entry>
 
   <entry key="Username" type="String">

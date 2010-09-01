@@ -67,10 +67,13 @@ class Filter
     TQString author() const { return m_author; }
     TQString name() const { return m_name; }
     TQString info() const { return m_info; }
-    
+
+    virtual bool needsSecondPage();
+
     int count_duplicates; //to count all duplicate messages
-    
+
   protected:
+    void showKMailImportArchiveDialog( FilterInfo* info );
     bool addMessage( FilterInfo* info,
                      const TQString& folder,
                      const TQString& msgFile,
@@ -79,7 +82,6 @@ class Filter
                      		    const TQString& folder,
                      		    const TQString& msgFile,
                                 const TQString& msgStatusFlags = TQString());
-    bool endImport();
   private:
     TQString m_name;
     TQString m_author;
@@ -112,7 +114,7 @@ public:
 	    for(unsigned int i=0; i<size; i++) d[i]=s[i];
 	} ;
 
-	/** Assignment operator. Does the same thing as 
+	/** Assignment operator. Does the same thing as
 	*   the copy constructor.
 	*/
 	FolderStructureBase &operator =(const FolderStructureBase &s)

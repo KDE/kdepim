@@ -71,9 +71,6 @@ bool sendToKOrganizer(const KAEvent&);
 bool deleteFromKOrganizer(const TQString& eventID);
 bool runKOrganizer();
 }
-#ifdef HAVE_XTEST
-void x11_cancelScreenSaver();
-#endif
 
 
 namespace KAlarm
@@ -929,17 +926,6 @@ TQString stripAccel(const TQString& text)
 	if (newlen != out.length())
 		out.truncate(newlen);
 	return out;
-}
-
-/******************************************************************************
-* Cancel the screen saver, in case it is active.
-* Only implemented if the X11 XTest extension is installed.
-*/
-void cancelScreenSaver()
-{
-#ifdef HAVE_XTEST
-	x11_cancelScreenSaver();
-#endif // HAVE_XTEST
 }
 
 } // namespace KAlarm

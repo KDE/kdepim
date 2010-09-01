@@ -29,6 +29,7 @@
 #include <tqguardedptr.h>
 #include <libkcal/incidencebase.h>
 
+#include "calendarview.h"
 
 class TQPopupMenu;
 class TQTime;
@@ -37,44 +38,46 @@ class KConfig;
 class KOAgenda;
 class KOAgendaItem;
 
-using namespace KOrg;
 namespace KOrg {
-class IncidenceChangerBase;
+  class IncidenceChangerBase;
 }
+using namespace KOrg;
 
-using namespace KCal;
 namespace KCal {
-class Event;
-class Todo;
-class Calendar;
+  class Event;
+  class Todo;
+  class Calendar;
 }
+using namespace KCal;
 
-class MarcusBains : public TQFrame {
-    Q_OBJECT
+class MarcusBains : public TQFrame
+{
+  Q_OBJECT
   public:
     MarcusBains( KOAgenda *agenda = 0, const char *name = 0 );
+    void updateLocationRecalc( bool recalculate = false );
     virtual ~MarcusBains();
 
   public slots:
-    void updateLocation( bool recalculate = false );
+    void updateLocation();
 
   private:
     int todayColumn();
     TQTimer *minutes;
     TQLabel *mTimeBox;
     KOAgenda *agenda;
-    TQTime oldTime;
-    int oldToday;
+    TQTime mOldTime;
+    int mOldToday;
 };
 
-
-class KOAgenda : public QScrollView
+class KOAgenda : public TQScrollView
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
-    KOAgenda ( int columns, int rows, int columnSize, TQWidget *parent=0,
-               const char *name = 0, WFlags f = 0 );
-    KOAgenda ( int columns, TQWidget *parent = 0,
+    KOAgenda ( int columns, int rows, int columnSize, CalendarView *calendarView,
+               TQWidget *parent=0, const char *name = 0, WFlags f = 0 );
+
+    KOAgenda ( int columns, CalendarView *calendarView, TQWidget *parent = 0,
                const char *name = 0, WFlags f = 0 );
     virtual ~KOAgenda();
 
@@ -103,7 +106,7 @@ class KOAgenda : public QScrollView
     void setStartTime( const TQTime &startHour );
 
     KOAgendaItem *insertItem ( Incidence *incidence, const TQDate &qd, int X, int YTop,
-                               int YBottom );
+                               int YBottom, int itemPos, int itemCount );
     KOAgendaItem *insertAllDayItem ( Incidence *event, const TQDate &qd, int XBegin,
                                      int XEnd );
     void insertMultiItem ( Event *event, const TQDate &qd, int XBegin, int XEnd,
@@ -171,18 +174,18 @@ class KOAgenda : public QScrollView
     void showAgendaItem( KOAgendaItem *item );
 
   signals:
-    void newEventSignal();
+    void newEventSignal( ResourceCalendar *res, const TQString &subResource );
     void newTimeSpanSignal( const TQPoint &, const TQPoint & );
     void newStartSelectSignal();
 
-    void showIncidenceSignal( Incidence * );
-    void editIncidenceSignal( Incidence * );
+    void showIncidenceSignal( Incidence *, const TQDate & );
+    void editIncidenceSignal( Incidence *, const TQDate & );
     void deleteIncidenceSignal( Incidence * );
-    void showIncidencePopupSignal( Incidence *, const TQDate &);
+    void showIncidencePopupSignal( Calendar *, Incidence *, const TQDate &);
     void showNewEventPopupSignal();
 
     void itemModified( KOAgendaItem *item );
-    void incidenceSelected( Incidence * );
+    void incidenceSelected( Incidence *, const TQDate & );
     void startMultiModify( const TQString & );
     void endMultiModify();
 
@@ -343,6 +346,7 @@ class KOAgenda : public QScrollView
 
     // The KOAgendaItem, which is being moved/resized
     TQGuardedPtr<KOAgendaItem> mActionItem;
+    QPair<ResourceCalendar *, TQString> mResPair;
 
     // Currently selected item
     TQGuardedPtr<KOAgendaItem> mSelectedItem;
@@ -373,6 +377,8 @@ class KOAgenda : public QScrollView
 
     bool mReturnPressed;
     KOrg::IncidenceChangerBase *mChanger;
+
+    CalendarView *mCalendarView;
 };
 
 #endif // KOAGENDA_H

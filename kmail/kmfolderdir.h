@@ -19,10 +19,15 @@ class KMFolderDir: public KMFolderNode, public KMFolderNodeList
 public:
   KMFolderDir( KMFolder * owner, KMFolderDir * parent = 0,
                const TQString& path = TQString::null,
-	       KMFolderDirType = KMStandardDir );
+               KMFolderDirType = KMStandardDir );
   virtual ~KMFolderDir();
 
   virtual bool isDir() const { return true; }
+
+  /**
+   * Adds the given subdirectory of this directory to the associated folder.
+   */
+  void addDirToParent( const TQString &dirName, KMFolder *parentFolder );
 
   /** Read contents of directory. */
   virtual bool reload();
@@ -39,9 +44,9 @@ public:
   /** Create a mail folder in this directory with given name. If sysFldr==TRUE
    the folder is marked as a (KMail) system folder.
    Returns Folder on success. */
-  virtual KMFolder* createFolder(const TQString& folderName,
-				 bool sysFldr=false,
-                                 KMFolderType folderType=KMFolderTypeMbox);
+  virtual KMFolder* createFolder( const TQString& folderName,
+                                  bool sysFldr=false,
+                                  KMFolderType folderType=KMFolderTypeMbox );
 
   /** Returns folder with given name or zero if it does not exist */
   virtual KMFolderNode* hasNamedFolder(const TQString& name);
@@ -67,9 +72,9 @@ class KMFolderRootDir: public KMFolderDir
   Q_OBJECT
 
 public:
-  KMFolderRootDir(KMFolderMgr* manager,
-		  const TQString& path=TQString::null,
-		  KMFolderDirType dirType = KMStandardDir);
+  KMFolderRootDir( KMFolderMgr* manager,
+                   const TQString& path=TQString::null,
+                   KMFolderDirType dirType = KMStandardDir );
   virtual ~KMFolderRootDir();
   virtual TQString path() const;
 

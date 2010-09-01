@@ -61,6 +61,13 @@ public:
     }
 
     /**
+     * Sets a new Journals URL to load.
+     */
+    virtual void setJournalsUrl(const TQString& s) {
+        mJournalsUrl = s;
+    }
+
+    /**
      * Sets the parent qobject.
      */
     virtual void setParent(TQObject *s) {
@@ -86,6 +93,13 @@ public:
      */
     virtual TQString tasksUrl() const {
         return mTasksUrl;
+    }
+
+    /**
+     * @return Journals URL to load.
+     */
+    virtual TQString journalsUrl() const {
+        return mJournalsUrl;
     }
 
     /**
@@ -117,6 +131,13 @@ public:
     }
 
     /**
+     * @return true if journals downloading process failed.
+     */
+    virtual bool journalsError() const {
+        return mJournalsError;
+    }
+
+    /**
      * @return an event error string.
      */
     virtual TQString errorString() const {
@@ -131,6 +152,13 @@ public:
     }
 
     /**
+     * @return a journal error string.
+     */
+    virtual TQString journalsErrorString() const {
+        return mJournalsErrorString;
+    }
+
+    /**
      * @return an event error number.
      */
     virtual long errorNumber() const {
@@ -142,6 +170,13 @@ public:
      */
     virtual long tasksErrorNumber() const {
         return mTasksErrorNumber;
+    }
+
+    /**
+     * @return a journal error number.
+     */
+    virtual long journalsErrorNumber() const {
+        return mJournalsErrorNumber;
     }
 
 protected:
@@ -167,6 +202,15 @@ protected:
     virtual int runTasksJob(runtime_info* caldavRuntime) = 0;
 
     /**
+     * Main run method for journal jobs. Jobs should not override run() method.
+     * Instead of this they should override this one.
+     * @param caldavRuntime specific libcaldav runtime information. This pointer should not be saved for the usage
+     * outside of runJob.
+     * @return libcaldav response code (see CALDAV_RESPONSE)
+     */
+    virtual int runJournalsJob(runtime_info* caldavRuntime) = 0;
+
+    /**
      * Some cleaning. Jobs may (and usually should) override this method.
      */
     virtual void cleanJob() {
@@ -176,6 +220,9 @@ protected:
         mTasksError = false;
         mTasksErrorString = "";
         mTasksErrorNumber = 0;
+        mJournalsError = false;
+        mJournalsErrorString = "";
+        mJournalsErrorNumber = 0;
     }
 
     /**
@@ -187,6 +234,11 @@ protected:
      * Sets a task error string to @p err. Also sets an error flag.
      */
     void setTasksErrorString(const TQString& str, const long number);
+
+    /**
+     * Sets a journal error string to @p err. Also sets an error flag.
+     */
+    void setJournalsErrorString(const TQString& str, const long number);
 
     /**
      * Process an event error.
@@ -204,16 +256,28 @@ protected:
      */
     virtual void processTasksError(const caldav_error* err);
 
+    /**
+     * Process a journal error.
+     * Subclasses can overwrite this method, if some special error message handling
+     * should be done. Call setErrorString() to set the error after processing is done.
+     * @param err error structure.
+     */
+    virtual void processJournalsError(const caldav_error* err);
+
 private:
 
     TQString mUrl;
     TQString mTasksUrl;
+    TQString mJournalsUrl;
     bool mError;
     bool mTasksError;
+    bool mJournalsError;
     TQString mErrorString;
     TQString mTasksErrorString;
+    TQString mJournalsErrorString;
     long mErrorNumber;
     long mTasksErrorNumber;
+    long mJournalsErrorNumber;
     TQObject *mParent;
     int mType;
 

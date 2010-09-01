@@ -48,6 +48,8 @@ using namespace KCal;
 #define PORTRAIT_HEADER_HEIGHT 72   // header height, for portrait orientation
 #define LANDSCAPE_HEADER_HEIGHT 54  // header height, for landscape orientation
 #define SUBHEADER_HEIGHT 20         // subheader height, for all orientations
+#define PORTRAIT_FOOTER_HEIGHT 16   // footer height, for portrait orientation
+#define LANDSCAPE_FOOTER_HEIGHT 14  // footer height, for landscape orientation
 #define MARGIN_SIZE 36              // margins, for all orientations
 #define PADDING_SIZE 7              // padding between the various top-level boxes
 #define BOX_BORDER_WIDTH 2          // width of the border of all top-level boxes
@@ -115,7 +117,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     void setKOrgCoreHelper( KOrg::CoreHelper*helper );
     bool useColors() const;
     void setUseColors( bool useColors );
-    
+
     /** Helper functions to hide the KOrg::CoreHelper */
     TQColor categoryBgColor( Incidence *incidence );
     TQColor textColor( const TQColor &color );
@@ -123,7 +125,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     bool isWorkingDay( const TQDate &dt );
     TQString holidayString( const TQDate &dt );
     Event *holiday( const TQDate &dt );
-    
+
     /**
       Determines the column of the given weekday ( 1=Monday, 7=Sunday ), taking the
       start of the week setting into account as given in kcontrol.
@@ -135,7 +137,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     KPrinter::Orientation orientation() const;
 
     /** Returns the height of the page header. If the height was explicitly
-        set using setHeaderHeight, that value is returned, otherwise a 
+        set using setHeaderHeight, that value is returned, otherwise a
         default value based on the printer orientation.
         \return height of the page header of the printout
     */
@@ -145,12 +147,20 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     int subHeaderHeight() const;
     void setSubHeaderHeight( const int height );
 
+    /** Returns the height of the page footer. If the height was explicitly
+        set using setFooterHeight, that value is returned, otherwise a
+        default value based on the printer orientation.
+        \return height of the page footer of the printout
+    */
+    int footerHeight() const;
+    void setFooterHeight( const int height );
+
     int margin() const;
     void setMargin( const int margin );
-    
+
     int padding() const;
     void setPadding( const int margin );
-    
+
     int borderWidth() const;
     void setBorderWidth( const int border );
 
@@ -161,7 +171,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
   /*****************************************************************
    **               PRINTING HELPER FUNCTIONS                     **
    *****************************************************************/
-  public: 
+  public:
     /**
       Draw a box with given width at the given coordinates.
       \param p The printer to be used
@@ -177,44 +187,51 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param rect The rectangle of the box
     */
     static void drawShadedBox( TQPainter &p, int linewidth, const TQBrush &brush, const TQRect &rect );
-  
+
     /**
       Print the given string (event summary) in the given rectangle. Margins
       and justification (centered or not) are automatically adjusted.
       \param p TQPainter of the printout
       \param box Coordinates of the surrounding event box
       \param str The text to be printed in the box
+      \param flags is a bitwise OR of TQt::AlignmentFlags and TQt::TextFlags values.
     */
     void printEventString( TQPainter &p, const TQRect &box, const TQString &str, int flags = -1 );
 
     /**
       Print the box for the given event with the given string.
       \param p QPainer of the printout
+      \param linewidth is the width of the line used to draw the box, ignored if less than 1.
       \param box Coordinates of the event's box
       \param incidence The incidence (if available), from which the category
                        color will be deduced, if applicable.
       \param str The string to print inside the box
+      \param flags is a bitwise OR of TQt::AlignmentFlags and TQt::TextFlags values.
     */
-    void showEventBox( TQPainter &p, const TQRect &box, Incidence *incidence, const TQString &str, int flags = -1 );
-    
-    /** 
+    void showEventBox( TQPainter &p, int linewidth, const TQRect &box, Incidence *incidence,
+                       const TQString &str, int flags = -1 );
+
+    /**
       Draw a subheader box with a shaded background and the given string
       \param p TQPainter of the printout
       \param str Text to be printed inside the box
       \param box Coordinates of the box
     */
     void drawSubHeaderBox(TQPainter &p, const TQString &str, const TQRect &box );
-    
+
     /**
       Draw an event box with vertical text.
       \param p TQPainter of the printout
+      \param linewidth is the width of the line used to draw the box, ignored if less than 1.
       \param box Coordinates of the box
       \param str ext to be printed inside the box
+      \param flags is a bitwise OR of TQt::AlignmentFlags and TQt::TextFlags values.
     */
-    void drawVerticalBox( TQPainter &p, const TQRect &box, const TQString &str );
-    
+    void drawVerticalBox( TQPainter &p, int linewidth, const TQRect &box, const TQString &str,
+                          int flags=-1 );
+
     /**
-      Draw a component box with a heading (printed in bold). 
+      Draw a component box with a heading (printed in bold).
       \param p TQPainter of the printout
       \param box Coordinates of the box
       \param caption Caption string to be printed inside the box
@@ -222,7 +239,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
                       then no text will be printed, only the caption.
       \param sameLine Whether the contents should start on the same line as
                       the caption (the space below the caption text will be
-                      used as indentation in the subsequent lines) or on the 
+                      used as indentation in the subsequent lines) or on the
                       next line (no indentation of the contents)
       \param expand Whether to expand the box vertically to fit the
                     whole text in it.
@@ -234,7 +251,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
               custom contents in that case.
     */
     int drawBoxWithCaption( TQPainter &p, const TQRect &box, const TQString &caption,
-                            const TQString &contents, 
+                            const TQString &contents,
                             bool sameLine, bool expand, const TQFont &captionFont, const TQFont &textFont );
 
     /**
@@ -260,13 +277,23 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param box coordinates of the title bar
       \param expand Whether to expand the box vertically to fit the
                     whole title in it.
-      \return The bottom of the printed box. If expand==false, this 
+      \return The bottom of the printed box. If expand==false, this
               is box.bottom, otherwise it is larger than box.bottom
               and matches the y-coordinate of the surrounding rectangle.
     */
     int drawHeader( TQPainter &p, TQString title,
                      const TQDate &month1, const TQDate &month2,
                      const TQRect &box, bool expand = false );
+
+    /**
+      Draw a page footer containing the printing date and possibly
+      other things, like a page number.
+      \param p TQPainter of the printout
+      \param box coordinates of the footer
+      \return The bottom of the printed box.
+    */
+    int drawFooter( TQPainter &p, TQRect &box );
+
     /**
       Draw a small calendar with the days of a month into the given area.
       Used for example in the title bar of the sheet.
@@ -309,7 +336,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     void drawTimeLine( TQPainter &p,
                        const TQTime &fromTime, const TQTime &toTime,
                        const TQRect &box );
-  
+
     /**
       Draw the all-day box for the agenda print view (the box on top which
       doesn't have a time on the time scale associated). If expandable is set,
@@ -359,7 +386,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
                          const TQDateTime &startPrintDate,
                          const TQDateTime &endPrintDate,
                          float minlen, const TQRect &box );
-  
+
     /**
       Draw the box containing a list of all events of the given day (with their times,
       of course). Used in the Filofax and the month print style.
@@ -429,8 +456,8 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param dt Arbitrary date within the month to be printed
       \param box coordinates of the box reserved for the month
       \param maxdays Days to print. If a value of -1 is given, the number of days
-                     is deduced from the month. If maxdays is larger than the 
-                     number of days in the month, the remaining boxes are 
+                     is deduced from the month. If maxdays is larger than the
+                     number of days in the month, the remaining boxes are
                      shaded to indicate they are not days of the month.
       \param subDailyFlags Bitfield consisting of DisplayFlags flags to determine
                            how events that do not cross midnight should be printed.
@@ -501,6 +528,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     bool mUseColors;
     int mHeaderHeight;
     int mSubHeaderHeight;
+    int mFooterHeight;
     int mMargin;
     int mPadding;
     int mBorder;

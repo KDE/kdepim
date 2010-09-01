@@ -60,6 +60,19 @@ k_dcop:
                             const TQString &attachParamValue,
                             const TQCString &attachContDisp,
                             const TQCString &attachCharset) = 0;
+  virtual int openComposer (const TQString &to, const TQString &cc,
+                            const TQString &bcc, const TQString &subject,
+                            const TQString &body, int hidden,
+                            const TQString &attachName,
+                            const TQCString &attachCte,
+                            const TQCString &attachData,
+                            const TQCString &attachType,
+                            const TQCString &attachSubType,
+                            const TQCString &attachParamAttr,
+                            const TQString &attachParamValue,
+                            const TQCString &attachContDisp,
+                            const TQCString &attachCharset,
+                            uint identity) = 0;
   /** Open composer and return reference to DCOP interface of composer window.
     If hidden is true, the window will not be shown. If you use that option,
     it's your responsibility to call the send() function of the composer in
@@ -102,6 +115,7 @@ k_dcop:
   virtual int dcopAddMessage(const TQString & foldername,
                              const KURL & messagefile,
                              const TQString & MsgStatusFlags = TQString()) = 0;
+  virtual void showImportArchiveDialog() = 0;
 
   virtual TQStringList folderList() const =0;
   virtual DCOPRef getFolder( const TQString& vpath ) =0;
@@ -211,7 +225,7 @@ k_dcop_hidden:
   /** Clears the list of added message ids which is used to filter out
       duplicates. */
   virtual void dcopResetAddMessage() = 0;
-  
+
   virtual void loadProfile( const TQString& path ) = 0;
   virtual void saveToProfile( const TQString& path ) const = 0;
 };

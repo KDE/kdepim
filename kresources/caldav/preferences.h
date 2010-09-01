@@ -92,6 +92,11 @@ public:
      */
     TQString getFullTasksUrl();
 
+    /**
+     * @return A full URL to connect to CalDAV Journals server (including username and password).
+     */
+    TQString getFullJournalsUrl();
+
 protected:
 
     /**

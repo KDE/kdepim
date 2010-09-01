@@ -35,6 +35,7 @@
 #include <kmessagebox.h>
 
 #include <libkcal/calendar.h>
+#include <libkcal/incidenceformatter.h>
 
 #include "koglobals.h"
 #include "koprefs.h"
@@ -244,7 +245,7 @@ void KOWhatsNextView::showDates( const TQDate &start, const TQDate &end )
   updateView();
 }
 
-void KOWhatsNextView::showIncidences( const Incidence::List & )
+void KOWhatsNextView::showIncidences( const Incidence::List &, const TQDate & )
 {
 }
 
@@ -312,8 +313,8 @@ void KOWhatsNextView::appendTodo( Incidence *ev )
   if ( ev->type()=="Todo" ) {
     Todo *todo = static_cast<Todo*>(ev);
     if ( todo->hasDueDate() ) {
-      mText += i18n("  (Due: %1)")
-         .arg( (todo->doesFloat())?(todo->dtDueDateStr()):(todo->dtDueStr()) );
+      mText += i18n( "  (Due: %1)" ).
+               arg( IncidenceFormatter::dateTimeToString( todo->dtDue(), todo->doesFloat() ) );
     }
   }
   mText += "</li>\n";
@@ -329,7 +330,9 @@ void KOWhatsNextView::showIncidence( const TQString &uid )
   } else if ( uid.startsWith( "todo://" ) ) {
     incidence = calendar()->incidence( uid.mid( 7 ) );
   }
-  if ( incidence ) emit showIncidenceSignal( incidence );
+  if ( incidence ) {
+    emit showIncidenceSignal( incidence, TQDate() );
+  }
 }
 
 #include "kowhatsnextview.moc"

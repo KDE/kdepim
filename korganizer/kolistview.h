@@ -27,6 +27,7 @@
 #define _KOLISTVIEW_H
 
 #include <tqdict.h>
+#include <tqmap.h>
 #include <tqtooltip.h>
 
 #include <libkcal/incidence.h>
@@ -43,12 +44,13 @@ class KOListView;
 class KOListViewToolTip : public QToolTip
 {
   public:
-    KOListViewToolTip (TQWidget* parent, KListView* lv );
+    KOListViewToolTip ( TQWidget* parent, Calendar *calendar, KListView* lv );
 
   protected:
-    void maybeTip( const TQPoint & pos);
+    void maybeTip( const TQPoint &pos );
 
   private:
+    Calendar *mCalendar;
     KListView* eventlist;
 };
 
@@ -67,26 +69,32 @@ class KOListView : public KOEventView
 {
     Q_OBJECT
   public:
-    KOListView(Calendar *calendar, TQWidget *parent = 0,
-               const char *name = 0);
+   explicit KOListView( Calendar *calendar,
+                        TQWidget *parent = 0,
+                        const char *name = 0,
+                        bool nonInteractive = false );
     ~KOListView();
 
     virtual int maxDatesHint();
     virtual int currentDateCount();
     virtual Incidence::List selectedIncidences();
-    virtual DateList selectedDates();
+    virtual DateList selectedIncidenceDates();
 
-    void showDates(bool show);
+    void showDates( bool show );
+
+    // Shows all incidences of the calendar
+    void showAll();
 
     void readSettings(KConfig *config);
     void writeSettings(KConfig *config);
 
     void clear();
+    TQSize sizeHint() const;
 
   public slots:
     virtual void updateView();
     virtual void showDates( const TQDate &start, const TQDate &end );
-    virtual void showIncidences( const Incidence::List &incidenceList );
+    virtual void showIncidences( const Incidence::List &incidenceList, const TQDate &date );
 
     void clearSelection();
 
@@ -102,8 +110,8 @@ class KOListView : public KOEventView
     void processSelectionChange();
 
   protected:
-    void addIncidences( const Incidence::List & );
-    void addIncidence(Incidence *);
+    void addIncidences(const Incidence::List &, const TQDate &date);
+    void addIncidence(Incidence *,  const TQDate &date);
     KOListViewItem *getItemForIncidence(Incidence *incidence);
 
   private:
@@ -112,7 +120,11 @@ class KOListView : public KOEventView
     KOEventPopupMenu *mPopupMenu;
     KOListViewItem *mActiveItem;
     TQDict<Incidence> mUidDict;
+    TQMap<TQString, TQDate>mDateList;
     DateList mSelectedDates;
+
+    // if it's non interactive we disable context menu, and incidence editing
+    bool mIsNonInteractive;
 };
 
 #endif

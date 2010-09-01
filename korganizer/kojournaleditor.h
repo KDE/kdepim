@@ -69,12 +69,12 @@ class KOJournalEditor : public KOIncidenceEditor
     */
     void setTexts( const TQString &summary, const TQString &description = TQString::null );
     /** Edit an existing Journal. */
-    void editIncidence(Incidence *, Calendar *);
+    void editIncidence(Incidence *, const TQDate &date, Calendar *);
 
     /** Set widgets to default values */
     void setDate( const TQDate &date );
     /** Read event object and setup widgets accordingly */
-    void readJournal( Journal * );
+    void readJournal( Journal *, const TQDate &date );
     /** Write event settings to event object */
     void writeJournal( Journal * );
 
@@ -86,7 +86,7 @@ class KOJournalEditor : public KOIncidenceEditor
     bool processInput();
 
     /** This Journal has been modified externally */
-    void modified (int change=0);
+    void modified();
 
   protected slots:
     void loadDefaults();

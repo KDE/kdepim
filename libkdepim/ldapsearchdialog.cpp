@@ -1,5 +1,5 @@
 /* ldapsearchdialogimpl.cpp - LDAP access
- *      Copyright (C) 2002 Klarälvdalens Datakonsult AB
+ *      Copyright (C) 2002 Klar�vdalens Datakonsult AB
  *
  *      Author: Steffen Hansen <hansen@kde.org>
  *
@@ -20,6 +20,8 @@
 
 #include "ldapsearchdialog.h"
 #include "ldapclient.h"
+
+#include <libemailfunctions/email.h>
 
 #include <tqcheckbox.h>
 #include <tqgroupbox.h>
@@ -94,12 +96,20 @@ static TQMap<TQString, TQString>& adrbookattr2ldap()
   return keys;
 }
 
-class ContactListItem : public QListViewItem
+namespace KPIM {
+
+class ContactListItem : public TQListViewItem
 {
   public:
     ContactListItem( TQListView* parent, const KPIM::LdapAttrMap& attrs )
       : TQListViewItem( parent ), mAttrs( attrs )
-    { }
+    {
+      const KPIM::LdapAttrValue &mailAttrs = attrs[ "mail" ];
+      if ( mailAttrs.isEmpty() ) {
+        setSelectable( false );
+        setEnabled( false );
+      }
+    }
 
     KPIM::LdapAttrMap mAttrs;
 
@@ -111,6 +121,8 @@ class ContactListItem : public QListViewItem
       return join( mAttrs[ ldapAttrName ], ", " );
     }
 };
+
+}
 
 LDAPSearchDialog::LDAPSearchDialog( TQWidget* parent, const char* name )
   : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
@@ -248,7 +260,7 @@ void LDAPSearchDialog::restoreSettings()
 
       KPIM::LdapClient* ldapClient = new KPIM::LdapClient( 0, this, "ldapclient" );
       ldapClient->setServer( ldapServer );
-      
+
       TQStringList attrs;
 
       for ( TQMap<TQString,TQString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
@@ -435,7 +447,7 @@ TQString LDAPSearchDialog::selectedEMails() const
         if ( name.isEmpty() ) {
           result << email;
         } else {
-          result << name + " <" + email + ">";
+          result << KPIM::quoteNameIfNecessary( name ) + " <" + email + ">";
         }
       }
     }

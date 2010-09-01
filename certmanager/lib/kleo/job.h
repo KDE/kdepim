@@ -38,6 +38,10 @@
 
 class TQWidget;
 
+namespace GpgME {
+    class Error;
+}
+
 namespace Kleo {
 
   /**
@@ -67,6 +71,8 @@ namespace Kleo {
     virtual void showErrorDialog( TQWidget * parent=0, const TQString & caption=TQString::null ) const;
 
     virtual TQString auditLogAsHtml() const;
+    virtual GpgME::Error auditLogError() const;
+    bool isAuditLogSupported() const;
 
   public slots:
     virtual void slotCancel() = 0;

@@ -82,12 +82,30 @@ public:
     }
 
     /**
+     * Sets the information about added journals writer should send to server.
+     * @param s icalendar-formatted string consists of all added journals plus necessary calendar info.
+     * May be an empty string, which means there are no added journals to send.
+     */
+    void setAddedJournalsObjects(const TQString& s) {
+        mJournalsAdded = s;
+    }
+
+    /**
      * Sets the information about changed tasks writer should send to server.
      * @param s icalendar-formatted string consists of all changed tasks plus necessary calendar info.
      * May be an empty string, which means there are no changed tasks to send.
      */
     void setChangedTasksObjects(const TQString& s) {
         mTasksChanged = s;
+    }
+
+    /**
+     * Sets the information about changed journals writer should send to server.
+     * @param s icalendar-formatted string consists of all changed journals plus necessary calendar info.
+     * May be an empty string, which means there are no changed journals to send.
+     */
+    void setChangedJournalsObjects(const TQString& s) {
+        mJournalsChanged = s;
     }
 
     /**
@@ -100,6 +118,15 @@ public:
     }
 
     /**
+     * Sets the information about deleted journals writer should send to server.
+     * @param s icalendar-formatted string consists of all deleted journals plus necessary calendar info.
+     * May be an empty string, which means there are no deleted journals to send.
+     */
+    void setDeletedJournalsObjects(const TQString& s) {
+        mJournalsDeleted = s;
+    }
+
+    /**
      * Clear all the information previously set.
      */
     void clearObjects() {
@@ -109,15 +136,20 @@ public:
         setAddedTasksObjects("");
         setChangedTasksObjects("");
         setDeletedTasksObjects("");
+        setAddedJournalsObjects("");
+        setChangedJournalsObjects("");
+        setDeletedJournalsObjects("");
     }
 
 protected:
 
     virtual int runJob(runtime_info* caldavRuntime);
     virtual int runTasksJob(runtime_info* caldavRuntime);
+    virtual int runJournalsJob(runtime_info* caldavRuntime);
 
     virtual void cleanJob();
     virtual void cleanTasksJob();
+    virtual void cleanJournalsJob();
 
     /// Just a wrapper above libcaldav event writing functions.
     template<typename Operation>
@@ -139,6 +171,16 @@ protected:
         return r;
     }
 
+    /// Just a wrapper above libcaldav journal writing functions.
+    template<typename Operation>
+    int pushJournalsObjects(const TQString& data, Operation op, int okCode, runtime_info* RT) {
+        int r = okCode;
+//         if (!data.isNull() && !data.isEmpty()) {
+//             r = op(std::string(data.ascii()).c_str(), std::string(journalsUrl().ascii()).c_str(), RT);
+//         }
+        return r;
+    }
+
 private:
 
     TQString mAdded;
@@ -148,6 +190,10 @@ private:
     TQString mTasksAdded;
     TQString mTasksChanged;
     TQString mTasksDeleted;
+
+    TQString mJournalsAdded;
+    TQString mJournalsChanged;
+    TQString mJournalsDeleted;
 };
 
 } // namespace KCal

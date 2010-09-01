@@ -23,22 +23,60 @@
 */
 
 #include "koeventviewer.h"
-
+#include "koglobals.h"
 #include "urihandler.h"
 
+#include <libkcal/attachmenthandler.h>
+#include <libkcal/calendar.h>
 #include <libkcal/incidence.h>
 #include <libkcal/incidenceformatter.h>
-#include <kdebug.h>
-#include <koglobals.h>
 
-KOEventViewer::KOEventViewer( TQWidget *parent, const char *name )
-  : TQTextBrowser( parent, name ), mDefaultText("")
+#include <kdebug.h>
+#include <klocale.h>
+#include <kpopupmenu.h>
+
+#include <tqcursor.h>
+#include <tqregexp.h>
+#include <tqtooltip.h>
+
+KOEventViewer::KOEventViewer( Calendar *calendar, TQWidget *parent, const char *name )
+  : TQTextBrowser( parent, name ), mCalendar( calendar ), mDefaultText("")
 {
   mIncidence = 0;
+  connect( this, TQT_SIGNAL(highlighted(const TQString &)), TQT_SLOT(message(const TQString &)) );
 }
 
 KOEventViewer::~KOEventViewer()
 {
+}
+
+void KOEventViewer::message( const TQString &link )
+{
+  mAttachLink = TQString();
+  if ( link.isEmpty() ) {
+    TQToolTip::remove( this );
+    return;
+  }
+
+  TQString ttStr;
+  if ( link.startsWith( "kmail:" ) ) {
+    ttStr = i18n( "Open the message in KMail" );
+  } else if ( link.startsWith( "mailto:" ) ) {
+    ttStr = i18n( "Send an email message to %1" ).arg( link.mid( 7 ) );
+  } else if ( link.startsWith( "uid:" ) ) {
+    ttStr = i18n( "Lookup the contact in KAddressbook" );
+  } else if ( link.startsWith( "ATTACH:" ) ) {
+    TQString tmp = link;
+    tmp.remove( TQRegExp( "^ATTACH://" ) );
+    TQString uid = tmp.section( ':', 0, 0 );
+    TQString name = tmp.section( ':', -1, -1 );
+    ttStr = i18n( "View attachment \"%1\"" ).arg( name );
+    mAttachLink = link;
+  } else {  // no special URI, let KDE handle it
+    ttStr = i18n( "Launch a viewer on the link" );
+  }
+
+  TQToolTip::add( this, ttStr );
 }
 
 void KOEventViewer::readSettings( KConfig * config )
@@ -50,7 +88,7 @@ void KOEventViewer::readSettings( KConfig * config )
     config->setGroup( TQString("EventViewer-%1").arg( name() )  );
     int zoomFactor = config->readNumEntry("ZoomFactor", pointSize() );
     zoomTo( zoomFactor/2 );
-    kdDebug(5850) << " KOEventViewer: restoring the pointSize:  "<< pointSize() 
+    kdDebug(5850) << " KOEventViewer: restoring the pointSize:  "<< pointSize()
       << ", zoomFactor: " << zoomFactor << endl;
 #endif
   }
@@ -67,20 +105,25 @@ void KOEventViewer::writeSettings( KConfig * config )
 
 void KOEventViewer::setSource( const TQString &n )
 {
-  UriHandler::process( n );
+  UriHandler::process( parentWidget(), n );
 }
 
-bool KOEventViewer::appendIncidence( Incidence *incidence )
+bool KOEventViewer::appendIncidence( Incidence *incidence, const TQDate &date )
 {
-  addText( IncidenceFormatter::extensiveDisplayString( incidence ) );
+  addText( IncidenceFormatter::extensiveDisplayStr( mCalendar, incidence, date ) );
   return true;
 }
 
-void KOEventViewer::setIncidence( Incidence *incidence )
+void KOEventViewer::setCalendar( Calendar *calendar )
+{
+  mCalendar = calendar;
+}
+
+void KOEventViewer::setIncidence( Incidence *incidence, const TQDate &date )
 {
   clearEvents();
   if( incidence ) {
-    appendIncidence( incidence );
+    appendIncidence( incidence, date );
     mIncidence = incidence;
   } else {
     clearEvents( true );
@@ -105,19 +148,42 @@ void KOEventViewer::setDefaultText( const TQString &text )
   mDefaultText = text;
 }
 
-void KOEventViewer::changeIncidenceDisplay( Incidence *incidence, int action )
+void KOEventViewer::changeIncidenceDisplay( Incidence *incidence, const TQDate &date, int action )
 {
   if ( mIncidence && ( incidence->uid() == mIncidence->uid() ) ) {
-    switch (action ) {
-      case KOGlobals::INCIDENCEEDITED:{
-        setIncidence( incidence );
-        break;
-      }
-      case KOGlobals::INCIDENCEDELETED: {
-        setIncidence( 0 );
-        break;
-      } 
+    switch ( action ) {
+    case KOGlobals::INCIDENCEEDITED:
+      setIncidence( incidence, date );
+      break;
+    case KOGlobals::INCIDENCEDELETED:
+      setIncidence( 0, date );
+      break;
     }
+  }
+}
+
+void KOEventViewer::contentsContextMenuEvent( TQContextMenuEvent *e )
+{
+  TQString name = UriHandler::attachmentNameFromUri( mAttachLink );
+  TQString uid = UriHandler::uidFromUri( mAttachLink );
+  if ( name.isEmpty() || uid.isEmpty() ) {
+    TQTextBrowser::contentsContextMenuEvent( e );
+    return;
+  }
+
+  KPopupMenu *menu = new KPopupMenu();
+  menu->insertItem( i18n( "Open Attachment" ), 0 );
+  menu->insertItem( i18n( "Save Attachment As..." ), 1 );
+
+  switch( menu->exec( TQCursor::pos(), 0 ) ) {
+  case 0: // open
+    AttachmentHandler::view( parentWidget(), name, uid );
+    break;
+  case 1: // save as
+    AttachmentHandler::saveAs( parentWidget(), name, uid );
+    break;
+  default:
+    break;
   }
 }
 

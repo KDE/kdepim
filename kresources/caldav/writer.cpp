@@ -103,6 +103,34 @@ int CalDavWriter::runJob(runtime_info* RT) {
       }
     }
 
+    int journalsres = OK;
+
+    if ((OK == journalsres) && (tasksUrl() != "")) {
+      kdDebug() << "pushing added tasks objects";
+      journalsres = pushJournalsObjects(mJournalsAdded, caldav_add_object, OK, RT);
+      if (OK == journalsres) {
+#ifdef USE_CALDAV_TASKS_MODIFY
+          kdDebug() << "pushing changed objects";
+          journalsres = pushJournalsObjects(mJournalsChanged, caldav_tasks_modify_object, OK, RT);
+          if (OK == journalsres) {
+              kdDebug() << "pushing deleted objects";
+              journalsres = pushJournalsObjects(mJournalsDeleted, caldav_tasks_delete_object, OK, RT);
+          }
+#else // if USE_CALDAV_TASKS_MODIFY
+          kdDebug() << "pushing changed objects (delete)";
+          journalsres = pushJournalsObjects(mJournalsChanged, caldav_tasks_delete_object, OK, RT);
+          if (OK == journalsres) {
+              kdDebug() << "pushing changed objects (add)";
+              journalsres = pushJournalsObjects(mJournalsChanged, caldav_add_object, OK, RT);
+              if (OK == journalsres) {
+                  kdDebug() << "pushing deleted objects";
+                  journalsres = pushJournalsObjects(mJournalsDeleted, caldav_tasks_delete_object, OK, RT);
+              }
+          }
+#endif // if USE_CALDAV_TASKS_MODIFY
+      }
+    }
+
     if ((OK != res) || (OK != tasksres)) {
         clearObjects();
     }
@@ -119,6 +147,15 @@ int CalDavWriter::runTasksJob(runtime_info* RT) {
 }
 
 void CalDavWriter::cleanTasksJob() {
+    // Stub function as there is no reason to split the writing jobs like the reading jobs
+}
+
+int CalDavWriter::runJournalsJob(runtime_info* RT) {
+    // Stub function as there is no reason to split the writing jobs like the reading jobs
+    return OK;
+}
+
+void CalDavWriter::cleanJournalsJob() {
     // Stub function as there is no reason to split the writing jobs like the reading jobs
 }
 

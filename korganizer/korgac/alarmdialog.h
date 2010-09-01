@@ -31,36 +31,48 @@
 #include <kdialogbase.h>
 
 #include <libkcal/event.h>
-#include <libkcal/calendarlocal.h>
+#include <libkcal/calendarresources.h>
 
 using namespace KCal;
 
+class AlarmListItem;
 class KOEventViewer;
-class TQSpinBox;
 class KComboBox;
 class KListView;
-class AlarmListItem;
+class TQSpinBox;
+class TQSplitter;
 
 class AlarmDialog : public KDialogBase {
-    Q_OBJECT
+  Q_OBJECT
   public:
-    AlarmDialog( TQWidget *parent = 0, const char *name = 0 );
-    virtual ~AlarmDialog();
+    explicit AlarmDialog( CalendarResources *calendar, TQWidget *parent = 0, const char *name = 0 );
 
-    void addIncidence( Incidence *incidence, const TQDateTime &reminderAt );
+    ~AlarmDialog();
+
+    void addIncidence( Incidence *incidence, const TQDateTime &reminderAt,
+                       const TQString &displayText );
     void eventNotification();
 
   public slots:
-    void slotOk();
-    void slotUser1();
-    void slotUser2();
-    void slotUser3();
+
+    void slotOk();    // suspend
+    void slotUser1(); // edit
+    void slotUser2(); // dismiss all
+    void slotUser3(); // dismiss selected
     void slotSave();
     void wakeUp();
     void show();
+    void edit();
     void suspend();
     void suspendAll();
     void dismissAll();
+    void dismissCurrent();
+
+    /**
+       If an incidence changed, for example in korg, we must update
+       the date and summary shown in the list view.
+    */
+    void slotCalendarChanged();
 
   signals:
     void reminderCount( int count );
@@ -69,16 +81,29 @@ class AlarmDialog : public KDialogBase {
     void updateButtons();
     void showDetails();
 
+  protected:
+    void closeEvent( TQCloseEvent * );
+
   private:
-    bool startKOrganizer();
+
+    static TQDateTime triggerDateForIncidence( Incidence *inc,
+                                              const TQDateTime &reminderAt,
+                                              TQString &displayStr );
+
+    void readLayout();
+    void writeLayout();
+    AlarmListItem *searchByUid( const TQString &uid );
+    bool ensureKorganizerRunning() const;
     void setTimer();
     int activeCount();
     TQValueList<AlarmListItem*> selectedItems() const;
 
+    CalendarResources *mCalendar;
     KListView *mIncidenceListView;
     KOEventViewer *mDetailView;
 
     TQSpinBox *mSuspendSpin;
+    TQSplitter *mSplitter;
     KComboBox *mSuspendUnit;
     TQTimer mSuspendTimer;
 };

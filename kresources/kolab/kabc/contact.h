@@ -121,9 +121,8 @@ public:
   void setProfession( const TQString& profession );
   TQString profession() const;
 
-  // not shown in the kaddressbook GUI
-  //void setJobTitle( const TQString& title );
-  //TQString jobTitle() const;
+  void setJobTitle( const TQString& title );
+  TQString jobTitle() const;
 
   void setManagerName( const TQString& name );
   TQString managerName() const;
@@ -245,7 +244,7 @@ private:
   TQString mDepartment;
   TQString mOfficeLocation;
   TQString mProfession;
-  //TQString mJobTitle;
+  TQString mJobTitle;
   TQString mManagerName;
   TQString mAssistant;
   TQString mNickName;

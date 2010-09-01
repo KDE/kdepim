@@ -41,8 +41,7 @@ namespace KCal
   class Incidence;
   class ResourceCalendar;
 }
-namespace KOrg
-{
+namespace KOrg {
   class MainWindow;
 }
 
@@ -59,7 +58,7 @@ class CalendarView;
 class KOrganizer;
 class KONewStuff;
 class KOWindowList;
-class ImportDialog;
+class PreviewDialog;
 class ResourceView;
 class HTMLExportSettings;
 
@@ -152,7 +151,8 @@ class KDE_EXPORT ActionManager : public TQObject, public KCalendarIface
     */
     virtual bool deleteIncidence( const TQString& uid, bool force = false );
 
-    bool editIncidence( const TQString& uid );
+    bool editIncidence( const TQString &uid );
+    bool editIncidence( const TQString &uid, const TQDate &date );
 
     /**
       Add an incidence to the active calendar.
@@ -194,7 +194,8 @@ class KDE_EXPORT ActionManager : public TQObject, public KCalendarIface
                          const TQString& uri,
                          const TQString& file,
                          const TQStringList& attendees,
-                         const TQString& attachmentMimetype );
+                         const TQString& attachmentMimetype,
+                         bool isTask );
 
     void openJournalEditor( const TQDate& date );
     void openJournalEditor( const TQString& text, const TQDate& date );
@@ -219,6 +220,8 @@ class KDE_EXPORT ActionManager : public TQObject, public KCalendarIface
     void loadProfile( const TQString & path );
 
     void saveToProfile( const TQString & path ) const;
+
+    bool handleCommandLine();
 
   signals:
     /**
@@ -251,7 +254,7 @@ class KDE_EXPORT ActionManager : public TQObject, public KCalendarIface
 
     void setDestinationPolicy();
 
-    void processIncidenceSelection( Incidence * );
+    void processIncidenceSelection( Incidence *incidence, const TQDate &date );
     void keyBindings();
 
     /**
@@ -342,7 +345,7 @@ class KDE_EXPORT ActionManager : public TQObject, public KCalendarIface
 
     void updateRedoAction( const TQString & );
 
-    void slotImportDialogFinished( ImportDialog * );
+    void slotPreviewDialogFinished( PreviewDialog * );
 
   protected:
     /** Get URL for saving. Opens FileDialog. */
@@ -366,6 +369,9 @@ class KDE_EXPORT ActionManager : public TQObject, public KCalendarIface
     /** Create all the actions. */
     void initActions();
     void enableIncidenceActions( bool enable );
+
+    QPair<ResourceCalendar *, TQString> viewSubResourceCalendar();
+    bool isWritable( ResourceCalendar *res, const TQString &subRes, const TQString &contentsType );
 
     KOrg::Part::List mParts; // List of parts loaded
     KURL mURL;      // URL of calendar file
@@ -400,6 +406,13 @@ class KDE_EXPORT ActionManager : public TQObject, public KCalendarIface
     KAction *mNextXDays;
     KAction *mPublishEvent;
     KAction *mForwardEvent;
+
+    KAction *mSendInvitation;
+    KAction *mSendCancel;
+    KAction *mSendStatusUpdate;
+
+    KAction *mRequestChange;
+    KAction *mRequestUpdate;
 
     KAction *mUndoAction;
     KAction *mRedoAction;

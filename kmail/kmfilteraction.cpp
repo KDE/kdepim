@@ -9,6 +9,8 @@
 
 #include "kmfilteraction.h"
 
+#include "customtemplates.h"
+#include "customtemplates_kfg.h"
 #include "kmcommands.h"
 #include "kmmsgpart.h"
 #include "kmfiltermgr.h"
@@ -27,7 +29,6 @@ using KPIM::CollectingProcess;
 #include "folderrequester.h"
 using KMail::FolderRequester;
 #include "kmmsgbase.h"
-#include "templateparser.h"
 #include "messageproperty.h"
 #include "actionscheduler.h"
 using KMail::MessageProperty;
@@ -48,6 +49,8 @@ using KMail::RegExpLineEdit;
 #include <tqtimer.h>
 #include <tqobject.h>
 #include <tqstylesheet.h>
+#include <tqtooltip.h>
+#include <tqwhatsthis.h> 
 #include <assert.h>
 
 
@@ -1433,14 +1436,26 @@ bool KMFilterActionCopy::requiresBody(KMMsgBase*) const
 
 //=============================================================================
 // KMFilterActionForward - forward to
-// Forward message to another user
+// Forward message to another user, with a defined template
 //=============================================================================
 class KMFilterActionForward: public KMFilterActionWithAddress
 {
 public:
   KMFilterActionForward();
-  virtual ReturnCode process(KMMessage* msg) const;
+  virtual ReturnCode process( KMMessage* msg ) const;
+  virtual TQWidget* createParamWidget( TQWidget* parent ) const;
+  virtual void applyParamWidgetValue( TQWidget* paramWidget );
+  virtual void setParamWidgetValue( TQWidget* paramWidget ) const;
+  virtual void clearParamWidget( TQWidget* paramWidget ) const;
+  virtual void argsFromString( const TQString argsStr );
+  virtual const TQString argsAsString() const;
+  virtual const TQString displayString() const;
+
   static KMFilterAction* newAction(void);
+
+private:
+
+  mutable TQString mTemplate;
 };
 
 KMFilterAction* KMFilterActionForward::newAction(void)
@@ -1460,89 +1475,152 @@ KMFilterAction::ReturnCode KMFilterActionForward::process(KMMessage* aMsg) const
 
   // avoid endless loops when this action is used in a filter
   // which applies to sent messages
-  if ( KMMessage::addressIsInAddressList( mParameter, aMsg->to() ) )
+  if ( KMMessage::addressIsInAddressList( mParameter, aMsg->to() ) ) {
+    kdWarning(5006) << "Attempt to forward to receipient of original message, ignoring." << endl;
     return ErrorButGoOn;
-
-  // Create the forwarded message by hand to make forwarding of messages with
-  // attachments work.
-  // Note: This duplicates a lot of code from KMMessage::createForward() and
-  //       KMComposeWin::applyChanges().
-  // ### FIXME: Remove the code duplication again.
-
-  KMMessage* msg = new KMMessage;
-
-  msg->initFromMessage( aMsg );
-
-  // TQString st = TQString::fromUtf8( aMsg->createForwardBody() );
-
-  TemplateParser parser( msg, TemplateParser::Forward,
-    aMsg->body(), false, false, false, false);
-  parser.process( aMsg );
-
-  QCString
-    encoding = KMMsgBase::autoDetectCharset( aMsg->charset(),
-                                             KMMessage::preferredCharsets(),
-                                             msg->body() );
-  if( encoding.isEmpty() )
-    encoding = "utf-8";
-  TQCString str = KMMsgBase::codecForName( encoding )->fromUnicode( msg->body() );
-
-  msg->setCharset( encoding );
-  msg->setTo( mParameter );
-  msg->setSubject( "Fwd: " + aMsg->subject() );
-
-  bool isQP = kmkernel->msgSender()->sendQuotedPrintable();
-
-  if( aMsg->numBodyParts() == 0 )
-  {
-    msg->setAutomaticFields( true );
-    msg->setHeaderField( "Content-Type", "text/plain" );
-    // msg->setCteStr( isQP ? "quoted-printable": "8bit" );
-    TQValueList<int> dummy;
-    msg->setBodyAndGuessCte(str, dummy, !isQP);
-    msg->setCharset( encoding );
-    if( isQP )
-      msg->setBodyEncoded( str );
-    else
-      msg->setBody( str );
   }
-  else
-  {
-    KMMessagePart bodyPart, msgPart;
 
-    msg->removeHeaderField( "Content-Type" );
-    msg->removeHeaderField( "Content-Transfer-Encoding" );
-    msg->setAutomaticFields( true );
-    msg->setBody( "This message is in MIME format.\n\n" );
+  KMMessage *fwdMsg = aMsg->createForward( mTemplate );
+  fwdMsg->setTo( fwdMsg->to() + ',' + mParameter );
 
-    bodyPart.setTypeStr( "text" );
-    bodyPart.setSubtypeStr( "plain" );
-    // bodyPart.setCteStr( isQP ? "quoted-printable": "8bit" );
-    TQValueList<int> dummy;
-    bodyPart.setBodyAndGuessCte(str, dummy, !isQP);
-    bodyPart.setCharset( encoding );
-    bodyPart.setBodyEncoded( str );
-    msg->addBodyPart( &bodyPart );
-
-    for( int i = 0; i < aMsg->numBodyParts(); i++ )
-    {
-      aMsg->bodyPart( i, &msgPart );
-      if( i > 0 || qstricmp( msgPart.typeStr(), "text" ) != 0 )
-        msg->addBodyPart( &msgPart );
-    }
-  }
-  msg->cleanupHeader();
-  msg->link( aMsg, KMMsgStatusForwarded );
-
-  sendMDN( aMsg, KMime::MDN::Dispatched );
-
-  if ( !kmkernel->msgSender()->send( msg, KMail::MessageSender::SendLater ) ) {
-    kdDebug(5006) << "KMFilterAction: could not forward message (sending failed)" << endl;
+  if ( !kmkernel->msgSender()->send( fwdMsg, KMail::MessageSender::SendDefault ) ) {
+    kdWarning(5006) << "KMFilterAction: could not forward message (sending failed)" << endl;
     return ErrorButGoOn; // error: couldn't send
   }
+  else
+    sendMDN( aMsg, KMime::MDN::Dispatched );
+
+  // (the msgSender takes ownership of the message, so don't delete it here)
+
   return GoOn;
 }
 
+TQWidget* KMFilterActionForward::createParamWidget( TQWidget* parent ) const
+{
+  TQWidget *addressAndTemplate = new TQWidget( parent );
+  TQHBoxLayout *hBox = new TQHBoxLayout( addressAndTemplate );
+  TQWidget *addressEdit = KMFilterActionWithAddress::createParamWidget( addressAndTemplate );
+  addressEdit->setName( "addressEdit" );
+  hBox->addWidget( addressEdit );
+
+  KLineEdit *lineEdit = dynamic_cast<KLineEdit*>( addressEdit->child( "addressEdit" ) );
+  Q_ASSERT( lineEdit );
+  TQToolTip::add( lineEdit, i18n( "The addressee the message will be forwarded to" ) );
+  TQWhatsThis::add( lineEdit, i18n( "The filter will forward the message to the addressee entered here." ) );
+
+  TQComboBox *templateCombo = new TQComboBox( addressAndTemplate );
+  templateCombo->setName( "templateCombo" );
+  hBox->addWidget( templateCombo );
+
+  templateCombo->insertItem( i18n( "Default Template" ) );
+  TQStringList templateNames = GlobalSettingsBase::self()->customTemplates();
+  for ( TQStringList::const_iterator it = templateNames.begin(); it != templateNames.end();
+        it++ ) {
+    CTemplates templat( *it );
+    if ( templat.type() == CustomTemplates::TForward ||
+         templat.type() == CustomTemplates::TUniversal )
+      templateCombo->insertItem( *it );
+  }
+  templateCombo->setEnabled( templateCombo->count() > 1 );
+  TQToolTip::add( templateCombo, i18n( "The template used when forwarding" ) );
+  TQWhatsThis::add( templateCombo, i18n( "Set the forwarding template that will be used with this filter." ) );
+
+  return addressAndTemplate;
+}
+
+void KMFilterActionForward::applyParamWidgetValue( TQWidget* paramWidget )
+{
+  // Use findChildren<T> when porting to KDE 4
+  TQWidget *addressEdit = dynamic_cast<TQWidget*>( paramWidget->child( "addressEdit" ) );
+  Q_ASSERT( addressEdit );
+  KMFilterActionWithAddress::applyParamWidgetValue( addressEdit );
+
+  TQComboBox *templateCombo = dynamic_cast<TQComboBox*>( paramWidget->child( "templateCombo" ) );
+  Q_ASSERT( templateCombo );
+
+  if ( templateCombo->currentItem() == 0 ) {
+    // Default template, so don't use a custom one
+    mTemplate = TQString::null;
+  }
+  else {
+    mTemplate = templateCombo->currentText();
+  }
+}
+
+void KMFilterActionForward::setParamWidgetValue( TQWidget* paramWidget ) const
+{
+  TQWidget *addressEdit = dynamic_cast<TQWidget*>( paramWidget->child( "addressEdit" ) );
+  Q_ASSERT( addressEdit );
+  KMFilterActionWithAddress::setParamWidgetValue( addressEdit );
+
+  TQComboBox *templateCombo = dynamic_cast<TQComboBox*>( paramWidget->child( "templateCombo" ) );
+  Q_ASSERT( templateCombo );
+
+  if ( mTemplate.isEmpty() ) {
+    templateCombo->setCurrentItem( 0 );
+  }
+  else {
+    // WTF: TQt3's combobox has no indexOf? Search it manually, then.
+    int templateIndex = -1;
+    for ( int i = 1; i < templateCombo->count(); i++ ) {
+      if ( templateCombo->text( i ) == mTemplate ) {
+        templateIndex = i;
+        break;
+      }
+    }
+
+    if ( templateIndex != -1 ) {
+      templateCombo->setCurrentItem( templateIndex );
+    }
+    else {
+      mTemplate = TQString::null;
+    }
+  }
+}
+
+void KMFilterActionForward::clearParamWidget( TQWidget* paramWidget ) const
+{
+  TQWidget *addressEdit = dynamic_cast<TQWidget*>( paramWidget->child( "addressEdit" ) );
+  Q_ASSERT( addressEdit );
+  KMFilterActionWithAddress::clearParamWidget( addressEdit );
+
+  TQComboBox *templateCombo = dynamic_cast<TQComboBox*>( paramWidget->child( "templateCombo" ) );
+  Q_ASSERT( templateCombo );
+
+  templateCombo->setCurrentItem( 0 );
+}
+
+// We simply place a "@$$@" between the two parameters. The template is the last
+// parameter in the string, for compatibility reasons.
+static const TQString forwardFilterArgsSeperator = "@$$@";
+
+void KMFilterActionForward::argsFromString( const TQString argsStr )
+{
+  int seperatorPos = argsStr.find( forwardFilterArgsSeperator );
+
+  if ( seperatorPos == - 1 ) {
+    // Old config, assume that the whole string is the addressee
+    KMFilterActionWithAddress::argsFromString( argsStr );
+  }
+  else {
+    TQString addressee = argsStr.left( seperatorPos );
+    mTemplate = argsStr.mid( seperatorPos + forwardFilterArgsSeperator.length() );
+    KMFilterActionWithAddress::argsFromString( addressee );
+  }
+}
+
+const TQString KMFilterActionForward::argsAsString() const
+{
+  return KMFilterActionWithAddress::argsAsString() + forwardFilterArgsSeperator + mTemplate;
+}
+
+const TQString KMFilterActionForward::displayString() const
+{
+  if ( mTemplate.isEmpty() )
+    return i18n( "Forward to %1 with default template " ).arg( mParameter );
+  else
+    return i18n( "Forward to %1 with template %2" ).arg( mParameter, mTemplate );
+}
 
 //=============================================================================
 // KMFilterActionRedirect - redirect to

@@ -58,12 +58,13 @@ using namespace KOrg;
 class KOTodoListViewToolTip : public QToolTip
 {
   public:
-    KOTodoListViewToolTip( TQWidget *parent, KOTodoListView *lv );
+    KOTodoListViewToolTip( TQWidget *parent, Calendar *calendar, KOTodoListView *lv );
 
   protected:
     void maybeTip( const TQPoint &pos );
 
   private:
+    Calendar *mCalendar;
     KOTodoListView *todolist;
 };
 
@@ -99,7 +100,6 @@ class KOTodoListView : public KListView
     TQPoint mPressPos;
     bool mMousePressed;
     TQListViewItem *mOldCurrent;
-    KOTodoListViewToolTip *tooltip;
 };
 
 
@@ -121,7 +121,7 @@ class KOTodoView : public KOrg::BaseView
     Incidence::List selectedIncidences();
     Todo::List selectedTodos();
 
-    DateList selectedDates() { return DateList(); }
+    DateList selectedIncidenceDates() { return DateList(); }
 
     /** Return number of shown dates. TodoView does not show dates, */
     int currentDateCount() { return 0; }
@@ -143,7 +143,7 @@ class KOTodoView : public KOrg::BaseView
     void changeIncidenceDisplay( Incidence *, int );
 
     void showDates( const TQDate &start, const TQDate &end );
-    void showIncidences( const Incidence::List &incidenceList );
+    void showIncidences( const Incidence::List &incidenceList, const TQDate &date );
 
     void clearSelection();
 
@@ -177,8 +177,8 @@ class KOTodoView : public KOrg::BaseView
   signals:
     void unSubTodoSignal();
     void unAllSubTodoSignal();
-
     void purgeCompletedSignal();
+    void configChanged();
 
   protected slots:
     void processSelectionChange();
@@ -232,7 +232,7 @@ class KOTodoView : public KOrg::BaseView
       ePercentColumn = 3,
       eDueDateColumn = 4,
       eCategoriesColumn = 5,
-      eDescriptionColumn = 6
+      eFolderColumn = 6
     };
     enum {
       ePopupEdit = 1300,

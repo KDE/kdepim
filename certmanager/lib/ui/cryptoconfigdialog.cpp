@@ -46,6 +46,12 @@ Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, TQWidg
   setMainWidget( mMainWidget );
   connect( mMainWidget, TQT_SIGNAL( changed() ), TQT_SLOT( slotChanged() ) );
   enableButton( Apply, false );
+  if ( mMainWidget->hasError() ) {
+      showButton( Default, false );
+      showButton( User1, false );
+      showButton( Apply, false );
+      showButton( Ok, false );
+  }
 
   // Automatically assign accelerators
   KAcceleratorManager::manage( this );

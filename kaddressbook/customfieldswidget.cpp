@@ -289,6 +289,33 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
   }
 }
 
+void FieldWidget::setReadOnly( bool readOnly )
+{
+  FieldRecordList::ConstIterator it;
+  for ( it = mFieldList.begin(); it != mFieldList.end(); ++it ) {
+    TQString value;
+    if ( (*it).mWidget->isA( "TQLineEdit" ) ) {
+      TQLineEdit *wdg = static_cast<TQLineEdit*>( (*it).mWidget );
+      wdg->setReadOnly(readOnly);
+    } else if ( (*it).mWidget->isA( "TQSpinBox" ) ) {
+      TQSpinBox *wdg = static_cast<TQSpinBox*>( (*it).mWidget );
+      wdg->setEnabled( !readOnly );
+    } else if ( (*it).mWidget->isA( "TQCheckBox" ) ) {
+      TQCheckBox *wdg = static_cast<TQCheckBox*>( (*it).mWidget );
+      wdg->setEnabled( !readOnly );
+    } else if ( (*it).mWidget->isA( "TQDateEdit" ) ) {
+      TQDateEdit *wdg = static_cast<TQDateEdit*>( (*it).mWidget );
+      wdg->setEnabled( !readOnly );
+    } else if ( (*it).mWidget->isA( "TQTimeEdit" ) ) {
+      TQTimeEdit *wdg = static_cast<TQTimeEdit*>( (*it).mWidget );
+      wdg->setEnabled( !readOnly );
+    } else if ( (*it).mWidget->isA( "TQDateTimeEdit" ) ) {
+      TQDateTimeEdit *wdg = static_cast<TQDateTimeEdit*>( (*it).mWidget );
+      wdg->setEnabled( !readOnly );
+    }
+  }
+}
+
 void FieldWidget::storeContact( KABC::Addressee *addr )
 {
   FieldRecordList::ConstIterator it;
@@ -390,6 +417,7 @@ void CustomFieldsWidget::setReadOnly( bool readOnly )
 {
   mAddButton->setEnabled( !readOnly );
   mRemoveButton->setEnabled( !readOnly && !mFieldWidget->fields().isEmpty() );
+  mFieldWidget->setReadOnly( readOnly );
 }
 
 void CustomFieldsWidget::addField()

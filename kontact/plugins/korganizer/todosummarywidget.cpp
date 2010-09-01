@@ -67,7 +67,6 @@ TodoSummaryWidget::TodoSummaryWidget( TodoPlugin *plugin,
   mLayout->setRowStretch( 6, 1 );
 
   mCalendar = KOrg::StdCalendar::self();
-  mCalendar->load();
 
   connect( mCalendar, TQT_SIGNAL( calendarChanged() ), TQT_SLOT( updateView() ) );
   connect( mPlugin->core(), TQT_SIGNAL( dayChanged( const TQDate& ) ),
@@ -169,7 +168,7 @@ void TodoSummaryWidget::updateView()
       connect( urlLabel, TQT_SIGNAL( rightClickedURL( const TQString& ) ),
                this, TQT_SLOT( popupMenu( const TQString& ) ) );
 
-      TQString tipText( KCal::IncidenceFormatter::toolTipString( todo, true ) );
+      TQString tipText( KCal::IncidenceFormatter::toolTipStr( mCalendar, todo, currentDate, true ) );
       if ( !tipText.isEmpty() ) {
         TQToolTip::add( urlLabel, tipText );
       }
@@ -213,11 +212,11 @@ void TodoSummaryWidget::completeTodo( const TQString &uid )
 {
   KCal::Todo *todo = mCalendar->todo( uid );
   IncidenceChanger *changer = new IncidenceChanger( mCalendar, this );
-  if ( !todo->isReadOnly() && changer->beginChange( todo ) ) {
+  if ( !todo->isReadOnly() && changer->beginChange( todo, 0, TQString() ) ) {
     KCal::Todo *oldTodo = todo->clone();
     todo->setCompleted( TQDateTime::currentDateTime() );
-    changer->changeIncidence( oldTodo, todo, KOGlobals::COMPLETION_MODIFIED );
-    changer->endChange( todo );
+    changer->changeIncidence( oldTodo, todo, KOGlobals::COMPLETION_MODIFIED, this );
+    changer->endChange( todo, 0, TQString() );
     delete oldTodo;
     updateView();
   }

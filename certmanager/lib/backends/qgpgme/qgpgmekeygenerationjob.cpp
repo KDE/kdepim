@@ -80,7 +80,10 @@ GpgME::Error Kleo::QGpgMEKeyGenerationJob::start( const TQString & parameters ) 
 }
 
 void Kleo::QGpgMEKeyGenerationJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->keyGenerationResult(), mPubKeyDataProvider ? mPubKeyDataProvider->data() : TQByteArray() );
+    const GpgME::KeyGenerationResult res = mCtx->keyGenerationResult();
+    const TQByteArray data = mPubKeyDataProvider ? mPubKeyDataProvider->data() : TQByteArray() ;
+    getAuditLog();
+    emit result( res, data );
 }
 
 #include "qgpgmekeygenerationjob.moc"

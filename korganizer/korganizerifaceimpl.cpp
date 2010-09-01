@@ -91,6 +91,11 @@ bool KOrganizerIfaceImpl::editIncidence( const TQString &uid )
   return mActionManager->editIncidence( uid );
 }
 
+bool KOrganizerIfaceImpl::editIncidence( const TQString &uid, const TQDate &date )
+{
+  return mActionManager->editIncidence( uid, date );
+}
+
 bool KOrganizerIfaceImpl::addIncidence( const TQString &ical )
 {
   return mActionManager->addIncidence( ical );
@@ -103,12 +108,14 @@ bool KOrganizerIfaceImpl::canQueryClose()
 
 void KOrganizerIfaceImpl::loadProfile( const TQString& path )
 {
-    mActionManager->loadProfile( path );
+  mActionManager->loadProfile( path );
 }
 
 void KOrganizerIfaceImpl::saveToProfile( const TQString& path ) const
 {
-    mActionManager->saveToProfile( path );
+  mActionManager->saveToProfile( path );
 }
 
-
+bool KOrganizerIfaceImpl::handleCommandLine() {
+  return mActionManager->handleCommandLine();
+}

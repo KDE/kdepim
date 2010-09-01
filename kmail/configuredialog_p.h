@@ -58,6 +58,7 @@ class KFontRequester;
 class KIconButton;
 class KKeyButton;
 class TQSpinBox;
+class KComboBox;
 
 namespace Kpgp {
   class Config;
@@ -485,7 +486,6 @@ private: // data
   TQButtonGroup *mMIMETreeModeGroup;
   TQButtonGroup *mReaderWindowModeGroup;
   TQCheckBox *mFavoriteFolderViewCB;
-  TQCheckBox *mFolderQuickSearchCB;
 };
 
 class AppearancePageHeadersTab : public ConfigModuleTab {
@@ -505,7 +505,6 @@ private: // methods
   void setDateDisplay( int id, const TQString & format );
 
 private: // data
-  TQCheckBox    *mShowQuickSearch;
   TQCheckBox    *mMessageSizeCheck;
   TQCheckBox    *mAttachmentCheck;
   TQCheckBox    *mNestedMessagesCheck;
@@ -533,6 +532,7 @@ private:
   void readCurrentOverrideCodec();
 
 private: // data
+  TQCheckBox *mCloseAfterReplyOrForwardCheck;
   TQCheckBox *mShowColorbarCheck;
   TQCheckBox *mShowSpamStatusCheck;
   TQCheckBox *mShowEmoticonsCheck;
@@ -611,13 +611,18 @@ private:
   TQCheckBox     *mAutoAppSignFileCheck;
   TQCheckBox     *mTopQuoteCheck;
   TQCheckBox     *mSmartQuoteCheck;
+  TQCheckBox     *mStripSignatureCheck;
+  TQCheckBox     *mQuoteSelectionOnlyCheck;
   TQCheckBox     *mAutoRequestMDNCheck;
-  QCheckBox	*mShowRecentAddressesInComposer;
+  TQCheckBox	*mShowRecentAddressesInComposer;
   TQCheckBox     *mWordWrapCheck;
   KIntSpinBox   *mWrapColumnSpin;
+  TQCheckBox     *mRecipientCheck;
+  KIntSpinBox   *mRecipientSpin;
   KIntSpinBox   *mAutoSave;
   TQCheckBox     *mExternalEditorCheck;
   KURLRequester *mEditorRequester;
+  KComboBox     *mForwardTypeCombo;
 };
 
 class ComposerPagePhrasesTab : public ConfigModuleTab {
@@ -1020,6 +1025,7 @@ private:
   TQCheckBox* mLegacyMangleFromTo;
   TQCheckBox* mLegacyBodyInvites;
   TQCheckBox* mExchangeCompatibleInvitations;
+  TQCheckBox* mOutlookCompatibleInvitationComments;
   TQCheckBox* mAutomaticSending;
 };
 

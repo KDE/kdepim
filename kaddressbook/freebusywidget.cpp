@@ -68,6 +68,11 @@ void FreeBusyWidget::storeContact( KABC::Addressee *addr )
 
   KCal::FreeBusyUrlStore::self()->writeUrl( addr->preferredEmail(), mURL->url() );
   KCal::FreeBusyUrlStore::self()->sync();
+  if ( mURL->url().isEmpty() ) {
+    addr->removeCustom( "KADDRESSBOOK", "FreeBusyURL" );
+  } else {
+    addr->insertCustom( "KADDRESSBOOK", "FreeBusyURL", mURL->url() );
+  }
 }
 
 void FreeBusyWidget::setReadOnly( bool readOnly )

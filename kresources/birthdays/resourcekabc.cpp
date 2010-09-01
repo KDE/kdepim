@@ -46,6 +46,8 @@
 #include "libkcal/filestorage.h"
 #include "libkcal/alarm.h"
 
+#include <libemailfunctions/email.h>
+
 #include <kresources/configwidget.h>
 
 #include "resourcekabcconfig.h"
@@ -70,6 +72,8 @@ ResourceKABC::ResourceKABC( const KConfig* config )
 {
   if ( config ) {
     readConfig( config );
+  } else {
+    setResourceName( i18n( "Birthdays" ) );
   }
 
   init();
@@ -227,7 +231,8 @@ bool ResourceKABC::doLoad()
       bool found = false;
       for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
         if ( name == (*addrIt).realName() ) {
-          TQDateTime spouseAnniversary = TQDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+          TQDate spouseAnniversary =
+            TQDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
           if ( anniversary == spouseAnniversary ) {
             found = true;
             break;
@@ -255,22 +260,30 @@ bool ResourceKABC::doLoad()
     TQString spouseName = (*addrIt).custom( "KADDRESSBOOK", "X-SpousesName" );
     TQString name_2,email_2,uid_2;
     if ( !spouseName.isEmpty() ) {
-      //TODO: find a KABC:Addressee of the spouse
-      //      Probably easiest would be to use a TQMap (as the spouse's entry was already searched above!
+      TQString tname, temail;
+      KPIM::getNameAndMail( spouseName, tname, temail );
+      tname = KPIM::quoteNameIfNecessary( tname );
+      if ( ( tname[0] == '"' ) && ( tname[tname.length() - 1] == '"' ) ) {
+        tname.remove( 0, 1 );
+        tname.truncate( tname.length() - 1 );
+      }
       KABC::Addressee spouse;
-      spouse.setNameFromString( spouseName );
+      spouse.setNameFromString( tname );
+      name_2 = spouse.nickName();
       uid_2 = spouse.uid();
       email_2 = spouse.fullEmail();
-      name_2 = spouse.nickName();
-      if ( name_2.isEmpty() )
-        name_2 = spouse.givenName();
-      summary = i18n("insert names of both spouses", "%1's & %2's anniversary").arg( name_1 ).arg( name_2 );
+      if ( name_2.isEmpty() ) {
+        name_2 = spouse.realName();
+      }
+      summary = i18n("insert names of both spouses",
+                     "%1's & %2's anniversary").arg( name_1 ).arg( name_2 );
     } else {
-      summary = i18n("only one spouse in addressbook, insert the name", "%1's anniversary").arg( name_1 );
+      summary = i18n("only one spouse in addressbook, insert the name",
+                     "%1's anniversary").arg( name_1 );
     }
 
     Event *ev = new Event();
-      ev->setUid( uid_1+"_KABC_Anniversary" );
+    ev->setUid( uid_1+"_KABC_Anniversary" );
 
     ev->setDtStart(anniversary);
     ev->setDtEnd(anniversary);
@@ -378,12 +391,17 @@ KABC::Lock *ResourceKABC::lock()
 }
 
 
-bool ResourceKABC::addEvent(Event*)
+bool ResourceKABC::addEvent( Event * )
 {
   return false;
 }
 
-bool ResourceKABC::deleteEvent(Event*)
+bool ResourceKABC::addEvent( Event *, const TQString & )
+{
+  return false;
+}
+
+bool ResourceKABC::deleteEvent( Event * )
 {
   return false;
 }
@@ -417,12 +435,17 @@ Event::List ResourceKABC::rawEvents( EventSortField sortField, SortDirection sor
   return mCalendar.rawEvents( sortField, sortDirection );
 }
 
-bool ResourceKABC::addTodo(Todo*)
+bool ResourceKABC::addTodo( Todo * )
 {
   return false;
 }
 
-bool ResourceKABC::deleteTodo(Todo*)
+bool ResourceKABC::addTodo( Todo *, const TQString & )
+{
+  return false;
+}
+
+bool ResourceKABC::deleteTodo( Todo * )
 {
   return false;
 }
@@ -444,12 +467,17 @@ Todo::List ResourceKABC::rawTodosForDate( const TQDate &date )
 }
 
 
-bool ResourceKABC::addJournal(Journal*)
+bool ResourceKABC::addJournal( Journal * )
 {
   return false;
 }
 
-bool ResourceKABC::deleteJournal(Journal*)
+bool ResourceKABC::addJournal( Journal *, const TQString & )
+{
+  return false;
+}
+
+bool ResourceKABC::deleteJournal( Journal * )
 {
   return false;
 }

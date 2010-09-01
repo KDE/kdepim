@@ -55,19 +55,20 @@ class MessageActions : public QObject
 
     KAction* editAction() const { return mEditAction; }
 
+  signals:
+
+    // This signal is emitted when a reply is triggered and the
+    // action has finished.
+    // This is useful for the stand-alone reader, it might want to close the window in
+    // that case.
+    void replyActionFinished();
+
   public slots:
     void editCurrentMessage();
 
   private:
     void updateActions();
-    template<typename T> void replyCommand()
-    {
-      if ( !mCurrentMessage )
-        return;
-      const TQString text = mMessageView ? mMessageView->copyText() : "";
-      KMCommand *command = new T( mParent, mCurrentMessage, text );
-      command->start();
-    }
+    template<typename T> void replyCommand();
     void setMessageStatus( KMMsgStatus status, bool toggle = false );
 
   private slots:

@@ -140,10 +140,15 @@ void KMReaderMainWin::setUseFixedFont( bool useFixedFont )
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderMainWin::showMsg( const TQString & encoding, KMMessage *msg )
+void KMReaderMainWin::showMsg( const TQString & encoding, KMMessage *msg,
+                               unsigned long serNumOfOriginalMessage, int nodeIdOffset )
 {
   mReaderWin->setOverrideEncoding( encoding );
   mReaderWin->setMsg( msg, true );
+  if ( serNumOfOriginalMessage != 0 ) {
+    Q_ASSERT( nodeIdOffset != -1 );
+    mReaderWin->setOriginalMsg( serNumOfOriginalMessage, nodeIdOffset );
+  }
   mReaderWin->slotTouchMessage();
   setCaption( msg->subject() );
   mMsg = msg;
@@ -161,6 +166,13 @@ void KMReaderMainWin::slotFolderRemoved( TQObject* folderPtr )
   assert(folderPtr == mMsg->parent());
   if( mMsg && folderPtr == mMsg->parent() )
     mMsg->setParent( 0 );
+}
+
+void KMReaderMainWin::slotReplyOrForwardFinished()
+{
+  if ( GlobalSettings::self()->closeAfterReplyOrForward() ) {
+    close();
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -212,6 +224,7 @@ void KMReaderMainWin::slotMarkAll()
 void KMReaderMainWin::slotPrintMsg()
 {
   KMPrintCommand *command = new KMPrintCommand( this, mReaderWin->message(),
+      mReaderWin->headerStyle(), mReaderWin->headerStrategy(),
       mReaderWin->htmlOverride(), mReaderWin->htmlLoadExtOverride(),
       mReaderWin->isFixedFont(), mReaderWin->overrideEncoding() );
   command->setOverrideFont( mReaderWin->cssHelper()->bodyFont( mReaderWin->isFixedFont(), true /*printing*/ ) );
@@ -228,6 +241,8 @@ void KMReaderMainWin::slotForwardInlineMsg()
    } else {
     command = new KMForwardInlineCommand( this, mReaderWin->message() );
    }
+   connect( command, TQT_SIGNAL( completed( KMCommand * ) ),
+            this, TQT_SLOT( slotReplyOrForwardFinished() ) );
    command->start();
 }
 
@@ -241,6 +256,8 @@ void KMReaderMainWin::slotForwardAttachedMsg()
    } else {
      command = new KMForwardAttachedCommand( this, mReaderWin->message() );
    }
+   connect( command, TQT_SIGNAL( completed( KMCommand * ) ),
+            this, TQT_SLOT( slotReplyOrForwardFinished() ) );
    command->start();
 }
 
@@ -254,6 +271,8 @@ void KMReaderMainWin::slotForwardDigestMsg()
    } else {
      command = new KMForwardDigestCommand( this, mReaderWin->message() );
    }
+   connect( command, TQT_SIGNAL( completed( KMCommand * ) ),
+            this, TQT_SLOT( slotReplyOrForwardFinished() ) );
    command->start();
 }
 
@@ -261,6 +280,8 @@ void KMReaderMainWin::slotForwardDigestMsg()
 void KMReaderMainWin::slotRedirectMsg()
 {
   KMCommand *command = new KMRedirectCommand( this, mReaderWin->message() );
+  connect( command, TQT_SIGNAL( completed( KMCommand * ) ),
+           this, TQT_SLOT( slotReplyOrForwardFinished() ) );
   command->start();
 }
 
@@ -276,9 +297,36 @@ void KMReaderMainWin::slotShowMsgSrc()
 }
 
 //-----------------------------------------------------------------------------
+void KMReaderMainWin::setupForwardActions()
+{
+  disconnect( mForwardActionMenu, TQT_SIGNAL( activated() ), 0, 0 );
+  mForwardActionMenu->remove( mForwardInlineAction );
+  mForwardActionMenu->remove( mForwardAttachedAction );
+
+  if ( GlobalSettings::self()->forwardingInlineByDefault() ) {
+    mForwardActionMenu->insert( mForwardInlineAction, 0 );
+    mForwardActionMenu->insert( mForwardAttachedAction, 1 );
+    mForwardInlineAction->setShortcut( Key_F );
+    mForwardAttachedAction->setShortcut( SHIFT+Key_F );
+    connect( mForwardActionMenu, TQT_SIGNAL(activated()), this,
+            TQT_SLOT(slotForwardInlineMsg()) );
+
+  } else {
+    mForwardActionMenu->insert( mForwardAttachedAction, 0 );
+    mForwardActionMenu->insert( mForwardInlineAction, 1 );
+    mForwardInlineAction->setShortcut( SHIFT+Key_F );
+    mForwardAttachedAction->setShortcut( Key_F );
+    connect( mForwardActionMenu, TQT_SIGNAL(activated()), this,
+            TQT_SLOT(slotForwardAttachedMsg()) );
+  }
+}
+
+//-----------------------------------------------------------------------------
 void KMReaderMainWin::slotConfigChanged()
 {
   //readConfig();
+  setupForwardActions();
+  setupForwardingActionsList();
 }
 
 void KMReaderMainWin::setupAccel()
@@ -288,6 +336,9 @@ void KMReaderMainWin::setupAccel()
 
   mMsgActions = new KMail::MessageActions( actionCollection(), this );
   mMsgActions->setMessageView( mReaderWin );
+  connect( mMsgActions, TQT_SIGNAL( replyActionFinished() ),
+           this, TQT_SLOT( slotReplyOrForwardFinished() ) );
+
   //----- File Menu
   //mOpenAction = KStdAction::open( this, TQT_SLOT( slotOpenMsg() ),
   //                                actionCollection() );
@@ -351,21 +402,7 @@ void KMReaderMainWin::setupAccel()
                                  actionCollection(),
                                  "message_forward_redirect" );
 
-  if ( GlobalSettings::self()->forwardingInlineByDefault() ) {
-      mForwardActionMenu->insert( mForwardInlineAction );
-      mForwardActionMenu->insert( mForwardAttachedAction );
-      mForwardInlineAction->setShortcut( Key_F );
-      mForwardAttachedAction->setShortcut( SHIFT+Key_F );
-      connect( mForwardActionMenu, TQT_SIGNAL(activated()), this,
-               TQT_SLOT(slotForwardInlineMsg()) );
-  } else {
-      mForwardActionMenu->insert( mForwardAttachedAction );
-      mForwardActionMenu->insert( mForwardInlineAction );
-      mForwardInlineAction->setShortcut( SHIFT+Key_F );
-      mForwardAttachedAction->setShortcut( Key_F );
-      connect( mForwardActionMenu, TQT_SIGNAL(activated()), this,
-               TQT_SLOT(slotForwardAttachedMsg()) );
-  }
+  setupForwardActions();
 
   mForwardActionMenu->insert( mForwardDigestAction );
   mForwardActionMenu->insert( mRedirectAction );
@@ -408,7 +445,7 @@ void KMReaderMainWin::slotMsgPopup(KMMessage &aMsg, const KURL &aUrl, const TQPo
   mUrl = aUrl;
   mMsg = &aMsg;
   bool urlMenuAdded=false;
-
+  bool copyAdded = false;
   if (!aUrl.isEmpty())
   {
     if (aUrl.protocol() == "mailto") {
@@ -421,7 +458,8 @@ void KMReaderMainWin::slotMsgPopup(KMMessage &aMsg, const KURL &aUrl, const TQPo
       }
       mReaderWin->addAddrBookAction()->plug( menu );
       mReaderWin->openAddrBookAction()->plug( menu );
-      mReaderWin->copyAction()->plug( menu );
+      mReaderWin->copyURLAction()->plug( menu );
+      copyAdded = true;
     } else {
       // popup on a not-mailto URL
       mReaderWin->urlOpenAction()->plug( menu );
@@ -436,8 +474,8 @@ void KMReaderMainWin::slotMsgPopup(KMMessage &aMsg, const KURL &aUrl, const TQPo
       menu->insertSeparator();
     mMsgActions->replyMenu()->plug( menu );
     menu->insertSeparator();
-
-    mReaderWin->copyAction()->plug( menu );
+    if( !copyAdded )
+       mReaderWin->copyAction()->plug( menu );
     mReaderWin->selectAllAction()->plug( menu );
   } else if ( !urlMenuAdded )
   {

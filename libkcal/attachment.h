@@ -38,14 +38,14 @@ class KDE_EXPORT Attachment
 
     /**
       Create a Reference to some URI by copying an existing Attachment.
-      
+
       @param attachment the attachment to be duplicated
     */
     Attachment( const Attachment &attachment );
 
     /**
       Create a Reference to some URI.
-      
+
       @param uri the uri this attachment refers to
       @param mime the mime type of the resource being linked to
     */
@@ -53,39 +53,66 @@ class KDE_EXPORT Attachment
 
     /**
       Create a binary attachment.
-     
+
       @param base64 the attachment in base64 format
       @param mime the mime type of the attachment
     */
     Attachment( const char *base64, const TQString &mime = TQString::null );
 
+    ~Attachment();
+
     /* The VALUE parameter in iCal */
     bool isUri() const;
     TQString uri() const;
     void setUri( const TQString &uri );
-    
+
     bool isBinary() const;
     char *data() const;
     void setData( const char *base64 );
 
+    void setDecodedData( const TQByteArray &data );
+    TQByteArray &decodedData();
+
+    uint size();
+
     /* The optional FMTTYPE parameter in iCal */
     TQString mimeType() const;
     void setMimeType( const TQString &mime );
-		
-		/* The custom X-CONTENT-DISPOSITION parameter, used by OGo etc. */
-		bool showInline() const;
-		void setShowInline( bool showinline );
-		
-		/* The custom X-LABEL parameter to show a human-readable title */
-		TQString label() const;
-		void setLabel( const TQString &label );
+
+    /* The custom X-CONTENT-DISPOSITION parameter, used by OGo etc. */
+    bool showInline() const;
+    void setShowInline( bool showinline );
+
+    /* The custom X-LABEL parameter to show a human-readable title */
+    TQString label() const;
+    void setLabel( const TQString &label );
+
+    /**
+      Sets the attachment "local" option, which is derived from the
+      Calendar Incidence @b X-KONTACT-TYPE parameter.
+
+      @param local is the flag to set (true) or unset (false) for the
+      attachment "local" option.
+
+      @see local()
+    */
+    void setLocal( bool local );
+
+    /**
+      Returns the attachment "local" flag.
+    */
+    bool isLocal() const;
 
   private:
+    TQByteArray mDataCache;
+    uint mSize;
     TQString mMimeType;
-    TQString mData;
+    TQString mUri;
+    char *mData;
+    TQString mLabel;
     bool mBinary;
-		bool mShowInline;
-		TQString mLabel;
+    bool mLocal;
+    bool mShowInline;
 
     class Private;
     Private *d;

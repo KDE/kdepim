@@ -27,11 +27,11 @@
 
 #include "calendarview.h"
 
-#include <libkcal/resourcecalendar.h>
 #include <tqlistview.h>
 
 namespace KCal {
-class CalendarResources;
+  class CalendarResources;
+  class ResourceCalendar;
 }
 using namespace KCal;
 class KListView;
@@ -41,16 +41,15 @@ class TQPushButton;
 class ResourceViewFactory : public CalendarViewExtension::Factory
 {
   public:
-    ResourceViewFactory( KCal::CalendarResources *calendar,
-                         CalendarView *view );
+    ResourceViewFactory( CalendarResources *calendar, CalendarView *view );
 
     CalendarViewExtension *create( TQWidget * );
 
     ResourceView *resourceView() const;
 
   private:
-    KCal::CalendarResources *mCalendar;
-    CalendarView *mView;
+    CalendarResources *mCalendar;
+    CalendarView *mCalendarView;
     ResourceView *mResourceView;
 };
 
@@ -58,18 +57,15 @@ class ResourceViewFactory : public CalendarViewExtension::Factory
 class ResourceItem : public QCheckListItem
 {
   public:
-    ResourceItem( KCal::ResourceCalendar *resource, ResourceView *view,
-                  KListView *parent );
-    ResourceItem( KCal::ResourceCalendar *resource, const TQString& sub,
-                  const TQString& label, ResourceView *view,
-                  ResourceItem* parent );
+    ResourceItem( ResourceCalendar *resource, ResourceView *view, KListView *parent );
+    ResourceItem( ResourceCalendar *resource, const TQString &identifier,
+                  const TQString &label, ResourceView *view, ResourceItem *parent );
 
-    KCal::ResourceCalendar *resource() { return mResource; }
+    ResourceCalendar *resource() { return mResource; }
     const TQString& resourceIdentifier() { return mResourceIdentifier; }
     bool isSubresource() const { return mIsSubresource; }
     void createSubresourceItems();
     void setStandardResource( bool std );
-
     void update();
 
     virtual void paintCell(TQPainter *p, const TQColorGroup &cg,
@@ -77,15 +73,15 @@ class ResourceItem : public QCheckListItem
 
     void setResourceColor(TQColor& color);
     TQColor &resourceColor() {return mResourceColor;}
+
   protected:
     void stateChange( bool active );
-
     void setGuiState();
     TQColor mResourceColor;
 
   private:
-    KCal::ResourceCalendar *mResource;
-    ResourceView *mView;
+    ResourceCalendar *mResource;
+    ResourceView *mResourceView;
     bool mBlockStateChange;
     bool mIsSubresource;
     TQString mResourceIdentifier;
@@ -100,45 +96,45 @@ class ResourceView : public CalendarViewExtension
 {
     Q_OBJECT
   public:
-    ResourceView( KCal::CalendarResources *calendar, TQWidget *parent = 0,
-                  const char *name = 0 );
+    ResourceView( CalendarResources *calendar, CalendarView *view,
+                  TQWidget *parent = 0, const char *name = 0 );
     ~ResourceView();
 
-    KCal::CalendarResources *calendar() const { return mCalendar; }
+    CalendarResources *calendar() const { return mCalendar; }
 
     void updateView();
 
     void emitResourcesChanged();
 
-    void requestClose( ResourceCalendar * );
+    void requestClose( ResourceCalendar *resource );
 
     void showButtons( bool visible );
 
   public slots:
-    void addResourceItem( ResourceCalendar * );
-    void updateResourceItem( ResourceCalendar * );
+    void addResourceItem( ResourceCalendar *resource );
+    void updateResourceItem( ResourceCalendar *resource );
 
   signals:
     void resourcesChanged();
 
   protected:
-    ResourceItem *findItem( ResourceCalendar * );
-    ResourceItem *findItemByIdentifier( const TQString& id );
+    ResourceItem *findItem( ResourceCalendar *resource );
+    ResourceItem *findItemByIdentifier( const TQString &identifier );
     ResourceItem *currentItem();
 
   protected slots:
     void addResource();
     void removeResource();
     void editResource();
-    void currentChanged( TQListViewItem* );
-    void slotSubresourceAdded( ResourceCalendar *, const TQString &,
-                               const TQString &resource,const TQString& label );
+    void currentChanged( TQListViewItem *lvitem );
+    void slotSubresourceAdded( ResourceCalendar *resource, const TQString &type,
+                               const TQString &identifier, const TQString &label );
 
-    void slotSubresourceRemoved( ResourceCalendar *, const TQString &,
-                                 const TQString & );
-    void closeResource( ResourceCalendar * );
+    void slotSubresourceRemoved( ResourceCalendar *resource, const TQString &type,
+                                 const TQString &identifier );
+    void closeResource( ResourceCalendar *resource );
 
-    void contextMenuRequested ( TQListViewItem *i, const TQPoint &pos, int );
+    void contextMenuRequested ( TQListViewItem *lvitem, const TQPoint &pos, int );
 
     void assignColor();
     void disableColor();
@@ -152,7 +148,8 @@ class ResourceView : public CalendarViewExtension
 
   private:
     KListView *mListView;
-    KCal::CalendarResources *mCalendar;
+    CalendarResources *mCalendar;
+    CalendarView *mCalendarView;
     TQPushButton *mAddButton;
     TQPushButton *mDeleteButton;
     TQPushButton *mEditButton;

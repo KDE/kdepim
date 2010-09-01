@@ -38,7 +38,6 @@ FilterKMail_maildir::FilterKMail_maildir( void ) :
 /** Destructor. */
 FilterKMail_maildir::~FilterKMail_maildir( void )
 {
-    endImport();
 }
 
 /** Recursive import of KMail maildir. */
@@ -52,6 +51,7 @@ void FilterKMail_maildir::import( FilterInfo *info )
     kfd->setMode( KFile::Directory | KFile::LocalOnly );
     kfd->exec();
     mailDir = kfd->selectedFile();
+    delete kfd;
 
     if ( mailDir.isEmpty() ) {
         info->alert( i18n( "No directory selected." ) );

@@ -18,6 +18,8 @@
 
 #include "kmfolderindex.h"
 #include "kmfolder.h"
+#include "kmfoldertype.h"
+#include "kcursorsaver.h"
 #include <config.h>
 #include <tqfileinfo.h>
 #include <tqtimer.h>
@@ -31,7 +33,7 @@
 #endif
 
 // Current version of the table of contents (index) files
-#define INDEX_VERSION 1506
+#define INDEX_VERSION 1507
 
 #ifndef MAX_LINE
 #define MAX_LINE 4096
@@ -110,9 +112,13 @@ int KMFolderIndex::updateIndex()
     return 0;
   bool dirty = mDirty;
   mDirtyTimer->stop();
-  for (unsigned int i=0; !dirty && i<mMsgList.high(); i++)
-    if (mMsgList.at(i))
-      dirty = !mMsgList.at(i)->syncIndexString();
+  for ( unsigned int i = 0; !dirty && i < mMsgList.high(); i++ ) {
+    if ( mMsgList.at(i) ) {
+      if ( !mMsgList.at(i)->syncIndexString() ) {
+        dirty = true;
+      }
+    }
+  }
   if (!dirty) { // Update successful
       touchFolderIdsFile();
       return 0;
@@ -209,9 +215,11 @@ int KMFolderIndex::writeIndex( bool createEmptyIndex )
   return 0;
 }
 
-
 bool KMFolderIndex::readIndex()
 {
+  if ( contentsType() != KMail::ContentsTypeMail ) {
+    kdDebug(5006) << k_funcinfo << "Reading index for " << label() << endl;
+  }
   Q_INT32 len;
   KMMsgInfo* mi;
 
@@ -224,6 +232,7 @@ bool KMFolderIndex::readIndex()
   setDirty( false );
 
   if (!readIndexHeader(&version)) return false;
+  //kdDebug(5006) << "Index version for " << label() << " is " << version << endl;
 
   mUnreadMsgs = 0;
   mTotalMsgs = 0;
@@ -234,15 +243,20 @@ bool KMFolderIndex::readIndex()
   {
     mi = 0;
     if(version >= 1505) {
-      if(!fread(&len, sizeof(len), 1, mIndexStream))
+      if(!fread(&len, sizeof(len), 1, mIndexStream)) {
+        // Seems to be normal?
+        // kdDebug(5006) << k_funcinfo << " Unable to read length field!" << endl;
         break;
+      }
 
       if (mIndexSwapByteOrder)
         len = kmail_swap_32(len);
 
       off_t offs = ftell(mIndexStream);
-      if(fseek(mIndexStream, len, SEEK_CUR))
+      if(fseek(mIndexStream, len, SEEK_CUR)) {
+        kdDebug(5006) << k_funcinfo << " Unable to seek to the end of the message!" << endl;
         break;
+      }
       mi = new KMMsgInfo(folder(), offs, len);
     }
     else
@@ -251,16 +265,18 @@ bool KMFolderIndex::readIndex()
       fgets(line.data(), MAX_LINE, mIndexStream);
       if (feof(mIndexStream)) break;
       if (*line.data() == '\0') {
-	  fclose(mIndexStream);
-	  mIndexStream = 0;
-	  clearIndex();
-	  return false;
+        fclose(mIndexStream);
+        mIndexStream = 0;
+        clearIndex();
+        return false;
       }
       mi = new KMMsgInfo(folder());
       mi->compat_fromOldIndexString(line, mConvertToUtf8);
     }
-    if(!mi)
+    if(!mi) {
+      kdDebug(5006) << k_funcinfo << " Unable to create message info object!" << endl;
       break;
+    }
 
     if (mi->isDeleted())
     {
@@ -290,7 +306,17 @@ bool KMFolderIndex::readIndex()
     setDirty( true );
     writeIndex();
   }
+
+  if ( version < 1507 ) {
+    updateInvitationAndAddressFieldsFromContents();
+    setDirty( true );
+    writeIndex();
+  }
+
   mTotalMsgs = mMsgList.count();
+  if ( contentsType() != KMail::ContentsTypeMail ) {
+    kdDebug(5006) << k_funcinfo << "Done reading the index for " << label() << ", we have " << mTotalMsgs << " messages." << endl;
+  }
   return true;
 }
 
@@ -316,6 +342,15 @@ bool KMFolderIndex::readIndexHeader(int *gv)
       return false; // index file has invalid header
   if(gv)
       *gv = indexVersion;
+
+  // Check if the index is corrupted ("not compactable") and recreate it if necessary. See
+  // FolderStorage::getMsg() for the detection code.
+  if ( !mCompactable ) {
+    kdWarning(5006) << "Index file " << indexLocation() << " is corrupted!!. Re-creating it." << endl;
+    recreateIndex( false /* don't call readIndex() afterwards */ );
+    return false;
+  }
+
   if (indexVersion < 1505 ) {
       if(indexVersion == 1503) {
 	  kdDebug(5006) << "Converting old index file " << indexLocation() << " to utf-8" << endl;
@@ -323,7 +358,7 @@ bool KMFolderIndex::readIndexHeader(int *gv)
       }
       return true;
   } else if (indexVersion == 1505) {
-  } else if (indexVersion < INDEX_VERSION) {
+  } else if (indexVersion < INDEX_VERSION && indexVersion != 1506) {
       kdDebug(5006) << "Index file " << indexLocation() << " is out of date. Re-creating it." << endl;
       createIndexFromContents();
       return false;
@@ -434,6 +469,9 @@ bool KMFolderIndex::updateIndexStreamPtr(bool)
 
 KMFolderIndex::IndexStatus KMFolderIndex::indexStatus()
 {
+    if ( !mCompactable )
+      return IndexCorrupt;
+
     TQFileInfo contInfo(location());
     TQFileInfo indInfo(indexLocation());
 
@@ -484,16 +522,56 @@ KMMsgInfo* KMFolderIndex::setIndexEntry( int idx, KMMessage *msg )
   return msgInfo;
 }
 
-void KMFolderIndex::recreateIndex()
+void KMFolderIndex::recreateIndex( bool readIndexAfterwards )
 {
   kapp->setOverrideCursor(KCursor::arrowCursor());
-  KMessageBox::error(0,
+  KMessageBox::information(0,
        i18n("The mail index for '%1' is corrupted and will be regenerated now, "
-            "but some information, including status flags, will be lost.").arg(name()));
+            "but some information, like status flags, might get lost.").arg(name()));
   kapp->restoreOverrideCursor();
   createIndexFromContents();
-  readIndex();
+  if ( readIndexAfterwards ) {
+    readIndex();
+  }
+
+  // Clear the corrupted flag
+  mCompactable = true;
+  writeConfig();
 }
 
+void KMFolderIndex::silentlyRecreateIndex()
+{
+  Q_ASSERT( !isOpened() );
+  open( "silentlyRecreateIndex" );
+  KCursorSaver busy( KBusyPtr::busy() );
+  createIndexFromContents();
+  mCompactable = true;
+  writeConfig();
+  close( "silentlyRecreateIndex" );
+}
+
+void KMFolderIndex::updateInvitationAndAddressFieldsFromContents()
+{
+  kdDebug(5006) << "Updating index for " << label() << ", this might take a while." << endl;
+  for ( uint i = 0; i < mMsgList.size(); i++ ) {
+    KMMsgInfo * const msgInfo = dynamic_cast<KMMsgInfo*>( mMsgList[i] );
+    if ( msgInfo ) {
+      DwString msgString( getDwString( i ) );
+      if ( msgString.size() > 0 ) {
+        KMMessage msg;
+        msg.fromDwString( msgString, false );
+        msg.updateInvitationState();
+        if ( msg.status() & KMMsgStatusHasInvitation ) {
+          msgInfo->setStatus( msgInfo->status() | KMMsgStatusHasInvitation );
+        }
+        if ( msg.status() & KMMsgStatusHasNoInvitation ) {
+          msgInfo->setStatus( msgInfo->status() | KMMsgStatusHasNoInvitation );
+        }
+        msgInfo->setFrom( msg.from() );
+        msgInfo->setTo( msg.to() );
+      }
+    }
+  }
+}
 
 #include "kmfolderindex.moc"

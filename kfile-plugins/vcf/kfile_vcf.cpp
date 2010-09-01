@@ -68,8 +68,11 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
     file.close();
 
     KABC::VCardConverter converter;
-    KABC::Addressee addr = converter.parseVCard(contents);
-
+#if defined(KABC_VCARD_ENCODING_FIX)
+    KABC::Addressee addr = converter.parseVCardRaw( contents.utf8() );
+#else
+    KABC::Addressee addr = converter.parseVCard( contents );
+#endif
     KFileMetaInfoGroup group = appendGroup(info, "Technical");
 
     // prepare the text

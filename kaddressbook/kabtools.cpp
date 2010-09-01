@@ -80,12 +80,15 @@ void KABTools::mailVCards( const TQStringList &uids, KABC::AddressBook *ab )
       KABC::VCardConverter converter;
       KABC::Addressee::List list;
       list.append( addressee );
+#if defined(KABC_VCARD_ENCODING_FIX)
+      const TQCString vcard = converter.createVCardsRaw( list, KABC::VCardConverter::v3_0 );
+      file.writeBlock( vcard, vcard.length() );
+#else
       TQString vcard = converter.createVCards( list, KABC::VCardConverter::v3_0 );
-
       TQTextStream t( &file );
       t.setEncoding( TQTextStream::UnicodeUTF8 );
       t << vcard;
-
+#endif
       file.close();
 
       KURL url( path );

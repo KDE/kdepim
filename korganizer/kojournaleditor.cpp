@@ -62,8 +62,10 @@ void KOJournalEditor::init()
 
 void KOJournalEditor::reload()
 {
-  kdDebug(5851)<<"reloading Journal"<<endl;
-  if ( mJournal ) readJournal( mJournal );
+  kdDebug(5851) << "reloading Journal" << endl;
+  if ( mJournal ) {
+    readJournal( mJournal, TQDate() );
+  }
 }
 
 void KOJournalEditor::setupGeneral()
@@ -94,7 +96,7 @@ void KOJournalEditor::setupGeneral()
   mGeneral->finishSetup();
 }
 
-void KOJournalEditor::editIncidence( Incidence *incidence, Calendar * )
+void KOJournalEditor::editIncidence( Incidence *incidence, const TQDate &date, Calendar * )
 {
   Journal *journal=dynamic_cast<Journal*>(incidence);
   if (journal)
@@ -102,7 +104,7 @@ void KOJournalEditor::editIncidence( Incidence *incidence, Calendar * )
     init();
 
     mJournal = journal;
-    readJournal(mJournal);
+    readJournal(mJournal, date);
   }
 }
 
@@ -140,7 +142,7 @@ bool KOJournalEditor::processInput()
   if ( mJournal ) {
     Journal *oldJournal = mJournal->clone();
     writeJournal( mJournal );
-    mChanger->changeIncidence( oldJournal, mJournal );
+    mChanger->changeIncidence( oldJournal, mJournal, KOGlobals::NOTHING_MODIFIED, this );
     delete oldJournal;
   } else {
     mJournal = new Journal;
@@ -149,8 +151,7 @@ bool KOJournalEditor::processInput()
 
     writeJournal( mJournal );
 
-    if ( !mChanger->addIncidence( mJournal, this ) ) {
-      KODialogManager::errorSaveIncidence( this, mJournal );
+    if ( !mChanger->addIncidence( mJournal, mResource, mSubResource, this ) ) {
       delete mJournal;
       mJournal = 0;
       return false;
@@ -176,10 +177,10 @@ void KOJournalEditor::setDate( const TQDate &date )
   mDetails->setDefaults();
 }
 
-void KOJournalEditor::readJournal( Journal *journal )
+void KOJournalEditor::readJournal( Journal *journal, const TQDate &date )
 {
   kdDebug(5851)<<"read Journal"<<endl;
-  mGeneral->readJournal( journal );
+  mGeneral->readJournal( journal, date );
   mDetails->readEvent( journal );
 }
 
@@ -201,10 +202,10 @@ int KOJournalEditor::msgItemDelete()
       i18n("KOrganizer Confirmation"), KGuiItem( i18n("Delete"), "editdelete" ));
 }
 
-void KOJournalEditor::modified( int /*modification*/)
+void KOJournalEditor::modified()
 {
-  // Play dump, just reload the Journal. This dialog has become so complicated that
-  // there is no point in trying to be smart here...
+  // Play dump, just reload the Journal. This dialog has become so complicated
+  // that there is no point in trying to be smart here...
   reload();
 }
 
@@ -215,7 +216,7 @@ void KOJournalEditor::loadTemplate( /*const*/ CalendarLocal& cal)
     KMessageBox::error( this,
         i18n("Template does not contain a valid journal.") );
   } else {
-    readJournal( journals.first() );
+    readJournal( journals.first(), TQDate() );
   }
 }
 

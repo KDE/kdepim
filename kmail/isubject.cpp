@@ -31,8 +31,15 @@ namespace KMail {
   void ISubject::notify()
   {
     kdDebug(5006) << "ISubject::notify " << mObserverList.size() << endl;
-    for ( TQValueVector<Interface::Observer*>::iterator it = mObserverList.begin() ; it != mObserverList.end() ; ++it )
-      (*it)->update( this );
+
+    // iterate over a copy (to prevent crashes when
+    // {attach(),detach()} is called from an Observer::update()
+    const TQValueVector<Interface::Observer*> copy = mObserverList;
+    for ( TQValueVector<Interface::Observer*>::const_iterator it = copy.begin() ; it != copy.end() ; ++it ) {
+      if ( (*it) ) {
+        (*it)->update( this );
+      }
+    }
   }
 
 }

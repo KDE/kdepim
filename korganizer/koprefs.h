@@ -91,7 +91,6 @@ class KDE_EXPORT KOPrefs : public KOPrefsBase
     TQColor* resourceColor( const TQString & );
 
     TQString mHtmlExportFile;
-    bool mAlarmsEnabledByDefault;
 
     // Groupware passwords
     TQString mPublishPassword;

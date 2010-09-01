@@ -238,6 +238,7 @@ namespace KPIM {
             TQString::number( printFont.pointSize() ) )
       +
       TQString( "tr.textAtmH,\n"
+               "tr.signInProgressH,\n"
                "tr.rfc822H,\n"
                "tr.encrH,\n"
                "tr.signOkKeyOkH,\n"
@@ -367,6 +368,10 @@ namespace KPIM {
                "  color: white ! important;\n"
                "}\n\n"
 
+               "a.black {\n"
+               "  color: black ! important;\n"
+               "}\n\n"
+
                "table.textAtm { background-color: %2 ! important; }\n\n"
 
                "tr.textAtmH {\n"
@@ -378,10 +383,12 @@ namespace KPIM {
                "  background-color: %3 ! important;\n"
                "}\n\n"
 
+               "table.signInProgress,\n"
                "table.rfc822 {\n"
                "  background-color: %3 ! important;\n"
                "}\n\n"
 
+               "tr.signInProgressH,\n"
                "tr.rfc822H {\n"
                "%4"
                "}\n\n" )
@@ -538,6 +545,7 @@ namespace KPIM {
       "  font-weight: normal ! important;\n"
       "}\n\n"
 
+      "tr.signInProgressH,\n"
       "tr.rfc822H,\n"
       "tr.encrH,\n"
       "tr.signOkKeyOkH,\n"
@@ -565,6 +573,7 @@ namespace KPIM {
       "table.signErr,\n"
       "table.signOkKeyBad,\n"
       "table.signOkKeyOk,\n"
+      "table.signInProgress,\n"
       "div.fancy.header table {\n"
       "  width: 100% ! important;\n"
       "  border-width: 0px ! important;\n"
@@ -628,6 +637,11 @@ namespace KPIM {
   void CSSHelper::setPrintFont( const TQFont& font )
   {
     mPrintFont = font;
+  }
+
+  TQColor CSSHelper::pgpWarnColor() const
+  {
+    return cPgpWarnH;
   }
 
 } // namespace KPIM

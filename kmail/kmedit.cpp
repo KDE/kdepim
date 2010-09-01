@@ -200,10 +200,10 @@ void KMEdit::contentsDropEvent(TQDropEvent *e)
         }
         else
           kdDebug(5006) << "KMEdit::contentsDropEvent, unable to add dropped object" << endl;
-    } 
+    }
     else if( e->provides("text/x-textsnippet") ) {
 	emit insertSnippet();
-    } 
+    }
     else {
         KEdit::contentsDropEvent(e);
     }
@@ -214,7 +214,8 @@ KMEdit::KMEdit(TQWidget *parent, KMComposeWin* composer,
                const char *name)
   : KEdit( parent, name ),
     mComposer( composer ),
-    mKSpell( 0 ),
+    mKSpellForDialog( 0 ),
+    mSpeller( 0 ),
     mSpellConfig( autoSpellConfig ),
     mSpellingFilter( 0 ),
     mExtEditorTempFile( 0 ),
@@ -222,19 +223,30 @@ KMEdit::KMEdit(TQWidget *parent, KMComposeWin* composer,
     mExtEditorProcess( 0 ),
     mUseExtEditor( false ),
     mWasModifiedBeforeSpellCheck( false ),
-    mSpellChecker( 0 ),
+    mHighlighter( 0 ),
     mSpellLineEdit( false ),
     mPasteMode( QClipboard::Clipboard )
 {
+  connect( this, TQT_SIGNAL(selectionChanged()), this, TQT_SLOT(slotSelectionChanged()) );
   installEventFilter(this);
   KCursor::setAutoHideCursor( this, true, true );
   setOverwriteEnabled( true );
+  createSpellers();
+  connect( mSpellConfig, TQT_SIGNAL( configChanged() ),
+           this, TQT_SLOT( createSpellers() ) );
+  connect( mSpeller, TQT_SIGNAL( death() ),
+           this, TQT_SLOT( spellerDied() ) );
 }
 
+void KMEdit::createSpellers()
+{
+  delete mSpeller;
+  mSpeller = new KMSpell( this, TQT_SLOT( spellerReady( KSpell * ) ), mSpellConfig );
+}
 
 void KMEdit::initializeAutoSpellChecking()
 {
-  if ( mSpellChecker )
+  if ( mHighlighter )
     return; // already initialized
   TQColor defaultColor1( 0x00, 0x80, 0x00 ); // defaults from kmreaderwin.cpp
   TQColor defaultColor2( 0x00, 0x70, 0x00 );
@@ -252,14 +264,14 @@ void KMEdit::initializeAutoSpellChecking()
   TQColor col3 = readerConfig.readColorEntry( "QuotedText2", &defaultColor2 );
   TQColor col4 = readerConfig.readColorEntry( "QuotedText1", &defaultColor1 );
   TQColor misspelled = readerConfig.readColorEntry( "MisspelledColor", &c );
-  mSpellChecker = new KDictSpellingHighlighter( this, /*active*/ true,
-                                                /*autoEnabled*/ false,
-                                                /*spellColor*/ misspelled,
-                                                /*colorQuoting*/ true,
-                                                col1, col2, col3, col4,
-                                                mSpellConfig );
+  mHighlighter = new KMSyntaxHighter( this, /*active*/ true,
+                                       /*autoEnabled*/ false,
+                                       /*spellColor*/ misspelled,
+                                       /*colorQuoting*/ true,
+                                       col1, col2, col3, col4,
+                                       mSpellConfig );
 
-  connect( mSpellChecker, TQT_SIGNAL(newSuggestions(const TQString&, const TQStringList&, unsigned int)),
+  connect( mHighlighter, TQT_SIGNAL(newSuggestions(const TQString&, const TQStringList&, unsigned int)),
            this, TQT_SLOT(addSuggestion(const TQString&, const TQStringList&, unsigned int)) );
 }
 
@@ -279,8 +291,8 @@ TQPopupMenu *KMEdit::createPopupMenu( const TQPoint& pos )
 
 void KMEdit::deleteAutoSpellChecking()
 { // because the highlighter doesn't support RichText, delete its instance.
-  delete mSpellChecker;
-  mSpellChecker =0;
+  delete mHighlighter;
+  mHighlighter =0;
 }
 
 void KMEdit::addSuggestion(const TQString& text, const TQStringList& lst, unsigned int )
@@ -290,8 +302,8 @@ void KMEdit::addSuggestion(const TQString& text, const TQStringList& lst, unsign
 
 void KMEdit::setSpellCheckingActive(bool spellCheckingActive)
 {
-  if ( mSpellChecker ) {
-    mSpellChecker->setActive(spellCheckingActive);
+  if ( mHighlighter ) {
+    mHighlighter->setActive(spellCheckingActive);
   }
 }
 
@@ -300,10 +312,16 @@ KMEdit::~KMEdit()
 {
   removeEventFilter(this);
 
-  delete mKSpell;
-  delete mSpellChecker;
-  mSpellChecker = 0;
+  if ( mSpeller ) {
+    // The speller needs some time to clean up, so trigger cleanup and let it delete itself
+    mSpeller->setAutoDelete( true );
+    mSpeller->cleanUp();
+    mSpeller = 0;
+  }
 
+  delete mKSpellForDialog;
+  delete mHighlighter;
+  mHighlighter = 0;
 }
 
 
@@ -343,6 +361,55 @@ unsigned int KMEdit::lineBreakColumn() const
   return lineBreakColumn;
 }
 
+KMSpell::KMSpell( TQObject *receiver, const char *slot, KSpellConfig *spellConfig )
+  : KSpell( 0, TQString(), receiver, slot, spellConfig )
+{
+}
+
+KMSyntaxHighter::KMSyntaxHighter( TQTextEdit *textEdit,
+                                  bool spellCheckingActive,
+                                  bool autoEnable,
+                                  const TQColor& spellColor,
+                                  bool colorQuoting,
+                                  const TQColor& QuoteColor0,
+                                  const TQColor& QuoteColor1,
+                                  const TQColor& QuoteColor2,
+                                  const TQColor& QuoteColor3,
+                                  KSpellConfig *spellConfig )
+  : KDictSpellingHighlighter( textEdit, spellCheckingActive, autoEnable, spellColor, colorQuoting,
+                              QuoteColor0, QuoteColor1, QuoteColor2, QuoteColor3, spellConfig )
+{
+}
+
+bool KMSyntaxHighter::isMisspelled( const TQString &word )
+{
+  if ( mIgnoredWords.contains( word ) ) {
+    return false;
+  }
+  else {
+    return KDictSpellingHighlighter::isMisspelled( word );
+  }
+}
+
+void KMSyntaxHighter::ignoreWord( const TQString &word )
+{
+  mIgnoredWords << word;
+}
+
+TQStringList KMSyntaxHighter::ignoredWords() const
+{
+  return mIgnoredWords;
+}
+
+void KMEdit::spellerDied()
+{
+  mSpeller = 0;
+}
+
+void KMEdit::spellerReady( KSpell *spell )
+{
+  Q_ASSERT( mSpeller == spell );
+}
 
 bool KMEdit::eventFilter(TQObject*o, TQEvent* e)
 {
@@ -439,7 +506,6 @@ bool KMEdit::eventFilter(TQObject*o, TQEvent* e)
       if( !word.isEmpty() && mReplacements.contains( word ) )
       {
         KPopupMenu p;
-        p.insertTitle( i18n("Suggestions") );
 
         //Add the suggestions to the popup menu
         TQStringList reps = mReplacements[word];
@@ -453,13 +519,34 @@ bool KMEdit::eventFilter(TQObject*o, TQEvent* e)
         }
         else
         {
-          p.insertItem( TQString::fromLatin1("No Suggestions"), -2 );
+          p.setItemEnabled( p.insertItem( i18n( "No Suggestions" ), -2 ), false );
+        }
+
+        int addToDictionaryId = -42;
+        int ignoreId = -43;
+        if ( mSpeller && mSpeller->status() == KSpell::Running ) {
+          p.insertSeparator();
+          addToDictionaryId = p.insertItem( i18n( "Add to Dictionary" ) );
+          ignoreId = p.insertItem( i18n( "Ignore All" ) );
         }
 
         //Execute the popup inline
-        int id = p.exec( mapToGlobal( event->pos() ) );
+        const int id = p.exec( mapToGlobal( event->pos() ) );
 
-        if( id > -1 )
+        if ( id == ignoreId ) {
+          mHighlighter->ignoreWord( word );
+          mHighlighter->rehighlight();
+        }
+        if ( id == addToDictionaryId ) {
+          mSpeller->addPersonal( word );
+          mSpeller->writePersonalDictionary();
+          if ( mHighlighter ) {
+            // Wait a bit until reloading the highlighter, the mSpeller first needs to finish saving
+            // the personal word list.
+            TQTimer::singleShot( 200, mHighlighter, TQT_SLOT( slotLocalSpellConfigChanged() ) );
+          }
+        }
+        else if( id > -1 )
         {
           //Save the cursor position
           int parIdx = 1, txtIdx = 1;
@@ -472,6 +559,12 @@ bool KMEdit::eventFilter(TQObject*o, TQEvent* e)
             txtIdx += mReplacements[word][id].length() - word.length();
           setCursorPosition(parIdx, txtIdx);
         }
+
+        if ( id == addToDictionaryId || id == ignoreId ) {
+          // No longer misspelled: Either added to dictionary or ignored
+          mReplacements.remove( word );
+        }
+
         //Cancel original event
         return true;
       }
@@ -494,10 +587,10 @@ int KMEdit::autoSpellChecking( bool on )
        KMessageBox::sorry(this, i18n("Automatic spellchecking is not possible on text with markup."));
      return -1;
   }
-  if ( mSpellChecker ) {
+  if ( mHighlighter ) {
     // don't autoEnable spell checking if the user turned spell checking off
-    mSpellChecker->setAutomatic( on );
-    mSpellChecker->setActive( on );
+    mHighlighter->setAutomatic( on );
+    mHighlighter->setActive( on );
   }
   return 1;
 }
@@ -551,54 +644,57 @@ bool KMEdit::checkExternalEditorFinished() {
 
 void KMEdit::spellcheck()
 {
-  if ( mKSpell )
+  if ( mKSpellForDialog )
     return;
   mWasModifiedBeforeSpellCheck = isModified();
   mSpellLineEdit = !mSpellLineEdit;
 //  maybe for later, for now plaintext is given to KSpell
 //  if (textFormat() == Qt::RichText ) {
 //    kdDebug(5006) << "KMEdit::spellcheck, spellchecking for RichText" << endl;
-//    mKSpell = new KSpell(this, i18n("Spellcheck - KMail"), this,
+//    mKSpellForDialog = new KSpell(this, i18n("Spellcheck - KMail"), this,
 //                    TQT_SLOT(slotSpellcheck2(KSpell*)),0,true,false,KSpell::HTML);
 //  }
 //  else {
-    mKSpell = new KSpell(this, i18n("Spellcheck - KMail"), this,
-                      TQT_SLOT(slotSpellcheck2(KSpell*)));
+
+    // Don't use mSpellConfig here. Reason is that the spell dialog, KSpellDlg, uses its own
+    // spell config, and therefore the two wouldn't be in sync.
+    mKSpellForDialog = new KSpell( this, i18n("Spellcheck - KMail"), this,
+                                   TQT_SLOT(slotSpellcheck2(KSpell*))/*, mSpellConfig*/ );
 //  }
 
   TQStringList l = KSpellingHighlighter::personalWords();
   for ( TQStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
-      mKSpell->addPersonal( *it );
+      mKSpellForDialog->addPersonal( *it );
   }
-  connect (mKSpell, TQT_SIGNAL( death()),
+  connect (mKSpellForDialog, TQT_SIGNAL( death()),
           this, TQT_SLOT (slotSpellDone()));
-  connect (mKSpell, TQT_SIGNAL (misspelling (const TQString &, const TQStringList &, unsigned int)),
+  connect (mKSpellForDialog, TQT_SIGNAL (misspelling (const TQString &, const TQStringList &, unsigned int)),
           this, TQT_SLOT (slotMisspelling (const TQString &, const TQStringList &, unsigned int)));
-  connect (mKSpell, TQT_SIGNAL (corrected (const TQString &, const TQString &, unsigned int)),
+  connect (mKSpellForDialog, TQT_SIGNAL (corrected (const TQString &, const TQString &, unsigned int)),
           this, TQT_SLOT (slotCorrected (const TQString &, const TQString &, unsigned int)));
-  connect (mKSpell, TQT_SIGNAL (done(const TQString &)),
+  connect (mKSpellForDialog, TQT_SIGNAL (done(const TQString &)),
           this, TQT_SLOT (slotSpellResult (const TQString&)));
 }
 
 void KMEdit::cut()
 {
   KEdit::cut();
-  if ( textFormat() != Qt::RichText && mSpellChecker )
-    mSpellChecker->restartBackgroundSpellCheck();
+  if ( textFormat() != Qt::RichText && mHighlighter )
+    mHighlighter->restartBackgroundSpellCheck();
 }
 
 void KMEdit::clear()
 {
   KEdit::clear();
-  if ( textFormat() != Qt::RichText && mSpellChecker )
-    mSpellChecker->restartBackgroundSpellCheck();
+  if ( textFormat() != Qt::RichText && mHighlighter )
+    mHighlighter->restartBackgroundSpellCheck();
 }
 
 void KMEdit::del()
 {
   KEdit::del();
-  if ( textFormat() != Qt::RichText && mSpellChecker )
-    mSpellChecker->restartBackgroundSpellCheck();
+  if ( textFormat() != Qt::RichText && mHighlighter )
+    mHighlighter->restartBackgroundSpellCheck();
 }
 
 void KMEdit::paste()
@@ -618,6 +714,54 @@ void KMEdit::contentsMouseReleaseEvent( TQMouseEvent * e )
   mPasteMode = QClipboard::Selection;
   KEdit::contentsMouseReleaseEvent( e );
   mPasteMode = QClipboard::Clipboard;
+}
+
+void KMEdit::contentsMouseDoubleClickEvent( TQMouseEvent *e )
+{
+  bool handled = false;
+  if ( e->button() == TQt::LeftButton ) {
+
+    // Get the cursor position for the place where the user clicked to
+    int paragraphPos;
+    int charPos = charAt ( e->pos(), &paragraphPos );
+    TQString paraText = text( paragraphPos );
+
+    // Now select the word under the cursor
+    if ( charPos >= 0 && static_cast<unsigned int>( charPos ) <= paraText.length() ) {
+
+      // Start the selection where the user clicked
+      int start = charPos;
+      unsigned int end = charPos;
+
+      // Extend the selection to the left, until we reach a non-letter and non-digit char
+      for (;;) {
+        if ( ( start - 1 ) < 0 )
+          break;
+        TQChar charToTheLeft = paraText.at( start - 1 );
+        if ( charToTheLeft.isLetter() || charToTheLeft.isDigit() )
+          start--;
+        else
+          break;
+      }
+
+      // Extend the selection to the left, until we reach a non-letter and non-digit char
+      for (;;) {
+        if ( ( end + 1 ) >= paraText.length() )
+          break;
+        TQChar charToTheRight = paraText.at( end + 1 );
+        if ( charToTheRight.isLetter() || charToTheRight.isDigit() )
+          end++;
+        else
+          break;
+      }
+
+      setSelection( paragraphPos, start, paragraphPos, end + 1 );
+      handled = true;
+    }
+  }
+
+  if ( !handled )
+    return KEdit::contentsMouseDoubleClickEvent( e );
 }
 
 void KMEdit::slotMisspelling(const TQString &text, const TQStringList &lst, unsigned int pos)
@@ -660,6 +804,12 @@ void KMEdit::slotCorrected (const TQString &oldWord, const TQString &newWord, un
 
 void KMEdit::slotSpellcheck2(KSpell*)
 {
+  // Make sure words ignored by the highlighter are ignored by KSpell as well
+  if ( mHighlighter ) {
+    for ( uint i = 0; i < mHighlighter->ignoredWords().size(); i++ )
+      mKSpellForDialog->ignore( mHighlighter->ignoredWords()[i] );
+  }
+
     if( !mSpellLineEdit)
     {
         spellcheck_start();
@@ -682,10 +832,10 @@ void KMEdit::slotSpellcheck2(KSpell*)
         mSpellingFilter = new SpellingFilter(plaintext.text(), quotePrefix, SpellingFilter::FilterUrls,
                                              SpellingFilter::FilterEmailAddresses);
 
-        mKSpell->check(mSpellingFilter->filteredText());
+        mKSpellForDialog->check(mSpellingFilter->filteredText());
     }
     else if( mComposer )
-        mKSpell->check( mComposer->sujectLineWidget()->text());
+        mKSpellForDialog->check( mComposer->sujectLineWidget()->text());
 }
 
 void KMEdit::slotSpellResult(const TQString &s)
@@ -693,7 +843,7 @@ void KMEdit::slotSpellResult(const TQString &s)
     if( !mSpellLineEdit)
         spellcheck_stop();
 
-  int dlgResult = mKSpell->dlgResult();
+  int dlgResult = mKSpellForDialog->dlgResult();
   if ( dlgResult == KS_CANCEL )
   {
       if( mSpellLineEdit)
@@ -711,7 +861,7 @@ void KMEdit::slotSpellResult(const TQString &s)
           setModified(true);
       }
   }
-  mKSpell->cleanUp();
+  mKSpellForDialog->cleanUp();
   KDictSpellingHighlighter::dictionaryChanged();
 
   emit spellcheck_done( dlgResult );
@@ -720,9 +870,9 @@ void KMEdit::slotSpellResult(const TQString &s)
 void KMEdit::slotSpellDone()
 {
   kdDebug(5006)<<" void KMEdit::slotSpellDone()\n";
-  KSpell::spellStatus status = mKSpell->status();
-  delete mKSpell;
-  mKSpell = 0;
+  KSpell::spellStatus status = mKSpellForDialog->status();
+  delete mKSpellForDialog;
+  mKSpellForDialog = 0;
 
   kdDebug(5006) << "spelling: delete SpellingFilter" << endl;
   delete mSpellingFilter;
@@ -761,6 +911,22 @@ void KMEdit::setCursorPositionFromStart( unsigned int pos ) {
   // kdDebug() << "Position " << pos << " converted to " << l << ":" << c << endl;
   setCursorPosition( l, c );
   ensureCursorVisible();
+}
+
+int KMEdit::indexOfCurrentLineStart( int paragraph, int index )
+{
+  Q_ASSERT( paragraph >= 0 && paragraph < paragraphs() );
+  Q_ASSERT( index >= 0 && ( index == 0 || index < paragraphLength( paragraph ) ) );
+
+  const int startLine = lineOfChar( paragraph, index );
+  Q_ASSERT( startLine >= 0 && startLine < linesOfParagraph( paragraph ) );
+  for ( int curIndex = index; curIndex >= 0; curIndex-- ) {
+    const int line = lineOfChar( paragraph, curIndex );
+    if ( line != startLine ) {
+      return curIndex + 1;
+    }
+  }
+  return 0;
 }
 
 #include "kmedit.moc"

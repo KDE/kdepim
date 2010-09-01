@@ -20,34 +20,46 @@
 */
 
 #include "attachment.h"
+#include <kmdcodec.h>
 
 using namespace KCal;
 
-Attachment::Attachment( const Attachment &attachment)
+Attachment::Attachment( const Attachment &attachment )
 {
+  mSize = attachment.mSize;
   mMimeType = attachment.mMimeType;
-  mData = attachment.mData;
+  mUri = attachment.mUri;
+  mData = qstrdup( attachment.mData );
+  mLabel = attachment.mLabel;
   mBinary = attachment.mBinary;
-	mShowInline = attachment.mShowInline;
-	mLabel = attachment.mLabel;
+  mLocal = attachment.mLocal;
+  mShowInline = attachment.mShowInline;
 }
 
-Attachment::Attachment(const TQString& uri, const TQString& mime)
+Attachment::Attachment( const TQString &uri, const TQString &mime )
 {
+  mSize = 0;
   mMimeType = mime;
-  mData = uri;
+  mUri = uri;
+  mData = 0;
   mBinary = false;
-	mShowInline = false;
-	mLabel = TQString::null;
+  mLocal = false;
+  mShowInline = false;
 }
 
-Attachment::Attachment(const char *base64, const TQString& mime)
+Attachment::Attachment( const char *base64, const TQString &mime )
 {
+  mSize = 0;
   mMimeType = mime;
-  mData = TQString::fromUtf8(base64);
+  mData = qstrdup( base64 );
   mBinary = true;
-	mShowInline = false;
-	mLabel = TQString::null;
+  mLocal = false;
+  mShowInline = false;
+}
+
+Attachment::~Attachment()
+{
+  delete[] mData;
 }
 
 bool Attachment::isUri() const
@@ -57,15 +69,16 @@ bool Attachment::isUri() const
 
 TQString Attachment::uri() const
 {
-  if (!mBinary)
-    return mData;
-  else
+  if ( !mBinary ) {
+    return mUri;
+  } else {
     return TQString::null;
+  }
 }
 
-void Attachment::setUri(const TQString& uri)
+void Attachment::setUri( const TQString &uri )
 {
-  mData = uri;
+  mUri = uri;
   mBinary = false;
 }
 
@@ -76,17 +89,60 @@ bool Attachment::isBinary() const
 
 char *Attachment::data() const
 {
-  if (mBinary)
-    // this method actually return a const char*, but that can't be done because of the uneededly non-const libical API
-    return const_cast<char*>( mData.latin1() ); //mData.utf8().data();
-  else
+  if ( mBinary ) {
+    return mData;
+  } else {
     return 0;
+  }
 }
 
-void Attachment::setData(const char *base64)
+TQByteArray &Attachment::decodedData()
 {
-  mData = TQString::fromUtf8(base64);
+  if ( mDataCache.isNull() && mData ) {
+    // base64Decode() sometimes appends a null byte when called
+    // with a TQCString so work on TQByteArray's instead
+    TQByteArray encoded;
+    encoded.duplicate( mData, strlen( mData ) );
+    TQByteArray decoded;
+    KCodecs::base64Decode( encoded, decoded );
+    mDataCache = decoded;
+  }
+
+  return mDataCache;
+}
+
+void Attachment::setDecodedData( const TQByteArray &data )
+{
+  TQByteArray encoded;
+  KCodecs::base64Encode( data, encoded );
+
+  encoded.resize( encoded.count() + 1 );
+  encoded[encoded.count()-1] = '\0';
+
+  setData( encoded.data() );
+  mDataCache = data;
+  mSize = mDataCache.size();
+}
+
+void Attachment::setData( const char *base64 )
+{
+  delete[] mData;
+  mData = qstrdup( base64 );
   mBinary = true;
+  mDataCache = TQByteArray();
+  mSize = 0;
+}
+
+uint Attachment::size()
+{
+  if ( isUri() ) {
+    return 0;
+  }
+  if ( !mSize ) {
+    mSize = decodedData().size();
+  }
+
+  return mSize;
 }
 
 TQString Attachment::mimeType() const
@@ -119,3 +175,12 @@ void Attachment::setLabel( const TQString& label )
   mLabel = label;
 }
 
+bool Attachment::isLocal() const
+{
+  return mLocal;
+}
+
+void Attachment::setLocal( bool local )
+{
+  mLocal = local;
+}
