@@ -114,13 +114,23 @@ void KDeclarativeMainView::delayedInit()
 
   // TODO: Figure out what the listProxy is and how to get rid of it.
 
+  // Remove this resetter after the Qt in master on Aug 26 is in mobile packages
+  // That is after rc1.
+  KResettingProxyModel *resetter = new KResettingProxyModel(this);
+  resetter->setSourceModel(d->mItemFilter);
+
+  QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel(this);
+  qmlCheckable->setSourceModel(resetter);
+
+  QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( resetter, this );
+  qmlCheckable->setSelectionModel(itemSelectionModel);
+
   if ( d->mListProxy ) {
     d->mListProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
-    d->mListProxy->setSourceModel( d->mItemFilter );
-  }
 
-  d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy )
-                                                                  : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
+    d->mListProxy->setSourceModel( qmlCheckable);
+  }
+  d->mItemSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this);
 
   if ( debugTiming ) {
     kWarning() << "Begin inserting QML context" << t.elapsed() << &t;
@@ -138,18 +148,8 @@ void KDeclarativeMainView::delayedInit()
   context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
 
   if ( d->mListProxy ) {
-    // Remove this resetter after the Qt in master on Aug 26 is in mobile packages
-    // That is after rc1.
-    KResettingProxyModel *resetter = new KResettingProxyModel(this);
-    resetter->setSourceModel( d->mListProxy->sourceModel() );
 
-    d->mListProxy->setSourceModel( resetter );
-
-    QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel(this);
-    qmlCheckable->setSourceModel(d->mListProxy);
-    qmlCheckable->setSelectionModel(d->mItemSelectionModel);
-
-    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( qmlCheckable ) ) );
+    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
 
     QMLListSelectionModel *qmlSelectionModel = new QMLListSelectionModel(d->mItemSelectionModel, this);
     context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlSelectionModel ) ) );
