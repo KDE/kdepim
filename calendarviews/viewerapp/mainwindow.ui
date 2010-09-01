@@ -43,6 +43,7 @@
      <string>Add View</string>
     </property>
     <addaction name="actionAgenda"/>
+    <addaction name="actionMultiAgenda"/>
    </widget>
    <addaction name="addViewMenu"/>
   </widget>
@@ -50,6 +51,11 @@
   <action name="actionAgenda">
    <property name="text">
     <string>Agenda</string>
+   </property>
+  </action>
+  <action name="actionMultiAgenda">
+   <property name="text">
+    <string>MultiAgenda</string>
    </property>
   </action>
  </widget>
