@@ -243,8 +243,8 @@ void Kleo::CryptoBackendFactory::readConfig() {
   mBackends.clear();
   const KConfigGroup group( configObject(), "Backends" );
   for ( ProtocolSet::const_iterator it = mAvailableProtocols.begin(), end = mAvailableProtocols.end() ; it != end ; ++it ) {
-    const QString backend = group.readEntry( *it, defaultBackend( *it ) );
-    mBackends[*it] = backendByName( backend );
+    const QString backend = group.readEntry( *it );
+    mBackends[*it] = backendByName( backend.isEmpty() ? QString::fromLatin1( defaultBackend( *it ) ) : backend );
   }
 }
 
