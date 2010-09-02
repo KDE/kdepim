@@ -190,6 +190,15 @@ QObject* KDeclarativeFullScreenView::getAction( const QString& name, const QStri
   return action;
 }
 
+QString KDeclarativeFullScreenView::getActionIconName( const QString& name ) const
+{
+  QAction * action = mActionCollection->action( name );
+  if ( action )
+    return action->icon().name();
+
+  return QString();
+}
+
 void KDeclarativeFullScreenView::setActionTitle(const QString& name, const QString& title)
 {
   QAction * action = mActionCollection->action( name );

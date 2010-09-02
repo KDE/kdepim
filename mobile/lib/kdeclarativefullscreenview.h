@@ -57,6 +57,11 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
      */
     QObject* getAction( const QString &name, const QString& argument ) const;
 
+    /**
+     * Returns the icon name for the action with the given @p name.
+     */
+    QString getActionIconName( const QString &name ) const;
+
     void setActionTitle( const QString& name, const QString& title);
     
     KActionCollection* actionCollection() const;

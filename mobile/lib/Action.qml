@@ -26,6 +26,7 @@ import org.kde 4.5
 Rectangle {
   id : _topContext
   property variant action
+  property variant actionIconName
   property int hardcoded_height : 70
   property bool hidable : true
   property bool hidden : hidable && !action.enabled
@@ -38,12 +39,11 @@ Rectangle {
   signal triggered()
   signal longPressed()
 
-  // FIXME: there is no "pixmap" property in QML.Image anymore!
-/*  Binding {
+  Binding {
     target : image
-    property : "pixmap"
-    value : KDE.iconToPixmap(action.icon, 35)
-  }*/
+    property : "source"
+    value : "image://action_images/" + actionIconName
+  }
 
   Binding {
     target : buttonText

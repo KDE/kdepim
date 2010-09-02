@@ -23,6 +23,7 @@
 
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeImageProvider>
 #include <QtGui/QApplication>
 #include <QtDBus/qdbusconnection.h>
 #include <QtDBus/qdbusmessage.h>
@@ -62,6 +63,32 @@
 #include "qmllistselectionmodel.h"
 #include "qmlcheckableproxymodel.h"
 
+class ActionImageProvider : public QDeclarativeImageProvider
+{
+  public:
+    ActionImageProvider()
+      : QDeclarativeImageProvider( QDeclarativeImageProvider::Pixmap )
+    {
+    }
+
+    QPixmap requestPixmap( const QString &id, QSize *size, const QSize &requestedSize )
+    {
+      qDebug("requested icon %s", qPrintable(id));
+      int width = 32;
+      int height = 32;
+      if ( requestedSize.isValid() ) {
+        width = requestedSize.width();
+        height = requestedSize.height();
+      }
+
+      if ( size )
+        *size = QSize( width, height );
+
+      const QIcon icon = KIconLoader::global()->loadIcon( id, KIconLoader::Dialog, KIconLoader::SizeHuge );
+      return icon.pixmap( width, height );
+    }
+};
+
 using namespace Akonadi;
 
 KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent )
@@ -69,6 +96,9 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   , d( new KDeclarativeMainViewPrivate )
 {
   d->mListProxy = listProxy;
+
+  ActionImageProvider *provider = new ActionImageProvider;
+  engine()->addImageProvider( QLatin1String( "action_images" ), provider );
 }
 
 void KDeclarativeMainView::delayedInit()

@@ -50,6 +50,9 @@ QML.Item {
       application.setActionTitle(name, title)
       application.getAction(name, argument);
     }
+    actionIconName : {
+      application.getActionIconName(name);
+    }
     hidable : false
 
     onLongPressed: {
