@@ -1126,6 +1126,9 @@ void KOAgenda::endItemAction()
 
         mChanger->changeIncidence( oldIncSaved, inc, wc, this );
 
+        mActionItem->dissociateFromMultiItem();
+        mActionItem->setIncidence( incToChange );
+
         // mActionItem does not exist any more, seeing as we just got done deleting it
         // (by deleting/replacing the original incidence it was created from through
         // user modification of said incidence) above!
@@ -1144,9 +1147,6 @@ void KOAgenda::endItemAction()
             break;
           }
         }
-
-        mActionItem->dissociateFromMultiItem();
-        mActionItem->setIncidence( incToChange );
       }
     }
 
