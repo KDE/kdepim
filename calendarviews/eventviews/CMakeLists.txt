@@ -43,7 +43,7 @@ set( eventviews_LIB_SRCS
      agenda/timelabels.cpp
      agenda/timelabelszone.cpp
      agenda/timescaleconfigdialog.cpp
-     agenda/multiagenda/multiagendaview.cpp
+     multiagenda/multiagendaview.cpp
 
      # TODO: Month view specific code
 )
