@@ -22,6 +22,7 @@ import Qt 4.7
 Item {
     id: calendarday
     property alias text: myText.text
+    property int currentDay: 0
 
     width: 54
     height: 54
@@ -58,7 +59,7 @@ Item {
     states: [
         State {
             name: "active"
-            when: calendarHelper.isCurrentDay(myText.text)
+            when: (currentDay == myText.text)
             PropertyChanges {
                 target: active
                 visible: true
