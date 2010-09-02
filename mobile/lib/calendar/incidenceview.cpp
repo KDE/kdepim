@@ -71,9 +71,7 @@ void IncidenceView::delayedInit()
   qmlRegisterType<DCollectionCombo>( "org.kde.incidenceeditors", 4, 5, "CollectionCombo" );
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
-
-  m_calendarHelper = new CalendarHelper(this);
-  engine()->rootContext()->setContextProperty( "calendarHelper", m_calendarHelper );
+  qmlRegisterType<CalendarHelper>( "CalendarHelper", 4, 5, "CalendarHelper" );
 
   connect( mItemManager, SIGNAL(itemSaveFinished(CalendarSupport::EditorItemManager::SaveAction)),
            SLOT(slotSaveFinished(CalendarSupport::EditorItemManager::SaveAction) ) );
