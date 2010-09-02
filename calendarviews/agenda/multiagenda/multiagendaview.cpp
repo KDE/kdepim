@@ -414,7 +414,11 @@ AgendaView *MultiAgendaView::createView( const QString &title )
   mTimeLabelsZone->setAgendaView( av );
   connect( av->splitter(), SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
   connect( av, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
-               SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)) );
+           SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)) );
+
+  connect( av, SIGNAL(showNewEventPopupSignal()),
+           SIGNAL(showNewEventPopupSignal()) );
+
   return av;
 }
 
