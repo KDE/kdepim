@@ -50,10 +50,9 @@ class CalendarHelper : public QObject
     int year() const;
     void setYear( const int year );
 
-  public slots:
-    QString dayForPosition( const int pos ) const;
-    int weekForPosition( const int pos ) const;
-    bool isCurrentDay( const QString &text ) const;
+    Q_INVOKABLE QString dayForPosition( const int pos ) const;
+    Q_INVOKABLE int weekForPosition( const int pos ) const;
+    Q_INVOKABLE bool isCurrentDay( const QString &text ) const;
 
   signals:
     void dateChanged();
