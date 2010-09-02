@@ -551,6 +551,8 @@ void MultiAgendaView::setupScrollBar()
 
 void MultiAgendaView::collectionSelectionChanged()
 {
+  kDebug();
+  mPendingChanges = true;
   recreateViews();
 }
 
