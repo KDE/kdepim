@@ -20,9 +20,10 @@
 import Qt 4.7
 
 Item {
-    id: calendarday
+    id: calendarDay
     property alias text: myText.text
     property int currentDay: 0
+    property int dayPos: 0
 
     width: 54
     height: 54
