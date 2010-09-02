@@ -546,7 +546,7 @@ you can configure the keyboard shortcuts by going to
         below.</para></important></entry></row>
 <row><entry>New Message</entry><entry><keycombo action="simul">&Ctrl;&Shift;<keycap>M</keycap></keycombo></entry></row>
 <row><entry>New Contact</entry><entry><keycombo action="simul">&Ctrl;&Shift;<keycap>C</keycap></keycombo></entry></row>
-<row><entry>New To-do</entry><entry><keycombo action="simul"><keycap>T</keycap></keycombo></entry></row>
+<row><entry>New To-do</entry><entry><keycombo action="simul">&Ctrl;&Shift;<keycap>T</keycap></keycombo></entry></row>
 <row><entry>New Feed</entry><entry><keycombo action="simul">&Ctrl;&Shift;<keycap>F</keycap></keycombo></entry></row>
 <row><entry>New Article</entry><entry><keycombo action="simul">&Ctrl;&Shift;<keycap>A</keycap></keycombo></entry></row>
 <row><entry>New Journal</entry><entry><keycombo action="simul">&Ctrl;&Shift;<keycap>J</keycap></keycombo></entry></row>
@@ -556,7 +556,7 @@ you can configure the keyboard shortcuts by going to
 <row><entry>New Task</entry><entry><keycombo action="simul">&Ctrl;&Shift;<keycap>W</keycap></keycombo></entry></row>
 <row><entry>&kontact; Handbook</entry><entry><keycombo action="press"><keycap>F1</keycap></keycombo></entry></row>
 <row><entry>What's This Help</entry><entry><keycombo action="simul">&Ctrl;<keycap>F1</keycap></keycombo></entry></row>
-<row><entry>Quit</entry><entry><keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>></entry></row>
+<row><entry>Quit</entry><entry><keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo></entry></row>
 </tbody>
 </tgroup>
 </table>
