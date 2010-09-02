@@ -51,6 +51,7 @@ MailWebView::MailWebView( QWidget *parent )
 #endif
   connect( page(), SIGNAL(linkHovered(QString,QString,QString)),
            this,   SIGNAL(linkHovered(QString,QString,QString)) );
+  //Fixed in qtwebkit-2.1  the   2010-08-25
   // workaround for https://bugs.webkit.org/show_bug.cgi?id=44252
   disconnect( page(), SIGNAL(selectionChanged()),
               this,   SIGNAL(selectionChanged()) );
