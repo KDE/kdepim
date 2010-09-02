@@ -126,7 +126,7 @@ KPIM.MainView {
             anchors.fill: parent
             KPIM.Button2 {
               width: parent.width
-              buttonText : KDE.i18n( "Forward as Attachemnt" )
+              buttonText : KDE.i18n( "Forward as Attachment" )
               onClicked : {
                 application.getAction("message_forward_as_attachment", "").trigger();
                 forwardOptionsPage.visible = false
