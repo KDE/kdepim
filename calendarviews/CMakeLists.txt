@@ -1,3 +1,4 @@
+project( calendarView )
 add_subdirectory( eventviews  )
 
 if (KDEPIM_BUILD_EXAMPLES)
