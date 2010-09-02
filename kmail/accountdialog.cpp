@@ -1307,6 +1307,7 @@ void AccountDialog::slotSetupNamespaces( const ImapAccountBase::nsDelimMap& map 
     mImap.ui.editPNS->setEnabled( true );
   } else {
     mImap.ui.editPNS->setEnabled( false );
+    mImap.ui.personalNS->setEnabled( false );
   }
   ns = map[ImapAccountBase::OtherUsersNS];
   if ( !ns.isEmpty() ) {
@@ -1314,6 +1315,7 @@ void AccountDialog::slotSetupNamespaces( const ImapAccountBase::nsDelimMap& map 
     mImap.ui.editONS->setEnabled( true );
   } else {
     mImap.ui.editONS->setEnabled( false );
+    mImap.ui.otherUsersNS->setEnabled( false );
   }
   ns = map[ImapAccountBase::SharedNS];
   if ( !ns.isEmpty() ) {
@@ -1321,6 +1323,7 @@ void AccountDialog::slotSetupNamespaces( const ImapAccountBase::nsDelimMap& map 
     mImap.ui.editSNS->setEnabled( true );
   } else {
     mImap.ui.editSNS->setEnabled( false );
+    mImap.ui.sharedNS->setEnabled( false );
   }
 }
 
