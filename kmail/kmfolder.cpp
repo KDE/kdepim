@@ -1107,9 +1107,9 @@ void KMFolder::slotIdentitiesChanged()
   }
 }
 
-bool KMFolder::isValidName( const QString &folderName, QString &message )
+bool KMFolder::isValidName( KMFolder * folder, const QString &folderName, QString &message )
 {
-  KMFolderType fldType = folderType();
+  KMFolderType fldType = folder->folderType();
 
   // names of local folders must not contain a '/'
   if ( folderName.contains( "/" )  &&
@@ -1124,19 +1124,19 @@ bool KMFolder::isValidName( const QString &folderName, QString &message )
     message = i18n( "Folder names cannot start with a . (dot) character; please choose another folder name." );
     return false;
   }
-
+  FolderStorage *folderStorage = folder->storage();
   // names of IMAP folders must not contain the folder delimiter
   if ( fldType == KMFolderTypeImap || fldType == KMFolderTypeCachedImap ) {
     QString delimiter;
     if ( fldType == KMFolderTypeImap ) {
-      KMAcctImap *ai = static_cast<KMFolderImap*>( mStorage )->account();
+      KMAcctImap *ai = static_cast<KMFolderImap*>( folderStorage )->account();
       if ( ai ) {
-        delimiter = ai->delimiterForFolder( mStorage );
+        delimiter = ai->delimiterForFolder( folderStorage );
       }
     } else {
-      KMAcctCachedImap *ai = static_cast<KMFolderCachedImap*>( mStorage )->account();
+      KMAcctCachedImap *ai = static_cast<KMFolderCachedImap*>( folderStorage )->account();
       if ( ai ) {
-        delimiter = ai->delimiterForFolder( mStorage );
+        delimiter = ai->delimiterForFolder( folderStorage );
       }
     }
     if ( !delimiter.isEmpty() && folderName.contains( delimiter ) ) {

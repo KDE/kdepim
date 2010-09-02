@@ -224,7 +224,7 @@ void NewFolderDialog::slotOk()
   }
 
   QString msg;
-  if ( mFolder && !mFolder->isValidName( fldName, msg ) ) {
+  if ( mFolder && !KMFolder::isValidName( mFolder, fldName, msg ) ) {
     KMessageBox::error( this, msg );
     return;
   }

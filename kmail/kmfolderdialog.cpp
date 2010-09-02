@@ -736,7 +736,11 @@ bool FolderDialogGeneralTab::save()
   // a noop or not.
   if ( !oldFldName.isEmpty() )
   {
-    kmkernel->folderMgr()->renameFolder( folder, fldName );
+    QString message;
+    if ( KMFolder::isValidName( folder, fldName, message ) )
+      kmkernel->folderMgr()->renameFolder( folder, fldName );
+    else
+      KMessageBox::error( this, message );
   } else {
     kmkernel->folderMgr()->contentsChanged();
   }

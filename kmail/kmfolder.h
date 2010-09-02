@@ -170,12 +170,12 @@ public:
       0 if no such directory exists */
   KMFolderDir* child() const
     { return mChild; }
-  
+
   /**
    * Returns true if the specified folder is a descendant of this folder
    * (if fld is somewhere in this folder's children subtree).
    * Returns false otherwise (or if fld is null).
-   * 
+   *
    * This function assumes that fld, if not null, is a valid pointer to
    * a folder that can be dereferenced.
    */
@@ -595,7 +595,7 @@ public:
   * If the name contains invalid characters then false is returned and message will contain
   * an explanation that can be presented to the user.
   */
-  bool isValidName( const QString &folderName, QString &message );
+  static bool isValidName( KMFolder *folder, const QString &folderName, QString &message );
 
 signals:
   /** Emitted when the status, name, or associated accounts of this
@@ -772,9 +772,9 @@ public:
   }
 
   KMFolder * folder() const { return mFolder; }
-  
+
   int openResult() const { return mOpenRc; }
-  
+
 private:
   //we forbid construction on the heap as good as we can
   void * operator new( size_t size );

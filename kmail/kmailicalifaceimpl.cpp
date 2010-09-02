@@ -2246,7 +2246,7 @@ bool KMailICalIfaceImpl::addSubresource( const QString& resource,
   if ( !parentFolderDir || parentFolderDir->hasNamedFolder( resource ) ) return false;
 
   QString msg;
-  if ( parentFolderDir->owner() && !parentFolderDir->owner()->isValidName( resource, msg ) ) {
+  if ( parentFolderDir->owner() && !KMFolder::isValidName( parentFolderDir->owner(), resource, msg ) ) {
     KMessageBox::error( 0, msg );
     return false;
   }
