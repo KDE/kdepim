@@ -102,12 +102,9 @@ void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
     timeLabels->setAgenda( mAgenda );
     area->verticalScrollBar()->setValue( mAgenda->verticalScrollBar()->value() );
 
+   connect( area->verticalScrollBar(), SIGNAL(valueChanged(int)),
+            mAgenda->verticalScrollBar(), SLOT(setValue(int)) );
   }
-  // timelabel's scroll is just a slave, this shouldn't be here
-  // if ( mParent ) {
-  //  connect( area->verticalScrollBar(), SIGNAL(valueChanged(int)),
-  //           mParent, SLOT(setContentsPos(int)) );
-  // }
 }
 
 int TimeLabelsZone::preferedTimeLabelsWidth() const

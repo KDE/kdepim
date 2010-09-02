@@ -121,7 +121,6 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   mScrollArea->setFrameShape( QFrame::NoFrame );
   topLevelLayout->addWidget( mScrollArea, 100 );
   mTopBox = new KHBox( mScrollArea->viewport() );
-  //TODO_EVENTVIEWS: review
   mScrollArea->setWidget( mTopBox );
 
   topSideBox = new KVBox( this );
@@ -161,7 +160,6 @@ void MultiAgendaView::recreateViews()
   if ( !mPendingChanges ) {
     return;
   }
-
   mPendingChanges = false;
 
   deleteViews();
