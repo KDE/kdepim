@@ -32,7 +32,9 @@
 
 #include "eventview.h"
 
-#include <kcalcore/todo.h>
+#include "prefs.h"
+
+#include <KCalCore/Todo>
 
 #include <QFrame>
 
@@ -48,6 +50,12 @@ namespace Akonadi {
 
 namespace EventViews
 {
+
+#ifndef EVENTVIEWS_NODECOS
+  namespace CalendarDecoration {
+    class Decoration;
+  }
+#endif
 
 class TimeLabels;
 class TimeLabelsZone;
@@ -88,8 +96,18 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 {
   Q_OBJECT
   public:
-    explicit AgendaView( QWidget *parent = 0, bool isSideBySide = false );
+  explicit AgendaView( const PrefsPtr &preferences,
+                       bool isSideBySide = false,
+                       QWidget *parent = 0 );
+
+    explicit AgendaView( bool isSideBySide = false,
+                         QWidget *parent = 0 );
+
     virtual ~AgendaView();
+
+    enum {
+      MAX_DAY_COUNT = 42 // ( 6 * 7)
+    };
 
     /** Returns number of currently shown dates. */
     virtual int currentDateCount() const;
@@ -102,9 +120,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     /** return the default start/end date/time for new events   */
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
-
-    /** Remove all events from view */
-    void clearView();
 
     /** start-datetime of selection */
     virtual QDateTime selectionStart() const;
@@ -122,18 +137,18 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     bool selectedIsSingleCell() const;
 
     /* reimp from EventView */
-    virtual void setCalendar( Akonadi::Calendar *cal );
+    virtual void setCalendar( CalendarSupport::Calendar *cal );
 
     /** Show only incidences from the given collection selection. */
-//    void setCollectionSelection( CollectionSelection* selection );
+    // void setCollectionSelection( CollectionSelection* selection );
     void setCollection( Akonadi::Collection::Id id );
     Akonadi::Collection::Id collection() const;
 
-    Agenda *agenda() const;
     QSplitter *splitter() const;
 
     /** First shown day */
     QDate startDate() const;
+
     /** Last shown day */
     QDate endDate() const;
 
@@ -143,9 +158,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     virtual void showDates( const QDate &start, const QDate &end );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
-    void insertIncidence( const Akonadi::Item &incidence, const QDate &curDate );
-    void changeIncidenceDisplayAdded( const Akonadi::Item &incidence );
-    void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
+    void insertIncidence( const Akonadi::Item &incidence, const QDate &curDate, bool createSelected );
 
     void clearSelection();
 
@@ -155,15 +168,14 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void readSettings( const KConfig * );
     void writeSettings( KConfig * );
 
-    void setContentsPos( int y );
 
     /** reschedule the todo  to the given x- and y- coordinates.
         Third parameter determines all-day (no time specified) */
-    void slotTodosDropped( const QList<KCalCore::Todo::Ptr> & todos, const QPoint &, bool );
+    void slotTodosDropped( const KCalCore::Todo::List &, const QPoint &, bool );
     void slotTodosDropped( const QList<KUrl>& todos, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
     void zoomInHorizontally( const QDate &date=QDate() );
     void zoomOutHorizontally( const QDate &date=QDate() );
@@ -183,6 +195,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     void createTimeBarHeaders();
 
+    void setChanges( EventView::Changes );
+
   Q_SIGNALS:
     void showNewEventPopupSignal();
     void showIncidencePopupSignal(Akonadi::Item,QDate);
@@ -191,9 +205,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void timeSpanSelectionChanged();
 
   protected:
-    /** Fill agenda beginning with date startDate */
-    void fillAgenda( const QDate &startDate );
-
     /** Fill agenda using the current set value for the start date */
     void fillAgenda();
 
@@ -234,13 +245,27 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void alignAgendas();
 
   private:
-
+    void init();
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
-    int timeLabelsWidth();
-    void displayIncidence( const Akonadi::Item &incidence );
-    void placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop );
+    void displayIncidence( const Akonadi::Item &incidence, bool createSelected );
 
+    // TODO: delete this in a few weeks, after reviewing if doUpdateItem() can be removed.
+    // (it's not even called)
+    void changeIncidenceDisplayAdded( const Akonadi::Item &incidence );
+    void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
+
+#ifndef EVENTVIEWS_NODECOS
+    typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;
+    bool loadDecorations( const QStringList &decorations, DecorationList &decoList );
+    void placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop );
+    void placeDecorations( DecorationList &decoList, const QDate &date,
+                           KHBox *labelBox, bool forWeek );
+#endif
+
+    friend class TimeLabelsZone;
+    friend class MultiAgendaView;
+    Agenda *agenda() const;
   private:
     class Private;
     Private *const d;

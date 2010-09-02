@@ -23,7 +23,7 @@
 #include <KGlobalSettings>
 
 #include <calendarsupport/calendar.h>
-#include <calendarviews/agenda/agendaview.h>
+#include <calendarviews/eventviews/agenda/agendaview.h>
 
 using namespace EventViews;
 

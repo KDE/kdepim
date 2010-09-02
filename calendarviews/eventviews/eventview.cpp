@@ -32,7 +32,7 @@
 
 
 // AKONADI_PORT hack, see below
-#include "agendaview.h"
+#include "agenda/agendaview.h"
 
 #include <calendarsupport/recurrenceactions.h>
 #include <calendarsupport/calendar.h>

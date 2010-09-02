@@ -18,10 +18,10 @@
 
 #include "multiagendaview.h"
 
-#include <calendarviews/agenda/prefs.h>
-#include <calendarviews/agenda/agenda.h>
-#include <calendarviews/agenda/agendaview.h>
-#include <calendarviews/agenda/timelabelszone.h>
+#include <eventviews/prefs.h>
+#include <eventviews/agenda/agenda.h>
+#include <eventviews/agenda/agendaview.h>
+#include <eventviews/agenda/timelabelszone.h>
 
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>

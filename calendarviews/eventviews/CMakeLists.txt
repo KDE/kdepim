@@ -18,7 +18,7 @@ include_directories(
     ${CMAKE_BINARY_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/calendarsupport
     ${CMAKE_BINARY_DIR}/calendarsupport
-    ${CMAKE_SOURCE_DIR}/calendarviews/agenda
+    ${CMAKE_SOURCE_DIR}/calendarviews
 )
 
 if (KDEPIM_MOBILE_UI)
@@ -28,26 +28,30 @@ endif (KDEPIM_MOBILE_UI)
 ########### next target ###############
 
 set( eventviews_LIB_SRCS
-     cellitem.cpp
      eventview.cpp
-     agenda.cpp
-     agendaitem.cpp
-     agendaview.cpp
-     timelabels.cpp
-     timelabelszone.cpp
-     prefs.cpp
      helper.cpp
-     alternatelabel.cpp
-     timescaleconfigdialog.cpp
-     multiagenda/multiagendaview.cpp
-     calendardecoration.cpp
-     decorationlabel.cpp
+     prefs.cpp
+
+     # Agenda view specific code.
+     agenda/agenda.cpp
+     agenda/agendaitem.cpp
+     agenda/agendaview.cpp
+     agenda/alternatelabel.cpp
+     agenda/calendardecoration.cpp
+     agenda/cellitem.cpp
+     agenda/decorationlabel.cpp
+     agenda/timelabels.cpp
+     agenda/timelabelszone.cpp
+     agenda/timescaleconfigdialog.cpp
+     agenda/multiagenda/multiagendaview.cpp
+
+     # TODO: Month view specific code
 )
 
 kde4_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc )
 
 kde4_add_ui_files(eventviews_LIB_SRCS
-    timescaleedit_base.ui
+    agenda/timescaleedit_base.ui
 )
 
 kde4_add_library(eventviews ${LIBRARY_TYPE} ${eventviews_LIB_SRCS})

@@ -23,13 +23,12 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef AGENDA_H
-#define AGENDA_H
+#ifndef EVENTVIEWS_AGENDA_H
+#define EVENTVIEWS_AGENDA_H
 
-#include "eventviews_export.h"
 
-#include <kcalcore/todo.h>
-#include <kcalcore/event.h>
+#include <KCalCore/Todo>
+#include <KCalCore/Event>
 
 #include <Akonadi/Item>
 
@@ -45,7 +44,7 @@ class QScrollBar;
 class QTime;
 class QWheelEvent;
 
-namespace Akonadi
+namespace CalendarSupport
 {
   class Calendar;
   class IncidenceChanger;
@@ -74,7 +73,7 @@ class MarcusBains : public QFrame
     Private *const d;
 };
 
-class EVENTVIEWS_EXPORT Agenda : public QWidget
+class Agenda : public QWidget
 {
   Q_OBJECT
   public:
@@ -97,7 +96,9 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     int contentsX() const { return x(); };
     void setContentsPos( int x, int y );
 
-    QScrollBar* verticalScrollBar();
+    QScrollBar* verticalScrollBar() const;
+
+    QScrollArea* scrollArea() const;
 
     /**
       Returns the uid of the last incidence that was selected. This
@@ -119,19 +120,19 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     QVector<int> minContentsY() const;
     QVector<int> maxContentsY() const;
 
-    int visibleContentsYMin();
-    int visibleContentsYMax();
+    int visibleContentsYMin() const;
+    int visibleContentsYMax() const;
 
     void setStartTime( const QTime &startHour );
 
     AgendaItem *insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
-                             int YBottom, int itemPos, int itemCount );
+                             int YBottom, int itemPos, int itemCount, bool isSelected );
 
     AgendaItem *insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
-                                   int XEnd );
+                                   int XEnd, bool isSelected );
 
     void insertMultiItem ( const Akonadi::Item &event, const QDate &qd, int XBegin, int XEnd,
-                           int YTop, int YBottom );
+                           int YTop, int YBottom, bool isSelected );
 
     /**
       Removes an event and all its multi-items from the agenda. This function
@@ -162,9 +163,9 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void setDateList( const KCalCore::DateList &selectedDates );
     KCalCore::DateList dateList() const;
 
-    void setCalendar( Akonadi::Calendar *cal );
+    void setCalendar( CalendarSupport::Calendar *cal );
 
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
     QList<AgendaItem*> agendaItems( const Akonadi::Item &item ) const;
 
@@ -208,10 +209,11 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void deleteIncidenceSignal( const Akonadi::Item & );
     void showIncidencePopupSignal( const Akonadi::Item &, const QDate &);
 
-    //TODO_SPIT: change it's name to something like RMBClicked
     void showNewEventPopupSignal();
 
+    // If the incidence is multi-day, item is the first one
     void itemModified( AgendaItem *item );
+
     void incidenceSelected( const Akonadi::Item &, const QDate & );
     void startMultiModify( const QString & );
     void endMultiModify();
@@ -220,7 +222,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void upperYChanged( int );
 
     void startDragSignal( const Akonadi::Item & );
-    void droppedToDos( const QList<KCalCore::Todo::Ptr> &todo, const QPoint &gpos, bool allDay );
+    void droppedToDos( const KCalCore::Todo::List &todo, const QPoint &gpos, bool allDay );
     void droppedToDos( const QList<KUrl> &todo, const QPoint &gpos, bool allDay );
 
     void enableAgendaUpdate( bool enable );
@@ -350,7 +352,7 @@ class AgendaScrollArea : public QScrollArea
     AgendaScrollArea( bool allDay, EventView *eventView, QWidget *parent );
     ~AgendaScrollArea();
 
-    Agenda* agenda();
+    Agenda* agenda() const;
 
   private:
     Agenda *mAgenda;

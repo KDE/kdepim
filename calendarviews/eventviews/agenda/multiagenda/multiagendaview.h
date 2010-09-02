@@ -19,7 +19,7 @@
 #ifndef EVENTVIEWS_MULTIAGENDAVIEW_H_H
 #define EVENTVIEWS_MULTIAGENDAVIEW_H_H
 
-#include "../eventview.h"
+#include "../../eventview.h"
 #include "../agendaview.h"
 
 #include <Akonadi/Item>
