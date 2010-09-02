@@ -1204,32 +1204,33 @@ bool FolderView::event( QEvent *e )
   int icon_sizes[] = { /* 128, 64, 48, */ 32, 22 };
 
   QString iconPath;
-
+  int icon_size_found = 32;
   for ( int i = 0; i < 2; i++ )
   {
     iconPath = KIconLoader::global()->iconPath( fvi->normalIcon(), -icon_sizes[ i ], true );
-    if ( !iconPath.isEmpty() )
+    if ( !iconPath.isEmpty() ) {
+      icon_size_found = icon_sizes[ i ];
       break;
+    }
   }
 
-  if ( iconPath.isEmpty() )
+  if ( iconPath.isEmpty() ) 
     iconPath = KIconLoader::global()->iconPath( "folder", -32, false );
 
   tip += QString::fromLatin1(
           "</td>" \
           "<td align=\"right\" valign=\"top\">" \
             "<table border=\"0\"><tr><td width=\"32\" height=\"32\" align=\"center\" valign=\"middle\">"
-              "<img src=\"%1\">" \
+              "<img src=\"%1\" width=\"%2\" height=\"%2\">" \
             "</td></tr></table>" \
           "</td>" \
         "</tr>" \
-    ) .arg( iconPath );
+    ) .arg( iconPath ).arg( icon_size_found );
 
 
   tip += QString::fromLatin1(
       "</table>"
     );
-
   QToolTip::showText( he->globalPos(), tip, viewport(), visualItemRect( it ) );
 
   return true;
