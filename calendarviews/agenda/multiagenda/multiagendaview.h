@@ -44,43 +44,6 @@ namespace EventViews {
   class AgendaView;
   class TimeLabelsZone;
 
-
-#if 0 // TODO_EVENTVIEWS
-class EVENTVIEWS_EXPORT MultiAgendaViewConfigDialog : public KDialog
-{
-  Q_OBJECT
-  public:
-    explicit MultiAgendaViewConfigDialog( QAbstractItemModel *baseModel, QWidget *parent=0 );
-    ~MultiAgendaViewConfigDialog();
-
-    bool useCustomColumns() const;
-    void setUseCustomColumns( bool );
-
-    int numberOfColumns() const;
-    void setNumberOfColumns( int n );
-
-    QString columnTitle( int column ) const;
-    void setColumnTitle( int column, const QString &title );
-    CalendarSupport::CollectionSelectionProxyModel *takeSelectionModel( int column );
-    void setSelectionModel( int column, CalendarSupport::CollectionSelectionProxyModel *model );
-
-  public Q_SLOTS:
-    /**
-     * reimplemented from QDialog
-     */
-    void accept();
-
-  private Q_SLOTS:
-    void useCustomToggled( bool );
-    void numberOfColumnsChanged( int );
-    void currentChanged( const QModelIndex &index );
-    void titleEdited( const QString &text );
-
-  private:
-    class Private;
-    Private *const d;
-};
-#endif
 /**
   Shows one agenda for every resource side-by-side.
 */
@@ -97,17 +60,12 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     int maxDatesHint() const;
 
     bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
-    /* reimp */void setCalendar( CalendarSupport::Calendar *cal );
 
-    /**
-     * reimplemented from KOrg::BaseView
-     */
+    /* reimp */
+    void setCalendar( CalendarSupport::Calendar *cal );
+
+    /* reimp */
     bool hasConfigurationDialog() const;
-
-    /**
-     * reimplemented from KOrg::BaseView
-     */
-    void showConfigurationDialog( QWidget *parent );
 
     void setChanges( Changes changes );
 
