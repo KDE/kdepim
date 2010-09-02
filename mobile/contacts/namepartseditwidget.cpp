@@ -78,6 +78,11 @@ NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
 
   mPrefixCombo->lineEdit()->setFocus();
 
+  connect( mSuffixCombo, SIGNAL( activated( int ) ), this, SLOT( inputChanged() ) );
+  connect( mPrefixCombo, SIGNAL( activated( int ) ), this, SLOT( inputChanged() ) );
+  connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
+  connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
+  connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( inputChanged() ) );
 }
 
 void NamePartsEditWidget::loadContact( const KABC::Addressee &contact )
