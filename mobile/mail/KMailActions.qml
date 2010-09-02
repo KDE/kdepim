@@ -50,12 +50,6 @@ ActionMenuContainer {
     text : KDE.i18n( "Accounts" )
 
     model : agentInstanceList
-
-    customActions : [
-      ActionListItem { name : "akonadi_agentinstance_configure" },
-      ActionListItem { name : "akonadi_agentinstance_delete" },
-      ActionListItem { name : "akonadi_agentinstance_create" }
-    ]
   }
 
   ActionListItem {

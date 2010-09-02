@@ -62,6 +62,12 @@ QML.Rectangle {
     anchors.right : parent.right
     actionItemWidth : width
     actionItemHeight : _topLevel.actionItemHeight
+
+    content : [
+      ActionListItem { name : "akonadi_agentinstance_configure" },
+      ActionListItem { name : "akonadi_agentinstance_delete" },
+      ActionListItem { name : "akonadi_agentinstance_create" }
+    ]
   }
 
   onActionItemSpacingChanged : {
