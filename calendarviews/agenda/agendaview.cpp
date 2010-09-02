@@ -239,6 +239,7 @@ void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &inciden
 
   mAgenda->removeIncidence( incidence );
   mAllDayAgenda->removeIncidence( incidence );
+
   q->displayIncidence( incidence, false );
   mAgenda->checkScrollBoundaries();
   q->updateEventIndicators();
@@ -1572,9 +1573,6 @@ void AgendaView::fillAgenda()
   if ( changes() == NothingChanged ) {
     return;
   }
-  kDebug() << "changes = " << changes()
-           << "; mUpdateAgenda = " << d->mUpdateAgenda
-           << "; mUpdateAllDayAgenda = " << d->mUpdateAllDayAgenda;
 
   /* Remember the item Ids of the selected items. In case one of the
    * items was deleted and re-added, we want to reselect it. */
