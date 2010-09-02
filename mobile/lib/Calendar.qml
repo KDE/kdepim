@@ -18,6 +18,8 @@
 */
 
 import Qt 4.7
+
+import org.kde 4.5
 import CalendarHelper 4.5
 
 Item {
@@ -37,7 +39,7 @@ Item {
 
         Text {
             id: month
-            text: calendarHelper.monthName
+            text: KDE.i18n(calendarHelper.monthName)
             color: "#004bb8"
             font.pixelSize: 24
         }
@@ -134,7 +136,7 @@ Item {
                 id: sundayLabel
                 width: 54
                 height: 15
-                text: "Sun"
+                text: KDE.i18n("Sun")
                 color: "#5c5c5c"
                 font.pixelSize: 16
                 style: Text.Sunken
@@ -187,7 +189,7 @@ Item {
                 id: mondayLabel
                 width: 54
                 height: 15
-                text: "Mon"
+                text: KDE.i18n("Mon")
                 font.pixelSize: 16
                 color: "#5c5c5c"
                 style: Text.Sunken
@@ -240,7 +242,7 @@ Item {
                 id: tuesdayLabel
                 width: 54
                 height: 15
-                text: "Tue"
+                text: KDE.i18n("Tue")
                 color: "#5c5c5c"
                 font.pixelSize: 16
                 style: Text.Sunken
@@ -293,7 +295,7 @@ Item {
                 id: wednesdayLabel
                 width: 54
                 height: 15
-                text: "Wed"
+                text: KDE.i18n("Wed")
                 color: "#5c5c5c"
                 font.pixelSize: 16
                 style: Text.Sunken
@@ -346,7 +348,7 @@ Item {
                 id: thursdayLabel
                 width: 54
                 height: 15
-                text: "Thu"
+                text: KDE.i18n("Thu")
                 color: "#5c5c5c"
                 font.pixelSize: 16
                 style: Text.Sunken
@@ -399,7 +401,7 @@ Item {
                 id: fridayLabel
                 width: 54
                 height: 15
-                text: "Fri"
+                text: KDE.i18n("Fri")
                 color: "#5c5c5c"
                 font.pixelSize: 16
                 style: Text.Sunken
@@ -452,7 +454,7 @@ Item {
                 id: saturdayLabel
                 width: 54
                 height: 15
-                text: "Sat"
+                text: KDE.i18n("Sat")
                 color: "#5c5c5c"
                 font.pixelSize: 16
                 style: Text.Sunken
