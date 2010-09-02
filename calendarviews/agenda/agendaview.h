@@ -199,7 +199,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
   Q_SIGNALS:
     void showNewEventPopupSignal();
-    void showIncidencePopupSignal(Akonadi::Item,QDate);
+    void showIncidencePopupSignal( const Akonadi::Item  &, const QDate & );
     void zoomViewHorizontally( const QDate &, int count );
 
     void timeSpanSelectionChanged();

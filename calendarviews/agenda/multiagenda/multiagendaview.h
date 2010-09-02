@@ -111,6 +111,9 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
 
     void setChanges( Changes changes );
 
+  Q_SIGNALS:
+    void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );
+
   public slots:
     void showDates( const QDate &start, const QDate &end );
     void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
