@@ -79,6 +79,12 @@ namespace {
         /* reimp */ QString label() const { return m_customLabel.isEmpty() ? m_defaultLabel : m_customLabel; }
         void setDefaultLabel( const QString & l ) { m_defaultLabel = l; }
         /* reimp */ void setLabel( const QString & l ) { m_customLabel = l; }
+        /* reimp */ QString errorString() const {
+            if ( const shared_ptr<QIODevice> io = ioDevice() )
+                return io->errorString();
+            else
+                return i18n("No input device");
+        }
 
     private:
         QString m_customLabel;
@@ -107,6 +113,7 @@ namespace {
         /* reimp */ unsigned int classification() const { return 0U; } // plain text
         /* reimp */ unsigned long long size() const { return 0; }
         /* reimp */ QString label() const;
+        /* reimp */ QString errorString() const;
 
     private:
         const QString m_command;
@@ -140,6 +147,7 @@ namespace {
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_buffer; }
         /* reimp */ unsigned int classification() const;
         /* reimp */ unsigned long long size() const { return m_buffer ? m_buffer->buffer().size() : 0; }
+        /* reimp */ QString errorString() const { return QString(); }
 
     private:
         const QClipboard::Mode m_mode;
@@ -290,6 +298,17 @@ QString ProcessStdOutInput::label() const {
         return i18nc( "e.g. \"Output of tar xf - file1 ...\"", "Output of %1 ...", cmdline );
     else
         return i18nc( "e.g. \"Output of tar xf - file\"",      "Output of %1",     cmdline );
+}
+
+QString ProcessStdOutInput::errorString() const {
+    kleo_assert( m_proc );
+    if ( m_proc->exitStatus() == QProcess::NormalExit && m_proc->exitCode() == 0 )
+        return QString();
+    if ( m_proc->error() == QProcess::UnknownError )
+        return i18n( "Error while running %1:\n%2", m_command,
+                     QString::fromLocal8Bit( m_proc->readAllStandardError().trimmed().constData() ) );
+    else
+        return i18n( "Failed to execute %1: %2", m_command, m_proc->errorString() );
 }
 
 shared_ptr<Input> Input::createFromClipboard() {
