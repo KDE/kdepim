@@ -27,6 +27,10 @@ Item {
     width: 460
     height: 360
 
+    property alias day: calendarHelper.day
+    property alias month: calendarHelper.month
+    property alias year: calendarHelper.year
+
     CalendarHelper {
         id: calendarHelper
     }
@@ -52,452 +56,426 @@ Item {
         }
     }
 
-    Row {
-        spacing: 4
+    Grid {
+        id: calendarGrid
+        spacing: 3
+        columns: 8
+        rows: 7
         anchors.top: title.bottom
         anchors.topMargin: 10
 
-        Column {
-            id: weeks
-            spacing: 4
-
-            Item {
-                id: spacer
-                width: 20
-                height: 15
-            }
-
-            Text {
-                id: week1
-                width: 20
-                height: 54
-                text: calendarHelper.weekForPosition(1)
-                color: "#828282"
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignTop
-            }
-
-            Text {
-                id: week2
-                width: 20
-                height: 54
-                text: calendarHelper.weekForPosition(2)
-                color: "#828282"
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignTop
-            }
-
-            Text {
-                id: week3
-                width: 20
-                height: 54
-                text: calendarHelper.weekForPosition(3)
-                color: "#828282"
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignTop
-            }
-
-            Text {
-                id: week4
-                width: 20
-                height: 54
-                text: calendarHelper.weekForPosition(4)
-                color: "#828282"
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignTop
-            }
-
-            Text {
-                id: week5
-                width: 20
-                height: 54
-                text: calendarHelper.weekForPosition(5)
-                color: "#828282"
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignTop
-            }
-
-            Text {
-                id: week6
-                width: 20
-                height: 54
-                text: calendarHelper.weekForPosition(6)
-                color: "#828282"
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignTop
-            }
+        // headline
+        Item {
+            id: spacer
+            width: 20
+            height: 15
+        }
+        Text {
+            id: sundayLabel
+            width: 54
+            height: 15
+            text: KDE.i18n("Sun")
+            color: "#5c5c5c"
+            font.pixelSize: 16
+            style: Text.Sunken
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignBottom
+        }
+        Text {
+            id: mondayLabel
+            width: 54
+            height: 15
+            text: KDE.i18n("Mon")
+            color: "#5c5c5c"
+            font.pixelSize: 16
+            style: Text.Sunken
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignBottom
+        }
+        Text {
+            id: tuesdayLabel
+            width: 54
+            height: 15
+            text: KDE.i18n("Tue")
+            color: "#5c5c5c"
+            font.pixelSize: 16
+            style: Text.Sunken
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignBottom
+        }
+        Text {
+            id: wednesdayLabel
+            width: 54
+            height: 15
+            text: KDE.i18n("Wed")
+            color: "#5c5c5c"
+            font.pixelSize: 16
+            style: Text.Sunken
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignBottom
+        }
+        Text {
+            id: thursdayLabel
+            width: 54
+            height: 15
+            text: KDE.i18n("Thu")
+            color: "#5c5c5c"
+            font.pixelSize: 16
+            style: Text.Sunken
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignBottom
+        }
+        Text {
+            id: fridayLabel
+            width: 54
+            height: 15
+            text: KDE.i18n("Fri")
+            color: "#5c5c5c"
+            font.pixelSize: 16
+            style: Text.Sunken
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignBottom
+        }
+        Text {
+            id: saturdayLabel
+            width: 54
+            height: 15
+            text: KDE.i18n("Sat")
+            color: "#5c5c5c"
+            font.pixelSize: 16
+            style: Text.Sunken
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignBottom
         }
 
-        Column {
-            id: sundays
-            spacing: 4
-
-            Text {
-                id: sundayLabel
-                width: 54
-                height: 15
-                text: KDE.i18n("Sun")
-                color: "#5c5c5c"
-                font.pixelSize: 16
-                style: Text.Sunken
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignBottom
-            }
-
-            CalendarDay {
-                id: day1
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(1);
-            }
-
-            CalendarDay {
-                id: day8
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(8);
-            }
-
-            CalendarDay {
-                id: day15
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(15);
-            }
-
-            CalendarDay {
-                id: day22
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(22);
-            }
-
-            CalendarDay {
-                id: day29
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(29);
-            }
-
-            CalendarDay {
-                id: day36
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(36);
-            }
+        // first row
+        Text {
+            id: week1
+            property int weekPos: 1
+            width: 20
+            height: 54
+            color: "#828282"
+            text: calendarHelper.weekForPosition(1)
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignTop
+        }
+        CalendarDay {
+            id: day1
+            dayPos: 1
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(1);
+        }
+        CalendarDay {
+            id: day2
+            dayPos: 2
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(2);
+        }
+        CalendarDay {
+            id: day3
+            dayPos: 3
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(3);
+        }
+        CalendarDay {
+            id: day4
+            dayPos: 4
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(4);
+        }
+        CalendarDay {
+            id: day5
+            dayPos: 5
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(5);
+        }
+        CalendarDay {
+            id: day6
+            dayPos: 6
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(6);
+        }
+        CalendarDay {
+            id: day7
+            dayPos: 7
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(7);
         }
 
-        Column {
-            id: mondays
-            spacing: 4
-
-            Text {
-                id: mondayLabel
-                width: 54
-                height: 15
-                text: KDE.i18n("Mon")
-                font.pixelSize: 16
-                color: "#5c5c5c"
-                style: Text.Sunken
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignBottom
-            }
-
-            CalendarDay {
-                id: day2
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(2);
-            }
-
-            CalendarDay {
-                id: day9
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(9);
-            }
-
-            CalendarDay {
-                id: day16
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(16);
-            }
-
-            CalendarDay {
-                id: day23
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(23);
-            }
-
-            CalendarDay {
-                id: day30
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(30);
-            }
-
-            CalendarDay {
-                id: day37
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(37);
-            }
+        // second row
+        Text {
+            id: week2
+            property int weekPos: 2
+            width: 20
+            height: 54
+            color: "#828282"
+            text: calendarHelper.weekForPosition(2)
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignTop
+        }
+        CalendarDay {
+            id: day8
+            dayPos: 8
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(8);
+        }
+        CalendarDay {
+            id: day9
+            dayPos: 9
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(9);
+        }
+        CalendarDay {
+            id: day10
+            dayPos: 10
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(10);
+        }
+        CalendarDay {
+            id: day11
+            dayPos: 11
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(11);
+        }
+        CalendarDay {
+            id: day12
+            dayPos: 12
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(12);
+        }
+        CalendarDay {
+            id: day13
+            dayPos: 13
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(13);
+        }
+        CalendarDay {
+            id: day14
+            dayPos: 14
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(14);
         }
 
-        Column {
-            id: tuesdays
-            spacing: 4
-
-            Text {
-                id: tuesdayLabel
-                width: 54
-                height: 15
-                text: KDE.i18n("Tue")
-                color: "#5c5c5c"
-                font.pixelSize: 16
-                style: Text.Sunken
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignBottom
-            }
-
-            CalendarDay {
-                id: day3
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(3);
-            }
-
-            CalendarDay {
-                id: day10
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(10);
-            }
-
-            CalendarDay {
-                id: day17
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(17);
-            }
-
-            CalendarDay {
-                id: day24
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(24);
-            }
-
-            CalendarDay {
-                id: day31
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(31);
-            }
-
-            CalendarDay {
-                id: day38
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(38);
-            }
+        // third row
+        Text {
+            id: week3
+            property int weekPos: 3
+            width: 20
+            height: 54
+            color: "#828282"
+            text: calendarHelper.weekForPosition(3)
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignTop
+        }
+        CalendarDay {
+            id: day15
+            dayPos: 15
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(15);
+        }
+        CalendarDay {
+            id: day16
+            dayPos: 16
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(16);
+        }
+        CalendarDay {
+            id: day17
+            dayPos: 17
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(17);
+        }
+        CalendarDay {
+            id: day18
+            dayPos: 18
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(18);
+        }
+        CalendarDay {
+            id: day19
+            dayPos: 19
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(19);
+        }
+        CalendarDay {
+            id: day20
+            dayPos: 20
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(20);
+        }
+        CalendarDay {
+            id: day21
+            dayPos: 21
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(21);
         }
 
-        Column {
-            id: wednesdays
-            spacing: 4
-
-            Text {
-                id: wednesdayLabel
-                width: 54
-                height: 15
-                text: KDE.i18n("Wed")
-                color: "#5c5c5c"
-                font.pixelSize: 16
-                style: Text.Sunken
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignBottom
-            }
-
-            CalendarDay {
-                id: day4
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(4);
-            }
-
-            CalendarDay {
-                id: day11
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(11);
-            }
-
-            CalendarDay {
-                id: day18
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(18);
-            }
-
-            CalendarDay {
-                id: day25
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(25);
-            }
-
-            CalendarDay {
-                id: day32
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(32);
-            }
-
-            CalendarDay {
-                id: day39
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(39);
-            }
+        // forth row
+        Text {
+            id: week4
+            property int weekPos: 4
+            width: 20
+            height: 54
+            color: "#828282"
+            text: calendarHelper.weekForPosition(4)
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignTop
+        }
+        CalendarDay {
+            id: day22
+            dayPos: 22
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(22);
+        }
+        CalendarDay {
+            id: day23
+            dayPos: 23
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(23);
+        }
+        CalendarDay {
+            id: day24
+            dayPos: 24
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(24);
+        }
+        CalendarDay {
+            id: day25
+            dayPos: 25
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(25);
+        }
+        CalendarDay {
+            id: day26
+            dayPos: 26
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(26);
+        }
+        CalendarDay {
+            id: day27
+            dayPos: 27
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(27);
+        }
+        CalendarDay {
+            id: day28
+            dayPos: 28
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(28);
         }
 
-        Column {
-            id: thursdays
-            spacing: 4
-
-            Text {
-                id: thursdayLabel
-                width: 54
-                height: 15
-                text: KDE.i18n("Thu")
-                color: "#5c5c5c"
-                font.pixelSize: 16
-                style: Text.Sunken
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignBottom
-            }
-
-            CalendarDay {
-                id: day5
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(5);
-            }
-
-            CalendarDay {
-                id: day12
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(12);
-            }
-
-            CalendarDay {
-                id: day19
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(19);
-            }
-
-            CalendarDay {
-                id: day26
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(26);
-            }
-
-            CalendarDay {
-                id: day33
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(33);
-            }
-
-            CalendarDay {
-                id: day40
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(40);
-            }
+        // fifth row
+        Text {
+            id: week5
+            property int weekPos: 5
+            width: 20
+            height: 54
+            color: "#828282"
+            text: calendarHelper.weekForPosition(5)
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignTop
+        }
+        CalendarDay {
+            id: day29
+            dayPos: 29
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(29);
+        }
+        CalendarDay {
+            id: day30
+            dayPos: 30
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(30);
+        }
+        CalendarDay {
+            id: day31
+            dayPos: 31
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(31);
+        }
+        CalendarDay {
+            id: day32
+            dayPos: 32
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(32);
+        }
+        CalendarDay {
+            id: day33
+            dayPos: 33
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(33);
+        }
+        CalendarDay {
+            id: day34
+            dayPos: 34
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(34);
+        }
+        CalendarDay {
+            id: day35
+            dayPos: 35
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(35);
         }
 
-        Column {
-            id: fridays
-            spacing: 4
-
-            Text {
-                id: fridayLabel
-                width: 54
-                height: 15
-                text: KDE.i18n("Fri")
-                color: "#5c5c5c"
-                font.pixelSize: 16
-                style: Text.Sunken
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignBottom
-            }
-
-            CalendarDay {
-                id: day6
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(6);
-            }
-
-            CalendarDay {
-                id: day13
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(13);
-            }
-
-            CalendarDay {
-                id: day20
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(20);
-            }
-
-            CalendarDay {
-                id: day27
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(27);
-            }
-
-            CalendarDay {
-                id: day34
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(34);
-            }
-
-            CalendarDay {
-                id: day41
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(41);
-            }
+        // sixth row
+        Text {
+            id: week6
+            property int weekPos: 6
+            width: 20
+            height: 54
+            color: "#828282"
+            text: calendarHelper.weekForPosition(6)
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignTop
+        }
+        CalendarDay {
+            id: day36
+            dayPos: 36
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(36);
+        }
+        CalendarDay {
+            id: day37
+            dayPos: 37
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(37);
+        }
+        CalendarDay {
+            id: day38
+            dayPos: 38
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(38);
+        }
+        CalendarDay {
+            id: day39
+            dayPos: 39
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(39);
+        }
+        CalendarDay {
+            id: day40
+            dayPos: 40
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(40);
+        }
+        CalendarDay {
+            id: day41
+            dayPos: 41
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(41);
         }
 
-        Column {
-            id: saturdays
-            spacing: 4
-
-            Text {
-                id: saturdayLabel
-                width: 54
-                height: 15
-                text: KDE.i18n("Sat")
-                color: "#5c5c5c"
-                font.pixelSize: 16
-                style: Text.Sunken
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignBottom
-            }
-
-            CalendarDay {
-                id: day7
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(7);
-            }
-
-            CalendarDay {
-                id: day14
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(14);
-            }
-
-            CalendarDay {
-                id: day21
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(21);
-            }
-
-            CalendarDay {
-                id: day28
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(28);
-            }
-
-            CalendarDay {
-                id: day35
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(35);
-            }
-
-            CalendarDay {
-                id: day42
-                currentDay: calendarHelper.day
-                text: calendarHelper.dayForPosition(42);
-            }
+        CalendarDay {
+            id: day42
+            dayPos: 42
+            currentDay: calendarHelper.day
+            text: calendarHelper.dayForPosition(42);
         }
     }
 
+    Component.onCompleted: {
+        calendarHelper.registerItems(calendarGrid);
+    }
 }
+
