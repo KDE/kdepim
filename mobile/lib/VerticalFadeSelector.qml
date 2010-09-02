@@ -87,7 +87,7 @@ Item {
             height: 30
             opacity: fadeselector.focus ? relativeopacity(parent.y, y, height) : indexopacity(index);
             Text {
-                text: index + 1
+                text: index
                 anchors.fill: parent
                 color: "#004bb8"
                 font.bold: true
