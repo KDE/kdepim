@@ -42,12 +42,16 @@ KPIM.ActionList {
 /*  KPIM.FakeAction {
     name : "search_" + type
   }
-  KPIM.FakeAction {
-    name : "work_offline"
+*/
+  KPIM.ActionListItem {
+    name : "akonadi_work_offline"
   }
+  // TODO: implement us!
+/*
   KPIM.FakeAction {
     name : "configure"
-  }*/
+  }
+*/
   KPIM.ScriptActionItem  {
     name : "show_about_dialog"
     title : KDE.i18n( "About" )
