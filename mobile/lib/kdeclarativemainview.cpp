@@ -73,7 +73,6 @@ class ActionImageProvider : public QDeclarativeImageProvider
 
     QPixmap requestPixmap( const QString &id, QSize *size, const QSize &requestedSize )
     {
-      qDebug("requested icon %s", qPrintable(id));
       int width = 32;
       int height = 32;
       if ( requestedSize.isValid() ) {
