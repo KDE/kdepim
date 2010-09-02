@@ -564,7 +564,11 @@ void MultiAgendaView::collectionSelectionChanged()
 
 bool MultiAgendaView::hasConfigurationDialog() const
 {
-  return true;
+
+  /** The wrapper in korg has the dialog. Too complicated to move to CalendarViews.
+      Depends on korg/AkonadiCollectionView, and will be refactored some day
+      to get rid of CollectionSelectionProxyModel/EntityStateSaver */
+  return false;
 }
 
 void MultiAgendaView::showConfigurationDialog( QWidget *parent )
