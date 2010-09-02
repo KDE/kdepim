@@ -150,7 +150,7 @@ void KOEditorGeneral::initHeader( TQWidget *parent,TQBoxLayout *topLayout)
   thirdLineLayout->addWidget( mCategoriesLabel );
 
   mCategoriesButton = new TQPushButton( parent );
-  mCategoriesButton->setText(i18n("&Select..."));
+  mCategoriesButton->setText(i18n("Select..."));
   TQWhatsThis::add( mCategoriesButton, whatsThis );
   connect(mCategoriesButton,TQT_SIGNAL(clicked()),TQT_SLOT(selectCategories()));
   thirdLineLayout->addWidget( mCategoriesButton );
