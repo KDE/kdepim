@@ -45,13 +45,12 @@ Item {
 
     KPIM.VerticalFadeSelector {
         id: seconds
-        height: 90
+        height: 100
         width: 150
         model: 60
 
         anchors {
             right: parent.right
-            topMargin: 120
             rightMargin: 40
         }
     }
@@ -63,22 +62,22 @@ Item {
         anchors {
             top: seconds.bottom
             right: parent.right
-            topMargin: -20
+            topMargin: -15
             rightMargin: 40
         }
     }
 
     KPIM.VerticalFadeSelector {
         id: minutes
-        height: 90
-        width: 150
+        height: seconds.height
+        width: seconds.width
         model: 60
         currentIndex: 0
 
         anchors {
             top: secondsLabel.bottom
             right: parent.right
-            topMargin: -10
+            topMargin: -5
             rightMargin: 40
         }
     }
@@ -90,22 +89,22 @@ Item {
         anchors {
             top: minutes.bottom
             right: parent.right
-            topMargin: -20
+            topMargin: -15
             rightMargin: 40
         }
     }
 
     KPIM.VerticalFadeSelector {
         id: hours
-        height: 90
-        width: 150
+        height: seconds.height
+        width: seconds.width
         model: 12
         currentIndex: 0
 
         anchors {
             top: minutesLabel.bottom
             right: parent.right
-            topMargin: -10
+            topMargin: -5
             rightMargin: 40
         }
 
@@ -118,7 +117,7 @@ Item {
         anchors {
             top: hours.bottom
             right: parent.right
-            topMargin: -20
+            topMargin: -15
             rightMargin: 40
         }
     }
