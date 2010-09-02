@@ -28,10 +28,10 @@ class CalendarHelper : public QObject
 {
   Q_OBJECT;
   Q_PROPERTY(int day READ day WRITE setDay NOTIFY dayChanged)
+  Q_PROPERTY(int daysInMonth READ daysInMonth NOTIFY daysInMonthChanged)
   Q_PROPERTY(int month READ month WRITE setMonth NOTIFY monthChanged)
   Q_PROPERTY(QString monthName READ monthName NOTIFY monthChanged)
   Q_PROPERTY(int year READ year WRITE setYear NOTIFY yearChanged)
-  Q_PROPERTY(QDateTime date READ date WRITE setDate NOTIFY dateChanged)
 
   public:
     CalendarHelper( QObject *parent = 0 );
@@ -40,10 +40,13 @@ class CalendarHelper : public QObject
     QDateTime date() const;
     void setDate( const QDateTime datetime );
 
+    void updateOffsets();
+
     int day() const;
     void setDay( const int day );
 
     int month() const;
+    int daysInMonth() const;
     QString monthName() const;
     void setMonth( const int month );
 
@@ -53,15 +56,23 @@ class CalendarHelper : public QObject
     Q_INVOKABLE QString dayForPosition( const int pos ) const;
     Q_INVOKABLE int weekForPosition( const int pos ) const;
     Q_INVOKABLE bool isCurrentDay( const QString &text ) const;
+    Q_INVOKABLE void registerItems( QObject *obj );
+
+
+  protected slots:
+    void updateDays();
+    void updateWeeks();
 
   signals:
-    void dateChanged();
     void dayChanged();
+    void daysInMonthChanged();
     void monthChanged();
     void yearChanged();
 
   private:
     QDateTime m_original;
+    QList<QObject*> m_days;
+    QList<QObject*> m_weeks;
     int m_day;
     int m_month;
     int m_year;

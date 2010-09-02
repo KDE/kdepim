@@ -23,12 +23,17 @@
 #define MAX_WEEKS_ON_WIDGET 6
 
 #include <KDebug>
+#include <QVariant>
 
 
 CalendarHelper::CalendarHelper( QObject *parent )
     : QObject( parent )
 {
     setDate(QDateTime::currentDateTime());
+    connect( this, SIGNAL(monthChanged()), this, SLOT(updateDays()) );
+    connect( this, SIGNAL(yearChanged()), this, SLOT(updateDays()) );
+    connect( this, SIGNAL(monthChanged()), this, SLOT(updateWeeks()) );
+    connect( this, SIGNAL(yearChanged()), this, SLOT(updateWeeks()) );
 }
 
 CalendarHelper::~CalendarHelper()
@@ -43,16 +48,30 @@ QDateTime CalendarHelper::date() const
 void CalendarHelper::setDate( const QDateTime datetime )
 {
   m_original = datetime;
-  m_day = datetime.date().day();
-  m_month = datetime.date().month();
-  m_year = datetime.date().year();
-  m_daysInMonth = m_original.date().daysInMonth();
 
+  m_day = datetime.date().day();
+  emit dayChanged();
+
+  m_month = datetime.date().month();
+  emit monthChanged();
+  emit daysInMonthChanged();
+
+  m_year = datetime.date().year();
+  emit yearChanged();
+
+  m_daysInMonth = m_original.date().daysInMonth();
+  emit daysInMonthChanged();
+
+  updateOffsets();
+}
+
+void CalendarHelper::updateOffsets()
+{
   // calculate the offsets for day and week
   QDate firstDay = QDate(m_year, m_month, 1);
   m_offset = firstDay.dayOfWeek();
   m_weekOffset = firstDay.weekNumber();
-  emit dateChanged();
+
 }
 
 int CalendarHelper::day() const
@@ -71,6 +90,8 @@ void CalendarHelper::setDay( const int day )
 
   m_original.setDate( newDate );
   m_day = day;
+
+  updateOffsets();
   emit dayChanged();
 }
 
@@ -95,8 +116,16 @@ void CalendarHelper::setMonth( const int month )
 
   m_original.setDate( newDate );
   m_month = month;
-  m_daysInMonth = m_original.date().daysInMonth();
+  updateOffsets();
   emit monthChanged();
+
+  m_daysInMonth = m_original.date().daysInMonth();
+  emit daysInMonthChanged();
+}
+
+int CalendarHelper::daysInMonth() const
+{
+  return m_daysInMonth;
 }
 
 int CalendarHelper::year() const
@@ -110,11 +139,13 @@ void CalendarHelper::setYear( const int year )
       return;
 
   QDate newDate(year, m_month, m_day);
-  if ( !newDate.isValid() )
+  // we dont accept years BC (so no negative years)
+  if ( !newDate.isValid() || year <= 0 )
     return;
 
   m_original.setDate( newDate );
   m_year = year;
+  updateOffsets();
   emit yearChanged();
 }
 
@@ -158,7 +189,55 @@ int CalendarHelper::weekForPosition( const int pos ) const
 
 bool CalendarHelper::isCurrentDay( const QString &text ) const
 {
-    return ( m_day == text.toInt() );
+  return ( m_day == text.toInt() );
+}
+
+void CalendarHelper::registerItems( QObject *obj )
+{
+  // we expect to receive the item that has all the days and weeks as children
+  for( int i = 0; i < obj->children().size(); i++) {
+    // check for days and weeks
+    QObject *item = obj->children().at(i);
+    QVariant currentDay = item->property("currentDay");
+    QVariant weekPos = item->property("weekPos");
+
+    // add to the list if we found each one
+    if ( currentDay.isValid() ) {
+      m_days << item;
+    } else if ( weekPos.isValid() ) {
+      m_weeks << item;
+    }
+  }
+}
+
+void CalendarHelper::updateDays()
+{
+  for( int i = 0; i < m_days.size(); i++) {
+    QObject *item = m_days.at(i);
+    QVariant position = item->property("dayPos");
+
+    // invalid item
+    if (!position.isValid()) {
+        continue;
+    }
+
+    item->setProperty("text", dayForPosition(position.toInt()));
+  }
+}
+
+void CalendarHelper::updateWeeks()
+{
+  for( int i = 0; i < m_weeks.size(); i++) {
+    QObject *item = m_weeks.at(i);
+    QVariant position = item->property("weekPos");
+
+    // invalid item
+    if (!position.isValid()) {
+        continue;
+    }
+
+    item->setProperty("text", weekForPosition(position.toInt()));
+  }
 }
 
 #include "calendarhelper.moc"
