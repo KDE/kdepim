@@ -172,6 +172,13 @@ namespace {
         /* reimp */ void setLabel( const QString & label ) { m_customLabel = label; }
         void setDefaultLabel( const QString & l ) { m_defaultLabel = l; }
 
+        /* reimp */ QString errorString() const {
+            if ( shared_ptr<QIODevice> io = ioDevice() )
+                return io->errorString();
+            else
+                return i18n("No output device");
+        }
+
         /* reimp */ bool isFinalized() const { return m_isFinalized; }
         /* reimp */ void finalize() {
             kDebug() << this;
@@ -238,6 +245,8 @@ namespace {
         }
         /* reimp */ QString label() const;
 
+        /* reimp */ QString errorString() const;
+
     private:
         const QString m_command;
         const QStringList m_arguments;
@@ -271,6 +280,7 @@ namespace {
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_buffer; }
         /* reimp */ void doFinalize();
         /* reimp */ void doCancel() {}
+        /* reimp */ QString errorString() const { return QString(); }
     private:
         const QClipboard::Mode m_mode;
         shared_ptr<QBuffer> m_buffer;
@@ -428,6 +438,17 @@ QString ProcessStdInOutput::label() const {
         return i18nc( "e.g. \"Input to tar xf - file1 ...\"", "Input to %1 ...", cmdline );
     else
         return i18nc( "e.g. \"Input to tar xf - file\"",      "Input to %1",     cmdline );
+}
+
+QString ProcessStdInOutput::errorString() const {
+    kleo_assert( m_proc );
+    if ( m_proc->exitStatus() == QProcess::NormalExit && m_proc->exitCode() == 0 )
+        return QString();
+    if ( m_proc->error() == QProcess::UnknownError )
+        return i18n( "Error while running %1: %2", m_command,
+                     QString::fromLocal8Bit( m_proc->readAllStandardError().trimmed().constData() ) );
+    else
+        return i18n( "Failed to execute %1: %2", m_command, m_proc->errorString() );
 }
 
 shared_ptr<Output> Output::createFromClipboard() {

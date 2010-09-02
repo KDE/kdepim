@@ -75,6 +75,7 @@ namespace Kleo {
         virtual void setLabel( const QString & label ) = 0;
         virtual QString label() const = 0;
         virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
+        virtual QString errorString() const = 0;
         virtual bool isFinalized() const = 0;
         virtual void finalize() = 0;
         virtual void cancel() = 0;
