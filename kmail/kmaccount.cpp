@@ -303,10 +303,12 @@ if( fileD0.open( QIODevice::WriteOnly ) ) {
     folderId = ( type() == KAccount::DImap ) ? parent->folder()->idString()
                                              : mFolder->idString();
   }
-  else {
-    folderId = aMsg->parent()->idString();
+  else { /*message was moving */
+    if( aMsg->parent() ) /* don't crash in bug #242056 Don't know why aMsg->parent() is null */
+       folderId = aMsg->parent()->idString();
   }
-  addToNewInFolder( folderId, 1 );
+  if( !folderId.isEmpty() )
+    addToNewInFolder( folderId, 1 );
 
   return true; //Everything's fine - message has been added by filter  }
 }
