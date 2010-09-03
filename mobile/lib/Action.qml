@@ -38,11 +38,12 @@ Rectangle {
   signal triggered()
   signal longPressed()
 
-  Binding {
+  // FIXME: there is no "pixmap" property in QML.Image anymore!
+/*  Binding {
     target : image
     property : "pixmap"
     value : KDE.iconToPixmap(action.icon, 35)
-  }
+  }*/
 
   Binding {
     target : buttonText
