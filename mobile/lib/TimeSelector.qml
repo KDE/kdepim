@@ -47,16 +47,17 @@ Item {
             leftMargin: 20
         }
 
-        seconds: seconds.currentIndex*6
-        minutes: minutes.currentIndex*6
-        hours: hours.currentIndex*30
+        seconds: seconds.currentIndex
+        minutes: minutes.currentIndex
+        hours: hours.currentIndex
     }
 
     KPIM.VerticalFadeSelector {
         id: seconds
         height: 100
         width: 150
-        model: 61
+        model: 60
+        currentIndex: 0
 
         anchors {
             right: parent.right
@@ -87,8 +88,8 @@ Item {
         id: minutes
         height: 100
         width: 150
-        model: 61
-        currentIndex: clockHelper.minutes
+        model: 60
+        currentIndex: 0
 
         anchors {
             top: secondsLabel.bottom
@@ -121,7 +122,7 @@ Item {
         id: hours
         height: 100
         width: 150
-        model: 13
+        model: 12
         currentIndex: 0
 
         anchors {

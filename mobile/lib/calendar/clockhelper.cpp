@@ -20,7 +20,7 @@
 
 #include "clockhelper.h"
 #include "clockhelper_p.h"
-
+#include <QDebug>
 #include <QtCore/qmath.h>
 
 static const qreal Q_PI   = qreal(3.14159265358979323846);   // pi
@@ -161,7 +161,7 @@ void ClockHelper::setSeconds(int sec)
 {
   Q_D(ClockHelper);
 
-  sec = normalize(sec);
+  sec = normalize(sec) * 6;
   if (sec == d->seconds)
     return;
 
@@ -179,7 +179,7 @@ void ClockHelper::setMinutes(int min)
 {
   Q_D(ClockHelper);
 
-  min = normalize(min);
+  min = normalize(min) * 6;
   if (min == d->minutes)
     return;
 
@@ -197,7 +197,7 @@ void ClockHelper::setHours(int hour)
 {
   Q_D(ClockHelper);
 
-  hour = normalize(hour);
+  hour = normalize(hour) * 30;
   if (hour == d->hours)
     return;
 
