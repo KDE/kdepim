@@ -21,10 +21,19 @@ import Qt 4.7
 import ClockHelper 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
-Item {
+Rectangle {
     id: timeSelector
     height: 400
     width: 600
+    color: "red"
+    MouseArea {
+        anchors.fill:parent
+        onClicked: {
+            seconds.state = "unselected"
+            minutes.state = "unselected"
+            hours.state = "unselected"
+        }
+    }
 
     KPIM.Clock {
         id: clock
@@ -47,11 +56,18 @@ Item {
         id: seconds
         height: 100
         width: 150
-        model: 60
+        model: 61
 
         anchors {
             right: parent.right
             rightMargin: 40
+        }
+
+        onStateChanged: {
+            if (state == "selected") {
+                minutes.state = "unselected";
+                hours.state = "unselected";
+            }
         }
     }
     Text {
@@ -69,16 +85,23 @@ Item {
 
     KPIM.VerticalFadeSelector {
         id: minutes
-        height: seconds.height
-        width: seconds.width
-        model: 60
-        currentIndex: 0
+        height: 100
+        width: 150
+        model: 61
+        currentIndex: clockHelper.minutes
 
         anchors {
             top: secondsLabel.bottom
             right: parent.right
             topMargin: -5
             rightMargin: 40
+        }
+
+        onStateChanged: {
+            if (state == "selected") {
+                seconds.state = "unselected";
+                hours.state = "unselected";
+            }
         }
     }
     Text {
@@ -96,9 +119,9 @@ Item {
 
     KPIM.VerticalFadeSelector {
         id: hours
-        height: seconds.height
-        width: seconds.width
-        model: 12
+        height: 100
+        width: 150
+        model: 13
         currentIndex: 0
 
         anchors {
@@ -107,7 +130,12 @@ Item {
             topMargin: -5
             rightMargin: 40
         }
-
+        onStateChanged: {
+            if (state == "selected") {
+                minutes.state = "unselected";
+                seconds.state = "unselected";
+            }
+        }
     }
 
     Text {
