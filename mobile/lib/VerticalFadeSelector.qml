@@ -23,10 +23,10 @@ Item {
     id: fadeselector
     width: 160
     height: 90
+    state: "unselected"
 
     property alias model: list.model
     property alias currentIndex: list.currentIndex
-
 
     Image {
         id: inputLeft
@@ -79,12 +79,17 @@ Item {
         return 0;
     }
 
+    function toggleState()
+    {
+        state = (state == "selected")? "unselected" : "selected";
+    }
+
     Component {
         id: fadeDelegate
         Item {
             id: fadewrapper
             width: fadeselector.width
-            height: 30
+            height: fadeselector.height/2
             opacity: fadeselector.focus ? relativeopacity(parent.y, y, height) : indexopacity(index);
             Text {
                 text: index
@@ -99,13 +104,7 @@ Item {
                 hoverEnabled: true
                 anchors.fill: parent
                 onClicked: {
-                    fadeselector.focus = true;
-                }
-                onEntered: {
-                    fadeselector.focus = true;
-                }
-                onExited: {
-                    fadeselector.focus = false;
+                    toggleState()
                 }
             }
         }
@@ -123,12 +122,14 @@ Item {
         id: list
         clip: true
         model: 10
+        interactive: fadeselector.focus
+
         delegate: fadeDelegate
         highlight: highlight
         highlightRangeMode: ListView.StrictlyEnforceRange
         highlightFollowsCurrentItem: true
-        preferredHighlightBegin: 30
-        preferredHighlightEnd: 60
+        preferredHighlightBegin: fadeselector.height/3
+        preferredHighlightEnd: fadeselector.height/2.7
 
         anchors.fill: parent
         anchors.leftMargin: 5
@@ -137,4 +138,27 @@ Item {
         snapMode: ListView.SnapToItem
     }
 
+    states: [
+        State {
+            name: "selected"
+            PropertyChanges {
+                target: fadeselector
+                focus: true
+                height: 135
+                width: 240
+            }
+        },
+        State {
+            name: "unselected"
+            PropertyChanges {
+                target: fadeselector
+                focus: false
+                height: 90
+                width: 160
+            }
+        }
+    ]
+    transitions: Transition {
+        PropertyAnimation { target: fadeselector; properties: "height, width"; duration: 500 }
+    }
 }
