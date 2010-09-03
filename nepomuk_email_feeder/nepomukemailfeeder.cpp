@@ -48,7 +48,11 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
 #if !(KDE_IS_VERSION( 4, 5, 50 ))
   setNeedsStrigi( true );
 #else
+#ifdef _MSC_VER
+#pragma NOTE(Fix attachment indexing once Nepomuk adds the necessary interface again)
+#else
 #warning Fix attachment indexing once Nepomuk adds the necessary interface again
+#endif
 #endif
 
   // failsafe in case we don't have / lost G13 support

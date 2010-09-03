@@ -184,7 +184,11 @@ void MessageAnalyzer::processPart(KMime::Content* content)
 #if !(KDE_IS_VERSION( 4, 5, 50 ))
     m_parent->indexData( m_email.uri(), content->decodedContent(), m_item.modificationTime() );
 #else
+#ifdef _MSC_VER
+#pragma NOTE(Fix attachment indexing once Nepomuk adds the necessary interface again)
+#else
 #warning Fix attachment indexing once Nepomuk adds the necessary interface again
+#endif
 #endif
   }
 
@@ -207,7 +211,11 @@ void MessageAnalyzer::processPart(KMime::Content* content)
 #if !(KDE_IS_VERSION( 4, 5, 50 ))
     m_parent->indexData( attachmentUrl, content->decodedContent(), m_item.modificationTime() );
 #else
+#ifdef _MSC_VER
+#pragma NOTE(Fix attachment indexing once Nepomuk adds the necessary interface again)
+#else
 #warning Fix attachment indexing once Nepomuk adds the necessary interface again
+#endif
 #endif
   }
 
