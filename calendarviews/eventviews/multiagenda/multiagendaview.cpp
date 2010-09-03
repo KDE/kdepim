@@ -75,12 +75,12 @@ class MultiAgendaView::Private {
     }
 
     void addView( const Akonadi::Collection &collection );
-    void addView( CalendarSupport::CollectionSelectionProxyModel *selectionProxy, const QString &title );
+    void addView( CalendarSupport::CollectionSelectionProxyModel *selectionProxy,
+                  const QString &title );
     AgendaView *createView( const QString &title );
     void deleteViews();
     void setupViews();
     void resizeScrollView( const QSize &size );
-
 
     QList<AgendaView*> mAgendaViews;
     QList<QWidget*> mAgendaWidgets;
@@ -145,6 +145,7 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   topLevelLayout->addWidget( topSideBox );
 
   d->mScrollArea = new QScrollArea( this );
+  d->mScrollArea->setWidgetResizable( true );
 
 // TODO_EVENTVIEWS
   //d->mScrollArea->setResizePolicy( Q3ScrollView::Manual );
@@ -476,10 +477,12 @@ void MultiAgendaView::resizeEvent( QResizeEvent *ev )
 
 void MultiAgendaView::Private::resizeScrollView( const QSize &size )
 {
-  const int widgetWidth = size.width() - mTimeLabelsZone->width() - mScrollBar->width();
-  const int width = qMax( mTopBox->sizeHint().width(), widgetWidth );
+  const int widgetWidth = size.width() - mTimeLabelsZone->width() -
+                          mScrollBar->width();
+
   int height = size.height();
-  if ( width > widgetWidth ) {
+  if ( mScrollArea->horizontalScrollBar()->isVisible() ) {
+    // this should never happen, you can't get horizontalScrollBars
     const int sbHeight = mScrollArea->horizontalScrollBar()->height();
     height -= sbHeight;
     mLeftBottomSpacer->setFixedHeight( sbHeight );
@@ -488,9 +491,10 @@ void MultiAgendaView::Private::resizeScrollView( const QSize &size )
     mLeftBottomSpacer->setFixedHeight( 0 );
     mRightBottomSpacer->setFixedHeight( 0 );
   }
-  // TODO_EVENTVIEWS: review
-  //mScrollArea->resizeContents( width, height );
-  mTopBox->resize( width, height );
+
+  mScrollArea->widget()->setFixedSize( widgetWidth, height );
+
+  mTopBox->resize( widgetWidth, height );
 }
 
 void MultiAgendaView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
