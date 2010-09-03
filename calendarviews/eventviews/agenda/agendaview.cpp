@@ -625,14 +625,15 @@ void AgendaView::zoomView( const int delta, const QPoint &pos, const Qt::Orienta
 
 #ifndef EVENTVIEWS_NODECOS
 
-bool AgendaView::loadDecorations( const QStringList &decorations, DecorationList &decoList )
+bool AgendaView::loadDecorations( const QStringList &decorations,
+                                  DecorationList &decoList )
 {
   foreach ( const QString &decoName, decorations ) {
     if ( preferences()->selectedPlugins().contains( decoName ) ) {
       decoList << d->loadCalendarDecoration( decoName );
     }
   }
-  return ( decorations.count() > 0 );
+  return decoList.count() > 0;
 }
 
 void AgendaView::placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop )
