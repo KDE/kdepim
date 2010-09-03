@@ -132,15 +132,17 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
 
-  mActionManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Synchronize contacts\nin account" ) );
+  mActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize contacts\nin account",
+                                                                                               "Synchronize contacts\nin accounts" ) );
   mActionManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
   mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  mActionManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete folder" ) );
-  mActionManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Synchronize contacts\nin folder" ) );
+  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
+  mActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize contacts\nin folder",
+                                                                                                 "Synchronize contacts\nin folders" ) );
   mActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
   mActionManager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
   mActionManager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  mActionManager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete contact" ) );
+  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete contact", "Delete contacts" ) );
   mActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move contact\nto folder" ) );
   mActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy contact\nto folder" ) );
 

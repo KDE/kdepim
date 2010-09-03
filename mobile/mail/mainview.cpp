@@ -596,15 +596,15 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
 
-  manager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Synchronize emails\nin account" ) );
+  manager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize emails\nin account", "Synchronize emails\nin accounts" ) );
   manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
   manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  manager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete folder" ) );
-  manager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Synchronize emails\nin folder" ) );
+  manager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
+  manager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize emails\nin folder", "Synchronize emails\nin folders" ) );
   manager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
   manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
   manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  manager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete email" ) );
+  manager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete email", "Delete emails" ) );
   manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move email\nto folder" ) );
   manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy email\nto folder" ) );
 
