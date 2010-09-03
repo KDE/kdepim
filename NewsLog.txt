@@ -1,3 +1,16 @@
+Friday, September 3rd 2010
+
+Problems addressed
+------------------
+
+* Fix a crash when manually decrypting a message which is to be saved unencrypted
+* kolab/issue3867: Save S/MIME encrypted mails unencrypted after reading them
+* kolab/issue4325: event updates mails should be displayed like in OL2007 (rt#6099)
+* kolab/issue3992: Print layout problem, if a url is to long (rt#5872)
+* kolab/issue4427: attachment order of the composer is inconsistent (rt#6179)
+* Fix a crash during copying of a mail with online IMAP while the password dialog was shown
+
+
 Friday, August 27th 2010
 
 Problems addressed
