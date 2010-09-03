@@ -190,7 +190,8 @@ KPIM.MainView {
       id: backgroundImage
       x: 0
       y: 0
-      source: "korganizer-mobile-background.png"
+// FIXME: too big, costs about 1.5Mb RAM
+//      source: "korganizer-mobile-background.png"
     }
 
     AkonadiBreadcrumbNavigationView {

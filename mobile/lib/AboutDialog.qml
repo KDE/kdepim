@@ -22,14 +22,23 @@
 import Qt 4.7 as QML
 
 QML.Rectangle {
-  color : "lightsteelblue"
+  property alias source: backgroundImage.source
+  anchors.fill: parent
+  color: "white"
+  visible: false
+  
+  QML.Image {
+    id: backgroundImage
+    anchors.fill: parent
 
-  //Flickable {
-    QML.Text {
-      anchors.centerIn : parent
-      text : "This is the about dialog"
-    }
-  //}
+    //Flickable {
+      QML.Text {
+        anchors.centerIn : parent
+        text : "This is the about dialog\n\n" + application.version
+      }
+    //}
+
+  }
 
   QML.MouseArea {
     anchors.fill : parent

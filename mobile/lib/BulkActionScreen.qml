@@ -23,7 +23,7 @@ import Qt 4.7 as QML
 import org.kde.akonadi 4.5 as Akonadi
 
 QML.Rectangle {
-  color : "#00000000"
+  color : "white"
   id : _top
   property alias selectedItemModel : actionList.selectedItemModel
   property alias multipleText : actionList.multipleText

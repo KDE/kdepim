@@ -150,7 +150,8 @@ KPIM.MainView {
       id: backgroundImage
       x: 0
       y: 0
-      source: "kaddressbook-mobile-background.png"
+// FIXME: too big, costs about 1.5Mb RAM
+//      source: "kaddressbook-mobile-background.png"
       visible: collectionView.visible
     }
 
