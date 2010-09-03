@@ -21,12 +21,15 @@
 */
 
 #include "utils.h"
+#include "kcalprefs.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDialog>
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Item>
+
+#include <KHolidays/Holidays>
 
 #include <KCalCore/CalFilter>
 #include <KCalCore/Event>
@@ -53,6 +56,7 @@
 #include <boost/bind.hpp>
 
 using namespace CalendarSupport;
+using namespace KHolidays;
 
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 {
@@ -423,4 +427,42 @@ QString CalendarSupport::displayName( const Akonadi::Collection &c )
 QString CalendarSupport::subMimeTypeForIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
   return incidence->mimeType();
+}
+
+QList<QDate> CalendarSupport::workDays( const QDate &startDate,
+                                        const QDate &endDate )
+{
+  QList<QDate> result;
+
+  const int mask( ~( KCalPrefs::instance()->mWorkWeekMask ) );
+  const int numDays = startDate.daysTo( endDate ) + 1;
+
+  for ( int i = 0; i < numDays; ++i ) {
+    const QDate date = startDate.addDays( i );
+    if ( !( mask & ( 1 << ( date.dayOfWeek() - 1 ) ) ) ) {
+      result.append( date );
+    }
+  }
+
+  if ( KCalPrefs::instance()->mExcludeHolidays ) {
+    // NOTE: KOGlobals, where this method comes from, used to hold a pointer to
+    //       a KHolidays object. I'm not sure about how expensive it is, just
+    //       creating one here.
+    const HolidayRegion holidays( KCalPrefs::instance()->mHolidays );
+    const Holiday::List list = holidays.holidays( startDate, endDate );
+    for ( int i = 0; i < list.count(); ++i ) {
+      const Holiday &h = list.at( i );
+      const QString dateString = h.date().toString();
+      if ( h.dayType() == Holiday::NonWorkday ) {
+        result.removeAll( h.date() );
+      }
+    }
+  }
+
+  return result;
+}
+
+bool CalendarSupport::isWorkDay( const QDate &date )
+{
+  return workDays( date, date ).contains( date );
 }

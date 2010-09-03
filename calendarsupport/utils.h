@@ -211,6 +211,12 @@ namespace CalendarSupport
 
   CALENDARSUPPORT_EXPORT QString subMimeTypeForIncidence(
     const KCalCore::Incidence::Ptr &incidence );
+
+  /**
+      Returns a list containing work days between @p start and @end.
+  */
+  CALENDARSUPPORT_EXPORT QList<QDate> workDays( const QDate &start, const QDate &end );
+  CALENDARSUPPORT_EXPORT bool isWorkDay( const QDate &qd );
 }
 
 #endif
