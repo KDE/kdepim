@@ -30,6 +30,7 @@ Item {
     property alias day: calendarHelper.day
     property alias month: calendarHelper.month
     property alias year: calendarHelper.year
+    property alias daysInMonth: calendarHelper.daysInMonth
 
     CalendarHelper {
         id: calendarHelper
