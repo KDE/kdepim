@@ -115,6 +115,8 @@ namespace Util {
     bool validateAddresses( QWidget *parent, const QString &addresses );
 
 
+    QStringList AttachmentKeywords();
+
     /**
      * A LaterDeleter is intended to be used with the RAII ( Resource
      * Acquisiation is Initialization ) paradigm. When an instance of it

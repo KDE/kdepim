@@ -8,6 +8,7 @@
   <include>templatesconfiguration.h</include>
   <include>kglobalsettings.h</include>
   <include>kcolorscheme.h</include>
+  <include>util.h</include>
   <kcfgfile name="kmailrc"/>
     <group name="Behaviour">
       <entry name="DelayedMarkAsRead"  type="Bool">
@@ -418,10 +419,7 @@
       </entry>
       <entry name="AttachmentKeywords" type="StringList" key="attachment-keywords">
         <default code="true">
-          i18nc(
-                "comma-separated list of keywords that are used to detect whether "
-                "the user forgot to attach his attachment",
-                "attachment,attached" ).split( ',' )
+          KMail::Util::AttachmentKeywords()
         </default>
       </entry>
       <entry name="ShowMessagePartDialogOnAttach" type="Bool" key="showMessagePartDialogOnAttach">
