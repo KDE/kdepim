@@ -40,6 +40,7 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/incidencechanger.h>
 #include <calendarsupport/utils.h>
+#include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/entitymodelstatesaver.h>
 #include <calendarsupport/kcalprefs.h>
@@ -714,6 +715,44 @@ EventView::Changes EventView::changes() const
 {
   return d->mChanges;
 }
+
+void EventView::restoreConfig( const KConfigGroup &configGroup )
+{
+  const bool useCustom = configGroup.readEntry( "UseCustomCollectionSelection", false );
+  if ( !d->collectionSelectionModel && !useCustom ) {
+    delete d->collectionSelectionModel;
+    d->collectionSelectionModel = 0;
+    d->setUpModels();
+  } else if ( useCustom ) {
+
+    if ( !d->collectionSelectionModel ) {
+      d->collectionSelectionModel = new CalendarSupport::CollectionSelectionProxyModel( this );
+      d->collectionSelectionModel->setCheckableColumn( CalendarSupport::CalendarModel::CollectionTitle );
+      d->collectionSelectionModel->setDynamicSortFilter( true );
+      d->collectionSelectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+      if ( d->calendar )
+        d->collectionSelectionModel->setSourceModel( d->calendar->treeModel() );
+      d->setUpModels();
+    }
+
+    const KConfigGroup selectionGroup = configGroup.config()->group( configGroup.name() + QLatin1String( "_selectionSetup" ) );
+    d->stateSaver->restoreConfig( selectionGroup );
+  }
+
+  doRestoreConfig( configGroup );
+}
+
+void EventView::saveConfig( KConfigGroup &configGroup )
+{
+  configGroup.writeEntry( "UseCustomCollectionSelection", d->collectionSelectionModel != 0 );
+  if ( d->stateSaver ) {
+    KConfigGroup selectionGroup = configGroup.config()->group( configGroup.name() + QLatin1String( "_selectionSetup" ) );
+    d->stateSaver->saveConfig( selectionGroup );
+  }
+
+  doSaveConfig( configGroup );
+}
+
 
 #include "eventview.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;
