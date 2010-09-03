@@ -77,7 +77,7 @@ private:
  * @see KViewStateSaver
  */
 template<typename StateSaver>
-class AKONADI_NEXT_EXPORT KViewStateMaintainer : public KViewStateMaintainerBase
+class KViewStateMaintainer : public KViewStateMaintainerBase
 {
   typedef StateSaver StateRestorer;
 public:
