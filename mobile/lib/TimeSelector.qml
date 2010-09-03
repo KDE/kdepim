@@ -21,11 +21,11 @@ import Qt 4.7
 import ClockHelper 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
-Rectangle {
+Item {
     id: timeSelector
     height: 400
     width: 600
-    color: "red"
+
     MouseArea {
         anchors.fill:parent
         onClicked: {
