@@ -1109,6 +1109,10 @@ void KOAgenda::endItemAction()
       if ( chosenOption == KOGlobals::ONLY_THIS_ONE ||
            chosenOption == KOGlobals::ONLY_FUTURE ) {
 
+        // FIXME Prompt for this...it is quite possible that the user does not want to broadcast the change
+        // That prompting dialog will require the ability to suppress/override the mChanger->endChange GroupWare communication though.
+        int autoAnswerGroupWare = 1;		// Send all possible GroupWare messages without prompting
+
         // Store modification information in case it is needed to recreate the changes with a new actionitem...
         int mai_xl = mActionItem->cellXLeft();
         int mai_xr = mActionItem->cellXRight();
@@ -1116,15 +1120,16 @@ void KOAgenda::endItemAction()
         int mai_yb = mActionItem->cellYBottom(); 
 
         multiModify = true;
+        emit startMultiModify( i18n("Dissociate event from recurrence") );
         enableAgendaUpdate( false );
 
-        mChanger->addIncidence( incToChange, mResPair.first, mResPair.second, this );
+        mChanger->addIncidence( incToChange, mResPair.first, mResPair.second, this, autoAnswerGroupWare );
         enableAgendaUpdate( true );
         KOGlobals::WhatChanged wc = chosenOption == KOGlobals::ONLY_THIS_ONE ?
                                     KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY :
                                     KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE;
 
-        mChanger->changeIncidence( oldIncSaved, inc, wc, this );
+        mChanger->changeIncidence( oldIncSaved, inc, wc, this, autoAnswerGroupWare );
 
         // mActionItem does not exist any more, seeing as we just got done deleting it
         // (by deleting/replacing the original incidence it was created from through

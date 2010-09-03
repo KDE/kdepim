@@ -78,7 +78,8 @@ class KOGroupware : public QObject
     bool sendICalMessage( TQWidget *parent, KCal::Scheduler::Method method,
                           Incidence* incidence,
                           KOGlobals::HowChanged action,
-                          bool attendeeStatusChanged );
+                          bool attendeeStatusChanged,
+                          int dontAskForGroupware = 0 );
 
     /**
       Send counter proposal message.

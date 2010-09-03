@@ -242,7 +242,8 @@ bool KOGroupware::sendICalMessage( TQWidget* parent,
                                    KCal::Scheduler::Method method,
                                    Incidence* incidence,
                                    KOGlobals::HowChanged action,
-                                   bool attendeeStatusChanged )
+                                   bool attendeeStatusChanged,
+                                   int dontAskForGroupware )
 {
   // If there are no attendees, don't bother
   if( incidence->attendees().isEmpty() )
@@ -264,108 +265,116 @@ bool KOGroupware::sendICalMessage( TQWidget* parent,
    *   insists on applying them.
    */
 
-  if ( isOrganizer ) {
-    /* We are the organizer. If there is more than one attendee, or if there is
-     * only one, and it's not the same as the organizer, ask the user to send
-     * mail. */
-    if ( incidence->attendees().count() > 1
-        || incidence->attendees().first()->email() != incidence->organizer().email() ) {
+  if ( dontAskForGroupware == 1 ) {
+    rc = KMessageBox::Yes;
+  }
+  else if ( dontAskForGroupware == 2 ) {
+    rc = KMessageBox::No;
+  }
+  else {
+    if ( isOrganizer ) {
+      /* We are the organizer. If there is more than one attendee, or if there is
+       * only one, and it's not the same as the organizer, ask the user to send
+       * mail. */
+      if ( incidence->attendees().count() > 1
+          || incidence->attendees().first()->email() != incidence->organizer().email() ) {
 
-      TQString txt;
-      switch( action ) {
-      case KOGlobals::INCIDENCEEDITED:
-        txt = i18n( "You changed the invitation \"%1\".\n"
-                    "Do you want to email the attendees an update message?" ).
-              arg( incidence->summary() );
-        break;
-      case KOGlobals::INCIDENCEDELETED:
-        Q_ASSERT( incidence->type() == "Event" || incidence->type() == "Todo" );
-        if ( incidence->type() == "Event" ) {
-          txt = i18n( "You removed the invitation \"%1\".\n"
-                      "Do you want to email the attendees that the event is canceled?" ).
+        TQString txt;
+        switch( action ) {
+        case KOGlobals::INCIDENCEEDITED:
+          txt = i18n( "You changed the invitation \"%1\".\n"
+                      "Do you want to email the attendees an update message?" ).
                 arg( incidence->summary() );
-        } else if ( incidence->type() == "Todo" ) {
-          txt = i18n( "You removed the invitation \"%1\".\n"
-                      "Do you want to email the attendees that the todo is canceled?" ).
-                arg( incidence->summary() );
+          break;
+        case KOGlobals::INCIDENCEDELETED:
+          Q_ASSERT( incidence->type() == "Event" || incidence->type() == "Todo" );
+          if ( incidence->type() == "Event" ) {
+            txt = i18n( "You removed the invitation \"%1\".\n"
+                        "Do you want to email the attendees that the event is canceled?" ).
+                  arg( incidence->summary() );
+          } else if ( incidence->type() == "Todo" ) {
+            txt = i18n( "You removed the invitation \"%1\".\n"
+                        "Do you want to email the attendees that the todo is canceled?" ).
+                  arg( incidence->summary() );
+          }
+          break;
+        case KOGlobals::INCIDENCEADDED:
+          if ( incidence->type() == "Event" ) {
+            txt = i18n( "The event \"%1\" includes other people.\n"
+                        "Do you want to email the invitation to the attendees?" ).
+                  arg( incidence->summary() );
+          } else if ( incidence->type() == "Todo" ) {
+            txt = i18n( "The todo \"%1\" includes other people.\n"
+                        "Do you want to email the invitation to the attendees?" ).
+                  arg( incidence->summary() );
+          } else {
+            txt = i18n( "This incidence includes other people. "
+                        "Should an email be sent to the attendees?" );
+          }
+          break;
+        default:
+          kdError() << "Unsupported HowChanged action" << int( action ) << endl;
+          break;
         }
-        break;
-      case KOGlobals::INCIDENCEADDED:
-        if ( incidence->type() == "Event" ) {
-          txt = i18n( "The event \"%1\" includes other people.\n"
-                      "Do you want to email the invitation to the attendees?" ).
-                arg( incidence->summary() );
-        } else if ( incidence->type() == "Todo" ) {
-          txt = i18n( "The todo \"%1\" includes other people.\n"
-                      "Do you want to email the invitation to the attendees?" ).
-                arg( incidence->summary() );
-        } else {
-          txt = i18n( "This incidence includes other people. "
-                      "Should an email be sent to the attendees?" );
-        }
-        break;
-      default:
-        kdError() << "Unsupported HowChanged action" << int( action ) << endl;
-        break;
+
+        rc = KMessageBox::questionYesNo(
+               parent, txt, i18n( "Group Scheduling Email" ),
+               KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+      } else {
+        return true;
       }
+    } else if( incidence->type() == "Todo" ) {
+      if( method == Scheduler::Request )
+        // This is an update to be sent to the organizer
+        method = Scheduler::Reply;
 
-      rc = KMessageBox::questionYesNo(
-             parent, txt, i18n( "Group Scheduling Email" ),
-             KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+      // Ask if the user wants to tell the organizer about the current status
+      TQString txt = i18n( "Do you want to send a status update to the "
+                          "organizer of this task?");
+      rc = KMessageBox::questionYesNo( parent, txt, TQString::null, i18n("Send Update"), i18n("Do Not Send") );
+    } else if( incidence->type() == "Event" ) {
+      TQString txt;
+      if ( attendeeStatusChanged && method == Scheduler::Request ) {
+        txt = i18n( "Your status as an attendee of this event changed. "
+                    "Do you want to send a status update to the event organizer?" );
+        method = Scheduler::Reply;
+        rc = KMessageBox::questionYesNo( parent, txt, TQString::null, i18n("Send Update"), i18n("Do Not Send") );
+      } else {
+        if( action == KOGlobals::INCIDENCEDELETED ) {
+          const TQStringList myEmails = KOPrefs::instance()->allEmails();
+          bool askConfirmation = false;
+          for ( TQStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
+            TQString email = *it;
+            Attendee *me = incidence->attendeeByMail(email);
+            if (me && (me->status()==KCal::Attendee::Accepted || me->status()==KCal::Attendee::Delegated)) {
+              askConfirmation = true;
+              break;
+            }
+          }
+
+          if ( !askConfirmation ) {
+            return true;
+          }
+
+          txt = i18n( "You had previously accepted an invitation to this event. "
+                      "Do you want to send an updated response to the organizer "
+                      "declining the invitation?" );
+          rc = KMessageBox::questionYesNo(
+            parent, txt, i18n( "Group Scheduling Email" ),
+            KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+          setDoNotNotify( rc == KMessageBox::No );
+        } else {
+          txt = i18n( "You are not the organizer of this event. Editing it will "
+                      "bring your calendar out of sync with the organizer's calendar. "
+                      "Do you really want to edit it?" );
+          rc = KMessageBox::warningYesNo( parent, txt );
+          return ( rc == KMessageBox::Yes );
+        }
+      }
     } else {
+      kdWarning(5850) << "Groupware messages for Journals are not implemented yet!" << endl;
       return true;
     }
-  } else if( incidence->type() == "Todo" ) {
-    if( method == Scheduler::Request )
-      // This is an update to be sent to the organizer
-      method = Scheduler::Reply;
-
-    // Ask if the user wants to tell the organizer about the current status
-    TQString txt = i18n( "Do you want to send a status update to the "
-                        "organizer of this task?");
-    rc = KMessageBox::questionYesNo( parent, txt, TQString::null, i18n("Send Update"), i18n("Do Not Send") );
-  } else if( incidence->type() == "Event" ) {
-    TQString txt;
-    if ( attendeeStatusChanged && method == Scheduler::Request ) {
-      txt = i18n( "Your status as an attendee of this event changed. "
-                  "Do you want to send a status update to the event organizer?" );
-      method = Scheduler::Reply;
-      rc = KMessageBox::questionYesNo( parent, txt, TQString::null, i18n("Send Update"), i18n("Do Not Send") );
-    } else {
-      if( action == KOGlobals::INCIDENCEDELETED ) {
-        const TQStringList myEmails = KOPrefs::instance()->allEmails();
-        bool askConfirmation = false;
-        for ( TQStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
-          TQString email = *it;
-          Attendee *me = incidence->attendeeByMail(email);
-          if (me && (me->status()==KCal::Attendee::Accepted || me->status()==KCal::Attendee::Delegated)) {
-            askConfirmation = true;
-            break;
-          }
-        }
-
-        if ( !askConfirmation ) {
-          return true;
-        }
-
-        txt = i18n( "You had previously accepted an invitation to this event. "
-                    "Do you want to send an updated response to the organizer "
-                    "declining the invitation?" );
-        rc = KMessageBox::questionYesNo(
-          parent, txt, i18n( "Group Scheduling Email" ),
-          KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
-        setDoNotNotify( rc == KMessageBox::No );
-      } else {
-        txt = i18n( "You are not the organizer of this event. Editing it will "
-                    "bring your calendar out of sync with the organizer's calendar. "
-                    "Do you really want to edit it?" );
-        rc = KMessageBox::warningYesNo( parent, txt );
-        return ( rc == KMessageBox::Yes );
-      }
-    }
-  } else {
-    kdWarning(5850) << "Groupware messages for Journals are not implemented yet!" << endl;
-    return true;
   }
 
   if ( rc == KMessageBox::Yes ) {

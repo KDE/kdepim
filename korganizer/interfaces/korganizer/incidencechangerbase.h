@@ -57,9 +57,15 @@ public:
   virtual bool addIncidence( Incidence *incidence,
                              ResourceCalendar *res, const TQString &subRes,
                              TQWidget *parent ) = 0;
+  virtual bool addIncidence( Incidence *incidence,
+                             ResourceCalendar *res, const TQString &subRes,
+                             TQWidget *parent, int dontAskForGroupware) = 0;
 
   virtual bool changeIncidence( Incidence *oldinc, Incidence *newinc,
                                 KOGlobals::WhatChanged, TQWidget *parent ) = 0;
+  virtual bool changeIncidence( Incidence *oldinc, Incidence *newinc,
+                                KOGlobals::WhatChanged, TQWidget *parent, int dontAskForGroupware ) = 0;
+
   virtual bool deleteIncidence( Incidence *incidence, TQWidget *parent ) = 0;
 
   virtual bool cutIncidences( const Incidence::List &incidences, TQWidget *parent ) = 0;

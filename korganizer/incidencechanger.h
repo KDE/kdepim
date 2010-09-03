@@ -52,9 +52,14 @@ class IncidenceChanger : public KOrg::IncidenceChangerBase
     bool addIncidence( Incidence *incidence,
                        ResourceCalendar *res, const TQString &subRes,
                        TQWidget *parent );
+    bool addIncidence( Incidence *incidence,
+                       ResourceCalendar *res, const TQString &subRes,
+                       TQWidget *parent, int dontAskForGroupware );
 
     bool changeIncidence( Incidence *oldinc, Incidence *newinc,
                           KOGlobals::WhatChanged, TQWidget *parent );
+    bool changeIncidence( Incidence *oldinc, Incidence *newinc,
+                          KOGlobals::WhatChanged, TQWidget *parent, int dontAskForGroupware );
 
     bool deleteIncidence( Incidence *incidence, TQWidget *parent );
 

@@ -329,6 +329,14 @@ bool IncidenceChanger::changeIncidence( Incidence *oldinc, Incidence *newinc,
                                         KOGlobals::WhatChanged action,
                                         TQWidget *parent )
 {
+  return changeIncidence( oldinc, newinc, action, parent, 0 );
+}
+
+bool IncidenceChanger::changeIncidence( Incidence *oldinc, Incidence *newinc,
+                                        KOGlobals::WhatChanged action,
+                                        TQWidget *parent,
+                                        int dontAskForGroupware )
+{
 kdDebug(5850)<<"IncidenceChanger::changeIncidence for incidence \""<<newinc->summary()<<"\" ( old one was \""<<oldinc->summary()<<"\")"<<endl;
   if ( incidencesEqual( newinc, oldinc ) ) {
     // Don't do anything
@@ -347,7 +355,7 @@ kdDebug(5850)<<"IncidenceChanger::changeIncidence for incidence \""<<newinc->sum
       success = KOGroupware::instance()->sendICalMessage(
         parent,
         KCal::Scheduler::Request,
-        newinc, KOGlobals::INCIDENCEEDITED, attendeeStatusChanged );
+        newinc, KOGlobals::INCIDENCEEDITED, attendeeStatusChanged, dontAskForGroupware );
     }
 
     if ( success ) {
@@ -365,6 +373,13 @@ kdDebug(5850)<<"IncidenceChanger::changeIncidence for incidence \""<<newinc->sum
 bool IncidenceChanger::addIncidence( Incidence *incidence,
                                      ResourceCalendar *res, const TQString &subRes,
                                      TQWidget *parent )
+{
+  return addIncidence( incidence, res, subRes, parent, 0 );
+}
+
+bool IncidenceChanger::addIncidence( Incidence *incidence,
+                                     ResourceCalendar *res, const TQString &subRes,
+                                     TQWidget *parent, int dontAskForGroupware )
 {
   CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
   if( stdcal && !stdcal->hasCalendarResources() ) {
@@ -440,7 +455,7 @@ bool IncidenceChanger::addIncidence( Incidence *incidence,
     if ( !KOGroupware::instance()->sendICalMessage(
            parent,
            KCal::Scheduler::Request,
-           incidence, KOGlobals::INCIDENCEADDED, false ) ) {
+           incidence, KOGlobals::INCIDENCEADDED, false, dontAskForGroupware ) ) {
       KMessageBox::sorry(
         parent,
         i18n( "Attempt to send the scheduling message failed. "
