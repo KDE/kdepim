@@ -13,7 +13,7 @@ namespace MessageViewer {
  * As soon as it gets out of scope, it will restore the original
  * cursor.
  */
-class MESSAGEVIEWER_EXPORT KCursorSaver
+class KCursorSaver
 {
 public:
     /// constructor taking QCursor shapes
