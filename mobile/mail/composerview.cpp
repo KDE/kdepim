@@ -313,8 +313,6 @@ void ComposerView::addAttachment()
 void ComposerView::addAttachment(KMime::Content* part)
 {
   if ( part ) {
-//     qDebug() << part->encodedContent();
-//FIXME: Why isn't the attachment added to the message??
     m_composerBase->addAttachmentPart( part );
   }
 }

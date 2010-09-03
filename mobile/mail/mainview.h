@@ -58,17 +58,15 @@ class MainView : public KDeclarativeMainView
 
     void configureIdentity();
 
-
   protected slots:
     void delayedInit();
-    void replyToMessage();
-    void replyToAll();
-    void replyToAuthor();
-    void replyToMailingList();
     void forwardMessage();
     void forwardAsAttachment();
     void redirect();
-    void replyVariants();
+    void replyToAll();
+    void replyToAuthor();
+    void replyToMailingList();
+    void replyToMessage();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

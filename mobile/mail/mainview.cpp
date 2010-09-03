@@ -600,11 +600,6 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
                            i18n( "Do you really want to delete the selected account?" ) );
 }
 
-void MainView::replyVariants()
-{
-  qDebug() << Q_FUNC_INFO;
-}
-
 
 // #############################################################
 

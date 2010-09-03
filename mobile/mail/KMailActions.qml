@@ -140,14 +140,15 @@ ActionMenuContainer {
     category: "mail_viewer"
     name : "email_menu"
     text : KDE.i18n( "Email" )
-    /*
+
     ActionListItem {
       name : "message_reply"
       onPressAndHold: {
-          console.log("TODO: Show the possible reply actions")
+          replyOptionsPage.visible = true
+          actionPanel.collapse()
       }
-    }*/
-    //TODO: Show this above onPressAndHold
+    }
+    /*
     ActionList {
       category: "mail_viewer"
       name : "mail_viewer_reply"
@@ -156,15 +157,16 @@ ActionMenuContainer {
       ActionListItem { name: "message_reply_to_author" }
       ActionListItem { name: "message_reply_to_all" }
       ActionListItem { name: "message_reply_to_list" }
-   }
-/*
+   }*/
+
     ActionListItem {
       name : "message_forward"
       onPressAndHold: {
-          console.log("TODO: Show the possible forward actions")
+          forwardOptionsPage.visible = true
+          actionPanel.collapse()
       }
-    }*/
-    //TODO: Show this above onPressAndHold
+    }
+    /*
     ActionList {
       category: "mail_viewer"
       name : "mail_viewer_forward"
@@ -172,7 +174,8 @@ ActionMenuContainer {
       ActionListItem { name: "message_forward" }
       ActionListItem { name: "message_forward_as_attachment" }
       ActionListItem { name: "message_redirect" }
-   }
+   }*/
+   /*
     ActionList {
       name : "mail_viewer_mark_as_menu"
       text : KDE.i18n( "Mark As" )
@@ -180,7 +183,8 @@ ActionMenuContainer {
       ActionListItem { name : "akonadi_mark_as_unread" }
       ActionListItem { name : "akonadi_mark_as_important" }
       ActionListItem { name : "akonadi_mark_as_action_item" }
-    }
+    }*/
+    ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark As ..." ) }
     FakeAction { name : "send_again" }
     FakeAction { name : "create_todo_reminder" }
     FakeAction { name : "find_in_email" }
