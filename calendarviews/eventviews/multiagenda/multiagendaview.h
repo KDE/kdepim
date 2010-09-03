@@ -43,6 +43,7 @@ namespace CalendarSupport {
 namespace EventViews {
   class AgendaView;
   class TimeLabelsZone;
+  class ConfigDialogInterface;
 
 /**
   Shows one agenda for every resource side-by-side.
@@ -74,6 +75,9 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );
 
   public slots:
+
+    void customCollectionsChanged( EventViews::ConfigDialogInterface *dlg );
+
     void showDates( const QDate &start, const QDate &end );
     void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     void updateView();

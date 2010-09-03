@@ -17,6 +17,7 @@
 */
 
 #include "multiagendaview.h"
+#include "configdialoginterface.h"
 
 #include <eventviews/prefs.h>
 #include <eventviews/agenda/agenda.h>
@@ -622,6 +623,22 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
     saver.addRole( Qt::CheckStateRole, "CheckState" );
     saver.saveConfig( g );
   }
+}
+
+void MultiAgendaView::customCollectionsChanged( ConfigDialogInterface *dlg )
+{
+  mCustomColumnSetupUsed = dlg->useCustomColumns();
+  mCustomNumberOfColumns = dlg->numberOfColumns();
+  QVector<CalendarSupport::CollectionSelectionProxyModel*> newModels;
+  newModels.resize( mCustomNumberOfColumns );
+  mCustomColumnTitles.resize( mCustomNumberOfColumns );
+  for ( int i = 0; i < mCustomNumberOfColumns; ++i ) {
+    newModels[i] = dlg->takeSelectionModel( i );
+    mCustomColumnTitles[i] = dlg->columnTitle( i );
+  }
+  mCollectionSelectionModels = newModels;
+  mPendingChanges = true;
+  recreateViews();
 }
 
 #include "multiagendaview.moc"
