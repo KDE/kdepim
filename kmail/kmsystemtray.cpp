@@ -21,6 +21,7 @@
 #include "kmfolder.h"
 #include "kmfoldermgr.h"
 #include "kmfolderimap.h"
+#include "kmfoldercachedimap.h"
 #include "kmmainwidget.h"
 #include "accountmanager.h"
 
@@ -286,7 +287,7 @@ void KMSystemTray::slotActivated( QSystemTrayIcon::ActivationReason reason )
   }
 }
 
-void KMSystemTray::slotContextMenuAboutToShow() 
+void KMSystemTray::slotContextMenuAboutToShow()
 {
   // Rebuild popup menu before show to minimize race condition if
   // the base KMainWidget is closed.
@@ -328,7 +329,7 @@ void KMSystemTray::slotContextMenuAboutToShow()
 
 /**
  * Return the name of the folder in which the mail is deposited, prepended
- * with the account name if the folder is IMAP.
+ * with the account name if the folder is IMAP or DIMAP
  */
 QString KMSystemTray::prettyName(KMFolder * fldr)
 {
@@ -343,6 +344,19 @@ QString KMSystemTray::prettyName(KMFolder * fldr)
     {
       kDebug() << "IMAP folder, prepend label with type";
       rvalue = imap->account()->name() + "->" + rvalue;
+    }
+  }
+  else if(fldr->folderType() == KMFolderTypeCachedImap)
+  {
+    KMFolderCachedImap* dimap = dynamic_cast<KMFolderCachedImap*>(fldr->storage());
+
+    assert(dimap);
+
+    if((dimap->account() != 0) &&
+       (dimap->account()->name() != 0) )
+    {
+      kDebug() << "DIMAP folder, prepend label with type";
+      rvalue = dimap->account()->name() + "->" + rvalue;
     }
   }
 
