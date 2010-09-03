@@ -92,6 +92,7 @@ RenameJob::~RenameJob()
 // FIXME: move on the server for online imap given source and target are on the same server
 void RenameJob::execute()
 {
+  const QString oldFolderName = mStorage->folder()->idString();
   if ( mNewParent )
   {
     // move the folder to a different parent
@@ -102,6 +103,8 @@ void RenameJob::execute()
     {
       // local folders can handle this on their own
       mStorage->rename( mNewName, mNewParent );
+      const QString newFolderName = mStorage->folder()->idString();
+      kmkernel->updateExpireFolder( oldFolderName, newFolderName );
       emit renameDone( mNewName, true );
       deleteLater();
       return;
@@ -118,6 +121,8 @@ void RenameJob::execute()
     {
       // local and dimap folder handle this directly
       mStorage->rename( mNewName );
+      const QString newFolderName = mStorage->folder()->idString();
+      kmkernel->updateExpireFolder( oldFolderName, newFolderName );
       emit renameDone( mNewName, true );
       deleteLater();
       return;
@@ -129,6 +134,8 @@ void RenameJob::execute()
       deleteLater();
       return;
     } else if ( mOldName == mNewName || mOldImapPath == "/INBOX/" ) {
+      const QString newFolderName = mStorage->folder()->idString();
+      kmkernel->updateExpireFolder( oldFolderName, newFolderName );
       emit renameDone( mNewName, true ); // noop
       deleteLater();
       return;
@@ -177,9 +184,13 @@ void RenameJob::slotRenameResult( KJob *job )
   // subscribe new
   account->changeSubscription( true, mNewImapPath );
 
+  const QString oldFolderName = mStorage->folder()->idString();
   // local part (will set the new name)
   mStorage->rename( mNewName );
   mStorage->setObjectName( mNewName );
+
+  const QString newFolderName = mStorage->folder()->idString();
+  kmkernel->updateExpireFolder( oldFolderName, newFolderName );
 
   emit renameDone( mNewName, true );
   deleteLater();
@@ -244,7 +255,6 @@ void RenameJob::folderCopyComplete(bool success)
   } else {
     kmkernel->folderMgr()->remove( mStorage->folder() );
   }
-
   emit renameDone( mNewName, true );
 }
 

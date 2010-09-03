@@ -416,6 +416,8 @@ public:
 
   void selectFolder( KMFolder *folder );
 
+  void updateExpireFolder( const QString& oldFolderName, const QString& newFolderName );
+
 public slots:
   void toggleMainWin();
   void showMainWin();

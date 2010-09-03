@@ -2590,4 +2590,20 @@ void KMKernel::updatedTemplates()
 }
 
 
+void KMKernel::updateExpireFolder( const QString& oldFolderName, const QString& newFolderName )
+{
+  QList< QPointer< KMFolder > > folders = allFolders();
+  QList< QPointer< KMFolder > >::Iterator it = folders.begin();
+  while ( it != folders.end() ) {
+    KMFolder *folder = (*it);
+    if ( ( folder->expireAction() == KMFolder::ExpireMove ) &&
+         ( folder->expireToFolderId() == oldFolderName ) ) {
+      folder->setExpireToFolderId( newFolderName );
+    }
+
+    ++it;
+  }
+
+}
+
 #include "kmkernel.moc"
