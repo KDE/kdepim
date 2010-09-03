@@ -105,7 +105,7 @@ void KMSystemTray::buildPopupMenu()
   if ( !mainWidget )
     return;
 
-  static_cast<KMenu*>( contextMenu() )->addTitle(this->icon(), "KMail");
+  static_cast<KMenu*>( contextMenu() )->addTitle(this->icon(), i18n("KMail") );
   QAction * action;
   if ( ( action = mainWidget->action("check_mail") ) )
     contextMenu()->addAction( action );
