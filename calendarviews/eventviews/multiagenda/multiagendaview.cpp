@@ -202,7 +202,8 @@ void MultiAgendaView::recreateViews()
 void MultiAgendaView::deleteViews()
 {
   Q_FOREACH ( AgendaView *const i, mAgendaViews ) {
-    CalendarSupport::CollectionSelectionProxyModel *proxy = i->takeCustomCollectionSelectionProxyModel();
+    CalendarSupport::CollectionSelectionProxyModel *proxy =
+      i->takeCustomCollectionSelectionProxyModel();
     if ( proxy && !mCollectionSelectionModels.contains( proxy ) ) {
       delete proxy;
     }
@@ -355,8 +356,8 @@ void MultiAgendaView::changeIncidenceDisplay( const Akonadi::Item &incidence, in
 
 int MultiAgendaView::maxDatesHint() const
 {
-  // TODO: remove these maxDatesHint functions, they aren't used
-  return 0;
+  // these maxDatesHint functions aren't used
+  return 31;
 }
 
 void MultiAgendaView::slotSelectionChanged()
