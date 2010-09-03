@@ -63,6 +63,11 @@ class TimeLabelsZone : public QWidget
 
     QList<QScrollArea*> timeLabels() const;
 
+    /** Checks how much agenda is scrolled relative to it's QScrollArea
+        and makes each TimeLabels scroll that amount
+    */
+    void updateTimeLabelsPosition();
+
   private:
     void setupTimeLabel( QScrollArea *area );
     Agenda *mAgenda;

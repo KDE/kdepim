@@ -141,4 +141,19 @@ void TimeLabelsZone::setAgendaView( AgendaView *agenda )
   }
 }
 
+void TimeLabelsZone::updateTimeLabelsPosition()
+{
+  if ( mAgenda ) {
+    foreach ( QScrollArea *area, timeLabels() ) {
+      TimeLabels *label = static_cast<TimeLabels*>( area->widget() );
+      const int adjustment = mAgenda->contentsY();
+      // y() is the offset to our parent (QScrollArea)
+      // and gets negative as we scroll
+      if ( adjustment != -label->y() ) {
+        area->verticalScrollBar()->setValue( adjustment );
+      }
+    }
+  }
+}
+
 #include "timelabelszone.moc"

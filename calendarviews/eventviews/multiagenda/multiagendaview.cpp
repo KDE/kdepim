@@ -195,13 +195,8 @@ void MultiAgendaView::recreateViews()
   QTimer::singleShot( 0, this, SLOT(resizeSplitters()) );
   QTimer::singleShot( 0, this, SLOT(setupScrollBar()) );
 
-  /*
-    TODO_EVENTVIEWS
-  foreach ( QScrollArea *area, mTimeLabelsZone->timeLabels() ) {
-    TimeLabels *label = static_cast<TimeLabels*>( area->widget() );
-    label->positionChanged();
-  }
-  */
+  mTimeLabelsZone->updateTimeLabelsPosition();
+
 }
 
 void MultiAgendaView::deleteViews()
