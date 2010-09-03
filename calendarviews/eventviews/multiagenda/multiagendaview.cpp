@@ -641,4 +641,25 @@ void MultiAgendaView::customCollectionsChanged( ConfigDialogInterface *dlg )
   recreateViews();
 }
 
+bool MultiAgendaView::customColumnSetupUsed() const
+{
+  return mCustomColumnSetupUsed;
+}
+
+int MultiAgendaView::customNumberOfColumns() const
+{
+  return mCustomNumberOfColumns;
+}
+
+QVector<CalendarSupport::CollectionSelectionProxyModel*>
+MultiAgendaView::collectionSelectionModels() const
+{
+  return mCollectionSelectionModels;
+}
+
+QVector<QString> MultiAgendaView::customColumnTitles() const
+{
+  return mCustomColumnTitles;
+}
+
 #include "multiagendaview.moc"

@@ -35,7 +35,6 @@ class QResizeEvent;
 class QScrollBar;
 class QSplitter;
 
-
 namespace CalendarSupport {
   class CollectionSelectionProxyModel;
 }
@@ -69,6 +68,12 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     bool hasConfigurationDialog() const;
 
     void setChanges( Changes changes );
+
+    bool customColumnSetupUsed() const;
+    int customNumberOfColumns() const;
+    QVector<QString> customColumnTitles() const;
+    QVector<CalendarSupport::CollectionSelectionProxyModel*>
+      collectionSelectionModels() const;
 
   Q_SIGNALS:
     void showNewEventPopupSignal();
