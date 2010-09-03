@@ -387,7 +387,7 @@ KPIM.MainView {
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
-      opacity : application.isLoadingSelected ? 1 : 0
+      visible : application.isLoadingSelected
     }
 
     QML.Rectangle {

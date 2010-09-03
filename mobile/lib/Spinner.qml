@@ -41,6 +41,7 @@ Item {
             easing.type: "Linear"
             duration: 5 * 10 * 24
             loops: Animation.Infinite
+            running: spinner.visible
         }
 
     }
