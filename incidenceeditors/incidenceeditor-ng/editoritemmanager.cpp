@@ -36,10 +36,11 @@
 #include <Akonadi/Session>
 
 using namespace Akonadi;
+using namespace CalendarSupport;
 
 /// ItemEditorPrivate
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 class ItemEditorPrivate
 {
@@ -61,8 +62,6 @@ class ItemEditorPrivate
     void modifyResult( KJob *job );
     void setupMonitor();
 };
-
-}
 
 ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
   : q_ptr( qq ), mItemMonitor( 0 )
@@ -135,7 +134,7 @@ void ItemEditorPrivate::modifyResult( KJob *job )
 
 void ItemEditorPrivate::setupMonitor()
 {
-  Q_Q( EditorItemManager );
+  // Q_Q( EditorItemManager );
   delete mItemMonitor;
   mItemMonitor = new Akonadi::Monitor;
   mItemMonitor->ignoreSession( Akonadi::Session::defaultSession() );
@@ -176,6 +175,8 @@ void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
   // Overwrite or not, we need to update the revision and the remote id to be able
   // to store item later on.
   mItem.setRevision( item.revision() );
+}
+
 }
 
 /// ItemEditor

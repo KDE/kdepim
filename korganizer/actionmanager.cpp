@@ -44,11 +44,10 @@
 #include "htmlexportjob.h"
 #include "htmlexportsettings.h"
 
-#include <KCalCore/FileStorage>
+#include <kcalcore/filestorage.h>
 
 #include <KMime/KMimeMessage>
 
-#include <calendarviews/agenda/eventview.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendaradaptor.h>
 #include <calendarsupport/calendarmodel.h>
@@ -72,7 +71,6 @@
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/AgentManager>
 #include <Akonadi/AgentInstanceCreateJob>
-#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include <kmimetypetrader.h>
 #include <kio/job.h>
@@ -233,7 +231,7 @@ void ActionManager::slotCollectionChanged( const Akonadi::Collection &collection
   Q_UNUSED( collection );
 
   if ( changedAttributes.contains( "AccessRights" ) ) {
-    mCalendarView->viewManager()->addChange( EventViews::EventView::ResourcesChanged );
+    mCalendarView->viewManager()->setUpdateNeeded();
     mCalendarView->updateView();
   }
 }
@@ -278,17 +276,12 @@ void ActionManager::createCalendarAkonadi()
   mCollectionView = factory.collectionView();
   connect( mCollectionView, SIGNAL(resourcesChanged(bool)), SLOT(slotResourcesChanged(bool)));
   connect( mCollectionView, SIGNAL(resourcesAddedRemoved()), SLOT(slotResourcesAddedRemoved()));
-  connect( mCollectionView, SIGNAL(defaultResourceChanged(Akonadi::Collection)),
-           SLOT(slotDefaultResourceChanged(Akonadi::Collection)) );
-  connect( mCollectionView, SIGNAL(colorsChanged()),
-           mCalendarView, SLOT(updateConfig()) );
+  connect( mCollectionView, SIGNAL(defaultResourceChanged(Akonadi::Collection)), SLOT(slotDefaultResourceChanged(Akonadi::Collection)) );
 
   mCollectionViewStateSaver = new Akonadi::EntityTreeViewStateSaver( mCollectionView->view() );
   mCollectionView->setCollectionSelectionProxyModel( selectionProxyModel );
 
-  CalendarSupport::CollectionSelection *colSel = new CalendarSupport::CollectionSelection( selectionModel );
-  BaseView::setGlobalCollectionSelection( colSel );
-  EventViews::EventView::setGlobalCollectionSelection( colSel );
+  BaseView::setGlobalCollectionSelection( new CalendarSupport::CollectionSelection( selectionModel ) );
   KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( selectionModel );
   selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
   selectionProxy->setSourceModel( mCalendarModel );

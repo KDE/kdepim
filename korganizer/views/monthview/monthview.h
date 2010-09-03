@@ -74,7 +74,7 @@ class MonthView : public KOEventView
 
     bool supportsDateRangeSelection() { return false; }
 
-    virtual CalPrinterBase::PrintType printType() const;
+    virtual CalPrinterBase::PrintType printType();
 
   public slots:
     virtual void updateView();

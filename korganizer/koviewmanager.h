@@ -25,8 +25,6 @@
 #ifndef KOVIEWMANAGER_H
 #define KOVIEWMANAGER_H
 
-#include <calendarviews/agenda/eventview.h>
-
 #include <QObject>
 #include <QDate>
 
@@ -170,7 +168,7 @@ class KOViewManager : public QObject
        next time CalendarView::updateView() is called, views won't try to be smart
        and ignore the update for performance reasons.
     */
-    void addChange( EventViews::EventView::Change change );
+    void setUpdateNeeded();
 
   private slots:
     void currentAgendaViewTabChanged( QWidget * );

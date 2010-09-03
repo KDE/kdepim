@@ -21,7 +21,8 @@
 #ifndef ALARMDIALOG_H
 #define ALARMDIALOG_H
 
-#include <kcalcore/alarm.h>
+#include <KCalCore/Incidence>
+#include <KCalCore/Alarm>
 
 #include <KDialog>
 
@@ -48,13 +49,16 @@ class AlarmDialog : public KDialog
     };
 
   public:
-    AlarmDialog();
+    /**
+       Constructs a new alarm dialog.
+       @p incidenceType will influence i18n strings, that will be different for to-dos.
+     */
+    AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent = 0 );
 
     void load( const KCalCore::Alarm::Ptr &alarm );
     void save( const KCalCore::Alarm::Ptr &alarm ) const;
     void setAllowBeginReminders( bool allow );
     void setAllowEndReminders( bool allow );
-    void setIsTodoReminder( bool isTodo );
     void setOffset( int offset );
     void setUnit( Unit unit );
     void setWhen( When when );
@@ -64,7 +68,7 @@ class AlarmDialog : public KDialog
 
   private:
     Ui::AlarmDialog *mUi;
-    bool mIsTodo;
+    KCalCore::Incidence::IncidenceType mIncidenceType;
     bool mAllowBeginReminders;
     bool mAllowEndReminders;
 };

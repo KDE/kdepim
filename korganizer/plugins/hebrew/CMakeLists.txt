@@ -8,6 +8,7 @@ include_directories(
 ########### next target ###############
 
 set( korg_hebrew_PART_SRCS
+     ${CMAKE_SOURCE_DIR}/korganizer/interfaces/calendar/calendardecoration.cpp
      converter.cpp
      parsha.cpp
      holiday.cpp
@@ -18,7 +19,6 @@ set( korg_hebrew_PART_SRCS
 kde4_add_plugin( korg_hebrew ${korg_hebrew_PART_SRCS} )
 
 target_link_libraries( korg_hebrew
-                       eventviews
                        ${KDE4_KDECORE_LIBS}
                        ${KDE4_KDEUI_LIBS}
                        korganizerprivate )

@@ -25,9 +25,8 @@
 #include "printplugin.h"
 #include "korganizer/korganizer_export.h"
 
-#include <KCalCore/Event>
+#include <kcalcore/event.h>
 
-#include <calendarviews/agenda/eventview.h>
 #include <calendarsupport/incidencechanger.h>
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
@@ -56,6 +55,7 @@ namespace KCalCore {
 }
 
 namespace KOrg {
+
 
 /**
   This class provides an interface for all views being displayed within the
@@ -120,7 +120,7 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
      */
     virtual QDateTime selectionEnd() { return QDateTime(); }
 
-    virtual CalPrinterBase::PrintType printType() const;
+    virtual CalPrinterBase::PrintType printType();
 
     /**
       Returns the number of currently shown dates.
@@ -172,7 +172,7 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
     virtual void showConfigurationDialog( QWidget* parent );
 
     QByteArray identifier() const;
-    virtual void setIdentifier( const QByteArray& identifier );
+    void setIdentifier( const QByteArray& identifier );
 
     /**
      * reads the view configuration. View-specific configuration can be
@@ -192,9 +192,9 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
      */
     void saveConfig( KConfigGroup &configGroup );
 
-    virtual CalendarSupport::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();
+    CalendarSupport::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();
     CalendarSupport::CollectionSelectionProxyModel *customCollectionSelectionProxyModel() const;
-    virtual void setCustomCollectionSelectionProxyModel( CalendarSupport::CollectionSelectionProxyModel* model );
+    void setCustomCollectionSelectionProxyModel( CalendarSupport::CollectionSelectionProxyModel* model );
 
     CalendarSupport::CollectionSelection *customCollectionSelection() const;
 
@@ -215,7 +215,7 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
       @param start Start of date range.
       @param end   End of date range.
     */
-    virtual void setDateRange( const KDateTime &start, const KDateTime &end );
+    void setDateRange( const KDateTime &start, const KDateTime &end );
 
     KDateTime startDateTime() const;
     KDateTime endDateTime() const;
@@ -386,14 +386,9 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
     /**
        Notifies the view that there are pending changes so a redraw is needed.
 
-       @param changes Types of changes that were made
+       @param needed if the update is needed or not.
     */
-    virtual void setChanges( EventViews::EventView::Changes changes );
-
-    /**
-       Returns if there are pending changes and a redraw is needed.
-    */
-    EventViews::EventView::Changes changes() const;
+    virtual void setUpdateNeeded( bool needed );
 
   protected:
     /**
@@ -423,6 +418,11 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
     virtual void incidencesChanged( const Akonadi::Item::List& incidences );
 
     virtual void handleBackendError( const QString &error );
+
+    /**
+       Returns if there are pending changes and a redraw is needed.
+    */
+    bool updateNeeded() const;
 
   protected Q_SLOTS:
     virtual void collectionSelectionChanged();

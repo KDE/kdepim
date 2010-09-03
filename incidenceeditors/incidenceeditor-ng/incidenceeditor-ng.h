@@ -66,7 +66,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     virtual bool isValid();
 
     /**
-     * Returns the type of the Inicdince that is currently loaded.
+     * Returns the type of the Incidence that is currently loaded.
      */
     KCalCore::IncidenceBase::IncidenceType type() const;
 

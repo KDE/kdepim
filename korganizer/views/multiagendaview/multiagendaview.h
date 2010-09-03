@@ -19,17 +19,23 @@
 #ifndef KORG_MULTIAGENDAVIEW_H_H
 #define KORG_MULTIAGENDAVIEW_H_H
 
-#include "../../koeventview.h"
+#include "views/agendaview/agendaview.h"
 
 #include <Akonadi/Item>
 
 #include <KDialog>
 
+class KOAgendaView;
+class TimeLabelsZone;
 
-namespace EventViews {
-  class AgendaView;
-  class TimeLabelsZone;
-}
+class KHBox;
+
+class Q3ScrollView;
+class QAbstractItemModel;
+class QModelIndex;
+class QResizeEvent;
+class QScrollBar;
+class QSplitter;
 
 namespace CalendarSupport {
   class CollectionSelectionProxyModel;
@@ -37,10 +43,45 @@ namespace CalendarSupport {
 
 namespace KOrg {
 
+class MultiAgendaViewConfigDialog : public KDialog
+{
+  Q_OBJECT
+  public:
+    explicit MultiAgendaViewConfigDialog( QAbstractItemModel *baseModel, QWidget *parent=0 );
+    ~MultiAgendaViewConfigDialog();
+
+    bool useCustomColumns() const;
+    void setUseCustomColumns( bool );
+
+    int numberOfColumns() const;
+    void setNumberOfColumns( int n );
+
+    QString columnTitle( int column ) const;
+    void setColumnTitle( int column, const QString &title );
+    CalendarSupport::CollectionSelectionProxyModel *takeSelectionModel( int column );
+    void setSelectionModel( int column, CalendarSupport::CollectionSelectionProxyModel *model );
+
+  public Q_SLOTS:
+    /**
+     * reimplemented from QDialog
+     */
+    void accept();
+
+  private Q_SLOTS:
+    void useCustomToggled( bool );
+    void numberOfColumnsChanged( int );
+    void currentChanged( const QModelIndex &index );
+    void titleEdited( const QString &text );
+
+  private:
+    class Private;
+    Private *const d;
+};
+
 /**
   Shows one agenda for every resource side-by-side.
 */
-class MultiAgendaView : public KOEventView
+class MultiAgendaView : public AgendaView
 {
   Q_OBJECT
   public:
@@ -65,10 +106,7 @@ class MultiAgendaView : public KOEventView
      */
     void showConfigurationDialog( QWidget *parent );
 
-    void setChanges( EventViews::EventView::Changes changes );
-
-    CalendarSupport::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();
-    void setCustomCollectionSelectionProxyModel( CalendarSupport::CollectionSelectionProxyModel* model );
+    void setUpdateNeeded( bool needed );
 
   public slots:
     void showDates( const QDate &start, const QDate &end );
@@ -79,10 +117,53 @@ class MultiAgendaView : public KOEventView
 
     void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
-  private:
-    class Private;
-    Private * const d;
+  protected:
+    void resizeEvent( QResizeEvent *event );
+    void showEvent( QShowEvent *event );
 
+    /* reimp */void doRestoreConfig( const KConfigGroup &configGroup );
+    /* reimp */void doSaveConfig( KConfigGroup &configGroup );
+
+  protected Q_SLOTS:
+    /**
+     * Reimplemented from KOrg::BaseView
+     */
+    void collectionSelectionChanged();
+
+  private:
+    void addView( const Akonadi::Collection &collection );
+    void addView( CalendarSupport::CollectionSelectionProxyModel *selectionProxy, const QString &title );
+    KOAgendaView *createView( const QString &title );
+
+    void deleteViews();
+    void setupViews();
+    void resizeScrollView( const QSize &size );
+
+  private slots:
+    void slotSelectionChanged();
+    void slotClearTimeSpanSelection();
+    void resizeSplitters();
+    void setupScrollBar();
+    void zoomView( const int delta, const QPoint &pos, const Qt::Orientation ori );
+    void slotResizeScrollView();
+    void recreateViews();
+
+  private:
+    QList<KOAgendaView*> mAgendaViews;
+    QList<QWidget*> mAgendaWidgets;
+    KHBox *mTopBox;
+    Q3ScrollView *mScrollView;
+    TimeLabelsZone *mTimeLabelsZone;
+    QSplitter *mLeftSplitter, *mRightSplitter;
+    QScrollBar *mScrollBar;
+    QWidget *mLeftBottomSpacer, *mRightBottomSpacer;
+    QDate mStartDate, mEndDate;
+    bool mUpdateOnShow;
+    bool mPendingChanges;
+    bool mCustomColumnSetupUsed;
+    QVector<CalendarSupport::CollectionSelectionProxyModel*> mCollectionSelectionModels;
+    QVector<QString> mCustomColumnTitles;
+    int mCustomNumberOfColumns;
 };
 
 }

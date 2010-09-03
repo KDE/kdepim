@@ -115,7 +115,7 @@
    <item row="3" column="1">
     <widget class="QCheckBox" name="mStartCheck">
      <property name="whatsThis">
-      <string comment="@info:whatsthis" >Sets the start date for this to-do</string>
+      <string comment="@info:whatsthis">Sets the start date for this to-do</string>
      </property>
      <property name="text">
       <string comment="@option:check to-do start datetime"/>
@@ -125,7 +125,7 @@
    <item row="3" column="2">
     <widget class="QDateEdit" name="mStartDateEdit">
      <property name="displayFormat">
-      <string comment="@info date formatting string" >MM.dd.yyyy</string>
+      <string>MM.dd.yyyy</string>
      </property>
     </widget>
    </item>
@@ -180,7 +180,7 @@
    <item row="5" column="1">
     <widget class="QCheckBox" name="mEndCheck">
      <property name="whatsThis">
-      <string comment="@info:whatsthis" >Sets the due date for this to-do.</string>
+      <string comment="@info:whatsthis">Sets the due date for this to-do.</string>
      </property>
      <property name="text">
       <string comment="to-do due datetime"/>
@@ -196,7 +196,7 @@
       </sizepolicy>
      </property>
      <property name="displayFormat">
-      <string comment="@info date formatting string" >MM.dd.yyyy</string>
+      <string>MM.dd.yyyy</string>
      </property>
     </widget>
    </item>
@@ -235,7 +235,7 @@
       <string comment="@info:whatsthis">Set if this to-do's start and due dates have times associated with them.</string>
      </property>
      <property name="text">
-      <string comment="@option:check The event or task takes the whole day" >Whole day</string>
+      <string comment="@option:check The event or task takes the whole day">Whole day</string>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -280,7 +280,7 @@
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::MinimumExpanding</enum>
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>

@@ -25,7 +25,7 @@
 
 #include "editoritemmanager.h"
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 class Calendar;
 class InvitationDispatcherPrivate;
@@ -38,21 +38,23 @@ class InvitationDispatcher : public QObject
 {
   Q_OBJECT
   public:
-    explicit InvitationDispatcher( Akonadi::Calendar *calendar, QObject *parent = 0 );
+    explicit InvitationDispatcher( Calendar *calendar, QObject *parent = 0 );
     ~InvitationDispatcher();
+
+    void setIsCounterProposal( bool isCounterProposal );
 
     /**
       Sets the manager to which this dispatcher listens for the itemSaveFinished
       signal.
      */
-    void setItemManager( Akonadi::EditorItemManager *manager );
+    void setItemManager( CalendarSupport::EditorItemManager *manager );
 
   private:
     InvitationDispatcherPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( InvitationDispatcher );
     Q_DISABLE_COPY( InvitationDispatcher );
 
-    Q_PRIVATE_SLOT( d_ptr, void processItemSave( Akonadi::EditorItemManager::SaveAction ) );
+    Q_PRIVATE_SLOT( d_ptr, void processItemSave( CalendarSupport::EditorItemManager::SaveAction ) );
     Q_PRIVATE_SLOT( d_ptr, void resetManager() );
 };
 

@@ -24,7 +24,7 @@
 #ifndef FREEBUSYURLDIALOG_H
 #define FREEBUSYURLDIALOG_H
 
-#include "incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 #include "attendeedata.h"
 #include <KDialog>
 
@@ -35,7 +35,7 @@ namespace IncidenceEditorsNG
 {
   class FreeBusyUrlWidget;
 
-class INCIDENCEEDITORS_EXPORT FreeBusyUrlDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlDialog : public KDialog
 {
   Q_OBJECT
   public:
@@ -48,7 +48,7 @@ class INCIDENCEEDITORS_EXPORT FreeBusyUrlDialog : public KDialog
     FreeBusyUrlWidget *mWidget;
 };
 
-class INCIDENCEEDITORS_EXPORT FreeBusyUrlWidget : public QWidget
+class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlWidget : public QWidget
 {
   Q_OBJECT
   public:

@@ -53,10 +53,11 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
   Q_OBJECT
 public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui = 0 );
+    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui );
 #else
-    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
 #endif
+    ~IncidenceAttendee();
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );

@@ -25,22 +25,76 @@
 #ifndef KOAGENDAVIEW_H
 #define KOAGENDAVIEW_H
 
-#include "../../koeventview.h"
-#include "../../printing/calprinter.h"
+#include "agendaview.h"
+#include "calprinter.h"
+
+#include <calendarsupport/calendar.h>
+
+#include <Akonadi/Collection>
+#include <Akonadi/Item>
 
 #include <KCalCore/Todo>
 
+#include <QFrame>
+#include <QPixmap>
+#include <QVector>
+
+class TimeLabels;
+class TimeLabelsZone;
+
+class KOAgenda;
+class KOAgendaItem;
+class KOAgendaView;
+class KOAlternateLabel;
+
+class KConfig;
+class KHBox;
+
+class QBoxLayout;
+class QGridLayout;
+class QMenu;
+class QPaintEvent;
 class QSplitter;
 
-namespace EventViews {
-  class AgendaView;
+namespace KOrg {
+#ifndef KORG_NODECOS
+  namespace CalendarDecoration {
+    class Decoration;
+  }
+#endif
 }
+using namespace KOrg;
+
+class EventIndicator : public QFrame
+{
+  Q_OBJECT
+  public:
+    enum Location {
+      Top,
+      Bottom
+    };
+    explicit EventIndicator( Location loc = Top, QWidget *parent = 0 );
+    virtual ~EventIndicator();
+
+    void changeColumns( int columns );
+
+    void enableColumn( int column, bool enable );
+
+  protected:
+    void paintEvent( QPaintEvent *event );
+
+  private:
+    int mColumns;
+    Location mLocation;
+    QPixmap mPixmap;
+    QVector<bool> mEnabled;
+};
 
 /**
   KOAgendaView is the agenda-like view that displays events in a single
   or multi-day view.
 */
-class KOAgendaView : public KOEventView
+class KOAgendaView : public KOrg::AgendaView, public CalendarSupport::Calendar::CalendarObserver
 {
   Q_OBJECT
   public:
@@ -62,16 +116,19 @@ class KOAgendaView : public KOEventView
     /** return the default start/end date/time for new events   */
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );
 
-    CalPrinter::PrintType printType() const;
+    /** Remove all events from view */
+    void clearView();
+
+    CalPrinter::PrintType printType();
 
     /** start-datetime of selection */
-    virtual QDateTime selectionStart();
+    virtual QDateTime selectionStart() { return mTimeSpanBegin; }
 
     /** end-datetime of selection */
-    virtual QDateTime selectionEnd();
+    virtual QDateTime selectionEnd() { return mTimeSpanEnd; }
 
     /** returns true if selection is for whole day */
-    bool selectedIsAllDay();
+    bool selectedIsAllDay() { return mTimeSpanInAllDay; }
     /** make selected start/end invalid */
     void deleteSelectedDateTime();
     /** returns if only a single cell is selected, or a range of cells */
@@ -85,10 +142,13 @@ class KOAgendaView : public KOEventView
     void setCollection( Akonadi::Collection::Id id );
     Akonadi::Collection::Id collection() const;
 
-    /** reimpl */
-    virtual void setTypeAheadReceiver( QObject *o );
+    KOAgenda *agenda() const { return mAgenda; }
+    QSplitter *splitter() const { return mSplitterAgenda; }
 
-    void setChanges( EventViews::EventView::Changes changes );
+    /* reimplemented from KCalCore::Calendar::CalendarObserver */
+    void calendarIncidenceAdded( const Akonadi::Item &incidence );
+    void calendarIncidenceChanged( const Akonadi::Item &incidence );
+    void calendarIncidenceDeleted( const Akonadi::Item &incidence );
 
   public slots:
     virtual void updateView();
@@ -96,19 +156,24 @@ class KOAgendaView : public KOEventView
     virtual void showDates( const QDate &start, const QDate &end );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
+    void insertIncidence( const Akonadi::Item &incidence, const QDate &curDate );
     void changeIncidenceDisplayAdded( const Akonadi::Item &incidence );
     void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
 
     void clearSelection();
 
+    void startDrag( const Akonadi::Item & );
+
     void readSettings();
     void readSettings( KConfig * );
     void writeSettings( KConfig * );
 
+    void setContentsPos( int y );
+
     /** reschedule the todo  to the given x- and y- coordinates.
         Third parameter determines all-day (no time specified) */
-    void slotTodosDropped( const Todo::List  &todos, const QPoint &, bool );
-    void slotTodosDropped( const QList<KUrl> &todos, const QPoint &, bool );
+    void slotTodosDropped( const QList<KCalCore::Todo::Ptr> & todos, const QPoint &, bool );
+    void slotTodosDropped( const QList<KUrl>& todos, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
     void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
@@ -119,15 +184,133 @@ class KOAgendaView : public KOEventView
     void zoomInVertically( );
     void zoomOutVertically( );
 
-    void zoomView( const int delta, const QPoint &pos, const Qt::Orientation orient=Qt::Horizontal );
+    void zoomView( const int delta, const QPoint &pos,
+      const Qt::Orientation orient=Qt::Horizontal );
+
+    void clearTimeSpanSelection();
+
+    // Used by the timelabelszone
+    void updateTimeBarWidth();
+
+    /** Create labels for the selected dates. */
+    void createDayLabels();
+
+    void createTimeBarHeaders();
 
   signals:
     void zoomViewHorizontally( const QDate &, int count );
+
     void timeSpanSelectionChanged();
 
+  protected:
+    /** Fill agenda beginning with date startDate */
+    void fillAgenda( const QDate &startDate );
+
+    /** Fill agenda using the current set value for the start date */
+    void fillAgenda();
+
+    void connectAgenda( KOAgenda *agenda, KOEventPopupMenu *popup, KOAgenda *otherAgenda );
+
+    /**
+      Set the masks on the agenda widgets indicating, which days are holidays.
+    */
+    void setHolidayMasks();
+
+    void removeIncidence( const Akonadi::Item & );
+    /**
+      Updates the event indicators after a certain incidence was modified or
+      removed.
+    */
+    void updateEventIndicators();
+
+    virtual void resizeEvent( QResizeEvent *resizeEvent );
+
+  protected slots:
+    /** Update event belonging to agenda item */
+    void updateEventDates( KOAgendaItem *item );
+    /** update just the display of the given incidence, called by a single-shot timer */
+    void doUpdateItem();
+
+    void updateEventIndicatorTop( int newY );
+    void updateEventIndicatorBottom( int newY );
+
+    /** Updates data for selected timespan */
+    void newTimeSpanSelected( const QPoint &start, const QPoint &end );
+    /** Updates data for selected timespan for all day event*/
+    void newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &end );
+
+    void handleNewEventRequest();
+
+    void updateDayLabelSizes();
+
   private:
-    class Private;
-    Private *const d;
+
+    bool filterByCollectionSelection( const Akonadi::Item &incidence );
+    void setupTimeLabel( TimeLabels *timeLabel );
+    int timeLabelsWidth();
+    void displayIncidence( const Akonadi::Item &incidence );
+#ifndef KORG_NODECOS
+    typedef QList<KOrg::CalendarDecoration::Decoration *> DecorationList;
+    bool loadDecorations( const QStringList &decorations, DecorationList &decoList );
+    void placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop );
+    void placeDecorations( DecorationList &decoList, const QDate &date,
+                           KHBox *labelBox, bool forWeek );
+#endif
+
+  private:
+    // view widgets
+    QGridLayout *mGridLayout;
+    QFrame *mTopDayLabels;
+    KHBox *mTopDayLabelsFrame;
+    QList<KOAlternateLabel*> mDateDayLabels;
+    QBoxLayout *mLayoutTopDayLabels;
+    QFrame *mBottomDayLabels;
+    KHBox *mBottomDayLabelsFrame;
+    QBoxLayout *mLayoutBottomDayLabels;
+    KHBox *mAllDayFrame;
+    QWidget *mTimeBarHeaderFrame;
+    QGridLayout *mAgendaLayout;
+    QSplitter *mSplitterAgenda;
+    QList<QLabel *> mTimeBarHeaders;
+
+    KOAgenda *mAllDayAgenda;
+    KOAgenda *mAgenda;
+
+    TimeLabelsZone *mTimeLabelsZone;
+
+    KCalCore::DateList mSelectedDates;  // List of dates to be displayed
+    int mViewType;
+
+    KOEventPopupMenu *mAgendaPopup;
+    KOEventPopupMenu *mAllDayAgendaPopup;
+
+    EventIndicator *mEventIndicatorTop;
+    EventIndicator *mEventIndicatorBottom;
+
+    QVector<int> mMinY;
+    QVector<int> mMaxY;
+
+    QVector<bool> mHolidayMask;
+
+    QDateTime mTimeSpanBegin;
+    QDateTime mTimeSpanEnd;
+    bool mTimeSpanInAllDay;
+    bool mAllowAgendaUpdate;
+
+    Akonadi::Item mUpdateItem;
+
+    //CollectionSelection *mCollectionSelection;
+    Akonadi::Collection::Id mCollectionId;
+
+    bool mIsSideBySide;
+
+    // the current date is inserted into mSelectedDates in the constructor
+    // however whe should only show events when setDates is called, otherwise
+    // we see day view with current date for a few milisecs, then we see something else
+    // because someone called setDates with the real dates that should be displayed.
+    // Other solution would be not initializing mSelectedDates in the ctor, but that requires
+    // lots of changes in koagenda.cpp and koagendaview.cpp
+    bool mAreDatesInitialized;
 };
 
 #endif

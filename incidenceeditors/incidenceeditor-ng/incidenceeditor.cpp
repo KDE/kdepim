@@ -20,6 +20,8 @@
 
 #include "incidenceeditor-ng.h"
 
+#include <KDebug>
+
 using namespace IncidenceEditorsNG;
 
 IncidenceEditor::IncidenceEditor( QObject *parent )
@@ -32,8 +34,10 @@ IncidenceEditor::~IncidenceEditor()
 
 void IncidenceEditor::checkDirtyStatus()
 {
-  if ( !mLoadedIncidence )
+  if ( !mLoadedIncidence ) {
+    kDebug() << "checkDirtyStatus called on an invalid incidence";
     return;
+  }
 
   const bool dirty = isDirty();
   if ( mWasDirty != dirty ) {

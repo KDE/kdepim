@@ -57,7 +57,6 @@
 #include <incidenceeditors/incidenceeditor-ng/incidencedialog.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedefaults.h>
 
-#include <calendarviews/agenda/eventview.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/calendaradaptor.h>
 #include <calendarsupport/collectionselection.h>
@@ -73,16 +72,16 @@
 #include <akonadi/control.h>
 #include <akonadi/collectionpropertiesdialog.h>
 
-#include <KCalCore/FileStorage>
-#include <KCalCore/Calendar>
-#include <KCalCore/CalFilter>
-#include <KCalCore/FreeBusy>
-#include <KCalCore/ICalFormat>
-#include <KCalCore/VCalFormat>
+#include <kcalcore/filestorage.h>
+#include <kcalcore/calendar.h>
+#include <kcalcore/calfilter.h>
+#include <kcalcore/freebusy.h>
+#include <kcalcore/icalformat.h>
+#include <kcalcore/vcalformat.h>
 
-#include <KCalUtils/Stringify>
-#include <KCalUtils/ICalDrag>
-#include <KCalUtils/Scheduler>
+#include <kcalutils/stringify.h>
+#include <kcalutils/icaldrag.h>
+#include <kcalutils/scheduler.h>
 
 #include <KHolidays/Holidays>
 
@@ -636,11 +635,6 @@ void CalendarView::goPrevious()
   } else {
     mDateNavigator->selectPrevious();
   }
-}
-
-void CalendarView::updateConfig()
-{
-  updateConfig( QByteArray( "korganizer" ) );
 }
 
 void CalendarView::updateConfig( const QByteArray &receiver )
@@ -2415,7 +2409,7 @@ void CalendarView::filterActivated( int filterNo )
     mCurrentFilter = newFilter;
     mCalendar->setFilter( mCurrentFilter );
     mViewManager->setFilter( mCurrentFilter );
-    mViewManager->addChange( EventViews::EventView::FilterChanged );
+    mViewManager->setUpdateNeeded();
     updateView();
   }
   emit filterChanged();
@@ -3116,7 +3110,7 @@ void CalendarView::moveIncidenceTo( const Akonadi::Item &itemmove, const QDate &
 
 void CalendarView::resourcesChanged()
 {
-  mViewManager->addChange( EventViews::EventView::ResourcesChanged );
+  mViewManager->setUpdateNeeded();
   mDateNavigatorContainer->setUpdateNeeded();
   updateView();
 }

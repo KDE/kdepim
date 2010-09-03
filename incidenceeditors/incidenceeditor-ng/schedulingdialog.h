@@ -50,6 +50,9 @@ public:
     QDate selectedStartDate() const;
     QTime selectedStartTime() const;
 
+public slots:
+    void slotUpdateIncidenceStartEnd( const KDateTime & startDateTime, const KDateTime & endDateTime );
+
 signals:
     void startDateChanged( const QDate &newDate );
     void startTimeChanged( const QTime &newTime );

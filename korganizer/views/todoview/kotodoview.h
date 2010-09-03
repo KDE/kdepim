@@ -85,7 +85,7 @@ class KOTodoView : public BaseView
     bool usesFullWindow();
 
     bool supportsDateRangeSelection() { return false; }
-    virtual KOrg::CalPrinterBase::PrintType printType() const;
+    virtual KOrg::CalPrinterBase::PrintType printType();
 
   public Q_SLOTS:
     virtual void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );

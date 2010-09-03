@@ -92,6 +92,14 @@ SchedulingDialog::~SchedulingDialog()
 {
 }
 
+void SchedulingDialog::slotUpdateIncidenceStartEnd( const KDateTime & startDateTime, const KDateTime & endDateTime )
+{
+#ifndef KDEPIM_MOBILE_UI
+    mVisualWidget->slotUpdateIncidenceStartEnd( startDateTime, endDateTime );
+#endif
+}
+
+
 void SchedulingDialog::fillCombos()
 {
 // Note: we depend on the following order

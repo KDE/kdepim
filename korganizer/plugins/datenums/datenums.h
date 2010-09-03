@@ -21,9 +21,9 @@
 #ifndef KORG_DATENUMS_H
 #define KORG_DATENUMS_H
 
-#include <calendarviews/agenda/calendardecoration.h>
+#include <calendar/calendardecoration.h>
 
-using namespace EventViews::CalendarDecoration;
+using namespace KOrg::CalendarDecoration;
 
 class Datenums : public Decoration
 {
@@ -42,7 +42,7 @@ class Datenums : public Decoration
     };
     Q_DECLARE_FLAGS( DayNumbers, DayNumber )
 
-    QString info() const;
+    QString info();
 
   private:
     DayNumbers mDisplayedInfo;
