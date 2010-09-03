@@ -27,7 +27,6 @@
 #include <QtGui/QApplication>
 #include <QtDBus/qdbusconnection.h>
 #include <QtDBus/qdbusmessage.h>
-#include <QtCore/QThread>
 
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
@@ -123,8 +122,6 @@ void KDeclarativeMainView::delayedInit()
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
   d->mChangeRecorder->fetchCollection( true );
   d->mChangeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
-
-  QThread::currentThread()->wait(1000);
 
   d->mEtm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
   d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
