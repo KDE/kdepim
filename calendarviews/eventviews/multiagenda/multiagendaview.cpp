@@ -59,13 +59,52 @@ static QString generateColumnLabel( int c )
 {
   return i18n( "Agenda %1", c + 1 );
 }
+class MultiAgendaView::Private {
+
+  public:
+    Private( MultiAgendaView *qq ) : q( qq ),
+                                     mUpdateOnShow( true ),
+                                     mPendingChanges( true ),
+                                     mCustomColumnSetupUsed( false ),
+                                     mCustomNumberOfColumns( 2 )
+    {
+    }
+
+    ~Private()
+    {
+    }
+
+    void addView( const Akonadi::Collection &collection );
+    void addView( CalendarSupport::CollectionSelectionProxyModel *selectionProxy, const QString &title );
+    AgendaView *createView( const QString &title );
+    void deleteViews();
+    void setupViews();
+    void resizeScrollView( const QSize &size );
+
+
+    QList<AgendaView*> mAgendaViews;
+    QList<QWidget*> mAgendaWidgets;
+    KHBox *mTopBox;
+    QScrollArea *mScrollArea;
+    TimeLabelsZone *mTimeLabelsZone;
+    QSplitter *mLeftSplitter, *mRightSplitter;
+    QScrollBar *mScrollBar;
+    QWidget *mLeftBottomSpacer, *mRightBottomSpacer;
+    QDate mStartDate, mEndDate;
+    bool mUpdateOnShow;
+    bool mPendingChanges;
+    bool mCustomColumnSetupUsed;
+    QVector<CalendarSupport::CollectionSelectionProxyModel*> mCollectionSelectionModels;
+    QVector<QString> mCustomColumnTitles;
+    int mCustomNumberOfColumns;
+    MultiAgendaView *q;
+};
+
+
 
 MultiAgendaView::MultiAgendaView( QWidget *parent )
-  : EventView( parent ),
-    mUpdateOnShow( true ),
-    mPendingChanges( true ),
-    mCustomColumnSetupUsed( false ),
-    mCustomNumberOfColumns( 2 )
+  : EventView( parent ), d( new Private( this ) )
+
 {
   QHBoxLayout *topLevelLayout = new QHBoxLayout( this );
   topLevelLayout->setSpacing( 0 );
@@ -79,14 +118,14 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   QWidget *topSideSpacer = new QWidget( topSideBox );
   topSideSpacer->setFixedHeight( topLabelHeight );
 
-  mLeftSplitter = new QSplitter( Qt::Vertical, topSideBox );
-  mLeftSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
+  d->mLeftSplitter = new QSplitter( Qt::Vertical, topSideBox );
+  d->mLeftSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
-  QLabel *label = new QLabel( i18n( "All Day" ), mLeftSplitter );
+  QLabel *label = new QLabel( i18n( "All Day" ), d->mLeftSplitter );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   label->setWordWrap( true );
 
-  KVBox *sideBox = new KVBox( mLeftSplitter );
+  KVBox *sideBox = new KVBox( d->mLeftSplitter );
 
   EventIndicator *eiSpacer = new EventIndicator( EventIndicator::Top, sideBox );
   eiSpacer->changeColumns( 0 );
@@ -94,60 +133,60 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   // compensate for the frame the agenda views but not the timelabels have
   QWidget *timeLabelTopAlignmentSpacer = new QWidget( sideBox );
 
-  mTimeLabelsZone = new TimeLabelsZone( sideBox, PrefsPtr( new Prefs() ) );
+  d->mTimeLabelsZone = new TimeLabelsZone( sideBox, PrefsPtr( new Prefs() ) );
 
   QWidget *timeLabelBotAlignmentSpacer = new QWidget( sideBox );
 
   eiSpacer = new EventIndicator( EventIndicator::Bottom, sideBox );
   eiSpacer->changeColumns( 0 );
 
-  mLeftBottomSpacer = new QWidget( topSideBox );
+  d->mLeftBottomSpacer = new QWidget( topSideBox );
 
   topLevelLayout->addWidget( topSideBox );
 
-  mScrollArea = new QScrollArea( this );
+  d->mScrollArea = new QScrollArea( this );
 
 // TODO_EVENTVIEWS
-  //mScrollArea->setResizePolicy( Q3ScrollView::Manual );
-  mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+  //d->mScrollArea->setResizePolicy( Q3ScrollView::Manual );
+  d->mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
   // asymetric since the timelabels
-  timeLabelTopAlignmentSpacer->setFixedHeight( mScrollArea->frameWidth() - 1 );
+  timeLabelTopAlignmentSpacer->setFixedHeight( d->mScrollArea->frameWidth() - 1 );
   // have 25 horizontal lines
-  timeLabelBotAlignmentSpacer->setFixedHeight( mScrollArea->frameWidth() - 2 );
+  timeLabelBotAlignmentSpacer->setFixedHeight( d->mScrollArea->frameWidth() - 2 );
 
-  mScrollArea->setFrameShape( QFrame::NoFrame );
-  topLevelLayout->addWidget( mScrollArea, 100 );
-  mTopBox = new KHBox( mScrollArea->viewport() );
-  mScrollArea->setWidget( mTopBox );
+  d->mScrollArea->setFrameShape( QFrame::NoFrame );
+  topLevelLayout->addWidget( d->mScrollArea, 100 );
+  d->mTopBox = new KHBox( d->mScrollArea->viewport() );
+  d->mScrollArea->setWidget( d->mTopBox );
 
   topSideBox = new KVBox( this );
 
   topSideSpacer = new QWidget( topSideBox );
   topSideSpacer->setFixedHeight( topLabelHeight );
 
-  mRightSplitter = new QSplitter( Qt::Vertical, topSideBox );
-  mRightSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
+  d->mRightSplitter = new QSplitter( Qt::Vertical, topSideBox );
+  d->mRightSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
-  new QWidget( mRightSplitter );
-  sideBox = new KVBox( mRightSplitter );
+  new QWidget( d->mRightSplitter );
+  sideBox = new KVBox( d->mRightSplitter );
 
   eiSpacer = new EventIndicator( EventIndicator::Top, sideBox );
   eiSpacer->setFixedHeight( eiSpacer->minimumHeight() );
   eiSpacer->changeColumns( 0 );
-  mScrollBar = new QScrollBar( Qt::Vertical, sideBox );
+  d->mScrollBar = new QScrollBar( Qt::Vertical, sideBox );
   eiSpacer = new EventIndicator( EventIndicator::Bottom, sideBox );
   eiSpacer->setFixedHeight( eiSpacer->minimumHeight() );
   eiSpacer->changeColumns( 0 );
 
-  mRightBottomSpacer = new QWidget( topSideBox );
+  d->mRightBottomSpacer = new QWidget( topSideBox );
   topLevelLayout->addWidget( topSideBox );
 }
 
 void MultiAgendaView::setCalendar( CalendarSupport::Calendar *cal )
 {
   EventView::setCalendar( cal );
-  Q_FOREACH ( CalendarSupport::CollectionSelectionProxyModel *const i, mCollectionSelectionModels ) {
+  Q_FOREACH ( CalendarSupport::CollectionSelectionProxyModel *const i, d->mCollectionSelectionModels ) {
     i->setSourceModel( cal->treeModel() );
   }
   recreateViews();
@@ -155,51 +194,51 @@ void MultiAgendaView::setCalendar( CalendarSupport::Calendar *cal )
 
 void MultiAgendaView::recreateViews()
 {
-  if ( !mPendingChanges ) {
+  if ( !d->mPendingChanges ) {
     return;
   }
-  mPendingChanges = false;
+  d->mPendingChanges = false;
 
-  deleteViews();
+  d->deleteViews();
 
-  if ( mCustomColumnSetupUsed ) {
-    Q_ASSERT( mCollectionSelectionModels.size() == mCustomNumberOfColumns );
-    for ( int i = 0; i < mCustomNumberOfColumns; ++i ) {
-      addView( mCollectionSelectionModels[i], mCustomColumnTitles[i] );
+  if ( d->mCustomColumnSetupUsed ) {
+    Q_ASSERT( d->mCollectionSelectionModels.size() == d->mCustomNumberOfColumns );
+    for ( int i = 0; i < d->mCustomNumberOfColumns; ++i ) {
+      d->addView( d->mCollectionSelectionModels[i], d->mCustomColumnTitles[i] );
     }
   } else {
     Q_FOREACH( const Akonadi::Collection &i, collectionSelection()->selectedCollections() ) {
       if ( i.contentMimeTypes().contains( Event::eventMimeType() ) ) {
-        addView( i );
+        d->addView( i );
       }
     }
   }
   // no resources activated, so stop here to avoid crashing somewhere down the line
   // TODO: show a nice message instead
-  if ( mAgendaViews.isEmpty() ) {
+  if ( d->mAgendaViews.isEmpty() ) {
     return;
   }
 
-  setupViews();
+  d->setupViews();
   QTimer::singleShot( 0, this, SLOT(slotResizeScrollView()) );
-  mTimeLabelsZone->updateAll();
+  d->mTimeLabelsZone->updateAll();
 
-  QScrollArea *timeLabel = mTimeLabelsZone->timeLabels().first();
+  QScrollArea *timeLabel = d->mTimeLabelsZone->timeLabels().first();
   connect( timeLabel->verticalScrollBar(), SIGNAL(valueChanged(int)),
-           mScrollBar, SLOT(setValue(int)) );
-  connect( mScrollBar, SIGNAL(valueChanged(int)),
+           d->mScrollBar, SLOT(setValue(int)) );
+  connect( d->mScrollBar, SIGNAL(valueChanged(int)),
            timeLabel->verticalScrollBar(), SLOT(setValue(int)) );
 
-  connect( mLeftSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
-  connect( mRightSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
+  connect( d->mLeftSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
+  connect( d->mRightSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
   QTimer::singleShot( 0, this, SLOT(resizeSplitters()) );
   QTimer::singleShot( 0, this, SLOT(setupScrollBar()) );
 
-  mTimeLabelsZone->updateTimeLabelsPosition();
+  d->mTimeLabelsZone->updateTimeLabelsPosition();
 
 }
 
-void MultiAgendaView::deleteViews()
+void MultiAgendaView::Private::deleteViews()
 {
   Q_FOREACH ( AgendaView *const i, mAgendaViews ) {
     CalendarSupport::CollectionSelectionProxyModel *proxy =
@@ -215,59 +254,59 @@ void MultiAgendaView::deleteViews()
   mAgendaWidgets.clear();
 }
 
-void MultiAgendaView::setupViews()
+void MultiAgendaView::Private::setupViews()
 {
   foreach ( AgendaView *agenda, mAgendaViews ) {
-    connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::List)),
-             SIGNAL(newEventSignal(Akonadi::Collection::List)) );
-    connect( agenda, SIGNAL(editIncidenceSignal(Akonadi::Item)),
-             SIGNAL(editIncidenceSignal(Akonadi::Item)) );
-    connect( agenda, SIGNAL(showIncidenceSignal(Akonadi::Item)),
-             SIGNAL(showIncidenceSignal(Akonadi::Item)) );
-    connect( agenda, SIGNAL(deleteIncidenceSignal(Akonadi::Item)),
-             SIGNAL(deleteIncidenceSignal(Akonadi::Item)) );
-    connect( agenda, SIGNAL(startMultiModify(const QString &)),
-             SIGNAL(startMultiModify(const QString &)) );
-    connect( agenda, SIGNAL(endMultiModify()),
-             SIGNAL(endMultiModify()) );
+    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::List)),
+                q, SIGNAL(newEventSignal(Akonadi::Collection::List)) );
+    q->connect( agenda, SIGNAL(editIncidenceSignal(Akonadi::Item)),
+                q, SIGNAL(editIncidenceSignal(Akonadi::Item)) );
+    q->connect( agenda, SIGNAL(showIncidenceSignal(Akonadi::Item)),
+                q, SIGNAL(showIncidenceSignal(Akonadi::Item)) );
+    q->connect( agenda, SIGNAL(deleteIncidenceSignal(Akonadi::Item)),
+                q, SIGNAL(deleteIncidenceSignal(Akonadi::Item)) );
+    q->connect( agenda, SIGNAL(startMultiModify(QString)),
+                q, SIGNAL(startMultiModify(QString)) );
+    q->connect( agenda, SIGNAL(endMultiModify()),
+                q, SIGNAL(endMultiModify()) );
 
-    connect( agenda, SIGNAL(incidenceSelected(Akonadi::Item, const QDate &)),
-             SIGNAL(incidenceSelected(Akonadi::Item, const QDate &)) );
+    q->connect( agenda, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
+                q, SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
 
-    connect( agenda, SIGNAL(cutIncidenceSignal(Akonadi::Item)),
-             SIGNAL(cutIncidenceSignal(Akonadi::Item)) );
-    connect( agenda, SIGNAL(copyIncidenceSignal(Akonadi::Item)),
-             SIGNAL(copyIncidenceSignal(Akonadi::Item)) );
-    connect( agenda, SIGNAL(pasteIncidenceSignal()),
-             SIGNAL(pasteIncidenceSignal()) );
-    connect( agenda, SIGNAL(toggleAlarmSignal(Akonadi::Item)),
-             SIGNAL(toggleAlarmSignal(Akonadi::Item)) );
-    connect( agenda, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item, const QDate&)),
-             SIGNAL(dissociateOccurrencesSignal(Akonadi::Item, const QDate&)) );
+    q->connect( agenda, SIGNAL(cutIncidenceSignal(Akonadi::Item)),
+                q, SIGNAL(cutIncidenceSignal(Akonadi::Item)) );
+    q->connect( agenda, SIGNAL(copyIncidenceSignal(Akonadi::Item)),
+                q, SIGNAL(copyIncidenceSignal(Akonadi::Item)) );
+    q->connect( agenda, SIGNAL(pasteIncidenceSignal()),
+                q, SIGNAL(pasteIncidenceSignal()) );
+    q->connect( agenda, SIGNAL(toggleAlarmSignal(Akonadi::Item)),
+                q, SIGNAL(toggleAlarmSignal(Akonadi::Item)) );
+    q->connect( agenda, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate) ),
+                q, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
 
-    connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::List,const QDate&)),
-             SIGNAL(newEventSignal(Akonadi::Collection::List,const QDate&)) );
-    connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::List,const QDateTime&)),
-             SIGNAL(newEventSignal(Akonadi::Collection::List,const QDateTime&)) );
-    connect( agenda,
-             SIGNAL(newEventSignal(Akonadi::Collection::List,const QDateTime&,const QDateTime&)),
-             SIGNAL(newEventSignal(Akonadi::Collection::List,const QDateTime&,const QDateTime&)) );
+    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::List,QDate)),
+                q, SIGNAL(newEventSignal(Akonadi::Collection::List,QDate)) );
+    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::List,QDateTime)),
+                q, SIGNAL(newEventSignal(Akonadi::Collection::List,QDateTime)) );
+    q->connect( agenda,
+                SIGNAL(newEventSignal(Akonadi::Collection::List,QDateTime,QDateTime)),
+                q, SIGNAL(newEventSignal(Akonadi::Collection::List,QDateTime,QDateTime)) );
 
-    connect( agenda, SIGNAL(newTodoSignal(const QDate&)),
-             SIGNAL(newTodoSignal(const QDate&)) );
+    q->connect( agenda, SIGNAL(newTodoSignal(QDate)),
+                q, SIGNAL(newTodoSignal(QDate)) );
 
-    connect( agenda, SIGNAL(incidenceSelected(Akonadi::Item, const QDate &)),
-             SLOT(slotSelectionChanged()) );
+    q->connect( agenda, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
+                q, SLOT(slotSelectionChanged()) );
 
-    connect( agenda, SIGNAL(timeSpanSelectionChanged()),
-             SLOT(slotClearTimeSpanSelection()) );
+    q->connect( agenda, SIGNAL(timeSpanSelectionChanged()),
+                q, SLOT(slotClearTimeSpanSelection()) );
 
-    disconnect( agenda->agenda(),
-                SIGNAL(zoomView(const int,const QPoint&,const Qt::Orientation)),
-                agenda, 0 );
-    connect( agenda->agenda(),
-             SIGNAL(zoomView(const int,const QPoint&,const Qt::Orientation)),
-             SLOT(zoomView(const int,const QPoint&,const Qt::Orientation)) );
+    q->disconnect( agenda->agenda(),
+                   SIGNAL(zoomView(int,QPoint,Qt::Orientation)),
+                   agenda, 0 );
+    q->connect( agenda->agenda(),
+                SIGNAL(zoomView(int,QPoint,Qt::Orientation)),
+                q, SLOT(zoomView(int,QPoint,Qt::Orientation)) );
   }
 
   AgendaView *lastView = mAgendaViews.last();
@@ -293,12 +332,13 @@ void MultiAgendaView::setupViews()
 
 MultiAgendaView::~MultiAgendaView()
 {
+  delete d;
 }
 
 Akonadi::Item::List MultiAgendaView::selectedIncidences() const
 {
   Akonadi::Item::List list;
-  foreach ( AgendaView *agendaView, mAgendaViews ) {
+  foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     list += agendaView->selectedIncidences();
   }
   return list;
@@ -307,7 +347,7 @@ Akonadi::Item::List MultiAgendaView::selectedIncidences() const
 DateList MultiAgendaView::selectedIncidenceDates() const
 {
   DateList list;
-  foreach ( AgendaView *agendaView, mAgendaViews ) {
+  foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     list += agendaView->selectedIncidenceDates();
   }
   return list;
@@ -315,7 +355,7 @@ DateList MultiAgendaView::selectedIncidenceDates() const
 
 int MultiAgendaView::currentDateCount() const
 {
-  foreach ( AgendaView *agendaView, mAgendaViews ) {
+  foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     return agendaView->currentDateCount();
   }
   return 0;
@@ -323,18 +363,18 @@ int MultiAgendaView::currentDateCount() const
 
 void MultiAgendaView::showDates( const QDate &start, const QDate &end )
 {
-  mStartDate = start;
-  mEndDate = end;
+  d->mStartDate = start;
+  d->mEndDate = end;
   slotResizeScrollView();
-  mTimeLabelsZone->updateAll();
-  foreach ( AgendaView *agendaView, mAgendaViews ) {
+  d->mTimeLabelsZone->updateAll();
+  foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     agendaView->showDates( start, end );
   }
 }
 
 void MultiAgendaView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
 {
-  foreach ( AgendaView *agendaView, mAgendaViews ) {
+  foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     agendaView->showIncidences( incidenceList, date );
   }
 }
@@ -342,14 +382,14 @@ void MultiAgendaView::showIncidences( const Akonadi::Item::List &incidenceList, 
 void MultiAgendaView::updateView()
 {
   recreateViews();
-  foreach ( AgendaView *agendaView, mAgendaViews ) {
+  foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     agendaView->updateView();
   }
 }
 
 void MultiAgendaView::changeIncidenceDisplay( const Akonadi::Item &incidence, int mode )
 {
-  foreach ( AgendaView *agendaView, mAgendaViews ) {
+  foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     agendaView->changeIncidenceDisplay( incidence, mode );
   }
 }
@@ -362,7 +402,7 @@ int MultiAgendaView::maxDatesHint() const
 
 void MultiAgendaView::slotSelectionChanged()
 {
-  foreach ( AgendaView *agenda, mAgendaViews ) {
+  foreach ( AgendaView *agenda, d->mAgendaViews ) {
     if ( agenda != sender() ) {
       agenda->clearSelection();
     }
@@ -371,7 +411,7 @@ void MultiAgendaView::slotSelectionChanged()
 
 bool MultiAgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
 {
-  foreach ( AgendaView *agenda, mAgendaViews ) {
+  foreach ( AgendaView *agenda, d->mAgendaViews ) {
     bool valid = agenda->eventDurationHint( startDt, endDt, allDay );
     if ( valid ) {
       return true;
@@ -382,14 +422,14 @@ bool MultiAgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, b
 
 void MultiAgendaView::slotClearTimeSpanSelection()
 {
-  foreach ( AgendaView *agenda, mAgendaViews ) {
+  foreach ( AgendaView *agenda, d->mAgendaViews ) {
     if ( agenda != sender() ) {
       agenda->clearTimeSpanSelection();
     }
   }
 }
 
-AgendaView *MultiAgendaView::createView( const QString &title )
+AgendaView *MultiAgendaView::Private::createView( const QString &title )
 {
   QWidget *box = new QWidget( mTopBox );
   QVBoxLayout *layout = new QVBoxLayout( box );
@@ -397,32 +437,32 @@ AgendaView *MultiAgendaView::createView( const QString &title )
   QLabel *l = new QLabel( title );
   layout->addWidget( l );
   l->setAlignment( Qt::AlignVCenter | Qt::AlignHCenter );
-  AgendaView *av = new AgendaView( true, this );
+  AgendaView *av = new AgendaView( true, q );
   layout->addWidget( av );
-  av->setCalendar( calendar() );
-  av->setIncidenceChanger( changer() );
+  av->setCalendar( q->calendar() );
+  av->setIncidenceChanger( q->changer() );
   av->agenda()->scrollArea()->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   mAgendaViews.append( av );
   mAgendaWidgets.append( box );
   box->show();
   mTimeLabelsZone->setAgendaView( av );
-  connect( av->splitter(), SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
-  connect( av, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
-           SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)) );
+  q->connect( av->splitter(), SIGNAL(splitterMoved(int,int)), q, SLOT(resizeSplitters()) );
+  q->connect( av, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
+              q, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)) );
 
-  connect( av, SIGNAL(showNewEventPopupSignal()),
-           SIGNAL(showNewEventPopupSignal()) );
+  q->connect( av, SIGNAL(showNewEventPopupSignal()),
+              q, SIGNAL(showNewEventPopupSignal()) );
 
   return av;
 }
 
-void MultiAgendaView::addView( const Akonadi::Collection &collection )
+void MultiAgendaView::Private::addView( const Akonadi::Collection &collection )
 {
   AgendaView *av = createView( CalendarSupport::displayName( collection ) );
   av->setCollection( collection.id() );
 }
 
-void MultiAgendaView::addView( CalendarSupport::CollectionSelectionProxyModel *sm, const QString &title )
+void MultiAgendaView::Private::addView( CalendarSupport::CollectionSelectionProxyModel *sm, const QString &title )
 {
   AgendaView *av = createView( title );
   av->setCustomCollectionSelectionProxyModel( sm );
@@ -430,11 +470,11 @@ void MultiAgendaView::addView( CalendarSupport::CollectionSelectionProxyModel *s
 
 void MultiAgendaView::resizeEvent( QResizeEvent *ev )
 {
-  resizeScrollView( ev->size() );
+  d->resizeScrollView( ev->size() );
   EventView::resizeEvent( ev );
 }
 
-void MultiAgendaView::resizeScrollView( const QSize &size )
+void MultiAgendaView::Private::resizeScrollView( const QSize &size )
 {
   const int widgetWidth = size.width() - mTimeLabelsZone->width() - mScrollBar->width();
   const int width = qMax( mTopBox->sizeHint().width(), widgetWidth );
@@ -456,7 +496,7 @@ void MultiAgendaView::resizeScrollView( const QSize &size )
 void MultiAgendaView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
 {
   EventView::setIncidenceChanger( changer );
-  foreach ( AgendaView *agenda, mAgendaViews ) {
+  foreach ( AgendaView *agenda, d->mAgendaViews ) {
     agenda->setIncidenceChanger( changer );
   }
 }
@@ -464,33 +504,33 @@ void MultiAgendaView::setIncidenceChanger( CalendarSupport::IncidenceChanger *ch
 void MultiAgendaView::updateConfig()
 {
   EventView::updateConfig();
-  mTimeLabelsZone->updateAll();
-  foreach ( AgendaView *agenda, mAgendaViews ) {
+  d->mTimeLabelsZone->updateAll();
+  foreach ( AgendaView *agenda, d->mAgendaViews ) {
     agenda->updateConfig();
   }
 }
 
 void MultiAgendaView::resizeSplitters()
 {
-  if ( mAgendaViews.isEmpty() ) {
+  if ( d->mAgendaViews.isEmpty() ) {
     return;
   }
 
   QSplitter *lastMovedSplitter = qobject_cast<QSplitter*>( sender() );
   if ( !lastMovedSplitter ) {
-    lastMovedSplitter = mAgendaViews.first()->splitter();
+    lastMovedSplitter = d->mAgendaViews.first()->splitter();
   }
-  foreach ( AgendaView *agenda, mAgendaViews ) {
+  foreach ( AgendaView *agenda, d->mAgendaViews ) {
     if ( agenda->splitter() == lastMovedSplitter ) {
       continue;
     }
     agenda->splitter()->setSizes( lastMovedSplitter->sizes() );
   }
-  if ( lastMovedSplitter != mLeftSplitter ) {
-    mLeftSplitter->setSizes( lastMovedSplitter->sizes() );
+  if ( lastMovedSplitter != d->mLeftSplitter ) {
+    d->mLeftSplitter->setSizes( lastMovedSplitter->sizes() );
   }
-  if ( lastMovedSplitter != mRightSplitter ) {
-    mRightSplitter->setSizes( lastMovedSplitter->sizes() );
+  if ( lastMovedSplitter != d->mRightSplitter ) {
+    d->mRightSplitter->setSizes( lastMovedSplitter->sizes() );
   }
 }
 
@@ -507,52 +547,52 @@ void MultiAgendaView::zoomView( const int delta, const QPoint &pos, const Qt::Or
     }
   }
 
-  foreach ( AgendaView *agenda, mAgendaViews ) {
+  foreach ( AgendaView *agenda, d->mAgendaViews ) {
     agenda->zoomView( delta, pos, ori );
   }
 
-  mTimeLabelsZone->updateAll();
+  d->mTimeLabelsZone->updateAll();
 }
 
 void MultiAgendaView::slotResizeScrollView()
 {
-  resizeScrollView( size() );
+  d->resizeScrollView( size() );
 }
 
 void MultiAgendaView::showEvent( QShowEvent *event )
 {
   EventView::showEvent( event );
-  if ( mUpdateOnShow ) {
-    mUpdateOnShow = false;
-    mPendingChanges = true; // force a full view recreation
-    showDates( mStartDate, mEndDate );
+  if ( d->mUpdateOnShow ) {
+    d->mUpdateOnShow = false;
+    d->mPendingChanges = true; // force a full view recreation
+    showDates( d->mStartDate, d->mEndDate );
   }
 }
 
 void MultiAgendaView::setChanges( Changes changes )
 {
   EventView::setChanges( changes );
-  foreach ( AgendaView *agenda, mAgendaViews ) {
+  foreach ( AgendaView *agenda, d->mAgendaViews ) {
     agenda->setChanges( changes );
   }
 }
 
 void MultiAgendaView::setupScrollBar()
 {
-  if ( !mAgendaViews.isEmpty() && mAgendaViews.first()->agenda() ) {
-    QScrollBar *scrollBar = mAgendaViews.first()->agenda()->verticalScrollBar();
-    mScrollBar->setMinimum( scrollBar->minimum() );
-    mScrollBar->setMaximum( scrollBar->maximum() );
-    mScrollBar->setSingleStep( scrollBar->singleStep() );
-    mScrollBar->setPageStep( scrollBar->pageStep() );
-    mScrollBar->setValue( scrollBar->value() );
+  if ( !d->mAgendaViews.isEmpty() && d->mAgendaViews.first()->agenda() ) {
+    QScrollBar *scrollBar = d->mAgendaViews.first()->agenda()->verticalScrollBar();
+    d->mScrollBar->setMinimum( scrollBar->minimum() );
+    d->mScrollBar->setMaximum( scrollBar->maximum() );
+    d->mScrollBar->setSingleStep( scrollBar->singleStep() );
+    d->mScrollBar->setPageStep( scrollBar->pageStep() );
+    d->mScrollBar->setValue( scrollBar->value() );
   }
 }
 
 void MultiAgendaView::collectionSelectionChanged()
 {
   kDebug();
-  mPendingChanges = true;
+  d->mPendingChanges = true;
   recreateViews();
 }
 
@@ -567,20 +607,20 @@ bool MultiAgendaView::hasConfigurationDialog() const
 
 void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
 {
-  mCustomColumnSetupUsed = configGroup.readEntry( "UseCustomColumnSetup", false );
-  mCustomNumberOfColumns = configGroup.readEntry( "CustomNumberOfColumns", 2 );
-  mCustomColumnTitles =  configGroup.readEntry( "ColumnTitles", QStringList() ).toVector();
-  if ( mCustomColumnTitles.size() != mCustomNumberOfColumns ) {
-    const int orig = mCustomColumnTitles.size();
-    mCustomColumnTitles.resize( mCustomNumberOfColumns );
-    for ( int i = orig; i < mCustomNumberOfColumns; ++i ) {
-      mCustomColumnTitles[i] = generateColumnLabel( i );
+  d->mCustomColumnSetupUsed = configGroup.readEntry( "UseCustomColumnSetup", false );
+  d->mCustomNumberOfColumns = configGroup.readEntry( "CustomNumberOfColumns", 2 );
+  d->mCustomColumnTitles =  configGroup.readEntry( "ColumnTitles", QStringList() ).toVector();
+  if ( d->mCustomColumnTitles.size() != d->mCustomNumberOfColumns ) {
+    const int orig = d->mCustomColumnTitles.size();
+    d->mCustomColumnTitles.resize( d->mCustomNumberOfColumns );
+    for ( int i = orig; i < d->mCustomNumberOfColumns; ++i ) {
+      d->mCustomColumnTitles[i] = generateColumnLabel( i );
     }
   }
-  QVector<CalendarSupport::CollectionSelectionProxyModel*> oldModels = mCollectionSelectionModels;
-  mCollectionSelectionModels.clear();
-  mCollectionSelectionModels.resize( mCustomNumberOfColumns );
-  for ( int i = 0; i < mCustomNumberOfColumns; ++i ) {
+  QVector<CalendarSupport::CollectionSelectionProxyModel*> oldModels = d->mCollectionSelectionModels;
+  d->mCollectionSelectionModels.clear();
+  d->mCollectionSelectionModels.resize( d->mCustomNumberOfColumns );
+  for ( int i = 0; i < d->mCustomNumberOfColumns; ++i ) {
     const KConfigGroup g = configGroup.config()->group( configGroup.name() +
                                                         "_subView_" +
                                                         QByteArray::number( i ) );
@@ -596,21 +636,21 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
     CalendarSupport::EntityModelStateSaver *saver = new CalendarSupport::EntityModelStateSaver( selection, selection );
     saver->addRole( Qt::CheckStateRole, "CheckState" );
     saver->restoreConfig( g );
-    mCollectionSelectionModels[i] = selection;
+    d->mCollectionSelectionModels[i] = selection;
   }
-  mPendingChanges = true;
+  d->mPendingChanges = true;
   recreateViews();
   qDeleteAll( oldModels );
 }
 
 void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
 {
-  configGroup.writeEntry( "UseCustomColumnSetup", mCustomColumnSetupUsed );
-  configGroup.writeEntry( "CustomNumberOfColumns", mCustomNumberOfColumns );
-  const QStringList titleList = mCustomColumnTitles.toList();
+  configGroup.writeEntry( "UseCustomColumnSetup", d->mCustomColumnSetupUsed );
+  configGroup.writeEntry( "CustomNumberOfColumns", d->mCustomNumberOfColumns );
+  const QStringList titleList = d->mCustomColumnTitles.toList();
   configGroup.writeEntry( "ColumnTitles", titleList );
   int idx = 0;
-  Q_FOREACH ( CalendarSupport::CollectionSelectionProxyModel *i, mCollectionSelectionModels ) {
+  Q_FOREACH ( CalendarSupport::CollectionSelectionProxyModel *i, d->mCollectionSelectionModels ) {
     KConfigGroup g = configGroup.config()->group( configGroup.name() +
                                                   "_subView_" +
                                                   QByteArray::number( idx ) );
@@ -623,44 +663,44 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
 
 void MultiAgendaView::customCollectionsChanged( ConfigDialogInterface *dlg )
 {
-  if ( !mCustomColumnSetupUsed && !dlg->useCustomColumns() ) {
+  if ( !d->mCustomColumnSetupUsed && !dlg->useCustomColumns() ) {
     // Config didn't change, no need to recreate views
     return;
   }
 
-  mCustomColumnSetupUsed = dlg->useCustomColumns();
-  mCustomNumberOfColumns = dlg->numberOfColumns();
+  d->mCustomColumnSetupUsed = dlg->useCustomColumns();
+  d->mCustomNumberOfColumns = dlg->numberOfColumns();
   QVector<CalendarSupport::CollectionSelectionProxyModel*> newModels;
-  newModels.resize( mCustomNumberOfColumns );
-  mCustomColumnTitles.resize( mCustomNumberOfColumns );
-  for ( int i = 0; i < mCustomNumberOfColumns; ++i ) {
+  newModels.resize( d->mCustomNumberOfColumns );
+  d->mCustomColumnTitles.resize( d->mCustomNumberOfColumns );
+  for ( int i = 0; i < d->mCustomNumberOfColumns; ++i ) {
     newModels[i] = dlg->takeSelectionModel( i );
-    mCustomColumnTitles[i] = dlg->columnTitle( i );
+    d->mCustomColumnTitles[i] = dlg->columnTitle( i );
   }
-  mCollectionSelectionModels = newModels;
-  mPendingChanges = true;
+  d->mCollectionSelectionModels = newModels;
+  d->mPendingChanges = true;
   recreateViews();
 }
 
 bool MultiAgendaView::customColumnSetupUsed() const
 {
-  return mCustomColumnSetupUsed;
+  return d->mCustomColumnSetupUsed;
 }
 
 int MultiAgendaView::customNumberOfColumns() const
 {
-  return mCustomNumberOfColumns;
+  return d->mCustomNumberOfColumns;
 }
 
 QVector<CalendarSupport::CollectionSelectionProxyModel*>
 MultiAgendaView::collectionSelectionModels() const
 {
-  return mCollectionSelectionModels;
+  return d->mCollectionSelectionModels;
 }
 
 QVector<QString> MultiAgendaView::customColumnTitles() const
 {
-  return mCustomColumnTitles;
+  return d->mCustomColumnTitles;
 }
 
 #include "multiagendaview.moc"

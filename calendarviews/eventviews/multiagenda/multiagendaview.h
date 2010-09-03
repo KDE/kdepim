@@ -104,15 +104,6 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
      */
     void collectionSelectionChanged();
 
-  private:
-    void addView( const Akonadi::Collection &collection );
-    void addView( CalendarSupport::CollectionSelectionProxyModel *selectionProxy, const QString &title );
-    AgendaView *createView( const QString &title );
-
-    void deleteViews();
-    void setupViews();
-    void resizeScrollView( const QSize &size );
-
   private slots:
     void slotSelectionChanged();
     void slotClearTimeSpanSelection();
@@ -123,21 +114,8 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     void recreateViews();
 
   private:
-    QList<AgendaView*> mAgendaViews;
-    QList<QWidget*> mAgendaWidgets;
-    KHBox *mTopBox;
-    QScrollArea *mScrollArea;
-    TimeLabelsZone *mTimeLabelsZone;
-    QSplitter *mLeftSplitter, *mRightSplitter;
-    QScrollBar *mScrollBar;
-    QWidget *mLeftBottomSpacer, *mRightBottomSpacer;
-    QDate mStartDate, mEndDate;
-    bool mUpdateOnShow;
-    bool mPendingChanges;
-    bool mCustomColumnSetupUsed;
-    QVector<CalendarSupport::CollectionSelectionProxyModel*> mCollectionSelectionModels;
-    QVector<QString> mCustomColumnTitles;
-    int mCustomNumberOfColumns;
+    class Private;
+    Private *const d;
 };
 
 }
