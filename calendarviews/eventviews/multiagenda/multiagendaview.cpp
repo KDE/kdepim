@@ -627,6 +627,11 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
 
 void MultiAgendaView::customCollectionsChanged( ConfigDialogInterface *dlg )
 {
+  if ( !mCustomColumnSetupUsed && !dlg->useCustomColumns() ) {
+    // Config didn't change, no need to recreate views
+    return;
+  }
+
   mCustomColumnSetupUsed = dlg->useCustomColumns();
   mCustomNumberOfColumns = dlg->numberOfColumns();
   QVector<CalendarSupport::CollectionSelectionProxyModel*> newModels;
