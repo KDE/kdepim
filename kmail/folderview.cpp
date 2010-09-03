@@ -1214,7 +1214,7 @@ bool FolderView::event( QEvent *e )
     }
   }
 
-  if ( iconPath.isEmpty() ) 
+  if ( iconPath.isEmpty() )
     iconPath = KIconLoader::global()->iconPath( "folder", -32, false );
 
   tip += QString::fromLatin1(
@@ -1597,7 +1597,7 @@ QString FolderView::currentItemFullPath() const
   fvi = static_cast< FolderViewItem * >( static_cast< QTreeWidgetItem * >( fvi )->parent() );
   while ( fvi )
   {
-    ret.prepend( "/" );
+    ret.prepend( '/' );
     ret.prepend( fvi->labelText() );
     fvi = static_cast< FolderViewItem * >( static_cast< QTreeWidgetItem * >( fvi )->parent() );
   }
