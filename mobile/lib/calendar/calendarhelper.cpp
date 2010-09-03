@@ -212,6 +212,9 @@ void CalendarHelper::registerItems( QObject *obj )
 
 void CalendarHelper::updateDays()
 {
+  QDate today = QDateTime::currentDateTime().date();
+  bool disableCurrentDay = !(m_month == today.month());
+
   for( int i = 0; i < m_days.size(); i++) {
     QObject *item = m_days.at(i);
     QVariant position = item->property("dayPos");
@@ -219,6 +222,12 @@ void CalendarHelper::updateDays()
     // invalid item
     if (!position.isValid()) {
         continue;
+    }
+
+    if ( disableCurrentDay ) {
+        item->setProperty("currentDay", -1);
+    } else {
+        item->setProperty("currentDay", today.day());
     }
 
     item->setProperty("text", dayForPosition(position.toInt()));
