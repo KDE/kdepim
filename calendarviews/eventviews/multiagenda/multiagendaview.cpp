@@ -147,8 +147,6 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   d->mScrollArea = new QScrollArea( this );
   d->mScrollArea->setWidgetResizable( true );
 
-// TODO_EVENTVIEWS
-  //d->mScrollArea->setResizePolicy( Q3ScrollView::Manual );
   d->mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
   // asymetric since the timelabels
@@ -373,7 +371,8 @@ void MultiAgendaView::showDates( const QDate &start, const QDate &end )
   }
 }
 
-void MultiAgendaView::showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date )
+void MultiAgendaView::showIncidences( const Akonadi::Item::List &incidenceList,
+                                      const QDate &date )
 {
   foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     agendaView->showIncidences( incidenceList, date );
@@ -388,7 +387,8 @@ void MultiAgendaView::updateView()
   }
 }
 
-void MultiAgendaView::changeIncidenceDisplay( const Akonadi::Item &incidence, int mode )
+void MultiAgendaView::changeIncidenceDisplay( const Akonadi::Item &incidence,
+                                              int mode )
 {
   foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     agendaView->changeIncidenceDisplay( incidence, mode );
@@ -410,7 +410,8 @@ void MultiAgendaView::slotSelectionChanged()
   }
 }
 
-bool MultiAgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
+bool MultiAgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt,
+                                         bool &allDay ) const
 {
   foreach ( AgendaView *agenda, d->mAgendaViews ) {
     bool valid = agenda->eventDurationHint( startDt, endDt, allDay );
@@ -447,7 +448,12 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
   mAgendaWidgets.append( box );
   box->show();
   mTimeLabelsZone->setAgendaView( av );
-  q->connect( av->splitter(), SIGNAL(splitterMoved(int,int)), q, SLOT(resizeSplitters()) );
+
+  q->connect( mScrollBar, SIGNAL(valueChanged(int)),
+              av->agenda()->verticalScrollBar(), SLOT(setValue(int)) );
+
+  q->connect( av->splitter(), SIGNAL(splitterMoved(int,int)),
+              q, SLOT(resizeSplitters()) );
   q->connect( av, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
               q, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)) );
 
