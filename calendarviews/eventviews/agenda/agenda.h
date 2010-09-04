@@ -91,7 +91,7 @@ class Agenda : public QWidget
     QSize minimumSizeHint() const;
     QSize minimumSize() const;
     int minimumHeight() const;
-    QSizePolicy sizePolicy() const;
+    // QSizePolicy sizePolicy() const;
     int contentsY() const { return -y(); };
     int contentsX() const { return x(); };
     void setContentsPos( int x, int y );
