@@ -353,7 +353,6 @@ class AgendaScrollArea : public QScrollArea
     ~AgendaScrollArea();
 
     Agenda* agenda() const;
-
   private:
     Agenda *mAgenda;
 

@@ -55,6 +55,41 @@
 using namespace KCalCore;
 using namespace EventViews;
 
+
+/**
+   Function for debugging purposes:
+   prints an object's sizeHint()/minimumSizeHint()/policy
+   and it's children's too, recursively
+*/
+/*
+static void printObject( QObject *o, int level = 0 )
+{
+  QMap<int,QString> map;
+  map.insert( 0, "Fixed" );
+  map.insert( 1, "Minimum" );
+  map.insert( 4, "Maximum" );
+  map.insert( 5, "Preferred" );
+  map.insert( 7, "Expanding" );
+  map.insert( 3, "MinimumExpaning" );
+  map.insert( 13, "Ignored" );
+
+  QWidget *w = qobject_cast<QWidget*>( o );
+
+  if ( w ) {
+    qDebug() << QString( level*2, '-' ) << o
+             << w->sizeHint() << "/" << map[w->sizePolicy().verticalPolicy()]
+             << "; minimumSize = " << w->minimumSize()
+             << "; minimumSizeHint = " << w->minimumSizeHint();
+  } else {
+    qDebug() << QString( level*2, '-' ) << o ;
+  }
+
+  foreach( QObject *child, o->children() ) {
+    printObject( child, level + 1 );
+  }
+}
+*/
+
 static QString generateColumnLabel( int c )
 {
   return i18n( "Agenda %1", c + 1 );
@@ -82,6 +117,7 @@ class MultiAgendaView::Private {
     void setupViews();
     void resizeScrollView( const QSize &size );
 
+    MultiAgendaView *q;
     QList<AgendaView*> mAgendaViews;
     QList<QWidget*> mAgendaWidgets;
     KHBox *mTopBox;
@@ -97,9 +133,9 @@ class MultiAgendaView::Private {
     QVector<CalendarSupport::CollectionSelectionProxyModel*> mCollectionSelectionModels;
     QVector<QString> mCustomColumnTitles;
     int mCustomNumberOfColumns;
-    MultiAgendaView *q;
+    QLabel *mLabel;
+    QWidget *mRightDummyWidget;
 };
-
 
 
 MultiAgendaView::MultiAgendaView( QWidget *parent )
@@ -121,9 +157,9 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   d->mLeftSplitter = new QSplitter( Qt::Vertical, topSideBox );
   d->mLeftSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
-  QLabel *label = new QLabel( i18n( "All Day" ), d->mLeftSplitter );
-  label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
-  label->setWordWrap( true );
+  d->mLabel = new QLabel( i18n( "All Day" ), d->mLeftSplitter );
+  d->mLabel->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
+  d->mLabel->setWordWrap( true );
 
   KVBox *sideBox = new KVBox( d->mLeftSplitter );
 
@@ -167,7 +203,7 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   d->mRightSplitter = new QSplitter( Qt::Vertical, topSideBox );
   d->mRightSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
-  new QWidget( d->mRightSplitter );
+  d->mRightDummyWidget = new QWidget( d->mRightSplitter );
   sideBox = new KVBox( d->mRightSplitter );
 
   eiSpacer = new EventIndicator( EventIndicator::Top, sideBox );
@@ -185,7 +221,8 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
 void MultiAgendaView::setCalendar( CalendarSupport::Calendar *cal )
 {
   EventView::setCalendar( cal );
-  Q_FOREACH ( CalendarSupport::CollectionSelectionProxyModel *const i, d->mCollectionSelectionModels ) {
+  Q_FOREACH ( CalendarSupport::CollectionSelectionProxyModel *const i,
+              d->mCollectionSelectionModels ) {
     i->setSourceModel( cal->treeModel() );
   }
   recreateViews();
@@ -459,6 +496,13 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
 
   q->connect( av, SIGNAL(showNewEventPopupSignal()),
               q, SIGNAL(showNewEventPopupSignal()) );
+
+  const QSize minHint = av->allDayAgenda()->scrollArea()->minimumSizeHint();
+
+  if ( minHint.isValid() ) {
+    mLabel->setMinimumHeight( minHint.height() );
+    mRightDummyWidget->setMinimumHeight( minHint.height() );
+  }
 
   return av;
 }
