@@ -2019,6 +2019,11 @@ Agenda *AgendaView::agenda() const
   return d->mAgenda;
 }
 
+Agenda *AgendaView::allDayAgenda() const
+{
+  return d->mAllDayAgenda;
+}
+
 QSplitter *AgendaView::splitter() const
 {
   return d->mSplitterAgenda;

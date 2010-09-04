@@ -266,6 +266,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     friend class TimeLabelsZone;
     friend class MultiAgendaView;
     Agenda *agenda() const;
+    Agenda *allDayAgenda() const;
   private:
     class Private;
     Private *const d;
