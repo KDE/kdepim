@@ -22,6 +22,7 @@ macro(add_messageviewer_unittest _source)
     ${QGPGME_LIBRARIES}
     ${QT_QTTEST_LIBRARY}
     ${QT_QTCORE_LIBRARY}
+    ${QT_QTWEBKIT_LIBRARY}
     ${KDE4_KIO_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
