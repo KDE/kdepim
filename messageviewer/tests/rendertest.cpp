@@ -50,6 +50,7 @@ class RenderTest : public QObject
       QFETCH( QString, mailFileName );
       QFETCH( QString, referenceFileName );
       QFETCH( QString, outFileName );
+      const QString htmlFileName = outFileName + ".html";
 
       // load input mail
       QFile mailFile( mailFileName );
@@ -81,15 +82,27 @@ class RenderTest : public QObject
       QStringList args = QStringList()
         << "--format"
         << "--output"
-        << (outFileName + ".html")
+        << htmlFileName
         << outFileName;
       QCOMPARE( QProcess::execute( "xmllint", args ),  0 );
+
+      // get rid of system dependent or random paths
+      {
+        QFile f( htmlFileName );
+        QVERIFY( f.open( QIODevice::ReadOnly ) );
+        QString content = QString::fromUtf8( f.readAll() );
+        f.close();
+        content.replace( QRegExp( "\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"" ), "\"file:\\1\"" );
+        QVERIFY( f.open( QIODevice::WriteOnly | QIODevice::Truncate ) );
+        f.write( content.toUtf8() );
+        f.close();
+      }
 
       // compare to reference file
       args = QStringList()
         << "-u"
         << referenceFileName
-        << (outFileName + ".html");
+        << htmlFileName;
       QProcess proc;
       proc.setProcessChannelMode( QProcess::ForwardedChannels );
       proc.start( "diff", args );
