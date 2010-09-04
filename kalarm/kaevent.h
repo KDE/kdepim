@@ -76,8 +76,8 @@ class KAEvent
         void               setEmail(uint from, const EmailAddressList& addrs, const QString& subject, const QStringList& attachments)
                                                                             { d->mEventData->setEmail(from, addrs, subject, attachments); }
         void               setResource(AlarmResource* r)                    { d->mResource = r; }
-        void               setAudioFile(const QString& filename, float volume, float fadeVolume, int fadeSeconds)
-                                                                            { d->mEventData->setAudioFile(filename, volume, fadeVolume, fadeSeconds); }
+        void               setAudioFile(const QString& filename, float volume, float fadeVolume, int fadeSeconds, bool allowEmptyFile = false)
+                                                                            { d->mEventData->setAudioFile(filename, volume, fadeVolume, fadeSeconds, allowEmptyFile); }
         void               setTemplate(const QString& name, int afterTime = -1) { d->mEventData->setTemplate(name, afterTime); }
         void               setActions(const QString& pre, const QString& post, bool cancelOnError)
                                                                             { d->mEventData->setActions(pre, post, cancelOnError); }
