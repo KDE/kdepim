@@ -792,6 +792,7 @@ void KAEventData::readAlarm(const Alarm* alarm, AlarmData& data, bool audioMain,
 	data.alarm           = alarm;
 	data.displayingFlags = 0;
 	data.isEmailText     = false;
+	data.speak           = false;
 	data.nextRepeat      = 0;
 	if (alarm->repeatCount())
 	{
