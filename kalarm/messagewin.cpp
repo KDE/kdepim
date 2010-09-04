@@ -1416,6 +1416,8 @@ AudioThread::~AudioThread()
 {
 	kDebug();
 	stop(true);   // stop playing and tidy up (timeout 3 seconds)
+	delete mAudioObject;
+	mAudioObject = 0;
 }
 
 /******************************************************************************
@@ -1457,7 +1459,7 @@ void AudioThread::run()
 		kError() << "Open failure:" << audioFile;
 		return;
 	}
-	mAudioObject = new Phonon::MediaObject(this);
+	mAudioObject = new Phonon::MediaObject();
 	mAudioObject->setCurrentSource(source);
 	mAudioObject->setTransitionTime(100);   // workaround to prevent clipping of end of files in Xine backend
 	Phonon::AudioOutput* output = new Phonon::AudioOutput(Phonon::NotificationCategory, mAudioObject);
