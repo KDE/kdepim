@@ -1953,7 +1953,6 @@ void Agenda::deleteItemsToDelete()
 */
 void Agenda::resizeEvent ( QResizeEvent *ev )
 {
-
   QSize newSize( ev->size() );
 
   if ( d->mAllDayMode ) {
@@ -2237,14 +2236,17 @@ QScrollArea* Agenda::scrollArea() const
   return d->mScrollArea;
 }
 
-AgendaScrollArea::AgendaScrollArea( bool isAllDay, EventView *eventView, QWidget *parent )
+AgendaScrollArea::AgendaScrollArea( bool isAllDay, EventView *eventView,
+                                    QWidget *parent )
   : QScrollArea( parent )
 {
   if ( isAllDay ) {
     mAgenda = new Agenda( eventView, this, 1 );
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    verticalScrollBar()->setFixedSize( 0, 0 );
   } else {
-    mAgenda = new Agenda( eventView, this, 1, 96, eventView->preferences()->hourSize() );
+    mAgenda = new Agenda( eventView, this, 1, 96,
+                          eventView->preferences()->hourSize() );
   }
 
   setWidgetResizable( true );
