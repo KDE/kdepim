@@ -1437,6 +1437,9 @@ KAEvent::List AlarmCalendar::atLoginAlarms() const
 */
 void AlarmCalendar::findEarliestAlarm(AlarmResource* resource)
 {
+	EarliestMap::Iterator eit = mEarliestAlarm.find(resource);
+	if (eit != mEarliestAlarm.end())
+		eit.value() = 0;
 	if (!mCalendar  ||  mCalType != RESOURCES
 	||  !resource  ||  resource->alarmType() != AlarmResource::ACTIVE)
 		return;
