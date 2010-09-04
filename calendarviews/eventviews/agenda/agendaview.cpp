@@ -150,6 +150,7 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
         mLayoutBottomDayLabels( 0 ),
         mBottomDayLabels( 0 ),
         mBottomDayLabelsFrame( 0 ),
+        mTimeBarHeaderFrame( 0 ),
         mAllDayAgenda( 0 ),
         mAgenda( 0 ),
         mTimeLabelsZone( 0 ),
@@ -205,7 +206,7 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
     //CollectionSelection *mCollectionSelection;
     Akonadi::Collection::Id mCollectionId;
 
-    bool mIsSideBySide;
+    const bool mIsSideBySide;
 
     QWidget *mDummyAllDayLeft;
     bool mUpdateAllDayAgenda;
@@ -333,7 +334,8 @@ void AgendaView::init()
   d->mAllDayFrame->setSpacing( 2 );
 
   // Alignment and description widgets
-  d->mTimeBarHeaderFrame = new KHBox( d->mAllDayFrame );
+  if ( !d->mIsSideBySide )
+    d->mTimeBarHeaderFrame = new KHBox( d->mAllDayFrame );
 
   // The widget itself
   d->mDummyAllDayLeft = new QWidget( d->mAllDayFrame );
@@ -346,9 +348,6 @@ void AgendaView::init()
   d->mAgendaLayout->setMargin( 0 );
   d->mAgendaLayout->setHorizontalSpacing( 2 );
   d->mAgendaLayout->setVerticalSpacing( 0 );
-  if ( d->mIsSideBySide ) {
-    d->mTimeBarHeaderFrame->hide();
-  }
 
   // Create event indicator bars
   d->mEventIndicatorTop = new EventIndicator( EventIndicator::Top, agendaFrame );
@@ -2050,7 +2049,7 @@ void AgendaView::alignAgendas()
 {
   // resize dummy widget so the allday agenda lines up with the hourly agenda
   d->mDummyAllDayLeft->setFixedWidth( d->mTimeLabelsZone->width() -
-                                      d->mTimeBarHeaderFrame->width() );
+                                      d->mIsSideBySide ? 0 : d->mTimeBarHeaderFrame->width() );
 
   createDayLabels( true );
 }
