@@ -1,7 +1,7 @@
 /*
  *  templatedlg.cpp  -  dialog to create, edit and delete alarm templates
  *  Program:  kalarm
- *  Copyright © 2004-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2004-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ TemplateDlg::TemplateDlg(QWidget* parent)
 	QWidget* topWidget = new QWidget(this);
 	setMainWidget(topWidget);
 	setButtons(Close);
-	setDefaultButton(Ok);
+	setDefaultButton(Close);
 	setModal(false);
 	setCaption(i18nc("@title:window", "Alarm Templates"));
 	showButtonSeparator(true);
