@@ -8,35 +8,30 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 
-########### htmlquotecolorertest ###############
-
-set(htmlquotecolorertest_SRCS htmlquotecolorertest.cpp ../htmlquotecolorer.cpp)
-kde4_add_unit_test(htmlquotecolorertest TESTNAME messageviewer-quotecolorertest ${htmlquotecolorertest_SRCS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
-target_link_libraries(htmlquotecolorertest
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${QT_QTWEBKIT_LIBRARY}
-  ${KDE4_KDECORE_LIBS}
-  messageviewer
-)
-
-########### objecttreeparsertest ###############
-
-set(objecttreeparsertest_SRCS objecttreeparsertest.cpp ${CMAKE_SOURCE_DIR}/messagecore/tests/util.cpp )
 add_definitions(-DKMAIL_UNITTESTS=YES)
-kde4_add_unit_test(objecttreeparsertest TESTNAME messageviewer-objecttreeparsertest ${objecttreeparsertest_SRCS})
-target_link_libraries(objecttreeparsertest
-  messageviewer
-  kleo
-  ${QGPGME_LIBRARIES}
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTCORE_LIBRARY}
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-)
+
+# convenience macro to add qtest unit tests
+macro(add_messageviewer_unittest _source)
+  set(_test ${_source})
+  get_filename_component(_name ${_source} NAME_WE)
+  kde4_add_unit_test(${_name} TESTNAME messageviewer-${_name} ${_test} ${CMAKE_SOURCE_DIR}/messagecore/tests/util.cpp)
+  target_link_libraries( ${_name}
+    messageviewer
+    kleo
+    ${QGPGME_LIBRARIES}
+    ${QT_QTTEST_LIBRARY}
+    ${QT_QTCORE_LIBRARY}
+    ${KDE4_KIO_LIBS}
+    ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS}
+  )
+endmacro ()
+
+add_messageviewer_unittest( htmlquotecolorertest.cpp )
+add_messageviewer_unittest( objecttreeparsertest.cpp )
+add_messageviewer_unittest( rendertest.cpp )
+
 
 ########### viewertest_gui ###############
 
