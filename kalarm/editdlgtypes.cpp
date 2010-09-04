@@ -1467,6 +1467,8 @@ void EditAudioAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
 {
 	// File name edit box
 	mSoundConfig = new SoundWidget(false, true, parent);
+	if (isTemplate())
+		mSoundConfig->setAllowEmptyFile();
 	connect(mSoundConfig, SIGNAL(changed()), SLOT(contentsChanged()));
 	frameLayout->addWidget(mSoundConfig);
 
@@ -1566,7 +1568,9 @@ void EditAudioAlarmDlg::type_setEvent(KAEvent& event, const KDateTime& dt, const
 	float volume, fadeVolume;
 	int   fadeSecs;
 	mSoundConfig->getVolume(volume, fadeVolume, fadeSecs);
-	event.setAudioFile(mSoundConfig->file(false).prettyUrl(), volume, fadeVolume, fadeSecs);
+	KUrl url;
+	mSoundConfig->file(url, false);
+	event.setAudioFile(url.prettyUrl(), volume, fadeVolume, fadeSecs);
 }
 
 /******************************************************************************
@@ -1583,8 +1587,14 @@ int EditAudioAlarmDlg::getAlarmFlags() const
 */
 bool EditAudioAlarmDlg::checkText(QString& result, bool showErrorMessage) const
 {
-	result = mSoundConfig->file(showErrorMessage).pathOrUrl();
-	return !result.isEmpty();
+	KUrl url;
+	if (!mSoundConfig->file(url, showErrorMessage))
+	{
+		result.clear();
+		return false;
+	}
+	result = url.pathOrUrl();
+	return true;
 }
 
 
