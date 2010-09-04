@@ -1,0 +1,7 @@
+[Misc]
+Name=TNEF
+Comment=A bodypart formatter plugin for TNEF attachments
+
+[Plugin]
+Type=application/ms-tnef
+X-KDE-Library=messageviewer_bodypartformatter_application_mstnef
