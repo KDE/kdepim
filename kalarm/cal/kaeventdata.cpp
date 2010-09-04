@@ -1055,10 +1055,10 @@ void KAEventData::setEmail(uint from, const EmailAddressList& addresses, const Q
 	mEmailAttachments  = attachments;
 }
 
-void KAEventData::setAudioFile(const QString& filename, float volume, float fadeVolume, int fadeSeconds)
+void KAEventData::setAudioFile(const QString& filename, float volume, float fadeVolume, int fadeSeconds, bool allowEmptyFile)
 {
 	mAudioFile = filename;
-	mSoundVolume = filename.isEmpty() ? -1 : volume;
+	mSoundVolume = (!allowEmptyFile && filename.isEmpty()) ? -1 : volume;
 	if (mSoundVolume >= 0)
 	{
 		mFadeVolume  = (fadeSeconds > 0) ? fadeVolume : -1;
@@ -1588,7 +1588,7 @@ Alarm* KAEventData::initKCalAlarm(Event* event, int startOffsetSecs, const QStri
 void KAEventData::setAudioAlarm(Alarm* alarm) const
 {
 	alarm->setAudioAlarm(mAudioFile);  // empty for a beep or for speaking
-	if (!mAudioFile.isEmpty()  &&  mSoundVolume >= 0)
+	if (mSoundVolume >= 0)
 		alarm->setCustomProperty(KCalendar::APPNAME, VOLUME_PROPERTY,
 		              QString::fromLatin1("%1;%2;%3").arg(QString::number(mSoundVolume, 'f', 2))
 		                                             .arg(QString::number(mFadeVolume, 'f', 2))

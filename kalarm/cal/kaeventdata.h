@@ -278,7 +278,7 @@ public:
 		void               set(const KDateTime&, const QString& message, const QColor& bg, const QColor& fg, const QFont&, Action, int lateCancel, int flags, bool changesPending = false);
 		void               setEmail(uint from, const EmailAddressList&, const QString& subject, const QStringList& attachments);
 		void               setResource(AlarmResource* r)                    { mResource = r; }
-		void               setAudioFile(const QString& filename, float volume, float fadeVolume, int fadeSeconds);
+		void               setAudioFile(const QString& filename, float volume, float fadeVolume, int fadeSeconds, bool allowEmptyFile = false);
 		void               setTemplate(const QString& name, int afterTime = -1);
 		void               setActions(const QString& pre, const QString& post, bool cancelOnError)
 		                                                                    { mPreAction = pre;  mPostAction = post;  mCancelOnPreActErr = cancelOnError;  mUpdated = true; }
@@ -380,10 +380,10 @@ public:
 		bool               workTimeOnly() const           { return mWorkTimeOnly; }
 		bool               speak() const                  { return (mActionType == T_MESSAGE  ||  (mActionType == T_COMMAND && mCommandDisplay)) && mSpeak; }
 		const QString&     audioFile() const              { return mAudioFile; }
-		float              soundVolume() const            { return !mAudioFile.isEmpty() ? mSoundVolume : -1; }
-		float              fadeVolume() const             { return !mAudioFile.isEmpty() && mSoundVolume >= 0 && mFadeSeconds ? mFadeVolume : -1; }
-		int                fadeSeconds() const            { return !mAudioFile.isEmpty() && mSoundVolume >= 0 && mFadeVolume >= 0 ? mFadeSeconds : 0; }
-		bool               repeatSound() const            { return mRepeatSound  &&  !mAudioFile.isEmpty(); }
+		float              soundVolume() const            { return mSoundVolume; }
+		float              fadeVolume() const             { return mSoundVolume >= 0 && mFadeSeconds ? mFadeVolume : -1; }
+		int                fadeSeconds() const            { return mSoundVolume >= 0 && mFadeVolume >= 0 ? mFadeSeconds : 0; }
+		bool               repeatSound() const            { return mRepeatSound; }
 		const QString&     preAction() const              { return mPreAction; }
 		const QString&     postAction() const             { return mPostAction; }
 		bool               cancelOnPreActionError() const { return mCancelOnPreActErr; }
