@@ -936,6 +936,10 @@ void AgendaView::createTimeBarHeaders()
 
 void AgendaView::updateTimeBarWidth()
 {
+  if ( d->mIsSideBySide ) {
+    return;
+  }
+
   createTimeBarHeaders();
 
   QFontMetrics fm( font() );
