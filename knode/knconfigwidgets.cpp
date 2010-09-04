@@ -228,7 +228,11 @@ void KNode::IdentityWidget::save()
   d_ata->e_mail=e_mail->text();
   d_ata->r_eplyTo=r_eplyTo->text();
   d_ata->m_ailCopiesTo=m_ailCopiesTo->text();
-  d_ata->s_igningKey = s_igningKey->keyIDs().first();
+  if ( s_igningKey->keyIDs().isEmpty() ) {
+    d_ata->s_igningKey.clear();
+  } else {
+    d_ata->s_igningKey = s_igningKey->keyIDs().first();
+  }
   d_ata->u_seSigFile=s_igFile->isChecked();
   d_ata->u_seSigGenerator=s_igGenerator->isChecked();
   d_ata->s_igPath=c_ompletion->replacedPath(s_ig->text());
