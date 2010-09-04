@@ -84,6 +84,7 @@ namespace MessageViewer {
   }
 
   void FileHtmlWriter::flush() {
+    mStream.flush();
     mFile.flush();
   }
 

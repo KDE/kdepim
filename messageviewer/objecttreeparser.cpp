@@ -994,9 +994,9 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str )
       if ( ( hrefPos == -1 ) || ( pos - hrefPos > 7 ) ) {
 
         // HTML messages created by KMail itself for now contain the following:
-        // <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+        // <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
         // Make sure not to show an external references warning for this string
-        int dtdPos = str.indexOf( "http://www.w3.org/TR/REC-html40/strict.dtd", pos + 1 );
+        int dtdPos = str.indexOf( "http://www.w3.org/TR/html4/loose.dtd", pos + 1 );
         if ( dtdPos != ( pos + 1 ) )
           return true;
       }
@@ -1056,7 +1056,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
                                   "sender of this message then you can load the external "
                                   "references for this message "
                                   "<a href=\"kmail:loadExternal\">by clicking here</a>.") );
-        htmlWriter()->queue( "</div><br><br>" );
+        htmlWriter()->queue( "</div><br/><br/>" );
       }
     } else {
       htmlWriter()->queue( "<div class=\"htmlWarn\">\n" );
@@ -1066,7 +1066,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
                                 "message then you can activate formatted "
                                 "HTML display for this message "
                                 "<a href=\"kmail:showHTML\">by clicking here</a>.") );
-      htmlWriter()->queue( "</div><br><br>" );
+      htmlWriter()->queue( "</div><br/><br/>" );
     }
     // Make sure the body is relative, so that nothing is painted over above "Note: ..."
     // if a malicious message uses absolute positioning. #137643
@@ -1240,7 +1240,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
     else
       htmlStr += label;
     if ( !comment.isEmpty() )
-      htmlStr += "<br>" + comment;
+      htmlStr += "<br/>" + comment;
     htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
 
     htmlWriter()->queue( htmlStr );
@@ -1285,7 +1285,7 @@ bool ObjectTreeParser::processToltecMail( KMime::Content *node )
     return false;
 
   htmlWriter()->queue( GlobalSettings::self()->toltecReplacementText() );
-  htmlWriter()->queue( "<br><br><a href=\"kmail:showRawToltecMail\">" +
+  htmlWriter()->queue( "<br/><br/><a href=\"kmail:showRawToltecMail\">" +
                        i18n( "Show Raw Message" ) + "</a>" );
   return true;
 }
@@ -1750,20 +1750,20 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
       htmlWriter()->queue( i18n( "Sorry, no certificates were found in this message." ) );
       return true;
     }
-    QString comment = "<b>" + i18n( "Certificate import status:" ) + "</b><br>&nbsp;<br>";
+    QString comment = "<b>" + i18n( "Certificate import status:" ) + "</b><br/>&nbsp;<br/>";
     if ( nImp )
       comment += i18np( "1 new certificate was imported.",
-                        "%1 new certificates were imported.", nImp ) + "<br>";
+                        "%1 new certificates were imported.", nImp ) + "<br/>";
     if ( nUnc )
       comment += i18np( "1 certificate was unchanged.",
-                        "%1 certificates were unchanged.", nUnc ) + "<br>";
+                        "%1 certificates were unchanged.", nUnc ) + "<br/>";
     if ( nSKImp )
       comment += i18np( "1 new secret key was imported.",
-                        "%1 new secret keys were imported.", nSKImp ) + "<br>";
+                        "%1 new secret keys were imported.", nSKImp ) + "<br/>";
     if ( nSKUnc )
       comment += i18np( "1 secret key was unchanged.",
-                        "%1 secret keys were unchanged.", nSKUnc ) + "<br>";
-    comment += "&nbsp;<br>";
+                        "%1 secret keys were unchanged.", nSKUnc ) + "<br/>";
+    comment += "&nbsp;<br/>";
     htmlWriter()->queue( comment );
     if ( !nImp && !nSKImp ) {
       htmlWriter()->queue( "<hr>" );
@@ -1774,7 +1774,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
       htmlWriter()->queue( i18n( "Sorry, no details on certificate import available." ) + "<hr>" );
       return true;
     }
-    htmlWriter()->queue( "<b>" + i18n( "Certificate import details:" ) + "</b><br>" );
+    htmlWriter()->queue( "<b>" + i18n( "Certificate import details:" ) + "</b><br/>" );
     for ( std::vector<GpgME::Import>::const_iterator it = imports.begin() ; it != imports.end() ; ++it ) {
       if ( (*it).error() ) {
         htmlWriter()->queue( i18nc( "Certificate import failed.", "Failed: %1 (%2)", (*it).fingerprint(),
@@ -1786,7 +1786,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
           htmlWriter()->queue( i18n( "New or changed: %1", (*it).fingerprint() ) );
         }
       }
-      htmlWriter()->queue( "<br>" );
+      htmlWriter()->queue( "<br/>" );
     }
 
     htmlWriter()->queue( "<hr>" );
@@ -2061,7 +2061,7 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, Pr
     else
       htmlStr += label;
     if ( !comment.isEmpty() )
-      htmlStr += "<br>" + comment;
+      htmlStr += "<br/>" + comment;
     htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
     htmlWriter()->queue( htmlStr );
   }
@@ -2082,8 +2082,8 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, Pr
                                                          KIconLoader::Desktop, att->name() );
 
     htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"file:///" +
-                          iconName + "\" border=\"0\" style=\"max-width: 100%\">" + label +
-                          "</a></div><br>" );
+                          iconName + "\" border=\"0\" style=\"max-width: 100%\"/>" + label +
+                          "</a></div><br/>" );
   }
 
   if ( !showOnlyOneMimePart() )
@@ -2139,11 +2139,11 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   if ( inlineImage ) {
     // show the filename of the image below the embedded image
     htmlWriter()->queue( "<div><a href=\"" + href + "\">"
-                         "<img src=\"file:///" + fileName + "\" border=\"0\" style=\"max-width: 100%\"></a>"
+                         "<img src=\"file:///" + fileName + "\" border=\"0\" style=\"max-width: 100%\"/></a>"
                           "</div>"
                           "<div><a href=\"" + href + "\">" + label + "</a>"
                           "</div>"
-                          "<div>" + comment + "</div><br>" );
+                          "<div>" + comment + "</div><br/>" );
   } else {
     // show the filename next to the image
     iconName = mNodeHelper->iconName( msgPart );
@@ -2152,9 +2152,9 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
       iconName = mNodeHelper->iconName( msgPart );
     }
     htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"file:///" +
-                          iconName + "\" border=\"0\" style=\"max-width: 100%\" alt=\"\">" + label +
+                          iconName + "\" border=\"0\" style=\"max-width: 100%\" alt=\"\"/>" + label +
                           "</a></div>"
-                          "<div>" + comment + "</div><br>" );
+                          "<div>" + comment + "</div><br/>" );
   }
 }
 
@@ -3177,7 +3177,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
       }
       else
       {
-        htmlStr += "<br>";
+        htmlStr += "<br/>";
         // after an empty line, always start a new paragraph
         startNewPara = true;
       }
