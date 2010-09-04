@@ -42,6 +42,7 @@ namespace KMime {
 }
 
 namespace MessageViewer {
+class NodeHelper;
 namespace Interface {
 
 /*FIXME(Andras) review, port
@@ -176,6 +177,12 @@ namespace Interface {
      * topLevelContent() 
      */
     virtual KMime::Content* topLevelContent() const = 0;
+
+    /**
+     * Ok, this is ugly, exposing the node helper here, but there is too much useful stuff in there
+     * for real-world plugins. Still, there should be a nicer way for this.
+     */
+    virtual MessageViewer::NodeHelper* nodeHelper() const = 0;
   };
 
 } // namespace Interface

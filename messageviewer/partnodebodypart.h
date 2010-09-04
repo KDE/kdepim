@@ -72,6 +72,7 @@ public:
   void setDefaultDisplay( BodyPart::Display );
   KMime::Content* content() const { return mContent; }
   KMime::Content* topLevelContent() const { return mTopLevelContent; }
+  NodeHelper* nodeHelper() const { return mNodeHelper; }
 
 private:
   KMime::Content *mTopLevelContent;

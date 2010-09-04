@@ -69,6 +69,20 @@ target_link_libraries(messageviewer_bodypartformatter_text_xdiff  ${KDE4_KDECORE
 install(TARGETS messageviewer_bodypartformatter_text_xdiff  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
+########### next target ###############
+
+kde4_add_plugin(messageviewer_bodypartformatter_application_mstnef application_ms-tnef.cpp)
+target_link_libraries(messageviewer_bodypartformatter_application_mstnef
+  ${KDE4_KDECORE_LIBS}
+  ${QT_QTGUI_LIBRARY}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_KTNEF_LIBS}
+  messagecore
+  messageviewer
+)
+install(TARGETS messageviewer_bodypartformatter_application_mstnef DESTINATION ${PLUGIN_INSTALL_DIR})
+
+
 ########### install files ###############
 
-install( FILES text_vcard.desktop text_calendar.desktop text_xdiff.desktop  DESTINATION ${DATA_INSTALL_DIR}/messageviewer/plugins/bodypartformatter)
+install( FILES text_vcard.desktop text_calendar.desktop text_xdiff.desktop application_ms-tnef.desktop DESTINATION ${DATA_INSTALL_DIR}/messageviewer/plugins/bodypartformatter)

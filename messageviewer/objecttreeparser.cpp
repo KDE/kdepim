@@ -78,9 +78,6 @@
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 #include <gpgme.h>
-#include <ktnef/ktnefparser.h>
-#include <ktnef/ktnefmessage.h>
-#include <ktnef/ktnefattach.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_util.h>
 
@@ -2025,70 +2022,6 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   if ( htmlWriter() )
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
   mNodeHelper->setPartMetaData( curNode, messagePart );
-  return true;
-}
-
-bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, ProcessResult &result )
-{
-  Q_UNUSED( result );
-  if ( !htmlWriter() )
-    return false;
-
-  const QString fileName = mNodeHelper->writeNodeToTempFile( node );
-  KTnef::KTNEFParser parser;
-  if ( !parser.openFile( fileName ) || !parser.message()) {
-    kDebug() << "Could not parse" << fileName;
-    return false;
-  }
-
-  QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
-  if ( tnefatts.isEmpty() ) {
-    kDebug() << "No attachments found in" << fileName;
-    return false;
-  }
-
-  if ( !showOnlyOneMimePart() ) {
-    QString label = NodeHelper::fileName( node );
-    label = StringUtil::quoteHtmlChars( label, true );
-    const QString comment = StringUtil::quoteHtmlChars( node->contentDescription()->asUnicodeString(), true );
-    const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
-
-    QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
-                "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
-    if ( !fileName.isEmpty() )
-    htmlStr += "<a href=\"" + mNodeHelper->asHREF( node, "body" ) + "\">"
-                + label + "</a>";
-    else
-      htmlStr += label;
-    if ( !comment.isEmpty() )
-      htmlStr += "<br/>" + comment;
-    htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
-    htmlWriter()->queue( htmlStr );
-  }
-
-  for ( int i = 0; i < tnefatts.count(); ++i ) {
-    KTnef::KTNEFAttach *att = tnefatts.at( i );
-    QString label = att->displayName();
-    if( label.isEmpty() )
-      label = att->name();
-    label = StringUtil::quoteHtmlChars( label, true );
-
-    QString dir = mNodeHelper->createTempDir( "ktnef-" + QString::number( i ) );
-    parser.extractFileTo( att->name(), dir );
-    mNodeHelper->addTempFile( dir + QDir::separator() + att->name() );
-    QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
-
-    const QString iconName = Util::fileNameForMimetype( att->mimeTag(),
-                                                         KIconLoader::Desktop, att->name() );
-
-    htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"file:///" +
-                          iconName + "\" border=\"0\" style=\"max-width: 100%\"/>" + label +
-                          "</a></div><br/>" );
-  }
-
-  if ( !showOnlyOneMimePart() )
-    htmlWriter()->queue( "</td></tr></table>" );
-
   return true;
 }
 

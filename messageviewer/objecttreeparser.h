@@ -447,7 +447,6 @@ public:// (during refactoring)
   bool processApplicationOctetStreamSubtype( KMime::Content * node, ProcessResult & result );
   bool processApplicationPkcs7MimeSubtype( KMime::Content * node, ProcessResult & result );
   bool processApplicationChiasmusTextSubtype( KMime::Content * node, ProcessResult & result );
-  bool processApplicationMsTnefSubtype( KMime::Content *node, ProcessResult &result );
 
   bool decryptChiasmus( const QByteArray& data, QByteArray& bodyDecoded, QString& errorText );
   void writeBodyString( const QByteArray & bodyString,

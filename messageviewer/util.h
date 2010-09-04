@@ -109,7 +109,7 @@ namespace Util {
      *                              Example: "test.zip"
      * @return the full file name of the icon file
      */
-    QString fileNameForMimetype( const QString &mimeType, int iconSize,
+    QString MESSAGEVIEWER_EXPORT fileNameForMimetype( const QString &mimeType, int iconSize,
                                  const QString &fallbackFileName1 = QString(),
                                  const QString &fallbackFileName2 = QString() );
 
