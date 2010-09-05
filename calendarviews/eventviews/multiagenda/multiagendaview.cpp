@@ -476,7 +476,9 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
   QLabel *l = new QLabel( title );
   layout->addWidget( l );
   l->setAlignment( Qt::AlignVCenter | Qt::AlignHCenter );
-  AgendaView *av = new AgendaView( true, q );
+  AgendaView *av = new AgendaView( q->startDateTime().date(),
+                                   q->endDateTime().date(),
+                                   true, q );
   layout->addWidget( av );
   av->setCalendar( q->calendar() );
   av->setIncidenceChanger( q->changer() );

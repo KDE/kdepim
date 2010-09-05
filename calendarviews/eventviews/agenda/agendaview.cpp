@@ -215,14 +215,40 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
     CalendarDecoration::Decoration *loadCalendarDecoration( const QString &name );
     void clearView();
     void setChanges( EventView::Changes changes,
-                     const KCalCore::Incidence::Ptr &incidence = KCalCore::Incidence::Ptr() );
+                     const KCalCore::Incidence::Ptr &incidence =
+                                    KCalCore::Incidence::Ptr() );
+
+    /**
+        Returns a list of consecutive dates, starting with @p start and ending
+        with @p end. If either start or end are invalid, a list with
+        QDate::currentDate() is returned */
+    static QList<QDate> generateDateList( const QDate &start, const QDate &end );
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
     void calendarIncidenceAdded( const Akonadi::Item &incidence );
     void calendarIncidenceChanged( const Akonadi::Item &incidence );
     void calendarIncidenceDeleted( const Akonadi::Item &incidence );
-
 };
+
+/** static */
+QList<QDate> AgendaView::Private::generateDateList( const QDate &start,
+                                                    const QDate &end )
+{
+  QList<QDate> list;
+
+  if ( start.isValid() && end.isValid() && end >= start &&
+       start.daysTo( end ) < AgendaView::MAX_DAY_COUNT ) {
+    QDate date = start;
+    while ( date <= end ) {
+      list.append( date );
+      date = date.addDays( 1 );
+    }
+  } else {
+    list.append( QDate::currentDate() );
+  }
+
+  return list;
+}
 
 void AgendaView::Private::calendarIncidenceAdded( const Akonadi::Item &incidence )
 {
@@ -296,26 +322,30 @@ void AgendaView::Private::clearView()
 
 ////////////////////////////////////////////////////////////////////////////
 
-AgendaView::AgendaView( bool isSideBySide,
+AgendaView::AgendaView( const QDate &start,
+                        const QDate &end,
+                        bool isSideBySide,
                         QWidget *parent )
   : EventView( parent ), d( new Private( this, isSideBySide ) )
 {
-  init();
+  init( start, end );
 }
 
 
 AgendaView::AgendaView( const PrefsPtr &prefs,
+                        const QDate &start,
+                        const QDate &end,
                         bool isSideBySide,
                         QWidget *parent )
   : EventView( parent ), d( new Private( this, isSideBySide ) )
 {
   setPreferences( prefs );
-  init();
+  init( start, end );
 }
 
-void AgendaView::init()
+void AgendaView::init( const QDate &start, const QDate &end )
 {
-  d->mSelectedDates.append( QDate::currentDate() );
+  d->mSelectedDates = Private::generateDateList( start, end );
 
   d->mGridLayout = new QGridLayout( this );
   d->mGridLayout->setMargin( 0 );
@@ -1325,18 +1355,13 @@ void AgendaView::showDates( const QDate &start, const QDate &end )
     return;
   }
 
-  if ( !start.isValid() || !end.isValid() || start > end || start.daysTo( end ) > MAX_DAY_COUNT ) {
+  if ( !start.isValid() || !end.isValid() || start > end ||
+       start.daysTo( end ) > MAX_DAY_COUNT ) {
     kWarning() << "got bizare parameters: " << start << end << " - aborting here";
     return;
   }
 
-  d->mSelectedDates.clear();
-
-  QDate date = start;
-  while ( date <= end ) {
-    d->mSelectedDates.append( date );
-    date = date.addDays( 1 );
-  }
+  d->mSelectedDates = d->generateDateList( start, end );
 
   // and update the view
   setChanges( changes() | DatesChanged );

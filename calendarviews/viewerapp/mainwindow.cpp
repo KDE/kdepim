@@ -72,8 +72,11 @@ void MainWindow::addView( const QString &viewName )
 {
   EventView *eventView = 0;
 
+  const KDateTime start = KDateTime::currentLocalDateTime().addDays( -1 );
+  const KDateTime end = KDateTime::currentLocalDateTime().addDays( 1 );
+
   if ( viewName == QLatin1String( "agenda" ) ) {
-    eventView = new AgendaView( false, this );
+    eventView = new AgendaView( start.date(), end.date(), false, this );
   } else if ( viewName == QLatin1String( "multiagenda" ) ) {
     eventView = new MultiAgendaView( this );
   }
@@ -82,8 +85,8 @@ void MainWindow::addView( const QString &viewName )
     eventView->setPreferences( *mViewPreferences );
     eventView->setCalendar( mCalendar );
     eventView->setIncidenceChanger( mIncidenceChanger );
-    eventView->setDateRange( KDateTime::currentLocalDateTime().addDays( -1 ),
-                             KDateTime::currentLocalDateTime().addDays( 1 ) );
+    eventView->setDateRange( start, end );
+
     eventView->updateConfig();
     mUi.tabWidget->addTab( eventView, viewName );
   } else {

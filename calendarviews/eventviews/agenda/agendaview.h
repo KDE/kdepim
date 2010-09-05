@@ -97,10 +97,14 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
   Q_OBJECT
   public:
     explicit AgendaView( const PrefsPtr &preferences,
+                         const QDate &start,
+                         const QDate &end,
                          bool isSideBySide = false,
                          QWidget *parent = 0 );
 
-    explicit AgendaView( bool isSideBySide = false,
+    explicit AgendaView( const QDate &start,
+                         const QDate &end,
+                         bool isSideBySide = false,
                          QWidget *parent = 0 );
 
     virtual ~AgendaView();
@@ -247,7 +251,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void alignAgendas();
 
   private:
-    void init();
+    void init( const QDate &start, const QDate &end );
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
     void displayIncidence( const Akonadi::Item &incidence, bool createSelected );
