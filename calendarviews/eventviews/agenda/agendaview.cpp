@@ -954,8 +954,6 @@ void AgendaView::updateTimeBarWidth()
 
   const int timeBarWidth = ( width + 1 ) * d->mTimeBarHeaders.size();
 
-  kDebug() << "DEBUG calculated width is " << width << " and timeBarWidth is " << timeBarWidth;
-
   d->mTimeBarHeaderFrame->setFixedWidth( timeBarWidth );
   d->mTimeLabelsZone->setFixedWidth( timeBarWidth );
   d->mDummyAllDayLeft->setFixedWidth( 0 );
