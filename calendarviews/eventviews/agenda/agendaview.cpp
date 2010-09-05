@@ -64,6 +64,10 @@
 
 using namespace EventViews;
 
+enum {
+  SPACING = 2
+};
+
 class EventIndicator::Private
 {
   EventIndicator *const q;
@@ -499,11 +503,11 @@ void AgendaView::init( const QDate &start, const QDate &end )
 
   /* Create day name labels for agenda columns */
   d->mTopDayLabelsFrame = new KHBox( d->mSplitterAgenda );
-  d->mTopDayLabelsFrame->setSpacing( 2 );
+  d->mTopDayLabelsFrame->setSpacing( SPACING );
 
   /* Create all-day agenda widget */
   d->mAllDayFrame = new KHBox( d->mSplitterAgenda );
-  d->mAllDayFrame->setSpacing( 2 );
+  d->mAllDayFrame->setSpacing( SPACING );
 
   // Alignment and description widgets
   if ( !d->mIsSideBySide )
@@ -567,7 +571,7 @@ void AgendaView::init( const QDate &start, const QDate &end )
 
   /* Create a frame at the bottom which may be used by decorations */
   d->mBottomDayLabelsFrame = new KHBox( d->mSplitterAgenda );
-  d->mBottomDayLabelsFrame->setSpacing( 2 );
+  d->mBottomDayLabelsFrame->setSpacing( SPACING );
 
   if ( !d->mIsSideBySide ) {
     /* Make the all-day and normal agendas line up with each other */
@@ -1137,9 +1141,9 @@ void AgendaView::updateTimeBarWidth()
 
   width = width + fm.width( QLatin1Char( '/' ) );
 
-  const int timeBarWidth = ( width + 1 ) * d->mTimeBarHeaders.size();
+  const int timeBarWidth = width * d->mTimeBarHeaders.count();
 
-  d->mTimeBarHeaderFrame->setFixedWidth( timeBarWidth );
+  d->mTimeBarHeaderFrame->setFixedWidth( timeBarWidth - SPACING );
   d->mTimeLabelsZone->setFixedWidth( timeBarWidth );
   d->mDummyAllDayLeft->setFixedWidth( 0 );
 }
@@ -2099,8 +2103,8 @@ bool AgendaView::filterByCollectionSelection( const Akonadi::Item &incidence )
 
 void AgendaView::alignAgendas()
 {
-  // resize dummy widget so the allday agenda lines up with the hourly agenda
-  d->mDummyAllDayLeft->setFixedWidth( d->mTimeLabelsZone->width() -
+  // resize dummy widget so the allday agenda lines up with the hourly agenda.
+  d->mDummyAllDayLeft->setFixedWidth( -SPACING + d->mTimeLabelsZone->width() -
                                       d->mIsSideBySide ? 0 : d->mTimeBarHeaderFrame->width() );
 
   // Must be async, so they are centered
