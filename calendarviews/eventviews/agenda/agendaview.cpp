@@ -1439,6 +1439,14 @@ void AgendaView::insertIncidence( const Akonadi::Item &aitem,
     return;
   }
 
+  if ( d->mMinY.count() <= curCol ) {
+    d->mMinY.resize( d->mSelectedDates.count() );
+  }
+
+  if ( d->mMaxY.count() <= curCol ) {
+    d->mMaxY.resize( d->mSelectedDates.count() );
+  }
+
   // Default values, which can never be reached
   d->mMinY[curCol] = d->mAgenda->timeToY( QTime( 23, 59 ) ) + 1;
   d->mMaxY[curCol] = d->mAgenda->timeToY( QTime( 0, 0 ) ) - 1;
