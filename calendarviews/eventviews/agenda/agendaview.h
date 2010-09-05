@@ -96,9 +96,9 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 {
   Q_OBJECT
   public:
-  explicit AgendaView( const PrefsPtr &preferences,
-                       bool isSideBySide = false,
-                       QWidget *parent = 0 );
+    explicit AgendaView( const PrefsPtr &preferences,
+                         bool isSideBySide = false,
+                         QWidget *parent = 0 );
 
     explicit AgendaView( bool isSideBySide = false,
                          QWidget *parent = 0 );
@@ -119,7 +119,9 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     virtual KCalCore::DateList selectedIncidenceDates() const;
 
     /** return the default start/end date/time for new events   */
-    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
+    virtual bool eventDurationHint( QDateTime &startDt,
+                                    QDateTime &endDt,
+                                    bool &allDay ) const;
 
     /** start-datetime of selection */
     virtual QDateTime selectionStart() const;

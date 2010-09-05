@@ -435,7 +435,7 @@ void MultiAgendaView::changeIncidenceDisplay( const Akonadi::Item &incidence,
 int MultiAgendaView::maxDatesHint() const
 {
   // these maxDatesHint functions aren't used
-  return 31;
+  return AgendaView::MAX_DAY_COUNT;
 }
 
 void MultiAgendaView::slotSelectionChanged()
