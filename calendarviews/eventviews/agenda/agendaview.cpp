@@ -541,7 +541,15 @@ void AgendaView::init( const QDate &start, const QDate &end )
 
   // Create time labels
   d->mTimeLabelsZone = new TimeLabelsZone( this, preferences(), d->mAgenda );
-  d->mAgendaLayout->addWidget( d->mTimeLabelsZone, 1, 0 );
+
+  // This timeLabelsZoneLayout is for adding some spacing
+  // to align timelabels, to agenda's grid
+  QVBoxLayout *timeLabelsZoneLayout = new QVBoxLayout();
+  d->mAgendaLayout->addLayout( timeLabelsZoneLayout, 1, 0 );
+
+  timeLabelsZoneLayout->addSpacing( scrollArea->frameWidth() );
+  timeLabelsZoneLayout->addWidget( d->mTimeLabelsZone );
+  timeLabelsZoneLayout->addSpacing( scrollArea->frameWidth() );
 
   // Scrolling
   connect( d->mAgenda, SIGNAL(zoomView(const int,QPoint,const Qt::Orientation)),
