@@ -401,6 +401,12 @@ void AgendaView::init()
   // Don't call it now, bottom agenda isn't fully up yet
   QMetaObject::invokeMethod( this, "alignAgendas", Qt::QueuedConnection );
 
+  // Whoever changes this code, remember to leave createDayLabels()
+  // inside the ctor, so it's always called before readSettings(), so
+  // readSettings() works on the splitter that has the right amount of
+  // widgets ( createDayLabels() via placeDecorationFrame() removes widgets).
+  createDayLabels( true );
+
   /* Connect the agendas */
 
   connect( d->mAllDayAgenda,
@@ -778,10 +784,9 @@ void AgendaView::createDayLabels( bool force )
   d->mTopDayLabels->show();
   d->mBottomDayLabels->show();
 
- // Update the labels now and after a single event loop run. Now to avoid flicker, and
+  // Update the labels now and after a single event loop run. Now to avoid flicker, and
   // delayed so that the delayed layouting size is taken into account.
   updateDayLabelSizes();
-
 }
 
 void AgendaView::updateDayLabelSizes()
@@ -2047,8 +2052,6 @@ void AgendaView::alignAgendas()
   // resize dummy widget so the allday agenda lines up with the hourly agenda
   d->mDummyAllDayLeft->setFixedWidth( d->mTimeLabelsZone->width() -
                                       d->mIsSideBySide ? 0 : d->mTimeBarHeaderFrame->width() );
-
-  createDayLabels( true );
 }
 
 CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration( const QString &name )
