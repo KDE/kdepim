@@ -1872,9 +1872,8 @@ void AgendaView::readSettings( const KConfig *config )
   // we don't want to read invalid/corrupted settings or else agenda becomes invisible
   if ( sizes.count() >= 2 && !sizes.contains( 0 ) ) {
     d->mSplitterAgenda->setSizes( sizes );
+    updateConfig();
   }
-
-  updateConfig();
 }
 
 void AgendaView::writeSettings( KConfig *config )
