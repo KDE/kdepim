@@ -165,42 +165,63 @@ Item {
             dayPos: 1
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(1);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day2
             dayPos: 2
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(2);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day3
             dayPos: 3
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(3);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day4
             dayPos: 4
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(4);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day5
             dayPos: 5
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(5);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day6
             dayPos: 6
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(6);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day7
             dayPos: 7
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(7);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
 
         // second row
@@ -219,42 +240,63 @@ Item {
             dayPos: 8
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(8);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day9
             dayPos: 9
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(9);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day10
             dayPos: 10
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(10);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day11
             dayPos: 11
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(11);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day12
             dayPos: 12
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(12);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day13
             dayPos: 13
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(13);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day14
             dayPos: 14
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(14);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
 
         // third row
@@ -273,42 +315,63 @@ Item {
             dayPos: 15
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(15);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day16
             dayPos: 16
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(16);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day17
             dayPos: 17
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(17);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day18
             dayPos: 18
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(18);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day19
             dayPos: 19
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(19);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day20
             dayPos: 20
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(20);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day21
             dayPos: 21
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(21);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
 
         // forth row
@@ -327,42 +390,63 @@ Item {
             dayPos: 22
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(22);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day23
             dayPos: 23
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(23);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day24
             dayPos: 24
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(24);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day25
             dayPos: 25
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(25);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day26
             dayPos: 26
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(26);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day27
             dayPos: 27
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(27);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day28
             dayPos: 28
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(28);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
 
         // fifth row
@@ -381,42 +465,63 @@ Item {
             dayPos: 29
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(29);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day30
             dayPos: 30
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(30);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day31
             dayPos: 31
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(31);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day32
             dayPos: 32
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(32);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day33
             dayPos: 33
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(33);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day34
             dayPos: 34
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(34);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day35
             dayPos: 35
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(35);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
 
         // sixth row
@@ -435,36 +540,54 @@ Item {
             dayPos: 36
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(36);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day37
             dayPos: 37
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(37);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day38
             dayPos: 38
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(38);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day39
             dayPos: 39
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(39);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day40
             dayPos: 40
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(40);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
         CalendarDay {
             id: day41
             dayPos: 41
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(41);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
 
         CalendarDay {
@@ -472,6 +595,9 @@ Item {
             dayPos: 42
             currentDay: calendarHelper.day
             text: calendarHelper.dayForPosition(42);
+            onDaySelected: {
+                calendarHelper.day = day
+            }
         }
     }
 

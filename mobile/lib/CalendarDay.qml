@@ -24,6 +24,7 @@ Item {
     property alias text: myText.text
     property int currentDay: 0
     property int dayPos: 0
+    signal daySelected(string day)
 
     width: 54
     height: 54
@@ -55,6 +56,13 @@ Item {
         verticalAlignment: Text.AlignVCenter
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
+    }
+    MouseArea {
+        id: dayArea
+        anchors.fill: parent
+        onClicked: {
+            calendarDay.daySelected(myText.text);
+        }
     }
 
     states: [
