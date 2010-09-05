@@ -31,7 +31,6 @@ set(calendarsupport_LIB_SRCS
   mailclient.cpp
   mailscheduler.cpp
   modelstatesaver.cpp
-  recurrenceactions.cpp
   utils.cpp
 )
 
@@ -42,8 +41,6 @@ if (NOT WINCE)
 endif (NOT WINCE)
 
 kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc )
-
-kde4_add_ui_files( calendarsupport_LIB_SRCS recurrenceactionsscopewidget.ui )
 
 qt4_add_dbus_interface(calendarsupport_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.CalendarSearchAgent.xml calendarsearchinterface)
 

@@ -34,13 +34,13 @@
 #include "helper.h"
 #include "prefs.h"
 
-#include <calendarsupport/recurrenceactions.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/incidencechanger.h>
 
 #include <KCalCore/Todo>
 
+#include <KCalUtils/RecurrenceActions>
 #include <KCalUtils/DndFactory>
 #include <KCalUtils/ICalDrag>
 #include <KCalUtils/VCalDrag>
@@ -1166,11 +1166,11 @@ void Agenda::endItemAction()
       int res = d->mEventView->showMoveRecurDialog( d->mActionItem->incidence(),
                                                     d->mActionItem->itemDate() );
       switch ( res ) {
-      case RecurrenceActions::AllOccurrences: // All occurrences
+      case KCalUtils::RecurrenceActions::AllOccurrences: // All occurrences
         // Moving the whole sequene of events is handled by the itemModified below.
         modify = true;
         break;
-      case RecurrenceActions::SelectedOccurrence:
+      case KCalUtils::RecurrenceActions::SelectedOccurrence:
       { // Just this occurrence
         // Dissociate this occurrence:
         // create clone of event, set relation to old event, set cloned event
@@ -1215,7 +1215,7 @@ void Agenda::endItemAction()
         }
         break;
       }
-      case RecurrenceActions::FutureOccurrences/*Future*/:
+      case KCalUtils::RecurrenceActions::FutureOccurrences/*Future*/:
       { // All future occurrences
         // Dissociate this occurrence:
         // create clone of event, set relation to old event, set cloned event

@@ -34,7 +34,6 @@
 // AKONADI_PORT hack, see below
 #include "agenda/agendaview.h"
 
-#include <calendarsupport/recurrenceactions.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
@@ -45,6 +44,7 @@
 #include <calendarsupport/entitymodelstatesaver.h>
 #include <calendarsupport/kcalprefs.h>
 
+#include <KCalUtils/RecurrenceActions>
 #include <kholidays/holidayregion.h>
 
 #include <Akonadi/Collection>
@@ -232,7 +232,7 @@ int EventView::showMoveRecurDialog( const Akonadi::Item &aitem, const QDate &dat
 
   KDateTime dateTime( date, preferences()->timeSpec() );
 
-  int availableOccurrences = RecurrenceActions::availableOccurrences( inc, dateTime );
+  int availableOccurrences = KCalUtils::RecurrenceActions::availableOccurrences( inc, dateTime );
 
   const QString caption = i18nc( "@title:window", "Changing Recurring Item" );
   KGuiItem itemFuture( i18n( "Also &Future Items" ) );
@@ -240,38 +240,37 @@ int EventView::showMoveRecurDialog( const Akonadi::Item &aitem, const QDate &dat
   KGuiItem itemAll( i18n( "&All Occurrences" ) );
 
   switch ( availableOccurrences ) {
-    case RecurrenceActions::NoOccurrence:
-        return RecurrenceActions::NoOccurrence;
-    case RecurrenceActions::SelectedOccurrence:
-      return RecurrenceActions::SelectedOccurrence;
+    case KCalUtils::RecurrenceActions::NoOccurrence:
+      return KCalUtils::RecurrenceActions::NoOccurrence;
+    case KCalUtils::RecurrenceActions::SelectedOccurrence:
+      return KCalUtils::RecurrenceActions::SelectedOccurrence;
 
-    case RecurrenceActions::AllOccurrences: {
-      Q_ASSERT( availableOccurrences & RecurrenceActions::SelectedOccurrence );
+    case KCalUtils::RecurrenceActions::AllOccurrences: {
+      Q_ASSERT( availableOccurrences & KCalUtils::RecurrenceActions::SelectedOccurrence );
 
       // if there are all kinds of ooccurrences (i.e. past present and future) the user might
       // want the option only apply to current and future occurrences, leaving the past ones
-      // untouched.
       // provide a third choice for that ("Also future")
-      if ( availableOccurrences == RecurrenceActions::AllOccurrences ) {
+      if ( availableOccurrences == KCalUtils::RecurrenceActions::AllOccurrences ) {
         const QString message = i18n( "The item you are trying to change is a recurring item. "
                                       "Should the changes be applied only to this single occurrence, "
                                       "also to future items, or to all items in the recurrence?" );
-        return RecurrenceActions::questionSelectedFutureAllCancel( message, caption, itemSelected, itemFuture, itemAll, this );
+        return KCalUtils::RecurrenceActions::questionSelectedFutureAllCancel( message, caption, itemSelected, itemFuture, itemAll, this );
       }
     }
 
     default: {
-      Q_ASSERT( availableOccurrences & RecurrenceActions::SelectedOccurrence );
+      Q_ASSERT( availableOccurrences & KCalUtils::RecurrenceActions::SelectedOccurrence );
       // selected occurrence and either past or future occurrences
       const QString message = i18n( "The item you are trying to change is a recurring item. "
                                     "Should the changes be applied only to this single occurrence "
                                     "or to all items in the recurrence?" );
-      return RecurrenceActions::questionSelectedAllCancel( message, caption, itemSelected, itemAll, this );
+      return KCalUtils::RecurrenceActions::questionSelectedAllCancel( message, caption, itemSelected, itemAll, this );
       break;
     }
   }
 
-  return RecurrenceActions::NoOccurrence;
+  return KCalUtils::RecurrenceActions::NoOccurrence;
 }
 
 void EventView::setCalendar( CalendarSupport::Calendar *cal )
