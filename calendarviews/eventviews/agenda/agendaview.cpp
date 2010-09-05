@@ -223,6 +223,10 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
         with @p end. If either start or end are invalid, a list with
         QDate::currentDate() is returned */
     static QList<QDate> generateDateList( const QDate &start, const QDate &end );
+
+    void insertIncidence( const Akonadi::Item &incidence,
+                          const QDate &curDate, bool createSelected );
+
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
     void calendarIncidenceAdded( const Akonadi::Item &incidence );
@@ -319,6 +323,144 @@ void AgendaView::Private::clearView()
   if ( mUpdateAgenda )
     mAgenda->clear();
 }
+
+void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
+                                           const QDate &curDate,
+                                           bool createSelected )
+{
+  if ( !q->filterByCollectionSelection( aitem ) ) {
+    return;
+  }
+
+  // FIXME: Use a visitor here, or some other method to get rid of the dynamic_cast's
+  Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+  Event::Ptr event = CalendarSupport::event( aitem );
+  Todo::Ptr todo = CalendarSupport::todo( aitem );
+
+  int curCol = mSelectedDates.first().daysTo( curDate );
+
+  // In case incidence->dtStart() isn't visible (crosses bounderies)
+  if ( curCol < 0 ) {
+    curCol = 0;
+  }
+
+  // The date for the event is not displayed, just ignore it
+  if ( curCol >= mSelectedDates.count() ) {
+    return;
+  }
+
+  if ( mMinY.count() <= curCol ) {
+    mMinY.resize( mSelectedDates.count() );
+  }
+
+  if ( mMaxY.count() <= curCol ) {
+    mMaxY.resize( mSelectedDates.count() );
+  }
+
+  // Default values, which can never be reached
+  mMinY[curCol] = mAgenda->timeToY( QTime( 23, 59 ) ) + 1;
+  mMaxY[curCol] = mAgenda->timeToY( QTime( 0, 0 ) ) - 1;
+
+  int beginX;
+  int endX;
+  QDate columnDate;
+  if ( event ) {
+    QDate firstVisibleDate = mSelectedDates.first();
+    // its crossing bounderies, lets calculate beginX and endX
+    if ( curDate < firstVisibleDate ) {
+      beginX = curCol + firstVisibleDate.daysTo( curDate );
+      endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
+      columnDate = firstVisibleDate;
+    } else {
+      beginX = curCol;
+      endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
+      columnDate = curDate;
+    }
+  } else if ( todo ) {
+    if ( !todo->hasDueDate() ) {
+      return;  // todo shall not be displayed if it has no date
+    }
+    columnDate = curDate;
+    beginX = endX = curCol;
+
+  } else {
+    return;
+  }
+
+  const KDateTime::Spec timeSpec = q->preferences()->timeSpec();
+
+  if ( todo && todo->isOverdue() ) {
+    mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol,
+                                     createSelected );
+  } else if ( incidence->allDay() ) {
+      mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX,
+                                       createSelected );
+  } else if ( event && event->isMultiDay( timeSpec ) ) {
+    int startY = mAgenda->timeToY( event->dtStart().toTimeSpec( timeSpec ).time() );
+    QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
+    if ( endtime == QTime( 0, 0, 0 ) ) {
+      endtime = QTime( 23, 59, 59 );
+    }
+    int endY = mAgenda->timeToY( endtime ) - 1;
+    if ( ( beginX <= 0 && curCol == 0 ) || beginX == curCol ) {
+      mAgenda->insertMultiItem( aitem, columnDate, beginX, endX, startY, endY,
+                                createSelected );
+
+    }
+    if ( beginX == curCol ) {
+      mMaxY[curCol] = mAgenda->timeToY( QTime( 23, 59 ) );
+      if ( startY < mMinY[curCol] ) {
+        mMinY[curCol] = startY;
+      }
+    } else if ( endX == curCol ) {
+      mMinY[curCol] = mAgenda->timeToY( QTime( 0, 0 ) );
+      if ( endY > mMaxY[curCol] ) {
+        mMaxY[curCol] = endY;
+      }
+    } else {
+      mMinY[curCol] = mAgenda->timeToY( QTime( 0, 0 ) );
+      mMaxY[curCol] = mAgenda->timeToY( QTime( 23, 59 ) );
+    }
+  } else {
+    int startY = 0, endY = 0;
+    if ( event ) {
+      startY = mAgenda->timeToY( incidence->dtStart().toTimeSpec( timeSpec ).time() );
+      QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
+      if ( endtime == QTime( 0, 0, 0 ) ) {
+        endtime = QTime( 23, 59, 59 );
+      }
+      endY = mAgenda->timeToY( endtime ) - 1;
+    }
+    if ( todo ) {
+      QTime t = todo->dtDue().toTimeSpec( timeSpec ).time();
+
+      if ( t == QTime( 0, 0 ) ) {
+        t = QTime( 23, 59 );
+      }
+
+      const int halfHour = 1800;
+      if ( t.addSecs( -halfHour ) < t ) {
+        startY = mAgenda->timeToY( t.addSecs( -halfHour ) );
+        endY   = mAgenda->timeToY( t ) - 1;
+      } else {
+        startY = 0;
+        endY   = mAgenda->timeToY( t.addSecs( halfHour ) ) - 1;
+      }
+    }
+    if ( endY < startY ) {
+      endY = startY;
+    }
+    mAgenda->insertItem( aitem, columnDate, curCol, startY, endY, 1, 1,
+                         createSelected );
+    if ( startY < mMinY[curCol] ) {
+      mMinY[curCol] = startY;
+    }
+    if ( endY > mMaxY[curCol] ) {
+      mMaxY[curCol] = endY;
+    }
+  }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -1414,139 +1556,6 @@ void AgendaView::showIncidences( const Akonadi::Item::List &incidences, const QD
   d->mAgenda->selectItem( first );
 }
 
-void AgendaView::insertIncidence( const Akonadi::Item &aitem,
-                                  const QDate &curDate,
-                                  bool createSelected )
-{
-  if ( !filterByCollectionSelection( aitem ) ) {
-    return;
-  }
-
-  // FIXME: Use a visitor here, or some other method to get rid of the dynamic_cast's
-  Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  Event::Ptr event = CalendarSupport::event( aitem );
-  Todo::Ptr todo = CalendarSupport::todo( aitem );
-
-  int curCol = d->mSelectedDates.first().daysTo( curDate );
-
-  // In case incidence->dtStart() isn't visible (crosses bounderies)
-  if ( curCol < 0 ) {
-    curCol = 0;
-  }
-
-  // The date for the event is not displayed, just ignore it
-  if ( curCol >= d->mSelectedDates.count() ) {
-    return;
-  }
-
-  if ( d->mMinY.count() <= curCol ) {
-    d->mMinY.resize( d->mSelectedDates.count() );
-  }
-
-  if ( d->mMaxY.count() <= curCol ) {
-    d->mMaxY.resize( d->mSelectedDates.count() );
-  }
-
-  // Default values, which can never be reached
-  d->mMinY[curCol] = d->mAgenda->timeToY( QTime( 23, 59 ) ) + 1;
-  d->mMaxY[curCol] = d->mAgenda->timeToY( QTime( 0, 0 ) ) - 1;
-
-  int beginX;
-  int endX;
-  QDate columnDate;
-  if ( event ) {
-    QDate firstVisibleDate = d->mSelectedDates.first();
-    // its crossing bounderies, lets calculate beginX and endX
-    if ( curDate < firstVisibleDate ) {
-      beginX = curCol + firstVisibleDate.daysTo( curDate );
-      endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
-      columnDate = firstVisibleDate;
-    } else {
-      beginX = curCol;
-      endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
-      columnDate = curDate;
-    }
-  } else if ( todo ) {
-    if ( !todo->hasDueDate() ) {
-      return;  // todo shall not be displayed if it has no date
-    }
-    columnDate = curDate;
-    beginX = endX = curCol;
-
-  } else {
-    return;
-  }
-
-  const KDateTime::Spec timeSpec = preferences()->timeSpec();
-
-  if ( todo && todo->isOverdue() ) {
-    d->mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol, createSelected );
-  } else if ( incidence->allDay() ) {
-      d->mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX, createSelected );
-  } else if ( event && event->isMultiDay( timeSpec ) ) {
-    int startY = d->mAgenda->timeToY( event->dtStart().toTimeSpec( timeSpec ).time() );
-    QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
-    if ( endtime == QTime( 0, 0, 0 ) ) {
-      endtime = QTime( 23, 59, 59 );
-    }
-    int endY = d->mAgenda->timeToY( endtime ) - 1;
-    if ( ( beginX <= 0 && curCol == 0 ) || beginX == curCol ) {
-      d->mAgenda->insertMultiItem( aitem, columnDate, beginX, endX, startY, endY, createSelected );
-
-    }
-    if ( beginX == curCol ) {
-      d->mMaxY[curCol] = d->mAgenda->timeToY( QTime( 23, 59 ) );
-      if ( startY < d->mMinY[curCol] ) {
-        d->mMinY[curCol] = startY;
-      }
-    } else if ( endX == curCol ) {
-      d->mMinY[curCol] = d->mAgenda->timeToY( QTime( 0, 0 ) );
-      if ( endY > d->mMaxY[curCol] ) {
-        d->mMaxY[curCol] = endY;
-      }
-    } else {
-      d->mMinY[curCol] = d->mAgenda->timeToY( QTime( 0, 0 ) );
-      d->mMaxY[curCol] = d->mAgenda->timeToY( QTime( 23, 59 ) );
-    }
-  } else {
-    int startY = 0, endY = 0;
-    if ( event ) {
-      startY = d->mAgenda->timeToY( incidence->dtStart().toTimeSpec( timeSpec ).time() );
-      QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
-      if ( endtime == QTime( 0, 0, 0 ) ) {
-        endtime = QTime( 23, 59, 59 );
-      }
-      endY = d->mAgenda->timeToY( endtime ) - 1;
-    }
-    if ( todo ) {
-      QTime t = todo->dtDue().toTimeSpec( timeSpec ).time();
-
-      if ( t == QTime( 0, 0 ) ) {
-        t = QTime( 23, 59 );
-      }
-
-      int halfHour = 1800;
-      if ( t.addSecs( -halfHour ) < t ) {
-        startY = d->mAgenda->timeToY( t.addSecs( -halfHour ) );
-        endY   = d->mAgenda->timeToY( t ) - 1;
-      } else {
-        startY = 0;
-        endY   = d->mAgenda->timeToY( t.addSecs( halfHour ) ) - 1;
-      }
-    }
-    if ( endY < startY ) {
-      endY = startY;
-    }
-    d->mAgenda->insertItem( aitem, columnDate, curCol, startY, endY, 1, 1, createSelected );
-    if ( startY < d->mMinY[curCol] ) {
-      d->mMinY[curCol] = startY;
-    }
-    if ( endY > d->mMaxY[curCol] ) {
-      d->mMaxY[curCol] = endY;
-    }
-  }
-}
-
 void AgendaView::changeIncidenceDisplayAdded( const Akonadi::Item &aitem )
 {
   if ( !calendar() ) {
@@ -1770,7 +1779,7 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   }
 
   for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
-    insertIncidence( aitem, t->toTimeSpec( timeSpec ).date(), createSelected );
+    d->insertIncidence( aitem, t->toTimeSpec( timeSpec ).date(), createSelected );
   }
 }
 

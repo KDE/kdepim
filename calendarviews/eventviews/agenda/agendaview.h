@@ -164,8 +164,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     virtual void showDates( const QDate &start, const QDate &end );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
-    void insertIncidence( const Akonadi::Item &incidence, const QDate &curDate, bool createSelected );
-
     void clearSelection();
 
     void startDrag( const Akonadi::Item & );
