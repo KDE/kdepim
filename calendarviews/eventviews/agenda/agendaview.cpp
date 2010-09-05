@@ -4,6 +4,7 @@
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Author: Kevin Krammer, krake@kdab.com
+  Author: Sergio Martins, sergio.martins@kdab.com
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -1479,14 +1480,6 @@ void AgendaView::updateEventDates( AgendaItem *item )
   enableAgendaUpdate( true );
 }
 
-void AgendaView::doUpdateItem()
-{
-  if ( CalendarSupport::hasIncidence( d->mUpdateItem ) ) {
-    changeIncidenceDisplay( d->mUpdateItem, CalendarSupport::IncidenceChanger::INCIDENCEEDITED );
-    d->mUpdateItem = Akonadi::Item();
-  }
-}
-
 QDate AgendaView::startDate() const
 {
   if ( d->mSelectedDates.isEmpty() )
@@ -1566,66 +1559,6 @@ void AgendaView::showIncidences( const Akonadi::Item::List &incidences, const QD
   }
 
   d->mAgenda->selectItem( first );
-}
-
-void AgendaView::changeIncidenceDisplayAdded( const Akonadi::Item &aitem )
-{
-  if ( !calendar() ) {
-    kError() << "No Calendar set";
-    return;
-  }
-  Todo::Ptr todo = CalendarSupport::todo( aitem );
-  CalFilter *filter = calendar()->filter();
-  if ( ( filter && !filter->filterIncidence( CalendarSupport::incidence( aitem ) ) ) ||
-       ( ( todo && !preferences()->showTodosAgendaView() ) ) ) {
-    return;
-  }
-
-  displayIncidence( aitem, false );
-}
-
-void AgendaView::changeIncidenceDisplay( const Akonadi::Item &aitem, int mode )
-{
-  switch ( mode ) {
-  case CalendarSupport::IncidenceChanger::INCIDENCEADDED:
-  {
-    // Add an event. No need to recreate the whole view!
-    // recreating everything even causes troubles: dropping to the
-    // day matrix recreates the agenda items, but the evaluation is
-    // still in an agendaItems' code, which was deleted in the mean time.
-    // Thus KOrg crashes...
-    changeIncidenceDisplayAdded( aitem );
-    updateEventIndicators();
-    break;
-  }
-  case CalendarSupport::IncidenceChanger::INCIDENCEEDITED:
-  {
-    if ( d->mAllowAgendaUpdate ) {
-      //PENDING(AKONADI_PORT) try harder not to recreate the items here, this causes flicker with the delayed notification from Akonadi, after a dnd operation
-      removeIncidence( aitem );
-      changeIncidenceDisplayAdded( aitem );
-    }
-    updateEventIndicators();
-    break;
-  }
-  case CalendarSupport::IncidenceChanger::INCIDENCEDELETED:
-  {
-    removeIncidence( aitem );
-    updateEventIndicators();
-    break;
-  }
-  default:
-    return;
-  }
-
-  // HACK: Update the view if the all-day agenda has been modified.
-  // Do this because there are some layout problems in the
-  // all-day agenda that are not easily solved, but clearing
-  // and redrawing works ok.
-  Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  if ( incidence && incidence->allDay() ) {
-    updateView();
-  }
 }
 
 void AgendaView::fillAgenda()

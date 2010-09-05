@@ -1,5 +1,7 @@
 /*
   Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Sergio Martins <sergio.martins@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -421,14 +423,6 @@ void MultiAgendaView::updateView()
   recreateViews();
   foreach ( AgendaView *agendaView, d->mAgendaViews ) {
     agendaView->updateView();
-  }
-}
-
-void MultiAgendaView::changeIncidenceDisplay( const Akonadi::Item &incidence,
-                                              int mode )
-{
-  foreach ( AgendaView *agendaView, d->mAgendaViews ) {
-    agendaView->changeIncidenceDisplay( incidence, mode );
   }
 }
 

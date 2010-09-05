@@ -5,6 +5,7 @@
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Author: Kevin Krammer, krake@kdab.com
+  Author: Sergio Martins, sergio.martins@kdab.com
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -231,8 +232,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
   protected Q_SLOTS:
     /** Update event belonging to agenda item */
     void updateEventDates( AgendaItem *item );
-    /** update just the display of the given incidence, called by a single-shot timer */
-    void doUpdateItem();
 
     void updateEventIndicatorTop( int newY );
     void updateEventIndicatorBottom( int newY );
@@ -253,11 +252,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
     void displayIncidence( const Akonadi::Item &incidence, bool createSelected );
-
-    // TODO: delete this in a few weeks, after reviewing if doUpdateItem() can be removed.
-    // (it's not even called)
-    void changeIncidenceDisplayAdded( const Akonadi::Item &incidence );
-    void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
 
 #ifndef EVENTVIEWS_NODECOS
     typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;

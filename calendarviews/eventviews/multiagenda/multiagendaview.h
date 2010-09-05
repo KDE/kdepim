@@ -1,5 +1,7 @@
 /*
   Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Sergio Martins <sergio.martins@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -86,7 +88,6 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     void showDates( const QDate &start, const QDate &end );
     void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     void updateView();
-    void changeIncidenceDisplay( const Akonadi::Item &, int mode );
     void updateConfig();
 
     void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
