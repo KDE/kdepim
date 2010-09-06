@@ -713,6 +713,16 @@ QColor Prefs::agendaCalendarItemsToDosDueTodayBackgroundColor() const
   return d->getColor( d->mBaseConfig.agendaCalendarItemsToDosDueTodayBackgroundColorItem() );
 }
 
+void Prefs::setAgendaHolidaysBackgroundColor( const QColor &color ) const
+{
+  d->setColor( d->mBaseConfig.agendaHolidaysBackgroundColorItem(), color );
+}
+
+QColor Prefs::agendaHolidaysBackgroundColor() const
+{
+  return d->getColor( d->mBaseConfig.agendaHolidaysBackgroundColorItem() );
+}
+
 void Prefs::setUnsetCategoryColor( const QColor &color )
 {
   d->setColor( d->mBaseConfig.unsetCategoryColorItem(), color );
@@ -751,6 +761,76 @@ void Prefs::setMonthViewFont( const QFont &font )
 QFont Prefs::monthViewFont() const
 {
   return d->getFont( d->mBaseConfig.monthViewFontItem() );
+}
+
+QColor Prefs::monthGridBackgroundColor() const
+{
+  return d->getColor( d->mBaseConfig.monthGridBackgroundColorItem() );
+}
+
+void Prefs::setMonthGridBackgroundColor( const QColor &color )
+{
+  d->setColor( d->mBaseConfig.monthGridBackgroundColorItem(), color );
+}
+
+QColor Prefs::monthGridWorkHoursBackgroundColor() const
+{
+  return d->getColor( d->mBaseConfig.monthGridWorkHoursBackgroundColorItem() );
+}
+
+void Prefs::monthGridWorkHoursBackgroundColor( const QColor &color )
+{
+  d->setColor( d->mBaseConfig.monthGridWorkHoursBackgroundColorItem(), color );
+}
+
+int Prefs::monthViewColors() const
+{
+  return d->getInt( d->mBaseConfig.monthViewColorsItem() );
+}
+
+void Prefs::setMonthViewColors( int colors ) const
+{
+  d->setInt( d->mBaseConfig.monthViewColorsItem(), colors );
+}
+
+void Prefs::setEnableMonthItemIcons( bool enable )
+{
+  d->setBool( d->mBaseConfig.enableMonthItemIconsItem(), enable );
+}
+
+bool Prefs::enableMonthItemIcons() const
+{
+  return d->getBool( d->mBaseConfig.enableMonthItemIconsItem() );
+}
+
+bool Prefs::showTodosMonthView() const
+{
+  return d->getBool( d->mBaseConfig.showTodosMonthViewItem() );
+}
+
+void Prefs::setShowTodosMonthView( bool enable )
+{
+  d->setBool( d->mBaseConfig.showTodosMonthViewItem(), enable );
+}
+
+bool Prefs::showJournalsMonthView() const
+{
+  return d->getBool( d->mBaseConfig.showJournalsMonthViewItem() );
+}
+
+void Prefs::setShowJournalsMonthView( bool enable )
+{
+  d->setBool( d->mBaseConfig.showJournalsMonthViewItem(), enable );
+}
+
+bool Prefs::fullViewMonth() const
+{
+  return d->getBool( d->mBaseConfig.fullViewMonthItem() );
+}
+
+void Prefs::setFullViewMonth( bool fullView )
+{
+  d->setBool( d->mBaseConfig.fullViewMonthItem(), fullView );
 }
 
 void Prefs::setEnableToolTips( bool enable )

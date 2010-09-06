@@ -120,6 +120,9 @@ class EVENTVIEWS_EXPORT Prefs
     void setAgendaCalendarItemsToDosDueTodayBackgroundColor( const QColor &color );
     QColor agendaCalendarItemsToDosDueTodayBackgroundColor() const;
 
+    void setAgendaHolidaysBackgroundColor( const QColor &color ) const;
+    QColor agendaHolidaysBackgroundColor() const;
+
     void setUnsetCategoryColor( const QColor &color );
     QColor unsetCategoryColor() const;
 
@@ -132,9 +135,30 @@ class EVENTVIEWS_EXPORT Prefs
     void setMonthViewFont( const QFont &font );
     QFont monthViewFont() const;
 
+    QColor monthGridBackgroundColor() const;
+    void setMonthGridBackgroundColor( const QColor &color );
+
+    QColor monthGridWorkHoursBackgroundColor() const;
+    void monthGridWorkHoursBackgroundColor( const QColor &color );
+
+    void setMonthViewColors( int colors ) const;
+    int monthViewColors() const;
+
+    bool enableMonthItemIcons() const;
+    void setEnableMonthItemIcons( bool enable );
+
+    bool showTodosMonthView() const;
+    void setShowTodosMonthView( bool show );
+
+    bool showJournalsMonthView() const;
+    void setShowJournalsMonthView( bool show );
+
+    bool fullViewMonth() const;
+    void setFullViewMonth( bool fullView );
+    
     void setEnableToolTips( bool enable );
     bool enableToolTips() const;
-
+    
     void setDefaultDuration( const QDateTime &dateTime );
     QDateTime defaultDuration() const;
 
