@@ -2006,6 +2006,16 @@ Exchange understands. The invitation will be sent as an attachment with name <fi
 <para>When the user provides comments when responding to invitations, send the comment in way that Microsoft Outlook(tm) understands. If this option is not enabled, the response comments will not be seen in Outlook.</para>
 </listitem>
 </varlistentry>
+<varlistentry>
+<term><guilabel>Show invitation update differences in the Outook style</guilabel></term>
+<listitem>
+<para>When viewing updated invitations, this option enables the differences between the previous
+and current invitations to be displayed in a way very much like Microsoft Outlook(tm). 
+This is the default. The user can turn this option off if they want to see the invitation
+update differences shown in the the "classic" KMail style.
+</para>
+</listitem>
+</varlistentry>
 </variablelist>
 </sect2>
 
