@@ -39,7 +39,6 @@
 
 namespace CalendarSupport {
   class Calendar;
-  class CalendarSearch;
   class CollectionSelection;
   class CollectionSelectionProxyModel;
   class IncidenceChanger;
@@ -138,8 +137,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual void setKCalPreferences( const KCalPrefsPtr &preferences );
     KCalPrefsPtr kcalPreferences() const;
 
-    // CalendarSupport::CalendarSearch* calendarSearch() const;
-
     /**
        A todo can have two pixmaps, one for completed and one for incomplete.
     */
@@ -234,7 +231,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     virtual EventView* viewAt( const QPoint &p );
 
-    void setDateRange( const KDateTime &start, const KDateTime &end );
+    virtual void setDateRange( const KDateTime &start, const KDateTime &end );
 
     KDateTime startDateTime() const;
     KDateTime endDateTime() const;
@@ -446,12 +443,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
   protected Q_SLOTS:
     virtual void collectionSelectionChanged();
     virtual void calendarReset();
-
-  private Q_SLOTS:
-    void backendErrorOccurred();
-    void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
-    void rowsInserted( const QModelIndex &parent, int start, int end );
-    void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
 
   protected:
 

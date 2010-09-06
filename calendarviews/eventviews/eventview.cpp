@@ -31,7 +31,6 @@
 #include "prefs.h"
 
 #include <calendarsupport/calendar.h>
-#include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/incidencechanger.h>
 #include <calendarsupport/utils.h>
@@ -81,17 +80,6 @@ class EventView::Private
       QByteArray cname = q->metaObject()->className();
       cname.replace( ":", "_" );
       identifier = cname + "_" + KRandom::randomString( 8 ).toLatin1();
-      /*
-        TODO_CALENDARSEARCH
-      calendarSearch = new CalendarSupport::CalendarSearch( q );
-      connect( calendarSearch->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-               q, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
-      connect( calendarSearch->model(), SIGNAL( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ),
-               q, SLOT( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ) );
-      connect( calendarSearch->model(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-               q, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
-      connect( calendarSearch->model(), SIGNAL( modelReset() ), q, SLOT( calendarReset() ) );
-      */
     }
 
     ~Private()
@@ -104,7 +92,6 @@ class EventView::Private
 
   public:
     CalendarSupport::Calendar *calendar;
-    // CalendarSupport::CalendarSearch *calendarSearch;
     CalendarSupport::CollectionSelection *customCollectionSelection;
     CalendarSupport::CollectionSelectionProxyModel* collectionSelectionModel;
     CalendarSupport::EntityModelStateSaver* stateSaver;
@@ -319,13 +306,6 @@ KCalPrefsPtr EventView::kcalPreferences() const
 {
   return d->mKCalPrefs;
 }
-/*
-// DISABLED_FOR_NOW
-CalendarSupport::CalendarSearch* EventView::calendarSearch() const
-{
-  return d->calendarSearch;
-}
-*/
 
 void EventView::dayPassed( const QDate & )
 {
@@ -382,9 +362,6 @@ void EventView::setDateRange( const KDateTime &start, const KDateTime &end )
   const QPair<KDateTime,KDateTime> adjusted = actualDateRange( start, end );
   d->actualStartDateTime = adjusted.first;
   d->actualEndDateTime = adjusted.second;
-  // DISABLED_FOR_NOW
-  // d->calendarSearch->setStartDate( d->actualStartDateTime );
-  // d->calendarSearch->setEndDate( d->actualEndDateTime );
 }
 
 KDateTime EventView::startDateTime() const
@@ -616,35 +593,8 @@ QStringList EventView::holidayNames( const QDate &date ) const
   return hdays;
 }
 
-void EventView::backendErrorOccurred()
-{
-  // DISABLED_FOR_NOW
-  // handleBackendError( d->calendarSearch->errorString() );
-}
-
 void EventView::calendarReset()
 {
-}
-
-void EventView::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
-{
-  Q_ASSERT( topLeft.parent() == bottomRight.parent() );
-
-  // DISABLED_FOR_NOW
-  // incidencesChanged( CalendarSupport::itemsFromModel( d->calendarSearch->model(), topLeft.parent(),
-  //                   topLeft.row(), bottomRight.row() ) );
-}
-
-void EventView::rowsInserted( const QModelIndex& parent, int start, int end )
-{
-  // DISABLED_FOR_NOW
-  // incidencesAdded( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
-}
-
-void EventView::rowsAboutToBeRemoved( const QModelIndex& parent, int start, int end )
-{
-  // DISABLED_FOR_NOW
-  // incidencesAboutToBeRemoved( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
 }
 
 CalendarSupport::CollectionSelection* EventView::globalCollectionSelection()
