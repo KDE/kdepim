@@ -349,8 +349,14 @@ void EventOrTodoDialogPrivate::handleItemSaveFail( CalendarSupport::EditorItemMa
 {
   Q_Q( EventOrTodoDialog );
 
-  const QString message = i18nc( "@info", "Unable to store the incidence in the calendar. Try again?\n\n Reason: %1", errorMessage );
-  if ( KMessageBox::warningYesNo( q, message ) == KMessageBox::Yes ) {
+  bool retry = false;
+
+  if ( !errorMessage.isEmpty() ) {
+    const QString message = i18nc( "@info", "Unable to store the incidence in the calendar. Try again?\n\n Reason: %1", errorMessage );
+    retry = ( KMessageBox::warningYesNo( q, message ) == KMessageBox::Yes );
+  }
+
+  if ( retry ) {
     mItemManager->save();
   } else {
     updateButtonStatus( mEditor->isDirty() );

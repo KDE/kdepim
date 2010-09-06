@@ -264,7 +264,7 @@ void EditorItemManager::save()
   Q_D( ItemEditor );
 
   if ( !d->mItemUi->isValid() ) {
-    emit itemSaveFailed( d->mItem.isValid() ? Modify : Create, i18n( "Editor content is not valid." ) );
+    emit itemSaveFailed( d->mItem.isValid() ? Modify : Create, QString() );
     return;
   }
 
