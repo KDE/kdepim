@@ -82,8 +82,10 @@ void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
     load( todo );
   } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>() ) {
     load( event );
+  } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<Journal>() ) {
+    load( journal );
   } else {
-    kDebug() << "Not an event or an todo.";
+    kDebug() << "Not an Incidence.";
   }
 
   // Set the initial times before calling enableTimeEdits, as enableTimeEdits
@@ -118,6 +120,9 @@ bool IncidenceDateTime::isDirty() const
     return isDirty( todo );
   } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>() ) {
     return isDirty( event );
+  } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<Journal>() ) {
+    //TODO_JOURNAL
+    return false;
   } else {
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::isDirty", "Only implemented for todos and events" );
     return false;
@@ -167,7 +172,7 @@ void IncidenceDateTime::setTimeZonesVisibility( bool visible )
 #endif
 
   mUi->mTimeZoneComboStart->setVisible( visible );
-  mUi->mTimeZoneComboEnd->setVisible( visible );
+  mUi->mTimeZoneComboEnd->setVisible( visible && type() != KCalCore::Incidence::TypeJournal );
 }
 
 void IncidenceDateTime::toggleTimeZoneVisibility()
@@ -465,6 +470,67 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
     mUi->mFreeBusyCheck->setChecked( true );
     break;
   }
+}
+
+void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
+{
+  // First en/disable the necessary ui bits and pieces
+  mUi->mStartCheck->setVisible( false );
+  mUi->mStartCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
+  mUi->mEndCheck->setVisible( false );
+  mUi->mEndCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
+  mUi->mEndDateEdit->setVisible( false );
+  mUi->mEndTimeEdit->setVisible( false );
+  mUi->mTimeZoneComboEnd->setVisible( false );
+  mUi->mEndLabel->setVisible( false );
+  mUi->mFreeBusyCheck->setVisible( false );
+
+  // Start time
+  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),
+           SLOT(updateStartTime(QTime)) );
+  connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)),
+           SLOT(updateStartDate(QDate)) );
+  connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)),
+           SLOT(updateStartSpec()) );
+
+  mUi->mWholeDayCheck->setChecked( journal->allDay() );
+  enableTimeEdits();
+
+  bool isTemplate = false; // TODO
+/*  if ( !isTemplate ) {
+    KDateTime startDT = journal->dtStart();
+    KDateTime endDT = event->dtEnd();
+    if ( event->recurs() && mActiveDate.isValid() ) {
+      // Consider the active date when editing recurring Events.
+      KDateTime kdt( mActiveDate, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
+      const int eventLength = startDT.daysTo( endDT );
+      kdt = kdt.addSecs( -1 );
+      startDT.setDate( event->recurrence()->getNextDateTime( kdt ).date() );
+      if ( event->hasEndDate() ) {
+        endDT.setDate( startDT.addDays( eventLength ).date() );
+      } else {
+        if ( event->hasDuration() ) {
+          endDT = startDT.addSecs( event->duration().asSeconds() );
+        } else {
+          endDT = startDT;
+        }
+      }
+    }
+    // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
+    if ( startDT.isUtc() )
+      startDT = startDT.toLocalZone();
+
+    if ( endDT.isUtc() )
+      endDT = endDT.toLocalZone();
+
+    setDateTimes( startDT, endDT );
+  } else {
+    // set the start/end time from the template, only as a last resort #190545
+    if ( !event->dtStart().isValid() || !event->dtEnd().isValid() ) {
+      setTimes( event->dtStart(), event->dtEnd() );
+    }
+  }
+*/
 }
 
 void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )

@@ -23,11 +23,11 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <kcalcore/memorycalendar.h>
-#include <kcalcore/icalformat.h>
-#include <kcalcore/incidence.h>
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/MemoryCalendar>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/Incidence>
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
 #include <KConfigSkeleton>
 #include <KMessageBox>
 #include <KStandardDirs>
@@ -390,8 +390,7 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish( CalendarSupport::EditorItem
 
 bool EventOrTodoDialogPrivate::hasSupportedPayload( const Akonadi::Item &item ) const
 {
-  return item.hasPayload() && item.hasPayload<KCalCore::Incidence::Ptr>()
-    && ( item.hasPayload<KCalCore::Event::Ptr>() || item.hasPayload<KCalCore::Todo::Ptr>() );
+  return CalendarSupport::incidence( item );
 }
 
 bool EventOrTodoDialogPrivate::isDirty() const
@@ -409,6 +408,14 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   Q_Q( EventOrTodoDialog );
 
   Q_ASSERT( hasSupportedPayload( item ) );
+
+  if ( CalendarSupport::hasJournal( item ) ) {
+    //mUi->mTabWidget->removeTab( 5 );
+    mUi->mTabWidget->removeTab( AttachmentsTab );
+    mUi->mTabWidget->removeTab( RecurrenceTab );
+    mUi->mTabWidget->removeTab( AlarmsTab );
+  }
+
   mEditor->load( CalendarSupport::incidence( item ) );
 
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
@@ -433,6 +440,8 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
     q->setWindowIcon( SmallIcon( "view-calendar-tasks" ) );
   } else if ( mEditor->type() == KCalCore::Incidence::TypeEvent ) {
     q->setWindowIcon( SmallIcon( "view-calendar-day" ) );
+  } else if  ( mEditor->type() == KCalCore::Incidence::TypeJournal ) {
+    q->setWindowIcon( SmallIcon( "view-pim-journal" ) );
   }
 
   // Initialize tab's titles

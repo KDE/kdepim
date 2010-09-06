@@ -25,6 +25,7 @@
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
+#include <KCalCore/Journal>
 
 namespace KCalCore {
 class ICalTimeZones;
@@ -100,6 +101,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
   private:
     void load( const KCalCore::Event::Ptr &event );
     void load( const KCalCore::Todo::Ptr &todo );
+    void load( const KCalCore::Journal::Ptr &journal );
     void save( const KCalCore::Event::Ptr &event );
     void save( const KCalCore::Todo::Ptr &todo );
     void setDateTimes( const KDateTime &start, const KDateTime &end );

@@ -26,8 +26,9 @@
 #include <calendarsupport/kcalprefs.h>
 
 #include <Akonadi/Item>
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
+#include <KCalCore/Journal>
 
 #include "../korganizereditorconfig.h"
 #include "eventortododialog.h"
@@ -54,6 +55,7 @@ int main( int argc, char **argv )
   KCmdLineOptions options;
   options.add("new-event", ki18n("Creates a new event"));
   options.add("new-todo", ki18n("Creates a new todo"));
+  options.add("new-journal", ki18n("Creates a new journal"));
   options.add("+item", ki18n("Loads an existing item, or returns without doing anything when the item is not an event or todo."));
 
   KCmdLineArgs::addCmdLineOptions( options );
@@ -85,6 +87,11 @@ int main( int argc, char **argv )
     KCalCore::Todo::Ptr todo( new KCalCore::Todo );
     defaults.setDefaults( todo );
     item.setPayload<KCalCore::Todo::Ptr>( todo );
+  } else if ( args->isSet( "new-journal" ) ) {
+    std::cout << "Creating new journal..." << std::endl;
+    KCalCore::Journal::Ptr journal( new KCalCore::Journal );
+    defaults.setDefaults( journal );
+    item.setPayload<KCalCore::Journal::Ptr>( journal );
   } else if ( args->count() == 1 ) {
     qint64 id = -1;
     if ( argc == 2 ) {

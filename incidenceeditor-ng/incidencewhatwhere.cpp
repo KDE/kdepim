@@ -53,6 +53,9 @@ void IncidenceWhatWhere::load( const KCalCore::Incidence::Ptr &incidence )
     mUi->mLocationEdit->clear();
   }
 
+  mUi->mLocationEdit->setVisible( type() != KCalCore::Incidence::TypeJournal );
+  mUi->label_4->setVisible( type() != KCalCore::Incidence::TypeJournal );
+
   mWasDirty = false;
 }
 
