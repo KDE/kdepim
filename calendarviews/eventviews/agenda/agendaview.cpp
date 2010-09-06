@@ -884,7 +884,9 @@ void AgendaView::createDayLabels( bool force )
 
   // this spacer moves the day labels over to line up with the day columns
   QSpacerItem *spacer =
-    new QSpacerItem( d->mTimeLabelsZone->width() + SPACING + d->mAllDayAgenda->scrollArea()->frameWidth(),
+    new QSpacerItem( ( d->mTimeLabelsZone->isVisible() ? d->mTimeLabelsZone->width() : 0 ) +
+                     SPACING +
+                     d->mAllDayAgenda->scrollArea()->frameWidth(),
                      1, QSizePolicy::Fixed );
 
   d->mLayoutTopDayLabels->addSpacerItem( spacer );
