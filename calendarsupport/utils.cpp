@@ -466,3 +466,16 @@ bool CalendarSupport::isWorkDay( const QDate &date )
 {
   return workDays( date, date ).contains( date );
 }
+
+QStringList CalendarSupport::holiday( const QDate &date )
+{
+  QStringList hdays;
+
+  const HolidayRegion holidays( KCalPrefs::instance()->mHolidays );
+  const Holiday::List list = holidays.holidays( date );
+  
+  for ( int i = 0; i < list.count(); ++i ) {
+    hdays.append( list.at( i ).text() );
+  }
+  return hdays;
+}
