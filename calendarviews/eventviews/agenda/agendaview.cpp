@@ -884,9 +884,13 @@ void AgendaView::createDayLabels( bool force )
   d->mTopDayLabelsFrame->setStretchFactor( d->mTopDayLabels, 1 );
   d->mLayoutTopDayLabels = new QHBoxLayout( d->mTopDayLabels );
   d->mLayoutTopDayLabels->setMargin( 0 );
+  d->mLayoutTopDayLabels->setSpacing( 1 );
+
   // this spacer moves the day labels over to line up with the day columns
   QSpacerItem *spacer =
-    new QSpacerItem( d->mTimeLabelsZone->width(), 1, QSizePolicy::Fixed );
+    new QSpacerItem( d->mTimeLabelsZone->width() + SPACING + d->mAllDayAgenda->scrollArea()->frameWidth(),
+                     1, QSizePolicy::Fixed );
+
   d->mLayoutTopDayLabels->addSpacerItem( spacer );
   KVBox *topWeekLabelBox = new KVBox( d->mTopDayLabels );
   d->mLayoutTopDayLabels->addWidget( topWeekLabelBox );
@@ -955,6 +959,10 @@ void AgendaView::createDayLabels( bool force )
     placeDecorations( botDecos, date, bottomDayLabelBox, false );
 #endif
   }
+
+  QSpacerItem *rightSpacer = new QSpacerItem( d->mAllDayAgenda->scrollArea()->frameWidth(),
+                                              1, QSizePolicy::Fixed );
+  d->mLayoutTopDayLabels->addSpacerItem( rightSpacer );
 
 #ifndef EVENTVIEWS_NODECOS
   // Week decoration labels
