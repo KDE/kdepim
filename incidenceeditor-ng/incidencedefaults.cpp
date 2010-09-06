@@ -26,6 +26,7 @@
 #include <KABC/Addressee>
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
+#include <KCalCore/Journal>
 #include <KLocalizedString>
 #include <KPIMUtils/Email>
 
@@ -51,6 +52,7 @@ struct IncidenceDefaultsPrivate
 
   void todoDefaults( const Todo::Ptr &todo ) const;
   void eventDefaults( const Event::Ptr &event ) const;
+  void journalDefaults( const Journal::Ptr &journal ) const;
 };
 
 }
@@ -129,6 +131,17 @@ void IncidenceDefaultsPrivate::eventDefaults( const Event::Ptr &event ) const
   event->setDtStart( startDT );
   event->setDtEnd( mEndDt );
   event->setTransparency( Event::Opaque );
+}
+
+void IncidenceDefaultsPrivate::journalDefaults( const Journal::Ptr &journal ) const
+{
+  KDateTime startDT = KDateTime::currentLocalDateTime();
+  if ( mStartDt.isValid() )
+    startDT = mStartDt;
+
+  KDateTime endDT = startDT.addSecs( 3600 ); // Default event time: 1 hour
+
+  journal->setDtStart( startDT );
 }
 
 void IncidenceDefaultsPrivate::todoDefaults( const Todo::Ptr &todo ) const
@@ -286,7 +299,11 @@ void IncidenceDefaults::setDefaults( const Incidence::Ptr &incidence ) const
   case Incidence::TypeTodo:
     d->todoDefaults( incidence.dynamicCast<Todo>() );
     break;
+  case Incidence::TypeJournal:
+    d->journalDefaults( incidence.dynamicCast<Journal>() );
+    break;
   default:
-    kDebug() << "Unsupported incidence type, keeping current values. Type: " << incidence->type();
+    kDebug() << "Unsupported incidence type, keeping current values. Type: "
+             << incidence->type();
   }
 }

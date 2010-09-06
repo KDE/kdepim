@@ -124,10 +124,10 @@ bool IncidenceDateTime::isDirty() const
   } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>() ) {
     return isDirty( event );
   } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<Journal>() ) {
-    //TODO_JOURNAL
-    return false;
+    return isDirty( journal );
   } else {
-    Q_ASSERT_X( false, "IncidenceDateTimeEditor::isDirty", "Only implemented for todos and events" );
+    Q_ASSERT_X( false, "IncidenceDateTimeEditor::isDirty",
+                "Only implemented for todos and events" );
     return false;
   }
 }
@@ -375,6 +375,24 @@ bool IncidenceDateTime::isDirty( const KCalCore::Event::Ptr &event ) const
   } else {
     if ( currentStartDateTime() != mInitialStartDT ||
          currentEndDateTime() != mInitialEndDT ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool IncidenceDateTime::isDirty( const KCalCore::Journal::Ptr &journal ) const
+{
+  if ( journal->allDay() != mUi->mWholeDayCheck->isChecked() )
+    return true;
+
+  if ( journal->allDay() ) {
+    if ( mUi->mStartDateEdit->date() != mInitialStartDT.date() ) {
+      return true;
+    }
+  } else {
+    if ( currentStartDateTime() != mInitialStartDT ) {
       return true;
     }
   }

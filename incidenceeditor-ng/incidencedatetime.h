@@ -97,6 +97,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 
   private slots: /// Event specific
     bool isDirty( const KCalCore::Event::Ptr &event ) const;
+    bool isDirty( const KCalCore::Journal::Ptr &journal ) const;
 
   private:
     void load( const KCalCore::Event::Ptr &event );
