@@ -104,6 +104,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void load( const KCalCore::Journal::Ptr &journal );
     void save( const KCalCore::Event::Ptr &event );
     void save( const KCalCore::Todo::Ptr &todo );
+    void save( const KCalCore::Journal::Ptr &journal );
     void setDateTimes( const KDateTime &start, const KDateTime &end );
     void setTimes( const KDateTime &start, const KDateTime &end );
 

@@ -464,6 +464,8 @@ Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
     newIncidence = KCalCore::Event::Ptr( new KCalCore::Event );
   } else if ( incidenceInEditor->type() == KCalCore::Incidence::TypeTodo ) {
     newIncidence = KCalCore::Todo::Ptr( new KCalCore::Todo );
+  } else if ( incidenceInEditor->type() == KCalCore::Incidence::TypeJournal ) {
+    newIncidence = KCalCore::Journal::Ptr( new KCalCore::Journal );
   } else {
     Q_ASSERT_X( false, "save", "Invalid Incidence type" );
   }

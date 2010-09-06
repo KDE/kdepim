@@ -106,12 +106,15 @@ void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
 
 void IncidenceDateTime::save( const KCalCore::Incidence::Ptr &incidence )
 {
-  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>( incidence ) )
+  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>( incidence ) ) {
     save( todo );
-  else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>( incidence ) )
+  } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>( incidence ) ) {
     save( event );
-  else
-    Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
+  } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<Journal>( incidence ) ) {
+    save( journal );
+  } else {
+    Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos, events and journals" );
+  }
 }
 
 bool IncidenceDateTime::isDirty() const
@@ -655,6 +658,20 @@ void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
       KDateTime todoDT = currentEndDateTime();
       todo->setDtDue( todoDT );
     }
+  }
+}
+
+void IncidenceDateTime::save( const KCalCore::Journal::Ptr &journal )
+{
+  journal->setAllDay( mUi->mWholeDayCheck->isChecked() );
+
+  if ( mUi->mWholeDayCheck->isChecked() ) { // All day journal
+    KDateTime journalDTStart = currentStartDateTime();
+    journalDTStart.setDateOnly( true );
+    journal->setDtStart( journalDTStart );
+  } else { // Timed Journal
+    // set date/time end
+    journal->setDtStart( currentStartDateTime() );
   }
 }
 
