@@ -187,6 +187,7 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
 
   d->mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
+  // BUG: timelabels aren't aligned with the agenda's grid, 2 or 3 pixels of offset.
   // asymetric since the timelabels
   timeLabelTopAlignmentSpacer->setFixedHeight( d->mScrollArea->frameWidth() - 1 );
   // have 25 horizontal lines
