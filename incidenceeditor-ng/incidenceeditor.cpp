@@ -46,10 +46,16 @@ void IncidenceEditor::checkDirtyStatus()
   }
 }
 
-bool IncidenceEditor::isValid()
+bool IncidenceEditor::isValid() const
 {
   return true;
 }
+
+QString IncidenceEditor::validate()
+{
+  return QString();
+}
+
 
 KCalCore::IncidenceBase::IncidenceType IncidenceEditor::type() const
 {

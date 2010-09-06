@@ -20,6 +20,7 @@
 
 #include "combinedincidenceeditor.h"
 
+#include <KMessageBox>
 #include <QtCore/QDebug>
 
 using namespace IncidenceEditorsNG;
@@ -29,6 +30,7 @@ using namespace IncidenceEditorsNG;
 CombinedIncidenceEditor::CombinedIncidenceEditor( QWidget *parent )
   : IncidenceEditor( parent )
   , mDirtyEditorCount( 0 )
+  , mParent( parent )
 { }
 
 CombinedIncidenceEditor::~CombinedIncidenceEditor()
@@ -49,11 +51,17 @@ bool CombinedIncidenceEditor::isDirty() const
   return mDirtyEditorCount > 0;
 }
 
-bool CombinedIncidenceEditor::isValid()
+bool CombinedIncidenceEditor::isValid() const
 {
-  foreach ( IncidenceEditor *editor, mCombinedEditors  )
-    if ( !editor->isValid() )
+  foreach ( IncidenceEditor *editor, mCombinedEditors )
+    if ( !editor->isValid() ) {
+      const QString reason = editor->validate();
+      if ( !reason.isEmpty() ) {
+        KMessageBox::sorry( mParent, reason );
+      }
+
       return false;
+    }
 
   return true;
 }

@@ -177,7 +177,7 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
      * true, so if the ui doesn't need validation there is no need to reimplement
      * this method.
      */
-    virtual bool isValid();
+    virtual bool isValid() const;
 
     /**
      * Fills the ui with the values of the payload of @param item. The item is

@@ -103,7 +103,7 @@ public:
   void handleItemSaveFail( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage );
   virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
   virtual bool isDirty() const;
-  virtual bool isValid();
+  virtual bool isValid() const;
   virtual void load( const Akonadi::Item &item );
   virtual Akonadi::Item save( const Akonadi::Item &item );
   virtual Akonadi::Collection selectedCollection() const;
@@ -393,7 +393,7 @@ bool EventOrTodoDialogPrivate::isDirty() const
   return mEditor->isDirty();
 }
 
-bool EventOrTodoDialogPrivate::isValid()
+bool EventOrTodoDialogPrivate::isValid() const
 {
   return mEditor->isValid();
 }

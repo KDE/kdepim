@@ -324,7 +324,7 @@ ItemFetchScope &EditorItemManager::fetchScope()
 ItemEditorUi::~ItemEditorUi()
 { }
 
-bool ItemEditorUi::isValid()
+bool ItemEditorUi::isValid() const
 {
   return true;
 }

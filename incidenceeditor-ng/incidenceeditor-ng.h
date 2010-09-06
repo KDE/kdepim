@@ -60,10 +60,15 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
 
     /**
      * Returns whether or not the content of this editor is valid. The default
-     * implementation returns always true. The method is not const so that
-     * re-implementing editors can change the focus of their widgets.
+     * implementation returns always true.
      */
-    virtual bool isValid();
+    virtual bool isValid() const;
+
+    /**
+     * Sets focus on the invalid field.
+     * @return an i18n string with the error.
+     */
+    virtual QString validate();
 
     /**
      * Returns the type of the Incidence that is currently loaded.

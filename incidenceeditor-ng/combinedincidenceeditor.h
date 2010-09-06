@@ -43,13 +43,13 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
     ~CombinedIncidenceEditor();
 
     void combine( IncidenceEditor *other );
-    
+
     /**
      * Returns whether or not the current values in the editor differ from the
      * initial values or if one of the combined editors is dirty.
      */
     virtual bool isDirty() const;
-    virtual bool isValid();
+    virtual bool isValid() const;
 
     /**
      * Loads all data from @param inicidence into the combined editors. Note, if
@@ -62,10 +62,11 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
 
   private slots:
     void handleDirtyStatusChange( bool isDirty );
-    
+
   private:
     QVector<IncidenceEditor*> mCombinedEditors;
     int mDirtyEditorCount;
+    QWidget *mParent;
 };
 
 } // IncidenceEditorsNG

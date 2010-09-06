@@ -662,7 +662,7 @@ bool IncidenceDateTime::endDateTimeEnabled() const
 }
 
 
-bool IncidenceDateTime::isValid()
+bool IncidenceDateTime::isValid() const
 {
   if ( startDateTimeEnabled() && endDateTimeEnabled() ) {
     return currentStartDateTime() <= currentEndDateTime();
