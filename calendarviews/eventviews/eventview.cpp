@@ -474,7 +474,7 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
                        ke->text(),
                        ke->isAutoRepeat(),
                        static_cast<ushort>( ke->count() ) ) );
-      if ( !d->mTypeAhead ) {
+      if ( !d->mTypeAhead && !collectionSelection()->selectedCollections().isEmpty() ) {
         d->mTypeAhead = true;
         // TODO(AKONADI_PORT) Remove this hack when the calendarview is ported to CalendarSearch
         if ( AgendaView *view = dynamic_cast<AgendaView*>( this ) ) {
