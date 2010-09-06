@@ -43,9 +43,13 @@ set( eventviews_LIB_SRCS
      agenda/timelabels.cpp
      agenda/timelabelszone.cpp
      agenda/timescaleconfigdialog.cpp
-     multiagenda/multiagendaview.cpp
 
-     # TODO: Month view specific code
+     month/monthgraphicsitems.cpp
+     month/monthitem.cpp
+     month/monthscene.cpp
+     month/monthview.cpp
+
+     multiagenda/multiagendaview.cpp
 )
 
 kde4_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc )
