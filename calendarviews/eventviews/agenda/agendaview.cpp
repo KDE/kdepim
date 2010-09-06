@@ -161,7 +161,6 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
         mTimeLabelsZone( 0 ),
         mAllowAgendaUpdate( true ),
         mUpdateItem( 0 ),
-        mCollectionId( -1 ),
         mIsSideBySide( isSideBySide ),
         mDummyAllDayLeft( 0 ),
         mUpdateAllDayAgenda( true ),
@@ -207,9 +206,6 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
     bool mAllowAgendaUpdate;
 
     Akonadi::Item mUpdateItem;
-
-    //CollectionSelection *mCollectionSelection;
-    Akonadi::Collection::Id mCollectionId;
 
     const bool mIsSideBySide;
 
@@ -1919,7 +1915,7 @@ void AgendaView::newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &e
 
 void AgendaView::handleNewEventRequest()
 {
-  emit newEventSignal( Akonadi::Collection::List() << Akonadi::Collection( collection() ) );
+  emit newEventSignal( Akonadi::Collection::List() << Akonadi::Collection( collectionId() ) );
 }
 
 void AgendaView::newTimeSpanSelected( const QPoint &start, const QPoint &end )
@@ -1992,28 +1988,6 @@ void AgendaView::clearTimeSpanSelection()
   deleteSelectedDateTime();
 }
 
-#if 0
-void AgendaView::setCollectionSelection( CollectionSelection *sel )
-{
-  if ( mCollectionSelection == sel ) {
-    return;
-  }
-  mCollectionSelection = sel;
-}
-#endif
-
-void AgendaView::setCollection( Akonadi::Collection::Id coll )
-{
-  if ( d->mCollectionId != coll ) {
-    d->mCollectionId = coll;
-  }
-}
-
-Akonadi::Collection::Id AgendaView::collection() const
-{
-  return d->mCollectionId;
-}
-
 Agenda *AgendaView::agenda() const
 {
   return d->mAgenda;
@@ -2035,10 +2009,10 @@ bool AgendaView::filterByCollectionSelection( const Akonadi::Item &incidence )
     return customCollectionSelection()->contains( incidence.parentCollection().id() );
   }
 
-  if ( d->mCollectionId < 0 ) {
+  if ( collectionId() < 0 ) {
     return true;
   } else {
-    return d->mCollectionId == incidence.storageCollectionId();
+    return collectionId() == incidence.storageCollectionId();
   }
 }
 

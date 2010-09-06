@@ -208,6 +208,14 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     void saveConfig( KConfigGroup &configGroup );
 
+    /**
+       Makes the eventview display only items of collection @p id.
+       Usefull for example in multi-agendaview (side-by-side) where
+       each AgendaView displays only one collection.
+    */
+    void setCollectionId( Akonadi::Collection::Id id );
+    Akonadi::Collection::Id collectionId() const;
+
     //----------------------------------------------------------------------------
     // TODO_SPLIT: review these collection stuff
     CalendarSupport::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();

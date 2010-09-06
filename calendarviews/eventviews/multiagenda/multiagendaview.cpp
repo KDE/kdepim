@@ -506,7 +506,7 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
 void MultiAgendaView::Private::addView( const Akonadi::Collection &collection )
 {
   AgendaView *av = createView( CalendarSupport::displayName( collection ) );
-  av->setCollection( collection.id() );
+  av->setCollectionId( collection.id() );
 }
 
 void MultiAgendaView::Private::addView( CalendarSupport::CollectionSelectionProxyModel *sm, const QString &title )

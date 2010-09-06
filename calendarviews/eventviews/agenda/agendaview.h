@@ -146,11 +146,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     /* reimp from EventView */
     virtual void setCalendar( CalendarSupport::Calendar *cal );
 
-    /** Show only incidences from the given collection selection. */
-    // void setCollectionSelection( CollectionSelection* selection );
-    void setCollection( Akonadi::Collection::Id id );
-    Akonadi::Collection::Id collection() const;
-
     QSplitter *splitter() const;
 
     /** First shown day */

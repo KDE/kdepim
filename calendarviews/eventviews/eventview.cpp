@@ -30,10 +30,6 @@
 
 #include "prefs.h"
 
-
-// AKONADI_PORT hack, see below
-#include "agenda/agendaview.h"
-
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
@@ -79,7 +75,8 @@ class EventView::Private
         mPrefs( new Prefs() ),
         mKCalPrefs( new CalendarSupport::KCalPrefs() ),
         mChanger( 0 ),
-        mChanges( DatesChanged )
+        mChanges( DatesChanged ),
+        mCollectionId( -1 )
     {
       QByteArray cname = q->metaObject()->className();
       cname.replace( ":", "_" );
@@ -134,6 +131,7 @@ class EventView::Private
 
     CalendarSupport::IncidenceChanger *mChanger;
     Changes mChanges;
+    Akonadi::Collection::Id mCollectionId;
 };
 
 CalendarSupport::CollectionSelection* EventView::Private::sGlobalCollectionSelection = 0;
@@ -422,13 +420,8 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
       d->mReturnPressed = true;
     } else if ( ke->type() == QEvent::KeyRelease ) {
       if ( d->mReturnPressed ) {
-        // TODO(AKONADI_PORT) Remove this hack when the calendarview is ported to CalendarSearch
-        if ( AgendaView *view = dynamic_cast<AgendaView*>( this ) ) {
-          if ( view->collection() >= 0 ) {
-            emit newEventSignal( Akonadi::Collection::List() << Akonadi::Collection( view->collection() ) );
-          } else {
-            emit newEventSignal( collectionSelection()->selectedCollections() );
-          }
+        if ( collectionId() >= 0 ) {
+          emit newEventSignal( Akonadi::Collection::List() << Akonadi::Collection( collectionId() ) );
         } else {
           emit newEventSignal( collectionSelection()->selectedCollections() );
         }
@@ -476,13 +469,8 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
                        static_cast<ushort>( ke->count() ) ) );
       if ( !d->mTypeAhead && !collectionSelection()->selectedCollections().isEmpty() ) {
         d->mTypeAhead = true;
-        // TODO(AKONADI_PORT) Remove this hack when the calendarview is ported to CalendarSearch
-        if ( AgendaView *view = dynamic_cast<AgendaView*>( this ) ) {
-          if ( view->collection() >= 0 ) {
-            emit newEventSignal( Akonadi::Collection::List() << Akonadi::Collection( view->collection() ) );
-          } else {
-            emit newEventSignal( collectionSelection()->selectedCollections() );
-          }
+        if ( collectionId() >= 0 ) {
+          emit newEventSignal( Akonadi::Collection::List() << Akonadi::Collection( collectionId() ) );
         } else {
           emit newEventSignal( collectionSelection()->selectedCollections() );
         }
@@ -752,6 +740,17 @@ void EventView::saveConfig( KConfigGroup &configGroup )
   doSaveConfig( configGroup );
 }
 
+void EventView::setCollectionId( Akonadi::Collection::Id id )
+{
+  if ( d->mCollectionId != id ) {
+    d->mCollectionId = id;
+  }
+}
+
+Akonadi::Collection::Id EventView::collectionId() const
+{
+  return d->mCollectionId;
+}
 
 #include "eventview.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;
