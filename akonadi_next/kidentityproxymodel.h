@@ -44,6 +44,7 @@ public:
   virtual QModelIndex parent(const QModelIndex& child) const;
   virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
   virtual bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
+  virtual QStringList mimeTypes() const;
 
   virtual QItemSelection mapSelectionFromSource(const QItemSelection& selection) const;
   virtual QItemSelection mapSelectionToSource(const QItemSelection& selection) const;

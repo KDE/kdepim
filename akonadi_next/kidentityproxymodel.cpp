@@ -22,6 +22,7 @@
 #include "kidentityproxymodel.h"
 
 #include <QtGui/QItemSelection>
+#include <QtCore/QStringList>
 
 namespace Future
 {
@@ -305,6 +306,17 @@ QModelIndexList KIdentityProxyModel::match(const QModelIndex& start, int role, c
     for ( ; it != end; ++it)
       proxyList.append(mapFromSource(*it));
     return proxyList;
+}
+
+/*!
+    \reimp
+ */
+QStringList KIdentityProxyModel::mimeTypes() const
+{
+    if (sourceModel())
+        return sourceModel()->mimeTypes();
+    else
+        return QAbstractProxyModel::mimeTypes();
 }
 
 /*!
