@@ -176,8 +176,9 @@ void MultiplyingLineView::slotDeleteLine()
   }
 
   mLines.removeAll( line );
+  line->hide();
   line->setParent( 0 );
-  delete line;
+  line->deleteLater();
 
   emit lineDeleted( pos );
 
