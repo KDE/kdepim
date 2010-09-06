@@ -59,8 +59,8 @@ void DateRangeFilterProxyModel::setStartDate( const KDateTime &date )
 {
   if ( date.isValid() ) {
     d->mStart = date;
+    invalidateFilter();
   }
-  invalidateFilter();
 }
 
 KDateTime DateRangeFilterProxyModel::endDate() const
@@ -72,9 +72,8 @@ void DateRangeFilterProxyModel::setEndDate( const KDateTime &date )
 {
   if ( date.isValid() ) {
     d->mEnd = date.toUtc();
+    invalidateFilter();
   }
-
-  invalidateFilter();
 }
 
 int DateRangeFilterProxyModel::startDateColumn() const
