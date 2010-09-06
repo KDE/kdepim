@@ -1998,6 +1998,16 @@ Exchange understands. The invitation will be sent as an attachment with name <fi
 </listitem>
 </varlistentry>
 <varlistentry>
+<term><guilabel>Show invitation update differences in the Outook style</guilabel></term>
+<listitem>
+<para>When viewing updated invitations, this option enables the differences between the previous
+and current invitations to be displayed in a way very much like Microsoft Outlook(tm). 
+This is the default. The user can turn this option off if they want to see the invitation
+update differences shown in the the "classic" KMail style.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
 <term><guilabel>Automatic invitation sending</guilabel></term>
 <listitem>
 <para>When this is checked, you will not see the mail composer window. Instead, 
