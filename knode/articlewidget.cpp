@@ -279,11 +279,12 @@ void ArticleWidget::disableActions()
 void ArticleWidget::readConfig()
 {
   KNConfigManager *cfgMgr = knGlobals.configManager();
+  KNConfig::ReadNewsViewer *rnViewer = cfgMgr->readNewsViewer();
 
-  mFixedFontToggle->setChecked( cfgMgr->readNewsViewer()->useFixedFont() );
-  mFancyToggle->setChecked( cfgMgr->readNewsViewer()->interpretFormatTags() );
+  mFixedFontToggle->setChecked( rnViewer->useFixedFont() );
+  mFancyToggle->setChecked( rnViewer->interpretFormatTags() );
 
-  mShowHtml = cfgMgr->readNewsViewer()->alwaysShowHTML();
+  mShowHtml = rnViewer->alwaysShowHTML();
 
   KConfig *conf = knGlobals.config();
   conf->setGroup( "READNEWS" );
@@ -315,8 +316,9 @@ void ArticleWidget::writeConfig()
   conf->writeEntry( "headerStyle", mHeaderStyle );
 
   KNConfigManager *cfgMgr = knGlobals.configManager();
-  cfgMgr->readNewsViewer()->setUseFixedFont( mFixedFontToggle->isChecked() );
-  cfgMgr->readNewsViewer()->setInterpretFormatTags( mFancyToggle->isChecked() );
+  KNConfig::ReadNewsViewer *rnViewer = cfgMgr->readNewsViewer();
+  rnViewer->setUseFixedFont( mFixedFontToggle->isChecked() );
+  rnViewer->setInterpretFormatTags( mFancyToggle->isChecked() );
 }
 
 
@@ -328,7 +330,8 @@ void ArticleWidget::setArticle( KNArticle *article )
     delete mArticle;
 
   KNConfigManager *cfgMgr = knGlobals.configManager();
-  mShowHtml = cfgMgr->readNewsViewer()->alwaysShowHTML();
+  KNConfig::ReadNewsViewer *rnViewer = cfgMgr->readNewsViewer();
+  mShowHtml = rnViewer->alwaysShowHTML();
   mRot13 = false;
   mRot13Toggle->setChecked( false );
   mTimer->stop();
@@ -385,7 +388,7 @@ void ArticleWidget::displayArticle()
   }
 
   KNConfigManager *cfgMgr = knGlobals.configManager();
-  KNConfig::ReadNewsViewer *rnv = cfgMgr->readNewsViewer();
+  KNConfig::ReadNewsViewer *rnViewer = cfgMgr->readNewsViewer();
   removeTempFiles();
 
   mViewer->begin();
@@ -458,7 +461,7 @@ void ArticleWidget::displayArticle()
   mAttachments.clear();
   mAttachementMap.clear();
   if( !text || ct->isMultipart() )
-    mArticle->attachments( &mAttachments, rnv->showAlternativeContents() );
+    mArticle->attachments( &mAttachments, rnViewer->showAlternativeContents() );
 
   // partial message
   if(ct->isPartial()) {
@@ -470,7 +473,7 @@ void ArticleWidget::displayArticle()
     // handle HTML messages
     if ( text->contentType()->isHTMLText() ) {
       QString htmlTxt;
-      text->decodedText( htmlTxt, true, cfgMgr->readNewsViewer()->removeTrailingNewlines() );
+      text->decodedText( htmlTxt, true, rnViewer->removeTrailingNewlines() );
       if ( mShowHtml ) {
         // strip </html> & </body>
         int i = kMin( htmlTxt.findRev( "</html>", -1, false ), htmlTxt.findRev( "</body>", -1, false ) );
@@ -492,7 +495,7 @@ void ArticleWidget::displayArticle()
     else {
       if ( !containsPGP ) {
         QStringList lines;
-        text->decodedText( lines, true, cfgMgr->readNewsViewer()->removeTrailingNewlines() );
+        text->decodedText( lines, true, rnViewer->removeTrailingNewlines() );
         displayBodyBlock( lines );
       }
     }
@@ -576,6 +579,7 @@ void ArticleWidget::displayHeader()
   // standard & fancy header style
   KMime::Headers::Base *hb;
   KNConfigManager *cfgMgr = knGlobals.configManager();
+  KNConfig::ReadNewsViewer *rnViewer = cfgMgr->readNewsViewer();
   QValueList<KNDisplayedHeader*> dhs = cfgMgr->displayedHeaders()->headers();
   for ( QValueList<KNDisplayedHeader*>::Iterator it = dhs.begin(); it != dhs.end(); ++it ) {
     KNDisplayedHeader *dh = (*it);
@@ -654,8 +658,7 @@ void ArticleWidget::displayHeader()
 
   // references
   KMime::Headers::References *refs = mArticle->references( false );
-  if ( mArticle->type() == KMime::Base::ATremote && refs
-       && cfgMgr->readNewsViewer()->showRefBar() ) {
+  if ( mArticle->type() == KMime::Base::ATremote && refs && rnViewer->showRefBar() ) {
     html += "<div class=\"spamheader\">";
     int refCnt = refs->count(), i = 1;
     QCString id = refs->first();
@@ -1169,7 +1172,8 @@ void ArticleWidget::slotURLClicked( const KURL &url, bool forceOpen)
       return;
     // TODO: replace with message box as done in KMail
     KNConfigManager *cfgMgr = knGlobals.configManager();
-    if ( forceOpen || cfgMgr->readNewsViewer()->openAttachmentsOnClick() )
+    KNConfig::ReadNewsViewer *rnViewer = cfgMgr->readNewsViewer();
+    if ( forceOpen || rnViewer->openAttachmentsOnClick() )
       knGlobals.articleManager()->openContent( c );
     else
       knGlobals.articleManager()->saveContentToFile( c, this );
