@@ -58,11 +58,9 @@ KDateTime DateRangeFilterProxyModel::startDate() const
 void DateRangeFilterProxyModel::setStartDate( const KDateTime &date )
 {
   if ( date.isValid() ) {
-    emit layoutAboutToBeChanged();
     d->mStart = date;
-    invalidateFilter();
-    emit layoutChanged();
   }
+  invalidateFilter();
 }
 
 KDateTime DateRangeFilterProxyModel::endDate() const
@@ -73,11 +71,10 @@ KDateTime DateRangeFilterProxyModel::endDate() const
 void DateRangeFilterProxyModel::setEndDate( const KDateTime &date )
 {
   if ( date.isValid() ) {
-    emit layoutAboutToBeChanged();
     d->mEnd = date.toUtc();
-    invalidateFilter();
-    emit layoutChanged();
   }
+
+  invalidateFilter();
 }
 
 int DateRangeFilterProxyModel::startDateColumn() const
@@ -90,11 +87,8 @@ void DateRangeFilterProxyModel::setStartDateColumn( int column )
   if ( column == d->mStartColumn ) {
     return;
   }
-
-  emit layoutAboutToBeChanged();
   d->mStartColumn = column;
   invalidateFilter();
-  emit layoutChanged();
 }
 
 int DateRangeFilterProxyModel::endDateColumn() const
@@ -107,10 +101,8 @@ void DateRangeFilterProxyModel::setEndDateColumn( int column )
   if ( column == d->mEndColumn ) {
     return;
   }
-  emit layoutAboutToBeChanged();
   d->mEndColumn = column;
   invalidateFilter();
-  emit layoutChanged();
 }
 
 bool DateRangeFilterProxyModel::filterAcceptsRow( int source_row,
