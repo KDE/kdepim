@@ -64,7 +64,7 @@ configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version
 
 # It is needed otherwise it finds the kde4-config of the target platform
 if(WINCE)
-FIND_PROGRAM(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
+find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
 endif(WINCE)
 
 find_package(KDE4 REQUIRED)
@@ -84,8 +84,16 @@ endif()
 ### end of 4.4 compat code ###
 
 ############### Load the CTest options ###############
-# Set a timeout value of 5 minutes per test
-set(DART_TESTING_TIMEOUT 300)
+
+# CMake is irritating and doesn't allow setting the tests timeout globally.
+# Let's work around this. The global timeout is now 2 minutes.
+set(_DartConfigFile "${CMAKE_BINARY_DIR}/DartConfiguration.tcl")
+if(EXISTS ${_DartConfigFile})
+  set(DartTestingTimeout "120")
+  file(READ ${_DartConfigFile} _DartConfigFile_content)
+  string(REGEX REPLACE "TimeOut: 1500" "TimeOut: ${DartTestingTimeout}" _DartConfigFile_content ${_DartConfigFile_content})
+  file(WRITE ${_DartConfigFile} ${_DartConfigFile_content})
+endif()
 
 # CTestCustom.cmake has to be in the CTEST_BINARY_DIR.
 # in the KDE build system, this is the same as CMAKE_BINARY_DIR.
