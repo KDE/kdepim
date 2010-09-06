@@ -156,8 +156,8 @@ if (NOT WINCE)
 
 set(testincidenceeditor_SRCS main.cpp)
 
-kde4_add_executable(keventeditor ${testincidenceeditor_SRCS})
-target_link_libraries(keventeditor
+kde4_add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
+target_link_libraries(kincidenceeditor
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
@@ -167,7 +167,7 @@ target_link_libraries(keventeditor
   kdepimdbusinterfaces
 )
 
-install(TARGETS keventeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kincidenceeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory( tests )
 
