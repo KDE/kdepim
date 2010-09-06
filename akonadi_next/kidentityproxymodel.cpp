@@ -475,6 +475,14 @@ void KIdentityProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     endResetModel();
 }
 
+Qt::DropActions KIdentityProxyModel::supportedDropActions() const
+{
+    if (sourceModel())
+        return sourceModel()->supportedDropActions();
+    else
+        return QAbstractProxyModel::supportedDropActions();
+}
+
 void KIdentityProxyModelPrivate::_k_sourceColumnsAboutToBeInserted(const QModelIndex &parent, int start, int end)
 {
     Q_Q(KIdentityProxyModel);
