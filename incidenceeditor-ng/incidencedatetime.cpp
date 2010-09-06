@@ -671,4 +671,23 @@ bool IncidenceDateTime::isValid() const
   }
 }
 
+QString IncidenceDateTime::validate()
+{
+  if ( startDateTimeEnabled() && endDateTimeEnabled() &&
+       currentStartDateTime() > currentEndDateTime() ) {
+    if ( mLoadedIncidence->type() == KCalCore::IncidenceType::Event ) {
+      return i18nc( "@info",
+                    "The event ends before it starts.\n"
+                    "Please correct dates and times." );
+    } else if ( mLoadedIncidence->type() == KCalCore::IncidenceType::Todo ) {
+      return i18nc( "@info",
+                    "The to-do is due before it starts.\n"
+                    "Please correct dates and times." );
+
+    }
+  } else {
+    return QString();
+  }
+}
+
 #include "moc_incidencedatetime.cpp"
