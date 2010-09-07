@@ -46,6 +46,7 @@ namespace EventViews {
 
 class MonthGraphicsView;
 class MonthScene;
+class MonthViewPrivate;
 
 /**
   New month view.
@@ -147,12 +148,13 @@ class MonthView : public EventView
     Akonadi::Item::Id mSelectedItemId;
     QDate mSelectedItemDate;
 
-    CalendarSupport::CalendarSearch* mCalendarSearch;
-
     QTimer mReloadTimer;
 
     friend class MonthScene;
     friend class MonthGraphicsView;
+
+  private:
+    Q_DECLARE_PRIVATE( MonthView );
 };
 
 }

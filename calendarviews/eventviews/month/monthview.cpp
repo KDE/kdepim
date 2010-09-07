@@ -23,7 +23,7 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "monthview.h"
+#include "monthview_p.h"
 #include "monthscene.h"
 #include "monthitem.h"
 #include "monthgraphicsitems.h"
@@ -49,9 +49,9 @@
 using namespace EventViews;
 
 MonthView::MonthView( QWidget *parent )
-  : EventView( parent )
-  , mCalendarSearch( new CalendarSupport::CalendarSearch( this ) )
+  : EventView( new MonthViewPrivate( this ), parent )
 {
+  Q_D( MonthView );
   QHBoxLayout *topLayout = new QHBoxLayout( this );
 
   mView = new MonthGraphicsView( this );
@@ -102,13 +102,13 @@ MonthView::MonthView( QWidget *parent )
 
   topLayout->addLayout( rightLayout );
 
-  connect( mCalendarSearch->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+  connect( d->calendarSearch->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
            this, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
-  connect( mCalendarSearch->model(), SIGNAL( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ),
+  connect( d->calendarSearch->model(), SIGNAL( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ),
            this, SLOT( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ) );
-  connect( mCalendarSearch->model(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
+  connect( d->calendarSearch->model(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
-  connect( mCalendarSearch->model(), SIGNAL( modelReset() ), this, SLOT( calendarReset() ) );
+  connect( d->calendarSearch->model(), SIGNAL( modelReset() ), this, SLOT( calendarReset() ) );
   
   connect( mScene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
            SIGNAL(showIncidencePopup(Akonadi::Item, QDate)) );
@@ -129,8 +129,14 @@ MonthView::MonthView( QWidget *parent )
   mSelectedItemId = -1;
 }
 
+MonthView::~MonthView()
+{
+  delete d_ptr;
+}
+
 void MonthView::updateConfig()
 {
+  Q_D( MonthView );
   CalendarSupport::CalendarSearch::IncidenceTypes types;
   if ( preferences()->showTodosMonthView() ) {
     types |= CalendarSupport::CalendarSearch::Todos;
@@ -141,13 +147,9 @@ void MonthView::updateConfig()
   }
 
   types |= CalendarSupport::CalendarSearch::Events;
-  mCalendarSearch->setIncidenceTypes( types );
+  d->calendarSearch->setIncidenceTypes( types );
 
   mScene->update();
-}
-
-MonthView::~MonthView()
-{
 }
 
 int MonthView::currentDateCount() const
@@ -195,10 +197,10 @@ QDateTime MonthView::selectionEnd() const
 
 void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
 {
+  Q_D( MonthView );
   EventView::setDateRange( start, end );
-  // TODO: Make EventView::d protected
-  // mCalendarSearch->setStartDate( d->actualStartDateTime );
-  // mCalendarSearch->setEndDate( d->actualEndDateTime );
+  d->calendarSearch->setStartDate( d->actualStartDateTime );
+  d->calendarSearch->setEndDate( d->actualEndDateTime );
 }
   
 bool MonthView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
@@ -351,6 +353,7 @@ Akonadi::Item::List MonthView::selectedIncidences() const
 
 void MonthView::reloadIncidences()
 {
+  Q_D( MonthView );
   // keep selection if it exists
   Akonadi::Item incidenceSelected;
 
@@ -374,7 +377,7 @@ void MonthView::reloadIncidences()
 
   // build global event list
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-  const Akonadi::Item::List incidences = CalendarSupport::itemsFromModel( mCalendarSearch->model() );
+  const Akonadi::Item::List incidences = CalendarSupport::itemsFromModel( d->calendarSearch->model() );
 
   foreach ( const Akonadi::Item &aitem, incidences ) {
     const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
@@ -470,18 +473,21 @@ void MonthView::calendarReset()
 void MonthView::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
 {
   Q_ASSERT( topLeft.parent() == bottomRight.parent() );
-  incidencesChanged( CalendarSupport::itemsFromModel( mCalendarSearch->model(), topLeft.parent(),
+  Q_D( MonthView );
+  incidencesChanged( CalendarSupport::itemsFromModel( d->calendarSearch->model(), topLeft.parent(),
                     topLeft.row(), bottomRight.row() ) );
 }
 
 void MonthView::rowsInserted( const QModelIndex& parent, int start, int end )
 {
-  incidencesAdded( CalendarSupport::itemsFromModel( mCalendarSearch->model(), parent, start, end ) );
+  Q_D( MonthView );
+  incidencesAdded( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
 }
 
 void MonthView::rowsAboutToBeRemoved( const QModelIndex& parent, int start, int end )
 {
-  incidencesAboutToBeRemoved( CalendarSupport::itemsFromModel( mCalendarSearch->model(), parent, start, end ) );
+  Q_D( MonthView );
+  incidencesAboutToBeRemoved( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
 }
 
 void MonthView::incidencesAdded( const Akonadi::Item::List &incidences )

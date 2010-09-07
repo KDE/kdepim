@@ -85,21 +85,8 @@ void EventViewPrivate::setUpModels()
       new CalendarSupport::CollectionSelection( collectionSelectionModel->selectionModel() );
     stateSaver = new CalendarSupport::EntityModelStateSaver( collectionSelectionModel, q );
     stateSaver->addRole( Qt::CheckStateRole, "CheckState" );
-    // DISABLED_FOR_NOW
-    //calendarSearch->setSelectionModel( collectionSelectionModel->selectionModel() );
-  } else {
-    // DISABLED_FOR_NOW
-    //calendarSearch->setSelectionModel( globalCollectionSelection()->model() );
   }
-#if 0
-  QDialog *dlg = new QDialog( q );
-  dlg->setModal( false );
-  QVBoxLayout *layout = new QVBoxLayout( dlg );
-  EntityTreeView *testview = new EntityTreeView( dlg );
-  layout->addWidget( testview );
-  testview->setModel( calendarSearch->model() );
-  dlg->show();
-#endif
+
   reconnectCollectionSelection();
 }
 

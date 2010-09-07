@@ -75,6 +75,23 @@ EventView::EventView( QWidget *parent ) : QWidget( parent ), d_ptr( new EventVie
   d_ptr->setUpModels();
 }
 
+EventView::EventView( EventViewPrivate *dd, QWidget *parent )
+  : QWidget( parent ),
+    d_ptr( dd )
+{
+
+  //AKONADI_PORT review: the FocusLineEdit in the editor emits focusReceivedSignal(),
+  //which triggered finishTypeAhead.  But the global focus widget in QApplication is
+  //changed later, thus subsequent keyevents still went to this view, triggering another
+  //editor, for each keypress.
+  //Thus, listen to the global focusChanged() signal (seen in Qt 4.6-stable-patched 20091112 -Frank)
+  connect( qobject_cast<QApplication*>( QApplication::instance() ),
+           SIGNAL(focusChanged(QWidget*,QWidget*)),
+           this, SLOT(focusChanged(QWidget*,QWidget*)) );
+
+  d_ptr->setUpModels();
+}
+
 EventView::~EventView()
 {
   delete d_ptr;
