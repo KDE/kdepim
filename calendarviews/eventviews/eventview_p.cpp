@@ -33,6 +33,8 @@
 #include <calendarsupport/entitymodelstatesaver.h>
 #include <calendarsupport/kcalprefs.h>
 
+#include <QtGui/QApplication>
+
 EventView::Private::Private( EventView *qq )
   : q( qq ),
     calendar( 0 ),
@@ -56,6 +58,18 @@ EventView::Private::Private( EventView *qq )
 EventView::Private::~Private()
 {
   delete collectionSelectionModel;
+}
+
+void EventView::Private::finishTypeAhead()
+{
+  if ( mTypeAheadReceiver ) {
+    foreach ( QEvent *e, mTypeAheadEvents ) {
+      QApplication::sendEvent( mTypeAheadReceiver, e );
+    }
+  }
+  qDeleteAll( mTypeAheadEvents );
+  mTypeAheadEvents.clear();
+  mTypeAhead = false;
 }
 
 void EventView::Private::setUpModels()

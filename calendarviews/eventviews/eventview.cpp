@@ -362,20 +362,8 @@ void EventView::setTypeAheadReceiver( QObject *o )
 void EventView::focusChanged( QWidget *, QWidget *now )
 {
   if ( d->mTypeAhead && now && now == d->mTypeAheadReceiver ) {
-    finishTypeAhead();
+    d->finishTypeAhead();
   }
-}
-
-void EventView::finishTypeAhead()
-{
-  if ( d->mTypeAheadReceiver ) {
-    foreach ( QEvent *e, d->mTypeAheadEvents ) {
-      QApplication::sendEvent( d->mTypeAheadReceiver, e );
-    }
-  }
-  qDeleteAll( d->mTypeAheadEvents );
-  d->mTypeAheadEvents.clear();
-  d->mTypeAhead = false;
 }
 
 CalendarSupport::CollectionSelection *EventView::collectionSelection() const

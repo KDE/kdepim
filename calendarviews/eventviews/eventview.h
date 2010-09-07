@@ -469,13 +469,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     QStringList holidayNames( const QDate &date ) const;
 
   private:
-    /*
-     * This is called when the new event dialog is shown. It sends
-     * all events in mTypeAheadEvents to the receiver.
-     */
-    void finishTypeAhead();
-
-  private:
     class Private;
     Private *const d;
 };

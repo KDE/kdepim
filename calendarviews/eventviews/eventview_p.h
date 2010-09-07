@@ -44,6 +44,11 @@ class EventView::Private
 
     ~Private();
 
+    /**
+      This is called when the new event dialog is shown. It sends
+      all events in mTypeAheadEvents to the receiver.
+     */
+    void finishTypeAhead();
     void setUpModels();
     void reconnectCollectionSelection();
 
