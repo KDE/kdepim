@@ -112,7 +112,9 @@ class MonthView : public EventView
   protected:
     int maxDatesHint() const;
 
+#ifndef QT_NO_WHEELEVENT
     virtual void wheelEvent( QWheelEvent *event );
+#endif
     virtual void keyPressEvent( QKeyEvent *event );
     virtual void keyReleaseEvent( QKeyEvent *event );
 

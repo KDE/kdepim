@@ -726,13 +726,19 @@ void MonthGraphicsView::setActionCursor( MonthScene::ActionType actionType )
 {
    switch ( actionType ) {
    case MonthScene::Move:
+#ifndef QT_NO_CURSOR
      setCursor( Qt::ArrowCursor );
+#endif
      break;
    case MonthScene::Resize:
+#ifndef QT_NO_CURSOR
      setCursor( Qt::SizeHorCursor );
+#endif
      break;
+#ifndef QT_NO_CURSOR
    default:
      setCursor( Qt::ArrowCursor );
+#endif
    }
 }
 

@@ -245,6 +245,7 @@ void MonthView::updateView()
   mView->update();
 }
 
+#ifndef QT_NO_WHEELEVENT
 void MonthView::wheelEvent( QWheelEvent *event )
 {
   // invert direction to get scroll-like behaviour
@@ -257,6 +258,7 @@ void MonthView::wheelEvent( QWheelEvent *event )
   // call accept in every case, we do not want anybody else to react
   event->accept();
 }
+#endif
 
 void MonthView::keyPressEvent( QKeyEvent *event )
 {
