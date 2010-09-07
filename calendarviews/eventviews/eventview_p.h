@@ -33,16 +33,16 @@ namespace CalendarSupport {
 class EntityModelStateSaver;
 }
 
-using namespace EventViews;
+namespace EventViews {
 
-class EventView::Private
+class EventViewPrivate
 {
   EventView *const q;
 
   public: /// Methods
-    explicit Private( EventView *qq );
+    explicit EventViewPrivate( EventView *qq );
 
-    ~Private();
+    ~EventViewPrivate();
 
     /**
       This is called when the new event dialog is shown. It sends
@@ -79,6 +79,8 @@ class EventView::Private
     KCalPrefsPtr mKCalPrefs;
 
     CalendarSupport::IncidenceChanger *mChanger;
-    Changes mChanges;
+    EventView::Changes mChanges;
     Akonadi::Collection::Id mCollectionId;
 };
+
+} // EventViews

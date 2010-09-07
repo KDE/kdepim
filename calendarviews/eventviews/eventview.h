@@ -59,6 +59,7 @@ class KConfigGroup;
 
 namespace EventViews {
 
+class EventViewPrivate;
 class Prefs;
 typedef boost::shared_ptr<Prefs> PrefsPtr;
 typedef boost::shared_ptr<CalendarSupport::KCalPrefs> KCalPrefsPtr;
@@ -469,8 +470,8 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     QStringList holidayNames( const QDate &date ) const;
 
   private:
-    class Private;
-    Private *const d;
+    EventViewPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE( EventView );
 };
 
 }

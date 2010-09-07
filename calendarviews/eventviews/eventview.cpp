@@ -50,15 +50,17 @@ using namespace KCalCore;
 #include <QApplication>
 #include <QKeyEvent>
 
-CalendarSupport::CollectionSelection *EventView::Private::sGlobalCollectionSelection = 0;
+using namespace EventViews;
+
+CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 
 /* static */
 void EventView::setGlobalCollectionSelection( CalendarSupport::CollectionSelection *s )
 {
-  Private::sGlobalCollectionSelection = s;
+  EventViewPrivate::sGlobalCollectionSelection = s;
 }
 
-EventView::EventView( QWidget *parent ) : QWidget( parent ), d( new Private( this ) )
+EventView::EventView( QWidget *parent ) : QWidget( parent ), d_ptr( new EventViewPrivate( this ) )
 {
 
   //AKONADI_PORT review: the FocusLineEdit in the editor emits focusReceivedSignal(),
@@ -70,12 +72,12 @@ EventView::EventView( QWidget *parent ) : QWidget( parent ), d( new Private( thi
            SIGNAL(focusChanged(QWidget*,QWidget*)),
            this, SLOT(focusChanged(QWidget*,QWidget*)) );
 
-  d->setUpModels();
+  d_ptr->setUpModels();
 }
 
 EventView::~EventView()
 {
-  delete d;
+  delete d_ptr;
 }
 
 void EventView::defaultAction( const Akonadi::Item &aitem )
@@ -97,6 +99,7 @@ void EventView::defaultAction( const Akonadi::Item &aitem )
 
 void EventView::setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegion )
 {
+  Q_D( EventView );
   d->mHolidayRegion = holidayRegion;
 }
 
@@ -152,6 +155,7 @@ int EventView::showMoveRecurDialog( const Akonadi::Item &aitem, const QDate &dat
 
 void EventView::setCalendar( CalendarSupport::Calendar *cal )
 {
+  Q_D( EventView );
   if ( d->calendar != cal ) {
     d->calendar = cal;
     if ( cal && d->collectionSelectionModel ) {
@@ -162,11 +166,13 @@ void EventView::setCalendar( CalendarSupport::Calendar *cal )
 
 CalendarSupport::Calendar *EventView::calendar() const
 {
+  Q_D( const EventView );
   return d->calendar;
 }
 
 void EventView::setPreferences( const PrefsPtr &preferences )
 {
+  Q_D( EventView );
   if ( d->mPrefs != preferences ) {
     if ( preferences ) {
       d->mPrefs = preferences;
@@ -179,6 +185,7 @@ void EventView::setPreferences( const PrefsPtr &preferences )
 
 void EventView::setKCalPreferences( const KCalPrefsPtr &preferences )
 {
+  Q_D( EventView );
   if ( d->mKCalPrefs != preferences ) {
     if ( preferences ) {
       d->mKCalPrefs = preferences;
@@ -191,11 +198,13 @@ void EventView::setKCalPreferences( const KCalPrefsPtr &preferences )
 
 PrefsPtr EventView::preferences() const
 {
+  Q_D( const EventView );
   return d->mPrefs;
 }
 
 KCalPrefsPtr EventView::kcalPreferences() const
 {
+  Q_D( const EventView );
   return d->mKCalPrefs;
 }
 
@@ -206,6 +215,7 @@ void EventView::dayPassed( const QDate & )
 
 void EventView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
 {
+  Q_D( EventView );
   d->mChanger = changer;
 }
 
@@ -244,6 +254,7 @@ bool EventView::hasConfigurationDialog() const
 
 void EventView::setDateRange( const KDateTime &start, const KDateTime &end )
 {
+  Q_D( EventView );
 #if 0
   //AKONADI_PORT the old code called showDates() (below), which triggers a repaint,
   //which the old code relies on
@@ -261,21 +272,25 @@ void EventView::setDateRange( const KDateTime &start, const KDateTime &end )
 
 KDateTime EventView::startDateTime() const
 {
+  Q_D( const EventView );
   return d->startDateTime;
 }
 
 KDateTime EventView::endDateTime() const
 {
+  Q_D( const EventView );
   return d->endDateTime;
 }
 
 KDateTime EventView::actualStartDateTime() const
 {
+  Q_D( const EventView );
   return d->actualStartDateTime;
 }
 
 KDateTime EventView::actualEndDateTime() const
 {
+  Q_D( const EventView );
   return d->actualEndDateTime;
 }
 
@@ -285,6 +300,7 @@ void EventView::showConfigurationDialog( QWidget * )
 
 bool EventView::processKeyEvent( QKeyEvent *ke )
 {
+  Q_D( EventView );
   // If Return is pressed bring up an editor for the current selected time span.
   if ( ke->key() == Qt::Key_Return ) {
     if ( ke->type() == QEvent::KeyPress ) {
@@ -356,11 +372,13 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
 
 void EventView::setTypeAheadReceiver( QObject *o )
 {
+  Q_D( EventView );
   d->mTypeAheadReceiver = o;
 }
 
 void EventView::focusChanged( QWidget *, QWidget *now )
 {
+  Q_D( EventView );
   if ( d->mTypeAhead && now && now == d->mTypeAheadReceiver ) {
     d->finishTypeAhead();
   }
@@ -368,12 +386,13 @@ void EventView::focusChanged( QWidget *, QWidget *now )
 
 CalendarSupport::CollectionSelection *EventView::collectionSelection() const
 {
+  Q_D( const EventView );
   return d->customCollectionSelection ? d->customCollectionSelection : globalCollectionSelection();
 }
 
-void EventView::setCustomCollectionSelectionProxyModel(
-  CalendarSupport::CollectionSelectionProxyModel *model )
+void EventView::setCustomCollectionSelectionProxyModel( CalendarSupport::CollectionSelectionProxyModel *model )
 {
+  Q_D( EventView );
   if ( d->collectionSelectionModel == model ) {
     return;
   }
@@ -388,14 +407,15 @@ void EventView::collectionSelectionChanged()
 
 }
 
-CalendarSupport::CollectionSelectionProxyModel
-*EventView::customCollectionSelectionProxyModel() const
+CalendarSupport::CollectionSelectionProxyModel *EventView::customCollectionSelectionProxyModel() const
 {
+  Q_D( const EventView );
   return d->collectionSelectionModel;
 }
 
 CalendarSupport::CollectionSelectionProxyModel *EventView::takeCustomCollectionSelectionProxyModel()
 {
+  Q_D( EventView );
   CalendarSupport::CollectionSelectionProxyModel *m = d->collectionSelectionModel;
   d->collectionSelectionModel = 0;
   d->setUpModels();
@@ -404,6 +424,7 @@ CalendarSupport::CollectionSelectionProxyModel *EventView::takeCustomCollectionS
 
 CalendarSupport::CollectionSelection *EventView::customCollectionSelection() const
 {
+  Q_D( const EventView );
   return d->customCollectionSelection;
 }
 
@@ -421,6 +442,7 @@ bool EventView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &a
 
 CalendarSupport::IncidenceChanger *EventView::changer() const
 {
+  Q_D( const EventView );
   return d->mChanger;
 }
 
@@ -457,6 +479,7 @@ void EventView::handleBackendError( const QString &errorString )
 
 bool EventView::isWorkDay( const QDate &date ) const
 {
+  Q_D( const EventView );
   int mask( ~( preferences()->workWeekMask() ) );
 
   bool nonWorkDay = ( mask & ( 1 << ( date.dayOfWeek() - 1 ) ) );
@@ -471,6 +494,7 @@ bool EventView::isWorkDay( const QDate &date ) const
 
 QStringList EventView::holidayNames( const QDate &date ) const
 {
+  Q_D( const EventView );
   QStringList hdays;
 
   if ( d->mHolidayRegion ) {
@@ -488,7 +512,7 @@ void EventView::calendarReset()
 
 CalendarSupport::CollectionSelection *EventView::globalCollectionSelection()
 {
-  return Private::sGlobalCollectionSelection;
+  return EventViewPrivate::sGlobalCollectionSelection;
 }
 
 /* static */
@@ -520,16 +544,19 @@ bool EventView::usesCompletedTodoPixmap( const Akonadi::Item &aitem, const QDate
 
 QByteArray EventView::identifier() const
 {
+  Q_D( const EventView );
   return d->identifier;
 }
 
 void EventView::setIdentifier( const QByteArray &identifier )
 {
+  Q_D( EventView );
   d->identifier = identifier;
 }
 
 void EventView::setChanges( Changes changes )
 {
+  Q_D( EventView );
   if ( d->mChanges == NothingChanged ) {
     QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
   }
@@ -539,11 +566,13 @@ void EventView::setChanges( Changes changes )
 
 EventView::Changes EventView::changes() const
 {
+  Q_D( const EventView );
   return d->mChanges;
 }
 
 void EventView::restoreConfig( const KConfigGroup &configGroup )
 {
+  Q_D( EventView );
   const bool useCustom = configGroup.readEntry( "UseCustomCollectionSelection", false );
   if ( !d->collectionSelectionModel && !useCustom ) {
     delete d->collectionSelectionModel;
@@ -573,6 +602,7 @@ void EventView::restoreConfig( const KConfigGroup &configGroup )
 
 void EventView::saveConfig( KConfigGroup &configGroup )
 {
+  Q_D( EventView );
   configGroup.writeEntry( "UseCustomCollectionSelection", d->collectionSelectionModel != 0 );
   if ( d->stateSaver ) {
     KConfigGroup selectionGroup =
@@ -585,6 +615,7 @@ void EventView::saveConfig( KConfigGroup &configGroup )
 
 void EventView::setCollectionId( Akonadi::Collection::Id id )
 {
+  Q_D( EventView );
   if ( d->mCollectionId != id ) {
     d->mCollectionId = id;
   }
@@ -592,6 +623,7 @@ void EventView::setCollectionId( Akonadi::Collection::Id id )
 
 Akonadi::Collection::Id EventView::collectionId() const
 {
+  Q_D( const EventView );
   return d->mCollectionId;
 }
 

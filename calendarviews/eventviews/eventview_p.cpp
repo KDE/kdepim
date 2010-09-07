@@ -35,7 +35,9 @@
 
 #include <QtGui/QApplication>
 
-EventView::Private::Private( EventView *qq )
+using namespace EventViews;
+
+EventViewPrivate::EventViewPrivate( EventView *qq )
   : q( qq ),
     calendar( 0 ),
     customCollectionSelection( 0 ),
@@ -47,7 +49,7 @@ EventView::Private::Private( EventView *qq )
     mPrefs( new Prefs() ),
     mKCalPrefs( new CalendarSupport::KCalPrefs() ),
     mChanger( 0 ),
-    mChanges( DatesChanged ),
+    mChanges( EventView::DatesChanged ),
     mCollectionId( -1 )
 {
   QByteArray cname = q->metaObject()->className();
@@ -55,12 +57,12 @@ EventView::Private::Private( EventView *qq )
   identifier = cname + '_' + KRandom::randomString( 8 ).toLatin1();
 }
 
-EventView::Private::~Private()
+EventViewPrivate::~EventViewPrivate()
 {
   delete collectionSelectionModel;
 }
 
-void EventView::Private::finishTypeAhead()
+void EventViewPrivate::finishTypeAhead()
 {
   if ( mTypeAheadReceiver ) {
     foreach ( QEvent *e, mTypeAheadEvents ) {
@@ -72,7 +74,7 @@ void EventView::Private::finishTypeAhead()
   mTypeAhead = false;
 }
 
-void EventView::Private::setUpModels()
+void EventViewPrivate::setUpModels()
 {
   delete stateSaver;
   stateSaver = 0;
@@ -101,7 +103,7 @@ void EventView::Private::setUpModels()
   reconnectCollectionSelection();
 }
 
-void EventView::Private::reconnectCollectionSelection()
+void EventViewPrivate::reconnectCollectionSelection()
 {
   if ( q->globalCollectionSelection() ) {
     q->globalCollectionSelection()->disconnect( q );
