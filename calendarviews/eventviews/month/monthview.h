@@ -51,7 +51,7 @@ class MonthViewPrivate;
 /**
   New month view.
 */
-class MonthView : public EventView
+class EVENTVIEWS_EXPORT MonthView : public EventView
 {
   Q_OBJECT
   public:
