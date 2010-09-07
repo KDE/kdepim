@@ -62,6 +62,16 @@ using namespace boost;
 
 namespace {
 
+    class Process : public QProcess {
+    public:
+        explicit Process( QObject * parent=0 )
+            : QProcess( parent ) {}
+        /* reimp */ void close() { closeReadChannel( StandardOutput ); }
+    };
+}
+
+namespace {
+
     class InputImplBase : public Input {
     public:
         InputImplBase() : Input(), m_customLabel(), m_defaultLabel() {}
@@ -101,7 +111,7 @@ namespace {
     private:
         const QString m_command;
         const QStringList m_arguments;
-        const shared_ptr<QProcess> m_proc;
+        const shared_ptr<Process> m_proc;
     };
 
     class FileInput : public InputImplBase {
@@ -247,7 +257,7 @@ ProcessStdOutInput::ProcessStdOutInput( const QString & cmd, const QStringList &
     : InputImplBase(),
       m_command( cmd ),
       m_arguments( args ),
-      m_proc( new QProcess )
+      m_proc( new Process )
 {
     const QIODevice::OpenMode openMode =
         stdin_.isEmpty() ? QIODevice::ReadOnly : QIODevice::ReadWrite ;
