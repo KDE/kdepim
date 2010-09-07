@@ -129,9 +129,7 @@ MonthView::MonthView( QWidget *parent )
 }
 
 MonthView::~MonthView()
-{
-  delete d_ptr;
-}
+{ }
 
 void MonthView::updateConfig()
 {
