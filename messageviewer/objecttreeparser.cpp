@@ -191,7 +191,7 @@ ObjectTreeParser::~ObjectTreeParser()
 
 void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, const char* content, const char* cntDesc )
 {
-  kDebug() << "CONTENT: " << QByteArray( content ).left( 100 ) << " CNTDESC: " << cntDesc;
+//  kDebug() << "CONTENT: " << QByteArray( content ).left( 100 ) << " CNTDESC: " << cntDesc;
 
   KMime::Content *newNode = new KMime::Content();
   newNode->setContent( KMime::CRLFtoLF( content ) );
@@ -435,7 +435,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
                                                          const std::vector<GpgME::Signature> & paramSignatures,
                                                          bool hideErrors )
 {
-  kDebug() << "DECRYPT" << data;
+//  kDebug() << "DECRYPT" << data;
   bool bIsOpaqueSigned = false;
   enum { NO_PLUGIN, NOT_INITIALIZED, CANT_VERIFY_SIGNATURES }
     cryptPlugError = NO_PLUGIN;
@@ -461,7 +461,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
 #endif
 
   if ( doCheck && cryptProto ) {
-    kDebug() << "going to call CRYPTPLUG" << cryptPlugLibName;
+    //kDebug() << "going to call CRYPTPLUG" << cryptPlugLibName;
   }
 #endif
 
@@ -754,7 +754,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
 #ifdef DEBUG_SIGNATURE
   kDebug() << "done, returning" << ( bIsOpaqueSigned ? "TRUE" : "FALSE" );
 #endif
-  kDebug() << "DECRYPTED" << data;
+  //kDebug() << "DECRYPTED" << data;
   return bIsOpaqueSigned;
 }
 
@@ -859,7 +859,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
   #endif
 
 
-    kDebug() << "going to call CRYPTPLUG" << cryptPlugLibName;
+    //kDebug() << "going to call CRYPTPLUG" << cryptPlugLibName;
 
     // Check whether the memento contains a result from last time:
     const DecryptVerifyBodyPartMemento * m
@@ -899,7 +899,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
       const GpgME::VerificationResult & verifyResult = m->verifyResult();
       std::stringstream ss;
       ss << decryptResult << '\n' << verifyResult;
-      kDebug() << ss.str().c_str();
+      //kDebug() << ss.str().c_str();
       signatureFound = verifyResult.signatures().size() > 0;
       signatures = verifyResult.signatures();
       bDecryptionOk = !decryptResult.error();
@@ -913,7 +913,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
       if ( actuallyEncrypted && decryptResult.numRecipients() > 0 )
         partMetaData.keyId = decryptResult.recipient( 0 ).keyID();
 
-      kDebug() << "ObjectTreeParser::decryptMIME: returned from CRYPTPLUG";
+      //kDebug() << "ObjectTreeParser::decryptMIME: returned from CRYPTPLUG";
       if ( bDecryptionOk )
         decryptedData = plainText;
       else if ( htmlWriter() && showWarning ) {
@@ -1498,7 +1498,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
                                       actuallyEncrypted,
                                       decryptionStarted,
                                       messagePart );
-    kDebug() << "decrypted, signed?:" << signatureFound;
+    //kDebug() << "decrypted, signed?:" << signatureFound;
 
     if ( decryptionStarted ) {
       writeDecryptionInProgressBlock();
@@ -1538,7 +1538,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
                                           signatures,
                                           false );
         mNodeHelper->setSignatureState( node, KMMsgFullySigned);
-        kDebug() << "setting FULLY SIGNED to:" << node;
+        //kDebug() << "setting FULLY SIGNED to:" << node;
       } else {
         decryptedData = KMime::CRLFtoLF( decryptedData ); //KMime works with LF only inside insertAndParseNewChildNode
 

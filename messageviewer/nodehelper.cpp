@@ -87,7 +87,7 @@ void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.append( node );
-  kDebug() << "Node processed: " << node->index().toString() << node->contentType()->as7BitString();
+  //kDebug() << "Node processed: " << node->index().toString() << node->contentType()->as7BitString();
            //<< " decodedContent" << node->decodedContent();
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
@@ -113,12 +113,12 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
           p->removeContent( c );
       }
       qDeleteAll( it.value() );
-      kDebug() << "mExtraContents deleted for" << it.key();
+      //kDebug() << "mExtraContents deleted for" << it.key();
       mExtraContents.remove( it.key() );
     }
   }
 
-  kDebug() << "Node UNprocessed: " << node;
+  //kDebug() << "Node UNprocessed: " << node;
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
@@ -808,7 +808,7 @@ QString NodeHelper::fromAsString( KMime::Content* node )
 
 void NodeHelper::attachExtraContent( KMime::Content *topLevelNode, KMime::Content* content )
 {
-   kDebug() << "mExtraContents added for" << topLevelNode << " extra content: " << content;
+  //kDebug() << "mExtraContents added for" << topLevelNode << " extra content: " << content;
   mExtraContents[topLevelNode].append( content );
 }
 

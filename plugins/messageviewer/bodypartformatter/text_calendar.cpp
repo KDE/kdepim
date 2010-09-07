@@ -283,7 +283,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
   public:
     UrlHandler()
     {
-      kDebug() << "UrlHandler() (iCalendar)";
+      //kDebug() << "UrlHandler() (iCalendar)";
     }
 
     Attendee::Ptr findMyself( const Incidence::Ptr &incidence, const QString &receiver ) const

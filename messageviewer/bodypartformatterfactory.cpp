@@ -87,8 +87,8 @@ static void insertBodyPartFormatter( const char * type, const char * subtype,
 
   TypeRegistry::iterator type_it = all->find( type );
   if ( type_it == all->end() ) {
-    kDebug() << "BodyPartFormatterFactory: instantiating new Subtype Registry for \""
-		    << type << "\"";
+    //kDebug() << "BodyPartFormatterFactory: instantiating new Subtype Registry for \""
+    //         << type << "\"";
     type_it = all->insert( std::make_pair( type, SubtypeRegistry() ) ).first;
     assert( type_it != all->end() );
   }
@@ -111,7 +111,7 @@ static void loadPlugins() {
     return;
   }
   const QStringList types = pl->types();
-  kDebug() << "BodyPartFormatterFactory: found" << types.size() << "plugins.";
+  //kDebug() << "BodyPartFormatterFactory: found" << types.size() << "plugins.";
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
     const Interface::BodyPartFormatterPlugin * plugin = pl->createForName( *it );
     if ( !plugin ) {
