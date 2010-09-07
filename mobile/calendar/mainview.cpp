@@ -41,6 +41,7 @@
 #include <qdeclarativecontext.h>
 
 #include "agendaviewitem.h"
+#include "monthviewitem.h"
 #include "qmldateedit.h"
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
@@ -80,6 +81,7 @@ void MainView::delayedInit()
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
   qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
+  qmlRegisterType<EventViews::MonthViewItem>( "org.kde.calendarviews", 4, 5, "MonthView" );
   qmlRegisterType<Qt::QmlDateEdit>( "org.qt", 4, 7, "QmlDateEdit" );
 
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );

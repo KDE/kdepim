@@ -121,6 +121,54 @@ KPIM.MainView {
   }
 
   Rectangle {
+    id: monthView
+    visible: false
+    anchors.fill: parent
+
+    Rectangle {
+//      id : backToMessageListButton
+      height: 48
+      width: 48
+      z: 5
+      color: "#00000000"
+      anchors.right : parent.right
+      anchors.rightMargin : 70
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : 70
+      Image {
+        source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
+        MouseArea {
+          anchors.fill : parent;
+          onClicked : {
+            monthView.visible = false;
+            mainWorkView.visible = true;
+            selectButton.visible = true
+            korganizerActions.showOnlyCategory("home")
+          }
+        }
+      }
+    }
+
+    CalendarViews.MonthView {
+      id: month
+      anchors { fill: parent; topMargin: 10; leftMargin: 40 }
+      calendar: calendarModel
+
+//       onItemSelected: {
+//         if ( selectedItemId > 0 ) {
+//           eventView.itemId = selectedItemId;
+//           eventView.activeDate = activeDate;
+//           application.setCurrentEventItemId(selectedItemId);
+//           korganizerActions.showOnlyCategory("event_viewer")
+//           eventView.visible = true;
+//           agendaView.visible = false;
+//           clearSelection();
+//         }
+//       }
+    }
+  }
+
+  Rectangle {
     id: agendaView
     visible: false
     anchors.fill: parent
@@ -304,6 +352,7 @@ KPIM.MainView {
             mainWorkView.visible = false
             agendaView.visible = true
             selectButton.visible = false
+            monthView.visible = false
           }
         }
         KPIM.Button2 {
@@ -315,6 +364,7 @@ KPIM.MainView {
             mainWorkView.visible = false
             agendaView.visible = true
             selectButton.visible = false
+            monthView.visible = false
           }
         }
         KPIM.Button2 {
@@ -322,10 +372,11 @@ KPIM.MainView {
           buttonText: KDE.i18n( "Month view" )
           width: parent.width / 3
           onClicked: {
-            agenda.showRange( dateEdit.date, 2 /* "Month" */ );
+            //agenda.showRange( dateEdit.date, 2 /* "Month" */ );
             mainWorkView.visible = false
-            agendaView.visible = true
+            agendaView.visible = false
             selectButton.visible = false
+            monthView.visible = true
           }
         }
       }

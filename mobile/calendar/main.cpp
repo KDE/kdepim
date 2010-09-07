@@ -25,8 +25,24 @@
 
 #include <incidenceeditors/korganizereditorconfig.h>
 
+#include <calendarviews/eventviews/eventview.h>
+
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/collectionselection.h>
+#include <calendarsupport/collectionselectionproxymodel.h>
+
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/Collection>
+#include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/ItemFetchScope>
+
+#include <KCalCore/Event>
+
 #include "mainview.h"
 
+using namespace Akonadi;
+using namespace CalendarSupport;
 using namespace IncidenceEditors;
 
 int main( int argc, char **argv )
@@ -44,6 +60,31 @@ int main( int argc, char **argv )
   KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
 
+  ItemFetchScope scope;
+  scope.fetchFullPayload( true );
+  scope.fetchAttribute<EntityDisplayAttribute>();
+
+  ChangeRecorder mChangeRecorder;
+  mChangeRecorder.setCollectionMonitored( Collection::root(), true );
+  mChangeRecorder.fetchCollection( true );
+  mChangeRecorder.setItemFetchScope( scope );
+  mChangeRecorder.setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
+
+  CalendarModel calendarModel( &mChangeRecorder );
+  calendarModel.setCollectionFetchStrategy( EntityTreeModel::InvisibleCollectionFetch );
+
+  CollectionSelectionProxyModel selectionProxyModel;
+  selectionProxyModel.setCheckableColumn( CalendarModel::CollectionTitle );
+  selectionProxyModel.setDynamicSortFilter( true );
+  selectionProxyModel.setSortCaseSensitivity( Qt::CaseInsensitive );
+
+  QItemSelectionModel selectionModel( &selectionProxyModel );
+  selectionProxyModel.setSelectionModel( &selectionModel );
+  selectionProxyModel.setSourceModel( &calendarModel );
+
+  CalendarSupport::CollectionSelection colSel( &selectionModel );
+  EventViews::EventView::setGlobalCollectionSelection( &colSel );
+  
   MainView view;
   view.show();
 
