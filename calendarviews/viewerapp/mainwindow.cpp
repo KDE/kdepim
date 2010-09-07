@@ -30,6 +30,8 @@
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/incidencechanger.h>
 
+#include <KCalCore/Event>
+
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
