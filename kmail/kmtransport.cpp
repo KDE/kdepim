@@ -670,7 +670,7 @@ void KMTransportDialog::enableAuthMethods( unsigned int auth ) {
   // LOGIN doesn't offer anything over PLAIN, requires more server
   // roundtrips and is not an official SASL mechanism, but a MS-ism,
   // so only enable it if PLAIN isn't available:
-  mSmtp.authLogin->setEnabled( auth & LOGIN && !(auth & PLAIN));
+  mSmtp.authLogin->setEnabled( auth & LOGIN /*&& !(auth & PLAIN)*/);
   mSmtp.authCramMd5->setEnabled( auth & CRAM_MD5 );
   mSmtp.authDigestMd5->setEnabled( auth & DIGEST_MD5 );
   mSmtp.authNTLM->setEnabled( auth & NTLM );
