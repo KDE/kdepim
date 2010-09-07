@@ -13,7 +13,7 @@ add_definitions(-DKMAIL_UNITTESTS=YES)
 
 # convenience macro to add qtest unit tests
 macro(add_messageviewer_unittest _source)
-  set(_test ${_source})
+  set(_test ${_source} util.cpp)
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME messageviewer-${_name} ${_test} ${CMAKE_SOURCE_DIR}/messagecore/tests/util.cpp)
   target_link_libraries( ${_name}

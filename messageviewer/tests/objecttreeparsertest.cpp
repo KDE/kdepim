@@ -17,6 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "objecttreeparsertest.h"
+#include "util.h"
 
 #include "objecttreeparser.h"
 #include "objecttreeemptysource.h"
@@ -29,33 +30,6 @@
 #include <messagecore/tests/util.h>
 
 using namespace MessageViewer;
-
-class TestHtmlWriter : public MessageViewer::HtmlWriter {
-  public:
-    explicit TestHtmlWriter() {}
-    virtual ~TestHtmlWriter() {}
-
-
-    virtual void begin( const QString & ) {}
-    virtual void write( const QString & ) {}
-    virtual void end() {}
-    virtual void reset() {}
-    virtual void queue( const QString & ) {}
-    virtual void flush() {}
-    virtual void embedPart( const QByteArray &, const QString & ) {}
-
-};
-
-class TestCSSHelper : public MessageViewer::CSSHelper {
-  public:
-    TestCSSHelper() : MessageViewer::CSSHelper( 0 ) {}
-    virtual ~TestCSSHelper() {}
-
-    QString nonQuotedFontTag() const { return QString::fromAscii( "<" ); }
-
-    QString quoteFontTag( int ) const { return QString::fromAscii( "<" ); }
-};
-
 
 QTEST_KDEMAIN( ObjectTreeParserTester, GUI )
 
@@ -155,16 +129,4 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
   otp.parseObjectTree( msg.get() );
 
   QCOMPARE( otp.textualContent().toAscii().data(), "asdfasdf" );
-}
-
-KMime::Message::Ptr ObjectTreeParserTester::readAndParseMail( const QString &mailFile ) const
-{
-  QFile file( MAIL_DATA_DIR"/" + mailFile );
-  Q_ASSERT( file.open( QIODevice::ReadOnly ) );
-  const QByteArray data = KMime::CRLFtoLF( file.readAll() );
-  Q_ASSERT( !data.isEmpty() );
-  KMime::Message::Ptr msg( new KMime::Message );
-  msg->setContent( data );
-  msg->parse();
-  return msg;
 }
