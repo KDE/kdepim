@@ -2234,7 +2234,6 @@ AgendaScrollArea::AgendaScrollArea( bool isAllDay, EventView *eventView,
   if ( isAllDay ) {
     mAgenda = new Agenda( eventView, this, 1 );
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    verticalScrollBar()->setFixedSize( 0, 0 );
   } else {
     mAgenda = new Agenda( eventView, this, 1, 96,
                           eventView->preferences()->hourSize() );
