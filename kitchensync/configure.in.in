@@ -1,0 +1,66 @@
+dnl configure.in.in for OpenSync based KitchenSync
+dnl
+dnl Copyright (C) 2005 Holger Hans Peter Freyther
+dnl
+dnl Based on KPilot's configure.in
+dnl Copyright (C) 2000,2001 Adriaan de Groot
+dnl
+dnl This file is released under the terms of the GNU General Public
+dnl Licence (GPL) Version 2.
+
+
+
+dnl we need PKG_CONFIG for doing these tests
+AC_DEFUN([KITCHENSYNC_CHECK_OPENSYNC],[
+dnl AC_REQUIRE([PKG_CHECK_MODULES])
+
+dnl Say what we're doing
+AC_MSG_CHECKING(for opensync (for KitchenSync))
+AC_ARG_WITH(opensync,
+[  --with-opensync=PATH set prefix for opensync files],
+)dnl
+
+dnl change pkg_config_path if we have a OpenSync prefix
+dnl and also set it to our prefix
+if test -d "$with_opensync"; then
+    export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/lib/pkgconfig:$with_opensync/lib/pkgconfig
+fi
+export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:$prefix/lib/pkgconfig:/usr/local/lib/pkgconfig
+
+
+HAVE_OPENSYNC=0
+PKG_CHECK_MODULES(OPENSYNC, opensync-1.0 >= 0.33, HAVE_OPENSYNC=1,HAVE_OPENSYNC=0)
+PKG_CHECK_MODULES(LIBXML,   libxml-2.0, , HAVE_OPENSYNC=0)
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.6, , HAVE_OPENSYNC=0)
+
+if test -z "PKG_CONFIG"; then
+    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+fi
+
+if test "$PKG_CONFIG" != "no"; then
+    OPENSYNC_CONFIGDIR=`$PKG_CONFIG  --variable=configdir  "opensync-1.0"`
+    OPENSYNC_PLUGINDIR=`$PKG_CONFIG  --variable=plugindir  "opensync-1.0"`
+    OPENSYNC_FORMATSDIR=`$PKG_CONFIG --variable=formatsdir "opensync-1.0"`
+    OPENSYNC_HEADERDIR=`$PKG_CONFIG  --variable=headerdir  "opensync-1.0"`
+fi
+
+AC_SUBST(OPENSYNC_CONFIGDIR)
+AC_SUBST(OPENSYNC_PLUGINDIR)
+AC_SUBST(OPENSYNC_FORMATSDIR)
+AC_SUBST(OPENSYNC_HEADERDIR)
+
+dnl Check if we can compile KitchenSync
+AM_CONDITIONAL(compile_kitchensync, test "$HAVE_OPENSYNC" = 1)
+
+if test "$HAVE_OPENSYNC" = 1; then
+    AC_MSG_RESULT([found])
+else
+    AC_MSG_RESULT([not found])
+    DO_NOT_COMPILE="$DO_NOT_COMPILE kitchensync"
+fi
+
+])
+
+
+dnl Check For OpenSync support
+KITCHENSYNC_CHECK_OPENSYNC

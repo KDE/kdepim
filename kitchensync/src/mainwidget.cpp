@@ -26,7 +26,7 @@
 #include "syncprocess.h"
 #include "syncprocessmanager.h"
 
-#include <libqopensync/environment.h>
+#include <libqopensync/result.h>
 
 #include <kaboutdata.h>
 #include <kaction.h>
@@ -45,13 +45,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, TQWidget *widget, const char *
 {
   initGUI();
   initActions();
-
-  /** apply object type filter hack **/
-  int count = SyncProcessManager::self()->count();
-  for ( int i = 0; i < count; ++i ) {
-    SyncProcessManager::self()->at( i )->applyObjectTypeFilter();
-  }
-  /** apply object type filter hack **/
 
   mGroupView->updateView();
 
@@ -125,12 +118,19 @@ void MainWidget::addGroup()
 {
   bool ok;
   TQString name = KInputDialog::getText( i18n("Create Synchronization Group"),
-    i18n("Name for new synchronization group."), TQString::null, &ok, this );
+    i18n("Name for new synchronization group."), i18n( "Default" ), &ok, this );
   if ( ok ) {
+    SyncProcess *process = SyncProcessManager::self()->byGroupName( name );
+    if ( process ) {
+      KMessageBox::error( this, i18n( "A group with the same name exists already.\nPlease choose another name." ),
+                          i18n( "Duplicated Group Name" ) );
+      return;
+    }
+
     SyncProcessManager::self()->addGroup( name );
     enableActions();
 
-    SyncProcess *process = SyncProcessManager::self()->byGroupName( name );
+    process = SyncProcessManager::self()->byGroupName( name );
     if ( process )
       editGroup( process );
   }

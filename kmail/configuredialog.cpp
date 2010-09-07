@@ -2241,6 +2241,9 @@ static const BoolConfigEntry showExpandQuotesMark= {
   "Reader", "ShowExpandQuotesMark", I18N_NOOP("Show expand/collapse quote marks"), false
 };
 
+static const BoolConfigEntry showCurrentTime = {
+  "Reader", "ShowCurrentTime", I18N_NOOP("Show current sender time"), true
+};
 
 TQString AppearancePage::ReaderTab::helpAnchor() const {
   return TQString::fromLatin1("configure-appearance-reader");
@@ -2349,6 +2352,11 @@ AppearancePageReaderTab::AppearancePageReaderTab( TQWidget * parent,
   hlay2->addWidget( label );
   hlay2->addWidget( mOverrideCharsetCombo );
 
+  populateCheckBox( mShowCurrentTimeCheck = new TQCheckBox( this ), showCurrentTime );
+  vlay->addWidget( mShowCurrentTimeCheck );
+  connect( mShowCurrentTimeCheck, TQT_SIGNAL ( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
+
   vlay->addStretch( 100 ); // spacer
 }
 
@@ -2420,6 +2428,7 @@ void AppearancePage::ReaderTab::doLoadFromGlobalSettings()
   mCollapseQuoteLevelSpin->setValue( GlobalSettings::self()->collapseQuoteLevelSpin() );
   readCurrentFallbackCodec();
   readCurrentOverrideCodec();
+  mShowCurrentTimeCheck->setChecked( GlobalSettings::self()->showCurrentTime() );
 }
 
 void AppearancePage::ReaderTab::doLoadOther()
@@ -2446,6 +2455,7 @@ void AppearancePage::ReaderTab::save() {
       mOverrideCharsetCombo->currentItem() == 0 ?
         TQString() :
         KGlobal::charsets()->encodingForName( mOverrideCharsetCombo->currentText() ) );
+  GlobalSettings::self()->setShowCurrentTime( mShowCurrentTimeCheck->isChecked() );
 }
 
 
@@ -2457,6 +2467,7 @@ void AppearancePage::ReaderTab::installProfile( KConfig * /* profile */ ) {
   loadProfile( mShowEmoticonsCheck, reader, showEmoticons );
   loadProfile( mShrinkQuotesCheck, reader, shrinkQuotes );
   loadProfile( mShowExpandQuotesMark, reader, showExpandQuotesMark);
+  loadProfile( mShowCurrentTimeCheck, reader, showCurrentTime );
 }
 
 

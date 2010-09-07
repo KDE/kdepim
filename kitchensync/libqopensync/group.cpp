@@ -25,85 +25,17 @@
 /** hack includes **/
 
 #include <opensync/opensync.h>
+#include <opensync/opensync-group.h>
 
 #include "conversion.h"
+#include "filter.h"
+#include "member.h"
+#include "plugin.h"
+#include "result.h"
+
 #include "group.h"
 
 using namespace QSync;
-
-/**
-  This class is a quick hack for OpenSync 0.19 and 0.20 because
-  the engine doesn't stores the filter settings itself when calling
-  osync_group_set_objtype_enabled(), so we have to store it for every
-  group in a separated config file. This class encapsulates it.
- */
-GroupConfig::GroupConfig()
-  : mGroup( 0 )
-{
-}
-
-TQStringList GroupConfig::activeObjectTypes() const
-{
-  Q_ASSERT( mGroup );
-
-  const TQString fileName = TQString( "%1/filter.conf" ).arg( osync_group_get_configdir( mGroup ) );
-
-  TQFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) )
-    return TQStringList();
-
-  TQDomDocument document;
-
-  TQString message;
-  if ( !document.setContent( &file, &message ) ) {
-    qDebug( "Error on loading %s: %s", fileName.latin1(), message.latin1() );
-    return TQStringList();
-  }
-  file.close();
-
-  TQStringList objectTypes;
-
-  TQDomElement element = document.documentElement();
-  TQDomNode node = element.firstChild();
-  while ( !node.isNull() ) {
-    TQDomElement childElement = node.toElement();
-    if ( !childElement.isNull() )
-      objectTypes.append( childElement.tagName() );
-
-    node = node.nextSibling();
-  }
-
-  return objectTypes;
-}
-
-void GroupConfig::setActiveObjectTypes( const TQStringList &objectTypes )
-{
-  Q_ASSERT( mGroup );
-
-  TQDomDocument document( "Filter" );
-  document.appendChild( document.createProcessingInstruction(
-                        "xml", "version=\"1.0\" encoding=\"UTF-8\"" ) );
-
-  TQDomElement element = document.createElement( "filter" );
-  document.appendChild( element );
-
-  for ( uint i = 0; i < objectTypes.count(); ++i ) {
-    TQDomElement entry = document.createElement( objectTypes[ i ] );
-    element.appendChild( entry );
-  }
-
-  const TQString fileName = TQString( "%1/filter.conf" ).arg( osync_group_get_configdir( mGroup ) );
-
-  TQFile file( fileName );
-  if ( !file.open( IO_WriteOnly ) )
-    return;
-
-  TQTextStream s( &file );
-  s.setEncoding( TQTextStream::UnicodeUTF8 );
-  s << document.toString();
-  file.close();
-}
-
 
 Group::Group()
   : mGroup( 0 )
@@ -117,22 +49,6 @@ Group::~Group()
 bool Group::isValid() const
 {
   return ( mGroup != 0 );
-}
-
-Group::Iterator Group::begin()
-{
-  Iterator it( this );
-  it.mPos = 0;
-
-  return it;
-}
-
-Group::Iterator Group::end()
-{
-  Iterator it( this );
-  it.mPos = memberCount();
-
-  return it;
 }
 
 void Group::setName( const TQString &name )
@@ -188,18 +104,22 @@ Group::LockType Group::lock()
   }
 }
 
-void Group::unlock( bool removeFile )
+void Group::unlock()
 {
   Q_ASSERT( mGroup );
 
-  osync_group_unlock( mGroup, removeFile );
+  osync_group_unlock( mGroup );
 }
 
-Member Group::addMember()
+Member Group::addMember( const QSync::Plugin &plugin )
 {
   Q_ASSERT( mGroup );
 
-  OSyncMember *omember = osync_member_new( mGroup );
+  OSyncError *error = 0;
+
+  OSyncMember *omember = osync_member_new( &error );
+  osync_group_add_member( mGroup, omember );
+  osync_member_set_pluginname( omember, plugin.name().utf8() );
 
   Member member;
   member.mMember = omember;
@@ -269,6 +189,30 @@ Result Group::save()
     return Result();
 }
 
+void Group::setUseMerger( bool use )
+{
+  Q_ASSERT( mGroup );
+  osync_group_set_merger_enabled( mGroup, use );
+}
+
+bool Group::useMerger() const
+{
+  Q_ASSERT( mGroup );
+  return osync_group_get_merger_enabled( mGroup );
+}
+
+void Group::setUseConverter( bool use )
+{
+  Q_ASSERT( mGroup );
+  osync_group_set_converter_enabled( mGroup, use );
+}
+
+bool Group::useConverter() const
+{
+  Q_ASSERT( mGroup );
+  return osync_group_get_converter_enabled( mGroup );
+}
+
 void Group::setObjectTypeEnabled( const TQString &objectType, bool enabled )
 {
   Q_ASSERT( mGroup );
@@ -281,12 +225,13 @@ bool Group::isObjectTypeEnabled( const TQString &objectType ) const
   return osync_group_objtype_enabled( mGroup, objectType.utf8() );
 }
 
-GroupConfig Group::config() const
+Result Group::cleanup() const
 {
   Q_ASSERT( mGroup );
 
-  GroupConfig config;
-  config.mGroup = mGroup;
-
-  return config;
+  OSyncError *error = 0;
+  if ( !osync_group_delete( mGroup, &error ) )
+    return Result( &error );
+  else
+    return Result();
 }

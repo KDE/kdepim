@@ -615,6 +615,122 @@ namespace KMail {
     kdDebug( 5006 ) << "final presence: '" << presence << "'" << endl;
 #endif
 
+    TQString timeHTML;
+    if ( GlobalSettings::self()->showCurrentTime() && strategy->showHeader( "date" ) ) {
+      DwHeaders& header = message->headers();
+      if ( header.HasDate() ) {
+				DwDateTime& origDate = header.Date();
+				int zone = origDate.Zone();
+				// kdDebug() << "FancyHeaderStyle::format() zone offset (in minutes): " << zone << endl;
+				
+				// copyed fro mimelib -- code to determine local timezone
+        time_t t_now = time((time_t*) 0);
+#if defined(HAVE_GMTIME_R)
+        struct tm utc;
+        gmtime_r(&t_now, &utc);
+        struct tm local;
+        localtime_r(&t_now, &local);
+#else
+        struct tm utc = *gmtime(&t_now);
+        struct tm local = *localtime(&t_now);
+#endif
+        DwUint32 t_local = 0;
+        t_local = 24 * t_local + local.tm_hour;
+        t_local = 60 * t_local + local.tm_min;
+        t_local = 60 * t_local + local.tm_sec;
+        DwUint32 t_utc = 0;
+        t_utc = 24 * t_utc + utc.tm_hour;
+        t_utc = 60 * t_utc + utc.tm_min;
+        t_utc = 60 * t_utc + utc.tm_sec;
+        int lzone = (int) (t_local - t_utc) / 60;
+				
+				// kdDebug() << "FancyHeaderStyle::format() local zone offset (in minutes): " << lzone << endl;
+				
+				TQTime currTime = TQTime::currentTime( Qt::UTC );
+				
+				// kdDebug() << "FancyHeaderStyle::format() current time: " << currTime << endl;
+				
+				// now currTime contain message sender local time
+				currTime = currTime.addSecs( zone * 60 );
+				
+				TQString timeofday;
+				TQString color;
+				TQString bg_color;
+				TQString bg_image;
+				if ( currTime > TQTime( 0, 0, 0 ) && currTime <= TQTime( 6, 0, 0 ) ) {
+				  timeofday = i18n( "Night" );
+				  color = "white";
+				  bg_color = "#000B6B";
+				  bg_image = "url(data:image/png;base64,"
+				    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAyCAIAAAASmSbdAAAAS0lEQVQI11WOsRGAQAzDOG/LHoz9"
+				    "kikIcF+kSBxbPs7LoNGVapAI0Zn+O+8NUwldozn6io7G7kdS/5zi7i+BvUM/5uSXlIfzMHx/bmWR"
+				    "k++yj9rZAAAAAElFTkSuQmCC)";
+				}
+				else if ( currTime > TQTime( 6, 0, 0 ) && currTime <= TQTime( 12, 0, 0 ) ) {
+				  timeofday = i18n( "Morning" );
+				  color = "white";
+				  bg_color = "#00A6FF";
+				  bg_image = "url(data:image/png;base64,"
+				    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAyCAYAAACd+7GKAAAAWklEQVQI122OQQ7DMAzDaP3/dfuO"
+				    "pWSHJgva7iZIBk3m/Ew5hexCHVCilewzFHKEbFZqgxJQWyzKhWKl9unqddJj8+L9sl0oR2gUim+o"
+				    "zu4uSh7kn67/DNv+C4tsZOtjAWEHAAAAAElFTkSuQmCC)";
+				}
+				else if ( currTime > TQTime( 12, 0, 0 ) && currTime <= TQTime( 18, 0, 0 ) ) {
+				  timeofday = i18n( "Afternoon" );
+				  color = "black";
+				  bg_color = "#00A6FF";
+				  bg_image = "url(data:image/png;base64,"
+				    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAyCAYAAACd+7GKAAAAPUlEQVQI132OwQ0AIAwCSfcfw91c"
+				    "QsCfRm399HFwoWjdDhMICQhxHSWMQPhkTCoqWRZU2h5i9tr4GZfmV5t3wWUI3h+NugAAAABJRU5E"
+				    "rkJggg==)";
+				}
+				else {
+				  timeofday = i18n( "Evening" );
+				  color = "white";
+				  bg_color = "#0014CC";
+				  bg_image = "url(data:image/png;base64,"
+				    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAyCAYAAACd+7GKAAAAWklEQVQI11WOyRHAMAgDNQuUlBrS"
+				    "fyFpAfKwje0PwyEt0vN+hVsJpzS6QML2ziWcFI6mZBZNSVDXYehyUgI1XsLI9eimHDH6kW0ddVIO"
+				    "xx7JjrtshlbXlLDSD+WhJ+hwqWo8AAAAAElFTkSuQmCC)";
+				}
+				
+				TQString tformat;
+				if ( KGlobal::locale()->use12Clock() ) {
+				  tformat = "h:mm AP";
+				}
+				else {
+				  tformat = "h:mm";
+				}
+				
+				// kdDebug() << "FancyHeaderStyle::format() current time: " << currTime << " (" << timeofday << ")" << endl;
+				
+				timeHTML.append( TQString(
+				  "<div style=\""
+				  "border:1px solid %1;"
+				  "color:%2;"
+				  "background-image:%3;"
+				  "background-position:center left;"
+				  "background-repeat:repeat-x;"
+				  "text-align:center;"
+				  "font-size:12px;"
+				  "padding:2px;"
+				  "width:50px;"
+				  "heigth:50px;"
+				  "margin: 0px 0px 3px 0px;"
+				  "\" class=\"curtime\">%4<br />%5<br />%6</div>"
+				  )
+				  .arg( bg_color )
+				  .arg( color )
+				  .arg( bg_image )
+				  .arg( i18n( "Now:" ) )
+				  .arg( currTime.toString( tformat ) )
+				  .arg( timeofday )
+				  );
+			}
+			else {
+			  // kdDebug() << "FancyHeaderStyle::format() no date header to display" << endl;
+			}
+    }
 
     //case HdrFancy:
     // the subject line and box below for details
@@ -719,7 +835,9 @@ namespace KMail {
     */
     headerStr.append( TQString("<tr><td colspan=\"2\"><div id=\"attachmentInjectionPoint\"></div></td></tr>" ) );
     headerStr.append(
-          TQString( "</table></td><td align=\"center\">%1</td></tr></table>\n" ).arg(userHTML) );
+          TQString( "</table></td><td align=\"center\" valign=\"top\">%1%2</td></tr></table>\n" )
+          .arg(timeHTML)
+          .arg(userHTML) );
 
     if ( !spamHTML.isEmpty() )
       headerStr.append( TQString( "<div class=\"spamheader\" dir=\"%1\"><b>%2</b>&nbsp;<span style=\"padding-left: 20px;\">%3</span></div>\n")

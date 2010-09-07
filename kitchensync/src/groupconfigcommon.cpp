@@ -30,14 +30,15 @@
 #include <tqcheckbox.h>
 
 #include <libqopensync/group.h>
-#include <libqopensync/conversion.h>
-#include <libqopensync/environment.h>
+//#include <libqopensync/conversion.h>
 
 #include "syncprocess.h"
 #include "syncprocessmanager.h"
 
 #include "groupconfigcommon.h"
 
+// TODO: port ObjectTypeSelector to ported solution of Conversation class
+#if 0
 ObjectTypeSelector::ObjectTypeSelector( TQWidget *parent )
   : TQWidget( parent )
 {
@@ -124,6 +125,7 @@ void ObjectTypeSelector::save( QSync::Group group )
   QSync::GroupConfig config = group.config();
   config.setActiveObjectTypes( objectTypes );
 }
+#endif
 
 GroupConfigCommon::GroupConfigCommon( TQWidget *parent )
   : TQWidget( parent )
@@ -135,10 +137,11 @@ GroupConfigCommon::GroupConfigCommon( TQWidget *parent )
   mGroupName = new KLineEdit( this );
   layout->addWidget( mGroupName, 0, 1 );
 
-  layout->addWidget( new TQLabel( i18n( "Object Types to be Synchronized:"), this ), 1, 0, Qt::AlignTop );
+  //layout->addWidget( new TQLabel( i18n( "Object Types to be Synchronized:"), this ), 1, 0, Qt::AlignTop );
 
-  mObjectTypeSelector = new ObjectTypeSelector( this );
-  layout->addWidget( mObjectTypeSelector, 1, 1 );
+  // TODO port ObjectTypeSelector class..
+  //mObjectTypeSelector = new ObjectTypeSelector( this );
+  //layout->addWidget( mObjectTypeSelector, 1, 1 );
 
   layout->setRowStretch( 2, 1 );
 }
@@ -148,11 +151,15 @@ void GroupConfigCommon::setSyncProcess( SyncProcess *syncProcess )
   mSyncProcess = syncProcess;
 
   mGroupName->setText( mSyncProcess->group().name() );
-  mObjectTypeSelector->load( mSyncProcess->group() );
+
+  // TODO port ObjectTypeSelector class..
+  //mObjectTypeSelector->load( mSyncProcess->group() );
 }
 
 void GroupConfigCommon::save()
 {
   mSyncProcess->group().setName( mGroupName->text() );
-  mObjectTypeSelector->save( mSyncProcess->group() );
+
+  // TODO port ObjectTypeSelector class..
+  //mObjectTypeSelector->save( mSyncProcess->group() );
 }

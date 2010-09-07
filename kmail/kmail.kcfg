@@ -607,6 +607,12 @@
      <entry name="ChiasmusDecryptionOptions" type="String">
      </entry>
 
+     <entry name="ShowCurrentTime" type="Bool">
+       <default>true</default>
+       <label>Show current message sender time</label>
+       <whatsthis>Enable this if you like to know what time of day are now in sender location (calculated from sender time zone).</whatsthis> 
+     </entry>
+
      <entry name="ShowUserAgent" type="Bool">
        <default>false</default>
        <label>Show user agent in fancy headers</label>

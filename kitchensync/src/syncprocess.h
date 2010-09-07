@@ -44,11 +44,9 @@ class SyncProcess : public QObject
     TQString memberStatus( const QSync::Member &member ) const;
 
     QSync::Result addMember( const QSync::Plugin &plugin );
+    void removeMember( const QSync::Member &member );
 
     void reinitEngine();
-
-    /** apply object type filter hack **/
-    void applyObjectTypeFilter();
 
   signals:
     /**

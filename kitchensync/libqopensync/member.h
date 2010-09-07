@@ -22,19 +22,21 @@
 #ifndef QSYNC_MEMBER_H
 #define QSYNC_MEMBER_H
 
-#include <libqopensync/plugin.h>
-#include <libqopensync/result.h>
-#include <libqopensync/plugin.h>
+#include <tqstring.h>
 
 class OSyncMember;
 
 namespace QSync {
 
+class Result;
+
 class Member
 {
   friend class Group;
+  friend class Engine;
   friend class SyncChange;
   friend class SyncMemberUpdate;
+  friend class SyncChangeUpdate;
 
   public:
     Member();
@@ -54,11 +56,6 @@ class Member
       Returns the name of the plugin, the member belongs to.
      */
     TQString pluginName() const;
-
-    /**
-      Returns the plugin, the member belongs to.
-     */
-    Plugin plugin() const;
 
     /**
       Returns the id of the plugin.
@@ -102,7 +99,7 @@ class Member
     /**
       Make this member an instance of the given plugin.
     */
-    Result instance( const Plugin & );
+    Result instance();
 
     bool operator==( const Member& ) const;
 
@@ -118,6 +115,12 @@ class Member
       to the device with the given configuration.
      */
     bool testConnection( const TQString &configuration );
+
+
+    /**
+     * Deletes the member's information from the hard disc.
+     */
+    Result cleanup() const;
 
   private:
     OSyncMember *mMember;

@@ -19,38 +19,41 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <opensync/opensync.h>
-#include <opensync/opensync-format.h>
+#ifndef QSYNC_SYNCMAPPING_H
+#define QSYNC_SYNCMAPPING_H
 
-#include "filter.h"
+#include <libqopensync/syncchange.h>
 
-using namespace QSync;
+class OSyncEngine;
+class OSyncMappingEngine;
 
-Filter::Filter()
-  : mFilter( 0 )
+namespace QSync {
+
+class SyncMapping
 {
+  friend class SyncMappingUpdate;
+
+  public:
+    SyncMapping();
+    SyncMapping( OSyncMappingEngine*, OSyncEngine* );
+    ~SyncMapping();
+
+    bool isValid() const;
+
+    long long id() const;
+
+    void duplicate();
+    void solve( const SyncChange &change );
+    void ignore();
+
+    int changesCount() const;
+    SyncChange changeAt( int pos );
+
+  private:
+    OSyncEngine *mEngine;
+    OSyncMappingEngine *mMappingEngine;
+};
+
 }
 
-Filter::~Filter()
-{
-}
-
-bool Filter::isValid() const
-{
-  return (mFilter != 0);
-}
-
-void Filter::setConfiguration( const TQString &configuration )
-{
-  Q_ASSERT( mFilter );
-
-  osync_filter_set_config( mFilter, (const char*)configuration.utf8() );
-}
-
-TQString Filter::configuration() const
-{
-  Q_ASSERT( mFilter );
-
-  return TQString::fromUtf8( osync_filter_get_config( mFilter ) );
-}
-
+#endif

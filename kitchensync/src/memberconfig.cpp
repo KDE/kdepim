@@ -23,6 +23,8 @@
 #include "configgui.h"
 #include "memberinfo.h"
 
+#include <libqopensync/result.h>
+
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -67,13 +69,16 @@ void MemberConfig::saveData()
   if ( txt.isEmpty() ) {
     KMessageBox::sorry( this, i18n("Configuration of %1 is empty.").arg( mMember.pluginName() ) );
   } else {
-    TQByteArray cfg = txt.utf8();
-    cfg.truncate(cfg.size() - 1); /* discard NUL terminator */
-    mMember.setConfiguration( cfg );
+    mMember.setConfiguration( txt.utf8() );
     mMember.setName( mGui->instanceName() );
     // TODO: Check for save() error.
     mMember.save();
   }
+}
+
+QSync::Member MemberConfig::member() const
+{
+  return mMember;
 }
 
 #include "memberconfig.moc"

@@ -541,6 +541,7 @@ private: // data
   TQCheckBox *mShrinkQuotesCheck;
   TQComboBox *mCharsetCombo;
   TQComboBox *mOverrideCharsetCombo;
+  TQCheckBox *mShowCurrentTimeCheck;
 };
 
 

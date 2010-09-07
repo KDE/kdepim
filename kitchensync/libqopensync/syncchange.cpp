@@ -19,8 +19,13 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include <stdlib.h>
+
 #include <opensync/file.h>
+
 #include <opensync/opensync.h>
+#include <opensync/opensync-data.h>
+#include <opensync/opensync-format.h>
 
 #include "syncchange.h"
 
@@ -64,39 +69,50 @@ TQString SyncChange::hash() const
   return TQString::fromUtf8( osync_change_get_hash( mSyncChange ) );
 }
 
-void SyncChange::setData( const TQString &data )
+void SyncChange::setData( const TQString &data , OSyncObjFormat *format )
 {
-  osync_change_set_data( mSyncChange, const_cast<char*>( data.utf8().data() ), data.utf8().size(), true );
+  OSyncError *error = 0;	
+
+  OSyncData *odata = osync_data_new( const_cast<char*>( data.utf8().data() ), data.utf8().size(), format, &error );
+  osync_change_set_data( mSyncChange, odata );
 }
 
 TQString SyncChange::data() const
 {
-  int size = osync_change_get_datasize( mSyncChange );
+  char *buf;
+  unsigned int size;
+
+  OSyncData *data = osync_change_get_data( mSyncChange );
+
+  osync_data_get_data( data, &buf, &size );
 
   TQString content;
   if ( objectFormatName() == "file" ) {
-    fileFormat *format = (fileFormat*)osync_change_get_data( mSyncChange );
+    OSyncFileFormat *format = (OSyncFileFormat*) buf;
     if ( format )
       content = TQString::fromUtf8( format->data, format->size );
   } else
-    content = TQString::fromUtf8( osync_change_get_data( mSyncChange ), size );
+    content = TQString::fromUtf8( buf, size );
+
+  free( buf );
 
   return content;
 }
 
 bool SyncChange::hasData() const
 {
-  return osync_change_has_data( mSyncChange );
+  return osync_data_has_data( osync_change_get_data( mSyncChange ) );
 }
 
 TQString SyncChange::objectFormatName() const
 {
-  OSyncObjFormat *format = osync_change_get_objformat( mSyncChange );
+  OSyncObjFormat *format = osync_data_get_objformat( osync_change_get_data( mSyncChange ) );
   Q_ASSERT( format );
 
   return TQString::fromUtf8( osync_objformat_get_name( format ) );
 }
 
+/*
 Member SyncChange::member() const
 {
   OSyncMember *omember = osync_change_get_member( mSyncChange );
@@ -106,6 +122,7 @@ Member SyncChange::member() const
 
   return m;
 }
+*/
 
 void SyncChange::setChangeType( Type changeType )
 {
@@ -113,20 +130,20 @@ void SyncChange::setChangeType( Type changeType )
 
   switch ( changeType ) {
     case AddedChange:
-      ochangeType = CHANGE_ADDED;
+      ochangeType = OSYNC_CHANGE_TYPE_ADDED;
       break;
     case UnmodifiedChange:
-      ochangeType = CHANGE_UNMODIFIED;
+      ochangeType = OSYNC_CHANGE_TYPE_UNMODIFIED;
       break;
     case DeletedChange:
-      ochangeType = CHANGE_DELETED;
+      ochangeType = OSYNC_CHANGE_TYPE_DELETED;
       break;
     case ModifiedChange:
-      ochangeType = CHANGE_MODIFIED;
+      ochangeType = OSYNC_CHANGE_TYPE_MODIFIED;
       break;
     case UnknownChange:
     default:
-      ochangeType = CHANGE_UNKNOWN;
+      ochangeType = OSYNC_CHANGE_TYPE_UNKNOWN;
       break;
   }
 
@@ -138,19 +155,19 @@ SyncChange::Type SyncChange::changeType() const
   OSyncChangeType ochangeType = osync_change_get_changetype( mSyncChange );
 
   switch ( ochangeType ) {
-    case CHANGE_ADDED:
+    case OSYNC_CHANGE_TYPE_ADDED:
       return AddedChange;
       break;
-    case CHANGE_UNMODIFIED:
+    case OSYNC_CHANGE_TYPE_UNMODIFIED:
       return UnmodifiedChange;
       break;
-    case CHANGE_DELETED:
+    case OSYNC_CHANGE_TYPE_DELETED:
       return DeletedChange;
       break;
-    case CHANGE_MODIFIED:
+    case OSYNC_CHANGE_TYPE_MODIFIED:
       return ModifiedChange;
       break;
-    case CHANGE_UNKNOWN:
+    case OSYNC_CHANGE_TYPE_UNKNOWN:
     default:
       return UnknownChange;
       break;

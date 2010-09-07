@@ -55,13 +55,20 @@ void ConfigGuiFile::load( const TQString &xml )
   TQDomDocument doc;
   doc.setContent( xml );
   TQDomElement docElement = doc.documentElement();
-  TQDomNode n;
-  for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-    TQDomElement e = n.toElement();
-    if ( e.tagName() == "path" ) {
-      mFilename->setURL( e.text() );
-    } else if ( e.tagName() == "recursive" ) {
-      mRecursive->setChecked( e.text() == "TRUE" );
+
+  TQDomNode node;
+  for ( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
+    TQDomElement e = node.toElement();
+    if ( e.tagName() == "directory" ) {
+      TQDomNode subNode;
+      for ( subNode = e.firstChild(); !subNode.isNull(); subNode = subNode.nextSibling() ) {
+        TQDomElement subElement = subNode.toElement();
+        if ( subElement.tagName() == "path" ) {
+          mFilename->setURL( subElement.text() );
+        } else if ( subElement.tagName() == "recursive" ) {
+          mRecursive->setChecked( subElement.text() == "TRUE" );
+        }
+      }
     }
   }
 }
@@ -69,13 +76,18 @@ void ConfigGuiFile::load( const TQString &xml )
 TQString ConfigGuiFile::save() const
 {
   TQString xml;
-  xml = "<config>";
-  xml += "<path>" + mFilename->url() + "</path>";
-  xml += "<recursive>";
-  if ( mRecursive->isChecked() ) xml += "TRUE";
-  else xml += "FALSE";
-  xml += "</recursive>";
-  xml += "</config>";
+  xml = "<config>\n";
+  xml += "  <directory>\n";
+  xml += "    <path>" + mFilename->url() + "</path>\n";
+  xml += "    <objtype>data</objtype>\n";
+  xml += "    <recursive>";
+  if ( mRecursive->isChecked() )
+    xml += "TRUE";
+  else
+    xml += "FALSE";
+  xml += "</recursive>\n";
+  xml += "  </directory>\n";
+  xml += "</config>\n";
 
   return xml;
 }

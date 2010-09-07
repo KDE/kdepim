@@ -19,38 +19,61 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <opensync/opensync.h>
-#include <opensync/opensync-format.h>
+#ifndef QSYNC_ENGINE_H
+#define QSYNC_ENGINE_H
 
-#include "filter.h"
+class OSyncEngine;
 
-using namespace QSync;
+namespace QSync {
 
-Filter::Filter()
-  : mFilter( 0 )
+class Group;
+class Member;
+class Result;
+
+class Engine
 {
+  friend class CallbackHandler;
+
+  public:
+    /**
+      Constructs an engine .
+     */
+    Engine( const Group &group );
+
+    /**
+      Destroys the engine.
+     */
+    ~Engine();
+
+    /**
+      Initializes the engine.
+     */
+    Result initialize();
+
+    /**
+      Finalizes the engine.
+     */
+    void finalize();
+
+    /**
+      Starts the synchronization process.
+     */
+    Result synchronize();
+
+    /**
+      Starts the discover process for a certain member.
+     */
+    Result discover( const Member &member );
+
+    /**
+      Stops the synchronization process.
+     */
+    void abort();
+
+  private:
+    OSyncEngine *mEngine;
+};
+
 }
 
-Filter::~Filter()
-{
-}
-
-bool Filter::isValid() const
-{
-  return (mFilter != 0);
-}
-
-void Filter::setConfiguration( const TQString &configuration )
-{
-  Q_ASSERT( mFilter );
-
-  osync_filter_set_config( mFilter, (const char*)configuration.utf8() );
-}
-
-TQString Filter::configuration() const
-{
-  Q_ASSERT( mFilter );
-
-  return TQString::fromUtf8( osync_filter_get_config( mFilter ) );
-}
-
+#endif

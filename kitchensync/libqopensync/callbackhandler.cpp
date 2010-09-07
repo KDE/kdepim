@@ -19,11 +19,12 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <osengine/engine.h>
-
-#include <libqopensync/engine.h>
+#include <opensync/opensync.h>
+#include <opensync/opensync-engine.h>
 
 #include <tqapplication.h>
+
+#include "engine.h"
 
 #include "callbackhandler.h"
 
@@ -111,11 +112,11 @@ void CallbackHandler::setEngine( Engine *engine )
 {
   mEngine = engine;
 
-  osengine_set_conflict_callback( engine->mEngine, &conflict_callback, this );
-  osengine_set_changestatus_callback( engine->mEngine, &change_callback, this );
-  osengine_set_mappingstatus_callback( engine->mEngine, &mapping_callback, this );
-  osengine_set_enginestatus_callback( engine->mEngine, &engine_callback, this );
-  osengine_set_memberstatus_callback( engine->mEngine, &member_callback, this );
+  osync_engine_set_conflict_callback( engine->mEngine, &conflict_callback, this );
+  osync_engine_set_changestatus_callback( engine->mEngine, &change_callback, this );
+  osync_engine_set_mappingstatus_callback( engine->mEngine, &mapping_callback, this );
+  osync_engine_set_enginestatus_callback( engine->mEngine, &engine_callback, this );
+  osync_engine_set_memberstatus_callback( engine->mEngine, &member_callback, this );
 }
 
 Engine* CallbackHandler::engine() const
@@ -143,7 +144,7 @@ void CallbackHandler::customEvent( TQCustomEvent *event )
   }
 }
 
-void CallbackHandler::conflict_callback( OSyncEngine *engine, OSyncMapping *omapping, void *data )
+void CallbackHandler::conflict_callback( OSyncEngine *engine, OSyncMappingEngine *omapping, void *data )
 {
   SyncMapping mapping( omapping, engine );
 
@@ -152,7 +153,7 @@ void CallbackHandler::conflict_callback( OSyncEngine *engine, OSyncMapping *omap
   TQApplication::postEvent( handler, new ConflictEvent( mapping ) );
 }
 
-void CallbackHandler::change_callback( OSyncEngine*, OSyncChangeUpdate *update, void *data )
+void CallbackHandler::change_callback( OSyncChangeUpdate *update, void *data )
 {
   SyncChangeUpdate change( update );
 
@@ -170,7 +171,7 @@ void CallbackHandler::mapping_callback( OSyncMappingUpdate *update, void *data )
   TQApplication::postEvent( handler, new MappingEvent( mapping ) );
 }
 
-void CallbackHandler::engine_callback( OSyncEngine*, OSyncEngineUpdate *update, void *data )
+void CallbackHandler::engine_callback( OSyncEngineUpdate *update, void *data )
 {
   SyncEngineUpdate engine( update );
 

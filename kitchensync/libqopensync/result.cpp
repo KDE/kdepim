@@ -100,7 +100,7 @@ Result::Result( OSyncError **error, bool deleteError )
   mMessage = TQString::fromUtf8( osync_error_print( error ) );
 
   if ( deleteError )
-    osync_error_free( error );
+    osync_error_unref( error );
 }
 
 Result::~Result()

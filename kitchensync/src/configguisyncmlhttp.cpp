@@ -121,7 +121,7 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, TQWidget 
   mGridLayout->addWidget( label, 5, 0 );
 
   mRecvLimit = new TQSpinBox( optionWidget );
-  mRecvLimit->setMinValue( 1 );
+  mRecvLimit->setMinValue( 0 );
   mRecvLimit->setMaxValue( 65536 );
   mGridLayout->addWidget( mRecvLimit, 5, 1 );
 
@@ -130,7 +130,7 @@ ConfigGuiSyncmlHttp::ConfigGuiSyncmlHttp( const QSync::Member &member, TQWidget 
   mGridLayout->addWidget( label, 6, 0 );
 
   mMaxObjSize = new TQSpinBox( optionWidget );
-  mMaxObjSize->setMinValue( 1 );
+  mMaxObjSize->setMinValue( 0 );
   mMaxObjSize->setMaxValue( 65536 );
   mGridLayout->addWidget( mMaxObjSize, 6, 1 );
 

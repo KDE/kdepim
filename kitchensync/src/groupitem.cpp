@@ -33,6 +33,9 @@
 #include <tqprogressbar.h>
 #include <tqvbox.h>
 
+#include <libqopensync/plugin.h>
+#include <libqopensync/pluginenv.h>
+
 #include "memberinfo.h"
 #include "multiconflictdialog.h"
 #include "singleconflictdialog.h"
@@ -150,12 +153,9 @@ void GroupItem::update()
   mProgressBar->reset();
   mProgressBar->hide();
 
-  QSync::Group group = mSyncProcess->group();
-  QSync::Group::Iterator memberIt( group.begin() );
-  QSync::Group::Iterator memberEndIt( group.end() );
-
-  for ( ; memberIt != memberEndIt; ++memberIt ) {
-    MemberItem *item = new MemberItem( mBox, mSyncProcess, *memberIt );
+  const QSync::Group group = mSyncProcess->group();
+  for ( int i = 0; i < group.memberCount(); ++i ) {
+    MemberItem *item = new MemberItem( mBox, mSyncProcess, group.memberAt( i ) );
     item->show();
     item->setStatusMessage( i18n( "Ready" ) );
     mMemberItems.append( item );
@@ -187,14 +187,11 @@ void GroupItem::conflict( QSync::SyncMapping mapping )
 void GroupItem::change( const QSync::SyncChangeUpdate &update )
 {
   switch ( update.type() ) {
-    case QSync::SyncChangeUpdate::Received:
+    case QSync::SyncChangeUpdate::Read:
       mProcessedItems++;
       mStatus->setText( i18n( "%1 entries read" ).arg( mProcessedItems ) );
       break;
-    case QSync::SyncChangeUpdate::ReceivedInfo:
-      mStatus->setText( i18n( "Receive information" ) );
-      break;
-    case QSync::SyncChangeUpdate::Sent:
+    case QSync::SyncChangeUpdate::Written:
       mProcessedItems--;
       mStatus->setText( i18n( "%1 entries written" ).arg( mMaxProcessedItems - mProcessedItems ) );
 
@@ -211,11 +208,7 @@ void GroupItem::change( const QSync::SyncChangeUpdate &update )
         mProgressBar->setProgress( 100 - progress );
       }
       break;
-    case QSync::SyncChangeUpdate::WriteError:
-      mStatus->setText( i18n( "Error" ) );
-      KPassivePopup::message( update.result().message(), this );
-      break;
-    case QSync::SyncChangeUpdate::ReceiveError:
+    case QSync::SyncChangeUpdate::Error:
       mStatus->setText( i18n( "Error" ) );
       KPassivePopup::message( update.result().message(), this );
       break;
@@ -232,21 +225,21 @@ void GroupItem::mapping( const QSync::SyncMappingUpdate& )
 void GroupItem::engine( const QSync::SyncEngineUpdate &update )
 {
   switch ( update.type() ) {
-    case QSync::SyncEngineUpdate::EndPhaseConnected:
+    case QSync::SyncEngineUpdate::Connected:
       mStatus->setText( i18n( "Connected" ) );
       mProgressBar->setProgress( 0 );
       mSynchronizing = true;
       mSyncAction->setText( "Abort Synchronization" );
       break;
-    case QSync::SyncEngineUpdate::EndPhaseRead:
+    case QSync::SyncEngineUpdate::Read:
       mStatus->setText( i18n( "Data read" ) );
       break;
-    case QSync::SyncEngineUpdate::EndPhaseWrite:
+    case QSync::SyncEngineUpdate::Written:
       mStatus->setText( i18n( "Data written" ) );
       mProgressBar->setProgress( 100 );
       mProcessedItems = mMaxProcessedItems = 0;
       break;
-    case QSync::SyncEngineUpdate::EndPhaseDisconnected:
+    case QSync::SyncEngineUpdate::Disconnected:
       mStatus->setText( i18n( "Disconnected" ) );
       break;
     case QSync::SyncEngineUpdate::Error:
@@ -257,7 +250,7 @@ void GroupItem::engine( const QSync::SyncEngineUpdate &update )
       mSynchronizing = false;
       mSyncAction->setText( i18n( "Synchronize Now" ) );
       break;
-    case QSync::SyncEngineUpdate::SyncSuccessfull:
+    case QSync::SyncEngineUpdate::SyncSuccessful:
       mStatus->setText( i18n( "Successfully synchronized" ) );
       mSyncProcess->group().setLastSynchronization( TQDateTime::currentDateTime() );
       mSyncProcess->group().save();
@@ -288,28 +281,22 @@ void GroupItem::member( const QSync::SyncMemberUpdate &update )
         case QSync::SyncMemberUpdate::Connected:
           (*it)->setStatusMessage( i18n( "Connected" ) );
           break;
-        case QSync::SyncMemberUpdate::SentChanges:
+        case QSync::SyncMemberUpdate::Read:
           (*it)->setStatusMessage( i18n( "Changes read" ) );
           break;
-        case QSync::SyncMemberUpdate::CommittedAll:
+        case QSync::SyncMemberUpdate::Written:
           (*it)->setStatusMessage( i18n( "Changes written" ) );
           break;
         case QSync::SyncMemberUpdate::Disconnected:
           (*it)->setStatusMessage( i18n( "Disconnected" ) );
           break;
-        case QSync::SyncMemberUpdate::ConnectError:
-          (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+        case QSync::SyncMemberUpdate::SyncDone:
+          (*it)->setStatusMessage( i18n( "Synchronization done" ) );
           break;
-        case QSync::SyncMemberUpdate::GetChangesError:
-          (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
+        case QSync::SyncMemberUpdate::Discovered:
+          (*it)->setStatusMessage( i18n( "Discovered" ) );
           break;
-        case QSync::SyncMemberUpdate::CommittedAllError:
-          (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
-          break;
-        case QSync::SyncMemberUpdate::SyncDoneError:
-          (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
-          break;
-        case QSync::SyncMemberUpdate::DisconnectedError:
+        case QSync::SyncMemberUpdate::Error:
           (*it)->setStatusMessage( i18n( "Error: %1" ).arg( update.result().message() ) );
           break;
         default:
@@ -352,11 +339,8 @@ MemberItem::MemberItem( TQWidget *parent, SyncProcess *process,
   TQFont boldFont;
   boldFont.setBold( true );
 
-  MemberInfo mi( member );
-
-  TQPixmap icon = mi.smallIcon();
-
-  QSync::Plugin plugin = member.plugin();
+  const MemberInfo mi( member );
+  const TQPixmap icon = mi.smallIcon();
 
   TQVBoxLayout *layout = new TQVBoxLayout( this );
 
@@ -378,7 +362,14 @@ MemberItem::MemberItem( TQWidget *parent, SyncProcess *process,
   mStatus = new TQLabel( box );
 
   mMemberName->setText( member.name() );
-  mDescription->setText( plugin.longName() );
+
+  const QSync::PluginEnv *env = SyncProcessManager::self()->pluginEnv();
+  const QSync::Plugin plugin = env->pluginByName( member.pluginName() );
+
+  if ( plugin.isValid() )
+    mDescription->setText( plugin.longName() );
+  else
+    mDescription->setText( i18n("Plugin \"%1\" can't get initialized!").arg( member.pluginName() ) );
 }
 
 void MemberItem::setStatusMessage( const TQString &msg )
