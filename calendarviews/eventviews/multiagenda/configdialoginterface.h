@@ -17,8 +17,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef CONFIGDIALOGINTERFACE_H_
-#define CONFIGDIALOGINTERFACE_H_
+#ifndef EVENTVIEWS_CONFIGDIALOGINTERFACE_H
+#define EVENTVIEWS_CONFIGDIALOGINTERFACE_H
 
 namespace CalendarSupport {
   class CollectionSelectionProxyModel;
@@ -35,8 +35,7 @@ class ConfigDialogInterface
     virtual bool useCustomColumns() const = 0;
     virtual QString columnTitle( int column ) const = 0;
 
-    virtual CalendarSupport::CollectionSelectionProxyModel
-      *takeSelectionModel( int column ) = 0;
+    virtual CalendarSupport::CollectionSelectionProxyModel *takeSelectionModel( int column ) = 0;
 };
 
 }

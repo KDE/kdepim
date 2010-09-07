@@ -22,29 +22,10 @@
 #define EVENTVIEWS_MULTIAGENDAVIEW_H_H
 
 #include "eventview.h"
-#include "agenda/agendaview.h"
-
-#include <Akonadi/Item>
-
-#include <KDialog>
-
-class KHBox;
-
-class QScrollArea;
-class QAbstractItemModel;
-class QModelIndex;
-class QResizeEvent;
-class QScrollBar;
-class QSplitter;
-
-namespace CalendarSupport {
-  class CollectionSelectionProxyModel;
-}
 
 namespace EventViews {
-  class AgendaView;
-  class TimeLabelsZone;
-  class ConfigDialogInterface;
+
+class ConfigDialogInterface;
 
 /**
   Shows one agenda for every resource side-by-side.
@@ -74,8 +55,7 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     bool customColumnSetupUsed() const;
     int customNumberOfColumns() const;
     QVector<QString> customColumnTitles() const;
-    QVector<CalendarSupport::CollectionSelectionProxyModel*>
-      collectionSelectionModels() const;
+    QVector<CalendarSupport::CollectionSelectionProxyModel*>collectionSelectionModels() const;
 
   Q_SIGNALS:
     void showNewEventPopupSignal();
@@ -83,7 +63,7 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
 
   public slots:
 
-    void customCollectionsChanged( EventViews::ConfigDialogInterface *dlg );
+    void customCollectionsChanged( ConfigDialogInterface *dlg );
 
     void showDates( const QDate &start, const QDate &end );
     void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
