@@ -23,6 +23,7 @@
 
 #include "agenda.h"
 #include "agendaview.h"
+#include "month/monthview.h"
 #include "multiagenda/multiagendaview.h"
 #include "prefs.h"
 
@@ -83,6 +84,8 @@ void MainWindow::addView( const QString &viewName )
     eventView = new AgendaView( start.date(), end.date(), false, this );
   } else if ( viewName == QLatin1String( "multiagenda" ) ) {
     eventView = new MultiAgendaView( this );
+  } else if ( viewName == QLatin1String( "month" ) ) {
+    eventView = new MonthView( this );
   }
 
   if ( eventView != 0 ) {
