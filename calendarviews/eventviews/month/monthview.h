@@ -29,6 +29,8 @@
 
 #include <Akonadi/Item>
 
+#include <KDateTime>
+
 #include <QDate>
 #include <QTimer>
 
