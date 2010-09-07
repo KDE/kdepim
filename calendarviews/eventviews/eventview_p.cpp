@@ -51,11 +51,7 @@ EventViewPrivate::EventViewPrivate( EventView *qq )
     mChanger( 0 ),
     mChanges( EventView::DatesChanged ),
     mCollectionId( -1 )
-{
-  QByteArray cname = q->metaObject()->className();
-  cname.replace( ':', '_' );
-  identifier = cname + '_' + KRandom::randomString( 8 ).toLatin1();
-}
+{ }
 
 EventViewPrivate::~EventViewPrivate()
 {
@@ -88,6 +84,13 @@ void EventViewPrivate::setUpModels()
   }
 
   reconnectCollectionSelection();
+}
+
+void EventViewPrivate::initIdentifier()
+{
+  QByteArray cname = q->metaObject()->className();
+  cname.replace( ':', '_' );
+  identifier = cname + '_' + KRandom::randomString( 8 ).toLatin1();
 }
 
 void EventViewPrivate::reconnectCollectionSelection()

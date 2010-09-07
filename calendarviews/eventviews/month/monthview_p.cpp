@@ -33,13 +33,12 @@ using namespace EventViews;
 MonthViewPrivate::MonthViewPrivate( MonthView *qq )
   : EventViewPrivate( qq )
   , q( qq )
-  , calendarSearch( new CalendarSupport::CalendarSearch( qq ) )
-  , scene( new MonthScene( qq ) )
+  , calendarSearch( 0 )
+  , scene( 0 )
   , selectedItemId( -1 )
-  , view( new MonthGraphicsView( qq ) )
+  , view( 0 )
 {
   reloadTimer.setSingleShot( true );
-  view->setScene( scene );
 }
 
 MonthViewPrivate::~MonthViewPrivate()

@@ -52,6 +52,12 @@ MonthView::MonthView( QWidget *parent )
   : EventView( new MonthViewPrivate( this ), parent )
 {
   Q_D( MonthView );
+
+  d->calendarSearch = new CalendarSupport::CalendarSearch( this );
+  d->scene = new MonthScene( this );
+  d->view = new MonthGraphicsView( this );
+  d->view->setScene( d->scene );
+  
   QHBoxLayout *topLayout = new QHBoxLayout( this );
   topLayout->addWidget( d->view );
 

@@ -72,6 +72,9 @@ EventView::EventView( QWidget *parent ) : QWidget( parent ), d_ptr( new EventVie
            SIGNAL(focusChanged(QWidget*,QWidget*)),
            this, SLOT(focusChanged(QWidget*,QWidget*)) );
 
+  // Moved out of the ctor because we cannot always garuantee that q is already
+  // fully initialized, causing crashes when this is not the case.
+  d_ptr->initIdentifier();
   d_ptr->setUpModels();
 }
 
@@ -89,6 +92,9 @@ EventView::EventView( EventViewPrivate *dd, QWidget *parent )
            SIGNAL(focusChanged(QWidget*,QWidget*)),
            this, SLOT(focusChanged(QWidget*,QWidget*)) );
 
+  // Moved out of the ctor because we cannot always garuantee that q is already
+  // fully initialized, causing crashes when this is not the case.
+  d_ptr->initIdentifier();
   d_ptr->setUpModels();
 }
 
