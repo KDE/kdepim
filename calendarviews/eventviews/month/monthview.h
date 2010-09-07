@@ -135,14 +135,6 @@ class MonthView : public EventView
     void reloadIncidences();
 
   private:
-    void addIncidence( const Akonadi::Item &incidence );
-    void moveStartDate( int weeks, int months );
-    void triggerDelayedReload() {
-      if ( !mReloadTimer.isActive() ) {
-        mReloadTimer.start( 50 );
-      }
-    }
-
     MonthGraphicsView *mView;
     MonthScene *mScene;
     Akonadi::Item::Id mSelectedItemId;
@@ -150,10 +142,11 @@ class MonthView : public EventView
 
     QTimer mReloadTimer;
 
-    friend class MonthScene;
-
   private:
     Q_DECLARE_PRIVATE( MonthView );
+
+    friend class MonthScene;
+    friend class MonthViewPrivate;
 };
 
 }

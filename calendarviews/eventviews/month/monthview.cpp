@@ -235,13 +235,6 @@ void MonthView::changeIncidenceDisplay( const Akonadi::Item &incidence, int acti
   QTimer::singleShot( 0, this, SLOT(reloadIncidences()) );
 }
 
-void MonthView::addIncidence( const Akonadi::Item &incidence )
-{
-  Q_UNUSED( incidence );
-  //TODO: add some more intelligence here...
-  reloadIncidences();
-}
-
 void MonthView::updateView()
 {
   mView->update();
@@ -250,11 +243,12 @@ void MonthView::updateView()
 #ifndef QT_NO_WHEELEVENT
 void MonthView::wheelEvent( QWheelEvent *event )
 {
+  Q_D( MonthView );
   // invert direction to get scroll-like behaviour
   if ( event->delta() > 0 ) {
-    moveStartDate( -1, 0 );
+    d->moveStartDate( -1, 0 );
   } else if ( event->delta() < 0 ) {
-    moveStartDate( 1, 0 );
+    d->moveStartDate( 1, 0 );
   }
 
   // call accept in every case, we do not want anybody else to react
@@ -264,11 +258,12 @@ void MonthView::wheelEvent( QWheelEvent *event )
 
 void MonthView::keyPressEvent( QKeyEvent *event )
 {
+  Q_D( MonthView );
   if ( event->key() == Qt::Key_PageUp ) {
-    moveStartDate( 0, -1 );
+    d->moveStartDate( 0, -1 );
     event->accept();
   } else if ( event->key() == Qt::Key_PageDown ) {
-    moveStartDate( 0, 1 );
+    d->moveStartDate( 0, 1 );
     event->accept();
   } else if ( processKeyEvent( event ) ) {
     event->accept();
@@ -288,40 +283,34 @@ void MonthView::keyReleaseEvent( QKeyEvent *event )
 
 void MonthView::moveBackMonth()
 {
-  moveStartDate( 0, -1 );
+  Q_D( MonthView );
+  d->moveStartDate( 0, -1 );
 }
 
 void MonthView::moveBackWeek()
 {
-  moveStartDate( -1, 0 );
+  Q_D( MonthView );
+  d->moveStartDate( -1, 0 );
 }
 
 void MonthView::moveFwdWeek()
 {
-  moveStartDate( 1, 0 );
+  Q_D( MonthView );
+  d->moveStartDate( 1, 0 );
 }
 
 void MonthView::moveFwdMonth()
 {
-  moveStartDate( 0, 1 );
-}
-
-void MonthView::moveStartDate( int weeks, int months )
-{
-  KDateTime start = startDateTime();
-  KDateTime end = endDateTime();
-  start = start.addDays( weeks * 7 );
-  end = end.addDays( weeks * 7 );
-  start = start.addMonths( months );
-  end = end.addMonths( months );
-  setDateRange( start, end );
+  Q_D( MonthView );
+  d->moveStartDate( 0, 1 );
 }
 
 void MonthView::showDates( const QDate &start, const QDate &end )
 {
   Q_UNUSED( start );
   Q_UNUSED( end );
-  triggerDelayedReload();
+  Q_D( MonthView );
+  d->triggerDelayedReload();
 }
 
 QPair<KDateTime,KDateTime> MonthView::actualDateRange( const KDateTime &start,
@@ -466,8 +455,9 @@ void MonthView::reloadIncidences()
 
 void MonthView::calendarReset()
 {
+  Q_D( MonthView );
   kDebug();
-  triggerDelayedReload();
+  d->triggerDelayedReload();
 }
 
 void MonthView::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
@@ -492,27 +482,30 @@ void MonthView::rowsAboutToBeRemoved( const QModelIndex& parent, int start, int 
 
 void MonthView::incidencesAdded( const Akonadi::Item::List &incidences )
 {
+  Q_D( MonthView );
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item added: " << CalendarSupport::incidence( i )->summary();
   }
-  triggerDelayedReload();
+  d->triggerDelayedReload();
 }
 
 void MonthView::incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences )
 {
+  Q_D( MonthView );
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item removed: " << CalendarSupport::incidence( i )->summary();
   }
-  triggerDelayedReload();
+  d->triggerDelayedReload();
 }
 
 void MonthView::incidencesChanged( const Akonadi::Item::List &incidences )
 {
+  Q_D( MonthView );
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item changed: " << CalendarSupport::incidence( i )->summary();
   }
-  triggerDelayedReload();
+  d->triggerDelayedReload();
 }
 
 QDate MonthView::averageDate() const

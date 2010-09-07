@@ -30,6 +30,7 @@ using namespace EventViews;
 
 MonthViewPrivate::MonthViewPrivate( MonthView *qq )
   : EventViewPrivate( qq )
+  , q( qq )
   , calendarSearch( new CalendarSupport::CalendarSearch( qq ) )
 { }
 
@@ -54,4 +55,29 @@ void MonthViewPrivate::setUpModels()
   testview->setModel( calendarSearch->model() );
   dlg->show();
 #endif
+}
+
+void MonthViewPrivate::addIncidence( const Akonadi::Item &incidence )
+{
+  Q_UNUSED( incidence );
+  //TODO: add some more intelligence here...
+  q->reloadIncidences();
+}
+
+void MonthViewPrivate::moveStartDate( int weeks, int months )
+{
+  KDateTime start = q->startDateTime();
+  KDateTime end = q->endDateTime();
+  start = start.addDays( weeks * 7 );
+  end = end.addDays( weeks * 7 );
+  start = start.addMonths( months );
+  end = end.addMonths( months );
+  q->setDateRange( start, end );
+}
+
+void MonthViewPrivate::triggerDelayedReload()
+{
+//   if ( !mReloadTimer.isActive() ) {
+//     mReloadTimer.start( 50 );
+//   }
 }

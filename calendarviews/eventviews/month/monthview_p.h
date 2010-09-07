@@ -27,11 +27,17 @@ namespace EventViews {
 
 class MonthViewPrivate : public EventViewPrivate
 {
+  MonthView *q;
+  
   public: /// Methods
     explicit MonthViewPrivate( MonthView *qq );
     virtual ~MonthViewPrivate();
 
     virtual void setUpModels();
+
+    void addIncidence( const Akonadi::Item &incidence );
+    void moveStartDate( int weeks, int months );
+    void triggerDelayedReload();
 
   public:  /// Members
     CalendarSupport::CalendarSearch* calendarSearch;
