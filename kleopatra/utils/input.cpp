@@ -254,6 +254,9 @@ ProcessStdOutInput::ProcessStdOutInput( const QString & cmd, const QStringList &
     qDebug() << "ProcessStdOutInput:" << "\n"
         "cd" << wd.absolutePath() << "\n" <<
         cmd << args << Outputter( stdin_ );
+    if ( cmd.isEmpty() )
+        throw Exception( gpg_error( GPG_ERR_INV_ARG ),
+                         i18n("Command not specified") );
     m_proc->setWorkingDirectory( wd.absolutePath() );
     m_proc->start( cmd, args, openMode );
     if ( !m_proc->waitForStarted() )
