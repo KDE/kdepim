@@ -240,8 +240,13 @@ void IncidenceDateTime::updateStartSpec()
 
   const bool dateChanged = mCurrentStartDateTime.date().day() != prevDate.day()
                            || mCurrentStartDateTime.date().month() != prevDate.month();
+
   if ( dateChanged )
     emit startDateChanged( mCurrentStartDateTime.date() );
+
+  if ( type() == KCalCore::Incidence::TypeJournal ) {
+    checkDirtyStatus();
+  }
 }
 
 /// private slots for Todo
@@ -324,7 +329,8 @@ bool IncidenceDateTime::isDirty( const KCalCore::Todo::Ptr &todo ) const
 {
   Q_ASSERT( todo );
 
-  const bool hasDateTimes = mUi->mStartCheck->isChecked() || mUi->mEndCheck->isChecked();
+  const bool hasDateTimes = mUi->mStartCheck->isChecked() ||
+                            mUi->mEndCheck->isChecked();
 
   // First check the start time/date of the todo
   if ( todo->hasStartDate() != mUi->mStartCheck->isChecked() ) {
@@ -364,7 +370,8 @@ bool IncidenceDateTime::isDirty( const KCalCore::Event::Ptr &event ) const
   if ( mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Opaque )
     return true;
 
-  if ( !mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Transparent )
+  if ( !mUi->mFreeBusyCheck->isChecked() &&
+       event->transparency() != Event::Transparent )
     return true;
 
   if ( event->allDay() ) {
@@ -518,40 +525,27 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
   enableTimeEdits();
 
   bool isTemplate = false; // TODO
-/*  if ( !isTemplate ) {
+  if ( !isTemplate ) {
     KDateTime startDT = journal->dtStart();
-    KDateTime endDT = event->dtEnd();
-    if ( event->recurs() && mActiveDate.isValid() ) {
-      // Consider the active date when editing recurring Events.
+
+    if ( journal->recurs() && mActiveDate.isValid() ) {
+      // Consider the active date when editing recurring journals
       KDateTime kdt( mActiveDate, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
-      const int eventLength = startDT.daysTo( endDT );
       kdt = kdt.addSecs( -1 );
-      startDT.setDate( event->recurrence()->getNextDateTime( kdt ).date() );
-      if ( event->hasEndDate() ) {
-        endDT.setDate( startDT.addDays( eventLength ).date() );
-      } else {
-        if ( event->hasDuration() ) {
-          endDT = startDT.addSecs( event->duration().asSeconds() );
-        } else {
-          endDT = startDT;
-        }
-      }
+      startDT.setDate( journal->recurrence()->getNextDateTime( kdt ).date() );
     }
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
     if ( startDT.isUtc() )
       startDT = startDT.toLocalZone();
 
-    if ( endDT.isUtc() )
-      endDT = endDT.toLocalZone();
-
-    setDateTimes( startDT, endDT );
+    setDateTimes( startDT, KDateTime() );
   } else {
     // set the start/end time from the template, only as a last resort #190545
-    if ( !event->dtStart().isValid() || !event->dtEnd().isValid() ) {
-      setTimes( event->dtStart(), event->dtEnd() );
+    kDebug() << "DEBUG dtStart is valid " << journal->dtStart().isValid();
+    if ( !journal->dtStart().isValid() ) {
+      setTimes( journal->dtStart(), KDateTime() );
     }
   }
-*/
 }
 
 void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
