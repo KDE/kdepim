@@ -32,9 +32,9 @@ IncidenceDialog *IncidenceDialogFactory::create( KCalCore::IncidenceBase::Incide
   switch ( type ) {
   case IncidenceBase::TypeEvent: // Fall through
   case IncidenceBase::TypeTodo:
+  case IncidenceBase::TypeJournal:
+    // TODO: rename EventOrTodoDialog to IncidenceDialog
     return new EventOrTodoDialog( parent, flags );
-//  case IncidenceBase::TypeJournal: // TODO: Implement a IncidenceDialog based Journal dialog.
-//    return new JournalDialog;
   default:
     return 0;
   }
