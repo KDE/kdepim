@@ -96,11 +96,14 @@ void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
     connect( mAgenda->verticalScrollBar(), SIGNAL(valueChanged(int)),
              area->verticalScrollBar(), SLOT(setValue(int)) );
 
-    TimeLabels *timeLabels = static_cast<TimeLabels*>( area->widget() );
-    timeLabels->setAgenda( mAgenda );
     area->verticalScrollBar()->setValue( mAgenda->verticalScrollBar()->value() );
 
   }
+
+  TimeLabels *timeLabels = static_cast<TimeLabels*>( area->widget() );
+  timeLabels->setAgenda( mAgenda );
+
+
   // timelabel's scroll is just a slave, this shouldn't be here
   // if ( mParent ) {
   //  connect( area->verticalScrollBar(), SIGNAL(valueChanged(int)),
@@ -130,10 +133,11 @@ QList<QScrollArea*> TimeLabelsZone::timeLabels() const
   return mTimeLabelsList;
 }
 
-void TimeLabelsZone::setAgendaView( AgendaView *agenda )
+void TimeLabelsZone::setAgendaView( AgendaView *agendaView )
 {
-  mAgenda = agenda->agenda();
-  mParent = agenda;
+  mParent = agendaView;
+  mAgenda = agendaView ? agendaView->agenda() : 0;
+
   foreach ( QScrollArea *timeLabel, mTimeLabelsList ) {
     setupTimeLabel( timeLabel );
   }

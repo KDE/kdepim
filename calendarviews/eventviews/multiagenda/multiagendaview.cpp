@@ -281,6 +281,7 @@ void MultiAgendaView::Private::deleteViews()
   }
 
   mAgendaViews.clear();
+  mTimeLabelsZone->setAgendaView( 0 );
   qDeleteAll( mAgendaWidgets );
   mAgendaWidgets.clear();
 }
