@@ -64,6 +64,7 @@ MainWindow::MainWindow( const QStringList &viewNames )
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 
+  setGeometry( 0, 0, 800, 600 );
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
 }
 
