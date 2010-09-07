@@ -151,7 +151,6 @@ class MonthView : public EventView
     QTimer mReloadTimer;
 
     friend class MonthScene;
-    friend class MonthGraphicsView;
 
   private:
     Q_DECLARE_PRIVATE( MonthView );
