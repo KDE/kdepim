@@ -29,6 +29,8 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/incidencechanger.h>
+#include <calendarsupport/collectionselectionproxymodel.h>
+#include <calendarsupport/collectionselection.h>
 
 #include <KCalCore/Event>
 
@@ -121,6 +123,24 @@ void MainWindow::delayedInit()
 
   // no collections, just items
   calendarModel->setCollectionFetchStrategy( EntityTreeModel::InvisibleCollectionFetch );
+
+  { // Collection Selection stuff
+
+    CalendarSupport::CollectionSelectionProxyModel *selectionProxyModel =
+      new CalendarSupport::CollectionSelectionProxyModel( this );
+
+    selectionProxyModel->setCheckableColumn( CalendarSupport::CalendarModel::CollectionTitle );
+    selectionProxyModel->setDynamicSortFilter( true );
+    selectionProxyModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+    QItemSelectionModel* selectionModel = new QItemSelectionModel( selectionProxyModel );
+    selectionProxyModel->setSelectionModel( selectionModel );
+    selectionProxyModel->setSourceModel( calendarModel );
+
+    CalendarSupport::CollectionSelection *colSel
+      = new CalendarSupport::CollectionSelection( selectionModel );
+
+    EventViews::EventView::setGlobalCollectionSelection( colSel );
+  }
 
   EntityMimeTypeFilterModel *filterModel = new EntityMimeTypeFilterModel( this );
   filterModel->setHeaderGroup( EntityTreeModel::ItemListHeaders );
