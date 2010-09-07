@@ -1,6 +1,4 @@
 /*
-  This file is part of the KOrganizer interfaces.
-
   Copyright (c) 2007 Loïc Corbasson <loic.corbasson@gmail.com>
 
   This library is free software; you can redistribute it and/or
@@ -18,19 +16,16 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef CALENDARDECORATION_H
-#define CALENDARDECORATION_H
+#ifndef EVENTVIEWS_CALENDARDECORATION_H
+#define EVENTVIEWS_CALENDARDECORATION_H
 
 #include "eventviews_export.h"
 
 #include <calendarsupport/plugin.h>
 
-#include <kurl.h>
+#include <KUrl>
 
-#include <QtCore/QString>
-#include <QtCore/QDateTime>
-#include <QtCore/QList>
-#include <QtGui/QPixmap>
+#include <QPixmap>
 
 namespace EventViews {
 

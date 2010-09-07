@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2007 Bruno Virlet <bruno@virlet.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,26 +19,10 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
 #include "timescaleconfigdialog.h"
-
 #include "prefs.h"
 
-#include <kdebug.h>
-#include <kstandarddirs.h>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kconfig.h>
-#include <kglobal.h>
-#include <kglobalsettings.h>
-#include <ksystemtimezone.h>
-
-#include <QLabel>
-#include <QFrame>
-#include <QLayout>
-#include <QListWidget>
-
-#include <boost/shared_ptr.hpp>
+#include <KSystemTimeZone>
 
 using namespace EventViews;
 
@@ -69,7 +51,6 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   QWidget *mainwidget = new QWidget( this );
   setupUi( mainwidget );
   setMainWidget( mainwidget );
-
 
   QStringList list;
   const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();

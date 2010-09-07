@@ -1,5 +1,4 @@
 /*
-  This file is part of KOrganizer.
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
@@ -28,54 +27,37 @@
   without including the source code for Qt in the source distribution.
 */
 #include "agenda.h"
-
 #include "agendaitem.h"
 #include "eventview.h"
 #include "helper.h"
 #include "prefs.h"
 
 #include <calendarsupport/calendar.h>
-#include <calendarsupport/utils.h>
 #include <calendarsupport/incidencechanger.h>
+#include <calendarsupport/utils.h>
 
+#include <KCalCore/Incidence>
 #include <KCalCore/Todo>
 
 #include <KCalUtils/RecurrenceActions>
-#include <KCalUtils/DndFactory>
-#include <KCalUtils/ICalDrag>
-#include <KCalUtils/VCalDrag>
 
-
-#include <KDebug>
 #include <KGlobal>
-#include <KLocale>
 #include <KMessageBox>
-#include <KUrl>
 
-#include <QScrollBar>
-#include <QScrollArea>
-#include <QDateTime>
 #include <QApplication>
-#include <QCursor>
-#include <QPainter>
 #include <QLabel>
-#include <QWheelEvent>
-#include <QPixmap>
-#include <QVector>
-#include <QList>
-#include <QEvent>
-#include <QKeyEvent>
-#include <QFrame>
-#include <QDropEvent>
+#include <KLocale>
+#include <QMouseEvent>
+#include <QPainter>
 #include <QPointer>
 #include <QResizeEvent>
+#include <QScrollBar>
 #include <QTimer>
-#include <QMouseEvent>
+#include <QWheelEvent>
 
-#include <cmath>
+#include <cmath> // for fabs()
 
 using namespace EventViews;
-using namespace KCalUtils;
 
 ///////////////////////////////////////////////////////////////////////////////
 class MarcusBains::Private
@@ -105,7 +87,7 @@ int MarcusBains::Private::todayColumn() const
   const QDate currentDate = QDate::currentDate();
 
   int col = 0;
-  const DateList dateList = mAgenda->dateList();
+  const KCalCore::DateList dateList = mAgenda->dateList();
   Q_FOREACH( const QDate &date, dateList ) {
     if ( date == currentDate ) {
       return QApplication::isRightToLeft() ? mAgenda->columns() - 1 - col : col;
@@ -221,7 +203,8 @@ class Agenda::Private
   Agenda *const q;
 
   public:
-    Private( Agenda *parent, EventView *eventView, QScrollArea *scrollArea, int columns, int rows, int rowSize )
+    Private( Agenda *parent, EventView *eventView, QScrollArea *scrollArea,
+             int columns, int rows, int rowSize )
       : q( parent ), mEventView( eventView ), mScrollArea( scrollArea ), mAllDayMode( false ),
         mColumns( columns ), mRows( rows ), mGridSpacingX( 0.0 ), mGridSpacingY( rowSize ),
         mDesiredGridSpacingY( rowSize ), mCalendar( 0 ), mChanger( 0 ),
@@ -285,7 +268,7 @@ class Agenda::Private
     QPoint mSelectionEndCell;
 
     // List of dates to be displayed
-    DateList mSelectedDates;
+    KCalCore::DateList mSelectedDates;
 
     // The AgendaItem, which has been right-clicked last
     QPointer<AgendaItem> mClickedItem;
@@ -584,7 +567,7 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
     }
 
     const QList<KUrl> todoUrls = CalendarSupport::todoItemUrls( md );
-    const Todo::List todos = CalendarSupport::todos( md, d->mCalendar->timeSpec() );
+    const KCalCore::Todo::List todos = CalendarSupport::todos( md, d->mCalendar->timeSpec() );
 
     Q_ASSERT( !todoUrls.isEmpty() || !todos.isEmpty() );
 
@@ -629,7 +612,7 @@ bool Agenda::eventFilter_wheel ( QObject *object, QWheelEvent *e )
     }
     //kDebug() << type:" << e->type() << "delta:" << e->delta();
     emit zoomView( -e->delta(),
-                   contentsToGrid(  viewportPos  ), Qt::Horizontal );
+                   contentsToGrid( viewportPos ), Qt::Horizontal );
     accepted = true;
   }
 
@@ -639,8 +622,8 @@ bool Agenda::eventFilter_wheel ( QObject *object, QWheelEvent *e )
     } else {
       viewportPos = e->pos();
     }
-    emit zoomView( -e->delta(), contentsToGrid(  viewportPos  ), Qt::Vertical );
-    emit mousePosSignal( gridToContents( contentsToGrid( viewportPos  ) ) );
+    emit zoomView( -e->delta(), contentsToGrid( viewportPos ), Qt::Vertical );
+    emit mousePosSignal( gridToContents( contentsToGrid( viewportPos ) ) );
     accepted = true;
   }
   if ( accepted ) {
@@ -678,7 +661,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
         AgendaItem *item = dynamic_cast<AgendaItem *>(object);
         if (item) {
           const Akonadi::Item aitem = item->incidence();
-          Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+          KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
           if ( incidence->isReadOnly() ) {
             d->mActionItem = 0;
           } else {
@@ -695,7 +678,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
     } else {
       if ( me->button() == Qt::RightButton ) {
         // if mouse pointer is not in selection, select the cell below the cursor
-        QPoint gpos = contentsToGrid( viewportPos  );
+        QPoint gpos = contentsToGrid( viewportPos );
         if ( !ptInSelection( gpos ) ) {
           d->mSelectionStartCell = gpos;
           d->mSelectionEndCell = gpos;
@@ -725,18 +708,18 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
     }
     // This nasty gridToContents(contentsToGrid(..)) is needed to
     // avoid an offset of a few pixels. Don't ask me why...
-    emit mousePosSignal( gridToContents( contentsToGrid( viewportPos )  ) );
+    emit mousePosSignal( gridToContents( contentsToGrid( viewportPos ) ) );
     break;
 
   case QEvent::MouseMove:
   {
     // This nasty gridToContents(contentsToGrid(..)) is needed to
     // avoid an offset of a few pixels. Don't ask me why...
-    QPoint indicatorPos = gridToContents( contentsToGrid(  viewportPos  ) );
+    QPoint indicatorPos = gridToContents( contentsToGrid( viewportPos ) );
     if ( object != this ) {
       AgendaItem *moveItem = dynamic_cast<AgendaItem *>( object );
       const Akonadi::Item aitem = moveItem ? moveItem->incidence() : Akonadi::Item();
-      Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+      KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
       if ( incidence && !incidence->isReadOnly() ) {
         if ( !d->mActionItem ) {
           setNoActionCursor( moveItem, viewportPos );
@@ -765,7 +748,8 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
         performSelectAction( viewportPos );
 
         // show cursor at end of timespan
-        if ( ( ( d->mStartCell.y() < d->mEndCell.y() ) && ( d->mEndCell.x() >= d->mStartCell.x() ) ) ||
+        if ( ( ( d->mStartCell.y() < d->mEndCell.y() ) &&
+               ( d->mEndCell.x() >= d->mStartCell.x() ) ) ||
              ( d->mEndCell.x() > d->mStartCell.x() ) ) {
           indicatorPos = gridToContents( QPoint( d->mEndCell.x(), d->mEndCell.y() + 1 ) );
         } else {
@@ -803,9 +787,11 @@ bool Agenda::ptInSelection( const QPoint &gpos ) const
     return false;
   } else if ( gpos.x() < d->mSelectionStartCell.x() || gpos.x() > d->mSelectionEndCell.x() ) {
     return false;
-  } else if ( ( gpos.x() == d->mSelectionStartCell.x() ) && ( gpos.y() < d->mSelectionStartCell.y() ) ) {
+  } else if ( ( gpos.x() == d->mSelectionStartCell.x() ) &&
+              ( gpos.y() < d->mSelectionStartCell.y() ) ) {
     return false;
-  } else if ( ( gpos.x() == d->mSelectionEndCell.x() ) && ( gpos.y() > d->mSelectionEndCell.y() ) ) {
+  } else if ( ( gpos.x() == d->mSelectionEndCell.x() ) &&
+              ( gpos.y() > d->mSelectionEndCell.y() ) ) {
     return false;
   }
   return true;
@@ -1156,7 +1142,7 @@ void Agenda::endItemAction()
   bool multiModify = false;
   // FIXME: do the cloning here...
   Akonadi::Item inc = d->mActionItem->incidence();
-  const Incidence::Ptr incidence = CalendarSupport::incidence( inc );
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( inc );
   d->mItemMoved = d->mItemMoved && !( d->mStartCell.x() == d->mEndCell.x() &&
                                       d->mStartCell.y() == d->mEndCell.y() );
 
@@ -1181,8 +1167,8 @@ void Agenda::endItemAction()
         modify = true;
         multiModify = true;
         emit startMultiModify( i18n( "Dissociate event from recurrence" ) );
-        Incidence::Ptr oldIncSaved( incidence->clone() );
-        Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
+        KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
+        KCalCore::Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
           inc, d->mActionItem->itemDate(), d->mEventView->preferences()->timeSpec() ) );
         if ( newInc ) {
           // don't recreate items, they already have the correct position
@@ -1194,7 +1180,8 @@ void Agenda::endItemAction()
           } else {
             kError() << "No IncidenceChanger set";
           }
-#ifdef AKONADI_PORT_DISABLED // this needs to be done when the async item adding is done and we have the real akonadi item
+#ifdef AKONADI_PORT_DISABLED
+  // this needs to be done when the async item adding is done and we have the real akonadi item
           Akonadi::Item item;
           item.setPayload( newInc );
           d->mActionItem->setIncidence( item );
@@ -1226,12 +1213,13 @@ void Agenda::endItemAction()
         modify = true;
         multiModify = true;
         emit startMultiModify( i18n( "Split future recurrences" ) );
-        Incidence::Ptr oldIncSaved( incidence->clone() );
-        Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
+        KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
+        KCalCore::Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
           inc, d->mActionItem->itemDate(), d->mEventView->preferences()->timeSpec(), false ) );
         if ( newInc ) {
           emit enableAgendaUpdate( false );
-#ifdef AKONADI_PORT_DISABLED // this needs to be done when the async item adding is done and we have the real akonadi item
+#ifdef AKONADI_PORT_DISABLED
+  // this needs to be done when the async item adding is done and we have the real akonadi item
           d->mActionItem->dissociateFromMultiItem();
           Item item;
           item.setPayload( newInc );
@@ -1262,7 +1250,8 @@ void Agenda::endItemAction()
       default:
         modify = false;
         d->mActionItem->resetMove();
-        placeSubCells( d->mActionItem ); //PENDING(AKONADI_PORT) should this be done after the new item was asynchronously added?
+        placeSubCells( d->mActionItem ); //PENDING(AKONADI_PORT) should this be done after
+                                         //the new item was asynchronously added?
       }
     }
 
@@ -1438,7 +1427,7 @@ void Agenda::placeSubCells( AgendaItem *placeItem )
 #if 0
   kDebug();
   if ( placeItem ) {
-    Incidence::Ptr event = placeItem->incidence();
+    KCalCore::Incidence::Ptr event = placeItem->incidence();
     if ( !event ) {
       kDebug() << "  event is 0";
     } else {
@@ -1739,7 +1728,8 @@ AgendaItem *Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
                       int( ( YBottom + 1 ) * d->mGridSpacingY ) );
   agendaItem->setCellXY( X, YTop, YBottom );
   agendaItem->setCellXRight( X );
-  agendaItem->setResourceColor( EventViews::resourceColor( incidence, d->mEventView->preferences() ) );
+  agendaItem->setResourceColor( EventViews::resourceColor( incidence,
+                                                           d->mEventView->preferences() ) );
   agendaItem->installEventFilter( this );
 
   agendaItem->move( int( X * d->mGridSpacingX ), int( YTop * d->mGridSpacingY ) );
@@ -1768,7 +1758,8 @@ AgendaItem *Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDat
 
   d->mActionType = NOP;
 
-  AgendaItem *agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence, 1, 1, qd, isSelected, this );
+  AgendaItem *agendaItem =
+    new AgendaItem( d->mEventView, d->mCalendar, incidence, 1, 1, qd, isSelected, this );
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
            SLOT(removeAgendaItem(AgendaItem *)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
@@ -1784,7 +1775,8 @@ AgendaItem *Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDat
   agendaItem->resize( int( endIt ) - int( startIt ), int( d->mGridSpacingY ) );
 
   agendaItem->installEventFilter( this );
-  agendaItem->setResourceColor( EventViews::resourceColor( incidence, d->mEventView->preferences() ) );
+  agendaItem->setResourceColor( EventViews::resourceColor( incidence,
+                                                           d->mEventView->preferences() ) );
   agendaItem->move( int( XBegin * d->mGridSpacingX ), 0 ) ;
   d->mItems.append( agendaItem );
 
@@ -1798,7 +1790,7 @@ AgendaItem *Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDat
 void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int XBegin,
                               int XEnd, int YTop, int YBottom, bool isSelected )
 {
-  Event::Ptr ev = CalendarSupport::event( event );
+  KCalCore::Event::Ptr ev = CalendarSupport::event( event );
   Q_ASSERT( ev );
   if ( d->mAllDayMode ) {
     kDebug() << "using this in all-day mode is illegal.";
@@ -1946,7 +1938,6 @@ void Agenda::deleteItemsToDelete()
   return QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   }
 }*/
-
 
 /*
   Overridden from QScrollView to provide proper resizing of AgendaItems.
@@ -2181,13 +2172,13 @@ void Agenda::calculateWorkingHours()
                                    tmp.second() / 3600. ) - 1 );
 }
 
-void Agenda::setDateList( const DateList &selectedDates )
+void Agenda::setDateList( const KCalCore::DateList &selectedDates )
 {
   d->mSelectedDates = selectedDates;
   marcus_bains();
 }
 
-DateList Agenda::dateList() const
+KCalCore::DateList Agenda::dateList() const
 {
   return d->mSelectedDates;
 }
@@ -2231,7 +2222,7 @@ void Agenda::setContentsPos( int x, int y )
   d->mScrollArea->ensureVisible( x, y, 0, 0 );
 }
 
-QScrollArea* Agenda::scrollArea() const
+QScrollArea *Agenda::scrollArea() const
 {
   return d->mScrollArea;
 }
@@ -2266,4 +2257,5 @@ Agenda *AgendaScrollArea::agenda() const
 }
 
 #include "agenda.moc"
+
 // kate: space-indent on; indent-width 2; replace-tabs on;

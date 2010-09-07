@@ -1,5 +1,4 @@
 /*
-  This file is part of KOrganizer.
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
@@ -26,38 +25,28 @@
 #ifndef EVENTVIEWS_AGENDA_H
 #define EVENTVIEWS_AGENDA_H
 
-
-#include <KCalCore/Todo>
-#include <KCalCore/Event>
+#include "eventviews_export.h"
 
 #include <Akonadi/Item>
+
+#include <KCalCore/IncidenceBase> // for DateList
+#include <KCalCore/Todo>
 
 #include <QFrame>
 #include <QScrollArea>
 
-class QDropEvent;
-class QEvent;
-class QKeyEvent;
-class QMouseEvent;
-class QResizeEvent;
-class QScrollBar;
-class QTime;
-class QWheelEvent;
-
-namespace CalendarSupport
-{
+namespace CalendarSupport {
   class Calendar;
   class IncidenceChanger;
 }
 
-namespace EventViews
-{
+namespace EventViews {
 
 class Agenda;
 class AgendaItem;
 class EventView;
 
-class MarcusBains : public QFrame
+class EVENTVIEWS_EXPORT MarcusBains : public QFrame
 {
   Q_OBJECT
   public:
@@ -73,15 +62,13 @@ class MarcusBains : public QFrame
     Private *const d;
 };
 
-class Agenda : public QWidget
+class EVENTVIEWS_EXPORT Agenda : public QWidget
 {
   Q_OBJECT
   public:
-    Agenda ( EventView *eventView, QScrollArea *scrollArea,
-             int columns, int rows, int rowSize );
+    Agenda ( EventView *eventView, QScrollArea *scrollArea, int columns, int rows, int rowSize );
 
-    Agenda ( EventView *eventView,
-             QScrollArea *scrollArea, int columns );
+    Agenda ( EventView *eventView, QScrollArea *scrollArea, int columns );
 
     virtual ~Agenda();
 
@@ -92,13 +79,13 @@ class Agenda : public QWidget
     QSize minimumSize() const;
     int minimumHeight() const;
     // QSizePolicy sizePolicy() const;
-    int contentsY() const { return -y(); };
-    int contentsX() const { return x(); };
+    int contentsY() const { return -y(); }
+    int contentsX() const { return x(); }
     void setContentsPos( int x, int y );
 
-    QScrollBar* verticalScrollBar() const;
+    QScrollBar *verticalScrollBar() const;
 
-    QScrollArea* scrollArea() const;
+    QScrollArea *scrollArea() const;
 
     /**
       Returns the uid of the last incidence that was selected. This
@@ -346,19 +333,21 @@ class Agenda : public QWidget
     Private *const d;
 };
 
-class AgendaScrollArea : public QScrollArea
+class EVENTVIEWS_EXPORT AgendaScrollArea : public QScrollArea
 {
   public:
     AgendaScrollArea( bool allDay, EventView *eventView, QWidget *parent );
     ~AgendaScrollArea();
 
-    Agenda* agenda() const;
+    Agenda *agenda() const;
+
   private:
     Agenda *mAgenda;
 
 };
 
-} // namespace EventViews
+}
 
-#endif // AGENDA_H
+#endif
+
 // kate: space-indent on; indent-width 2; replace-tabs on;

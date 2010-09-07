@@ -1,5 +1,4 @@
 /*
-  This file is part of KOrganizer.
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2007 Loïc Corbasson <loic.corbasson@gmail.com>
@@ -22,15 +21,12 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
 #include "decorationlabel.h"
 
 #include <KToolInvocation>
 
-#include <QtGui/QMouseEvent>
-#include <QtGui/QResizeEvent>
-
-#include "decorationlabel.moc"
+#include <QMouseEvent>
+#include <QResizeEvent>
 
 using namespace EventViews;
 
@@ -215,3 +211,5 @@ void DecorationLabel::useShortText( bool allowAutomaticSqueeze )
   QLabel::setText( mShortText );
   setToolTip( mExtensiveText.isEmpty() ? mLongText : mExtensiveText );
 }
+
+#include "decorationlabel.moc"

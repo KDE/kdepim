@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2007 Bruno Virlet <bruno@virlet.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,17 +19,17 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
 #include "timelabelszone.h"
-#include "prefs.h"
 #include "agenda.h"
 #include "agendaview.h"
+#include "prefs.h"
+#include "timelabels.h"
 
-#include <ksystemtimezone.h>
+#include <KSystemTimeZone>
 
-#include <QScrollBar>
-#include <QScrollArea>
 #include <QHBoxLayout>
+#include <QScrollArea>
+#include <QScrollBar>
 
 using namespace EventViews;
 

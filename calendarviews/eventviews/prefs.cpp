@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -25,40 +23,12 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
 #include "prefs.h"
-
 #include "prefs_base.h"
 
-#include <akonadi/collection.h>
-
-#include <kmime/kmime_header_parsing.h>
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
-#include <kpimutils/email.h>
-
-#include <kglobalsettings.h>
-#include <kglobal.h>
-#include <kconfig.h>
-#include <klocale.h>
-#include <kdebug.h>
-#include <kemailsettings.h>
-#include <kdatetime.h>
-#include <kstringhandler.h>
-#include <ksystemtimezone.h>
-
-#include <QDir>
-#include <QHash>
-#include <QString>
-#include <QFont>
-#include <QColor>
-#include <QMap>
-#include <QStringList>
-
-#include <time.h>
-#include <unistd.h>
-
-using namespace KPIMIdentities;
+#include <KEMailSettings>
+#include <KGlobalSettings>
+#include <KSystemTimeZone>
 
 using namespace EventViews;
 
@@ -243,7 +213,6 @@ void BaseConfig::usrWriteConfig()
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   timeScaleConfig.writeEntry( "Timescale Timezones", timeScaleTimezones() );
 
-
   KConfigSkeleton::usrWriteConfig();
 }
 
@@ -299,7 +268,8 @@ class Prefs::Private
     void setDateTime( KCoreConfigSkeleton::ItemDateTime *baseConfigItem, const QDateTime &value );
     QDateTime getDateTime( const KCoreConfigSkeleton::ItemDateTime *baseConfigItem ) const;
 
-    void setStringList( KCoreConfigSkeleton::ItemStringList *baseConfigItem, const QStringList &value );
+    void setStringList( KCoreConfigSkeleton::ItemStringList *baseConfigItem,
+                        const QStringList &value );
     QStringList getStringList( const KCoreConfigSkeleton::ItemStringList *baseConfigItem ) const;
 
     void setColor( KConfigSkeleton::ItemColor *baseConfigItem, const QColor &value );
@@ -316,7 +286,8 @@ class Prefs::Private
     Prefs *q;
 };
 
-KConfigSkeletonItem *Prefs::Private::appConfigItem( const KConfigSkeletonItem *baseConfigItem ) const
+KConfigSkeletonItem *Prefs::Private::appConfigItem(
+  const KConfigSkeletonItem *baseConfigItem ) const
 {
   Q_ASSERT( baseConfigItem );
 
@@ -383,11 +354,14 @@ int Prefs::Private::getInt( const KCoreConfigSkeleton::ItemInt *baseConfigItem )
   return baseConfigItem->value();
 }
 
-void Prefs::Private::setString( KCoreConfigSkeleton::ItemString *baseConfigItem, const QString &value )
+void Prefs::Private::setString( KCoreConfigSkeleton::ItemString *baseConfigItem,
+                                const QString &value )
 {
   KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
   if ( appItem ) {
-    KCoreConfigSkeleton::ItemString *item = dynamic_cast<KCoreConfigSkeleton::ItemString*>( appItem );
+    KCoreConfigSkeleton::ItemString *item =
+      dynamic_cast<KCoreConfigSkeleton::ItemString*>( appItem );
+
     if ( item ) {
       item->setValue( value );
     } else {
@@ -402,7 +376,9 @@ QString Prefs::Private::getString( const KCoreConfigSkeleton::ItemString *baseCo
 {
   KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
   if ( appItem ) {
-    KCoreConfigSkeleton::ItemString *item = dynamic_cast<KCoreConfigSkeleton::ItemString*>( appItem );
+    KCoreConfigSkeleton::ItemString *item =
+      dynamic_cast<KCoreConfigSkeleton::ItemString*>( appItem );
+
     if ( item ) {
       return item->value();
     }
@@ -411,11 +387,14 @@ QString Prefs::Private::getString( const KCoreConfigSkeleton::ItemString *baseCo
   return baseConfigItem->value();
 }
 
-void Prefs::Private::setDateTime( KCoreConfigSkeleton::ItemDateTime *baseConfigItem, const QDateTime &value )
+void Prefs::Private::setDateTime( KCoreConfigSkeleton::ItemDateTime *baseConfigItem,
+                                  const QDateTime &value )
 {
   KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
   if ( appItem ) {
-    KCoreConfigSkeleton::ItemDateTime *item = dynamic_cast<KCoreConfigSkeleton::ItemDateTime*>( appItem );
+    KCoreConfigSkeleton::ItemDateTime *item =
+      dynamic_cast<KCoreConfigSkeleton::ItemDateTime*>( appItem );
+
     if ( item ) {
       item->setValue( value );
     } else {
@@ -426,11 +405,14 @@ void Prefs::Private::setDateTime( KCoreConfigSkeleton::ItemDateTime *baseConfigI
   }
 }
 
-QDateTime Prefs::Private::getDateTime( const KCoreConfigSkeleton::ItemDateTime *baseConfigItem ) const
+QDateTime Prefs::Private::getDateTime(
+  const KCoreConfigSkeleton::ItemDateTime *baseConfigItem ) const
 {
   KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
   if ( appItem ) {
-    KCoreConfigSkeleton::ItemDateTime *item = dynamic_cast<KCoreConfigSkeleton::ItemDateTime*>( appItem );
+    KCoreConfigSkeleton::ItemDateTime *item =
+      dynamic_cast<KCoreConfigSkeleton::ItemDateTime*>( appItem );
+
     if ( item ) {
       return item->value();
     }
@@ -439,11 +421,14 @@ QDateTime Prefs::Private::getDateTime( const KCoreConfigSkeleton::ItemDateTime *
   return baseConfigItem->value();
 }
 
-void Prefs::Private::setStringList( KCoreConfigSkeleton::ItemStringList *baseConfigItem, const QStringList &value )
+void Prefs::Private::setStringList( KCoreConfigSkeleton::ItemStringList *baseConfigItem,
+                                    const QStringList &value )
 {
   KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
   if ( appItem ) {
-    KCoreConfigSkeleton::ItemStringList *item = dynamic_cast<KCoreConfigSkeleton::ItemStringList*>( appItem );
+    KCoreConfigSkeleton::ItemStringList *item =
+      dynamic_cast<KCoreConfigSkeleton::ItemStringList*>( appItem );
+
     if ( item ) {
       item->setValue( value );
     } else {
@@ -454,11 +439,14 @@ void Prefs::Private::setStringList( KCoreConfigSkeleton::ItemStringList *baseCon
   }
 }
 
-QStringList Prefs::Private::getStringList( const KCoreConfigSkeleton::ItemStringList *baseConfigItem ) const
+QStringList Prefs::Private::getStringList(
+  const KCoreConfigSkeleton::ItemStringList *baseConfigItem ) const
 {
   KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
   if ( appItem ) {
-    KCoreConfigSkeleton::ItemStringList *item = dynamic_cast<KCoreConfigSkeleton::ItemStringList*>( appItem );
+    KCoreConfigSkeleton::ItemStringList *item =
+      dynamic_cast<KCoreConfigSkeleton::ItemStringList*>( appItem );
+
     if ( item ) {
       return item->value();
     }
@@ -939,15 +927,17 @@ QColor Prefs::resourceColor( const QString &cal )
   if ( !cal.isEmpty() ) {
     if ( d->mBaseConfig.mResourceColors.contains( cal ) ) {
       color = d->mBaseConfig.mResourceColors.value( cal );
-      if ( !color.isValid() )
+      if ( !color.isValid() ) {
         return color;
+      }
     }
   } else {
     return d->mBaseConfig.mDefaultResourceColor;
   }
 
   // assign default color if enabled
-  if ( !cal.isEmpty() && !color.isValid() && d->getBool( d->mBaseConfig.assignDefaultResourceColorsItem() ) ) {
+  if ( !cal.isEmpty() && !color.isValid() &&
+       d->getBool( d->mBaseConfig.assignDefaultResourceColorsItem() ) ) {
     QColor defColor( 0x37, 0x7A, 0xBC );
     const int seed = d->getInt( d->mBaseConfig.defaultResourceColorSeedItem() );
     const QStringList colors = d->getStringList( d->mBaseConfig.defaultResourceColorsItem() );
@@ -960,7 +950,7 @@ QColor Prefs::resourceColor( const QString &cal )
         s -= s * static_cast<int>( ( ( seed / 12 ) % 2 ) * 0.5 );
         defColor.setHsv( h, s, v );
     }
-    d->setInt( d->mBaseConfig.defaultResourceColorSeedItem(), ( seed + 1 ));
+    d->setInt( d->mBaseConfig.defaultResourceColorSeedItem(), ( seed + 1 ) );
     d->mBaseConfig.setResourceColor( cal, defColor );
     color = d->mBaseConfig.mResourceColors[cal];
   }
@@ -982,7 +972,7 @@ void Prefs::setTimeScaleTimezones( const QStringList &list )
   d->mBaseConfig.setTimeScaleTimezones( list );
 }
 
-KConfigSkeleton::ItemFont* Prefs::fontItem( const QString &name ) const
+KConfigSkeleton::ItemFont *Prefs::fontItem( const QString &name ) const
 {
   KConfigSkeletonItem *item = d->mAppConfig ? d->mAppConfig->findItem( name ) : 0;
 
@@ -1007,7 +997,6 @@ QStringList Prefs::decorationsAtAgendaViewBottom() const
 {
   return d->mBaseConfig.decorationsAtAgendaViewBottom();
 }
-
 
 void Prefs::setSelectedPlugins( const QStringList &plugins )
 {

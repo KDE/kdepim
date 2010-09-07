@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2007 Bruno Virlet <bruno@virlet.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,26 +19,29 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef TIMELABELSZONE_H
-#define TIMELABELSZONE_H
+#ifndef EVENTVIEWS_TIMELABELSZONE_H
+#define EVENTVIEWS_TIMELABELSZONE_H
 
-#include "timelabels.h"
+#include "eventviews_export.h"
 
 #include <KDateTime>
 
 #include <QWidget>
-#include <QList>
+
+#include <boost/shared_ptr.hpp>
 
 class QHBoxLayout;
 class QScrollArea;
 
-namespace EventViews
-{
+namespace EventViews {
 
-class AgendaView;
 class Agenda;
+class AgendaView;
 
-class TimeLabelsZone : public QWidget
+class Prefs;
+typedef boost::shared_ptr<Prefs> PrefsPtr;
+
+class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
 {
   Q_OBJECT
   public:
@@ -78,6 +79,6 @@ class TimeLabelsZone : public QWidget
     QList<QScrollArea*> mTimeLabelsList;
 };
 
-} // namespace EventViews
+}
 
 #endif

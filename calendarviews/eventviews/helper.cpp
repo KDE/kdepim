@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -26,11 +24,7 @@
 #include "prefs.h"
 
 #include <Akonadi/Collection>
-#include <akonadi/item.h>
-
-#include <QDate>
-
-using namespace Akonadi;
+#include <Akonadi/Item>
 
 QColor EventViews::getTextColor( const QColor &c )
 {
@@ -38,16 +32,20 @@ QColor EventViews::getTextColor( const QColor &c )
   return ( luminance > 128.0 ) ? QColor( 0, 0, 0 ) : QColor( 255, 255, 255 );
 }
 
-QColor EventViews::resourceColor( const Collection &coll, const PrefsPtr &preferences ) {
-  if ( !coll.isValid() )
+QColor EventViews::resourceColor( const Akonadi::Collection &coll, const PrefsPtr &preferences )
+{
+  if ( !coll.isValid() ) {
     return QColor();
+  }
   const QString id = QString::number( coll.id() );
   return preferences->resourceColor( id );
 }
 
-QColor EventViews::resourceColor( const Item &item, const PrefsPtr &preferences ) {
-  if ( !item.isValid() )
+QColor EventViews::resourceColor( const Akonadi::Item &item, const PrefsPtr &preferences )
+{
+  if ( !item.isValid() ) {
     return QColor();
+  }
   const QString id = QString::number( item.storageCollectionId() );
   return preferences->resourceColor( id );
 }

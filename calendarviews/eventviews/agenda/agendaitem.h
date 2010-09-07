@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -22,30 +20,20 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef AGENDAITEM_H
-#define AGENDAITEM_H
+#ifndef EVENTVIEWS_AGENDAITEM_H
+#define EVENTVIEWS_AGENDAITEM_H
 
+#include "eventviews_export.h"
 #include "cellitem.h"
-
-#include <KCalCore/Incidence>
 
 #include <Akonadi/Item>
 
 #include <QDate>
-#include <QList>
 #include <QWidget>
 
 namespace CalendarSupport {
   class Calendar;
 }
-
-using namespace KCalCore;
-
-class QDragEnterEvent;
-class QDropEvent;
-class QPainter;
-class QPaintEvent;
-class QPixmap;
 
 namespace EventViews {
 
@@ -89,7 +77,7 @@ struct MultiItemInfo
   for that longer sequence including all (shown and hidden) items.
 */
 
-class AgendaItem : public QWidget, public CellItem
+class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
 {
   Q_OBJECT
   public:
@@ -275,6 +263,6 @@ class AgendaItem : public QWidget, public CellItem
     static QPixmap *completedPxmp;
 };
 
-} // namespace EventViews
+}
 
 #endif

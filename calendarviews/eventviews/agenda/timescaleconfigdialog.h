@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2007 Bruno Virlet <bruno@virlet.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,23 +19,22 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef TIMESCALECONFIGDIALOG_H
-#define TIMESCALECONFIGDIALOG_H
+#ifndef EVENTVIEWS_TIMESCALECONFIGDIALOG_H
+#define EVENTVIEWS_TIMESCALECONFIGDIALOG_H
 
+#include "eventviews_export.h"
 #include "ui_timescaleedit_base.h"
 
 #include <KDialog>
 
-namespace boost {
-  template <typename T> class shared_ptr;
-}
+#include <boost/shared_ptr.hpp>
 
-namespace EventViews
-{
-  class Prefs;
-  typedef boost::shared_ptr<Prefs> PrefsPtr;
+namespace EventViews {
 
-class TimeScaleConfigDialog : public KDialog, private Ui::TimeScaleEditWidget
+class Prefs;
+typedef boost::shared_ptr<Prefs> PrefsPtr;
+
+class EVENTVIEWS_EXPORT TimeScaleConfigDialog : public KDialog, private Ui::TimeScaleEditWidget
 {
   Q_OBJECT
 
@@ -60,6 +57,6 @@ class TimeScaleConfigDialog : public KDialog, private Ui::TimeScaleEditWidget
     Private *const d;
 };
 
-} // namespace EventViews
+}
 
 #endif

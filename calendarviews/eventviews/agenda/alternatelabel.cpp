@@ -1,5 +1,4 @@
 /*
-  This file is part of KOrganizer.
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -21,17 +20,12 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
 #include "alternatelabel.h"
-
-#include "alternatelabel.moc"
 
 using namespace EventViews;
 
-AlternateLabel::AlternateLabel( const QString &shortlabel,
-                                    const QString &longlabel,
-                                    const QString &extensivelabel,
-                                    QWidget *parent )
+AlternateLabel::AlternateLabel( const QString &shortlabel, const QString &longlabel,
+                                const QString &extensivelabel, QWidget *parent )
   : QLabel( parent ), mTextTypeFixed( false ), mShortText( shortlabel ),
     mLongText( longlabel ), mExtensiveText( extensivelabel )
 {
@@ -124,10 +118,17 @@ AlternateLabel::TextType AlternateLabel::largestFittingTextType() const
 
 void AlternateLabel::setFixedType( TextType type )
 {
-  switch ( type )
-  {
-    case Extensive: useExtensiveText(); break;
-    case Long: useLongText(); break;
-    case Short: useShortText(); break;
+  switch ( type ) {
+  case Extensive:
+    useExtensiveText();
+    break;
+  case Long:
+    useLongText();
+    break;
+  case Short:
+    useShortText();
+    break;
   }
 }
+
+#include "alternatelabel.moc"

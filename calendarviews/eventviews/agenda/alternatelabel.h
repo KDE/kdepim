@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -22,29 +20,31 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef ALTERNATELABEL_H
-#define ALTERNATELABEL_H
+#ifndef EVENTVIEWS_ALTERNATELABEL_H
+#define EVENTVIEWS_ALTERNATELABEL_H
 
-#include <kurl.h>
+#include "eventviews_export.h"
 
-#include <QtGui/QLabel>
-#include <QtCore/QString>
+#include <QLabel>
 
-namespace EventViews
-{
+namespace EventViews {
 
-class AlternateLabel : public QLabel
+class EVENTVIEWS_EXPORT AlternateLabel : public QLabel
 {
   Q_OBJECT
   public:
     AlternateLabel( const QString &shortlabel, const QString &longlabel,
-                    const QString &extensivelabel = QString(),
-                    QWidget *parent = 0 );
+                    const QString &extensivelabel = QString(), QWidget *parent = 0 );
     ~AlternateLabel();
 
     virtual QSize minimumSizeHint() const;
 
-    enum TextType { Short = 0, Long = 1, Extensive = 2 };
+    enum TextType {
+      Short = 0,
+      Long = 1,
+      Extensive = 2
+    };
+
     TextType largestFittingTextType() const;
     void setFixedType( TextType type );
 

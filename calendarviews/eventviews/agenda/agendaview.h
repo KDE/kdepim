@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
@@ -25,15 +23,11 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
-#ifndef AGENDAVIEW_H
-#define AGENDAVIEW_H
+#ifndef EVENTVIEWS_AGENDAVIEW_H
+#define EVENTVIEWS_AGENDAVIEW_H
 
 #include "eventviews_export.h"
-
 #include "eventview.h"
-
-#include "prefs.h"
 
 #include <KCalCore/Todo>
 
@@ -42,20 +36,14 @@
 class KConfig;
 class KHBox;
 
-class QPaintEvent;
 class QSplitter;
 
-namespace Akonadi {
-  class CollectionSelection;
-}
-
-namespace EventViews
-{
+namespace EventViews {
 
 #ifndef EVENTVIEWS_NODECOS
-  namespace CalendarDecoration {
-    class Decoration;
-  }
+namespace CalendarDecoration {
+  class Decoration;
+}
 #endif
 
 class TimeLabels;
@@ -168,7 +156,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void readSettings( const KConfig * );
     void writeSettings( KConfig * );
 
-
     /** reschedule the todo  to the given x- and y- coordinates.
         Third parameter determines all-day (no time specified) */
     void slotTodosDropped( const KCalCore::Todo::List &, const QPoint &, bool );
@@ -199,7 +186,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
   Q_SIGNALS:
     void showNewEventPopupSignal();
-    void showIncidencePopupSignal(Akonadi::Item,QDate);
+    void showIncidencePopupSignal( Akonadi::Item, QDate );
     void zoomViewHorizontally( const QDate &, int count );
 
     void timeSpanSelectionChanged();

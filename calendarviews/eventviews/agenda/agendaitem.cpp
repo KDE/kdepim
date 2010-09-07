@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -22,20 +20,16 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
 #include "agendaitem.h"
 #include "eventview.h"
 #include "helper.h"
 #include "prefs.h"
 #include "prefs_base.h" // for enums
 
-#include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/utils.h>
 
 #include <KABC/VCardDrag>
-
-#include <KCalCore/Event>
-#include <KCalCore/Todo>
 
 #include <KCalUtils/ICalDrag>
 #include <KCalUtils/VCalDrag>
@@ -43,7 +37,6 @@
 
 #include <KPIMUtils/Email>
 
-#include <KIconLoader>
 #include <KLocale>
 #include <KMessageBox>
 #include <KWordWrap>
@@ -54,7 +47,6 @@
 #include <QToolTip>
 
 using namespace EventViews;
-using namespace KCalUtils;
 
 //-----------------------------------------------------------------------------
 
@@ -83,18 +75,18 @@ AgendaItem::AgendaItem( EventView *eventView, CalendarSupport::Calendar *calenda
     return;
   }
 
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   Q_ASSERT( incidence );
   if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     const int years = EventViews::yearDiff( incidence->dtStart().date(), qd );
     if ( years > 0 ) {
-      incidence = Incidence::Ptr( incidence->clone() );
+      incidence = KCalCore::Incidence::Ptr( incidence->clone() );
       incidence->setReadOnly( false );
       incidence->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years, incidence->summary() ) );
       incidence->setReadOnly( true );
       mCloned = true;
-      mIncidence.setPayload<Incidence::Ptr>( incidence );
+      mIncidence.setPayload<KCalCore::Incidence::Ptr>( incidence );
     }
   }
 
@@ -134,7 +126,7 @@ void AgendaItem::updateIcons()
   if ( !mValid ) {
     return;
   }
-  Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
   Q_ASSERT( incidence );
   mIconReadonly = incidence->isReadOnly();
   mIconRecur = incidence->recurs();
@@ -146,14 +138,14 @@ void AgendaItem::updateIcons()
       mIconGroupTent = false;
       mIconOrganizer = true;
     } else {
-      Attendee::Ptr me = incidence->attendeeByMails( mEventView->kcalPreferences()->allEmails() );
+      KCalCore::Attendee::Ptr me = incidence->attendeeByMails( mEventView->kcalPreferences()->allEmails() );
       if ( me ) {
-        if ( me->status() == Attendee::NeedsAction && me->RSVP() ) {
+        if ( me->status() == KCalCore::Attendee::NeedsAction && me->RSVP() ) {
           mIconReply = true;
           mIconGroup = false;
           mIconGroupTent = false;
           mIconOrganizer = false;
-        } else if ( me->status() == Attendee::Tentative ) {
+        } else if ( me->status() == KCalCore::Attendee::Tentative ) {
           mIconReply = false;
           mIconGroup = false;
           mIconGroupTent = true;
@@ -618,7 +610,7 @@ void AgendaItem::dragEnterEvent( QDragEnterEvent *e )
 {
 #ifndef KORG_NODND
   const QMimeData *md = e->mimeData();
-  if ( ICalDrag::canDecode( md ) || VCalDrag::canDecode( md ) ) {
+  if ( KCalUtils::ICalDrag::canDecode( md ) || KCalUtils::VCalDrag::canDecode( md ) ) {
     // TODO: Allow dragging events/todos onto other events to create a relation
     e->ignore();
     return;
@@ -637,11 +629,11 @@ void AgendaItem::addAttendee( const QString &newAttendee )
     return;
   }
 
-  const Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
   QString name, email;
   KPIMUtils::extractEmailAddressAndName( newAttendee, email, name );
   if ( !( name.isEmpty() && email.isEmpty() ) ) {
-    incidence->addAttendee( Attendee::Ptr( new Attendee( name, email ) ) );
+    incidence->addAttendee( KCalCore::Attendee::Ptr( new KCalCore::Attendee( name, email ) ) );
     KMessageBox::information(
       this,
       i18n( "Attendee \"%1\" added to the calendar item \"%2\"",
@@ -666,8 +658,8 @@ void AgendaItem::dropEvent( QDropEvent *e )
   bool decoded = md->hasText();
   QString text = md->text();
   if ( decoded && text.startsWith( QLatin1String( "file:" ) ) ) {
-    const Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
-    incidence->addAttachment( Attachment::Ptr( new Attachment( text ) ) );
+    const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
+    incidence->addAttachment( KCalCore::Attachment::Ptr( new KCalCore::Attachment( text ) ) );
     return;
   }
 
@@ -737,7 +729,7 @@ static void conditionalPaint( QPainter *p, bool condition, int &x, int y,
 
 void AgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
 {
-  const Event::Ptr event = CalendarSupport::event( mIncidence );
+  const KCalCore::Event::Ptr event = CalendarSupport::event( mIncidence );
   if ( !event ) {
     return;
   }
@@ -838,7 +830,8 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
 
   QColor bgColor;
 
-  if ( CalendarSupport::hasTodo( mIncidence ) && !mEventView->preferences()->todosUseCategoryColors() ) {
+  if ( CalendarSupport::hasTodo( mIncidence ) &&
+       !mEventView->preferences()->todosUseCategoryColors() ) {
     if ( CalendarSupport::todo( mIncidence )->isOverdue() ) {
       bgColor = mEventView->preferences()->agendaCalendarItemsToDosOverdueBackgroundColor();
     } else if ( CalendarSupport::todo( mIncidence )->dtDue().date() ==
@@ -847,7 +840,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     }
   }
 
-  const Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
   Q_ASSERT( incidence );
   QColor categoryColor;
   QStringList categories = incidence->categories();
@@ -940,7 +933,8 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
       longH = i18n( "%1 - %2",
                     shortH,
                     KGlobal::locale()->formatTime(
-                      incidence->dateTime( Incidence::RoleEnd ).toTimeSpec( mEventView->preferences()->timeSpec() ).time() ) );
+                      incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec(
+                        mEventView->preferences()->timeSpec() ).time() ) );
     } else {
       longH = shortH;
     }
@@ -950,7 +944,8 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     longH = shortH;
   } else {
     shortH = KGlobal::locale()->formatTime(
-      incidence->dateTime( Incidence::RoleEnd ).toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
+      incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec(
+        mEventView->preferences()->timeSpec() ).time() );
     longH = i18n( "- %1", shortH );
   }
 
@@ -1036,7 +1031,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   if ( incidence->allDay() ) {
     shortH = longH = "";
 
-    if ( const Event::Ptr event = CalendarSupport::event( mIncidence ) ) {
+    if ( const KCalCore::Event::Ptr event = CalendarSupport::event( mIncidence ) ) {
       if ( event->isMultiDay( mEventView->preferences()->timeSpec() ) ) {
         // multi-day, all-day event
         shortH =
@@ -1044,7 +1039,8 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
                 KGlobal::locale()->formatDate(
                   incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).date() ),
                 KGlobal::locale()->formatDate(
-                  incidence->dateTime( Incidence::RoleEnd ).toTimeSpec( mEventView->preferences()->timeSpec() ).date() ) );
+                  incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec(
+                    mEventView->preferences()->timeSpec() ).date() ) );
         longH = shortH;
 
         // paint headline
@@ -1209,12 +1205,12 @@ void AgendaItem::drawRoundedRect( QPainter *p, const QRect &rect,
 
   QLinearGradient gradient( QPointF( r.x(), r.y() ), QPointF( r.x(), r.height() ) );
 
-  const Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
   Q_ASSERT( incidence );
 
   if ( r.height() > 50 ) {
     if ( incidence->allDay() &&
-         incidence->dtStart() == incidence->dateTime( Incidence::RoleEnd ) &&
+         incidence->dtStart() == incidence->dateTime( KCalCore::Incidence::RoleEnd ) &&
          CalendarSupport::hasEvent( mIncidence ) ) {
       gradient.setColorAt( 0, bgColor.light( 130 ) );
       qreal t = 1.0 - ( r.height() - 18.0 ) / r.height();
@@ -1229,7 +1225,7 @@ void AgendaItem::drawRoundedRect( QPainter *p, const QRect &rect,
     gradient.setColorAt( 1, bgColor.dark( 110 ) );
   } else {
     if ( incidence->allDay() &&
-         incidence->dtStart() == incidence->dateTime( Incidence::RoleEnd ) &&
+         incidence->dtStart() == incidence->dateTime( KCalCore::Incidence::RoleEnd ) &&
          !CalendarSupport::hasTodo( mIncidence ) ) {
       gradient.setColorAt( 0, bgColor.light( 130 ) );
       gradient.setColorAt( 0.35, bgColor.light( 115 ) );
@@ -1362,7 +1358,7 @@ bool AgendaItem::event( QEvent *event )
       QHelpEvent *helpEvent = static_cast<QHelpEvent*>( event );
       QToolTip::showText(
         helpEvent->globalPos(),
-        IncidenceFormatter::toolTipStr(
+        KCalUtils::IncidenceFormatter::toolTipStr(
           CalendarSupport::displayName( mIncidence.parentCollection() ),
           CalendarSupport::incidence( mIncidence ),
           mDate, true, mEventView->preferences()->timeSpec() ),

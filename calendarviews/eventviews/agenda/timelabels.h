@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2007 Bruno Virlet <bruno@virlet.org>
@@ -26,29 +24,29 @@
 #ifndef EVENTVIEWS_TIMELABELS_H
 #define EVENTVIEWS_TIMELABELS_H
 
-#include "prefs.h"
+#include "eventviews_export.h"
+
 #include <KDateTime>
 
 #include <QFrame>
 
 #include <boost/shared_ptr.hpp>
 
-namespace EventViews
-{
+namespace EventViews {
 
 class Agenda;
 class TimeLabelsZone;
 
+class Prefs;
 typedef boost::shared_ptr<Prefs> PrefsPtr;
 
-class TimeLabels : public QFrame
+class EVENTVIEWS_EXPORT TimeLabels : public QFrame
 {
   Q_OBJECT
   public:
     typedef QList<TimeLabels *> List;
 
-    TimeLabels( const KDateTime::Spec &spec, int rows,
-                const PrefsPtr &preferences ,
+    TimeLabels( const KDateTime::Spec &spec, int rows, const PrefsPtr &preferences,
                 TimeLabelsZone *parent = 0, Qt::WFlags f = 0 );
 
     /** Calculates the minimum width */
@@ -103,6 +101,6 @@ class TimeLabels : public QFrame
     QFrame *mMousePos;  // shows a marker for the current mouse position in y direction
 };
 
-} // namespace EventViews
+}
 
 #endif

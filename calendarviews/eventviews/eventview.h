@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 1999 Preston Brown <pbrown@kde.org>
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -25,24 +23,15 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef EVENTVIEW_H
-#define EVENTVIEW_H
+#ifndef EVENTVIEWS_EVENTVIEW_H
+#define EVENTVIEWS_EVENTVIEW_H
 
 #include "eventviews_export.h"
-
-#include <KCalCore/Incidence>
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 
 #include <QWidget>
-
-namespace CalendarSupport {
-  class Calendar;
-  class CollectionSelection;
-  class CollectionSelectionProxyModel;
-  class IncidenceChanger;
-}
 
 namespace boost {
   template <typename T> class shared_ptr;
@@ -59,25 +48,24 @@ namespace KHolidays {
 }
 
 namespace CalendarSupport {
+  class Calendar;
+  class CollectionSelection;
+  class CollectionSelectionProxyModel;
+  class IncidenceChanger;
   class KCalPrefs;
 }
 
 class KConfigGroup;
-class QDate;
-class QDateTime;
-class QModelIndex;
 
-namespace EventViews
-{
-  class Prefs;
-  typedef boost::shared_ptr<Prefs> PrefsPtr;
+namespace EventViews {
 
-  typedef boost::shared_ptr<CalendarSupport::KCalPrefs> KCalPrefsPtr;
+class Prefs;
+typedef boost::shared_ptr<Prefs> PrefsPtr;
+typedef boost::shared_ptr<CalendarSupport::KCalPrefs> KCalPrefsPtr;
 
 /**
-  EventView is the abstract base class from wich all other
-  calendar views for event data are derived.  It provides methods for
-  displaying
+  EventView is the abstract base class from which all other calendar views
+  for event data are derived.  It provides methods for displaying
   appointments and events on one or more days.  The actual number of
   days that a view actually supports is not defined by this abstract class;
   that is up to the classes that inherit from it.  It also provides
@@ -104,7 +92,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       ZoomChanged = 64,
       ConfigChanged = 128
     };
-    Q_DECLARE_FLAGS(Changes, Change)
+    Q_DECLARE_FLAGS( Changes, Change )
 
     /**
      * Constructs a view.
@@ -163,8 +151,8 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual QDateTime selectionStart() const;
 
     /**
-       Returns the end of the selection, or an invalid QDateTime if there is no selection
-       or the view doesn't support selecting cells.
+      Returns the end of the selection, or an invalid QDateTime if there is no selection
+      or the view doesn't support selecting cells.
      */
     virtual QDateTime selectionEnd() const;
 
@@ -206,9 +194,9 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     void saveConfig( KConfigGroup &configGroup );
 
     /**
-       Makes the eventview display only items of collection @p id.
-       Usefull for example in multi-agendaview (side-by-side) where
-       each AgendaView displays only one collection.
+      Makes the eventview display only items of collection @p id.
+      Useful for example in multi-agendaview (side-by-side) where
+      each AgendaView displays only one collection.
     */
     void setCollectionId( Akonadi::Collection::Id id );
     Akonadi::Collection::Id collectionId() const;
@@ -217,19 +205,21 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     // TODO_SPLIT: review these collection stuff
     CalendarSupport::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();
     CalendarSupport::CollectionSelectionProxyModel *customCollectionSelectionProxyModel() const;
-    void setCustomCollectionSelectionProxyModel( CalendarSupport::CollectionSelectionProxyModel* model );
+    void setCustomCollectionSelectionProxyModel(
+      CalendarSupport::CollectionSelectionProxyModel *model );
 
     CalendarSupport::CollectionSelection *customCollectionSelection() const;
 
-    static CalendarSupport::CollectionSelection* globalCollectionSelection();
-    static void setGlobalCollectionSelection( CalendarSupport::CollectionSelection* selection );
+    static CalendarSupport::CollectionSelection *globalCollectionSelection();
+    static void setGlobalCollectionSelection( CalendarSupport::CollectionSelection *selection );
     //----------------------------------------------------------------------------
 
     /**
-     * returns the view at the given widget coordinate. This is usually the view itself,
-     * except for composite views, where a subview will be returned. The default implementation returns @p this .
+     * returns the view at the given widget coordinate. This is usually the view
+     * itself, except for composite views, where a subview will be returned.
+     * The default implementation returns @p this .
      */
-    virtual EventView* viewAt( const QPoint &p );
+    virtual EventView *viewAt( const QPoint &p );
 
     virtual void setDateRange( const KDateTime &start, const KDateTime &end );
 
@@ -242,9 +232,8 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     int showMoveRecurDialog( const Akonadi::Item &inc, const QDate &date );
 
     /**
-     * Handles key events, opens the new event dialog when enter is pressed, activates
-     * type ahead.
-     */
+      Handles key events, opens the new event dialog when enter is pressed, activates type ahead.
+    */
     bool processKeyEvent( QKeyEvent * );
 
     /*
@@ -254,24 +243,23 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     void setTypeAheadReceiver( QObject *o );
 
     /**
-     * returns the selection of collection to be used by this view (custom if set, or global otherwise)
-     */
-    CalendarSupport::CollectionSelection* collectionSelection() const;
+      Returns the selection of collection to be used by this view
+      (custom if set, or global otherwise).
+    */
+    CalendarSupport::CollectionSelection *collectionSelection() const;
 
     /**
-       Notifies the view that there are pending changes so a redraw is needed.
-
-       @param needed if the update is needed or not.
+      Notifies the view that there are pending changes so a redraw is needed.
+      @param needed if the update is needed or not.
     */
     virtual void setChanges( Changes changes );
 
     /**
-       Returns if there are pending changes and a redraw is needed.
+      Returns if there are pending changes and a redraw is needed.
     */
     Changes changes() const;
 
   public Q_SLOTS:
-
     /**
       Shows given incidences. Depending on the actual view it might not
       be possible to show all given events.
@@ -316,7 +304,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
 
-    void focusChanged( QWidget*, QWidget* );
+    void focusChanged( QWidget *, QWidget * );
 
     /**
      Perform the default action for an incidence, e.g. open the event editor,
@@ -445,34 +433,35 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual void calendarReset();
 
   protected:
-
     CalendarSupport::IncidenceChanger *changer() const;
 
    /**
-     * reimplement to read view-specific settings
+     * reimplement to read view-specific settings.
      */
     virtual void doRestoreConfig( const KConfigGroup &configGroup );
 
     /**
-     * reimplement to write vie- specific settings
+     * reimplement to write view-specific settings.
      */
     virtual void doSaveConfig( KConfigGroup &configGroup );
 
     /**
       @deprecated
      */
-    virtual void showDates( const QDate& start, const QDate& end ) = 0;
+    virtual void showDates( const QDate &start, const QDate &end ) = 0;
 
     /**
-     * from the requested date range (passed via setDateRange()), calculates the adjusted date range actually displayed by the view, depending
-     * on the view's supported range (e.g., a month view always displays one month)
+     * from the requested date range (passed via setDateRange()), calculates the
+     * adjusted date range actually displayed by the view, depending on the
+     * view's supported range (e.g., a month view always displays one month)
      * The default implementation returns the range unmodified
      */
-    virtual QPair<KDateTime,KDateTime> actualDateRange( const KDateTime& start, const KDateTime& end ) const;
+    virtual QPair<KDateTime,KDateTime> actualDateRange( const KDateTime &start,
+                                                        const KDateTime &end ) const;
 
-    virtual void incidencesAdded( const Akonadi::Item::List& incidences );
-    virtual void incidencesAboutToBeRemoved( const Akonadi::Item::List& incidences );
-    virtual void incidencesChanged( const Akonadi::Item::List& incidences );
+    virtual void incidencesAdded( const Akonadi::Item::List &incidences );
+    virtual void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );
+    virtual void incidencesChanged( const Akonadi::Item::List &incidences );
 
     virtual void handleBackendError( const QString &error );
 
@@ -491,7 +480,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     Private *const d;
 };
 
-} // namespace EventViews
+}
 
 #endif
 // kate: space-indent on; indent-width 2; replace-tabs on;

@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2007 Bruno Virlet <bruno@virlet.org>
@@ -23,21 +21,21 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
 #include "timelabels.h"
+#include "agenda.h"
+#include "prefs.h"
 #include "timelabelszone.h"
 #include "timescaleconfigdialog.h"
-#include "prefs.h"
-#include "agenda.h"
-#include "eventview.h"
 
 #include <KIcon>
+#include <KLocale>
+#include <KGlobal>
 
-#include <QScrollArea>
 #include <QFrame>
-#include <QAction>
 #include <QMenu>
 #include <QPainter>
+#include <QPointer>
+#include <QScrollArea>
 
 using namespace EventViews;
 

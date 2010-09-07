@@ -29,12 +29,14 @@
 
 #include <Akonadi/Item>
 
-#include <QtCore/QTimer>
+#include <QDate>
+#include <QTimer>
 
 class KOEventPopupMenu;
 
 class QWheelEvent;
 class QKeyEvent;
+class QModelIndex;
 
 namespace CalendarSupport {
   class CalendarSearch;
@@ -68,7 +70,7 @@ class MonthView : public EventView
     virtual QDateTime selectionEnd() const;
 
     virtual void setDateRange( const KDateTime &start, const KDateTime &end );
-    
+
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
 
     /**
@@ -106,7 +108,7 @@ class MonthView : public EventView
     void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
     void rowsInserted( const QModelIndex &parent, int start, int end );
     void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
-    
+
   protected:
     int maxDatesHint() const;
 
@@ -119,7 +121,7 @@ class MonthView : public EventView
     /* reimp */void incidencesChanged( const Akonadi::Item::List &incidences );
     /* reimp */QPair<KDateTime,KDateTime> actualDateRange( const KDateTime &start,
                                                            const KDateTime &end ) const;
-                                                           
+
     /**
      * @deprecated
      */
@@ -144,7 +146,7 @@ class MonthView : public EventView
     QDate mSelectedItemDate;
 
     CalendarSupport::CalendarSearch* mCalendarSearch;
-    
+
     QTimer mReloadTimer;
 
     friend class MonthScene;

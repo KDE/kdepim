@@ -1,6 +1,4 @@
 /*
-  This file is part of the KOrganizer interfaces.
-
   Copyright (c) 2007 Loïc Corbasson <loic.corbasson@gmail.com>
 
   This library is free software; you can redistribute it and/or
@@ -18,9 +16,9 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-
 #include "calendardecoration.h"
-#include "calendardecoration.moc"
+
+#include <QDate>
 
 using namespace EventViews::CalendarDecoration;
 
@@ -285,3 +283,5 @@ QDate Decoration::yearDate( const QDate &date )
 {
   return QDate( date.year(), 1, 1 );
 }
+
+#include "calendardecoration.moc"

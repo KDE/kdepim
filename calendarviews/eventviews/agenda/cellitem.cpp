@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -25,11 +23,8 @@
 
 #include "cellitem.h"
 
-#include <klocale.h>
-#include <kdebug.h>
-
-#include <QList>
-#include <QMultiHash>
+#include <KDebug>
+#include <KLocale>
 
 using namespace EventViews;
 

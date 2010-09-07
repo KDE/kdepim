@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,20 +19,20 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef HELPER_H
-#define HELPER_H
+#ifndef EVENTVIEWS_HELPER_H
+#define EVENTVIEWS_HELPER_H
 
-#include <kcalcore/incidence.h>
+#include "eventviews_export.h"
 
 #include <QColor>
+
+namespace boost {
+  template <typename T> class shared_ptr;
+}
 
 namespace Akonadi {
   class Collection;
   class Item;
-}
-
-namespace boost {
-  template <typename T> class shared_ptr;
 }
 
 class QDate;
@@ -43,13 +41,14 @@ class QDate;
 
 namespace EventViews
 {
+
   class Prefs;
   typedef boost::shared_ptr<Prefs> PrefsPtr;
 
   /**
-    Returns a nice QColor for text, give the input color &c.
+   Returns a nice QColor for text, give the input color &c.
   */
-  QColor getTextColor( const QColor &c );
+  EVENTVIEWS_EXPORT QColor getTextColor( const QColor &c );
 
   /**
     This method returns the proper resource / subresource color for the view.
@@ -59,15 +58,17 @@ namespace EventViews
     @param incidence the incidence for which the color is needed (to
                      determine which  subresource needs to be used)
   */
-  QColor resourceColor( const Akonadi::Item &incidence, const PrefsPtr &preferences );
+  EVENTVIEWS_EXPORT QColor resourceColor( const Akonadi::Item &incidence,
+                                          const PrefsPtr &preferences );
 
-  QColor resourceColor( const Akonadi::Collection &collection, const PrefsPtr &preferences );
+  EVENTVIEWS_EXPORT QColor resourceColor( const Akonadi::Collection &collection,
+                                          const PrefsPtr &preferences );
 
   /**
     Returns the number of years between the @p start QDate and the @p end QDate
     (i.e. the difference in the year number of both dates)
   */
-  int yearDiff( const QDate &start, const QDate &end );
+  EVENTVIEWS_EXPORT int yearDiff( const QDate &start, const QDate &end );
 }
 
 #endif

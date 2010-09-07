@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
 
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
@@ -24,43 +22,34 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef PREFS_H
-#define PREFS_H
+#ifndef EVENTVIEWS_PREFS_H
+#define EVENTVIEWS_PREFS_H
 
 #include "eventviews_export.h"
 
-#include <kconfigskeleton.h>
+#include <KConfigSkeleton>
 #include <KDateTime>
-
-namespace Akonadi
-{
-  class Collection;
-}
 
 namespace boost {
   template <typename T> class shared_ptr;
 }
 
-class KCoreConfigSkeleton;
-class QColor;
-class QFont;
-class QStringList;
-
-namespace EventViews
-{
+namespace EventViews {
 
 class EVENTVIEWS_EXPORT Prefs
 {
   public:
-    /** Creates an instance of Prefs with just base config
+    /**
+      Creates an instance of Prefs with just base config
     */
     Prefs();
 
-    /** Creates an instance of Prefs with base config and application override config
+    /**
+      Creates an instance of Prefs with base config and application override config
 
-        The passed @p appConfig will be queried for matching items whenever one of the
-        accessors is called. If one is found it is used for setting/getting the value
-        otherwise the one from the eventviews base config is used.
+      The passed @p appConfig will be queried for matching items whenever one of the
+      accessors is called. If one is found it is used for setting/getting the value
+      otherwise the one from the eventviews base config is used.
     */
     explicit Prefs( KCoreConfigSkeleton *appConfig );
 
@@ -71,7 +60,6 @@ class EVENTVIEWS_EXPORT Prefs
     void writeConfig();
 
   public:
-
     void setMarcusBainsShowSeconds( bool showSeconds );
     bool marcusBainsShowSeconds() const;
 
@@ -155,10 +143,10 @@ class EVENTVIEWS_EXPORT Prefs
 
     bool fullViewMonth() const;
     void setFullViewMonth( bool fullView );
-    
+
     void setEnableToolTips( bool enable );
     bool enableToolTips() const;
-    
+
     void setDefaultDuration( const QDateTime &dateTime );
     QDateTime defaultDuration() const;
 
@@ -174,7 +162,7 @@ class EVENTVIEWS_EXPORT Prefs
     void setExcludeHolidays( bool exclude );
     bool excludeHolidays() const;
 
-    KConfigSkeleton::ItemFont* fontItem( const QString &name ) const;
+    KConfigSkeleton::ItemFont *fontItem( const QString &name ) const;
 
     // preferences data
     void setCategoryColor( const QString &cat, const QColor &color );
@@ -206,7 +194,7 @@ class EVENTVIEWS_EXPORT Prefs
 
 typedef boost::shared_ptr<Prefs> PrefsPtr;
 
-} // namespace EventViews
+}
 
 #endif
 

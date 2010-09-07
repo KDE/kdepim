@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,16 +19,13 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CELLITEM_H
-#define CELLITEM_H
+#ifndef EVENTVIEWS_CELLITEM_H
+#define EVENTVIEWS_CELLITEM_H
 
 #include "eventviews_export.h"
-
-#include <QString>
 #include <QList>
 
-namespace EventViews
-{
+namespace EventViews {
 
 class EVENTVIEWS_EXPORT CellItem
 {
@@ -65,6 +60,6 @@ class EVENTVIEWS_EXPORT CellItem
     int mSubCell;
 };
 
-} // namespace EventViews
+}
 
 #endif

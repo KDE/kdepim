@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2007 Loïc Corbasson <loic.corbasson@gmail.com>
@@ -23,23 +21,19 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef DECORATIONLABEL_H
-#define DECORATIONLABEL_H
-
-#include "calendardecoration.h"
+#ifndef EVENTVIEWS_DECORATIONLABEL_H
+#define EVENTVIEWS_DECORATIONLABEL_H
 
 #include "eventviews_export.h"
+#include "calendardecoration.h"
 
-#include <KUrl>
-
-#include <QtGui/QLabel>
+#include <QLabel>
 
 namespace EventViews {
 
 class EVENTVIEWS_EXPORT DecorationLabel : public QLabel
 {
   Q_OBJECT
-
   public:
     explicit DecorationLabel( EventViews::CalendarDecoration::Element *e,
                               QWidget *parent = 0 );
