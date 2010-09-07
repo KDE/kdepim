@@ -126,7 +126,7 @@ public:
      *  node that needs extra handling.
      */
     bool isPermanentwWithExtraContent( KMime::Content* node );
-    
+
      /** Get a QTextCodec suitable for this message part */
     const QTextCodec * codec( KMime::Content* node );
 
