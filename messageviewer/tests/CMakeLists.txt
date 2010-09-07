@@ -32,6 +32,7 @@ endmacro ()
 add_messageviewer_unittest( htmlquotecolorertest.cpp )
 add_messageviewer_unittest( objecttreeparsertest.cpp )
 add_messageviewer_unittest( rendertest.cpp )
+add_messageviewer_unittest( unencryptedmessagetest.cpp )
 
 
 ########### viewertest_gui ###############
