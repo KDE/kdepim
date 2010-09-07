@@ -2,6 +2,7 @@
 Name=Air
 Name[en_GB]=Air
 Name[es]=Aire
+Name[nb]=Air
 Name[pt]=Air
 Name[pt_BR]=Air
 Name[sv]=Luft
@@ -11,6 +12,7 @@ Name[zh_TW]=Air
 Description=An Air theme
 Description[en_GB]=An Air theme
 Description[es]=Un tema aire
+Description[nb]=Et Air-tema
 Description[pt]=Um tema do Air
 Description[pt_BR]=Um tema do Air
 Description[sv]=Ett lufttema

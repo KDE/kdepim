@@ -1,6 +1,8 @@
 [Misc]
 Name=TNEF
+Name[x-test]=xxTNEFxx
 Comment=A bodypart formatter plugin for TNEF attachments
+Comment[x-test]=xxA bodypart formatter plugin for TNEF attachmentsxx
 
 [Plugin]
 Type=application/ms-tnef
