@@ -22,6 +22,8 @@
 */
 #include "monthview_p.h"
 
+#include "monthscene.h"
+
 #include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/collectionselectionproxymodel.h>
@@ -32,7 +34,13 @@ MonthViewPrivate::MonthViewPrivate( MonthView *qq )
   : EventViewPrivate( qq )
   , q( qq )
   , calendarSearch( new CalendarSupport::CalendarSearch( qq ) )
-{ }
+  , scene( new MonthScene( qq ) )
+  , selectedItemId( -1 )
+  , view( new MonthGraphicsView( qq ) )
+{
+  reloadTimer.setSingleShot( true );
+  view->setScene( scene );
+}
 
 MonthViewPrivate::~MonthViewPrivate()
 { }

@@ -135,18 +135,9 @@ class MonthView : public EventView
     void reloadIncidences();
 
   private:
-    MonthGraphicsView *mView;
-    MonthScene *mScene;
-    Akonadi::Item::Id mSelectedItemId;
-    QDate mSelectedItemDate;
-
-    QTimer mReloadTimer;
-
-  private:
     Q_DECLARE_PRIVATE( MonthView );
 
     friend class MonthScene;
-    friend class MonthViewPrivate;
 };
 
 }

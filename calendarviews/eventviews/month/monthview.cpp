@@ -53,12 +53,7 @@ MonthView::MonthView( QWidget *parent )
 {
   Q_D( MonthView );
   QHBoxLayout *topLayout = new QHBoxLayout( this );
-
-  mView = new MonthGraphicsView( this );
-
-  mScene = new MonthScene( this );
-  mView->setScene( mScene );
-  topLayout->addWidget( mView );
+  topLayout->addWidget( d->view );
 
   QVBoxLayout *rightLayout = new QVBoxLayout( );
   rightLayout->setSpacing( 0 );
@@ -110,23 +105,21 @@ MonthView::MonthView( QWidget *parent )
            this, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
   connect( d->calendarSearch->model(), SIGNAL( modelReset() ), this, SLOT( calendarReset() ) );
   
-  connect( mScene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
+  connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
            SIGNAL(showIncidencePopup(Akonadi::Item, QDate)) );
 
-  connect( mScene, SIGNAL(showNewEventPopupSignal()),
+  connect( d->scene, SIGNAL(showNewEventPopupSignal()),
            SLOT(showNewEventPopup()) );
 
-  connect( mScene, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
+  connect( d->scene, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
            this, SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
 
-  connect( mScene, SIGNAL(newEventSignal(Akonadi::Collection::List)),
+  connect( d->scene, SIGNAL(newEventSignal(Akonadi::Collection::List)),
            this, SIGNAL(newEventSignal(Akonadi::Collection::List)) );
-  mReloadTimer.setSingleShot( true );
-  connect( &mReloadTimer, SIGNAL(timeout()), this, SLOT(reloadIncidences()) );
-  mReloadTimer.start( 50 );
-  updateConfig();
 
-  mSelectedItemId = -1;
+  connect( &d->reloadTimer, SIGNAL(timeout()), this, SLOT(reloadIncidences()) );
+  d->reloadTimer.start( 50 );
+  updateConfig();
 }
 
 MonthView::~MonthView()
@@ -148,8 +141,7 @@ void MonthView::updateConfig()
 
   types |= CalendarSupport::CalendarSearch::Events;
   d->calendarSearch->setIncidenceTypes( types );
-
-  mScene->update();
+  d->scene->update();
 }
 
 int MonthView::currentDateCount() const
@@ -164,17 +156,18 @@ int MonthView::maxDatesHint() const
 
 DateList MonthView::selectedIncidenceDates() const
 {
+  Q_D( const MonthView );
   DateList list;
-  if ( mScene->selectedItem() ) {
-    IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( mScene->selectedItem() );
+  if ( d->scene->selectedItem() ) {
+    IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( d->scene->selectedItem() );
     if ( tmp ) {
       QDate selectedItemDate = tmp->realStartDate();
       if ( selectedItemDate.isValid() ) {
         list << selectedItemDate;
       }
     }
-  } else if ( mScene->selectedCell() ) {
-    list << mScene->selectedCell()->date();
+  } else if ( d->scene->selectedCell() ) {
+    list << d->scene->selectedCell()->date();
   }
 
   return list;
@@ -182,8 +175,9 @@ DateList MonthView::selectedIncidenceDates() const
 
 QDateTime MonthView::selectionStart() const
 {
-  if ( mScene->selectedCell() ) {
-    return QDateTime( mScene->selectedCell()->date() );
+  Q_D( const MonthView );
+  if ( d->scene->selectedCell() ) {
+    return QDateTime( d->scene->selectedCell()->date() );
   } else {
     return QDateTime();
   }
@@ -205,9 +199,10 @@ void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
   
 bool MonthView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
 {
-  if ( mScene->selectedCell() ) {
-    startDt.setDate( mScene->selectedCell()->date() );
-    endDt.setDate( mScene->selectedCell()->date() );
+  Q_D( const MonthView );
+  if ( d->scene->selectedCell() ) {
+    startDt.setDate( d->scene->selectedCell()->date() );
+    endDt.setDate( d->scene->selectedCell()->date() );
     allDay = true;
     return true;
   }
@@ -237,7 +232,8 @@ void MonthView::changeIncidenceDisplay( const Akonadi::Item &incidence, int acti
 
 void MonthView::updateView()
 {
-  mView->update();
+  Q_D( MonthView );
+  d->view->update();
 }
 
 #ifndef QT_NO_WHEELEVENT
@@ -327,9 +323,10 @@ QPair<KDateTime,KDateTime> MonthView::actualDateRange( const KDateTime &start,
 
 Akonadi::Item::List MonthView::selectedIncidences() const
 {
+  Q_D( const MonthView );
   Akonadi::Item::List selected;
-  if ( mScene->selectedItem() ) {
-    IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( mScene->selectedItem() );
+  if ( d->scene->selectedItem() ) {
+    IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( d->scene->selectedItem() );
     if ( tmp ) {
       Akonadi::Item incidenceSelected = tmp->incidence();
       if ( incidenceSelected.isValid() ) {
@@ -348,19 +345,19 @@ void MonthView::reloadIncidences()
 
   MonthItem *itemToReselect = 0;
 
-  if ( IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( mScene->selectedItem() ) ) {
-    mSelectedItemId = tmp->incidence().id();
-    mSelectedItemDate = tmp->realStartDate();
-    if ( !mSelectedItemDate.isValid() ) {
+  if ( IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( d->scene->selectedItem() ) ) {
+    d->selectedItemId = tmp->incidence().id();
+    d->selectedItemDate = tmp->realStartDate();
+    if ( !d->selectedItemDate.isValid() ) {
       return;
     }
   }
 
-  mScene->resetAll();
+  d->scene->resetAll();
   // build monthcells hash
   int i = 0;
-  for ( QDate d = actualStartDateTime().date(); d <= actualEndDateTime().date(); d = d.addDays( 1 ) ) {
-    mScene->mMonthCellMap[ d ] = new MonthCell( i, d, mScene );
+  for ( QDate date = actualStartDateTime().date(); date <= actualEndDateTime().date(); date = date.addDays( 1 ) ) {
+    d->scene->mMonthCellMap[ date ] = new MonthCell( i, date, d->scene );
     i ++;
   }
 
@@ -396,12 +393,12 @@ void MonthView::reloadIncidences()
     }
     DateTimeList::const_iterator t;
     for ( t = dateTimeList.constBegin(); t != dateTimeList.constEnd(); ++t ) {
-      MonthItem *manager = new IncidenceMonthItem( mScene,
+      MonthItem *manager = new IncidenceMonthItem( d->scene,
                                                    aitem,
                                                    t->toTimeSpec( timeSpec ).date() );
-      mScene->mManagerList << manager;
-      if ( mSelectedItemId == aitem.id() &&
-           manager->realStartDate() == mSelectedItemDate ) {
+      d->scene->mManagerList << manager;
+      if ( d->selectedItemId == aitem.id() &&
+           manager->realStartDate() == d->selectedItemDate ) {
         // only select it outside the loop because we are still creating items
         itemToReselect = manager;
       }
@@ -409,48 +406,48 @@ void MonthView::reloadIncidences()
   }
 
   if ( itemToReselect ) {
-    mScene->selectItem( itemToReselect );
+    d->scene->selectItem( itemToReselect );
   }
 
   // add holidays
-  for ( QDate d = actualStartDateTime().date(); d <= actualEndDateTime().date(); d = d.addDays( 1 ) ) {
-    QStringList holidays( CalendarSupport::holiday( d ) );
+  for ( QDate date = actualStartDateTime().date(); date <= actualEndDateTime().date(); date = date.addDays( 1 ) ) {
+    QStringList holidays( CalendarSupport::holiday( date ) );
     if ( !holidays.isEmpty() ) {
       MonthItem *holidayItem =
         new HolidayMonthItem(
-          mScene, d,
+          d->scene, date,
           holidays.join( i18nc( "delimiter for joining holiday names", "," ) ) );
-      mScene->mManagerList << holidayItem;
+      d->scene->mManagerList << holidayItem;
     }
   }
 
   // sort it
-  qSort( mScene->mManagerList.begin(),
-         mScene->mManagerList.end(),
+  qSort( d->scene->mManagerList.begin(),
+         d->scene->mManagerList.end(),
          MonthItem::greaterThan );
 
   // build each month's cell event list
-  foreach ( MonthItem *manager, mScene->mManagerList ) {
-    for ( QDate d = manager->startDate(); d <= manager->endDate(); d = d.addDays( 1 ) ) {
-      MonthCell *cell = mScene->mMonthCellMap.value( d );
+  foreach ( MonthItem *manager, d->scene->mManagerList ) {
+    for ( QDate date = manager->startDate(); date <= manager->endDate(); date = date.addDays( 1 ) ) {
+      MonthCell *cell = d->scene->mMonthCellMap.value( date );
       if ( cell ) {
         cell->mMonthItemList << manager;
       }
     }
   }
 
-  foreach ( MonthItem *manager, mScene->mManagerList ) {
+  foreach ( MonthItem *manager, d->scene->mManagerList ) {
     manager->updateMonthGraphicsItems();
     manager->updatePosition();
   }
 
-  foreach ( MonthItem *manager, mScene->mManagerList ) {
+  foreach ( MonthItem *manager, d->scene->mManagerList ) {
     manager->updateGeometry();
   }
 
-  mScene->setInitialized( true );
-  mView->update();
-  mScene->update();
+  d->scene->setInitialized( true );
+  d->view->update();
+  d->scene->update();
 }
 
 void MonthView::calendarReset()

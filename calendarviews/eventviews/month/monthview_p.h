@@ -40,7 +40,12 @@ class MonthViewPrivate : public EventViewPrivate
     void triggerDelayedReload();
 
   public:  /// Members
-    CalendarSupport::CalendarSearch* calendarSearch;
+    CalendarSupport::CalendarSearch *calendarSearch;
+    QTimer                           reloadTimer;
+    MonthScene                      *scene;
+    QDate                            selectedItemDate;
+    Akonadi::Item::Id                selectedItemId;
+    MonthGraphicsView               *view;
 };
 
 } // EventViews
