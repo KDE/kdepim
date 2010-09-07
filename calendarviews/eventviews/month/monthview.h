@@ -110,9 +110,6 @@ class MonthView : public EventView
     void rowsInserted( const QModelIndex &parent, int start, int end );
     void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
 
-  protected:
-    int maxDatesHint() const;
-
 #ifndef QT_NO_WHEELEVENT
     virtual void wheelEvent( QWheelEvent *event );
 #endif

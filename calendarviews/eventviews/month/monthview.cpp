@@ -149,11 +149,6 @@ int MonthView::currentDateCount() const
   return actualStartDateTime().date().daysTo( actualEndDateTime().date() );
 }
 
-int MonthView::maxDatesHint() const
-{
-  return 6 * 7;
-}
-
 DateList MonthView::selectedIncidenceDates() const
 {
   Q_D( const MonthView );
