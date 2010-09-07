@@ -28,6 +28,7 @@ endif (KDEPIM_MOBILE_UI)
 ########### next target ###############
 
 set( eventviews_LIB_SRCS
+     eventview_p.cpp
      eventview.cpp
      helper.cpp
      prefs.cpp

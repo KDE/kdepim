@@ -24,7 +24,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "eventview.h"
+#include "eventview_p.h"
+
 #include "prefs.h"
 
 #include <calendarsupport/calendar.h>
@@ -32,7 +33,6 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/entitymodelstatesaver.h>
-#include <calendarsupport/incidencechanger.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -46,76 +46,9 @@ using namespace KCalCore;
 
 #include <KGuiItem>
 #include <KLocale>
-#include <KRandom>
 
 #include <QApplication>
 #include <QKeyEvent>
-
-using namespace EventViews;
-
-class EventView::Private
-{
-  EventView *const q;
-
-  public:
-    explicit Private( EventView *qq )
-      : q( qq ),
-        calendar( 0 ),
-        customCollectionSelection( 0 ),
-        collectionSelectionModel( 0 ),
-        stateSaver( 0 ),
-        mReturnPressed( false ),
-        mTypeAhead( false ),
-        mTypeAheadReceiver( 0 ),
-        mPrefs( new Prefs() ),
-        mKCalPrefs( new CalendarSupport::KCalPrefs() ),
-        mChanger( 0 ),
-        mChanges( DatesChanged ),
-        mCollectionId( -1 )
-    {
-      QByteArray cname = q->metaObject()->className();
-      cname.replace( ':', '_' );
-      identifier = cname + '_' + KRandom::randomString( 8 ).toLatin1();
-    }
-
-    ~Private()
-    {
-      delete collectionSelectionModel;
-    }
-
-    void setUpModels();
-    void reconnectCollectionSelection();
-
-  public:
-    CalendarSupport::Calendar *calendar;
-    CalendarSupport::CollectionSelection *customCollectionSelection;
-    CalendarSupport::CollectionSelectionProxyModel *collectionSelectionModel;
-    CalendarSupport::EntityModelStateSaver *stateSaver;
-    QByteArray identifier;
-    KDateTime startDateTime;
-    KDateTime endDateTime;
-    KDateTime actualStartDateTime;
-    KDateTime actualEndDateTime;
-
-    /* When we receive a QEvent with a key_Return release
-     * we will only show a new event dialog if we previously received a
-     * key_Return press, otherwise a new event dialog appears when
-     * you hit return in some yes/no dialog */
-    bool mReturnPressed;
-
-    bool mTypeAhead;
-    QObject *mTypeAheadReceiver;
-    QList<QEvent *> mTypeAheadEvents;
-    static CalendarSupport::CollectionSelection *sGlobalCollectionSelection;
-
-    KHolidays::HolidayRegionPtr mHolidayRegion;
-    PrefsPtr mPrefs;
-    KCalPrefsPtr mKCalPrefs;
-
-    CalendarSupport::IncidenceChanger *mChanger;
-    Changes mChanges;
-    Akonadi::Collection::Id mCollectionId;
-};
 
 CalendarSupport::CollectionSelection *EventView::Private::sGlobalCollectionSelection = 0;
 
@@ -123,50 +56,6 @@ CalendarSupport::CollectionSelection *EventView::Private::sGlobalCollectionSelec
 void EventView::setGlobalCollectionSelection( CalendarSupport::CollectionSelection *s )
 {
   Private::sGlobalCollectionSelection = s;
-}
-
-void EventView::Private::setUpModels()
-{
-  delete stateSaver;
-  stateSaver = 0;
-  delete customCollectionSelection;
-  customCollectionSelection = 0;
-  if ( collectionSelectionModel ) {
-    customCollectionSelection =
-      new CalendarSupport::CollectionSelection( collectionSelectionModel->selectionModel() );
-    stateSaver = new CalendarSupport::EntityModelStateSaver( collectionSelectionModel, q );
-    stateSaver->addRole( Qt::CheckStateRole, "CheckState" );
-    // DISABLED_FOR_NOW
-    //calendarSearch->setSelectionModel( collectionSelectionModel->selectionModel() );
-  } else {
-    // DISABLED_FOR_NOW
-    //calendarSearch->setSelectionModel( globalCollectionSelection()->model() );
-  }
-#if 0
-  QDialog *dlg = new QDialog( q );
-  dlg->setModal( false );
-  QVBoxLayout *layout = new QVBoxLayout( dlg );
-  EntityTreeView *testview = new EntityTreeView( dlg );
-  layout->addWidget( testview );
-  testview->setModel( calendarSearch->model() );
-  dlg->show();
-#endif
-  reconnectCollectionSelection();
-}
-
-void EventView::Private::reconnectCollectionSelection()
-{
-  if ( q->globalCollectionSelection() ) {
-    q->globalCollectionSelection()->disconnect( q );
-  }
-
-  if ( customCollectionSelection ) {
-    customCollectionSelection->disconnect( q );
-  }
-
-  QObject::connect( q->collectionSelection(),
-                    SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
-                    q, SLOT(collectionSelectionChanged()) );
 }
 
 EventView::EventView( QWidget *parent ) : QWidget( parent ), d( new Private( this ) )
