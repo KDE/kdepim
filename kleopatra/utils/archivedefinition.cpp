@@ -249,7 +249,7 @@ namespace {
                                &m_packCommand[CMS], &m_packPrefixArguments[CMS], &m_packPostfixArguments[CMS], &method, true );
             else
                 parse_command( group.readEntry( PACK_COMMAND_ENTRY ), id(), PACK_COMMAND_ENTRY,
-                               &m_packCommand[OpenPGP], &m_packPrefixArguments[OpenPGP], &m_packPostfixArguments[OpenPGP], &method, true );
+                               &m_packCommand[CMS], &m_packPrefixArguments[CMS], &m_packPostfixArguments[CMS], &method, true );
             setPackCommandArgumentPassingMethod( CMS, method );
 
             QStringList dummy;
