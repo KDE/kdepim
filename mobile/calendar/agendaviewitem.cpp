@@ -93,7 +93,7 @@ void AgendaViewItem::setCalendar(QObject* calendarObj)
 
 void AgendaViewItem::showRange( const QDate &date, int range )
 {
-  Q_ASSERT( range >= 0 && range <= 3 );
+  Q_ASSERT( range >= 0 && range <= 1 );
 
   m_currentRange = Range( range );
   switch( m_currentRange ) {
@@ -103,9 +103,6 @@ void AgendaViewItem::showRange( const QDate &date, int range )
   case Week:
     // Todo: Take in account sunday or monday as first day of week.
     m_view->showDates( date.addDays( - date.dayOfWeek() ), date.addDays( 6 - date.dayOfWeek() ) );
-    break;
-  case Month:
-    m_view->showDates( date.addDays( - date.day() + 1 ), date.addDays( date.daysInMonth() - date.day() ) );
     break;
   }
 }
