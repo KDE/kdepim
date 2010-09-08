@@ -940,8 +940,10 @@ static KMime::Content* decryptedNodeForContent( KMime::Content *content, NodeHel
   return 0;
 }
 
-bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &resultingData, bool addHeaders )
+bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &resultingData, bool addHeaders,
+                                            int recursionLevel )
 {
+  bool returnValue = false;
   if ( node ) {
     KMime::Content *curNode = node;
     KMime::Content *decryptedNode = 0;
@@ -950,7 +952,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     const bool isMultipart = node->contentType( false ) && node->contentType()->isMultipart();
     bool isSignature = false;
 
-    kDebug() << "Looking at" << type << "/" << subType;
+    kDebug() << "(" << recursionLevel << ") Looking at" << type << "/" << subType;
 
     if ( isMultipart ) {
       if ( subType == "signed" ) {
@@ -1003,9 +1005,9 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
       headers.assemble();
 
       resultingData += headers.head() + '\n';
-      unencryptedMessage_helper( decryptedNode, resultingData, false );
+      unencryptedMessage_helper( decryptedNode, resultingData, false, recursionLevel + 1 );
 
-      return true;
+      returnValue = true;
     }
 
     else if ( isSignature ) {
@@ -1016,7 +1018,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
         resultingData += curNode->head() + '\n';
       }
       resultingData += curNode->encodedBody();
-      return false;
+      returnValue = false;
     }
 
     else if ( isMultipart ) {
@@ -1029,13 +1031,13 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
       const QByteArray boundary = curNode->contentType()->boundary();
       foreach( KMime::Content *child, curNode->contents() ) {
         resultingData += "\n--" + boundary + '\n';
-        const bool changed = unencryptedMessage_helper( child, resultingData, true );
+        const bool changed = unencryptedMessage_helper( child, resultingData, true, recursionLevel + 1 );
         if ( changed ) {
           somethingChanged = true;
         }
       }
       resultingData += "\n--" + boundary + "--\n\n";
-      return somethingChanged;
+      returnValue = somethingChanged;
     }
 
     else if ( curNode->bodyIsMessage() ) {
@@ -1044,7 +1046,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
         resultingData += curNode->head() + '\n';
       }
 
-      return unencryptedMessage_helper( curNode->bodyAsMessage().get(), resultingData, true );
+      returnValue = unencryptedMessage_helper( curNode->bodyAsMessage().get(), resultingData, true, recursionLevel + 1 );
     }
 
     else {
@@ -1053,11 +1055,12 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
         resultingData += curNode->head() + '\n';
       }
       resultingData += curNode->body();
-      return false;
+      returnValue = false;
     }
   }
 
-  return false;
+  kDebug() << "(" << recursionLevel << ") done.";
+  return returnValue;
 }
 
 KMime::Message::Ptr NodeHelper::unencryptedMessage( const KMime::Message::Ptr& originalMessage )

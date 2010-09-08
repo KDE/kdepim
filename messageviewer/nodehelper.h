@@ -274,7 +274,8 @@ public:
 
 private:
 
-    bool unencryptedMessage_helper( KMime::Content *node, QByteArray &resultingData, bool addHeaders );
+    bool unencryptedMessage_helper( KMime::Content *node, QByteArray &resultingData, bool addHeaders,
+                                    int recursionLevel = 1 );
 
     /** Check for prefixes @p prefixRegExps in #subject(). If none
         is found, @p newPrefix + ' ' is prepended to the subject and the
