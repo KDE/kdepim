@@ -19,12 +19,12 @@
 #ifndef GROUPWAREINTEGRATION_H
 #define GROUPWAREINTEGRATION_H
 
-#include "incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 
-namespace IncidenceEditors
+namespace IncidenceEditorsNG
 {
 
-class INCIDENCEEDITORS_EXPORT GroupwareIntegration
+class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
 {
   public:
     static bool isActive();
@@ -34,6 +34,6 @@ class INCIDENCEEDITORS_EXPORT GroupwareIntegration
     static bool sActivated;
 };
 
-} // namespace IncidenceEditors
+} // namespace IncidenceEditorsNG
 
 #endif

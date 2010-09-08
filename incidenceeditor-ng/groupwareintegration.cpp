@@ -18,11 +18,9 @@
 
 #include "groupwareintegration.h"
 #include "editorconfig.h"
-#include "incidenceeditor-ng/incidencedialog.h"
-#include "incidenceeditor-ng/incidencedialogfactory.h"
-#include "journaleditor.h"
-
-#include <kcalcore/visitor.h>
+#include "incidencedialog.h"
+#include "incidencedialogfactory.h"
+#include "korganizereditorconfig.h"
 
 #include <kcalprefs.h>
 
@@ -37,42 +35,8 @@
 
 #include <KSystemTimeZones>
 
-#include "korganizereditorconfig.h"
-
 using namespace KCalCore;
-using namespace IncidenceEditors;
-
-class EditorDialogVisitor : public Visitor
-{
-  public:
-    EditorDialogVisitor() : Visitor(), mEditor( 0 ), mDialog( 0 ) {}
-    IncidenceEditor *editor() const { return mEditor; }
-
-    // TODO: Once the JournalEditor is ported, we can just use the factory method
-    //       and get rid of this visitor.
-
-  protected:
-    bool visit( Event::Ptr  )
-    {
-      return true;
-    }
-    bool visit( Todo::Ptr  )
-    {
-      return true;
-    }
-    bool visit( Journal::Ptr  )
-    {
-      mEditor = new JournalEditor( 0 );
-      return mEditor;
-    }
-    bool visit( FreeBusy::Ptr  ) // to inhibit hidden virtual compile warning
-    {
-      return 0;
-    }
-
-    IncidenceEditor *mEditor;
-    IncidenceEditorsNG::IncidenceDialog *mDialog;
-};
+using namespace IncidenceEditorsNG;
 
 class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
 {
@@ -108,23 +72,9 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
         return;
       }
 
-      EditorDialogVisitor v;
-      if ( !incidence->accept( v, incidence ) ) {
-        return;
-      }
-
-      if ( v.editor() ) {
-        // TODO: Get rid of this as soon as the JournalEditor is ported as well.
-        IncidenceEditor *editor = v.editor();
-        editor->editIncidence( item, QDate::currentDate() );
-        editor->selectInvitationCounterProposal( true );
-        editor->setIncidenceChanger( new CalendarSupport::IncidenceChanger( mCalendar, this, -1 ) );
-        editor->show();
-      } else {
-        IncidenceEditorsNG::IncidenceDialog *dialog = IncidenceEditorsNG::IncidenceDialogFactory::create( incidence->type() );
-        dialog->setIsCounterProposal( true );
-        dialog->load( item, QDate::currentDate() );
-      }
+      IncidenceEditorsNG::IncidenceDialog *dialog = IncidenceEditorsNG::IncidenceDialogFactory::create( incidence->type() );
+      dialog->setIsCounterProposal( true );
+      dialog->load( item, QDate::currentDate() );
     }
 
     CalendarSupport::Calendar *mCalendar;

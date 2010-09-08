@@ -33,10 +33,8 @@ set( incidenceeditors_LIB_SRCS
     editorgeneraljournal.cpp
     embeddedurlpage.cpp
     freebusyurldialog.cpp
-    groupwareintegration.cpp
     incidenceeditor.cpp
     journaleditor.cpp
-    korganizereditorconfig.cpp
     templatemanagementdialog.cpp
 )
 

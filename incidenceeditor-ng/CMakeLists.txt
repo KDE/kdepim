@@ -74,6 +74,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   incidencedialogfactory.cpp
   eventortododialog.cpp
   visualfreebusywidget.cpp
+  groupwareintegration.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
