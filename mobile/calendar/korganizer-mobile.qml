@@ -372,11 +372,11 @@ KPIM.MainView {
           buttonText: KDE.i18n( "Month view" )
           width: parent.width / 3
           onClicked: {
-            //agenda.showRange( dateEdit.date, 2 /* "Month" */ );
             mainWorkView.visible = false
             agendaView.visible = false
             selectButton.visible = false
             monthView.visible = true
+            month.showMonth( dateEdit.date );
           }
         }
       }
