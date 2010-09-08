@@ -1,5 +1,7 @@
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}/calendarsupport
+  ${CMAKE_BINARY_DIR}/calendarsupport
 )
 
 if(NOT MSVC)

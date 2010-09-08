@@ -23,7 +23,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
-#include <incidenceeditors/korganizereditorconfig.h>
+#include <incidenceeditors/incidenceeditor-ng/korganizereditorconfig.h>
 
 #include <calendarviews/eventviews/eventview.h>
 
@@ -43,13 +43,13 @@
 
 using namespace Akonadi;
 using namespace CalendarSupport;
-using namespace IncidenceEditors;
+using namespace IncidenceEditorsNG;
 
 int main( int argc, char **argv )
 {
   const QByteArray& ba = QByteArray( "korganizer-mobile" );
   const KLocalizedString name = ki18n( "KOrganizer Mobile" );
-  
+
   // NOTE: This is necessary to avoid a crash, but will result in an empty config.
   //       To make this really configurable do something like KOrganizerEditorConfig
   //       in incidinceeditors/groupwareintegration.cpp
@@ -84,7 +84,7 @@ int main( int argc, char **argv )
 
   CalendarSupport::CollectionSelection colSel( &selectionModel );
   EventViews::EventView::setGlobalCollectionSelection( &colSel );
-  
+
   MainView view;
   view.show();
 

@@ -23,11 +23,11 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
-#include <incidenceeditors/korganizereditorconfig.h>
+#include <incidenceeditors/incidenceeditor-ng/korganizereditorconfig.h>
 
 #include "mainview.h"
 
-using namespace IncidenceEditors;
+using namespace IncidenceEditorsNG;
 
 int main( int argc, char **argv )
 {
