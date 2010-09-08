@@ -21,6 +21,8 @@
 
 #include "objecttreeemptysource.h"
 
+#include <messagecore/tests/util.h>
+
 #include <qtest_kde.h>
 
 using namespace MessageViewer;
@@ -31,7 +33,10 @@ class UnencryptedMessageTest : public QObject
   private slots:
     void initTestCase();
     void testMailWithoutEncryption();
+    void testSMIMESignedEncrypted();
     void testOpenPGPSignedEncrypted();
+    void testForwardedOpenPGPSignedEncrypted();
+    void testSignedForwardedOpenPGPSignedEncrypted();
     void testOpenPGPEncrypted();
 };
 
@@ -51,6 +56,89 @@ void UnencryptedMessageTest::testMailWithoutEncryption()
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
   QVERIFY( !nodeHelper.unencryptedMessage( originalMessage ) );
+}
+
+void UnencryptedMessageTest::testSignedForwardedOpenPGPSignedEncrypted()
+{
+  KMime::Message::Ptr originalMessage = readAndParseMail( "signed-forward-openpgp-signed-encrypted.mbox" );
+
+  NodeHelper nodeHelper;
+    TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  MessageCore::Test::TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+  otp.parseObjectTree( originalMessage.get() );
+
+  QCOMPARE( otp.textualContent().toAscii().data(), "bla bla bla" ); // The textual content doesn't include the encrypted encapsulated message by design
+  QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgPartiallyEncrypted );
+  QCOMPARE( nodeHelper.overallSignatureState( originalMessage.get() ), KMMsgFullySigned );
+
+  KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage( originalMessage );
+  QVERIFY( !unencryptedMessage ); // We must not invalidate the outer signature
+}
+
+void UnencryptedMessageTest::testForwardedOpenPGPSignedEncrypted()
+{
+  KMime::Message::Ptr originalMessage = readAndParseMail( "forward-openpgp-signed-encrypted.mbox" );
+
+  NodeHelper nodeHelper;
+    TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  MessageCore::Test::TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+  otp.parseObjectTree( originalMessage.get() );
+
+  QCOMPARE( otp.textualContent().toAscii().data(), "bla bla bla" ); // The textual content doesn't include the encrypted encapsulated message by design
+  QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgPartiallyEncrypted );
+
+  // Signature state handling is broken. First, the state is apparently not calculated correctly,
+  // and then the state is never stored somewhere so it can't be remembered.
+  QEXPECT_FAIL( "", "Signature state handling broken!", Continue );
+  QVERIFY( nodeHelper.overallSignatureState( originalMessage.get() ) != KMMsgNotSigned );
+
+  // Now, test that the unencrypted message is generated correctly
+  KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage( originalMessage );
+  QCOMPARE( unencryptedMessage->contentType()->mimeType().data(), "multipart/mixed" );
+  QCOMPARE( unencryptedMessage->contents().size(), 2 );
+  QCOMPARE( unencryptedMessage->contents().first()->contentType()->mimeType().data(), "text/plain" );
+  QCOMPARE( unencryptedMessage->contents().first()->decodedContent().data(), "bla bla bla" );
+  QCOMPARE( unencryptedMessage->contents().at( 1 )->contentType()->mimeType().data(), "message/rfc822" );
+  KMime::Message::Ptr encapsulated = unencryptedMessage->contents().at( 1 )->bodyAsMessage();
+  QCOMPARE( encapsulated->contentType()->mimeType().data(), "multipart/signed" );
+  QCOMPARE( encapsulated->contents().size(), 2 );
+  QCOMPARE( encapsulated->contents().first()->contentType()->mimeType().data(), "text/plain" );
+  QCOMPARE( encapsulated->contents().at( 1 )->contentType()->mimeType().data(), "application/pgp-signature" );
+  QCOMPARE( encapsulated->contents().first()->decodedContent().data(), "encrypted message text" );
+
+  // TODO: Check that the signature is valid
+}
+
+void UnencryptedMessageTest::testSMIMESignedEncrypted()
+{
+  KMime::Message::Ptr originalMessage = readAndParseMail( "smime-signed-encrypted.mbox" );
+
+  NodeHelper nodeHelper;
+  EmptySource emptySource;
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+  otp.parseObjectTree( originalMessage.get() );
+
+  QCOMPARE( otp.textualContent().toAscii().data(), "encrypted message text" );
+  QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgFullyEncrypted );
+
+  // Signature state handling is broken. First, the state is apparently not calculated correctly,
+  // and then the state is never stored somewhere so it can't be remembered.
+  QEXPECT_FAIL( "", "Signature state handling broken!", Continue );
+  QVERIFY( nodeHelper.overallSignatureState( originalMessage.get() ) != KMMsgNotSigned );
+
+  // Now, test that the unencrypted message is generated correctly
+  KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage( originalMessage );
+  QCOMPARE( unencryptedMessage->contentType()->mimeType().data(), "multipart/signed" );
+  QCOMPARE( unencryptedMessage->contents().size(), 2 );
+  QCOMPARE( unencryptedMessage->contents().first()->contentType()->mimeType().data(), "text/plain" );
+  QCOMPARE( unencryptedMessage->contents().at( 1 )->contentType()->mimeType().data(), "application/pkcs7-signature" );
+  QCOMPARE( unencryptedMessage->contents().first()->decodedContent().data(), "encrypted message text" );
+
+  // TODO: Check that the signature is valid
 }
 
 void UnencryptedMessageTest::testOpenPGPSignedEncrypted()
