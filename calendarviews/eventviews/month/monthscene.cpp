@@ -620,7 +620,7 @@ void MonthScene::mousePressEvent ( QGraphicsSceneMouseEvent *mouseEvent )
       mSelectedCellDate = cell->date();
       update();
       if ( mouseEvent->button() == Qt::RightButton ) {
-        emit showNewEventPopupSignal();
+        emit newEventSignal( Akonadi::Collection::List() );
       }
       mouseEvent->accept();
     }

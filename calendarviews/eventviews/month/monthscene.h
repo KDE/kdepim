@@ -177,7 +177,6 @@ class MonthScene : public QGraphicsScene
   signals:
     void incidenceSelected( const Akonadi::Item &incidence, const QDate & );
     void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );
-    void showNewEventPopupSignal();
     void newEventSignal( const Akonadi::Collection::List & );
 
   protected:

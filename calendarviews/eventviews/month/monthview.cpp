@@ -114,9 +114,6 @@ MonthView::MonthView( QWidget *parent )
   connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
            SIGNAL(showIncidencePopup(Akonadi::Item, QDate)) );
 
-  connect( d->scene, SIGNAL(showNewEventPopupSignal()),
-           SLOT(showNewEventPopup()) );
-
   connect( d->scene, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
            this, SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
 
