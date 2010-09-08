@@ -674,15 +674,16 @@ void MainView::preferHTML(bool useHtml)
       QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
-      Q_ASSERT( collection.isValid() );
+      QModelIndexList selectedIndexes = collectionSelectionModel->selection().indexes();
+      Q_FOREACH(QModelIndex index, selectedIndexes) {
+          Q_ASSERT( index.isValid() );
+          const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+          Q_ASSERT( collection.isValid() );
 
-      KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
-      KConfigGroup group(config, QString("c%1").arg(collection.id()));
-      group.writeEntry("htmlMailOverride", useHtml);
-
+          KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
+          KConfigGroup group(config, QString("c%1").arg(collection.id()));
+          group.writeEntry("htmlMailOverride", useHtml);
+      }
       item->viewer()->setHtmlOverride( useHtml );
   }
 }
@@ -704,15 +705,17 @@ void MainView::loadExternalReferences(bool load)
       QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
-      Q_ASSERT( collection.isValid() );
+      qDebug() << collectionSelectionModel->selection().indexes().count();
+      QModelIndexList selectedIndexes = collectionSelectionModel->selection().indexes();
+      Q_FOREACH(QModelIndex index, selectedIndexes) {
+          Q_ASSERT( index.isValid() );
+          const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+          Q_ASSERT( collection.isValid() );
 
-      KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
-      KConfigGroup group(config, QString("c%1").arg(collection.id()));
-      group.writeEntry("htmlLoadExternalOverride", load);
-
+          KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
+          KConfigGroup group(config, QString("c%1").arg(collection.id()));
+          group.writeEntry("htmlLoadExternalOverride", load);
+      }
       item->viewer()->setHtmlLoadExtOverride( load );
   }
 }
