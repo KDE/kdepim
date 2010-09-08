@@ -40,6 +40,9 @@ class MonthViewItem : public DeclarativeAkonadiItem
     QObject *calendar() const;
     void setCalendar( QObject* calendarObj );
 
+    /// Show the month from @param date.
+    Q_INVOKABLE void showMonth( const QDate &date );
+
   private:
     MonthView *mView;
 };

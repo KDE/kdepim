@@ -29,16 +29,10 @@ using namespace EventViews;
 MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
   : DeclarativeAkonadiItem( parent )
   , mView( new MonthView() )
-{
-  const KDateTime start = KDateTime::currentLocalDateTime().addDays( -1 );
-  const KDateTime end = KDateTime::currentLocalDateTime().addDays( 1 );
-  
+{  
   // start with the oxygen palette (which is not necessarily the default on all platforms)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
-
   mView->setPalette( pal );
-  mView->setDateRange( start, end );
-  
   setWidget( mView );
 }
 
@@ -60,5 +54,12 @@ void MonthViewItem::setCalendar( QObject* calendarObj )
     mView->setCalendar( cal );
     mView->updateConfig();
   }
+}
+
+void MonthViewItem::showMonth( const QDate &date )
+{
+  const KDateTime start( QDate( date.year(), date.month(), 1 ) );
+  const KDateTime end( QDate( date.year(), date.month(), date.daysInMonth() ) );
+  mView->setDateRange( start, end );
 }
 
