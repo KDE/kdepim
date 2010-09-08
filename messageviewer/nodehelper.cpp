@@ -140,7 +140,6 @@ void NodeHelper::clear()
   mProcessedNodes.clear();
   mEncryptionState.clear();
   mSignatureState.clear();
-  mUnencryptedMessages.clear();
   mOverrideCodecs.clear();
   for ( QMap<KMime::Content*, QMap< QByteArray, Interface::BodyPartMemento*> >::iterator
         it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
@@ -538,17 +537,6 @@ QString NodeHelper::cleanSubject( KMime::Message *message, const QStringList & p
   return NodeHelper::replacePrefixes( message->subject()->asUnicodeString(), prefixRegExps, replace,
                                       newPrefix );
 }
-
-void NodeHelper::attachUnencryptedMessage( KMime::Message::Ptr message,
-                                           KMime::Message::Ptr unencrypted )
-{
-  if ( !message )
-    return;
-
-  mUnencryptedMessages[message] = unencrypted;
-}
-
-
 
 void NodeHelper::setOverrideCodec( KMime::Content* node, const QTextCodec* codec )
 {

@@ -105,9 +105,6 @@ public:
      */
     static QString cleanSubject( KMime::Message *message );
 
-    /** Attach an unencrypted message to an encrypted one */
-    void attachUnencryptedMessage( KMime::Message::Ptr message, KMime::Message::Ptr unencrypted );
-
     /** Attach an extra node to an existing node */
     void attachExtraContent( KMime::Content *topLevelNode, KMime::Content* content );
     void removeAllExtraContent( KMime::Content *topLevelNode );
@@ -295,7 +292,6 @@ private:
     QList<KMime::Content*> mNodesUnderProcess;
     QMap<KMime::Content *, KMMsgEncryptionState> mEncryptionState;
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
-    QMap<KMime::Message::Ptr, KMime::Message::Ptr > mUnencryptedMessages;
     QSet<KMime::Content *> mDisplayEmbeddedNodes;
     QSet<KMime::Content *> mDisplayHiddenNodes;
     QTextCodec *mLocalCodec;
