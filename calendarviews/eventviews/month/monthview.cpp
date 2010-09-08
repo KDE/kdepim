@@ -31,6 +31,8 @@
 
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarsearch.h>
+#include <calendarsupport/collectionselection.h>
+#include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -54,6 +56,11 @@ MonthView::MonthView( QWidget *parent )
   Q_D( MonthView );
 
   d->calendarSearch = new CalendarSupport::CalendarSearch( this );
+  if ( d->collectionSelectionModel ) {
+    d->calendarSearch->setSelectionModel( d->collectionSelectionModel->selectionModel() );
+  } else {
+    d->calendarSearch->setSelectionModel( d->sGlobalCollectionSelection->model() );
+  }
   d->scene = new MonthScene( this );
   d->view = new MonthGraphicsView( this );
   d->view->setScene( d->scene );

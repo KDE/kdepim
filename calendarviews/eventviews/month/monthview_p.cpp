@@ -48,11 +48,11 @@ void MonthViewPrivate::setUpModels()
 {
   EventViewPrivate::setUpModels();
 
-  if ( collectionSelectionModel ) {
-    calendarSearch->setSelectionModel( collectionSelectionModel->selectionModel() );
-  } else {
-    calendarSearch->setSelectionModel( sGlobalCollectionSelection->model() );
-  }
+//   if ( collectionSelectionModel ) {
+//     calendarSearch->setSelectionModel( collectionSelectionModel->selectionModel() );
+//   } else {
+//     calendarSearch->setSelectionModel( sGlobalCollectionSelection->model() );
+//   }
 #if 0
   QDialog *dlg = new QDialog( q );
   dlg->setModal( false );
