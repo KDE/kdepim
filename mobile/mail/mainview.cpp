@@ -25,6 +25,8 @@
 #include "global.h"
 #include "messageviewitem.h"
 #include "messageviewer/viewer.h"
+#include <akonadi/collection.h>
+#include <akonadi/collectionmodel.h>
 
 #include "savemailcommand_p.h"
 
@@ -613,6 +615,8 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy email\nto folder" ) );
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall emails" ) );
+
+  connect( collectionSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(folderChanged()));
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
@@ -667,6 +671,18 @@ void MainView::preferHTML(bool useHtml)
   }
 
   if (item) {
+      QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
+      KConfigGroup group(config, QString("c%1").arg(collection.id()));
+      group.writeEntry("htmlMailOverride", useHtml);
+
       item->viewer()->setHtmlOverride( useHtml );
   }
 }
@@ -685,8 +701,36 @@ void MainView::loadExternalReferences(bool load)
   }
 
   if (item) {
+      QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
+      KConfigGroup group(config, QString("c%1").arg(collection.id()));
+      group.writeEntry("htmlLoadExternalOverride", load);
+
       item->viewer()->setHtmlLoadExtOverride( load );
   }
+}
+
+void MainView::folderChanged()
+{
+    QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
+    if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      return;
+    const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+    Q_ASSERT( index.isValid() );
+    const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+    Q_ASSERT( collection.isValid() );
+
+    KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
+    KConfigGroup group(config, QString("c%1").arg(collection.id()));
+    actionCollection()->action("prefer_html_to_plain")->setChecked(group.readEntry("htmlMailOverride", false));
+    actionCollection()->action("load_external_ref")->setChecked(group.readEntry("htmlLoadExternalOverride", false));
 }
 
 // #############################################################
