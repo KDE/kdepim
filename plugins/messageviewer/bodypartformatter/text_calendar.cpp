@@ -36,7 +36,7 @@
 
 #include <calendarsupport/groupware.h>
 
-#include <incidenceeditors/groupwareintegration.h>
+#include <incidenceeditors/incidenceeditor-ng/groupwareintegration.h>
 
 #include <messageviewer/globalsettings.h>
 #include <messageviewer/viewer.h>
@@ -721,8 +721,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
     {
     // FIXME no IncidenceEditors on WinCE, anyway we don't want to depend on it just for that
 #ifndef Q_OS_WINCE
-      if ( !IncidenceEditors::GroupwareIntegration::isActive() ) {
-        IncidenceEditors::GroupwareIntegration::activate();
+      if ( !IncidenceEditorsNG::GroupwareIntegration::isActive() ) {
+        IncidenceEditorsNG::GroupwareIntegration::activate();
       }
 #endif
       return CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
