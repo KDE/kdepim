@@ -1606,7 +1606,6 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
   }
 
-  kDebug() << "SET NODE DISPLAYED EMBEDDED " << node;
   mNodeHelper->setNodeDisplayedEmbedded( node, true );
   mNodeHelper->setPartMetaData( node, messagePart );
 
@@ -1808,9 +1807,9 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
   // or there is neither signed nor encrypted parameter.
   if ( !isSigned ) {
     if ( isEncrypted )
-      kDebug() << "pkcs7 mime     ==      S/MIME TYPE: enveloped (encrypted) data";
+      ;//kDebug() << "pkcs7 mime     ==      S/MIME TYPE: enveloped (encrypted) data";
     else
-      kDebug() << "pkcs7 mime  -  type unknown  -  enveloped (encrypted) data ?";
+      ;//kDebug() << "pkcs7 mime  -  type unknown  -  enveloped (encrypted) data ?";
     QByteArray decryptedData;
     PartMetaData messagePart;
     messagePart.isEncrypted = true;
@@ -1829,14 +1828,14 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
       const bool bOkDecrypt = okDecryptMIME( *node, decryptedData, signatureFound, signatures,
                                              false, passphraseError, actuallyEncrypted,
                                              decryptionStarted, messagePart );
-      kDebug() << "PKCS7 found signature?" << signatureFound;
+      //kDebug() << "PKCS7 found signature?" << signatureFound;
       if ( decryptionStarted ) {
         writeDecryptionInProgressBlock();
         return true;
       }
 
       if ( bOkDecrypt ) {
-        kDebug() << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
+        //kDebug() << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
         isEncrypted = true;
         mNodeHelper->setEncryptionState( node, KMMsgFullyEncrypted );
         if( signatureFound )
@@ -1862,7 +1861,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
         }
 
         if ( isEncrypted ) {
-          kDebug() << "pkcs7 mime  -  ERROR: COULD NOT DECRYPT enveloped data !";
+          //kDebug() << "pkcs7 mime  -  ERROR: COULD NOT DECRYPT enveloped data !";
           // paint the frame
           messagePart.isDecryptable = false;
           if ( htmlWriter() ) {
@@ -1874,7 +1873,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
             htmlWriter()->queue( writeSigstatFooter( messagePart ) );
           }
         } else {
-          kDebug() << "pkcs7 mime  -  NO encryption found";
+          //kDebug() << "pkcs7 mime  -  NO encryption found";
         }
       }
     }
@@ -1886,9 +1885,9 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
   // We now try signature verification if necessarry.
   if ( signTestNode ) {
     if ( isSigned )
-      kDebug() << "pkcs7 mime     ==      S/MIME TYPE: opaque signed data";
+      ;//kDebug() << "pkcs7 mime     ==      S/MIME TYPE: opaque signed data";
     else
-      kDebug() << "pkcs7 mime  -  type unknown  -  opaque signed data ?";
+      ;//kDebug() << "pkcs7 mime  -  type unknown  -  opaque signed data ?";
 
     bool sigFound = writeOpaqueOrMultipartSignedData( 0,
                                                       *signTestNode,
@@ -1899,7 +1898,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
                                                       isEncrypted );
     if ( sigFound ) {
       if ( !isSigned ) {
-        kDebug() << "pkcs7 mime  -  signature found  -  opaque signed data !";
+        //kDebug() << "pkcs7 mime  -  signature found  -  opaque signed data !";
         isSigned = true;
       }
 
@@ -1907,7 +1906,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
       if ( signTestNode != node )
         mNodeHelper->setSignatureState( node, KMMsgFullySigned );
     } else {
-      kDebug() << "pkcs7 mime  -  NO signature found   :-(";
+      //kDebug() << "pkcs7 mime  -  NO signature found   :-(";
     }
   }
 

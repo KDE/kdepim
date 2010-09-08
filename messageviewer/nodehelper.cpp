@@ -236,7 +236,7 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
     fileName = "unnamed";
   fname += '/' + fileName;
 
-  kDebug() << "Create temp file: " << fname;
+  //kDebug() << "Create temp file: " << fname;
 
   QByteArray data = node->decodedContent();
   if ( node->contentType()->isText() && data.size() > 0 ) {
@@ -638,13 +638,13 @@ void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &whi
 
 bool NodeHelper::isNodeDisplayedEmbedded( KMime::Content* node ) const
 {
-  kDebug() << "IS NODE: " << mDisplayEmbeddedNodes.contains( node );
+  //kDebug() << "IS NODE: " << mDisplayEmbeddedNodes.contains( node );
   return mDisplayEmbeddedNodes.contains( node );
 }
 
 void NodeHelper::setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded )
 {
-  kDebug() << "SET NODE: " << node << displayedEmbedded;
+  //kDebug() << "SET NODE: " << node << displayedEmbedded;
   if ( displayedEmbedded )
     mDisplayEmbeddedNodes.insert( node );
   else
@@ -940,7 +940,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     const bool isMultipart = node->contentType( false ) && node->contentType()->isMultipart();
     bool isSignature = false;
 
-    kDebug() << "(" << recursionLevel << ") Looking at" << type << "/" << subType;
+    //kDebug() << "(" << recursionLevel << ") Looking at" << type << "/" << subType;
 
     if ( isMultipart ) {
       if ( subType == "signed" ) {
@@ -963,8 +963,8 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     if ( decryptedNode ) {
-      kDebug() << "Current node has an associated decrypted node, adding a modified header "
-                  "and then processing the children.";
+      //kDebug() << "Current node has an associated decrypted node, adding a modified header "
+      //            "and then processing the children.";
 
       Q_ASSERT( addHeaders );
       KMime::Content headers;
@@ -999,7 +999,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     else if ( isSignature ) {
-      kDebug() << "Current node is a signature, adding it as-is.";
+      //kDebug() << "Current node is a signature, adding it as-is.";
       // We can't change the nodes under the signature, as that would invalidate it. Add the signature
       // and its child as-is
       if ( addHeaders ) {
@@ -1010,7 +1010,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     else if ( isMultipart ) {
-      kDebug() << "Current node is a multipart node, adding its header and then processing all children.";
+      //kDebug() << "Current node is a multipart node, adding its header and then processing all children.";
       // Normal multipart node, add the header and all of its children
       bool somethingChanged = false;
       if ( addHeaders ) {
@@ -1029,7 +1029,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     else if ( curNode->bodyIsMessage() ) {
-      kDebug() << "Current node is a message, adding the header and then processing the child.";
+      //kDebug() << "Current node is a message, adding the header and then processing the child.";
       if ( addHeaders ) {
         resultingData += curNode->head() + '\n';
       }
@@ -1038,7 +1038,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     else {
-      kDebug() << "Current node is an ordinary leaf node, adding it as-is.";
+      //kDebug() << "Current node is an ordinary leaf node, adding it as-is.";
       if ( addHeaders ) {
         resultingData += curNode->head() + '\n';
       }
@@ -1047,7 +1047,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
   }
 
-  kDebug() << "(" << recursionLevel << ") done.";
+  //kDebug() << "(" << recursionLevel << ") done.";
   return returnValue;
 }
 
