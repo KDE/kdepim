@@ -57,6 +57,16 @@ void UnencryptedMessageTest::testOpenPGPSignedEncrypted()
   // and then the state is never stored somewhere so it can't be remembered.
   QEXPECT_FAIL( "", "Signature state handling broken!", Continue );
   QVERIFY( nodeHelper.overallSignatureState( originalMessage.get() ) != KMMsgNotSigned );
+
+  // Now, test that the unencrypted message is generated correctly
+  KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage( originalMessage );
+  QCOMPARE( unencryptedMessage->contentType()->mimeType().data(), "multipart/signed" );
+  QCOMPARE( unencryptedMessage->contents().size(), 2 );
+  QCOMPARE( unencryptedMessage->contents().first()->contentType()->mimeType().data(), "text/plain" );
+  QCOMPARE( unencryptedMessage->contents().at( 1 )->contentType()->mimeType().data(), "application/pgp-signature" );
+  QCOMPARE( unencryptedMessage->contents().first()->decodedContent().data(), "encrypted message text" );
+
+  // TODO: Check that the signature is valid
 }
 
 #include "unencryptedmessagetest.moc"

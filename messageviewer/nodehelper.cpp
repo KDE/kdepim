@@ -928,4 +928,157 @@ NodeHelper::AttachmentDisplayInfo NodeHelper::attachmentDisplayInfo( KMime::Cont
   return info;
 }
 
+static KMime::Content* decryptedNodeForContent( KMime::Content *content, NodeHelper *nodeHelper )
+{
+  if ( !nodeHelper->extraContents( content ).isEmpty() ) {
+    if ( nodeHelper->extraContents( content ).size() == 1 ) {
+      return nodeHelper->extraContents( content ).first();
+    } else {
+      kWarning() << "WTF, encrypted node has multiple extra contents?";
+    }
+  }
+  return 0;
+}
+
+bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &resultingData, bool addHeaders )
+{
+  if ( node ) {
+    KMime::Content *curNode = node;
+    KMime::Content *decryptedNode = 0;
+    const QByteArray type = node->contentType( false ) ? QByteArray( node->contentType()->mediaType() ).toLower() : "text";
+    const QByteArray subType = node->contentType( false ) ? node->contentType()->subType().toLower() : "plain";
+    const bool isMultipart = node->contentType( false ) && node->contentType()->isMultipart();
+    bool isSignature = false;
+
+    kDebug() << "Looking at" << type << "/" << subType;
+
+    if ( isMultipart ) {
+      if ( subType == "signed" ) {
+        isSignature = true;
+      } else if ( subType == "encrypted" ) {
+        decryptedNode = decryptedNodeForContent( curNode, this );
+      }
+    } else if ( type == "application" ) {
+      if ( subType == "octet-stream" ) {
+        decryptedNode = decryptedNodeForContent( curNode, this );
+      } else if ( subType == "pkcs7-signature" ) {
+        isSignature = true;
+      } else if ( subType == "pkcs7-mime" ) {
+        // note: subtype pkcs7-mime can also be signed
+        //       and we do NOT want to remove the signature!
+        if ( encryptionState( curNode ) != KMMsgNotEncrypted ) {
+        decryptedNode = decryptedNodeForContent( curNode, this );
+        }
+      }
+    }
+
+    if ( decryptedNode ) {
+      kDebug() << "Current node has an associated decrypted node, adding a modified header "
+                  "and then processing the children.";
+
+      Q_ASSERT( addHeaders );
+      KMime::Content headers;
+      headers.setHead( curNode->head() );
+      headers.parse();
+      if ( decryptedNode->contentType( false ) ) {
+        headers.contentType()->from7BitString( decryptedNode->contentType()->as7BitString( false ) );
+      } else {
+        headers.removeHeader( headers.contentType()->type() );
+      }
+      if ( decryptedNode->contentTransferEncoding( false ) ) {
+        headers.contentTransferEncoding()->from7BitString( decryptedNode->contentTransferEncoding()->as7BitString( false ) );
+      } else {
+        headers.removeHeader( headers.contentTransferEncoding()->type() );
+      }
+      if ( decryptedNode->contentDisposition( false ) ) {
+        headers.contentDisposition()->from7BitString( decryptedNode->contentDisposition()->as7BitString( false ) );
+      } else {
+        headers.removeHeader( headers.contentDisposition()->type() );
+      }
+      if ( decryptedNode->contentDescription( false ) ) {
+        headers.contentDescription()->from7BitString( decryptedNode->contentDescription()->as7BitString( false ) );
+      } else {
+        headers.removeHeader( headers.contentDescription()->type() );
+      }
+      headers.assemble();
+
+      resultingData += headers.head() + '\n';
+      unencryptedMessage_helper( decryptedNode, resultingData, false );
+
+      return true;
+    }
+
+    else if ( isSignature ) {
+      kDebug() << "Current node is a signature, adding it as-is.";
+      // We can't change the nodes under the signature, as that would invalidate it. Add the signature
+      // and its child as-is
+      if ( addHeaders ) {
+        resultingData += curNode->head() + '\n';
+      }
+      resultingData += curNode->encodedBody();
+      return false;
+    }
+
+    else if ( isMultipart ) {
+      kDebug() << "Current node is a multipart node, adding its header and then processing all children.";
+      // Normal multipart node, add the header and all of its children
+      bool somethingChanged = false;
+      if ( addHeaders ) {
+        resultingData += curNode->head() + '\n';
+      }
+      const QByteArray boundary = curNode->contentType()->boundary();
+      foreach( KMime::Content *child, curNode->contents() ) {
+        resultingData += "\n--" + boundary + '\n';
+        const bool changed = unencryptedMessage_helper( child, resultingData, true );
+        if ( changed ) {
+          somethingChanged = true;
+        }
+      }
+      resultingData += "\n--" + boundary + "--\n\n";
+      return somethingChanged;
+    }
+
+    else if ( curNode->bodyIsMessage() ) {
+      kDebug() << "Current node is a message, adding the header and then processing the child.";
+      if ( addHeaders ) {
+        resultingData += curNode->head() + '\n';
+      }
+
+      return unencryptedMessage_helper( curNode->bodyAsMessage().get(), resultingData, true );
+    }
+
+    else {
+      kDebug() << "Current node is an ordinary leaf node, adding it as-is.";
+      if ( addHeaders ) {
+        resultingData += curNode->head() + '\n';
+      }
+      resultingData += curNode->body();
+      return false;
+    }
+  }
+
+  return false;
+}
+
+KMime::Message::Ptr NodeHelper::unencryptedMessage( const KMime::Message::Ptr& originalMessage )
+{
+  QByteArray resultingData;
+  const bool messageChanged = unencryptedMessage_helper( originalMessage.get(), resultingData, true );
+  if ( messageChanged ) {
+#if 0
+    kDebug() << "Resulting data is:" << resultingData;
+    QFile bla("stripped.mbox");
+    bla.open(QIODevice::WriteOnly);
+    bla.write(resultingData);
+    bla.close();
+#endif
+    KMime::Message::Ptr newMessage( new KMime::Message );
+    newMessage->setContent( resultingData );
+    newMessage->parse();
+    return newMessage;
+  } else {
+    return KMime::Message::Ptr();
+  }
+}
+
 }
