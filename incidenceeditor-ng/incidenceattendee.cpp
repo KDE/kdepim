@@ -24,6 +24,7 @@
 */
 
 #include "incidenceattendee.h"
+#include "editorconfig.h"
 
 #include <QtCore/QWeakPointer>
 #include <QtGui/QGridLayout>
@@ -35,7 +36,7 @@
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
 #include <KABC/Address>
-#include <kcalcore/event.h>
+#include <KCalCore/Event>
 #include <KComboBox>
 #include <KDebug>
 #include <KMessageBox>
@@ -228,7 +229,7 @@ bool IncidenceAttendee::isDirty() const
 
 void IncidenceAttendee::changeStatusForMe( KCalCore::Attendee::PartStat stat )
 {
-  const IncidenceEditors::EditorConfig *config = IncidenceEditors::EditorConfig::instance();
+  const IncidenceEditorsNG::EditorConfig *config = IncidenceEditorsNG::EditorConfig::instance();
 
   AttendeeData::List attendees = mAttendeeEditor->attendees();
   mAttendeeEditor->clear();
@@ -258,7 +259,7 @@ void IncidenceAttendee::declineForMe()
 void IncidenceAttendee::fillOrganizerCombo()
 {
   mUi->mOrganizerCombo->clear();
-  const QStringList lst = IncidenceEditors::EditorConfig::instance()->fullEmails();
+  const QStringList lst = IncidenceEditorsNG::EditorConfig::instance()->fullEmails();
   QStringList uniqueList;
   for ( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     if ( !uniqueList.contains( *it ) ) {
@@ -396,7 +397,7 @@ void IncidenceAttendee::slotUpdateConflictLabel( int count )
 bool IncidenceAttendee::iAmOrganizer() const
 {
   if ( mLoadedIncidence ) {
-    const IncidenceEditors::EditorConfig *config = IncidenceEditors::EditorConfig::instance();
+    const IncidenceEditorsNG::EditorConfig *config = IncidenceEditorsNG::EditorConfig::instance();
     return config->thatIsMe( mLoadedIncidence->organizer()->email() );
   }
 

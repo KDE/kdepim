@@ -37,17 +37,17 @@ AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWid
   setWindowTitle( i18n( "Create a new alarm" ) );
   mUi->setupUi( mainWidget() );
 
-  const int defaultReminderTime = IncidenceEditors::EditorConfig::instance()->reminderTime();
+  const int defaultReminderTime = IncidenceEditorsNG::EditorConfig::instance()->reminderTime();
   mUi->mAlarmOffset->setValue( defaultReminderTime );
 
-  int defaultReminderUnits = IncidenceEditors::EditorConfig::instance()->reminderTimeUnits();
+  int defaultReminderUnits = IncidenceEditorsNG::EditorConfig::instance()->reminderTimeUnits();
   if ( defaultReminderUnits < 0 || defaultReminderUnits > 2 )
     defaultReminderUnits = 0; // minutes
 
   mUi->mOffsetUnit->setCurrentIndex( defaultReminderUnits );
 
-  if ( IncidenceEditors::EditorConfig::instance()->defaultAudioFileReminders() )
-    mUi->mSoundFile->setUrl( IncidenceEditors::EditorConfig::instance()->audioFilePath() );
+  if ( IncidenceEditorsNG::EditorConfig::instance()->defaultAudioFileReminders() )
+    mUi->mSoundFile->setUrl( IncidenceEditorsNG::EditorConfig::instance()->audioFilePath() );
 
   fillCombo();
 }
@@ -138,8 +138,8 @@ void AlarmDialog::load( const Alarm::Ptr &alarm )
 
   mUi->mTypeStack->setCurrentIndex( id );
   if ( alarm->audioFile().isEmpty() &&
-       IncidenceEditors::EditorConfig::instance()->defaultAudioFileReminders() ) {
-    mUi->mSoundFile->setUrl( IncidenceEditors::EditorConfig::instance()->audioFilePath() );
+       IncidenceEditorsNG::EditorConfig::instance()->defaultAudioFileReminders() ) {
+    mUi->mSoundFile->setUrl( IncidenceEditorsNG::EditorConfig::instance()->audioFilePath() );
   }
 }
 

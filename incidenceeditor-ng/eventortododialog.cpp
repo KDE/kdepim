@@ -273,7 +273,7 @@ void EventOrTodoDialogPrivate::manageTemplates()
 {
   Q_Q( EventOrTodoDialog );
 
-  QStringList &templates = IncidenceEditors::EditorConfig::instance()->templates( mEditor->type() );
+  QStringList &templates = IncidenceEditorsNG::EditorConfig::instance()->templates( mEditor->type() );
   QPointer<IncidenceEditors::TemplateManagementDialog> dialog(
       new IncidenceEditors::TemplateManagementDialog( q, templates, mEditor->type() ) );
   q->connect( dialog, SIGNAL( loadTemplate( const QString& ) ),
@@ -307,8 +307,8 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
 {
   // I find this somewhat broken. templates() returns a reference, maybe it should
   // be changed by adding a setTemplates method.
-  IncidenceEditors::EditorConfig::instance()->templates( mEditor->type() ) = templateNames;
-  IncidenceEditors::EditorConfig::instance()->config()->writeConfig();
+  IncidenceEditorsNG::EditorConfig::instance()->templates( mEditor->type() ) = templateNames;
+  IncidenceEditorsNG::EditorConfig::instance()->config()->writeConfig();
 }
 
 
@@ -419,7 +419,7 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   mEditor->load( CalendarSupport::incidence( item ) );
 
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-  const QStringList allEmails = IncidenceEditors::EditorConfig::instance()->allEmails();
+  const QStringList allEmails = IncidenceEditorsNG::EditorConfig::instance()->allEmails();
   KCalCore::Attendee::Ptr me = incidence->attendeeByMails( allEmails );
 
   if ( incidence->attendeeCount() > 1 &&

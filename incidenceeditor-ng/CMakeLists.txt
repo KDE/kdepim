@@ -50,8 +50,8 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   categoryconfig.cpp
   categoryhierarchyreader.cpp
-  ../editorconfig.cpp
-  ../korganizereditorconfig.cpp
+  editorconfig.cpp
+  korganizereditorconfig.cpp
 )
 
 if (NOT WINCE)

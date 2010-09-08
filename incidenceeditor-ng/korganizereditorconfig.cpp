@@ -22,7 +22,7 @@
 
 using namespace KCalCore;
 using namespace CalendarSupport;
-using namespace IncidenceEditors;
+using namespace IncidenceEditorsNG;
 
 KOrganizerEditorConfig::KOrganizerEditorConfig()
   : EditorConfig()

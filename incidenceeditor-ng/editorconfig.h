@@ -24,7 +24,7 @@
 #ifndef EDITORCONFIG_H
 #define EDITORCONFIG_H
 
-#include "incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 
 #include <KCalCore/IncidenceBase>
 
@@ -35,7 +35,7 @@
 
 class KConfigSkeleton;
 
-namespace IncidenceEditors
+namespace IncidenceEditorsNG
 {
 
 /**
@@ -43,10 +43,10 @@ namespace IncidenceEditors
  * to provide application specific configurations to the editor.
  *
  */
-class INCIDENCEEDITORS_EXPORT EditorConfig
+class INCIDENCEEDITORS_NG_EXPORT EditorConfig
 {
   public:
-    explicit EditorConfig();
+    EditorConfig();
     virtual ~EditorConfig();
 
     static EditorConfig *instance();
@@ -92,6 +92,6 @@ class INCIDENCEEDITORS_EXPORT EditorConfig
     Private *const d;
 };
 
-} // namespace IncidenceEditors
+} // namespace IncidenceEditorsNG
 
 #endif

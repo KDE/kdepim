@@ -26,7 +26,7 @@
 */
 
 #include "editorfreebusy.h"
-#include "../editorconfig.h"
+#include "editorconfig.h"
 #include "freebusyurldialog.h"
 
 #include "attendeedata.h"
@@ -42,7 +42,7 @@
 
 #include <KPIMUtils/Email>
 
-#include <kcalutils/stringify.h>
+#include <KCalUtils/Stringify>
 
 #include <KComboBox>
 #include <KLocale>
@@ -940,7 +940,7 @@ void EditorFreeBusy::clearSelection() const
 
 void EditorFreeBusy::changeStatusForMe( AttendeeData::PartStat status )
 {
-  const QStringList myEmails = IncidenceEditors::EditorConfig::instance()->allEmails();
+  const QStringList myEmails = IncidenceEditorsNG::EditorConfig::instance()->allEmails();
   Q_FOREACH ( FreeBusyItem *item, mFreeBusyItems ) {
     for ( QStringList::ConstIterator it2( myEmails.begin() ), end( myEmails.end() );
           it2 != end; ++it2 ) {

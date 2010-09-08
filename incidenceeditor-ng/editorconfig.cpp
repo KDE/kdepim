@@ -28,7 +28,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QStringList>
 
-using namespace IncidenceEditors;
+using namespace IncidenceEditorsNG;
 
 class EditorConfig::Private
 {

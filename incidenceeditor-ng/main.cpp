@@ -30,11 +30,10 @@
 #include <KCalCore/Todo>
 #include <KCalCore/Journal>
 
-#include "../korganizereditorconfig.h"
+#include "korganizereditorconfig.h"
 #include "eventortododialog.h"
 #include "incidencedefaults.h"
 
-using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
 
 int main( int argc, char **argv )

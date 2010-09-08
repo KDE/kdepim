@@ -23,12 +23,12 @@
 
 #include <KCalCore/IncidenceBase>
 
-namespace IncidenceEditors {
+namespace IncidenceEditorsNG {
 
-class INCIDENCEEDITORS_EXPORT KOrganizerEditorConfig : public IncidenceEditors::EditorConfig
+class INCIDENCEEDITORS_NG_EXPORT KOrganizerEditorConfig : public IncidenceEditorsNG::EditorConfig
 {
   public:
-    explicit KOrganizerEditorConfig();
+    KOrganizerEditorConfig();
     virtual ~KOrganizerEditorConfig();
 
     virtual KConfigSkeleton *config() const;
