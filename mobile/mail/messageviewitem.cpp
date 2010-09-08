@@ -116,4 +116,9 @@ void MessageViewItem::simulateMouseClick( const QPoint &pos )
   m_viewer->d_ptr->mViewer->event( event );
 }
 
+Viewer* MessageViewItem::viewer()
+{
+    return m_viewer;
+}
+
 #include "messageviewitem.moc"

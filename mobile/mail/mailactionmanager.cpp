@@ -56,7 +56,7 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action = actionCollection->addAction("message_reply_to_author");
   action->setText( i18n("Reply to Author") );
 
-    action = actionCollection->addAction("message_reply_to_list");
+  action = actionCollection->addAction("message_reply_to_list");
   action->setText( i18n("Reply to Mailing List") );
 
   action = actionCollection->addAction("message_reply_variants");
@@ -81,6 +81,16 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
 
   action = actionCollection->addAction("message_edit");
   action->setText( i18n("Edit Email") );
+
+  action = actionCollection->addAction("prefer_html_to_plain");
+  action->setText( i18n("Prefer HTML to Plain Text") );
+  action->setCheckable(true);
+  action->setChecked(false);
+
+  action = actionCollection->addAction("load_external_ref");
+  action->setText( i18n("Load External References") );
+  action->setCheckable(true);
+  action->setChecked(false);
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

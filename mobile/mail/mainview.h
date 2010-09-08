@@ -69,6 +69,8 @@ class MainView : public KDeclarativeMainView
     void replyToMessage();
     void sendAgain();
     void saveMessage();
+    void preferHTML(bool useHtml);
+    void loadExternalReferences(bool load);
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

@@ -52,6 +52,8 @@ class MessageViewItem : public DeclarativeAkonadiItem
 
     QObject* attachmentModel() const;
 
+    Viewer *viewer();
+
     virtual qint64 itemId() const;
     virtual void setItemId( qint64 id );
 

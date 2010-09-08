@@ -24,6 +24,7 @@
 #include "mailactionmanager.h"
 #include "global.h"
 #include "messageviewitem.h"
+#include "messageviewer/viewer.h"
 
 #include "savemailcommand_p.h"
 
@@ -100,6 +101,8 @@ void MainView::delayedInit()
   connect(actionCollection()->action("message_edit"), SIGNAL(triggered(bool)), SLOT(sendAgain())); //do the same under a different name
   connect(actionCollection()->action("message_save_as"), SIGNAL(triggered(bool)), SLOT(saveMessage()));
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
+  connect(actionCollection()->action("prefer_html_to_plain"), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)));
+  connect(actionCollection()->action("load_external_ref"), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 
@@ -651,7 +654,40 @@ void MainView::saveMessage()
     command->execute();
 }
 
+void MainView::preferHTML(bool useHtml)
+{
+  QGraphicsObject *root = rootObject();
+  MessageViewer::MessageViewItem* item = 0;
+  Q_FOREACH(QObject* obj, root->children())
+  {
+      if (dynamic_cast<MessageViewer::MessageViewItem*>(obj)) {
+        item = static_cast<MessageViewer::MessageViewItem*>(obj);
+        break;
+    }
+  }
 
+  if (item) {
+      item->viewer()->setHtmlOverride( useHtml );
+  }
+}
+
+
+void MainView::loadExternalReferences(bool load)
+{
+  QGraphicsObject *root = rootObject();
+  MessageViewer::MessageViewItem* item = 0;
+  Q_FOREACH(QObject* obj, root->children())
+  {
+      if (dynamic_cast<MessageViewer::MessageViewItem*>(obj)) {
+        item = static_cast<MessageViewer::MessageViewItem*>(obj);
+        break;
+    }
+  }
+
+  if (item) {
+      item->viewer()->setHtmlLoadExtOverride( load );
+  }
+}
 
 // #############################################################
 
