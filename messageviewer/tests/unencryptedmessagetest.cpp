@@ -31,6 +31,7 @@ class UnencryptedMessageTest : public QObject
   private slots:
     void initTestCase();
     void testOpenPGPSignedEncrypted();
+    void testOpenPGPEncrypted();
 };
 
 QTEST_KDEMAIN( UnencryptedMessageTest, GUI )
@@ -67,6 +68,25 @@ void UnencryptedMessageTest::testOpenPGPSignedEncrypted()
   QCOMPARE( unencryptedMessage->contents().first()->decodedContent().data(), "encrypted message text" );
 
   // TODO: Check that the signature is valid
+}
+
+void UnencryptedMessageTest::testOpenPGPEncrypted()
+{
+  KMime::Message::Ptr originalMessage = readAndParseMail( "openpgp-encrypted.mbox" );
+
+  NodeHelper nodeHelper;
+  EmptySource emptySource;
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+  otp.parseObjectTree( originalMessage.get() );
+
+  QCOMPARE( otp.textualContent().toAscii().data(), "encrypted message text" );
+  QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgFullyEncrypted );
+
+  // Now, test that the unencrypted message is generated correctly
+  KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage( originalMessage );
+  QCOMPARE( unencryptedMessage->contentType()->mimeType().data(), "text/plain" );
+  QCOMPARE( unencryptedMessage->decodedContent().data(), "encrypted message text" );
+  QCOMPARE( unencryptedMessage->contents().size(), 0 );
 }
 
 #include "unencryptedmessagetest.moc"
