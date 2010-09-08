@@ -50,7 +50,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
 
 # remove eventually?
 if (NOT WINCE)
-  target_link_libraries(messageviewer_bodypartformatter_text_calendar incidenceeditors)
+  target_link_libraries(messageviewer_bodypartformatter_text_calendar incidenceeditorsng)
 endif (NOT WINCE)
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})

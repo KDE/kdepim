@@ -23,11 +23,6 @@ target_link_libraries(tasks-mobile
   kdepim
 )
 
-# not built under WinCE, should be going away eventually anyway
-if (NOT WINCE)
-  target_link_libraries(tasks-mobile incidenceeditors)
-endif (NOT WINCE)
-
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES tasks-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES tasks-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
