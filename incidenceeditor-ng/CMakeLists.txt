@@ -80,8 +80,8 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
-  ../categoryselectdialog_base.ui
-  ../template_management_dialog_base.ui
+  categoryselectdialog_base.ui
+  template_management_dialog_base.ui
   eventortododesktop.ui
   alarmdialog.ui
   attachmenteditdialog.ui
@@ -119,8 +119,8 @@ endif(NOT WINCE)
   )
 
   kde4_add_ui_files(incidenceeditors_ng_mobile_LIB_SRCS
-    ../categoryselectdialog_base.ui
-    ../editoralarms_base.ui
+    categoryselectdialog_base.ui
+    editoralarms_base.ui
     eventortododesktop.ui
     eventortodomobile.ui
     eventortodomoremobile.ui
