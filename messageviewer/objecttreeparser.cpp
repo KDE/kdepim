@@ -760,8 +760,8 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
 
 void ObjectTreeParser::writeDeferredDecryptionBlock()
 {
-  const QString iconName = KIconLoader::global()->iconPath( "document-decrypt",
-                                                            KIconLoader::Small );
+  const QString iconName = "file://" + KIconLoader::global()->iconPath( "document-decrypt",
+                                                                        KIconLoader::Small );
   const QString decryptedData = "<div style=\"font-size:large; text-align:center;"
         "padding-top:20pt;\">"
         + i18n("This message is encrypted.")
