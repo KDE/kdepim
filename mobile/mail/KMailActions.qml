@@ -196,7 +196,7 @@ ActionMenuContainer {
     category: "mail_viewer"
     name : "mail_viewer_edit"
     text : KDE.i18n( "Edit" )
-    FakeAction { name : "edit_email" }
+    ActionListItem { name : "message_edit" }
     ActionListItem { name : "akonadi_item_copy_to_menu" }
     ActionListItem { name : "akonadi_item_move_to_menu" }
     ActionListItem { name : "akonadi_item_delete" }

@@ -78,6 +78,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
 
   action = actionCollection->addAction("message_save_as");
   action->setText( i18n("Save As...") );
+
+  action = actionCollection->addAction("message_edit");
+  action->setText( i18n("Edit Email") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)
