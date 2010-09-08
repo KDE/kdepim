@@ -19,12 +19,10 @@
 */
 
 #include <libqopensync/engine.h>
-#include <libqopensync/member.h>
-#include <libqopensync/result.h>
+#include <libqopensync/environment.h>
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <kmessagebox.h>
 
 #include "syncprocess.h"
 #include "syncprocessmanager.h"
@@ -62,20 +60,13 @@ TQString SyncProcess::memberStatus( const QSync::Member& ) const
 
 QSync::Result SyncProcess::addMember( const QSync::Plugin &plugin )
 {
-  QSync::Member member = mGroup.addMember( plugin );
-  QSync::Result result = member.instance();
+  QSync::Member member = mGroup.addMember();
+  QSync::Result result = member.instance( plugin );
 
   if ( !result.isError() )
     mGroup.save();
 
   return result;
-}
-
-void SyncProcess::removeMember( const QSync::Member &member )
-{
-  member.cleanup();
-  mGroup.removeMember( member );
-  mGroup.save();
 }
 
 void SyncProcess::reinitEngine()
@@ -84,14 +75,34 @@ void SyncProcess::reinitEngine()
   delete mEngine;
   mEngine = new QSync::Engine( mGroup );
   Result result = mEngine->initialize();
-  if ( result.isError() ) {
+  if ( result.isError() )
     kdDebug() << "SyncProcess::reinitEngine: " << result.message() << endl;
-    KMessageBox::error( 0, i18n("Error initializing Synchronization Engine for group \"%1\":\n %2")
-		    .arg( mGroup.name() ).arg( result.message() ) );
 
-  }
+  applyObjectTypeFilter();
 
   emit engineChanged( mEngine );
+}
+
+void SyncProcess::applyObjectTypeFilter()
+{
+  const QSync::Conversion conversion = SyncProcessManager::self()->environment()->conversion();
+  const TQStringList objectTypes = conversion.objectTypes();
+  const TQStringList activeObjectTypes = mGroup.config().activeObjectTypes();
+
+  for ( uint i = 0; i < objectTypes.count(); ++i ) {
+    if ( activeObjectTypes.contains( objectTypes[ i ] ) ) {
+      kdDebug() << "Enabled object type: " <<  objectTypes[ i ] << endl;
+      /*
+       * This is not required. Also this lead to filtering problems when sync with "file-sync".
+       * Uncomment this line again when OpenSync is fixed!
+       *
+       * mGroup.setObjectTypeEnabled( objectTypes[ i ], true );
+       */
+    } else {
+      kdDebug() << "Disabled object type: " <<  objectTypes[ i ] << endl;
+      mGroup.setObjectTypeEnabled( objectTypes[ i ], false );
+    }
+  }
 }
 
 #include "syncprocess.moc"

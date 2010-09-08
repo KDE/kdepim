@@ -20,11 +20,7 @@
 */
 
 #include <opensync/opensync.h>
-#include <opensync/opensync-engine.h>
-
-#include "group.h"
-#include "member.h"
-#include "result.h"
+#include <osengine/engine.h>
 
 #include "engine.h"
 
@@ -33,21 +29,19 @@ using namespace QSync;
 Engine::Engine( const Group &group )
 {
   OSyncError *error = 0;
-  mEngine = osync_engine_new( group.mGroup, &error );
+  mEngine = osengine_new( group.mGroup, &error );
 }
 
 Engine::~Engine()
 {
-  osync_engine_unref( mEngine );
+  osengine_free( mEngine );
   mEngine = 0;
 }
 
 Result Engine::initialize()
 {
-  Q_ASSERT( mEngine );
-
   OSyncError *error = 0;
-  if ( !osync_engine_initialize	( mEngine, &error ) )
+  if ( !osengine_init( mEngine, &error ) )
     return Result( &error );
   else
     return Result();
@@ -55,29 +49,13 @@ Result Engine::initialize()
 
 void Engine::finalize()
 {
-  Q_ASSERT( mEngine );
-
-  OSyncError *error = 0;
-  osync_engine_finalize( mEngine , &error );
+  osengine_finalize( mEngine );
 }
 
 Result Engine::synchronize()
 {
-  Q_ASSERT( mEngine );
-
   OSyncError *error = 0;
-  if ( !osync_engine_synchronize( mEngine, &error ) )
-    return Result( &error );
-  else
-    return Result();
-}
-
-Result Engine::discover( const Member &member )
-{
-  Q_ASSERT( mEngine );
-
-  OSyncError *error = 0;
-  if ( !osync_engine_discover_and_block( mEngine, member.mMember, &error ) )
+  if ( !osengine_synchronize( mEngine, &error ) )
     return Result( &error );
   else
     return Result();
@@ -85,9 +63,5 @@ Result Engine::discover( const Member &member )
 
 void Engine::abort()
 {
-  Q_ASSERT( mEngine );
-
-// TODO
-//  osync_engine_abort( mEngine );
+  osengine_abort( mEngine );
 }
-

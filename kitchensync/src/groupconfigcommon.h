@@ -30,8 +30,6 @@ class KLineEdit;
 class SyncProcess;
 class TQCheckBox;
 
-//TODO: Conversation needs to be ported before...
-#if 0
 class ObjectTypeSelector : public TQWidget
 {
   public:
@@ -43,7 +41,6 @@ class ObjectTypeSelector : public TQWidget
   private:
     TQMap<TQString,TQCheckBox *> mObjectTypeChecks;
 };
-#endif
 
 class GroupConfigCommon : public QWidget
 {
@@ -55,7 +52,7 @@ class GroupConfigCommon : public QWidget
 
   private:
     KLineEdit *mGroupName;
-  //  ObjectTypeSelector *mObjectTypeSelector;
+    ObjectTypeSelector *mObjectTypeSelector;
 
     SyncProcess *mSyncProcess;
 };

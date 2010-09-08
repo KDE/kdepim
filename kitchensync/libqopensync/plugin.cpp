@@ -20,7 +20,6 @@
 */
 
 #include <opensync/opensync.h>
-#include <opensync/opensync-plugin.h>
 
 #include "plugin.h"
 

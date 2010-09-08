@@ -39,10 +39,8 @@ class ChangeItem : public KWidgetListItem
     {
       TQGridLayout *layout = new TQGridLayout( this, 2, 1, KDialog::marginHint(), KDialog::spacingHint() );
 
-      // TODO change doesn't contain member as struct member .. use SyncMapping to determine the correct member.
-      //MemberInfo mi( change.member() );
-      //layout->addWidget( new TQLabel( mi.name(), this ), 0, 0 );
-      layout->addWidget( new TQLabel( "PORTING TODO", this ), 0, 0 );
+      MemberInfo mi( change.member() );
+      layout->addWidget( new TQLabel( mi.name(), this ), 0, 0 );
 
       TQString type;
       switch ( change.changeType() ) {

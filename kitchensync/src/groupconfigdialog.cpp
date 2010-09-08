@@ -28,7 +28,7 @@
 
 GroupConfigDialog::GroupConfigDialog( TQWidget *parent, SyncProcess *process )
   : KDialogBase( parent, 0, true, i18n("Configure Synchronization Group"),
-     Ok | User1 | User2, Ok )
+     Ok )
 {
   TQFrame *topFrame = makeMainWidget();
 
@@ -40,13 +40,6 @@ GroupConfigDialog::GroupConfigDialog( TQWidget *parent, SyncProcess *process )
   mConfigWidget->setSyncProcess( process );
 
   setInitialSize( configDialogSize( "size_groupconfigdialog" ) );
-
-  enableButton( User1, false );
-  setButtonText( User1, i18n( "Remove Member" ) );
-
-  connect( mConfigWidget, TQT_SIGNAL( memberSelected( bool ) ), TQT_SLOT( memberSelected( bool ) ) );
-
-  setButtonText( User2, i18n("Add Member...") );
 }
 
 GroupConfigDialog::~GroupConfigDialog()
@@ -59,21 +52,6 @@ void GroupConfigDialog::slotOk()
   mConfigWidget->saveConfig();
 
   accept();
-}
-
-void GroupConfigDialog::slotUser1()
-{
-  mConfigWidget->removeMember();
-}
-
-void GroupConfigDialog::slotUser2()
-{
-  mConfigWidget->addMember();
-}
-
-void GroupConfigDialog::memberSelected( bool selected )
-{
-  enableButton( User1, selected );
 }
 
 #include "groupconfigdialog.moc"

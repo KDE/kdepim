@@ -23,10 +23,7 @@
 
 #include "syncprocess.h"
 
-#include <libqopensync/groupenv.h>
-#include <libqopensync/member.h>
-#include <libqopensync/pluginenv.h>
-#include <libqopensync/result.h>
+#include <libqopensync/environment.h>
 
 #include <kstaticdeleter.h>
 #include <kmessagebox.h>
@@ -46,24 +43,14 @@ SyncProcessManager *SyncProcessManager::self()
 
 SyncProcessManager::SyncProcessManager()
 {
-  mGroupEnv = new QSync::GroupEnv;
-  QSync::Result result = mGroupEnv->initialize();
+  mEnvironment = new QSync::Environment;
+  QSync::Result result = mEnvironment->initialize();
   if ( result.isError() ) {
     KMessageBox::error( 0, i18n("Error initializing OpenSync.\n%1")
       .arg( result.message() ) );
   } else {
-    initGroup( mGroupEnv );
+    init( mEnvironment );
   }
-
-  mPluginEnv = new QSync::PluginEnv;
-  result = mPluginEnv->initialize();
-  if ( result.isError() ) {
-    KMessageBox::error( 0, i18n("Error initializing OpenSync.\n%1")
-      .arg( result.message() ) );
-  } else {
-//    initPlugin( mPluginEnv );
-  }
-
 }
 
 SyncProcessManager::~SyncProcessManager()
@@ -74,8 +61,8 @@ SyncProcessManager::~SyncProcessManager()
 
   mProcesses.clear();
 
-  mGroupEnv->finalize();
-  delete mGroupEnv;
+  mEnvironment->finalize();
+  delete mEnvironment;
 }
 
 int SyncProcessManager::count() const
@@ -115,7 +102,8 @@ void SyncProcessManager::addGroup( const TQString &name )
 {
   SyncProcess* process = byGroupName( name );
   if ( !process ) {
-    QSync::Group group = mGroupEnv->addGroup( name );
+    QSync::Group group = mEnvironment->addGroup();
+    group.setName( name );
     group.save();
 
     mProcesses.append( new SyncProcess( group ) );
@@ -132,21 +120,22 @@ void SyncProcessManager::remove( SyncProcess *syncProcess )
     const QSync::Group group = syncProcess->group();
     delete syncProcess;
 
-    mGroupEnv->removeGroup( group );
+    mEnvironment->removeGroup( group );
 
     emit changed();
   }
 }
 
-void SyncProcessManager::initGroup( QSync::GroupEnv *groupEnv )
+void SyncProcessManager::init( QSync::Environment *environment )
 {
-  for ( int i = 0; i < groupEnv->groupCount(); ++i ) {
+  QSync::Environment::GroupIterator it( environment->groupBegin() );
+  for ( ; it != environment->groupEnd(); ++it ) {
     /**
      * We check whether the group is valid before we append them
      * to mProcesses. That avoids crashes if the plugin of one of
      * the members isn't loaded (e.g. not installed).
      */
-    const QSync::Group group = groupEnv->groupAt( i );
+    const QSync::Group group = *it;
     int count = group.memberCount();
 
     bool isValid = true;
@@ -160,7 +149,7 @@ void SyncProcessManager::initGroup( QSync::GroupEnv *groupEnv )
     }
 
     if ( isValid )
-      mProcesses.append( new SyncProcess( group ) );
+      mProcesses.append( new SyncProcess( *it ) );
   }
 
   emit changed();
@@ -178,15 +167,6 @@ QSync::Result SyncProcessManager::addMember( SyncProcess *process,
   }
 
   return result;
-}
-
-void SyncProcessManager::removeMember( SyncProcess *process, const QSync::Member &member )
-{
-  Q_ASSERT( process );
-
-  process->removeMember( member );
-  process->group().save();
-  emit syncProcessChanged( process );
 }
 
 #include "syncprocessmanager.moc"

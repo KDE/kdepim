@@ -25,7 +25,7 @@
 #include <libqopensync/syncchange.h>
 
 class OSyncEngine;
-class OSyncMappingEngine;
+class OSyncMapping;
 
 namespace QSync {
 
@@ -35,7 +35,7 @@ class SyncMapping
 
   public:
     SyncMapping();
-    SyncMapping( OSyncMappingEngine*, OSyncEngine* );
+    SyncMapping( OSyncMapping*, OSyncEngine* );
     ~SyncMapping();
 
     bool isValid() const;
@@ -51,7 +51,7 @@ class SyncMapping
 
   private:
     OSyncEngine *mEngine;
-    OSyncMappingEngine *mMappingEngine;
+    OSyncMapping *mMapping;
 };
 
 }

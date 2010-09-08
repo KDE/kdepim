@@ -26,8 +26,7 @@
 #include <libqopensync/group.h>
 
 namespace QSync {
-class GroupEnv;
-class PluginEnv;
+class Environment;
 }
 
 class SyncProcess;
@@ -44,14 +43,9 @@ class SyncProcessManager : public QObject
     ~SyncProcessManager();
 
     /**
-      Return OpenSync GroupEnv.
+      Return OpenSync Environment.
     */
-    QSync::GroupEnv *groupEnv() const { return mGroupEnv; }
-
-    /**
-      Return OpenSync PluginEnv.
-    */
-    QSync::PluginEnv *pluginEnv() const { return mPluginEnv; }
+    QSync::Environment *environment() const { return mEnvironment; }
 
     /**
       Returns the number of SyncProcesses.
@@ -88,11 +82,6 @@ class SyncProcessManager : public QObject
      */
     QSync::Result addMember( SyncProcess *process, const QSync::Plugin &plugin );
 
-    /**
-      Removes the @param member from the group of @param process.
-     */
-    void removeMember( SyncProcess *process, const QSync::Member &member );
-
   signals:
     void changed();
     void syncProcessChanged( SyncProcess *process );
@@ -100,12 +89,10 @@ class SyncProcessManager : public QObject
   private:
     SyncProcessManager();
 
-    void initGroup( QSync::GroupEnv *groupEnv );
-//    void initPlugin( QSync::PluginEnv *pluginEnv );
+    void init( QSync::Environment *environment );
 
     TQValueList<SyncProcess*> mProcesses;
-    QSync::GroupEnv *mGroupEnv;
-    QSync::PluginEnv *mPluginEnv;
+    QSync::Environment *mEnvironment;
 
     static SyncProcessManager *mSelf;
 };

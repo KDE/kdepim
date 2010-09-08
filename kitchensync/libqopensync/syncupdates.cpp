@@ -19,8 +19,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <opensync/opensync.h>
-#include <opensync/opensync-engine.h>
+#include <osengine/engine.h>
 
 #include "syncupdates.h"
 
@@ -33,26 +32,32 @@ SyncMemberUpdate::SyncMemberUpdate()
 SyncMemberUpdate::SyncMemberUpdate( OSyncMemberUpdate *update )
 {
   switch ( update->type ) {
-    case OSYNC_CLIENT_EVENT_CONNECTED:
+    case MEMBER_CONNECTED:
       mType = Connected;
       break;
-    case OSYNC_CLIENT_EVENT_DISCONNECTED:
+    case MEMBER_SENT_CHANGES:
+      mType = SentChanges;
+      break;
+    case MEMBER_COMMITTED_ALL:
+      mType = CommittedAll;
+      break;
+    case MEMBER_DISCONNECTED:
       mType = Disconnected;
       break;
-    case OSYNC_CLIENT_EVENT_READ:
-      mType = Read; 
+    case MEMBER_CONNECT_ERROR:
+      mType = ConnectError;
       break;
-    case OSYNC_CLIENT_EVENT_WRITTEN:
-      mType = Written;
+    case MEMBER_GET_CHANGES_ERROR:
+      mType = GetChangesError;
       break;
-    case OSYNC_CLIENT_EVENT_SYNC_DONE:
-      mType = SyncDone;
+    case MEMBER_COMMITTED_ALL_ERROR:
+      mType = CommittedAllError;
       break;
-    case OSYNC_CLIENT_EVENT_DISCOVERED:
-      mType = Discovered;
+    case MEMBER_SYNC_DONE_ERROR:
+      mType = SyncDoneError;
       break;
-    case OSYNC_CLIENT_EVENT_ERROR:
-      mType = Error;
+    case MEMBER_DISCONNECT_ERROR:
+      mType = DisconnectedError;
       break;
   }
 
@@ -89,14 +94,20 @@ SyncChangeUpdate::SyncChangeUpdate()
 SyncChangeUpdate::SyncChangeUpdate( OSyncChangeUpdate *update )
 {
   switch ( update->type ) {
-    case OSYNC_CHANGE_EVENT_READ:
-      mType = Read;
+    case CHANGE_RECEIVED:
+      mType = Received;
       break;
-    case OSYNC_CHANGE_EVENT_WRITTEN:
-      mType = Written;
+    case CHANGE_RECEIVED_INFO:
+      mType = ReceivedInfo;
       break;
-    case OSYNC_CHANGE_EVENT_ERROR:
-      mType = Error;
+    case CHANGE_SENT:
+      mType = Sent;
+      break;
+    case CHANGE_WRITE_ERROR:
+      mType = WriteError;
+      break;
+    case CHANGE_RECV_ERROR:
+      mType = ReceiveError;
       break;
   }
 
@@ -104,7 +115,7 @@ SyncChangeUpdate::SyncChangeUpdate( OSyncChangeUpdate *update )
     mResult = Result( &(update->error) );
 
   mChange = SyncChange( update->change );
-  mMember.mMember = update->member;
+  mMemberId = update->member_id;
   mMappingId = update->mapping_id;
 }
 
@@ -127,9 +138,9 @@ SyncChange SyncChangeUpdate::change() const
   return mChange;
 }
 
-Member SyncChangeUpdate::member() const
+int SyncChangeUpdate::memberId() const
 {
-  return mMember;
+  return mMemberId;
 }
 
 int SyncChangeUpdate::mappingId() const
@@ -144,14 +155,14 @@ SyncMappingUpdate::SyncMappingUpdate()
 SyncMappingUpdate::SyncMappingUpdate( OSyncMappingUpdate *update, OSyncEngine *engine )
 {
   switch ( update->type ) {
-    case OSYNC_MAPPING_EVENT_SOLVED:
+    case MAPPING_SOLVED:
       mType = Solved;
       break;
-//    case OSYNC_MAPPING_EVENT_SYNCED:
-  //    mType = Synced;
-    //  break;
-    case OSYNC_MAPPING_EVENT_ERROR:
-      mType = Error;
+    case MAPPING_SYNCED:
+      mType = Synced;
+      break;
+    case MAPPING_WRITE_ERROR:
+      mType = WriteError;
       break;
   }
 
@@ -160,9 +171,7 @@ SyncMappingUpdate::SyncMappingUpdate( OSyncMappingUpdate *update, OSyncEngine *e
 
   mWinner = update->winner;
   mMapping.mEngine = engine;
-
-  // TODO PORTING
-//  mMapping.mMapping = update->mapping;
+  mMapping.mMapping = update->mapping;
 }
 
 SyncMappingUpdate::~SyncMappingUpdate()
@@ -196,32 +205,29 @@ SyncEngineUpdate::SyncEngineUpdate()
 SyncEngineUpdate::SyncEngineUpdate( OSyncEngineUpdate *update )
 {
   switch ( update->type ) {
-    case OSYNC_ENGINE_EVENT_CONNECTED:
-      mType = Connected;
+    case ENG_ENDPHASE_CON:
+      mType = EndPhaseConnected;
       break;
-    case OSYNC_ENGINE_EVENT_READ:
-      mType = Read;
+    case ENG_ENDPHASE_READ:
+      mType = EndPhaseRead;
       break;
-    case OSYNC_ENGINE_EVENT_WRITTEN:
-      mType = Written;
+    case ENG_ENDPHASE_WRITE:
+      mType = EndPhaseWrite;
       break;
-    case OSYNC_ENGINE_EVENT_DISCONNECTED: 
-      mType = Disconnected;
+    case ENG_ENDPHASE_DISCON:
+      mType = EndPhaseDisconnected;
       break;
-    case OSYNC_ENGINE_EVENT_ERROR:
+    case ENG_ERROR:
       mType = Error;
       break;
-    case OSYNC_ENGINE_EVENT_SUCCESSFUL:
-      mType = SyncSuccessful;
+    case ENG_SYNC_SUCCESSFULL:
+      mType = SyncSuccessfull;
       break;
-    case OSYNC_ENGINE_EVENT_PREV_UNCLEAN:
+    case ENG_PREV_UNCLEAN:
       mType = PrevUnclean;
       break;
-    case OSYNC_ENGINE_EVENT_END_CONFLICTS:
+    case ENG_END_CONFLICTS:
       mType = EndConflicts;
-      break;
-    case OSYNC_ENGINE_EVENT_SYNC_DONE:
-      mType = SyncDone;
       break;
   }
 

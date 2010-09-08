@@ -24,7 +24,7 @@
 #include "memberinfo.h"
 #include "syncprocessmanager.h"
 
-#include <libqopensync/pluginenv.h>
+#include <libqopensync/environment.h>
 
 #include <kdialog.h>
 #include <kglobal.h>
@@ -77,14 +77,12 @@ void PluginPicker::updatePluginList()
 {
   mPluginList->clear();
 
-  const QSync::PluginEnv *env = SyncProcessManager::self()->pluginEnv();
+  QSync::Environment *env = SyncProcessManager::self()->environment();
 
-  for ( int i = 0; i < env->pluginCount(); ++i ) {
-    QSync::Plugin plugin = env->pluginAt( i );
-
-    if ( plugin.isValid() )
-      mPluginList->appendItem( new PluginItem( mPluginList, plugin ) );
-
+  QSync::Environment::PluginIterator it( env->pluginBegin() );
+  for( ; it != env->pluginEnd(); ++it ) {
+    QSync::Plugin plugin = *it;
+    mPluginList->appendItem( new PluginItem( mPluginList, plugin ) );
   }
 }
 

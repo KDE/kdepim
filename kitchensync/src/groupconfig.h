@@ -40,19 +40,12 @@ class GroupConfig : public QWidget
 
     void setSyncProcess( SyncProcess *process );
 
-    void saveConfig();
-
-  public slots:
-    void addMember();
-    void removeMember();
-
     void updateMembers();
 
-  signals:
-    void memberSelected( bool );
+    void saveConfig();
 
   protected slots:
-    void memberWidgetSelected( TQWidget* );
+    void addMember();
 
   private:
     TQLabel *mNameLabel;
@@ -62,8 +55,8 @@ class GroupConfig : public QWidget
     SyncProcess *mProcess;
 
     GroupConfigCommon *mCommonConfig;
-    TQMap<TQWidget*, MemberConfig*> mMemberConfigs;
-    TQValueList<TQFrame*> mConfigPages;
+    TQValueList<MemberConfig *> mMemberConfigs;
+    TQValueList<TQFrame *> mConfigPages;
 };
 
 #endif

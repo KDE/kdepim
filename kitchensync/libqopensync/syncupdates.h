@@ -42,12 +42,14 @@ class SyncMemberUpdate
   public:
     enum Type {
       Connected,
+      SentChanges,
+      CommittedAll,
       Disconnected,
-      Read,
-      Written,
-      SyncDone,
-      Discovered,
-      Error
+      ConnectError,
+      GetChangesError,
+      CommittedAllError,
+      SyncDoneError,
+      DisconnectedError
     };
 
     SyncMemberUpdate();
@@ -70,9 +72,11 @@ class SyncChangeUpdate
 
   public:
     enum Type {
-      Read = 1,
-      Written,
-      Error
+      Received = 1,
+      ReceivedInfo,
+      Sent,
+      WriteError,
+      ReceiveError
     };
 
     SyncChangeUpdate();
@@ -82,14 +86,14 @@ class SyncChangeUpdate
     Type type() const;
     Result result() const;
     SyncChange change() const;
-    Member member() const;
+    int memberId() const;
     int mappingId() const;
 
   private:
     Type mType;
     Result mResult;
     SyncChange mChange;
-    Member mMember;
+    int mMemberId;
     int mMappingId;
 };
 
@@ -100,8 +104,8 @@ class SyncMappingUpdate
   public:
     enum Type {
       Solved = 1,
-      //Synced,
-      Error
+      Synced,
+      WriteError
     };
 
     SyncMappingUpdate();
@@ -126,15 +130,14 @@ class SyncEngineUpdate
 
   public:
     enum Type {
-      Connected = 1,
-      Read,
-      Written,
-      Disconnected,
+      EndPhaseConnected = 1,
+      EndPhaseRead,
+      EndPhaseWrite,
+      EndPhaseDisconnected,
       Error,
-      SyncSuccessful,
+      SyncSuccessfull,
       PrevUnclean,
-      EndConflicts,
-      SyncDone
+      EndConflicts
     };
 
     SyncEngineUpdate();

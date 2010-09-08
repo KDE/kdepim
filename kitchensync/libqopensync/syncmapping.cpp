@@ -20,20 +20,19 @@
 */
 
 #include <tqstring.h>
-#include <opensync/opensync.h>
-#include <opensync/opensync-engine.h>
+#include <osengine/engine.h>
 
 #include "syncmapping.h"
 
 using namespace QSync;
 
 SyncMapping::SyncMapping()
-  : mEngine( 0 ), mMappingEngine( 0 )
+  : mEngine( 0 ), mMapping( 0 )
 {
 }
 
-SyncMapping::SyncMapping( OSyncMappingEngine *mapping, OSyncEngine *engine )
-  : mEngine( engine ), mMappingEngine( mapping )
+SyncMapping::SyncMapping( OSyncMapping *mapping, OSyncEngine *engine )
+  : mEngine( engine ), mMapping( mapping )
 {
 }
 
@@ -43,64 +42,58 @@ SyncMapping::~SyncMapping()
 
 bool SyncMapping::isValid() const
 {
-  return ( mEngine != 0 && mMappingEngine != 0 );
+  return ( mEngine != 0 && mMapping != 0 );
 }
 
-/*
 long long SyncMapping::id() const
 {
-  Q_ASSERT( mMappingEngine );
+  Q_ASSERT( mMapping );
 
-  return osync_mapping_engine_get_id( mMappingEngine );
+  return osengine_mapping_get_id( mMapping );
 }
-*/
 
 void SyncMapping::duplicate()
 {
   Q_ASSERT( mEngine );
-  Q_ASSERT( mMappingEngine );
+  Q_ASSERT( mMapping );
 
-  OSyncError *error = 0;
-
-  osync_mapping_engine_duplicate( mMappingEngine, &error );
+  osengine_mapping_duplicate( mEngine, mMapping );
 }
 
 void SyncMapping::solve( const SyncChange &change )
 {
   Q_ASSERT( mEngine );
-  Q_ASSERT( mMappingEngine );
+  Q_ASSERT( mMapping );
   Q_ASSERT( change.isValid() );
 
-  OSyncError *error = 0;
-
-  osync_mapping_engine_solve( mMappingEngine, change.mSyncChange, &error );
+  osengine_mapping_solve( mEngine, mMapping, change.mSyncChange );
 }
 
 void SyncMapping::ignore()
 {
   Q_ASSERT( mEngine );
-  Q_ASSERT( mMappingEngine );
+  Q_ASSERT( mMapping );
 
   //TODO: error should be returned as Result
   OSyncError *error = 0;
-  osync_mapping_engine_ignore( mMappingEngine, &error );
+  osengine_mapping_ignore_conflict( mEngine, mMapping, &error );
 }
 
 int SyncMapping::changesCount() const
 {
-  Q_ASSERT( mMappingEngine );
+  Q_ASSERT( mMapping );
 
-  return osync_mapping_engine_num_changes( mMappingEngine );
+  return osengine_mapping_num_changes( mMapping );
 }
 
 SyncChange SyncMapping::changeAt( int pos )
 {
-  Q_ASSERT( mMappingEngine );
+  Q_ASSERT( mMapping );
 
-  if ( pos < 0 || pos >= osync_mapping_engine_num_changes( mMappingEngine ) )
+  if ( pos < 0 || pos >= osengine_mapping_num_changes( mMapping ) )
     return SyncChange();
 
-  OSyncChange *ochange = osync_mapping_engine_nth_change( mMappingEngine, pos );
+  OSyncChange *ochange = osengine_mapping_nth_change( mMapping, pos );
 
   return SyncChange( ochange );
 }

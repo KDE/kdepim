@@ -38,8 +38,6 @@ class MemberConfig : public QWidget
     void loadData();
     void saveData();
 
-    QSync::Member member() const;
-
   private:
     QSync::Member mMember;
 

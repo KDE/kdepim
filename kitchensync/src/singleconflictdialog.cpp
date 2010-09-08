@@ -27,7 +27,6 @@
 
 #include "addresseediffalgo.h"
 #include "genericdiffalgo.h"
-#include "xmldiffalgo.h"
 #include "htmldiffalgodisplay.h"
 #include "memberinfo.h"
 
@@ -44,22 +43,16 @@ SingleConflictDialog::SingleConflictDialog( QSync::SyncMapping &mapping, TQWidge
 
   if ( format == "file" ) {
     mDiffAlgo = new KSync::GenericDiffAlgo( leftChange.data(), rightChange.data() );
-  } else if ( format == "vcard21" || format == "vcard30" ) {
-    mDiffAlgo = new KSync::AddresseeDiffAlgo( leftChange.data(), rightChange.data() );
+  } else if ( format == "vcard" ) {
   } else if ( format == "calendar" ) {
-  } else if ( format == "xmlformat-contact" || format == "xmlformat-note"
-	   || format == "xmlformat-event" || format == "xmlformat-todo") { 
-    mDiffAlgo = new KSync::XmlDiffAlgo( leftChange.data(), rightChange.data() );
+  } else if ( format == "xml-contact" ) {
+    mDiffAlgo = new KSync::AddresseeDiffAlgo( leftChange.data(), rightChange.data() );
   }
 
-// TODO: SyncChange doesn't have member as struct member anymore ...
-// Use SyncMapping to determine the member .. see msynctool for example implementation of conlicthandler
-#if 0  
   MemberInfo miLeft( leftChange.member() );
   mDiffAlgoDisplay->setLeftSourceTitle( miLeft.name() );
   MemberInfo miRight( rightChange.member() );
   mDiffAlgoDisplay->setRightSourceTitle( miRight.name() );
-#endif  
 
   if ( mDiffAlgo ) {
     mDiffAlgo->addDisplay( mDiffAlgoDisplay );
@@ -106,7 +99,6 @@ void SingleConflictDialog::initGUI()
   TQGridLayout *layout = new TQGridLayout( this, 3, 4, KDialog::marginHint(), KDialog::spacingHint() );
 
   layout->addMultiCellWidget( new TQLabel( i18n( "A conflict has appeared, please solve it manually." ), this ), 0, 0, 0, 3 );
-
   mDiffAlgoDisplay = new KSync::HTMLDiffAlgoDisplay( this );
 
   layout->addMultiCellWidget( mDiffAlgoDisplay, 1, 1, 0, 3 );

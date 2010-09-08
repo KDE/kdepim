@@ -25,7 +25,6 @@
 #include <libqopensync/member.h>
 
 class OSyncChange;
-class OSyncObjFormat;
 
 namespace QSync {
 
@@ -75,7 +74,7 @@ class SyncChange
     /**
       Sets the data provided by the plugin.
      */
-    void setData( const TQString &data, OSyncObjFormat *format );
+    void setData( const TQString &data );
 
     /**
       Returns the data provided by the plugin.
@@ -95,7 +94,7 @@ class SyncChange
     /**
       Returns the parent member of this change.
      */
-//    Member member() const;
+    Member member() const;
 
     /**
       Sets the change type.

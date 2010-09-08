@@ -20,7 +20,6 @@
 */
 
 #include <opensync/opensync.h>
-#include <opensync/opensync-format.h>
 
 #include "conversion.h"
 
@@ -44,20 +43,16 @@ TQStringList Conversion::objectTypes() const
 {
   Q_ASSERT( mEnvironment );
 
-  OSyncError *error = NULL;
-  OSyncFormatEnv *formatEnv = osync_format_env_new( &error );
+  OSyncFormatEnv *formatEnv = osync_conv_env_new( mEnvironment );
   Q_ASSERT( formatEnv );
 
-  osync_format_env_load_plugins(formatEnv, NULL, &error);
-
   TQStringList types;	
+  for ( int i = 0; i < osync_conv_num_objtypes( formatEnv ); i++ ) {
+    OSyncObjType *type = osync_conv_nth_objtype( formatEnv, i );
+    types.append( TQString::fromUtf8( osync_objtype_get_name( type ) ) );
+  }
 
-  for (int i = 0; i < osync_format_env_num_objformats(formatEnv); i++) {
-    OSyncObjFormat *format = osync_format_env_nth_objformat(formatEnv, i);
-    types.append( TQString::fromUtf8( osync_objformat_get_objtype(format) ) );
- }
-
-  osync_format_env_free( formatEnv );
+  osync_conv_env_free( formatEnv );
 
   return types;
 }

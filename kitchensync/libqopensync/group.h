@@ -25,22 +25,35 @@
 #include <tqdatetime.h>
 #include <tqstringlist.h>
 
+#include <libqopensync/filter.h>
+#include <libqopensync/member.h>
+
 class OSyncGroup;
 
 namespace QSync {
 
-class Filter;
-class Member;
-class Plugin;
-class Result;
-
 /**
   @internal
  */
+class GroupConfig
+{
+  friend class Group;
+
+  public:
+    GroupConfig();
+
+    TQStringList activeObjectTypes() const;
+    void setActiveObjectTypes( const TQStringList &objectTypes );
+
+  private:
+    OSyncGroup *mGroup;
+};
+
+
 class Group
 {
   friend class Engine;
-  friend class GroupEnv;
+  friend class Environment;
 
   public:
     enum LockType
@@ -57,6 +70,51 @@ class Group
       Returns whether the object is a valid group.
      */
     bool isValid() const;
+
+    class Iterator
+    {
+      friend class Group;
+
+      public:
+        Iterator( Group *group )
+          : mGroup( group ), mPos( -1 )
+        {
+        }
+
+        Iterator( const Iterator &it )
+        {
+          mGroup = it.mGroup;
+          mPos = it.mPos;
+        }
+
+        Member operator*() 
+        {
+          return mGroup->memberAt( mPos );
+        }
+
+        Iterator &operator++() { mPos++; return *this; }
+        Iterator &operator++( int ) { mPos++; return *this; }
+        Iterator &operator--() { mPos--; return *this; }
+        Iterator &operator--( int ) { mPos--; return *this; }
+        bool operator==( const Iterator &it ) { return mGroup == it.mGroup && mPos == it.mPos; }
+        bool operator!=( const Iterator &it ) { return mGroup == it.mGroup && mPos != it.mPos; }
+
+      private:
+        Group *mGroup;
+        int mPos;
+    };
+
+    /**
+      Returns an iterator pointing to the first item in the member list.
+      This iterator equals end() if the member list is empty.
+     */
+    Iterator begin();
+
+    /**
+      Returns an iterator pointing past the last item in the member list.
+      This iterator equals begin() if the member list is empty.
+     */
+    Iterator end();
 
     /**
       Sets the name of the group.
@@ -87,15 +145,17 @@ class Group
 
     /**
       Unlocks the group.
+
+      @param removeFile Whether the lock file shall be removed.
      */
-    void unlock();
+    void unlock( bool removeFile = true );
 
     /**
       Adds a new member to the group.
 
       @returns the new member.
      */
-    Member addMember( const QSync::Plugin &plugin );
+    Member addMember();
 
     /**
       Removes a member from the group.
@@ -135,36 +195,18 @@ class Group
     bool isObjectTypeEnabled( const TQString &objectType ) const;
 
     /**
-      Sets whether this group uses the merger for synchronization.
-     */
-    void setUseMerger( bool use );
-
-    /**
-      Returns whether this group uses the merger for synchronization.
-     */
-    bool useMerger() const;
-
-    /**
-      Sets whether this group uses the converter for synchronization.
-     */
-    void setUseConverter( bool use );
-
-    /**
-      Returns whether this group uses the converter for synchronization.
-     */
-    bool useConverter() const;
-
-    /**
       Saves the configuration to hard disc.
      */
     Result save();
 
-    bool operator==( const Group &group ) const { return mGroup == group.mGroup; }
-
     /**
-      Removes all group configurations from the hard disc.
+      Returns the config object of this group.
+
+      Note: This method is only available for OpenSync 0.19 and 0.20.
      */
-    Result cleanup() const;
+    GroupConfig config() const;
+
+    bool operator==( const Group &group ) const { return mGroup == group.mGroup; }
 
   private:
     OSyncGroup *mGroup;
