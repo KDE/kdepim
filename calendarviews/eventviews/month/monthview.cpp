@@ -191,6 +191,7 @@ void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
   EventView::setDateRange( start, end );
   d->calendarSearch->setStartDate( d->actualStartDateTime );
   d->calendarSearch->setEndDate( d->actualEndDateTime );
+  reloadIncidences();
 }
   
 bool MonthView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
