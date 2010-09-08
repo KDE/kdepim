@@ -94,7 +94,7 @@ void MainView::delayedInit()
   // FIXME: My suspicion is that this is wrong. I.e. the collection selection is
   //        not correct resulting in no items showing up in the monthview.
   CalendarSupport::CollectionSelection *collectionselection;
-  collectionselection = new CalendarSupport::CollectionSelection( entityTreeModel(), this );
+  collectionselection = new CalendarSupport::CollectionSelection( regularSelectionModel(), this );
   EventViews::EventView::setGlobalCollectionSelection( collectionselection );
   
   QDBusConnection::sessionBus().registerService("org.kde.korganizer"); //register also as the real korganizer, so kmail can communicate with it
