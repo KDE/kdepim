@@ -30,6 +30,7 @@ class UnencryptedMessageTest : public QObject
   Q_OBJECT
   private slots:
     void initTestCase();
+    void testMailWithoutEncryption();
     void testOpenPGPSignedEncrypted();
     void testOpenPGPEncrypted();
 };
@@ -40,6 +41,16 @@ void UnencryptedMessageTest::initTestCase()
 {
   setenv("GNUPGHOME", KDESRCDIR "../../messagecore/tests/gnupg_home" , 1 );
   setenv("LC_ALL", "C", 1);
+}
+
+void UnencryptedMessageTest::testMailWithoutEncryption()
+{
+  KMime::Message::Ptr originalMessage = readAndParseMail( "encapsulated-with-attachment.mbox" );
+  NodeHelper nodeHelper;
+  EmptySource emptySource;
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+  otp.parseObjectTree( originalMessage.get() );
+  QVERIFY( !nodeHelper.unencryptedMessage( originalMessage ) );
 }
 
 void UnencryptedMessageTest::testOpenPGPSignedEncrypted()
