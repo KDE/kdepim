@@ -27,7 +27,11 @@
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
 #include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/collectionselection.h>
+#include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/kcalprefs.h>
+#include <calendarviews/eventviews/eventview.h>
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
@@ -87,6 +91,12 @@ void MainView::delayedInit()
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
 
+  // FIXME: My suspicion is that this is wrong. I.e. the collection selection is
+  //        not correct resulting in no items showing up in the monthview.
+  CalendarSupport::CollectionSelection *collectionselection;
+  collectionselection = new CalendarSupport::CollectionSelection( entityTreeModel(), this );
+  EventViews::EventView::setGlobalCollectionSelection( collectionselection );
+  
   QDBusConnection::sessionBus().registerService("org.kde.korganizer"); //register also as the real korganizer, so kmail can communicate with it
   CalendarInterface* calendarIface = new CalendarInterface();
   new CalendarAdaptor(calendarIface);
