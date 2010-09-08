@@ -388,12 +388,12 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
 }
 
 
-void ViewerPrivate::itemModifiedResult(KJob* job)
+void ViewerPrivate::itemModifiedResult( KJob* job )
 {
   if ( job->error() ) {
-    kDebug() << "Item update failed!";
+    kDebug() << "Item update failed:" << job->errorString();
   } else {
-    setMessageItem( mMessageItem, MessageViewer::Viewer::Force);
+    setMessageItem( mMessageItem, MessageViewer::Viewer::Force );
   }
 }
 
@@ -505,156 +505,6 @@ void ViewerPrivate::prepareHandleAttachment( KMime::Content *node, const QString
   mCurrentContent = node;
   mCurrentFileName = fileName;
 }
-
-// This function returns the complete data that were in this
-// message parts - *after* all encryption has been removed that
-// could be removed.
-// - This is used to store the message in decrypted form.
-void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
-                                            QByteArray& resultingData,
-                                            KMime::Message::Ptr theMessage,
-                                            bool weAreReplacingTheRootNode,
-                                            int recCount )
-{
-  kDebug() << "-------------------------------------------------";
-  kDebug() << "START" << "(" << recCount << ")";
-  if( node ) {
-
-    KMime::Content* curNode = node;
-    KMime::Content* dataNode = curNode;
-    KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
-    const QString type = curNode->contentType()->mediaType().toLower();
-    const QString subType = curNode->contentType()->subType().toLower();
-    const bool bIsMultipart = type == "multipart";
-    bool bKeepPartAsIs = false;
-
-    kDebug() << type << "/" << subType;
-
-    if ( type == "multipart" ) {
-      if ( subType == "signed" ) {
-        bKeepPartAsIs = true;
-      } else if ( subType == "encrypted" ) {
-        if ( child ) {
-          dataNode = child;
-        }
-      }
-    } else if ( type == "message" ) {
-      if ( subType == "rfc822" ) {
-        if ( child ) {
-          dataNode = child;
-        }
-      }
-    } else if ( type == "application" ) {
-      if ( subType == "octet-stream" ) {
-        if ( child ) {
-          dataNode = child;
-        }
-      } else if ( subType == "x-pkcs7-signature" ) {
-        // note: subtype Pkcs7Signature specifies a signature part
-        //       which we do NOT want to remove!
-        bKeepPartAsIs = true;
-      } else if ( subType == "x-pkcs7-mime" ) {
-        // note: subtype Pkcs7Mime can also be signed
-        //       and we do NOT want to remove the signature!
-        if ( child && mNodeHelper->encryptionState( curNode ) != KMMsgNotEncrypted ) {
-          dataNode = child;
-        }
-      }
-    }
-
-    KMime::Content* headerContent = 0;
-    if ( !dataNode->head().isEmpty() ) {
-      headerContent = dataNode;
-    }
-    if ( weAreReplacingTheRootNode || !dataNode->parent() ) {
-      headerContent = theMessage.get();
-    }
-    if( dataNode == curNode ) {
-      kDebug() << "dataNode == curNode:  Save curNode without replacing it.";
-
-      // A) Store the headers of this part IF curNode is not the root node
-      //    AND we are not replacing a node that already *has* replaced
-      //    the root node in previous recursion steps of this function...
-      if ( !headerContent->head().isEmpty() ) {
-        if( dataNode->parent() && !weAreReplacingTheRootNode ) {
-          kDebug() << "dataNode is NOT replacing the root node:  Store the headers.";
-          resultingData += headerContent->head();
-        } else if( weAreReplacingTheRootNode && !dataNode->head().isEmpty() ){
-          kDebug() << "dataNode replace the root node:  Do NOT store the headers but change";
-          kDebug() << "                                 the Message's headers accordingly.";
-          kDebug() << "              old Content-Type =" << theMessage->contentType()->asUnicodeString();
-          kDebug() << "              new Content-Type =" << headerContent->contentType()->asUnicodeString();
-          theMessage->contentType()->from7BitString( headerContent->contentType()->as7BitString() );
-          theMessage->contentTransferEncoding()->from7BitString(
-              headerContent->contentTransferEncoding(false)
-            ? headerContent->contentTransferEncoding()->as7BitString()
-            : "" );
-          theMessage->contentDescription()->from7BitString( headerContent->contentDescription()->as7BitString() );
-          theMessage->contentDisposition()->from7BitString( headerContent->contentDisposition()->as7BitString() );
-          theMessage->assemble();
-        }
-      }
-
-      if ( bKeepPartAsIs ) {
-        resultingData += dataNode->encodedContent();
-      } else {
-
-        // B) Store the body of this part.
-        if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
-          kDebug() << "is valid Multipart, processing children:";
-          QByteArray boundary = headerContent->contentType()->boundary();
-          curNode = MessageCore::NodeHelper::firstChild( dataNode );
-          // store children of multipart
-          while( curNode ) {
-            kDebug() << "--boundary";
-            if( resultingData.size() &&
-                ( '\n' != resultingData.at( resultingData.size()-1 ) ) )
-              resultingData += '\n';
-            resultingData += '\n';
-            resultingData += "--";
-            resultingData += boundary;
-            resultingData += '\n';
-            // note: We are processing a harmless multipart that is *not*
-            //       to be replaced by one of it's children, therefor
-            //       we set their doStoreHeaders to true.
-            objectTreeToDecryptedMsg( curNode,
-                                      resultingData,
-                                      theMessage,
-                                      false,
-                                      recCount + 1 );
-            curNode = MessageCore::NodeHelper::nextSibling( curNode );
-          }
-          kDebug() << "--boundary--";
-          resultingData += "\n--";
-          resultingData += boundary;
-          resultingData += "--\n\n";
-          kDebug() << "Multipart processing children - DONE";
-        } else {
-          // store simple part
-          kDebug() << "is Simple part or invalid Multipart, storing body data .. DONE";
-          resultingData += dataNode->body();
-        }
-      }
-    } else {
-      kDebug() << "dataNode != curNode:  Replace curNode by dataNode.";
-      bool rootNodeReplaceFlag = weAreReplacingTheRootNode || !curNode->parent();
-      if ( rootNodeReplaceFlag ) {
-        kDebug() << "                      Root node will be replaced.";
-      } else {
-        kDebug() << "                      Root node will NOT be replaced.";
-      }
-      // store special data to replace the current part
-      // (e.g. decrypted data or embedded RfC 822 data)
-      objectTreeToDecryptedMsg( dataNode,
-                                resultingData,
-                                theMessage,
-                                rootNodeReplaceFlag,
-                                recCount + 1 );
-    }
-  }
-  kDebug() << "END" << "(" << recCount << ")";
-}
-
 
 QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 {
@@ -855,89 +705,81 @@ void ViewerPrivate::displayMessage()
   htmlWriter()->flush();
 }
 
-void ViewerPrivate::removeEncryptedPart(KMime::Content* node)
-{
-  bool changed = false;
-  KMime::Content* data = ObjectTreeParser::findType( node, "application/pgp-encrypted", true, true );
-  if ( data ) {
-    changed = true;
-//     qDebug() << "REMOVING: " << data->encodedContent();
-    KMime::Content *encryptedData = MessageCore::NodeHelper::next( data, false ); //this is the encrypted data
-    if ( encryptedData && encryptedData->contentType()->mimeType() == "application/octet-stream" ) {
-//       qDebug() << "REMOVING: " << encryptedData->encodedContent();
-      data = MessageCore::NodeHelper::next( encryptedData, false ); //this will be the decrypted content
-      if ( data ) {
-        QByteArray decryptedData = data->encodedContent();
-        node->setBody( decryptedData );
-        node->contentType()->from7BitString( data->contentType()->as7BitString( false ) );
-        node->contentTransferEncoding()->from7BitString( data->contentTransferEncoding()->as7BitString( false ) );
-        node->assemble();
-        return;
-      }
-    }
-    data = 0;
-  }
-  else {
-    data = ObjectTreeParser::findType( node, "application/pkcs7-mime", true, true );
-    if ( data ) {
-        //node->removeContent( data, true );
-        kDebug() << "Unfinished Akonadi port in " << Q_FUNC_INFO;
-        data = 0;
-    }
-  }
-
-}
-
-
-void ViewerPrivate::createDecryptedMessage()
-{
-  //check if the message is in the outbox folder
-//   kDebug() << "Item is in the collection : " << mMessageItem.parentCollection().id() << mMessageItem.isValid();
-  //FIXME: using root() is too much, but using mMessageItem.parentCollection() returns no collections in job->collections()
-  Akonadi::CollectionFetchJob* job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( collectionFetchResult( KJob* ) ) );
-}
-
-void ViewerPrivate::collectionFetchResult( KJob* job )
+void ViewerPrivate::collectionFetchedForStoringDecryptedMessage( KJob* job )
 {
   if ( job->error() )
     return;
   
   Akonadi::Collection col;
-  Q_FOREACH(Akonadi::Collection c, static_cast<Akonadi::CollectionFetchJob*>( job )->collections() ) {
+  Q_FOREACH( Akonadi::Collection c, static_cast<Akonadi::CollectionFetchJob*>( job )->collections() ) {
     if ( c == mMessageItem.parentCollection() ) {
       col = c;
       break;
     }
   }
+
   if ( !col.isValid() )
     return;
   Akonadi::AgentInstance::List instances = Akonadi::AgentManager::self()->instances();
   QString itemResource = col.resource();
-//   kDebug() << "Item resource : " << itemResource << col.id() << col.name();
   Akonadi::AgentInstance resourceInstance;
   foreach ( const Akonadi::AgentInstance &instance, instances ) {
-//     kDebug() << "Instance " << instance.name() << " identifier : " << instance.identifier();
     if ( instance.identifier() == itemResource ) {
       resourceInstance = instance;
       break;
     }
   }
   bool isInOutbox = true;
-  Akonadi::Collection outboxCollection = Akonadi::SpecialMailCollections::self()->collection( Akonadi::SpecialMailCollections::Outbox, resourceInstance );
-  if ( resourceInstance.isValid() && outboxCollection != col )
+  Akonadi::Collection outboxCollection = Akonadi::SpecialMailCollections::self()->collection(
+                   Akonadi::SpecialMailCollections::Outbox, resourceInstance );
+  if ( resourceInstance.isValid() && outboxCollection != col ) {
     isInOutbox = false;
+  }
 
   if ( !isInOutbox ) {
-      KMime::Message* message = mNodeHelper->messageWithExtraContent( mMessage.get() );
-      removeEncryptedPart( message );
-
-      mMessage.reset( message );
-
-      mMessageItem.setPayloadFromData( message->encodedContent() );
+    KMime::Message::Ptr unencryptedMessage = mNodeHelper->unencryptedMessage( mMessage );
+    if ( unencryptedMessage ) {
+      mMessageItem.setPayload<KMime::Message::Ptr>( unencryptedMessage );
       Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
       connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
-  //   kDebug() << "Decrypted message: " << message->encodedContent();
+    }
+  }
+}
+
+void ViewerPrivate::postProcessMessage( ObjectTreeParser *otp, KMMsgEncryptionState encryptionState )
+{
+  if ( GlobalSettings::self()->storeDisplayedMessagesUnencrypted() )
+  {
+
+    // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
+    // of german government:
+    // --> All received encrypted messages *must* be stored in unencrypted form
+    //     after they have been decrypted once the user has read them.
+    //     ( "Aufhebung der Verschluesselung nach dem Lesen" )
+    //
+    // note: Since there is no configuration option for this, we do that for
+    //       all kinds of encryption now - *not* just for S/MIME.
+    //       This could be changed in the objectTreeToDecryptedMsg() function
+    //       by deciding when (or when not, resp.) to set the 'dataNode' to
+    //       something different than 'curNode'.
+
+    const bool messageAtLeastPartiallyEncrypted = ( KMMsgFullyEncrypted == encryptionState ) ||
+                                                  ( KMMsgPartiallyEncrypted == encryptionState );
+         // only proceed if we were called the normal way - not by
+         // double click on the message (==not running in a separate window)
+    if( decryptMessage() && // only proceed if the message has actually been decrypted
+        !otp->hasPendingAsyncJobs() && // only proceed if no pending async jobs are running:
+        messageAtLeastPartiallyEncrypted ) {
+      //check if the message is in the outbox folder
+      //FIXME: using root() is too much, but using mMessageItem.parentCollection() returns no collections in job->collections()
+      //FIXME: this is done async, which means it is possible that the user selects another message while
+      //       this job is running. In that case, collectionFetchedForStoringDecryptedMessage() will work
+      //       on the wrong item!
+      Akonadi::CollectionFetchJob* job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(),
+                                                                          Akonadi::CollectionFetchJob::Recursive );
+      connect( job, SIGNAL( result( KJob* ) ),
+              this, SLOT( collectionFetchedForStoringDecryptedMessage( KJob* ) ) );
+    }
   }
 }
 
@@ -996,40 +838,7 @@ void ViewerPrivate::parseContent( KMime::Content *content )
     mNodeHelper->setSignatureState( content, signatureState );
   }
 
-  bool emitReplaceMsgByUnencryptedVersion = false;
-  if ( GlobalSettings::self()->storeDisplayedMessagesUnencrypted() )
-  {
-
-    // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
-    // of german government:
-    // --> All received encrypted messages *must* be stored in unencrypted form
-    //     after they have been decrypted once the user has read them.
-    //     ( "Aufhebung der Verschluesselung nach dem Lesen" )
-    //
-    // note: Since there is no configuration option for this, we do that for
-    //       all kinds of encryption now - *not* just for S/MIME.
-    //       This could be changed in the objectTreeToDecryptedMsg() function
-    //       by deciding when (or when not, resp.) to set the 'dataNode' to
-    //       something different than 'curNode'.
-
-
-    //FIXME(Andras) kDebug() <<"(mIdOfLastViewedMessage != aMsg->msgId()) ="       << (mIdOfLastViewedMessage != aMsg->msgId());
-//     kDebug() << "aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() = " << (aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder());
-//     kDebug() << "message_was_saved_decrypted_before( aMsg ) = " << message_was_saved_decrypted_before( aMsg );
-    kDebug() << "this->decryptMessage() = " << decryptMessage();
-    kDebug() << "otp.hasPendingAsyncJobs() = " << otp.hasPendingAsyncJobs();
-    kDebug() << "   (KMMsgFullyEncrypted == encryptionState) ="     << (KMMsgFullyEncrypted == encryptionState);
-    kDebug() << "|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
-
-         // only proceed if we were called the normal way - not by
-         // double click on the message (==not running in a separate window)
-    if( decryptMessage() // only proceed if the message has actually been decrypted          
-        && !otp.hasPendingAsyncJobs() // only proceed if no pending async jobs are running:         
-        && (    (KMMsgFullyEncrypted == encryptionState)     // only proceed if this message is (at least partially) encrypted
-            || (KMMsgPartiallyEncrypted == encryptionState) ) ) {
-      createDecryptedMessage();
-    }
-  }
+  postProcessMessage( &otp, encryptionState );
 
   showHideMimeTree();
 }
@@ -2488,7 +2297,8 @@ void ViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
       file.close();
 
       mMessageItem.setPayloadFromData( mMessage->encodedContent() );
-      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
+      /*Akonadi::ItemModifyJob *job = */new Akonadi::ItemModifyJob( mMessageItem );
+      // FIXME: Check for errors in the job
     }
   }
   mEditorWatchers.remove( editorWatcher );

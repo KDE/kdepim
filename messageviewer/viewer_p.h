@@ -34,6 +34,7 @@
 
 #include <akonadi/kmime/messagestatus.h>
 
+#include "nodehelper.h"
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 #include <kio/job.h>
 
@@ -69,7 +70,6 @@ namespace MessageViewer {
   class ObjectTreeParser;
   class HeaderStrategy;
   class HeaderStyle;
-  class NodeHelper;
   class FindBar;
   class MimeTreeModel;
   class ConfigureWidget;
@@ -222,20 +222,7 @@ public:
    */
   void prepareHandleAttachment(KMime::Content *node, const QString& fileName );
 
-
-  /** This function returns the complete data that were in this
-  * message parts - *after* all encryption has been removed that
-  * could be removed.
-  * - This is used to store the message in decrypted form.
-  */
-  void objectTreeToDecryptedMsg( KMime::Content* node,
-                                 QByteArray& resultingData,
-                                 KMime::Message::Ptr theMessage,
-                                 bool weAreReplacingTheRootNode = false,
-                                 int recCount = 0 );
-
-  void createDecryptedMessage();
-  void removeEncryptedPart( KMime::Content* node );
+  void postProcessMessage( ObjectTreeParser *otp, KMMsgEncryptionState encryptionState );
 
   QString createAtmFileLink( const QString& atmFileName ) const;
   KService::Ptr getServiceOffer( KMime::Content *content);
@@ -468,7 +455,7 @@ private slots:
 
   void itemModifiedResult( KJob* job );
 
-  void collectionFetchResult( KJob* job );
+  void collectionFetchedForStoringDecryptedMessage( KJob* job );
 
   void slotMimePartDestroyed();
 
