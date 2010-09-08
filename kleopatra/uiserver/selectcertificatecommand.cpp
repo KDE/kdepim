@@ -39,6 +39,7 @@
 #include <models/keycache.h>
 
 #include <utils/stl_util.h>
+#include <boost/mem_fn.hpp>
 
 #include <kleo/exception.h>
 
