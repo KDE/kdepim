@@ -32,10 +32,10 @@ BreadcrumbNavigationFactory::BreadcrumbNavigationFactory(QObject* parent)
 
 QAbstractItemModel* BreadcrumbNavigationFactory::getChildItemsModel(QAbstractItemModel* model)
 {
-  EntityMimeTypeFilterModel *proxy = new Akonadi::EntityMimeTypeFilterModel( this );
-  proxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  proxy->setSourceModel( model );
-  proxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  return proxy;
+  EntityMimeTypeFilterModel *filterProxy = new Akonadi::EntityMimeTypeFilterModel( this );
+  filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  filterProxy->setSourceModel( model );
+  filterProxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  return filterProxy;
 }
 
