@@ -22,6 +22,7 @@
 
 #include "eventsapplet.h"
 #include "eventwidget.h"
+#include "ui_configui.h"
 
 #include <plasma/dataengine.h>
 #include <plasma/widgets/scrollwidget.h>
@@ -31,6 +32,7 @@
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kdatetime.h>
+#include <kconfigdialog.h>
 
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
@@ -99,16 +101,19 @@ void EventsApplet::configChanged()
 
 void EventsApplet::updateEvents()
 {
-    QString source = "events:%1:%2";
+    dataEngine( "calendar" )->disconnectSource( m_source, this );
+
+
+    m_source = "events:%1:%2";
     QDate currentDate = QDate::currentDate();
     QDate endDate = currentDate.addDays( m_numDays );
 
-    source = source.arg( currentDate.toString( Qt::ISODate ) );
-    source = source.arg( currentDate.toString( Qt::ISODate ) );
+    m_source = m_source.arg( currentDate.toString( Qt::ISODate ) );
+    m_source = m_source.arg( currentDate.toString( Qt::ISODate ) );
 
-    kDebug() << "Connecting source:" << source;
+    kDebug() << "Connecting source:" << m_source;
 
-    dataEngine( "calendar" )->connectSource( source, this );
+    dataEngine( "calendar" )->connectSource( m_source, this );
 }
 
 void EventsApplet::updateUI()
@@ -127,6 +132,61 @@ void EventsApplet::updateUI()
         m_scrollerLayout->addItem( it.value() );
         kDebug() << "adding" << it.value()->summary() << it.key();
     }
+}
+
+void EventsApplet::createConfigurationInterface( KConfigDialog *parent)
+{
+    KConfigGroup cg = config();
+
+    m_configWidget = new QWidget();
+    m_configUi.setupUi(m_configWidget);
+
+    m_configUi.daysSpinBox->setValue(cg.readEntry("numDays", 7));
+
+    QString incType = cg.readEntry("incidenceType", "Agenda");
+
+    m_configUi.calendarCB->setChecked(true);
+    m_configUi.todoCB->setChecked(true);
+    if ( incType == "Todo" ) {
+        m_configUi.calendarCB->setChecked( false );
+    } else if ( incType == "Events" ) {
+        m_configUi.todoCB->setChecked( false );
+    }
+
+    connect(parent, SIGNAL(applyClicked()), this, SLOT(configAccepted()));
+    connect(parent, SIGNAL(okClicked()), this, SLOT(configAccepted()));
+
+    parent->addPage(m_configWidget, i18n("Configuration"),
+                    "view-pim-calendar",
+                    i18n("Configure Events applet."));
+}
+
+void EventsApplet::configAccepted()
+{
+    KConfigGroup cg = config();
+
+    cg.writeEntry( "numDays", m_configUi.daysSpinBox->value() );
+
+    if ( m_configUi.calendarCB->isChecked() && m_configUi.todoCB->isChecked() ) {
+        cg.writeEntry( "incidenceType", "Agenda" );
+    } else if ( m_configUi.calendarCB->isChecked() ) {
+        cg.writeEntry( "incidenceType", "Events" );
+    } else if ( m_configUi.todoCB->isChecked() ) {
+        cg.writeEntry( "incidenceType", "Todo" );
+    }
+
+    // Clear the incidences before updating to keep stale entries out.
+    if ( m_numDays > m_configUi.daysSpinBox->value() ) {
+        QMapIterator<QString,EventWidget*> it( m_incidences );
+        while ( it.hasNext() ) {
+            it.next();
+            delete it.value();
+            m_incidences.erase( it.key() );
+        }
+    }
+
+    configChanged();
+    updateEvents();
 }
 
 void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data pimData )
@@ -181,6 +241,9 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data pimData
                     if ( !m_incidences[ key ] ) {
                         EventWidget* widget = new EventWidget( data, this );
                         m_incidences[ key ] = widget;
+                    } else {
+                        m_incidences[ key ]->updateSummaryUI();
+                        m_incidences[ key ]->updateFullUI();
                     }
                 }
             } 
@@ -197,3 +260,4 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data pimData
 #include "eventsapplet.moc"
 
 #endif // EVENTSAPPLET_CPP
+

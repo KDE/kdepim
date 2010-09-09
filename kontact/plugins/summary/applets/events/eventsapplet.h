@@ -21,6 +21,8 @@
 #ifndef EVENTSAPPLET_H
 #define EVENTSAPPLET_H
 
+#include "ui_configui.h"
+
 class EventWidget;
 
 #include <plasma/applet.h>
@@ -51,7 +53,11 @@ public slots:
     void updateEvents();
     void dataUpdated( QString source, Plasma::DataEngine::Data data );
 
+    void createConfigurationInterface( KConfigDialog* parent );
+    void configAccepted();
+
 private:
+    QString m_source;
     QString m_incidenceType;
     int m_numDays;
     bool m_noCollections;
@@ -60,6 +66,9 @@ private:
     Plasma::ScrollWidget* m_scrollWidget;
     QGraphicsWidget* m_scroller;
     QGraphicsLinearLayout* m_scrollerLayout;
+
+    QWidget* m_configWidget;
+    Ui::EventsConfigUI m_configUi;
 };
 
 #endif
