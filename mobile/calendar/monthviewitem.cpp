@@ -34,11 +34,19 @@ MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
   mView->setPalette( pal );
   setWidget( mView );
+
+  connect( mView, SIGNAL(newEventSignal(Akonadi::Collection::List)),
+           SLOT(emitDateClicked()));
 }
 
 MonthViewItem::~MonthViewItem()
 {
   delete mView;
+}
+
+void MonthViewItem::emitDateClicked()
+{
+  emit dateClicked( mView->selectionStart().date() );
 }
 
 QObject* MonthViewItem::calendar() const
@@ -63,3 +71,4 @@ void MonthViewItem::showMonth( const QDate &date )
   mView->setDateRange( start, end );
 }
 
+#include "monthviewitem.moc"

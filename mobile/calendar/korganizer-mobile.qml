@@ -154,17 +154,11 @@ KPIM.MainView {
       anchors { fill: parent; topMargin: 10; leftMargin: 40 }
       calendar: calendarModel
 
-//       onItemSelected: {
-//         if ( selectedItemId > 0 ) {
-//           eventView.itemId = selectedItemId;
-//           eventView.activeDate = activeDate;
-//           application.setCurrentEventItemId(selectedItemId);
-//           korganizerActions.showOnlyCategory("event_viewer")
-//           eventView.visible = true;
-//           agendaView.visible = false;
-//           clearSelection();
-//         }
-//       }
+      onDateClicked: {
+        agenda.showRange( date, 0 );
+        monthView.visible = false;
+        agendaView.visible = true;
+      }
     }
   }
 

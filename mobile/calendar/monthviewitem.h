@@ -43,6 +43,12 @@ class MonthViewItem : public DeclarativeAkonadiItem
     /// Show the month from @param date.
     Q_INVOKABLE void showMonth( const QDate &date );
 
+  Q_SIGNALS:
+    void dateClicked( const QDate &date );
+    
+  private Q_SLOTS:
+    void emitDateClicked();
+    
   private:
     MonthView *mView;
 };
