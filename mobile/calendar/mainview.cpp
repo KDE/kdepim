@@ -37,7 +37,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/standardactionmanager.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencedefaults.h>
+#include <incidenceeditor-ng/incidencedefaults.h>
 
 #include <ksystemtimezone.h>
 

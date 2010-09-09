@@ -36,7 +36,7 @@
 
 #include <calendarsupport/groupware.h>
 
-#include <incidenceeditors/incidenceeditor-ng/groupwareintegration.h>
+#include <incidenceeditor-ng/groupwareintegration.h>
 
 #include <messageviewer/globalsettings.h>
 #include <messageviewer/viewer.h>

@@ -1,5 +1,5 @@
 include_directories(
-    ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng
+    ${CMAKE_SOURCE_DIR}/incidenceeditor-ng
     ${Boost_INCLUDE_DIR}
 )
 

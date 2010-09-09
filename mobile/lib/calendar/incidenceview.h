@@ -23,8 +23,8 @@
 #include <Akonadi/Item>
 #include <kcalcore/incidence.h>
 
-#include <incidenceeditors/incidenceeditor-ng/combinedincidenceeditor.h>
-#include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
+#include <incidenceeditor-ng/combinedincidenceeditor.h>
+#include <incidenceeditor-ng/editoritemmanager.h>
 
 #include "kdeclarativefullscreenview.h"
 

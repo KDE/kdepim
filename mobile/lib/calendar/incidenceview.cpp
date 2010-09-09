@@ -37,16 +37,16 @@
 #include <qdeclarativeengine.h>
 #include <qdeclarativecontext.h>
 
-#include <incidenceeditors/incidenceeditor-ng/incidencealarm.h>
-#include <incidenceeditors/incidenceeditor-ng/incidenceattachment.h>
-#include <incidenceeditors/incidenceeditor-ng/incidenceattendee.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencecategories.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencecompletionpriority.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencedescription.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencewhatwhere.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencerecurrence.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencesecrecy.h>
+#include <incidenceeditor-ng/incidencealarm.h>
+#include <incidenceeditor-ng/incidenceattachment.h>
+#include <incidenceeditor-ng/incidenceattendee.h>
+#include <incidenceeditor-ng/incidencecategories.h>
+#include <incidenceeditor-ng/incidencecompletionpriority.h>
+#include <incidenceeditor-ng/incidencedatetime.h>
+#include <incidenceeditor-ng/incidencedescription.h>
+#include <incidenceeditor-ng/incidencewhatwhere.h>
+#include <incidenceeditor-ng/incidencerecurrence.h>
+#include <incidenceeditor-ng/incidencesecrecy.h>
 
 
 using namespace Akonadi;

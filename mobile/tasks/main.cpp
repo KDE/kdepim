@@ -23,7 +23,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
-#include <incidenceeditors/incidenceeditor-ng/korganizereditorconfig.h>
+#include <incidenceeditor-ng/korganizereditorconfig.h>
 
 #include "mainview.h"
 

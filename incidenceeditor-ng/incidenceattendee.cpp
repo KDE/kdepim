@@ -55,7 +55,6 @@
 #include "freebusyitemmodel.h"
 #include "incidencedatetime.h"
 #include "schedulingdialog.h"
-#include "../editorconfig.h"
 
 using namespace IncidenceEditorsNG;
 

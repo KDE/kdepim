@@ -270,7 +270,7 @@ set(libkdgantt1_SRCS
   add_subdirectory(libkdepim)
   add_subdirectory(calendarsupport)
   add_subdirectory(calendarviews)
-  add_subdirectory(incidenceeditors)
+  add_subdirectory(incidenceeditor-ng)
   add_subdirectory(libkdepimdbusinterfaces)
   add_subdirectory(libkleo)
   add_subdirectory(libkpgp)

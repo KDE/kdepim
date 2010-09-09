@@ -27,7 +27,7 @@
 #include "editormore.h"
 #include "declarativewidgetbase.h"
 
-#include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
+#include <incidenceeditor-ng/editoritemmanager.h>
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>

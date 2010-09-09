@@ -1,5 +1,5 @@
 include_directories(
-    ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng
+    ${CMAKE_SOURCE_DIR}/incidenceeditor-ng
     ${CMAKE_CURRENT_SOURCE_DIR}/..
     ${Boost_INCLUDE_DIR}
 )
@@ -15,8 +15,8 @@ set(mobileui_calendar_SRCS
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(mobileui_calendar_SRCS
-  ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomobile.ui
-  ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomoremobile.ui
+  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/eventortodomobile.ui
+  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/eventortodomoremobile.ui
 )
 
 kde4_add_library(kdepimmobileuicalendar STATIC ${mobileui_calendar_SRCS})
