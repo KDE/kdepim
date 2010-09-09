@@ -195,7 +195,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
   connect( d->calendarSearch->model(), SIGNAL( modelReset() ), this, SLOT( calendarReset() ) );
 
   connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
-           SIGNAL(showIncidencePopup(Akonadi::Item, QDate)) );
+           SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)) );
 
   connect( d->scene, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
            this, SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );

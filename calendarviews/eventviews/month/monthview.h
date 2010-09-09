@@ -63,7 +63,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
       Visible,
       Hidden
     };
-    
+
     explicit MonthView( NavButtonsVisibility visibility = Visible, QWidget *parent = 0 );
     ~MonthView();
 
@@ -93,7 +93,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     bool supportsDateRangeSelection() { return false; }
 
   Q_SIGNALS:
-    void showIncidencePopup( const Akonadi::Item &item, const QDate &date );
+    void showIncidencePopupSignal( const Akonadi::Item &item, const QDate &date );
 
   public Q_SLOTS:
     // virtual slots
@@ -110,7 +110,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
   protected Q_SLOTS:
     virtual void calendarReset();
-    
+
   private Q_SLOTS:
     void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
     void rowsInserted( const QModelIndex &parent, int start, int end );
