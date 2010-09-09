@@ -135,54 +135,56 @@ void MonthViewPrivate::triggerDelayedReload()
 
 /// MonthView
 
-MonthView::MonthView( QWidget *parent )
+MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
   : EventView( parent )
   , d( new MonthViewPrivate( this ) )
 {
   QHBoxLayout *topLayout = new QHBoxLayout( this );
   topLayout->addWidget( d->view );
 
-  QVBoxLayout *rightLayout = new QVBoxLayout( );
-  rightLayout->setSpacing( 0 );
-  rightLayout->setMargin( 0 );
+  if ( visibility == Visible ) {
+    QVBoxLayout *rightLayout = new QVBoxLayout( );
+    rightLayout->setSpacing( 0 );
+    rightLayout->setMargin( 0 );
 
-  // push buttons to the bottom
-  rightLayout->addStretch( 1 );
+    // push buttons to the bottom
+    rightLayout->addStretch( 1 );
 
-  QToolButton *minusMonth = new QToolButton( this );
-  minusMonth->setIcon( KIcon( "arrow-up-double" ) );
-  minusMonth->setToolTip( i18n( "Go back one month" ) );
-  minusMonth->setAutoRaise( true );
-  connect( minusMonth, SIGNAL(clicked()),
-           this, SLOT(moveBackMonth()) );
+    QToolButton *minusMonth = new QToolButton( this );
+    minusMonth->setIcon( KIcon( "arrow-up-double" ) );
+    minusMonth->setToolTip( i18n( "Go back one month" ) );
+    minusMonth->setAutoRaise( true );
+    connect( minusMonth, SIGNAL(clicked()),
+            this, SLOT(moveBackMonth()) );
 
-  QToolButton *minusWeek = new QToolButton( this );
-  minusWeek->setIcon( KIcon( "arrow-up" ) );
-  minusWeek->setToolTip( i18n( "Go back one week" ) );
-  minusWeek->setAutoRaise( true );
-  connect( minusWeek, SIGNAL(clicked()),
-           this, SLOT(moveBackWeek()) );
+    QToolButton *minusWeek = new QToolButton( this );
+    minusWeek->setIcon( KIcon( "arrow-up" ) );
+    minusWeek->setToolTip( i18n( "Go back one week" ) );
+    minusWeek->setAutoRaise( true );
+    connect( minusWeek, SIGNAL(clicked()),
+            this, SLOT(moveBackWeek()) );
 
-  QToolButton *plusWeek = new QToolButton( this );
-  plusWeek->setIcon( KIcon( "arrow-down" ) );
-  plusWeek->setToolTip( i18n( "Go forward one week" ) );
-  plusWeek->setAutoRaise( true );
-  connect( plusWeek, SIGNAL(clicked()),
-           this, SLOT(moveFwdWeek()) );
+    QToolButton *plusWeek = new QToolButton( this );
+    plusWeek->setIcon( KIcon( "arrow-down" ) );
+    plusWeek->setToolTip( i18n( "Go forward one week" ) );
+    plusWeek->setAutoRaise( true );
+    connect( plusWeek, SIGNAL(clicked()),
+            this, SLOT(moveFwdWeek()) );
 
-  QToolButton *plusMonth = new QToolButton( this );
-  plusMonth->setIcon( KIcon( "arrow-down-double" ) );
-  plusMonth->setToolTip( i18n( "Go forward one month" ) );
-  plusMonth->setAutoRaise( true );
-  connect( plusMonth, SIGNAL(clicked()),
-           this, SLOT(moveFwdMonth()) );
+    QToolButton *plusMonth = new QToolButton( this );
+    plusMonth->setIcon( KIcon( "arrow-down-double" ) );
+    plusMonth->setToolTip( i18n( "Go forward one month" ) );
+    plusMonth->setAutoRaise( true );
+    connect( plusMonth, SIGNAL(clicked()),
+            this, SLOT(moveFwdMonth()) );
 
-  rightLayout->addWidget( minusMonth );
-  rightLayout->addWidget( minusWeek );
-  rightLayout->addWidget( plusWeek );
-  rightLayout->addWidget( plusMonth );
+    rightLayout->addWidget( minusMonth );
+    rightLayout->addWidget( minusWeek );
+    rightLayout->addWidget( plusWeek );
+    rightLayout->addWidget( plusMonth );
 
-  topLayout->addLayout( rightLayout );
+    topLayout->addLayout( rightLayout );
+  }
 
   connect( d->calendarSearch->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
            this, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );

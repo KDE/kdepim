@@ -86,7 +86,7 @@ void MainWindow::addView( const QString &viewName )
   } else if ( viewName == QLatin1String( "multiagenda" ) ) {
     eventView = new MultiAgendaView( this );
   } else if ( viewName == QLatin1String( "month" ) ) {
-    eventView = new MonthView( this );
+    eventView = new MonthView( MonthView::Visible, this );
   }
 
   if ( eventView != 0 ) {

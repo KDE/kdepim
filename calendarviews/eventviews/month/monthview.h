@@ -59,7 +59,12 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 {
   Q_OBJECT
   public:
-    explicit MonthView( QWidget *parent = 0 );
+    enum NavButtonsVisibility {
+      Visible,
+      Hidden
+    };
+    
+    explicit MonthView( NavButtonsVisibility visibility = Visible, QWidget *parent = 0 );
     ~MonthView();
 
     virtual int currentDateCount() const;

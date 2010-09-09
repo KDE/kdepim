@@ -28,7 +28,7 @@ using namespace EventViews;
 
 MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
   : DeclarativeAkonadiItem( parent )
-  , mView( new MonthView() )
+  , mView( new MonthView( MonthView::Hidden ) )
 {  
   // start with the oxygen palette (which is not necessarily the default on all platforms)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
