@@ -92,9 +92,6 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
     bool supportsDateRangeSelection() { return false; }
 
-    // TODO: Where does this come from?
-//     virtual CalPrinterBase::PrintType printType();
-
   Q_SIGNALS:
     void showIncidencePopup( const Akonadi::Item &item, const QDate &date );
 

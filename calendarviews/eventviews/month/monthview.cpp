@@ -193,7 +193,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
   connect( d->calendarSearch->model(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
   connect( d->calendarSearch->model(), SIGNAL( modelReset() ), this, SLOT( calendarReset() ) );
-  
+
   connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
            SIGNAL(showIncidencePopup(Akonadi::Item, QDate)) );
 
@@ -276,7 +276,7 @@ void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
   d->calendarSearch->setEndDate( actualEndDateTime() );
   reloadIncidences();
 }
-  
+
 bool MonthView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
 {
   if ( d->scene->selectedCell() ) {
@@ -581,8 +581,3 @@ bool MonthView::usesFullWindow()
 {
   return preferences()->fullViewMonth();
 }
-
-// CalPrinterBase::PrintType MonthView::printType()
-// {
-//   return CalPrinterBase::Month;
-// }
