@@ -24,8 +24,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef VIEW_H
-#define VIEW_H
+#ifndef EVENTVIEWS_MONTHVIEW_H_
+#define EVENTVIEWS_MONTHVIEW_H_
 
 #include "../eventview.h"
 
