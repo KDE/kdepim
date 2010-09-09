@@ -66,7 +66,8 @@ void EventWidget::setData( QVariantHash args )
         if ( !m_endDate.isNull() ) {
             // make the date reference this year
             // FIXME fugly.
-            QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_endDate.date().month(), m_endDate.date().day() ) );
+            QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_endDate.date().month(), m_endDate.date().day() ),
+                                      QTime(m_startDate.time().hour(), m_startDate.time().minute(), m_startDate.time().second()) );
 
             m_endDate = KDateTime( day );
         }
@@ -205,23 +206,23 @@ void EventWidget::updateFullUI()
     if ( !m_endDate.isNull() && !m_startDate.isNull() ) {
         text = i18n( "%1 to %2");
         if ( !m_allDay ) {
-            text = text.arg( m_startDate.toString(), m_endDate.toString() );
+            text = text.arg( m_startDate.toString(KDateTime::LocalDate), m_endDate.toString(KDateTime::LocalDate) );
         } else {
-            text = text.arg( m_startDate.date().toString(), m_endDate.date().toString() );
+            text = text.arg( m_startDate.date().toString(Qt::SystemLocaleShortDate), m_endDate.date().toString(Qt::SystemLocaleShortDate) );
         }
     } else if ( !m_startDate.isNull() ) {
         text = i18n("%1");
         if ( !m_allDay ) {
-            text = text.arg( m_startDate.toString() );
+            text = text.arg( m_startDate.toString(KDateTime::LocalDate) );
         } else {
-            text = text.arg( m_startDate.date().toString() );
+            text = text.arg( m_startDate.date().toString(Qt::SystemLocaleShortDate) );
         }
     } else if ( !m_endDate.isNull() ) {
         text = i18n("Ends on %1");
         if ( !m_allDay ) {
-            text = text.arg( m_endDate.toString() );
+            text = text.arg( m_endDate.toString(KDateTime::LocalDate) );
         } else {
-            text = text.arg( m_endDate.date().toString() );
+            text = text.arg( m_endDate.date().toString(Qt::SystemLocaleShortDate) );
         }
     } else {
         text = "";
@@ -242,7 +243,7 @@ void EventWidget::toggleMoreInfo()
 
 void EventWidget::setMoreInfoVisible( bool visible )
 {
-    if ( visible ) {
+    if ( !visible ) {
         m_masterLayout->removeItem( m_fullViewWidget );
         m_fullViewWidget->setVisible( 0 );
         m_moreInfoIcon->setIcon( KIcon( "arrow-down-double" ) );
@@ -259,3 +260,4 @@ bool EventWidget::moreInfoVisible()
 {
     return m_moreInfoVisible;
 }
+
