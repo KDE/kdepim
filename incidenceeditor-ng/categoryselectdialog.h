@@ -23,7 +23,7 @@
 #ifndef CATEGORYSELECTDIALOG_H
 #define CATEGORYSELECTDIALOG_H
 
-#include "incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 
 #include <KDialog>
 
@@ -34,7 +34,7 @@ namespace IncidenceEditors
   class AutoCheckTreeWidget;
   class CategoryConfig;
 
-class INCIDENCEEDITORS_EXPORT CategorySelectWidget : public QWidget
+class INCIDENCEEDITORS_NG_EXPORT CategorySelectWidget : public QWidget
 {
   Q_OBJECT
   public:
@@ -67,7 +67,7 @@ class INCIDENCEEDITORS_EXPORT CategorySelectWidget : public QWidget
     CategoryConfig *mCategoryConfig;
 };
 
-class INCIDENCEEDITORS_EXPORT CategorySelectDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT CategorySelectDialog : public KDialog
 {
   Q_OBJECT
   public:

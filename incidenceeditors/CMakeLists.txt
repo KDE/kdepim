@@ -1,17 +1,14 @@
-if (KDEPIM_MOBILE_UI)
-  remove_definitions(-DKDEPIM_MOBILE_UI)
-endif()
 #
-include_directories(
-    ${CMAKE_SOURCE_DIR}/incidenceeditors
-    ${CMAKE_BINARY_DIR}/incidenceeditors
-    ${CMAKE_SOURCE_DIR}/kdgantt1
-    ${CMAKE_SOURCE_DIR}/libkdepim
-    ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
-    ${CMAKE_SOURCE_DIR}/calendarsupport
-    ${CMAKE_BINARY_DIR}/calendarsupport
-    ${Boost_INCLUDE_DIR}
-)
+#include_directories(
+#    ${CMAKE_SOURCE_DIR}/incidenceeditors
+#    ${CMAKE_BINARY_DIR}/incidenceeditors
+#    ${CMAKE_SOURCE_DIR}/kdgantt1
+#    ${CMAKE_SOURCE_DIR}/libkdepim
+#    ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
+#    ${CMAKE_SOURCE_DIR}/calendarsupport
+#    ${CMAKE_BINARY_DIR}/calendarsupport
+#    ${Boost_INCLUDE_DIR}
+#)
 #
 #add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 #if (QT_QT3SUPPORT_FOUND)

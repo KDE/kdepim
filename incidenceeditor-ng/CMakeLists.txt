@@ -1,7 +1,12 @@
+if (KDEPIM_MOBILE_UI)
+  remove_definitions(-DKDEPIM_MOBILE_UI)
+endif()
+
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/calendarsupport
   ${CMAKE_BINARY_DIR}/calendarsupport
+  ${Boost_INCLUDE_DIR}
 )
 
 if(NOT MSVC)

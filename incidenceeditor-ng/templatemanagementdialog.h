@@ -38,7 +38,7 @@
 #ifndef TEMPLATEMANAGEMENTDIALOG_H
 #define TEMPLATEMANAGEMENTDIALOG_H
 
-#include "incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 
 #include "ui_template_management_dialog_base.h"
 
@@ -51,7 +51,7 @@
 namespace IncidenceEditors
 {
 
-class INCIDENCEEDITORS_EXPORT TemplateManagementDialog: public KDialog
+class INCIDENCEEDITORS_NG_EXPORT TemplateManagementDialog: public KDialog
 {
   Q_OBJECT
   public:

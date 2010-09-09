@@ -23,8 +23,8 @@
 #include "categoryselectdialog.h"
 #include "autochecktreewidget.h"
 
-#include "incidenceeditor-ng/categoryhierarchyreader.h"
-#include "incidenceeditor-ng/categoryconfig.h"
+#include "categoryhierarchyreader.h"
+#include "categoryconfig.h"
 
 #include "ui_categoryselectdialog_base.h"
 
