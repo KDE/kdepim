@@ -432,6 +432,7 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
   if ( !changer ) {
     KMessageBox::sorry( parentWidget(), i18n( "Unable to save %1 \"%2\".",
                         i18n( incidence->typeStr() ), incidence->summary() ) );
+    kDebug() << "No incidence changer is set";
     return;
   }
 
