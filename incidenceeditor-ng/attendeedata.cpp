@@ -20,7 +20,7 @@
 
 #include "attendeedata.h"
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 void AttendeeData::clear()
 {

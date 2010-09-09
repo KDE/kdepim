@@ -32,7 +32,7 @@
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( FreePeriodModelTest, NoGUI )
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 void FreePeriodModelTest::testModelValidity()
 {

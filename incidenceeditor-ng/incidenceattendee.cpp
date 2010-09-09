@@ -56,7 +56,7 @@
 #include "incidencedatetime.h"
 #include "schedulingdialog.h"
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore* ui )
@@ -228,7 +228,7 @@ bool IncidenceAttendee::isDirty() const
 
 void IncidenceAttendee::changeStatusForMe( KCalCore::Attendee::PartStat stat )
 {
-  const IncidenceEditorsNG::EditorConfig *config = IncidenceEditorsNG::EditorConfig::instance();
+  const IncidenceEditorNG::EditorConfig *config = IncidenceEditorNG::EditorConfig::instance();
 
   AttendeeData::List attendees = mAttendeeEditor->attendees();
   mAttendeeEditor->clear();
@@ -258,7 +258,7 @@ void IncidenceAttendee::declineForMe()
 void IncidenceAttendee::fillOrganizerCombo()
 {
   mUi->mOrganizerCombo->clear();
-  const QStringList lst = IncidenceEditorsNG::EditorConfig::instance()->fullEmails();
+  const QStringList lst = IncidenceEditorNG::EditorConfig::instance()->fullEmails();
   QStringList uniqueList;
   for ( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     if ( !uniqueList.contains( *it ) ) {
@@ -352,7 +352,7 @@ void IncidenceAttendee::slotSelectAddresses()
   }
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
+void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
 {
   int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
   QScopedPointer<SchedulingDialog> dialog( new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), duration, mConflictResolver, mParentWidget ) );
@@ -396,7 +396,7 @@ void IncidenceAttendee::slotUpdateConflictLabel( int count )
 bool IncidenceAttendee::iAmOrganizer() const
 {
   if ( mLoadedIncidence ) {
-    const IncidenceEditorsNG::EditorConfig *config = IncidenceEditorsNG::EditorConfig::instance();
+    const IncidenceEditorNG::EditorConfig *config = IncidenceEditorNG::EditorConfig::instance();
     return config->thatIsMe( mLoadedIncidence->organizer()->email() );
   }
 

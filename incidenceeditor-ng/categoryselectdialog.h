@@ -1,5 +1,5 @@
 /*
-  This file is part of libkdepim.
+  This file is part of incidenceeditor-ng.
 
   Copyright (c) 2000, 2001, 2002 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -20,8 +20,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef CATEGORYSELECTDIALOG_H
-#define CATEGORYSELECTDIALOG_H
+#ifndef INCIDENCEEDITOR_CATEGORYSELECTDIALOG_H
+#define INCIDENCEEDITOR_CATEGORYSELECTDIALOG_H
 
 #include "incidenceeditors-ng_export.h"
 
@@ -29,7 +29,7 @@
 
 class CategorySelectWidgetBase;
 
-namespace IncidenceEditors
+namespace IncidenceEditorNG
 {
   class AutoCheckTreeWidget;
   class CategoryConfig;
@@ -97,6 +97,6 @@ class INCIDENCEEDITORS_NG_EXPORT CategorySelectDialog : public KDialog
     CategorySelectDialogPrivate *d;
 };
 
-} // namespace IncidenceEditors
+}
 
 #endif

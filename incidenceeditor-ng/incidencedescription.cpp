@@ -33,10 +33,10 @@
 #include "ui_eventortododesktop.h"
 #endif
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class IncidenceDescriptionPrivate
 {

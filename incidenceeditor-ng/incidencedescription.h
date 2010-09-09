@@ -28,7 +28,7 @@ namespace Ui {
   class EventOrTodoDesktop;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class IncidenceDescriptionPrivate;
 
@@ -71,6 +71,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
     //@endcond
 };
 
-} // IncidenceEditorsNG
+} // IncidenceEditorNG
 
 #endif // INCIDENCEDESCRIPTIONEDITOR_H

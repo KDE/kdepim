@@ -31,7 +31,7 @@
 #include <KLocale>
 #include <KGlobal>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 FreeBusyGanttProxyModel::FreeBusyGanttProxyModel( QObject* parent ) : QSortFilterProxyModel( parent )
 {

@@ -29,7 +29,7 @@ namespace Akonadi {
 class Item;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class EventOrTodoDialogPrivate;
 
@@ -76,7 +76,7 @@ private:
   Q_PRIVATE_SLOT(d_ptr, void handleAlarmCountChange(int))
   Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish(CalendarSupport::EditorItemManager::SaveAction))
   Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFail(CalendarSupport::EditorItemManager::SaveAction, QString))
-  Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(IncidenceEditorsNG::RecurrenceType))
+  Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(IncidenceEditorNG::RecurrenceType))
   Q_PRIVATE_SLOT(d_ptr, void loadTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void saveTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void storeTemplatesInConfig(QStringList))

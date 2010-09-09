@@ -35,7 +35,7 @@
 
 class KConfigSkeleton;
 
-namespace IncidenceEditorsNG
+namespace IncidenceEditorNG
 {
 
 /**
@@ -92,6 +92,6 @@ class INCIDENCEEDITORS_NG_EXPORT EditorConfig
     Private *const d;
 };
 
-} // namespace IncidenceEditorsNG
+} // namespace IncidenceEditorNG
 
 #endif

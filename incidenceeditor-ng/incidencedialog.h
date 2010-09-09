@@ -32,7 +32,7 @@ class Collection;
 class Item;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
 {

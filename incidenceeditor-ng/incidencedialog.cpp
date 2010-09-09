@@ -20,7 +20,7 @@
 
 #include "incidencedialog.h"
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 // TODO: I think that most of the code in EventOrTodoDialog can be moved to this
 //       class and reused for Journals as well

@@ -1,5 +1,5 @@
 /*
-  This file is part of libkdepim.
+  This file is part of incidenceeditor-ng.
 
   Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
@@ -32,7 +32,7 @@ class QString;
 
 class KConfig;
 
-namespace IncidenceEditors
+namespace IncidenceEditorNG
 {
 
 class INCIDENCEEDITORS_NG_EXPORT CategoryConfig : public QObject
@@ -55,6 +55,6 @@ private:
   Q_PRIVATE_SLOT( d, void configChanged() )
 };
 
-} // namespace IncidenceEditors
+}
 
 #endif

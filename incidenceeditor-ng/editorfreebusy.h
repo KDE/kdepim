@@ -48,7 +48,7 @@ namespace KDGantt {
 
 class KDateTime;
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 class EditorFreeBusy : public QDialog
 {
   Q_OBJECT

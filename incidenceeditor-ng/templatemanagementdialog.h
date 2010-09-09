@@ -48,7 +48,7 @@
 
 #include <QString>
 
-namespace IncidenceEditors
+namespace IncidenceEditorNG
 {
 
 class INCIDENCEEDITORS_NG_EXPORT TemplateManagementDialog: public KDialog
@@ -92,6 +92,6 @@ class INCIDENCEEDITORS_NG_EXPORT TemplateManagementDialog: public KDialog
     bool m_changed;
 };
 
-} // namespace IncidenceEditors
+}
 
 #endif

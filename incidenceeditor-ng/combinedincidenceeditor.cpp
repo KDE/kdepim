@@ -23,7 +23,7 @@
 #include <KMessageBox>
 #include <QtCore/QDebug>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 /// public methods
 

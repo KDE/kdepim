@@ -33,7 +33,7 @@
 
 class Ui_Dialog;
 
-namespace IncidenceEditorsNG
+namespace IncidenceEditorNG
 {
 
 class FreePeriodModel;

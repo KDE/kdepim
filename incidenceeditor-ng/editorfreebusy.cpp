@@ -63,7 +63,7 @@
 #include <QHeaderView>
 #include <QScrollBar>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 class RowController : public KDGantt::AbstractRowController {
 private:
@@ -940,7 +940,7 @@ void EditorFreeBusy::clearSelection() const
 
 void EditorFreeBusy::changeStatusForMe( AttendeeData::PartStat status )
 {
-  const QStringList myEmails = IncidenceEditorsNG::EditorConfig::instance()->allEmails();
+  const QStringList myEmails = IncidenceEditorNG::EditorConfig::instance()->allEmails();
   Q_FOREACH ( FreeBusyItem *item, mFreeBusyItems ) {
     for ( QStringList::ConstIterator it2( myEmails.begin() ), end( myEmails.end() );
           it2 != end; ++it2 ) {

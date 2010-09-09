@@ -46,7 +46,7 @@
 #include <QStringList>
 #include <QTimer>
 
-using namespace IncidenceEditors;
+using namespace IncidenceEditorNG;
 
 TemplateManagementDialog::TemplateManagementDialog(
   QWidget *parent, const QStringList &templates, KCalCore::IncidenceBase::IncidenceType type )

@@ -50,7 +50,7 @@
 
 
 using namespace Akonadi;
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 using namespace KCalCore;
 using namespace CalendarSupport;
 
@@ -109,15 +109,15 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
   Incidence::Ptr incidencePtr = CalendarSupport::incidence( mItem );
 
-  IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceWhatWhere( editorWidget->mUi );
+  IncidenceEditorNG::IncidenceEditor *editor = new IncidenceEditorNG::IncidenceWhatWhere( editorWidget->mUi );
   mEditor->combine( editor );
 
   Q_ASSERT( mEditorDateTime == 0 );
-  mEditorDateTime = new IncidenceEditorsNG::IncidenceDateTime( editorWidget->mUi );
+  mEditorDateTime = new IncidenceEditorNG::IncidenceDateTime( editorWidget->mUi );
   mEditorDateTime->setActiveDate( mActiveDate );
   mEditor->combine( mEditorDateTime );
 
-  editor = new IncidenceEditorsNG::IncidenceCompletionPriority( editorWidget->mUi );
+  editor = new IncidenceEditorNG::IncidenceCompletionPriority( editorWidget->mUi );
   mEditor->combine( editor );
   mEditor->load( incidencePtr );
 
@@ -130,26 +130,26 @@ void IncidenceView::initIncidenceMore()
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
   const Incidence::Ptr incidencePtr = CalendarSupport::incidence( mItem );
 
-  IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceCategories( mIncidenceMore->mUi );
+  IncidenceEditorNG::IncidenceEditor *editor = new IncidenceEditorNG::IncidenceCategories( mIncidenceMore->mUi );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceDescription( mIncidenceMore->mUi );
+  editor = new IncidenceEditorNG::IncidenceDescription( mIncidenceMore->mUi );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceAttendee( 0, mEditorDateTime, mIncidenceMore->mUi );
+  editor = new IncidenceEditorNG::IncidenceAttendee( 0, mEditorDateTime, mIncidenceMore->mUi );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceAlarm( mEditorDateTime, mIncidenceMore->mUi );
+  editor = new IncidenceEditorNG::IncidenceAlarm( mEditorDateTime, mIncidenceMore->mUi );
   mEditor->combine( editor );
 
   Q_ASSERT( mEditorDateTime != 0 );
-  editor = new IncidenceEditorsNG::IncidenceRecurrence( mEditorDateTime, mIncidenceMore->mUi );
+  editor = new IncidenceEditorNG::IncidenceRecurrence( mEditorDateTime, mIncidenceMore->mUi );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceSecrecy( mIncidenceMore->mUi );
+  editor = new IncidenceEditorNG::IncidenceSecrecy( mIncidenceMore->mUi );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceAttachment( mIncidenceMore->mUi );
+  editor = new IncidenceEditorNG::IncidenceAttachment( mIncidenceMore->mUi );
   mEditor->combine( editor );
   mEditor->load( incidencePtr );
 }

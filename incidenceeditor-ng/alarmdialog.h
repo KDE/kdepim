@@ -30,7 +30,7 @@ namespace Ui {
 class AlarmDialog;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class AlarmDialog : public KDialog
 {

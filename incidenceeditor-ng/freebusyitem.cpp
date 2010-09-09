@@ -26,7 +26,7 @@
 
 #include <calendarsupport/freebusymanager.h>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 FreeBusyItem::FreeBusyItem( const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget )
   : mAttendee( attendee ), mTimerID( 0 ),

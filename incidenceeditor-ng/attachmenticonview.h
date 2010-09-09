@@ -42,7 +42,7 @@
 
 class KUrl;
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class AttachmentIconView : public QListWidget
 {

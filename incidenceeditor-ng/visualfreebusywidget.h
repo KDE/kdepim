@@ -38,7 +38,7 @@ namespace KDGantt {
   class GraphicsView;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class ConflictResolver;
 class FreeBusyItemModel;

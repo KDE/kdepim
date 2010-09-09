@@ -23,9 +23,9 @@
 
 #include <KCalCore/IncidenceBase>
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
-class INCIDENCEEDITORS_NG_EXPORT KOrganizerEditorConfig : public IncidenceEditorsNG::EditorConfig
+class INCIDENCEEDITORS_NG_EXPORT KOrganizerEditorConfig : public IncidenceEditorNG::EditorConfig
 {
   public:
     KOrganizerEditorConfig();

@@ -22,7 +22,7 @@
 
 #include <KDebug>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 IncidenceEditor::IncidenceEditor( QObject *parent )
   : QObject( parent )

@@ -33,7 +33,7 @@
 
 class ItemPrivateData;
 
-namespace IncidenceEditorsNG
+namespace IncidenceEditorNG
 {
 /**
  * The FreeBusyItemModel is a 2-level tree structure.

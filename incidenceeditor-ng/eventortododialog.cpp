@@ -52,9 +52,9 @@
 #include "templatemanagementdialog.h"
 #include "ui_eventortododesktop.h"
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 enum Tabs {
   GeneralTab = 0,
@@ -88,7 +88,7 @@ public:
 
   /// General methods
   void handleAlarmCountChange( int newCount );
-  void handleRecurrenceChange( IncidenceEditorsNG::RecurrenceType type );
+  void handleRecurrenceChange( IncidenceEditorNG::RecurrenceType type );
   void loadTemplate( const QString &templateName );
   void manageTemplates();
   void saveTemplate( const QString &templateName );
@@ -177,8 +177,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(handleItemSaveFail(CalendarSupport::EditorItemManager::SaveAction, QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
-  q->connect( mIeRecurrence, SIGNAL(recurrenceChanged(IncidenceEditorsNG::RecurrenceType)),
-              SLOT(handleRecurrenceChange(IncidenceEditorsNG::RecurrenceType)) );
+  q->connect( mIeRecurrence, SIGNAL(recurrenceChanged(IncidenceEditorNG::RecurrenceType)),
+              SLOT(handleRecurrenceChange(IncidenceEditorNG::RecurrenceType)) );
   q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
               SLOT(updateAttachmentCount(int)) );
   q->connect( mIeAttendee, SIGNAL(attendeeCountChanged(int)),
@@ -205,7 +205,7 @@ void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
   mUi->mTabWidget->setTabText( AlarmsTab, tabText );
 }
 
-void EventOrTodoDialogPrivate::handleRecurrenceChange( IncidenceEditorsNG::RecurrenceType type )
+void EventOrTodoDialogPrivate::handleRecurrenceChange( IncidenceEditorNG::RecurrenceType type )
 {
   QString tabText = i18nc( "@title:tab Tab to configure the recurrence of an event or todo",
                            "Rec&urrence" );
@@ -273,9 +273,9 @@ void EventOrTodoDialogPrivate::manageTemplates()
 {
   Q_Q( EventOrTodoDialog );
 
-  QStringList &templates = IncidenceEditorsNG::EditorConfig::instance()->templates( mEditor->type() );
-  QPointer<IncidenceEditors::TemplateManagementDialog> dialog(
-      new IncidenceEditors::TemplateManagementDialog( q, templates, mEditor->type() ) );
+  QStringList &templates = IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() );
+  QPointer<IncidenceEditorNG::TemplateManagementDialog> dialog(
+      new IncidenceEditorNG::TemplateManagementDialog( q, templates, mEditor->type() ) );
   q->connect( dialog, SIGNAL( loadTemplate( const QString& ) ),
               SLOT( loadTemplate( const QString& ) ) );
   q->connect( dialog, SIGNAL( templatesChanged( const QStringList& ) ),
@@ -307,8 +307,8 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
 {
   // I find this somewhat broken. templates() returns a reference, maybe it should
   // be changed by adding a setTemplates method.
-  IncidenceEditorsNG::EditorConfig::instance()->templates( mEditor->type() ) = templateNames;
-  IncidenceEditorsNG::EditorConfig::instance()->config()->writeConfig();
+  IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() ) = templateNames;
+  IncidenceEditorNG::EditorConfig::instance()->config()->writeConfig();
 }
 
 
@@ -419,7 +419,7 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   mEditor->load( CalendarSupport::incidence( item ) );
 
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-  const QStringList allEmails = IncidenceEditorsNG::EditorConfig::instance()->allEmails();
+  const QStringList allEmails = IncidenceEditorNG::EditorConfig::instance()->allEmails();
   KCalCore::Attendee::Ptr me = incidence->attendeeByMails( allEmails );
 
   if ( incidence->attendeeCount() > 1 &&

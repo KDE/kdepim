@@ -1,5 +1,5 @@
 /*
-  This file is part of KOrganizer.
+  This file is part of incidenceeditor-ng.
 
   Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
@@ -34,7 +34,7 @@
 #include <QFrame>
 #include <QLabel>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 using namespace KCalCore;
 
 FreeBusyUrlDialog::FreeBusyUrlDialog( AttendeeData::Ptr attendee, QWidget *parent )

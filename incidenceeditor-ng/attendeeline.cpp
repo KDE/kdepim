@@ -35,10 +35,10 @@
 #include <QMenu>
 
 using namespace KCalUtils;
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 using namespace KPIM;
 
-IncidenceEditorsNG::AttendeeCheckBox::AttendeeCheckBox( QWidget* parent )
+IncidenceEditorNG::AttendeeCheckBox::AttendeeCheckBox( QWidget* parent )
   : QCheckBox( parent )
 {}
 

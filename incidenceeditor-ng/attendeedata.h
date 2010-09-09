@@ -27,7 +27,7 @@
 
 #include <QSharedPointer>
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class AttendeeData : public KPIM::MultiplyingLineData, public KCalCore::Attendee
 {

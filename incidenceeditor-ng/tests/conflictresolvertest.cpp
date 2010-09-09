@@ -36,7 +36,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/concept_check.hpp>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 using namespace KCalCore;
 
 void ConflictResolverTest::insertAttendees()

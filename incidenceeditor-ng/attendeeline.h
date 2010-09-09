@@ -35,7 +35,7 @@
 
 class QMenu;
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class Attendee;
 

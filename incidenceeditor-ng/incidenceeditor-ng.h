@@ -27,7 +27,7 @@
 
 #include "incidenceeditors-ng_export.h"
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 /**
  * KCal Incidences are complicated objects. The user interfaces to create/modify
@@ -111,6 +111,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     bool mWasDirty;
 };
 
-} // IncidenceEditorsNG
+} // IncidenceEditorNG
 
 #endif // INCIDENCEEDITOR_H

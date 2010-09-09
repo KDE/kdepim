@@ -38,7 +38,7 @@ namespace Ui {
 class AttachmentEditDialog;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class AttachmentIconItem;
 
@@ -62,6 +62,6 @@ class AttachmentEditDialog : public KDialog
     Ui::AttachmentEditDialog *mUi;
 };
 
-} // IncidenceEditorsNG
+} // IncidenceEditorNG
 
 #endif // ATTACHMENTEDITDIALOG_H

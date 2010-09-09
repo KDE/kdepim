@@ -34,7 +34,7 @@ namespace Akonadi {
 class CollectionComboBox;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 class IncidenceDateTime;
 }
 
@@ -84,8 +84,8 @@ class IncidenceView : public KDeclarativeFullScreenView, public CalendarSupport:
     Akonadi::Item mItem;
     CalendarSupport::EditorItemManager *mItemManager;
     Akonadi::CollectionComboBox *mCollectionCombo;
-    IncidenceEditorsNG::CombinedIncidenceEditor *mEditor;
-    IncidenceEditorsNG::IncidenceDateTime *mEditorDateTime;
+    IncidenceEditorNG::CombinedIncidenceEditor *mEditor;
+    IncidenceEditorNG::IncidenceDateTime *mEditorDateTime;
 
     /// We need this because we can't rely on the order in which those two are added.
     MobileIncidenceMore *mIncidenceMore;

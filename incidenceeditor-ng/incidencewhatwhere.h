@@ -28,7 +28,7 @@ namespace Ui {
 class EventOrTodoDesktop;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 /**
  * The IncidenceGeneralEditor keeps track of the following Incidence parts:
@@ -52,6 +52,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceWhatWhere : public IncidenceEditor
     Ui::EventOrTodoDesktop *mUi;
 };
 
-} // IncidenceEditorsNG
+} // IncidenceEditorNG
 
 #endif // INCIDENCEWHATWHERE_H

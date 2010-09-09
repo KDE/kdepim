@@ -28,7 +28,7 @@ class EventOrTodoDesktop;
 class EventOrTodoMore;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class IncidenceDateTime;
 

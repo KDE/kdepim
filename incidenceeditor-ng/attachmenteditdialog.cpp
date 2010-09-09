@@ -33,7 +33,7 @@
 #include "attachmenticonview.h" // UGLY
 #include "ui_attachmenteditdialog.h"
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
                                             QWidget *parent,

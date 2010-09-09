@@ -24,7 +24,7 @@
 
 #include <QList>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 AttendeeEditor::AttendeeEditor( QWidget* parent )
   : MultiplyingLineEditor( new AttendeeLineFactory( parent ), parent )

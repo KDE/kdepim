@@ -28,7 +28,7 @@
 #include "ui_eventortododesktop.h"
 #endif
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 IncidenceWhatWhere::IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )

@@ -25,7 +25,7 @@
 
 #include "incidenceeditors-ng_export.h"
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class IncidenceDefaultsPrivate;
 

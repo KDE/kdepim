@@ -28,7 +28,7 @@
 #include <QString>
 #include <K3ListView>
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 template<class T>
 class CustomListViewItem : public K3ListViewItem
@@ -65,6 +65,6 @@ class CustomListViewItem : public K3ListViewItem
     QMap<int,QString> mKeyMap;
 };
 
-} // namespace IncidenceEditorsNG
+} // namespace IncidenceEditorNG
 
 #endif

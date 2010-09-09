@@ -48,7 +48,7 @@
 #include "ui_eventortododesktop.h"
 #endif
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoMore *ui )

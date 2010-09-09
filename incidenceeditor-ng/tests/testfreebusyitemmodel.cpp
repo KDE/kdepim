@@ -31,7 +31,7 @@
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( FreeBusyItemModelTest, NoGUI )
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 void FreeBusyItemModelTest::testModelValidity()
 {

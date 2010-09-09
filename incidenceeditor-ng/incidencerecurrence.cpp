@@ -34,7 +34,7 @@
 #include "ui_eventortododesktop.h"
 #endif
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 enum {
   // Keep in sync with mRecurrenceEndCombo

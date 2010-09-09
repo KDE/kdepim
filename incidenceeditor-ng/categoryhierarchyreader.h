@@ -1,22 +1,22 @@
 /*
-    This file is part of libkdepim.
+  This file is part of incidenceeditor-ng
 
-    Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
+  Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 #ifndef CATEGORYHIERARCHYREADER_H
 #define CATEGORYHIERARCHYREADER_H
@@ -31,17 +31,18 @@ class QString;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-namespace IncidenceEditors
+namespace IncidenceEditorNG
 {
 
 class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReader
 {
   public:
     void read( QStringList categories );
-    virtual ~CategoryHierarchyReader() { }
+    virtual ~CategoryHierarchyReader() {}
     static QStringList path( QString string );
+
   protected:
-    CategoryHierarchyReader() { }
+    CategoryHierarchyReader() {}
     virtual void clear() = 0;
     virtual void goUp() = 0;
     virtual void addChild( const QString &label, const QVariant &userData = QVariant() ) = 0;
@@ -51,9 +52,8 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReader
 class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
 {
   public:
-    CategoryHierarchyReaderQComboBox( QComboBox *box )
-        : mBox( box ), mCurrentDepth( 0 ) { }
-    virtual ~CategoryHierarchyReaderQComboBox() { }
+    CategoryHierarchyReaderQComboBox( QComboBox *box ) : mBox( box ), mCurrentDepth( 0 ) {}
+    virtual ~CategoryHierarchyReaderQComboBox() {}
 
   protected:
     virtual void clear();
@@ -86,6 +86,6 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQTreeWidget : public Cat
 };
 #endif
 
-} // namespace IncidenceEditors;
+}
 
 #endif

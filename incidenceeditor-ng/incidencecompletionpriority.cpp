@@ -28,7 +28,7 @@
 
 #include <kcalcore/todo.h>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 class IncidenceCompletionPriority::Private
 {

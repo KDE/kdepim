@@ -21,7 +21,7 @@
 
 #include "incidenceeditors-ng_export.h"
 
-namespace IncidenceEditorsNG
+namespace IncidenceEditorNG
 {
 
 class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
@@ -34,6 +34,6 @@ class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
     static bool sActivated;
 };
 
-} // namespace IncidenceEditorsNG
+} // namespace IncidenceEditorNG
 
 #endif

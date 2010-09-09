@@ -35,7 +35,7 @@ namespace Ui {
 class EventOrTodoDesktop;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
@@ -132,6 +132,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool mTimezoneCombosWhereVisibile;
 };
 
-} // IncidenceEditorsNG
+} // IncidenceEditorNG
 
 #endif // INCIDENCEDATETIMEEDITOR_H

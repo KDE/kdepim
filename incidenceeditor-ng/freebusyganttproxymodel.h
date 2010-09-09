@@ -27,7 +27,7 @@
 
 #include <QSortFilterProxyModel>
 
-namespace IncidenceEditorsNG
+namespace IncidenceEditorNG
 {
 /**
  * This is a private proxy model, that wraps the free busy data exposed

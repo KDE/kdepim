@@ -27,7 +27,7 @@
 
 #include "mainview.h"
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 int main( int argc, char **argv )
 {

@@ -40,7 +40,7 @@ namespace KPIM {
 class MultiplyingLine;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class AttendeeEditor;
 class ConflictResolver;

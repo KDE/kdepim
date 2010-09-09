@@ -34,7 +34,7 @@
 
 #include <QBoxLayout>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startTime, int duration, ConflictResolver* resolver, QWidget* parent  )
   : KDialog( parent ),

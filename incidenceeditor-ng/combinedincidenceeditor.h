@@ -24,7 +24,7 @@
 #include "incidenceeditor-ng.h"
 #include "incidenceeditors-ng_export.h"
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 /**
  * The CombinedIncidenceEditor combines optional widgets with zero or more
@@ -69,6 +69,6 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
     QWidget *mParent;
 };
 
-} // IncidenceEditorsNG
+} // IncidenceEditorNG
 
 #endif // COMBINEDINCIDENCEEDITOR_H

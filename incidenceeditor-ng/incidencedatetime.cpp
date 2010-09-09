@@ -40,7 +40,7 @@
 #include "ui_eventortododesktop.h"
 #endif
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 using namespace KCalCore;
 using namespace KCalUtils;
 

@@ -25,7 +25,7 @@
 #include <kglobal.h>
 using namespace KCalCore;
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 namespace AlarmPresets {
 
@@ -248,4 +248,4 @@ int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm )
 }
 
 } // AlarmPresets
-} // IncidenceEditorsNG
+} // IncidenceEditorNG

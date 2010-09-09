@@ -26,7 +26,7 @@
 class QString;
 class QStringList;
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 namespace AlarmPresets {
 

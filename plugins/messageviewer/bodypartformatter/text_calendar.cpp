@@ -721,8 +721,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
     {
     // FIXME no IncidenceEditors on WinCE, anyway we don't want to depend on it just for that
 #ifndef Q_OS_WINCE
-      if ( !IncidenceEditorsNG::GroupwareIntegration::isActive() ) {
-        IncidenceEditorsNG::GroupwareIntegration::activate();
+      if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
+        IncidenceEditorNG::GroupwareIntegration::activate();
       }
 #endif
       return CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );

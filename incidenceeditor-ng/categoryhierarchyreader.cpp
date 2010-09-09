@@ -1,22 +1,22 @@
 /*
-    This file is part of libkdepim.
+  This file is part of incidenceeditor-ng.
 
-    Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
+  Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include "categoryhierarchyreader.h"
@@ -26,24 +26,27 @@
 #include <QTreeWidget>
 #include <QStringList>
 
-using namespace IncidenceEditors;
+using namespace IncidenceEditorNG;
 
 inline QString &quote( QString &string )
 {
   Q_ASSERT( CategoryConfig::categorySeparator != "@" );
-  return string.replace( "@", "@0" ).replace( QString("\\") +
+  return string.replace( '@', "@0" ).replace( QString( '\\' ) +
                                               CategoryConfig::categorySeparator,
                                               "@1" );
 }
 
 inline QStringList &unquote( QStringList &strings )
 {
-  return strings.replaceInStrings( "@1", CategoryConfig::categorySeparator ).replaceInStrings( "@0", "@" );
+  return
+    strings.replaceInStrings( "@1", CategoryConfig::categorySeparator ).
+    replaceInStrings( "@0", "@" );
 }
 
 QStringList CategoryHierarchyReader::path( QString string )
 {
-  QStringList _path = quote( string).split( CategoryConfig::categorySeparator, QString::SkipEmptyParts );
+  QStringList _path =
+    quote( string).split( CategoryConfig::categorySeparator, QString::SkipEmptyParts );
   return unquote( _path );
 }
 
@@ -68,15 +71,19 @@ void CategoryHierarchyReader::read( QStringList categories )
     QStringList::Iterator jt, kt;
     int split_level = 0;
     QStringList new_path = _path; // save it for later
-    for (jt = _path.begin(), kt = last_path.begin(); jt != _path.end() && kt != last_path.end(); ++jt, ++kt)
-      if (*jt == *kt) {
+    for ( jt = _path.begin(), kt = last_path.begin();
+          jt != _path.end() && kt != last_path.end(); ++jt, ++kt ) {
+      if ( *jt == *kt ) {
         split_level++;
-      } else
+      } else {
         break; // now we have first non_equal component in the iterators
+      }
+    }
 
     // make a path relative to the shared ancestor
-    if ( jt != _path.begin() )
+    if ( jt != _path.begin() ) {
       _path.erase( _path.begin(), jt );
+    }
     last_path = new_path;
 
     if ( _path.isEmpty() ) {
@@ -138,7 +145,7 @@ void CategoryHierarchyReaderQTreeWidget::goUp()
 void CategoryHierarchyReaderQTreeWidget::addChild( const QString &label, const QVariant &userData )
 {
   Q_UNUSED( userData );
-  
+
   if ( mItem ) {
     mItem = new QTreeWidgetItem( mItem, QStringList() << label );
   } else {

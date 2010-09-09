@@ -36,7 +36,7 @@
 #include <KSystemTimeZones>
 
 using namespace KCalCore;
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
 {
@@ -72,7 +72,7 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
         return;
       }
 
-      IncidenceEditorsNG::IncidenceDialog *dialog = IncidenceEditorsNG::IncidenceDialogFactory::create( incidence->type() );
+      IncidenceEditorNG::IncidenceDialog *dialog = IncidenceEditorNG::IncidenceDialogFactory::create( incidence->type() );
       dialog->setIsCounterProposal( true );
       dialog->load( item, QDate::currentDate() );
     }

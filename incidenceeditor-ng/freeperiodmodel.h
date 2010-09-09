@@ -27,7 +27,7 @@
 
 #include <QAbstractTableModel>
 
-namespace IncidenceEditorsNG
+namespace IncidenceEditorNG
 {
 
 class INCIDENCEEDITORS_NG_EXPORT FreePeriodModel : public QAbstractTableModel

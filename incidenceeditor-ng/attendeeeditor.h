@@ -25,7 +25,7 @@
 
 #include <libkdepim/multiplyinglineeditor.h>
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class AttendeeLineFactory : public KPIM::MultiplyingLineFactory
 {

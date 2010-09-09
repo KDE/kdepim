@@ -21,7 +21,7 @@
 #include "incidencedialogfactory.h"
 #include "eventortododialog.h"
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 using namespace KCalCore;
 
 

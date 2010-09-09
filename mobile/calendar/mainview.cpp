@@ -135,7 +135,7 @@ void MainView::newEvent()
   item.setMimeType( KCalCore::Event::eventMimeType() );
   KCalCore::Event::Ptr event( new KCalCore::Event );
 
-  IncidenceEditorsNG::IncidenceDefaults defaults;
+  IncidenceEditorNG::IncidenceDefaults defaults;
   // Set the full emails manually here, to avoid that we get dependencies on
   // KCalPrefs all over the place.
   defaults.setFullEmails( CalendarSupport::KCalPrefs::instance()->fullEmails() );

@@ -30,7 +30,7 @@ class EventOrTodoDesktop;
 class EventOrTodoMore;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class IncidenceDateTime;
 
@@ -61,7 +61,7 @@ public:
     RecurrenceType currentRecurrenceType() const;
 
 Q_SIGNALS:
-    void recurrenceChanged( IncidenceEditorsNG::RecurrenceType type );
+    void recurrenceChanged( IncidenceEditorNG::RecurrenceType type );
 
 private Q_SLOTS:
     void addException();

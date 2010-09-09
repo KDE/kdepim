@@ -1,5 +1,5 @@
 /*
-  This file is part of KOrganizer.
+  This file is part of incidenceeditor-ng.
 
   Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
@@ -26,14 +26,14 @@
 
 #include "incidenceeditors-ng_export.h"
 #include "attendeedata.h"
+
 #include <KDialog>
 
 class KLineEdit;
 
+namespace IncidenceEditorNG {
 
-namespace IncidenceEditorsNG
-{
-  class FreeBusyUrlWidget;
+class FreeBusyUrlWidget;
 
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlDialog : public KDialog
 {
@@ -63,6 +63,6 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlWidget : public QWidget
    AttendeeData::Ptr mAttendee;
 };
 
-} // namespace IncidenceEditors
+}
 
 #endif

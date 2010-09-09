@@ -31,9 +31,9 @@
 #include <KPIMUtils/Email>
 
 using namespace KCalCore;
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 struct IncidenceDefaultsPrivate
 {

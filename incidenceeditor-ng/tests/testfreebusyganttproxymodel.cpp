@@ -33,7 +33,7 @@
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( FreeBusyGanttProxyModelTest, NoGUI )
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 void FreeBusyGanttProxyModelTest::testModelValidity()
 {

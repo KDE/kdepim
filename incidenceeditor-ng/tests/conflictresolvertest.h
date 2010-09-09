@@ -28,7 +28,7 @@
 
 #include <QtCore/QObject>
 
-namespace IncidenceEditorsNG
+namespace IncidenceEditorNG
 {
 class ConflictResolver;
 }
@@ -51,9 +51,9 @@ private slots:
 private:
     void insertAttendees();
     void addAttendee( const QString &email, const KCalCore::FreeBusy::Ptr &fb, KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant ) ;
-    QList<IncidenceEditorsNG::FreeBusyItem::Ptr> attendees;
+    QList<IncidenceEditorNG::FreeBusyItem::Ptr> attendees;
     QWidget *parent;
-    IncidenceEditorsNG::ConflictResolver *resolver;
+    IncidenceEditorNG::ConflictResolver *resolver;
     KDateTime base, end;
 };
 

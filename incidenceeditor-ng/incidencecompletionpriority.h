@@ -27,7 +27,7 @@ namespace Ui {
 class EventOrTodoDesktop;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceCompletionPriority : public IncidenceEditor
 {

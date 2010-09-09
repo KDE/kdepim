@@ -48,7 +48,7 @@
 #include <QHeaderView>
 #include <QScrollBar>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 class RowController : public KDGantt::AbstractRowController
 {

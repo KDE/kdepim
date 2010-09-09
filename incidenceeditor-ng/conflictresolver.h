@@ -40,7 +40,7 @@
 #include <kcalcore/period.h>
 
 
-namespace IncidenceEditorsNG
+namespace IncidenceEditorNG
 {
 
 class FreeBusyItem;

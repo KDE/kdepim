@@ -42,7 +42,7 @@
 #include <KDE/KTemporaryFile>
 #include <KDE/KUrl>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 AttachmentIconItem::AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QListWidget *parent )
   : QListWidgetItem( parent )

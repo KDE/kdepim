@@ -25,7 +25,7 @@
 
 #include "incidenceeditors-ng_export.h"
 
-namespace IncidenceEditorsNG
+namespace IncidenceEditorNG
 {
 
 class IncidenceDialog;
@@ -47,6 +47,6 @@ namespace IncidenceDialogFactory
                                                       Qt::WFlags flags = 0);
 }
 
-} // IncidenceEditorsNG
+} // IncidenceEditorNG
 
 #endif // INCIDENCEDIALOGFACTORY_H

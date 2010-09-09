@@ -29,7 +29,7 @@
 
 #include <calendarsupport/freebusymanager.h>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 class ItemPrivateData {
 public:
@@ -184,7 +184,7 @@ QVariant FreeBusyItemModel::headerData( int section, Qt::Orientation orientation
 }
 
 
-void FreeBusyItemModel::addItem(const IncidenceEditorsNG::FreeBusyItem::Ptr& freebusy)
+void FreeBusyItemModel::addItem(const IncidenceEditorNG::FreeBusyItem::Ptr& freebusy)
 {
     kDebug() << freebusy->attendee()->fullName();
     int row = mFreeBusyItems.size();
@@ -234,7 +234,7 @@ void FreeBusyItemModel::clear()
 }
 
 
-void IncidenceEditorsNG::FreeBusyItemModel::removeRow( int row )
+void IncidenceEditorNG::FreeBusyItemModel::removeRow( int row )
 {
     beginRemoveRows( QModelIndex(), row, row );
     mFreeBusyItems.removeAt( row );
@@ -243,7 +243,7 @@ void IncidenceEditorsNG::FreeBusyItemModel::removeRow( int row )
     endRemoveRows();
 }
 
-void FreeBusyItemModel::removeItem( const IncidenceEditorsNG::FreeBusyItem::Ptr& freebusy )
+void FreeBusyItemModel::removeItem( const IncidenceEditorNG::FreeBusyItem::Ptr& freebusy )
 {
     int row = mFreeBusyItems.indexOf( freebusy );
     if( row >= 0 )

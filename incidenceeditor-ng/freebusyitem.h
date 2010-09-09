@@ -31,7 +31,7 @@
 
 #include "attendeedata.h"
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 /**
  * The FreeBusyItem is the whole line for a given attendee..
  */

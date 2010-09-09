@@ -32,12 +32,12 @@
 #include <QHash>
 #include <QSet>
 
-using namespace IncidenceEditorsNG;
+using namespace IncidenceEditorNG;
 
 FreePeriodModel::FreePeriodModel( QObject* parent ): QAbstractTableModel( parent )
 {}
 
-IncidenceEditorsNG::FreePeriodModel::~FreePeriodModel()
+IncidenceEditorNG::FreePeriodModel::~FreePeriodModel()
 {
 }
 

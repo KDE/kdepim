@@ -28,7 +28,7 @@ class EventOrTodoDesktop;
 class EventOrTodoMore;
 }
 
-namespace IncidenceEditorsNG {
+namespace IncidenceEditorNG {
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceSecrecy : public IncidenceEditor
 {
