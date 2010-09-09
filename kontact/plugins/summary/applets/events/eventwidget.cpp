@@ -38,6 +38,8 @@ EventWidget::EventWidget( QVariantHash args, QGraphicsWidget* parent )
     initUI();
     updateSummaryUI();
     updateFullUI();
+
+    setMoreInfoVisible( false );
 }
 
 void EventWidget::setData( QVariantHash args )
@@ -50,7 +52,8 @@ void EventWidget::setData( QVariantHash args )
         if ( !m_startDate.isNull() ) {
             // make the date reference this year
             // FIXME fugly.
-            QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_startDate.date().month(), m_startDate.date().day() ) );
+            QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_startDate.date().month(), m_startDate.date().day() ), 
+                                             QTime(m_startDate.time().hour(), m_startDate.time().minute(), m_startDate.time().second()) );
 
             m_startDate = KDateTime( day );
         }
@@ -226,7 +229,6 @@ void EventWidget::updateFullUI()
 
     // .. and set the text!
     m_startDateLabel->setText( text );
-
 }
 
 void EventWidget::toggleMoreInfo()
