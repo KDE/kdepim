@@ -1,3 +1,5 @@
+#ifndef EVENTSAPPLET_CPP
+#define EVENTSAPPLET_CPP
 /*
  *   Copyright 2010 Ryan Rix <ry@n.rix.si>
  * 
@@ -106,7 +108,7 @@ void EventsApplet::updateEvents()
 
     kDebug() << "Connecting source:" << source;
 
-    dataEngine( "calendar" )->connectSource( source, this, 6000 );
+    dataEngine( "calendar" )->connectSource( source, this );
 }
 
 void EventsApplet::updateUI()
@@ -127,28 +129,36 @@ void EventsApplet::updateUI()
     }
 }
 
-void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
+void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data pimData )
 {
     if ( source.startsWith( "events" ) ) { // ++insurance
         // Start by purging old data
         // m_incidences.clear();
 
-        QHashIterator<QString,QVariant> it( data );
+        QHashIterator<QString,QVariant> it( pimData );
         while ( it.hasNext() ) {
             it.next();
             QVariantHash data = it.value().toHash();
 
+            kDebug() << it.key();
+            kDebug() << data;
+
             // Start by making sure it's a type we are looking for
             if ( data[ "Type" ].toString() == m_incidenceType || m_incidenceType == "Agenda" ) {
-                KDateTime sd = qVariantValue<KDateTime>( data[ "StartDate" ] );
+                KDateTime sd = data.value("StartDate").value<KDateTime>();
 
-                QDate date = sd.date();
-                date = QDate( QDate::currentDate().year(), date.month(), date.day() );
-                sd = KDateTime( date, sd.time() );
+                int difference = 0;
 
-                // Since it seems like the calendar dataengine is broken and returning ALL data, let's
-                // filter it a little bit by hand... FIXME
-                int difference = KDateTime::currentDateTime( sd.timeSpec() ).daysTo( sd ) % 365 ; // XXX different locales with different calendars?
+                if( sd.isValid() ) {
+                    QDate date = sd.date();
+                    date = QDate( QDate::currentDate().year(), date.month(), date.day() );
+                    sd = KDateTime( date, sd.time() );
+
+                    // Since it seems like the calendar dataengine is broken and returning ALL data, let's
+                    // filter it a little bit by hand... FIXME
+                    difference = KDateTime::currentDateTime( sd.timeSpec() ).daysTo( sd ) % 365 ; // XXX different locales with different calendars?
+                }
+
                 if ( difference <= m_numDays && difference >= 0 ) {
                     QString key = sd.toString();
                     if (m_incidences[ key ]) {
@@ -168,8 +178,10 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
                         }
                     }
                     kDebug() << "Adding" << data[ "Summary" ] << key;
-                    EventWidget* widget = new EventWidget( data, this );
-                    m_incidences[ key ] = widget;
+                    if ( !m_incidences[ key ] ) {
+                        EventWidget* widget = new EventWidget( data, this );
+                        m_incidences[ key ] = widget;
+                    }
                 }
             } 
             // kDebug() << data;
@@ -184,3 +196,4 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
 
 #include "eventsapplet.moc"
 
+#endif // EVENTSAPPLET_CPP
