@@ -128,14 +128,14 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     /* reimp */QPair<KDateTime,KDateTime> actualDateRange( const KDateTime &start,
                                                            const KDateTime &end ) const;
 
+    // Compute and update the whole view
+    void reloadIncidences();
+
+  protected:
     /**
      * @deprecated
      */
     void showDates( const QDate &start, const QDate &end );
-
-  private slots:
-    // Compute and update the whole view
-    void reloadIncidences();
 
   private:
     MonthViewPrivate * const d;
