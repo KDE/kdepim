@@ -35,6 +35,10 @@ MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
   mView->setPalette( pal );
   setWidget( mView );
 
+  connect( this, SIGNAL(previousItemRequest()),
+           mView, SLOT(moveBackMonth()) );
+  connect( this, SIGNAL(nextItemRequest()),
+           mView, SLOT(moveFwdMonth()) );
   connect( mView, SIGNAL(newEventSignal(Akonadi::Collection::List)),
            SLOT(emitDateClicked()));
 }
