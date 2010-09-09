@@ -23,6 +23,8 @@
 
 #include <akonadi/entitymimetypefiltermodel.h>
 
+#include "orderedchildcollectionsmodel.h"
+
 using namespace Akonadi;
 
 BreadcrumbNavigationFactory::BreadcrumbNavigationFactory(QObject* parent)
@@ -36,6 +38,10 @@ QAbstractItemModel* BreadcrumbNavigationFactory::getChildItemsModel(QAbstractIte
   filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
   filterProxy->setSourceModel( model );
   filterProxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  return filterProxy;
+
+  OrderedChildCollectionsModel *orderProxy = new OrderedChildCollectionsModel( this );
+  orderProxy->sort(0, Qt::DescendingOrder );
+  orderProxy->setSourceModel( filterProxy );
+  return orderProxy;
 }
 
