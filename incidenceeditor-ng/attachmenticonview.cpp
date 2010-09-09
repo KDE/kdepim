@@ -104,8 +104,9 @@ const QString AttachmentIconItem::label() const
 
 void AttachmentIconItem::setLabel( const QString &description )
 {
-  if ( mAttachment->label() == description )
+  if ( mAttachment->label() == description ) {
     return;
+  }
   mAttachment->setLabel( description );
   readAttachment();
 }
@@ -150,8 +151,7 @@ void AttachmentIconItem::readAttachment()
 
   setFlags( flags() | Qt::ItemIsEditable );
 
-  if ( mAttachment->mimeType().isEmpty() ||
-        !( KMimeType::mimeType( mAttachment->mimeType() ) ) ) {
+  if ( mAttachment->mimeType().isEmpty() || !( KMimeType::mimeType( mAttachment->mimeType() ) ) ) {
     KMimeType::Ptr mimeType;
     if ( mAttachment->isUri() ) {
       mimeType = KMimeType::findByUrl( mAttachment->uri() );
@@ -205,12 +205,12 @@ KUrl AttachmentIconView::tempFileForAttachment( const KCalCore::Attachment::Ptr 
   return mTempFiles.value( attachment );
 }
 
-QMimeData* AttachmentIconView::mimeData(const QList< QListWidgetItem* > items) const
+QMimeData *AttachmentIconView::mimeData(const QList< QListWidgetItem* > items) const
 {
   // create a list of the URL:s that we want to drag
   KUrl::List urls;
   QStringList labels;
-  foreach( QListWidgetItem *it, items ) {
+  foreach ( QListWidgetItem *it, items ) {
     if ( it->isSelected() ) {
       AttachmentIconItem *item = static_cast<AttachmentIconItem *>( it );
       if ( item->isBinary() ) {
@@ -265,10 +265,10 @@ void AttachmentIconView::startDrag( Qt::DropActions supportedActions )
 #endif
 }
 
-void AttachmentIconView::keyPressEvent(QKeyEvent* event)
+void AttachmentIconView::keyPressEvent( QKeyEvent *event )
 {
-  if ( ( event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter )
-    && currentItem() && state() != EditingState ) {
+  if ( ( event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter ) &&
+       currentItem() && state() != EditingState ) {
     emit itemDoubleClicked( currentItem() ); // ugly, but itemActivated() also includes single click
     return;
   }

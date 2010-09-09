@@ -52,15 +52,17 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItemModel : public QAbstractItemModel
         FreeBusyPeriodRole
     };
 
-    FreeBusyItemModel( QObject* parent = 0 );
+    FreeBusyItemModel( QObject *parent = 0 );
     virtual ~FreeBusyItemModel();
 
-    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
-    virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
-    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual QModelIndex index(int row, int column = 0, const QModelIndex& parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex& child) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual QModelIndex index( int row, int column = 0,
+                               const QModelIndex &parent = QModelIndex() ) const;
+    virtual QModelIndex parent( const QModelIndex &child ) const;
+    virtual QVariant headerData( int section, Qt::Orientation orientation,
+                                 int role = Qt::DisplayRole ) const;
 
     void addItem( const FreeBusyItem::Ptr &freebusy );
 
@@ -77,14 +79,15 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItemModel : public QAbstractItemModel
      * redownloaded from Akonadi.
      */
     void triggerReload();
+
     /**
      * cancel reloading
-     * */
+     */
     void cancelReload();
 
     /**
      * Reload FB items
-     * */
+     */
     void reload();
 
   public slots:
@@ -100,13 +103,14 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItemModel : public QAbstractItemModel
     void autoReload();
 
   private:
-    void setFreeBusyPeriods( const QModelIndex &parent, const KCalCore::FreeBusyPeriod::List &list );
+    void setFreeBusyPeriods( const QModelIndex &parent,
+                             const KCalCore::FreeBusyPeriod::List &list );
     void updateFreeBusyData( const FreeBusyItem::Ptr & );
 
     QTimer mReloadTimer;
     bool mForceDownload;
     QList<FreeBusyItem::Ptr> mFreeBusyItems;
-    ItemPrivateData* mRootData;
+    ItemPrivateData *mRootData;
 };
 
 }

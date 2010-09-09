@@ -40,10 +40,9 @@ namespace IncidenceDialogFactory
 
     TODO: Implement support for Journals.
     NOTE: There is no editor for Incidence::TypeFreeBusy
-   */
+  */
   INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *create( KCalCore::IncidenceBase::IncidenceType type,
-                                                      QWidget *parent = 0,
-                                                      Qt::WFlags flags = 0);
+                                                      QWidget *parent = 0, Qt::WFlags flags = 0 );
 }
 
 }

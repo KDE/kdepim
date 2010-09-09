@@ -57,15 +57,14 @@ class EditorFreeBusy : public QDialog
     void setUpdateEnabled( bool enabled );
     bool updateEnabled() const;
 
-    void insertAttendee( AttendeeData::Ptr , bool readFBList = true );
-    void removeAttendee( AttendeeData::Ptr  );
+    void insertAttendee( AttendeeData::Ptr, bool readFBList = true );
+    void removeAttendee( AttendeeData::Ptr );
     void clearAttendees();
-
 
     void triggerReload();
     void cancelReload();
 
-    int indexOfItem( FreeBusyItem* item );
+    int indexOfItem( FreeBusyItem *item );
 
   signals:
     void dateTimesChanged( const QDateTime &, const QDateTime & );
@@ -75,7 +74,7 @@ class EditorFreeBusy : public QDialog
 
     void setDateTimes( const KDateTime &, const KDateTime  & );
 
-    void editFreeBusyUrl( const QModelIndex& index );
+    void editFreeBusyUrl( const QModelIndex &index );
 
     void slotOrganizerChanged( const QString &newOrganizer );
 
@@ -118,13 +117,13 @@ class EditorFreeBusy : public QDialog
                   KDateTime &tryFrom, KDateTime &tryTo );
     void updateStatusSummary();
     void reload();
-    FreeBusyItem* selectedItem() const;
+    FreeBusyItem *selectedItem() const;
 
     KDGantt::GraphicsView *mGanttView;
     QTreeWidget *mLeftView;
     RowController *mRowController;
     KDGantt::DateTimeGrid *mGanttGrid;
-//     KDIntervalColorRectangle *mEventRectangle;
+//  KDIntervalColorRectangle *mEventRectangle;
     QLabel *mStatusSummaryLabel;
     bool mIsOrganizer;
     KComboBox *mScaleCombo;
@@ -136,7 +135,9 @@ class EditorFreeBusy : public QDialog
     bool mForceDownload;
 
     QString mCurrentOrganizer;
-    QList<FreeBusyItem*> mFreeBusyItems; //TODO: holds all the items. if a tree like structure is needed, instead of the list, add it as a data of mLeftView items
+    QList<FreeBusyItem*> mFreeBusyItems; //TODO: holds all the items. if a tree like structure
+                                         //is needed instead of the list, add it as a data of
+                                         //mLeftView items
 };
 
 }

@@ -1,21 +1,21 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "alarmpresets.h"
@@ -109,6 +109,7 @@ void initPresets( AlarmPresets::When when )
     sBeforeStartPresetNames->append( i18nc( "@item:inlistbox", "5 days before start" ) );
     sBeforeStartPresets->append( alarm );
     break;
+
   case AlarmPresets::BeforeEnd:
     alarm->setType( Alarm::Display );
     alarm->setEndOffset( -5 * 60 ); // 5 minutes before
@@ -186,38 +187,43 @@ QStringList availablePresets( AlarmPresets::When when )
 {
   switch ( when ) {
   case AlarmPresets::BeforeStart:
-    if ( sBeforeStartPresetNames->isEmpty() )
+    if ( sBeforeStartPresetNames->isEmpty() ) {
       initPresets( when );
+    }
     return *sBeforeStartPresetNames;
   case AlarmPresets::BeforeEnd:
-    if ( sBeforeEndPresetNames->isEmpty() )
+    if ( sBeforeEndPresetNames->isEmpty() ) {
       initPresets( when );
+    }
     return *sBeforeEndPresetNames;
   default:
     return QStringList();
   }
 }
 
-
 Alarm::Ptr preset( When when, const QString &name )
 {
   switch ( when ) {
   case AlarmPresets::BeforeStart:
-    {
-      if ( sBeforeStartPresetNames->isEmpty() )
-        initPresets( when );
-      Q_ASSERT( sBeforeStartPresetNames->count( name ) == 1 ); // The name should exists and only once
-
-      return Alarm::Ptr( new Alarm( *sBeforeStartPresets->at( sBeforeStartPresetNames->indexOf( name ) ) ) );
+  {
+    if ( sBeforeStartPresetNames->isEmpty() ) {
+      initPresets( when );
     }
+    Q_ASSERT( sBeforeStartPresetNames->count( name ) == 1 ); // The name should exists and only once
+
+    return Alarm::Ptr(
+      new Alarm( *sBeforeStartPresets->at( sBeforeStartPresetNames->indexOf( name ) ) ) );
+  }
   case AlarmPresets::BeforeEnd:
-    {
-      if ( sBeforeEndPresetNames->isEmpty() )
-        initPresets( when );
-      Q_ASSERT( sBeforeEndPresetNames->count( name ) == 1 ); // The name should exists and only once
-
-      return Alarm::Ptr( new Alarm( *sBeforeEndPresets->at( sBeforeEndPresetNames->indexOf( name ) ) ) );
+  {
+    if ( sBeforeEndPresetNames->isEmpty() ) {
+      initPresets( when );
     }
+    Q_ASSERT( sBeforeEndPresetNames->count( name ) == 1 ); // The name should exists and only once
+
+    return Alarm::Ptr(
+      new Alarm( *sBeforeEndPresets->at( sBeforeEndPresetNames->indexOf( name ) ) ) );
+  }
   default:
     return Alarm::Ptr();
   };
@@ -227,11 +233,13 @@ int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm )
 {
   switch ( when ) {
   case AlarmPresets::BeforeStart:
-    if ( sBeforeStartPresetNames->isEmpty() )
+    if ( sBeforeStartPresetNames->isEmpty() ) {
       initPresets( when );
+    }
   case AlarmPresets::BeforeEnd:
-    if ( sBeforeEndPresetNames->isEmpty() )
+    if ( sBeforeEndPresetNames->isEmpty() ) {
       initPresets( when );
+    }
   }
 
   const QStringList presets = availablePresets( when );
@@ -244,8 +252,8 @@ int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm )
   }
 
   return -1;
-
 }
 
 } // AlarmPresets
+
 } // IncidenceEditorNG

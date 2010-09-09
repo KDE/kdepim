@@ -59,7 +59,6 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
 
-
   private slots:
     void handleDirtyStatusChange( bool isDirty );
 

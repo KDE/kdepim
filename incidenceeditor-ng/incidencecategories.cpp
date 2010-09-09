@@ -89,8 +89,9 @@ bool IncidenceCategories::isDirty() const
     categoriesEqual = ( mLoadedIncidence->categories().size() == mSelectedCategories.size() );
     if ( categoriesEqual ) {
       QStringListIterator it( mLoadedIncidence->categories() );
-      while ( it.hasNext() && categoriesEqual )
+      while ( it.hasNext() && categoriesEqual ) {
         categoriesEqual = mSelectedCategories.contains( it.next() );
+      }
     }
   }
   return !categoriesEqual;

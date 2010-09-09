@@ -23,7 +23,7 @@
 
 #include "incidenceeditor-ng.h"
 
-#include <kcalcore/incidence.h>
+#include <KCalCore/Incidence>
 
 class KJob;
 
@@ -51,47 +51,53 @@ class SchedulingDialog;
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 {
   Q_OBJECT
-public:
+  public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui );
+    IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui );
 #else
-    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
+    IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
 #endif
     ~IncidenceAttendee();
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
-signals:
+
+  signals:
     void attendeeCountChanged( int );
 
-public slots:
+  public slots:
     /// If the user is attendee of the loaded event, one of the following slots
     /// can be used to change the status.
     void acceptForMe();
     void declineForMe();
 
-private slots:
+  private slots:
     void checkIfExpansionIsNeeded( KPIM::MultiplyingLine* );
     void expandResult( KJob *job );
     void groupSearchResult( KJob *job );
     void slotSelectAddresses();
     void slotSolveConflictPressed();
     void slotUpdateConflictLabel( int );
-    void slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
+    void slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee,
+                              const KCalCore::Attendee::Ptr &newAttendee );
     void slotOrganizerChanged( const QString & organizer );
 
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
-private:
+
+  private:
     void changeStatusForMe( KCalCore::Attendee::PartStat );
+
     /** Returns if I was the organizer of the loaded event */
     bool iAmOrganizer() const;
+
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
      * from the addressbook and expanding distribution lists.
      * The optional Attendee parameter can be used to pass in default values
-     * to be used by the new Attendee. */
+     * to be used by the new Attendee.
+     */
     void insertAttendeeFromAddressee( const KABC::Addressee &a );
     void fillOrganizerCombo();
 
@@ -100,7 +106,7 @@ private:
 #else
     Ui::EventOrTodoDesktop *mUi;
 #endif
-    QWidget* mParentWidget;
+    QWidget *mParentWidget;
     AttendeeEditor *mAttendeeEditor;
     ConflictResolver *mConflictResolver;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;

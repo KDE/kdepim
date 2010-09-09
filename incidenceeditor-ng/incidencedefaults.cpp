@@ -74,7 +74,7 @@ Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
   if ( !mGroupWareDomain.isEmpty() ) {
     // Check if we have an identity with an email that ends with the groupware
     // domain.
-    foreach( const QString &fullEmail, mEmails ) {
+    foreach ( const QString &fullEmail, mEmails ) {
       QString name;
       QString email;
       bool success = KPIMUtils::extractEmailAddressAndName( fullEmail, email, name );
@@ -89,7 +89,7 @@ Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
   if ( organizer->email() == invalidEmail ) {
     // Either, no groupware was used, or we didn't find a groupware email address.
     // Now try to
-    foreach( const QString &fullEmail, mEmails ) {
+    foreach ( const QString &fullEmail, mEmails ) {
       QString name;
       QString email;
       const bool success = KPIMUtils::extractEmailAddressAndName( fullEmail, email, name );
@@ -121,12 +121,14 @@ Attendee::Ptr IncidenceDefaultsPrivate::organizerAsAttendee( const Person::Ptr &
 void IncidenceDefaultsPrivate::eventDefaults( const Event::Ptr &event ) const
 {
   KDateTime startDT = KDateTime::currentLocalDateTime();
-  if ( mStartDt.isValid() )
+  if ( mStartDt.isValid() ) {
     startDT = mStartDt;
+  }
 
   KDateTime endDT = startDT.addSecs( 3600 ); // Default event time: 1 hour
-  if ( mEndDt.isValid() )
+  if ( mEndDt.isValid() ) {
     endDT = mEndDt;
+  }
 
   event->setDtStart( startDT );
   event->setDtEnd( mEndDt );
@@ -136,8 +138,9 @@ void IncidenceDefaultsPrivate::eventDefaults( const Event::Ptr &event ) const
 void IncidenceDefaultsPrivate::journalDefaults( const Journal::Ptr &journal ) const
 {
   KDateTime startDT = KDateTime::currentLocalDateTime();
-  if ( mStartDt.isValid() )
+  if ( mStartDt.isValid() ) {
     startDT = mStartDt;
+  }
 
   KDateTime endDT = startDT.addSecs( 3600 ); // Default event time: 1 hour
 
@@ -147,22 +150,25 @@ void IncidenceDefaultsPrivate::journalDefaults( const Journal::Ptr &journal ) co
 void IncidenceDefaultsPrivate::todoDefaults( const Todo::Ptr &todo ) const
 {
   Todo::Ptr relatedTodo = mRelatedIncidence.dynamicCast<Todo>();
-  if ( relatedTodo )
+  if ( relatedTodo ) {
     todo->setCategories( relatedTodo->categories() );
+  }
 
-  if ( mEndDt.isValid() )
+  if ( mEndDt.isValid() ) {
     todo->setDtDue( mEndDt );
-  else if ( relatedTodo && relatedTodo->hasDueDate() )
+  } else if ( relatedTodo && relatedTodo->hasDueDate() ) {
     todo->setDtDue( relatedTodo->dtDue() );
-  else
+  } else {
     todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
+  }
 
-  if ( mStartDt.isValid() )
+  if ( mStartDt.isValid() ) {
     todo->setDtStart( mStartDt );
-  else if ( !mEndDt.isValid() || ( KDateTime::currentLocalDateTime() < mEndDt ) )
+  } else if ( !mEndDt.isValid() || ( KDateTime::currentLocalDateTime() < mEndDt ) ) {
     todo->setDtStart( KDateTime::currentLocalDateTime() );
-  else
+  } else {
     todo->setDtStart( mEndDt.addDays( -1 ) );
+  }
 
   todo->setCompleted( false );
   todo->setPercentComplete( 0 );
@@ -188,9 +194,9 @@ IncidenceDefaults::~IncidenceDefaults()
 
 IncidenceDefaults &IncidenceDefaults::operator=( const IncidenceDefaults& other )
 {
-  if ( &other != this )
+  if ( &other != this ) {
     *d_ptr = *other.d_ptr;
-
+  }
   return *this;
 }
 
@@ -286,11 +292,13 @@ void IncidenceDefaults::setDefaults( const Incidence::Ptr &incidence ) const
   const Person::Ptr organizerAsPerson = d->organizerAsPerson();
   incidence->setOrganizer( organizerAsPerson );
   incidence->addAttendee( d->organizerAsAttendee( organizerAsPerson ) );
-  foreach ( const Attendee::Ptr &attendee, d->mAttendees )
+  foreach ( const Attendee::Ptr &attendee, d->mAttendees ) {
     incidence->addAttendee( attendee );
+  }
 
-  foreach ( const Attachment::Ptr &attachment, d->mAttachments )
+  foreach ( const Attachment::Ptr &attachment, d->mAttachments ) {
     incidence->addAttachment( attachment );
+  }
 
   switch ( incidence->type() ) {
   case Incidence::TypeEvent:
@@ -304,6 +312,6 @@ void IncidenceDefaults::setDefaults( const Incidence::Ptr &incidence ) const
     break;
   default:
     kDebug() << "Unsupported incidence type, keeping current values. Type: "
-             << incidence->type();
+             << int( incidence->type() );
   }
 }

@@ -46,16 +46,16 @@ class AttachmentIconView : public QListWidget
   public:
     AttachmentIconView( QWidget *parent = 0 );
 
-    QMimeData* mimeData() const;
+    QMimeData *mimeData() const;
     KUrl tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const;
 
   protected:
-    QMimeData* mimeData( const QList<QListWidgetItem*> items ) const;
+    QMimeData * mimeData( const QList<QListWidgetItem*> items ) const;
     void startDrag( Qt::DropActions supportedActions );
-    void keyPressEvent( QKeyEvent* event );
+    void keyPressEvent( QKeyEvent *event );
 
   private:
-    mutable QHash<KCalCore::Attachment::Ptr , KUrl> mTempFiles;
+    mutable QHash<KCalCore::Attachment::Ptr, KUrl> mTempFiles;
 };
 
 class AttachmentIconItem : public QListWidgetItem

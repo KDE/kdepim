@@ -24,12 +24,11 @@
 #define INCIDENCEEDITOR_FREEBUSYITEM_H
 
 #include "incidenceeditors-ng_export.h"
+#include "attendeedata.h"
+
+#include <KCalCore/FreeBusy>
 
 #include <QSharedPointer>
-
-#include <kcalcore/freebusy.h>
-
-#include "attendeedata.h"
 
 namespace IncidenceEditorNG {
 /**
@@ -39,10 +38,11 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
 {
   public:
     typedef QSharedPointer<FreeBusyItem> Ptr;
+
     /**
-    * @param parentWidget is passed to Akonadi when fetching free/busy data.
-    */
-  FreeBusyItem( const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget );
+     * @param parentWidget is passed to Akonadi when fetching free/busy data.
+     */
+    FreeBusyItem( const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget );
     ~FreeBusyItem() {}
 
     KCalCore::Attendee::Ptr attendee() const;
@@ -56,7 +56,8 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
     void startDownload( bool forceDownload );
     void setIsDownloading( bool d );
     bool isDownloading() const;
-signals:
+
+  signals:
     void attendeeChanged( const KCalCore::Attendee::Ptr &attendee );
     void freebusyChanged( const KCalCore::FreeBusy::Ptr fb );
 

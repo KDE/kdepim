@@ -36,7 +36,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategorySelectWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit CategorySelectWidget( CategoryConfig* config, QWidget *parent=0 );
+    explicit CategorySelectWidget( CategoryConfig *config, QWidget *parent=0 );
     ~CategorySelectWidget();
 
     void setCategories( const QStringList &categoryList = QStringList() );

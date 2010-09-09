@@ -31,85 +31,77 @@ class IncidenceDefaultsPrivate;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
 {
-public:
-  IncidenceDefaults();
-  IncidenceDefaults( const IncidenceDefaults &other );
-  ~IncidenceDefaults();
+  public:
+    IncidenceDefaults();
+    IncidenceDefaults( const IncidenceDefaults &other );
+    ~IncidenceDefaults();
 
-  IncidenceDefaults& operator=( const IncidenceDefaults& other );
+    IncidenceDefaults &operator=( const IncidenceDefaults &other );
 
-  /**
-    Sets the attachments that are added by default to incidences.
-   */
-  void setAttachments( const QStringList &attachments,
-                       const QStringList &attachmentMimetypes = QStringList(),
-                       bool inlineAttachment = false );
+    /**
+      Sets the attachments that are added by default to incidences.
+    */
+    void setAttachments( const QStringList &attachments,
+                         const QStringList &attachmentMimetypes = QStringList(),
+                         bool inlineAttachment = false );
 
-  /**
-    Sets the attendees that are added by default to incidences.
+    /**
+      Sets the attendees that are added by default to incidences.
+      @param attendees Expected to be of the form "name name <email>"
+    */
+    void setAttendees( const QStringList &attendees );
 
-    @param attendees Expected to be of the form "name name <email>"
-   */
-  void setAttendees( const QStringList &attendees );
+    /**
+      Sets the list of identities to be used for the user. The items in the list
+      are expected to be of the form: "name [name] <email>".
 
-  /**
-    Sets the list of identities to be used for the user. The items in the list
-    are expected to be of the form: "name [name] <email>".
+      If the list is empty, it is assumed that no valid identities are configured.
 
-    If the list is empty, it is assumed that no valid identities are configured.
+      @param fullEmails The list of name email pairs that the user has configured as identities.
+    */
+    void setFullEmails( const QStringList &fullEmails );
 
-    @param fullEmails The list of name email pairs that the user has configured
-           as identities.
-   */
-  void setFullEmails( const QStringList &fullEmails );
+    /**
+      This is used to do a smarter guess about which identity to use for the organizer.
+      If the groupware server is not set, the first avaialble identity will be used.
+      @param domain The gropuware server domain name without any protocol prefixes
+      (e.g. demo.kolab.org).
+    */
+    void setGroupWareDomain( const QString &domain );
 
-  /**
-    This is used to do a smarter guess about which identity to use for the
-    organizer. If the groupware server is not set, the first avaialble identity
-    will be used.
+    /**
+      Sets the incidence related to the incidence for which to set the defaults. For
+      example the parent todo of a new sub todo.
+    */
+    void setRelatedIncidence( const KCalCore::Incidence::Ptr &incidence );
 
-    @param domain The gropuware server domain name without any protocol prefixes
-                  (e.g. demo.kolab.org).
-   */
-  void setGroupWareDomain( const QString &domain );
+    /**
+      Set the start date/time to use for passed incidences. This defaults to the
+      current start date/time. The main purpose of this method is supporting
+      defaults for new incidences that where created with a given time slot.
+      @param startDT The start date time to set on the incidence.
+    */
+    void setStartDateTime( const KDateTime &startDT );
 
-  /**
-    Sets the incidence related to the incidence for which to set the defaults. For
-    example the parent todo of a new sub todo.
-   */
-  void setRelatedIncidence( const KCalCore::Incidence::Ptr &incidence );
+    /**
+      Set the end date/time to use for passed incidences. This defaults to the
+      current start date/time. The main purpose of this method is supporting
+      defaults for new incidences that where created with a given time slot.
+      @param endDT The start date time to set on the incidence.
+    */
+    void setEndDateTime( const KDateTime &endDT );
 
-  /**
-    Set the start date/time to use for passed incidences. This defaults to the
-    current start date/time. The main purpose of this method is supporting
-    defaults for new incidences that where created with a given time slot.
+    /**
+      Sets the default values for @param incidence. This method is merely meant for
+      <em>new</em> icidences. However, it will clear out all fields and set them
+      to default values.
+      @param incidence The incidence that will get default values for all of its field.
+    */
+    void setDefaults( const KCalCore::Incidence::Ptr &incidence ) const;
 
-    @param startDT The start date time to set on the incidence.
-   */
-  void setStartDateTime( const KDateTime &startDT );
-
-  /**
-    Set the end date/time to use for passed incidences. This defaults to the
-    current start date/time. The main purpose of this method is supporting
-    defaults for new incidences that where created with a given time slot.
-
-    @param endDT The start date time to set on the incidence.
-   */
-  void setEndDateTime( const KDateTime &endDT );
-
-  /**
-    Sets the default values for @param incidence. This method is merely meant for
-    <em>new</em> icidences. However, it will clear out all fields and set them
-    to default values.
-
-    @param incidence The incidence that will get default values for all of its
-           field.
-   */
-  void setDefaults( const KCalCore::Incidence::Ptr &incidence ) const;
-
-private:
-  IncidenceDefaultsPrivate * const d_ptr;
-  Q_DECLARE_PRIVATE( IncidenceDefaults )
+  private:
+    IncidenceDefaultsPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE( IncidenceDefaults )
 };
 
 }

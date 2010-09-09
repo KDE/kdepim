@@ -37,7 +37,7 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit FreeBusyUrlDialog(AttendeeData::Ptr, QWidget *parent = 0 );
+    explicit FreeBusyUrlDialog( AttendeeData::Ptr, QWidget *parent = 0 );
 
   public slots:
     void slotOk();
@@ -50,7 +50,7 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit FreeBusyUrlWidget(AttendeeData::Ptr, QWidget *parent = 0 );
+    explicit FreeBusyUrlWidget( AttendeeData::Ptr, QWidget *parent = 0 );
     ~FreeBusyUrlWidget();
 
     void loadConfig();

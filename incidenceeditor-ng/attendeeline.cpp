@@ -1,21 +1,21 @@
 /*
-    Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
-    Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
+  Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "attendeeline.h"
@@ -38,46 +38,51 @@ using namespace KCalUtils;
 using namespace IncidenceEditorNG;
 using namespace KPIM;
 
-IncidenceEditorNG::AttendeeCheckBox::AttendeeCheckBox( QWidget* parent )
+IncidenceEditorNG::AttendeeCheckBox::AttendeeCheckBox( QWidget *parent )
   : QCheckBox( parent )
-{}
-
-void AttendeeCheckBox::keyPressEvent(QKeyEvent* ev)
 {
-  if ( ev->key() == Qt::Key_Left )
+}
+
+void AttendeeCheckBox::keyPressEvent( QKeyEvent *ev )
+{
+  if ( ev->key() == Qt::Key_Left ) {
     emit leftPressed();
-  else  if ( ev->key() == Qt::Key_Right )
+  } else if ( ev->key() == Qt::Key_Right ) {
     emit rightPressed();
-  else
+  } else {
     QAbstractButton::keyPressEvent( ev );
+  }
 }
 
 typedef QPair<QString, QIcon> TextIconPair;
 
-AttendeeComboBox::AttendeeComboBox( QWidget* parent )
-  : QToolButton( parent ), mMenu( new QMenu( this  ) ), mCurrentIndex( -1 )
+AttendeeComboBox::AttendeeComboBox( QWidget *parent )
+  : QToolButton( parent ), mMenu( new QMenu( this ) ), mCurrentIndex( -1 )
 {
   setPopupMode( QToolButton::InstantPopup );
   setToolButtonStyle( Qt::ToolButtonIconOnly );
   setMenu( mMenu );
 }
 
-void AttendeeComboBox::addItem( const QIcon& icon, const QString& text )
+void AttendeeComboBox::addItem( const QIcon &icon, const QString &text )
 {
-  mList.append( TextIconPair( text, icon )  );
-  if( mCurrentIndex == -1 )
+  mList.append( TextIconPair( text, icon ) );
+  if ( mCurrentIndex == -1 ) {
     setCurrentIndex( 0 );
+  }
   int index = mList.size() - 1;
   QAction *act = menu()->addAction( icon, text, this, SLOT( slotActionTriggered() ) );
   act->setData( index );
 }
 
-void AttendeeComboBox::addItems( const QStringList& texts )
+void AttendeeComboBox::addItems( const QStringList &texts )
 {
-  foreach( const QString &str, texts )
+  foreach( const QString &str, texts ) {
     addItem( QIcon(), str );
-  if( mCurrentIndex == -1 )
+  }
+  if ( mCurrentIndex == -1 ) {
     setCurrentIndex( 0 );
+  }
 }
 
 int AttendeeComboBox::currentIndex() const
@@ -99,8 +104,9 @@ void AttendeeComboBox::setCurrentIndex( int index )
   mCurrentIndex = index;
   setIcon( mList.at( index ).second );
   setToolTip( mList.at( index ).first );
-  if( old != index )
+  if ( old != index ) {
     emit itemChanged();
+  }
 }
 
 void AttendeeComboBox::slotActionTriggered()
@@ -109,7 +115,7 @@ void AttendeeComboBox::slotActionTriggered()
   setCurrentIndex( index );
 }
 
-void AttendeeComboBox::keyPressEvent(QKeyEvent* ev)
+void AttendeeComboBox::keyPressEvent( QKeyEvent *ev )
 {
   if ( ev->key() == Qt::Key_Left ) {
     emit leftPressed();
@@ -122,13 +128,13 @@ void AttendeeComboBox::keyPressEvent(QKeyEvent* ev)
 
 AttendeeLineEdit::AttendeeLineEdit( QWidget* parent )
   : AddresseeLineEdit( parent, true )
-{}
-
-void AttendeeLineEdit::keyPressEvent( QKeyEvent* ev )
 {
-  if ( (ev->key() == Qt::Key_Enter || ev->key() == Qt::Key_Return) &&
-      !completionBox()->isVisible() )
-  {
+}
+
+void AttendeeLineEdit::keyPressEvent( QKeyEvent *ev )
+{
+  if ( ( ev->key() == Qt::Key_Enter || ev->key() == Qt::Key_Return ) &&
+       !completionBox()->isVisible() ) {
     emit downPressed();
     KPIM::AddresseeLineEdit::keyPressEvent( ev );
   } else if ( ev->key() == Qt::Key_Backspace  &&  text().isEmpty() ) {
@@ -149,14 +155,14 @@ void AttendeeLineEdit::keyPressEvent( QKeyEvent* ev )
   }
 }
 
-AttendeeLine::AttendeeLine(QWidget* parent)
-  : MultiplyingLine( parent )
-  , mRoleCombo(  new AttendeeComboBox( this ) )
-  , mStateCombo( new AttendeeComboBox( this ) )
-  , mResponseCheck( new AttendeeCheckBox( this ) )
-  , mEdit( new AttendeeLineEdit( this ) )
-  , mData( new AttendeeData( QString(), QString() ) )
-  , mModified( false )
+AttendeeLine::AttendeeLine( QWidget *parent )
+  : MultiplyingLine( parent ),
+    mRoleCombo(  new AttendeeComboBox( this ) ),
+    mStateCombo( new AttendeeComboBox( this ) ),
+    mResponseCheck( new AttendeeCheckBox( this ) ),
+    mEdit( new AttendeeLineEdit( this ) ),
+    mData( new AttendeeData( QString(), QString() ) ),
+    mModified( false )
 {
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
 
@@ -189,26 +195,26 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   mResponseCheck->setChecked( true );
 
   mEdit->setToolTip( i18nc( "@info:tooltip",
-                     "Enter the name or email address of the attendee." ) );
+                            "Enter the name or email address of the attendee." ) );
   mEdit->setClearButtonShown( true );
 
   mStateCombo->setWhatsThis( i18nc( "@info:whatsthis",
-                     "Edits the current attendance status of the attendee." ) );
+                                    "Edits the current attendance status of the attendee." ) );
 
   mRoleCombo->setWhatsThis( i18nc( "@info:whatsthis",
                                    "Edits the role of the attendee." ) );
 
   mEdit->setWhatsThis( i18nc( "@info:whatsthis",
-                  "The email address or name of the attendee. An invitation "
-                  "can be sent to the user if an email address is provided.") );
+                              "The email address or name of the attendee. An invitation "
+                              "can be sent to the user if an email address is provided.") );
 
   setActions( EventActions );
 
-  mResponseCheck->setToolTip(i18nc( "@info:tooltip", "Request a response from the attendee" ) );
+  mResponseCheck->setToolTip( i18nc( "@info:tooltip", "Request a response from the attendee" ) );
   mResponseCheck->setWhatsThis( i18nc( "@info:whatsthis",
-           "Edits whether to send an email to the "
-           "attendee to request a response concerning "
-           "attendance." ) );
+                                       "Edits whether to send an email to the "
+                                       "attendee to request a response concerning "
+                                       "attendance." ) );
 
   // add them to the layout in the correct order
   topLayout->addWidget( mRoleCombo );
@@ -288,8 +294,7 @@ void AttendeeLine::dataFromFields()
   KPIMUtils::extractEmailAddressAndName( mEdit->text(), email, name );
 
   mData->setName( name );
-  mData->setEmail(  email );
-
+  mData->setEmail( email );
 
   mData->setRole( AttendeeData::Role( mRoleCombo->currentIndex() ) );
   mData->setStatus( AttendeeData::PartStat( mStateCombo->currentIndex() ) );
@@ -297,7 +302,8 @@ void AttendeeLine::dataFromFields()
   mData->setUid( mUid );
 
   clearModified();
-  if( !( oldAttendee == mData->attendee() ) && !email.isEmpty() /*if email is empty, we don't want to update anything*/ ) {
+  if ( !( oldAttendee == mData->attendee() ) && !email.isEmpty() ) {
+    // if email is empty, we don't want to update anything
     kDebug() << oldAttendee->email() << mData->email();
     emit changed( oldAttendee, mData->attendee() );
   }
@@ -305,8 +311,10 @@ void AttendeeLine::dataFromFields()
 
 void AttendeeLine::fieldsFromData()
 {
-  if( !mData )
+  if( !mData ) {
     return;
+  }
+
   mEdit->setText( mData->fullName() );
   mRoleCombo->setCurrentIndex( mData->role() );
   AttendeeData::PartStat partStat = mData->status();
@@ -319,7 +327,7 @@ void AttendeeLine::fieldsFromData()
   mUid = mData->uid();
 }
 
-void AttendeeLine::fixTabOrder( QWidget* previous )
+void AttendeeLine::fixTabOrder( QWidget *previous )
 {
   setTabOrder( previous, mRoleCombo );
   setTabOrder( mRoleCombo, mEdit );
@@ -327,7 +335,7 @@ void AttendeeLine::fixTabOrder( QWidget* previous )
   setTabOrder( mStateCombo, mResponseCheck );
 }
 
-QWidget* AttendeeLine::tabOut() const
+QWidget *AttendeeLine::tabOut() const
 {
   return mResponseCheck;
 }
@@ -407,7 +415,7 @@ void AttendeeLine::setActions( AttendeeActions actions )
     mStateCombo->addItem( DesktopIcon( "task-delegate", 48 ),
                           Stringify::attendeeStatus( AttendeeData::Delegated ) );
     mStateCombo->addItem( DesktopIcon( "task-complete", 48 ),
-                          Stringify::attendeeStatus( AttendeeData::Completed ) ),
+                          Stringify::attendeeStatus( AttendeeData::Completed ) );
     mStateCombo->addItem( DesktopIcon( "task-ongoing", 48 ),
                           Stringify::attendeeStatus( AttendeeData::InProcess ) );
 #else
@@ -422,7 +430,7 @@ void AttendeeLine::setActions( AttendeeActions actions )
     mStateCombo->addItem( SmallIcon( "task-delegate" ),
                           Stringify::attendeeStatus( AttendeeData::Delegated ) );
     mStateCombo->addItem( SmallIcon( "task-complete" ),
-                          Stringify::attendeeStatus( AttendeeData::Completed ) ),
+                          Stringify::attendeeStatus( AttendeeData::Completed ) );
     mStateCombo->addItem( SmallIcon( "task-ongoing" ),
                           Stringify::attendeeStatus( AttendeeData::InProcess ) );
 #endif
@@ -437,8 +445,9 @@ void AttendeeLine::setCompletionMode( KGlobalSettings::Completion mode )
 void AttendeeLine::setData( const KPIM::MultiplyingLineData::Ptr& data )
 {
   AttendeeData::Ptr attendee = qSharedPointerDynamicCast<AttendeeData>( data );
-  if( !attendee )
+  if( !attendee ) {
     return;
+  }
   mData = attendee;
   fieldsFromData();
 }
@@ -462,18 +471,18 @@ void AttendeeLine::slotTextChanged( const QString& /*str*/ )
 
 void AttendeeLine::slotComboChanged()
 {
-    mModified = true;
-    emit changed();
+  mModified = true;
+  emit changed();
 }
 
 void AttendeeLine::aboutToBeDeleted()
 {
-  if( !mData )
+  if ( !mData ) {
     return;
+  }
 
   emit changed( mData->attendee(), KCalCore::Attendee::Ptr( new KCalCore::Attendee( "", "" ) ) );
 }
-
 
 #include "attendeeline.moc"
 

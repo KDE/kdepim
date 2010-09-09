@@ -52,16 +52,18 @@ int main( int argc, char **argv )
   about.setProgramIconName( "korganizer" );
 
   KCmdLineOptions options;
-  options.add("new-event", ki18n("Creates a new event"));
-  options.add("new-todo", ki18n("Creates a new todo"));
-  options.add("new-journal", ki18n("Creates a new journal"));
-  options.add("+item", ki18n("Loads an existing item, or returns without doing anything when the item is not an event or todo."));
+  options.add( "new-event", ki18n( "Creates a new event" ) );
+  options.add( "new-todo", ki18n( "Creates a new todo" ) );
+  options.add( "new-journal", ki18n( "Creates a new journal" ) );
+  options.add( "+item",
+               ki18n( "Loads an existing item, or returns without doing anything "
+                      "when the item is not an event or todo." ) );
 
   KCmdLineArgs::addCmdLineOptions( options );
   KCmdLineArgs::init( argc, argv, &about );
   KApplication app;
 
-  KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   Akonadi::Item item( -1 );
 
   IncidenceDefaults defaults;
@@ -73,8 +75,10 @@ int main( int argc, char **argv )
   //       groupware account. Which doesn't have to be the case necessarily.
   //       This method should somehow depend on the calendar selected to which
   //       the incidence is added.
-  if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() )
-    defaults.setGroupWareDomain( KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+  if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
+    defaults.setGroupWareDomain(
+      KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+  }
 
   if ( args->isSet( "new-event" ) ) {
     std::cout << "Creating new event..." << std::endl;

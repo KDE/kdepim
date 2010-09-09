@@ -1,21 +1,21 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "editoritemmanager.h"
@@ -56,7 +56,7 @@ class ItemEditorPrivate
 
   public:
     ItemEditorPrivate( EditorItemManager *qq );
-    void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& );
+    void itemChanged( const Akonadi::Item &, const QSet<QByteArray> & );
     void itemFetchResult( KJob *job );
     void itemMoveResult( KJob *job );
     void modifyResult( KJob *job );
@@ -111,11 +111,11 @@ void ItemEditorPrivate::modifyResult( KJob *job )
   Q_Q( EditorItemManager );
 
   if ( job->error() ) {
-    if ( qobject_cast<ItemModifyJob*>( job ) )
+    if ( qobject_cast<ItemModifyJob*>( job ) ) {
       emit q->itemSaveFailed( EditorItemManager::Modify, job->errorString() );
-    else
+    } else {
       emit q->itemSaveFailed( EditorItemManager::Create, job->errorString() );
-
+    }
     return;
   }
 
@@ -139,11 +139,12 @@ void ItemEditorPrivate::setupMonitor()
   mItemMonitor = new Akonadi::Monitor;
   mItemMonitor->ignoreSession( Akonadi::Session::defaultSession() );
   mItemMonitor->itemFetchScope().fetchFullPayload();
-  if ( mItem.isValid() )
+  if ( mItem.isValid() ) {
     mItemMonitor->setItemMonitored( mItem );
+  }
 
-//   q->connect( mItemMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-//               SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+//   q->connect( mItemMonitor, SIGNAL(itemChanged(const Akonadi::Item&,const QSet<QByteArray>&)),
+//               SLOT(itemChanged(const Akonadi::Item&,const QSet<QByteArray>&)) );
 }
 
 void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
@@ -153,7 +154,8 @@ void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
   if ( mItemUi->containsPayloadIdentifiers( partIdentifiers ) ) {
     QPointer<QMessageBox> dlg = new QMessageBox; //krazy:exclude=qclasses
     dlg->setIcon( QMessageBox::Question );
-    dlg->setInformativeText( i18n( "The item has been changed by another application.\nWhat should be done?" ) );
+    dlg->setInformativeText( i18n( "The item has been changed by another application.\n"
+                                   "What should be done?" ) );
     dlg->addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
     dlg->addButton( i18n( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
 
@@ -188,7 +190,6 @@ EditorItemManager::EditorItemManager( ItemEditorUi *ui )
   d->mItemUi = ui;
 }
 
-
 EditorItemManager::~EditorItemManager()
 {
   delete d_ptr;
@@ -200,15 +201,16 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
 
   switch ( state ) {
   case EditorItemManager::AfterSave:
-    if ( d->mItem.isValid() && d->mItem.hasPayload() )
+    if ( d->mItem.isValid() && d->mItem.hasPayload() ) {
       return d->mItem;
+    }
     break;
   case EditorItemManager::BeforeSave:
-    if ( d->mPrevItem.isValid() && d->mPrevItem.hasPayload() )
+    if ( d->mPrevItem.isValid() && d->mPrevItem.hasPayload() ) {
       return d->mPrevItem;
+    }
     break;
   }
-
   return Akonadi::Item();
 }
 
@@ -238,12 +240,13 @@ void EditorItemManager::revertLastSave()
   if ( d->mPrevItem.hasPayload() ) {
     // Modify
     Q_ASSERT( d->mItem.isValid() ); // Really, if this isn't true, then fix the logic somewhere else
-    Q_ASSERT( d->mItem.id() == d->mPrevItem.id() ); // If this triggers: wtf, managing two different items?
+    Q_ASSERT( d->mItem.id() == d->mPrevItem.id() ); // managing two different items??
 
     d->mPrevItem.setRevision( d->mItem.revision() );
     ItemModifyJob *job = new ItemModifyJob( d->mPrevItem );
-    if ( !job->exec() )
+    if ( !job->exec() ) {
       kDebug() << "Revert failed, could not delete item." << job->errorText();
+    }
 
   } else if ( d->mItem.isValid() ) {
 
@@ -251,8 +254,9 @@ void EditorItemManager::revertLastSave()
     // call to save created a new item and reverting that means that we have to
     // delete it.
     ItemDeleteJob *job = new ItemDeleteJob( d->mItem );
-    if ( !job->exec() )
+    if ( !job->exec() ) {
       kDebug() << "Revert failed, could not delete item." << job->errorText();
+    }
   }
 
   // else, the previous item had no payload *and* the current item is not valid,
@@ -268,8 +272,8 @@ void EditorItemManager::save()
     return;
   }
 
-  if ( !d->mItemUi->isDirty()
-    && d->mItemUi->selectedCollection() == d->mItem.parentCollection() ) {
+  if ( !d->mItemUi->isDirty() &&
+       d->mItemUi->selectedCollection() == d->mItem.parentCollection() ) {
     // Item did not change and was not moved
     emit itemSaveFinished( None );
     return;
@@ -288,12 +292,12 @@ void EditorItemManager::save()
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
-      if ( d->mItemUi->isDirty() )
+      if ( d->mItemUi->isDirty() ) {
         Q_ASSERT_X( false, "ItemEditor::save()",
                     "Moving of modified items not implemented yet" );
-        // 1) ItemModify( d->mItem );
-        // 2) ItemMove( d->mItem,d->mItemUi->selectedCollection() )
-      else {
+      // 1) ItemModify( d->mItem );
+      // 2) ItemMove( d->mItem,d->mItemUi->selectedCollection() )
+      } else {
         ItemMoveJob *imjob = new ItemMoveJob( d->mItem, d->mItemUi->selectedCollection() );
         connect( imjob, SIGNAL(result(KJob*)), SLOT(itemMoveResult(KJob*)) );
       }
@@ -301,8 +305,7 @@ void EditorItemManager::save()
   } else { // An invalid item needs to be created.
     Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
-    ItemCreateJob *createJob =
-      new ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
+    ItemCreateJob *createJob = new ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
     connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
   }
 }
@@ -322,7 +325,8 @@ ItemFetchScope &EditorItemManager::fetchScope()
 }
 
 ItemEditorUi::~ItemEditorUi()
-{ }
+{
+}
 
 bool ItemEditorUi::isValid() const
 {

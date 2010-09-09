@@ -25,27 +25,26 @@
 */
 
 #include "attachmenteditdialog.h"
-
-#include <KDE/KIO/NetAccess>
-
 #include "attachmenticonview.h" // UGLY
 #include "ui_attachmenteditdialog.h"
+
+#include <KDE/KIO/NetAccess>
 
 using namespace IncidenceEditorNG;
 
 AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
                                             QWidget *parent,
                                             bool modal )
-  : KDialog( parent )
+  : KDialog( parent ),
 #ifdef KDEPIM_ENTERPRISE_BUILD
-  , mAttachment( new KCalCore::Attachment( '\0' ) ) //use the non-uri constructor
-                                                // as we want inline by default
+  mAttachment( new KCalCore::Attachment( '\0' ) ), //use the non-uri constructor
+                                                   // as we want inline by default
 #else
-   , mAttachment( new KCalCore::Attachment( QString() ) )
+  mAttachment( new KCalCore::Attachment( QString() ) ),
 #endif
-  , mItem( item )
-  , mMimeType( KMimeType::mimeType( item->mimeType() ) )
-  , mUi( new Ui::AttachmentEditDialog )
+  mItem( item ),
+  mMimeType( KMimeType::mimeType( item->mimeType() ) ),
+  mUi( new Ui::AttachmentEditDialog )
 {
   QWidget *page = new QWidget(this);
   mUi->setupUi( page );

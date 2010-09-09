@@ -1,21 +1,21 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "alarmdialog.h"
@@ -28,11 +28,8 @@ using namespace IncidenceEditorNG;
 using namespace KCalCore;
 
 AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent )
-  : KDialog( parent )
-  ,  mUi( new Ui::AlarmDialog )
-  , mIncidenceType( incidenceType )
-  , mAllowBeginReminders( true )
-  , mAllowEndReminders( true )
+  : KDialog( parent ),  mUi( new Ui::AlarmDialog ), mIncidenceType( incidenceType ),
+    mAllowBeginReminders( true ), mAllowEndReminders( true )
 {
   setWindowTitle( i18n( "Create a new alarm" ) );
   mUi->setupUi( mainWidget() );
@@ -41,13 +38,15 @@ AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWid
   mUi->mAlarmOffset->setValue( defaultReminderTime );
 
   int defaultReminderUnits = IncidenceEditorNG::EditorConfig::instance()->reminderTimeUnits();
-  if ( defaultReminderUnits < 0 || defaultReminderUnits > 2 )
+  if ( defaultReminderUnits < 0 || defaultReminderUnits > 2 ) {
     defaultReminderUnits = 0; // minutes
+  }
 
   mUi->mOffsetUnit->setCurrentIndex( defaultReminderUnits );
 
-  if ( IncidenceEditorNG::EditorConfig::instance()->defaultAudioFileReminders() )
+  if ( IncidenceEditorNG::EditorConfig::instance()->defaultAudioFileReminders() ) {
     mUi->mSoundFile->setUrl( IncidenceEditorNG::EditorConfig::instance()->audioFilePath() );
+  }
 
   fillCombo();
 }
@@ -168,21 +167,23 @@ void AlarmDialog::save( const Alarm::Ptr &alarm ) const
   Q_ASSERT( mAllowBeginReminders || mAllowEndReminders );
 
   // TODO: Add possibility to specify a given time for the reminder
-  if ( mAllowBeginReminders && beforeafterpos == 0 ) // before start
+  if ( mAllowBeginReminders && beforeafterpos == 0 ) { // before start
     alarm->setStartOffset( Duration( offset ) );
-  else if ( mAllowBeginReminders && beforeafterpos == 1 ) // after start
+  } else if ( mAllowBeginReminders && beforeafterpos == 1 ) { // after start
     alarm->setStartOffset( Duration( offset ) );
+  }
 
   // We assume that if mAllowBeginReminders is not set, that mAllowBeginReminders
   // is set.
-  if ( !mAllowBeginReminders && beforeafterpos == 0 ) // before end
+  if ( !mAllowBeginReminders && beforeafterpos == 0 ) { // before end
     alarm->setStartOffset( Duration( offset ) );
-  else if ( !mAllowBeginReminders && beforeafterpos == 1 ) // after end
+  } else if ( !mAllowBeginReminders && beforeafterpos == 1 ) { // after end
     alarm->setStartOffset( Duration( offset ) );
-  else if ( beforeafterpos == 2 ) // before end
+  } else if ( beforeafterpos == 2 ) { // before end
     alarm->setStartOffset( Duration( offset ) );
-  else if ( beforeafterpos == 3 ) // after end
+  } else if ( beforeafterpos == 3 ) { // after end
     alarm->setStartOffset( Duration( offset ) );
+  }
 
   if ( beforeafterpos / 2 == 0 ) { // start offset
     alarm->setStartOffset( Duration( offset ) );
@@ -223,19 +224,20 @@ void AlarmDialog::fillCombo()
   if ( mIncidenceType == Incidence::TypeTodo ) {
     mUi->mBeforeAfter->clear();
 
-    if ( mAllowBeginReminders )
+    if ( mAllowBeginReminders ) {
       items << i18n( "Before the to-do starts" ) << i18n( "After the to-do starts" );
+    }
 
-    if ( mAllowEndReminders )
+    if ( mAllowEndReminders ) {
       items << i18n( "Before the to-do is due" ) << i18n( "After the to-do is due" );
-
+    }
   } else {
-
-    if ( mAllowEndReminders )
+    if ( mAllowEndReminders ) {
       items << i18n( "Before the event starts" ) << i18n( "After the event starts" );
-
-    if ( mAllowEndReminders )
+    }
+    if ( mAllowEndReminders ) {
       items << i18n( "Before the event ends" ) << i18n( "After the event ends" );
+    }
   }
 
   mUi->mBeforeAfter->clear();
@@ -270,4 +272,3 @@ void AlarmDialog::setWhen( When when )
   Q_ASSERT( when <= mUi->mBeforeAfter->count() );
   mUi->mBeforeAfter->setCurrentIndex( when );
 }
-

@@ -85,8 +85,9 @@ bool IncidenceSecrecy::isDirty() const
       return true;
     }
   } else {
-    if ( mUi->mSecrecyCombo->currentIndex() != 0 )
+    if ( mUi->mSecrecyCombo->currentIndex() != 0 ) {
       return true;
+    }
   }
 
   return false;

@@ -36,7 +36,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryConfig : public QObject
 {
   Q_OBJECT
   public:
-    explicit CategoryConfig( KCoreConfigSkeleton* cfg, QObject* parent=0 );
+    explicit CategoryConfig( KCoreConfigSkeleton *cfg, QObject *parent=0 );
     ~CategoryConfig();
     QStringList customCategories() const;
     void setCustomCategories( const QStringList &categories );
@@ -48,7 +48,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryConfig : public QObject
   private:
     Q_DISABLE_COPY(CategoryConfig)
     class Private;
-    Private* const d;
+    Private *const d;
     Q_PRIVATE_SLOT( d, void configChanged() )
 };
 

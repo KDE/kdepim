@@ -45,10 +45,8 @@ using namespace KCalCore;
 using namespace KCalUtils;
 
 IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
-  : IncidenceEditor( 0 )
-  , mTimeZones( new ICalTimeZones )
-  , mUi( ui )
-  , mTimezoneCombosWhereVisibile( false )
+  : IncidenceEditor( 0 ), mTimeZones( new ICalTimeZones ), mUi( ui ),
+    mTimezoneCombosWhereVisibile( false )
 {
   setTimeZonesVisibility( false );
   setObjectName( "IncidenceDateTime" );
@@ -63,9 +61,8 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
 #endif
 
   connect( mUi->mFreeBusyCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()));
-  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)),
-           SLOT(checkDirtyStatus()) );
+  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
+  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
 }
 
 IncidenceDateTime::~IncidenceDateTime()
@@ -95,11 +92,13 @@ void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
 
   enableTimeEdits();
 
-  if ( mUi->mTimeZoneComboStart->currentIndex() == 0 ) // Floating
+  if ( mUi->mTimeZoneComboStart->currentIndex() == 0 ) { // Floating
     mInitialStartDT.setTimeSpec( mInitialStartDT.toLocalZone().timeSpec() );
+  }
 
-  if ( mUi->mTimeZoneComboEnd->currentIndex() == 0 ) // Floating
+  if ( mUi->mTimeZoneComboEnd->currentIndex() == 0 ) { // Floating
     mInitialEndDT.setTimeSpec( mInitialEndDT.toLocalZone().timeSpec() );
+  }
 
   mWasDirty = false;
 }
@@ -113,7 +112,9 @@ void IncidenceDateTime::save( const KCalCore::Incidence::Ptr &incidence )
   } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<Journal>( incidence ) ) {
     save( journal );
   } else {
-    Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos, events and journals" );
+    Q_ASSERT_X( false,
+                "IncidenceDateTimeEditor::save",
+                "Only implemented for todos, events and journals" );
   }
 }
 
@@ -205,11 +206,12 @@ void IncidenceDateTime::updateStartTime( const QTime &newTime )
 
 void IncidenceDateTime::updateStartDate( const QDate &newDate )
 {
-  if ( !newDate.isValid() )
+  if ( !newDate.isValid() ) {
     return;
+  }
 
-  const bool dateChanged = mCurrentStartDateTime.date().day() != newDate.day()
-                           || mCurrentStartDateTime.date().month() != newDate.month();
+  const bool dateChanged = mCurrentStartDateTime.date().day() != newDate.day() ||
+                           mCurrentStartDateTime.date().month() != newDate.month();
 
   KDateTime endDateTime = currentEndDateTime();
   int daysep = mCurrentStartDateTime.daysTo( endDateTime );
@@ -232,17 +234,19 @@ void IncidenceDateTime::updateStartSpec()
 {
   QDate prevDate = mCurrentStartDateTime.date();
 
-  if ( mUi->mEndCheck->isChecked()
-    && currentEndDateTime().timeSpec() == mCurrentStartDateTime.timeSpec() )
+  if ( mUi->mEndCheck->isChecked() &&
+       currentEndDateTime().timeSpec() == mCurrentStartDateTime.timeSpec() ) {
     mUi->mTimeZoneComboEnd->selectTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
+  }
 
   mCurrentStartDateTime.setTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
 
-  const bool dateChanged = mCurrentStartDateTime.date().day() != prevDate.day()
-                           || mCurrentStartDateTime.date().month() != prevDate.month();
+  const bool dateChanged = mCurrentStartDateTime.date().day() != prevDate.day() ||
+                           mCurrentStartDateTime.date().month() != prevDate.month();
 
-  if ( dateChanged )
+  if ( dateChanged ) {
     emit startDateChanged( mCurrentStartDateTime.date() );
+  }
 
   if ( type() == KCalCore::Incidence::TypeJournal ) {
     checkDirtyStatus();
@@ -307,12 +311,12 @@ void IncidenceDateTime::enableTimeEdits()
   mUi->mTimeZoneLabel->setVisible( !wholeDayChecked );
 #endif
 
-  if( mUi->mStartCheck->isChecked() ) {
+  if ( mUi->mStartCheck->isChecked() ) {
     mUi->mStartTimeEdit->setEnabled( !wholeDayChecked );
     mUi->mTimeZoneComboStart->setEnabled( !wholeDayChecked );
     mUi->mTimeZoneComboStart->setFloating( wholeDayChecked, mInitialStartDT.timeSpec() );
   }
-  if( mUi->mEndCheck->isChecked() ) {
+  if ( mUi->mEndCheck->isChecked() ) {
     mUi->mEndTimeEdit->setEnabled( !wholeDayChecked );
     mUi->mTimeZoneComboEnd->setEnabled( !wholeDayChecked );
     mUi->mTimeZoneComboEnd->setFloating( wholeDayChecked, mInitialEndDT.timeSpec() );
@@ -349,12 +353,13 @@ bool IncidenceDateTime::isDirty( const KCalCore::Todo::Ptr &todo ) const
     // Use mActiveStartTime. This is the KDateTime::Spec selected on load coming from
     // the combobox. We use this one as it can slightly differ (e.g. missing
     // country code in the incidence time spec) from the incidence.
-    if ( currentStartDateTime() != mInitialStartDT )
+    if ( currentStartDateTime() != mInitialStartDT ) {
       return true;
+    }
   }
 
   if ( mUi->mEndCheck->isChecked() && currentEndDateTime() != mInitialEndDT ) {
-      return true;
+    return true;
   }
 
   return false;
@@ -364,15 +369,17 @@ bool IncidenceDateTime::isDirty( const KCalCore::Todo::Ptr &todo ) const
 
 bool IncidenceDateTime::isDirty( const KCalCore::Event::Ptr &event ) const
 {
-  if ( event->allDay() != mUi->mWholeDayCheck->isChecked() )
+  if ( event->allDay() != mUi->mWholeDayCheck->isChecked() ) {
     return true;
+  }
 
-  if ( mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Opaque )
+  if ( mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Opaque ) {
     return true;
+  }
 
-  if ( !mUi->mFreeBusyCheck->isChecked() &&
-       event->transparency() != Event::Transparent )
+  if ( !mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Transparent ) {
     return true;
+  }
 
   if ( event->allDay() ) {
     if ( mUi->mStartDateEdit->date() != mInitialStartDT.date() ||
@@ -391,8 +398,9 @@ bool IncidenceDateTime::isDirty( const KCalCore::Event::Ptr &event ) const
 
 bool IncidenceDateTime::isDirty( const KCalCore::Journal::Ptr &journal ) const
 {
-  if ( journal->allDay() != mUi->mWholeDayCheck->isChecked() )
+  if ( journal->allDay() != mUi->mWholeDayCheck->isChecked() ) {
     return true;
+  }
 
   if ( journal->allDay() ) {
     if ( mUi->mStartDateEdit->date() != mInitialStartDT.date() ) {
@@ -476,11 +484,13 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
       }
     }
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
-    if ( startDT.isUtc() )
+    if ( startDT.isUtc() ) {
       startDT = startDT.toLocalZone();
+    }
 
-    if ( endDT.isUtc() )
+    if ( endDT.isUtc() ) {
       endDT = endDT.toLocalZone();
+    }
 
     setDateTimes( startDT, endDT );
   } else {
@@ -608,8 +618,9 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
       int days = todo->dtStart( true ).daysTo( todo->dtDue( true ) );
       startDT.setDate( startDT.date().addDays( -days ) );
     }
-    if ( startDT.isUtc() )
+    if ( startDT.isUtc() ) {
       startDT = startDT.toLocalZone();
+    }
   }
 
   setDateTimes( startDT, endDT );

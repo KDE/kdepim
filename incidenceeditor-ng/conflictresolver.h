@@ -24,20 +24,19 @@
 #define INCIDENCEEDITOR_CONFLICTRESOLVER_H
 
 #include "incidenceeditors-ng_export.h"
-
 #include "freebusyitem.h"
+
+#include <KCalCore/FreeBusy>
+#include <KCalCore/Attendee>
+#include <KCalCore/Period>
+
+#include <KDateTime>
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtCore/QSet>
 #include <QtCore/QBitArray>
 #include <QtCore/QVector>
-
-#include <KDateTime>
-
-#include <kcalcore/freebusy.h>
-#include <kcalcore/attendee.h>
-#include <kcalcore/period.h>
 
 namespace IncidenceEditorNG {
 
@@ -55,10 +54,10 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
 {
   Q_OBJECT
   public:
-   /**
-    * @param parentWidget is passed to Akonadi when fetching free/busy data.
-    */
-    explicit ConflictResolver( QWidget *parentWidget, QObject* parent = 0 );
+    /**
+     * @param parentWidget is passed to Akonadi when fetching free/busy data.
+     */
+    explicit ConflictResolver( QWidget *parentWidget, QObject *parent = 0 );
 
     /**
      *  Add an attendee
@@ -72,11 +71,13 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
      * Removes an attendee
      * The attendee will no longer be considered when
      * resolving conflicts
-     * */
+     */
+
     void removeAttendee( const KCalCore::Attendee::Ptr &attendee );
+
     /**
      * Clear all attendees
-     **/
+     */
     void clearAttendees();
 
     /**
@@ -119,13 +120,13 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
 
     QList<FreeBusyItem::Ptr> freeBusyItems() const;
 
-    FreeBusyItemModel* model() const;
+    FreeBusyItemModel *model() const;
 
   signals:
     /**
      * Emitted when the user changes the start and end dateTimes
      * for the incidence.
-     **/
+     */
     void dateTimesChanged( const KDateTime & newStart, const KDateTime & newEnd );
 
     /**
@@ -176,7 +177,7 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
       possible slot for this participant (not necessarily a slot that is
       available for all participants).
     */
-    bool tryDate( const KCalCore::FreeBusy::Ptr &fb, KDateTime& tryFrom, KDateTime& tryTo );
+    bool tryDate( const KCalCore::FreeBusy::Ptr &fb, KDateTime &tryFrom, KDateTime &tryTo );
 
     /**
      * Checks whether the supplied attendee passes the

@@ -57,7 +57,8 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
       monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
       monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
 
-      CalendarSupport::CalendarModel *calendarModel = new CalendarSupport::CalendarModel( monitor, this );
+      CalendarSupport::CalendarModel *calendarModel =
+        new CalendarSupport::CalendarModel( monitor, this );
 
       mCalendar = new CalendarSupport::Calendar( calendarModel, calendarModel,
                                                  KSystemTimeZones::local() );
@@ -72,7 +73,8 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
         return;
       }
 
-      IncidenceEditorNG::IncidenceDialog *dialog = IncidenceEditorNG::IncidenceDialogFactory::create( incidence->type() );
+      IncidenceEditorNG::IncidenceDialog *dialog =
+        IncidenceEditorNG::IncidenceDialogFactory::create( incidence->type() );
       dialog->setIsCounterProposal( true );
       dialog->load( item, QDate::currentDate() );
     }

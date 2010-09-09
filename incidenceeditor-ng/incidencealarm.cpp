@@ -1,21 +1,21 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "incidencealarm.h"
@@ -41,10 +41,10 @@ IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoMore
 #else
 IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui )
 #endif
-  : mUi( ui )
-  , mDateTime( dateTime )
-  , mEnabledAlarmCount( 0 )
-  , mIsTodo( false )
+  : mUi( ui ),
+    mDateTime( dateTime ),
+    mEnabledAlarmCount( 0 ),
+    mIsTodo( false )
 {
   setObjectName( "IncidenceAlarm" );
   mUi->mAlarmPresetCombo->insertItems( 0, AlarmPresets::availablePresets() );
@@ -78,8 +78,9 @@ void IncidenceAlarm::load( const KCalCore::Incidence::Ptr &incidence )
   mDateTime->load( incidence );
 
   mAlarms.clear();
-  foreach ( const KCalCore::Alarm::Ptr &alarm, incidence->alarms() )
+  foreach ( const KCalCore::Alarm::Ptr &alarm, incidence->alarms() ) {
     mAlarms.append( KCalCore::Alarm::Ptr( new KCalCore::Alarm( *alarm.data() ) ) );
+  }
 
   mIsTodo = incidence->type() == KCalCore::Incidence::TypeTodo;
   if ( mIsTodo ) {
@@ -183,17 +184,17 @@ void IncidenceAlarm::editCurrentAlarm()
 
 void IncidenceAlarm::handleDateTimeToggle()
 {
-  QWidget *parent = mUi->mAlarmPresetCombo->parentWidget();  // Take the parent of a toplevel widget;
-  if ( parent )
-    parent->setEnabled( mDateTime->startDateTimeEnabled()
-                        || mDateTime->endDateTimeEnabled() );
+  QWidget *parent = mUi->mAlarmPresetCombo->parentWidget();  // the parent of a toplevel widget
+  if ( parent ) {
+    parent->setEnabled( mDateTime->startDateTimeEnabled() || mDateTime->endDateTimeEnabled() );
+  }
 
   mUi->mAlarmPresetCombo->setEnabled( mDateTime->endDateTimeEnabled() );
   mUi->mAlarmAddPresetButton->setEnabled( mDateTime->endDateTimeEnabled() );
 
-  #ifndef KDEPIM_MOBILE_UI
-    mUi->mQuickAddReminderLabel->setEnabled( mDateTime->endDateTimeEnabled() );
-  #endif
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mQuickAddReminderLabel->setEnabled( mDateTime->endDateTimeEnabled() );
+#endif
 }
 
 void IncidenceAlarm::newAlarm()
@@ -203,10 +204,11 @@ void IncidenceAlarm::newAlarm()
   QPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type(), mUi->mTabWidget ) );
   dialog->setOffset( 15 );
   dialog->setUnit( AlarmDialog::Minutes );
-  if ( mIsTodo && mDateTime->endDateTimeEnabled() )
+  if ( mIsTodo && mDateTime->endDateTimeEnabled() ) {
     dialog->setWhen( AlarmDialog::BeforeEnd );
-  else
+  } else {
     dialog->setWhen( AlarmDialog::BeforeStart );
+  }
 
   dialog->setAllowBeginReminders( mDateTime->startDateTimeEnabled() );
   dialog->setAllowEndReminders( mDateTime->endDateTimeEnabled() );
@@ -219,7 +221,6 @@ void IncidenceAlarm::newAlarm()
     updateAlarmList();
     checkDirtyStatus();
   }
-
   delete dialog;
 
 #endif
@@ -227,13 +228,15 @@ void IncidenceAlarm::newAlarm()
 
 void IncidenceAlarm::newAlarmFromPreset()
 {
-  if ( mIsTodo )
-    mAlarms.append( AlarmPresets::preset( AlarmPresets::BeforeEnd, mUi->mAlarmPresetCombo->currentText() ) );
-  else
-    mAlarms.append( AlarmPresets::preset( AlarmPresets::BeforeStart, mUi->mAlarmPresetCombo->currentText() ) );
+  if ( mIsTodo ) {
+    mAlarms.append(
+      AlarmPresets::preset( AlarmPresets::BeforeEnd, mUi->mAlarmPresetCombo->currentText() ) );
+  } else {
+    mAlarms.append(
+      AlarmPresets::preset( AlarmPresets::BeforeStart, mUi->mAlarmPresetCombo->currentText() ) );
+  }
 
   updateAlarmList();
-
   checkDirtyStatus();
 }
 
@@ -341,60 +344,76 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
   if ( alarm->enabled() ) {
     if ( useoffset > 0 && alarm->hasStartOffset() ) {
       if ( mIsTodo ) {
-        return i18n( "%1 %2 %3 after the to-do started %4", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the to-do started %4",
+                     action, useoffset, offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 after the event started %4", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the event started %4",
+                     action, useoffset, offsetUnit, repeatStr );
       }
     } else if ( useoffset < 0 && alarm->hasStartOffset() ) {
       if ( mIsTodo ) {
-        return i18n( "%1 %2 %3 before the to-do starts %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the to-do starts %4",
+                     action, qAbs( useoffset ), offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 before the event starts %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the event starts %4",
+                     action, qAbs( useoffset ), offsetUnit, repeatStr );
       }
     } else if ( useoffset > 0 && alarm->hasEndOffset() ) {
       if ( mIsTodo ) {
-        return i18n( "%1 %2 %3 after the to-do is due %4", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the to-do is due %4",
+                     action, useoffset, offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 after the event ends %4", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the event ends %4",
+                     action, useoffset, offsetUnit, repeatStr );
       }
     } else if ( useoffset < 0 && alarm->hasEndOffset() ) {
       if ( mIsTodo ) {
-        return i18n( "%1 %2 %3 before the to-do is due %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the to-do is due %4",
+                     action, qAbs( useoffset ), offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 before the event ends %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the event ends %4",
+                     action, qAbs( useoffset ), offsetUnit, repeatStr );
       }
     }
   } else {
     if ( useoffset > 0 ) {
       if ( mIsTodo ) {
-        return i18n( "%1 %2 %3 after the to-do started %4 (Disabled)", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the to-do started %4 (Disabled)",
+                     action, useoffset, offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 after the event started %4 (Disabled)", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the event started %4 (Disabled)",
+                     action, useoffset, offsetUnit, repeatStr );
       }
 
     } else if ( useoffset < 0 ) {
       if ( mIsTodo ) {
-        return i18n( "%1 %2 %3 before the to-do starts %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the to-do starts %4 (Disabled)",
+                     action, qAbs( useoffset ), offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 before the event starts %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the event starts %4 (Disabled)",
+                     action, qAbs( useoffset ), offsetUnit, repeatStr );
       }
     } else if ( useoffset > 0 && alarm->hasEndOffset() ) {
       if ( mIsTodo ) {
-        return i18n( "%1 %2 %3 after the to-do is due %4 (Disabled)", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the to-do is due %4 (Disabled)",
+                     action, useoffset, offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 after the event ends %4 (Disabled)", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the event ends %4 (Disabled)",
+                     action, useoffset, offsetUnit, repeatStr );
       }
     } else if ( useoffset < 0 && alarm->hasEndOffset() ) {
       if ( mIsTodo ) {
-        return i18n( "%1 %2 %3 before the to-do is due %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the to-do is due %4 (Disabled)",
+                     action, qAbs( useoffset ), offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 before the event ends %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the event ends %4 (Disabled)",
+                     action, qAbs( useoffset ), offsetUnit, repeatStr );
       }
     }
   }
 
   // useoffset == 0
-  if ( alarm->enabled() )
+  if ( alarm->enabled() ) {
     if ( mIsTodo && alarm->hasStartOffset() ) {
       return i18n( "%1 when the to-do starts", action );
     } else if ( alarm->hasStartOffset() ) {
@@ -404,7 +423,7 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
     } else {
       return i18n( "%1 when the event ends", action );
     }
-  else
+  } else {
     if ( mIsTodo && alarm->hasStartOffset() ) {
       return i18n( "%1 when the to-do starts (Disabled)", action );
     } else if ( alarm->hasStartOffset() ) {
@@ -414,4 +433,5 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
     } else {
       return i18n( "%1 when the event ends (Disabled)", action );
     }
+  }
 }

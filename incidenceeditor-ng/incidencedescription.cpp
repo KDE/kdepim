@@ -35,7 +35,6 @@
 
 using namespace IncidenceEditorNG;
 
-
 namespace IncidenceEditorNG {
 
 class IncidenceDescriptionPrivate
@@ -50,15 +49,12 @@ class IncidenceDescriptionPrivate
 
 }
 
-
 #ifdef KDEPIM_MOBILE_UI
 IncidenceDescription::IncidenceDescription( Ui::EventOrTodoMore *ui )
 #else
 IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
 #endif
-  : IncidenceEditor( 0 )
-  , mUi( ui )
-  , d( new IncidenceDescriptionPrivate() )
+  : IncidenceEditor( 0 ), mUi( ui ), d( new IncidenceDescriptionPrivate() )
 {
   setObjectName( "IncidenceDescription" );
   mUi->mDescriptionEdit->setRichTextSupport( KRichTextWidget::SupportBold |
@@ -90,10 +86,11 @@ void IncidenceDescription::load( const KCalCore::Incidence::Ptr &incidence )
   mLoadedIncidence = incidence;
   if ( incidence ) {
     enableRichTextDescription( incidence->descriptionIsRich() );
-    if ( incidence->descriptionIsRich() )
+    if ( incidence->descriptionIsRich() ) {
       mUi->mDescriptionEdit->setHtml( incidence->richDescription() );
-    else
+    } else {
       mUi->mDescriptionEdit->setText( incidence->description() );
+    }
   } else {
     enableRichTextDescription( false );
     mUi->mDescriptionEdit->clear();

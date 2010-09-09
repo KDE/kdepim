@@ -42,7 +42,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
 #endif
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence);
+    virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 
   private slots:

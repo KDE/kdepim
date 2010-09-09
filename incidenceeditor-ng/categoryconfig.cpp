@@ -58,20 +58,20 @@ static QStringList categoryDefaults()
 
 class CategoryConfig::Private
 {
-public:
-  explicit Private( KCoreConfigSkeleton* cfg ) : config( cfg )
-  {
-  }
+  public:
+    explicit Private( KCoreConfigSkeleton *cfg ) : config( cfg )
+    {
+    }
 
-  void configChanged()
-  {
+    void configChanged()
+    {
+    }
 
-  }
-
-  KCoreConfigSkeleton* config;
+    KCoreConfigSkeleton *config;
 };
 
-CategoryConfig::CategoryConfig( KCoreConfigSkeleton* cfg, QObject* parent ) : QObject( parent ), d( new Private( cfg ) )
+CategoryConfig::CategoryConfig( KCoreConfigSkeleton *cfg, QObject *parent )
+  : QObject( parent ), d( new Private( cfg ) )
 {
 }
 
@@ -90,13 +90,14 @@ QStringList CategoryConfig::customCategories() const
   KConfigGroup group( d->config->config(), "General" );
   QStringList cats = group.readEntry( "Custom Categories", QStringList() );
 
-  if ( cats.isEmpty() )
+  if ( cats.isEmpty() ) {
     cats = categoryDefaults();
+  }
   cats.sort();
   return cats;
 }
 
-void CategoryConfig::setCustomCategories( const QStringList& categories )
+void CategoryConfig::setCustomCategories( const QStringList &categories )
 {
   KConfigGroup group( d->config->config(), "General" );
   group.writeEntry( "Custom Categories", categories );

@@ -34,7 +34,7 @@ namespace IncidenceEditorNG
   the method itemByPath().
 
   @author Mathias Soeken <msoeken@tzi.de>
- */
+*/
 class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
 {
   Q_OBJECT
@@ -51,9 +51,8 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
     /**
       Default constructor. The default behavior is like a QTreeWidget, so you
       have to activate the autoCheckChildren property manually.
-     */
+    */
     AutoCheckTreeWidget( QWidget *parent = 0 );
-
 
     ~AutoCheckTreeWidget();
 
@@ -62,7 +61,7 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
 
       @param path The path
       @returns a item which is represented by the path, if available.
-     */
+    */
     QTreeWidgetItem *itemByPath( const QStringList &path ) const;
 
     /**
@@ -70,13 +69,13 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
 
       @param item The item
       @returns a string list which is the represented path of the item.
-     */
-    QStringList pathByItem( QTreeWidgetItem *item) const;
+    */
+    QStringList pathByItem( QTreeWidgetItem *item ) const;
 
     /**
       @returns whether autoCheckChildren is enabled or not.
                Default value is false.
-     */
+    */
     bool autoCheckChildren() const;
 
     /**
@@ -84,13 +83,13 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
 
       @param autoCheckChildren if true, children of items are auto checked or
                                not, otherwise. Default value is false.
-     */
+    */
     void setAutoCheckChildren( bool autoCheckChildren );
 
     /**
       @returns whether newly added items have checkboxes by default.
                Default value is true.
-     */
+    */
     bool autoCheck() const;
 
     /**
@@ -98,7 +97,7 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
 
       @param autoCheck if true, newly added items have unchecked checkboxes
                        by default, otherwise not. Default value is true.
-     */
+    */
     void setAutoCheck( bool autoCheck );
 
   protected:

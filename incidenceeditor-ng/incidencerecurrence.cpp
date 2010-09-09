@@ -1,38 +1,35 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "incidencerecurrence.h"
-
-#include <QtCore/QDebug>
-#include <QtGui/QListWidgetItem>
-
-#include <KCalendarSystem>
-#include <KDebug>
-
 #include "incidencedatetime.h"
-
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
+
+#include <KCalendarSystem>
+#include <KDebug>
+
+#include <QListWidgetItem>
 
 using namespace IncidenceEditorNG;
 
@@ -65,12 +62,12 @@ Description of available recurrence types:
 #ifdef KDEPIM_MOBILE_UI
 IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
 #else
-IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui )
+  IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui )
 #endif
-  : mUi( ui )
-  , mDateTime( dateTime )
-  , mMonthlyInitialType( 0 )
-  , mYearlyInitialType( 0 )
+    : mUi( ui )
+    , mDateTime( dateTime )
+    , mMonthlyInitialType( 0 )
+    , mYearlyInitialType( 0 )
 {
   setObjectName( "IncidenceRecurrence" );
   // Set some sane defaults
@@ -131,20 +128,20 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
 // that its message to translators appears before any usages of this method.
 KLocalizedString IncidenceRecurrence::subsOrdinal ( const KLocalizedString &text, int number ) const
 {
-    QString q = i18nc( "In several of the messages below, "
-                      "an ordinal number is substituted into the message. "
-                      "Translate this as \"0\" if English ordinal suffixes "
-                      "should be added (1st, 22nd, 123rd); "
-                      "translate this as \"1\" if just the number itself "
-                      "should be substituted (1, 22, 123).",
-                      "0" );
-    if ( q == "0" ) {
-        QString ordinal;
-        ordinal = numberToString( number );
-        return text.subs( ordinal );
-    } else {
-        return text.subs( number );
-    }
+  QString q = i18nc( "In several of the messages below, "
+                     "an ordinal number is substituted into the message. "
+                     "Translate this as \"0\" if English ordinal suffixes "
+                     "should be added (1st, 22nd, 123rd); "
+                     "translate this as \"1\" if just the number itself "
+                     "should be substituted (1, 22, 123).",
+                     "0" );
+  if ( q == "0" ) {
+    QString ordinal;
+    ordinal = numberToString( number );
+    return text.subs( ordinal );
+  } else {
+    return text.subs( number );
+  }
 }
 
 void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
@@ -404,14 +401,14 @@ void IncidenceRecurrence::fillCombos()
   mUi->mMonthlyCombo->addItem( item );
 
   item = subsOrdinal( ki18nc( "example: the 5th Wednesday", "the %1 %2" ), monthWeekFromStart()
-                    ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
+    ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
   mUi->mMonthlyCombo->addItem( item );
 
   if ( monthWeekFromEnd() == 1 )
     item = ki18nc( "example: the last Wednesday", "the last %1" ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
   else
     item = subsOrdinal( ki18nc( "example: the 5th to last Wednesday", "the %1 to last %2" ), monthWeekFromEnd()
-                      ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
+      ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
   mUi->mMonthlyCombo->addItem( item );
   mUi->mMonthlyCombo->setCurrentIndex( currentMonthlyIndex == -1 ? 0 : currentMonthlyIndex );
 
@@ -429,24 +426,24 @@ void IncidenceRecurrence::fillCombos()
 
   item = subsOrdinal( ki18nc( "example: the 3rd to last day of June", "the %1 to last day of %2"),
                       startDate.daysInMonth() - startDate.day()
-                    ).subs( longMonthName ).toString();
+    ).subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
   item = subsOrdinal( ki18nc( "example: the 4th Wednesday of June", "the %1 %2 of %3" ),
                       monthWeekFromStart()
-                    ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
-                     .subs( longMonthName ).toString();
+    ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
+         .subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
   if ( monthWeekFromEnd() == 1 )
     item = ki18nc( "example: the last Wednesday of June", "the last %1 of %2" )
-                 .subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
-                 .subs( longMonthName ).toString();
+           .subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
+           .subs( longMonthName ).toString();
   else
     item = subsOrdinal( ki18nc( "example: the 4th to last Wednesday of June", "the %1 to last %2 of %3 " ),
                         monthWeekFromEnd()
-                      ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
-                       .subs( longMonthName ).toString();
+      ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
+           .subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
   item = subsOrdinal( ki18nc( "example: the 15th day of the year", "the %1 day of the year" ),
@@ -465,7 +462,7 @@ void IncidenceRecurrence::handleDateTimeToggle()
 void IncidenceRecurrence::handleEndAfterOccurrencesChange( int currentValue )
 {
   mUi->mRecurrenceOccurrencesLabel->setText(
-      i18ncp( "Recurrence ends after n occurrences", "occurrence", "occurrences", currentValue ) );
+    i18ncp( "Recurrence ends after n occurrences", "occurrence", "occurrences", currentValue ) );
 }
 
 void IncidenceRecurrence::handleExceptionDateChange( const QDate &currentDate )
@@ -511,7 +508,7 @@ void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
                         "dynamic context 'type': 'd' days, 'w' weeks, "
                         "'m' months, 'y' years",
                         "every", "every" )
-                        .subs(frequency).inContext("type", freqKey).toString();
+               .subs(frequency).inContext("type", freqKey).toString();
   mUi->mFrequencyLabel->setText( labelEvery );
   mUi->mRecurrenceRuleLabel->setText( labelFreq );
 
@@ -859,6 +856,6 @@ RecurrenceType IncidenceRecurrence::currentRecurrenceType() const
 {
   const int currentIndex = mUi->mRecurrenceTypeCombo->currentIndex();
   Q_ASSERT_X( currentIndex >= 0 && currentIndex < RecurrenceTypeUnknown, "currentRecurrenceType",
-                                                  "Keep the combo-box values in sync with the enum" );
+              "Keep the combo-box values in sync with the enum" );
   return static_cast<RecurrenceType>( currentIndex );
 }

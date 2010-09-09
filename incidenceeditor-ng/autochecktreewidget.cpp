@@ -23,7 +23,8 @@
 using namespace IncidenceEditorNG;
 
 //@cond PRIVATE
-class AutoCheckTreeWidget::Private {
+class AutoCheckTreeWidget::Private
+{
   public:
     Private()
       : mAutoCheckChildren( false ),
@@ -50,14 +51,16 @@ AutoCheckTreeWidget::~AutoCheckTreeWidget()
   delete d;
 }
 
-QTreeWidgetItem* AutoCheckTreeWidget::itemByPath( const QStringList &path ) const
+QTreeWidgetItem *AutoCheckTreeWidget::itemByPath( const QStringList &path ) const
 {
   QStringList newPath = path;
   QTreeWidgetItem *item = 0;
 
   while ( newPath.count() ) {
     item = findItem( item, newPath.takeFirst() );
-    if ( !item ) return 0;
+    if ( !item ) {
+      return 0;
+    }
   }
 
   return item;
@@ -96,7 +99,7 @@ void AutoCheckTreeWidget::setAutoCheck( bool autoCheck )
   d->mAutoCheck = autoCheck;
 }
 
-QTreeWidgetItem* AutoCheckTreeWidget::findItem( QTreeWidgetItem *parent, const QString &text ) const
+QTreeWidgetItem *AutoCheckTreeWidget::findItem( QTreeWidgetItem *parent, const QString &text ) const
 {
   if ( parent ) {
     for ( int i = 0; i < parent->childCount(); ++i ) {
@@ -140,7 +143,9 @@ void AutoCheckTreeWidget::slotRowsInserted( const QModelIndex &parent,
 void AutoCheckTreeWidget::slotDataChanged( const QModelIndex &topLeft,
                                            const QModelIndex &bottomRight )
 {
-  if ( !d->mAutoCheckChildren ) return;
+  if ( !d->mAutoCheckChildren ) {
+    return;
+  }
 
   QTreeWidgetItem *item1 = itemFromIndex( topLeft );
   QTreeWidgetItem *item2 = itemFromIndex( bottomRight );

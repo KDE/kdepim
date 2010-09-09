@@ -110,7 +110,7 @@ class AttendeeLine : public KPIM::MultiplyingLine
       TodoActions
     };
 
-    AttendeeLine( QWidget* parent );
+    AttendeeLine( QWidget *parent );
     virtual ~AttendeeLine(){}
 
     virtual void activate();
@@ -125,8 +125,8 @@ class AttendeeLine : public KPIM::MultiplyingLine
     virtual KPIM::MultiplyingLineData::Ptr data() const;
     virtual void setData( const KPIM::MultiplyingLineData::Ptr &data );
 
-    virtual void fixTabOrder( QWidget* previous );
-    virtual QWidget* tabOut() const;
+    virtual void fixTabOrder( QWidget *previous );
+    virtual QWidget *tabOut() const;
 
     virtual void moveCompletionPopup();
     virtual void setCompletionMode( KGlobalSettings::Completion );
@@ -139,7 +139,8 @@ class AttendeeLine : public KPIM::MultiplyingLine
 
   signals:
     void changed();
-    void changed( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
+    void changed( const KCalCore::Attendee::Ptr &oldAttendee,
+                  const KCalCore::Attendee::Ptr &newAttendee );
     void editingFinished( KPIM::MultiplyingLine * );
 
   private slots:

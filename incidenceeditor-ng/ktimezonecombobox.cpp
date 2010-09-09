@@ -19,8 +19,8 @@
 
 #include "ktimezonecombobox.h"
 
-#include <kcalcore/calendar.h>
-#include <kcalcore/icaltimezones.h>
+#include <KCalCore/Calendar>
+#include <KCalCore/ICalTimeZones>
 
 #include <KDebug>
 #include <KGlobal>
@@ -38,9 +38,9 @@ class KPIM::KTimeZoneComboBox::Private
     {}
 
     void fillComboBox();
-    KTimeZoneComboBox * const mParent;
+    KTimeZoneComboBox *const mParent;
     QStringList mZones;
-    const ICalTimeZones* mAdditionalZones;
+    const ICalTimeZones *mAdditionalZones;
 };
 
 void KPIM::KTimeZoneComboBox::Private::fillComboBox()
@@ -67,7 +67,7 @@ void KPIM::KTimeZoneComboBox::Private::fillComboBox()
   mZones.prepend( "Floating" ); // do not use i18n here
 
   // Put translated zones into the combobox
-  foreach( const QString &z, mZones ) {
+  foreach ( const QString &z, mZones ) {
     mParent->addItem( i18n( z.toUtf8() ).replace( '_', ' ' ) );
   }
 }
@@ -79,8 +79,7 @@ KTimeZoneComboBox::KTimeZoneComboBox( QWidget *parent )
   d->fillComboBox();
 }
 
-
-KTimeZoneComboBox::KTimeZoneComboBox( const ICalTimeZones* zones, QWidget *parent )
+KTimeZoneComboBox::KTimeZoneComboBox( const ICalTimeZones *zones, QWidget *parent )
   : KComboBox( parent ), d( new KPIM::KTimeZoneComboBox::Private( this ) )
 {
   d->mAdditionalZones = zones;
@@ -88,7 +87,7 @@ KTimeZoneComboBox::KTimeZoneComboBox( const ICalTimeZones* zones, QWidget *paren
   d->fillComboBox();
 }
 
-void KTimeZoneComboBox::setAdditionalTimeZones( const ICalTimeZones* zones )
+void KTimeZoneComboBox::setAdditionalTimeZones( const ICalTimeZones *zones )
 {
   d->mAdditionalZones = zones;
   d->fillComboBox();
@@ -104,7 +103,7 @@ void KTimeZoneComboBox::selectTimeSpec( const KDateTime::Spec &spec )
   int nCurrentlySet = -1;
 
   int i = 0;
-  foreach( const QString &z, d->mZones ) {
+  foreach ( const QString &z, d->mZones ) {
     if ( z == spec.timeZone().name() ) {
       nCurrentlySet = i;
       break;
@@ -131,8 +130,7 @@ KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec() const
   }
   else if ( currentIndex() == 1 ) { // UTC
     spec.setType( KDateTime::UTC );
-  }
-  else {
+  } else {
     spec.setType( KSystemTimeZones::zone( d->mZones[currentIndex()] ) );
   }
 

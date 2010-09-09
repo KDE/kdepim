@@ -28,10 +28,9 @@ using namespace IncidenceEditorNG;
 /// public methods
 
 CombinedIncidenceEditor::CombinedIncidenceEditor( QWidget *parent )
-  : IncidenceEditor( parent )
-  , mDirtyEditorCount( 0 )
-  , mParent( parent )
-{ }
+  : IncidenceEditor( parent ), mDirtyEditorCount( 0 ), mParent( parent )
+{
+}
 
 CombinedIncidenceEditor::~CombinedIncidenceEditor()
 {
@@ -53,15 +52,15 @@ bool CombinedIncidenceEditor::isDirty() const
 
 bool CombinedIncidenceEditor::isValid() const
 {
-  foreach ( IncidenceEditor *editor, mCombinedEditors )
+  foreach ( IncidenceEditor *editor, mCombinedEditors ) {
     if ( !editor->isValid() ) {
       const QString reason = editor->validate();
       if ( !reason.isEmpty() ) {
         KMessageBox::sorry( mParent, reason );
       }
-
       return false;
     }
+  }
 
   return true;
 }
@@ -72,23 +71,26 @@ void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
 
   Q_ASSERT( mDirtyEditorCount >= 0 );
 
-  if ( isDirty )
+  if ( isDirty ) {
     ++mDirtyEditorCount;
-  else
+  } else {
     --mDirtyEditorCount;
+  }
 
   Q_ASSERT( mDirtyEditorCount >= 0 );
 
-  if ( prevDirtyCount == 0 )
+  if ( prevDirtyCount == 0 ) {
     emit dirtyStatusChanged( true );
-  if ( mDirtyEditorCount == 0 )
+  }
+  if ( mDirtyEditorCount == 0 ) {
     emit dirtyStatusChanged( false );
+  }
 }
 
 void CombinedIncidenceEditor::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
-  foreach ( IncidenceEditor *editor, mCombinedEditors  ) {
+  foreach ( IncidenceEditor *editor, mCombinedEditors ) {
     // load() may fire dirtyStatusChanged(), reset mDirtyEditorCount to make sure
     // we don't end up with an invalid dirty count.
     editor->blockSignals( true );
@@ -107,8 +109,9 @@ void CombinedIncidenceEditor::load( const KCalCore::Incidence::Ptr &incidence )
 
 void CombinedIncidenceEditor::save( const KCalCore::Incidence::Ptr &incidence )
 {
-  foreach ( IncidenceEditor *editor, mCombinedEditors  )
+  foreach ( IncidenceEditor *editor, mCombinedEditors ) {
     editor->save( incidence );
+  }
 }
 
 #include "moc_combinedincidenceeditor.cpp"
