@@ -88,7 +88,6 @@ MonthViewPrivate::MonthViewPrivate( MonthView *qq )
 {
   reloadTimer.setSingleShot( true );
   view->setScene( scene );
-  setUpModels();
 }
 
 void MonthViewPrivate::addIncidence( const Akonadi::Item &incidence )
@@ -111,7 +110,6 @@ void MonthViewPrivate::moveStartDate( int weeks, int months )
 
 void MonthViewPrivate::setUpModels()
 {
-  qDebug() << "TEST!!!!!!!!!" << calendarSearch;
   if ( q->customCollectionSelectionProxyModel() ) {
     calendarSearch->setSelectionModel( q->customCollectionSelectionProxyModel()->selectionModel() );
   } else {
@@ -139,10 +137,8 @@ void MonthViewPrivate::triggerDelayedReload()
 
 MonthView::MonthView( QWidget *parent )
   : EventView( parent )
-  , d_ptr( new MonthViewPrivate( this ) )
+  , d( new MonthViewPrivate( this ) )
 {
-  Q_D( MonthView );
-  
   QHBoxLayout *topLayout = new QHBoxLayout( this );
   topLayout->addWidget( d->view );
 
@@ -206,18 +202,19 @@ MonthView::MonthView( QWidget *parent )
            this, SIGNAL(newEventSignal(Akonadi::Collection::List)) );
 
   connect( &d->reloadTimer, SIGNAL(timeout()), this, SLOT(reloadIncidences()) );
-  d->reloadTimer.start( 50 );
   updateConfig();
+
+  d->setUpModels();
+  d->reloadTimer.start( 50 );
 }
 
 MonthView::~MonthView()
 {
-  delete d_ptr;
+  delete d;
 }
 
 void MonthView::updateConfig()
 {
-  Q_D( MonthView );
   CalendarSupport::CalendarSearch::IncidenceTypes types;
   if ( preferences()->showTodosMonthView() ) {
     types |= CalendarSupport::CalendarSearch::Todos;
@@ -239,7 +236,6 @@ int MonthView::currentDateCount() const
 
 DateList MonthView::selectedIncidenceDates() const
 {
-  Q_D( const MonthView );
   DateList list;
   if ( d->scene->selectedItem() ) {
     IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( d->scene->selectedItem() );
@@ -258,7 +254,6 @@ DateList MonthView::selectedIncidenceDates() const
 
 QDateTime MonthView::selectionStart() const
 {
-  Q_D( const MonthView );
   if ( d->scene->selectedCell() ) {
     return QDateTime( d->scene->selectedCell()->date() );
   } else {
@@ -274,7 +269,6 @@ QDateTime MonthView::selectionEnd() const
 
 void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
 {
-  Q_D( MonthView );
   EventView::setDateRange( start, end );
   d->calendarSearch->setStartDate( actualStartDateTime() );
   d->calendarSearch->setEndDate( actualEndDateTime() );
@@ -283,7 +277,6 @@ void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
   
 bool MonthView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
 {
-  Q_D( const MonthView );
   if ( d->scene->selectedCell() ) {
     startDt.setDate( d->scene->selectedCell()->date() );
     endDt.setDate( d->scene->selectedCell()->date() );
@@ -316,14 +309,12 @@ void MonthView::changeIncidenceDisplay( const Akonadi::Item &incidence, int acti
 
 void MonthView::updateView()
 {
-  Q_D( MonthView );
   d->view->update();
 }
 
 #ifndef QT_NO_WHEELEVENT
 void MonthView::wheelEvent( QWheelEvent *event )
 {
-  Q_D( MonthView );
   // invert direction to get scroll-like behaviour
   if ( event->delta() > 0 ) {
     d->moveStartDate( -1, 0 );
@@ -338,7 +329,6 @@ void MonthView::wheelEvent( QWheelEvent *event )
 
 void MonthView::keyPressEvent( QKeyEvent *event )
 {
-  Q_D( MonthView );
   if ( event->key() == Qt::Key_PageUp ) {
     d->moveStartDate( 0, -1 );
     event->accept();
@@ -363,25 +353,21 @@ void MonthView::keyReleaseEvent( QKeyEvent *event )
 
 void MonthView::moveBackMonth()
 {
-  Q_D( MonthView );
   d->moveStartDate( 0, -1 );
 }
 
 void MonthView::moveBackWeek()
 {
-  Q_D( MonthView );
   d->moveStartDate( -1, 0 );
 }
 
 void MonthView::moveFwdWeek()
 {
-  Q_D( MonthView );
   d->moveStartDate( 1, 0 );
 }
 
 void MonthView::moveFwdMonth()
 {
-  Q_D( MonthView );
   d->moveStartDate( 0, 1 );
 }
 
@@ -389,7 +375,6 @@ void MonthView::showDates( const QDate &start, const QDate &end )
 {
   Q_UNUSED( start );
   Q_UNUSED( end );
-  Q_D( MonthView );
   d->triggerDelayedReload();
 }
 
@@ -407,7 +392,6 @@ QPair<KDateTime,KDateTime> MonthView::actualDateRange( const KDateTime &start,
 
 Akonadi::Item::List MonthView::selectedIncidences() const
 {
-  Q_D( const MonthView );
   Akonadi::Item::List selected;
   if ( d->scene->selectedItem() ) {
     IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( d->scene->selectedItem() );
@@ -423,7 +407,6 @@ Akonadi::Item::List MonthView::selectedIncidences() const
 
 void MonthView::reloadIncidences()
 {
-  Q_D( MonthView );
   // keep selection if it exists
   Akonadi::Item incidenceSelected;
 
@@ -536,7 +519,6 @@ void MonthView::reloadIncidences()
 
 void MonthView::calendarReset()
 {
-  Q_D( MonthView );
   kDebug();
   d->triggerDelayedReload();
 }
@@ -544,26 +526,22 @@ void MonthView::calendarReset()
 void MonthView::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
 {
   Q_ASSERT( topLeft.parent() == bottomRight.parent() );
-  Q_D( MonthView );
   incidencesChanged( CalendarSupport::itemsFromModel( d->calendarSearch->model(), topLeft.parent(),
                     topLeft.row(), bottomRight.row() ) );
 }
 
 void MonthView::rowsInserted( const QModelIndex& parent, int start, int end )
 {
-  Q_D( MonthView );
   incidencesAdded( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
 }
 
 void MonthView::rowsAboutToBeRemoved( const QModelIndex& parent, int start, int end )
 {
-  Q_D( MonthView );
   incidencesAboutToBeRemoved( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
 }
 
 void MonthView::incidencesAdded( const Akonadi::Item::List &incidences )
 {
-  Q_D( MonthView );
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item added: " << CalendarSupport::incidence( i )->summary();
@@ -573,7 +551,6 @@ void MonthView::incidencesAdded( const Akonadi::Item::List &incidences )
 
 void MonthView::incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences )
 {
-  Q_D( MonthView );
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item removed: " << CalendarSupport::incidence( i )->summary();
   }
@@ -582,7 +559,6 @@ void MonthView::incidencesAboutToBeRemoved( const Akonadi::Item::List &incidence
 
 void MonthView::incidencesChanged( const Akonadi::Item::List &incidences )
 {
-  Q_D( MonthView );
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item changed: " << CalendarSupport::incidence( i )->summary();
   }

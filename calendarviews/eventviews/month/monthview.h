@@ -136,9 +136,8 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     void reloadIncidences();
 
   private:
-    MonthViewPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( MonthView );
-
+    MonthViewPrivate * const d;
+    friend class MonthViewPrivate;
     friend class MonthScene;
 };
 
