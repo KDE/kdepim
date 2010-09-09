@@ -487,8 +487,8 @@ void MonthScene::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent *mouseEvent )
 {
   QPointF pos = mouseEvent->scenePos();
   repeatTimer.stop();
-  MonthGraphicsItem *iItem;
-  if ( ( iItem = dynamic_cast<MonthGraphicsItem*>( itemAt( pos ) ) ) ) {
+  MonthGraphicsItem *iItem = dynamic_cast<MonthGraphicsItem*>( itemAt( pos ) );
+  if ( iItem ) {
     if ( iItem->monthItem() ) {
       IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( iItem->monthItem() );
       if ( tmp ) {
@@ -512,8 +512,8 @@ void MonthScene::mouseMoveEvent ( QGraphicsSceneMouseEvent *mouseEvent )
   // Change cursor depending on the part of the item it hovers to inform
   // the user that he can resize the item.
   if ( mActionType == None ) {
-    MonthGraphicsItem *iItem;
-    if ( ( iItem = dynamic_cast<MonthGraphicsItem*>( itemAt( pos ) ) ) ) {
+    MonthGraphicsItem *iItem = dynamic_cast<MonthGraphicsItem*>( itemAt( pos ) );
+    if ( iItem ) {
       if ( iItem->monthItem()->isResizable() &&
             iItem->isBeginItem() && iItem->mapFromScene( pos ).x() <= 10 ) {
         view->setActionCursor( Resize );
@@ -573,8 +573,8 @@ void MonthScene::mousePressEvent ( QGraphicsSceneMouseEvent *mouseEvent )
   mClickedItem = 0;
   mCurrentIndicator = 0;
 
-  MonthGraphicsItem *iItem;
-  if ( ( iItem = dynamic_cast<MonthGraphicsItem*>( itemAt( pos ) ) ) ) {
+  MonthGraphicsItem *iItem = dynamic_cast<MonthGraphicsItem*>( itemAt( pos ) );
+  if ( iItem ) {
     mClickedItem = iItem->monthItem();
 
     selectItem( mClickedItem );
