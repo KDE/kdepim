@@ -608,9 +608,9 @@ Akonadi::Item Calendar::todo( Akonadi::Item::Id id ) const
   }
 }
 
-Akonadi::Item::List Calendar::rawTodos( TodoSortField sortField, SortDirection sortDirection )
+Akonadi::Item::List Calendar::rawTodos( TodoSortField sortField,
+                                        SortDirection sortDirection )
 {
-  kDebug() << int( sortField ) << int( sortDirection );
   Akonadi::Item::List todoList;
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
@@ -624,7 +624,6 @@ Akonadi::Item::List Calendar::rawTodos( TodoSortField sortField, SortDirection s
 
 Akonadi::Item::List Calendar::rawTodosForDate( const QDate &date )
 {
-  kDebug() << date.toString();
   Akonadi::Item::List todoList;
   QString dateStr = date.toString();
   QMultiHash<QString, Akonadi::Item::Id>::const_iterator it =
@@ -670,7 +669,6 @@ Akonadi::Item::List Calendar::rawEventsForDate( const QDate &date,
                                                 EventSortField sortField,
                                                 SortDirection sortDirection )
 {
-  kDebug() << date.toString();
   Akonadi::Item::List eventList;
   // Find the hash for the specified date
   QString dateStr = date.toString();
@@ -727,7 +725,6 @@ Akonadi::Item::List Calendar::rawEventsForDate( const QDate &date,
 Akonadi::Item::List Calendar::rawEvents( const QDate &start, const QDate &end,
                                          const KDateTime::Spec &timespec, bool inclusive )
 {
-  kDebug() << start.toString() << end.toString() << inclusive;
   Akonadi::Item::List eventList;
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
   KDateTime st( start, ts );
@@ -781,13 +778,12 @@ Akonadi::Item::List Calendar::rawEvents( const QDate &start, const QDate &end,
 
 Akonadi::Item::List Calendar::rawEventsForDate( const KDateTime &kdt )
 {
-  kDebug();
   return rawEventsForDate( kdt.date(), kdt.timeSpec() );
 }
 
-Akonadi::Item::List Calendar::rawEvents( EventSortField sortField, SortDirection sortDirection )
+Akonadi::Item::List Calendar::rawEvents( EventSortField sortField,
+                                         SortDirection sortDirection )
 {
-  kDebug() << int( sortField ) << int( sortDirection );
   Akonadi::Item::List eventList;
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
@@ -809,7 +805,8 @@ Akonadi::Item Calendar::journal( Akonadi::Item::Id id ) const
   }
 }
 
-Akonadi::Item::List Calendar::rawJournals( JournalSortField sortField, SortDirection sortDirection )
+Akonadi::Item::List Calendar::rawJournals( JournalSortField sortField,
+                                           SortDirection sortDirection )
 {
   Akonadi::Item::List journalList;
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
