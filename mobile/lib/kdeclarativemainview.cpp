@@ -62,6 +62,7 @@
 #include "kresettingproxymodel.h"
 #include "qmllistselectionmodel.h"
 #include "qmlcheckableproxymodel.h"
+#include <QtCore/QPluginLoader>
 
 class ActionImageProvider : public QDeclarativeImageProvider
 {
@@ -326,6 +327,23 @@ QAbstractItemModel* KDeclarativeMainView::itemModel() const
 
 void KDeclarativeMainView::launchAccountWizard()
 {
+#ifdef Q_OS_UNIX
+  const QString inProcessAccountWizard = KStandardDirs::locate( "module", "accountwizard_plugin.so" );
+  kDebug() << inProcessAccountWizard;
+  if ( !inProcessAccountWizard.isEmpty() ) {
+    QPluginLoader loader( inProcessAccountWizard );
+    if ( loader.load() ) {
+      QObject *instance = loader.instance();
+      // TODO error handling
+      QMetaObject::invokeMethod( instance, "run", Qt::DirectConnection, Q_ARG( QStringList, d->mChangeRecorder->mimeTypesMonitored() ) );
+      loader.unload();
+      return;
+    } else {
+      kDebug() << loader.fileName() << loader.errorString();
+    }
+  }
+#endif
+
   QStringList args;
   args << QLatin1String( "--type" ) << d->mChangeRecorder->mimeTypesMonitored().join( "," );
 
