@@ -70,7 +70,7 @@ class ContactGroupEditorView::Private : public CalendarSupport::ItemEditorUi
       return true;
     }
 
-    bool isValid()
+    bool isValid() const
     {
       return true;
     }
