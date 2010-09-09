@@ -159,6 +159,18 @@ KPIM.MainView {
         monthView.visible = false;
         agendaView.visible = true;
       }
+
+      onItemSelected: {
+        if ( selectedItemId > 0 ) {
+          eventView.itemId = selectedItemId;
+          eventView.activeDate = activeDate;
+          application.setCurrentEventItemId(selectedItemId);
+          korganizerActions.showOnlyCategory("event_viewer")
+          eventView.visible = true;
+          monthView.visible = false;
+          clearSelection();
+        }
+      }
     }
   }
 

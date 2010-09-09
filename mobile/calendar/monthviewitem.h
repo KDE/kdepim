@@ -45,9 +45,11 @@ class MonthViewItem : public DeclarativeAkonadiItem
     
   Q_SIGNALS:
     void dateClicked( const QDate &date );
+    void itemSelected( qint64 selectedItemId, const QDate &activeDate );
 
   private Q_SLOTS:
     void emitDateClicked();
+    void emitItemSelected( const Akonadi::Item &item, const QDate &activeDate );
     
   private:
     MonthView *mView;

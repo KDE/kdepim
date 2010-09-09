@@ -41,6 +41,8 @@ MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
            mView, SLOT(moveFwdMonth()) );
   connect( mView, SIGNAL(newEventSignal(Akonadi::Collection::List)),
            SLOT(emitDateClicked()));
+  connect( mView, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
+           SLOT(emitItemSelected(Akonadi::Item, QDate)) );
 }
 
 MonthViewItem::~MonthViewItem()
@@ -51,6 +53,11 @@ MonthViewItem::~MonthViewItem()
 void MonthViewItem::emitDateClicked()
 {
   emit dateClicked( mView->selectionStart().date() );
+}
+
+void MonthViewItem::emitItemSelected( const Akonadi::Item &item, const QDate &activeDate )
+{
+  emit itemSelected( item.id(), activeDate );
 }
 
 QObject* MonthViewItem::calendar() const
