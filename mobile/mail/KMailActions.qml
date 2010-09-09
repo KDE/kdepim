@@ -180,7 +180,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark As ..." ) }
     ActionListItem { name : "message_send_again" }
     FakeAction { name : "create_todo_reminder" }
-    FakeAction { name : "find_in_email" }
+    ActionListItem { name : "message_find_in" }
     ActionListItem { name : "message_save_as" }
   }
 

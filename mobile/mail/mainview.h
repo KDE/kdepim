@@ -69,6 +69,7 @@ class MainView : public KDeclarativeMainView
     void replyToMessage();
     void sendAgain();
     void saveMessage();
+    void findInMessage();
     void preferHTML(bool useHtml);
     void loadExternalReferences(bool load);
     void folderChanged();

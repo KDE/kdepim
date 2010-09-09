@@ -82,6 +82,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action = actionCollection->addAction("message_edit");
   action->setText( i18n("Edit Email") );
 
+  action = actionCollection->addAction("message_find_in");
+  action->setText( i18n("Find in Message") );
+
   action = actionCollection->addAction("prefer_html_to_plain");
   action->setText( i18n("Prefer HTML to Plain Text") );
   action->setCheckable(true);

@@ -101,6 +101,7 @@ void MainView::delayedInit()
   connect(actionCollection()->action("message_redirect"), SIGNAL(triggered(bool)), SLOT(redirect()));
   connect(actionCollection()->action("message_send_again"), SIGNAL(triggered(bool)), SLOT(sendAgain()));
   connect(actionCollection()->action("message_edit"), SIGNAL(triggered(bool)), SLOT(sendAgain())); //do the same under a different name
+  connect(actionCollection()->action("message_find_in"), SIGNAL(triggered(bool)), SLOT(findInMessage())); 
   connect(actionCollection()->action("message_save_as"), SIGNAL(triggered(bool)), SLOT(saveMessage()));
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
   connect(actionCollection()->action("prefer_html_to_plain"), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)));
@@ -658,6 +659,23 @@ void MainView::saveMessage()
     command->execute();
 }
 
+void MainView::findInMessage()
+{
+  QGraphicsObject *root = rootObject();
+  MessageViewer::MessageViewItem* item = 0;
+  Q_FOREACH(QObject* obj, root->children())
+  {
+      if (dynamic_cast<MessageViewer::MessageViewItem*>(obj)) {
+        item = static_cast<MessageViewer::MessageViewItem*>(obj);
+        break;
+    }
+  }
+
+  if (item) {
+    item->viewer()->slotFind();
+  }
+}
+
 void MainView::preferHTML(bool useHtml)
 {
   QGraphicsObject *root = rootObject();
@@ -725,6 +743,8 @@ void MainView::folderChanged()
     QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
     if ( collectionSelectionModel->selection().indexes().isEmpty() )
       return;
+    //NOTE: not exactly correct if multiple folders are selected, although I don't know what to do then, as the action is not
+    //a tri-state one (checked, unchecked, for some folders checked)
     const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
     Q_ASSERT( index.isValid() );
     const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
