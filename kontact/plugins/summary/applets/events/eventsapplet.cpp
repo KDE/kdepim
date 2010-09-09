@@ -58,7 +58,6 @@ void EventsApplet::init()
 
     ui();
     configChanged();
-    updateEvents();
     updateUI();
 
     m_timer = new QTimer(this);
@@ -97,6 +96,9 @@ void EventsApplet::configChanged()
     // This can be either "Todo", "Events" or "Agenda" (merged of both)
     m_incidenceType = cg.readEntry( "incidenceType", "Agenda" );
     m_numDays = cg.readEntry( "numDays", 31 );
+    m_categories = cg.readEntry( "categories", QString() ).split( "," );
+
+    updateEvents();
 }
 
 void EventsApplet::updateEvents()
@@ -153,6 +155,17 @@ void EventsApplet::createConfigurationInterface( KConfigDialog *parent)
         m_configUi.todoCB->setChecked( false );
     }
 
+    // Create list of categories
+    QStringList allCats = QStringList();
+    KSharedConfigPtr config = KSharedConfig::openConfig( "korganizerrc" );
+    KConfigGroup korg_cg = KConfigGroup( config, "General" );
+
+    QStringList selectedCats = cg.readEntry( "categories", QString() ).split( "," );
+    allCats = korg_cg.readEntry( "Custom Categories", QString() ).split( "," );
+
+    m_configUi.categoriesCCB->insertItems( -1, allCats );
+    m_configUi.categoriesCCB->setCheckedItems( selectedCats );
+
     connect(parent, SIGNAL(applyClicked()), this, SLOT(configAccepted()));
     connect(parent, SIGNAL(okClicked()), this, SLOT(configAccepted()));
 
@@ -175,6 +188,9 @@ void EventsApplet::configAccepted()
         cg.writeEntry( "incidenceType", "Todo" );
     }
 
+    QStringList selectedCats = m_configUi.categoriesCCB->checkedItems();
+    cg.writeEntry( "categories", selectedCats.join( "," ) );
+
     // Clear the incidences before updating to keep stale entries out.
     if ( m_numDays > m_configUi.daysSpinBox->value() ) {
         QMapIterator<QString,EventWidget*> it( m_incidences );
@@ -184,9 +200,6 @@ void EventsApplet::configAccepted()
             m_incidences.erase( it.key() );
         }
     }
-
-    configChanged();
-    updateEvents();
 }
 
 void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data pimData )
@@ -200,53 +213,62 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data pimData
             it.next();
             QVariantHash data = it.value().toHash();
 
-            kDebug() << it.key();
-            kDebug() << data;
+            // kDebug() << it.key();
+            // kDebug() << data;
 
             // Start by making sure it's a type we are looking for
             if ( data[ "Type" ].toString() == m_incidenceType || m_incidenceType == "Agenda" ) {
-                KDateTime sd = data.value("StartDate").value<KDateTime>();
+                // Then filter on category
+                if ( m_categories.length() > 0 ) {
+                    QStringList incidenceCats = data[ "Categories" ].toString().split( "," );
+                    foreach( QString cat, incidenceCats ) {
+                        if ( m_categories.contains( cat ) ) {
+                            // Lastly, make sure it's in a date we're looking for.
+                            KDateTime sd = data.value("StartDate").value<KDateTime>();
 
-                int difference = 0;
+                            int difference = 0;
 
-                if( sd.isValid() ) {
-                    QDate date = sd.date();
-                    date = QDate( QDate::currentDate().year(), date.month(), date.day() );
-                    sd = KDateTime( date, sd.time() );
+                            if( sd.isValid() ) {
+                                QDate date = sd.date();
+                                date = QDate( QDate::currentDate().year(), date.month(), date.day() );
+                                sd = KDateTime( date, sd.time() );
 
-                    // Since it seems like the calendar dataengine is broken and returning ALL data, let's
-                    // filter it a little bit by hand... FIXME
-                    difference = KDateTime::currentDateTime( sd.timeSpec() ).daysTo( sd ) % 365 ; // XXX different locales with different calendars?
-                }
-
-                if ( difference <= m_numDays && difference >= 0 ) {
-                    QString key = sd.toString();
-                    if (m_incidences[ key ]) {
-                        int i = 0;
-                        while ( i <= 255 ) {
-                            if ( m_incidences[ key ]->summary() == data[ "Summary" ] ) { // Event already exists with same summary, 
-                                                                                         // assume it's the same event
-                                break;
+                                // Since it seems like the calendar dataengine is broken and returning ALL data, let's
+                                // filter it a little bit by hand... FIXME
+                                difference = KDateTime::currentDateTime( sd.timeSpec() ).daysTo( sd ) % 365 ; // XXX different locales with different calendars?
                             }
 
-                            i++;
-                            key = sd.toString()+QString( i );
+                            if ( difference <= m_numDays && difference >= 0 ) {
+                                QString key = sd.toString();
+                                if (m_incidences[ key ]) {
+                                    int i = 0;
+                                    while ( i <= 255 ) {
+                                        if ( m_incidences[ key ]->summary() == data[ "Summary" ] ) { // Event already exists with same summary, 
+                                                                                                     // assume it's the same event
+                                            break;
+                                        }
 
-                            if (!m_incidences[ key ]) { // Found a unique ID, use it.
-                                break;
+                                        i++;
+                                        key = sd.toString()+QString( i );
+
+                                        if (!m_incidences[ key ]) { // Found a unique ID, use it.
+                                            break;
+                                        }
+                                    }
+                                }
+                                kDebug() << "Adding" << data[ "Summary" ] << key;
+                                if ( !m_incidences[ key ] ) {
+                                    EventWidget* widget = new EventWidget( data, this );
+                                    m_incidences[ key ] = widget;
+                                } else {
+                                    m_incidences[ key ]->updateSummaryUI();
+                                    m_incidences[ key ]->updateFullUI();
+                                }
                             }
                         }
                     }
-                    kDebug() << "Adding" << data[ "Summary" ] << key;
-                    if ( !m_incidences[ key ] ) {
-                        EventWidget* widget = new EventWidget( data, this );
-                        m_incidences[ key ] = widget;
-                    } else {
-                        m_incidences[ key ]->updateSummaryUI();
-                        m_incidences[ key ]->updateFullUI();
-                    }
                 }
-            } 
+            }
             // kDebug() << data;
         }
 

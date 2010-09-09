@@ -6,116 +6,137 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>223</height>
+    <width>320</width>
+    <height>126</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Number of Days</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="daysSpinBox">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+     <property name="text">
+      <string>Number of Days</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
    </item>
-   <item>
+   <item row="0" column="1">
+    <widget class="QSpinBox" name="daysSpinBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Show calendar events</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
     <widget class="QCheckBox" name="calendarCB">
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string>Show Calendar events</string>
+      <string/>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Show todo events</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
     <widget class="QCheckBox" name="todoCB">
      <property name="text">
-      <string>Show Todo events</string>
+      <string/>
      </property>
     </widget>
    </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetMinAndMaxSize</enum>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Categories</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="KPIM::KCheckComboBox" name="categoriesCCB">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-    </layout>
+     <property name="text">
+      <string>Categories</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="KPIM::KCheckComboBox" name="categoriesCCB">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>2</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KCheckComboBox</class>
-   <extends>KComboBox</extends>
-   <header>libkdepim/kcheckcombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KCheckComboBox</class>
+   <extends>KComboBox</extends>
+   <header>libkdepim/kcheckcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

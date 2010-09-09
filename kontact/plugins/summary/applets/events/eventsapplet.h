@@ -66,6 +66,7 @@ private:
     Plasma::ScrollWidget* m_scrollWidget;
     QGraphicsWidget* m_scroller;
     QGraphicsLinearLayout* m_scrollerLayout;
+    QStringList m_categories;
 
     QWidget* m_configWidget;
     Ui::EventsConfigUI m_configUi;
