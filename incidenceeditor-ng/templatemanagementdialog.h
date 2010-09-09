@@ -35,8 +35,8 @@
 **   your version.
 **
 ******************************************************************************/
-#ifndef TEMPLATEMANAGEMENTDIALOG_H
-#define TEMPLATEMANAGEMENTDIALOG_H
+#ifndef INCIDENCEEDITOR_TEMPLATEMANAGEMENTDIALOG_H
+#define INCIDENCEEDITOR_TEMPLATEMANAGEMENTDIALOG_H
 
 #include "incidenceeditors-ng_export.h"
 

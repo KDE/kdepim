@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
@@ -26,16 +24,16 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef ATTACHMENTEDITDIALOG_H
-#define ATTACHMENTEDITDIALOG_H
+#ifndef INCIDENCEEDITOR_ATTACHMENTEDITDIALOG_H
+#define INCIDENCEEDITOR_ATTACHMENTEDITDIALOG_H
 
-#include <kcalcore/attachment.h>
+#include <KCalCore/Attachment>
 
 #include <KDE/KDialog>
 #include <KDE/KMimeType>
 
 namespace Ui {
-class AttachmentEditDialog;
+  class AttachmentEditDialog;
 }
 
 namespace IncidenceEditorNG {
@@ -62,6 +60,6 @@ class AttachmentEditDialog : public KDialog
     Ui::AttachmentEditDialog *mUi;
 };
 
-} // IncidenceEditorNG
+}
 
-#endif // ATTACHMENTEDITDIALOG_H
+#endif

@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001,2004 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2010 Andras Mantia <andras@kdab.com>
@@ -24,12 +22,12 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef EDITORFREEBUSY_H
-#define EDITORFREEBUSY_H
+#ifndef INCIDENCEEDITOR_EDITORFREEBUSY_H
+#define INCIDENCEEDITOR_EDITORFREEBUSY_H
 
 #include "attendeeeditor.h"
 
-#include <kcalcore/freebusy.h>
+#include <KCalCore/FreeBusy>
 
 #include <QDateTime>
 #include <QTimer>

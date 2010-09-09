@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
@@ -29,16 +27,14 @@
         kdepim/incidenceeditors/editorattachments.{h,cpp}
 */
 
-#ifndef ATTACHMENTICONVIEW_H
-#define ATTACHMENTICONVIEW_H
+#ifndef INCIDENCEEDITOR_ATTACHMENTICONVIEW_H
+#define INCIDENCEEDITOR_ATTACHMENTICONVIEW_H
 
-#include <kcalcore/attachment.h>
+#include <KCalCore/Attachment>
 
 #include <KDE/KMimeType>
 
 #include <QtGui/QListWidget>
-
-
 
 class KUrl;
 
@@ -95,4 +91,4 @@ class AttachmentIconItem : public QListWidgetItem
 
 }
 
-#endif // ATTACHMENTICONVIEW_H
+#endif

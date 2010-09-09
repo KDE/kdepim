@@ -125,7 +125,7 @@
    <item row="3" column="2">
     <widget class="QDateEdit" name="mStartDateEdit">
      <property name="displayFormat">
-      <string>MM.dd.yyyy</string>
+      <string comment="@label date display format">MM.dd.yyyy</string>
      </property>
     </widget>
    </item>
@@ -196,7 +196,7 @@
       </sizepolicy>
      </property>
      <property name="displayFormat">
-      <string>MM.dd.yyyy</string>
+      <string comment="@label date display format">MM.dd.yyyy</string>
      </property>
     </widget>
    </item>

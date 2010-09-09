@@ -1,6 +1,4 @@
 /*
-  This file is part of incidenceeditor-ng.
-
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
   This library is free software; you can redistribute it and/or
@@ -57,7 +55,7 @@ void CategoryHierarchyReader::read( QStringList categories )
 
   // case insensitive sort
   QMap<QString, QString> map;
-  foreach ( QString str, categories ) {
+  foreach ( const QString &str, categories ) {
     map.insert( str.toLower(), str );
   }
 

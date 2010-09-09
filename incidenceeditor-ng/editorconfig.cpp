@@ -1,5 +1,4 @@
 /*
-  This file is part of KOrganizer.
   Copyright (c) 2009 Sebastian Sauer <sebsauer@kdab.net>
 
   This program is free software; you can redistribute it and/or modify

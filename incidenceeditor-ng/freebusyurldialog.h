@@ -1,6 +1,4 @@
 /*
-  This file is part of incidenceeditor-ng.
-
   Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,8 +19,8 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef FREEBUSYURLDIALOG_H
-#define FREEBUSYURLDIALOG_H
+#ifndef INCIDENCEEDITOR_FREEBUSYURLDIALOG_H
+#define INCIDENCEEDITOR_FREEBUSYURLDIALOG_H
 
 #include "incidenceeditors-ng_export.h"
 #include "attendeedata.h"
@@ -60,7 +58,7 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlWidget : public QWidget
 
   private:
     KLineEdit *mUrlEdit;
-   AttendeeData::Ptr mAttendee;
+    AttendeeData::Ptr mAttendee;
 };
 
 }

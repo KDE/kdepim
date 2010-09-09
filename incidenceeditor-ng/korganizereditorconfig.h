@@ -16,8 +16,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KORGANIZEREDITORCONFIG_H
-#define KORGANIZEREDITORCONFIG_H
+#ifndef INCIDENCEEDITOR_KORGANIZEREDITORCONFIG_H
+#define INCIDENCEEDITOR_KORGANIZEREDITORCONFIG_H
 
 #include "editorconfig.h"
 
@@ -52,4 +52,4 @@ class INCIDENCEEDITORS_NG_EXPORT KOrganizerEditorConfig : public IncidenceEditor
 
 } // IncidenceEditors
 
-#endif // KORGANIZEREDITORCONFIG_H
+#endif

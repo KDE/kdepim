@@ -1,5 +1,4 @@
 /*
-  This file is part of KOrganizer.
   Copyright (c) 2009 Sebastian Sauer <sebsauer@kdab.net>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,8 +20,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef EDITORCONFIG_H
-#define EDITORCONFIG_H
+#ifndef INCIDENCEEDITOR_EDITORCONFIG_H
+#define INCIDENCEEDITOR_EDITORCONFIG_H
 
 #include "incidenceeditors-ng_export.h"
 

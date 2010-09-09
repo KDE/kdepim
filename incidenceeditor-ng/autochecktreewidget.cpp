@@ -1,6 +1,4 @@
 /*
-  This file is part of incidenceeditor-ng.
-
   Copyright (c) 2007 Mathias Soeken <msoeken@tzi.de>
 
   This library is free software; you can redistribute it and/or

@@ -1,34 +1,34 @@
 /*
-    Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
-    Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
+  Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
-#ifndef FREEBUSYGANTTPROXYMODEL_H
-#define FREEBUSYGANTTPROXYMODEL_H
+#ifndef INCIDENCEEDITOR_FREEBUSYGANTTPROXYMODEL_H
+#define INCIDENCEEDITOR_FREEBUSYGANTTPROXYMODEL_H
 
 #include "incidenceeditors-ng_export.h"
 
-#include <kcalcore/freebusy.h>
+#include <KCalCore/FreeBusy>
 
 #include <QSortFilterProxyModel>
 
-namespace IncidenceEditorNG
-{
+namespace IncidenceEditorNG {
+
 /**
  * This is a private proxy model, that wraps the free busy data exposed
  * by the FreeBusyItemModel for use by KDGantt2.
@@ -41,11 +41,12 @@ namespace IncidenceEditorNG
  */
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyGanttProxyModel : public QSortFilterProxyModel
 {
-public:
+  public:
     FreeBusyGanttProxyModel( QObject* parent = 0 );
     QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     QString tooltipify( const KCalCore::FreeBusyPeriod &period, const KDateTime::Spec &timeSpec ) const;
 };
+
 }
 
-#endif // FREEBUSYGANTTPROXYMODEL_H
+#endif

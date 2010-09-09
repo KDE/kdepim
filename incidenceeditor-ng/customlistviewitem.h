@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,8 +19,8 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CUSTOMLISTVIEWITEM_H
-#define CUSTOMLISTVIEWITEM_H
+#ifndef INCIDENCEEDITOR_CUSTOMLISTVIEWITEM_H
+#define INCIDENCEEDITOR_CUSTOMLISTVIEWITEM_H
 
 #include <QMap>
 #include <QString>

@@ -1,6 +1,4 @@
 /*
-  This file is part of incidenceeditor-ng.
-
   Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 

@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (C) 2007 Bruno Virlet <bruno.virlet@gmail.com>
   Copyright 2008-2009 Allen Winter <winter@kde.org>
 
@@ -23,8 +21,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KDEPIM_KTIMEZONECOMBOBOX_H
-#define KDEPIM_KTIMEZONECOMBOBOX_H
+#ifndef INCIDENCEEDITOR_KTIMEZONECOMBOBOX_H
+#define INCIDENCEEDITOR_KTIMEZONECOMBOBOX_H
 
 #include "incidenceeditors-ng_export.h"
 

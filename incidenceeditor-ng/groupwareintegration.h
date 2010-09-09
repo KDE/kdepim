@@ -16,13 +16,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef GROUPWAREINTEGRATION_H
-#define GROUPWAREINTEGRATION_H
+#ifndef INCIDENCEEDITOR_GROUPWAREINTEGRATION_H
+#define INCIDENCEEDITOR_GROUPWAREINTEGRATION_H
 
 #include "incidenceeditors-ng_export.h"
 
-namespace IncidenceEditorNG
-{
+namespace IncidenceEditorNG {
 
 class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
 {
@@ -34,6 +33,6 @@ class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
     static bool sActivated;
 };
 
-} // namespace IncidenceEditorNG
+}
 
 #endif

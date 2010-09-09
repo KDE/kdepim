@@ -1,6 +1,4 @@
 /*
-  This file is part of incidenceeditor-ng.
-
   Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
@@ -19,8 +17,8 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef CATEGORYCONFIG_H
-#define CATEGORYCONFIG_H
+#ifndef INCIDENCEEDITOR_CATEGORYCONFIG_H
+#define INCIDENCEEDITOR_CATEGORYCONFIG_H
 
 #include "incidenceeditors-ng_export.h"
 
@@ -32,27 +30,26 @@ class QString;
 
 class KConfig;
 
-namespace IncidenceEditorNG
-{
+namespace IncidenceEditorNG {
 
 class INCIDENCEEDITORS_NG_EXPORT CategoryConfig : public QObject
 {
   Q_OBJECT
-public:
-  explicit CategoryConfig( KCoreConfigSkeleton* cfg, QObject* parent=0 );
-  ~CategoryConfig();
-  QStringList customCategories() const;
-  void setCustomCategories( const QStringList &categories );
+  public:
+    explicit CategoryConfig( KCoreConfigSkeleton* cfg, QObject* parent=0 );
+    ~CategoryConfig();
+    QStringList customCategories() const;
+    void setCustomCategories( const QStringList &categories );
 
-  void writeConfig();
+    void writeConfig();
 
-  static const QString categorySeparator;
+    static const QString categorySeparator;
 
-private:
-  Q_DISABLE_COPY(CategoryConfig)
-  class Private;
-  Private* const d;
-  Q_PRIVATE_SLOT( d, void configChanged() )
+  private:
+    Q_DISABLE_COPY(CategoryConfig)
+    class Private;
+    Private* const d;
+    Q_PRIVATE_SLOT( d, void configChanged() )
 };
 
 }

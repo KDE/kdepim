@@ -1,6 +1,4 @@
 /*
-  This file is part of incidenceeditor-ng
-
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
   This library is free software; you can redistribute it and/or
@@ -18,8 +16,8 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef CATEGORYHIERARCHYREADER_H
-#define CATEGORYHIERARCHYREADER_H
+#ifndef INCIDENCEEDITOR_CATEGORYHIERARCHYREADER_H
+#define INCIDENCEEDITOR_CATEGORYHIERARCHYREADER_H
 
 #include <QVariant>
 
@@ -31,8 +29,7 @@ class QString;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-namespace IncidenceEditorNG
-{
+namespace IncidenceEditorNG {
 
 class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReader
 {
