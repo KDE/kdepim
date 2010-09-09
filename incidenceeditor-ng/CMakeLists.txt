@@ -5,7 +5,7 @@ include_directories(
 )
 
 if(NOT MSVC)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
 endif(NOT MSVC)
 
 set(incidenceeditors_ng_shared_LIB_SRCS
@@ -60,8 +60,8 @@ if (NOT WINCE)
   set(incidenceeditors_ng_shared_LIB_SRCS ${incidenceeditors_ng_shared_LIB_SRCS}
     # pending: replace QTreeWidget with QListWidget
     editorfreebusy.cpp
-  ../autochecktreewidget.cpp
-  ../categoryselectdialog.cpp
+    autochecktreewidget.cpp
+    categoryselectdialog.cpp
   )
 endif (NOT WINCE)
 
@@ -71,7 +71,7 @@ if (NOT WINCE)
 
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
-  ../templatemanagementdialog.cpp
+  templatemanagementdialog.cpp
   incidencedialog.cpp
   incidencedialogfactory.cpp
   eventortododialog.cpp
