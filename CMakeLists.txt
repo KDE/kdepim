@@ -241,24 +241,6 @@ set(libknoteseditor_SRCS
   ${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp
 )
 
-# used in kdgantt1, korganizer
-set(libkdgantt1_SRCS
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttView.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewEventItem.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItem.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItemDrag.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSubwidgets.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSummaryItem.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskItem.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLink.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLinkGroup.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttMinimizeSplitter.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSemiSizingControl.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSizingControl.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
-)
-
-
 ############### Now, we add the PIM components ###############
 
   include (kleopatra/ConfigureChecks.cmake)
@@ -275,7 +257,6 @@ set(libkdgantt1_SRCS
   add_subdirectory(libkleo)
   add_subdirectory(libkpgp)
   add_subdirectory(libksieve)
-  add_subdirectory(kdgantt1)
   add_subdirectory(kdgantt2)
   add_subdirectory(icons)
   add_subdirectory(messagecore)
