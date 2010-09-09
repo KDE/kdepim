@@ -43,6 +43,7 @@ Rectangle {
     target : image
     property : "source"
     value : "image://action_images/" + actionIconName
+    when: actionIconName != undefined
   }
 
   Binding {
