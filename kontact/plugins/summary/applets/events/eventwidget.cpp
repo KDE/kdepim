@@ -88,6 +88,11 @@ void EventWidget::setData( QVariantHash args )
     if ( var.isValid() ) {
         m_allDay = qVariantValue<bool>( var );
     }
+
+    var = args[ "Description" ];
+    if ( var.isValid() ) {
+        m_description = qVariantValue<QString>( var );
+    }
 }
 
 void EventWidget::initUI()
