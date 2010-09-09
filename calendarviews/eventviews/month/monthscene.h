@@ -178,6 +178,7 @@ class MonthScene : public QGraphicsScene
     void incidenceSelected( const Akonadi::Item &incidence, const QDate & );
     void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );
     void newEventSignal( const Akonadi::Collection::List & );
+    void showNewEventPopupSignal();
 
   protected:
     virtual void mouseDoubleClickEvent( QGraphicsSceneMouseEvent *mouseEvent );

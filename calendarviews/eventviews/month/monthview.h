@@ -94,6 +94,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
   Q_SIGNALS:
     void showIncidencePopupSignal( const Akonadi::Item &item, const QDate &date );
+    void showNewEventPopupSignal();
 
   public Q_SLOTS:
     // virtual slots

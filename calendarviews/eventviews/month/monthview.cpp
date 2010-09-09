@@ -203,6 +203,9 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
   connect( d->scene, SIGNAL(newEventSignal(Akonadi::Collection::List)),
            this, SIGNAL(newEventSignal(Akonadi::Collection::List)) );
 
+  connect( d->scene, SIGNAL(showNewEventPopupSignal()),
+           SIGNAL(showNewEventPopupSignal()) );
+
   connect( &d->reloadTimer, SIGNAL(timeout()), this, SLOT(reloadIncidences()) );
   updateConfig();
 
