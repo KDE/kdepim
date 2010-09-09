@@ -21,31 +21,8 @@
   without including the source code for Qt in the source distribution.
 */
 #include "monthview.h"
-#include "eventview_p.h"
 
 namespace EventViews {
 
-class MonthViewPrivate : public EventViewPrivate
-{
-  MonthView *q;
-  
-  public: /// Methods
-    explicit MonthViewPrivate( MonthView *qq );
-    virtual ~MonthViewPrivate();
-
-    virtual void setUpModels();
-
-    void addIncidence( const Akonadi::Item &incidence );
-    void moveStartDate( int weeks, int months );
-    void triggerDelayedReload();
-
-  public:  /// Members
-    CalendarSupport::CalendarSearch *calendarSearch;
-    QTimer                           reloadTimer;
-    MonthScene                      *scene;
-    QDate                            selectedItemDate;
-    Akonadi::Item::Id                selectedItemId;
-    MonthGraphicsView               *view;
-};
 
 } // EventViews

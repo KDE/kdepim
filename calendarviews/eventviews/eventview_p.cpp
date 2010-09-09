@@ -86,13 +86,6 @@ void EventViewPrivate::setUpModels()
   reconnectCollectionSelection();
 }
 
-void EventViewPrivate::initIdentifier()
-{
-  QByteArray cname = q->metaObject()->className();
-  cname.replace( ':', '_' );
-  identifier = cname + '_' + KRandom::randomString( 8 ).toLatin1();
-}
-
 void EventViewPrivate::reconnectCollectionSelection()
 {
   if ( q->globalCollectionSelection() ) {

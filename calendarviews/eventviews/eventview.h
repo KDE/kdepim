@@ -469,9 +469,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     bool isWorkDay( const QDate &date ) const;
     QStringList holidayNames( const QDate &date ) const;
 
-  protected:
-    explicit EventView( EventViewPrivate *dd, QWidget *parent = 0 );
-    
+  private:
     EventViewPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( EventView );
 };

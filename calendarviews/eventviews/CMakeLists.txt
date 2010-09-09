@@ -48,7 +48,6 @@ set( eventviews_LIB_SRCS
      month/monthgraphicsitems.cpp
      month/monthitem.cpp
      month/monthscene.cpp
-     month/monthview_p.cpp
      month/monthview.cpp
 
      multiagenda/multiagendaview.cpp

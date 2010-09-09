@@ -3,6 +3,8 @@
   This file is part of KOrganizer.
 
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Bertjan Broeksema, broeksema@kde.org
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -50,20 +52,96 @@
 
 using namespace EventViews;
 
+/// MonthViewPrivate
+
+namespace EventViews {
+
+class MonthViewPrivate
+{
+  MonthView *q;
+
+  public: /// Methods
+    explicit MonthViewPrivate( MonthView *qq );
+
+    void addIncidence( const Akonadi::Item &incidence );
+    void moveStartDate( int weeks, int months );
+    void setUpModels();
+    void triggerDelayedReload();
+
+  public:  /// Members
+    CalendarSupport::CalendarSearch *calendarSearch;
+    QTimer                           reloadTimer;
+    MonthScene                      *scene;
+    QDate                            selectedItemDate;
+    Akonadi::Item::Id                selectedItemId;
+    MonthGraphicsView               *view;
+};
+
+}
+
+MonthViewPrivate::MonthViewPrivate( MonthView *qq )
+  : q( qq )
+  , calendarSearch( new CalendarSupport::CalendarSearch( qq ) )
+  , scene( new MonthScene( qq ) )
+  , selectedItemId( -1 )
+  , view( new MonthGraphicsView( qq ) )
+{
+  reloadTimer.setSingleShot( true );
+  view->setScene( scene );
+  setUpModels();
+}
+
+void MonthViewPrivate::addIncidence( const Akonadi::Item &incidence )
+{
+  Q_UNUSED( incidence );
+  //TODO: add some more intelligence here...
+  q->reloadIncidences();
+}
+
+void MonthViewPrivate::moveStartDate( int weeks, int months )
+{
+  KDateTime start = q->startDateTime();
+  KDateTime end = q->endDateTime();
+  start = start.addDays( weeks * 7 );
+  end = end.addDays( weeks * 7 );
+  start = start.addMonths( months );
+  end = end.addMonths( months );
+  q->setDateRange( start, end );
+}
+
+void MonthViewPrivate::setUpModels()
+{
+  qDebug() << "TEST!!!!!!!!!" << calendarSearch;
+  if ( q->customCollectionSelectionProxyModel() ) {
+    calendarSearch->setSelectionModel( q->customCollectionSelectionProxyModel()->selectionModel() );
+  } else {
+    calendarSearch->setSelectionModel( q->globalCollectionSelection()->model() );
+  }
+#if 0
+  QDialog *dlg = new QDialog( q );
+  dlg->setModal( false );
+  QVBoxLayout *layout = new QVBoxLayout( dlg );
+  EntityTreeView *testview = new EntityTreeView( dlg );
+  layout->addWidget( testview );
+  testview->setModel( calendarSearch->model() );
+  dlg->show();
+#endif
+}
+
+void MonthViewPrivate::triggerDelayedReload()
+{
+  if ( !reloadTimer.isActive() ) {
+    reloadTimer.start( 50 );
+  }
+}
+
+/// MonthView
+
 MonthView::MonthView( QWidget *parent )
-  : EventView( new MonthViewPrivate( this ), parent )
+  : EventView( parent )
+  , d_ptr( new MonthViewPrivate( this ) )
 {
   Q_D( MonthView );
-
-  d->calendarSearch = new CalendarSupport::CalendarSearch( this );
-  if ( d->collectionSelectionModel ) {
-    d->calendarSearch->setSelectionModel( d->collectionSelectionModel->selectionModel() );
-  } else {
-    d->calendarSearch->setSelectionModel( d->sGlobalCollectionSelection->model() );
-  }
-  d->scene = new MonthScene( this );
-  d->view = new MonthGraphicsView( this );
-  d->view->setScene( d->scene );
   
   QHBoxLayout *topLayout = new QHBoxLayout( this );
   topLayout->addWidget( d->view );
@@ -133,7 +211,9 @@ MonthView::MonthView( QWidget *parent )
 }
 
 MonthView::~MonthView()
-{ }
+{
+  delete d_ptr;
+}
 
 void MonthView::updateConfig()
 {
@@ -196,8 +276,8 @@ void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
 {
   Q_D( MonthView );
   EventView::setDateRange( start, end );
-  d->calendarSearch->setStartDate( d->actualStartDateTime );
-  d->calendarSearch->setEndDate( d->actualEndDateTime );
+  d->calendarSearch->setStartDate( actualStartDateTime() );
+  d->calendarSearch->setEndDate( actualEndDateTime() );
   reloadIncidences();
 }
   

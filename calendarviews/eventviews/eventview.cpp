@@ -60,9 +60,14 @@ void EventView::setGlobalCollectionSelection( CalendarSupport::CollectionSelecti
   EventViewPrivate::sGlobalCollectionSelection = s;
 }
 
-EventView::EventView( QWidget *parent ) : QWidget( parent ), d_ptr( new EventViewPrivate( this ) )
+EventView::EventView( QWidget *parent )
+  : QWidget( parent )
+  , d_ptr( new EventViewPrivate( this ) )
 {
-
+  QByteArray cname = metaObject()->className();
+  cname.replace( ':', '_' );
+  d_ptr->identifier = cname + '_' + KRandom::randomString( 8 ).toLatin1();
+  
   //AKONADI_PORT review: the FocusLineEdit in the editor emits focusReceivedSignal(),
   //which triggered finishTypeAhead.  But the global focus widget in QApplication is
   //changed later, thus subsequent keyevents still went to this view, triggering another
@@ -71,30 +76,7 @@ EventView::EventView( QWidget *parent ) : QWidget( parent ), d_ptr( new EventVie
   connect( qobject_cast<QApplication*>( QApplication::instance() ),
            SIGNAL(focusChanged(QWidget*,QWidget*)),
            this, SLOT(focusChanged(QWidget*,QWidget*)) );
-
-  // Moved out of the ctor because we cannot always garuantee that q is already
-  // fully initialized, causing crashes when this is not the case.
-  d_ptr->initIdentifier();
-  d_ptr->setUpModels();
-}
-
-EventView::EventView( EventViewPrivate *dd, QWidget *parent )
-  : QWidget( parent ),
-    d_ptr( dd )
-{
-
-  //AKONADI_PORT review: the FocusLineEdit in the editor emits focusReceivedSignal(),
-  //which triggered finishTypeAhead.  But the global focus widget in QApplication is
-  //changed later, thus subsequent keyevents still went to this view, triggering another
-  //editor, for each keypress.
-  //Thus, listen to the global focusChanged() signal (seen in Qt 4.6-stable-patched 20091112 -Frank)
-  connect( qobject_cast<QApplication*>( QApplication::instance() ),
-           SIGNAL(focusChanged(QWidget*,QWidget*)),
-           this, SLOT(focusChanged(QWidget*,QWidget*)) );
-
-  // Moved out of the ctor because we cannot always garuantee that q is already
-  // fully initialized, causing crashes when this is not the case.
-  d_ptr->initIdentifier();
+  
   d_ptr->setUpModels();
 }
 

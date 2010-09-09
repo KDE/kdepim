@@ -2,6 +2,8 @@
   This file is part of KOrganizer.
 
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Bertjan Broeksema, broeksema@kde.org
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -134,6 +136,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     void reloadIncidences();
 
   private:
+    MonthViewPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( MonthView );
 
     friend class MonthScene;
