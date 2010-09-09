@@ -54,10 +54,10 @@ public:
     ~MailWebView();
 
     enum FindFlag {
-        FindWrapsAroundDocument,
-        FindBackward,
-        FindCaseSensitively,
-        HighlightAllOccurrences,
+        FindWrapsAroundDocument = 1,
+        FindBackward = 2,
+        FindCaseSensitively = 4,
+        HighlightAllOccurrences = 8,
 
         NumFindFlags
     };
