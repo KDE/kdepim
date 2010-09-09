@@ -98,22 +98,22 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
   Q_SIGNALS:
     void showIncidencePopup( const Akonadi::Item &item, const QDate &date );
 
-  public slots:
+  public Q_SLOTS:
+    // virtual slots
+    virtual void updateConfig();
     virtual void updateView();
-
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
+    // non-virtual slots
     void changeIncidenceDisplay( const Akonadi::Item &, int );
+    void moveBackMonth(); /// Shift the view one month back
+    void moveBackWeek();  /// Shift the view one week back
+    void moveFwdWeek();   /// Shift the view one week forward
+    void moveFwdMonth();  /// Shift the view one month forward
 
-    /* reimp */void updateConfig();
-
-  protected slots:
-    void moveBackMonth();
-    void moveBackWeek();
-    void moveFwdWeek();
-    void moveFwdMonth();
-    /* reimp */void calendarReset();
-
+  protected Q_SLOTS:
+    virtual void calendarReset();
+    
   private Q_SLOTS:
     void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
     void rowsInserted( const QModelIndex &parent, int start, int end );
