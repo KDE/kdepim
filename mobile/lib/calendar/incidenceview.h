@@ -59,7 +59,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public CalendarSupport:
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
     virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
     virtual bool isDirty() const;
-    virtual bool isValid();
+    virtual bool isValid() const;
     virtual void load( const Akonadi::Item &item );
     virtual Akonadi::Item save( const Akonadi::Item &item );
     virtual Akonadi::Collection selectedCollection() const;

@@ -179,7 +179,7 @@ bool IncidenceView::isDirty() const
   return mEditor->isDirty();
 }
 
-bool IncidenceView::isValid()
+bool IncidenceView::isValid() const
 {
   return mEditor->isValid();
 }
