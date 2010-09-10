@@ -40,7 +40,7 @@ QAbstractItemModel* BreadcrumbNavigationFactory::getChildItemsModel(QAbstractIte
   filterProxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
 
   OrderedChildCollectionsModel *orderProxy = new OrderedChildCollectionsModel( this );
-  orderProxy->sort(0, Qt::DescendingOrder );
+  orderProxy->sort(0, Qt::AscendingOrder );
   orderProxy->setSourceModel( filterProxy );
   return orderProxy;
 }
