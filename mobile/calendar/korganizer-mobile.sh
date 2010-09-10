@@ -9,4 +9,4 @@ if [ "$?" -ne "0"  ]; then
 fi
 
 # PLEASE MAKE SURE THAT THIS LINE POINTS TO /usr/bin/korganizer-mobile ON MAEMO
-/usr/bin/korganizer-mobile --graphicssystem raster
+/usr/bin/korganizer-mobile --graphicssystem raster --disable-opengl
