@@ -273,13 +273,15 @@ void IncidenceAlarm::updateAlarmList()
   mUi->mAlarmList->clear();
   foreach ( const KCalCore::Alarm::Ptr &alarm, mAlarms ) {
     mUi->mAlarmList->addItem( stringForAlarm( alarm ) );
-    if ( alarm->enabled() )
+    if ( alarm->enabled() ) {
       ++mEnabledAlarmCount;
+    }
   }
 
   mUi->mAlarmList->setCurrentIndex( currentIndex );
-  if ( prevEnabledAlarmCount != mEnabledAlarmCount )
+  if ( prevEnabledAlarmCount != mEnabledAlarmCount ) {
     emit alarmCountChanged( mEnabledAlarmCount );
+  }
 }
 
 void IncidenceAlarm::updateButtons()
@@ -299,7 +301,6 @@ void IncidenceAlarm::updateButtons()
     mUi->mAlarmToggleButton->setEnabled( false );
   }
 }
-
 
 QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
 {
@@ -338,8 +339,9 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
   }
 
   QString repeatStr;
-  if ( alarm->repeatCount() > 0 )
-    repeatStr = i18nc( "The alarm is configured to repeat after snooze","(Repeats)");
+  if ( alarm->repeatCount() > 0 ) {
+    repeatStr = i18nc( "The alarm is configured to repeat after snooze", "(Repeats)" );
+  }
 
   if ( alarm->enabled() ) {
     if ( useoffset > 0 && alarm->hasStartOffset() ) {

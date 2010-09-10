@@ -77,7 +77,7 @@ void AttendeeComboBox::addItem( const QIcon &icon, const QString &text )
 
 void AttendeeComboBox::addItems( const QStringList &texts )
 {
-  foreach( const QString &str, texts ) {
+  foreach ( const QString &str, texts ) {
     addItem( QIcon(), str );
   }
   if ( mCurrentIndex == -1 ) {
@@ -126,7 +126,7 @@ void AttendeeComboBox::keyPressEvent( QKeyEvent *ev )
   }
 }
 
-AttendeeLineEdit::AttendeeLineEdit( QWidget* parent )
+AttendeeLineEdit::AttendeeLineEdit( QWidget *parent )
   : AddresseeLineEdit( parent, true )
 {
 }
@@ -141,10 +141,12 @@ void AttendeeLineEdit::keyPressEvent( QKeyEvent *ev )
     ev->accept();
     emit deleteMe();
   } else if ( ev->key() == Qt::Key_Left && cursorPosition() == 0 &&
-              !ev->modifiers().testFlag( Qt::ShiftModifier ) ) {  // Shift would be pressed during selection
+              !ev->modifiers().testFlag( Qt::ShiftModifier ) ) {
+    // Shift would be pressed during selection
     emit leftPressed();
   } else if ( ev->key() == Qt::Key_Right && cursorPosition() == (int)text().length() &&
-              !ev->modifiers().testFlag( Qt::ShiftModifier ) ) {  // Shift would be pressed during selection
+              !ev->modifiers().testFlag( Qt::ShiftModifier ) ) {
+    // Shift would be pressed during selection
     emit rightPressed();
   } else if ( ev->key() == Qt::Key_Down ) {
     emit downPressed();
@@ -157,7 +159,7 @@ void AttendeeLineEdit::keyPressEvent( QKeyEvent *ev )
 
 AttendeeLine::AttendeeLine( QWidget *parent )
   : MultiplyingLine( parent ),
-    mRoleCombo(  new AttendeeComboBox( this ) ),
+    mRoleCombo( new AttendeeComboBox( this ) ),
     mStateCombo( new AttendeeComboBox( this ) ),
     mResponseCheck( new AttendeeCheckBox( this ) ),
     mEdit( new AttendeeLineEdit( this ) ),
@@ -206,7 +208,7 @@ AttendeeLine::AttendeeLine( QWidget *parent )
 
   mEdit->setWhatsThis( i18nc( "@info:whatsthis",
                               "The email address or name of the attendee. An invitation "
-                              "can be sent to the user if an email address is provided.") );
+                              "can be sent to the user if an email address is provided." ) );
 
   setActions( EventActions );
 
@@ -229,8 +231,6 @@ AttendeeLine::AttendeeLine( QWidget *parent )
            SLOT( slotTextChanged( const QString & ) ), Qt::QueuedConnection );
   connect( mEdit, SIGNAL( upPressed() ), SLOT( slotFocusUp() ) );
   connect( mEdit, SIGNAL( downPressed() ), SLOT( slotFocusDown() ) );
-
-
 
   connect( mRoleCombo, SIGNAL( rightPressed() ), mEdit, SLOT( setFocus() ) );
   connect( mEdit, SIGNAL( leftPressed() ), mRoleCombo, SLOT( setFocus() ) );
@@ -278,15 +278,17 @@ void AttendeeLine::clearModified()
 
 MultiplyingLineData::Ptr AttendeeLine::data() const
 {
-  if( isModified() )
+  if ( isModified() ) {
     const_cast<AttendeeLine*>( this )->dataFromFields();
+  }
   return mData;
 }
 
 void AttendeeLine::dataFromFields()
 {
-  if( !mData )
+  if ( !mData ) {
     return;
+  }
 
   KCalCore::Attendee::Ptr oldAttendee( mData->attendee() );
 
@@ -442,10 +444,10 @@ void AttendeeLine::setCompletionMode( KGlobalSettings::Completion mode )
   mEdit->setCompletionMode( mode );
 }
 
-void AttendeeLine::setData( const KPIM::MultiplyingLineData::Ptr& data )
+void AttendeeLine::setData( const KPIM::MultiplyingLineData::Ptr &data )
 {
   AttendeeData::Ptr attendee = qSharedPointerDynamicCast<AttendeeData>( data );
-  if( !attendee ) {
+  if ( !attendee ) {
     return;
   }
   mData = attendee;
@@ -463,8 +465,9 @@ void AttendeeLine::slotHandleChange()
   }
 }
 
-void AttendeeLine::slotTextChanged( const QString& /*str*/ )
+void AttendeeLine::slotTextChanged( const QString &str )
 {
+  Q_UNUSED( str );
   mModified = true;
   emit changed();
 }

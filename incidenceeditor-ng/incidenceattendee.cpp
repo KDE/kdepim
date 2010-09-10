@@ -1,26 +1,26 @@
 /*
-    Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
-    Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
+  Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    Based on old attendeeeditor.cpp:
-    Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+  Based on old attendeeeditor.cpp:
+  Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "incidenceattendee.h"
@@ -59,15 +59,16 @@
 using namespace IncidenceEditorNG;
 
 #ifdef KDEPIM_MOBILE_UI
-IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore* ui )
+IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTime,
+                                      Ui::EventOrTodoMore *ui )
 #else
-IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop* ui )
+IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTime,
+                                      Ui::EventOrTodoDesktop *ui )
 #endif
-  : mUi( ui )
-  , mParentWidget( parent )
-  , mAttendeeEditor( new AttendeeEditor )
-  , mConflictResolver( 0 )
-  , mDateTime( dateTime )
+  : mUi( ui ),
+    mParentWidget( parent ),
+    mAttendeeEditor( new AttendeeEditor ),
+    mConflictResolver( 0 ), mDateTime( dateTime )
 {
   setObjectName( "IncidenceAttendee" );
 
@@ -78,10 +79,10 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
-  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ),
-           SIGNAL( attendeeCountChanged( int ) ) );
-  connect( mAttendeeEditor, SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ),
-           SLOT( checkIfExpansionIsNeeded( KPIM::MultiplyingLine* ) ) );
+  connect( mAttendeeEditor, SIGNAL(countChanged(int)),
+           SIGNAL(attendeeCountChanged(int)) );
+  connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine *)),
+           SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine *)) );
 
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
@@ -95,23 +96,33 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   mConflictResolver->setLatestDate( mDateTime->endDate() );
   mConflictResolver->setLatestTime( mDateTime->endTime() );
 
-  connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
-  connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflictPressed()) );
-  connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), this, SLOT( slotOrganizerChanged( QString ) ) );
-  connect( mUi->mOrganizerCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( checkDirtyStatus() ) );
+  connect( mUi->mSelectButton, SIGNAL(clicked(bool)),
+           this, SLOT(slotSelectAddresses()) );
+  connect( mUi->mSolveButton, SIGNAL(clicked(bool)),
+           this, SLOT(slotSolveConflictPressed()) );
+  connect( mUi->mOrganizerCombo, SIGNAL(activated(QString)),
+           this, SLOT(slotOrganizerChanged(QString)) );
+  connect( mUi->mOrganizerCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(checkDirtyStatus()) );
 
-  connect( mDateTime, SIGNAL( startDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
-  connect( mDateTime, SIGNAL( endDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
-  connect( mDateTime, SIGNAL( startTimeChanged( QTime ) ), this , SLOT( slotEventDurationChanged() ) );
-  connect( mDateTime, SIGNAL( endTimeChanged( QTime ) ), this , SLOT( slotEventDurationChanged() ) );
+  connect( mDateTime, SIGNAL(startDateChanged(QDate)),
+           this, SLOT(slotEventDurationChanged()) );
+  connect( mDateTime, SIGNAL(endDateChanged(QDate)),
+           this, SLOT(slotEventDurationChanged()) );
+  connect( mDateTime, SIGNAL(startTimeChanged(QTime)),
+           this, SLOT(slotEventDurationChanged()) );
+  connect( mDateTime, SIGNAL(endTimeChanged(QTime)),
+           this, SLOT(slotEventDurationChanged()) );
 
-  connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
+  connect( mConflictResolver, SIGNAL(conflictsDetected(int)),
+           this, SLOT(slotUpdateConflictLabel(int)) );
+
   slotUpdateConflictLabel( 0 ); //initialize label
 
-  connect( mAttendeeEditor, SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ),
-           SLOT( checkIfExpansionIsNeeded( KPIM::MultiplyingLine* ) ) );
-  connect( mAttendeeEditor, SIGNAL( changed( KCalCore::Attendee::Ptr, KCalCore::Attendee::Ptr ) ),
-           SLOT( slotAttendeeChanged( KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr ) ) );
+  connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine *)),
+           SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine *)) );
+  connect( mAttendeeEditor, SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)),
+           SLOT(slotAttendeeChanged(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)) );
 }
 
 IncidenceAttendee::~IncidenceAttendee() {}
@@ -144,14 +155,16 @@ void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
   mAttendeeEditor->clear();
   // NOTE: Do this *before* adding the attendees, otherwise the status of the
   //       attendee in the line will be 0 after when returning from load()
-  if ( incidence->type() == KCalCore::Incidence::TypeEvent )
+  if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
     mAttendeeEditor->setActions( AttendeeLine::EventActions );
-  else
+  } else {
     mAttendeeEditor->setActions( AttendeeLine::TodoActions );
+  }
 
   const KCalCore::Attendee::List attendees = incidence->attendees();
-  foreach( const KCalCore::Attendee::Ptr &a, attendees )
+  foreach ( const KCalCore::Attendee::Ptr &a, attendees ) {
     mAttendeeEditor->addAttendee( a );
+  }
 
   mWasDirty = false;
 }
@@ -162,23 +175,24 @@ void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
 
   AttendeeData::List attendees = mAttendeeEditor->attendees();
 
-  foreach( AttendeeData::Ptr attendee, attendees ) {
+  foreach ( AttendeeData::Ptr attendee, attendees ) {
     Q_ASSERT( attendee );
 
     bool skip = false;
     if ( KPIMUtils::isValidAddress( attendee->email() ) ) {
-        if ( KMessageBox::warningYesNo(
-               0,
-               i18nc( "@info",
-                      "%1 does not look like a valid email address. "
-                      "Are you sure you want to invite this participant?",
-                      attendee->email() ),
-               i18nc( "@title:window", "Invalid Email Address" ) ) != KMessageBox::Yes ) {
-          skip = true;
-        }
+      if ( KMessageBox::warningYesNo(
+             0,
+             i18nc( "@info",
+                    "%1 does not look like a valid email address. "
+                    "Are you sure you want to invite this participant?",
+                    attendee->email() ),
+             i18nc( "@title:window", "Invalid Email Address" ) ) != KMessageBox::Yes ) {
+        skip = true;
       }
-    if( !skip  )
+    }
+    if ( !skip ) {
       incidence->addAttendee( attendee );
+    }
   }
   incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
 }
@@ -202,8 +216,9 @@ bool IncidenceAttendee::isDirty() const
 
   // The lists sizes *must* be the same. When the organizer is attending the
   // event as well, he should be in the attendees list as well.
-  if ( origList.size() != newList.size() )
+  if ( origList.size() != newList.size() ) {
     return true;
+  }
 
   // Okay, again not the most efficient algorithm, but I'm assuming that in the
   // bulk of the use cases, the number of attendees is not much higher than 10 or so.
@@ -234,8 +249,8 @@ void IncidenceAttendee::changeStatusForMe( KCalCore::Attendee::PartStat stat )
   mAttendeeEditor->clear();
 
   foreach ( const AttendeeData::Ptr &attendee, attendees ) {
-    if ( config->thatIsMe( attendee->email() )
-      && mLoadedIncidence->organizer()->email() == attendee->email() ) {
+    if ( config->thatIsMe( attendee->email() ) &&
+         mLoadedIncidence->organizer()->email() == attendee->email() ) {
       attendee->setStatus( stat );
     }
     mAttendeeEditor->addAttendee( attendee );
@@ -254,7 +269,6 @@ void IncidenceAttendee::declineForMe()
   changeStatusForMe( KCalCore::Attendee::Declined );
 }
 
-
 void IncidenceAttendee::fillOrganizerCombo()
 {
   mUi->mOrganizerCombo->clear();
@@ -271,14 +285,16 @@ void IncidenceAttendee::fillOrganizerCombo()
 void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 {
   AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( line->data() );
-  if ( !data )
+  if ( !data ) {
     return;
+  }
 
   // For some reason, when pressing enter (in stead of tab) the editingFinished()
   // signal is emitted twice. Check if there is already a job running to prevent
   // that we end up with the group members twice.
-  if ( mMightBeGroupLines.key( QWeakPointer<KPIM::MultiplyingLine>( line ) ) != 0 )
+  if ( mMightBeGroupLines.key( QWeakPointer<KPIM::MultiplyingLine>( line ) ) != 0 ) {
     return;
+  }
 
   Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
   job->setQuery( Akonadi::ContactGroupSearchJob::Name, data->name() );
@@ -293,8 +309,9 @@ void IncidenceAttendee::expandResult( KJob *job )
   Q_ASSERT( expandJob );
 
   const KABC::Addressee::List groupMembers = expandJob->contacts();
-  foreach ( const KABC::Addressee &member, groupMembers )
+  foreach ( const KABC::Addressee &member, groupMembers ) {
     insertAttendeeFromAddressee( member );
+  }
 }
 
 void IncidenceAttendee::groupSearchResult( KJob *job )
@@ -306,13 +323,15 @@ void IncidenceAttendee::groupSearchResult( KJob *job )
   KPIM::MultiplyingLine *line = mMightBeGroupLines.take( job ).data();
 
   const KABC::ContactGroup::List contactGroups = searchJob->contactGroups();
-  if ( contactGroups.isEmpty() )
+  if ( contactGroups.isEmpty() ) {
     return; // Nothing todo, probably a normal email address was entered
+  }
 
   // TODO: Give the user the possibility to choose a group when there is more than one?!
   KABC::ContactGroup group = contactGroups.first();
-  if ( line )
+  if ( line ) {
     line->slotPropagateDeletion();
+  }
 
   Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
   connect( expandJob, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
@@ -321,7 +340,8 @@ void IncidenceAttendee::groupSearchResult( KJob *job )
 
 void IncidenceAttendee::slotSelectAddresses()
 {
-  QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog( new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
+  QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog(
+    new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
   dialog.data()->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
 
   if ( dialog.data()->exec() == QDialog::Accepted ) {
@@ -332,7 +352,9 @@ void IncidenceAttendee::slotSelectAddresses()
       foreach ( const Akonadi::EmailAddressSelection &selection, list ) {
 
         if ( selection.item().hasPayload<KABC::ContactGroup>() ) {
-          Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( selection.item().payload<KABC::ContactGroup>(), this );
+          Akonadi::ContactGroupExpandJob *job =
+            new Akonadi::ContactGroupExpandJob(
+              selection.item().payload<KABC::ContactGroup>(), this );
           connect( job, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
           job->start();
         } else {
@@ -340,9 +362,9 @@ void IncidenceAttendee::slotSelectAddresses()
           contact.setName( selection.name() );
           contact.insertEmail( selection.email() );
 
-          if ( selection.item().hasPayload<KABC::Addressee>() )
+          if ( selection.item().hasPayload<KABC::Addressee>() ) {
             contact.setUid( selection.item().payload<KABC::Addressee>().uid() );
-
+          }
           insertAttendeeFromAddressee( contact );
         }
       }
@@ -355,8 +377,12 @@ void IncidenceAttendee::slotSelectAddresses()
 void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
 {
   int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
-  QScopedPointer<SchedulingDialog> dialog( new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), duration, mConflictResolver, mParentWidget ) );
-  dialog->slotUpdateIncidenceStartEnd( mDateTime->currentStartDateTime(), mDateTime->currentEndDateTime() );
+  QScopedPointer<SchedulingDialog> dialog( new SchedulingDialog( mDateTime->startDate(),
+                                                                 mDateTime->startTime(),
+                                                                 duration, mConflictResolver,
+                                                                 mParentWidget ) );
+  dialog->slotUpdateIncidenceStartEnd( mDateTime->currentStartDateTime(),
+                                       mDateTime->currentEndDateTime() );
   if( dialog->exec() == KDialog::Accepted ) {
     kDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
     mDateTime->setStartDate( dialog->selectedStartDate() );
@@ -364,33 +390,33 @@ void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
   }
 }
 
-void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee::Ptr& oldAttendee,
-                                             const KCalCore::Attendee::Ptr& newAttendee )
+void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee,
+                                             const KCalCore::Attendee::Ptr &newAttendee )
 {
-   // if newAttendee's email is empty, we are probably removing an attendee
-   if( mConflictResolver->containsAttendee( oldAttendee ) )
-      mConflictResolver->removeAttendee( oldAttendee );
-   if( !mConflictResolver->containsAttendee( newAttendee ) && !newAttendee->email().isEmpty() )
-      mConflictResolver->insertAttendee( newAttendee );
-
-   checkDirtyStatus();
+  // if newAttendee's email is empty, we are probably removing an attendee
+  if ( mConflictResolver->containsAttendee( oldAttendee ) ) {
+    mConflictResolver->removeAttendee( oldAttendee );
+  }
+  if ( !mConflictResolver->containsAttendee( newAttendee ) && !newAttendee->email().isEmpty() ) {
+    mConflictResolver->insertAttendee( newAttendee );
+  }
+  checkDirtyStatus();
 }
-
 
 void IncidenceAttendee::slotUpdateConflictLabel( int count )
 {
-    if( count > 0 ) {
-      mUi->mSolveButton->setEnabled( true );
-      QString label( i18ncp( "@label Shows the number of scheduling conflicts",
-                             "%1 scheduling conflict",
-                             "%1 scheduling conflicts", count ) );
-      mUi->mConflictsLabel->setText( label );
-    } else {
-      mUi->mSolveButton->setEnabled( false );
-      QString label( i18nc( "@label There are no scheduling conflicts.",
-                            "No scheduling conflicts" ) );
-      mUi->mConflictsLabel->setText( label );
-    }
+  if ( count > 0 ) {
+    mUi->mSolveButton->setEnabled( true );
+    QString label( i18ncp( "@label Shows the number of scheduling conflicts",
+                           "%1 scheduling conflict",
+                           "%1 scheduling conflicts", count ) );
+    mUi->mConflictsLabel->setText( label );
+  } else {
+    mUi->mSolveButton->setEnabled( false );
+    QString label( i18nc( "@label There are no scheduling conflicts.",
+                          "No scheduling conflicts" ) );
+    mUi->mConflictsLabel->setText( label );
+  }
 }
 
 bool IncidenceAttendee::iAmOrganizer() const
@@ -403,11 +429,12 @@ bool IncidenceAttendee::iAmOrganizer() const
   return true;
 }
 
-void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
+void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee &a )
 {
   const bool sameAsOrganizer = mUi->mOrganizerCombo &&
-                         KPIMUtils::compareEmail( a.preferredEmail(),
-                                                  mUi->mOrganizerCombo->currentText(), false );
+                               KPIMUtils::compareEmail( a.preferredEmail(),
+                                                        mUi->mOrganizerCombo->currentText(),
+                                                        false );
   KCalCore::Attendee::PartStat partStat = KCalCore::Attendee::NeedsAction;
   bool rsvp = true;
 
@@ -415,8 +442,11 @@ void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
     partStat = KCalCore::Attendee::Accepted;
     rsvp = false;
   }
-  KCalCore::Attendee::Ptr newAt( new KCalCore::Attendee( a.realName(), a.preferredEmail(), rsvp,
-                                  partStat, KCalCore::Attendee::ReqParticipant, a.uid() ) );
+  KCalCore::Attendee::Ptr newAt( new KCalCore::Attendee( a.realName(), a.preferredEmail(),
+                                                         rsvp,
+                                                         partStat,
+                                                         KCalCore::Attendee::ReqParticipant,
+                                                         a.uid() ) );
 
   mAttendeeEditor->addAttendee( newAt );
 }
@@ -426,8 +456,9 @@ void IncidenceAttendee::slotEventDurationChanged()
   KDateTime start = mDateTime->currentStartDateTime();
   KDateTime end = mDateTime->currentEndDateTime();
 
-  if ( start >= end ) // This can happen, especially for todos.
+  if ( start >= end ) { // This can happen, especially for todos.
     return;
+  }
 
   kDebug() << start << end;
 
@@ -435,10 +466,11 @@ void IncidenceAttendee::slotEventDurationChanged()
   mConflictResolver->setLatestDateTime( end );
 }
 
-void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
+void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
 {
-  if ( KPIMUtils::compareEmail( newOrganizer, mOrganizer, false ) )
+  if ( KPIMUtils::compareEmail( newOrganizer, mOrganizer, false ) ) {
     return;
+  }
 
   QString name;
   QString email;
@@ -452,11 +484,11 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
   AttendeeData::Ptr newOrganizerAttendee;
 
   Q_FOREACH( AttendeeData::Ptr attendee, mAttendeeEditor->attendees() ) {
-    if( attendee->fullName() == mOrganizer ) {
+    if ( attendee->fullName() == mOrganizer ) {
       currentOrganizerAttendee = attendee;
     }
 
-    if( attendee->fullName() == newOrganizer ) {
+    if ( attendee->fullName() == newOrganizer ) {
       newOrganizerAttendee = attendee;
     }
   }
@@ -469,8 +501,9 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
              "You are changing the organizer of this event. "
              "Since the organizer is also attending this event, would you "
              "like to change the corresponding attendee as well?" ) );
-  } else
+  } else {
     answer = KMessageBox::Yes;
+  }
 
   if ( answer == KMessageBox::Yes ) {
     if ( currentOrganizerAttendee ) {
@@ -480,14 +513,14 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
     if ( !newOrganizerAttendee ) {
       bool rsvp = !iAmOrganizer(); // if it is the user, don't make him rsvp.
       KCalCore::Attendee::PartStat status = iAmOrganizer() ? KCalCore::Attendee::Accepted
-                                                           : KCalCore::Attendee::NeedsAction;
+                                            : KCalCore::Attendee::NeedsAction;
 
-      KCalCore::Attendee::Ptr newAt( new KCalCore::Attendee( name, email, rsvp, status, KCalCore::Attendee::ReqParticipant ) );
+      KCalCore::Attendee::Ptr newAt(
+        new KCalCore::Attendee( name, email, rsvp, status, KCalCore::Attendee::ReqParticipant ) );
 
       mAttendeeEditor->addAttendee( newAt );
     }
   }
   mOrganizer = newOrganizer;
 }
-
 

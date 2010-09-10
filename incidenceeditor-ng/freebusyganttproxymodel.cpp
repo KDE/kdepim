@@ -39,8 +39,9 @@ FreeBusyGanttProxyModel::FreeBusyGanttProxyModel( QObject *parent )
 
 QVariant FreeBusyGanttProxyModel::data( const QModelIndex &index, int role ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QVariant();
+  }
   QModelIndex source_index = mapToSource( index );
 
   // if the index is not valid, then its a toplevel item, which is an attendee
@@ -57,7 +58,10 @@ QVariant FreeBusyGanttProxyModel::data( const QModelIndex &index, int role ) con
 
   // if the index is valid, then it corrsponds to a free busy period
   KDateTime::Spec timeSpec = KSystemTimeZones::local();
-  KCalCore::FreeBusyPeriod period  = sourceModel()->data( source_index, FreeBusyItemModel::FreeBusyPeriodRole ).value<KCalCore::FreeBusyPeriod>();
+  KCalCore::FreeBusyPeriod period =
+    sourceModel()->data( source_index, FreeBusyItemModel::FreeBusyPeriodRole ).
+    value<KCalCore::FreeBusyPeriod>();
+
   switch ( role ) {
   case KDGantt::ItemTypeRole:
     return KDGantt::TypeTask;

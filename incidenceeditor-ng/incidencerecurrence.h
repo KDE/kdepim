@@ -26,8 +26,8 @@
 #include <KLocale>
 
 namespace Ui {
-class EventOrTodoDesktop;
-class EventOrTodoMore;
+  class EventOrTodoDesktop;
+  class EventOrTodoMore;
 }
 
 namespace IncidenceEditorNG {
@@ -46,8 +46,8 @@ enum RecurrenceType {
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
 {
-    Q_OBJECT
-public:
+  Q_OBJECT
+  public:
 #ifdef KDEPIM_MOBILE_UI
     IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui );
 #else
@@ -60,10 +60,10 @@ public:
 
     RecurrenceType currentRecurrenceType() const;
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void recurrenceChanged( IncidenceEditorNG::RecurrenceType type );
 
-private Q_SLOTS:
+  private Q_SLOTS:
     void addException();
     void fillCombos();
     void handleDateTimeToggle();
@@ -75,7 +75,7 @@ private Q_SLOTS:
     void updateRemoveExceptionButton();
     void updateWeekDays( const QDate &newStartDate );
 
-private:
+  private:
     KLocalizedString subsOrdinal( const KLocalizedString &text, int number ) const;
     /**
      * Return the day in the month/year on which the event recurs, starting at the
@@ -109,7 +109,7 @@ private:
      */
     int weekdayCountForMonth( const QDate &date ) const;
 
-private:
+  private:
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;
 #else

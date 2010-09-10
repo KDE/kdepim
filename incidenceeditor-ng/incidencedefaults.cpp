@@ -1,21 +1,21 @@
 /*
-    Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "incidencedefaults.h"
@@ -24,11 +24,14 @@
 #include <KDebug>
 
 #include <KABC/Addressee>
+
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <KCalCore/Journal>
-#include <KLocalizedString>
+
 #include <KPIMUtils/Email>
+
+#include <KLocalizedString>
 
 using namespace KCalCore;
 using namespace IncidenceEditorNG;
@@ -179,9 +182,10 @@ void IncidenceDefaultsPrivate::todoDefaults( const Todo::Ptr &todo ) const
 
 IncidenceDefaults::IncidenceDefaults()
   : d_ptr( new IncidenceDefaultsPrivate )
-{ }
+{
+}
 
-IncidenceDefaults::IncidenceDefaults( const IncidenceDefaults& other )
+IncidenceDefaults::IncidenceDefaults( const IncidenceDefaults &other )
   : d_ptr( new IncidenceDefaultsPrivate )
 {
   *d_ptr = *other.d_ptr;
@@ -192,14 +196,13 @@ IncidenceDefaults::~IncidenceDefaults()
   delete d_ptr;
 }
 
-IncidenceDefaults &IncidenceDefaults::operator=( const IncidenceDefaults& other )
+IncidenceDefaults &IncidenceDefaults::operator=( const IncidenceDefaults &other )
 {
   if ( &other != this ) {
     *d_ptr = *other.d_ptr;
   }
   return *this;
 }
-
 
 void IncidenceDefaults::setAttachments( const QStringList &attachments,
                                         const QStringList &attachmentMimetypes,
@@ -213,8 +216,9 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
   for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it, ++i ) {
     if ( !(*it).isEmpty() ) {
       QString mimeType;
-      if ( attachmentMimetypes.count() > i )
+      if ( attachmentMimetypes.count() > i ) {
         mimeType = attachmentMimetypes[ i ];
+      }
 
       Attachment::Ptr attachment( new Attachment( *it, mimeType ) );
       attachment->setShowInline( inlineAttachment );
@@ -234,7 +238,6 @@ void IncidenceDefaults::setAttendees( const QStringList &attendees )
     d->mAttendees << Attendee::Ptr( new Attendee( name, email, true, Attendee::NeedsAction ) );
   }
 }
-
 
 void IncidenceDefaults::setFullEmails( const QStringList &fullEmails )
 {

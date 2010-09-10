@@ -89,7 +89,7 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
      * Constrain the free time slot search to the weekdays
      * identified by their KCalendarSystem integer representation
      * Default is Monday - Friday
-     * @param weekdays a 7 bit array indicating the allowed days (bit 0 = Monday, value 1 = allowed).
+     * @param weekdays a 7 bit array indicating the allowed days (bit 0=Monday, value 1=allowed).
      * @see KCalendarSystem
      */
     void setAllowedWeekdays( const QBitArray &weekdays );
@@ -188,20 +188,22 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
 
     void calculateConflicts();
 
-    KCalCore::Period mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
+    KCalCore::Period mTimeframeConstraint; //!< the datetime range for outside of which
+                                           //free slots won't be searched.
     KCalCore::Period::List mAvailableSlots;
 
-    QTimer mCalculateTimer; /*!< A timer is used control the calculation of
-                                   conflicts to prevent the process from being
-                                   repeated many times after a series of quick
-                                   parameter changes.
-                              */
+    QTimer mCalculateTimer; //!< A timer is used control the calculation of conflicts
+                            // to prevent the process from being repeated many times
+                            // after a series of quick parameter changes.
+
     bool mForceDownload;
     FreeBusyItemModel *mFBModel;
     QWidget *mParentWidget;
 
     QSet<KCalCore::Attendee::Role> mMandatoryRoles;
-    QBitArray mWeekdays; //!< a 7 bit array indicating the allowed days (bit 0 = Monday, value 1 = allowed).
+    QBitArray mWeekdays; //!< a 7 bit array indicating the allowed days
+                         //(bit 0 = Monday, value 1 = allowed).
+
     int mSlotResolutionSeconds;
 };
 

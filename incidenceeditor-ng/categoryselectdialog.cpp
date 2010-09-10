@@ -170,7 +170,7 @@ void CategorySelectWidget::setCategoryList( const QStringList &categories )
    mCategoryList = categories;
 }
 
-CategorySelectDialog::CategorySelectDialog( CategoryConfig* cc, QWidget *parent )
+CategorySelectDialog::CategorySelectDialog( CategoryConfig *cc, QWidget *parent )
   : KDialog( parent )
 {
   setCaption( i18n( "Select Categories" ) );

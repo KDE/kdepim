@@ -58,7 +58,7 @@ class INCIDENCEEDITORS_NG_EXPORT KTimeZoneComboBox : public KComboBox
      * @param additionalZones Additional time zones that shall be included in the combobox.
      * @param parent The parent widget.
      */
-    explicit KTimeZoneComboBox( const KCalCore::ICalTimeZones* additionalZones, QWidget *parent = 0 );
+    explicit KTimeZoneComboBox( const KCalCore::ICalTimeZones *additionalZones, QWidget *parent=0 );
 
     /**
      * Destroys the time zone combobox.
@@ -66,10 +66,10 @@ class INCIDENCEEDITORS_NG_EXPORT KTimeZoneComboBox : public KComboBox
     ~KTimeZoneComboBox();
 
     /**
-     * Sets additional time @p zones (usually from a calendar) which should be displayed additionally
-     * to the system time zones
-     */
-    void setAdditionalTimeZones( const KCalCore::ICalTimeZones* zones );
+      Sets additional time @p zones (usually from a calendar) which should be displayed
+      additionally to the system time zones.
+    */
+    void setAdditionalTimeZones( const KCalCore::ICalTimeZones *zones );
 
     /**
      * Selects the item in the combobox corresponding to the given @p spec.

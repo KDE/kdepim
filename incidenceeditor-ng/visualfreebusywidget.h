@@ -21,10 +21,11 @@
 #ifndef INCIDENCEEDITOR_VISUALFREEBUSYWIDGET_H
 #define INCIDENCEEDITOR_VISUALFREEBUSYWIDGET_H
 
+#include "conflictresolver.h"
+
 #include <KDateTime>
 
 #include <QWidget>
-#include "conflictresolver.h"
 
 class QTreeView;
 class QLabel;
@@ -46,19 +47,19 @@ class FreeBusyGanttProxyModel;
 
 class VisualFreeBusyWidget : public QWidget
 {
-Q_OBJECT
-public:
-    explicit VisualFreeBusyWidget( FreeBusyItemModel* model, int spacing = 8, QWidget* parent = 0 );
+  Q_OBJECT
+  public:
+    explicit VisualFreeBusyWidget( FreeBusyItemModel *model, int spacing = 8, QWidget *parent = 0 );
     ~VisualFreeBusyWidget();
 
-public slots:
-  void slotUpdateIncidenceStartEnd( const KDateTime &, const KDateTime & );
+  public slots:
+    void slotUpdateIncidenceStartEnd( const KDateTime &, const KDateTime & );
 
-signals:
+  signals:
     void dateTimesChanged( const KDateTime &, const KDateTime & );
     void manualReload();
 
-protected slots:
+  protected slots:
     void slotScaleChanged( int );
     void slotCenterOnStart() ;
     void slotZoomToTime();
@@ -66,10 +67,10 @@ protected slots:
     void showAttendeeStatusMenu();
     void slotIntervalColorRectangleMoved( const KDateTime &start, const KDateTime &end );
 
-private slots:
+  private slots:
     void splitterMoved();
 
-private:
+  private:
     KDGantt::GraphicsView *mGanttGraphicsView;
     QTreeView *mLeftView;
     RowController *mRowController;

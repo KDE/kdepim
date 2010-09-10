@@ -73,7 +73,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     void declineForMe();
 
   private slots:
-    void checkIfExpansionIsNeeded( KPIM::MultiplyingLine* );
+    void checkIfExpansionIsNeeded( KPIM::MultiplyingLine * );
     void expandResult( KJob *job );
     void groupSearchResult( KJob *job );
     void slotSelectAddresses();
@@ -81,7 +81,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     void slotUpdateConflictLabel( int );
     void slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee,
                               const KCalCore::Attendee::Ptr &newAttendee );
-    void slotOrganizerChanged( const QString & organizer );
+    void slotOrganizerChanged( const QString &organizer );
 
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
@@ -109,7 +109,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     QWidget *mParentWidget;
     AttendeeEditor *mAttendeeEditor;
     ConflictResolver *mConflictResolver;
-    QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
+    QMap<KJob *,QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
     IncidenceDateTime *mDateTime;
     QString mOrganizer;
 };

@@ -262,7 +262,7 @@ void FreeBusyItemModel::setFreeBusyPeriods( const QModelIndex &parent,
 
   int fb_count = list.size();
   beginInsertRows( parent, 0, fb_count - 1 );
-  for ( int i = 0; i < fb_count ; ++i  ) {
+  for ( int i=0; i < fb_count; ++i ) {
     ItemPrivateData *childData= new ItemPrivateData( parentData );
     parentData->appendChild( childData );
   }
@@ -295,7 +295,7 @@ void FreeBusyItemModel::removeItem( const IncidenceEditorNG::FreeBusyItem::Ptr &
   }
 }
 
-void FreeBusyItemModel::removeAttendee( const KCalCore::Attendee::Ptr& attendee )
+void FreeBusyItemModel::removeAttendee( const KCalCore::Attendee::Ptr &attendee )
 {
   FreeBusyItem::Ptr anItem;
   for ( int i = 0; i < mFreeBusyItems.count(); ++i ) {
@@ -339,7 +339,7 @@ void FreeBusyItemModel::updateFreeBusyData( const FreeBusyItem::Ptr &item )
   item->setUpdateTimerID( startTimer( 1000 ) );
 }
 
-void FreeBusyItemModel::timerEvent( QTimerEvent* event )
+void FreeBusyItemModel::timerEvent( QTimerEvent *event )
 {
   killTimer( event->timerId() );
   Q_FOREACH( FreeBusyItem::Ptr item, mFreeBusyItems ) {

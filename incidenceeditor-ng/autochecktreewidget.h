@@ -39,13 +39,9 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
 {
   Q_OBJECT
 
-  Q_PROPERTY( bool autoCheckChildren
-              READ autoCheckChildren
-              WRITE setAutoCheckChildren )
+  Q_PROPERTY( bool autoCheckChildren READ autoCheckChildren WRITE setAutoCheckChildren )
 
-  Q_PROPERTY( bool autoCheck
-              READ autoCheck
-              WRITE setAutoCheck )
+  Q_PROPERTY( bool autoCheck READ autoCheck WRITE setAutoCheck )
 
   public:
     /**

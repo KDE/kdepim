@@ -1,31 +1,33 @@
 /*
-    Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "invitationdispatcher.h"
 
-#include <kcalcore/icalformat.h>
-#include <KDebug>
-
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/invitationhandler.h>
 #include <calendarsupport/utils.h>
+
+#include <KCalCore/ICalFormat>
+
+#include <KDebug>
+
 #include <Akonadi/Item>
 
 using namespace CalendarSupport;
@@ -51,9 +53,7 @@ class InvitationDispatcherPrivate
 };
 
 InvitationDispatcherPrivate::InvitationDispatcherPrivate( CalendarSupport::Calendar *calendar )
-  : mManager( 0 )
-  , mInvitationHandler( calendar )
-  , mIsCounterProposal( false )
+  : mManager( 0 ), mInvitationHandler( calendar ), mIsCounterProposal( false )
 { }
 
 bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr &oldInc,
@@ -70,7 +70,8 @@ bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr 
 
 void InvitationDispatcherPrivate::sentEventInvitationMessage()
 {
-  const Incidence::Ptr newInc = CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
+  const Incidence::Ptr newInc =
+    CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
   const InvitationHandler::SendStatus status =
       mInvitationHandler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, newInc );
 
@@ -95,8 +96,10 @@ void InvitationDispatcherPrivate::sentEventInvitationMessage()
 
 void InvitationDispatcherPrivate::sentEventModifiedMessage()
 {
-  const Incidence::Ptr oldInc = CalendarSupport::incidence( mManager->item( EditorItemManager::BeforeSave ) );
-  const Incidence::Ptr newInc = CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
+  const Incidence::Ptr oldInc =
+    CalendarSupport::incidence( mManager->item( EditorItemManager::BeforeSave ) );
+  const Incidence::Ptr newInc =
+    CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
 
   InvitationHandler::SendStatus status = InvitationHandler::Success;
   if ( mIsCounterProposal ) {
@@ -155,9 +158,9 @@ void InvitationDispatcherPrivate::resetManager()
 /// InvitationDispatcher
 
 InvitationDispatcher::InvitationDispatcher( CalendarSupport::Calendar *calendar, QObject *parent )
-  : QObject(parent)
-  , d_ptr( new InvitationDispatcherPrivate( calendar ) )
-{ }
+  : QObject( parent ), d_ptr( new InvitationDispatcherPrivate( calendar ) )
+{
+}
 
 InvitationDispatcher::~InvitationDispatcher()
 {
@@ -176,16 +179,20 @@ void InvitationDispatcher::setItemManager( EditorItemManager *manager )
   Q_ASSERT( manager );
 
   if ( d->mManager ) {
-    disconnect( d->mManager, SIGNAL( destroyed() ) );
-    disconnect( d->mManager, SIGNAL( itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction ) ) );
+    disconnect( d->mManager, SIGNAL(destroyed()) );
+    disconnect( d->mManager,
+                SIGNAL(itemSaveFinished(CalendarSupport::EditorItemManager::SaveAction)) );
   }
 
   d->mManager = manager;
   connect( manager, SIGNAL( destroyed() ), SLOT( resetManager() ) );
 
-  qRegisterMetaType<CalendarSupport::EditorItemManager::SaveAction>( "CalendarSupport::EditorItemManager::SaveAction" );
-  connect( manager, SIGNAL( itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction ) ),
-           SLOT( processItemSave( CalendarSupport::EditorItemManager::SaveAction ) ), Qt::QueuedConnection );
+  qRegisterMetaType<CalendarSupport::EditorItemManager::SaveAction>(
+    "CalendarSupport::EditorItemManager::SaveAction" );
+
+  connect( manager, SIGNAL(itemSaveFinished(CalendarSupport::EditorItemManager::SaveAction)),
+           SLOT(processItemSave(CalendarSupport::EditorItemManager::SaveAction)),
+           Qt::QueuedConnection );
 }
 
 #include "invitationdispatcher.moc"

@@ -50,8 +50,9 @@ AttachmentIconItem::AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QL
   } else {
     // for the enteprise, inline attachments are the default
 #ifdef KDEPIM_ENTERPRISE_BUILD
-    mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( '\0' ) ); //use the non-uri constructor
-                                                // as we want inline by default
+    mAttachment =
+      KCalCore::Attachment::Ptr( new KCalCore::Attachment( '\0' ) ); //use the non-uri constructor
+                                                                     // as we want inline by default
 #else
     mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( QString() ) );
 #endif
@@ -205,7 +206,7 @@ KUrl AttachmentIconView::tempFileForAttachment( const KCalCore::Attachment::Ptr 
   return mTempFiles.value( attachment );
 }
 
-QMimeData *AttachmentIconView::mimeData(const QList< QListWidgetItem* > items) const
+QMimeData *AttachmentIconView::mimeData( const QList< QListWidgetItem*> items ) const
 {
   // create a list of the URL:s that we want to drag
   KUrl::List urls;
@@ -237,7 +238,7 @@ QMimeData *AttachmentIconView::mimeData(const QList< QListWidgetItem* > items) c
   return mimeData;
 }
 
-QMimeData* AttachmentIconView::mimeData() const
+QMimeData *AttachmentIconView::mimeData() const
 {
   return mimeData( selectedItems() );
 }

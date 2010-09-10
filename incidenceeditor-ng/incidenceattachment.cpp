@@ -1,21 +1,21 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "incidenceattachment.h"
@@ -24,7 +24,6 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QPointer>
 #include <QtGui/QClipboard>
-
 
 #include <KDE/KABC/VCardDrag>
 #include <KDE/KAction>
@@ -55,9 +54,9 @@ IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoMore *ui )
 #else
 IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
 #endif
-  : IncidenceEditor( 0 )
-  , mUi( ui )
-  , mPopupMenu( new KMenu )
+  : IncidenceEditor( 0 ),
+    mUi( ui ),
+    mPopupMenu( new KMenu )
 {
   setupActions();
   setupAttachmentIconView();
@@ -74,8 +73,9 @@ void IncidenceAttachment::load( const KCalCore::Incidence::Ptr &incidence )
 
   KCalCore::Attachment::List attachments = incidence->attachments();
   KCalCore::Attachment::List::ConstIterator it;
-  for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it )
+  for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
     new AttachmentIconItem( (*it), mAttachmentView );
+  }
 
   mWasDirty = false;
 }
@@ -88,39 +88,42 @@ void IncidenceAttachment::save( const KCalCore::Incidence::Ptr &incidence )
     QListWidgetItem *item = mAttachmentView->item( itemIndex );
     AttachmentIconItem *attitem = dynamic_cast<AttachmentIconItem*>(item);
     Q_ASSERT( item );
-    incidence->addAttachment( KCalCore::Attachment::Ptr( new KCalCore::Attachment( *( attitem->attachment() ) ) ) );
+    incidence->addAttachment(
+      KCalCore::Attachment::Ptr( new KCalCore::Attachment( *( attitem->attachment() ) ) ) );
   }
 }
 
 bool IncidenceAttachment::isDirty() const
 {
   if ( mLoadedIncidence ) {
-    if ( mAttachmentView->count() != mLoadedIncidence->attachments().count() )
+    if ( mAttachmentView->count() != mLoadedIncidence->attachments().count() ) {
       return true;
+    }
 
     KCalCore::Attachment::List origAttachments = mLoadedIncidence->attachments();
     for ( int itemIndex = 0; itemIndex < mAttachmentView->count(); ++itemIndex ) {
       QListWidgetItem *item = mAttachmentView->item( itemIndex );
       Q_ASSERT( dynamic_cast<AttachmentIconItem*>( item ) );
 
-      const KCalCore::Attachment::Ptr listAttachment
-        = static_cast<AttachmentIconItem*>( item )->attachment();
+      const KCalCore::Attachment::Ptr listAttachment =
+        static_cast<AttachmentIconItem*>( item )->attachment();
 
       bool found = false;
       for ( int i = 0; i < origAttachments.size() && !found; ++i ) {
         const KCalCore::Attachment::Ptr attachment = origAttachments.at( i );
 
         // Check for changed label first
-        if ( attachment->label() != listAttachment->label() )
+        if ( attachment->label() != listAttachment->label() ) {
           continue;
+        }
 
-        if ( attachment->isBinary() && listAttachment->isBinary()
-          && attachment->decodedData() == listAttachment->decodedData() ) {
+        if ( attachment->isBinary() && listAttachment->isBinary() &&
+             attachment->decodedData() == listAttachment->decodedData() ) {
           // Not sure about this. Might be too expensive.
           origAttachments.remove( i );
           found = true;
-        } else if ( attachment->isUri() && listAttachment->isUri()
-           && attachment->uri() == listAttachment->uri() ) {
+        } else if ( attachment->isUri() && listAttachment->isUri() &&
+                    attachment->uri() == listAttachment->uri() ) {
           origAttachments.remove( i );
           found = true;
         }
@@ -130,7 +133,6 @@ bool IncidenceAttachment::isDirty() const
     // All attachments are removed from the list, meaning, the items in mAttachmentView
     // are equal to the attachments set on mLoadedIncidence.
     return !origAttachments.isEmpty();
-
 
   } else {
     // No incidence loaded, so if the user added attachments we're dirty.
@@ -145,7 +147,6 @@ int IncidenceAttachment::attachmentCount() const
   return mAttachmentView->count();
 }
 
-
 /// Private slots
 
 void IncidenceAttachment::addAttachment()
@@ -158,10 +159,11 @@ void IncidenceAttachment::addAttachment()
   QWeakPointer<AttachmentEditDialog> dialog( new AttachmentEditDialog( item, mAttachmentView ) );
 #endif
   dialog.data()->setCaption( i18nc( "@title", "Add Attachment" ) );
-  if ( dialog.data()->exec() == KDialog::Rejected )
+  if ( dialog.data()->exec() == KDialog::Rejected ) {
     delete item;
-  else
+  } else {
     emit attachmentCountChanged( mAttachmentView->count() );
+  }
 
   checkDirtyStatus();
 }
@@ -203,8 +205,9 @@ void IncidenceAttachment::removeSelectedAttachments()
     }
   }
 
-  if ( selected.isEmpty() )
+  if ( selected.isEmpty() ) {
     return;
+  }
 
   QString labelsStr = labels.join( "<br>" );
 
@@ -218,8 +221,8 @@ void IncidenceAttachment::removeSelectedAttachments()
     return;
   }
 
-  for ( QList<QListWidgetItem *>::iterator it( selected.begin() ), end( selected.end() );
-        it != end ; ++it ) {
+  for ( QList<QListWidgetItem*>::iterator it( selected.begin() ), end( selected.end() );
+        it != end; ++it ) {
     int row = mAttachmentView->row( *it );
     QListWidgetItem *next = mAttachmentView->item( ++row );
     QListWidgetItem *prev = mAttachmentView->item( --row );
@@ -242,8 +245,9 @@ void IncidenceAttachment::saveAttachment( QListWidgetItem *item )
   Q_ASSERT( dynamic_cast<AttachmentIconItem*>( item ) );
 
   AttachmentIconItem *attitem = static_cast<AttachmentIconItem*>( item );
-  if ( !attitem->attachment() )
+  if ( !attitem->attachment() ) {
     return;
+  }
 
   KCalCore::Attachment::Ptr att = attitem->attachment();
 
@@ -279,8 +283,9 @@ void IncidenceAttachment::saveSelectedAttachments()
 {
   for ( int itemIndex = 0; itemIndex < mAttachmentView->count(); ++itemIndex ) {
     QListWidgetItem *item = mAttachmentView->item( itemIndex );
-    if ( item->isSelected() )
+    if ( item->isSelected() ) {
       saveAttachment( item );
+    }
   }
 }
 
@@ -289,8 +294,9 @@ void IncidenceAttachment::showAttachment( QListWidgetItem *item )
   Q_ASSERT( item );
   Q_ASSERT( dynamic_cast<AttachmentIconItem*>( item ) );
   AttachmentIconItem *attitem = static_cast<AttachmentIconItem*>( item );
-  if ( !attitem->attachment() )
+  if ( !attitem->attachment() ) {
     return;
+  }
 
   KCalCore::Attachment::Ptr att = attitem->attachment();
   if ( att->isUri() ) {
@@ -329,8 +335,9 @@ void IncidenceAttachment::showSelectedAttachments()
 {
   for ( int itemIndex = 0; itemIndex < mAttachmentView->count(); ++itemIndex ) {
     QListWidgetItem *item = mAttachmentView->item( itemIndex );
-    if ( item->isSelected() )
+    if ( item->isSelected() ) {
       showAttachment( item );
+    }
   }
 }
 
@@ -350,15 +357,16 @@ void IncidenceAttachment::editSelectedAttachments()
       Q_ASSERT( dynamic_cast<AttachmentIconItem*>( item ) );
 
       AttachmentIconItem *attitem = static_cast<AttachmentIconItem*>( item );
-      if ( !attitem->attachment() )
+      if ( !attitem->attachment() ) {
         return;
+      }
 
 #ifdef KDEPIM_MOBILE_UI
       QPointer<AttachmentEditDialog> dialog(
-          new AttachmentEditDialog( attitem, 0, false ) );
+        new AttachmentEditDialog( attitem, 0, false ) );
 #else
       QPointer<AttachmentEditDialog> dialog(
-          new AttachmentEditDialog( attitem, mAttachmentView, false ) );
+        new AttachmentEditDialog( attitem, mAttachmentView, false ) );
 #endif
       dialog->setModal( false );
       connect( dialog.data(), SIGNAL(hidden()), dialog.data(), SLOT(delayedDestruct()) );
@@ -387,7 +395,6 @@ void IncidenceAttachment::slotSelectionChanged()
   }
   mUi->mRemoveButton->setEnabled( selected );
 }
-
 
 /// Private functions
 
@@ -443,18 +450,19 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
   }
 
   menu.addSeparator();
-  cancelAction = menu.addAction( KIcon( "process-stop" ) , i18nc( "@action:inmenu", "C&ancel" ) );
+  cancelAction = menu.addAction( KIcon( "process-stop" ), i18nc( "@action:inmenu", "C&ancel" ) );
 
   QByteArray data;
   QString mimeType;
   QString label;
 
-  if(!mimeData->formats().isEmpty() && !probablyWeHaveUris) {
+  if ( !mimeData->formats().isEmpty() && !probablyWeHaveUris ) {
     mimeType = mimeData->formats().first();
     data = mimeData->data( mimeType );
     KMimeType::Ptr mime = KMimeType::mimeType( mimeType );
-    if ( mime )
-        label = mime->comment();
+    if ( mime ) {
+      label = mime->comment();
+    }
   }
 
   QAction *ret = menu.exec( QCursor::pos() );
@@ -538,7 +546,6 @@ void IncidenceAttachment::setupAttachmentIconView()
   connect( mAttachmentView, SIGNAL(customContextMenuRequested(QPoint)),
            SLOT(showContextMenu(QPoint)) );
 
-
   QGridLayout *layout = new QGridLayout( mUi->mAttachmentViewPlaceHolder );
   layout->addWidget( mAttachmentView );
 }
@@ -580,7 +587,8 @@ void IncidenceAttachment::addUriAttachment( const QString &uri,
                                                   bool inLine )
 {
   if ( !inLine ) {
-    AttachmentIconItem *item = new AttachmentIconItem( KCalCore::Attachment::Ptr(), mAttachmentView );
+    AttachmentIconItem *item =
+      new AttachmentIconItem( KCalCore::Attachment::Ptr(), mAttachmentView );
     item->setUri( uri );
     item->setLabel( label );
     if ( mimeType.isEmpty() ) {

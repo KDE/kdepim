@@ -31,8 +31,11 @@ class AttendeeLineFactory : public KPIM::MultiplyingLineFactory
 {
   Q_OBJECT
   public:
-    AttendeeLineFactory( QObject* parent ) : KPIM::MultiplyingLineFactory( parent ) {}
-    virtual KPIM::MultiplyingLine* newLine(  QWidget *parent )
+    AttendeeLineFactory( QObject *parent ) : KPIM::MultiplyingLineFactory( parent )
+    {
+    }
+
+    virtual KPIM::MultiplyingLine *newLine( QWidget *parent )
     {
       return new AttendeeLine( parent );
     }
@@ -40,24 +43,25 @@ class AttendeeLineFactory : public KPIM::MultiplyingLineFactory
 
 class AttendeeEditor : public KPIM::MultiplyingLineEditor
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     explicit AttendeeEditor( QWidget *parent = 0 );
 
     AttendeeData::List attendees() const;
 
     void addAttendee( const KCalCore::Attendee::Ptr &attendee );
-    void removeAttendee( const AttendeeData::Ptr& attendee );
+    void removeAttendee( const AttendeeData::Ptr &attendee );
 
     void setActions( AttendeeLine::AttendeeActions actions );
 
   signals:
     void countChanged( int );
-    void changed( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
-    void editingFinished( KPIM::MultiplyingLine* );
+    void changed( const KCalCore::Attendee::Ptr &oldAttendee,
+                  const KCalCore::Attendee::Ptr &newAttendee );
+    void editingFinished( KPIM::MultiplyingLine * );
 
   protected slots:
-    void slotLineAdded( KPIM::MultiplyingLine* );
+    void slotLineAdded( KPIM::MultiplyingLine * );
     void slotCalculateTotal();
 };
 

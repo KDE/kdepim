@@ -1,21 +1,21 @@
 /*
-    Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
-    Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
+  Copyright (C) 2009-2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "visualfreebusywidget.h"
@@ -67,42 +67,50 @@ class RowController : public KDGantt::AbstractRowController
       m_model = model;
     }
 
-    /*reimp*/int headerHeight() const
+    /*reimp*/
+    int headerHeight() const
     {
       return 2 * mRowHeight + 10;
     }
 
-    /*reimp*/ bool isRowVisible( const QModelIndex & ) const
+    /*reimp*/
+    bool isRowVisible( const QModelIndex & ) const
     {
       return true;
     }
 
-    /*reimp*/ bool isRowExpanded( const QModelIndex & ) const
+    /*reimp*/
+    bool isRowExpanded( const QModelIndex & ) const
     {
       return false;
     }
 
-    /*reimp*/ KDGantt::Span rowGeometry( const QModelIndex &idx ) const
+    /*reimp*/
+    KDGantt::Span rowGeometry( const QModelIndex &idx ) const
     {
-      return KDGantt::Span( idx.row()*mRowHeight, mRowHeight );
+      return KDGantt::Span( idx.row() * mRowHeight, mRowHeight );
     }
 
-    /*reimp*/ int maximumItemHeight() const
+    /*reimp*/
+    int maximumItemHeight() const
     {
       return mRowHeight / 2;
     }
 
-    /*reimp*/int totalHeight() const
+    /*reimp*/
+    int totalHeight() const
     {
       return m_model->rowCount() * mRowHeight;
     }
 
-    /*reimp*/ QModelIndex indexAt( int height ) const
+    /*reimp*/
+    QModelIndex indexAt( int height ) const
     {
       return m_model->index( height / mRowHeight, 0 );
     }
 
-    /*reimp*/ QModelIndex indexBelow( const QModelIndex &idx ) const
+    /*reimp*/
+    QModelIndex indexBelow( const QModelIndex &idx ) const
     {
       if ( !idx.isValid() ) {
         return QModelIndex();
@@ -110,7 +118,8 @@ class RowController : public KDGantt::AbstractRowController
       return idx.model()->index( idx.row() + 1, idx.column(), idx.parent() );
     }
 
-    /*reimp*/ QModelIndex indexAbove( const QModelIndex &idx ) const
+    /*reimp*/
+    QModelIndex indexAbove( const QModelIndex &idx ) const
     {
       if ( !idx.isValid() ) {
         return QModelIndex();
@@ -131,7 +140,8 @@ class RowController : public KDGantt::AbstractRowController
 class GanttHeaderView : public QHeaderView
 {
   public:
-    explicit GanttHeaderView( QWidget* parent = 0 ) : QHeaderView( Qt::Horizontal, parent ) {
+    explicit GanttHeaderView( QWidget *parent = 0 ) : QHeaderView( Qt::Horizontal, parent )
+    {
     }
 
     QSize sizeHint() const
@@ -272,12 +282,12 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
   QDateTime horizonEnd = QDateTime::currentDateTime().addDays( 15 );
   mGanttGrid->setStartDateTime( horizonStart );
 
-//  connect( mGanttGraphicsView, SIGNAL(timeIntervalSelected(const KDateTime &,const KDateTime &)),
-//           mGanttGraphicsView, SLOT(zoomToSelection(const KDateTime &,const  KDateTime &)) );
-//   connect( mGanttGraphicsView, SIGNAL(doubleClicked( QModelIndex)),
-//            SLOT(editFreeBusyUrl(QModelIndex)) );
-//   connect( mGanttGraphicsView, SIGNAL(intervalColorRectangleMoved(const KDateTime &,const KDateTime &)),
-//            this, SLOT(slotIntervalColorRectangleMoved(const KDateTime &,const KDateTime &)) );
+//connect( mGanttGraphicsView, SIGNAL(timeIntervalSelected(const KDateTime &,const KDateTime &)),
+//         mGanttGraphicsView, SLOT(zoomToSelection(const KDateTime &,const  KDateTime &)) );
+//connect( mGanttGraphicsView, SIGNAL(doubleClicked( QModelIndex)),
+//         SLOT(editFreeBusyUrl(QModelIndex)) );
+//connect(mGanttGraphicsView,SIGNAL(intervalColorRectangleMoved(const KDateTime&,const KDateTime&)),
+//        this, SLOT(slotIntervalColorRectangleMoved(const KDateTime &,const KDateTime &)) );
 
   connect( mLeftView, SIGNAL(customContextMenuRequested(QPoint)),
            this, SLOT(showAttendeeStatusMenu()) );
@@ -398,7 +408,7 @@ void VisualFreeBusyWidget::slotScaleChanged( int newScale )
 
   int value = var.value<int>();
 
-  mGanttGrid->setScale(( KDGantt::DateTimeGrid::Scale )value );
+  mGanttGrid->setScale( (KDGantt::DateTimeGrid::Scale)value );
 }
 
 void VisualFreeBusyWidget::slotUpdateIncidenceStartEnd( const KDateTime &dtFrom,

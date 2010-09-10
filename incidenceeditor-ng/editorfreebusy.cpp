@@ -80,42 +80,50 @@ class RowController : public KDGantt::AbstractRowController
       m_model = model;
     }
 
-    /*reimp*/int headerHeight() const
+    /*reimp*/
+    int headerHeight() const
     {
       return 2 * mRowHeight + 10;
     }
 
-    /*reimp*/ bool isRowVisible( const QModelIndex & ) const
+    /*reimp*/
+    bool isRowVisible( const QModelIndex & ) const
     {
       return true;
     }
 
-    /*reimp*/ bool isRowExpanded( const QModelIndex & ) const
+    /*reimp*/
+    bool isRowExpanded( const QModelIndex & ) const
     {
       return false;
     }
 
-    /*reimp*/ KDGantt::Span rowGeometry( const QModelIndex & idx ) const
+    /*reimp*/
+    KDGantt::Span rowGeometry( const QModelIndex & idx ) const
     {
       return KDGantt::Span( idx.row() * mRowHeight, mRowHeight );
     }
 
-    /*reimp*/ int maximumItemHeight() const
+    /*reimp*/
+    int maximumItemHeight() const
     {
       return mRowHeight / 2;
     }
 
-    /*reimp*/int totalHeight() const
+    /*reimp*/
+    int totalHeight() const
     {
       return m_model->rowCount() * mRowHeight;
     }
 
-    /*reimp*/ QModelIndex indexAt( int height ) const
+    /*reimp*/
+    QModelIndex indexAt( int height ) const
     {
       return m_model->index( height / mRowHeight, 0 );
     }
 
-    /*reimp*/ QModelIndex indexBelow( const QModelIndex& idx ) const
+    /*reimp*/
+    QModelIndex indexBelow( const QModelIndex &idx ) const
     {
       if ( !idx.isValid() ) {
         return QModelIndex();
@@ -123,7 +131,8 @@ class RowController : public KDGantt::AbstractRowController
       return idx.model()->index( idx.row() + 1, idx.column(), idx.parent() );
     }
 
-    /*reimp*/ QModelIndex indexAbove( const QModelIndex& idx ) const
+    /*reimp*/
+    QModelIndex indexAbove( const QModelIndex &idx ) const
     {
       if ( !idx.isValid() ) {
         return QModelIndex();
@@ -140,7 +149,7 @@ class RowController : public KDGantt::AbstractRowController
 class GanttHeaderView : public QHeaderView
 {
   public:
-    explicit GanttHeaderView( QWidget* parent=0 ) : QHeaderView( Qt::Horizontal, parent )
+    explicit GanttHeaderView( QWidget *parent=0 ) : QHeaderView( Qt::Horizontal, parent )
     {
     }
 
@@ -306,7 +315,7 @@ void FreeBusyItem::setFreeBusyPeriods( const KCalCore::FreeBusy::Ptr &fb )
       newItem->setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
       newItem->setData( per.start().toTimeSpec( timeSpec ).dateTime(), KDGantt::StartTimeRole );
       newItem->setData( per.end().toTimeSpec( timeSpec ).dateTime(), KDGantt::EndTimeRole );
-      newItem->setData( Qt::red, Qt::BackgroundRole ); //TODO: doesn't work, probably we need a delegate
+      newItem->setData( Qt::red, Qt::BackgroundRole );//TODO: doesn't work, probably need a delegate
 
       QString toolTip = "<qt>";
       toolTip += "<b>" + i18nc( "@info:tooltip", "Free/Busy Period" ) + "</b>";
@@ -927,7 +936,7 @@ void EditorFreeBusy::editFreeBusyUrl( const QModelIndex & index )
   delete dialog;
 }
 
-FreeBusyItem* EditorFreeBusy::selectedItem() const
+FreeBusyItem *EditorFreeBusy::selectedItem() const
 {
   if ( mLeftView->selectedItems().isEmpty() ) {
     return 0;
@@ -1081,7 +1090,7 @@ void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
   AttendeeData::Ptr currentOrganizerAttendee;
   AttendeeData::Ptr newOrganizerAttendee;
 
-  Q_FOREACH( FreeBusyItem* item, mFreeBusyItems ) {
+  Q_FOREACH( FreeBusyItem *item, mFreeBusyItems ) {
     AttendeeData::Ptr attendee = item->attendee();
     if( attendee->fullName() == mCurrentOrganizer ) {
       currentOrganizerAttendee = attendee;
@@ -1124,7 +1133,8 @@ void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
 // Q3ListViewItem *EditorFreeBusy::hasExampleAttendee() const
 // {
 // #if 0
-// //TODO: finish porting. the upper class deals with Q3ListViewItem, and it should deal with something else. Here FreeBusyItem.
+// //TODO: finish porting. the upper class deals with Q3ListViewItem,
+// //      and it should deal with something else. Here FreeBusyItem.
 //   Q_FOREACH ( FreeBusyItem *item, mFreeBusyItems ) {
 //     AttendeeData::Ptr attendee = item->attendee();
 //     Q_ASSERT( attendee );

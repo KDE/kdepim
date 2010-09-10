@@ -1,21 +1,21 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "incidencedatetime.h"
@@ -112,8 +112,7 @@ void IncidenceDateTime::save( const KCalCore::Incidence::Ptr &incidence )
   } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<Journal>( incidence ) ) {
     save( journal );
   } else {
-    Q_ASSERT_X( false,
-                "IncidenceDateTimeEditor::save",
+    Q_ASSERT_X( false, "IncidenceDateTimeEditor::save",
                 "Only implemented for todos, events and journals" );
   }
 }
@@ -158,7 +157,6 @@ QTime IncidenceDateTime::endTime() const
   return currentEndDateTime().time();
 }
 
-
 /// private slots for General
 
 void IncidenceDateTime::setTimeZonesVisibility( bool visible )
@@ -186,8 +184,9 @@ void IncidenceDateTime::toggleTimeZoneVisibility()
 
 void IncidenceDateTime::updateStartTime( const QTime &newTime )
 {
-  if ( !newTime.isValid() )
+  if ( !newTime.isValid() ) {
     return;
+  }
 
   KDateTime endDateTime = currentEndDateTime();
   const int secsep = mCurrentStartDateTime.secsTo( endDateTime );
@@ -545,9 +544,9 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
       startDT.setDate( journal->recurrence()->getNextDateTime( kdt ).date() );
     }
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
-    if ( startDT.isUtc() )
+    if ( startDT.isUtc() ) {
       startDT = startDT.toLocalZone();
-
+    }
     setDateTimes( startDT, KDateTime() );
   } else {
     // set the start/end time from the template, only as a last resort #190545
@@ -592,8 +591,8 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
   connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SIGNAL(endDateTimeToggled(bool)) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SIGNAL( endDateChanged( QDate ) ) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL( endTimeChanged( QTime ) ) );
+  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SIGNAL(endDateChanged(QDate)) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL(endTimeChanged(QTime)) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
   //TODO: do something with tmpl, note: this wasn't used in the old code either.
@@ -607,8 +606,9 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
       dt = dt.addSecs( -1 );
       endDT.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
     }
-    if ( endDT.isUtc() )
+    if ( endDT.isUtc() ) {
       endDT = endDT.toLocalZone();
+    }
   }
 
   KDateTime startDT = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
@@ -745,13 +745,13 @@ void IncidenceDateTime::setTimes( const KDateTime &start, const KDateTime &end )
 //   emitDateTimeStr();
 }
 
-void IncidenceDateTime::setStartDate( const QDate& newDate )
+void IncidenceDateTime::setStartDate( const QDate &newDate )
 {
   mUi->mStartDateEdit->setDate( newDate );
   updateStartDate( newDate );
 }
 
-void IncidenceDateTime::setStartTime( const QTime& newTime )
+void IncidenceDateTime::setStartTime( const QTime &newTime )
 {
   mUi->mStartTimeEdit->setTime( newTime );
   updateStartTime( newTime );
@@ -766,7 +766,6 @@ bool IncidenceDateTime::endDateTimeEnabled() const
 {
   return mUi->mEndCheck->isChecked();
 }
-
 
 bool IncidenceDateTime::isValid() const
 {

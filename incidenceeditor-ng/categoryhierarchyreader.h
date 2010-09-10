@@ -67,7 +67,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQTreeWidget : public Cat
 {
   public:
     CategoryHierarchyReaderQTreeWidget( QTreeWidget *tree )
-  : mTree( tree ), mItem( 0 ), mCurrentDepth( 0 ) {}
+      : mTree( tree ), mItem( 0 ), mCurrentDepth( 0 ) {}
     virtual ~CategoryHierarchyReaderQTreeWidget() {}
 
   protected:
