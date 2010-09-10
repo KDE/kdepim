@@ -51,7 +51,9 @@
 #include "core/delegate.h"
 #include "core/manager.h"
 #include "core/messageitemsetmanager.h"
+#include "core/messageitem.h"
 
+#include <akonadi/item.h>
 #include <akonadi/kmime/messagestatus.h>
 #include "messagecore/stringutil.h"
 
@@ -465,11 +467,18 @@ QVariant Model::data( const QModelIndex & index, int role ) const
   ///  messagelist uses its own internal roles, here we respond
   ///  to the ETM ones.
 
-  const Item* item = static_cast< Item* >( index.internalPointer() );
+  Item* item = static_cast< Item* >( index.internalPointer() );
 
   switch( role ) {
    /// taken from entitytreemodel.h
-    case Qt::UserRole + 3:
+    case Qt::UserRole + 2: //EntityTreeModel::ItemRole
+      if( item->type() == MessageList::Core::Item::Message ) {
+        MessageItem* mItem = static_cast<MessageItem*>( item );
+        return QVariant::fromValue( Akonadi::Item( mItem->uniqueId() ) );
+      } else
+        return QVariant();
+      break;
+    case Qt::UserRole + 3: //EntityTreeModel::MimeTypeRole
       if( item->type() == MessageList::Core::Item::Message )
         return QLatin1String( "message/rfc822" );
       else
