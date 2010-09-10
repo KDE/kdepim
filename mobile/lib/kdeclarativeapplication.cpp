@@ -85,6 +85,7 @@ void KDeclarativeApplication::initCmdLine()
 
   KCmdLineOptions options;
   options.add("timeit", ki18n("start timers for various parts of the application startup"));
+  options.add("disable-opengl", ki18n("do not use OpenGL ES acceleration for rendering (for testing only)"));
   KCmdLineArgs::addCmdLineOptions(options);
 }
 

@@ -50,15 +50,17 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   m_qmlFileName( qmlFileName )
 {
 #ifndef Q_OS_WIN
-  // make MainView use OpenGL ES2 backend for better performance
-  // right now, the best performance can be achieved with a GLWidget
-  // and the use of the raster graphicssystem.
-  QGLFormat format = QGLFormat::defaultFormat();
-  format.setSampleBuffers(false);
-  glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
-  glWidget->setAutoFillBackground(false);
-  setViewport(glWidget);
-  Akonadi::Control::widgetNeedsAkonadi( glWidget );
+  if ( !KCmdLineArgs::parsedArgs()->isSet( "disable-opengl" ) ) {
+    // make MainView use OpenGL ES2 backend for better performance
+    // right now, the best performance can be achieved with a GLWidget
+    // and the use of the raster graphicssystem.
+    QGLFormat format = QGLFormat::defaultFormat();
+    format.setSampleBuffers(false);
+    glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
+    glWidget->setAutoFillBackground(false);
+    setViewport(glWidget);
+    Akonadi::Control::widgetNeedsAkonadi( glWidget );
+  }
 #else
   Akonadi::Control::widgetNeedsAkonadi( this );
 #endif
