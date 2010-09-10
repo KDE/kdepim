@@ -235,7 +235,10 @@ QItemSelection KIdentityProxyModel::mapSelectionFromSource(const QItemSelection&
     for ( ; it != end; ++it)
     {
         Q_ASSERT(it->model() == sourceModel());
+        Q_ASSERT(it->topLeft().isValid());
+        Q_ASSERT(it->bottomRight().isValid());
         const QItemSelectionRange range(mapFromSource(it->topLeft()), mapFromSource(it->bottomRight()));
+        Q_ASSERT(range.isValid());
         proxySelection.append(range);
     }
 
@@ -257,7 +260,10 @@ QItemSelection KIdentityProxyModel::mapSelectionToSource(const QItemSelection& s
     for ( ; it != end; ++it)
     {
         Q_ASSERT(it->model() == this);
+        Q_ASSERT(it->topLeft().isValid());
+        Q_ASSERT(it->bottomRight().isValid());
         const QItemSelectionRange range(mapToSource(it->topLeft()), mapToSource(it->bottomRight()));
+        Q_ASSERT(range.isValid());
         sourceSelection.append(range);
     }
 
