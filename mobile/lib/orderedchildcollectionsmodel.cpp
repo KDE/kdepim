@@ -57,15 +57,17 @@ bool OrderedChildCollectionsModel::lessThan( const QModelIndex &left, const QMod
   // Neither is special.
 
   // First put inbox on top,
+
   const Akonadi::Collection leftCol = left.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-  if ( leftCol.name().compare( QLatin1String( "inbox" ), Qt::CaseInsensitive ) ) {
+  if ( leftCol.name().compare( QLatin1String( "inbox" ), Qt::CaseInsensitive ) == 0 ) {
+    // If we have two collections called inbox make sure they have total order.
     const Akonadi::Collection rightCol = right.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( rightCol.name().compare( QLatin1String( "inbox" ), Qt::CaseInsensitive ) )
+    if ( rightCol.name().compare( QLatin1String( "inbox" ), Qt::CaseInsensitive ) == 0 )
       return leftId < rightId;
     return true;
   } else {
     const Akonadi::Collection rightCol = right.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( rightCol.name().compare( QLatin1String( "inbox" ), Qt::CaseInsensitive ) )
+    if ( rightCol.name().compare( QLatin1String( "inbox" ), Qt::CaseInsensitive ) == 0 )
       return false;
   }
   // ... then let QSFPM sort by display data
