@@ -25,6 +25,7 @@ set( akonadi_next_SRCS
   quotacolorproxymodel.cpp
   incidenceattachmentmodel.cpp
   kcheckableproxymodel.cpp
+  kcolumnfilterproxymodel.cpp
   kviewstatemaintainer.cpp
   kidentityproxymodel.cpp
   amazingcompleter.cpp
