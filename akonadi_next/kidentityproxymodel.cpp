@@ -322,7 +322,7 @@ QStringList KIdentityProxyModel::mimeTypes() const
 QMimeData* KIdentityProxyModel::mimeData(const QModelIndexList& indexes) const
 {
     if (!sourceModel())
-        return QAbstractProxyModel::mimeTypes();
+        return QAbstractProxyModel::mimeData(indexes);
 
     QModelIndexList proxyIndexes;
     foreach(const QModelIndex &index, indexes)
