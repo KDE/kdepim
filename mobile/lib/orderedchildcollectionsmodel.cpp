@@ -28,6 +28,8 @@ OrderedChildCollectionsModel::OrderedChildCollectionsModel( QObject* parent )
   : QSortFilterProxyModel( parent )
 {
   setDynamicSortFilter( true );
+  setSortCaseSensitivity( Qt::CaseInsensitive );
+  setSortLocaleAware( true );
   // TODO: This does not actually work. The id() of each special collection is -1.
   specialCollectionOrder <<
           Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).id()
