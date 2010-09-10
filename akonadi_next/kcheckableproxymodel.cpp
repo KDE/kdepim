@@ -60,6 +60,12 @@ KCheckableProxyModel::~KCheckableProxyModel()
   delete d_ptr;
 }
 
+QItemSelectionModel *KCheckableProxyModel::selectionModel() const
+{
+  Q_D(const KCheckableProxyModel);
+  return d->m_itemSelectionModel;
+}
+
 void KCheckableProxyModel::setSelectionModel(QItemSelectionModel* itemSelectionModel)
 {
   Q_D(KCheckableProxyModel);

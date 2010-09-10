@@ -40,6 +40,7 @@ public:
   KCheckableProxyModel(QObject* parent = 0);
   ~KCheckableProxyModel();
 
+  QItemSelectionModel *selectionModel() const;
   void setSelectionModel(QItemSelectionModel *itemSelectionModel);
 
   /* reimp */ Qt::ItemFlags flags(const QModelIndex& index) const;
