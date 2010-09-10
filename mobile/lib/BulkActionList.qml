@@ -114,18 +114,18 @@ QML.Column {
     height : itemHeight
     anchors.left : parent.left
     anchors.right : parent.right
-    action : application.getAction("akonadi_item_move_to_menu", "")
+    action : application.getAction("akonadi_item_move_to_dialog", "")
     onTriggered : {
-      _top.triggered("akonadi_item_move_to_menu")
+      _top.triggered("akonadi_item_move_to_dialog")
     }
   }
   KPIM.Action {
     height : itemHeight
     anchors.left : parent.left
     anchors.right : parent.right
-    action : application.getAction("akonadi_item_copy_to_menu", "")
+    action : application.getAction("akonadi_item_copy_to_dialog", "")
     onTriggered : {
-      _top.triggered("akonadi_item_copy_to_menu")
+      _top.triggered("akonadi_item_copy_to_dialog")
     }
   }
 }

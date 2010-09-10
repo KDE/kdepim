@@ -71,8 +71,8 @@ ActionMenuContainer {
     text : KDE.i18n( "Edit" )
     ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
-    ActionListItem { name : "akonadi_collection_move_to_menu" }
-    ActionListItem { name : "akonadi_collection_copy_to_menu" }
+    ActionListItem { name : "akonadi_collection_move_to_dialog" }
+    ActionListItem { name : "akonadi_collection_copy_to_dialog" }
     ActionListItem { name : "akonadi_collection_delete" }
   }
 
@@ -111,8 +111,8 @@ ActionMenuContainer {
     name : "note_viewer_edit_menu"
     category : "note_viewer"
     text : KDE.i18n( "Edit" )
-    ActionListItem { name : "akonadi_item_copy_to_menu" }
-    ActionListItem { name : "akonadi_item_move_to_menu" }
+    ActionListItem { name : "akonadi_item_copy_to_dialog" }
+    ActionListItem { name : "akonadi_item_move_to_dialog" }
     ActionListItem { name : "akonadi_item_delete" }
   }
 
