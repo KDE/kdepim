@@ -211,8 +211,6 @@ bool Groupware::sendICalMessage( QWidget *parent,
                     incidence->summary() );
         break;
       case IncidenceChanger::INCIDENCEDELETED:
-        Q_ASSERT( incidence->type() == KCalCore::IncidenceBase::TypeEvent ||
-                  incidence->type() == KCalCore::IncidenceBase::TypeTodo );
         if ( incidence->type() == KCalCore::IncidenceBase::TypeEvent ) {
           txt = i18n( "You removed the invitation \"%1\".\n"
                       "Do you want to email the attendees that the event is canceled?",
@@ -220,6 +218,10 @@ bool Groupware::sendICalMessage( QWidget *parent,
         } else if ( incidence->type() == KCalCore::IncidenceBase::TypeTodo ) {
           txt = i18n( "You removed the invitation \"%1\".\n"
                       "Do you want to email the attendees that the todo is canceled?",
+                      incidence->summary() );
+        } else if ( incidence->type() == KCalCore::IncidenceBase::TypeJournal ) {
+          txt = i18n( "You removed the invitation \"%1\".\n"
+                      "Do you want to email the attendees that the journal is canceled?",
                       incidence->summary() );
         }
         break;
