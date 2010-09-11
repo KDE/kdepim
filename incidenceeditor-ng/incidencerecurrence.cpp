@@ -27,9 +27,6 @@
 #endif
 
 #include <KCalendarSystem>
-#include <KDebug>
-
-#include <QListWidgetItem>
 
 using namespace IncidenceEditorNG;
 

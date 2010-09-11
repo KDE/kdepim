@@ -21,9 +21,9 @@
 #ifndef INCIDENCEEDITOR_INCIDENCEDEFAULTS_H
 #define INCIDENCEEDITOR_INCIDENCEDEFAULTS_H
 
-#include <KCalCore/Incidence>
-
 #include "incidenceeditors-ng_export.h"
+
+#include <KCalCore/Incidence>
 
 namespace IncidenceEditorNG {
 

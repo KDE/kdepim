@@ -26,22 +26,14 @@
 #include "incidenceeditors-ng_export.h"
 #include "freebusyitem.h"
 
-#include <KCalCore/FreeBusy>
-#include <KCalCore/Attendee>
-#include <KCalCore/Period>
-
-#include <KDateTime>
-
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
-#include <QtCore/QSet>
-#include <QtCore/QBitArray>
-#include <QtCore/QVector>
+#include <QBitArray>
+#include <QSet>
+#include <QTimer>
 
 namespace IncidenceEditorNG {
 
-class FreeBusyItem;
 class FreeBusyItemModel;
+
 /**
  * Takes a list of attendees and event info (e.g., min time start, max time end)
  * fetches their freebusy information, then identifies conflicts and periods of non-conflict.

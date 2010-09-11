@@ -21,24 +21,28 @@
 #ifndef INCIDENCEEDITOR_INVITATIONDISPATCHER_H
 #define INCIDENCEEDITOR_INVITATIONDISPATCHER_H
 
-#include <QtCore/QObject>
-
+#include "incidenceeditors-ng_export.h"
 #include "editoritemmanager.h"
 
-namespace CalendarSupport {
+#include <QtCore/QObject>
 
-class Calendar;
+namespace CalendarSupport {
+  class Calendar;
+}
+
+namespace IncidenceEditorNG {
+
 class InvitationDispatcherPrivate;
 
 /**
   Listens to an EditorItemManager and sends out the invitations every time an
   Incidence was saved successfuly.
  */
-class InvitationDispatcher : public QObject
+class  INCIDENCEEDITORS_NG_EXPORT InvitationDispatcher : public QObject
 {
   Q_OBJECT
   public:
-    explicit InvitationDispatcher( Calendar *calendar, QObject *parent = 0 );
+    explicit InvitationDispatcher( CalendarSupport::Calendar *calendar, QObject *parent = 0 );
     ~InvitationDispatcher();
 
     void setIsCounterProposal( bool isCounterProposal );
@@ -47,14 +51,14 @@ class InvitationDispatcher : public QObject
       Sets the manager to which this dispatcher listens for the itemSaveFinished
       signal.
      */
-    void setItemManager( CalendarSupport::EditorItemManager *manager );
+    void setItemManager( EditorItemManager *manager );
 
   private:
     InvitationDispatcherPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( InvitationDispatcher );
     Q_DISABLE_COPY( InvitationDispatcher );
 
-    Q_PRIVATE_SLOT( d_ptr, void processItemSave( CalendarSupport::EditorItemManager::SaveAction ) );
+    Q_PRIVATE_SLOT( d_ptr, void processItemSave( EditorItemManager::SaveAction ) );
     Q_PRIVATE_SLOT( d_ptr, void resetManager() );
 };
 

@@ -19,19 +19,19 @@
 */
 
 #include "incidencecategories.h"
-
 #include "categoryconfig.h"
 #include "categoryhierarchyreader.h"
 #ifndef Q_OS_WINCE
 #include "categoryselectdialog.h"
 #endif
 #include "editorconfig.h"
-
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
+
+#include <KConfigSkeleton>
 
 using namespace IncidenceEditorNG;
 

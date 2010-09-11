@@ -27,10 +27,12 @@
 #ifndef INCIDENCEEDITOR_ATTACHMENTEDITDIALOG_H
 #define INCIDENCEEDITOR_ATTACHMENTEDITDIALOG_H
 
+#include "incidenceeditors-ng_export.h"
+
 #include <KCalCore/Attachment>
 
-#include <KDE/KDialog>
-#include <KDE/KMimeType>
+#include <KDialog>
+#include <KMimeType>
 
 namespace Ui {
   class AttachmentEditDialog;
@@ -40,7 +42,7 @@ namespace IncidenceEditorNG {
 
 class AttachmentIconItem;
 
-class AttachmentEditDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public KDialog
 {
   Q_OBJECT
   public:

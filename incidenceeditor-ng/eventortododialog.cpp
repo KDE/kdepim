@@ -19,38 +19,34 @@
 */
 
 #include "eventortododialog.h"
-
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
-
-#include <KCalCore/MemoryCalendar>
-#include <KCalCore/ICalFormat>
-#include <KCalCore/Incidence>
-#include <KCalCore/Event>
-#include <KCalCore/Todo>
-#include <KConfigSkeleton>
-#include <KMessageBox>
-#include <KStandardDirs>
-#include <KSystemTimeZones>
-
-#include <Akonadi/CollectionComboBox>
-#include <Akonadi/Item>
-
 #include "combinedincidenceeditor.h"
 #include "editorconfig.h"
 #include "incidencealarm.h"
 #include "incidenceattachment.h"
+#include "incidenceattendee.h"
 #include "incidencecategories.h"
 #include "incidencecompletionpriority.h"
 #include "incidencedatetime.h"
 #include "incidencedescription.h"
-#include "incidencewhatwhere.h"
 #include "incidencerecurrence.h"
 #include "incidencesecrecy.h"
-#include "incidenceattendee.h"
+#include "incidencewhatwhere.h"
 #include "invitationdispatcher.h"
 #include "templatemanagementdialog.h"
 #include "ui_eventortododesktop.h"
+
+#include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/utils.h>
+
+#include <Akonadi/CollectionComboBox>
+#include <Akonadi/Item>
+
+#include <KCalCore/ICalFormat>
+#include <KCalCore/MemoryCalendar>
+
+#include <KMessageBox>
+#include <KStandardDirs>
+#include <KSystemTimeZones>
 
 using namespace IncidenceEditorNG;
 
@@ -64,7 +60,7 @@ enum Tabs {
   AttachmentsTab,
 };
 
-class EventOrTodoDialogPrivate : public CalendarSupport::ItemEditorUi
+class EventOrTodoDialogPrivate : public ItemEditorUi
 {
   EventOrTodoDialog *q_ptr;
   Q_DECLARE_PUBLIC( EventOrTodoDialog )
@@ -74,8 +70,8 @@ class EventOrTodoDialogPrivate : public CalendarSupport::ItemEditorUi
     Akonadi::CollectionComboBox *mCalSelector;
     bool mCloseOnSave;
 
-    CalendarSupport::EditorItemManager *mItemManager;
-    CalendarSupport::InvitationDispatcher *mInvitationDispatcher;
+    EditorItemManager *mItemManager;
+    InvitationDispatcher *mInvitationDispatcher;
 
     CombinedIncidenceEditor *mEditor;
     IncidenceDateTime *mIeDateTime;
@@ -99,9 +95,8 @@ class EventOrTodoDialogPrivate : public CalendarSupport::ItemEditorUi
 
     /// ItemEditorUi methods
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
-    void handleItemSaveFinish( CalendarSupport::EditorItemManager::SaveAction );
-    void handleItemSaveFail( CalendarSupport::EditorItemManager::SaveAction,
-                             const QString &errorMessage );
+    void handleItemSaveFinish( EditorItemManager::SaveAction );
+    void handleItemSaveFail( EditorItemManager::SaveAction, const QString &errorMessage );
     virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
     virtual bool isDirty() const;
     virtual bool isValid() const;
@@ -120,7 +115,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
     mUi( new Ui::EventOrTodoDesktop ),
     mCalSelector( new Akonadi::CollectionComboBox ),
     mCloseOnSave( false ),
-    mItemManager( new CalendarSupport::EditorItemManager( this ) ),
+    mItemManager( new EditorItemManager( this ) ),
     mInvitationDispatcher( 0 ),
     mEditor( new CombinedIncidenceEditor )
 {
@@ -134,7 +129,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
 
   if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
-    mInvitationDispatcher = new CalendarSupport::InvitationDispatcher( 0, q );
+    mInvitationDispatcher = new InvitationDispatcher( 0, q );
     mInvitationDispatcher->setItemManager( mItemManager );
   }
 
@@ -173,11 +168,11 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
               SLOT(updateButtonStatus(bool)) );
   q->connect( mItemManager,
-              SIGNAL(itemSaveFinished(CalendarSupport::EditorItemManager::SaveAction)),
-              SLOT(handleItemSaveFinish(CalendarSupport::EditorItemManager::SaveAction)));
+              SIGNAL(itemSaveFinished(EditorItemManager::SaveAction)),
+              SLOT(handleItemSaveFinish(EditorItemManager::SaveAction)));
   q->connect( mItemManager,
-              SIGNAL(itemSaveFailed(CalendarSupport::EditorItemManager::SaveAction,QString)),
-              SLOT(handleItemSaveFail(CalendarSupport::EditorItemManager::SaveAction, QString)));
+              SIGNAL(itemSaveFailed(EditorItemManager::SaveAction,QString)),
+              SLOT(handleItemSaveFail(EditorItemManager::SaveAction, QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
   q->connect( mIeRecurrence, SIGNAL(recurrenceChanged(IncidenceEditorNG::RecurrenceType)),
@@ -354,7 +349,7 @@ bool EventOrTodoDialogPrivate::containsPayloadIdentifiers(
   return partIdentifiers.contains( QByteArray( "PLD:RFC822" ) );
 }
 
-void EventOrTodoDialogPrivate::handleItemSaveFail( CalendarSupport::EditorItemManager::SaveAction,
+void EventOrTodoDialogPrivate::handleItemSaveFail( EditorItemManager::SaveAction,
                                                    const QString &errorMessage )
 {
   Q_Q( EventOrTodoDialog );
@@ -377,8 +372,7 @@ void EventOrTodoDialogPrivate::handleItemSaveFail( CalendarSupport::EditorItemMa
   }
 }
 
-void EventOrTodoDialogPrivate::handleItemSaveFinish(
-  CalendarSupport::EditorItemManager::SaveAction )
+void EventOrTodoDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction )
 {
   Q_Q( EventOrTodoDialog );
 

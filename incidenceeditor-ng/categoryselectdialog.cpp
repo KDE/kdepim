@@ -19,18 +19,9 @@
 */
 
 #include "categoryselectdialog.h"
-#include "autochecktreewidget.h"
-
-#include "categoryhierarchyreader.h"
 #include "categoryconfig.h"
-
+#include "categoryhierarchyreader.h"
 #include "ui_categoryselectdialog_base.h"
-
-#include <KLocale>
-
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QHeaderView>
 
 using namespace IncidenceEditorNG;
 

@@ -21,7 +21,8 @@
 #include "combinedincidenceeditor.h"
 
 #include <KMessageBox>
-#include <QtCore/QDebug>
+
+#include <QDebug>
 
 using namespace IncidenceEditorNG;
 

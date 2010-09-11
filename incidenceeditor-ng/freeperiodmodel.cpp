@@ -20,16 +20,12 @@
 
 #include "freeperiodmodel.h"
 
-#include <kcalcore/duration.h>
-#include <kcalcore/period.h>
+#include <KCalCore/Period>
 
-#include <KSystemTimeZones>
 #include <KCalendarSystem>
 #include <KGlobal>
-#include <KLocalizedString>
-#include <KDebug>
+#include <KSystemTimeZones>
 
-#include <QHash>
 #include <QSet>
 
 using namespace IncidenceEditorNG;

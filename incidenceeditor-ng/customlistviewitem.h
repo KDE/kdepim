@@ -63,6 +63,6 @@ class CustomListViewItem : public K3ListViewItem
     QMap<int,QString> mKeyMap;
 };
 
-} // namespace IncidenceEditorNG
+}
 
 #endif

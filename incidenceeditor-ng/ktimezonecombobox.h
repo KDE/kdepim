@@ -33,7 +33,7 @@ namespace KCalCore {
   class ICalTimeZones;
 }
 
-namespace KPIM {
+namespace IncidenceEditorNG {
 
 /**
  * A combobox that shows the system timezones available in KSystemTimeZones::zones()

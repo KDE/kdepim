@@ -19,36 +19,30 @@
 */
 
 #include "visualfreebusywidget.h"
-
-#include "conflictresolver.h"
-#include "freebusyitem.h"
-#include "freebusyitemmodel.h"
 #include "freebusyganttproxymodel.h"
+#include "freebusyitemmodel.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttview.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
 #include <kdgantt2/kdganttabstractrowcontroller.h>
 
-#include <kcalutils/stringify.h>
-
 #include <KComboBox>
-#include <KLocale>
-#include <KMenu>
-#include <KMessageBox>
 #include <KDebug>
+#include <KLocale>
 
-#include <QTreeView>
-#include <QAction>
-#include <QBoxLayout>
-#include <QLabel>
-#include <QStandardItemModel>
-#include <QSplitter>
-#include <QPushButton>
 #include <QHeaderView>
+#include <QLabel>
+#include <QPointer>
+#include <QPushButton>
 #include <QScrollBar>
+#include <QSplitter>
+#include <QTreeView>
+#include <QVBoxLayout>
 
 using namespace IncidenceEditorNG;
+
+namespace IncidenceEditorNG {
 
 class RowController : public KDGantt::AbstractRowController
 {
@@ -151,6 +145,8 @@ class GanttHeaderView : public QHeaderView
       return s;
     }
 };
+
+}
 
 VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacing, QWidget *parent )
   : QWidget( parent ), mGanttGrid( 0 ), mScaleCombo( 0 )

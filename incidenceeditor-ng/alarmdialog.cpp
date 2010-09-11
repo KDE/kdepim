@@ -25,7 +25,6 @@
 #include <KPIMUtils/Email>
 
 using namespace IncidenceEditorNG;
-using namespace KCalCore;
 
 AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent )
   : KDialog( parent ),  mUi( new Ui::AlarmDialog ), mIncidenceType( incidenceType ),
@@ -51,7 +50,7 @@ AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWid
   fillCombo();
 }
 
-void AlarmDialog::load( const Alarm::Ptr &alarm )
+void AlarmDialog::load( const KCalCore::Alarm::Ptr &alarm )
 {
   if ( !alarm ) {
     return;
@@ -102,23 +101,23 @@ void AlarmDialog::load( const Alarm::Ptr &alarm )
   int id = 0;
 
   switch ( alarm->type() ) {
-  case Alarm::Audio:
+  case KCalCore::Alarm::Audio:
     mUi->mTypeCombo->setCurrentIndex( 1 );
     mUi->mSoundFile->setUrl( alarm->audioFile() );
     id = 1;
     break;
-  case Alarm::Procedure:
+  case KCalCore::Alarm::Procedure:
     mUi->mTypeCombo->setCurrentIndex( 2 );
     mUi->mApplication->setUrl( alarm->programFile() );
     mUi->mAppArguments->setText( alarm->programArguments() );
     id = 2;
     break;
-  case Alarm::Email:
+  case KCalCore::Alarm::Email:
   {
     mUi->mTypeCombo->setCurrentIndex( 3 );
-    Person::List addresses = alarm->mailAddresses();
+    KCalCore::Person::List addresses = alarm->mailAddresses();
     QStringList add;
-    for ( Person::List::ConstIterator it = addresses.constBegin();
+    for ( KCalCore::Person::List::ConstIterator it = addresses.constBegin();
           it != addresses.constEnd(); ++it ) {
       add << (*it)->fullName();
     }
@@ -127,8 +126,8 @@ void AlarmDialog::load( const Alarm::Ptr &alarm )
     id = 3;
     break;
   }
-  case Alarm::Display:
-  case Alarm::Invalid:
+  case KCalCore::Alarm::Display:
+  case KCalCore::Alarm::Invalid:
   default:
     mUi->mTypeCombo->setCurrentIndex( 0 );
     mUi->mDisplayText->setPlainText( alarm->text() );
@@ -142,7 +141,7 @@ void AlarmDialog::load( const Alarm::Ptr &alarm )
   }
 }
 
-void AlarmDialog::save( const Alarm::Ptr &alarm ) const
+void AlarmDialog::save( const KCalCore::Alarm::Ptr &alarm ) const
 {
   // Offsets
   int offset = mUi->mAlarmOffset->value() * 60; // minutes
@@ -168,27 +167,27 @@ void AlarmDialog::save( const Alarm::Ptr &alarm ) const
 
   // TODO: Add possibility to specify a given time for the reminder
   if ( mAllowBeginReminders && beforeafterpos == 0 ) { // before start
-    alarm->setStartOffset( Duration( offset ) );
+    alarm->setStartOffset( KCalCore::Duration( offset ) );
   } else if ( mAllowBeginReminders && beforeafterpos == 1 ) { // after start
-    alarm->setStartOffset( Duration( offset ) );
+    alarm->setStartOffset( KCalCore::Duration( offset ) );
   }
 
   // We assume that if mAllowBeginReminders is not set, that mAllowBeginReminders
   // is set.
   if ( !mAllowBeginReminders && beforeafterpos == 0 ) { // before end
-    alarm->setStartOffset( Duration( offset ) );
+    alarm->setStartOffset( KCalCore::Duration( offset ) );
   } else if ( !mAllowBeginReminders && beforeafterpos == 1 ) { // after end
-    alarm->setStartOffset( Duration( offset ) );
+    alarm->setStartOffset( KCalCore::Duration( offset ) );
   } else if ( beforeafterpos == 2 ) { // before end
-    alarm->setStartOffset( Duration( offset ) );
+    alarm->setStartOffset( KCalCore::Duration( offset ) );
   } else if ( beforeafterpos == 3 ) { // after end
-    alarm->setStartOffset( Duration( offset ) );
+    alarm->setStartOffset( KCalCore::Duration( offset ) );
   }
 
   if ( beforeafterpos / 2 == 0 ) { // start offset
-    alarm->setStartOffset( Duration( offset ) );
+    alarm->setStartOffset( KCalCore::Duration( offset ) );
   } else {
-    alarm->setEndOffset( Duration( offset ) );
+    alarm->setEndOffset( KCalCore::Duration( offset ) );
   }
 
   // Repeating
@@ -206,9 +205,9 @@ void AlarmDialog::save( const Alarm::Ptr &alarm ) const
                               mUi->mAppArguments->text() );
   } else if ( mUi->mTypeCombo->currentIndex() == 3 ) { // Email
     QStringList addresses = KPIMUtils::splitAddressList( mUi->mEmailAddress->text() );
-    Person::List add;
+    KCalCore::Person::List add;
     for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ++it ) {
-      add << Person::fromFullName( *it );
+      add << KCalCore::Person::fromFullName( *it );
     }
     // TODO: Add a subject line and possibilities for attachments
     alarm->setEmailAlarm( QString(), mUi->mEmailText->toPlainText(), add );
@@ -221,7 +220,7 @@ void AlarmDialog::fillCombo()
 {
   QStringList items;
 
-  if ( mIncidenceType == Incidence::TypeTodo ) {
+  if ( mIncidenceType == KCalCore::Incidence::TypeTodo ) {
     mUi->mBeforeAfter->clear();
 
     if ( mAllowBeginReminders ) {

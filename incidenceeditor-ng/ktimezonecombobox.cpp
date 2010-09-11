@@ -19,7 +19,6 @@
 
 #include "ktimezonecombobox.h"
 
-#include <KCalCore/Calendar>
 #include <KCalCore/ICalTimeZones>
 
 #include <KDebug>
@@ -27,10 +26,9 @@
 #include <KLocale>
 #include <KSystemTimeZone>
 
-using namespace KPIM;
-using namespace KCalCore;
+using namespace IncidenceEditorNG;
 
-class KPIM::KTimeZoneComboBox::Private
+class KTimeZoneComboBox::Private
 {
   public:
     Private( KTimeZoneComboBox *parent )
@@ -40,10 +38,10 @@ class KPIM::KTimeZoneComboBox::Private
     void fillComboBox();
     KTimeZoneComboBox *const mParent;
     QStringList mZones;
-    const ICalTimeZones *mAdditionalZones;
+    const KCalCore::ICalTimeZones *mAdditionalZones;
 };
 
-void KPIM::KTimeZoneComboBox::Private::fillComboBox()
+void KTimeZoneComboBox::Private::fillComboBox()
 {
   mParent->clear();
   // Read all system time zones
@@ -56,8 +54,9 @@ void KPIM::KTimeZoneComboBox::Private::fillComboBox()
 
   // Prepend the list of additional timezones
   if ( mAdditionalZones ) {
-    const ICalTimeZones::ZoneMap calzones = mAdditionalZones->zones();
-    for ( ICalTimeZones::ZoneMap::ConstIterator it=calzones.begin(); it != calzones.end(); ++it ) {
+    const KCalCore::ICalTimeZones::ZoneMap calzones = mAdditionalZones->zones();
+    for ( KCalCore::ICalTimeZones::ZoneMap::ConstIterator it=calzones.begin();
+          it != calzones.end(); ++it ) {
       kDebug() << "Prepend timezone " << it.key().toUtf8();
       mZones.prepend( it.key().toUtf8() );
     }
@@ -73,21 +72,21 @@ void KPIM::KTimeZoneComboBox::Private::fillComboBox()
 }
 
 KTimeZoneComboBox::KTimeZoneComboBox( QWidget *parent )
-  : KComboBox( parent ), d( new KPIM::KTimeZoneComboBox::Private( this ) )
+  : KComboBox( parent ), d( new KTimeZoneComboBox::Private( this ) )
 {
   KGlobal::locale()->insertCatalog( "timezones4" ); // for translated timezones
   d->fillComboBox();
 }
 
-KTimeZoneComboBox::KTimeZoneComboBox( const ICalTimeZones *zones, QWidget *parent )
-  : KComboBox( parent ), d( new KPIM::KTimeZoneComboBox::Private( this ) )
+KTimeZoneComboBox::KTimeZoneComboBox( const KCalCore::ICalTimeZones *zones, QWidget *parent )
+  : KComboBox( parent ), d( new KTimeZoneComboBox::Private( this ) )
 {
   d->mAdditionalZones = zones;
   KGlobal::locale()->insertCatalog( "timezones4" ); // for translated timezones
   d->fillComboBox();
 }
 
-void KTimeZoneComboBox::setAdditionalTimeZones( const ICalTimeZones *zones )
+void KTimeZoneComboBox::setAdditionalTimeZones( const KCalCore::ICalTimeZones *zones )
 {
   d->mAdditionalZones = zones;
   d->fillComboBox();

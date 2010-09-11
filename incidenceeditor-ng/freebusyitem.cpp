@@ -22,8 +22,6 @@
 
 #include "freebusyitem.h"
 
-#include <KSystemTimeZones>
-
 #include <calendarsupport/freebusymanager.h>
 
 using namespace IncidenceEditorNG;

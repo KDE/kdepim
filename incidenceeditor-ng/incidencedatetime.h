@@ -21,18 +21,18 @@
 #ifndef INCIDENCEEDITOR_INCIDENCEDATETIME_H
 #define INCIDENCEEDITOR_INCIDENCEDATETIME_H
 
-#include "combinedincidenceeditor.h"
+#include "incidenceeditor-ng.h"
 
 #include <KCalCore/Event>
-#include <KCalCore/Todo>
 #include <KCalCore/Journal>
-
-namespace KCalCore {
-  class ICalTimeZones;
-}
+#include <KCalCore/Todo>
 
 namespace Ui {
   class EventOrTodoDesktop;
+}
+
+namespace KCalCore {
+  class ICalTimeZones;
 }
 
 namespace IncidenceEditorNG {

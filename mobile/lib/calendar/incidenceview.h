@@ -42,7 +42,7 @@ class MobileIncidenceGeneral;
 class MobileIncidenceMore;
 class CalendarHelper;
 
-class IncidenceView : public KDeclarativeFullScreenView, public CalendarSupport::ItemEditorUi
+class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorNG::ItemEditorUi
 {
   Q_OBJECT;
   public:
@@ -73,8 +73,9 @@ class IncidenceView : public KDeclarativeFullScreenView, public CalendarSupport:
     void delayedInit();
 
   private slots:
-    void slotSaveFinished(CalendarSupport::EditorItemManager::SaveAction action );
-    void slotSaveFailed( CalendarSupport::EditorItemManager::SaveAction action, const QString &message );
+    void slotSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action );
+    void slotSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction action,
+                         const QString &message );
 
   private:
     void initIncidenceMore();
@@ -82,7 +83,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public CalendarSupport:
   private:
     QDate mActiveDate;
     Akonadi::Item mItem;
-    CalendarSupport::EditorItemManager *mItemManager;
+    IncidenceEditorNG::EditorItemManager *mItemManager;
     Akonadi::CollectionComboBox *mCollectionCombo;
     IncidenceEditorNG::CombinedIncidenceEditor *mEditor;
     IncidenceEditorNG::IncidenceDateTime *mEditorDateTime;

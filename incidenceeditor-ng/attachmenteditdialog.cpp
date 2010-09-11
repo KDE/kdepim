@@ -25,10 +25,11 @@
 */
 
 #include "attachmenteditdialog.h"
-#include "attachmenticonview.h" // UGLY
+#include "attachmenticonview.h"
 #include "ui_attachmenteditdialog.h"
 
-#include <KDE/KIO/NetAccess>
+#include <KMimeType>
+#include <KIO/NetAccess>
 
 using namespace IncidenceEditorNG;
 

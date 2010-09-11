@@ -21,32 +21,30 @@
 #ifndef INCIDENCEEDITOR_ATTENDEELINE_H
 #define INCIDENCEEDITOR_ATTENDEELINE_H
 
-#include "attendeedata.h"
+#include "incidenceeditors-ng_export.h"
 
-#include <libkdepim/multiplyingline.h>
 #include <libkdepim/addresseelineedit.h>
+#include <libkdepim/multiplyingline.h>
 
-#include <KComboBox>
-#include <KGlobalSettings>
+#include <KCalCore/Attendee>
 
 #include <QCheckBox>
-#include <QKeyEvent>
 #include <QToolButton>
 
-class QMenu;
+class QKeyEvent;
 
 namespace IncidenceEditorNG {
 
-class Attendee;
+class AttendeeData;
 
-class AttendeeComboBox : public QToolButton
+class INCIDENCEEDITORS_NG_EXPORT AttendeeComboBox : public QToolButton
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     explicit AttendeeComboBox( QWidget *parent );
 
-    void addItem( const QIcon & icon, const QString & text );
-    void addItems( const QStringList & texts );
+    void addItem( const QIcon &icon, const QString &text );
+    void addItems( const QStringList &texts );
 
     int currentIndex() const;
 
@@ -62,17 +60,19 @@ class AttendeeComboBox : public QToolButton
 
   protected:
     void keyPressEvent( QKeyEvent *ev );
+
   private slots:
     void slotActionTriggered();
+
   private:
     QMenu *mMenu;
     QList<QPair<QString, QIcon> > mList;
     int mCurrentIndex;
 };
 
-class AttendeeCheckBox : public QCheckBox
+class INCIDENCEEDITORS_NG_EXPORT AttendeeCheckBox : public QCheckBox
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     explicit AttendeeCheckBox( QWidget *parent );
 
@@ -84,9 +84,9 @@ class AttendeeCheckBox : public QCheckBox
     void keyPressEvent( QKeyEvent *ev );
 };
 
-class AttendeeLineEdit : public KPIM::AddresseeLineEdit
+class INCIDENCEEDITORS_NG_EXPORT AttendeeLineEdit : public KPIM::AddresseeLineEdit
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     explicit AttendeeLineEdit( QWidget * parent );
 
@@ -101,9 +101,9 @@ class AttendeeLineEdit : public KPIM::AddresseeLineEdit
     void keyPressEvent( QKeyEvent *ev );
 };
 
-class AttendeeLine : public KPIM::MultiplyingLine
+class INCIDENCEEDITORS_NG_EXPORT AttendeeLine : public KPIM::MultiplyingLine
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     enum AttendeeActions {
       EventActions,
@@ -147,6 +147,7 @@ class AttendeeLine : public KPIM::MultiplyingLine
     void slotTextChanged( const QString & );
     void slotHandleChange();
     void slotComboChanged();
+
   private:
     void dataFromFields();
     void fieldsFromData();

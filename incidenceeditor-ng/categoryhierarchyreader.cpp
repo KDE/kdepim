@@ -22,7 +22,6 @@
 
 #include <QComboBox>
 #include <QTreeWidget>
-#include <QStringList>
 
 using namespace IncidenceEditorNG;
 

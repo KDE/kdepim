@@ -21,11 +21,9 @@
 #ifndef INCIDENCEEDITOR_EDITORITEMMANAGER_H
 #define INCIDENCEEDITOR_EDITORITEMMANAGER_H
 
-#include <QObject>
-
 #include "incidenceeditors-ng_export.h"
 
-class KJob;
+#include <QObject>
 
 namespace Akonadi {
   class Collection;
@@ -33,7 +31,9 @@ namespace Akonadi {
   class ItemFetchScope;
 }
 
-namespace CalendarSupport {
+class KJob;
+
+namespace IncidenceEditorNG {
 
 class ItemEditorUi;
 class ItemEditorPrivate;
@@ -122,9 +122,9 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     };
 
   Q_SIGNALS:
-    void itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction action );
+    void itemSaveFinished( EditorItemManager::SaveAction action );
 
-    void itemSaveFailed( CalendarSupport::EditorItemManager::SaveAction action,
+    void itemSaveFailed( EditorItemManager::SaveAction action,
                          const QString &message );
 
     void revertFinished();

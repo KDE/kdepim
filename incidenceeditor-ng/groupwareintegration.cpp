@@ -22,11 +22,10 @@
 #include "incidencedialogfactory.h"
 #include "korganizereditorconfig.h"
 
-#include <kcalprefs.h>
-
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/groupware.h>
+#include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
 #include <Akonadi/ChangeRecorder>
@@ -35,7 +34,6 @@
 
 #include <KSystemTimeZones>
 
-using namespace KCalCore;
 using namespace IncidenceEditorNG;
 
 class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
@@ -62,13 +60,13 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
 
       mCalendar = new CalendarSupport::Calendar( calendarModel, calendarModel,
                                                  KSystemTimeZones::local() );
-      mCalendar->setOwner( Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                   CalendarSupport::KCalPrefs::instance()->email() ) );
+      mCalendar->setOwner( KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                             CalendarSupport::KCalPrefs::instance()->email() ) );
     }
 
     void requestIncidenceEditor( const Akonadi::Item &item )
     {
-      const Incidence::Ptr incidence = CalendarSupport::incidence( item );
+      const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
       if ( !incidence ) {
         return;
       }

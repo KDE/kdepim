@@ -19,13 +19,11 @@
 */
 
 #include "incidencedatetime.h"
-
-#include <KCalCore/ICalTimeZones>
-#include <KCalUtils/IncidenceFormatter>
-
-#include <KDebug>
-#include <KSystemTimeZones>
-
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_eventortodomobile.h"
+#else
+#include "ui_eventortododesktop.h"
+#endif
 //#ifdef KDEPIM_MOBILE_UI
 //#include "ui_iedatetimemobile.h"
 //#else
@@ -33,19 +31,15 @@
 //#include "ui_incidencedatetime.h"
 //#endif
 
-// TODO different UI file in case of mobile
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_eventortodomobile.h"
-#else
-#include "ui_eventortododesktop.h"
-#endif
+#include <KCalCore/ICalTimeZones>
+
+#include <KDebug>
+#include <KSystemTimeZone>
 
 using namespace IncidenceEditorNG;
-using namespace KCalCore;
-using namespace KCalUtils;
 
 IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
-  : IncidenceEditor( 0 ), mTimeZones( new ICalTimeZones ), mUi( ui ),
+  : IncidenceEditor( 0 ), mTimeZones( new KCalCore::ICalTimeZones ), mUi( ui ),
     mTimezoneCombosWhereVisibile( false )
 {
   setTimeZonesVisibility( false );
@@ -75,11 +69,11 @@ void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
   mLoadedIncidence = incidence;
 
   // We can only handle events or todos.
-  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>() ) {
+  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<KCalCore::Todo>() ) {
     load( todo );
-  } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>() ) {
+  } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<KCalCore::Event>() ) {
     load( event );
-  } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<Journal>() ) {
+  } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<KCalCore::Journal>() ) {
     load( journal );
   } else {
     kDebug() << "Not an Incidence.";
@@ -105,11 +99,14 @@ void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
 
 void IncidenceDateTime::save( const KCalCore::Incidence::Ptr &incidence )
 {
-  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>( incidence ) ) {
+  if ( KCalCore::Todo::Ptr todo =
+       IncidenceDateTime::incidence<KCalCore::Todo>( incidence ) ) {
     save( todo );
-  } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>( incidence ) ) {
+  } else if ( KCalCore::Event::Ptr event =
+              IncidenceDateTime::incidence<KCalCore::Event>( incidence ) ) {
     save( event );
-  } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<Journal>( incidence ) ) {
+  } else if ( KCalCore::Journal::Ptr journal =
+              IncidenceDateTime::incidence<KCalCore::Journal>( incidence ) ) {
     save( journal );
   } else {
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::save",
@@ -119,11 +116,11 @@ void IncidenceDateTime::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceDateTime::isDirty() const
 {
-  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>() ) {
+  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<KCalCore::Todo>() ) {
     return isDirty( todo );
-  } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>() ) {
+  } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<KCalCore::Event>() ) {
     return isDirty( event );
-  } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<Journal>() ) {
+  } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<KCalCore::Journal>() ) {
     return isDirty( journal );
   } else {
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::isDirty",
@@ -372,11 +369,13 @@ bool IncidenceDateTime::isDirty( const KCalCore::Event::Ptr &event ) const
     return true;
   }
 
-  if ( mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Opaque ) {
+  if ( mUi->mFreeBusyCheck->isChecked() &&
+       event->transparency() != KCalCore::Event::Opaque ) {
     return true;
   }
 
-  if ( !mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Transparent ) {
+  if ( !mUi->mFreeBusyCheck->isChecked() &&
+       event->transparency() != KCalCore::Event::Transparent ) {
     return true;
   }
 
@@ -500,10 +499,10 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   }
 
   switch( event->transparency() ) {
-  case Event::Transparent:
+  case KCalCore::Event::Transparent:
     mUi->mFreeBusyCheck->setChecked( false );
     break;
-  case Event::Opaque:
+  case KCalCore::Event::Opaque:
     mUi->mFreeBusyCheck->setChecked( true );
     break;
   }
@@ -650,7 +649,9 @@ void IncidenceDateTime::save( const KCalCore::Event::Ptr &event )
 
   // Free == Event::Transparent
   // Busy == Event::Opaque
-  event->setTransparency( mUi->mFreeBusyCheck->isChecked() ? Event::Opaque : Event::Transparent );
+  event->setTransparency( mUi->mFreeBusyCheck->isChecked() ?
+                          KCalCore::Event::Opaque :
+                          KCalCore::Event::Transparent );
 }
 
 void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )

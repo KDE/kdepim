@@ -22,10 +22,7 @@
 
 #include "editorconfig.h"
 
-#include <KConfigSkeleton>
-
 #include <QtCore/QCoreApplication>
-#include <QtCore/QStringList>
 
 using namespace IncidenceEditorNG;
 

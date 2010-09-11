@@ -30,17 +30,18 @@
 #ifndef INCIDENCEEDITOR_ATTACHMENTICONVIEW_H
 #define INCIDENCEEDITOR_ATTACHMENTICONVIEW_H
 
+#include "incidenceeditors-ng_export.h"
+
 #include <KCalCore/Attachment>
 
-#include <KDE/KMimeType>
+#include <KMimeType>
+#include <KUrl>
 
-#include <QtGui/QListWidget>
-
-class KUrl;
+#include <QListWidget>
 
 namespace IncidenceEditorNG {
 
-class AttachmentIconView : public QListWidget
+class INCIDENCEEDITORS_NG_EXPORT AttachmentIconView : public QListWidget
 {
   friend class EditorAttachments;
   public:
@@ -58,7 +59,7 @@ class AttachmentIconView : public QListWidget
     mutable QHash<KCalCore::Attachment::Ptr, KUrl> mTempFiles;
 };
 
-class AttachmentIconItem : public QListWidgetItem
+class INCIDENCEEDITORS_NG_EXPORT AttachmentIconItem : public QListWidgetItem
 {
   public:
     AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QListWidget *parent );

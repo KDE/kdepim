@@ -21,15 +21,16 @@
 #ifndef INCIDENCEEDITOR_ATTENDEEDATA_H
 #define INCIDENCEEDITOR_ATTENDEEDATA_H
 
+#include "incidenceeditors-ng_export.h"
+
 #include <libkdepim/multiplyingline.h>
 
 #include <KCalCore/Attendee>
 
-#include <QSharedPointer>
-
 namespace IncidenceEditorNG {
 
-class AttendeeData : public KPIM::MultiplyingLineData, public KCalCore::Attendee
+class  INCIDENCEEDITORS_NG_EXPORT AttendeeData
+  : public KPIM::MultiplyingLineData, public KCalCore::Attendee
 {
   public:
     typedef QSharedPointer<AttendeeData> Ptr;
@@ -51,6 +52,7 @@ class AttendeeData : public KPIM::MultiplyingLineData, public KCalCore::Attendee
     KCalCore::Attendee::Ptr attendee() const;
 
 };
+
 }
 
 #endif

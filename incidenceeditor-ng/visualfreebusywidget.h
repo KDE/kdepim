@@ -21,31 +21,28 @@
 #ifndef INCIDENCEEDITOR_VISUALFREEBUSYWIDGET_H
 #define INCIDENCEEDITOR_VISUALFREEBUSYWIDGET_H
 
-#include "conflictresolver.h"
+#include "incidenceeditors-ng_export.h"
 
 #include <KDateTime>
 
 #include <QWidget>
-
-class QTreeView;
-class QLabel;
-class KComboBox;
-class FreeBusyItem;
-class RowController;
-class QStandardItemModel;
 
 namespace KDGantt {
   class DateTimeGrid;
   class GraphicsView;
 }
 
+class KComboBox;
+
+class QTreeView;
+
 namespace IncidenceEditorNG {
 
-class ConflictResolver;
 class FreeBusyItemModel;
 class FreeBusyGanttProxyModel;
+class RowController;
 
-class VisualFreeBusyWidget : public QWidget
+class INCIDENCEEDITORS_NG_EXPORT VisualFreeBusyWidget : public QWidget
 {
   Q_OBJECT
   public:

@@ -21,11 +21,9 @@
 #ifndef INCIDENCEEDITOR_INCIDENCEDIALOG_H
 #define INCIDENCEEDITOR_INCIDENCEDIALOG_H
 
-#include <KDialog>
-
 #include "incidenceeditors-ng_export.h"
 
-class QDate;
+#include <KDialog>
 
 namespace Akonadi {
   class Collection;

@@ -20,32 +20,26 @@
 
 #include "invitationdispatcher.h"
 
-#include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/calendar.h>
 #include <calendarsupport/invitationhandler.h>
+#include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <KCalCore/ICalFormat>
+#include <KCalCore/Incidence>
 
-#include <KDebug>
-
-#include <Akonadi/Item>
-
-using namespace CalendarSupport;
-using namespace KCalCore;
-
-namespace CalendarSupport {
+namespace IncidenceEditorNG {
 
 class InvitationDispatcherPrivate
 {
   public: /// Members
     EditorItemManager *mManager;
-    InvitationHandler mInvitationHandler;
+    CalendarSupport::InvitationHandler mInvitationHandler;
     bool mIsCounterProposal;
 
   public: /// Functions
     InvitationDispatcherPrivate( CalendarSupport::Calendar *calendar );
-    bool myAttendeeStatusChanged( const Incidence::Ptr &oldInc,
-                                  const Incidence::Ptr &newInc );
+    bool myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &oldInc,
+                                  const KCalCore::Incidence::Ptr &newInc );
     void processItemSave( EditorItemManager::SaveAction action );
     void sentEventInvitationMessage();
     void sentEventModifiedMessage();
@@ -56,11 +50,13 @@ InvitationDispatcherPrivate::InvitationDispatcherPrivate( CalendarSupport::Calen
   : mManager( 0 ), mInvitationHandler( calendar ), mIsCounterProposal( false )
 { }
 
-bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr &oldInc,
-                                                           const Incidence::Ptr &newInc )
+bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &oldInc,
+                                                           const KCalCore::Incidence::Ptr &newInc )
 {
-  Attendee::Ptr oldMe( oldInc->attendeeByMails( KCalPrefs::instance()->allEmails() ) );
-  Attendee::Ptr newMe( newInc->attendeeByMails( KCalPrefs::instance()->allEmails() ) );
+  KCalCore::Attendee::Ptr oldMe( oldInc->attendeeByMails(
+                                   CalendarSupport::KCalPrefs::instance()->allEmails() ) );
+  KCalCore::Attendee::Ptr newMe( newInc->attendeeByMails(
+                                   CalendarSupport::KCalPrefs::instance()->allEmails() ) );
   if ( oldMe && newMe && ( oldMe->status() != newMe->status() ) ) {
     return true;
   }
@@ -70,13 +66,13 @@ bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr 
 
 void InvitationDispatcherPrivate::sentEventInvitationMessage()
 {
-  const Incidence::Ptr newInc =
+  const KCalCore::Incidence::Ptr newInc =
     CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
-  const InvitationHandler::SendStatus status =
+  const CalendarSupport::InvitationHandler::SendStatus status =
       mInvitationHandler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, newInc );
 
   switch ( status ) {
-  case InvitationHandler::FailAbortUpdate:
+  case CalendarSupport::InvitationHandler::FailAbortUpdate:
     // Okay, at this point we have a new event which is already stored
     // in our calendar, and we need to undo the save.
     mManager->revertLastSave();
@@ -96,12 +92,14 @@ void InvitationDispatcherPrivate::sentEventInvitationMessage()
 
 void InvitationDispatcherPrivate::sentEventModifiedMessage()
 {
-  const Incidence::Ptr oldInc =
+  const KCalCore::Incidence::Ptr oldInc =
     CalendarSupport::incidence( mManager->item( EditorItemManager::BeforeSave ) );
-  const Incidence::Ptr newInc =
+  const KCalCore::Incidence::Ptr newInc =
     CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
 
-  InvitationHandler::SendStatus status = InvitationHandler::Success;
+  CalendarSupport::InvitationHandler::SendStatus status =
+    CalendarSupport::InvitationHandler::Success;
+
   if ( mIsCounterProposal ) {
     status = mInvitationHandler.sendCounterProposal( oldInc, newInc );
   } else {
@@ -112,7 +110,7 @@ void InvitationDispatcherPrivate::sentEventModifiedMessage()
   }
 
   switch ( status ) {
-  case InvitationHandler::FailAbortUpdate:
+  case CalendarSupport::InvitationHandler::FailAbortUpdate:
     // Okay, at this point we have an modified event which is already stored
     // in our calendar, and we need to undo the last changes.
     mManager->revertLastSave();
@@ -153,8 +151,6 @@ void InvitationDispatcherPrivate::resetManager()
   mManager = 0;
 }
 
-}
-
 /// InvitationDispatcher
 
 InvitationDispatcher::InvitationDispatcher( CalendarSupport::Calendar *calendar, QObject *parent )
@@ -187,12 +183,12 @@ void InvitationDispatcher::setItemManager( EditorItemManager *manager )
   d->mManager = manager;
   connect( manager, SIGNAL( destroyed() ), SLOT( resetManager() ) );
 
-  qRegisterMetaType<CalendarSupport::EditorItemManager::SaveAction>(
-    "CalendarSupport::EditorItemManager::SaveAction" );
+  qRegisterMetaType<EditorItemManager::SaveAction>( "EditorItemManager::SaveAction" );
 
-  connect( manager, SIGNAL(itemSaveFinished(CalendarSupport::EditorItemManager::SaveAction)),
-           SLOT(processItemSave(CalendarSupport::EditorItemManager::SaveAction)),
-           Qt::QueuedConnection );
+  connect( manager, SIGNAL(itemSaveFinished(EditorItemManager::SaveAction)),
+           SLOT(processItemSave(EditorItemManager::SaveAction)), Qt::QueuedConnection );
+}
+
 }
 
 #include "invitationdispatcher.moc"

@@ -29,16 +29,13 @@
 
 #include "attachmenticonview.h"
 
-#include <KCalCore/Attachment>
+#include <KIconLoader>
+#include <KLocale>
+#include <KTemporaryFile>
 
-#include <QtCore/QMimeData>
-#include <QtGui/QDrag>
-#include <QtGui/QKeyEvent>
-
-#include <KDE/KIconLoader>
-#include <KDE/KLocale>
-#include <KDE/KTemporaryFile>
-#include <KDE/KUrl>
+#include <QDrag>
+#include <QKeyEvent>
+#include <QMimeData>
 
 using namespace IncidenceEditorNG;
 

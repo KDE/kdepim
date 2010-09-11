@@ -23,30 +23,26 @@
 
 #include "incidenceeditor-ng.h"
 
-#include <KCalCore/Incidence>
-
-class KJob;
-
 namespace Ui {
   class EventOrTodoDesktop;
   class EventOrTodoMore;
-}
-
-namespace KABC {
-  class Addressee;
 }
 
 namespace KPIM {
   class MultiplyingLine;
 }
 
+namespace KABC {
+  class Addressee;
+}
+
+class KJob;
+
 namespace IncidenceEditorNG {
 
 class AttendeeEditor;
 class ConflictResolver;
-class FreeBusyItemModel;
 class IncidenceDateTime;
-class SchedulingDialog;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 {

@@ -21,13 +21,9 @@
 #ifndef INCIDENCEEDITOR_EVENTORTODODIALOG_H
 #define INCIDENCEEDITOR_EVENTORTODODIALOG_H
 
+#include "incidenceeditors-ng_export.h"
 #include "editoritemmanager.h"
 #include "incidencedialog.h"
-#include "incidenceeditors-ng_export.h"
-
-namespace Akonadi {
-  class Item;
-}
 
 namespace IncidenceEditorNG {
 
@@ -74,10 +70,8 @@ class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public IncidenceDialog
     Q_DISABLE_COPY( EventOrTodoDialog )
 
     Q_PRIVATE_SLOT( d_ptr, void handleAlarmCountChange(int) )
-    Q_PRIVATE_SLOT( d_ptr,
-                    void handleItemSaveFinish(CalendarSupport::EditorItemManager::SaveAction) )
-    Q_PRIVATE_SLOT( d_ptr,
-                    void handleItemSaveFail(CalendarSupport::EditorItemManager::SaveAction, QString) )
+    Q_PRIVATE_SLOT( d_ptr, void handleItemSaveFinish(EditorItemManager::SaveAction) )
+    Q_PRIVATE_SLOT( d_ptr, void handleItemSaveFail(EditorItemManager::SaveAction,QString) )
     Q_PRIVATE_SLOT( d_ptr, void handleRecurrenceChange(IncidenceEditorNG::RecurrenceType) )
     Q_PRIVATE_SLOT( d_ptr, void loadTemplate(QString) )
     Q_PRIVATE_SLOT( d_ptr, void saveTemplate(QString) )

@@ -73,10 +73,10 @@ void IncidenceView::delayedInit()
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
   qmlRegisterType<CalendarHelper>( "CalendarHelper", 4, 5, "CalendarHelper" );
 
-  connect( mItemManager, SIGNAL(itemSaveFinished(CalendarSupport::EditorItemManager::SaveAction)),
-           SLOT(slotSaveFinished(CalendarSupport::EditorItemManager::SaveAction) ) );
-  connect( mItemManager, SIGNAL(itemSaveFailed(CalendarSupport::EditorItemManager::SaveAction, QString)),
-           SLOT(slotSaveFailed(CalendarSupport::EditorItemManager::SaveAction, QString) ) );
+  connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+           SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction) ) );
+  connect( mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString)),
+           SLOT(slotSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString) ) );
 }
 
 IncidenceView::~IncidenceView()
@@ -227,13 +227,17 @@ void IncidenceView::save()
   mItemManager->save();
 }
 
-void IncidenceView::slotSaveFinished( CalendarSupport::EditorItemManager::SaveAction action )
+void IncidenceView::slotSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action )
 {
+  Q_UNUSED( action );
   deleteLater();
 }
 
-void IncidenceView::slotSaveFailed( CalendarSupport::EditorItemManager::SaveAction action, const QString &message )
+void IncidenceView::slotSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction action,
+                                    const QString &message )
 {
+  Q_UNUSED( action );
+
   QPointer<QMessageBox> dlg = new QMessageBox; //krazy:exclude=qclasses
   dlg->setIcon( QMessageBox::Warning );
   dlg->setWindowTitle( i18n( "Saving the event failed." ) );

@@ -19,19 +19,14 @@
 */
 
 #include "incidencedescription.h"
-
-#include <QtCore/QDebug>
-
-#include <KDE/KActionCollection>
-#include <KDE/KToolBar>
-
-#include <KDebug>
-
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
+
+#include <KActionCollection>
+#include <KToolBar>
 
 using namespace IncidenceEditorNG;
 
@@ -149,7 +144,7 @@ void IncidenceDescription::toggleRichTextDescription()
 void IncidenceDescription::setupToolBar()
 {
 #ifndef QT_NO_TOOLBAR
-  KActionCollection *collection = new KActionCollection( this ); //krazy:exclude=tipsandthis
+  KActionCollection *collection = new KActionCollection( this );
   mUi->mDescriptionEdit->createActions( collection );
 
   KToolBar *mEditToolBar = new KToolBar( mUi->mEditToolBarPlaceHolder );

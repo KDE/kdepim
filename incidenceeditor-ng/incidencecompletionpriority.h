@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_INCIDENCECOMPLETIONPRIORITY_H
 #define INCIDENCEEDITOR_INCIDENCECOMPLETIONPRIORITY_H
 
-#include "combinedincidenceeditor.h"
+#include "incidenceeditor-ng.h"
 
 namespace Ui {
   class EventOrTodoDesktop;

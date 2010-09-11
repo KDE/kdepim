@@ -24,13 +24,11 @@
 #define INCIDENCEEDITOR_FREEBUSYITEM_H
 
 #include "incidenceeditors-ng_export.h"
-#include "attendeedata.h"
 
 #include <KCalCore/FreeBusy>
 
-#include <QSharedPointer>
-
 namespace IncidenceEditorNG {
+
 /**
  * The FreeBusyItem is the whole line for a given attendee..
  */

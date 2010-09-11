@@ -18,8 +18,6 @@
 */
 #include "autochecktreewidget.h"
 
-#include <QAbstractItemModel>
-
 using namespace IncidenceEditorNG;
 
 //@cond PRIVATE

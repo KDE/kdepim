@@ -22,8 +22,7 @@
 
 #include "kdeclarativefullscreenview.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
   class Collection;
   class Item;
 }
@@ -61,8 +60,9 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void saveFinished() );
-    Q_PRIVATE_SLOT( d, void saveFailed( CalendarSupport::EditorItemManager::SaveAction, const QString& ) );
-    Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d, void saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction,
+                                        const QString & ) );
+    Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection & ) )
 };
 
 #endif

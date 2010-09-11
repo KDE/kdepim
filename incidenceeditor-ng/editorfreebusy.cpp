@@ -24,10 +24,6 @@
 */
 
 #include "editorfreebusy.h"
-#include "editorconfig.h"
-#include "freebusyurldialog.h"
-
-#include "attendeedata.h"
 
 #include <calendarsupport/freebusymanager.h>
 
@@ -35,31 +31,26 @@
 #include <kdgantt2/kdganttdatetimegrid.h>
 #include <kdgantt2/kdganttabstractrowcontroller.h>
 
-#include <Akonadi/Contact/ContactGroupExpandJob>
-#include <Akonadi/Contact/ContactGroupSearchJob>
-
-#include <KPIMUtils/Email>
-
 #include <KCalUtils/Stringify>
 
 #include <KComboBox>
+#include <KDebug>
+#include <KGlobal>
 #include <KLocale>
 #include <KMessageBox>
 #include <KSystemTimeZone>
 
-#include <QBoxLayout>
-#include <QDateTime>
-#include <QFrame>
+#include <QHeaderView>
 #include <QLabel>
-#include <KMenu>
+#include <QPointer>
 #include <QPushButton>
-#include <QToolTip>
-#include <QVBoxLayout>
-#include <QTreeWidget>
+#include <QScrollBar>
 #include <QSplitter>
 #include <QStandardItemModel>
-#include <QHeaderView>
-#include <QScrollBar>
+#include <QTimerEvent>
+#include <QToolTip>
+#include <QTreeWidget>
+#include <QVBoxLayout>
 
 using namespace IncidenceEditorNG;
 
@@ -166,6 +157,8 @@ class GanttHeaderView : public QHeaderView
 //
 // We can't use the CustomListViewItem base class, since we need a
 // different inheritance hierarchy for supporting the Gantt view.
+namespace IncidenceEditorNG {
+
 class FreeBusyItem
 {
   public:
@@ -350,6 +343,8 @@ void FreeBusyItem::setFreeBusyPeriods( const KCalCore::FreeBusy::Ptr &fb )
 
   // We are no longer downloading
   mIsDownloading = false;
+}
+
 }
 
 ////

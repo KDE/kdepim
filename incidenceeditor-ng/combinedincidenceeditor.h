@@ -21,8 +21,8 @@
 #ifndef COMBINEDINCIDENCEEDITOR_H
 #define COMBINEDINCIDENCEEDITOR_H
 
-#include "incidenceeditor-ng.h"
 #include "incidenceeditors-ng_export.h"
+#include "incidenceeditor-ng.h"
 
 namespace IncidenceEditorNG {
 

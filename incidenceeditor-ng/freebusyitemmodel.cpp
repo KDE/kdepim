@@ -22,14 +22,15 @@
 
 #include <calendarsupport/freebusymanager.h>
 
-#include <KCalCore/Attendee>
-#include <KCalCore/Period>
-
-#include <KLocale>
-#include <KGlobal>
 #include <KDebug>
+#include <KGlobal>
+#include <KLocale>
+
+#include <QTimerEvent>
 
 using namespace IncidenceEditorNG;
+
+namespace IncidenceEditorNG {
 
 class ItemPrivateData
 {
@@ -80,6 +81,8 @@ class ItemPrivateData
     QList<ItemPrivateData*> childItems;
     ItemPrivateData *parentItem;
 };
+
+}
 
 FreeBusyItemModel::FreeBusyItemModel( QObject *parent )
   : QAbstractItemModel( parent ), mForceDownload( false )

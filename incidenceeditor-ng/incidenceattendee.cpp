@@ -24,37 +24,27 @@
 */
 
 #include "incidenceattendee.h"
+#include "attendeeeditor.h"
+#include "conflictresolver.h"
 #include "editorconfig.h"
-
-#include <QtCore/QWeakPointer>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTreeView>
-
-#include <akonadi/contact/emailaddressselectiondialog.h>
-
-#include <Akonadi/Contact/ContactGroupExpandJob>
-#include <Akonadi/Contact/ContactGroupSearchJob>
-#include <KABC/Address>
-#include <KCalCore/Event>
-#include <KComboBox>
-#include <KDebug>
-#include <KMessageBox>
-#include <KPIMUtils/Email>
-#include <KDateTime>
-
+#include "incidencedatetime.h"
+#include "schedulingdialog.h"
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
 
-#include "attendeeeditor.h"
-#include "attendeeline.h"
-#include "conflictresolver.h"
-#include "freebusyitemmodel.h"
-#include "incidencedatetime.h"
-#include "schedulingdialog.h"
+#include <Akonadi/Contact/ContactGroupExpandJob>
+#include <Akonadi/Contact/ContactGroupSearchJob>
+#include <Akonadi/Contact/EmailAddressSelectionDialog>
+
+#include <KPIMUtils/Email>
+
+#include <KDebug>
+#include <KMessageBox>
+
+#include <QTreeView>
 
 using namespace IncidenceEditorNG;
 

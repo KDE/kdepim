@@ -19,14 +19,13 @@
 */
 
 #include "incidencecompletionpriority.h"
-
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
 
-#include <kcalcore/todo.h>
+#include <KCalCore/Todo>
 
 using namespace IncidenceEditorNG;
 

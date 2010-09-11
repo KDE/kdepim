@@ -23,7 +23,7 @@
 
 #include "incidenceeditor-ng.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 namespace Ui {
   class EventOrTodoDesktop;
@@ -36,13 +36,13 @@ class IncidenceDateTime;
 
 /// Keep this in sync with the values in mUi->mRecurrenceTypeCombo
 enum RecurrenceType {
-    RecurrenceTypeNone = 0,
-    RecurrenceTypeDaily,
-    RecurrenceTypeWeekly,
-    RecurrenceTypeMonthly,
-    RecurrenceTypeYearly,
-    RecurrenceTypeUnknown // keep this one at the end always
- };
+  RecurrenceTypeNone = 0,
+  RecurrenceTypeDaily,
+  RecurrenceTypeWeekly,
+  RecurrenceTypeMonthly,
+  RecurrenceTypeYearly,
+  RecurrenceTypeUnknown // keep this one at the end always
+};
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
 {

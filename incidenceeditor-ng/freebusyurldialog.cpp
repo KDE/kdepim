@@ -22,18 +22,17 @@
 
 #include "freebusyurldialog.h"
 
-#include <kcalcore/freebusyurlstore.h>
+#include <KCalCore/FreeBusyUrlStore>
 
-#include <KDebug>
 #include <KLineEdit>
 #include <KLocale>
 
 #include <QBoxLayout>
+#include <KDebug>
 #include <QFrame>
 #include <QLabel>
 
 using namespace IncidenceEditorNG;
-using namespace KCalCore;
 
 FreeBusyUrlDialog::FreeBusyUrlDialog( AttendeeData::Ptr attendee, QWidget *parent )
   : KDialog( parent )

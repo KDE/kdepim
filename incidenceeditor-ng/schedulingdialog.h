@@ -21,19 +21,14 @@
 #ifndef INCIDENCEEDITOR_SCHEDULINGDIALOG_H
 #define INCIDENCEEDITOR_SCHEDULINGDIALOG_H
 
+#include "incidenceeditors-ng_export.h"
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_mobileschedulingdialog.h"
 #else
 #include "ui_schedulingdialog.h"
 #endif
 
-#include <KCalCore/Period>
-
 #include <KDialog>
-
-#include <QDate>
-
-class Ui_Dialog;
 
 namespace IncidenceEditorNG {
 
@@ -41,7 +36,7 @@ class FreePeriodModel;
 class ConflictResolver;
 class VisualFreeBusyWidget;
 
-class SchedulingDialog : public KDialog, private Ui_Dialog
+class INCIDENCEEDITORS_NG_EXPORT SchedulingDialog : public KDialog, private Ui_Dialog
 {
   Q_OBJECT
   public:

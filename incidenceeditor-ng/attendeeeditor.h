@@ -22,12 +22,13 @@
 #define INCIDENCEEDITOR_ATTENDEEEDITOR_H
 
 #include "attendeeline.h"
+#include "attendeedata.h"
 
 #include <libkdepim/multiplyinglineeditor.h>
 
 namespace IncidenceEditorNG {
 
-class AttendeeLineFactory : public KPIM::MultiplyingLineFactory
+class INCIDENCEEDITORS_NG_EXPORT AttendeeLineFactory : public KPIM::MultiplyingLineFactory
 {
   Q_OBJECT
   public:
@@ -41,7 +42,7 @@ class AttendeeLineFactory : public KPIM::MultiplyingLineFactory
     }
 };
 
-class AttendeeEditor : public KPIM::MultiplyingLineEditor
+class INCIDENCEEDITORS_NG_EXPORT AttendeeEditor : public KPIM::MultiplyingLineEditor
 {
   Q_OBJECT
   public:

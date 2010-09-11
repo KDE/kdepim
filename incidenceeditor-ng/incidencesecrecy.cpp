@@ -19,16 +19,13 @@
 */
 
 #include "incidencesecrecy.h"
-
-#include <calendarsupport/utils.h>
-
-#include <KCalUtils/Stringify>
-
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
+
+#include <KCalUtils/Stringify>
 
 using namespace IncidenceEditorNG;
 

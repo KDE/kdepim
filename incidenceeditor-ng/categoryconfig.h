@@ -22,13 +22,9 @@
 
 #include "incidenceeditors-ng_export.h"
 
-#include <KConfigSkeleton>
+#include <QObject>
 
-#include <QStringList>
-
-class QString;
-
-class KConfig;
+class KCoreConfigSkeleton;
 
 namespace IncidenceEditorNG {
 

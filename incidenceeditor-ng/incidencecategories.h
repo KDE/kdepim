@@ -33,7 +33,6 @@ namespace IncidenceEditorNG {
 class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
 {
   Q_OBJECT
-
   public:
 #ifdef KDEPIM_MOBILE_UI
     IncidenceCategories( Ui::EventOrTodoMore *ui );

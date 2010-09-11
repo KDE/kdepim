@@ -421,7 +421,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
+      <widget class="IncidenceEditorNG::KTimeZoneComboBox" name="mTimeZoneComboStart">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -536,7 +536,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
+      <widget class="IncidenceEditorNG::KTimeZoneComboBox" name="mTimeZoneComboEnd">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1533,7 +1533,7 @@
    <header>libkdepim/kweekdaycheckcombo.h</header>
   </customwidget>
   <customwidget>
-   <class>KPIM::KTimeZoneComboBox</class>
+   <class>IncidenceEditorNG::KTimeZoneComboBox</class>
    <extends>KComboBox</extends>
    <header>ktimezonecombobox.h</header>
   </customwidget>

@@ -36,7 +36,6 @@
 #include <KABC/Addressee>
 
 using namespace Akonadi;
-using namespace CalendarSupport;
 
 typedef DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral> DeclarativeEditorGeneral;
 typedef DeclarativeWidgetBase<EditorBusiness, ContactEditorView, &ContactEditorView::setEditorBusiness> DeclarativeEditorBusiness;
@@ -46,13 +45,13 @@ typedef DeclarativeWidgetBase<EditorCrypto, ContactEditorView, &ContactEditorVie
 #endif
 typedef DeclarativeWidgetBase<EditorMore, ContactEditorView, &ContactEditorView::setEditorMore> DeclarativeEditorMore;
 
-class ContactEditorView::Private : public CalendarSupport::ItemEditorUi
+class ContactEditorView::Private : public IncidenceEditorNG::ItemEditorUi
 {
   ContactEditorView *const q;
 
   public:
     explicit Private( ContactEditorView *parent )
-      : q( parent ), mItemManager( new EditorItemManager( this ) ),
+      : q( parent ), mItemManager( new IncidenceEditorNG::EditorItemManager( this ) ),
         mEditorBusiness( 0 ), mEditorGeneral( 0 ), mEditorMore( 0 )
     {
     }
@@ -66,7 +65,7 @@ class ContactEditorView::Private : public CalendarSupport::ItemEditorUi
 
   public: // slots
     void saveFinished();
-    void saveFailed( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage );
+    void saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, const QString &errorMessage );
     void collectionChanged( const Akonadi::Collection &collection );
 
   public: // ItemEditorGeneralUi interface
@@ -100,7 +99,7 @@ class ContactEditorView::Private : public CalendarSupport::ItemEditorUi
     ContactMetaData mContactMetaData;
     Collection mCollection;
 
-    EditorItemManager *mItemManager;
+    IncidenceEditorNG::EditorItemManager *mItemManager;
 
     EditorBusiness *mEditorBusiness;
     EditorGeneral *mEditorGeneral;
@@ -129,7 +128,7 @@ void ContactEditorView::Private::saveFinished()
   q->deleteLater();
 }
 
-void ContactEditorView::Private::saveFailed( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage )
+void ContactEditorView::Private::saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, const QString &errorMessage )
 {
   kError() << errorMessage;
 }
@@ -221,10 +220,10 @@ void ContactEditorView::delayedInit()
 #endif
   qmlRegisterType<DeclarativeEditorMore>( "org.kde.contacteditors", 4, 5, "ContactEditorMore" );
 
-  connect( d->mItemManager, SIGNAL( itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction ) ),
+  connect( d->mItemManager, SIGNAL( itemSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction ) ),
            SLOT( saveFinished() ) );
-  connect( d->mItemManager, SIGNAL( itemSaveFailed( CalendarSupport::EditorItemManager::SaveAction, QString ) ),
-           SLOT( saveFailed( CalendarSupport::EditorItemManager::SaveAction, QString ) ) );
+  connect( d->mItemManager, SIGNAL( itemSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, QString ) ),
+           SLOT( saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, QString ) ) );
 }
 
 ContactEditorView::~ContactEditorView()

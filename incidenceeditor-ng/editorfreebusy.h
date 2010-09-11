@@ -25,29 +25,31 @@
 #ifndef INCIDENCEEDITOR_EDITORFREEBUSY_H
 #define INCIDENCEEDITOR_EDITORFREEBUSY_H
 
-#include "attendeeeditor.h"
+#include "incidenceeditors-ng_export.h"
+#include "attendeedata.h"
 
 #include <KCalCore/FreeBusy>
 
-#include <QDateTime>
-#include <QTimer>
-#include <QAbstractItemModel>
 #include <QDialog>
-
-class QTreeWidget;
-class QLabel;
-class FreeBusyItem;
-class RowController;
+#include <QTimer>
 
 namespace KDGantt {
   class DateTimeGrid;
   class GraphicsView;
 }
 
-class KDateTime;
+class KComboBox;
+
+class QLabel;
+class QModelIndex;
+class QTreeWidget;
 
 namespace IncidenceEditorNG {
-class EditorFreeBusy : public QDialog
+
+class FreeBusyItem;
+class RowController;
+
+class INCIDENCEEDITORS_NG_EXPORT EditorFreeBusy : public QDialog
 {
   Q_OBJECT
   public:

@@ -20,106 +20,106 @@
 
 #include <calendarsupport/kcalprefs.h>
 
-using namespace KCalCore;
-using namespace CalendarSupport;
 using namespace IncidenceEditorNG;
 
 KOrganizerEditorConfig::KOrganizerEditorConfig()
   : EditorConfig()
-{ }
+{
+}
 
 KOrganizerEditorConfig::~KOrganizerEditorConfig()
-{ }
+{
+}
 
 KConfigSkeleton *KOrganizerEditorConfig::config() const
 {
-  return KCalPrefs::instance();
+  return CalendarSupport::KCalPrefs::instance();
 }
 
 QString KOrganizerEditorConfig::fullName() const
 {
-  return KCalPrefs::instance()->fullName();
+  return CalendarSupport::KCalPrefs::instance()->fullName();
 }
 
 QString KOrganizerEditorConfig::email() const
 {
-  return KCalPrefs::instance()->email();
+  return CalendarSupport::KCalPrefs::instance()->email();
 }
 
 bool KOrganizerEditorConfig::thatIsMe( const QString &email ) const
 {
-  return KCalPrefs::instance()->thatIsMe(email);
+  return CalendarSupport::KCalPrefs::instance()->thatIsMe(email);
 }
 
 QStringList KOrganizerEditorConfig::allEmails() const
 {
-  return KCalPrefs::instance()->allEmails();
+  return CalendarSupport::KCalPrefs::instance()->allEmails();
 }
 
 QStringList KOrganizerEditorConfig::fullEmails() const
 {
-  return KCalPrefs::instance()->fullEmails();
+  return CalendarSupport::KCalPrefs::instance()->fullEmails();
 }
 
 bool KOrganizerEditorConfig::showTimeZoneSelectorInIncidenceEditor() const
 {
-  return KCalPrefs::instance()->showTimeZoneSelectorInIncidenceEditor();
+  return CalendarSupport::KCalPrefs::instance()->showTimeZoneSelectorInIncidenceEditor();
 }
 
 QDateTime KOrganizerEditorConfig::defaultDuration() const
 {
-  return KCalPrefs::instance()->defaultDuration();
+  return CalendarSupport::KCalPrefs::instance()->defaultDuration();
 }
 
 QDateTime KOrganizerEditorConfig::startTime() const
 {
-  return KCalPrefs::instance()->startTime();
+  return CalendarSupport::KCalPrefs::instance()->startTime();
 }
 
 bool KOrganizerEditorConfig::defaultAudioFileReminders() const
 {
-  return KCalPrefs::instance()->defaultAudioFileReminders();
+  return CalendarSupport::KCalPrefs::instance()->defaultAudioFileReminders();
 }
 
 KUrl KOrganizerEditorConfig::audioFilePath() const
 {
-  return KCalPrefs::instance()->audioFilePath();
+  return CalendarSupport::KCalPrefs::instance()->audioFilePath();
 }
 
 int KOrganizerEditorConfig::reminderTime() const
 {
-  return KCalPrefs::instance()->reminderTime();
+  return CalendarSupport::KCalPrefs::instance()->reminderTime();
 }
 
 int KOrganizerEditorConfig::reminderTimeUnits() const
 {
-  return KCalPrefs::instance()->reminderTimeUnits();
+  return CalendarSupport::KCalPrefs::instance()->reminderTimeUnits();
 }
 
 bool KOrganizerEditorConfig::defaultTodoReminders() const
 {
-  return KCalPrefs::instance()->defaultTodoReminders();
+  return CalendarSupport::KCalPrefs::instance()->defaultTodoReminders();
 }
 
 bool KOrganizerEditorConfig::defaultEventReminders() const
 {
-  return KCalPrefs::instance()->defaultEventReminders();
+  return CalendarSupport::KCalPrefs::instance()->defaultEventReminders();
 }
 
 QStringList KOrganizerEditorConfig::activeDesignerFields() const
 {
-  return KCalPrefs::instance()->activeDesignerFields();
+  return CalendarSupport::KCalPrefs::instance()->activeDesignerFields();
 }
 
-QStringList &KOrganizerEditorConfig::templates( IncidenceBase::IncidenceType type )
+QStringList &KOrganizerEditorConfig::templates( KCalCore::IncidenceBase::IncidenceType type )
 {
-  if ( type == IncidenceBase::TypeEvent ) {
+  if ( type == KCalCore::IncidenceBase::TypeEvent ) {
     //TODO remove mEventTemplates+etc from Prefs::instance()
-    return KCalPrefs::instance()->mEventTemplates;
-  } if ( type == IncidenceBase::TypeTodo ) {
-    return KCalPrefs::instance()->mTodoTemplates;
-  } if ( type == IncidenceBase::TypeJournal ) {
-    return KCalPrefs::instance()->mJournalTemplates;
+    return CalendarSupport::KCalPrefs::instance()->mEventTemplates;
+  } if ( type == KCalCore::IncidenceBase::TypeTodo ) {
+    return CalendarSupport::KCalPrefs::instance()->mTodoTemplates;
+  } if ( type == KCalCore::IncidenceBase::TypeJournal ) {
+    return CalendarSupport::KCalPrefs::instance()->mJournalTemplates;
   }
   return EditorConfig::templates( type );
 }

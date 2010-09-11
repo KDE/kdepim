@@ -23,15 +23,16 @@
 
 #include "incidenceeditor-ng.h"
 
-class KAction;
-class KMenu;
-class QListWidgetItem;
-class QMimeData;
-
 namespace Ui {
   class EventOrTodoDesktop;
   class EventOrTodoMore;
 }
+
+class KAction;
+class KMenu;
+
+class QListWidgetItem;
+class QMimeData;
 
 namespace IncidenceEditorNG {
 

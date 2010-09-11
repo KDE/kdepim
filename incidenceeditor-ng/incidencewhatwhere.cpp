@@ -19,14 +19,13 @@
 */
 
 #include "incidencewhatwhere.h"
-
-#include <KDebug>
-
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
+
+#include <KDebug>
 
 using namespace IncidenceEditorNG;
 

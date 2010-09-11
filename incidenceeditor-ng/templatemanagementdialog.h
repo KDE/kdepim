@@ -39,17 +39,13 @@
 #define INCIDENCEEDITOR_TEMPLATEMANAGEMENTDIALOG_H
 
 #include "incidenceeditors-ng_export.h"
-
 #include "ui_template_management_dialog_base.h"
 
 #include <KCalCore/IncidenceBase>
 
 #include <KDialog>
 
-#include <QString>
-
-namespace IncidenceEditorNG
-{
+namespace IncidenceEditorNG {
 
 class INCIDENCEEDITORS_NG_EXPORT TemplateManagementDialog: public KDialog
 {

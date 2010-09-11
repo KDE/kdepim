@@ -19,13 +19,11 @@
 #ifndef INCIDENCEEDITOR_CATEGORYHIERARCHYREADER_H
 #define INCIDENCEEDITOR_CATEGORYHIERARCHYREADER_H
 
-#include <QVariant>
-
 #include "incidenceeditors-ng_export.h"
 
+#include <QVariant>
+
 class QComboBox;
-class QStringList;
-class QString;
 class QTreeWidget;
 class QTreeWidgetItem;
 

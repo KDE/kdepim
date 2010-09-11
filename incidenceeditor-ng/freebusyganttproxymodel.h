@@ -23,9 +23,13 @@
 
 #include "incidenceeditors-ng_export.h"
 
-#include <KCalCore/FreeBusy>
+#include <KDateTime>
 
 #include <QSortFilterProxyModel>
+
+namespace KCalCore {
+  class FreeBusyPeriod;
+}
 
 namespace IncidenceEditorNG {
 

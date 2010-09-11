@@ -19,20 +19,16 @@
 */
 
 #include "incidencealarm.h"
-
-#include <KCalCore/Todo>
-
-#include <KDebug>
-
 #include "alarmdialog.h"
 #include "alarmpresets.h"
 #include "incidencedatetime.h"
-
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
+
+#include <KDebug>
 
 using namespace IncidenceEditorNG;
 
@@ -52,12 +48,12 @@ IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesk
   updateButtons();
 
   connect( mDateTime, SIGNAL(startDateTimeToggled(bool)),
-           SLOT( handleDateTimeToggle() ) );
+           SLOT(handleDateTimeToggle()) );
   connect( mDateTime, SIGNAL(endDateTimeToggled(bool)),
-           SLOT( handleDateTimeToggle() ) );
+           SLOT(handleDateTimeToggle()) );
   connect( mUi->mAlarmAddPresetButton, SIGNAL(clicked()),
            SLOT(newAlarmFromPreset()) );
-  connect( mUi->mAlarmList, SIGNAL(itemSelectionChanged ()),
+  connect( mUi->mAlarmList, SIGNAL(itemSelectionChanged()),
            SLOT(updateButtons()) );
   connect( mUi->mAlarmNewButton, SIGNAL(clicked()),
            SLOT(newAlarm()));

@@ -23,12 +23,11 @@
 
 #include <kdgantt2/kdganttgraphicsview.h>
 
-#include <KCalCore/Attendee>
+#include <KCalCore/FreeBusyPeriod>
 
-#include <KDebug>
-#include <KSystemTimeZones>
-#include <KLocale>
 #include <KGlobal>
+#include <KLocale>
+#include <KSystemTimeZones>
 
 using namespace IncidenceEditorNG;
 

@@ -19,33 +19,32 @@
 */
 
 #include "incidenceattachment.h"
-
-#include <QtCore/QDebug>
-#include <QtCore/QMimeData>
-#include <QtCore/QPointer>
-#include <QtGui/QClipboard>
-
-#include <KDE/KABC/VCardDrag>
-#include <KDE/KAction>
-#include <KDE/KActionCollection>
-#include <KDE/KFileDialog>
-#include <KDE/KIO/Job>
-#include <KDE/KIO/NetAccess>
-#include <KDE/KMime/Message>
-#include <KDE/KMenu>
-#include <KDE/KMessageBox>
-#include <KDE/KProtocolManager>
-#include <KDE/KRun>
-
-#include <libkdepimdbusinterfaces/urihandler.h>
-
-#include "attachmenticonview.h"
 #include "attachmenteditdialog.h"
+#include "attachmenticonview.h"
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
+
+#include <libkdepimdbusinterfaces/urihandler.h>
+
+#include <KABC/VCardDrag>
+
+#include <KMime/Message>
+
+#include <KAction>
+#include <KActionCollection>
+#include <KFileDialog>
+#include <KMenu>
+#include <KMessageBox>
+#include <KProtocolManager>
+#include <KRun>
+#include <KIO/Job>
+#include <KIO/NetAccess>
+
+#include <QClipboard>
+#include <QMimeData>
 
 using namespace IncidenceEditorNG;
 

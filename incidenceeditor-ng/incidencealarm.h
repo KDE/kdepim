@@ -24,8 +24,8 @@
 #include "incidenceeditor-ng.h"
 
 namespace Ui {
-class EventOrTodoDesktop;
-class EventOrTodoMore;
+  class EventOrTodoDesktop;
+  class EventOrTodoMore;
 }
 
 namespace IncidenceEditorNG {

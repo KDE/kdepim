@@ -27,10 +27,10 @@
 
 class CategorySelectWidgetBase;
 
-namespace IncidenceEditorNG
-{
-  class AutoCheckTreeWidget;
-  class CategoryConfig;
+namespace IncidenceEditorNG {
+
+class AutoCheckTreeWidget;
+class CategoryConfig;
 
 class INCIDENCEEDITORS_NG_EXPORT CategorySelectWidget : public QWidget
 {

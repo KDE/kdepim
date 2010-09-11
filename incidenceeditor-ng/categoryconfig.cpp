@@ -20,12 +20,8 @@
 
 #include "categoryconfig.h"
 
-#include <KConfigGroup>
 #include <KConfigSkeleton>
 #include <KLocalizedString>
-
-#include <QString>
-#include <QStringList>
 
 using namespace IncidenceEditorNG;
 

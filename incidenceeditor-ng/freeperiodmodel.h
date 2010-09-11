@@ -46,7 +46,7 @@ class INCIDENCEEDITORS_NG_EXPORT FreePeriodModel : public QAbstractTableModel
                                  int role = Qt::DisplayRole ) const;
 
   public slots:
-    void slotNewFreePeriods( const KCalCore::Period::List & freePeriods );
+    void slotNewFreePeriods( const KCalCore::Period::List &freePeriods );
 
   private:
     /** Splits period blocks in the provided list, so that each period occurs on one day */

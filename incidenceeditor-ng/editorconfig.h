@@ -29,13 +29,11 @@
 
 #include <KUrl>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QStringList>
+#include <QStringList>
 
 class KConfigSkeleton;
 
-namespace IncidenceEditorNG
-{
+namespace IncidenceEditorNG {
 
 /**
  * Configuration details. An application can inherit from this class
@@ -91,6 +89,6 @@ class INCIDENCEEDITORS_NG_EXPORT EditorConfig
     Private *const d;
 };
 
-} // namespace IncidenceEditorNG
+}
 
 #endif

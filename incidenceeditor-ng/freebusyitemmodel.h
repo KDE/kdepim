@@ -21,19 +21,15 @@
 #ifndef INCIDENCEEDITOR_FREEBUSYITEMMODEL_H
 #define INCIDENCEEDITOR_FREEBUSYITEMMODEL_H
 
+#include "incidenceeditors-ng_export.h"
 #include "freebusyitem.h"
 
-#include "incidenceeditors-ng_export.h"
-
-#include <KCalCore/Attendee>
-
 #include <QAbstractItemModel>
-#include <QTimerEvent>
 #include <QTimer>
 
-class ItemPrivateData;
-
 namespace IncidenceEditorNG {
+
+class ItemPrivateData;
 
 /**
  * The FreeBusyItemModel is a 2-level tree structure.

@@ -21,7 +21,8 @@
 #ifndef INCIDENCEEDITOR_ALARMDIALOG_H
 #define INCIDENCEEDITOR_ALARMDIALOG_H
 
-#include <KCalCore/Alarm>
+#include "incidenceeditors-ng_export.h"
+
 #include <KCalCore/Incidence>
 
 #include <KDialog>
@@ -32,7 +33,7 @@ namespace Ui {
 
 namespace IncidenceEditorNG {
 
-class AlarmDialog : public KDialog
+class  INCIDENCEEDITORS_NG_EXPORT AlarmDialog : public KDialog
 {
   public:
     enum Unit {

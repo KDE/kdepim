@@ -40,10 +40,8 @@
 #include "templatemanagementdialog.h"
 
 #include <KInputDialog>
-#include <KLocale>
 #include <KMessageBox>
 
-#include <QStringList>
 #include <QTimer>
 
 using namespace IncidenceEditorNG;

@@ -20,11 +20,6 @@
 
 #include "editoritemmanager.h"
 
-#include <QtCore/QPointer>
-#include <QtGui/QMessageBox>
-
-#include <KLocale>
-
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
@@ -35,12 +30,15 @@
 #include <Akonadi/Monitor>
 #include <Akonadi/Session>
 
-using namespace Akonadi;
-using namespace CalendarSupport;
+#include <KJob>
+#include <KLocale>
+
+#include <QMessageBox>
+#include <QPointer>
 
 /// ItemEditorPrivate
 
-namespace CalendarSupport {
+namespace IncidenceEditorNG {
 
 class ItemEditorPrivate
 {
@@ -48,10 +46,10 @@ class ItemEditorPrivate
   Q_DECLARE_PUBLIC( EditorItemManager )
 
   public:
-    Item mItem;
-    Item mPrevItem;
-    ItemFetchScope mFetchScope;
-    Monitor *mItemMonitor;
+    Akonadi::Item mItem;
+    Akonadi::Item mPrevItem;
+    Akonadi::ItemFetchScope mFetchScope;
+    Akonadi::Monitor *mItemMonitor;
     ItemEditorUi *mItemUi;
 
   public:
@@ -80,13 +78,13 @@ void ItemEditorPrivate::itemFetchResult( KJob *job )
     return;
   }
 
-  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
   if ( fetchJob->items().isEmpty() ) {
     mItemUi->reject( ItemEditorUi::ItemFetchFailed );
     return;
   }
 
-  Item item = fetchJob->items().first();
+  Akonadi::Item item = fetchJob->items().first();
   if ( mItemUi->hasSupportedPayload( item ) ) {
     q->load( item );
   } else {
@@ -111,7 +109,7 @@ void ItemEditorPrivate::modifyResult( KJob *job )
   Q_Q( EditorItemManager );
 
   if ( job->error() ) {
-    if ( qobject_cast<ItemModifyJob*>( job ) ) {
+    if ( qobject_cast<Akonadi::ItemModifyJob*>( job ) ) {
       emit q->itemSaveFailed( EditorItemManager::Modify, job->errorString() );
     } else {
       emit q->itemSaveFailed( EditorItemManager::Create, job->errorString() );
@@ -119,11 +117,11 @@ void ItemEditorPrivate::modifyResult( KJob *job )
     return;
   }
 
-  if ( ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob*>( job ) ) {
+  if ( Akonadi::ItemModifyJob *modifyJob = qobject_cast<Akonadi::ItemModifyJob*>( job ) ) {
     mItem = modifyJob->item();
     emit q->itemSaveFinished( EditorItemManager::Modify );
   } else {
-    ItemCreateJob *createJob = qobject_cast<ItemCreateJob*>( job );
+    Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob*>( job );
     Q_ASSERT(createJob);
     mItem = createJob->item();
     emit q->itemSaveFinished( EditorItemManager::Create );
@@ -179,8 +177,6 @@ void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
   mItem.setRevision( item.revision() );
 }
 
-}
-
 /// ItemEditor
 
 EditorItemManager::EditorItemManager( ItemEditorUi *ui )
@@ -225,7 +221,7 @@ void EditorItemManager::load( const Akonadi::Item &item )
     d->mItemUi->load( item );
     d->setupMonitor();
   } else {
-    ItemFetchJob *job = new ItemFetchJob( item, this );
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
     job->setFetchScope( d->mFetchScope );
 
     connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
@@ -243,7 +239,7 @@ void EditorItemManager::revertLastSave()
     Q_ASSERT( d->mItem.id() == d->mPrevItem.id() ); // managing two different items??
 
     d->mPrevItem.setRevision( d->mItem.revision() );
-    ItemModifyJob *job = new ItemModifyJob( d->mPrevItem );
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( d->mPrevItem );
     if ( !job->exec() ) {
       kDebug() << "Revert failed, could not delete item." << job->errorText();
     }
@@ -253,7 +249,7 @@ void EditorItemManager::revertLastSave()
     // No payload in the previous item and the current item is valid, so the last
     // call to save created a new item and reverting that means that we have to
     // delete it.
-    ItemDeleteJob *job = new ItemDeleteJob( d->mItem );
+    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( d->mItem );
     if ( !job->exec() ) {
       kDebug() << "Revert failed, could not delete item." << job->errorText();
     }
@@ -287,7 +283,7 @@ void EditorItemManager::save()
     Q_ASSERT( d->mItem.parentCollection().isValid() );
 
     if ( d->mItem.parentCollection() == d->mItemUi->selectedCollection() ) {
-      ItemModifyJob *modifyJob = new ItemModifyJob( d->mItem );
+      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( d->mItem );
       connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
@@ -298,26 +294,28 @@ void EditorItemManager::save()
       // 1) ItemModify( d->mItem );
       // 2) ItemMove( d->mItem,d->mItemUi->selectedCollection() )
       } else {
-        ItemMoveJob *imjob = new ItemMoveJob( d->mItem, d->mItemUi->selectedCollection() );
+        Akonadi::ItemMoveJob *imjob =
+          new Akonadi::ItemMoveJob( d->mItem, d->mItemUi->selectedCollection() );
         connect( imjob, SIGNAL(result(KJob*)), SLOT(itemMoveResult(KJob*)) );
       }
     }
   } else { // An invalid item needs to be created.
     Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
-    ItemCreateJob *createJob = new ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
+    Akonadi::ItemCreateJob *createJob =
+      new Akonadi::ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
     connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
   }
 }
 
-void EditorItemManager::setFetchScope( const ItemFetchScope &fetchScope )
+void EditorItemManager::setFetchScope( const Akonadi::ItemFetchScope &fetchScope )
 {
   Q_D( ItemEditor );
 
   d->mFetchScope = fetchScope;
 }
 
-ItemFetchScope &EditorItemManager::fetchScope()
+Akonadi::ItemFetchScope &EditorItemManager::fetchScope()
 {
   Q_D( ItemEditor );
 
@@ -331,6 +329,8 @@ ItemEditorUi::~ItemEditorUi()
 bool ItemEditorUi::isValid() const
 {
   return true;
+}
+
 }
 
 #include "editoritemmanager.moc"

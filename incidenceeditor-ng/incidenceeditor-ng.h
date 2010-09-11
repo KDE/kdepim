@@ -21,11 +21,11 @@
 #ifndef INCIDENCEEDITOR_NG_H
 #define INCIDENCEEDITOR_NG_H
 
-#include <QtGui/QWidget>
+#include "incidenceeditors-ng_export.h"
 
 #include <KCalCore/Incidence>
 
-#include "incidenceeditors-ng_export.h"
+#include <QWidget>
 
 namespace IncidenceEditorNG {
 

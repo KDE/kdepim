@@ -22,8 +22,6 @@
 
 #include <KDebug>
 
-#include <QList>
-
 using namespace IncidenceEditorNG;
 
 AttendeeEditor::AttendeeEditor( QWidget *parent )

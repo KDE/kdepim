@@ -19,21 +19,13 @@
 */
 
 #include "schedulingdialog.h"
-
 #include "conflictresolver.h"
-#include "visualfreebusywidget.h"
 #include "freeperiodmodel.h"
-
-#include <KCalCore/Attendee>
+#include "visualfreebusywidget.h"
 
 #include <KCalUtils/Stringify>
 
 #include <KCalendarSystem>
-#include <KIconLoader>
-#include <KLocale>
-#include <KDebug>
-
-#include <QBoxLayout>
 
 using namespace IncidenceEditorNG;
 
