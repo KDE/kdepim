@@ -620,6 +620,8 @@ void AgendaItem::dragEnterEvent( QDragEnterEvent *e )
   } else {
     e->ignore();
   }
+#else
+  Q_UNUSED( e );
 #endif
 }
 
@@ -674,6 +676,8 @@ void AgendaItem::dropEvent( QDropEvent *e )
       addAttendee( em );
     }
   }
+#else
+  Q_UNUSED( e );
 #endif // KORG_NODND
 }
 
