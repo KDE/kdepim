@@ -42,6 +42,8 @@ extern "C" {
 #include "icalformatimpl.h"
 #include "compat.h"
 
+#include "config.h"
+
 #define _ICAL_VERSION "2.0"
 
 using namespace KCal;
@@ -666,7 +668,11 @@ icalproperty *ICalFormatImpl::writeAttachment( Attachment *att )
   if ( att->isUri() ) {
     attach = icalattach_new_from_url( att->uri().utf8().data() );
   } else {
+#ifdef USE_LIBICAL_0_46
+    attach = icalattach_new_from_data ( (const char *)att->data(), 0, 0 );
+#else
     attach = icalattach_new_from_data ( (unsigned char *)att->data(), 0, 0 );
+#endif
   }
   icalproperty *p = icalproperty_new_attach( attach );
 

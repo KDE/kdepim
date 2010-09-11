@@ -1,0 +1,160 @@
+#MIN_CONFIG(3.3)
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h sys/sysctl.h sys/param.h sys/time.h sys/types.h unistd.h values.h sys/limits.h err.h sys/cdefs.h)
+
+AC_CHECK_SETENV
+AC_CHECK_UNSETENV
+
+KDE_NEED_FLEX
+
+if test "$x_includes" != "NONE"; then
+  AC_DEFINE(HAVE_X11_HEADERS,1,Define if you have X11 header files)
+fi
+AC_CHECK_LIB(Xtst, XTestFakeKeyEvent, [LIBXTST=-lXtst],, -lX11)
+AC_SUBST(LIBXTST)
+if test "$LIBXTST" != ""; then
+  AC_CHECK_HEADER([X11/extensions/XTest.h],
+                  [AC_DEFINE(HAVE_XTEST, 1, [Define if you have X11 Xtest header files])])
+fi
+
+KDE_INIT_DOXYGEN([KDE PIM API Reference], [Version $VERSION])
+
+KDE_CHECK_THREADING
+
+dnl For apps that NEED threads
+if test -z "$LIBPTHREAD" && test -z "$USE_THREADS"; then
+  DO_NOT_COMPILE="$DO_NOT_COMPILE knode"
+fi
+
+CXXFLAGS="$CXXFLAGS $KDE_DEFAULT_CXXFLAGS"
+
+# check for libbluetooth (Bluetooth library) because gnokii may require it
+AC_DEFUN([KDE_CHECK_BLUETOOTH],
+[
+  AC_CHECK_HEADERS(bluetooth/bluetooth.h)
+  LIB_BLUETOOTH=
+  AC_CHECK_LIB(bluetooth, hci_open_dev,
+       [ LIB_BLUETOOTH="-lbluetooth" ],
+       [],
+       [] )
+  AC_SUBST(LIB_BLUETOOTH)
+])
+
+
+# check for libgnokii (Nokia mobile phone library)
+AC_DEFUN([KDE_CHECK_GNOKII],
+[
+  KDE_CHECK_HEADERS(gnokii.h)
+  AC_REQUIRE([AC_HAVE_XPM])
+  AC_CHECK_LIB(gnokii, gn_cfg_read,
+       [ LIB_GNOKII="-lgnokii $LIB_BLUETOOTH" ],
+       [
+    	AC_CHECK_LIB(gnokii, gn_cfg_get,
+       	[ LIB_GNOKII="-lgnokii -lintl $LIB_BLUETOOTH" ],
+       	[], $all_libraries -lintl -lXpm -lX11 $LIB_BLUETOOTH )
+       ],
+       $all_libraries -lXpm -lX11 $LIB_BLUETOOTH )
+  AC_SUBST(LIB_GNOKII)
+])
+
+AC_ARG_WITH(gnokii,
+  [AC_HELP_STRING(--with-gnokii,
+    [enable support for mobile phones through gnokii @<:@default=check@:>@])],
+  [], with_gnokii=check)
+
+LIB_GNOKII=
+if test "x$with_gnokii" != xno; then
+  # for kaddressbook/xxport/ and kmobile/devices/gnokii/
+  KDE_CHECK_BLUETOOTH
+  KDE_CHECK_GNOKII
+
+  if test "x$with_gnokii" != xcheck && test -z "$LIB_GNOKII"; then
+    AC_MSG_ERROR([--with-gnokii was given, but test for gnokii failed])
+  fi
+fi
+
+dnl Checks for header files.
+AC_CHECK_HEADERS(sys/cdefs.h) dnl for libkholidays/lunarphase.cpp
+AC_CHECK_HEADERS(sys/ioctl.h) dnl for kandy/src/modem.cpp
+AC_CHECK_HEADERS(sys/file.h sys/stat.h sys/time.h byteswap.h) dnl for at least kmail
+
+dnl the below is copied from kdenetwork's configure as too many apps moved
+dnl and noone can say which tests are needed and which are obsolete for kdepim ;(
+
+AC_CHECK_HEADERS(fcntl.h unistd.h sysent.h strings.h paths.h)
+
+dnl unused AC_CHECK_HEADER([resolv.h],,,[#include <netinet/in.h>])
+
+KDE_CHECK_LARGEFILE
+
+AC_CHECK_USLEEP
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(socket fabsl strdup vsnprintf tzset)
+AC_CHECK_GETDOMAINNAME
+AC_CHECK_GETHOSTNAME
+AC_C_BIGENDIAN
+
+AC_CHECK_RES_INIT
+
+dnl needed by libkmime
+AC_CACHE_CHECK(for timezone variable, ac_cv_var_timezone,
+	AC_TRY_COMPILE([
+		#include <time.h>
+	], [
+		timezone = 1;
+	], ac_cv_var_timezone=yes, ac_cv_var_timezone=no))
+if test $ac_cv_var_timezone = yes; then
+	AC_DEFINE(HAVE_TIMEZONE, 1, [define if you have a timezone variable])
+fi
+
+dnl needed by libkmime
+AC_CACHE_CHECK(for tm_gmtoff in struct tm, ac_cv_struct_tm_gmtoff,	
+	AC_TRY_COMPILE([
+		#include <time.h>
+	], [
+		struct tm tm;
+		tm.tm_gmtoff = 1;
+	], ac_cv_struct_tm_gmtoff=yes, ac_cv_struct_tm_gmtoff=no))
+if test $ac_cv_struct_tm_gmtoff = yes; then
+	AC_DEFINE(HAVE_TM_GMTOFF, 1, [Define if you have a tm_gmtoff member in struct tm])
+fi
+
+dnl Check libical API version
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+cxx_flags_safe="$CXXFLAGS"
+cflags_safe="$CFLAGS"
+CXXFLAGS="$CXXFLAGS -I$ac_cv_sword_incdir"
+CFLAGS="$CFLAGS -I$ac_cv_sword_incdir"
+AC_MSG_CHECKING([for libical >= 0.46])
+AC_TRY_COMPILE([extern "C" {
+  #include <libical/ical.h>
+  #include <libical/icalparser.h>
+  #include <libical/icalrestriction.h>
+}
+],[icalattach *attach;
+    attach = icalattach_new_from_data ( (const char *)"TEST", 0, 0 );],
+[AC_MSG_RESULT(yes)
+AC_DEFINE(USE_LIBICAL_0_46,1,[yes])],
+AC_MSG_RESULT(no))
+CXXFLAGS="$cxx_flags_safe"
+CFLAGS="$cflags_safe"
+AC_LANG_RESTORE
+
+AC_LANG_PUSH(C++)
+AC_CACHE_CHECK(for stl coping with namespace std, ac_cv_var_stlnamespace,
+        AC_TRY_COMPILE([
+                #include <iterator>
+		struct s : public std::iterator<std::forward_iterator_tag, int> {};
+        ], [
+        ], ac_cv_var_stlnamespace=yes, ac_cv_var_stlnamespace=no))
+if test $ac_cv_var_stlnamespace = yes; then
+        AC_DEFINE(HAVE_STLNAMESPACE, 1, [Define if your version of stl is defined in namespace std])
+	AC_DEFINE(STD_NAMESPACE_PREFIX, [std::], [Namespace prefix the stl is defined in])
+else
+	AC_DEFINE(STD_NAMESPACE_PREFIX, [], [Namespace prefix the stl is defined in])
+fi
+
+AC_LANG_POP
