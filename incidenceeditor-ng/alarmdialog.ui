@@ -242,7 +242,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="WStackPage">
+     <widget class="QWidget" name="DisplayStack">
       <layout class="QVBoxLayout">
        <property name="spacing">
         <number>6</number>
@@ -262,7 +262,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="WStackPage">
+     <widget class="QWidget" name="AudioStack">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QLabel" name="mSoundFileLabel">
@@ -308,7 +308,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="WStackPage">
+     <widget class="QWidget" name="ApplicationStack">
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
         <widget class="QLabel" name="mApplicationLabel">
@@ -371,7 +371,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="WStackPage">
+     <widget class="QWidget" name="EmailStack">
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
         <widget class="QLabel" name="mEmailToLabel">
