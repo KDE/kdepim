@@ -1,5 +1,4 @@
 /*
-
   This file is part of KOrganizer.
 
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
