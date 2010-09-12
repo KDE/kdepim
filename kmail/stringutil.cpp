@@ -954,7 +954,7 @@ QString expandAliases( const QString& recipients, QStringList &distributionListE
       KConfigGroup general( KMKernel::config(), "General" );
       QString defaultdomain = general.readEntry( "Default domain" );
       if ( !defaultdomain.isEmpty() ) {
-        expandedRecipients += KPIMUtils::normalizedAddress( displayName, addrSpec + '@' + defaultdomain, comment );
+        expandedRecipients += KPIMUtils::normalizedAddress( displayName, addrSpec + QLatin1Char('@') + defaultdomain, comment );
       }
       else {
         expandedRecipients += guessEmailAddressFromLoginName( addrSpec );
@@ -981,10 +981,10 @@ QString guessEmailAddressFromLoginName( const QString& loginName )
   if ( user.isValid() ) {
     QString fullName = user.property( KUser::FullName ).toString();
     if ( fullName.contains( QRegExp( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" ) ) )
-      address = '"' + fullName.replace( '\\', "\\" ).replace( '"', "\\" )
-          + "\" <" + address + '>';
+      address = QLatin1Char('"') + fullName.replace( '\\', "\\" ).replace( '"', "\\" )
+          + "\" <" + address + QLatin1Char('>');
     else
-      address = fullName + " <" + address + '>';
+      address = fullName + " <" + address + QLatin1Char('>');
   }
 
   return address;

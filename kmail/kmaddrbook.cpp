@@ -57,7 +57,7 @@ void KabcBridge::addresses(QStringList& result) // includes lists
     for ( mit = emails.begin(); mit != emails.end(); ++mit ) {
       email = *mit;
       if (!email.isEmpty()) {
-        if (n.isEmpty() || (email.contains( '<' ) ))
+        if (n.isEmpty() || (email.contains( QLatin1Char('<') ) ))
           addr.clear();
         else { // do we really need quotes around this name ?
           if (n.contains(needQuotes) )
@@ -66,10 +66,10 @@ void KabcBridge::addresses(QStringList& result) // includes lists
             addr = n + ' ';
         }
 
-        if (!addr.isEmpty() && !(email.contains( '<' ) )
-            && !(email.contains( '>' ) )
-            && !(email.contains( ',' ) ))
-          addr += '<' + email + '>';
+        if (!addr.isEmpty() && !(email.contains( QLatin1Char('<') ) )
+            && !(email.contains( QLatin1Char('>') ) )
+            && !(email.contains( QLatin1Char(',') ) ))
+          addr += QLatin1Char('<') + email + QLatin1Char('>');
         else
           addr += email;
         addr = addr.trimmed();

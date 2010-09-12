@@ -796,7 +796,7 @@ int KMKernel::dbusAddMessage( const QString & foldername,
     msg->fromString( messageText );
 
     if (readFolderMsgIds) {
-      if ( foldername.contains("/")) {
+      if ( foldername.contains(QLatin1Char('/'))) {
         QString tmp_fname = "";
         KMFolder *folder = NULL;
         KMFolderDir *subfolder;
@@ -964,7 +964,7 @@ int KMKernel::dbusAddMessage_fastImport( const QString & foldername,
     msg->fromString( messageText );
 
     if ( foldername != mAddMessageLastFolder ) {
-      if ( foldername.contains( '/' ) ) {
+      if ( foldername.contains( QLatin1Char('/') ) ) {
         QString tmp_fname = "";
         KMFolder *folder = NULL;
         KMFolderDir *subfolder;
