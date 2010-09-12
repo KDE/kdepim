@@ -49,6 +49,8 @@
 #include "calprintmonthconfig_base.h"
 #include "calprinttodoconfig_base.h"
 
+extern TQString cleanStr(const TQString &instr);
+
 /**************************************************************
  *           Print Incidence
  **************************************************************/
