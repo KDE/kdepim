@@ -49,7 +49,11 @@
 #include "calprintmonthconfig_base.h"
 #include "calprinttodoconfig_base.h"
 
-extern TQString cleanStr(const TQString &instr);
+static TQString cleanString( const TQString &instr )
+{
+  TQString ret = instr;
+  return ret.replace( '\n', ' ' );
+}
 
 /**************************************************************
  *           Print Incidence
@@ -767,10 +771,10 @@ void CalPrintDay::print( TQPainter &p, int width, int height )
         count++;
         TQString str;
         if ( (*it)->location().isEmpty() ) {
-          str = cleanStr( (*it)->summary() );
+          str = cleanString( (*it)->summary() );
         } else {
           str = i18n( "summary, location", "%1, %2" ).
-                arg( cleanStr( (*it)->summary() ), cleanStr( (*it)->location() ) );
+                arg( cleanString( (*it)->summary() ), cleanString( (*it)->location() ) );
         }
         printEventString( p, eventBox, str );
         eventBox.setTop( eventBox.bottom() );
