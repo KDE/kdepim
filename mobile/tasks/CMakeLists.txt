@@ -19,7 +19,6 @@ if (KDEQMLPLUGIN_STATIC)
 endif (KDEQMLPLUGIN_STATIC)
 
 kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
-SET_TARGET_PROPERTIES(tasks-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
 
 target_link_libraries(tasks-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
