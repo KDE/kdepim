@@ -1,10 +1,3 @@
-if include_egroupware_SUBDIR
-if include_slox_SUBDIR
-if include_kolab_SUBDIR
-if include_exchange_SUBDIR
-if include_groupwise_SUBDIR 
-if include_scalix_SUBDIR
-
 METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
@@ -129,10 +122,3 @@ exchangewizard.lo: ../kresources/lib/kresources_groupwareprefs.h
 sloxwizard.lo: ../kresources/slox/kabcsloxprefs.h ../kresources/slox/kcalsloxprefs.h
 
 xdg_apps_DATA = groupwarewizard.desktop
-
-endif
-endif
-endif
-endif
-endif
-endif
