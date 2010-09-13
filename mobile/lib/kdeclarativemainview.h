@@ -136,9 +136,7 @@ signals:
 
 protected:
   QItemSelectionModel* regularSelectionModel() const;
-  QItemSelectionModel* favoriteSelectionModel() const;
   QAbstractItemModel *regularSelectedItems() const;
-  QAbstractItemModel *favoriteSelectedItems() const;
   QItemSelectionModel* itemSelectionModel() const;
   QAbstractItemModel* selectedItemsModel() const;
 

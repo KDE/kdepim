@@ -419,11 +419,6 @@ QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const
   return d->mBnf->selectionModel();
 }
 
-QItemSelectionModel* KDeclarativeMainView::favoriteSelectionModel() const
-{
-  return d->mFavSelection;
-}
-
 QAbstractItemModel* KDeclarativeMainView::regularSelectedItems() const
 {
   return d->mItemFilter;
