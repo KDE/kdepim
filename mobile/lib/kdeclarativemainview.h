@@ -35,6 +35,25 @@ class ListProxy;
 class KDeclarativeMainViewPrivate;
 
 /**
+ * @internal
+ */
+class ItemSelectHook : public QObject
+{
+  Q_OBJECT
+public:
+  ItemSelectHook(QItemSelectionModel *selectionModel, QObject *parent = 0);
+
+public slots:
+  void selectionChanged();
+
+signals:
+  void rowSelected(int row, qint64 itemId);
+
+private:
+  QItemSelectionModel *m_selectionModel;
+};
+
+/**
  * Main view for mobile applications. This class is just to share code and therefore
  * should not be instantiated by itself.
  */

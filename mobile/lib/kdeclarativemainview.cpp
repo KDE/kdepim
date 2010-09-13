@@ -64,6 +64,23 @@
 #include "qmlcheckableproxymodel.h"
 #include <QtCore/QPluginLoader>
 
+ItemSelectHook::ItemSelectHook(QItemSelectionModel *selectionModel, QObject* parent)
+  : QObject(parent), m_selectionModel(selectionModel)
+{
+  connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()));
+}
+
+void ItemSelectHook::selectionChanged()
+{
+  const QModelIndexList list = m_selectionModel->selectedRows();
+  if (list.size() != 1)
+    return;
+  const QModelIndex idx = list.first();
+  Q_ASSERT(idx.isValid());
+  Akonadi::Item::Id itemId = idx.data( Akonadi::EntityTreeModel::ItemIdRole ).toLongLong();
+  rowSelected(idx.row(), itemId);
+}
+
 class ActionImageProvider : public QDeclarativeImageProvider
 {
   public:
@@ -183,6 +200,10 @@ void KDeclarativeMainView::delayedInit()
     context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
 
     QMLListSelectionModel *qmlSelectionModel = new QMLListSelectionModel(d->mItemSelectionModel, this);
+
+    QObject *hook = new ItemSelectHook(d->mItemSelectionModel, this);
+    context->setContextProperty( "_itemSelectHook", QVariant::fromValue( hook ) );
+
     context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlSelectionModel ) ) );
 
     Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory(this);

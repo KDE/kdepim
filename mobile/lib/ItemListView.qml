@@ -47,6 +47,20 @@ QML.Item {
     }
   }
 
+  function setSelectedRow(row, itemId)
+  {
+    itemListView.currentIndex = row;
+    currentItemId = itemId;
+    itemListView.parent.itemSelected();
+  }
+
+  QML.Connections {
+    target : _itemSelectHook
+    onRowSelected : {
+      setSelectedRow(row, itemId);
+    }
+  }
+
   QML.ListView {
     id: itemListView
     anchors.fill: parent

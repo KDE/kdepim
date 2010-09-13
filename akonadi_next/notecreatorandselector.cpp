@@ -135,6 +135,6 @@ void NoteCreatorAndSelector::trySelectNote()
     return;
 
   const QModelIndex idx = list.first();
-  m_secondarySelectionModel->select(idx, QItemSelectionModel::ClearAndSelect);
+  m_secondarySelectionModel->select(QItemSelection(idx, idx), QItemSelectionModel::ClearAndSelect);
 }
 
