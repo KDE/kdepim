@@ -29,7 +29,6 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarviews/eventviews/eventview.h>
 

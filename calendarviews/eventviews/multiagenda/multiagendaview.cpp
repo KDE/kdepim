@@ -28,10 +28,11 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/entitymodelstatesaver.h>
 #include <calendarsupport/utils.h>
 
+#include <akonadi_next/kcheckableproxymodel.h>
+#include <akonadi_next/kcolumnfilterproxymodel.h>
 #include <KCalCore/Event>
 
 #include <KGlobalSettings>
@@ -45,9 +46,11 @@
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QSplitter>
+#include <QSortFilterProxyModel>
 #include <QTimer>
 
 using namespace EventViews;
+using namespace Future;
 
 /**
    Function for debugging purposes:
@@ -105,8 +108,7 @@ class MultiAgendaView::Private
     }
 
     void addView( const Akonadi::Collection &collection );
-    void addView( CalendarSupport::CollectionSelectionProxyModel *selectionProxy,
-                  const QString &title );
+    void addView( KCheckableProxyModel *selectionProxy, const QString &title );
     AgendaView *createView( const QString &title );
     void deleteViews();
     void setupViews();
@@ -125,7 +127,7 @@ class MultiAgendaView::Private
     bool mUpdateOnShow;
     bool mPendingChanges;
     bool mCustomColumnSetupUsed;
-    QVector<CalendarSupport::CollectionSelectionProxyModel*> mCollectionSelectionModels;
+    QVector<KCheckableProxyModel*> mCollectionSelectionModels;
     QVector<QString> mCustomColumnTitles;
     int mCustomNumberOfColumns;
     QLabel *mLabel;
@@ -216,8 +218,7 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
 void MultiAgendaView::setCalendar( CalendarSupport::Calendar *cal )
 {
   EventView::setCalendar( cal );
-  Q_FOREACH ( CalendarSupport::CollectionSelectionProxyModel *const i,
-              d->mCollectionSelectionModels ) {
+  Q_FOREACH ( KCheckableProxyModel *const i, d->mCollectionSelectionModels ) {
     i->setSourceModel( cal->treeModel() );
   }
   recreateViews();
@@ -272,8 +273,7 @@ void MultiAgendaView::recreateViews()
 void MultiAgendaView::Private::deleteViews()
 {
   Q_FOREACH ( AgendaView *const i, mAgendaViews ) {
-    CalendarSupport::CollectionSelectionProxyModel *proxy =
-      i->takeCustomCollectionSelectionProxyModel();
+    KCheckableProxyModel *proxy = i->takeCustomCollectionSelectionProxyModel();
     if ( proxy && !mCollectionSelectionModels.contains( proxy ) ) {
       delete proxy;
     }
@@ -503,8 +503,7 @@ void MultiAgendaView::Private::addView( const Akonadi::Collection &collection )
   av->setCollectionId( collection.id() );
 }
 
-void MultiAgendaView::Private::addView( CalendarSupport::CollectionSelectionProxyModel *sm,
-                                        const QString &title )
+void MultiAgendaView::Private::addView( KCheckableProxyModel *sm, const QString &title )
 {
   AgendaView *av = createView( title );
   av->setCustomCollectionSelectionProxyModel( sm );
@@ -662,28 +661,39 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
       d->mCustomColumnTitles[i] = generateColumnLabel( i );
     }
   }
-  QVector<CalendarSupport::CollectionSelectionProxyModel*>oldModels = d->mCollectionSelectionModels;
+  QVector<KCheckableProxyModel*> oldModels = d->mCollectionSelectionModels;
   d->mCollectionSelectionModels.clear();
   d->mCollectionSelectionModels.resize( d->mCustomNumberOfColumns );
   for ( int i = 0; i < d->mCustomNumberOfColumns; ++i ) {
-    const KConfigGroup g = configGroup.config()->group( configGroup.name() +
-                                                        "_subView_" +
-                                                        QByteArray::number( i ) );
-    CalendarSupport::CollectionSelectionProxyModel *selection =
-      new CalendarSupport::CollectionSelectionProxyModel;
-    selection->setCheckableColumn( CalendarSupport::CalendarModel::CollectionTitle );
-    selection->setDynamicSortFilter( true );
+    // Sort the calanders by name
+    QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel( this );
+    sortProxy->setDynamicSortFilter( true );
     if ( calendar() ) {
-      selection->setSourceModel( calendar()->treeModel() );
+      sortProxy->setSourceModel( calendar()->treeModel() );
     }
 
-    QItemSelectionModel *qsm = new QItemSelectionModel( selection, selection );
-    selection->setSelectionModel( qsm );
+    // Only show the first column
+    KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
+    columnFilterProxy->setVisibleColumn( CalendarSupport::CalendarModel::CollectionTitle );
+    columnFilterProxy->setSourceModel( sortProxy );
+
+    // Keep track of selection.
+    QItemSelectionModel *qsm = new QItemSelectionModel( columnFilterProxy );
+    
+    // Make the model checkable.
+    KCheckableProxyModel *checkableProxy = new KCheckableProxyModel( this );
+    checkableProxy->setSourceModel( columnFilterProxy );
+    checkableProxy->setSelectionModel( qsm );
+
+    const KConfigGroup g = configGroup.config()->group( configGroup.name()
+                                                        + "_subView_"
+                                                        + QByteArray::number( i ) );
+    
     CalendarSupport::EntityModelStateSaver *saver =
-      new CalendarSupport::EntityModelStateSaver( selection, selection );
+      new CalendarSupport::EntityModelStateSaver( checkableProxy, checkableProxy );
     saver->addRole( Qt::CheckStateRole, "CheckState" );
     saver->restoreConfig( g );
-    d->mCollectionSelectionModels[i] = selection;
+    d->mCollectionSelectionModels[i] = checkableProxy;
   }
   d->mPendingChanges = true;
   recreateViews();
@@ -697,7 +707,7 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
   const QStringList titleList = d->mCustomColumnTitles.toList();
   configGroup.writeEntry( "ColumnTitles", titleList );
   int idx = 0;
-  Q_FOREACH ( CalendarSupport::CollectionSelectionProxyModel *i, d->mCollectionSelectionModels ) {
+  Q_FOREACH ( KCheckableProxyModel *i, d->mCollectionSelectionModels ) {
     KConfigGroup g = configGroup.config()->group( configGroup.name() +
                                                   "_subView_" +
                                                   QByteArray::number( idx ) );
@@ -717,7 +727,7 @@ void MultiAgendaView::customCollectionsChanged( ConfigDialogInterface *dlg )
 
   d->mCustomColumnSetupUsed = dlg->useCustomColumns();
   d->mCustomNumberOfColumns = dlg->numberOfColumns();
-  QVector<CalendarSupport::CollectionSelectionProxyModel*> newModels;
+  QVector<KCheckableProxyModel *> newModels;
   newModels.resize( d->mCustomNumberOfColumns );
   d->mCustomColumnTitles.resize( d->mCustomNumberOfColumns );
   for ( int i = 0; i < d->mCustomNumberOfColumns; ++i ) {
@@ -739,8 +749,7 @@ int MultiAgendaView::customNumberOfColumns() const
   return d->mCustomNumberOfColumns;
 }
 
-QVector<CalendarSupport::CollectionSelectionProxyModel*>
-MultiAgendaView::collectionSelectionModels() const
+QVector<KCheckableProxyModel *> MultiAgendaView::collectionSelectionModels() const
 {
   return d->mCollectionSelectionModels;
 }

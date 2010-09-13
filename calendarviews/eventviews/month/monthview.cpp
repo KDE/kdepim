@@ -24,7 +24,7 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "monthview_p.h"
+#include "monthview.h"
 #include "monthscene.h"
 #include "monthitem.h"
 #include "monthgraphicsitems.h"
@@ -33,10 +33,10 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
+#include <akonadi_next/kcheckableproxymodel.h>
 #include <kcalcore/incidence.h>
 
 #include <KIcon>

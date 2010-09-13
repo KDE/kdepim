@@ -30,7 +30,6 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/incidencechanger.h>
-#include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/collectionselection.h>
 
 #include <KCalCore/Event>
@@ -130,16 +129,7 @@ void MainWindow::delayedInit()
 
   { // Collection Selection stuff
 
-    CalendarSupport::CollectionSelectionProxyModel *selectionProxyModel =
-      new CalendarSupport::CollectionSelectionProxyModel( this );
-
-    selectionProxyModel->setCheckableColumn( CalendarSupport::CalendarModel::CollectionTitle );
-    selectionProxyModel->setDynamicSortFilter( true );
-    selectionProxyModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-    QItemSelectionModel* selectionModel = new QItemSelectionModel( selectionProxyModel );
-    selectionProxyModel->setSelectionModel( selectionModel );
-    selectionProxyModel->setSourceModel( calendarModel );
-
+    QItemSelectionModel* selectionModel = new QItemSelectionModel( calendarModel );
     CalendarSupport::CollectionSelection *colSel
       = new CalendarSupport::CollectionSelection( selectionModel );
 

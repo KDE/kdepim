@@ -31,10 +31,12 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/entitymodelstatesaver.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
+
+#include <akonadi_next/kcheckableproxymodel.h>
+#include <akonadi_next/kcolumnfilterproxymodel.h>
 
 #include <KCalCore/Incidence>
 #include <KCalCore/Todo>
@@ -49,8 +51,10 @@ using namespace KCalCore;
 
 #include <QApplication>
 #include <QKeyEvent>
+#include <QSortFilterProxyModel>
 
 using namespace EventViews;
+using namespace Future;
 
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 
@@ -395,7 +399,7 @@ CalendarSupport::CollectionSelection *EventView::collectionSelection() const
   return d->customCollectionSelection ? d->customCollectionSelection : globalCollectionSelection();
 }
 
-void EventView::setCustomCollectionSelectionProxyModel( CalendarSupport::CollectionSelectionProxyModel *model )
+void EventView::setCustomCollectionSelectionProxyModel( KCheckableProxyModel *model )
 {
   Q_D( EventView );
   if ( d->collectionSelectionModel == model ) {
@@ -412,16 +416,16 @@ void EventView::collectionSelectionChanged()
 
 }
 
-CalendarSupport::CollectionSelectionProxyModel *EventView::customCollectionSelectionProxyModel() const
+KCheckableProxyModel *EventView::customCollectionSelectionProxyModel() const
 {
   Q_D( const EventView );
   return d->collectionSelectionModel;
 }
 
-CalendarSupport::CollectionSelectionProxyModel *EventView::takeCustomCollectionSelectionProxyModel()
+KCheckableProxyModel *EventView::takeCustomCollectionSelectionProxyModel()
 {
   Q_D( EventView );
-  CalendarSupport::CollectionSelectionProxyModel *m = d->collectionSelectionModel;
+  KCheckableProxyModel *m = d->collectionSelectionModel;
   d->collectionSelectionModel = 0;
   d->setUpModels();
   return m;
@@ -586,14 +590,24 @@ void EventView::restoreConfig( const KConfigGroup &configGroup )
   } else if ( useCustom ) {
 
     if ( !d->collectionSelectionModel ) {
-      d->collectionSelectionModel = new CalendarSupport::CollectionSelectionProxyModel( this );
-      d->collectionSelectionModel->
-        setCheckableColumn( CalendarSupport::CalendarModel::CollectionTitle );
-      d->collectionSelectionModel->setDynamicSortFilter( true );
-      d->collectionSelectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+      // Sort the calendar model on calendar name
+      QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel( this );
+      sortProxy->setDynamicSortFilter( true );
+      sortProxy->setSortCaseSensitivity( Qt::CaseInsensitive );
+
       if ( d->calendar ) {
-        d->collectionSelectionModel->setSourceModel( d->calendar->treeModel() );
+        sortProxy->setSourceModel( d->calendar->treeModel() );
       }
+
+      // Only show the first column.
+      KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
+      columnFilterProxy->setVisibleColumn( CalendarSupport::CalendarModel::CollectionTitle );
+      columnFilterProxy->setSourceModel( sortProxy );
+
+      // Make the calendar model checkable.
+      d->collectionSelectionModel = new KCheckableProxyModel( this );      
+      d->collectionSelectionModel->setSourceModel( columnFilterProxy );
+      
       d->setUpModels();
     }
 

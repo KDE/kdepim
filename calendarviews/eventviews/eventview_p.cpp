@@ -29,9 +29,10 @@
 #include "prefs.h"
 
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/entitymodelstatesaver.h>
 #include <calendarsupport/kcalprefs.h>
+
+#include <akonadi_next/kcheckableproxymodel.h>
 
 #include <QtGui/QApplication>
 

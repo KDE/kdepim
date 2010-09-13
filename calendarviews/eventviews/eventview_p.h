@@ -56,7 +56,7 @@ class EventViewPrivate
   public: /// Members
     CalendarSupport::Calendar *calendar;
     CalendarSupport::CollectionSelection *customCollectionSelection;
-    CalendarSupport::CollectionSelectionProxyModel *collectionSelectionModel;
+    Future::KCheckableProxyModel *collectionSelectionModel;
     CalendarSupport::EntityModelStateSaver *stateSaver;
     QByteArray identifier;
     KDateTime startDateTime;

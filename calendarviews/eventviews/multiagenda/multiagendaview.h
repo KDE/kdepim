@@ -55,7 +55,7 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     bool customColumnSetupUsed() const;
     int customNumberOfColumns() const;
     QVector<QString> customColumnTitles() const;
-    QVector<CalendarSupport::CollectionSelectionProxyModel*>collectionSelectionModels() const;
+    QVector<Future::KCheckableProxyModel*>collectionSelectionModels() const;
 
   Q_SIGNALS:
     void showNewEventPopupSignal();

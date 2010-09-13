@@ -20,8 +20,8 @@
 #ifndef EVENTVIEWS_CONFIGDIALOGINTERFACE_H
 #define EVENTVIEWS_CONFIGDIALOGINTERFACE_H
 
-namespace CalendarSupport {
-  class CollectionSelectionProxyModel;
+namespace Future {
+  class KCheckableProxyModel;
 }
 
 namespace EventViews {
@@ -35,7 +35,7 @@ class ConfigDialogInterface
     virtual bool useCustomColumns() const = 0;
     virtual QString columnTitle( int column ) const = 0;
 
-    virtual CalendarSupport::CollectionSelectionProxyModel *takeSelectionModel( int column ) = 0;
+    virtual Future::KCheckableProxyModel *takeSelectionModel( int column ) = 0;
 };
 
 }

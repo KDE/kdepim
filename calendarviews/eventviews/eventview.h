@@ -50,9 +50,12 @@ namespace KHolidays {
 namespace CalendarSupport {
   class Calendar;
   class CollectionSelection;
-  class CollectionSelectionProxyModel;
   class IncidenceChanger;
   class KCalPrefs;
+}
+
+namespace Future {
+  class KCheckableProxyModel;
 }
 
 class KConfigGroup;
@@ -204,10 +207,9 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     //----------------------------------------------------------------------------
     // TODO_SPLIT: review these collection stuff
-    CalendarSupport::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();
-    CalendarSupport::CollectionSelectionProxyModel *customCollectionSelectionProxyModel() const;
-    void setCustomCollectionSelectionProxyModel(
-      CalendarSupport::CollectionSelectionProxyModel *model );
+    Future::KCheckableProxyModel *takeCustomCollectionSelectionProxyModel();
+    Future::KCheckableProxyModel *customCollectionSelectionProxyModel() const;
+    void setCustomCollectionSelectionProxyModel( Future::KCheckableProxyModel *model );
 
     CalendarSupport::CollectionSelection *customCollectionSelection() const;
 
