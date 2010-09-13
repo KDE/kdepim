@@ -175,6 +175,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mScrollDownAction( 0 ),
     mScrollUpMoreAction( 0 ),
     mScrollDownMoreAction( 0 ),
+    mThemesMenu( 0 ),
+    mDownloadThemesAction( 0 ),
     mHeaderOnlyAttachmentsAction( 0 ),
     mSelectEncodingAction( 0 ),
     mGUIClient( 0 ),
@@ -1497,6 +1499,13 @@ void ViewerPrivate::createActions()
   KToggleAction *raction = 0;
   QActionGroup *group = new QActionGroup( this );
 
+  KActionMenu *mThemesActionMenu  = new KActionMenu(i18nc("View->", "&Themes"), this);
+  ac->addAction("view_themes", mThemesActionMenu  );
+  mThemesActionMenu ->setHelpText( i18n("Choose header theme.") );
+  mThemesMenu = mThemesActionMenu ->menu();
+  connect( mThemesMenu , SIGNAL( triggered(QAction*)),
+           SLOT( slotSetTheme(QAction*) ));
+
   mDownloadThemesAction = new KAction( i18n( "Download new themes" ), this );
   mDownloadThemesAction->setHelpText( i18n( "Allows you to download new themes from kde artists site." ) );
   ac->addAction( "download_themes", mDownloadThemesAction );
@@ -1654,6 +1663,7 @@ void ViewerPrivate::loadActionLists()
 
   if ( !themesActionList.isEmpty() )
       mGUIClient->unplugActionList( "themes_action_list" );
+  mThemesMenu->clear();
   themesActionList.clear();
   
   QStringList themesLocations( KGlobal::dirs()->findDirs("data", "messageviewer/themes/") );
@@ -1692,10 +1702,9 @@ void ViewerPrivate::loadActionLists()
     themeAction->data().toString();
     themeAction->setText( themeDesktop->readName() );
     themeAction->setData(dirName);
-    connect( themeAction , SIGNAL( triggered(QAction*)),
-          SLOT( slotSetTheme(QAction*) ));
 
     ac->addAction( themeDesktop->readName() , themeAction );
+    mThemesMenu->addAction( themeAction );
     themesActionList.append( themeAction );
 
     delete themeDesktop;

@@ -27,6 +27,8 @@
 #include <KSharedConfigPtr>
 #include <KUrl>
 
+#include <QMenu>
+
 #include <akonadi/item.h>
 #include <akonadi/monitor.h>
 
@@ -44,7 +46,6 @@ namespace KIO { class Job; }
 namespace Kleo { class SpecialJob; }
 
 class KAction;
-class KActionMenu;
 class KActionCollection;
 class KSelectAction;
 class KXMLGUIClient;
@@ -621,6 +622,7 @@ public:
       *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
       *mViewSourceAction, *mSaveMessageAction;
+  QMenu        *mThemesMenu;
   KAction *mDownloadThemesAction;    
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
