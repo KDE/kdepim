@@ -30,6 +30,8 @@ QML.Rectangle {
 
     indentation : 0
 
+    clickToBulkAction : false
+
     showCheckboxes : true
     checkable : true
 
