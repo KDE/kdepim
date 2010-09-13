@@ -42,6 +42,11 @@
 #include <akonadi_next/note.h>
 #include <kmessagebox.h>
 
+#ifdef KDEQMLPLUGIN_STATIC
+#include "runtime/qml/kde/kdeintegration.h"
+#include <QDeclarativeContext>
+#endif
+
 using namespace Akonadi;
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
@@ -52,6 +57,10 @@ void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
   setWindowTitle( i18n( "KJots" ) );
+  
+#ifdef KDEQMLPLUGIN_STATIC  
+  rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
+#endif
 
   addMimeType( "text/x-vnd.akonadi.note" );
   itemFetchScope().fetchFullPayload();

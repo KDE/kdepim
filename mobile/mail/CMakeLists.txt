@@ -26,6 +26,10 @@ if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
 
+if (KDEQMLPLUGIN_STATIC)
+  add_definitions(-DKDEQMLPLUGIN_STATIC)
+endif (KDEQMLPLUGIN_STATIC)
+
 kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
 
 target_link_libraries(kmail-mobile
@@ -47,6 +51,10 @@ target_link_libraries(kmail-mobile
 if (RUNTIME_PLUGINS_STATIC)
   target_link_libraries(kmail-mobile akonadi_serializer_mail)
 endif (RUNTIME_PLUGINS_STATIC)
+
+if (KDEQMLPLUGIN_STATIC)
+  target_link_libraries(kmail-mobile kdeqmlplugin)
+endif (KDEQMLPLUGIN_STATIC)
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES kmail-mobile.sh DESTINATION ${BIN_INSTALL_DIR})

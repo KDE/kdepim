@@ -49,6 +49,10 @@
 #include "messagecore/messagehelpers.h"
 #include "messageviewer/nodehelper.h"
 #include <akonadi/kmime/standardmailactionmanager.h>
+#ifdef KDEQMLPLUGIN_STATIC
+#include "runtime/qml/kde/kdeintegration.h"
+#include <QDeclarativeContext>
+#endif
 
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/ItemFetchJob>
@@ -58,6 +62,7 @@
 
 #include <QTimer>
 #include <QDir>
+
 
 Q_DECLARE_METATYPE(KMime::Content*)
 QML_DECLARE_TYPE(MessageViewer::MessageViewItem)
@@ -81,6 +86,9 @@ void MainView::delayedInit()
   }
 
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
+#ifdef KDEQMLPLUGIN_STATIC  
+  rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
+#endif
 
   addMimeType( KMime::Message::mimeType() );
   itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );

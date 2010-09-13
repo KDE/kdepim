@@ -54,6 +54,10 @@ kde4_add_ui_files(kab_mobile_srcs
   editormore_personalpage.ui
 )
 
+if (KDEQMLPLUGIN_STATIC)
+  add_definitions(-DKDEQMLPLUGIN_STATIC)
+endif (KDEQMLPLUGIN_STATIC)
+
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
 
 target_link_libraries(kaddressbook-mobile
@@ -67,6 +71,10 @@ target_link_libraries(kaddressbook-mobile
     kleo
     incidenceeditorsngmobile
 )
+
+if (KDEQMLPLUGIN_STATIC)
+  target_link_libraries(kaddressbook-mobile kdeqmlplugin)
+endif (KDEQMLPLUGIN_STATIC)
 
 configure_file(kaddressbook-mobile.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook-mobile.sh)
 

@@ -40,6 +40,11 @@
 #include "calendar/kcalitembrowseritem.h"
 #include "tasklistproxy.h"
 
+#ifdef KDEQMLPLUGIN_STATIC
+#include "runtime/qml/kde/kdeintegration.h"
+#include <QDeclarativeContext>
+#endif
+
 using namespace Akonadi;
 
 QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
@@ -57,6 +62,9 @@ void MainView::delayedInit()
   itemFetchScope().fetchFullPayload();
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
+#ifdef KDEQMLPLUGIN_STATIC  
+  rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
+#endif
 
   KAction *action = new KAction( i18n( "New Appointment" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(newTask()) );
