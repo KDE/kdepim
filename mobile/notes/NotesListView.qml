@@ -85,6 +85,7 @@ KPIM.ItemListView {
           action : application.getAction("akonadi_item_delete", "")
           hidable : false
           showText : false
+          disableable : false
           opacity : 0.6
           visible : showDeleteButton
           onTriggered : {
