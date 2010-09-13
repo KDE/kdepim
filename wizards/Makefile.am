@@ -48,13 +48,22 @@ kde_module_LTLIBRARIES = $(EGROUPWARE_LIB_LA) $(SLOX_LIB_LA) \
                          $(GROUPWISE_LIB_LA) \
                          $(SCALIX_LIB_LA)
 
-
+if include_egroupware_SUBDIR
+if include_slox_SUBDIR
+if include_kolab_SUBDIR
+if include_exchange_SUBDIR
+if include_groupwise_SUBDIR
 groupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 groupwarewizard_LDADD = libegroupwarewizard.la libsloxwizard.la $(LIB_KDEUI) \
                         libkolabwizard.la \
                         libexchangewizard.la \
                         libgroupwisewizard.la
 groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
+endif
+endif
+endif
+endif
+endif
 
 # Kolab
 if include_kolab_SUBDIR
