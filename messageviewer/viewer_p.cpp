@@ -1063,7 +1063,7 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCa
   headerTheme()->setNodeHelper( mNodeHelper );
   headerTheme()->setMessagePath( mMessagePath );
 
-  return headerTheme()->setTheming( mThemeName, aMsg );
+  return headerTheme()->setTheme( mThemeName, aMsg );
 }
 
 void ViewerPrivate::showVCard( KMime::Content* msgPart ) {

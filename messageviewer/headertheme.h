@@ -86,7 +86,7 @@ public:
   static QByteArray dateShortStr(const KDateTime &dateTime);
 
   // method to set up the theme in the header Styles
-  QString setTheming( const QString &styleName , KMime::Message *message ) const;
+  QString setTheme( const QString &styleName , KMime::Message *message ) const;
 
   static QString imgToDataUrl( const QImage & image );
 

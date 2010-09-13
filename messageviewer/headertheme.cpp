@@ -110,7 +110,7 @@ HeaderTheme::HeaderTheme()
 HeaderTheme::~HeaderTheme() {  
 }
 
-QString HeaderTheme::setTheming( const QString &themeName, KMime::Message *message ) const {
+QString HeaderTheme::setTheme( const QString &themeName, KMime::Message *message ) const {
   
   Grantlee::Template t = mEngine->loadByName( themeName + "/default.html" );
   QVariantHash data;
