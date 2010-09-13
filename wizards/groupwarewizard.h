@@ -26,7 +26,7 @@
 
 class OverViewPage;
 
-class GroupwareWizard : public QWidget
+class GroupwareWizard : public TQWidget
 {
   Q_OBJECT
 
