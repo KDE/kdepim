@@ -28,6 +28,7 @@ Rectangle {
   property variant action
   property variant actionIconName
   property int hardcoded_height : 70
+  property bool disableable : true
   property bool hidable : true
   property bool hidden : hidable && !action.enabled
   property bool checkable : false
@@ -55,7 +56,7 @@ Rectangle {
   Binding {
     target: _topContext
     property: "enabled"
-    value: action.enabled
+    value: disableable ? action.enabled : true
   }
 
   height : (!hidable || action.enabled) ? hardcoded_height : 0
