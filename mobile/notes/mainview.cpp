@@ -40,6 +40,7 @@
 #include <KMime/KMimeMessage>
 #include <akonadi_next/notecreatorandselector.h>
 #include <akonadi_next/note.h>
+#include <kmessagebox.h>
 
 using namespace Akonadi;
 
@@ -275,6 +276,8 @@ void MainView::startComposer()
 
   if (!collection.isValid())
   {
+    KMessageBox::information(this, i18n( "You do not appear to have any resources for notes. Please create one first." ),
+                             i18n( "No resources available" ) );
     // No suitable collection found.
     // Create a resource with LocalResourceCreator,
     // then add a collection, then use the NoteCreatorAndSelector.
