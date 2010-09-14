@@ -14,11 +14,11 @@ set(notes_mobile_SRCS
   main.cpp
 )
 
-if (KDEQMLPLUGIN_STATIC)
-  add_definitions(-DKDEQMLPLUGIN_STATIC)
-endif (KDEQMLPLUGIN_STATIC)
-
 kde4_add_executable(notes-mobile ${notes_mobile_SRCS} )
+if (WINCE)
+  SET_TARGET_PROPERTIES(notes-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
+endif(WINCE)
+
 target_link_libraries(notes-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
@@ -27,10 +27,6 @@ target_link_libraries(notes-mobile
   kdepim
   akonadi_next
 )
-
-if (KDEQMLPLUGIN_STATIC)
-  target_link_libraries(notes-mobile kdeqmlplugin)
-endif (KDEQMLPLUGIN_STATIC)
 
 install(TARGETS notes-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES notes-mobile.sh DESTINATION ${BIN_INSTALL_DIR})

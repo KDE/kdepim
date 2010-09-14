@@ -35,11 +35,6 @@
 #include <klocale.h>
 #include <Akonadi/ItemFetchScope>
 
-#ifdef KDEQMLPLUGIN_STATIC
-#include "runtime/qml/kde/kdeintegration.h"
-#include <QDeclarativeContext>
-#endif
-
 QML_DECLARE_TYPE( Akonadi::Contact::ContactViewItem )
 QML_DECLARE_TYPE( Akonadi::Contact::ContactGroupViewItem )
 
@@ -51,9 +46,6 @@ void MainView::delayedInit()
 {
   qmlRegisterType<Akonadi::Contact::ContactViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactView" );
   qmlRegisterType<Akonadi::Contact::ContactGroupViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactGroupView" );
-#ifdef KDEQMLPLUGIN_STATIC  
-  rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
-#endif
 
   ContactImageProvider *provider = new ContactImageProvider;
   provider->setModel( itemModel() );

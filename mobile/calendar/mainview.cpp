@@ -56,11 +56,6 @@
 #include <QTimer>
 #include <QDBusConnection>
 
-#ifdef KDEQMLPLUGIN_STATIC
-#include "runtime/qml/kde/kdeintegration.h"
-#include <QDeclarativeContext>
-#endif
-
 using namespace Akonadi;
 using CalendarSupport::KCalPrefs;
 
@@ -91,9 +86,6 @@ void MainView::delayedInit()
   qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
   qmlRegisterType<EventViews::MonthViewItem>( "org.kde.calendarviews", 4, 5, "MonthView" );
   qmlRegisterType<Qt::QmlDateEdit>( "org.qt", 4, 7, "QmlDateEdit" );
-#ifdef KDEQMLPLUGIN_STATIC  
-  rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
-#endif
 
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );

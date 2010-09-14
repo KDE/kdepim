@@ -22,6 +22,10 @@ set(mobileui_SRCS
     qmllistselectionmodel.cpp
 )
 
+if (KDEQMLPLUGIN_STATIC)
+  add_definitions(-DKDEQMLPLUGIN_STATIC)
+endif (KDEQMLPLUGIN_STATIC)
+
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_library(kdepimmobileui ${LIBRARY_TYPE} ${mobileui_SRCS})
@@ -35,6 +39,9 @@ target_link_libraries(kdepimmobileui
   kdepim
   calendarsupport
 )
+if (KDEQMLPLUGIN_STATIC)
+  target_link_libraries(kdepimmobileui kdeqmlplugin)
+endif (KDEQMLPLUGIN_STATIC)
 
 set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
 configure_file( stylesheet.css.cmake ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css )

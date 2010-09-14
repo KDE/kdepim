@@ -29,8 +29,7 @@ KDeclarativeApplication::KDeclarativeApplication()
   // make it look more like on the actual device when testing on the desktop
 #ifdef Q_OS_WINCE
   QFont f = font();
-  f.setPointSize( 11 );
-  f.setWeight( QFont::Bold );
+  f.setPointSize( 9 );
   setFont( f );
 #else
   QFont f = font();

@@ -44,6 +44,11 @@
 #include <boost/bind.hpp>
 #include <algorithm>
 
+#ifdef KDEQMLPLUGIN_STATIC
+#include "runtime/qml/kde/kdeintegration.h"
+#include <QDeclarativeContext>
+#endif
+
 
 KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileName, QWidget* parent) :
   QDeclarativeView( parent ),
@@ -65,6 +70,10 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   Akonadi::Control::widgetNeedsAkonadi( this );
 #endif
 
+#ifdef KDEQMLPLUGIN_STATIC  
+  rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
+#endif
+
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
 #if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE)
   setWindowState( Qt::WindowFullScreen );
@@ -78,9 +87,13 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   qApp->setStartDragDistance(40);
 
   m_splashScreen = new QLabel( this );
+//Take out Splashscreen, because it is loaded each time a new window is opened
+//This is too much for wince
+#ifdef Q_OS_WINCE
   QPixmap splashBackground;
   splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
   m_splashScreen->setPixmap( splashBackground );
+#endif
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
 }
