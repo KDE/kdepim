@@ -472,15 +472,20 @@ void MainView::setListSelectedRow(int row)
   const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
   Q_ASSERT(idx.isValid());
   itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
-  Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-
+  // FIXME this should all be in messageviewer and happen after mail download, see also similar code in KMCommands
+  Akonadi::Item fullItem = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
   Akonadi::MessageStatus status;
-  status.setStatusFromFlags(item.flags());
+  status.setStatusFromFlags(fullItem.flags());
   if ( status.isUnread() )
   {
+    Akonadi::Item sparseItem( fullItem.id() );
+    sparseItem.setRevision( fullItem.revision() );
+
     status.setRead();
-    item.setFlags(status.statusFlags());
-    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item);
+    sparseItem.setFlags(status.statusFlags());
+    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(sparseItem, this);
+    modifyJob->disableRevisionCheck();
+    modifyJob->ignorePayload();
   }
 }
 
