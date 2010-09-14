@@ -481,14 +481,20 @@ void MonthView::reloadIncidences()
   }
 
   // add holidays
+  const QList<QDate> workDays = CalendarSupport::workDays( actualStartDateTime().date(),
+                                                           actualEndDateTime().date() );
+
   for ( QDate date = actualStartDateTime().date(); date <= actualEndDateTime().date(); date = date.addDays( 1 ) ) {
-    QStringList holidays( CalendarSupport::holiday( date ) );
-    if ( !holidays.isEmpty() ) {
-      MonthItem *holidayItem =
-        new HolidayMonthItem(
-          d->scene, date,
-          holidays.join( i18nc( "delimiter for joining holiday names", "," ) ) );
-      d->scene->mManagerList << holidayItem;
+    // Only call CalendarSupport::holiday() if it's not a workDay, saves come cpu cicles.
+    if ( !workDays.contains( date ) ) {
+      QStringList holidays( CalendarSupport::holiday( date ) );
+      if ( !holidays.isEmpty() ) {
+        MonthItem *holidayItem =
+          new HolidayMonthItem(
+            d->scene, date,
+            holidays.join( i18nc( "delimiter for joining holiday names", "," ) ) );
+        d->scene->mManagerList << holidayItem;
+      }
     }
   }
 
