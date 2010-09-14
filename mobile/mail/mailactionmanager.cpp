@@ -47,6 +47,12 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action = actionCollection->addAction("write_new_email");
   action->setText( i18n("Write New Email") );
 
+  action = actionCollection->addAction("send_queued_emails");
+  action->setText( i18n("Send Queued EMails") );
+
+  action = actionCollection->addAction("send_queued_emails_via");
+  action->setText( i18n("Send Queued EMails") );
+
   action = actionCollection->addAction("message_reply");
   action->setText( i18n("Reply") );
   

@@ -62,15 +62,34 @@
 
 #include <QTimer>
 #include <QDir>
+#include <messagecomposer/akonadisender.h>
+#include <mailtransport/transportmanager.h>
+#include <QSignalMapper>
+#include <QLabel>
 
 
 Q_DECLARE_METATYPE(KMime::Content*)
 QML_DECLARE_TYPE(MessageViewer::MessageViewItem)
 
+static bool workOffline()
+{
+  KConfig config( QLatin1String( "akonadikderc" ) );
+  const KConfigGroup group( &config, QLatin1String( "Actions" ) );
+
+  return group.readEntry( "WorkOffline", false );
+}
+
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
 {
   qRegisterMetaType<KMime::Content*>();
+  mAskingToGoOnline = false;
+  mTransportDialog = 0;
+}
+
+MainView::~MainView()
+{
+  delete mMessageSender;
 }
 
 void MainView::delayedInit()
@@ -93,13 +112,16 @@ void MainView::delayedInit()
   addMimeType( KMime::Message::mimeType() );
   itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
   setWindowTitle( i18n( "KMail Mobile" ) );
+  mMessageSender = new AkonadiSender;
 
-  MailActionManager *mailActionManager = new MailActionManager(actionCollection(), this);
-  mailActionManager->setItemSelectionModel(itemSelectionModel());
+  MailActionManager *mMailActionManager = new MailActionManager(actionCollection(), this);
+  mMailActionManager->setItemSelectionModel(itemSelectionModel());
 
   connect(actionCollection()->action("mark_message_important"), SIGNAL(triggered(bool)), SLOT(markImportant(bool)));
   connect(actionCollection()->action("mark_message_action_item"), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)));
   connect(actionCollection()->action("write_new_email"), SIGNAL(triggered(bool)), SLOT(startComposer()));
+  connect(actionCollection()->action("send_queued_emails"), SIGNAL(triggered(bool)), SLOT(sendQueued()));
+  connect(actionCollection()->action("send_queued_emails_via"), SIGNAL(triggered(bool)), SLOT(sendQueuedVia()));
   connect(actionCollection()->action("message_reply"), SIGNAL(triggered(bool)), SLOT(replyToMessage()));
   connect(actionCollection()->action("message_reply_to_all"), SIGNAL(triggered(bool)), SLOT(replyToAll()));
   connect(actionCollection()->action("message_reply_to_author"), SIGNAL(triggered(bool)), SLOT(replyToAuthor()));
@@ -259,6 +281,83 @@ void MainView::sendAgainFetchResult(KJob* job)
   composer->setMessage( newMsg );
   composer->show();
 }
+
+bool MainView::askToGoOnline()
+{
+  // already asking means we are offline and need to wait anyhow
+  if ( mAskingToGoOnline ) {
+    return false;
+  }
+
+  if ( workOffline() ) {
+    mAskingToGoOnline = true;
+    int rc =
+    KMessageBox::questionYesNo( this,
+                                i18n("KMail is currently in offline mode. "
+                                     "How do you want to proceed?"),
+                                i18n("Online/Offline"),
+                                KGuiItem(i18n("Work Online")),
+                                KGuiItem(i18n("Work Offline")));
+
+    mAskingToGoOnline = false;
+    if( rc == KMessageBox::No ) {
+      return false;
+    } else {
+      ///emulate turning off offline mode
+      QAction *workOffLineAction = mMailActionManager->action( Akonadi::StandardActionManager::ToggleWorkOffline );
+      workOffLineAction->setChecked(true);
+      workOffLineAction->trigger();
+    }
+  }
+  return true;
+}
+
+void MainView::sendQueued()
+{
+  if ( !askToGoOnline() )
+    return;
+
+  mMessageSender->sendQueued();
+}
+
+void MainView::sendQueuedVia()
+{
+  if ( !askToGoOnline() )
+    return;
+
+  const QStringList availTransports= MailTransport::TransportManager::self()->transportNames();
+  
+  delete mTransportDialog;
+  mTransportDialog = new QWidget( this, Qt::Dialog ); //not a real dialog though, should be done in QML
+  mTransportDialog->setWindowTitle( i18n( "Send Queued Email Via" ) );
+  QPalette pal = mTransportDialog->palette();
+  pal.setColor( QPalette::Window, Qt::darkGray ); //make sure the label is readable...
+  mTransportDialog->setPalette( pal );
+  QVBoxLayout *layout = new QVBoxLayout( mTransportDialog );
+  QLabel *label = new QLabel( i18n( "Send Queued Email Via" ) );
+  layout->addWidget( label );
+  QSignalMapper *mapper = new QSignalMapper( mTransportDialog );
+  Q_FOREACH( QString transport, availTransports )
+  {
+    QPushButton *button = new QPushButton( transport );
+    layout->addWidget( button );
+    mapper->setMapping( button, transport);
+    connect( button, SIGNAL( clicked() ), mapper, SLOT( map() ) );
+ }
+  connect( mapper, SIGNAL( mapped( QString ) ), this, SLOT( sendQueuedVia( QString ) ));
+  QPushButton *button = new QPushButton( i18n("Discard") );
+  layout->addWidget( button );
+  connect( button, SIGNAL( clicked( bool ) ), mTransportDialog, SLOT( close() ) );
+  mTransportDialog->show();
+}
+
+void MainView::sendQueuedVia(const QString& transport)
+{
+  mMessageSender->sendQueued( transport );
+  delete mTransportDialog;
+  mTransportDialog = 0;
+}
+
 
 void MainView::replyToAuthor()
 {
@@ -505,6 +604,7 @@ bool MainView::isDraft( int row )
 {
   static const int column = 0;
   const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
+  kDebug() << "itemSelectionModel " << itemSelectionModel() << " model" << itemSelectionModel()->model() << " idx->model()" << idx.model();
   itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
   Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
@@ -601,28 +701,28 @@ void MainView::deleteItemResult( KJob *job )
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
-  Akonadi::StandardMailActionManager *manager = new Akonadi::StandardMailActionManager( actionCollection(), this );
-  manager->setCollectionSelectionModel( collectionSelectionModel );
-  manager->setItemSelectionModel( itemSelectionModel );
+  mMailActionManager = new Akonadi::StandardMailActionManager( actionCollection(), this );
+  mMailActionManager->setCollectionSelectionModel( collectionSelectionModel );
+  mMailActionManager->setItemSelectionModel( itemSelectionModel );
 
-  manager->createAllActions();
+  mMailActionManager->createAllActions();
 
-  manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+  mMailActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
 
-  connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
+  connect( mMailActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
 
-  manager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize emails\nin account", "Synchronize emails\nin accounts" ) );
-  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
-  manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  manager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
-  manager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize emails\nin folder", "Synchronize emails\nin folders" ) );
-  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
-  manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
-  manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  manager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete email", "Delete emails" ) );
-  manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move email\nto folder" ) );
-  manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy email\nto folder" ) );
+  mMailActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize emails\nin account", "Synchronize emails\nin accounts" ) );
+  mMailActionManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  mMailActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
+  mMailActionManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
+  mMailActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize emails\nin folder", "Synchronize emails\nin folders" ) );
+  mMailActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  mMailActionManager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
+  mMailActionManager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
+  mMailActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete email", "Delete emails" ) );
+  mMailActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move email\nto folder" ) );
+  mMailActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy email\nto folder" ) );
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall emails" ) );
 

@@ -26,6 +26,11 @@
 #include <messagecomposer/messagefactory.h>
 #include <Akonadi/KMime/SpecialMailCollections>
 
+namespace Akonadi {
+  class StandardMailActionManager;
+}
+
+class AkonadiSender;
 class KJob;
 
 /** The new KMMainWidget ;-) */
@@ -34,6 +39,8 @@ class MainView : public KDeclarativeMainView
   Q_OBJECT
   public:
     explicit MainView(QWidget* parent = 0);
+
+    ~MainView();
 
     enum ForwardMode {
       InLine = 0,
@@ -68,6 +75,9 @@ class MainView : public KDeclarativeMainView
     void replyToMailingList();
     void replyToMessage();
     void sendAgain();
+    void sendQueued();
+    void sendQueuedVia();
+    void sendQueuedVia( const QString &transport );
     void saveMessage();
     void findInMessage();
     void preferHTML(bool useHtml);
@@ -96,7 +106,13 @@ class MainView : public KDeclarativeMainView
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
     void recoverAutoSavedMessages();
     Akonadi::Item currentItem();
+    bool askToGoOnline();
 
+
+    AkonadiSender *mMessageSender;
+    bool mAskingToGoOnline;
+    QWidget* mTransportDialog;
+    Akonadi::StandardMailActionManager* mMailActionManager;
 };
 
 Q_DECLARE_METATYPE(MainView::ForwardMode)

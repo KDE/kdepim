@@ -35,7 +35,13 @@ ActionMenuContainer {
     name : "home_menu"
     text : KDE.i18n( "Home" )
     ActionListItem { name : "synchronize_all_items" }
-    FakeAction { name : "send_queued_emails" }
+    ActionListItem {
+      name : "send_queued_emails" 
+      onPressAndHold: {
+          application.getAction("send_queued_emails_via", "").trigger();
+          actionPanel.collapse()
+      }
+    }
     ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select multiple folders" ) }
     FakeAction { name : "empty_all_trash_folders" }
   }
@@ -139,8 +145,9 @@ ActionMenuContainer {
       onPressAndHold: {
           replyOptionsPage.visible = true
           actionPanel.collapse()
-      }
+      }      
     }
+  
     /*
     ActionList {
       category: "mail_viewer"
