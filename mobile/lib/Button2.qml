@@ -22,6 +22,7 @@
 import Qt 4.7
 
 Rectangle {
+  id: mainItem
   property string icon
   property alias buttonText: buttonText.text
   property alias font: buttonText.font
@@ -64,9 +65,9 @@ Rectangle {
     State {
       name: "pressed"
       PropertyChanges {
-          target: mainItem
-          border.color: "#4166F5"
-          border.width: 2
+        target: mainItem
+        border.color: "#4166F5"
+        border.width: 2
       }
     }
   ]
