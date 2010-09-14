@@ -64,6 +64,16 @@
 #include "qmlcheckableproxymodel.h"
 #include <QtCore/QPluginLoader>
 
+#include <QtGui/QTreeView>
+
+#define VIEW(model) {                        \
+  QTreeView *view = new QTreeView;           \
+  view->setAttribute(Qt::WA_DeleteOnClose);  \
+  view->setModel(model);                     \
+  view->setWindowTitle(#model);              \
+  view->show();                              \
+}
+
 ItemSelectHook::ItemSelectHook(QItemSelectionModel *selectionModel, QObject* parent)
   : QObject(parent), m_selectionModel(selectionModel)
 {
