@@ -2010,13 +2010,6 @@ void KMKernel::slotRequestConfigSync() {
 
 void KMKernel::slotShowConfigurationDialog()
 {
-  if( !mConfigureDialog ) {
-    mConfigureDialog = new ConfigureDialog( 0, false );
-    mConfigureDialog->setObjectName( "configure" );
-    connect( mConfigureDialog, SIGNAL( configChanged() ),
-             this, SLOT( slotConfigChanged() ) );
-  }
-
   if( KMKernel::getKMMainWidget() == 0 ) {
     // ensure that there is a main widget available
     // as parts of the configure dialog (identity) rely on this
@@ -2025,7 +2018,13 @@ void KMKernel::slotShowConfigurationDialog()
     win->show();
 
   }
-
+	
+  if( !mConfigureDialog ) {
+    mConfigureDialog = new ConfigureDialog( 0, false );
+    mConfigureDialog->setObjectName( "configure" );
+    connect( mConfigureDialog, SIGNAL( configChanged() ),
+             this, SLOT( slotConfigChanged() ) );
+  }
   if( mConfigureDialog->isHidden() ) {
     mConfigureDialog->show();
   } else {
