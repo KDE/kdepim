@@ -178,8 +178,6 @@ void KDeclarativeMainView::delayedInit()
   context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
 
   if ( d->mListProxy ) {
-
-    connect(d->mListProxy, SIGNAL(layoutChanged()), resetter, SLOT(doReset()), Qt::QueuedConnection);
     context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
 
     QMLListSelectionModel *qmlSelectionModel = new QMLListSelectionModel(d->mItemSelectionModel, this);
