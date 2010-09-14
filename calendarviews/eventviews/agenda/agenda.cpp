@@ -1476,7 +1476,7 @@ int Agenda::columnWidth( int column ) const
 void Agenda::paintEvent( QPaintEvent * )
 {
   QPainter p( this );
-  drawContents( &p, 0, 0, d->mGridSpacingX * d->mColumns, d->mGridSpacingY * d->mRows );
+  drawContents( &p, 0, -y(), d->mGridSpacingX * d->mColumns, d->mGridSpacingY * d->mRows + y() );
 }
 
 /*
