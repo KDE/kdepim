@@ -522,7 +522,7 @@ void MainView::initDefaultFolders()
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::SentMail );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Drafts );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Trash );
-  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Templates );
+  //findCreateDefaultCollection( Akonadi::SpecialMailCollections::Templates );
 }
 
 void MainView::findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type )
