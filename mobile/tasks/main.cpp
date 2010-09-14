@@ -34,13 +34,7 @@ int main( int argc, char **argv )
   const QByteArray& ba = QByteArray( "tasks-mobile" );
   const KLocalizedString name = ki18n( "Tasks Mobile" );
 
-  // FIXME we don't build incidenceeditor on WinCE, let's hope we don't have the crash there
-#ifndef Q_OS_WINCE
-  // NOTE: This is necessary to avoid a crash, but will result in an empty config.
-  //       To make this really configurable do something like KOrganizerEditorConfig
-  //       in incidinceeditors/groupwareintegration.cpp
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
-#endif
 
   KAboutData aboutData( ba, ba, name, ba, name );
   KCmdLineArgs::init( argc, argv, &aboutData );
