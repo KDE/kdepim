@@ -761,6 +761,11 @@ void KMMainWidget::createWidgets()
     connect( mMessageListView, SIGNAL( messageSelected( KMMessage * ) ),
              this, SLOT( slotMsgSelected( KMMessage * ) ) );
   }
+  else {
+    if ( mMsgActions ) {
+      mMsgActions->setMessageView( 0 );
+    }
+  }
 
   //
   // Create the folder tree
