@@ -89,7 +89,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   m_splashScreen = new QLabel( this );
 //Take out Splashscreen, because it is loaded each time a new window is opened
 //This is too much for wince
-#ifdef Q_OS_WINCE
+#ifndef Q_OS_WINCE
   QPixmap splashBackground;
   splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
   m_splashScreen->setPixmap( splashBackground );
