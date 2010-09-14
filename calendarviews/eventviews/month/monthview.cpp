@@ -65,7 +65,7 @@ class MonthViewPrivate
     void addIncidence( const Akonadi::Item &incidence );
     void moveStartDate( int weeks, int months );
     void setUpModels();
-    void triggerDelayedReload();
+    void triggerDelayedReload( EventView::Change reason );
 
   public:  /// Members
     CalendarSupport::CalendarSearch *calendarSearch;
@@ -93,6 +93,7 @@ void MonthViewPrivate::addIncidence( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
   //TODO: add some more intelligence here...
+  q->setChanges( q->changes() | EventView::IncidencesAdded );
   q->reloadIncidences();
 }
 
@@ -125,8 +126,9 @@ void MonthViewPrivate::setUpModels()
 #endif
 }
 
-void MonthViewPrivate::triggerDelayedReload()
+void MonthViewPrivate::triggerDelayedReload( EventView::Change reason )
 {
+  q->setChanges( q->changes() | reason );
   if ( !reloadTimer.isActive() ) {
     reloadTimer.start( 50 );
   }
@@ -231,6 +233,7 @@ void MonthView::updateConfig()
   types |= CalendarSupport::CalendarSearch::Events;
   d->calendarSearch->setIncidenceTypes( types );
   d->scene->update();
+  setChanges( changes() | ConfigChanged );
 }
 
 int MonthView::currentDateCount() const
@@ -276,6 +279,7 @@ void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
   EventView::setDateRange( start, end );
   d->calendarSearch->setStartDate( actualStartDateTime() );
   d->calendarSearch->setEndDate( actualEndDateTime() );
+  setChanges( changes() | DatesChanged );
   reloadIncidences();
 }
 
@@ -308,6 +312,7 @@ void MonthView::changeIncidenceDisplay( const Akonadi::Item &incidence, int acti
   // MonthItems, but this changeIncidenceDisplay()-method was probably
   // called by one of the MonthItem objects. So only schedule a reload
   // as event
+  setChanges( changes() | IncidencesEdited );
   QTimer::singleShot( 0, this, SLOT(reloadIncidences()) );
 }
 
@@ -379,7 +384,7 @@ void MonthView::showDates( const QDate &start, const QDate &end )
 {
   Q_UNUSED( start );
   Q_UNUSED( end );
-  d->triggerDelayedReload();
+  d->triggerDelayedReload( DatesChanged );
 }
 
 QPair<KDateTime,KDateTime> MonthView::actualDateRange( const KDateTime &start,
@@ -411,6 +416,9 @@ Akonadi::Item::List MonthView::selectedIncidences() const
 
 void MonthView::reloadIncidences()
 {
+  if ( changes() == NothingChanged ) {
+    return;
+  }
   // keep selection if it exists
   Akonadi::Item incidenceSelected;
 
@@ -530,7 +538,7 @@ void MonthView::reloadIncidences()
 void MonthView::calendarReset()
 {
   kDebug();
-  d->triggerDelayedReload();
+  d->triggerDelayedReload( ResourcesChanged );
 }
 
 void MonthView::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
@@ -556,7 +564,7 @@ void MonthView::incidencesAdded( const Akonadi::Item::List &incidences )
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item added: " << CalendarSupport::incidence( i )->summary();
   }
-  d->triggerDelayedReload();
+  d->triggerDelayedReload( IncidencesAdded );
 }
 
 void MonthView::incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences )
@@ -564,7 +572,7 @@ void MonthView::incidencesAboutToBeRemoved( const Akonadi::Item::List &incidence
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item removed: " << CalendarSupport::incidence( i )->summary();
   }
-  d->triggerDelayedReload();
+  d->triggerDelayedReload( IncidencesDeleted );
 }
 
 void MonthView::incidencesChanged( const Akonadi::Item::List &incidences )
@@ -572,7 +580,7 @@ void MonthView::incidencesChanged( const Akonadi::Item::List &incidences )
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item changed: " << CalendarSupport::incidence( i )->summary();
   }
-  d->triggerDelayedReload();
+  d->triggerDelayedReload( IncidencesEdited );
 }
 
 QDate MonthView::averageDate() const
