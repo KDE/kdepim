@@ -546,9 +546,10 @@ void MainView::createDefaultCollectionDone( KJob *job)
   if ( job->error() ) {
     kDebug() << "Error creating default collection: " << job->errorText();
     //###: review error string
-    KMessageBox::sorry( this,
+    // diabled for now, triggers too often without good reason on the n900 (too short timeouts probably)
+/*    KMessageBox::sorry( this,
                         i18n("Error creating default collection."),
-                        i18n("Internal Error"));
+                        i18n("Internal Error"));*/
     return;
   }
 
