@@ -571,8 +571,10 @@ void MonthView::incidencesAboutToBeRemoved( const Akonadi::Item::List &incidence
 {
   Q_FOREACH ( const Akonadi::Item &i, incidences ) {
     kDebug() << "item removed: " << CalendarSupport::incidence( i )->summary();
+    d->scene->removeIncidence( i.id() );
   }
-  d->triggerDelayedReload( IncidencesDeleted );
+
+  // No need to trigger reload, we already removed the incidence.
 }
 
 void MonthView::incidencesChanged( const Akonadi::Item::List &incidences )

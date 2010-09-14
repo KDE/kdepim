@@ -239,6 +239,8 @@ class MonthItem : public QObject
     */
     virtual QList<QPixmap *> icons() const = 0;
 
+    QList<MonthGraphicsItem *> monthGraphicsItems() const;
+
   protected:
     /**
       Called after a move operation.

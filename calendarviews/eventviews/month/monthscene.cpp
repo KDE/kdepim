@@ -715,6 +715,19 @@ void MonthScene::selectItem( MonthItem *item )
   }
 }
 
+void MonthScene::removeIncidence( Akonadi::Item::Id id )
+{
+  foreach( MonthItem *manager, mManagerList ) {
+    IncidenceMonthItem *imi = qobject_cast<IncidenceMonthItem*>( manager );
+    if ( imi && imi->incidence().id() == id ) {
+      foreach( MonthGraphicsItem *gitem, imi->monthGraphicsItems() ) {
+        removeItem( gitem );
+      }
+    }
+  }
+}
+
+
 //----------------------------------------------------------
 MonthGraphicsView::MonthGraphicsView( MonthView *parent )
   : QGraphicsView( parent ), mMonthView( parent )

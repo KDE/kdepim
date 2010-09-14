@@ -174,6 +174,11 @@ class MonthScene : public QGraphicsScene
     QPixmap *replyPixmap() { return &mReplyPixmap; }
     QPixmap *holidayPixmap() { return &mHolidayPixmap; }
 
+    /**
+       Removes an incidence from the scene
+    */
+    void removeIncidence( Akonadi::Item::Id id );
+
   signals:
     void incidenceSelected( const Akonadi::Item &incidence, const QDate & );
     void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );

@@ -282,6 +282,11 @@ void MonthItem::updatePosition()
   mPosition = firstFreeSpace;
 }
 
+QList<MonthGraphicsItem *> EventViews::MonthItem::monthGraphicsItems() const
+{
+  return mMonthGraphicsItemList;
+}
+
 //-----------------------------------------------------------------
 // INCIDENCEMONTHITEM
 IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
@@ -743,3 +748,4 @@ QColor HolidayMonthItem::frameColor() const
 {
   return Qt::black;
 }
+
