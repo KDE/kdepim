@@ -60,6 +60,16 @@ Item {
   function showOnlyCategory(category)
   {
     itemModel.showOnlyCategory(category)
+
+    for ( var i = 0; i < itemModel.children.length; ++i ) {
+      // QML has no type or interface system so we rely on the all children of itemModel
+      // that are items have a category property
+      if (itemModel.children[i].visible && itemModel.children[i].showChildren != undefined ) {
+        // We make the first visible item show its children.
+        itemModel.children[i].showChildren = true;
+        return;
+      }
+    }
   }
 
   VisualItemModel {
