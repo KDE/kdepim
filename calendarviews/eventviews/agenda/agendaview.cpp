@@ -940,7 +940,7 @@ void AgendaView::createDayLabels( bool force )
     }
     d->mDateDayLabels.append( dayLabel );
     // if a holiday region is selected, show the holiday name
-    const QStringList texts = holidayNames( date );
+    const QStringList texts = CalendarSupport::holiday( date );
     Q_FOREACH( const QString &text, texts ) {
       // Compute a small version of the holiday string for AlternateLabel
       const KWordWrap *ww = KWordWrap::formatText( fm, topDayLabelBox->rect(), 0, text, -1 );
@@ -1893,13 +1893,15 @@ void AgendaView::setHolidayMasks()
 
   d->mHolidayMask.resize( d->mSelectedDates.count() + 1 );
 
+  const QList<QDate> workDays = CalendarSupport::workDays( d->mSelectedDates.first().addDays( -1 ),
+                                                           d->mSelectedDates.last() );
   for ( int i = 0; i < d->mSelectedDates.count(); ++i ) {
-    d->mHolidayMask[i] = !isWorkDay( d->mSelectedDates[ i ] );
+    d->mHolidayMask[i] = !workDays.contains( d->mSelectedDates[ i ] );
   }
 
   // Store the information about the day before the visible area (needed for
   // overnight working hours) in the last bit of the mask:
-  bool showDay = !isWorkDay( d->mSelectedDates[ 0 ].addDays( -1 ) );
+  bool showDay = !workDays.contains( d->mSelectedDates[ 0 ].addDays( -1 ) );
   d->mHolidayMask[ d->mSelectedDates.count() ] = showDay;
 
   d->mAgenda->setHolidayMask( &d->mHolidayMask );

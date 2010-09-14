@@ -216,7 +216,6 @@ namespace CalendarSupport
       Returns a list containing work days between @p start and @end.
   */
   CALENDARSUPPORT_EXPORT QList<QDate> workDays( const QDate &start, const QDate &end );
-  CALENDARSUPPORT_EXPORT bool isWorkDay( const QDate &qd );
 
   /**
     Returns a list of holidays that occur at @param date.

@@ -71,7 +71,7 @@ EventView::EventView( QWidget *parent )
   QByteArray cname = metaObject()->className();
   cname.replace( ':', '_' );
   d_ptr->identifier = cname + '_' + KRandom::randomString( 8 ).toLatin1();
-  
+
   //AKONADI_PORT review: the FocusLineEdit in the editor emits focusReceivedSignal(),
   //which triggered finishTypeAhead.  But the global focus widget in QApplication is
   //changed later, thus subsequent keyevents still went to this view, triggering another
@@ -80,7 +80,7 @@ EventView::EventView( QWidget *parent )
   connect( qobject_cast<QApplication*>( QApplication::instance() ),
            SIGNAL(focusChanged(QWidget*,QWidget*)),
            this, SLOT(focusChanged(QWidget*,QWidget*)) );
-  
+
   d_ptr->setUpModels();
 }
 
@@ -486,35 +486,6 @@ void EventView::handleBackendError( const QString &errorString )
   kError() << errorString;
 }
 
-bool EventView::isWorkDay( const QDate &date ) const
-{
-  Q_D( const EventView );
-  int mask( ~( preferences()->workWeekMask() ) );
-
-  bool nonWorkDay = ( mask & ( 1 << ( date.dayOfWeek() - 1 ) ) );
-  if ( preferences()->excludeHolidays() && d->mHolidayRegion ) {
-    const KHolidays::Holiday::List list = d->mHolidayRegion->holidays( date );
-    for ( int i = 0; i < list.count(); ++i ) {
-      nonWorkDay = nonWorkDay || ( list.at( i ).dayType() == KHolidays::Holiday::NonWorkday );
-    }
-  }
-  return !nonWorkDay;
-}
-
-QStringList EventView::holidayNames( const QDate &date ) const
-{
-  Q_D( const EventView );
-  QStringList hdays;
-
-  if ( d->mHolidayRegion ) {
-    const KHolidays::Holiday::List list = d->mHolidayRegion->holidays( date );
-    Q_FOREACH( const KHolidays::Holiday &holiday, list ) {
-        hdays.append( holiday.text() );
-    }
-  }
-  return hdays;
-}
-
 void EventView::calendarReset()
 {
 }
@@ -605,9 +576,9 @@ void EventView::restoreConfig( const KConfigGroup &configGroup )
       columnFilterProxy->setSourceModel( sortProxy );
 
       // Make the calendar model checkable.
-      d->collectionSelectionModel = new KCheckableProxyModel( this );      
+      d->collectionSelectionModel = new KCheckableProxyModel( this );
       d->collectionSelectionModel->setSourceModel( columnFilterProxy );
-      
+
       d->setUpModels();
     }
 

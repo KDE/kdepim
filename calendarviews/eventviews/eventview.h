@@ -468,9 +468,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     virtual void handleBackendError( const QString &error );
 
-    bool isWorkDay( const QDate &date ) const;
-    QStringList holidayNames( const QDate &date ) const;
-
   private:
     EventViewPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( EventView );
