@@ -104,7 +104,7 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
            SLOT( themeListCurrentItemChanged( QListWidgetItem *, QListWidgetItem * ) ) );
 
   d->mNewThemeButton = new QPushButton( i18n( "New Theme" ), base );
-  d->mNewThemeButton->setIcon( KIcon( "document-new" ) );
+  d->mNewThemeButton->setIcon( KIcon( QLatin1String( "document-new" ) ) );
   d->mNewThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mNewThemeButton, 0, 1 );
 
@@ -112,7 +112,7 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
            SLOT( newThemeButtonClicked() ) );
 
   d->mCloneThemeButton = new QPushButton( i18n( "Clone Theme" ), base );
-  d->mCloneThemeButton->setIcon( KIcon( "edit-copy" ) );
+  d->mCloneThemeButton->setIcon( KIcon( QLatin1String( "edit-copy" ) ) );
   d->mCloneThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mCloneThemeButton, 1, 1 );
 
@@ -125,7 +125,7 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   g->addWidget( f, 2, 1, Qt::AlignVCenter );
 
   d->mDeleteThemeButton = new QPushButton( i18n( "Delete Theme" ), base );
-  d->mDeleteThemeButton->setIcon( KIcon( "edit-delete" ) );
+  d->mDeleteThemeButton->setIcon( KIcon( QLatin1String( "edit-delete" ) ) );
   d->mDeleteThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mDeleteThemeButton, 3, 1 );
 
@@ -309,7 +309,7 @@ QString ConfigureThemesDialog::Private::uniqueNameForTheme( QString baseName, Th
   while ( item )
   {
     idx++;
-    ret = QString("%1 %2").arg( baseName ).arg( idx );
+    ret = QString(QLatin1String( "%1 %2" )).arg( baseName ).arg( idx );
     item = findThemeItemByName( ret, skipTheme );
   }
   return ret;

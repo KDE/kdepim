@@ -34,12 +34,12 @@ QString MessageList::Core::SubjectUtils::stripOffPrefixes( const QString &subjec
 
   QStringList replyPrefixes = composerGroup.readEntry( "reply-prefixes", QStringList() );
   if ( replyPrefixes.isEmpty() ) {
-    replyPrefixes << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:";
+    replyPrefixes << QLatin1String( "Re\\s*:" ) << QLatin1String( "Re\\[\\d+\\]:" ) << QLatin1String( "Re\\d+:" );
   }
 
   QStringList forwardPrefixes = composerGroup.readEntry( "forward-prefixes", QStringList() );
   if ( forwardPrefixes.isEmpty() ) {
-    forwardPrefixes << "Fwd:" << "FW:";
+    forwardPrefixes << QLatin1String( "Fwd:" ) << QLatin1String( "FW:" );
   }
 
   QString str = subject;
@@ -49,7 +49,7 @@ QString MessageList::Core::SubjectUtils::stripOffPrefixes( const QString &subjec
   // 1. is anchored to the beginning of str (sans whitespace)
   // 2. matches at least one of the part regexps in prefixRegExps
   QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*")
-                      .arg( prefixRegExps.join(")|(?:") );
+                      .arg( prefixRegExps.join(QLatin1String( ")|(?:" )) );
   QRegExp rx( bigRegExp, Qt::CaseInsensitive );
   if ( !rx.isValid() ) {
     kWarning() << "bigRegExp = \""

@@ -127,7 +127,7 @@ Widget::Widget( QWidget *pParent )
            this, SLOT(themesChanged() ) );
 
   setAutoFillBackground( true );
-  setObjectName( "messagelistwidget" );
+  setObjectName( QLatin1String( "messagelistwidget" ) );
 
   QGridLayout * g = new QGridLayout( this );
   g->setMargin( 2 ); // use a smaller default
@@ -135,7 +135,7 @@ Widget::Widget( QWidget *pParent )
 
   d->mSearchEdit = new KLineEdit( this );
   d->mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
-  d->mSearchEdit->setObjectName( "quicksearch" );
+  d->mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
   d->mSearchEdit->setClearButtonShown( true );
   d->mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
 
@@ -154,7 +154,7 @@ Widget::Widget( QWidget *pParent )
 
   // The "Open Full Search" button
   d->mOpenFullSearchButton = new QToolButton( this );
-  d->mOpenFullSearchButton->setIcon( KIcon( "edit-find-mail" ) );
+  d->mOpenFullSearchButton->setIcon( KIcon( QLatin1String( "edit-find-mail" ) ) );
   d->mOpenFullSearchButton->setText( i18n( "Open Full Search" ) );
   d->mOpenFullSearchButton->setToolTip( d->mOpenFullSearchButton->text() );
   d->mOpenFullSearchButton->setVisible( Settings::self()->showQuickSearch() );
@@ -166,7 +166,7 @@ Widget::Widget( QWidget *pParent )
 
   d->mView = new View( this );
   d->mView->setSortOrder( &d->mSortOrder );
-  d->mView->setObjectName( "messagealistview" );
+  d->mView->setObjectName( QLatin1String( "messagealistview" ) );
   g->addWidget( d->mView, 1, 0, 1, 6 );
 
   connect( d->mView->header(), SIGNAL( sectionClicked( int ) ),
@@ -229,49 +229,49 @@ void Widget::populateStatusFilterCombo()
 {
   d->mStatusFilterCombo->clear();
 
-  d->mStatusFilterCombo->addItem( SmallIcon("system-run"), i18n( "Any Status" ), 0 );
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "system-run" )), i18n( "Any Status" ), 0 );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-unread"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-unread" )),
                                   i18nc( "@action:inmenu Status of a message", "Unread" ),
                                   Akonadi::MessageStatus::statusUnread().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-replied"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-replied" )),
                                   i18nc( "@action:inmenu Status of a message", "Replied" ),
                                   Akonadi::MessageStatus::statusReplied().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-forwarded"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-forwarded" )),
                                   i18nc( "@action:inmenu Status of a message", "Forwarded" ),
                                   Akonadi::MessageStatus::statusForwarded().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("emblem-important"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "emblem-important" )),
                                   i18nc( "@action:inmenu Status of a message", "Important"),
                                   Akonadi::MessageStatus::statusForwarded().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-task"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-task" )),
                                   i18nc( "@action:inmenu Status of a message", "Action Item" ),
                                   Akonadi::MessageStatus::statusToAct().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-thread-watch"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-thread-watch" )),
                                   i18nc( "@action:inmenu Status of a message", "Watched" ),
                                   Akonadi::MessageStatus::statusWatched().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-thread-ignored"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-thread-ignored" )),
                                   i18nc( "@action:inmenu Status of a message", "Ignored" ),
                                   Akonadi::MessageStatus::statusIgnored().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-attachment"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-attachment" )),
                                   i18nc( "@action:inmenu Status of a message", "Has Attachment" ),
                                   Akonadi::MessageStatus::statusHasAttachment().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-invitation"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-invitation" )),
                                   i18nc( "@action:inmenu Status of a message", "Has Invitation" ),
                                   Akonadi::MessageStatus::statusHasInvitation().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-mark-junk"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-mark-junk" )),
                                   i18nc( "@action:inmenu Status of a message", "Spam" ),
                                   Akonadi::MessageStatus::statusSpam().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon("mail-mark-notjunk"),
+  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-mark-notjunk" )),
                                   i18nc( "@action:inmenu Status of a message", "Ham" ),
                                   Akonadi::MessageStatus::statusHam().toQInt32() );
 

@@ -105,7 +105,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   } // Proxy stack done
 
   d->mNewTabButton = new QToolButton( this );
-  d->mNewTabButton->setIcon( KIcon( "tab-new" ) );
+  d->mNewTabButton->setIcon( KIcon( QLatin1String( "tab-new" ) ) );
   d->mNewTabButton->adjustSize();
   d->mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
   setCornerWidget( d->mNewTabButton, Qt::TopLeftCorner );
@@ -113,7 +113,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
            SLOT( onNewTabClicked() ) );
 
   d->mCloseTabButton = new QToolButton( this );
-  d->mCloseTabButton->setIcon( KIcon( "tab-close" ) );
+  d->mCloseTabButton->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
   d->mCloseTabButton->adjustSize();
   d->mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
   setCornerWidget( d->mCloseTabButton, Qt::TopRightCorner );
@@ -156,7 +156,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
       d->mXmlGuiClient->actionCollection()->removeAction( d->mActionMenu );
     }
     d->mActionMenu = new KActionMenu( KIcon(), i18n( "Message List" ), this );
-    d->mXmlGuiClient->actionCollection()->addAction( "view_message_list", d->mActionMenu );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "view_message_list" ), d->mActionMenu );
     const Widget * const w = static_cast<Widget*>( currentWidget() );
     w->view()->fillViewMenu( d->mActionMenu->menu() );
   }
@@ -323,10 +323,10 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   }
 
   QString label;
-  QIcon icon = KIcon( "folder" );
+  QIcon icon = KIcon( QLatin1String( "folder" ) );
   QString toolTip;
   foreach ( const QModelIndex &index, s->selectedRows() ) {
-    label+= index.data( Qt::DisplayRole ).toString()+", ";
+    label+= index.data( Qt::DisplayRole ).toString()+QLatin1String( ", " );
   }
   label.chop( 2 );
 
@@ -338,7 +338,7 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
     QModelIndex idx = s->selectedRows().first().parent();
     toolTip = label;
     while ( idx != QModelIndex() ) {
-      toolTip = idx.data().toString() + '/' + toolTip;
+      toolTip = idx.data().toString() + QLatin1Char( '/' ) + toolTip;
       idx = idx.parent();
     }
   }
@@ -396,13 +396,13 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 
   action = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
   action->setEnabled( q->count() > 1 );
-  action->setIcon( KIcon( "tab-close" ) );
+  action->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
   connect( action, SIGNAL(triggered(bool)),
            q, SLOT(onCloseTabClicked()) ); // Reuse the logic...
 
   QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
   allOther->setEnabled( q->count() > 1 );
-  allOther->setIcon( KIcon( "tab-close-other" ) );
+  allOther->setIcon( KIcon( QLatin1String( "tab-close-other" ) ) );
 
   action = menu.exec( q->mapToGlobal( pos ) );
 

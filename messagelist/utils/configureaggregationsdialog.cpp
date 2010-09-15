@@ -110,7 +110,7 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
            SLOT( aggregationListCurrentItemChanged( QListWidgetItem *, QListWidgetItem * ) ) );
 
   d->mNewAggregationButton = new QPushButton( i18n( "New Aggregation" ), base );
-  d->mNewAggregationButton->setIcon( KIcon( "document-new" ) );
+  d->mNewAggregationButton->setIcon( KIcon( QLatin1String( "document-new" ) ) );
   d->mNewAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mNewAggregationButton, 0, 1 );
 
@@ -118,7 +118,7 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
            SLOT( newAggregationButtonClicked() ) );
 
   d->mCloneAggregationButton = new QPushButton( i18n( "Clone Aggregation" ), base );
-  d->mCloneAggregationButton->setIcon( KIcon( "edit-copy" ) );
+  d->mCloneAggregationButton->setIcon( KIcon( QLatin1String( "edit-copy" ) ) );
   d->mCloneAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mCloneAggregationButton, 1, 1 );
 
@@ -131,7 +131,7 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   g->addWidget( f, 2, 1, Qt::AlignVCenter );
 
   d->mDeleteAggregationButton = new QPushButton( i18n( "Delete Aggregation" ), base );
-  d->mDeleteAggregationButton->setIcon( KIcon( "edit-delete" ) );
+  d->mDeleteAggregationButton->setIcon( KIcon( QLatin1String( "edit-delete" ) ) );
   d->mDeleteAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   g->addWidget( d->mDeleteAggregationButton, 3, 1 );
 
@@ -307,7 +307,7 @@ QString ConfigureAggregationsDialog::Private::uniqueNameForAggregation( QString 
   while ( item )
   {
     idx++;
-    ret = QString("%1 %2").arg( baseName ).arg( idx );
+    ret = QString(QLatin1String( "%1 %2" )).arg( baseName ).arg( idx );
     item = findAggregationItemByName( ret, skipAggregation );
   }
   return ret;

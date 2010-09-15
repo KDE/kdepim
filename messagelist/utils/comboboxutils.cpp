@@ -41,7 +41,7 @@ void ComboBoxUtils::fillIntegerOptionCombo( KComboBox *combo, const QList< QPair
   }
   if ( idx == 0)
   {
-    combo->addItem( QString("-"), QVariant( (int)0 ) ); // always default to 0
+    combo->addItem( QLatin1String("-"), QVariant( (int)0 ) ); // always default to 0
     combo->setEnabled( false );
   } else {
     if ( !combo->isEnabled() )

@@ -1548,19 +1548,19 @@ void View::selectFocusedMessageItem( bool centerItem )
 void View::fillViewMenu( KMenu * menu )
 {
   KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
-  sortingMenu->setIcon( KIcon( "view-sort-ascending" ) );
+  sortingMenu->setIcon( KIcon( QLatin1String( "view-sort-ascending" ) ) );
   menu->addMenu( sortingMenu );
   connect( sortingMenu, SIGNAL( aboutToShow() ),
            d->mWidget, SLOT( sortOrderMenuAboutToShow() ) );
 
   KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
-  aggregationMenu->setIcon( KIcon( "view-process-tree" ) );
+  aggregationMenu->setIcon( KIcon( QLatin1String( "view-process-tree" ) ) );
   menu->addMenu( aggregationMenu );
   connect( aggregationMenu, SIGNAL( aboutToShow() ),
            d->mWidget, SLOT( aggregationMenuAboutToShow() ) );
 
   KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
-  themeMenu->setIcon( KIcon( "preferences-desktop-theme" ) );
+  themeMenu->setIcon( KIcon( QLatin1String( "preferences-desktop-theme" ) ) );
   menu->addMenu( themeMenu );
   connect( themeMenu, SIGNAL( aboutToShow() ),
            d->mWidget, SLOT( themeMenuAboutToShow() ) );
@@ -2279,7 +2279,7 @@ bool View::event( QEvent *e )
       if ( !tags.isEmpty () )
       {
         if ( !status.isEmpty() )
-          status += ", ";
+          status += QLatin1String( ", " );
         status += tags;
       }
 
@@ -2287,12 +2287,12 @@ bool View::event( QEvent *e )
       tip += htmlCodeForStandardRow.arg( i18n( "Size" ) ).arg( mi->formattedSize() );
 
       if ( mi->hasAnnotation() ) {
-        tip += htmlCodeForStandardRow.arg( i18n( "Note" ) ).arg( mi->annotation().replace( '\n', "<br>" ) );
+        tip += htmlCodeForStandardRow.arg( i18n( "Note" ) ).arg( mi->annotation().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
       }
 
       QString content = mi->contentSummary();
       if ( !content.isEmpty() ) {
-        tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( '\n', "<br>" ) );
+        tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
       }
 
       tip += QString::fromLatin1(
@@ -2356,7 +2356,7 @@ bool View::event( QEvent *e )
             switch ( d->mAggregation->threadLeader() )
             {
               case Aggregation::TopmostMessage:
-                if ( ghi->label().contains( QRegExp( "[0-9]" ) ) )
+                if ( ghi->label().contains( QRegExp( QLatin1String( "[0-9]" ) ) ) )
                   description = i18nc(
                       "@info:tooltip Formats to something like 'Threads started on 2008-12-21'",
                       "Threads started on %1",
@@ -2377,7 +2377,7 @@ bool View::event( QEvent *e )
               break;
             }
           } else {
-            if ( ghi->label().contains( QRegExp( "[0-9]" ) ) )
+            if ( ghi->label().contains( QRegExp( QLatin1String( "[0-9]" ) ) ) )
             {
               if ( storageModel()->containsOutboundMessages() )
                 description = i18nc(

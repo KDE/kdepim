@@ -238,7 +238,7 @@ void MessageItem::Private::fillTagList() const
   const QList< Nepomuk::Tag > nepomukTagList = resource.tags();
   if ( !nepomukTagList.isEmpty() ) {
     foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
-      QString symbol = "mail-tagged";
+      QString symbol = QLatin1String( "mail-tagged" );
       if ( !nepomukTag.symbols().isEmpty() ) {
         symbol = nepomukTag.symbols().first();
       }
@@ -345,12 +345,12 @@ QString MessageItem::contentSummary() const
   // Extract the first 5 non-empty, non-quoted lines from the content and return it
   int numLines = 0;
   const int maxLines = 5;
-  const QStringList lines = content.split( '\n' );
+  const QStringList lines = content.split( QLatin1Char( '\n' ) );
   QString ret;
   foreach( const QString &line, lines ) {
-    const bool isQuoted = line.trimmed().startsWith( '>' ) || line.trimmed().startsWith( '|' );
+    const bool isQuoted = line.trimmed().startsWith( QLatin1Char( '>' ) ) || line.trimmed().startsWith( QLatin1Char( '|' ) );
     if ( !line.trimmed().isEmpty() && !isQuoted ) {
-      ret += line + '\n';
+      ret += line + QLatin1Char( '\n' );
       numLines++;
       if ( numLines >= maxLines )
         break;
@@ -379,7 +379,7 @@ QString MessageItem::tagListDescription() const
 
   foreach( const Tag *tag, tagList() ) {
     if ( !ret.isEmpty() )
-      ret += ", ";
+      ret += QLatin1String( ", " );
     ret += tag->name();
   }
 
