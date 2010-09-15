@@ -43,7 +43,7 @@ ActionMenuContainer {
       }
     }
     ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select multiple folders" ) }
-    FakeAction { name : "empty_all_trash_folders" }
+    ActionListItem { name : "akonadi_empty_all_trash" }
   }
 
   FavoriteManager{
