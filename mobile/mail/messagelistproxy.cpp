@@ -42,7 +42,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
     messageStatus.setStatusFromFlags(item.flags());
     switch ( role ) {
       case SubjectRole:
-        return msg->subject()->asUnicodeString();
+        return msg->subject()->asUnicodeString().trimmed();
       case FromRole:
       {
         QStringList l;
