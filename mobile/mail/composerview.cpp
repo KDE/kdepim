@@ -211,7 +211,8 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
   if ( !m_composerBase->editor()->checkExternalEditorFinished() )
     return;
 
-  if ( m_composerBase->recipientsEditor()->recipients().isEmpty() ) {
+  if ( m_composerBase->recipientsEditor()->recipients().isEmpty()
+    && saveIn != MessageSender::SaveInDrafts ) {
       KMessageBox::sorry( this,
                           i18n("You should specify at least one recipient for this message."),
                           i18n("No recipients found"));
@@ -364,7 +365,10 @@ void ComposerView::closeEvent( QCloseEvent * event )
                                                   KStandardGuiItem::cancel() );
 
   if ( rc == KMessageBox::Yes ) {
+    connect( this, SIGNAL( sentSuccessfully() ), this, SLOT( deleteLater() ) );
     saveDraft();
+    event->ignore();
+    return;
   } else if (rc == KMessageBox::Cancel ) {
     event->ignore();
     return;
