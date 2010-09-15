@@ -99,7 +99,8 @@ void IncidenceView::load( const Akonadi::Item &item, const QDate &date )
 void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 {
   mCollectionCombo = combo;
-  mCollectionCombo->setMimeTypeFilter( QStringList() << KCalCore::Event::eventMimeType() );
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mItem );
+  mCollectionCombo->setMimeTypeFilter( QStringList() << incidence->mimeType() );
   mCollectionCombo->setAccessRightsFilter( Collection::CanCreateItem );
   mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
 }
