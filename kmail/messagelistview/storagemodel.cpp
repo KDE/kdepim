@@ -313,7 +313,7 @@ bool StorageModel::containsOutboundMessages() const
  * the colors the message should use.
  */
 QList< Core::MessageItem::Tag * > * fillTagList( KMMsgBase * msg,
-    QColor & textColor, QColor & backgroundColor )
+    QColor & textColor, QColor & backgroundColor, QFont &textFnt )
 {
   // FIXME: Tags should be sorted by priority!
   QList< Core::MessageItem::Tag * > * tagList = 0;
@@ -335,6 +335,7 @@ QList< Core::MessageItem::Tag * > * fillTagList( KMMsgBase * msg,
             textColor = description->textColor();
             backgroundColor = description->backgroundColor();
             bestPriority = description->priority();
+	    textFnt = description->textFont();
           }
 
           Core::MessageItem::Tag * tag;
@@ -476,8 +477,9 @@ void StorageModel::setMessageItemData( Core::MessageItem * mi, KMMsgBase * msg )
 
   QColor clr;
   QColor backClr;
+  QFont textFnt;
   QList< Core::MessageItem::Tag * > * tagList;
-  tagList = fillTagList( msg, clr, backClr );
+  tagList = fillTagList( msg, clr, backClr , textFnt);
   mi->setTagList( tagList );
 
   KPIM::MessageStatus stat = msg->messageStatus();
@@ -507,6 +509,8 @@ void StorageModel::setMessageItemData( Core::MessageItem * mi, KMMsgBase * msg )
     mi->setFont( mFontUnreadMessage );
   else if ( stat.isToAct() )
     mi->setFont( mFontToDoMessage );
+  else if ( textFnt != QFont() )
+    mi->setFont( textFnt );
   else
     mi->setFont( mFont );
 }
