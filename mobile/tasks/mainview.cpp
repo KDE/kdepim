@@ -58,7 +58,7 @@ void MainView::delayedInit()
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
 
-  KAction *action = new KAction( i18n( "New Appointment" ), this );
+  KAction *action = new KAction( i18n( "New Task" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(newTask()) );
   actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
 }
