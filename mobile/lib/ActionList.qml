@@ -29,6 +29,8 @@ QML.Item {
   //property alias listElementContent : _listElementContent.data
   default property alias listContent : _listContent.content
 
+  signal doCollapse()
+
   property string category
 
   property string name
@@ -71,6 +73,10 @@ QML.Item {
 
     onTriggered : {
       actionList_top.triggered(triggeredName)
+    }
+
+    onDoCollapse : {
+      actionList_top.doCollapse()
     }
     visible : false
   }

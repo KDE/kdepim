@@ -39,6 +39,8 @@ Item {
 
   signal triggered(string triggeredName)
 
+  signal doCollapse()
+
   clip: true
 
   Item {
@@ -103,6 +105,10 @@ Item {
           children[i].actionItemSpacing = actionItemSpacing
         if (children[i].actionItemHeight != undefined)
           children[i].actionItemHeight = actionItemHeight
+        if (children[i].doCollapse != undefined) {
+          children[i].doCollapse.disconnect(_topLevel, doCollapse)
+          children[i].doCollapse.connect(_topLevel, doCollapse)
+        }
         children[i].triggered.disconnect( itemModel, triggered )
         children[i].triggered.connect( itemModel, triggered )
         // children[i].width = parent.actionItemWidth

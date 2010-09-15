@@ -307,6 +307,8 @@ KPIM.MainView {
             }
           ]
 
+          onDoCollapse : actionPanelNew.collapse();
+
           onTriggered : {
             console.log("Triggered was: " + triggeredName)
           }

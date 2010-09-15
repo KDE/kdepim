@@ -33,6 +33,7 @@ QML.Item {
   property string category
 
   signal triggered(string triggeredName)
+  signal doCollapse()
   signal pressAndHold()
 
   onVisibleChanged :
@@ -57,6 +58,10 @@ QML.Item {
 
     onLongPressed: {
       pressAndHold();
+    }
+
+    onTriggered : {
+      parent.doCollapse()
     }
   }
 }
