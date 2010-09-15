@@ -92,7 +92,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   EntityMimeTypeFilterModel *itemFilter = new EntityMimeTypeFilterModel( this );
   itemFilter->setSourceModel( childrenFilter );
   itemFilter->addMimeTypeExclusionFilter( Collection::mimeType() );
-  itemFilter->addMimeTypeInclusionFilter( "message/rfc822" );
+  itemFilter->addMimeTypeInclusionFilter( QLatin1String( "message/rfc822" ) );
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
   d->mModel = itemFilter;
@@ -161,7 +161,7 @@ QString StorageModel::id() const
   }
 
   ids.sort();
-  return ids.join(":");
+  return ids.join(QLatin1String( ":" ));
 }
 
 bool StorageModel::containsOutboundMessages() const
@@ -226,7 +226,7 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
 
   QString subject = mail->subject()->asUnicodeString();
   if ( subject.isEmpty() ) {
-    subject = '(' + noSubject + ')';
+    subject = QLatin1Char( '(' ) + noSubject + QLatin1Char( ')' );
   }
 
   mi->setSubject( subject );

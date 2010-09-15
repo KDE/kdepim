@@ -101,7 +101,7 @@ bool Widget::canAcceptDrag( const QDropEvent * e )
     if ( collection.isValid() ) { // You're not supposed to drop collections here
       return false;
     } else { // Yay, this is an item!
-      const QString type = url.queryItems()["type"]; // But does it have the right type?
+      const QString type = url.queryItems()[QLatin1String( "type" )]; // But does it have the right type?
       if ( !target.contentMimeTypes().contains( type ) ) {
         return false;
       }
@@ -341,10 +341,10 @@ void Widget::viewDropEvent( QDropEvent *e )
     } else {
       // FIXME: This code is duplicated almost exactly in FolderView... shouldn't we share ?
       KMenu menu;
-      QAction *moveAction = menu.addAction( KIcon( "go-jump"), i18n( "&Move Here" ) );
-      QAction *copyAction = menu.addAction( KIcon( "edit-copy" ), i18n( "&Copy Here" ) );
+      QAction *moveAction = menu.addAction( KIcon( QLatin1String( "go-jump" )), i18n( "&Move Here" ) );
+      QAction *copyAction = menu.addAction( KIcon( QLatin1String( "edit-copy" ) ), i18n( "&Copy Here" ) );
       menu.addSeparator();
-      menu.addAction( KIcon( "dialog-cancel" ), i18n( "C&ancel" ) );
+      menu.addAction( KIcon( QLatin1String( "dialog-cancel" ) ), i18n( "C&ancel" ) );
 
       QAction *menuChoice = menu.exec( QCursor::pos() );
       if ( menuChoice == moveAction ) {
@@ -407,9 +407,9 @@ void Widget::viewStartDragRequest()
   // Set pixmap
   QPixmap pixmap;
   if( items.size() == 1 ) {
-    pixmap = QPixmap( DesktopIcon("mail-message", KIconLoader::SizeSmall) );
+    pixmap = QPixmap( DesktopIcon(QLatin1String( "mail-message" ), KIconLoader::SizeSmall) );
   } else {
-    pixmap = QPixmap( DesktopIcon("document-multiple", KIconLoader::SizeSmall) );
+    pixmap = QPixmap( DesktopIcon(QLatin1String( "document-multiple" ), KIconLoader::SizeSmall) );
   }
 
   // Calculate hotspot (as in Konqueror)

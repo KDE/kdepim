@@ -176,7 +176,7 @@ void ThemeContentItemSourceLabel::startDrag()
   QByteArray arry;
   arry.resize( sizeof( Theme::ContentItem::Type ) );
   *( ( Theme::ContentItem::Type * ) arry.data() ) = mType;
-  data->setData( gThemeContentItemTypeDndMimeDataFormat, arry );
+  data->setData( QLatin1String( gThemeContentItemTypeDndMimeDataFormat ), arry );
   QDrag * drag = new QDrag( this );
   drag->setMimeData( data );
   //drag->setPixmap( pix );
@@ -415,7 +415,7 @@ void ThemePreviewWidget::setTheme( Theme * theme )
   {
     QString label = ( *it )->label();
     if ( ( *it )->visibleByDefault() )
-      label += QString( " (%1)" ).arg( i18nc( "Indicates whether or not a header label is visible", "Visible") );
+      label += QString( QLatin1String( " (%1)" )).arg( i18nc( "Indicates whether or not a header label is visible", "Visible") );
 
     headerLabels.append( label );
   }
@@ -434,7 +434,7 @@ void ThemePreviewWidget::internalHandleDragEnterEvent( QDragEnterEvent * e )
 
   if ( !e->mimeData() )
     return;
-  if ( !e->mimeData()->hasFormat( gThemeContentItemTypeDndMimeDataFormat ) )
+  if ( !e->mimeData()->hasFormat( QLatin1String( gThemeContentItemTypeDndMimeDataFormat ) ) )
     return;
 
   e->accept();
@@ -469,10 +469,10 @@ void ThemePreviewWidget::internalHandleDragMoveEvent( QDragMoveEvent * e )
 
   if ( !e->mimeData() )
     return;
-  if ( !e->mimeData()->hasFormat( gThemeContentItemTypeDndMimeDataFormat ) )
+  if ( !e->mimeData()->hasFormat( QLatin1String( gThemeContentItemTypeDndMimeDataFormat ) ) )
     return;
 
-  QByteArray arry = e->mimeData()->data( gThemeContentItemTypeDndMimeDataFormat );
+  QByteArray arry = e->mimeData()->data(QLatin1String( gThemeContentItemTypeDndMimeDataFormat ) );
 
   if ( arry.size() != sizeof( Theme::ContentItem::Type ) )
     return; // ugh
@@ -504,10 +504,10 @@ void ThemePreviewWidget::dropEvent( QDropEvent * e )
   if ( !e->mimeData() )
     return;
 
-  if ( !e->mimeData()->hasFormat( gThemeContentItemTypeDndMimeDataFormat ) )
+  if ( !e->mimeData()->hasFormat( QLatin1String( gThemeContentItemTypeDndMimeDataFormat ) ) )
     return;
 
-  QByteArray arry = e->mimeData()->data( gThemeContentItemTypeDndMimeDataFormat );
+  QByteArray arry = e->mimeData()->data( QLatin1String( gThemeContentItemTypeDndMimeDataFormat ) );
 
   if ( arry.size() != sizeof( Theme::ContentItem::Type ) )
     return; // ugh
@@ -789,7 +789,7 @@ void ThemePreviewWidget::mouseMoveEvent( QMouseEvent * e )
   QByteArray arry;
   arry.resize( sizeof( Theme::ContentItem::Type ) );
   *( ( Theme::ContentItem::Type * ) arry.data() ) = mSelectedThemeContentItem->type();
-  data->setData( gThemeContentItemTypeDndMimeDataFormat, arry );
+  data->setData( QLatin1String( gThemeContentItemTypeDndMimeDataFormat ), arry );
   QDrag * drag = new QDrag( this );
   drag->setMimeData( data );
 

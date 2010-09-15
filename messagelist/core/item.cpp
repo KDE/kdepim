@@ -219,7 +219,7 @@ Item * Item::topmostNonRoot()
 static inline void append_string( QString &buffer, const QString &append )
 {
   if ( !buffer.isEmpty() )
-    buffer += ", ";
+    buffer += QLatin1String( ", " );
   buffer += append;
 }
 
@@ -559,11 +559,11 @@ int Item::appendChildItem( Model *model, Item *child )
 
 void Item::dump( const QString &prefix )
 {
-  QString out = QString("%1 %x VIEWABLE:%2").arg(prefix).arg(d->mIsViewable ? "yes" : "no");
+  QString out = QString(QLatin1String( "%1 %x VIEWABLE:%2" )).arg(prefix).arg(d->mIsViewable ? QLatin1String( "yes" ) : QLatin1String( "no" ));
   qDebug( out.toUtf8().data(),this );
 
   QString nPrefix = prefix;
-  nPrefix += QString("  ");
+  nPrefix += QLatin1String("  ");
 
   if (!d->mChildItems )
     return;

@@ -210,16 +210,16 @@ SortOrder SortOrder::defaultForAggregation( const Aggregation *aggregation,
 
 bool SortOrder::readConfigHelper( KConfigGroup &conf, const QString &id )
 {
-  if ( !conf.hasKey( id + QString( "MessageSorting" ) ) )
+  if ( !conf.hasKey( id + QLatin1String( "MessageSorting" ) ) )
     return false;
   mMessageSorting = messageSortingForName(
-       conf.readEntry( id + QString( "MessageSorting" ) ) );
+       conf.readEntry( id + QLatin1String( "MessageSorting" ) ) );
   mMessageSortDirection = sortDirectionForName(
-       conf.readEntry( id + QString( "MessageSortDirection" ) ) );
+       conf.readEntry( id + QLatin1String( "MessageSortDirection" ) ) );
   mGroupSorting = groupSortingForName(
-       conf.readEntry( id + QString( "GroupSorting" ) ) );
+       conf.readEntry( id + QLatin1String( "GroupSorting" ) ) );
   mGroupSortDirection = sortDirectionForName(
-       conf.readEntry( id + QString( "GroupSortDirection" ) ) );
+       conf.readEntry( id + QLatin1String( "GroupSortDirection" ) ) );
   return true;
 }
 
@@ -227,7 +227,7 @@ void SortOrder::readConfig( KConfigGroup &conf, const QString &storageId,
                             bool *storageUsesPrivateSortOrder )
 {
   SortOrder privateSortOrder, globalSortOrder;
-  globalSortOrder.readConfigHelper( conf, "GlobalSortOrder" );
+  globalSortOrder.readConfigHelper( conf, QLatin1String( "GlobalSortOrder" ) );
   *storageUsesPrivateSortOrder = privateSortOrder.readConfigHelper( conf, storageId );
   if ( *storageUsesPrivateSortOrder )
     *this = privateSortOrder;
@@ -241,20 +241,20 @@ void SortOrder::writeConfig( KConfigGroup &conf, const QString &storageId,
 {
   QString id = storageId;
   if ( !storageUsesPrivateSortOrder ) {
-    id = "GlobalSortOrder";
-    conf.deleteEntry( storageId + QString( "MessageSorting" ) );
-    conf.deleteEntry( storageId + QString( "MessageSortDirection" ) );
-    conf.deleteEntry( storageId + QString( "GroupSorting" ) );
-    conf.deleteEntry( storageId + QString( "GroupSortDirection" ) );
+    id = QLatin1String( "GlobalSortOrder" );
+    conf.deleteEntry( storageId + QLatin1String( "MessageSorting" ) );
+    conf.deleteEntry( storageId + QLatin1String( "MessageSortDirection" ) );
+    conf.deleteEntry( storageId + QLatin1String( "GroupSorting" ) );
+    conf.deleteEntry( storageId + QLatin1String( "GroupSortDirection" ) );
   }
 
-   conf.writeEntry( id + QString( "MessageSorting" ),
+   conf.writeEntry( id + QLatin1String( "MessageSorting" ),
                     nameForMessageSorting( mMessageSorting ) );
-   conf.writeEntry( id + QString( "MessageSortDirection" ),
+   conf.writeEntry( id + QLatin1String( "MessageSortDirection" ),
                     nameForSortDirection( mMessageSortDirection ) );
-   conf.writeEntry( id + QString( "GroupSorting" ),
+   conf.writeEntry( id + QLatin1String( "GroupSorting" ),
                     nameForGroupSorting( mGroupSorting ) );
-   conf.writeEntry( id + QString( "GroupSortDirection" ),
+   conf.writeEntry( id + QLatin1String( "GroupSortDirection" ),
                     nameForSortDirection( mGroupSortDirection ) );
 
 }
@@ -287,19 +287,19 @@ bool SortOrder::isValidMessageSorting( SortOrder::MessageSorting ms )
 const QString SortOrder::nameForSortDirection( SortDirection sortDirection )
 {
   int index = staticMetaObject.indexOfEnumerator( "SortDirection" );
-  return staticMetaObject.enumerator( index ).valueToKey( sortDirection );
+  return QLatin1String( staticMetaObject.enumerator( index ).valueToKey( sortDirection ) );
 }
 
 const QString SortOrder::nameForMessageSorting( MessageSorting messageSorting )
 {
   int index = staticMetaObject.indexOfEnumerator( "MessageSorting" );
-  return staticMetaObject.enumerator( index ).valueToKey( messageSorting );
+  return QLatin1String( staticMetaObject.enumerator( index ).valueToKey( messageSorting ) );
 }
 
 const QString SortOrder::nameForGroupSorting( GroupSorting groupSorting )
 {
   int index = staticMetaObject.indexOfEnumerator( "GroupSorting" );
-  return staticMetaObject.enumerator( index ).valueToKey( groupSorting );
+  return QLatin1String( staticMetaObject.enumerator( index ).valueToKey( groupSorting  ) );
 }
 
 SortOrder::SortDirection SortOrder::sortDirectionForName( const QString& name )

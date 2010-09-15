@@ -50,7 +50,7 @@ void AggregationComboBox::writeDefaultConfig() const
   KConfigGroup group( ConfigProvider::self()->config(), "MessageListView::StorageModelAggregations" );
 
   const QString aggregationID = currentAggregation();
-  group.writeEntry( QString( "DefaultSet" ), aggregationID );
+  group.writeEntry( QLatin1String( "DefaultSet" ), aggregationID );
 
   Manager::instance()->aggregationsConfigurationCompleted();
 }

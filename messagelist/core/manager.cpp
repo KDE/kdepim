@@ -173,7 +173,7 @@ unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *st
   // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
   qulonglong defValue = 0;
 
-  return conf.readEntry( QString( "MessageUniqueIdForStorageModel%1" ).arg( storageModel->id() ), defValue );
+  return conf.readEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModel->id() ), defValue );
 }
 
 void Manager::savePreSelectedMessageForStorageModel( const StorageModel * storageModel, unsigned long uniqueIdOfMessage )
@@ -187,9 +187,9 @@ void Manager::savePreSelectedMessageForStorageModel( const StorageModel * storag
     // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
     qulonglong val = uniqueIdOfMessage;
 
-    conf.writeEntry( QString( "MessageUniqueIdForStorageModel%1" ).arg( storageModel->id() ), val );
+    conf.writeEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModel->id() ), val );
   } else
-    conf.deleteEntry( QString( "MessageUniqueIdForStorageModel%1" ).arg( storageModel->id() ) );
+    conf.deleteEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModel->id() ) );
 }
 
 const Aggregation * Manager::aggregation( const QString &id )
@@ -206,7 +206,7 @@ const Aggregation * Manager::defaultAggregation()
   KConfigGroup conf( ConfigProvider::self()->config(),
                      "MessageListView::StorageModelAggregations" );
 
-  QString aggregationId = conf.readEntry( QString( "DefaultSet" ), "" );
+  QString aggregationId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
 
   Aggregation * opt = 0;
 
@@ -480,7 +480,7 @@ const Theme * Manager::defaultTheme()
 {
   KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
 
-  QString themeId = conf.readEntry( QString( "DefaultSet" ), "" );
+  QString themeId = conf.readEntry( QLatin1String( "DefaultSet" ), "" );
 
   Theme * opt = 0;
 
@@ -893,7 +893,7 @@ void Manager::loadConfiguration()
     int idx = 0;
     while ( idx < cnt )
     {
-      QString data = conf.readEntry( QString( "Set%1" ).arg( idx ), QString() );
+      QString data = conf.readEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), QString() );
       if ( !data.isEmpty() )
       {
         Aggregation * set = new Aggregation();
@@ -928,7 +928,7 @@ void Manager::loadConfiguration()
     int idx = 0;
     while ( idx < cnt )
     {
-      QString data = conf.readEntry( QString( "Set%1" ).arg( idx ), QString() );
+      QString data = conf.readEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), QString() );
       if ( !data.isEmpty() )
       {
         Theme * set = new Theme();
@@ -975,7 +975,7 @@ void Manager::saveConfiguration()
     int idx = 0;
     for( QHash< QString, Aggregation * >::Iterator it = mAggregations.begin(); it != mAggregations.end(); ++it )
     {
-      conf.writeEntry( QString( "Set%1" ).arg( idx ), ( *it )->saveToString() );
+      conf.writeEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), ( *it )->saveToString() );
       idx++;
     }
   }
@@ -991,7 +991,7 @@ void Manager::saveConfiguration()
     int idx = 0;
     for( QHash< QString, Theme * >::Iterator it = mThemes.begin(); it != mThemes.end(); ++it )
     {
-      conf.writeEntry( QString( "Set%1" ).arg( idx ), ( *it )->saveToString() );
+      conf.writeEntry( QString( QLatin1String( "Set%1" ) ).arg( idx ), ( *it )->saveToString() );
       idx++;
     }
   }

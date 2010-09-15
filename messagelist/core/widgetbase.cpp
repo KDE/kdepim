@@ -123,7 +123,7 @@ Widget::Widget( QWidget *pParent )
            this, SLOT(themesChanged() ) );
 
   setAutoFillBackground( true );
-  setObjectName( "messagelistwidget" );
+  setObjectName( QLatin1String( "messagelistwidget" ) );
 
   QGridLayout * g = new QGridLayout( this );
   g->setMargin( 2 ); // use a smaller default
@@ -131,7 +131,7 @@ Widget::Widget( QWidget *pParent )
 
   d->mSearchEdit = new KLineEdit( this );
   d->mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
-  d->mSearchEdit->setObjectName( "quicksearch" );
+  d->mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
   d->mSearchEdit->setClearButtonShown( true );
 
   connect( d->mSearchEdit, SIGNAL( textEdited( const QString & ) ),
@@ -159,7 +159,7 @@ Widget::Widget( QWidget *pParent )
 
   d->mView = new View( this );
   d->mView->setSortOrder( &d->mSortOrder );
-  d->mView->setObjectName( "messagealistview" );
+  d->mView->setObjectName( QLatin1String( "messagealistview" ) );
   g->addWidget( d->mView, 1, 0, 1, 6 );
 
   connect( d->mView->header(), SIGNAL( sectionClicked( int ) ),

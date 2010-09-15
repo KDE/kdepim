@@ -100,7 +100,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   } // Proxy stack done
 
   d->mNewTabButton = new QToolButton( this );
-  d->mNewTabButton->setIcon( KIcon( "tab-new" ) );
+  d->mNewTabButton->setIcon( KIcon( QLatin1String( "tab-new" ) ) );
   d->mNewTabButton->adjustSize();
   d->mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
   setCornerWidget( d->mNewTabButton, Qt::TopLeftCorner );
@@ -108,7 +108,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
            SLOT( onNewTabClicked() ) );
 
   d->mCloseTabButton = new QToolButton( this );
-  d->mCloseTabButton->setIcon( KIcon( "tab-close" ) );
+  d->mCloseTabButton->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
   d->mCloseTabButton->adjustSize();
   d->mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
   setCornerWidget( d->mCloseTabButton, Qt::TopRightCorner );
