@@ -169,23 +169,16 @@ void KDeclarativeMainView::delayedInit()
   d->mItemFilter->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   d->mItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
-  // TODO: Figure out what the listProxy is and how to get rid of it.
-
-  // Remove this resetter after the Qt in master on Aug 26 is in mobile packages
-  // That is after rc1.
-  KResettingProxyModel *resetter = new KResettingProxyModel(this);
-  resetter->setSourceModel(d->mItemFilter);
-
   QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel(this);
-  qmlCheckable->setSourceModel(resetter);
-  QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( resetter, this );
+  qmlCheckable->setSourceModel(d->mItemFilter);
+  QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( d->mItemFilter, this );
   qmlCheckable->setSelectionModel(itemActionCheckModel);
 
   KSelectionProxyModel *checkedItems = new KSelectionProxyModel(itemActionCheckModel, this);
   checkedItems->setFilterBehavior(KSelectionProxyModel::ExactSelection);
-  checkedItems->setSourceModel(resetter);
+  checkedItems->setSourceModel(d->mItemFilter);
 
-  QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( resetter, this );
+  QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( d->mItemFilter, this );
 
   if ( d->mListProxy ) {
     d->mListProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
