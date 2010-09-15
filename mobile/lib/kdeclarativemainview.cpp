@@ -187,7 +187,7 @@ void KDeclarativeMainView::delayedInit()
 
     d->mListProxy->setSourceModel( qmlCheckable);
   }
-  d->mItemSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this);
+  d->mItemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this);
 
   if ( debugTiming ) {
     kWarning() << "Begin inserting QML context" << t.elapsed() << &t;
@@ -207,12 +207,12 @@ void KDeclarativeMainView::delayedInit()
   if ( d->mListProxy ) {
     context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
 
-    QMLListSelectionModel *qmlSelectionModel = new QMLListSelectionModel(d->mItemSelectionModel, this);
+    QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel(d->mItemNavigationSelectionModel, this);
 
-    QObject *hook = new ItemSelectHook(d->mItemSelectionModel, this);
+    QObject *hook = new ItemSelectHook(d->mItemNavigationSelectionModel, this);
     context->setContextProperty( "_itemSelectHook", QVariant::fromValue( hook ) );
 
-    context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlSelectionModel ) ) );
+    context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
 
     Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory(this);
     bulkActionBnf->createCheckableBreadcrumbContext( d->mEtm, this);
@@ -245,7 +245,7 @@ void KDeclarativeMainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( synchronizeAllItems() ) );
   actionCollection()->addAction( QLatin1String( "synchronize_all_items" ), action );
 
-  setupStandardActionManager( regularSelectionModel(), d->mItemSelectionModel );
+  setupStandardActionManager( regularSelectionModel(), d->mItemNavigationSelectionModel );
 
   connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
   connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
@@ -316,8 +316,8 @@ QStringList KDeclarativeMainView::mimeTypes() const
 void KDeclarativeMainView::setListSelectedRow( int row )
 {
   static const int column = 0;
-  const QModelIndex idx = d->mItemSelectionModel->model()->index( row, column );
-  d->mItemSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+  const QModelIndex idx = d->mItemNavigationSelectionModel->model()->index( row, column );
+  d->mItemNavigationSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
 }
 
 void KDeclarativeMainView::setAgentInstanceListSelectedRow( int row )
@@ -463,7 +463,7 @@ Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
 
 QItemSelectionModel* KDeclarativeMainView::itemSelectionModel() const
 {
-  return d->mItemSelectionModel;
+  return d->mItemNavigationSelectionModel;
 }
 
 void KDeclarativeMainView::persistCurrentSelection(const QString& key)
