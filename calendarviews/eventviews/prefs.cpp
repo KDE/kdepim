@@ -80,7 +80,9 @@ BaseConfig::BaseConfig() : PrefsBase()
     qMax( mDefaultMonthViewFont.pointSize() - 2, 6 ) );
 
   agendaTimeLabelsFontItem()->setDefaultValue( mDefaultAgendaTimeLabelsFont );
+  agendaTimeLabelsFontItem()->setDefault();
   monthViewFontItem()->setDefaultValue( mDefaultMonthViewFont );
+  monthViewFontItem()->setDefault();
 }
 
 void BaseConfig::setResourceColor( const QString &resource, const QColor &color )
