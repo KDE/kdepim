@@ -47,6 +47,9 @@
 
 KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileName, QWidget* parent) :
   QDeclarativeView( parent ),
+#ifndef Q_OS_WIN
+  m_glWidget( 0 ),
+#endif
   m_qmlFileName( qmlFileName )
 {
 #ifndef Q_OS_WIN
@@ -56,10 +59,10 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
     // and the use of the raster graphicssystem.
     QGLFormat format = QGLFormat::defaultFormat();
     format.setSampleBuffers(false);
-    glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
-    glWidget->setAutoFillBackground(false);
-    setViewport(glWidget);
-    Akonadi::Control::widgetNeedsAkonadi( glWidget );
+    m_glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
+    m_glWidget->setAutoFillBackground(false);
+    setViewport(m_glWidget);
+    Akonadi::Control::widgetNeedsAkonadi( m_glWidget );
   }
 #else
   Akonadi::Control::widgetNeedsAkonadi( this );
@@ -137,7 +140,7 @@ void KDeclarativeFullScreenView::delayedInit()
 KDeclarativeFullScreenView::~KDeclarativeFullScreenView()
 {
 #ifndef Q_OS_WIN
-  delete glWidget;
+  delete m_glWidget;
 #endif
 }
 

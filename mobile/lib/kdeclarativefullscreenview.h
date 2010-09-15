@@ -79,7 +79,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
   private:
     KActionCollection *mActionCollection;
 #ifndef Q_OS_WIN
-    QGLWidget *glWidget;
+    QGLWidget *m_glWidget;
 #endif
     QString m_qmlFileName;
     QLabel *m_splashScreen;
