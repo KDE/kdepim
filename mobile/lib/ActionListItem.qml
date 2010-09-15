@@ -58,22 +58,5 @@ QML.Item {
     onLongPressed: {
       pressAndHold();
     }
-    }
-     
-
-/*
-  QML.Rectangle {
-    height : parent.height
-    width : parent.width
-    color : "yellow"
-    QML.Text {
-      height : parent.height
-
-      id : itemText
-    }
-    QML.MouseArea {
-      anchors.fill : parent
-      onClicked : { console.log("TRIG"); triggered(itemText.text) }
-    }
-  } */
+  }
 }
