@@ -301,9 +301,9 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
 
   QString label;
-  QIcon icon = KIcon( "folder" );
+  QIcon icon = KIcon( QLatin1String( "folder" ) );
   foreach ( const QModelIndex &index, s->selectedRows() ) {
-    label+= index.data( Qt::DisplayRole ).toString()+", ";
+    label+= index.data( Qt::DisplayRole ).toString()+QLatin1String( ", " );
   }
   label.chop( 2 );
 
@@ -365,13 +365,13 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 
   action = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
   action->setEnabled( q->count() > 1 );
-  action->setIcon( KIcon( "tab-close" ) );
+  action->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
   connect( action, SIGNAL(triggered(bool)),
            q, SLOT(onCloseTabClicked()) ); // Reuse the logic...
 
   QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
   action->setEnabled( q->count() > 1 );
-  action->setIcon( KIcon( "tab-close-other" ) );
+  action->setIcon( KIcon( QLatin1String( "tab-close-other" ) ) );
 
   action = menu.exec( q->mapToGlobal( pos ) );
 

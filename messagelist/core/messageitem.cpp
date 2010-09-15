@@ -152,7 +152,7 @@ QString MessageItem::tagListDescription() const
   for ( QList< Tag * >::Iterator it = d->mTagList->begin(); it != d->mTagList->end(); ++it )
   {
     if ( !ret.isEmpty() )
-      ret += ", ";
+      ret += QLatin1String( ", " );
     ret += ( *it )->name();
   }
 

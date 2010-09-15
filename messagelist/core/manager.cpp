@@ -59,39 +59,39 @@ Manager::Manager()
 
   mDisplayMessageToolTips = true;
 
-  mPixmapMessageNew = new QPixmap( SmallIcon( "mail-unread-new" ) );
-  mPixmapMessageUnread = new QPixmap( SmallIcon( "mail-unread" ) );
-  mPixmapMessageRead = new QPixmap( SmallIcon( "mail-read" ) );
-  mPixmapMessageDeleted = new QPixmap( SmallIcon( "mail-deleted" ) );
-  mPixmapMessageReplied = new QPixmap( SmallIcon( "mail-replied" ) );
-  mPixmapMessageRepliedAndForwarded = new QPixmap( SmallIcon( "mail-forwarded-replied" ) );
-  mPixmapMessageQueued = new QPixmap( SmallIcon( "mail-queued" ) ); // mail-queue ?
-  mPixmapMessageActionItem = new QPixmap( SmallIcon( "mail-task" ) );
-  mPixmapMessageSent = new QPixmap( SmallIcon( "mail-sent" ) );
-  mPixmapMessageForwarded = new QPixmap( SmallIcon( "mail-forwarded" ) );
-  mPixmapMessageImportant = new QPixmap( SmallIcon( "emblem-important" ) ); // "flag"
-  mPixmapMessageWatched = new QPixmap( SmallIcon( "mail-thread-watch" ) );
-  mPixmapMessageIgnored = new QPixmap( SmallIcon( "mail-thread-ignored" ) );
-  mPixmapMessageSpam = new QPixmap( SmallIcon( "mail-mark-junk" ) );
-  mPixmapMessageHam = new QPixmap( SmallIcon( "mail-mark-notjunk" ) );
-  mPixmapMessageFullySigned = new QPixmap( SmallIcon( "mail-signed-verified" ) );
-  mPixmapMessagePartiallySigned = new QPixmap( SmallIcon( "mail-signed-part" ) );
-  mPixmapMessageUndefinedSigned = new QPixmap( SmallIcon( "mail-signed" ) );
-  mPixmapMessageNotSigned = new QPixmap( SmallIcon( "text-plain" ) );
-  mPixmapMessageFullyEncrypted = new QPixmap( SmallIcon( "mail-encrypted-full" ) );
-  mPixmapMessagePartiallyEncrypted = new QPixmap( SmallIcon( "mail-encrypted-part" ) );
-  mPixmapMessageUndefinedEncrypted = new QPixmap( SmallIcon( "mail-encrypted" ) );
-  mPixmapMessageNotEncrypted = new QPixmap( SmallIcon( "text-plain" ) );
-  mPixmapMessageAttachment = new QPixmap( SmallIcon( "mail-attachment" ) );
+  mPixmapMessageNew = new QPixmap( SmallIcon( QLatin1String( "mail-unread-new" ) ) );
+  mPixmapMessageUnread = new QPixmap( SmallIcon( QLatin1String( "mail-unread" ) ) );
+  mPixmapMessageRead = new QPixmap( SmallIcon( QLatin1String( "mail-read" ) ) );
+  mPixmapMessageDeleted = new QPixmap( SmallIcon( QLatin1String( "mail-deleted" ) ) );
+  mPixmapMessageReplied = new QPixmap( SmallIcon( QLatin1String( "mail-replied" ) ) );
+  mPixmapMessageRepliedAndForwarded = new QPixmap( SmallIcon( QLatin1String( "mail-forwarded-replied" ) ) );
+  mPixmapMessageQueued = new QPixmap( SmallIcon( QLatin1String( "mail-queued" ) ) ); // mail-queue ?
+  mPixmapMessageActionItem = new QPixmap( SmallIcon( QLatin1String( "mail-task" ) ) );
+  mPixmapMessageSent = new QPixmap( SmallIcon( QLatin1String( "mail-sent" ) ) );
+  mPixmapMessageForwarded = new QPixmap( SmallIcon( QLatin1String( "mail-forwarded" ) ) );
+  mPixmapMessageImportant = new QPixmap( SmallIcon( QLatin1String( "emblem-important" ) ) ); // "flag"
+  mPixmapMessageWatched = new QPixmap( SmallIcon( QLatin1String( "mail-thread-watch" ) ) );
+  mPixmapMessageIgnored = new QPixmap( SmallIcon( QLatin1String( "mail-thread-ignored" ) ) );
+  mPixmapMessageSpam = new QPixmap( SmallIcon( QLatin1String( "mail-mark-junk" ) ) );
+  mPixmapMessageHam = new QPixmap( SmallIcon( QLatin1String( "mail-mark-notjunk" ) ) );
+  mPixmapMessageFullySigned = new QPixmap( SmallIcon( QLatin1String( "mail-signed-verified" ) ) );
+  mPixmapMessagePartiallySigned = new QPixmap( SmallIcon( QLatin1String( "mail-signed-part" ) ) );
+  mPixmapMessageUndefinedSigned = new QPixmap( SmallIcon( QLatin1String( "mail-signed" ) ) );
+  mPixmapMessageNotSigned = new QPixmap( SmallIcon( QLatin1String( "text-plain" ) ) );
+  mPixmapMessageFullyEncrypted = new QPixmap( SmallIcon( QLatin1String( "mail-encrypted-full" ) ) );
+  mPixmapMessagePartiallyEncrypted = new QPixmap( SmallIcon( QLatin1String( "mail-encrypted-part" ) ) );
+  mPixmapMessageUndefinedEncrypted = new QPixmap( SmallIcon( QLatin1String( "mail-encrypted" ) ) );
+  mPixmapMessageNotEncrypted = new QPixmap( SmallIcon( QLatin1String( "text-plain" ) ) );
+  mPixmapMessageAttachment = new QPixmap( SmallIcon( QLatin1String( "mail-attachment" ) ) );
   //mPixmapShowMore = new QPixmap( SmallIcon( "list-add.png" ) );
   //mPixmapShowLess = new QPixmap( SmallIcon( "list-remove.png" ) );
   if ( KApplication::isRightToLeft() )
-    mPixmapShowMore = new QPixmap( SmallIcon( "arrow-left" ) );
+    mPixmapShowMore = new QPixmap( SmallIcon( QLatin1String( "arrow-left" ) ) );
   else
-    mPixmapShowMore = new QPixmap( SmallIcon( "arrow-right" ) );
-  mPixmapShowLess = new QPixmap( SmallIcon( "arrow-down" ) );
-  mPixmapVerticalLine = new QPixmap( SmallIcon( "mail-vertical-separator-line" ) );
-  mPixmapHorizontalSpacer = new QPixmap( SmallIcon( "mail-horizontal-space" ) );
+    mPixmapShowMore = new QPixmap( SmallIcon( QLatin1String( "arrow-right" ) ) );
+  mPixmapShowLess = new QPixmap( SmallIcon( QLatin1String( "arrow-down" ) ) );
+  mPixmapVerticalLine = new QPixmap( SmallIcon( QLatin1String( "mail-vertical-separator-line" ) ) );
+  mPixmapHorizontalSpacer = new QPixmap( SmallIcon( QLatin1String( "mail-horizontal-space" ) ) );
 
   mCachedLocalizedUnknownText = i18nc( "Unknown date", "Unknown" ) ;
 
@@ -234,12 +234,12 @@ void Manager::saveAggregationForStorageModel( const StorageModel *storageModel, 
                      "MessageListView::StorageModelAggregations" );
 
   if ( storageUsesPrivateAggregation )
-    conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), id );
+    conf.writeEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModel->id() ), id );
   else
-    conf.deleteEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ) );
+    conf.deleteEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModel->id() ) );
 
   if ( !storageUsesPrivateAggregation )
-    conf.writeEntry( QString( "DefaultSet" ), id );
+    conf.writeEntry( QLatin1String( "DefaultSet" ), id );
 }
 
 
@@ -255,7 +255,7 @@ const Aggregation * Manager::aggregationForStorageModel( const StorageModel *sto
   KConfigGroup conf( ConfigProvider::self()->config(),
                      "MessageListView::StorageModelAggregations" );
 
-  QString aggregationId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), "" );
+  QString aggregationId = conf.readEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModel->id() ), "" );
 
   Aggregation * opt = 0;
 
@@ -510,12 +510,12 @@ void Manager::saveThemeForStorageModel( const StorageModel *storageModel, const 
   KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
 
   if ( storageUsesPrivateTheme )
-    conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), id );
+    conf.writeEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModel->id() ), id );
   else
-    conf.deleteEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ) );
+    conf.deleteEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModel->id() ) );
 
   if ( !storageUsesPrivateTheme )
-    conf.writeEntry( QString( "DefaultSet" ), id );
+    conf.writeEntry( QLatin1String( "DefaultSet" ), id );
 }
 
 
@@ -529,7 +529,7 @@ const Theme * Manager::themeForStorageModel( const StorageModel *storageModel, b
     return defaultTheme();
 
   KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
-  QString themeId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), "" );
+  QString themeId = conf.readEntry( QString( QLatin1String( "SetForStorageModel%1" ) ).arg( storageModel->id() ), "" );
 
   Theme * opt = 0;
 
@@ -675,16 +675,16 @@ void Manager::createDefaultThemes()
   add_theme_simple_text_column( s, i18nc( "Date of a message", "Date" ), Theme::ContentItem::Date, true, SortOrder::SortMessagesByDateTime, false, false );
   add_theme_simple_text_column( s, i18n( "Most Recent Date" ), Theme::ContentItem::MostRecentDate, false, SortOrder::SortMessagesByDateTimeOfMostRecent, false, true );
   add_theme_simple_text_column( s, i18nc( "Size of a message", "Size" ), Theme::ContentItem::Size, false, SortOrder::SortMessagesBySize, false, false );
-  add_theme_simple_icon_column( s, i18nc( "Attachement indication", "Attachment" ), "mail-attachment", Theme::ContentItem::AttachmentStateIcon, false, SortOrder::NoMessageSorting );
-  add_theme_simple_icon_column( s, i18n( "New/Unread" ), "mail-unread-new", Theme::ContentItem::ReadStateIcon, false, SortOrder::SortMessagesByNewUnreadStatus );
-  add_theme_simple_icon_column( s, i18n( "Replied" ), "mail-replied", Theme::ContentItem::RepliedStateIcon, false, SortOrder::NoMessageSorting );
-  add_theme_simple_icon_column( s, i18nc( "Message importance indication", "Important" ), "emblem-important", Theme::ContentItem::ImportantStateIcon, false, SortOrder::NoMessageSorting );
-  add_theme_simple_icon_column( s, i18n( "Action Item" ), "mail-task", Theme::ContentItem::ActionItemStateIcon, false, SortOrder::SortMessagesByActionItemStatus );
-  add_theme_simple_icon_column( s, i18n( "Spam/Ham" ), "mail-mark-junk", Theme::ContentItem::SpamHamStateIcon, false, SortOrder::NoMessageSorting );
-  add_theme_simple_icon_column( s, i18n( "Watched/Ignored" ), "mail-thread-watch", Theme::ContentItem::WatchedIgnoredStateIcon, false, SortOrder::NoMessageSorting );
-  add_theme_simple_icon_column( s, i18n( "Encryption" ), "mail-encrypted-full", Theme::ContentItem::EncryptionStateIcon, false, SortOrder::NoMessageSorting );
-  add_theme_simple_icon_column( s, i18n( "Signature" ), "mail-signed-verified", Theme::ContentItem::SignatureStateIcon, false, SortOrder::NoMessageSorting );
-  add_theme_simple_icon_column( s, i18n( "Tag List" ), "feed-subscribe", Theme::ContentItem::TagList, false, SortOrder::NoMessageSorting );
+  add_theme_simple_icon_column( s, i18nc( "Attachement indication", "Attachment" ), QLatin1String( "mail-attachment" ), Theme::ContentItem::AttachmentStateIcon, false, SortOrder::NoMessageSorting );
+  add_theme_simple_icon_column( s, i18n( "New/Unread" ), QLatin1String( "mail-unread-new" ), Theme::ContentItem::ReadStateIcon, false, SortOrder::SortMessagesByNewUnreadStatus );
+  add_theme_simple_icon_column( s, i18n( "Replied" ), QLatin1String( "mail-replied" ), Theme::ContentItem::RepliedStateIcon, false, SortOrder::NoMessageSorting );
+  add_theme_simple_icon_column( s, i18nc( "Message importance indication", "Important" ), QLatin1String( "emblem-important" ), Theme::ContentItem::ImportantStateIcon, false, SortOrder::NoMessageSorting );
+  add_theme_simple_icon_column( s, i18n( "Action Item" ), QLatin1String( "mail-task" ), Theme::ContentItem::ActionItemStateIcon, false, SortOrder::SortMessagesByActionItemStatus );
+  add_theme_simple_icon_column( s, i18n( "Spam/Ham" ), QLatin1String( "mail-mark-junk" ), Theme::ContentItem::SpamHamStateIcon, false, SortOrder::NoMessageSorting );
+  add_theme_simple_icon_column( s, i18n( "Watched/Ignored" ), QLatin1String( "mail-thread-watch" ), Theme::ContentItem::WatchedIgnoredStateIcon, false, SortOrder::NoMessageSorting );
+  add_theme_simple_icon_column( s, i18n( "Encryption" ), QLatin1String( "mail-encrypted-full" ), Theme::ContentItem::EncryptionStateIcon, false, SortOrder::NoMessageSorting );
+  add_theme_simple_icon_column( s, i18n( "Signature" ), QLatin1String( "mail-signed-verified" ), Theme::ContentItem::SignatureStateIcon, false, SortOrder::NoMessageSorting );
+  add_theme_simple_icon_column( s, i18n( "Tag List" ), QLatin1String( "feed-subscribe" ), Theme::ContentItem::TagList, false, SortOrder::NoMessageSorting );
 
   s->resetColumnState(); // so it's initially set from defaults
 
