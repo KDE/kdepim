@@ -47,6 +47,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/selectionproxymodel.h>
+#include <akonadi_next/kviewstatemaintainer.h>
 
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
