@@ -28,7 +28,7 @@
 #include <akonadi/entitymimetypefiltermodel.h>
 
 #include "akonadibreadcrumbnavigationfactory.h"
-#include <kviewstatemaintainer.h>
+#include <akonadi_next/kviewstatemaintainer.h>
 #include <akonadi/etmviewstatesaver.h>
 
 class KActionCollection;
@@ -56,7 +56,7 @@ public: /// members
   QItemSelectionModel                *mItemNavigationSelectionModel;
   QItemSelectionModel                *mItemActionSelectionModel;
   QHash<QString, QStringList>        mPersistedSelections;
-  KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
+  Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();
