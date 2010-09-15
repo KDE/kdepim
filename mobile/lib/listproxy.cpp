@@ -24,7 +24,10 @@
 
 ListProxy::ListProxy( QObject* parent ) : QSortFilterProxyModel( parent )
 {
-  connect(this, SIGNAL(layoutChanged()), SLOT(doReset()), Qt::QueuedConnection);
+#if QT_VERSION < 0x040701
+  connect(this, SIGNAL(layoutAboutToBeChanged()), SIGNAL(modelAboutToBeReset()));
+  connect(this, SIGNAL(layoutChanged()), SIGNAL(modelReset()));
+#endif
 }
 
 qint64 ListProxy::itemId( int row ) const

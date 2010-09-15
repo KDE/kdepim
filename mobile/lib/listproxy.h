@@ -38,11 +38,6 @@ class MOBILEUI_EXPORT ListProxy : public QSortFilterProxyModel
 
 
     Q_INVOKABLE qint64 itemId( int row ) const;
-
-private slots:
-  void doReset() {
-    reset();
-  }
 };
 
 #endif
