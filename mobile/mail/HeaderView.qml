@@ -97,7 +97,7 @@ KPIM.ItemListView {
           opacity : 0.6
           visible : showDeleteButton
           onTriggered : {
-            application.setListSelectedRow(model.index);
+            _itemActionModel.select(model.index, 3);
           }
           image : KDE.locate( "data", "mobileui/delete-button.png" );
         }

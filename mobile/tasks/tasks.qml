@@ -236,6 +236,7 @@ KPIM.MainView {
       TaskListView {
         id: itemList
         model: itemModel
+        checkModel : _itemActionModel
         anchors.fill: parent
         onItemSelected: {
           taskView.itemId = itemList.currentItemId;
@@ -364,7 +365,7 @@ KPIM.MainView {
       showCheckBox : true
       id: bulkActionHeaderList
       model: itemModel
-      checkModel : _itemCheckModel
+      checkModel : _itemActionModel
       anchors.fill : parent
       showCompletionSlider: false
     }

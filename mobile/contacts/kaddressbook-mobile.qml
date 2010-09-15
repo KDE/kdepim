@@ -298,6 +298,7 @@ KPIM.MainView {
       ContactListView {
         id: contactList
         model: itemModel
+        checkModel : _itemActionModel
         anchors.fill : parent
         onItemSelected: {
           if ( itemModel.typeForIndex( contactList.currentIndex ) == "contact" ) {
@@ -419,7 +420,7 @@ KPIM.MainView {
       showCheckBox : true
       id: bulkActionContactList
       model: itemModel
-      checkModel : _itemCheckModel
+      checkModel : _itemActionModel
       anchors.fill : parent
     }
     onBackClicked : {

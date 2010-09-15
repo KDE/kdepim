@@ -178,9 +178,14 @@ void KDeclarativeMainView::delayedInit()
 
   QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel(this);
   qmlCheckable->setSourceModel(resetter);
+  QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( resetter, this );
+  qmlCheckable->setSelectionModel(itemActionCheckModel);
+
+  KSelectionProxyModel *checkedItems = new KSelectionProxyModel(itemActionCheckModel, this);
+  checkedItems->setFilterBehavior(KSelectionProxyModel::ExactSelection);
+  checkedItems->setSourceModel(resetter);
 
   QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( resetter, this );
-  qmlCheckable->setSelectionModel(itemSelectionModel);
 
   if ( d->mListProxy ) {
     d->mListProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
@@ -188,6 +193,7 @@ void KDeclarativeMainView::delayedInit()
     d->mListProxy->setSourceModel( qmlCheckable);
   }
   d->mItemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this);
+  d->mItemActionSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemActionCheckModel, this);
 
   if ( debugTiming ) {
     kWarning() << "Begin inserting QML context" << t.elapsed() << &t;
@@ -208,11 +214,13 @@ void KDeclarativeMainView::delayedInit()
     context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
 
     QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel(d->mItemNavigationSelectionModel, this);
+    QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel(d->mItemActionSelectionModel, this);
 
     QObject *hook = new ItemSelectHook(d->mItemNavigationSelectionModel, this);
     context->setContextProperty( "_itemSelectHook", QVariant::fromValue( hook ) );
 
     context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
+    context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
 
     Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory(this);
     bulkActionBnf->createCheckableBreadcrumbContext( d->mEtm, this);
@@ -245,7 +253,7 @@ void KDeclarativeMainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( synchronizeAllItems() ) );
   actionCollection()->addAction( QLatin1String( "synchronize_all_items" ), action );
 
-  setupStandardActionManager( regularSelectionModel(), d->mItemNavigationSelectionModel );
+  setupStandardActionManager( regularSelectionModel(), d->mItemActionSelectionModel );
 
   connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
   connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
@@ -318,6 +326,7 @@ void KDeclarativeMainView::setListSelectedRow( int row )
   static const int column = 0;
   const QModelIndex idx = d->mItemNavigationSelectionModel->model()->index( row, column );
   d->mItemNavigationSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+  d->mItemActionSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
 }
 
 void KDeclarativeMainView::setAgentInstanceListSelectedRow( int row )

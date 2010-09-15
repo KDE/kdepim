@@ -52,6 +52,7 @@ public: /// members
   Akonadi::BreadcrumbNavigationFactory *mBnf;
   Akonadi::BreadcrumbNavigationFactory *mMultiBnf;
   QItemSelectionModel                *mItemNavigationSelectionModel;
+  QItemSelectionModel                *mItemActionSelectionModel;
   QHash<QString, QStringList>        mPersistedSelections;
 
 public: /// Methods

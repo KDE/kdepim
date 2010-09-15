@@ -201,6 +201,7 @@ KPIM.MainView {
       NotesListView {
         id: headerList
         model: itemModel
+        checkModel : _itemActionModel
         anchors.fill : parent
         onItemSelected: {
           // Prevent reloading of the message, perhaps this should be done
@@ -313,7 +314,7 @@ KPIM.MainView {
       showCheckBox : true
       id: bulkActionHeaderList
       model: itemModel
-      checkModel : _itemCheckModel
+      checkModel : _itemActionModel
       anchors.fill : parent
       showDeleteButton: false
     }

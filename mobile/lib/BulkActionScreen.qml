@@ -95,7 +95,7 @@ QML.Rectangle {
         anchors.right : parent.right
         anchors.verticalCenter : parent.verticalCenter
         height : 30
-        text : KDE.i18n("Move %1 items to %2", _itemCheckModel.selection.length, _bulkActionBnf.selectedDisplayText);
+        text : KDE.i18n("Move %1 items to %2", _itemActionModel.selection.length, _bulkActionBnf.selectedDisplayText);
       }
       Button2 {
         anchors.bottom : parent.bottom
@@ -126,7 +126,7 @@ QML.Rectangle {
         anchors.right : parent.right
         anchors.verticalCenter : parent.verticalCenter
         height : 30
-        text : KDE.i18n("Move %1 items to %2", _itemCheckModel.selection.length, _bulkActionBnf.selectedDisplayText);
+        text : KDE.i18n("Move %1 items to %2", _itemActionModel.selection.length, _bulkActionBnf.selectedDisplayText);
       }
       Button2 {
         anchors.bottom : parent.bottom

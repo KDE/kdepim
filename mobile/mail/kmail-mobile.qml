@@ -402,6 +402,7 @@ KPIM.MainView {
       HeaderView {
         id: headerList
         model: itemModel
+        checkModel : _itemActionModel
         anchors.fill : parent
 
         showDeleteButton : true
@@ -543,7 +544,7 @@ KPIM.MainView {
       showCheckBox : true
       id: bulkActionHeaderList
       model: itemModel
-      checkModel : _itemCheckModel
+      checkModel : _itemActionModel
       anchors.fill : parent
     }
     onBackClicked : {
