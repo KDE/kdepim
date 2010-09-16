@@ -86,7 +86,7 @@ void AttachmentFromUrlJobTest::testAttachmentTooBig()
 
 void AttachmentFromUrlJobTest::testAttachmentCharset()
 {
-  const QByteArray charset( "iso-8859-2" );
+  const QString charset = QString::fromLatin1( "iso-8859-2" );
   const QString filename = QString::fromLatin1( "file.txt" );
   KUrl url = KUrl::fromPath( PATH_ATTACHMENTS + filename );
   url.setFileEncoding( charset );
@@ -99,7 +99,7 @@ void AttachmentFromUrlJobTest::testAttachmentCharset()
 
   QCOMPARE( part->name(), filename );
   QCOMPARE( part->fileName(), filename );
-  QCOMPARE( part->charset(), charset );
+  QCOMPARE( QLatin1String(part->charset()), charset );
 }
 
 #include "attachmentfromurljobtest.moc"
