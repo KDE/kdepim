@@ -431,52 +431,52 @@ QString MessageStatus::getStatusStr() const
 {
   QString sstr;
   if ( mStatus & KMMsgStatusNew ) {
-    sstr += 'N';
+    sstr += QLatin1Char( 'N' );
   }
   if ( mStatus & KMMsgStatusUnread ) {
-    sstr += 'U';
+    sstr += QLatin1Char( 'U' );
   }
   if ( mStatus & KMMsgStatusOld ) {
-    sstr += 'O';
+    sstr += QLatin1Char( 'O' );
   }
   if ( mStatus & KMMsgStatusRead ) {
-    sstr += 'R';
+    sstr += QLatin1Char( 'R' );
   }
   if ( mStatus & KMMsgStatusDeleted ) {
-    sstr += 'D';
+    sstr += QLatin1Char( 'D' );
   }
   if ( mStatus & KMMsgStatusReplied ) {
-    sstr += 'A';
+    sstr += QLatin1Char( 'A' );
   }
   if ( mStatus & KMMsgStatusForwarded ) {
-    sstr += 'F';
+    sstr += QLatin1Char( 'F' );
   }
   if ( mStatus & KMMsgStatusQueued ) {
-    sstr += 'Q';
+    sstr += QLatin1Char( 'Q' );
   }
   if ( mStatus & KMMsgStatusToAct ) {
-    sstr += 'K';
+    sstr += QLatin1Char( 'K' );
   }
   if ( mStatus & KMMsgStatusSent ) {
-    sstr += 'S';
+    sstr += QLatin1Char( 'S' );
   }
   if ( mStatus & KMMsgStatusFlag ) {
-    sstr += 'G';
+    sstr += QLatin1Char( 'G' );
   }
   if ( mStatus & KMMsgStatusWatched ) {
-    sstr += 'W';
+    sstr += QLatin1Char( 'W' );
   }
   if ( mStatus & KMMsgStatusIgnored ) {
-    sstr += 'I';
+    sstr += QLatin1Char( 'I' );
   }
   if ( mStatus & KMMsgStatusSpam ) {
-    sstr += 'P';
+    sstr += QLatin1Char( 'P' );
   }
   if ( mStatus & KMMsgStatusHam ) {
-    sstr += 'H';
+    sstr += QLatin1Char( 'H' );
   }
   if ( mStatus & KMMsgStatusHasAttach ) {
-    sstr += 'T';
+    sstr += QLatin1Char( 'T' );
   }
 
   return sstr;
@@ -486,62 +486,62 @@ void MessageStatus::setStatusFromStr( const QString& aStr )
 {
   mStatus = KMMsgStatusUnknown;
 
-  if ( aStr.contains( 'N' ) ) {
+  if ( aStr.contains( QLatin1Char( 'N' ) ) ) {
     setNew();
   }
-  if ( aStr.contains( 'U' ) ) {
+  if ( aStr.contains( QLatin1Char( 'U' ) ) ) {
     setUnread();
   }
-  if ( aStr.contains( 'O' ) ) {
+  if ( aStr.contains( QLatin1Char( 'O' ) ) ) {
     setOld();
   }
-  if ( aStr.contains( 'R' ) ) {
+  if ( aStr.contains( QLatin1Char( 'R' ) ) ) {
     setRead();
   }
-  if ( aStr.contains( 'D' ) ) {
+  if ( aStr.contains( QLatin1Char( 'D' ) ) ) {
     setDeleted();
   }
-  if ( aStr.contains( 'A' ) ) {
+  if ( aStr.contains( QLatin1Char( 'A' ) ) ) {
     setReplied();
   }
-  if ( aStr.contains( 'F' ) ) {
+  if ( aStr.contains( QLatin1Char( 'F' ) ) ) {
     setForwarded();
   }
-  if ( aStr.contains( 'Q' ) ) {
+  if ( aStr.contains( QLatin1Char( 'Q' ) ) ) {
     setQueued();
   }
-  if ( aStr.contains( 'K' ) ) {
+  if ( aStr.contains( QLatin1Char( 'K' ) ) ) {
     setToAct();
   }
-  if ( aStr.contains( 'S' ) ) {
+  if ( aStr.contains( QLatin1Char( 'S' ) ) ) {
     setSent();
   }
-  if ( aStr.contains( 'G' ) ) {
+  if ( aStr.contains( QLatin1Char( 'G' ) ) ) {
     setImportant();
   }
-  if ( aStr.contains( 'W' ) ) {
+  if ( aStr.contains( QLatin1Char( 'W' ) ) ) {
     setWatched();
   }
-  if ( aStr.contains( 'I' ) ) {
+  if ( aStr.contains( QLatin1Char( 'I' ) ) ) {
     setIgnored();
   }
-  if ( aStr.contains( 'P' ) ) {
+  if ( aStr.contains( QLatin1Char( 'P' ) ) ) {
     setSpam();
   }
-  if ( aStr.contains( 'H' ) ) {
+  if ( aStr.contains( QLatin1Char( 'H' ) ) ) {
     setHam();
   }
-  if ( aStr.contains( 'T' ) ) {
+  if ( aStr.contains( QLatin1Char( 'T' ) ) ) {
     setHasAttachment();
   }
-  if ( aStr.contains( 'C' ) ) {
+  if ( aStr.contains( QLatin1Char( 'C' ) ) ) {
     setHasAttachment( false );
   }
 }
 
 QString MessageStatus::getSortRank() const
 {
-  QString sstr = "bcbbbbbbbb";
+  QString sstr = QLatin1String( "bcbbbbbbbb" );
 
   // put watched ones first, then normal ones, ignored ones last
   if ( mStatus & KMMsgStatusWatched ) {

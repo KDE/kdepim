@@ -113,7 +113,7 @@ void AttachmentPropertiesDialog::Private::mimeTypeChanged( const QString &type )
     ui.mimeIcon->setPixmap( KIconLoader::global()->loadMimeTypeIcon( mimeType->iconName(),
                             KIconLoader::Desktop ) );
   } else {
-    ui.mimeIcon->setPixmap( DesktopIcon( "unknown" ) );
+    ui.mimeIcon->setPixmap( DesktopIcon( QLatin1String("unknown") ) );
   }
 }
 
@@ -220,7 +220,7 @@ void AttachmentPropertiesDialog::Private::loadFromPart()
 {
   Q_ASSERT( part );
 
-  ui.mimeType->setCurrentItem( part->mimeType(), true );
+  ui.mimeType->setCurrentItem( QLatin1String(part->mimeType()), true );
   ui.size->setText( KGlobal::locale()->formatByteSize( part->size() ) );
   ui.name->setText( part->name() );
   ui.description->setText( part->description() );
