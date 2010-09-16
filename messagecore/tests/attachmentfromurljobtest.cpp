@@ -99,7 +99,7 @@ void AttachmentFromUrlJobTest::testAttachmentCharset()
 
   QCOMPARE( part->name(), filename );
   QCOMPARE( part->fileName(), filename );
-  QCOMPARE( QLatin1String(part->charset()), charset );
+  QCOMPARE( QLatin1String( part->charset() ), charset );
 }
 
 #include "attachmentfromurljobtest.moc"
