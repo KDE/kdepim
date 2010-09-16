@@ -473,6 +473,11 @@ QItemSelectionModel* KDeclarativeMainView::itemSelectionModel() const
   return d->mItemNavigationSelectionModel;
 }
 
+QItemSelectionModel* KDeclarativeMainView::itemActionModel() const
+{
+  return d->mItemActionSelectionModel;
+}
+
 void KDeclarativeMainView::persistCurrentSelection(const QString& key)
 {
   ETMViewStateSaver saver;

@@ -580,6 +580,7 @@ void MainView::setListSelectedRow(int row)
   const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
   Q_ASSERT(idx.isValid());
   itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+  itemActionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
   // FIXME this should all be in messageviewer and happen after mail download, see also similar code in KMCommands
   Akonadi::Item fullItem = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
   Akonadi::MessageStatus status;
