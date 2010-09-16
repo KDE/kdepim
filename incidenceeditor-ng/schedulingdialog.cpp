@@ -21,8 +21,9 @@
 #include "schedulingdialog.h"
 #include "conflictresolver.h"
 #include "freeperiodmodel.h"
+#ifndef KDEPIM_MOBILE_UI
 #include "visualfreebusywidget.h"
-
+#endif
 #include <KCalUtils/Stringify>
 
 #include <KCalendarSystem>
