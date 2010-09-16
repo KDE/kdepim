@@ -36,6 +36,7 @@ class MOBILEUI_EXPORT ListProxy : public QSortFilterProxyModel
     /** Make sure that reimplementing classes implement data for their own needs */
     virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const = 0;
 
+    virtual void setSourceModel(QAbstractItemModel* sourceModel);
 
     Q_INVOKABLE qint64 itemId( int row ) const;
 };

@@ -24,10 +24,6 @@
 
 ListProxy::ListProxy( QObject* parent ) : QSortFilterProxyModel( parent )
 {
-#if QT_VERSION < 0x040701
-  connect(this, SIGNAL(layoutAboutToBeChanged()), SIGNAL(modelAboutToBeReset()));
-  connect(this, SIGNAL(layoutChanged()), SIGNAL(modelReset()));
-#endif
 }
 
 qint64 ListProxy::itemId( int row ) const
@@ -42,5 +38,17 @@ qint64 ListProxy::itemId( int row ) const
   const Akonadi::Item item = QSortFilterProxyModel::data( idx, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   return item.id();
 }
+
+void ListProxy::setSourceModel(QAbstractItemModel* sourceModel)
+{
+  QSortFilterProxyModel::setSourceModel(sourceModel);
+#if QT_VERSION < 0x040701
+  disconnect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(_q_sourceLayoutAboutToBeChanged()));
+  disconnect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(_q_sourceLayoutChanged()));
+  connect(sourceModel, SIGNAL(layoutAboutToBeChanged()), SLOT(_q_sourceAboutToBeReset()));
+  connect(sourceModel, SIGNAL(layoutChanged()), SLOT(_q_sourceReset()));
+#endif
+}
+
 
 #include "listproxy.moc"
