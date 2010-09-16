@@ -25,6 +25,7 @@
 
 #include <KUrl>
 
+#include <QDate>
 #include <QPixmap>
 
 namespace EventViews {
