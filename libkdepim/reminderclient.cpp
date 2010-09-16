@@ -39,14 +39,14 @@ ReminderClient::ReminderClient()
 
 void ReminderClient::startDaemon()
 {
-  QDBusInterface iface( "org.kde.korgac", "/" );
+  QDBusInterface iface( QLatin1String( "org.kde.korgac" ), QLatin1String( "/" ) );
   if ( iface.isValid() ){
     // Reminder daemon already runs
     return;
   }
 
   KGlobal::dirs()->addResourceType( "autostart", 0, "share/autostart" );
-  QString desktopFile = KStandardDirs::locate( "autostart", "korgac.desktop" );
+  QString desktopFile = KStandardDirs::locate( "autostart", QLatin1String( "korgac.desktop" ) );
   if ( desktopFile.isEmpty() ) {
     kWarning() << "Couldn't find autostart/korgac.desktop!";
   } else {
@@ -60,21 +60,21 @@ void ReminderClient::startDaemon()
 void ReminderClient::stopDaemon()
 {
   OrgKdeKorganizerKOrgacInterface interface(
-    "org.kde.korgac", "/ac", QDBusConnection::sessionBus() );
+    QLatin1String( "org.kde.korgac" ), QLatin1String( "/ac" ), QDBusConnection::sessionBus() );
   interface.quit();
 }
 
 void ReminderClient::hideDaemon()
 {
   OrgKdeKorganizerKOrgacInterface interface(
-    "org.kde.korgac", "/ac", QDBusConnection::sessionBus() );
+    QLatin1String( "org.kde.korgac" ), QLatin1String( "/ac" ), QDBusConnection::sessionBus() );
   interface.hide();
 }
 
 void ReminderClient::showDaemon()
 {
   OrgKdeKorganizerKOrgacInterface interface(
-    "org.kde.korgac", "/ac", QDBusConnection::sessionBus() );
+    QLatin1String( "org.kde.korgac" ), QLatin1String( "/ac" ), QDBusConnection::sessionBus() );
   interface.show();
 }
 

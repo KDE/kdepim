@@ -81,7 +81,7 @@ AddresseeView::AddresseeView( QWidget *parent, KConfig *config )
   mActionShowCustomFields = new KToggleAction( i18n( "Show Custom Fields" ), this );
 
   if ( !config ) {
-    mConfig = new KConfig( "kaddressbookrc" );
+    mConfig = new KConfig( QLatin1String( "kaddressbookrc" ) );
     mDefaultConfig = true;
   } else {
     mConfig = config;
@@ -144,7 +144,7 @@ void AddresseeView::enableLinks( int linkMask )
 QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, LinkMask linkMask,
                                     bool internalLoading, FieldMask fieldMask )
 {
-  QString image = QString( "contact_%1_image" ).arg( addr.uid() );
+  QString image = QString( QLatin1String( "contact_%1_image" ) ).arg( addr.uid() );
 
   // Style strings from Gentix; this is just an initial version.
   //
@@ -194,9 +194,9 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
     if ( pic.isIntern() && !pic.data().isNull() ) {
       image = pixmapAsDataUrl( QPixmap::fromImage( pic.data() ) );
     } else if ( !pic.url().isEmpty() ) {
-      image = (pic.url().startsWith( "http://" ) || pic.url().startsWith( "https://" ) ? pic.url() : "http://" + pic.url());
+      image = (pic.url().startsWith( QLatin1String( "http://" ) ) || pic.url().startsWith( QLatin1String( "https://" ) ) ? pic.url() : QLatin1String( "http://" ) + pic.url());
     } else {
-      image = "file:" + KIconLoader::global()->iconPath( "x-office-contact", KIconLoader::Desktop );
+      image = QLatin1String( "file:" ) + KIconLoader::global()->iconPath( QLatin1String( "x-office-contact" ), KIconLoader::Desktop );
     }
   }
 
@@ -224,14 +224,14 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
       if ( linkMask & PhoneLinks ) {
         QString smsURL;
         if ( (*phoneIt).type() & KABC::PhoneNumber::Cell )
-          smsURL = QString(" (<a href=\"sms:%1\">%2</a>)" ).arg( number ).arg( i18n( "SMS") );
+          smsURL = QString(QLatin1String( " (<a href=\"sms:%1\">%2</a>)" ) ).arg( number ).arg( i18n( "SMS") );
 
         dynamicPart += rowFmtStr
-          .arg( (*phoneIt).typeLabel().replace( " ", "&nbsp;" ) )
+          .arg( (*phoneIt).typeLabel().replace( QLatin1String( " " ), QLatin1String( "&nbsp;" ) ) )
           .arg( QString::fromLatin1( "<a href=\"%1\">%2</a>%3" ).arg( url ).arg( number ).arg( smsURL ) );
       } else {
         dynamicPart += rowFmtStr
-          .arg( (*phoneIt).typeLabel().replace( " ", "&nbsp;" ) )
+          .arg( (*phoneIt).typeLabel().replace( QLatin1String( " " ), QLatin1String( "&nbsp;" ) ) )
           .arg( number );
       }
     }
@@ -247,7 +247,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
       if ( linkMask & EmailLinks ) {
         dynamicPart += rowFmtStr.arg( type )
           .arg( QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
-          .arg( fullEmail, Qt::escape( *emailIt ) ) );
+                .arg( QLatin1String( fullEmail ), Qt::escape( *emailIt ) ) );
       } else {
         dynamicPart += rowFmtStr.arg( type ).arg( *emailIt );
       }
@@ -258,8 +258,8 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
     if ( !addr.url().url().isEmpty() ) {
       QString url;
       if ( linkMask & URLLinks ) {
-        url = (addr.url().url().startsWith( "http://" ) || addr.url().url().startsWith( "https://" ) ? addr.url().url() :
-          "http://" + addr.url().url());
+        url = (addr.url().url().startsWith( QLatin1String( "http://" ) ) || addr.url().url().startsWith( QLatin1String( "https://" ) ) ? addr.url().url() :
+          QLatin1String( "http://" ) + addr.url().url());
         url = KStringHandler::tagUrls( url );
       } else {
         url = addr.url().url();
@@ -267,7 +267,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
       dynamicPart += rowFmtStr.arg( i18n("Homepage") ).arg( url );
     }
 
-    QString blog = addr.custom( "KADDRESSBOOK", "BlogFeed" );
+    QString blog = addr.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
     if ( !blog.isEmpty() ) {
       if ( linkMask & URLLinks ) {
         blog = KStringHandler::tagUrls( blog );
@@ -285,10 +285,10 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
 
         formattedAddress = Qt::escape( (*addrIt).formattedAddress().trimmed() );
 
-        formattedAddress = formattedAddress.replace( '\n', "<br>" );
+        formattedAddress = formattedAddress.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) );
 
-        QString link = "<a href=\"addr:" + (*addrIt).id() + "\">" +
-                       formattedAddress + "</a>";
+        QString link = QLatin1String( "<a href=\"addr:" ) + (*addrIt).id() + QLatin1String( "\">" ) +
+                       formattedAddress + QLatin1String( "</a>" );
 
         if ( linkMask & AddressLinks ) {
           dynamicPart += rowFmtStr
@@ -300,8 +300,8 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
             .arg( formattedAddress );
         }
       } else {
-        QString link = "<a href=\"addr:" + (*addrIt).id() + "\">" +
-                       (*addrIt).label().replace( '\n', "<br>" ) + "</a>";
+        QString link = QLatin1String( "<a href=\"addr:" ) + (*addrIt).id() + QLatin1String( "\">" ) +
+                       (*addrIt).label().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) + QLatin1String( "</a>" );
 
         if ( linkMask & AddressLinks ) {
           dynamicPart += rowFmtStr
@@ -310,7 +310,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
         } else {
           dynamicPart += rowFmtStr
             .arg( KABC::Address::typeLabel( (*addrIt).type() ) )
-            .arg( (*addrIt).label().replace( '\n', "<br>" ) );
+            .arg( (*addrIt).label().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
         }
       }
     }
@@ -322,21 +322,21 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
     // the data afterwards (keeps us safe from possible % signs
     // in either one).
     notes = Qt::escape( addr.note() );
-    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( notes.replace( '\n', "<br>" ) ) ;
+    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( notes.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) ) ;
   }
 
   QString customData;
   if ( fieldMask & CustomFields ) {
     static QMap<QString, QString> titleMap;
     if ( titleMap.isEmpty() ) {
-      titleMap.insert( "Department", i18n( "Department" ) );
-      titleMap.insert( "Profession", i18n( "Profession" ) );
-      titleMap.insert( "AssistantsName", i18n( "Assistant's Name" ) );
-      titleMap.insert( "ManagersName", i18n( "Manager's Name" ) );
-      titleMap.insert( "SpousesName", i18nc( "Wife/Husband/...", "Partner's Name" ) );
-      titleMap.insert( "Office", i18n( "Office" ) );
-      titleMap.insert( "IMAddress", i18n( "IM Address" ) );
-      titleMap.insert( "Anniversary", i18n( "Anniversary" ) );
+      titleMap.insert( QLatin1String( "Department" ), i18n( "Department" ) );
+      titleMap.insert( QLatin1String( "Profession" ), i18n( "Profession" ) );
+      titleMap.insert( QLatin1String( "AssistantsName" ), i18n( "Assistant's Name" ) );
+      titleMap.insert( QLatin1String( "ManagersName" ), i18n( "Manager's Name" ) );
+      titleMap.insert( QLatin1String( "SpousesName" ), i18nc( "Wife/Husband/...", "Partner's Name" ) );
+      titleMap.insert( QLatin1String( "Office" ), i18n( "Office" ) );
+      titleMap.insert( QLatin1String( "IMAddress" ), i18n( "IM Address" ) );
+      titleMap.insert( QLatin1String( "Anniversary" ), i18n( "Anniversary" ) );
     }
 
     if ( !addr.customs().empty() ) {
@@ -345,16 +345,16 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
       const QStringList::Iterator endIt( customs.end() );
       for ( ; it != endIt; ++it ) {
         QString customEntry = *it;
-        if ( customEntry.startsWith ( "KADDRESSBOOK-" ) ) {
-          customEntry.remove( "KADDRESSBOOK-X-" );
-          customEntry.remove( "KADDRESSBOOK-" );
+        if ( customEntry.startsWith ( QLatin1String( "KADDRESSBOOK-" ) ) ) {
+          customEntry.remove( QLatin1String( "KADDRESSBOOK-X-" ) );
+          customEntry.remove( QLatin1String( "KADDRESSBOOK-" ) );
 
-          int pos = customEntry.indexOf( ':' );
+          int pos = customEntry.indexOf( QLatin1Char( QLatin1Char( ':' ) ) );
           QString key = customEntry.left( pos );
           const QString value = customEntry.mid( pos + 1 );
 
           // blog and im address are handled separated
-          if ( key == "BlogFeed" || key == "IMAddress" )
+          if ( key == QLatin1String( "BlogFeed" ) || key == QLatin1String( "IMAddress" ) )
             continue;
 
           const QMap<QString, QString>::ConstIterator keyIt = titleMap.constFind( key );
@@ -373,7 +373,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
 
   if ( fieldMask & IMFields ) {
 
-    const QString imAddress = addr.custom( "KADDRESSBOOK", "X-IMAddress" );
+    const QString imAddress = addr.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ) );
     if ( !imAddress.isEmpty() ) {
       customData += rowFmtStr.arg( i18n( "IM Address" ) ).arg( Qt::escape( imAddress ) ) ;
     }
@@ -474,8 +474,8 @@ QString AddresseeView::pixmapAsDataUrl( const QPixmap& pixmap )
   QBuffer buffer( &ba, 0 );
   buffer.open( QIODevice::WriteOnly );
   pixmap.save( &buffer, "PNG" );
-  QString encoded( "data:image/png;base64," );
-  encoded.append( ba.toBase64() );
+  QString encoded( QLatin1String( "data:image/png;base64," ) );
+  encoded.append( QLatin1String( ba.toBase64() ) );
   return encoded;
 }
 
@@ -523,7 +523,7 @@ void AddresseeView::updateView()
      .arg( KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() )
      .arg( strAddr );
 
-  QString imageURL = QString( "contact_%1_image" ).arg( mAddressee.uid() );
+  QString imageURL = QString( QLatin1String( "contact_%1_image" ) ).arg( mAddressee.uid() );
 
   KABC::Picture picture = mAddressee.photo();
   if ( picture.isIntern() && !picture.data().isNull() )
@@ -540,7 +540,7 @@ void AddresseeView::updateView()
                  this, SLOT( result( KJob* ) ) );
       }
     } else {
-      document()->addResource( QTextDocument::ImageResource, imageURL, KIcon( "x-office-contact" ).pixmap( 128, 128 ) );
+      document()->addResource( QTextDocument::ImageResource, imageURL, KIcon( QLatin1String( "x-office-contact" ) ).pixmap( 128, 128 ) );
     }
   }
 
@@ -560,7 +560,7 @@ void AddresseeView::urlClicked( const QString &url )
 
 void AddresseeView::emailClicked( const QString &email )
 {
-  if ( email.startsWith( "mailto:" ) )
+  if ( email.startsWith( QLatin1String( "mailto:" ) ) )
     KToolInvocation::invokeMailer( email.mid( 7 ), QString() );
   else
     KToolInvocation::invokeMailer( email, QString() );
@@ -568,7 +568,7 @@ void AddresseeView::emailClicked( const QString &email )
 
 void AddresseeView::phoneNumberClicked( const QString &number )
 {
-  KConfig _config( "kaddressbookrc" );
+  KConfig _config( QLatin1String( "kaddressbookrc" ) );
   KConfigGroup config(&_config, "General" );
   QString commandLine = config.readEntry( "PhoneHookApplication" );
 
@@ -577,13 +577,13 @@ void AddresseeView::phoneNumberClicked( const QString &number )
     return;
   }
 
-  commandLine.replace( "%N", number );
+  commandLine.replace( QLatin1String( "%N" ), number );
   KRun::runCommand( commandLine, topLevelWidget());
 }
 
 void AddresseeView::smsTextClicked( const QString &number )
 {
-  KConfig _config( "kaddressbookrc" );
+  KConfig _config( QLatin1String( "kaddressbookrc" ) );
   KConfigGroup config(&_config, "General" );
   QString commandLine = config.readEntry( "SMSHookApplication" );
 
@@ -600,7 +600,7 @@ void AddresseeView::smsTextClicked( const QString &number )
 
 void AddresseeView::sendSMS( const QString &number, const QString &text )
 {
-  KConfig _config( "kaddressbookrc" );
+  KConfig _config( QLatin1String( "kaddressbookrc" ) );
   KConfigGroup config(&_config, "General" );
   QString commandLine = config.readEntry( "SMSHookApplication" );
 
@@ -611,15 +611,15 @@ void AddresseeView::sendSMS( const QString &number, const QString &text )
   stream << text;
   stream.flush();
 
-  commandLine.replace( "%N", number );
-  commandLine.replace( "%F", file.fileName() );
+  commandLine.replace( QLatin1String( "%N" ), number );
+  commandLine.replace( QLatin1String( "%F" ), file.fileName() );
 
   KRun::runCommand( commandLine, topLevelWidget());
 }
 
 void AddresseeView::faxNumberClicked( const QString &number )
 {
-  KConfig _config( "kaddressbookrc" );
+  KConfig _config( QLatin1String( "kaddressbookrc" ) );
   KConfigGroup config(&_config, "General" );
   QString commandLine = config.readEntry( "FaxHookApplication", "kdeprintfax --phone %N" );
 
@@ -628,7 +628,7 @@ void AddresseeView::faxNumberClicked( const QString &number )
     return;
   }
 
-  commandLine.replace( "%N", number );
+  commandLine.replace( QLatin1String( "%N" ), number );
   KRun::runCommand( commandLine, topLevelWidget());
 }
 
@@ -658,15 +658,15 @@ void AddresseeView::slotMailClicked( const QString&, const QString &email )
 
 void AddresseeView::slotUrlClicked( const QString &url )
 {
-  if ( url.startsWith( "phone:" ) )
+  if ( url.startsWith( QLatin1String( "phone:" ) ) )
     phoneNumberClicked( strippedNumber( url.mid( 6 ) ) );
-  else if ( url.startsWith( "sms:" ) )
+  else if ( url.startsWith( QLatin1String( "sms:" ) ) )
     smsTextClicked( strippedNumber( url.mid( 4 ) ) );
-  else if ( url.startsWith( "fax:" ) )
+  else if ( url.startsWith( QLatin1String( "fax:" ) ) )
     faxNumberClicked( strippedNumber( url.mid( 4 ) ) );
-  else if ( url.startsWith( "addr:" ) )
+  else if ( url.startsWith( QLatin1String( "addr:" ) ) )
     emit addressClicked( url.mid( 5 ) );
-  else if ( url.startsWith( "im:" ) )
+  else if ( url.startsWith( QLatin1String( "im:" ) ) )
     imAddressClicked();
   else
     urlClicked( url );
@@ -674,33 +674,33 @@ void AddresseeView::slotUrlClicked( const QString &url )
 
 void AddresseeView::slotHighlighted( const QString &link )
 {
-  if ( link.startsWith( "mailto:" ) ) {
+  if ( link.startsWith( QLatin1String( "mailto:" ) ) ) {
     QString email = link.mid( 7 );
 
     emit emailHighlighted( email );
     emit highlightedMessage( i18n( "Send mail to '%1'", email ) );
-  } else if ( link.startsWith( "phone:" ) ) {
+  } else if ( link.startsWith( QLatin1String( "phone:" ) ) ) {
     QString number = link.mid( 6 );
 
     emit phoneNumberHighlighted( strippedNumber( number ) );
     emit highlightedMessage( i18n( "Call number %1", number ) );
-  } else if ( link.startsWith( "fax:" ) ) {
+  } else if ( link.startsWith( QLatin1String( "fax:" ) ) ) {
     QString number = link.mid( 4 );
 
     emit faxNumberHighlighted( strippedNumber( number ) );
     emit highlightedMessage( i18n( "Send fax to %1", number ) );
-  } else if ( link.startsWith( "addr:" ) ) {
+  } else if ( link.startsWith( QLatin1String( "addr:" ) ) ) {
     emit highlightedMessage( i18n( "Show address on map" ) );
-  } else if ( link.startsWith( "sms:" ) ) {
+  } else if ( link.startsWith( QLatin1String( "sms:" ) ) ) {
     QString number = link.mid( 4 );
     emit highlightedMessage( i18n( "Send SMS to %1", number ) );
-  } else if ( link.startsWith( "http:" ) || link.startsWith( "https:" ) ) {
+  } else if ( link.startsWith( QLatin1String( "http:" ) ) || link.startsWith( QLatin1String( "https:" ) ) ) {
     emit urlHighlighted( link );
     emit highlightedMessage( i18n( "Open URL %1", link ) );
-  } else if ( link.startsWith( "im:" ) ) {
+  } else if ( link.startsWith( QLatin1String( "im:" ) ) ) {
     emit highlightedMessage( i18n( "Chat with %1", mAddressee.realName() ) );
   } else
-    emit highlightedMessage( "" );
+    emit highlightedMessage( QString() );
 }
 
 void AddresseeView::slotPresenceChanged( const QString &uid )
@@ -770,7 +770,7 @@ QString AddresseeView::strippedNumber( const QString &number )
 
   for ( int i = 0; i < number.length(); ++i ) {
     QChar c = number[ i ];
-    if ( c.isDigit() || c == '*' || c == '#' || (c == '+' && i == 0) )
+    if ( c.isDigit() || c == QLatin1Char( '*' ) || c == QLatin1Char( '#' ) || (c == QLatin1Char( '+' ) && i == 0) )
       retval.append( c );
   }
 

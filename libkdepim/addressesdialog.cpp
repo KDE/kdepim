@@ -98,7 +98,7 @@ AddresseeViewItem::AddresseeViewItem( AddresseeViewItem *parent, const KABC::Add
 
   if ( addr.photo().url().isEmpty() ) {
     if ( addr.photo().data().isNull() )
-      setIcon( 0, KIconLoader::global()->loadIcon( "x-office-contact", KIconLoader::Small ) );
+      setIcon( 0, KIconLoader::global()->loadIcon( QLatin1String( "x-office-contact" ), KIconLoader::Small ) );
     else
       setIcon( 0, QPixmap::fromImage( addr.photo().data().scaled( 16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation
 ) ) );
@@ -132,7 +132,7 @@ AddresseeViewItem::AddresseeViewItem(  AddresseeViewItem *parent, const QString 
   d = new AddresseeViewItemPrivate;
   d->category = DistList;
 
-  setIcon( 0, KIconLoader::global()->loadIcon( "x-mail-distribution-list", KIconLoader::Small ) );
+  setIcon( 0, KIconLoader::global()->loadIcon(QLatin1String( "x-mail-distribution-list" ), KIconLoader::Small ) );
   setText( 0, name );
   setText( 1, i18n( "<group>" ) );
 }
@@ -867,9 +867,9 @@ AddressesDialog::searchLdap()
 void
 AddressesDialog::ldapSearchResult()
 {
-  QStringList emails = d->ldapSearchDialog->selectedEMails().split(',');
-  QStringList::iterator it( emails.begin() );
-  QStringList::iterator end( emails.end() );
+  const QStringList emails = d->ldapSearchDialog->selectedEMails().split(QLatin1String( "," ));
+  QStringList::const_iterator it( emails.begin() );
+  QStringList::const_iterator end( emails.end() );
   for ( ; it != end; ++it ){
       QString name;
       QString email;

@@ -78,7 +78,7 @@ class KOTimeValidator : public QValidator
 
       // readTime doesn't help knowing when the string is "Intermediate".
       // HACK. Not fully locale aware etc. (esp. the separator is '.' in sv_SE...)
-      QChar sep = ':';
+      QChar sep = QLatin1Char(':');
       // I want to allow "HH:", ":MM" and ":" to make editing easier
       if ( str[0] == sep ) {
         if ( length == 1 ) { // just ":"

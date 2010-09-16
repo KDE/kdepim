@@ -146,7 +146,7 @@ MailSummary::operator KUrl() const { return KUrl(); }
 
 QString MailList::mimeDataType()
 {
-  return "x-kmail-drag/message-list";
+  return QLatin1String( "x-kmail-drag/message-list" );
 }
 
 bool MailList::canDecode( const QMimeData *md )
@@ -224,7 +224,7 @@ MailListMimeData::~MailListMimeData()
 
 bool MailListMimeData::hasFormat ( const QString & mimeType ) const
 {
-  if ( mimeType == "message/rfc822" && mMailTextSource )
+  if ( mimeType == QLatin1String( "message/rfc822" ) && mMailTextSource )
     return true;
   else
     return QMimeData::hasFormat( mimeType );
@@ -234,14 +234,14 @@ QStringList MailListMimeData::formats () const
 {
   QStringList theFormats = QMimeData::formats();
   if ( mMailTextSource )
-    theFormats.prepend( QByteArray( "message/rfc822" ) );
+    theFormats.prepend( QLatin1String( "message/rfc822" ) );
   return theFormats;
 }
 
 QVariant MailListMimeData::retrieveData( const QString & mimeType,
                                          QVariant::Type type ) const
 {
-  if ( ( mimeType == "message/rfc822" ) && mMailTextSource ) {
+  if ( ( mimeType == QLatin1String( "message/rfc822" ) ) && mMailTextSource ) {
 
     if ( mMails.isEmpty() ) {
       MailList list = MailList::fromMimeData( this );

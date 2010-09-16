@@ -67,4 +67,4 @@ void KPimPrefs::usrWriteConfig()
   KConfigSkeleton::usrWriteConfig();
 }
 
-const QString KPimPrefs::categorySeparator( ":" );
+const QString KPimPrefs::categorySeparator( QLatin1String( ":" ) );

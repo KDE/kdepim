@@ -215,6 +215,12 @@ KMeditor::KMeditor( QWidget *parent )
   d->init();
 }
 
+KMeditor::KMeditor( QWidget *parent, const QString & configFile )
+ : TextEdit( parent, configFile ), d( new KMeditorPrivate( this ) )
+{
+  d->init();
+}
+
 KMeditor::~KMeditor()
 {
   delete d;

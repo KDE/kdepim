@@ -78,7 +78,7 @@ class DateValidator : public QValidator
 KDateEdit::KDateEdit( QWidget *parent, const char *name )
   : QComboBox( parent ), mReadOnly( false ), mDiscardNextMousePress( false )
 {
-  setObjectName( name );
+  setObjectName( QLatin1String( name ) );
   // need at least one entry for popup to work
   setMaxCount( 1 );
   setEditable( true );

@@ -41,13 +41,13 @@ CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget *parent )
   setButtons( Ok | Apply | Cancel | Help );
   mWidgets = new Ui::CategoryEditDialog_base();
   QWidget *widget = new QWidget( this );
-  widget->setObjectName( "CategoryEdit" );
+  widget->setObjectName( QLatin1String( "CategoryEdit" ) );
   mWidgets->setupUi( widget );
 
   mWidgets->mCategories->header()->hide();
-  mWidgets->mButtonAdd->setIcon( KIcon( "list-add" ) );
-  mWidgets->mButtonAddSubcategory->setIcon( KIcon( "list-add" ) );
-  mWidgets->mButtonRemove->setIcon( KIcon( "list-remove" ) );
+  mWidgets->mButtonAdd->setIcon( KIcon( QLatin1String( "list-add" ) ) );
+  mWidgets->mButtonAddSubcategory->setIcon( KIcon( QLatin1String( "list-add" ) ) );
+  mWidgets->mButtonRemove->setIcon( KIcon( QLatin1String( "list-remove" ) ) );
 
   // unfortunately, kde-core-devel will not allow this code in KDialog
   // because these button's functionality cannot be easily generalized.
@@ -194,7 +194,7 @@ void CategoryEditDialog::slotApply()
   while ( *it ) {
     path = mWidgets->mCategories->pathByItem( *it++ );
     path.replaceInStrings(
-      KPimPrefs::categorySeparator, QString( "\\" ) + KPimPrefs::categorySeparator );
+      KPimPrefs::categorySeparator, QLatin1Char( '\\' ) + KPimPrefs::categorySeparator );
     mPrefs->mCustomCategories.append( path.join( KPimPrefs::categorySeparator ) );
   }
 

@@ -42,8 +42,8 @@ class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog
     {
       setupUi( this );
 
-      mButtonClear->setIcon( KIcon( "edit-clear-locationbar-rtl" ) );
-      mButtonEdit->setIcon( KIcon( "document-properties" ) );
+      mButtonClear->setIcon( KIcon( QLatin1String( "edit-clear-locationbar-rtl" )) );
+      mButtonEdit->setIcon( KIcon( QLatin1String( "document-properties" ) ) );
     }
 };
 
@@ -121,7 +121,7 @@ static QStringList getSelectedCategories( AutoCheckTreeWidget *categoriesView )
   while ( *it ) {
     QStringList path = categoriesView->pathByItem( *it++ );
     if ( path.count() ) {
-      path.replaceInStrings( KPimPrefs::categorySeparator, QString( "\\" ) +
+      path.replaceInStrings( KPimPrefs::categorySeparator, QLatin1String( "\\" ) +
                              KPimPrefs::categorySeparator );
       categories.append( path.join( KPimPrefs::categorySeparator ) );
     }
@@ -156,7 +156,7 @@ void CategorySelectWidget::hideHeader()
 QStringList CategorySelectWidget::selectedCategories( QString &categoriesStr )
 {
   mCategoryList = getSelectedCategories( listView() );
-  categoriesStr = mCategoryList.join( ", " );
+  categoriesStr = mCategoryList.join( QLatin1String( ", " ) );
   return mCategoryList;
 }
 
@@ -183,7 +183,7 @@ CategorySelectDialog::CategorySelectDialog( KPimPrefs *prefs, QWidget *parent )
   lay->setSpacing( KDialog::spacingHint() );
 
   mWidgets = new CategorySelectWidget( this, prefs );
-  mWidgets->setObjectName( "CategorySelection" );
+  mWidgets->setObjectName( QLatin1String( "CategorySelection" ) );
   mWidgets->hideHeader();
   lay->addWidget( mWidgets );
 

@@ -27,7 +27,7 @@ using namespace KPIM;
 
 QString KVCardDrag::mimeType()
 {
-  return "text/directory";
+  return QLatin1String( "text/directory" );
 }
 
 bool KVCardDrag::populateMimeData( QMimeData *md, const QByteArray &content )
