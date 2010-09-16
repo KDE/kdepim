@@ -1,11 +1,16 @@
 KAlarm Change Log
 
-=== Version 2.4.8 --- 4 September 2010 ===
+=== Version 2.4.9 --- 16 September 2010 ===
+- Fix crash if alarm triggers while its deletion confirmation prompt is visible.
+
+=== Version 2.4.8 (KDEPIM 4.4.6) --- 4 September 2010 ===
 - Fix crash when a reminder alarm is being redisplayed.
 - Fix possible crash: on alarm deletion, always update next alarm to trigger.
 - Fix Sound File selection dialogue Play button not playing any sound.
 - Always show current storage location choice in Configuration dialogue.
 - Fix inability to leave file name blank in audio alarm templates.
+- Fix changes to volume not enabling OK button when editing an audio alarm
+  template with no audio file specified.
 
 === Version 2.4.7 (KDE 4.4.5) --- 2 June 2010 ===
 - Fix inability to defer non-recurring alarms.
