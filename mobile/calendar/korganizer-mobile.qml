@@ -341,7 +341,8 @@ KPIM.MainView {
           id: dateEdit
           width: parent.width
           height: 480 / 6
-          displayFormat: "MM.dd.yyyy"
+          // FIXME we'd need to translate that, QDateEdit should default to the current locale, I think
+          //displayFormat: "MM.dd.yyyy"
           styleSheet: window.styleSheet
         }
       }
