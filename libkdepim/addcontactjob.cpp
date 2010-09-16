@@ -115,7 +115,7 @@ class AddContactJob::Private
       const QString text = i18n( "The VCard was added to your address book; "
                                  "you can add more information to this "
                                  "entry by opening the address book." );
-      KMessageBox::information( mParentWidget, text, QString(), "addedtokabc" );
+      KMessageBox::information( mParentWidget, text, QString(), QLatin1String("addedtokabc") );
 
       q->emitResult();
     }

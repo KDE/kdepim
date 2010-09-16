@@ -60,7 +60,7 @@ class AddEmailAddressJob::Private
         const QString text = i18n( "<qt>The email address <b>%1</b> is already in your address book.</qt>",
                                    mCompleteAddress );
 
-        KMessageBox::information( mParentWidget, text, QString(), "alreadyInAddressBook" );
+        KMessageBox::information( mParentWidget, text, QString(), QLatin1String("alreadyInAddressBook") );
         q->setError( UserDefinedError );
         q->emitResult();
         return;
@@ -156,7 +156,7 @@ class AddEmailAddressJob::Private
       const QString text = i18n( "<qt>The email address <b>%1</b> was added to your "
                                  "address book; you can add more information to this "
                                  "entry by opening the address book.</qt>", mCompleteAddress );
-      KMessageBox::information( mParentWidget, text, QString(), "addedtokabc" );
+      KMessageBox::information( mParentWidget, text, QString(), QLatin1String("addedtokabc") );
 
       q->emitResult();
     }
