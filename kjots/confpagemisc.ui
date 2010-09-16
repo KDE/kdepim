@@ -100,7 +100,7 @@
    <item row="0" column="0" colspan="4">
     <widget class="QCheckBox" name="autoSave">
      <property name="whatsThis">
-      <string>When &quot;Enable autosave&quot; is checked, KJots will automatically save changes made to books at the interval defined below.</string>
+      <string>When &quot;Save changes periodically&quot; is checked, KJots will automatically save changes made to books at the interval defined below.</string>
      </property>
      <property name="text">
       <string>&amp;Save changes periodically</string>
