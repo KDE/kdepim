@@ -105,7 +105,7 @@ void MainView::delayedInit()
   }
 
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
-#ifdef KDEQMLPLUGIN_STATIC  
+#ifdef KDEQMLPLUGIN_STATIC
   rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
 #endif
 
@@ -131,7 +131,7 @@ void MainView::delayedInit()
   connect(actionCollection()->action("message_redirect"), SIGNAL(triggered(bool)), SLOT(redirect()));
   connect(actionCollection()->action("message_send_again"), SIGNAL(triggered(bool)), SLOT(sendAgain()));
   connect(actionCollection()->action("message_edit"), SIGNAL(triggered(bool)), SLOT(sendAgain())); //do the same under a different name
-  connect(actionCollection()->action("message_find_in"), SIGNAL(triggered(bool)), SLOT(findInMessage())); 
+  connect(actionCollection()->action("message_find_in"), SIGNAL(triggered(bool)), SLOT(findInMessage()));
   connect(actionCollection()->action("message_save_as"), SIGNAL(triggered(bool)), SLOT(saveMessage()));
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
   connect(actionCollection()->action("prefer_html_to_plain"), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)));
@@ -145,7 +145,7 @@ void MainView::delayedInit()
   action = new KAction( i18n( "New Email" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT(startComposer()) );
   actionCollection()->addAction( "add_new_mail", action );
-  
+
   // lazy load of the default single folders
   QTimer::singleShot(3000, this, SLOT(initDefaultFolders()));
 
@@ -326,7 +326,7 @@ void MainView::sendQueuedVia()
     return;
 
   const QStringList availTransports= MailTransport::TransportManager::self()->transportNames();
-  
+
   delete mTransportDialog;
   mTransportDialog = new QWidget( this, Qt::Dialog ); //not a real dialog though, should be done in QML
   mTransportDialog->setWindowTitle( i18n( "Send Queued Email Via" ) );
@@ -534,7 +534,7 @@ void MainView::redirect()
 Akonadi::Item MainView::currentItem()
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
-  
+
   if (list.size() != 1)
     return Akonadi::Item();
   const QModelIndex idx = list.first();
