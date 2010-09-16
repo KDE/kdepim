@@ -14,6 +14,10 @@ set(notes_mobile_SRCS
   main.cpp
 )
 
+if (RUNTIME_PLUGINS_STATIC)
+  add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
+endif (RUNTIME_PLUGINS_STATIC)
+
 kde4_add_executable(notes-mobile ${notes_mobile_SRCS} )
 if (WINCE)
   SET_TARGET_PROPERTIES(notes-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
@@ -27,6 +31,10 @@ target_link_libraries(notes-mobile
   kdepim
   akonadi_next
 )
+
+if (RUNTIME_PLUGINS_STATIC)
+  target_link_libraries(notes-mobile akonadi_serializer_mail)
+endif (RUNTIME_PLUGINS_STATIC)
 
 install(TARGETS notes-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES notes-mobile.sh DESTINATION ${BIN_INSTALL_DIR})

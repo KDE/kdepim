@@ -25,6 +25,11 @@
 
 #include "mainview.h"
 
+#ifdef MAIL_SERIALIZER_PLUGIN_STATIC
+#include <QtPlugin>
+
+Q_IMPORT_PLUGIN(akonadi_serializer_mail)
+#endif
 
 int main( int argc, char **argv )
 {
