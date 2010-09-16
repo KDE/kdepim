@@ -24,9 +24,144 @@ import org.kde.incidenceeditors 4.5 as IncidenceEditors
 
 KPIM.MainView {
 
+  Connections {
+    target: calendarWidget
+    onCollapsed: {
+        calendarWidget.visible = false;
+        _incidenceview.setNewDate(myCalendar.day, myCalendar.month, myCalendar.year);
+    }
+  }
+
+  Connections {
+    target: _incidenceview
+    onShowCalendarWidget: {
+        calendarWidget.expand();
+        calendarWidget.visible = true;
+        myCalendar.day = day;
+        myCalendar.month = month;
+        myCalendar.year = year;
+    }
+  }
+
+  Connections {
+    target: clockWidget
+    onCollapsed: {
+        clockWidget.visible = false;
+        _incidenceview.setNewDate(myClock.hours, myClock.minutes, myClock.seconds);
+    }
+  }
+
+  Connections {
+    target: _incidenceview
+    onShowClockWidget: {
+        clockWidget.expand();
+        clockWidget.visible = true;
+        myClock.hours = hour;
+        myClock.minutes = minute;
+        myClock.seconds = second;
+    }
+  }
+
   SlideoutPanelContainer {
     anchors.fill: parent
     z: 50
+
+    SlideoutPanel {
+      id: calendarWidget
+      anchors.fill: parent
+      titleText: KDE.i18n("Date");
+      handlePosition: 150
+      handleHeight: 120
+      visible: false
+      content: [
+          Row {
+            spacing: 15
+
+            KPIM.Calendar {
+              id: myCalendar
+              day: daySelector.currentIndex
+              month: monthSelector.currentIndex
+              year: yearSelector.currentIndex
+            }
+
+            Column {
+              spacing: 10
+              anchors.top: parent.top
+              anchors.topMargin: 50
+
+              KPIM.VerticalFadeSelector {
+                id: daySelector
+                height: 100
+                model: myCalendar.daysInMonth
+                currentIndex: myCalendar.day
+              }
+
+              KPIM.VerticalFadeSelector {
+                id: monthSelector
+                height: 100
+                model: 12
+                currentIndex: myCalendar.month
+              }
+
+              KPIM.VerticalFadeSelector {
+                id: yearSelector
+                height: 100
+                // high enough :)
+                model: 3000
+                currentIndex: myCalendar.year
+              }
+            }
+          }
+      ]
+    }
+
+    SlideoutPanel {
+      id: clockWidget
+      anchors.fill: parent
+      titleText: KDE.i18n("Time");
+      handlePosition: 150
+      handleHeight: 120
+      visible: false
+      content: [
+          Row {
+            spacing: 15
+
+            KPIM.Clock {
+              id: myClock
+              hours: hourSelector.currentIndex
+              minutes: minuteSelector.currentIndex
+              seconds: secondSelector.currentIndex
+            }
+
+            Column {
+              spacing: 10
+              anchors.top: parent.top
+              anchors.topMargin: 50
+
+              KPIM.VerticalFadeSelector {
+                id: hourSelector
+                height: 100
+                model: 13
+                currentIndex: myClock.hours
+              }
+
+              KPIM.VerticalFadeSelector {
+                id: minuteSelector
+                height: 100
+                model: 61
+                currentIndex: myClock.minutes
+              }
+
+              KPIM.VerticalFadeSelector {
+                id: secondSelector
+                height: 100
+                model: 61
+                currentIndex: myClock.seconds
+              }
+            }
+          }
+      ]
+    }
 
     SlideoutPanel {
       anchors.fill: parent
