@@ -722,17 +722,12 @@ void MainWindow::slotModify()
 void MainWindow::slotDelete(bool force)
 {
 	KAEvent::List events = mListView->selectedEvents();
-	// Copy the events, and their event IDs, to be deleted, in case any are
+	// Save the IDs of the events to be deleted, in case any events are
 	// deleted by being triggered while the confirmation prompt is displayed
 	// (in which case their pointers will become invalid).
 	QStringList ids;
-	KAEvent::List eventCopies;
 	for (int i = 0, end = events.count();  i < end;  ++i)
-	{
-		KAEvent* event = events[i];
-		eventCopies.append(event);
-		ids.append(event->id());
-	}
+		ids.append(events[i]->id());
 
 	if (!force  &&  Preferences::confirmAlarmDeletion())
 	{
@@ -754,18 +749,18 @@ void MainWindow::slotDelete(bool force)
 	{
 		AlarmResource* r = resources->resourceForEvent(ids[i]);
 		if (!r)
-			eventCopies[i] = 0;
+			events[i] = 0;
 		else
-			undos.append(*eventCopies[i], r);
+			undos.append(*events[i], r);
 	}
-	eventCopies.removeAll((KAEvent*)0);
+	events.removeAll((KAEvent*)0);
 
-	if (eventCopies.isEmpty())
+	if (events.isEmpty())
 		kDebug() << "No alarms left to delete";
 	else
 	{
 		// Delete the events from the calendar and displays
-		KAlarm::deleteEvents(eventCopies, true, this);
+		KAlarm::deleteEvents(events, true, this);
 		Undo::saveDeletes(undos);
 	}
 }
