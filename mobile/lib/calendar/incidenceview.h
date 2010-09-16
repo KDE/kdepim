@@ -29,6 +29,8 @@
 #include "kdeclarativefullscreenview.h"
 
 class KJob;
+class QTimeEdit;
+class QDateEdit;
 
 namespace Akonadi {
 class CollectionComboBox;
@@ -40,7 +42,6 @@ class IncidenceDateTime;
 
 class MobileIncidenceGeneral;
 class MobileIncidenceMore;
-class CalendarHelper;
 
 class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorNG::ItemEditorUi
 {
@@ -65,9 +66,17 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     virtual Akonadi::Collection selectedCollection() const;
     virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
 
+  signals:
+    void showCalendarWidget( int day, int month, int year );
+    void showClockWidget( int hour, int minute, int second );
+
   public slots:
     void save();   /// Ok clicked in the user interface
     void cancel(); /// Cancel clicked in the user interface
+    void showCalendar( QObject *obj );
+    void setNewDate( int day, int month, int year );
+    void showClock( QObject *obj );
+    void setNewTime( int hour, int minute, int second );
 
   protected slots:
     void delayedInit();
@@ -91,7 +100,8 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     /// We need this because we can't rely on the order in which those two are added.
     MobileIncidenceMore *mIncidenceMore;
 
-    CalendarHelper *m_calendarHelper;
+    QDateEdit *mDateWidget;
+    QTimeEdit *mTimeWidget;
 };
 
 #endif // INCIDENCEVIEW_H

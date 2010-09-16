@@ -19,10 +19,13 @@
 
 #include "incidenceview.h"
 #include "calendarhelper.h"
+#include "clockhelper.h"
 
 #include <calendarsupport/utils.h>
 
 #include <QtGui/QMessageBox>
+#include <QtGui/QDateEdit>
+#include <QtGui/QTimeEdit>
 
 #include <KDebug>
 #include <KDialog>
@@ -30,7 +33,6 @@
 
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
-
 
 #include "declarativeeditors.h"
 
@@ -61,8 +63,12 @@ IncidenceView::IncidenceView( QWidget* parent )
   , mEditor( new CombinedIncidenceEditor( parent ) )
   , mEditorDateTime( 0 )
   , mIncidenceMore( 0 )
+  , mDateWidget( 0 )
+  , mTimeWidget( 0 )
 {
   setAttribute(Qt::WA_DeleteOnClose);
+  QDeclarativeContext *context = engine()->rootContext();
+  context->setContextProperty( "_incidenceview", this );
 }
 
 void IncidenceView::delayedInit()
@@ -72,6 +78,7 @@ void IncidenceView::delayedInit()
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
   qmlRegisterType<CalendarHelper>( "CalendarHelper", 4, 5, "CalendarHelper" );
+  qmlRegisterType<ClockHelper>( "ClockHelper", 4, 5, "ClockHelper" );
 
   connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
            SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction) ) );
@@ -116,6 +123,10 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
   Q_ASSERT( mEditorDateTime == 0 );
   mEditorDateTime = new IncidenceEditorNG::IncidenceDateTime( editorWidget->mUi );
   mEditorDateTime->setActiveDate( mActiveDate );
+  connect( mEditorDateTime, SIGNAL( startDateFocus(QObject*) ), this, SLOT( showCalendar(QObject*) ) );
+  connect( mEditorDateTime, SIGNAL( endDateFocus(QObject*) ), this, SLOT( showCalendar(QObject*) ) );
+  connect( mEditorDateTime, SIGNAL( startTimeFocus(QObject*) ), this, SLOT( showClock(QObject*) ) );
+  connect( mEditorDateTime, SIGNAL( endTimeFocus(QObject*) ), this, SLOT( showClock(QObject*) ) );
   mEditor->combine( mEditorDateTime );
 
   editor = new IncidenceEditorNG::IncidenceCompletionPriority( editorWidget->mUi );
@@ -124,6 +135,43 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 
   if ( mIncidenceMore != 0 ) // IncidenceMore was set *before* general.
     initIncidenceMore();
+}
+
+void IncidenceView::showCalendar( QObject *obj )
+{
+  mDateWidget = qobject_cast<QDateEdit*>( obj );
+  if ( !mDateWidget )
+    return;
+
+  QDate date = mDateWidget->date();
+  emit showCalendarWidget( date.day(), date.month(), date.year() );
+}
+
+void IncidenceView::setNewDate( int day, int month, int year )
+{
+  if ( mDateWidget == 0 )
+    return;
+
+  mDateWidget->setDate( QDate( year, month, day ) );
+}
+
+void IncidenceView::showClock( QObject *obj )
+{
+  mTimeWidget = qobject_cast<QTimeEdit*>( obj );
+  if ( !mTimeWidget )
+    return;
+
+  QTime time = mTimeWidget->time();
+  kDebug() << "----> Showing clock: " << time;
+  emit showClockWidget( time.hour(), time.minute(), time.second() );
+}
+
+void IncidenceView::setNewTime( int hour, int minute, int second )
+{
+  if ( mTimeWidget == 0 )
+    return;
+
+  mTimeWidget->setTime( QTime( hour, minute, second ) );
 }
 
 void IncidenceView::initIncidenceMore()
