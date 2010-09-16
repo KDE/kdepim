@@ -42,6 +42,7 @@
 #include <KIcon>
 #include <KLocale>
 #include <KMenu>
+#include <KHolidays/Holidays>
 
 #include <QMouseEvent>
 #include <QPainter>
@@ -234,13 +235,22 @@ void KODayMatrix::updateView( const QDate &actdate )
   // there's no need to update the whole list of incidences... This is just a
   // waste of computational power
   updateIncidences();
+
+  QHash<int, QStringList> allHolidays;
+  if( KOGlobals::self()->holidays() ) {
+    KHolidays::Holiday::List holidays = KOGlobals::self()->holidays()->holidays( mDays[0], mDays[NUMDAYS-1] );
+    foreach( KHolidays::Holiday holiday, holidays ) {
+      allHolidays[holiday.date().toJulianDay()].append( holiday.text() );
+    }
+  }
+
   for ( int i = 0; i < NUMDAYS; i++ ) {
     //if it is a holy day then draw it red. Sundays are consider holidays, too
-    QStringList holidays = KOGlobals::self()->holiday( mDays[i] );
+    QStringList holidays = allHolidays.value( mDays[i].toJulianDay() );
     QString holiStr;
 
     if ( ( KOGlobals::self()->calendarSystem()->dayOfWeek( mDays[i] ) ==
-           KOGlobals::self()->calendarSystem()->weekDayOfPray() ) ||
+           KGlobal::locale()->weekDayOfPray() ) ||
          !holidays.isEmpty() ) {
       if ( !holidays.isEmpty() ) {
         holiStr = holidays.join( i18nc( "delimiter for joining holiday names", "," ) );

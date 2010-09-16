@@ -50,6 +50,7 @@
 #include <KGlobalSettings>
 #include <KHBox>
 #include <KVBox>
+#include <KHolidays/Holidays>
 
 #include <QDrag>
 #include <QGridLayout>
@@ -541,6 +542,15 @@ void KOAgendaView::createDayLabels()
   placeDecorationsFrame( mBottomDayLabelsFrame, loadDecorations( botStrDecos, botDecos ), false );
 #endif
 
+  QHash<int, QStringList> allHolidays;
+  if( KOGlobals::self()->holidays() ) {
+    KHolidays::Holiday::List holidays = KOGlobals::self()->holidays()->holidays(
+                                        mSelectedDates.first(), mSelectedDates.last() );
+    foreach( KHolidays::Holiday holiday, holidays ) {
+      allHolidays[holiday.date().toJulianDay()].append( holiday.text() );
+    }
+  }
+
   DateList::ConstIterator dit;
   for ( dit = mSelectedDates.constBegin(); dit != mSelectedDates.constEnd(); ++dit ) {
     QDate date = *dit;
@@ -569,7 +579,7 @@ void KOAgendaView::createDayLabels()
     mDateDayLabels.append( dayLabel );
 
     // if a holiday region is selected, show the holiday name
-    QStringList texts = KOGlobals::self()->holiday( date );
+    QStringList texts = allHolidays.value( date.toJulianDay() );
     QStringList::ConstIterator textit = texts.constBegin();
     for ( ; textit != texts.constEnd(); ++textit ) {
       // Compute a small version of the holiday string for KOAlternateLabel

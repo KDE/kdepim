@@ -37,6 +37,7 @@
 #include <akonadi/kcal/utils.h>
 
 #include <KCal/Incidence>
+#include <KHolidays/Holidays>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -404,8 +405,17 @@ void MonthView::reloadIncidences()
   }
 
   // add holidays
+  QHash<int, QStringList> allHolidays;
+  if( KOGlobals::self()->holidays() ) {
+    KHolidays::Holiday::List holidays = KOGlobals::self()->holidays()->holidays(
+                                        actualStartDateTime().date(), actualEndDateTime().date() );
+    foreach( KHolidays::Holiday holiday, holidays ) {
+      allHolidays[holiday.date().toJulianDay()].append( holiday.text() );
+    }
+  }
+
   for ( QDate d = actualStartDateTime().date(); d <= actualEndDateTime().date(); d = d.addDays( 1 ) ) {
-    QStringList holidays( KOGlobals::self()->holiday( d ) );
+    QStringList holidays( allHolidays.value( d.toJulianDay() ) );
     if ( !holidays.isEmpty() ) {
       MonthItem *holidayItem =
         new HolidayMonthItem(
