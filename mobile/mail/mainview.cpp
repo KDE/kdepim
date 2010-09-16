@@ -534,6 +534,7 @@ void MainView::redirect()
 Akonadi::Item MainView::currentItem()
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
+  
   if (list.size() != 1)
     return Akonadi::Item();
   const QModelIndex idx = list.first();
@@ -859,15 +860,22 @@ void MainView::folderChanged()
       return;
     //NOTE: not exactly correct if multiple folders are selected, although I don't know what to do then, as the action is not
     //a tri-state one (checked, unchecked, for some folders checked)
-    const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
-    Q_ASSERT( index.isValid() );
-    const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
-    Q_ASSERT( collection.isValid() );
+    bool htmlMailOverrideInAll = true;
+    bool htmlLoadExternalOverrideInAll = true;
 
     KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
-    KConfigGroup group(config, QString("c%1").arg(collection.id()));
-    actionCollection()->action("prefer_html_to_plain")->setChecked(group.readEntry("htmlMailOverride", false));
-    actionCollection()->action("load_external_ref")->setChecked(group.readEntry("htmlLoadExternalOverride", false));
+    Q_FOREACH( QModelIndex index, collectionSelectionModel->selection().indexes() ) {
+        Q_ASSERT( index.isValid() );
+        const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+        Q_ASSERT( collection.isValid() );
+        KConfigGroup group(config, QString("c%1").arg(collection.id()));
+        if ( group.readEntry("htmlMailOverride", false) == false )
+          htmlMailOverrideInAll = false;
+        if ( group.readEntry("htmlLoadExternalOverride", false) == false )
+          htmlLoadExternalOverrideInAll = false;
+    }
+    actionCollection()->action("prefer_html_to_plain")->setChecked( htmlMailOverrideInAll );
+    actionCollection()->action("load_external_ref")->setChecked( htmlLoadExternalOverrideInAll );
 }
 
 // #############################################################
