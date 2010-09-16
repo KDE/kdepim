@@ -70,6 +70,7 @@ public:
 
   /** Returns the list of (sub)jobs of a session or another job. */
   QList<JobInfo> jobs( const QString& parent ) const;
+  QStringList jobNames( int id ) const;
   QList<JobInfo> jobs( int id ) const;
 
   int idForJob( const QString& job ) const;

@@ -72,10 +72,10 @@ public:
   }
 
   QStringList sessions;
-  QMap<QString, int> idToSequence;
-  QMap<int, QString> sequenceToId;
-  QMap<QString, QStringList> jobs;
-  QMap<QString, JobInfo> infos;
+  QHash<QString, int> idToSequence;
+  QHash<int, QString> sequenceToId;
+  QHash<QString, QStringList> jobs;
+  QHash<QString, JobInfo> infos;
   int lastId;
   QTimer timer;
   bool disabled;
@@ -228,20 +228,26 @@ QList<JobInfo> JobTracker::jobs( int id ) const
 QList<JobInfo> JobTracker::jobs( const QString & parent ) const
 {
   assert( d->jobs.contains(parent) );
-  const QStringList jobs = d->jobs[parent];
+  const QStringList jobs = d->jobs.value(parent);
   QList<JobInfo> infos;
-  Q_FOREACH( const QString &job, jobs )
-  {
-    infos << d->infos[job];
+  Q_FOREACH( const QString &job, jobs ) {
+    infos << d->infos.value(job);
   }
   return infos;
+}
+
+QStringList JobTracker::jobNames(int id) const
+{
+  if ( d->isSession( id ) )
+    return d->jobs.value( sessionForId( id ) );
+  return d->jobs.value( jobForId( id ) );
 }
 
 // only works on jobs
 int JobTracker::idForJob(const QString & job) const
 {
   assert( d->idToSequence.contains(job) );
-  return d->idToSequence[job];
+  return d->idToSequence.value(job);
 }
 
 QString JobTracker::jobForId(int id) const
@@ -249,7 +255,7 @@ QString JobTracker::jobForId(int id) const
   if ( d->isSession( id ) )
     return sessionForId( id );
   assert( d->sequenceToId.contains(id) );
-  return d->sequenceToId[id];
+  return d->sequenceToId.value(id);
 }
 
 
@@ -277,7 +283,7 @@ int JobTracker::parentId( int id ) const
   }
   else
   {
-    const QString job = d->sequenceToId[id];
+    const QString job = d->sequenceToId.value(id);
     return d->infos[job].parent;
   }
 
@@ -291,7 +297,7 @@ JobInfo JobTracker::info( int id) const
 JobInfo JobTracker::info(const QString & job) const
 {
   assert( d->infos.contains(job) );
-  return d->infos[job];
+  return d->infos.value(job);
 }
 
 void JobTracker::triggerReset()

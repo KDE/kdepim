@@ -58,7 +58,8 @@ JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent )
   tv->expandAll();
   tv->setAlternatingRowColors( true );
   tv->setContextMenuPolicy( Qt::CustomContextMenu );
-  tv->header()->setResizeMode( QHeaderView::ResizeToContents );
+  // too slow with many jobs:
+  // tv->header()->setResizeMode( QHeaderView::ResizeToContents );
   connect( d->model, SIGNAL( modelReset( ) ), tv, SLOT( expandAll() ) );
   connect( tv, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );
   layout->addWidget( tv );

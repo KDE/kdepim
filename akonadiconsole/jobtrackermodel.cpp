@@ -55,7 +55,7 @@ public:
       else
       {
         // offset of the parent in the list of children of the grandparent
-        row = tracker.jobs( grandparentid ).indexOf( tracker.info( parentid ) );
+        row = tracker.jobNames( grandparentid ).indexOf( tracker.jobForId( parentid ) );
       }
       return row;
   }
@@ -91,9 +91,9 @@ QModelIndex JobTrackerModel::index(int row, int column, const QModelIndex & pare
     return createIndex( row, column, d->tracker.idForSession( d->tracker.sessions().at(row) ) );
   }
   // non-toplevel job
-  const QList<JobInfo> jobs = d->tracker.jobs( parent.internalId() );
+  const QStringList jobs = d->tracker.jobNames( parent.internalId() );
   if ( row >= jobs.size() ) return QModelIndex();
-  return createIndex( row, column, d->tracker.idForJob( jobs.at( row ).id ) );
+  return createIndex( row, column, d->tracker.idForJob( jobs.at( row ) ) );
 }
 
 QModelIndex JobTrackerModel::parent(const QModelIndex & idx) const
@@ -115,7 +115,7 @@ int JobTrackerModel::rowCount(const QModelIndex & parent) const
   }
   else
   {
-    return d->tracker.jobs( parent.internalId() ).size();
+    return d->tracker.jobNames( parent.internalId() ).size();
   }
 }
 
@@ -231,9 +231,9 @@ void JobTrackerModel::jobsAdded( const QList< QPair< int, int > > & jobs )
       const int id = idx.internalId();
       const JobInfo info = d->tracker.info( id );
       if ( info.type == QLatin1String("Akonadi::TransactionBeginJob") ) {
-        d->currentColor.setRed( d->currentColor.red() + 25 );
+        d->currentColor.setRed( qMin( d->currentColor.red() + 25, 255 ) );
       } else if ( info.type == QLatin1String("Akonadi::TransactionRollbackJob") || info.type == QLatin1String("Akonadi::TransactionCommitJob") ) {
-        d->currentColor.setRed( d->currentColor.red() - 25 );
+        d->currentColor.setRed( qMax( d->currentColor.red() - 25, 0 ) );
       }
     }
   }
