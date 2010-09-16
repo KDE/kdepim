@@ -557,13 +557,13 @@ KPIM.MainView {
     }
 
     KPIM.Action {
-      action: application.getAction( "akonadi_mark_all_as_read", "" );
+      action: application.getAction( "akonadi_mark_as_read", "" );
     }
     KPIM.Action {
-      action: application.getAction( "akonadi_mark_all_as_important", "" );
+      action: application.getAction( "akonadi_mark_as_important", "" );
     }
     KPIM.Action {
-      action: application.getAction( "akonadi_mark_all_as_action_item", "" );
+      action: application.getAction( "akonadi_mark_as_action_item", "" );
     }
   }
 
