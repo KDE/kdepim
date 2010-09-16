@@ -118,7 +118,7 @@ ActionMenuContainer {
     category : "multiple_folder"
     name : "multi_folder_folder_menu"
     text : KDE.i18n( "Folders" )
-    FakeAction { name : "check_mail_in_sel_folder" }
+    ActionListItem { name : "akonadi_collection_sync" }
     FakeAction { name : "mark_all_msg_as_read" }
     FakeAction { name : "move_all_msg_to_trash" }
     FakeAction { name : "remove_dupl_msgs" }
