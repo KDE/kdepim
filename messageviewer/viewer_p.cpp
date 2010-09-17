@@ -638,6 +638,8 @@ int ViewerPrivate::pointsToPixel(int pointSize) const
 
 void ViewerPrivate::displaySplashPage( const QString &info )
 {
+// FIXME: add loading screen that doesn't eat 15Mb
+#ifndef KDEPIM_MOBILE_UI
   mMsgDisplay = false;
   adjustLayout();
 
@@ -656,6 +658,7 @@ void ViewerPrivate::displaySplashPage( const QString &info )
 
   mViewer->setHtml( content.arg(fontSize).arg(mAppName).arg(catchPhrase).arg(quickDescription).arg(info), KUrl::fromPath( location ) );
   mViewer->show();
+#endif
 }
 
 void ViewerPrivate::enableMessageDisplay()
