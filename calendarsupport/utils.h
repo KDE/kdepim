@@ -182,7 +182,7 @@ namespace CalendarSupport
     there was no collection selected.
   */
   CALENDARSUPPORT_EXPORT Akonadi::Collection selectCollection(
-    QWidget *parent, int dialogCode,
+    QWidget *parent, int &dialogCode,
     const QStringList &mimeTypes,
     const Akonadi::Collection &defaultCollection = Akonadi::Collection() );
 

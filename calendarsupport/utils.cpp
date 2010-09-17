@@ -323,7 +323,7 @@ KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
 }
 
 Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
-                                                       int dialogCode,
+                                                       int &dialogCode,
                                                        const QStringList &mimeTypes,
                                                        const Akonadi::Collection &defCollection )
 {
@@ -337,6 +337,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
     dlg->setDefaultCollection( defCollection );
   }
   Akonadi::Collection collection;
+
   dialogCode = dlg->exec();
   if ( dialogCode == QDialog::Accepted ) {
     collection = dlg->selectedCollection();
