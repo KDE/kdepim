@@ -1464,10 +1464,8 @@ void FolderView::fillContextMenuFolderServiceRelatedActions( KMenu *menu, Folder
     // local root or searches
     menu->addAction( mMainWidget->action( "compact_all_folders" ) );
     menu->addAction( mMainWidget->action( "expire_all_folders" ) );
-  }
-
-  if ( !folder )
     return; // no more folder service actions for non-foldered items (notably for local root and searches)
+  }
 
   // Folder "Service" Actions
 
