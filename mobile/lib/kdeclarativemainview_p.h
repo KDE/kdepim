@@ -36,6 +36,25 @@ class KActionCollection;
 static const char * const sFavoritePrefix = "Favorite_";
 static const int sFavoritePrefixLength = 9;
 
+/**
+ * @internal
+ */
+class ItemSelectHook : public QObject
+{
+  Q_OBJECT
+public:
+  ItemSelectHook(QItemSelectionModel *selectionModel, QObject *parent = 0);
+
+public slots:
+  void selectionChanged();
+
+signals:
+  void rowSelected(int row, qint64 itemId);
+
+private:
+  QItemSelectionModel *m_selectionModel;
+};
+
 class ListProxy;
 class KDeclarativeMainViewPrivate : public QObject
 {
@@ -57,6 +76,7 @@ public: /// members
   QItemSelectionModel                *mItemActionSelectionModel;
   QHash<QString, QStringList>        mPersistedSelections;
   Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
+  ItemSelectHook                     *m_hook;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();

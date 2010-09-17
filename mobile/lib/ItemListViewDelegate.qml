@@ -39,11 +39,10 @@ Item {
         itemViewTopLevel.ListView.view.currentIndex = model.index;
         itemViewTopLevel.ListView.view.parent.currentItemId = model.itemId;
 
+        var block = application.blockHook();
         itemViewTopLevel.ListView.view.parent.itemSelected();
-        // We also need to check it in the action check model so
-        // that actions related to it get enabled.
-        //checkModel.select(model.index, 3)
         application.setListSelectedRow(model.index);
+        application.unblockHook(block)
       }
     }
   }

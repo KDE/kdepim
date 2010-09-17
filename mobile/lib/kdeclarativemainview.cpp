@@ -214,8 +214,8 @@ void KDeclarativeMainView::delayedInit()
     QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel(d->mItemNavigationSelectionModel, this);
     QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel(d->mItemActionSelectionModel, this);
 
-    QObject *hook = new ItemSelectHook(d->mItemNavigationSelectionModel, this);
-    context->setContextProperty( "_itemSelectHook", QVariant::fromValue( hook ) );
+    d->m_hook = new ItemSelectHook(d->mItemNavigationSelectionModel, this);
+    context->setContextProperty( "_itemSelectHook", QVariant::fromValue( static_cast<QObject*>( d->m_hook ) ) );
 
     context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
     context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
@@ -319,12 +319,25 @@ QStringList KDeclarativeMainView::mimeTypes() const
   return d->mChangeRecorder->mimeTypesMonitored();
 }
 
+bool KDeclarativeMainView::blockHook()
+{
+  return d->m_hook->blockSignals( true );
+}
+
+void KDeclarativeMainView::unblockHook( bool block )
+{
+  d->m_hook->blockSignals( block );
+}
+
 void KDeclarativeMainView::setListSelectedRow( int row )
 {
   static const int column = 0;
   const QModelIndex idx = d->mItemNavigationSelectionModel->model()->index( row, column );
+  const bool blocked = d->m_hook->blockSignals( true );
   d->mItemNavigationSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
   d->mItemActionSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+
+  d->m_hook->blockSignals( blocked );
 }
 
 void KDeclarativeMainView::setAgentInstanceListSelectedRow( int row )
