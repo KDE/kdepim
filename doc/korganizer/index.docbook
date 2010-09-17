@@ -1971,7 +1971,7 @@ and <guilabel>Attachments</guilabel> tabs appears.</para>
 </mediaobject>
 </screenshot>
 
-<para>This tab shares a lot of option with the <guilabel>Edit Events</guilabel> dialog, 
+<para>This tab shares a lot of options with the <guilabel>Edit Events</guilabel> dialog, 
 but has some additional items for To-dos:</para>
 
 <variablelist>
@@ -3030,7 +3030,7 @@ you may configure the interval of time in minutes between each upload.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Publish (default 60) days of free/busy informaation</guilabel></term>
+<term><guilabel>Publish (default 60) days of free/busy information</guilabel></term>
 <listitem><para>Configure the number of calendar days you wish to be published
 and available to others</para></listitem>
 </varlistentry>
@@ -3320,7 +3320,7 @@ or Chol HaMoed.
 <sect2 id="journal-print-plugin">
 <title>Journal Print Style</title>
 <para>
-The plugin allows you to print ou journal entries (diary entries).
+The plugin allows you to print out journal entries (diary entries).
 </para>
 </sect2>
 
