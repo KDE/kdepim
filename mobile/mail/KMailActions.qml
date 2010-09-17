@@ -121,7 +121,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_collection_sync" }
     ActionListItem { name : "akonadi_mark_all_as_read" }
     ActionListItem { name : "akonadi_move_all_to_trash" }
-    FakeAction { name : "akonadi_remove_duplicates" }
+    ActionListItem { name : "akonadi_remove_duplicates" }
     FakeAction { name : "archive_selected_folders" }
   }
 
