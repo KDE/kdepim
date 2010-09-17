@@ -329,6 +329,8 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
 {
   QPointer<Akonadi::CollectionDialog> dlg( new Akonadi::CollectionDialog( parent ) );
 
+  kDebug() << "selecting collections with mimeType in " << mimeTypes;
+
   dlg->setMimeTypeFilter( mimeTypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   if ( defCollection.isValid() ) {
