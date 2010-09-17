@@ -71,6 +71,8 @@
 Q_DECLARE_METATYPE(KMime::Content*)
 QML_DECLARE_TYPE(MessageViewer::MessageViewItem)
 
+using namespace Akonadi;
+
 static bool workOffline()
 {
   KConfig config( QLatin1String( "akonadikderc" ) );
@@ -110,7 +112,7 @@ void MainView::delayedInit()
 #endif
 
   addMimeType( KMime::Message::mimeType() );
-  itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
+  itemFetchScope().fetchPayloadPart( MessagePart::Envelope );
   setWindowTitle( i18n( "KMail Mobile" ) );
   mMessageSender = new AkonadiSender;
 
@@ -203,15 +205,15 @@ void MainView::startComposer()
 
 void MainView::restoreDraft( quint64 id )
 {
-    Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( id ), this );
+    ItemFetchJob *fetch = new ItemFetchJob( Item( id ), this );
     fetch->fetchScope().fetchFullPayload();
-    fetch->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    fetch->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
     connect( fetch, SIGNAL(result(KJob*)), SLOT(composeFetchResult(KJob*)) );
 }
 
 void MainView::composeFetchResult( KJob *job )
 {
-  Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetch->items().isEmpty() ) {
     kDebug() << "error!!";
     //###: review error string
@@ -221,7 +223,7 @@ void MainView::composeFetchResult( KJob *job )
     return;
   }
 
-  const Akonadi::Item item = fetch->items().first();
+  const Item item = fetch->items().first();
   if (!item.isValid() && !item.parentCollection().isValid() ) {
     //###: review error string
     KMessageBox::sorry( this,
@@ -241,7 +243,7 @@ void MainView::composeFetchResult( KJob *job )
 
   // delete from the drafts folder
   // ###: do we need an option for this?)
-  Akonadi::ItemDeleteJob *djob = new Akonadi::ItemDeleteJob( item );
+  ItemDeleteJob *djob = new ItemDeleteJob( item );
   connect( djob, SIGNAL( result( KJob* ) ), this, SLOT( deleteItemResult( KJob* ) ) );
 
   // create the composer and fill it with the retrieved message
@@ -253,22 +255,22 @@ void MainView::composeFetchResult( KJob *job )
 
 void MainView::sendAgain()
 {
-    Akonadi::Item item = currentItem();
+    Item item = currentItem();
     if ( !item.isValid() )
       return;
 
-    Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( item.id() ), this );
+    ItemFetchJob *fetch = new ItemFetchJob( Item( item.id() ), this );
     fetch->fetchScope().fetchFullPayload();
     connect( fetch, SIGNAL(result(KJob*)), SLOT(sendAgainFetchResult(KJob*)) );
 }
 
 void MainView::sendAgainFetchResult(KJob* job)
 {
-  Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetch->items().isEmpty() )
     return;
 
-  const Akonadi::Item item = fetch->items().first();
+  const Item item = fetch->items().first();
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
@@ -304,7 +306,7 @@ bool MainView::askToGoOnline()
       return false;
     } else {
       ///emulate turning off offline mode
-      QAction *workOffLineAction = mMailActionManager->action( Akonadi::StandardActionManager::ToggleWorkOffline );
+      QAction *workOffLineAction = mMailActionManager->action( StandardActionManager::ToggleWorkOffline );
       workOffLineAction->setChecked(true);
       workOffLineAction->trigger();
     }
@@ -361,7 +363,7 @@ void MainView::sendQueuedVia(const QString& transport)
 
 void MainView::replyToAuthor()
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -370,7 +372,7 @@ void MainView::replyToAuthor()
 
 void MainView::replyToMailingList()
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -379,7 +381,7 @@ void MainView::replyToMailingList()
 
 void MainView::reply(quint64 id, MessageComposer::ReplyStrategy replyStrategy)
 {
-  Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( id ), this );
+  ItemFetchJob *fetch = new ItemFetchJob( Item( id ), this );
   fetch->fetchScope().fetchFullPayload();
   fetch->setProperty( "replyStrategy", QVariant::fromValue( replyStrategy ) );
   connect( fetch, SIGNAL(result(KJob*)), SLOT(replyFetchResult(KJob*)) );
@@ -387,11 +389,11 @@ void MainView::reply(quint64 id, MessageComposer::ReplyStrategy replyStrategy)
 
 void MainView::replyFetchResult(KJob* job)
 {
-  Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetch->items().isEmpty() )
     return;
 
-  const Akonadi::Item item = fetch->items().first();
+  const Item item = fetch->items().first();
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
   MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
@@ -405,7 +407,7 @@ void MainView::replyFetchResult(KJob* job)
 
 void MainView::forward(quint64 id, ForwardMode mode)
 {
-  Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( id ), this );
+  ItemFetchJob *fetch = new ItemFetchJob( Item( id ), this );
   fetch->fetchScope().fetchFullPayload();
   fetch->setProperty( "forwardMode", QVariant::fromValue( mode ) );
   connect( fetch, SIGNAL(result(KJob*)), SLOT(forwardFetchResult(KJob*)) );
@@ -413,11 +415,11 @@ void MainView::forward(quint64 id, ForwardMode mode)
 
 void MainView::forwardFetchResult( KJob* job )
 {
-  Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetch->items().isEmpty() )
     return;
 
-  const Akonadi::Item item = fetch->items().first();
+  const Item item = fetch->items().first();
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
   MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
@@ -446,11 +448,11 @@ void MainView::forwardFetchResult( KJob* job )
 
 void MainView::markImportant(bool checked)
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
-  Akonadi::MessageStatus status;
+  MessageStatus status;
   status.setStatusFromFlags(item.flags());
   if (checked && status.isImportant())
     return;
@@ -460,17 +462,17 @@ void MainView::markImportant(bool checked)
       status.setImportant(false);
   item.setFlags(status.statusFlags());
 
-  Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
+  ItemModifyJob *job = new ItemModifyJob(item);
   connect(job, SIGNAL(result(KJob *)), SLOT(modifyDone(KJob *)));
 }
 
 void MainView::markMailTask(bool checked)
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
-  Akonadi::MessageStatus status;
+  MessageStatus status;
   status.setStatusFromFlags(item.flags());
   if (checked && status.isToAct())
     return;
@@ -480,13 +482,13 @@ void MainView::markMailTask(bool checked)
       status.setToAct(false);
   item.setFlags(status.statusFlags());
 
-  Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
+  ItemModifyJob *job = new ItemModifyJob(item);
   connect(job, SIGNAL(result(KJob *)), SLOT(modifyDone(KJob *)));
 }
 
 void MainView::replyToMessage()
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -495,7 +497,7 @@ void MainView::replyToMessage()
 
 void MainView::replyToAll()
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -504,7 +506,7 @@ void MainView::replyToAll()
 
 void MainView::forwardMessage()
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -513,7 +515,7 @@ void MainView::forwardMessage()
 
 void MainView::forwardAsAttachment()
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -523,7 +525,7 @@ void MainView::forwardAsAttachment()
 
 void MainView::redirect()
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -531,16 +533,16 @@ void MainView::redirect()
 }
 
 
-Akonadi::Item MainView::currentItem()
+Item MainView::currentItem()
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
 
   if (list.size() != 1)
-    return Akonadi::Item();
+    return Item();
   const QModelIndex idx = list.first();
-  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
   if (!item.hasPayload<KMime::Message::Ptr>())
-    return Akonadi::Item();
+    return Item();
 
   return item;
 }
@@ -562,11 +564,11 @@ void MainView::modifyDone(KJob *job)
 
 void MainView::dataChanged()
 {
-  Akonadi::Item item = currentItem();
+  Item item = currentItem();
   if ( !item.isValid() )
     return;
 
-  Akonadi::MessageStatus status;
+  MessageStatus status;
   status.setStatusFromFlags(item.flags());
 
   actionCollection()->action("mark_message_important")->setChecked(status.isImportant());
@@ -582,17 +584,17 @@ void MainView::setListSelectedRow(int row)
   itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
   itemActionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
   // FIXME this should all be in messageviewer and happen after mail download, see also similar code in KMCommands
-  Akonadi::Item fullItem = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-  Akonadi::MessageStatus status;
+  Item fullItem = idx.data(EntityTreeModel::ItemRole).value<Item>();
+  MessageStatus status;
   status.setStatusFromFlags(fullItem.flags());
   if ( status.isUnread() )
   {
-    Akonadi::Item sparseItem( fullItem.id() );
+    Item sparseItem( fullItem.id() );
     sparseItem.setRevision( fullItem.revision() );
 
     status.setRead();
     sparseItem.setFlags(status.statusFlags());
-    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(sparseItem, this);
+    ItemModifyJob *modifyJob = new ItemModifyJob(sparseItem, this);
     modifyJob->disableRevisionCheck();
     modifyJob->ignorePayload();
   }
@@ -613,9 +615,9 @@ bool MainView::isDraft( int row )
   const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
   kDebug() << "itemSelectionModel " << itemSelectionModel() << " model" << itemSelectionModel()->model() << " idx->model()" << idx.model();
   itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
-  Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+  Item item = idx.data(EntityTreeModel::ItemRole).value<Item>();
 
-  Akonadi::Collection &collection = item.parentCollection();
+  Collection &collection = item.parentCollection();
   return folderIsDrafts(collection);
 }
 
@@ -624,23 +626,23 @@ bool MainView::isDraft( int row )
 
 void MainView::initDefaultFolders()
 {
-  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
-  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Outbox );
-  findCreateDefaultCollection( Akonadi::SpecialMailCollections::SentMail );
-  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Drafts );
-  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Trash );
-  //findCreateDefaultCollection( Akonadi::SpecialMailCollections::Templates );
+  findCreateDefaultCollection( SpecialMailCollections::Inbox );
+  findCreateDefaultCollection( SpecialMailCollections::Outbox );
+  findCreateDefaultCollection( SpecialMailCollections::SentMail );
+  findCreateDefaultCollection( SpecialMailCollections::Drafts );
+  findCreateDefaultCollection( SpecialMailCollections::Trash );
+  //findCreateDefaultCollection( SpecialMailCollections::Templates );
 }
 
-void MainView::findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type )
+void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
 {
-  if( Akonadi::SpecialMailCollections::self()->hasDefaultCollection( type ) ) {
-    const Akonadi::Collection col = Akonadi::SpecialMailCollections::self()->defaultCollection( type );
-    if ( !( col.rights() & Akonadi::Collection::AllRights ) )
+  if( SpecialMailCollections::self()->hasDefaultCollection( type ) ) {
+    const Collection col = SpecialMailCollections::self()->defaultCollection( type );
+    if ( !( col.rights() & Collection::AllRights ) )
       kDebug() << "You do not have read/write permission to your inbox folder";
   } else {
-    Akonadi::SpecialMailCollectionsRequestJob *job =
-        new Akonadi::SpecialMailCollectionsRequestJob( this );
+    SpecialMailCollectionsRequestJob *job =
+        new SpecialMailCollectionsRequestJob( this );
 
     connect( job, SIGNAL( result( KJob* ) ),
              this, SLOT( createDefaultCollectionDone( KJob* ) ) );
@@ -660,20 +662,20 @@ void MainView::createDefaultCollectionDone( KJob *job)
     return;
   }
 
-  Akonadi::SpecialMailCollectionsRequestJob *requestJob =
-      qobject_cast<Akonadi::SpecialMailCollectionsRequestJob*>( job );
+  SpecialMailCollectionsRequestJob *requestJob =
+      qobject_cast<SpecialMailCollectionsRequestJob*>( job );
 
-  const Akonadi::Collection col = requestJob->collection();
-  if ( !( col.rights() & Akonadi::Collection::AllRights ) )
+  const Collection col = requestJob->collection();
+  if ( !( col.rights() & Collection::AllRights ) )
     kDebug() << "You do not have read/write permission to your inbox folder.";
 
-  connect( Akonadi::SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
+  connect( SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
            this, SLOT( initDefaultFolders() ) );
 }
 
-bool MainView::folderIsDrafts(const Akonadi::Collection &col)
+bool MainView::folderIsDrafts(const Collection &col)
 {
-  Akonadi::Collection defaultDraft = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
+  Collection defaultDraft = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Drafts );
 
   // check if this is the default draft folder
   if ( col == defaultDraft )
@@ -708,28 +710,58 @@ void MainView::deleteItemResult( KJob *job )
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
-  mMailActionManager = new Akonadi::StandardMailActionManager( actionCollection(), this );
+  mMailActionManager = new StandardMailActionManager( actionCollection(), this );
   mMailActionManager->setCollectionSelectionModel( collectionSelectionModel );
   mMailActionManager->setItemSelectionModel( itemSelectionModel );
 
-  mMailActionManager->createAllActions();
+  //Don't use mMailActionManager->createAllActions() to save memory by not
+  //creating actions that doesn't make sense in mobile.
+  QList<StandardActionManager::Type> standardActions;
+  standardActions << StandardActionManager::CreateCollection << StandardActionManager::CopyCollections
+   << StandardActionManager:: DeleteCollections << StandardActionManager::SynchronizeCollections
+   << StandardActionManager::CollectionProperties << StandardActionManager::CopyItems
+   << StandardActionManager::Paste << StandardActionManager::DeleteItems
+   << StandardActionManager::ManageLocalSubscriptions << StandardActionManager::AddToFavoriteCollections
+   << StandardActionManager::RemoveFromFavoriteCollections  << StandardActionManager::RenameFavoriteCollection
+   << StandardActionManager::CutItems << StandardActionManager::CutCollections
+   << StandardActionManager::CreateResource << StandardActionManager::DeleteResources
+   << StandardActionManager::ResourceProperties << StandardActionManager::SynchronizeResources
+   << StandardActionManager::ToggleWorkOffline << StandardActionManager::CopyCollectionToDialog
+   << StandardActionManager::MoveCollectionToDialog << StandardActionManager::CopyItemToDialog
+   << StandardActionManager::MoveItemToDialog;
 
-  mMailActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+  Q_FOREACH( StandardActionManager::Type standardAction, standardActions ) {
+    mMailActionManager->createAction( standardAction );
+  }
 
-  connect( mMailActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
+  QList<StandardMailActionManager::Type> mailActions;
+  mailActions << StandardMailActionManager::MarkMailAsRead << StandardMailActionManager::MarkMailAsUnread
+   << StandardMailActionManager::MarkMailAsImportant << StandardMailActionManager::MarkMailAsActionItem
+   << StandardMailActionManager::MarkAllMailAsRead << StandardMailActionManager::MarkAllMailAsUnread
+   << StandardMailActionManager::MarkAllMailAsImportant << StandardMailActionManager::MarkAllMailAsActionItem
+   << StandardMailActionManager::MoveToTrash << StandardMailActionManager::MoveAllToTrash
+   << StandardMailActionManager::RemoveDuplicates << StandardMailActionManager::EmptyAllTrash;
+
+  Q_FOREACH( StandardMailActionManager::Type mailAction, mailActions ) {
+    mMailActionManager->createAction( mailAction );
+  }
+
+  mMailActionManager->interceptAction( StandardActionManager::CreateResource );
+
+  connect( mMailActionManager->action( StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
 
-  mMailActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize emails\nin account", "Synchronize emails\nin accounts" ) );
-  mMailActionManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
-  mMailActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  mMailActionManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
-  mMailActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize emails\nin folder", "Synchronize emails\nin folders" ) );
-  mMailActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
-  mMailActionManager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
-  mMailActionManager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  mMailActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete email", "Delete emails" ) );
-  mMailActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move email\nto folder" ) );
-  mMailActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy email\nto folder" ) );
+  mMailActionManager->setActionText( StandardActionManager::SynchronizeResources, ki18np( "Synchronize emails\nin account", "Synchronize emails\nin accounts" ) );
+  mMailActionManager->action( StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  mMailActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
+  mMailActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
+  mMailActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize emails\nin folder", "Synchronize emails\nin folders" ) );
+  mMailActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  mMailActionManager->action( StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
+  mMailActionManager->action( StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
+  mMailActionManager->setActionText( StandardActionManager::DeleteItems, ki18np( "Delete email", "Delete emails" ) );
+  mMailActionManager->action( StandardActionManager::MoveItemToMenu )->setText( i18n( "Move email\nto folder" ) );
+  mMailActionManager->action( StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy email\nto folder" ) );
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall emails" ) );
 
@@ -738,35 +770,36 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 {
-  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  AgentActionManager *manager = new AgentActionManager( actionCollection(), this );
   manager->setSelectionModel( selectionModel );
+
   manager->createAllActions();
 
-  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
-  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
-  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
+  manager->action( AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
+  manager->action( AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
+  manager->action( AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
 
-  manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
+  manager->interceptAction( AgentActionManager::CreateAgentInstance );
 
-  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
+  connect( manager->action( AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
 
-  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
+  manager->setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle,
                            i18nc( "@title:window", "New Account" ) );
-  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
+  manager->setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText,
                            i18n( "Could not create account: %1" ) );
-  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
+  manager->setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle,
                            i18n( "Account creation failed" ) );
 
-  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
+  manager->setContextText( AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle,
                            i18nc( "@title:window", "Delete Account?" ) );
-  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
+  manager->setContextText( AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
 }
 
 void MainView::saveMessage()
 {
-    Akonadi::Item item = currentItem();
+    Item item = currentItem();
     if ( !item.isValid() )
       return;
 
@@ -811,7 +844,7 @@ void MainView::preferHTML(bool useHtml)
       QModelIndexList selectedIndexes = collectionSelectionModel->selection().indexes();
       Q_FOREACH(QModelIndex index, selectedIndexes) {
           Q_ASSERT( index.isValid() );
-          const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+          const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
           Q_ASSERT( collection.isValid() );
 
           KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
@@ -843,7 +876,7 @@ void MainView::loadExternalReferences(bool load)
       QModelIndexList selectedIndexes = collectionSelectionModel->selection().indexes();
       Q_FOREACH(QModelIndex index, selectedIndexes) {
           Q_ASSERT( index.isValid() );
-          const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+          const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
           Q_ASSERT( collection.isValid() );
 
           KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
@@ -867,7 +900,7 @@ void MainView::folderChanged()
     KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
     Q_FOREACH( QModelIndex index, collectionSelectionModel->selection().indexes() ) {
         Q_ASSERT( index.isValid() );
-        const Akonadi::Collection collection = index.data( Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+        const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
         Q_ASSERT( collection.isValid() );
         KConfigGroup group(config, QString("c%1").arg(collection.id()));
         if ( group.readEntry("htmlMailOverride", false) == false )
