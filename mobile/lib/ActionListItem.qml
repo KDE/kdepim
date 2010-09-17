@@ -47,6 +47,7 @@ QML.Item {
   KPIM.Action {
     height : parent.height
     width : parent.width
+    showIcon : false
     action : {
       application.setActionTitle(name, title)
       application.getAction(name, argument);

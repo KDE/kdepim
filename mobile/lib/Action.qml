@@ -29,6 +29,7 @@ Rectangle {
   property variant actionIconName
   property int hardcoded_height : 70
   property bool disableable : true
+  property bool showIcon : true
   property bool hidable : true
   property bool hidden : hidable && !action.enabled
   property bool checkable : false
@@ -44,7 +45,7 @@ Rectangle {
     target : image
     property : "source"
     value : "image://action_images/" + actionIconName
-    when: actionIconName != undefined
+    when: showIcon && actionIconName != undefined
   }
 
   Binding {
