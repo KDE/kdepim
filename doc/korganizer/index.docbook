@@ -830,7 +830,7 @@ before exporting them, you can create
 if you classify your events and to-dos in
 <link linkend="categories-view">categories</link>. To enable and disable
 resources, check or uncheck the resource box in the
-<link linkend="managing-resources"><guilabel>Calender Manger</guilabel> </link>
+<link linkend="managing-resources"><guilabel>Calendar Manager</guilabel> </link>
 sidebar.</para>
 
 <para>To export all your <quote>active</quote> events, to-dos and journal entries
@@ -1002,7 +1002,7 @@ to see your to-dos while using the other views.</para>
 <para>The item viewer sidebar component shows details of the currently selected
 events, to-dos or journal entries.</para>
 
-<para>Finally, finally calendar manager viewer sidebar component allow you to enable or
+<para>Finally, calendar manager viewer sidebar component allow you to enable or
 disable the resources on the list, by checking or unchecking the resource
 box, and to manage your resources. For more information, please check
 <xref linkend="managing-resources" />.</para>
@@ -3276,10 +3276,10 @@ left, right side or even outside the main &korganizer; window.</para>
 </para>
 
 <para>
-The plugins can be configured under the &korganizer; main configuration dialog
+The plugins can be configured under the &korganizer; main configuration dialog.
 Choose <menuchoice><guimenu>Settings</guimenu><guimenuitem>
 Configure &korganizer;</guimenuitem></menuchoice> and click the
-<guilabel>Plugin</guilabel> icon on the icon list sidebar of the dialog.
+<guilabel>Plugins</guilabel> icon on the icon list sidebar of the dialog.
 </para>
 
 <sect1 id="plugins-chapter-availableplugins">
