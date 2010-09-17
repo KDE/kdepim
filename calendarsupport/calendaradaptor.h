@@ -172,7 +172,6 @@ class CALENDARSUPPORT_EXPORT CalendarAdaptor : public KCalCore::MemoryCalendar
     bool deleteIncidence( const Akonadi::Item &aitem, bool deleteCalendar = false );
 
   private slots:
-    void addIncidenceFinished( KJob *j );
     void deleteIncidenceFinished( KJob *j );
 
   private:
@@ -188,6 +187,10 @@ class CALENDARSUPPORT_EXPORT CalendarAdaptor : public KCalCore::MemoryCalendar
     QWidget *mParent;
     bool mDeleteCalendar;
     bool mStoreDefaultCollection;
+
+    class Private;
+    Private *const d;
+
 };
 
 }

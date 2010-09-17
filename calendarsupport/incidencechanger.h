@@ -112,6 +112,7 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger : public QObject
     void setDefaultCollectionId( Akonadi::Entity::Id );
 
     void setDestinationPolicy( DestinationPolicy destinationPolicy );
+
     DestinationPolicy destinationPolicy() const;
 
     /**

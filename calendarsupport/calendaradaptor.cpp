@@ -23,6 +23,7 @@
 #include "groupware.h"
 #include "mailscheduler.h"
 #include "utils.h"
+#include "incidencechanger.h"
 
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
@@ -59,16 +60,40 @@ inline Akonadi::Item incidenceToItem( T *incidence )
   return item;
 }
 
-CalendarAdaptor::CalendarAdaptor( CalendarSupport::Calendar *calendar, QWidget *parent,
+class CalendarAdaptor::Private
+{
+  public:
+    Private( CalendarSupport::Calendar *calendar, QWidget *parent ) : mCalendar( calendar )
+    {
+      Q_ASSERT( mCalendar );
+      mChanger = new IncidenceChanger( mCalendar, parent );
+      mChanger->setDestinationPolicy( IncidenceChanger::USE_DEFAULT_DESTINATION );
+    }
+
+    ~Private()
+     {
+       delete mChanger;
+     }
+
+    IncidenceChanger *mChanger;
+    CalendarSupport::Calendar *mCalendar;
+};
+
+
+CalendarAdaptor::CalendarAdaptor( CalendarSupport::Calendar *calendar,
+                                  QWidget *parent,
                                   bool storeDefaultCollection )
   : MemoryCalendar( KCalPrefs::instance()->timeSpec() ),
-    mCalendar( calendar ), mParent( parent ), mDeleteCalendar( false ),
-    mStoreDefaultCollection( storeDefaultCollection )
+    mParent( parent ), mDeleteCalendar( false ),
+    mStoreDefaultCollection( storeDefaultCollection ),
+    d( new Private( calendar, parent ) )
 {
-  Q_ASSERT( mCalendar );
 }
 
-CalendarAdaptor::~CalendarAdaptor() {}
+CalendarAdaptor::~CalendarAdaptor()
+{
+  delete d;
+}
 
 bool CalendarAdaptor::save()
 {
@@ -103,13 +128,13 @@ KCalCore::Event::List CalendarAdaptor::rawEvents( KCalCore::EventSortField sortF
                                                   KCalCore::SortDirection sortDirection ) const
 {
   return itemsToIncidences<KCalCore::Event>(
-    mCalendar->rawEvents( ( CalendarSupport::EventSortField ) sortField,
+    d->mCalendar->rawEvents( ( CalendarSupport::EventSortField ) sortField,
                           ( CalendarSupport::SortDirection ) sortDirection ) );
 }
 
 KCalCore::Event::List CalendarAdaptor::rawEventsForDate( const KDateTime &dt ) const
 {
-  return itemsToIncidences<KCalCore::Event>( mCalendar->rawEventsForDate( dt ) );
+  return itemsToIncidences<KCalCore::Event>( d->mCalendar->rawEventsForDate( dt ) );
 }
 
 KCalCore::Event::List CalendarAdaptor::rawEvents( const QDate &start, const QDate &end,
@@ -117,7 +142,7 @@ KCalCore::Event::List CalendarAdaptor::rawEvents( const QDate &start, const QDat
                                                   bool inclusive ) const
 {
   return itemsToIncidences<KCalCore::Event>(
-    mCalendar->rawEvents( start, end, timeSpec, inclusive ) );
+    d->mCalendar->rawEvents( start, end, timeSpec, inclusive ) );
 }
 
 KCalCore::Event::List CalendarAdaptor::rawEventsForDate( const QDate &date,
@@ -125,7 +150,7 @@ KCalCore::Event::List CalendarAdaptor::rawEventsForDate( const QDate &date,
                                                          KCalCore::EventSortField sortField,
                                                          KCalCore::SortDirection sortDirection ) const
 {
-  return itemsToIncidences<KCalCore::Event>( mCalendar->rawEventsForDate(
+  return itemsToIncidences<KCalCore::Event>( d->mCalendar->rawEventsForDate(
                                                date, timeSpec,
                                                ( CalendarSupport::EventSortField ) sortField,
                                                ( CalendarSupport::SortDirection ) sortDirection ) );
@@ -136,7 +161,7 @@ KCalCore::Event::Ptr CalendarAdaptor::event( const QString &uid,
 {
   Q_UNUSED( recurrenceId );
   return itemToIncidence<KCalCore::Event>(
-    mCalendar->event( mCalendar->itemIdForIncidenceUid( uid ) ) );
+    d->mCalendar->event( d->mCalendar->itemIdForIncidenceUid( uid ) ) );
 }
 
 bool CalendarAdaptor::addTodo( const KCalCore::Todo::Ptr &todo )
@@ -157,21 +182,21 @@ void CalendarAdaptor::deleteAllTodos()
 KCalCore::Todo::List CalendarAdaptor::rawTodos( KCalCore::TodoSortField sortField,
                                                 KCalCore::SortDirection sortDirection ) const
 {
-  return itemsToIncidences<KCalCore::Todo>( mCalendar->rawTodos(
+  return itemsToIncidences<KCalCore::Todo>( d->mCalendar->rawTodos(
                                               ( CalendarSupport::TodoSortField ) sortField,
                                               ( CalendarSupport::SortDirection ) sortDirection ) );
 }
 
 KCalCore::Todo::List CalendarAdaptor::rawTodosForDate( const QDate &date ) const
 {
-  return itemsToIncidences<KCalCore::Todo>( mCalendar->rawTodosForDate( date ) );
+  return itemsToIncidences<KCalCore::Todo>( d->mCalendar->rawTodosForDate( date ) );
 }
 
 KCalCore::Todo::Ptr CalendarAdaptor::todo( const QString &uid, const KDateTime &recurrenceId ) const
 {
   Q_UNUSED( recurrenceId );
   return itemToIncidence<KCalCore::Todo>(
-    mCalendar->todo( mCalendar->itemIdForIncidenceUid( uid ) ) );
+    d->mCalendar->todo( d->mCalendar->itemIdForIncidenceUid( uid ) ) );
 }
 
 bool CalendarAdaptor::addJournal( const KCalCore::Journal::Ptr &journal )
@@ -192,68 +217,58 @@ void CalendarAdaptor::deleteAllJournals()
 KCalCore::Journal::List CalendarAdaptor::rawJournals( KCalCore::JournalSortField sortField,
                                                       KCalCore::SortDirection sortDirection ) const
 {
-  return itemsToIncidences<KCalCore::Journal>( mCalendar->rawJournals(
+  return itemsToIncidences<KCalCore::Journal>( d->mCalendar->rawJournals(
                                                  ( CalendarSupport::JournalSortField ) sortField,
                                                  ( CalendarSupport::SortDirection ) sortDirection ) );
 }
 
 KCalCore::Journal::List CalendarAdaptor::rawJournalsForDate( const QDate &dt ) const
 {
-  return itemsToIncidences<KCalCore::Journal>( mCalendar->rawJournalsForDate( dt ) );
+  return itemsToIncidences<KCalCore::Journal>( d->mCalendar->rawJournalsForDate( dt ) );
 }
 
 KCalCore::Journal::Ptr CalendarAdaptor::journal( const QString &uid,
                                                  const KDateTime &recurrenceId ) const
 {
   Q_UNUSED( recurrenceId );
-  return itemToIncidence<KCalCore::Journal>( mCalendar->journal(
-                                               mCalendar->itemIdForIncidenceUid( uid ) ) );
+  return itemToIncidence<KCalCore::Journal>( d->mCalendar->journal(
+                                               d->mCalendar->itemIdForIncidenceUid( uid ) ) );
 }
 
-KCalCore::Alarm::List CalendarAdaptor::alarms( const KDateTime &from, const KDateTime &to ) const
+KCalCore::Alarm::List CalendarAdaptor::alarms( const KDateTime &from,
+                                               const KDateTime &to ) const
 {
-  return mCalendar->alarms( from, to );
+  return d->mCalendar->alarms( from, to );
 }
 
 // From IncidenceChanger
 bool CalendarAdaptor::addIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
-  if( !incidence ) {
-    return false;
-  }
-  Akonadi::Collection collection;
-
-  const QString incidenceMimeType = incidence->mimeType();
-
-  if ( mStoreDefaultCollection && mDefaultCollection.isValid() ) {
-    collection = mDefaultCollection;
+  if ( mStoreDefaultCollection ) {
+    d->mChanger->setDestinationPolicy( IncidenceChanger::USE_DEFAULT_DESTINATION );
   } else {
-    int dialogCode = 0;
-    QStringList mimeTypes( incidenceMimeType );
-    collection = CalendarSupport::selectCollection( mParent, dialogCode, mimeTypes );
+    d->mChanger->setDestinationPolicy( IncidenceChanger::ASK_DESTINATION );
   }
 
-  if ( !collection.isValid() ) {
-    return false;
+  int dialogCode;
+  Akonadi::Collection selectedCollection;
+  const bool result = d->mChanger->addIncidence( incidence,
+                                                 mParent,
+                                                 /*by ref*/selectedCollection,
+                                                 /*by ref*/dialogCode );
+
+  if ( mStoreDefaultCollection ) {
+    /** The first time, IncidenceChanger asks the destination.
+        The second time it doesn't ask, because it has a defaultCollection.
+        Meanwhile, it can ask again, if for example, the defaultCollection
+        doesn't support the mimetype we are trying to add. So, when importing
+        a calendar, it will probably ask once, add a batch of events, and
+        ask again to add a batch of to-dos ( supposing you didn't choose
+        a calendar that supports both mimeTypes **/
+    d->mChanger->setDefaultCollectionId( selectedCollection.id() );
   }
 
-  if ( mStoreDefaultCollection && !mDefaultCollection.isValid() ) {
-    mDefaultCollection = collection;
-  }
-
-  kDebug() << "\"" << incidence->summary() << "\"";
-
-  Akonadi::Item item;
-  item.setPayload( incidence );
-
-  item.setMimeType( incidenceMimeType );
-  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
-  // The connection needs to be queued to be sure addIncidenceFinished
-  // is called after the kjob finished it's eventloop. That's needed
-  // because Groupware uses synchron job->exec() calls.
-  connect( job, SIGNAL(result(KJob *)),
-           this, SLOT(addIncidenceFinished(KJob *)), Qt::QueuedConnection );
-  return true;
+  return result;
 }
 
 bool CalendarAdaptor::deleteIncidence( const Akonadi::Item &aitem, bool deleteCalendar )
@@ -276,40 +291,6 @@ bool CalendarAdaptor::deleteIncidence( const Akonadi::Item &aitem, bool deleteCa
   Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( aitem );
   connect( job, SIGNAL(result(KJob *)), this, SLOT(deleteIncidenceFinished(KJob *)) );
   return true;
-}
-
-void CalendarAdaptor::addIncidenceFinished( KJob *j )
-{
-  kDebug();
-  const Akonadi::ItemCreateJob* job = qobject_cast<const Akonadi::ItemCreateJob*>( j );
-  Q_ASSERT( job );
-  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( job->item() );
-
-  if  ( job->error() ) {
-    KMessageBox::sorry(
-      mParent,
-      i18n( "Unable to save %1 \"%2\": %3",
-            i18n( incidence->typeStr() ),
-            incidence->summary(),
-            job->errorString() ) );
-    if ( mDeleteCalendar ) {
-      deleteLater();
-    }
-    return;
-  }
-
-  Q_ASSERT( incidence );
-  if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
-    if ( !Groupware::instance()->sendICalMessage(
-           mParent,
-           KCalCore::iTIPRequest,
-           incidence, IncidenceChanger::INCIDENCEADDED, false ) ) {
-      kError() << "sendIcalMessage failed.";
-    }
-  }
-  if ( mDeleteCalendar ) {
-    deleteLater();
-  }
 }
 
 void CalendarAdaptor::deleteIncidenceFinished( KJob * j )
@@ -350,7 +331,7 @@ void CalendarAdaptor::deleteIncidenceFinished( KJob * j )
     }
 
     if ( !Groupware::instance()->doNotNotify() && notifyOrganizer ) {
-      MailScheduler scheduler( mCalendar );
+      MailScheduler scheduler( d->mCalendar );
       scheduler.performTransaction( tmp, KCalCore::iTIPReply );
     }
     //reset the doNotNotify flag
@@ -395,7 +376,7 @@ void CalendarAdaptor::schedule( KCalCore::iTIPMethod method, const Akonadi::Item
   inc->clearAttendees();
 
   // Send the mail
-  MailScheduler scheduler( mCalendar );
+  MailScheduler scheduler( d->mCalendar );
   if ( scheduler.performTransaction( incidence, method ) ) {
     KMessageBox::information( mParent,
                               i18n( "The groupware message for item '%1' "

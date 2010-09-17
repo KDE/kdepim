@@ -451,7 +451,8 @@ bool IncidenceChanger::changeIncidence( const KCalCore::Incidence::Ptr &oldinc,
 }
 
 bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
-                                     QWidget *parent, Akonadi::Collection &selectedCollection,
+                                     QWidget *parent,
+                                     Akonadi::Collection &selectedCollection,
                                      int &dialogCode )
 {
   const Akonadi::Collection defaultCollection = d->mCalendar->collection( d->mDefaultCollectionId );
@@ -481,7 +482,8 @@ bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
 }
 
 bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
-                                     const Akonadi::Collection &collection, QWidget *parent )
+                                     const Akonadi::Collection &collection,
+                                     QWidget *parent )
 {
   Q_UNUSED( parent );
 
