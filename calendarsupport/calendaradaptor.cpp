@@ -68,6 +68,7 @@ class CalendarAdaptor::Private
       Q_ASSERT( mCalendar );
       mChanger = new IncidenceChanger( mCalendar, parent );
       mChanger->setDestinationPolicy( IncidenceChanger::USE_DEFAULT_DESTINATION );
+      mLastDialogCode = -1;
     }
 
     ~Private()
@@ -77,8 +78,8 @@ class CalendarAdaptor::Private
 
     IncidenceChanger *mChanger;
     CalendarSupport::Calendar *mCalendar;
+    int mLastDialogCode;
 };
-
 
 CalendarAdaptor::CalendarAdaptor( CalendarSupport::Calendar *calendar,
                                   QWidget *parent,
@@ -244,18 +245,25 @@ KCalCore::Alarm::List CalendarAdaptor::alarms( const KDateTime &from,
 // From IncidenceChanger
 bool CalendarAdaptor::addIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
+
+  /**
+     The user pressed cancel. Don't ask again.
+  */
+  if ( batchAdding() && d->mLastDialogCode == QDialog::Rejected ) {
+    return true;
+  }
+
   if ( mStoreDefaultCollection ) {
     d->mChanger->setDestinationPolicy( IncidenceChanger::USE_DEFAULT_DESTINATION );
   } else {
     d->mChanger->setDestinationPolicy( IncidenceChanger::ASK_DESTINATION );
   }
 
-  int dialogCode;
   Akonadi::Collection selectedCollection;
   const bool result = d->mChanger->addIncidence( incidence,
                                                  mParent,
                                                  /*by ref*/selectedCollection,
-                                                 /*by ref*/dialogCode );
+                                                 /*by ref*/d->mLastDialogCode );
 
   if ( mStoreDefaultCollection ) {
     /** The first time, IncidenceChanger asks the destination.
@@ -405,5 +413,11 @@ void CalendarAdaptor::incidenceUpdated( const QString &uid, const KDateTime &rec
 {
   Q_UNUSED( uid );
   Q_UNUSED( recurrenceId );
+}
+
+void CalendarAdaptor::endBatchAdding()
+{
+  KCalCore::Calendar::endBatchAdding();
+  d->mLastDialogCode = -1;
 }
 

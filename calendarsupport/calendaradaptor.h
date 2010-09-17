@@ -55,6 +55,9 @@ class CALENDARSUPPORT_EXPORT CalendarAdaptor : public KCalCore::MemoryCalendar
     virtual bool reload();
     virtual void close();
 
+    /** reimp */
+    void endBatchAdding();
+
     virtual void incidenceUpdate( const QString &uid, const KDateTime &recurrenceId );
     virtual void incidenceUpdated( const QString &uid, const KDateTime &recurrenceId );
 
