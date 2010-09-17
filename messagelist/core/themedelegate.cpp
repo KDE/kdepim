@@ -99,7 +99,8 @@ static inline void paint_right_aligned_elided_text( const QString &text, Theme::
   QFontMetrics fontMetrics( font );
   int w = right - left;
   QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
-  QRect rct( left, top, w, fontMetrics.height() );
+  QRect fct = fontMetrics.boundingRect(elidedText);
+  QRect rct( left, top, w, fct.height() - fct.top() );
   QRect outRct;
 
   if ( ci->softenByBlending() )
@@ -122,7 +123,8 @@ static inline void compute_bounding_rect_for_right_aligned_elided_text( const QS
   QFontMetrics fontMetrics( font );
   int w = right - left;
   QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
-  QRect rct( left, top, w, fontMetrics.height() );
+  QRect fct = fontMetrics.boundingRect(elidedText);
+  QRect rct( left, top, w, fct.height() - fct.top() );
   Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignRight : Qt::AlignLeft;
   outRect = fontMetrics.boundingRect( rct, Qt::AlignTop | af | Qt::TextSingleLine, elidedText );
   if ( layoutDir == Qt::LeftToRight )
@@ -138,7 +140,8 @@ static inline void paint_left_aligned_elided_text( const QString &text, Theme::C
   QFontMetrics fontMetrics( font );
   int w = right - left;
   QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
-  QRect rct( left, top, w, fontMetrics.height() + 3 );
+  QRect fct = fontMetrics.boundingRect(elidedText);
+  QRect rct( left, top, w, fct.height() - fct.top() );
   QRect outRct;
   if ( ci->softenByBlending() )
   {
@@ -160,7 +163,8 @@ static inline void compute_bounding_rect_for_left_aligned_elided_text( const QSt
   QFontMetrics fontMetrics( font );
   int w = right - left;
   QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
-  QRect rct( left, top, w, fontMetrics.height() );
+  QRect fct = fontMetrics.boundingRect(elidedText);
+  QRect rct( left, top, w, fct.height() - fct.top() );
   Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignLeft : Qt::AlignRight;
   outRect = fontMetrics.boundingRect( rct, Qt::AlignTop | af | Qt::TextSingleLine, elidedText );
   if ( layoutDir == Qt::LeftToRight )
