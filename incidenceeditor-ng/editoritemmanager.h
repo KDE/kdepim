@@ -122,9 +122,9 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     };
 
   Q_SIGNALS:
-    void itemSaveFinished( EditorItemManager::SaveAction action );
+    void itemSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action );
 
-    void itemSaveFailed( EditorItemManager::SaveAction action,
+    void itemSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction action,
                          const QString &message );
 
     void revertFinished();
