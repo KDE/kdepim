@@ -1112,7 +1112,9 @@ void KOAgenda::endItemAction()
     }
 
     if ( modify ) {
+      kDebug() << "Modified, before dtStart is " << Akonadi::incidence( mActionItem->incidence() )->dtStart();
       mActionItem->endMove();
+      kDebug() << "Modified, after dtStart is " << Akonadi::incidence( mActionItem->incidence() )->dtStart();
 
       KOAgendaItem *modif = placeItem;
 
@@ -1137,7 +1139,7 @@ void KOAgenda::endItemAction()
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-
+      kDebug() << "Not modified";
       emit itemModified( placeItem );
     }
   }

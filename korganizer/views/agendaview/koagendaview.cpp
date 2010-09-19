@@ -817,6 +817,8 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
   if ( !mChanger ) {
     return;
   }
+
+  kDebug() << "dtStart is " << incidence->dtStart();
   Incidence::Ptr oldIncidence( incidence->clone() );
 
   QTime startTime( 0, 0, 0 ), endTime( 0, 0, 0 );
@@ -1079,6 +1081,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
   }
   item->setItemDate( startDt.toTimeSpec( KCalPrefs::instance()->timeSpec() ).date() );
 
+  kDebug() << "Changing dtStart to " << Akonadi::incidence( aitem )->dtStart();
   const bool result = mChanger->changeIncidence( oldIncidence, aitem,
                                                  Akonadi::IncidenceChanger::DATE_MODIFIED, this );
 
