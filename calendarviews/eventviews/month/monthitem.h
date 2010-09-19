@@ -37,8 +37,6 @@ class QPixmap;
 class QColor;
 class QString;
 
-using namespace KCalCore;
-
 namespace EventViews {
 
 class MonthGraphicsItem;

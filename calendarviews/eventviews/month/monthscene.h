@@ -47,7 +47,6 @@ namespace Akonadi {
 namespace KCal {
   class Incidence;
 }
-using namespace KCalCore;
 
 namespace EventViews {
 

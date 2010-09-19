@@ -37,7 +37,7 @@
 #include <calendarsupport/utils.h>
 
 #include <akonadi_next/kcheckableproxymodel.h>
-#include <kcalcore/incidence.h>
+#include <KCalCore/Incidence>
 
 #include <KIcon>
 
@@ -50,6 +50,7 @@
 #include <QTimer>
 
 using namespace EventViews;
+using namespace KCalCore;
 
 /// MonthViewPrivate
 

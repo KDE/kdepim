@@ -36,12 +36,13 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <kcalcore/incidence.h>
-#include <kcalutils/incidenceformatter.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/Incidence>
+#include <KCalUtils/IncidenceFormatter>
+#include <KCalCore/Todo>
 
 using namespace EventViews;
 using namespace KCalUtils;
+using namespace KCalCore;
 
 //-------------------------------------------------------------
 MonthItem::MonthItem( MonthScene *monthScene )
