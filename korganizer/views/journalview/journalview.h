@@ -57,7 +57,7 @@ class JournalView : public QWidget
   public:
     typedef ListBase<JournalView> List;
 
-    JournalView( const Akonadi::Item &journal, QWidget *parent );
+    JournalView( const Akonadi::Item &journal, Akonadi::Calendar *calendar, QWidget *parent );
     virtual ~JournalView();
 
     void setJournal( const Akonadi::Item &journal );

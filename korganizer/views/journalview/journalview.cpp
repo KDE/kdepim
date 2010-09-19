@@ -93,9 +93,8 @@ void JournalDateView::addJournal( const Item &j )
     return;
   }
 
-  JournalView *entry = new JournalView( j, this );
+  JournalView *entry = new JournalView( j, mCalendar, this );
   entry->show();
-  entry->setCalendar( mCalendar );
   entry->setDate( mDate );
   entry->setIncidenceChanger( mChanger );
 
@@ -152,8 +151,8 @@ void JournalDateView::journalDeleted( const Item &journal )
   mEntries.remove( journal.id() );
 }
 
-JournalView::JournalView( const Item &j, QWidget *parent )
-  : QWidget( parent ), mJournal( j )
+JournalView::JournalView( const Item &j, Akonadi::Calendar *calendar, QWidget *parent )
+  : QWidget( parent ), mJournal( j ), mCalendar( calendar )
 {
   mDirty = false;
   mWriteInProgress = false;
