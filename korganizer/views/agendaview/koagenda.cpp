@@ -1018,6 +1018,8 @@ void KOAgenda::endItemAction()
   if ( mItemMoved ) {
     bool modify = false;
     if ( incidence->recurs() ) {
+      kDebug() << "d->mActionItem->incidence()->dtStart() is "
+               << incidence->dtStart();
       int res = mEventView->showMoveRecurDialog( mActionItem->incidence(),
                                                  mActionItem->itemDate() );
       switch ( res ) {
