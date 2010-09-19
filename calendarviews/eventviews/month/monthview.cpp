@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Author: Bertjan Broeksema, broeksema@kde.org
@@ -25,34 +23,26 @@
 */
 
 #include "monthview.h"
-#include "monthscene.h"
-#include "monthitem.h"
 #include "monthgraphicsitems.h"
+#include "monthitem.h"
+#include "monthscene.h"
 #include "prefs.h"
 
-#include <calendarsupport/calendar.h>
+#include <akonadi_next/kcheckableproxymodel.h>
+
 #include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <akonadi_next/kcheckableproxymodel.h>
-#include <KCalCore/Incidence>
-
 #include <KIcon>
 
-#include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QTimer>
 #include <QToolButton>
 #include <QWheelEvent>
-#include <QKeyEvent>
-#include <QDate>
-#include <QTimer>
 
 using namespace EventViews;
-using namespace KCalCore;
-
-/// MonthViewPrivate
 
 namespace EventViews {
 
@@ -80,11 +70,11 @@ class MonthViewPrivate
 }
 
 MonthViewPrivate::MonthViewPrivate( MonthView *qq )
-  : q( qq )
-  , calendarSearch( new CalendarSupport::CalendarSearch( qq ) )
-  , scene( new MonthScene( qq ) )
-  , selectedItemId( -1 )
-  , view( new MonthGraphicsView( qq ) )
+  : q( qq ),
+    calendarSearch( new CalendarSupport::CalendarSearch( qq ) ),
+    scene( new MonthScene( qq ) ),
+    selectedItemId( -1 ),
+    view( new MonthGraphicsView( qq ) )
 {
   reloadTimer.setSingleShot( true );
   view->setScene( scene );
@@ -138,8 +128,7 @@ void MonthViewPrivate::triggerDelayedReload( EventView::Change reason )
 /// MonthView
 
 MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
-  : EventView( parent )
-  , d( new MonthViewPrivate( this ) )
+  : EventView( parent ), d( new MonthViewPrivate( this ) )
 {
   QHBoxLayout *topLayout = new QHBoxLayout( this );
   topLayout->addWidget( d->view );
@@ -191,13 +180,13 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
     d->view->setFrameStyle( QFrame::NoFrame );
   }
 
-  connect( d->calendarSearch->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-           this, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
-  connect( d->calendarSearch->model(), SIGNAL( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ),
-           this, SLOT( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ) );
-  connect( d->calendarSearch->model(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
-  connect( d->calendarSearch->model(), SIGNAL( modelReset() ), this, SLOT( calendarReset() ) );
+  connect( d->calendarSearch->model(), SIGNAL(rowsInserted(const QModelIndex &,int,int)),
+           this, SLOT(rowsInserted(const QModelIndex &,int,int)) );
+  connect( d->calendarSearch->model(), SIGNAL(rowsAboutToBeRemoved(const QModelIndex &,int,int)),
+           this, SLOT( rowsAboutToBeRemoved(const QModelIndex &,int,int)) );
+  connect( d->calendarSearch->model(), SIGNAL(dataChanged(const QModelIndex &,const QModelIndex &)),
+           this, SLOT( dataChanged(const QModelIndex &,const QModelIndex &)) );
+  connect( d->calendarSearch->model(), SIGNAL(modelReset()), this, SLOT(calendarReset()) );
 
   connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
            SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)) );
@@ -245,9 +234,9 @@ int MonthView::currentDateCount() const
   return actualStartDateTime().date().daysTo( actualEndDateTime().date() );
 }
 
-DateList MonthView::selectedIncidenceDates() const
+KCalCore::DateList MonthView::selectedIncidenceDates() const
 {
-  DateList list;
+  KCalCore::DateList list;
   if ( d->scene->selectedItem() ) {
     IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( d->scene->selectedItem() );
     if ( tmp ) {
@@ -439,19 +428,21 @@ void MonthView::reloadIncidences()
   d->scene->resetAll();
   // build monthcells hash
   int i = 0;
-  for ( QDate date = actualStartDateTime().date(); date <= actualEndDateTime().date(); date = date.addDays( 1 ) ) {
+  for ( QDate date = actualStartDateTime().date();
+        date <= actualEndDateTime().date(); date = date.addDays( 1 ) ) {
     d->scene->mMonthCellMap[ date ] = new MonthCell( i, date, d->scene );
     i ++;
   }
 
   // build global event list
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-  const Akonadi::Item::List incidences = CalendarSupport::itemsFromModel( d->calendarSearch->model() );
+  const Akonadi::Item::List incidences =
+    CalendarSupport::itemsFromModel( d->calendarSearch->model() );
 
   foreach ( const Akonadi::Item &aitem, incidences ) {
-    const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+    const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
 
-    DateTimeList dateTimeList;
+    KCalCore::DateTimeList dateTimeList;
 
     if ( incidence->recurs() ) {
       // Get a list of all dates that the recurring event will happen
@@ -460,7 +451,7 @@ void MonthView::reloadIncidences()
     } else {
       KDateTime dateToAdd;
 
-      if ( Todo::Ptr todo = CalendarSupport::todo( aitem ) ) {
+      if ( KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem ) ) {
         if ( todo->hasDueDate() ) {
           dateToAdd = todo->dtDue();
         }
@@ -474,7 +465,7 @@ void MonthView::reloadIncidences()
       }
 
     }
-    DateTimeList::const_iterator t;
+    KCalCore::DateTimeList::const_iterator t;
     for ( t = dateTimeList.constBegin(); t != dateTimeList.constEnd(); ++t ) {
       MonthItem *manager = new IncidenceMonthItem( d->scene,
                                                    aitem,
@@ -496,7 +487,8 @@ void MonthView::reloadIncidences()
   const QList<QDate> workDays = CalendarSupport::workDays( actualStartDateTime().date(),
                                                            actualEndDateTime().date() );
 
-  for ( QDate date = actualStartDateTime().date(); date <= actualEndDateTime().date(); date = date.addDays( 1 ) ) {
+  for ( QDate date = actualStartDateTime().date();
+        date <= actualEndDateTime().date(); date = date.addDays( 1 ) ) {
     // Only call CalendarSupport::holiday() if it's not a workDay, saves come cpu cicles.
     if ( !workDays.contains( date ) ) {
       QStringList holidays( CalendarSupport::holiday( date ) );
@@ -517,7 +509,8 @@ void MonthView::reloadIncidences()
 
   // build each month's cell event list
   foreach ( MonthItem *manager, d->scene->mManagerList ) {
-    for ( QDate date = manager->startDate(); date <= manager->endDate(); date = date.addDays( 1 ) ) {
+    for ( QDate date = manager->startDate();
+          date <= manager->endDate(); date = date.addDays( 1 ) ) {
       MonthCell *cell = d->scene->mMonthCellMap.value( date );
       if ( cell ) {
         cell->mMonthItemList << manager;
@@ -545,21 +538,23 @@ void MonthView::calendarReset()
   d->triggerDelayedReload( ResourcesChanged );
 }
 
-void MonthView::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
+void MonthView::dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
 {
   Q_ASSERT( topLeft.parent() == bottomRight.parent() );
   incidencesChanged( CalendarSupport::itemsFromModel( d->calendarSearch->model(), topLeft.parent(),
-                    topLeft.row(), bottomRight.row() ) );
+                                                      topLeft.row(), bottomRight.row() ) );
 }
 
-void MonthView::rowsInserted( const QModelIndex& parent, int start, int end )
+void MonthView::rowsInserted( const QModelIndex &parent, int start, int end )
 {
-  incidencesAdded( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
+  incidencesAdded( CalendarSupport::itemsFromModel( d->calendarSearch->model(),
+                                                    parent, start, end ) );
 }
 
-void MonthView::rowsAboutToBeRemoved( const QModelIndex& parent, int start, int end )
+void MonthView::rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end )
 {
-  incidencesAboutToBeRemoved( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
+  incidencesAboutToBeRemoved( CalendarSupport::itemsFromModel( d->calendarSearch->model(),
+                                                               parent, start, end ) );
 }
 
 void MonthView::incidencesAdded( const Akonadi::Item::List &incidences )
@@ -591,7 +586,8 @@ void MonthView::incidencesChanged( const Akonadi::Item::List &incidences )
 
 QDate MonthView::averageDate() const
 {
-  return actualStartDateTime().date().addDays( actualStartDateTime().date().daysTo( actualEndDateTime().date() ) / 2 );
+  return actualStartDateTime().date().addDays(
+    actualStartDateTime().date().daysTo( actualEndDateTime().date() ) / 2 );
 }
 
 int MonthView::currentMonth() const

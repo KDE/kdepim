@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
 
@@ -23,17 +21,16 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "eventview.h"
 #include "monthgraphicsitems.h"
+#include "eventview.h"
+#include "helper.h"
 #include "monthitem.h"
 #include "monthscene.h"
 #include "monthview.h"
-
 #include "prefs.h"
-#include "helper.h"
 
-#include <QPainter>
 #include <QGraphicsScene>
+#include <QPainter>
 
 using namespace EventViews;
 

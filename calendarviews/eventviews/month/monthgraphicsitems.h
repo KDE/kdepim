@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
 
@@ -23,17 +21,13 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef MONTHGRAPHICSITEMS_H
-#define MONTHGRAPHICSITEMS_H
+#ifndef EVENTVIEWS_MONTHGRAPHICSITEMS_H
+#define EVENTVIEWS_MONTHGRAPHICSITEMS_H
 
-#include <QHash>
-#include <QGraphicsItem>
-#include <QRect>
+#include "eventviews_export.h"
+
 #include <QDate>
-
-class QGraphicsScene;
-class QStyleOptionGraphicsItem;
-class QPainterPath;
+#include <QGraphicsItem>
 
 namespace EventViews {
 
@@ -43,7 +37,7 @@ class MonthItem;
  * Graphics items which indicates that the view can be scrolled to display
  * more events.
  */
-class ScrollIndicator : public QGraphicsItem
+class EVENTVIEWS_EXPORT ScrollIndicator : public QGraphicsItem
 {
   public:
     enum ArrowDirection {
@@ -68,7 +62,7 @@ class ScrollIndicator : public QGraphicsItem
 /**
  * Keeps information about a month cell.
  */
-class MonthCell
+class EVENTVIEWS_EXPORT MonthCell
 {
   public:
     MonthCell( int id, const QDate &date, QGraphicsScene *scene );
@@ -118,10 +112,10 @@ class MonthCell
  * A MonthGraphicsItem representing a part of an event. There should be
  * one part per row = week
  */
-class MonthGraphicsItem : public QObject, public QGraphicsItem
+class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
 {
   Q_OBJECT
-  Q_INTERFACES(QGraphicsItem)
+  Q_INTERFACES( QGraphicsItem )
 
   public:
     typedef QList<MonthGraphicsItem *> List;
@@ -206,4 +200,4 @@ class MonthGraphicsItem : public QObject, public QGraphicsItem
 
 }
 
-#endif //MONTHGRAPHICSITEMS_H
+#endif

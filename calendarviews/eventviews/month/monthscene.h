@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -22,41 +20,32 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef MONTHSCENE_H
-#define MONTHSCENE_H
+#ifndef EVENTVIEWS_MONTHSCENE_H
+#define EVENTVIEWS_MONTHSCENE_H
 
-#include <calendarsupport/incidencechanger.h>
+#include "eventviews_export.h"
 
 #include <Akonadi/Collection>
+#include <Akonadi/Item>
 
-#include <QMap>
+#include <QBasicTimer>
 #include <QDate>
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QPixmap>
-#include <QBasicTimer>
+#include <QMap>
 
-class QResizeEvent;
-class QGraphicsSceneMouseEvent;
-class QGraphicsSceneWheelEvent;
-
-namespace Akonadi {
-  class Item;
-}
-
-namespace KCal {
-  class Incidence;
+namespace CalendarSupport {
+  class IncidenceChanger;
 }
 
 namespace EventViews {
 
-class MonthItem;
-class ScrollIndicator;
 class MonthCell;
-class MonthGraphicsView;
+class MonthItem;
 class MonthView;
+class ScrollIndicator;
 
-class MonthScene : public QGraphicsScene
+class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
 {
   Q_OBJECT
 
@@ -292,7 +281,7 @@ class MonthScene : public QGraphicsScene
 /**
  * Renders a MonthScene
  */
-class MonthGraphicsView : public QGraphicsView
+class EVENTVIEWS_EXPORT MonthGraphicsView : public QGraphicsView
 {
   public:
     MonthGraphicsView( MonthView *parent );

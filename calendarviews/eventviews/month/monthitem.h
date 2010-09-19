@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -22,20 +20,15 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef MONTHITEM_H
-#define MONTHITEM_H
+#ifndef EVENTVIEWS_MONTHITEM_H
+#define EVENTVIEWS_MONTHITEM_H
 
-#include <QObject>
-#include <QList>
-#include <QDate>
-
-#include <kcalcore/incidence.h>
+#include "eventviews_export.h"
 
 #include <Akonadi/Item>
 
-class QPixmap;
-class QColor;
-class QString;
+#include <QDate>
+#include <QObject>
 
 namespace EventViews {
 
@@ -45,7 +38,7 @@ class MonthScene;
 /**
  * A month item manages different MonthGraphicsItems.
  */
-class MonthItem : public QObject
+class EVENTVIEWS_EXPORT MonthItem : public QObject
 {
   Q_OBJECT
 
@@ -270,7 +263,7 @@ class MonthItem : public QObject
     int mPosition;
 };
 
-class IncidenceMonthItem : public MonthItem
+class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
 {
   Q_OBJECT
 
@@ -325,7 +318,7 @@ class IncidenceMonthItem : public MonthItem
     bool mIsEvent, mIsTodo, mIsJournal;
 };
 
-class HolidayMonthItem : public MonthItem
+class EVENTVIEWS_EXPORT HolidayMonthItem : public MonthItem
 {
   Q_OBJECT
 

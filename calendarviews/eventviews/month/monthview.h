@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Author: Bertjan Broeksema, broeksema@kde.org
@@ -24,32 +22,17 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef EVENTVIEWS_MONTHVIEW_H_
-#define EVENTVIEWS_MONTHVIEW_H_
+#ifndef EVENTVIEWS_MONTHVIEW_H
+#define EVENTVIEWS_MONTHVIEW_H
 
-#include "../eventview.h"
-
-#include <Akonadi/Item>
+#include "eventview.h"
 
 #include <KDateTime>
 
-#include <QDate>
-#include <QTimer>
-
-class KOEventPopupMenu;
-
-class QWheelEvent;
-class QKeyEvent;
 class QModelIndex;
-
-namespace CalendarSupport {
-  class CalendarSearch;
-}
 
 namespace EventViews {
 
-class MonthGraphicsView;
-class MonthScene;
 class MonthViewPrivate;
 
 /**

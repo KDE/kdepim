@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2008 Bruno Virlet <bruno.virlet@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -23,26 +21,20 @@
 */
 
 #include "monthscene.h"
-#include "monthitem.h"
 #include "monthgraphicsitems.h"
+#include "monthitem.h"
 #include "monthview.h"
 #include "prefs.h"
 
 #include <calendarsupport/utils.h>
-#include <calendarsupport/incidencechanger.h>
-
-#include <Akonadi/Item>
-
-#include <kcalcore/incidence.h>
 
 #include <KCalendarSystem>
 #include <KIconLoader>
 
 #include <QGraphicsSceneMouseEvent>
-#include <QGraphicsSceneWheelEvent>
-#include <QPaintEvent>
+#include <QResizeEvent>
 
-#define AUTO_REPEAT_DELAY  600
+static const int AUTO_REPEAT_DELAY = 600;
 
 using namespace EventViews;
 
@@ -293,7 +285,8 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
   QPen oldPen =  mMonthView->preferences()->monthGridBackgroundColor().dark( 150 );
 
   // Draw dates
-  for ( QDate d = mMonthView->actualStartDateTime().date(); d <= mMonthView->actualEndDateTime().date(); d = d.addDays( 1 ) ) {
+  for ( QDate d = mMonthView->actualStartDateTime().date();
+        d <= mMonthView->actualEndDateTime().date(); d = d.addDays( 1 ) ) {
     MonthCell *cell = mScene->mMonthCellMap.value( d );
 
     QFont font = p->font();
@@ -394,7 +387,8 @@ bool MonthScene::lastItemFit( MonthCell *cell )
 int MonthScene::totalHeight()
 {
   int max = 0;
-  for ( QDate d = mMonthView->actualStartDateTime().date(); d <= mMonthView->actualEndDateTime().date(); d = d.addDays( 1 ) ) {
+  for ( QDate d = mMonthView->actualStartDateTime().date();
+        d <= mMonthView->actualEndDateTime().date(); d = d.addDays( 1 ) ) {
     int c = mMonthCellMap[ d ]->firstFreeSpace();
     if ( c > max ) {
       max = c;
@@ -627,12 +621,12 @@ void MonthScene::mousePressEvent ( QGraphicsSceneMouseEvent *mouseEvent )
   }
 }
 
-void MonthScene::timerEvent(QTimerEvent *e)
+void MonthScene::timerEvent( QTimerEvent *e )
 {
-  if (e->timerId() == repeatTimer.timerId()) {
+  if ( e->timerId() == repeatTimer.timerId() ) {
     if ( mCurrentIndicator->isVisible() ) {
       clickOnScrollIndicator( mCurrentIndicator );
-      repeatTimer.start(AUTO_REPEAT_DELAY, this);
+      repeatTimer.start( AUTO_REPEAT_DELAY, this );
     } else {
       mCurrentIndicator = 0;
       repeatTimer.stop();
@@ -717,16 +711,15 @@ void MonthScene::selectItem( MonthItem *item )
 
 void MonthScene::removeIncidence( Akonadi::Item::Id id )
 {
-  foreach( MonthItem *manager, mManagerList ) {
+  foreach ( MonthItem *manager, mManagerList ) {
     IncidenceMonthItem *imi = qobject_cast<IncidenceMonthItem*>( manager );
     if ( imi && imi->incidence().id() == id ) {
-      foreach( MonthGraphicsItem *gitem, imi->monthGraphicsItems() ) {
+      foreach ( MonthGraphicsItem *gitem, imi->monthGraphicsItems() ) {
         removeItem( gitem );
       }
     }
   }
 }
-
 
 //----------------------------------------------------------
 MonthGraphicsView::MonthGraphicsView( MonthView *parent )
