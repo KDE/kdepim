@@ -9,7 +9,8 @@ check_PROGRAMS = testwizard testaddresseelineedit \
                  test_kregexp \
                  testdateedit \
                  testlinklocator \
-                 testkincidencechooser
+                 testkincidencechooser \
+                 testldapsearchdialog
 
 # disabled because of X dependency
 #                 testdistrlist
@@ -24,6 +25,7 @@ testdateedit_SOURCES = testdateedit.cpp
 testlinklocator_SOURCES = testlinklocator.cpp
 #testdistrlist_SOURCES = testdistrlist.cpp
 testkincidencechooser_SOURCES = testkincidencechooser.cpp
+testldapsearchdialog_SOURCES = testldapsearchdialog.cpp
 
 #TESTS = testdistrlist
 
