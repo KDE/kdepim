@@ -143,6 +143,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
 {
   QHBoxLayout *topLayout = new QHBoxLayout( this );
   topLayout->addWidget( d->view );
+  topLayout->setMargin( 0 );
 
   if ( visibility == Visible ) {
     QVBoxLayout *rightLayout = new QVBoxLayout( );
@@ -186,6 +187,8 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
     rightLayout->addWidget( plusMonth );
 
     topLayout->addLayout( rightLayout );
+  } else {
+    d->view->setFrameStyle( QFrame::NoFrame );
   }
 
   connect( d->calendarSearch->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
