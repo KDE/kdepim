@@ -898,7 +898,7 @@ void MainView::folderChanged()
     bool htmlLoadExternalOverrideInAll = true;
 
     KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
-    Q_FOREACH( QModelIndex index, collectionSelectionModel->selection().indexes() ) {
+    Q_FOREACH( QModelIndex index, collectionSelectionModel->selectedRows() ) {
         Q_ASSERT( index.isValid() );
         const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
         Q_ASSERT( collection.isValid() );
