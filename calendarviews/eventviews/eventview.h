@@ -470,7 +470,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
   private:
     EventViewPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( EventView );
+    Q_DECLARE_PRIVATE( EventView )
 };
 
 }
