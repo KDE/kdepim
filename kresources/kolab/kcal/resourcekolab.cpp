@@ -730,6 +730,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     if ( KCal::IncidenceBase *update = mPendingUpdates.find( uid ) ) {
       mSilent = false; // we do want to tell KMail
       mPendingUpdates.remove( uid );
+      mUidsPendingAdding.remove( uid );
       incidenceUpdated( update );
     } else {
       /* If the uid was added by KMail, KOrganizer needs to be told, so
