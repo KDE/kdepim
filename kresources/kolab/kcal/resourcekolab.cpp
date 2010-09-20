@@ -569,6 +569,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
             << "; sernum = " << sernum
             << "; mBatchAddingInProgress = " << mBatchAddingInProgress
             << "; dtStart() = " << incidence->dtStart()
+            << "; revision = " << incidence->revision()
             << endl;
 
   QString uid = incidence->uid();
