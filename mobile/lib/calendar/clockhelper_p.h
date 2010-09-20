@@ -39,8 +39,11 @@ class ClockHelperPrivate
   QPointF position;
   qreal angle;
   int seconds;
+  int secondsAngle;
   int minutes;
+  int minutesAngle;
   int hours;
+  int hoursAngle;
   bool secondsHandSelected;
   bool minutesHandSelected;
   bool hoursHandSelected;

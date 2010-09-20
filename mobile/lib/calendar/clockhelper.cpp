@@ -28,7 +28,8 @@ static const qreal Q_2PI  = qreal(6.28318530717958647693);   // 2*pi
 
 ClockHelperPrivate::ClockHelperPrivate(ClockHelper *qq)
   : q_ptr(qq), origin(0, 0), position(0, 0), angle(0),
-    seconds(0), minutes(0), hours(0), secondsHandSelected(false),
+    seconds(0), secondsAngle(0), minutes(0), minutesAngle(0), hours(0),
+    hoursAngle(0), secondsHandSelected(false),
     minutesHandSelected(false), hoursHandSelected(false)
 
 {
@@ -157,16 +158,27 @@ int ClockHelper::seconds() const
   return d->seconds;
 }
 
+int ClockHelper::secondsAngle() const
+{
+  Q_D(const ClockHelper);
+  return d->secondsAngle;
+}
+
 void ClockHelper::setSeconds(int sec)
 {
   Q_D(ClockHelper);
 
-  sec = normalize(sec) * 6;
   if (sec == d->seconds)
     return;
 
   d->seconds = sec;
-  emit secondsChanged(sec);
+
+  // math our angle
+  sec = normalize(sec) * 6;
+  d->secondsAngle = sec;
+
+  emit secondsChanged();
+  emit secondsAngleChanged();
 }
 
 int ClockHelper::minutes() const
@@ -175,16 +187,27 @@ int ClockHelper::minutes() const
   return d->minutes;
 }
 
+int ClockHelper::minutesAngle() const
+{
+  Q_D(const ClockHelper);
+  return d->minutesAngle;
+}
+
 void ClockHelper::setMinutes(int min)
 {
   Q_D(ClockHelper);
 
-  min = normalize(min) * 6;
   if (min == d->minutes)
     return;
 
   d->minutes = min;
-  emit minutesChanged(min);
+
+  // match our angle
+  min = normalize(min) * 6;
+  d->minutesAngle = min;
+
+  emit minutesChanged();
+  emit minutesAngleChanged();
 }
 
 int ClockHelper::hours() const
@@ -193,16 +216,31 @@ int ClockHelper::hours() const
   return d->hours;
 }
 
+int ClockHelper::hoursAngle() const
+{
+  Q_D(const ClockHelper);
+  return d->hoursAngle;
+}
+
+#include <KDebug>
+
 void ClockHelper::setHours(int hour)
 {
   Q_D(ClockHelper);
 
-  hour = normalize(hour) * 30;
+  kDebug() << "\n\n------> set hour to: " << hour;
+
   if (hour == d->hours)
     return;
 
   d->hours = hour;
-  emit hoursChanged(hour);
+
+  // math our angle
+  hour = normalize(hour) * 30;
+  d->hoursAngle = hour;
+
+  emit hoursChanged();
+  emit hoursAngleChanged();
 }
 
 void ClockHelper::setSecondsHandSelected(bool selected)
