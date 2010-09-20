@@ -27,6 +27,11 @@ Item {
 
     property alias model: list.model
     property alias currentIndex: list.currentIndex
+    property int value
+
+    onValueChanged: {
+        list.currentIndex = fadeselector.value;
+    }
 
     Image {
         id: inputLeft
@@ -79,9 +84,11 @@ Item {
         return 0;
     }
 
-    function toggleState()
+    function toggleState(index)
     {
-        state = (state == "selected")? "unselected" : "selected";
+        state = (state == "selected") ? "unselected" : "selected";
+        if (state == "unselected")
+            fadeselector.value = index;
     }
 
     Component {
@@ -104,7 +111,7 @@ Item {
                 hoverEnabled: true
                 anchors.fill: parent
                 onClicked: {
-                    toggleState()
+                    toggleState(index)
                 }
             }
         }

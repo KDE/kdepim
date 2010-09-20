@@ -47,7 +47,7 @@ KPIM.MainView {
     target: clockWidget
     onCollapsed: {
         clockWidget.visible = false;
-        _incidenceview.setNewDate(myClock.hours, myClock.minutes, myClock.seconds);
+        _incidenceview.setNewTime(myClock.hours, myClock.minutes, myClock.seconds);
     }
   }
 
@@ -79,9 +79,6 @@ KPIM.MainView {
 
             KPIM.Calendar {
               id: myCalendar
-              day: daySelector.currentIndex
-              month: monthSelector.currentIndex
-              year: yearSelector.currentIndex
             }
 
             Column {
@@ -94,6 +91,7 @@ KPIM.MainView {
                 height: 100
                 model: myCalendar.daysInMonth
                 currentIndex: myCalendar.day
+                onValueChanged: myCalendar.day = value;
               }
 
               KPIM.VerticalFadeSelector {
@@ -101,6 +99,7 @@ KPIM.MainView {
                 height: 100
                 model: 12
                 currentIndex: myCalendar.month
+                onValueChanged: myCalendar.month = value;
               }
 
               KPIM.VerticalFadeSelector {
@@ -109,6 +108,7 @@ KPIM.MainView {
                 // high enough :)
                 model: 3000
                 currentIndex: myCalendar.year
+                onValueChanged: myCalendar.year = value;
               }
             }
           }
@@ -128,9 +128,6 @@ KPIM.MainView {
 
             KPIM.Clock {
               id: myClock
-              hours: hourSelector.currentIndex
-              minutes: minuteSelector.currentIndex
-              seconds: secondSelector.currentIndex
             }
 
             Column {
@@ -141,22 +138,25 @@ KPIM.MainView {
               KPIM.VerticalFadeSelector {
                 id: hourSelector
                 height: 100
-                model: 13
+                model: 24
                 currentIndex: myClock.hours
+                onValueChanged: myClock.hours = value;
               }
 
               KPIM.VerticalFadeSelector {
                 id: minuteSelector
                 height: 100
-                model: 61
+                model: 60
                 currentIndex: myClock.minutes
+                onValueChanged: myClock.minutes = value;
               }
 
               KPIM.VerticalFadeSelector {
                 id: secondSelector
                 height: 100
-                model: 61
+                model: 60
                 currentIndex: myClock.seconds
+                onValueChanged: myClock.seconds = value;
               }
             }
           }
