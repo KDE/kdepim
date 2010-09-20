@@ -28,6 +28,8 @@ Rectangle {
   property alias font: buttonText.font
   signal clicked
 
+  property string _state
+
   radius: 10
   border.color: "white"
   border.width: 0
@@ -36,12 +38,12 @@ Rectangle {
 
   Image {
     id : leftPart
-    source : "images/button-left.png"
+    source : "button-left" + mainItem._state + ".png"
     anchors.left : parent.left
     anchors.top : parent.top
   }
   Image {
-    source : "images/button-center.png"
+    source : "button-center" + mainItem._state + ".png"
     anchors.left : leftPart.right
     anchors.right : rightPart.left
     fillMode : Image.TileHorizontally
@@ -49,7 +51,7 @@ Rectangle {
   }
   Image {
     id : rightPart
-    source : "images/button-right.png"
+    source : "button-right" + mainItem._state + ".png"
     anchors.right : parent.right
     anchors.top : parent.top
   }
@@ -64,19 +66,17 @@ Rectangle {
   states: [
     State {
       name: "pressed"
+      when : _mouseArea.pressed
       PropertyChanges {
         target: mainItem
-        border.color: "#4166F5"
-        border.width: 2
+        _state : "-pressed"
       }
     }
   ]
 
   MouseArea {
+    id : _mouseArea
     anchors.fill: parent
-    onPressed: parent.state = "pressed"
-    onReleased: parent.state = ""
-    onCanceled: parent.state = ""
     onClicked: parent.clicked()
   }
 }
