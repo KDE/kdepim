@@ -793,19 +793,22 @@ CalendarResources::Ticket
 
 bool CalendarResources::save( Ticket *ticket, Incidence *incidence )
 {
-  kdDebug(5800) << "CalendarResources::save( Ticket *)" << endl;
+  kdDebug(5800) << "CalendarResources::save(Ticket *)" << endl;
 
-  if ( !ticket || !ticket->resource() )
+  if ( !ticket || !ticket->resource() ) {
+    kdDebug(5800) << "saved: failure" << endl;
     return false;
+  }
 
   kdDebug(5800) << "tick " << ticket->resource()->resourceName() << endl;
 
     // @TODO: Check if the resource was changed at all. If not, don't save.
   if ( ticket->resource()->save( incidence ) ) {
     releaseSaveTicket( ticket );
+    kdDebug(5800) << "save: success" << endl;
     return true;
   }
-
+  kdDebug(5800) << "save: failure2" << endl;
   return false;
 }
 
@@ -868,7 +871,7 @@ bool CalendarResources::endChange( Incidence *incidence,
 {
   Q_UNUSED( subres ); // possible future use
 
-  kdDebug(5800) << "CalendarResource::endChange()" << endl;
+  kdDebug(5800) << "CalendarResource::endChange()" << incidence->dtStart() << endl;
 
   if ( !res ) {
     res = resource( incidence );
