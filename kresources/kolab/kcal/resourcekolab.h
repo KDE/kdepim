@@ -261,6 +261,19 @@ private:
   */
   QMap<QString,int> mLastKnownRevisions;
 
+  /**
+     incidenceUpdated( IncidenceBase * ) does an optimization so an incidence isn't sent twice
+     to kolab server.
+     This optimization should only be done when this method call is triggered from the outside, i.e.
+     from the CalendarObserver mechanism ( Incidence::update() ).
+
+     When it's called directly by ResourceKolab, we set this variable to true so we don't optimize
+     in incidenceUpdated( IncidenceBase *).
+
+     I didn't just add a new parameter to incidenceUpdated() because it's a re-implementation
+     of a pure virtual in KCal::CalendarObserver. */
+  bool mDisableOptimization;
+
 };
 
 struct TemporarySilencer {

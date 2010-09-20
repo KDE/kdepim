@@ -71,7 +71,7 @@ static const char* incidenceInlineMimeType = "text/calendar";
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),mResourceChangedTimer( 0,
-        "mResourceChangedTimer" ), mBatchAddingInProgress( false )
+        "mResourceChangedTimer" ), mBatchAddingInProgress( false ), mDisableOptimization( false )
 {
   if ( !config ) {
     setResourceName( i18n( "Kolab Server" ) );
@@ -319,7 +319,7 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
     return;
   }
 
-  { // start optimization
+  if ( !mDisableOptimization ) { // start optimization
     /**
        KOrganizer and libkcal like calling two Incidence::updated()
        for only one user change. That's because after a change,
@@ -732,7 +732,10 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mSilent = false; // we do want to tell KMail
       mPendingUpdates.remove( uid );
       mUidsPendingAdding.remove( uid );
+
+      mDisableOptimization = true;
       incidenceUpdated( update );
+      mDisableOptimization = false;
     } else {
       /* If the uid was added by KMail, KOrganizer needs to be told, so
        * schedule emitting of the resourceChanged signal. */
