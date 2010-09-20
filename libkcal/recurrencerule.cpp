@@ -1433,7 +1433,8 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const Q
 RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const QDateTime &preDate, PeriodType type ) const
 {
   // TODO: Simplify this!
-  kdDebug(5800) << "       (o) getNextValidDateInterval after " << preDate << ", type=" << type << endl;
+  //kdDebug(5800) << "       (o) getNextValidDateInterval after " << preDate
+  //<< ", type=" << type << endl;
   long periods = 0;
   QDateTime start = startDt();
   QDateTime nextValid( start );
