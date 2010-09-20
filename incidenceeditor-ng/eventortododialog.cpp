@@ -168,11 +168,11 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
               SLOT(updateButtonStatus(bool)) );
   q->connect( mItemManager,
-              SIGNAL(itemSaveFinished(EditorItemManager::SaveAction)),
-              SLOT(handleItemSaveFinish(EditorItemManager::SaveAction)));
+              SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+              SLOT(handleItemSaveFinish(IncidenceEditorNG::EditorItemManager::SaveAction)));
   q->connect( mItemManager,
-              SIGNAL(itemSaveFailed(EditorItemManager::SaveAction,QString)),
-              SLOT(handleItemSaveFail(EditorItemManager::SaveAction, QString)));
+              SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)),
+              SLOT(handleItemSaveFail(IncidenceEditorNG::EditorItemManager::SaveAction, QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
   q->connect( mIeRecurrence, SIGNAL(recurrenceChanged(IncidenceEditorNG::RecurrenceType)),
