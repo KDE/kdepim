@@ -267,6 +267,7 @@ bool ResourceKABC::doLoad()
         tname.remove( 0, 1 );
         tname.truncate( tname.length() - 1 );
       }
+      tname.remove( '\\' ); // remove escape chars
       KABC::Addressee spouse;
       spouse.setNameFromString( tname );
       name_2 = spouse.nickName();
