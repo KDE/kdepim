@@ -38,12 +38,12 @@ Rectangle {
 
   Image {
     id : leftPart
-    source : "button-left" + mainItem._state + ".png"
+    source : "images/button-left" + mainItem._state + ".png"
     anchors.left : parent.left
     anchors.top : parent.top
   }
   Image {
-    source : "button-center" + mainItem._state + ".png"
+    source : "images/button-center" + mainItem._state + ".png"
     anchors.left : leftPart.right
     anchors.right : rightPart.left
     fillMode : Image.TileHorizontally
@@ -51,7 +51,7 @@ Rectangle {
   }
   Image {
     id : rightPart
-    source : "button-right" + mainItem._state + ".png"
+    source : "images/button-right" + mainItem._state + ".png"
     anchors.right : parent.right
     anchors.top : parent.top
   }
