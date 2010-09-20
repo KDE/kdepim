@@ -267,6 +267,9 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     void updated();
     void updatedSilent();
 
+    // For debugging/Testing purposes.
+    QPtrList<Observer> observers() const;
+
   protected:
     /**
       @copydoc

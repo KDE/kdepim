@@ -429,3 +429,8 @@ void IncidenceBase::updatedSilent()
   }
 }
 
+QPtrList<IncidenceBase::Observer> IncidenceBase::observers() const
+{
+  return mObservers;
+}
+
