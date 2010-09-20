@@ -162,7 +162,6 @@ void IncidenceView::showClock( QObject *obj )
     return;
 
   QTime time = mTimeWidget->time();
-  kDebug() << "----> Showing clock: " << time;
   emit showClockWidget( time.hour(), time.minute(), time.second() );
 }
 
