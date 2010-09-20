@@ -48,7 +48,7 @@ Image {
         transform: Rotation {
             origin.x: secondsHand.width/2
             origin.y: secondsHand.height*0.95
-            angle: clockHelper.seconds
+            angle: clockHelper.secondsAngle
         }
     }
 
@@ -65,7 +65,7 @@ Image {
         transform: Rotation {
             origin.x: minutesHand.width/2
             origin.y: minutesHand.height*0.95
-            angle: clockHelper.minutes
+            angle: clockHelper.minutesAngle
         }
     }
 
@@ -82,7 +82,7 @@ Image {
         transform: Rotation {
             origin.x: hoursHand.width/2
             origin.y: hoursHand.height*0.95
-            angle: clockHelper.hours
+            angle: clockHelper.hoursAngle
         }
     }
 
