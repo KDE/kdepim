@@ -47,6 +47,9 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     */
     KDeclarativeFullScreenView( const QString &qmlFileName, QWidget *parent = 0 );
     virtual ~KDeclarativeFullScreenView();
+#ifdef Q_OS_WINCE
+    virtual bool winEvent ( MSG * message, long * result );
+#endif
 
   public slots:
     /** Triggers de-fullscreen/task switcher */
@@ -77,6 +80,10 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     void slotStatusChanged ( QDeclarativeView::Status );
 
   private:
+#ifdef Q_OS_WINCE
+    bool RotateTo270Degrees();
+#endif
+  
     KActionCollection *mActionCollection;
 #ifndef Q_OS_WIN
     QGLWidget *m_glWidget;

@@ -44,6 +44,10 @@
 #include <boost/bind.hpp>
 #include <algorithm>
 
+#ifdef Q_OS_WINCE
+#include <windows.h>
+#endif
+
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
 #include <QDeclarativeContext>
@@ -57,6 +61,9 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 #endif
   m_qmlFileName( qmlFileName )
 {
+#ifdef Q_OS_WINCE
+  RotateTo270Degrees();
+#endif
 #ifndef Q_OS_WIN
   if ( !KCmdLineArgs::parsedArgs()->isSet( "disable-opengl" ) ) {
     // make MainView use OpenGL ES2 backend for better performance
@@ -170,6 +177,33 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
     kWarning() << "setSourceDone" << t.elapsed() << &t;
   }
 }
+
+#ifdef Q_OS_WINCE
+bool KDeclarativeFullScreenView::RotateTo270Degrees()
+{
+  DEVMODE DevMode;
+
+  memset(&DevMode, 0, sizeof (DevMode));
+  DevMode.dmSize               = sizeof (DevMode);
+  DevMode.dmFields             = DM_DISPLAYORIENTATION;
+  DevMode.dmDisplayOrientation = DMDO_270;
+  if (DISP_CHANGE_SUCCESSFUL != ChangeDisplaySettingsEx(NULL, &DevMode, NULL, 0, NULL)){
+    //error cannot change to 270 degrees
+    return false;
+  }
+
+  return true;
+}
+
+bool KDeclarativeFullScreenView::winEvent ( MSG * message, long * result )
+{
+  Q_UNUSED(result);
+  if ( message->message == WM_SETTINGCHANGE ) {
+    RotateTo270Degrees();
+  }
+  return false;
+}
+#endif
 
 void KDeclarativeFullScreenView::triggerTaskSwitcher()
 {
