@@ -10,6 +10,7 @@ set(CTEST_CUSTOM_WARNING_EXCEPTION
   
   "groupwise/soap"
   "mk4storage"
+  "kresources"
   "'Resource' is deprecated"
   "too big, try a different debug format"
   "qlist.h.*increases required alignment of target type"
