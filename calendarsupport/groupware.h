@@ -65,7 +65,7 @@ class CALENDARSUPPORT_EXPORT Groupware : public QObject
       SendEmail  = 1,             /**> Regular "Do you wish to send email?" dialog, and user pressed "send". */
       DoNotSendEmail = 2,         /**> Regular "Do you wish to send email?" dialog, and user pressed "No". */
       NotOrganizerAbort = 4,      /**> "You are not the organizer, abort?" dialog, and user pressed "Abort" */
-      NotOrganizerConfirm = 8,    /**> "You are not the organizer, abort?" dialog, and user pressed "Continue" */
+      NotOrganizerContinue = 8,   /**> "You are not the organizer, abort?" dialog, and user pressed "Continue" */
       SendingErrorAbort = 16,     /**> "There was an error sending e-mail, abort?" dialog, and user pressed "Abort" */
       SendingErrorDoNotSend = 32  /**> "There was an error sending e-mail, abort?" dialog, and user pressed "Do not send" */
     };

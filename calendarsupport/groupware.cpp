@@ -177,12 +177,14 @@ bool Groupware::sendICalMessage( QWidget *parent,
                                  bool attendeeStatusChanged,
                                  SendICalMessageDialogResults &dialogResults )
 {
+  dialogResults = NoDialog;
+
   // If there are no attendees, don't bother
   if ( incidence->attendees().isEmpty() ) {
     return true;
   }
 
-  bool isOrganizer = KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
+  const bool isOrganizer = KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
   int rc = 0;
   /*
    * There are two scenarios:
@@ -249,6 +251,12 @@ bool Groupware::sendICalMessage( QWidget *parent,
       rc = KMessageBox::questionYesNo(
              parent, txt, i18n( "Group Scheduling Email" ),
              KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+
+      if ( rc == KMessageBox::Yes ) {
+        dialogResults |= SendEmail;
+      } else {
+        dialogResults |= DoNotSendEmail;
+      }
     } else {
       return true;
     }
@@ -263,6 +271,11 @@ bool Groupware::sendICalMessage( QWidget *parent,
     rc = KMessageBox::questionYesNo(
            parent, txt, QString(),
            KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+    if ( rc == KMessageBox::Yes ) {
+      dialogResults |= SendEmail;
+    } else {
+      dialogResults |= DoNotSendEmail;
+    }
   } else if ( incidence->type() == KCalCore::IncidenceBase::TypeEvent ) {
     QString txt;
     if ( attendeeStatusChanged && method == KCalCore::iTIPRequest ) {
@@ -272,6 +285,11 @@ bool Groupware::sendICalMessage( QWidget *parent,
       rc = KMessageBox::questionYesNo(
              parent, txt, QString(),
              KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+      if ( rc == KMessageBox::Yes ) {
+        dialogResults |= SendEmail;
+      } else {
+        dialogResults |= DoNotSendEmail;
+      }
     } else {
       if ( action == IncidenceChanger::INCIDENCEDELETED ) {
         const QStringList myEmails = KCalPrefs::instance()->allEmails();
@@ -298,6 +316,11 @@ bool Groupware::sendICalMessage( QWidget *parent,
           parent, txt, i18n( "Group Scheduling Email" ),
           KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
         setDoNotNotify( rc == KMessageBox::No );
+        if ( rc == KMessageBox::Yes ) {
+          dialogResults |= SendEmail;
+        } else {
+          dialogResults |= DoNotSendEmail;
+      }
       } else if ( action == IncidenceChanger::INCIDENCEADDED ) {
         // We just got this event from the groupware stack, so add it right away
         // the notification mail was sent on the KMail side.
@@ -307,6 +330,12 @@ bool Groupware::sendICalMessage( QWidget *parent,
                     "bring your calendar out of sync with the organizer's calendar. "
                     "Do you really want to edit it?" );
         rc = KMessageBox::warningYesNo( parent, txt );
+
+        if ( rc == KMessageBox::Yes ) {
+          dialogResults |= NotOrganizerContinue;
+        } else {
+          dialogResults |= NotOrganizerAbort;
+        }
         return rc == KMessageBox::Yes;
       }
     }
@@ -331,6 +360,11 @@ bool Groupware::sendICalMessage( QWidget *parent,
            i18n( "Sending group scheduling email failed." ),
            i18n( "Group Scheduling Email" ),
            KGuiItem( i18n( "Abort Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+    if ( rc == KMessageBox::Yes ) {
+      dialogResults |= SendingErrorAbort;
+    } else {
+      dialogResults |= SendingErrorDoNotSend;
+    }
     return rc == KMessageBox::No;
   } else if ( rc == KMessageBox::No ) {
     return true;
