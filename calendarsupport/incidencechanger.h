@@ -80,21 +80,27 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger : public QObject
     bool sendGroupwareMessage( const Akonadi::Item &incidence,
                                KCalCore::iTIPMethod method,
                                HowChanged action,
-                               QWidget *parent );
+                               QWidget *parent,
+                               uint atomicOperationId = 0 );
 
     // returns true if the add job was created
     bool addIncidence( const KCalCore::Incidence::Ptr &incidence,
-                       QWidget *parent, Akonadi::Collection &selectedCollection,
-                       int &dialogCode );
+                       QWidget *parent,
+                       Akonadi::Collection &selectedCollection,
+                       int &dialogCode,
+                       uint atomicOperationId = 0 );
 
     // returns true if the add job was created
     bool addIncidence( const KCalCore::Incidence::Ptr &incidence,
-                       const Akonadi::Collection &collection, QWidget *parent );
+                       const Akonadi::Collection &collection,
+                       QWidget *parent,
+                       uint atomicOperationId = 0 );
 
     bool changeIncidence( const KCalCore::Incidence::Ptr &oldinc,
                           const Akonadi::Item &newItem,
                           WhatChanged,
-                          QWidget *parent );
+                          QWidget *parent,
+                          uint atomicOperationId = 0 );
 
     // returns true if the delete job was created
     // TODO: true/false isn't enough for the API, if the user deletes the same
@@ -104,7 +110,8 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger : public QObject
     // If we return true, the application will assume success.. but there's still the
     // chance that the running deletion isn't successful
     // So we need a third return value that says "ignore me".
-    bool deleteIncidence( const Akonadi::Item &incidence, QWidget *parent = 0 );
+    bool deleteIncidence( const Akonadi::Item &incidence, uint atomicOperationId = 0,
+                          QWidget *parent = 0 );
 
     bool cutIncidences( const Akonadi::Item::List &incidences, QWidget *parent );
     bool cutIncidence( const Akonadi::Item &incidence, QWidget *parent );
@@ -129,6 +136,30 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger : public QObject
      * job ends the ETM still has the item for a short period of time.
      */
     bool isNotDeleted( Akonadi::Item::Id ) const;
+
+    /**
+       Some incidence operations require more than one change. Like dissociating
+       occurrences, which needs an incidence add, and an incidence change.
+
+       If you want the prevent that the same dialogs are presented multiple times
+       use this function, which returns an id for your atomic operation.
+
+       Use that id on all addIncidence()/changeIncidence()/deleteIncidence() calls
+       that belong to the same atomic operation.
+
+       TODO: Would be nice to have undo support, in case one operation,
+             (other than the first) fails.
+    */
+    uint startAtomicOperation();
+
+    /**
+       Tells IncidenceChanger you won't be doing more changes with atomic operation
+       id @p atomicOperationId
+
+       (Internaly, this function only does cleanup.)
+       @see startAtomicOperation()
+    */
+    void endAtomicOperation( uint atomicOperationId );
 
   public Q_SLOTS:
     void cancelAttendees( const Akonadi::Item &incidence );

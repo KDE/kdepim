@@ -138,9 +138,9 @@ bool Groupware::handleInvitation( const QString &receiver, const QString &iCal,
       // accept counter proposal
       scheduler.acceptCounterProposal( incidence );
       // send update to all attendees
-      SendICalMessageDialogResults dialogResults;
+      SendICalMessageDialogAnswers dialogAnswers;
       sendICalMessage( 0, KCalCore::iTIPRequest, incidence,
-                       IncidenceChanger::INCIDENCEEDITED, false, dialogResults /*byref*/ );
+                       IncidenceChanger::INCIDENCEEDITED, false, dialogAnswers /*byref*/ );
     }
   } else {
     kError() << "Unknown incoming action" << action;
@@ -175,10 +175,9 @@ bool Groupware::sendICalMessage( QWidget *parent,
                                  const KCalCore::Incidence::Ptr &incidence,
                                  IncidenceChanger::HowChanged action,
                                  bool attendeeStatusChanged,
-                                 SendICalMessageDialogResults &dialogResults )
+                                 SendICalMessageDialogAnswers &dialogAnswers,
+                                 bool reuseDialogAnswers )
 {
-  dialogResults = NoDialog;
-
   // If there are no attendees, don't bother
   if ( incidence->attendees().isEmpty() ) {
     return true;
@@ -248,14 +247,13 @@ bool Groupware::sendICalMessage( QWidget *parent,
         break;
       }
 
-      rc = KMessageBox::questionYesNo(
-             parent, txt, i18n( "Group Scheduling Email" ),
-             KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
-
-      if ( rc == KMessageBox::Yes ) {
-        dialogResults |= SendEmail;
+      if ( reuseDialogAnswers && dialogAnswers.sendEmailAnswer ) {
+        rc = dialogAnswers.sendEmailAnswer;
       } else {
-        dialogResults |= DoNotSendEmail;
+        rc = KMessageBox::questionYesNo( parent, txt, i18n( "Group Scheduling Email" ),
+                                         KGuiItem( i18n( "Send Email" ) ),
+                                         KGuiItem( i18n( "Do Not Send" ) ) );
+        dialogAnswers.sendEmailAnswer = rc;
       }
     } else {
       return true;
@@ -265,30 +263,33 @@ bool Groupware::sendICalMessage( QWidget *parent,
       // This is an update to be sent to the organizer
       method = KCalCore::iTIPReply;
     }
-    // Ask if the user wants to tell the organizer about the current status
-    QString txt = i18n( "Do you want to send a status update to the "
-                        "organizer of this task?" );
-    rc = KMessageBox::questionYesNo(
-           parent, txt, QString(),
-           KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
-    if ( rc == KMessageBox::Yes ) {
-      dialogResults |= SendEmail;
+
+    if ( reuseDialogAnswers && dialogAnswers.sendEmailAnswer ) {
+        rc = dialogAnswers.sendEmailAnswer;
     } else {
-      dialogResults |= DoNotSendEmail;
+      // Ask if the user wants to tell the organizer about the current status
+      const QString txt = i18n( "Do you want to send a status update to the "
+                                "organizer of this task?" );
+      rc = KMessageBox::questionYesNo( parent, txt, QString(),
+                                       KGuiItem( i18n( "Send Update" ) ),
+                                       KGuiItem( i18n( "Do Not Send" ) ) );
+      dialogAnswers.sendEmailAnswer = rc;
+
     }
   } else if ( incidence->type() == KCalCore::IncidenceBase::TypeEvent ) {
-    QString txt;
     if ( attendeeStatusChanged && method == KCalCore::iTIPRequest ) {
-      txt = i18n( "Your status as an attendee of this event changed. "
-                  "Do you want to send a status update to the event organizer?" );
       method = KCalCore::iTIPReply;
-      rc = KMessageBox::questionYesNo(
-             parent, txt, QString(),
-             KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
-      if ( rc == KMessageBox::Yes ) {
-        dialogResults |= SendEmail;
+
+      if ( reuseDialogAnswers && dialogAnswers.sendEmailAnswer ) {
+        rc = dialogAnswers.sendEmailAnswer;
       } else {
-        dialogResults |= DoNotSendEmail;
+        const QString txt = i18n( "Your status as an attendee of this event changed. "
+                                  "Do you want to send a status update to the event organizer?" );
+
+        rc = KMessageBox::questionYesNo( parent, txt, QString(),
+                                         KGuiItem( i18n( "Send Update" ) ),
+                                         KGuiItem( i18n( "Do Not Send" ) ) );
+        dialogAnswers.sendEmailAnswer = rc;
       }
     } else {
       if ( action == IncidenceChanger::INCIDENCEDELETED ) {
@@ -309,32 +310,33 @@ bool Groupware::sendICalMessage( QWidget *parent,
           return true;
         }
 
-        txt = i18n( "You had previously accepted an invitation to this event. "
-                    "Do you want to send an updated response to the organizer "
-                    "declining the invitation?" );
-        rc = KMessageBox::questionYesNo(
-          parent, txt, i18n( "Group Scheduling Email" ),
-          KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
-        setDoNotNotify( rc == KMessageBox::No );
-        if ( rc == KMessageBox::Yes ) {
-          dialogResults |= SendEmail;
+        if ( reuseDialogAnswers && dialogAnswers.sendEmailAnswer ) {
+          rc = dialogAnswers.sendEmailAnswer;
         } else {
-          dialogResults |= DoNotSendEmail;
-      }
+          const QString txt = i18n( "You had previously accepted an invitation to this event. "
+                                    "Do you want to send an updated response to the organizer "
+                                    "declining the invitation?" );
+          rc = KMessageBox::questionYesNo( parent, txt, i18n( "Group Scheduling Email" ),
+                                           KGuiItem( i18n( "Send Update" ) ),
+                                           KGuiItem( i18n( "Do Not Send" ) ) );
+          dialogAnswers.sendEmailAnswer = rc;
+        }
+
+        setDoNotNotify( rc == KMessageBox::No );
       } else if ( action == IncidenceChanger::INCIDENCEADDED ) {
         // We just got this event from the groupware stack, so add it right away
         // the notification mail was sent on the KMail side.
         return true;
       } else {
-        txt = i18n( "You are not the organizer of this event. Editing it will "
-                    "bring your calendar out of sync with the organizer's calendar. "
-                    "Do you really want to edit it?" );
-        rc = KMessageBox::warningYesNo( parent, txt );
 
-        if ( rc == KMessageBox::Yes ) {
-          dialogResults |= NotOrganizerContinue;
+        if ( reuseDialogAnswers && dialogAnswers.notOrganizerAnswer ) {
+          rc = dialogAnswers.notOrganizerAnswer;
         } else {
-          dialogResults |= NotOrganizerAbort;
+          const QString txt = i18n( "You are not the organizer of this event. Editing it will "
+                                    "bring your calendar out of sync with the organizer's calendar. "
+                                    "Do you really want to edit it?" );
+          rc = KMessageBox::warningYesNo( parent, txt );
+          dialogAnswers.notOrganizerAnswer = rc;
         }
         return rc == KMessageBox::Yes;
       }
@@ -355,16 +357,18 @@ bool Groupware::sendICalMessage( QWidget *parent,
     if ( scheduler.performTransaction( incidence, method ) ) {
       return true;
     }
-    rc = KMessageBox::questionYesNo(
-           parent,
-           i18n( "Sending group scheduling email failed." ),
-           i18n( "Group Scheduling Email" ),
-           KGuiItem( i18n( "Abort Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
-    if ( rc == KMessageBox::Yes ) {
-      dialogResults |= SendingErrorAbort;
+
+    if ( reuseDialogAnswers && dialogAnswers.sendingErrorAnswer ) {
+      rc = dialogAnswers.sendingErrorAnswer;
     } else {
-      dialogResults |= SendingErrorDoNotSend;
+      rc = KMessageBox::questionYesNo( parent,
+                                       i18n( "Sending group scheduling email failed." ),
+                                       i18n( "Group Scheduling Email" ),
+                                       KGuiItem( i18n( "Abort Update" ) ),
+                                       KGuiItem( i18n( "Do Not Send" ) ) );
+      dialogAnswers.sendingErrorAnswer = rc;
     }
+
     return rc == KMessageBox::No;
   } else if ( rc == KMessageBox::No ) {
     return true;

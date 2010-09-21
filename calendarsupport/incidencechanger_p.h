@@ -26,6 +26,7 @@
 #define CALENDARSUPPORT_INCIDENCECHANGER_P_H
 
 #include "incidencechanger.h"
+#include "groupware.h"
 
 #include <Akonadi/Item>
 
@@ -45,6 +46,12 @@ class IncidenceChanger::Private : public QObject
       Akonadi::Item newItem;
       IncidenceChanger::WhatChanged action;
       QWidget *parent;
+      uint atomicOperationId;
+    };
+
+    struct AddInfo {
+      QWidget *parent;
+      uint atomicOperationId;
     };
 
     Private( Akonadi::Entity::Id defaultCollectionId, Calendar *calendar ) :
@@ -85,6 +92,11 @@ class IncidenceChanger::Private : public QObject
     QList<Akonadi::Item::Id> mDeletedItemIds;
 
     Calendar *mCalendar;
+
+    // Index my atomic operation id
+    QHash<uint,Groupware::SendICalMessageDialogAnswers> mSendICalDialogResults;
+
+    QHash<KJob*,AddInfo> mAddInfoForJob;
 
   public slots:
     void performNextChange( Akonadi::Item::Id );

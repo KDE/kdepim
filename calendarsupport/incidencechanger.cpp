@@ -42,11 +42,8 @@ bool IncidenceChanger::Private::myAttendeeStatusChanged( const KCalCore::Inciden
 {
   KCalCore::Attendee::Ptr oldMe = oldInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
   KCalCore::Attendee::Ptr newMe = newInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
-  if ( oldMe && newMe && ( oldMe->status() != newMe->status() ) ) {
-    return true;
-  }
 
-  return false;
+  return oldMe && newMe && ( oldMe->status() != newMe->status() );
 }
 
 void IncidenceChanger::Private::queueChange( Change *change )
@@ -134,13 +131,18 @@ bool IncidenceChanger::Private::performChange( Change *change )
       if ( !mGroupware ) {
           kError() << "Groupware communication enabled but no groupware instance set";
       } else {
-        Groupware::SendICalMessageDialogResults dialogResults;
+        Groupware::SendICalMessageDialogAnswers dialogResults = mSendICalDialogResults[change->atomicOperationId];
+        const bool reuseDialogAnswers = ( change->atomicOperationId != 0 );
         success = mGroupware->sendICalMessage( change->parent,
                                                KCalCore::iTIPRequest,
                                                newinc,
                                                INCIDENCEEDITED,
                                                attendeeStatusChanged,
-                                               dialogResults /* by ref */);
+                                               dialogResults /* by ref */,
+                                               reuseDialogAnswers );
+        if ( change->atomicOperationId ) {
+          mSendICalDialogResults.insert( change->atomicOperationId, dialogResults );
+        }
       }
     }
 
@@ -242,7 +244,8 @@ void IncidenceChanger::setGroupware( Groupware *groupware )
 bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
                                              KCalCore::iTIPMethod method,
                                              HowChanged action,
-                                             QWidget *parent )
+                                             QWidget *parent,
+                                             uint atomicOperationId )
 {
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( !incidence ) {
@@ -258,8 +261,17 @@ bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
       kError() << "Groupware communication enabled but no groupware instance set";
       return false;
     }
-    Groupware::SendICalMessageDialogResults dialogResults;
-    return d->mGroupware->sendICalMessage( parent, method, incidence, action, false, dialogResults /* byref */ );
+    Groupware::SendICalMessageDialogAnswers dialogResults = d->mSendICalDialogResults[atomicOperationId];
+    const bool reuseDialogAnswers = ( atomicOperationId != 0 );
+    const bool result =  d->mGroupware->sendICalMessage( parent, method, incidence, action, false,
+                                                         dialogResults /* byref */,
+                                                         reuseDialogAnswers );
+
+    if ( atomicOperationId ) {
+      d->mSendICalDialogResults.insert( atomicOperationId, dialogResults );
+    }
+
+    return result;
   }
   return true;
 }
@@ -289,7 +301,9 @@ void IncidenceChanger::cancelAttendees( const Akonadi::Item &aitem )
   }
 }
 
-bool IncidenceChanger::deleteIncidence( const Akonadi::Item &aitem, QWidget *parent )
+bool IncidenceChanger::deleteIncidence( const Akonadi::Item &aitem,
+                                        uint atomicOperationId,
+                                        QWidget *parent )
 {
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( !incidence ) {
@@ -306,8 +320,8 @@ bool IncidenceChanger::deleteIncidence( const Akonadi::Item &aitem, QWidget *par
     return false;
   }
 
-  bool doDelete = sendGroupwareMessage( aitem, KCalCore::iTIPCancel,
-                                        INCIDENCEDELETED, parent );
+  const bool doDelete = sendGroupwareMessage( aitem, KCalCore::iTIPCancel,
+                                              INCIDENCEDELETED, parent, atomicOperationId );
   if( !doDelete ) {
     return false;
   }
@@ -379,16 +393,20 @@ bool IncidenceChanger::cutIncidences( const Akonadi::Item::List &list, QWidget *
   Akonadi::Item::List::ConstIterator it;
   bool doDelete = true;
   Akonadi::Item::List itemsToCut;
+  const uint atomicOperationId = startAtomicOperation();
   for ( it = list.constBegin(); it != list.constEnd(); ++it ) {
     if ( CalendarSupport::hasIncidence( ( *it ) ) ) {
       doDelete = sendGroupwareMessage( *it, KCalCore::iTIPCancel,
-                                       INCIDENCEDELETED, parent );
+                                       INCIDENCEDELETED, parent, atomicOperationId );
+
       if ( doDelete ) {
         emit incidenceToBeDeleted( *it );
         itemsToCut.append( *it );
       }
     }
    }
+
+  endAtomicOperation( atomicOperationId );
 
 #ifndef QT_NO_DRAGANDDROP
   CalendarAdaptor::Ptr cal( new CalendarAdaptor( d->mCalendar, parent ) );
@@ -422,7 +440,8 @@ void IncidenceChanger::setDefaultCollectionId( Akonadi::Entity::Id defaultCollec
 bool IncidenceChanger::changeIncidence( const KCalCore::Incidence::Ptr &oldinc,
                                         const Akonadi::Item &newItem,
                                         WhatChanged action,
-                                        QWidget *parent )
+                                        QWidget *parent,
+                                        uint atomicOperationId )
 {
   if ( !CalendarSupport::hasIncidence( newItem ) || !newItem.isValid() ) {
     kDebug() << "Skipping invalid item id=" << newItem.id();
@@ -444,6 +463,7 @@ bool IncidenceChanger::changeIncidence( const KCalCore::Incidence::Ptr &oldinc,
   change->newItem = newItem;
   change->oldInc = oldinc;
   change->parent = parent;
+  change->atomicOperationId = atomicOperationId;
 
   if ( d->mCurrentChanges.contains( newItem.id() ) ) {
     d->queueChange( change );
@@ -456,7 +476,8 @@ bool IncidenceChanger::changeIncidence( const KCalCore::Incidence::Ptr &oldinc,
 bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
                                      QWidget *parent,
                                      Akonadi::Collection &selectedCollection,
-                                     int &dialogCode )
+                                     int &dialogCode,
+                                     uint atomicOperationId )
 {
   const Akonadi::Collection defaultCollection = d->mCalendar->collection( d->mDefaultCollectionId );
 
@@ -478,7 +499,7 @@ bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
   }
 
   if ( selectedCollection.isValid() ) {
-    return addIncidence( incidence, selectedCollection, parent );
+    return addIncidence( incidence, selectedCollection, parent, atomicOperationId );
   } else {
     return false;
   }
@@ -486,7 +507,8 @@ bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
 
 bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
                                      const Akonadi::Collection &collection,
-                                     QWidget *parent )
+                                     QWidget *parent,
+                                     uint atomicOperationId )
 {
   Q_UNUSED( parent );
 
@@ -504,6 +526,13 @@ bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
 
   item.setMimeType( incidence->mimeType() );
   Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
+
+  Private::AddInfo addInfo;
+  addInfo.parent = parent;
+  addInfo.atomicOperationId = atomicOperationId;
+
+  // so the jobs sees this info
+  d->mAddInfoForJob.insert( job, addInfo );
 
   // The connection needs to be queued to be sure addIncidenceFinished
   // is called after the kjob finished it's eventloop. That's needed
@@ -532,15 +561,22 @@ void IncidenceChanger::addIncidenceFinished( KJob *j )
   }
 
   Q_ASSERT( incidence );
-  Groupware::SendICalMessageDialogResults dialogResults;
+
   if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
+    const uint atomicOperationId = d->mAddInfoForJob[j].atomicOperationId;
+    Groupware::SendICalMessageDialogAnswers dialogResults = d->mSendICalDialogResults[atomicOperationId];
+    const bool reuseDialogAnswers = ( atomicOperationId != 0 );
+
     if ( !d->mGroupware ) {
       kError() << "Groupware communication enabled but no groupware instance set";
     } else if ( !d->mGroupware->sendICalMessage(
            0, //PENDING(AKONADI_PORT) set parent, ideally the one passed in addIncidence...
            KCalCore::iTIPRequest,
-           incidence, INCIDENCEADDED, false, dialogResults /* byref */ ) ) {
+           incidence, INCIDENCEADDED, false, dialogResults /* byref */, reuseDialogAnswers ) ) {
       kError() << "sendIcalMessage failed.";
+    }
+    if ( atomicOperationId ) {
+      d->mSendICalDialogResults.insert( atomicOperationId, dialogResults );
     }
   }
 
@@ -572,4 +608,16 @@ bool IncidenceChanger::isNotDeleted( Akonadi::Item::Id id ) const
 void IncidenceChanger::setCalendar( CalendarSupport::Calendar *calendar )
 {
   d->mCalendar = calendar;
+}
+
+uint IncidenceChanger::startAtomicOperation()
+{
+  static unsigned int latestAtomicOperationId = 0;
+
+  return ++latestAtomicOperationId;
+}
+
+void IncidenceChanger::endAtomicOperation( uint atomicOperationId )
+{
+  d->mSendICalDialogResults.remove( atomicOperationId );
 }
