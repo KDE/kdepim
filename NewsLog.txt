@@ -14,6 +14,7 @@ Problems addressed
 * kolab/issue4537: Kontact Crash in KOrg::CellItem::placeItem (rt#6206)
 * kolab/issue4538: Fast toggling of todo complete state creates conflict (rt#6062)
 * kolab/issue4545: Kontact Crash in DwMessageComponent::partId
+* kolab/issue4560: Crash after deletion of two attachments (rt#6207)
 
 
 Friday, September 3rd 2010
