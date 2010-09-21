@@ -282,6 +282,8 @@ class AKREGATORPART_EXPORT Feed : public TreeNode, public virtual FaviconListene
         /** executes the actual fetch action */
         void tryFetch();
 
+        void markAsFetchedNow();
+
     private slots:
 
         void fetchCompleted(Syndication::Loader *loader, Syndication::FeedPtr doc, Syndication::ErrorCode errorCode);
