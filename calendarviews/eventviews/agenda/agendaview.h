@@ -213,7 +213,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
   protected Q_SLOTS:
     /** Update event belonging to agenda item */
-    void updateEventDates( AgendaItem *item );
+    void updateEventDates( AgendaItem *item, uint atomicOperationId );
 
     void updateEventIndicatorTop( int newY );
     void updateEventIndicatorBottom( int newY );

@@ -199,7 +199,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void showNewEventPopupSignal();
 
     // If the incidence is multi-day, item is the first one
-    void itemModified( AgendaItem *item );
+    void itemModified( AgendaItem *item, uint atomicOperationId );
 
     void incidenceSelected( const Akonadi::Item &, const QDate & );
     void startMultiModify( const QString & );

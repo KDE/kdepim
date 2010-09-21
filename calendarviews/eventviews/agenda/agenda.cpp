@@ -1139,6 +1139,12 @@ void Agenda::endItemAction()
 #ifndef QT_NO_CURSOR
   setCursor( Qt::ArrowCursor );
 #endif
+
+  if ( !d->mChanger ) {
+    kError() << "No IncidenceChanger set";
+    return;
+  }
+
   bool multiModify = false;
   // FIXME: do the cloning here...
   Akonadi::Item inc = d->mActionItem->incidence();
@@ -1146,11 +1152,13 @@ void Agenda::endItemAction()
   d->mItemMoved = d->mItemMoved && !( d->mStartCell.x() == d->mEndCell.x() &&
                                       d->mStartCell.y() == d->mEndCell.y() );
 
+  uint atomicOperationId = 0;
   if ( d->mItemMoved ) {
     bool modify = false;
     if ( incidence->recurs() ) {
-      int res = d->mEventView->showMoveRecurDialog( d->mActionItem->incidence(),
-                                                    d->mActionItem->itemDate() );
+      atomicOperationId = d->mChanger->startAtomicOperation();
+      const int res = d->mEventView->showMoveRecurDialog( d->mActionItem->incidence(),
+                                                          d->mActionItem->itemDate() );
       switch ( res ) {
       case KCalUtils::RecurrenceActions::AllOccurrences: // All occurrences
         // Moving the whole sequene of events is handled by the itemModified below.
@@ -1173,13 +1181,11 @@ void Agenda::endItemAction()
         if ( newInc ) {
           // don't recreate items, they already have the correct position
           emit enableAgendaUpdate( false );
-          if ( d->mChanger ) {
-            d->mChanger->changeIncidence(
-              oldIncSaved, inc,
-              CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, this );
-          } else {
-            kError() << "No IncidenceChanger set";
-          }
+
+          d->mChanger->changeIncidence(
+            oldIncSaved, inc,
+            CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, this, atomicOperationId );
+
 #ifdef AKONADI_PORT_DISABLED
   // this needs to be done when the async item adding is done and we have the real akonadi item
           Akonadi::Item item;
@@ -1187,11 +1193,8 @@ void Agenda::endItemAction()
           d->mActionItem->setIncidence( item );
           d->mActionItem->dissociateFromMultiItem();
 #endif
-          if ( d->mChanger ) {
-            d->mChanger->addIncidence( newInc, inc.parentCollection(), this );
-          } else {
-            kError() << "No IncidenceChanger set";
-          }
+          d->mChanger->addIncidence( newInc, inc.parentCollection(), this, atomicOperationId );
+
           emit enableAgendaUpdate( true );
         } else {
           KMessageBox::sorry(
@@ -1225,19 +1228,12 @@ void Agenda::endItemAction()
           item.setPayload( newInc );
           d->mActionItem->setIncidence( item );
 #endif
-          if ( d->mChanger ) {
-            d->mChanger->addIncidence( newInc, inc.parentCollection(), this );
-          } else {
-            kError() << "No IncidenceChanger set";
-          }
+          d->mChanger->addIncidence( newInc, inc.parentCollection(), this );
+
           emit enableAgendaUpdate( true );
-          if ( d->mChanger ) {
-            d->mChanger->changeIncidence(
-              oldIncSaved, inc,
-              CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE, this );
-          } else {
-            kError() << "No IncidenceChanger set";
-          }
+          d->mChanger->changeIncidence( oldIncSaved, inc,
+                                        CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE,
+                                        this );
         } else {
           KMessageBox::sorry(
             this,
@@ -1282,11 +1278,11 @@ void Agenda::endItemAction()
       // calling when we move item.
       // Not perfect need to improve it!
       //mChanger->endChange( inc );
-      emit itemModified( modif );
+      emit itemModified( modif, atomicOperationId );
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-      emit itemModified( placeItem );
+      emit itemModified( placeItem, atomicOperationId );
     }
   }
 
@@ -1296,8 +1292,6 @@ void Agenda::endItemAction()
   if ( multiModify ) {
     emit endMultiModify();
   }
-
-  kDebug() << "done";
 }
 
 void Agenda::setActionCursor( int actionType, bool acting )

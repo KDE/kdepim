@@ -654,8 +654,8 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
   connect( agenda, SIGNAL(endMultiModify()),
                    SIGNAL(endMultiModify()) );
 
-  connect( agenda, SIGNAL(itemModified(AgendaItem *)),
-                   SLOT(updateEventDates(AgendaItem *)) );
+  connect( agenda, SIGNAL(itemModified(AgendaItem *,uint)),
+                   SLOT(updateEventDates(AgendaItem *,uint)) );
   connect( agenda, SIGNAL(enableAgendaUpdate(bool)),
                    SLOT(enableAgendaUpdate(bool)) );
 
@@ -1154,7 +1154,7 @@ void AgendaView::updateTimeBarWidth()
   d->mDummyAllDayLeft->setFixedWidth( 0 );
 }
 
-void AgendaView::updateEventDates( AgendaItem *item )
+void AgendaView::updateEventDates( AgendaItem *item, uint atomicOperationId )
 {
   kDebug() << item->text()
            << "; item->cellXLeft(): " << item->cellXLeft()
@@ -1190,12 +1190,11 @@ void AgendaView::updateEventDates( AgendaItem *item )
 
   const Akonadi::Item aitem = item->incidence();
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  if ( !incidence ) {
+  if ( !incidence || !changer() ) {
+    kWarning() << "changer is " << changer() << " and incidence is " << incidence.data();
     return;
   }
-  if ( !changer() ) {
-    return;
-  }
+
   KCalCore::Incidence::Ptr oldIncidence( incidence->clone() );
 
   QTime startTime( 0, 0, 0 ), endTime( 0, 0, 0 );
@@ -1459,7 +1458,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
 
   const bool result = changer()->changeIncidence( oldIncidence, aitem,
                                                   CalendarSupport::IncidenceChanger::DATE_MODIFIED,
-                                                  this );
+                                                  this, atomicOperationId );
 
   // Update the view correctly if an agenda item move was aborted by
   // cancelling one of the subsequent dialogs.
