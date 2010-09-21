@@ -8,6 +8,7 @@ Name[pt_BR]=Contatos do KDE
 Name[sv]=KDE-kontakter
 Name[uk]=Контакти KDE
 Name[x-test]=xxKDE Contactsxx
+Name[zh_TW]=KDE 聯絡人
 Exec=kaddressbook-mobile.sh
 
 Icon=kaddressbook-mobile
