@@ -138,8 +138,9 @@ bool Groupware::handleInvitation( const QString &receiver, const QString &iCal,
       // accept counter proposal
       scheduler.acceptCounterProposal( incidence );
       // send update to all attendees
+      SendICalMessageDialogResults dialogResults;
       sendICalMessage( 0, KCalCore::iTIPRequest, incidence,
-                       IncidenceChanger::INCIDENCEEDITED, false );
+                       IncidenceChanger::INCIDENCEEDITED, false, dialogResults /*byref*/ );
     }
   } else {
     kError() << "Unknown incoming action" << action;
@@ -173,7 +174,8 @@ bool Groupware::sendICalMessage( QWidget *parent,
                                  KCalCore::iTIPMethod method,
                                  const KCalCore::Incidence::Ptr &incidence,
                                  IncidenceChanger::HowChanged action,
-                                 bool attendeeStatusChanged )
+                                 bool attendeeStatusChanged,
+                                 SendICalMessageDialogResults &dialogResults )
 {
   // If there are no attendees, don't bother
   if ( incidence->attendees().isEmpty() ) {

@@ -57,17 +57,38 @@ class CALENDARSUPPORT_EXPORT Groupware : public QObject
   Q_OBJECT
   public:
 
+    /**
+       Flags for sendICalMessage()'s dialogResults parameter.
+    */
+    enum SendICalMessageDialogResult {
+      NoDialog = 0,               /**> No dialog was presented to the user */
+      SendEmail  = 1,             /**> Regular "Do you wish to send email?" dialog, and user pressed "send". */
+      DoNotSendEmail = 2,         /**> Regular "Do you wish to send email?" dialog, and user pressed "No". */
+      NotOrganizerAbort = 4,      /**> "You are not the organizer, abort?" dialog, and user pressed "Abort" */
+      NotOrganizerConfirm = 8,    /**> "You are not the organizer, abort?" dialog, and user pressed "Continue" */
+      SendingErrorAbort = 16,     /**> "There was an error sending e-mail, abort?" dialog, and user pressed "Abort" */
+      SendingErrorDoNotSend = 32  /**> "There was an error sending e-mail, abort?" dialog, and user pressed "Do not send" */
+    };
+    Q_DECLARE_FLAGS( SendICalMessageDialogResults, SendICalMessageDialogResult )
+
     static Groupware *create( CalendarSupport::Calendar *, GroupwareUiDelegate * );
     static Groupware *instance();
 
     /** Send iCal messages after asking the user
          Returns false if the user cancels the dialog, and true if the
          user presses Yes or No.
+
+         @param dialogCode will contain user answers to all dialogs that
+                were presented. Use this information for example to see
+                if user pressed cancel so you don't call this twice on atomic
+                operations like dissociating occurrences ( which are composed
+                of an "add incidence" and a "change incidence" ).
     */
     bool sendICalMessage( QWidget *parent, KCalCore::iTIPMethod method,
                           const KCalCore::Incidence::Ptr &incidence,
                           IncidenceChanger::HowChanged action,
-                          bool attendeeStatusChanged );
+                          bool attendeeStatusChanged,
+                          SendICalMessageDialogResults &dialogResults );
 
     /**
       Send counter proposal message.

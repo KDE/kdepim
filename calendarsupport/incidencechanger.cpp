@@ -134,11 +134,13 @@ bool IncidenceChanger::Private::performChange( Change *change )
       if ( !mGroupware ) {
           kError() << "Groupware communication enabled but no groupware instance set";
       } else {
+        Groupware::SendICalMessageDialogResults dialogResults;
         success = mGroupware->sendICalMessage( change->parent,
                                                KCalCore::iTIPRequest,
                                                newinc,
                                                INCIDENCEEDITED,
-                                               attendeeStatusChanged );
+                                               attendeeStatusChanged,
+                                               dialogResults /* by ref */);
       }
     }
 
@@ -256,7 +258,8 @@ bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
       kError() << "Groupware communication enabled but no groupware instance set";
       return false;
     }
-    return d->mGroupware->sendICalMessage( parent, method, incidence, action, false );
+    Groupware::SendICalMessageDialogResults dialogResults;
+    return d->mGroupware->sendICalMessage( parent, method, incidence, action, false, dialogResults /* byref */ );
   }
   return true;
 }
@@ -529,13 +532,14 @@ void IncidenceChanger::addIncidenceFinished( KJob *j )
   }
 
   Q_ASSERT( incidence );
+  Groupware::SendICalMessageDialogResults dialogResults;
   if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
     if ( !d->mGroupware ) {
       kError() << "Groupware communication enabled but no groupware instance set";
     } else if ( !d->mGroupware->sendICalMessage(
            0, //PENDING(AKONADI_PORT) set parent, ideally the one passed in addIncidence...
            KCalCore::iTIPRequest,
-           incidence, INCIDENCEADDED, false ) ) {
+           incidence, INCIDENCEADDED, false, dialogResults /* byref */ ) ) {
       kError() << "sendIcalMessage failed.";
     }
   }

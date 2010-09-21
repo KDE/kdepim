@@ -362,8 +362,9 @@ bool CalendarAdaptor::sendGroupwareMessage( const Akonadi::Item &aitem,
     schedule( method, aitem );
     return true;
   } else if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
+    Groupware::SendICalMessageDialogResults dialogResults;
     return Groupware::instance()->sendICalMessage( mParent, method,
-                                                   incidence, action, false );
+                                                   incidence, action, false, dialogResults );
   }
   return true;
 }
