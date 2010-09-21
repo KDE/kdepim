@@ -1,3 +1,21 @@
+Tuesday, September 21st 2010
+
+Problems addressed
+------------------
+
+* kolab/issue3070: Crash in KMCommand::slotStart while replying to a mail
+* kolab/issue4103: Wish: It should be possible to minimize a creation/edit dialog of an event(rt#6005)
+* kolab/issue4125: Event with recurrence: Changing attendee of one event, changes it for every event.(rt#6029)
+* kolab/issue4383: Cannot enter a hierachy of text snippets
+* kolab/issue4479: Change used kontact plugins crash (Kontact::MainWindow::addPlugin at mainwindow.cpp:719)(rt#6193)
+* kolab/issue4530: Kolab resource viewer shows wrong name
+* kolab/issue4534: Wrong time if changing a recurring item (of an event with recurrence) by drag&drop
+* kolab/issue4536: Kontact crash in QMap<KPIM::ProgressItem*, bool>::isEmpty (rt#6205)
+* kolab/issue4537: Kontact Crash in KOrg::CellItem::placeItem (rt#6206)
+* kolab/issue4538: Fast toggling of todo complete state creates conflict (rt#6062)
+* kolab/issue4545: Kontact Crash in DwMessageComponent::partId
+
+
 Friday, September 3rd 2010
 
 Problems addressed
@@ -505,7 +523,7 @@ Friday, December 11th 2009
 Problems addressed
 ------------------
 
-* kolab/issue3985: Typos in German dialog "Ungültige E-Mail-Adresse" (rt#5898)
+* kolab/issue3985: Typos in German dialog "Ung-AC<ltige E-Mail-Adresse" (rt#5898)
 * kolab/issue3972: Event print order will be wrong, if recurring and single events are mixed. (rt#5914)
 * kolab/issue3964(partial): An attendee of an event is not informed about his role or status in the event (rt#5893)
 * kolab/issue3961: Mail attachment of a task should be persistent (rt#5915)
@@ -1073,7 +1091,7 @@ Problems addressed
 
 * kolab/issue3304 Pasting a contact opens an edit dialog.
 * kolab/issue3345 Calendar: The default status of an organizer should be accepted.
-* kolab/issue2677 Misleading german translation "Die Terminordner gehören zur Identität"
+* kolab/issue2677 Misleading german translation "Die Terminordner geh-AC6ren zur IdentitC$t"
 * kolab/issue2908 Wrong default name when renaming IMAP ressources
 * kolab/issue3219 user templates do not work, if the email has an attachment
 
