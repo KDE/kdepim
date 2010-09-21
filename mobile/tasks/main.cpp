@@ -27,6 +27,12 @@
 
 #include "mainview.h"
 
+#ifdef KCALCORE_SERIALIZER_PLUGIN_STATIC
+#include <QtPlugin>
+
+Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
+#endif
+
 using namespace IncidenceEditorNG;
 
 int main( int argc, char **argv )

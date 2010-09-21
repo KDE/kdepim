@@ -14,6 +14,10 @@ set(mobile_tasks_SRCS
   main.cpp
 )
 
+if (RUNTIME_PLUGINS_STATIC)
+  add_definitions(-DKCALCORE_SERIALIZER_PLUGIN_STATIC)
+endif (RUNTIME_PLUGINS_STATIC)
+
 kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
 if (WINCE)
   SET_TARGET_PROPERTIES(tasks-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
@@ -26,6 +30,10 @@ target_link_libraries(tasks-mobile
   kdepimmobileuicalendar
   kdepim
 )
+
+if (RUNTIME_PLUGINS_STATIC)
+  target_link_libraries(tasks-mobile akonadi_serializer_kcalcore)
+endif (RUNTIME_PLUGINS_STATIC)
 
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES tasks-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
