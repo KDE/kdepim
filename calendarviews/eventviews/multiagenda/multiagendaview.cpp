@@ -289,15 +289,15 @@ void MultiAgendaView::Private::deleteViews()
 void MultiAgendaView::Private::setupViews()
 {
   foreach ( AgendaView *agenda, mAgendaViews ) {
-    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::Id)),
-                q, SLOT(newEvent(Akonadi::Collection::Id)) );
-    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::Id,QDate)),
-                q, SLOT(newEvent(Akonadi::Collection::Id,QDate)) );
-    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::Id,QDateTime)),
-                q, SLOT(newEvent(Akonadi::Collection::Id,QDateTime)) );
+    q->connect( agenda, SIGNAL(newEventSignal()),
+                q, SIGNAL(newEventSignal()) );
+    q->connect( agenda, SIGNAL(newEventSignal(QDate)),
+                q, SIGNAL(newEventSignal(QDate)) );
+    q->connect( agenda, SIGNAL(newEventSignal(QDateTime)),
+                q, SIGNAL(newEventSignal(QDateTime)) );
     q->connect( agenda,
-                SIGNAL(newEventSignal(Akonadi::Collection::Id,QDateTime,QDateTime)),
-                q, SLOT(newEvent(Akonadi::Collection::Id,QDateTime,QDateTime)) );
+                SIGNAL(newEventSignal(QDateTime,QDateTime)),
+                q, SIGNAL(newEventSignal(QDateTime,QDateTime)) );
 
     q->connect( agenda, SIGNAL(editIncidenceSignal(Akonadi::Item)),
                 q, SIGNAL(editIncidenceSignal(Akonadi::Item)) );
@@ -452,6 +452,8 @@ void MultiAgendaView::slotClearTimeSpanSelection()
   foreach ( AgendaView *agenda, d->mAgendaViews ) {
     if ( agenda != sender() ) {
       agenda->clearTimeSpanSelection();
+    } else {
+      setCollectionId( agenda->collectionId() );
     }
   }
 }
@@ -757,26 +759,6 @@ QVector<KCheckableProxyModel *> MultiAgendaView::collectionSelectionModels() con
 QVector<QString> MultiAgendaView::customColumnTitles() const
 {
   return d->mCustomColumnTitles;
-}
-
-void MultiAgendaView::newEvent( Akonadi::Collection::Id, const QDate &date )
-{
-  emit newEventSignal( static_cast<AgendaView*>( sender() )->collectionId(), date );
-}
-
-void MultiAgendaView::newEvent( Akonadi::Collection::Id,
-                                const QDateTime &start,
-                                const QDateTime &end )
-{
-  const Akonadi::Collection::Id defaultCollectionId = static_cast<AgendaView*>( sender() )->collectionId();
-
-  if ( start.isValid() && end.isValid() ) {
-    emit newEventSignal( defaultCollectionId, start, end );
-  } else if ( start.isValid() ) {
-    emit newEventSignal( defaultCollectionId, start );
-  } else {
-    emit newEventSignal( defaultCollectionId );
-  }
 }
 
 #include "multiagendaview.moc"

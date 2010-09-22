@@ -316,7 +316,7 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
       d->mReturnPressed = true;
     } else if ( ke->type() == QEvent::KeyRelease ) {
       if ( d->mReturnPressed ) {
-        emit newEventSignal( collectionId() );
+        emit newEventSignal();
         d->mReturnPressed = false;
         return true;
       } else {
@@ -361,7 +361,7 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
                        static_cast<ushort>( ke->count() ) ) );
       if ( !d->mTypeAhead && !collectionSelection()->selectedCollections().isEmpty() ) {
         d->mTypeAhead = true;
-        emit newEventSignal( collectionId() );
+        emit newEventSignal();
       }
       return true;
     }

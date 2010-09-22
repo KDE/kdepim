@@ -87,12 +87,6 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
      */
     void collectionSelectionChanged();
 
-    void newEvent( Akonadi::Collection::Id, const QDate & );
-
-    void newEvent( Akonadi::Collection::Id,
-                   const QDateTime & = QDateTime(),
-                   const QDateTime & = QDateTime() );
-
   private slots:
     void slotSelectionChanged();
     void slotClearTimeSpanSelection();
