@@ -3,7 +3,7 @@
 
 # Change the maximum warnings that will be displayed
 # on the report page (default 50)
-set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 5000)
+set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 7500)
 
 # Warnings that will be ignored
 set(CTEST_CUSTOM_WARNING_EXCEPTION
@@ -11,6 +11,8 @@ set(CTEST_CUSTOM_WARNING_EXCEPTION
   "groupwise/soap"
   "mk4storage"
   "kresources"
+  "'Iterator' is deprecated"
+  "'ConstIterator' is deprecated"
   "'Resource' is deprecated"
   "too big, try a different debug format"
   "qlist.h.*increases required alignment of target type"
