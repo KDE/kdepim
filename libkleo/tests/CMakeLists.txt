@@ -3,6 +3,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 ########### next target ###############
 
+if ( NOT KDEPIM_ONLY_KLEO )
 set(test_keylister_SRCS test_keylister.cpp )
 
 kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
@@ -13,6 +14,7 @@ target_link_libraries(test_keylister
     ${KDE4_KDEUI_LIBS}
     ${QGPGME_LIBRARIES}
     ${QT_QTGUI_LIBRARY} )
+endif ( NOT KDEPIM_ONLY_KLEO )
 
 
 ########### next target ###############
@@ -28,11 +30,13 @@ target_link_libraries(test_keygen  kleo ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} 
 
 ########### next target ###############
 
+if ( NOT KDEPIM_ONLY_KLEO )
 set(test_keyselectiondialog_SRCS test_keyselectiondialog.cpp )
 
 kde4_add_executable(test_keyselectiondialog TEST ${test_keyselectiondialog_SRCS})
 
 target_link_libraries(test_keyselectiondialog kleo ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} )
+endif ( NOT KDEPIM_ONLY_KLEO )
 
 ########### next target ###############
 
