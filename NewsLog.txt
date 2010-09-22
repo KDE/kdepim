@@ -6,8 +6,7 @@ Problems addressed
 * kolab/issue3070: Crash in KMCommand::slotStart while replying to a mail
 * kolab/issue4103: Wish: It should be possible to minimize a creation/edit dialog of an event(rt#6005)
 * kolab/issue4125: Event with recurrence: Changing attendee of one event, changes it for every event.(rt#6029)
-* kolab/issue4383: Cannot enter a hierachy of text snippets
-* kolab/issue4479: Change used kontact plugins crash (Kontact::MainWindow::addPlugin at mainwindow.cpp:719)(rt#6193)
+* kolab/issue4383(mainly): Cannot enter a hierachy of text snippets
 * kolab/issue4530: Kolab resource viewer shows wrong name
 * kolab/issue4534: Wrong time if changing a recurring item (of an event with recurrence) by drag&drop
 * kolab/issue4536: Kontact crash in QMap<KPIM::ProgressItem*, bool>::isEmpty (rt#6205)
