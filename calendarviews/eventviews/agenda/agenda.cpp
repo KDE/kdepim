@@ -291,8 +291,8 @@ class Agenda::Private
     bool mItemMoved;
 
     // List of all Items contained in agenda
-    QList<AgendaItem*> mItems;
-    QList<AgendaItem*> mItemsToDelete;
+    QList<AgendaItem::QPtr> mItems;
+    QList<AgendaItem::QPtr> mItemsToDelete;
 
     int mOldLowerScrollValue;
     int mOldUpperScrollValue;
@@ -658,7 +658,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
                                          d->mClickedItem->itemDate() );
         }
       } else {
-        AgendaItem *item = dynamic_cast<AgendaItem *>(object);
+        AgendaItem::QPtr item = dynamic_cast<AgendaItem *>(object);
         if (item) {
           const Akonadi::Item aitem = item->incidence();
           KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
@@ -717,7 +717,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
     // avoid an offset of a few pixels. Don't ask me why...
     QPoint indicatorPos = gridToContents( contentsToGrid( viewportPos ) );
     if ( object != this ) {
-      AgendaItem *moveItem = dynamic_cast<AgendaItem *>( object );
+      AgendaItem::QPtr moveItem = dynamic_cast<AgendaItem *>( object );
       const Akonadi::Item aitem = moveItem ? moveItem->incidence() : Akonadi::Item();
       KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
       if ( incidence && !incidence->isReadOnly() ) {
@@ -728,7 +728,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
 
           if ( d->mActionType == MOVE ) {
             // show cursor at the current begin of the item
-            AgendaItem *firstItem = d->mActionItem->firstMultiItem();
+            AgendaItem::QPtr firstItem = d->mActionItem->firstMultiItem();
             if ( !firstItem ) {
               firstItem = d->mActionItem;
             }
@@ -766,7 +766,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
       selectItem( 0 );
       emit newEventSignal();
     } else {
-      AgendaItem *doubleClickedItem = dynamic_cast<AgendaItem *>( object );
+      AgendaItem::QPtr doubleClickedItem = dynamic_cast<AgendaItem *>( object );
       if ( doubleClickedItem ) {
         selectItem( doubleClickedItem );
         emit editIncidenceSignal( doubleClickedItem->incidence() );
@@ -868,7 +868,7 @@ void Agenda::endSelectAction( const QPoint &currentPos )
 
 Agenda::MouseActionType Agenda::isInResizeArea( bool horizontal,
                                                 const QPoint &pos,
-                                                AgendaItem *item )
+                                                AgendaItem::QPtr item )
 {
   if ( !item ) {
     return NOP;
@@ -999,16 +999,16 @@ void Agenda::performItemAction( const QPoint &pos )
     d->mActionItem->raise();
     if ( d->mActionType == MOVE ) {
       // Move all items belonging to a multi item
-      AgendaItem *firstItem = d->mActionItem->firstMultiItem();
+      AgendaItem::QPtr firstItem = d->mActionItem->firstMultiItem();
       if ( !firstItem ) {
         firstItem = d->mActionItem;
       }
-      AgendaItem *lastItem = d->mActionItem->lastMultiItem();
+      AgendaItem::QPtr lastItem = d->mActionItem->lastMultiItem();
       if ( !lastItem ) {
         lastItem = d->mActionItem;
       }
       QPoint deltapos = gpos - d->mEndCell;
-      AgendaItem *moveItem = firstItem;
+      AgendaItem::QPtr moveItem = firstItem;
       while ( moveItem ) {
         bool changed = false;
         if ( deltapos.x() != 0 ) {
@@ -1022,7 +1022,7 @@ void Agenda::performItemAction( const QPoint &pos )
           if ( newY < 0 ) {
             moveItem->expandTop( -moveItem->cellYTop() );
             // prepend a new item at ( x-1, rows()+newY to rows() )
-            AgendaItem *newFirst = firstItem->prevMoveItem();
+            AgendaItem::QPtr newFirst = firstItem->prevMoveItem();
             // cell's y values are first and last cell of the bar,
             // so if newY=-1, they need to be the same
             if ( newFirst ) {
@@ -1076,7 +1076,7 @@ void Agenda::performItemAction( const QPoint &pos )
           } else if ( newY >= rows() ) {
             moveItem->expandBottom( rows()-moveItem->cellYBottom() - 1 );
             // append item at ( x+1, 0 to newY-rows() )
-            AgendaItem *newLast = lastItem->nextMoveItem();
+            AgendaItem::QPtr newLast = lastItem->nextMoveItem();
             if ( newLast ) {
               newLast->setCellXY( moveItem->cellXLeft() + 1, 0, newY-rows() - 1 );
               d->mItems.append( newLast );
@@ -1251,7 +1251,7 @@ void Agenda::endItemAction()
       }
     }
 
-    AgendaItem *placeItem = d->mActionItem->firstMultiItem();
+    AgendaItem::QPtr placeItem = d->mActionItem->firstMultiItem();
     if ( !placeItem ) {
       placeItem = d->mActionItem;
     }
@@ -1259,12 +1259,13 @@ void Agenda::endItemAction()
     if ( modify ) {
       d->mActionItem->endMove();
 
-      AgendaItem *modif = placeItem;
+      AgendaItem::QPtr modif = placeItem;
 
-      QList<AgendaItem*> oldconflictItems = placeItem->conflictItems();
-      QList<AgendaItem*>::iterator it;
+      QList<AgendaItem::QPtr> oldconflictItems = placeItem->conflictItems();
+      QList<AgendaItem::QPtr>::iterator it;
       for ( it = oldconflictItems.begin(); it != oldconflictItems.end(); ++it ) {
-        placeSubCells( *it );
+        if ( *it )
+          placeSubCells( *it );
       }
       while ( placeItem ) {
         placeSubCells( placeItem );
@@ -1319,7 +1320,7 @@ void Agenda::setActionCursor( int actionType, bool acting )
 #endif
 }
 
-void Agenda::setNoActionCursor( AgendaItem *moveItem, const QPoint &pos )
+void Agenda::setNoActionCursor( AgendaItem::QPtr moveItem, const QPoint &pos )
 {
   const Akonadi::Item item = moveItem ? moveItem->incidence() : Akonadi::Item();
 
@@ -1334,7 +1335,7 @@ void Agenda::setNoActionCursor( AgendaItem *moveItem, const QPoint &pos )
 
 /** calculate the width of the column subcells of the given item
 */
-double Agenda::calcSubCellWidth( AgendaItem *item )
+double Agenda::calcSubCellWidth( AgendaItem::QPtr item )
 {
   QPoint pt, pt1;
   pt = gridToContents( QPoint( item->cellXLeft(), item->cellYTop() ) );
@@ -1350,7 +1351,7 @@ double Agenda::calcSubCellWidth( AgendaItem *item )
   return newSubCellWidth;
 }
 
-void Agenda::adjustItemPosition( AgendaItem *item )
+void Agenda::adjustItemPosition( AgendaItem::QPtr item )
 {
   if ( !item ) {
     return;
@@ -1365,7 +1366,7 @@ void Agenda::adjustItemPosition( AgendaItem *item )
   item->move( cpos.x(), cpos.y() );
 }
 
-void Agenda::placeAgendaItem( AgendaItem *item, double subCellWidth )
+void Agenda::placeAgendaItem( AgendaItem::QPtr item, double subCellWidth )
 {
   // "left" upper corner, no subcells yet, RTL layouts have right/left
   // switched, widths are negative then
@@ -1416,7 +1417,7 @@ void Agenda::placeAgendaItem( AgendaItem *item, double subCellWidth )
   cell, where other items are, which do not overlap in Y with the item to
   place, the display gets corrupted, although the corruption looks quite nice.
 */
-void Agenda::placeSubCells( AgendaItem *placeItem )
+void Agenda::placeSubCells( AgendaItem::QPtr placeItem )
 {
 #if 0
   kDebug();
@@ -1435,19 +1436,22 @@ void Agenda::placeSubCells( AgendaItem *placeItem )
 
   QList<CellItem*> cells;
   foreach ( CellItem *item, d->mItems ) {
-    cells.append( item );
+    if( item )
+      cells.append( item );
   }
 
   QList<CellItem*> items = CellItem::placeItem( cells, placeItem );
 
-  placeItem->setConflictItems( QList<AgendaItem*>() );
+  placeItem->setConflictItems( QList<AgendaItem::QPtr>() );
   double newSubCellWidth = calcSubCellWidth( placeItem );
   QList<CellItem*>::iterator it;
   for ( it = items.begin(); it != items.end(); ++it ) {
-    AgendaItem *item = static_cast<AgendaItem *>( *it );
-    placeAgendaItem( item, newSubCellWidth );
-    item->addConflictItem( placeItem );
-    placeItem->addConflictItem( item );
+    if ( *it ) {
+      AgendaItem::QPtr item = static_cast<AgendaItem* >( *it );
+      placeAgendaItem( item, newSubCellWidth );
+      item->addConflictItem( placeItem );
+      placeItem->addConflictItem( item );
+    }
   }
   if ( items.isEmpty() ) {
     placeAgendaItem( placeItem, newSubCellWidth );
@@ -1651,12 +1655,14 @@ QVector<int> Agenda::minContentsY() const
 {
   QVector<int> minArray;
   minArray.fill( timeToY( QTime( 23, 59 ) ), d->mSelectedDates.count() );
-  foreach ( AgendaItem *item, d->mItems ) {
-    int ymin = item->cellYTop();
-    int index = item->cellXLeft();
-    if ( index >= 0 && index < (int)( d->mSelectedDates.count() ) ) {
-      if ( ymin < minArray[index] && !d->mItemsToDelete.contains( item ) ) {
-        minArray[index] = ymin;
+  foreach ( AgendaItem::QPtr item, d->mItems ) {
+    if ( item ) {
+      int ymin = item->cellYTop();
+      int index = item->cellXLeft();
+      if ( index >= 0 && index < (int)( d->mSelectedDates.count() ) ) {
+        if ( ymin < minArray[index] && !d->mItemsToDelete.contains( item ) ) {
+          minArray[index] = ymin;
+        }
       }
     }
   }
@@ -1668,12 +1674,15 @@ QVector<int> Agenda::maxContentsY() const
 {
   QVector<int> maxArray;
   maxArray.fill( timeToY( QTime( 0, 0 ) ), d->mSelectedDates.count() );
-  foreach ( AgendaItem *item, d->mItems ) {
-    int ymax = item->cellYBottom();
-    int index = item->cellXLeft();
-    if ( index >= 0 && index < (int)( d->mSelectedDates.count() ) ) {
-      if ( ymax > maxArray[index] && !d->mItemsToDelete.contains( item ) ) {
-        maxArray[index] = ymax;
+  foreach ( AgendaItem::QPtr item, d->mItems ) {
+    if ( item ) {
+      int ymax = item->cellYBottom();
+
+      int index = item->cellXLeft();
+      if ( index >= 0 && index < (int)( d->mSelectedDates.count() ) ) {
+        if ( ymax > maxArray[index] && !d->mItemsToDelete.contains( item ) ) {
+          maxArray[index] = ymax;
+        }
       }
     }
   }
@@ -1692,9 +1701,9 @@ void Agenda::setStartTime( const QTime &startHour )
 /*
   Insert AgendaItem into agenda.
 */
-AgendaItem *Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
-                                int X, int YTop, int YBottom, int itemPos, int itemCount,
-                                bool isSelected )
+AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
+                                     int X, int YTop, int YBottom, int itemPos, int itemCount,
+                                     bool isSelected )
 {
   if ( d->mAllDayMode ) {
     kDebug() << "using this in all-day mode is illegal.";
@@ -1703,13 +1712,13 @@ AgendaItem *Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
 
   d->mActionType = NOP;
 
-  AgendaItem *agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence,
-                                           itemPos, itemCount, qd, isSelected, this );
+  AgendaItem::QPtr agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence,
+                                                itemPos, itemCount, qd, isSelected, this );
 
-  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
-           SLOT(removeAgendaItem(AgendaItem *)) );
-  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
-           SLOT(showAgendaItem(AgendaItem *)) );
+  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
+           SLOT(removeAgendaItem(AgendaItem::QPtr)) );
+  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
+           SLOT(showAgendaItem(AgendaItem::QPtr )) );
 
   if ( YBottom <= YTop ) {
     kDebug() << "Text:" << agendaItem->text() << " YSize<0";
@@ -1742,7 +1751,7 @@ AgendaItem *Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
 /*
   Insert all-day AgendaItem into agenda.
 */
-AgendaItem *Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDate &qd,
+AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDate &qd,
                                       int XBegin, int XEnd, bool isSelected )
 {
   if ( !d->mAllDayMode ) {
@@ -1752,12 +1761,12 @@ AgendaItem *Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDat
 
   d->mActionType = NOP;
 
-  AgendaItem *agendaItem =
+  AgendaItem::QPtr agendaItem =
     new AgendaItem( d->mEventView, d->mCalendar, incidence, 1, 1, qd, isSelected, this );
-  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
-           SLOT(removeAgendaItem(AgendaItem *)) );
-  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
-           SLOT(showAgendaItem(AgendaItem *)) );
+  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr )),
+           SLOT(removeAgendaItem(AgendaItem::QPtr )) );
+  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr )),
+           SLOT(showAgendaItem(AgendaItem::QPtr )) );
 
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );
@@ -1796,8 +1805,8 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int X
   QString newtext;
   int width = XEnd - XBegin + 1;
   int count = 0;
-  AgendaItem *current = 0;
-  QList<AgendaItem*> multiItems;
+  AgendaItem::QPtr current = 0;
+  QList<AgendaItem::QPtr> multiItems;
   int visibleCount = d->mSelectedDates.first().daysTo( d->mSelectedDates.last() );
   for ( cellX = XBegin; cellX <= XEnd; ++cellX ) {
     ++count;
@@ -1822,16 +1831,16 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int X
     }
   }
 
-  QList<AgendaItem*>::iterator it = multiItems.begin();
-  QList<AgendaItem*>::iterator e = multiItems.end();
+  QList<AgendaItem::QPtr>::iterator it = multiItems.begin();
+  QList<AgendaItem::QPtr>::iterator e = multiItems.end();
 
   if ( it != e ) { // .first asserts if the list is empty
-    AgendaItem *first = multiItems.first();
-    AgendaItem *last = multiItems.last();
-    AgendaItem *prev = 0, *next = 0;
+    AgendaItem::QPtr first = multiItems.first();
+    AgendaItem::QPtr last = multiItems.last();
+    AgendaItem::QPtr prev = 0, next = 0;
 
     while ( it != e ) {
-      AgendaItem *item = *it;
+      AgendaItem::QPtr item = *it;
       ++it;
       next = ( it == e ) ? 0 : (*it);
       if ( item ) {
@@ -1846,10 +1855,10 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int X
   marcus_bains();
 }
 
-QList<AgendaItem*> Agenda::agendaItems( const Akonadi::Item &aitem ) const
+QList<AgendaItem::QPtr> Agenda::agendaItems( const Akonadi::Item &aitem ) const
 {
-  QList<AgendaItem*> items;
-  Q_FOREACH ( AgendaItem * const item, d->mItems ) {
+  QList<AgendaItem::QPtr> items;
+  Q_FOREACH ( AgendaItem::QPtr const item, d->mItems ) {
     if ( item && item->incidence() == aitem ) {
       items.push_back( item );
     }
@@ -1862,14 +1871,14 @@ void Agenda::removeIncidence( const Akonadi::Item &incidence )
   // First find all items to be deleted and store them
   // in its own list. Otherwise removeAgendaItem will reset
   // the current position in the iterator-loop and mess the logic up.
-  const QList<AgendaItem*> itemsToRemove = agendaItems( incidence );
+  const QList<AgendaItem::QPtr> itemsToRemove = agendaItems( incidence );
 
-  foreach ( AgendaItem * const item, itemsToRemove ) {
+  foreach ( AgendaItem::QPtr  const item, itemsToRemove ) {
     removeAgendaItem( item );
   }
 }
 
-void Agenda::showAgendaItem( AgendaItem *agendaItem )
+void Agenda::showAgendaItem( AgendaItem::QPtr agendaItem )
 {
   if ( !agendaItem ) {
     return;
@@ -1887,24 +1896,26 @@ void Agenda::showAgendaItem( AgendaItem *agendaItem )
   agendaItem->show();
 }
 
-bool Agenda::removeAgendaItem( AgendaItem *item )
+bool Agenda::removeAgendaItem( AgendaItem::QPtr item )
 {
   // we found the item. Let's remove it and update the conflicts
   bool taken = false;
-  AgendaItem *thisItem = item;
-  QList<AgendaItem*> conflictItems = thisItem->conflictItems();
+  AgendaItem::QPtr thisItem = item;
+  QList<AgendaItem::QPtr> conflictItems = thisItem->conflictItems();
 //  removeChild( thisItem );
 
   taken = ( d->mItems.removeAll( thisItem ) > 0 );
 
-  QList<AgendaItem*>::iterator it;
+  QList<AgendaItem::QPtr>::iterator it;
   for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
+    if ( *it ) {
       (*it)->setSubCells( ( *it )->subCells()-1 );
+    }
   }
 
   for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
     // the item itself is also in its own conflictItems list!
-    if ( *it != thisItem ) {
+    if ( *it && *it != thisItem ) {
       placeSubCells( *it );
     }
   }
@@ -1963,16 +1974,20 @@ void Agenda::resizeEvent ( QResizeEvent *ev )
 void Agenda::resizeAllContents()
 {
   double subCellWidth;
-  AgendaItem *item;
+  AgendaItem::QPtr item;
   if ( d->mAllDayMode ) {
     foreach ( item, d->mItems ) {
-      subCellWidth = calcSubCellWidth( item );
-      placeAgendaItem( item, subCellWidth );
+      if ( item ) {
+        subCellWidth = calcSubCellWidth( item );
+        placeAgendaItem( item, subCellWidth );
+      }
     }
   } else {
     foreach ( item, d->mItems ) {
-      subCellWidth = calcSubCellWidth( item );
-      placeAgendaItem( item, subCellWidth );
+      if ( item ) {
+        subCellWidth = calcSubCellWidth( item );
+        placeAgendaItem( item, subCellWidth );
+      }
     }
   }
   checkScrollBoundaries();
@@ -2083,19 +2098,21 @@ void Agenda::deselectItem()
 
   const Akonadi::Item selectedItem = d->mSelectedItem->incidence();
 
-  foreach ( AgendaItem *item, d->mItems ) {
-    const Akonadi::Item itemInc = item->incidence();
-    if( itemInc.isValid() && selectedItem.isValid() && itemInc.id() == selectedItem.id() ) {
-      item->select( false );
+  foreach ( AgendaItem::QPtr item, d->mItems ) {
+    if ( item ) {
+      const Akonadi::Item itemInc = item->incidence();
+      if( itemInc.isValid() && selectedItem.isValid() && itemInc.id() == selectedItem.id() ) {
+        item->select( false );
+      }
     }
   }
 
   d->mSelectedItem = 0;
 }
 
-void Agenda::selectItem( AgendaItem *item )
+void Agenda::selectItem( AgendaItem::QPtr item )
 {
-  if ( (AgendaItem *)d->mSelectedItem == item ) {
+  if ( (AgendaItem::QPtr )d->mSelectedItem == item ) {
     return;
   }
   deselectItem();
@@ -2108,8 +2125,8 @@ void Agenda::selectItem( AgendaItem *item )
   Q_ASSERT( CalendarSupport::hasIncidence( d->mSelectedItem->incidence() ) );
   d->mSelectedId = d->mSelectedItem->incidence().id();
 
-  foreach ( AgendaItem *item, d->mItems ) {
-    if( item->incidence().id() == d->mSelectedId ) {
+  foreach ( AgendaItem::QPtr item, d->mItems ) {
+    if( item && item->incidence().id() == d->mSelectedId ) {
       item->select();
     }
   }
@@ -2118,8 +2135,8 @@ void Agenda::selectItem( AgendaItem *item )
 
 void Agenda::selectItemByItemId( const Akonadi::Item::Id &id )
 {
-  foreach ( AgendaItem *item, d->mItems ) {
-    if( item->incidence().id() == id ) {
+  foreach ( AgendaItem::QPtr item, d->mItems ) {
+    if ( item && item->incidence().id() == id ) {
       selectItem( item );
       break;
     }

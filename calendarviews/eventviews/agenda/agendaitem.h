@@ -30,6 +30,7 @@
 
 #include <QDate>
 #include <QWidget>
+#include <QPointer>
 
 namespace CalendarSupport {
   class Calendar;
@@ -44,10 +45,10 @@ struct MultiItemInfo
 {
   int mStartCellXLeft, mStartCellXRight;
   int mStartCellYTop, mStartCellYBottom;
-  AgendaItem *mFirstMultiItem;
-  AgendaItem *mPrevMultiItem;
-  AgendaItem *mNextMultiItem;
-  AgendaItem *mLastMultiItem;
+  QPointer<AgendaItem> mFirstMultiItem;
+  QPointer<AgendaItem> mPrevMultiItem;
+  QPointer<AgendaItem> mNextMultiItem;
+  QPointer<AgendaItem> mLastMultiItem;
 };
 
 /**
@@ -81,6 +82,8 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
 {
   Q_OBJECT
   public:
+    typedef QPointer<AgendaItem> QPtr;
+
     AgendaItem( EventView *eventView,
                 CalendarSupport::Calendar *calendar,
                 const Akonadi::Item &incidence,
@@ -134,33 +137,33 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
     void expandRight( int dx );
 
     bool isMultiItem() const;
-    AgendaItem *prevMoveItem() const
+    AgendaItem::QPtr prevMoveItem() const
     { return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : 0; }
 
-    AgendaItem *nextMoveItem() const
+    AgendaItem::QPtr nextMoveItem() const
     { return (mStartMoveInfo) ? (mStartMoveInfo->mNextMultiItem) : 0; }
 
     MultiItemInfo *moveInfo() const { return mStartMoveInfo; }
 
-    void setMultiItem( AgendaItem *first,AgendaItem *prev,
-                       AgendaItem *next, AgendaItem *last );
+    void setMultiItem( AgendaItem::QPtr first,AgendaItem::QPtr prev,
+                       AgendaItem::QPtr next, AgendaItem::QPtr last );
 
-    AgendaItem *prependMoveItem( AgendaItem * );
+    AgendaItem::QPtr prependMoveItem( AgendaItem::QPtr  );
 
-    AgendaItem *appendMoveItem( AgendaItem * );
+    AgendaItem::QPtr appendMoveItem( AgendaItem::QPtr  );
 
-    AgendaItem *removeMoveItem( AgendaItem * );
+    AgendaItem::QPtr removeMoveItem( AgendaItem::QPtr  );
 
-    AgendaItem *firstMultiItem() const
+    AgendaItem::QPtr firstMultiItem() const
     { return (mMultiItemInfo) ? (mMultiItemInfo->mFirstMultiItem) : 0; }
 
-    AgendaItem *prevMultiItem() const
+    AgendaItem::QPtr prevMultiItem() const
     { return (mMultiItemInfo) ? (mMultiItemInfo->mPrevMultiItem) : 0; }
 
-    AgendaItem *nextMultiItem() const
+    AgendaItem::QPtr nextMultiItem() const
     { return (mMultiItemInfo) ? (mMultiItemInfo->mNextMultiItem) : 0; }
 
-    AgendaItem *lastMultiItem() const
+    AgendaItem::QPtr lastMultiItem() const
     { return (mMultiItemInfo) ? (mMultiItemInfo->mLastMultiItem) : 0; }
 
     bool dissociateFromMultiItem();
@@ -175,9 +178,9 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
     void setText ( const QString &text ) { mLabelText = text; }
     QString text () { return mLabelText; }
 
-    QList<AgendaItem*> &conflictItems();
-    void setConflictItems( QList<AgendaItem*> );
-    void addConflictItem( AgendaItem *ci );
+    QList<AgendaItem::QPtr> &conflictItems();
+    void setConflictItems( QList<AgendaItem::QPtr> );
+    void addConflictItem( AgendaItem::QPtr ci );
 
     QString label() const;
 
@@ -188,8 +191,8 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
     QColor resourceColor() { return mResourceColor; }
 
   signals:
-    void removeAgendaItem( AgendaItem * );
-    void showAgendaItem( AgendaItem * );
+    void removeAgendaItem( AgendaItem::QPtr  );
+    void showAgendaItem( AgendaItem::QPtr  );
 
   public slots:
     void updateIcons();
@@ -249,7 +252,7 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
     // Multi item pointers
     MultiItemInfo *mMultiItemInfo;
 
-    QList<AgendaItem*> mConflictItems;
+    QList<AgendaItem::QPtr> mConflictItems;
 
     static QPixmap *alarmPxmp;
     static QPixmap *recurPxmp;

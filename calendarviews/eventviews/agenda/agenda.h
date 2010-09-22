@@ -26,6 +26,7 @@
 #define EVENTVIEWS_AGENDA_H
 
 #include "eventviews_export.h"
+#include "agendaitem.h"
 
 #include <Akonadi/Item>
 
@@ -112,11 +113,11 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setStartTime( const QTime &startHour );
 
-    AgendaItem *insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
-                             int YBottom, int itemPos, int itemCount, bool isSelected );
+    AgendaItem::QPtr insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
+                                  int YBottom, int itemPos, int itemCount, bool isSelected );
 
-    AgendaItem *insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
-                                   int XEnd, bool isSelected );
+    AgendaItem::QPtr insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
+                                        int XEnd, bool isSelected );
 
     void insertMultiItem ( const Akonadi::Item &event, const QDate &qd, int XBegin, int XEnd,
                            int YTop, int YBottom, bool isSelected );
@@ -154,7 +155,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
-    QList<AgendaItem*> agendaItems( const Akonadi::Item &item ) const;
+    QList<AgendaItem::QPtr> agendaItems( const Akonadi::Item &item ) const;
 
   public Q_SLOTS:
     void scrollUp();
@@ -172,7 +173,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
       deselected. This function emits the itemSelected(bool) signal to inform
       about selection/deselection of events.
     */
-    void selectItem( AgendaItem * );
+    void selectItem( AgendaItem::QPtr  );
 
     /**
       Selects the item associated with a given Akonadi Item id.
@@ -183,8 +184,8 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void selectItemByItemId( const Akonadi::Item::Id &id );
     void selectItem( const Akonadi::Item &item );
 
-    bool removeAgendaItem( AgendaItem *item );
-    void showAgendaItem( AgendaItem *item );
+    bool removeAgendaItem( AgendaItem::QPtr item );
+    void showAgendaItem( AgendaItem::QPtr item );
 
   Q_SIGNALS:
     void newEventSignal();
@@ -199,7 +200,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void showNewEventPopupSignal();
 
     // If the incidence is multi-day, item is the first one
-    void itemModified( AgendaItem *item, uint atomicOperationId );
+    void itemModified( AgendaItem::QPtr item, uint atomicOperationId );
 
     void incidenceSelected( const Akonadi::Item &, const QDate & );
     void startMultiModify( const QString & );
@@ -264,7 +265,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
         @param pos The current mouse position
         @param item The affected item
     */
-    MouseActionType isInResizeArea( bool horizontal, const QPoint &pos, AgendaItem *item );
+    MouseActionType isInResizeArea( bool horizontal, const QPoint &pos, AgendaItem::QPtr item );
     /** Return whether the cell specified by the grid point belongs to the current select
     */
     bool ptInSelection( const QPoint &gpos ) const;
@@ -288,7 +289,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void endItemAction();
 
     /** Set cursor, when no item action is in progress */
-    void setNoActionCursor( AgendaItem *moveItem, const QPoint &viewportPos );
+    void setNoActionCursor( AgendaItem::QPtr moveItem, const QPoint &viewportPos );
     /** Sets the cursor according to the given action type.
         @param actionType The type of action for which the cursor should be set.
         @param acting If true, the corresponding action is running (e.g. the
@@ -298,13 +299,13 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void setActionCursor( int actionType, bool acting=false );
 
     /** calculate the width of the column subcells of the given item */
-    double calcSubCellWidth( AgendaItem *item );
+    double calcSubCellWidth( AgendaItem::QPtr item );
     /** Move and resize the given item to the correct position */
-    void placeAgendaItem( AgendaItem *item, double subCellWidth );
+    void placeAgendaItem( AgendaItem::QPtr item, double subCellWidth );
     /** Place agenda item in agenda and adjust other cells if necessary */
-    void placeSubCells( AgendaItem *placeItem );
+    void placeSubCells( AgendaItem::QPtr placeItem );
     /** Place the agenda item at the correct position (ignoring conflicting items) */
-    void adjustItemPosition( AgendaItem *item );
+    void adjustItemPosition( AgendaItem::QPtr item );
 
     /** Process the keyevent, including the ignored keyevents of eventwidgets.
      * Implements pgup/pgdn and cursor key navigation in the view.
