@@ -214,7 +214,7 @@ void KMAcctImap::ignoreJobsForMessage( KMMessage* msg )
   for ( it = mImapJobList.constBegin(); it != mImapJobList.constEnd() && (*it); ++it )
   {
     ImapJob *job = (*it);
-    if ( job->msgList().first() == msg )
+    if ( !job->msgList().isEmpty() && job->msgList().first() == msg )
     {
       job->kill();
     }
