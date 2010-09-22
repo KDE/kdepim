@@ -192,10 +192,10 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
            SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)) );
 
   connect( d->scene, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-           this, SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
+           SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
 
-  connect( d->scene, SIGNAL(newEventSignal(Akonadi::Collection::List)),
-           this, SIGNAL(newEventSignal(Akonadi::Collection::List)) );
+  connect( d->scene, SIGNAL(newEventSignal()),
+           SIGNAL(newEventSignal()) );
 
   connect( d->scene, SIGNAL(showNewEventPopupSignal()),
            SIGNAL(showNewEventPopupSignal()) );

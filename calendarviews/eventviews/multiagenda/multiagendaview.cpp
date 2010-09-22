@@ -289,8 +289,16 @@ void MultiAgendaView::Private::deleteViews()
 void MultiAgendaView::Private::setupViews()
 {
   foreach ( AgendaView *agenda, mAgendaViews ) {
-    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::List)),
-                q, SIGNAL(newEventSignal(Akonadi::Collection::List)) );
+    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::Id)),
+                q, SLOT(newEvent(Akonadi::Collection::Id)) );
+    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::Id,QDate)),
+                q, SLOT(newEvent(Akonadi::Collection::Id,QDate)) );
+    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::Id,QDateTime)),
+                q, SLOT(newEvent(Akonadi::Collection::Id,QDateTime)) );
+    q->connect( agenda,
+                SIGNAL(newEventSignal(Akonadi::Collection::Id,QDateTime,QDateTime)),
+                q, SLOT(newEvent(Akonadi::Collection::Id,QDateTime,QDateTime)) );
+
     q->connect( agenda, SIGNAL(editIncidenceSignal(Akonadi::Item)),
                 q, SIGNAL(editIncidenceSignal(Akonadi::Item)) );
     q->connect( agenda, SIGNAL(showIncidenceSignal(Akonadi::Item)),
@@ -315,14 +323,6 @@ void MultiAgendaView::Private::setupViews()
                 q, SIGNAL(toggleAlarmSignal(Akonadi::Item)) );
     q->connect( agenda, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate) ),
                 q, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
-
-    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::List,QDate)),
-                q, SIGNAL(newEventSignal(Akonadi::Collection::List,QDate)) );
-    q->connect( agenda, SIGNAL(newEventSignal(Akonadi::Collection::List,QDateTime)),
-                q, SIGNAL(newEventSignal(Akonadi::Collection::List,QDateTime)) );
-    q->connect( agenda,
-                SIGNAL(newEventSignal(Akonadi::Collection::List,QDateTime,QDateTime)),
-                q, SIGNAL(newEventSignal(Akonadi::Collection::List,QDateTime,QDateTime)) );
 
     q->connect( agenda, SIGNAL(newTodoSignal(QDate)),
                 q, SIGNAL(newTodoSignal(QDate)) );
@@ -679,7 +679,7 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
 
     // Keep track of selection.
     QItemSelectionModel *qsm = new QItemSelectionModel( columnFilterProxy );
-    
+
     // Make the model checkable.
     KCheckableProxyModel *checkableProxy = new KCheckableProxyModel( this );
     checkableProxy->setSourceModel( columnFilterProxy );
@@ -688,7 +688,7 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
     const KConfigGroup g = configGroup.config()->group( configGroup.name()
                                                         + "_subView_"
                                                         + QByteArray::number( i ) );
-    
+
     CalendarSupport::EntityModelStateSaver *saver =
       new CalendarSupport::EntityModelStateSaver( checkableProxy, checkableProxy );
     saver->addRole( Qt::CheckStateRole, "CheckState" );
@@ -757,6 +757,26 @@ QVector<KCheckableProxyModel *> MultiAgendaView::collectionSelectionModels() con
 QVector<QString> MultiAgendaView::customColumnTitles() const
 {
   return d->mCustomColumnTitles;
+}
+
+void MultiAgendaView::newEvent( Akonadi::Collection::Id, const QDate &date )
+{
+  emit newEventSignal( static_cast<AgendaView*>( sender() )->collectionId(), date );
+}
+
+void MultiAgendaView::newEvent( Akonadi::Collection::Id,
+                                const QDateTime &start,
+                                const QDateTime &end )
+{
+  const Akonadi::Collection::Id defaultCollectionId = static_cast<AgendaView*>( sender() )->collectionId();
+
+  if ( start.isValid() && end.isValid() ) {
+    emit newEventSignal( defaultCollectionId, start, end );
+  } else if ( start.isValid() ) {
+    emit newEventSignal( defaultCollectionId, start );
+  } else {
+    emit newEventSignal( defaultCollectionId );
+  }
 }
 
 #include "multiagendaview.moc"

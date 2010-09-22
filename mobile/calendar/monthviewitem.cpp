@@ -29,7 +29,7 @@ using namespace EventViews;
 MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
   : DeclarativeAkonadiItem( parent )
   , mView( new MonthView( MonthView::Hidden ) )
-{  
+{
   // start with the oxygen palette (which is not necessarily the default on all platforms)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
   mView->setPalette( pal );
@@ -39,7 +39,7 @@ MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
            mView, SLOT(moveBackMonth()) );
   connect( this, SIGNAL(nextItemRequest()),
            mView, SLOT(moveFwdMonth()) );
-  connect( mView, SIGNAL(newEventSignal(Akonadi::Collection::List)),
+  connect( mView, SIGNAL(newEventSignal(Akonadi::Collection::Id)),
            SLOT(emitDateClicked()));
   connect( mView, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
            SLOT(emitItemSelected(Akonadi::Item, QDate)) );

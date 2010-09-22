@@ -632,10 +632,7 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 
   agenda->setCalendar( calendar() );
 
-  // Create/Show/Edit/Delete Event
-  // Is the newEventSignal even emitted? It doesn't seem to reach handleNewEventRequest()
-  // at least.
-  connect( agenda, SIGNAL(newEventSignal()), SLOT(handleNewEventRequest()) );
+  connect( agenda, SIGNAL(newEventSignal()), SIGNAL(newEventSignal()) );
 
   connect( agenda, SIGNAL(newStartSelectSignal()),
            otherAgenda, SLOT(clearSelection()) );
@@ -1917,11 +1914,6 @@ void AgendaView::newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &e
 {
   newTimeSpanSelected( start, end );
   d->mTimeSpanInAllDay = true;
-}
-
-void AgendaView::handleNewEventRequest()
-{
-  emit newEventSignal( Akonadi::Collection::List() << Akonadi::Collection( collectionId() ) );
 }
 
 void AgendaView::newTimeSpanSelected( const QPoint &start, const QPoint &end )

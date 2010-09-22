@@ -493,7 +493,7 @@ void MonthScene::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent *mouseEvent )
       }
     }
   } else {
-    emit newEventSignal( Akonadi::Collection::List() );
+    emit newEventSignal();
   }
 }
 

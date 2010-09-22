@@ -23,6 +23,8 @@
 
 #include "eventview.h"
 
+#include <QDateTime>
+
 namespace EventViews {
 
 class ConfigDialogInterface;
@@ -84,6 +86,12 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
      * Reimplemented from KOrg::BaseView
      */
     void collectionSelectionChanged();
+
+    void newEvent( Akonadi::Collection::Id, const QDate & );
+
+    void newEvent( Akonadi::Collection::Id,
+                   const QDateTime & = QDateTime(),
+                   const QDateTime & = QDateTime() );
 
   private slots:
     void slotSelectionChanged();

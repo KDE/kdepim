@@ -40,7 +40,6 @@
 
 #include <KCalCore/Incidence>
 #include <KCalCore/Todo>
-using namespace KCalCore;
 
 #include <KCalUtils/RecurrenceActions>
 
@@ -53,6 +52,7 @@ using namespace KCalCore;
 #include <QKeyEvent>
 #include <QSortFilterProxyModel>
 
+using namespace KCalCore;
 using namespace EventViews;
 using namespace Future;
 
@@ -316,12 +316,7 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
       d->mReturnPressed = true;
     } else if ( ke->type() == QEvent::KeyRelease ) {
       if ( d->mReturnPressed ) {
-        if ( collectionId() >= 0 ) {
-          emit newEventSignal(
-            Akonadi::Collection::List() << Akonadi::Collection( collectionId() ) );
-        } else {
-          emit newEventSignal( collectionSelection()->selectedCollections() );
-        }
+        emit newEventSignal( collectionId() );
         d->mReturnPressed = false;
         return true;
       } else {
@@ -366,12 +361,7 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
                        static_cast<ushort>( ke->count() ) ) );
       if ( !d->mTypeAhead && !collectionSelection()->selectedCollections().isEmpty() ) {
         d->mTypeAhead = true;
-        if ( collectionId() >= 0 ) {
-          emit newEventSignal(
-            Akonadi::Collection::List() << Akonadi::Collection( collectionId() ) );
-        } else {
-          emit newEventSignal( collectionSelection()->selectedCollections() );
-        }
+        emit newEventSignal( collectionId() );
       }
       return true;
     }

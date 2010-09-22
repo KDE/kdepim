@@ -223,8 +223,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     /** Updates data for selected timespan for all day event*/
     void newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &end );
 
-    void handleNewEventRequest();
-
     void updateDayLabelSizes();
 
     void alignAgendas();
