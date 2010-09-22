@@ -275,9 +275,11 @@ private:
     void slotPageStringFilterChanged( const QString & filter );
     void slotPageHierarchyChanged( bool on );
 
+#ifndef QT_NO_INPUTDIALOG
     void slotRenameCurrentTab() {
         renamePage( currentPage() );
     }
+#endif // QT_NO_INPUTDIALOG
     void slotNewTab();
     void slotDuplicateCurrentTab() {
         duplicatePage( currentPage() );
@@ -301,7 +303,9 @@ private:
         collapseAll( currentPage() );
     }
 
+#ifndef QT_NO_INPUTDIALOG
     void renamePage( Page * page );
+#endif
     void duplicatePage( Page * page );
     void closePage( Page * page );
     void movePageLeft( Page * page );
@@ -450,8 +454,10 @@ void TabWidget::Private::slotContextMenu( QWidget * w, const QPoint & p ) {
     if ( contextMenuPage == current || action == newAction )
         return; // performed through signal/slot connections...
 
+#ifndef QT_NO_INPUTDIALOG
     if ( action == otherPageActions[Rename] )
         renamePage( contextMenuPage );
+#endif // QT_NO_INPUTDIALOG
     else if ( action == otherPageActions[Duplicate] )
         duplicatePage( contextMenuPage );
     else if ( action == otherPageActions[Close] )
@@ -522,6 +528,7 @@ void TabWidget::Private::slotNewTab() {
     tabWidget.setCurrentIndex( tabWidget.count()-1 );
 }
 
+#ifndef QT_NO_INPUTDIALOG
 void TabWidget::Private::renamePage( Page * page ) {
     if ( !page )
         return;
@@ -531,6 +538,7 @@ void TabWidget::Private::renamePage( Page * page ) {
         return;
     page->setTitle( text );
 }
+#endif
 
 void TabWidget::Private::duplicatePage( Page * page ) {
     if ( !page )
