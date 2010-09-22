@@ -57,35 +57,35 @@ static void update( const QString & fname, const QString & id ) {
         (*dir_id_2_dir_map())[ id ] = QFileInfo( fname ).absolutePath();
 }
 
-QString FileDialog::getExistingDirectory( QWidget * parent, const QString & caption, const QString & dirID, QFileDialog::Options options ) {
-    const QString fname = QFileDialog::getExistingDirectory( parent, caption, dir( dirID ), options );
+QString FileDialog::getExistingDirectory( QWidget * parent, const QString & caption, const QString & dirID ) {
+    const QString fname = QFileDialog::getExistingDirectory( parent, caption, dir( dirID ) );
     update( fname, dirID );
     return fname;
 }
 
-QString FileDialog::getOpenFileName( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter, QFileDialog::Options options ) {
-    const QString fname = QFileDialog::getOpenFileName( parent, caption, dir( dirID ), filter, selectedFilter, options );
+QString FileDialog::getOpenFileName( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter ) {
+    const QString fname = QFileDialog::getOpenFileName( parent, caption, dir( dirID ), filter, selectedFilter );
     update( fname, dirID );
     return fname;
 }
 
-QStringList FileDialog::getOpenFileNames( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter, QFileDialog::Options options ) {
-    const QStringList files = QFileDialog::getOpenFileNames( parent, caption, dir( dirID ), filter, selectedFilter, options );
+QStringList FileDialog::getOpenFileNames( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter ) {
+    const QStringList files = QFileDialog::getOpenFileNames( parent, caption, dir( dirID ), filter, selectedFilter );
     if ( !files.empty() )
         update( files.front(), dirID );
     return files;
 }
 
-QString FileDialog::getSaveFileName( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter, QFileDialog::Options options ) {
-    const QString fname = QFileDialog::getSaveFileName( parent, caption, dir( dirID ), filter, selectedFilter, options );
+QString FileDialog::getSaveFileName( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter ) {
+    const QString fname = QFileDialog::getSaveFileName( parent, caption, dir( dirID ), filter, selectedFilter );
     update( fname, dirID );
     return fname;
 }
 
-QString FileDialog::getSaveFileNameEx( QWidget * parent, const QString & caption, const QString & dirID, const QString & proposedFileName, const QString & filter, QString * selectedFilter, QFileDialog::Options options ) {
+QString FileDialog::getSaveFileNameEx( QWidget * parent, const QString & caption, const QString & dirID, const QString & proposedFileName, const QString & filter, QString * selectedFilter ) {
     if ( proposedFileName.isEmpty() )
-        return getSaveFileName( parent, caption, dirID, filter, selectedFilter, options );
-    const QString fname = QFileDialog::getSaveFileName( parent, caption, QDir( dir( dirID ) ).filePath( proposedFileName ), filter, selectedFilter, options );
+        return getSaveFileName( parent, caption, dirID, filter, selectedFilter );
+    const QString fname = QFileDialog::getSaveFileName( parent, caption, QDir( dir( dirID ) ).filePath( proposedFileName ), filter, selectedFilter );
     update( fname, dirID );
     return fname;
 }
