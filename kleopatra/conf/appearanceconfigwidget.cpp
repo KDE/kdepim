@@ -313,9 +313,18 @@ public:
         connect( dnOrderWidget, SIGNAL(changed()), q, SIGNAL(changed()) );
 
         connect( iconButton, SIGNAL(clicked()), q, SLOT(slotIconClicked()) );
+#ifndef QT_NO_COLORDIALOG
         connect( foregroundButton, SIGNAL(clicked()), q, SLOT(slotForegroundClicked()) );
         connect( backgroundButton, SIGNAL(clicked()), q, SLOT(slotBackgroundClicked()) );
+#else
+        foregroundButton->hide();
+        backgroundButton->hide();
+#endif
+#ifndef QT_NO_FONTDIALOG
         connect( fontButton, SIGNAL(clicked()), q, SLOT(slotFontClicked()) );
+#else
+        fontButton->hide();
+#endif
         connect( categoriesLV, SIGNAL(itemSelectionChanged()), q, SLOT(slotSelectionChanged()) );
         connect( defaultLookPB, SIGNAL(clicked()), q, SLOT(slotDefaultClicked()) );
         connect( italicCB, SIGNAL(toggled(bool)), q, SLOT(slotItalicToggled(bool)) );
@@ -332,9 +341,13 @@ private:
 
 private:
     void slotIconClicked();
+#ifndef QT_NO_COLORDIALOG
     void slotForegroundClicked();
     void slotBackgroundClicked();
+#endif
+#ifndef QT_NO_FONTDIALOG
     void slotFontClicked();
+#endif
     void slotSelectionChanged();
     void slotDefaultClicked();
     void slotItalicToggled(bool);
@@ -368,9 +381,13 @@ QListWidgetItem * AppearanceConfigWidget::Private::selectedItem() const {
 
 void AppearanceConfigWidget::Private::enableDisableActions( QListWidgetItem * item ) {
     kiosk_enable( iconButton, item, MayChangeIconRole );
+#ifndef QT_NO_COLORDIALOG
     kiosk_enable( foregroundButton, item, MayChangeForegroundRole );
     kiosk_enable( backgroundButton, item, MayChangeBackgroundRole );
+#endif
+#ifndef QT_NO_FONTDIALOG
     kiosk_enable( fontButton, item, MayChangeFontRole );
+#endif
     kiosk_enable( italicCB, item, MayChangeItalicRole );
     kiosk_enable( boldCB, item, MayChangeBoldRole );
     kiosk_enable( strikeoutCB, item, MayChangeStrikeOutRole );
@@ -480,6 +497,7 @@ void AppearanceConfigWidget::Private::slotIconClicked() {
     emit q->changed();
 }
 
+#ifndef QT_NO_COLORDIALOG
 void AppearanceConfigWidget::Private::slotForegroundClicked() {
     QListWidgetItem * const item = selectedItem();
     if ( !item )
@@ -511,7 +529,9 @@ void AppearanceConfigWidget::Private::slotBackgroundClicked() {
         emit q->changed();
     }
 }
+#endif // QT_NO_COLORDIALOG
 
+#ifndef QT_NO_FONTDIALOG
 void AppearanceConfigWidget::Private::slotFontClicked() {
     QListWidgetItem * const item = selectedItem();
     if ( !item )
@@ -538,6 +558,7 @@ void AppearanceConfigWidget::Private::slotFontClicked() {
     item->setData( HasFontRole, true );
     emit q->changed();
 }
+#endif // QT_NO_FONTDIALOG
 
 void AppearanceConfigWidget::Private::slotItalicToggled( bool on ) {
     set_italic( selectedItem(), on );
