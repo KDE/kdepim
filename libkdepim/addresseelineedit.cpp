@@ -1088,9 +1088,6 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
     }
 
     if ( ke->key() == Key_Up ) {
-      if ( e->type() != QEvent::KeyRelease ) {
-        return true;
-      }
       //kdDebug() << "EVENTFILTER: Key_Up currentIndex=" << currentIndex << endl;
       // figure out if the item we would be moving to is one we want
       // to ignore. If so, go one further
@@ -1103,22 +1100,19 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
           completionBox()->setCurrentItem( itemAbove->prev() );
           completionBox()->setSelected( currentIndex - 1, true );
         } else if ( currentIndex == 0 ) {
-          // nothing to skip to, let's stay where we are, but make sure the
-          // first header becomes visible, if we are the first real entry
-          completionBox()->ensureVisible( 0, 0 );
-          //Kolab issue 2941: be sure to add email even if it's the only element.
-          if ( itemIsHeader( completionBox()->item( currentIndex ) ) ) {
-            currentIndex++;
-          }
-          completionBox()->setCurrentItem( itemAbove );
-          completionBox()->setSelected( currentIndex, true );
+            // nothing to skip to, let's stay where we are, but make sure the
+            // first header becomes visible, if we are the first real entry
+            completionBox()->ensureVisible( 0, 0 );
+            //Kolab issue 2941: be sure to add email even if it's the only element.
+            if ( itemIsHeader( completionBox()->item( currentIndex ) ) ) {
+              currentIndex++;
+            }
+            completionBox()->setCurrentItem( itemAbove );
+            completionBox()->setSelected( currentIndex, true );
         }
-      }
-      return true;
-    } else if ( ke->key() == Key_Down  ) {
-      if ( e->type() != QEvent::KeyRelease ) {
         return true;
       }
+    } else if ( ke->key() == Key_Down  ) {
       // same strategy for downwards
       //kdDebug() << "EVENTFILTER: Key_Down. currentIndex=" << currentIndex << endl;
       QListBoxItem *itemBelow = completionBox()->item( currentIndex );
@@ -1136,7 +1130,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       }
       // special case of the last and only item in the list needing selection
       if ( !itemBelow && currentIndex == 1 ) {
-       completionBox()->setSelected( currentIndex, true );
+        completionBox()->setSelected( currentIndex, true );
       }
       // special case of the initial selection, which is unfortunately a header.
       // Setting it to selected tricks KCompletionBox into not treating is special
@@ -1144,8 +1138,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       QListBoxItem *item = completionBox()->item( currentIndex );
       if ( item && itemIsHeader(item) ) {
         completionBox()->setSelected( currentIndex, true );
-      }
-      return true;
+       }
     } else if ( e->type() == QEvent::KeyRelease &&
                 ( ke->key() == Key_Tab || ke->key() == Key_Backtab ) ) {
       //kdDebug() << "EVENTFILTER: Key_Tab. currentIndex=" << currentIndex << endl;
