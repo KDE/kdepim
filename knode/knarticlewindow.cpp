@@ -93,7 +93,7 @@ bool ArticleWindow::raiseWindowForArticle( const QByteArray &mid )
 ArticleWindow::ArticleWindow( KNArticle *art )
   : KXmlGuiWindow( 0 )
 {
-  setObjectName( "articleWindow" );
+  setObjectName( QLatin1String( "articleWindow" ) );
   if ( knGlobals.componentData().isValid() )
     setComponentData( knGlobals.componentData() );
 

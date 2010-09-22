@@ -660,7 +660,7 @@ KNode::AppearanceWidget::AppearanceWidget( const KComponentData &inst, QWidget *
   connect( mColorList, SIGNAL( itemSelectionChanged() ), SLOT( slotColSelectionChanged() ) );
 
   c_olorCB = new QCheckBox(i18n("&Use custom colors"),this);
-  c_olorCB->setObjectName( "kcfg_useCustomColors" );
+  c_olorCB->setObjectName( QLatin1String( "kcfg_useCustomColors" ) );
   topL->addWidget( c_olorCB, 0, 0, 1, 3 );
   connect(c_olorCB, SIGNAL(toggled(bool)), this, SLOT(slotColCheckBoxToggled(bool)));
 
@@ -675,7 +675,7 @@ KNode::AppearanceWidget::AppearanceWidget( const KComponentData &inst, QWidget *
   connect( mFontList, SIGNAL( itemSelectionChanged() ), SLOT( slotFontSelectionChanged() ) );
 
   f_ontCB = new QCheckBox(i18n("Use custom &fonts"),this);
-  f_ontCB->setObjectName( "kcfg_useCustomFonts" );
+  f_ontCB->setObjectName( QLatin1String( "kcfg_useCustomFonts" ) );
   topL->addWidget(f_ontCB , 4, 0, 1, 3 );
   connect(f_ontCB, SIGNAL(toggled(bool)), this, SLOT(slotFontCheckBoxToggled(bool)));
 
@@ -1232,14 +1232,14 @@ KNode::ScoringWidget::ScoringWidget( const KComponentData &inst, QWidget *parent
   topL->addItem( new QSpacerItem( 0, 10), 1, 0 );
 
   mIgnored = new KIntSpinBox( -100000, 100000, 1, 0, this );
-  mIgnored->setObjectName( "kcfg_ignoredThreshold" );
+  mIgnored->setObjectName( QLatin1String( "kcfg_ignoredThreshold" ) );
   QLabel *l = new QLabel( i18n("Default score for &ignored threads:"), this );
   l->setBuddy( mIgnored );
   topL->addWidget(l, 2, 0);
   topL->addWidget( mIgnored, 2, 1 );
 
   mWatched = new KIntSpinBox( -100000, 100000, 1, 0, this );
-  mWatched->setObjectName( "kcfg_watchedThreshold" );
+  mWatched->setObjectName( QLatin1String( "kcfg_watchedThreshold" ) );
   l = new QLabel( i18n("Default score for &watched threads:"), this );
   l->setBuddy( mWatched );
   topL->addWidget(l, 3, 0);
@@ -1723,7 +1723,7 @@ KNode::PrivacyWidget::PrivacyWidget( const KComponentData &inst,QWidget *parent 
   QBoxLayout *topLayout = new QVBoxLayout(this);
   topLayout->setSpacing(5);
   c_onf = new Kpgp::Config( this, false );
-  c_onf->setObjectName( "knode pgp config" );
+  c_onf->setObjectName( QLatin1String( "knode pgp config" ) );
   topLayout->addWidget(c_onf);
   connect(c_onf, SIGNAL(changed()), SLOT(changed()));
 

@@ -108,9 +108,9 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
 
   // splitters
   mPrimarySplitter = new QSplitter( Qt::Horizontal, this );
-  mPrimarySplitter->setObjectName( "mPrimarySplitter" );
+  mPrimarySplitter->setObjectName( QLatin1String( "mPrimarySplitter" ) );
   mSecondSplitter = new QSplitter( Qt::Vertical, mPrimarySplitter );
-  mSecondSplitter->setObjectName( "mSecondSplitter" );
+  mSecondSplitter->setObjectName( QLatin1String( "mSecondSplitter" ) );
 
   //article view
   mArticleViewer = new ArticleWidget( mPrimarySplitter, knGlobals.guiClient, actionCollection(), true/*main viewer*/ );
@@ -139,7 +139,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
 
   q_uicksearch = new KToolBar( dummy );
   QLabel *lbl = new QLabel(i18n("&Search:"),dummy);
-  lbl->setObjectName("kde toolbar widget");
+  lbl->setObjectName( QLatin1String("kde toolbar widget" ));
   q_uicksearch->addWidget( lbl );
   s_earchLineEdit = new K3ListViewSearchLine( q_uicksearch, h_drView );
   q_uicksearch->addWidget( s_earchLineEdit );
@@ -1940,7 +1940,7 @@ void KNMainWidget::slotFetchArticleWithID()
     return;
 
   FetchArticleIdDlg *dlg = new FetchArticleIdDlg( this );
-  dlg->setObjectName( "messageid" );
+  dlg->setObjectName( QLatin1String( "messageid" ) );
 
   if (dlg->exec()) {
     QString id = dlg->messageId().simplified();

@@ -49,7 +49,7 @@ void KNConfigManager::configure()
 {
   if(!d_ialog) {
     d_ialog = new KNConfigDialog( knGlobals.topWidget );
-    d_ialog->setObjectName( "Preferences_Dlg" );
+    d_ialog->setObjectName( QLatin1String( "Preferences_Dlg" ) );
     connect(d_ialog, SIGNAL(finished()), this, SLOT(slotDialogDone()));
     d_ialog->show();
   }

@@ -178,7 +178,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
       e_ditorTempfile(0), a_ttChanged(false),
       mFirstEdit( firstEdit )
 {
-  setObjectName( "composerWindow" );
+  setObjectName( QLatin1String( "composerWindow" ) );
     mSpellingFilter = 0;
     spellLineEdit = false;
 
