@@ -131,8 +131,10 @@ void KeyGenerator::slotStartKeyGeneration() {
   const GpgME::Error err = job->start( params );
   if ( err )
     showError( err );
+#ifndef LIBKLEO_NO_PROGRESSDIALOG
   else
     (void)new Kleo::ProgressDialog( job, "Generating key", this );
+#endif
 }
 
 void KeyGenerator::showError( const GpgME::Error & err ) {

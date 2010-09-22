@@ -636,8 +636,10 @@ void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend::P
   if ( err )
     return showKeyListError( this, err );
 
+#ifndef LIBKLEO_NO_PROGRESSDIALOG
   // FIXME: create a MultiProgressDialog:
   (void)new ProgressDialog( job, validate ? i18n( "Checking selected keys..." ) : i18n( "Fetching keys..." ), this );
+#endif
   ++mListJobCount;
 }
 

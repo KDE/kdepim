@@ -35,6 +35,9 @@
 
 #include "kleo/kleo_export.h"
 #include <QtGui/QProgressDialog>
+
+#ifndef QT_NO_PROGRESSDIALOG
+
 #include <QtCore/QString>
 namespace Kleo {
 
@@ -62,5 +65,11 @@ namespace Kleo {
   };
 
 }
+
+#else
+# ifndef LIBKLEO_NO_PROGRESSDIALOG
+#  define LIBKLEO_NO_PROGRESSDIALOG
+# endif
+#endif // QT_NO_PROGRESSDIALOG
 
 #endif // __KLEO_PROGRESSDIALOG_H__

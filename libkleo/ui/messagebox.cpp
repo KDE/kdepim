@@ -62,13 +62,17 @@ using namespace GpgME;
 
 namespace {
 
+#ifndef QT_NO_FILEDIALOG
 static KGuiItem KGuiItem_save() {
     return KGuiItem( i18n("&Save to Disk..."), "document-save-as" );
 }
+#endif
 
+#ifndef QT_NO_CLIPBOARD
 static KGuiItem KGuiItem_copy() {
     return KGuiItem( i18n("&Copy to Clipboard"), "edit-copy", i18n("Copy Audit Log to Clipboard") );
 }
+#endif
 
 static KGuiItem KGuiItem_showAuditLog() {
     return KGuiItem( i18n("&Show Audit Log") ); // "view_log"?
@@ -82,10 +86,21 @@ AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::Windo
       m_textEdit( new QTextEdit( this ) )
 {
     setCaption( i18n("View GnuPG Audit Log") );
-    setButtons( Close|User1|User2 );
+    setButtons( Close
+#ifndef QT_NO_FILEDIALOG
+                |User1
+#endif
+#ifndef QT_NO_CLIPBOARD
+                |User2
+#endif
+                );
     setDefaultButton( Close );
+#ifndef QT_NO_FILEDIALOG
     setButtonGuiItem( User1, KGuiItem_save() );
+#endif
+#ifndef QT_NO_CLIPBOARD
     setButtonGuiItem( User2, KGuiItem_copy() );
+#endif
     showButtonSeparator( false );
     setModal( false );
     setMainWidget( m_textEdit );
@@ -93,8 +108,12 @@ AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::Windo
     m_textEdit->setReadOnly( true );
     setAuditLog( log );
 
+#ifndef QT_NO_FILEDIALOG
     connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
+#endif
+#ifndef QT_NO_CLIPBOARD
     connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
+#endif
 }
 
 AuditLogViewer::~AuditLogViewer() {}
@@ -106,6 +125,7 @@ void AuditLogViewer::setAuditLog( const QString & log ) {
   m_textEdit->setHtml( "<qt>" + log + "</qt>" );
 }
 
+#ifndef QT_NO_FILEDIALOG
 void AuditLogViewer::slotUser1() {
 #ifndef KDEPIM_ONLY_KLEO
     const QString fileName = KFileDialog::getSaveFileName( QString(), QString(),
@@ -138,14 +158,15 @@ void AuditLogViewer::slotUser1() {
                             file.fileName(), QString::fromLocal8Bit( strerror( err ) ) ),
                             i18n("File Save Error") );
 }
+#endif // QT_NO_FILEDIALOG
 
-void AuditLogViewer::slotUser2() {
 #ifndef QT_NO_CLIPBOARD
+void AuditLogViewer::slotUser2() {
     m_textEdit->selectAll();
     m_textEdit->copy();
     m_textEdit->textCursor().clearSelection();
-#endif
 }
+#endif // QT_NO_CLIPBOARD
 
 // static
 void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & caption ) {

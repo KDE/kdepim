@@ -32,6 +32,8 @@
 
 #include "progressdialog.h"
 
+#ifndef QT_NO_PROGRESSDIALOG
+
 #include "progressbar.h"
 
 #include "kleo/job.h"
@@ -97,3 +99,4 @@ void Kleo::ProgressDialog::slotDone() {
 
 #include "progressdialog.moc"
 
+#endif // QT_NO_PROGRESSDIALOG

@@ -51,8 +51,12 @@ namespace Private {
         void setAuditLog( const QString & log );
 
     private Q_SLOTS:
+#ifndef QT_NO_FILEDIALOG
         void slotUser1();
+#endif
+#ifndef QT_NO_CLIPBOARD
         void slotUser2();
+#endif
 
     private:
         QString m_log;
