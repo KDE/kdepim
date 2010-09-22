@@ -1283,9 +1283,6 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
       return true;
     }
     if ( keyEvent->key() == Qt::Key_Up ) {
-      if ( event->type() != QEvent::KeyRelease ) {
-        return true;
-      }
       //kDebug() <<"EVENTFILTER: Qt::Key_Up currentIndex=" << currentIndex;
       // figure out if the item we would be moving to is one we want
       // to ignore. If so, go one further
@@ -1311,12 +1308,10 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
             item->setSelected( true );
           }
         }
-      }
-      return true;
-    } else if ( keyEvent->key() == Qt::Key_Down ) {
-      if ( event->type() != QEvent::KeyRelease ) {
+
         return true;
       }
+    } else if ( keyEvent->key() == Qt::Key_Down ) {
       // same strategy for downwards
       //kDebug() <<"EVENTFILTER: Qt::Key_Down. currentIndex=" << currentIndex;
       const QListWidgetItem *itemBelow = completionBox()->item( currentIndex );
@@ -1333,6 +1328,7 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
             item->setSelected( true );
           }
         }
+
         return true;
       }
       // special case of the initial selection, which is unfortunately a header.
@@ -1343,7 +1339,6 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
         completionBox()->setCurrentItem( item );
         item->setSelected( true );
       }
-      return true;
     } else if ( event->type() == QEvent::KeyRelease &&
                 ( keyEvent->key() == Qt::Key_Tab || keyEvent->key() == Qt::Key_Backtab ) ) {
       /// first, find the header of the current section
