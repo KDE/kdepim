@@ -111,6 +111,7 @@ static QPixmap UserIcon_nocached( const char * name ) {
     return iconPath.isEmpty() ? il->unknown() : QPixmap( iconPath ) ;
 }
 
+#ifndef QT_NO_SPLASHSCREEN
 class SplashScreen : public KSplashScreen {
     QBasicTimer m_timer;
 public:
@@ -132,28 +133,41 @@ protected:
     }
           
 };
+#else
+class SplashScreen {};
+#endif // QT_NO_SPLASHSCREEN
 
-static bool selfCheck( KSplashScreen & splash ) {
+static bool selfCheck( SplashScreen & splash ) {
+#ifndef QT_NO_SPLASHSCREEN
     splash.showMessage( i18n("Performing Self-Check...") );
+#endif
     Kleo::Commands::SelfTestCommand cmd( 0 );
     cmd.setAutoDelete( false );
     cmd.setAutomaticMode( true );
+#ifndef QT_NO_SPLASHSCREEN
     cmd.setSplashScreen( &splash );
+#endif
     QEventLoop loop;
     QObject::connect( &cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
+#ifndef QT_NO_SPLASHSCREEN
     QObject::connect( &cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)) );
+#endif
     QTimer::singleShot( 0, &cmd, SLOT(start()) ); // start() may emit finished()...
     loop.exec();
     if ( cmd.isCanceled() ) {
+#ifndef QT_NO_SPLASHSCREEN
         splash.showMessage( i18nc("did not pass", "Self-Check Failed") );
+#endif
         return false;
     } else {
+#ifndef QT_NO_SPLASHSCREEN
         splash.showMessage( i18n("Self-Check Passed") );
+#endif
         return true;
     }
 }
 
-static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
+static void fillKeyCache( SplashScreen * splash, Kleo::UiServer * server ) {
 
   QEventLoop loop;
   Kleo::ReloadKeysCommand * cmd = new Kleo::ReloadKeysCommand( 0 );
@@ -163,10 +177,16 @@ static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 #else
   Q_UNUSED( server );
 #endif
+#ifndef QT_NO_SPLASHSCREEN
   splash->showMessage( i18n("Loading certificate cache...") );
+#else
+  Q_UNUSED( splash );
+#endif
   cmd->start();
   loop.exec();
+#ifndef QT_NO_SPLASHSCREEN
   splash->showMessage( i18n("Certificate cache loaded.") );
+#endif
 }
 
 int main( int argc, char** argv )
@@ -226,22 +246,34 @@ int main( int argc, char** argv )
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( CreateChecksumsCommand );
+#ifndef QT_NO_WIZARD
       REGISTER( DecryptCommand );
+#endif // QT_NO_WIZARD
       REGISTER( DecryptFilesCommand );
       REGISTER( DecryptVerifyFilesCommand );
       REGISTER( EchoCommand );
+#ifndef QT_NO_WIZARD
       REGISTER( EncryptCommand );
+#endif // QT_NO_WIZARD
       REGISTER( EncryptFilesCommand );
       REGISTER( EncryptSignFilesCommand );
       REGISTER( ImportFilesCommand );
+#ifndef QT_NO_WIZARD
       REGISTER( PrepEncryptCommand );
       REGISTER( PrepSignCommand );
+#endif // QT_NO_WIZARD
       REGISTER( SelectCertificateCommand );
+#ifndef QT_NO_WIZARD
       REGISTER( SignCommand );
+#endif // QT_NO_WIZARD
       REGISTER( SignEncryptFilesCommand );
       REGISTER( SignFilesCommand );
+#ifndef QT_NO_DIRMODEL
       REGISTER( VerifyChecksumsCommand );
+#endif // QT_NO_DIRMODEL
+#ifndef QT_NO_WIZARD
       REGISTER( VerifyCommand );
+#endif // QT_NO_WIZARD
       REGISTER( VerifyFilesCommand );
 #undef REGISTER
 
@@ -251,8 +283,10 @@ int main( int argc, char** argv )
 
       const bool daemon = args->isSet("daemon");
 
+#ifndef QT_NO_SPLASHSCREEN
       if ( !daemon )
           splash.show();
+#endif
       if ( !selfCheck( splash ) )
           return 1;
       qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: SelfCheck completed";
@@ -271,7 +305,9 @@ int main( int argc, char** argv )
       if ( !daemon ) {
           app.newInstance();
           qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: new instance created";
+#ifndef QT_NO_SPLASHSCREEN
           splash.finish( app.mainWindow() );
+#endif // QT_NO_SPLASHSCREEN
       }
 
       rc = app.exec();
