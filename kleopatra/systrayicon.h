@@ -35,6 +35,8 @@
 
 #include <utils/systemtrayicon.h>
 
+#ifndef QT_NO_SYSTEMTRAYICON
+
 #include <utils/pimpl_ptr.h>
 
 class MainWindow;
@@ -72,5 +74,7 @@ private:
     Q_PRIVATE_SLOT( d, void slotSetInitialPin() )
     Q_PRIVATE_SLOT( d, void slotLearnCertificates() )
 };
+
+#endif // QT_NO_SYSTEMTRAYICON
 
 #endif /* __KLEOPATRA_SYSTRAYICON_H__ */

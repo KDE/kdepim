@@ -33,6 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "systrayicon.h"
+
+#ifndef QT_NO_SYSTEMTRAYICON
+
 #include "mainwindow.h"
 
 #include <smartcard/readerstatus.h>
@@ -355,3 +358,4 @@ void SysTrayIcon::slotEnableDisableActions() {
 
 #include "moc_systrayicon.cpp"
 
+#endif // QT_NO_SYSTEMTRAYICON

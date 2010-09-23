@@ -34,6 +34,8 @@
 
 #include "systemtrayicon.h"
 
+#ifndef QT_NO_SYSTEMTRAYICON
+
 #include <KIcon>
 #include <KLocale>
 #include <KWindowSystem>
@@ -220,3 +222,4 @@ void SystemTrayIcon::doAttentionWindowClosed( QWidget * ) {}
 
 #include "moc_systemtrayicon.cpp"
 
+#endif // QT_NO_SYSTEMTRAYICON

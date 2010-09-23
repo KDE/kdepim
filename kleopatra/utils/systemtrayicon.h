@@ -35,6 +35,8 @@
 
 #include <QSystemTrayIcon>
 
+#ifndef QT_NO_SYSTEMTRAYICON
+
 #include <utils/pimpl_ptr.h>
 
 namespace Kleo {
@@ -80,5 +82,7 @@ private:
 };
 
 } // namespace Kleo
+
+#endif // QT_NO_SYSTEMTRAYICON
 
 #endif /* __KLEOPATRA_UTILS_SYSTEMTRAYICON_H__ */
