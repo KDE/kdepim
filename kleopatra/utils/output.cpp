@@ -272,6 +272,7 @@ namespace {
         const shared_ptr<OverwritePolicy> m_policy;
     };
 
+#ifndef QT_NO_CLIPBOARD
     class ClipboardOutput : public OutputImplBase {
     public:
         explicit ClipboardOutput( QClipboard::Mode mode );
@@ -285,6 +286,7 @@ namespace {
         const QClipboard::Mode m_mode;
         shared_ptr<QBuffer> m_buffer;
     };
+#endif // QT_NO_CLIPBOARD
 
 }
 
@@ -451,6 +453,7 @@ QString ProcessStdInOutput::errorString() const {
         return i18n( "Failed to execute %1: %2", m_command, m_proc->errorString() );
 }
 
+#ifndef QT_NO_CLIPBOARD
 shared_ptr<Output> Output::createFromClipboard() {
     return shared_ptr<Output>( new ClipboardOutput( QClipboard::Clipboard ) );
 }
@@ -487,6 +490,7 @@ void ClipboardOutput::doFinalize() {
         throw Exception( gpg_error( GPG_ERR_EIO ),
                          i18n( "Could not find clipboard" ) );
 }
+#endif // QT_NO_CLIPBOARD
 
 
 

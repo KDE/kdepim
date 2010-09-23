@@ -138,6 +138,7 @@ namespace {
         QString m_fileName;
     };
 
+#ifndef QT_NO_CLIPBOARD
     class ClipboardInput : public Input {
     public:
         explicit ClipboardInput( QClipboard::Mode mode );
@@ -153,6 +154,7 @@ namespace {
         const QClipboard::Mode m_mode;
         shared_ptr<QBuffer> m_buffer;
     };
+#endif // QT_NO_CLIPBOARD
 
 }
 
@@ -311,6 +313,7 @@ QString ProcessStdOutInput::errorString() const {
         return i18n( "Failed to execute %1: %2", m_command, m_proc->errorString() );
 }
 
+#ifndef QT_NO_CLIPBOARD
 shared_ptr<Input> Input::createFromClipboard() {
     return shared_ptr<Input>( new ClipboardInput( QClipboard::Clipboard ) );
 }
@@ -352,6 +355,7 @@ QString ClipboardInput::label() const {
 unsigned int ClipboardInput::classification() const {
     return classifyContent( m_buffer->data() );
 }
+#endif // QT_NO_CLIPBOARD
 
 Input::~Input() {}
 

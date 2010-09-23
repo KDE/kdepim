@@ -86,7 +86,9 @@ namespace Kleo {
         static boost::shared_ptr<Output> createFromProcessStdIn( const QString & command );
         static boost::shared_ptr<Output> createFromProcessStdIn( const QString & command, const QStringList & args );
         static boost::shared_ptr<Output> createFromProcessStdIn( const QString & command, const QStringList & args, const QDir & workingDirectory );
+#ifndef QT_NO_CLIPBOARD
         static boost::shared_ptr<Output> createFromClipboard();
+#endif
     };
 }
 
