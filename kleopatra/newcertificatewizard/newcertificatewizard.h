@@ -35,6 +35,8 @@
 
 #include <QWizard>
 
+#ifndef QT_NO_WIZARD
+
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
@@ -71,5 +73,7 @@ namespace Kleo {
     };
 
 }
+
+#endif // QT_NO_WIZARD
 
 #endif /* __KLEOPATRA_NEWCERTIFICATEWIZARD_NEWCERTIFICATEWIZARD_H__ */
