@@ -34,6 +34,8 @@
 
 #include "signclipboardcommand.h"
 
+#ifndef QT_NO_CLIPBOARD
+
 #include "command_p.h"
 
 #include <crypto/signemailcontroller.h>
@@ -172,3 +174,5 @@ void SignClipboardCommand::doCancel() {
 #undef q
 
 #include "moc_signclipboardcommand.cpp"
+
+#endif // QT_NO_CLIPBOARD

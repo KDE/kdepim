@@ -149,6 +149,7 @@ void ImportCertificateFromFileCommand::doStart()
     d->setWaitForMoreJobs( false );
 }
 
+#ifndef QT_NO_FILEDIALOG
 static QStringList get_file_name( QWidget * parent ) {
     const QString certificateFilter = i18n("Certificates") + " (*.asc *.cer *.cert *.crt *.der *.pem *.gpg *.p7c *.p12 *.pfx *.pgp)";
     const QString anyFilesFilter = i18n("Any files") + " (*)";
@@ -157,6 +158,7 @@ static QStringList get_file_name( QWidget * parent ) {
         const KConfigGroup group( config, "Import Certificate" );
         previousDir = group.readPathEntry( "last-open-file-directory", QDir::homePath() );
     }
+    // ### use Kleo::FileDialog?
     const QStringList files = QFileDialog::getOpenFileNames( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
     if ( !files.empty() )
         if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
@@ -165,11 +167,14 @@ static QStringList get_file_name( QWidget * parent ) {
         }
     return files;
 }
+#endif QT_NO_FILEDIALOG
 
 bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
 {
+#ifndef QT_NO_FILEDIALOG
     if ( files.empty() )
         files = get_file_name( parentWidgetOrView() );
+#endif // QT_NO_FILEDIALOG
     return !files.empty();
 }
 

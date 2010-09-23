@@ -110,8 +110,10 @@ private:
             dialog->raise();
         else
             dialog->show();
+#ifndef QT_NO_SPLASHSCREEN
         if ( splash )
             splash->finish( dialog );
+#endif // QT_NO_SPLASHSCREEN
     }
 
     bool runAtStartUp() const {
@@ -181,7 +183,9 @@ private:
     }
 
 private:
+#ifndef QT_NO_SPLASHSCREEN
     QPointer<KSplashScreen> splash;
+#endif // QT_NO_SPLASHSCREEN
     QPointer<SelfTestDialog> dialog;
     bool canceled;
     bool automatic;
@@ -195,7 +199,9 @@ const SelfTestCommand::Private * SelfTestCommand::d_func() const { return static
 
 SelfTestCommand::Private::Private( SelfTestCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
+#ifndef QT_NO_SPLASHSCREEN
       splash(),
+#endif // QT_NO_SPLASHSCREEN
       dialog(),
       canceled( false ),
       automatic( false )
@@ -232,7 +238,11 @@ void SelfTestCommand::setAutomaticMode( bool on ) {
 }
 
 void SelfTestCommand::setSplashScreen( KSplashScreen * splash ) {
+#ifndef QT_NO_SPLASHSCREEN
     d->splash = splash;
+#else
+    Q_UNUSED( splash );
+#endif // QT_NO_SPLASHSCREEN
 }
 
 bool SelfTestCommand::isCanceled() const {

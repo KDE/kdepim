@@ -35,6 +35,8 @@
 
 #include <commands/command.h>
 
+#ifndef QT_NO_WIZARD
+
 #include <gpgme++/global.h>
 
 namespace Kleo {
@@ -64,5 +66,7 @@ namespace Commands {
 
 }
 }
+
+#endif // QT_NO_WIZARD
 
 #endif // __KLEOPATRA_COMMANDS_NEWCERTIFICATECOMMAND_H__

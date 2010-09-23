@@ -33,6 +33,8 @@
 
 #include "newcertificatecommand.h"
 
+#ifndef QT_NO_WIZARD
+
 #include "command_p.h"
 
 #include <newcertificatewizard/newcertificatewizard.h>
@@ -151,3 +153,5 @@ void NewCertificateCommand::Private::ensureDialogCreated() {
 #undef q
 
 #include "moc_newcertificatecommand.cpp"
+
+#endif // QT_NO_WIZARD

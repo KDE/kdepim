@@ -35,6 +35,8 @@
 
 #include <commands/command.h>
 
+#ifndef QT_NO_CLIPBOARD
+
 #include <utils/types.h>
 
 namespace Kleo {
@@ -63,5 +65,7 @@ namespace Commands {
 
 }
 }
+
+#endif // QT_NO_CLIPBOARD
 
 #endif // __KLEOPATRA_COMMMANDS_DECRYPTVERIFYCLIPBOARDCOMMAND_H__

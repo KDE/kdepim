@@ -35,6 +35,8 @@
 
 #include <commands/command.h>
 
+#ifndef QT_NO_CLIPBOARD
+
 #include <utils/types.h>
 
 #include <gpgme++/global.h>
@@ -66,5 +68,7 @@ namespace Commands {
 
 }
 }
+
+#endif // QT_NO_CLIPBOARD
 
 #endif // __KLEOPATRA_COMMMANDS_SIGNCLIPBOARDCOMMAND_H__

@@ -33,6 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "importcertificatefromclipboardcommand.h"
+
+#ifndef QT_NO_CLIPBOARD
+
 #include "importcertificatescommand_p.h"
 
 #include "utils/classify.h"
@@ -136,4 +139,4 @@ bool ImportCertificateFromClipboardCommand::Private::ensureHaveClipboard() {
 
 #include "moc_importcertificatefromclipboardcommand.cpp"
 
-
+#endif // QT_NO_CLIPBOARD

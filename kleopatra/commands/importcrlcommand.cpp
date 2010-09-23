@@ -63,6 +63,7 @@ public:
 
 private:
     void init();
+#ifndef QT_NO_FILEDIALOG
     QStringList getFileNames() {
     	// loadcrl can only work with DER encoded files 
 	//   (verified with dirmngr 1.0.3)
@@ -70,6 +71,7 @@ private:
         return QFileDialog::getOpenFileNames( parentWidgetOrView(), i18n("Select CRL File to Import"),
                                               QString(), filter );
     }
+#endif // QT_NO_FILEDIALOG
 
 private:
     void slotProcessFinished( int, QProcess::ExitStatus );
@@ -142,8 +144,10 @@ void ImportCrlCommand::setFiles( const QStringList & files ) {
 
 void ImportCrlCommand::doStart() {
 
+#ifndef QT_NO_FILEDIALOG
     if ( d->files.empty() )
         d->files = d->getFileNames();
+#endif // QT_NO_FILEDIALOG
     if ( d->files.empty() ) {
         emit canceled();
         d->finished();

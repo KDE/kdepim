@@ -35,6 +35,8 @@
 
 #include "importcertificatescommand.h"
 
+#ifndef QT_NO_CLIPBOARD
+
 class QStringList;
 
 namespace Kleo {
@@ -57,6 +59,8 @@ namespace Kleo {
         inline const Private * d_func() const;
     };
 }
+
+#endif // QT_NO_CLIPBOARD
 
 #endif // __KLEOPATRA_IMPORTCERTIFICATEFROMCLIPBOARDCOMMAND_H__
 

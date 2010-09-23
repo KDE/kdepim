@@ -34,6 +34,8 @@
 
 #include "encryptclipboardcommand.h"
 
+#ifndef QT_NO_CLIPBOARD
+
 #include "command_p.h"
 
 #include <crypto/encryptemailcontroller.h>
@@ -169,3 +171,5 @@ void EncryptClipboardCommand::doCancel() {
 #undef q
 
 #include "moc_encryptclipboardcommand.cpp"
+
+#endif // QT_NO_CLIPBOARD

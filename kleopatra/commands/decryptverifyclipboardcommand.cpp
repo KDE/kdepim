@@ -34,6 +34,8 @@
 
 #include "decryptverifyclipboardcommand.h"
 
+#ifndef QT_NO_CLIPBOARD
+
 #include "command_p.h"
 
 #include <crypto/decryptverifyemailcontroller.h>
@@ -170,3 +172,5 @@ void DecryptVerifyClipboardCommand::doCancel() {
 #undef q
 
 #include "moc_decryptverifyclipboardcommand.cpp"
+
+#endif // QT_NO_CLIPBOARD
