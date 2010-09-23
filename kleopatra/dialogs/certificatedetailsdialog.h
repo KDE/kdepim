@@ -68,8 +68,10 @@ namespace Dialogs {
         Q_PRIVATE_SLOT( d, void slotAddUserIDClicked() )
         Q_PRIVATE_SLOT( d, void slotAddUserIDCommandFinished() )
         Q_PRIVATE_SLOT( d, void slotRevokeUserIDClicked() )
+#ifndef QT_NO_WIZARD
         Q_PRIVATE_SLOT( d, void slotCertifyUserIDClicked() )
         Q_PRIVATE_SLOT( d, void slotSignCertificateCommandFinished() )
+#endif // QT_NO_WIZARD
         Q_PRIVATE_SLOT( d, void slotRevokeCertificationClicked() )
         Q_PRIVATE_SLOT( d, void slotShowCertificationsClicked() )
         Q_PRIVATE_SLOT( d, void slotSignatureListingNextKey(GpgME::Key) )

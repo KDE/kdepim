@@ -33,9 +33,9 @@
 #ifndef __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__
 #define __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__
 
-#include <QDialog>
-
 #include <QWizard>
+
+#ifndef QT_NO_WIZARD
 
 #include <kleo/signkeyjob.h>
 
@@ -90,6 +90,8 @@ namespace Dialogs {
 
 }
 }
+
+#endif // QT_NO_WIZARD
 
 #endif /* __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__ */
 

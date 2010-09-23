@@ -33,6 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "certifycertificatedialog.h"
+
+#ifndef QT_NO_WIZARD
+
 #include "certifycertificatedialog_p.h"
 
 #include <utils/formatting.h>
@@ -457,3 +460,4 @@ void CertifyCertificateDialog::Private::ensureSummaryPageVisible() {
 #include "moc_certifycertificatedialog.cpp"
 #include "moc_certifycertificatedialog_p.cpp"
 
+#endif // QT_NO_WIZARD
