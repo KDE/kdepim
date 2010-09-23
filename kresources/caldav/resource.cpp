@@ -739,6 +739,15 @@ TQString ResourceCalDav::getICalString(const Incidence::List& inc) {
     }
     data = data + footer;
 
+    // Remove any line feeds/carriage returns/white spaces from the UID field as they WILL break libcaldav
+    int uidPos = data.find("UID:", 0) + 4;
+    int nextPos = data.findRev("\n", data.find(":", uidPos));
+    TQString uidField = data.mid(uidPos, nextPos-uidPos);
+    data.remove(uidPos, nextPos-uidPos);
+    uidField.replace("\n", "");
+    uidField.replace("\r", "");
+    uidField.replace(" ", "");
+    data.insert(uidPos, uidField);
     return data;
 }
 
