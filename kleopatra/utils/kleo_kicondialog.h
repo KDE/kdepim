@@ -227,7 +227,9 @@ private:
     Q_PRIVATE_SLOT(d, void _k_slotProgress(int))
     Q_PRIVATE_SLOT(d, void _k_slotFinished())
     Q_PRIVATE_SLOT(d, void _k_slotAcceptIcons())
+#ifndef QT_NO_FILEDIALOG
     Q_PRIVATE_SLOT(d, void _k_slotBrowse())
+#endif
     Q_PRIVATE_SLOT(d, void _k_slotOtherIconClicked())
     Q_PRIVATE_SLOT(d, void _k_slotSystemIconClicked())
 };

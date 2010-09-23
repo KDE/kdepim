@@ -114,7 +114,9 @@ void KIconCanvas::loadFiles(const QStringList& files)
 void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
 {
     q->setResizeMode(QListWidget::Fixed);
+#ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
+#endif
 
     // disable updates to not trigger paint events when adding child items
     q->setUpdatesEnabled(false);
@@ -144,6 +146,7 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
 
 	if (ext != "SVG" && ext != "VGZ")
 	    img.load(*it);
+#ifndef QT_NO_SVGRENDERER
 	else {
             // Special stuff for SVG icons
             img = QImage(60, 60, QImage::Format_ARGB32_Premultiplied);
@@ -154,6 +157,7 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
                 renderer.render(&p);
             }
         }
+#endif // QT_NO_SVGRENDERER
 
 	if (img.isNull())
 	    continue;
@@ -179,7 +183,9 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
     // enable updates since we have to draw the whole view now
     q->setUpdatesEnabled(true);
 
+#ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
+#endif
     m_bLoading = false;
     emit q->finished();
     q->setResizeMode(QListWidget::Adjust);
@@ -225,7 +231,9 @@ class KIconDialog::KIconDialogPrivate
     void _k_slotProgress(int);
     void _k_slotFinished();
     void _k_slotAcceptIcons();
+#ifndef QT_NO_FILEDIALOG
     void _k_slotBrowse();
+#endif
     void _k_slotOtherIconClicked();
     void _k_slotSystemIconClicked();
 
@@ -236,7 +244,9 @@ class KIconDialog::KIconDialogPrivate
 
     QStringList mFileList;
     QComboBox *mpCombo;
+#ifndef QT_NO_FILEDIALOG
     QPushButton *mpBrowseBut;
+#endif
     QRadioButton *mpSystemIcons, *mpOtherIcons;
     QProgressBar *mpProgress;
     int mNumOfSteps;
@@ -312,9 +322,11 @@ void KIconDialog::KIconDialogPrivate::init()
     mpOtherIcons = new QRadioButton(i18n("O&ther icons:"), bgroup);
     connect(mpOtherIcons, SIGNAL(clicked()), q, SLOT(_k_slotOtherIconClicked()));
     grid->addWidget(mpOtherIcons, 2, 0);
+#ifndef QT_NO_FILEDIALOG
     mpBrowseBut = new QPushButton(i18n("&Browse..."), bgroup);
     connect(mpBrowseBut, SIGNAL(clicked()), q, SLOT(_k_slotBrowse()));
     grid->addWidget(mpBrowseBut, 2, 1);
+#endif // QT_NO_FILEDIALOG
 
     //
     // ADD SEARCHLINE
@@ -394,7 +406,9 @@ void KIconDialog::KIconDialogPrivate::init()
     }
     mpCombo->setFixedSize(mpCombo->sizeHint());
 
+#ifndef QT_NO_FILEDIALOG
     mpBrowseBut->setFixedWidth(mpCombo->width());
+#endif
 
     // Make the dialog a little taller
     q->incrementInitialSize(QSize(0,100));
@@ -484,7 +498,9 @@ void KIconDialog::setup(KIconLoader::Group group, KIconLoader::Context context,
     d->mpOtherIcons->setChecked(user);
     d->mpOtherIcons->setEnabled(!lockUser || user);
     d->mpCombo->setEnabled(!user);
+#ifndef QT_NO_FILEDIALOG
     d->mpBrowseBut->setEnabled(user && !lockCustomDir);
+#endif
     d->setContext(context);
 }
 
@@ -563,6 +579,7 @@ QString KIconDialog::getIcon(KIconLoader::Group group, KIconLoader::Context cont
     return dlg.openDialog();
 }
 
+#ifndef QT_NO_FILEDIALOG
 void KIconDialog::KIconDialogPrivate::_k_slotBrowse()
 {
     const QString file = QFileDialog::getOpenFileName( q, i18n("Open"), QString(), i18n("Icon Files (*.png *.xpm *.svg *.svgz)") );
@@ -575,17 +592,22 @@ void KIconDialog::KIconDialogPrivate::_k_slotBrowse()
         q->slotOk();
     }
 }
+#endif
 
 void KIconDialog::KIconDialogPrivate::_k_slotSystemIconClicked()
 {
+#ifndef QT_NO_FILEDIALOG
     mpBrowseBut->setEnabled(false);
+#endif
     mpCombo->setEnabled(true);
     showIcons();
 }
 
 void KIconDialog::KIconDialogPrivate::_k_slotOtherIconClicked()
 {
+#ifndef QT_NO_FILEDIALOG
     mpBrowseBut->setEnabled(!m_bLockCustomDir);
+#endif
     mpCombo->setEnabled(false);
     showIcons();
 }
