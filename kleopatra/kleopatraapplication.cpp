@@ -134,6 +134,7 @@ public:
         : ignoreNewInstance( true )
     {
         KDAB_SET_OBJECT_NAME( readerStatus );
+#ifndef QT_NO_SYSTEMTRAYICON
         KDAB_SET_OBJECT_NAME( sysTray );
 
         sysTray.setAnyCardHasNullPin( readerStatus.anyCardHasNullPin() );
@@ -143,12 +144,15 @@ public:
                  &sysTray, SLOT(setAnyCardHasNullPin(bool)) );
         connect( &readerStatus, SIGNAL(anyCardCanLearnKeysChanged(bool)),
                  &sysTray, SLOT(setAnyCardCanLearnKeys(bool)) );
+#endif
     }
 
 public:
     bool ignoreNewInstance;
     SmartCard::ReaderStatus readerStatus;
+#ifndef QT_NO_SYSTEMTRAYICON
     SysTrayIcon sysTray;
+#endif
     shared_ptr<KeyCache> keyCache;
     shared_ptr<Log> log;
     shared_ptr<FileSystemWatcher> watcher;
@@ -203,7 +207,9 @@ KleopatraApplication::KleopatraApplication()
     add_resources();
     d->setupKeyCache();
     d->setupLogging();
+#ifndef QT_NO_SYSTEMTRAYICON
     d->sysTray.show();
+#endif
     setQuitOnLastWindowClosed( false );
 }
 
@@ -290,6 +296,7 @@ int KleopatraApplication::newInstance() {
     return 0;
 }
 
+#ifndef QT_NO_SYSTEMTRAYICON
 const SysTrayIcon * KleopatraApplication::sysTrayIcon() const {
     return &d->sysTray;
 }
@@ -323,6 +330,7 @@ void KleopatraApplication::importCertificatesFromFile( const QStringList & files
     if ( !files.empty() )
         d->sysTray.mainWindow()->importCertificatesFromFile( files );
 }
+#endif // QT_NO_SYSTEMTRAYICON
 
 void KleopatraApplication::encryptFiles( const QStringList & files, GpgME::Protocol proto ) {
     SignEncryptFilesCommand * const cmd = new SignEncryptFilesCommand( files, 0 );
