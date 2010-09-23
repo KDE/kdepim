@@ -35,6 +35,8 @@
 
 #include "assuancommand.h"
 
+#ifndef QT_NO_WIZARD
+
 #include <utils/pimpl_ptr.h>
 
 namespace Kleo {
@@ -56,5 +58,7 @@ namespace Kleo {
     };
 
 }
+
+#endif // QT_NO_WIZARD
 
 #endif /*__KLEO_UISERVER_SIGNCOMMAND_H__*/

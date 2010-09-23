@@ -34,6 +34,8 @@
 
 #include "prepencryptcommand.h"
 
+#ifndef QT_NO_WIZARD
+
 #include <crypto/newsignencryptemailcontroller.h>
 
 #include <kleo/exception.h>
@@ -159,3 +161,5 @@ void PrepEncryptCommand::doCanceled() {
 }
 
 #include "prepencryptcommand.moc"
+
+#endif // QT_NO_WIZARD

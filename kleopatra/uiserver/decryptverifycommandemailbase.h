@@ -35,6 +35,8 @@
 
 #include "assuancommand.h"
 
+#ifndef QT_NO_WIZARD
+
 #include <utils/pimpl_ptr.h>
 #include <utils/types.h>
 
@@ -72,5 +74,7 @@ namespace Kleo {
         static const char * staticName() { return "DECRYPT_VERIFY"; }
     };
 }
+
+#endif // QT_NO_WIZARD
 
 #endif // __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__

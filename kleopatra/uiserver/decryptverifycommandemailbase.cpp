@@ -34,6 +34,8 @@
 
 #include "decryptverifycommandemailbase.h"
 
+#ifndef QT_NO_WIZARD
+
 #include <crypto/decryptverifytask.h>
 #include <crypto/decryptverifyemailcontroller.h>
 
@@ -226,3 +228,5 @@ void DecryptVerifyCommandEMailBase::Private::verificationResult( const Verificat
 }
 
 #include "decryptverifycommandemailbase.moc"
+
+#endif // QT_NO_WIZARD

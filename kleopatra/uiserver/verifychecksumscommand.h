@@ -34,6 +34,9 @@
 #define __KLEOPATRA_UISERVER_VERIFYCHECKSUMSCOMMAND_H__
 
 #include "assuancommand.h"
+
+#ifndef QT_NO_DIRMODEL
+
 #include <QObject>
 
 namespace Kleo {
@@ -64,5 +67,7 @@ namespace Kleo {
     };
 
 }
+
+#endif // QT_NO_DIRMODEL
 
 #endif /* __KLEOPATRA_UISERVER_VERIFYCHECKSUMSCOMMAND_H__ */

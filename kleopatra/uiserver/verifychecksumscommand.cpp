@@ -34,6 +34,8 @@
 
 #include "verifychecksumscommand.h"
 
+#ifndef QT_NO_DIRMODEL
+
 #include <crypto/verifychecksumscontroller.h>
 
 #include <kleo/exception.h>
@@ -101,3 +103,5 @@ void VerifyChecksumsCommand::doCanceled() {
     if ( d->controller )
         d->controller->cancel();
 }
+
+#endif // QT_NO_DIRMODEL
