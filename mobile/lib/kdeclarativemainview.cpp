@@ -188,7 +188,7 @@ void KDeclarativeMainView::delayedInit()
   }
   d->mItemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this);
 
-  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config(), QLatin1String( "ItemSelectionState" ), this);
+  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this);
   d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
 
   d->mItemActionSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemActionCheckModel, this);

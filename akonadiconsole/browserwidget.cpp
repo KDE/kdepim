@@ -198,7 +198,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
   Nepomuk::ResourceManager::instance()->init();
 
-  m_stateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config(), "CollectionViewState", this );
+  m_stateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group("CollectionViewState"), this );
   m_stateMaintainer->setView( mCollectionView );
 
   m_stateMaintainer->restoreState();
