@@ -35,6 +35,8 @@
 
 #include <crypto/controller.h>
 
+#ifndef QT_NO_DIRMODEL
+
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
@@ -69,6 +71,8 @@ namespace Crypto {
 
 }
 }
+
+#endif // QT_NO_DIRMODEL
 
 #endif /* __KLEOPATRA_UISERVER_VERIFYCHECKSUMSCONTROLLER_H__ */
 

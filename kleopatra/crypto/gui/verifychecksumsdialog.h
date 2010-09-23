@@ -36,6 +36,8 @@
 #include <QDialog>
 #include <QMetaType>
 
+#ifndef QT_NO_DIRMODEL
+
 #include <utils/pimpl_ptr.h>
 
 namespace Kleo {
@@ -77,5 +79,7 @@ namespace Gui {
 }
 
 Q_DECLARE_METATYPE( Kleo::Crypto::Gui::VerifyChecksumsDialog::Status )
+
+#endif // QT_NO_DIRMODEL
 
 #endif // __KLEOPATRA_CRYPTO_GUI_RESULTITEMWIDGET_H__

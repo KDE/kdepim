@@ -34,6 +34,8 @@
 
 #include "verifychecksumscontroller.h"
 
+#ifndef QT_NO_DIRMODEL
+
 #include <crypto/gui/verifychecksumsdialog.h>
 
 #include <utils/input.h>
@@ -641,3 +643,5 @@ void VerifyChecksumsController::Private::run() {
 
 #include "moc_verifychecksumscontroller.cpp"
 #include "verifychecksumscontroller.moc"
+
+#endif // QT_NO_DIRMODEL

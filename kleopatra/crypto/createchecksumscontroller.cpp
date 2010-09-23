@@ -185,10 +185,12 @@ Q_SIGNALS:
 
 private:
     void slotOperationFinished() {
+#ifndef QT_NO_PROGRESSDIALOG
         if ( progressDialog ) {
             progressDialog->setValue( progressDialog->maximum() );
             progressDialog->close();
         }
+#endif // QT_NO_PROGRESSDIALOG
         ResultDialog * const dlg = new ResultDialog( created, errors );
         q->bringToForeground( dlg );
         if ( !errors.empty() )
@@ -198,18 +200,22 @@ private:
     }
     void slotProgress( int current, int total, const QString & what ) {
         qDebug( "progress: %d/%d: %s", current, total, qPrintable( what ) );
+#ifndef QT_NO_PROGRESSDIALOG
         if ( !progressDialog )
             return;
         progressDialog->setMaximum( total );
         progressDialog->setValue( current );
         progressDialog->setLabelText( what );
+#endif // QT_NO_PROGRESSDIALOG
     }
 
 private:
     /* reimp */ void run();
 
 private:
+#ifndef QT_NO_PROGRESSDIALOG
     QPointer<QProgressDialog> progressDialog;
+#endif
     mutable QMutex mutex;
     const std::vector< shared_ptr<ChecksumDefinition> > checksumDefinitions;
     shared_ptr<ChecksumDefinition> checksumDefinition;
@@ -221,7 +227,9 @@ private:
 
 CreateChecksumsController::Private::Private( CreateChecksumsController * qq )
     : q( qq ),
+#ifndef QT_NO_PROGRESSDIALOG
       progressDialog(),
+#endif
       mutex(),
       checksumDefinitions( ChecksumDefinition::getChecksumDefinitions() ),
       checksumDefinition( ChecksumDefinition::getDefaultChecksumDefinition( checksumDefinitions ) ),
@@ -284,12 +292,14 @@ void CreateChecksumsController::start() {
     {
         const QMutexLocker locker( &d->mutex );
 
+#ifndef QT_NO_PROGRESSDIALOG
         d->progressDialog = new QProgressDialog( i18n("Initializing..."), i18n("Cancel"), 0, 0 );
         applyWindowID( d->progressDialog );
         d->progressDialog->setAttribute( Qt::WA_DeleteOnClose );
         d->progressDialog->setMinimumDuration( 1000 );
         d->progressDialog->setWindowTitle( i18nc("@title:window","Create Checksum Progress") );
         connect( d->progressDialog, SIGNAL(canceled()), this, SLOT(cancel()) );
+#endif // QT_NO_PROGRESSDIALOG
 
         d->canceled = false;
         d->errors.clear();

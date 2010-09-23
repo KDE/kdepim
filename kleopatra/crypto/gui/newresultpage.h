@@ -35,6 +35,8 @@
 
 #include <QWizardPage>
 
+#ifndef QT_NO_WIZARD
+
 #include <utils/pimpl_ptr.h>
 
 namespace boost {
@@ -84,5 +86,7 @@ private:
 }
 }
 }
+
+#endif // QT_NO_WIZARD
 
 #endif // __KLEOPATRA_CRYPTO_GUI_NEWRESULTPAGE_H__

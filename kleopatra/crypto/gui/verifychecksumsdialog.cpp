@@ -34,6 +34,8 @@
 
 #include "verifychecksumsdialog.h"
 
+#ifndef QT_NO_DIRMODEL
+
 #include <KDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -362,3 +364,5 @@ void VerifyChecksumsDialog::clearStatusInformation() {
 
 #include "verifychecksumsdialog.moc"
 #include "moc_verifychecksumsdialog.cpp"
+
+#endif // QT_NO_DIRMODEL

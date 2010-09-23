@@ -45,6 +45,8 @@
 
 #include <vector>
 
+#ifndef QT_NO_WIZARD
+
 class QFile;
 
 namespace KMime {
@@ -114,5 +116,7 @@ private:
 } //namespace Kleo
 
 Q_DECLARE_METATYPE( GpgME::VerificationResult )
+
+#endif // QT_NO_WIZARD
 
 #endif // __KLEOPATRA_CTYPTO_DECRYPTVERIFYEMAILCONTROLLER_H__
