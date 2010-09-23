@@ -38,6 +38,8 @@
 #include <QPoint>
 #include <QMimeData>
 
+#ifndef QT_NO_DRAGANDDROP
+
 class QUrl;
 
 namespace Kleo {
@@ -67,6 +69,8 @@ namespace Kleo {
     };
 
 }
+
+#endif // QT_NO_DRAGANDDROP
 
 #endif // __KLEOPATRA_CRYPTO_GUI_DRAGQUEEN_H__
 

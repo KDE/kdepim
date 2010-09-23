@@ -35,6 +35,8 @@
 
 #include "dragqueen.h"
 
+#ifndef QT_NO_DRAGANDDROP
+
 #include <QDrag>
 #include <QMouseEvent>
 #include <QStringList>
@@ -196,3 +198,5 @@ void DragQueen::mouseMoveEvent( QMouseEvent * e ) {
 
 #include "moc_dragqueen.cpp"
 #include "dragqueen.moc"
+
+#endif // QT_NO_DRAGANDDROP
