@@ -63,15 +63,20 @@ Item {
   {
     itemModel.showOnlyCategory(category)
 
+    var firstMenu = -1;
+    var showFirstMenu = true;
     for ( var i = 0; i < itemModel.children.length; ++i ) {
       // QML has no type or interface system so we rely on the all children of itemModel
       // that are items have a category property
-      if (itemModel.children[i].visible && itemModel.children[i].showChildren != undefined ) {
+      if (firstMenu == -1 && itemModel.children[i].visible && itemModel.children[i].showChildren != undefined ) {
         // We make the first visible item show its children.
-        itemModel.children[i].showChildren = true;
+        firstMenu = i;
+      }
+      if (itemModel.children[i].showChildren != undefined && itemModel.children[i].showChildren) {
         return;
       }
     }
+    itemModel.children[firstMenu].showChildren = true;
   }
 
   VisualItemModel {
