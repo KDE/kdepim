@@ -58,34 +58,54 @@ static void update( const QString & fname, const QString & id ) {
 }
 
 QString FileDialog::getExistingDirectory( QWidget * parent, const QString & caption, const QString & dirID ) {
+#ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getExistingDirectory( parent, caption, dir( dirID ) );
     update( fname, dirID );
     return fname;
+#else
+    return QString();
+#endif // QT_NO_FILEDIALOG
 }
 
 QString FileDialog::getOpenFileName( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter ) {
+#ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getOpenFileName( parent, caption, dir( dirID ), filter, selectedFilter );
     update( fname, dirID );
     return fname;
+#else
+    return QString();
+#endif // QT_NO_FILEDIALOG
 }
 
 QStringList FileDialog::getOpenFileNames( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter ) {
+#ifndef QT_NO_FILEDIALOG
     const QStringList files = QFileDialog::getOpenFileNames( parent, caption, dir( dirID ), filter, selectedFilter );
     if ( !files.empty() )
         update( files.front(), dirID );
     return files;
+#else
+    return QStringList();
+#endif // QT_NO_FILEDIALOG
 }
 
 QString FileDialog::getSaveFileName( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter ) {
+#ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getSaveFileName( parent, caption, dir( dirID ), filter, selectedFilter );
     update( fname, dirID );
     return fname;
+#else
+    return QString();
+#endif // QT_NO_FILEDIALOG
 }
 
 QString FileDialog::getSaveFileNameEx( QWidget * parent, const QString & caption, const QString & dirID, const QString & proposedFileName, const QString & filter, QString * selectedFilter ) {
+#ifndef QT_NO_FILEDIALOG
     if ( proposedFileName.isEmpty() )
         return getSaveFileName( parent, caption, dirID, filter, selectedFilter );
     const QString fname = QFileDialog::getSaveFileName( parent, caption, QDir( dir( dirID ) ).filePath( proposedFileName ), filter, selectedFilter );
     update( fname, dirID );
     return fname;
+#else
+    return QString();
+#endif // QT_NO_FILEDIALOG
 }
