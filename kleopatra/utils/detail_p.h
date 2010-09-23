@@ -39,7 +39,7 @@
 
 #include <QByteArray>
 
-#ifdef Q_OS_WIN32
+#ifdef _WIN32
 #include <io.h>
 #endif
 
@@ -74,7 +74,7 @@ namespace _detail {
     static inline int translate_sys2libc_fd( assuan_fd_t fd, bool for_write ) {
         if ( fd == ASSUAN_INVALID_FD )
             return -1;
-#ifdef Q_OS_WIN32
+#ifdef _WIN32
         return _open_osfhandle( (intptr_t)fd, for_write );
 #else
         (void)for_write;
@@ -85,7 +85,7 @@ namespace _detail {
     static inline assuan_fd_t translate_libc2sys_fd( int fd ) {
         if ( fd == -1 )
             return ASSUAN_INVALID_FD;
-#ifdef Q_OS_WIN32
+#ifdef _WIN32
         return (assuan_fd_t)_get_osfhandle( fd );
 #else
         return fd;
@@ -96,7 +96,7 @@ namespace _detail {
     //suitable for debug output
     static inline qulonglong assuanFD2int( assuan_fd_t fd )
     {
-#ifdef Q_OS_WIN32
+#ifdef _WIN32
         return reinterpret_cast<qulonglong>( fd );
 #else
         return static_cast<qulonglong>( fd );
