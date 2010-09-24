@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    commands/checksumcreatefilescommand.h
+    commands/checksumverifyfilescommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_COMMMANDS_CHECKSUMCREATEFILESCOMMAND_H__
-#define __KLEOPATRA_COMMMANDS_CHECKSUMCREATEFILESCOMMAND_H__
+#ifndef __KLEOPATRA_COMMMANDS_CHECKSUMVERIFYFILESCOMMAND_H__
+#define __KLEOPATRA_COMMMANDS_CHECKSUMVERIFYFILESCOMMAND_H__
 
 #include <commands/command.h>
 
@@ -44,14 +44,14 @@ class QStringList;
 namespace Kleo {
 namespace Commands {
 
-    class ChecksumCreateFilesCommand : public Command {
+    class ChecksumVerifyFilesCommand : public Command {
         Q_OBJECT
     public:
-        explicit ChecksumCreateFilesCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ChecksumCreateFilesCommand( KeyListController * parent );
-        explicit ChecksumCreateFilesCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
-        explicit ChecksumCreateFilesCommand( const QStringList & files, KeyListController * parent );
-        ~ChecksumCreateFilesCommand();
+        explicit ChecksumVerifyFilesCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit ChecksumVerifyFilesCommand( KeyListController * parent );
+        explicit ChecksumVerifyFilesCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
+        explicit ChecksumVerifyFilesCommand( const QStringList & files, KeyListController * parent );
+        ~ChecksumVerifyFilesCommand();
 
         void setFiles( const QStringList & files );
 
@@ -70,4 +70,4 @@ namespace Commands {
 }
 }
 
-#endif // __KLEOPATRA_COMMMANDS_CHECKSUMCREATEFILESCOMMAND_H__
+#endif // __KLEOPATRA_COMMMANDS_CHECKSUMVERIFYFILESCOMMAND_H__
