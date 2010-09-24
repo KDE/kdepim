@@ -19,6 +19,8 @@ macro( macro_bool_to_bool FOUND_VAR )
 endmacro()
 
 include (MacroEnsureVersion)
+include (MacroBoolTo01)
+include (MacroLogFeature)
 
 message( STATUS "In FindAssuan2.cmake" )
 
