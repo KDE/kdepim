@@ -272,7 +272,7 @@ static QByteArray make_input( const QStringList & files, char sep ) {
     QByteArray result;
     Q_FOREACH( const QString & file, files ) {
         result += QFile::encodeName( file );
-        result + sep;
+        result += sep;
     }
     return result;
 }
