@@ -66,6 +66,8 @@
 #include "commands/certifycertificatecommand.h"
 #include "commands/adduseridcommand.h"
 #include "commands/newcertificatecommand.h"
+#include "commands/checksumverifyfilescommand.h"
+#include "commands/checksumcreatefilescommand.h"
 
 #include "utils/detail_p.h"
 #include "utils/gnupg-helper.h"
@@ -258,6 +260,12 @@ public:
     void importCrlFromFile() {
         createAndStart<ImportCrlCommand>();
     }
+    void checksumCreateFiles() {
+        createAndStart<ChecksumCreateFilesCommand>();
+    }
+    void checksumVerifyFiles() {
+        createAndStart<ChecksumVerifyFilesCommand>();
+    }
     void configureToolbars() {
         KEditToolBar dlg( q->factory() );
         dlg.exec();
@@ -414,6 +422,10 @@ void MainWindow::Private::setupActions() {
           "document-edit-decrypt-verify", q, SLOT(decryptVerifyFiles()), QString(), false, true },
         { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
           "document-edit-sign-encrypt", q, SLOT(signEncryptFiles()), QString(), false, true },
+        { "file_checksum_create_files", i18n("Create Checksum Files..."), QString(),
+          "document-checksum-create", q, SLOT(checksumCreateFiles()), QString(), false, true },
+        { "file_checksum_verify_files", i18n("Verify Checksum Files..."), QString(),
+          "document-checksum-verify", q, SLOT(checksumVerifyFiles()), QString(), false, true },
         // View menu
         { "view_redisplay", i18n("Redisplay"), QString(),
           "view-refresh", q, SLOT(reloadCertificates()), "F5", false, true },
@@ -516,6 +528,8 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<ExportSecretKeyCommand>(    coll->action( "file_export_secret_keys" ) );
     controller.registerActionForCommand<ImportCertificateFromFileCommand>( coll->action( "file_import_certificates" ) );
     controller.registerActionForCommand<LookupCertificatesCommand>( coll->action( "file_lookup_certificates" ) );
+    controller.registerActionForCommand<ChecksumCreateFilesCommand>(coll->action( "file_checksum_create_files" ) );
+    controller.registerActionForCommand<ChecksumVerifyFilesCommand>(coll->action( "file_checksum_verify_files" ) );
     controller.registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
     controller.registerActionForCommand<DumpCrlCacheCommand>(       coll->action( "crl_dump_crl_cache" ) );
     controller.registerActionForCommand<ImportCrlCommand>(          coll->action( "crl_import_crl" ) );
