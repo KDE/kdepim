@@ -192,6 +192,7 @@ void KDateEdit::Private::lineEnterPressed()
       updateView();
     }
 
+    emit q->dateEdited( date );
     emit q->dateChanged( date );
     emit q->dateEntered( date );
   }
@@ -201,8 +202,10 @@ void KDateEdit::Private::slotTextChanged( const QString& )
 {
   const QDate date = parseDate();
 
-  if ( q->assignDate( date ) )
-    emit q->dateChanged( date );
+  if ( q->assignDate( date ) ) {
+      emit q->dateEdited( date );
+      emit q->dateChanged( date );
+  }
 
   mTextChanged = true;
 }
@@ -212,6 +215,7 @@ void KDateEdit::Private::dateSelected( const QDate &date )
   if ( q->assignDate( date ) ) {
     updateView();
     emit q->dateChanged( date );
+    emit q->dateEdited( date );
     emit q->dateEntered( date );
 
     if ( date.isValid() )
@@ -270,6 +274,9 @@ void KDateEdit::setDate( const QDate &date )
 {
   assignDate( date );
   d->updateView();
+
+  if ( date.isValid() )
+      emit dateChanged( date );
 }
 
 QDate KDateEdit::date() const
@@ -362,6 +369,7 @@ void KDateEdit::keyPressEvent( QKeyEvent *event )
       if ( assignDate( date ) ) {
         d->updateView();
         emit dateChanged( date );
+        emit dateEdited( date );
         emit dateEntered( date );
       }
     }

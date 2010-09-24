@@ -50,16 +50,16 @@ SchedulingDialog::SchedulingDialog( const QDate &startDate, const QTime &startTi
   ganttlayout->addWidget( mVisualWidget );
 #endif
 
-  connect( mStartDate, SIGNAL(dateChanged(QDate)),
+  connect( mStartDate, SIGNAL(dateEdited(QDate)),
            mResolver, SLOT(setEarliestDate(QDate)) );
-  connect( mStartTime, SIGNAL(timeChanged(QTime)),
+  connect( mStartTime, SIGNAL(timeEdited(QTime)),
            mResolver, SLOT(setEarliestTime(QTime)) );
-  connect( mEndDate, SIGNAL(dateChanged(QDate)),
+  connect( mEndDate, SIGNAL(dateEdited(QDate)),
            mResolver, SLOT(setLatestDate(QDate)) );
-  connect( mEndTime, SIGNAL(timeChanged(QTime)),
+  connect( mEndTime, SIGNAL(timeEdited(QTime)),
            mResolver, SLOT(setLatestTime(QTime)) );
 
-  connect( mStartDate, SIGNAL(dateChanged(QDate)),
+  connect( mStartDate, SIGNAL(dateEdited(QDate)),
            this, SLOT(slotStartDateChanged(QDate)) );
 
   connect( mWeekdayCombo, SIGNAL(checkedItemsChanged(QStringList)),
@@ -69,7 +69,7 @@ SchedulingDialog::SchedulingDialog( const QDate &startDate, const QTime &startTi
 
   connect( mResolver, SIGNAL(freeSlotsAvailable(const KCalCore::Period::List &)),
            mPeriodModel, SLOT(slotNewFreePeriods(const KCalCore::Period::List &)) );
-  connect( mMoveBeginTimeEdit, SIGNAL(timeChanged(const QTime &)),
+  connect( mMoveBeginTimeEdit, SIGNAL(timeEdited(const QTime &)),
            this, SLOT(slotSetEndTimeLabel(const QTime &)) );
 
   mTableView->setModel( mPeriodModel );

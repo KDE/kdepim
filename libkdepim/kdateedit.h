@@ -105,10 +105,22 @@ class KDEPIM_EXPORT KDateEdit : public QComboBox
     void dateEntered( const QDate &date );
 
     /**
-     * This signal is emitted whenever the user modifies the date.
+     * This signal is emitted whenever date is changed.
+     * Unlike dateEdited(), this signal is also emitted when the date is changed
+     * programmatically.
+     *
      * The passed date can be invalid.
      */
     void dateChanged( const QDate &date );
+
+    /**
+     * This signal is emitted whenever the date is edited by the user.
+     * Unlike dateChanged(), this signal is not emitted when the date is changed
+     * programmatically.
+     *
+     * The passed date can be invalid.
+     */
+    void dateEdited ( const QDate &date );
 
   public Q_SLOTS:
     /**

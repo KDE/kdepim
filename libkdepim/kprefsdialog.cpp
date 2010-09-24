@@ -304,7 +304,7 @@ KPrefsWidTime::KPrefsWidTime( KConfigSkeleton::ItemDateTime *item, QWidget *pare
   mLabel = new QLabel( mItem->label() + QLatin1Char( ':' ), parent );
   mTimeEdit = new KTimeEdit( parent );
   mLabel->setBuddy( mTimeEdit );
-  connect( mTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL(changed()) );
+  connect( mTimeEdit, SIGNAL(timeEdited(const QTime&)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mTimeEdit->setToolTip( toolTip );
@@ -353,7 +353,7 @@ KPrefsWidDuration::KPrefsWidDuration( KConfigSkeleton::ItemDateTime *item,
   }
   mTimeEdit->setMinimumTime( QTime( 0, 1 ) ); // [1 min]
   mTimeEdit->setMaximumTime( QTime( 24, 0 ) ); // [24 hr]
-  connect( mTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL(changed()) );
+  connect( mTimeEdit, SIGNAL(timeEdited(const QTime&)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mTimeEdit->setToolTip( toolTip );
@@ -392,7 +392,7 @@ KPrefsWidDate::KPrefsWidDate( KConfigSkeleton::ItemDateTime *item, QWidget *pare
   mLabel = new QLabel( mItem->label() + QLatin1Char( ':' ), parent );
   mDateEdit = new KDateEdit( parent );
   mLabel->setBuddy( mDateEdit );
-  connect( mDateEdit, SIGNAL(dateChanged(const QDate&)), SIGNAL(changed()) );
+  connect( mDateEdit, SIGNAL(dateEdited(const QDate&)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mDateEdit->setToolTip( toolTip );

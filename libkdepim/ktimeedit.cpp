@@ -136,6 +136,7 @@ void KTimeEdit::Private::addTime( const QTime &time )
   mTime = time.addSecs( mTime.minute() * 60 + mTime.hour() * 3600 );
   updateText();
   emit q->timeChanged( mTime );
+  emit q->timeEdited( mTime );
 }
 
 void KTimeEdit::Private::subTime( const QTime &time )
@@ -160,6 +161,7 @@ void KTimeEdit::Private::subTime( const QTime &time )
   mTime.setHMS( h, m, 0 );
   updateText();
   emit q->timeChanged( mTime );
+  emit q->timeEdited( mTime );
 }
 
 void KTimeEdit::Private::updateText()
@@ -185,6 +187,7 @@ void KTimeEdit::Private::slotActivated( int index )
   mTime = mMinumum.addSecs( index * 15 * 60 );
 
   emit q->timeChanged( mTime );
+  emit q->timeEdited( mTime );
 }
 
 void KTimeEdit::Private::slotTextChanged()
@@ -192,6 +195,7 @@ void KTimeEdit::Private::slotTextChanged()
   if ( q->inputIsValid() ) {
     mTime = q->time();
     emit q->timeChanged( mTime );
+    emit q->timeEdited( mTime );
   }
 }
 
@@ -268,6 +272,9 @@ void KTimeEdit::setTime( const QTime &newTime )
     d->mTime = newTime;
     d->updateText();
   }
+
+  if ( d->mTime.isValid() )
+    emit timeChanged( d->mTime );
 }
 
 void KTimeEdit::keyPressEvent( QKeyEvent *event )

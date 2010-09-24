@@ -113,10 +113,21 @@ class KDEPIM_EXPORT KTimeEdit : public QComboBox
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the time has been changed.
+     * Unlike timeEdited(), this signal is also emitted when the time is changed
+     * programmatically.
      *
      * @note The time can be invalid.
      */
     void timeChanged( const QTime &time );
+
+    /**
+     * This signal is emitted whenever the time has been edited by the user.
+     * Unlike timeChanged(), this signal is not emitted when the time is changed
+     * programmatically.
+     *
+     * @note The time can be invalid.
+     */
+    void timeEdited( const QTime &time );
 
   public Q_SLOTS:
     /**
