@@ -23,15 +23,9 @@
 
 #include "progressmanager.h"
 
-#include "agentprogressmonitor.h"
-
 #include <KDebug>
 #include <KLocale>
 #include <KGlobal>
-
-#include <Akonadi/AgentInstance>
-
-using namespace Akonadi;
 
 namespace KPIM {
 
@@ -210,26 +204,6 @@ ProgressItem *ProgressManager::createProgressItemImpl( const QString &parent,
 {
   ProgressItem *p = mTransactions.value( parent );
   return createProgressItemImpl( p, id, label, status, canBeCanceled, usesCrypto );
-}
-
-ProgressItem *ProgressManager::createProgressItemForAgent( ProgressItem *parent,
-                                                           const Akonadi::AgentInstance &instance,
-                                                           const QString &id,
-                                                           const QString &label,
-                                                           const QString &status,
-                                                           bool cancellable,
-                                                           bool usesCrypto )
-{
-  const bool itemAlreadyExists = ( mTransactions.value( id ) != 0 );
-  ProgressItem *t = createProgressItemImpl( parent, id, label, status, cancellable, usesCrypto );
-  // TODO ^ emits progressItemAdded() before I'm done connecting the signals.
-  // Should I block that and emit it when I'm done?
-
-  if (!itemAlreadyExists) {
-//    kDebug() << "Created ProgressItem for agent" << instance.name();
-    new AgentProgressMonitor( instance, t );
-  }
-  return t;
 }
 
 void ProgressManager::emitShowProgressDialogImpl()
