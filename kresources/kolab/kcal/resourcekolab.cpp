@@ -56,6 +56,7 @@
 
 #include <assert.h>
 
+using namespace KPIM;
 using namespace KCal;
 using namespace Kolab;
 
@@ -67,6 +68,8 @@ static const char* todoAttachmentMimeType = "application/x-vnd.kolab.task";
 static const char* journalAttachmentMimeType = "application/x-vnd.kolab.journal";
 static const char* incidenceInlineMimeType = "text/calendar";
 
+// flag to determine if a conflict has occurred during the current sync
+static bool conflictThisSync = false;
 
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
@@ -193,6 +196,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 
     { // for RAII scoping below
       TemporarySilencer t( this );
+      conflictThisSync = false;
       for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
         addIncidence( mimetype, it.data(), subResource, it.key() );
       }
@@ -378,68 +382,169 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   incidenceUpdatedSilent( incidencebase );
 }
 
+static KCal::Incidence *takeOneByChooser( KIncidenceChooser *ch,
+                                          KCal::Incidence *local, KCal::Incidence *remote )
+{
+  KCal::Incidence *result = 0;
+  ch->setIncidences( local ,remote );
+  if ( ch->exec() ) {
+    result = ch->takeIncidence();
+  }
+  return result;
+}
+
+static KCal::Incidence *takeOneByMode( KIncidenceChooser::TakeMode takeMode,
+                                       KCal::Incidence *local, KCal::Incidence *remote )
+{
+  KCal::Incidence *result = 0;
+  switch( takeMode ) {
+  case KIncidenceChooser::Newer:
+    if ( local->lastModified() == remote->lastModified() ) {
+      result = 0;
+    } else if ( local->lastModified() >  remote->lastModified() ) {
+      result = local;
+    } else {
+      result = remote;
+    }
+    break;
+  case KIncidenceChooser::Remote:
+    result = remote;
+    break;
+  case KIncidenceChooser::Local:
+    result = local;
+    break;
+  case KIncidenceChooser::Both:
+    result = 0;
+    break;
+  }
+  return result;
+}
+
 void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
 {
   if ( !inc ) {
     return;
-   }
+  }
 
-   if ( !mResolveConflict ) {
-     // we should do no conflict resolution
-     delete inc;
-     return;
-   }
-   const QString origUid = inc->uid();
-   Incidence* local = mCalendar.incidence( origUid );
-   Incidence* localIncidence = 0;
-   Incidence* addedIncidence = 0;
-   Incidence* result = 0;
-   if ( local ) {
-     if ( *local == *inc ) {
-       // real duplicate, remove the second one
-       result = local;
-     } else {
-       KIncidenceChooser* ch = new KIncidenceChooser();
-       ch->setIncidence( local ,inc );
-       if ( KIncidenceChooser::chooseMode == KIncidenceChooser::ask ) {
-         connect ( this, SIGNAL( useGlobalMode() ), ch, SLOT (  useGlobalMode() ) );
-         if ( ch->exec() ) {
-           if ( KIncidenceChooser::chooseMode != KIncidenceChooser::ask ) {
-             emit useGlobalMode() ;
-           }
-         }
-       }
-       result = ch->getIncidence();
-       delete ch;
-     }
+  if ( !mResolveConflict ) {
+    // we should do no conflict resolution
+    delete inc;
+    return;
+  }
+
+  static bool conflictThisSession = false;
+
+  const QString origUid = inc->uid();
+  Incidence* local = mCalendar.incidence( origUid );
+  Incidence* localIncidence = 0;
+  Incidence* addedIncidence = 0;
+  Incidence* result = 0;
+  if ( local ) {
+    if ( *local == *inc ) {
+      // real duplicate, remove the second one
+      result = local;
+    } else {
+      // We have a conflict.
+      //1. look in our rc file and see if this folder has a takeMode and askPolicy already
+      //2. if not, look in our rc file and see if there is a global takeMode and askPolicy already
+      //3. if not, use fallback defaults for takeMode and askPolicy
+      KConfig config( configFile() );
+
+      bool folderOnly = true;
+      KIncidenceChooser::ConflictAskPolicy askPolicy = KIncidenceChooser::Always;
+      KIncidenceChooser::TakeMode takeMode = KIncidenceChooser::Newer;
+
+      config.setGroup( "Conflicts" );
+      askPolicy =
+        (KIncidenceChooser::ConflictAskPolicy)config.readNumEntry( "AskPolicy", int( askPolicy ) );
+      takeMode =
+        (KIncidenceChooser::TakeMode)config.readNumEntry( "TakeMode", int( takeMode ) );
+
+      config.setGroup( subresource );
+      askPolicy =
+        (KIncidenceChooser::ConflictAskPolicy)config.readNumEntry( "AskPolicy", int( askPolicy ) );
+      takeMode =
+        (KIncidenceChooser::TakeMode)config.readNumEntry( "TakeMode", int( takeMode ) );
+
+      bool chooser = true;
+      switch( askPolicy ) {
+      case KIncidenceChooser::Always:
+        break;
+
+      case KIncidenceChooser::Sync:
+        if ( !conflictThisSync ) {
+          conflictThisSync = true;
+        } else {
+          chooser = false;
+        }
+        break;
+
+      case KIncidenceChooser::Session:
+        if ( !conflictThisSession ) {
+          conflictThisSession = true;
+        } else {
+          chooser = false;
+        }
+        break;
+
+      case KIncidenceChooser::Never:
+        chooser = false;
+        break;
+      }
+
+      if ( chooser ) {
+        KIncidenceChooser *ch =
+          new KIncidenceChooser( labelForSubresource( subresource ), askPolicy, folderOnly );
+        result = takeOneByChooser( ch, local, inc );
+
+        if ( ch->folderOnly() ) {
+          // write settings for this folder only
+          config.setGroup( subresource );
+          config.writeEntry( "AskPolicy", int( ch->conflictAskPolicy() ) );
+          config.writeEntry( "TakeMode", int( ch->takeMode() ) );
+        } else {
+          // write settings for global
+          config.setGroup( "Conflicts" );
+          config.writeEntry( "AskPolicy", int( ch->conflictAskPolicy() ) );
+          config.writeEntry( "TakeMode", int( ch->takeMode() ) );
+        }
+        delete ch;
+      } else {
+        result = takeOneByMode( takeMode, local, inc );
+      }
+      conflictThisSession = true;
+      conflictThisSync = true;
+    }
+  } else {
+    // nothing there locally, just take the new one. Can't Happen (TM)
+    result = inc;
+  }
+
+  if ( result == local ) {
+    delete inc;
+    localIncidence = local;
+  } else  if ( result == inc ) {
+    addedIncidence = inc;
+  } else if ( result == 0 ) { // take both
+    addedIncidence = inc;
+    addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
+    addedIncidence->setUid( CalFormat::createUniqueId() );
+    localIncidence = local;
+  }
+  const bool silent = mSilent;
+  mSilent = false;
+  if ( !localIncidence ) {
+    deleteIncidence( local ); // remove local from kmail
+  }
+  mUidsPendingDeletion.append( origUid );
+  if ( addedIncidence ) {
+    sendKMailUpdate( addedIncidence, subresource, sernum );
    } else {
-     // nothing there locally, just take the new one. Can't Happen (TM)
-     result = inc;
-   }
-   if ( result == local ) {
-     delete inc;
-     localIncidence = local;
-   } else  if ( result == inc ) {
-     addedIncidence = inc;
-   } else if ( result == 0 ) { // take both
-     addedIncidence = inc;
-     addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
-     addedIncidence->setUid( CalFormat::createUniqueId() );
-     localIncidence = local;
-   }
-   const bool silent = mSilent;
-   mSilent = false;
-   if ( !localIncidence ) {
-     deleteIncidence( local ); // remove local from kmail
-   }
-   mUidsPendingDeletion.append( origUid );
-   if ( addedIncidence ) {
-     sendKMailUpdate( addedIncidence, subresource, sernum );
-   } else {
-     kmailDeleteIncidence( subresource, sernum );// remove new from kmail
-   }
-   mSilent = silent;
+    kmailDeleteIncidence( subresource, sernum );// remove new from kmail
+  }
+  mSilent = silent;
 }
+
 void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
                                   const QString& subResource, Q_UINT32 sernum )
 {
@@ -1142,6 +1247,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map
                                               const QString& folder )
 {
   TemporarySilencer t( this );
+  conflictThisSync = false;
   for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
     addIncidence( type.latin1(), it.data(), folder, it.key() );
 }
