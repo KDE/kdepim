@@ -1,4 +1,4 @@
-# - Try to find the assuan v2 library
+# - Try :to find the assuan v2 library
 
 # Variables set:
 #  ASSUAN2_{INCLUDES,FOUND,LIBRARIES} will be set for each of the above
@@ -21,8 +21,6 @@ endmacro()
 include (MacroEnsureVersion)
 include (MacroBoolTo01)
 include (MacroLogFeature)
-
-message( STATUS "In FindAssuan2.cmake" )
 
 if ( WIN32 )
 
