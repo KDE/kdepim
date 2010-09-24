@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    commands/signencryptfilescommand.h
+    commands/checksumcreatefilescommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_COMMMANDS_SIGNENCRYPTFILESCOMMAND_H__
-#define __KLEOPATRA_COMMMANDS_SIGNENCRYPTFILESCOMMAND_H__
+#ifndef __KLEOPATRA_COMMMANDS_CHECKSUMCREATEFILESCOMMAND_H__
+#define __KLEOPATRA_COMMMANDS_CHECKSUMCREATEFILESCOMMAND_H__
 
 #include <commands/command.h>
 
@@ -44,25 +44,16 @@ class QStringList;
 namespace Kleo {
 namespace Commands {
 
-    class SignEncryptFilesCommand : public Command {
+    class ChecksumCreateFilesCommand : public Command {
         Q_OBJECT
     public:
-        explicit SignEncryptFilesCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit SignEncryptFilesCommand( KeyListController * parent );
-        explicit SignEncryptFilesCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
-        explicit SignEncryptFilesCommand( const QStringList & files, KeyListController * parent );
-        ~SignEncryptFilesCommand();
+        explicit ChecksumCreateFilesCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit ChecksumCreateFilesCommand( KeyListController * parent );
+        explicit ChecksumCreateFilesCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
+        explicit ChecksumCreateFilesCommand( const QStringList & files, KeyListController * parent );
+        ~ChecksumCreateFilesCommand();
 
         void setFiles( const QStringList & files );
-
-        void setSigningPolicy( Policy policy );
-        Policy signingPolicy() const;
-
-        void setEncryptionPolicy( Policy force );
-        Policy encryptionPolicy() const;
-
-        void setProtocol( GpgME::Protocol protocol );
-        GpgME::Protocol protocol() const;
 
     private:
         /* reimp */ void doStart();
@@ -79,4 +70,4 @@ namespace Commands {
 }
 }
 
-#endif // __KLEOPATRA_COMMMANDS_SIGNENCRYPTFILESCOMMAND_H__
+#endif // __KLEOPATRA_COMMMANDS_CHECKSUMCREATEFILESCOMMAND_H__
