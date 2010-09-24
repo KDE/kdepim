@@ -11,10 +11,20 @@ option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
+option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
+
+if(KDEPIM_BUILD_STATIC)
+  set(LIBRARY_TYPE STATIC)
+else(KDEPIM_BUILD_STATIC)
+  set(LIBRARY_TYPE SHARED)
+endif(KDEPIM_BUILD_STATIC)
 
 # cmake would not find kde for xcompile if that is not set
 if(WINCE)
     set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
+    set(LIBRARY_TYPE STATIC)
+    add_definitions(-DKDELIBS_STATIC_LIBS)
+    add_definitions(-DKDEPIM_STATIC_LIBS)
 endif(WINCE)
 
 # if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
@@ -199,15 +209,6 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUD
 if (NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
   add_definitions( -DKDEPIM_NO_KRESOURCES )
 endif (NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
-
-if(WINCE)
-  set(LIBRARY_TYPE STATIC)
-  add_definitions(-DKDELIBS_STATIC_LIBS)
-  add_definitions(-DKDEPIM_STATIC_LIBS)
-else(WINCE)
-  set(LIBRARY_TYPE SHARED)
-endif(WINCE)
-
 
 ############### Macros ###############
 
