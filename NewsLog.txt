@@ -1,3 +1,14 @@
+Friday, September 24th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue3070: Crash in KMCommand::slotStart while replying to a mail
+* kolab/issue4112: Event/Task conflict dialog is too difficult. (rt#6009)
+* kolab/issue4383: [Translation fix] Cannot enter a hierachy of text snippets
+* kolab/issue4565: Kontact Crash in QGArray::data
+
+
 Tuesday, September 21st 2010
 
 Problems addressed
