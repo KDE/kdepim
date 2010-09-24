@@ -40,6 +40,11 @@ namespace IncidenceEditorNG {
 class IncidenceDateTime;
 }
 
+namespace KPIM {
+class KTimeEdit;
+class KDateEdit;
+}
+
 class MobileIncidenceGeneral;
 class MobileIncidenceMore;
 
@@ -100,8 +105,8 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     /// We need this because we can't rely on the order in which those two are added.
     MobileIncidenceMore *mIncidenceMore;
 
-    QDateEdit *mDateWidget;
-    QTimeEdit *mTimeWidget;
+    KPIM::KDateEdit *mDateWidget;
+    KPIM::KTimeEdit *mTimeWidget;
 };
 
 #endif // INCIDENCEVIEW_H

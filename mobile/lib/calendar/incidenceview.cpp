@@ -30,7 +30,8 @@
 #include <KDebug>
 #include <KDialog>
 #include <KLocalizedString>
-
+#include <libkdepim/ktimeedit.h>
+#include <libkdepim/kdateedit.h>
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
 
@@ -139,7 +140,7 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 
 void IncidenceView::showCalendar( QObject *obj )
 {
-  mDateWidget = qobject_cast<QDateEdit*>( obj );
+  mDateWidget = qobject_cast<KPIM::KDateEdit*>( obj );
   if ( !mDateWidget )
     return;
 
@@ -157,9 +158,9 @@ void IncidenceView::setNewDate( int day, int month, int year )
 
 void IncidenceView::showClock( QObject *obj )
 {
-  mTimeWidget = qobject_cast<QTimeEdit*>( obj );
-  if ( !mTimeWidget )
-    return;
+    mTimeWidget = qobject_cast<KPIM::KTimeEdit*>( obj );
+    if ( !mTimeWidget )
+        return;
 
   QTime time = mTimeWidget->time();
   emit showClockWidget( time.hour(), time.minute(), time.second() );

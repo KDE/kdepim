@@ -57,11 +57,40 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mFreeBusyCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
+
+  mUi->mStartDateEdit->installEventFilter( this );
+  mUi->mEndDateEdit->installEventFilter( this );
+  mUi->mStartTimeEdit->installEventFilter( this );
+  mUi->mEndTimeEdit->installEventFilter( this );
 }
 
 IncidenceDateTime::~IncidenceDateTime()
 {
   delete mTimeZones;
+}
+
+bool IncidenceDateTime::eventFilter(QObject *obj, QEvent *event)
+{
+  if (event->type() == QEvent::FocusIn) {
+    if ( obj == mUi->mStartDateEdit ) {
+      kDebug() << "emiting startDateTime: " << mUi->mStartDateEdit;
+      emit startDateFocus(obj);
+    } else if ( obj == mUi->mEndDateEdit ) {
+      kDebug() << "emiting endDateTime: " << mUi->mEndDateEdit;
+      emit endDateFocus(obj);
+    } else if ( obj == mUi->mStartTimeEdit ) {
+      kDebug() << "emiting startTimeTime: " << mUi->mStartTimeEdit;
+      emit startTimeFocus(obj);
+    } else if ( obj == mUi->mEndTimeEdit ) {
+      kDebug() << "emiting endTimeTime: " << mUi->mEndTimeEdit;
+      emit endTimeFocus(obj);
+    }
+
+    return true;
+  } else {
+    // standard event processing
+    return QObject::eventFilter(obj, event);
+  }
 }
 
 void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )

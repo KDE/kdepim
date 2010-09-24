@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>492</width>
+    <width>501</width>
     <height>308</height>
    </rect>
   </property>
@@ -50,6 +50,12 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>430</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string comment="@info:tooltip">Set the title</string>
      </property>
@@ -85,6 +91,12 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>430</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string comment="@info:tooltip">Set the location</string>
      </property>
@@ -107,9 +119,6 @@
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
-     <property name="buddy">
-      <cstring>mStartDateEdit</cstring>
-     </property>
     </widget>
    </item>
    <item row="3" column="1">
@@ -119,26 +128,6 @@
      </property>
      <property name="text">
       <string comment="@option:check to-do start datetime"/>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QDateEdit" name="mStartDateEdit">
-     <property name="displayFormat">
-      <string comment="@label date display format">MM.dd.yyyy</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3">
-    <widget class="QTimeEdit" name="mStartTimeEdit">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
      </property>
     </widget>
    </item>
@@ -172,9 +161,6 @@
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
-     <property name="buddy">
-      <cstring>mEndDateEdit</cstring>
-     </property>
     </widget>
    </item>
    <item row="5" column="1">
@@ -184,32 +170,6 @@
      </property>
      <property name="text">
       <string comment="to-do due datetime"/>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <widget class="QDateEdit" name="mEndDateEdit">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="displayFormat">
-      <string comment="@label date display format">MM.dd.yyyy</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="3">
-    <widget class="QTimeEdit" name="mEndTimeEdit">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
      </property>
     </widget>
    </item>
@@ -387,9 +347,140 @@
      </property>
     </widget>
    </item>
+   <item row="3" column="2">
+    <widget class="KPIM::KDateEdit" name="mStartDateEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhPreferNumbers</set>
+     </property>
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <property name="maxVisibleItems">
+      <number>1</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="KPIM::KTimeEdit" name="mStartTimeEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhPreferNumbers</set>
+     </property>
+     <property name="maxVisibleItems">
+      <number>1</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="KPIM::KDateEdit" name="mEndDateEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhPreferNumbers</set>
+     </property>
+     <property name="maxVisibleItems">
+      <number>1</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="KPIM::KTimeEdit" name="mEndTimeEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhPreferNumbers</set>
+     </property>
+     <property name="maxVisibleItems">
+      <number>1</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KPIM::KTimeEdit</class>
+   <extends>QComboBox</extends>
+   <header>libkdepim/ktimeedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KDateEdit</class>
+   <extends>QComboBox</extends>
+   <header>libkdepim/kdateedit.h</header>
+  </customwidget>
   <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>

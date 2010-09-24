@@ -74,6 +74,13 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     QString validate();
 
   signals:
+    // used to indicate that the widgets were activated
+    void startDateFocus( QObject *obj );
+    void endDateFocus( QObject *obj );
+    void startTimeFocus( QObject *obj );
+    void endTimeFocus( QObject *obj );
+
+    // general
     void startDateTimeToggled( bool enabled );
     void startDateChanged( const QDate &newDate );
     void startTimeChanged( const QTime &newTime );
@@ -97,6 +104,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
   private slots: /// Event specific
     bool isDirty( const KCalCore::Event::Ptr &event ) const;
     bool isDirty( const KCalCore::Journal::Ptr &journal ) const;
+
+  protected:
+    bool eventFilter(QObject *obj, QEvent *event);
 
   private:
     void load( const KCalCore::Event::Ptr &event );
