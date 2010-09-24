@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    commands/signencryptfilescommand.cpp
+    commands/checksumcreatefilescommand.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -32,11 +32,11 @@
 
 #include <config-kleopatra.h>
 
-#include "signencryptfilescommand.h"
+#include "checksumcreatefilescommand.h"
 
 #include "command_p.h"
 
-#include <crypto/signencryptfilescontroller.h>
+#include <crypto/createchecksumscontroller.h>
 
 #include <utils/stl_util.h>
 #include <utils/filedialog.h>
@@ -54,11 +54,11 @@ using namespace Kleo::Commands;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class SignEncryptFilesCommand::Private : public Command::Private {
-    friend class ::Kleo::Commands::SignEncryptFilesCommand;
-    SignEncryptFilesCommand * q_func() const { return static_cast<SignEncryptFilesCommand*>( q ); }
+class ChecksumCreateFilesCommand::Private : public Command::Private {
+    friend class ::Kleo::Commands::ChecksumCreateFilesCommand;
+    ChecksumCreateFilesCommand * q_func() const { return static_cast<ChecksumCreateFilesCommand*>( q ); }
 public:
-    explicit Private( SignEncryptFilesCommand * qq, KeyListController * c );
+    explicit Private( ChecksumCreateFilesCommand * qq, KeyListController * c );
     ~Private();
 
     QStringList selectFiles() const;
@@ -76,144 +76,66 @@ private:
 private:
     QStringList files;
     shared_ptr<const ExecutionContext> shared_qq;
-    SignEncryptFilesController controller;
+    CreateChecksumsController controller;
 };
 
 
-SignEncryptFilesCommand::Private * SignEncryptFilesCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const SignEncryptFilesCommand::Private * SignEncryptFilesCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+ChecksumCreateFilesCommand::Private * ChecksumCreateFilesCommand::d_func() { return static_cast<Private*>( d.get() ); }
+const ChecksumCreateFilesCommand::Private * ChecksumCreateFilesCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
 
 #define d d_func()
 #define q q_func()
 
-SignEncryptFilesCommand::Private::Private( SignEncryptFilesCommand * qq, KeyListController * c )
+ChecksumCreateFilesCommand::Private::Private( ChecksumCreateFilesCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
       files(),
       shared_qq( qq, kdtools::nodelete() ),
       controller()
 {
-    controller.setOperationMode( SignEncryptFilesController::SignAllowed | SignEncryptFilesController::EncryptAllowed | SignEncryptFilesController::ArchiveAllowed );
+    controller.setAllowAddition( true );
 }
 
-SignEncryptFilesCommand::Private::~Private() { kDebug(); }
+ChecksumCreateFilesCommand::Private::~Private() { kDebug(); }
 
-SignEncryptFilesCommand::SignEncryptFilesCommand( KeyListController * c )
+ChecksumCreateFilesCommand::ChecksumCreateFilesCommand( KeyListController * c )
     : Command( new Private( this, c ) )
 {
     d->init();
 }
 
-SignEncryptFilesCommand::SignEncryptFilesCommand( QAbstractItemView * v, KeyListController * c )
+ChecksumCreateFilesCommand::ChecksumCreateFilesCommand( QAbstractItemView * v, KeyListController * c )
     : Command( v, new Private( this, c ) )
 {
     d->init();
 }
 
-SignEncryptFilesCommand::SignEncryptFilesCommand( const QStringList & files, KeyListController * c )
+ChecksumCreateFilesCommand::ChecksumCreateFilesCommand( const QStringList & files, KeyListController * c )
     : Command( new Private( this, c ) )
 {
     d->init();
     d->files = files;
 }
 
-SignEncryptFilesCommand::SignEncryptFilesCommand( const QStringList & files, QAbstractItemView * v, KeyListController * c )
+ChecksumCreateFilesCommand::ChecksumCreateFilesCommand( const QStringList & files, QAbstractItemView * v, KeyListController * c )
     : Command( v, new Private( this, c ) )
 {
     d->init();
     d->files = files;
 }
 
-void SignEncryptFilesCommand::Private::init() {
+void ChecksumCreateFilesCommand::Private::init() {
     controller.setExecutionContext( shared_qq );
     connect( &controller, SIGNAL(done()), q, SLOT(slotControllerDone()) );
     connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
 }
 
-SignEncryptFilesCommand::~SignEncryptFilesCommand() { kDebug(); }
+ChecksumCreateFilesCommand::~ChecksumCreateFilesCommand() { kDebug(); }
 
-void SignEncryptFilesCommand::setFiles( const QStringList & files ) {
+void ChecksumCreateFilesCommand::setFiles( const QStringList & files ) {
     d->files = files;
 }
 
-void SignEncryptFilesCommand::setSigningPolicy( Policy policy ) {
-    unsigned int mode = d->controller.operationMode();
-    mode &= ~SignEncryptFilesController::SignMask;
-    switch ( policy ) {
-    case NoPolicy:
-    case Allow:
-        mode |= SignEncryptFilesController::SignAllowed ;
-        break;
-    case Deny:
-        mode |= SignEncryptFilesController::SignDisallowed ;
-        break;
-    case Force:
-        mode |= SignEncryptFilesController::SignForced ;
-        break;
-    }
-    try {
-        d->controller.setOperationMode( mode );
-    } catch ( ... ) {}
-}
-
-Policy SignEncryptFilesCommand::signingPolicy() const {
-    const unsigned int mode = d->controller.operationMode();
-    switch ( mode & SignEncryptFilesController::SignMask ) {
-    default:
-        assert( !"This shouldn't happen!" );
-        return NoPolicy;
-    case SignEncryptFilesController::SignAllowed:
-        return Allow;
-    case SignEncryptFilesController::SignForced:
-        return Force;
-    case SignEncryptFilesController::SignDisallowed:
-        return Deny;
-    }
-}
-
-void SignEncryptFilesCommand::setEncryptionPolicy( Policy policy ) {
-    unsigned int mode = d->controller.operationMode();
-    mode &= ~SignEncryptFilesController::EncryptMask;
-    switch ( policy ) {
-    case NoPolicy:
-    case Allow:
-        mode |= SignEncryptFilesController::EncryptAllowed ;
-        break;
-    case Deny:
-        mode |= SignEncryptFilesController::EncryptDisallowed ;
-        break;
-    case Force:
-        mode |= SignEncryptFilesController::EncryptForced ;
-        break;
-    }
-    try {
-        d->controller.setOperationMode( mode );
-    } catch ( ... ) {}
-}
-
-Policy SignEncryptFilesCommand::encryptionPolicy() const {
-    const unsigned int mode = d->controller.operationMode();
-    switch ( mode & SignEncryptFilesController::EncryptMask ) {
-    default:
-        assert( !"This shouldn't happen!" );
-        return NoPolicy;
-    case SignEncryptFilesController::EncryptAllowed:
-        return Allow;
-    case SignEncryptFilesController::EncryptForced:
-        return Force;
-    case SignEncryptFilesController::EncryptDisallowed:
-        return Deny;
-    }
-}
-
-void SignEncryptFilesCommand::setProtocol( GpgME::Protocol proto ) {
-    d->controller.setProtocol( proto );
-}
-
-GpgME::Protocol SignEncryptFilesCommand::protocol() const {
-    return d->controller.protocol();
-}
-
-void SignEncryptFilesCommand::doStart() {
+void ChecksumCreateFilesCommand::doStart() {
 
     try {
 
@@ -230,21 +152,21 @@ void SignEncryptFilesCommand::doStart() {
     } catch ( const std::exception & e ) {
         d->information( i18n("An error occurred: %1",
                              QString::fromLocal8Bit( e.what() ) ),
-                        i18n("Sign/Encrypt Files Error") );
+                        i18n("Create Checksum Files Error") );
         d->finished();
     }
 }
 
-void SignEncryptFilesCommand::doCancel() {
+void ChecksumCreateFilesCommand::doCancel() {
     kDebug();
     d->controller.cancel();
 }
 
-QStringList SignEncryptFilesCommand::Private::selectFiles() const {
-    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Sign and/or Encrypt" ), "enc" );
+QStringList ChecksumCreateFilesCommand::Private::selectFiles() const {
+    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Create Checksums For" ), "chk" );
 }
 
 #undef d
 #undef q
 
-#include "moc_signencryptfilescommand.cpp"
+#include "moc_checksumcreatefilescommand.cpp"

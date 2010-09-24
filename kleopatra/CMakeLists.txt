@@ -258,6 +258,7 @@ set( _kleopatra_SRCS
   commands/newcertificatecommand.cpp
   commands/setinitialpincommand.cpp
   commands/learncardkeyscommand.cpp
+  commands/checksumcreatefilescommand.cpp
   
   ${_kleopatra_uiserver_files}
 
