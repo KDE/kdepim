@@ -86,11 +86,13 @@ class KDEPIM_EXPORT KDateEdit : public QComboBox
      * Sets the earliest date which can be entered.
      *
      * @param date Earliest date allowed, or invalid to remove the minimum limit.
-     * @param errorDate Error message to be displayed when a date earlier than
-     *                  @p date is entered. Set to QString() to use the default
-     *                  error message.
+     * @param errorMsg Error message to be displayed when a date earlier than
+     *                 @p date is entered. Set to QString() to use the default
+     *                 error message.
+     *
+     * @see setDateRange()
      */
-    void setMinimumDate( const QDate& date, const QString& errorDate = QString() );
+    void setMinimumDate( const QDate& date, const QString& errorMsg = QString() );
 
     /**
      * Returns the earliest date which can be entered.
@@ -102,17 +104,37 @@ class KDEPIM_EXPORT KDateEdit : public QComboBox
      * Sets the latest date which can be entered.
      *
      * @param date Latest date allowed, or invalid to remove the maximum limit.
-     * @param errorDate Error message to be displayed when a date later than
-     *                  @p date is entered. Set to QString() to use the default
-     *                  error message.
+     * @param errorMsg Error message to be displayed when a date later than
+     *                 @p date is entered. Set to QString() to use the default
+     *                 error message.
+     *
+     * @see setDateRange()
      */
-    void setMaximumDate( const QDate& date, const QString& errorDate = QString() );
+    void setMaximumDate( const QDate& date, const QString& errorMsg = QString() );
 
     /**
      * Returns the latest date which can be entered.
      * If there is no maximum date, returns an invalid date.
      */
     QDate maximumDate() const;
+
+    /**
+     * Sets the range of dates which can be entered.
+     *
+     * @param earliest Earliest date allowed, or invalid to remove the minimum limit.
+     * @param latest   Latest date allowed, or invalid to remove the maximum limit.
+     * @param earlyErrorMsg Error message to be displayed when a date earlier than
+     *                  @p earliest is entered. Set to QString() to use the default
+     *                  error message.
+     * @param lateErrorMsg Error message to be displayed when a date later than
+     *                  @p latest is entered. Set to QString() to use the default
+     *                  error message.
+     *
+     * @see setMinimumDate(), setMaximumDate()
+     */
+    void setDateRange( const QDate& earliest, const QDate& latest,
+                       const QString& earlyErrorMsg = QString(),
+                       const QString& lateErrorMsg = QString() );
 
     /**
      * Sets whether the widget is read-only for the user. If read-only, the

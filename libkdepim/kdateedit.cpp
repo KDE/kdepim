@@ -332,13 +332,13 @@ QDate KDateEdit::date() const
   return d->mDate;
 }
 
-void KDateEdit::setMinimumDate( const QDate& minDate, const QString& errorDate )
+void KDateEdit::setMinimumDate( const QDate& minDate, const QString& errorMsg )
 {
   d->mMinDate = minDate;
   if ( d->mMinDate.isValid()  &&  date().isValid()  &&  date() < d->mMinDate ) {
     setDate( d->mMinDate );
   }
-  d->mMinDateErrString = errorDate;
+  d->mMinDateErrString = errorMsg;
 }
 
 QDate KDateEdit::minimumDate() const
@@ -346,18 +346,25 @@ QDate KDateEdit::minimumDate() const
   return d->mMinDate;
 }
 
-void KDateEdit::setMaximumDate( const QDate& maxDate, const QString& errorDate )
+void KDateEdit::setMaximumDate( const QDate& maxDate, const QString& errorMsg )
 {
   d->mMaxDate = maxDate;
   if ( d->mMaxDate.isValid()  &&  date().isValid()  &&  date() > d->mMaxDate ) {
     setDate( d->mMaxDate );
   }
-  d->mMaxDateErrString = errorDate;
+  d->mMaxDateErrString = errorMsg;
 }
 
 QDate KDateEdit::maximumDate() const
 {
   return d->mMaxDate;
+}
+
+void KDateEdit::setDateRange( const QDate& earliest, const QDate& latest,
+                              const QString& earlyErrorMsg, const QString& lateErrorMsg )
+{
+  setMinimumDate( earliest, earlyErrorMsg );
+  setMaximumDate( latest, lateErrorMsg );
 }
 
 void KDateEdit::setReadOnly( bool readOnly )
