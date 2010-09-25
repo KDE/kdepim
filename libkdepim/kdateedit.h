@@ -2,7 +2,7 @@
   This file is part of libkdepim.
 
   Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
-  Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2002,2010 David Jarvie <djarvie@kde.org>
   Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
 
   This library is free software; you can redistribute it and/or
@@ -44,12 +44,17 @@ namespace KPIM {
   to type in the day name to get the date. The following keywords
   are supported (in the native language): tomorrow, yesterday, today,
   monday, tuesday, wednesday, thursday, friday, saturday, sunday.
+  The user may also use the up and down arrow on the keyboard to
+  increment and decrement the date.
+
+  Upper and/or lower limits may be set on the range of dates which the
+  user is allowed to enter.
 
   @image html kdateedit.png "This is how it looks"
 
   @author Cornelius Schumacher <schumacher@kde.org>
   @author Mike Pilone <mpilone@slac.com>
-  @author David Jarvie <software@astrojar.org.uk>
+  @author David Jarvie <djarvie@kde.org>
   @author Tobias Koenig <tokoe@kde.org>
 */
 class KDEPIM_EXPORT KDateEdit : public QComboBox
@@ -76,6 +81,38 @@ class KDEPIM_EXPORT KDateEdit : public QComboBox
      *       you have to check validity yourself.
      */
     QDate date() const;
+
+    /**
+     * Sets the earliest date which can be entered.
+     *
+     * @param date Earliest date allowed, or invalid to remove the minimum limit.
+     * @param errorDate Error message to be displayed when a date earlier than
+     *                  @p date is entered. Set to QString() to use the default
+     *                  error message.
+     */
+    void setMinimumDate( const QDate& date, const QString& errorDate = QString() );
+
+    /**
+     * Returns the earliest date which can be entered.
+     * If there is no minimum date, returns an invalid date.
+     */
+    QDate minimumDate() const;
+
+    /**
+     * Sets the latest date which can be entered.
+     *
+     * @param date Latest date allowed, or invalid to remove the maximum limit.
+     * @param errorDate Error message to be displayed when a date later than
+     *                  @p date is entered. Set to QString() to use the default
+     *                  error message.
+     */
+    void setMaximumDate( const QDate& date, const QString& errorDate = QString() );
+
+    /**
+     * Returns the latest date which can be entered.
+     * If there is no maximum date, returns an invalid date.
+     */
+    QDate maximumDate() const;
 
     /**
      * Sets whether the widget is read-only for the user. If read-only, the

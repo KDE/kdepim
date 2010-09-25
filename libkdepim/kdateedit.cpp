@@ -2,7 +2,7 @@
   This file is part of libkdepim.
 
   Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
-  Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2002,2010 David Jarvie <djarvie@kde.org>
   Copyright (c) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
 
@@ -28,6 +28,7 @@
 
 #include "kdatepickerpopup.h"
 
+#include <KMessageBox>
 #include <KCalendarSystem>
 #include <KGlobal>
 #include <KGlobalSettings>
@@ -91,7 +92,11 @@ class KDateEdit::Private
     QDate parseDate( bool *replaced = 0 ) const;
     void updateView();
     void setupKeywords();
+    bool newDateEntered( const QDate& newDate );
+  private:
+    void pastLimitMessage( const QDate& limit, const QString& error, const KLocalizedString& defaultError );
 
+  public:
     // slots
     void lineEnterPressed();
     void slotTextChanged( const QString& );
@@ -102,6 +107,10 @@ class KDateEdit::Private
     KDatePickerPopup *mPopup;
 
     QDate mDate;
+    QDate mMinDate;               // minimum allowed date, or invalid for no minimum
+    QDate mMaxDate;               // maximum allowed date, or invalid for no maximum
+    QString mMinDateErrString;    // error message when entered date < mMinDate
+    QString mMaxDateErrString;    // error message when entered date > mMaxDate
     bool mReadOnly;
     bool mTextChanged;
     bool mDiscardNextMousePress;
@@ -181,6 +190,50 @@ void KDateEdit::Private::setupKeywords()
   }
 }
 
+// Check a new date against any minimum or maximum date.
+bool KDateEdit::Private::newDateEntered( const QDate& newDate )
+{
+  QDate date = newDate;
+  if ( newDate.isValid() )
+  {
+    QString errString;
+    KLocalizedString message;
+    if ( mMinDate.isValid()  &&  newDate < mMinDate ) {
+      message   = ki18nc( "@info", "Date cannot be earlier than %1" );
+      errString = mMinDateErrString;
+      date      = mMinDate;
+    }
+    else if ( mMaxDate.isValid()  &&  newDate > mMaxDate ) {
+      message   = ki18nc( "@info", "Date cannot be later than %1" );
+      errString = mMaxDateErrString;
+      date      = mMaxDate;
+    }
+    if ( !message.isEmpty() ) {
+      q->assignDate( date );
+      updateView();
+      pastLimitMessage( date, errString, message );
+    }
+  }
+
+  emit q->dateChanged( date );
+  emit q->dateEdited( date );
+  emit q->dateEntered( date );
+
+  return date.isValid();
+}
+
+void KDateEdit::Private::pastLimitMessage( const QDate& limit, const QString& error, const KLocalizedString& defaultError )
+{
+  QString errString = error;
+  if ( errString.isEmpty() ) {
+    errString = ( limit == QDate::currentDate() )
+              ? i18nc( "@info/plain", "today" )
+              : KGlobal::locale()->formatDate( limit, KLocale::ShortDate );
+    errString = defaultError.subs( errString ).toString();
+  }
+  KMessageBox::sorry( q, errString );
+}
+
 void KDateEdit::Private::lineEnterPressed()
 {
   bool replaced = false;
@@ -192,9 +245,7 @@ void KDateEdit::Private::lineEnterPressed()
       updateView();
     }
 
-    emit q->dateEdited( date );
-    emit q->dateChanged( date );
-    emit q->dateEntered( date );
+    newDateEntered( date );
   }
 }
 
@@ -214,12 +265,9 @@ void KDateEdit::Private::dateSelected( const QDate &date )
 {
   if ( q->assignDate( date ) ) {
     updateView();
-    emit q->dateChanged( date );
-    emit q->dateEdited( date );
-    emit q->dateEntered( date );
-
-    if ( date.isValid() )
+    if ( newDateEntered( date ) ) {
       mPopup->hide();
+    }
   }
 }
 
@@ -282,6 +330,34 @@ void KDateEdit::setDate( const QDate &date )
 QDate KDateEdit::date() const
 {
   return d->mDate;
+}
+
+void KDateEdit::setMinimumDate( const QDate& minDate, const QString& errorDate )
+{
+  d->mMinDate = minDate;
+  if ( d->mMinDate.isValid()  &&  date().isValid()  &&  date() < d->mMinDate ) {
+    setDate( d->mMinDate );
+  }
+  d->mMinDateErrString = errorDate;
+}
+
+QDate KDateEdit::minimumDate() const
+{
+  return d->mMinDate;
+}
+
+void KDateEdit::setMaximumDate( const QDate& maxDate, const QString& errorDate )
+{
+  d->mMaxDate = maxDate;
+  if ( d->mMaxDate.isValid()  &&  date().isValid()  &&  date() > d->mMaxDate ) {
+    setDate( d->mMaxDate );
+  }
+  d->mMaxDateErrString = errorDate;
+}
+
+QDate KDateEdit::maximumDate() const
+{
+  return d->mMaxDate;
 }
 
 void KDateEdit::setReadOnly( bool readOnly )
@@ -368,9 +444,7 @@ void KDateEdit::keyPressEvent( QKeyEvent *event )
       date = date.addDays( step );
       if ( assignDate( date ) ) {
         d->updateView();
-        emit dateChanged( date );
-        emit dateEdited( date );
-        emit dateEntered( date );
+        d->newDateEntered( date );
       }
     }
   }
