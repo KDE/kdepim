@@ -26,6 +26,7 @@ ContactPhotoMemento::ContactPhotoMemento( const QString &emailAddress )
   : QObject( 0 ), mFinished( false )
 {
   Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
+  searchJob->setLimit( 1 );
   searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
   connect( searchJob, SIGNAL( result( KJob* ) ),
            this, SLOT( slotSearchJobFinished( KJob* ) ) );
@@ -34,20 +35,16 @@ ContactPhotoMemento::ContactPhotoMemento( const QString &emailAddress )
 void ContactPhotoMemento::slotSearchJobFinished( KJob *job )
 {
   mFinished = true;
-  Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob*>( job );
+  const Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob*>( job );
   if ( searchJob->error() ) {
     kWarning() << "Unable to fetch photo for contact:" << searchJob->errorText();
     return;
   }
 
   if ( searchJob->contacts().size() == 1 ) {
-
-    KABC::Addressee addressee = searchJob->contacts().first();
+    const KABC::Addressee addressee = searchJob->contacts().first();
     mPhoto = addressee.photo();
     emit update( Viewer::Delayed );
-
-  } else if ( searchJob->contacts().size() > 1 ) {
-    // TODO: Figure out something here...
   }
 }
 
@@ -64,9 +61,7 @@ KABC::Picture ContactPhotoMemento::photo() const
 
 void ContactPhotoMemento::detach()
 {
-  disconnect( this, SIGNAL(update(Viewer::UpdateMode)), 0, 0 );
+  disconnect( this, SIGNAL( update( Viewer::UpdateMode ) ), 0, 0 );
 }
-
-
 
 #include "contactphotomemento.moc"
