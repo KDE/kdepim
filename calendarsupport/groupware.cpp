@@ -78,7 +78,7 @@ bool Groupware::handleInvitation( const QString &receiver, const QString &iCal,
   const QString action = type;
 
   CalendarAdaptor::Ptr adaptor( new CalendarAdaptor( mCalendar, 0 ) );
-  KCalCore::ScheduleMessage *message = mFormat.parseScheduleMessage( adaptor, iCal );
+  KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( adaptor, iCal );
   if ( !message ) {
     QString errorMessage;
     if ( mFormat.exception() ) {
@@ -97,7 +97,6 @@ bool Groupware::handleInvitation( const QString &receiver, const QString &iCal,
   KCalCore::ScheduleMessage::Status status = message->status();
   KCalCore::Incidence::Ptr incidence = message->event().staticCast<KCalCore::Incidence>();
   if ( !incidence ) {
-    delete message;
     return false;
   }
   MailScheduler scheduler( mCalendar );
@@ -151,7 +150,6 @@ bool Groupware::handleInvitation( const QString &receiver, const QString &iCal,
     item.setPayload( KCalCore::Incidence::Ptr( incidence->clone() ) );
     mDelegate->requestIncidenceEditor( item );
   }
-  delete message;
   return true;
 }
 

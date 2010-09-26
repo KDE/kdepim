@@ -196,8 +196,7 @@ bool InvitationHandler::receiveInvitation( const QString &receiver,
   KCalCore::ICalFormat mFormat;
 
   CalendarAdaptor::Ptr adaptor( new CalendarAdaptor( d->mCalendar, d->mParent ) );
-  QScopedPointer<KCalCore::ScheduleMessage> message(
-    mFormat.parseScheduleMessage( adaptor, iCal ) );
+  KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( adaptor, iCal );
 
   if ( !message ) {
     QString errorMessage = i18n( "Unknown error while parsing iCal invitation" );

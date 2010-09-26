@@ -269,7 +269,7 @@ static Incidence::Ptr icalToString( const QString &iCal )
 {
   MemoryCalendar::Ptr calendar( new MemoryCalendar( KSystemTimeZones::local() ) ) ;
   ICalFormat format;
-  ScheduleMessage *message = format.parseScheduleMessage( calendar, iCal );
+  ScheduleMessage::Ptr message = format.parseScheduleMessage( calendar, iCal );
   if ( !message ) {
     //TODO: Error message?
     return Incidence::Ptr();
