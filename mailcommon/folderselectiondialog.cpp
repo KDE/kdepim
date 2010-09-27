@@ -88,7 +88,9 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   d->folderTreeWidget->disableContextMenuAndExtraColumn();
   d->folderTreeWidget->readableCollectionProxyModel()->setEnabledCheck( ( options & EnableCheck ) );
   d->folderTreeWidget->folderTreeView()->setTooltipsPolicy( FolderTreeWidget::DisplayNever );
+  #ifndef QT_NO_DRAGANDDROP
   d->folderTreeWidget->folderTreeView()->setDragDropMode( QAbstractItemView::NoDragDrop );
+  #endif
   layout->addWidget( d->folderTreeWidget );
 
   enableButton( KDialog::Ok, false );

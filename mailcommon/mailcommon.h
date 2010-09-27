@@ -110,15 +110,19 @@ public:
   void updateSystemTray();
 
   virtual bool showPopupAfterDnD() { //TODO:Implement, use GlobalSettings::self()
+    return false;
   }
 
   virtual bool excludeImportantMailFromExpiry() { //TODO:Implement, use GlobalSettings::self()
+    return false;
   }
   
   virtual qreal closeToQuotaThreshold() { //TODO:Implement, use GlobalSettings::self()
+    return 0;
   }
 
   virtual Akonadi::Collection::Id lastSelectedFolder() {//TODO:Implement, use GlobalSettings::self()
+    return 0;
   }
 
   virtual void setLastSelectedFolder( const Akonadi::Collection::Id  &col ) {//TODO:Implement, use GlobalSettings::self()
