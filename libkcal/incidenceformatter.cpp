@@ -2137,7 +2137,7 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
   }
 }
 
-static QString invitationAttendees( Incidence *incidence )
+static QString invitationAttendees( Incidence *incidence, Attendee *sender )
 {
   QString tmpStr;
   if ( !incidence ) {
@@ -2155,10 +2155,19 @@ static QString invitationAttendees( Incidence *incidence )
   Attendee::List attendees = incidence->attendees();
   if ( !attendees.isEmpty() ) {
 
+    QString statusStr;
     Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
       Attendee *a = *it;
       if ( !iamAttendee( a ) ) {
+        if ( sender && a->email() == sender->email() ) {
+          // use the attendee taken from the response incidence,
+          // rather than the attendee from the calendar incidence.
+          a = sender;
+          statusStr = i18n( "%1 (<i>unrecorded</i>)" ).arg( a->statusStr() );
+        } else {
+          statusStr = a->statusStr();
+        }
         count++;
         if ( count == 1 ) {
           tmpStr += "<table border=\"1\" cellpadding=\"1\" cellspacing=\"0\" columns=\"2\">";
@@ -2173,7 +2182,7 @@ static QString invitationAttendees( Incidence *incidence )
           tmpStr += i18n(" (delegated to %1)" ).arg( a->delegate() );
         }
         tmpStr += "</td>";
-        tmpStr += "<td>" + a->statusStr() + "</td>";
+        tmpStr += "<td>" + statusStr + "</td>";
         tmpStr += "</tr>";
       }
     }
@@ -2880,7 +2889,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
   // Add the attendee list if I am the organizer
   if ( myInc && helper->calendar() ) {
-    html += invitationAttendees( helper->calendar()->incidence( inc->uid() ) );
+    html += invitationAttendees( helper->calendar()->incidence( inc->uid() ), a );
   }
 
   // close the top-level table
