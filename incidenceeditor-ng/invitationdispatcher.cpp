@@ -40,7 +40,7 @@ class InvitationDispatcherPrivate
     InvitationDispatcherPrivate( CalendarSupport::Calendar *calendar );
     bool myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &oldInc,
                                   const KCalCore::Incidence::Ptr &newInc );
-    void processItemSave( EditorItemManager::SaveAction action );
+    void processItemSave( IncidenceEditorNG::EditorItemManager::SaveAction action );
     void sentEventInvitationMessage();
     void sentEventModifiedMessage();
     void resetManager();
@@ -183,10 +183,10 @@ void InvitationDispatcher::setItemManager( EditorItemManager *manager )
   d->mManager = manager;
   connect( manager, SIGNAL( destroyed() ), SLOT( resetManager() ) );
 
-  qRegisterMetaType<EditorItemManager::SaveAction>( "EditorItemManager::SaveAction" );
+  qRegisterMetaType<IncidenceEditorNG::EditorItemManager::SaveAction>( "IncidenceEditorNG::EditorItemManager::SaveAction" );
 
-  connect( manager, SIGNAL(itemSaveFinished(EditorItemManager::SaveAction)),
-           SLOT(processItemSave(EditorItemManager::SaveAction)), Qt::QueuedConnection );
+  connect( manager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+           SLOT(processItemSave(IncidenceEditorNG::EditorItemManager::SaveAction)), Qt::QueuedConnection );
 }
 
 }
