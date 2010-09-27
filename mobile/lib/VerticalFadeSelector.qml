@@ -85,11 +85,11 @@ Item {
         return 0;
     }
 
-    function toggleState(index)
+    function toggleState(newValue)
     {
         state = (state == "selected") ? "unselected" : "selected";
         if (state == "unselected")
-            fadeselector.value = index;
+            fadeselector.value = newValue;
         else
             fadeselector.selected();
     }
@@ -102,7 +102,7 @@ Item {
             height: fadeselector.height/2
             opacity: fadeselector.focus ? relativeopacity(parent.y, y, height) : indexopacity(index);
             Text {
-                text: index
+                text: (value == "") ? index : value
                 anchors.fill: parent
                 color: "#004bb8"
                 font.bold: true
@@ -114,7 +114,8 @@ Item {
                 hoverEnabled: true
                 anchors.fill: parent
                 onClicked: {
-                    toggleState(index)
+                    var newValue = (value == "") ? index : value;
+                    toggleState(newValue)
                 }
             }
         }

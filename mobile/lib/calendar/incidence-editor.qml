@@ -23,6 +23,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.incidenceeditors 4.5 as IncidenceEditors
 
 KPIM.MainView {
+  id: mainview
 
   Connections {
     target: calendarWidget
@@ -62,6 +63,15 @@ KPIM.MainView {
     }
   }
 
+  function setupModel(total, parent) {
+    var qmlstr = "import Qt 4.7; ListModel { }";
+    var newObject = Qt.createQmlObject(qmlstr, parent);
+    for(var i=1; i <= total; i++) {
+        newObject.append({"value": i});
+    }
+    return newObject;
+  }
+
   SlideoutPanelContainer {
     anchors.fill: parent
     z: 50
@@ -89,8 +99,9 @@ KPIM.MainView {
               KPIM.VerticalFadeSelector {
                 id: daySelector
                 height: 100
-                model: myCalendar.daysInMonth
-                currentIndex: myCalendar.day
+                model: mainview.setupModel(myCalendar.daysInMonth, calendarWidget)
+                // value - 1 because the index starts at '0'
+                currentIndex: myCalendar.day - 1
                 onValueChanged: myCalendar.day = value;
                 onSelected: {
                     monthSelector.state = "unselected";
@@ -101,8 +112,9 @@ KPIM.MainView {
               KPIM.VerticalFadeSelector {
                 id: monthSelector
                 height: 100
-                model: 12
-                currentIndex: myCalendar.month
+                model: mainview.setupModel(12, calendarWidget)
+                // value - 1 because the index starts at '0'
+                currentIndex: myCalendar.month - 1
                 onValueChanged: myCalendar.month = value;
                 onSelected: {
                     daySelector.state = "unselected";
@@ -114,8 +126,9 @@ KPIM.MainView {
                 id: yearSelector
                 height: 100
                 // high enough :)
-                model: 3000
-                currentIndex: myCalendar.year
+                model: mainview.setupModel(3000, calendarWidget)
+                // value - 1 because the index starts at '0'
+                currentIndex: myCalendar.year - 1
                 onValueChanged: myCalendar.year = value;
                 onSelected: {
                     daySelector.state = "unselected";
