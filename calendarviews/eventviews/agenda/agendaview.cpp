@@ -651,11 +651,6 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
   connect( agenda, SIGNAL(endMultiModify()),
                    SIGNAL(endMultiModify()) );
 
-  connect( agenda, SIGNAL(itemModified(AgendaItem *,uint)),
-                   SLOT(updateEventDates(AgendaItem *,uint)) );
-  connect( agenda, SIGNAL(enableAgendaUpdate(bool)),
-                   SLOT(enableAgendaUpdate(bool)) );
-
   // drag signals
   connect( agenda, SIGNAL(startDragSignal(Akonadi::Item)),
            SLOT(startDrag(Akonadi::Item)) );
