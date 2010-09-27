@@ -30,7 +30,6 @@
 
 #include <Akonadi/Item>
 
-#include <KCalCore/IncidenceBase> // for DateList
 #include <KCalCore/Todo>
 
 #include <QFrame>
@@ -45,7 +44,7 @@ namespace EventViews {
 
 class Agenda;
 class AgendaItem;
-class EventView;
+class AgendaView;
 
 class EVENTVIEWS_EXPORT MarcusBains : public QFrame
 {
@@ -67,9 +66,9 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 {
   Q_OBJECT
   public:
-    Agenda ( EventView *eventView, QScrollArea *scrollArea, int columns, int rows, int rowSize );
+    Agenda ( AgendaView *agendaView, QScrollArea *scrollArea, int columns, int rows, int rowSize );
 
-    Agenda ( EventView *eventView, QScrollArea *scrollArea, int columns );
+    Agenda ( AgendaView *agendaView, QScrollArea *scrollArea, int columns );
 
     virtual ~Agenda();
 
@@ -198,9 +197,6 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void showIncidencePopupSignal( const Akonadi::Item &, const QDate &);
 
     void showNewEventPopupSignal();
-
-    // If the incidence is multi-day, item is the first one
-    void itemModified( AgendaItem::QPtr item, uint atomicOperationId );
 
     void incidenceSelected( const Akonadi::Item &, const QDate & );
     void startMultiModify( const QString & );
@@ -337,7 +333,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 class EVENTVIEWS_EXPORT AgendaScrollArea : public QScrollArea
 {
   public:
-    AgendaScrollArea( bool allDay, EventView *eventView, QWidget *parent );
+    AgendaScrollArea( bool allDay, AgendaView *agendaView, QWidget *parent );
     ~AgendaScrollArea();
 
     Agenda *agenda() const;

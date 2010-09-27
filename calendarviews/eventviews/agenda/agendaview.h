@@ -142,6 +142,10 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     /** Last shown day */
     QDate endDate() const;
 
+    /** Update event belonging to agenda item
+        If the incidence is multi-day, item is the first one
+    */
+    void updateEventDates( AgendaItem *item, uint atomicOperationId );
   public slots:
     virtual void updateView();
     virtual void updateConfig();
@@ -212,9 +216,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     virtual void resizeEvent( QResizeEvent *resizeEvent );
 
   protected Q_SLOTS:
-    /** Update event belonging to agenda item */
-    void updateEventDates( AgendaItem *item, uint atomicOperationId );
-
     void updateEventIndicatorTop( int newY );
     void updateEventIndicatorBottom( int newY );
 
