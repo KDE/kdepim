@@ -423,9 +423,9 @@ void MainWindow::Private::setupActions() {
         { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
           "document-edit-sign-encrypt", q, SLOT(signEncryptFiles()), QString(), false, true },
         { "file_checksum_create_files", i18n("Create Checksum Files..."), QString(),
-          "document-checksum-create", q, SLOT(checksumCreateFiles()), QString(), false, true },
+          0/*"document-checksum-create"*/, q, SLOT(checksumCreateFiles()), QString(), false, true },
         { "file_checksum_verify_files", i18n("Verify Checksum Files..."), QString(),
-          "document-checksum-verify", q, SLOT(checksumVerifyFiles()), QString(), false, true },
+          0/*"document-checksum-verify"*/, q, SLOT(checksumVerifyFiles()), QString(), false, true },
         // View menu
         { "view_redisplay", i18n("Redisplay"), QString(),
           "view-refresh", q, SLOT(reloadCertificates()), "F5", false, true },
