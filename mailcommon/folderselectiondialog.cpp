@@ -22,7 +22,7 @@
 #include "foldertreeview.h"
 #include "foldercollection.h"
 #include "readablecollectionproxymodel.h"
-#include "mailcommon.h"
+#include "mailkernel.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>
@@ -36,6 +36,8 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 
+namespace MailCommon {
+
 class FolderSelectionDialog::FolderSelectionDialogPrivate
 {
 public:
@@ -48,10 +50,10 @@ public:
   FolderTreeWidget *folderTreeWidget;
   bool mNotAllowToCreateNewFolder;
   bool mUseGlobalSettings;
-  MailCommon *mMailCommon;
+  Kernel *mMailCommon;
 };
 
-FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOptions options, MailCommon *mailCommon )
+FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOptions options, Kernel *mailCommon )
   :KDialog( parent ), d( new FolderSelectionDialogPrivate() )
 {
   setObjectName( "folder dialog" );
@@ -239,5 +241,8 @@ void FolderSelectionDialog::hideEvent( QHideEvent * )
 {
   d->folderTreeWidget->clearFilter();
 }
+
+}
+
 
 #include "folderselectiondialog.moc"

@@ -17,7 +17,7 @@
 */
 
 #include "foldertreeview.h"
-#include "mailcommon.h"
+#include "mailkernel.h"
 
 #include <KDebug>
 #include <KLocale>
@@ -32,7 +32,9 @@
 #include <QHeaderView>
 #include <QMouseEvent>
 
-FolderTreeView::FolderTreeView(MailCommon* mailCommon, QWidget* parent, bool showUnreadCount )
+namespace MailCommon {
+  
+FolderTreeView::FolderTreeView(Kernel* mailCommon, QWidget* parent, bool showUnreadCount )
   : Akonadi::EntityTreeView( parent ),
     mbDisableContextMenuAndExtraColumn( false ),
     mMailCommon( mailCommon )
@@ -41,7 +43,7 @@ FolderTreeView::FolderTreeView(MailCommon* mailCommon, QWidget* parent, bool sho
 }
 
 
-FolderTreeView::FolderTreeView(MailCommon* mailCommon, KXMLGUIClient* xmlGuiClient, QWidget* parent, bool showUnreadCount )
+FolderTreeView::FolderTreeView(Kernel* mailCommon, KXMLGUIClient* xmlGuiClient, QWidget* parent, bool showUnreadCount )
   :Akonadi::EntityTreeView( xmlGuiClient, parent ), mbDisableContextMenuAndExtraColumn( false ),
     mMailCommon( mailCommon )
 {
@@ -479,6 +481,8 @@ void FolderTreeView::mousePressEvent( QMouseEvent * e )
   const bool buttonPressedIsMiddle = ( e->button() == Qt::MidButton );
   emit prefereCreateNewTab( buttonPressedIsMiddle );
   EntityTreeView::mousePressEvent( e );
+}
+
 }
 
 #include "foldertreeview.moc"

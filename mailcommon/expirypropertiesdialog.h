@@ -10,13 +10,12 @@
 class QCheckBox;
 class QRadioButton;
 class KIntSpinBox;
+
+namespace MailCommon {
+
+class FolderRequester;
 class FolderCollection;
-
-class MailCommon;
-
-namespace KMail {
-
-  class FolderRequester;
+class Kernel;
 
 class MAILCOMMON_EXPORT ExpiryPropertiesDialog : public KDialog
 {
@@ -26,7 +25,7 @@ public:
     ExpiryPropertiesDialog(
       QWidget *tree,
       const QSharedPointer<FolderCollection> &folder,
-      MailCommon *mailCommon );
+      Kernel *mailCommon );
     ~ExpiryPropertiesDialog();
 
 protected slots:
@@ -43,7 +42,8 @@ private:
     QRadioButton *moveToRB;
     FolderRequester *folderSelector;
     QRadioButton *deletePermanentlyRB;
-    MailCommon *mMailCommon;
+    Kernel *mMailCommon;
 };
+
 } // namespace
 #endif // EXPIRYPROPERTIESDIALOG_H

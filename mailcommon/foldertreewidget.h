@@ -27,16 +27,19 @@
 #include <QAbstractItemView>
 #include <akonadi/collection.h>
 
-class MailCommon;
 class KXMLGUIClient;
 class QItemSelectionModel;
-class FolderTreeView;
 class KLineEdit;
-class EntityCollectionOrderProxyModel;
 
 namespace Akonadi {
   class StatisticsProxyModel;
 }
+
+namespace MailCommon {
+
+class EntityCollectionOrderProxyModel;
+class FolderTreeView;
+class Kernel;
 
 /**
  * This is the widget that shows the main folder tree in KMail.
@@ -59,7 +62,7 @@ public:
   };
   Q_DECLARE_FLAGS( TreeViewOptions, TreeViewOption )
 
-  FolderTreeWidget( MailCommon* mailCommon, QWidget *parent = 0, KXMLGUIClient *xmlGuiClient = 0,
+  FolderTreeWidget( Kernel* mailCommon, QWidget *parent = 0, KXMLGUIClient *xmlGuiClient = 0,
                     TreeViewOptions options = (TreeViewOptions) (ShowUnreadCount|ShowCollectionStatisticAnimation),
                     ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy = ReadableCollectionProxyModel::None );
   ~FolderTreeWidget();
@@ -131,6 +134,9 @@ private:
   FolderTreeWidgetPrivate * const d;
 
 };
+
+}
+
 
 #endif
 

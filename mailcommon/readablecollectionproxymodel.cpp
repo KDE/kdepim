@@ -21,7 +21,7 @@
 #include "readablecollectionproxymodel.h"
 #include "foldercollection.h"
 #include "mailutil.h"
-#include "mailcommon.h"
+#include "mailkernel.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>
@@ -29,6 +29,8 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QPalette>
+
+namespace MailCommon {
 
 class ReadableCollectionProxyModel::Private
 {
@@ -46,10 +48,10 @@ public:
   bool hideSpecificFolder;
   bool hideOutboxFolder;
   bool hideImapFolder;
-  MailCommon* mailCommon;
+  Kernel* mailCommon;
 };
 
-ReadableCollectionProxyModel::ReadableCollectionProxyModel( MailCommon* mailCommon, QObject *parent, ReadableCollectionOptions option )
+ReadableCollectionProxyModel::ReadableCollectionProxyModel( Kernel* mailCommon, QObject *parent, ReadableCollectionOptions option )
   : Akonadi::EntityRightsFilterModel( parent ),
     d( new Private )
 {
@@ -152,7 +154,7 @@ bool ReadableCollectionProxyModel::acceptRow( int sourceRow, const QModelIndex &
 
   const Akonadi::Collection collection = sourceModel()->data( modelIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   if ( d->hideVirtualFolder ) {
-    if ( MailCommonNS::Util::isVirtualCollection( collection ) )
+    if ( Util::isVirtualCollection( collection ) )
       return false;
   }
   if ( d->hideSpecificFolder ) {
@@ -171,6 +173,8 @@ bool ReadableCollectionProxyModel::acceptRow( int sourceRow, const QModelIndex &
   }
 
   return Akonadi::EntityRightsFilterModel::acceptRow( sourceRow, sourceParent );
+}
+
 }
 
 

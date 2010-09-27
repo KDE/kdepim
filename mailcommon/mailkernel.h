@@ -17,8 +17,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILCOMMON_H
-#define MAILCOMMON_H
+#ifndef MAILCOMMON_KERNEL_H
+#define MAILCOMMON_KERNEL_H
 
 #include "mailcommon_export.h"
 
@@ -30,10 +30,6 @@
 #include "akonadi/kmime/specialmailcollections.h"
 
 
-namespace KMail {
-  class JobScheduler;
-}
-
 namespace Akonadi {
   class ChangeRecorder;
   class EntityMimeTypeFilterModel;
@@ -42,6 +38,10 @@ namespace Akonadi {
 namespace KPIMIdentities {
   class IdentityManager;
 }
+
+namespace MailCommon {
+
+class JobScheduler;
 
 /** Deals with common mail application related operations. It needs to be
  * initialized with all the setters before usage. There should be one MailCommon
@@ -52,10 +52,10 @@ namespace KPIMIdentities {
  * Never delete any MailCommon pointer you got!
  */
 
-class MAILCOMMON_EXPORT MailCommon : public QObject {
+class MAILCOMMON_EXPORT Kernel : public QObject {
   Q_OBJECT  
 public:
-  MailCommon( QObject* parent = 0 );
+  Kernel( QObject* parent = 0 );
 
   /**
    * Returns a model of all folders in KMail. This is basically the same as entityTreeModel(),
@@ -72,8 +72,8 @@ public:
   KPIMIdentities::IdentityManager *identityManager();
   void setIdentityManager( KPIMIdentities::IdentityManager *identityManager );
 
-  KMail::JobScheduler* jobScheduler() { return mJobScheduler; }
-  void setJobScheduler( KMail::JobScheduler* jobScheduler ) { mJobScheduler = jobScheduler; }
+  JobScheduler* jobScheduler() { return mJobScheduler; }
+  void setJobScheduler( JobScheduler* jobScheduler ) { mJobScheduler = jobScheduler; }
 
   Akonadi::ChangeRecorder *folderCollectionMonitor() { return mFolderCollectionMonitor; }
   void setFolderCollectionMonitor( Akonadi::ChangeRecorder* monitor ) { mFolderCollectionMonitor = monitor; }
@@ -143,7 +143,7 @@ private:
   KSharedConfig::Ptr mConfig;
   Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
   KPIMIdentities::IdentityManager *mIdentityManager;
-  KMail::JobScheduler* mJobScheduler;
+  JobScheduler* mJobScheduler;
   Akonadi::ChangeRecorder *mFolderCollectionMonitor;
 
   Akonadi::Collection::Id the_inboxCollectionFolder;
@@ -153,5 +153,7 @@ private:
   Akonadi::Collection::Id the_draftsCollectionFolder;
   Akonadi::Collection::Id the_templatesCollectionFolder;
 };
+
+}
 
 #endif

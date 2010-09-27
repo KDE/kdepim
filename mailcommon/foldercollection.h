@@ -30,13 +30,15 @@
 #include "messagecore/mailinglist-magic.h"
 using MessageCore::MailingList;
 
-class MailCommon;
+namespace MailCommon {
+
+class Kernel;
 
 class MAILCOMMON_EXPORT FolderCollection : public QObject
 {
   Q_OBJECT
 public:
-  static QSharedPointer<FolderCollection> forCollection( const Akonadi::Collection& coll, MailCommon* mailCommon );
+  static QSharedPointer<FolderCollection> forCollection( const Akonadi::Collection& coll, Kernel* mailCommon );
 
   ~FolderCollection();
 
@@ -210,7 +212,7 @@ signals:
 
 private:
 
-  explicit FolderCollection( const Akonadi::Collection & col, MailCommon* mailCommon, bool writeConfig = true );
+  explicit FolderCollection( const Akonadi::Collection & col, Kernel* mailCommon, bool writeConfig = true );
 
   Akonadi::Collection mCollection;
   bool         mExpireMessages;          // true if old messages are expired
@@ -242,9 +244,10 @@ private:
   bool mWriteConfig;
 
   bool mOldIgnoreNewMail;
-  MailCommon* mMailCommon;
+  Kernel* mMailCommon;
 };
 
+}
 
 #endif /* FOLDERCOLLECTION_H */
 

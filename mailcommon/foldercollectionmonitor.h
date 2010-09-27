@@ -28,8 +28,6 @@
 
 #include <QModelIndex>
 
-class MailCommon;
-
 class QAbstractItemModel;
 
 namespace Akonadi {
@@ -37,11 +35,15 @@ namespace Akonadi {
   class Collection;
 }
 
+namespace MailCommon {
+
+class Kernel;
+
 class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
 {
   Q_OBJECT
 public:
-  FolderCollectionMonitor(QObject *parent, MailCommon* mailCommon);
+  FolderCollectionMonitor(QObject *parent, Kernel* mailCommon);
   ~FolderCollectionMonitor();
 
   Akonadi::ChangeRecorder * monitor() const;
@@ -56,10 +58,10 @@ protected:
 
 private:
   Akonadi::ChangeRecorder *mMonitor;
-  MailCommon* mMailCommon;
+  Kernel* mMailCommon;
 };
 
-
+}
 
 #endif /* FOLDERCOLLECTIONMONITOR_H */
 

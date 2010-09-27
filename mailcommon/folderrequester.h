@@ -38,11 +38,11 @@
 #include <QtGui/QWidget>
 #include <QKeyEvent>
 
-class MailCommon;
+namespace MailCommon {
 
-namespace KMail {
+class Kernel;
 
-  /**
+/**
    * A widget that contains a KLineEdit which shows the current folder
    * and a button that fires a FolderSelectionDialog
    * The dialog is set to disable readonly folders by default
@@ -57,7 +57,7 @@ namespace KMail {
        * Constructor
        * @param parent the parent widget
        */
-      FolderRequester( MailCommon* mailCommon, QWidget* parent );
+      FolderRequester( Kernel* mailCommon, QWidget* parent );
       virtual ~FolderRequester();
 
       Akonadi::Collection folderCollection() const;
@@ -114,7 +114,7 @@ namespace KMail {
       bool mShowOutbox;
       bool mShowImapFolders;
       bool mNotCreateNewFolder;
-      MailCommon *mMailCommon;
+      Kernel *mMailCommon;
   };
 
 } // namespace KMail

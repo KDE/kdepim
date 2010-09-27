@@ -39,7 +39,7 @@
 
 #include "mailutil.h"
 #include "imapsettings.h"
-#include "mailcommon.h"
+#include "mailkernel.h"
 
 #include "messagecore/stringutil.h"
 #include "messagecomposer/messagehelper.h"
@@ -66,19 +66,19 @@
 #include "foldercollection.h"
 
 
-OrgKdeAkonadiImapSettingsInterface *MailCommonNS::Util::createImapSettingsInterface( const QString &ident )
+OrgKdeAkonadiImapSettingsInterface *MailCommon::Util::createImapSettingsInterface( const QString &ident )
 {
   return new OrgKdeAkonadiImapSettingsInterface("org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
 }
 
 
-bool MailCommonNS::Util::isVirtualCollection(const Akonadi::Collection & collection)
+bool MailCommon::Util::isVirtualCollection(const Akonadi::Collection & collection)
 {
   return ( collection.resource() == QLatin1String( "akonadi_nepomuktag_resource" ) || collection.resource() == QLatin1String( "akonadi_search_resource" ) );
 
 }
 
-QString MailCommonNS::Util::fullCollectionPath( const Akonadi::Collection& collection, MailCommon* mailCommon )
+QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection& collection, Kernel* mailCommon )
 {
   QString fullPath;
   QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( mailCommon->collectionModel(), collection );
@@ -93,7 +93,7 @@ QString MailCommonNS::Util::fullCollectionPath( const Akonadi::Collection& colle
   return fullPath;
 }
 
-void MailCommonNS::Util::showJobErrorMessage( KJob *job )
+void MailCommon::Util::showJobErrorMessage( KJob *job )
 {
   if ( job->error() ) {
     if ( static_cast<KIO::Job*>( job )->ui() )

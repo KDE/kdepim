@@ -20,7 +20,7 @@
 #include "foldertreeview.h"
 #include "imapaclattribute.h"
 #include "readablecollectionproxymodel.h"
-#include "mailcommon.h"
+#include "mailkernel.h"
 #include "entitycollectionorderproxymodel.h"
 
 #include "messageviewer/globalsettings.h"
@@ -45,6 +45,8 @@
 #include <klineedit.h>
 #include <klocalizedstring.h>
 
+namespace MailCommon {
+  
 class FolderTreeWidget::FolderTreeWidgetPrivate
 {
 public:
@@ -68,11 +70,11 @@ public:
   KLineEdit *filterFolderLineEdit;
   QLabel *label;
   bool dontKeyFilter;
-  MailCommon* mailCommon;
+  Kernel* mailCommon;
 };
 
 
-FolderTreeWidget::FolderTreeWidget( MailCommon* mailCommon, QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy )
+FolderTreeWidget::FolderTreeWidget( Kernel* mailCommon, QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy )
   : QWidget( parent ), d( new FolderTreeWidgetPrivate() )
 {
   d->mailCommon = mailCommon;
@@ -361,5 +363,6 @@ bool FolderTreeWidget::eventFilter( QObject* o, QEvent *e )
   return false;
 }
 
+}
 
 #include "foldertreewidget.moc"

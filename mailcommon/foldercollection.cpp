@@ -33,14 +33,17 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QWeakPointer>
-#include "mailcommon.h"
+#include "mailkernel.h"
 
 using namespace Akonadi;
+
+namespace MailCommon {
 
 static QMutex mapMutex;
 static QMap<Collection::Id,QWeakPointer<FolderCollection> > fcMap;
 
-QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi::Collection& coll, MailCommon* mailCommon )
+
+QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi::Collection& coll, Kernel* mailCommon )
 {
   QMutexLocker lock( &mapMutex );
 
@@ -53,7 +56,7 @@ QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi:
   return sptr;
 }
 
-FolderCollection::FolderCollection( const Akonadi::Collection & col, MailCommon* mailCommon, bool writeconfig )
+FolderCollection::FolderCollection( const Akonadi::Collection & col, Kernel* mailCommon, bool writeconfig )
   : mCollection( col ),
     mExpireMessages( false ),
     mUnreadExpireAge( 28 ),
@@ -215,7 +218,7 @@ void FolderCollection::writeConfig() const
 
   if ( !mUseDefaultIdentity ) {
     int identityId = -1;
-    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = MailCommonNS::Util::createImapSettingsInterface( mCollection.resource() );
+    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = Util::createImapSettingsInterface( mCollection.resource() );
     if ( imapSettingsInterface->isValid() ) {
       QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
       if ( reply.isValid() ) {
@@ -268,7 +271,7 @@ uint FolderCollection::identity() const
 {
   if ( mUseDefaultIdentity ) {
     int identityId = -1;
-    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = MailCommonNS::Util::createImapSettingsInterface( mCollection.resource() );
+    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = Util::createImapSettingsInterface( mCollection.resource() );
     if ( imapSettingsInterface->isValid() ) {
       QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
       if( useDefault.isValid() && useDefault.value() )
@@ -386,8 +389,8 @@ static int daysToExpire( int number, FolderCollection::ExpireUnits units )
 }
 
 void FolderCollection::daysToExpire(int& unreadDays, int& readDays) {
-  unreadDays = ::daysToExpire( getUnreadExpireAge(), getUnreadExpireUnits() );
-  readDays = ::daysToExpire( getReadExpireAge(), getReadExpireUnits() );
+  unreadDays = MailCommon::daysToExpire( getUnreadExpireAge(), getUnreadExpireUnits() );
+  readDays = MailCommon::daysToExpire( getReadExpireAge(), getReadExpireUnits() );
 }
 
 void FolderCollection::removeCollection()
@@ -399,13 +402,15 @@ void FolderCollection::removeCollection()
 void FolderCollection::slotDeletionCollectionResult( KJob * job )
 {
   if ( job->error() ) {
-    MailCommonNS::Util::showJobErrorMessage( job );
+    Util::showJobErrorMessage( job );
   }
 }
 
 void FolderCollection::expireOldMessages( bool immediate )
 {
-  KMail::ScheduledExpireTask* task = new KMail::ScheduledExpireTask(mCollection, mMailCommon, immediate);
+  ScheduledExpireTask* task = new ScheduledExpireTask(mCollection, mMailCommon, immediate);
   mMailCommon->jobScheduler()->registerTask( task );
+}
+
 }
 

@@ -46,18 +46,19 @@ class KJob;
 class QString;
 
 class OrgKdeAkonadiImapSettingsInterface;
-class MailCommon;
 
 namespace Akonadi {
   class Collection;
 }
 
-class MailCommon;
 
 #define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
 #define POP3_RESOURCE_IDENTIFIER "akonadi_pop3_resource"
-namespace MailCommonNS
+namespace MailCommon
 {
+
+  class Kernel;
+
     /**
      * The Util namespace contains a collection of helper functions use in
      * various places.
@@ -68,7 +69,7 @@ namespace Util {
 
     MAILCOMMON_EXPORT bool isVirtualCollection(const Akonadi::Collection & col);
 
-    MAILCOMMON_EXPORT QString fullCollectionPath( const Akonadi::Collection& collection, MailCommon* mailCommon );
+    MAILCOMMON_EXPORT QString fullCollectionPath( const Akonadi::Collection& collection, Kernel* mailCommon );
 
     MAILCOMMON_EXPORT void showJobErrorMessage( KJob *job );
 }

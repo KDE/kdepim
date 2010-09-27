@@ -32,7 +32,7 @@
 
 #include "folderselectiondialog.h"
 #include "mailutil.h"
-#include "mailcommon.h"
+#include "mailkernel.h"
 
 #include "messageviewer/autoqpointer.h"
 
@@ -47,9 +47,9 @@
 
 #include <Akonadi/CollectionFetchJob>
 
-namespace KMail {
+namespace MailCommon {
 
-FolderRequester::FolderRequester( MailCommon* mailCommon, QWidget* parent )
+FolderRequester::FolderRequester( Kernel* mailCommon, QWidget* parent )
   : QWidget( parent ),
     mMustBeReadWrite( true ), mShowOutbox( true ), mShowImapFolders( true ), mNotCreateNewFolder( false ), mMailCommon( mailCommon )
 {
@@ -108,7 +108,7 @@ Akonadi::Collection FolderRequester::folderCollection() const
 
 void FolderRequester::setCollectionFullPath( const Akonadi::Collection&col )
 {
-  edit->setText( MailCommonNS::Util::fullCollectionPath( col , mMailCommon ) );
+  edit->setText( Util::fullCollectionPath( col , mMailCommon ) );
 }
 
 //-----------------------------------------------------------------------------

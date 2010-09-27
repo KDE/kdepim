@@ -30,7 +30,7 @@
 #include "jobscheduler.h"
 #include <kdebug.h>
 
-using namespace KMail;
+namespace MailCommon {
 
 ScheduledTask::ScheduledTask( const Akonadi::Collection& folder, bool immediate )
   : mCurrentFolder( folder ), mImmediate( immediate )
@@ -256,6 +256,8 @@ ScheduledJob::ScheduledJob( const Akonadi::Collection& folder, bool immediate )
 
 ScheduledJob::~ScheduledJob()
 {
+}
+
 }
 
 #include "jobscheduler.moc"

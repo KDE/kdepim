@@ -17,12 +17,15 @@
 */
 
 #include "entitycollectionorderproxymodel.h"
-#include "mailcommon.h"
+#include "mailkernel.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <kdebug.h>
+
+
+namespace MailCommon {
 
 class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
 {
@@ -51,12 +54,12 @@ public:
   }
   bool manualSortingActive;
   QList<qlonglong> orderSpecialCollection;
-  MailCommon* mailCommon;
+  Kernel* mailCommon;
 };
 
 
 
-EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( MailCommon* mailCommon, QObject* parent )
+EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( Kernel* mailCommon, QObject* parent )
   : EntityOrderProxyModel( parent ), d( new EntityCollectionOrderProxyModelPrivate() )
 {
   d->mailCommon = mailCommon;
@@ -120,6 +123,8 @@ void EntityCollectionOrderProxyModel::setManualSortingActive( bool active )
 bool EntityCollectionOrderProxyModel::isManualSortingActive() const
 {
   return d->manualSortingActive;
+}
+
 }
 
 #include "entitycollectionorderproxymodel.moc"

@@ -36,7 +36,7 @@
 #include <QString>
 #include <akonadi/collection.h>
 
-namespace KMail {
+namespace MailCommon {
 
 class FolderJob : public QObject
 {
@@ -148,7 +148,7 @@ signals:
    * This signal is emitted by the FolderJob destructor => do NOT downcast
    * the job to a subclass!
    */
-  void result( KMail::FolderJob* job );
+  void result( FolderJob* job );
 
   /**
    * This progress signal contains the "done" and the "total" numbers so

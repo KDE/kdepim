@@ -41,7 +41,7 @@
 // This is for debugging purposes only, don't commit with it.
 //#define DEBUG_SCHEDULER
 
-namespace KMail {
+namespace MailCommon {
 
 class FolderJob;
 class ScheduledJob;

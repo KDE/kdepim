@@ -32,8 +32,9 @@
 #include <kmime/kmime_message.h>
 #include <Akonadi/CollectionFetchScope>
 
+namespace MailCommon {
 
-FolderCollectionMonitor::FolderCollectionMonitor(QObject *parent, MailCommon* mailCommon)
+FolderCollectionMonitor::FolderCollectionMonitor(QObject *parent, Kernel* mailCommon)
   :QObject( parent ), mMailCommon( mailCommon )
 {
   // monitor collection changes
@@ -72,7 +73,7 @@ void FolderCollectionMonitor::expireAllCollection( const QAbstractItemModel *mod
     const QModelIndex index = model->index( row, 0, parentIndex );
     const Akonadi::Collection collection = model->data( index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
 
-    if ( !collection.isValid() || MailCommonNS::Util::isVirtualCollection( collection ) )
+    if ( !collection.isValid() || Util::isVirtualCollection( collection ) )
       continue;
 
     QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection, mMailCommon );
@@ -99,7 +100,7 @@ void FolderCollectionMonitor::expunge( const Akonadi::Collection & col )
 void FolderCollectionMonitor::slotExpungeJob( KJob *job )
 {
   if ( job->error() ) {
-    MailCommonNS::Util::showJobErrorMessage( job );
+    Util::showJobErrorMessage( job );
     return;
   }
   Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
@@ -116,6 +117,8 @@ void FolderCollectionMonitor::slotExpungeJob( KJob *job )
 void FolderCollectionMonitor::slotDeleteJob( KJob *job )
 {
   if ( job->error() )
-    MailCommonNS::Util::showJobErrorMessage( job );
+    Util::showJobErrorMessage( job );
+}
+
 }
 

@@ -17,9 +17,9 @@ set(libmailcommon_SRCS
   foldertreewidget.cpp
   imapaclattribute.cpp
   jobscheduler.cpp
-  mailcommon.cpp
-  readablecollectionproxymodel.cpp
+  mailkernel.cpp
   mailutil.cpp
+  readablecollectionproxymodel.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)

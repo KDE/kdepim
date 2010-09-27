@@ -3,7 +3,7 @@
 #include "folderrequester.h"
 #include "foldercollection.h"
 #include "mailutil.h"
-#include "mailcommon.h"
+#include "mailkernel.h"
 
 #include <QPushButton>
 #include <QCheckBox>
@@ -18,7 +18,7 @@
 #include <kmessagebox.h>
 #include <akonadi/collection.h>
 
-using namespace KMail;
+using namespace MailCommon;
 
 /*
  *  Constructs a ExpiryPropertiesDialog as a child of 'parent', with the
@@ -27,7 +27,7 @@ using namespace KMail;
  */
 ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   QWidget *tree,
-  const QSharedPointer<FolderCollection> &folder, MailCommon *mailCommon )
+  const QSharedPointer<FolderCollection> &folder, Kernel *mailCommon )
     : KDialog( tree ),
       mFolder( folder ),
       mMailCommon( mailCommon )
@@ -96,7 +96,7 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   connect( moveToRB, SIGNAL( toggled( bool ) ), this, SLOT( slotUpdateControls() ) );
   moveToHBox->addWidget( moveToRB );
 
-  folderSelector = new KMail::FolderRequester( mMailCommon, privateLayoutWidget );
+  folderSelector = new FolderRequester( mMailCommon, privateLayoutWidget );
   folderSelector->setMustBeReadWrite( true );
   folderSelector->setShowOutbox( false );
   moveToHBox->addWidget( folderSelector );

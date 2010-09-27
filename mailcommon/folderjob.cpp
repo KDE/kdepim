@@ -33,7 +33,7 @@
 #include <kdebug.h>
 #include <kio/global.h>
 
-namespace KMail {
+namespace MailCommon {
 
 //----------------------------------------------------------------------------
   FolderJob::FolderJob( KMime::Message *msg, JobType jt, const Akonadi::Collection& folder,

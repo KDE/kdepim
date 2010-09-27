@@ -31,8 +31,7 @@
 #include "broadcaststatus.h"
 using KPIM::BroadcastStatus;
 #include "foldercollection.h"
-using namespace KMail;
-#include "mailcommon.h"
+#include "mailkernel.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -63,8 +62,9 @@ using namespace KMail;
   - Expire All Folders                              [KMMainWidget::slotExpireAll()]
 */
 
+namespace MailCommon {
 
-ExpireJob::ExpireJob( const Akonadi::Collection& folder, MailCommon* mailCommon, bool immediate )
+ExpireJob::ExpireJob( const Akonadi::Collection& folder, Kernel* mailCommon, bool immediate )
  : ScheduledJob( folder, immediate ), mCurrentIndex( 0 ),
    mFolderOpen( false ), mMoveToFolder( 0 ), mMailCommon( mailCommon )
 {
@@ -245,6 +245,8 @@ void ExpireJob::slotMessagesMoved( KJob* job )
     BroadcastStatus::instance()->setStatusMsg( msg );
   }
   deleteLater();
+}
+
 }
 
 #include "expirejob.moc"
