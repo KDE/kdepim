@@ -38,7 +38,7 @@ class QLabel;
  */
 class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
 {
-  Q_OBJECT;
+  Q_OBJECT
   protected:
     /**
     * Creates a new full screen view for a mobile application.
