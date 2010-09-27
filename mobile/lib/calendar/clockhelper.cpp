@@ -20,7 +20,8 @@
 
 #include "clockhelper.h"
 #include "clockhelper_p.h"
-#include <QDebug>
+
+#include <QTime>
 #include <QtCore/qmath.h>
 
 static const qreal Q_PI   = qreal(3.14159265358979323846);   // pi
@@ -90,17 +91,21 @@ void ClockHelperPrivate::calculateAngle()
 
   if (oldAngle != angle) {
     if (secondsHandSelected)
-      q->setSeconds(angle);
+      q->setSecond(angle);
     else if (minutesHandSelected)
-      q->setMinutes(angle);
+      q->setMinute(angle);
     else if (hoursHandSelected)
-      q->setHours(angle);
+      q->setHour(angle);
   }
 }
 
 ClockHelper::ClockHelper(QObject *parent)
   : QObject(parent), d_ptr(new ClockHelperPrivate(this))
 {
+    // init the clock with a sane value
+    QTime time = QTime::currentTime();
+    setHour(time.hour());
+    setMinute(time.minute());
 }
 
 ClockHelper::~ClockHelper()
@@ -164,7 +169,7 @@ int ClockHelper::secondsAngle() const
   return d->secondsAngle;
 }
 
-void ClockHelper::setSeconds(int sec)
+void ClockHelper::setSecond(int sec)
 {
   Q_D(ClockHelper);
 
@@ -192,7 +197,7 @@ int ClockHelper::minutesAngle() const
   return d->minutesAngle;
 }
 
-void ClockHelper::setMinutes(int min)
+void ClockHelper::setMinute(int min)
 {
   Q_D(ClockHelper);
 
@@ -220,7 +225,7 @@ int ClockHelper::hoursAngle() const
   return d->hoursAngle;
 }
 
-void ClockHelper::setHours(int hour)
+void ClockHelper::setHour(int hour)
 {
   Q_D(ClockHelper);
 

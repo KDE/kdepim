@@ -34,11 +34,11 @@ class ClockHelper : public QObject
   Q_PROPERTY(bool secondsHandSelected READ secondsHandSelected WRITE setSecondsHandSelected)
   Q_PROPERTY(bool minutesHandSelected READ minutesHandSelected WRITE setMinutesHandSelected)
   Q_PROPERTY(bool hoursHandSelected READ hoursHandSelected WRITE setHoursHandSelected)
-  Q_PROPERTY(int seconds READ seconds WRITE setSeconds NOTIFY secondsChanged)
+  Q_PROPERTY(int seconds READ seconds WRITE setSecond NOTIFY secondsChanged)
   Q_PROPERTY(int secondsAngle READ secondsAngle NOTIFY secondsAngleChanged)
-  Q_PROPERTY(int minutes READ minutes WRITE setMinutes NOTIFY minutesChanged)
+  Q_PROPERTY(int minutes READ minutes WRITE setMinute NOTIFY minutesChanged)
   Q_PROPERTY(int minutesAngle READ minutesAngle NOTIFY minutesAngleChanged)
-  Q_PROPERTY(int hours READ hours WRITE setHours NOTIFY hoursChanged)
+  Q_PROPERTY(int hours READ hours WRITE setHour NOTIFY hoursChanged)
   Q_PROPERTY(int hoursAngle READ hoursAngle NOTIFY hoursAngleChanged)
 
 public:
@@ -55,15 +55,15 @@ public:
 
   int seconds() const;
   int secondsAngle() const;
-  void setSeconds(int sec);
+  void setSecond(int sec);
 
   int minutes() const;
   int minutesAngle() const;
-  void setMinutes(int min);
+  void setMinute(int min);
 
   int hours() const;
   int hoursAngle() const;
-  void setHours(int hour);
+  void setHour(int hour);
 
   void setSecondsHandSelected(bool selected);
   bool secondsHandSelected() const;
