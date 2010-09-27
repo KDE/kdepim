@@ -28,6 +28,7 @@ Item {
     property alias model: list.model
     property alias currentIndex: list.currentIndex
     property int value
+    signal selected()
 
     onValueChanged: {
         list.currentIndex = fadeselector.value;
@@ -89,6 +90,8 @@ Item {
         state = (state == "selected") ? "unselected" : "selected";
         if (state == "unselected")
             fadeselector.value = index;
+        else
+            fadeselector.selected();
     }
 
     Component {

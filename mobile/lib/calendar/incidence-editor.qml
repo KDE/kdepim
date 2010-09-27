@@ -92,6 +92,10 @@ KPIM.MainView {
                 model: myCalendar.daysInMonth
                 currentIndex: myCalendar.day
                 onValueChanged: myCalendar.day = value;
+                onSelected: {
+                    monthSelector.state = "unselected";
+                    yearSelector.state = "unselected";
+                }
               }
 
               KPIM.VerticalFadeSelector {
@@ -100,6 +104,10 @@ KPIM.MainView {
                 model: 12
                 currentIndex: myCalendar.month
                 onValueChanged: myCalendar.month = value;
+                onSelected: {
+                    daySelector.state = "unselected";
+                    yearSelector.state = "unselected";
+                }
               }
 
               KPIM.VerticalFadeSelector {
@@ -109,6 +117,10 @@ KPIM.MainView {
                 model: 3000
                 currentIndex: myCalendar.year
                 onValueChanged: myCalendar.year = value;
+                onSelected: {
+                    daySelector.state = "unselected";
+                    monthSelector.state = "unselected";
+                }
               }
             }
           }
@@ -141,6 +153,10 @@ KPIM.MainView {
                 model: 24
                 currentIndex: myClock.hours
                 onValueChanged: myClock.hours = value;
+                onSelected: {
+                    minuteSelector.state = "unselected";
+                    secondSelector.state = "unselected";
+                }
               }
 
               KPIM.VerticalFadeSelector {
@@ -149,6 +165,10 @@ KPIM.MainView {
                 model: 60
                 currentIndex: myClock.minutes
                 onValueChanged: myClock.minutes = value;
+                onSelected: {
+                    hourSelector.state = "unselected";
+                    secondSelector.state = "unselected";
+                }
               }
 
               KPIM.VerticalFadeSelector {
@@ -157,6 +177,10 @@ KPIM.MainView {
                 model: 60
                 currentIndex: myClock.seconds
                 onValueChanged: myClock.seconds = value;
+                onSelected: {
+                    hourSelector.state = "unselected";
+                    minuteSelector.state = "unselected";
+                }
               }
             }
           }
