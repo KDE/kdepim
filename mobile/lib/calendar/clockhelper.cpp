@@ -172,12 +172,11 @@ void ClockHelper::setSeconds(int sec)
     return;
 
   d->seconds = sec;
+  emit secondsChanged();
 
   // math our angle
   sec = normalize(sec) * 6;
   d->secondsAngle = sec;
-
-  emit secondsChanged();
   emit secondsAngleChanged();
 }
 
@@ -201,12 +200,11 @@ void ClockHelper::setMinutes(int min)
     return;
 
   d->minutes = min;
+  emit minutesChanged();
 
   // match our angle
   min = normalize(min) * 6;
   d->minutesAngle = min;
-
-  emit minutesChanged();
   emit minutesAngleChanged();
 }
 
@@ -222,24 +220,19 @@ int ClockHelper::hoursAngle() const
   return d->hoursAngle;
 }
 
-#include <KDebug>
-
 void ClockHelper::setHours(int hour)
 {
   Q_D(ClockHelper);
-
-  kDebug() << "\n\n------> set hour to: " << hour;
 
   if (hour == d->hours)
     return;
 
   d->hours = hour;
+  emit hoursChanged();
 
   // math our angle
   hour = normalize(hour) * 30;
   d->hoursAngle = hour;
-
-  emit hoursChanged();
   emit hoursAngleChanged();
 }
 
