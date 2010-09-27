@@ -58,6 +58,8 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
 
+  mUi->mStartDateEdit->setReadOnly(true);
+  mUi->mEndDateEdit->setReadOnly(true);
   mUi->mStartTimeEdit->clear();
   mUi->mEndTimeEdit->clear();
 
