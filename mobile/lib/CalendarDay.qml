@@ -74,10 +74,6 @@ Item {
                 visible: true
             }
             PropertyChanges {
-                target: normal
-                visible: true
-            }
-            PropertyChanges {
                 target: inactive
                 visible: false
             }
@@ -87,10 +83,6 @@ Item {
             when: (myText.text == "")
             PropertyChanges {
                 target: active
-                visible: false
-            }
-            PropertyChanges {
-                target: normal
                 visible: false
             }
             PropertyChanges {
