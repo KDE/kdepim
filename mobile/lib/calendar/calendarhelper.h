@@ -26,7 +26,7 @@
 
 class CalendarHelper : public QObject
 {
-  Q_OBJECT;
+  Q_OBJECT
   Q_PROPERTY(int day READ day WRITE setDay NOTIFY dayChanged)
   Q_PROPERTY(int daysInMonth READ daysInMonth NOTIFY daysInMonthChanged)
   Q_PROPERTY(int month READ month WRITE setMonth NOTIFY monthChanged)

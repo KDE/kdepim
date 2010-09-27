@@ -64,3 +64,4 @@ class DeclarativeWidgetWrapper : public DeclarativeWidgetWrapperBase
 
 
 #endif
+

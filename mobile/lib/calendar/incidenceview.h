@@ -50,7 +50,7 @@ class MobileIncidenceMore;
 
 class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorNG::ItemEditorUi
 {
-  Q_OBJECT;
+  Q_OBJECT
   public:
     explicit IncidenceView( QWidget* parent = 0 );
     ~IncidenceView();
