@@ -1153,6 +1153,7 @@ void Agenda::endItemAction()
                                       d->mStartCell.y() == d->mEndCell.y() );
 
   uint atomicOperationId = 0;
+  bool addIncidence = false;
   if ( d->mItemMoved ) {
     bool modify = false;
     if ( incidence->recurs() ) {
@@ -1186,14 +1187,12 @@ void Agenda::endItemAction()
             oldIncSaved, inc,
             CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, this, atomicOperationId );
 
-#ifdef AKONADI_PORT_DISABLED
-  // this needs to be done when the async item adding is done and we have the real akonadi item
           Akonadi::Item item;
           item.setPayload( newInc );
           d->mActionItem->setIncidence( item );
           d->mActionItem->dissociateFromMultiItem();
-#endif
-          d->mChanger->addIncidence( newInc, inc.parentCollection(), this, atomicOperationId );
+
+          addIncidence = true;
 
           d->mAgendaView->enableAgendaUpdate( true );
         } else {
@@ -1221,14 +1220,13 @@ void Agenda::endItemAction()
           inc, d->mActionItem->itemDate(), d->mAgendaView->preferences()->timeSpec(), false ) );
         if ( newInc ) {
           d->mAgendaView->enableAgendaUpdate( false );
-#ifdef AKONADI_PORT_DISABLED
-  // this needs to be done when the async item adding is done and we have the real akonadi item
+
           d->mActionItem->dissociateFromMultiItem();
-          Item item;
+          Akonadi::Item item;
           item.setPayload( newInc );
           d->mActionItem->setIncidence( item );
-#endif
-          d->mChanger->addIncidence( newInc, inc.parentCollection(), this );
+
+          addIncidence = true;
 
           d->mAgendaView->enableAgendaUpdate( true );
           d->mChanger->changeIncidence( oldIncSaved, inc,
@@ -1279,11 +1277,16 @@ void Agenda::endItemAction()
       // calling when we move item.
       // Not perfect need to improve it!
       //mChanger->endChange( inc );
-      d->mAgendaView->updateEventDates( modif, atomicOperationId );
+      d->mAgendaView->updateEventDates( modif, atomicOperationId, addIncidence, inc.parentCollection().id() );
+
+      if ( addIncidence ) {
+        // delete the one we dragged, there's a new one being added async, due to dissociation.
+        delete modif;
+      }
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-      d->mAgendaView->updateEventDates( placeItem, atomicOperationId );
+      d->mAgendaView->updateEventDates( placeItem, atomicOperationId, addIncidence, inc.parentCollection().id() );
     }
   }
 

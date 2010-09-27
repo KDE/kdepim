@@ -501,6 +501,7 @@ bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
   if ( selectedCollection.isValid() ) {
     return addIncidence( incidence, selectedCollection, parent, atomicOperationId );
   } else {
+    kError() << "Selected collection isn't valid.";
     return false;
   }
 }
@@ -513,6 +514,7 @@ bool IncidenceChanger::addIncidence( const KCalCore::Incidence::Ptr &incidence,
   Q_UNUSED( parent );
 
   if ( !incidence || !collection.isValid() ) {
+    kError() << "Incidence or collection isn't valid. collection.isValid() == " << collection.isValid();
     return false;
   }
 

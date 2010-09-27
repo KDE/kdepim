@@ -145,7 +145,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     /** Update event belonging to agenda item
         If the incidence is multi-day, item is the first one
     */
-    void updateEventDates( AgendaItem *item, uint atomicOperationId );
+    void updateEventDates( AgendaItem *item, uint atomicOperationId, bool addIncidence,
+                           Akonadi::Collection::Id collectionId );
   public slots:
     virtual void updateView();
     virtual void updateConfig();

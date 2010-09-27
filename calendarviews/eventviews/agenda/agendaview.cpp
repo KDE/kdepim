@@ -1151,7 +1151,8 @@ void AgendaView::updateTimeBarWidth()
   d->mDummyAllDayLeft->setFixedWidth( 0 );
 }
 
-void AgendaView::updateEventDates( AgendaItem *item, uint atomicOperationId )
+void AgendaView::updateEventDates( AgendaItem *item, uint atomicOperationId,
+                                   bool addIncidence, Akonadi::Collection::Id collectionId )
 {
   kDebug() << item->text()
            << "; item->cellXLeft(): " << item->cellXLeft()
@@ -1289,9 +1290,16 @@ void AgendaView::updateEventDates( AgendaItem *item, uint atomicOperationId )
   }
   item->setItemDate( startDt.toTimeSpec( preferences()->timeSpec() ).date() );
 
-  const bool result = changer()->changeIncidence( oldIncidence, aitem,
-                                                  CalendarSupport::IncidenceChanger::DATE_MODIFIED,
-                                                  this, atomicOperationId );
+  bool result;
+  if ( addIncidence ) {
+    Akonadi::Collection collection = calendar()->collection( collectionId );
+    kDebug() << "Collection isValid() = " << collection.isValid();
+    result = changer()->addIncidence( incidence, collection, this, atomicOperationId );
+  } else {
+    result = changer()->changeIncidence( oldIncidence, aitem,
+                                         CalendarSupport::IncidenceChanger::DATE_MODIFIED,
+                                         this, atomicOperationId );
+  }
 
   // Update the view correctly if an agenda item move was aborted by
   // cancelling one of the subsequent dialogs.
