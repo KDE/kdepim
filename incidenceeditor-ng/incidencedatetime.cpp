@@ -58,6 +58,9 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
 
+  mUi->mStartTimeEdit->clear();
+  mUi->mEndTimeEdit->clear();
+
   mUi->mStartDateEdit->installEventFilter( this );
   mUi->mEndDateEdit->installEventFilter( this );
   mUi->mStartTimeEdit->installEventFilter( this );
