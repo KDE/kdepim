@@ -38,6 +38,8 @@
 #ifndef MAILCOMMON_UTIL_H
 #define MAILCOMMON_UTIL_H
 
+#include "mailcommon_export.h"
+
 class KUrl;
 class KJob;
 
@@ -62,13 +64,13 @@ namespace MailCommonNS
      */
 namespace Util {
 
-    OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
+    MAILCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
 
-    bool isVirtualCollection(const Akonadi::Collection & col);
+    MAILCOMMON_EXPORT bool isVirtualCollection(const Akonadi::Collection & col);
 
-    QString fullCollectionPath( const Akonadi::Collection& collection, MailCommon* mailCommon );
+    MAILCOMMON_EXPORT QString fullCollectionPath( const Akonadi::Collection& collection, MailCommon* mailCommon );
 
-    void showJobErrorMessage( KJob *job );
+    MAILCOMMON_EXPORT void showJobErrorMessage( KJob *job );
 }
 }
 

@@ -1,0 +1,56 @@
+include_directories(
+  ${CMAKE_SOURCE_DIR}/messageviewer
+ )
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
+set(libmailcommon_SRCS
+  entitycollectionorderproxymodel.cpp
+  expirejob.cpp
+  expirypropertiesdialog.cpp
+  foldercollection.cpp
+  foldercollectionmonitor.cpp
+  folderjob.cpp
+  folderrequester.cpp
+  folderselectiondialog.cpp
+  foldertreeview.cpp
+  foldertreewidget.cpp
+  imapaclattribute.cpp
+  jobscheduler.cpp
+  mailcommon.cpp
+  readablecollectionproxymodel.cpp
+  mailutil.cpp
+)
+
+macro(add_resource_iface _kcfgFile _ifaceName _className)
+  kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
+  string(TOLOWER ${_className} _codeFile) 
+  set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
+  qt4_add_dbus_interface(libmailcommon_SRCS
+    ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
+  )
+endmacro(add_resource_iface)
+
+add_resource_iface( imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings )
+
+# kde4_add_kcfg_files(libmailcommon_SRCS
+#   globalsettings_base.kcfgc
+# )
+
+kde4_add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})
+
+target_link_libraries(mailcommon messageviewer messagecore kdepim
+  akonadi_next
+  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_KPIMUTILS_LIBS}
+  ${KDEPIMLIBS_KIMAP_LIBS}
+  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  ${KDE4_KDEUI_LIBS}
+)
+
+set_target_properties( mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
+#install( FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)

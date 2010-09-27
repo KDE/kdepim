@@ -19,6 +19,8 @@
 #ifndef FOLDERTREEVIEW_H
 #define FOLDERTREEVIEW_H
 
+#include "mailcommon_export.h"
+
 #include <akonadi/entitytreeview.h>
 #include <akonadi/collection.h>
 #include "foldertreewidget.h"
@@ -36,7 +38,7 @@ class MailCommon;
  * This is an enhanced EntityTreeView specially suited for the folders in KMail's
  * main folder widget.
  */
-class FolderTreeView : public Akonadi::EntityTreeView
+class MAILCOMMON_EXPORT FolderTreeView : public Akonadi::EntityTreeView
 {
   Q_OBJECT
 public:

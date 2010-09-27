@@ -26,8 +26,10 @@
  *  your version.
  */
 
-#ifndef folderrequester_h
-#define folderrequester_h
+#ifndef FOLDERREQUESTER_H
+#define FOLDERREQUESTER_H
+
+#include "mailcommon_export.h"
 
 #include <klineedit.h>
 #include <ksharedconfig.h>
@@ -46,7 +48,7 @@ namespace KMail {
    * The dialog is set to disable readonly folders by default
    * Search folders are excluded
    */
-  class FolderRequester: public QWidget
+  class MAILCOMMON_EXPORT FolderRequester: public QWidget
   {
     Q_OBJECT
 

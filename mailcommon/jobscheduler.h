@@ -29,6 +29,8 @@
 #ifndef KMAIL_JOBSCHEDULER_H
 #define KMAIL_JOBSCHEDULER_H
 
+#include "mailcommon_export.h"
+
 #include <QObject>
 
 #include <QTimer>
@@ -90,7 +92,7 @@ private:
  * using too much CPU for too long. Tasks for opened folders are not executed until
  * the folder is closed.
  */
-class JobScheduler : public QObject
+class MAILCOMMON_EXPORT JobScheduler : public QObject
 {
   Q_OBJECT
 public:

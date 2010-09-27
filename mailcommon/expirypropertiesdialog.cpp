@@ -2,7 +2,7 @@
 #include "expirypropertiesdialog.h"
 #include "folderrequester.h"
 #include "foldercollection.h"
-#include "util.h"
+#include "mailutil.h"
 #include "mailcommon.h"
 
 #include <QPushButton>

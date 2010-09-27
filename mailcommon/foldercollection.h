@@ -19,6 +19,8 @@
 #ifndef FOLDERCOLLECTION_H
 #define FOLDERCOLLECTION_H
 
+#include "mailcommon_export.h"
+
 #include <kshortcut.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionstatistics.h>
@@ -30,7 +32,7 @@ using MessageCore::MailingList;
 
 class MailCommon;
 
-class FolderCollection : public QObject
+class MAILCOMMON_EXPORT FolderCollection : public QObject
 {
   Q_OBJECT
 public:

@@ -20,6 +20,8 @@
 #ifndef AKONADI_IMAPACLATTRIBUTE_H
 #define AKONADI_IMAPACLATTRIBUTE_H
 
+#include "mailcommon_export.h"
+
 #include <akonadi/attribute.h>
 
 #include <QtCore/QMap>
@@ -28,7 +30,7 @@
 
 namespace Akonadi {
 
-class ImapAclAttribute : public Akonadi::Attribute
+class MAILCOMMON_EXPORT ImapAclAttribute : public Akonadi::Attribute
 {
   public:
     ImapAclAttribute();

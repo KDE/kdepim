@@ -2,6 +2,8 @@
 #ifndef EXPIRYPROPERTIESDIALOG_H
 #define EXPIRYPROPERTIESDIALOG_H
 
+#include "mailcommon_export.h"
+
 #include <kdialog.h>
 #include <QSharedPointer>
 
@@ -16,7 +18,7 @@ namespace KMail {
 
   class FolderRequester;
 
-class ExpiryPropertiesDialog : public KDialog
+class MAILCOMMON_EXPORT ExpiryPropertiesDialog : public KDialog
 {
     Q_OBJECT
 

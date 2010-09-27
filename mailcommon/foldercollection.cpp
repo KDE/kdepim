@@ -17,7 +17,7 @@
 */
 
 #include "foldercollection.h"
-#include "util.h"
+#include "mailutil.h"
 #include "imapsettings.h"
 #include "expirejob.h"
 #include "jobscheduler.h"

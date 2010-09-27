@@ -19,6 +19,8 @@
 #ifndef FOLDERSELECTIONDIALOG_H
 #define FOLDERSELECTIONDIALOG_H
 
+#include "mailcommon_export.h"
+
 #include <QAbstractItemView>
 #include <KDialog>
 #include <akonadi/collection.h>
@@ -31,7 +33,7 @@ class KJob;
  * A dialog that lets the user select a folder.
  * TODO: Move most of this to Akonadi::CollectionDialog
  */
-class FolderSelectionDialog : public KDialog
+class MAILCOMMON_EXPORT FolderSelectionDialog : public KDialog
 {
   Q_OBJECT
 public:

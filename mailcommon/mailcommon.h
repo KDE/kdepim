@@ -19,6 +19,9 @@
 
 #ifndef MAILCOMMON_H
 #define MAILCOMMON_H
+
+#include "mailcommon_export.h"
+
 #include <QObject>
 
 #include <ksharedconfig.h>
@@ -49,7 +52,7 @@ namespace KPIMIdentities {
  * Never delete any MailCommon pointer you got!
  */
 
-class MailCommon : public QObject {
+class MAILCOMMON_EXPORT MailCommon : public QObject {
   Q_OBJECT  
 public:
   MailCommon( QObject* parent = 0 );

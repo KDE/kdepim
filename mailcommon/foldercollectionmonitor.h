@@ -19,6 +19,8 @@
 #ifndef FOLDERCOLLECTIONMONITOR_H
 #define FOLDERCOLLECTIONMONITOR_H
 
+#include "mailcommon_export.h"
+
 #include <QObject>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
@@ -35,7 +37,7 @@ namespace Akonadi {
   class Collection;
 }
 
-class FolderCollectionMonitor : public QObject
+class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
 {
   Q_OBJECT
 public:

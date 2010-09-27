@@ -20,7 +20,7 @@
 
 #include "readablecollectionproxymodel.h"
 #include "foldercollection.h"
-#include "util.h"
+#include "mailutil.h"
 #include "mailcommon.h"
 
 #include <akonadi/collection.h>

@@ -19,7 +19,9 @@
 #ifndef FOLDERTREEWIDGET_H
 #define FOLDERTREEWIDGET_H
 
+#include "mailcommon_export.h"
 #include "readablecollectionproxymodel.h"
+
 #include <QWidget>
 
 #include <QAbstractItemView>
@@ -42,7 +44,7 @@ namespace Akonadi {
  * It consists of the view (FolderTreeView) and a search line.
  * Internally, several proxy models are used on top of a entity tree model.
  */
-class FolderTreeWidget : public QWidget
+class MAILCOMMON_EXPORT FolderTreeWidget : public QWidget
 {
   Q_OBJECT
 public:

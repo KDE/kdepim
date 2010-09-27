@@ -17,7 +17,7 @@
 */
 
 #include "foldercollectionmonitor.h"
-#include "util.h"
+#include "mailutil.h"
 #include "foldercollection.h"
 
 #include <akonadi/changerecorder.h>

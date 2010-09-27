@@ -37,7 +37,7 @@
 *******************************************************************************/
 
 
-#include "util.h"
+#include "mailutil.h"
 #include "imapsettings.h"
 #include "mailcommon.h"
 
