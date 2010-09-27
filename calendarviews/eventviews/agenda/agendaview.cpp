@@ -1269,7 +1269,7 @@ void AgendaView::updateEventDates( AgendaItem *item, uint atomicOperationId )
   }
 
   // A commented code block which had 150 lines to adjust recurrence was here.
-  // I deleted it in rev 1180270 to make this function readable.
+  // I deleted it in rev 1180272 to make this function readable.
 
   if ( const KCalCore::Event::Ptr ev = CalendarSupport::event( aitem ) ) {
     /* setDtEnd() must be called before setDtStart(), otherwise, when moving
