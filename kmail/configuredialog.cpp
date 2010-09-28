@@ -182,7 +182,7 @@ namespace {
                    const KCoreConfigSkeleton::ItemEnum *e ) {
     Q_ASSERT( group->buttons().size() == e->choices().size() );
     checkLockDown( box, e );
-    group->buttons()[e->value()]->animateClick();
+    group->buttons()[e->value()]->setChecked( true );
   }
 
   void saveCheckBox( QCheckBox * b, KCoreConfigSkeleton::ItemBool *e ) {
@@ -973,6 +973,8 @@ AppearancePageColorsTab::AppearancePageColorsTab( QWidget * parent )
 
   connect( mCustomColorCheck, SIGNAL( stateChanged( int ) ),
            this, SLOT( slotEmitChanged( void ) ) );
+  connect( mColorList, SIGNAL( changed( ) ),
+           this, SLOT( slotEmitChanged( void ) ) );
 }
 
 void AppearancePage::ColorsTab::doLoadOther()
@@ -1015,13 +1017,11 @@ void AppearancePage::ColorsTab::doLoadOther()
          configName == "UnreadMessageColor" ||
          configName == "ImportantMessageColor" ||
          configName == "TodoMessageColor" ) {
-      mColorList->setColor( i, messageListView.readEntry( configName, defaultColor[i] ));
+      mColorList->setColorSilently( i, messageListView.readEntry( configName, defaultColor[i] ) );
     }
     else
-      mColorList->setColor( i,reader.readEntry( configName, defaultColor[i] ));
+      mColorList->setColorSilently( i, reader.readEntry( configName, defaultColor[i] ) );
   }
-  connect( mColorList, SIGNAL( changed( ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
 }
 
 void AppearancePage::ColorsTab::save()
