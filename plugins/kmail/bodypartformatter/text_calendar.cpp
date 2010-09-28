@@ -640,8 +640,11 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           ok = mail( incidence, callback, status, Scheduler::Reply );
         }
       } else {
-        if ( callback.deleteInvitationAfterReply() )
+        if ( callback.deleteInvitationAfterReply() ) {
           ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
+        } else {
+          callback.updateReaderWindow();
+        }
       }
       delete incidence;
 
@@ -796,8 +799,11 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // These should just be saved with their type as the dir
         const QString p = (path == "accept_counter" ? QString("reply") : path);
         if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
-          if ( c.deleteInvitationAfterReply() )
+          if ( c.deleteInvitationAfterReply() ) {
             ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+          } else {
+            c.updateReaderWindow();
+          }
           result = true;
         }
       }
@@ -831,8 +837,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           if ( saveFile( "Receiver Not Searched", iCal, QString( "reply" ) ) ) {
             if ( c.deleteInvitationAfterReply() ) {
               ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
-              result = true;
+            } else {
+              c.updateReaderWindow();
             }
+            result = true;
           }
           showCalendar( incidence->dtStart().date() );
           break;
