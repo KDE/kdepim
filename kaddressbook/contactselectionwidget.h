@@ -24,7 +24,6 @@
 
 #include <kabc/addressee.h>
 
-class QAbstractItemModel;
 class QCheckBox;
 class QItemSelectionModel;
 class QLabel;
@@ -50,11 +49,10 @@ class ContactSelectionWidget : public QWidget
     /**
      * Creates a new contact selection widget.
      *
-     * @param model The model that contains all available contacts.
      * @param selectionModel The model that contains the currently selected contacts.
      * @param parent The parent widget.
      */
-    ContactSelectionWidget( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent = 0 );
+    ContactSelectionWidget( QItemSelectionModel *selectionModel, QWidget *parent = 0 );
 
     /**
      * Sets the @p message text.
@@ -78,7 +76,6 @@ class ContactSelectionWidget : public QWidget
     KABC::Addressee::List collectSelectedContacts() const;
     KABC::Addressee::List collectAddressBookContacts() const;
 
-    QAbstractItemModel *mModel;
     QItemSelectionModel *mSelectionModel;
 
     QLabel *mMessageLabel;

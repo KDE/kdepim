@@ -72,13 +72,6 @@ class XXPortManager : public QObject
     void addExportAction( QAction *action, const QString &identifier );
 
     /**
-     * Sets the @p model that contains a list of all contacts.
-     *
-     * @note This model is used by the ContactSelectionDialog.
-     */
-    void setItemModel( QAbstractItemModel *model );
-
-    /**
      * Sets the @p model that contains the current selection.
      *
      * @note This model is used by the ContactSelectionDialog.
@@ -99,7 +92,6 @@ class XXPortManager : public QObject
     void slotImportJobDone( KJob* );
 
   private:
-    QAbstractItemModel *mItemModel;
     QItemSelectionModel *mSelectionModel;
     QWidget *mParentWidget;
     XXPortFactory mFactory;

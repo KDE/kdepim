@@ -23,13 +23,13 @@
 
 #include <klocale.h>
 
-ContactSelectionDialog::ContactSelectionDialog( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
+ContactSelectionDialog::ContactSelectionDialog( QItemSelectionModel *selectionModel, QWidget *parent )
   : KDialog( parent )
 {
   setCaption( i18n( "Select Contacts" ) );
   setButtons( Ok | Cancel );
 
-  mSelectionWidget = new ContactSelectionWidget( model, selectionModel, this );
+  mSelectionWidget = new ContactSelectionWidget( selectionModel, this );
   setMainWidget( mSelectionWidget );
 
   setInitialSize( QSize( 450, 220 ) );

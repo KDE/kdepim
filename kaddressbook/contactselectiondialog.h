@@ -25,7 +25,6 @@
 
 class ContactSelectionWidget;
 
-class QAbstractItemModel;
 class QItemSelectionModel;
 
 namespace Akonadi
@@ -46,11 +45,10 @@ class ContactSelectionDialog : public KDialog
     /**
      * Creates a new contact selection dialog.
      *
-     * @param model The model that contains all available contacts.
      * @param selectionModel The model that contains the currently selected contacts.
      * @param parent The parent widget.
      */
-    ContactSelectionDialog( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent = 0 );
+    explicit ContactSelectionDialog( QItemSelectionModel *selectionModel, QWidget *parent = 0 );
 
     /**
      * Sets the @p message text.

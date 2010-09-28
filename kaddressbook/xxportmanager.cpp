@@ -39,7 +39,7 @@
 
 
 XXPortManager::XXPortManager( QWidget *parent )
-  : QObject( parent ), mItemModel( 0 ), mSelectionModel( 0 ),
+  : QObject( parent ), mSelectionModel( 0 ),
     mParentWidget( parent ), mImportProgressDialog( 0 )
 {
   mImportMapper = new QSignalMapper( this );
@@ -65,11 +65,6 @@ void XXPortManager::addExportAction( QAction *action, const QString &identifier 
 {
   mExportMapper->setMapping( action, identifier );
   connect( action, SIGNAL( triggered( bool ) ), mExportMapper, SLOT( map() ) );
-}
-
-void XXPortManager::setItemModel( QAbstractItemModel *itemModel )
-{
-  mItemModel = itemModel;
 }
 
 void XXPortManager::setSelectionModel( QItemSelectionModel *selectionModel )
@@ -151,10 +146,10 @@ void XXPortManager::slotImportJobDone( KJob* )
 
 void XXPortManager::slotExport( const QString &identifier )
 {
-  if ( !mItemModel || !mSelectionModel )
+  if ( !mSelectionModel )
     return;
 
-  QPointer<ContactSelectionDialog> dlg = new ContactSelectionDialog( mItemModel, mSelectionModel, mParentWidget );
+  QPointer<ContactSelectionDialog> dlg = new ContactSelectionDialog( mSelectionModel, mParentWidget );
   dlg->setMessageText( i18n( "Which contact do you want to export?" ) );
   dlg->setDefaultAddressBook( mDefaultAddressBook );
   if ( !dlg->exec() || !dlg ) {

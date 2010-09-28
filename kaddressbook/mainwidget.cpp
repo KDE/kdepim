@@ -145,8 +145,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   checkableProxyModel->setSelectionModel( mCollectionSelectionModel );
   checkableProxyModel->setSourceModel( mCollectionTree );
 
-  mXXPortManager->setItemModel( allContactsModel() );
-
   mCollectionView->setModel( checkableProxyModel );
   mCollectionView->setXmlGuiClient( guiClient );
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
@@ -502,8 +500,7 @@ void MainWidget::print()
   if ( !printDialog.exec() ) //krazy:exclude=crashy
     return;
 
-  KABPrinting::PrintingWizard wizard( &printer, allContactsModel(),
-                                      mItemView->selectionModel(), this );
+  KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
   wizard.setDefaultAddressBook( currentAddressBook() );
 
   wizard.exec();

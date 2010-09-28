@@ -19,15 +19,13 @@
 
 #include "contactselectionwidget.h"
 
-#include "recursiveitemfetchjob.h"
-
 #include <akonadi/collectioncombobox.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/recursiveitemfetchjob.h>
 #include <klocale.h>
 
-#include <QtCore/QAbstractItemModel>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
@@ -37,8 +35,8 @@
 #include <QtGui/QRadioButton>
 #include <QtGui/QVBoxLayout>
 
-ContactSelectionWidget::ContactSelectionWidget( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
-  : QWidget( parent ), mModel( model ), mSelectionModel( selectionModel )
+ContactSelectionWidget::ContactSelectionWidget( QItemSelectionModel *selectionModel, QWidget *parent )
+  : QWidget( parent ), mSelectionModel( selectionModel )
 {
   initGui();
 
@@ -123,15 +121,17 @@ void ContactSelectionWidget::initGui()
 
 KABC::Addressee::List ContactSelectionWidget::collectAllContacts() const
 {
-  KABC::Addressee::List contacts;
+  Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
+                                                                            QStringList() << KABC::Addressee::mimeType() );
+  job->fetchScope().fetchFullPayload();
 
-  for ( int i = 0; i < mModel->rowCount(); ++i ) {
-    const QModelIndex index = mModel->index( i, 0 );
-    if ( index.isValid() ) {
-      const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-      if ( item.isValid() && item.hasPayload<KABC::Addressee>() )
-        contacts.append( item.payload<KABC::Addressee>() );
-    }
+  KABC::Addressee::List contacts;
+  if ( !job->exec() )
+    return contacts;
+
+  foreach ( const Akonadi::Item &item, job->items() ) {
+    if ( item.isValid() && item.hasPayload<KABC::Addressee>() )
+      contacts.append( item.payload<KABC::Addressee>() );
   }
 
   return contacts;
@@ -164,29 +164,28 @@ KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
   }
 
   if ( mAddressBookSelectionRecursive->isChecked() ) {
-    Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( collection );
+    Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( collection,
+                                                                              QStringList() << KABC::Addressee::mimeType() );
     job->fetchScope().fetchFullPayload();
 
-    if ( job->exec() ) {
-      const Akonadi::Item::List items = job->items();
+    if ( !job->exec() )
+      return contacts;
 
-      foreach ( const Akonadi::Item &item, items ) {
-        if ( item.hasPayload<KABC::Addressee>() ) {
-          contacts.append( item.payload<KABC::Addressee>() );
-        }
+    foreach ( const Akonadi::Item &item, job->items() ) {
+      if ( item.hasPayload<KABC::Addressee>() ) {
+        contacts.append( item.payload<KABC::Addressee>() );
       }
     }
   } else {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
     job->fetchScope().fetchFullPayload();
 
-    if ( job->exec() ) {
-      const Akonadi::Item::List items = job->items();
+    if ( !job->exec() )
+      return contacts;
 
-      foreach ( const Akonadi::Item &item, items ) {
-        if ( item.hasPayload<KABC::Addressee>() ) {
-          contacts.append( item.payload<KABC::Addressee>() );
-        }
+    foreach ( const Akonadi::Item &item, job->items() ) {
+      if ( item.hasPayload<KABC::Addressee>() ) {
+        contacts.append( item.payload<KABC::Addressee>() );
       }
     }
   }

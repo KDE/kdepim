@@ -32,7 +32,6 @@
 #include <kabc/addressee.h>
 #include <kassistantdialog.h>
 
-class QAbstractItemModel;
 class QItemSelectionModel;
 class QPrinter;
 
@@ -63,12 +62,10 @@ class PrintingWizard : public KAssistantDialog
      * Creates a new printing wizard.
      *
      * @param printer The configured printer.
-     * @param itemModel The item model to get all contacts from.
      * @param selectionModel The selection model to get the selected contacts from.
      * @param parent The parent widget.
      */
     PrintingWizard( QPrinter *printer,
-                    QAbstractItemModel *itemModel,
                     QItemSelectionModel *selectionModel,
                     QWidget *parent = 0 );
 
