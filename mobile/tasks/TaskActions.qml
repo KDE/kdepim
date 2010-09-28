@@ -37,6 +37,8 @@ ActionMenuContainer {
     text : KDE.i18n( "Home" )
     ActionListItem { name : "synchronize_all_items" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
+    ActionListItem { name : "import_tasks" }
+    ActionListItem { name : "export_tasks" }
     FakeAction { name : "purge_completed_todos" }
   }
 
@@ -64,6 +66,7 @@ ActionMenuContainer {
     category : "single_folder"
     text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "export_tasks" }
     FakeAction { name : "purge_completed_todos" }
   }
 
@@ -91,6 +94,7 @@ ActionMenuContainer {
     name : "multi_folder_folder_menu"
     text : KDE.i18n( "Folders" )
     ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "export_tasks" }
     FakeAction { name : "purge_completed_todos" }
   }
 

@@ -24,6 +24,9 @@
 
 #include "kdeclarativemainview.h"
 
+class KJob;
+class KProgressDialog;
+
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
@@ -35,6 +38,9 @@ class MainView : public KDeclarativeMainView
     void setPercentComplete(int row, int percentComplete);
     void editIncidence( const Akonadi::Item &item );
 
+    void importICal();
+    void exportICal();
+
   protected slots:
     virtual void delayedInit();
 
@@ -43,6 +49,12 @@ class MainView : public KDeclarativeMainView
                                              QItemSelectionModel *itemSelectionModel );
 
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+
+  private Q_SLOTS:
+    void slotImportJobDone( KJob* );
+
+  private:
+    KProgressDialog *m_importProgressDialog;
 };
 
 #endif // MAINVIEW_H
