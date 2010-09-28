@@ -49,13 +49,13 @@
 
 namespace MailCommon {
 
-FolderRequester::FolderRequester( Kernel* mailCommon, QWidget* parent )
+FolderRequester::FolderRequester( QWidget* parent )
   : QWidget( parent ),
-    mMustBeReadWrite( true ), mShowOutbox( true ), mShowImapFolders( true ), mNotCreateNewFolder( false ), mMailCommon( mailCommon )
+    mMustBeReadWrite( true ), mShowOutbox( true ), mShowImapFolders( true ), mNotCreateNewFolder( false )
 {
   QHBoxLayout * hlay = new QHBoxLayout( this );
   hlay->setSpacing( KDialog::spacingHint() );
-  hlay->setMargin( 0 );
+  hlay->setContentsMargins( 0, 0, 0, 0 );
 
   edit = new KLineEdit( this );
   edit->setReadOnly( true );
@@ -86,7 +86,7 @@ void FolderRequester::slotOpenDialog()
     options |= FolderSelectionDialog::HideOutboxFolder;
 
   MessageViewer::AutoQPointer<FolderSelectionDialog> dlg(
-      new FolderSelectionDialog( this, options, mMailCommon ) );
+      new FolderSelectionDialog( this, options ) );
   dlg->setCaption( i18n("Select Folder") );
   dlg->setModal( false );
   dlg->setSelectedCollection( mCollection );
@@ -108,7 +108,7 @@ Akonadi::Collection FolderRequester::folderCollection() const
 
 void FolderRequester::setCollectionFullPath( const Akonadi::Collection&col )
 {
-  edit->setText( Util::fullCollectionPath( col , mMailCommon ) );
+  edit->setText( Util::fullCollectionPath( col ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ void FolderRequester::slotCollectionsReceived( const Akonadi::Collection::List& 
 //-----------------------------------------------------------------------------
 void FolderRequester::setFolder( const QString &idString )
 {
-  Akonadi::Collection folder = mMailCommon->collectionFromId( idString );
+  Akonadi::Collection folder = Kernel::self()->collectionFromId( idString );
   if ( folder.isValid() ) {
     setFolder( folder );
   } else {

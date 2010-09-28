@@ -23,13 +23,11 @@
 
 namespace MailCommon {
 
-class Kernel;
-
 class EntityCollectionOrderProxyModel : public Akonadi::EntityOrderProxyModel
 {
   Q_OBJECT
 public:
-  EntityCollectionOrderProxyModel( Kernel* mailCommon, QObject * parent = 0 );
+  EntityCollectionOrderProxyModel( QObject * parent = 0 );
 
   virtual ~EntityCollectionOrderProxyModel();
 

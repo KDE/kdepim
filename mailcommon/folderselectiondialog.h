@@ -30,8 +30,6 @@ class KJob;
 
 namespace MailCommon {
 
-class Kernel;
-
 /**
  * A dialog that lets the user select a folder.
  * TODO: Move most of this to Akonadi::CollectionDialog
@@ -53,7 +51,7 @@ public:
   };
   Q_DECLARE_FLAGS( SelectionFolderOptions, SelectionFolderOption )
 
-  FolderSelectionDialog( QWidget* parent, FolderSelectionDialog::SelectionFolderOptions options, Kernel* mailCommon );
+  FolderSelectionDialog( QWidget* parent, FolderSelectionDialog::SelectionFolderOptions options );
   ~FolderSelectionDialog();
 
   void setSelectionMode( QAbstractItemView::SelectionMode mode );

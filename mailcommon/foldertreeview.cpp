@@ -34,18 +34,16 @@
 
 namespace MailCommon {
   
-FolderTreeView::FolderTreeView(Kernel* mailCommon, QWidget* parent, bool showUnreadCount )
+FolderTreeView::FolderTreeView( QWidget* parent, bool showUnreadCount )
   : Akonadi::EntityTreeView( parent ),
-    mbDisableContextMenuAndExtraColumn( false ),
-    mMailCommon( mailCommon )
+    mbDisableContextMenuAndExtraColumn( false )
 {
   init(showUnreadCount);
 }
 
 
-FolderTreeView::FolderTreeView(Kernel* mailCommon, KXMLGUIClient* xmlGuiClient, QWidget* parent, bool showUnreadCount )
-  :Akonadi::EntityTreeView( xmlGuiClient, parent ), mbDisableContextMenuAndExtraColumn( false ),
-    mMailCommon( mailCommon )
+FolderTreeView::FolderTreeView( KXMLGUIClient* xmlGuiClient, QWidget* parent, bool showUnreadCount )
+  :Akonadi::EntityTreeView( xmlGuiClient, parent ), mbDisableContextMenuAndExtraColumn( false )    
 {
   init(showUnreadCount);
 }
@@ -97,7 +95,7 @@ void FolderTreeView::showStatisticAnimation( bool anim )
 
 void FolderTreeView::writeConfig()
 {
-  KConfigGroup myGroup( mMailCommon->config(), "MainFolderView");
+  KConfigGroup myGroup( KernelIf->config(), "MainFolderView");
   myGroup.writeEntry( "IconSize", iconSize().width() );
   myGroup.writeEntry( "ToolTipDisplayPolicy", ( int ) mToolTipDisplayPolicy );
   myGroup.writeEntry( "SortingPolicy", ( int ) mSortingPolicy );
@@ -105,7 +103,7 @@ void FolderTreeView::writeConfig()
 
 void FolderTreeView::readConfig()
 {
-  KConfigGroup myGroup( mMailCommon->config(), "MainFolderView" );
+  KConfigGroup myGroup( KernelIf->config(), "MainFolderView" );
   int iIconSize = myGroup.readEntry( "IconSize", iconSize().width() );
   if ( iIconSize < 16 || iIconSize > 32 )
     iIconSize = 22;
@@ -421,9 +419,9 @@ bool FolderTreeView::isUnreadFolder( const QModelIndex & current, QModelIndex &i
             // via ctrl+ or ctrl- so we do this only if (confirm == true), which means
             // we are doing readOn.
 
-            if ( collection == mMailCommon->draftsCollectionFolder() ||
-                 collection == mMailCommon->templatesCollectionFolder() ||
-                 collection == mMailCommon->sentCollectionFolder() )
+            if ( collection == Kernel::self()->draftsCollectionFolder() ||
+                 collection == Kernel::self()->templatesCollectionFolder() ||
+                 collection == Kernel::self()->sentCollectionFolder() )
               return false;
 
             // warn user that going to next folder - but keep track of

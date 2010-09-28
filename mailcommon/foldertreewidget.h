@@ -62,7 +62,7 @@ public:
   };
   Q_DECLARE_FLAGS( TreeViewOptions, TreeViewOption )
 
-  FolderTreeWidget( Kernel* mailCommon, QWidget *parent = 0, KXMLGUIClient *xmlGuiClient = 0,
+  FolderTreeWidget( QWidget *parent = 0, KXMLGUIClient *xmlGuiClient = 0,
                     TreeViewOptions options = (TreeViewOptions) (ShowUnreadCount|ShowCollectionStatisticAnimation),
                     ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy = ReadableCollectionProxyModel::None );
   ~FolderTreeWidget();

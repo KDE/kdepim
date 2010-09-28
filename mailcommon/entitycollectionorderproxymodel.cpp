@@ -36,33 +36,31 @@ public:
   }
   void createOrderSpecialCollection()
   {
-    if ( mailCommon->inboxCollectionFolder().id()>0 &&
-         mailCommon->outboxCollectionFolder().id()>0&&
-         mailCommon->trashCollectionFolder().id()>0&&
-         mailCommon->draftsCollectionFolder().id()>0&&
-         mailCommon->templatesCollectionFolder().id()>0 &&
-         mailCommon->sentCollectionFolder().id()>0)
+    if ( Kernel::self()->inboxCollectionFolder().id()>0 &&
+         Kernel::self()->outboxCollectionFolder().id()>0&&
+         Kernel::self()->trashCollectionFolder().id()>0&&
+         Kernel::self()->draftsCollectionFolder().id()>0&&
+         Kernel::self()->templatesCollectionFolder().id()>0 &&
+         Kernel::self()->sentCollectionFolder().id()>0)
       {
         orderSpecialCollection<<
-          mailCommon->inboxCollectionFolder().id()<<
-          mailCommon->outboxCollectionFolder().id()<<
-          mailCommon->sentCollectionFolder().id()<<
-          mailCommon->trashCollectionFolder().id()<<
-          mailCommon->draftsCollectionFolder().id()<<
-          mailCommon->templatesCollectionFolder().id();
+          Kernel::self()->inboxCollectionFolder().id()<<
+          Kernel::self()->outboxCollectionFolder().id()<<
+          Kernel::self()->sentCollectionFolder().id()<<
+          Kernel::self()->trashCollectionFolder().id()<<
+          Kernel::self()->draftsCollectionFolder().id()<<
+          Kernel::self()->templatesCollectionFolder().id();
       }
   }
   bool manualSortingActive;
   QList<qlonglong> orderSpecialCollection;
-  Kernel* mailCommon;
 };
 
 
 
-EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( Kernel* mailCommon, QObject* parent )
+EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( QObject* parent )
   : EntityOrderProxyModel( parent ), d( new EntityCollectionOrderProxyModelPrivate() )
 {
-  d->mailCommon = mailCommon;
   setDynamicSortFilter(true);
   connect( Akonadi::SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
            this, SLOT( slotDefaultCollectionsChanged () ) );

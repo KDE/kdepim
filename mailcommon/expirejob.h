@@ -45,7 +45,7 @@ class ExpireJob : public ScheduledJob
 {
   Q_OBJECT
 public:
-  ExpireJob( const Akonadi::Collection& folder, Kernel *mailCommon, bool immediate );
+  ExpireJob( const Akonadi::Collection& folder, bool immediate );
   virtual ~ExpireJob();
 
   virtual void execute();
@@ -66,7 +66,6 @@ private:
   int mMaxReadTime;
   bool mFolderOpen;
   Akonadi::Collection mMoveToFolder;
-  Kernel* mMailCommon;
 };
 
 /// A scheduled "expire mails in this folder" task.
@@ -75,16 +74,13 @@ class ScheduledExpireTask : public ScheduledTask
 public:
   /// If immediate is set, the job will execute synchronously. This is used when
   /// the user requests explicitly that the operation should happen immediately.
-  ScheduledExpireTask( const Akonadi::Collection& folder, Kernel* mailCommon, bool immediate )
-    : ScheduledTask( folder, immediate ), mMailCommon( mailCommon ) {}
+  ScheduledExpireTask( const Akonadi::Collection& folder, bool immediate )
+    : ScheduledTask( folder, immediate ) {}
   virtual ~ScheduledExpireTask() {}
   virtual ScheduledJob* run() {
-    return folder().isValid() ? new ExpireJob( folder(), mMailCommon, isImmediate() ) : 0;
+    return folder().isValid() ? new ExpireJob( folder(), isImmediate() ) : 0;
   }
   virtual int taskTypeId() const { return 1; }
-
-private:
-  Kernel* mMailCommon;
 };
 
 } // namespace

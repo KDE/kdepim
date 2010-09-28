@@ -37,13 +37,11 @@ namespace Akonadi {
 
 namespace MailCommon {
 
-class Kernel;
-
 class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
 {
   Q_OBJECT
 public:
-  FolderCollectionMonitor(QObject *parent, Kernel* mailCommon);
+  FolderCollectionMonitor( QObject *parent = 0 );
   ~FolderCollectionMonitor();
 
   Akonadi::ChangeRecorder * monitor() const;
@@ -58,7 +56,6 @@ protected:
 
 private:
   Akonadi::ChangeRecorder *mMonitor;
-  Kernel* mMailCommon;
 };
 
 }

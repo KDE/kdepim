@@ -34,8 +34,8 @@
 
 namespace MailCommon {
 
-FolderCollectionMonitor::FolderCollectionMonitor(QObject *parent, Kernel* mailCommon)
-  :QObject( parent ), mMailCommon( mailCommon )
+FolderCollectionMonitor::FolderCollectionMonitor( QObject *parent )
+  :QObject( parent )
 {
   // monitor collection changes
   mMonitor = new Akonadi::ChangeRecorder( this );
@@ -76,7 +76,7 @@ void FolderCollectionMonitor::expireAllCollection( const QAbstractItemModel *mod
     if ( !collection.isValid() || Util::isVirtualCollection( collection ) )
       continue;
 
-    QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection, mMailCommon );
+    QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection );
     if ( col && col->isAutoExpire() ) {
       col->expireOldMessages( immediate );
     }

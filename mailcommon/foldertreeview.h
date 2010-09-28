@@ -34,8 +34,6 @@ class CollectionStatisticsDelegate;
 
 namespace MailCommon {
 
-class Kernel;
-
 /**
  * This is an enhanced EntityTreeView specially suited for the folders in KMail's
  * main folder widget.
@@ -44,9 +42,9 @@ class MAILCOMMON_EXPORT FolderTreeView : public Akonadi::EntityTreeView
 {
   Q_OBJECT
 public:
-  explicit FolderTreeView( Kernel* mailCommon, QWidget *parent = 0, bool showUnreadCount = true );
+  explicit FolderTreeView( QWidget *parent = 0, bool showUnreadCount = true );
 
-  explicit FolderTreeView( Kernel* mailCommon, KXMLGUIClient *xmlGuiClient, QWidget *parent = 0, bool showUnreadCount = true );
+  explicit FolderTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0, bool showUnreadCount = true );
 
   virtual ~FolderTreeView();
 
@@ -98,7 +96,6 @@ private:
   Akonadi::CollectionStatisticsDelegate *mCollectionStatisticsDelegate;
   bool mbDisableContextMenuAndExtraColumn;
   bool mLastButtonPressedWasMiddle;
-  Kernel* mMailCommon;
 };
 
 }

@@ -43,7 +43,7 @@ public:
   };
   Q_DECLARE_FLAGS( ReadableCollectionOptions, ReadableCollectionOption )
 
-  explicit ReadableCollectionProxyModel( Kernel* mailCommon, QObject *parent = 0, ReadableCollectionOptions = ReadableCollectionProxyModel::None );
+  explicit ReadableCollectionProxyModel( QObject *parent = 0, ReadableCollectionOptions = ReadableCollectionProxyModel::None );
 
   virtual ~ReadableCollectionProxyModel();
 

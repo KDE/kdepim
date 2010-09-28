@@ -57,7 +57,7 @@ class Kernel;
        * Constructor
        * @param parent the parent widget
        */
-      FolderRequester( Kernel* mailCommon, QWidget* parent );
+      FolderRequester( QWidget* parent );
       virtual ~FolderRequester();
 
       Akonadi::Collection folderCollection() const;

@@ -24,8 +24,7 @@ class MAILCOMMON_EXPORT ExpiryPropertiesDialog : public KDialog
 public:
     ExpiryPropertiesDialog(
       QWidget *tree,
-      const QSharedPointer<FolderCollection> &folder,
-      Kernel *mailCommon );
+      const QSharedPointer<FolderCollection> &folder);
     ~ExpiryPropertiesDialog();
 
 protected slots:
@@ -42,7 +41,6 @@ private:
     QRadioButton *moveToRB;
     FolderRequester *folderSelector;
     QRadioButton *deletePermanentlyRB;
-    Kernel *mMailCommon;
 };
 
 } // namespace

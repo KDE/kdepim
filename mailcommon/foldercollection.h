@@ -38,7 +38,7 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
 {
   Q_OBJECT
 public:
-  static QSharedPointer<FolderCollection> forCollection( const Akonadi::Collection& coll, Kernel* mailCommon );
+  static QSharedPointer<FolderCollection> forCollection( const Akonadi::Collection& coll );
 
   ~FolderCollection();
 
@@ -212,7 +212,7 @@ signals:
 
 private:
 
-  explicit FolderCollection( const Akonadi::Collection & col, Kernel* mailCommon, bool writeConfig = true );
+  explicit FolderCollection( const Akonadi::Collection& col, bool writeconfig );
 
   Akonadi::Collection mCollection;
   bool         mExpireMessages;          // true if old messages are expired
@@ -244,7 +244,6 @@ private:
   bool mWriteConfig;
 
   bool mOldIgnoreNewMail;
-  Kernel* mMailCommon;
 };
 
 }

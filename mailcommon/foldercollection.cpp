@@ -43,20 +43,20 @@ static QMutex mapMutex;
 static QMap<Collection::Id,QWeakPointer<FolderCollection> > fcMap;
 
 
-QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi::Collection& coll, Kernel* mailCommon )
+QSharedPointer<FolderCollection> FolderCollection::forCollection( const Akonadi::Collection& coll )
 {
   QMutexLocker lock( &mapMutex );
 
   QSharedPointer<FolderCollection> sptr = fcMap.value( coll.id() ).toStrongRef();
 
   if ( !sptr ) {
-    sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, mailCommon, true ) );
+    sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, true ) );
     fcMap.insert( coll.id(), sptr );
   }
   return sptr;
 }
 
-FolderCollection::FolderCollection( const Akonadi::Collection & col, Kernel* mailCommon, bool writeconfig )
+FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writeconfig )
   : mCollection( col ),
     mExpireMessages( false ),
     mUnreadExpireAge( 28 ),
@@ -68,14 +68,13 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, Kernel* mai
     mPutRepliesInSameFolder( false ),
     mHideInSelectionDialog( false ),
     mWriteConfig( writeconfig ),
-    mOldIgnoreNewMail( false ),
-    mMailCommon( mailCommon )
+    mOldIgnoreNewMail( false )
 {
   assert( col.isValid() );
-  mIdentity = mMailCommon->identityManager()->defaultIdentity().uoid();
+  mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
 
   readConfig();
-  connect( mMailCommon->identityManager(), SIGNAL( changed() ),
+  connect( KernelIf->identityManager(), SIGNAL( changed() ),
            this, SLOT( slotIdentitiesChanged() ) );
 }
 
@@ -93,7 +92,7 @@ QString FolderCollection::name() const
 
 bool FolderCollection::isSystemFolder() const
 {
-  return mMailCommon->isSystemFolderCollection( mCollection );
+  return Kernel::self()->isSystemFolderCollection( mCollection );
 }
 
 bool FolderCollection::isStructural() const
@@ -138,14 +137,14 @@ Akonadi::Collection FolderCollection::collection() const
 
 void FolderCollection::slotIdentitiesChanged()
 {
-  uint defaultIdentity =  mMailCommon->identityManager()->defaultIdentity().uoid();
+  uint defaultIdentity =  KernelIf->identityManager()->defaultIdentity().uoid();
   // The default identity may have changed, therefore set it again
   // if necessary
   if ( mUseDefaultIdentity )
     mIdentity = defaultIdentity;
 
   // Fall back to the default identity if the one used currently is invalid
-  if ( mMailCommon->identityManager()->identityForUoid( mIdentity ).isNull() ) {
+  if ( KernelIf->identityManager()->identityForUoid( mIdentity ).isNull() ) {
     mIdentity = defaultIdentity;
     mUseDefaultIdentity = true;
   }
@@ -158,7 +157,7 @@ QString FolderCollection::configGroupName() const
 
 void FolderCollection::readConfig()
 {
-  const KConfigGroup configGroup( mMailCommon->config(), configGroupName() );
+  const KConfigGroup configGroup( KernelIf->config(), configGroupName() );
   mExpireMessages = configGroup.readEntry( "ExpireMessages", false );
   mReadExpireAge = configGroup.readEntry( "ReadExpireAge", 3 );
   mReadExpireUnits = (ExpireUnits)configGroup.readEntry( "ReadExpireUnits", (int)ExpireMonths );
@@ -172,7 +171,7 @@ void FolderCollection::readConfig()
   mMailingList.readConfig( configGroup );
 
   mUseDefaultIdentity = configGroup.readEntry( "UseDefaultIdentity", true );
-  uint defaultIdentity = mMailCommon->identityManager()->defaultIdentity().uoid();
+  uint defaultIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
   mIdentity = configGroup.readEntry("Identity", defaultIdentity );
   slotIdentitiesChanged();
 
@@ -201,7 +200,7 @@ QString FolderCollection::idString() const
 
 void FolderCollection::writeConfig() const
 {
-  KConfigGroup configGroup( mMailCommon->config(), configGroupName() );
+  KConfigGroup configGroup( KernelIf->config(), configGroupName() );
   configGroup.writeEntry("ExpireMessages", mExpireMessages);
   configGroup.writeEntry("ReadExpireAge", mReadExpireAge);
   configGroup.writeEntry("ReadExpireUnits", (int)mReadExpireUnits);
@@ -242,7 +241,7 @@ void FolderCollection::writeConfig() const
   else
     configGroup.deleteEntry( "Shortcut" );
   if ( mIgnoreNewMail != mOldIgnoreNewMail ) {
-    mMailCommon->updateSystemTray();
+    KernelIf->updateSystemTray();
   }
 }
 
@@ -257,14 +256,14 @@ void FolderCollection::setUseDefaultIdentity( bool useDefaultIdentity )
 {
   mUseDefaultIdentity = useDefaultIdentity;
   if ( mUseDefaultIdentity )
-    mIdentity = mMailCommon->identityManager()->defaultIdentity().uoid();
-  mMailCommon->syncConfig();
+    mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
+  KernelIf->syncConfig();
 }
 
 void FolderCollection::setIdentity( uint identity )
 {
   mIdentity = identity;
-  mMailCommon->syncConfig();
+  KernelIf->syncConfig();
 }
 
 uint FolderCollection::identity() const
@@ -283,7 +282,7 @@ uint FolderCollection::identity() const
       }
     }
     delete imapSettingsInterface;
-    if ( identityId != -1 && !mMailCommon->identityManager()->identityForUoid( identityId ).isNull() )
+    if ( identityId != -1 && !KernelIf->identityManager()->identityForUoid( identityId ).isNull() )
       return identityId;
   }
   return mIdentity;
@@ -408,8 +407,8 @@ void FolderCollection::slotDeletionCollectionResult( KJob * job )
 
 void FolderCollection::expireOldMessages( bool immediate )
 {
-  ScheduledExpireTask* task = new ScheduledExpireTask(mCollection, mMailCommon, immediate);
-  mMailCommon->jobScheduler()->registerTask( task );
+  ScheduledExpireTask* task = new ScheduledExpireTask(mCollection, immediate);
+  KernelIf->jobScheduler()->registerTask( task );
 }
 
 }

@@ -69,7 +69,7 @@ namespace Util {
 
     MAILCOMMON_EXPORT bool isVirtualCollection(const Akonadi::Collection & col);
 
-    MAILCOMMON_EXPORT QString fullCollectionPath( const Akonadi::Collection& collection, Kernel* mailCommon );
+    MAILCOMMON_EXPORT QString fullCollectionPath( const Akonadi::Collection& collection );
 
     MAILCOMMON_EXPORT void showJobErrorMessage( KJob *job );
 }

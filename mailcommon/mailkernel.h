@@ -20,6 +20,7 @@
 #ifndef MAILCOMMON_KERNEL_H
 #define MAILCOMMON_KERNEL_H
 
+#include "mailinterfaces.h"
 #include "mailcommon_export.h"
 
 #include <QObject>
@@ -30,54 +31,50 @@
 #include "akonadi/kmime/specialmailcollections.h"
 
 
-namespace Akonadi {
-  class ChangeRecorder;
-  class EntityMimeTypeFilterModel;
-}
-
-namespace KPIMIdentities {
-  class IdentityManager;
-}
 
 namespace MailCommon {
 
-class JobScheduler;
 
-/** Deals with common mail application related operations. It needs to be
- * initialized with all the setters before usage. There should be one MailCommon
- * object per application and either used as an argument for different other
- * classes, so they work on the same config file, collectionmodel, etc., or stored
- * in an application global static object (think KMKernel in KMail desktop).
- *
- * Never delete any MailCommon pointer you got!
+/** Deals with common mail application related operations. The required interfaces
+ *  MUST be registered before using it!
+ *  Be careful when using in multi-threaded applications, as Kernel is a QObject
+ *  singleton, created in the main thread, thus event handling for Kernel::self()
+ *  will happen in the main thread.
  */
 
 class MAILCOMMON_EXPORT Kernel : public QObject {
   Q_OBJECT  
 public:
-  Kernel( QObject* parent = 0 );
+
+  virtual ~Kernel();
+  
+  static Kernel *self();
+
+  /** Register the interface dealing with main mail functionality. This function
+   * MUST be called with a valid interface pointer, before any Kernel::self()
+   * method is used. The pointer ownership will not be transfered to Kernel. */
+  void registerKernelIf( IKernel* kernelIf ) {
+    mKernelIf = kernelIf;
+  }
+
+  IKernel *kernelIf() const {
+    Q_ASSERT( mKernelIf );
+    return mKernelIf;
+  }
+
+  /** Register the interface dealing with mail settings. This function
+   * MUST be called with a valid interface pointer, before any Kernel::self()
+   * method is used. The pointer ownership will not be transfered to Kernel. */
+  void registerSettingsIf( ISettings* settingsIf ) {
+    mSettingsIf = settingsIf;
+  }
+
+  ISettings *settingsIf() const {
+    Q_ASSERT( mSettingsIf );
+    return mSettingsIf;
+  }
 
   /**
-   * Returns a model of all folders in KMail. This is basically the same as entityTreeModel(),
-   * but with items filtered out, the model contains only collections.
-   */
-  Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
-  void setCollectionModel( Akonadi::EntityMimeTypeFilterModel *collectionModel );
-
-  KSharedConfig::Ptr config();
-  void setConfig( KSharedConfig::Ptr config );
-  void syncConfig();
-
-    /** return the pointer to the identity manager */
-  KPIMIdentities::IdentityManager *identityManager();
-  void setIdentityManager( KPIMIdentities::IdentityManager *identityManager );
-
-  JobScheduler* jobScheduler() { return mJobScheduler; }
-  void setJobScheduler( JobScheduler* jobScheduler ) { mJobScheduler = jobScheduler; }
-
-  Akonadi::ChangeRecorder *folderCollectionMonitor() { return mFolderCollectionMonitor; }
-  void setFolderCollectionMonitor( Akonadi::ChangeRecorder* monitor ) { mFolderCollectionMonitor = monitor; }
-    /**
   * Returns the collection associated with the given @p id, or an invalid collection if not found.
   * The EntityTreeModel of the kernel is searched for the collection. Since the ETM is loaded
   * async, this method will not find the collection right after startup, when the ETM is not yet
@@ -107,27 +104,6 @@ public:
 
   void emergencyExit( const QString& reason );
 
-  void updateSystemTray();
-
-  virtual bool showPopupAfterDnD() { //TODO:Implement, use GlobalSettings::self()
-    return false;
-  }
-
-  virtual bool excludeImportantMailFromExpiry() { //TODO:Implement, use GlobalSettings::self()
-    return false;
-  }
-  
-  virtual qreal closeToQuotaThreshold() { //TODO:Implement, use GlobalSettings::self()
-    return 0;
-  }
-
-  virtual Akonadi::Collection::Id lastSelectedFolder() {//TODO:Implement, use GlobalSettings::self()
-    return 0;
-  }
-
-  virtual void setLastSelectedFolder( const Akonadi::Collection::Id  &col ) {//TODO:Implement, use GlobalSettings::self()
-  }
-  
 private:  
   void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type );
 
@@ -140,20 +116,24 @@ Q_SIGNALS:
   void requestSystemTrayUpdate();
 
 private:
-  KSharedConfig::Ptr mConfig;
-  Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
-  KPIMIdentities::IdentityManager *mIdentityManager;
-  JobScheduler* mJobScheduler;
-  Akonadi::ChangeRecorder *mFolderCollectionMonitor;
-
+  Kernel( QObject* parent = 0 );
+  friend class KernelPrivate;
+  
   Akonadi::Collection::Id the_inboxCollectionFolder;
   Akonadi::Collection::Id the_outboxCollectionFolder;
   Akonadi::Collection::Id the_sentCollectionFolder;
   Akonadi::Collection::Id the_trashCollectionFolder;
   Akonadi::Collection::Id the_draftsCollectionFolder;
   Akonadi::Collection::Id the_templatesCollectionFolder;
+
+  IKernel* mKernelIf;
+  ISettings* mSettingsIf;
 };
 
 }
+
+#define KernelIf MailCommon::Kernel::self()->kernelIf()
+#define SettingsIf MailCommon::Kernel::self()->settingsIf()
+#define CommonKernel MailCommon::Kernel::self()
 
 #endif

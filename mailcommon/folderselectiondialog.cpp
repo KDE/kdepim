@@ -50,15 +50,13 @@ public:
   FolderTreeWidget *folderTreeWidget;
   bool mNotAllowToCreateNewFolder;
   bool mUseGlobalSettings;
-  Kernel *mMailCommon;
 };
 
-FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOptions options, Kernel *mailCommon )
+FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOptions options )
   :KDialog( parent ), d( new FolderSelectionDialogPrivate() )
 {
   setObjectName( "folder dialog" );
 
-  d->mMailCommon = mailCommon;
   d->mNotAllowToCreateNewFolder = ( options & FolderSelectionDialog::NotAllowToCreateNewFolder );
   if ( d->mNotAllowToCreateNewFolder )
     setButtons( Ok | Cancel );
@@ -86,7 +84,7 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   if ( options & FolderSelectionDialog::HideImapFolder )
     optReadableProxy |= ReadableCollectionProxyModel::HideImapFolder;
 
-  d->folderTreeWidget = new FolderTreeWidget( d->mMailCommon, this, 0, opt, optReadableProxy);
+  d->folderTreeWidget = new FolderTreeWidget( this, 0, opt, optReadableProxy);
   d->folderTreeWidget->disableContextMenuAndExtraColumn();
   d->folderTreeWidget->readableCollectionProxyModel()->setEnabledCheck( ( options & EnableCheck ) );
   d->folderTreeWidget->folderTreeView()->setTooltipsPolicy( FolderTreeWidget::DisplayNever );
@@ -173,7 +171,7 @@ void FolderSelectionDialog::slotSelectionChanged()
     Akonadi::Collection parent;
     enableButton(KDialog::User1, canCreateCollection( parent ) );
     if ( parent.isValid() ) {
-      enableButton( KDialog::Ok, FolderCollection::forCollection( parent, d->mMailCommon )->canCreateMessages() );
+      enableButton( KDialog::Ok, FolderCollection::forCollection( parent )->canCreateMessages() );
     }
   }
 }
@@ -208,7 +206,7 @@ static const char * myConfigGroupName = "FolderSelectionDialog";
 
 void FolderSelectionDialog::readConfig()
 {
-  KConfigGroup group( d->mMailCommon->config(), myConfigGroupName );
+  KConfigGroup group( KernelIf->config(), myConfigGroupName );
 
   QSize size = group.readEntry( "Size", QSize() );
   if ( !size.isEmpty() )
@@ -216,9 +214,9 @@ void FolderSelectionDialog::readConfig()
   else
     resize( 500, 300 );
   if ( d->mUseGlobalSettings ) {
-    const Akonadi::Collection::Id id = d->mMailCommon->lastSelectedFolder();
+    const Akonadi::Collection::Id id = SettingsIf->lastSelectedFolder();
     if ( id > -1 ) {
-      const Akonadi::Collection col = d->mMailCommon->collectionFromId( id );
+      const Akonadi::Collection col = Kernel::self()->collectionFromId( id );
       d->folderTreeWidget->selectCollectionFolder( col );
     }
   }
@@ -227,13 +225,13 @@ void FolderSelectionDialog::readConfig()
 
 void FolderSelectionDialog::writeConfig()
 {
-  KConfigGroup group( d->mMailCommon->config(), myConfigGroupName );
+  KConfigGroup group( KernelIf->config(), myConfigGroupName );
   group.writeEntry( "Size", size() );
 
   if ( d->mUseGlobalSettings ) {
     Akonadi::Collection col = selectedCollection();
     if ( col.isValid() )
-      d->mMailCommon->setLastSelectedFolder( col.id() );
+      SettingsIf->setLastSelectedFolder( col.id() );
   }
 }
 

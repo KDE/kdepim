@@ -70,17 +70,15 @@ public:
   KLineEdit *filterFolderLineEdit;
   QLabel *label;
   bool dontKeyFilter;
-  Kernel* mailCommon;
 };
 
 
-FolderTreeWidget::FolderTreeWidget( Kernel* mailCommon, QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy )
+FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy )
   : QWidget( parent ), d( new FolderTreeWidgetPrivate() )
 {
-  d->mailCommon = mailCommon;
   Akonadi::AttributeFactory::registerAttribute<Akonadi::ImapAclAttribute>();
 
-  d->folderTreeView = new FolderTreeView( mailCommon, xmlGuiClient, this, options & ShowUnreadCount );
+  d->folderTreeView = new FolderTreeView( xmlGuiClient, this, options & ShowUnreadCount );
   d->folderTreeView->showStatisticAnimation( options & ShowCollectionStatisticAnimation );
 
   connect( d->folderTreeView, SIGNAL( manualSortingChanged( bool ) ), this, SLOT( slotManualSortingChanged( bool ) ) );
@@ -99,7 +97,7 @@ FolderTreeWidget::FolderTreeWidget( Kernel* mailCommon, QWidget* parent, KXMLGUI
 
   Akonadi::RecursiveCollectionFilterProxyModel *recurfilter = new Akonadi::RecursiveCollectionFilterProxyModel( this );
   recurfilter->addContentMimeTypeInclusionFilter( KMime::Message::mimeType() );
-  recurfilter->setSourceModel( d->mailCommon->collectionModel() );
+  recurfilter->setSourceModel( KernelIf->collectionModel() );
 
   // ... with statistics...
   d->filterModel = new Akonadi::StatisticsProxyModel( this );
@@ -108,7 +106,7 @@ FolderTreeWidget::FolderTreeWidget( Kernel* mailCommon, QWidget* parent, KXMLGUI
   d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
   d->quotaModel->setSourceModel( d->filterModel );
 
-  d->readableproxy = new ReadableCollectionProxyModel( mailCommon, this, optReadableProxy );
+  d->readableproxy = new ReadableCollectionProxyModel( this, optReadableProxy );
   d->readableproxy->setSourceModel( d->quotaModel );
 
 
@@ -128,9 +126,9 @@ FolderTreeWidget::FolderTreeWidget( Kernel* mailCommon, QWidget* parent, KXMLGUI
   d->filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
 
   //Order proxy
-  d->entityOrderProxy = new EntityCollectionOrderProxyModel( d->mailCommon, this );
+  d->entityOrderProxy = new EntityCollectionOrderProxyModel( this );
   d->entityOrderProxy->setSourceModel( d->filterTreeViewModel );
-  KConfigGroup grp( d->mailCommon->config(), "CollectionTreeOrder" );
+  KConfigGroup grp( KernelIf->config(), "CollectionTreeOrder" );
   d->entityOrderProxy->setOrderConfig( grp );
   d->folderTreeView->setModel( d->entityOrderProxy );
 
@@ -237,17 +235,17 @@ void FolderTreeWidget::readConfig()
 {
   // Custom/System font support
   if (!MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-    KConfigGroup fontConfig( d->mailCommon->config(), "Fonts" );
+    KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
     setFont( fontConfig.readEntry("folder-font", KGlobalSettings::generalFont() ) );
   } else {
     setFont( KGlobalSettings::generalFont() );
   }
 
-  KConfigGroup mainFolderView( d->mailCommon->config(), "MainFolderView" );
+  KConfigGroup mainFolderView( KernelIf->config(), "MainFolderView" );
   const int checkedFolderToolTipsPolicy = mainFolderView.readEntry( "ToolTipDisplayPolicy", 0 );
   changeToolTipsPolicyConfig( ( ToolTipDisplayPolicy )checkedFolderToolTipsPolicy );
 
-  d->folderTreeView->setDropActionMenuEnabled( d->mailCommon->showPopupAfterDnD() );
+  d->folderTreeView->setDropActionMenuEnabled( SettingsIf->showPopupAfterDnD() );
   readQuotaConfig();
 }
 
@@ -280,9 +278,9 @@ void FolderTreeWidget::readQuotaConfig()
   QColor quotaColor;
   qreal threshold = 100;
   if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-    KConfigGroup readerConfig( d->mailCommon->config(), "Reader" );
+    KConfigGroup readerConfig( KernelIf->config(), "Reader" );
     quotaColor = readerConfig.readEntry( "CloseToQuotaColor", quotaColor  );
-    threshold = d->mailCommon->closeToQuotaThreshold();
+    threshold = SettingsIf->closeToQuotaThreshold();
   }
   quotaWarningParameters( quotaColor, threshold );
 }
@@ -330,6 +328,7 @@ void FolderTreeWidget::slotManualSortingChanged( bool active )
 
 bool FolderTreeWidget::eventFilter( QObject* o, QEvent *e )
 {
+  Q_UNUSED( o );
   if ( d->dontKeyFilter )
     return false;
 

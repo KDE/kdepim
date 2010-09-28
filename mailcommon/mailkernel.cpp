@@ -29,10 +29,19 @@
 
 namespace MailCommon {
 
-Kernel::Kernel( QObject* parent ) : QObject( parent ),
-    mConfig( 0 ), mCollectionModel( 0 ),
-    mIdentityManager( 0 ), mJobScheduler( 0 ),
-    mFolderCollectionMonitor( 0 )
+class KernelPrivate {
+  public:
+    KernelPrivate() : kernel( new Kernel ) {}
+    ~KernelPrivate() {
+      kDebug();
+      delete kernel;      
+    }
+    Kernel* kernel;
+};
+
+K_GLOBAL_STATIC( KernelPrivate, sInstance )
+
+Kernel::Kernel( QObject* parent ) : QObject( parent )
 {
   the_draftsCollectionFolder = -1;
   the_inboxCollectionFolder = -1;
@@ -40,48 +49,24 @@ Kernel::Kernel( QObject* parent ) : QObject( parent ),
   the_sentCollectionFolder = -1;
   the_templatesCollectionFolder = -1;
   the_trashCollectionFolder = -1;
+  mKernelIf = 0;
+  mSettingsIf = 0;
 }
 
-void Kernel::setConfig(KSharedConfig::Ptr config)
+Kernel::~Kernel()
 {
-  mConfig = config;
+  kDebug();
 }
 
-KSharedConfig::Ptr Kernel::config()
+Kernel *Kernel::self()
 {
-  return mConfig;
-}
-
-void Kernel::syncConfig()
-{
-  emit requestConfigSync();
-}
-
-
-void Kernel::setCollectionModel(Akonadi::EntityMimeTypeFilterModel* collectionModel)
-{
-  mCollectionModel = collectionModel;
-}
-
-Akonadi::EntityMimeTypeFilterModel* Kernel::collectionModel() const
-{
-  return mCollectionModel;
-}
-
-void Kernel::setIdentityManager(KPIMIdentities::IdentityManager* identityManager)
-{
-  mIdentityManager = identityManager;
-}
-
-KPIMIdentities::IdentityManager* Kernel::identityManager()
-{
-  return mIdentityManager;
+  return sInstance->kernel; //will create it
 }
 
 Akonadi::Collection Kernel::collectionFromId(const Akonadi::Collection::Id& id) const
 {
   const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(
-    mCollectionModel, Akonadi::Collection(id)
+    kernelIf()->collectionModel(), Akonadi::Collection(id)
   );
   return idx.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 }
@@ -224,10 +209,6 @@ void Kernel::emergencyExit( const QString& reason )
   }
 }
 
-void Kernel::updateSystemTray()
-{
-  emit requestSystemTrayUpdate();
-}
 
 }
 

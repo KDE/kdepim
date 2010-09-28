@@ -64,9 +64,9 @@ using KPIM::BroadcastStatus;
 
 namespace MailCommon {
 
-ExpireJob::ExpireJob( const Akonadi::Collection& folder, Kernel* mailCommon, bool immediate )
+ExpireJob::ExpireJob( const Akonadi::Collection& folder, bool immediate )
  : ScheduledJob( folder, immediate ), mCurrentIndex( 0 ),
-   mFolderOpen( false ), mMoveToFolder( 0 ), mMailCommon( mailCommon )
+   mFolderOpen( false ), mMoveToFolder( 0 )
 {
 }
 
@@ -85,7 +85,7 @@ void ExpireJob::execute()
   mMaxUnreadTime = 0;
   mMaxReadTime = 0;
   mCurrentIndex = 0;
-  QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder, mMailCommon ) );
+  QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder ) );
   int unreadDays, readDays;
   fd->daysToExpire( unreadDays, readDays );
   if (unreadDays > 0) {
@@ -131,7 +131,7 @@ void ExpireJob::itemFetchResult( KJob *job )
     Akonadi::MessageStatus status;
     status.setStatusFromFlags( item.flags() );
     if ( ( status.isImportant() || status.isToAct() || status.isWatched() )
-      && mMailCommon->excludeImportantMailFromExpiry() )
+      && SettingsIf->excludeImportantMailFromExpiry() )
        continue;
 
     time_t maxTime = status.isUnread() ? mMaxUnreadTime : mMaxReadTime;
@@ -151,7 +151,7 @@ void ExpireJob::done()
 {
   QString str;
   bool moving = false;
-  QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder, mMailCommon ) );
+  QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder ) );
 
   if ( !mRemovedMsgs.isEmpty() ) {
     int count = mRemovedMsgs.count();
@@ -162,7 +162,7 @@ void ExpireJob::done()
       kDebug() << "ExpireJob: finished expiring in folder"
                     << mSrcFolder.name()
                     << count << "messages to remove.";
-      Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( mRemovedMsgs, mMailCommon->trashCollectionFolder(), this );
+      Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( mRemovedMsgs, Kernel::self()->trashCollectionFolder(), this );
       connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMessagesMoved(KJob*)) );
       moving = true;
       str = i18np( "Removing 1 old message from folder %2...",
@@ -170,7 +170,7 @@ void ExpireJob::done()
               mSrcFolder.name() );
     } else {
       // Expire by moving
-      mMoveToFolder = mMailCommon->collectionFromId( fd->expireToFolderId() );
+      mMoveToFolder = Kernel::self()->collectionFromId( fd->expireToFolderId() );
       if ( !mMoveToFolder.isValid() ) {
         str = i18n( "Cannot expire messages from folder %1: destination "
                     "folder %2 not found",
@@ -193,7 +193,7 @@ void ExpireJob::done()
   if ( !str.isEmpty() )
     BroadcastStatus::instance()->setStatusMsg( str );
 
-  KConfigGroup group( mMailCommon->config(), fd->configGroupName() );
+  KConfigGroup group( KernelIf->config(), fd->configGroupName() );
   group.writeEntry( "Current", -1 ); // i.e. make it invalid, the serial number will be used
 
   if ( !moving )
@@ -204,7 +204,7 @@ void ExpireJob::slotMessagesMoved( KJob* job )
 {
   kDebug() << job << job->error();
   QString msg;
-  QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder, mMailCommon ) );
+  QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder ) );
   if ( fd ) {
     int error = job->error();
     switch (error ) {

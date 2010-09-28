@@ -48,10 +48,9 @@ public:
   bool hideSpecificFolder;
   bool hideOutboxFolder;
   bool hideImapFolder;
-  Kernel* mailCommon;
 };
 
-ReadableCollectionProxyModel::ReadableCollectionProxyModel( Kernel* mailCommon, QObject *parent, ReadableCollectionOptions option )
+ReadableCollectionProxyModel::ReadableCollectionProxyModel( QObject *parent, ReadableCollectionOptions option )
   : Akonadi::EntityRightsFilterModel( parent ),
     d( new Private )
 {
@@ -68,7 +67,6 @@ ReadableCollectionProxyModel::ReadableCollectionProxyModel( Kernel* mailCommon, 
   if ( option & HideImapFolder ) {
     d->hideImapFolder = true;
   }
-  d->mailCommon = mailCommon;
 }
 
 ReadableCollectionProxyModel::~ReadableCollectionProxyModel()
@@ -158,13 +156,13 @@ bool ReadableCollectionProxyModel::acceptRow( int sourceRow, const QModelIndex &
       return false;
   }
   if ( d->hideSpecificFolder ) {
-    QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection, d->mailCommon );
+    QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection );
     if ( col && col->hideInSelectionDialog() )
       return false;
   }
 
   if ( d->hideOutboxFolder ) {
-    if ( collection == d->mailCommon->outboxCollectionFolder() )
+    if ( collection == Kernel::self()->outboxCollectionFolder() )
       return false;
   }
   if ( d->hideImapFolder ) {

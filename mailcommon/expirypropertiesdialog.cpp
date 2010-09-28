@@ -27,10 +27,9 @@ using namespace MailCommon;
  */
 ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   QWidget *tree,
-  const QSharedPointer<FolderCollection> &folder, Kernel *mailCommon )
+  const QSharedPointer<FolderCollection> &folder )
     : KDialog( tree ),
-      mFolder( folder ),
-      mMailCommon( mailCommon )
+      mFolder( folder )
 {
   setCaption( i18n( "Mail Expiry Properties" ) );
   setButtons( Ok|Cancel );
@@ -96,7 +95,7 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
   connect( moveToRB, SIGNAL( toggled( bool ) ), this, SLOT( slotUpdateControls() ) );
   moveToHBox->addWidget( moveToRB );
 
-  folderSelector = new FolderRequester( mMailCommon, privateLayoutWidget );
+  folderSelector = new FolderRequester( privateLayoutWidget );
   folderSelector->setMustBeReadWrite( true );
   folderSelector->setShowOutbox( false );
   moveToHBox->addWidget( folderSelector );
@@ -142,7 +141,7 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog(
 
   QString destFolderID = mFolder->expireToFolderId();
   if ( !destFolderID.isEmpty() ) {
-    Akonadi::Collection destFolder = mMailCommon->collectionFromId( destFolderID );
+    Akonadi::Collection destFolder = Kernel::self()->collectionFromId( destFolderID );
     if ( destFolder.isValid() )
       folderSelector->setFolder( destFolder );
   }

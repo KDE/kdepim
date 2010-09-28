@@ -78,10 +78,10 @@ bool MailCommon::Util::isVirtualCollection(const Akonadi::Collection & collectio
 
 }
 
-QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection& collection, Kernel* mailCommon )
+QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection& collection )
 {
   QString fullPath;
-  QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( mailCommon->collectionModel(), collection );
+  QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), collection );
   if ( !idx.isValid() )
     return fullPath;
   fullPath = idx.data().toString();
