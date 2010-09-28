@@ -26,6 +26,11 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KLocale>
+#include "mailutil.h"
+#include <akonadi/agentinstance.h>
+#include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identity.h>
+#include <imapsettings.h>
 
 namespace MailCommon {
 
@@ -209,7 +214,100 @@ void Kernel::emergencyExit( const QString& reason )
   }
 }
 
+/**
+ * Returns true if the folder is either the outbox or one of the drafts-folders
+ */
+bool Kernel::folderIsDraftOrOutbox(const Akonadi::Collection & col)
+{
+  if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Outbox ) )
+    return true;
+  return folderIsDrafts( col );
+}
 
+bool Kernel::folderIsDrafts(const Akonadi::Collection & col)
+{
+  if ( col ==  Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts ) )
+    return true;
+
+  const QString idString = QString::number( col.id() );
+  if ( idString.isEmpty() ) return false;
+
+  // search the identities if the folder matches the drafts-folder
+  const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
+  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it )
+    if ( (*it).drafts() == idString ) return true;
+  return false;
+}
+
+bool Kernel::folderIsTemplates(const Akonadi::Collection &col)
+{
+  if ( col ==  Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates ) )
+    return true;
+
+  const QString idString = QString::number( col.id() );
+  if ( idString.isEmpty() ) return false;
+
+  // search the identities if the folder matches the templates-folder
+  const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
+  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it )
+    if ( (*it).templates() == idString ) return true;
+  return false;
+}
+
+Akonadi::Collection Kernel::trashCollectionFromResource( const Akonadi::Collection & col )
+{
+  Akonadi::Collection trashCol;
+  if ( col.isValid() ) {
+    if ( col.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+      OrgKdeAkonadiImapSettingsInterface *iface = MailCommon::Util::createImapSettingsInterface( col.resource() );
+      if ( iface->isValid() ) {
+
+        trashCol =  Akonadi::Collection( iface->trashCollection() );
+        delete iface;
+        return trashCol;
+      }
+      delete iface;
+    }
+  }
+  return trashCol;
+}
+
+bool Kernel::folderIsTrash( const Akonadi::Collection & col )
+{
+  if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash ) )
+    return true;
+  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
+  foreach ( const Akonadi::AgentInstance& type, lst ) {
+    if ( type.status() == Akonadi::AgentInstance::Broken )
+      continue;
+    if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+      OrgKdeAkonadiImapSettingsInterface *iface = MailCommon::Util::createImapSettingsInterface( type.identifier() );
+      if ( iface->isValid() ) {
+        if ( iface->trashCollection() == col.id() ) {
+          delete iface;
+          return true;
+        }
+      }
+      delete iface;
+    }
+  }
+  return false;
+}
+
+bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
+{
+  if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail ) )
+    return true;
+
+  const QString idString = QString::number( col.id() );
+  if ( idString.isEmpty() ) return false;
+
+  // search the identities if the folder matches the sent-folder
+  const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
+  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it )
+    if ( (*it).fcc() == idString ) return true;
+  return false;
+}
 }
 
 #include "mailkernel.moc"

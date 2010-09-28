@@ -40,6 +40,8 @@
 
 #include "mailcommon_export.h"
 
+#include <akonadi/agentinstance.h>
+
 class KUrl;
 class KJob;
 
@@ -72,6 +74,8 @@ namespace Util {
     MAILCOMMON_EXPORT QString fullCollectionPath( const Akonadi::Collection& collection );
 
     MAILCOMMON_EXPORT void showJobErrorMessage( KJob *job );
+
+    MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances();
 }
 }
 
