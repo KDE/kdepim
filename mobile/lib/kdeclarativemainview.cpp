@@ -155,6 +155,7 @@ void KDeclarativeMainView::delayedInit()
 
   d->mEtm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
   d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+  d->mEtm->setIncludeUnsubscribed( false );
 
   if ( debugTiming ) {
     kWarning() << "ETM created" << t.elapsed() << &t;
