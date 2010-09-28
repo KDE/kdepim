@@ -206,7 +206,7 @@ ActionMenuContainer {
     ActionListItem { name : "message_edit" }
     ActionListItem { name : "akonadi_item_copy_to_dialog" }
     ActionListItem { name : "akonadi_item_move_to_dialog" }
-    ActionListItem { name : "akonadi_item_delete" }
+    ActionListItem { name : "akonadi_move_to_trash" }
   }
 
   ApplicationGeneralActions {
