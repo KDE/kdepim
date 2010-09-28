@@ -687,6 +687,8 @@ void MainView::createDefaultCollectionDone( KJob *job)
 
   connect( SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
            this, SLOT( initDefaultFolders() ) );
+
+  folderChanged(); //call here, as e.g trash folders cannot be detected before the special collections are set up
 }
 
 bool MainView::folderIsDrafts(const Collection &col)
