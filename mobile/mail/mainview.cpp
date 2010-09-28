@@ -23,6 +23,7 @@
 #include "messagelistproxy.h"
 #include "mailactionmanager.h"
 #include "messageviewitem.h"
+#include "mailcommon/mailkernel.h"
 #include "messageviewer/viewer.h"
 #include <akonadi/collection.h>
 #include <akonadi/collectionmodel.h>
@@ -152,6 +153,7 @@ void MainView::delayedInit()
   connect(actionCollection()->action("prefer_html_to_plain"), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)));
   connect(actionCollection()->action("load_external_ref"), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)));
   connect(actionCollection()->action("show_expire_properties"), SIGNAL(triggered(bool)), SLOT(showExpireProperties()));
+  connect(actionCollection()->action("move_all_to_trash"), SIGNAL(triggered(bool)), SLOT(moveToOrEmptyTrash()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 
@@ -754,7 +756,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
    << StandardMailActionManager::MarkAllMailAsRead << StandardMailActionManager::MarkAllMailAsUnread
    << StandardMailActionManager::MarkAllMailAsImportant << StandardMailActionManager::MarkAllMailAsActionItem
    << StandardMailActionManager::MoveToTrash << StandardMailActionManager::MoveAllToTrash
-   << StandardMailActionManager::RemoveDuplicates << StandardMailActionManager::EmptyAllTrash;
+   << StandardMailActionManager::RemoveDuplicates << StandardMailActionManager::EmptyAllTrash << StandardMailActionManager::EmptyTrash;
 
   Q_FOREACH( StandardMailActionManager::Type mailAction, mailActions ) {
     mMailActionManager->createAction( mailAction );
@@ -904,7 +906,8 @@ void MainView::loadExternalReferences(bool load)
 void MainView::folderChanged()
 {
     QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
-    if ( collectionSelectionModel->selection().indexes().isEmpty() )
+    QModelIndexList indexes = collectionSelectionModel->selection().indexes();
+    if ( indexes.isEmpty() )
       return;
     //NOTE: not exactly correct if multiple folders are selected, although I don't know what to do then, as the action is not
     //a tri-state one (checked, unchecked, for some folders checked)
@@ -924,6 +927,15 @@ void MainView::folderChanged()
     }
     actionCollection()->action("prefer_html_to_plain")->setChecked( htmlMailOverrideInAll );
     actionCollection()->action("load_external_ref")->setChecked( htmlLoadExternalOverrideInAll );
+
+    actionCollection()->action("move_all_to_trash")->setText( i18n("Move All to Trash") );
+    if ( indexes.count() == 1 ) {
+      QModelIndex index = collectionSelectionModel->selection().indexes().first();
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+      if ( CommonKernel->folderIsTrash( collection ) )
+        actionCollection()->action("move_all_to_trash")->setText( i18n("Empty Trash") );
+    }
 }
 
 void MainView::showExpireProperties()
@@ -938,6 +950,25 @@ void MainView::showExpireProperties()
 
     MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, MailCommon::FolderCollection::forCollection( collection ) );
     dlg->show();
+}
+
+void MainView::moveToOrEmptyTrash()
+{
+    QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
+    QModelIndexList indexes = collectionSelectionModel->selection().indexes();
+    if ( indexes.isEmpty() )
+      return;
+
+    QModelIndex index = collectionSelectionModel->selection().indexes().first();
+    const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+    Q_ASSERT( collection.isValid() );
+    if ( indexes.count() == 1 && CommonKernel->folderIsTrash( collection ) ) {
+       //empty trash
+       kDebug() << "EMPTY TRASH";
+      mMailActionManager->action(Akonadi::StandardMailActionManager::EmptyTrash)->trigger();
+    } else {
+      mMailActionManager->action(Akonadi::StandardMailActionManager::MoveAllToTrash)->trigger();
+    }
 }
 
 

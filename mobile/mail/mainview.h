@@ -84,6 +84,7 @@ class MainView : public KDeclarativeMainView
     void preferHTML(bool useHtml);
     void loadExternalReferences(bool load);
     void folderChanged();
+    void moveToOrEmptyTrash();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

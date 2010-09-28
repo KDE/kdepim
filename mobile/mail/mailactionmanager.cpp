@@ -103,6 +103,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
 
   action = actionCollection->addAction("show_expire_properties");
   action->setText( i18n("Expire Properties") );
+
+  action = actionCollection->addAction("move_all_to_trash");
+  action->setText( i18n("Move All to Trash") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)
