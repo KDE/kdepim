@@ -28,6 +28,7 @@
 
 namespace Akonadi {
   class StandardMailActionManager;
+class EntityMimeTypeFilterModel;
 }
 
 class AkonadiSender;
@@ -114,6 +115,7 @@ class MainView : public KDeclarativeMainView
     bool mAskingToGoOnline;
     QWidget* mTransportDialog;
     Akonadi::StandardMailActionManager* mMailActionManager;
+    Akonadi::EntityMimeTypeFilterModel* mCollectionModel;
 };
 
 Q_DECLARE_METATYPE(MainView::ForwardMode)

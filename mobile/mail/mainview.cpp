@@ -103,7 +103,15 @@ void MainView::delayedInit()
   KDeclarativeMainView::delayedInit();
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
   MobileKernel::self()->setFolderCollectionMonitor( monitor() );
-  MobileKernel::self()->setCollectionModel( dynamic_cast<Akonadi::EntityMimeTypeFilterModel*>( regularSelectedItems() ) ); //TODO: check if this is the right model
+
+  mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
+  mCollectionModel->setSourceModel( entityTreeModel() );
+  mCollectionModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  mCollectionModel->setDynamicSortFilter( true );
+  mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+
+  MobileKernel::self()->setCollectionModel( mCollectionModel ); 
   
   QTime t;
   if ( debugTiming ) {
