@@ -42,6 +42,7 @@
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/agentinstancemodel.h>
 #include <akonadi/agentmanager.h>
+#include <akonadi/changerecorder.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/itemfetchscope.h>
@@ -203,7 +204,7 @@ void KDeclarativeMainView::delayedInit()
 
   d->mMultiBnf = new Akonadi::BreadcrumbNavigationFactory(this);
   d->mMultiBnf->createCheckableBreadcrumbContext( d->mEtm, this);
-
+ 
   context->setContextProperty( "_multiSelectionComponentFactory", d->mMultiBnf );
 
   context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
@@ -576,4 +577,9 @@ void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selecti
 QString KDeclarativeMainView::version() const
 {
   return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_SVN_REVISION_STRING, KDEPIM_SVN_LAST_CHANGE );
+}
+
+Akonadi::ChangeRecorder* KDeclarativeMainView::monitor() const
+{
+  return d->mChangeRecorder;
 }

@@ -22,7 +22,6 @@
 #include "composerview.h"
 #include "messagelistproxy.h"
 #include "mailactionmanager.h"
-#include "global.h"
 #include "messageviewitem.h"
 #include "messageviewer/viewer.h"
 #include <akonadi/collection.h>
@@ -66,6 +65,8 @@
 #include <mailtransport/transportmanager.h>
 #include <QSignalMapper>
 #include <QLabel>
+#include "mobilekernel.h"
+#include <akonadi/entitymimetypefiltermodel.h>
 
 
 Q_DECLARE_METATYPE(KMime::Content*)
@@ -99,7 +100,9 @@ void MainView::delayedInit()
   kDebug();
   KDeclarativeMainView::delayedInit();
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
-
+  MobileKernel::self()->setFolderCollectionMonitor( monitor() );
+  MobileKernel::self()->setCollectionModel( dynamic_cast<Akonadi::EntityMimeTypeFilterModel*>( regularSelectedItems() ) ); //TODO: check if this is the right model
+  
   QTime t;
   if ( debugTiming ) {
     t.start();
@@ -275,7 +278,7 @@ void MainView::sendAgainFetchResult(KJob* job)
     return;
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   MessageComposer::MessageFactory factory( msg, item.id() );
-  factory.setIdentityManager( Global::identityManager() );
+  factory.setIdentityManager( MobileKernel::self()->identityManager() );
   KMime::Message::Ptr newMsg = factory.createResend();
   newMsg->contentType()->setCharset( MessageViewer::NodeHelper::charset( msg.get() ) );
 
@@ -397,7 +400,7 @@ void MainView::replyFetchResult(KJob* job)
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
   MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
-  factory.setIdentityManager( Global::identityManager() );
+  factory.setIdentityManager( MobileKernel::self()->identityManager() );
   factory.setReplyStrategy( fetch->property( "replyStrategy" ).value<MessageComposer::ReplyStrategy>() );
 
   ComposerView *composer = new ComposerView;
@@ -423,7 +426,7 @@ void MainView::forwardFetchResult( KJob* job )
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
   MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
-  factory.setIdentityManager( Global::identityManager() );
+  factory.setIdentityManager( MobileKernel::self()->identityManager() );
 
   ComposerView *composer = new ComposerView;
   ForwardMode mode = fetch->property( "forwardMode" ).value<ForwardMode>();
@@ -687,7 +690,7 @@ bool MainView::folderIsDrafts(const Collection &col)
     return false;
 
   // search the identities if the folder matches the drafts-folder
-  const KPIMIdentities::IdentityManager *im = Global::identityManager();
+  const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
   for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).drafts() == idString )
       return true;

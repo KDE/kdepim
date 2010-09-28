@@ -10,8 +10,8 @@ include_directories(
 )
 
 set(kmail_mobile_srcs
+  mobilekernel.cpp
   attachmentproxymodel.cpp
-  global.cpp
   composerautoresizer.cpp
   composerview.cpp
   declarativeidentitycombobox.cpp
@@ -41,6 +41,7 @@ target_link_libraries(kmail-mobile
     akonadi_next
     kdepim
     kdepimmobileui
+    mailcommon
     messagecomposer
     messagecore
     messageviewer

@@ -20,7 +20,7 @@
 #include "composerview.h"
 #include "composerautoresizer.h"
 
-#include "global.h"
+#include "mobilekernel.h"
 #include "declarativewidgetbase.h"
 #include "declarativeidentitycombobox.h"
 
@@ -102,7 +102,7 @@ void ComposerView::delayedInit()
 
   // ### TODO: make this happens later to show the composer as fast as possible
   m_composerBase = new Message::ComposerViewBase( this );
-  m_composerBase->setIdentityManager( Global::identityManager() );
+  m_composerBase->setIdentityManager( MobileKernel::self()->identityManager() );
 
   // Temporarily only in c++, use from QML when ready.
   MailTransport::TransportComboBox* transportCombo = new  MailTransport::TransportComboBox( this );

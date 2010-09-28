@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 #include "declarativeidentitycombobox.h"
-#include "global.h"
+#include "mobilekernel.h"
 
 #include <kpimidentities/identitymanager.h>
 
 DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* parent ) :
   DeclarativeWidgetBase< KPIMIdentities::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
-    ( new KPIMIdentities::IdentityCombo( Global::identityManager(), 0 ), parent )
+    ( new KPIMIdentities::IdentityCombo( MobileKernel::self()->identityManager(), 0 ), parent )
 {
 }
 

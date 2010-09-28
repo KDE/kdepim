@@ -26,6 +26,7 @@ class QAbstractItemModel;
 
 
 namespace Akonadi {
+class ChangeRecorder;
 class EntityTreeModel;
 class Item;
 class ItemFetchScope;
@@ -106,6 +107,8 @@ public:
   int numSelectedAccounts();
 
   QString version() const;
+
+  Akonadi::ChangeRecorder* monitor() const;
 
 public slots:
   void setSelectedAccount( int row );
