@@ -67,6 +67,8 @@
 #include <QLabel>
 #include "mobilekernel.h"
 #include <akonadi/entitymimetypefiltermodel.h>
+#include <mailcommon/expirypropertiesdialog.h>
+#include <mailcommon/foldercollection.h>
 
 
 Q_DECLARE_METATYPE(KMime::Content*)
@@ -141,6 +143,7 @@ void MainView::delayedInit()
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
   connect(actionCollection()->action("prefer_html_to_plain"), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)));
   connect(actionCollection()->action("load_external_ref"), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)));
+  connect(actionCollection()->action("show_expire_properties"), SIGNAL(triggered(bool)), SLOT(showExpireProperties()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 
@@ -914,6 +917,21 @@ void MainView::folderChanged()
     actionCollection()->action("prefer_html_to_plain")->setChecked( htmlMailOverrideInAll );
     actionCollection()->action("load_external_ref")->setChecked( htmlLoadExternalOverrideInAll );
 }
+
+void MainView::showExpireProperties()
+{
+    QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
+    if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      return;
+
+    QModelIndex index = collectionSelectionModel->selection().indexes().first();
+    const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+    Q_ASSERT( collection.isValid() );
+
+    MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, MailCommon::FolderCollection::forCollection( collection ) );
+    dlg->show();
+}
+
 
 // #############################################################
 

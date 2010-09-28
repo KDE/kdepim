@@ -98,6 +98,7 @@ class MainView : public KDeclarativeMainView
     void initDefaultFolders();
     void createDefaultCollectionDone( KJob *job);
     void deleteItemResult( KJob *job );
+    void showExpireProperties();
 
   private:
     

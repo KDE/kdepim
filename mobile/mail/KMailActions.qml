@@ -83,7 +83,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
     FakeAction { name : "archive_folder" }
-    FakeAction { name : "expire_rule" }
+    ActionListItem { name : "show_expire_properties" }
     FakeAction { name : "ml_management" }
     FakeAction { name : "empty_trash" }
   }

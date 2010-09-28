@@ -100,6 +100,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setText( i18n("Load External References") );
   action->setCheckable(true);
   action->setChecked(false);
+
+  action = actionCollection->addAction("show_expire_properties");
+  action->setText( i18n("Expire Properties") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)
