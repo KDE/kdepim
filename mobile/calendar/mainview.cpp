@@ -25,6 +25,9 @@
 #include "eventlistproxy.h"
 
 #include <kcalcore/event.h>
+#include <kcalcore/filestorage.h>
+#include <kcalcore/icalformat.h>
+#include <kcalcore/memorycalendar.h>
 #include <kcalcore/todo.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
@@ -33,11 +36,18 @@
 #include <calendarviews/eventviews/eventview.h>
 
 #include <akonadi/agentactionmanager.h>
+#include <akonadi/collectiondialog.h>
 #include <akonadi/entitytreemodel.h>
-#include <Akonadi/ItemFetchScope>
+#include <akonadi/itemcreatejob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/recursiveitemfetchjob.h>
 #include <akonadi/standardactionmanager.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 
+#include <kfiledialog.h>
+#include <kmessagebox.h>
+#include <kprogressdialog.h>
 #include <ksystemtimezone.h>
 
 #include <qdeclarativeengine.h>
@@ -63,7 +73,9 @@ QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 QML_DECLARE_TYPE( EventViews::AgendaView )
 QML_DECLARE_TYPE( Qt::QmlDateEdit )
 
-MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent )
+MainView::MainView( QWidget* parent )
+  : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent ),
+    m_importProgressDialog( 0 )
 {
   m_calendar = 0;
 }
@@ -107,6 +119,14 @@ void MainView::delayedInit()
   action = new KAction( i18n( "New Todo" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(newTodo()) );
   actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
+
+  action = new KAction( i18n( "Import Events" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( importICal() ) );
+  actionCollection()->addAction( QLatin1String( "import_events" ), action );
+
+  action = new KAction( i18n( "Export Events" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportICal() ) );
+  actionCollection()->addAction( QLatin1String( "export_events" ), action );
 
   //connect Qt signals to QML slots
   connect(calendarIface, SIGNAL(showDateSignal(QVariant)), rootObject(), SLOT(showDate(QVariant)));
@@ -174,6 +194,179 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
   IncidenceView *editor = new IncidenceView;
   editor->load( item, date );
   editor->show();
+}
+
+void MainView::importICal()
+{
+  const QStringList fileNames = KFileDialog::getOpenFileNames( KUrl(), "*.ics|iCal", 0,
+                                                               i18n( "Select iCal to Import" ) );
+
+  if ( fileNames.count() == 0 )
+    return;
+
+  bool anyFailures = false;
+
+  KCalCore::Event::List events;
+
+  foreach ( const QString &fileName, fileNames ) {
+    KCalCore::MemoryCalendar::Ptr calendar( new KCalCore::MemoryCalendar( QLatin1String( "UTC" ) ) );
+
+    KCalCore::FileStorage::Ptr storage( new KCalCore::FileStorage( calendar, fileName, new KCalCore::ICalFormat() ) );
+
+    if ( storage->load() ) {
+      events << calendar->events();
+    } else {
+      const QString caption( i18n( "iCal Import Failed" ) );
+      const QString msg = i18nc( "@info",
+                                 "<para>Error when trying to read the iCal <filename>%1</filename>:</para>",
+                                 fileName );
+      KMessageBox::error( 0, msg, caption );
+      anyFailures = true;
+    }
+  }
+
+  if ( events.isEmpty() ) {
+    if ( anyFailures && fileNames.count() > 1 )
+      KMessageBox::information( 0, i18n( "No events were imported, due to errors with the iCals." ) );
+    else if ( !anyFailures )
+      KMessageBox::information( 0, i18n( "The iCal does not contain any events." ) );
+
+    return; // nothing to import
+  }
+
+  const QStringList mimeTypes( KCalCore::Event::eventMimeType() );
+
+  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog();
+  dlg->setMimeTypeFilter( mimeTypes );
+  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  dlg->setCaption( i18n( "Select Calendar" ) );
+  dlg->setDescription( i18n( "Select the calendar the imported event(s) shall be saved in:" ) );
+
+  // preselect the currently selected folder
+  const QModelIndexList indexes = regularSelectionModel()->selectedRows();
+  if ( !indexes.isEmpty() ) {
+    const QModelIndex collectionIndex = indexes.first();
+    const Akonadi::Collection collection = collectionIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( collection.isValid() )
+      dlg->setDefaultCollection( collection );
+  }
+
+  if ( !dlg->exec() || !dlg ) {
+    delete dlg;
+    return;
+  }
+
+  const Akonadi::Collection collection = dlg->selectedCollection();
+  delete dlg;
+
+  if ( !m_importProgressDialog ) {
+    m_importProgressDialog = new KProgressDialog( 0, i18n( "Import Events" ) );
+    m_importProgressDialog->setLabelText( i18np( "Importing one event to %2", "Importing %1 events to %2",
+                                                events.count(), collection.name() ) );
+    m_importProgressDialog->setAllowCancel( false );
+    m_importProgressDialog->setAutoClose( true );
+    m_importProgressDialog->progressBar()->setRange( 1, events.count() );
+  }
+
+  m_importProgressDialog->show();
+
+  foreach ( const KCalCore::Event::Ptr &event, events ) {
+    Akonadi::Item item;
+    item.setPayload<KCalCore::Event::Ptr>( event );
+    item.setMimeType( KCalCore::Event::eventMimeType() );
+
+    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
+    connect( job, SIGNAL( result( KJob* ) ), SLOT( slotImportJobDone( KJob* ) ) );
+  }
+}
+
+void MainView::slotImportJobDone( KJob* )
+{
+  if ( !m_importProgressDialog )
+    return;
+
+  QProgressBar *progressBar = m_importProgressDialog->progressBar();
+
+  progressBar->setValue( progressBar->value() + 1 );
+
+  // cleanup on last step
+  if ( progressBar->value() == progressBar->maximum() ) {
+    m_importProgressDialog->deleteLater();
+    m_importProgressDialog = 0;
+  }
+}
+
+void MainView::exportICal()
+{
+  Akonadi::Collection::List selectedCollections;
+  const QModelIndexList indexes = regularSelectionModel()->selectedRows();
+  foreach ( const QModelIndex &index, indexes ) {
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( collection.isValid() )
+      selectedCollections << collection;
+  }
+
+  bool exportAllEvents = false;
+  if ( !selectedCollections.isEmpty() ) {
+    const QString msg = i18n( "Which events shall be exported?" );
+    switch ( KMessageBox::questionYesNo( 0, msg, QString(), KGuiItem(i18n( "All Events" ) ),
+                                         KGuiItem( i18n( "Events in current folder" ) ) ) ) {
+      case KMessageBox::Yes:
+        exportAllEvents = true;
+        break;
+      case KMessageBox::No: // fall through
+      default:
+        exportAllEvents = false;
+    }
+  } else {
+    exportAllEvents = true;
+  }
+
+  Akonadi::Item::List eventItems;
+  if ( exportAllEvents ) {
+    Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
+                                                                              QStringList() << KCalCore::Event::eventMimeType() );
+    job->fetchScope().fetchFullPayload();
+
+    job->exec();
+
+    eventItems << job->items();
+  } else {
+    foreach ( const Akonadi::Collection &collection, selectedCollections ) {
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
+      job->fetchScope().fetchFullPayload();
+
+      if ( job->exec() )
+        eventItems << job->items();
+    }
+  }
+
+  KCalCore::Event::List events;
+
+  foreach ( const Akonadi::Item &item, eventItems ) {
+    if ( item.hasPayload<KCalCore::Event::Ptr>() )
+      events << item.payload<KCalCore::Event::Ptr>();
+  }
+
+  if ( events.isEmpty() )
+    return;
+
+  const QString fileName = KFileDialog::getSaveFileName( KUrl( "calendar.ics" ) );
+  if ( fileName.isEmpty() )
+    return;
+
+  KCalCore::MemoryCalendar::Ptr calendar( new KCalCore::MemoryCalendar( QLatin1String( "UTC" ) ) );
+  calendar->startBatchAdding();
+  foreach ( const KCalCore::Event::Ptr &event, events )
+    calendar->addIncidence( event );
+  calendar->endBatchAdding();
+
+  KCalCore::FileStorage::Ptr storage( new KCalCore::FileStorage( calendar, fileName, new KCalCore::ICalFormat() ) );
+
+  if ( storage->open() ) {
+    storage->save();
+    storage->close();
+  }
 }
 
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

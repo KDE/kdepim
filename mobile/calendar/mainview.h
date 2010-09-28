@@ -23,6 +23,8 @@
 
 #include "kdeclarativemainview.h"
 
+class KJob;
+class KProgressDialog;
 class QDate;
 
 namespace CalendarSupport
@@ -48,6 +50,9 @@ class MainView : public KDeclarativeMainView
     void newTodo();
     void editIncidence( const Akonadi::Item &item, const QDate &date );
 
+    void importICal();
+    void exportICal();
+
   protected slots:
     void delayedInit();
 
@@ -57,8 +62,12 @@ class MainView : public KDeclarativeMainView
 
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
+  private Q_SLOTS:
+    void slotImportJobDone( KJob* );
+
   private:
     CalendarSupport::Calendar *m_calendar;
+    KProgressDialog *m_importProgressDialog;
 };
 
 #endif // MAINVIEW_H
