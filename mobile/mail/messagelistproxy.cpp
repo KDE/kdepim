@@ -97,6 +97,8 @@ bool MessageListProxy::lessThan(const QModelIndex& left, const QModelIndex& righ
   const KMime::Message::Ptr leftMsg = leftItem.payload<KMime::Message::Ptr>();
   const KMime::Message::Ptr rightMsg = rightItem.payload<KMime::Message::Ptr>();
 
+  if ( leftMsg->date()->dateTime() == rightMsg->date()->dateTime() )
+    return leftItem.id() < rightItem.id();
   return leftMsg->date()->dateTime() < rightMsg->date()->dateTime();
 }
 
