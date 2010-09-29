@@ -96,6 +96,11 @@ static QVariantHash phoneNumberHash( const KABC::PhoneNumber &phoneNumber, int c
   if ( !phoneNumber.isEmpty() ) {
     const QString url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( phoneNumber.number() );
     numberObject.insert( QLatin1String( "numberLink" ), url );
+
+    if ( phoneNumber.type() & KABC::PhoneNumber::Cell ) {
+      const QString url = QString::fromLatin1( "<a href=\"sms:?index=%1\">(SMS)</a>" ).arg( counter );
+      numberObject.insert( QLatin1String( "smsLink" ), url );
+    }
   }
 
   return numberObject;

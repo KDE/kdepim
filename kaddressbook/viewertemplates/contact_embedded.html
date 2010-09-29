@@ -21,11 +21,19 @@
       {% endif %}
 
       {% for phoneNumber in contact.phoneNumbers %}
-        {% with phoneNumber.type as title %}
-        {% with phoneNumber.numberLink|safe as value %}
-        {% include "contact_row.html" %}
-        {% endwith %}
-        {% endwith %}
+        {% if phoneNumber.smsLink %}
+          {% with phoneNumber.type as title %}
+          {% with phoneNumber.numberLink|safe|add:" "|add:phoneNumber.smsLink|safe as value %}
+          {% include "contact_row.html" %}
+          {% endwith %}
+          {% endwith %}
+        {% else %}
+          {% with phoneNumber.type as title %}
+          {% with phoneNumber.numberLink|safe as value %}
+          {% include "contact_row.html" %}
+          {% endwith %}
+          {% endwith %}
+        {% endif %}
       {% endfor %}
 
       {% for email in contact.emails %}
