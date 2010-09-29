@@ -32,6 +32,7 @@
 #include <KIconLoader>
 #include <KLocale>
 #include <KTemporaryFile>
+#include <KDebug>
 
 #include <QDrag>
 #include <QKeyEvent>
@@ -44,6 +45,7 @@ AttachmentIconItem::AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QL
 {
   if ( att ) {
     mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( *att.data() ) );
+    mAttachment->setLabel( att->label() );
   } else {
     // for the enteprise, inline attachments are the default
 #ifdef KDEPIM_ENTERPRISE_BUILD
@@ -137,16 +139,7 @@ QPixmap AttachmentIconItem::icon( KMimeType::Ptr mimeType,
 
 void AttachmentIconItem::readAttachment()
 {
-  if ( mAttachment->label().isEmpty() ) {
-    if ( mAttachment->isUri() ) {
-      setText( mAttachment->uri() );
-    } else {
-      setText( i18nc( "@label attachment contains binary data", "[Binary data]" ) );
-    }
-  } else {
-    setText( mAttachment->label() );
-  }
-
+  setText( mAttachment->label() );
   setFlags( flags() | Qt::ItemIsEditable );
 
   if ( mAttachment->mimeType().isEmpty() || !( KMimeType::mimeType( mAttachment->mimeType() ) ) ) {

@@ -107,17 +107,15 @@ bool IncidenceAttachment::isDirty() const
       const KCalCore::Attachment::Ptr listAttachment =
         static_cast<AttachmentIconItem*>( item )->attachment();
 
-      bool found = false;
-      for ( int i = 0; i < origAttachments.size() && !found; ++i ) {
+      for ( int i = 0; i < origAttachments.count(); ++i ) {
         const KCalCore::Attachment::Ptr attachment = origAttachments.at( i );
 
         if ( *attachment == *listAttachment ) {
           origAttachments.remove( i );
-          found = true;
+          break;
         }
       }
     }
-
     // All attachments are removed from the list, meaning, the items in mAttachmentView
     // are equal to the attachments set on mLoadedIncidence.
     return !origAttachments.isEmpty();
