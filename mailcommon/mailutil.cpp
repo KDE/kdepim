@@ -40,11 +40,10 @@
 #include "mailutil.h"
 #include "imapsettings.h"
 #include "mailkernel.h"
+#include "calendarinterface.h"
 
 #include "messagecore/stringutil.h"
 #include "messagecomposer/messagehelper.h"
-
-
 
 #include <kmime/kmime_message.h>
 #include <kpimutils/email.h>
@@ -65,6 +64,8 @@
 
 #include "foldercollection.h"
 #include <KDBusServiceStarter>
+#include <messagecore/messagehelpers.h>
+#include <KTemporaryFile>
 
 
 OrgKdeAkonadiImapSettingsInterface *MailCommon::Util::createImapSettingsInterface( const QString &ident )
@@ -147,3 +148,50 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
     kWarning() << "Couldn't start DBUS/Organizer:" << dbusService << error;
   }
 }
+
+QString msgId( const KMime::Message::Ptr &msg ) //copied from messagecomposer/messagehelper.cpp to avoid linking to messagecomposer. should go to messagecore
+{
+  if ( !msg->headerByType("Message-Id") )
+    return QString();
+  QString msgId = msg->headerByType("Message-Id")->asUnicodeString();
+
+  // search the end of the message id
+  const int rightAngle = msgId.indexOf( QString::fromLatin1(">") );
+  if (rightAngle != -1)
+    msgId.truncate( rightAngle + 1 );
+  // now search the start of the message id
+  const int leftAngle = msgId.lastIndexOf( QString::fromLatin1("<") );
+  if (leftAngle != -1)
+    msgId = msgId.mid( leftAngle );
+  return msgId;
+}
+
+bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
+{
+  KMime::Message::Ptr msg = MessageCore::Util::message( mailItem );
+
+  if ( !msg )
+    return false;
+
+  ensureKorganizerRunning();
+  const QString txt = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
+                     msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
+  KTemporaryFile tf;
+  tf.setAutoRemove( true );
+  if ( !tf.open() ) {
+    kWarning() << "CreateTodoCommand: Unable to open temp file.";
+    return false;
+  }
+  const QString uri = "kmail:" + QString::number( mailItem.id() ) + '/' + msgId(msg);
+  tf.write( msg->encodedContent() );
+  tf.flush();
+  OrgKdeKorganizerCalendarInterface *iface =
+      new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
+                                             QDBusConnection::sessionBus() );
+  iface->openTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ), txt, uri,
+                         tf.fileName(), QStringList(), "message/rfc822" );
+  delete iface;
+  tf.close();
+  return true;
+}
+

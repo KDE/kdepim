@@ -51,6 +51,7 @@ class OrgKdeAkonadiImapSettingsInterface;
 
 namespace Akonadi {
   class Collection;
+  class Item;
 }
 
 
@@ -78,6 +79,8 @@ namespace Util {
     MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances();
 
     MAILCOMMON_EXPORT void ensureKorganizerRunning( bool switchTo = true );
+
+    MAILCOMMON_EXPORT bool createTodoFromMail( const Akonadi::Item &mailItem );
 }
 }
 

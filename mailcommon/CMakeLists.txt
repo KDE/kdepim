@@ -33,9 +33,9 @@ endmacro(add_resource_iface)
 
 add_resource_iface( imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings )
 
-# kde4_add_kcfg_files(libmailcommon_SRCS
-#   globalsettings_base.kcfgc
-# )
+qt4_add_dbus_interfaces(libmailcommon_SRCS
+  ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
+)
 
 kde4_add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})
 
