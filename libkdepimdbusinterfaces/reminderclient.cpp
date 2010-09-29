@@ -40,7 +40,6 @@ void ReminderClient::startDaemon()
     return;
   }
 
-  KGlobal::dirs()->addResourceType( "autostart", 0, "share/autostart" );
   const QString desktopFile = KStandardDirs::locate( "autostart", "korgac.desktop" );
   if ( desktopFile.isEmpty() ) {
     kWarning() << "Couldn't find autostart/korgac.desktop!";
@@ -48,6 +47,9 @@ void ReminderClient::startDaemon()
     QString error;
     if ( KToolInvocation::startServiceByDesktopPath( desktopFile, QStringList(), &error ) != 0 ) {
       kWarning() << "Failure starting korgac:" << error;
+      // try harder...
+      const QString korgacExe = KStandardDirs::findExe( QLatin1String( "korgac" ) );
+      QProcess::startDetached( korgacExe );
     }
   }
 }
