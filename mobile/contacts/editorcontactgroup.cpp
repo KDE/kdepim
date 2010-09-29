@@ -351,7 +351,7 @@ void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGrou
     ++inputIt;
   }
 
-  for ( uint i = 0; inputIt != d->mInputs.constEnd(); ++inputIt, ++i, ++count ) {
+  for ( uint i = 0; inputIt != d->mInputs.constEnd() && i < contactGroup.contactReferenceCount(); ++inputIt, ++i, ++count ) {
     const KABC::ContactGroup::ContactReference &ref = contactGroup.contactReference( i );
     (*inputIt)->mItem.setId( ref.uid().toLongLong() );
     (*inputIt)->mPreferredEmail = ref.preferredEmail();
