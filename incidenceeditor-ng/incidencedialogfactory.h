@@ -24,6 +24,7 @@
 #include "incidenceeditors-ng_export.h"
 
 #include <KCalCore/IncidenceBase>
+#include <Akonadi/Collection>
 
 namespace IncidenceEditorNG {
 
@@ -43,8 +44,19 @@ namespace IncidenceDialogFactory
   */
   INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *create( KCalCore::IncidenceBase::IncidenceType type,
                                                       QWidget *parent = 0, Qt::WFlags flags = 0 );
-}
 
-}
+  INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createTodoEditor( const QString &summary,
+                                                                const QString &description,
+                                                                const QStringList &attachments,
+                                                                const QStringList &attendees,
+                                                                const QStringList &attachmentMimetypes,
+                                                                bool inlineAttachment,
+                                                                Akonadi::Collection defaultCcollection,
+                                                                QWidget *parent = 0, Qt::WFlags flags = 0 );
+
+
+} // namespace IncidenceDialogFactory
+
+} // namespace IncidenceEditorNG
 
 #endif

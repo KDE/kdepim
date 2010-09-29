@@ -20,8 +20,13 @@
 
 #include "incidencedialogfactory.h"
 #include "eventortododialog.h"
+#include "incidencedefaults.h"
+
+#include <KCalCore/Todo>
+#include <Akonadi/Item>
 
 using namespace IncidenceEditorNG;
+using namespace KCalCore;
 
 IncidenceDialog *IncidenceDialogFactory::create( KCalCore::IncidenceBase::IncidenceType type,
                                                  QWidget *parent, Qt::WFlags flags )
@@ -35,4 +40,34 @@ IncidenceDialog *IncidenceDialogFactory::create( KCalCore::IncidenceBase::Incide
   default:
     return 0;
   }
+}
+
+IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summary,
+                                                            const QString &description,
+                                                            const QStringList &attachments,
+                                                            const QStringList &attendees,
+                                                            const QStringList &attachmentMimetypes,
+                                                            bool inlineAttachment,
+                                                            Akonadi::Collection defaultCollection,
+                                                            QWidget *parent, Qt::WFlags flags )
+{
+  IncidenceDefaults defaults = IncidenceDefaults::minimalIncidenceDefaults();
+  // if attach or attendee list is empty, these methods don't do anything, so
+  // it's safe to call them in every case
+  defaults.setAttachments( attachments, attachmentMimetypes, inlineAttachment );
+  defaults.setAttendees( attendees );
+
+  Todo::Ptr todo( new Todo );
+  defaults.setDefaults( todo );
+
+  todo->setSummary( summary );
+  todo->setDescription( description );
+
+  Akonadi::Item item;
+  item.setPayload( todo );
+
+  IncidenceEditorNG::IncidenceDialog *dialog = create( KCalCore::Incidence::TypeTodo,
+                                                       parent, flags );
+  dialog->selectCollection( defaultCollection );
+  dialog->load( item );
 }
