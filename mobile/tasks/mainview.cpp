@@ -43,6 +43,7 @@
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/recursiveitemfetchjob.h>
 #include <akonadi/standardactionmanager.h>
+#include <libkdepimdbusinterfaces/reminderclient.h>
 
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
@@ -82,6 +83,8 @@ void MainView::delayedInit()
   action = new KAction( i18n( "Export Tasks" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportICal() ) );
   actionCollection()->addAction( QLatin1String( "export_tasks" ), action );
+
+  KPIM::ReminderClient::startDaemon();
 }
 
 void MainView::newTask()

@@ -44,6 +44,7 @@
 #include <akonadi/recursiveitemfetchjob.h>
 #include <akonadi/standardactionmanager.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
+#include <libkdepimdbusinterfaces/reminderclient.h>
 
 #include <kfiledialog.h>
 #include <kmessagebox.h>
@@ -131,6 +132,8 @@ void MainView::delayedInit()
   //connect Qt signals to QML slots
   connect(calendarIface, SIGNAL(showDateSignal(QVariant)), rootObject(), SLOT(showDate(QVariant)));
   connect(calendarIface, SIGNAL(showEventViewSignal()), rootObject(), SLOT(showEventView()));
+
+  KPIM::ReminderClient::startDaemon();
 }
 
 void MainView::showRegularCalendar()
