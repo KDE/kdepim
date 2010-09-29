@@ -36,6 +36,7 @@ target_link_libraries(korganizer-mobile
   ${KDE4_KDEUI_LIBRARY}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
+  kdepimdbusinterfaces
   kdepimmobileui
   kdepimmobileuicalendar
   calendarsupport
