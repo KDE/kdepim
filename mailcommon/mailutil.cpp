@@ -118,7 +118,7 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances()
   return relevantInstances;
 }
 
-void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
+void ensureKorganizerRunning( bool switchTo )
 {
   QString error;
   QString dbusService;
@@ -173,7 +173,7 @@ bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
   if ( !msg )
     return false;
 
-  ensureKorganizerRunning();
+  ensureKorganizerRunning( true );
   const QString txt = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
                      msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
   KTemporaryFile tf;
