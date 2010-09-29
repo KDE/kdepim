@@ -233,11 +233,24 @@ KPIM.MainView {
       color : "#00000000"
       opacity : itemList.count > 0 ? 1 : 0
 
+      Akonadi.FilterLineEdit {
+        id: filterLineEdit
+        anchors.left : parent.left
+        anchors.top : parent.top
+        anchors.bottom : itemList.top
+        anchors.right : parent.right
+        visible : false
+        height : 0
+      }
+
       TaskListView {
         id: itemList
         model: itemModel
         checkModel : _itemActionModel
-        anchors.fill: parent
+        anchors.left : parent.left
+        anchors.top : filterLineEdit.bottom
+        anchors.bottom : parent.bottom
+        anchors.right : parent.right
         onItemSelected: {
           taskView.itemId = itemList.currentItemId;
           taskView.visible = true;

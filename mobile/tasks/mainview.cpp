@@ -48,6 +48,7 @@
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
 #include "tasklistproxy.h"
+#include "tasksfilterproxymodel.h"
 
 #include <QtCore/QPointer>
 #include <QtDeclarative/QDeclarativeEngine>
@@ -344,3 +345,9 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
 }
+
+QAbstractProxyModel* MainView::itemFilterModel() const
+{
+  return new TasksFilterProxyModel();
+}
+
