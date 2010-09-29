@@ -3649,8 +3649,6 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
   return ret;
 }
 
-
-
 bool IncidenceFormatter::ToolTipVisitor::visit( Event *event )
 {
   mResult = generateToolTip( event, dateRangeText( event, mDate ) );
@@ -3678,8 +3676,9 @@ bool IncidenceFormatter::ToolTipVisitor::visit( FreeBusy *fb )
   return !mResult.isEmpty();
 }
 
-static QString tooltipPerson( const QString& email, QString name )
+static QString tooltipPerson( const QString &email, const QString &name,  Attendee::PartStat status )
 {
+  QString printName = name;
   // Make the search, if there is an email address to search on,
   // and name is missing
   if ( name.isEmpty() && !email.isEmpty() ) {
@@ -3689,30 +3688,84 @@ static QString tooltipPerson( const QString& email, QString name )
       KABC::Addressee o = addressList.first();
       if ( !o.isEmpty() && addressList.size() < 2 ) {
         // use the name from the addressbook
-        name = o.formattedName();
+        printName = o.formattedName();
       }
     }
   }
 
-  // Show the attendee
-  QString tmpString = ( name.isEmpty() ? email : name );
+  QString personString;
 
-  return tmpString;
+  // Compute an icon corresponding to the attendee status
+  QString iconPath;
+  switch ( status ) {
+  case Attendee::Accepted:
+    iconPath = KGlobal::iconLoader()->iconPath( "ok", KIcon::Small );
+    break;
+  case Attendee::Declined:
+    iconPath = KGlobal::iconLoader()->iconPath( "no", KIcon::Small );
+    break;
+  case Attendee::NeedsAction:
+  case Attendee::InProcess:
+    iconPath = KGlobal::iconLoader()->iconPath( "help", KIcon::Small );
+    break;
+  case Attendee::Tentative:
+    iconPath = KGlobal::iconLoader()->iconPath( "apply", KIcon::Small );
+    break;
+  case Attendee::Delegated:
+    iconPath = KGlobal::iconLoader()->iconPath( "mail_forward", KIcon::Small );
+    break;
+  default:
+    break;
+  }
+  if ( !iconPath.isEmpty() ) {
+    personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
+  }
+  personString += i18n( "attendee name (attendee status)", "%1 (%2)" ).
+                  arg( printName.isEmpty() ? email : printName ).
+                  arg( Attendee::statusName( status ) );
+
+  return personString;
+}
+
+static QString tooltipFormatOrganizer( const QString &email, const QString &name )
+{
+  QString printName = name;
+  // Make the search, if there is an email address to search on,
+  // and name is missing
+  if ( name.isEmpty() && !email.isEmpty() ) {
+    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
+    KABC::Addressee::List addressList = add_book->findByEmail( email );
+    if ( !addressList.isEmpty() ) {
+      KABC::Addressee o = addressList.first();
+      if ( !o.isEmpty() && addressList.size() < 2 ) {
+        // use the name from the addressbook
+        printName = o.formattedName();
+      }
+    }
+  }
+
+  QString personString;
+
+  // Get the icon for organizer
+  QString iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
+  personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
+
+  personString += ( printName.isEmpty() ? email : printName );
+
+  return personString;
 }
 
 static QString tooltipFormatAttendeeRoleList( Incidence *incidence, Attendee::Role role )
 {
   const int maxNumAtts = 8; // maximum number of people to print per attendee role
   const QString etc = i18n( "elipsis", "..." );
-  const QString sep = i18n( "separator for lists of people names", ", " );
-  int sepLen = sep.length();
 
   int i = 0;
   QString tmpStr;
   Attendee::List::ConstIterator it;
   Attendee::List attendees = incidence->attendees();
 
-  for( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
     Attendee *a = *it;
     if ( a->role() != role ) {
       // skip not this role
@@ -3723,21 +3776,22 @@ static QString tooltipFormatAttendeeRoleList( Incidence *incidence, Attendee::Ro
       continue;
     }
     if ( i == maxNumAtts ) {
-      tmpStr += etc;
+      tmpStr += "&nbsp;&nbsp;" + etc;
       break;
     }
-    tmpStr += tooltipPerson( a->email(), a->name() );
+    tmpStr += "&nbsp;&nbsp;" + tooltipPerson( a->email(), a->name(), a->status() );
     if ( !a->delegator().isEmpty() ) {
       tmpStr += i18n(" (delegated by %1)" ).arg( a->delegator() );
     }
     if ( !a->delegate().isEmpty() ) {
       tmpStr += i18n(" (delegated to %1)" ).arg( a->delegate() );
     }
-    tmpStr += sep;
+    tmpStr += "<br>";
     i++;
   }
-  if ( tmpStr.endsWith( sep ) ) {
-    tmpStr.truncate( tmpStr.length() - sepLen );
+
+  if ( tmpStr.endsWith( "<br>" ) ) {
+    tmpStr.truncate( tmpStr.length() - 4 );
   }
   return tmpStr;
 }
@@ -3751,36 +3805,36 @@ static QString tooltipFormatAttendees( Incidence *incidence )
   if ( attendeeCount > 1 ||
        ( attendeeCount == 1 &&
          incidence->organizer().email() != incidence->attendees().first()->email() ) ) {
-    tmpStr += "<i>" + i18n( "Organizer:" ) + "</i>" + "&nbsp;";
-    tmpStr += tooltipPerson( incidence->organizer().email(),
-                             incidence->organizer().name() );
+    tmpStr += "<i>" + i18n( "Organizer:" ) + "</i>" + "<br>";
+    tmpStr += "&nbsp;&nbsp;" + tooltipFormatOrganizer( incidence->organizer().email(),
+                                                       incidence->organizer().name() );
   }
 
   // Add "chair"
   str = tooltipFormatAttendeeRoleList( incidence, Attendee::Chair );
   if ( !str.isEmpty() ) {
-    tmpStr += "<br><i>" + i18n( "Chair:" ) + "</i>" + "&nbsp;";
+    tmpStr += "<br><i>" + i18n( "Chair:" ) + "</i>" + "<br>";
     tmpStr += str;
   }
 
   // Add required participants
   str = tooltipFormatAttendeeRoleList( incidence, Attendee::ReqParticipant );
   if ( !str.isEmpty() ) {
-    tmpStr += "<br><i>" + i18n( "Required Participants:" ) + "</i>" + "&nbsp;";
+    tmpStr += "<br><i>" + i18n( "Required Participants:" ) + "</i>" + "<br>";
     tmpStr += str;
   }
 
   // Add optional participants
   str = tooltipFormatAttendeeRoleList( incidence, Attendee::OptParticipant );
   if ( !str.isEmpty() ) {
-    tmpStr += "<br><i>" + i18n( "Optional Participants:" ) + "</i>" + "&nbsp;";
+    tmpStr += "<br><i>" + i18n( "Optional Participants:" ) + "</i>" + "<br>";
     tmpStr += str;
   }
 
   // Add observers
   str = tooltipFormatAttendeeRoleList( incidence, Attendee::NonParticipant );
   if ( !str.isEmpty() ) {
-    tmpStr += "<br><i>" + i18n( "Observers:" ) + "</i>" + "&nbsp;";
+    tmpStr += "<br><i>" + i18n( "Observers:" ) + "</i>" + "<br>";
     tmpStr += str;
   }
 
