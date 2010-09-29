@@ -93,6 +93,8 @@ class MainView : public KDeclarativeMainView
 
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
+    virtual QAbstractProxyModel* itemFilterModel() const;
+
   private slots:
     void sendAgainFetchResult( KJob *job );
     void replyFetchResult( KJob *job );

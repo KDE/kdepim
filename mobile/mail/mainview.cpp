@@ -20,6 +20,7 @@
 
 #include "mainview.h"
 #include "composerview.h"
+#include "emailsfilterproxymodel.h"
 #include "messagelistproxy.h"
 #include "mailactionmanager.h"
 #include "messageviewitem.h"
@@ -815,6 +816,11 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
                            i18nc( "@title:window", "Delete Account?" ) );
   manager->setContextText( AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
+}
+
+QAbstractProxyModel* MainView::itemFilterModel() const
+{
+  return new EmailsFilterProxyModel();
 }
 
 void MainView::saveMessage()

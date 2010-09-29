@@ -10,16 +10,17 @@ include_directories(
 )
 
 set(kmail_mobile_srcs
-  mobilekernel.cpp
   attachmentproxymodel.cpp
   composerautoresizer.cpp
   composerview.cpp
   declarativeidentitycombobox.cpp
+  emailsfilterproxymodel.cpp
   mailactionmanager.cpp
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
   messageviewitem.cpp
+  mobilekernel.cpp
   savemailcommand.cpp
 )
 if (RUNTIME_PLUGINS_STATIC)
