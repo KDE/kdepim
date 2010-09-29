@@ -2155,18 +2155,18 @@ static QString invitationAttendees( Incidence *incidence, Attendee *sender )
   Attendee::List attendees = incidence->attendees();
   if ( !attendees.isEmpty() ) {
 
-    QString statusStr;
     Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
       Attendee *a = *it;
       if ( !iamAttendee( a ) ) {
+        QString statusStr = a->statusStr();
         if ( sender && a->email() == sender->email() ) {
           // use the attendee taken from the response incidence,
           // rather than the attendee from the calendar incidence.
+          if ( a->status() != sender->status() ) {
+            statusStr = i18n( "%1 (<i>unrecorded</i>)" ).arg( sender->statusStr() );
+          }
           a = sender;
-          statusStr = i18n( "%1 (<i>unrecorded</i>)" ).arg( a->statusStr() );
-        } else {
-          statusStr = a->statusStr();
         }
         count++;
         if ( count == 1 ) {
@@ -2743,7 +2743,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     html += "<i><u>";
     if ( rsvpRec && inc ) {
       if ( inc->revision() == 0 ) {
-        html += i18n( "Your <b>%1</b> response has already been recorded" ).
+        html += i18n( "Your <b>%1</b> response has been recorded" ).
                 arg( ea->statusStr() );
       } else {
         html += i18n( "Your status for this invitation is <b>%1</b>" ).
@@ -2751,7 +2751,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       }
       rsvpReq = false;
     } else if ( msg->method() == Scheduler::Cancel ) {
-      html += i18n( "This invitation was declined" );
+      html += i18n( "This invitation was canceled" );
     } else if ( msg->method() == Scheduler::Add ) {
       html += i18n( "This invitation was accepted" );
     } else {
@@ -2857,7 +2857,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       if ( ea && ( ea->status() != Attendee::NeedsAction ) && ( ea->status() == a->status() ) ) {
         if ( inc && inc->revision() > 0 ) {
           html += "<br><u><i>";
-          html += i18n( "The response has been recorded [%1]" ).arg( ea->statusStr() );
+          html += i18n( "The <b>%1</b> response has been recorded" ).arg( ea->statusStr() );
           html += "</i></u>";
         }
       } else {
