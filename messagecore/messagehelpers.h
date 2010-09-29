@@ -46,7 +46,12 @@ namespace MessageCore {
      * contain a valid message pointer.
      */
     MESSAGECORE_EXPORT bool isStandaloneMessage( const Akonadi::Item& item );
-  }
+
+    /**
+     * Get the message id as a string from a message.
+     */
+    MESSAGECORE_EXPORT QString msgId( const KMime::Message::Ptr &msg );
+ }
 }
 
 #endif // MESSAGEHELPERS_H

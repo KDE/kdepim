@@ -100,9 +100,6 @@ namespace MessageHelper {
    */
   QByteArray MESSAGECOMPOSER_EXPORT getRefStr( const KMime::Message::Ptr &msg );
 
-  QString MESSAGECOMPOSER_EXPORT msgId( const KMime::Message::Ptr &msg );
-
-
   QString MESSAGECOMPOSER_EXPORT ccStrip( const KMime::Message::Ptr &msg );
   QString MESSAGECOMPOSER_EXPORT toStrip( const KMime::Message::Ptr &msg );
   QString MESSAGECOMPOSER_EXPORT fromStrip( const KMime::Message::Ptr &msg );

@@ -250,23 +250,6 @@ void setTagList( const Akonadi::Item& msg, const QList<Nepomuk::Tag> &tags )
   res.setTags( tags );
 }
 
-QString msgId( const KMime::Message::Ptr &msg )
-{
-  if ( !msg->headerByType("Message-Id") )
-    return QString();
-  QString msgId = msg->headerByType("Message-Id")->asUnicodeString();
-
-  // search the end of the message id
-  const int rightAngle = msgId.indexOf( QString::fromLatin1(">") );
-  if (rightAngle != -1)
-    msgId.truncate( rightAngle + 1 );
-  // now search the start of the message id
-  const int leftAngle = msgId.lastIndexOf( QString::fromLatin1("<") );
-  if (leftAngle != -1)
-    msgId = msgId.mid( leftAngle );
-  return msgId;
-}
-
 QString ccStrip( const KMime::Message::Ptr &msg )
 {
   return MessageCore::StringUtil::stripEmailAddr( msg->cc()->asUnicodeString() );
