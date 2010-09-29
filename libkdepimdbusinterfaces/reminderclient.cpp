@@ -32,11 +32,6 @@
 
 using namespace KPIM;
 
-ReminderClient::ReminderClient()
-{
-  kDebug(5850) << "ReminderClient::ReminderClient()";
-}
-
 void ReminderClient::startDaemon()
 {
   QDBusInterface iface( "org.kde.korgac", "/" );
@@ -77,4 +72,3 @@ void ReminderClient::showDaemon()
     "org.kde.korgac", "/ac", QDBusConnection::sessionBus() );
   interface.show();
 }
-

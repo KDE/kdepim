@@ -26,34 +26,30 @@
 namespace KPIM {
 
 /**
-  This class provides the interface for communicating with the reminder daemon.
-  It can be subclassed for specific daemons.
+  This namespace provides the interface for communicating with the reminder daemon.
 */
-class KDEPIMDBUSINTERFACES_EXPORT ReminderClient
+namespace ReminderClient
 {
-  public:
-    ReminderClient();
-    virtual ~ReminderClient() {}
     /**
       Start reminder daemon.
     */
-    virtual void startDaemon();
+    KDEPIMDBUSINTERFACES_EXPORT void startDaemon();
 
     /**
       Stop reminder daemon.
     */
-    virtual void stopDaemon();
+    KDEPIMDBUSINTERFACES_EXPORT void stopDaemon();
 
     /**
       Hide the reminder daemon.
     */
-    virtual void hideDaemon();
+    KDEPIMDBUSINTERFACES_EXPORT void hideDaemon();
 
     /**
       Show the reminder daemon.
     */
-    virtual void showDaemon();
-};
+    KDEPIMDBUSINTERFACES_EXPORT void showDaemon();
+}
 
 }
 
