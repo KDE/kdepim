@@ -178,8 +178,11 @@ static QString firstAttendeeName( Incidence *incidence, const QString &defName )
  *  Helper functions for the extensive display (display viewer)
  *******************************************************************/
 
-static QString displayViewLinkPerson( const QString& email, QString name, QString uid )
+static QString displayViewLinkPerson( const QString &email, const QString &name,
+                                      const QString &uid, Attendee::PartStat status )
 {
+  QString printName = name;
+  QString printUid = uid;
   // Make the search, if there is an email address to search on,
   // and either name or uid is missing
   if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
@@ -190,29 +193,56 @@ static QString displayViewLinkPerson( const QString& email, QString name, QStrin
       if ( !o.isEmpty() && addressList.size() < 2 ) {
         if ( name.isEmpty() ) {
           // No name set, so use the one from the addressbook
-          name = o.formattedName();
+          printName = o.formattedName();
         }
-        uid = o.uid();
+        printUid = o.uid();
       } else {
         // Email not found in the addressbook. Don't make a link
-        uid = QString::null;
+        printUid = QString::null;
       }
     }
   }
 
-  // Show the attendee
-  QString tmpString;
-  if ( !uid.isEmpty() ) {
+  QString personString;
+
+  // Compute an icon corresponding to the attendee status
+  QString iconPath;
+  switch ( status ) {
+  case Attendee::Accepted:
+    iconPath = KGlobal::iconLoader()->iconPath( "ok", KIcon::Small );
+    break;
+  case Attendee::Declined:
+    iconPath = KGlobal::iconLoader()->iconPath( "no", KIcon::Small );
+    break;
+  case Attendee::NeedsAction:
+  case Attendee::InProcess:
+    iconPath = KGlobal::iconLoader()->iconPath( "help", KIcon::Small );
+    break;
+  case Attendee::Tentative:
+    iconPath = KGlobal::iconLoader()->iconPath( "apply", KIcon::Small );
+    break;
+  case Attendee::Delegated:
+    iconPath = KGlobal::iconLoader()->iconPath( "mail_forward", KIcon::Small );
+    break;
+  default:
+    break;
+  }
+  if ( !iconPath.isEmpty() ) {
+    personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
+  }
+
+  // Make the uid link
+  if ( !printUid.isEmpty() ) {
     // There is a UID, so make a link to the addressbook
-    if ( name.isEmpty() ) {
+    if ( printName.isEmpty() ) {
       // Use the email address for text
-      tmpString += htmlAddLink( "uid:" + uid, email );
+      personString += htmlAddLink( "uid:" + printUid, email );
     } else {
-      tmpString += htmlAddLink( "uid:" + uid, name );
+      personString += htmlAddLink( "uid:" + printUid, printName );
     }
   } else {
     // No UID, just show some text
-    tmpString += ( name.isEmpty() ? email : name );
+    personString += ( printName.isEmpty() ? email : printName );
   }
 
   // Make the mailto link
@@ -220,14 +250,65 @@ static QString displayViewLinkPerson( const QString& email, QString name, QStrin
     KURL mailto;
     mailto.setProtocol( "mailto" );
     mailto.setPath( email );
-    const QString iconPath =
-      KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
-    tmpString += "&nbsp;" +
-                 htmlAddLink( mailto.url(),
-                              "<img valign=\"top\" src=\"" + iconPath + "\">" );
+    const QString iconPath = KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
+    personString += "&nbsp;" +
+                    htmlAddLink( mailto.url(), "<img valign=\"top\" src=\"" + iconPath + "\">" );
   }
 
-  return tmpString;
+  return personString;
+}
+
+static QString displayViewFormatOrganizer( const QString &email, const QString &name )
+{
+  QString printName = name;
+  QString printUid;
+  // Search, if there is an email address to search on
+  if ( !email.isEmpty() ) {
+    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
+    KABC::Addressee::List addressList = add_book->findByEmail( email );
+    if ( !addressList.isEmpty() ) {
+      KABC::Addressee o = addressList.first();
+      if ( !o.isEmpty() && addressList.size() < 2 ) {
+        if ( name.isEmpty() ) {
+          // No name set, so use the one from the addressbook
+          printName = o.formattedName();
+        }
+        printUid = o.uid();
+      }
+    }
+  }
+
+  QString personString;
+
+  // Get the icon for organizer
+  QString iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
+  personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
+
+  // Make the uid link
+  if ( !printUid.isEmpty() ) {
+    // There is a UID, so make a link to the addressbook
+    if ( printName.isEmpty() ) {
+      // Use the email address for text
+      personString += htmlAddLink( "uid:" + printUid, email );
+    } else {
+      personString += htmlAddLink( "uid:" + printUid, printName );
+    }
+  } else {
+    // No UID, just show some text
+    personString += ( printName.isEmpty() ? email : printName );
+  }
+
+  // Make the mailto link
+  if ( !email.isEmpty() ) {
+    KURL mailto;
+    mailto.setProtocol( "mailto" );
+    mailto.setPath( email );
+    const QString iconPath = KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
+    personString += "&nbsp;" +
+                    htmlAddLink( mailto.url(), "<img valign=\"top\" src=\"" + iconPath + "\">" );
+  }
+
+  return personString;
 }
 
 static QString displayViewFormatAttendeeRoleList( Incidence *incidence, Attendee::Role role )
@@ -246,7 +327,7 @@ static QString displayViewFormatAttendeeRoleList( Incidence *incidence, Attendee
       // skip attendee that is also the organizer
       continue;
     }
-    tmpStr += displayViewLinkPerson( a->email(), a->name(), a->uid() );
+    tmpStr += displayViewLinkPerson( a->email(), a->name(), a->uid(), a->status() );
     if ( !a->delegator().isEmpty() ) {
       tmpStr += i18n(" (delegated by %1)" ).arg( a->delegator() );
     }
@@ -272,10 +353,8 @@ static QString displayViewFormatAttendees( Incidence *incidence )
          incidence->organizer().email() != incidence->attendees().first()->email() ) ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Organizer:" ) + "</b></td>";
-    tmpStr += "<td>" +
-              displayViewLinkPerson( incidence->organizer().email(),
-                                     incidence->organizer().name(),
-                                     QString::null ) +
+    tmpStr += "<td>" + displayViewFormatOrganizer( incidence->organizer().email(),
+                                                   incidence->organizer().name() ) +
               "</td>";
     tmpStr += "</tr>";
   }
@@ -375,14 +454,14 @@ static QString displayViewFormatBirthday( Event *event )
   QString name = event->customProperty("KABC","NAME-1");
   QString email= event->customProperty("KABC","EMAIL-1");
 
-  QString tmpStr = displayViewLinkPerson( email, name, uid );
+  QString tmpStr = displayViewLinkPerson( email, name, uid, Attendee::None );
 
   if ( event->customProperty( "KABC", "ANNIVERSARY") == "YES" ) {
     uid = event->customProperty("KABC","UID-2");
     name = event->customProperty("KABC","NAME-2");
     email= event->customProperty("KABC","EMAIL-2");
     tmpStr += "<br>";
-    tmpStr += displayViewLinkPerson( email, name, uid );
+    tmpStr += displayViewLinkPerson( email, name, uid, Attendee::None );
   }
 
   return tmpStr;
@@ -1738,7 +1817,7 @@ static bool replyMeansCounter( Incidence */*incidence*/ )
 {
   return false;
 /**
-  see kolab/issue 3665 for an example of when we might use this for something
+  see kolab/issue3665 for an example of when we might use this for something
 
   bool status = false;
   if ( incidence ) {
@@ -2496,15 +2575,15 @@ static bool incidenceOwnedByMe( Calendar *calendar, Incidence *incidence )
   return true;
 }
 
-// The spacer for the invitation buttons
-static QString spacer = "<td> &nbsp; </td>";
-// The open & close table cell tags for the invitation buttons
-static QString tdOpen = "<td>";
-static QString tdClose = "</td>" + spacer;
-
 static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
                                 InvitationFormatterHelper *helper )
 {
+  // The spacer for the invitation buttons
+  const QString spacer = "<td> &nbsp; </td>";
+  // The open & close table cell tags for the invitation buttons
+  const QString tdOpen = "<td>";
+  const QString tdClose = "</td>" + spacer;
+
   QString html;
   if ( !helper ) {
     return html;
@@ -2569,6 +2648,12 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
 static QString counterButtons( Incidence *incidence,
                                InvitationFormatterHelper *helper )
 {
+  // The spacer for the invitation buttons
+  const QString spacer = "<td> &nbsp; </td>";
+  // The open & close table cell tags for the invitation buttons
+  const QString tdOpen = "<td>";
+  const QString tdClose = "</td>" + spacer;
+
   QString html;
   if ( !helper ) {
     return html;
@@ -3615,11 +3700,11 @@ static QString tooltipPerson( const QString& email, QString name )
   return tmpString;
 }
 
-static QString etc = i18n( "elipsis", "..." );
 static QString tooltipFormatAttendeeRoleList( Incidence *incidence, Attendee::Role role )
 {
-  int maxNumAtts = 8; // maximum number of people to print per attendee role
-  QString sep = i18n( "separator for lists of people names", ", " );
+  const int maxNumAtts = 8; // maximum number of people to print per attendee role
+  const QString etc = i18n( "elipsis", "..." );
+  const QString sep = i18n( "separator for lists of people names", ", " );
   int sepLen = sep.length();
 
   int i = 0;
@@ -3704,7 +3789,8 @@ static QString tooltipFormatAttendees( Incidence *incidence )
 
 QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidence, QString dtRangeText )
 {
-  uint maxDescLen = 120; // maximum description chars to print (before elipsis)
+  const QString etc = i18n( "elipsis", "..." );
+  const uint maxDescLen = 120; // maximum description chars to print (before elipsis)
 
   if ( !incidence ) {
     return QString::null;
