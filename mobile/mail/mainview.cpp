@@ -70,6 +70,7 @@
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <mailcommon/expirypropertiesdialog.h>
 #include <mailcommon/foldercollection.h>
+#include <mailcommon/mailutil.h>
 
 
 Q_DECLARE_METATYPE(KMime::Content*)
@@ -154,6 +155,7 @@ void MainView::delayedInit()
   connect(actionCollection()->action("load_external_ref"), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)));
   connect(actionCollection()->action("show_expire_properties"), SIGNAL(triggered(bool)), SLOT(showExpireProperties()));
   connect(actionCollection()->action("move_all_to_trash"), SIGNAL(triggered(bool)), SLOT(moveToOrEmptyTrash()));
+  connect(actionCollection()->action("create_todo_reminder"), SIGNAL(triggered(bool)), SLOT(createToDo()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 
@@ -971,6 +973,15 @@ void MainView::moveToOrEmptyTrash()
     } else {
       mMailActionManager->action(Akonadi::StandardMailActionManager::MoveAllToTrash)->trigger();
     }
+}
+
+void MainView::createToDo()
+{
+    Item item = currentItem();    
+    if ( !item.isValid() )
+      return;
+
+    MailCommon::Util::createTodoFromMail( item );
 }
 
 

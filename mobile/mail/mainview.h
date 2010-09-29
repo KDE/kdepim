@@ -85,6 +85,7 @@ class MainView : public KDeclarativeMainView
     void loadExternalReferences(bool load);
     void folderChanged();
     void moveToOrEmptyTrash();
+    void createToDo();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

@@ -106,6 +106,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
 
   action = actionCollection->addAction("move_all_to_trash");
   action->setText( i18n("Move All to Trash") );
+
+  action = actionCollection->addAction("create_todo_reminder");
+  action->setText( i18n("Create To-Do/Reminder") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)
