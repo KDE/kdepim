@@ -72,6 +72,21 @@ static QString htmlAddLink( const QString &ref, const QString &text,
   return tmpStr;
 }
 
+static QString htmlAddMailtoLink( const QString &email, const QString &name )
+{
+  QString str;
+
+  if ( !email.isEmpty() ) {
+    KCal::Person person( name, email );
+    KURL mailto;
+    mailto.setProtocol( "mailto" );
+    mailto.setPath( person.fullName() );
+    const QString iconPath = KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
+    str = htmlAddLink( mailto.url(), "<img valign=\"top\" src=\"" + iconPath + "\">" );
+  }
+  return str;
+}
+
 static QString htmlAddTag( const QString & tag, const QString & text )
 {
   int numLineBreaks = text.contains( "\n" );
@@ -284,12 +299,7 @@ static QString displayViewLinkPerson( const QString &email, const QString &name,
 
   // Make the mailto link
   if ( !email.isEmpty() ) {
-    KURL mailto;
-    mailto.setProtocol( "mailto" );
-    mailto.setPath( email );
-    const QString iconPath = KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
-    personString += "&nbsp;" +
-                    htmlAddLink( mailto.url(), "<img valign=\"top\" src=\"" + iconPath + "\">" );
+    personString += "&nbsp;" + htmlAddMailtoLink( email, printName );
   }
 
   return personString;
@@ -324,12 +334,7 @@ static QString displayViewFormatOrganizer( const QString &email, const QString &
 
   // Make the mailto link
   if ( !email.isEmpty() ) {
-    KURL mailto;
-    mailto.setProtocol( "mailto" );
-    mailto.setPath( email );
-    const QString iconPath = KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
-    personString += "&nbsp;" +
-                    htmlAddLink( mailto.url(), "<img valign=\"top\" src=\"" + iconPath + "\">" );
+    personString += "&nbsp;" + htmlAddMailtoLink( email, printName );
   }
 
   return personString;
@@ -1337,15 +1342,7 @@ static QString invitationPerson( const QString &email, const QString &name, cons
 
   // Make the mailto link
   if ( !email.isEmpty() ) {
-    KCal::Person person( printName, email );
-    KURL mailto;
-    mailto.setProtocol( "mailto" );
-    mailto.setPath( person.fullName() );
-    const QString iconPath =
-      KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
-    tmpString += "&nbsp;" +
-                 htmlAddLink( mailto.url(), "<img src=\"" + iconPath + "\">" )
-;
+    tmpString += "&nbsp;" + htmlAddMailtoLink( email, printName );
   }
   tmpString += "\n";
 
