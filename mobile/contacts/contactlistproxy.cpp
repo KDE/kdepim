@@ -150,4 +150,4 @@ QString ContactListProxy::typeForIndex(int row) const
   return index( row, 0 ).data( TypeRole ).toString();
 }
 
-#include "contactlistproxy.h"
+#include "contactlistproxy.moc"
