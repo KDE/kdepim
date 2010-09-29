@@ -336,6 +336,7 @@ void ComposerView::failed( const QString &errorMessage )
   notify->setText(i18nc("Notification when there was an error while trying to send an email",
                         "Error while trying to send email. %1", errorMessage));
   notify->sendEvent();
+  setBusy( false );
 }
 
 void ComposerView::setEditor( Message::KMeditor* editor )

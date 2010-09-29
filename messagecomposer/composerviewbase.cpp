@@ -665,12 +665,14 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
     QString msg = i18n( "There were problems trying to queue the message for sending: %1",
                         job->errorString() );
 
-    if( m_pendingQueueJobs == 0 )
-        emit failed( msg );
+    if( m_pendingQueueJobs == 0 ) {
+      emit failed( msg );
+      return;
+    }
   }
 
   if( m_pendingQueueJobs == 0 ) {
-      emit sentSuccessfully();
+    emit sentSuccessfully();
   }
 }
 
