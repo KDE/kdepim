@@ -21,6 +21,7 @@
 #include "incidencedialogfactory.h"
 #include "eventortododialog.h"
 #include "incidencedefaults.h"
+#include "groupwareintegration.h"
 
 #include <KCalCore/Todo>
 #include <Akonadi/Item>
@@ -66,8 +67,13 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
   Akonadi::Item item;
   item.setPayload( todo );
 
-  IncidenceEditorNG::IncidenceDialog *dialog = create( KCalCore::Incidence::TypeTodo,
-                                                       parent, flags );
+  // Construct the groupware object, it'll take care of the IncidenceEditors::EditorConfig as well
+  if ( !GroupwareIntegration::isActive() ) {
+    GroupwareIntegration::activate();
+  }
+
+  IncidenceDialog *dialog = create( KCalCore::Incidence::TypeTodo,
+                                    parent, flags );
   dialog->selectCollection( defaultCollection );
   dialog->load( item );
 }

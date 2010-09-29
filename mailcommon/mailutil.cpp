@@ -53,6 +53,8 @@
 #include <Akonadi/EntityTreeModel>
 #include <akonadi/entitymimetypefiltermodel.h>
 
+#include <incidenceeditor-ng/incidencedialogfactory.h>
+
 #include <KStandardDirs>
 #include <kascii.h>
 #include <KCharsets>
@@ -156,24 +158,34 @@ bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
   if ( !msg )
     return false;
 
-  ensureKorganizerRunning( true );
-  const QString txt = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
-                     msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
   KTemporaryFile tf;
   tf.setAutoRemove( true );
+
   if ( !tf.open() ) {
     kWarning() << "CreateTodoCommand: Unable to open temp file.";
     return false;
   }
+
+  const QString txt = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
+                     msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
+
   const QString uri = "kmail:" + QString::number( mailItem.id() ) + '/' + MessageCore::Util::msgId(msg);
   tf.write( msg->encodedContent() );
   tf.flush();
-  OrgKdeKorganizerCalendarInterface *iface =
-      new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
-                                             QDBusConnection::sessionBus() );
-  iface->openTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ), txt, uri,
-                         tf.fileName(), QStringList(), "message/rfc822" );
-  delete iface;
+
+  QStringList uris;
+  uris << tf.fileName();
+
+  QStringList mimeTypes;
+  mimeTypes << QLatin1String( "message/rfc822" );
+
+  IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
+                                                               txt, uris,
+                                                               QStringList(), mimeTypes,
+                                                               true /* inline */,
+                                                               Akonadi::Collection() );
+
+
   tf.close();
   return true;
 }

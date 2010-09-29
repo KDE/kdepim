@@ -41,6 +41,7 @@ kde4_add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})
 
 target_link_libraries(mailcommon messageviewer messagecore kdepim
   akonadi_next
+  incidenceeditorsng
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
