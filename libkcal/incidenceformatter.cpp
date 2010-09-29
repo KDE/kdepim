@@ -87,6 +87,22 @@ static QString htmlAddMailtoLink( const QString &email, const QString &name )
   return str;
 }
 
+static QString htmlAddUidLink( const QString &email, const QString &name, const QString &uid )
+{
+  QString str;
+
+  if ( !uid.isEmpty() ) {
+    // There is a UID, so make a link to the addressbook
+    if ( name.isEmpty() ) {
+      // Use the email address for text
+      str += htmlAddLink( "uid:" + uid, email );
+    } else {
+      str += htmlAddLink( "uid:" + uid, name );
+    }
+  }
+  return str;
+}
+
 static QString htmlAddTag( const QString & tag, const QString & text )
 {
   int numLineBreaks = text.contains( "\n" );
@@ -285,13 +301,7 @@ static QString displayViewLinkPerson( const QString &email, const QString &name,
 
   // Make the uid link
   if ( !printUid.isEmpty() ) {
-    // There is a UID, so make a link to the addressbook
-    if ( printName.isEmpty() ) {
-      // Use the email address for text
-      personString += htmlAddLink( "uid:" + printUid, email );
-    } else {
-      personString += htmlAddLink( "uid:" + printUid, printName );
-    }
+    personString += htmlAddUidLink( email, printName, printUid );
   } else {
     // No UID, just show some text
     personString += ( printName.isEmpty() ? email : printName );
@@ -320,13 +330,7 @@ static QString displayViewFormatOrganizer( const QString &email, const QString &
 
   // Make the uid link
   if ( !printUid.isEmpty() ) {
-    // There is a UID, so make a link to the addressbook
-    if ( printName.isEmpty() ) {
-      // Use the email address for text
-      personString += htmlAddLink( "uid:" + printUid, email );
-    } else {
-      personString += htmlAddLink( "uid:" + printUid, printName );
-    }
+    personString += htmlAddUidLink( email, printName, printUid );
   } else {
     // No UID, just show some text
     personString += ( printName.isEmpty() ? email : printName );
@@ -1324,29 +1328,23 @@ static QString invitationPerson( const QString &email, const QString &name, cons
   const QString printName = s.first;
   const QString printUid = s.second;
 
-  // Show the attendee
-  QString tmpString;
+  QString personString;
+  // Make the uid link
   if ( !printUid.isEmpty() ) {
-    // There is a UID, so make a link to the addressbook
-    if ( printName.isEmpty() ) {
-      // Use the email address for text
-      tmpString += htmlAddLink( "uid:" + printUid, email );
-    } else {
-      tmpString += htmlAddLink( "uid:" + printUid, printName );
-    }
+    personString += htmlAddUidLink( email, printName, printUid );
   } else {
     // No UID, just show some text
-    tmpString += ( printName.isEmpty() ? email : printName );
+    personString += ( printName.isEmpty() ? email : printName );
   }
-  tmpString += '\n';
+  personString += '\n';
 
   // Make the mailto link
   if ( !email.isEmpty() ) {
-    tmpString += "&nbsp;" + htmlAddMailtoLink( email, printName );
+    personString += "&nbsp;" + htmlAddMailtoLink( email, printName );
   }
-  tmpString += "\n";
+  personString += "\n";
 
-  return tmpString;
+  return personString;
 }
 
 static QString invitationDetailsIncidence( Incidence *incidence, bool noHtmlMode )
