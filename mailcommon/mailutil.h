@@ -76,6 +76,8 @@ namespace Util {
     MAILCOMMON_EXPORT void showJobErrorMessage( KJob *job );
 
     MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances();
+
+    MAILCOMMON_EXPORT void ensureKorganizerRunning( bool switchTo = true );
 }
 }
 

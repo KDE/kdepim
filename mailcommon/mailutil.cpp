@@ -64,6 +64,7 @@
 #include <stdlib.h>
 
 #include "foldercollection.h"
+#include <KDBusServiceStarter>
 
 
 OrgKdeAkonadiImapSettingsInterface *MailCommon::Util::createImapSettingsInterface( const QString &ident )
@@ -116,3 +117,33 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances()
   return relevantInstances;
 }
 
+void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
+{
+  QString error;
+  QString dbusService;
+  int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString(),
+                                                            &error, &dbusService );
+  if ( result == 0 ) {
+    // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
+    QDBusInterface iface( "org.kde.korganizer", "/MainApplication",
+                          "org.kde.KUniqueApplication" );
+    if ( iface.isValid() ) {
+      if ( switchTo ) {
+        iface.call( "newInstance" ); // activate korganizer window
+      }
+      QDBusInterface pimIface( "org.kde.korganizer", "/korganizer_PimApplication",
+                                "org.kde.KUniqueApplication" );
+      QDBusReply<bool> r = pimIface.call( "load" );
+      if ( !r.isValid() || !r.value() ) {
+        kWarning() << "Loading korganizer failed: " << pimIface.lastError().message();
+      }
+    } else {
+      kWarning() << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
+    }
+
+    // We don't do anything with it, we just need it to be running so that it handles
+    // the incoming directory.
+  } else {
+    kWarning() << "Couldn't start DBUS/Organizer:" << dbusService << error;
+  }
+}
