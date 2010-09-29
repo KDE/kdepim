@@ -22,7 +22,7 @@ import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
-import org.kde.akonadi.contacts 4.5 as Akonadi
+import org.kde.akonadi.contacts 4.5 as Contacts
 
 KPIM.MainView {
   id: kaddressbookMobile
@@ -56,7 +56,7 @@ KPIM.MainView {
     }
   }
 
-  Akonadi.ContactView {
+  Contacts.ContactView {
     id: contactView
     z: 0
     anchors.fill: parent
@@ -90,7 +90,7 @@ KPIM.MainView {
     }
   }
 
-  Akonadi.ContactGroupView {
+  Contacts.ContactGroupView {
     id: contactGroupView
     z: 0
     anchors.fill: parent
@@ -295,11 +295,24 @@ KPIM.MainView {
       color : "#00000000"
       opacity : contactList.count > 0 ? 1 : 0
 
+      Akonadi.FilterLineEdit {
+        id: filterLineEdit
+        anchors.left : parent.left
+        anchors.top : parent.top
+        anchors.bottom : contactList.top
+        anchors.right : parent.right
+        visible : false
+        height : 0
+      }
+
       ContactListView {
         id: contactList
+        anchors.left : parent.left
+        anchors.top : filterLineEdit.bottom
+        anchors.bottom : parent.bottom
+        anchors.right : parent.right
         model: itemModel
         checkModel : _itemActionModel
-        anchors.fill : parent
         onItemSelected: {
           if ( itemModel.typeForIndex( contactList.currentIndex ) == "contact" ) {
             contactView.itemId = contactList.currentItemId;

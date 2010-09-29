@@ -21,6 +21,7 @@
 
 #include "kdepim-version.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeImageProvider>
@@ -31,6 +32,7 @@
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KConfigGroup>
+#include <KDE/KLineEdit>
 #include <KDE/KLocale>
 #include <KDE/KSharedConfig>
 #include <KDE/KSharedConfigPtr>
@@ -53,8 +55,9 @@
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
 
-#include "listproxy.h"
 #include "akonadibreadcrumbnavigationfactory.h"
+#include "declarativewidgetbase.h"
+#include "listproxy.h"
 #include <KActionCollection>
 #include <akonadi/standardactionmanager.h>
 #include <KAction>
@@ -120,6 +123,9 @@ class ActionImageProvider : public QDeclarativeImageProvider
 
 using namespace Akonadi;
 
+typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setFilterLineEdit> DeclarativeFilterLineEdit;
+QML_DECLARE_TYPE( DeclarativeFilterLineEdit )
+
 KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent )
   : KDeclarativeFullScreenView( appName, parent )
   , d( new KDeclarativeMainViewPrivate )
@@ -133,6 +139,8 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 void KDeclarativeMainView::delayedInit()
 {
   kDebug();
+  qmlRegisterType<DeclarativeFilterLineEdit>( "org.kde.akonadi", 4, 5, "FilterLineEdit" );
+
   KDeclarativeFullScreenView::delayedInit();
 
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
@@ -168,14 +176,25 @@ void KDeclarativeMainView::delayedInit()
     kWarning() << "BreadcrumbNavigation factory created" << t.elapsed() << &t;
   }
 
-  d->mItemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
-  d->mItemFilter->setSourceModel( d->mBnf->unfilteredChildItemModel() );
-  d->mItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+  qDebug("tokoe: before creation");
+  Akonadi::EntityMimeTypeFilterModel *filterModel = new Akonadi::EntityMimeTypeFilterModel(this);
+  filterModel->setSourceModel( d->mBnf->unfilteredChildItemModel() );
+  filterModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
-  QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel(this);
-  qmlCheckable->setSourceModel(d->mItemFilter);
+  d->mItemFilter = filterModel;
+
+  d->mItemFilterModel = itemFilterModel();
+  if ( d->mItemFilterModel ) {
+    qDebug("tokoe: itemFilterModel set");
+    d->mItemFilterModel->setSourceModel( filterModel );
+    d->mItemFilter = d->mItemFilterModel;
+  }
+
+  QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel( this );
+  qmlCheckable->setSourceModel( d->mItemFilter );
+
   QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( d->mItemFilter, this );
-  qmlCheckable->setSelectionModel(itemActionCheckModel);
+  qmlCheckable->setSelectionModel( itemActionCheckModel );
 
   KSelectionProxyModel *checkedItems = new KSelectionProxyModel(itemActionCheckModel, this);
   checkedItems->setFilterBehavior(KSelectionProxyModel::ExactSelection);
@@ -205,7 +224,7 @@ void KDeclarativeMainView::delayedInit()
 
   d->mMultiBnf = new Akonadi::BreadcrumbNavigationFactory(this);
   d->mMultiBnf->createCheckableBreadcrumbContext( d->mEtm, this);
- 
+
   context->setContextProperty( "_multiSelectionComponentFactory", d->mMultiBnf );
 
   context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
@@ -575,6 +594,11 @@ void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selecti
   manager->createAllActions();
 }
 
+QAbstractProxyModel* KDeclarativeMainView::itemFilterModel() const
+{
+  return 0;
+}
+
 QString KDeclarativeMainView::version() const
 {
   return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_SVN_REVISION_STRING, KDEPIM_SVN_LAST_CHANGE );
@@ -584,3 +608,29 @@ Akonadi::ChangeRecorder* KDeclarativeMainView::monitor() const
 {
   return d->mChangeRecorder;
 }
+
+void KDeclarativeMainView::setFilterLineEdit( KLineEdit *lineEdit )
+{
+  d->mFilterLineEdit = lineEdit;
+  d->mFilterLineEdit->setFixedHeight( 0 );
+  d->mFilterLineEdit->setClearButtonShown( true );
+  connect( d->mFilterLineEdit, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( filterLineEditChanged( const QString& ) ) );
+  connect( d->mFilterLineEdit, SIGNAL( textChanged( const QString& ) ),
+           d->mItemFilterModel, SLOT( setFilterString( const QString& ) ) );
+}
+
+void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )
+{
+  static bool isSendingEvent = false;
+
+  if ( !isSendingEvent && !event->text().isEmpty() && d->mFilterLineEdit && d->mItemFilterModel ) {
+    isSendingEvent = true;
+    QCoreApplication::sendEvent( d->mFilterLineEdit, event );
+    isSendingEvent = false;
+  } else {
+    KDeclarativeFullScreenView::keyPressEvent( event );
+  }
+}
+
+#include "kdeclarativemainview.moc"

@@ -31,6 +31,7 @@ namespace Akonadi
 
 class ContactListProxy;
 class KJob;
+class KLineEdit;
 class KProgressDialog;
 
 class MainView : public KDeclarativeMainView
@@ -58,6 +59,8 @@ class MainView : public KDeclarativeMainView
                                              QItemSelectionModel *itemSelectionModel );
 
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+
+    virtual QAbstractProxyModel* itemFilterModel() const;
 
   private Q_SLOTS:
     void slotImportJobDone( KJob* );

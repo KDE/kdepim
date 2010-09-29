@@ -23,7 +23,8 @@
 #include <QItemSelectionModel>
 
 class QAbstractItemModel;
-
+class QAbstractProxyModel;
+class KLineEdit;
 
 namespace Akonadi {
 class ChangeRecorder;
@@ -87,6 +88,15 @@ protected:
    */
   virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
+  /**
+   * Returns the filter proxy model that will be used to filter the item list.
+   * If @c 0 is returned, no filtering is done.
+   *
+   * @note The model has to provide a public slot with the following signature:
+   *       void setFilterString( const QString& )
+   */
+  virtual QAbstractProxyModel* itemFilterModel() const;
+
 protected slots:
   void delayedInit();
 
@@ -109,6 +119,8 @@ public:
   QString version() const;
 
   Akonadi::ChangeRecorder* monitor() const;
+
+  void setFilterLineEdit( KLineEdit *lineEdit );
 
 public slots:
   void setSelectedAccount( int row );
@@ -148,9 +160,13 @@ protected:
 
   Akonadi::Item itemFromId( quint64 id ) const;
 
+  virtual void keyPressEvent( QKeyEvent *event );
+
 private:
   KDeclarativeMainViewPrivate * const d;
   Q_DISABLE_COPY( KDeclarativeMainView )
+
+  Q_PRIVATE_SLOT( d, void filterLineEditChanged( const QString& ) )
 };
 
 #endif // KDECLARATIVEMAINVIEW_H

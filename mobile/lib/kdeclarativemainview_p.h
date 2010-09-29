@@ -32,6 +32,7 @@
 #include <akonadi/etmviewstatesaver.h>
 
 class KActionCollection;
+class KLineEdit;
 
 static const char * const sFavoritePrefix = "Favorite_";
 static const int sFavoritePrefixLength = 9;
@@ -65,7 +66,8 @@ public: /// members
   QAbstractItemModel                 *mCollectionFilter;              // Deleted by ~QObect
   Akonadi::EntityTreeModel           *mEtm;
   ListProxy                          *mListProxy;
-  Akonadi::EntityMimeTypeFilterModel *mItemFilter;
+  QAbstractItemModel                 *mItemFilter;
+  QAbstractProxyModel                *mItemFilterModel;
   QItemSelectionModel                *mFavSelection;
   QStringListModel                   *mFavsListModel;
   Akonadi::AgentFilterProxyModel     *mAgentInstanceFilterModel;
@@ -77,6 +79,7 @@ public: /// members
   QHash<QString, QStringList>        mPersistedSelections;
   Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
   ItemSelectHook                     *m_hook;
+  KLineEdit                          *mFilterLineEdit;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();
@@ -87,6 +90,7 @@ public: /// Methods
 public slots:
   void saveState();
   void restoreState();
+  void filterLineEditChanged( const QString &text );
 };
 
 #endif // KDECLARATIVEMAINVIEW_P_H

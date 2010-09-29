@@ -26,6 +26,7 @@
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/collectiondialog.h>
+#include <akonadi/contact/contactsfilterproxymodel.h>
 #include <akonadi/contact/standardcontactactionmanager.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -37,6 +38,7 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kfiledialog.h>
+#include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kprogressdialog.h>
@@ -439,6 +441,11 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
                            i18nc( "@title:window", "Delete Account?" ) );
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
+}
+
+QAbstractProxyModel* MainView::itemFilterModel() const
+{
+  return new Akonadi::ContactsFilterProxyModel();
 }
 
 #include "mainview.moc"

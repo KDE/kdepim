@@ -20,6 +20,7 @@
 
 #include <KDE/KConfigGroup>
 #include <KDE/KGlobal>
+#include <KDE/KLineEdit>
 #include <KDE/KSharedConfig>
 
 #include <akonadi/etmviewstatesaver.h>
@@ -29,7 +30,9 @@
 KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
   : mChangeRecorder( 0 )
   , mCollectionFilter( 0 )
+  , mItemFilterModel( 0 )
   , mFavsListModel( 0 )
+  , mFilterLineEdit( 0 )
 { }
 
 void KDeclarativeMainViewPrivate::restoreState()
@@ -66,3 +69,16 @@ QAbstractItemModel* KDeclarativeMainViewPrivate::getFavoritesListModel()
 
   return mFavsListModel;
 }
+
+void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
+{
+  if ( !text.isEmpty() && !mFilterLineEdit->isVisible() ) {
+    mFilterLineEdit->setFixedHeight( 35 );
+    mFilterLineEdit->show();
+    mFilterLineEdit->setFocus();
+  } else if ( text.isEmpty() && mFilterLineEdit->isVisible() ) {
+    mFilterLineEdit->setFixedHeight( 0 );
+    mFilterLineEdit->hide();
+  }
+}
+
