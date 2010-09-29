@@ -110,9 +110,6 @@ void MainView::delayedInit()
   EventViews::EventView::setGlobalCollectionSelection( collectionselection );
   
   QDBusConnection::sessionBus().registerService("org.kde.korganizer"); //register also as the real korganizer, so kmail can communicate with it
-  CalendarInterface* calendarIface = new CalendarInterface();
-  new CalendarAdaptor(calendarIface);
-  QDBusConnection::sessionBus().registerObject("/Calendar", calendarIface);
 
   KAction *action = new KAction( i18n( "New Appointment" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(newEvent()) );
@@ -129,11 +126,24 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportICal() ) );
   actionCollection()->addAction( QLatin1String( "export_events" ), action );
 
-  //connect Qt signals to QML slots
-  connect(calendarIface, SIGNAL(showDateSignal(QVariant)), rootObject(), SLOT(showDate(QVariant)));
-  connect(calendarIface, SIGNAL(showEventViewSignal()), rootObject(), SLOT(showEventView()));
+  connect(this, SIGNAL(statusChanged(QDeclarativeView::Status)),
+          this, SLOT(connectQMLSlots(QDeclarativeView::Status)));
+
+  //register DBUS interface
+  m_calendarIface = new CalendarInterface( this );
+  new CalendarAdaptor(m_calendarIface);
+  QDBusConnection::sessionBus().registerObject("/Calendar", m_calendarIface);
 
   KPIM::ReminderClient::startDaemon();
+}
+
+void MainView::connectQMLSlots(QDeclarativeView::Status status)
+{
+  if ( status != Ready )
+    return;
+
+  connect(m_calendarIface, SIGNAL(showDateSignal(QVariant)), rootObject(), SLOT(showDate(QVariant)));
+  connect(m_calendarIface, SIGNAL(showEventViewSignal()), rootObject(), SLOT(showEventView()));
 }
 
 void MainView::showRegularCalendar()

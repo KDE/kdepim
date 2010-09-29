@@ -23,6 +23,7 @@
 
 #include "kdeclarativemainview.h"
 
+class CalendarInterface;
 class KJob;
 class KProgressDialog;
 class QDate;
@@ -55,6 +56,7 @@ class MainView : public KDeclarativeMainView
 
   protected slots:
     void delayedInit();
+    void connectQMLSlots(QDeclarativeView::Status status);
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -68,6 +70,7 @@ class MainView : public KDeclarativeMainView
   private:
     CalendarSupport::Calendar *m_calendar;
     KProgressDialog *m_importProgressDialog;
+    CalendarInterface* m_calendarIface;
 };
 
 #endif // MAINVIEW_H
