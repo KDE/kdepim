@@ -58,10 +58,12 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
 
+#ifdef KDEPIM_MOBILE_UI
   mUi->mStartDateEdit->setReadOnly(true);
   mUi->mEndDateEdit->setReadOnly(true);
   mUi->mStartTimeEdit->clear();
   mUi->mEndTimeEdit->clear();
+#endif
 
   mUi->mStartDateEdit->installEventFilter( this );
   mUi->mEndDateEdit->installEventFilter( this );
