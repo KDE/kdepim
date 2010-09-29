@@ -111,18 +111,7 @@ bool IncidenceAttachment::isDirty() const
       for ( int i = 0; i < origAttachments.size() && !found; ++i ) {
         const KCalCore::Attachment::Ptr attachment = origAttachments.at( i );
 
-        // Check for changed label first
-        if ( attachment->label() != listAttachment->label() ) {
-          continue;
-        }
-
-        if ( attachment->isBinary() && listAttachment->isBinary() &&
-             attachment->decodedData() == listAttachment->decodedData() ) {
-          // Not sure about this. Might be too expensive.
-          origAttachments.remove( i );
-          found = true;
-        } else if ( attachment->isUri() && listAttachment->isUri() &&
-                    attachment->uri() == listAttachment->uri() ) {
+        if ( *attachment == *listAttachment ) {
           origAttachments.remove( i );
           found = true;
         }
