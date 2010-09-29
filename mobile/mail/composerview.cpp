@@ -219,7 +219,7 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
       return;
   }
 
-  if ( m_subject.isEmpty() ) {
+  if ( m_subject.isEmpty() && saveIn != MessageSender::SaveInDrafts ) {
       const int rc = KMessageBox::questionYesNo( this,
                                                  i18n("You did not specify a subject. Do you want to send the message without specifying one?"),
                                                  i18n("No subject"));
