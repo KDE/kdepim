@@ -174,6 +174,32 @@ static QString firstAttendeeName( Incidence *incidence, const QString &defName )
   return name;
 }
 
+static QString attendeeStatusIconPath( Attendee::PartStat status )
+{
+  QString iconPath;
+  switch ( status ) {
+  case Attendee::Accepted:
+    iconPath = KGlobal::iconLoader()->iconPath( "ok", KIcon::Small );
+    break;
+  case Attendee::Declined:
+    iconPath = KGlobal::iconLoader()->iconPath( "no", KIcon::Small );
+    break;
+  case Attendee::NeedsAction:
+  case Attendee::InProcess:
+    iconPath = KGlobal::iconLoader()->iconPath( "help", KIcon::Small );
+    break;
+  case Attendee::Tentative:
+    iconPath = KGlobal::iconLoader()->iconPath( "apply", KIcon::Small );
+    break;
+  case Attendee::Delegated:
+    iconPath = KGlobal::iconLoader()->iconPath( "mail_forward", KIcon::Small );
+    break;
+  default:
+    break;
+  }
+  return iconPath;
+}
+
 /*******************************************************************
  *  Helper functions for the extensive display (display viewer)
  *******************************************************************/
@@ -205,28 +231,8 @@ static QString displayViewLinkPerson( const QString &email, const QString &name,
 
   QString personString;
 
-  // Compute an icon corresponding to the attendee status
-  QString iconPath;
-  switch ( status ) {
-  case Attendee::Accepted:
-    iconPath = KGlobal::iconLoader()->iconPath( "ok", KIcon::Small );
-    break;
-  case Attendee::Declined:
-    iconPath = KGlobal::iconLoader()->iconPath( "no", KIcon::Small );
-    break;
-  case Attendee::NeedsAction:
-  case Attendee::InProcess:
-    iconPath = KGlobal::iconLoader()->iconPath( "help", KIcon::Small );
-    break;
-  case Attendee::Tentative:
-    iconPath = KGlobal::iconLoader()->iconPath( "apply", KIcon::Small );
-    break;
-  case Attendee::Delegated:
-    iconPath = KGlobal::iconLoader()->iconPath( "mail_forward", KIcon::Small );
-    break;
-  default:
-    break;
-  }
+  // Make the status icon
+  QString iconPath = attendeeStatusIconPath( status );
   if ( !iconPath.isEmpty() ) {
     personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
   }
@@ -3694,29 +3700,7 @@ static QString tooltipPerson( const QString &email, const QString &name,  Attend
   }
 
   QString personString;
-
-  // Compute an icon corresponding to the attendee status
-  QString iconPath;
-  switch ( status ) {
-  case Attendee::Accepted:
-    iconPath = KGlobal::iconLoader()->iconPath( "ok", KIcon::Small );
-    break;
-  case Attendee::Declined:
-    iconPath = KGlobal::iconLoader()->iconPath( "no", KIcon::Small );
-    break;
-  case Attendee::NeedsAction:
-  case Attendee::InProcess:
-    iconPath = KGlobal::iconLoader()->iconPath( "help", KIcon::Small );
-    break;
-  case Attendee::Tentative:
-    iconPath = KGlobal::iconLoader()->iconPath( "apply", KIcon::Small );
-    break;
-  case Attendee::Delegated:
-    iconPath = KGlobal::iconLoader()->iconPath( "mail_forward", KIcon::Small );
-    break;
-  default:
-    break;
-  }
+  QString iconPath = attendeeStatusIconPath( status );
   if ( !iconPath.isEmpty() ) {
     personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
   }
