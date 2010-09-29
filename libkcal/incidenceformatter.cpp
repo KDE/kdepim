@@ -96,6 +96,54 @@ static QString htmlAddTag( const QString & tag, const QString & text )
   return tmpStr;
 }
 
+static QPair<QString, QString> searchNameAndUid( const QString &email, const QString &name,
+                                                 const QString &uid )
+{
+  QString sName = name;
+  QString sUid = uid;
+  // Make the search, if there is an email address to search on,
+  // and either name or uid is missing
+  if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
+    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
+    KABC::Addressee::List addressList = add_book->findByEmail( email );
+    if ( !addressList.isEmpty() ) {
+      KABC::Addressee o = addressList.first();
+      if ( !o.isEmpty() && addressList.size() < 2 ) {
+        if ( name.isEmpty() ) {
+          // No name set, so use the one from the addressbook
+          sName = o.formattedName();
+        }
+        sUid = o.uid();
+      } else {
+        // Email not found in the addressbook
+        sUid = QString::null;
+      }
+    }
+  }
+  QPair<QString, QString>s;
+  s.first = sName;
+  s.second = sUid;
+  return s;
+}
+
+static QString searchName( const QString &email, const QString &name )
+{
+  QString printName = name;
+  // Search, if there is an email address to search on
+  if ( name.isEmpty() && !email.isEmpty() ) {
+    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
+    KABC::Addressee::List addressList = add_book->findByEmail( email );
+    if ( !addressList.isEmpty() ) {
+      KABC::Addressee o = addressList.first();
+      if ( !o.isEmpty() && addressList.size() < 2 ) {
+        // No name set, so use the one from the addressbook
+        printName = o.formattedName();
+      }
+    }
+  }
+  return printName;
+}
+
 static bool iamAttendee( Attendee *attendee )
 {
   // Check if I'm this attendee
@@ -207,32 +255,15 @@ static QString attendeeStatusIconPath( Attendee::PartStat status )
 static QString displayViewLinkPerson( const QString &email, const QString &name,
                                       const QString &uid, Attendee::PartStat status )
 {
-  QString printName = name;
-  QString printUid = uid;
-  // Make the search, if there is an email address to search on,
-  // and either name or uid is missing
-  if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
-    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
-    KABC::Addressee::List addressList = add_book->findByEmail( email );
-    if ( !addressList.isEmpty() ) {
-      KABC::Addressee o = addressList.first();
-      if ( !o.isEmpty() && addressList.size() < 2 ) {
-        if ( name.isEmpty() ) {
-          // No name set, so use the one from the addressbook
-          printName = o.formattedName();
-        }
-        printUid = o.uid();
-      } else {
-        // Email not found in the addressbook. Don't make a link
-        printUid = QString::null;
-      }
-    }
-  }
+  // Search for new print name or uid, if needed.
+  QPair<QString, QString> s = searchNameAndUid( email, name, uid );
+  const QString printName = s.first;
+  const QString printUid = s.second;
+
+  // Get the icon corresponding to the attendee participation status.
+  QString iconPath = attendeeStatusIconPath( status );
 
   QString personString;
-
-  // Make the status icon
-  QString iconPath = attendeeStatusIconPath( status );
   if ( !iconPath.isEmpty() ) {
     personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
   }
@@ -266,28 +297,15 @@ static QString displayViewLinkPerson( const QString &email, const QString &name,
 
 static QString displayViewFormatOrganizer( const QString &email, const QString &name )
 {
-  QString printName = name;
-  QString printUid;
-  // Search, if there is an email address to search on
-  if ( !email.isEmpty() ) {
-    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
-    KABC::Addressee::List addressList = add_book->findByEmail( email );
-    if ( !addressList.isEmpty() ) {
-      KABC::Addressee o = addressList.first();
-      if ( !o.isEmpty() && addressList.size() < 2 ) {
-        if ( name.isEmpty() ) {
-          // No name set, so use the one from the addressbook
-          printName = o.formattedName();
-        }
-        printUid = o.uid();
-      }
-    }
-  }
-
-  QString personString;
+  // Search for new print name or uid, if needed.
+  QPair<QString, QString> s = searchNameAndUid( email, name, QString() );
+  const QString printName = s.first;
+  const QString printUid = s.second;
 
   // Get the icon for organizer
   QString iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
+
+  QString personString;
   personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
 
   // Make the uid link
@@ -629,7 +647,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
   }
   tmpStr += "</tr>";
 
-  QString durStr = IncidenceFormatter::durationString( event );
+  const QString durStr = IncidenceFormatter::durationString( event );
   if ( !durStr.isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
@@ -720,7 +738,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
   tmpStr += "<col width=\"75%\"/>";
 
   if ( calendar ) {
-    QString calStr = IncidenceFormatter::resourceString( calendar, todo );
+    const QString calStr = IncidenceFormatter::resourceString( calendar, todo );
     if ( !calStr.isEmpty() ) {
       tmpStr += "<tr>";
       tmpStr += "<td><b>" + i18n( "Calendar:" ) + "</b></td>";
@@ -770,7 +788,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
     tmpStr += "</tr>";
   }
 
-  QString durStr = IncidenceFormatter::durationString( todo );
+  const QString durStr = IncidenceFormatter::durationString( todo );
   if ( !durStr.isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
@@ -870,7 +888,7 @@ static QString displayViewFormatJournal( Calendar *calendar, Journal *journal )
   tmpStr += "<col width=\"75%\"/>";
 
   if ( calendar ) {
-    QString calStr = IncidenceFormatter::resourceString( calendar, journal );
+    const QString calStr = IncidenceFormatter::resourceString( calendar, journal );
     if ( !calStr.isEmpty() ) {
       tmpStr += "<tr>";
       tmpStr += "<td><b>" + i18n( "Calendar:" ) + "</b></td>";
@@ -1295,47 +1313,31 @@ static QString myStatusStr( Incidence *incidence )
   return ret;
 }
 
-static QString invitationPerson( const QString& email, QString name, QString uid )
+static QString invitationPerson( const QString &email, const QString &name, const QString &uid )
 {
-  // Make the search, if there is an email address to search on,
-  // and either name or uid is missing
-  if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
-    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
-    KABC::Addressee::List addressList = add_book->findByEmail( email );
-    if ( !addressList.isEmpty() ) {
-      KABC::Addressee o = addressList.first();
-      if ( !o.isEmpty() && addressList.size() < 2 ) {
-        if ( name.isEmpty() ) {
-          // No name set, so use the one from the addressbook
-          name = o.formattedName();
-        }
-        uid = o.uid();
-      } else {
-        // Email not found in the addressbook. Don't make a link
-        uid = QString::null;
-      }
-    }
-  }
+  QPair<QString, QString> s = searchNameAndUid( email, name, uid );
+  const QString printName = s.first;
+  const QString printUid = s.second;
 
   // Show the attendee
   QString tmpString;
-  if ( !uid.isEmpty() ) {
+  if ( !printUid.isEmpty() ) {
     // There is a UID, so make a link to the addressbook
-    if ( name.isEmpty() ) {
+    if ( printName.isEmpty() ) {
       // Use the email address for text
-      tmpString += htmlAddLink( "uid:" + uid, email );
+      tmpString += htmlAddLink( "uid:" + printUid, email );
     } else {
-      tmpString += htmlAddLink( "uid:" + uid, name );
+      tmpString += htmlAddLink( "uid:" + printUid, printName );
     }
   } else {
     // No UID, just show some text
-    tmpString += ( name.isEmpty() ? email : name );
+    tmpString += ( printName.isEmpty() ? email : printName );
   }
   tmpString += '\n';
 
   // Make the mailto link
   if ( !email.isEmpty() ) {
-    KCal::Person person( name, email );
+    KCal::Person person( printName, email );
     KURL mailto;
     mailto.setProtocol( "mailto" );
     mailto.setPath( person.fullName() );
@@ -3684,58 +3686,35 @@ bool IncidenceFormatter::ToolTipVisitor::visit( FreeBusy *fb )
 
 static QString tooltipPerson( const QString &email, const QString &name,  Attendee::PartStat status )
 {
-  QString printName = name;
-  // Make the search, if there is an email address to search on,
-  // and name is missing
-  if ( name.isEmpty() && !email.isEmpty() ) {
-    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
-    KABC::Addressee::List addressList = add_book->findByEmail( email );
-    if ( !addressList.isEmpty() ) {
-      KABC::Addressee o = addressList.first();
-      if ( !o.isEmpty() && addressList.size() < 2 ) {
-        // use the name from the addressbook
-        printName = o.formattedName();
-      }
-    }
-  }
+  // Search for a new print name, if needed.
+  const QString printName = searchName( email, name );
 
+  // Get the icon corresponding to the attendee participation status.
+  const QString iconPath = attendeeStatusIconPath( status );
+
+  // Make the return string.
   QString personString;
-  QString iconPath = attendeeStatusIconPath( status );
   if ( !iconPath.isEmpty() ) {
     personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
   }
   personString += i18n( "attendee name (attendee status)", "%1 (%2)" ).
                   arg( printName.isEmpty() ? email : printName ).
                   arg( Attendee::statusName( status ) );
-
   return personString;
 }
 
 static QString tooltipFormatOrganizer( const QString &email, const QString &name )
 {
-  QString printName = name;
-  // Make the search, if there is an email address to search on,
-  // and name is missing
-  if ( name.isEmpty() && !email.isEmpty() ) {
-    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
-    KABC::Addressee::List addressList = add_book->findByEmail( email );
-    if ( !addressList.isEmpty() ) {
-      KABC::Addressee o = addressList.first();
-      if ( !o.isEmpty() && addressList.size() < 2 ) {
-        // use the name from the addressbook
-        printName = o.formattedName();
-      }
-    }
-  }
-
-  QString personString;
+  // Search for a new print name, if needed
+  const QString printName = searchName( email, name );
 
   // Get the icon for organizer
-  QString iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
+  const QString iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
+
+  // Make the return string.
+  QString personString;
   personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
-
   personString += ( printName.isEmpty() ? email : printName );
-
   return personString;
 }
 
@@ -3825,7 +3804,7 @@ static QString tooltipFormatAttendees( Incidence *incidence )
   return tmpStr;
 }
 
-QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidence, QString dtRangeText )
+QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidence, QString dtRangeText )
 {
   const QString etc = i18n( "elipsis", "..." );
   const uint maxDescLen = 120; // maximum description chars to print (before elipsis)
