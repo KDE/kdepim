@@ -27,9 +27,12 @@
 #include <KCalCore/Journal>
 
 #include <KPIMUtils/Email>
-
+#include <KIO/Job>
+#include <KIO/NetAccess>
 #include <KDebug>
 #include <KLocalizedString>
+
+#include <QFile>
 
 using namespace IncidenceEditorNG;
 
@@ -218,9 +221,38 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
         mimeType = attachmentMimetypes[ i ];
       }
 
-      KCalCore::Attachment::Ptr attachment( new KCalCore::Attachment( *it, mimeType ) );
-      attachment->setShowInline( inlineAttachment );
-      d->mAttachments << attachment;
+      KCalCore::Attachment::Ptr attachment;
+      if ( inlineAttachment ) {
+        QString tmpFile;
+        if ( KIO::NetAccess::download( *it, tmpFile, 0 ) ) {
+          QFile f( tmpFile );
+          if ( f.open( QIODevice::ReadOnly ) ) {
+            const QByteArray data = f.readAll();
+            f.close();
+            attachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( data, mimeType ) );
+          } else {
+            kError() << "Error opening " << *it;
+          }
+        } else {
+          kError() << "Error downloading uri " << *it << KIO::NetAccess::lastErrorString();
+        }
+        // TODO, this method needs better error reporting.
+        KIO::NetAccess::removeTempFile( tmpFile );
+      } else {
+        attachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( *it, mimeType ) );
+      }
+
+      if ( attachment ) {
+        if ( attachment->label().isEmpty() ) {
+          if ( attachment->isUri() ) {
+            attachment->setLabel( attachment->uri() );
+          } else {
+            attachment->setLabel( i18nc( "@label attachment contains binary data", "[Binary data]" ) );
+          }
+        }
+        d->mAttachments << attachment;
+        attachment->setShowInline( inlineAttachment );
+      }
     }
   }
 }
