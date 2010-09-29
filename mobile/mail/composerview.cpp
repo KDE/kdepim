@@ -325,14 +325,6 @@ void ComposerView::success()
     m_draft = false;
     return;
   }
-
-  QPixmap pix = KIcon("kmail-mobile").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
-  KNotification *notify = new KNotification("emailsent");
-  notify->setComponentData(KComponentData("kmail-mobile"));
-  notify->setPixmap(pix);
-  notify->setText(i18nc("Notification when the email was sent",
-                        "E-mail successfully sent"));
-  notify->sendEvent();
 }
 
 void ComposerView::failed( const QString &errorMessage )

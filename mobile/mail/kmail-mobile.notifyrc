@@ -33,36 +33,6 @@ Name[x-test]=xxKDE Mailxx
 Name[zh_CN]=KDE 电子邮件
 Name[zh_TW]=KDE 郵件軟體
 
-[Event/emailsent]
-Name=E-mail successfully sent
-Name[en_GB]=E-mail successfully sent
-Name[es]=Correo enviado satisfactoriamente
-Name[gl]=Enviouse a mensaxe sen problemas
-Name[lt]=E. laiškas sėkmingai išsiųstas
-Name[nb]=E.post vellykket sendt
-Name[nds]=Nettbreef mit Spood loosstüert
-Name[pt]=O e-mail foi enviado com sucesso
-Name[pt_BR]=O e-mail foi enviado com sucesso
-Name[sv]=E-post skickad med lyckat resultat
-Name[uk]=Пошту успішно надіслано
-Name[x-test]=xxE-mail successfully sentxx
-Name[zh_CN]=邮件已成功发送
-Name[zh_TW]=電子郵件已成功傳送
-Comment=Your e-mail was successfully sent.
-Comment[en_GB]=Your e-mail was successfully sent.
-Comment[es]=Su correo se envió satisfactoriamente
-Comment[gl]=Enviouse a súa mensaxe sen problemas.
-Comment[lt]=Jūsų e. laiškas sėkmingai išsiųstas.
-Comment[nb]=Din e-post ble vellykket sendt.
-Comment[nds]=Dien Nettbreef wöör mit Spood loosstüert
-Comment[pt]=O seu e-mail foi enviado com sucesso.
-Comment[pt_BR]=O seu e-mail foi enviado com sucesso.
-Comment[sv]=E-post skickad med lyckat resultat.
-Comment[uk]=Вашу пошту успішно надіслано.
-Comment[x-test]=xxYour e-mail was successfully sent.xx
-Comment[zh_TW]=您的電子郵件已成功傳送。
-Action=Popup
-
 [Event/sendfailed]
 Name=Error while sending email
 Name[de]=Fehler beim Versenden der E-Mail
