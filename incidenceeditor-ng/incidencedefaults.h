@@ -99,6 +99,14 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
     */
     void setDefaults( const KCalCore::Incidence::Ptr &incidence ) const;
 
+    /**
+     * Returns minimal incidence defaults: e-mails and groupware domain.
+     *
+     * TODO: See if this is always called when using IncidenceDefaults.
+     * If yes, this should be done inside ctor.
+     */
+    static IncidenceDefaults minimalIncidenceDefaults();
+
   private:
     IncidenceDefaultsPrivate *const d_ptr;
     Q_DECLARE_PRIVATE( IncidenceDefaults )

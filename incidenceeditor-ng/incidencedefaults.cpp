@@ -20,6 +20,8 @@
 
 #include "incidencedefaults.h"
 
+#include <calendarsupport/kcalprefs.h>
+
 #include <KABC/Addressee>
 
 #include <KCalCore/Event>
@@ -348,4 +350,23 @@ void IncidenceDefaults::setDefaults( const KCalCore::Incidence::Ptr &incidence )
     kDebug() << "Unsupported incidence type, keeping current values. Type: "
              << int( incidence->type() );
   }
+}
+
+/** static */
+IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults()
+{
+  IncidenceDefaults defaults;
+
+  // Set the full emails manually here, to avoid that we get dependencies on
+  // KCalPrefs all over the place.
+  defaults.setFullEmails( CalendarSupport::KCalPrefs::instance()->fullEmails() );
+
+  // NOTE: At some point this should be generalized. That is, we now use the
+  //       freebusy url as a hack, but this assumes that the user has only one
+  //       groupware account. Which doesn't have to be the case necessarily.
+  //       This method should somehow depend on the calendar selected to which
+  //       the incidence is added.
+  if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() )
+    defaults.setGroupWareDomain( KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+  return defaults;
 }
