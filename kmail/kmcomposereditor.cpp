@@ -169,7 +169,7 @@ void KMComposerEditor::insertFromMimeData( const QMimeData *source )
     QImage image = qvariant_cast<QImage>( source->imageData() );
     QFileInfo fi( source->text() );
 #endif
-    if ( textMode() == KRichTextEdit::Rich  && isEnableImageActions() ) {
+    if ( textMode() == KRichTextEdit::Rich ) {
       KMenu menu;
       const QAction *addAsInlineImageAction = menu.addAction( i18n("Add as &Inline Image") );
       /*const QAction *addAsAttachmentAction = */menu.addAction( i18n("Add as &Attachment") );
