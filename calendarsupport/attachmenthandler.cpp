@@ -1,5 +1,5 @@
 /*
-  This file is part of the kcal library.
+  This file is part of the kcalutils library.
 
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
@@ -29,34 +29,33 @@
   @author Allen Winter \<winter@kde.org\>
 */
 #include "attachmenthandler.h"
-#include "attachment.h"
-#include "calendarresources.h"
-#include "incidence.h"
-#include "scheduler.h"
 
-#include <kapplication.h>
-#include <kfiledialog.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kmimetype.h>
-#include <krun.h>
-#include <ktempfile.h>
-#include <kio/netaccess.h>
+#include <kcalcore/schedulemessage.h>
+using namespace KCalCore;
 
-#include <qfile.h>
+#include <KFileDialog>
+#include <KLocale>
+#include <KMessageBox>
+#include <KMimeType>
+#include <KRun>
+#include <KTemporaryFile>
+#include <KToolInvocation>
+#include <KIO/NetAccess>
 
-namespace KCal {
+#include <QFile>
 
-Attachment *AttachmentHandler::find( QWidget *parent, const QString &attachmentName,
-                                     Incidence *incidence )
+namespace KCalUtils {
+
+Attachment::Ptr AttachmentHandler::find( QWidget *parent, const QString &attachmentName,
+                                         Incidence::Ptr incidence )
 {
   if ( !incidence ) {
-    return 0;
+    return Attachment::Ptr();
   }
 
   // get the attachment by name from the incidence
   Attachment::List as = incidence->attachments();
-  Attachment *a = 0;
+  Attachment::Ptr a;
   if ( as.count() > 0 ) {
     Attachment::List::ConstIterator it;
     for ( it = as.begin(); it != as.end(); ++it ) {
@@ -70,82 +69,80 @@ Attachment *AttachmentHandler::find( QWidget *parent, const QString &attachmentN
   if ( !a ) {
     KMessageBox::error(
       parent,
-      i18n( "No attachment named \"%1\" found in the incidence." ).arg( attachmentName ) );
-    return 0;
+      i18n( "No attachment named \"%1\" found in the incidence.", attachmentName ) );
+    return Attachment::Ptr();
   }
 
   if ( a->isUri() ) {
-    if ( !KIO::NetAccess::exists( a->uri(), true, parent ) ) {
+    if ( !KIO::NetAccess::exists( a->uri(), KIO::NetAccess::SourceSide, parent ) ) {
       KMessageBox::sorry(
         parent,
-        i18n( "The attachment \"%1\" is a web link that is inaccessible from this computer. " ).
-        arg( KURL::decode_string( a->uri() ) ) );
-      return 0;
+        i18n( "The attachment \"%1\" is a web link that is inaccessible from this computer. ",
+              KUrl::fromPercentEncoding( a->uri().toLatin1() ) ) );
+      return Attachment::Ptr();
     }
   }
   return a;
 }
 
-Attachment *AttachmentHandler::find( QWidget *parent,
-                                     const QString &attachmentName, const QString &uid )
+Attachment::Ptr AttachmentHandler::find( QWidget *parent,
+                                         const QString &attachmentName, const QString &uid )
 {
   if ( uid.isEmpty() ) {
-    return 0;
+    return Attachment::Ptr();
   }
 
   CalendarResources *cal = new CalendarResources( "UTC" );
   cal->readConfig();
   cal->load();
-  Incidence *incidence = cal->incidence( uid );
+  Incidence::Ptr incidence = cal->incidence( uid );
   if ( !incidence ) {
     KMessageBox::error(
       parent,
       i18n( "The incidence that owns the attachment named \"%1\" could not be found. "
-            "Perhaps it was removed from your calendar?" ).arg( attachmentName ) );
-    return 0;
+            "Perhaps it was removed from your calendar?", attachmentName ) );
+    return Attachment::Ptr();
   }
 
   return find( parent, attachmentName, incidence );
 }
 
-Attachment *AttachmentHandler::find( QWidget *parent, const QString &attachmentName,
-                                     ScheduleMessage *message )
+Attachment::Ptr AttachmentHandler::find( QWidget *parent, const QString &attachmentName,
+                                         ScheduleMessage *message )
 {
   if ( !message ) {
-    return 0;
+    return Attachment::Ptr();
   }
 
-  Incidence *incidence = dynamic_cast<Incidence*>( message->event() );
+  Incidence::Ptr incidence = message->event().dynamicCast<Incidence>();
   if ( !incidence ) {
     KMessageBox::error(
       parent,
       i18n( "The calendar invitation stored in this email message is broken in some way. "
             "Unable to continue." ) );
-    return 0;
+    return Attachment::Ptr();
   }
 
   return find( parent, attachmentName, incidence );
 }
 
-static KTempFile *s_tempFile = 0;
+static KTemporaryFile *s_tempFile = 0;
 
-static KURL tempFileForAttachment( Attachment *attachment )
+static KUrl tempFileForAttachment( const Attachment::Ptr attachment )
 {
-  KURL url;
+  KUrl url;
+
+  s_tempFile = new KTemporaryFile();
+  s_tempFile->setAutoRemove( false );
   QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
   if ( !patterns.empty() ) {
-    s_tempFile = new KTempFile( QString::null,
-                                QString( patterns.first() ).remove( '*' ), 0600 );
-  } else {
-    s_tempFile = new KTempFile( QString::null, QString::null, 0600 );
+    s_tempFile->setSuffix( QString( patterns.first() ).remove( '*' ) );
   }
-
-  QFile *qfile = s_tempFile->file();
-  qfile->open( IO_WriteOnly );
-  QTextStream stream( qfile );
-  stream.writeRawBytes( attachment->decodedData().data(), attachment->size() );
+  s_tempFile->open();
+  s_tempFile->setPermissions( QFile::ReadUser );
+  s_tempFile->write( QByteArray::fromBase64( attachment->data() ) );
   s_tempFile->close();
-  QFile tf( s_tempFile->name() );
+  QFile tf( s_tempFile->fileName() );
   if ( tf.size() != attachment->size() ) {
     //whoops. failed to write the entire attachment. return an invalid URL.
     delete s_tempFile;
@@ -153,11 +150,11 @@ static KURL tempFileForAttachment( Attachment *attachment )
     return url;
   }
 
-  url.setPath( s_tempFile->name() );
+  url.setPath( s_tempFile->fileName() );
   return url;
 }
 
-bool AttachmentHandler::view( QWidget *parent, Attachment *attachment )
+bool AttachmentHandler::view( QWidget *parent, const Attachment::Ptr attachment )
 {
   if ( !attachment ) {
     return false;
@@ -165,12 +162,12 @@ bool AttachmentHandler::view( QWidget *parent, Attachment *attachment )
 
   bool stat = true;
   if ( attachment->isUri() ) {
-    kapp->invokeBrowser( attachment->uri() );
+    KToolInvocation::invokeBrowser( attachment->uri() );
   } else {
     // put the attachment in a temporary file and launch it
-    KURL tempUrl = tempFileForAttachment( attachment );
+    KUrl tempUrl = tempFileForAttachment( attachment );
     if ( tempUrl.isValid() ) {
-      stat = KRun::runURL( tempUrl, attachment->mimeType(), false, true );
+      stat = KRun::runUrl( tempUrl, attachment->mimeType(), 0, true );
     } else {
       stat = false;
       KMessageBox::error(
@@ -183,7 +180,8 @@ bool AttachmentHandler::view( QWidget *parent, Attachment *attachment )
   return stat;
 }
 
-bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName, Incidence *incidence )
+bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName,
+                              const Incidence::Ptr incidence )
 {
   return view( parent, find( parent, attachmentName, incidence ) );
 }
@@ -199,29 +197,29 @@ bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName,
   return view( parent, find( parent, attachmentName, message ) );
 }
 
-bool AttachmentHandler::saveAs( QWidget *parent, Attachment *attachment )
+bool AttachmentHandler::saveAs( QWidget *parent, const Attachment::Ptr attachment )
 {
   // get the saveas file name
-  QString saveAsFile = KFileDialog::getSaveFileName( attachment->label(), QString::null, parent,
+  QString saveAsFile = KFileDialog::getSaveFileName( attachment->label(), QString(), parent,
                                                      i18n( "Save Attachment" ) );
   if ( saveAsFile.isEmpty() ||
        ( QFile( saveAsFile ).exists() &&
          ( KMessageBox::warningYesNo(
              parent,
-             i18n( "%1 already exists. Do you want to overwrite it?").
-             arg( saveAsFile ) ) == KMessageBox::No ) ) ) {
+             i18n( "%1 already exists. Do you want to overwrite it?",
+                   saveAsFile ) ) == KMessageBox::No ) ) ) {
     return false;
   }
 
   bool stat = false;
   if ( attachment->isUri() ) {
     // save the attachment url
-    stat = KIO::NetAccess::file_copy( attachment->uri(), KURL( saveAsFile ), -1, true );
+    stat = KIO::NetAccess::file_copy( attachment->uri(), KUrl( saveAsFile ) );
   } else {
     // put the attachment in a temporary file and save it
-    KURL tempUrl = tempFileForAttachment( attachment );
+    KUrl tempUrl = tempFileForAttachment( attachment );
     if ( tempUrl.isValid() ) {
-      stat = KIO::NetAccess::file_copy( tempUrl, KURL( saveAsFile ), -1, true );
+      stat = KIO::NetAccess::file_copy( tempUrl, KUrl( saveAsFile ) );
       if ( !stat && KIO::NetAccess::lastError() ) {
         KMessageBox::error( parent, KIO::NetAccess::lastErrorString() );
       }
@@ -238,7 +236,7 @@ bool AttachmentHandler::saveAs( QWidget *parent, Attachment *attachment )
 }
 
 bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName,
-                                Incidence *incidence )
+                                const Incidence::Ptr incidence )
 {
   return saveAs( parent, find( parent, attachmentName, incidence ) );
 }

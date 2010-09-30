@@ -1,5 +1,5 @@
 /*
-  This file is part of the kcal library.
+  This file is part of the kcalutils library.
 
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
@@ -25,18 +25,20 @@
 
   @author Allen Winter \<winter@kde.org\>
 */
+#ifndef KCALUTILS_ATTACHMENTHANDLER_H
+#define KCALUTILS_ATTACHMENTHANDLER_H
 
-#ifndef KCAL_ATTACHMENTHANDLER_H
-#define KCAL_ATTACHMENTHANDLER_H
+#include <kcalcore/attachment.h>
+#include <kcalcore/incidence.h>
+
+namespace KCalCore {
+  class ScheduleMessage;
+}
 
 class QString;
 class QWidget;
 
-namespace KCal {
-
-class Attachment;
-class Incidence;
-class ScheduleMessage;
+namespace KCalUtils {
 
 /**
   @brief
@@ -55,7 +57,8 @@ namespace AttachmentHandler {
 
     @return a pointer to the Attachment object located; 0 if no such attachment could be found.
   */
-  Attachment *find( QWidget *parent, const QString &attachmentName, Incidence *incidence );
+  KCalCore::Attachment::Ptr find( QWidget *parent, const QString &attachmentName,
+                                  const KCalCore::Incidence::Ptr incidence );
 
   /**
     Finds the attachment in the user's calendar, by @p attachmentName and a scheduler message;
@@ -67,7 +70,8 @@ namespace AttachmentHandler {
 
     @return a pointer to the Attachment object located; 0 if no such attachment could be found.
   */
-  Attachment *find( QWidget *parent, const QString &attachmentName, ScheduleMessage *message );
+  KCalCore::Attachment::Ptr find( QWidget *parent, const QString &attachmentName,
+                                  KCalCore::ScheduleMessage *message );
 
   /**
     Finds the attachment in the user's calendar, by @p attachmentName and @p uid.
@@ -78,7 +82,8 @@ namespace AttachmentHandler {
 
     @return a pointer to the Attachment object located; 0 if no such attachment could be found.
   */
-  Attachment *find( QWidget *parent, const QString &attachmentName, const QString &uid );
+  KCalCore::Attachment::Ptr find( QWidget *parent, const QString &attachmentName,
+                                  const QString &uid );
 
   /**
     Launches a viewer on the specified attachment.
@@ -88,7 +93,7 @@ namespace AttachmentHandler {
 
     @return true if the viewer program successfully launched; false otherwise.
   */
-  bool view( QWidget *parent, Attachment *attachment );
+  bool view( QWidget *parent, const KCalCore::Attachment::Ptr attachment );
 
   /**
     Launches a viewer on the specified attachment.
@@ -100,7 +105,8 @@ namespace AttachmentHandler {
     @return true if the attachment could be found and the viewer program successfully launched;
     false otherwise.
   */
-  bool view( QWidget *parent, const QString &attachmentName, Incidence *incidence );
+  bool view( QWidget *parent, const QString &attachmentName,
+             const KCalCore::Incidence::Ptr incidence );
 
   /**
     Launches a viewer on the specified attachment.
@@ -124,7 +130,7 @@ namespace AttachmentHandler {
     @return true if the attachment could be found and the viewer program successfully launched;
     false otherwise.
   */
-  bool view( QWidget *parent, const QString &attachmentName, ScheduleMessage *message );
+  bool view( QWidget *parent, const QString &attachmentName, KCalCore::ScheduleMessage *message );
 
   /**
     Saves the specified attachment to a file of the user's choice.
@@ -134,7 +140,7 @@ namespace AttachmentHandler {
 
     @return true if the save operation was successful; false otherwise.
   */
-  bool saveAs( QWidget *parent, Attachment *attachment );
+  bool saveAs( QWidget *parent, const KCalCore::Attachment::Ptr attachment );
 
   /**
     Saves the specified attachment to a file of the user's choice.
@@ -146,7 +152,8 @@ namespace AttachmentHandler {
     @return true if the attachment could be found and the save operation was successful;
     false otherwise.
   */
-  bool saveAs( QWidget *parent, const QString &attachmentName, Incidence *incidence );
+  bool saveAs( QWidget *parent, const QString &attachmentName,
+               const KCalCore::Incidence::Ptr incidence );
 
   /**
     Saves the specified attachment to a file of the user's choice.
@@ -170,7 +177,7 @@ namespace AttachmentHandler {
     @return true if the attachment could be found and the save operation was successful;
     false otherwise.
   */
-  bool saveAs( QWidget *parent, const QString &attachmentName, ScheduleMessage *message );
+  bool saveAs( QWidget *parent, const QString &attachmentName, KCalCore::ScheduleMessage *message );
 }
 
 }
