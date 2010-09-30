@@ -27,7 +27,7 @@ Item {
 
     property alias model: list.model
     property alias currentIndex: list.currentIndex
-    property int value
+    property int value: -1
     signal selected()
 
     onValueChanged: {
