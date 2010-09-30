@@ -70,21 +70,6 @@ Item {
         anchors.rightMargin: 5
     }
 
-    function relativeopacity(y1, y2, height) {
-        var opacity = (y2 + y1) / height;
-        if (opacity > 1)
-            return 2.4 - opacity;
-        else if (opacity == 1)
-            return opacity
-        return opacity + 0.4
-    }
-
-    function indexopacity(index) {
-        if (index == list.currentIndex)
-            return 1;
-        return 0;
-    }
-
     function toggleState(newValue)
     {
         state = (state == "selected") ? "unselected" : "selected";
@@ -99,8 +84,7 @@ Item {
         Item {
             id: fadewrapper
             width: fadeselector.width
-            height: fadeselector.height/2
-            opacity: fadeselector.focus ? relativeopacity(parent.y, y, height) : indexopacity(index);
+            height: fadeselector.height
             Text {
                 text: (value == "") ? index : value
                 anchors.fill: parent
@@ -139,8 +123,8 @@ Item {
         highlight: highlight
         highlightRangeMode: ListView.StrictlyEnforceRange
         highlightFollowsCurrentItem: true
-        preferredHighlightBegin: fadeselector.height/3
-        preferredHighlightEnd: fadeselector.height/2.7
+        preferredHighlightBegin: 0
+        preferredHighlightEnd: fadeselector.height
 
         anchors.fill: parent
         anchors.leftMargin: 5
