@@ -2,6 +2,8 @@ if(MESSAGEVIEWER_SUPPORTED)
   add_subdirectory( messageviewer )
 endif(MESSAGEVIEWER_SUPPORTED)
 
-add_subdirectory( ktexteditor )
+if (KDEPIM_BUILD_DESKTOP)
+  add_subdirectory( ktexteditor )
+endif (KDEPIM_BUILD_DESKTOP)
 
 add_subdirectory( kaddressbook )

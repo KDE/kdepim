@@ -12,6 +12,7 @@ option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branc
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
 option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
+option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 
 if(KDEPIM_BUILD_STATIC)
   set(LIBRARY_TYPE STATIC)
@@ -293,8 +294,11 @@ endif (NOT WINCE)
       add_definitions(-DKMAIL_SUPPORTED)
     endif(BUILD_kmail)
 
-    macro_optional_add_subdirectory(kmailcvt)
-    macro_optional_add_subdirectory(ksendemail)
+    if (KDEPIM_BUILD_DESKTOP)
+      macro_optional_add_subdirectory(kmailcvt)
+      macro_optional_add_subdirectory(ksendemail)
+    endif (KDEPIM_BUILD_DESKTOP)
+
     macro_optional_add_subdirectory(korganizer)
 
     # disabled until Strigi dep is removed
@@ -305,17 +309,17 @@ endif (NOT WINCE)
     endif(NOT WINCE)
   endif(QGPGME_FOUND)
 
-  if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+  if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(knode)
-  endif(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+  endif(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
 
-  if (QT_QT3SUPPORT_FOUND)
+  if (QT_QT3SUPPORT_FOUND AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(akregator)
-  endif (QT_QT3SUPPORT_FOUND)
+  endif (QT_QT3SUPPORT_FOUND AND KDEPIM_BUILD_DESKTOP)
   macro_optional_add_subdirectory(akonadiconsole)
-  if (KDEPIMLIBS_KCAL_LIBRARY)
+  if (KDEPIMLIBS_KCAL_LIBRARY AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(blogilo)
-  endif (KDEPIMLIBS_KCAL_LIBRARY)
+  endif (KDEPIMLIBS_KCAL_LIBRARY AND KDEPIM_BUILD_DESKTOP)
   macro_optional_add_subdirectory(console)
 
   if (Grantlee_FOUND)
@@ -334,18 +338,20 @@ endif (NOT WINCE)
     include_directories(${CMAKE_SOURCE_DIR}/runtime ${CMAKE_BINARY_DIR}/runtime)
   endif (BUILD_runtime)
 
-  if (KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW)
+  if (KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(kalarm)
-  endif (KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW)
+  endif (KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW AND KDEPIM_BUILD_DESKTOP)
 
-  macro_optional_add_subdirectory(kaddressbook)
-  if(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+  if (KDEPIM_BUILD_DESKTOP)
+    macro_optional_add_subdirectory(kaddressbook)
+  endif (KDEPIM_BUILD_DESKTOP)
+  if(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(ktimetracker)
-  endif(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+  endif(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
 
-  if (QT_QT3SUPPORT_FOUND)
+  if (QT_QT3SUPPORT_FOUND AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(kontact) # must be the last one.
-  endif (QT_QT3SUPPORT_FOUND)
+  endif (QT_QT3SUPPORT_FOUND AND KDEPIM_BUILD_DESKTOP)
 
   # These targets depend on optional applications
   if (KDEPIMLIBS_KRESOURCES_LIBRARY)
@@ -368,4 +374,3 @@ if(NOT QGPGME_FOUND)
 endif(NOT QGPGME_FOUND)
 # All done, let's display what we found...
 macro_display_feature_log()
-
