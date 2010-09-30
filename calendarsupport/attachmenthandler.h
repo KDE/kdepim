@@ -49,133 +49,139 @@ namespace AttachmentHandler {
   /**
     Finds the attachment in the user's calendar, by @p attachmentName and @p incidence.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
     @param incidence is a pointer to a valid Incidence object containing the attachment.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return a pointer to the Attachment object located; 0 if no such attachment could be found.
   */
-  KCalCore::Attachment::Ptr find( QWidget *parent, const QString &attachmentName,
-                                  const KCalCore::Incidence::Ptr &incidence );
+  KCalCore::Attachment::Ptr find( const QString &attachmentName,
+                                  const KCalCore::Incidence::Ptr &incidence,
+                                  QWidget *parent );
 
   /**
     Finds the attachment in the user's calendar, by @p attachmentName and a scheduler message;
     in other words, this function is intended to retrieve attachments from calendar invitations.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
     @param message is a pointer to a valid ScheduleMessage object containing the attachment.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return a pointer to the Attachment object located; 0 if no such attachment could be found.
   */
-  KCalCore::Attachment::Ptr find( QWidget *parent, const QString &attachmentName,
-                                  KCalCore::ScheduleMessage *message );
+  KCalCore::Attachment::Ptr find( const QString &attachmentName,
+                                  KCalCore::ScheduleMessage *message,
+                                  QWidget *parent );
 
   /**
     Finds the attachment in the user's calendar, by @p attachmentName and @p uid.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
     @param uid is a QString containing a UID of the incidence containing the attachment.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return a pointer to the Attachment object located; 0 if no such attachment could be found.
   */
-  KCalCore::Attachment::Ptr find( QWidget *parent, const QString &attachmentName,
-                                  const QString &uid );
+  KCalCore::Attachment::Ptr find( const QString &attachmentName,
+                                  const QString &uid,
+                                  QWidget *parent );
 
   /**
     Launches a viewer on the specified attachment.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachment is a pointer to a valid Attachment object.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return true if the viewer program successfully launched; false otherwise.
   */
-  bool view( QWidget *parent, const KCalCore::Attachment::Ptr &attachment );
+  bool view( const KCalCore::Attachment::Ptr &attachment,
+             QWidget *parent );
 
   /**
     Launches a viewer on the specified attachment.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
     @param incidence is a pointer to a valid Incidence object containing the attachment.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return true if the attachment could be found and the viewer program successfully launched;
     false otherwise.
   */
-  bool view( QWidget *parent, const QString &attachmentName,
-             const KCalCore::Incidence::Ptr &incidence );
+  bool view( const QString &attachmentName,
+             const KCalCore::Incidence::Ptr &incidence,
+             QWidget *parent );
 
   /**
     Launches a viewer on the specified attachment.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
     @param uid is a QString containing a UID of the incidence containing the attachment.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return true if the attachment could be found and the viewer program successfully launched;
     false otherwise.
   */
-  bool view( QWidget *parent, const QString &attachmentName, const QString &uid );
+  bool view( const QString &attachmentName, const QString &uid, QWidget *parent );
 
   /**
     Launches a viewer on the specified attachment.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
     @param message is a pointer to a valid ScheduleMessage object containing the attachment.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return true if the attachment could be found and the viewer program successfully launched;
     false otherwise.
   */
-  bool view( QWidget *parent, const QString &attachmentName, KCalCore::ScheduleMessage *message );
+  bool view( const QString &attachmentName, KCalCore::ScheduleMessage *message, QWidget *parent );
 
   /**
     Saves the specified attachment to a file of the user's choice.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachment is a pointer to a valid Attachment object.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return true if the save operation was successful; false otherwise.
   */
-  bool saveAs( QWidget *parent, const KCalCore::Attachment::Ptr &attachment );
+  bool saveAs( const KCalCore::Attachment::Ptr &attachment, QWidget *parent );
 
   /**
     Saves the specified attachment to a file of the user's choice.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
     @param incidence is a pointer to a valid Incidence object containing the attachment.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return true if the attachment could be found and the save operation was successful;
     false otherwise.
   */
-  bool saveAs( QWidget *parent, const QString &attachmentName,
-               const KCalCore::Incidence::Ptr &incidence );
+  bool saveAs( const QString &attachmentName,
+               const KCalCore::Incidence::Ptr &incidence,
+               QWidget *parent );
 
   /**
     Saves the specified attachment to a file of the user's choice.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
     @param uid is a QString containing a UID of the incidence containing the attachment.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return true if the attachment could be found and the save operation was successful;
     false otherwise.
   */
-  bool saveAs( QWidget *parent, const QString &attachmentName, const QString &uid );
+  bool saveAs( const QString &attachmentName, const QString &uid, QWidget *parent );
 
   /**
     Saves the specified attachment to a file of the user's choice.
 
-    @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
     @param message is a pointer to a valid ScheduleMessage object containing the attachment.
+    @param parent is the parent widget for the dialogs used in this function.
 
     @return true if the attachment could be found and the save operation was successful;
     false otherwise.
   */
-  bool saveAs( QWidget *parent, const QString &attachmentName, KCalCore::ScheduleMessage *message );
+  bool saveAs( const QString &attachmentName, KCalCore::ScheduleMessage *message, QWidget *parent );
 }
 
 }

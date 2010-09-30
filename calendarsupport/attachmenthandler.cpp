@@ -45,9 +45,9 @@ using namespace KCalCore;
 
 namespace CalendarSupport {
 
-Attachment::Ptr AttachmentHandler::find( QWidget *parent,
-                                         const QString &attachmentName,
-                                         const Incidence::Ptr &incidence )
+Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
+                                         const Incidence::Ptr &incidence,
+                                         QWidget *parent )
 {
   if ( !incidence ) {
     return Attachment::Ptr();
@@ -85,9 +85,8 @@ Attachment::Ptr AttachmentHandler::find( QWidget *parent,
   return a;
 }
 
-Attachment::Ptr AttachmentHandler::find( QWidget *parent,
-                                         const QString &attachmentName,
-                                         onst QString &uid )
+Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
+                                         const QString &uid, QWidget *parent )
 {
   if ( uid.isEmpty() ) {
     return Attachment::Ptr();
@@ -108,9 +107,8 @@ Attachment::Ptr AttachmentHandler::find( QWidget *parent,
   return find( parent, attachmentName, incidence );
 }
 
-Attachment::Ptr AttachmentHandler::find( QWidget *parent,
-                                         const QString &attachmentName,
-                                         ScheduleMessage *message )
+Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
+                                         ScheduleMessage *message, QWidget *parent )
 {
   if ( !message ) {
     return Attachment::Ptr();
@@ -156,7 +154,7 @@ static KUrl tempFileForAttachment( const Attachment::Ptr &attachment )
   return url;
 }
 
-bool AttachmentHandler::view( QWidget *parent, const Attachment::Ptr &attachment )
+bool AttachmentHandler::view( const Attachment::Ptr &attachment, QWidget *parent )
 {
   if ( !attachment ) {
     return false;
@@ -182,24 +180,24 @@ bool AttachmentHandler::view( QWidget *parent, const Attachment::Ptr &attachment
   return stat;
 }
 
-bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName,
-                              const Incidence::Ptr &incidence )
+bool AttachmentHandler::view( const QString &attachmentName,
+                              const Incidence::Ptr &incidence, QWidget *parent )
 {
   return view( parent, find( parent, attachmentName, incidence ) );
 }
 
-bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName, const QString &uid )
+bool AttachmentHandler::view( const QString &attachmentName, const QString &uid, QWidget *parent )
 {
   return view( parent, find( parent, attachmentName, uid ) );
 }
 
-bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName,
-                              ScheduleMessage *message )
+bool AttachmentHandler::view( const QString &attachmentName,
+                              ScheduleMessage *message, QWidget *parent )
 {
   return view( parent, find( parent, attachmentName, message ) );
 }
 
-bool AttachmentHandler::saveAs( QWidget *parent, const Attachment::Ptr &attachment )
+bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment, QWidget *parent )
 {
   // get the saveas file name
   QString saveAsFile = KFileDialog::getSaveFileName( attachment->label(), QString(), parent,
@@ -237,19 +235,19 @@ bool AttachmentHandler::saveAs( QWidget *parent, const Attachment::Ptr &attachme
   return stat;
 }
 
-bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName,
-                                const Incidence::Ptr &incidence )
+bool AttachmentHandler::saveAs( const QString &attachmentName,
+                                const Incidence::Ptr &incidence, QWidget *parent )
 {
   return saveAs( parent, find( parent, attachmentName, incidence ) );
 }
 
-bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName, const QString &uid )
+bool AttachmentHandler::saveAs( const QString &attachmentName, const QString &uid, QWidget *parent )
 {
   return saveAs( parent, find( parent, attachmentName, uid ) );
 }
 
-bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName,
-                                ScheduleMessage *message )
+bool AttachmentHandler::saveAs( const QString &attachmentName,
+                                ScheduleMessage *message, QWidget *parent )
 {
   return saveAs( parent, find( parent, attachmentName, message ) );
 }
