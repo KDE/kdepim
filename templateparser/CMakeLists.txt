@@ -28,10 +28,12 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/messagecore
 )
 
-if (NOT WINCE)
-
 kde4_add_kcfg_files(templateparser_LIB_SRCS
   templatesconfiguration_kfg.kcfgc
+)  
+
+if (NOT WINCE)
+kde4_add_kcfg_files(templateparser_LIB_SRCS
   customtemplates_kfg.kcfgc
   globalsettings_base.kcfgc 
 )

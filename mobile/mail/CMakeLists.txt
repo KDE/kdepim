@@ -6,6 +6,9 @@ add_subdirectory(tests)
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo/
+  ${CMAKE_SOURCE_DIR}/kmail/
+  ${CMAKE_BINARY_DIR}/kmail/kcm_kpimidentities/
+  ${CMAKE_SOURCE_DIR}/kmail/kcm_kpimidentities/
   ${Boost_INCLUDE_DIR}
 )
 
@@ -52,6 +55,10 @@ target_link_libraries(kmail-mobile
 if (RUNTIME_PLUGINS_STATIC)
   target_link_libraries(kmail-mobile akonadi_serializer_mail)
 endif (RUNTIME_PLUGINS_STATIC)
+
+if (WINCE)
+  target_link_libraries(kmail-mobile kcm_kpimidentities)
+endif(WINCE)
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES kmail-mobile.sh DESTINATION ${BIN_INSTALL_DIR})

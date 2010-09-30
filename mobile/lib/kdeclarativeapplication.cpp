@@ -37,6 +37,7 @@ KDeclarativeApplication::KDeclarativeApplication()
   setFont( f );
 #endif
 
+#ifndef Q_OS_WINCE
   QPalette p;
   p.setColor( QPalette::Window,          QColor( 0,     0,   0 ) );
   p.setColor( QPalette::WindowText,      QColor( 255, 255, 255 ) );
@@ -63,6 +64,7 @@ KDeclarativeApplication::KDeclarativeApplication()
   p.setColor( QPalette::Disabled, QPalette::HighlightedText, QColor(  26,  26,  26 ) );
 
   setPalette( p );
+#endif
 
   setStyle( "plastique" ); // to avoid oxygen artefacts
 #endif

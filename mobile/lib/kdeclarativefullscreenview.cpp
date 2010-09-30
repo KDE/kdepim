@@ -87,8 +87,10 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
 #if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE)
   setWindowState( Qt::WindowFullScreen );
+#ifndef Q_OS_WINCE
   // use the oxygen black on whilte palette instead of the native white on black maemo5 one
   setPalette( KGlobalSettings::createApplicationPalette( KGlobal::config() ) );
+#endif
 #else
   // on the desktop start with a nice size
   resize(800, 480);
@@ -172,6 +174,7 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
     t.start();
     kWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
   }
+  qDebug() << "trying to load \"" +  source << "\"";
   setSource( source );
   if ( debugTiming ) {
     kWarning() << "setSourceDone" << t.elapsed() << &t;

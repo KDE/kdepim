@@ -40,9 +40,7 @@ using namespace Akonadi;
 typedef DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral> DeclarativeEditorGeneral;
 typedef DeclarativeWidgetBase<EditorBusiness, ContactEditorView, &ContactEditorView::setEditorBusiness> DeclarativeEditorBusiness;
 typedef DeclarativeWidgetBase<EditorLocation, ContactEditorView, &ContactEditorView::setEditorLocation> DeclarativeEditorLocation;
-#ifndef Q_OS_WINCE
 typedef DeclarativeWidgetBase<EditorCrypto, ContactEditorView, &ContactEditorView::setEditorCrypto> DeclarativeEditorCrypto;
-#endif
 typedef DeclarativeWidgetBase<EditorMore, ContactEditorView, &ContactEditorView::setEditorMore> DeclarativeEditorMore;
 
 class ContactEditorView::Private : public IncidenceEditorNG::ItemEditorUi
