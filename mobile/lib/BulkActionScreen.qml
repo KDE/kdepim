@@ -55,8 +55,22 @@ QML.Rectangle {
     anchors.right : parent.right
     anchors.bottom : parent.bottom
     anchors.left : actionList.right
+
+    Akonadi.BulkActionFilterLineEdit {
+      id: bulkActionFilterLineEdit
+      anchors.left : parent.left
+      anchors.top : parent.top
+      anchors.bottom : headerList.top
+      anchors.right : parent.right
+      visible : false
+      height : 0
+    }
+
     QML.Item {
-      anchors.fill : parent
+      anchors.left : parent.left
+      anchors.top : bulkActionFilterLineEdit.bottom
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
       id : headerList
     }
 

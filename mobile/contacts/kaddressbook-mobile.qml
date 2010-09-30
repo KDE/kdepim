@@ -175,6 +175,7 @@ KPIM.MainView {
       onSelectedClicked : {
         mainWorkView.visible = false
         bulkActionScreen.visible = true
+        application.isBulkActionScreenSelected = true
       }
     }
 
@@ -387,6 +388,7 @@ KPIM.MainView {
                 actionPanelNew.collapse();
                 mainWorkView.visible = false
                 bulkActionScreen.visible = true
+                application.isBulkActionScreenSelected = true
               }
             }
           ]
@@ -428,6 +430,7 @@ KPIM.MainView {
     backgroundImage : backgroundImage.source
 
     visible : false
+
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18n("%1 folders", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
@@ -440,6 +443,7 @@ KPIM.MainView {
     }
     onBackClicked : {
       bulkActionScreen.visible = false
+      application.isBulkActionScreenSelected = false
       mainWorkView.visible = true
     }
   }

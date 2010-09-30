@@ -80,6 +80,8 @@ public: /// members
   Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
   ItemSelectHook                     *m_hook;
   KLineEdit                          *mFilterLineEdit;
+  KLineEdit                          *mBulkActionFilterLineEdit;
+  bool                               mIsBulkActionScreenSelected;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();
@@ -91,6 +93,7 @@ public slots:
   void saveState();
   void restoreState();
   void filterLineEditChanged( const QString &text );
+  void bulkActionFilterLineEditChanged( const QString &text );
 };
 
 #endif // KDECLARATIVEMAINVIEW_P_H

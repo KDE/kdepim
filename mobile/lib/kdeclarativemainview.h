@@ -46,6 +46,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
   Q_PROPERTY(int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged)
   Q_PROPERTY(bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged)
   Q_PROPERTY(QString version READ version CONSTANT)
+  Q_PROPERTY(bool isBulkActionScreenSelected READ isBulkActionScreenSelected WRITE setBulkActionScreenSelected NOTIFY isBulkActionScreenSelectedChanged)
 
 protected:
   /**
@@ -118,9 +119,12 @@ public:
 
   QString version() const;
 
+  bool isBulkActionScreenSelected() const;
+
   Akonadi::ChangeRecorder* monitor() const;
 
   void setFilterLineEdit( KLineEdit *lineEdit );
+  void setBulkActionFilterLineEdit( KLineEdit *lineEdit );
 
 public slots:
   void setSelectedAccount( int row );
@@ -146,10 +150,13 @@ public slots:
   void clearPersistedSelection(const QString &key);
   void restorePersistedSelection(const QString &key);
 
+  void setBulkActionScreenSelected( bool selected );
+
 signals:
   void numSelectedAccountsChanged();
   void selectedItemChanged( int row, qlonglong itemId );
   void isLoadingSelectedChanged();
+  void isBulkActionScreenSelectedChanged();
 
 protected:
   QItemSelectionModel* regularSelectionModel() const;
@@ -167,6 +174,7 @@ private:
   Q_DISABLE_COPY( KDeclarativeMainView )
 
   Q_PRIVATE_SLOT( d, void filterLineEditChanged( const QString& ) )
+  Q_PRIVATE_SLOT( d, void bulkActionFilterLineEditChanged( const QString& ) )
 };
 
 #endif // KDECLARATIVEMAINVIEW_H

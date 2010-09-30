@@ -124,7 +124,9 @@ class ActionImageProvider : public QDeclarativeImageProvider
 using namespace Akonadi;
 
 typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setFilterLineEdit> DeclarativeFilterLineEdit;
+typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit> DeclarativeBulkActionFilterLineEdit;
 QML_DECLARE_TYPE( DeclarativeFilterLineEdit )
+QML_DECLARE_TYPE( DeclarativeBulkActionFilterLineEdit )
 
 KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent )
   : KDeclarativeFullScreenView( appName, parent )
@@ -140,6 +142,7 @@ void KDeclarativeMainView::delayedInit()
 {
   kDebug();
   qmlRegisterType<DeclarativeFilterLineEdit>( "org.kde.akonadi", 4, 5, "FilterLineEdit" );
+  qmlRegisterType<DeclarativeBulkActionFilterLineEdit>( "org.kde.akonadi", 4, 5, "BulkActionFilterLineEdit" );
 
   KDeclarativeFullScreenView::delayedInit();
 
@@ -176,7 +179,6 @@ void KDeclarativeMainView::delayedInit()
     kWarning() << "BreadcrumbNavigation factory created" << t.elapsed() << &t;
   }
 
-  qDebug("tokoe: before creation");
   Akonadi::EntityMimeTypeFilterModel *filterModel = new Akonadi::EntityMimeTypeFilterModel(this);
   filterModel->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   filterModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
@@ -185,7 +187,6 @@ void KDeclarativeMainView::delayedInit()
 
   d->mItemFilterModel = itemFilterModel();
   if ( d->mItemFilterModel ) {
-    qDebug("tokoe: itemFilterModel set");
     d->mItemFilterModel->setSourceModel( filterModel );
     d->mItemFilter = d->mItemFilterModel;
   }
@@ -543,6 +544,12 @@ void KDeclarativeMainView::restorePersistedSelection(const QString& key)
   restorer->restoreSelection(selection);
 }
 
+void KDeclarativeMainView::setBulkActionScreenSelected( bool selected )
+{
+  d->mIsBulkActionScreenSelected = selected;
+  emit isBulkActionScreenSelectedChanged();
+}
+
 int KDeclarativeMainView::numSelectedAccounts()
 {
   const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
@@ -604,6 +611,11 @@ QString KDeclarativeMainView::version() const
   return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_SVN_REVISION_STRING, KDEPIM_SVN_LAST_CHANGE );
 }
 
+bool KDeclarativeMainView::isBulkActionScreenSelected() const
+{
+  return d->mIsBulkActionScreenSelected;
+}
+
 Akonadi::ChangeRecorder* KDeclarativeMainView::monitor() const
 {
   return d->mChangeRecorder;
@@ -620,13 +632,26 @@ void KDeclarativeMainView::setFilterLineEdit( KLineEdit *lineEdit )
            d->mItemFilterModel, SLOT( setFilterString( const QString& ) ) );
 }
 
+void KDeclarativeMainView::setBulkActionFilterLineEdit( KLineEdit *lineEdit )
+{
+  d->mBulkActionFilterLineEdit = lineEdit;
+  d->mBulkActionFilterLineEdit->setFixedHeight( 0 );
+  d->mBulkActionFilterLineEdit->setClearButtonShown( true );
+  connect( d->mBulkActionFilterLineEdit, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( bulkActionFilterLineEditChanged( const QString& ) ) );
+  connect( d->mBulkActionFilterLineEdit, SIGNAL( textChanged( const QString& ) ),
+           d->mItemFilterModel, SLOT( setFilterString( const QString& ) ) );
+}
+
 void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )
 {
   static bool isSendingEvent = false;
 
-  if ( !isSendingEvent && !event->text().isEmpty() && d->mFilterLineEdit && d->mItemFilterModel ) {
+  KLineEdit *lineEdit = (d->mIsBulkActionScreenSelected ? d->mBulkActionFilterLineEdit : d->mFilterLineEdit);
+
+  if ( !isSendingEvent && !event->text().isEmpty() && lineEdit && d->mItemFilterModel ) {
     isSendingEvent = true;
-    QCoreApplication::sendEvent( d->mFilterLineEdit, event );
+    QCoreApplication::sendEvent( lineEdit, event );
     isSendingEvent = false;
   } else {
     KDeclarativeFullScreenView::keyPressEvent( event );

@@ -33,6 +33,8 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
   , mItemFilterModel( 0 )
   , mFavsListModel( 0 )
   , mFilterLineEdit( 0 )
+  , mBulkActionFilterLineEdit( 0 )
+  , mIsBulkActionScreenSelected( false )
 { }
 
 void KDeclarativeMainViewPrivate::restoreState()
@@ -82,3 +84,14 @@ void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
   }
 }
 
+void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString &text )
+{
+  if ( !text.isEmpty() && !mBulkActionFilterLineEdit->isVisible() ) {
+    mBulkActionFilterLineEdit->setFixedHeight( 35 );
+    mBulkActionFilterLineEdit->show();
+    mBulkActionFilterLineEdit->setFocus();
+  } else if ( text.isEmpty() && mBulkActionFilterLineEdit->isVisible() ) {
+    mBulkActionFilterLineEdit->setFixedHeight( 0 );
+    mBulkActionFilterLineEdit->hide();
+  }
+}
