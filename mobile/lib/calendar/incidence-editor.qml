@@ -63,10 +63,12 @@ KPIM.MainView {
     }
   }
 
-  function setupModel(total, parent) {
+  function setupModel(start, total, parent) {
     var qmlstr = "import Qt 4.7; ListModel { }";
     var newObject = Qt.createQmlObject(qmlstr, parent);
-    for(var i=1; i <= total; i++) {
+      console.log("\n\n\n----> setupModel");
+    for(var i=start; i <= total; i++) {
+        console.log("--> value: " + i);
         newObject.append({"value": i});
     }
     return newObject;
@@ -99,7 +101,7 @@ KPIM.MainView {
               KPIM.VerticalFadeSelector {
                 id: daySelector
                 height: 100
-                model: mainview.setupModel(myCalendar.daysInMonth, calendarWidget)
+                model: mainview.setupModel(1, myCalendar.daysInMonth, calendarWidget)
                 // value - 1 because the index starts at '0'
                 currentIndex: myCalendar.day - 1
                 onValueChanged: myCalendar.day = value;
@@ -112,7 +114,7 @@ KPIM.MainView {
               KPIM.VerticalFadeSelector {
                 id: monthSelector
                 height: 100
-                model: mainview.setupModel(12, calendarWidget)
+                model: mainview.setupModel(1, 12, calendarWidget)
                 // value - 1 because the index starts at '0'
                 currentIndex: myCalendar.month - 1
                 onValueChanged: myCalendar.month = value;
@@ -126,9 +128,9 @@ KPIM.MainView {
                 id: yearSelector
                 height: 100
                 // high enough :)
-                model: mainview.setupModel(3000, calendarWidget)
-                // value - 1 because the index starts at '0'
-                currentIndex: myCalendar.year - 1
+                model: mainview.setupModel(2000, 2050, calendarWidget)
+                // value - 2000 because the index starts at '0'
+                currentIndex: myCalendar.year - 2000
                 onValueChanged: myCalendar.year = value;
                 onSelected: {
                     daySelector.state = "unselected";
@@ -163,7 +165,8 @@ KPIM.MainView {
               KPIM.VerticalFadeSelector {
                 id: hourSelector
                 height: 100
-                model: 24
+                model: mainview.setupModel(0, 23, clockWidget)
+                // value - 1 because the index starts at '0'
                 currentIndex: myClock.hours
                 onValueChanged: myClock.hours = value;
                 onSelected: {
@@ -175,7 +178,8 @@ KPIM.MainView {
               KPIM.VerticalFadeSelector {
                 id: minuteSelector
                 height: 100
-                model: 60
+                model: mainview.setupModel(0, 59, clockWidget)
+                // value - 1 because the index starts at '0'
                 currentIndex: myClock.minutes
                 onValueChanged: myClock.minutes = value;
                 onSelected: {
@@ -187,7 +191,8 @@ KPIM.MainView {
               KPIM.VerticalFadeSelector {
                 id: secondSelector
                 height: 100
-                model: 60
+                model: mainview.setupModel(0, 59, clockWidget)
+                // value - 1 because the index starts at '0'
                 currentIndex: myClock.seconds
                 onValueChanged: myClock.seconds = value;
                 onSelected: {
