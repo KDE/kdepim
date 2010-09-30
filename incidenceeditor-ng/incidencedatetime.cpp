@@ -48,6 +48,18 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
 #ifdef KDEPIM_MOBILE_UI
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
+
+  // We don't want to see the combobox list / calendar in the mobile version
+  mUi->mStartDateEdit->setReadOnly(true);
+  mUi->mEndDateEdit->setReadOnly(true);
+  mUi->mStartTimeEdit->clear();
+  mUi->mEndTimeEdit->clear();
+
+  // This event filter is not needed in the desktop version
+  mUi->mStartDateEdit->installEventFilter( this );
+  mUi->mEndDateEdit->installEventFilter( this );
+  mUi->mStartTimeEdit->installEventFilter( this );
+  mUi->mEndTimeEdit->installEventFilter( this );
 #else
   mUi->mTimeZoneLabel->setVisible( !mUi->mWholeDayCheck->isChecked() );
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
@@ -57,18 +69,6 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mFreeBusyCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
-
-#ifdef KDEPIM_MOBILE_UI
-  mUi->mStartDateEdit->setReadOnly(true);
-  mUi->mEndDateEdit->setReadOnly(true);
-  mUi->mStartTimeEdit->clear();
-  mUi->mEndTimeEdit->clear();
-#endif
-
-  mUi->mStartDateEdit->installEventFilter( this );
-  mUi->mEndDateEdit->installEventFilter( this );
-  mUi->mStartTimeEdit->installEventFilter( this );
-  mUi->mEndTimeEdit->installEventFilter( this );
 }
 
 IncidenceDateTime::~IncidenceDateTime()
