@@ -96,7 +96,7 @@ KPIM.MainView {
               anchors.top: parent.top
               anchors.topMargin: 50
 
-              KPIM.VerticalFadeSelector {
+              KPIM.VerticalSelector {
                 id: daySelector
                 height: 100
                 model: mainview.setupModel(1, myCalendar.daysInMonth, calendarWidget)
@@ -109,7 +109,7 @@ KPIM.MainView {
                 }
               }
 
-              KPIM.VerticalFadeSelector {
+              KPIM.VerticalSelector {
                 id: monthSelector
                 height: 100
                 model: mainview.setupModel(1, 12, calendarWidget)
@@ -122,10 +122,10 @@ KPIM.MainView {
                 }
               }
 
-              KPIM.VerticalFadeSelector {
+              KPIM.VerticalSelector {
                 id: yearSelector
                 height: 100
-                // high enough :)
+                // high enough == 2050 :)
                 model: mainview.setupModel(2000, 2050, calendarWidget)
                 // value - 2000 because the index starts at '0'
                 currentIndex: myCalendar.year - 2000
@@ -160,7 +160,7 @@ KPIM.MainView {
               anchors.top: parent.top
               anchors.topMargin: 50
 
-              KPIM.VerticalFadeSelector {
+              KPIM.VerticalSelector {
                 id: hourSelector
                 height: 100
                 model: mainview.setupModel(0, 23, clockWidget)
@@ -173,7 +173,7 @@ KPIM.MainView {
                 }
               }
 
-              KPIM.VerticalFadeSelector {
+              KPIM.VerticalSelector {
                 id: minuteSelector
                 height: 100
                 model: mainview.setupModel(0, 59, clockWidget)
@@ -186,7 +186,7 @@ KPIM.MainView {
                 }
               }
 
-              KPIM.VerticalFadeSelector {
+              KPIM.VerticalSelector {
                 id: secondSelector
                 height: 100
                 model: mainview.setupModel(0, 59, clockWidget)

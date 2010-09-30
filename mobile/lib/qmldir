@@ -10,7 +10,7 @@ ReorderListContainer 4.5 ReorderListContainer.qml
 ActionListItem 4.5 ActionListItem.qml
 AttachmentList 4.5 AttachmentList.qml
 CompletionSlider 4.5 CompletionSlider.qml
-VerticalFadeSelector 4.5 VerticalFadeSelector.qml
+VerticalSelector 4.5 VerticalSelector.qml
 Clock 4.5 Clock.qml
 TimeSelector 4.5 TimeSelector.qml
 Calendar 4.5 Calendar.qml

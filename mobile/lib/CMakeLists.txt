@@ -90,7 +90,7 @@ install(FILES
   StartCanvas.qml
   Spinner.qml
   WindowBar.qml
-  VerticalFadeSelector.qml
+  VerticalSelector.qml
   Clock.qml
   Calendar.qml
   CalendarDay.qml
