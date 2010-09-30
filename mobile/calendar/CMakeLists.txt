@@ -18,6 +18,7 @@ set(korganizer_mobile_SRCS
   calendarinterface.cpp
   declarativewidgetwrapper.cpp
   eventlistproxy.cpp
+  eventsfilterproxymodel.cpp
   qmldateedit.cpp
   mainview.cpp
   main.cpp

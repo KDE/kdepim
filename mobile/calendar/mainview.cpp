@@ -23,6 +23,7 @@
 #include "calendarinterface.h"
 #include "calendaradaptor.h"
 #include "eventlistproxy.h"
+#include "eventsfilterproxymodel.h"
 
 #include <kcalcore/event.h>
 #include <kcalcore/filestorage.h>
@@ -436,6 +437,11 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
                            i18nc( "@title:window", "Delete Account?" ) );
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
+}
+
+QAbstractProxyModel* MainView::itemFilterModel() const
+{
+  return new EventsFilterProxyModel();
 }
 
 #include "mainview.moc"

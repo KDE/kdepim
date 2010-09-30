@@ -64,6 +64,8 @@ class MainView : public KDeclarativeMainView
 
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
+    virtual QAbstractProxyModel* itemFilterModel() const;
+
   private Q_SLOTS:
     void slotImportJobDone( KJob* );
 
