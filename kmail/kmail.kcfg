@@ -93,10 +93,12 @@
         <whatsthis>The most recently selected folder in the folder selection dialog.</whatsthis>
         <default>inbox</default>
       </entry>
-
     </group>
 
     <group name="General">
+      <entry name="mailLossDebug" type="Bool">
+        <default>false</default>
+      </entry>
       <entry name="disregardUmask" type="Bool">
         <label>Disregard the users umask setting and use "read-write for the user only" instead</label>
         <default>false</default>

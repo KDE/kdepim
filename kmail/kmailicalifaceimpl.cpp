@@ -551,9 +551,11 @@ QMap<Q_UINT32, QString> KMailICalIfaceImpl::incidencesKolab( const QString& mime
 
   f->open( "incidences" );
 
-  kdDebug(5006) << k_funcinfo << "Getting incidences (" << mimetype << ") for folder " << f->label()
-                << ", starting with index " << startIndex << ", " << nbMessages << " messages." << endl;
-  kdDebug(5006) << "The folder has " << f->count() << " messages." << endl;
+  if ( GlobalSettings::self()->mailLossDebug() ) {
+    kdDebug(5006) << k_funcinfo << "Getting incidences (" << mimetype << ") for folder " << f->label()
+                  << ", starting with index " << startIndex << ", " << nbMessages << " messages." << endl;
+    kdDebug(5006) << "The folder has " << f->count() << " messages." << endl;
+  }
 
   int stopIndex = nbMessages == -1 ? f->count() :
                   QMIN( f->count(), startIndex + nbMessages );

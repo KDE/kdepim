@@ -217,7 +217,7 @@ int KMFolderIndex::writeIndex( bool createEmptyIndex )
 
 bool KMFolderIndex::readIndex()
 {
-  if ( contentsType() != KMail::ContentsTypeMail ) {
+  if ( GlobalSettings::self()->mailLossDebug() ) {
     kdDebug(5006) << k_funcinfo << "Reading index for " << label() << endl;
   }
   Q_INT32 len;
@@ -314,7 +314,7 @@ bool KMFolderIndex::readIndex()
   }
 
   mTotalMsgs = mMsgList.count();
-  if ( contentsType() != KMail::ContentsTypeMail ) {
+  if ( GlobalSettings::self()->mailLossDebug() ) {
     kdDebug(5006) << k_funcinfo << "Done reading the index for " << label() << ", we have " << mTotalMsgs << " messages." << endl;
   }
   return true;
