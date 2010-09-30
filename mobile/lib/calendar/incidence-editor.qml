@@ -66,9 +66,7 @@ KPIM.MainView {
   function setupModel(start, total, parent) {
     var qmlstr = "import Qt 4.7; ListModel { }";
     var newObject = Qt.createQmlObject(qmlstr, parent);
-      console.log("\n\n\n----> setupModel");
     for(var i=start; i <= total; i++) {
-        console.log("--> value: " + i);
         newObject.append({"value": i});
     }
     return newObject;
