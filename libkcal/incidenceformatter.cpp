@@ -283,38 +283,6 @@ static QString attendeeStatusIconPath( Attendee::PartStat status )
  *  Helper functions for the extensive display (display viewer)
  *******************************************************************/
 
-static QString displayViewLinkPerson( const QString &email, const QString &name,
-                                      const QString &uid, Attendee::PartStat status )
-{
-  // Search for new print name or uid, if needed.
-  QPair<QString, QString> s = searchNameAndUid( email, name, uid );
-  const QString printName = s.first;
-  const QString printUid = s.second;
-
-  // Get the icon corresponding to the attendee participation status.
-  QString iconPath = attendeeStatusIconPath( status );
-
-  QString personString;
-  if ( !iconPath.isEmpty() ) {
-    personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
-  }
-
-  // Make the uid link
-  if ( !printUid.isEmpty() ) {
-    personString += htmlAddUidLink( email, printName, printUid );
-  } else {
-    // No UID, just show some text
-    personString += ( printName.isEmpty() ? email : printName );
-  }
-
-  // Make the mailto link
-  if ( !email.isEmpty() ) {
-    personString += "&nbsp;" + htmlAddMailtoLink( email, printName );
-  }
-
-  return personString;
-}
-
 static QString displayViewFormatPerson( const QString &email, const QString &name,
                                         const QString &uid, const QString &iconPath )
 {
@@ -344,6 +312,12 @@ static QString displayViewFormatPerson( const QString &email, const QString &nam
   return personString;
 }
 
+static QString displayViewFormatPerson( const QString &email, const QString &name,
+                                        const QString &uid, Attendee::PartStat status )
+{
+  return displayViewFormatPerson( email, name, uid, attendeeStatusIconPath( status ) );
+}
+
 static QString displayViewFormatAttendeeRoleList( Incidence *incidence, Attendee::Role role )
 {
   QString tmpStr;
@@ -360,7 +334,7 @@ static QString displayViewFormatAttendeeRoleList( Incidence *incidence, Attendee
       // skip attendee that is also the organizer
       continue;
     }
-    tmpStr += displayViewLinkPerson( a->email(), a->name(), a->uid(), a->status() );
+    tmpStr += displayViewFormatPerson( a->email(), a->name(), a->uid(), a->status() );
     if ( !a->delegator().isEmpty() ) {
       tmpStr += i18n(" (delegated by %1)" ).arg( a->delegator() );
     }
@@ -491,16 +465,12 @@ static QString displayViewFormatBirthday( Event *event )
   QString uid = event->customProperty("KABC","UID-1");
   QString name = event->customProperty("KABC","NAME-1");
   QString email= event->customProperty("KABC","EMAIL-1");
-
-  QString iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
   QString tmpStr = displayViewFormatPerson( email, name, uid, QString() );
 
   if ( event->customProperty( "KABC", "ANNIVERSARY") == "YES" ) {
     uid = event->customProperty("KABC","UID-2");
     name = event->customProperty("KABC","NAME-2");
     email= event->customProperty("KABC","EMAIL-2");
-
-    iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
     tmpStr += "<br>" + displayViewFormatPerson( email, name, uid, QString() );
   }
 
