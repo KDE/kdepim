@@ -57,6 +57,7 @@
 
 #include "akonadibreadcrumbnavigationfactory.h"
 #include "declarativewidgetbase.h"
+#include "importhandlerbase.h"
 #include "listproxy.h"
 #include <KActionCollection>
 #include <akonadi/standardactionmanager.h>
@@ -550,6 +551,16 @@ void KDeclarativeMainView::setBulkActionScreenSelected( bool selected )
   emit isBulkActionScreenSelectedChanged();
 }
 
+void KDeclarativeMainView::import()
+{
+  ImportHandlerBase *import = importHandler();
+  if ( !import )
+    return;
+
+  import->setSelectionModel( regularSelectionModel() );
+  import->import();
+}
+
 int KDeclarativeMainView::numSelectedAccounts()
 {
   const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
@@ -602,6 +613,11 @@ void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selecti
 }
 
 QAbstractProxyModel* KDeclarativeMainView::itemFilterModel() const
+{
+  return 0;
+}
+
+ImportHandlerBase* KDeclarativeMainView::importHandler() const
 {
   return 0;
 }

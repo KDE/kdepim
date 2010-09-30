@@ -32,7 +32,6 @@
 #include <KGlobal>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kprogressdialog.h>
 #include <KStandardDirs>
 
 #include <akonadi/agentactionmanager.h>
@@ -49,6 +48,7 @@
 #include "calendar/kcalitembrowseritem.h"
 #include "tasklistproxy.h"
 #include "tasksfilterproxymodel.h"
+#include "tasksimporthandler.h"
 
 #include <QtCore/QPointer>
 #include <QtDeclarative/QDeclarativeEngine>
@@ -58,8 +58,7 @@ using namespace Akonadi;
 QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 
 MainView::MainView( QWidget *parent )
-  : KDeclarativeMainView( "tasks", new TaskListProxy, parent ),
-    m_importProgressDialog( 0 )
+  : KDeclarativeMainView( "tasks", new TaskListProxy, parent )
 {
 }
 
@@ -78,7 +77,7 @@ void MainView::delayedInit()
   actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
 
   action = new KAction( i18n( "Import Tasks" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( importICal() ) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( import() ) );
   actionCollection()->addAction( QLatin1String( "import_tasks" ), action );
 
   action = new KAction( i18n( "Export Tasks" ), this );
@@ -115,106 +114,6 @@ void MainView::editIncidence( const Akonadi::Item &item )
   IncidenceView *editor = new IncidenceView;
   editor->load( item, QDate() );
   editor->show();
-}
-
-void MainView::importICal()
-{
-  const QStringList fileNames = KFileDialog::getOpenFileNames( KUrl(), "*.ics|iCal", 0,
-                                                               i18n( "Select iCal to Import" ) );
-
-  if ( fileNames.count() == 0 )
-    return;
-
-  bool anyFailures = false;
-
-  KCalCore::Todo::List todos;
-
-  foreach ( const QString &fileName, fileNames ) {
-    KCalCore::MemoryCalendar::Ptr calendar( new KCalCore::MemoryCalendar( QLatin1String( "UTC" ) ) );
-
-    KCalCore::FileStorage::Ptr storage( new KCalCore::FileStorage( calendar, fileName, new KCalCore::ICalFormat() ) );
-
-    if ( storage->load() ) {
-      todos << calendar->todos();
-    } else {
-      const QString caption( i18n( "iCal Import Failed" ) );
-      const QString msg = i18nc( "@info",
-                                 "<para>Error when trying to read the iCal <filename>%1</filename>:</para>",
-                                 fileName );
-      KMessageBox::error( 0, msg, caption );
-      anyFailures = true;
-    }
-  }
-
-  if ( todos.isEmpty() ) {
-    if ( anyFailures && fileNames.count() > 1 )
-      KMessageBox::information( 0, i18n( "No tasks were imported, due to errors with the iCals." ) );
-    else if ( !anyFailures )
-      KMessageBox::information( 0, i18n( "The iCal does not contain any tasks." ) );
-
-    return; // nothing to import
-  }
-
-  const QStringList mimeTypes( KCalCore::Todo::todoMimeType() );
-
-  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog();
-  dlg->setMimeTypeFilter( mimeTypes );
-  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  dlg->setCaption( i18n( "Select Calendar" ) );
-  dlg->setDescription( i18n( "Select the calendar the imported todo(s) shall be saved in:" ) );
-
-  // preselect the currently selected folder
-  const QModelIndexList indexes = regularSelectionModel()->selectedRows();
-  if ( !indexes.isEmpty() ) {
-    const QModelIndex collectionIndex = indexes.first();
-    const Akonadi::Collection collection = collectionIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( collection.isValid() )
-      dlg->setDefaultCollection( collection );
-  }
-
-  if ( !dlg->exec() || !dlg ) {
-    delete dlg;
-    return;
-  }
-
-  const Akonadi::Collection collection = dlg->selectedCollection();
-  delete dlg;
-
-  if ( !m_importProgressDialog ) {
-    m_importProgressDialog = new KProgressDialog( 0, i18n( "Import Todos" ) );
-    m_importProgressDialog->setLabelText( i18np( "Importing one todo to %2", "Importing %1 todos to %2",
-                                                 todos.count(), collection.name() ) );
-    m_importProgressDialog->setAllowCancel( false );
-    m_importProgressDialog->setAutoClose( true );
-    m_importProgressDialog->progressBar()->setRange( 1, todos.count() );
-  }
-
-  m_importProgressDialog->show();
-
-  foreach ( const KCalCore::Todo::Ptr &todo, todos ) {
-    Akonadi::Item item;
-    item.setPayload<KCalCore::Todo::Ptr>( todo );
-    item.setMimeType( KCalCore::Todo::todoMimeType() );
-
-    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( slotImportJobDone( KJob* ) ) );
-  }
-}
-
-void MainView::slotImportJobDone( KJob* )
-{
-  if ( !m_importProgressDialog )
-    return;
-
-  QProgressBar *progressBar = m_importProgressDialog->progressBar();
-
-  progressBar->setValue( progressBar->value() + 1 );
-
-  // cleanup on last step
-  if ( progressBar->value() == progressBar->maximum() ) {
-    m_importProgressDialog->deleteLater();
-    m_importProgressDialog = 0;
-  }
 }
 
 void MainView::exportICal()
@@ -351,3 +250,7 @@ QAbstractProxyModel* MainView::itemFilterModel() const
   return new TasksFilterProxyModel();
 }
 
+ImportHandlerBase* MainView::importHandler() const
+{
+  return new TasksImportHandler();
+}

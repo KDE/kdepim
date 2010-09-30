@@ -30,9 +30,7 @@ namespace Akonadi
 }
 
 class ContactListProxy;
-class KJob;
 class KLineEdit;
-class KProgressDialog;
 
 class MainView : public KDeclarativeMainView
 {
@@ -48,7 +46,6 @@ class MainView : public KDeclarativeMainView
     void editContact( const Akonadi::Item &item );
     void editContactGroup( const Akonadi::Item &item );
 
-    void importVCard();
     void exportVCard();
 
   protected slots:
@@ -61,14 +58,11 @@ class MainView : public KDeclarativeMainView
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
     virtual QAbstractProxyModel* itemFilterModel() const;
-
-  private Q_SLOTS:
-    void slotImportJobDone( KJob* );
+    virtual ImportHandlerBase* importHandler() const;
 
   private:
     Akonadi::StandardContactActionManager *mActionManager;
     ContactListProxy *mContactListProxy;
-    KProgressDialog *mImportProgressDialog;
 };
 
 #endif // MAINVIEW_H

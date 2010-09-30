@@ -23,6 +23,7 @@
 #include "contacteditorview.h"
 #include "contactgroupeditorview.h"
 #include "contactlistproxy.h"
+#include "contactsimporthandler.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/collectiondialog.h>
@@ -50,8 +51,7 @@ QML_DECLARE_TYPE( Akonadi::Contact::ContactViewItem )
 QML_DECLARE_TYPE( Akonadi::Contact::ContactGroupViewItem )
 
 MainView::MainView( QWidget *parent )
-  : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent ),
-    mImportProgressDialog( 0 )
+  : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
 {
 }
 
@@ -79,7 +79,7 @@ void MainView::delayedInit()
   actionCollection()->addAction( QLatin1String( "add_new_contact_group" ), action );
 
   action = new KAction( i18n( "Import Contacts" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( importVCard() ) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( import() ) );
   actionCollection()->addAction( QLatin1String( "import_vcards" ), action );
 
   action = new KAction( i18n( "Export Contacts" ), this );
@@ -129,113 +129,6 @@ void MainView::editContactGroup( const Akonadi::Item &item )
   connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->loadContactGroup( item );
   editor->show();
-}
-
-void MainView::importVCard()
-{
-  QString fileName;
-  KABC::Addressee::List contacts;
-
-  const QStringList fileNames = KFileDialog::getOpenFileNames( KUrl(), "*.vcf|vCards", 0,
-                                                               i18n( "Select vCard to Import" ) );
-
-  if ( fileNames.count() == 0 )
-    return;
-
-  const QString caption( i18n( "vCard Import Failed" ) );
-  bool anyFailures = false;
-
-  KABC::VCardConverter converter;
-
-  foreach ( const QString &fileName, fileNames ) {
-    QFile file( fileName );
-
-    if ( file.open( QIODevice::ReadOnly ) ) {
-      const QByteArray data = file.readAll();
-      file.close();
-      if ( data.size() > 0 ) {
-        contacts += converter.parseVCards( data );
-      }
-    } else {
-      const QString msg = i18nc( "@info",
-                                 "<para>When trying to read the vCard, there was an error opening the file <filename>%1</filename>:</para>"
-                                 "<para>%2</para>",
-                                 fileName,
-                                 i18nc( "QFile", file.errorString().toLatin1() ) );
-      KMessageBox::error( 0, msg, caption );
-      anyFailures = true;
-    }
-  }
-
-  if ( contacts.isEmpty() ) {
-    if ( anyFailures && fileNames.count() > 1 )
-      KMessageBox::information( 0, i18n( "No contacts were imported, due to errors with the vCards." ) );
-    else if ( !anyFailures )
-      KMessageBox::information( 0, i18n( "The vCard does not contain any contacts." ) );
-
-    return; // nothing to import
-  }
-
-  const QStringList mimeTypes( KABC::Addressee::mimeType() );
-
-  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog();
-  dlg->setMimeTypeFilter( mimeTypes );
-  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  dlg->setCaption( i18n( "Select Address Book" ) );
-  dlg->setDescription( i18n( "Select the address book the imported contact(s) shall be saved in:" ) );
-
-  // preselect the currently selected folder
-  const QModelIndexList indexes = regularSelectionModel()->selectedRows();
-  if ( !indexes.isEmpty() ) {
-    const QModelIndex collectionIndex = indexes.first();
-    const Akonadi::Collection collection = collectionIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( collection.isValid() )
-      dlg->setDefaultCollection( collection );
-  }
-
-  if ( !dlg->exec() || !dlg ) {
-    delete dlg;
-    return;
-  }
-
-  const Akonadi::Collection collection = dlg->selectedCollection();
-  delete dlg;
-
-  if ( !mImportProgressDialog ) {
-    mImportProgressDialog = new KProgressDialog( 0, i18n( "Import Contacts" ) );
-    mImportProgressDialog->setLabelText( i18np( "Importing one contact to %2", "Importing %1 contacts to %2",
-                                                contacts.count(), collection.name() ) );
-    mImportProgressDialog->setAllowCancel( false );
-    mImportProgressDialog->setAutoClose( true );
-    mImportProgressDialog->progressBar()->setRange( 1, contacts.count() );
-  }
-
-  mImportProgressDialog->show();
-
-  for ( int i = 0; i < contacts.count(); ++i ) {
-    Akonadi::Item item;
-    item.setPayload<KABC::Addressee>( contacts.at( i ) );
-    item.setMimeType( KABC::Addressee::mimeType() );
-
-    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( slotImportJobDone( KJob* ) ) );
-  }
-}
-
-void MainView::slotImportJobDone( KJob* )
-{
-  if ( !mImportProgressDialog )
-    return;
-
-  QProgressBar *progressBar = mImportProgressDialog->progressBar();
-
-  progressBar->setValue( progressBar->value() + 1 );
-
-  // cleanup on last step
-  if ( progressBar->value() == progressBar->maximum() ) {
-    mImportProgressDialog->deleteLater();
-    mImportProgressDialog = 0;
-  }
 }
 
 static QString contactFileName( const KABC::Addressee &contact )
@@ -446,6 +339,11 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 QAbstractProxyModel* MainView::itemFilterModel() const
 {
   return new Akonadi::ContactsFilterProxyModel();
+}
+
+ImportHandlerBase* MainView::importHandler() const
+{
+  return new ContactsImportHandler();
 }
 
 #include "mainview.moc"

@@ -7,20 +7,21 @@ include_directories(
 add_subdirectory( calendar )
 
 set(mobileui_SRCS
-    listproxy.cpp
+    akonadibreadcrumbnavigationfactory.cpp
     breadcrumbnavigation.cpp
     breadcrumbnavigationcontext.cpp
-    akonadibreadcrumbnavigationfactory.cpp
-    favoriteslistmodel.cpp
-    kresettingproxymodel.cpp
     declarativeakonadiitem.cpp
+    favoriteslistmodel.cpp
+    importhandlerbase.cpp
     kdeclarativeapplication.cpp
-    kdeclarativemainview_p.cpp
-    kdeclarativemainview.cpp
     kdeclarativefullscreenview.cpp
+    kdeclarativemainview.cpp
+    kdeclarativemainview_p.cpp
+    kresettingproxymodel.cpp
+    listproxy.cpp
     orderedchildcollectionsmodel.cpp
-    stylesheetloader.cpp
     qmllistselectionmodel.cpp
+    stylesheetloader.cpp
 )
 
 if (KDEQMLPLUGIN_STATIC)

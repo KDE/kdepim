@@ -14,14 +14,15 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(korganizer_mobile_SRCS
   agendaviewitem.cpp
-  monthviewitem.cpp
   calendarinterface.cpp
   declarativewidgetwrapper.cpp
   eventlistproxy.cpp
   eventsfilterproxymodel.cpp
-  qmldateedit.cpp
+  eventsimporthandler.cpp
   mainview.cpp
   main.cpp
+  monthviewitem.cpp
+  qmldateedit.cpp
 )
 
 qt4_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )

@@ -33,6 +33,7 @@ class Item;
 class ItemFetchScope;
 }
 
+class ImportHandlerBase;
 class ListProxy;
 class KDeclarativeMainViewPrivate;
 
@@ -98,6 +99,12 @@ protected:
    */
   virtual QAbstractProxyModel* itemFilterModel() const;
 
+  /**
+   * Returns the import object that will be used for importing data.
+   * If @c 0 is returned, no import functionality is offered.
+   */
+  virtual ImportHandlerBase* importHandler() const;
+
 protected slots:
   void delayedInit();
 
@@ -151,6 +158,8 @@ public slots:
   void restorePersistedSelection(const QString &key);
 
   void setBulkActionScreenSelected( bool selected );
+
+  void import();
 
 signals:
   void numSelectedAccountsChanged();
