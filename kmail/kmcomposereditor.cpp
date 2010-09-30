@@ -181,6 +181,9 @@ void KMComposerEditor::insertFromMimeData( const QMimeData *source )
 	return;
 #endif	
       }
+      else if( !selectedAction ) {
+	return;
+      }
       // else fall through
     }
 
