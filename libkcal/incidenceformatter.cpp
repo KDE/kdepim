@@ -315,18 +315,18 @@ static QString displayViewLinkPerson( const QString &email, const QString &name,
   return personString;
 }
 
-static QString displayViewFormatOrganizer( const QString &email, const QString &name )
+static QString displayViewFormatPerson( const QString &email, const QString &name,
+                                        const QString &uid, const QString &iconPath )
 {
   // Search for new print name or uid, if needed.
-  QPair<QString, QString> s = searchNameAndUid( email, name, QString() );
+  QPair<QString, QString> s = searchNameAndUid( email, name, uid );
   const QString printName = s.first;
   const QString printUid = s.second;
 
-  // Get the icon for organizer
-  QString iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
-
   QString personString;
-  personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
+  if ( !iconPath.isEmpty() ) {
+    personString += "<img valign=\"top\" src=\"" + iconPath + "\">" + "&nbsp;";
+  }
 
   // Make the uid link
   if ( !printUid.isEmpty() ) {
@@ -384,10 +384,15 @@ static QString displayViewFormatAttendees( Incidence *incidence )
   if ( attendeeCount > 1 ||
        ( attendeeCount == 1 &&
          incidence->organizer().email() != incidence->attendees().first()->email() ) ) {
+
+    QPair<QString, QString> s = searchNameAndUid( incidence->organizer().email(),
+                                                  incidence->organizer().name(),
+                                                  QString() );
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Organizer:" ) + "</b></td>";
-    tmpStr += "<td>" + displayViewFormatOrganizer( incidence->organizer().email(),
-                                                   incidence->organizer().name() ) +
+    QString iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
+    tmpStr += "<td>" + displayViewFormatPerson( incidence->organizer().email(),
+                                                s.first, s.second, iconPath ) +
               "</td>";
     tmpStr += "</tr>";
   }
@@ -487,14 +492,16 @@ static QString displayViewFormatBirthday( Event *event )
   QString name = event->customProperty("KABC","NAME-1");
   QString email= event->customProperty("KABC","EMAIL-1");
 
-  QString tmpStr = displayViewLinkPerson( email, name, uid, Attendee::None );
+  QString iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
+  QString tmpStr = displayViewFormatPerson( email, name, uid, QString() );
 
   if ( event->customProperty( "KABC", "ANNIVERSARY") == "YES" ) {
     uid = event->customProperty("KABC","UID-2");
     name = event->customProperty("KABC","NAME-2");
     email= event->customProperty("KABC","EMAIL-2");
-    tmpStr += "<br>";
-    tmpStr += displayViewLinkPerson( email, name, uid, Attendee::None );
+
+    iconPath = KGlobal::iconLoader()->iconPath( "organizer", KIcon::Small );
+    tmpStr += "<br>" + displayViewFormatPerson( email, name, uid, QString() );
   }
 
   return tmpStr;
