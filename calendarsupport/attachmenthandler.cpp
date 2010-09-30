@@ -28,8 +28,7 @@
 */
 #include "attachmenthandler.h"
 
-#include <kcalcore/schedulemessage.h>
-using namespace KCalCore;
+#include <KCalCore/ScheduleMessage>
 
 #include <KFileDialog>
 #include <KLocale>
@@ -42,10 +41,13 @@ using namespace KCalCore;
 
 #include <QFile>
 
+using namespace KCalCore;
+
 namespace CalendarSupport {
 
-Attachment::Ptr AttachmentHandler::find( QWidget *parent, const QString &attachmentName,
-                                         Incidence::Ptr incidence )
+Attachment::Ptr AttachmentHandler::find( QWidget *parent,
+                                         const QString &attachmentName,
+                                         const Incidence::Ptr &incidence )
 {
   if ( !incidence ) {
     return Attachment::Ptr();
@@ -84,7 +86,8 @@ Attachment::Ptr AttachmentHandler::find( QWidget *parent, const QString &attachm
 }
 
 Attachment::Ptr AttachmentHandler::find( QWidget *parent,
-                                         const QString &attachmentName, const QString &uid )
+                                         const QString &attachmentName,
+                                         onst QString &uid )
 {
   if ( uid.isEmpty() ) {
     return Attachment::Ptr();
@@ -105,7 +108,8 @@ Attachment::Ptr AttachmentHandler::find( QWidget *parent,
   return find( parent, attachmentName, incidence );
 }
 
-Attachment::Ptr AttachmentHandler::find( QWidget *parent, const QString &attachmentName,
+Attachment::Ptr AttachmentHandler::find( QWidget *parent,
+                                         const QString &attachmentName,
                                          ScheduleMessage *message )
 {
   if ( !message ) {
@@ -126,7 +130,7 @@ Attachment::Ptr AttachmentHandler::find( QWidget *parent, const QString &attachm
 
 static KTemporaryFile *s_tempFile = 0;
 
-static KUrl tempFileForAttachment( const Attachment::Ptr attachment )
+static KUrl tempFileForAttachment( const Attachment::Ptr &attachment )
 {
   KUrl url;
 
@@ -152,7 +156,7 @@ static KUrl tempFileForAttachment( const Attachment::Ptr attachment )
   return url;
 }
 
-bool AttachmentHandler::view( QWidget *parent, const Attachment::Ptr attachment )
+bool AttachmentHandler::view( QWidget *parent, const Attachment::Ptr &attachment )
 {
   if ( !attachment ) {
     return false;
@@ -179,7 +183,7 @@ bool AttachmentHandler::view( QWidget *parent, const Attachment::Ptr attachment 
 }
 
 bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName,
-                              const Incidence::Ptr incidence )
+                              const Incidence::Ptr &incidence )
 {
   return view( parent, find( parent, attachmentName, incidence ) );
 }
@@ -195,7 +199,7 @@ bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName,
   return view( parent, find( parent, attachmentName, message ) );
 }
 
-bool AttachmentHandler::saveAs( QWidget *parent, const Attachment::Ptr attachment )
+bool AttachmentHandler::saveAs( QWidget *parent, const Attachment::Ptr &attachment )
 {
   // get the saveas file name
   QString saveAsFile = KFileDialog::getSaveFileName( attachment->label(), QString(), parent,
@@ -234,7 +238,7 @@ bool AttachmentHandler::saveAs( QWidget *parent, const Attachment::Ptr attachmen
 }
 
 bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName,
-                                const Incidence::Ptr incidence )
+                                const Incidence::Ptr &incidence )
 {
   return saveAs( parent, find( parent, attachmentName, incidence ) );
 }
@@ -250,5 +254,5 @@ bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName,
   return saveAs( parent, find( parent, attachmentName, message ) );
 }
 
-}
+} // namespace CalendarSupport
 

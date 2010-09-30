@@ -26,8 +26,8 @@
 #ifndef CALENDARSUPPORT_ATTACHMENTHANDLER_H
 #define CALENDARSUPPORT_ATTACHMENTHANDLER_H
 
-#include <kcalcore/attachment.h>
-#include <kcalcore/incidence.h>
+#include <KCalCore/Attachment>
+#include <KCalCore/Incidence>
 
 namespace KCalCore {
   class ScheduleMessage;
@@ -56,7 +56,7 @@ namespace AttachmentHandler {
     @return a pointer to the Attachment object located; 0 if no such attachment could be found.
   */
   KCalCore::Attachment::Ptr find( QWidget *parent, const QString &attachmentName,
-                                  const KCalCore::Incidence::Ptr incidence );
+                                  const KCalCore::Incidence::Ptr &incidence );
 
   /**
     Finds the attachment in the user's calendar, by @p attachmentName and a scheduler message;
@@ -91,7 +91,7 @@ namespace AttachmentHandler {
 
     @return true if the viewer program successfully launched; false otherwise.
   */
-  bool view( QWidget *parent, const KCalCore::Attachment::Ptr attachment );
+  bool view( QWidget *parent, const KCalCore::Attachment::Ptr &attachment );
 
   /**
     Launches a viewer on the specified attachment.
@@ -104,7 +104,7 @@ namespace AttachmentHandler {
     false otherwise.
   */
   bool view( QWidget *parent, const QString &attachmentName,
-             const KCalCore::Incidence::Ptr incidence );
+             const KCalCore::Incidence::Ptr &incidence );
 
   /**
     Launches a viewer on the specified attachment.
@@ -138,7 +138,7 @@ namespace AttachmentHandler {
 
     @return true if the save operation was successful; false otherwise.
   */
-  bool saveAs( QWidget *parent, const KCalCore::Attachment::Ptr attachment );
+  bool saveAs( QWidget *parent, const KCalCore::Attachment::Ptr &attachment );
 
   /**
     Saves the specified attachment to a file of the user's choice.
@@ -151,7 +151,7 @@ namespace AttachmentHandler {
     false otherwise.
   */
   bool saveAs( QWidget *parent, const QString &attachmentName,
-               const KCalCore::Incidence::Ptr incidence );
+               const KCalCore::Incidence::Ptr &incidence );
 
   /**
     Saves the specified attachment to a file of the user's choice.
