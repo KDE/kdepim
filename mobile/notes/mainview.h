@@ -52,6 +52,8 @@ class MainView : public KDeclarativeMainView
 
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
+    virtual QAbstractProxyModel* itemFilterModel() const;
+
   private:
     Akonadi::Collection suitableContainerCollection(const QModelIndex &parent = QModelIndex());
 };

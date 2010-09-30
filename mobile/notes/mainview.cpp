@@ -21,30 +21,31 @@
 
 #include "mainview.h"
 
-#include <QtDeclarative/QDeclarativeEngine>
+#include "notelistproxy.h"
+#include "notesfilterproxymodel.h"
+
+#include <akonadi/agentactionmanager.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/standardactionmanager.h>
+#include <akonadi_next/note.h>
+#include <akonadi_next/notecreatorandselector.h>
 
 #include <KAction>
 #include <KActionCollection>
 #include <KDebug>
 #include <KGlobal>
 #include <KLocale>
+#include <KMessageBox>
+#include <KMime/KMimeMessage>
 #include <KStandardDirs>
 
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/entitytreemodel.h>
-#include <Akonadi/ItemFetchScope>
-#include <akonadi/standardactionmanager.h>
-
-#include "notelistproxy.h"
-#include <QDeclarativeContext>
-#include <KMime/KMimeMessage>
-#include <akonadi_next/notecreatorandselector.h>
-#include <akonadi_next/note.h>
-#include <kmessagebox.h>
+#include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeEngine>
 
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
-#include <QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeContext>
 #endif
 
 using namespace Akonadi;
@@ -57,8 +58,8 @@ void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
   setWindowTitle( i18n( "KJots" ) );
-  
-#ifdef KDEQMLPLUGIN_STATIC  
+
+#ifdef KDEQMLPLUGIN_STATIC
   rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
 #endif
 
@@ -364,3 +365,7 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
                            i18n( "Do you really want to delete the selected account?" ) );
 }
 
+QAbstractProxyModel* MainView::itemFilterModel() const
+{
+  return new NotesFilterProxyModel();
+}

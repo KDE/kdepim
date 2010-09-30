@@ -126,6 +126,7 @@ KPIM.MainView {
       onSelectedClicked : {
         mainWorkView.visible = false
         bulkActionScreen.visible = true
+        application.isBulkActionScreenSelected = true
       }
     }
     KPIM.Button2 {
@@ -198,11 +199,24 @@ KPIM.MainView {
       color : "#00000000"
       opacity : headerList.count > 0 ? 1 : 0
 
+      Akonadi.FilterLineEdit {
+        id: filterLineEdit
+        anchors.left : parent.left
+        anchors.top : parent.top
+        anchors.bottom : headerList.top
+        anchors.right : parent.right
+        visible : false
+        height : 0
+      }
+
       NotesListView {
         id: headerList
         model: itemModel
         checkModel : _itemActionModel
-        anchors.fill : parent
+        anchors.left : parent.left
+        anchors.top : filterLineEdit.bottom
+        anchors.bottom : parent.bottom
+        anchors.right : parent.right
         onItemSelected: {
           // Prevent reloading of the message, perhaps this should be done
           // in messageview itself.
@@ -268,6 +282,7 @@ KPIM.MainView {
                 actionPanelNew.collapse();
                 mainWorkView.visible = false
                 bulkActionScreen.visible = true
+                application.isBulkActionScreenSelected = true
               }
             }
           ]
@@ -322,6 +337,7 @@ KPIM.MainView {
     }
     onBackClicked : {
       bulkActionScreen.visible = false
+      application.isBulkActionScreenSelected = false
       mainWorkView.visible = true
     }
   }
