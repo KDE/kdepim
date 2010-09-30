@@ -77,6 +77,9 @@ class AlarmDialog : public KDialog
   signals:
     void reminderCount( int count );
 
+  protected:
+    void keyPressEvent( QKeyEvent *e );
+
   private Q_SLOTS:
     void update();
     void toggleDetails( QTreeWidgetItem *item, int column );

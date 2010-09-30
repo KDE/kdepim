@@ -770,4 +770,15 @@ void AlarmDialog::accept()
   }
 }
 
+void AlarmDialog::keyPressEvent( QKeyEvent *e )
+{
+  if ( e->state() == 0 ) {
+    if ( e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return ) {
+      e->ignore();
+      return;
+    }
+  }
+  KDialog::keyPressEvent( e );
+}
+
 #include "alarmdialog.moc"
