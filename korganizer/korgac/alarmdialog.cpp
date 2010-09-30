@@ -739,3 +739,13 @@ void AlarmDialog::slotCalendarChanged()
   }
 }
 
+void AlarmDialog::keyPressEvent( QKeyEvent *e )
+{
+  if ( e->state() == 0 ) {
+    if ( e->key() == Key_Enter || e->key() == Key_Return ) {
+      e->ignore();
+      return;
+    }
+  }
+  KDialog::keyPressEvent( e );
+}

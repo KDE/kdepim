@@ -82,6 +82,7 @@ class AlarmDialog : public KDialogBase {
     void showDetails();
 
   protected:
+    void keyPressEvent( QKeyEvent *e );
     void closeEvent( QCloseEvent * );
 
   private:
