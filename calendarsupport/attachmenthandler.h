@@ -28,10 +28,7 @@
 
 #include <KCalCore/Attachment>
 #include <KCalCore/Incidence>
-
-namespace KCalCore {
-  class ScheduleMessage;
-}
+#include <KCalCore/ScheduleMessage>
 
 class QString;
 class QWidget;
@@ -70,7 +67,7 @@ namespace AttachmentHandler {
     @return a pointer to the Attachment object located; 0 if no such attachment could be found.
   */
   KCalCore::Attachment::Ptr find( const QString &attachmentName,
-                                  KCalCore::ScheduleMessage *message,
+                                  const KCalCore::ScheduleMessage::Ptr &message,
                                   QWidget *parent );
 
   /**
@@ -133,7 +130,8 @@ namespace AttachmentHandler {
     @return true if the attachment could be found and the viewer program successfully launched;
     false otherwise.
   */
-  bool view( const QString &attachmentName, KCalCore::ScheduleMessage *message, QWidget *parent );
+  bool view( const QString &attachmentName, const KCalCore::ScheduleMessage::Ptr &message,
+             QWidget *parent );
 
   /**
     Saves the specified attachment to a file of the user's choice.
@@ -181,7 +179,8 @@ namespace AttachmentHandler {
     @return true if the attachment could be found and the save operation was successful;
     false otherwise.
   */
-  bool saveAs( const QString &attachmentName, KCalCore::ScheduleMessage *message, QWidget *parent );
+  bool saveAs( const QString &attachmentName, const KCalCore::ScheduleMessage::Ptr &message,
+               QWidget *parent );
 }
 
 }

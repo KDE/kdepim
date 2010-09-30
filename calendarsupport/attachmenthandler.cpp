@@ -28,8 +28,6 @@
 */
 #include "attachmenthandler.h"
 
-#include <KCalCore/ScheduleMessage>
-
 #include <KFileDialog>
 #include <KLocale>
 #include <KMessageBox>
@@ -108,7 +106,8 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
 }
 
 Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
-                                         ScheduleMessage *message, QWidget *parent )
+                                         const ScheduleMessage::Ptr &message,
+                                         QWidget *parent )
 {
   if ( !message ) {
     return Attachment::Ptr();
@@ -192,7 +191,7 @@ bool AttachmentHandler::view( const QString &attachmentName, const QString &uid,
 }
 
 bool AttachmentHandler::view( const QString &attachmentName,
-                              ScheduleMessage *message, QWidget *parent )
+                              const ScheduleMessage::Ptr &message, QWidget *parent )
 {
   return view( parent, find( parent, attachmentName, message ) );
 }
@@ -247,7 +246,7 @@ bool AttachmentHandler::saveAs( const QString &attachmentName, const QString &ui
 }
 
 bool AttachmentHandler::saveAs( const QString &attachmentName,
-                                ScheduleMessage *message, QWidget *parent )
+                                const ScheduleMessage::Ptr &message, QWidget *parent )
 {
   return saveAs( parent, find( parent, attachmentName, message ) );
 }
