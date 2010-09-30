@@ -1,6 +1,4 @@
 /*
-  This file is part of the kcalutils library.
-
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
@@ -25,8 +23,8 @@
 
   @author Allen Winter \<winter@kde.org\>
 */
-#ifndef KCALUTILS_ATTACHMENTHANDLER_H
-#define KCALUTILS_ATTACHMENTHANDLER_H
+#ifndef CALENDARSUPPORT_ATTACHMENTHANDLER_H
+#define CALENDARSUPPORT_ATTACHMENTHANDLER_H
 
 #include <kcalcore/attachment.h>
 #include <kcalcore/incidence.h>
@@ -38,7 +36,7 @@ namespace KCalCore {
 class QString;
 class QWidget;
 
-namespace KCalUtils {
+namespace CalendarSupport {
 
 /**
   @brief

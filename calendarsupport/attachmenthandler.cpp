@@ -1,6 +1,4 @@
 /*
-  This file is part of the kcalutils library.
-
   Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
@@ -44,7 +42,7 @@ using namespace KCalCore;
 
 #include <QFile>
 
-namespace KCalUtils {
+namespace CalendarSupport {
 
 Attachment::Ptr AttachmentHandler::find( QWidget *parent, const QString &attachmentName,
                                          Incidence::Ptr incidence )
