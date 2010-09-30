@@ -138,6 +138,7 @@ KPIM.MainView {
       onSelectedClicked : {
         mainWorkView.visible = false
         bulkActionScreen.visible = true
+        application.isBulkActionScreenSelected = true
       }
     }
     KPIM.Button2 {
@@ -307,6 +308,7 @@ KPIM.MainView {
                 actionPanelNew.collapse();
                 mainWorkView.visible = false
                 bulkActionScreen.visible = true
+                application.isBulkActionScreenSelected = true
               }
             },
             KPIM.ScriptAction {
@@ -386,6 +388,7 @@ KPIM.MainView {
     }
     onBackClicked : {
       bulkActionScreen.visible = false
+      application.isBulkActionScreenSelected = false
       mainWorkView.visible = true
     }
   }
