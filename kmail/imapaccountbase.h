@@ -35,6 +35,7 @@
 #include <QTimer>
 
 #include <QByteArray>
+#include "progressmanager.h"
 
 class AccountManager;
 class KMFolder;
@@ -151,8 +152,8 @@ namespace KMail {
       jobData( const QString& _url, KMFolder *_parent = 0,
           int _total = 1, int _done = 0, bool _quiet = false,
           bool _cancelable = false )
-        : url(_url), parent(_parent), current(0), total(_total), done(_done), offset(0),
-          progressItem(0), quiet(_quiet), cancellable(_cancelable) {}
+        : url(_url), parent(_parent), current(0), total(_total), done(_done), offset(0), progressItem(0),
+          quiet(_quiet), cancellable(_cancelable) {}
 
       QString path;
       QString url;
@@ -163,7 +164,7 @@ namespace KMail {
       KMFolder *parent, *current;
       QList<KMMessage*> msgList;
       int total, done, offset;
-      KPIM::ProgressItem *progressItem;
+      QPointer<KPIM::ProgressItem>progressItem;
       bool onlySubscribed : 1, quiet : 1, cancellable : 1;
     };
 

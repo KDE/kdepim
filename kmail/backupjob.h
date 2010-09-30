@@ -21,18 +21,16 @@
 
 #include <kurl.h>
 #include <qlist.h>
-
+#include <QPointer>
 #include <qobject.h>
+#include "progressmanager.h"
+
 
 class KMFolder;
 class KMMessage;
 class KArchive;
 class KProcess;
 class QWidget;
-
-namespace KPIM {
-  class ProgressItem;
-}
 
 namespace KMail
 {
@@ -88,7 +86,7 @@ class BackupJob : public QObject
     bool mCurrentFolderOpen;
     int mArchivedMessages;
     uint mArchivedSize;
-    KPIM::ProgressItem *mProgressItem;
+    QPointer<KPIM::ProgressItem> mProgressItem;
     bool mAborted;
     bool mDeleteFoldersAfterCompletion;
 

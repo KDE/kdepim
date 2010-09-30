@@ -24,8 +24,6 @@
 #include "kmfolderdir.h"
 #include "folderutil.h"
 
-#include "progressmanager.h"
-
 #include "kzip.h"
 #include "ktar.h"
 #include "kmessagebox.h"
@@ -168,10 +166,11 @@ void BackupJob::finish()
       return;
     }
   }
-
-  mProgressItem->setStatus( i18n( "Archiving finished" ) );
-  mProgressItem->setComplete();
-  mProgressItem = 0;
+  if( mProgressItem ) {
+    mProgressItem->setStatus( i18n( "Archiving finished" ) );
+    mProgressItem->setComplete();
+    mProgressItem = 0;
+  }
 
   QFileInfo archiveFileInfo( mMailArchivePath.path() );
   QString text = i18n( "Archiving folder '%1' successfully completed. "
