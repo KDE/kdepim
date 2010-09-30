@@ -179,12 +179,13 @@ bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
   QStringList mimeTypes;
   mimeTypes << QLatin1String( "message/rfc822" );
 
+#ifndef _WIN32_WCE
   IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
                                                                txt, uris,
                                                                QStringList(), mimeTypes,
                                                                true /* inline */,
                                                                Akonadi::Collection() );
-
+#endif
 
   tf.close();
   return true;

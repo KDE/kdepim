@@ -41,7 +41,6 @@ kde4_add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})
 
 target_link_libraries(mailcommon messageviewer messagecore kdepim
   akonadi_next
-  incidenceeditorsng
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
@@ -50,6 +49,11 @@ target_link_libraries(mailcommon messageviewer messagecore kdepim
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
 )
+if (NOT WINCE)
+target_link_libraries(mailcommon 
+  incidenceeditorsng
+)
+endif (NOT WINCE)
 
 set_target_properties( mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS} )
