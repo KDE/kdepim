@@ -5,6 +5,7 @@ Problems addressed
 ------------------
 
 * kolab/issue4423: Reminder is closed, when no button is selected and enter is pressed.(rt#5845)
+* kolab/issue4483 (An attendee, who accepted an invitation, is listed with needs reply in the accept answer mail (rt#6187)
 * kolab/issue4565: Kontact Crash in QGArray::data
 * kolab/issue4567: click on pdf octet-stream attachment in the header, not asked how to handle attachment(rt#5907)
 * kolab/issue4570: Move recurring item (rt#6210)
