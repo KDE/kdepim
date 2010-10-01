@@ -1,3 +1,16 @@
+
+Friday 01 October 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4423: Reminder is closed, when no button is selected and enter is pressed.(rt#5845)
+* kolab/issue4565: Kontact Crash in QGArray::data
+* kolab/issue4567: click on pdf octet-stream attachment in the header, not asked how to handle attachment(rt#5907)
+* kolab/issue4570: Move recurring item (rt#6210)
+* kolab/issue4571: Kontact Crash in FolderStorage::removeMsg (rt#6211)
+
+
 Friday, September 24th 2010
 
 Problems addressed
@@ -634,475 +647,475 @@ Friday, October 2th 2009
 Problems addressed
 ------------------
 
-* kolab/issue3783: SMIME encrypted and signed mail: Audit log dialog contains ???? at the bottom
-* kolab/issue3823: mimetreeviewer doesn't show structure of forward-as-attachment message #n where #n > 1
-* kolab/issue3889: Kontact crahes if opening/changing calendar view (rt#5868)
-* kolab/issue3867: Save S/MIME encrypted mails unencrypted after reading them
-* Also use new icons in the special dates summary, for birthday, anniversary and holiday
+* kolab/issue3783: SMIME encrypted and signed mail: Audit log dialog contains ??-A?? at the bottom
+-A* kolab/issue3823: mimetreeviewer doesn't show structure of forward-as-attachment message #n where #n > 1
+-A* kolab/issue3889: Kontact crahes if opening/changing calendar view (rt#5868)
+-A* kolab/issue3867: Save S/MIME encrypted mails unencrypted after reading them
+-A* Also use new icons in the special dates summary, for birthday, anniversary and holiday
 
 
-Friday, September 25th 2009
+-AFriday, September 25th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3806: The sorting of mails in the mailview changes after opening a configuration dialog (rt#5852)
-* kolab/issue3182: Replies to invitations always sent with default outgoing transport
-* kolab/issue3876: regression: New Message To: doesn't fill in To: field in composer
+-A* kolab/issue3806: The sorting of mails in the mailview changes after opening a configuration dialog (rt#5852)
+-A* kolab/issue3182: Replies to invitations always sent with default outgoing transport
+-A* kolab/issue3876: regression: New Message To: doesn't fill in To: field in composer
 
 
-Friday, September 18th 2009
+-AFriday, September 18th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue2974: Anniversary event has broken title
-* kolab/issue3865: Crash while syncing, automatic event archival enabled, in EventArchiver::archiveIncidences
-* kolab/issue3853: Crash after renaming a folder
-* kolab/issue2069: Kontact rewrites custom folder types
-* kolab/issue3830: Mail: Setting option properties->share unread state with all users on an inbox doesn't have an effect
-* Add new KOrganizer icons for anniversary, birthday, holiday and special occassion
+-A* kolab/issue2974: Anniversary event has broken title
+-A* kolab/issue3865: Crash while syncing, automatic event archival enabled, in EventArchiver::archiveIncidences
+-A* kolab/issue3853: Crash after renaming a folder
+-A* kolab/issue2069: Kontact rewrites custom folder types
+-A* kolab/issue3830: Mail: Setting option properties->share unread state with all users on an inbox doesn't have an effect
+-A* Add new KOrganizer icons for anniversary, birthday, holiday and special occassion
 
-
-Friday, September 11th 2009
-
-Problems addressed
-------------------
+
+-AFriday, September 11th 2009
+
+-AProblems addressed
+-A------------------
 
-* kolab/issue3853: Crash after renaming a folder
-* kolab/issue3836: Saved auditlog contains some strange xml text
-* kolab/issue3833: Mails will vanish, if a folder is renamed
-* kolab/issue3837: Reproducible crash when (not) decrypting s/mime message
-* kolab/issue3577: [regression] S/MIME opaque signed and encrypted email without smime-type parameter suboptimal display
-* kolab/issue3855: [regression] S/MIME opaque signed and encrypted email suboptimal display
-* kolab/issue3831: Forward inline: the header of the forwarded msg doesn't contain the CC
-                   field and the time after the date (rt#5862)
-* Fix copying of an URL from KMail, which was a recent regression
+-A* kolab/issue3853: Crash after renaming a folder
+-A* kolab/issue3836: Saved auditlog contains some strange xml text
+-A* kolab/issue3833: Mails will vanish, if a folder is renamed
+-A* kolab/issue3837: Reproducible crash when (not) decrypting s/mime message
+-A* kolab/issue3577: [regression] S/MIME opaque signed and encrypted email without smime-type parameter suboptimal display
+-A* kolab/issue3855: [regression] S/MIME opaque signed and encrypted email suboptimal display
+-A* kolab/issue3831: Forward inline: the header of the forwarded msg doesn't contain the CC
+                   -Afield and the time after the date (rt#5862)
+-A* Fix copying of an URL from KMail, which was a recent regression
 
-
-Monday, September 7th 2009
-
-Problems addressed
-------------------
+
+-AMonday, September 7th 2009
+
+-AProblems addressed
+-A------------------
 
-* kolab/issue3816: event view: some topics miss the colon after the topic name (rt#5855)
-* kolab/issue3788: Calendar: A default for the reminder option should be configurable (rt#5841)
-* kolab/issue3827: Address completion ldap, missing results from some sources (rt#5853)
-* kolab/issue3799: Freebusy authentication dialog appears in the background
-* kolab/issue3803: Reply-to field in composer has unused "..." button
-* Fix crash when completing LDAP addresses
-* Don't print "CC:" and "BCC:" in the enterprise header.
+-A* kolab/issue3816: event view: some topics miss the colon after the topic name (rt#5855)
+-A* kolab/issue3788: Calendar: A default for the reminder option should be configurable (rt#5841)
+-A* kolab/issue3827: Address completion ldap, missing results from some sources (rt#5853)
+-A* kolab/issue3799: Freebusy authentication dialog appears in the background
+-A* kolab/issue3803: Reply-to field in composer has unused "..." button
+-A* Fix crash when completing LDAP addresses
+-A* Don't print "CC:" and "BCC:" in the enterprise header.
 
 
-Friday, August 28th 2009
-
-Problems addressed
-------------------
-
-* kolab/issue3359: LDAP Search result not coming in later, if user typed too fast in email completion (rt#5853)
-* kolab/issue3815: event view: dates are displayed without weekday (rt#5855)
-* kolab/issue3808: Reminder: small problems (rt#5845)
-* kolab/issue3816: event view: some topics miss the colon after the topic name (rt#5855)
-* kolab/issue3804: Configuration of Address completion order: Missing last-used addresses (rt#5856)
-* kolab/issue3821: [regression] kmail reader: cannot drag attachment icon anymore
-* kolab/issue3792: Local Folder for Groupware: Type setting partly lost by restart.
-* kolab/issue3822: Configuration of Address completion order: last-used-addresses by default shown one but last, though sorted last (rt#5856)
-* kolab/issue3671: Calendar: To Today button doesn't display a workweek right (rt#5769)
-* kolab/issue3254: printed mail cut at the left side
-* kolab/issue3812: Recent addresses of addresses with comma are displayed with backslash and quote
-* Fix regressions that images were not shown in the reader in KMail
-* Fix regression that shift-clicking an attachment in KMail wouldn't open it anymore
+-AFriday, August 28th 2009
+
+-AProblems addressed
+-A------------------
+
+-A* kolab/issue3359: LDAP Search result not coming in later, if user typed too fast in email completion (rt#5853)
+-A* kolab/issue3815: event view: dates are displayed without weekday (rt#5855)
+-A* kolab/issue3808: Reminder: small problems (rt#5845)
+-A* kolab/issue3816: event view: some topics miss the colon after the topic name (rt#5855)
+-A* kolab/issue3804: Configuration of Address completion order: Missing last-used addresses (rt#5856)
+-A* kolab/issue3821: [regression] kmail reader: cannot drag attachment icon anymore
+-A* kolab/issue3792: Local Folder for Groupware: Type setting partly lost by restart.
+-A* kolab/issue3822: Configuration of Address completion order: last-used-addresses by default shown one but last, though sorted last (rt#5856)
+-A* kolab/issue3671: Calendar: To Today button doesn't display a workweek right (rt#5769)
+-A* kolab/issue3254: printed mail cut at the left side
+-A* kolab/issue3812: Recent addresses of addresses with comma are displayed with backslash and quote
+-A* Fix regressions that images were not shown in the reader in KMail
+-A* Fix regression that shift-clicking an attachment in KMail wouldn't open it anymore
 
 
-Friday, August 21th 2009
+-AFriday, August 21th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3811: Rejecting an invitation, with the event existing and writable by someone else,
-                   Kontact will delete the event without question (rt#5803)
-* kolab/issue3722: Dragging emails to an existing appointment or tasks does not work (rt#5806)
-* kolab/issue3788: Calendar: A default for the reminder option should be configurable (rt#5841)
-* kolab/issue3608: Lastname of an attendee is missing (rt#5802)
-* kolab/issue3814: Completion order configuration for emails broken (rt#5856)
-* kolab/issue3819: Calendar Birthday resource: Anniversary day handling has small problems
-* kolab/issue3717: The attachment of an invitation isn't displayed
+-A* kolab/issue3811: Rejecting an invitation, with the event existing and writable by someone else,
+                   -AKontact will delete the event without question (rt#5803)
+-A* kolab/issue3722: Dragging emails to an existing appointment or tasks does not work (rt#5806)
+-A* kolab/issue3788: Calendar: A default for the reminder option should be configurable (rt#5841)
+-A* kolab/issue3608: Lastname of an attendee is missing (rt#5802)
+-A* kolab/issue3814: Completion order configuration for emails broken (rt#5856)
+-A* kolab/issue3819: Calendar Birthday resource: Anniversary day handling has small problems
+-A* kolab/issue3717: The attachment of an invitation isn't displayed
 
 
-Friday, August 14th 2009
+-AFriday, August 14th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue1536: Default to the sender as organizer when it is not set
-* kolab/issue3717: Add support for attachments in invitations
-* kolab/issue3802: When updating incidences, preserve the UIDs so that the update is correctly registered
-* kolab/issue3808: Rename 'Dismiss' into 'Dismiss Reminder' in the reminder dialog
-* kolab/issue3375: Make the attachment overview less confusing by making a difference between embedded and
-                   normal attachments
-* kolab/issue3776: Show the 'Record into my calendar' button on updated invitations when sharing
-                   a calendar with others who have access rights
+-A* kolab/issue1536: Default to the sender as organizer when it is not set
+-A* kolab/issue3717: Add support for attachments in invitations
+-A* kolab/issue3802: When updating incidences, preserve the UIDs so that the update is correctly registered
+-A* kolab/issue3808: Rename 'Dismiss' into 'Dismiss Reminder' in the reminder dialog
+-A* kolab/issue3375: Make the attachment overview less confusing by making a difference between embedded and
+                   -Anormal attachments
+-A* kolab/issue3776: Show the 'Record into my calendar' button on updated invitations when sharing
+                   -Aa calendar with others who have access rights
 
 
-Friday, August 7th 2009
+-AFriday, August 7th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3685: Make it possible again to enter the update mail of a moved event into the calendar
-* kolab/issue3789: Show again the buttons for the 'Delegate', 'Forward' and 'Look into Calendar' actions
-* kolab/issue3234: Put optional participants of events into the CC field of the invitation mails, not into 
-                   the To field, to make Outlook happy
-* kolab/issue3779: Always allow an attendee to remove invitation events from his calendar
-* kolab/issue3788: Make the default time and time unit for new reminders configurable
-* kolab/issue3742: Allow to specify the groupware type of local folders again
-* kolab/issue3375: When using 'Scroll To' on attachments, mark the scrolled-to attachment with a yellow border
-* kolab/issue3776: Don't ask for the storage location on invitation updates
-* kolab/issue3740: When displaying encapsulated messages in a seperate window, make deleting attachments work
-                   correctly
-* kolab/issue3722: When dragging email messages as attachments, try to use the mail subject
-                   as the attachment name in the KOrganizer attachment editor.
-* Fix a problem that attachments in encapsulated messages could not be deleted
-* Don't erroneously display the text part of encapsulated messages as attachment in the quick attachment list
-* Add nicer icon for the organizer, replacing the old 'tux' icon
+-A* kolab/issue3685: Make it possible again to enter the update mail of a moved event into the calendar
+-A* kolab/issue3789: Show again the buttons for the 'Delegate', 'Forward' and 'Look into Calendar' actions
+-A* kolab/issue3234: Put optional participants of events into the CC field of the invitation mails, not into 
+                   -Athe To field, to make Outlook happy
+-A* kolab/issue3779: Always allow an attendee to remove invitation events from his calendar
+-A* kolab/issue3788: Make the default time and time unit for new reminders configurable
+-A* kolab/issue3742: Allow to specify the groupware type of local folders again
+-A* kolab/issue3375: When using 'Scroll To' on attachments, mark the scrolled-to attachment with a yellow border
+-A* kolab/issue3776: Don't ask for the storage location on invitation updates
+-A* kolab/issue3740: When displaying encapsulated messages in a seperate window, make deleting attachments work
+                   -Acorrectly
+-A* kolab/issue3722: When dragging email messages as attachments, try to use the mail subject
+                   -Aas the attachment name in the KOrganizer attachment editor.
+-A* Fix a problem that attachments in encapsulated messages could not be deleted
+-A* Don't erroneously display the text part of encapsulated messages as attachment in the quick attachment list
+-A* Add nicer icon for the organizer, replacing the old 'tux' icon
 
 
-Friday, July 31th 2009
+-AFriday, July 31th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3722: Make dragging mails to existing appointments work
-* kolab/issue3759: Don't enable the Apply button in the to-do editor when opened from KMail
-* kolab/issue3719: Don't remove linebreaks from the comments on invitations
-* kolab/issue3780: Allow declining an invitation without getting an error message
-* kolab/issue3777: Fix crash when creating a new folder in KMail
-* kolab/issue3724: Possible fix a problem that when multiple persons have write access to a folder,
-                   things were confused for other users
-* kolab/issue3725: When forwarding an encrypted mail, don't ask for the passphrase twice
-* kolab/issue3781: Allow to delete an accepted appointment without notifing the organizer
+-A* kolab/issue3722: Make dragging mails to existing appointments work
+-A* kolab/issue3759: Don't enable the Apply button in the to-do editor when opened from KMail
+-A* kolab/issue3719: Don't remove linebreaks from the comments on invitations
+-A* kolab/issue3780: Allow declining an invitation without getting an error message
+-A* kolab/issue3777: Fix crash when creating a new folder in KMail
+-A* kolab/issue3724: Possible fix a problem that when multiple persons have write access to a folder,
+                   -Athings were confused for other users
+-A* kolab/issue3725: When forwarding an encrypted mail, don't ask for the passphrase twice
+-A* kolab/issue3781: Allow to delete an accepted appointment without notifing the organizer
 
 
-Friday, July 24th 2009
+-AFriday, July 24th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3718: Don't show the warning about too many recipients when sending invitations
-* kolab/issue3769: Don't crash when reading a free/busy list that was sent as mail
-* kolab/issue3771: In the attendee edit dialog, allow to edit the organizer field if it is empty
-* kolab/issue3744: Also recognize invitation attachments marked as text/x-vcalendar
-* kolab/issue3734: Allow to change the free/busy and active alarm setting of the default groupware
-                   folders as well
-* kolab/issue3683: Fix the webpage export in KOrganizer not showing the right events
-* kolab/issue3735: Fix append-only IMAP folders leading to sync and conflict loops
-* kolab/issue3725: When forwarding encrypted mails, correctly include the attachments in the mail
-* kolab/issue3724: Fix various issues with invitations if you have access to a calendar of another
-                   person that is also invited
-* kolab/issue3742: Don't show the combo box that changes the folder type for online IMAP folders, since
-                   that is not supported there
+-A* kolab/issue3718: Don't show the warning about too many recipients when sending invitations
+-A* kolab/issue3769: Don't crash when reading a free/busy list that was sent as mail
+-A* kolab/issue3771: In the attendee edit dialog, allow to edit the organizer field if it is empty
+-A* kolab/issue3744: Also recognize invitation attachments marked as text/x-vcalendar
+-A* kolab/issue3734: Allow to change the free/busy and active alarm setting of the default groupware
+                   -Afolders as well
+-A* kolab/issue3683: Fix the webpage export in KOrganizer not showing the right events
+-A* kolab/issue3735: Fix append-only IMAP folders leading to sync and conflict loops
+-A* kolab/issue3725: When forwarding encrypted mails, correctly include the attachments in the mail
+-A* kolab/issue3724: Fix various issues with invitations if you have access to a calendar of another
+                   -Aperson that is also invited
+-A* kolab/issue3742: Don't show the combo box that changes the folder type for online IMAP folders, since
+                   -Athat is not supported there
 
 
-Friday, July 17th 2009
+-AFriday, July 17th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3687: When printing from KOrganizer, make sure to include the Location
-* kolab/issue3756: Fix problems with reminders not showing up with freshly configured folders
+-A* kolab/issue3687: When printing from KOrganizer, make sure to include the Location
+-A* kolab/issue3756: Fix problems with reminders not showing up with freshly configured folders
 
 
-Sunday, July 12th 2009
+-ASunday, July 12th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3722 (partly): Don't indicate that mails can be dropped to the attachment editor, that is not possible
-* kolab/issue3746: Fix summary not showing in an update mail and remove empty rectangle
-* kolab/issue3721: Fix incorrect translation for ical import tool
+-A* kolab/issue3722 (partly): Don't indicate that mails can be dropped to the attachment editor, that is not possible
+-A* kolab/issue3746: Fix summary not showing in an update mail and remove empty rectangle
+-A* kolab/issue3721: Fix incorrect translation for ical import tool
 
 
-Friday, June 26th 2009
+-AFriday, June 26th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* Fix problems with Free/Busy passwords that have a '!' in them.
-  This fix is in kdelibs, not in the enterprise branch.
-* Fix incompatibility with GPGME 1.2
+-A* Fix problems with Free/Busy passwords that have a '!' in them.
+  -AThis fix is in kdelibs, not in the enterprise branch.
+-A* Fix incompatibility with GPGME 1.2
 
 
-Friday, June 19th 2009
+-AFriday, June 19th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3375: Fix attachment overview in the header being confusing for short mails
-* kolab/issue3578: Minimize the amount of key lookups in KMail, especially when not encrypting at all
-* kolab/issue3682: Fix a crash when displaying certain S/MIME messages
+-A* kolab/issue3375: Fix attachment overview in the header being confusing for short mails
+-A* kolab/issue3578: Minimize the amount of key lookups in KMail, especially when not encrypting at all
+-A* kolab/issue3682: Fix a crash when displaying certain S/MIME messages
 
 
-Friday, June 12th 2009
+-AFriday, June 12th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3685: Fix invitation handling regression, now the update mails of moved events can be
-                   entered into the calendar again
-* kolab/issue3678: Speed up displaying of inline PGP encrypted messages
-* kolab/issue3694: Fix crash when displaying an invitation mail
-* kolab/issue3692: Fix crash when quickly closing the window displaying a signed message
-* Add info about the invitation options in KMail's handbook
+-A* kolab/issue3685: Fix invitation handling regression, now the update mails of moved events can be
+                   -Aentered into the calendar again
+-A* kolab/issue3678: Speed up displaying of inline PGP encrypted messages
+-A* kolab/issue3694: Fix crash when displaying an invitation mail
+-A* kolab/issue3692: Fix crash when quickly closing the window displaying a signed message
+-A* Add info about the invitation options in KMail's handbook
 
 
-Friday, June 5th 2009
+-AFriday, June 5th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3673: Switch to calendar component when choosing "Look into the calendar" in invitations
-* kolab/issue3636: Prevent creating incorrect maildir folders when using an IMAP account
-* kolab/issue3648: Syncing mails was slow and used a lot of memory
-* Don't block the UI when displaying signed or encrypted mail
-* Add select all and unselect all buttons to the filter importer/export in KMail
+-A* kolab/issue3673: Switch to calendar component when choosing "Look into the calendar" in invitations
+-A* kolab/issue3636: Prevent creating incorrect maildir folders when using an IMAP account
+-A* kolab/issue3648: Syncing mails was slow and used a lot of memory
+-A* Don't block the UI when displaying signed or encrypted mail
+-A* Add select all and unselect all buttons to the filter importer/export in KMail
 
 
-Friday, May 22th 2009
+-AFriday, May 22th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3615 (partly): Confusing warnings when evaluating key trust in KMail
+-A* kolab/issue3615 (partly): Confusing warnings when evaluating key trust in KMail
 
 
-Friday, May 15th 2009
+-AFriday, May 15th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3608: Lastname of an attendee is missing
-* kolab/issue3598: Holidays are not colored correctly
-* kolab/issue2972: Bogus error message when refreshing the IMAP cache
-* kolab/issue3617: Kleopatra's setting dialog cannot deal with gpgconf TYPE=0
-* Some spelling and whitespace fixes in the english version of the KOrganizer manual
+-A* kolab/issue3608: Lastname of an attendee is missing
+-A* kolab/issue3598: Holidays are not colored correctly
+-A* kolab/issue2972: Bogus error message when refreshing the IMAP cache
+-A* kolab/issue3617: Kleopatra's setting dialog cannot deal with gpgconf TYPE=0
+-A* Some spelling and whitespace fixes in the english version of the KOrganizer manual
 
 
-Friday, May 8th 2009
+-AFriday, May 8th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3605: System tray icon displayed even when there is no unread mail
-* kolab/issue3606: Some common folder properties are missing
-* kolab/issue2459: Don't crash when refreshing the IMAP cache
-* kolab/issue3598: Public holiday description of events are missing
-* kolab/issue2276: Export contacts or calendar overwrites files without a warning
-* kolab/issue2150: Reply action missing in the message popup menu
+-A* kolab/issue3605: System tray icon displayed even when there is no unread mail
+-A* kolab/issue3606: Some common folder properties are missing
+-A* kolab/issue2459: Don't crash when refreshing the IMAP cache
+-A* kolab/issue3598: Public holiday description of events are missing
+-A* kolab/issue2276: Export contacts or calendar overwrites files without a warning
+-A* kolab/issue2150: Reply action missing in the message popup menu
 
 
-Thursday, April 30th 2009
+-AThursday, April 30th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3228: Forwarding filter action does not directly send the email 
-* kolab/issue3251: Fix the phone numbers of a contact in the XML, so that syncing with Toltec etc works
-* kolab/issue2931: Fix an incorrect translation
-* kolab/issue2963: Crash while deleting mails, in KMMoveCommand::execute
-* kolab/issue3268: Changes to the reply prefix would need a restart of KMail to work
-* kolab/issue2152: System tray doesn't react on the change of a folder configuration
-* Some fixes for the color settings in KOrganizer
-* Fix a small memory leak
+-A* kolab/issue3228: Forwarding filter action does not directly send the email 
+-A* kolab/issue3251: Fix the phone numbers of a contact in the XML, so that syncing with Toltec etc works
+-A* kolab/issue2931: Fix an incorrect translation
+-A* kolab/issue2963: Crash while deleting mails, in KMMoveCommand::execute
+-A* kolab/issue3268: Changes to the reply prefix would need a restart of KMail to work
+-A* kolab/issue2152: System tray doesn't react on the change of a folder configuration
+-A* Some fixes for the color settings in KOrganizer
+-A* Fix a small memory leak
 
 
-Friday, April 24th 2009
+-AFriday, April 24th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue2472: (partly) Default event color is not used
-* kolab/issue3576: Crash in KOrganizer when switching to the month view
-* kolab/issue2501: Set the default month view color strategy to "calendar inside, category outside"
-* kolab/issue2508: Don't send an invitation when it the event can't be written
-* kolab/issue1819: The help link in the template configuration didn't work
-* Fix crashes in KAddressbook when undo/redo is used on a deleted resource
-* Implement a new (currently hidden) configuration option for making the frames of month or agenda items prettier
-* Fix various memory leaks
-* Correctly disable various buttons if clicking them would lead to no action or crashes
+-A* kolab/issue2472: (partly) Default event color is not used
+-A* kolab/issue3576: Crash in KOrganizer when switching to the month view
+-A* kolab/issue2501: Set the default month view color strategy to "calendar inside, category outside"
+-A* kolab/issue2508: Don't send an invitation when it the event can't be written
+-A* kolab/issue1819: The help link in the template configuration didn't work
+-A* Fix crashes in KAddressbook when undo/redo is used on a deleted resource
+-A* Implement a new (currently hidden) configuration option for making the frames of month or agenda items prettier
+-A* Fix various memory leaks
+-A* Correctly disable various buttons if clicking them would lead to no action or crashes
 
 
-Friday, April 17th 2009
+-AFriday, April 17th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue1894: Default width of folder name column was too small on first start
-* kolab/issue2130: Displayed header type in the mail display is wrong
-* kolab/issue1838: Remove the What's this icon from Kontact
-* kolab/issue3303: Departement and title were not saved and restored
-* Reenable dragging of folders in KMail after an error
-* Fix various memory leaks
-* Correctly disable various buttons if clicking them would lead to no action or crashes
-* In KAddressbook, cancel saving when we didn't select a resource
+-A* kolab/issue1894: Default width of folder name column was too small on first start
+-A* kolab/issue2130: Displayed header type in the mail display is wrong
+-A* kolab/issue1838: Remove the What's this icon from Kontact
+-A* kolab/issue3303: Departement and title were not saved and restored
+-A* Reenable dragging of folders in KMail after an error
+-A* Fix various memory leaks
+-A* Correctly disable various buttons if clicking them would lead to no action or crashes
+-A* In KAddressbook, cancel saving when we didn't select a resource
 
 
-Friday, April 10th 2009
+-AFriday, April 10th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3492: Default outgoing transport changes randomly when removing any outgoing account
-* kolab/issue1996: Composer text-completion: Cursor always jumps to the end of the entered text
-* kolab/issue3244: Crash at KMFolder::addMsg after a second import of testmails
-* In KMail, don't allow executing something when clicking on a URL in the reader
-* When formatting incidences, don't add "[Accept]" to it if it can't be accepted
-* In the attendee editor, disable "Response request" when the attendee is oneself
-* When address completion is disabled, don't search on the LDAP server when typing
-* When exporting addresses to vcard, ask before overwriting files
-* Fix small memory leaks in KMail
+-A* kolab/issue3492: Default outgoing transport changes randomly when removing any outgoing account
+-A* kolab/issue1996: Composer text-completion: Cursor always jumps to the end of the entered text
+-A* kolab/issue3244: Crash at KMFolder::addMsg after a second import of testmails
+-A* In KMail, don't allow executing something when clicking on a URL in the reader
+-A* When formatting incidences, don't add "[Accept]" to it if it can't be accepted
+-A* In the attendee editor, disable "Response request" when the attendee is oneself
+-A* When address completion is disabled, don't search on the LDAP server when typing
+-A* When exporting addresses to vcard, ask before overwriting files
+-A* Fix small memory leaks in KMail
 
 
-Monday, April 6th 2009
+-AMonday, April 6th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3051: Pressing Shift+R at a shown mail opens a composer with a reference to the mail
-* kolab/issue2238: D'n'D a contact on the contact sidebar icon should not be possible.
-* kolab/issue1940: Activating "unseen mails behind folder" sets the option "unread mails in own column"
-* kolab/issue3512: Kontact does not detect shared seen folder capabilty anymore
-* kolab/issue2687: After applying a new identity, the columns of the mail view reset
-* Other small improvements in the sieve script editor
-* Fix crash in the composer if the transport is empty
-* Fix enable/disable action when we are in template folder
+-A* kolab/issue3051: Pressing Shift+R at a shown mail opens a composer with a reference to the mail
+-A* kolab/issue2238: D'n'D a contact on the contact sidebar icon should not be possible.
+-A* kolab/issue1940: Activating "unseen mails behind folder" sets the option "unread mails in own column"
+-A* kolab/issue3512: Kontact does not detect shared seen folder capabilty anymore
+-A* kolab/issue2687: After applying a new identity, the columns of the mail view reset
+-A* Other small improvements in the sieve script editor
+-A* Fix crash in the composer if the transport is empty
+-A* Fix enable/disable action when we are in template folder
 
 
-Friday, March 27th 2009
+-AFriday, March 27th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3482: Kontact creates invitations with reminders for one week (1W) that Outlook 2003 does not understand
-* kolab/issue3263: Support custom templates when forwarding with filters, and also support fixed recipients for templates
-* kolab/issue3471: Copy menu entry doubled in context menu
-* kolab/issue3312: Crashes if a contact is changed with the contact editor
-* In KMail, fix crash when changing the configuration
-* When deleting templates in KMail, make sure they are removed from the configuration file
-* Remove one unnecessary sync in KNotes
+-A* kolab/issue3482: Kontact creates invitations with reminders for one week (1W) that Outlook 2003 does not understand
+-A* kolab/issue3263: Support custom templates when forwarding with filters, and also support fixed recipients for templates
+-A* kolab/issue3471: Copy menu entry doubled in context menu
+-A* kolab/issue3312: Crashes if a contact is changed with the contact editor
+-A* In KMail, fix crash when changing the configuration
+-A* When deleting templates in KMail, make sure they are removed from the configuration file
+-A* Remove one unnecessary sync in KNotes
 
-Merges
-------
+-AMerges
+-A------
 
-* Merge the forwarding fixes from enterprise4, to prevent corrupt mails after using filters for forwarding
+-A* Merge the forwarding fixes from enterprise4, to prevent corrupt mails after using filters for forwarding
 
 
-Friday, March 20th 2009
+-AFriday, March 20th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3467: Frequent crash after editing notes
-* Eliminate some unnecessary groupware syncs in KNotes
-* Don't crash when using "Save As" in KNotes
-* Fix problems with notes being randomly recreated or randomly placed
-* Don't allow resizes when a note is locked
-* Disable "Find Text" and "Show/Hide All Notes" actions when there are no notes
+-A* kolab/issue3467: Frequent crash after editing notes
+-A* Eliminate some unnecessary groupware syncs in KNotes
+-A* Don't crash when using "Save As" in KNotes
+-A* Fix problems with notes being randomly recreated or randomly placed
+-A* Don't allow resizes when a note is locked
+-A* Disable "Find Text" and "Show/Hide All Notes" actions when there are no notes
 
 
-Friday, March 13th 2009
+-AFriday, March 13th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue2685: Signature not recognised with combined OpenPGP encrypted/signed email
-* kolab/issue2444: Kontact sends base64 encoded password when sieve server does not advertise STARTTLS
-* kolab/issue1950: gpgme config dialog broken when /etc/gnupg/gpgconf.conf not empty
-* kolab/issue2628: For encrypted emails where no encryption was tried, it says "decryption impossible"
-* kolab/issue3477: Kontact creates bad invitations if attendee name with umlauts is entered with double quotes
-* In KNotes, disable actions when the note is locked
-* In KMail, consider marginally trusted keys as trusted, too
+-A* kolab/issue2685: Signature not recognised with combined OpenPGP encrypted/signed email
+-A* kolab/issue2444: Kontact sends base64 encoded password when sieve server does not advertise STARTTLS
+-A* kolab/issue1950: gpgme config dialog broken when /etc/gnupg/gpgconf.conf not empty
+-A* kolab/issue2628: For encrypted emails where no encryption was tried, it says "decryption impossible"
+-A* kolab/issue3477: Kontact creates bad invitations if attendee name with umlauts is entered with double quotes
+-A* In KNotes, disable actions when the note is locked
+-A* In KMail, consider marginally trusted keys as trusted, too
 
 
-Friday, March 6th 2009
+-AFriday, March 6th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3367: Changing organizer's status doesn't work
-* kolab/issue3119: Black notes are displayed after system start
-* Don't allow selection of S/MIME certificates when we only want OpenPGP ones (and vice versa)
-* Avoid some unnecessary resyncs in KNotes
-* Don't enable undo/redo for locked notes
-* Don't allow to rename locked notes
-* Fix memory leak in the Kolab resource
-* Don't save the spellcheck coloring to the notes
+-A* kolab/issue3367: Changing organizer's status doesn't work
+-A* kolab/issue3119: Black notes are displayed after system start
+-A* Don't allow selection of S/MIME certificates when we only want OpenPGP ones (and vice versa)
+-A* Avoid some unnecessary resyncs in KNotes
+-A* Don't enable undo/redo for locked notes
+-A* Don't allow to rename locked notes
+-A* Fix memory leak in the Kolab resource
+-A* Don't save the spellcheck coloring to the notes
 
-Merges
-------
+-AMerges
+-A------
 
-* Speed up folder syncing for disconnected IMAP by only uploading flags that really changed
+-A* Speed up folder syncing for disconnected IMAP by only uploading flags that really changed
 
 
-Friday, February 27th 2009
+-AFriday, February 27th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3436: Fix crash in extractAuditLog in KMail.
-* kolab/issue3377: Issue warning when emailing to more than X recipients
-* Fix enabling/disabling of the Add/Remove Quote Characters actions.
+-A* kolab/issue3436: Fix crash in extractAuditLog in KMail.
+-A* kolab/issue3377: Issue warning when emailing to more than X recipients
+-A* Fix enabling/disabling of the Add/Remove Quote Characters actions.
 
 
-Friday, February 20th 2009
+-AFriday, February 20th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* Fix memory leak in KMail when reading signed or encrypted messages
+-A* Fix memory leak in KMail when reading signed or encrypted messages
 
 
-Friday, February 13th 2009
+-AFriday, February 13th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3385 Reminder of an event doesn't work
-* kolab/issue2523 Export Calendar as Web Page: Date range empty by default, no warning
-* kolab/issue3065: Crash in KOAgendaItem::paintEvent
+-A* kolab/issue3385 Reminder of an event doesn't work
+-A* kolab/issue2523 Export Calendar as Web Page: Date range empty by default, no warning
+-A* kolab/issue3065: Crash in KOAgendaItem::paintEvent
 
-Merges
-------
+-AMerges
+-A------
 
-* Add a cancel button to the reoccurence editor
-* Fix memory leak in KNotes
-* Disable various buttons if they have no effect, in KOrganizer, Knotes, KAddressbook and KMail
+-A* Add a cancel button to the reoccurence editor
+-A* Fix memory leak in KNotes
+-A* Disable various buttons if they have no effect, in KOrganizer, Knotes, KAddressbook and KMail
 
 
-Friday, February 6th 2009
+-AFriday, February 6th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3374 Window behaviour of Kontact is undesirable sometimes if a message box comes up.
-* kolab/issue3376 Make gui for option ForwardingInlineByDefault
-* kolab/issue3386 Kontact requires that free/busy urls match email addresses
+-A* kolab/issue3374 Window behaviour of Kontact is undesirable sometimes if a message box comes up.
+-A* kolab/issue3376 Make gui for option ForwardingInlineByDefault
+-A* kolab/issue3386 Kontact requires that free/busy urls match email addresses
 
 
-Friday, January 30th 2009
+-AFriday, January 30th 2009
 
-Problems addressed
--------------------
+-AProblems addressed
+-A-------------------
 
-* kolab/issue3275 translation of "calendar" to "Kalendar" is wrong, should be "Kalender"
+-A* kolab/issue3275 translation of "calendar" to "Kalendar" is wrong, should be "Kalender"
 
-Tuesday, January 20th 2009
+-ATuesday, January 20th 2009
 
-Problems addressed
-------------------
+-AProblems addressed
+-A------------------
 
-* kolab/issue3304 Pasting a contact opens an edit dialog.
-* kolab/issue3345 Calendar: The default status of an organizer should be accepted.
-* kolab/issue2677 Misleading german translation "Die Terminordner geh-AC6ren zur IdentitC$t"
+-A* kolab/issue3304 Pasting a contact opens an edit dialog.
+-A* kolab/issue3345 Calendar: The default status of an organizer should be accepted.
+-A* kolab/issue2677 Misleading german translation "Die Terminordner gehC6ren zur IdentitC$t"
 * kolab/issue2908 Wrong default name when renaming IMAP ressources
 * kolab/issue3219 user templates do not work, if the email has an attachment
 
