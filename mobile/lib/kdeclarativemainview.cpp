@@ -22,6 +22,7 @@
 #include "kdepim-version.h"
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QPluginLoader>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeImageProvider>
@@ -68,7 +69,7 @@
 #include "kresettingproxymodel.h"
 #include "qmllistselectionmodel.h"
 #include "qmlcheckableproxymodel.h"
-#include <QtCore/QPluginLoader>
+#include "agentstatusmonitor.h"
 
 #include <QtGui/QTreeView>
 
@@ -128,6 +129,7 @@ typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMain
 typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit> DeclarativeBulkActionFilterLineEdit;
 QML_DECLARE_TYPE( DeclarativeFilterLineEdit )
 QML_DECLARE_TYPE( DeclarativeBulkActionFilterLineEdit )
+QML_DECLARE_TYPE( AgentStatusMonitor )
 
 KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent )
   : KDeclarativeFullScreenView( appName, parent )
@@ -301,6 +303,9 @@ void KDeclarativeMainView::delayedInit()
     t.start();
     kWarning() << "Finished KDeclarativeMainView ctor: " << t.elapsed() << " - " << &t;
   }
+
+  qmlRegisterUncreatableType<AgentStatusMonitor>( "org.kde.pim.mobileui", 4, 5, "AgentStatusMonitor", QLatin1String( "This type is only exported for its enums" ) );
+  context->setContextProperty( "agentStatusMonitor", QVariant::fromValue<QObject*>( new AgentStatusMonitor( this ) ) );
 }
 
 KDeclarativeMainView::~KDeclarativeMainView()

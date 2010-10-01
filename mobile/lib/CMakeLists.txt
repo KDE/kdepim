@@ -22,6 +22,7 @@ set(mobileui_SRCS
     orderedchildcollectionsmodel.cpp
     qmllistselectionmodel.cpp
     stylesheetloader.cpp
+    agentstatusmonitor.cpp
 )
 
 if (KDEQMLPLUGIN_STATIC)
