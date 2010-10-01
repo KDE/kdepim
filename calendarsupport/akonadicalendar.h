@@ -24,16 +24,18 @@
 #ifndef AKONADI_CALENDAR_H
 #define AKONADI_CALENDAR_H
 
-#include "todo.h"
-#include "event.h"
-#include "journal.h"
-#include "kcalcore_export.h"
+#include "calendarsupport_export.h"
+
+#include <KCalCore/Todo>
+#include <KCalCore/Event>
+#include <KCalCore/Journal>
+#include <KCalCore/Calendar>
 
 #include <QtCore/QObject>
 
-namespace AkonadiCalendar {
+namespace CalendarSupport {
 
-class CALENDARSUPPORT_EXPORT Calendar : public KCalCore::Calendar
+class CALENDARSUPPORT_EXPORT AkonadiCalendar : public KCalCore::Calendar
 {
   Q_OBJECT
 
@@ -52,148 +54,141 @@ class CALENDARSUPPORT_EXPORT Calendar : public KCalCore::Calendar
 
     virtual bool isSaving() const;
 
-    virtual bool addIncidence( const Incidence::Ptr &incidence );
+    virtual bool addIncidence( const KCalCore::Incidence::Ptr &incidence );
 
-    virtual bool deleteIncidence( const Incidence::Ptr &incidence );
+    virtual bool deleteIncidence( const KCalCore::Incidence::Ptr &incidence );
 
-    virtual Incidence::List incidences() const;
+    virtual KCalCore::Incidence::List incidences() const;
 
-    virtual Incidence::List incidences( const QDate &date ) const;
+    virtual KCalCore::Incidence::List incidences( const QDate &date ) const;
 
-    virtual Incidence::List rawIncidences() const;
+    virtual KCalCore::Incidence::List incidences( const QString & ) const;
 
-    virtual Incidence::List instances( const Incidence::Ptr &incidence ) const;
+    virtual KCalCore::Incidence::List rawIncidences() const;
 
-    virtual bool deleteIncidenceInstances( const Incidence::Ptr &incidence );
+    virtual KCalCore::Incidence::List instances( const KCalCore::Incidence::Ptr &incidence ) const;
 
-    virtual bool beginChange( const Incidence::Ptr &incidence );
+    virtual bool deleteIncidenceInstances( const KCalCore::Incidence::Ptr &incidence );
 
-    virtual bool endChange( const Incidence::Ptr &incidence );
+    virtual bool beginChange( const KCalCore::Incidence::Ptr &incidence );
 
-    virtual bool addEvent( const Event::Ptr &event );
+    virtual bool endChange( const KCalCore::Incidence::Ptr &incidence );
 
-    virtual bool deleteEvent( const Event::Ptr &event );
+    virtual bool addEvent( const KCalCore::Event::Ptr &event );
 
-    virtual bool deleteEventInstances( const Event::Ptr &event );
+    virtual bool deleteEvent( const KCalCore::Event::Ptr &event );
+
+    virtual bool deleteEventInstances( const KCalCore::Event::Ptr &event );
 
     virtual void deleteAllEvents();
 
-    static Event::List sortEvents( const Event::List &eventList,
-                                   EventSortField sortField,
-                                   SortDirection sortDirection );
+    static KCalCore::Event::List sortEvents( const KCalCore::Event::List &eventList,
+                                             KCalCore::EventSortField sortField,
+                                             KCalCore::SortDirection sortDirection );
 
-    virtual Event::List events( EventSortField sortField = EventSortUnsorted,
-                                SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Event::List events( KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
+                                          KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual Event::List rawEvents(
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Event::List rawEvents( KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
+                                             KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual Event::List rawEventsForDate( const KDateTime &dt ) const;
+    virtual KCalCore::Event::List rawEventsForDate( const KDateTime &dt ) const;
 
-    virtual Event::List rawEvents( const QDate &start, const QDate &end,
-                                   const KDateTime::Spec &timeSpec = KDateTime::Spec(),
-                                   bool inclusive = false ) const;
+    virtual KCalCore::Event::List rawEvents( const QDate &start, const QDate &end,
+                                             const KDateTime::Spec &timeSpec = KDateTime::Spec(),
+                                             bool inclusive = false ) const;
 
-    virtual Event::List rawEventsForDate(
-      const QDate &date,
-      const KDateTime::Spec &timeSpec = KDateTime::Spec(),
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Event::List rawEventsForDate(  const QDate &date,
+                                                     const KDateTime::Spec &timeSpec = KDateTime::Spec(),
+                                                     KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
+                                                     KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual Event::Ptr event( const QString &uid,
-                              const KDateTime &recurrenceId = KDateTime() ) const;
+    virtual KCalCore::Event::Ptr event( const QString &uid,
+                                        const KDateTime &recurrenceId = KDateTime() ) const;
+    using QObject::event;
 
-    virtual Event::Ptr deletedEvent( const QString &uid,
-                                     const KDateTime &recurrenceId = KDateTime() ) const;
+    virtual KCalCore::Event::Ptr deletedEvent( const QString &uid,
+                                               const KDateTime &recurrenceId = KDateTime() ) const;
 
-    virtual Event::List eventInstances(
-      const Incidence::Ptr &event,
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const = 0;
+    virtual KCalCore::Event::List eventInstances( const KCalCore::Incidence::Ptr &event,
+                                                  KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
+                                                  KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const = 0;
 
-    virtual bool addTodo( const Todo::Ptr &todo );
+    virtual bool addTodo( const KCalCore::Todo::Ptr &todo );
 
-    virtual bool deleteTodo( const Todo::Ptr &todo );
+    virtual bool deleteTodo( const KCalCore::Todo::Ptr &todo );
 
-    virtual bool deleteTodoInstances( const Todo::Ptr &todo );
+    virtual bool deleteTodoInstances( const KCalCore::Todo::Ptr &todo );
 
     virtual void deleteAllTodos();
 
-    virtual Todo::List todos( TodoSortField sortField = TodoSortUnsorted,
-                              SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Todo::List todos( KCalCore::TodoSortField sortField = KCalCore::TodoSortUnsorted,
+                                        KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual Todo::List todos( const QDate &date ) const;
+    virtual KCalCore::Todo::List todos( const QDate &date ) const;
 
-    virtual Todo::List todos( const QDate &start, const QDate &end,
-                              const KDateTime::Spec &timespec = KDateTime::Spec(),
-                              bool inclusive = false ) const;
+    virtual KCalCore::Todo::List todos( const QDate &start, const QDate &end,
+                                        const KDateTime::Spec &timespec = KDateTime::Spec(),
+                                        bool inclusive = false ) const;
 
-    virtual Todo::List rawTodos(
-      TodoSortField sortField = TodoSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Todo::List rawTodos( KCalCore::TodoSortField sortField = KCalCore::TodoSortUnsorted,
+                                           KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual Todo::List rawTodosForDate( const QDate &date ) const;
+    virtual KCalCore::Todo::List rawTodosForDate( const QDate &date ) const;
 
-    virtual Todo::List rawTodos( const QDate &start, const QDate &end,
-                                 const KDateTime::Spec &timespec = KDateTime::Spec(),
-                                 bool inclusive = false ) const;
+    virtual KCalCore::Todo::List rawTodos( const QDate &start, const QDate &end,
+                                           const KDateTime::Spec &timespec = KDateTime::Spec(),
+                                           bool inclusive = false ) const;
 
-    virtual Todo::Ptr todo( const QString &uid,
-                            const KDateTime &recurrenceId = KDateTime() ) const;
+    virtual KCalCore::Todo::Ptr todo( const QString &uid,
+                                      const KDateTime &recurrenceId = KDateTime() ) const;
 
-    virtual Todo::Ptr deletedTodo( const QString &uid,
-                                   const KDateTime &recurrenceId = KDateTime() ) const;
+    virtual KCalCore::Todo::Ptr deletedTodo( const QString &uid,
+                                             const KDateTime &recurrenceId = KDateTime() ) const;
 
-    virtual Todo::List deletedTodos(
-      TodoSortField sortField = TodoSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Todo::List deletedTodos( KCalCore::TodoSortField sortField = KCalCore::TodoSortUnsorted,
+                                               KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual Todo::List todoInstances(
-      const Incidence::Ptr &todo,
-      TodoSortField sortField = TodoSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Todo::List todoInstances( const KCalCore::Incidence::Ptr &todo,
+                                                KCalCore::TodoSortField sortField = KCalCore::TodoSortUnsorted,
+                                                KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual bool addJournal( const Journal::Ptr &journal );
+    virtual bool addJournal( const KCalCore::Journal::Ptr &journal );
 
-    virtual bool deleteJournal( const Journal::Ptr &journal );
+    virtual bool deleteJournal( const KCalCore::Journal::Ptr &journal );
 
-    virtual bool deleteJournalInstances( const Journal::Ptr &journal );
+    virtual bool deleteJournalInstances( const KCalCore::Journal::Ptr &journal );
 
     virtual void deleteAllJournals();
 
-    virtual Journal::List journals(
-      JournalSortField sortField = JournalSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Journal::List journals( KCalCore::JournalSortField sortField = KCalCore::JournalSortUnsorted,
+                                              KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual Journal::List journals( const QDate &date ) const;
+    virtual KCalCore::Journal::List journals( const QDate &date ) const;
 
-    virtual Journal::List rawJournals(
-      JournalSortField sortField = JournalSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Journal::List rawJournals( KCalCore::JournalSortField sortField = KCalCore::JournalSortUnsorted,
+                                                 KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual Journal::List rawJournalsForDate( const QDate &date ) const;
+    virtual KCalCore::Journal::List rawJournalsForDate( const QDate &date ) const;
 
-    virtual Journal::Ptr journal( const QString &uid,
-                                  const KDateTime &recurrenceId = KDateTime() ) const;
+    virtual KCalCore::Journal::Ptr journal( const QString &uid,
+                                            const KDateTime &recurrenceId = KDateTime() ) const;
 
-    virtual Journal::Ptr deletedJournal( const QString &uid,
-                                         const KDateTime &recurrenceId = KDateTime() ) const;
+    virtual KCalCore::Journal::Ptr deletedJournal( const QString &uid,
+                                                   const KDateTime &recurrenceId = KDateTime() ) const;
 
-    virtual Journal::List deletedJournals(
-      JournalSortField sortField = JournalSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Journal::List deletedJournals( KCalCore::JournalSortField sortField = KCalCore::JournalSortUnsorted,
+                                                     KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual Journal::List journalInstances(
-      const Incidence::Ptr &journal,
-      JournalSortField sortField = JournalSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) const;
+    virtual KCalCore::Journal::List journalInstances( const KCalCore::Incidence::Ptr &journal,
+                                                      KCalCore::JournalSortField sortField = KCalCore::JournalSortUnsorted,
+                                                      KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
-    virtual void setupRelations( const Incidence::Ptr &incidence );
+    virtual void setupRelations( const KCalCore::Incidence::Ptr &incidence );
 
-    virtual void removeRelations( const Incidence::Ptr &incidence );
+    virtual void removeRelations( const KCalCore::Incidence::Ptr &incidence );
 
-    virtual Alarm::List alarms( const KDateTime &from, const KDateTime &to ) const;
+    virtual KCalCore::Alarm::List alarms( const KDateTime &from, const KDateTime &to ) const;
 
   private:
     //@cond PRIVATE
