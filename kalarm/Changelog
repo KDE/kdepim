@@ -1,7 +1,8 @@
 KAlarm Change Log
 
-=== Version 2.4.9 --- 18 September 2010 ===
+=== Version 2.4.9 --- 1 October 2010 ===
 - Fix crash if alarm triggers while its deletion confirmation prompt is visible.
+- Prevent long file name from expanding the width of file display alarm window.
 - Combine 4 New Alarm icons in toolbar, to fix icon texts not fitting into width.
 
 === Version 2.4.8 (KDEPIM 4.4.6) --- 4 September 2010 ===
