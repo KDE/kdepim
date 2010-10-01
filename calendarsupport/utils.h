@@ -65,6 +65,13 @@ namespace CalendarSupport
     const Akonadi::Item::List &items );
 
   /**
+   * returns incidence pointers from an akonadi item.
+   */
+  CALENDARSUPPORT_EXPORT KCalCore::Incidence::List incidencesFromItems(
+    const Akonadi::Item::List &items );
+
+
+  /**
   * returns the todo from an akonadi item, or a null pointer if the item has no such payload
   */
   CALENDARSUPPORT_EXPORT KCalCore::Todo::Ptr todo( const Akonadi::Item &item );

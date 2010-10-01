@@ -27,6 +27,7 @@
   @author Allen Winter \<winter@kde.org\>
 */
 #include "attachmenthandler.h"
+#include "akonadicalendar.h"
 
 #include <KFileDialog>
 #include <KLocale>
@@ -84,16 +85,17 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
 }
 
 Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
-                                         const QString &uid, QWidget *parent )
+                                         const QString &uid,
+                                         QWidget *parent )
 {
   if ( uid.isEmpty() ) {
     return Attachment::Ptr();
   }
 
-  CalendarResources *cal = new CalendarResources( "UTC" );
-  cal->readConfig();
-  cal->load();
-  Incidence::Ptr incidence = cal->incidence( uid );
+  // Use a singleton for this? might be expensive of this is called too often
+  AkonadiCalendar *calendar = new AkonadiCalendar( "UTC" );
+
+  Incidence::Ptr incidence = calendar->incidence( uid );
   if ( !incidence ) {
     KMessageBox::error(
       parent,
@@ -102,7 +104,8 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
     return Attachment::Ptr();
   }
 
-  return find( parent, attachmentName, incidence );
+  delete calendar;
+  return find( attachmentName, incidence, parent );
 }
 
 Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
@@ -122,7 +125,7 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
     return Attachment::Ptr();
   }
 
-  return find( parent, attachmentName, incidence );
+  return find( attachmentName, incidence, parent );
 }
 
 static KTemporaryFile *s_tempFile = 0;
@@ -182,18 +185,19 @@ bool AttachmentHandler::view( const Attachment::Ptr &attachment, QWidget *parent
 bool AttachmentHandler::view( const QString &attachmentName,
                               const Incidence::Ptr &incidence, QWidget *parent )
 {
-  return view( parent, find( parent, attachmentName, incidence ) );
+  return view( find( attachmentName, incidence, parent ), parent );
 }
 
-bool AttachmentHandler::view( const QString &attachmentName, const QString &uid, QWidget *parent )
+bool AttachmentHandler::view( const QString &attachmentName, const QString &uid,
+                              QWidget *parent )
 {
-  return view( parent, find( parent, attachmentName, uid ) );
+  return view( find( attachmentName, uid, parent ), parent );
 }
 
 bool AttachmentHandler::view( const QString &attachmentName,
                               const ScheduleMessage::Ptr &message, QWidget *parent )
 {
-  return view( parent, find( parent, attachmentName, message ) );
+  return view( find( attachmentName, message, parent ), parent );
 }
 
 bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment, QWidget *parent )
@@ -237,18 +241,19 @@ bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment, QWidget *pare
 bool AttachmentHandler::saveAs( const QString &attachmentName,
                                 const Incidence::Ptr &incidence, QWidget *parent )
 {
-  return saveAs( parent, find( parent, attachmentName, incidence ) );
+  return saveAs( find( attachmentName, incidence, parent ), parent );
 }
 
-bool AttachmentHandler::saveAs( const QString &attachmentName, const QString &uid, QWidget *parent )
+bool AttachmentHandler::saveAs( const QString &attachmentName, const QString &uid,
+                                QWidget *parent )
 {
-  return saveAs( parent, find( parent, attachmentName, uid ) );
+  return saveAs( find( attachmentName, uid, parent ), parent );
 }
 
 bool AttachmentHandler::saveAs( const QString &attachmentName,
                                 const ScheduleMessage::Ptr &message, QWidget *parent )
 {
-  return saveAs( parent, find( parent, attachmentName, message ) );
+  return saveAs( find( attachmentName, message, parent ), parent );
 }
 
 } // namespace CalendarSupport
