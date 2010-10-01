@@ -399,24 +399,6 @@ KPIM.MainView {
         onClicked : { application.newEvent(); }
 
       }
-
-      KPIM.Button2 {
-        id: addCalendarAccountButton
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: 2/3 * parent.width
-        buttonText: KDE.i18n( "Add calendar" )
-        onClicked : { application.launchAccountWizard() }
-      }
-      KPIM.Button2 {
-        id : saveFavoriteButton
-        anchors.horizontalCenter: parent.horizontalCenter
-        buttonText: KDE.i18n( "Save calendar selection" )
-        width: 2/3 * parent.width
-        visible : collectionView.hasSelection
-        onClicked : {
-          application.saveFavorite();
-        }
-      }
     }
   }
 
