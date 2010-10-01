@@ -50,6 +50,8 @@ class CALENDARSUPPORT_EXPORT AkonadiCalendar : public KCalCore::Calendar
 
     virtual bool save();
 
+    virtual bool load();
+
     virtual bool reload();
 
     virtual bool isSaving() const;
@@ -82,11 +84,17 @@ class CALENDARSUPPORT_EXPORT AkonadiCalendar : public KCalCore::Calendar
 
     virtual void deleteAllEvents();
 
-    static KCalCore::Event::List sortEvents( const KCalCore::Event::List &eventList,
-                                             KCalCore::EventSortField sortField,
-                                             KCalCore::SortDirection sortDirection );
+    void incidenceUpdated( const QString &uid, const KDateTime &recurrenceId );
+    void incidenceUpdate( const QString &uid, const KDateTime &recurrenceId );
 
-    virtual KCalCore::Event::List events( KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
+
+    KCalCore::Event::List events(
+      const QDate &date,
+      const KDateTime::Spec &timeSpec = KDateTime::Spec(),
+      KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
+      KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
+
+    KCalCore::Event::List events( KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
                                           KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
     virtual KCalCore::Event::List rawEvents( KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
@@ -112,7 +120,7 @@ class CALENDARSUPPORT_EXPORT AkonadiCalendar : public KCalCore::Calendar
 
     virtual KCalCore::Event::List eventInstances( const KCalCore::Incidence::Ptr &event,
                                                   KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
-                                                  KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const = 0;
+                                                  KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
 
     virtual bool addTodo( const KCalCore::Todo::Ptr &todo );
 
@@ -189,6 +197,16 @@ class CALENDARSUPPORT_EXPORT AkonadiCalendar : public KCalCore::Calendar
     virtual void removeRelations( const KCalCore::Incidence::Ptr &incidence );
 
     virtual KCalCore::Alarm::List alarms( const KDateTime &from, const KDateTime &to ) const;
+
+
+    virtual KCalCore::Event::List deletedEvents(
+      KCalCore::EventSortField sortField = KCalCore::EventSortUnsorted,
+      KCalCore::SortDirection sortDirection = KCalCore::SortDirectionAscending ) const;
+
+
+  Q_SIGNALS:
+    // See if we have this in the parent class, in KCalCore
+    void calendarChanged();
 
   private:
     //@cond PRIVATE

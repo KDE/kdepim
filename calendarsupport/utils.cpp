@@ -85,6 +85,17 @@ KCalCore::Event::List CalendarSupport::eventsFromItems( const Akonadi::Item::Lis
   return events;
 }
 
+KCalCore::Incidence::List CalendarSupport::incidencesFromItems( const Akonadi::Item::List &items )
+{
+  KCalCore::Incidence::List incidences;
+  Q_FOREACH ( const Akonadi::Item &item, items ) {
+    if ( const KCalCore::Incidence::Ptr e = CalendarSupport::incidence( item ) ) {
+      incidences.push_back( e );
+    }
+  }
+  return incidences;
+}
+
 KCalCore::Todo::Ptr CalendarSupport::todo( const Akonadi::Item &item )
 {
   return
