@@ -25,6 +25,7 @@ set(kab_mobile_srcs
   editorbase.cpp
   editorbusiness.cpp
   editorcontactgroup.cpp
+  editorcrypto.cpp
   editorgeneral.cpp
   editorlocation.cpp
   editormore.cpp
@@ -35,12 +36,6 @@ set(kab_mobile_srcs
   mobilelineedit.cpp
   phonetypecombo.cpp
 )
-
-if (NOT WINCE)
-  set(kab_mobile_srcs ${kab_mobile_srcs}
-    editorcrypto.cpp
-  )
-endif(NOT WINCE)
 
 kde4_add_ui_files(kab_mobile_srcs
   editorbusiness.ui
