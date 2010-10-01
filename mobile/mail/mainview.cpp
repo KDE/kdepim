@@ -741,7 +741,7 @@ void MainView::deleteItemResult( KJob *job )
       kDebug() << "Error trying to delete item";
       //###: review error string
       KMessageBox::sorry( this,
-                          i18n("Can not delete draft."),
+                          i18n("Cannot delete draft."),
                           i18n("Delete Draft Error"));
   }
 }

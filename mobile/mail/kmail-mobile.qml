@@ -569,7 +569,7 @@ KPIM.MainView {
 
     visible : false
     actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18n("%1 folders", collectionView.numSelected)
+    multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
     headerList : HeaderView {
       showCheckBox : true

@@ -113,12 +113,14 @@ KPIM.MainView {
       anchors.left: parent.left
 
       breadcrumbComponentFactory : _breadcrumbNavigationFactory
+      
+      multipleSelectionText : KDE.i18nc("%1 is e.g. 3 folders, %2 is e.g. from 2 accounts, %3 is e.g. 9 emails",
+                                        "You have selected \n%1\n%2\n%3",
+                                        KDE.i18np("1 folder","%1 folders",collectionView.numSelected),
+                                        KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
+                                        KDE.i18np("1 note","%1 notes",headerList.count))
 
-      multipleSelectionText : KDE.i18n("You have selected \n%1 folders\nfrom %2 accounts\n%3 notes",
-                                       collectionView.numSelected,
-                                       application.numSelectedAccounts,
-                                       headerList.count)
-
+      
       QML.Component.onCompleted : updateContextActionsStates();
       onNumBreadcrumbsChanged : updateContextActionsStates();
       onNumSelectedChanged : updateContextActionsStates();
@@ -325,7 +327,7 @@ KPIM.MainView {
 
     visible : false
     actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18n("%1 note books", collectionView.numSelected)
+    multipleText : KDE.i18np("1 note book", "%1 note books", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
     headerList : NotesListView {
       showCheckBox : true

@@ -165,9 +165,13 @@ KPIM.MainView {
 
       breadcrumbComponentFactory : _breadcrumbNavigationFactory
 
-      multipleSelectionText : KDE.i18n("You have selected \n%1 addressbooks\nfrom %2 accounts\n%3 contacts", collectionView.numSelected,
-                                                                                                        application.numSelectedAccounts,
-                                                                                                        contactList.count)
+      multipleSelectionText : KDE.i18nc("%1 is e.g. 3 address books, %2 is e.g. from 2 accounts, %3 is e.g. 9 contacts",
+                                        "You have selected \n%1\n%2\n%3",
+                                        KDE.i18np("1 address book","%1 address books",collectionView.numSelected),
+                                        KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
+                                        KDE.i18np("1 contact","%1 contacts",contactList.count))
+
+
       QML.Component.onCompleted : updateContextActionsStates();
       onNumBreadcrumbsChanged : updateContextActionsStates();
       onNumSelectedChanged : updateContextActionsStates();
@@ -432,7 +436,7 @@ KPIM.MainView {
     visible : false
 
     actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18n("%1 folders", collectionView.numSelected)
+    multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
     headerList : ContactListView {
       showCheckBox : true
