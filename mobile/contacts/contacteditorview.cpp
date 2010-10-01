@@ -213,9 +213,7 @@ void ContactEditorView::delayedInit()
   qmlRegisterType<DeclarativeEditorGeneral>( "org.kde.contacteditors", 4, 5, "ContactEditorGeneral" );
   qmlRegisterType<DeclarativeEditorBusiness>( "org.kde.contacteditors", 4, 5, "ContactEditorBusiness" );
   qmlRegisterType<DeclarativeEditorLocation>( "org.kde.contacteditors", 4, 5, "ContactEditorLocation" );
-#ifndef Q_OS_WINCE
   qmlRegisterType<DeclarativeEditorCrypto>( "org.kde.contacteditors", 4, 5, "ContactEditorCrypto" );
-#endif
   qmlRegisterType<DeclarativeEditorMore>( "org.kde.contacteditors", 4, 5, "ContactEditorMore" );
 
   connect( d->mItemManager, SIGNAL( itemSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction ) ),
