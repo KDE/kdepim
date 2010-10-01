@@ -61,6 +61,9 @@ class MessageViewItem : public DeclarativeAkonadiItem
     virtual void scrollUp( int dist );
     virtual void simulateMouseClick( const QPoint &pos );
 
+  public slots:
+    void saveAllAttachments();
+
   signals:
     /** Emitted for urls not handled by MessageViewer::Viewer. */
     void urlClicked( const Akonadi::Item &item, const KUrl &url );

@@ -130,4 +130,10 @@ Viewer* MessageViewItem::viewer()
     return m_viewer;
 }
 
+void MessageViewItem::saveAllAttachments()
+{
+  m_viewer->slotAttachmentSaveAll();
+}
+
+
 #include "messageviewitem.moc"

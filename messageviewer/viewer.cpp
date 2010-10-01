@@ -155,6 +155,12 @@ void Viewer::slotAttachmentSaveAs()
   d->slotAttachmentSaveAs();
 }
 
+void Viewer::slotAttachmentSaveAll()
+{
+  Q_D( Viewer );
+  d->slotAttachmentSaveAll();
+}
+
 void Viewer::slotSaveMessage()
 {
   Q_D( Viewer );

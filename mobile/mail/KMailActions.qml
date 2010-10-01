@@ -163,7 +163,8 @@ ActionMenuContainer {
     category: "mail_viewer"
     name : "mail_viewer_attachments"
     text : KDE.i18n( "Attachments" )
-    FakeAction { name : "save_all" }
+    ScriptActionItem { name : "attachment_save_all"; title : KDE.i18n( "Save All Attachments" ) }
+   // ActionListItem { name : "attachment_save_all" }
   }
 
   ActionList {

@@ -324,6 +324,7 @@ public slots:
   void slotFind();
   void slotSaveMessage();
   void slotAttachmentSaveAs();
+  void slotAttachmentSaveAll();
   void slotShowMessageSource();
 
 protected:

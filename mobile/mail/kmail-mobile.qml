@@ -498,6 +498,13 @@ KPIM.MainView {
                   bulkActionScreen.visible = true
                   application.isBulkActionScreenSelected = true
                 }
+              },
+              KPIM.ScriptAction {
+                name : "attachment_save_all"
+                script : {
+                  actionPanel.collapse();
+                  messageView.saveAllAttachments();
+                }
               }
             ]
 
