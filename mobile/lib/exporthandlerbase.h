@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef IMPORTHANDLERBASE_H
-#define IMPORTHANDLERBASE_H
+#ifndef EXPORTHANDLERBASE_H
+#define EXPORTHANDLERBASE_H
 
 #include "mobileui_export.h"
 
@@ -26,17 +26,15 @@
 
 #include <QtCore/QObject>
 
-class KJob;
-class KProgressDialog;
 class QItemSelectionModel;
 
-class MOBILEUI_EXPORT ImportHandlerBase : public QObject
+class MOBILEUI_EXPORT ExportHandlerBase : public QObject
 {
   Q_OBJECT
 
   public:
-    ImportHandlerBase( QObject *parent = 0 );
-    ~ImportHandlerBase();
+    ExportHandlerBase( QObject *parent = 0 );
+    ~ExportHandlerBase();
 
     void setSelectionModel( QItemSelectionModel *model );
 
@@ -44,21 +42,14 @@ class MOBILEUI_EXPORT ImportHandlerBase : public QObject
     void exec();
 
   protected:
-    virtual QString fileDialogNameFilter() const = 0;
-    virtual QString fileDialogTitle() const = 0;
-    virtual QString collectionDialogText() const = 0;
-    virtual QString collectionDialogTitle() const = 0;
-    virtual QString importDialogText( int count, const QString &collectionName ) const = 0;
-    virtual QString importDialogTitle() const = 0;
+    virtual QString dialogText() const = 0;
+    virtual QString dialogAllText() const = 0;
+    virtual QString dialogLocalOnlyText() const = 0;
 
     virtual QStringList mimeTypes() const = 0;
-    virtual Akonadi::Item::List createItems( const QStringList &fileNames, bool *ok ) = 0;
-
-  private Q_SLOTS:
-    void slotImportJobDone( KJob* );
+    virtual bool exportItems( const Akonadi::Item::List &items ) = 0;
 
   private:
-    KProgressDialog *mImportProgressDialog;
     QItemSelectionModel *mSelectionModel;
 };
 

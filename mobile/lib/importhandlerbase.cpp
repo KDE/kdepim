@@ -43,7 +43,7 @@ void ImportHandlerBase::setSelectionModel( QItemSelectionModel *model )
   mSelectionModel = model;
 }
 
-void ImportHandlerBase::import()
+void ImportHandlerBase::exec()
 {
   const QStringList fileNames = KFileDialog::getOpenFileNames( KUrl(), fileDialogNameFilter(),
                                                                0, fileDialogTitle() );

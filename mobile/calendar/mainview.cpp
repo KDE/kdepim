@@ -24,12 +24,10 @@
 #include "calendaradaptor.h"
 #include "eventlistproxy.h"
 #include "eventsfilterproxymodel.h"
+#include "eventsexporthandler.h"
 #include "eventsimporthandler.h"
 
 #include <kcalcore/event.h>
-#include <kcalcore/filestorage.h>
-#include <kcalcore/icalformat.h>
-#include <kcalcore/memorycalendar.h>
 #include <kcalcore/todo.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
@@ -38,18 +36,12 @@
 #include <calendarviews/eventviews/eventview.h>
 
 #include <akonadi/agentactionmanager.h>
-#include <akonadi/collectiondialog.h>
 #include <akonadi/entitytreemodel.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/recursiveitemfetchjob.h>
 #include <akonadi/standardactionmanager.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
-#include <kfiledialog.h>
-#include <kmessagebox.h>
 #include <ksystemtimezone.h>
 
 #include <qdeclarativeengine.h>
@@ -119,11 +111,11 @@ void MainView::delayedInit()
   actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
 
   action = new KAction( i18n( "Import Events" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( import() ) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   actionCollection()->addAction( QLatin1String( "import_events" ), action );
 
   action = new KAction( i18n( "Export Events" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportICal() ) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   actionCollection()->addAction( QLatin1String( "export_events" ), action );
 
   connect(this, SIGNAL(statusChanged(QDeclarativeView::Status)),
@@ -209,79 +201,6 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
   editor->show();
 }
 
-void MainView::exportICal()
-{
-  Akonadi::Collection::List selectedCollections;
-  const QModelIndexList indexes = regularSelectionModel()->selectedRows();
-  foreach ( const QModelIndex &index, indexes ) {
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( collection.isValid() )
-      selectedCollections << collection;
-  }
-
-  bool exportAllEvents = false;
-  if ( !selectedCollections.isEmpty() ) {
-    const QString msg = i18n( "Which events shall be exported?" );
-    switch ( KMessageBox::questionYesNo( 0, msg, QString(), KGuiItem(i18n( "All Events" ) ),
-                                         KGuiItem( i18n( "Events in current folder" ) ) ) ) {
-      case KMessageBox::Yes:
-        exportAllEvents = true;
-        break;
-      case KMessageBox::No: // fall through
-      default:
-        exportAllEvents = false;
-    }
-  } else {
-    exportAllEvents = true;
-  }
-
-  Akonadi::Item::List eventItems;
-  if ( exportAllEvents ) {
-    Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
-                                                                              QStringList() << KCalCore::Event::eventMimeType() );
-    job->fetchScope().fetchFullPayload();
-
-    job->exec();
-
-    eventItems << job->items();
-  } else {
-    foreach ( const Akonadi::Collection &collection, selectedCollections ) {
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
-      job->fetchScope().fetchFullPayload();
-
-      if ( job->exec() )
-        eventItems << job->items();
-    }
-  }
-
-  KCalCore::Event::List events;
-
-  foreach ( const Akonadi::Item &item, eventItems ) {
-    if ( item.hasPayload<KCalCore::Event::Ptr>() )
-      events << item.payload<KCalCore::Event::Ptr>();
-  }
-
-  if ( events.isEmpty() )
-    return;
-
-  const QString fileName = KFileDialog::getSaveFileName( KUrl( "calendar.ics" ) );
-  if ( fileName.isEmpty() )
-    return;
-
-  KCalCore::MemoryCalendar::Ptr calendar( new KCalCore::MemoryCalendar( QLatin1String( "UTC" ) ) );
-  calendar->startBatchAdding();
-  foreach ( const KCalCore::Event::Ptr &event, events )
-    calendar->addIncidence( event );
-  calendar->endBatchAdding();
-
-  KCalCore::FileStorage::Ptr storage( new KCalCore::FileStorage( calendar, fileName, new KCalCore::ICalFormat() ) );
-
-  if ( storage->open() ) {
-    storage->save();
-    storage->close();
-  }
-}
-
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
@@ -346,6 +265,11 @@ QAbstractProxyModel* MainView::itemFilterModel() const
 ImportHandlerBase* MainView::importHandler() const
 {
   return new EventsImportHandler();
+}
+
+ExportHandlerBase* MainView::exportHandler() const
+{
+  return new EventsExportHandler();
 }
 
 #include "mainview.moc"

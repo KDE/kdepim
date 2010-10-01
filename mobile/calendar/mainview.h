@@ -49,8 +49,6 @@ class MainView : public KDeclarativeMainView
     void newTodo();
     void editIncidence( const Akonadi::Item &item, const QDate &date );
 
-    void exportICal();
-
   protected slots:
     void delayedInit();
     void connectQMLSlots(QDeclarativeView::Status status);
@@ -63,6 +61,7 @@ class MainView : public KDeclarativeMainView
 
     virtual QAbstractProxyModel* itemFilterModel() const;
     virtual ImportHandlerBase* importHandler() const;
+    virtual ExportHandlerBase* exportHandler() const;
 
   private:
     CalendarSupport::Calendar *m_calendar;

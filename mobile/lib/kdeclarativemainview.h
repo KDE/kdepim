@@ -33,6 +33,7 @@ class Item;
 class ItemFetchScope;
 }
 
+class ExportHandlerBase;
 class ImportHandlerBase;
 class ListProxy;
 class KDeclarativeMainViewPrivate;
@@ -100,10 +101,16 @@ protected:
   virtual QAbstractProxyModel* itemFilterModel() const;
 
   /**
-   * Returns the import object that will be used for importing data.
+   * Returns the object that will be used for importing data.
    * If @c 0 is returned, no import functionality is offered.
    */
   virtual ImportHandlerBase* importHandler() const;
+
+  /**
+   * Returns the object that will be used for exporting data.
+   * If @c 0 is returned, no export functionality is offered.
+   */
+  virtual ExportHandlerBase* exportHandler() const;
 
 protected slots:
   void delayedInit();
@@ -159,7 +166,8 @@ public slots:
 
   void setBulkActionScreenSelected( bool selected );
 
-  void import();
+  void importItems();
+  void exportItems();
 
 signals:
   void numSelectedAccountsChanged();

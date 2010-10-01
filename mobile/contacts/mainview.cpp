@@ -23,26 +23,20 @@
 #include "contacteditorview.h"
 #include "contactgroupeditorview.h"
 #include "contactlistproxy.h"
+#include "contactsexporthandler.h"
 #include "contactsimporthandler.h"
 
 #include <akonadi/agentactionmanager.h>
-#include <akonadi/collectiondialog.h>
 #include <akonadi/contact/contactsfilterproxymodel.h>
 #include <akonadi/contact/standardcontactactionmanager.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/recursiveitemfetchjob.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
-#include <kabc/vcardconverter.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kfiledialog.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <kmessagebox.h>
-#include <kprogressdialog.h>
 
 #include <QtCore/QPointer>
 #include <QtDeclarative/QDeclarativeEngine>
@@ -79,11 +73,11 @@ void MainView::delayedInit()
   actionCollection()->addAction( QLatin1String( "add_new_contact_group" ), action );
 
   action = new KAction( i18n( "Import Contacts" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( import() ) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   actionCollection()->addAction( QLatin1String( "import_vcards" ), action );
 
   action = new KAction( i18n( "Export Contacts" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportVCard() ) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   actionCollection()->addAction( QLatin1String( "export_vcards" ), action );
 }
 
@@ -129,144 +123,6 @@ void MainView::editContactGroup( const Akonadi::Item &item )
   connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->loadContactGroup( item );
   editor->show();
-}
-
-static QString contactFileName( const KABC::Addressee &contact )
-{
-  if ( !contact.givenName().isEmpty() && !contact.familyName().isEmpty() )
-    return QString( "%1_%2" ).arg( contact.givenName() ).arg( contact.familyName() );
-
-  if ( !contact.familyName().isEmpty() )
-    return contact.familyName();
-
-  if ( !contact.givenName().isEmpty() )
-    return contact.givenName();
-
-  if ( !contact.organization().isEmpty() )
-    return contact.organization();
-
-  return contact.uid();
-}
-
-static bool doExport( const QString &fileName, const QByteArray &data )
-{
-  KUrl url( fileName );
-  if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
-    if ( KMessageBox::questionYesNo( 0, i18n( "Do you want to overwrite file \"%1\"", url.toLocalFile() ) ) == KMessageBox::No )
-      return false;
-  }
-
-  QFile file( fileName );
-  if ( !file.open( QIODevice::WriteOnly ) )
-    return false;
-
-  file.write( data );
-  file.close();
-
-  return true;
-}
-
-void MainView::exportVCard()
-{
-  Akonadi::Collection::List selectedCollections;
-  const QModelIndexList indexes = regularSelectionModel()->selectedRows();
-  foreach ( const QModelIndex &index, indexes ) {
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( collection.isValid() )
-      selectedCollections << collection;
-  }
-
-  bool exportAllContacts = false;
-  if ( !selectedCollections.isEmpty() ) {
-    const QString msg = i18n( "Which contacts shall be exported?" );
-    switch ( KMessageBox::questionYesNo( 0, msg, QString(), KGuiItem(i18n( "All Contacts" ) ),
-                                         KGuiItem( i18n( "Contacts in current folder" ) ) ) ) {
-      case KMessageBox::Yes:
-        exportAllContacts = true;
-        break;
-      case KMessageBox::No: // fall through
-      default:
-        exportAllContacts = false;
-    }
-  } else {
-    exportAllContacts = true;
-  }
-
-  Akonadi::Item::List contactItems;
-  if ( exportAllContacts ) {
-    Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
-                                                                              QStringList() << KABC::Addressee::mimeType() );
-    job->fetchScope().fetchFullPayload();
-
-    job->exec();
-
-    contactItems << job->items();
-  } else {
-    foreach ( const Akonadi::Collection &collection, selectedCollections ) {
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
-      job->fetchScope().fetchFullPayload();
-
-      if ( job->exec() )
-        contactItems << job->items();
-    }
-  }
-
-  KABC::Addressee::List contacts;
-
-  foreach ( const Akonadi::Item &item, contactItems ) {
-    if ( item.hasPayload<KABC::Addressee>() )
-      contacts << item.payload<KABC::Addressee>();
-  }
-
-  if ( contacts.isEmpty() )
-    return;
-
-  KABC::VCardConverter converter;
-  QString fileName;
-
-  bool ok = true;
-  if ( contacts.count() == 1 ) {
-    fileName = KFileDialog::getSaveFileName( contactFileName( contacts.first() ) + QLatin1String( ".vcf" ) );
-    if ( fileName.isEmpty() ) // user canceled export
-      return;
-
-    ok = doExport( fileName, converter.createVCards( contacts, KABC::VCardConverter::v3_0 ) );
-  } else {
-    const QString msg = i18n( "You have selected a list of contacts, shall they be "
-                              "exported to several files?" );
-
-    switch ( KMessageBox::questionYesNo( parentWidget(), msg, QString(), KGuiItem(i18n( "Export to Several Files" ) ),
-                                         KGuiItem( i18n( "Export to One File" ) ) ) ) {
-      case KMessageBox::Yes: {
-        const KUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
-        if ( baseUrl.isEmpty() )
-          return; // user canceled export
-
-        foreach ( const KABC::Addressee &contact, contacts ) {
-
-          fileName = baseUrl.url() + QDir::separator() + contactFileName( contact ) + QLatin1String( ".vcf" );
-
-          bool tmpOk = false;
-
-          tmpOk = doExport( fileName, converter.createVCard( contact, KABC::VCardConverter::v3_0 ) );
-
-          ok = ok && tmpOk;
-        }
-        break;
-      }
-      case KMessageBox::No:
-      default: {
-        fileName = KFileDialog::getSaveFileName( KUrl( "addressbook.vcf" ) );
-        if ( fileName.isEmpty() )
-          return; // user canceled export
-
-        ok = doExport( fileName, converter.createVCards( contacts, KABC::VCardConverter::v3_0 ) );
-      }
-    }
-  }
-
-  if ( !ok )
-    qDebug() << "error";
 }
 
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -344,6 +200,11 @@ QAbstractProxyModel* MainView::itemFilterModel() const
 ImportHandlerBase* MainView::importHandler() const
 {
   return new ContactsImportHandler();
+}
+
+ExportHandlerBase* MainView::exportHandler() const
+{
+  return new ContactsExportHandler();
 }
 
 #include "mainview.moc"

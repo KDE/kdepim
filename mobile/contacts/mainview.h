@@ -46,8 +46,6 @@ class MainView : public KDeclarativeMainView
     void editContact( const Akonadi::Item &item );
     void editContactGroup( const Akonadi::Item &item );
 
-    void exportVCard();
-
   protected slots:
     virtual void delayedInit();
 
@@ -59,6 +57,7 @@ class MainView : public KDeclarativeMainView
 
     virtual QAbstractProxyModel* itemFilterModel() const;
     virtual ImportHandlerBase* importHandler() const;
+    virtual ExportHandlerBase* exportHandler() const;
 
   private:
     Akonadi::StandardContactActionManager *mActionManager;

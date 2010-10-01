@@ -11,6 +11,7 @@ set(mobileui_SRCS
     breadcrumbnavigation.cpp
     breadcrumbnavigationcontext.cpp
     declarativeakonadiitem.cpp
+    exporthandlerbase.cpp
     favoriteslistmodel.cpp
     importhandlerbase.cpp
     kdeclarativeapplication.cpp

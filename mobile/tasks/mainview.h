@@ -35,8 +35,6 @@ class MainView : public KDeclarativeMainView
     void setPercentComplete(int row, int percentComplete);
     void editIncidence( const Akonadi::Item &item );
 
-    void exportICal();
-
   protected slots:
     virtual void delayedInit();
 
@@ -48,6 +46,7 @@ class MainView : public KDeclarativeMainView
 
     virtual QAbstractProxyModel* itemFilterModel() const;
     virtual ImportHandlerBase* importHandler() const;
+    virtual ExportHandlerBase* exportHandler() const;
 };
 
 #endif // MAINVIEW_H

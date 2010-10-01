@@ -21,34 +21,25 @@
 
 #include "mainview.h"
 
-#include <kaction.h>
-#include <kactioncollection.h>
-#include <kcalcore/filestorage.h>
-#include <kcalcore/icalformat.h>
-#include <kcalcore/memorycalendar.h>
-#include <kcalcore/todo.h>
-#include <KDebug>
-#include <kfiledialog.h>
-#include <KGlobal>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <KStandardDirs>
-
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/collectiondialog.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <Akonadi/ItemFetchScope>
-#include <akonadi/recursiveitemfetchjob.h>
-#include <akonadi/standardactionmanager.h>
-#include <libkdepimdbusinterfaces/reminderclient.h>
-
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
 #include "tasklistproxy.h"
 #include "tasksfilterproxymodel.h"
+#include "tasksexporthandler.h"
 #include "tasksimporthandler.h"
+
+#include <akonadi/agentactionmanager.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/standardactionmanager.h>
+#include <kaction.h>
+#include <kactioncollection.h>
+#include <kcalcore/todo.h>
+#include <KDebug>
+#include <KGlobal>
+#include <klocale.h>
+#include <KStandardDirs>
+#include <libkdepimdbusinterfaces/reminderclient.h>
 
 #include <QtCore/QPointer>
 #include <QtDeclarative/QDeclarativeEngine>
@@ -77,11 +68,11 @@ void MainView::delayedInit()
   actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
 
   action = new KAction( i18n( "Import Tasks" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( import() ) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   actionCollection()->addAction( QLatin1String( "import_tasks" ), action );
 
   action = new KAction( i18n( "Export Tasks" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportICal() ) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   actionCollection()->addAction( QLatin1String( "export_tasks" ), action );
 
   KPIM::ReminderClient::startDaemon();
@@ -114,79 +105,6 @@ void MainView::editIncidence( const Akonadi::Item &item )
   IncidenceView *editor = new IncidenceView;
   editor->load( item, QDate() );
   editor->show();
-}
-
-void MainView::exportICal()
-{
-  Akonadi::Collection::List selectedCollections;
-  const QModelIndexList indexes = regularSelectionModel()->selectedRows();
-  foreach ( const QModelIndex &index, indexes ) {
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( collection.isValid() )
-      selectedCollections << collection;
-  }
-
-  bool exportAllTodos = false;
-  if ( !selectedCollections.isEmpty() ) {
-    const QString msg = i18n( "Which todos shall be exported?" );
-    switch ( KMessageBox::questionYesNo( 0, msg, QString(), KGuiItem(i18n( "All Todos" ) ),
-                                         KGuiItem( i18n( "Todos in current folder" ) ) ) ) {
-      case KMessageBox::Yes:
-        exportAllTodos = true;
-        break;
-      case KMessageBox::No: // fall through
-      default:
-        exportAllTodos = false;
-    }
-  } else {
-    exportAllTodos = true;
-  }
-
-  Akonadi::Item::List todoItems;
-  if ( exportAllTodos ) {
-    Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
-                                                                              QStringList() << KCalCore::Todo::todoMimeType() );
-    job->fetchScope().fetchFullPayload();
-
-    job->exec();
-
-    todoItems << job->items();
-  } else {
-    foreach ( const Akonadi::Collection &collection, selectedCollections ) {
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
-      job->fetchScope().fetchFullPayload();
-
-      if ( job->exec() )
-        todoItems << job->items();
-    }
-  }
-
-  KCalCore::Todo::List todos;
-
-  foreach ( const Akonadi::Item &item, todoItems ) {
-    if ( item.hasPayload<KCalCore::Todo::Ptr>() )
-      todos << item.payload<KCalCore::Todo::Ptr>();
-  }
-
-  if ( todos.isEmpty() )
-    return;
-
-  const QString fileName = KFileDialog::getSaveFileName( KUrl( "calendar.ics" ) );
-  if ( fileName.isEmpty() )
-    return;
-
-  KCalCore::MemoryCalendar::Ptr calendar( new KCalCore::MemoryCalendar( QLatin1String( "UTC" ) ) );
-  calendar->startBatchAdding();
-  foreach ( const KCalCore::Todo::Ptr &todo, todos )
-    calendar->addIncidence( todo );
-  calendar->endBatchAdding();
-
-  KCalCore::FileStorage::Ptr storage( new KCalCore::FileStorage( calendar, fileName, new KCalCore::ICalFormat() ) );
-
-  if ( storage->open() ) {
-    storage->save();
-    storage->close();
-  }
 }
 
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -253,4 +171,9 @@ QAbstractProxyModel* MainView::itemFilterModel() const
 ImportHandlerBase* MainView::importHandler() const
 {
   return new TasksImportHandler();
+}
+
+ExportHandlerBase* MainView::exportHandler() const
+{
+  return new TasksExportHandler();
 }

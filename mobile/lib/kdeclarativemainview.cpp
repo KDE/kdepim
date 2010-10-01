@@ -58,6 +58,7 @@
 
 #include "akonadibreadcrumbnavigationfactory.h"
 #include "declarativewidgetbase.h"
+#include "exporthandlerbase.h"
 #include "importhandlerbase.h"
 #include "listproxy.h"
 #include <KActionCollection>
@@ -556,14 +557,24 @@ void KDeclarativeMainView::setBulkActionScreenSelected( bool selected )
   emit isBulkActionScreenSelectedChanged();
 }
 
-void KDeclarativeMainView::import()
+void KDeclarativeMainView::importItems()
 {
-  ImportHandlerBase *import = importHandler();
-  if ( !import )
+  ImportHandlerBase *handler = importHandler();
+  if ( !handler )
     return;
 
-  import->setSelectionModel( regularSelectionModel() );
-  import->import();
+  handler->setSelectionModel( regularSelectionModel() );
+  handler->exec();
+}
+
+void KDeclarativeMainView::exportItems()
+{
+  ExportHandlerBase *handler = exportHandler();
+  if ( !handler )
+    return;
+
+  handler->setSelectionModel( regularSelectionModel() );
+  handler->exec();
 }
 
 int KDeclarativeMainView::numSelectedAccounts()
@@ -623,6 +634,11 @@ QAbstractProxyModel* KDeclarativeMainView::itemFilterModel() const
 }
 
 ImportHandlerBase* KDeclarativeMainView::importHandler() const
+{
+  return 0;
+}
+
+ExportHandlerBase* KDeclarativeMainView::exportHandler() const
 {
   return 0;
 }
