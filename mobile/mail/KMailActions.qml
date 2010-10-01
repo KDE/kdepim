@@ -68,7 +68,6 @@ ActionMenuContainer {
     name : "account_menu"
     text : KDE.i18n( "Account" )
     ActionListItem { name : "akonadi_resource_synchronize" }
-  //  FakeAction { name : "srv_side_subsrcp" }
     ActionListItem { name : "akonadi_manage_local_subscriptions" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
@@ -82,9 +81,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_mark_all_as_read" }
     ActionListItem { name : "move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
-    FakeAction { name : "archive_folder" }
     ActionListItem { name : "show_expire_properties" }
-    FakeAction { name : "ml_management" }
   }
 
   ActionList {
@@ -121,7 +118,6 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_mark_all_as_read" }
     ActionListItem { name : "akonadi_move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
-    FakeAction { name : "archive_selected_folders" }
   }
 
   ActionList {
@@ -147,17 +143,6 @@ ActionMenuContainer {
       }      
     }
   
-    /*
-    ActionList {
-      category: "mail_viewer"
-      name : "mail_viewer_reply"
-      text : KDE.i18n( "Reply..." )
-      ActionListItem { name: "message_reply" }
-      ActionListItem { name: "message_reply_to_author" }
-      ActionListItem { name: "message_reply_to_all" }
-      ActionListItem { name: "message_reply_to_list" }
-   }*/
-
     ActionListItem {
       name : "message_forward"
       onPressAndHold: {
@@ -165,24 +150,7 @@ ActionMenuContainer {
           actionPanel.collapse()
       }
     }
-    /*
-    ActionList {
-      category: "mail_viewer"
-      name : "mail_viewer_forward"
-      text : KDE.i18n( "Forward..." )
-      ActionListItem { name: "message_forward" }
-      ActionListItem { name: "message_forward_as_attachment" }
-      ActionListItem { name: "message_redirect" }
-   }*/
-   /*
-    ActionList {
-      name : "mail_viewer_mark_as_menu"
-      text : KDE.i18n( "Mark As" )
-      ActionListItem { name : "akonadi_mark_as_read" }
-      ActionListItem { name : "akonadi_mark_as_unread" }
-      ActionListItem { name : "akonadi_mark_as_important" }
-      ActionListItem { name : "akonadi_mark_as_action_item" }
-    }*/
+
     ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark As..." ) }
     ActionListItem { name : "message_send_again" }
     ActionListItem { name : "create_todo_reminder" }
@@ -214,6 +182,5 @@ ActionMenuContainer {
     text : KDE.i18n( "Application" )
     type : "mail"
 
-    FakeAction { name : "configure_notifications" }
   }
 }
