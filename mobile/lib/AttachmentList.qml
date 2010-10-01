@@ -34,7 +34,7 @@ Item {
   property int requestedWidth: attachmentListWidth
 
   /** Emittted when an attachment has been selected. */
-  signal attachmentSelected
+  signal attachmentSelected(string url, string mimeType)
 
   Component {
     id: attachmentDelegate
@@ -60,7 +60,7 @@ Item {
       MouseArea {
         anchors.fill: parent
         onClicked: {
-          console.log( "TODO - attachment selected: " + model.display );
+          console.log( "TODO - attachment si stillelected: ",  model.display );
           var nonCurrentClicked = false
           if ( wrapper.ListView.view.currentIndex != model.index ) { nonCurrentClicked = true }
           wrapper.ListView.view.currentIndex = model.index
@@ -68,7 +68,7 @@ Item {
           if ( model.mimeType.indexOf( "image" ) == 0 ) {
             wrapper.ListView.view.currentAttachmentUrl = model.attachmentUrl;
           }
-          if ( nonCurrentClicked ) { attachmentSelected(); }
+          if ( nonCurrentClicked ) { attachmentSelected(model.attachmentUrl, model.mimeType); }
         }
       }
     }

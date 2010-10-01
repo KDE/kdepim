@@ -532,6 +532,10 @@ KPIM.MainView {
           id: attachmentView
           model: messageView.attachmentModel
           anchors.fill: parent
+
+          onAttachmentSelected: {
+            application.openAttachment(url, mimeType);
+          }
         }
       ]
     }

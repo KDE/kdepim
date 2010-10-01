@@ -77,6 +77,7 @@
 #include <mailcommon/expirypropertiesdialog.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
+#include <KRun>
 
 
 Q_DECLARE_METATYPE(KMime::Content*)
@@ -1005,6 +1006,13 @@ void MainView::createToDo()
       return;
 
     MailCommon::Util::createTodoFromMail( item );
+}
+
+void MainView::openAttachment(const QString& url, const QString& mimeType)
+{
+   KRun::runUrl( KUrl::fromPathOrUrl(url), mimeType, this );
+  //TODO: if doesn't work, try KToolInvocation::invokeBrowser on maemo and a ShellExecuteEx direct API call on WinCE either inside KRun or KToolInvocation
+   //KToolInvocation::invokeBrowser and QDesktopServices::openUrl goes through a web browser, at least on desktop, and that is not nice
 }
 
 
