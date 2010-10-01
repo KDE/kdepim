@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 ########### next target ###############
 
 set(calendarsupport_LIB_SRCS
-#  akonadicalendar.cpp
+  akonadicalendar.cpp
   calendar.cpp
   calendaradaptor.cpp
   calendarmodel.cpp
