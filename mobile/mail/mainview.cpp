@@ -1011,7 +1011,7 @@ void MainView::createToDo()
 void MainView::openAttachment(const QString& url, const QString& mimeType)
 {
    KRun::runUrl( KUrl::fromPathOrUrl(url), mimeType, this );
-  //TODO: if doesn't work, try KToolInvocation::invokeBrowser on maemo and a ShellExecuteEx direct API call on WinCE either inside KRun or KToolInvocation
+  //TODO WINCE and MAEMO: if doesn't work, try KToolInvocation::invokeBrowser on maemo and a ShellExecuteEx direct API call on WinCE either inside KRun or KToolInvocation
    //KToolInvocation::invokeBrowser and QDesktopServices::openUrl goes through a web browser, at least on desktop, and that is not nice
 }
 
