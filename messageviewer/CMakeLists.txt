@@ -1,5 +1,18 @@
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+# KCFG files:
+# The main messageviewer.kcfg is configured by CMake and put in the build directory.
+
+if(KDEPIM_ENTERPRISE_BUILD)
+  set(EXCHANGE_COMPATIBLE_INVITATIONS true)
+  set(OUTLOOK_COMPATIBLE_INVITATION_REPLY_COMMENTS true)
+else(KDEPIM_ENTERPRISE_BUILD)
+  set(EXCHANGE_COMPATIBLE_INVITATIONS false)
+  set(OUTLOOK_COMPATIBLE_INVITATION_REPLY_COMMENTS false)
+endif(KDEPIM_ENTERPRISE_BUILD)
+
+configure_file(messageviewer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messageviewer.kcfg)
+
 check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
 macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
 configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messageviewer.h)

@@ -172,13 +172,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
      <entry name="ExchangeCompatibleInvitations" type="Bool">
         <label>Exchange-compatible invitation naming</label>
         <whatsthis>Microsoft Outlook, when used in combination with a Microsoft Exchange server, has a problem understanding standards-compliant groupware email. Turn this option on to send groupware invitations in a way that Microsoft Exchange understands.</whatsthis>
-        <default>false</default>
+        <default>${EXCHANGE_COMPATIBLE_INVITATIONS}</default>
       </entry>
 
       <entry name="OutlookCompatibleInvitationReplyComments" type="Bool">
         <label>Outlook compatible invitation reply comments</label>
         <whatsthis>When replying to invitations, send the reply comment in way that Microsoft Outlook understands.</whatsthis>
-        <default>false</default>
+        <default>${OUTLOOK_COMPATIBLE_INVITATION_REPLY_COMMENTS}</default>
       </entry>
 
       <entry name="OutlookCompatibleInvitationComparisons" type="Bool">
