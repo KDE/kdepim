@@ -42,6 +42,7 @@
 #include "partnodebodypart.h"
 #include "kmreaderwin.h"
 #include "kmkernel.h"
+#include "kmcommands.h"
 #include "broadcaststatus.h"
 #include "callback.h"
 #include "stl_util.h"
@@ -660,6 +661,7 @@ namespace {
     KPopupMenu *menu = new KPopupMenu();
     menu->insertItem( i18n( "&Open in Address Book" ), 0 );
     menu->insertItem( i18n( "&Copy Email Address" ), 1 );
+    menu->insertItem( i18n( "&New Message to..." ), 2 );
 
     switch( menu->exec( p, 0 ) ) {
     case 0: // open
@@ -675,6 +677,18 @@ namespace {
         clip->setSelectionMode( false );
         clip->setText( fullEmail );
         KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Address copied to clipboard." ) );
+      }
+      break;
+    }
+    case 2: // send
+    {
+      const QString fullEmail = searchFullEmailByUid( url.path() );
+      if ( !fullEmail.isEmpty() ) {
+        KURL url;
+        url.setProtocol( "mailto" );
+        url.setPath( fullEmail );
+        KMCommand *command = new KMMailtoComposeCommand( url );
+        command->start();
       }
       break;
     }
