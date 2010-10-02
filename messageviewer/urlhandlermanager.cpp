@@ -46,25 +46,30 @@
 #include "util.h"
 #include "stl_util.h"
 
-#include <kurl.h>
-
 #include <messagecore/stringutil.h>
 #include <libkdepim/broadcaststatus.h>
+#include <libkdepim/openemailaddressjob.h>
+
+#include <akonadi/contact/contactsearchjob.h>
 
 #include <kmime/kmime_content.h>
 #include <KPIMUtils/Email>
 
-#include <KStandardDirs>
-#include <KRun>
+#include <KMenu>
 #include <KMimeType>
+#include <KRun>
+#include <KStandardDirs>
+#include <KUrl>
 
+#include <QApplication>
+#include <QClipboard>
 #include <QProcess>
-#include <algorithm>
-
 #include <QScrollArea>
 #include <QWebElement>
 #include <QWebPage>
 #include <QWebFrame>
+
+#include <algorithm>
 
 using std::for_each;
 using std::remove;
@@ -121,6 +126,16 @@ namespace {
     bool handleContextMenuRequest( const KUrl &, const QPoint &, ViewerPrivate * ) const {
       return false;
     }
+    QString statusBarMessage( const KUrl &, ViewerPrivate * ) const;
+  };
+
+  class ContactUidURLHandler : public URLHandler {
+  public:
+    ContactUidURLHandler() : URLHandler() {}
+    ~ContactUidURLHandler() {}
+
+    bool handleClick( const KUrl &, ViewerPrivate * ) const;
+    bool handleContextMenuRequest( const KUrl &url, const QPoint &p, ViewerPrivate * ) const;
     QString statusBarMessage( const KUrl &, ViewerPrivate * ) const;
   };
 
@@ -312,6 +327,7 @@ URLHandlerManager::URLHandlerManager() {
   registerHandler( new ExpandCollapseQuoteURLManager() );
   registerHandler( new SMimeURLHandler() );
   registerHandler( new MailToURLHandler() );
+  registerHandler( new ContactUidURLHandler() );
   registerHandler( new HtmlAnchorHandler() );
   registerHandler( new AttachmentURLHandler() );
   registerHandler( mBodyPartURLHandlerManager = new BodyPartURLHandlerManager() );
@@ -648,6 +664,80 @@ namespace {
     if ( url.protocol() != "mailto" )
       return QString();
     return KPIMUtils::decodeMailtoUrl( url );
+  }
+}
+
+namespace {
+  static QString searchFullEmailByUid( const QString &uid )
+  {
+    QString fullEmail;
+    Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+    job->setLimit( 1 );
+    job->setQuery( Akonadi::ContactSearchJob::ContactUid, uid, Akonadi::ContactSearchJob::ExactMatch );
+    job->exec();
+    const KABC::Addressee::List res = job->contacts();
+    if ( !res.isEmpty() ) {
+      KABC::Addressee addr = res.first();
+      fullEmail = addr.fullEmail();
+    }
+    return fullEmail;
+  }
+
+  static void runKAddressBook( const KUrl &url )
+  {
+    KPIM::OpenEmailAddressJob *job = new KPIM::OpenEmailAddressJob( url.path(), 0 );
+    job->start();
+  }
+
+  bool ContactUidURLHandler::handleClick( const KUrl &url, ViewerPrivate * ) const
+  {
+    if ( url.protocol() != "uid" ) {
+      return false;
+    } else {
+      runKAddressBook( url );
+      return true;
+    }
+  }
+
+  bool ContactUidURLHandler::handleContextMenuRequest( const KUrl &url, const QPoint &p,
+                                                       ViewerPrivate * ) const
+  {
+    if ( url.protocol() != "uid" || url.path().isEmpty() ) {
+      return false;
+    }
+
+    KMenu *menu = new KMenu();
+    QAction *open =
+      menu->addAction( KIcon( "view-pim-contacts" ), i18n( "&Open in Address Book" ) );
+#ifndef QT_NO_CLIPBOARD
+    QAction *copy =
+      menu->addAction( KIcon( "edit-copy" ), i18n( "&Copy Email Address" ) );
+#endif
+
+    QAction *a = menu->exec( p );
+    if ( a == open ) {
+      runKAddressBook( url );
+#ifndef QT_NO_CLIPBOARD
+    } else if ( a == copy ) {
+      const QString fullEmail = searchFullEmailByUid( url.path() );
+      if ( !fullEmail.isEmpty() ) {
+        QClipboard *clip = QApplication::clipboard();
+        clip->setText( fullEmail, QClipboard::Clipboard );
+        clip->setText( fullEmail, QClipboard::Selection );
+        KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Address copied to clipboard." ) );
+      }
+#endif
+    }
+    return true;
+  }
+
+  QString ContactUidURLHandler::statusBarMessage( const KUrl &url, ViewerPrivate * ) const
+  {
+    if ( url.protocol() != "uid" ) {
+      return QString();
+    } else {
+      return i18n( "Lookup the contact in KAddressbook" );
+    }
   }
 }
 
