@@ -237,16 +237,16 @@ void KTimeEdit::keyPressEvent(QKeyEvent *qke)
 {
   switch(qke->key()) {
   case Key_Down:
-    addTime(QTime(0,1,0));
-    break;
-  case Key_Up:
     subTime(QTime(0,1,0));
     break;
+  case Key_Up:
+    addTime(QTime(0,1,0));
+    break;
   case Key_Prior:
-    subTime(QTime(1,0,0));
+    addTime(QTime(1,0,0));
     break;
   case Key_Next:
-    addTime(QTime(1,0,0));
+    subTime(QTime(1,0,0));
     break;
   default:
     QComboBox::keyPressEvent(qke);
