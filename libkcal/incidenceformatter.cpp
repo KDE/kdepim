@@ -1158,15 +1158,13 @@ static QString htmlRow( const QString &title, const QString &value, const QStrin
   }
 
   // if 'value' has changed, then make a special print
-//  QPalette pal = qApp->palette();
-//  QString color = pal.color( QPalette::Active, QColorGroup::Highlight ).name();
-  QString color = "#DE8519"; // hard-coded color from Outlook2007, per request.
+//  QString color = "#DE8519"; // hard-coded color from Outlook2007, per request.
+  QString color = QColor( Qt::red ).name() ; //customer changed their mind, now they want red.
   QString newtitle = "<font color=\"" + color + "\">" + title + "</font>";
   QString newvalue = "<font color=\"" + color + "\">" + value + "</font>" +
                      "&nbsp;" +
                      "(<strike>" + oldvalue + "</strike>)";
   return htmlRow( newtitle, newvalue );
-
 }
 
 static Attendee *findDelegatedFromMyAttendee( Incidence *incidence )
