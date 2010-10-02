@@ -76,4 +76,5 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
                                     parent, flags );
   dialog->selectCollection( defaultCollection );
   dialog->load( item );
+  return dialog;
 }
