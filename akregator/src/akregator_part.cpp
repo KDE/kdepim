@@ -143,26 +143,26 @@ Part::Part( QWidget *parentWidget, const char * /*widgetName*/,
 
     m_storage = 0;
     Backend::StorageFactory* factory = Backend::StorageFactoryRegistry::self()->getFactory(Settings::archiveBackend());
-   
+
     QStringList storageParams;
-    
+
     storageParams.append(QString("taggingEnabled=%1").arg(Settings::showTaggingGUI() ? "true" : "false"));
-    
+
     if (factory != 0)
     {
         if (factory->allowsMultipleWriteAccess())
         {
             m_storage = factory->createStorage(storageParams);
-        } 
+        }
         else
         {
             if (tryToLock(factory->name()))
                 m_storage = factory->createStorage(storageParams);
-            else 
+            else
                 m_storage = dummyFactory->createStorage(storageParams);
         }
     }
-    
+
 
     if (!m_storage) // Houston, we have a problem
     {
@@ -251,7 +251,7 @@ void Part::loadPlugins()
 void Part::slotOnShutdown()
 {
     m_shuttingDown = true;
-    
+
     const QString lockLocation = locateLocal("data", "akregator/lock");
     KSimpleConfig config(lockLocation);
     config.writeEntry("pid", -1);
@@ -405,14 +405,14 @@ bool Part::openFile()
 
     bool fileExists = file.exists();
     QString listBackup = m_storage->restoreFeedList();
-     
+
     QDomDocument doc;
 
     if (!fileExists)
     {
         doc = createDefaultFeedList();
     }
-    else 
+    else
     {
         if (file.open(IO_ReadOnly))
         {
@@ -426,12 +426,12 @@ bool Part::openFile()
         if (!doc.setContent(str))
         {
 
-            if (file.size() > 0) // don't backup empty files 
+            if (file.size() > 0) // don't backup empty files
             {
                 QString backup = m_file + "-backup." +  QString::number(QDateTime::currentDateTime().toTime_t());
-        
+
                 copyFile(backup);
-        
+
                 KMessageBox::error(m_view, i18n("<qt>The standard feed list is corrupted (invalid XML). A backup was created:<p><b>%2</b></p></qt>").arg(backup), i18n("XML Parsing Error") );
             }
 
@@ -442,7 +442,7 @@ bool Part::openFile()
 
     if (!m_view->loadFeeds(doc))
     {
-        if (file.size() > 0) // don't backup empty files 
+        if (file.size() > 0) // don't backup empty files
         {
             QString backup = m_file + "-backup." +  QString::number(QDateTime::currentDateTime().toTime_t());
             copyFile(backup);
@@ -453,7 +453,7 @@ bool Part::openFile()
     }
 
     emit setStatusBarText(QString::null);
-    
+
 
     if( Settings::markAllFeedsReadOnStartup() )
         m_view->slotMarkAllFeedsRead();
@@ -537,7 +537,7 @@ bool Part::mergePart(KParts::Part* part)
 QWidget* Part::getMainWindow()
 {
     // this is a dirty fix to get the main window used for the tray icon
-    
+
     QWidgetList *l = kapp->topLevelWidgets();
     QWidgetListIt it( *l );
     QWidget *wid;
@@ -599,9 +599,9 @@ void Part::saveTagSet(const QString& path)
     QString xmlStr = Kernel::self()->tagSet()->toXML().toString();
 
     m_storage->storeTagSet(xmlStr);
-    
+
     QFile file(path);
-    
+
     if ( file.open(IO_WriteOnly) )
     {
 
@@ -966,50 +966,62 @@ bool Part::tryToLock(const QString& backendName)
     if ( !first_instance )
     {
         QString msg;
-        if ( oldHostName == hostName ) 
+        if ( oldHostName == hostName )
         {
             // this can only happen if the user is running this application on
             // different displays on the same machine. All other cases will be
             // taken care of by KUniqueApplication()
             if ( oldAppName == appName )
-                msg = i18n("<qt>%1 already seems to be running on another display on "
-                        "this machine. <b>Running %2 more than once is not supported "
-                        "by the %3 backend and "
-                        "can cause the loss of archived articles and crashes at startup.</b> "
-                        "You should disable the archive for now "
-                        "unless you are sure that %2 is not already running.</qt>")
-                        .arg( programName, programName, backendName );
+                msg = i18n(
+                        "<qt>You already seem to be running %1 as part of Kontact on this system."
+                        "<p>"
+                        "Only one %2 is permitted to run at a time due to limitations of the "
+                        "storage system. "
+                        "<b>Failure to do so can cause program crashes or the lose of "
+                        "archived articles.</br>"
+                        "<p>"
+                        "You are strongly encouraged to disable the archiving system now.</qt>")
+                        .arg( programName, programName );
               // QString::arg( st ) only replaces the first occurrence of %1
               // with st while QString::arg( s1, s2 ) replacess all occurrences
               // of %1 with s1 and all occurrences of %2 with s2. So don't
               // even think about changing the above to .arg( programName ).
             else
-                msg = i18n("<qt>%1 seems to be running on another display on this "
-                        "machine. <b>Running %1 and %2 at the same "
-                        "time is not supported by the %3 backend and can cause "
-                        "the loss of archived articles and crashes at startup.</b> "
-                        "You should disable the archive for now "
-                        "unless you are sure that %2 is not already running.</qt>")
-                        .arg( oldProgramName, programName, backendName );
+                msg = i18n(
+                        "<qt>You already seem to be running %1 as part of Kontact on this system."
+                        "<p>"
+                        "Running %1 and %2 at the same time is not permitted due to limitations "
+                        "of the storage system. "
+                        "<b>Failure to do so can cause program crashes or the lose of "
+                        "archived articles.</br>"
+                        "<p>"
+                        "You are strongly encouraged to disable the archiving system now.</qt>")
+                        .arg( oldProgramName, programName );
         }
         else
         {
             if ( oldAppName == appName )
-                msg = i18n("<qt>%1 already seems to be running on %2. <b>Running %1 more "
-                        "than once is not supported by the %3 backend and can cause "
-                        "the loss of archived articles and crashes at startup.</b> "
-                        "You should disable the archive for now "
-                        "unless you are sure that it is "
-                        "not already running on %2.</qt>")
-                        .arg( programName, oldHostName, backendName );
+                msg = i18n(
+                        "<qt>You already seem to be running %1 as part of Kontact on %2."
+                        "<p>"
+                        "Only one %1 is permitted to run at a time due to limitations of the "
+                        "storage system. "
+                        "<b>Failure to do so can cause program crashes or the lose of "
+                        "archived articles.</br>"
+                        "<p>"
+                        "You are strongly encouraged to disable the archiving system now.</qt>")
+                        .arg( programName, oldHostName );
             else
-                msg = i18n("<qt>%1 seems to be running on %3. <b>Running %1 and %2 at the "
-                        "same time is not supported by the %4 backend and can cause "
-                        "the loss of archived articles and crashes at startup.</b> "
-                        "You should disable the archive for now "
-                        "unless you are sure that %1 is "
-                        "not running on %3.</qt>")
-                        .arg( oldProgramName, programName, oldHostName, backendName );
+                msg = i18n(
+                        "<qt>You already seem to be running %1 as part of Kontact on %3."
+                        "<p>"
+                        "Running %1 and %2 at the same time is not permitted due to limitations "
+                        "of the storage system. "
+                        "<b>Failure to do so can cause program crashes or the lose of "
+                        "archived articles.</br>"
+                        "<p>"
+                        "You are strongly encouraged to disable the archiving system now.</qt>")
+                        .arg( oldProgramName, programName, oldHostName );
         }
 
         KCursorSaver idle( KBusyPtr::idle() );
