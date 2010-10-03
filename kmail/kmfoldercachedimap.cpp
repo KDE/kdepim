@@ -357,7 +357,11 @@ void KMFolderCachedImap::writeConfig()
       }
       configGroup.writeEntry( "UIDSDeletedSinceLastSync", uidstrings );
       if ( GlobalSettings::self()->mailLossDebug() ) {
-        kdDebug( 5006 ) << "WRITING OUT UIDSDeletedSinceLastSync in: " << folder( )->prettyURL( ) << endl << uidstrings << endl;
+        if ( folder() ) {
+          kdDebug( 5006 ) << "WRITING OUT UIDSDeletedSinceLastSync in: " << folder()->prettyURL( ) << endl << uidstrings << endl;
+        } else {
+          kdDebug( 5006 ) << "CANNOT WRITE OUT UIDSDeletedSinceLastSync since folder() is NULL" << endl;
+        }
       }
   } else {
     configGroup.deleteEntry( "UIDSDeletedSinceLastSync" );
