@@ -163,7 +163,6 @@ void SignJob::process()
   QByteArray content;
   // 
 
-  kDebug() << "signing content before LFtoCRLF:" << d->content->encodedContent();
   if( d->format & Kleo::InlineOpenPGPFormat  &&
     !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
     content = KMime::LFtoCRLF( d->content->body() );
@@ -173,8 +172,6 @@ void SignJob::process()
     content = d->content->encodedContent();
   }
   
-  kDebug() << "signing content:" << content;
-
   // FIXME: Make this async
   GpgME::SigningResult res = job->exec( d->signers,
                                         content,

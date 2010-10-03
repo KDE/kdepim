@@ -142,7 +142,6 @@ void EncryptJob::process()
   Q_D( EncryptJob );
   Q_ASSERT( d->resultContent == 0 ); // Not processed before.
 
-  kDebug() << "starting encryption job";
   if( d->keys.size() == 0 ) { // should not happen---resolver should have dealt with it earlier
     kDebug() << "HELP! Encrypt job but have no keys to encrypt with.";
     return;
