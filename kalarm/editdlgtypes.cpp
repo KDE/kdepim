@@ -329,17 +329,7 @@ void EditDisplayAlarmDlg::type_showOptions(bool more)
 	if (mSpecialActionsButton)
 	{
 		if (more)
-		{
-			switch (mTypeCombo->currentIndex())
-			{
-				case tFILE:
-				case tTEXT:
-					mSpecialActionsButton->show();
-					break;
-				default:
-					break;
-			}
-		}
+			mSpecialActionsButton->show();
 		else
 			mSpecialActionsButton->hide();
 	}
@@ -584,8 +574,6 @@ void EditDisplayAlarmDlg::slotAlarmTypeChanged(int index)
 			mCmdEdit->hide();
 			mTextMessageEdit->show();
 			mSoundPicker->showSpeak(true);
-			if (mSpecialActionsButton  &&  showingMore())
-				mSpecialActionsButton->show();
 			setButtonWhatsThis(Try, i18nc("@info:whatsthis", "Display the alarm message now"));
 			focus = mTextMessageEdit;
 			break;
@@ -595,8 +583,6 @@ void EditDisplayAlarmDlg::slotAlarmTypeChanged(int index)
 			mFilePadding->show();
 			mCmdEdit->hide();
 			mSoundPicker->showSpeak(false);
-			if (mSpecialActionsButton  &&  showingMore())
-				mSpecialActionsButton->show();
 			setButtonWhatsThis(Try, i18nc("@info:whatsthis", "Display the file now"));
 			mFileMessageEdit->setNoSelect();
 			focus = mFileMessageEdit;
@@ -607,8 +593,6 @@ void EditDisplayAlarmDlg::slotAlarmTypeChanged(int index)
 			slotCmdScriptToggled(mCmdEdit->isScript());  // show/hide mFilePadding
 			mCmdEdit->show();
 			mSoundPicker->showSpeak(true);
-			if (mSpecialActionsButton)
-				mSpecialActionsButton->hide();
 			setButtonWhatsThis(Try, i18nc("@info:whatsthis", "Display the command output now"));
 			focus = mCmdEdit;
 			break;
