@@ -2,7 +2,7 @@
  *  birthdaymodel.cpp  -  model class for birthdays from address book
  *  Program:  kalarm
  *  Copyright © 2009 by Tobias Koenig <tokoe@kde.org>
- *  Copyright © 2007-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2007-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,6 +41,8 @@ BirthdayModel::BirthdayModel(Akonadi::ChangeRecorder* recorder)
 
 BirthdayModel::~BirthdayModel()
 {
+    if (this == mInstance)
+        mInstance = 0;
 }
 
 BirthdayModel* BirthdayModel::instance()
