@@ -41,6 +41,8 @@ BirthdayModel::BirthdayModel(Akonadi::ChangeRecorder* recorder)
 
 BirthdayModel::~BirthdayModel()
 {
+    if (this == mInstance)
+        mInstance = 0;
 }
 
 BirthdayModel* BirthdayModel::instance()
