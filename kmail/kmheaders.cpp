@@ -2124,14 +2124,22 @@ void KMHeaders::highlightMessage(QListViewItem* lvi, bool markitread)
   }
 
   if (!item) {
-    emit selected( 0 ); return;
+    emit selected( 0 );
+    return;
   }
 
   int idx = item->msgId();
-  KMMessage *msg = mFolder->getMsg(idx);
-  if (mReaderWindowActive && !msg) {
+  if ( idx < 0 ) {
     emit selected( 0 );
-    mPrevCurrent = 0;
+    return;
+  }
+
+  KMMessage *msg = mFolder->getMsg( idx );
+  if ( !msg ) {
+    if ( mReaderWindowActive ) {
+      mPrevCurrent = 0;
+    }
+    emit selected( 0 );
     return;
   }
 
