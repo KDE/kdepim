@@ -20,6 +20,7 @@
 #include "agentstatusmonitor.h"
 
 #include <Akonadi/AgentManager>
+#include <akonadi/mimetypechecker.h>
 #include <KDebug>
 
 using namespace Akonadi;
@@ -45,16 +46,15 @@ void AgentStatusMonitor::updateStatus()
 {
   AgentStatus oldStatus = m_status;
   m_status = Offline;
-  // TODO: apply mimetype filtering
   foreach ( const AgentInstance &instance, AgentManager::self()->instances() ) {
-    if ( instance.isOnline() )
-      m_status |= Online;
     if ( instance.type().identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) ) {
       if ( instance.status() == AgentInstance::Running )
         m_status |= Sending;
-    } else {
-      if ( instance.status() == AgentInstance::Running )
+    } else if ( instance.type().capabilities().contains( QLatin1String( "Resource" ) ) && m_mimeTypeChecker.containsWantedMimeType( instance.type().mimeTypes() ) ) {
+      if ( instance.status() == AgentInstance::Running  )
         m_status |= Receiving;
+      if ( instance.isOnline() )
+        m_status |= Online;
     }
   }
 
@@ -62,5 +62,12 @@ void AgentStatusMonitor::updateStatus()
   if ( m_status != oldStatus )
     emit statusChanged();
 }
+
+void AgentStatusMonitor::setMimeTypeFilter(const QStringList& mimeTypes)
+{
+  m_mimeTypeChecker.setWantedMimeTypes( mimeTypes );
+  updateStatus();
+}
+
 
 #include "agentstatusmonitor.moc"

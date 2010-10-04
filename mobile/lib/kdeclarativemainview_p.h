@@ -32,6 +32,7 @@
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QStringListModel>
 
+class AgentStatusMonitor;
 class KActionCollection;
 class KLineEdit;
 
@@ -84,6 +85,7 @@ public: /// members
   KLineEdit                          *mBulkActionFilterLineEdit;
   bool                               mIsBulkActionScreenSelected;
   KDeclarativeMainView::ScreenStates mScreenState;
+  AgentStatusMonitor                 *mAgentStatusMonitor;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();

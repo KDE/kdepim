@@ -21,6 +21,8 @@
 #define AGENTSTATUSMONITOR_H
 
 #include <QObject>
+#include <QStringList>
+#include <akonadi/mimetypechecker.h>
 
 class AgentStatusMonitor : public QObject
 {
@@ -40,6 +42,7 @@ class AgentStatusMonitor : public QObject
     explicit AgentStatusMonitor( QObject *parent = 0 );
 
     AgentStatus status() const;
+    void setMimeTypeFilter( const QStringList &mimeTypes );
 
   signals:
     void statusChanged();
@@ -49,6 +52,7 @@ class AgentStatusMonitor : public QObject
 
   private:
     AgentStatus m_status;
+    Akonadi::MimeTypeChecker m_mimeTypeChecker;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( AgentStatusMonitor::AgentStatus )

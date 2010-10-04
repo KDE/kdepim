@@ -306,7 +306,9 @@ void KDeclarativeMainView::delayedInit()
   }
 
   qmlRegisterUncreatableType<AgentStatusMonitor>( "org.kde.pim.mobileui", 4, 5, "AgentStatusMonitor", QLatin1String( "This type is only exported for its enums" ) );
-  context->setContextProperty( "agentStatusMonitor", QVariant::fromValue<QObject*>( new AgentStatusMonitor( this ) ) );
+  d->mAgentStatusMonitor = new  AgentStatusMonitor( this );
+  d->mAgentStatusMonitor->setMimeTypeFilter( d->mChangeRecorder->mimeTypesMonitored() );
+  context->setContextProperty( "agentStatusMonitor", QVariant::fromValue<QObject*>( d->mAgentStatusMonitor ) );
 }
 
 KDeclarativeMainView::~KDeclarativeMainView()
@@ -341,6 +343,7 @@ void KDeclarativeMainView::addMimeType( const QString &mimeType )
 {
   d->mChangeRecorder->setMimeTypeMonitored( mimeType );
   d->mAgentInstanceFilterModel->addMimeTypeFilter( mimeType );
+  d->mAgentStatusMonitor->setMimeTypeFilter( d->mChangeRecorder->mimeTypesMonitored() );
 }
 
 QStringList KDeclarativeMainView::mimeTypes() const
