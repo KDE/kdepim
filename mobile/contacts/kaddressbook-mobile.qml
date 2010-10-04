@@ -185,6 +185,10 @@ KPIM.MainView {
         bulkActionScreen.visible = true
         application.isBulkActionScreenSelected = true
       }
+
+      KPIM.AgentStatusIndicator {
+        anchors { top: parent.top; right: parent.right; rightMargin: 10; topMargin: 10 }
+      }
     }
 
     KPIM.Button2 {
