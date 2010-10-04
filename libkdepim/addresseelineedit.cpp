@@ -1181,8 +1181,10 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
 void AddresseeLineEdit::contextMenuEvent( QContextMenuEvent *event )
 {
   QMenu *menu = createStandardContextMenu();
-  menu->exec( event->globalPos() );
-  delete menu;
+  if ( menu ) { // can be 0 on platforms with only a touch interface
+    menu->exec( event->globalPos() );
+    delete menu;
+  }
 }
 
 QMenu *AddresseeLineEdit::createStandardContextMenu()

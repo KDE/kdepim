@@ -203,12 +203,14 @@ void ComposerLineEdit::groupDropExpandResult( KJob* job )
 #ifndef QT_NO_CONTEXTMENU
 void ComposerLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {
-   QMenu *popup = createStandardContextMenu();
-   popup->addSeparator();
-   QAction* act = popup->addAction( i18n( "Edit Recent Addresses..." ));
-   connect(act,SIGNAL(triggered(bool)), SLOT( editRecentAddresses() ) );
-   popup->exec( e->globalPos() );
-   delete popup;
+  QMenu *popup = createStandardContextMenu();
+  if ( popup ) { // can be 0 on platforms with only a touch interface
+    popup->addSeparator();
+    QAction* act = popup->addAction( i18n( "Edit Recent Addresses..." ));
+    connect(act,SIGNAL(triggered(bool)), SLOT( editRecentAddresses() ) );
+    popup->exec( e->globalPos() );
+    delete popup;
+  }
 }
 #endif
 
