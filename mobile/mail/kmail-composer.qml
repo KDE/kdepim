@@ -136,6 +136,18 @@ KPIM.MainView {
             actionPanel.collapse();
             window.configureTransport();
           }
+        },
+        KPIM.Button {
+          id: closeComposerButton
+          anchors.top: configureTransportButton.bottom;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          buttonText: KDE.i18n( "Close Composer" )
+          onClicked: {
+            actionPanel.collapse();
+            window.close();
+          }
         }
       ]
     }
