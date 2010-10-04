@@ -712,7 +712,11 @@ void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )
 
   KLineEdit *lineEdit = (d->mIsBulkActionScreenSelected ? d->mBulkActionFilterLineEdit : d->mFilterLineEdit);
 
-  if ( !isSendingEvent && !event->text().isEmpty() && lineEdit && d->mItemFilterModel ) {
+  if ( !isSendingEvent && // do not end up in a recursion
+       d->mScreenState != HomeScreen && // we are not showing the HomeScreen
+       !event->text().isEmpty() && // only react on character input
+       lineEdit && // only if a filter line edit has been set
+       d->mItemFilterModel ) { // and a filter model is used
     isSendingEvent = true;
     QCoreApplication::sendEvent( lineEdit, event );
     isSendingEvent = false;
