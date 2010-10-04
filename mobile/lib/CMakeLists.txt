@@ -39,6 +39,7 @@ target_link_libraries(kdepimmobileui
   ${QT_QTDECLARATIVE_LIBRARY}
   ${QT_QTOPENGL_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDE4_SOLID_LIBRARY}
   akonadi_next
   kdepim
   calendarsupport

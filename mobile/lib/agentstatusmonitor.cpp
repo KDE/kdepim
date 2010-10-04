@@ -22,6 +22,7 @@
 #include <Akonadi/AgentManager>
 #include <akonadi/mimetypechecker.h>
 #include <KDebug>
+#include <solid/networking.h>
 
 using namespace Akonadi;
 
@@ -34,6 +35,7 @@ AgentStatusMonitor::AgentStatusMonitor(QObject* parent): QObject(parent), m_stat
   connect( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(updateStatus()) );
   connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)), SLOT(updateStatus()) );
   connect( AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)), SLOT(updateStatus()) );
+  connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)), SLOT(updateStatus()) );
   updateStatus();
 }
 
@@ -56,6 +58,10 @@ void AgentStatusMonitor::updateStatus()
       if ( instance.isOnline() )
         m_status |= Online;
     }
+  }
+
+  if ( Solid::Networking::status() != Solid::Networking::Connected && Solid::Networking::status() != Solid::Networking::Unknown ) {
+    m_status &= ~Online;
   }
 
   kDebug() << m_status << oldStatus;
