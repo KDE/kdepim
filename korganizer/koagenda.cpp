@@ -1402,26 +1402,25 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
   QPainter dbp(&db);
   dbp.translate(-cx,-cy);
 
-//  kdDebug(5850) << "KOAgenda::drawContents()" << endl;
   double lGridSpacingY = mGridSpacingY*2;
 
   // Highlight working hours
   if (mWorkingHoursEnable) {
-    QPoint pt1( cx, mWorkingHoursYTop );
-    QPoint pt2( cx+cw, mWorkingHoursYBottom );
+    const QPoint pt1( cx, mWorkingHoursYTop );
+    const QPoint pt2( cx+cw, mWorkingHoursYBottom );
     if ( pt2.x() >= pt1.x() /*&& pt2.y() >= pt1.y()*/) {
       int gxStart = contentsToGrid( pt1 ).x();
       int gxEnd = contentsToGrid( pt2 ).x();
       // correct start/end for rtl layouts
       if ( gxStart > gxEnd ) {
-        int tmp = gxStart;
+        const int tmp = gxStart;
         gxStart = gxEnd;
         gxEnd = tmp;
       }
-      int xoffset = ( KOGlobals::self()->reverseLayout()?1:0 );
+      const int xoffset = ( KOGlobals::self()->reverseLayout()?1:0 );
       while( gxStart <= gxEnd ) {
-        int xStart = gridToContents( QPoint( gxStart+xoffset, 0 ) ).x();
-        int xWidth = columnWidth( gxStart ) + 1;
+        const int xStart = gridToContents( QPoint( gxStart+xoffset, 0 ) ).x();
+        const int xWidth = columnWidth( gxStart ) + 1;
         if ( pt2.y() < pt1.y() ) {
           // overnight working hours
           if ( ( (gxStart==0) && !mHolidayMask->at(mHolidayMask->count()-1) ) ||
