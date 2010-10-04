@@ -1450,13 +1450,12 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
 
   // Disabled, working on it
   QMemArray<bool> busyDayMask = mAgendaView->busyDayMask();
-  if ( false && !mAllDayMode ) {
+  if ( KOPrefs::instance()->mColorBusyDaysEnabled && !mAllDayMode ) {
     for ( int i = 0; i < busyDayMask.count(); ++i ) {
       if ( busyDayMask[i] ) {
         const QPoint pt1( cx + mGridSpacingX * i, 0 );
         // const QPoint pt2( cx + mGridSpacingX * ( i+1 ), ch );
-        dbp.fillRect( pt1.x(), pt1.y(), mGridSpacingX, cy + ch, Qt::black );
-
+        dbp.fillRect( pt1.x(), pt1.y(), mGridSpacingX, cy + ch, KOPrefs::instance()->mAgendaBgBusyColor );
       }
     }
   }
