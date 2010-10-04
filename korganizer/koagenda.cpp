@@ -1405,7 +1405,7 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
   double lGridSpacingY = mGridSpacingY*2;
 
   // Highlight working hours
-  if (mWorkingHoursEnable) {
+  if ( mWorkingHoursEnable ) {
     const QPoint pt1( cx, mWorkingHoursYTop );
     const QPoint pt2( cx+cw, mWorkingHoursYBottom );
     if ( pt2.x() >= pt1.x() /*&& pt2.y() >= pt1.y()*/) {
@@ -1417,7 +1417,7 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
         gxStart = gxEnd;
         gxEnd = tmp;
       }
-      const int xoffset = ( KOGlobals::self()->reverseLayout()?1:0 );
+      const int xoffset = ( KOGlobals::self()->reverseLayout() ? 1 : 0 );
       while( gxStart <= gxEnd ) {
         const int xStart = gridToContents( QPoint( gxStart+xoffset, 0 ) ).x();
         const int xWidth = columnWidth( gxStart ) + 1;
@@ -1444,6 +1444,19 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
           }
         }
         ++gxStart;
+      }
+    }
+  }
+
+  // Disabled, working on it
+  QMemArray<bool> busyDayMask = mAgendaView->busyDayMask();
+  if ( false && !mAllDayMode ) {
+    for ( int i = 0; i < busyDayMask.count(); ++i ) {
+      if ( busyDayMask[i] ) {
+        const QPoint pt1( cx + mGridSpacingX * i, 0 );
+        // const QPoint pt2( cx + mGridSpacingX * ( i+1 ), ch );
+        dbp.fillRect( pt1.x(), pt1.y(), mGridSpacingX, cy + ch, Qt::black );
+
       }
     }
   }
@@ -2068,12 +2081,6 @@ void KOAgenda::setDateList(const DateList &selectedDates)
     marcus_bains();
 }
 
-void KOAgenda::setHolidayMask(QMemArray<bool> *mask)
-{
-  mHolidayMask = mask;
-
-}
-
 void KOAgenda::contentsMousePressEvent ( QMouseEvent *event )
 {
   kdDebug(5850) << "KOagenda::contentsMousePressEvent(): type: " << event->type() << endl;
@@ -2088,4 +2095,9 @@ void KOAgenda::setTypeAheadReceiver( QObject *o )
 QObject *KOAgenda::typeAheadReceiver() const
 {
   return mTypeAheadReceiver;
+}
+
+void KOAgenda::setHolidayMask(QMemArray<bool> *mask)
+{
+  mHolidayMask = mask;
 }

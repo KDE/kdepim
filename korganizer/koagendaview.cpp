@@ -1363,7 +1363,13 @@ void KOAgendaView::displayIncidence( Incidence *incidence )
     }
   }
 
+  const bool busyDay = makesWholeDayBusy( incidence );
   for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
+    if ( busyDay ) {
+      Event::List &busyEvents = mBusyDays[(*t).date()];
+      busyEvents.append( event );
+    }
+
     insertIncidence( incidence, (*t).date() );
   }
 }
@@ -1373,6 +1379,7 @@ void KOAgendaView::clearView()
 //  kdDebug(5850) << "ClearView" << endl;
   mAllDayAgenda->clear();
   mAgenda->clear();
+  mBusyDays.clear();
 }
 
 CalPrinterBase::PrintType KOAgendaView::printType()
@@ -1499,6 +1506,22 @@ void KOAgendaView::setHolidayMasks()
 
   mAgenda->setHolidayMask( &mHolidayMask );
   mAllDayAgenda->setHolidayMask( &mHolidayMask );
+}
+
+QMemArray<bool> KOAgendaView::busyDayMask()
+{
+  if ( mSelectedDates.isEmpty() || !mSelectedDates[0].isValid() ) {
+    return QMemArray<bool>();
+  }
+
+  QMemArray<bool> busyDayMask;
+  busyDayMask.resize( mSelectedDates.count() );
+
+  for( uint i = 0; i < mSelectedDates.count(); ++i ) {
+    busyDayMask[i] = !mBusyDays[mSelectedDates[i]].isEmpty();
+  }
+
+  return busyDayMask;
 }
 
 void KOAgendaView::setContentsPos( int y )
@@ -1651,4 +1674,25 @@ void KOAgendaView::calendarIncidenceDeleted(Incidence * incidence)
 {
   Q_UNUSED( incidence );
   mPendingChanges = true;
+}
+
+bool KOAgendaView::makesWholeDayBusy( Incidence *incidence ) const
+{
+  // Must be event
+  // Must be all day
+  // Must be marked busy (TRANSP: OPAQUE)
+  // You must be attendee or organizer
+  if ( incidence->type() != "Event" || !incidence->doesFloat() ) {
+    return false;
+  }
+
+  Event *ev = static_cast<Event*>( incidence );
+
+  if ( ev->transparency() != Event::Opaque ) {
+    return false;
+  }
+
+  // TODO: check if we are organizer or attendee
+
+  return true;
 }

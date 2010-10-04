@@ -154,7 +154,6 @@ class KOAgenda : public QScrollView
 
     void setCalendar( Calendar*cal ) { mCalendar = cal; }
     void setIncidenceChanger( IncidenceChangerBase *changer ) { mChanger = changer; }
-
   public slots:
     void scrollUp();
     void scrollDown();
