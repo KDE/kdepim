@@ -286,8 +286,15 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
           kdError(5800) << "assigning different incidence types" << endl;
           res = false;
         } else {
-          i->setUid( oldUid );
-          i->setSchedulingID( inc->uid() );
+          {
+            // issue4579: DON'T change this order. setUid() emits incidenceUpdated().
+            // setSchedulingID() doesn't. If you change the order, kolab resource will
+            // catch the signal and think there isn't any schedulingId.
+            // Possible kcal improvement: create a setUids( schedulingId, uid )
+            // that changes both members and emits incidenceuIpdated() at the end.
+            i->setSchedulingID( inc->uid() );
+            i->setUid( oldUid );
+          }
         }
         deleteTransaction( incidence );
         return res;
