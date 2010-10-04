@@ -1692,7 +1692,19 @@ bool KOAgendaView::makesWholeDayBusy( Incidence *incidence ) const
     return false;
   }
 
-  // TODO: check if we are organizer or attendee
+  // Last check: must be organizer or attendee:
 
-  return true;
+  if ( KOPrefs::instance()->thatIsMe( ev->organizer().email() ) ) {
+    return true;
+  }
+
+  KCal::Attendee::List attendees = ev->attendees();
+  KCal::Attendee::List::ConstIterator it;
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    if ( KOPrefs::instance()->thatIsMe( (*it)->email() ) ) {
+      return true;
+    }
+  }
+
+  return false;
 }
