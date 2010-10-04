@@ -47,12 +47,16 @@ KPIM.MainView {
   {
     if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
       kaddressbookActions.showOnlyCategory("home")
+      application.setScreenVisibilityState( 0 )
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
       kaddressbookActions.showOnlyCategory("account")
+      application.setScreenVisibilityState( 1 )
     } else if ( collectionView.numSelected > 1 ) {
       kaddressbookActions.showOnlyCategory( "multiple_folder" );
+      application.setScreenVisibilityState( 2 )
     } else {
       kaddressbookActions.showOnlyCategory("single_folder")
+      application.setScreenVisibilityState( 4 )
     }
   }
 
@@ -242,7 +246,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : (collectionView.hasSelection && !collectionView.hasBreadcrumbs) && (contactList.count == 0) ? 1 : 0
+      opacity : application.isHomeScreenVisible ? 1 : 0
 
 
       KPIM.Button2 {
@@ -298,7 +302,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : contactList.count > 0 ? 1 : 0
+      opacity : application.isHomeScreenVisible ? 0 : 1
 
       Akonadi.FilterLineEdit {
         id: filterLineEdit

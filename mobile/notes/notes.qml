@@ -54,11 +54,14 @@ KPIM.MainView {
     if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
     {
       noteActions.showOnlyCategory("home")
+      application.setScreenVisibilityState( 0 )
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
     {
       noteActions.showOnlyCategory("account")
+      application.setScreenVisibilityState( 1 )
     } else { // something else is selected
       noteActions.showOnlyCategory("single_folder")
+      application.setScreenVisibilityState( 2 )
     }
   }
 
@@ -113,14 +116,14 @@ KPIM.MainView {
       anchors.left: parent.left
 
       breadcrumbComponentFactory : _breadcrumbNavigationFactory
-      
+
       multipleSelectionText : KDE.i18nc("%1 is e.g. 3 folders, %2 is e.g. from 2 accounts, %3 is e.g. 9 emails",
                                         "You have selected \n%1\n%2\n%3",
                                         KDE.i18np("1 folder","%1 folders",collectionView.numSelected),
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
                                         KDE.i18np("1 note","%1 notes",headerList.count))
 
-      
+
       QML.Component.onCompleted : updateContextActionsStates();
       onNumBreadcrumbsChanged : updateContextActionsStates();
       onNumSelectedChanged : updateContextActionsStates();
@@ -165,13 +168,36 @@ KPIM.MainView {
           height : 70
           KPIM.Button2 {
             width: parent.width
-            buttonText : KDE.i18n( "Write new Note" )
+            buttonText : KDE.i18n( "Writes new Note" )
             onClicked : {
               application.startComposer();
             }
           }
         }
       ]
+    }
+
+    QML.Rectangle {
+      id : accountPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : application.isHomeScreenVisible ? 1 : 0
+
+      KPIM.Button2 {
+        anchors.top : parent.top
+        anchors.topMargin : 30
+        anchors.left : parent.left
+        anchors.right : parent.right
+        anchors.leftMargin : 10
+        anchors.rightMargin : 10
+        buttonText : KDE.i18n( "New Note" )
+        onClicked : {
+          application.startComposer();
+        }
+      }
     }
 
     QML.Rectangle {
@@ -199,7 +225,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : headerList.count > 0 ? 1 : 0
+      opacity : application.isHomeScreenVisible ? 0 : 1
 
       Akonadi.FilterLineEdit {
         id: filterLineEdit
