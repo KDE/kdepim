@@ -1,7 +1,7 @@
 /*
  *  messagewin.h  -  displays an alarm message
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -181,6 +181,7 @@ class MessageWin : public MainWindowBase
 		int                 mScreenNumber;    // screen to display on, or -1 for default
 		bool                mAlwaysHide;      // the window should never be displayed
 		bool                mErrorWindow;     // the window is simply an error message
+		bool                mInitialised;     // initView() has been called to create the window's widgets
 		bool                mNoPostAction;    // don't execute any post-alarm action
 		bool                mRecreating;      // window is about to be deleted and immediately recreated
 		bool                mBeep;
