@@ -50,6 +50,13 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
   Q_PROPERTY(QString version READ version CONSTANT)
   Q_PROPERTY(bool isBulkActionScreenSelected READ isBulkActionScreenSelected WRITE setBulkActionScreenSelected NOTIFY isBulkActionScreenSelectedChanged)
 
+  Q_PROPERTY(bool isHomeScreenVisible READ isHomeScreenVisible NOTIFY screenVisibilityChanged)
+  Q_PROPERTY(bool isAccountScreenVisible READ isAccountScreenVisible NOTIFY screenVisibilityChanged)
+  Q_PROPERTY(bool isSingleFolderScreenVisible READ isSingleFolderScreenVisible NOTIFY screenVisibilityChanged)
+  Q_PROPERTY(bool isMultiFolderScreenVisible READ isMultiFolderScreenVisible NOTIFY screenVisibilityChanged)
+
+  Q_FLAGS( ScreenStates )
+
 protected:
   /**
    * Creates a new main view for a mobile application.
@@ -116,6 +123,17 @@ protected slots:
   void delayedInit();
 
 public:
+  /**
+   * Describes the state of the visible screens.
+   */
+  enum ScreenState {
+    HomeScreen = 0,
+    AccountScreen = 1,
+    SingleFolderScreen = 2,
+    MultiFolderScreen = 4
+  };
+  Q_DECLARE_FLAGS( ScreenStates, ScreenState )
+
   virtual ~KDeclarativeMainView();
 
   /**
@@ -169,11 +187,19 @@ public slots:
   void importItems();
   void exportItems();
 
+  void setScreenVisibilityState( ScreenStates state );
+
+  bool isHomeScreenVisible() const;
+  bool isAccountScreenVisible() const;
+  bool isSingleFolderScreenVisible() const;
+  bool isMultiFolderScreenVisible() const;
+
 signals:
   void numSelectedAccountsChanged();
   void selectedItemChanged( int row, qlonglong itemId );
   void isLoadingSelectedChanged();
   void isBulkActionScreenSelectedChanged();
+  void screenVisibilityChanged();
 
 protected:
   QItemSelectionModel* regularSelectionModel() const;

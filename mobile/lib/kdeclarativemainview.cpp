@@ -577,6 +577,32 @@ void KDeclarativeMainView::exportItems()
   handler->exec();
 }
 
+void KDeclarativeMainView::setScreenVisibilityState( ScreenStates state )
+{
+  d->mScreenState = state;
+  emit screenVisibilityChanged();
+}
+
+bool KDeclarativeMainView::isHomeScreenVisible() const
+{
+  return (d->mScreenState == HomeScreen);
+}
+
+bool KDeclarativeMainView::isAccountScreenVisible() const
+{
+  return (d->mScreenState == AccountScreen);
+}
+
+bool KDeclarativeMainView::isSingleFolderScreenVisible() const
+{
+  return (d->mScreenState == SingleFolderScreen);
+}
+
+bool KDeclarativeMainView::isMultiFolderScreenVisible() const
+{
+  return (d->mScreenState == MultiFolderScreen);
+}
+
 int KDeclarativeMainView::numSelectedAccounts()
 {
   const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();

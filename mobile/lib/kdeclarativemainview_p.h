@@ -19,17 +19,18 @@
 #ifndef KDECLARATIVEMAINVIEW_P_H
 #define KDECLARATIVEMAINVIEW_P_H
 
-#include <QtCore/QObject>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QStringListModel>
+#include "kdeclarativemainview.h"
+#include "akonadibreadcrumbnavigationfactory.h"
 
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitymimetypefiltermodel.h>
-
-#include "akonadibreadcrumbnavigationfactory.h"
-#include <akonadi_next/kviewstatemaintainer.h>
 #include <akonadi/etmviewstatesaver.h>
+#include <akonadi_next/kviewstatemaintainer.h>
+
+#include <QtCore/QObject>
+#include <QtGui/QItemSelectionModel>
+#include <QtGui/QStringListModel>
 
 class KActionCollection;
 class KLineEdit;
@@ -82,6 +83,7 @@ public: /// members
   KLineEdit                          *mFilterLineEdit;
   KLineEdit                          *mBulkActionFilterLineEdit;
   bool                               mIsBulkActionScreenSelected;
+  KDeclarativeMainView::ScreenStates mScreenState;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();
