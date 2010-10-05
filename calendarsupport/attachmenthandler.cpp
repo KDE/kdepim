@@ -39,14 +39,35 @@
 #include <KIO/NetAccess>
 
 #include <QFile>
+#include <QPointer>
 
 using namespace KCalCore;
 
 namespace CalendarSupport {
 
+class AttachmentHandler::Private
+{
+  public:
+    Private( QWidget *parent )
+    {
+      mParent = parent;
+    }
+
+  QPointer<QWidget> mParent;
+};
+
+AttachmentHandler::AttachmentHandler( QWidget *parent ) : d( new Private( parent ) )
+{
+
+}
+
+AttachmentHandler::~AttachmentHandler()
+{
+  delete d;
+}
+
 Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
-                                         const Incidence::Ptr &incidence,
-                                         QWidget *parent )
+                                         const Incidence::Ptr &incidence )
 {
   if ( !incidence ) {
     return Attachment::Ptr();
@@ -67,15 +88,15 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
 
   if ( !a ) {
     KMessageBox::error(
-      parent,
+      d->mParent,
       i18n( "No attachment named \"%1\" found in the incidence.", attachmentName ) );
     return Attachment::Ptr();
   }
 
   if ( a->isUri() ) {
-    if ( !KIO::NetAccess::exists( a->uri(), KIO::NetAccess::SourceSide, parent ) ) {
+    if ( !KIO::NetAccess::exists( a->uri(), KIO::NetAccess::SourceSide, d->mParent ) ) {
       KMessageBox::sorry(
-        parent,
+        d->mParent,
         i18n( "The attachment \"%1\" is a web link that is inaccessible from this computer. ",
               KUrl::fromPercentEncoding( a->uri().toLatin1() ) ) );
       return Attachment::Ptr();
@@ -85,8 +106,7 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
 }
 
 Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
-                                         const QString &uid,
-                                         QWidget *parent )
+                                         const QString &uid )
 {
   if ( uid.isEmpty() ) {
     return Attachment::Ptr();
@@ -98,19 +118,18 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
   Incidence::Ptr incidence = calendar->incidence( uid );
   if ( !incidence ) {
     KMessageBox::error(
-      parent,
+      d->mParent,
       i18n( "The incidence that owns the attachment named \"%1\" could not be found. "
             "Perhaps it was removed from your calendar?", attachmentName ) );
     return Attachment::Ptr();
   }
 
   delete calendar;
-  return find( attachmentName, incidence, parent );
+  return find( attachmentName, incidence );
 }
 
 Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
-                                         const ScheduleMessage::Ptr &message,
-                                         QWidget *parent )
+                                         const ScheduleMessage::Ptr &message )
 {
   if ( !message ) {
     return Attachment::Ptr();
@@ -119,13 +138,13 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
   Incidence::Ptr incidence = message->event().dynamicCast<Incidence>();
   if ( !incidence ) {
     KMessageBox::error(
-      parent,
+      d->mParent,
       i18n( "The calendar invitation stored in this email message is broken in some way. "
             "Unable to continue." ) );
     return Attachment::Ptr();
   }
 
-  return find( attachmentName, incidence, parent );
+  return find( attachmentName, incidence );
 }
 
 static KTemporaryFile *s_tempFile = 0;
@@ -156,7 +175,7 @@ static KUrl tempFileForAttachment( const Attachment::Ptr &attachment )
   return url;
 }
 
-bool AttachmentHandler::view( const Attachment::Ptr &attachment, QWidget *parent )
+bool AttachmentHandler::view( const Attachment::Ptr &attachment )
 {
   if ( !attachment ) {
     return false;
@@ -173,7 +192,7 @@ bool AttachmentHandler::view( const Attachment::Ptr &attachment, QWidget *parent
     } else {
       stat = false;
       KMessageBox::error(
-        parent,
+        d->mParent,
         i18n( "Unable to create a temporary file for the attachment." ) );
     }
     delete s_tempFile;
@@ -183,32 +202,31 @@ bool AttachmentHandler::view( const Attachment::Ptr &attachment, QWidget *parent
 }
 
 bool AttachmentHandler::view( const QString &attachmentName,
-                              const Incidence::Ptr &incidence, QWidget *parent )
+                              const Incidence::Ptr &incidence )
 {
-  return view( find( attachmentName, incidence, parent ), parent );
+  return view( find( attachmentName, incidence ) );
 }
 
-bool AttachmentHandler::view( const QString &attachmentName, const QString &uid,
-                              QWidget *parent )
+bool AttachmentHandler::view( const QString &attachmentName, const QString &uid )
 {
-  return view( find( attachmentName, uid, parent ), parent );
+  return view( find( attachmentName, uid ) );
 }
 
 bool AttachmentHandler::view( const QString &attachmentName,
-                              const ScheduleMessage::Ptr &message, QWidget *parent )
+                              const ScheduleMessage::Ptr &message )
 {
-  return view( find( attachmentName, message, parent ), parent );
+  return view( find( attachmentName, message ) );
 }
 
-bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment, QWidget *parent )
+bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment )
 {
   // get the saveas file name
-  QString saveAsFile = KFileDialog::getSaveFileName( attachment->label(), QString(), parent,
+  QString saveAsFile = KFileDialog::getSaveFileName( attachment->label(), QString(), d->mParent,
                                                      i18n( "Save Attachment" ) );
   if ( saveAsFile.isEmpty() ||
        ( QFile( saveAsFile ).exists() &&
          ( KMessageBox::warningYesNo(
-             parent,
+             d->mParent,
              i18n( "%1 already exists. Do you want to overwrite it?",
                    saveAsFile ) ) == KMessageBox::No ) ) ) {
     return false;
@@ -224,12 +242,12 @@ bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment, QWidget *pare
     if ( tempUrl.isValid() ) {
       stat = KIO::NetAccess::file_copy( tempUrl, KUrl( saveAsFile ) );
       if ( !stat && KIO::NetAccess::lastError() ) {
-        KMessageBox::error( parent, KIO::NetAccess::lastErrorString() );
+        KMessageBox::error( d->mParent, KIO::NetAccess::lastErrorString() );
       }
     } else {
       stat = false;
       KMessageBox::error(
-        parent,
+        d->mParent,
         i18n( "Unable to create a temporary file for the attachment." ) );
     }
     delete s_tempFile;
@@ -239,21 +257,20 @@ bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment, QWidget *pare
 }
 
 bool AttachmentHandler::saveAs( const QString &attachmentName,
-                                const Incidence::Ptr &incidence, QWidget *parent )
+                                const Incidence::Ptr &incidence )
 {
-  return saveAs( find( attachmentName, incidence, parent ), parent );
+  return saveAs( find( attachmentName, incidence ) );
 }
 
-bool AttachmentHandler::saveAs( const QString &attachmentName, const QString &uid,
-                                QWidget *parent )
+bool AttachmentHandler::saveAs( const QString &attachmentName, const QString &uid )
 {
-  return saveAs( find( attachmentName, uid, parent ), parent );
+  return saveAs( find( attachmentName, uid ) );
 }
 
 bool AttachmentHandler::saveAs( const QString &attachmentName,
-                                const ScheduleMessage::Ptr &message, QWidget *parent )
+                                const ScheduleMessage::Ptr &message )
 {
-  return saveAs( find( attachmentName, message, parent ), parent );
+  return saveAs( find( attachmentName, message ) );
 }
 
 } // namespace CalendarSupport
