@@ -114,7 +114,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string comment="@label Start date/time of the event or task">&amp;Start:</string>
+      <string comment="@label Start date/time of the event or task">Start:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -156,7 +156,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string comment="@label End date/time of the task or event">&amp;End:</string>
+      <string comment="@label End date/time of the task or event">End:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
