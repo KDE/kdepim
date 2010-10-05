@@ -28,6 +28,7 @@
 */
 #include "attachmenthandler.h"
 #include "akonadicalendar.h"
+#include "incidencesearchjob.h"
 
 #include <KFileDialog>
 #include <KLocale>
@@ -37,6 +38,7 @@
 #include <KTemporaryFile>
 #include <KToolInvocation>
 #include <KIO/NetAccess>
+#include <KJob>
 
 #include <QFile>
 #include <QPointer>
@@ -45,6 +47,11 @@ using namespace KCalCore;
 
 namespace CalendarSupport {
 
+struct ReceivedInfo {
+  QString uid;
+  QString attachmentName;
+};
+
 class AttachmentHandler::Private
 {
   public:
@@ -52,8 +59,8 @@ class AttachmentHandler::Private
     {
       mParent = parent;
     }
-
-  QPointer<QWidget> mParent;
+    QMap<KJob*,ReceivedInfo> mJobToReceivedInfo;
+    QPointer<QWidget> mParent;
 };
 
 AttachmentHandler::AttachmentHandler( QWidget *parent ) : d( new Private( parent ) )
@@ -105,28 +112,6 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
   return a;
 }
 
-Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
-                                         const QString &uid )
-{
-  if ( uid.isEmpty() ) {
-    return Attachment::Ptr();
-  }
-
-  // Use a singleton for this? might be expensive of this is called too often
-  AkonadiCalendar *calendar = new AkonadiCalendar( "UTC" );
-
-  Incidence::Ptr incidence = calendar->incidence( uid );
-  if ( !incidence ) {
-    KMessageBox::error(
-      d->mParent,
-      i18n( "The incidence that owns the attachment named \"%1\" could not be found. "
-            "Perhaps it was removed from your calendar?", attachmentName ) );
-    return Attachment::Ptr();
-  }
-
-  delete calendar;
-  return find( attachmentName, incidence );
-}
 
 Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
                                          const ScheduleMessage::Ptr &message )
@@ -207,9 +192,16 @@ bool AttachmentHandler::view( const QString &attachmentName,
   return view( find( attachmentName, incidence ) );
 }
 
-bool AttachmentHandler::view( const QString &attachmentName, const QString &uid )
+void AttachmentHandler::view( const QString &attachmentName, const QString &uid )
 {
-  return view( find( attachmentName, uid ) );
+  IncidenceSearchJob *job = new IncidenceSearchJob();
+  job->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, uid,
+                 IncidenceSearchJob::ExactMatch );
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFinishView( KJob* ) ) );
+  ReceivedInfo info;
+  info.attachmentName = attachmentName;
+  info.uid = uid;
+  d->mJobToReceivedInfo[job] = info;
 }
 
 bool AttachmentHandler::view( const QString &attachmentName,
@@ -262,9 +254,17 @@ bool AttachmentHandler::saveAs( const QString &attachmentName,
   return saveAs( find( attachmentName, incidence ) );
 }
 
-bool AttachmentHandler::saveAs( const QString &attachmentName, const QString &uid )
+void AttachmentHandler::saveAs( const QString &attachmentName, const QString &uid )
 {
-  return saveAs( find( attachmentName, uid ) );
+  IncidenceSearchJob *job = new IncidenceSearchJob();
+  job->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, uid,
+                 IncidenceSearchJob::ExactMatch );
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFinishView( KJob* ) ) );
+
+  ReceivedInfo info;
+  info.attachmentName = attachmentName;
+  info.uid = uid;
+  d->mJobToReceivedInfo[job] = info;
 }
 
 bool AttachmentHandler::saveAs( const QString &attachmentName,
@@ -272,6 +272,41 @@ bool AttachmentHandler::saveAs( const QString &attachmentName,
 {
   return saveAs( find( attachmentName, message ) );
 }
+
+void AttachmentHandler::slotFinishSaveAs( KJob *job )
+{
+  IncidenceSearchJob *searchJob = qobject_cast<IncidenceSearchJob*>( job );
+  const KCalCore::Incidence::List incidences = searchJob->incidences();
+  ReceivedInfo info = d->mJobToReceivedInfo[job];
+
+  bool success = false;
+  if ( !incidences.isEmpty() ) {
+    if ( saveAs( info.attachmentName, incidences.first() ) ) {
+      success = true;
+    }
+  }
+
+  emit saveAsFinished( info.uid, info.attachmentName, success );
+  d->mJobToReceivedInfo.remove( job );
+}
+
+void AttachmentHandler::slotFinishView( KJob *job )
+{
+  IncidenceSearchJob *searchJob = qobject_cast<IncidenceSearchJob*>( job );
+  const KCalCore::Incidence::List incidences = searchJob->incidences();
+  ReceivedInfo info = d->mJobToReceivedInfo[job];
+
+  bool success = false;
+  if ( !incidences.isEmpty() ) {
+    if ( view( info.attachmentName, incidences.first() ) ) {
+      success = true;
+    }
+  }
+
+  emit viewFinished( info.uid, info.attachmentName, success );
+  d->mJobToReceivedInfo.remove( job );
+}
+
 
 } // namespace CalendarSupport
 

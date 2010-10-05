@@ -32,6 +32,8 @@
 
 #include <QObject>
 
+class KJob;
+
 class QString;
 class QWidget;
 
@@ -80,16 +82,6 @@ namespace CalendarSupport {
                                   const KCalCore::ScheduleMessage::Ptr &message );
 
   /**
-    Finds the attachment in the user's calendar, by @p attachmentName and @p uid.
-
-    @param attachmentName is the name of the attachment
-    @param uid is a QString containing a UID of the incidence containing the attachment.
-    @return a pointer to the Attachment object located; 0 if no such attachment could be found.
-  */
-  KCalCore::Attachment::Ptr find( const QString &attachmentName,
-                                  const QString &uid );
-
-  /**
     Launches a viewer on the specified attachment.
 
     @param attachment is a pointer to a valid Attachment object.
@@ -115,10 +107,11 @@ namespace CalendarSupport {
     @param attachmentName is the name of the attachment
     @param uid is a QString containing a UID of the incidence containing the attachment.
 
-    @return true if the attachment could be found and the viewer program successfully launched;
-    false otherwise.
+    This function is async and will return immediately. Listen to signal viewFinished()
+    if you're interested on the success of this operation.
+
   */
-  bool view( const QString &attachmentName, const QString &uid );
+  void view( const QString &attachmentName, const QString &uid );
 
   /**
     Launches a viewer on the specified attachment.
@@ -160,10 +153,10 @@ namespace CalendarSupport {
     @param attachmentName is the name of the attachment
     @param uid is a QString containing a UID of the incidence containing the attachment.
 
-    @return true if the attachment could be found and the save operation was successful;
-    false otherwise.
+    This function is async, it will return immediately. Listen to signal saveAsFinished()
+    if you're interested on the success of this operation.
   */
-  bool saveAs( const QString &attachmentName, const QString &uid );
+  void saveAs( const QString &attachmentName, const QString &uid );
 
   /**
     Saves the specified attachment to a file of the user's choice.
@@ -176,6 +169,14 @@ namespace CalendarSupport {
   */
   bool saveAs( const QString &attachmentName,
                const KCalCore::ScheduleMessage::Ptr &message );
+
+  Q_SIGNALS:
+    void viewFinished( const QString &uid, const QString &attachmentName, bool success );
+    void saveAsFinished( const QString &uid, const QString &attachmentName, bool success );
+
+  private Q_SLOTS:
+    void slotFinishView( KJob *job );
+    void slotFinishSaveAs( KJob *job );
 
   private:
     //@cond PRIVATE
