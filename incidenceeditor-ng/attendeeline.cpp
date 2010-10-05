@@ -457,7 +457,8 @@ void AttendeeLine::slotHandleChange()
   if ( mEdit->text().isEmpty() ) {
     emit deleteLine( this );
   } else {
-    mEdit->setCursorPosition( 0 );
+    // ### has bad side-effects, and I have no idea what this was supposed to be doing in the first place
+//    mEdit->setCursorPosition( 0 );
     emit editingFinished( this );
     dataFromFields();
   }
