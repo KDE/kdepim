@@ -98,6 +98,9 @@ class MainView : public KDeclarativeMainView
 
     virtual QAbstractProxyModel* itemFilterModel() const;
 
+    virtual ImportHandlerBase* importHandler() const;
+    virtual ExportHandlerBase* exportHandler() const;
+
   private slots:
     void sendAgainFetchResult( KJob *job );
     void replyFetchResult( KJob *job );
@@ -109,7 +112,6 @@ class MainView : public KDeclarativeMainView
     void showExpireProperties();
 
   private:
-    
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
     void forward(quint64 id, ForwardMode mode);
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );

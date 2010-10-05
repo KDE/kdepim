@@ -20,7 +20,9 @@
 
 #include "mainview.h"
 #include "composerview.h"
+#include "emailsexporthandler.h"
 #include "emailsfilterproxymodel.h"
+#include "emailsimporthandler.h"
 #include "messagelistproxy.h"
 #include "mailactionmanager.h"
 #include "messageviewitem.h"
@@ -174,6 +176,14 @@ void MainView::delayedInit()
   action = new KAction( i18n( "New Email" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT(startComposer()) );
   actionCollection()->addAction( "add_new_mail", action );
+
+  action = new KAction( i18n( "Import Emails" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
+  actionCollection()->addAction( QLatin1String( "import_emails" ), action );
+
+  action = new KAction( i18n( "Export Emails" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  actionCollection()->addAction( QLatin1String( "export_emails" ), action );
 
   // lazy load of the default single folders
   QTimer::singleShot(3000, this, SLOT(initDefaultFolders()));
@@ -841,6 +851,16 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 QAbstractProxyModel* MainView::itemFilterModel() const
 {
   return new EmailsFilterProxyModel();
+}
+
+ImportHandlerBase* MainView::importHandler() const
+{
+  return new EmailsImportHandler();
+}
+
+ExportHandlerBase* MainView::exportHandler() const
+{
+  return new EmailsExportHandler();
 }
 
 void MainView::saveMessage()

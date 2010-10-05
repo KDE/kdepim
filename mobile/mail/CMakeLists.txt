@@ -17,7 +17,9 @@ set(kmail_mobile_srcs
   composerautoresizer.cpp
   composerview.cpp
   declarativeidentitycombobox.cpp
+  emailsexporthandler.cpp
   emailsfilterproxymodel.cpp
+  emailsimporthandler.cpp
   mailactionmanager.cpp
   mainview.cpp
   main.cpp
@@ -45,6 +47,7 @@ target_link_libraries(kmail-mobile
     akonadi_next
     kdepim
     kdepimmobileui
+    kmbox
     mailcommon
     messagecomposer
     messagecore

@@ -43,6 +43,8 @@ ActionMenuContainer {
       }
     }
     ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select multiple folders" ) }
+    ActionListItem { name : "import_emails" }
+    ActionListItem { name : "export_emails" }
     ActionListItem { name : "akonadi_empty_all_trash" }
   }
 
