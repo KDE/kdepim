@@ -24,6 +24,7 @@ import Qt 4.7
 import org.kde 4.5
 
 Rectangle {
+  id: root
   property real percentComplete : 0
   color : "#00000000"
   width : 155
@@ -35,7 +36,7 @@ Rectangle {
   }
   Image {
     anchors.verticalCenter : parent.verticalCenter
-    x : 3 + ((percentComplete/100) * width)
+    x : 3 + ((percentComplete/100) * (root.width - width - 6))
     source : "images/sliderhandle.png";
 
     MouseArea {
@@ -45,7 +46,7 @@ Rectangle {
       drag.minimumX: 3
       drag.maximumX: width - 6
       onReleased : {
-        percentComplete = ((parent.x - 3)/width) * 100
+        percentComplete = ((parent.x - 3)/(root.width - width - 6)) * 100
       }
     }
   }
