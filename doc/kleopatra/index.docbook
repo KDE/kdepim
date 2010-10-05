@@ -1851,7 +1851,7 @@ list.</para>
             </listitem>
           </varlistentry>
           <varlistentry id="tooltips-details">
-            <term><guilabel>Show technical details</guilabel></term>
+            <term><guilabel>Show certificate details</guilabel></term>
             <listitem>
               <para>
                 Shows technical information about the certificate:
@@ -1874,7 +1874,7 @@ list.</para>
       </sect2>
 
       <sect2 id="configuration-appearance-certificate-filters">
-        <title>Configuring <guilabel>Certificate Categories</guilabel></title>
+        <title>Configuring <guilabel>Certificate Filters</guilabel></title>
 
         <para>
           &kleopatra; allows you to customize the appearance of
@@ -2065,7 +2065,7 @@ button.</para>
       </sect2>
 
       <sect2 id="configuration-crypto-operations-file">
-        <title>Configuring <guilabel>File Operations</guilabel></title>
+        <title>Configuring <guilabel>Checksum Operations</guilabel></title>
 
         <para>
           Here you can configure some aspects of the file operations

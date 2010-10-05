@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year><year>2009</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year><year>2009</year><year>2010</year>
 <holder>&David.Jarvie;</holder>
 </copyright>
 
@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2009-11-28</date>
-<releaseinfo>2.04.00</releaseinfo>
+<date>2010-09-30</date>
+<releaseinfo>2.04.00 (&kde; 4.5)</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -1134,6 +1134,10 @@ revert to the simplified dialog, click the
 your last display choice whenever the Alarm Edit dialog is
 redisplayed.</para>
 
+<para>You can configure the default values of many of the settings in
+the Alarm Edit dialog using the
+<link linkend="preferences-edit">Configuration dialog's Edit tab</link>.</para>
+
 <screenshot>
 <screeninfo>Screenshot of the simplified Alarm Edit dialog</screeninfo>
 <mediaobject>
@@ -1312,6 +1316,16 @@ off and is then restored when you log back in.</para></listitem>
 (or a deferred alarm message) from a previous occurrence of the alarm
 is still visible; in other words, when the previous occurrence of the
 alarm has not yet been acknowledged.</para></listitem>
+</itemizedlist>
+
+<para>The pre-alarm action can be used to control whether to display
+the alarm message:</para>
+
+<itemizedlist>
+<listitem><para>Check <guilabel>Cancel alarm on error</guilabel> to
+cancel the alarm if the pre-alarm command returns an error status.
+This will prevent the alarm message from being displayed, and any
+post-alarm action from being executed.</para></listitem>
 </itemizedlist>
 </listitem>
 
