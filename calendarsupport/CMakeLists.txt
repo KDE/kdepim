@@ -1,3 +1,5 @@
+add_subdirectory( tests )
+
 include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
@@ -24,6 +26,7 @@ set(calendarsupport_LIB_SRCS
   identitymanager.cpp
   incidencechanger.cpp
   incidencefilterproxymodel.cpp
+  incidencesearchjob.cpp
   incidenceviewer.cpp
   invitationhandler.cpp
   kcalmodel.cpp
