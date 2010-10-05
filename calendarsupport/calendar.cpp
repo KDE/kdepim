@@ -120,12 +120,10 @@ void Calendar::Private::rowsAboutToBeRemoved( const QModelIndex &parent, int sta
 
 void Calendar::Private::layoutChanged()
 {
-  kDebug();
 }
 
 void Calendar::Private::modelReset()
 {
-  kDebug();
   clear();
   readFromModel();
 }
@@ -370,7 +368,6 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
 
 void Calendar::Private::itemChanged( const Akonadi::Item &item )
 {
-  kDebug() << "item changed: " << item.id();
   assertInvariants();
   Q_ASSERT( item.isValid() );
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
@@ -384,7 +381,6 @@ void Calendar::Private::itemChanged( const Akonadi::Item &item )
 
 void Calendar::Private::itemsAdded( const Akonadi::Item::List &items )
 {
-  kDebug() << "adding items: " << items.count();
   assertInvariants();
   foreach ( const Akonadi::Item &item, items ) {
     Q_ASSERT( item.isValid() );
@@ -400,7 +396,6 @@ void Calendar::Private::itemsAdded( const Akonadi::Item::List &items )
 
 void Calendar::Private::collectionsAdded( const Akonadi::Collection::List &collections )
 {
-  kDebug() << "adding collections: " << collections.count();
   foreach ( const Akonadi::Collection &collection, collections ) {
     m_collectionMap[collection.id()] = collection;
   }
@@ -408,7 +403,7 @@ void Calendar::Private::collectionsAdded( const Akonadi::Collection::List &colle
 
 void Calendar::Private::collectionsRemoved( const Akonadi::Collection::List &collections )
 {
-  kDebug() << "removing collections: " << collections.count();
+  // kDebug() << "removing collections: " << collections.count();
   foreach ( const Akonadi::Collection &collection, collections ) {
     m_collectionMap.remove( collection.id() );
   }
@@ -452,7 +447,7 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
 
     removeItemFromMaps( ci );
 
-    kDebug() << item.id();
+    // kDebug() << item.id();
     Q_ASSERT( ci.hasPayload<KCalCore::Incidence::Ptr>() );
     const KCalCore::Incidence::Ptr incidence = ci.payload<KCalCore::Incidence::Ptr>();
     kDebug() << "Remove uid=" << incidence->uid()
@@ -639,13 +634,11 @@ Akonadi::Item::List Calendar::rawTodosForDate( const QDate &date )
 
 KCalCore::Alarm::List Calendar::alarmsTo( const KDateTime &to )
 {
-  kDebug();
   return alarms( KDateTime( QDate( 1900, 1, 1 ) ), to );
 }
 
 KCalCore::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to )
 {
-  kDebug() << "Alarms:" << d->m_itemMap.count();
   KCalCore::Alarm::List alarmList;
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
@@ -1901,11 +1894,10 @@ void Calendar::appendRecurringAlarms( KCalCore::Alarm::List &alarms,
           }
         }
       }
-      kDebug() << incidence->summary() << "':" << dt.toString();
+      // kDebug() << incidence->summary() << "':" << dt.toString();
       alarms.append( a );
     }
   }
-
 }
 
 Akonadi::Collection Calendar::collection( const Akonadi::Collection::Id &id ) const
