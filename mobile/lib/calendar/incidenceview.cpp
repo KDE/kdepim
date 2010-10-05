@@ -50,6 +50,7 @@
 #include <incidenceeditor-ng/incidencewhatwhere.h>
 #include <incidenceeditor-ng/incidencerecurrence.h>
 #include <incidenceeditor-ng/incidencesecrecy.h>
+#include <incidenceeditor-ng/invitationdispatcher.h>
 
 
 using namespace Akonadi;
@@ -80,6 +81,11 @@ void IncidenceView::delayedInit()
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
   qmlRegisterType<CalendarHelper>( "CalendarHelper", 4, 5, "CalendarHelper" );
   qmlRegisterType<ClockHelper>( "ClockHelper", 4, 5, "ClockHelper" );
+
+
+  mInvitationDispatcher = new InvitationDispatcher( 0, this );
+  mInvitationDispatcher->setItemManager( mItemManager );
+
 
   connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
            SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction) ) );

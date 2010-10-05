@@ -38,6 +38,7 @@ class CollectionComboBox;
 
 namespace IncidenceEditorNG {
 class IncidenceDateTime;
+class InvitationDispatcher;
 }
 
 namespace KPIM {
@@ -107,6 +108,8 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
 
     KPIM::KDateEdit *mDateWidget;
     KPIM::KTimeEdit *mTimeWidget;
+
+    IncidenceEditorNG::InvitationDispatcher *mInvitationDispatcher;
 };
 
 #endif // INCIDENCEVIEW_H
