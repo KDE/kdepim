@@ -39,11 +39,18 @@ target_link_libraries(kdepimmobileui
   ${QT_QTDECLARATIVE_LIBRARY}
   ${QT_QTOPENGL_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDE4_SOLID_LIBRARY}
   akonadi_next
   kdepim
   calendarsupport
 )
+
+# FIXME: Solid is not implemented yet under wince
+if(NOT WINCE)
+target_link_libraries(kdepimmobileui
+  ${KDE4_SOLID_LIBRARY}
+)
+endif(NOT WINCE)
+
 if (KDEQMLPLUGIN_STATIC)
   target_link_libraries(kdepimmobileui kdeqmlplugin)
 endif (KDEQMLPLUGIN_STATIC)

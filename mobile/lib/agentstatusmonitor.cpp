@@ -35,7 +35,9 @@ AgentStatusMonitor::AgentStatusMonitor(QObject* parent): QObject(parent), m_stat
   connect( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(updateStatus()) );
   connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)), SLOT(updateStatus()) );
   connect( AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)), SLOT(updateStatus()) );
+#ifndef _WIN32_WCE
   connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)), SLOT(updateStatus()) );
+#endif
   updateStatus();
 }
 
@@ -60,9 +62,11 @@ void AgentStatusMonitor::updateStatus()
     }
   }
 
+#ifndef _WIN32_WCE
   if ( Solid::Networking::status() != Solid::Networking::Connected && Solid::Networking::status() != Solid::Networking::Unknown ) {
     m_status &= ~Online;
   }
+#endif
 
   kDebug() << m_status << oldStatus;
   if ( m_status != oldStatus )
