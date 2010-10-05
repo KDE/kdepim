@@ -53,9 +53,9 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
   }
 
   // get the attachment by name from the incidence
-  Attachment::List as = incidence->attachments();
+  const Attachment::List as = incidence->attachments();
   Attachment::Ptr a;
-  if ( as.count() > 0 ) {
+  if ( !as.isEmpty() ) {
     Attachment::List::ConstIterator it;
     for ( it = as.begin(); it != as.end(); ++it ) {
       if ( (*it)->label() == attachmentName ) {
