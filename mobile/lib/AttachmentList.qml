@@ -60,15 +60,9 @@ Item {
       MouseArea {
         anchors.fill: parent
         onClicked: {
-          console.log( "TODO - attachment si stillelected: ",  model.display );
-          var nonCurrentClicked = false
-          if ( wrapper.ListView.view.currentIndex != model.index ) { nonCurrentClicked = true }
           wrapper.ListView.view.currentIndex = model.index
           wrapper.ListView.view.currentMimeType = model.mimeType;
-          if ( model.mimeType.indexOf( "image" ) == 0 ) {
-            wrapper.ListView.view.currentAttachmentUrl = model.attachmentUrl;
-          }
-          if ( nonCurrentClicked ) { attachmentSelected(model.attachmentUrl, model.mimeType); }
+          wrapper.ListView.view.currentAttachmentUrl = model.attachmentUrl;
         }
       }
     }
@@ -112,6 +106,10 @@ Item {
       width: parent.width - 10
       height: parent.height / 6
       buttonText: KDE.i18n( "Open" )
+
+      onClicked: {
+         attachmentSelected(attachmentListView.currentAttachmentUrl, attachmentListView.currentMimeType);
+      }
     }
     KPIM.Button {
       id: saveButton
@@ -121,7 +119,6 @@ Item {
       height: parent.height / 6
       buttonText: KDE.i18n( "Save" )
     }
-
   }
 
   Item {
