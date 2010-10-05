@@ -73,6 +73,8 @@ bool EventListProxy::lessThan(const QModelIndex& left, const QModelIndex& right)
   const KCalCore::Event::Ptr leftEvent = leftItem.payload<KCalCore::Event::Ptr>();
   const KCalCore::Event::Ptr rightEvent = rightItem.payload<KCalCore::Event::Ptr>();
 
+  if ( leftEvent->dtStart() == rightEvent->dtStart() )
+    return leftItem.id() < rightItem.id();
   return leftEvent->dtStart() < rightEvent->dtStart();
 }
 
