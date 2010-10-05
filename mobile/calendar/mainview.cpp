@@ -138,6 +138,11 @@ void MainView::connectQMLSlots(QDeclarativeView::Status status)
   connect(m_calendarIface, SIGNAL(showEventViewSignal()), rootObject(), SLOT(showEventView()));
 }
 
+void MainView::finishEdit( QObject *editor )
+{
+  m_openItemEditors.remove( editor );
+}
+
 void MainView::showRegularCalendar()
 {
   m_calendar->setUnfilteredModel(regularSelectedItems());
@@ -196,8 +201,15 @@ void MainView::newTodo()
 
 void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
 {
+  if ( m_openItemEditors.values().contains( item.id() ) )
+    return; // An editor for this item is already open.
+
   IncidenceView *editor = new IncidenceView;
   editor->load( item, date );
+
+  m_openItemEditors.insert(  editor, item.id() );
+  connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
+
   editor->show();
 }
 

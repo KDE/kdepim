@@ -81,6 +81,11 @@ void MainView::delayedInit()
   actionCollection()->addAction( QLatin1String( "export_vcards" ), action );
 }
 
+void MainView::finishEdit( QObject *editor )
+{
+  mOpenItemEditors.remove( editor );
+}
+
 void MainView::newContact()
 {
   ContactEditorView *editor = new ContactEditorView;
@@ -111,17 +116,31 @@ void MainView::editItem()
 
 void MainView::editContact( const Akonadi::Item &item )
 {
+  if ( mOpenItemEditors.values().contains( item.id() ) )
+    return; // An editor for this item is already open.
+
   ContactEditorView *editor = new ContactEditorView;
-  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->loadContact( item );
+
+  mOpenItemEditors.insert(  editor, item.id() );
+  connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+
   editor->show();
 }
 
 void MainView::editContactGroup( const Akonadi::Item &item )
 {
+  if ( mOpenItemEditors.values().contains( item.id() ) )
+    return; // An editor for this item is already open.
+
   ContactGroupEditorView *editor = new ContactGroupEditorView;
-  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->loadContactGroup( item );
+
+  mOpenItemEditors.insert(  editor, item.id() );
+  connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+
   editor->show();
 }
 

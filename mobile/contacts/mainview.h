@@ -23,6 +23,8 @@
 
 #include "kdeclarativemainview.h"
 
+#include <Akonadi/Entity>
+
 namespace Akonadi
 {
   class Item;
@@ -49,6 +51,9 @@ class MainView : public KDeclarativeMainView
   protected slots:
     virtual void delayedInit();
 
+  private slots:
+    void finishEdit( QObject *editor );
+
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
@@ -62,6 +67,7 @@ class MainView : public KDeclarativeMainView
   private:
     Akonadi::StandardContactActionManager *mActionManager;
     ContactListProxy *mContactListProxy;
+    QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
 };
 
 #endif // MAINVIEW_H

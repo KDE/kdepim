@@ -23,6 +23,8 @@
 
 #include "kdeclarativemainview.h"
 
+#include <Akonadi/Entity>
+
 class CalendarInterface;
 class QDate;
 
@@ -53,6 +55,9 @@ class MainView : public KDeclarativeMainView
     void delayedInit();
     void connectQMLSlots(QDeclarativeView::Status status);
 
+  private slots:
+    void finishEdit( QObject *editor );
+
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
@@ -66,6 +71,7 @@ class MainView : public KDeclarativeMainView
   private:
     CalendarSupport::Calendar *m_calendar;
     CalendarInterface* m_calendarIface;
+    QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
 };
 
 #endif // MAINVIEW_H
