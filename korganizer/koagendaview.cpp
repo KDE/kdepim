@@ -1678,10 +1678,15 @@ void KOAgendaView::calendarIncidenceDeleted(Incidence * incidence)
 
 bool KOAgendaView::makesWholeDayBusy( Incidence *incidence ) const
 {
+  // Must be enabled in config
   // Must be event
   // Must be all day
   // Must be marked busy (TRANSP: OPAQUE)
   // You must be attendee or organizer
+  if ( !KOPrefs::instance()->mColorBusyDaysEnabled ) {
+    return false;
+  }
+
   if ( incidence->type() != "Event" || !incidence->doesFloat() ) {
     return false;
   }
