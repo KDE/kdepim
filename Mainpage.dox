@@ -55,9 +55,6 @@
         * - <a href="korganizer/korgac/html/index.html"><b>korgac</b></a>
         *   (<a href="korganizer/korgac/html/classes.html">classes</a>)\n
         *   <i>An alarm client for KOrganizer.</i>
-        * - <a href="kpilot/kpilot/html/index.html"><b>kpilot</b></a>
-        *   (<a href="kpilot/kpilot/html/classes.html">classes</a>)\n
-        *   <i>Synchronizes data with your PalmOS-based handheld.</i>
 	* </td>
 	* <td valign="top">
         * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>
@@ -84,9 +81,6 @@
         * - <a href="libkpimidentities/html/index.html"><b>libkpimidentities</b></a>
         *   (<a href="libkpimidentities/html/classes.html">classes</a>)\n
         *   <i>A library for managing identities.</i>
-        * - <a href="kpilot/lib/html/index.html"><b>kpilot library</b></a>
-        *   (<a href="kpilot/lib/html/classes.html">classes</a>)\n
-        *   <i>KPilot Library.</i>
 	* </td>
 	* </tr></table>
         *
