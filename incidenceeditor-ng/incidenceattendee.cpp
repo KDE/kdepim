@@ -330,8 +330,13 @@ void IncidenceAttendee::groupSearchResult( KJob *job )
 
 void IncidenceAttendee::slotSelectAddresses()
 {
+#ifndef KDEPIM_MOBILE_UI
+  QWidget *dialogParent = mAttendeeEditor;
+#else
+  QWidget *dialogParent = 0;
+#endif
   QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog(
-    new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
+    new Akonadi::EmailAddressSelectionDialog( dialogParent ) );
   dialog.data()->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
 
   if ( dialog.data()->exec() == QDialog::Accepted ) {
