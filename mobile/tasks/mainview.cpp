@@ -78,6 +78,11 @@ void MainView::delayedInit()
   KPIM::ReminderClient::startDaemon();
 }
 
+void MainView::finishEdit( QObject *editor )
+{
+  mOpenItemEditors.remove( editor );
+}
+
 void MainView::newTask()
 {
   IncidenceView *editor = new IncidenceView;
@@ -102,8 +107,15 @@ void MainView::setPercentComplete(int row, int percentComplete)
 
 void MainView::editIncidence( const Akonadi::Item &item )
 {
+  if ( mOpenItemEditors.values().contains( item.id() ) )
+    return; // An editor for this item is already open.
+
   IncidenceView *editor = new IncidenceView;
   editor->load( item, QDate() );
+
+  mOpenItemEditors.insert(  editor, item.id() );
+  connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
+
   editor->show();
 }
 

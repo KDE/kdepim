@@ -24,6 +24,8 @@
 
 #include "kdeclarativemainview.h"
 
+#include <Akonadi/Entity>
+
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
@@ -38,6 +40,9 @@ class MainView : public KDeclarativeMainView
   protected slots:
     virtual void delayedInit();
 
+  private slots:
+    void finishEdit( QObject *editor );
+
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
@@ -47,6 +52,9 @@ class MainView : public KDeclarativeMainView
     virtual QAbstractProxyModel* itemFilterModel() const;
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
+
+  private:
+    QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
 };
 
 #endif // MAINVIEW_H
