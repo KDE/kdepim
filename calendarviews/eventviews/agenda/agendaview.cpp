@@ -37,6 +37,7 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/incidencechanger.h>
 #include <calendarsupport/utils.h>
+#include <calendarsupport/kcalprefs.h>
 
 #include <KCalCore/CalFilter>
 #include <KCalCore/CalFormat>
@@ -211,6 +212,12 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
     bool mUpdateAllDayAgenda;
     bool mUpdateAgenda;
 
+    // Contains days that have at least one all-day Event with TRANSP: OPAQUE ( busy )
+    // that has you as organizer or attendee so we can color background with a different
+    // color
+    QMap<QDate, KCalCore::Event::List > mBusyDays;
+
+    bool makesWholeDayBusy( const KCalCore::Incidence::Ptr &incidence ) const;
     CalendarDecoration::Decoration *loadCalendarDecoration( const QString &name );
     void clearView();
     void setChanges( EventView::Changes changes,
@@ -290,6 +297,44 @@ void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &inciden
   //setChanges( q->changes() | IncidencesDeleted, CalendarSupport::incidence( incidence ) );
 }
 
+bool AgendaView::Private::makesWholeDayBusy( const KCalCore::Incidence::Ptr &incidence ) const
+{
+  // Must be enabled in config
+  // Must be event
+  // Must be all day
+  // Must be marked busy (TRANSP: OPAQUE)
+  // You must be attendee or organizer
+  if ( !q->preferences()->colorBusyDays() ) {
+    return false;
+  }
+
+  if ( incidence->type() != KCalCore::Incidence::TypeEvent || !incidence->allDay() ) {
+    return false;
+  }
+
+  KCalCore::Event::Ptr ev = incidence.staticCast<KCalCore::Event>();
+
+  if ( ev->transparency() != KCalCore::Event::Opaque ) {
+    return false;
+  }
+
+  // Last check: must be organizer or attendee:
+
+  if ( q->kcalPreferences()->thatIsMe( ev->organizer()->email() ) ) {
+    return true;
+  }
+
+  KCalCore::Attendee::List attendees = ev->attendees();
+  KCalCore::Attendee::List::ConstIterator it;
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    if ( q->kcalPreferences()->thatIsMe( (*it)->email() ) ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void EventViews::AgendaView::Private::setChanges( EventView::Changes changes,
                                                   const KCalCore::Incidence::Ptr &incidence )
 {
@@ -323,6 +368,7 @@ void AgendaView::Private::clearView()
   if ( mUpdateAgenda ) {
     mAgenda->clear();
   }
+  mBusyDays.clear();
 }
 
 void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
@@ -1567,7 +1613,13 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
     }
   }
 
+  const bool busyDay = d->makesWholeDayBusy( incidence );
   for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
+    if ( busyDay ) {
+      KCalCore::Event::List &busyEvents = d->mBusyDays[(*t).date()];
+      busyEvents.append( event );
+    }
+
     d->insertIncidence( aitem, t->toTimeSpec( timeSpec ).date(), createSelected );
   }
 }
@@ -1718,6 +1770,22 @@ void AgendaView::writeSettings( KConfig *config )
 
   QList<int> list = d->mSplitterAgenda->sizes();
   group.writeEntry( "Separator AgendaView", list );
+}
+
+QVector<bool> AgendaView::busyDayMask() const
+{
+  if ( d->mSelectedDates.isEmpty() || !d->mSelectedDates[0].isValid() ) {
+    return QVector<bool>();
+  }
+
+  QVector<bool> busyDayMask;
+  busyDayMask.resize( d->mSelectedDates.count() );
+
+  for( uint i = 0; i < d->mSelectedDates.count(); ++i ) {
+    busyDayMask[i] = !d->mBusyDays[d->mSelectedDates[i]].isEmpty();
+  }
+
+  return busyDayMask;
 }
 
 void AgendaView::setHolidayMasks()
@@ -1911,4 +1979,3 @@ void AgendaView::setChanges( EventView::Changes changes )
 #include "agendaview.moc"
 
 // kate: space-indent on; indent-width 2; replace-tabs on;
-

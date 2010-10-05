@@ -59,6 +59,17 @@
 
 using namespace EventViews;
 
+static QColor mixColors( const QColor &transparentColor,
+                         double alpha,
+                         const QColor &otherColor )
+{
+  const int red = ( 1 - alpha )*otherColor.red() + alpha*transparentColor.red();
+  const int green = ( 1 - alpha )*otherColor.green() + alpha*transparentColor.green();
+  const int blue = ( 1 - alpha )*otherColor.blue() + alpha*transparentColor.blue();
+
+  return QColor( red, green, blue );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 class MarcusBains::Private
 {
@@ -1501,8 +1512,34 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 
   double lGridSpacingY = d->mGridSpacingY * 2;
 
+  // If work day, use work color
+  // If busy day, use busy color
+  // if work and busy day, mix both, and busy color has alpha
+
+  const QVector<bool> busyDayMask = d->mAgendaView->busyDayMask();
+
+  if ( d->mAgendaView->preferences()->colorBusyDays() && !d->mAllDayMode ) {
+    for ( int i = 0; i < busyDayMask.count(); ++i ) {
+      if ( busyDayMask[i] ) {
+        const QPoint pt1( cx + d->mGridSpacingX * i, 0 );
+        // const QPoint pt2( cx + mGridSpacingX * ( i+1 ), ch );
+        dbp.fillRect( pt1.x(), pt1.y(), d->mGridSpacingX, cy + ch,
+                      d->mAgendaView->preferences()->agendaBgBusyColor() );
+      }
+    }
+  }
+
   // Highlight working hours
   if ( d->mWorkingHoursEnable && d->mHolidayMask ) {
+
+    QColor workAndBusyColor;
+    if ( d->mAgendaView->preferences()->colorBusyDays() ) {
+      workAndBusyColor = mixColors( d->mAgendaView->preferences()->agendaBgBusyColor(),
+                                    0.60, d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor() );
+    } else {
+      workAndBusyColor  = d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor();
+    }
+
     QPoint pt1( cx, d->mWorkingHoursYTop );
     QPoint pt2( cx + cw, d->mWorkingHoursYBottom );
     if ( pt2.x() >= pt1.x() /*&& pt2.y() >= pt1.y()*/) {
@@ -1518,29 +1555,34 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
       while ( gxStart <= gxEnd ) {
         int xStart = gridToContents( QPoint( gxStart + xoffset, 0 ) ).x();
         int xWidth = columnWidth( gxStart ) + 1;
+
+        QColor color;
+        if ( gxStart < busyDayMask.count() && busyDayMask[gxStart] ) {
+          color = workAndBusyColor;
+        } else {
+          color = d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor();
+        }
+
         if ( pt2.y() < pt1.y() ) {
           // overnight working hours
           if ( ( ( gxStart == 0 ) && !d->mHolidayMask->at( d->mHolidayMask->count() - 1 ) ) ||
                ( ( gxStart > 0 ) && ( gxStart < int( d->mHolidayMask->count() ) ) &&
                  ( !d->mHolidayMask->at( gxStart - 1 ) ) ) ) {
             if ( pt2.y() > cy ) {
-              dbp.fillRect( xStart, cy, xWidth, pt2.y() - cy + 1,
-                            d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor() );
+              dbp.fillRect( xStart, cy, xWidth, pt2.y() - cy + 1, color );
             }
           }
           if ( ( gxStart < int( d->mHolidayMask->count() - 1 ) ) &&
                ( !d->mHolidayMask->at( gxStart ) ) ) {
             if ( pt1.y() < cy + ch - 1 ) {
-              dbp.fillRect( xStart, pt1.y(), xWidth, cy + ch - pt1.y() + 1,
-                            d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor() );
+              dbp.fillRect( xStart, pt1.y(), xWidth, cy + ch - pt1.y() + 1, color );
             }
           }
         } else {
           // last entry in holiday mask denotes the previous day not visible
           // (needed for overnight shifts)
           if ( gxStart < int( d->mHolidayMask->count() - 1 ) && !d->mHolidayMask->at( gxStart ) ) {
-            dbp.fillRect( xStart, pt1.y(), xWidth, pt2.y() - pt1.y() + 1,
-                          d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor() );
+            dbp.fillRect( xStart, pt1.y(), xWidth, pt2.y() - pt1.y() + 1, color );
           }
         }
         ++gxStart;

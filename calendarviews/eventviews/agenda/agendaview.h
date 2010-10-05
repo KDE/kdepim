@@ -147,6 +147,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     */
     void updateEventDates( AgendaItem *item, uint atomicOperationId, bool addIncidence,
                            Akonadi::Collection::Id collectionId );
+
+    QVector<bool> busyDayMask() const;
   public slots:
     virtual void updateView();
     virtual void updateConfig();

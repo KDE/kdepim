@@ -893,6 +893,26 @@ void Prefs::setTimeSpec( const KDateTime::Spec &spec )
   d->mBaseConfig.mTimeSpec = spec;
 }
 
+bool Prefs::colorBusyDays() const
+{
+  return d->getBool( d->mBaseConfig.colorBusyDaysEnabledItem() );
+}
+
+QColor Prefs::agendaBgBusyColor() const
+{
+  return d->getColor( d->mBaseConfig.agendaBgBusyColorItem() );
+}
+
+void Prefs::setAgendaBgBusyColor( const QColor &color )
+{
+  d->mBaseConfig.mAgendaBgBusyColor = color;
+}
+
+void Prefs::setColorBusyDays( bool enable )
+{
+  d->mBaseConfig.mColorBusyDaysEnabled = enable;
+}
+
 void Prefs::setCategoryColor( const QString &cat, const QColor &color )
 {
   d->mBaseConfig.mCategoryColors.insert( cat, color );
