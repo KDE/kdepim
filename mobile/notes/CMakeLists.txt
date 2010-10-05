@@ -10,7 +10,9 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(notes_mobile_SRCS
   notelistproxy.cpp
+  notesexporthandler.cpp
   notesfilterproxymodel.cpp
+  notesimporthandler.cpp
   mainview.cpp
   main.cpp
 )
@@ -30,6 +32,7 @@ target_link_libraries(notes-mobile
   ${KDEPIMLIBS_KMIME_LIBS}
   kdepimmobileui
   kdepim
+  kmbox
   akonadi_next
 )
 

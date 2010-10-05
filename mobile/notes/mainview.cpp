@@ -22,7 +22,9 @@
 #include "mainview.h"
 
 #include "notelistproxy.h"
+#include "notesexporthandler.h"
 #include "notesfilterproxymodel.h"
+#include "notesimporthandler.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
@@ -69,6 +71,14 @@ void MainView::delayedInit()
   KAction *action = new KAction( i18n( "New Note" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
   actionCollection()->addAction( QLatin1String( "add_new_note" ), action );
+
+  action = new KAction( i18n( "Import Notes" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
+  actionCollection()->addAction( QLatin1String( "import_notes" ), action );
+
+  action = new KAction( i18n( "Export Notes" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  actionCollection()->addAction( QLatin1String( "export_notes" ), action );
 }
 
 QString MainView::noteTitle(int row)
@@ -368,4 +378,14 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 QAbstractProxyModel* MainView::itemFilterModel() const
 {
   return new NotesFilterProxyModel();
+}
+
+ImportHandlerBase* MainView::importHandler() const
+{
+  return new NotesImportHandler();
+}
+
+ExportHandlerBase* MainView::exportHandler() const
+{
+  return new NotesExportHandler();
 }

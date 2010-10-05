@@ -54,6 +54,9 @@ class MainView : public KDeclarativeMainView
 
     virtual QAbstractProxyModel* itemFilterModel() const;
 
+    virtual ImportHandlerBase* importHandler() const;
+    virtual ExportHandlerBase* exportHandler() const;
+
   private:
     Akonadi::Collection suitableContainerCollection(const QModelIndex &parent = QModelIndex());
 };
