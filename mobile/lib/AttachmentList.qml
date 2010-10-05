@@ -34,7 +34,8 @@ Item {
   property int requestedWidth: attachmentListWidth
 
   /** Emittted when an attachment has been selected. */
-  signal attachmentSelected(string url, string mimeType)
+  signal openAttachment(string url, string mimeType)
+  signal saveAttachment(string url)
 
   Component {
     id: attachmentDelegate
@@ -108,7 +109,7 @@ Item {
       buttonText: KDE.i18n( "Open" )
 
       onClicked: {
-         attachmentSelected(attachmentListView.currentAttachmentUrl, attachmentListView.currentMimeType);
+         openAttachment(attachmentListView.currentAttachmentUrl, attachmentListView.currentMimeType);
       }
     }
     KPIM.Button {
@@ -118,6 +119,9 @@ Item {
       width: parent.width - 10
       height: parent.height / 6
       buttonText: KDE.i18n( "Save" )
+      onClicked: {
+         saveAttachment(attachmentListView.currentAttachmentUrl);
+      }
     }
   }
 
