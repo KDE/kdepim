@@ -33,6 +33,7 @@
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/freebusymanager.h>
 #include <calendarviews/eventviews/eventview.h>
 
 #include <akonadi/agentactionmanager.h>
@@ -120,6 +121,10 @@ void MainView::delayedInit()
 
   connect(this, SIGNAL(statusChanged(QDeclarativeView::Status)),
           this, SLOT(connectQMLSlots(QDeclarativeView::Status)));
+
+  action = new KAction( i18n( "Upload Free Busy Information" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( uploadFreeBusy()) );
+  actionCollection()->addAction( QLatin1String( "upload_freebusy" ), action );
 
   //register DBUS interface
   m_calendarIface = new CalendarInterface( this );
@@ -283,5 +288,11 @@ ExportHandlerBase* MainView::exportHandler() const
 {
   return new EventsExportHandler();
 }
+
+void MainView::uploadFreeBusy()
+{
+  CalendarSupport::FreeBusyManager::self()->publishFreeBusy( this );
+}
+
 
 #include "mainview.moc"

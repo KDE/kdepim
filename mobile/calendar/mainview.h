@@ -50,6 +50,7 @@ class MainView : public KDeclarativeMainView
     void newEvent();
     void newTodo();
     void editIncidence( const Akonadi::Item &item, const QDate &date );
+    void uploadFreeBusy();
 
   protected slots:
     void delayedInit();
