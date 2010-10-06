@@ -360,7 +360,15 @@ void FolderStorage::removeMsg(const QPtrList<KMMsgBase>& msgList, bool imapQuiet
   for( QPtrListIterator<KMMsgBase> it( msgList ); *it; ++it )
   {
     int idx = find(it.current());
-    assert( idx != -1);
+
+    if ( idx == -1 ) {
+      kdWarning(5006) << "Going to crash. Subject of faulty message is "
+                      << it.current()->subject()
+                      << "; filename = " << it.current()->fileName()
+                      <<  endl;
+      assert( false && " idx != 1 " );
+    }
+
     removeMsg(idx, imapQuiet);
   }
 }
