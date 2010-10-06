@@ -45,9 +45,8 @@ KPIM.MainView {
         clockWidget.expand()
         clockWidgetOk.enabled = false
 
-        myCalendar.day = day;
-        myCalendar.month = month;
-        myCalendar.year = year;
+        myClock.hours = hour;
+        myClock.minutes = minute;
     }
   }
 
@@ -77,8 +76,6 @@ KPIM.MainView {
               left: parent.left
               top: parent.top
               bottom: parent.bottom
-
-              topMargin: 20
             }
           }
 
@@ -196,7 +193,7 @@ KPIM.MainView {
               left: myClock.right
               right: parent.right
 
-              topMargin: 20
+              topMargin: 100
               leftMargin: 60
             }
 
