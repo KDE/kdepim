@@ -336,7 +336,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="mTaskLabel">
      <property name="text">
-      <string comment="@label Task specific line in the dialog containing completed and priority">Task:</string>
+      <string comment="@label Task specific line in the dialog containing progress and priority">Progress:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
