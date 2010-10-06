@@ -67,6 +67,8 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
   d->sliderValueChanged( d->mUi->mCompletionSlider->value() );
   d->mUi->mCompletionPriorityWidget->hide();
   d->mUi->mTaskLabel->hide();
+  const QFontMetrics metrics( d->mUi->mCompletedLabel->font() );
+  d->mUi->mCompletedLabel->setMinimumWidth( metrics.width( QLatin1String( "100%" ) ) );
 #ifndef KDEPIM_MOBILE_UI
   d->mUi->mTaskSeparator->hide();
 #endif
