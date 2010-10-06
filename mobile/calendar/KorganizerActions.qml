@@ -151,7 +151,7 @@ ActionMenuContainer {
     FakeAction { name : "request_update" }
     FakeAction { name : "request_change" }
     FakeAction { name : "send_as_icalendar" }
-    FakeAction { name : "mail_freebusy_information" }
+    ActionListItem { name : "mail_freebusy" }
     ActionListItem { name : "upload_freebusy" }
   }
 

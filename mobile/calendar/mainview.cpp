@@ -95,6 +95,7 @@ void MainView::delayedInit()
 
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
+  CalendarSupport::FreeBusyManager::self()->setCalendar( m_calendar );
 
   // FIXME: My suspicion is that this is wrong. I.e. the collection selection is
   //        not correct resulting in no items showing up in the monthview.
@@ -125,6 +126,10 @@ void MainView::delayedInit()
   action = new KAction( i18n( "Upload Free Busy Information" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( uploadFreeBusy()) );
   actionCollection()->addAction( QLatin1String( "upload_freebusy" ), action );
+
+  action = new KAction( i18n( "Mail Free Busy Information" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( mailFreeBusy()) );
+  actionCollection()->addAction( QLatin1String( "mail_freebusy" ), action );
 
   //register DBUS interface
   m_calendarIface = new CalendarInterface( this );
@@ -292,6 +297,11 @@ ExportHandlerBase* MainView::exportHandler() const
 void MainView::uploadFreeBusy()
 {
   CalendarSupport::FreeBusyManager::self()->publishFreeBusy( this );
+}
+
+void MainView::mailFreeBusy()
+{
+  CalendarSupport::FreeBusyManager::self()->mailFreeBusy( 30, this );
 }
 
 
