@@ -191,9 +191,11 @@ void IncidenceAlarm::handleDateTimeToggle()
 
 void IncidenceAlarm::newAlarm()
 {
-#ifndef KDEPIM_MOBILE_UI
-
+#ifdef KDEPIM_MOBILE_UI
+  QPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type() ) );
+#else
   QPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type(), mUi->mTabWidget ) );
+#endif
   dialog->setOffset( 15 );
   dialog->setUnit( AlarmDialog::Minutes );
   if ( mIsTodo && mDateTime->endDateTimeEnabled() ) {
@@ -214,8 +216,6 @@ void IncidenceAlarm::newAlarm()
     checkDirtyStatus();
   }
   delete dialog;
-
-#endif
 }
 
 void IncidenceAlarm::newAlarmFromPreset()
