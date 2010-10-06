@@ -32,17 +32,17 @@
 class KBreadcrumbNavigationProxyModel : public Akonadi::SelectionProxyModel
 {
   Q_OBJECT
-public:
-  KBreadcrumbNavigationProxyModel(QItemSelectionModel* selectionModel, QObject* parent = 0);
 
-  void setShowHiddenAscendantData(bool showHiddenAscendantData);
-  bool showHiddenAscendantData() const;
+  public:
+    KBreadcrumbNavigationProxyModel( QItemSelectionModel *selectionModel, QObject *parent = 0 );
 
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    void setShowHiddenAscendantData( bool showHiddenAscendantData );
+    bool showHiddenAscendantData() const;
 
-private:
-  bool m_showHiddenAscendantData;
+    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
 
+  private:
+    bool m_showHiddenAscendantData;
 };
 
 class KForwardingItemSelectionModel;
@@ -50,51 +50,51 @@ class KForwardingItemSelectionModel;
 class KNavigatingProxyModel : public Akonadi::SelectionProxyModel
 {
   Q_OBJECT
-public:
-  KNavigatingProxyModel(KForwardingItemSelectionModel* selectionModel, QObject* parent = 0);
 
-  virtual void setSourceModel(QAbstractItemModel* sourceModel);
+  public:
+    KNavigatingProxyModel( KForwardingItemSelectionModel *selectionModel, QObject *parent = 0 );
 
-private slots:
-  void updateNavigation();
-  void navigationSelectionChanged( const QItemSelection &, const QItemSelection & );
-  void _sourceRowsInserted( const QModelIndex &parent, int start, int end );
-  void _sourceRowsRemoved( const QModelIndex &parent, int start, int end );
+    virtual void setSourceModel( QAbstractItemModel *sourceModel );
 
-private:
-  void silentSelect(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command);
+  private Q_SLOTS:
+    void updateNavigation();
+    void navigationSelectionChanged( const QItemSelection&, const QItemSelection& );
+    void _sourceRowsInserted( const QModelIndex &parent, int start, int end );
+    void _sourceRowsRemoved( const QModelIndex &parent, int start, int end );
 
-private:
-  using KSelectionProxyModel::setFilterBehavior;
+  private:
+    void silentSelect( const QItemSelection &selection, QItemSelectionModel::SelectionFlags command );
 
-  KForwardingItemSelectionModel *m_selectionModel;
-
+    using KSelectionProxyModel::setFilterBehavior;
+    KForwardingItemSelectionModel *m_selectionModel;
 };
 
 class KForwardingItemSelectionModel : public QItemSelectionModel
 {
   Q_OBJECT
-public:
-  enum Direction
-  {
-    Forward,
-    Reverse
-  };
-  KForwardingItemSelectionModel(QAbstractItemModel* model, QItemSelectionModel *selectionModel, QObject *parent = 0);
-  KForwardingItemSelectionModel(QAbstractItemModel* model, QItemSelectionModel *selectionModel, Direction direction, QObject *parent = 0);
 
-  virtual void select(const QModelIndex& index, SelectionFlags command);
-  virtual void select(const QItemSelection& selection, SelectionFlags command);
+  public:
+    enum Direction
+    {
+      Forward,
+      Reverse
+    };
 
-signals:
-  void resetNavigation();
+    KForwardingItemSelectionModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent = 0 );
+    KForwardingItemSelectionModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, Direction direction, QObject *parent = 0 );
 
-private slots:
-  void navigationSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    virtual void select( const QModelIndex &index, SelectionFlags command );
+    virtual void select( const QItemSelection &selection, SelectionFlags command );
 
-private:
-  QItemSelectionModel *m_selectionModel;
-  Direction m_direction;
+  Q_SIGNALS:
+    void resetNavigation();
+
+  private Q_SLOTS:
+    void navigationSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
+
+  private:
+    QItemSelectionModel *m_selectionModel;
+    Direction m_direction;
 };
 
 #endif

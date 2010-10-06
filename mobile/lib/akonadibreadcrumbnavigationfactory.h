@@ -26,16 +26,18 @@
 
 namespace Akonadi
 {
+
 class BreadcrumbNavigationFactory : public KBreadcrumbNavigationFactory
 {
   Q_OBJECT
-public:
-  BreadcrumbNavigationFactory(QObject* parent = 0);
 
-protected:
-  virtual QAbstractItemModel* getChildItemsModel(QAbstractItemModel* model);
+  public:
+    BreadcrumbNavigationFactory( QObject* parent = 0 );
 
+  protected:
+    virtual QAbstractItemModel* getChildItemsModel( QAbstractItemModel* model );
 };
 
 }
+
 #endif

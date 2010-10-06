@@ -22,74 +22,73 @@
 #ifndef BREADCRUMBNAVIGATIONFACTORY_H
 #define BREADCRUMBNAVIGATIONFACTORY_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class QAbstractItemModel;
-class QItemSelectionModel;
 class QDeclarativeContext;
-
+class QItemSelectionModel;
 
 class KBreadcrumbNavigationFactoryPrivate;
 
 class KBreadcrumbNavigationFactory : public QObject
 {
   Q_OBJECT
-  Q_PROPERTY(QString selectedDisplayText READ selectedDisplayText NOTIFY selectedDisplayTextChanged)
-public:
-  KBreadcrumbNavigationFactory(QObject* parent = 0);
+  Q_PROPERTY( QString selectedDisplayText READ selectedDisplayText NOTIFY selectedDisplayTextChanged )
 
-  void createBreadcrumbContext(QAbstractItemModel *model, QObject* parent = 0);
-  void createCheckableBreadcrumbContext(QAbstractItemModel *model, QObject* parent = 0);
+  public:
+    KBreadcrumbNavigationFactory( QObject* parent = 0 );
 
-  void setBreadcrumbDepth(int depth);
-  int breadcrumbDepth() const;
+    void createBreadcrumbContext( QAbstractItemModel *model, QObject* parent = 0 );
+    void createCheckableBreadcrumbContext( QAbstractItemModel *model, QObject* parent = 0 );
 
-  QItemSelectionModel *breadcrumbSelectionModel() const;
-  QItemSelectionModel *selectionModel() const;
-  QItemSelectionModel *childSelectionModel() const;
+    void setBreadcrumbDepth( int depth );
+    int breadcrumbDepth() const;
 
-  QAbstractItemModel *breadcrumbItemModel() const;
-  QAbstractItemModel *selectedItemModel() const;
-  QAbstractItemModel *unfilteredChildItemModel() const;
-  QAbstractItemModel *childItemModel() const;
+    QItemSelectionModel *breadcrumbSelectionModel() const;
+    QItemSelectionModel *selectionModel() const;
+    QItemSelectionModel *childSelectionModel() const;
 
-  QItemSelectionModel *checkModel() const;
-  QAbstractItemModel *checkedItemsModel() const;
-  QItemSelectionModel *checkedItemsCheckModel() const;
+    QAbstractItemModel *breadcrumbItemModel() const;
+    QAbstractItemModel *selectedItemModel() const;
+    QAbstractItemModel *unfilteredChildItemModel() const;
+    QAbstractItemModel *childItemModel() const;
 
-  QString selectedDisplayText() const;
+    QItemSelectionModel *checkModel() const;
+    QAbstractItemModel *checkedItemsModel() const;
+    QItemSelectionModel *checkedItemsCheckModel() const;
 
-signals:
-  void selectedDisplayTextChanged();
+    QString selectedDisplayText() const;
 
-public slots:
-  QObject* qmlBreadcrumbSelectionModel() const;
-  QObject* qmlSelectionModel() const;
-  QObject* qmlChildSelectionModel() const;
+  public Q_SLOTS:
+    QObject* qmlBreadcrumbSelectionModel() const;
+    QObject* qmlSelectionModel() const;
+    QObject* qmlChildSelectionModel() const;
 
-  QObject* qmlBreadcrumbCheckModel() const;
-  QObject* qmlSelectedItemCheckModel() const;
-  QObject* qmlChildCheckModel() const;
-  QObject* qmlCheckedItemsModel() const;
-  QObject* qmlCheckedItemsCheckModel() const;
+    QObject* qmlBreadcrumbCheckModel() const;
+    QObject* qmlSelectedItemCheckModel() const;
+    QObject* qmlChildCheckModel() const;
+    QObject* qmlCheckedItemsModel() const;
+    QObject* qmlCheckedItemsCheckModel() const;
 
-  QObject* qmlBreadcrumbsModel() const;
-  QObject* qmlSelectedItemModel() const;
-  QObject* qmlChildItemsModel() const;
+    QObject* qmlBreadcrumbsModel() const;
+    QObject* qmlSelectedItemModel() const;
+    QObject* qmlChildItemsModel() const;
 
-  void selectBreadcrumb( int row );
-  void selectChild( int row );
+    void selectBreadcrumb( int row );
+    void selectChild( int row );
 
-  bool childCollectionHasChildren( int row );
+    bool childCollectionHasChildren( int row ) const;
 
-protected:
-  virtual QAbstractItemModel* getBreadcrumbNavigationModel(QAbstractItemModel *model);
-  virtual QAbstractItemModel* getChildItemsModel(QAbstractItemModel *model);
+  Q_SIGNALS:
+    void selectedDisplayTextChanged();
 
-private:
-  Q_DECLARE_PRIVATE(KBreadcrumbNavigationFactory)
-  KBreadcrumbNavigationFactoryPrivate * const d_ptr;
+  protected:
+    virtual QAbstractItemModel* getBreadcrumbNavigationModel( QAbstractItemModel *model );
+    virtual QAbstractItemModel* getChildItemsModel( QAbstractItemModel *model );
 
+  private:
+    Q_DECLARE_PRIVATE( KBreadcrumbNavigationFactory )
+    KBreadcrumbNavigationFactoryPrivate * const d_ptr;
 };
 
 #endif

@@ -19,24 +19,25 @@
 
 #include "agentstatusmonitor.h"
 
-#include <Akonadi/AgentManager>
+#include <akonadi/agentmanager.h>
 #include <akonadi/mimetypechecker.h>
-#include <KDebug>
+#include <kdebug.h>
 #include <solid/networking.h>
 
 using namespace Akonadi;
 
 Q_DECLARE_METATYPE( AgentStatusMonitor::AgentStatus )
 
-AgentStatusMonitor::AgentStatusMonitor(QObject* parent): QObject(parent), m_status( Offline )
+AgentStatusMonitor::AgentStatusMonitor( QObject* parent )
+  : QObject( parent ), m_status( Offline )
 {
   qRegisterMetaType<AgentStatusMonitor::AgentStatus>();
-  connect( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)), SLOT(updateStatus()) );
-  connect( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(updateStatus()) );
-  connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)), SLOT(updateStatus()) );
-  connect( AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)), SLOT(updateStatus()) );
+  connect( AgentManager::self(), SIGNAL( instanceAdded( Akonadi::AgentInstance ) ), SLOT( updateStatus() ) );
+  connect( AgentManager::self(), SIGNAL( instanceRemoved( Akonadi::AgentInstance ) ), SLOT( updateStatus() ) );
+  connect( AgentManager::self(), SIGNAL( instanceOnline( Akonadi::AgentInstance, bool ) ), SLOT( updateStatus() ) );
+  connect( AgentManager::self(), SIGNAL( instanceStatusChanged( Akonadi::AgentInstance ) ), SLOT( updateStatus() ) );
 #ifndef _WIN32_WCE
-  connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)), SLOT(updateStatus()) );
+  connect( Solid::Networking::notifier(), SIGNAL( statusChanged( Solid::Networking::Status ) ), SLOT( updateStatus() ) );
 #endif
   updateStatus();
 }
@@ -48,7 +49,8 @@ AgentStatusMonitor::AgentStatus AgentStatusMonitor::status() const
 
 void AgentStatusMonitor::updateStatus()
 {
-  AgentStatus oldStatus = m_status;
+  const AgentStatus oldStatus = m_status;
+
   m_status = Offline;
   foreach ( const AgentInstance &instance, AgentManager::self()->instances() ) {
     if ( instance.type().identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) ) {
@@ -73,11 +75,10 @@ void AgentStatusMonitor::updateStatus()
     emit statusChanged();
 }
 
-void AgentStatusMonitor::setMimeTypeFilter(const QStringList& mimeTypes)
+void AgentStatusMonitor::setMimeTypeFilter( const QStringList &mimeTypes )
 {
   m_mimeTypeChecker.setWantedMimeTypes( mimeTypes );
   updateStatus();
 }
-
 
 #include "agentstatusmonitor.moc"

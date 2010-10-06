@@ -20,9 +20,10 @@
 #ifndef AGENTSTATUSMONITOR_H
 #define AGENTSTATUSMONITOR_H
 
-#include <QObject>
-#include <QStringList>
 #include <akonadi/mimetypechecker.h>
+
+#include <QtCore/QObject>
+#include <QtCore/QStringList>
 
 class AgentStatusMonitor : public QObject
 {
@@ -44,10 +45,10 @@ class AgentStatusMonitor : public QObject
     AgentStatus status() const;
     void setMimeTypeFilter( const QStringList &mimeTypes );
 
-  signals:
+  Q_SIGNALS:
     void statusChanged();
 
-  private slots:
+  private Q_SLOTS:
     void updateStatus();
 
   private:

@@ -21,18 +21,18 @@
 
 #include "akonadibreadcrumbnavigationfactory.h"
 
-#include <akonadi/entitymimetypefiltermodel.h>
-
 #include "orderedchildcollectionsmodel.h"
+
+#include <akonadi/entitymimetypefiltermodel.h>
 
 using namespace Akonadi;
 
-BreadcrumbNavigationFactory::BreadcrumbNavigationFactory(QObject* parent)
+BreadcrumbNavigationFactory::BreadcrumbNavigationFactory( QObject* parent )
   : KBreadcrumbNavigationFactory(parent)
 {
 }
 
-QAbstractItemModel* BreadcrumbNavigationFactory::getChildItemsModel(QAbstractItemModel* model)
+QAbstractItemModel* BreadcrumbNavigationFactory::getChildItemsModel( QAbstractItemModel* model )
 {
   EntityMimeTypeFilterModel *filterProxy = new Akonadi::EntityMimeTypeFilterModel( this );
   filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
@@ -42,6 +42,7 @@ QAbstractItemModel* BreadcrumbNavigationFactory::getChildItemsModel(QAbstractIte
   OrderedChildCollectionsModel *orderProxy = new OrderedChildCollectionsModel( this );
   orderProxy->sort(0, Qt::AscendingOrder );
   orderProxy->setSourceModel( filterProxy );
+
   return orderProxy;
 }
 
