@@ -244,8 +244,7 @@ QString Callback::receiver() const
 
 void Callback::updateReaderWindow() const
 {
- // seems to hang the source code viewer window we do this.
- // mReaderWin->updateReaderWin();
+  mReaderWin->update( true );
 }
 
 void Callback::closeIfSecondaryWindow() const
