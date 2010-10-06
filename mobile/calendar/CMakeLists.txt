@@ -42,7 +42,6 @@ target_link_libraries(korganizer-mobile
   kdepimdbusinterfaces
   kdepimmobileui
   kdepimmobileuicalendar
-  calendarsupport
   incidenceeditorsngmobile
   eventviews
   calendarsupport
