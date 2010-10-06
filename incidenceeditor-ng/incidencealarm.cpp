@@ -147,31 +147,23 @@ bool IncidenceAlarm::isDirty() const
 
 void IncidenceAlarm::editCurrentAlarm()
 {
-#ifndef KDEPIM_MOBILE_UI
-
   KCalCore::Alarm::Ptr currentAlarm = mAlarms.at( mUi->mAlarmList->currentRow() );
 
-  QWeakPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type(), mUi->mTabWidget ) );
-  dialog.data()->load( currentAlarm );
-
-  dialog.data()->setAllowBeginReminders( mDateTime->startDateTimeEnabled() );
-  dialog.data()->setAllowEndReminders( mDateTime->endDateTimeEnabled() );
-
-  if ( dialog.data()->exec() == KDialog::Accepted ) {
-    AlarmDialog *dialogPtr = dialog.data();
-
-    // If it was deleted it wouldn't have returned Accepted
-    // is this check needed?
-    if ( dialogPtr ) {
-      dialogPtr->save( currentAlarm );
-      updateAlarmList();
-      checkDirtyStatus();
-    } else {
-      kDebug() << "dialog was already deleted";
-    }
-  }
-
+#ifdef KDEPIM_MOBILE_UI
+  QPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type() ) );
+#else
+  QPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type(), mUi->mTabWidget ) );
 #endif
+  dialog->load( currentAlarm );
+
+  dialog->setAllowBeginReminders( mDateTime->startDateTimeEnabled() );
+  dialog->setAllowEndReminders( mDateTime->endDateTimeEnabled() );
+
+  if ( dialog->exec() == KDialog::Accepted ) {
+    dialog->save( currentAlarm );
+    updateAlarmList();
+    checkDirtyStatus();
+  }
 }
 
 void IncidenceAlarm::handleDateTimeToggle()
