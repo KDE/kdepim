@@ -26,6 +26,9 @@
 
 #include <Akonadi/Entity>
 
+class KJob;
+class TasksActionManager;
+
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
@@ -35,6 +38,7 @@ class MainView : public KDeclarativeMainView
   public slots:
     void newTask();
     void newSubTask();
+    void makeTaskIndependent();
     void setPercentComplete(int row, int percentComplete);
     void editIncidence( const Akonadi::Item &item );
 
@@ -43,6 +47,7 @@ class MainView : public KDeclarativeMainView
 
   private slots:
     void finishEdit( QObject *editor );
+    void modifyFinished( KJob *job );
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -58,6 +63,7 @@ class MainView : public KDeclarativeMainView
 
   private:
     QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
+    TasksActionManager *mTasksActionManager;
 };
 
 #endif // MAINVIEW_H

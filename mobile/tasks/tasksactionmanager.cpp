@@ -54,6 +54,7 @@ void TasksActionManager::setItemSelectionModel( QItemSelectionModel *itemSelecti
 void TasksActionManager::updateActions()
 {
   mActionCollection->action( QLatin1String( "add_new_subtask" ) )->setEnabled( false );
+  mActionCollection->action( QLatin1String( "make_subtask_independent" ) )->setEnabled( false );
 
   const QModelIndexList list = mItemSelectionModel->selectedRows();
   if ( list.size() != 1 )
@@ -69,6 +70,11 @@ void TasksActionManager::updateActions()
     return;
 
   mActionCollection->action( QLatin1String( "add_new_subtask" ) )->setEnabled( true );
+
+  // Only enable the make_subtask_independent action for todos that have a parent.
+  KCalCore::Todo::Ptr todo = item.payload<KCalCore::Todo::Ptr>();
+  const bool enable = !todo->relatedTo( KCalCore::Todo::RelTypeParent ).isEmpty();
+  mActionCollection->action( QLatin1String( "make_subtask_independent" ) )->setEnabled( enable );
 }
 
 void TasksActionManager::initActions()
@@ -84,6 +90,9 @@ void TasksActionManager::initActions()
 
   action = mActionCollection->addAction( QLatin1String( "add_new_subtask" ) );
   action->setText( i18n( "New Sub Task" ) );
+
+  action = mActionCollection->addAction( QLatin1String( "make_subtask_independent" ) );
+  action->setText( i18n( "Make Sub Task Independent" ) );
 }
 
 #include "tasksactionmanager.moc"

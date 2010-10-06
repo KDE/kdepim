@@ -31,8 +31,10 @@
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/standardactionmanager.h>
+
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcalcore/todo.h>
@@ -51,6 +53,7 @@ QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 
 MainView::MainView( QWidget *parent )
   : KDeclarativeMainView( "tasks", new TaskListProxy, parent )
+  , mTasksActionManager( 0 )
 {
 }
 
@@ -64,8 +67,8 @@ void MainView::delayedInit()
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
 
-  TasksActionManager *tasksActionManager = new TasksActionManager( actionCollection(), this );
-  tasksActionManager->setItemSelectionModel( itemSelectionModel() );
+  mTasksActionManager = new TasksActionManager( actionCollection(), this );
+  mTasksActionManager->setItemSelectionModel( itemSelectionModel() );
 
   connect( actionCollection()->action( QLatin1String( "add_new_task" ) ),
            SIGNAL( triggered( bool ) ), SLOT( newTask() ) );
@@ -75,6 +78,8 @@ void MainView::delayedInit()
            SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   connect( actionCollection()->action( QLatin1String( "export_tasks" ) ),
            SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( actionCollection()->action( QLatin1String( "make_subtask_independent" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( makeTaskIndependent() ) );
 
   KPIM::ReminderClient::startDaemon();
 }
@@ -82,6 +87,13 @@ void MainView::delayedInit()
 void MainView::finishEdit( QObject *editor )
 {
   mOpenItemEditors.remove( editor );
+}
+void MainView::modifyFinished( KJob *job )
+{
+  if ( job->error() ) // TODO: Proper error handling?
+    kDebug() << "FAIL:" << job->errorString();
+  else
+    mTasksActionManager->updateActions();
 }
 
 void MainView::newTask()
@@ -117,6 +129,23 @@ void MainView::newSubTask()
   IncidenceView *editor = new IncidenceView;
   editor->load( item );
   editor->show();
+}
+
+void MainView::makeTaskIndependent()
+{
+  Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  KCalCore::Todo::Ptr todo = item.payload<KCalCore::Todo::Ptr>();
+  if ( todo->relatedTo( KCalCore::Todo::RelTypeParent ).isEmpty() )
+    return; // The todo has no parent, no need for changes
+
+  todo->setRelatedTo( 0 );
+  item.setPayload( todo );
+
+  ItemModifyJob *job = new ItemModifyJob( item, this );
+  connect( job, SIGNAL( result( KJob * ) ), SLOT( modifyFinished( KJob* ) ) );
 }
 
 void MainView::setPercentComplete(int row, int percentComplete)

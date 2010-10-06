@@ -32,7 +32,7 @@ public:
 
   void setItemSelectionModel( QItemSelectionModel *itemSelectionModel );
 
-private slots:
+public slots:
   void updateActions();
 
 private:

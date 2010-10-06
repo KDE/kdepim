@@ -112,7 +112,7 @@ ActionMenuContainer {
     name : "todo_viewer_todo_menu"
     text : KDE.i18n( "ToDo" )
     ActionListItem { name : "add_new_subtask" }
-    FakeAction { name : "make_sub_todo_independent" }
+    ActionListItem { name : "make_subtask_independent" }
     FakeAction { name : "make_all_sub_todos_independent" }
   }
 
