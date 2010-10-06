@@ -242,8 +242,7 @@ KPIM.MainView {
               onValueChanged: myClock.seconds = value;
               onSelected: {
                 hourSelector.state = "unselected";
-                minuteSelector.state = "unsel  property int handleHeight : 160
-ected";
+                minuteSelector.state = "unselected";
               }
             }
           }
