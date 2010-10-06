@@ -279,7 +279,9 @@ void IncidenceView::reject( RejectReason /*reason*/, const QString &errorMessage
 
 void IncidenceView::save()
 {
-  mItemManager->save();
+  mEditor->validate();
+  if ( mEditor->isValid() )
+    mItemManager->save();
 }
 
 void IncidenceView::slotSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action )
