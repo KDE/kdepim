@@ -23,11 +23,12 @@
 #ifndef CALENDARSUPPORT_IDENTITYMANAGER_H
 #define CALENDARSUPPORT_IDENTITYMANAGER_H
 
+#include "calendarsupport_export.h"
 #include <KPIMIdentities/IdentityManager>
 
 namespace CalendarSupport {
 
-class IdentityManager : public KPIMIdentities::IdentityManager
+class CALENDARSUPPORT_EXPORT IdentityManager : public KPIMIdentities::IdentityManager
 {
   public:
     explicit IdentityManager( QObject *parent=0, const char *name=0 )
