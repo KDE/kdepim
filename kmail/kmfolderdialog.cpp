@@ -677,7 +677,7 @@ bool FolderDialogGeneralTab::save()
   if ( !mIsLocalSystemFolder || mIsResourceFolder )
   {
     oldFldName = mDlg->folder()->name();
-    if (!mNameEdit->text().isEmpty())
+    if (mNameEdit && !mNameEdit->text().isEmpty())
       fldName = mNameEdit->text();
     else
       fldName = oldFldName;
