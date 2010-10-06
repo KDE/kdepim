@@ -23,34 +23,15 @@ import ClockHelper 4.5
 Image {
     id: clock
 
-    property alias seconds: clockHelper.seconds
     property alias minutes: clockHelper.minutes
     property alias hours: clockHelper.hours
 
     // selects a clock hand to move using mouse/finger
-    property alias secondsHandSelected : clockHelper.secondsHandSelected
     property alias minutesHandSelected : clockHelper.minutesHandSelected
     property alias hoursHandSelected : clockHelper.hoursHandSelected
 
     source: "images/clock-background.png"
     smooth: true
-
-    Image {
-        id: secondsHand
-        source: "images/clock-seconds.png"
-        smooth: true
-
-        x: clock.width/2 - secondsHand.width/2
-        y: clock.height/2 - secondsHand.height*0.95
-        height: clock.height/(372/173)
-        width: clock.width/(370/3)
-
-        transform: Rotation {
-            origin.x: secondsHand.width/2
-            origin.y: secondsHand.height*0.95
-            angle: clockHelper.secondsAngle
-        }
-    }
 
     Image {
         id: minutesHand

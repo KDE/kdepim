@@ -74,7 +74,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
 
   signals:
     void showCalendarWidget( int day, int month, int year );
-    void showClockWidget( int hour, int minute, int second );
+    void showClockWidget( int hour, int minute );
 
   public slots:
     void save();   /// Ok clicked in the user interface
@@ -82,7 +82,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     void showCalendar( QObject *obj );
     void setNewDate( int day, int month, int year );
     void showClock( QObject *obj );
-    void setNewTime( int hour, int minute, int second );
+    void setNewTime( int hour, int minute );
 
   protected slots:
     void delayedInit();

@@ -169,15 +169,15 @@ void IncidenceView::showClock( QObject *obj )
         return;
 
   QTime time = mTimeWidget->time();
-  emit showClockWidget( time.hour(), time.minute(), time.second() );
+  emit showClockWidget( time.hour(), time.minute() );
 }
 
-void IncidenceView::setNewTime( int hour, int minute, int second )
+void IncidenceView::setNewTime( int hour, int minute )
 {
   if ( mTimeWidget == 0 )
     return;
 
-  mTimeWidget->setTime( QTime( hour, minute, second ) );
+  mTimeWidget->setTime( QTime( hour, minute ) );
 }
 
 void IncidenceView::initIncidenceMore()

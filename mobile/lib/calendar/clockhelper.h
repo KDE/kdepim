@@ -31,11 +31,8 @@ class ClockHelper : public QObject
 
   Q_PROPERTY(qreal originX READ originX WRITE setOriginX)
   Q_PROPERTY(qreal originY READ originY WRITE setOriginY)
-  Q_PROPERTY(bool secondsHandSelected READ secondsHandSelected WRITE setSecondsHandSelected)
   Q_PROPERTY(bool minutesHandSelected READ minutesHandSelected WRITE setMinutesHandSelected)
   Q_PROPERTY(bool hoursHandSelected READ hoursHandSelected WRITE setHoursHandSelected)
-  Q_PROPERTY(int seconds READ seconds WRITE setSecond NOTIFY secondsChanged)
-  Q_PROPERTY(int secondsAngle READ secondsAngle NOTIFY secondsAngleChanged)
   Q_PROPERTY(int minutes READ minutes WRITE setMinute NOTIFY minutesChanged)
   Q_PROPERTY(int minutesAngle READ minutesAngle NOTIFY minutesAngleChanged)
   Q_PROPERTY(int hours READ hours WRITE setHour NOTIFY hoursChanged)
@@ -53,10 +50,6 @@ public:
 
   Q_INVOKABLE void setXY(qreal x, qreal y);
 
-  int seconds() const;
-  int secondsAngle() const;
-  void setSecond(int sec);
-
   int minutes() const;
   int minutesAngle() const;
   void setMinute(int min);
@@ -65,9 +58,6 @@ public:
   int hoursAngle() const;
   void setHour(int hour);
 
-  void setSecondsHandSelected(bool selected);
-  bool secondsHandSelected() const;
-
   void setMinutesHandSelected(bool selected);
   bool minutesHandSelected() const;
 
@@ -75,8 +65,6 @@ public:
   bool hoursHandSelected() const;
 
 Q_SIGNALS:
-  void secondsChanged();
-  void secondsAngleChanged();
   void minutesChanged();
   void minutesAngleChanged();
   void hoursChanged();

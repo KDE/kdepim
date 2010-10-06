@@ -29,8 +29,7 @@ static const qreal Q_2PI  = qreal(6.28318530717958647693);   // 2*pi
 
 ClockHelperPrivate::ClockHelperPrivate(ClockHelper *qq)
   : q_ptr(qq), origin(0, 0), position(0, 0), angle(0),
-    seconds(0), secondsAngle(0), minutes(0), minutesAngle(0), hours(0),
-    hoursAngle(0), secondsHandSelected(false),
+    minutes(0), minutesAngle(0), hours(0),   hoursAngle(0),
     minutesHandSelected(false), hoursHandSelected(false)
 
 {
@@ -90,9 +89,7 @@ void ClockHelperPrivate::calculateAngle()
   angle = normalize(fromRadians(angle) + 90);
 
   if (oldAngle != angle) {
-    if (secondsHandSelected)
-      q->setSecond(angle);
-    else if (minutesHandSelected)
+    if (minutesHandSelected)
       q->setMinute(angle);
     else if (hoursHandSelected)
       q->setHour(angle);
@@ -157,34 +154,6 @@ void ClockHelper::setXY(qreal x, qreal y)
   d->calculateAngle();
 }
 
-int ClockHelper::seconds() const
-{
-  Q_D(const ClockHelper);
-  return d->seconds;
-}
-
-int ClockHelper::secondsAngle() const
-{
-  Q_D(const ClockHelper);
-  return d->secondsAngle;
-}
-
-void ClockHelper::setSecond(int sec)
-{
-  Q_D(ClockHelper);
-
-  if (sec == d->seconds)
-    return;
-
-  d->seconds = sec;
-  emit secondsChanged();
-
-  // math our angle
-  sec = normalize(sec) * 6;
-  d->secondsAngle = sec;
-  emit secondsAngleChanged();
-}
-
 int ClockHelper::minutes() const
 {
   Q_D(const ClockHelper);
@@ -241,24 +210,9 @@ void ClockHelper::setHour(int hour)
   emit hoursAngleChanged();
 }
 
-void ClockHelper::setSecondsHandSelected(bool selected)
-{
-  Q_D(ClockHelper);
-  d->secondsHandSelected = selected;
-  d->minutesHandSelected = !selected;
-  d->hoursHandSelected = !selected;
-}
-
-bool ClockHelper::secondsHandSelected() const
-{
-  Q_D(const ClockHelper);
-  return d->secondsHandSelected;
-}
-
 void ClockHelper::setMinutesHandSelected(bool selected)
 {
   Q_D(ClockHelper);
-  d->secondsHandSelected = !selected;
   d->minutesHandSelected = selected;
   d->hoursHandSelected = !selected;
 }
@@ -272,7 +226,6 @@ bool ClockHelper::minutesHandSelected() const
 void ClockHelper::setHoursHandSelected(bool selected)
 {
   Q_D(ClockHelper);
-  d->secondsHandSelected = !selected;
   d->minutesHandSelected = !selected;
   d->hoursHandSelected = selected;
 }

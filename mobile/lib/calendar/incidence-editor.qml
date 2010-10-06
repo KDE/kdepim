@@ -212,7 +212,6 @@ KPIM.MainView {
               }
               onSelected: {
                 minuteSelector.state = "unselected";
-                secondSelector.state = "unselected";
               }
             }
 
@@ -228,21 +227,6 @@ KPIM.MainView {
               }
               onSelected: {
                 hourSelector.state = "unselected";
-                secondSelector.state = "unselected";
-              }
-            }
-
-            //### remove this
-            KPIM.VerticalSelector {
-              id: secondSelector
-              height: 100
-              model: mainview.setupModel(0, 59, clockWidget)
-              // value - 1 because the index starts at '0'
-              currentIndex: myClock.seconds
-              onValueChanged: myClock.seconds = value;
-              onSelected: {
-                hourSelector.state = "unselected";
-                minuteSelector.state = "unselected";
               }
             }
           }
@@ -268,7 +252,7 @@ KPIM.MainView {
               width: 100
               onClicked: {
                 clockWidget.collapse()
-                _incidenceview.setNewTime(myClock.hours, myClock.minutes, myClock.seconds);
+                _incidenceview.setNewTime(myClock.hours, myClock.minutes);
               }
             }
           }
