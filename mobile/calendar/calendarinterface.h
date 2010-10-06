@@ -30,7 +30,7 @@ class CalendarInterface : public QObject
 public:
     CalendarInterface(QObject * parent = 0) :QObject(parent){};
 public slots:
-  void showDate(const QDate& date);
+    void showDate(const QDate& date);
     void openEventEditor( const QString &);
     void openEventEditor( const QString &summary,
                           const QString &description,
