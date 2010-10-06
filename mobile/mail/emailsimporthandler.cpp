@@ -83,7 +83,7 @@ Akonadi::Item::List EmailsImportHandler::createItems( const QStringList &fileNam
     } else {
       const QString caption( i18n( "MBox Import Failed" ) );
       const QString msg = i18nc( "@info",
-                                 "<para>When trying to read the mBox, there was an error opening the file <filename>%1</filename>:</para>",
+                                 "<para>When trying to read the MBox, there was an error opening the file <filename>%1</filename>:</para>",
                                  fileName );
       KMessageBox::error( 0, msg, caption );
       *ok = false;
