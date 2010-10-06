@@ -37,6 +37,8 @@
 #include "calendar.h"
 #include "freebusydownloadjob.h"
 #include "kcalprefs.h"
+#include "mailscheduler.h"
+#include "publishdialog.h"
 
 #include <Akonadi/Contact/ContactSearchJob>
 
@@ -643,6 +645,47 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
     connect( job, SIGNAL(result(KJob *)), SLOT(slotUploadFreeBusyResult(KJob *)) );
   }
 }
+
+void FreeBusyManager::mailFreeBusy(int daysToPublish, QWidget* parentWidget)
+{
+   Q_D( FreeBusyManager );
+ // No calendar set yet?
+  if ( !d->mCalendar ) {
+    return;
+  }
+  
+  KDateTime start = KDateTime::currentUtcDateTime().toTimeSpec( d->mCalendar->timeSpec() );
+  KDateTime end = start.addDays( daysToPublish );
+
+  Event::List events;
+  Akonadi::Item::List items = d->mCalendar->rawEvents( start.date(), end.date() );
+  foreach(const Akonadi::Item &item, items) { //FIXME
+    events << item.payload<Event::Ptr>();
+  }
+
+  FreeBusy::Ptr freebusy( new FreeBusy( events, start, end ) );
+  freebusy->setOrganizer( Person::Ptr( new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                                   CalendarSupport::KCalPrefs::instance()->email() ) ) );
+
+  QPointer<PublishDialog> publishdlg = new PublishDialog();
+  if ( publishdlg->exec() == QDialog::Accepted ) {
+    // Send the mail
+    CalendarSupport::MailScheduler scheduler( d->mCalendar );
+    if ( scheduler.publish( freebusy, publishdlg->addresses() ) ) {
+      KMessageBox::information(
+        parentWidget,
+        i18n( "The free/busy information was successfully sent." ),
+        i18n( "Sending Free/Busy" ),
+        "FreeBusyPublishSuccess" );
+    } else {
+      KMessageBox::error(
+        parentWidget,
+        i18n( "Unable to publish the free/busy data." ) );
+    }
+  }
+  delete publishdlg;
+}
+
 
 bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload,
                                         QWidget *parentWidget )

@@ -35,6 +35,7 @@ set(calendarsupport_LIB_SRCS
   mailclient.cpp
   mailscheduler.cpp
   modelstatesaver.cpp
+  publishdialog.cpp
   utils.cpp
 )
 
@@ -43,6 +44,8 @@ if (NOT WINCE)
     dndfactory.cpp
   )
 endif (NOT WINCE)
+
+kde4_add_ui_files(calendarsupport_LIB_SRCS publishdialog_base.ui)
 
 kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc )
 

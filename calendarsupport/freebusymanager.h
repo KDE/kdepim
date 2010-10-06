@@ -65,6 +65,11 @@ class CALENDARSUPPORT_EXPORT FreeBusyManager : public QObject, public KCalCore::
     void publishFreeBusy( QWidget *parentWidget = 0 );
 
     /**
+      Mail the freebusy information.
+     */
+    void mailFreeBusy( int daysToPublish = 30, QWidget *parentWidget = 0 );
+     
+   /**
       Retrieve the freebusy information of somebody else, i.e. it will not try
       to download our own freebusy information. This method makes use of a local
       cache, if the information for a given email is already downloaded it will
