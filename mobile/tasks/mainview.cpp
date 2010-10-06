@@ -107,8 +107,6 @@ void MainView::newSubTask()
     return;
 
   KCalCore::Todo::Ptr parentTodo = item.payload<KCalCore::Todo::Ptr>();
-  qDebug() << "PARENT UID:" << parentTodo->uid();
-
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
   // make it due one day from now
   todo->setDtStart( KDateTime::currentLocalDateTime() );
