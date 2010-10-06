@@ -34,6 +34,7 @@ class MainView : public KDeclarativeMainView
 
   public slots:
     void newTask();
+    void newSubTask();
     void setPercentComplete(int row, int percentComplete);
     void editIncidence( const Akonadi::Item &item );
 
@@ -52,6 +53,8 @@ class MainView : public KDeclarativeMainView
     virtual QAbstractProxyModel* itemFilterModel() const;
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
+
+    Akonadi::Item currentItem() const;
 
   private:
     QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;

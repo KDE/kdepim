@@ -18,6 +18,11 @@
 */
 #include "tasksactionmanager.h"
 
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/Item>
+
+#include <KCalCore/Todo>
+
 #include <KAction>
 #include <KActionCollection>
 #include <KLocalizedString>
@@ -48,7 +53,22 @@ void TasksActionManager::setItemSelectionModel( QItemSelectionModel *itemSelecti
 
 void TasksActionManager::updateActions()
 {
+  mActionCollection->action( QLatin1String( "add_new_subtask" ) )->setEnabled( false );
 
+  const QModelIndexList list = mItemSelectionModel->selectedRows();
+  if ( list.size() != 1 )
+    return;
+
+  const QModelIndex idx = list.first();
+  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+
+  if ( !item.isValid() )
+    return;
+
+  if ( !item.hasPayload<KCalCore::Todo::Ptr>() )
+    return;
+
+  mActionCollection->action( QLatin1String( "add_new_subtask" ) )->setEnabled( true );
 }
 
 void TasksActionManager::initActions()
@@ -61,6 +81,9 @@ void TasksActionManager::initActions()
 
   action = mActionCollection->addAction( QLatin1String( "export_tasks" ) );
   action->setText( i18n( "Export Tasks" ) );
+
+  action = mActionCollection->addAction( QLatin1String( "add_new_subtask" ) );
+  action->setText( i18n( "New Sub Task" ) );
 }
 
 #include "tasksactionmanager.moc"

@@ -69,6 +69,8 @@ void MainView::delayedInit()
 
   connect( actionCollection()->action( QLatin1String( "add_new_task" ) ),
            SIGNAL( triggered( bool ) ), SLOT( newTask() ) );
+  connect( actionCollection()->action( QLatin1String( "add_new_subtask" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( newSubTask() ) );
   connect( actionCollection()->action( QLatin1String( "import_tasks" ) ),
            SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   connect( actionCollection()->action( QLatin1String( "export_tasks" ) ),
@@ -94,6 +96,27 @@ void MainView::newTask()
   todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
 
   item.setPayload<KCalCore::Todo::Ptr>( todo );
+  editor->load( item );
+  editor->show();
+}
+
+void MainView::newSubTask()
+{
+  Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  KCalCore::Todo::Ptr parentTodo = item.payload<KCalCore::Todo::Ptr>();
+  qDebug() << "PARENT UID:" << parentTodo->uid();
+
+  KCalCore::Todo::Ptr todo( new KCalCore::Todo );
+  // make it due one day from now
+  todo->setDtStart( KDateTime::currentLocalDateTime() );
+  todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
+  todo->setRelatedTo( parentTodo->uid(), KCalCore::Todo::RelTypeParent );
+
+  item.setPayload<KCalCore::Todo::Ptr>( todo );
+  IncidenceView *editor = new IncidenceView;
   editor->load( item );
   editor->show();
 }
@@ -187,4 +210,19 @@ ImportHandlerBase* MainView::importHandler() const
 ExportHandlerBase* MainView::exportHandler() const
 {
   return new TasksExportHandler();
+}
+
+Item MainView::currentItem() const
+{
+ QModelIndexList list = itemSelectionModel()->selectedRows();
+
+  if (list.size() != 1)
+    return Item();
+
+  const QModelIndex idx = list.first();
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  if ( !item.hasPayload<KCalCore::Todo::Ptr>() )
+    return Item();
+
+  return item;
 }
