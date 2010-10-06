@@ -34,12 +34,15 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/freebusymanager.h>
+#include <calendarsupport/utils.h>
+#include <calendarsupport/identitymanager.h>
 #include <calendarviews/eventviews/eventview.h>
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/standardactionmanager.h>
+#include <akonadi/itemfetchjob.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
@@ -56,6 +59,7 @@
 
 #include <KAction>
 #include <KActionCollection>
+#include <KMessageBox>
 
 #include <QGraphicsItem>
 #include <QTimer>
@@ -72,6 +76,7 @@ MainView::MainView( QWidget* parent )
   : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent )
 {
   m_calendar = 0;
+  m_identityManager = 0;
 }
 
 MainView::~MainView()
@@ -96,6 +101,8 @@ void MainView::delayedInit()
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
   CalendarSupport::FreeBusyManager::self()->setCalendar( m_calendar );
+
+  m_identityManager = new CalendarSupport::IdentityManager;
 
   // FIXME: My suspicion is that this is wrong. I.e. the collection selection is
   //        not correct resulting in no items showing up in the monthview.
@@ -123,13 +130,18 @@ void MainView::delayedInit()
   connect(this, SIGNAL(statusChanged(QDeclarativeView::Status)),
           this, SLOT(connectQMLSlots(QDeclarativeView::Status)));
 
-  action = new KAction( i18n( "Upload Free Busy Information" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( uploadFreeBusy()) );
-  actionCollection()->addAction( QLatin1String( "upload_freebusy" ), action );
+  action = new KAction( i18n( "Send as ICalendar" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendAsICalendar()) );
+  actionCollection()->addAction( QLatin1String( "send_as_icalendar" ), action );
 
   action = new KAction( i18n( "Mail Free Busy Information" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( mailFreeBusy()) );
   actionCollection()->addAction( QLatin1String( "mail_freebusy" ), action );
+
+  action = new KAction( i18n( "Upload Free Busy Information" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( uploadFreeBusy()) );
+  actionCollection()->addAction( QLatin1String( "upload_freebusy" ), action );
+
 
   //register DBUS interface
   m_calendarIface = new CalendarInterface( this );
@@ -302,6 +314,36 @@ void MainView::uploadFreeBusy()
 void MainView::mailFreeBusy()
 {
   CalendarSupport::FreeBusyManager::self()->mailFreeBusy( 30, this );
+}
+
+void MainView::sendAsICalendar()
+{
+  QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if (list.isEmpty())
+    return;
+
+  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+  job->fetchScope().fetchFullPayload();
+  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForSendICalDone(KJob*)));
+  
+}
+
+void MainView::fetchForSendICalDone(KJob* job)
+{
+  if ( job->error() ) {
+      kDebug() << "Error trying to fetch item";
+      //###: review error string
+      KMessageBox::sorry( this,
+                          i18n("Cannot fetch calendar item."),
+                          i18n("Item Fetch Error"));
+      return;
+  }
+
+  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+  
+  kDebug() << item.id() << item.payloadData();
+  CalendarSupport::sendAsICalendar( item, m_identityManager, this );
 }
 
 

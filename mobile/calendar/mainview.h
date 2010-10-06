@@ -25,6 +25,11 @@
 
 #include <Akonadi/Entity>
 
+class KJob;
+namespace KPIMIdentities {
+class IdentityManager;
+}
+
 class CalendarInterface;
 class QDate;
 
@@ -52,6 +57,7 @@ class MainView : public KDeclarativeMainView
     void editIncidence( const Akonadi::Item &item, const QDate &date );
     void uploadFreeBusy();
     void mailFreeBusy();
+    void sendAsICalendar();
 
   protected slots:
     void delayedInit();
@@ -59,6 +65,7 @@ class MainView : public KDeclarativeMainView
 
   private slots:
     void finishEdit( QObject *editor );
+    void fetchForSendICalDone( KJob* job );
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -74,6 +81,7 @@ class MainView : public KDeclarativeMainView
     CalendarSupport::Calendar *m_calendar;
     CalendarInterface* m_calendarIface;
     QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
+    KPIMIdentities::IdentityManager* m_identityManager;
 };
 
 #endif // MAINVIEW_H
