@@ -1,6 +1,8 @@
 /*
     Copyright (c) 2010 Stephen Kelly <steveire@gmail.com>
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Copyright (c) 2010 Andras Mantia <andras@kdab.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
