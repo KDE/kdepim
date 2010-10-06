@@ -22,6 +22,8 @@
 
 #include "utils.h"
 #include "kcalprefs.h"
+#include "mailclient.h"
+#include "publishdialog.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDialog>
@@ -38,10 +40,13 @@
 #include <KCalCore/Journal>
 #include <KCalCore/MemoryCalendar>
 #include <KCalCore/Todo>
+#include <KCalCore/ICalFormat>
 
 #include <KCalUtils/DndFactory>
 #include <KCalUtils/ICalDrag>
 #include <KCalUtils/VCalDrag>
+
+#include <Mailtransport/TransportManager>
 
 #include <KIconLoader>
 #include <KUrl>
@@ -54,6 +59,8 @@
 #include <QPointer>
 
 #include <boost/bind.hpp>
+#include <KMessageBox>
+#include <KPIMIdentities/IdentityManager>
 
 using namespace CalendarSupport;
 using namespace KHolidays;
@@ -487,4 +494,49 @@ QStringList CalendarSupport::holiday( const QDate &date )
     hdays.append( list.at( i ).text() );
   }
   return hdays;
+}
+
+void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities::IdentityManager* identityManager, QWidget* parentWidget)
+{
+  Incidence::Ptr incidence = CalendarSupport::incidence( item );
+
+  if ( !incidence ) {
+    KMessageBox::information(
+      parentWidget,
+      i18n( "No item selected." ),
+      i18n( "Forwarding" ),
+      "ForwardNoEventSelected" );
+    return;
+  }
+
+  QPointer<PublishDialog> publishdlg = new PublishDialog;
+  if ( publishdlg->exec() == QDialog::Accepted ) {
+    const QString recipients = publishdlg->addresses();
+    if ( incidence->organizer()->isEmpty() ) {
+      incidence->setOrganizer( Person::Ptr( new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                                        CalendarSupport::KCalPrefs::instance()->email() ) ) );
+    }
+
+    ICalFormat format;
+    const QString from = CalendarSupport::KCalPrefs::instance()->email();
+    const bool bccMe = CalendarSupport::KCalPrefs::instance()->mBcc;
+    const QString messageText = format.createScheduleMessage( incidence, iTIPRequest );
+    CalendarSupport::MailClient mailer;
+    if ( mailer.mailTo(
+           incidence,
+           identityManager->identityForAddress( from ),
+           from, bccMe, recipients, messageText, MailTransport::TransportManager::self()->defaultTransportName() ) ) {
+      KMessageBox::information(
+        parentWidget,
+        i18n( "The item information was successfully sent." ),
+        i18n( "Forwarding" ),
+        "IncidenceForwardSuccess" );
+    } else {
+      KMessageBox::error(
+        parentWidget,
+        i18n( "Unable to forward the item '%1'", incidence->summary() ),
+        i18n( "Forwarding Error" ) );
+    }
+  }
+  delete publishdlg;
 }

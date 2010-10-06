@@ -36,6 +36,10 @@
 
 #include <QModelIndex>
 
+namespace KPIMIdentities {
+class IdentityManager;
+}
+
 namespace KCalCore {
   class CalFilter;
 }
@@ -228,6 +232,9 @@ namespace CalendarSupport
     Returns a list of holidays that occur at @param date.
   */
   CALENDARSUPPORT_EXPORT QStringList holiday( const QDate &date );
+
+  CALENDARSUPPORT_EXPORT void sendAsICalendar( const Akonadi::Item& item, KPIMIdentities::IdentityManager *identityManager, QWidget* parentWidget = 0 );
+
 }
 
 #endif
