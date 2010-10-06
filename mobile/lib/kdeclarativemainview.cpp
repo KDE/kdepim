@@ -19,28 +19,16 @@
 #include "kdeclarativemainview.h"
 #include "kdeclarativemainview_p.h"
 
+#include "agentstatusmonitor.h"
+#include "akonadibreadcrumbnavigationfactory.h"
+#include "declarativewidgetbase.h"
+#include "exporthandlerbase.h"
+#include "importhandlerbase.h"
 #include "kdepim-version.h"
-
-#include <QtCore/QCoreApplication>
-#include <QtCore/QPluginLoader>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeImageProvider>
-#include <QtGui/QApplication>
-#include <QtDBus/qdbusconnection.h>
-#include <QtDBus/qdbusmessage.h>
-
-#include <KDE/KDebug>
-#include <KDE/KGlobal>
-#include <KDE/KConfigGroup>
-#include <KDE/KLineEdit>
-#include <KDE/KLocale>
-#include <KDE/KSharedConfig>
-#include <KDE/KSharedConfigPtr>
-#include <KDE/KStandardDirs>
-#include <KDE/KProcess>
-
-#include <kselectionproxymodel.h>
+#include "kresettingproxymodel.h"
+#include "listproxy.h"
+#include "qmlcheckableproxymodel.h"
+#include "qmllistselectionmodel.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/agentinstancemodel.h>
@@ -51,27 +39,34 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/selectionproxymodel.h>
+#include <akonadi/standardactionmanager.h>
 #include <akonadi_next/kviewstatemaintainer.h>
-
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
+#include <kselectionproxymodel.h>
 
-#include "akonadibreadcrumbnavigationfactory.h"
-#include "declarativewidgetbase.h"
-#include "exporthandlerbase.h"
-#include "importhandlerbase.h"
-#include "listproxy.h"
-#include <KActionCollection>
-#include <akonadi/standardactionmanager.h>
-#include <KAction>
-#include <KCmdLineArgs>
-#include <KInputDialog>
+#include <KDE/KAction>
+#include <KDE/KActionCollection>
+#include <KDE/KCmdLineArgs>
+#include <KDE/KConfigGroup>
+#include <KDE/KDebug>
+#include <KDE/KGlobal>
+#include <KDE/KInputDialog>
+#include <KDE/KLineEdit>
+#include <KDE/KLocale>
+#include <KDE/KProcess>
+#include <KDE/KSharedConfig>
+#include <KDE/KSharedConfigPtr>
+#include <KDE/KStandardDirs>
 
-#include "kresettingproxymodel.h"
-#include "qmllistselectionmodel.h"
-#include "qmlcheckableproxymodel.h"
-#include "agentstatusmonitor.h"
-
+#include <QtCore/QCoreApplication>
+#include <QtCore/QPluginLoader>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusMessage>
+#include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QtGui/QApplication>
 #include <QtGui/QTreeView>
 
 #define VIEW(model) {                        \
@@ -82,21 +77,25 @@
   view->show();                              \
 }
 
-ItemSelectHook::ItemSelectHook(QItemSelectionModel *selectionModel, QObject* parent)
-  : QObject(parent), m_selectionModel(selectionModel)
+ItemSelectHook::ItemSelectHook( QItemSelectionModel *selectionModel, QObject* parent )
+  : QObject( parent ),
+    m_selectionModel( selectionModel )
 {
-  connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()));
+  connect( selectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
+           this, SLOT( selectionChanged() ) );
 }
 
 void ItemSelectHook::selectionChanged()
 {
   const QModelIndexList list = m_selectionModel->selectedRows();
-  if (list.size() != 1)
+  if ( list.size() != 1 )
     return;
-  const QModelIndex idx = list.first();
-  Q_ASSERT(idx.isValid());
-  Akonadi::Item::Id itemId = idx.data( Akonadi::EntityTreeModel::ItemIdRole ).toLongLong();
-  rowSelected(idx.row(), itemId);
+
+  const QModelIndex index = list.first();
+  Q_ASSERT( index.isValid() );
+
+  const Akonadi::Item::Id itemId = index.data( Akonadi::EntityTreeModel::ItemIdRole ).toLongLong();
+  rowSelected( index.row(), itemId );
 }
 
 class ActionImageProvider : public QDeclarativeImageProvider
@@ -144,24 +143,23 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
 void KDeclarativeMainView::delayedInit()
 {
-  kDebug();
   qmlRegisterType<DeclarativeFilterLineEdit>( "org.kde.akonadi", 4, 5, "FilterLineEdit" );
   qmlRegisterType<DeclarativeBulkActionFilterLineEdit>( "org.kde.akonadi", 4, 5, "BulkActionFilterLineEdit" );
 
   KDeclarativeFullScreenView::delayedInit();
 
-  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
+  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
 
-  QTime t;
+  QTime time;
   if ( debugTiming ) {
-    t.start();
-    kWarning() << "Start KDeclarativeMainView ctor" << &t << " - " << QDateTime::currentDateTime();
+    time.start();
+    kWarning() << "Start KDeclarativeMainView ctor" << &time << " - " << QDateTime::currentDateTime();
   }
 
   KGlobal::locale()->insertCatalog( QLatin1String( "libkdepimmobileui" ) );
 
   if ( debugTiming ) {
-    kWarning() << "Catalog inserted" << t.elapsed() << &t;
+    kWarning() << "Catalog inserted" << time.elapsed() << &time;
   }
 
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
@@ -173,17 +171,17 @@ void KDeclarativeMainView::delayedInit()
   d->mEtm->setIncludeUnsubscribed( false );
 
   if ( debugTiming ) {
-    kWarning() << "ETM created" << t.elapsed() << &t;
+    kWarning() << "ETM created" << time.elapsed() << &time;
   }
 
-  d->mBnf = new Akonadi::BreadcrumbNavigationFactory(this);
-  d->mBnf->createBreadcrumbContext(d->mEtm, this);
+  d->mBnf = new Akonadi::BreadcrumbNavigationFactory( this );
+  d->mBnf->createBreadcrumbContext( d->mEtm, this );
 
   if ( debugTiming ) {
-    kWarning() << "BreadcrumbNavigation factory created" << t.elapsed() << &t;
+    kWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
   }
 
-  Akonadi::EntityMimeTypeFilterModel *filterModel = new Akonadi::EntityMimeTypeFilterModel(this);
+  Akonadi::EntityMimeTypeFilterModel *filterModel = new Akonadi::EntityMimeTypeFilterModel( this );
   filterModel->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   filterModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
@@ -201,34 +199,34 @@ void KDeclarativeMainView::delayedInit()
   QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( d->mItemFilter, this );
   qmlCheckable->setSelectionModel( itemActionCheckModel );
 
-  KSelectionProxyModel *checkedItems = new KSelectionProxyModel(itemActionCheckModel, this);
-  checkedItems->setFilterBehavior(KSelectionProxyModel::ExactSelection);
-  checkedItems->setSourceModel(d->mItemFilter);
+  KSelectionProxyModel *checkedItems = new KSelectionProxyModel( itemActionCheckModel, this );
+  checkedItems->setFilterBehavior( KSelectionProxyModel::ExactSelection );
+  checkedItems->setSourceModel( d->mItemFilter );
 
   QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( d->mItemFilter, this );
 
   if ( d->mListProxy ) {
     d->mListProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
 
-    d->mListProxy->setSourceModel( qmlCheckable);
+    d->mListProxy->setSourceModel( qmlCheckable );
   }
-  d->mItemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this);
+  d->mItemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this );
 
-  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this);
+  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
   d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
 
-  d->mItemActionSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemActionCheckModel, this);
+  d->mItemActionSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemActionCheckModel, this );
 
   if ( debugTiming ) {
-    kWarning() << "Begin inserting QML context" << t.elapsed() << &t;
+    kWarning() << "Begin inserting QML context" << time.elapsed() << &time;
   }
 
   QDeclarativeContext *context = engine()->rootContext();
 
   context->setContextProperty( "_breadcrumbNavigationFactory", d->mBnf );
 
-  d->mMultiBnf = new Akonadi::BreadcrumbNavigationFactory(this);
-  d->mMultiBnf->createCheckableBreadcrumbContext( d->mEtm, this);
+  d->mMultiBnf = new Akonadi::BreadcrumbNavigationFactory( this );
+  d->mMultiBnf->createCheckableBreadcrumbContext( d->mEtm, this );
 
   context->setContextProperty( "_multiSelectionComponentFactory", d->mMultiBnf );
 
@@ -237,17 +235,17 @@ void KDeclarativeMainView::delayedInit()
   if ( d->mListProxy ) {
     context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
 
-    QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel(d->mItemNavigationSelectionModel, this);
-    QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel(d->mItemActionSelectionModel, this);
+    QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( d->mItemNavigationSelectionModel, this );
+    QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( d->mItemActionSelectionModel, this );
 
-    d->m_hook = new ItemSelectHook(d->mItemNavigationSelectionModel, this);
+    d->m_hook = new ItemSelectHook( d->mItemNavigationSelectionModel, this );
     context->setContextProperty( "_itemSelectHook", QVariant::fromValue( static_cast<QObject*>( d->m_hook ) ) );
 
     context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
     context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
 
-    Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory(this);
-    bulkActionBnf->createCheckableBreadcrumbContext( d->mEtm, this);
+    Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory( this );
+    bulkActionBnf->createCheckableBreadcrumbContext( d->mEtm, this );
     context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
   }
 
@@ -255,7 +253,7 @@ void KDeclarativeMainView::delayedInit()
 
   // A list of available favorites
   QAbstractItemModel *favsList = d->getFavoritesListModel();
-  favsList->setParent(this);
+  favsList->setParent( this );
 
   context->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
 
@@ -279,30 +277,30 @@ void KDeclarativeMainView::delayedInit()
 
   setupStandardActionManager( regularSelectionModel(), d->mItemActionSelectionModel );
 
-  connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
-  connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
-  connect( qApp, SIGNAL(aboutToQuit()), d, SLOT(saveState()) );
+  connect( d->mEtm, SIGNAL( modelAboutToBeReset() ), d, SLOT( saveState() ) );
+  connect( d->mEtm, SIGNAL( modelReset() ), d, SLOT( restoreState() ) );
+  connect( qApp, SIGNAL( aboutToQuit() ), d, SLOT( saveState() ) );
 
-  connect( d->mBnf->selectedItemModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SIGNAL(isLoadingSelectedChanged()));
-  connect( d->mBnf->selectedItemModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()));
-  connect( d->mBnf->selectedItemModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()));
+  connect( d->mBnf->selectedItemModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SIGNAL( isLoadingSelectedChanged() ) );
+  connect( d->mBnf->selectedItemModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SIGNAL( isLoadingSelectedChanged() ) );
+  connect( d->mBnf->selectedItemModel(), SIGNAL( rowsRemoved( QModelIndex, int, int ) ), SIGNAL( isLoadingSelectedChanged() ) );
 
 
   if ( debugTiming ) {
-    kWarning() << "Restoring state" << t.elapsed() << &t;
+    kWarning() << "Restoring state" << time.elapsed() << &time;
   }
 
   d->restoreState();
 
   if ( debugTiming ) {
-    kWarning() << "restore state done" << t.elapsed() << &t;
+    kWarning() << "restore state done" << time.elapsed() << &time;
   }
 
-  connect( d->mBnf->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(numSelectedAccountsChanged()));
+  connect( d->mBnf->selectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SIGNAL( numSelectedAccountsChanged() ) );
 
   if ( debugTiming ) {
-    t.start();
-    kWarning() << "Finished KDeclarativeMainView ctor: " << t.elapsed() << " - " << &t;
+    time.start();
+    kWarning() << "Finished KDeclarativeMainView ctor: " << time.elapsed() << " - " << &time;
   }
 
   qmlRegisterUncreatableType<AgentStatusMonitor>( "org.kde.pim.mobileui", 4, 5, "AgentStatusMonitor", QLatin1String( "This type is only exported for its enums" ) );
@@ -323,14 +321,14 @@ QString KDeclarativeMainView::pathToItem( Entity::Id id )
   if ( list.isEmpty() )
     return QString();
 
-  QModelIndex idx = list.first().parent();
-  while ( idx.isValid() )
-  {
-    path.prepend( idx.data().toString() );
-    idx = idx.parent();
-    if ( idx.isValid() )
+  QModelIndex index = list.first().parent();
+  while ( index.isValid() ) {
+    path.prepend( index.data().toString() );
+    index = index.parent();
+    if ( index.isValid() )
       path.prepend( " / " );
   }
+
   return path;
 }
 
@@ -383,17 +381,17 @@ void KDeclarativeMainView::setSelectedAccount( int row )
 {
   d->mBnf->selectionModel()->clearSelection();
   if ( row < 0 )
-  {
     return;
-  }
+
   d->mBnf->selectChild( row );
 }
 
 int KDeclarativeMainView::selectedCollectionRow()
 {
   const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
-  if (list.size() != 1)
+  if ( list.size() != 1 )
     return -1;
+
   return list.first().row();
 }
 
@@ -430,8 +428,7 @@ void KDeclarativeMainView::launchAccountWizard()
   args << QLatin1String( "--type" ) << d->mChangeRecorder->mimeTypesMonitored().join( "," );
 
   int pid = KProcess::startDetached( QLatin1String( "accountwizard" ), args );
-  if ( !pid )
-  {
+  if ( !pid ) {
     // Handle error
     kDebug() << "error creating accountwizard";
   }
@@ -458,41 +455,45 @@ void KDeclarativeMainView::synchronizeAllItems()
 void KDeclarativeMainView::saveFavorite()
 {
   bool ok;
-  QString name = KInputDialog::getText(i18n("Select name for favorite"), i18n("Favorite name"),
-                                       QString(), &ok, this);
+  const QString name = KInputDialog::getText( i18n( "Select name for favorite" ),
+                                              i18n( "Favorite name" ),
+                                              QString(), &ok, this );
 
-  if (!ok || name.isEmpty())
+  if ( !ok || name.isEmpty() )
     return;
 
   ETMViewStateSaver saver;
   saver.setSelectionModel( d->mBnf->selectionModel() );
 
-  KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
-  saver.saveState( cfg );
-  cfg.sync();
+  KConfigGroup config( KGlobal::config(), sFavoritePrefix + name );
+  saver.saveState( config );
+  config.sync();
   d->mFavsListModel->setStringList( d->getFavoritesList() );
 }
 
-void KDeclarativeMainView::loadFavorite(const QString& name)
+void KDeclarativeMainView::loadFavorite( const QString &name )
 {
   ETMViewStateSaver *saver = new ETMViewStateSaver;
   saver->setSelectionModel( d->mBnf->selectionModel() );
-  KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
-  if ( !cfg.isValid() )
-  {
+
+  KConfigGroup config( KGlobal::config(), sFavoritePrefix + name );
+  if ( !config.isValid() ) {
     delete saver;
     return;
   }
-  saver->restoreState( cfg );
+
+  saver->restoreState( config );
 }
 
 void KDeclarativeMainView::multipleSelectionFinished()
 {
-  QModelIndexList list = d->mMultiBnf->checkModel()->selectedRows();
+  const QModelIndexList list = d->mMultiBnf->checkModel()->selectedRows();
+
   QItemSelection selection;
-  foreach(const QModelIndex &idx, list)
-    selection.select(idx, idx);
-  d->mBnf->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
+  foreach ( const QModelIndex &index, list )
+    selection.select( index, index );
+
+  d->mBnf->selectionModel()->select( selection, QItemSelectionModel::ClearAndSelect );
 }
 
 QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const
@@ -505,11 +506,12 @@ QAbstractItemModel* KDeclarativeMainView::regularSelectedItems() const
   return d->mItemFilter;
 }
 
-Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
+Akonadi::Item KDeclarativeMainView::itemFromId( quint64 id ) const
 {
   const QModelIndexList list = EntityTreeModel::modelIndexesForItem( d->mEtm, Item( id ) );
   if ( list.isEmpty() )
     return Akonadi::Item();
+
   return list.first().data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 }
 
@@ -523,35 +525,36 @@ QItemSelectionModel* KDeclarativeMainView::itemActionModel() const
   return d->mItemActionSelectionModel;
 }
 
-void KDeclarativeMainView::persistCurrentSelection(const QString& key)
+void KDeclarativeMainView::persistCurrentSelection( const QString &key )
 {
   ETMViewStateSaver saver;
-  saver.setSelectionModel(d->mBnf->selectionModel());
-  QStringList selection = saver.selectionKeys();
-  if (selection.isEmpty())
+  saver.setSelectionModel( d->mBnf->selectionModel() );
+
+  const QStringList selection = saver.selectionKeys();
+  if ( selection.isEmpty() )
     return;
 
-  d->mPersistedSelections.insert(key, selection);
+  d->mPersistedSelections.insert( key, selection );
 }
 
-void KDeclarativeMainView::clearPersistedSelection(const QString& key)
+void KDeclarativeMainView::clearPersistedSelection( const QString &key )
 {
-  d->mPersistedSelections.remove(key);
+  d->mPersistedSelections.remove( key );
 }
 
-void KDeclarativeMainView::restorePersistedSelection(const QString& key)
+void KDeclarativeMainView::restorePersistedSelection( const QString &key )
 {
-  if (!d->mPersistedSelections.contains(key))
+  if ( !d->mPersistedSelections.contains( key ) )
     return;
 
-  QStringList selection = d->mPersistedSelections.take(key);
+  const QStringList selection = d->mPersistedSelections.take( key );
   ETMViewStateSaver *restorer = new ETMViewStateSaver;
 
   QItemSelectionModel *selectionModel = d->mBnf->selectionModel();
   selectionModel->clearSelection();
 
-  restorer->setSelectionModel(selectionModel);
-  restorer->restoreSelection(selection);
+  restorer->setSelectionModel( selectionModel );
+  restorer->restoreSelection( selection );
 }
 
 void KDeclarativeMainView::setBulkActionScreenSelected( bool selected )
@@ -609,18 +612,19 @@ bool KDeclarativeMainView::isMultiFolderScreenVisible() const
 int KDeclarativeMainView::numSelectedAccounts()
 {
   const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
-  if (list.isEmpty())
+  if ( list.isEmpty() )
     return 0;
 
   QSet<QString> resources;
 
-  foreach (const QModelIndex &index, list)
-  {
-    const Collection col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
-    if (!col.isValid())
+  foreach ( const QModelIndex &index, list ) {
+    const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+    if ( !collection.isValid() )
       continue;
-    resources.insert(col.resource());
+
+    resources.insert( collection.resource() );
   }
+
   return resources.size();
 }
 
@@ -631,14 +635,15 @@ QAbstractItemModel* KDeclarativeMainView::selectedItemsModel() const
 
 bool KDeclarativeMainView::isLoadingSelected()
 {
-  const QModelIndex idx = d->mBnf->selectedItemModel()->index(0, 0);
-  if (!idx.isValid())
+  const QModelIndex index = d->mBnf->selectedItemModel()->index( 0, 0 );
+  if ( !index.isValid() )
     return false;
 
-  const QVariant fetchStateData = idx.data(EntityTreeModel::FetchStateRole);
-  Q_ASSERT(fetchStateData.isValid());
-  const EntityTreeModel::FetchState fetchState = static_cast<EntityTreeModel::FetchState>(fetchStateData.toInt());
-  return fetchState == EntityTreeModel::FetchingState;
+  const QVariant fetchStateData = index.data( EntityTreeModel::FetchStateRole );
+  Q_ASSERT( fetchStateData.isValid() );
+
+  const EntityTreeModel::FetchState fetchState = static_cast<EntityTreeModel::FetchState>( fetchStateData.toInt() );
+  return (fetchState == EntityTreeModel::FetchingState);
 }
 
 void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

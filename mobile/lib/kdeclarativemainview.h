@@ -20,11 +20,15 @@
 #define KDECLARATIVEMAINVIEW_H
 
 #include "kdeclarativefullscreenview.h"
-#include <QItemSelectionModel>
 
+#include <QtGui/QItemSelectionModel>
+
+class ExportHandlerBase;
+class ImportHandlerBase;
+class KLineEdit;
+class ListProxy;
 class QAbstractItemModel;
 class QAbstractProxyModel;
-class KLineEdit;
 
 namespace Akonadi {
 class ChangeRecorder;
@@ -33,9 +37,6 @@ class Item;
 class ItemFetchScope;
 }
 
-class ExportHandlerBase;
-class ImportHandlerBase;
-class ListProxy;
 class KDeclarativeMainViewPrivate;
 
 /**
@@ -44,180 +45,251 @@ class KDeclarativeMainViewPrivate;
  */
 class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 {
-  Q_OBJECT
-  Q_PROPERTY(int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged)
-  Q_PROPERTY(bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged)
-  Q_PROPERTY(QString version READ version CONSTANT)
-  Q_PROPERTY(bool isBulkActionScreenSelected READ isBulkActionScreenSelected WRITE setBulkActionScreenSelected NOTIFY isBulkActionScreenSelectedChanged)
+    Q_OBJECT
+    Q_PROPERTY( int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged )
+    Q_PROPERTY( bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged )
+    Q_PROPERTY( QString version READ version CONSTANT )
+    Q_PROPERTY( bool isBulkActionScreenSelected READ isBulkActionScreenSelected WRITE setBulkActionScreenSelected NOTIFY isBulkActionScreenSelectedChanged )
 
-  Q_PROPERTY(bool isHomeScreenVisible READ isHomeScreenVisible NOTIFY screenVisibilityChanged)
-  Q_PROPERTY(bool isAccountScreenVisible READ isAccountScreenVisible NOTIFY screenVisibilityChanged)
-  Q_PROPERTY(bool isSingleFolderScreenVisible READ isSingleFolderScreenVisible NOTIFY screenVisibilityChanged)
-  Q_PROPERTY(bool isMultiFolderScreenVisible READ isMultiFolderScreenVisible NOTIFY screenVisibilityChanged)
+    Q_PROPERTY( bool isHomeScreenVisible READ isHomeScreenVisible NOTIFY screenVisibilityChanged )
+    Q_PROPERTY( bool isAccountScreenVisible READ isAccountScreenVisible NOTIFY screenVisibilityChanged )
+    Q_PROPERTY( bool isSingleFolderScreenVisible READ isSingleFolderScreenVisible NOTIFY screenVisibilityChanged )
+    Q_PROPERTY( bool isMultiFolderScreenVisible READ isMultiFolderScreenVisible NOTIFY screenVisibilityChanged )
 
-  Q_FLAGS( ScreenStates )
+    Q_FLAGS( ScreenStates )
 
-protected:
-  /**
-   * Creates a new main view for a mobile application.
-   *
-   * @param appName is used to find the QML file in ${DATA_DIR}/mobile/appname.qml
-   * @param listProxy proxy for the list view of the application. KDeclarativeMainView
-                      takes ownwership over the pointer.
-   */
-  KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent = 0 );
+  public:
+    /**
+     * Describes the state of the visible screens.
+     */
+    enum ScreenState {
+      HomeScreen = 0,
+      AccountScreen = 1,
+      SingleFolderScreen = 2,
+      MultiFolderScreen = 4
+    };
+    Q_DECLARE_FLAGS( ScreenStates, ScreenState )
 
-  /** Returns the central ETM. */
-  Akonadi::EntityTreeModel* entityTreeModel() const;
-  /** Returns the filtered and QML-adapted item model. */
-  QAbstractItemModel* itemModel() const;
+    /**
+     * Destroys the declarative main view.
+     */
+    virtual ~KDeclarativeMainView();
 
-  /**
-   * Returns whether the currently selected item is being loaded.
-   * Note that results appear asynchronously in chunks while loading the contents
-   * of a collection. That means that the number of items can be greater then zero
-   * while isLoadingSelected returns true.
-   */
-  bool isLoadingSelected();
+    /**
+     * Item fetch scope to specify how much data should be loaded for the list view.
+     * By default nothing is loaded.
+     */
+    Akonadi::ItemFetchScope& itemFetchScope();
 
-  /**
-   * Initializes the standard action manager that will be used by the application.
-   * This is a point of extension to use a custom action manager.
-   *
-   * @param collectionSelectionModel The selection model for the collections.
-   * @param itemSelectionModel The selection model for the items.
-   */
-  virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
-                                           QItemSelectionModel *itemSelectionModel );
+    /**
+     * Adds a mime type of the items handled by this application.
+     */
+    void addMimeType( const QString &mimeType );
 
-  /**
-   * Initializes the agent action manager that will be used by the application.
-   * This is a point of extension to use a custom action manager.
-   *
-   * @param selectionModel The selection model for the agent instances.
-   */
-  virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+    /**
+     * Returns the mime types of the items handled by this application.
+     */
+    QStringList mimeTypes() const;
 
-  /**
-   * Returns the filter proxy model that will be used to filter the item list.
-   * If @c 0 is returned, no filtering is done.
-   *
-   * @note The model has to provide a public slot with the following signature:
-   *       void setFilterString( const QString& )
-   */
-  virtual QAbstractProxyModel* itemFilterModel() const;
+    /**
+     * Returns the number of selected accounts.
+     */
+    int numSelectedAccounts();
 
-  /**
-   * Returns the object that will be used for importing data.
-   * If @c 0 is returned, no import functionality is offered.
-   */
-  virtual ImportHandlerBase* importHandler() const;
+    /**
+     * Returns the version of the application.
+     */
+    QString version() const;
 
-  /**
-   * Returns the object that will be used for exporting data.
-   * If @c 0 is returned, no export functionality is offered.
-   */
-  virtual ExportHandlerBase* exportHandler() const;
+    /**
+     * Returns whether the bulk action screen is currently visible.
+     */
+    bool isBulkActionScreenSelected() const;
 
-protected slots:
-  void delayedInit();
+    /**
+     * Returns the monitor that is used by the application.
+     */
+    Akonadi::ChangeRecorder* monitor() const;
 
-public:
-  /**
-   * Describes the state of the visible screens.
-   */
-  enum ScreenState {
-    HomeScreen = 0,
-    AccountScreen = 1,
-    SingleFolderScreen = 2,
-    MultiFolderScreen = 4
-  };
-  Q_DECLARE_FLAGS( ScreenStates, ScreenState )
+    /**
+     * Sets the @p lineEdit that is used to filter the items in the listview.
+     */
+    void setFilterLineEdit( KLineEdit *lineEdit );
 
-  virtual ~KDeclarativeMainView();
+    /**
+     * Sets the @p lineEdit that is used to filter the items in the listview in bulk action mode.
+     */
+    void setBulkActionFilterLineEdit( KLineEdit *lineEdit );
 
-  /**
-    * Item fetch scope to specify how much data should be loaded for the list view.
-    * By default nothing is loaded.
-    */
-  Akonadi::ItemFetchScope& itemFetchScope();
+  public slots:
+    void setSelectedAccount( int row );
+    int selectedCollectionRow();
 
-  /** Mime type of the items handled by this application. */
-  void addMimeType( const QString &mimeType );
+    // FIXME: make non-virtual again once mark-as-read logic is in messageviewer
+    virtual void setListSelectedRow( int row );
+    bool blockHook();
+    void unblockHook( bool block);
 
-  QStringList mimeTypes() const;
+    void setAgentInstanceListSelectedRow( int row );
 
-  int numSelectedAccounts();
+    QString pathToItem( qint64 id );
 
-  QString version() const;
+    /**
+     * Starts the account wizard to add and configure new resources.
+     */
+    void launchAccountWizard();
 
-  bool isBulkActionScreenSelected() const;
+    /**
+     * Starts the synchronization of all collections.
+     */
+    void synchronizeAllItems();
 
-  Akonadi::ChangeRecorder* monitor() const;
+    void saveFavorite();
+    void loadFavorite( const QString &name );
+    void multipleSelectionFinished();
 
-  void setFilterLineEdit( KLineEdit *lineEdit );
-  void setBulkActionFilterLineEdit( KLineEdit *lineEdit );
+    void persistCurrentSelection(const QString &key);
+    void clearPersistedSelection(const QString &key);
+    void restorePersistedSelection(const QString &key);
 
-public slots:
-  void setSelectedAccount( int row );
-  int selectedCollectionRow();
+    void setBulkActionScreenSelected( bool selected );
 
-  // FIXME: make non-virtual again once mark-as-read logic is in messageviewer
-  virtual void setListSelectedRow( int row );
-  bool blockHook();
-  void unblockHook( bool block);
+    /**
+     * Starts the import of items to the application.
+     *
+     * The actual work is done by the ImportHandlerBase objects returned
+     * by the importHandler() method.
+     */
+    void importItems();
 
-  void setAgentInstanceListSelectedRow( int row );
+    /**
+     * Starts the export of items from the application.
+     *
+     * The actual work is done by the ExportHandlerBase objects returned
+     * by the exportHandler() method.
+     */
+    void exportItems();
 
-  QString pathToItem( qint64 id );
+    /**
+     * Sets the screen @p state of the application.
+     */
+    void setScreenVisibilityState( ScreenStates state );
 
-  void launchAccountWizard();
-  void synchronizeAllItems();
+    /**
+     * Returns whether the home screen is currently visible.
+     */
+    bool isHomeScreenVisible() const;
 
-  void saveFavorite();
-  void loadFavorite( const QString &name );
-  void multipleSelectionFinished();
+    /**
+     * Returns whether the account screen is currently visible.
+     */
+    bool isAccountScreenVisible() const;
 
-  void persistCurrentSelection(const QString &key);
-  void clearPersistedSelection(const QString &key);
-  void restorePersistedSelection(const QString &key);
+    /**
+     * Returns whether the single folder screen is currently visible.
+     */
+    bool isSingleFolderScreenVisible() const;
 
-  void setBulkActionScreenSelected( bool selected );
+    /**
+     * Returns whether the multiple folder screen is currently visible.
+     */
+    bool isMultiFolderScreenVisible() const;
 
-  void importItems();
-  void exportItems();
+  Q_SIGNALS:
+    void numSelectedAccountsChanged();
+    void selectedItemChanged( int row, qlonglong itemId );
+    void isLoadingSelectedChanged();
+    void isBulkActionScreenSelectedChanged();
+    void screenVisibilityChanged();
 
-  void setScreenVisibilityState( ScreenStates state );
+  protected:
+    /**
+     * Creates a new main view for a mobile application.
+     *
+     * @param appName is used to find the QML file in ${DATA_DIR}/mobile/appname.qml
+     * @param listProxy proxy for the list view of the application. KDeclarativeMainView
+     *                  takes ownwership over the pointer.
+     * @param parent The parent widget.
+     */
+    KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent = 0 );
 
-  bool isHomeScreenVisible() const;
-  bool isAccountScreenVisible() const;
-  bool isSingleFolderScreenVisible() const;
-  bool isMultiFolderScreenVisible() const;
+    /**
+     * Returns the global entity tree model.
+     */
+    Akonadi::EntityTreeModel* entityTreeModel() const;
 
-signals:
-  void numSelectedAccountsChanged();
-  void selectedItemChanged( int row, qlonglong itemId );
-  void isLoadingSelectedChanged();
-  void isBulkActionScreenSelectedChanged();
-  void screenVisibilityChanged();
+    /**
+     * Returns the filtered and QML-adapted item model.
+     */
+    QAbstractItemModel* itemModel() const;
 
-protected:
-  QItemSelectionModel* regularSelectionModel() const;
-  QAbstractItemModel *regularSelectedItems() const;
-  QItemSelectionModel* itemSelectionModel() const;
-  QItemSelectionModel* itemActionModel() const;
-  QAbstractItemModel* selectedItemsModel() const;
+    /**
+     * Returns whether the currently selected item is being loaded.
+     * Note that results appear asynchronously in chunks while loading the contents
+     * of a collection. That means that the number of items can be greater then zero
+     * while isLoadingSelected returns true.
+     */
+    bool isLoadingSelected();
 
-  Akonadi::Item itemFromId( quint64 id ) const;
+    /**
+     * Initializes the standard action manager that will be used by the application.
+     * This is a point of extension to use a custom action manager.
+     *
+     * @param collectionSelectionModel The selection model for the collections.
+     * @param itemSelectionModel The selection model for the items.
+     */
+    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                             QItemSelectionModel *itemSelectionModel );
 
-  virtual void keyPressEvent( QKeyEvent *event );
+    /**
+     * Initializes the agent action manager that will be used by the application.
+     * This is a point of extension to use a custom action manager.
+     *
+     * @param selectionModel The selection model for the agent instances.
+     */
+    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
-private:
-  KDeclarativeMainViewPrivate * const d;
-  Q_DISABLE_COPY( KDeclarativeMainView )
+    /**
+     * Returns the filter proxy model that will be used to filter the item list.
+     * If @c 0 is returned, no filtering is done.
+     *
+     * @note The model has to provide a public slot with the following signature:
+     *       void setFilterString( const QString& )
+     */
+    virtual QAbstractProxyModel* itemFilterModel() const;
 
-  Q_PRIVATE_SLOT( d, void filterLineEditChanged( const QString& ) )
-  Q_PRIVATE_SLOT( d, void bulkActionFilterLineEditChanged( const QString& ) )
+    /**
+     * Returns the object that will be used for importing data.
+     * If @c 0 is returned, no import functionality is offered.
+     */
+    virtual ImportHandlerBase* importHandler() const;
+
+    /**
+     * Returns the object that will be used for exporting data.
+     * If @c 0 is returned, no export functionality is offered.
+     */
+    virtual ExportHandlerBase* exportHandler() const;
+
+  protected Q_SLOTS:
+    void delayedInit();
+
+  protected:
+    QItemSelectionModel* regularSelectionModel() const;
+    QAbstractItemModel *regularSelectedItems() const;
+    QItemSelectionModel* itemSelectionModel() const;
+    QItemSelectionModel* itemActionModel() const;
+    QAbstractItemModel* selectedItemsModel() const;
+
+    Akonadi::Item itemFromId( quint64 id ) const;
+
+    virtual void keyPressEvent( QKeyEvent *event );
+
+  private:
+    KDeclarativeMainViewPrivate * const d;
+    Q_DISABLE_COPY( KDeclarativeMainView )
+
+    Q_PRIVATE_SLOT( d, void filterLineEditChanged( const QString& ) )
+    Q_PRIVATE_SLOT( d, void bulkActionFilterLineEditChanged( const QString& ) )
 };
 
 #endif // KDECLARATIVEMAINVIEW_H
