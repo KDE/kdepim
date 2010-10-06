@@ -24,6 +24,7 @@
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
 #include "tasklistproxy.h"
+#include "tasksactionmanager.h"
 #include "tasksfilterproxymodel.h"
 #include "tasksexporthandler.h"
 #include "tasksimporthandler.h"
@@ -63,17 +64,15 @@ void MainView::delayedInit()
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
 
-  KAction *action = new KAction( i18n( "New Task" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(newTask()) );
-  actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
+  TasksActionManager *tasksActionManager = new TasksActionManager( actionCollection(), this );
+  tasksActionManager->setItemSelectionModel( itemSelectionModel() );
 
-  action = new KAction( i18n( "Import Tasks" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
-  actionCollection()->addAction( QLatin1String( "import_tasks" ), action );
-
-  action = new KAction( i18n( "Export Tasks" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
-  actionCollection()->addAction( QLatin1String( "export_tasks" ), action );
+  connect( actionCollection()->action( QLatin1String( "add_new_task" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( newTask() ) );
+  connect( actionCollection()->action( QLatin1String( "import_tasks" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
+  connect( actionCollection()->action( QLatin1String( "export_tasks" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
 
   KPIM::ReminderClient::startDaemon();
 }

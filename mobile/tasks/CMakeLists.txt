@@ -13,6 +13,7 @@ set(mobile_tasks_SRCS
   tasksfilterproxymodel.cpp
   tasksexporthandler.cpp
   tasksimporthandler.cpp
+  tasksactionmanager.cpp
   mainview.cpp
   main.cpp
 )
