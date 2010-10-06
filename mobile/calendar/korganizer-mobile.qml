@@ -157,6 +157,7 @@ KPIM.MainView {
       id: month
       anchors { fill: parent; topMargin: 10; leftMargin: 40 }
       calendar: calendarModel
+      swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
 
       onDateClicked: {
         agenda.showRange( date, 0 );
@@ -212,6 +213,7 @@ KPIM.MainView {
       id: agenda
       anchors { fill: parent; topMargin: 10; leftMargin: 40 }
       calendar: calendarModel
+      swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
 
       onItemSelected: {
         if ( selectedItemId > 0 ) {
