@@ -251,6 +251,18 @@ QDateTime EventView::selectionEnd() const
   return QDateTime();
 }
 
+bool EventView::dateRangeSelectionEnabled() const
+{
+  Q_D( const EventView );
+  return d->mDateRangeSelectionEnabled;
+}
+
+void EventView::setDateRangeSelectionEnabled( bool enable )
+{
+  Q_D( EventView );
+  d->mDateRangeSelectionEnabled = enable;
+}
+
 bool EventView::supportsZoom() const
 {
   return false;

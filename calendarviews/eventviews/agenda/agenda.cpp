@@ -1591,7 +1591,7 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
   }
 
   // draw selection
-  if ( d->mHasSelection ) {
+  if ( d->mHasSelection && d->mAgendaView->dateRangeSelectionEnabled() ) {
     QPoint pt, pt1;
 
     if ( d->mSelectionEndCell.x() > d->mSelectionStartCell.x() ) { // multi day selection

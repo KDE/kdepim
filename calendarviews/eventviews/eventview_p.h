@@ -69,7 +69,7 @@ class EventViewPrivate
      * key_Return press, otherwise a new event dialog appears when
      * you hit return in some yes/no dialog */
     bool mReturnPressed;
-
+    bool mDateRangeSelectionEnabled;
     bool mTypeAhead;
     QObject *mTypeAheadReceiver;
     QList<QEvent *> mTypeAheadEvents;

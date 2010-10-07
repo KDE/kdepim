@@ -45,6 +45,7 @@ EventViewPrivate::EventViewPrivate( EventView *qq )
     collectionSelectionModel( 0 ),
     stateSaver( 0 ),
     mReturnPressed( false ),
+    mDateRangeSelectionEnabled( true ),
     mTypeAhead( false ),
     mTypeAheadReceiver( 0 ),
     mPrefs( new Prefs() ),

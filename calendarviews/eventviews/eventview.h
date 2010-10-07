@@ -161,6 +161,20 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual QDateTime selectionEnd() const;
 
     /**
+      Returns whether or not date range selection is enabled. This setting only
+      applies to views that actually supports selecting cells.
+      @see selectionStart()
+      @see selectionEnd()
+     */
+    bool dateRangeSelectionEnabled() const;
+
+    /**
+      Enable or disable date range selection.
+      @see dateRangeSelectionEnabled()
+     */
+    void setDateRangeSelectionEnabled( bool enable );
+
+    /**
       Returns the number of currently shown dates.
       A return value of 0 means no idea.
     */
