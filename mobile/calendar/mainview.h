@@ -26,6 +26,7 @@
 #include "kdeclarativemainview.h"
 
 #include <Akonadi/Entity>
+#include <KCalCore/ScheduleMessage>
 
 class KJob;
 namespace KPIMIdentities {
@@ -61,6 +62,11 @@ class MainView : public KDeclarativeMainView
     void mailFreeBusy();
     void sendAsICalendar();
     void publishItemInformation();
+    void sendInvitation();
+    void sendStatusUpdate();
+    void sendCancellation();
+    void requestUpdate();
+    void requestChange();
 
   protected slots:
     void delayedInit();
@@ -69,7 +75,8 @@ class MainView : public KDeclarativeMainView
   private slots:
     void finishEdit( QObject *editor );
     void fetchForSendICalDone( KJob* job );
-    void fetchForPublishItem( KJob* job );
+    void fetchForPublishItemDone( KJob* job );
+    void fetchForiTIPMethodDone( KJob* job );
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -80,6 +87,7 @@ class MainView : public KDeclarativeMainView
     virtual QAbstractProxyModel* itemFilterModel() const;
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
+    void scheduleiTIPMethod( KCalCore::iTIPMethod method );
 
   private:
     CalendarSupport::Calendar *m_calendar;

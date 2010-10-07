@@ -145,11 +145,11 @@ ActionMenuContainer {
     text : KDE.i18n( "Event" )
     FakeAction { name : "detach_event" }
     ActionListItem { name : "publish_item_information" }
-    FakeAction { name : "send_invitations_to_attendees" }
-    FakeAction { name : "send_status_update" }
-    FakeAction { name : "send_cancellation_to_attendees" }
-    FakeAction { name : "request_update" }
-    FakeAction { name : "request_change" }
+    ActionListItem { name : "send_invitations_to_attendees" }
+    ActionListItem { name : "send_status_update" }
+    ActionListItem { name : "send_cancellation_to_attendees" }
+    ActionListItem { name : "request_update" }
+    ActionListItem { name : "request_change" }
     ActionListItem { name : "send_as_icalendar" }
     ActionListItem { name : "mail_freebusy" }
     ActionListItem { name : "upload_freebusy" }

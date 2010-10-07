@@ -67,6 +67,8 @@
 #include <QTimer>
 #include <QDBusConnection>
 
+Q_DECLARE_METATYPE(KCalCore::iTIPMethod)
+
 using namespace Akonadi;
 using CalendarSupport::KCalPrefs;
 
@@ -135,6 +137,26 @@ void MainView::delayedInit()
   action = new KAction( i18n( "Publish Item Information" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( publishItemInformation()) );
   actionCollection()->addAction( QLatin1String( "publish_item_information" ), action );
+
+  action = new KAction( i18n( "Send Invitation to Attendees" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendInvitation()) );
+  actionCollection()->addAction( QLatin1String( "send_invitations_to_attendees" ), action );
+
+  action = new KAction( i18n( "Send Status Update" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendStatusUpdate()) );
+  actionCollection()->addAction( QLatin1String( "send_status_update" ), action );
+
+  action = new KAction( i18n( "Send Cancellation to Attendees" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendCancellation()) );
+  actionCollection()->addAction( QLatin1String( "send_cancellation_to_attendees" ), action );
+
+  action = new KAction( i18n( "Request Update" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( requestUpdate()) );
+  actionCollection()->addAction( QLatin1String( "request_update" ), action );
+
+  action = new KAction( i18n( "Request Change" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( requestChange()) );
+  actionCollection()->addAction( QLatin1String( "request_change" ), action );
 
   action = new KAction( i18n( "Send as ICalendar" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( sendAsICalendar()) );
@@ -359,10 +381,10 @@ void MainView::publishItemInformation()
   Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForPublishItem(KJob*)));
+  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForPublishItemDone(KJob*)));
 }
 
-void MainView::fetchForPublishItem(KJob* job)
+void MainView::fetchForPublishItemDone(KJob* job)
 {
   if ( job->error() ) {
       kDebug() << "Error trying to fetch item";
@@ -375,8 +397,62 @@ void MainView::fetchForPublishItem(KJob* job)
 
   Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
 
-  kDebug() << item.id() << item.payloadData();
   CalendarSupport::publishItemInformation( item, m_calendar, this );
+}
+
+void MainView::sendInvitation()
+{
+  scheduleiTIPMethod( KCalCore::iTIPRequest );
+}
+
+void MainView::sendStatusUpdate()
+{
+  scheduleiTIPMethod( KCalCore::iTIPReply );
+}
+
+void MainView::sendCancellation()
+{
+  scheduleiTIPMethod( KCalCore::iTIPCancel );
+}
+
+void MainView::requestUpdate()
+{
+  scheduleiTIPMethod( KCalCore::iTIPRefresh );
+}
+
+void MainView::requestChange()
+{
+  scheduleiTIPMethod( KCalCore::iTIPCounter );
+}
+
+void MainView::scheduleiTIPMethod( KCalCore::iTIPMethod method )
+{
+  QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if (list.isEmpty())
+    return;
+
+  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+  job->fetchScope().fetchFullPayload();
+  job->setProperty( "iTIPmethod", QVariant::fromValue<KCalCore::iTIPMethod>(method) );
+  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForiTIPMethodDone(KJob*)));
+}
+
+void MainView::fetchForiTIPMethodDone(KJob* job)
+{
+  if ( job->error() ) {
+      kDebug() << "Error trying to fetch item";
+      //###: review error string
+      KMessageBox::sorry( this,
+                          i18n("Cannot fetch calendar item."),
+                          i18n("Item Fetch Error"));
+      return;
+  }
+
+  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+
+  KCalCore::iTIPMethod method = job->property( "iTIPmethod" ).value<KCalCore::iTIPMethod>();
+  CalendarSupport::scheduleiTIPMethods( method, item, m_calendar, this );
 }
 
 
