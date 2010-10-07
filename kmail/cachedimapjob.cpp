@@ -308,11 +308,13 @@ void CachedImapJob::slotGetNextMessage(KIO::Job * job)
       mMsg->setMsgSizeServer(size);
       mMsg->setTransferInProgress( false );
       int index = -1;
+      mFolder->open( "KMFolderCachedImap::slotGetNextMessage" );
       mFolder->addMsgInternal( mMsg, true, &index );
 
       if ( kmkernel->iCalIface().isResourceFolder( mFolder->folder() ) ) {
         mFolder->setStatus( index, KMMsgStatusRead, false );
       }
+      mFolder->close( "KMFolderCachedImap::slotGetNextMessage" );
 
       emit messageRetrieved( mMsg );
       if ( index >= 0 ) mFolder->unGetMsg( index );
