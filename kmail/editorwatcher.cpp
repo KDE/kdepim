@@ -89,7 +89,7 @@ bool EditorWatcher::start()
   list.append( mUrl );
   KService::Ptr offer = KServiceTypeProfile::preferredService( mMimeType, "Application" );
   if ( mOpenWith || !offer ) {
-    KOpenWithDlg dlg( list, i18n("Edit with:"), QString::null, 0 );
+    KOpenWithDlg dlg( list, i18n("Edit with:"), QString::null, mParentWidget );
     if ( !dlg.exec() )
       return false;
     offer = dlg.service();
