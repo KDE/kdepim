@@ -23,6 +23,7 @@
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <KLocale>
 #include <KGlobal>
@@ -33,40 +34,18 @@ EventListProxy::EventListProxy(QObject* parent) : ListProxy(parent)
   sort( 0, Qt::DescendingOrder );
 }
 
-QString durationString( const KCalCore::Incidence::Ptr &incidence )
-{
-  if ( KCalCore::Event::Ptr event = incidence.dynamicCast<KCalCore::Event>() ) {
-    if ( event->allDay() )
-      return i18n( "Whole day" );
-
-    if ( event->duration() )
-      return KGlobal::locale()->formatDuration( event->duration().asSeconds() * 1000 );
-    else
-      return KGlobal::locale()->formatDuration( event->dtStart().secsTo( event->dtEnd() ) * 1000 );
-
-  } else if ( KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>() ) {
-    if ( todo->hasDueDate() )
-      return i18n( "Due at %1", KGlobal::locale()->formatDateTime( todo->dtDue(), KLocale::FancyShortDate ) );
-    else
-      return i18n( "No due date" );
-  } else {
-    kDebug() << "Invalid incindce type" << incidence->typeStr();
-    return QString();
-  }
-}
-
 QVariant EventListProxy::data(const QModelIndex& index, int role) const
 {
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-    const KCalCore::Incidence::Ptr event = item.payload<KCalCore::Incidence::Ptr>();
+    const KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
     switch ( role ) {
       case SummaryRole:
-        return event->summary();
+        return incidence->summary();
       case BeginRole:
-        return KGlobal::locale()->formatDateTime( event->dtStart(), KLocale::FancyShortDate );
+        return KGlobal::locale()->formatDateTime( incidence->dtStart(), KLocale::FancyShortDate );
       case DurationRole:
-        return durationString( event );
+        return KCalUtils::IncidenceFormatter::durationString( incidence );
     }
   }
   return QSortFilterProxyModel::data(index, role);
