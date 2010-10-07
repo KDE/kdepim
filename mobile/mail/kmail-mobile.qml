@@ -40,22 +40,18 @@ KPIM.MainView {
     messageView.itemId = -1;
 
     updateContextActionsStates();
- }
+  }
 
   function updateContextActionsStates()
   {
     if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
       kmailActions.showOnlyCategory("home")
-      application.setScreenVisibilityState( 0 )
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
       kmailActions.showOnlyCategory("account")
-      application.setScreenVisibilityState( 1 )
     } else if ( collectionView.numSelected > 1 ) {
       kmailActions.showOnlyCategory( "multiple_folder" );
-      application.setScreenVisibilityState( 2 )
     } else {
       kmailActions.showOnlyCategory("single_folder")
-      application.setScreenVisibilityState( 4 )
     }
   }
 
@@ -354,7 +350,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : application.isHomeScreenVisible ? 1 : 0
+      opacity : screenManager.isHomeScreenVisible ? 1 : 0
 
 
       KPIM.Button2 {
@@ -407,7 +403,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : application.isHomeScreenVisible ? 0 : 1
+      opacity : screenManager.isHomeScreenVisible ? 0 : 1
 
       Akonadi.FilterLineEdit {
         id: filterLineEdit

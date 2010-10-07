@@ -56,16 +56,12 @@ KPIM.MainView {
   {
     if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
       korganizerActions.showOnlyCategory("home")
-      application.setScreenVisibilityState( 0 )
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
       korganizerActions.showOnlyCategory("account")
-      application.setScreenVisibilityState( 1 )
     } else if ( collectionView.numSelected > 1 ) { // something else is selected
       korganizerActions.showOnlyCategory( "multiple_folder" );
-      application.setScreenVisibilityState( 2 )
     } else {
       korganizerActions.showOnlyCategory("single_folder")
-      application.setScreenVisibilityState( 4 )
     }
   }
 

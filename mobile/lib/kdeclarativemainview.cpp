@@ -29,6 +29,7 @@
 #include "listproxy.h"
 #include "qmlcheckableproxymodel.h"
 #include "qmllistselectionmodel.h"
+#include "screenmanager.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/agentinstancemodel.h>
@@ -251,6 +252,10 @@ void KDeclarativeMainView::delayedInit()
 
   context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
+  // The global screen manager
+  d->mScreenManager = new ScreenManager( this );
+  context->setContextProperty( "screenManager", QVariant::fromValue( static_cast<QObject*>( d->mScreenManager ) ) );
+
   // A list of available favorites
   QAbstractItemModel *favsList = d->getFavoritesListModel();
   favsList->setParent( this );
@@ -285,6 +290,10 @@ void KDeclarativeMainView::delayedInit()
   connect( d->mBnf->selectedItemModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SIGNAL( isLoadingSelectedChanged() ) );
   connect( d->mBnf->selectedItemModel(), SIGNAL( rowsRemoved( QModelIndex, int, int ) ), SIGNAL( isLoadingSelectedChanged() ) );
 
+  connect( d->mBnf->qmlBreadcrumbsModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( breadcrumbsSelectionChanged() ) );
+  connect( d->mBnf->qmlBreadcrumbsModel(), SIGNAL( rowsRemoved( QModelIndex, int, int ) ), SLOT( breadcrumbsSelectionChanged() ) );
+  connect( d->mBnf->qmlSelectedItemModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( breadcrumbsSelectionChanged() ) );
+  connect( d->mBnf->qmlSelectedItemModel(), SIGNAL( rowsRemoved( QModelIndex, int, int ) ), SLOT( breadcrumbsSelectionChanged() ) );
 
   if ( debugTiming ) {
     kWarning() << "Restoring state" << time.elapsed() << &time;
@@ -312,6 +321,22 @@ void KDeclarativeMainView::delayedInit()
 KDeclarativeMainView::~KDeclarativeMainView()
 {
   delete d;
+}
+
+void KDeclarativeMainView::breadcrumbsSelectionChanged()
+{
+  const int numBreadcrumbs = qobject_cast<QAbstractItemModel*>(d->mBnf->qmlBreadcrumbsModel())->rowCount();
+  const int numSelectedItems = qobject_cast<QAbstractItemModel*>(d->mBnf->qmlSelectedItemModel())->rowCount();
+
+  if ( numBreadcrumbs == 0 && numSelectedItems == 0) {
+    d->mScreenManager->switchScreen( ScreenManager::HomeScreen );
+  } else if ( numBreadcrumbs == 0 && numSelectedItems != 0) {
+    d->mScreenManager->switchScreen( ScreenManager::AccountScreen );
+  } else if ( numSelectedItems > 1 ) {
+    d->mScreenManager->switchScreen( ScreenManager::MultiFolderScreen );
+  } else {
+    d->mScreenManager->switchScreen( ScreenManager::SingleFolderScreen );
+  }
 }
 
 QString KDeclarativeMainView::pathToItem( Entity::Id id )
@@ -583,32 +608,6 @@ void KDeclarativeMainView::exportItems()
   handler->exec();
 }
 
-void KDeclarativeMainView::setScreenVisibilityState( ScreenStates state )
-{
-  d->mScreenState = state;
-  emit screenVisibilityChanged();
-}
-
-bool KDeclarativeMainView::isHomeScreenVisible() const
-{
-  return (d->mScreenState == HomeScreen);
-}
-
-bool KDeclarativeMainView::isAccountScreenVisible() const
-{
-  return (d->mScreenState == AccountScreen);
-}
-
-bool KDeclarativeMainView::isSingleFolderScreenVisible() const
-{
-  return (d->mScreenState == SingleFolderScreen);
-}
-
-bool KDeclarativeMainView::isMultiFolderScreenVisible() const
-{
-  return (d->mScreenState == MultiFolderScreen);
-}
-
 int KDeclarativeMainView::numSelectedAccounts()
 {
   const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
@@ -721,7 +720,7 @@ void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )
   KLineEdit *lineEdit = (d->mIsBulkActionScreenSelected ? d->mBulkActionFilterLineEdit : d->mFilterLineEdit);
 
   if ( !isSendingEvent && // do not end up in a recursion
-       d->mScreenState != HomeScreen && // we are not showing the HomeScreen
+       !d->mScreenManager->isHomeScreenVisible() && // we are not showing the HomeScreen
        !event->text().isEmpty() && // only react on character input
        lineEdit && // only if a filter line edit has been set
        d->mItemFilterModel ) { // and a filter model is used

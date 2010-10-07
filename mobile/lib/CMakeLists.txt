@@ -22,6 +22,7 @@ set(mobileui_SRCS
     listproxy.cpp
     orderedchildcollectionsmodel.cpp
     qmllistselectionmodel.cpp
+    screenmanager.cpp
     stylesheetloader.cpp
     agentstatusmonitor.cpp
 )

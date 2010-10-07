@@ -35,8 +35,8 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
   , mFilterLineEdit( 0 )
   , mBulkActionFilterLineEdit( 0 )
   , mIsBulkActionScreenSelected( false )
-  , mScreenState( KDeclarativeMainView::HomeScreen )
   , mAgentStatusMonitor( 0 )
+  , mScreenManager( 0 )
 { }
 
 void KDeclarativeMainViewPrivate::restoreState()

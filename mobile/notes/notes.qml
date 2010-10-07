@@ -54,14 +54,11 @@ KPIM.MainView {
     if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
     {
       noteActions.showOnlyCategory("home")
-      application.setScreenVisibilityState( 0 )
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
     {
       noteActions.showOnlyCategory("account")
-      application.setScreenVisibilityState( 1 )
     } else { // something else is selected
       noteActions.showOnlyCategory("single_folder")
-      application.setScreenVisibilityState( 2 )
     }
   }
 
@@ -188,7 +185,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : application.isHomeScreenVisible ? 1 : 0
+      opacity : screenManager.isHomeScreenVisible ? 1 : 0
 
       KPIM.Button2 {
         anchors.top : parent.top
@@ -229,7 +226,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : application.isHomeScreenVisible ? 0 : 1
+      opacity : screenManager.isHomeScreenVisible ? 0 : 1
 
       Akonadi.FilterLineEdit {
         id: filterLineEdit

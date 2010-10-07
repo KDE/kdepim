@@ -35,6 +35,7 @@
 class AgentStatusMonitor;
 class KActionCollection;
 class KLineEdit;
+class ScreenManager;
 
 static const char * const sFavoritePrefix = "Favorite_";
 static const int sFavoritePrefixLength = 9;
@@ -84,8 +85,8 @@ public: /// members
   KLineEdit                          *mFilterLineEdit;
   KLineEdit                          *mBulkActionFilterLineEdit;
   bool                               mIsBulkActionScreenSelected;
-  KDeclarativeMainView::ScreenStates mScreenState;
   AgentStatusMonitor                 *mAgentStatusMonitor;
+  ScreenManager                      *mScreenManager;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();

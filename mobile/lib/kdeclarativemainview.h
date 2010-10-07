@@ -51,25 +51,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     Q_PROPERTY( QString version READ version CONSTANT )
     Q_PROPERTY( bool isBulkActionScreenSelected READ isBulkActionScreenSelected WRITE setBulkActionScreenSelected NOTIFY isBulkActionScreenSelectedChanged )
 
-    Q_PROPERTY( bool isHomeScreenVisible READ isHomeScreenVisible NOTIFY screenVisibilityChanged )
-    Q_PROPERTY( bool isAccountScreenVisible READ isAccountScreenVisible NOTIFY screenVisibilityChanged )
-    Q_PROPERTY( bool isSingleFolderScreenVisible READ isSingleFolderScreenVisible NOTIFY screenVisibilityChanged )
-    Q_PROPERTY( bool isMultiFolderScreenVisible READ isMultiFolderScreenVisible NOTIFY screenVisibilityChanged )
-
-    Q_FLAGS( ScreenStates )
-
   public:
-    /**
-     * Describes the state of the visible screens.
-     */
-    enum ScreenState {
-      HomeScreen = 0,
-      AccountScreen = 1,
-      SingleFolderScreen = 2,
-      MultiFolderScreen = 4
-    };
-    Q_DECLARE_FLAGS( ScreenStates, ScreenState )
-
     /**
      * Destroys the declarative main view.
      */
@@ -170,37 +152,11 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     void exportItems();
 
-    /**
-     * Sets the screen @p state of the application.
-     */
-    void setScreenVisibilityState( ScreenStates state );
-
-    /**
-     * Returns whether the home screen is currently visible.
-     */
-    bool isHomeScreenVisible() const;
-
-    /**
-     * Returns whether the account screen is currently visible.
-     */
-    bool isAccountScreenVisible() const;
-
-    /**
-     * Returns whether the single folder screen is currently visible.
-     */
-    bool isSingleFolderScreenVisible() const;
-
-    /**
-     * Returns whether the multiple folder screen is currently visible.
-     */
-    bool isMultiFolderScreenVisible() const;
-
   Q_SIGNALS:
     void numSelectedAccountsChanged();
     void selectedItemChanged( int row, qlonglong itemId );
     void isLoadingSelectedChanged();
     void isBulkActionScreenSelectedChanged();
-    void screenVisibilityChanged();
 
   protected:
     /**
@@ -272,6 +228,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
   protected Q_SLOTS:
     void delayedInit();
+    void breadcrumbsSelectionChanged();
 
   protected:
     QItemSelectionModel* regularSelectionModel() const;
