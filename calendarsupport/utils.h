@@ -1,5 +1,7 @@
 /*
+  Copyright (c) 2009, 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (C) 2009 KDAB (author: Frank Osterfeld <osterfeld@kde.org>)
+  Copyright (c) 2010 Andras Mantia <andras@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -242,6 +244,8 @@ class Calendar;
   CALENDARSUPPORT_EXPORT void publishItemInformation( const Akonadi::Item& item, Calendar* calendar, QWidget* parentWidget = 0 );
 
   CALENDARSUPPORT_EXPORT void scheduleiTIPMethods( KCalCore::iTIPMethod method, const Akonadi::Item &item, Calendar* calendar, QWidget *parentWidget = 0 );
+
+  CALENDARSUPPORT_EXPORT void saveAttachments( const Akonadi::Item& item, QWidget* parentWidget = 0 );
 
 }
 

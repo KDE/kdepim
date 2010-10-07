@@ -1,5 +1,7 @@
 /*
+  Copyright (c) 2009, 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (C) 2009 KDAB (author: Frank Osterfeld <osterfeld@kde.org>)
+  Copyright (c) 2010 Andras Mantia <andras@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -62,6 +64,8 @@
 #include <boost/bind.hpp>
 #include <KMessageBox>
 #include <KPIMIdentities/IdentityManager>
+#include <KFileDialog>
+#include <KIO/NetAccess>
 
 using namespace CalendarSupport;
 using namespace KHolidays;
@@ -628,4 +632,69 @@ void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method, const Ak
              incidence->summary(),
              ScheduleMessage::methodName( method ) ) );
   }
+}
+
+void CalendarSupport::saveAttachments(const Akonadi::Item& item, QWidget* parentWidget)
+{
+  Incidence::Ptr incidence = CalendarSupport::incidence( item );
+
+  if ( !incidence ) {
+    KMessageBox::sorry(
+      parentWidget,
+      i18n( "No item selected." ),
+      "SaveAttachments" );
+    return;
+  }
+
+  Attachment::List attachments = incidence->attachments();
+
+  if ( attachments.empty() )
+    return;
+
+  QString targetFile, targetDir;
+  if ( attachments.count() > 1 ) {
+    // get the dir
+    targetDir = KFileDialog::getExistingDirectory( KUrl( "kfiledialog:///saveAttachment" ),
+                                                   parentWidget,
+                                                   i18n( "Save Attachments To" ) );
+    if ( targetDir.isEmpty() ) {
+      return;
+    }
+
+    // we may not get a slash-terminated url out of KFileDialog
+    if ( !targetDir.endsWith('/') )
+      targetDir.append('/');
+  }
+  else {
+    // only one item, get the desired filename
+    QString fileName = attachments.first()->label();
+    if ( fileName.isEmpty() ) {
+      fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
+    }
+    targetFile = KFileDialog::getSaveFileName( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
+                                   QString(),
+                                   parentWidget,
+                                   i18n( "Save Attachment" ) );
+    if ( targetFile.isEmpty() ) {
+      return;
+    }
+
+    targetDir = QFileInfo( targetFile ).absolutePath() + "/";
+  }
+
+  Q_FOREACH( Attachment::Ptr attachment, attachments ) {
+    targetFile = targetDir + attachment->label();
+    KUrl sourceUrl;
+    if ( attachment->isUri() ) {
+      sourceUrl = attachment->uri();
+    } else {
+      sourceUrl = incidence->writeAttachmentToTempFile( attachment );
+    }
+    // save the attachment url
+    if ( !KIO::NetAccess::file_copy( sourceUrl, KUrl( targetFile ) ) &&
+        KIO::NetAccess::lastError() ) {
+      KMessageBox::error( parentWidget, KIO::NetAccess::lastErrorString() );
+    }
+  }
+  
 }
