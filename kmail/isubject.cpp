@@ -28,8 +28,8 @@ namespace KMail {
     // iterate over a copy (to prevent crashes when
     // {attach(),detach()} is called from an Observer::update()
     const QVector<Interface::Observer*> copy = mObserverList;
-    for ( QVector<Interface::Observer*>::const_iterator it = copy.begin() ; it != copy.end() ; ++it ) {
-      if ( (*it) ) {
+    for ( QVector<Interface::Observer*>::const_iterator it = copy.constBegin() ; it != copy.constEnd() ; ++it ) {
+      if ( *it ) {
         (*it)->update( this );
       }
     }
