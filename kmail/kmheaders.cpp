@@ -15,6 +15,7 @@ using KMail::HeaderItem;
 #include "kmmsgdict.h"
 #include "kmdebug.h"
 #include "kmfoldertree.h"
+#include "folderstorage.h"
 #include "folderjob.h"
 using KMail::FolderJob;
 #include "actionscheduler.h"
@@ -120,6 +121,7 @@ KMHeaders::KMHeaders(KMMainWidget *aOwner, QWidget *parent,
   mSortDescending = false;
   mSortInfo.ascending = false;
   mReaderWindowActive = false;
+  mBatchRemovingInProgress = false;
   mRoot = new SortCacheItem;
   mRoot->setId(-666); //mark of the root!
   setStyleDependantFrameWidth();
@@ -710,6 +712,10 @@ void KMHeaders::setFolder( KMFolder *aFolder, bool forceJumpToUnread )
                  this, SLOT(msgAdded(int)));
       disconnect(mFolder, SIGNAL( msgRemoved( int, QString ) ),
                  this, SLOT( msgRemoved( int, QString ) ) );
+      disconnect(mFolder->storage(), SIGNAL( batchRemovingStarted() ),
+                 this, SLOT( batchRemovingStarted() ) );
+      disconnect(mFolder->storage(), SIGNAL( batchRemovingFinished( ) ),
+                 this, SLOT( batchRemovingFinished() ) );
       disconnect(mFolder, SIGNAL(changed()),
                  this, SLOT(msgChanged()));
       disconnect(mFolder, SIGNAL(cleared()),
@@ -743,6 +749,10 @@ void KMHeaders::setFolder( KMFolder *aFolder, bool forceJumpToUnread )
               this, SLOT(msgAdded(int)));
       connect(mFolder, SIGNAL(msgRemoved(int,QString)),
               this, SLOT(msgRemoved(int,QString)));
+      connect(mFolder->storage(), SIGNAL( batchRemovingStarted() ),
+              this, SLOT( batchRemovingStarted() ) );
+      connect(mFolder->storage(), SIGNAL( batchRemovingFinished( ) ),
+              this, SLOT( batchRemovingFinished() ) );
       connect(mFolder, SIGNAL(changed()),
               this, SLOT(msgChanged()));
       connect(mFolder, SIGNAL(cleared()),
@@ -1573,7 +1583,9 @@ void KMHeaders::finalizeMove( HeaderItem *item, int contentX, int contentY )
     setSelected( item, true );
     setSelectionAnchor( currentItem() );
     mPrevCurrent = 0;
-    highlightMessage( item, false);
+    // read folderstorage.h:batchRemovingStarts() for more info on mBatchRemovingInProgress
+    if ( !mBatchRemovingInProgress )
+      highlightMessage( item, false);
   }
 
   setContentsPos( contentX, contentY );
@@ -3648,6 +3660,16 @@ QValueList< Q_UINT32 > KMHeaders::selectedVisibleSernums()
   }
 
   return list;
+}
+
+void KMHeaders::batchRemovingStarted()
+{
+  mBatchRemovingInProgress = true;
+}
+
+void KMHeaders::batchRemovingFinished()
+{
+  mBatchRemovingInProgress = false;
 }
 
 #include "kmheaders.moc"

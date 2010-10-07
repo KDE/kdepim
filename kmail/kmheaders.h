@@ -374,6 +374,9 @@ private slots:
 
   void updateActions();
 
+  void batchRemovingStarted();
+  void batchRemovingFinished();
+
 private:
   /** Is equivalent to clearing the list and inserting an item for
       each message in the current folder */
@@ -471,5 +474,9 @@ private:
   // copied messages
   QValueList<Q_UINT32> mCopiedMessages;
   bool mMoveMessages;
+
+  // Info about this in folderstorage.h:batchRemovingStarts()
+  bool mBatchRemovingInProgress;
+
 }; // class
 #endif

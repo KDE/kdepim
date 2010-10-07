@@ -502,10 +502,24 @@ signals:
   void folderSizeChanged();
 
   /**
-   *  Emiitted when the sync state, i.e. mailCheckInProgress(), changes.
+   *  Emitted when the sync state, i.e. mailCheckInProgress(), changes.
    *  Currently only supported for disconnected IMAP.
    */
   void syncStateChanged();
+
+  /**
+     Emitted when we are removing a list of messages. This is caught
+     for example by KMHeaders so it doesn't change any pointer in mMsgList.
+     Pointers to messages that we are removing must correspond to the ones in mMsgList.
+     More information in: https://issues.kolab.org/msg26709
+  */
+  void batchRemovingStarted();
+
+  /**
+     Emitted when we finish removing a list of messages.
+     It's now safe to call getMsg() and change contents of mMsgList.
+  */
+  void batchRemovingFinished();
 
 public slots:
   /** Incrementally update the index if possible else call writeIndex */
