@@ -1422,24 +1422,21 @@ void FolderView::fillContextMenuMessageRelatedActions( KMenu *menu, FolderViewIt
     return; // no multiSelection Account Related actions
 
   KMFolder *folder = item->folder();
-
-  if ( !folder )
-    return; // no actions without a folder at this time
-
   // Message Related Actions
 
-  if ( folder->isMailingListEnabled() )
+  if ( folder && folder->isMailingListEnabled() )
     menu->addAction( mMainWidget->action("post_message") );
-
-  if ( !folder->noContent() )
+  const bool nocontent = folder && folder->noContent();
+  if ( !nocontent )
   {
     // mark all messages as read
     menu->addAction( mMainWidget->action( "mark_all_as_read" ) );
-    // search messages
-    menu->addAction( mMainWidget->action( "search_messages" ) );
+  }
+  // search messages
+  menu->addAction( mMainWidget->action( "search_messages" ) );
+  if( !nocontent ) 
     // move all messages to trash
     menu->addAction( mMainWidget->action( "empty" ) );
-  }
 }
 
 void FolderView::fillContextMenuTreeStructureRelatedActions( KMenu */*menu*/, FolderViewItem */*item*/, bool /*multiSelection*/ )
@@ -1526,7 +1523,6 @@ void FolderView::contextMenuEvent( QContextMenuEvent *e )
   KMenu * menu = new KMenu();
   if ( fvi ) {
     KMFolder *folder = fvi->folder();
-
     // make sure the folder is activated (so actions will get updated)
     // but keep the selection (so multifolder is possible)
     Q_ASSERT( mMainWidget );
