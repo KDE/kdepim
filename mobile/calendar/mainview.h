@@ -67,6 +67,7 @@ class MainView : public KDeclarativeMainView
     void sendCancellation();
     void requestUpdate();
     void requestChange();
+    void saveAllAttachments();
 
   protected slots:
     void delayedInit();
@@ -77,6 +78,7 @@ class MainView : public KDeclarativeMainView
     void fetchForSendICalDone( KJob* job );
     void fetchForPublishItemDone( KJob* job );
     void fetchForiTIPMethodDone( KJob* job );
+    void fetchForSaveAllAttachmentsDone( KJob* job );
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

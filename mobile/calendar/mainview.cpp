@@ -170,6 +170,9 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( uploadFreeBusy()) );
   actionCollection()->addAction( QLatin1String( "upload_freebusy" ), action );
 
+  action = new KAction( i18n( "Save All" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments()) );
+  actionCollection()->addAction( QLatin1String( "save_all_attachments" ), action );
 
   //register DBUS interface
   m_calendarIface = new CalendarInterface( this );
@@ -454,6 +457,35 @@ void MainView::fetchForiTIPMethodDone(KJob* job)
   KCalCore::iTIPMethod method = job->property( "iTIPmethod" ).value<KCalCore::iTIPMethod>();
   CalendarSupport::scheduleiTIPMethods( method, item, m_calendar, this );
 }
+
+void MainView::saveAllAttachments()
+{
+  QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if (list.isEmpty())
+    return;
+
+  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+  job->fetchScope().fetchFullPayload();
+  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForSaveAllAttachmentsDone(KJob*)));
+}
+
+void MainView::fetchForSaveAllAttachmentsDone(KJob* job)
+{
+  if ( job->error() ) {
+      kDebug() << "Error trying to fetch item";
+      //###: review error string
+      KMessageBox::sorry( this,
+                          i18n("Cannot fetch calendar item."),
+                          i18n("Item Fetch Error"));
+      return;
+  }
+
+  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+
+  CalendarSupport::saveAttachments( item, this );
+}
+
 
 
 #include "mainview.moc"

@@ -158,7 +158,7 @@ ActionMenuContainer {
     name : "event_viewer_attachments_menu"
     category : "event_viewer"
     text : KDE.i18n( "Attachments" )
-    FakeAction { name : "save_all" }
+    ActionListItem { name : "save_all_attachments" }
   }
 
   ActionList {

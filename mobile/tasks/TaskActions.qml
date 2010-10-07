@@ -120,7 +120,7 @@ ActionMenuContainer {
     category : "todo_viewer"
     name : "todo_viewer_attachment_menu"
     text : KDE.i18n( "Attachments" )
-    FakeAction { name : "save_all" }
+    ActionListItem { name : "save_all_attachments" }
   }
 
   ActionList {

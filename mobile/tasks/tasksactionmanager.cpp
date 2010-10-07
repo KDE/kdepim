@@ -93,6 +93,9 @@ void TasksActionManager::initActions()
 
   action = mActionCollection->addAction( QLatin1String( "make_subtask_independent" ) );
   action->setText( i18n( "Make Sub Task Independent" ) );
+
+  action = mActionCollection->addAction( QLatin1String( "save_all_attachments" ) );
+  action->setText( i18n( "Save All" ) );
 }
 
 #include "tasksactionmanager.moc"

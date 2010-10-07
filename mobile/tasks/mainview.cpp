@@ -29,9 +29,12 @@
 #include "tasksexporthandler.h"
 #include "tasksimporthandler.h"
 
+#include <calendarsupport/utils.h>
+
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/standardactionmanager.h>
 
@@ -42,6 +45,7 @@
 #include <KGlobal>
 #include <klocale.h>
 #include <KStandardDirs>
+#include <KMessageBox>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
 #include <QtCore/QPointer>
@@ -80,6 +84,8 @@ void MainView::delayedInit()
            SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   connect( actionCollection()->action( QLatin1String( "make_subtask_independent" ) ),
            SIGNAL( triggered( bool ) ), SLOT( makeTaskIndependent() ) );
+  connect( actionCollection()->action( QLatin1String( "save_all_attachments" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
 
   KPIM::ReminderClient::startDaemon();
 }
@@ -252,4 +258,32 @@ Item MainView::currentItem() const
     return Item();
 
   return item;
+}
+
+void MainView::saveAllAttachments()
+{
+  QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if (list.isEmpty())
+    return;
+
+  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+  job->fetchScope().fetchFullPayload();
+  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForSaveAllAttachmentsDone(KJob*)));
+}
+
+void MainView::fetchForSaveAllAttachmentsDone(KJob* job)
+{
+  if ( job->error() ) {
+      kDebug() << "Error trying to fetch item";
+      //###: review error string
+      KMessageBox::sorry( this,
+                          i18n("Cannot fetch calendar item."),
+                          i18n("Item Fetch Error"));
+      return;
+  }
+
+  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+
+  CalendarSupport::saveAttachments( item, this );
 }

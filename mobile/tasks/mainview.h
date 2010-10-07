@@ -41,6 +41,7 @@ class MainView : public KDeclarativeMainView
     void makeTaskIndependent();
     void setPercentComplete(int row, int percentComplete);
     void editIncidence( const Akonadi::Item &item );
+    void saveAllAttachments();
 
   protected slots:
     virtual void delayedInit();
@@ -48,6 +49,7 @@ class MainView : public KDeclarativeMainView
   private slots:
     void finishEdit( QObject *editor );
     void modifyFinished( KJob *job );
+    void fetchForSaveAllAttachmentsDone( KJob* job );
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
