@@ -68,9 +68,6 @@ class MainView : public KDeclarativeMainView
 
     void configureIdentity();
 
-    void openAttachment(const QString& url, const QString& mimeType);
-    void saveAttachment(const QString& url);
-
   protected slots:
     void delayedInit();
     void forwardMessage();

@@ -81,9 +81,7 @@
 #include <mailcommon/expirypropertiesdialog.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
-#include <KRun>
 #include <messagecore/stringutil.h>
-#include <KFileDialog>
 
 
 Q_DECLARE_METATYPE(KMime::Content*)
@@ -1030,52 +1028,6 @@ void MainView::createToDo()
       return;
 
     MailCommon::Util::createTodoFromMail( item );
-}
-
-void MainView::openAttachment(const QString& url, const QString& mimeType)
-{
-   KRun::runUrl( KUrl(url), mimeType, this );
-  //TODO WINCE and MAEMO: if doesn't work, try KToolInvocation::invokeBrowser on maemo and a ShellExecuteEx direct API call on WinCE either inside KRun or KToolInvocation
-   //KToolInvocation::invokeBrowser and QDesktopServices::openUrl goes through a web browser, at least on desktop, and that is not nice
-}
-
-void MainView::saveAttachment(const QString& url)
-{
-  QString  fileName = KUrl( url ).fileName();
-  if ( fileName.isEmpty() ) {
-    fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
-  }
-  QString targetFile  = KFileDialog::getSaveFileName( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
-                                   QString(),
-                                   this,
-                                   i18n( "Save Attachment" ) );
-  if ( targetFile.isEmpty() ) {
-    return;
-  }
-
-  if ( QFile::exists( targetFile ) ) {
-    if ( KMessageBox::warningContinueCancel( this,
-            i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
-                  targetFile ),
-            i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
-        return;
-    }
-    QFile::remove( targetFile );
-  }
-
-  QFile file( url );
-  bool success = file.open( QFile::ReadOnly );
-  if ( success )
-    success = file.copy( targetFile );
-  if ( !success ) {
-      KMessageBox::error( this,
-                          i18nc( "1 = file name, 2 = error string",
-                                  "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                                  targetFile,
-                                  file.errorString() ),
-                          i18n( "Error saving attachment" ) );
-  }
-  file.close();
 }
 
 

@@ -351,6 +351,14 @@ KPIM.MainView {
           id: attachmentView
           model: taskView.attachmentModel
           anchors.fill: parent
+
+          onOpenAttachment: {
+            application.openAttachment(url, mimeType);
+          }
+
+          onSaveAttachment: {
+            application.saveAttachment(url);
+          }
         }
       ]
     }

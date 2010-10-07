@@ -51,11 +51,14 @@
 #include <KDE/KCmdLineArgs>
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
+#include <KDE/KFileDialog>
 #include <KDE/KGlobal>
 #include <KDE/KInputDialog>
 #include <KDE/KLineEdit>
 #include <KDE/KLocale>
+#include <KDE/KMessageBox>
 #include <KDE/KProcess>
+#include <KDE/KRun>
 #include <KDE/KSharedConfig>
 #include <KDE/KSharedConfigPtr>
 #include <KDE/KStandardDirs>
@@ -607,6 +610,54 @@ void KDeclarativeMainView::exportItems()
   handler->setSelectionModel( regularSelectionModel() );
   handler->exec();
 }
+
+
+void KDeclarativeMainView::openAttachment(const QString& url, const QString& mimeType)
+{
+   KRun::runUrl( KUrl(url), mimeType, this );
+  //TODO WINCE and MAEMO: if doesn't work, try KToolInvocation::invokeBrowser on maemo and a ShellExecuteEx direct API call on WinCE either inside KRun or KToolInvocation
+   //KToolInvocation::invokeBrowser and QDesktopServices::openUrl goes through a web browser, at least on desktop, and that is not nice
+}
+
+void KDeclarativeMainView::saveAttachment(const QString& url)
+{
+  QString  fileName = KUrl( url ).fileName();
+  if ( fileName.isEmpty() ) {
+    fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
+  }
+  QString targetFile  = KFileDialog::getSaveFileName( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
+                                   QString(),
+                                   this,
+                                   i18n( "Save Attachment" ) );
+  if ( targetFile.isEmpty() ) {
+    return;
+  }
+
+  if ( QFile::exists( targetFile ) ) {
+    if ( KMessageBox::warningContinueCancel( this,
+            i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
+                  targetFile ),
+            i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
+        return;
+    }
+    QFile::remove( targetFile );
+  }
+
+  QFile file( url );
+  bool success = file.open( QFile::ReadOnly );
+  if ( success )
+    success = file.copy( targetFile );
+  if ( !success ) {
+      KMessageBox::error( this,
+                          i18nc( "1 = file name, 2 = error string",
+                                  "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
+                                  targetFile,
+                                  file.errorString() ),
+                          i18n( "Error saving attachment" ) );
+  }
+  file.close();
+}
+
 
 int KDeclarativeMainView::numSelectedAccounts()
 {
