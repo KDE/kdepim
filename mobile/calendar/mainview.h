@@ -60,6 +60,7 @@ class MainView : public KDeclarativeMainView
     void uploadFreeBusy();
     void mailFreeBusy();
     void sendAsICalendar();
+    void publishItemInformation();
 
   protected slots:
     void delayedInit();
@@ -68,6 +69,7 @@ class MainView : public KDeclarativeMainView
   private slots:
     void finishEdit( QObject *editor );
     void fetchForSendICalDone( KJob* job );
+    void fetchForPublishItem( KJob* job );
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

@@ -132,6 +132,10 @@ void MainView::delayedInit()
   connect(this, SIGNAL(statusChanged(QDeclarativeView::Status)),
           this, SLOT(connectQMLSlots(QDeclarativeView::Status)));
 
+  action = new KAction( i18n( "Publish Item Information" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( publishItemInformation()) );
+  actionCollection()->addAction( QLatin1String( "publish_item_information" ), action );
+
   action = new KAction( i18n( "Send as ICalendar" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( sendAsICalendar()) );
   actionCollection()->addAction( QLatin1String( "send_as_icalendar" ), action );
@@ -327,8 +331,7 @@ void MainView::sendAsICalendar()
   Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForSendICalDone(KJob*)));
-  
+  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForSendICalDone(KJob*)));  
 }
 
 void MainView::fetchForSendICalDone(KJob* job)
@@ -344,8 +347,36 @@ void MainView::fetchForSendICalDone(KJob* job)
 
   Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
   
-  kDebug() << item.id() << item.payloadData();
   CalendarSupport::sendAsICalendar( item, m_identityManager, this );
+}
+
+void MainView::publishItemInformation()
+{
+  QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if (list.isEmpty())
+    return;
+
+  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+  job->fetchScope().fetchFullPayload();
+  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForPublishItem(KJob*)));
+}
+
+void MainView::fetchForPublishItem(KJob* job)
+{
+  if ( job->error() ) {
+      kDebug() << "Error trying to fetch item";
+      //###: review error string
+      KMessageBox::sorry( this,
+                          i18n("Cannot fetch calendar item."),
+                          i18n("Item Fetch Error"));
+      return;
+  }
+
+  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+
+  kDebug() << item.id() << item.payloadData();
+  CalendarSupport::publishItemInformation( item, m_calendar, this );
 }
 
 

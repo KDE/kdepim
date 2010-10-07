@@ -144,7 +144,7 @@ ActionMenuContainer {
     category : "event_viewer"
     text : KDE.i18n( "Event" )
     FakeAction { name : "detach_event" }
-    FakeAction { name : "publish_item_information" }
+    ActionListItem { name : "publish_item_information" }
     FakeAction { name : "send_invitations_to_attendees" }
     FakeAction { name : "send_status_update" }
     FakeAction { name : "send_cancellation_to_attendees" }
