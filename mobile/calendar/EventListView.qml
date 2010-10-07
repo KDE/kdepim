@@ -40,7 +40,7 @@ KPIM.ItemListView {
           anchors.topMargin : 1
           anchors.left : parent.left
           anchors.leftMargin : 10
-          text : KDE.i18n( "%1 (duration %2)", model.begin, model.duration );
+          text : KDE.i18n( "%1 (%2)", model.begin, model.duration );
           color : "#0C55BB"
           font.pixelSize: 16
           elide: "ElideRight"

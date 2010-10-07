@@ -20,7 +20,9 @@
 #include "eventlistproxy.h"
 
 #include <akonadi/item.h>
-#include <kcalcore/event.h>
+
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
 
 #include <KLocale>
 #include <KGlobal>
@@ -31,21 +33,40 @@ EventListProxy::EventListProxy(QObject* parent) : ListProxy(parent)
   sort( 0, Qt::DescendingOrder );
 }
 
+QString durationString( const KCalCore::Incidence::Ptr &incidence )
+{
+  if ( KCalCore::Event::Ptr event = incidence.dynamicCast<KCalCore::Event>() ) {
+    if ( event->allDay() )
+      return i18n( "Whole day" );
+
+    if ( event->duration() )
+      return KGlobal::locale()->formatDuration( event->duration().asSeconds() * 1000 );
+    else
+      return KGlobal::locale()->formatDuration( event->dtStart().secsTo( event->dtEnd() ) * 1000 );
+
+  } else if ( KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>() ) {
+    if ( todo->hasDueDate() )
+      return i18n( "Due at %1", KGlobal::locale()->formatDateTime( todo->dtDue(), KLocale::FancyShortDate ) );
+    else
+      return i18n( "No due date" );
+  } else {
+    kDebug() << "Invalid incindce type" << incidence->typeStr();
+    return QString();
+  }
+}
+
 QVariant EventListProxy::data(const QModelIndex& index, int role) const
 {
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if ( item.isValid() && item.hasPayload<KCalCore::Event::Ptr>() ) {
-    const KCalCore::Event::Ptr event = item.payload<KCalCore::Event::Ptr>();
+  if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+    const KCalCore::Incidence::Ptr event = item.payload<KCalCore::Incidence::Ptr>();
     switch ( role ) {
       case SummaryRole:
         return event->summary();
       case BeginRole:
         return KGlobal::locale()->formatDateTime( event->dtStart(), KLocale::FancyShortDate );
       case DurationRole:
-        if ( event->duration() )
-          return KGlobal::locale()->formatDuration( event->duration().asSeconds() * 1000 );
-        else
-          return KGlobal::locale()->formatDuration( event->dtStart().secsTo( event->dtEnd() ) * 1000 );
+        return durationString( event );
     }
   }
   return QSortFilterProxyModel::data(index, role);
