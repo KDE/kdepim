@@ -23,6 +23,7 @@
 #include "utils.h"
 #include "kcalprefs.h"
 #include "mailclient.h"
+#include "mailscheduler.h"
 #include "publishdialog.h"
 
 #include <Akonadi/Collection>
@@ -536,6 +537,48 @@ void CalendarSupport::sendAsICalendar(const Akonadi::Item& item, KPIMIdentities:
         parentWidget,
         i18n( "Unable to forward the item '%1'", incidence->summary() ),
         i18n( "Forwarding Error" ) );
+    }
+  }
+  delete publishdlg;
+}
+
+void  CalendarSupport::publishItemInformation(const Akonadi::Item& item, Calendar* calendar, QWidget* parentWidget)
+{
+  Incidence::Ptr incidence = CalendarSupport::incidence( item );
+
+  if ( !incidence ) {
+    KMessageBox::information(
+      parentWidget,
+      i18n( "No item selected." ),
+      "PublishNoEventSelected" );
+    return;
+  }
+
+  QPointer<PublishDialog> publishdlg = new PublishDialog();
+  if ( incidence->attendeeCount() > 0 ) {
+    Attendee::List attendees = incidence->attendees();
+    Attendee::List::ConstIterator it;
+    for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+      publishdlg->addAttendee( *it );
+    }
+  }
+  if ( publishdlg->exec() == QDialog::Accepted ) {
+    Incidence::Ptr inc( incidence->clone() );
+    inc->registerObserver( 0 );
+    inc->clearAttendees();
+
+    // Send the mail
+    CalendarSupport::MailScheduler scheduler( calendar );
+    if ( scheduler.publish( incidence, publishdlg->addresses() ) ) {
+      KMessageBox::information(
+        parentWidget,
+        i18n( "The item information was successfully sent." ),
+        i18n( "Publishing" ),
+        "IncidencePublishSuccess" );
+    } else {
+      KMessageBox::error(
+        parentWidget,
+        i18n( "Unable to publish the item '%1'", incidence->summary() ) );
     }
   }
   delete publishdlg;

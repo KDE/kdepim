@@ -52,6 +52,9 @@ typedef QList<QModelIndex> QModelIndexList;
 
 namespace CalendarSupport
 {
+
+class Calendar;
+
   /**
    * returns the incidence from an akonadi item, or a null pointer if the item has no such payload
    */
@@ -235,6 +238,7 @@ namespace CalendarSupport
 
   CALENDARSUPPORT_EXPORT void sendAsICalendar( const Akonadi::Item& item, KPIMIdentities::IdentityManager *identityManager, QWidget* parentWidget = 0 );
 
+  CALENDARSUPPORT_EXPORT void publishItemInformation( const Akonadi::Item& item, Calendar* calendar, QWidget* parentWidget = 0 );
 }
 
 #endif
