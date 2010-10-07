@@ -35,6 +35,7 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
   // start with the oxygen palette (which is not necessarily the default on all platforms)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
   m_view->setPalette( pal );
+  m_view->setDateRangeSelectionEnabled( false );
 
   connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
            SIGNAL(itemSelected()) );
