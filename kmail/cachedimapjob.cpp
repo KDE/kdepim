@@ -276,7 +276,7 @@ void CachedImapJob::slotGetNextMessage(KJob * job)
       mMsg->setUID(uid);
       mMsg->setMsgSizeServer(size);
       mMsg->setTransferInProgress( false );
-      int index = 0;
+      int index = -1;
       mFolder->open( "KMFolderCachedImap::slotGetNextMessage" );
       mFolder->addMsgInternal( mMsg, true, &index );
 
@@ -286,7 +286,7 @@ void CachedImapJob::slotGetNextMessage(KJob * job)
       mFolder->close( "KMFolderCachedImap::slotGetNextMessage" );
 
       emit messageRetrieved( mMsg );
-      if ( index > 0 ) mFolder->unGetMsg( index );
+      if ( index >= 0 ) mFolder->unGetMsg( index );
     } else {
       emit messageRetrieved( 0 );
     }
