@@ -182,7 +182,7 @@ void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & ca
 
     const GpgME::Error err = job->auditLogError();
 
-    if ( err.code() != GPG_ERR_NO_DATA ) {
+    if ( err && err.code() != GPG_ERR_NO_DATA ) {
         KMessageBox::information( parent, i18n("An error occurred while trying to retrieve the GnuPG Audit Log:\n%1",
                                   QString::fromLocal8Bit( err.asString() ) ),
                                   i18n("GnuPG Audit Log Error") );
