@@ -143,7 +143,6 @@ ActionMenuContainer {
     name : "event_viewer_event_menu"
     category : "event_viewer"
     text : KDE.i18n( "Event" )
-    FakeAction { name : "detach_event" }
     ActionListItem { name : "publish_item_information" }
     ActionListItem { name : "send_invitations_to_attendees" }
     ActionListItem { name : "send_status_update" }
