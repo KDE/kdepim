@@ -357,11 +357,21 @@ int FolderStorage::find( const KMMessage * msg ) const {
 //-----------------------------------------------------------------------------
 void FolderStorage::removeMsg(const QPtrList<KMMsgBase>& msgList, bool imapQuiet)
 {
+
+  emit batchRemovingStarted();
+  int i = 0;
   for( QPtrListIterator<KMMsgBase> it( msgList ); *it; ++it )
   {
+    if ( i == msgList.count() - 1 ) {
+      // For a batch of messages, we only want the last one
+      // to be processed by KMHeaders
+      emit batchRemovingFinished();
+    }
+
     int idx = find(it.current());
     assert( idx != -1);
     removeMsg(idx, imapQuiet);
+    ++i;
   }
 }
 
