@@ -30,6 +30,7 @@
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>
 #include <KCalCore/Journal>
+#include <KCalCore/ScheduleMessage>
 #include <KCalCore/Todo>
 
 #include <KDateTime>
@@ -239,6 +240,9 @@ class Calendar;
   CALENDARSUPPORT_EXPORT void sendAsICalendar( const Akonadi::Item& item, KPIMIdentities::IdentityManager *identityManager, QWidget* parentWidget = 0 );
 
   CALENDARSUPPORT_EXPORT void publishItemInformation( const Akonadi::Item& item, Calendar* calendar, QWidget* parentWidget = 0 );
+
+  CALENDARSUPPORT_EXPORT void scheduleiTIPMethods( KCalCore::iTIPMethod method, const Akonadi::Item &item, Calendar* calendar, QWidget *parentWidget = 0 );
+
 }
 
 #endif
