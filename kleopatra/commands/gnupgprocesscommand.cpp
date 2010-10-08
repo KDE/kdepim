@@ -130,6 +130,7 @@ private:
             dialog->setAttribute( Qt::WA_DeleteOnClose );
             applyWindowID( dialog );
             connect( dialog, SIGNAL(cancelRequested()), q, SLOT(cancel()) );
+            dialog->setWindowTitle( i18n("Subprocess Diagnostics") );
         }
         if ( dialog->isVisible() )
             dialog->raise();
