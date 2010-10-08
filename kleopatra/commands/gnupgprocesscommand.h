@@ -49,6 +49,9 @@ namespace Commands {
         explicit GnuPGProcessCommand( const GpgME::Key & key );
         ~GnuPGProcessCommand();
 
+    public:
+        QDialog * dialog() const;
+
     private:
         virtual bool preStartHook( QWidget * parentWidget ) const;
 
@@ -67,6 +70,8 @@ namespace Commands {
         QString errorString() const;
         void setIgnoresSuccessOrFailure( bool ignore );
         bool ignoresSuccessOrFailure() const;
+        void setShowsOutputWindow( bool show );
+        bool showsOutputWindow() const;
 
     private:
         /* reimp */ void doStart();
