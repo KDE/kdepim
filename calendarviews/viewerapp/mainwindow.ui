@@ -45,6 +45,7 @@
     <addaction name="actionAgenda"/>
     <addaction name="actionMultiAgenda"/>
     <addaction name="actionMonth"/>
+    <addaction name="actionTimeline"/>
    </widget>
    <addaction name="addViewMenu"/>
   </widget>
@@ -62,6 +63,11 @@
   <action name="actionMonth">
    <property name="text">
     <string>Month</string>
+   </property>
+  </action>
+  <action name="actionTimeline">
+   <property name="text">
+    <string>Timeline</string>
    </property>
   </action>
  </widget>

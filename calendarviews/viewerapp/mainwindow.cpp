@@ -25,6 +25,7 @@
 #include "agendaview.h"
 #include "month/monthview.h"
 #include "multiagenda/multiagendaview.h"
+#include "timeline/timelineview.h"
 #include "prefs.h"
 
 #include <calendarsupport/calendar.h>
@@ -86,6 +87,8 @@ void MainWindow::addView( const QString &viewName )
     eventView = new MultiAgendaView( this );
   } else if ( viewName == QLatin1String( "month" ) ) {
     eventView = new MonthView( MonthView::Visible, this );
+  } else if ( viewName == QLatin1String( "timeline" ) ) {
+    eventView = new TimelineView( this );
   }
 
   if ( eventView != 0 ) {

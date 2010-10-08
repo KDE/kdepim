@@ -29,7 +29,7 @@ namespace Akonadi
   class ChangeRecorder;
 }
 
-namespace CalendarSupport 
+namespace CalendarSupport
 {
   class Calendar;
   class IncidenceChanger;
