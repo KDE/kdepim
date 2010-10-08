@@ -28,29 +28,11 @@
 
 #include "eventview.h"
 
-#include <Akonadi/Collection>
 #include <Akonadi/Item>
 
-#include <KDateTime>
-
-#include <QMap>
-#include <QModelIndex>
-
-class QStandardItem;
-class QTreeWidget;
-
-namespace KDGantt {
-class GraphicsView;
-}
-
-namespace CalendarSupport {
-  class Calendar;
-}
+#include <QDateTime>
 
 namespace EventViews {
-
-class TimelineItem;
-class RowController;
 
 /**
   This class provides a view ....
@@ -69,33 +51,12 @@ class EVENTVIEWS_EXPORT TimelineView : public EventView
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     virtual void updateView();
     virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
-    virtual int maxDatesHint() const { return 0; }
-
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
-    // TODO: put printType in korg
-  private:
-    TimelineItem *calendarItemForIncidence( const Akonadi::Item &incidence );
-    void insertIncidence( const Akonadi::Item &incidence );
-    void insertIncidence( const Akonadi::Item &incidence, const QDate &day );
-    void removeIncidence( const Akonadi::Item &incidence );
-
-  private slots:
-    // void overscale( KDGantt::View::Scale scale );
-    void itemSelected( const QModelIndex &index );
-    void itemDoubleClicked( const QModelIndex& index );
-    void itemChanged( QStandardItem* item );
-    void contextMenuRequested( const QPoint& point);
-    void newEventWithHint( const QDateTime & );
-    void splitterMoved();
 
   private:
-    Akonadi::Item::List mSelectedItemList;
-    KDGantt::GraphicsView *mGantt;
-    QTreeWidget *mLeftView;
-    RowController *mRowController;
-    QMap<Akonadi::Collection::Id, TimelineItem*> mCalendarItemMap;
-    QDate mStartDate, mEndDate;
-    QDateTime mHintDate;
+    class Private;
+    Private *const d;
+
 };
 
 } // namespace EventViews
