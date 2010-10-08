@@ -108,7 +108,9 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_collection_sync" }
     ScriptActionItem { name : "show_today"; title : KDE.i18n( "Today" ) }
     ScriptActionItem { name : "day_layout"; title : KDE.i18n( "Day View" ) }
+    ScriptActionItem { name : "three_day_layout"; title : KDE.i18n( "Next Three Days View" ) }
     ScriptActionItem { name : "week_layout"; title : KDE.i18n( "Week View" ) }
+    ScriptActionItem { name : "work_week_layout"; title : KDE.i18n( "Work Week View" ) }
     ScriptActionItem { name : "month_layout"; title : KDE.i18n( "Month View" ) }
   }
 
@@ -127,7 +129,9 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_collection_sync" }
     ScriptActionItem { name : "show_today"; title : KDE.i18n( "Today" ) }
     ScriptActionItem { name : "day_layout"; title : KDE.i18n( "Day View" ) }
+    ScriptActionItem { name : "three_day_layout"; title : KDE.i18n( "Next Three Days View" ) }
     ScriptActionItem { name : "week_layout"; title : KDE.i18n( "Week View" ) }
+    ScriptActionItem { name : "work_week_layout"; title : KDE.i18n( "Work Week View" ) }
     ScriptActionItem { name : "month_layout"; title : KDE.i18n( "Month View" ) }
   }
 

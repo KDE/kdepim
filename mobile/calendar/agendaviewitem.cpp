@@ -95,15 +95,19 @@ void AgendaViewItem::setCalendar(QObject* calendarObj)
 
 void AgendaViewItem::showRange( const QDate &date, int range )
 {
-  Q_ASSERT( range >= 0 && range <= LastRange );
+  qDebug() << date << range;
+  //Q_ASSERT( range >= 0 && range <= LastRange );
 
   m_currentRange = Range( range );
   switch( m_currentRange ) {
-  case Day:
+  case Day: {
     m_view->showDates( date, date );
     break;
+  }
   case Week: {
     int weekStartDay = KGlobal::locale()->weekStartDay();
+    if ( weekStartDay > date.dayOfWeek() )
+      weekStartDay = weekStartDay - 7;
     m_view->showDates( date.addDays( weekStartDay - date.dayOfWeek() ), date.addDays( weekStartDay + 6 - date.dayOfWeek() ) );
     break;
   }
@@ -113,9 +117,19 @@ void AgendaViewItem::showRange( const QDate &date, int range )
     m_view->showDates( date.addDays( workingWeekStartDay - date.dayOfWeek() ), date.addDays( workingWeekEndDay - date.dayOfWeek() ) );
     break;
   }
+  case Next3Days: {
+    m_view->showDates( date, date.addDays( 3 ) );
+    break;
+  }
   default:;
   }
 }
+
+void AgendaViewItem::showToday()
+{
+  showRange( QDate::currentDate() , m_currentRange );
+}
+
 
 qint64 AgendaViewItem::selectedItemId() const
 {

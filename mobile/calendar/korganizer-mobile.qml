@@ -385,22 +385,6 @@ KPIM.MainView {
           }
         }
         KPIM.Button2 {
-          id: workWeekButton
-          buttonText: KDE.i18n( "Work Week view" )
-          width: parent.width / 3
-          onClicked: {
-            agenda.showRange( dateEdit.date, 2 /* "WorkWeek" */ );
-            mainWorkView.visible = false
-            agendaView.visible = true
-            selectButton.visible = false
-            monthView.visible = false
-          }
-        }
-      }
-       Row {
-        spacing: 2
-        width: parent.width - 5
-       KPIM.Button2 {
           id: monthButton
           buttonText: KDE.i18n( "Month view" )
           width: parent.width / 3
@@ -473,6 +457,13 @@ KPIM.MainView {
               }
             },
             KPIM.ScriptAction {
+              name : "three_day_layout"
+              script : {
+                agenda.showRange( dateEdit.date, 3 /** 3 days*/ );
+                actionPanelNew.collapse();
+              }
+            },
+            KPIM.ScriptAction {
               name : "week_layout"
               script: {
                 agenda.showRange( dateEdit.date, 1 /* "Week" */ );
@@ -480,17 +471,27 @@ KPIM.MainView {
               }
             },
             KPIM.ScriptAction {
+              name : "work_week_layout"
+              script: {
+                agenda.showRange( dateEdit.date, 2 /* "WorkWeek" */ );
+                actionPanelNew.collapse();
+              }
+            },
+            KPIM.ScriptAction {
               name : "month_layout"
               script: {
-                agenda.showRange( dateEdit.date, 2 /* "Month" */ );
+                mainWorkView.visible = false
+                agendaView.visible = false
+                selectButton.visible = false
+                monthView.visible = true
+                month.showMonth( dateEdit.date );
                 actionPanelNew.collapse();
               }
             },
             KPIM.ScriptAction {
               name : "show_today"
               script : {
-                dateEdit.date = new Date;
-                agenda.showRange( dateEdit.date, agenda.range );
+                agenda.showToday();
                 actionPanelNew.collapse();
               }
             },

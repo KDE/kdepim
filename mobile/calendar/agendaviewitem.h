@@ -47,6 +47,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
       Day = 0,
       Week,
       WorkWeek,
+      Next3Days,
       LastRange
     };
 
@@ -66,6 +67,8 @@ class AgendaViewItem : public DeclarativeAkonadiItem
 
     /** Show the appropriate range for given date. */
     Q_INVOKABLE void showRange( const QDate &date, /* Range */ int range ); // TODO: Figure out how to export enums to QML
+
+    Q_INVOKABLE void showToday();
 
     int range() const { return m_currentRange; }
 
