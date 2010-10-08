@@ -322,6 +322,9 @@ void SysTrayIcon::openOrRaiseMainWindow() {
 }
 
 void SysTrayIcon::doActivated() {
+    if ( const QWidget * const aw = attentionWindow() )
+        if ( aw->isVisible() )
+            return; // ignore clicks while an attention window is open.
     if ( d->anyCardHasNullPin )
         d->slotSetInitialPin();
     else if ( d->anyCardCanLearnKeys )
