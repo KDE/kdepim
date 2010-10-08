@@ -53,6 +53,10 @@ class EVENTVIEWS_EXPORT TimelineView : public EventView
     virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
 
+  Q_SIGNALS:
+    void showNewEventPopupSignal();
+    void showIncidencePopupSignal( Akonadi::Item, const QDate & );
+
   private:
     class Private;
     Private *const d;

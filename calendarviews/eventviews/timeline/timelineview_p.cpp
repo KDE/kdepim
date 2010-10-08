@@ -81,19 +81,14 @@ void TimelineView::Private::contextMenuRequested(const QPoint& point)
   // mHintDate = QDateTime( mGantt->getDateTimeForCoordX( QCursor::pos().x(), true ) );
   TimelineSubItem *tlitem = dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>( mGantt->model() )->item( index.row(), index.column() ) );
   if ( !tlitem ) {
-    //showNewEventPopup(); TODO: korg
+    emit q->showNewEventPopupSignal();
     mSelectedItemList = Akonadi::Item::List();
-    return;
+  } else {
+    emit q->showIncidencePopupSignal( tlitem->incidence(),
+                                      CalendarSupport::incidence( tlitem->incidence() )->dtStart().date() );
+
+    mSelectedItemList << tlitem->incidence();
   }
-  // TODO: korg
-  /*
-  if ( !mEventPopup ) {
-    mEventPopup = eventPopup();
-  }
-  mEventPopup->showIncidencePopup( tlitem->incidence(),
-                                   CalendarSupport::incidence( tlitem->incidence() )->dtStart().date() );
-  */
-  mSelectedItemList << tlitem->incidence();
 }
 
 //slot
