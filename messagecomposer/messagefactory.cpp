@@ -243,7 +243,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
 
   refStr = getRefStr( m_origMsg );
   if (!refStr.isEmpty())
-    msg->references()->fromUnicodeString (QString::fromLocal8Bit(refStr), QString::fromLatin1("utf-8").toLatin1() );
+    msg->references()->fromUnicodeString( QString::fromLocal8Bit( refStr ), "utf-8" );
   //In-Reply-To = original msg-id
   msg->inReplyTo()->fromUnicodeString( m_origMsg->messageID()->asUnicodeString(), "utf-8" );
 
@@ -901,7 +901,7 @@ QByteArray MessageFactory::getRefStr( const KMime::Message::Ptr &msg )
   refStr = msg->headerByType("References") ? msg->headerByType("References")->as7BitString().trimmed() : "";
 
   if (refStr.isEmpty())
-    return msg->messageID()->as7BitString();
+    return msg->messageID()->as7BitString( false );
 
   i = refStr.indexOf('<');
   j = refStr.indexOf('>');
@@ -916,6 +916,6 @@ QByteArray MessageFactory::getRefStr( const KMime::Message::Ptr &msg )
   if (!lastRef.isEmpty() && lastRef != firstRef)
     retRefStr += lastRef + ' ';
 
-  retRefStr += msg->messageID()->as7BitString();
+  retRefStr += msg->messageID()->as7BitString( false );
   return retRefStr;
 }
