@@ -65,7 +65,13 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   RotateTo270Degrees();
 #endif
 #ifndef Q_OS_WIN
-  if ( !KCmdLineArgs::parsedArgs()->isSet( "disable-opengl" ) ) {
+  bool openGlEnabled = false; // off by default, seems to have random bad side-effects on the N900
+  if ( !KCmdLineArgs::parsedArgs()->isSet( "enable-opengl" ) )
+    openGlEnabled = true;
+  if ( !KCmdLineArgs::parsedArgs()->isSet( "disable-opengl" ) )
+     openGlEnabled = false;
+
+  if ( openGlEnabled ) {
     // make MainView use OpenGL ES2 backend for better performance
     // right now, the best performance can be achieved with a GLWidget
     // and the use of the raster graphicssystem.
