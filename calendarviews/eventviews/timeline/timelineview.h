@@ -62,8 +62,8 @@ class TimelineView : public EventView
     explicit TimelineView( QWidget *parent = 0 );
     ~TimelineView();
 
-    virtual Akonadi::Item::List selectedIncidences();
-    virtual KCalCore::DateList selectedIncidenceDates();
+    virtual Akonadi::Item::List selectedIncidences() const;
+    virtual KCalCore::DateList selectedIncidenceDates() const;
     virtual int currentDateCount() const;
     virtual void showDates( const QDate &, const QDate & );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
@@ -71,7 +71,7 @@ class TimelineView : public EventView
     virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
     virtual int maxDatesHint() const { return 0; }
 
-    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );
+    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
     // TODO: put printType in korg
   private:
     TimelineItem *calendarItemForIncidence( const Akonadi::Item &incidence );
@@ -94,7 +94,6 @@ class TimelineView : public EventView
     QTreeWidget *mLeftView;
     RowController *mRowController;
     QMap<Akonadi::Collection::Id, TimelineItem*> mCalendarItemMap;
-    //TODO: MOVE TO korg: KOEventPopupMenu *mEventPopup;
     QDate mStartDate, mEndDate;
     QDateTime mHintDate;
 };

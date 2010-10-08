@@ -20,10 +20,10 @@
 */
 
 #include "timelineitem.h"
-#include <kcalprefs.h>
 
-#include "kdgantt2/kdganttglobal.h"
+#include <kdgantt2/kdganttglobal.h>
 
+#include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
 

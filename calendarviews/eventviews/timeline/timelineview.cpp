@@ -25,15 +25,14 @@
 */
 
 #include "timelineview.h"
-//#include "koglobals.h"
 #include "timelineitem.h"
-//#include "kohelper.h"
+#include "helper.h"
 
-#include "kdgantt2/kdganttgraphicsview.h"
-#include "kdgantt2/kdganttabstractrowcontroller.h"
-#include "kdgantt2/kdganttdatetimegrid.h"
-#include "kdgantt2/kdganttitemdelegate.h"
-#include "kdgantt2/kdganttstyleoptionganttitem.h"
+#include <kdgantt2/kdganttgraphicsview.h>
+#include <kdgantt2/kdganttabstractrowcontroller.h>
+#include <kdgantt2/kdganttdatetimegrid.h>
+#include <kdgantt2/kdganttitemdelegate.h>
+#include <kdgantt2/kdganttstyleoptionganttitem.h>
 
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/collectionselection.h>
@@ -255,13 +254,13 @@ void TimelineView::splitterMoved()
 
 
 /*virtual*/
-Akonadi::Item::List TimelineView::selectedIncidences()
+Akonadi::Item::List TimelineView::selectedIncidences() const
 {
   return mSelectedItemList;
 }
 
 /*virtual*/
-KCalCore::DateList TimelineView::selectedIncidenceDates()
+KCalCore::DateList TimelineView::selectedIncidenceDates() const
 {
   return KCalCore::DateList();
 }
@@ -315,11 +314,12 @@ void TimelineView::showDates( const QDate &start, const QDate &end )
       if ( collection.contentMimeTypes().contains( Event::eventMimeType() ) ) {
         item = new TimelineItem( calendar(), index++, static_cast<QStandardItemModel*>( mGantt->model() ), mGantt );
         mLeftView->addTopLevelItem(new QTreeWidgetItem( QStringList() << CalendarSupport::displayName( collection ) ) );
-        const QColor resourceColor;// = KOHelper::resourceColor( collection ); TODO: remove KOHelper
+        const QColor resourceColor = EventViews::resourceColor( collection, preferences() );
         if ( resourceColor.isValid() ) {
           item->setColor( resourceColor );
         }
-        kDebug() << "Created item " << item << " ( " <<  CalendarSupport::displayName( collection ) << " ) with index" <<  index - 1 << " from collection " << collection.id();
+        kDebug() << "Created item " << item << " ( " <<  CalendarSupport::displayName( collection ) << " ) with index"
+                 <<  index - 1 << " from collection " << collection.id();
         mCalendarItemMap.insert( collection.id(), item );
       }
     }
@@ -411,7 +411,7 @@ void TimelineView::contextMenuRequested(const QPoint& point)
 }
 
 bool TimelineView::eventDurationHint( QDateTime &startDt, QDateTime &endDt,
-                                        bool &allDay )
+                                        bool &allDay ) const
 {
   startDt = QDateTime( mHintDate );
   endDt = QDateTime( mHintDate.addSecs( 2 * 60 * 60 ) );
