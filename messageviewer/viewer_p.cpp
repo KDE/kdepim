@@ -1128,10 +1128,10 @@ void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
 void ViewerPrivate::setMessageItem( const Akonadi::Item &item, Viewer::UpdateMode updateMode )
 {
   resetStateForNewMessage();
-  foreach( const Akonadi::Entity::Id monitoredId, mMonitor.itemsMonitored() ) {
+  foreach( const Akonadi::Entity::Id monitoredId, mMonitor.itemsMonitoredEx() ) {
     mMonitor.setItemMonitored( Akonadi::Item( monitoredId ), false );
   }
-  Q_ASSERT( mMonitor.itemsMonitored().isEmpty() );
+  Q_ASSERT( mMonitor.itemsMonitoredEx().isEmpty() );
 
   mMessageItem = item;
   if ( mMessageItem.isValid() )
