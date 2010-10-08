@@ -6,7 +6,6 @@ Problems addressed
 
 * kolab/issue4259: Wish: all-day event (marked as busy) should set background color for the whole day (rt#5878)
 * kolab/issue4325: event updates mails should be displayed like in OL2007 (rt#6099)
-* kolab/issue4472: gpgsm / Kleopatra doesn't import crl file (rt#6112)
 * kolab/issue4483: An attendee, who accepted an invitation, is listed with needs reply in the accept answer mail (rt#6187)
 * kolab/issue4498: Single event from a shared calendar folder is not available in DIMAP Cache (rt#6198)
 * kolab/issue4559: KMail settings exchange compatible invitations and OL compatible comments should be default(rt#6196)
