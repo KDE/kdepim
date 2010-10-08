@@ -30,8 +30,10 @@ Item {
     property int value: -1
     signal selected()
 
+    property int offset: 0
+
     onValueChanged: {
-        list.currentIndex = fadeselector.value;
+        currentIndex = value - offset;
     }
 
     Image {
@@ -74,7 +76,7 @@ Item {
     {
         state = (state == "selected") ? "unselected" : "selected";
         if (state == "unselected")
-            fadeselector.value = newValue;
+            fadeselector.value = newValue
         else
             fadeselector.selected();
     }
@@ -86,7 +88,7 @@ Item {
             width: fadeselector.width
             height: fadeselector.height
             Text {
-                text: (value == "") ? index : value
+                text: value
                 anchors.fill: parent
                 color: "#004bb8"
                 font.bold: true
@@ -98,8 +100,7 @@ Item {
                 hoverEnabled: true
                 anchors.fill: parent
                 onClicked: {
-                    var newValue = (value == "") ? index : value;
-                    toggleState(newValue)
+                    toggleState(value)
                 }
             }
         }

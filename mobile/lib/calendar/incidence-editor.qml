@@ -36,6 +36,11 @@ KPIM.MainView {
         myCalendar.day = day;
         myCalendar.month = month;
         myCalendar.year = year;
+
+        // set the initial values
+        monthSelector.value = myCalendar.month
+        daySelector.value = myCalendar.day
+        yearSelector.value = myCalendar.year - 2000
     }
   }
 
@@ -45,6 +50,7 @@ KPIM.MainView {
         clockWidget.expand()
         clockWidgetOk.enabled = false
 
+        // set the initial values
         myClock.hours = hour;
         myClock.minutes = minute;
     }
@@ -77,6 +83,11 @@ KPIM.MainView {
               top: parent.top
               bottom: parent.bottom
             }
+
+            // Calendar change -> update selector
+            onDayChanged: {
+                daySelector.value = day
+            }
           }
 
           Column {
@@ -93,9 +104,11 @@ KPIM.MainView {
               id: daySelector
               height: 100
               model: mainview.setupModel(1, myCalendar.daysInMonth, calendarWidget)
-              // value - 1 because the index starts at '0'
-              currentIndex: myCalendar.day - 1
+              offset: 1
+
+              currentIndex: myCalendar.day
               onValueChanged: {
+                // selector change -> update calendar
                 myCalendar.day = value;
                 calendarWidgetOk.enabled = true;
               }
@@ -109,9 +122,11 @@ KPIM.MainView {
               id: monthSelector
               height: 100
               model: mainview.setupModel(1, 12, calendarWidget)
-              // value - 1 because the index starts at '0'
-              currentIndex: myCalendar.month - 1
+              offset: 1
+
+              currentIndex: myCalendar.month
               onValueChanged: {
+                // selector change -> update calendar
                 myCalendar.month = value;
                 calendarWidgetOk.enabled = true;
               }
@@ -127,6 +142,8 @@ KPIM.MainView {
               // high enough == 2050 :)
               model: mainview.setupModel(2000, 2050, calendarWidget)
               // value - 2000 because the index starts at '0'
+              offset: 2000
+
               currentIndex: myCalendar.year - 2000
               onValueChanged: {
                 myCalendar.year = value;
@@ -201,7 +218,7 @@ KPIM.MainView {
               id: hourSelector
               height: 100
               model: mainview.setupModel(0, 23, clockWidget)
-              // value - 1 because the index starts at '0'
+
               currentIndex: myClock.hours
               onValueChanged: {
                 myClock.hours = value;
@@ -216,7 +233,7 @@ KPIM.MainView {
               id: minuteSelector
               height: 100
               model: mainview.setupModel(0, 59, clockWidget)
-              // value - 1 because the index starts at '0'
+
               currentIndex: myClock.minutes
               onValueChanged: {
                 myClock.minutes = value;
