@@ -103,7 +103,7 @@ QStringList ExportSecretKeyCommand::arguments() const {
     QStringList result;
 
     if ( key.protocol() == OpenPGP )
-        result << gpgPath();
+        result << gpgPath() << "--batch";
     else
         result << gpgSmPath();
 
