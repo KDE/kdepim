@@ -28,6 +28,7 @@ import org.kde.calendarviews 4.5 as CalendarViews
 
 KPIM.MainView {
   id: korganizerMobile
+  property int lastView : 0 ; //0 - agenda, 1 - month, 2 - list
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
@@ -49,7 +50,12 @@ KPIM.MainView {
   function backToAgendaView()
   {
     eventView.visible = false;
-    agendaView.visible = true;
+    if ( lastView == 0 )
+        agendaView.visible = true;
+      else if ( lastView == 1 )
+        monthView.visible = true;
+      else
+        eventListView.visible = true;
   }
 
   function updateContextActionsStates()
@@ -102,8 +108,7 @@ KPIM.MainView {
       icon: KDE.locate( "data", "mobileui/edit-button.png" );
       onClicked: {
         application.editIncidence( parent.item, parent.activeDate );
-        eventView.visible = false;
-        agendaView.visible = true;
+        backToAgendaView();
       }
     }
     KPIM.Button {
@@ -114,6 +119,7 @@ KPIM.MainView {
       width: 70
       height: 70
       icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
+      
       onClicked: {
         backToAgendaView();
       }
@@ -167,6 +173,7 @@ KPIM.MainView {
           eventView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
           korganizerActions.showOnlyCategory("event_viewer")
+          korganizerMobile.lastView = 1;
           eventView.visible = true;
           monthView.visible = false;
           clearSelection();
@@ -217,6 +224,7 @@ KPIM.MainView {
           eventView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
           korganizerActions.showOnlyCategory("event_viewer")
+          korganizerMobile.lastView = 0;
           eventView.visible = true;
           agendaView.visible = false;
           clearSelection();
@@ -224,6 +232,64 @@ KPIM.MainView {
       }
     }
 
+    onVisibleChanged : {
+      if ( visible ) {
+        if ( collectionView.numSelected > 1 )
+          korganizerActions.showOnlyCategory("multiple_calendar")
+        else
+          korganizerActions.showOnlyCategory("single_calendar")
+      }
+    }
+  }
+
+  Rectangle {
+    id: eventListView
+    visible: false
+    anchors.fill: parent
+    color: "#D2D1D0" // TODO: make palette work correctly. palette.window
+
+    Rectangle {
+      id : backToMessageListButton2
+      height: 48
+      width: 48
+      z: 5
+      color: "#00000000"
+      anchors.right : parent.right
+      anchors.rightMargin : 70
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : 70
+      Image {
+        source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
+        MouseArea {
+          anchors.fill : parent;
+          onClicked : {
+            eventListView.visible = false;
+            mainWorkView.visible = true;
+            selectButton.visible = true
+            korganizerActions.showOnlyCategory("home")
+          }
+        }
+      }
+    }
+
+    EventListView {
+      showCheckBox : false
+      id: eventList
+      model: itemModel
+      checkModel : _itemActionModel
+      anchors { fill: parent; topMargin: 30; leftMargin: 40 }
+
+      onItemSelected: {
+         if ( currentItemId > 0 ) {
+          eventView.itemId = currentItemId;
+          application.setCurrentEventItemId(currentItemId);
+          korganizerActions.showOnlyCategory("event_viewer")
+          korganizerMobile.lastView = 2;
+          eventView.visible = true;
+          eventListView.visible = false;
+        }       
+      }
+    }
     onVisibleChanged : {
       if ( visible ) {
         if ( collectionView.numSelected > 1 )
@@ -488,7 +554,17 @@ KPIM.MainView {
                 actionPanelNew.collapse();
               }
             },
-            KPIM.ScriptAction {
+             KPIM.ScriptAction {
+              name : "eventlist_layout"
+              script: {
+                mainWorkView.visible = false
+                agendaView.visible = false
+                selectButton.visible = false
+                eventListView.visible = true
+                actionPanelNew.collapse();
+              }
+            },
+           KPIM.ScriptAction {
               name : "show_today"
               script : {
                 agenda.showToday();
