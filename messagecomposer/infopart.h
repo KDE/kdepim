@@ -61,10 +61,16 @@ class MESSAGECOMPOSER_EXPORT InfoPart : public MessagePart
 
     bool urgent() const;
     void setUrgent( bool );
-    
+
+    QString inReplyTo() const;
+    void setInReplyTo( const QString& inReplyTo );
+
+    QString references() const;
+    void setReferences( const QString& references );
+
     void setExtraHeaders( KMime::Headers::Base::List headers );
     KMime::Headers::Base::List extraHeaders() const;
-    
+
     int transportId() const;
     void setTransportId( int tid );
 

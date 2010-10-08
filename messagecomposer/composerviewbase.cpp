@@ -557,6 +557,12 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
   infoPart->setUserAgent( QLatin1String( "KMail" ) );
   infoPart->setUrgent( m_urgent );
 
+  if ( m_msg->inReplyTo() )
+    infoPart->setInReplyTo( m_msg->inReplyTo()->asUnicodeString() );
+
+  if ( m_msg->references() )
+    infoPart->setReferences( m_msg->references()->asUnicodeString() );
+
   KMime::Headers::Base::List extras;
   if( m_msg->headerByType( "X-KMail-SignatureActionEnabled" ) )
     extras << m_msg->headerByType( "X-KMail-SignatureActionEnabled" );
@@ -570,6 +576,18 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
     extras << m_msg->headerByType( "X-KMail-UnExpanded-CC" );
   if( m_msg->headerByType( "X-KMail-UnExpanded-BCC" ) )
     extras << m_msg->headerByType( "X-KMail-UnExpanded-BCC" );
+  if( m_msg->headerByType( "Organization" ) )
+    extras << m_msg->headerByType( "Organization" );
+  if( m_msg->headerByType( "X-KMail-Identity" ) )
+    extras << m_msg->headerByType( "X-KMail-Identity" );
+  if( m_msg->headerByType( "X-KMail-Transport" ) )
+    extras << m_msg->headerByType( "X-KMail-Transport" );
+  if( m_msg->headerByType( "X-KMail-Fcc" ) )
+    extras << m_msg->headerByType( "X-KMail-Fcc" );
+  if( m_msg->headerByType( "X-KMail-Drafts" ) )
+    extras << m_msg->headerByType( "X-KMail-Drafts" );
+  if( m_msg->headerByType( "X-KMail-Templates" ) )
+    extras << m_msg->headerByType( "X-KMail-Templates" );
 
   infoPart->setExtraHeaders( extras );
 }

@@ -32,6 +32,8 @@ class InfoPart::Private
     QString fcc;
     QString replyTo;
     QString userAgent;
+    QString inReplyTo;
+    QString references;
     int transportId;
     bool urgent;
     KMime::Headers::Base::List extraHeaders;
@@ -141,6 +143,25 @@ void InfoPart::setUrgent( bool urgent )
   d->urgent = urgent;
 }
 
+QString InfoPart::inReplyTo() const
+{
+  return d->inReplyTo;
+}
+
+void InfoPart::setInReplyTo( const QString& inReplyTo )
+{
+  d->inReplyTo = inReplyTo;
+}
+
+QString InfoPart::references() const
+{
+  return d->references;
+}
+
+void InfoPart::setReferences( const QString& references )
+{
+  d->references = references;
+}
 
 void InfoPart::setExtraHeaders( KMime::Headers::Base::List headers )
 {
