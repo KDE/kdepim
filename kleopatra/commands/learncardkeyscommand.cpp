@@ -53,6 +53,7 @@ LearnCardKeysCommand::LearnCardKeysCommand( GpgME::Protocol proto )
     : GnuPGProcessCommand( 0 ), m_protocol( proto )
 {
     setIgnoresSuccessOrFailure( true );
+    setShowsOutputWindow( true );
 }
 
 LearnCardKeysCommand::~LearnCardKeysCommand() {}
