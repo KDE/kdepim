@@ -64,7 +64,7 @@ MainView::MainView( QWidget *parent )
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
-  setWindowTitle( i18n( "KOrganizer Task Manager" ) );
+  setWindowTitle( i18n( "KDE Tasks" ) );
 
   addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();
@@ -105,6 +105,7 @@ void MainView::modifyFinished( KJob *job )
 void MainView::newTask()
 {
   IncidenceView *editor = new IncidenceView;
+  editor->setWindowTitle( i18n( "KDE Tasks" ) );
   Item item;
   item.setMimeType( KCalCore::Todo::todoMimeType() );
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
@@ -133,6 +134,7 @@ void MainView::newSubTask()
 
   item.setPayload<KCalCore::Todo::Ptr>( todo );
   IncidenceView *editor = new IncidenceView;
+  editor->setWindowTitle( i18n( "KDE Tasks" ) );
   editor->load( item );
   editor->show();
 }
@@ -166,6 +168,7 @@ void MainView::editIncidence( const Akonadi::Item &item )
     return; // An editor for this item is already open.
 
   IncidenceView *editor = new IncidenceView;
+  editor->setWindowTitle( i18n( "KDE Tasks" ) );
   editor->load( item, QDate() );
 
   mOpenItemEditors.insert(  editor, item.id() );

@@ -171,6 +171,8 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   Q_ASSERT( m_composerBase->identityCombo()  );
   Q_ASSERT( m_composerBase->recipientsEditor()  );
   Q_ASSERT( m_composerBase->transportComboBox()  );
+  Q_ASSERT( m_composerBase->attachmentModel() );
+  Q_ASSERT( m_composerBase->attachmentController() );
 
 //   kDebug() << m_identityCombo;
 //   kDebug() << m_editor;

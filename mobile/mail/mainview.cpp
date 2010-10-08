@@ -139,7 +139,7 @@ void MainView::delayedInit()
 
   addMimeType( KMime::Message::mimeType() );
   itemFetchScope().fetchPayloadPart( MessagePart::Envelope );
-  setWindowTitle( i18n( "KMail Mobile" ) );
+  setWindowTitle( i18n( "KDE Mail" ) );
   mMessageSender = new AkonadiSender;
 
   MailActionManager *mMailActionManager = new MailActionManager(actionCollection(), this);

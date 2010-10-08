@@ -34,6 +34,7 @@
 #include <Akonadi/ItemFetchScope>
 
 #include <KABC/Addressee>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 
@@ -204,6 +205,7 @@ ContactEditorView::ContactEditorView( QWidget *parent )
     d( new Private( this ) )
 {
   setAttribute(Qt::WA_DeleteOnClose);
+  setWindowTitle( i18n( "KDE Contacts" ) );
 }
 
 void ContactEditorView::delayedInit()

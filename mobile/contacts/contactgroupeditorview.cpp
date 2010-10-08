@@ -28,6 +28,7 @@
 #include <Akonadi/Item>
 
 #include <KABC/ContactGroup>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 
@@ -160,6 +161,7 @@ ContactGroupEditorView::ContactGroupEditorView( QWidget *parent )
     d( new Private( this ) )
 {
   setAttribute(Qt::WA_DeleteOnClose);
+  setWindowTitle( i18n( "KDE Contacts" ) );
 }
 
 void ContactGroupEditorView::delayedInit()

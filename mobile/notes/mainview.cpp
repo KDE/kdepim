@@ -59,7 +59,7 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteL
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
-  setWindowTitle( i18n( "KJots" ) );
+  setWindowTitle( i18n( "KDE Notes" ) );
 
 #ifdef KDEQMLPLUGIN_STATIC
   rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );

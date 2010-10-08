@@ -91,7 +91,7 @@ MainView::~MainView()
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
-  setWindowTitle( i18n( "KOrganizer" ) );
+  setWindowTitle( i18n( "KDE Calendar" ) );
 
   addMimeType( KCalCore::Event::eventMimeType() );
   addMimeType( KCalCore::Todo::todoMimeType() );
@@ -213,6 +213,7 @@ void MainView::setCurrentEventItemId(qint64 id)
 void MainView::newEvent()
 {
   IncidenceView *editor = new IncidenceView;
+  editor->setWindowTitle( i18n( "KDE Calendar" ) );
   Item item;
   item.setMimeType( KCalCore::Event::eventMimeType() );
   KCalCore::Event::Ptr event( new KCalCore::Event );
@@ -239,6 +240,7 @@ void MainView::newEvent()
 void MainView::newTodo()
 {
   IncidenceView *editor = new IncidenceView;
+  editor->setWindowTitle( i18n( "KDE Calendar" ) );
   Item item;
   item.setMimeType( KCalCore::Todo::todoMimeType() );
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
@@ -258,6 +260,7 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
     return; // An editor for this item is already open.
 
   IncidenceView *editor = new IncidenceView;
+  editor->setWindowTitle( i18n( "KDE Calendar" ) );
   editor->load( item, date );
 
   m_openItemEditors.insert(  editor, item.id() );

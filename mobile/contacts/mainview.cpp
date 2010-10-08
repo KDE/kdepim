@@ -59,7 +59,7 @@ void MainView::delayedInit()
   engine()->addImageProvider( QLatin1String( "contact_images" ), provider );
 
   KDeclarativeMainView::delayedInit();
-  setWindowTitle( i18n( "KAddressBook" ) );
+  setWindowTitle( i18n( "KDE Contacts" ) );
 
   addMimeType( KABC::Addressee::mimeType() );
   addMimeType( KABC::ContactGroup::mimeType() );
