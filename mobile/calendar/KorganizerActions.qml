@@ -86,6 +86,13 @@ ActionMenuContainer {
   }
 
   ActionList {
+    category : "account"
+    name : "single_folder_view_menu"
+    text : KDE.i18n( "View" )
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+  }
+
+  ActionList {
     category : "multiple_folder"
     name : "multi_folder_folder_menu"
     text : KDE.i18n( "Folders" )
