@@ -72,6 +72,7 @@
 #include <krun.h>
 #include <kbookmarkmanager.h>
 #include <kstandarddirs.h>
+#include <ktempdir.h>
 #include <ktempfile.h>
 #include <kimproxy.h>
 #include <kuserprofile.h>
@@ -3114,12 +3115,15 @@ QString KMHandleAttachmentCommand::createAtmFileLink() const
     KPIM::kBytesToFile( data.data(), size, mAtmName, false, false, false );
   }
 
-  KTempFile *linkFile = new KTempFile( locateLocal("tmp", atmFileInfo.fileName() +"_["),
-                          "]."+ atmFileInfo.extension() );
+  // tempfile name ist /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
+  KTempDir *linkDir = new KTempDir( locateLocal( "tmp", "attachments" ) );
+  QString linkPath = linkDir->name() + atmFileInfo.fileName();
+  QFile *linkFile = new QFile( linkPath );
 
-  linkFile->setAutoDelete(true);
+  linkDir->setAutoDelete( true );
   QString linkName = linkFile->name();
   delete linkFile;
+  delete linkDir;
 
   if ( ::link(QFile::encodeName( mAtmName ), QFile::encodeName( linkName )) == 0 ) {
     return linkName; // success
