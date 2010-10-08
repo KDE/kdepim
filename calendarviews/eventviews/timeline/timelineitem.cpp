@@ -22,18 +22,20 @@
 #include "timelineitem.h"
 #include <kcalprefs.h>
 
-#include <kcalcore/incidence.h>
-#include <kcalutils/incidenceformatter.h>
-
 #include "kdgantt2/kdganttglobal.h"
 
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
 
-using namespace KOrg;
-using namespace KCalUtils;
+#include <KCalCore/Incidence>
+#include <KCalUtils/IncidenceFormatter>
 
-TimelineItem::TimelineItem( CalendarSupport::Calendar *calendar, uint index, QStandardItemModel* model, QObject *parent )
+using namespace KCalCore;
+using namespace KCalUtils;
+using namespace EventViews;
+
+TimelineItem::TimelineItem( CalendarSupport::Calendar *calendar, uint index,
+                            QStandardItemModel* model, QObject *parent )
   : QObject( parent ), mCalendar( calendar ), mModel( model ), mIndex( index )
 {
  mModel->removeRow( mIndex );

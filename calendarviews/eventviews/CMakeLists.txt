@@ -51,6 +51,9 @@ set( eventviews_LIB_SRCS
      month/monthview.cpp
 
      multiagenda/multiagendaview.cpp
+
+     timeline/kotimelineview.cpp
+     timeline/timelineitem.cpp
 )
 
 kde4_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc )
@@ -76,6 +79,7 @@ target_link_libraries(eventviews
                       ${KDEPIMLIBS_AKONADI_LIBS}
                       ${KDEPIMLIBS_KHOLIDAYS_LIBS}
                       kdepim
+                      kdgantt2
                       calendarsupport
                       akonadi_next
                       ${KDEPIMLIBS_KCALCORE_LIBS}

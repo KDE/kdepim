@@ -18,10 +18,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KORG_TIMELINEITEM_H
-#define KORG_TIMELINEITEM_H
+#ifndef CALENDARVIEWS_TIMELINEITEM_H
+#define CALENDARVIEWS_TIMELINEITEM_H
 
-#include <kcalcore/incidence.h>
+#include <KCalCore/Incidence>
 
 #include <Akonadi/Item>
 
@@ -34,20 +34,20 @@
 class KDGanttView;
 class KDCanvasPolygon;
 
-using namespace KCalCore;
-
 namespace CalendarSupport {
   class Calendar;
 }
 
-namespace KOrg {
+namespace EventViews {
+
 class TimelineSubItem;
 
 class TimelineItem : public QObject
 {
   Q_OBJECT
   public:
-    TimelineItem( CalendarSupport::Calendar *calendar, uint index, QStandardItemModel* model, QObject *parent );
+    TimelineItem( CalendarSupport::Calendar *calendar, uint index, QStandardItemModel* model,
+                  QObject *parent );
 
     void insertIncidence( const Akonadi::Item &incidence,
                           const KDateTime &start = KDateTime(),
@@ -69,7 +69,7 @@ class TimelineItem : public QObject
 class TimelineSubItem : public QStandardItem
 {
   public:
-    TimelineSubItem( const Akonadi::Item &incidence, TimelineItem* parent);
+    TimelineSubItem( const Akonadi::Item &incidence, TimelineItem* parent );
     ~TimelineSubItem();
 
     Akonadi::Item  incidence() const { return mIncidence; }

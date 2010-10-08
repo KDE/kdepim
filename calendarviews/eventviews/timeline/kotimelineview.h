@@ -23,15 +23,18 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOTIMELINEVIEW_H
-#define KOTIMELINEVIEW_H
+#ifndef EVENTVIEWS_TIMELINEVIEW_H
+#define EVENTVIEWS_TIMELINEVIEW_H
 
-#include <koeventview.h>
+#include "eventview.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 
+#include <KDateTime>
+
 #include <QMap>
+#include <QModelIndex>
 
 class QStandardItem;
 class QTreeWidget;
@@ -44,20 +47,20 @@ namespace CalendarSupport {
   class Calendar;
 }
 
-namespace KOrg {
-  class TimelineItem;
-  class RowController;
-}
+namespace EventViews {
+
+class TimelineItem;
+class RowController;
 
 /**
   This class provides a view ....
 */
-class KOTimelineView : public KOEventView
+class TimelineView : public EventView
 {
     Q_OBJECT
   public:
-    explicit KOTimelineView( QWidget *parent = 0 );
-    ~KOTimelineView();
+    explicit TimelineView( QWidget *parent = 0 );
+    ~TimelineView();
 
     virtual Akonadi::Item::List selectedIncidences();
     virtual KCalCore::DateList selectedIncidenceDates();
@@ -69,16 +72,15 @@ class KOTimelineView : public KOEventView
     virtual int maxDatesHint() const { return 0; }
 
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );
-    virtual KOrg::CalPrinterBase::PrintType printType() const;
-
+    // TODO: put printType in korg
   private:
-    KOrg::TimelineItem *calendarItemForIncidence( const Akonadi::Item &incidence );
+    TimelineItem *calendarItemForIncidence( const Akonadi::Item &incidence );
     void insertIncidence( const Akonadi::Item &incidence );
     void insertIncidence( const Akonadi::Item &incidence, const QDate &day );
     void removeIncidence( const Akonadi::Item &incidence );
 
   private slots:
-//     void overscale( KDGantt::View::Scale scale );
+    // void overscale( KDGantt::View::Scale scale );
     void itemSelected( const QModelIndex &index );
     void itemDoubleClicked( const QModelIndex& index );
     void itemChanged( QStandardItem* item );
@@ -90,11 +92,13 @@ class KOTimelineView : public KOEventView
     Akonadi::Item::List mSelectedItemList;
     KDGantt::GraphicsView *mGantt;
     QTreeWidget *mLeftView;
-    KOrg::RowController *mRowController;
-    QMap<Akonadi::Collection::Id, KOrg::TimelineItem*> mCalendarItemMap;
-    KOEventPopupMenu *mEventPopup;
+    RowController *mRowController;
+    QMap<Akonadi::Collection::Id, TimelineItem*> mCalendarItemMap;
+    //TODO: MOVE TO korg: KOEventPopupMenu *mEventPopup;
     QDate mStartDate, mEndDate;
     QDateTime mHintDate;
 };
+
+} // namespace EventViews
 
 #endif
