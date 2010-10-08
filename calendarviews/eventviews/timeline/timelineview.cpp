@@ -484,7 +484,8 @@ void TimelineView::insertIncidence( const Akonadi::Item &incidence )
     Akonadi::Item::List events = calendar()->events( day, timeSpec,
                                                      CalendarSupport::EventSortStartDate,
                                                      CalendarSupport::SortDirectionAscending );
-    if ( events.contains( incidence ) ) //PENDING(AKONADI_PORT) check if correct. also check the original if, was inside the for loop (unnecessarily)
+    if ( events.contains( incidence ) )
+      //PENDING(AKONADI_PORT) check if correct. also check the original if, was inside the for loop (unnecessarily)
       for ( Akonadi::Item::List::ConstIterator it = events.constBegin(); it != events.constEnd(); ++it ) {
         insertIncidence( *it, day );
       }

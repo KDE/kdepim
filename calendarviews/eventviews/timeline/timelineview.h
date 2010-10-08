@@ -55,7 +55,7 @@ class RowController;
 /**
   This class provides a view ....
 */
-class TimelineView : public EventView
+class EVENTVIEWS_EXPORT TimelineView : public EventView
 {
     Q_OBJECT
   public:
