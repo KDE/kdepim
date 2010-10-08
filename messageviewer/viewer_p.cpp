@@ -52,6 +52,7 @@
 #include <KSharedConfigPtr>
 #include <KStandardDirs>
 #include <KStandardGuiItem>
+#include <KTempDir>
 #include <KTemporaryFile>
 #include <KToggleAction>
 
@@ -510,12 +511,14 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 {
   QFileInfo atmFileInfo( atmFileName );
 
-  KTemporaryFile *linkFile = new KTemporaryFile();
-  linkFile->setPrefix( atmFileInfo.fileName() +"_[" );
-  linkFile->setSuffix( "]." + KMimeType::extractKnownExtension( atmFileInfo.fileName() ) );
-  linkFile->open();
+  // tempfile name ist /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
+  KTempDir *linkDir = new KTempDir( KStandardDirs::locateLocal( "tmp", "attachments" ) );
+  QString linkPath = linkDir->name() + atmFileInfo.fileName();
+  QFile *linkFile = new QFile( linkPath );
+  linkFile->open( QIODevice::ReadWrite );
   const QString linkName = linkFile->fileName();
   delete linkFile;
+  delete linkDir;
 
   if ( ::link(QFile::encodeName( atmFileName ), QFile::encodeName( linkName )) == 0 ) {
     return linkName; // success
@@ -712,7 +715,7 @@ void ViewerPrivate::collectionFetchedForStoringDecryptedMessage( KJob* job )
 {
   if ( job->error() )
     return;
-  
+
   Akonadi::Collection col;
   Q_FOREACH( Akonadi::Collection c, static_cast<Akonadi::CollectionFetchJob*>( job )->collections() ) {
     if ( c == mMessageItem.parentCollection() ) {
@@ -2509,6 +2512,8 @@ void ViewerPrivate::setUseFixedFont( bool useFixedFont )
 
 void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
 {
+  Q_UNUSED( content );
+
   // FIXME: better detection of mimetype??
   if ( !mCurrentFileName.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive ) )
     return;
