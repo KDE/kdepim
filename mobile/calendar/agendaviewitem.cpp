@@ -95,8 +95,7 @@ void AgendaViewItem::setCalendar(QObject* calendarObj)
 
 void AgendaViewItem::showRange( const QDate &date, int range )
 {
-  qDebug() << date << range;
-  //Q_ASSERT( range >= 0 && range <= LastRange );
+  Q_ASSERT( range >= 0 && range <= LastRange );
 
   m_currentRange = Range( range );
   switch( m_currentRange ) {
