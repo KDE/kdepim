@@ -45,7 +45,9 @@ class AgendaViewItem : public DeclarativeAkonadiItem
   public:
     enum Range {
       Day = 0,
-      Week
+      Week,
+      WorkWeek,
+      LastRange
     };
 
   public:

@@ -24,6 +24,7 @@
 
 #include <calendarsupport/calendar.h>
 #include <calendarviews/eventviews/agenda/agendaview.h>
+#include <KLocale>
 
 using namespace EventViews;
 
@@ -94,17 +95,25 @@ void AgendaViewItem::setCalendar(QObject* calendarObj)
 
 void AgendaViewItem::showRange( const QDate &date, int range )
 {
-  Q_ASSERT( range >= 0 && range <= 1 );
+  Q_ASSERT( range >= 0 && range <= LastRange );
 
   m_currentRange = Range( range );
   switch( m_currentRange ) {
   case Day:
     m_view->showDates( date, date );
     break;
-  case Week:
-    // Todo: Take in account sunday or monday as first day of week.
-    m_view->showDates( date.addDays( - date.dayOfWeek() ), date.addDays( 6 - date.dayOfWeek() ) );
+  case Week: {
+    int weekStartDay = KGlobal::locale()->weekStartDay();
+    m_view->showDates( date.addDays( weekStartDay - date.dayOfWeek() ), date.addDays( weekStartDay + 6 - date.dayOfWeek() ) );
     break;
+  }
+  case WorkWeek: {
+    int workingWeekStartDay = KGlobal::locale()->workingWeekStartDay();
+    int workingWeekEndDay = KGlobal::locale()->workingWeekEndDay();
+    m_view->showDates( date.addDays( workingWeekStartDay - date.dayOfWeek() ), date.addDays( workingWeekEndDay - date.dayOfWeek() ) );
+    break;
+  }
+  default:;
   }
 }
 

@@ -385,6 +385,22 @@ KPIM.MainView {
           }
         }
         KPIM.Button2 {
+          id: workWeekButton
+          buttonText: KDE.i18n( "Work Week view" )
+          width: parent.width / 3
+          onClicked: {
+            agenda.showRange( dateEdit.date, 2 /* "WorkWeek" */ );
+            mainWorkView.visible = false
+            agendaView.visible = true
+            selectButton.visible = false
+            monthView.visible = false
+          }
+        }
+      }
+       Row {
+        spacing: 2
+        width: parent.width - 5
+       KPIM.Button2 {
           id: monthButton
           buttonText: KDE.i18n( "Month view" )
           width: parent.width / 3
