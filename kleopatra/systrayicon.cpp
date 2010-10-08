@@ -143,6 +143,7 @@ private:
 
     void slotLearnCertificates() {
         LearnCardKeysCommand * cmd = new LearnCardKeysCommand( GpgME::CMS );
+        q->setAttentionWindow( cmd->dialog() );
         startCommand( cmd );
     }
 
