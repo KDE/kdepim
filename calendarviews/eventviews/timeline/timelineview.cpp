@@ -24,7 +24,7 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "kotimelineview.h"
+#include "timelineview.h"
 //#include "koglobals.h"
 #include "timelineitem.h"
 //#include "kohelper.h"
@@ -562,4 +562,4 @@ void TimelineView::removeIncidence( const Akonadi::Item &incidence )
 //   */
 // }
 
-#include "kotimelineview.moc"
+#include "timelineview.moc"

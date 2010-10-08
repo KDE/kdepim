@@ -52,7 +52,7 @@ set( eventviews_LIB_SRCS
 
      multiagenda/multiagendaview.cpp
 
-     timeline/kotimelineview.cpp
+     timeline/timelineview.cpp
      timeline/timelineitem.cpp
 )
 
