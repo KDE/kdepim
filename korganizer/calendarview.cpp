@@ -1646,7 +1646,9 @@ void CalendarView::schedule_forward( Incidence *incidence )
     }
 
     ICalFormat format;
-    QString messageText = format.createScheduleMessage( incidence, Scheduler::Request );
+    format.setTimeZone( mCalendar->timeZoneId(), true );
+    const QString messageText = format.createScheduleMessage( incidence, Scheduler::Request );
+
     KOMailClient mailer;
     if ( mailer.mailTo( incidence, recipients, messageText ) ) {
       KMessageBox::information(
