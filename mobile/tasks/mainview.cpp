@@ -106,6 +106,7 @@ void MainView::newTask()
 {
   IncidenceView *editor = new IncidenceView;
   editor->setWindowTitle( i18n( "KDE Tasks" ) );
+
   Item item;
   item.setMimeType( KCalCore::Todo::todoMimeType() );
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
@@ -127,6 +128,7 @@ void MainView::newSubTask()
 
   KCalCore::Todo::Ptr parentTodo = item.payload<KCalCore::Todo::Ptr>();
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
+
   // make it due one day from now
   todo->setDtStart( KDateTime::currentLocalDateTime() );
   todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
@@ -156,10 +158,10 @@ void MainView::makeTaskIndependent()
   connect( job, SIGNAL( result( KJob * ) ), SLOT( modifyFinished( KJob* ) ) );
 }
 
-void MainView::setPercentComplete(int row, int percentComplete)
+void MainView::setPercentComplete( int row, int percentComplete )
 {
-  const QModelIndex idx = itemModel()->index(row, 0);
-  itemModel()->setData(idx, percentComplete, TaskListProxy::PercentComplete);
+  const QModelIndex index = itemModel()->index( row, 0 );
+  itemModel()->setData( index, percentComplete, TaskListProxy::PercentComplete );
 }
 
 void MainView::editIncidence( const Akonadi::Item &item )
@@ -250,13 +252,13 @@ ExportHandlerBase* MainView::exportHandler() const
 
 Item MainView::currentItem() const
 {
- QModelIndexList list = itemSelectionModel()->selectedRows();
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
 
-  if (list.size() != 1)
+  if ( list.size() != 1 )
     return Item();
 
-  const QModelIndex idx = list.first();
-  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  const QModelIndex index = list.first();
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
   if ( !item.hasPayload<KCalCore::Todo::Ptr>() )
     return Item();
 
@@ -265,28 +267,28 @@ Item MainView::currentItem() const
 
 void MainView::saveAllAttachments()
 {
-  QModelIndexList list = itemSelectionModel()->selectedIndexes();
-  if (list.isEmpty())
+  const QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if ( list.isEmpty() )
     return;
 
-  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  Akonadi::Item item( list.first().data( EntityTreeModel::ItemIdRole ).toInt() );
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForSaveAllAttachmentsDone(KJob*)));
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForSaveAllAttachmentsDone( KJob* ) ) );
 }
 
-void MainView::fetchForSaveAllAttachmentsDone(KJob* job)
+void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
 {
   if ( job->error() ) {
       kDebug() << "Error trying to fetch item";
       //###: review error string
       KMessageBox::sorry( this,
-                          i18n("Cannot fetch calendar item."),
-                          i18n("Item Fetch Error"));
+                          i18n( "Cannot fetch calendar item." ),
+                          i18n( "Item Fetch Error" ) );
       return;
   }
 
-  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+  const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
 
   CalendarSupport::saveAttachments( item, this );
 }
