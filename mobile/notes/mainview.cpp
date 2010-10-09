@@ -52,7 +52,8 @@
 
 using namespace Akonadi;
 
-MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
+MainView::MainView( QWidget *parent )
+  : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
 {
 }
 
@@ -81,24 +82,24 @@ void MainView::delayedInit()
   actionCollection()->addAction( QLatin1String( "export_notes" ), action );
 }
 
-QString MainView::noteTitle(int row)
+QString MainView::noteTitle( int row ) const
 {
   if ( row < 0 )
     return QString();
 
-  QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel").value<QObject *>();
+  QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel" ).value<QObject *>();
   QAbstractItemModel *itemModel = qobject_cast<QAbstractItemModel *>( itemModelObject );
 
   if ( !itemModel )
     return QString();
 
   static const int column = 0;
-  QModelIndex idx = itemModel->index(row, column);
+  const QModelIndex index = itemModel->index( row, column );
 
-  if ( !idx.isValid() )
+  if ( !index.isValid() )
     return QString();
 
-  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
 
   if ( !item.isValid() )
     return QString();
@@ -106,29 +107,29 @@ QString MainView::noteTitle(int row)
   if ( !item.hasPayload<KMime::Message::Ptr>() )
    return QString();
 
-  KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+  const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
 
   return note->subject()->asUnicodeString();
 }
 
-QString MainView::noteContent(int row)
+QString MainView::noteContent( int row ) const
 {
   if ( row < 0 )
     return QString();
 
-  QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel").value<QObject *>();
+  QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel" ).value<QObject *>();
   QAbstractItemModel *itemModel = qobject_cast<QAbstractItemModel *>( itemModelObject );
 
   if ( !itemModel )
     return QString();
 
   static const int column = 0;
-  QModelIndex idx = itemModel->index(row, column);
+  const QModelIndex index = itemModel->index( row, column );
 
-  if ( !idx.isValid() )
+  if ( !index.isValid() )
     return QString();
 
-  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
 
   if ( !item.isValid() )
     return QString();
@@ -136,132 +137,127 @@ QString MainView::noteContent(int row)
   if ( !item.hasPayload<KMime::Message::Ptr>() )
    return QString();
 
-  KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+  const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
 
   // TODO: Rich mimetype.
   return note->mainBodyPart()->decodedText();
 }
 
-void MainView::saveNote(const QString& title, const QString& content)
+void MainView::saveNote( const QString& title, const QString& content )
 {
-  QAbstractItemModel *model = const_cast<QAbstractItemModel*>(itemSelectionModel()->model());
+  QAbstractItemModel *model = const_cast<QAbstractItemModel*>( itemSelectionModel()->model() );
 
-  if (!model->hasChildren())
+  if ( !model->hasChildren() )
     return;
 
-  static const int column = 0;
-  static const int row = 0;
   const QModelIndexList list = itemSelectionModel()->selectedRows();
 
-  if (list.size() != 1)
+  if ( list.size() != 1 )
     return;
 
-  const QModelIndex idx = list.first();
+  const QModelIndex index = list.first();
 
-  Q_ASSERT( idx.isValid() );
+  Q_ASSERT( index.isValid() );
 
-  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
 
-  if (!item.isValid())
+  if ( !item.isValid() )
     return;
 
-  if (!item.hasPayload<KMime::Message::Ptr>())
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
 
   KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
-  note->subject()->fromUnicodeString(title, "utf-8");
+  note->subject()->fromUnicodeString( title, "utf-8" );
   KMime::Content *c = note->mainBodyPart();
-  c->fromUnicodeString(content);
+  c->fromUnicodeString( content );
 
   note->assemble();
 
-  model->setData(idx, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+  model->setData( index, QVariant::fromValue( item ), EntityTreeModel::ItemRole );
 }
 
-
-void MainView::saveCurrentNoteTitle(const QString& title)
+void MainView::saveCurrentNoteTitle( const QString& title )
 {
-  QAbstractItemModel *model = const_cast<QAbstractItemModel*>(itemSelectionModel()->model());
+  QAbstractItemModel *model = const_cast<QAbstractItemModel*>( itemSelectionModel()->model() );
 
-  if (!model->hasChildren())
+  if ( !model->hasChildren() )
     return;
 
-  static const int column = 0;
-  static const int row = 0;
   const QModelIndexList list = itemSelectionModel()->selectedRows();
 
-  if (list.size() != 1)
+  if ( list.size() != 1 )
     return;
 
-  const QModelIndex idx = list.first();
+  const QModelIndex index = list.first();
 
-  Q_ASSERT( idx.isValid() );
+  Q_ASSERT( index.isValid() );
 
-  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
 
-  if (!item.isValid())
+  if ( !item.isValid() )
     return;
 
-  if (!item.hasPayload<KMime::Message::Ptr>())
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
 
   KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
-  note->subject()->fromUnicodeString(title, "utf-8");
+  note->subject()->fromUnicodeString( title, "utf-8" );
 
   note->assemble();
 
-  model->setData(idx, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+  model->setData( index, QVariant::fromValue( item ), EntityTreeModel::ItemRole );
 }
 
-void MainView::saveCurrentNoteContent(const QString& content)
+void MainView::saveCurrentNoteContent( const QString& content )
 {
-  QAbstractItemModel *model = const_cast<QAbstractItemModel*>(itemSelectionModel()->model());
+  QAbstractItemModel *model = const_cast<QAbstractItemModel*>( itemSelectionModel()->model() );
 
-  if (!model->hasChildren())
+  if ( !model->hasChildren() )
     return;
 
-  static const int column = 0;
-  static const int row = 0;
   const QModelIndexList list = itemSelectionModel()->selectedRows();
 
-  if (list.size() != 1)
+  if ( list.size() != 1 )
     return;
 
-  const QModelIndex idx = list.first();
+  const QModelIndex index = list.first();
 
-  Q_ASSERT( idx.isValid() );
+  Q_ASSERT( index.isValid() );
 
-  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
 
-  if (!item.isValid())
+  if ( !item.isValid() )
     return;
 
-  if (!item.hasPayload<KMime::Message::Ptr>())
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
 
   KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
   KMime::Content *c = note->mainBodyPart();
-  c->fromUnicodeString(content);
+  c->fromUnicodeString( content );
 
   note->assemble();
 
-  model->setData(idx, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+  model->setData( index, QVariant::fromValue( item ), EntityTreeModel::ItemRole );
 }
 
-Collection MainView::suitableContainerCollection(const QModelIndex &parent)
+Collection MainView::suitableContainerCollection( const QModelIndex &parent ) const
 {
-  const int rowCount = entityTreeModel()->rowCount(parent);
-  for (int row = 0; row < rowCount; ++row)
-  {
+  const int rowCount = entityTreeModel()->rowCount( parent );
+  for ( int row = 0; row < rowCount; ++row ) {
     static const int column = 0;
-    const QModelIndex idx = entityTreeModel()->index(row, column, parent);
-    Q_ASSERT(idx.isValid());
-    const Collection collection = idx.data(EntityTreeModel::CollectionRole).value<Collection>();
-    Q_ASSERT(collection.isValid());
-    if (collection.contentMimeTypes().contains(Akonotes::Note::mimeType()))
+    const QModelIndex index = entityTreeModel()->index( row, column, parent );
+    Q_ASSERT( index.isValid() );
+
+    const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+    Q_ASSERT( collection.isValid() );
+
+    if ( collection.contentMimeTypes().contains( Akonotes::Note::mimeType() ) )
       return collection;
-    const Collection descendantCollection = suitableContainerCollection(idx);
-    if (descendantCollection.isValid())
+
+    const Collection descendantCollection = suitableContainerCollection( index );
+    if ( descendantCollection.isValid() )
       return descendantCollection;
   }
 
@@ -274,49 +270,51 @@ void MainView::startComposer()
 
   const int rowCount = selectedItemsModel()->rowCount();
 
-  if (rowCount > 1)
+  if ( rowCount > 1 )
     // Multiple items are selected. Find out how this should be handled.
     return;
 
-  if (rowCount == 1)
-  {
-    const QModelIndex idx = selectedItemsModel()->index(0, 0);
-    Q_ASSERT(idx.isValid());
-    const Collection collection = idx.data(EntityTreeModel::CollectionRole).value<Collection>();
-    Q_ASSERT(collection.isValid());
-    Akonotes::NoteCreatorAndSelector *noteCreator = new Akonotes::NoteCreatorAndSelector(itemSelectionModel(), itemSelectionModel(), this);
-    noteCreator->createNote(collection);
-    connect(itemSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(onSelectionChanged(QItemSelection,QItemSelection)));
+  if ( rowCount == 1 ) {
+    const QModelIndex index = selectedItemsModel()->index( 0, 0 );
+    Q_ASSERT( index.isValid() );
+
+    const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+    Q_ASSERT( collection.isValid() );
+
+    Akonotes::NoteCreatorAndSelector *noteCreator = new Akonotes::NoteCreatorAndSelector( itemSelectionModel(), itemSelectionModel(), this );
+    noteCreator->createNote( collection );
+    connect( itemSelectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
+             this, SLOT( onSelectionChanged( QItemSelection, QItemSelection ) ) );
+
     return;
   }
 
   // otherwise nothing is selected, find a collection which can contain notes and put it there.
 
-  Collection collection = suitableContainerCollection();
+  const Collection collection = suitableContainerCollection();
 
-  if (!collection.isValid())
-  {
-    KMessageBox::information(this, i18n( "You do not appear to have any resources for notes. Please create one first." ),
-                             i18n( "No resources available" ) );
+  if ( !collection.isValid() ) {
+    KMessageBox::information( this, i18n( "You do not appear to have any resources for notes. Please create one first." ),
+                              i18n( "No resources available" ) );
     // No suitable collection found.
     // Create a resource with LocalResourceCreator,
     // then add a collection, then use the NoteCreatorAndSelector.
     return;
   }
-  Akonotes::NoteCreatorAndSelector *noteCreator = new Akonotes::NoteCreatorAndSelector(regularSelectionModel(), itemSelectionModel(), this);
-  noteCreator->createNote(collection);
+
+  Akonotes::NoteCreatorAndSelector *noteCreator = new Akonotes::NoteCreatorAndSelector( regularSelectionModel(), itemSelectionModel(), this );
+  noteCreator->createNote( collection );
 }
 
-void MainView::onSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+void MainView::onSelectionChanged( const QItemSelection&, const QItemSelection& )
 {
-
   const QModelIndexList list = itemSelectionModel()->selectedRows();
 
-  if (list.size() != 1)
+  if ( list.size() != 1 )
     return;
 
-  const QModelIndex idx = list.first();
-  selectedItemChanged(idx.row(), idx.data(EntityTreeModel::ItemIdRole).toLongLong());
+  const QModelIndex index = list.first();
+  selectedItemChanged( index.row(), index.data( EntityTreeModel::ItemIdRole ).toLongLong() );
 }
 
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

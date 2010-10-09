@@ -29,19 +29,20 @@
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
+
   public:
     explicit MainView( QWidget *parent = 0 );
 
   public slots:
-    QString noteTitle( int row );
-    QString noteContent( int row );
+    QString noteTitle( int row ) const;
+    QString noteContent( int row ) const;
 
-    void saveNote(const QString &title, const QString &content);
-    void saveCurrentNoteTitle(const QString &title);
-    void saveCurrentNoteContent(const QString &content);
+    void saveNote( const QString &title, const QString &content );
+    void saveCurrentNoteTitle( const QString &title );
+    void saveCurrentNoteContent( const QString &content );
 
     void startComposer();
-    void onSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
 
   protected slots:
     virtual void delayedInit();
@@ -58,7 +59,7 @@ class MainView : public KDeclarativeMainView
     virtual ExportHandlerBase* exportHandler() const;
 
   private:
-    Akonadi::Collection suitableContainerCollection(const QModelIndex &parent = QModelIndex());
+    Akonadi::Collection suitableContainerCollection( const QModelIndex &parent = QModelIndex() ) const;
 };
 
 #endif // MAINVIEW_H
