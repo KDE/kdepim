@@ -36,10 +36,10 @@ class EntityMimeTypeFilterModel;
 class AkonadiSender;
 class KJob;
 
-/** The new KMMainWidget ;-) */
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
+
   public:
     explicit MainView(QWidget* parent = 0);
 
@@ -51,20 +51,20 @@ class MainView : public KDeclarativeMainView
       Redirect
     };
 
-  public slots:
+  public Q_SLOTS:
     void startComposer();
     void restoreDraft( quint64 id );
 
-    void markImportant(bool checked);
-    void markMailTask(bool checked);
-    void modifyDone(KJob *job);
+    void markImportant( bool checked );
+    void markMailTask( bool checked );
+    void modifyDone( KJob *job );
     void dataChanged();
 
     bool isDraft( int row );
-    bool folderIsDrafts(const Akonadi::Collection & col);
+    bool folderIsDrafts( const Akonadi::Collection &collection );
 
     // HACK until mark-as-read logic is in messageviewer
-    virtual void setListSelectedRow(int row);
+    virtual void setListSelectedRow( int row );
 
     void configureIdentity();
 
@@ -83,8 +83,8 @@ class MainView : public KDeclarativeMainView
     void sendQueuedVia( const QString &transport );
     void saveMessage();
     void findInMessage();
-    void preferHTML(bool useHtml);
-    void loadExternalReferences(bool load);
+    void preferHTML( bool useHtml );
+    void loadExternalReferences( bool load );
     void folderChanged();
     void moveToOrEmptyTrash();
     void createToDo();
@@ -112,20 +112,19 @@ class MainView : public KDeclarativeMainView
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
-    void forward(quint64 id, ForwardMode mode);
+    void forward( quint64 id, ForwardMode mode );
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
     void recoverAutoSavedMessages();
     Akonadi::Item currentItem();
     bool askToGoOnline();
 
-
     AkonadiSender *mMessageSender;
     bool mAskingToGoOnline;
-    QWidget* mTransportDialog;
-    Akonadi::StandardMailActionManager* mMailActionManager;
-    Akonadi::EntityMimeTypeFilterModel* mCollectionModel;
+    QWidget *mTransportDialog;
+    Akonadi::StandardMailActionManager *mMailActionManager;
+    Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
 };
 
-Q_DECLARE_METATYPE(MainView::ForwardMode)
+Q_DECLARE_METATYPE( MainView::ForwardMode )
 
 #endif

@@ -21,71 +21,69 @@
 */
 
 #include "mainview.h"
+
 #include "composerview.h"
 #include "emailsexporthandler.h"
 #include "emailsfilterproxymodel.h"
 #include "emailsimporthandler.h"
-#include "messagelistproxy.h"
 #include "mailactionmanager.h"
-#include "messageviewitem.h"
 #include "mailcommon/mailkernel.h"
+#include "messagecore/messagehelpers.h"
+#include "messagelistproxy.h"
+#include "messageviewer/nodehelper.h"
 #include "messageviewer/viewer.h"
+#include "messageviewitem.h"
+#include "mobilekernel.h"
+#include "savemailcommand_p.h"
+
+#include <akonadi/agentactionmanager.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionmodel.h>
+#include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/itemdeletejob.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemmodifyjob.h>
+#include <akonadi/kmime/messageparts.h>
+#include <akonadi/kmime/messagestatus.h>
+#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
+#include <akonadi/kmime/standardmailactionmanager.h>
+#include <kaction.h>
+#include <kactioncollection.h>
+#include <kcmdlineargs.h>
+#include <kcmultidialog.h>
+#include <kdebug.h>
+#include <klocalizedstring.h>
+#include <kmessagebox.h>
+#include <kmime/kmime_message.h>
+#include <kpimidentities/identity.h>
+#include <kpimidentities/identitymanager.h>
+#include <kselectionproxymodel.h>
+#include <kstandarddirs.h>
+#include <mailcommon/expirypropertiesdialog.h>
+#include <mailcommon/foldercollection.h>
+#include <mailcommon/mailutil.h>
+#include <mailtransport/transportmanager.h>
+#include <messagecomposer/akonadisender.h>
+#include <messagecore/stringutil.h>
+
+#include <QtCore/QDir>
+#include <QtCore/QTimer>
+#include <QtCore/QSignalMapper>
+#include <QtGui/QLabel>
 
 #ifdef _WIN32_WCE
 #include <identitypage.h>
 #include <kcomponentdata.h>
 #endif
 
-#include "savemailcommand_p.h"
-
-#include <KDE/KDebug>
-#include <KActionCollection>
-#include <KAction>
-#include <KCmdLineArgs>
-#include <KCMultiDialog>
-#include <KMessageBox>
-#include <kselectionproxymodel.h>
-#include <klocalizedstring.h>
-#include <kstandarddirs.h>
-
-#include <KMime/Message>
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/kmime/messageparts.h>
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
-#include <akonadi/kmime/messagestatus.h>
-#include "messagecore/messagehelpers.h"
-#include "messageviewer/nodehelper.h"
-#include <akonadi/kmime/standardmailactionmanager.h>
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
-#include <QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeContext>
 #endif
 
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/ItemDeleteJob>
-#include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
-
-#include <QTimer>
-#include <QDir>
-#include <messagecomposer/akonadisender.h>
-#include <mailtransport/transportmanager.h>
-#include <QSignalMapper>
-#include <QLabel>
-#include "mobilekernel.h"
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <mailcommon/expirypropertiesdialog.h>
-#include <mailcommon/foldercollection.h>
-#include <mailcommon/mailutil.h>
-#include <messagecore/stringutil.h>
-
-
-Q_DECLARE_METATYPE(KMime::Content*)
-QML_DECLARE_TYPE(MessageViewer::MessageViewItem)
+Q_DECLARE_METATYPE( KMime::Content* )
+QML_DECLARE_TYPE( MessageViewer::MessageViewItem )
 
 using namespace Akonadi;
 
@@ -97,12 +95,12 @@ static bool workOffline()
   return group.readEntry( "WorkOffline", false );
 }
 
-MainView::MainView(QWidget* parent) :
-  KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
+MainView::MainView(QWidget* parent)
+  : KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent ),
+    mAskingToGoOnline( false ),
+    mTransportDialog( 0 )
 {
   qRegisterMetaType<KMime::Content*>();
-  mAskingToGoOnline = false;
-  mTransportDialog = 0;
 }
 
 MainView::~MainView()
@@ -112,9 +110,9 @@ MainView::~MainView()
 
 void MainView::delayedInit()
 {
-  kDebug();
   KDeclarativeMainView::delayedInit();
-  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
+
+  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
   MobileKernel::self()->setFolderCollectionMonitor( monitor() );
 
   mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
@@ -125,16 +123,16 @@ void MainView::delayedInit()
   mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 
   MobileKernel::self()->setCollectionModel( mCollectionModel ); 
-  
-  QTime t;
+
+  QTime time;
   if ( debugTiming ) {
-    t.start();
-    kWarning() << "Start MainView ctor" << &t << " - " << QDateTime::currentDateTime();
+    time.start();
+    kWarning() << "Start MainView ctor" << &time << " - " << QDateTime::currentDateTime();
   }
 
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
 #ifdef KDEQMLPLUGIN_STATIC
-  rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
+  rootContext()->setContextProperty( QLatin1String( "KDE" ), new KDEIntegration( this ) );
 #endif
 
   addMimeType( KMime::Message::mimeType() );
@@ -142,39 +140,40 @@ void MainView::delayedInit()
   setWindowTitle( i18n( "KDE Mail" ) );
   mMessageSender = new AkonadiSender;
 
-  MailActionManager *mMailActionManager = new MailActionManager(actionCollection(), this);
-  mMailActionManager->setItemSelectionModel(itemSelectionModel());
+  MailActionManager *mMailActionManager = new MailActionManager( actionCollection(), this );
+  mMailActionManager->setItemSelectionModel( itemSelectionModel() );
 
-  connect(actionCollection()->action("mark_message_important"), SIGNAL(triggered(bool)), SLOT(markImportant(bool)));
-  connect(actionCollection()->action("mark_message_action_item"), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)));
-  connect(actionCollection()->action("write_new_email"), SIGNAL(triggered(bool)), SLOT(startComposer()));
-  connect(actionCollection()->action("send_queued_emails"), SIGNAL(triggered(bool)), SLOT(sendQueued()));
-  connect(actionCollection()->action("send_queued_emails_via"), SIGNAL(triggered(bool)), SLOT(sendQueuedVia()));
-  connect(actionCollection()->action("message_reply"), SIGNAL(triggered(bool)), SLOT(replyToMessage()));
-  connect(actionCollection()->action("message_reply_to_all"), SIGNAL(triggered(bool)), SLOT(replyToAll()));
-  connect(actionCollection()->action("message_reply_to_author"), SIGNAL(triggered(bool)), SLOT(replyToAuthor()));
-  connect(actionCollection()->action("message_reply_to_list"), SIGNAL(triggered(bool)), SLOT(replyToMailingList()));
-  connect(actionCollection()->action("message_forward"), SIGNAL(triggered(bool)), SLOT(forwardMessage()));
-  connect(actionCollection()->action("message_forward_as_attachment"), SIGNAL(triggered(bool)), SLOT(forwardAsAttachment()));
-  connect(actionCollection()->action("message_redirect"), SIGNAL(triggered(bool)), SLOT(redirect()));
-  connect(actionCollection()->action("message_send_again"), SIGNAL(triggered(bool)), SLOT(sendAgain()));
-  connect(actionCollection()->action("message_edit"), SIGNAL(triggered(bool)), SLOT(sendAgain())); //do the same under a different name
-  connect(actionCollection()->action("message_find_in"), SIGNAL(triggered(bool)), SLOT(findInMessage()));
-  connect(actionCollection()->action("message_save_as"), SIGNAL(triggered(bool)), SLOT(saveMessage()));
-  connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
-  connect(actionCollection()->action("prefer_html_to_plain"), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)));
-  connect(actionCollection()->action("load_external_ref"), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)));
-  connect(actionCollection()->action("show_expire_properties"), SIGNAL(triggered(bool)), SLOT(showExpireProperties()));
-  connect(actionCollection()->action("move_all_to_trash"), SIGNAL(triggered(bool)), SLOT(moveToOrEmptyTrash()));
-  connect(actionCollection()->action("create_todo_reminder"), SIGNAL(triggered(bool)), SLOT(createToDo()));
+  connect( actionCollection()->action( "mark_message_important" ), SIGNAL( triggered( bool ) ), SLOT( markImportant( bool ) ) );
+  connect( actionCollection()->action( "mark_message_action_item" ), SIGNAL( triggered( bool ) ), SLOT( markMailTask( bool ) ) );
+  connect( actionCollection()->action( "write_new_email" ), SIGNAL( triggered( bool ) ), SLOT( startComposer() ) );
+  connect( actionCollection()->action( "send_queued_emails" ), SIGNAL( triggered( bool ) ), SLOT( sendQueued() ) );
+  connect( actionCollection()->action( "send_queued_emails_via" ), SIGNAL( triggered( bool ) ), SLOT( sendQueuedVia() ) );
+  connect( actionCollection()->action( "message_reply" ), SIGNAL( triggered( bool ) ), SLOT( replyToMessage() ) );
+  connect( actionCollection()->action( "message_reply_to_all" ), SIGNAL( triggered( bool ) ), SLOT( replyToAll() ) );
+  connect( actionCollection()->action( "message_reply_to_author" ), SIGNAL( triggered( bool ) ), SLOT( replyToAuthor() ) );
+  connect( actionCollection()->action( "message_reply_to_list" ), SIGNAL( triggered( bool ) ), SLOT( replyToMailingList() ) );
+  connect( actionCollection()->action( "message_forward" ), SIGNAL( triggered( bool ) ), SLOT( forwardMessage() ) );
+  connect( actionCollection()->action( "message_forward_as_attachment" ), SIGNAL( triggered( bool ) ), SLOT( forwardAsAttachment() ) );
+  connect( actionCollection()->action( "message_redirect" ), SIGNAL( triggered( bool ) ), SLOT( redirect() ) );
+  connect( actionCollection()->action( "message_send_again" ), SIGNAL( triggered( bool ) ), SLOT( sendAgain() ) );
+  connect( actionCollection()->action( "message_edit" ), SIGNAL( triggered( bool ) ), SLOT( sendAgain() ) ); //do the same under a different name
+  connect( actionCollection()->action( "message_find_in" ), SIGNAL( triggered( bool ) ), SLOT( findInMessage() ) );
+  connect( actionCollection()->action( "message_save_as" ), SIGNAL( triggered( bool ) ), SLOT( saveMessage() ) );
+  connect( actionCollection()->action( "save_favorite" ), SIGNAL( triggered( bool ) ), SLOT( saveFavorite() ) );
+  connect( actionCollection()->action( "prefer_html_to_plain" ), SIGNAL( triggered( bool ) ), SLOT( preferHTML( bool ) ) );
+  connect( actionCollection()->action( "load_external_ref" ), SIGNAL( triggered( bool ) ), SLOT( loadExternalReferences( bool ) ) );
+  connect( actionCollection()->action( "show_expire_properties" ), SIGNAL( triggered( bool ) ), SLOT( showExpireProperties() ) );
+  connect( actionCollection()->action( "move_all_to_trash" ), SIGNAL( triggered( bool ) ), SLOT( moveToOrEmptyTrash() ) );
+  connect( actionCollection()->action( "create_todo_reminder" ), SIGNAL( triggered( bool ) ), SLOT( createToDo() ) );
 
-  connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
+  connect( itemSelectionModel()->model(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SLOT( dataChanged() ) );
 
   KAction *action = new KAction( i18n( "Identities" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( configureIdentity() ) );
   actionCollection()->addAction( "kmail_mobile_identities", action );
+
   action = new KAction( i18n( "New Email" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT(startComposer()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( startComposer() ) );
   actionCollection()->addAction( "add_new_mail", action );
 
   action = new KAction( i18n( "Import Emails" ), this );
@@ -186,20 +185,20 @@ void MainView::delayedInit()
   actionCollection()->addAction( QLatin1String( "export_emails" ), action );
 
   // lazy load of the default single folders
-  QTimer::singleShot(3000, this, SLOT(initDefaultFolders()));
+  QTimer::singleShot( 3000, this, SLOT( initDefaultFolders() ) );
 
   // Is there messages to recover? Do it if needed.
   recoverAutoSavedMessages();
 
   if ( debugTiming ) {
-    kWarning() << "Finished MainView ctor: " << t.elapsed() << " - "<< &t;
+    kWarning() << "Finished MainView ctor: " << time.elapsed() << " - "<< &time;
   }
 }
 
 void MainView::recoverAutoSavedMessages()
 {
   kDebug() << "Any message to recover?";
-  QDir autoSaveDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/") ) + QLatin1String( "autosave" ) );
+  QDir autoSaveDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave" ) );
   //### move directory creation to here
 
   const QFileInfoList savedMessages = autoSaveDir.entryInfoList( QDir::Files );
@@ -228,60 +227,60 @@ void MainView::recoverAutoSavedMessages()
       kDebug() << "error!!";
       //###: review error string
       KMessageBox::sorry( this,
-                          i18n("Could not recover a saved message."),
-                          i18n("Recover Message Error"));
+                          i18n( "Could not recover a saved message." ),
+                          i18n( "Recover Message Error" ) );
     }
   }
 }
 
 void MainView::startComposer()
 {
-    ComposerView *composer = new ComposerView;
-    composer->show();
+  ComposerView *composer = new ComposerView;
+  composer->show();
 }
 
 void MainView::restoreDraft( quint64 id )
 {
-    ItemFetchJob *fetch = new ItemFetchJob( Item( id ), this );
-    fetch->fetchScope().fetchFullPayload();
-    fetch->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
-    connect( fetch, SIGNAL(result(KJob*)), SLOT(composeFetchResult(KJob*)) );
+  ItemFetchJob *job = new ItemFetchJob( Item( id ), this );
+  job->fetchScope().fetchFullPayload();
+  job->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( composeFetchResult( KJob* ) ) );
 }
 
 void MainView::composeFetchResult( KJob *job )
 {
-  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
-  if ( job->error() || fetch->items().isEmpty() ) {
+  const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  if ( job->error() || fetchJob->items().isEmpty() ) {
     kDebug() << "error!!";
     //###: review error string
     KMessageBox::sorry( this,
-                        i18n("Could not restore a draft."),
-                        i18n("Restore Draft Error"));
+                        i18n( "Could not restore a draft." ),
+                        i18n( "Restore Draft Error" ) );
     return;
   }
 
-  const Item item = fetch->items().first();
-  if (!item.isValid() && !item.parentCollection().isValid() ) {
+  const Item item = fetchJob->items().first();
+  if ( !item.isValid() && !item.parentCollection().isValid() ) {
     //###: review error string
     KMessageBox::sorry( this,
-                        i18n("Invalid draft message."),
-                        i18n("Restore Draft Error"));
+                        i18n( "Invalid draft message." ),
+                        i18n( "Restore Draft Error" ) );
     return;
   }
 
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
+  const KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg ) {
     //###: review error string
     KMessageBox::sorry( this,
-                        i18n("Message content error"),
-                        i18n("Restore Draft Error"));
+                        i18n( "Message content error" ),
+                        i18n( "Restore Draft Error" ) );
     return;
   }
 
   // delete from the drafts folder
   // ###: do we need an option for this?)
-  ItemDeleteJob *djob = new ItemDeleteJob( item );
-  connect( djob, SIGNAL( result( KJob* ) ), this, SLOT( deleteItemResult( KJob* ) ) );
+  ItemDeleteJob *deleteJob = new ItemDeleteJob( item );
+  connect( deleteJob, SIGNAL( result( KJob* ) ), this, SLOT( deleteItemResult( KJob* ) ) );
 
   // create the composer and fill it with the retrieved message
   ComposerView *composer = new ComposerView;
@@ -289,30 +288,31 @@ void MainView::composeFetchResult( KJob *job )
   composer->show();
 }
 
-
 void MainView::sendAgain()
 {
-    Item item = currentItem();
-    if ( !item.isValid() )
-      return;
+  const Item item = currentItem();
+  if ( !item.isValid() )
+    return;
 
-    ItemFetchJob *fetch = new ItemFetchJob( Item( item.id() ), this );
-    fetch->fetchScope().fetchFullPayload();
-    connect( fetch, SIGNAL(result(KJob*)), SLOT(sendAgainFetchResult(KJob*)) );
+  ItemFetchJob *job = new ItemFetchJob( Item( item.id() ), this );
+  job->fetchScope().fetchFullPayload();
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( sendAgainFetchResult( KJob* ) ) );
 }
 
-void MainView::sendAgainFetchResult(KJob* job)
+void MainView::sendAgainFetchResult( KJob *job )
 {
-  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
-  if ( job->error() || fetch->items().isEmpty() )
+  const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  if ( job->error() || fetchJob->items().isEmpty() )
     return;
 
-  const Item item = fetch->items().first();
+  const Item item = fetchJob->items().first();
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
-  KMime::Message::Ptr msg = MessageCore::Util::message( item );
+
+  const KMime::Message::Ptr msg = MessageCore::Util::message( item );
   MessageComposer::MessageFactory factory( msg, item.id() );
   factory.setIdentityManager( MobileKernel::self()->identityManager() );
+
   KMime::Message::Ptr newMsg = factory.createResend();
   newMsg->contentType()->setCharset( MessageViewer::NodeHelper::charset( msg.get() ) );
 
@@ -332,22 +332,23 @@ bool MainView::askToGoOnline()
     mAskingToGoOnline = true;
     int rc =
     KMessageBox::questionYesNo( this,
-                                i18n("KMail is currently in offline mode. "
-                                     "How do you want to proceed?"),
-                                i18n("Online/Offline"),
-                                KGuiItem(i18n("Work Online")),
-                                KGuiItem(i18n("Work Offline")));
+                                i18n( "KMail is currently in offline mode. "
+                                      "How do you want to proceed?" ),
+                                i18n( "Online/Offline" ),
+                                KGuiItem( i18n( "Work Online" ) ),
+                                KGuiItem( i18n( "Work Offline" ) ) );
 
     mAskingToGoOnline = false;
-    if( rc == KMessageBox::No ) {
+    if ( rc == KMessageBox::No ) {
       return false;
     } else {
       ///emulate turning off offline mode
       QAction *workOffLineAction = mMailActionManager->action( StandardActionManager::ToggleWorkOffline );
-      workOffLineAction->setChecked(true);
+      workOffLineAction->setChecked( true );
       workOffLineAction->trigger();
     }
   }
+
   return true;
 }
 
@@ -369,38 +370,42 @@ void MainView::sendQueuedVia()
   delete mTransportDialog;
   mTransportDialog = new QWidget( this, Qt::Dialog ); //not a real dialog though, should be done in QML
   mTransportDialog->setWindowTitle( i18n( "Send Queued Email Via" ) );
-  QPalette pal = mTransportDialog->palette();
-  pal.setColor( QPalette::Window, Qt::darkGray ); //make sure the label is readable...
-  mTransportDialog->setPalette( pal );
+
+  QPalette palette = mTransportDialog->palette();
+  palette.setColor( QPalette::Window, Qt::darkGray ); //make sure the label is readable...
+  mTransportDialog->setPalette( palette );
+
   QVBoxLayout *layout = new QVBoxLayout( mTransportDialog );
   QLabel *label = new QLabel( i18n( "Send Queued Email Via" ) );
   layout->addWidget( label );
   QSignalMapper *mapper = new QSignalMapper( mTransportDialog );
-  Q_FOREACH( QString transport, availTransports )
-  {
+
+  Q_FOREACH( const QString &transport, availTransports ) {
     QPushButton *button = new QPushButton( transport );
     layout->addWidget( button );
-    mapper->setMapping( button, transport);
+    mapper->setMapping( button, transport );
     connect( button, SIGNAL( clicked() ), mapper, SLOT( map() ) );
- }
+  }
+
   connect( mapper, SIGNAL( mapped( QString ) ), this, SLOT( sendQueuedVia( QString ) ));
-  QPushButton *button = new QPushButton( i18n("Discard") );
+
+  QPushButton *button = new QPushButton( i18n( "Discard" ) );
   layout->addWidget( button );
   connect( button, SIGNAL( clicked( bool ) ), mTransportDialog, SLOT( close() ) );
+
   mTransportDialog->show();
 }
 
-void MainView::sendQueuedVia(const QString& transport)
+void MainView::sendQueuedVia( const QString &transport )
 {
   mMessageSender->sendQueued( transport );
   delete mTransportDialog;
   mTransportDialog = 0;
 }
 
-
 void MainView::replyToAuthor()
 {
-  Item item = currentItem();
+  const Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -409,123 +414,130 @@ void MainView::replyToAuthor()
 
 void MainView::replyToMailingList()
 {
-  Item item = currentItem();
+  const Item item = currentItem();
   if ( !item.isValid() )
     return;
 
   reply( item.id(), MessageComposer::ReplyList );
 }
 
-void MainView::reply(quint64 id, MessageComposer::ReplyStrategy replyStrategy)
+void MainView::reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy )
 {
-  ItemFetchJob *fetch = new ItemFetchJob( Item( id ), this );
-  fetch->fetchScope().fetchFullPayload();
-  fetch->setProperty( "replyStrategy", QVariant::fromValue( replyStrategy ) );
-  connect( fetch, SIGNAL(result(KJob*)), SLOT(replyFetchResult(KJob*)) );
+  ItemFetchJob *job = new ItemFetchJob( Item( id ), this );
+  job->fetchScope().fetchFullPayload();
+  job->setProperty( "replyStrategy", QVariant::fromValue( replyStrategy ) );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( replyFetchResult( KJob* ) ) );
 }
 
-void MainView::replyFetchResult(KJob* job)
+void MainView::replyFetchResult( KJob *job )
 {
-  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
-  if ( job->error() || fetch->items().isEmpty() )
+  const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  if ( job->error() || fetchJob->items().isEmpty() )
     return;
 
-  const Item item = fetch->items().first();
+  const Item item = fetchJob->items().first();
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
+
   MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
   factory.setIdentityManager( MobileKernel::self()->identityManager() );
-  factory.setReplyStrategy( fetch->property( "replyStrategy" ).value<MessageComposer::ReplyStrategy>() );
+  factory.setReplyStrategy( fetchJob->property( "replyStrategy" ).value<MessageComposer::ReplyStrategy>() );
 
   ComposerView *composer = new ComposerView;
   composer->setMessage( factory.createReply().msg );
   composer->show();
 }
 
-void MainView::forward(quint64 id, ForwardMode mode)
+void MainView::forward( quint64 id, ForwardMode mode )
 {
-  ItemFetchJob *fetch = new ItemFetchJob( Item( id ), this );
-  fetch->fetchScope().fetchFullPayload();
-  fetch->setProperty( "forwardMode", QVariant::fromValue( mode ) );
-  connect( fetch, SIGNAL(result(KJob*)), SLOT(forwardFetchResult(KJob*)) );
+  ItemFetchJob *job = new ItemFetchJob( Item( id ), this );
+  job->fetchScope().fetchFullPayload();
+  job->setProperty( "forwardMode", QVariant::fromValue( mode ) );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( forwardFetchResult( KJob* ) ) );
 }
 
 void MainView::forwardFetchResult( KJob* job )
 {
-  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
-  if ( job->error() || fetch->items().isEmpty() )
+  const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  if ( job->error() || fetchJob->items().isEmpty() )
     return;
 
-  const Item item = fetch->items().first();
+  const Item item = fetchJob->items().first();
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
+
   MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
   factory.setIdentityManager( MobileKernel::self()->identityManager() );
 
   ComposerView *composer = new ComposerView;
-  ForwardMode mode = fetch->property( "forwardMode" ).value<ForwardMode>();
-  switch (mode) {
+  const ForwardMode mode = fetchJob->property( "forwardMode" ).value<ForwardMode>();
+  switch ( mode ) {
     case InLine:
       composer->setMessage( factory.createForward() );
       break;
     case AsAttachment: {
-      QPair< KMime::Message::Ptr, QList< KMime::Content* > > fwdMsg = factory.createAttachedForward( QList< KMime::Message::Ptr >() << item.payload<KMime::Message::Ptr>());
+      QPair< KMime::Message::Ptr, QList< KMime::Content* > > forwardMessage = factory.createAttachedForward( QList< KMime::Message::Ptr >() << item.payload<KMime::Message::Ptr>());
       //the invokeMethods are there to be sure setMessage and addAttachment is called after composer->delayedInit
-      QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection, Q_ARG(KMime::Message::Ptr,  fwdMsg.first) );
-      foreach( KMime::Content* attach, fwdMsg.second )
-        QMetaObject::invokeMethod( composer, "addAttachment", Qt::QueuedConnection, Q_ARG(KMime::Content*,  attach ) );
+      QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection, Q_ARG( KMime::Message::Ptr, forwardMessage.first ) );
+      foreach ( KMime::Content* attach, forwardMessage.second )
+        QMetaObject::invokeMethod( composer, "addAttachment", Qt::QueuedConnection, Q_ARG( KMime::Content*, attach ) );
       break;
     }
     case Redirect:
-      composer->setMessage( factory.createRedirect("") );
+      composer->setMessage( factory.createRedirect( "" ) );
       break;
   }
+
   composer->show();
 }
 
-void MainView::markImportant(bool checked)
+void MainView::markImportant( bool checked )
 {
   Item item = currentItem();
   if ( !item.isValid() )
     return;
 
   MessageStatus status;
-  status.setStatusFromFlags(item.flags());
-  if (checked && status.isImportant())
+  status.setStatusFromFlags( item.flags() );
+  if ( checked && status.isImportant() )
     return;
-  if (checked)
-      status.setImportant();
-  else
-      status.setImportant(false);
-  item.setFlags(status.statusFlags());
 
-  ItemModifyJob *job = new ItemModifyJob(item);
-  connect(job, SIGNAL(result(KJob *)), SLOT(modifyDone(KJob *)));
+  if ( checked )
+    status.setImportant();
+  else
+    status.setImportant( false );
+
+  item.setFlags( status.statusFlags() );
+
+  ItemModifyJob *job = new ItemModifyJob( item );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( modifyDone( KJob* ) ) );
 }
 
-void MainView::markMailTask(bool checked)
+void MainView::markMailTask( bool checked )
 {
   Item item = currentItem();
   if ( !item.isValid() )
     return;
 
   MessageStatus status;
-  status.setStatusFromFlags(item.flags());
-  if (checked && status.isToAct())
+  status.setStatusFromFlags( item.flags() );
+  if ( checked && status.isToAct() )
     return;
-  if (checked)
-      status.setToAct();
-  else
-      status.setToAct(false);
-  item.setFlags(status.statusFlags());
 
-  ItemModifyJob *job = new ItemModifyJob(item);
-  connect(job, SIGNAL(result(KJob *)), SLOT(modifyDone(KJob *)));
+  if ( checked )
+    status.setToAct();
+  else
+    status.setToAct( false );
+
+  item.setFlags( status.statusFlags() );
+
+  ItemModifyJob *job = new ItemModifyJob( item );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( modifyDone( KJob* ) ) );
 }
 
 void MainView::replyToMessage()
 {
-  Item item = currentItem();
+  const Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -534,7 +546,7 @@ void MainView::replyToMessage()
 
 void MainView::replyToAll()
 {
-  Item item = currentItem();
+  const Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -543,7 +555,7 @@ void MainView::replyToAll()
 
 void MainView::forwardMessage()
 {
-  Item item = currentItem();
+  const Item item = currentItem();
   if ( !item.isValid() )
     return;
 
@@ -552,86 +564,86 @@ void MainView::forwardMessage()
 
 void MainView::forwardAsAttachment()
 {
-  Item item = currentItem();
+  const Item item = currentItem();
   if ( !item.isValid() )
     return;
 
   forward( item.id(), AsAttachment );
 }
 
-
 void MainView::redirect()
 {
-  Item item = currentItem();
+  const Item item = currentItem();
   if ( !item.isValid() )
     return;
 
   forward( item.id(), Redirect );
 }
 
-
 Item MainView::currentItem()
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
 
-  if (list.size() != 1)
+  if ( list.size() != 1 )
     return Item();
-  const QModelIndex idx = list.first();
-  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
-  if (!item.hasPayload<KMime::Message::Ptr>())
+
+  const QModelIndex index = list.first();
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
     return Item();
 
   return item;
 }
 
-
-void MainView::modifyDone(KJob *job)
+void MainView::modifyDone( KJob *job )
 {
-  if (job->error())
-  {
+  if ( job->error() ) {
     kWarning() << "Modify error: " << job->errorString();
     //###: review error string
     //## Use a notification instead?
     KMessageBox::sorry( this,
-                        i18n("Error trying to set item status"),
-                        i18n("Messages status error"));
+                        i18n( "Error trying to set item status" ),
+                        i18n( "Messages status error" ) );
     return;
   }
 }
 
 void MainView::dataChanged()
 {
-  Item item = currentItem();
+  const Item item = currentItem();
   if ( !item.isValid() )
     return;
 
   MessageStatus status;
-  status.setStatusFromFlags(item.flags());
+  status.setStatusFromFlags( item.flags() );
 
-  actionCollection()->action("mark_message_important")->setChecked(status.isImportant());
-  actionCollection()->action("mark_message_action_item")->setChecked(status.isToAct());
+  actionCollection()->action( "mark_message_important" )->setChecked( status.isImportant() );
+  actionCollection()->action( "mark_message_action_item" )->setChecked( status.isToAct() );
 }
 
 // FIXME: remove and put mark-as-read logic into messageviewer (shared with kmail)
-void MainView::setListSelectedRow(int row)
+void MainView::setListSelectedRow( int row )
 {
   static const int column = 0;
-  const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
-  Q_ASSERT(idx.isValid());
-  itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
-  itemActionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+  const QModelIndex index = itemSelectionModel()->model()->index( row, column );
+  Q_ASSERT( index.isValid() );
+
+  itemSelectionModel()->select( QItemSelection( index, index ), QItemSelectionModel::ClearAndSelect );
+  itemActionModel()->select( QItemSelection( index, index ), QItemSelectionModel::ClearAndSelect );
+
   // FIXME this should all be in messageviewer and happen after mail download, see also similar code in KMCommands
-  Item fullItem = idx.data(EntityTreeModel::ItemRole).value<Item>();
+  const Item fullItem = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
   MessageStatus status;
-  status.setStatusFromFlags(fullItem.flags());
-  if ( status.isUnread() )
-  {
+  status.setStatusFromFlags( fullItem.flags() );
+  if ( status.isUnread() ) {
     Item sparseItem( fullItem.id() );
     sparseItem.setRevision( fullItem.revision() );
 
     status.setRead();
-    sparseItem.setFlags(status.statusFlags());
-    ItemModifyJob *modifyJob = new ItemModifyJob(sparseItem, this);
+    sparseItem.setFlags( status.statusFlags() );
+
+    ItemModifyJob *modifyJob = new ItemModifyJob( sparseItem, this );
     modifyJob->disableRevisionCheck();
     modifyJob->ignorePayload();
   }
@@ -643,8 +655,9 @@ void MainView::configureIdentity()
   KComponentData instance( "kcmkmail_config_identity" ); // keep in sync with kmail for now to reuse kmail translations until after the string freeze
   KMail::IdentityPage *page = new KMail::IdentityPage( instance, this );
   page->setObjectName( "kcm_kpimidentities" );
-  KDialog dialog(this);
-  dialog.setMainWidget(page);
+
+  KDialog dialog( this );
+  dialog.setMainWidget( page );
   dialog.setButtons( KDialog::Ok | KDialog::Cancel );
   dialog.setWindowState( Qt::WindowFullScreen );
   connect( &dialog, SIGNAL( okClicked() ), page, SLOT( save() ) );
@@ -661,13 +674,13 @@ void MainView::configureIdentity()
 bool MainView::isDraft( int row )
 {
   static const int column = 0;
-  const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
-  kDebug() << "itemSelectionModel " << itemSelectionModel() << " model" << itemSelectionModel()->model() << " idx->model()" << idx.model();
-  itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
-  Item item = idx.data(EntityTreeModel::ItemRole).value<Item>();
+  const QModelIndex index = itemSelectionModel()->model()->index( row, column );
+  kDebug() << "itemSelectionModel " << itemSelectionModel() << " model" << itemSelectionModel()->model() << " idx->model()" << index.model();
+  itemSelectionModel()->select( QItemSelection( index, index ), QItemSelectionModel::ClearAndSelect );
 
-  Collection &collection = item.parentCollection();
-  return folderIsDrafts(collection);
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  return folderIsDrafts( item.parentCollection() );
 }
 
 // #############################################################
@@ -685,9 +698,9 @@ void MainView::initDefaultFolders()
 
 void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
 {
-  if( SpecialMailCollections::self()->hasDefaultCollection( type ) ) {
-    const Collection col = SpecialMailCollections::self()->defaultCollection( type );
-    if ( !( col.rights() & Collection::AllRights ) )
+  if ( SpecialMailCollections::self()->hasDefaultCollection( type ) ) {
+    const Collection collection = SpecialMailCollections::self()->defaultCollection( type );
+    if ( !( collection.rights() & Collection::AllRights ) )
       kDebug() << "You do not have read/write permission to your inbox folder";
   } else {
     SpecialMailCollectionsRequestJob *job =
@@ -699,7 +712,7 @@ void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
   }
 }
 
-void MainView::createDefaultCollectionDone( KJob *job)
+void MainView::createDefaultCollectionDone( KJob *job )
 {
   if ( job->error() ) {
     kDebug() << "Error creating default collection: " << job->errorText();
@@ -714,8 +727,8 @@ void MainView::createDefaultCollectionDone( KJob *job)
   SpecialMailCollectionsRequestJob *requestJob =
       qobject_cast<SpecialMailCollectionsRequestJob*>( job );
 
-  const Collection col = requestJob->collection();
-  if ( !( col.rights() & Collection::AllRights ) )
+  const Collection collection = requestJob->collection();
+  if ( !( collection.rights() & Collection::AllRights ) )
     kDebug() << "You do not have read/write permission to your inbox folder.";
 
   connect( SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
@@ -724,22 +737,22 @@ void MainView::createDefaultCollectionDone( KJob *job)
   folderChanged(); //call here, as e.g trash folders cannot be detected before the special collections are set up
 }
 
-bool MainView::folderIsDrafts(const Collection &col)
+bool MainView::folderIsDrafts( const Collection &collection )
 {
-  Collection defaultDraft = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Drafts );
+  const Collection defaultDraftCollection = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Drafts );
 
   // check if this is the default draft folder
-  if ( col == defaultDraft )
+  if ( collection == defaultDraftCollection )
     return true;
 
   // check for invalid collection
-  const QString idString = QString::number( col.id() );
+  const QString idString = QString::number( collection.id() );
   if ( idString.isEmpty() )
     return false;
 
   // search the identities if the folder matches the drafts-folder
   const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
-  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
+  for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).drafts() == idString )
       return true;
   }
@@ -750,11 +763,11 @@ bool MainView::folderIsDrafts(const Collection &col)
 void MainView::deleteItemResult( KJob *job )
 {
   if ( job->error() ) {
-      kDebug() << "Error trying to delete item";
-      //###: review error string
-      KMessageBox::sorry( this,
-                          i18n("Cannot delete draft."),
-                          i18n("Delete Draft Error"));
+    kDebug() << "Error trying to delete item";
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n( "Cannot delete draft." ),
+                        i18n( "Delete Draft Error" ) );
   }
 }
 
@@ -816,7 +829,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall emails" ) );
 
-  connect( collectionSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(folderChanged()));
+  connect( collectionSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), this, SLOT( folderChanged() ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
@@ -865,171 +878,177 @@ ExportHandlerBase* MainView::exportHandler() const
 
 void MainView::saveMessage()
 {
-    Item item = currentItem();
-    if ( !item.isValid() )
-      return;
+  const Item item = currentItem();
+  if ( !item.isValid() )
+    return;
 
 //See the header file for SaveMailCommand why is it here
-    SaveMailCommand *command = new SaveMailCommand( item, this );
-    command->execute();
+  SaveMailCommand *command = new SaveMailCommand( item, this );
+  command->execute();
 }
 
 void MainView::findInMessage()
 {
-  QGraphicsObject *root = rootObject();
   MessageViewer::MessageViewItem* item = 0;
-  Q_FOREACH(QObject* obj, root->children())
-  {
-      if (dynamic_cast<MessageViewer::MessageViewItem*>(obj)) {
-        item = static_cast<MessageViewer::MessageViewItem*>(obj);
-        break;
+
+  Q_FOREACH( QObject *childObject, rootObject()->children() ) {
+    if ( dynamic_cast<MessageViewer::MessageViewItem*>( childObject ) ) {
+      item = static_cast<MessageViewer::MessageViewItem*>( childObject );
+      break;
     }
   }
 
-  if (item) {
+  if ( item ) {
     item->viewer()->slotFind();
   }
 }
 
 void MainView::preferHTML(bool useHtml)
 {
-  QGraphicsObject *root = rootObject();
   MessageViewer::MessageViewItem* item = 0;
-  Q_FOREACH(QObject* obj, root->children())
-  {
-      if (dynamic_cast<MessageViewer::MessageViewItem*>(obj)) {
-        item = static_cast<MessageViewer::MessageViewItem*>(obj);
-        break;
+
+  Q_FOREACH( QObject *childObject, rootObject()->children() ) {
+    if ( dynamic_cast<MessageViewer::MessageViewItem*>( childObject ) ) {
+      item = static_cast<MessageViewer::MessageViewItem*>( childObject );
+      break;
     }
   }
 
-  if (item) {
-      QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
-        return;
-      QModelIndexList selectedIndexes = collectionSelectionModel->selection().indexes();
-      Q_FOREACH(QModelIndex index, selectedIndexes) {
-          Q_ASSERT( index.isValid() );
-          const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-          Q_ASSERT( collection.isValid() );
+  if ( item ) {
+    const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
+    if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      return;
 
-          KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
-          KConfigGroup group(config, QString("c%1").arg(collection.id()));
-          group.writeEntry("htmlMailOverride", useHtml);
-      }
-      item->viewer()->setHtmlOverride( useHtml );
+    const QModelIndexList selectedIndexes = collectionSelectionModel->selection().indexes();
+    Q_FOREACH( const QModelIndex &index, selectedIndexes ) {
+      Q_ASSERT( index.isValid() );
+
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      KSharedConfigPtr config = KSharedConfig::openConfig( "kmail-mobilerc" );
+      KConfigGroup group( config, QString( "c%1" ).arg( collection.id() ) );
+      group.writeEntry( "htmlMailOverride", useHtml );
+    }
+
+    item->viewer()->setHtmlOverride( useHtml );
   }
 }
 
-
 void MainView::loadExternalReferences(bool load)
 {
-  QGraphicsObject *root = rootObject();
   MessageViewer::MessageViewItem* item = 0;
-  Q_FOREACH(QObject* obj, root->children())
-  {
-      if (dynamic_cast<MessageViewer::MessageViewItem*>(obj)) {
-        item = static_cast<MessageViewer::MessageViewItem*>(obj);
-        break;
+
+  Q_FOREACH( QObject *childObject, rootObject()->children() ) {
+    if ( dynamic_cast<MessageViewer::MessageViewItem*>( childObject ) ) {
+      item = static_cast<MessageViewer::MessageViewItem*>( childObject );
+      break;
     }
   }
 
-  if (item) {
-      QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
-        return;
-      qDebug() << collectionSelectionModel->selection().indexes().count();
-      QModelIndexList selectedIndexes = collectionSelectionModel->selection().indexes();
-      Q_FOREACH(QModelIndex index, selectedIndexes) {
-          Q_ASSERT( index.isValid() );
-          const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-          Q_ASSERT( collection.isValid() );
+  if ( item ) {
+    const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
+    if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      return;
 
-          KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
-          KConfigGroup group(config, QString("c%1").arg(collection.id()));
-          group.writeEntry("htmlLoadExternalOverride", load);
-      }
-      item->viewer()->setHtmlLoadExtOverride( load );
+    const QModelIndexList selectedIndexes = collectionSelectionModel->selection().indexes();
+    Q_FOREACH( const QModelIndex &index, selectedIndexes ) {
+      Q_ASSERT( index.isValid() );
+
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      KSharedConfigPtr config = KSharedConfig::openConfig( "kmail-mobilerc" );
+      KConfigGroup group( config, QString( "c%1" ).arg( collection.id() ) );
+      group.writeEntry( "htmlLoadExternalOverride", load );
+    }
+
+    item->viewer()->setHtmlLoadExtOverride( load );
   }
 }
 
 void MainView::folderChanged()
 {
-    QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
-    QModelIndexList indexes = collectionSelectionModel->selection().indexes();
-    if ( indexes.isEmpty() )
-      return;
-    //NOTE: not exactly correct if multiple folders are selected, although I don't know what to do then, as the action is not
-    //a tri-state one (checked, unchecked, for some folders checked)
-    bool htmlMailOverrideInAll = true;
-    bool htmlLoadExternalOverrideInAll = true;
+  const QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
+  const QModelIndexList indexes = collectionSelectionModel->selection().indexes();
+  if ( indexes.isEmpty() )
+    return;
 
-    KSharedConfigPtr config = KSharedConfig::openConfig("kmail-mobilerc");
-    Q_FOREACH( QModelIndex index, collectionSelectionModel->selectedRows() ) {
-        Q_ASSERT( index.isValid() );
-        const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-        Q_ASSERT( collection.isValid() );
-        KConfigGroup group(config, QString("c%1").arg(collection.id()));
-        if ( group.readEntry("htmlMailOverride", false) == false )
-          htmlMailOverrideInAll = false;
-        if ( group.readEntry("htmlLoadExternalOverride", false) == false )
-          htmlLoadExternalOverrideInAll = false;
-    }
-    actionCollection()->action("prefer_html_to_plain")->setChecked( htmlMailOverrideInAll );
-    actionCollection()->action("load_external_ref")->setChecked( htmlLoadExternalOverrideInAll );
+  //NOTE: not exactly correct if multiple folders are selected, although I don't know what to do then, as the action is not
+  //a tri-state one (checked, unchecked, for some folders checked)
+  bool htmlMailOverrideInAll = true;
+  bool htmlLoadExternalOverrideInAll = true;
 
-    actionCollection()->action("move_all_to_trash")->setText( i18n("Move All to Trash") );
-    if ( indexes.count() == 1 ) {
-      QModelIndex index = collectionSelectionModel->selection().indexes().first();
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
-      if ( CommonKernel->folderIsTrash( collection ) )
-        actionCollection()->action("move_all_to_trash")->setText( i18n("Empty Trash") );
-    }
+  KSharedConfigPtr config = KSharedConfig::openConfig( "kmail-mobilerc" );
+  Q_FOREACH( const QModelIndex &index, collectionSelectionModel->selectedRows() ) {
+    Q_ASSERT( index.isValid() );
+
+    const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+    Q_ASSERT( collection.isValid() );
+
+    KConfigGroup group( config, QString( "c%1" ).arg( collection.id() ) );
+    if ( group.readEntry( "htmlMailOverride", false ) == false )
+      htmlMailOverrideInAll = false;
+
+    if ( group.readEntry( "htmlLoadExternalOverride", false ) == false )
+      htmlLoadExternalOverrideInAll = false;
+  }
+  actionCollection()->action( "prefer_html_to_plain" )->setChecked( htmlMailOverrideInAll );
+  actionCollection()->action( "load_external_ref" )->setChecked( htmlLoadExternalOverrideInAll );
+
+  actionCollection()->action( "move_all_to_trash" )->setText( i18n( "Move All to Trash" ) );
+  if ( indexes.count() == 1 ) {
+    const QModelIndex index = collectionSelectionModel->selection().indexes().first();
+    const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+    Q_ASSERT( collection.isValid() );
+
+    if ( CommonKernel->folderIsTrash( collection ) )
+      actionCollection()->action( "move_all_to_trash" )->setText( i18n( "Empty Trash" ) );
+  }
 }
 
 void MainView::showExpireProperties()
 {
-    QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
-    if ( collectionSelectionModel->selection().indexes().isEmpty() )
-      return;
+  const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
+  if ( collectionSelectionModel->selection().indexes().isEmpty() )
+    return;
 
-    QModelIndex index = collectionSelectionModel->selection().indexes().first();
-    const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-    Q_ASSERT( collection.isValid() );
+  const QModelIndex index = collectionSelectionModel->selection().indexes().first();
+  const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+  Q_ASSERT( collection.isValid() );
 
-    MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, MailCommon::FolderCollection::forCollection( collection ) );
-    dlg->show();
+  MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, MailCommon::FolderCollection::forCollection( collection ) );
+  dlg->show();
 }
 
 void MainView::moveToOrEmptyTrash()
 {
-    QItemSelectionModel* collectionSelectionModel = regularSelectionModel();
-    QModelIndexList indexes = collectionSelectionModel->selection().indexes();
-    if ( indexes.isEmpty() )
-      return;
+  const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
+  const QModelIndexList indexes = collectionSelectionModel->selection().indexes();
+  if ( indexes.isEmpty() )
+    return;
 
-    QModelIndex index = collectionSelectionModel->selection().indexes().first();
-    const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-    Q_ASSERT( collection.isValid() );
-    if ( indexes.count() == 1 && CommonKernel->folderIsTrash( collection ) ) {
-       //empty trash
-       kDebug() << "EMPTY TRASH";
-      mMailActionManager->action(Akonadi::StandardMailActionManager::EmptyTrash)->trigger();
-    } else {
-      mMailActionManager->action(Akonadi::StandardMailActionManager::MoveAllToTrash)->trigger();
-    }
+  const QModelIndex index = indexes.first();
+  const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+  Q_ASSERT( collection.isValid() );
+
+  if ( indexes.count() == 1 && CommonKernel->folderIsTrash( collection ) ) {
+    //empty trash
+    kDebug() << "EMPTY TRASH";
+    mMailActionManager->action( Akonadi::StandardMailActionManager::EmptyTrash )->trigger();
+  } else {
+    mMailActionManager->action( Akonadi::StandardMailActionManager::MoveAllToTrash )->trigger();
+  }
 }
 
 void MainView::createToDo()
 {
-    Item item = currentItem();    
-    if ( !item.isValid() )
-      return;
+  const Item item = currentItem();
+  if ( !item.isValid() )
+    return;
 
-    MailCommon::Util::createTodoFromMail( item );
+  MailCommon::Util::createTodoFromMail( item );
 }
-
 
 // #############################################################
 
