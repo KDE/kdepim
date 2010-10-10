@@ -537,17 +537,6 @@ bool KMFolderIndex::recreateIndex()
   return readIndex();
 }
 
-void KMFolderIndex::silentlyRecreateIndex()
-{
-  Q_ASSERT( !isOpened() );
-  open( "silentlyRecreateIndex" );
-  KCursorSaver busy( KBusyPtr::busy() );
-  createIndexFromContents();
-  mCompactable = true;
-  writeConfig();
-  close( "silentlyRecreateIndex" );
-}
-
 void KMFolderIndex::updateInvitationAndAddressFieldsFromContents()
 {
   kdDebug(5006) << "Updating index for " << label() << ", this might take a while." << endl;

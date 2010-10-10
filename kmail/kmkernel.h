@@ -253,7 +253,6 @@ public:
   void init();
   void readConfig();
   void cleanupImapFolders();
-  void recreateCorruptIndexFiles();
   void testDir(const char *_name);
   void recoverDeadLetters();
   void initFolders(KConfig* cfg);
