@@ -1225,10 +1225,9 @@ off_t KMMsgBase::getLongPart(MsgPartType t) const
 retry:
   off_t ret = 0;
 
-  g_chunk_offset = 0;
   bool using_mmap = false;
-  int sizeOfLong = storage()->indexSizeOfLong();
   bool swapByteOrder = storage()->indexSwapByteOrder();
+  int sizeOfLong = storage()->indexSizeOfLong();
   if (storage()->indexStreamBasePtr()) {
     if (g_chunk)
       free(g_chunk);
@@ -1241,46 +1240,46 @@ retry:
     assert(mIndexLength >= 0);
     if (g_chunk_length < mIndexLength)
       g_chunk = (uchar *)realloc(g_chunk, g_chunk_length = mIndexLength);
-    off_t first_off=ftell(storage()->mIndexStream);
+    off_t first_off = ftell(storage()->mIndexStream);
     fseek(storage()->mIndexStream, mIndexOffset, SEEK_SET);
     fread( g_chunk, mIndexLength, 1, storage()->mIndexStream);
     fseek(storage()->mIndexStream, first_off, SEEK_SET);
   }
 
-  MsgPartType type;
-  Q_UINT16 l;
-  while (g_chunk_offset < mIndexLength) {
+  Q_UINT16 len;
+  for ( g_chunk_offset = 0; g_chunk_offset < mIndexLength; g_chunk_offset += len ) {
     Q_UINT32 tmp;
     copy_from_stream(tmp);
-    copy_from_stream(l);
+    copy_from_stream(len);
     if (swapByteOrder)
     {
        tmp = kmail_swap_32(tmp);
-       l = kmail_swap_16(l);
+       len = kmail_swap_16(len);
     }
-    type = (MsgPartType) tmp;
+    MsgPartType type = (MsgPartType) tmp;
 
-    if (g_chunk_offset + l > mIndexLength) {
-      kdDebug(5006) << "This should never happen.. " << __FILE__ << ":" << __LINE__ << endl;
+    if (g_chunk_offset + len > mIndexLength) {
+      kdDebug() << "This should never happen..";
       if(using_mmap) {
         g_chunk_length = 0;
         g_chunk = 0;
       }
-      storage()->recreateIndex();
+      if (!storage()->recreateIndex())
+        return 0;
       goto retry;
     }
     if(type == t) {
-      assert(sizeOfLong == l);
+      assert(sizeOfLong == len);
       if (sizeOfLong == sizeof(ret))
       {
-	 copy_from_stream(ret);
-         if (swapByteOrder)
-         {
-            if (sizeof(ret) == 4)
-               ret = kmail_swap_32(ret);
-            else
-               ret = kmail_swap_64(ret);
-         }
+        copy_from_stream(ret);
+        if (swapByteOrder)
+        {
+          if (sizeof(ret) == 4)
+            ret = kmail_swap_32(ret);
+          else
+            ret = kmail_swap_64(ret);
+        }
       }
       else if (sizeOfLong == 4)
       {
@@ -1301,7 +1300,7 @@ retry:
          if (!swapByteOrder)
          {
             // Index file order is the same as the order of this CPU.
-#ifndef WORDS_BIGENDIAN
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
             // Index file order is little endian
             ret = ret_1; // We drop the 4 most significant bytes
 #else
@@ -1312,13 +1311,15 @@ retry:
          else
          {
             // Index file order is different from this CPU.
-#ifndef WORDS_BIGENDIAN
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
             // Index file order is big endian
             ret = ret_2; // We drop the 4 most significant bytes
 #else
             // Index file order is little endian
             ret = ret_1; // We drop the 4 most significant bytes
 #endif
+
+
             // We swap the result to host order.
             ret = kmail_swap_32(ret);
          }
@@ -1326,16 +1327,16 @@ retry:
       }
       break;
     }
-    g_chunk_offset += l;
-  }
+  } // for
   if(using_mmap) {
     g_chunk_length = 0;
     g_chunk = 0;
   }
+
   return ret;
 }
 
-#ifndef WORDS_BIGENDIAN
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
 // We need to use swab to swap bytes to network byte order
 #define memcpy_networkorder(to, from, len)  swab((char *)(from), (char *)(to), len)
 #else
@@ -1343,18 +1344,20 @@ retry:
 #define memcpy_networkorder(to, from, len)  memcpy(to, from, len)
 #endif
 
-#define STORE_DATA_LEN(type, x, len, network_order) do { \
-	int len2 = (len > 256) ? 256 : len; \
-	if(csize < (length + (len2 + sizeof(short) + sizeof(MsgPartType)))) \
-    	   ret = (uchar *)realloc(ret, csize += len2+sizeof(short)+sizeof(MsgPartType)); \
-        Q_UINT32 t = (Q_UINT32) type; memcpy(ret+length, &t, sizeof(t)); \
-        Q_UINT16 l = len2; memcpy(ret+length+sizeof(t), &l, sizeof(l)); \
-        if (network_order) \
-           memcpy_networkorder(ret+length+sizeof(t)+sizeof(l), x, len2); \
-        else \
-           memcpy(ret+length+sizeof(t)+sizeof(l), x, len2); \
-        length += len2+sizeof(t)+sizeof(l); \
-    } while(0)
+#define STORE_DATA_LEN(type, x, len, network_order) \
+  do { \
+    int len2 = (len > 256) ? 256 : len; \
+    if(csize < (length + (len2 + sizeof(short) + sizeof(MsgPartType)))) \
+      ret = (uchar *)realloc(ret, csize += len2+sizeof(short)+sizeof(MsgPartType)); \
+    Q_UINT32 t = (Q_UINT32) type; memcpy(ret+length, &t, sizeof(t)); \
+    Q_UINT16 l = len2; memcpy(ret+length+sizeof(t), &l, sizeof(l)); \
+    if (network_order) \
+       memcpy_networkorder(ret+length+sizeof(t)+sizeof(l), x, len2); \
+    else \
+       memcpy(ret+length+sizeof(t)+sizeof(l), x, len2); \
+    length += len2+sizeof(t)+sizeof(l); \
+  } while(0)
+
 #define STORE_DATA(type, x) STORE_DATA_LEN(type, &x, sizeof(x), false)
 
 //-----------------------------------------------------------------------------

@@ -524,21 +524,17 @@ KMMsgInfo* KMFolderIndex::setIndexEntry( int idx, KMMessage *msg )
   return msgInfo;
 }
 
-void KMFolderIndex::recreateIndex( bool readIndexAfterwards )
+bool KMFolderIndex::recreateIndex()
 {
   kapp->setOverrideCursor(KCursor::arrowCursor());
   KMessageBox::information(0,
        i18n("The mail index for '%1' is corrupted and will be regenerated now, "
             "but some information, like status flags, might get lost.").arg(name()));
   kapp->restoreOverrideCursor();
-  createIndexFromContents();
-  if ( readIndexAfterwards ) {
-    readIndex();
+  if ( createIndexFromContents() != 0 ) {
+    return false;
   }
-
-  // Clear the corrupted flag
-  mCompactable = true;
-  writeConfig();
+  return readIndex();
 }
 
 void KMFolderIndex::silentlyRecreateIndex()

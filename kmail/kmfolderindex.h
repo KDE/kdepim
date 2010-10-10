@@ -30,7 +30,7 @@
  * This class represents a message store which has an index for providing fast
  * access to often used message properties, namely those displayed in the list
  * of messages (KMHeaders).
- * 
+ *
  * @author Don Sanders <sanders@kde.org>
  */
 
@@ -81,7 +81,7 @@ public:
   virtual QString indexLocation() const;
   virtual int writeIndex( bool createEmptyIndex = false );
 
-  void recreateIndex( bool readIndexAfterwards = true );
+  bool recreateIndex();
   void silentlyRecreateIndex();
 
   /** Tests whether the contents of this folder is newer than the index.
