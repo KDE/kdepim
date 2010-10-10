@@ -83,7 +83,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.5.61 REQUIRED)
+find_package(KdepimLibs 4.5.63 REQUIRED)
 
 ### remove the following when requiring kdelibs 4.5 ###
 if ( NOT KDE4_KCMUTILS_LIBS )
