@@ -22,50 +22,46 @@
 */
 
 #include "mainview.h"
-#include "calendarinterface.h"
-#include "calendaradaptor.h"
-#include "eventlistproxy.h"
-#include "eventsfilterproxymodel.h"
-#include "eventsexporthandler.h"
-#include "eventsimporthandler.h"
-
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
-#include <calendarsupport/calendar.h>
-#include <calendarsupport/calendarmodel.h>
-#include <calendarsupport/collectionselection.h>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/freebusymanager.h>
-#include <calendarsupport/utils.h>
-#include <calendarsupport/identitymanager.h>
-#include <calendarviews/eventviews/eventview.h>
-
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/standardactionmanager.h>
-#include <akonadi/itemfetchjob.h>
-#include <incidenceeditor-ng/incidencedefaults.h>
-#include <libkdepimdbusinterfaces/reminderclient.h>
-
-#include <ksystemtimezone.h>
-
-#include <qdeclarativeengine.h>
-#include <qdeclarativecontext.h>
 
 #include "agendaviewitem.h"
+#include "calendaradaptor.h"
+#include "calendarinterface.h"
+#include "eventlistproxy.h"
+#include "eventsexporthandler.h"
+#include "eventsfilterproxymodel.h"
+#include "eventsimporthandler.h"
 #include "monthviewitem.h"
 #include "qmldateedit.h"
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
 
-#include <KAction>
-#include <KActionCollection>
-#include <KMessageBox>
+#include <akonadi/agentactionmanager.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/standardactionmanager.h>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/collectionselection.h>
+#include <calendarsupport/freebusymanager.h>
+#include <calendarsupport/identitymanager.h>
+#include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/utils.h>
+#include <calendarviews/eventviews/eventview.h>
+#include <kaction.h>
+#include <kactioncollection.h>
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
+#include <kmessagebox.h>
+#include <ksystemtimezone.h>
+#include <incidenceeditor-ng/incidencedefaults.h>
+#include <libkdepimdbusinterfaces/reminderclient.h>
 
-#include <QGraphicsItem>
-#include <QTimer>
-#include <QDBusConnection>
+#include <QtCore/QTimer>
+#include <QtDBus/QDBusConnection>
+#include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeContext>
+#include <QtGui/QGraphicsItem>
 
 Q_DECLARE_METATYPE(KCalCore::iTIPMethod)
 
@@ -113,14 +109,15 @@ void MainView::delayedInit()
   CalendarSupport::CollectionSelection *collectionselection;
   collectionselection = new CalendarSupport::CollectionSelection( regularSelectionModel(), this );
   EventViews::EventView::setGlobalCollectionSelection( collectionselection );
-  
-  QDBusConnection::sessionBus().registerService("org.kde.korganizer"); //register also as the real korganizer, so kmail can communicate with it
+
+  QDBusConnection::sessionBus().registerService( "org.kde.korganizer" ); //register also as the real korganizer, so kmail can communicate with it
 
   KAction *action = new KAction( i18n( "New Appointment" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(newEvent()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( newEvent() ) );
   actionCollection()->addAction( QLatin1String( "add_new_event" ), action );
+
   action = new KAction( i18n( "New Todo" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(newTodo()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( newTodo() ) );
   actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
 
   action = new KAction( i18n( "Import Events" ), this );
@@ -131,64 +128,64 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   actionCollection()->addAction( QLatin1String( "export_events" ), action );
 
-  connect(this, SIGNAL(statusChanged(QDeclarativeView::Status)),
-          this, SLOT(connectQMLSlots(QDeclarativeView::Status)));
-
   action = new KAction( i18n( "Publish Item Information" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( publishItemInformation()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( publishItemInformation() ) );
   actionCollection()->addAction( QLatin1String( "publish_item_information" ), action );
 
   action = new KAction( i18n( "Send Invitation to Attendees" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendInvitation()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendInvitation() ) );
   actionCollection()->addAction( QLatin1String( "send_invitations_to_attendees" ), action );
 
   action = new KAction( i18n( "Send Status Update" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendStatusUpdate()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendStatusUpdate() ) );
   actionCollection()->addAction( QLatin1String( "send_status_update" ), action );
 
   action = new KAction( i18n( "Send Cancellation to Attendees" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendCancellation()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendCancellation() ) );
   actionCollection()->addAction( QLatin1String( "send_cancellation_to_attendees" ), action );
 
   action = new KAction( i18n( "Request Update" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( requestUpdate()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( requestUpdate() ) );
   actionCollection()->addAction( QLatin1String( "request_update" ), action );
 
   action = new KAction( i18n( "Request Change" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( requestChange()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( requestChange() ) );
   actionCollection()->addAction( QLatin1String( "request_change" ), action );
 
   action = new KAction( i18n( "Send as ICalendar" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendAsICalendar()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendAsICalendar() ) );
   actionCollection()->addAction( QLatin1String( "send_as_icalendar" ), action );
 
   action = new KAction( i18n( "Mail Free Busy Information" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( mailFreeBusy()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( mailFreeBusy() ) );
   actionCollection()->addAction( QLatin1String( "mail_freebusy" ), action );
 
   action = new KAction( i18n( "Upload Free Busy Information" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( uploadFreeBusy()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( uploadFreeBusy() ) );
   actionCollection()->addAction( QLatin1String( "upload_freebusy" ), action );
 
   action = new KAction( i18n( "Save All" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
   actionCollection()->addAction( QLatin1String( "save_all_attachments" ), action );
+
+  connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
+           this, SLOT( connectQMLSlots( QDeclarativeView::Status ) ) );
 
   //register DBUS interface
   m_calendarIface = new CalendarInterface( this );
-  new CalendarAdaptor(m_calendarIface);
-  QDBusConnection::sessionBus().registerObject("/Calendar", m_calendarIface);
+  new CalendarAdaptor( m_calendarIface );
+  QDBusConnection::sessionBus().registerObject( "/Calendar", m_calendarIface );
 
   KPIM::ReminderClient::startDaemon();
 }
 
-void MainView::connectQMLSlots(QDeclarativeView::Status status)
+void MainView::connectQMLSlots( QDeclarativeView::Status status )
 {
   if ( status != Ready )
     return;
 
-  connect(m_calendarIface, SIGNAL(showDateSignal(QVariant)), rootObject(), SLOT(showDate(QVariant)));
-  connect(m_calendarIface, SIGNAL(showEventViewSignal()), rootObject(), SLOT(showEventView()));
+  connect( m_calendarIface, SIGNAL( showDateSignal( QVariant ) ), rootObject(), SLOT( showDate( QVariant ) ) );
+  connect( m_calendarIface, SIGNAL( showEventViewSignal() ), rootObject(), SLOT( showEventView() ) );
 }
 
 void MainView::finishEdit( QObject *editor )
@@ -198,16 +195,16 @@ void MainView::finishEdit( QObject *editor )
 
 void MainView::showRegularCalendar()
 {
-  m_calendar->setUnfilteredModel(regularSelectedItems());
+  m_calendar->setUnfilteredModel( regularSelectedItems() );
 }
 
-void MainView::setCurrentEventItemId(qint64 id)
+void MainView::setCurrentEventItemId( qint64 id )
 {
-  QModelIndexList list = itemModel()->match(itemModel()->index(0, 0), EntityTreeModel::ItemIdRole, id, 1 );
-  if (list.isEmpty())
+  const QModelIndexList list = itemModel()->match( itemModel()->index( 0, 0 ), EntityTreeModel::ItemIdRole, id, 1 );
+  if ( list.isEmpty() )
     return;
 
-  setListSelectedRow(list.first().row());
+  setListSelectedRow( list.first().row() );
 }
 
 void MainView::newEvent()
@@ -263,7 +260,7 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
   editor->setWindowTitle( i18n( "KDE Calendar" ) );
   editor->load( item, date );
 
-  m_openItemEditors.insert(  editor, item.id() );
+  m_openItemEditors.insert( editor, item.id() );
   connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
 
   editor->show();
@@ -352,56 +349,58 @@ void MainView::mailFreeBusy()
 
 void MainView::sendAsICalendar()
 {
-  QModelIndexList list = itemSelectionModel()->selectedIndexes();
-  if (list.isEmpty())
+  const QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if ( list.isEmpty() )
     return;
 
-  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  const Akonadi::Item item( list.first().data( EntityTreeModel::ItemIdRole ).toInt() );
+
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForSendICalDone(KJob*)));  
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForSendICalDone( KJob* ) ) );
 }
 
-void MainView::fetchForSendICalDone(KJob* job)
+void MainView::fetchForSendICalDone( KJob *job )
 {
   if ( job->error() ) {
-      kDebug() << "Error trying to fetch item";
-      //###: review error string
-      KMessageBox::sorry( this,
-                          i18n("Cannot fetch calendar item."),
-                          i18n("Item Fetch Error"));
-      return;
+    kDebug() << "Error trying to fetch item";
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n( "Cannot fetch calendar item." ),
+                        i18n( "Item Fetch Error" ) );
+    return;
   }
 
-  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
-  
+  const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+
   CalendarSupport::sendAsICalendar( item, m_identityManager, this );
 }
 
 void MainView::publishItemInformation()
 {
-  QModelIndexList list = itemSelectionModel()->selectedIndexes();
-  if (list.isEmpty())
+  const QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if ( list.isEmpty() )
     return;
 
-  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  const Akonadi::Item item( list.first().data( EntityTreeModel::ItemIdRole ).toInt() );
+
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForPublishItemDone(KJob*)));
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForPublishItemDone( KJob* ) ) );
 }
 
-void MainView::fetchForPublishItemDone(KJob* job)
+void MainView::fetchForPublishItemDone( KJob *job )
 {
   if ( job->error() ) {
-      kDebug() << "Error trying to fetch item";
-      //###: review error string
-      KMessageBox::sorry( this,
-                          i18n("Cannot fetch calendar item."),
-                          i18n("Item Fetch Error"));
-      return;
+    kDebug() << "Error trying to fetch item";
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n( "Cannot fetch calendar item." ),
+                        i18n( "Item Fetch Error" ) );
+    return;
   }
 
-  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+  const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
 
   CalendarSupport::publishItemInformation( item, m_calendar, this );
 }
@@ -433,62 +432,62 @@ void MainView::requestChange()
 
 void MainView::scheduleiTIPMethod( KCalCore::iTIPMethod method )
 {
-  QModelIndexList list = itemSelectionModel()->selectedIndexes();
-  if (list.isEmpty())
+  const QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if ( list.isEmpty() )
     return;
 
-  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  const Akonadi::Item item( list.first().data( EntityTreeModel::ItemIdRole ).toInt() );
+
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  job->setProperty( "iTIPmethod", QVariant::fromValue<KCalCore::iTIPMethod>(method) );
-  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForiTIPMethodDone(KJob*)));
+  job->setProperty( "iTIPmethod", QVariant::fromValue<KCalCore::iTIPMethod>( method ) );
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForiTIPMethodDone( KJob* ) ) );
 }
 
-void MainView::fetchForiTIPMethodDone(KJob* job)
+void MainView::fetchForiTIPMethodDone( KJob *job )
 {
   if ( job->error() ) {
-      kDebug() << "Error trying to fetch item";
-      //###: review error string
-      KMessageBox::sorry( this,
-                          i18n("Cannot fetch calendar item."),
-                          i18n("Item Fetch Error"));
-      return;
+    kDebug() << "Error trying to fetch item";
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n( "Cannot fetch calendar item." ),
+                        i18n( "Item Fetch Error" ) );
+    return;
   }
 
-  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+  const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
 
-  KCalCore::iTIPMethod method = job->property( "iTIPmethod" ).value<KCalCore::iTIPMethod>();
+  const KCalCore::iTIPMethod method = job->property( "iTIPmethod" ).value<KCalCore::iTIPMethod>();
   CalendarSupport::scheduleiTIPMethods( method, item, m_calendar, this );
 }
 
 void MainView::saveAllAttachments()
 {
-  QModelIndexList list = itemSelectionModel()->selectedIndexes();
-  if (list.isEmpty())
+  const QModelIndexList list = itemSelectionModel()->selectedIndexes();
+  if ( list.isEmpty() )
     return;
 
-  Akonadi::Item item( list.first().data(EntityTreeModel::ItemIdRole).toInt() );
+  const Akonadi::Item item( list.first().data( EntityTreeModel::ItemIdRole ).toInt() );
+
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect(job, SIGNAL( result( KJob* ) ), this, SLOT(fetchForSaveAllAttachmentsDone(KJob*)));
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchForSaveAllAttachmentsDone( KJob* ) ) );
 }
 
-void MainView::fetchForSaveAllAttachmentsDone(KJob* job)
+void MainView::fetchForSaveAllAttachmentsDone( KJob *job )
 {
   if ( job->error() ) {
-      kDebug() << "Error trying to fetch item";
-      //###: review error string
-      KMessageBox::sorry( this,
-                          i18n("Cannot fetch calendar item."),
-                          i18n("Item Fetch Error"));
-      return;
+    kDebug() << "Error trying to fetch item";
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n( "Cannot fetch calendar item." ),
+                        i18n( "Item Fetch Error" ) );
+    return;
   }
 
-  Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
+  const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
 
   CalendarSupport::saveAttachments( item, this );
 }
-
-
 
 #include "mainview.moc"

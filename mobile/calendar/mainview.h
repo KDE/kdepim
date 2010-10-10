@@ -28,18 +28,17 @@
 #include <Akonadi/Entity>
 #include <KCalCore/ScheduleMessage>
 
-class KJob;
+namespace CalendarSupport {
+class Calendar;
+}
+
 namespace KPIMIdentities {
 class IdentityManager;
 }
 
 class CalendarInterface;
+class KJob;
 class QDate;
-
-namespace CalendarSupport
-{
-class Calendar;
-}
 
 class MainView : public KDeclarativeMainView
 {
@@ -50,7 +49,7 @@ class MainView : public KDeclarativeMainView
 
     ~MainView();
 
-  public slots:
+  public Q_SLOTS:
     void showRegularCalendar();
 
     void setCurrentEventItemId( qint64 id );
@@ -69,16 +68,16 @@ class MainView : public KDeclarativeMainView
     void requestChange();
     void saveAllAttachments();
 
-  protected slots:
+  protected Q_SLOTS:
     void delayedInit();
-    void connectQMLSlots(QDeclarativeView::Status status);
+    void connectQMLSlots( QDeclarativeView::Status status );
 
-  private slots:
+  private Q_SLOTS:
     void finishEdit( QObject *editor );
-    void fetchForSendICalDone( KJob* job );
-    void fetchForPublishItemDone( KJob* job );
-    void fetchForiTIPMethodDone( KJob* job );
-    void fetchForSaveAllAttachmentsDone( KJob* job );
+    void fetchForSendICalDone( KJob *job );
+    void fetchForPublishItemDone( KJob *job );
+    void fetchForiTIPMethodDone( KJob *job );
+    void fetchForSaveAllAttachmentsDone( KJob *job );
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
