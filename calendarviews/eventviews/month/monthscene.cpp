@@ -645,7 +645,10 @@ void MonthScene::mouseReleaseEvent ( QGraphicsSceneMouseEvent *mouseEvent )
 
   if ( mActionItem ) {
     MonthCell *currentCell = getCellFromPos( pos );
-    if ( currentCell && currentCell != mStartCell ) { // We want to act if a move really happened
+
+    const bool somethingChanged = currentCell && currentCell != mStartCell;
+
+    if ( somethingChanged ) { // We want to act if a move really happened
       if ( mActionType == Resize ) {
         mActionItem->endResize();
       } else if ( mActionType == Move ) {
@@ -660,7 +663,9 @@ void MonthScene::mouseReleaseEvent ( QGraphicsSceneMouseEvent *mouseEvent )
     // FIXME: WOW, quite heavy if only a move happened...
     // and BTW, when changing an incidence, we should get an event anyway,
     // which should trigger the reload...
-    mMonthView->reloadIncidences();
+    if ( somethingChanged ) {
+      mMonthView->reloadIncidences();
+    }
 
     mouseEvent->accept();
   }
@@ -688,9 +693,16 @@ MonthCell *MonthScene::getCellFromPos( const QPointF &pos )
 
 void MonthScene::selectItem( MonthItem *item )
 {
-  if ( mSelectedItem == item ) {
-    return;
-  }
+  /*
+    if ( mSelectedItem == item ) {
+      return;
+    }
+
+    I commented the above code so it's possible to selected a selected item.
+    korg-mobile needs that, otherwise clicking on a selected item wont bring the editor up.
+    Another solution would be to have two signals: incidenceSelected() and incidenceClicked()
+  */
+
   IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( item );
 
   if ( !tmp ) {
@@ -707,6 +719,7 @@ void MonthScene::selectItem( MonthItem *item )
   } else {
     emit incidenceSelected( tmp->incidence(), mMonthView->selectedIncidenceDates().first() );
   }
+  update();
 }
 
 void MonthScene::removeIncidence( Akonadi::Item::Id id )
