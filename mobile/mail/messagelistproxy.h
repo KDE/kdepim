@@ -36,7 +36,8 @@ class MessageListProxy : public ListProxy
       DateRole,
       IsUnreadRole,
       IsImportantRole,
-      IsActionItemRole
+      IsActionItemRole,
+      DateGroupRole
     };
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;

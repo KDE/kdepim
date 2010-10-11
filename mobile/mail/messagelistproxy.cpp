@@ -24,6 +24,7 @@
 
 #include <akonadi/kmime/messagestatus.h>
 
+#include <KCalendarSystem>
 #include <KLocale>
 #include <KGlobal>
 
@@ -67,6 +68,39 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
         return messageStatus.isImportant();
       case IsActionItemRole:
         return messageStatus.isToAct();
+      case DateGroupRole:
+      {
+        // simplified version taken from libmessagelist
+        const KDateTime& dt = msg->date()->dateTime();
+        const QDate dDate = dt.date();
+        const KCalendarSystem *calendar = KGlobal::locale()->calendar();
+        int daysAgo = -1;
+        if ( calendar->isValid( dDate ) && calendar->isValid( QDate::currentDate() ) ) {
+          daysAgo = dDate.daysTo( QDate::currentDate() );
+        }
+
+        if ( daysAgo < 0 || !dt.isValid() ) // In the future or invalid
+          return i18n( "Unknown" );
+        else if( daysAgo == 0 ) // Today
+          return i18n( "Today" );
+        else if ( daysAgo == 1 ) // Yesterday
+          return i18n( "Yesterday" );
+        else if ( daysAgo > 1 && daysAgo < calendar->daysInWeek( QDate::currentDate() ) ) // Within last seven days
+          return KGlobal::locale()->calendar()->weekDayName( dDate );
+        else if( calendar->month( dDate ) == calendar->month( QDate::currentDate() ) && calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this month
+          const int startOfWeekDaysAgo = ( calendar->daysInWeek( QDate::currentDate() ) + calendar->dayOfWeek( QDate::currentDate() ) -
+                                           KGlobal::locale()->weekStartDay() ) % calendar->daysInWeek( QDate::currentDate() );
+          const int weeksAgo = ( ( daysAgo - startOfWeekDaysAgo ) / calendar->daysInWeek( QDate::currentDate() ) ) + 1;
+          if ( weeksAgo == 0 )
+            return KGlobal::locale()->calendar()->weekDayName( dDate );
+          else
+            return i18np( "One Week Ago", "%1 Weeks Ago", weeksAgo );
+        } else if ( calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this year
+          return calendar->monthName( dDate );
+        } else { // in previous years
+          return i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ), calendar->yearString( dDate ) );
+        }
+      }
     }
   }
   return QSortFilterProxyModel::data(index, role);
@@ -83,6 +117,7 @@ void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   names.insert( IsUnreadRole, "is_unread" );
   names.insert( IsImportantRole, "is_important" );
   names.insert( IsActionItemRole, "is_action_item" );
+  names.insert( DateGroupRole, "dateGroup" );
   setRoleNames( names );
   kDebug() << names << sourceModel->roleNames();
 }
