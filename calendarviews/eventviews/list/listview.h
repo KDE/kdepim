@@ -106,26 +106,9 @@ class EVENTVIEWS_EXPORT ListView : public EventView
   protected slots:
     void processSelectionChange();
 
-  protected:
-    void addIncidences( const Akonadi::Item::List &incidenceList, const QDate & );
-    void addIncidence( const Akonadi::Item &, const QDate &date );
-
   private:
-    ListViewItem *getItemForIncidence( const Akonadi::Item & );
-    KCalCore::Incidence::Ptr incidenceForId( Akonadi::Item::Id id ) const;
-
-  private:
-    class ListItemVisitor;
-    QTreeWidget *mTreeWidget;
-    ListViewItem *mActiveItem;
-    QHash<Akonadi::Item::Id,Akonadi::Item> mItems;
-    QHash<Akonadi::Item::Id, QDate> mDateList;
-    QDate mStartDate;
-    QDate mEndDate;
-    KCalCore::DateList mSelectedDates;
-
-    // if it's non interactive we disable context menu, and incidence editing
-    bool mIsNonInteractive;
+    class Private;
+    Private *const d;
 };
 
 }
