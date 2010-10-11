@@ -26,6 +26,7 @@
 #include "eventviews_export.h"
 
 #include <Akonadi/Item>
+#include <KCalCore/Incidence>
 
 #include <QDate>
 #include <QObject>
@@ -312,7 +313,7 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
     */
     QColor catColor() const;
 
-    Akonadi::Item mIncidence;
+    KCalCore::Incidence::Ptr mIncidence;
     bool mCloned;
     int mRecurDayOffset;
     bool mIsEvent, mIsTodo, mIsJournal;

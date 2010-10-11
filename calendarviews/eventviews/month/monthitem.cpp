@@ -38,6 +38,7 @@
 #include <KMessageBox>
 
 using namespace EventViews;
+using namespace KCalCore;
 
 MonthItem::MonthItem( MonthScene *monthScene )
   : mMonthScene( monthScene ),
@@ -287,13 +288,13 @@ QList<MonthGraphicsItem *> EventViews::MonthItem::monthGraphicsItems() const
 IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
                                         const Akonadi::Item &aitem,
                                         const QDate &recurStartDate )
-  : MonthItem( monthScene ), mIncidence( aitem ), mCloned( false )
+  : MonthItem( monthScene ), mIncidence( aitem.payload<Incidence::Ptr>() ), mCloned( false )
 {
-  mIsEvent = CalendarSupport::hasEvent( mIncidence );
-  mIsJournal = CalendarSupport::hasJournal( mIncidence );
-  mIsTodo = CalendarSupport::hasTodo( mIncidence );
+  mIsEvent = CalendarSupport::hasEvent( aitem );
+  mIsJournal = CalendarSupport::hasJournal( aitem );
+  mIsTodo = CalendarSupport::hasTodo( aitem );
 
-  KCalCore::Incidence::Ptr inc = CalendarSupport::incidence( mIncidence );
+  KCalCore::Incidence::Ptr inc = mIncidence;
   if ( inc->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        inc->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     const int years = EventViews::yearDiff( inc->dtStart().date(), recurStartDate );
@@ -302,7 +303,7 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
       inc->setReadOnly( false );
       inc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years, inc->summary() ) );
       inc->setReadOnly( true );
-      mIncidence.setPayload( inc );
+      mIncidence = inc;
       mCloned = true;
     }
   }
@@ -332,29 +333,27 @@ bool IncidenceMonthItem::greaterThanFallback( const MonthItem *other ) const
   if ( allDay() != o->allDay() ) {
     return allDay();
   }
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
-  const KCalCore::Incidence::Ptr otherIncidence = CalendarSupport::incidence( o->mIncidence );
+  const KCalCore::Incidence::Ptr otherIncidence = o->mIncidence;
 
-  if ( incidence->dtStart().time() != otherIncidence->dtStart().time() ) {
-    return incidence->dtStart().time() < otherIncidence->dtStart().time();
+  if ( mIncidence->dtStart().time() != otherIncidence->dtStart().time() ) {
+    return mIncidence->dtStart().time() < otherIncidence->dtStart().time();
   }
 
-  // as a last resort, compare the item id's
-  return mIncidence.id() < o->mIncidence.id();
+  // as a last resort, compare uids
+  return mIncidence->uid() < otherIncidence->uid();
 }
 
 QDate IncidenceMonthItem::realStartDate() const
 {
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
-  if ( !incidence ) {
+  if ( !mIncidence ) {
     return QDate();
   }
 
   KDateTime dt;
   if ( mIsEvent || mIsJournal ) {
-    dt = incidence->dtStart();
+    dt = mIncidence->dtStart();
   } else if ( mIsTodo ) {
-    dt = CalendarSupport::todo( mIncidence )->dtDue();
+    dt = mIncidence.staticCast<Todo>()->dtDue();
   }
 
   QDate start;
@@ -368,12 +367,11 @@ QDate IncidenceMonthItem::realStartDate() const
 }
 QDate IncidenceMonthItem::realEndDate() const
 {
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
-  if ( !incidence ) {
+  if ( !mIncidence ) {
     return QDate();
   }
 
-  const KDateTime dt = incidence->dateTime( KCalCore::Incidence::RoleDisplayEnd );
+  const KDateTime dt = mIncidence->dateTime( KCalCore::Incidence::RoleDisplayEnd );
 
   QDate end;
   if ( dt.isDateOnly() ) {
@@ -386,17 +384,16 @@ QDate IncidenceMonthItem::realEndDate() const
 }
 bool IncidenceMonthItem::allDay() const
 {
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
-  return incidence->allDay();
+  return mIncidence->allDay();
 }
 
 bool IncidenceMonthItem::isMoveable() const
 {
-  return monthScene()->mMonthView->calendar()->hasChangeRights( mIncidence );
+  return monthScene()->mMonthView->calendar()->hasChangeRights( akonadiItem() );
 }
 bool IncidenceMonthItem::isResizable() const
 {
-  return mIsEvent && monthScene()->mMonthView->calendar()->hasChangeRights( mIncidence );
+  return mIsEvent && monthScene()->mMonthView->calendar()->hasChangeRights( akonadiItem() );
 }
 
 void IncidenceMonthItem::finalizeMove( const QDate &newStartDate )
@@ -425,21 +422,21 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
   if ( startOffset == 0 && endOffset == 0 ) {
     return;
   }
-  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
 
   CalendarSupport::IncidenceChanger *changer = monthScene()->incidenceChanger();
   if ( !changer ) {
     KMessageBox::sorry( parentWidget(), i18n( "Unable to save %1 \"%2\".",
-                        i18n( incidence->typeStr() ), incidence->summary() ) );
+                        i18n( mIncidence->typeStr() ), mIncidence->summary() ) );
     kDebug() << "No incidence changer is set";
     return;
   }
 
   bool modify = true;
 
-  if ( incidence->recurs() ) {
-    const int res = monthScene()->mMonthView->showMoveRecurDialog(
-                                          CalendarSupport::incidence( mIncidence ), startDate() );
+  Akonadi::Item item = akonadiItem();
+  item.setPayload( mIncidence );
+  if ( mIncidence->recurs() ) {
+    const int res = monthScene()->mMonthView->showMoveRecurDialog( mIncidence, startDate() );
     switch ( res ) {
       case KMessageBox::Ok: // All occurrences
         modify = true;
@@ -447,17 +444,17 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
       case KMessageBox::Yes: // Just this occurrence
       {
         modify = true;
-        KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
+        KCalCore::Incidence::Ptr oldIncSaved( mIncidence->clone() );
         KCalCore::Incidence::Ptr newInc(
           monthScene()->mMonthView->calendar()->dissociateOccurrence(
-            mIncidence, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
+            item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
         if ( newInc ) {
            //TODO check return values
           changer->changeIncidence(
-            oldIncSaved, mIncidence,
+            oldIncSaved, item,
             CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, 0 );
 
-          changer->addIncidence( newInc, mIncidence.parentCollection(), parentWidget() );
+          changer->addIncidence( newInc, item.parentCollection(), parentWidget() );
         } else {
           KMessageBox::sorry(
             parentWidget(),
@@ -471,17 +468,17 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
       case KMessageBox::No: // All future occurrences
       {
         modify = true;
-        KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
+        KCalCore::Incidence::Ptr oldIncSaved( mIncidence->clone() );
         KCalCore::Incidence::Ptr newInc(
           monthScene()->mMonthView->calendar()->dissociateOccurrence(
-            mIncidence, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
+            item, startDate(), CalendarSupport::KCalPrefs::instance()->timeSpec(), false ) );
         if ( newInc ) {
            //TODO check return values
           changer->changeIncidence(
-            oldIncSaved, mIncidence,
+            oldIncSaved, item,
             CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE, 0 );
 
-          changer->addIncidence( newInc, mIncidence.parentCollection(), parentWidget() );
+          changer->addIncidence( newInc, item.parentCollection(), parentWidget() );
         } else {
           KMessageBox::sorry(
             parentWidget(),
@@ -498,21 +495,21 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
   }
 
   if ( modify ) {
-    KCalCore::Incidence::Ptr oldInc( incidence->clone() );
+    KCalCore::Incidence::Ptr oldInc( mIncidence->clone() );
 
     if ( !mIsTodo ) {
-      incidence->setDtStart( incidence->dtStart().addDays( startOffset ) );
+      mIncidence->setDtStart( mIncidence->dtStart().addDays( startOffset ) );
 
       if ( mIsEvent ) {
-        KCalCore::Event::Ptr event = CalendarSupport::event( mIncidence );
+        KCalCore::Event::Ptr event = mIncidence.staticCast<Event>();
         event->setDtEnd( event->dtEnd().addDays( endOffset ) );
       }
     } else {
-      KCalCore::Todo::Ptr todo = CalendarSupport::todo( mIncidence );
+      KCalCore::Todo::Ptr todo = mIncidence.staticCast<Todo>();
       todo->setDtDue( todo->dtDue().addDays( startOffset ) );
     }
 
-    changer->changeIncidence( oldInc, mIncidence,
+    changer->changeIncidence( oldInc, item,
                               CalendarSupport::IncidenceChanger::DATE_MODIFIED, 0 );
   }
 
@@ -521,25 +518,24 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
 void IncidenceMonthItem::updateSelection( const Akonadi::Item &incidence, const QDate &date )
 {
   Q_UNUSED( date );
-  setSelected( incidence == mIncidence );
+  setSelected( incidence == akonadiItem() );
 }
 
 QString IncidenceMonthItem::text( bool end ) const
 {
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
-  QString ret = incidence->summary();
+  QString ret = mIncidence->summary();
   if ( !allDay() ) { // Prepend the time str to the text
     QString timeStr;
     if ( mIsTodo ) {
-      KCalCore::Todo::Ptr todo = CalendarSupport::todo( mIncidence );
+      KCalCore::Todo::Ptr todo = mIncidence.staticCast<Todo>();
       timeStr = KCalUtils::IncidenceFormatter::timeToString(
         todo->dtDue(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() );
     } else {
       if ( !end ) {
         timeStr = KCalUtils::IncidenceFormatter::timeToString(
-          incidence->dtStart(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() );
+          mIncidence->dtStart(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() );
       } else {
-        KCalCore::Event::Ptr event = CalendarSupport::event( mIncidence );
+        KCalCore::Event::Ptr event = mIncidence.staticCast<Event>();
         timeStr = KCalUtils::IncidenceFormatter::timeToString(
           event->dtEnd(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() );
       }
@@ -559,8 +555,8 @@ QString IncidenceMonthItem::text( bool end ) const
 QString IncidenceMonthItem::toolTipText( const QDate &date ) const
 {
   return KCalUtils::IncidenceFormatter::toolTipStr(
-    CalendarSupport::displayName( mIncidence.parentCollection() ),
-    CalendarSupport::incidence( mIncidence ),
+    CalendarSupport::displayName( akonadiItem().parentCollection() ),
+    mIncidence,
     date, true, CalendarSupport::KCalPrefs::instance()->timeSpec() );
 }
 
@@ -568,17 +564,17 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 {
   QList<QPixmap *> ret;
 
-  if ( !CalendarSupport::hasIncidence( mIncidence ) ) {
+  if ( !mIncidence ) {
     return ret;
   }
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
 
   bool specialEvent = false;
+  Akonadi::Item item = akonadiItem();
   if ( mIsEvent ) {
-    if ( incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+    if ( mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
       specialEvent = true;
       ret << monthScene()->anniversaryPixmap();
-    } else if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+    } else if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
       specialEvent = true;
       ret << monthScene()->birthdayPixmap();
     }
@@ -593,8 +589,8 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 
   } else if ( mIsTodo ) {
 
-    bool isCompleted =
-      monthScene()->monthView()->usesCompletedTodoPixmap( mIncidence, realStartDate() );
+    const bool isCompleted =
+      monthScene()->monthView()->usesCompletedTodoPixmap( item, realStartDate() );
 
     if ( isCompleted ) {
       ret << monthScene()->todoDonePixmap();
@@ -605,7 +601,7 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
     ret << monthScene()->journalPixmap();
   }
 
-  if ( !monthScene()->mMonthView->calendar()->hasChangeRights( mIncidence ) && !specialEvent ) {
+  if ( !monthScene()->mMonthView->calendar()->hasChangeRights( item ) && !specialEvent ) {
     ret << monthScene()->readonlyPixmap();
   }
 #if 0
@@ -625,9 +621,8 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 QColor IncidenceMonthItem::catColor() const
 {
   QColor retColor;
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
-  Q_ASSERT( incidence );
-  QStringList categories = incidence->categories();
+  Q_ASSERT( mIncidence );
+  const QStringList categories = mIncidence->categories();
   QString cat;
   if ( !categories.isEmpty() ) {
     cat = categories.first();
@@ -646,9 +641,9 @@ QColor IncidenceMonthItem::bgColor() const
 
   PrefsPtr prefs = monthScene()->monthView()->preferences();
   if ( mIsTodo && !prefs->todosUseCategoryColors() ) {
-    if ( CalendarSupport::todo( mIncidence )->isOverdue() ) {
+    if ( mIncidence.staticCast<Todo>()->isOverdue() ) {
       bgColor = prefs->agendaCalendarItemsToDosOverdueBackgroundColor();
-    } else if ( CalendarSupport::todo( mIncidence )->dtDue().date() == QDate::currentDate() ) {
+    } else if ( mIncidence.staticCast<Todo>()->dtDue().date() == QDate::currentDate() ) {
       bgColor = prefs->agendaCalendarItemsToDosDueTodayBackgroundColor();
     }
   }
@@ -656,9 +651,13 @@ QColor IncidenceMonthItem::bgColor() const
   if ( !bgColor.isValid() ) {
     if ( prefs->monthViewColors() == PrefsBase::MonthItemResourceOnly ||
          prefs->monthViewColors() == PrefsBase::MonthItemResourceInsideCategoryOutside ) {
-      Q_ASSERT( mIncidence.isValid() );
-      const QString id = QString::number( mIncidence.storageCollectionId() );
-      Q_ASSERT( ! id.isEmpty() );
+
+      const QString id = QString::number( akonadiItem().storageCollectionId() );
+      if ( id.isEmpty() ) {
+        // item got removed from calendar, give up.
+        return QColor();
+      }
+
       bgColor = monthScene()->monthView()->preferences()->resourceColor( id );
     } else {
       bgColor = catColor();
@@ -679,9 +678,12 @@ QColor IncidenceMonthItem::frameColor() const
   PrefsPtr prefs = monthScene()->monthView()->preferences();
   if ( prefs->monthViewColors() == PrefsBase::MonthItemResourceOnly ||
        prefs->monthViewColors() == PrefsBase::MonthItemCategoryInsideResourceOutside ) {
-    Q_ASSERT( mIncidence.isValid() );
-    const QString id = QString::number( mIncidence.storageCollectionId() );
-    Q_ASSERT( ! id.isEmpty() );
+    Q_ASSERT( mIncidence );
+    const QString id = QString::number( akonadiItem().storageCollectionId() );
+    if ( id.isEmpty() ) {
+      // item got removed from calendar, give up.
+      return QColor();
+    }
     frameColor = prefs->resourceColor( id );
   } else {
     frameColor = catColor();
@@ -696,7 +698,12 @@ QColor IncidenceMonthItem::frameColor() const
 
 Akonadi::Item IncidenceMonthItem::akonadiItem() const
 {
-  return mIncidence;
+  if ( mIncidence ) {
+    Akonadi::Item item = monthScene()->mMonthView->calendar()->itemForIncidenceUid( mIncidence->uid() );
+    return item;
+  } else {
+    return Akonadi::Item();
+  }
 }
 //-----------------------------------------------------------------
 // HOLIDAYMONTHITEM
