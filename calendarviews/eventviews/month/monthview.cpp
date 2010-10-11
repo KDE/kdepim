@@ -398,7 +398,7 @@ Akonadi::Item::List MonthView::selectedIncidences() const
   if ( d->scene->selectedItem() ) {
     IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( d->scene->selectedItem() );
     if ( tmp ) {
-      Akonadi::Item incidenceSelected = tmp->incidence();
+      Akonadi::Item incidenceSelected = tmp->akonadiItem();
       if ( incidenceSelected.isValid() ) {
         selected.append( incidenceSelected );
       }
@@ -418,7 +418,7 @@ void MonthView::reloadIncidences()
   MonthItem *itemToReselect = 0;
 
   if ( IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( d->scene->selectedItem() ) ) {
-    d->selectedItemId = tmp->incidence().id();
+    d->selectedItemId = tmp->akonadiItem().id();
     d->selectedItemDate = tmp->realStartDate();
     if ( !d->selectedItemDate.isValid() ) {
       return;

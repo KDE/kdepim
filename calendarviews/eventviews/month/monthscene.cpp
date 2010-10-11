@@ -487,7 +487,7 @@ void MonthScene::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent *mouseEvent )
       IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( iItem->monthItem() );
       if ( tmp ) {
         selectItem( iItem->monthItem() );
-        mMonthView->defaultAction( tmp->incidence() );
+        mMonthView->defaultAction( tmp->akonadiItem() );
 
         mouseEvent->accept();
       }
@@ -575,7 +575,7 @@ void MonthScene::mousePressEvent ( QGraphicsSceneMouseEvent *mouseEvent )
     if ( mouseEvent->button() == Qt::RightButton ) {
       IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>( mClickedItem );
       if ( tmp ) {
-        emit showIncidencePopupSignal( tmp->incidence(), tmp->realStartDate() );
+        emit showIncidencePopupSignal( tmp->akonadiItem(), tmp->realStartDate() );
       }
     }
 
@@ -712,12 +712,12 @@ void MonthScene::selectItem( MonthItem *item )
   }
 
   mSelectedItem = item;
-  Q_ASSERT( CalendarSupport::hasIncidence( tmp->incidence() ) );
+  Q_ASSERT( CalendarSupport::hasIncidence( tmp->akonadiItem() ) );
 
   if ( mMonthView && mMonthView->selectedIncidenceDates().isEmpty() ) {
-    emit incidenceSelected( tmp->incidence(), QDate() );
+    emit incidenceSelected( tmp->akonadiItem(), QDate() );
   } else {
-    emit incidenceSelected( tmp->incidence(), mMonthView->selectedIncidenceDates().first() );
+    emit incidenceSelected( tmp->akonadiItem(), mMonthView->selectedIncidenceDates().first() );
   }
   update();
 }
@@ -726,7 +726,7 @@ void MonthScene::removeIncidence( Akonadi::Item::Id id )
 {
   foreach ( MonthItem *manager, mManagerList ) {
     IncidenceMonthItem *imi = qobject_cast<IncidenceMonthItem*>( manager );
-    if ( imi && imi->incidence().id() == id ) {
+    if ( imi && imi->akonadiItem().id() == id ) {
       foreach ( MonthGraphicsItem *gitem, imi->monthGraphicsItems() ) {
         removeItem( gitem );
       }

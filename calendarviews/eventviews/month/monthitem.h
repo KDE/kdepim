@@ -272,7 +272,7 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
                         const QDate &recurStartDate = QDate() );
     virtual ~IncidenceMonthItem();
 
-    Akonadi::Item incidence() const { return mIncidence; }
+    Akonadi::Item akonadiItem() const;
 
     virtual bool greaterThanFallback( const MonthItem *other ) const;
 

@@ -694,6 +694,10 @@ QColor IncidenceMonthItem::frameColor() const
   return frameColor;
 }
 
+Akonadi::Item IncidenceMonthItem::akonadiItem() const
+{
+  return mIncidence;
+}
 //-----------------------------------------------------------------
 // HOLIDAYMONTHITEM
 HolidayMonthItem::HolidayMonthItem( MonthScene *monthScene, const QDate &date,
@@ -750,4 +754,3 @@ QColor HolidayMonthItem::frameColor() const
 {
   return Qt::black;
 }
-
