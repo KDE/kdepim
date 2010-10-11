@@ -63,7 +63,7 @@ void MainView::delayedInit()
   setWindowTitle( i18n( "KDE Notes" ) );
 
 #ifdef KDEQMLPLUGIN_STATIC
-  rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
+  rootContext()->setContextProperty( QLatin1String( "KDE" ), new KDEIntegration( this ) );
 #endif
 
   addMimeType( "text/x-vnd.akonadi.note" );

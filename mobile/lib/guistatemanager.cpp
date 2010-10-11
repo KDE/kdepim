@@ -23,7 +23,7 @@
 
 static void printStack( const QStack<int> &stack )
 {
-  QString output = QLatin1String( "Stack: " );
+  QString output = QLatin1String( "UI-State-Stack: " );
   for ( int i = 0; i < stack.count(); ++i )
     output += QLatin1Char( ':' ) + QString::number( stack.at( i ) );
 
@@ -58,7 +58,6 @@ void GuiStateManager::switchState( int state )
   d->mGuiStates.pop();
   d->mGuiStates.push( state );
 
-  qDebug("state=%d", d->mGuiStates.top());
   printStack( d->mGuiStates );
   emitChangedSignal();
 }
@@ -67,7 +66,6 @@ void GuiStateManager::pushState( int state )
 {
   d->mGuiStates.push( state );
 
-  qDebug("state=%d", d->mGuiStates.top());
   printStack( d->mGuiStates );
   emitChangedSignal();
 }
@@ -77,7 +75,6 @@ void GuiStateManager::popState()
   d->mGuiStates.pop();
   Q_ASSERT( !d->mGuiStates.isEmpty() );
 
-  qDebug("state=%d", d->mGuiStates.top());
   printStack( d->mGuiStates );
   emitChangedSignal();
 }
