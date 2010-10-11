@@ -13,6 +13,7 @@ set(mobileui_SRCS
     declarativeakonadiitem.cpp
     exporthandlerbase.cpp
     favoriteslistmodel.cpp
+    guistatemanager.cpp
     importhandlerbase.cpp
     kdeclarativeapplication.cpp
     kdeclarativefullscreenview.cpp
@@ -22,7 +23,6 @@ set(mobileui_SRCS
     listproxy.cpp
     orderedchildcollectionsmodel.cpp
     qmllistselectionmodel.cpp
-    screenmanager.cpp
     stylesheetloader.cpp
     agentstatusmonitor.cpp
 )

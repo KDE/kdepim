@@ -27,36 +27,34 @@ import org.kde.kcal 4.5 as KCal
 KPIM.MainView {
   id: tasksMobile
 
-  function goBackToListing()
-  {
-    taskView.visible = false;
-    collectionView.visible = true;
-    itemListPage.visible = true;
-    selectButton.visible = true;
-    taskView.itemId = -1;
-
-    updateContextActionsStates();
+  QML.Connections {
+    target: guiStateManager
+    onGuiStateChanged: { updateContextActionStates() }
   }
 
-  function updateContextActionsStates()
+  QML.Component.onCompleted : updateContextActionStates();
+
+  function updateContextActionStates()
   {
-    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
-      taskActions.showOnlyCategory("home")
-    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
-      taskActions.showOnlyCategory("account")
-    } else if ( collectionView.numSelected > 1 ) {
-      taskActions.showOnlyCategory( "multiple_folder" );
-    } else {
-      taskActions.showOnlyCategory("single_folder")
+    if ( guiStateManager.inHomeScreenState ) {
+      taskActions.showOnlyCategory( "home" )
+    } else if ( guiStateManager.inAccountScreenState ) {
+      taskActions.showOnlyCategory( "account" )
+    } else if ( guiStateManager.inSingleFolderScreenState ) {
+      taskActions.showOnlyCategory( "single_folder" )
+    } else if ( guiStateManager.inMultipleFolderScreenState ) {
+      taskActions.showOnlyCategory( "multiple_folder" )
+    } else if ( guiStateManager.inViewSingleItemState ) {
+      taskActions.showOnlyCategory( "todo_viewer" )
     }
   }
 
   KCal.IncidenceView {
     id: taskView
+    visible: guiStateManager.inSingleItemState
     anchors { fill: parent; topMargin: 48; leftMargin: 48 }
     width: parent.width
     height: parent.height
-    visible: false
 
     z: 0
 
@@ -84,8 +82,6 @@ KPIM.MainView {
       icon: KDE.locate( "data", "mobileui/edit-button.png" );
       onClicked: {
         application.editIncidence( parent.item );
-        eventView.visible = false;
-        agendaView.visible = true;
       }
     }
     KPIM.Button {
@@ -97,13 +93,18 @@ KPIM.MainView {
       height: 70
       icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
       onClicked: {
-        goBackToListing();
+        guiStateManager.popState();
       }
     }
   }
 
   QML.Item {
     id : mainWorkView
+    visible: { guiStateManager.inHomeScreenState ||
+               guiStateManager.inAccountScreenState ||
+               guiStateManager.inSingleFolderScreenState ||
+               guiStateManager.inMultipleFolderScreenState
+             }
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -135,14 +136,8 @@ KPIM.MainView {
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
                                         KDE.i18np("1 task","%1 tasks",itemList.count))
 
-
-      QML.Component.onCompleted : updateContextActionsStates();
-      onNumBreadcrumbsChanged : updateContextActionsStates();
-      onNumSelectedChanged : updateContextActionsStates();
       onSelectedClicked : {
-        mainWorkView.visible = false
-        bulkActionScreen.visible = true
-        application.isBulkActionScreenSelected = true
+        guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
       }
 
       KPIM.AgentStatusIndicator {
@@ -159,46 +154,31 @@ KPIM.MainView {
       opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
       onClicked : {
         application.persistCurrentSelection("preFavSelection");
-        favoriteSelector.visible = true;
-        mainWorkView.visible = false;
+        guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState )
       }
     }
 
     KPIM.StartCanvas {
       id : startPage
+      visible: !collectionView.hasSelection
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       anchors.leftMargin : 10
       anchors.rightMargin : 10
-
-      opacity : collectionView.hasSelection ? 0 : 1
       showAccountsList : false
       favoritesModel : favoritesList
-
-      contextActions : [
-        QML.Column {
-          anchors.fill: parent
-          height : 70
-          KPIM.Button2 {
-            width: parent.width
-            buttonText : KDE.i18n( "New Task" )
-            onClicked: { application.newTask(); actionPanel.collapse() }
-          }
-        }
-      ]
     }
 
     QML.Rectangle {
       id : accountPage
+      visible : guiStateManager.inHomeScreenState
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : screenManager.isHomeScreenVisible ? 1 : 0
-
 
       KPIM.Button2 {
         anchors.top : parent.top
@@ -216,12 +196,12 @@ KPIM.MainView {
 
     QML.Rectangle {
       id : emptyFolderPage
+      visible: (!guiStateManager.inHomeScreenState && collectionView.hasBreadcrumbs && itemList.count == 0)
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : (collectionView.hasBreadcrumbs && itemList.count == 0 ) ? 1 : 0
       // TODO: content
       QML.Text {
         text : KDE.i18n("No tasks in this folder");
@@ -235,12 +215,15 @@ KPIM.MainView {
 
     QML.Rectangle {
       id : itemListPage
+      visible: { guiStateManager.inAccountScreenState ||
+                 guiStateManager.inSingleFolderScreenState ||
+                 guiStateManager.inMultipleFolderScreenState
+               }
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : screenManager.isHomeScreenVisible ? 0 : 1
 
       Akonadi.FilterLineEdit {
         id: filterLineEdit
@@ -262,11 +245,7 @@ KPIM.MainView {
         anchors.right : parent.right
         onItemSelected: {
           taskView.itemId = itemList.currentItemId;
-          taskView.visible = true;
-          taskActions.showOnlyCategory("todo_viewer")
-          collectionView.visible = false;
-          itemListPage.visible = false;
-          selectButton.visible = false;
+          guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
         }
       }
     }
@@ -274,6 +253,8 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
+
+    visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
 
     SlideoutPanel {
       id: actionPanelNew
@@ -299,8 +280,7 @@ KPIM.MainView {
               name : "to_selection_screen"
               script : {
                 actionPanelNew.collapse();
-                favoriteSelector.visible = true;
-                mainWorkView.visible = false;
+                guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState )
               }
             },
             KPIM.ScriptAction {
@@ -314,17 +294,13 @@ KPIM.MainView {
               name : "start_maintenance"
               script : {
                 actionPanelNew.collapse();
-                mainWorkView.visible = false
-                bulkActionScreen.visible = true
-                application.isBulkActionScreenSelected = true
+                guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
               }
             },
             KPIM.ScriptAction {
               name : "edit_todo"
               script : {
                 application.editIncidence( taskView.item );
-                eventView.visible = false;
-                agendaView.visible = true;
                 actionPanelNew.collapse();
               }
             }
@@ -366,23 +342,23 @@ KPIM.MainView {
 
   KPIM.MultipleSelectionScreen {
     id : favoriteSelector
+    visible : guiStateManager.inMultipleFolderSelectionScreenState
     anchors.fill : parent
-    visible : false
     backgroundImage : backgroundImage.source
     onFinished : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState()
       application.clearPersistedSelection("preFavSelection");
       application.multipleSelectionFinished();
     }
     onCanceled : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState()
       application.restorePersistedSelection("preFavSelection");
     }
   }
+
   KPIM.BulkActionScreen {
     id : bulkActionScreen
+    visible : guiStateManager.inBulkActionScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -390,7 +366,6 @@ KPIM.MainView {
     anchors.right : parent.right
     backgroundImage : backgroundImage.source
 
-    visible : false
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
@@ -403,15 +378,13 @@ KPIM.MainView {
       showCompletionSlider: false
     }
     onBackClicked : {
-      bulkActionScreen.visible = false
-      application.isBulkActionScreenSelected = false
-      mainWorkView.visible = true
+      guiStateManager.popState()
     }
   }
 
   QML.Connections {
     target: taskView
-    onIncidenceRemoved : { goBackToListing(); }
+    onIncidenceRemoved : { guiStateManager.popState(); }
   }
 
   QML.Connections {

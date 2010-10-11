@@ -26,35 +26,30 @@ import org.kde.akonadi 4.5 as Akonadi
 import org.kde.messageviewer 4.5 as MessageViewer
 import org.kde.pim.mobileui 4.5 as KPIM
 
-
 KPIM.MainView {
   id: kmailMobile
 
-  function backToListing()
-  {
-    messageView.visible = false;
-    backToMessageListButton.visible = false;
-    collectionView.visible = true;
-    emailListPage.visible = true;
-    selectButton.visible = true;
-    messageView.itemId = -1;
-
-    updateContextActionsStates();
+  QML.Connections {
+    target: guiStateManager
+    onGuiStateChanged: { updateContextActionStates() }
   }
 
-  function updateContextActionsStates()
+  QML.Component.onCompleted : updateContextActionStates();
+
+  function updateContextActionStates()
   {
-    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
-      kmailActions.showOnlyCategory("home")
-    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
-      kmailActions.showOnlyCategory("account")
-    } else if ( collectionView.numSelected > 1 ) {
-      kmailActions.showOnlyCategory( "multiple_folder" );
-    } else {
-      kmailActions.showOnlyCategory("single_folder")
+    if ( guiStateManager.inHomeScreenState ) {
+      kmailActions.showOnlyCategory( "home" )
+    } else if ( guiStateManager.inAccountScreenState ) {
+      kmailActions.showOnlyCategory( "account" )
+    } else if ( guiStateManager.inSingleFolderScreenState ) {
+      kmailActions.showOnlyCategory( "single_folder" )
+    } else if ( guiStateManager.inMultipleFolderScreenState ) {
+      kmailActions.showOnlyCategory( "multiple_folder" )
+    } else if ( guiStateManager.inViewSingleItemState ) {
+      kmailActions.showOnlyCategory( "mail_viewer" )
     }
   }
-
 
   QML.SystemPalette { id: palette; colorGroup: "Active" }
 
@@ -212,41 +207,38 @@ KPIM.MainView {
 
   MessageViewer.MessageView {
     id: messageView
-    z: 0
+    visible : guiStateManager.inViewSingleItemState
     anchors.left: parent.left
     width: parent.width
     height: parent.height
     itemId: -1
     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
-    visible : false
     onNextItemRequest: {
       // Only go to the next message when currently a valid item is set.
       if ( messageView.itemId >= 0 )
         headerList.nextItem();
-      kmailActions.showOnlyCategory("mail_viewer")
-   }
+    }
 
     onPreviousItemRequest: {
       // Only go to the previous message when currently a valid item is set.
       if ( messageView.itemId >= 0 )
         headerList.previousItem();
-      kmailActions.showOnlyCategory("mail_viewer")
     }
   }
 
   QML.Rectangle {
     id : backToMessageListButton
+    visible : guiStateManager.inViewSingleItemState
     anchors.right : kmailMobile.right
     anchors.rightMargin : 70
     anchors.bottom : kmailMobile.bottom
     anchors.bottomMargin : 100
-    visible : false
     QML.Image {
       source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {
-          backToListing();
+          guiStateManager.popState();
         }
       }
     }
@@ -254,6 +246,11 @@ KPIM.MainView {
 
   QML.Item {
     id : mainWorkView
+    visible: { guiStateManager.inHomeScreenState ||
+               guiStateManager.inAccountScreenState ||
+               guiStateManager.inSingleFolderScreenState ||
+               guiStateManager.inMultipleFolderScreenState
+             }
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -286,14 +283,8 @@ KPIM.MainView {
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
                                         KDE.i18np("1 email","%1 emails",headerList.count))
 
-      QML.Component.onCompleted : updateContextActionsStates();
-      onNumBreadcrumbsChanged : updateContextActionsStates();
-      onNumSelectedChanged : updateContextActionsStates();
-
       onSelectedClicked : {
-        mainWorkView.visible = false
-        bulkActionScreen.visible = true
-        application.isBulkActionScreenSelected = true
+        guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
       }
 
       KPIM.AgentStatusIndicator {
@@ -310,48 +301,31 @@ KPIM.MainView {
       opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
       onClicked : {
         application.persistCurrentSelection("preFavSelection");
-        favoriteSelector.visible = true;
-        mainWorkView.visible = false;
+        guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState )
       }
     }
 
     KPIM.StartCanvas {
       id : startPage
+      visible: !collectionView.hasSelection
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       anchors.leftMargin : 10
       anchors.rightMargin : 10
-
-      opacity : collectionView.hasSelection ? 0 : 1
       showAccountsList : false
       favoritesModel : favoritesList
-
-      contextActions : [
-        QML.Column {
-          anchors.fill: parent
-          height : 70
-          KPIM.Button2 {
-            width: parent.width
-            buttonText : KDE.i18n( "Write new Email" )
-            onClicked : {
-              application.startComposer();
-            }
-          }
-        }
-      ]
     }
 
     QML.Rectangle {
       id : accountPage
+      visible : guiStateManager.inHomeScreenState
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : screenManager.isHomeScreenVisible ? 1 : 0
-
 
       KPIM.Button2 {
         id : newEmailButton
@@ -370,12 +344,12 @@ KPIM.MainView {
 
     QML.Rectangle {
       id : emptyFolderPage
+      visible: (!application.isLoadingSelected && !guiStateManager.inHomeScreenState && collectionView.hasBreadcrumbs && headerList.count == 0)
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : { (!application.isLoadingSelected && collectionView.hasSelection && headerList.count == 0 ) ? 1 : 0 }
       // TODO: content
       QML.Text {
         text : KDE.i18n("No messages in this folder");
@@ -387,7 +361,7 @@ KPIM.MainView {
       }
     }
 
-     KPIM.Spinner {
+    KPIM.Spinner {
       id : loadingFolderPage
       anchors.left : collectionView.right
       anchors.top : parent.top
@@ -398,12 +372,15 @@ KPIM.MainView {
 
     QML.Rectangle {
       id : emailListPage
+      visible: { guiStateManager.inAccountScreenState ||
+                 guiStateManager.inSingleFolderScreenState ||
+                 guiStateManager.inMultipleFolderScreenState
+               }
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : screenManager.isHomeScreenVisible ? 0 : 1
 
       Akonadi.FilterLineEdit {
         id: filterLineEdit
@@ -434,15 +411,10 @@ KPIM.MainView {
             {
               messageView.messagePath = application.pathToItem(headerList.currentItemId);
               messageView.itemId = headerList.currentItemId;
-              messageView.visible = true;
-              backToMessageListButton.visible = true;
-              collectionView.visible = false;
-              emailListPage.visible = false;
-              selectButton.visible = false;
-              kmailActions.showOnlyCategory("mail_viewer")
+              guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
             } else {
               application.restoreDraft(headerList.currentItemId);
-              updateContextActionsStates()
+              updateContextActionStates()
             }
           }
         }
@@ -452,7 +424,7 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
-//     visible : !favoriteSelector.visible
+    visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
     SlideoutPanel {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
@@ -476,8 +448,7 @@ KPIM.MainView {
                 name : "to_selection_screen"
                 script : {
                   actionPanel.collapse();
-                  favoriteSelector.visible = true;
-                  mainWorkView.visible = false;
+                  guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
                 }
               },
               KPIM.ScriptAction {
@@ -498,9 +469,7 @@ KPIM.MainView {
                 name : "start_maintenance"
                 script : {
                   actionPanel.collapse();
-                  mainWorkView.visible = false
-                  bulkActionScreen.visible = true
-                  application.isBulkActionScreenSelected = true
+                  guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
                 }
               },
               KPIM.ScriptAction {
@@ -546,29 +515,29 @@ KPIM.MainView {
             application.saveAttachment(url);
           }
         }
-      ]     
+      ]
     }
   }
 
   KPIM.MultipleSelectionScreen {
     id : favoriteSelector
+    visible : guiStateManager.inMultipleFolderSelectionScreenState
     anchors.fill : parent
-    visible : false
     backgroundImage : backgroundImage.source
     onFinished : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState();
       application.clearPersistedSelection("preFavSelection");
       application.multipleSelectionFinished();
     }
     onCanceled : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState();
       application.restorePersistedSelection("preFavSelection");
     }
   }
+
   KPIM.BulkActionScreen {
     id : bulkActionScreen
+    visible : guiStateManager.inBulkActionScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -576,7 +545,6 @@ KPIM.MainView {
     anchors.right : parent.right
     backgroundImage : backgroundImage.source
 
-    visible : false
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
@@ -588,9 +556,7 @@ KPIM.MainView {
       anchors.fill : parent
     }
     onBackClicked : {
-      bulkActionScreen.visible = false
-      application.isBulkActionScreenSelected = false
-      mainWorkView.visible = true
+      guiStateManager.popState();
     }
 
     KPIM.Action {
@@ -621,7 +587,7 @@ KPIM.MainView {
 
   QML.Connections {
     target: messageView
-    onMailRemoved : { backToListing(); }
+    onMailRemoved : { guiStateManager.popState(); }
   }
 
   KPIM.AboutDialog {

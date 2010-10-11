@@ -29,8 +29,31 @@ KPIM.MainView {
 
   QML.SystemPalette { id: palette; colorGroup: "Active" }
 
+  QML.Connections {
+    target: guiStateManager
+    onGuiStateChanged: { updateContextActionStates() }
+  }
+
+  QML.Component.onCompleted : updateContextActionStates();
+
+  function updateContextActionStates()
+  {
+    if ( guiStateManager.inHomeScreenState ) {
+      noteActions.showOnlyCategory( "home" )
+    } else if ( guiStateManager.inAccountScreenState ) {
+      noteActions.showOnlyCategory( "account" )
+    } else if ( guiStateManager.inSingleFolderScreenState ) {
+      noteActions.showOnlyCategory( "single_folder" )
+    } else if ( guiStateManager.inMultipleFolderScreenState ) {
+      noteActions.showOnlyCategory( "multiple_folder" )
+    } else if ( guiStateManager.inViewSingleItemState ) {
+      noteActions.showOnlyCategory( "note_viewer" )
+    }
+  }
+
   NoteView {
     id: noteView
+    visible: guiStateManager.inViewSingleItemState
     anchors.left: parent.left
     anchors.topMargin : 40
     anchors.bottomMargin : 10
@@ -38,7 +61,6 @@ KPIM.MainView {
     anchors.rightMargin : 10
     width: parent.width
     height: parent.height
-    visible : false
 
     QML.Rectangle {
       anchors.top : noteView.top
@@ -49,37 +71,20 @@ KPIM.MainView {
     }
   }
 
-  function updateContextActionsStates()
-  {
-    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
-    {
-      noteActions.showOnlyCategory("home")
-    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
-    {
-      noteActions.showOnlyCategory("account")
-    } else { // something else is selected
-      noteActions.showOnlyCategory("single_folder")
-    }
-  }
-
   QML.Rectangle {
     id : backToMessageListButton
+    visible: guiStateManager.inViewSingleItemState
     anchors.right : notesMobile.right
     anchors.rightMargin : 70
     anchors.bottom : notesMobile.bottom
     anchors.bottomMargin : 100
-    visible : false
     QML.Image {
       source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {
           noteView.saveNote();
-          noteView.visible = false;
-          backToMessageListButton.visible = false;
-          collectionView.visible = true;
-          notesListPage.visible = true;
-          selectButton.visible = true;
+          guiStateManager.popState();
           noteView.noteId = -1;
         }
       }
@@ -89,6 +94,11 @@ KPIM.MainView {
 
   QML.Item {
     id : mainWorkView
+    visible: { guiStateManager.inHomeScreenState ||
+               guiStateManager.inAccountScreenState ||
+               guiStateManager.inSingleFolderScreenState ||
+               guiStateManager.inMultipleFolderScreenState
+             }
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -109,7 +119,6 @@ KPIM.MainView {
       anchors.top: parent.top
       width: 1/3 * parent.width
       anchors.bottom : selectButton.top
-      //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
 
       breadcrumbComponentFactory : _breadcrumbNavigationFactory
@@ -120,21 +129,15 @@ KPIM.MainView {
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
                                         KDE.i18np("1 note","%1 notes",headerList.count))
 
-
-      QML.Component.onCompleted : updateContextActionsStates();
-      onNumBreadcrumbsChanged : updateContextActionsStates();
-      onNumSelectedChanged : updateContextActionsStates();
-
       onSelectedClicked : {
-        mainWorkView.visible = false
-        bulkActionScreen.visible = true
-        application.isBulkActionScreenSelected = true
+        guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
       }
 
       KPIM.AgentStatusIndicator {
         anchors { top: parent.top; right: parent.right; rightMargin: 10; topMargin: 10 }
       }
     }
+
     KPIM.Button2 {
       id : selectButton
       anchors.left: collectionView.left
@@ -145,47 +148,31 @@ KPIM.MainView {
       opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
       onClicked : {
         application.persistCurrentSelection("preFavSelection");
-        favoriteSelector.visible = true;
-        mainWorkView.visible = false;
+        guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState )
       }
     }
 
     KPIM.StartCanvas {
       id : startPage
+      visible: !collectionView.hasSelection
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       anchors.leftMargin : 10
       anchors.rightMargin : 10
-
-      opacity : collectionView.hasSelection ? 0 : 1
       showAccountsList : false
       favoritesModel : favoritesList
-
-      contextActions : [
-        QML.Column {
-          anchors.fill: parent
-          height : 70
-          KPIM.Button2 {
-            width: parent.width
-            buttonText : KDE.i18n( "Writes new Note" )
-            onClicked : {
-              application.startComposer();
-            }
-          }
-        }
-      ]
     }
 
     QML.Rectangle {
       id : accountPage
+      visible : guiStateManager.inHomeScreenState
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : screenManager.isHomeScreenVisible ? 1 : 0
 
       KPIM.Button2 {
         anchors.top : parent.top
@@ -203,12 +190,12 @@ KPIM.MainView {
 
     QML.Rectangle {
       id : emptyFolderPage
+      visible: (!guiStateManager.inHomeScreenState && collectionView.hasBreadcrumbs && headerList.count == 0)
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : (collectionView.hasBreadcrumbs && headerList.count == 0 ) ? 1 : 0
       QML.Text {
         text : KDE.i18n("No notes in this notebook");
         height : 20;
@@ -221,12 +208,15 @@ KPIM.MainView {
 
     QML.Rectangle {
       id : notesListPage
+      visible: { guiStateManager.inAccountScreenState ||
+                 guiStateManager.inSingleFolderScreenState ||
+                 guiStateManager.inMultipleFolderScreenState
+               }
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : screenManager.isHomeScreenVisible ? 0 : 1
 
       Akonadi.FilterLineEdit {
         id: filterLineEdit
@@ -255,12 +245,7 @@ KPIM.MainView {
             noteView.currentNoteRow = -1;
             noteView.currentNoteRow = headerList.currentIndex;
 
-            noteView.visible = true;
-            noteActions.showOnlyCategory("note_viewer")
-            backToMessageListButton.visible = true;
-            collectionView.visible = false;
-            notesListPage.visible = false;
-            selectButton.visible = false;
+            guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
           }
         }
       }
@@ -269,6 +254,8 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
+
+    visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
 
     SlideoutPanel {
       id: actionPanelNew
@@ -294,8 +281,7 @@ KPIM.MainView {
               name : "to_selection_screen"
               script : {
                 actionPanelNew.collapse();
-                favoriteSelector.visible = true;
-                mainWorkView.visible = false;
+                guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
               }
             },
             KPIM.ScriptAction {
@@ -309,9 +295,7 @@ KPIM.MainView {
               name : "start_maintenance"
               script : {
                 actionPanelNew.collapse();
-                mainWorkView.visible = false
-                bulkActionScreen.visible = true
-                application.isBulkActionScreenSelected = true
+                guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
               }
             }
           ]
@@ -328,23 +312,23 @@ KPIM.MainView {
 
   KPIM.MultipleSelectionScreen {
     id : favoriteSelector
+    visible : guiStateManager.inMultipleFolderSelectionScreenState
     anchors.fill : parent
-    visible : false
     backgroundImage : backgroundImage.source
     onFinished : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState();
       application.clearPersistedSelection("preFavSelection");
       application.multipleSelectionFinished();
     }
     onCanceled : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState();
       application.restorePersistedSelection("preFavSelection");
     }
   }
+
   KPIM.BulkActionScreen {
     id : bulkActionScreen
+    visible : guiStateManager.inBulkActionScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -352,7 +336,6 @@ KPIM.MainView {
     anchors.right : parent.right
     backgroundImage : backgroundImage.source
 
-    visible : false
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18np("1 note book", "%1 note books", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
@@ -365,9 +348,7 @@ KPIM.MainView {
       showDeleteButton: false
     }
     onBackClicked : {
-      bulkActionScreen.visible = false
-      application.isBulkActionScreenSelected = false
-      mainWorkView.visible = true
+      guiStateManager.popState();
     }
   }
 

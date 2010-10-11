@@ -53,6 +53,7 @@ class MainView : public KDeclarativeMainView
 
   private slots:
     void finishEdit( QObject *editor );
+    void itemSelectionChanged( const QItemSelection &selected, const QItemSelection& );
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -63,6 +64,7 @@ class MainView : public KDeclarativeMainView
     virtual QAbstractProxyModel* itemFilterModel() const;
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
+    virtual GuiStateManager* createGuiStateManager() const;
 
   private:
     Akonadi::StandardContactActionManager *mActionManager;

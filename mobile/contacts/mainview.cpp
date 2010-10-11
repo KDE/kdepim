@@ -24,6 +24,7 @@
 #include "contactgroupeditorview.h"
 #include "contactlistproxy.h"
 #include "contactsexporthandler.h"
+#include "contactsguistatemanager.h"
 #include "contactsimporthandler.h"
 
 #include <akonadi/agentactionmanager.h>
@@ -43,6 +44,7 @@
 
 QML_DECLARE_TYPE( Akonadi::Contact::ContactViewItem )
 QML_DECLARE_TYPE( Akonadi::Contact::ContactGroupViewItem )
+QML_DECLARE_TYPE( ContactsGuiStateManager )
 
 MainView::MainView( QWidget *parent )
   : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
@@ -53,6 +55,7 @@ void MainView::delayedInit()
 {
   qmlRegisterType<Akonadi::Contact::ContactViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactView" );
   qmlRegisterType<Akonadi::Contact::ContactGroupViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactGroupView" );
+  qmlRegisterUncreatableType<ContactsGuiStateManager>( "org.kde.akonadi.contacts", 4, 5, "ContactsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 
   ContactImageProvider *provider = new ContactImageProvider;
   provider->setModel( itemModel() );
@@ -79,6 +82,25 @@ void MainView::delayedInit()
   action = new KAction( i18n( "Export Contacts" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   actionCollection()->addAction( QLatin1String( "export_vcards" ), action );
+
+  connect( itemSelectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+           this, SLOT( itemSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
+}
+
+void MainView::itemSelectionChanged( const QItemSelection &selected, const QItemSelection& )
+{
+  if ( selected.indexes().isEmpty() )
+    return;
+
+  const QModelIndex index = selected.indexes().first();
+  if ( !index.isValid() )
+    return;
+
+  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  if ( item.hasPayload<KABC::Addressee>() )
+    guiStateManager()->pushState( ContactsGuiStateManager::ViewContactState );
+  else if ( item.hasPayload<KABC::ContactGroup>() )
+    guiStateManager()->pushState( ContactsGuiStateManager::ViewContactGroupState );
 }
 
 void MainView::finishEdit( QObject *editor )
@@ -224,6 +246,11 @@ ImportHandlerBase* MainView::importHandler() const
 ExportHandlerBase* MainView::exportHandler() const
 {
   return new ContactsExportHandler();
+}
+
+GuiStateManager* MainView::createGuiStateManager() const
+{
+  return new ContactsGuiStateManager();
 }
 
 #include "mainview.moc"

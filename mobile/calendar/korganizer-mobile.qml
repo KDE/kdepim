@@ -25,57 +25,57 @@ import org.kde.akonadi 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kcal 4.5 as KCal
 import org.kde.calendarviews 4.5 as CalendarViews
+import org.kde.akonadi.events 4.5 as Events
 
 KPIM.MainView {
   id: korganizerMobile
-  property int lastView : 0 ; //0 - agenda, 1 - month, 2 - list
+
+  Connections {
+    target: guiStateManager
+    onGuiStateChanged: { updateContextActionStates() }
+  }
+
+  Component.onCompleted : updateContextActionStates();
+
+  function updateContextActionStates()
+  {
+    if ( guiStateManager.inHomeScreenState ) {
+      korganizerActions.showOnlyCategory( "home" )
+    } else if ( guiStateManager.inAccountScreenState ) {
+      korganizerActions.showOnlyCategory( "account" )
+    } else if ( guiStateManager.inSingleFolderScreenState ) {
+      korganizerActions.showOnlyCategory( "single_folder" )
+    } else if ( guiStateManager.inMultipleFolderScreenState ) {
+      korganizerActions.showOnlyCategory( "multiple_folder" )
+    } else if ( guiStateManager.inViewSingleItemState ) {
+      korganizerActions.showOnlyCategory( "event_viewer" )
+    } else if ( guiStateManager.inViewDayState || guiStateManager.inViewWeekState || guiStateManager.inViewEventListState ) {
+      if ( collectionView.numSelected > 1 )
+        korganizerActions.showOnlyCategory( "multiple_calendar" )
+      else
+        korganizerActions.showOnlyCategory( "single_calendar" )
+    }
+  }
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
   function showDate(date)
   {
     console.log("QML showDate called");
-    korganizerActions.showOnlyCategory("single_calendar")
     agenda.showRange( date, 0 /* "Day" */ );
+    guiStateManager.pushState( Events.EventsGuiStateManager.ViewDayState );
   }
 
   function showEventView()
   {
     console.log("QML showEventView called");
-    korganizerActions.showOnlyCategory("event_viewer")
-    mainWorkView.visible = false
-    agendaView.visible = true
-  }
-
-  function backToAgendaView()
-  {
-    eventView.visible = false;
-    if ( lastView == 0 )
-        agendaView.visible = true;
-      else if ( lastView == 1 )
-        monthView.visible = true;
-      else
-        eventListView.visible = true;
-  }
-
-  function updateContextActionsStates()
-  {
-    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
-      korganizerActions.showOnlyCategory("home")
-    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
-      korganizerActions.showOnlyCategory("account")
-    } else if ( collectionView.numSelected > 1 ) { // something else is selected
-      korganizerActions.showOnlyCategory( "multiple_folder" );
-    } else {
-      korganizerActions.showOnlyCategory("single_folder")
-    }
+    guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
   }
 
   KCal.IncidenceView {
     id: eventView
     anchors { fill: parent; topMargin: 48; leftMargin: 48 }
-    visible: false
-
+    visible: guiStateManager.inViewSingleItemState
     z: 0
 
     itemId: -1
@@ -108,9 +108,10 @@ KPIM.MainView {
       icon: KDE.locate( "data", "mobileui/edit-button.png" );
       onClicked: {
         application.editIncidence( parent.item, parent.activeDate );
-        backToAgendaView();
+        guiStateManager.popState();
       }
     }
+
     KPIM.Button {
       id: backButton
       anchors.bottom: parent.bottom
@@ -119,20 +120,18 @@ KPIM.MainView {
       width: 70
       height: 70
       icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
-      
       onClicked: {
-        backToAgendaView();
+        guiStateManager.popState();
       }
     }
   }
 
   Rectangle {
     id: monthView
-    visible: false
+    visible: guiStateManager.inViewMonthState
     anchors.fill: parent
 
     Rectangle {
-//      id : backToMessageListButton
       height: 48
       width: 48
       z: 5
@@ -146,10 +145,7 @@ KPIM.MainView {
         MouseArea {
           anchors.fill : parent;
           onClicked : {
-            monthView.visible = false;
-            mainWorkView.visible = true;
-            selectButton.visible = true
-            korganizerActions.showOnlyCategory("home")
+            guiStateManager.popState();
           }
         }
       }
@@ -163,8 +159,7 @@ KPIM.MainView {
 
       onDateClicked: {
         agenda.showRange( date, 0 );
-        monthView.visible = false;
-        agendaView.visible = true;
+        guiStateManager.switchState( Events.EventsGuiStateManager.ViewDayState );
       }
 
       onItemSelected: {
@@ -172,11 +167,7 @@ KPIM.MainView {
           eventView.itemId = selectedItemId;
           eventView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
-          korganizerActions.showOnlyCategory("event_viewer")
-          korganizerMobile.lastView = 1;
-          eventView.visible = true;
-          monthView.visible = false;
-          clearSelection();
+          guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
         }
       }
     }
@@ -184,7 +175,7 @@ KPIM.MainView {
 
   Rectangle {
     id: agendaView
-    visible: false
+    visible: guiStateManager.inViewDayState || guiStateManager.inViewWeekState
     anchors.fill: parent
     color: "#D2D1D0" // TODO: make palette work correctly. palette.window
 
@@ -203,10 +194,7 @@ KPIM.MainView {
         MouseArea {
           anchors.fill : parent;
           onClicked : {
-            agendaView.visible = false;
-            mainWorkView.visible = true;
-            selectButton.visible = true
-            korganizerActions.showOnlyCategory("home")
+            guiStateManager.popState();
           }
         }
       }
@@ -223,33 +211,20 @@ KPIM.MainView {
           eventView.itemId = selectedItemId;
           eventView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
-          korganizerActions.showOnlyCategory("event_viewer")
-          korganizerMobile.lastView = 0;
-          eventView.visible = true;
-          agendaView.visible = false;
+          guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
           clearSelection();
         }
-      }
-    }
-
-    onVisibleChanged : {
-      if ( visible ) {
-        if ( collectionView.numSelected > 1 )
-          korganizerActions.showOnlyCategory("multiple_calendar")
-        else
-          korganizerActions.showOnlyCategory("single_calendar")
       }
     }
   }
 
   Rectangle {
     id: eventListView
-    visible: false
+    visible: guiStateManager.inViewEventListState
     anchors.fill: parent
     color: "#D2D1D0" // TODO: make palette work correctly. palette.window
 
     Rectangle {
-      id : backToMessageListButton2
       height: 48
       width: 48
       z: 5
@@ -263,10 +238,7 @@ KPIM.MainView {
         MouseArea {
           anchors.fill : parent;
           onClicked : {
-            eventListView.visible = false;
-            mainWorkView.visible = true;
-            selectButton.visible = true
-            korganizerActions.showOnlyCategory("home")
+            guiStateManager.popState();
           }
         }
       }
@@ -283,25 +255,19 @@ KPIM.MainView {
          if ( currentItemId > 0 ) {
           eventView.itemId = currentItemId;
           application.setCurrentEventItemId(currentItemId);
-          korganizerActions.showOnlyCategory("event_viewer")
-          korganizerMobile.lastView = 2;
-          eventView.visible = true;
-          eventListView.visible = false;
-        }       
-      }
-    }
-    onVisibleChanged : {
-      if ( visible ) {
-        if ( collectionView.numSelected > 1 )
-          korganizerActions.showOnlyCategory("multiple_calendar")
-        else
-          korganizerActions.showOnlyCategory("single_calendar")
+          guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState )
+        }
       }
     }
   }
 
   Item {
     id : mainWorkView
+    visible: { guiStateManager.inHomeScreenState ||
+               guiStateManager.inAccountScreenState ||
+               guiStateManager.inSingleFolderScreenState ||
+               guiStateManager.inMultipleFolderScreenState
+             }
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -328,22 +294,15 @@ KPIM.MainView {
       // It's not possible to get the number of items in a model. We have to
       // put the model in a view and count the items in the view.
       ListView { id : dummyItemView; model : calendarModel }
-      
+
       multipleSelectionText : KDE.i18nc("%1 is e.g. 3 folders, %2 is e.g. from 2 accounts, %3 is e.g. 9 events",
                                         "You have selected \n%1\n%2\n%3",
                                         KDE.i18np("1 folder","%1 folders",collectionView.numSelected),
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
                                         KDE.i18np("1 event","%1 events",dummyItemView.count))
 
-      
-      Component.onCompleted : updateContextActionsStates();
-      onNumBreadcrumbsChanged : updateContextActionsStates();
-      onNumSelectedChanged : updateContextActionsStates();
-
       onSelectedClicked : {
-        mainWorkView.visible = false
-        bulkActionScreen.visible = true
-        application.isBulkActionScreenSelected = true
+        guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
       }
 
       KPIM.AgentStatusIndicator {
@@ -360,8 +319,7 @@ KPIM.MainView {
       buttonText : KDE.i18n("Select")
       opacity : collectionView.hasSelection ? 0 : 1
       onClicked : {
-        favoriteSelector.visible = true;
-        mainWorkView.visible = false;
+        guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
       }
     }
   }
@@ -432,10 +390,7 @@ KPIM.MainView {
           width: parent.width / 3
           onClicked: {
             agenda.showRange( dateEdit.date, 0 /* "Day" */ );
-            mainWorkView.visible = false
-            agendaView.visible = true
-            selectButton.visible = false
-            monthView.visible = false
+            guiStateManager.pushState( Events.EventsGuiStateManager.ViewDayState );
           }
         }
         KPIM.Button2 {
@@ -444,10 +399,7 @@ KPIM.MainView {
           width: parent.width / 3
           onClicked: {
             agenda.showRange( dateEdit.date, 1 /* "Week" */ );
-            mainWorkView.visible = false
-            agendaView.visible = true
-            selectButton.visible = false
-            monthView.visible = false
+            guiStateManager.pushState( Events.EventsGuiStateManager.ViewWeekState );
           }
         }
         KPIM.Button2 {
@@ -455,11 +407,8 @@ KPIM.MainView {
           buttonText: KDE.i18n( "Month view" )
           width: parent.width / 3
           onClicked: {
-            mainWorkView.visible = false
-            agendaView.visible = false
-            selectButton.visible = false
-            monthView.visible = true
             month.showMonth( dateEdit.date );
+            guiStateManager.pushState( Events.EventsGuiStateManager.ViewMonthState );
           }
         }
       }
@@ -479,6 +428,7 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
+    visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
 
     SlideoutPanel {
       id: actionPanelNew
@@ -504,8 +454,7 @@ KPIM.MainView {
               name : "to_selection_screen"
               script : {
                 actionPanelNew.collapse();
-                favoriteSelector.visible = true;
-                mainWorkView.visible = false;
+                guiStateManager.pushState( PIM.GuiStateManager.MultipleFolderSelectionScreenState );
               }
             },
             KPIM.ScriptAction {
@@ -546,10 +495,7 @@ KPIM.MainView {
             KPIM.ScriptAction {
               name : "month_layout"
               script: {
-                mainWorkView.visible = false
-                agendaView.visible = false
-                selectButton.visible = false
-                monthView.visible = true
+                guiStateManager.switchState( Events.EventsGuiStateManager.ViewMonthState );
                 month.showMonth( dateEdit.date );
                 actionPanelNew.collapse();
               }
@@ -557,10 +503,7 @@ KPIM.MainView {
              KPIM.ScriptAction {
               name : "eventlist_layout"
               script: {
-                mainWorkView.visible = false
-                agendaView.visible = false
-                selectButton.visible = false
-                eventListView.visible = true
+                guiStateManager.switchState( Events.EventsGuiStateManager.ViewEventListState );
                 actionPanelNew.collapse();
               }
             },
@@ -575,9 +518,7 @@ KPIM.MainView {
               name : "start_maintenance"
               script : {
                 actionPanelNew.collapse();
-                mainWorkView.visible = false
-                bulkActionScreen.visible = true
-                application.isBulkActionScreenSelected = true
+                guiStateManager.pushState( PIM.GuiStateManager.BulkActionScreenState );
               }
             },
             KPIM.ScriptAction {
@@ -622,24 +563,25 @@ KPIM.MainView {
       ]
     }
   }
+
   KPIM.MultipleSelectionScreen {
     id : favoriteSelector
     anchors.fill : parent
     anchors.topMargin : 12
-    visible : false
+    visible : guiStateManager.inMultipleFolderSelectionScreenState
     backgroundImage : backgroundImage.source
     onFinished : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState();
       application.multipleSelectionFinished();
     }
     onCanceled : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState();
     }
   }
+
   KPIM.BulkActionScreen {
     id : bulkActionScreen
+    visible : guiStateManager.inBulkActionScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -647,7 +589,6 @@ KPIM.MainView {
     anchors.right : parent.right
     backgroundImage : backgroundImage.source
 
-    visible : false
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18np("1 calendar", "%1 calendars", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
@@ -659,9 +600,7 @@ KPIM.MainView {
       anchors.fill : parent
     }
     onBackClicked : {
-      bulkActionScreen.visible = false
-      application.isBulkActionScreenSelected = false
-      mainWorkView.visible = true
+      guiStateManager.popState();
     }
   }
 
@@ -682,7 +621,7 @@ KPIM.MainView {
   Connections {
     target: eventView
     onIncidenceRemoved : {
-      backToAgendaView();
+      guiStateManager.popState();
     }
   }
 

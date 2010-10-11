@@ -18,6 +18,7 @@ set(korganizer_mobile_SRCS
   declarativewidgetwrapper.cpp
   eventlistproxy.cpp
   eventsfilterproxymodel.cpp
+  eventsguistatemanager.cpp
   eventsexporthandler.cpp
   eventsimporthandler.cpp
   mainview.cpp

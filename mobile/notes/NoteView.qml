@@ -82,8 +82,6 @@ Rectangle {
       anchors.leftMargin : 10
       anchors.rightMargin : 10
 
-      contentWidth: edit.paintedWidth
-      contentHeight: edit.paintedHeight
       clip: true
 
       function ensureVisible(r)

@@ -34,9 +34,8 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
   , mFavsListModel( 0 )
   , mFilterLineEdit( 0 )
   , mBulkActionFilterLineEdit( 0 )
-  , mIsBulkActionScreenSelected( false )
   , mAgentStatusMonitor( 0 )
-  , mScreenManager( 0 )
+  , mGuiStateManager( 0 )
 { }
 
 void KDeclarativeMainViewPrivate::restoreState()

@@ -27,6 +27,7 @@
 #include "eventlistproxy.h"
 #include "eventsexporthandler.h"
 #include "eventsfilterproxymodel.h"
+#include "eventsguistatemanager.h"
 #include "eventsimporthandler.h"
 #include "monthviewitem.h"
 #include "qmldateedit.h"
@@ -69,6 +70,7 @@ using CalendarSupport::KCalPrefs;
 QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 QML_DECLARE_TYPE( EventViews::AgendaView )
 QML_DECLARE_TYPE( Qt::QmlDateEdit )
+QML_DECLARE_TYPE( EventsGuiStateManager )
 
 MainView::MainView( QWidget* parent )
   : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent )
@@ -95,6 +97,7 @@ void MainView::delayedInit()
   qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
   qmlRegisterType<EventViews::MonthViewItem>( "org.kde.calendarviews", 4, 5, "MonthView" );
   qmlRegisterType<Qt::QmlDateEdit>( "org.qt", 4, 7, "QmlDateEdit" );
+  qmlRegisterUncreatableType<EventsGuiStateManager>( "org.kde.akonadi.events", 4, 5, "EventsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
@@ -333,6 +336,11 @@ ImportHandlerBase* MainView::importHandler() const
 ExportHandlerBase* MainView::exportHandler() const
 {
   return new EventsExportHandler();
+}
+
+GuiStateManager* MainView::createGuiStateManager() const
+{
+  return new EventsGuiStateManager();
 }
 
 void MainView::uploadFreeBusy()

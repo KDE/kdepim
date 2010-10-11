@@ -86,6 +86,8 @@ class MainView : public KDeclarativeMainView
     virtual QAbstractProxyModel* itemFilterModel() const;
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
+    virtual GuiStateManager* createGuiStateManager() const;
+
     void scheduleiTIPMethod( KCalCore::iTIPMethod method );
 
   private:

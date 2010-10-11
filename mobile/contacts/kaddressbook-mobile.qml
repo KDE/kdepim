@@ -27,38 +27,31 @@ import org.kde.akonadi.contacts 4.5 as Contacts
 KPIM.MainView {
   id: kaddressbookMobile
 
-  function goBackToListing()
-  {
-    contactView.visible = false;
-    contactGroupView.visible = false;
-    editContactButton.visible = false;
-    editContactGroupButton.visible = false;
-    backToFolderListButton.visible = false;
-    collectionView.visible = true;
-    contactListPage.visible = true;
-    selectButton.visible = true;
-    contactView.itemId = -1;
-    contactGroupView.itemId = -1;
-
-    updateContextActionsStates();
+  QML.Connections {
+    target: guiStateManager
+    onGuiStateChanged: { updateContextActionStates() }
   }
 
-  function updateContextActionsStates()
+  QML.Component.onCompleted : updateContextActionStates();
+
+  function updateContextActionStates()
   {
-    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
-      kaddressbookActions.showOnlyCategory("home")
-    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
-      kaddressbookActions.showOnlyCategory("account")
-    } else if ( collectionView.numSelected > 1 ) {
-      kaddressbookActions.showOnlyCategory( "multiple_folder" );
-    } else {
-      kaddressbookActions.showOnlyCategory("single_folder")
+    if ( guiStateManager.inHomeScreenState ) {
+      kaddressbookActions.showOnlyCategory( "home" )
+    } else if ( guiStateManager.inAccountScreenState ) {
+      kaddressbookActions.showOnlyCategory( "account" )
+    } else if ( guiStateManager.inSingleFolderScreenState ) {
+      kaddressbookActions.showOnlyCategory( "single_folder" )
+    } else if ( guiStateManager.inMultipleFolderScreenState ) {
+      kaddressbookActions.showOnlyCategory( "multiple_folder" )
+    } else if ( guiStateManager.inViewContactState || guiStateManager.inViewContactGroupState ) {
+      kaddressbookActions.showOnlyCategory( "contact_viewer" )
     }
   }
 
   Contacts.ContactView {
     id: contactView
-    z: 0
+    visible: guiStateManager.inViewContactState
     anchors.fill: parent
     itemId: -1
 
@@ -78,12 +71,12 @@ KPIM.MainView {
 
   KPIM.Button {
     id : editContactButton
+    visible : guiStateManager.inViewContactState
     anchors.bottom: backToFolderListButton.top
     anchors.right: parent.right
     anchors.margins: 12
     width: 70
     height: 70
-    visible : false
     icon: KDE.locate( "data", "mobileui/edit-button.png" );
     onClicked: {
       application.editContact( contactView.item );
@@ -92,10 +85,9 @@ KPIM.MainView {
 
   Contacts.ContactGroupView {
     id: contactGroupView
-    z: 0
+    visible: guiStateManager.inViewContactGroupState
     anchors.fill: parent
     itemId: -1
-    visible: false
 
     onNextItemRequest: {
       // Only go to the next message when currently a valid item is set.
@@ -112,12 +104,12 @@ KPIM.MainView {
 
   KPIM.Button {
     id : editContactGroupButton
+    visible : guiStateManager.inViewContactGroupState
     anchors.bottom: backToFolderListButton.top
     anchors.right: parent.right
     anchors.margins: 12
     width: 70
     height: 70
-    visible : false
     icon: KDE.locate( "data", "mobileui/edit-button.png" );
     onClicked: {
       application.editContactGroup( contactGroupView.item );
@@ -126,20 +118,24 @@ KPIM.MainView {
 
   KPIM.Button {
     id : backToFolderListButton
+    visible : guiStateManager.inViewContactState || guiStateManager.inViewContactGroupState
     anchors.bottom: kaddressbookMobile.bottom
     anchors.right: kaddressbookMobile.right
     anchors.margins: 12
     width: 70
     height: 70
-    visible : false
     icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
     onClicked: {
-      goBackToListing();
+      guiStateManager.popState();
     }
   }
 
   QML.Item {
     id : mainWorkView
+    visible: { guiStateManager.inHomeScreenState ||
+               guiStateManager.inAccountScreenState ||
+               guiStateManager.inSingleFolderScreenState ||
+               guiStateManager.inMultipleFolderScreenState }
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -156,7 +152,11 @@ KPIM.MainView {
     }
 
     Akonadi.AkonadiBreadcrumbNavigationView {
-      id : collectionView
+      id: collectionView
+      visible: { guiStateManager.inHomeScreenState ||
+                 guiStateManager.inAccountScreenState ||
+                 guiStateManager.inSingleFolderScreenState ||
+                 guiStateManager.inMultipleFolderScreenState }
       anchors.top: parent.top
       width: 1/3 * parent.width
       anchors.bottom : selectButton.top
@@ -171,15 +171,8 @@ KPIM.MainView {
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
                                         KDE.i18np("1 contact","%1 contacts",contactList.count))
 
-
-      QML.Component.onCompleted : updateContextActionsStates();
-      onNumBreadcrumbsChanged : updateContextActionsStates();
-      onNumSelectedChanged : updateContextActionsStates();
-
       onSelectedClicked : {
-        mainWorkView.visible = false
-        bulkActionScreen.visible = true
-        application.isBulkActionScreenSelected = true
+        guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
       }
 
       KPIM.AgentStatusIndicator {
@@ -188,22 +181,22 @@ KPIM.MainView {
     }
 
     KPIM.Button2 {
-      id : selectButton
+      id: selectButton
+      visible: guiStateManager.inHomeScreenState
       anchors.left: collectionView.left
       anchors.right: collectionView.right
       anchors.bottom : parent.bottom
       anchors.bottomMargin : { (collectionView.numSelected == 1) ? -selectButton.height : 0 }
       buttonText : (collectionView.numSelected <= 1) ? KDE.i18n("Select") : KDE.i18n("Change Selection")
-      opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
       onClicked : {
         application.persistCurrentSelection("preFavSelection");
-        favoriteSelector.visible = true;
-        mainWorkView.visible = false;
+        guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
       }
     }
 
     KPIM.StartCanvas {
       id : startPage
+      visible: !collectionView.hasSelection
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
@@ -211,32 +204,8 @@ KPIM.MainView {
       anchors.leftMargin : 10
       anchors.rightMargin : 10
 
-      opacity : collectionView.hasSelection ? 0 : 1
       showAccountsList : false
       favoritesModel : favoritesList
-
-      contextActions : [
-        QML.Column {
-          anchors.fill: parent
-          height : startPageNewContactButton.height + startPageNewContactGroupButton.height + 3 * spacing
-          KPIM.Button2 {
-            id: startPageNewContactButton
-            width: parent.width
-            buttonText : KDE.i18n( "New Contact" )
-            onClicked : {
-              application.newContact();
-            }
-          }
-          KPIM.Button2 {
-            id: startPageNewContactGroupButton
-            width: parent.width
-            buttonText : KDE.i18n( "New Contact Group" )
-            onClicked : {
-              application.newContactGroup();
-            }
-          }
-        }
-      ]
     }
 
     QML.Rectangle {
@@ -246,8 +215,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : screenManager.isHomeScreenVisible ? 1 : 0
-
+      visible : guiStateManager.inHomeScreenState
 
       KPIM.Button2 {
         id : newContactButton
@@ -262,6 +230,7 @@ KPIM.MainView {
           application.newContact();
         }
       }
+
       KPIM.Button2 {
         id : newContactGroupButton
         anchors.top : newContactButton.bottom
@@ -283,7 +252,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : (collectionView.hasBreadcrumbs && contactList.count == 0 ) ? 1 : 0
+      visible: (!guiStateManager.inHomeScreenState && collectionView.hasBreadcrumbs && contactList.count == 0)
       // TODO: content
       QML.Text {
         text : KDE.i18n("No contacts in this address book");
@@ -302,7 +271,9 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : screenManager.isHomeScreenVisible ? 0 : 1
+      visible: { guiStateManager.inAccountScreenState ||
+                 guiStateManager.inSingleFolderScreenState ||
+                 guiStateManager.inMultipleFolderScreenState }
 
       Akonadi.FilterLineEdit {
         id: filterLineEdit
@@ -325,27 +296,9 @@ KPIM.MainView {
         onItemSelected: {
           if ( itemModel.typeForIndex( contactList.currentIndex ) == "contact" ) {
             contactView.itemId = contactList.currentItemId;
-            contactView.visible = true;
-            contactGroupView.visible = false;
-            editContactButton.visible = true;
-            editContactGroupButton.visible = false;
-            backToFolderListButton.visible = true;
-            collectionView.visible = false;
-            contactListPage.visible = false;
-            selectButton.visible = false;
-            kaddressbookActions.showOnlyCategory("contact_viewer")
           }
           if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
             contactGroupView.itemId = contactList.currentItemId;
-            contactView.visible = false;
-            contactGroupView.visible = true;
-            editContactButton.visible = false;
-            editContactGroupButton.visible = true;
-            backToFolderListButton.visible = true;
-            collectionView.visible = false;
-            contactListPage.visible = false;
-            selectButton.visible = false;
-            kaddressbookActions.showOnlyCategory("contact_viewer")
           }
         }
       }
@@ -354,6 +307,8 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
+
+    visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
 
     SlideoutPanel {
       id: actionPanelNew
@@ -372,15 +327,14 @@ KPIM.MainView {
               name : "show_about_dialog"
               script : {
                 actionPanelNew.collapse();
-                aboutDialog.visible = true
+                aboutDialog.visible = true;
               }
             },
             KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
                 actionPanelNew.collapse();
-                favoriteSelector.visible = true;
-                mainWorkView.visible = false;
+                guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
               }
             },
             KPIM.ScriptAction {
@@ -394,9 +348,7 @@ KPIM.MainView {
               name : "start_maintenance"
               script : {
                 actionPanelNew.collapse();
-                mainWorkView.visible = false
-                bulkActionScreen.visible = true
-                application.isBulkActionScreenSelected = true
+                guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
               }
             }
           ]
@@ -413,31 +365,28 @@ KPIM.MainView {
 
   KPIM.MultipleSelectionScreen {
     id : favoriteSelector
+    visible : guiStateManager.inMultipleFolderSelectionScreenState
     anchors.fill : parent
-    visible : false
     backgroundImage : backgroundImage.source
     onFinished : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState();
       application.clearPersistedSelection("preFavSelection");
       application.multipleSelectionFinished();
     }
     onCanceled : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
+      guiStateManager.popState();
       application.restorePersistedSelection("preFavSelection");
     }
   }
   KPIM.BulkActionScreen {
     id : bulkActionScreen
+    visible : guiStateManager.inBulkActionScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right : parent.right
     backgroundImage : backgroundImage.source
-
-    visible : false
 
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
@@ -450,9 +399,7 @@ KPIM.MainView {
       anchors.fill : parent
     }
     onBackClicked : {
-      bulkActionScreen.visible = false
-      application.isBulkActionScreenSelected = false
-      mainWorkView.visible = true
+      guiStateManager.popState();
     }
   }
 
@@ -473,16 +420,17 @@ KPIM.MainView {
 
   QML.Connections {
     target: contactView
-    onContactRemoved : { goBackToListing(); }
+    onContactRemoved : { guiStateManager.popState(); }
   }
 
   QML.Connections {
     target: contactGroupView
-    onContactGroupRemoved : { goBackToListing(); }
+    onContactGroupRemoved : { guiStateManager.popState(); }
   }
 
   KPIM.AboutDialog {
     id : aboutDialog
+    visible: false
     source: backgroundImage.source
   }
 }

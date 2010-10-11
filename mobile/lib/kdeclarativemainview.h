@@ -24,6 +24,7 @@
 #include <QtGui/QItemSelectionModel>
 
 class ExportHandlerBase;
+class GuiStateManager;
 class ImportHandlerBase;
 class KLineEdit;
 class ListProxy;
@@ -49,7 +50,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     Q_PROPERTY( int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged )
     Q_PROPERTY( bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged )
     Q_PROPERTY( QString version READ version CONSTANT )
-    Q_PROPERTY( bool isBulkActionScreenSelected READ isBulkActionScreenSelected WRITE setBulkActionScreenSelected NOTIFY isBulkActionScreenSelectedChanged )
 
   public:
     /**
@@ -84,14 +84,15 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     QString version() const;
 
     /**
-     * Returns whether the bulk action screen is currently visible.
-     */
-    bool isBulkActionScreenSelected() const;
-
-    /**
      * Returns the monitor that is used by the application.
      */
     Akonadi::ChangeRecorder* monitor() const;
+
+    /**
+     * Returns the gui state manager that will be used to manage the visibility
+     * of the various gui elements of the application.
+     */
+    GuiStateManager* guiStateManager() const;
 
     /**
      * Sets the @p lineEdit that is used to filter the items in the listview.
@@ -134,8 +135,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void clearPersistedSelection(const QString &key);
     void restorePersistedSelection(const QString &key);
 
-    void setBulkActionScreenSelected( bool selected );
-
     /**
      * Starts the import of items to the application.
      *
@@ -159,7 +158,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void numSelectedAccountsChanged();
     void selectedItemChanged( int row, qlonglong itemId );
     void isLoadingSelectedChanged();
-    void isBulkActionScreenSelectedChanged();
 
   protected:
     /**
@@ -228,6 +226,13 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      * If @c 0 is returned, no export functionality is offered.
      */
     virtual ExportHandlerBase* exportHandler() const;
+
+    /**
+     * Returns the gui state manager that will be used by the application.
+     *
+     * Subclasses should returns its custom gui state managers here.
+     */
+    virtual GuiStateManager* createGuiStateManager() const;
 
   protected Q_SLOTS:
     void delayedInit();

@@ -23,13 +23,13 @@
 #include "akonadibreadcrumbnavigationfactory.h"
 #include "declarativewidgetbase.h"
 #include "exporthandlerbase.h"
+#include "guistatemanager.h"
 #include "importhandlerbase.h"
 #include "kdepim-version.h"
 #include "kresettingproxymodel.h"
 #include "listproxy.h"
 #include "qmlcheckableproxymodel.h"
 #include "qmllistselectionmodel.h"
-#include "screenmanager.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/agentinstancemodel.h>
@@ -134,6 +134,7 @@ typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMain
 QML_DECLARE_TYPE( DeclarativeFilterLineEdit )
 QML_DECLARE_TYPE( DeclarativeBulkActionFilterLineEdit )
 QML_DECLARE_TYPE( AgentStatusMonitor )
+QML_DECLARE_TYPE( GuiStateManager )
 
 KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent )
   : KDeclarativeFullScreenView( appName, parent )
@@ -149,6 +150,7 @@ void KDeclarativeMainView::delayedInit()
 {
   qmlRegisterType<DeclarativeFilterLineEdit>( "org.kde.akonadi", 4, 5, "FilterLineEdit" );
   qmlRegisterType<DeclarativeBulkActionFilterLineEdit>( "org.kde.akonadi", 4, 5, "BulkActionFilterLineEdit" );
+  qmlRegisterUncreatableType<GuiStateManager>( "org.kde.pim.mobileui", 4, 5, "GuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 
   KDeclarativeFullScreenView::delayedInit();
 
@@ -256,8 +258,8 @@ void KDeclarativeMainView::delayedInit()
   context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   // The global screen manager
-  d->mScreenManager = new ScreenManager( this );
-  context->setContextProperty( "screenManager", QVariant::fromValue( static_cast<QObject*>( d->mScreenManager ) ) );
+  d->mGuiStateManager = createGuiStateManager();
+  context->setContextProperty( "guiStateManager", QVariant::fromValue( static_cast<QObject*>( d->mGuiStateManager ) ) );
 
   // A list of available favorites
   QAbstractItemModel *favsList = d->getFavoritesListModel();
@@ -332,13 +334,13 @@ void KDeclarativeMainView::breadcrumbsSelectionChanged()
   const int numSelectedItems = qobject_cast<QAbstractItemModel*>(d->mBnf->qmlSelectedItemModel())->rowCount();
 
   if ( numBreadcrumbs == 0 && numSelectedItems == 0) {
-    d->mScreenManager->switchScreen( ScreenManager::HomeScreen );
-  } else if ( numBreadcrumbs == 0 && numSelectedItems != 0) {
-    d->mScreenManager->switchScreen( ScreenManager::AccountScreen );
+    d->mGuiStateManager->switchState( GuiStateManager::HomeScreenState );
+  } else if ( numBreadcrumbs == 0 && numSelectedItems == 1 ) {
+    d->mGuiStateManager->switchState( GuiStateManager::AccountScreenState );
   } else if ( numSelectedItems > 1 ) {
-    d->mScreenManager->switchScreen( ScreenManager::MultiFolderScreen );
+    d->mGuiStateManager->switchState( GuiStateManager::MultipleFolderScreenState );
   } else {
-    d->mScreenManager->switchScreen( ScreenManager::SingleFolderScreen );
+    d->mGuiStateManager->switchState( GuiStateManager::SingleFolderScreenState );
   }
 }
 
@@ -585,12 +587,6 @@ void KDeclarativeMainView::restorePersistedSelection( const QString &key )
   restorer->restoreSelection( selection );
 }
 
-void KDeclarativeMainView::setBulkActionScreenSelected( bool selected )
-{
-  d->mIsBulkActionScreenSelected = selected;
-  emit isBulkActionScreenSelectedChanged();
-}
-
 void KDeclarativeMainView::importItems()
 {
   ImportHandlerBase *handler = importHandler();
@@ -727,19 +723,24 @@ ExportHandlerBase* KDeclarativeMainView::exportHandler() const
   return 0;
 }
 
+GuiStateManager* KDeclarativeMainView::createGuiStateManager() const
+{
+  return new GuiStateManager();
+}
+
 QString KDeclarativeMainView::version() const
 {
   return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_SVN_REVISION_STRING, KDEPIM_SVN_LAST_CHANGE );
 }
 
-bool KDeclarativeMainView::isBulkActionScreenSelected() const
-{
-  return d->mIsBulkActionScreenSelected;
-}
-
 Akonadi::ChangeRecorder* KDeclarativeMainView::monitor() const
 {
   return d->mChangeRecorder;
+}
+
+GuiStateManager* KDeclarativeMainView::guiStateManager() const
+{
+  return d->mGuiStateManager;
 }
 
 void KDeclarativeMainView::setFilterLineEdit( KLineEdit *lineEdit )
@@ -768,10 +769,13 @@ void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )
 {
   static bool isSendingEvent = false;
 
-  KLineEdit *lineEdit = (d->mIsBulkActionScreenSelected ? d->mBulkActionFilterLineEdit : d->mFilterLineEdit);
+  KLineEdit *lineEdit = (d->mGuiStateManager->inBulkActionScreenState() ? d->mBulkActionFilterLineEdit : d->mFilterLineEdit);
 
   if ( !isSendingEvent && // do not end up in a recursion
-       !d->mScreenManager->isHomeScreenVisible() && // we are not showing the HomeScreen
+       (d->mGuiStateManager->inAccountScreenState() ||
+        d->mGuiStateManager->inSingleFolderScreenState() ||
+        d->mGuiStateManager->inMultipleFolderScreenState() ||
+        d->mGuiStateManager->inBulkActionScreenState()) && // only in the right state
        !event->text().isEmpty() && // only react on character input
        lineEdit && // only if a filter line edit has been set
        d->mItemFilterModel ) { // and a filter model is used
