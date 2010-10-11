@@ -46,6 +46,7 @@
 #include <klinkitemselectionmodel.h>
 #include <kselectionproxymodel.h>
 
+#include <KDE/KAboutData>
 #include <KDE/KAction>
 #include <KDE/KActionCollection>
 #include <KDE/KCmdLineArgs>
@@ -62,6 +63,8 @@
 #include <KDE/KSharedConfig>
 #include <KDE/KSharedConfigPtr>
 #include <KDE/KStandardDirs>
+#include <KDE/KToolInvocation>
+#include "kdeversion.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QPluginLoader>
@@ -72,6 +75,8 @@
 #include <QtDeclarative/QDeclarativeImageProvider>
 #include <QtGui/QApplication>
 #include <QtGui/QTreeView>
+
+#include <sys/utsname.h>
 
 #define VIEW(model) {                        \
   QTreeView *view = new QTreeView;           \
@@ -284,6 +289,10 @@ void KDeclarativeMainView::delayedInit()
   action = new KAction( i18n( "Synchronize all" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( synchronizeAllItems() ) );
   actionCollection()->addAction( QLatin1String( "synchronize_all_items" ), action );
+
+  action = new KAction( i18n( "Report bug or request feature" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( reportBug() ) );
+  actionCollection()->addAction( QLatin1String( "report_bug" ), action );
 
   setupStandardActionManager( regularSelectionModel(), d->mItemActionSelectionModel );
 
@@ -785,6 +794,25 @@ void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )
   } else {
     KDeclarativeFullScreenView::keyPressEvent( event );
   }
+}
+
+void KDeclarativeMainView::reportBug()
+{
+    QString kde_version = QString::fromLatin1( KDE_VERSION_STRING );
+
+    struct utsname unameBuf;
+    uname( &unameBuf );
+    QString os = QString::fromLatin1( unameBuf.sysname ) +
+          " (" + QString::fromLatin1( unameBuf.machine ) + ") "
+          "release " + QString::fromLatin1( unameBuf.release );
+    KUrl url = KUrl( "https://bugs.kde.org/wizard.cgi" );
+    url.addQueryItem( "os", os );
+    url.addQueryItem( "kdeVersion", kde_version );
+    url.addQueryItem( "appVersion", KGlobal::mainComponent().aboutData()->version() );
+    url.addQueryItem( "package",  KGlobal::mainComponent().aboutData()->productName() );
+    url.addQueryItem( "kbugreport", "1" );
+
+    KToolInvocation::invokeBrowser( url.url() );
 }
 
 #include "kdeclarativemainview.moc"

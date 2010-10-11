@@ -30,6 +30,8 @@ int main( int argc, char **argv )
   const KLocalizedString name = ki18n( "KAddressBook Mobile" );
 
   KAboutData aboutData( ba, ba, name, ba, name );
+  aboutData.setProductName( "KAddressbook Mobile" ); //has to match the bugzilla product name
+
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;

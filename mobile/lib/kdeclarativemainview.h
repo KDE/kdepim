@@ -154,6 +154,8 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void openAttachment(const QString& url, const QString& mimeType);
     void saveAttachment(const QString& url);
 
+    void reportBug();
+
   Q_SIGNALS:
     void numSelectedAccountsChanged();
     void selectedItemChanged( int row, qlonglong itemId );

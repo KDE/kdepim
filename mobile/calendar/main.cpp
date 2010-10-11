@@ -40,6 +40,8 @@ int main( int argc, char **argv )
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
   KAboutData aboutData( ba, ba, name, ba, name );
+  aboutData.setProductName( "KOrganizer Mobile/calendar" ); //has to match the bugzilla product name
+
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;

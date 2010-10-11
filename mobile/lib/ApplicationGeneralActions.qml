@@ -52,7 +52,11 @@ KPIM.ActionList {
     name : "configure"
   }
 */
-  KPIM.ScriptActionItem  {
+  KPIM.ActionListItem {
+    name : "report_bug"
+  }
+
+KPIM.ScriptActionItem  {
     name : "show_about_dialog"
     title : KDE.i18n( "About" )
   }

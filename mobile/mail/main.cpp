@@ -40,6 +40,7 @@ int main( int argc, char **argv )
   const QByteArray& ba = QByteArray( "kmail-mobile" );
   const KLocalizedString name = ki18n( "KMail Mobile" );
   KAboutData aboutData( ba, ba, name, ba, name );
+  aboutData.setProductName( "KMail Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication::initCmdLine();
