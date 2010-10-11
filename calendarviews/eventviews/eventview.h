@@ -31,6 +31,8 @@
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 
+#include <KCalCore/Incidence>
+
 #include <QWidget>
 
 namespace boost {
@@ -246,7 +248,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     KDateTime actualStartDateTime() const;
     KDateTime actualEndDateTime() const;
 
-    int showMoveRecurDialog( const Akonadi::Item &inc, const QDate &date );
+    int showMoveRecurDialog( const KCalCore::Incidence::Ptr &incidence, const QDate &date );
 
     /**
       Handles key events, opens the new event dialog when enter is pressed, activates type ahead.

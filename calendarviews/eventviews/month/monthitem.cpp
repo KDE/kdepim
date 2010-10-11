@@ -296,13 +296,12 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
   KCalCore::Incidence::Ptr inc = CalendarSupport::incidence( mIncidence );
   if ( inc->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        inc->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    int years = EventViews::yearDiff( inc->dtStart().date(), recurStartDate );
+    const int years = EventViews::yearDiff( inc->dtStart().date(), recurStartDate );
     if ( years > 0 ) {
       inc = KCalCore::Incidence::Ptr( inc->clone() );
       inc->setReadOnly( false );
       inc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years, inc->summary() ) );
       inc->setReadOnly( true );
-      mIncidence = Akonadi::Item();
       mIncidence.setPayload( inc );
       mCloned = true;
     }
@@ -439,7 +438,8 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
   bool modify = true;
 
   if ( incidence->recurs() ) {
-    int res = monthScene()->mMonthView->showMoveRecurDialog( mIncidence, startDate() );
+    const int res = monthScene()->mMonthView->showMoveRecurDialog(
+                                          CalendarSupport::incidence( mIncidence ), startDate() );
     switch ( res ) {
       case KMessageBox::Ok: // All occurrences
         modify = true;

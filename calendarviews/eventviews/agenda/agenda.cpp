@@ -1175,8 +1175,8 @@ void Agenda::endItemAction()
     bool modify = false;
     if ( incidence->recurs() ) {
       atomicOperationId = d->mChanger->startAtomicOperation();
-      const int res = d->mAgendaView->showMoveRecurDialog( d->mActionItem->incidence(),
-                                                          d->mActionItem->itemDate() );
+      const int res = d->mAgendaView->showMoveRecurDialog( CalendarSupport::incidence( d->mActionItem->incidence() ),
+                                                           d->mActionItem->itemDate() );
       switch ( res ) {
       case KCalUtils::RecurrenceActions::AllOccurrences: // All occurrences
         // Moving the whole sequene of events is handled by the itemModified below.

@@ -38,7 +38,6 @@
 #include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi_next/kcolumnfilterproxymodel.h>
 
-#include <KCalCore/Incidence>
 #include <KCalCore/Todo>
 
 #include <KCalUtils/RecurrenceActions>
@@ -112,10 +111,8 @@ void EventView::setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegi
   d->mHolidayRegion = holidayRegion;
 }
 
-int EventView::showMoveRecurDialog( const Akonadi::Item &aitem, const QDate &date )
+int EventView::showMoveRecurDialog( const Incidence::Ptr &inc, const QDate &date )
 {
-  const Incidence::Ptr inc = CalendarSupport::incidence( aitem );
-
   KDateTime dateTime( date, preferences()->timeSpec() );
 
   int availableOccurrences = KCalUtils::RecurrenceActions::availableOccurrences( inc, dateTime );
