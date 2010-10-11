@@ -1787,7 +1787,7 @@ QVector<bool> AgendaView::busyDayMask() const
   QVector<bool> busyDayMask;
   busyDayMask.resize( d->mSelectedDates.count() );
 
-  for( uint i = 0; i < d->mSelectedDates.count(); ++i ) {
+  for( int i = 0; i < d->mSelectedDates.count(); ++i ) {
     busyDayMask[i] = !d->mBusyDays[d->mSelectedDates[i]].isEmpty();
   }
 

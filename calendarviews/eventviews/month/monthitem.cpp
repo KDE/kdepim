@@ -288,7 +288,7 @@ QList<MonthGraphicsItem *> EventViews::MonthItem::monthGraphicsItems() const
 IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
                                         const Akonadi::Item &aitem,
                                         const QDate &recurStartDate )
-  : MonthItem( monthScene ), mIncidence( aitem.payload<Incidence::Ptr>() ), mCloned( false )
+  : MonthItem( monthScene ), mIncidence( aitem.payload<Incidence::Ptr>() )
 {
   mIsEvent = CalendarSupport::hasEvent( aitem );
   mIsJournal = CalendarSupport::hasJournal( aitem );
@@ -304,7 +304,6 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
       inc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years, inc->summary() ) );
       inc->setReadOnly( true );
       mIncidence = inc;
-      mCloned = true;
     }
   }
 

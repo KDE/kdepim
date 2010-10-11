@@ -314,7 +314,6 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
     QColor catColor() const;
 
     KCalCore::Incidence::Ptr mIncidence;
-    bool mCloned;
     int mRecurDayOffset;
     bool mIsEvent, mIsTodo, mIsJournal;
 };
