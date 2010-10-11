@@ -1852,7 +1852,11 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
   case Scheduler::Refresh:
     return i18n( "This invitation was refreshed" );
   case Scheduler::Cancel:
-    return i18n( "This invitation has been canceled" );
+    if ( iamOrganizer( event ) ) {
+      return i18n( "This invitation has been canceled" );
+    } else {
+      return i18n( "The organizer has removed you from the invitation" );
+    }
   case Scheduler::Add:
     return i18n( "Addition to the invitation" );
   case Scheduler::Reply:
@@ -1996,7 +2000,11 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
   case Scheduler::Refresh:
     return i18n( "This task was refreshed" );
   case Scheduler::Cancel:
-    return i18n( "This task was canceled" );
+    if ( iamOrganizer( todo ) ) {
+      return i18n( "This task was canceled" );
+    } else {
+      return i18n( "The organizer has removed you from this task" );
+    }
   case Scheduler::Add:
     return i18n( "Addition to the task" );
   case Scheduler::Reply:
