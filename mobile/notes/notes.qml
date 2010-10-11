@@ -236,7 +236,8 @@ KPIM.MainView {
             noteView.currentNoteRow = -1;
             noteView.currentNoteRow = headerList.currentIndex;
 
-            guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
+            if ( !guiStateManager.inViewSingleItemState )
+              guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
           }
         }
       }

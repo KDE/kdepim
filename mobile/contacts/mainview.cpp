@@ -97,10 +97,14 @@ void MainView::itemSelectionChanged( const QItemSelection &selected, const QItem
     return;
 
   const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if ( item.hasPayload<KABC::Addressee>() )
-    guiStateManager()->pushState( ContactsGuiStateManager::ViewContactState );
-  else if ( item.hasPayload<KABC::ContactGroup>() )
-    guiStateManager()->pushState( ContactsGuiStateManager::ViewContactGroupState );
+
+  if ( !qobject_cast<ContactsGuiStateManager*>( guiStateManager() )->inViewContactState() &&
+       !qobject_cast<ContactsGuiStateManager*>( guiStateManager() )->inViewContactGroupState() ) {
+    if ( item.hasPayload<KABC::Addressee>() )
+      guiStateManager()->pushState( ContactsGuiStateManager::ViewContactState );
+    else if ( item.hasPayload<KABC::ContactGroup>() )
+      guiStateManager()->pushState( ContactsGuiStateManager::ViewContactGroupState );
+  }
 }
 
 void MainView::finishEdit( QObject *editor )
