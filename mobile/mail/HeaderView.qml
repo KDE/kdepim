@@ -150,4 +150,20 @@ KPIM.ItemListView {
       ]
     }
   ]
+
+  section.property: "dateGroup"
+  section.criteria: ViewSection.FullString
+  section.delegate: QML.Item {
+    width: _top.width
+    height: itemListView.height / 7
+    QML.Rectangle {
+      anchors.fill: parent
+      color: "lightgray"
+    }
+    QML.Text {
+      anchors { fill: parent; leftMargin: 10; }
+      verticalAlignment: QML.Text.AlignVCenter
+      text: section
+    }
+  }
 }
