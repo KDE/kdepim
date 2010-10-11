@@ -23,27 +23,25 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOLISTVIEW_H
-#define KOLISTVIEW_H
+#ifndef CALENDARVIEWS_LISTVIEW_H
+#define CALENDARVIEWS_LISTVIEW_H
 
-#include "koeventview.h"
+#include "eventview.h"
 #include "customlistviewitem.h"
 
 #include <KCalCore/Incidence>
 
+#include <KConfig>
+
 #include <QHash>
 #include <QList>
-
-using namespace KCalCore;
 
 namespace CalendarSupport {
   class Calendar;
 }
 
+typedef CustomListViewItem<Akonadi::Item::Id> ListViewItem;
 
-typedef CustomListViewItem<Akonadi::Item::Id> KOListViewItem;
-
-class KOListView;
 class QTreeWidget;
 
 /**
@@ -56,18 +54,22 @@ class QTreeWidget;
   @author Preston Brown <pbrown@kde.org>
   @see KOBaseView, KODayListView
 */
-class KOListView : public KOEventView
+
+namespace EventViews {
+
+class ListView;
+
+class EVENTVIEWS_EXPORT ListView : public EventView
 {
   Q_OBJECT
   public:
-  explicit KOListView( CalendarSupport::Calendar *calendar,
+    explicit ListView( CalendarSupport::Calendar *calendar,
                        QWidget *parent = 0,  bool nonInteractive = false );
-    ~KOListView();
+    ~ListView();
 
-    virtual int maxDatesHint() const;
     virtual int currentDateCount() const;
     virtual Akonadi::Item::List selectedIncidences();
-    virtual DateList selectedIncidenceDates();
+    virtual KCalCore::DateList selectedIncidenceDates();
 
     void showDates( bool show );
 
@@ -79,7 +81,6 @@ class KOListView : public KOEventView
 
     void clear();
     QSize sizeHint() const;
-    virtual KOrg::CalPrinterBase::PrintType printType() const;
 
   public slots:
     virtual void updateView();
@@ -98,6 +99,10 @@ class KOListView : public KOEventView
 
     void popupMenu( const QPoint & );
 
+  Q_SIGNALS:
+    void showNewEventPopupSignal();
+    void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );
+
   protected slots:
     void processSelectionChange();
 
@@ -106,22 +111,23 @@ class KOListView : public KOEventView
     void addIncidence( const Akonadi::Item &, const QDate &date );
 
   private:
-    KOListViewItem *getItemForIncidence( const Akonadi::Item & );
+    ListViewItem *getItemForIncidence( const Akonadi::Item & );
     KCalCore::Incidence::Ptr incidenceForId( Akonadi::Item::Id id ) const;
 
   private:
     class ListItemVisitor;
     QTreeWidget *mTreeWidget;
-    KOEventPopupMenu *mPopupMenu;
-    KOListViewItem *mActiveItem;
+    ListViewItem *mActiveItem;
     QHash<Akonadi::Item::Id,Akonadi::Item> mItems;
     QHash<Akonadi::Item::Id, QDate> mDateList;
     QDate mStartDate;
     QDate mEndDate;
-    DateList mSelectedDates;
+    KCalCore::DateList mSelectedDates;
 
     // if it's non interactive we disable context menu, and incidence editing
     bool mIsNonInteractive;
 };
+
+}
 
 #endif

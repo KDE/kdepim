@@ -45,6 +45,8 @@ set( eventviews_LIB_SRCS
      agenda/timelabelszone.cpp
      agenda/timescaleconfigdialog.cpp
 
+     list/listview.cpp
+
      month/monthgraphicsitems.cpp
      month/monthitem.cpp
      month/monthscene.cpp

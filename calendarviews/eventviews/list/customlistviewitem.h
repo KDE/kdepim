@@ -19,26 +19,27 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CUSTOMLISTVIEWITEM_H
-#define CUSTOMLISTVIEWITEM_H
+#ifndef CALENDARVIEWS_CUSTOMLISTVIEWITEM_H
+#define CALENDARVIEWS_CUSTOMLISTVIEWITEM_H
 
 #include <QMap>
 #include <QString>
 #include <QTreeWidget>
 #include <QKeyEvent>
 
-
-class KOListView;
+namespace EventViews {
+  class ListView;
+}
 
 template<class T>
 // TODO, rename to CustomTreeWidgetItem
 class CustomListViewItem : public QTreeWidgetItem
 {
   public:
-      CustomListViewItem( T data, QTreeWidget *parent, KOListView *listView ) :
-                                    QTreeWidgetItem( parent ),
-                                    mData( data ),
-                                    mListView( listView )
+  CustomListViewItem( T data, QTreeWidget *parent, EventViews::ListView *listView ) :
+                          QTreeWidgetItem( parent ),
+                          mData( data ),
+                          mListView( listView )
       {
         updateItem();
       }
@@ -71,7 +72,7 @@ class CustomListViewItem : public QTreeWidgetItem
 
   private:
     T mData;
-    KOListView *mListView;
+    EventViews::ListView *mListView;
 
     QMap<int,QString> mKeyMap;
 };
