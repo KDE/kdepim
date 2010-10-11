@@ -448,14 +448,14 @@ void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee &a )
 
 void IncidenceAttendee::slotEventDurationChanged()
 {
-  KDateTime start = mDateTime->currentStartDateTime();
-  KDateTime end = mDateTime->currentEndDateTime();
+  const KDateTime start = mDateTime->currentStartDateTime();
+  const KDateTime end = mDateTime->currentEndDateTime();
 
   if ( start >= end ) { // This can happen, especially for todos.
     return;
   }
 
-  kDebug() << start << end;
+  // kDebug() << start << end;
 
   mConflictResolver->setEarliestDateTime( start );
   mConflictResolver->setLatestDateTime( end );
