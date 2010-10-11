@@ -454,7 +454,7 @@ KPIM.MainView {
               name : "to_selection_screen"
               script : {
                 actionPanelNew.collapse();
-                guiStateManager.pushState( PIM.GuiStateManager.MultipleFolderSelectionScreenState );
+                guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
               }
             },
             KPIM.ScriptAction {
@@ -518,7 +518,7 @@ KPIM.MainView {
               name : "start_maintenance"
               script : {
                 actionPanelNew.collapse();
-                guiStateManager.pushState( PIM.GuiStateManager.BulkActionScreenState );
+                guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
               }
             },
             KPIM.ScriptAction {
