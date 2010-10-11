@@ -26,6 +26,7 @@ QML.Item {
   property int currentItemId: -1
   property alias delegate: itemListView.delegate
   property alias count: itemListView.count
+  property alias section: itemListView.section
 
   signal itemSelected
 
