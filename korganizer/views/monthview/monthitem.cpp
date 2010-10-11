@@ -301,8 +301,10 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
       inc->setReadOnly( false );
       inc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years, inc->summary() ) );
       inc->setReadOnly( true );
+      const Akonadi::Item::Id originalId = mIncidence.id();
       mIncidence = Item();
       mIncidence.setPayload( inc );
+      mIncidence.setId( originalId ); // so it doesn't crash on assert( mIncidence.isValid() )
       mCloned = true;
     }
   }
