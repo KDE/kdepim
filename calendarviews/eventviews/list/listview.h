@@ -68,8 +68,8 @@ class EVENTVIEWS_EXPORT ListView : public EventView
     ~ListView();
 
     virtual int currentDateCount() const;
-    virtual Akonadi::Item::List selectedIncidences();
-    virtual KCalCore::DateList selectedIncidenceDates();
+    virtual Akonadi::Item::List selectedIncidences() const;
+    virtual KCalCore::DateList selectedIncidenceDates() const;
 
     void showDates( bool show );
 

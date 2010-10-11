@@ -271,7 +271,7 @@ int ListView::currentDateCount() const
   return d->mSelectedDates.count();
 }
 
-Akonadi::Item::List ListView::selectedIncidences()
+Akonadi::Item::List ListView::selectedIncidences() const
 {
   Akonadi::Item::List eventList;
   QTreeWidgetItem *item = d->mTreeWidget->selectedItems().isEmpty() ? 0 :
@@ -283,7 +283,7 @@ Akonadi::Item::List ListView::selectedIncidences()
   return eventList;
 }
 
-DateList ListView::selectedIncidenceDates()
+DateList ListView::selectedIncidenceDates() const
 {
   return d->mSelectedDates;
 }
