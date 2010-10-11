@@ -206,43 +206,29 @@ KPIM.MainView {
 
       showAccountsList : false
       favoritesModel : favoritesList
-    }
 
-    QML.Rectangle {
-      id : accountPage
-      anchors.left : collectionView.right
-      anchors.top : parent.top
-      anchors.bottom : parent.bottom
-      anchors.right : parent.right
-      color : "#00000000"
-      visible : guiStateManager.inHomeScreenState
-
-      KPIM.Button2 {
-        id : newContactButton
-        anchors.top : parent.top
-        anchors.topMargin : 30
-        anchors.left : parent.left
-        anchors.right : parent.right
-        anchors.leftMargin : 10
-        anchors.rightMargin : 10
-        buttonText : KDE.i18n( "New Contact" )
-        onClicked : {
-          application.newContact();
+      contextActions : [
+        QML.Column {
+          anchors.fill: parent
+          height : startPageNewContactButton.height + startPageNewContactGroupButton.height + 3 * spacing
+          KPIM.Button2 {
+            id: startPageNewContactButton
+            width: parent.width
+            buttonText : KDE.i18n( "New Contact" )
+            onClicked : {
+              application.newContact();
+            }
+          }
+          KPIM.Button2 {
+            id: startPageNewContactGroupButton
+            width: parent.width
+            buttonText : KDE.i18n( "New Contact Group" )
+            onClicked : {
+              application.newContactGroup();
+            }
+          }
         }
-      }
-
-      KPIM.Button2 {
-        id : newContactGroupButton
-        anchors.top : newContactButton.bottom
-        anchors.left : parent.left
-        anchors.right : parent.right
-        anchors.leftMargin : 10
-        anchors.rightMargin : 10
-        buttonText : KDE.i18n( "New Contact Group" )
-        onClicked : {
-          application.newContactGroup();
-        }
-      }
+      ]
     }
 
     QML.Rectangle {

@@ -163,29 +163,20 @@ KPIM.MainView {
       anchors.rightMargin : 10
       showAccountsList : false
       favoritesModel : favoritesList
-    }
 
-    QML.Rectangle {
-      id : accountPage
-      visible : guiStateManager.inHomeScreenState
-      anchors.left : collectionView.right
-      anchors.top : parent.top
-      anchors.bottom : parent.bottom
-      anchors.right : parent.right
-      color : "#00000000"
-
-      KPIM.Button2 {
-        anchors.top : parent.top
-        anchors.topMargin : 30
-        anchors.left : parent.left
-        anchors.right : parent.right
-        anchors.leftMargin : 10
-        anchors.rightMargin : 10
-        buttonText : KDE.i18n( "New Note" )
-        onClicked : {
-          application.startComposer();
+      contextActions : [
+        QML.Column {
+          anchors.fill: parent
+          height : 70
+          KPIM.Button2 {
+            width: parent.width
+            buttonText : KDE.i18n( "New Note" )
+            onClicked : {
+              application.startComposer();
+            }
+          }
         }
-      }
+      ]
     }
 
     QML.Rectangle {
