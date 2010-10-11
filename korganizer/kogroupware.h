@@ -80,7 +80,8 @@ class KOGroupware : public QObject
          but callers will always call this with useLastDialogAnswer = false first.
     */
     bool sendICalMessage( QWidget *parent, KCal::Scheduler::Method method,
-                          Incidence* incidence,
+                          Incidence *incidence,
+                          Incidence *oldincidence,
                           KOGlobals::HowChanged action,
                           bool attendeeStatusChanged,
                           bool useLastDialogAnswer = false );

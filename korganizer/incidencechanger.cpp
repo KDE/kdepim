@@ -58,34 +58,16 @@ bool IncidenceChanger::sendGroupwareMessage( Incidence *incidence,
                                              KOGlobals::HowChanged action,
                                              QWidget *parent )
 {
-  if ( KOPrefs::instance()->thatIsMe( incidence->organizer().email() ) && incidence->attendeeCount()>0
-      && !KOPrefs::instance()->mUseGroupwareCommunication ) {
+  if ( KOPrefs::instance()->thatIsMe( incidence->organizer().email() ) &&
+       ( incidence->attendeeCount() > 0 ) &&
+       !KOPrefs::instance()->mUseGroupwareCommunication ) {
     emit schedule( method, incidence );
     return true;
   } else if( KOPrefs::instance()->mUseGroupwareCommunication ) {
     return
-      KOGroupware::instance()->sendICalMessage( parent, method, incidence, action, false );
+      KOGroupware::instance()->sendICalMessage( parent, method, incidence, 0, action, false );
   }
   return true;
-}
-
-void IncidenceChanger::cancelAttendees( Incidence *incidence )
-{
-  if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
-    if ( KMessageBox::questionYesNo( 0, i18n("Some attendees were removed "
-       "from the incidence. Shall cancel messages be sent to these attendees?"),
-       i18n( "Attendees Removed" ), i18n("Send Messages"), i18n("Do Not Send") ) == KMessageBox::Yes ) {
-      // don't use KOGroupware::sendICalMessage here, because that asks just
-      // a very general question "Other people are involved, send message to
-      // them?", which isn't helpful at all in this situation. Afterwards, it
-      // would only call the MailScheduler::performTransaction, so do this
-      // manually.
-      // FIXME: Groupware scheduling should be factored out to it's own class
-      //        anyway
-      KCal::MailScheduler scheduler( mCalendar );
-      scheduler.performTransaction( incidence, Scheduler::Cancel );
-    }
-  }
 }
 
 bool IncidenceChanger::endChange( Incidence *incidence,
@@ -350,7 +332,8 @@ kdDebug(5850)<<"IncidenceChanger::changeIncidence for incidence \""<<newinc->sum
       success = KOGroupware::instance()->sendICalMessage(
         parent,
         KCal::Scheduler::Request,
-        newinc, KOGlobals::INCIDENCEEDITED, attendeeStatusChanged,
+        newinc, oldinc,
+        KOGlobals::INCIDENCEEDITED, attendeeStatusChanged,
         useLastDialogAnswer );
     }
 
@@ -444,7 +427,7 @@ bool IncidenceChanger::addIncidence( Incidence *incidence,
     if ( !KOGroupware::instance()->sendICalMessage(
            parent,
            KCal::Scheduler::Request,
-           incidence, KOGlobals::INCIDENCEADDED, false, useLastDialogAnswer ) ) {
+           incidence, 0, KOGlobals::INCIDENCEADDED, false, useLastDialogAnswer ) ) {
       KMessageBox::sorry(
         parent,
         i18n( "Attempt to send the scheduling message failed. "

@@ -261,9 +261,6 @@ void KODialogManager::connectEditor( KOIncidenceEditor*editor )
   connect( editor, SIGNAL( editCanceled( Incidence * ) ),
            mMainView, SLOT( editCanceled( Incidence * ) ) );
   connect( mMainView, SIGNAL( closingDown() ), editor, SLOT( reject() ) );
-
-  connect( editor, SIGNAL( deleteAttendee( Incidence * ) ),
-           mMainView, SIGNAL( cancelAttendees( Incidence * ) ) );
 }
 
 KOTodoEditor *KODialogManager::getTodoEditor()

@@ -107,8 +107,6 @@ class KOIncidenceEditor : public KDialogBase
     void addAttendees( const QStringList &attendees );
 
   signals:
-    void deleteAttendee( Incidence * );
-
     void editCategories();
     void updateCategoryConfig();
     void dialogClose( Incidence * );

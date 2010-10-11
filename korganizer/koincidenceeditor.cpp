@@ -129,9 +129,6 @@ void KOIncidenceEditor::cancelRemovedAttendees( Incidence *incidence )
     Incidence *ev = incidence->clone();
     ev->registerObserver( 0 );
     mAttendeeEditor->cancelAttendeeEvent( ev );
-    if ( ev->attendeeCount() > 0 ) {
-      emit deleteAttendee( ev );
-    }
     delete( ev );
   }
 

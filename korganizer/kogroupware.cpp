@@ -216,7 +216,7 @@ void KOGroupware::incomingDirChanged( const QString& path )
       // accept counter proposal
       scheduler.acceptCounterProposal( incidence );
       // send update to all attendees
-      sendICalMessage( mView, Scheduler::Request, incidence, KOGlobals::INCIDENCEEDITED, false );
+      sendICalMessage( mView, Scheduler::Request, incidence, 0, KOGlobals::INCIDENCEEDITED, false );
     }
   } else
     kdError(5850) << "Unknown incoming action " << action << endl;
@@ -235,6 +235,51 @@ class KOInvitationFormatterHelper : public InvitationFormatterHelper
     virtual QString generateLinkURL( const QString &id ) { return "kmail:groupware_request_" + id; }
 };
 
+// A string comparison that considers that null and empty are the same
+static bool stringCompare( const QString &s1, const QString &s2 )
+{
+  return ( s1.isEmpty() && s2.isEmpty() ) || ( s1 == s2 );
+}
+
+static bool compareIncsExceptAttendees( Incidence *i1, Incidence *i2 )
+{
+  if( i1->alarms().count() != i2->alarms().count() ) {
+    return false; // no need to check further
+  }
+
+  Alarm::List::ConstIterator a1 = i1->alarms().begin();
+  Alarm::List::ConstIterator a2 = i2->alarms().begin();
+  for( ; a1 != i1->alarms().end() && a2 != i2->alarms().end(); ++a1, ++a2 ) {
+    if( **a1 == **a2 ) {
+      continue;
+    } else {
+      return false;
+    }
+  }
+
+  bool recurrenceEqual = ( i1->recurrence() == 0 && i2->recurrence() == 0 );
+  if ( !recurrenceEqual ) {
+    recurrenceEqual = i1->recurrence() != 0 &&
+                      i2->recurrence() != 0 &&
+                      i2->recurrence() == i2->recurrence();
+  }
+
+  return
+    recurrenceEqual &&
+    i1->dtStart() == i2->dtStart() &&
+    i1->organizer() == i2->organizer() &&
+    i1->doesFloat() == i2->doesFloat() &&
+    i1->duration() == i2->duration() &&
+    i2->hasDuration() == i2->hasDuration() &&
+    stringCompare( i1->description(), i2->description() ) &&
+    stringCompare( i1->summary(), i2->summary() ) &&
+    i1->categories() == i2->categories() &&
+    i1->attachments() == i2->attachments() &&
+    i1->secrecy() == i2->secrecy() &&
+    i1->priority() == i2->priority() &&
+    stringCompare( i1->location(), i2->location() );
+}
+
 /* This function sends mails if necessary, and makes sure the user really
  * want to change his calendar.
  *
@@ -243,7 +288,8 @@ class KOInvitationFormatterHelper : public InvitationFormatterHelper
  */
 bool KOGroupware::sendICalMessage( QWidget* parent,
                                    KCal::Scheduler::Method method,
-                                   Incidence* incidence,
+                                   Incidence *incidence,
+                                   Incidence *oldincidence,
                                    KOGlobals::HowChanged action,
                                    bool attendeeStatusChanged,
                                    bool useLastDialogAnswer )
@@ -269,19 +315,154 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
    */
 
   if ( isOrganizer ) {
-    /* We are the organizer. If there is more than one attendee, or if there is
-     * only one, and it's not the same as the organizer, ask the user to send
-     * mail. */
+    // We are the organizer. If there is more than one attendee, or if there is
+    // only one, and it's not the same as the organizer, ask the user to send mail.
     if ( incidence->attendees().count() > 1
         || incidence->attendees().first()->email() != incidence->organizer().email() ) {
 
       QString txt;
       switch( action ) {
       case KOGlobals::INCIDENCEEDITED:
-        txt = i18n( "You changed the invitation \"%1\".\n"
-                    "Do you want to email the attendees an update message?" ).
-              arg( incidence->summary() );
-        break;
+      {
+        bool sendUpdate = true;
+
+        Attendee::List attendees = incidence->attendees();
+        Attendee::List::ConstIterator it;
+
+        // create the list of attendees from the new incidence
+        Attendee::List sameAtts;
+        for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+          if ( (*it)->email() != incidence->organizer().email() ) { //skip organizer
+            sameAtts << *it;
+          }
+        }
+
+        if ( incidence->summary().isEmpty() ) {
+          incidence->setSummary( i18n( "<No summary given>" ) );
+        }
+
+        if ( oldincidence ) {
+          // First we need to determine if the old and new incidences differ in
+          // the attendee list only. If that's the case, then we need to get the
+          // list of new attendees and the list of removed attendees and deal
+          // with those lists separately.
+
+          Attendee::List oldattendees = oldincidence->attendees();
+          Attendee::List::ConstIterator ot;
+
+          Attendee::List newAtts;  // newly added attendees
+          Attendee::List remAtts;  // newly removed attendees
+          sameAtts.clear();
+
+          // make a list of newly added attendees and attendees in both old and new incidence.
+          for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+            bool found = false;
+            for ( ot = oldattendees.begin(); ot != oldattendees.end(); ++ot ) {
+              if ( (*it)->email() == (*ot)->email() ) {
+                found = true;
+                break;
+              }
+            }
+            if ( !found ) {
+              newAtts << *it;
+            } else {
+              if ( (*it)->email() != incidence->organizer().email() ) { //skip organizer
+                sameAtts << *it;
+              }
+            }
+          }
+
+          // make a list of newly removed attendees
+          for ( ot = oldattendees.begin(); ot != oldattendees.end(); ++ot ) {
+            bool found = false;
+            for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+              if ( (*it)->email() == (*ot)->email() ) {
+                found = true;
+                break;
+              }
+            }
+            if ( !found ) {
+              remAtts << *ot;
+            }
+          }
+
+          // let's see if any else changed from the old incidence
+          if ( compareIncsExceptAttendees( incidence, oldincidence ) ) {
+            // no change, so no need to send an update to the original attendees list.
+            sendUpdate = false;
+          }
+
+          // For new attendees, send them the new incidence as a new invitation.
+          if ( newAtts.count() > 0 ) {
+            QStringList attStrList;
+            for ( it = newAtts.begin(); it != newAtts.end(); ++it ) {
+              attStrList << (*it)->fullName();
+            }
+            const QString recipients = attStrList.join( "," );
+
+            int newMail = KMessageBox::questionYesNoList(
+              parent,
+              i18n( "You are adding new attendees to the invitation \"%1\".\n"
+                    "Do you want to email an invitation to these new attendees?" ).
+              arg( incidence->summary() ),
+              attStrList,
+              i18n( "New Attendees" ),
+              KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+            if ( newMail == KMessageBox::Yes ) {
+              KCal::MailScheduler scheduler( mCalendar );
+              incidence->setRevision( 0 );
+              scheduler.performTransaction( incidence, Scheduler::Request, recipients );
+            }
+          }
+
+          // For removed attendees, tell them they are toast and send them a cancel.
+          if ( remAtts.count() > 0 ) {
+            QStringList attStrList;
+            for ( it = remAtts.begin(); it != remAtts.end(); ++it ) {
+              attStrList << (*it)->fullName();
+            }
+            const QString recipients = attStrList.join( "," );
+
+            int newMail = KMessageBox::questionYesNoList(
+              parent,
+              i18n( "You removed attendees from the invitation \"%1\".\n"
+                    "Do you want to email a cancellation message to these attendees?" ).
+              arg( incidence->summary() ),
+              attStrList,
+              i18n( "Removed Attendees" ),
+              KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+            if ( newMail == KMessageBox::Yes ) {
+              KCal::MailScheduler scheduler( mCalendar );
+              scheduler.performTransaction( incidence, Scheduler::Cancel, recipients );
+            }
+          }
+        }
+
+        // For existing attendees, skip the update if there are no other changes except attendees
+        if ( sendUpdate && ( sameAtts.count() > 0 ) ) {
+          QStringList attStrList;
+          Attendee::List::ConstIterator it;
+          for ( it = sameAtts.begin(); it != sameAtts.end(); ++it ) {
+            attStrList << (*it)->fullName();
+          }
+          const QString recipients = attStrList.join( "," );
+
+          int newMail = KMessageBox::questionYesNoList(
+            parent,
+            i18n( "You changed the invitation \"%1\".\n"
+                  "Do you want to email an updated invitation to these attendees?" ).
+            arg( incidence->summary() ),
+            attStrList,
+            i18n( "Send Invitation Update" ),
+            KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+          if ( newMail == KMessageBox::Yes ) {
+            KCal::MailScheduler scheduler( mCalendar );
+            scheduler.performTransaction( incidence, Scheduler::Request, recipients );
+          }
+        }
+        return true;
+      }
+
       case KOGlobals::INCIDENCEDELETED:
         Q_ASSERT( incidence->type() == "Event" || incidence->type() == "Todo" );
         if ( incidence->type() == "Event" ) {
@@ -294,6 +475,7 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
                 arg( incidence->summary() );
         }
         break;
+
       case KOGlobals::INCIDENCEADDED:
         if ( incidence->type() == "Event" ) {
           txt = i18n( "The event \"%1\" includes other people.\n"
@@ -308,6 +490,7 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
                       "Should an email be sent to the attendees?" );
         }
         break;
+
       default:
         kdError() << "Unsupported HowChanged action" << int( action ) << endl;
         break;
@@ -332,9 +515,11 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
       rc = lastUsedDialogAnswer;
     } else {
       // Ask if the user wants to tell the organizer about the current status
-      const QString txt = i18n( "Do you want to send a status update to the "
-                          "organizer of this task?");
-      lastUsedDialogAnswer = rc = KMessageBox::questionYesNo( parent, txt, QString::null, i18n("Send Update"), i18n("Do Not Send") );
+      const QString txt =
+        i18n( "Do you want to send a status update to the organizer of this task?" );
+      lastUsedDialogAnswer = rc = KMessageBox::questionYesNo(
+        parent, txt, i18n( "Group Scheduling Email" ),
+        KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
     }
   } else if ( incidence->type() == "Event" ) {
     QString txt;
@@ -345,7 +530,9 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
       if ( useLastDialogAnswer ) {
         rc = lastUsedDialogAnswer;
       } else {
-        lastUsedDialogAnswer = rc = KMessageBox::questionYesNo( parent, txt, QString::null, i18n("Send Update"), i18n("Do Not Send") );
+        lastUsedDialogAnswer = rc = KMessageBox::questionYesNo(
+          parent, txt, i18n( "Group Scheduling Email" ),
+          KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
       }
     } else {
       if( action == KOGlobals::INCIDENCEDELETED ) {
@@ -354,7 +541,9 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
         for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
           QString email = *it;
           Attendee *me = incidence->attendeeByMail(email);
-          if (me && (me->status()==KCal::Attendee::Accepted || me->status()==KCal::Attendee::Delegated)) {
+          if ( me &&
+               ( me->status() == KCal::Attendee::Accepted ||
+                 me->status() == KCal::Attendee::Delegated ) ) {
             askConfirmation = true;
             break;
           }
@@ -380,8 +569,8 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
           rc = lastUsedDialogAnswer;
         } else {
           txt = i18n( "You are not the organizer of this event. Editing it will "
-                    "bring your calendar out of sync with the organizer's calendar. "
-                    "Do you really want to edit it?" );
+                      "bring your calendar out of sync with the organizer's calendar. "
+                      "Do you really want to edit it?" );
           lastUsedDialogAnswer = rc = KMessageBox::warningYesNo( parent, txt );
         }
         return ( rc == KMessageBox::Yes );

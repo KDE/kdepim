@@ -337,10 +337,6 @@ void CalendarView::setIncidenceChanger( IncidenceChangerBase *changer )
 
   connect( mChanger, SIGNAL( schedule( Scheduler::Method, Incidence*) ),
            this, SLOT( schedule( Scheduler::Method, Incidence*) ) );
-
-
-  connect( this, SIGNAL( cancelAttendees( Incidence * ) ),
-           mChanger, SLOT( cancelAttendees( Incidence * ) ) );
 }
 
 Calendar *CalendarView::calendar()
