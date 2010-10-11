@@ -215,7 +215,7 @@ class Agenda::Private
 
   public:
     Private( Agenda *parent, AgendaView *agendaView, QScrollArea *scrollArea,
-             int columns, int rows, int rowSize )
+             int columns, int rows, int rowSize, bool isInteractive )
       : q( parent ), mAgendaView( agendaView ), mScrollArea( scrollArea ), mAllDayMode( false ),
         mColumns( columns ), mRows( rows ), mGridSpacingX( 0.0 ), mGridSpacingY( rowSize ),
         mDesiredGridSpacingY( rowSize ), mCalendar( 0 ), mChanger( 0 ),
@@ -223,7 +223,7 @@ class Agenda::Private
         mWorkingHoursEnable( false ), mHolidayMask( 0 ), mWorkingHoursYTop( 0 ),
         mWorkingHoursYBottom( 0 ), mHasSelection( 0 ), mSelectedId( -1 ), mMarcusBains( 0 ),
         mActionType( Agenda::NOP ), mItemMoved( false ), mOldLowerScrollValue( 0 ),
-        mOldUpperScrollValue( 0 ), mReturnPressed( false )
+        mOldUpperScrollValue( 0 ), mReturnPressed( false ), mIsInteractive( isInteractive )
     {
       if ( mGridSpacingY < 4 || mGridSpacingY > 30 ) {
         mGridSpacingY = 10;
@@ -309,14 +309,15 @@ class Agenda::Private
     int mOldUpperScrollValue;
 
     bool mReturnPressed;
+    bool mIsInteractive;
 };
 
 /*
   Create an agenda widget with rows rows and columns columns.
 */
 Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
-                int columns, int rows, int rowSize )
-  : QWidget( scrollArea ), d( new Private( this, agendaView, scrollArea, columns, rows, rowSize ) )
+                int columns, int rows, int rowSize, bool isInteractive )
+  : QWidget( scrollArea ), d( new Private( this, agendaView, scrollArea, columns, rows, rowSize, isInteractive ) )
 {
   setMouseTracking( true );
 
@@ -328,8 +329,9 @@ Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
   all-day events.
 */
 Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
-                int columns )
-  : QWidget( scrollArea ), d( new Private( this, agendaView, scrollArea, columns, 1, 24 ) )
+                int columns, bool isInteractive )
+  : QWidget( scrollArea ), d( new Private( this, agendaView, scrollArea, columns, 1, 24,
+                                           isInteractive ) )
 {
   d->mAllDayMode = true;
 
@@ -724,7 +726,11 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
 
   case QEvent::MouseMove:
   {
-    // This nasty gridToContents(contentsToGrid(..)) is needed to
+    if ( !d->mIsInteractive ) {
+      return true;
+    }
+
+    // This nasty gridToContents(contentsToGrid(..)) is needed todos
     // avoid an offset of a few pixels. Don't ask me why...
     QPoint indicatorPos = gridToContents( contentsToGrid( viewportPos ) );
     if ( object != this ) {
@@ -2284,15 +2290,15 @@ QScrollArea *Agenda::scrollArea() const
 }
 
 AgendaScrollArea::AgendaScrollArea( bool isAllDay, AgendaView *agendaView,
-                                    QWidget *parent )
+                                    bool isInteractive, QWidget *parent )
   : QScrollArea( parent )
 {
   if ( isAllDay ) {
-    mAgenda = new Agenda( agendaView, this, 1 );
+    mAgenda = new Agenda( agendaView, this, 1, isInteractive );
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   } else {
     mAgenda = new Agenda( agendaView, this, 1, 96,
-                          agendaView->preferences()->hourSize() );
+                          agendaView->preferences()->hourSize(), isInteractive );
   }
 
   setWidgetResizable( true );

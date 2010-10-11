@@ -30,7 +30,7 @@ using namespace EventViews;
 
 AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
-  , m_view( new AgendaView( QDate(), QDate(), false, 0 ) )
+  , m_view( new AgendaView( QDate(), QDate(), false, false, 0 ) )
   , m_currentRange( Week )
 {
   // start with the oxygen palette (which is not necessarily the default on all platforms)

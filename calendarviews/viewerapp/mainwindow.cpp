@@ -82,7 +82,7 @@ void MainWindow::addView( const QString &viewName )
   const KDateTime end = KDateTime::currentLocalDateTime().addDays( 1 );
 
   if ( viewName == QLatin1String( "agenda" ) ) {
-    eventView = new AgendaView( start.date(), end.date(), false, this );
+    eventView = new AgendaView( start.date(), end.date(), true, false, this );
   } else if ( viewName == QLatin1String( "multiagenda" ) ) {
     eventView = new MultiAgendaView( this );
   } else if ( viewName == QLatin1String( "month" ) ) {

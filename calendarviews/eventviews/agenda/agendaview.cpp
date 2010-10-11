@@ -146,7 +146,7 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
   AgendaView *const q;
 
   public:
-    explicit Private( AgendaView *parent, bool isSideBySide )
+    explicit Private( AgendaView *parent, bool isInteractive, bool isSideBySide )
       : q( parent ),
         mTopDayLabels( 0 ),
         mLayoutTopDayLabels( 0 ),
@@ -163,7 +163,8 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
         mIsSideBySide( isSideBySide ),
         mDummyAllDayLeft( 0 ),
         mUpdateAllDayAgenda( true ),
-        mUpdateAgenda( true )
+        mUpdateAgenda( true ),
+        mIsInteractive( isInteractive )
     {
     }
 
@@ -211,6 +212,7 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
     QWidget *mDummyAllDayLeft;
     bool mUpdateAllDayAgenda;
     bool mUpdateAgenda;
+    bool mIsInteractive;
 
     // Contains days that have at least one all-day Event with TRANSP: OPAQUE ( busy )
     // that has you as organizer or attendee so we can color background with a different
@@ -512,9 +514,10 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
 
 AgendaView::AgendaView( const QDate &start,
                         const QDate &end,
+                        bool isInteractive,
                         bool isSideBySide,
                         QWidget *parent )
-  : EventView( parent ), d( new Private( this, isSideBySide ) )
+  : EventView( parent ), d( new Private( this, isInteractive, isSideBySide ) )
 {
   init( start, end );
 }
@@ -522,9 +525,10 @@ AgendaView::AgendaView( const QDate &start,
 AgendaView::AgendaView( const PrefsPtr &prefs,
                         const QDate &start,
                         const QDate &end,
+                        bool isInteractive,
                         bool isSideBySide,
                         QWidget *parent )
-  : EventView( parent ), d( new Private( this, isSideBySide ) )
+  : EventView( parent ), d( new Private( this, isInteractive, isSideBySide ) )
 {
   setPreferences( prefs );
   init( start, end );
@@ -557,7 +561,8 @@ void AgendaView::init( const QDate &start, const QDate &end )
 
   // The widget itself
   d->mDummyAllDayLeft = new QWidget( d->mAllDayFrame );
-  AgendaScrollArea *allDayScrollArea = new AgendaScrollArea( true, this, d->mAllDayFrame );
+  AgendaScrollArea *allDayScrollArea = new AgendaScrollArea( true, this,
+                                                             d->mIsInteractive, d->mAllDayFrame );
   d->mAllDayAgenda = allDayScrollArea->agenda();
 
   /* Create the main agenda widget and the related widgets */
@@ -578,7 +583,8 @@ void AgendaView::init( const QDate &start, const QDate &end )
   d->mAgendaLayout->addWidget( dummyAgendaRight, 0, 2 );
 
   // Create agenda
-  AgendaScrollArea *scrollArea = new AgendaScrollArea( false, this, agendaFrame );
+  AgendaScrollArea *scrollArea = new AgendaScrollArea( false, this, d->mIsInteractive,
+                                                       agendaFrame );
   d->mAgenda = scrollArea->agenda();
 
   d->mAgendaLayout->addWidget( scrollArea, 1, 1, 1, 2 );

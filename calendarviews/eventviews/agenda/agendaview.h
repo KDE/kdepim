@@ -88,11 +88,13 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     explicit AgendaView( const PrefsPtr &preferences,
                          const QDate &start,
                          const QDate &end,
+                         bool isInteractive,
                          bool isSideBySide = false,
                          QWidget *parent = 0 );
 
     explicit AgendaView( const QDate &start,
                          const QDate &end,
+                         bool isInteractive,
                          bool isSideBySide = false,
                          QWidget *parent = 0 );
 

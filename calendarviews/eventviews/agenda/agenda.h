@@ -66,9 +66,9 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 {
   Q_OBJECT
   public:
-    Agenda ( AgendaView *agendaView, QScrollArea *scrollArea, int columns, int rows, int rowSize );
+    Agenda ( AgendaView *agendaView, QScrollArea *scrollArea, int columns, int rows, int rowSize, bool isInteractive );
 
-    Agenda ( AgendaView *agendaView, QScrollArea *scrollArea, int columns );
+    Agenda ( AgendaView *agendaView, QScrollArea *scrollArea, int columns, bool isInteractive );
 
     virtual ~Agenda();
 
@@ -333,7 +333,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 class EVENTVIEWS_EXPORT AgendaScrollArea : public QScrollArea
 {
   public:
-    AgendaScrollArea( bool allDay, AgendaView *agendaView, QWidget *parent );
+    AgendaScrollArea( bool allDay, AgendaView *agendaView, bool isInteractive, QWidget *parent );
     ~AgendaScrollArea();
 
     Agenda *agenda() const;
