@@ -76,4 +76,4 @@ class MessageViewItem : public DeclarativeAkonadiItem
 
 }
 
-#endif
+#endif /* MESSAGEVIEWER_MESSAGEVIEWITEM_H */

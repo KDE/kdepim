@@ -76,4 +76,4 @@ class  INCIDENCEEDITORS_NG_EXPORT AlarmDialog : public KDialog
 
 }
 
-#endif
+#endif // INCIDENCEEDITOR_ALARMDIALOG_H

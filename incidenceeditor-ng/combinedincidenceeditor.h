@@ -70,4 +70,4 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
 
 }
 
-#endif
+#endif // COMBINEDINCIDENCEEDITOR_H

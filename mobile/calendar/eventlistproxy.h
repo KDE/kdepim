@@ -41,4 +41,4 @@ class EventListProxy : public ListProxy
     bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
 };
 
-#endif
+#endif // EVENTLISTPROXY_H

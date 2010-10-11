@@ -93,4 +93,4 @@ class AgendaViewItem : public DeclarativeAkonadiItem
 
 }
 
-#endif
+#endif // CALENDARVIEWS_AGENDAVIEWITEM_H

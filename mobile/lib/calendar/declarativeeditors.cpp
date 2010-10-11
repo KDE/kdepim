@@ -54,7 +54,7 @@ void DIEGeneral::hack()
   // For whatever reason, this is needed to make the widget resize correctly. If
   // someone finds a nices way to make this actually work....
   //
-  // Without this hack the widget gets a width that is to large for the app. It
+  // Without this hack the widget gets a width that is too large for the app. It
   // doesn't seem to matter which size you pass here.
   m_widget->resize( QSize() );
 }

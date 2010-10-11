@@ -44,4 +44,5 @@ private:
 
 };
 
-#endif
+#endif // MAILACTIONMANAGER_H
+

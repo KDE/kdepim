@@ -55,4 +55,4 @@ class  INCIDENCEEDITORS_NG_EXPORT AttendeeData
 
 }
 
-#endif
+#endif // INCIDENCEEDITOR_ATTENDEEDATA_H

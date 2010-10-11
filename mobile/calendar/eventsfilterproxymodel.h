@@ -86,4 +86,4 @@ class EventsFilterProxyModel : public QSortFilterProxyModel
 
 }
 
-#endif
+#endif // AKONADI_EVENTSFILTERPROXYMODEL_H

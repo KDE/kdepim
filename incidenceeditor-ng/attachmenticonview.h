@@ -92,4 +92,4 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentIconItem : public QListWidgetItem
 
 }
 
-#endif
+#endif // INCIDENCEEDITOR_ATTACHMENTICONVIEW_H

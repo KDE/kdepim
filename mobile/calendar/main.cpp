@@ -1,6 +1,4 @@
 /*
-* This file is part of Akonadi
-*
 * Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 *
 * This library is free software; you can redistribute it and/or

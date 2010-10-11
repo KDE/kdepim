@@ -55,6 +55,5 @@ class AttachmentProxyModel : public QSortFilterProxyModel
     MessageViewer::NodeHelper *m_nodeHelper;
 };
 
+#endif // MESSAGEVIEWER_ATTACHMENTPROXYMODEL_H
 
-
-#endif

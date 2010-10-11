@@ -49,4 +49,4 @@ class LocationModel : public QAbstractTableModel
     KABC::Address::List mLocations;
 };
 
-#endif
+#endif /* LOCATIONMODEL_H */

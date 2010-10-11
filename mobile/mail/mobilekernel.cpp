@@ -103,5 +103,3 @@ bool MobileKernel::showPopupAfterDnD()
   return false;
 }
 
-
-

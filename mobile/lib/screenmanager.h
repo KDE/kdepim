@@ -78,4 +78,4 @@ class ScreenManager : public QObject
     QStack<ScreenState> mScreenStates;
 };
 
-#endif
+#endif // SCREENMANAGER_H

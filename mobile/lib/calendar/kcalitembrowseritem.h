@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef MESSAGEVIEWER_MESSAGEVIEWITEM_H
-#define MESSAGEVIEWER_MESSAGEVIEWITEM_H
+#ifndef KCALITEMBROWSERITEM_H
+#define KCALITEMBROWSERITEM_H
 
 #include <QtCore/QAbstractItemModel>
 
@@ -81,4 +81,4 @@ class KCalItemBrowserItem : public DeclarativeAkonadiItem
 }
 }
 
-#endif
+#endif /* KCALITEMBROWSERITEM_H */

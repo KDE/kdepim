@@ -20,7 +20,9 @@
 
 #ifndef CALENDARINTERFACE_H
 #define CALENDARINTERFACE_H
+
 #include <QObject>
+
 class QDate;
 
 /** Implement the www.kde.korganizer/Calendar interface for korganizer-mobile */

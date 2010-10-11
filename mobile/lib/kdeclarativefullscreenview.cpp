@@ -142,7 +142,7 @@ void KDeclarativeFullScreenView::delayedInit()
   QString qmlPath = KStandardDirs::locate( "appdata", m_qmlFileName + ".qml" );
 
   if ( debugTiming ) {
-    kWarning() << "Applying style done" << t.elapsed() << &t;
+    kWarning() << "Adding QML import paths done" << t.elapsed() << &t;
   }
 
   if ( qmlPath.isEmpty() ) // Try harder

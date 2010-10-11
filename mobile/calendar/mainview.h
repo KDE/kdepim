@@ -1,6 +1,4 @@
 /*
-* This file is part of Akonadi
-*
 * Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 * Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
 * Copyright (c) 2010 Andras Mantia <andras@kdab.com>

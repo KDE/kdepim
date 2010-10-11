@@ -41,4 +41,5 @@ private:
     QDeclarativeItem *flickable;
 };
 
-#endif
+#endif /* COMPOSERAUTORESIZER_H */
+

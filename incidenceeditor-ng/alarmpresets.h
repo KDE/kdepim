@@ -57,4 +57,4 @@ namespace AlarmPresets {
 
 }
 
-#endif
+#endif // INCIDENCEEDITOR_ALARMPRESETS_H

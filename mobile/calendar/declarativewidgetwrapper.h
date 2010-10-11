@@ -62,6 +62,5 @@ class DeclarativeWidgetWrapper : public DeclarativeWidgetWrapperBase
 
 }
 
-
-#endif
+#endif // DECLARATIVEWIDGETWRAPPER_H
 

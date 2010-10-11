@@ -60,4 +60,4 @@ class ContactListProxy : public ListProxy
     QString typeForIndex( int row ) const;
 };
 
-#endif
+#endif /* CONTACTLISTPROXY_H */

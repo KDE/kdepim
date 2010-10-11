@@ -33,4 +33,5 @@ class DeclarativeIdentityComboBox : public DeclarativeWidgetBase<KPIMIdentities:
     explicit DeclarativeIdentityComboBox( QDeclarativeItem *parent = 0 );
 };
 
-#endif
+#endif // DECLRARATIVEIDENTITYCOMBOBOX_H
+

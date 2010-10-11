@@ -36,4 +36,4 @@ class EventsImportHandler : public ImportHandlerBase
     virtual Akonadi::Item::List createItems( const QStringList &fileNames, bool *ok );
 };
 
-#endif
+#endif // EVENTSIMPORTHANDLER_H

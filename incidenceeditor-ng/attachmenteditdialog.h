@@ -64,4 +64,4 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public KDialog
 
 }
 
-#endif
+#endif // INCIDENCEEDITOR_ATTACHMENTEDITDIALOG_H

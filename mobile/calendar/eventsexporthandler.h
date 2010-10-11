@@ -33,4 +33,5 @@ class EventsExportHandler : public ExportHandlerBase
     virtual bool exportItems( const Akonadi::Item::List &items );
 };
 
-#endif
+#endif // EVENTSEXPORTHANDLER_H
+
