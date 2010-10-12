@@ -89,7 +89,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    * @param actionCollection the action collection where the widget's actions will belong to
    * @param f window flags
    */
-  Viewer( QWidget *parent, QWidget *mainWindow = 0, KActionCollection *actionCollection = 0,
+  explicit Viewer( QWidget *parent, QWidget *mainWindow = 0, KActionCollection *actionCollection = 0,
           Qt::WindowFlags f = 0 );
   virtual ~Viewer();
 
@@ -297,10 +297,10 @@ signals:
 
   void requestConfigSync();
 
-  /// Emitted when the content should be shown in a seperate window
+  /// Emitted when the content should be shown in a separate window
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
 
-  /// Emitted when the message should be shown in a seperate window
+  /// Emitted when the message should be shown in a separate window
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
 
   void deleteMessage( const Akonadi::Item & );

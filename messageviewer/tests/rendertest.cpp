@@ -41,7 +41,7 @@ class RenderTest : public QObject
 
       QDir dir( MAIL_DATA_DIR );
       foreach ( const QString &file, dir.entryList( QStringList("*.mbox"), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
-        QTest::newRow( file.toLatin1() ) << (dir.path() + "/" +  file) << (dir.path() + "/" + file + ".html") << (file + ".out");
+        QTest::newRow( file.toLatin1() ) << (dir.path() + '/' +  file) << (dir.path() + '/' + file + ".html") << (file + ".out");
       }
     }
 

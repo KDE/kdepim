@@ -17,8 +17,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGEVIEWER_MAILWEBVIEW_H__
-#define MESSAGEVIEWER_MAILWEBVIEW_H__
+#ifndef MESSAGEVIEWER_MAILWEBVIEW_H
+#define MESSAGEVIEWER_MAILWEBVIEW_H
 
 #include <qglobal.h> // make sure we have Q_OS_WINCE defined
 
@@ -38,7 +38,7 @@ namespace MessageViewer {
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
 #ifdef MESSAGEVIEWER_NO_WEBKIT
-class MailWebView : public QTextBrowser
+class MailWebView : public QTextBrowser // krazy:exclude=qclasses
 #else
 # ifdef Q_OS_WINCE
 class MailWebView : public QWebView
@@ -115,4 +115,4 @@ protected:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( MessageViewer::MailWebView::FindFlags )
 
-#endif /* MESSAGEVIEWER_MAILWEBVIEW_H__ */
+#endif /* MESSAGEVIEWER_MAILWEBVIEW_H */

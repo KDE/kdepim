@@ -29,8 +29,8 @@
     your version.
 */
 
-#ifndef MESSAGEVIEWER_CSSHELPER_H
-#define MESSAGEVIEWER_CSSHELPER_H
+#ifndef MESSAGEVIEWER_CSSHELPERBASE_H
+#define MESSAGEVIEWER_CSSHELPERBASE_H
 
 #include "messageviewer_export.h"
 #include <QColor>

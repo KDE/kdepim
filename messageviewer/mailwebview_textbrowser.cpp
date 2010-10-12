@@ -34,7 +34,7 @@ using namespace boost;
 using namespace MessageViewer;
 
 MailWebView::MailWebView( QWidget *parent )
-  : QTextBrowser( parent )
+  : QTextBrowser( parent ) // krazy:exclude=qclasses
 {
   setOpenLinks( false );
 #ifdef KDEPIM_MOBILE_UI
@@ -65,7 +65,7 @@ bool MailWebView::event( QEvent *event )
     return true;
   }
 #endif
-  return QTextBrowser::event( event );
+  return QTextBrowser::event( event ); // krazy:exclude=qclasses
 }
 
 void MailWebView::scrollDown( int pixels )
@@ -137,7 +137,7 @@ void MailWebView::scrollToRelativePosition( double pos )
 
 void MailWebView::selectAll()
 {
-  QTextBrowser::selectAll();
+  QTextBrowser::selectAll(); // krazy:exclude=qclasses
 }
 
 bool MailWebView::isAttachmentInjectionPoint( const QPoint & global ) const
@@ -157,7 +157,7 @@ void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
 
 void MailWebView::scrollToAnchor( const QString & anchor )
 {
-  QTextBrowser::scrollToAnchor( anchor );
+  QTextBrowser::scrollToAnchor( anchor ); // krazy:exclude=qclasses
 }
 
 bool MailWebView::removeAttachmentMarking( const QString & id )
@@ -180,7 +180,7 @@ void MailWebView::setHtml( const QString & html, const QUrl & base )
 {
   // PENDING(marc) does that make sense?
   setSource( base );
-  QTextBrowser::setHtml( html );
+  QTextBrowser::setHtml( html ); // krazy:exclude=qclasses
 }
 
 QString MailWebView::htmlSource() const
