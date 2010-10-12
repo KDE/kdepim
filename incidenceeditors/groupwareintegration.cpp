@@ -86,6 +86,7 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
       monitor->setCollectionMonitored( Akonadi::Collection::root() );
       monitor->fetchCollection( true );
       monitor->setItemFetchScope( scope );
+      monitor->setMimeTypeMonitored( "text/calendar" ); // some resources don't set sub-mime types
       monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::eventMimeType(), true );
       monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::todoMimeType(), true );
       monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::journalMimeType(), true );

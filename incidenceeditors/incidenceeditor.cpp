@@ -100,7 +100,7 @@ IncidenceEditor::IncidenceEditor( const QString &caption, const QStringList& mim
   mCalSelector->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
   //mCalSelector->setDefaultCollection( KCalPrefs::instance()->defaultCollection() );
   //mCalSelector->addExcludeResourcesType(QStringList()<<"akonadi_search_resource");
-  mCalSelector->setMimeTypeFilter( QStringList() << mimetypes );
+  mCalSelector->setMimeTypeFilter( QStringList() << mimetypes << "text/calendar" );
   connect( mCalSelector, SIGNAL(currentChanged(Akonadi::Collection)),
            SLOT(slotSelectedCollectionChanged()) );
   connect( mCalSelector->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
