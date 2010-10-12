@@ -123,7 +123,7 @@ ActionMenuContainer {
   ApplicationGeneralActions {
     category : "standard"
     name : "application_menu"
-    text : KDE.i18n( "KNotes" )
+    text : KDE.i18n( "Notes" )
     type : "note"
   }
 }

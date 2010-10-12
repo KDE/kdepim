@@ -184,7 +184,7 @@ ActionMenuContainer {
   ApplicationGeneralActions {
     category : "standard"
     name : "application_menu"
-    text : KDE.i18n( "Application" )
+    text : KDE.i18n( "Mail" )
     type : "mail"
 
   }

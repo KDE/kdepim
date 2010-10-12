@@ -135,7 +135,7 @@ ActionMenuContainer {
   ApplicationGeneralActions {
     name : "application_menu"
     category : "standard"
-    text : KDE.i18n( "KTasks" )
+    text : KDE.i18n( "Tasks" )
     type : "task"
   }
 }

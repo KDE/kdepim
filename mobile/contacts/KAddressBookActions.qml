@@ -123,7 +123,7 @@ ActionMenuContainer {
   ApplicationGeneralActions {
     name : "application_menu"
     category : "standard"
-    text : KDE.i18n( "KAddressBook" )
+    text : KDE.i18n( "Contacts" )
     type : "contact"
 
     ActionListItem { name : "add_new_contact_group" }

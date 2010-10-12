@@ -188,7 +188,7 @@ ActionMenuContainer {
   ApplicationGeneralActions {
     category : "standard"
     name : "application_menu"
-    text : KDE.i18n( "KOrganizer" )
+    text : KDE.i18n( "Calendar" )
     type : "event"
   }
 }
