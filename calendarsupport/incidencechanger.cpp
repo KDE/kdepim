@@ -623,3 +623,8 @@ void IncidenceChanger::endAtomicOperation( uint atomicOperationId )
 {
   d->mSendICalDialogResults.remove( atomicOperationId );
 }
+
+bool IncidenceChanger::changeInProgress( Akonadi::Item::Id id )
+{
+  return d->mCurrentChanges.contains( id );
+}

@@ -137,6 +137,12 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger : public QObject
      */
     bool isNotDeleted( Akonadi::Item::Id ) const;
 
+
+    /**
+       Returns true if there's a modify job in progress for the specified item.
+    */
+    bool changeInProgress( Akonadi::Item::Id );
+
     /**
        Some incidence operations require more than one change. Like dissociating
        occurrences, which needs an incidence add, and an incidence change.
