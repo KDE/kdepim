@@ -27,11 +27,11 @@
 #include "eventarchiver.h"
 #include "kcalprefs.h"
 
-#include <calendarsupport/calendar.h>
-#include <calendarsupport/calendaradaptor.h>
-#include <calendarsupport/incidencechanger.h>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include "calendar.h"
+#include "calendaradaptor.h"
+#include "incidencechanger.h"
+#include "kcalprefs.h"
+#include "utils.h"
 
 #include <kio/netaccess.h>
 #include <kcalcore/icalformat.h>
@@ -158,6 +158,7 @@ void EventArchiver::deleteIncidences( CalendarSupport::IncidenceChanger* changer
       return;
     }
   }
+  
   for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
     if ( changer->isNotDeleted( ( *it ).id() ) ) {
       changer->deleteIncidence( *it, 0, widget );

@@ -26,7 +26,9 @@
 #ifndef EVENTARCHIVER_H
 #define EVENTARCHIVER_H
 
-#include <calendarsupport/incidencechanger.h>
+#include "calendarsupport_export.h"
+
+#include "incidencechanger.h"
 
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
@@ -39,7 +41,6 @@ class QDate;
 
 namespace CalendarSupport {
   class Calendar;
-}
 
 /**
  * This class handles expiring and archiving of events.
@@ -50,7 +51,7 @@ namespace CalendarSupport {
  * Be sure to set mArchiveAction and mArchiveFile before a manual archiving
  * mAutoArchive is used for auto archiving.
  */
-class EventArchiver : public QObject
+class CALENDARSUPPORT_EXPORT EventArchiver : public QObject
 {
   Q_OBJECT
   public:
@@ -100,5 +101,7 @@ class EventArchiver : public QObject
                             const KCalCore::Todo::Ptr &todo,
                             const QDate &limitDate, QStringList checkedUids = QStringList() ) const;
 };
+
+}
 
 #endif /* EVENTARCHIVER_H */

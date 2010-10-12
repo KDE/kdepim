@@ -25,6 +25,8 @@
 #ifndef ARCHIVEDIALOG_H
 #define ARCHIVEDIALOG_H
 
+#include "calendarsupport_export.h"
+
 #include <calendarsupport/incidencechanger.h>
 
 #include <kdialog.h>
@@ -38,14 +40,15 @@ class QCheckBox;
 namespace KPIM {
 class KDateEdit;
 }
-namespace CalendarSupport {
-class Calendar;
-}
 namespace KOrg {
 class IncidenceChanger;
 }
 
-class ArchiveDialog : public KDialog
+namespace CalendarSupport {
+
+class Calendar;
+
+class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
 {
   Q_OBJECT
   public:
@@ -76,5 +79,7 @@ class ArchiveDialog : public KDialog
     CalendarSupport::IncidenceChanger *mChanger;
     CalendarSupport::Calendar *mCalendar;
 };
+
+}
 
 #endif
