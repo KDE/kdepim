@@ -70,7 +70,6 @@ void AgentStatusMonitor::updateStatus()
   }
 #endif
 
-  kDebug() << m_status << oldStatus;
   if ( m_status != oldStatus )
     emit statusChanged();
 }
