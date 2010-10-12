@@ -133,8 +133,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
 #ifndef MESSAGEVIEWER_NO_WEBKIT
   QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
   QWebElementCollection images = root.findAll( "img" );
-  QWebElementCollection::iterator it = images.begin();
-  while( it != images.end() )
+  for( QWebElementCollection::iterator it = images.begin(); it != images.end(); ++it )
   {
     KUrl url( (*it).attribute( "src" ) );
     if ( url.protocol() == "cid" )
