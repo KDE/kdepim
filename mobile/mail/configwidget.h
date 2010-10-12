@@ -36,6 +36,10 @@ class ConfigWidget : public QWidget
     void load();
     void save();
 
+  private Q_SLOTS:
+    void configureCompletionOrder();
+    void editRecentAddresses();
+
   private:
     void loadFromExternalSettings();
     void saveToExternalSettings();

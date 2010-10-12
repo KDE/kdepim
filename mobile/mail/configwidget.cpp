@@ -27,6 +27,9 @@
 #include "ui_configwidget.h"
 
 #include <kconfigdialogmanager.h>
+#include <libkdepim/completionordereditor.h>
+#include <libkdepim/ldap/ldapclient.h>
+#include <libkdepim/recentaddresses.h>
 
 using namespace MessageComposer;
 
@@ -37,20 +40,42 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   ui.setupUi( this );
 
   mManager = new KConfigDialogManager( this, Settings::self() );
+
+  connect( ui.configureCompletionOrderButton, SIGNAL( clicked() ),
+           this, SLOT( configureCompletionOrder() ) );
+  connect( ui.editRecentAddressesButton, SIGNAL( clicked() ),
+           this, SLOT( editRecentAddresses() ) );
 }
 
 void ConfigWidget::load()
 {
   loadFromExternalSettings();
   mManager->updateWidgets();
-  qDebug("load called");
 }
 
 void ConfigWidget::save()
 {
   mManager->updateSettings();
   saveToExternalSettings();
-  qDebug("save called");
+}
+
+void ConfigWidget::configureCompletionOrder()
+{
+  KLDAP::LdapClientSearch search;
+  KPIM::CompletionOrderEditor editor( &search, 0 );
+  editor.exec();
+}
+
+void ConfigWidget::editRecentAddresses()
+{
+  KPIM::RecentAddressDialog dlg( 0 );
+  dlg.setAddresses( KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->addresses() );
+  if ( dlg.exec() ) {
+    KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->clear();
+    foreach ( const QString &address, dlg.addresses() ) {
+      KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( address );
+    }
+  }
 }
 
 void ConfigWidget::loadFromExternalSettings()
@@ -115,6 +140,10 @@ void ConfigWidget::saveToExternalSettings()
   MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationComparisons( Settings::self()->invitationsOutlookCompatible() );
   MessageViewer::GlobalSettings::self()->setAutomaticSending( Settings::self()->invitationsAutomaticSending() );
   MessageViewer::GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply( Settings::self()->invitationsDeleteAfterReply() );
+
+  Settings::self()->writeConfig();
+  MessageViewer::GlobalSettings::self()->writeConfig();
+  TemplateParser::GlobalSettings::self()->writeConfig();
 }
 
 
