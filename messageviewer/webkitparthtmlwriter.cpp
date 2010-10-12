@@ -133,16 +133,16 @@ void WebKitPartHtmlWriter::resolveCidUrls()
 #ifndef MESSAGEVIEWER_NO_WEBKIT
   QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
   QWebElementCollection images = root.findAll( "img" );
-  QWebElement image;
-  foreach( image, images )
+  QWebElementCollection::iterator it = images.begin();
+  while( it != images.end() )
   {
-    KUrl url( image.attribute( "src" ) );
+    KUrl url( (*it).attribute( "src" ) );
     if ( url.protocol() == "cid" )
     {
-      EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.constFind( url.path() );
-      if ( it != mEmbeddedPartMap.constEnd() ) {
-        kDebug() << "Replacing" << url.prettyUrl() << "by" << it.value();
-        image.setAttribute( "src", it.value() );
+      EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind( url.path() );
+      if ( cit != mEmbeddedPartMap.constEnd() ) {
+        kDebug() << "Replacing" << url.prettyUrl() << "by" << cit.value();
+        (*it).setAttribute( "src", cit.value() );
       }
     }
   }
