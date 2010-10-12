@@ -66,9 +66,9 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 #endif
 #ifndef Q_OS_WIN
   bool openGlEnabled = false; // off by default, seems to have random bad side-effects on the N900
-  if ( !KCmdLineArgs::parsedArgs()->isSet( "enable-opengl" ) )
+  if ( KCmdLineArgs::parsedArgs()->isSet( "enable-opengl" ) )
     openGlEnabled = true;
-  if ( !KCmdLineArgs::parsedArgs()->isSet( "disable-opengl" ) )
+  if ( KCmdLineArgs::parsedArgs()->isSet( "disable-opengl" ) )
      openGlEnabled = false;
 
   if ( openGlEnabled ) {
