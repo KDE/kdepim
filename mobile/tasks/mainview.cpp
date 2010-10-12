@@ -104,6 +104,8 @@ void MainView::delayedInit()
            SIGNAL( triggered( bool ) ), SLOT( makeTaskIndependent() ) );
   connect( actionCollection()->action( QLatin1String( "make_all_subtasks_independent" ) ),
            SIGNAL( triggered( bool ) ), SLOT( makeAllSubtasksIndependent() ) );
+  connect( actionCollection()->action( QLatin1String( "purge_completed_tasks" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( purgeCompletedTasks() ) );
   connect( actionCollection()->action( QLatin1String( "save_all_attachments" ) ),
            SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
 
@@ -174,6 +176,11 @@ void MainView::makeAllSubtasksIndependent()
   if ( mCalendarUtils->makeChildrenIndependent( item ) ) {
     actionCollection()->action( QLatin1String( "make_all_subtasks_independent" ) )->setEnabled( false );
   }
+}
+
+void MainView::purgeCompletedTasks()
+{
+
 }
 
 void MainView::setPercentComplete( int row, int percentComplete )

@@ -44,6 +44,7 @@ class MainView : public KDeclarativeMainView
     void newSubTask();
     void makeTaskIndependent();
     void makeAllSubtasksIndependent();
+    void purgeCompletedTasks();
     void setPercentComplete( int row, int percentComplete );
     void editIncidence( const Akonadi::Item &item );
     void saveAllAttachments();

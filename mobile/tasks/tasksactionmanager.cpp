@@ -112,6 +112,9 @@ void TasksActionManager::initActions()
   action = mActionCollection->addAction( QLatin1String( "make_all_subtasks_independent" ) );
   action->setText( i18n( "Make All Sub Tasks Independent" ) );
 
+  action = mActionCollection->addAction( QLatin1String( "purge_completed_tasks" ) );
+  action->setText( i18n( "Purge completed tasks" ) );
+
   action = mActionCollection->addAction( QLatin1String( "save_all_attachments" ) );
   action->setText( i18n( "Save All" ) );
 
