@@ -39,16 +39,36 @@ using namespace KCalCore;
 
 /// CalendarUtilsPrivate
 
+struct MultiChange {
+  Item              parent;
+  QVector<Item::Id> children;
+  bool              success;
+
+  explicit MultiChange( const Item &parent = Item() )
+    : parent( parent )
+    , success( true )
+  {}
+
+  bool inProgress() {
+    return parent.isValid() && !children.isEmpty();
+  }
+};
+
 namespace CalendarSupport {
 
 struct CalendarUtilsPrivate
 {
   /// Methods
   CalendarUtilsPrivate( Calendar *calendar, CalendarUtils *qq );
+  void handleChangeFinish( const Akonadi::Item &oldInc,
+                           const Akonadi::Item &newInc,
+                           CalendarSupport::IncidenceChanger::WhatChanged,
+                           bool success );
 
   /// Members
   Calendar         *mCalendar;
   IncidenceChanger *mChanger;
+  MultiChange       mMultiChange;
 
 private:
   CalendarUtils * const q_ptr;
@@ -62,7 +82,58 @@ CalendarUtilsPrivate::CalendarUtilsPrivate( Calendar *calendar, CalendarUtils *q
   , mChanger( new IncidenceChanger( calendar, qq ) )
   , q_ptr( qq )
 {
+  Q_Q( CalendarUtils );
   Q_ASSERT( mCalendar );
+
+  q->connect( mChanger,
+             SIGNAL( incidenceChangeFinished( Akonadi::Item,
+                                              Akonadi::Item,
+                                              CalendarSupport::IncidenceChanger::WhatChanged,
+                                              bool ) ),
+             SLOT( handleChangeFinish( Akonadi::Item,
+                                       Akonadi::Item,
+                                       CalendarSupport::IncidenceChanger::WhatChanged,
+                                      bool ) ) );
+}
+
+void CalendarUtilsPrivate::handleChangeFinish( const Akonadi::Item &oldInc,
+                                               const Akonadi::Item &newInc,
+                                               CalendarSupport::IncidenceChanger::WhatChanged,
+                                               bool success )
+{
+  Q_Q( CalendarUtils );
+
+  if ( mMultiChange.inProgress() ) {
+    mMultiChange.children.remove( mMultiChange.children.indexOf( newInc.id() ) );
+    mMultiChange.success = mMultiChange.success && success;
+
+    // Are we still in progress?
+    if ( !mMultiChange.inProgress() ) {
+      const Akonadi::Item parent = mMultiChange.parent;
+      const bool success = mMultiChange.success;
+
+      // Reset the multi change.
+      mMultiChange = MultiChange();
+      Q_ASSERT( !mMultiChange.inProgress() );
+
+      if ( success ) {
+        kDebug() << "MultiChange finished";
+        emit q->actionFinished( parent );
+      } else {
+        kDebug() << "MultiChange failed";
+        emit q->actionFailed( parent, QString() );
+      }
+    }
+  } else {
+    if ( success ) {
+      kDebug() << "Change finished";
+      emit q->actionFinished( newInc );
+    } else {
+      kDebug() << "Change failed";
+      // TODO: Let incidence changer return a useful message.
+      emit q->actionFailed( oldInc, QString() );
+    }
+  }
 }
 
 /// CalendarUtils
@@ -88,8 +159,17 @@ Calendar *CalendarUtils::calendar() const
 bool CalendarUtils::makeIndependent( const Akonadi::Item &item )
 {
   Q_D( CalendarUtils );
-  const Incidence::Ptr inc = CalendarSupport::incidence( item );
+  Q_ASSERT( item.isValid() );
 
+  if ( d->mChanger->changeInProgress( item.id() ) ) {
+    return false;
+  }
+
+  if ( d->mMultiChange.inProgress() && !d->mMultiChange.children.contains( item.id() ) ) {
+    return false;
+  }
+
+  const Incidence::Ptr inc = CalendarSupport::incidence( item );
   if ( !inc || inc->relatedTo().isEmpty() ) {
     return false;
   }
@@ -97,27 +177,48 @@ bool CalendarUtils::makeIndependent( const Akonadi::Item &item )
   Incidence::Ptr oldInc( inc->clone() );
   inc->setRelatedTo( 0 );
   // HACK: This is not a widget, so pass 0 for now
-  d->mChanger->changeIncidence( oldInc, item, CalendarSupport::IncidenceChanger::RELATION_MODIFIED, 0 );
-
-  return true;
+  return d->mChanger->changeIncidence( oldInc, item, CalendarSupport::IncidenceChanger::RELATION_MODIFIED, 0 );
 }
 
 bool CalendarUtils::makeChildrenIndependent( const Akonadi::Item &item )
 {
   Q_D( CalendarUtils );
-  const Incidence::Ptr inc = CalendarSupport::incidence( item );
+  Q_ASSERT( item.isValid() );
 
-  Akonadi::Item::List subIncs = d->mCalendar->findChildren( item );
+  // Is the current item being changed atm?
+  if ( d->mChanger->changeInProgress( item.id() ) ) {
+    return false;
+  }
+
+  if ( d->mMultiChange.inProgress() ) {
+    return false;
+ }
+
+  const Incidence::Ptr inc = CalendarSupport::incidence( item );
+  const Akonadi::Item::List subIncs = d->mCalendar->findChildren( item );
 
   if ( !inc || subIncs.isEmpty() ) {
     return false;
   }
-  //startMultiModify ( i18n( "Make sub-to-dos independent" ) );
 
-  foreach( const Akonadi::Item &item, subIncs ) {
-    makeIndependent( item );
+  // First make sure that no changes are in progress for one of the incs
+  foreach ( const Item &subInc, subIncs ) {
+    if ( d->mChanger->changeInProgress( subInc.id() ) )
+      return false;
   }
 
-  //endMultiModify();
+  d->mMultiChange = MultiChange( item );
+  bool allStarted = true;
+  foreach( const Item &subInc, subIncs ) {
+    d->mMultiChange.children.append( subInc.id() );
+    allStarted = allStarted && makeIndependent( subInc );
+  }
+
+  Q_ASSERT( allStarted ); // OKay, maybe we should not assert here, but one or
+                          // changes could have been started, so just returning
+                          // false isn't suitable either.
+
   return true;
 }
+
+#include "calendarutils.moc"

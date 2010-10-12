@@ -35,6 +35,11 @@ namespace CalendarSupport {
 class Calendar;
 class CalendarUtilsPrivate;
 
+/** Some calendar/Incidence related utilitly methods.
+
+    NOTE: this class will only start an modify job for an Item when no other job
+          started by this class for the same Item is still running.
+ */
 class CALENDARSUPPORT_EXPORT CalendarUtils : public QObject
 {
   Q_OBJECT
@@ -50,20 +55,27 @@ public:
   Calendar *calendar() const;
 
   /** Makes the incidence from @param item independent from its parent. Returns
-      true when the incidence was made independent, false otherwise.
+      true when the ModifyJob to make the incidence independent was actually
+      started, false otherwise. This method is async, either actionFailed or
+      actionFinished will be emitted when the operation finished or failed.
    */
   bool makeIndependent( const Akonadi::Item &item );
 
   /** Make all children of the incindence from @param item independent
-      Works with any incidence type, although currently we only pass to-dos.
       Returns true when one or more incidence(s) where made independent, false
       otherwise.
    */
   bool makeChildrenIndependent( const Akonadi::Item &item );
 
+Q_SIGNALS:
+  void actionFailed( const Akonadi::Item &item, const QString &msg );
+  void actionFinished( const Akonadi::Item &item );
+
 private:
   CalendarUtilsPrivate * const d_ptr;
   Q_DECLARE_PRIVATE( CalendarUtils )
+
+  Q_PRIVATE_SLOT( d_ptr, void handleChangeFinish( Akonadi::Item, Akonadi::Item, CalendarSupport::IncidenceChanger::WhatChanged, bool ) );
 };
 
 }
