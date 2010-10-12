@@ -32,6 +32,10 @@
 #include "calhelper.h"
 #include "calendarresources.h"
 
+#include <libemailfunctions/email.h>
+
+#include <kemailsettings.h>
+
 using namespace KCal;
 
 bool CalHelper::isMyKolabIncidence( Calendar *calendar, Incidence *incidence )
@@ -164,4 +168,72 @@ QPair<ResourceCalendar *, QString> CalHelper::incSubResourceCalendar( Calendar *
   }
   p = qMakePair( res, subRes );
   return p;
+}
+
+bool CalHelper::incOrganizerOwnsCalendar( Calendar *calendar, Incidence *incidence )
+{
+  if ( !calendar || !incidence ) {
+    return false;
+  }
+
+  QPair<ResourceCalendar *, QString> p =  incSubResourceCalendar( calendar, incidence );
+  ResourceCalendar *res = p.first;
+  QString subRes = p.second;
+
+  if ( !res ) {
+    return false;
+  }
+
+  QString orgEmail;
+  QString orgName;
+  KPIM::getNameAndMail( incidence->organizer().email(), orgName, orgEmail );
+  if ( KPIM::isValidEmailAddress( orgEmail ) != KPIM::AddressOk ) {
+    return false;
+  }
+
+  // first determine if I am the organizer.
+  bool iam = false;
+  KEMailSettings settings;
+  QStringList profiles = settings.profiles();
+  for( QStringList::Iterator it=profiles.begin(); it!=profiles.end(); ++it ) {
+    settings.setProfile( *it );
+    if ( settings.getSetting( KEMailSettings::EmailAddress ) == orgEmail ) {
+      iam = true;
+      break;
+    }
+  }
+
+  // if I am the organizer and the incidence is in my calendar
+  if ( iam && isMyCalendarIncidence( calendar, incidence ) ) {
+    // then we have a winner.
+    return true;
+  }
+
+  // The organizer is not me.
+
+  if ( ( res->type() == "imap" || res->type() == "kolab" ) && !subRes.isEmpty() ) {
+    // KOLAB SPECIFIC:
+    // Check if the organizer owns this calendar by looking at the
+    // username part of the email encoded in the subresource name,
+    // which is of the form "/.../.user.directory/.<name>.directory/..."
+    const int atChar = orgEmail.findRev( '@' );
+    const QString name = orgEmail.left( atChar );
+    QString kolabFolder = "/.user.directory/." + name + ".directory/";
+    if ( subRes.contains( kolabFolder ) ) {
+      return true;
+    }
+    // if that fails, maybe the first name of the organizer email name will work
+    const int dotChar = name.find( '.' );
+    if ( dotChar > 0 ) {
+      const QString firstName = name.left( dotChar );
+      kolabFolder = "/.user.directory/." + firstName + ".directory/";
+      if ( subRes.contains( kolabFolder ) ) {
+        return true;
+      }
+    }
+  }
+
+  // TODO: support other resource types
+
+  return false;
 }

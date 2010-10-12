@@ -127,6 +127,12 @@ namespace CalHelper {
   QPair<ResourceCalendar *, QString> incSubResourceCalendar( Calendar *calendar,
                                                              Incidence *incidence );
 
+  /**
+    Determines if the organizer of the @p incidence owns the specified @p calendar.
+    @param calendar is a pointer to a valid Calendar object.
+    @param incidence is a pointer to an Incidence object.
+  */
+  bool incOrganizerOwnsCalendar( Calendar *calendar, Incidence *incidence );
 }
 
 }
