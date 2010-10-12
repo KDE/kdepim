@@ -79,10 +79,14 @@ void MainView::delayedInit()
   CalendarSupport::Calendar *cal = new CalendarSupport::Calendar( entityTreeModel(),
                                                                   regularSelectedItems(),
                                                                   KSystemTimeZones::local() );
+  CalendarSupport::FreeBusyManager::self()->setCalendar( cal );
+
   mCalendarUtils = new CalendarSupport::CalendarUtils( cal, this );
   cal->setParent( mCalendarUtils );
-
-  CalendarSupport::FreeBusyManager::self()->setCalendar( cal );
+  connect( mCalendarUtils, SIGNAL( actionFinished( Akonadi::Item ) ),
+          SLOT( processActionFinish( Akonadi::Item ) ) );
+  connect( mCalendarUtils, SIGNAL( actionFailed( Akonadi::Item, QString ) ),
+          SLOT( processActionFail( Akonadi::Item, QString ) ) );
 
   mTasksActionManager = new TasksActionManager( actionCollection(), this );
   mTasksActionManager->setCalendar( cal );
@@ -109,13 +113,6 @@ void MainView::delayedInit()
 void MainView::finishEdit( QObject *editor )
 {
   mOpenItemEditors.remove( editor );
-}
-void MainView::modifyFinished( KJob *job )
-{
-  if ( job->error() ) // TODO: Proper error handling?
-    kDebug() << "FAIL:" << job->errorString();
-  else
-    mTasksActionManager->updateActions();
 }
 
 void MainView::newTask()
@@ -163,15 +160,9 @@ void MainView::makeTaskIndependent()
   if ( !item.isValid() )
     return;
 
-  KCalCore::Todo::Ptr todo = item.payload<KCalCore::Todo::Ptr>();
-  if ( todo->relatedTo( KCalCore::Todo::RelTypeParent ).isEmpty() )
-    return; // The todo has no parent, no need for changes
-
-  todo->setRelatedTo( 0 );
-  item.setPayload( todo );
-
-  ItemModifyJob *job = new ItemModifyJob( item, this );
-  connect( job, SIGNAL( result( KJob * ) ), SLOT( modifyFinished( KJob* ) ) );
+  if ( mCalendarUtils->makeIndependent( item ) ) {
+    actionCollection()->action( QLatin1String( "make_subtask_independent" ) )->setEnabled( false );
+  }
 }
 
 void MainView::makeAllSubtasksIndependent()
@@ -180,7 +171,9 @@ void MainView::makeAllSubtasksIndependent()
   if ( !item.isValid() )
     return;
 
-  mCalendarUtils->makeChildrenIndependent( item );
+  if ( mCalendarUtils->makeChildrenIndependent( item ) ) {
+    actionCollection()->action( QLatin1String( "make_all_subtasks_independent" ) )->setEnabled( false );
+  }
 }
 
 void MainView::setPercentComplete( int row, int percentComplete )
@@ -316,5 +309,18 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
   const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
 
   CalendarSupport::saveAttachments( item, this );
+}
+
+void MainView::processActionFail( const Akonadi::Item &item, const QString &msg )
+{
+  Q_UNUSED( item );
+  Q_UNUSED( msg );
+  mTasksActionManager->updateActions();
+}
+
+void MainView::processActionFinish( const Akonadi::Item &item )
+{
+  Q_UNUSED( item );
+  mTasksActionManager->updateActions();
 }
 

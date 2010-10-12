@@ -53,8 +53,9 @@ class MainView : public KDeclarativeMainView
 
   private slots:
     void finishEdit( QObject *editor );
-    void modifyFinished( KJob *job );
     void fetchForSaveAllAttachmentsDone( KJob* job );
+    void processActionFail( const Akonadi::Item &item, const QString &msg );
+    void processActionFinish( const Akonadi::Item &item );
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
