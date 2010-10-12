@@ -33,11 +33,12 @@ kde4_add_kcfg_files(templateparser_LIB_SRCS
   templatesconfiguration_kfg.kcfgc
 )  
 
-if (NOT WINCE)
 kde4_add_kcfg_files(templateparser_LIB_SRCS
   customtemplates_kfg.kcfgc
   globalsettings_base.kcfgc 
 )
+
+if (NOT WINCE)
 
 kde4_add_ui_files(templateparser_LIB_SRCS
   ui/templatesconfiguration_base.ui
