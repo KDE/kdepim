@@ -225,6 +225,12 @@
            <height>80</height>
           </size>
          </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::NoWrap</enum>
+         </property>
+         <property name="acceptRichText">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item row="3" column="1">
@@ -247,6 +253,12 @@
            <width>16777215</width>
            <height>80</height>
           </size>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::NoWrap</enum>
+         </property>
+         <property name="acceptRichText">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -271,6 +283,12 @@
            <height>80</height>
           </size>
          </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::NoWrap</enum>
+         </property>
+         <property name="acceptRichText">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item row="7" column="1">
@@ -293,6 +311,12 @@
            <width>16777215</width>
            <height>80</height>
           </size>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::NoWrap</enum>
+         </property>
+         <property name="acceptRichText">
+          <bool>false</bool>
          </property>
         </widget>
        </item>

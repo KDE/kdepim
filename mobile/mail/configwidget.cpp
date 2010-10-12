@@ -39,6 +39,11 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   Ui_ConfigWidget ui;
   ui.setupUi( this );
 
+  ui.kcfg_ComposerTemplatesNewMessage->setProperty( "kcfg_property", QByteArray( "plainText" ) );
+  ui.kcfg_ComposerTemplatesReplyToSender->setProperty( "kcfg_property", QByteArray( "plainText" ) );
+  ui.kcfg_ComposerTemplatesReplyToAll->setProperty( "kcfg_property", QByteArray( "plainText" ) );
+  ui.kcfg_ComposerTemplatesForwardMessage->setProperty( "kcfg_property", QByteArray( "plainText" ) );
+
   mManager = new KConfigDialogManager( this, Settings::self() );
 
   connect( ui.configureCompletionOrderButton, SIGNAL( clicked() ),
