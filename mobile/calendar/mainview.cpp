@@ -39,6 +39,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/standardactionmanager.h>
+#include <calendarsupport/archivedialog.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
@@ -76,6 +77,7 @@ MainView::MainView( QWidget* parent )
   : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent )
 {
   m_calendar = 0;
+  m_changer = 0;
   m_identityManager = 0;
 }
 
@@ -103,6 +105,8 @@ void MainView::delayedInit()
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
   CalendarSupport::FreeBusyManager::self()->setCalendar( m_calendar );
 
+  m_changer = new CalendarSupport::IncidenceChanger( m_calendar, this );
+
   m_identityManager = new CalendarSupport::IdentityManager;
 
   // FIXME: My suspicion is that this is wrong. I.e. the collection selection is
@@ -128,6 +132,10 @@ void MainView::delayedInit()
   action = new KAction( i18n( "Export Events" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   actionCollection()->addAction( QLatin1String( "export_events" ), action );
+
+  action = new KAction( i18n( "Archive Old Entries" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( archiveOldEntries() ) );
+  actionCollection()->addAction( QLatin1String( "archive_old_entries" ), action );
 
   action = new KAction( i18n( "Publish Item Information" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( publishItemInformation() ) );
@@ -495,5 +503,12 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob *job )
 
   CalendarSupport::saveAttachments( item, this );
 }
+
+void MainView::archiveOldEntries()
+{
+  CalendarSupport::ArchiveDialog archiveDialog( m_calendar, m_changer, this );
+  archiveDialog.exec();
+}
+
 
 #include "mainview.moc"

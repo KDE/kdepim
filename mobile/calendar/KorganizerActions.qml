@@ -38,6 +38,7 @@ ActionMenuContainer {
     ActionListItem { name : "synchronize_all_items" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
     ActionListItem { name : "import_events" }
+    ActionListItem { name : "archive_old_entries" }
   }
 
   FavoriteManager{ model : favoritesList }

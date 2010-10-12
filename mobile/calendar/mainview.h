@@ -28,6 +28,7 @@
 
 namespace CalendarSupport {
 class Calendar;
+class IncidenceChanger;
 }
 
 namespace KPIMIdentities {
@@ -65,6 +66,7 @@ class MainView : public KDeclarativeMainView
     void requestUpdate();
     void requestChange();
     void saveAllAttachments();
+    void archiveOldEntries();
 
   protected Q_SLOTS:
     void delayedInit();
@@ -95,6 +97,7 @@ class MainView : public KDeclarativeMainView
     CalendarInterface* m_calendarIface;
     QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
     KPIMIdentities::IdentityManager* m_identityManager;
+    CalendarSupport::IncidenceChanger *m_changer;
 };
 
 #endif // MAINVIEW_H
