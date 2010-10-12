@@ -92,6 +92,9 @@ void MainView::delayedInit()
   mTasksActionManager->setCalendar( cal );
   mTasksActionManager->setItemSelectionModel( itemSelectionModel() );
 
+  connect( entityTreeModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
+           mTasksActionManager, SLOT( updateActions() ) );
+
   connect( actionCollection()->action( QLatin1String( "add_new_task" ) ),
            SIGNAL( triggered( bool ) ), SLOT( newTask() ) );
   connect( actionCollection()->action( QLatin1String( "add_new_subtask" ) ),
