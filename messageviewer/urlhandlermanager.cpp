@@ -757,7 +757,7 @@ namespace {
  {
    bool inHeader = false;
    const QString place = url.queryItem( "place" ).toLower();
-   if ( place != QString::null ) {
+   if ( !place.isNull() ) {
      inHeader = ( place == "header" );
    }
    return inHeader;

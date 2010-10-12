@@ -62,13 +62,13 @@ void PluginLoaderBase::doScan( const char * path ) {
 
       const QString type = group.readEntry( "Type" ).toLower();
       if ( type.isEmpty() ) {
-        kWarning( 5300 ) << "missing or empty [Plugin]Type value in \"" << *it << "\" - skipping" << endl;
+        kWarning() << "missing or empty [Plugin]Type value in \"" << *it << "\" - skipping";
         continue;
       }
 
       const QString library = group.readEntry( "X-KDE-Library" );
       if ( library.isEmpty() ) {
-        kWarning( 5300 ) << "missing or empty [Plugin]X-KDE-Library value in \"" << *it << "\" - skipping" << endl;
+        kWarning() << "missing or empty [Plugin]X-KDE-Library value in \"" << *it << "\" - skipping";
         continue;
       }
 
@@ -76,19 +76,19 @@ void PluginLoaderBase::doScan( const char * path ) {
 
       QString name = group2.readEntry( "Name" );
       if ( name.isEmpty() ) {
-        kWarning( 5300 ) << "missing or empty [Misc]Name value in \"" << *it << "\" - inserting default name" << endl;
+        kWarning() << "missing or empty [Misc]Name value in \"" << *it << "\" - inserting default name";
         name = i18n("Unnamed plugin");
       }
 
       QString comment = group2.readEntry( "Comment" );
       if ( comment.isEmpty() ) {
-        kWarning( 5300 ) << "missing or empty [Misc]Comment value in \"" << *it << "\" - inserting default name" << endl;
+        kWarning() << "missing or empty [Misc]Comment value in \"" << *it << "\" - inserting default name";
         comment = i18n("No description available");
       }
 
       mPluginMap.insert( type, PluginMetaData( library, name, comment ) );
     } else {
-      kWarning( 5300 ) << "Desktop file \"" << *it << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" << endl;
+      kWarning() << "Desktop file \"" << *it << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)";
     }
   }
 }
@@ -112,7 +112,7 @@ KLibrary::void_function_ptr PluginLoaderBase::mainFunc( const QString & type, co
   const QString factory_name = libName + '_' + mf_name;
   KLibrary::void_function_ptr sym = const_cast<KLibrary*>( lib )->resolveFunction( factory_name.toLatin1() );
   if ( !sym ) {
-    kWarning( 5300 ) << "No symbol named \"" << factory_name.toLatin1() << "\" (" << factory_name << ") was found in library \"" << libName << "\"" << endl;
+    kWarning() << "No symbol named \"" << factory_name.toLatin1() << "\" (" << factory_name << ") was found in library \"" << libName << "\"";
     return 0;
   }
 
@@ -124,13 +124,13 @@ const KLibrary * PluginLoaderBase::openLibrary( const QString & libName ) const 
   const QString path = KLibLoader::findLibrary( libName );
 
   if ( path.isEmpty() ) {
-    kWarning( 5300 ) << "No plugin library named \"" << libName << "\" was found!" << endl;
+    kWarning() << "No plugin library named \"" << libName << "\" was found!";
     return 0;
   }
 
   const KLibrary * library = KLibLoader::self()->library( path );
 
-  kDebug( !library, 5300 ) << "Could not load library '" << libName << "'" << endl;
+  kDebug( !library ) << "Could not load library '" << libName << "'";
 
   return library;
 }
