@@ -554,6 +554,7 @@ class KOPrefsDialogViews : public KPrefsModule
                                              topFrame );
       addWidBool( KOPrefs::instance()->enableMonthScrollItem(), monthGroup );
       addWidBool( KOPrefs::instance()->fullViewMonthItem(), monthGroup );
+      addWidBool( KOPrefs::instance()->colorMonthBusyDaysEnabledItem(), monthGroup );
       addWidCombo( KOPrefs::instance()->monthItemColorsItem(), monthGroup );
       topLayout->addWidget( monthGroup );
 
@@ -670,10 +671,10 @@ KOPrefsDialogColors::KOPrefsDialogColors( QWidget *parent, const char *name )
   topLayout->addWidget(agendaBgColor->label(),2,0);
   topLayout->addWidget(agendaBgColor->button(),2,1);
 
-  KPrefsWidColor *agendaBgBusyColor =
-      addWidColor( KOPrefs::instance()->agendaBgBusyColorItem(), topFrame );
-  topLayout->addWidget(agendaBgBusyColor->label(),3,0);
-  topLayout->addWidget(agendaBgBusyColor->button(),3,1);
+  KPrefsWidColor *agendaMonthBgBusyColor =
+      addWidColor( KOPrefs::instance()->agendaMonthBgBusyColorItem(), topFrame );
+  topLayout->addWidget(agendaMonthBgBusyColor->label(),3,0);
+  topLayout->addWidget(agendaMonthBgBusyColor->button(),3,1);
 
   // working hours color
   KPrefsWidColor *workingHoursColor =

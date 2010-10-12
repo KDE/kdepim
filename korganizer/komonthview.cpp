@@ -556,7 +556,7 @@ class MonthViewCell::CreateItemVisitor :
            || ( mMultiDay == 0 && event->recursOn( mDate ) ) ) {
           text = "(-- " + event->summary();
           dt = event->dtStart();
-        } else if ( !event->doesRecur() && mDate == dtEnd
+        } else if ( ( !event->doesRecur() && mDate == dtEnd )
                  // last day of a recurring multi-day event?
                  || ( mMultiDay == length && event->recursOn( mDate.addDays( -length ) ) ) ) {
           text = event->summary() + " --)";
@@ -1084,8 +1084,8 @@ void KOMonthView::changeIncidenceDisplayAdded( Incidence *incidence, MonthViewCe
     return;
   }
 
-  bool floats = incidence->doesFloat();
-
+  const bool floats = incidence->doesFloat();
+  const bool makesItBusy = KOEventView::makesWholeDayBusy( incidence );
   if ( incidence->doesRecur() ) {
     for ( uint i = 0; i < mCells.count(); ++i ) {
       if ( incidence->recursOn( mCells[i]->date() ) ) {
@@ -1104,7 +1104,13 @@ void KOMonthView::changeIncidenceDisplayAdded( Incidence *incidence, MonthViewCe
       for ( QDate date = gdv.startDate().date();
             date <= endDate; date = date.addDays( 1 ) ) {
         MonthViewCell *mvc = mDateToCell[ date ];
-        if ( mvc ) mvc->addIncidence( incidence, v );
+        if ( mvc ) {
+          if ( makesItBusy ) {
+            Event::List &busyEvents = mBusyDays[date];
+            busyEvents.append( static_cast<Event*>( incidence ) );
+          }
+          mvc->addIncidence( incidence, v );
+        }
       }
     }
   }

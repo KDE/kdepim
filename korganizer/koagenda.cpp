@@ -1427,7 +1427,7 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
       if ( busyDayMask[i] ) {
         const QPoint pt1( cx + mGridSpacingX * i, 0 );
         // const QPoint pt2( cx + mGridSpacingX * ( i+1 ), ch );
-        dbp.fillRect( pt1.x(), pt1.y(), mGridSpacingX, cy + ch, KOPrefs::instance()->mAgendaBgBusyColor );
+        dbp.fillRect( pt1.x(), pt1.y(), mGridSpacingX, cy + ch, KOPrefs::instance()->mAgendaMonthBgBusyColor );
       }
     }
   }
@@ -1437,7 +1437,7 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
     QColor workAndBusyColor;
 
     if ( KOPrefs::instance()->mColorBusyDaysEnabled ) {
-      workAndBusyColor = mixColors( KOPrefs::instance()->mAgendaBgBusyColor, 0.60, KOPrefs::instance()->mWorkingHoursColor );
+      workAndBusyColor = mixColors( KOPrefs::instance()->mAgendaMonthBgBusyColor, 0.60, KOPrefs::instance()->mWorkingHoursColor );
     } else {
       workAndBusyColor = KOPrefs::instance()->mWorkingHoursColor;
     }

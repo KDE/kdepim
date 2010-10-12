@@ -257,7 +257,6 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
   private:
     bool filterByResource( Incidence *incidence );
     void displayIncidence( Incidence *incidence );
-    bool makesWholeDayBusy( Incidence *incidence ) const;
 
   private:
     // view widgets
@@ -308,12 +307,6 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
     // Other solution would be not initializing mSelectedDates in the ctor, but that requires
     // lots of changes in koagenda.cpp and koagendaview.cpp
     bool mAreDatesInitialized;
-
-
-    // Contains days that have at least one all-day Event with TRANSP: OPAQUE ( busy )
-    // that has you as organizer or attendee so we can color background with a different
-    // color
-    QMap<QDate, KCal::Event::List > mBusyDays;
 };
 
 #endif

@@ -127,8 +127,13 @@ class KOEventView : public KOrg::BaseView
     virtual void showNewEventPopup();
 
   protected:
+    static bool makesWholeDayBusy( Incidence *incidence );
     Incidence *mCurrentIncidence;  // Incidence selected e.g. for a context menu
 
+    // Contains days that have at least one all-day Event with TRANSP: OPAQUE ( busy )
+    // that has you as organizer or attendee so we can color background with a different
+    // color
+    QMap<QDate, KCal::Event::List > mBusyDays;
 };
 
 #endif

@@ -22,8 +22,12 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qpopupmenu.h>
-#include <qcursor.h>
+#include "koprefs.h"
+#include "kocore.h"
+#include "koeventview.h"
+#include "koeventpopupmenu.h"
+
+#include <libkcal/calendar.h>
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -32,12 +36,9 @@
 #include <kxmlguiclient.h>
 #include <kxmlguifactory.h>
 
-#include <libkcal/calendar.h>
+#include <qpopupmenu.h>
+#include <qcursor.h>
 
-
-#include "kocore.h"
-#include "koeventview.h"
-#include "koeventpopupmenu.h"
 
 using namespace KOrg;
 #include "koeventview.moc"
@@ -167,6 +168,45 @@ void KOEventView::defaultAction( Incidence *incidence )
 }
 
 //---------------------------------------------------------------------------
+/* static */
+bool KOEventView::makesWholeDayBusy( Incidence *incidence )
+{
+  // Must be enabled in config
+  // Must be event
+  // Must be all day
+  // Must be marked busy (TRANSP: OPAQUE)
+  // You must be attendee or organizer
+  if ( !KOPrefs::instance()->mColorBusyDaysEnabled ) {
+    return false;
+  }
+
+  if ( incidence->type() != "Event" || !incidence->doesFloat() ) {
+    return false;
+  }
+
+  Event *ev = static_cast<Event*>( incidence );
+
+  if ( ev->transparency() != Event::Opaque ) {
+    return false;
+  }
+
+  // Last check: must be organizer or attendee:
+  if ( KOPrefs::instance()->thatIsMe( ev->organizer().email() ) ) {
+    return true;
+  }
+
+  KCal::Attendee::List attendees = ev->attendees();
+  KCal::Attendee::List::ConstIterator it;
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    if ( KOPrefs::instance()->thatIsMe( (*it)->email() ) ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+//---------------------------------------------------------------------------
+
 
 #include "baseview.moc"
 
