@@ -356,7 +356,11 @@ void MonthViewItem::paint( QPainter *p )
   QColor textColor = getTextColor( bgColor );
   p->setPen( textColor );
 
-  KWordWrap::drawFadeoutText( p, x, yPos, listBox()->width() - x, text() );
+  // For Kolab/issue4637 (right- and left-arrow scrolling screws with fadeout)
+  // let's simply draw the text normally, with no fade-out.
+  // Personally, I like without the fadeout better -Allen
+//  KWordWrap::drawFadeoutText( p, x, yPos, listBox()->width() - x, text() );
+  p->drawText( x, yPos, text() );
 }
 
 int MonthViewItem::height( const QListBox *lb ) const
