@@ -1,6 +1,4 @@
-/* This file is part of the KDE project
- *
- * Copyright (C) 2010 Torgny Nyblom <kde nyblom org>
+/* Copyright (C) 2010 Torgny Nyblom <kde@nyblom.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,8 +15,8 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef MESSAGEVIEWER_FINDBAR_FINDBAR_H__
-#define MESSAGEVIEWER_FINDBAR_FINDBAR_H__
+#ifndef MESSAGEVIEWER_FINDBAR_FINDBAR_H
+#define MESSAGEVIEWER_FINDBAR_FINDBAR_H
 
 #include <QtGui/QWidget>
 
