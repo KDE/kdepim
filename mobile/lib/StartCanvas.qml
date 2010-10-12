@@ -50,7 +50,6 @@ Item {
       height : _topContext.height / 6
       width : ListView.view.width
       onIndexSelected : {
-        console.log("favorite clicked: " + model.display );
         favoriteSelected(model.display);
       }
     }

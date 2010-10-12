@@ -63,14 +63,10 @@ QML.Item {
     anchors.bottom : nameItem.top
 
     property int bottomMargin
-    onBottomMarginChanged : {
-      console.log("CH" + bottomMargin)
-    }
     anchors.bottomMargin : bottomMargin
     visible : false
 
     onTriggered : {
-      console.log ("INNER NAME" + triggeredName + " " + nameItem.name)
       actionList_top.triggered(triggeredName)
     }
   }

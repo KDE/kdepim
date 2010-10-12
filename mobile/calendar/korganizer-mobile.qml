@@ -61,14 +61,12 @@ KPIM.MainView {
 
   function showDate(date)
   {
-    console.log("QML showDate called");
     agenda.showRange( date, 0 /* "Day" */ );
     guiStateManager.pushState( Events.EventsGuiStateManager.ViewDayState );
   }
 
   function showEventView()
   {
-    console.log("QML showEventView called");
     guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
   }
 
@@ -533,11 +531,6 @@ KPIM.MainView {
           ]
 
           onDoCollapse : actionPanelNew.collapse();
-
-          onTriggered : {
-            console.log("Triggered was: " + triggeredName)
-          }
-
         }
       ]
     }
