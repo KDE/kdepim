@@ -4,6 +4,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set( templateparser_LIB_SRCS
    templateparser.cpp
+   defaulttemplates.cpp
 )
 
 option(TEMPLATEPARSER_NO_WEBKIT "Use QTextBrowser instead of WebKit for the templateparser" FALSE)

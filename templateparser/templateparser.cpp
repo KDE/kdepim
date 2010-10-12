@@ -1212,7 +1212,7 @@ QString TemplateParser::findTemplate()
     return "";
   }
 
-  mQuoteString = TemplatesConfiguration::defaultQuoteString();
+  mQuoteString = DefaultTemplates::defaultQuoteString();
 #endif
   return tmpl;
 }

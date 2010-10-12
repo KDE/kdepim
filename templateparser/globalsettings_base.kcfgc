@@ -6,4 +6,4 @@ Mutators=true
 Singleton=true
 ItemAccessors=true
 SetUserTexts=true
-IncludeFiles=templateparser_export.h,templatesconfiguration.h
+IncludeFiles=templateparser_export.h,defaulttemplates.h

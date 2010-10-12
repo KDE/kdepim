@@ -103,11 +103,11 @@ void TemplatesConfiguration::slotTextChanged()
 
 void TemplatesConfiguration::resetToDefault()
 {
-  textEdit_new->setText( defaultNewMessage() );
-  textEdit_reply->setText( defaultReply() );
-  textEdit_reply_all->setText( defaultReplyAll() );
-  textEdit_forward->setText( defaultForward() );
-  lineEdit_quote->setText( defaultQuoteString() );
+  textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
+  textEdit_reply->setText( DefaultTemplates::defaultReply() );
+  textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
+  textEdit_forward->setText( DefaultTemplates::defaultForward() );
+  lineEdit_quote->setText( DefaultTemplates::defaultQuoteString() );
 }
 
 void TemplatesConfiguration::loadFromGlobal()
@@ -115,31 +115,31 @@ void TemplatesConfiguration::loadFromGlobal()
   QString str;
   str = TemplateParser::GlobalSettings::self()->templateNewMessage();
   if ( str.isEmpty() ) {
-    textEdit_new->setText( defaultNewMessage() );
+    textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
   } else {
     textEdit_new->setText(str);
   }
   str = TemplateParser::GlobalSettings::self()->templateReply();
   if ( str.isEmpty() ) {
-    textEdit_reply->setText( defaultReply() );
+    textEdit_reply->setText( DefaultTemplates::defaultReply() );
   } else {
     textEdit_reply->setText( str );
   }
   str = TemplateParser::GlobalSettings::self()->templateReplyAll();
   if ( str.isEmpty() ) {
-    textEdit_reply_all->setText( defaultReplyAll() );
+    textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
   } else {
     textEdit_reply_all->setText( str );
   }
   str = TemplateParser::GlobalSettings::self()->templateForward();
   if ( str.isEmpty() ) {
-    textEdit_forward->setText( defaultForward() );
+    textEdit_forward->setText( DefaultTemplates::defaultForward() );
   } else {
     textEdit_forward->setText( str );
   }
   str = TemplateParser::GlobalSettings::self()->quoteString();
   if ( str.isEmpty() ) {
-    lineEdit_quote->setText( defaultQuoteString() );
+    lineEdit_quote->setText( DefaultTemplates::defaultQuoteString() );
   } else {
     lineEdit_quote->setText( str );
   }
@@ -166,7 +166,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
     str = TemplateParser::GlobalSettings::self()->templateNewMessage();
   }
   if ( str.isEmpty() ) {
-    str = defaultNewMessage();
+    str = DefaultTemplates::defaultNewMessage();
   }
   textEdit_new->setText( str );
 
@@ -175,7 +175,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
     str = TemplateParser::GlobalSettings::self()->templateReply();
   }
   if ( str.isEmpty() ) {
-    str = defaultReply();
+    str = DefaultTemplates::defaultReply();
   }
   textEdit_reply->setText( str );
 
@@ -184,7 +184,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
     str = TemplateParser::GlobalSettings::self()->templateReplyAll();
   }
   if ( str.isEmpty() ) {
-    str = defaultReplyAll();
+    str = DefaultTemplates::defaultReplyAll();
   }
   textEdit_reply_all->setText( str );
 
@@ -193,7 +193,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
     str = TemplateParser::GlobalSettings::self()->templateForward();
   }
   if ( str.isEmpty() ) {
-    str = defaultForward();
+    str = DefaultTemplates::defaultForward();
   }
   textEdit_forward->setText( str );
 
@@ -202,7 +202,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
     str = TemplateParser::GlobalSettings::self()->quoteString();
   }
   if ( str.isEmpty() ) {
-    str = defaultQuoteString();
+    str = DefaultTemplates::defaultQuoteString();
   }
   lineEdit_quote->setText( str );
 }
@@ -237,7 +237,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = TemplateParser::GlobalSettings::self()->templateNewMessage();
   }
   if ( str.isEmpty() ) {
-    str = defaultNewMessage();
+    str = DefaultTemplates::defaultNewMessage();
   }
   textEdit_new->setText( str );
 
@@ -249,7 +249,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = TemplateParser::GlobalSettings::self()->templateReply();
   }
   if ( str.isEmpty() ) {
-    str = defaultReply();
+    str = DefaultTemplates::defaultReply();
   }
   textEdit_reply->setText( str );
 
@@ -261,7 +261,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = TemplateParser::GlobalSettings::self()->templateReplyAll();
   }
   if ( str.isEmpty() ) {
-    str = defaultReplyAll();
+    str = DefaultTemplates::defaultReplyAll();
   }
   textEdit_reply_all->setText( str );
 
@@ -273,7 +273,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = TemplateParser::GlobalSettings::self()->templateForward();
   }
   if ( str.isEmpty() ) {
-    str = defaultForward();
+    str = DefaultTemplates::defaultForward();
   }
   textEdit_forward->setText( str );
 
@@ -285,7 +285,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
     str = TemplateParser::GlobalSettings::self()->quoteString();
   }
   if ( str.isEmpty() ) {
-      str = defaultQuoteString();
+      str = DefaultTemplates::defaultQuoteString();
   }
   lineEdit_quote->setText( str );
 
@@ -327,59 +327,6 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
   cursor.setPosition( cursor.position() + adjustCursor );
   edit->setTextCursor( cursor );
   edit->setFocus();
-}
-
-QString TemplatesConfiguration::defaultNewMessage() {
-  return "%REM=\"" + i18n( "Default new message template" ) + "\"%-\n"
-         "%BLANK";
-}
-
-QString TemplatesConfiguration::defaultReply() {
-  return
-    "%REM=\"" + i18n( "Default reply template" ) + "\"%-\n" +
-    i18nc( "Default reply template."
-           "%1: date of original message, %2: time of original message, "
-           "%3: quoted text of original message, %4: cursor Position",
-           "On %1 %2 you wrote:\n"
-           "%3\n"
-           "%4", "%ODATE", "%OTIMELONG", "%QUOTE", "%CURSOR" );
-}
-
-QString TemplatesConfiguration::defaultReplyAll() {
-  return
-    "%REM=\"" + i18n( "Default reply all template" ) + "\"%-\n" +
-    i18nc( "Default reply all template: %1: date, %2: time, %3: name of original sender, "
-           "%4: quoted text of original message, %5: cursor position",
-           "On %1 %2 %3 wrote:\n"
-           "%4\n"
-           "%5",
-           "%ODATE", "%OTIMELONG", "%OFROMNAME", "%QUOTE", "%CURSOR");
-}
-
-QString TemplatesConfiguration::defaultForward()
-{
-  return
-    "%REM=\"" + i18n( "Default forward template" ) + "\"%-\n" +
-    i18nc( "Default forward template: %1: subject of original message, "
-           "%2: date of original message, "
-           "%3: time of original message, "
-           "%4: mail address of original sender, "
-           "%5: original message text",
-           "\n"
-           "----------  Forwarded Message  ----------\n"
-           "\n"
-           "Subject: %1\n"
-           "Date: %2, %3\n"
-           "From: %4\n"
-           "%OADDRESSEESADDR\n"
-           "\n"
-           "%5\n"
-           "-----------------------------------------",
-           "%OFULLSUBJECT", "%ODATE", "%OTIMELONG", "%OFROMADDR", "%TEXT" );
-}
-
-QString TemplatesConfiguration::defaultQuoteString() {
-  return "> ";
 }
 
 QString TemplatesConfiguration::strOrBlank( const QString &str ) {

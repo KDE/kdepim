@@ -44,12 +44,6 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
     void saveToFolder( const QString &id );
     void resetToDefault();
 
-    static QString defaultNewMessage();
-    static QString defaultReply();
-    static QString defaultReplyAll();
-    static QString defaultForward();
-    static QString defaultQuoteString();
-
     QLabel *helpLabel() const { return mHelp; }
 
     /**
