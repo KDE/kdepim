@@ -79,6 +79,12 @@ CalendarUtils::~CalendarUtils()
   delete d_ptr;
 }
 
+Calendar *CalendarUtils::calendar() const
+{
+  Q_D( const CalendarUtils );
+  return d->mCalendar;
+}
+
 bool CalendarUtils::makeIndependent( const Akonadi::Item &item )
 {
   Q_D( CalendarUtils );
