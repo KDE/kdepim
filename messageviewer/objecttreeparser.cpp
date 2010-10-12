@@ -1806,10 +1806,11 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
   // if we either *know* that it is an encrypted message part
   // or there is neither signed nor encrypted parameter.
   if ( !isSigned ) {
-    if ( isEncrypted )
+    if ( isEncrypted ) {
       ;//kDebug() << "pkcs7 mime     ==      S/MIME TYPE: enveloped (encrypted) data";
-    else
+    } else {
       ;//kDebug() << "pkcs7 mime  -  type unknown  -  enveloped (encrypted) data ?";
+    }
     QByteArray decryptedData;
     PartMetaData messagePart;
     messagePart.isEncrypted = true;
@@ -1884,10 +1885,11 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
 
   // We now try signature verification if necessarry.
   if ( signTestNode ) {
-    if ( isSigned )
+    if ( isSigned ) {
       ;//kDebug() << "pkcs7 mime     ==      S/MIME TYPE: opaque signed data";
-    else
+    } else {
       ;//kDebug() << "pkcs7 mime  -  type unknown  -  opaque signed data ?";
+    }
 
     bool sigFound = writeOpaqueOrMultipartSignedData( 0,
                                                       *signTestNode,
@@ -2090,7 +2092,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   }
 }
 
-#define SIG_FRAME_COL_UNDEF  99
+static const int SIG_FRAME_COL_UNDEF = 99;
 #define SIG_FRAME_COL_RED    -1
 #define SIG_FRAME_COL_YELLOW  0
 #define SIG_FRAME_COL_GREEN   1

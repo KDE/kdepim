@@ -53,7 +53,7 @@
 #define NUMPRINTS (LASTPRINT - FIRSTPRINT + 1)
 
 /* output line length for compressed data */
-#define MAXLINELEN 78
+static const int MAXLINELEN = 78;
 
 /* Portable, very large unsigned integer arithmetic is needed.
  * Implementation uses arrays of WORDs.  COMPs must have at least
@@ -71,7 +71,7 @@
 #define GREY 1
 #define WHITE 2
 
-#define MAX_XFACE_LENGTH 2048
+static const int MAX_XFACE_LENGTH = 2048;
 
 using namespace MessageViewer;
 
