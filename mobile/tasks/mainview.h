@@ -29,6 +29,10 @@
 class KJob;
 class TasksActionManager;
 
+namespace CalendarSupport {
+class CalendarUtils;
+}
+
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
@@ -39,6 +43,7 @@ class MainView : public KDeclarativeMainView
     void newTask();
     void newSubTask();
     void makeTaskIndependent();
+    void makeAllSubtasksIndependent();
     void setPercentComplete( int row, int percentComplete );
     void editIncidence( const Akonadi::Item &item );
     void saveAllAttachments();
@@ -64,6 +69,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::Item currentItem() const;
 
   private:
+    CalendarSupport::CalendarUtils *mCalendarUtils;
     QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
     TasksActionManager *mTasksActionManager;
 };

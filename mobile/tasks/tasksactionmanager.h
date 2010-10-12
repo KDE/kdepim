@@ -21,6 +21,10 @@
 
 #include <QtCore/QObject>
 
+namespace CalendarSupport {
+class Calendar;
+}
+
 class KActionCollection;
 class QItemSelectionModel;
 
@@ -30,6 +34,7 @@ class TasksActionManager : public QObject
 public:
   explicit TasksActionManager( KActionCollection *actionCollection, QObject *parent = 0 );
 
+  void setCalendar( CalendarSupport::Calendar *calendar );
   void setItemSelectionModel( QItemSelectionModel *itemSelectionModel );
 
 public slots:
@@ -39,8 +44,9 @@ private:
   void initActions(); // Initializes the tasks application specific actions.
 
 private:
-  KActionCollection *mActionCollection;
-  QItemSelectionModel *mItemSelectionModel;
+  KActionCollection         *mActionCollection;
+  CalendarSupport::Calendar *mCalendar;
+  QItemSelectionModel       *mItemSelectionModel;
 };
 
 #endif // TASKACTIONMANAGER_H

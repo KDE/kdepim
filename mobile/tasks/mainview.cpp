@@ -29,6 +29,9 @@
 #include "tasksexporthandler.h"
 #include "tasksimporthandler.h"
 
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarutils.h>
+#include <calendarsupport/freebusymanager.h>
 #include <calendarsupport/utils.h>
 
 #include <akonadi/agentactionmanager.h>
@@ -45,6 +48,7 @@
 #include <KGlobal>
 #include <klocale.h>
 #include <KStandardDirs>
+#include <KSystemTimeZones>
 #include <KMessageBox>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
@@ -57,6 +61,7 @@ QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 
 MainView::MainView( QWidget *parent )
   : KDeclarativeMainView( "tasks", new TaskListProxy, parent )
+  , mCalendarUtils( 0 )
   , mTasksActionManager( 0 )
 {
 }
@@ -71,7 +76,16 @@ void MainView::delayedInit()
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
 
+  CalendarSupport::Calendar *cal = new CalendarSupport::Calendar( entityTreeModel(),
+                                                                  regularSelectedItems(),
+                                                                  KSystemTimeZones::local() );
+  mCalendarUtils = new CalendarSupport::CalendarUtils( cal, this );
+  cal->setParent( mCalendarUtils );
+
+  CalendarSupport::FreeBusyManager::self()->setCalendar( cal );
+
   mTasksActionManager = new TasksActionManager( actionCollection(), this );
+  mTasksActionManager->setCalendar( cal );
   mTasksActionManager->setItemSelectionModel( itemSelectionModel() );
 
   connect( actionCollection()->action( QLatin1String( "add_new_task" ) ),
@@ -84,6 +98,8 @@ void MainView::delayedInit()
            SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   connect( actionCollection()->action( QLatin1String( "make_subtask_independent" ) ),
            SIGNAL( triggered( bool ) ), SLOT( makeTaskIndependent() ) );
+  connect( actionCollection()->action( QLatin1String( "make_all_subtasks_independent" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( makeAllSubtasksIndependent() ) );
   connect( actionCollection()->action( QLatin1String( "save_all_attachments" ) ),
            SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
 
@@ -156,6 +172,15 @@ void MainView::makeTaskIndependent()
 
   ItemModifyJob *job = new ItemModifyJob( item, this );
   connect( job, SIGNAL( result( KJob * ) ), SLOT( modifyFinished( KJob* ) ) );
+}
+
+void MainView::makeAllSubtasksIndependent()
+{
+  Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  mCalendarUtils->makeChildrenIndependent( item );
 }
 
 void MainView::setPercentComplete( int row, int percentComplete )
@@ -292,3 +317,4 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
 
   CalendarSupport::saveAttachments( item, this );
 }
+

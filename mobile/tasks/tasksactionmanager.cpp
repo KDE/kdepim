@@ -18,6 +18,8 @@
 */
 #include "tasksactionmanager.h"
 
+#include <calendarsupport/calendar.h>
+
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Item>
 
@@ -29,12 +31,21 @@
 
 #include <QtGui/QItemSelectionModel>
 
+using namespace CalendarSupport;
+
 TasksActionManager::TasksActionManager( KActionCollection *actionCollection, QObject *parent)
   : QObject( parent )
   , mActionCollection( actionCollection )
+  , mCalendar( 0 )
   , mItemSelectionModel( 0 )
 {
   initActions();
+}
+
+void TasksActionManager::setCalendar( Calendar *calendar )
+{
+  // Doesn't take ownership. The calendar is used in updateActions.
+  mCalendar = calendar;
 }
 
 void TasksActionManager::setItemSelectionModel( QItemSelectionModel *itemSelectionModel )
@@ -55,6 +66,7 @@ void TasksActionManager::updateActions()
 {
   mActionCollection->action( QLatin1String( "add_new_subtask" ) )->setEnabled( false );
   mActionCollection->action( QLatin1String( "make_subtask_independent" ) )->setEnabled( false );
+  mActionCollection->action( QLatin1String( "make_all_subtasks_independent" ) )->setEnabled( false );
 
   const QModelIndexList list = mItemSelectionModel->selectedRows();
   if ( list.size() != 1 )
@@ -68,6 +80,9 @@ void TasksActionManager::updateActions()
 
   if ( !item.hasPayload<KCalCore::Todo::Ptr>() )
     return;
+
+  if ( mCalendar->findChildren( item ).size() >= 1 )
+    mActionCollection->action( QLatin1String( "make_all_subtasks_independent" ) )->setEnabled( true );
 
   mActionCollection->action( QLatin1String( "add_new_subtask" ) )->setEnabled( true );
 
@@ -94,8 +109,12 @@ void TasksActionManager::initActions()
   action = mActionCollection->addAction( QLatin1String( "make_subtask_independent" ) );
   action->setText( i18n( "Make Sub Task Independent" ) );
 
+  action = mActionCollection->addAction( QLatin1String( "make_all_subtasks_independent" ) );
+  action->setText( i18n( "Make All Sub Tasks Independent" ) );
+
   action = mActionCollection->addAction( QLatin1String( "save_all_attachments" ) );
   action->setText( i18n( "Save All" ) );
+
 }
 
 #include "tasksactionmanager.moc"
