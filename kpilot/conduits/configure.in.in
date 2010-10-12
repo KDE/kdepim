@@ -1,0 +1,241 @@
+dnl Configure.in.in for KPilot conduits.
+dnl
+dnl Copyright (C) 2000,2001 Adriaan de Groot
+dnl Copyright (C) 2002 Reinhold Kainhofer
+dnl
+dnl This file is released under the terms of the Gnu General Public
+dnl Licence (GPL) Version 2.
+
+
+
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for the MAL conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
+dnl
+dnl
+dnl Check to see if MAL header and library are available
+dnl
+
+dnl
+dnl Questions and comments can be sent to kde-pim@kde.org
+dnl
+dnl This was copied and adapted from kabc's ldap configure.in.in
+
+
+AC_DEFUN([KPILOT_CHECK_MAL],
+[
+AC_REQUIRE([KDE_CHECK_LIB64])
+AC_REQUIRE([KPILOT_CHECK_PISOCK])
+
+AC_MSG_CHECKING(for libmal (for KPilots MAL conduit))
+AC_ARG_WITH(mal,
+[  --with-mal=PATH         set path for libmal files @<:@default=check@:>@],
+[ case "$withval" in
+  yes)
+    with_mal=CHECK
+    ;;
+  esac ],
+[ with_mal=CHECK ]
+)dnl
+
+if test "x$with_mal" = "xCHECK" ; then
+  with_mal=NOTFOUND
+  search_incs_tmp="$kde_includes /usr/include /usr/local/include"
+	dnl build the list of include dirs, both with and without libmal appended
+	search_incs="";
+	for idir in $search_incs_tmp; do
+		search_incs="$search_incs $idir $idir/libmal"
+	done
+  AC_FIND_FILE(libmal.h, $search_incs, mal_incdir)
+  if test -r $mal_incdir/libmal.h ; then
+    test "x$mal_incdir" != "x/usr/include" && MAL_INCLUDE="-I$mal_incdir"
+    with_mal=FOUND
+  fi
+  if test $with_mal = FOUND ; then
+    with_mal=NOTFOUND
+    for ext in la so sl a ; do
+      AC_FIND_FILE(libmal.$ext, $kde_libraries $libdir /usr/lib$kdelibsuff /usr/local/lib$kdelibsuff $libdir/libmal /usr/lib/libmal /usr/local/lib/libmal,
+        mal_libdir)
+      if test -r $mal_libdir/libmal.$ext ; then
+        if test "x$mal_libdir" != "x/usr/lib$kdelibsuff" ; then
+          MAL_LIB="-L$mal_libdir "
+          test "$USE_RPATH" = yes && MAL_RPATH="-R $mal_libdir"
+        fi
+        MAL_LIB="${MAL_LIB}-lmal"
+        with_mal=FOUND
+        break
+      fi
+    done
+  fi
+fi
+
+case "$with_mal" in
+no) AC_MSG_RESULT(no) ;;
+NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
+*)
+  if test "x$with_mal" = "xFOUND" ; then
+    msg="incs=$mal_incdir libs=$mal_libdir"
+  else
+    msg="$with_mal"
+    MAL_ROOT="$with_mal"
+    if test "x$MAL_ROOT" != "x/usr" ; then
+      MAL_INCLUDE="-I${MAL_ROOT}/include"
+      MAL_LIB="-L${MAL_ROOT}/lib$kdelibsuff "
+      if test "$USE_RPATH" = "yes" ; then
+        MAL_RPATH="-R ${MAL_ROOT}/lib$kdelibsuff"
+      fi
+    fi
+    MAL_LIB="${MAL_LIBS}-lmal"
+  fi
+
+  kde_save_LIBS="$LIBS"
+  kde_save_CFLAGS="$CFLAGS"
+  kde_save_CPPFLAGS="$CPPFLAGS"
+  kde_save_LDFLAGS="$LDFLAGS"
+  LIBS="$LIBS $PISOCK_LIB $MAL_LIB"
+  CFLAGS="$CFLAGS $MAL_INCLUDE"
+  CPPFLAGS="$CPPFLAGS $all_includes $PISOCK_INCLUDE $MAL_INCLUDE"
+  LDFLAGS="$LDFLAGS $PISOCK_LDFLAGS $all_libraries"
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
+  AC_TRY_LINK(dnl
+  [
+  #include <libmal.h>
+  ],
+  [
+  PalmSyncInfo *psi;
+  ],
+  , with_mal=no
+  )
+  if test "$with_mal" = "no" ; then
+    MAL_LIB="$MAL_LIB -ldl"
+    LIBS="$LIBS $PISOCK_LIB $MAL_LIB"
+    with_mal=yes
+    AC_TRY_LINK(dnl
+    [
+    #include <libmal.h>
+    ],
+    [
+    PalmSyncInfo *psi;
+    ],
+    , with_mal=no
+    )
+  fi
+  if test "$with_mal" = "no" ; then
+    MAL_INCLUDE=
+    MAL_LIB=
+    MAL_RPATH=
+    AC_MSG_RESULT(no (but first try gave $msg))
+  else
+    AC_DEFINE(HAVE_LIBMAL, 1, [Define if you have MAL libraries])
+		dnl check which version we have (pre 0.40 or >=0.40):
+    AC_TRY_LINK(dnl
+    [#include <libmal.h>],
+    [
+    PalmSyncInfo *psi;
+		psi->httpProxy;
+    ],
+    , mal_version20=yes
+    )
+    if test "$mal_version20" = "yes" ; then
+			AC_DEFINE(LIBMAL20, 1, [Define if we have the old libmal version (<0.40)])
+		fi
+    HAVE_LIBMAL=1
+    AC_MSG_RESULT($msg)
+  fi
+  AC_LANG_RESTORE
+  CFLAGS=$kde_save_CFLAGS
+  CPPFLAGS=$kde_save_CPPFLAGS
+  LIBS=$kde_save_LIBS
+  LDFLAGS=$kde_save_LDFLAGS
+  ;;
+esac
+
+AC_SUBST(MAL_INCLUDE)
+AC_SUBST(MAL_LIB)
+AC_SUBST(MAL_RPATH)
+
+AM_CONDITIONAL(include_malconduit, test "$HAVE_LIBMAL" = 1)
+
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for the addressbook conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
+AC_DEFUN([KPILOT_CHECK_KABC],[HAVE_KABC=0
+KDE_CHECK_HEADER(kresources/factory.h,HAVE_KABC=1,
+	AC_MSG_WARN([KPILOT: Older kaddressbook version detected. No address book
+	conduit will be compiled.]))
+AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for the notepad conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
+AC_DEFUN([KPILOT_CHECK_NOTEPAD],[HAVE_NOTEPAD=0
+kpilot_save_cflags="$CPPFLAGS"
+kpilot_save_ldflags="$LDFLAGS"
+
+test -z "$PISOCK_INCLUDE" || CPPFLAGS="$CPPFLAGS $PISOCK_INCLUDE"
+KDE_CHECK_HEADER(pi-notepad.h,HAVE_NOTEPAD=1,
+	AC_MSG_WARN([KPILOT: No notepad.h for pilot-link. Your pilot-link is too old.]))
+
+CPPFLAGS="$kpilot_save_cflags"
+LDFLAGS="$kpilot_save_ldflags"
+unset kpilot_save_cflags
+unset kpilot_save_ldflags
+
+AM_CONDITIONAL(include_notepad, test "$HAVE_NOTEPAD" = 1)
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for embedded language conduits
+dnl
+dnl ----------------------------------------------------------------------------
+
+AC_DEFUN([KPILOT_CHECK_PERL],[HAVE_PERL=0
+AC_MSG_CHECKING([for Perl embedding])
+if perl -MExtUtils::Embed -e ccopts > /dev/null 2> /dev/null ; then
+	PERL_CFLAGS=`perl -MExtUtils::Embed -e ccopts 2> /dev/null`
+	PERL_LDFLAGS=`perl -MExtUtils::Embed -e ldopts 2> /dev/null`
+	HAVE_PERL=1
+	AC_MSG_RESULT(yes)
+else
+	PERL_CFLAGS=""
+	PERL_LDFLAGS=""
+	AC_MSG_RESULT(no)
+fi
+AC_SUBST(PERL_CFLAGS)
+AC_SUBST(PERL_LDFLAGS)
+AM_CONDITIONAL(include_perl, test "$HAVE_PERL" = 1)
+])
+
+AC_DEFUN([KPILOT_CHECK_PYTHON],[HAVE_PYTHON=0
+AC_MSG_CHECKING([for Python embedding])
+AM_CONDITIONAL(include_python, test "$HAVE_PYTHON" = 1)
+AC_MSG_RESULT(N/A)
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                   actually call the checks
+dnl
+dnl ----------------------------------------------------------------------------
+
+KPILOT_CHECK_MAL
+KPILOT_CHECK_KABC
+KPILOT_CHECK_PERL
+KPILOT_CHECK_PYTHON
+KPILOT_CHECK_NOTEPAD
+

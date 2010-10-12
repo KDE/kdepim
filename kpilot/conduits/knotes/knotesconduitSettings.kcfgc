@@ -1,0 +1,7 @@
+File=knotesconduit.kcfg
+ClassName=KNotesConduitSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

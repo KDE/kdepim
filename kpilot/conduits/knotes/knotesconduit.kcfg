@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="kpilot_notesconduitrc"/> 
+  <group name="General">
+    <entry name="DeleteNoteForMemo"  type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="SuppressKNotesConfirm" type="Bool">
+        <label>Suppress the confirmation KNotes normally shows when deleting a note.</label>
+        <default>false</default>
+    </entry>
+
+    <entry name="MemoIds"  type="IntList">
+        <label>list of the synced MemoDB records</label>
+        <default></default>
+    </entry>
+    <entry name="NoteIds"  type="StringList">
+        <label>list of the corresponding KNotes note IDs</label>
+        <default></default>
+    </entry>
+  </group>
+</kcfg>

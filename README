@@ -26,6 +26,7 @@ What it is
 * kmailcvt: tool for importing mail related data from other programs
 * knode: news client
 * korganizer: a calendar-of-events and todo-list manager
+* kpilot: to sync with your PalmPilot
 * kalarm: gui for setting up personal alarm messages, emails and commands
 * kalarmd: alarm monitoring daemon, shared by korganizer and kalarm.
 * kontact: Integrated PIM application

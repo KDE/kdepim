@@ -1,0 +1,7 @@
+File=vcalconduitbase.kcfg
+ClassName=VCalConduitSettings
+#Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

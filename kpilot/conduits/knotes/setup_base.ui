@@ -1,0 +1,88 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>KNotesWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>KNotesWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>436</width>
+            <height>394</height>
+        </rect>
+    </property>
+        <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+    <widget class="QTabWidget">
+        <property name="name">
+            <cstring>tabWidget</cstring>
+        </property>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab</cstring>
+            </property>
+            <attribute name="title">
+                <string>General</string>
+            </attribute>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox" row="0" column="0">
+                    <property name="name">
+                        <cstring>fDeleteNoteForMemo</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Delete KNote when Pilot memo is deleted</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Check this box if you wish to delete notes from KNotes automatically when the corresponding Pilot memo is deleted. Use this option with care, as the notes you want to keep in the handheld and in the desktop are not necessarily the same.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="0">
+                    <property name="name">
+                        <cstring>fSuppressConfirm</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Suppress delete-confirmation in KNotes</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Check this box if you wish to delete notes from KNotes, without confirmation, when the corresponding Pilot memo is deleted. Use this option only if you want to keep the same notes in the handheld and in the PC.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <spacer row="2" column="0">
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>101</height>
+                        </size>
+                    </property>
+                </spacer>
+            </grid>
+        </widget>
+    </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,557 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>DOCWidget</class>
+<author>Reinhold Kainhofer</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>Form2</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>564</width>
+            <height>266</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>3</hsizetype>
+            <vsizetype>3</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabWidget</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>General</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>TextLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Text files:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fTXTDir</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter here, or select clicking the file picker button, the name and location of the folder used to find and synchronize text files. All files with extension .txt located in this folder will be synced to Palm DOC databases in your handheld.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>fkeepPDBLocally</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Local co&amp;py:</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Check this box if you want to save a copy of the Palm DOC databases (.pdb files) on your PC.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="KURLRequester" row="0" column="1">
+                        <property name="name">
+                            <cstring>fTXTDir</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter here, or select clicking the file picker button, the name and location of the folder used to find and synchronize text files. All files with extension .txt located in this folder will be synced to Palm DOC databases in your handheld.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QButtonGroup" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fSyncDirection</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Synchronization Mode</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Sync only P&amp;C to PDA</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>2</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to synchronize texts changed in your PC to Palm DOC databases in your handheld. Palm DOC databases modified in the handheld will not be converted to text files, but texts changed in the PC will be converted to the Palm DOC databases.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Sync only P&amp;DA to PC</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to synchronize the changes made to Palm DOC databases in your handheld to the PC text files. Palm DOC databases modified in the handheld will be converted to text files, but texts changed in the PC will not be converted to the Palm DOC databases.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Sync &amp;all</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to synchronize the file texts in your PC to Palm DOC databases in your handheld. Palm DOC databases modified in the handheld will be converted to text files, and texts changed in the PC will be converted to the Palm DOC databases, keeping both versions in sync.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <spacer row="3" column="1">
+                        <property name="name">
+                            <cstring>Spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KURLRequester" row="1" column="1">
+                        <property name="name">
+                            <cstring>fPDBDir</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter here, or select clicking the file picker button, the name and location of the folder where copies of the handheld databases are kept (.pdb files). Local copies are only made if the box is checked as well.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>PC -&gt; Handheld</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QCheckBox" row="0" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>fCompress</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Compress</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Check this box, if the text should be compressed on the handheld to save memory. Most doc reader on the handheld support compressed texts.</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;The Palm DOC format supports compressing the text to save memory. Check this box to enable text compression, so the resulting Palm DOC database will consume about 50% less memory than in uncompressed state. Almost all DOC readers on the Palm support compressed texts.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>fConvertBookmarks</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Convert &amp;bookmarks</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Check this box to enable bookmark creation when converting text files to Palm DOC databases. Most doc readers support bookmarks. In order to create a bookmark, it is necessary to to provide the location in the text where the bookmark should be set and the bookmark title, in at least one of the formats listed below.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <spacer row="6" column="2">
+                        <property name="name">
+                            <cstring>spacer9</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="2" column="1">
+                        <property name="name">
+                            <cstring>fBookmarksInline</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Inline tags in text</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Check this box to create bookmarks from inline tags in the text. The inline tag consist of tags in the form &lt;* bookmarktext *&gt;. The bookmark location is set using the location of the inline tag in the text, and  the name is the text between the &lt;* and the *&gt;. The inline tag (&lt;*...*&gt;) will be removed from the text.</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="0">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Encoding:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fEncoding</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="1">
+                        <property name="name">
+                            <cstring>fBookmarksEndtags</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Tags at end of text</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Check this box to convert tags of the form &lt;bookmarkname&gt; at the end of the text to bookmarks. The text inside the tag ("bookmarkname") will be searched in the text, and whenever found, a bookmark will be set there. The endtags &lt;...&gt; will then be removed from the end of the text.</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="1">
+                        <property name="name">
+                            <cstring>fBookmarksBmk</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Regular &amp;expressions in .bmk file</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Check this box to use regular expressions in a file to search the text for bookmarks. The file should have the same name as the text file, but should end in .bmk instead of .txt (for instance, the regular expression file for textname.txt should be textname.bmk). See the documentation for a description of the format of the bmk file.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="5" column="1">
+                        <property name="name">
+                            <cstring>fEncoding</cstring>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Handheld -&gt; PC</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <spacer row="2" column="0">
+                        <property name="name">
+                            <cstring>spacer16</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>fNoConversionOfBmksOnly</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Do not convert, if text unchanged (only bookmarks)</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Check this box to avoid syncing the text on the handheld to the PC if you only changed the bookmarks on the handheld (but not the text).&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QButtonGroup" row="0" column="0">
+                        <property name="name">
+                            <cstring>fPCBookmarks</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Convert Bookmarks</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>radioButton8</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Do &amp;not convert bookmarks</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Check this box to avoid converting Palm DOC bookmarks to inline tags or to a bookmark file.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>radioButton11</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Convert into .bm &amp;file</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>1</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Check this box to convert the Palm DOC database bookmarks to a separate file, in the bmk format (see more about this format in the documentation). The resulting bookmark file shares the same filename as the resulting .txt file, but ends in .bmk instead. This approach creates a clean text file and a bookmark file.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>radioButton9</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Convert as &amp;inline tags</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>2</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Check this box to convert the Palm DOC database bookmarks to inline tags, in the form &amp;lt;* BookmarkName *&amp;gt;. These tags are inserted in the text in the position marked by the bookmark, and the text inside the tag corresponds to the bookmark name. Inline tags are easy to create, delete, move and edit.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Conflicts</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QButtonGroup">
+                        <property name="name">
+                            <cstring>fConflictResolution</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Conflict Resolution</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>If the same text was changed on the PC and the handheld, which of the two versions should be used as the new version?</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;The Palm DOC conduit does not feature merging the modifications when a text is changed both in the handheld and in the computer. Therefore, the choice is between working with the files out of sync, or discarding the changes in one of them.&lt;/qt&gt;</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>radioButton12</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;No resolution</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;The Palm DOC conduit does not feature merging the modifications when a text is changed both in the handheld and in the computer. Therefore, when conflicts appear, the choice is between working with the files out of sync, or discarding the changes in one of them. Select this option to prevent KPilot from overwriting your modifications.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton5</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>P&amp;DA overrides</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>1</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;The Palm DOC conduit does not feature merging the modifications when a text is changed both in the handheld and in the computer. Therefore, when conflicts appear, the choice is between working with the files out of sync, or discarding the changes in one of them. Select this option to make the PDA version overwrite the PC version in case of conflict.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton4</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>P&amp;C overrides</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>2</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;The Palm DOC conduit does not feature merging the modifications when a text is changed both in the handheld and in the computer. Therefore, when conflicts appear, the choice is between working with the files out of sync, or discarding the changes in one of them. Select this option to make the PC version overwrite the PDA version in case of conflict.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="3" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton7</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Ask the user</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>4</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;The Palm DOC conduit does not feature merging the modifications when a text is changed both in the handheld and in the computer. Therefore, when conflicts appear, the choice is between working with the files out of sync, or discarding the changes in one of them. Select this option to show the resolution dialog to let the user decide on a case by case basis.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>fAlwaysUseResolution</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Always show the resolution dialog</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Check this box to force the resolution dialog to appear even when there are no conflicts.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>Spacer8</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </vbox>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<customwidgets>
+</customwidgets>
+<connections>
+    <connection>
+        <sender>fConvertBookmarks</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fBookmarksInline</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>fConvertBookmarks</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fBookmarksEndtags</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>fConvertBookmarks</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fBookmarksBmk</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>fkeepPDBLocally</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fPDBDir</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>fTXTDir</tabstop>
+    <tabstop>fkeepPDBLocally</tabstop>
+    <tabstop>fPDBDir</tabstop>
+    <tabstop>fCompress</tabstop>
+    <tabstop>fConvertBookmarks</tabstop>
+    <tabstop>fBookmarksInline</tabstop>
+    <tabstop>fBookmarksEndtags</tabstop>
+    <tabstop>fBookmarksBmk</tabstop>
+    <tabstop>radioButton11</tabstop>
+    <tabstop>fNoConversionOfBmksOnly</tabstop>
+    <tabstop>RadioButton7</tabstop>
+    <tabstop>fAlwaysUseResolution</tabstop>
+    <tabstop>tabWidget</tabstop>
+    <tabstop>RadioButton1</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+<includes>
+    <include location="global" impldecl="in implementation">kurlrequester.h</include>
+    <include location="global" impldecl="in implementation">klineedit.h</include>
+    <include location="global" impldecl="in implementation">kpushbutton.h</include>
+</includes>
+</UI>

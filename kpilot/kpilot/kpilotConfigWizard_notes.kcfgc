@@ -1,0 +1,7 @@
+File=../conduits/knotes/knotesconduit.kcfg
+ClassName=KPilotWizard_notesConfig
+Singleton=false
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true
