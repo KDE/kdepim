@@ -11,6 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(calendarsupport_LIB_SRCS
   akonadicalendar.cpp
+  archivedialog.cpp
   attachmenthandler.cpp
   calendar.cpp
   calendaradaptor.cpp
@@ -21,6 +22,7 @@ set(calendarsupport_LIB_SRCS
   collectionselection.cpp
   daterangefilterproxymodel.cpp
   entitymodelstatesaver.cpp
+  eventarchiver.cpp
   freebusydownloadjob.cpp
   freebusymanager.cpp
   groupware.cpp
@@ -57,6 +59,7 @@ kde4_add_library(calendarsupport ${LIBRARY_TYPE} ${calendarsupport_LIB_SRCS})
 target_link_libraries(calendarsupport
   akonadi_next
   kdepimdbusinterfaces
+  kdepim
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
