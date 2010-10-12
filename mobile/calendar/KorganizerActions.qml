@@ -38,7 +38,6 @@ ActionMenuContainer {
     ActionListItem { name : "synchronize_all_items" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
     ActionListItem { name : "import_events" }
-    ActionListItem { name : "export_events" }
   }
 
   FavoriteManager{ model : favoritesList }
@@ -61,10 +60,18 @@ ActionMenuContainer {
   }
 
   ActionList {
-    name : "single_folder_folder_menu"
+    category : "account"
+    name : "single_folder_view_menu"
+    text : KDE.i18n( "View" )
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+  }
+
+  ActionList {
     category : "single_folder"
+    name : "single_folder_folder_menu"
     text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "export_events" }
   }
 
   ActionList {
@@ -86,18 +93,12 @@ ActionMenuContainer {
   }
 
   ActionList {
-    category : "account"
-    name : "single_folder_view_menu"
-    text : KDE.i18n( "View" )
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
-  }
-
-  ActionList {
     category : "multiple_folder"
     name : "multi_folder_folder_menu"
     text : KDE.i18n( "Folders" )
 
     ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "export_events" }
   }
 
   ActionList {
@@ -123,8 +124,8 @@ ActionMenuContainer {
   }
 
   ActionList {
-    name : "single_folder_view_menu"
     category : "single_calendar"
+    name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
@@ -145,16 +146,16 @@ ActionMenuContainer {
   }
 
   ActionList {
-    name : "multi_calendar_view_menu"
     category : "multiple_calendar"
+    name : "multi_calendar_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
   }
 
   ActionList {
-    name : "event_viewer_event_menu"
     category : "event_viewer"
+    name : "event_viewer_event_menu"
     text : KDE.i18n( "Event" )
     ActionListItem { name : "publish_item_information" }
     ActionListItem { name : "send_invitations_to_attendees" }
@@ -168,15 +169,15 @@ ActionMenuContainer {
   }
 
   ActionList {
-    name : "event_viewer_attachments_menu"
     category : "event_viewer"
+    name : "event_viewer_attachments_menu"
     text : KDE.i18n( "Attachments" )
     ActionListItem { name : "save_all_attachments" }
   }
 
   ActionList {
-    name : "event_viewer_edit_menu"
     category : "event_viewer"
+    name : "event_viewer_edit_menu"
     text : KDE.i18n( "Edit" )
     ScriptActionItem { name : "edit_event"; title : KDE.i18n( "Edit Event" ) }
     ActionListItem { name : "akonadi_item_copy_to_dialog" }
@@ -185,8 +186,8 @@ ActionMenuContainer {
   }
 
   ApplicationGeneralActions {
-    name : "application_menu"
     category : "standard"
+    name : "application_menu"
     text : KDE.i18n( "KOrganizer" )
     type : "event"
   }

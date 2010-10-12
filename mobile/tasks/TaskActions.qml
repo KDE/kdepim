@@ -38,7 +38,6 @@ ActionMenuContainer {
     ActionListItem { name : "synchronize_all_items" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
     ActionListItem { name : "import_tasks" }
-    ActionListItem { name : "export_tasks" }
     FakeAction { name : "purge_completed_todos" }
   }
 

@@ -43,9 +43,8 @@ ActionMenuContainer {
       }
     }
     ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select multiple folders" ) }
-    ActionListItem { name : "import_emails" }
-    ActionListItem { name : "export_emails" }
     ActionListItem { name : "akonadi_empty_all_trash" }
+    ActionListItem { name : "import_emails" }
   }
 
   FavoriteManager{
@@ -73,6 +72,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_manage_local_subscriptions" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
+    ActionListItem { name : "export_emails" }
   }
 
   ActionList {
@@ -84,6 +84,7 @@ ActionMenuContainer {
     ActionListItem { name : "move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
     ActionListItem { name : "show_expire_properties" }
+    ActionListItem { name : "export_emails" }
   }
 
   ActionList {
@@ -120,6 +121,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_mark_all_as_read" }
     ActionListItem { name : "akonadi_move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
+    ActionListItem { name : "export_emails" }
   }
 
   ActionList {

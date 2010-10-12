@@ -38,7 +38,6 @@ ActionMenuContainer {
     ActionListItem { name : "synchronize_all_items" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
     ActionListItem { name : "import_vcards" }
-    ActionListItem { name : "export_vcards" }
   }
 
   FavoriteManager{ model : favoritesList }
@@ -58,6 +57,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_resource_synchronize" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
+    ActionListItem { name : "export_vcards" }
   }
 
   ActionList {
@@ -65,6 +65,7 @@ ActionMenuContainer {
     name : "single_folder_folder_menu"
     text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "export_vcards" }
   }
 
   ActionList {
@@ -91,6 +92,7 @@ ActionMenuContainer {
     name : "multi_folder_folder_menu"
     text : KDE.i18n( "Folders" )
     ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "export_vcards" }
   }
 
   ActionList {
