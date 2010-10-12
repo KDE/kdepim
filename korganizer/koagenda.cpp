@@ -1708,7 +1708,7 @@ KOAgendaItem *KOAgenda::insertAllDayItem( Incidence *event, const QDate &qd,
                                           int XBegin, int XEnd )
 {
   if ( !mAllDayMode ) {
-    kdDebug(5850) << "KOAgenda: calling insertAllDayItem in non all-day mode is illegal." << endl;
+    kdWarning(5850) << "KOAgenda: calling insertAllDayItem in non all-day mode is illegal." << endl;
     return 0;
   }
 
@@ -1723,9 +1723,9 @@ KOAgendaItem *KOAgenda::insertAllDayItem( Incidence *event, const QDate &qd,
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );
 
-  double startIt = mGridSpacingX * ( agendaItem->cellXLeft() );
-  double endIt = mGridSpacingX * ( agendaItem->cellWidth() +
-                                   agendaItem->cellXLeft() );
+  const double startIt = mGridSpacingX * ( agendaItem->cellXLeft() );
+  const double endIt = mGridSpacingX * ( agendaItem->cellWidth() +
+                                         agendaItem->cellXLeft() );
 
   agendaItem->resize( int( endIt ) - int( startIt ), int( mGridSpacingY ) );
 
