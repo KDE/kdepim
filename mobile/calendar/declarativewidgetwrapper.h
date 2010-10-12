@@ -21,6 +21,7 @@
 #define DECLARATIVEWIDGETWRAPPER_H
 
 #include <qdeclarativeitem.h>
+#include <stylesheetloader.h>
 
 class QGraphicsProxyWidget;
 
@@ -29,13 +30,8 @@ namespace Qt {
 class DeclarativeWidgetWrapperBase : public QDeclarativeItem
 {
   Q_OBJECT
-  Q_PROPERTY( QString styleSheet READ styleSheet WRITE setStyleSheet )
-
   public:
     DeclarativeWidgetWrapperBase( QWidget *widget, QDeclarativeItem *parent );
-
-    QString styleSheet() const { return widget()->styleSheet(); }
-    void setStyleSheet( const QString &styleSheet ) { widget()->setStyleSheet( styleSheet ); }
 
   protected:
     void geometryChanged( const QRectF &newGeometry, const QRectF &oldGeometry );
@@ -53,6 +49,7 @@ class DeclarativeWidgetWrapper : public DeclarativeWidgetWrapperBase
     explicit DeclarativeWidgetWrapper( QDeclarativeItem* parent ) :
       DeclarativeWidgetWrapperBase( m_widget = new WidgetT, parent )
     {
+      StyleSheetLoader::applyStyle( m_widget );
     }
 
   protected:

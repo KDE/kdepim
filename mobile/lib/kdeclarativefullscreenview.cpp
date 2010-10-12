@@ -121,14 +121,6 @@ void KDeclarativeFullScreenView::delayedInit()
   kDebug();
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
   QTime t;
-  if ( debugTiming ) {
-    kWarning() << "Applying style" << t.elapsed() << &t;
-  }
-  StyleSheetLoader::applyStyle( this );
-
-  if ( debugTiming ) {
-    kWarning() << "Applying style done" << t.elapsed() << &t;
-  }
 
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(slotStatusChanged(QDeclarativeView::Status)) );
 
