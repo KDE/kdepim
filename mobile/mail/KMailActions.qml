@@ -142,9 +142,9 @@ ActionMenuContainer {
       onPressAndHold: {
           replyOptionsPage.visible = true
           actionPanel.collapse()
-      }      
+      }
     }
-  
+
     ActionListItem {
       name : "message_forward"
       onPressAndHold: {

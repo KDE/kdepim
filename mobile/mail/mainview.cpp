@@ -23,6 +23,8 @@
 #include "mainview.h"
 
 #include "composerview.h"
+#include "configwidget.h"
+#include "declarativewidgetbase.h"
 #include "emailsexporthandler.h"
 #include "emailsfilterproxymodel.h"
 #include "emailsimporthandler.h"
@@ -84,6 +86,7 @@
 
 Q_DECLARE_METATYPE( KMime::Content* )
 QML_DECLARE_TYPE( MessageViewer::MessageViewItem )
+QML_DECLARE_TYPE( DeclarativeConfigWidget )
 
 using namespace Akonadi;
 
@@ -131,6 +134,7 @@ void MainView::delayedInit()
   }
 
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
+  qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.mail", 4, 5, "ConfigWidget" );
 #ifdef KDEQMLPLUGIN_STATIC
   rootContext()->setContextProperty( QLatin1String( "KDE" ), new KDEIntegration( this ) );
 #endif

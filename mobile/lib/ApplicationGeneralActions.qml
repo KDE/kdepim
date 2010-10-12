@@ -46,17 +46,15 @@ KPIM.ActionList {
   KPIM.ActionListItem {
     name : "akonadi_work_offline"
   }
-  // TODO: implement us!
-/*
-  KPIM.FakeAction {
+  KPIM.ScriptActionItem {
     name : "configure"
+    title : KDE.i18n( "Configure" )
   }
-*/
   KPIM.ActionListItem {
     name : "report_bug"
   }
 
-KPIM.ScriptActionItem  {
+  KPIM.ScriptActionItem  {
     name : "show_about_dialog"
     title : KDE.i18n( "About" )
   }

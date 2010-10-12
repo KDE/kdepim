@@ -46,7 +46,7 @@ public:
     void setFolderCollectionMonitor( Akonadi::ChangeRecorder* monitor ) { mMonitor = monitor; }
     void setCollectionModel( Akonadi::EntityMimeTypeFilterModel *collectionModel ) { mCollectionModel = collectionModel; }
 
-//IKernel methods:    
+//IKernel methods:
     /*reimp*/ Akonadi::ChangeRecorder* folderCollectionMonitor() const { return mMonitor; }
     /*reimp*/ MailCommon::JobScheduler* jobScheduler() const { return mJobScheduler; }
     /*reimp*/ KSharedConfig::Ptr config();
@@ -54,7 +54,7 @@ public:
     /*reimp*/ KPIMIdentities::IdentityManager* identityManager();
     /*reimp*/ Akonadi::EntityMimeTypeFilterModel* collectionModel() const { return mCollectionModel; }
 
-//ISettings methods:    
+//ISettings methods:
     /*reimp*/ void updateSystemTray();
     /*reimp*/ void setLastSelectedFolder(const Akonadi::Entity::Id& col);
     /*reimp*/ Akonadi::Entity::Id lastSelectedFolder();
@@ -65,7 +65,7 @@ public:
 
     /*reimp*/ ~MobileKernel();
 
-private:    
+private:
     MobileKernel();
 
     MailCommon::JobScheduler *mJobScheduler;

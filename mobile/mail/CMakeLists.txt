@@ -9,6 +9,12 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/kmail/
   ${CMAKE_BINARY_DIR}/kmail/kcm_kpimidentities/
   ${CMAKE_SOURCE_DIR}/kmail/kcm_kpimidentities/
+  ${CMAKE_SOURCE_DIR}/templateparser
+  ${CMAKE_BINARY_DIR}/templateparser
+  ${CMAKE_SOURCE_DIR}/messagecomposer
+  ${CMAKE_BINARY_DIR}/messagecomposer
+  ${CMAKE_SOURCE_DIR}/messageviewer
+  ${CMAKE_BINARY_DIR}/messageviewer
   ${Boost_INCLUDE_DIR}
 )
 
@@ -16,6 +22,7 @@ set(kmail_mobile_srcs
   attachmentproxymodel.cpp
   composerautoresizer.cpp
   composerview.cpp
+  configwidget.cpp
   declarativeidentitycombobox.cpp
   emailsexporthandler.cpp
   emailsfilterproxymodel.cpp
@@ -28,6 +35,10 @@ set(kmail_mobile_srcs
   mobilekernel.cpp
   savemailcommand.cpp
 )
+
+qt4_wrap_ui(kmail_mobile_srcs configwidget.ui)
+kde4_add_kcfg_files(kmail_mobile_srcs settings.kcfgc)
+
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
@@ -67,6 +78,7 @@ install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES kmail-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
+  ConfigDialog.qml
   HeaderView.qml
   important-email.png
   action-item-email.png

@@ -436,6 +436,13 @@ KPIM.MainView {
                 }
               },
               KPIM.ScriptAction {
+                name : "configure"
+                script : {
+                  actionPanel.collapse();
+                  configDialog.visible = true;
+                }
+              },
+              KPIM.ScriptAction {
                 name : "to_selection_screen"
                 script : {
                   actionPanel.collapse();
@@ -559,6 +566,11 @@ KPIM.MainView {
     KPIM.Action {
       action: application.getAction( "akonadi_mark_as_action_item", "" );
     }
+  }
+
+  ConfigDialog {
+    id: configDialog
+    visible: false
   }
 
   QML.Connections {

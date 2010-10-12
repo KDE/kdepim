@@ -34,6 +34,7 @@ class EntityMimeTypeFilterModel;
 }
 
 class AkonadiSender;
+class ConfigWidget;
 class KJob;
 
 class MainView : public KDeclarativeMainView

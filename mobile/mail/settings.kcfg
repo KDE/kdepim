@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+
+  <include>kglobalsettings.h</include>
+  <kcfgfile name="kmail-mobilerc" />
+
+  <group name="Appearance">
+    <entry name="AppearanceShowHtmlStatusBar" type="Bool" />
+    <entry name="AppearanceReplaceSmileys" type="Bool" />
+    <entry name="AppearanceReduceQuotedFontSize" type="Bool" />
+  </group>
+
+  <group name="Composer">
+    <entry name="ComposerInsertSignature" type="Bool" />
+    <entry name="ComposertInsertSignatureAboveQuote" type="Bool" />
+    <entry name="ComposerPrependSeparator" type="Bool" />
+    <entry name="ComposerUseSmartQuoting" type="Bool" />
+    <entry name="ComposerRequestMDN" type="Bool" />
+    <entry name="ComposerUseRecentAddressCompletion" type="Bool" />
+    <entry name="ComposerWordWrapAtColumn" type="Bool" />
+    <entry name="ComposerReplaceReplyPrefixes" type="Bool" />
+    <entry name="ComposerReplaceForwardPrefixes" type="Bool" />
+    <entry name="ComposerOutlookCompatibleNaming" type="Bool" />
+    <entry name="ComposerDetectMissingAttachments" type="Bool" />
+
+    <entry name="ComposerTemplatesNewMessage" type="String" />
+    <entry name="ComposerTemplatesReplyToSender" type="String" />
+    <entry name="ComposerTemplatesReplyToAll" type="String" />
+    <entry name="ComposerTemplatesForwardMessage" type="String" />
+  </group>
+
+  <group name="Invitations">
+    <entry name="InvitationsOutlookCompatible" type="Bool" />
+    <entry name="InvitationsAutomaticSending" type="Bool" />
+    <entry name="InvitationsDeleteAfterReply" type="Bool" />
+  </group>
+
+  <group name="Misc">
+    <entry name="MiscEmptyTrashAtExit" type="Bool" />
+  </group>
+</kcfg>
