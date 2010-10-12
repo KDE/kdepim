@@ -27,13 +27,15 @@ KPIM.ItemListView {
   property bool showDeleteButton : false
   property bool showCheckBox
   property variant checkModel
+  property string collapsedSections
 
   delegate: [
     KPIM.ItemListViewDelegate {
       id : _delegate
       showCheckBox : _top.showCheckBox
       checkModel : _top.checkModel
-      height : itemListView.height / 7
+      height : (_top.collapsedSections.indexOf(model.dateGroup) >= 0) ? 0 : (itemListView.height / 7)
+      clip: true
       summaryContent : [
         QML.Text {
           id: fromLabel
@@ -152,8 +154,9 @@ KPIM.ItemListView {
   ]
 
   section.property: "dateGroup"
-  section.criteria: ViewSection.FullString
+  section.criteria: QML.ViewSection.FullString
   section.delegate: QML.Item {
+    id: sectionDelegate
     width: _top.width
     height: itemListView.height / 7
     QML.Rectangle {
@@ -164,6 +167,25 @@ KPIM.ItemListView {
       anchors { fill: parent; leftMargin: 10; }
       verticalAlignment: QML.Text.AlignVCenter
       text: section
+    }
+    QML.Image {
+      anchors { right: parent.right; verticalCenter: parent.verticalCenter; }
+      source: KDE.locate( "module", "imports/org/kde/pim/mobileui/images/movedown.png" );
+      rotation: (_top.collapsedSections.indexOf(section) >= 0) ? 90 : 0
+
+      QML.MouseArea {
+        anchors.fill: parent
+        onClicked: {
+          console.log( "toggle expansion in section " + section );
+          console.log( "section map before: " + _top.collapsedSections );
+          if (_top.collapsedSections.indexOf(section) != -1) {
+            _top.collapsedSections = _top.collapsedSections.replace(section + ",", "")
+          } else {
+            _top.collapsedSections += (section + ",")
+          }
+          console.log( "section map after: " + _top.collapsedSections );
+        }
+      }
     }
   }
 }
