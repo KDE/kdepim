@@ -1720,6 +1720,21 @@ KOAgendaItem *KOAgenda::insertAllDayItem( Incidence *event, const QDate &qd,
   connect( agendaItem, SIGNAL( showAgendaItem( KOAgendaItem::GPtr ) ),
            SLOT( showAgendaItem( KOAgendaItem::GPtr ) ) );
 
+  { // Start hack
+
+    // Fixes https://issues.kolab.org/issue3933 -
+    // issue3933: A large wholeday event is not shown at all days in dayview.(rt#5884)
+    // ( Some 32k pixel limit Qt3 has. )
+    if ( event->doesFloat() && XBegin * mGridSpacingX <= -32767/*32k*/ + mGridSpacingX ) {
+
+      // Our event starts _many_ days before dt, so we lie to agenda and make
+      // it think the event starts one day before.
+      // That part of the event won't be visible, so the lie won't have any effect
+      // for the user
+      XBegin = -1;
+    }
+  } // End hack
+
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );
 
