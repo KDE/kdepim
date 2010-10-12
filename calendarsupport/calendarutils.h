@@ -22,6 +22,8 @@
 #ifndef CALENDARUTILS_H
 #define CALENDARUTILS_H
 
+#include "calendarsupport_export.h"
+
 #include <QtCore/QObject>
 
 namespace Akonadi {
@@ -33,7 +35,7 @@ namespace CalendarSupport {
 class Calendar;
 class CalendarUtilsPrivate;
 
-class CalendarUtils : public QObject
+class CALENDARSUPPORT_EXPORT CalendarUtils : public QObject
 {
   Q_OBJECT
 public:
