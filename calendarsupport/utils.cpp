@@ -696,5 +696,5 @@ void CalendarSupport::saveAttachments(const Akonadi::Item& item, QWidget* parent
       KMessageBox::error( parentWidget, KIO::NetAccess::lastErrorString() );
     }
   }
-  
+
 }
