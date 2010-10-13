@@ -188,6 +188,11 @@ InvitationHandler::~InvitationHandler()
   delete d;
 }
 
+void InvitationHandler::setDialogParent( QWidget *parent )
+{
+  d->mParent = parent;
+}
+
 bool InvitationHandler::receiveInvitation( const QString &receiver,
                                            const QString &iCal,
                                            const QString &type )
