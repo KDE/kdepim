@@ -398,4 +398,14 @@ bool TimelineView::eventDurationHint( QDateTime &startDt, QDateTime &endDt,
 //   */
 // }
 
+QDate TimelineView::startDate() const
+{
+  return d->mStartDate;
+}
+
+QDate TimelineView::endDate() const
+{
+  return d->mEndDate;
+}
+
 #include "timelineview.moc"

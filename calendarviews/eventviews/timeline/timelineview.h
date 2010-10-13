@@ -51,6 +51,11 @@ class EVENTVIEWS_EXPORT TimelineView : public EventView
     // ensure start and end are valid before calling this.
     virtual void showDates( const QDate &, const QDate & );
 
+    // FIXME: we already have startDateTime() in the base class
+    // why aren't we using it.
+    QDate startDate() const;
+    QDate endDate() const;
+
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     virtual void updateView();
     virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );

@@ -28,6 +28,8 @@
 
 using namespace EventViews;
 
+// TODO: reuse code with AgendaViewItem and MonthViewItem once the dust has settled
+
 TimelineViewItem::TimelineViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
   , m_view( new TimelineView() )
@@ -56,7 +58,7 @@ TimelineViewItem::~TimelineViewItem()
 
 QDate TimelineViewItem::startDate() const
 {
-  return QDate( m_view->startDateTime().date() );
+  return QDate( m_view->startDate() );
 }
 
 void TimelineViewItem::setStartDate(const QDate& startDate)
@@ -68,7 +70,7 @@ void TimelineViewItem::setStartDate(const QDate& startDate)
 
 QDate TimelineViewItem::endDate() const
 {
-  return QDate( m_view->endDateTime().date() );
+  return QDate( m_view->endDate() );
 }
 
 void TimelineViewItem::setEndDate(const QDate& endDate)
