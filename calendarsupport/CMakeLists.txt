@@ -33,7 +33,6 @@ set(calendarsupport_LIB_SRCS
   incidenceviewer.cpp
   invitationhandler.cpp
   kcalmodel.cpp
-  kcalmodel.cpp
   kcalprefs.cpp
   mailclient.cpp
   mailscheduler.cpp
