@@ -69,7 +69,7 @@ bool EditorWatcher::start()
   if ( mOpenWith || !offer ) {
 #ifndef Q_OS_WINCE
     AutoQPointer<KOpenWithDialog> dlg( new KOpenWithDialog( list, i18n("Edit with:"),
-                                                            QString(), 0 ) );
+                                                            QString(), mParentWidget ) );
     int dlgrc = dlg->exec();
     if ( dlgrc && dlg ) {
       offer = dlg->service();
