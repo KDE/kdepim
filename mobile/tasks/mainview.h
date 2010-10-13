@@ -29,6 +29,10 @@
 class KJob;
 class TasksActionManager;
 
+namespace Akonadi {
+class StandardActionManager;
+}
+
 namespace CalendarSupport {
 class CalendarUtils;
 }
@@ -73,6 +77,7 @@ class MainView : public KDeclarativeMainView
   private:
     CalendarSupport::CalendarUtils *mCalendarUtils;
     QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
+    Akonadi::StandardActionManager *mStandardActionManager;
     TasksActionManager *mTasksActionManager;
 };
 

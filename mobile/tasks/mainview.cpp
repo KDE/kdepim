@@ -210,27 +210,27 @@ void MainView::editIncidence( const Akonadi::Item &item )
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
-  Akonadi::StandardActionManager *manager = new Akonadi::StandardActionManager( actionCollection(), this );
-  manager->setCollectionSelectionModel( collectionSelectionModel );
-  manager->setItemSelectionModel( itemSelectionModel );
+  mStandardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
+  mStandardActionManager->setCollectionSelectionModel( collectionSelectionModel );
+  mStandardActionManager->setItemSelectionModel( itemSelectionModel );
 
-  manager->createAllActions();
-  manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+  mStandardActionManager->createAllActions();
+  mStandardActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
 
-  connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
-           this, SLOT( launchAccountWizard() ) );
+  connect( mStandardActionManager->action( Akonadi::StandardActionManager::CreateResource ),
+           SIGNAL( triggered( bool ) ), SLOT( launchAccountWizard() ) );
 
-  manager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize todos\nin account", "Synchronize todos\nin accounts" ) );
-  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
-  manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  manager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
-  manager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize todos\nin folder", "Synchronize todos\nin folders" ) );
-  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
-  manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
-  manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  manager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete todo", "Delete todos" ) );
-  manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move todo\nto folder" ) );
-  manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy todo\nto folder" ) );
+  mStandardActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize todos\nin account", "Synchronize todos\nin accounts" ) );
+  mStandardActionManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  mStandardActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
+  mStandardActionManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
+  mStandardActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize todos\nin folder", "Synchronize todos\nin folders" ) );
+  mStandardActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  mStandardActionManager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
+  mStandardActionManager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
+  mStandardActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete todo", "Delete todos" ) );
+  mStandardActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move todo\nto folder" ) );
+  mStandardActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy todo\nto folder" ) );
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall todos" ) );
 }
