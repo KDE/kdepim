@@ -138,9 +138,10 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     QSplitter *splitter() const;
 
+    // FIXME: we already have startDateTime() and endDateTime() in the base class
+
     /** First shown day */
     QDate startDate() const;
-
     /** Last shown day */
     QDate endDate() const;
 
