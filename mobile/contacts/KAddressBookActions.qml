@@ -104,11 +104,11 @@ ActionMenuContainer {
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
   }
 
-  ActionList {
+  /*ActionList {
     category : "contact_viewer"
     name : "contact_viewer_contact_menu"
     text : KDE.i18n( "Contact" )
-  }
+  }*/
 
   ActionList {
     category : "contact_viewer"
