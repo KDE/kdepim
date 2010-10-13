@@ -33,6 +33,9 @@
 
 #include <KCalCore/Incidence>
 
+#include <KLocalizedString>
+#include <KMessageBox>
+
 using namespace Akonadi;
 using namespace CalendarSupport;
 using namespace KCalCore;
@@ -64,6 +67,8 @@ struct CalendarUtilsPrivate
                            const Akonadi::Item &newInc,
                            CalendarSupport::IncidenceChanger::WhatChanged,
                            bool success );
+
+  bool purgeCompletedSubTodos( const Akonadi::Item &todoItem, bool &allPurged );
 
   /// Members
   Calendar         *mCalendar;
@@ -134,6 +139,37 @@ void CalendarUtilsPrivate::handleChangeFinish( const Akonadi::Item &oldInc,
       emit q->actionFailed( oldInc, QString() );
     }
   }
+}
+
+bool CalendarUtilsPrivate::purgeCompletedSubTodos( const Akonadi::Item &todoItem, bool &allPurged )
+{
+  const Todo::Ptr todo = CalendarSupport::todo( todoItem );
+  if ( !todo ) {
+    return true;
+  }
+
+  bool deleteThisTodo = true;
+  Akonadi::Item::List subTodos = mCalendar->findChildren( todoItem );
+  foreach( const Akonadi::Item &item,  subTodos ) {
+    if ( CalendarSupport::hasTodo( item ) ) {
+      deleteThisTodo &= purgeCompletedSubTodos( item, allPurged );
+    }
+  }
+
+  if ( deleteThisTodo ) {
+    if ( todo->isCompleted() ) {
+      if ( !mChanger->deleteIncidence( todoItem, 0 ) ) {
+        allPurged = false;
+      }
+    } else {
+      deleteThisTodo = false;
+    }
+  } else {
+    if ( todo->isCompleted() ) {
+      allPurged = false;
+    }
+  }
+  return deleteThisTodo;
 }
 
 /// CalendarUtils
@@ -219,6 +255,38 @@ bool CalendarUtils::makeChildrenIndependent( const Akonadi::Item &item )
                           // false isn't suitable either.
 
   return true;
+}
+
+/// Todo specific methods.
+
+void CalendarUtils::purgeCompletedTodos()
+{
+  Q_D( CalendarUtils );
+  bool allDeleted = true;
+//  startMultiModify( i18n( "Purging completed to-dos" ) );
+  Akonadi::Item::List todos = calendar()->rawTodos();
+  Akonadi::Item::List rootTodos;
+  Akonadi::Item::List::ConstIterator it;
+  for ( it = todos.constBegin(); it != todos.constEnd(); ++it ) {
+    Todo::Ptr aTodo = CalendarSupport::todo( *it );
+    if ( aTodo && aTodo->relatedTo().isEmpty() ) { // top level todo //REVIEW(AKONADI_PORT)
+      rootTodos.append( *it );
+    }
+  }
+  // now that we have a list of all root todos, check them and their children
+  for ( it = rootTodos.constBegin(); it != rootTodos.constEnd(); ++it ) {
+    d->purgeCompletedSubTodos( *it, allDeleted );
+  }
+
+//  endMultiModify();
+  if ( !allDeleted ) {
+    KMessageBox::information(
+      0,
+      i18nc( "@info",
+             "Unable to purge to-dos with uncompleted children." ),
+      i18n( "Delete To-do" ),
+      "UncompletedChildrenPurgeTodos" );
+  }
 }
 
 #include "calendarutils.moc"

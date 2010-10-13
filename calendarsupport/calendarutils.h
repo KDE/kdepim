@@ -24,6 +24,8 @@
 
 #include "calendarsupport_export.h"
 
+#include <Akonadi/Collection>
+
 #include <QtCore/QObject>
 
 namespace Akonadi {
@@ -66,6 +68,12 @@ public:
       otherwise.
    */
   bool makeChildrenIndependent( const Akonadi::Item &item );
+
+  /** Todo specific methods ***************************************************/
+
+  /** Deletes the completed todos from all active collections in the Calendar.
+   */
+  void purgeCompletedTodos();
 
 Q_SIGNALS:
   void actionFailed( const Akonadi::Item &item, const QString &msg );
