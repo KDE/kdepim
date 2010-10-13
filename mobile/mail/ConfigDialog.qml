@@ -17,30 +17,34 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi.mail 4.5 as Mail
 
-Rectangle {
+QML.Rectangle {
   id: configDialog
   anchors.fill: parent
   z: 10
   color: "white"
 
-  Flickable {
+  QML.Flickable {
     id: configWidgetBox
     anchors.fill: parent
     anchors.topMargin: 25
-    flickableDirection: Flickable.VerticalFlick
+    flickableDirection: QML.Flickable.VerticalFlick
     contentHeight: configWidget.height;
 
-    Mail.ConfigWidget {
-      id: configWidget
+    QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
+      anchors.fill: parent 
+      Mail.ConfigWidget {
+        id: configWidget
+        width: parent.width - okButton.width
 
-      onVisibleChanged: {
-        if ( visible ) {
-          configWidget.load()
+        onVisibleChanged: {
+          if ( visible ) {
+            configWidget.load()
+          }
         }
       }
     }
