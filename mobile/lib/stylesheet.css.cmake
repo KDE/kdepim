@@ -23,16 +23,15 @@
  */
 
 /* font colors */
-QCheckBox, QLabel, QPushButton, QRadioButton:off
+QCheckBox,
+QComboBox:editable,
+QLabel,
+QPushButton,
+QRadioButton:off,
+KPIM--KDateEdit,
+KPIM--KTimeEdit
 {
   color: black
-}
-
-/* Dialogs/Message boxes, shouldn't be affected by this stylesheet at all, but apparently that's not always true... */
-QDialog,
-QDialog QLabel
-{
-  color: white;
 }
 
 
@@ -57,7 +56,7 @@ QToolButton
 
 /* active button background */
 QCheckBox:pressed,
-QComboBox:pressed,
+QComboBox:!editable:pressed,
 QDateTimeEdit::down-button:pressed,
 QDateTimeEdit::up-button:pressed,
 QPushButton:pressed,
