@@ -307,7 +307,7 @@ KPIM.MainView {
       anchors.fill: parent
       handlePosition : actionPanelNew.handlePosition + actionPanelNew.handleHeight
       id: attachmentPanel
-      visible: taskView.attachmentModel.attachmentCount >= 1
+      visible: (taskView.attachmentModel.attachmentCount >= 1) && guiStateManager.inViewSingleItemState
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       content: [
