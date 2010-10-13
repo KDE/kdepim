@@ -187,11 +187,15 @@ class EVENTVIEWS_EXPORT Prefs
     QStringList decorationsAtAgendaViewBottom() const;
     void setDecorationsAtAgendaViewBottom( const QStringList & );
 
-    bool colorBusyDays() const;
-    void setColorBusyDays( bool enable );
+    bool colorAgendaBusyDays() const;
+    void setColorAgendaBusyDays( bool enable );
 
-    QColor agendaBgBusyColor() const;
-    void setAgendaBgBusyColor( const QColor & );
+    bool colorMonthBusyDays() const;
+    void setColorMonthBusyDays( bool enable );
+
+
+    QColor viewBgBusyColor() const;
+    void setViewBgBusyColor( const QColor & );
 
   private:
     class Private;

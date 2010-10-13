@@ -893,24 +893,34 @@ void Prefs::setTimeSpec( const KDateTime::Spec &spec )
   d->mBaseConfig.mTimeSpec = spec;
 }
 
-bool Prefs::colorBusyDays() const
+bool Prefs::colorAgendaBusyDays() const
 {
   return d->getBool( d->mBaseConfig.colorBusyDaysEnabledItem() );
 }
 
-QColor Prefs::agendaBgBusyColor() const
+bool Prefs::colorMonthBusyDays() const
 {
-  return d->getColor( d->mBaseConfig.agendaBgBusyColorItem() );
+  return d->getBool( d->mBaseConfig.colorMonthBusyDaysEnabledItem() );
 }
 
-void Prefs::setAgendaBgBusyColor( const QColor &color )
+QColor Prefs::viewBgBusyColor() const
 {
-  d->mBaseConfig.mAgendaBgBusyColor = color;
+  return d->getColor( d->mBaseConfig.viewBgBusyColorItem() );
 }
 
-void Prefs::setColorBusyDays( bool enable )
+void Prefs::setViewBgBusyColor( const QColor &color )
+{
+  d->mBaseConfig.mViewBgBusyColor = color;
+}
+
+void Prefs::setColorAgendaBusyDays( bool enable )
 {
   d->mBaseConfig.mColorBusyDaysEnabled = enable;
+}
+
+void Prefs::setColorMonthBusyDays( bool enable )
+{
+  d->mBaseConfig.mColorMonthBusyDaysEnabled = enable;
 }
 
 void Prefs::setCategoryColor( const QString &cat, const QColor &color )

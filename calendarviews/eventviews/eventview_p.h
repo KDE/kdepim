@@ -52,7 +52,7 @@ class EventViewPrivate
 
   public: // virtual functions
     void setUpModels();
-    
+ 
   public: /// Members
     CalendarSupport::Calendar *calendar;
     CalendarSupport::CollectionSelection *customCollectionSelection;

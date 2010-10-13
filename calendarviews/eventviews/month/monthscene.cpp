@@ -259,6 +259,14 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
     p->drawRect( QRect( mScene->cellHorizontalPos( cell ), mScene->cellVerticalPos( cell ),
                         columnWidth, rowHeight ) );
 
+    if ( mMonthView->isBusyDay( d ) ) {
+      QColor busyColor = mMonthView->preferences()->viewBgBusyColor();
+      busyColor.setAlpha( EventViews::BUSY_BACKGROUND_ALPHA );
+      p->setBrush( busyColor );
+      p->drawRect( QRect( mScene->cellHorizontalPos( cell ), mScene->cellVerticalPos( cell ),
+                          columnWidth, rowHeight ) );
+    }
+
     // Draw cell header
     int cellHeaderX = mScene->cellHorizontalPos( cell ) + 1;
     int cellHeaderY = mScene->cellVerticalPos( cell ) + 1;

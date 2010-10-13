@@ -64,7 +64,10 @@ class MonthViewPrivate
     MonthScene                      *scene;
     QDate                            selectedItemDate;
     Akonadi::Item::Id                selectedItemId;
-    MonthGraphicsView               *view;
+    MonthGraphicsView *view;
+
+  // List of uids for QDate
+    QMap<QDate, QStringList > mBusyDays;
 };
 
 }
@@ -426,6 +429,7 @@ void MonthView::reloadIncidences()
   }
 
   d->scene->resetAll();
+  d->mBusyDays.clear();
   // build monthcells hash
   int i = 0;
   for ( QDate date = actualStartDateTime().date();
@@ -466,7 +470,13 @@ void MonthView::reloadIncidences()
 
     }
     KCalCore::DateTimeList::const_iterator t;
+    const bool busyDay = makesWholeDayBusy( incidence ) && preferences()->colorMonthBusyDays();
     for ( t = dateTimeList.constBegin(); t != dateTimeList.constEnd(); ++t ) {
+      if ( busyDay ) {
+        QStringList &list = d->mBusyDays[t->date()];
+        list.append( incidence->uid() );
+      }
+
       MonthItem *manager = new IncidenceMonthItem( d->scene,
                                                    aitem,
                                                    t->toTimeSpec( timeSpec ).date() );
@@ -598,4 +608,9 @@ int MonthView::currentMonth() const
 bool MonthView::usesFullWindow()
 {
   return preferences()->fullViewMonth();
+}
+
+bool MonthView::isBusyDay( const QDate &day ) const
+{
+  return !d->mBusyDays[day].isEmpty();
 }

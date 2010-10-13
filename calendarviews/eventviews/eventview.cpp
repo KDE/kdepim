@@ -616,5 +616,40 @@ Akonadi::Collection::Id EventView::collectionId() const
   return d->mCollectionId;
 }
 
+bool EventView::makesWholeDayBusy( const KCalCore::Incidence::Ptr &incidence ) const
+{
+  // Must be event
+  // Must be all day
+  // Must be marked busy (TRANSP: OPAQUE)
+  // You must be attendee or organizer
+
+  if ( incidence->type() != KCalCore::Incidence::TypeEvent || !incidence->allDay() ) {
+    return false;
+  }
+
+  KCalCore::Event::Ptr ev = incidence.staticCast<KCalCore::Event>();
+
+  if ( ev->transparency() != KCalCore::Event::Opaque ) {
+    return false;
+  }
+
+  // Last check: must be organizer or attendee:
+
+  if ( kcalPreferences()->thatIsMe( ev->organizer()->email() ) ) {
+    return true;
+  }
+
+  KCalCore::Attendee::List attendees = ev->attendees();
+  KCalCore::Attendee::List::ConstIterator it;
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    if ( kcalPreferences()->thatIsMe( (*it)->email() ) ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 #include "eventview.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;
+

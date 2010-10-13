@@ -1524,27 +1524,9 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 
   const QVector<bool> busyDayMask = d->mAgendaView->busyDayMask();
 
-  if ( d->mAgendaView->preferences()->colorBusyDays() && !d->mAllDayMode ) {
-    for ( int i = 0; i < busyDayMask.count(); ++i ) {
-      if ( busyDayMask[i] ) {
-        const QPoint pt1( cx + d->mGridSpacingX * i, 0 );
-        // const QPoint pt2( cx + mGridSpacingX * ( i+1 ), ch );
-        dbp.fillRect( pt1.x(), pt1.y(), d->mGridSpacingX, cy + ch,
-                      d->mAgendaView->preferences()->agendaBgBusyColor() );
-      }
-    }
-  }
-
   // Highlight working hours
   if ( d->mWorkingHoursEnable && d->mHolidayMask ) {
-
-    QColor workAndBusyColor;
-    if ( d->mAgendaView->preferences()->colorBusyDays() ) {
-      workAndBusyColor = mixColors( d->mAgendaView->preferences()->agendaBgBusyColor(),
-                                    0.60, d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor() );
-    } else {
-      workAndBusyColor  = d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor();
-    }
+    const QColor workColor = d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor();
 
     QPoint pt1( cx, d->mWorkingHoursYTop );
     QPoint pt2( cx + cw, d->mWorkingHoursYBottom );
@@ -1562,36 +1544,42 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
         int xStart = gridToContents( QPoint( gxStart + xoffset, 0 ) ).x();
         int xWidth = columnWidth( gxStart ) + 1;
 
-        QColor color;
-        if ( gxStart < busyDayMask.count() && busyDayMask[gxStart] ) {
-          color = workAndBusyColor;
-        } else {
-          color = d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor();
-        }
-
         if ( pt2.y() < pt1.y() ) {
           // overnight working hours
           if ( ( ( gxStart == 0 ) && !d->mHolidayMask->at( d->mHolidayMask->count() - 1 ) ) ||
                ( ( gxStart > 0 ) && ( gxStart < int( d->mHolidayMask->count() ) ) &&
                  ( !d->mHolidayMask->at( gxStart - 1 ) ) ) ) {
             if ( pt2.y() > cy ) {
-              dbp.fillRect( xStart, cy, xWidth, pt2.y() - cy + 1, color );
+              dbp.fillRect( xStart, cy, xWidth, pt2.y() - cy + 1, workColor );
             }
           }
           if ( ( gxStart < int( d->mHolidayMask->count() - 1 ) ) &&
                ( !d->mHolidayMask->at( gxStart ) ) ) {
             if ( pt1.y() < cy + ch - 1 ) {
-              dbp.fillRect( xStart, pt1.y(), xWidth, cy + ch - pt1.y() + 1, color );
+              dbp.fillRect( xStart, pt1.y(), xWidth, cy + ch - pt1.y() + 1, workColor );
             }
           }
         } else {
           // last entry in holiday mask denotes the previous day not visible
           // (needed for overnight shifts)
           if ( gxStart < int( d->mHolidayMask->count() - 1 ) && !d->mHolidayMask->at( gxStart ) ) {
-            dbp.fillRect( xStart, pt1.y(), xWidth, pt2.y() - pt1.y() + 1, color );
+            dbp.fillRect( xStart, pt1.y(), xWidth, pt2.y() - pt1.y() + 1, workColor );
           }
         }
         ++gxStart;
+      }
+    }
+  }
+
+  // busy days
+  if ( d->mAgendaView->preferences()->colorAgendaBusyDays() && !d->mAllDayMode ) {
+    for ( int i = 0; i < busyDayMask.count(); ++i ) {
+      if ( busyDayMask[i] ) {
+        const QPoint pt1( cx + d->mGridSpacingX * i, 0 );
+        // const QPoint pt2( cx + mGridSpacingX * ( i+1 ), ch );
+        QColor busyColor = d->mAgendaView->preferences()->viewBgBusyColor();
+        busyColor.setAlpha( EventViews::BUSY_BACKGROUND_ALPHA );
+        dbp.fillRect( pt1.x(), pt1.y(), d->mGridSpacingX, cy + ch, busyColor );
       }
     }
   }

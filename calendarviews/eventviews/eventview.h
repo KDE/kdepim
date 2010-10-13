@@ -64,6 +64,10 @@ class KConfigGroup;
 
 namespace EventViews {
 
+enum {
+  BUSY_BACKGROUND_ALPHA = 70
+};
+
 class EventViewPrivate;
 class Prefs;
 typedef boost::shared_ptr<Prefs> PrefsPtr;
@@ -452,6 +456,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual void calendarReset();
 
   protected:
+    bool makesWholeDayBusy( const KCalCore::Incidence::Ptr &incidence ) const;
     CalendarSupport::IncidenceChanger *changer() const;
 
    /**

@@ -125,6 +125,11 @@
       <whatsthis>Check this box to prevent KOrganizer from marking the working hours on holidays.</whatsthis>
       <default>true</default>
     </entry>
+    <entry type="Bool" key="ColorMonthBusyDaysEnabled" name="ColorMonthBusyDaysEnabled">
+      <label>Color busy days with a different background color</label>
+      <whatsthis>Check this box if you want month view's background to be filled with a different color on days which have at least one all day event marked as busy. Also, you can change the background color used for this option on the Colors configuration page. Look for the "Busy days background color" setting.</whatsthis>
+      <default>false</default>
+    </entry>
   </group>
 
 <!-- Time&Date Page: Default Values Tab -->
@@ -294,13 +299,11 @@
       </choices>
       <default>CategoryInsideResourceOutside</default>
     </entry>
-
     <entry type="Bool" key="ColorBusyDaysEnabled" name="ColorBusyDaysEnabled">
       <label>Color busy days with a different background color</label>
-      <whatsthis>Check this box if you want agenda's background to be filled with a different color on days which have at least one all day event marked as busy. Also, you can change the background color used for this option on the Colors configuration page. Look for the "Agenda view background busy color" setting.</whatsthis>
+      <whatsthis>Check this box if you want agenda's background to be filled with a different color on days which have at least one all day event marked as busy. Also, you can change the background color used for this option on the Colors configuration page. Look for the "Busy days background color" setting.</whatsthis>
       <default>false</default>
     </entry>
-
     <entry type="Enum" name="AgendaViewCalendarDisplay">
       <label>Multiple Calendar Display</label>
       <choices>
@@ -422,9 +425,9 @@
       <default>255, 255, 255</default>
     </entry>
 
-    <entry type="Color" key="AgendaBackgroundBusyColor" name="AgendaBgBusyColor">
-      <label>Agenda view background busy color</label>
-      <whatsthis>When you have an all day event marked as busy, you can have a different agenda view background color for that day. Select the color here.</whatsthis>
+    <entry type="Color" key="ViewBackgroundBusyColor" name="ViewBgBusyColor">
+      <label>Agenda/Month view background busy color</label>
+      <whatsthis>When you have an all day event marked as busy, you can have a different agenda or month view background color for that day. Select the color here.</whatsthis>
       <default>136, 255, 219</default>
     </entry>
 

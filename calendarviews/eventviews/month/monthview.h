@@ -75,6 +75,8 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
     bool supportsDateRangeSelection() { return false; }
 
+    bool isBusyDay( const QDate &day ) const;
+
   Q_SIGNALS:
     void showIncidencePopupSignal( const Akonadi::Item &item, const QDate &date );
     void showNewEventPopupSignal();
