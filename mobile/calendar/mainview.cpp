@@ -35,6 +35,7 @@
 #include "calendar/kcalitembrowseritem.h"
 
 #include <akonadi/agentactionmanager.h>
+#include <akonadi/collectionmodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
@@ -48,10 +49,13 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 #include <calendarviews/eventviews/eventview.h>
+#include <calendarviews/eventviews/agenda/agendaview.h>
+#include <calendarviews/eventviews/month/monthview.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
+#include <kcolordialog.h>
 #include <kmessagebox.h>
 #include <ksystemtimezone.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
@@ -176,6 +180,10 @@ void MainView::delayedInit()
   action = new KAction( i18n( "Save All" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
   actionCollection()->addAction( QLatin1String( "save_all_attachments" ), action );
+
+  action = new KAction( i18n( "Set Colour" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( changeCalendarColor()) );
+  actionCollection()->addAction( QLatin1String( "set_calendar_colour" ), action );
 
   connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
            this, SLOT( connectQMLSlots( QDeclarativeView::Status ) ) );
@@ -509,6 +517,46 @@ void MainView::archiveOldEntries()
   CalendarSupport::ArchiveDialog archiveDialog( m_calendar, m_changer, this );
   archiveDialog.exec();
 }
+
+void MainView::changeCalendarColor()
+{
+  EventViews::AgendaViewItem* agendaItem = 0;
+
+  QList<EventViews::AgendaViewItem*> agendaViews = rootObject()->findChildren<EventViews::AgendaViewItem*>();
+  if ( !agendaViews.isEmpty() )
+    agendaItem = agendaViews.first();
+
+  EventViews::MonthViewItem* monthItem = 0;
+
+  QList<EventViews::MonthViewItem*> monthViews = rootObject()->findChildren<EventViews::MonthViewItem*>();
+  if ( !monthViews.isEmpty() )
+    monthItem = monthViews.first();
+
+  if ( !agendaItem )
+    return; //something is fishy
+
+  const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
+  if ( collectionSelectionModel->selection().indexes().isEmpty() )
+     return;
+
+  const QModelIndexList selectedIndexes = collectionSelectionModel->selection().indexes();
+  const Collection collection = selectedIndexes.first().data( CollectionModel::CollectionRole ).value<Collection>();
+  QString id = QString::number( collection.id() );
+  QColor calendarColor = agendaItem->preferences()->resourceColor( id );
+  QColor myColor;
+
+  const int result = KColorDialog::getColor( myColor, calendarColor );
+  if ( result == KColorDialog::Accepted && myColor != calendarColor ) {  
+    agendaItem->preferences()->setResourceColor( id, myColor );
+    agendaItem->updateConfig();
+
+    if ( monthItem ) {
+      monthItem->preferences()->setResourceColor( id, myColor );
+      monthItem->updateConfig();
+    }
+  }
+}
+
 
 
 #include "mainview.moc"

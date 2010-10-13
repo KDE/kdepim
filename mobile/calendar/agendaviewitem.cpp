@@ -50,10 +50,13 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
 
   setWidget( m_view );
   showRange( QDate::currentDate(), Week );
+
+  preferences()->readConfig();
 }
 
 AgendaViewItem::~AgendaViewItem()
 {
+  preferences()->writeConfig();
   delete m_view;
 }
 
@@ -164,5 +167,16 @@ void AgendaViewItem::gotoPrevious()
   m_view->clearSelection();
   m_view->blockSignals( false );
 }
+
+PrefsPtr AgendaViewItem::preferences() const
+{
+  return m_view->preferences();
+}
+
+void AgendaViewItem::updateConfig()
+{
+  m_view->updateConfig();
+}
+
 
 #include "agendaviewitem.moc"

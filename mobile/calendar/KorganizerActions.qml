@@ -129,6 +129,7 @@ ActionMenuContainer {
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
+    ActionListItem { name : "set_calendar_colour" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
   }
 

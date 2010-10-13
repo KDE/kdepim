@@ -43,10 +43,13 @@ MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
            SLOT(emitDateClicked()));
   connect( mView, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
            SLOT(emitItemSelected(Akonadi::Item, QDate)) );
+
+  preferences()->readConfig();
 }
 
 MonthViewItem::~MonthViewItem()
 {
+  mView->preferences()->writeConfig();
   delete mView;
 }
 
@@ -80,6 +83,16 @@ void MonthViewItem::showMonth( const QDate &date )
   const KDateTime start( QDate( date.year(), date.month(), 1 ) );
   const KDateTime end( QDate( date.year(), date.month(), date.daysInMonth() ) );
   mView->setDateRange( start, end );
+}
+
+PrefsPtr MonthViewItem::preferences() const
+{
+  return mView->preferences();
+}
+
+void MonthViewItem::updateConfig()
+{
+  mView->updateConfig();
 }
 
 #include "monthviewitem.moc"

@@ -24,6 +24,8 @@
 
 #include "declarativeakonadiitem.h"
 
+#include "calendarviews/eventviews/prefs.h"
+
 namespace Akonadi {
 class Item;
 }
@@ -73,6 +75,10 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     int range() const { return m_currentRange; }
 
     qint64 selectedItemId() const;
+
+    PrefsPtr preferences() const;
+
+    void updateConfig();
 
   public slots:
     /** Unselects currently selected incidences */

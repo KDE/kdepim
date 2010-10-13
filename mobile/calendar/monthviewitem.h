@@ -21,6 +21,8 @@
 
 #include "declarativeakonadiitem.h"
 
+#include "calendarviews/eventviews/prefs.h"
+
 namespace EventViews {
 
 class MonthView;
@@ -42,7 +44,11 @@ class MonthViewItem : public DeclarativeAkonadiItem
 
     /// Show the month from @param date.
     Q_INVOKABLE void showMonth( const QDate &date );
-    
+
+    PrefsPtr preferences() const;
+
+    void updateConfig();
+
   Q_SIGNALS:
     void dateClicked( const QDate &date );
     void itemSelected( qint64 selectedItemId, const QDate &activeDate );

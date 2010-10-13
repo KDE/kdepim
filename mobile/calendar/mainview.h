@@ -26,6 +26,8 @@
 #include <Akonadi/Entity>
 #include <KCalCore/ScheduleMessage>
 
+#include <calendarviews/eventviews/prefs.h>
+
 namespace CalendarSupport {
 class Calendar;
 class IncidenceChanger;
@@ -67,6 +69,7 @@ class MainView : public KDeclarativeMainView
     void requestChange();
     void saveAllAttachments();
     void archiveOldEntries();
+    void changeCalendarColor();
 
   protected Q_SLOTS:
     void delayedInit();
