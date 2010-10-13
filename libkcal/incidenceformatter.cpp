@@ -2607,25 +2607,6 @@ QString InvitationFormatterHelper::makeLink( const QString &id, const QString &t
   }
 }
 
-// Check if the given incidence is likely one that we own instead one from
-// a shared calendar (Kolab-specific)
-static bool incidenceOwnedByMe( Calendar *calendar, Incidence *incidence )
-{
-  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
-  if ( !cal || !incidence ) {
-    return true;
-  }
-  ResourceCalendar *res = cal->resource( incidence );
-  if ( !res ) {
-    return true;
-  }
-  const QString subRes = res->subresourceIdentifier( incidence );
-  if ( !subRes.contains( "/.INBOX.directory/" ) ) {
-    return false;
-  }
-  return true;
-}
-
 static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
                                 InvitationFormatterHelper *helper )
 {
@@ -2757,14 +2738,14 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   Incidence *existingIncidence = 0;
   if ( incBase && helper->calendar() ) {
     existingIncidence = helper->calendar()->incidence( incBase->uid() );
-    if ( !incidenceOwnedByMe( helper->calendar(), existingIncidence ) ) {
+    if ( !CalHelper::isMyCalendarIncidence( helper->calendar(), existingIncidence ) ) {
       existingIncidence = 0;
     }
     if ( !existingIncidence ) {
       const Incidence::List list = helper->calendar()->incidences();
       for ( Incidence::List::ConstIterator it = list.begin(), end = list.end(); it != end; ++it ) {
         if ( (*it)->schedulingID() == incBase->uid() &&
-             incidenceOwnedByMe( helper->calendar(), *it ) ) {
+             CalHelper::isMyCalendarIncidence( helper->calendar(), *it ) ) {
           existingIncidence = *it;
           break;
         }
