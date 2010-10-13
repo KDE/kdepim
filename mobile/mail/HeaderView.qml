@@ -90,7 +90,7 @@ KPIM.ItemListView {
           id : deleteAction
           anchors.verticalCenter: parent.verticalCenter;
           anchors.right : parent.right;
-          width: imageWidth
+          width: (showDeleteButton || showCheckBox) ? imageWidth : 0
           height : imageHeight
           action : application.getAction("akonadi_move_to_trash", "")
           hidable : false

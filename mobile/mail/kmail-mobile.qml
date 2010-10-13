@@ -391,7 +391,7 @@ KPIM.MainView {
         anchors.bottom : parent.bottom
         anchors.right : parent.right
 
-        showDeleteButton : true
+        showDeleteButton : false // too easy to accidentally hit it, although very useful...
         onItemSelected: {
           // Prevent reloading of the message, perhaps this should be done
           // in messageview itself.
