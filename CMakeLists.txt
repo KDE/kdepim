@@ -69,7 +69,12 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
   endif (KdeSubversion_FOUND)
 endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
 
-configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h)
+if (NOT DEFINED KDEPIM_DEV_VERSION)
+    set( KDEPIM_DEV_VERSION "pre" )
+endif (NOT DEFINED KDEPIM_DEV_VERSION)
+
+set( KDEPIM_VERSION "4.6 ${KDEPIM_DEV_VERSION}" )
+configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
 ############### search packages used by KDE ###############
 

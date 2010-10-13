@@ -58,7 +58,7 @@
     3.2 alpha1
 */
 
-#define KDEPIM_VERSION "4.6 pre"
+#define KDEPIM_VERSION "@KDEPIM_VERSION@"
 
 /* SVN revision number, of the form "svn-xxxxxxxx" */
 #define KDEPIM_SVN_REVISION_STRING "@kdepim_svn_revision@"
