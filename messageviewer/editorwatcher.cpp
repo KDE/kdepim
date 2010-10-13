@@ -68,7 +68,7 @@ bool EditorWatcher::start()
   KService::Ptr offer = KMimeTypeTrader::self()->preferredService( mMimeType, "Application" );
   if ( mOpenWith || !offer ) {
     AutoQPointer<KOpenWithDialog> dlg( new KOpenWithDialog( list, i18n("Edit with:"),
-                                                            QString(), 0 ) );
+                                                            QString(), mParentWidget ) );
     int dlgrc = dlg->exec();
     if ( dlgrc && dlg ) {
       offer = dlg->service();
