@@ -1446,7 +1446,7 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
         const int xStart = gridToContents( QPoint( gxStart+xoffset, 0 ) ).x();
         const int xWidth = columnWidth( gxStart ) + 1;
         QColor color;
-        if ( busyDayMask[gxStart] ) {
+        if ( gxStart < busyDayMask.count() && busyDayMask[gxStart] ) {
           color = workAndBusyColor;
         } else {
           color = KOPrefs::instance()->mWorkingHoursColor;
