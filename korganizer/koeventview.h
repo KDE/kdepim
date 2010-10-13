@@ -92,6 +92,9 @@ class KOEventView : public KOrg::BaseView
 
     bool supportsDateNavigation() const { return true; }
 
+    QMap<QDate, KCal::Event::List >  busyDays() const { return mBusyDays; }
+    void setBusyDays( const QMap<QDate, KCal::Event::List > &days ) { mBusyDays = days; }
+
   public slots:
 
     /**

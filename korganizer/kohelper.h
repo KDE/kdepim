@@ -42,6 +42,10 @@ class KDE_EXPORT KOHelper
       to a subresource, the color for the subresource is returned (if set).
     */
     static QColor resourceColor( KCal::Calendar*calendar, KCal::Incidence*incidence );
+
+    static QColor mixColors( const QColor &transparentColor, double alpha,
+                             const QColor &otherColor );
+
 };
 
 #endif

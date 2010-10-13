@@ -34,6 +34,17 @@
 #include "koprefs.h"
 #include "kohelper.h"
 
+QColor KOHelper::mixColors( const QColor &transparentColor,
+                            double alpha,
+                            const QColor &otherColor )
+{
+  const int red = ( 1 - alpha )*otherColor.red() + alpha*transparentColor.red();
+  const int green = ( 1 - alpha )*otherColor.green() + alpha*transparentColor.green();
+  const int blue = ( 1 - alpha )*otherColor.blue() + alpha*transparentColor.blue();
+
+  return QColor( red, green, blue );
+}
+
 QColor KOHelper::resourceColor( KCal::Calendar*calendar, KCal::Incidence*incidence )
 {
   QColor resourceColor = QColor(); //Default invalid color

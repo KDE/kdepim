@@ -55,7 +55,7 @@ class KNoScrollListBox: public QListBox
     KNoScrollListBox(QWidget *parent=0, const char *name=0);
     ~KNoScrollListBox() {}
 
-    void setBackground( bool primary, bool workday );
+    void setBackground( bool primary, bool workday, bool busyDay );
 
   signals:
     void shiftDown();
@@ -161,6 +161,7 @@ class MonthViewCell : public QWidget
 
     /** Make this cell show as a holiday */
     void setHoliday( bool );
+
     /**
       Sets the holiday name to this cell. This will not call
       setHoliday( true ).
@@ -292,7 +293,7 @@ class KOMonthView: public KOEventView
 
   private:
     void showLabel( bool show );
-      
+
     class GetDateVisitor;
     int mDaysPerWeek;
     int mNumWeeks;

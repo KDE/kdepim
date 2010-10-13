@@ -62,18 +62,6 @@
 #include <libkcal/calhelper.h>
 #include <math.h>
 
-
-static QColor mixColors( const QColor &transparentColor,
-                         double alpha,
-                         const QColor &otherColor )
-{
-  const int red = ( 1 - alpha )*otherColor.red() + alpha*transparentColor.red();
-  const int green = ( 1 - alpha )*otherColor.green() + alpha*transparentColor.green();
-  const int blue = ( 1 - alpha )*otherColor.blue() + alpha*transparentColor.blue();
-
-  return QColor( red, green, blue );
-}
-
 static void freeItemList( const AgendaItemList &list )
 {
   AgendaItemList::ConstIterator it;
@@ -1437,7 +1425,7 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
     QColor workAndBusyColor;
 
     if ( KOPrefs::instance()->mColorBusyDaysEnabled ) {
-      workAndBusyColor = mixColors( KOPrefs::instance()->mAgendaMonthBgBusyColor, 0.60, KOPrefs::instance()->mWorkingHoursColor );
+      workAndBusyColor = KOHelper::mixColors( KOPrefs::instance()->mAgendaMonthBgBusyColor, 0.60, KOPrefs::instance()->mWorkingHoursColor );
     } else {
       workAndBusyColor = KOPrefs::instance()->mWorkingHoursColor;
     }

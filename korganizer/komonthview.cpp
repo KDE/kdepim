@@ -97,8 +97,10 @@ KNoScrollListBox::KNoScrollListBox( QWidget *parent, const char *name )
   setPalette( pal );
 }
 
-void KNoScrollListBox::setBackground( bool primary, bool workDay )
+void KNoScrollListBox::setBackground( bool primary, bool workDay, bool busyDay )
 {
+  busyDay = busyDay && KOPrefs::instance()->mColorMonthBusyDaysEnabled;
+
   QColor color;
   if ( workDay ) {
     color = KOPrefs::instance()->workingHoursColor();
@@ -107,11 +109,15 @@ void KNoScrollListBox::setBackground( bool primary, bool workDay )
   }
 
   QPalette pal = palette();
-  if ( primary ) {
-    pal.setColor( QColorGroup::Base, color );
-  } else {
-    pal.setColor( QColorGroup::Base, color.dark( 115 ) );
+  if ( !primary ) {
+    color = color.dark( 115 );
   }
+
+  if ( busyDay ) {
+    color = KOHelper::mixColors( KOPrefs::instance()->mAgendaMonthBgBusyColor, 0.60, color );
+  }
+
+  pal.setColor( QColorGroup::Base, color );
   setPalette( pal );
 }
 
@@ -386,7 +392,7 @@ int MonthViewItem::width( const QListBox *lb ) const
 }
 
 
-MonthViewCell::MonthViewCell( KOMonthView *parent)
+MonthViewCell::MonthViewCell( KOMonthView *parent )
   : QWidget( parent ),
     mMonthView( parent ), mPrimary( false ), mHoliday( false ),
     isSelected( false )
@@ -476,7 +482,8 @@ void MonthViewCell::setPrimary( bool primary )
     mLabel->setBackgroundMode( PaletteBackground );
   }
 
-  mItemList->setBackground( mPrimary, KOGlobals::self()->isWorkDay( mDate ) );
+  const bool busyDay = !mMonthView->busyDays()[date()].isEmpty();
+  mItemList->setBackground( mPrimary, KOGlobals::self()->isWorkDay( mDate ), busyDay );
 }
 
 bool MonthViewCell::isPrimary() const
@@ -510,8 +517,7 @@ void MonthViewCell::updateCell()
     QPalette pal = mItemList->palette();
     pal.setColor( QColorGroup::Foreground, KOPrefs::instance()->highlightColor() );
     mItemList->setPalette( pal );
-  }
-  else {
+  } else {
     if ( mHoliday )
       setPalette( mHolidayPalette );
     else
@@ -637,6 +643,10 @@ class MonthViewCell::CreateItemVisitor :
 
 void MonthViewCell::addIncidence( Incidence *incidence, CreateItemVisitor& v, int multiDay )
 {
+  // So busy color is applied
+  const bool busyDay = !mMonthView->busyDays()[date()].isEmpty();
+  mItemList->setBackground( mPrimary, KOGlobals::self()->isWorkDay( mDate ), busyDay );
+
   if ( v.act( incidence, mDate, mStandardPalette, multiDay ) ) {
     MonthViewItem *item = v.item();
     if ( item ) {
@@ -670,14 +680,38 @@ void MonthViewCell::addIncidence( Incidence *incidence, CreateItemVisitor& v, in
 
 void MonthViewCell::removeIncidence( Incidence *incidence )
 {
+  bool mustUpdateBackground = false;
+
   for ( uint i = 0; i < mItemList->count(); ++i ) {
     MonthViewItem *item = static_cast<MonthViewItem *>(mItemList->item( i ) );
     if ( item && item->incidence() &&
          item->incidence()->uid() == incidence->uid() ) {
+
+      QMap<QDate, KCal::Event::List > busyDays =  mMonthView->busyDays();
+      if ( busyDays.contains( date() ) ) {
+
+        Event::List &list = busyDays[date()];
+
+        Event::List::Iterator it;
+        for ( it = list.begin(); it != list.end(); ++it ) {
+          if ( (*it)->uid() == incidence->uid() ) {
+            mustUpdateBackground = true;
+            it = list.remove( it );
+          }
+        }
+        mMonthView->setBusyDays( busyDays );
+      }
+
       mItemList->removeItem( i );
       --i;
     }
   }
+
+  if ( mustUpdateBackground ) {
+    const bool busyDay = !mMonthView->busyDays()[date()].isEmpty();
+    mItemList->setBackground( mPrimary, KOGlobals::self()->isWorkDay( mDate ), busyDay );
+  }
+
 }
 
 void MonthViewCell::updateConfig()
@@ -707,14 +741,17 @@ void MonthViewCell::updateConfig()
                             KOPrefs::instance()->holidayColor() );
   mHolidayPalette.setColor( QColorGroup::Text,
                             KOPrefs::instance()->holidayColor() );
+
   mTodayPalette = mStandardPalette;
   mTodayPalette.setColor( QColorGroup::Foreground,
                           KOPrefs::instance()->highlightColor() );
   mTodayPalette.setColor( QColorGroup::Text,
                           KOPrefs::instance()->highlightColor() );
+
   updateCell();
 
-  mItemList->setBackground( mPrimary, KOGlobals::self()->isWorkDay( mDate ) );
+  const bool busyDay = !mMonthView->busyDays()[date()].isEmpty();
+  mItemList->setBackground( mPrimary, KOGlobals::self()->isWorkDay( mDate ), busyDay );
 }
 
 void MonthViewCell::enableScrollBars( bool enabled )
@@ -1095,8 +1132,12 @@ void KOMonthView::changeIncidenceDisplayAdded( Incidence *incidence, MonthViewCe
       if ( incidence->recursOn( mCells[i]->date() ) ) {
 
         // handle multiday events
-        int length = gdv.startDate().daysTo( gdv.endDate().addSecs( floats ? 0 : -1 ).date() );
+        const int length = gdv.startDate().daysTo( gdv.endDate().addSecs( floats ? 0 : -1 ).date() );
         for ( int j = 0; j <= length && i+j < mCells.count(); ++j ) {
+          if ( makesItBusy ) {
+            Event::List &busyEvents = mBusyDays[mCells[i+j]->date()];
+            busyEvents.append( static_cast<Event*>( incidence ) );
+          }
           mCells[i+j]->addIncidence( incidence, v, j );
         }
       }
@@ -1143,6 +1184,7 @@ void KOMonthView::changeIncidenceDisplay( Incidence *incidence, int action )
 
 void KOMonthView::updateView()
 {
+  mBusyDays.clear();
   for( uint i = 0; i < mCells.count(); ++i ) {
     mCells[i]->updateCell();
   }
