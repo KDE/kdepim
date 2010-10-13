@@ -521,6 +521,7 @@ KPIM.MainView {
             KPIM.ScriptAction {
               name : "day_layout"
               script: {
+                guiStateManager.switchState( Events.EventsGuiStateManager.ViewWeekState );
                 agenda.showRange( dateEdit.date, 0 /* "Day" */ );
                 actionPanelNew.collapse();
               }
@@ -528,6 +529,7 @@ KPIM.MainView {
             KPIM.ScriptAction {
               name : "three_day_layout"
               script : {
+                guiStateManager.switchState( Events.EventsGuiStateManager.ViewWeekState );
                 agenda.showRange( dateEdit.date, 3 /** 3 days*/ );
                 actionPanelNew.collapse();
               }
@@ -535,6 +537,7 @@ KPIM.MainView {
             KPIM.ScriptAction {
               name : "week_layout"
               script: {
+                guiStateManager.switchState( Events.EventsGuiStateManager.ViewWeekState );
                 agenda.showRange( dateEdit.date, 1 /* "Week" */ );
                 actionPanelNew.collapse();
               }
@@ -542,6 +545,7 @@ KPIM.MainView {
             KPIM.ScriptAction {
               name : "work_week_layout"
               script: {
+                guiStateManager.switchState( Events.EventsGuiStateManager.ViewWeekState );
                 agenda.showRange( dateEdit.date, 2 /* "WorkWeek" */ );
                 actionPanelNew.collapse();
               }
