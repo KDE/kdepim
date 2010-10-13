@@ -47,7 +47,10 @@ class EVENTVIEWS_EXPORT TimelineView : public EventView
     virtual Akonadi::Item::List selectedIncidences() const;
     virtual KCalCore::DateList selectedIncidenceDates() const;
     virtual int currentDateCount() const;
+
+    // ensure start and end are valid before calling this.
     virtual void showDates( const QDate &, const QDate & );
+
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     virtual void updateView();
     virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
