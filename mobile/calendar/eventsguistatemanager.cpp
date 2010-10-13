@@ -39,6 +39,11 @@ bool EventsGuiStateManager::inViewEventListState() const
   return (currentState() == ViewEventListState);
 }
 
+bool EventsGuiStateManager::inViewTimelineState() const
+{
+  return (currentState() == ViewTimelineState);
+}
+
 void EventsGuiStateManager::emitChangedSignal()
 {
   GuiStateManager::emitChangedSignal();

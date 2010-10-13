@@ -219,6 +219,50 @@ KPIM.MainView {
   }
 
   Rectangle {
+    // TODO: reuse the button? we have it 3x here.
+    id: timlineView
+    visible: guiStateManager.inViewTimelineState
+    anchors.fill: parent
+
+    Rectangle {
+      height: 48
+      width: 48
+      z: 5
+      color: "#00000000"
+      anchors.right : parent.right
+      anchors.rightMargin : 70
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : 70
+      Image {
+        source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
+        MouseArea {
+          anchors.fill : parent;
+          onClicked : {
+            guiStateManager.popState();
+          }
+        }
+      }
+    }
+
+    CalendarViews.TimelineView {
+      id: timeline
+      anchors { fill: parent; topMargin: 10; leftMargin: 40 }
+      calendar: calendarModel
+      swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
+
+      onItemSelected: {
+        if ( selectedItemId > 0 ) {
+          timelineView.itemId = selectedItemId;
+          timelineView.activeDate = activeDate;
+          application.setCurrentEventItemId(selectedItemId);
+          if ( !guiStateManager.inViewSingleItemState )
+            guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
+        }
+      }
+    }
+  }
+
+  Rectangle {
     id: eventListView
     visible: guiStateManager.inViewEventListState
     anchors.fill: parent
@@ -387,7 +431,7 @@ KPIM.MainView {
         KPIM.Button2 {
           id: dayButton
           buttonText: KDE.i18n( "Day view" )
-          width: parent.width / 3
+          width: parent.width / 4
           onClicked: {
             agenda.showRange( dateEdit.date, 0 /* "Day" */ );
             guiStateManager.pushState( Events.EventsGuiStateManager.ViewDayState );
@@ -396,7 +440,7 @@ KPIM.MainView {
         KPIM.Button2 {
           id: weekButton
           buttonText: KDE.i18n( "Week view" )
-          width: parent.width / 3
+          width: parent.width / 4
           onClicked: {
             agenda.showRange( dateEdit.date, 1 /* "Week" */ );
             guiStateManager.pushState( Events.EventsGuiStateManager.ViewWeekState );
@@ -405,10 +449,20 @@ KPIM.MainView {
         KPIM.Button2 {
           id: monthButton
           buttonText: KDE.i18n( "Month view" )
-          width: parent.width / 3
+          width: parent.width / 4
           onClicked: {
             month.showMonth( dateEdit.date );
             guiStateManager.pushState( Events.EventsGuiStateManager.ViewMonthState );
+          }
+        }
+
+        KPIM.Button2 {
+          id: timelineButton
+          buttonText: KDE.i18n( "Timeline view" )
+          width: parent.width / 4
+          onClicked: {
+            timeline.showRange( dateEdit.date, 1 /* "Week" */ );
+            guiStateManager.pushState( Events.EventsGuiStateManager.ViewTimelineState );
           }
         }
       }

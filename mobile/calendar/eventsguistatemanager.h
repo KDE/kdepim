@@ -30,6 +30,7 @@ class EventsGuiStateManager : public GuiStateManager
   Q_PROPERTY( bool inViewWeekState READ inViewWeekState NOTIFY guiStateChanged )
   Q_PROPERTY( bool inViewMonthState READ inViewMonthState NOTIFY guiStateChanged )
   Q_PROPERTY( bool inViewEventListState READ inViewEventListState NOTIFY guiStateChanged )
+  Q_PROPERTY( bool inViewTimelineState READ inViewTimelineState NOTIFY guiStateChanged )
 
   Q_ENUMS( GuiState )
 
@@ -38,7 +39,8 @@ class EventsGuiStateManager : public GuiStateManager
       ViewDayState = GuiStateManager::UserState,
       ViewWeekState,
       ViewMonthState,
-      ViewEventListState
+      ViewEventListState,
+      ViewTimelineState
     };
 
   public Q_SLOTS:
@@ -61,6 +63,11 @@ class EventsGuiStateManager : public GuiStateManager
      * Returns whether the current state is the view event list state.
      */
     bool inViewEventListState() const;
+
+    /**
+     * Returns whether the current state is the view timeline state.
+     */
+    bool inViewTimelineState() const;
 
   Q_SIGNALS:
     void guiStateChanged();

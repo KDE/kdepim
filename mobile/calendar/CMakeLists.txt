@@ -24,6 +24,7 @@ set(korganizer_mobile_SRCS
   mainview.cpp
   main.cpp
   monthviewitem.cpp
+  timelineviewitem.cpp
   qmldateedit.cpp
 )
 
