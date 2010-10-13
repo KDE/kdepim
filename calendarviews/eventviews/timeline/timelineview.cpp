@@ -272,6 +272,7 @@ int TimelineView::currentDateCount() const
 /*virtual*/
 void TimelineView::showDates( const QDate &start, const QDate &end )
 {
+  Q_ASSERT_X( calendar(), "showDates", "set a CalendarSupport::Calendar" );
   kDebug() << "start=" << start << "end=" << end;
 
   d->mStartDate = start;
