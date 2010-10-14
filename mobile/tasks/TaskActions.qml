@@ -39,7 +39,6 @@ ActionMenuContainer {
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
     ActionListItem { name : "import_tasks" }
     ActionListItem { name : "export_tasks" }
-    ActionListItem { name : "purge_completed_tasks" }
   }
 
   FavoriteManager{ model : favoritesList }
@@ -59,6 +58,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_resource_synchronize" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
+    ActionListItem { name : "purge_completed_tasks" }
   }
 
   ActionList {

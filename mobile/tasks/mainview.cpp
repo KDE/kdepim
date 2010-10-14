@@ -183,7 +183,15 @@ void MainView::makeAllSubtasksIndependent()
 
 void MainView::purgeCompletedTasks()
 {
+  const int result = KMessageBox::warningContinueCancel(
+    this,
+    i18n( "Delete all completed to-dos?" ),
+    i18n( "Purge To-dos" ),
+    KGuiItem( i18n( "Purge" ) ) );
 
+  if ( result == KMessageBox::Continue ) {
+    mCalendarUtils->purgeCompletedTodos();
+  }
 }
 
 void MainView::setPercentComplete( int row, int percentComplete )
