@@ -465,6 +465,24 @@ void Viewer::deleteMessage()
   emit deleteMessage( d->messageItem() );
 }
 
+void Viewer::selectAll()
+{
+  Q_D( Viewer );
+  d->selectAll();
+}
+
+void Viewer::clearSelection()
+{
+  Q_D( Viewer );
+  d->clearSelection();
+}
+
+
+void Viewer::copySelectionToClipboard()
+{
+  Q_D( Viewer );
+  d->slotCopySelectedText();
+}
 
 
 }

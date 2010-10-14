@@ -140,6 +140,13 @@ void MailWebView::selectAll()
   QTextBrowser::selectAll(); // krazy:exclude=qclasses
 }
 
+void MailWebView::clearSelection()
+{
+  QTextCursor cursor = textCursor();
+  cursor.clearSelection();
+  setTextCursor( cursor );
+}
+
 bool MailWebView::isAttachmentInjectionPoint( const QPoint & global ) const
 {
   // this is not needed in the cases we use QTextBrowser, but should eventually be implemented

@@ -84,6 +84,7 @@ public:
     void setHtml( const QString & html, const QUrl & baseUrl );
     QString htmlSource() const;
     void selectAll();
+    void clearSelection();
     void scrollToRelativePosition( double pos );
     double relativePosition() const;
 

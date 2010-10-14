@@ -240,6 +240,10 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   CSSHelper* cssHelper() const;
   void setPrinting(bool enable);
 
+  void selectAll();
+  void clearSelection();
+  void copySelectionToClipboard();
+
   KToggleAction *toggleFixFontAction();
 
   KToggleAction *toggleMimePartTreeAction();

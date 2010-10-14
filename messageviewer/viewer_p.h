@@ -385,9 +385,6 @@ public:
   bool htmlMail() const;
   bool htmlLoadExternal() const;
 
-    /** Return selected text */
-  QString copyText();
-
   /** Get the html override setting */
   bool htmlOverride() const;
 
@@ -544,6 +541,8 @@ public slots:
   
   /** Select message body. */
   void selectAll();
+
+  void clearSelection();
 
   /** Copy URL in mUrlCurrent to clipboard. Removes "mailto:" at
       beginning of URL before copying. */

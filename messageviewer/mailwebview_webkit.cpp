@@ -22,6 +22,7 @@
 
 #include <KDebug>
 
+#include <QCoreApplication>
 #include <QContextMenuEvent>
 #include <QWebFrame>
 #include <QWebElement>
@@ -147,6 +148,15 @@ void MailWebView::scrollToRelativePosition( double pos )
 void MailWebView::selectAll()
 {
   page()->triggerAction( QWebPage::SelectAll );
+}
+
+void MailWebView::clearSelection()
+{
+  //This is an ugly hack to remove the selection, I found no other way to do it with QWebView
+  QMouseEvent event(QEvent::MouseButtonPress, QPoint( 10, 10 ), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
+  QCoreApplication::sendEvent( page(), &event );
+  QMouseEvent event2(QEvent::MouseButtonRelease, QPoint( 10, 10 ), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
+  QCoreApplication::sendEvent( page(), &event2 );
 }
 
 // Checks if the given node has a child node that is a DIV which has an ID attribute
