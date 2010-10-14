@@ -483,6 +483,13 @@ KPIM.MainView {
                   actionPanel.collapse();
                   messageView.saveAllAttachments();
                 }
+              },
+              KPIM.ScriptAction {
+                name : "copy_all_to_clipboard"
+                script : {
+                  actionPanel.collapse();
+                  messageView.copyAllToClipboard();
+                }
               }
             ]
 

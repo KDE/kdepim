@@ -34,6 +34,7 @@
 #include <messageviewer/viewer.h>
 #include <messageviewer/viewer_p.h>
 #include "attachmentproxymodel.h"
+#include <KAction>
 
 using namespace MessageViewer;
 
@@ -133,6 +134,13 @@ Viewer* MessageViewItem::viewer()
 void MessageViewItem::saveAllAttachments()
 {
   m_viewer->slotAttachmentSaveAll();
+}
+
+void MessageViewItem::copyAllToClipboard()
+{
+  m_viewer->selectAll();
+  m_viewer->copySelectionToClipboard();
+  m_viewer->clearSelection();
 }
 
 

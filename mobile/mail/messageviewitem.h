@@ -63,6 +63,7 @@ class MessageViewItem : public DeclarativeAkonadiItem
 
   public slots:
     void saveAllAttachments();
+    void copyAllToClipboard();
 
   signals:
     /** Emitted for urls not handled by MessageViewer::Viewer. */

@@ -166,6 +166,14 @@ ActionMenuContainer {
 
   ActionList {
     category: "mail_viewer"
+    name : "mail_viewer_view"
+    text : KDE.i18n( "View" )
+    ScriptActionItem { name : "copy_all_to_clipboard"; title : KDE.i18n( "Copy All Text to Clipboard" ) }
+   // ActionListItem { name : "attachment_save_all" }
+  }
+
+  ActionList {
+    category: "mail_viewer"
     name : "mail_viewer_attachments"
     text : KDE.i18n( "Attachments" )
     ScriptActionItem { name : "attachment_save_all"; title : KDE.i18n( "Save All Attachments" ) }
