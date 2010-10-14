@@ -49,7 +49,7 @@ KPIM.MainView {
       korganizerActions.showOnlyCategory( "multiple_folder" )
     } else if ( guiStateManager.inViewSingleItemState ) {
       korganizerActions.showOnlyCategory( "event_viewer" )
-    } else if ( guiStateManager.inViewDayState || guiStateManager.inViewWeekState || guiStateManager.inViewEventListState ) {
+    } else if ( guiStateManager.inViewDayState || guiStateManager.inViewWeekState || guiStateManager.inViewMonthState|| guiStateManager.inViewTimelineState || guiStateManager.inViewEventListState ) {
       if ( collectionView.numSelected > 1 )
         korganizerActions.showOnlyCategory( "multiple_calendar" )
       else
