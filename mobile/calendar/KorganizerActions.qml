@@ -36,7 +36,7 @@ ActionMenuContainer {
     name : "home_menu"
     text : KDE.i18n( "Home" )
     ActionListItem { name : "synchronize_all_items" }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Multiple Calendars" ) }
     ActionListItem { name : "import_events" }
     ActionListItem { name : "archive_old_entries" }
   }
@@ -106,7 +106,7 @@ ActionMenuContainer {
     category : "multiple_folder"
     name : "multi_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Change Folder Selection" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Calendars" ) }
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
   }
 
@@ -152,7 +152,7 @@ ActionMenuContainer {
     name : "multi_calendar_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Calendars" ) }
   }
 
   ActionList {

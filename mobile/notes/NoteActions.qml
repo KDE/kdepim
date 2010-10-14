@@ -100,7 +100,7 @@ ActionMenuContainer {
     category : "multiple_folder"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Folders" ) }
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
   }
 
