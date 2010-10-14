@@ -31,8 +31,6 @@
 #include <QList>
 #include <QStandardItemModel>
 
-class KDGanttView;
-class KDCanvasPolygon;
 
 namespace CalendarSupport {
   class Calendar;

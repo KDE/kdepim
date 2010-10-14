@@ -52,7 +52,6 @@ class TimeLabelsZone;
 class Agenda;
 class AgendaItem;
 class AgendaView;
-class AlternateLabel;
 
 class EVENTVIEWS_EXPORT EventIndicator : public QFrame
 {

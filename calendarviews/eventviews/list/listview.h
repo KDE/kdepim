@@ -42,7 +42,6 @@ namespace CalendarSupport {
 
 typedef CustomListViewItem<Akonadi::Item::Id> ListViewItem;
 
-class QTreeWidget;
 
 /**
   This class provides a multi-column list view of events.  It can
