@@ -32,6 +32,7 @@
 #include "mailcommon/mailkernel.h"
 #include "messagecore/messagehelpers.h"
 #include "messagelistproxy.h"
+#include "messageviewer/globalsettings.h"
 #include "messageviewer/nodehelper.h"
 #include "messageviewer/viewer.h"
 #include "messageviewitem.h"
@@ -164,6 +165,7 @@ void MainView::delayedInit()
   connect( actionCollection()->action( "message_edit" ), SIGNAL( triggered( bool ) ), SLOT( sendAgain() ) ); //do the same under a different name
   connect( actionCollection()->action( "message_find_in" ), SIGNAL( triggered( bool ) ), SLOT( findInMessage() ) );
   connect( actionCollection()->action( "message_save_as" ), SIGNAL( triggered( bool ) ), SLOT( saveMessage() ) );
+  connect( actionCollection()->action( "message_fixed_font" ), SIGNAL( triggered( bool ) ), SLOT( useFixedFont() ) );
   connect( actionCollection()->action( "save_favorite" ), SIGNAL( triggered( bool ) ), SLOT( saveFavorite() ) );
   connect( actionCollection()->action( "prefer_html_to_plain" ), SIGNAL( triggered( bool ) ), SLOT( preferHTML( bool ) ) );
   connect( actionCollection()->action( "load_external_ref" ), SIGNAL( triggered( bool ) ), SLOT( loadExternalReferences( bool ) ) );
@@ -198,7 +200,25 @@ void MainView::delayedInit()
   if ( debugTiming ) {
     kWarning() << "Finished MainView ctor: " << time.elapsed() << " - "<< &time;
   }
+
+  connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
+           this, SLOT( qmlInitialized( QDeclarativeView::Status ) ) );
 }
+
+void MainView::qmlInitialized(QDeclarativeView::Status status)
+{
+  if ( status != Ready )
+    return;
+
+  MessageViewer::MessageViewItem* item = messageViewerItem();
+
+  if ( item ) {
+    bool fixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
+    item->viewer()->setUseFixedFont( fixedFont );
+    actionCollection()->action( "message_fixed_font" )->setChecked( fixedFont );
+  }
+}
+
 
 void MainView::recoverAutoSavedMessages()
 {
@@ -904,17 +924,21 @@ void MainView::saveMessage()
   command->execute();
 }
 
-void MainView::findInMessage()
+MessageViewer::MessageViewItem* MainView::messageViewerItem()
 {
   MessageViewer::MessageViewItem* item = 0;
 
-  Q_FOREACH( QObject *childObject, rootObject()->children() ) {
-    if ( dynamic_cast<MessageViewer::MessageViewItem*>( childObject ) ) {
-      item = static_cast<MessageViewer::MessageViewItem*>( childObject );
-      break;
-    }
-  }
+  QList<MessageViewer::MessageViewItem*> items = rootObject()->findChildren<MessageViewer::MessageViewItem* >();
+  if ( !items.isEmpty() )
+    item = items.first();
+  
+  return item;
+}
 
+
+void MainView::findInMessage()
+{
+  MessageViewer::MessageViewItem* item = messageViewerItem();
   if ( item ) {
     item->viewer()->slotFind();
   }
@@ -922,14 +946,7 @@ void MainView::findInMessage()
 
 void MainView::preferHTML(bool useHtml)
 {
-  MessageViewer::MessageViewItem* item = 0;
-
-  Q_FOREACH( QObject *childObject, rootObject()->children() ) {
-    if ( dynamic_cast<MessageViewer::MessageViewItem*>( childObject ) ) {
-      item = static_cast<MessageViewer::MessageViewItem*>( childObject );
-      break;
-    }
-  }
+  MessageViewer::MessageViewItem* item = messageViewerItem();
 
   if ( item ) {
     const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
@@ -954,14 +971,7 @@ void MainView::preferHTML(bool useHtml)
 
 void MainView::loadExternalReferences(bool load)
 {
-  MessageViewer::MessageViewItem* item = 0;
-
-  Q_FOREACH( QObject *childObject, rootObject()->children() ) {
-    if ( dynamic_cast<MessageViewer::MessageViewItem*>( childObject ) ) {
-      item = static_cast<MessageViewer::MessageViewItem*>( childObject );
-      break;
-    }
-  }
+  MessageViewer::MessageViewItem* item = messageViewerItem();
 
   if ( item ) {
     const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
@@ -1066,6 +1076,20 @@ void MainView::createToDo()
 
   MailCommon::Util::createTodoFromMail( item );
 }
+
+void MainView::useFixedFont()
+{
+  MessageViewer::MessageViewItem* item = messageViewerItem();
+
+  if ( item ) {
+    bool fixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
+    item->viewer()->setUseFixedFont( !fixedFont );
+    item->viewer()->update( MessageViewer::Viewer::Force );
+    MessageViewer::GlobalSettings::self()->setUseFixedFont( !fixedFont );
+    MessageViewer::GlobalSettings::self()->writeConfig();
+  }
+}
+
 
 // #############################################################
 

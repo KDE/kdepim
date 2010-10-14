@@ -28,6 +28,10 @@
 #include <messagecomposer/messagefactory.h>
 #include <Akonadi/KMime/SpecialMailCollections>
 
+namespace MessageViewer {
+  class MessageViewItem;
+}
+
 namespace Akonadi {
   class StandardMailActionManager;
 class EntityMimeTypeFilterModel;
@@ -90,6 +94,7 @@ class MainView : public KDeclarativeMainView
     void folderChanged();
     void moveToOrEmptyTrash();
     void createToDo();
+    void useFixedFont();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -103,6 +108,7 @@ class MainView : public KDeclarativeMainView
     virtual ExportHandlerBase* exportHandler() const;
 
   private slots:
+    void qmlInitialized( QDeclarativeView::Status status );
     void sendAgainFetchResult( KJob *job );
     void replyFetchResult( KJob *job );
     void forwardFetchResult( KJob *job );
@@ -119,6 +125,7 @@ class MainView : public KDeclarativeMainView
     void recoverAutoSavedMessages();
     Akonadi::Item currentItem();
     bool askToGoOnline();
+    MessageViewer::MessageViewItem *messageViewerItem();
 
     AkonadiSender *mMessageSender;
     bool mAskingToGoOnline;

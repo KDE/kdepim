@@ -105,6 +105,11 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setCheckable(true);
   action->setChecked(false);
 
+  action = actionCollection->addAction("message_fixed_font");
+  action->setText( i18n("Use Fixed Font") );
+  action->setCheckable(true);
+  action->setChecked(false);
+
   action = actionCollection->addAction("show_expire_properties");
   action->setText( i18n("Expire Properties") );
 
