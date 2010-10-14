@@ -31,7 +31,7 @@
 
 /**
  * KDEPIM classes for drag and drop of mails
- * 
+ *
  * // Code example for drag and drop enabled widget
  *
  * void SomeWidget::contentsDropEvent(QDropEvent *e)
@@ -44,10 +44,10 @@
 
 namespace KPIM {
 
-class KDE_EXPORT MailSummary 
+class KDE_EXPORT MailSummary
 {
 public:
-    MailSummary( Q_UINT32 serialNumber, QString messageId, QString subject, 
+    MailSummary( Q_UINT32 serialNumber, QString messageId, QString subject,
 		 QString from, QString to, time_t date );
     MailSummary() {}
     ~MailSummary() {}
@@ -92,25 +92,23 @@ public:
 };
 
 // Drag and drop object for mails
-class KDE_EXPORT MailListDrag : public QStoredDrag
+class KDE_EXPORT MailListDrag : public QDragObject
 {
 public:
     // Takes ownership of "src" and deletes it when done
-    MailListDrag( MailList, QWidget * parent = 0, MailTextSource *src = 0 );
+    MailListDrag( const MailList& mails, QWidget * parent, MailTextSource *src );
     ~MailListDrag();
 
     const char *format(int i) const;
 
-    bool provides(const char *mimeType) const;
-
     QByteArray encodedData(const char *) const;
 
     /* Reset the list of mail summaries */
-    void setMailList( MailList );
+    void setMailList( const MailList& mails );
 
     /* The format for this drag - "x-kmail-drag/message-list" */
     static const char* format();
-    
+
     /* Returns TRUE if the information in e can be decoded into a QString;
        otherwsie returns FALSE */
     static bool canDecode( QMimeSource* e );
@@ -129,6 +127,7 @@ public:
 
 private:
     MailTextSource *_src;
+    MailList _mailList;
 };
 
 }
