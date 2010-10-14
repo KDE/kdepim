@@ -25,6 +25,7 @@
 #include <calendarsupport/calendar.h>
 #include <calendarviews/eventviews/timeline/timelineview.h>
 #include <KLocale>
+#include <QLayout>
 
 using namespace EventViews;
 
@@ -39,6 +40,7 @@ TimelineViewItem::TimelineViewItem(QDeclarativeItem* parent)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
   m_view->setPalette( pal );
   m_view->setDateRangeSelectionEnabled( false );
+  m_view->layout()->setMargin( 0 );
 
   connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
            SIGNAL(itemSelected()) );
