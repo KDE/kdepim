@@ -349,27 +349,29 @@ void ComposerView::setEditor( Message::KMeditor* editor )
 
 void ComposerView::closeEvent( QCloseEvent * event )
 {
-  const QString saveButton = i18n("&Save as Draft");
-  const QString saveText = i18n("Save this message in the Drafts folder. ");
+  if ( m_composerBase->editor()->document()->isModified() || m_composerBase->recipientsEditor()->isModified() || !m_subject.isEmpty() ) {
+    const QString saveButton = i18n("&Save as Draft");
+    const QString saveText = i18n("Save this message in the Drafts folder. ");
 
-  const int rc = KMessageBox::warningYesNoCancel( this,
-                                                  i18n("Do you want to save the message for later or discard it?"),
-                                                  i18n("Close Composer"),
-                                                  KGuiItem(saveButton, "document-save", QString(), saveText),
-                                                  KStandardGuiItem::discard(),
-                                                  KStandardGuiItem::cancel() );
+    const int rc = KMessageBox::warningYesNoCancel( this,
+                                                    i18n("Do you want to save the message for later or discard it?"),
+                                                    i18n("Close Composer"),
+                                                    KGuiItem(saveButton, "document-save", QString(), saveText),
+                                                    KStandardGuiItem::discard(),
+                                                    KStandardGuiItem::cancel() );
 
-  if ( rc == KMessageBox::Yes ) {
-    connect( this, SIGNAL( sentSuccessfully() ), this, SLOT( deleteLater() ) );
-    saveDraft();
-    event->ignore();
-    return;
-  } else if (rc == KMessageBox::Cancel ) {
-    event->ignore();
-    return;
-  } else {
-    // remove autosaves if the message was discarded
-    m_composerBase->cleanupAutoSave();
+    if ( rc == KMessageBox::Yes ) {
+      connect( this, SIGNAL( sentSuccessfully() ), this, SLOT( deleteLater() ) );
+      saveDraft();
+      event->ignore();
+      return;
+    } else if (rc == KMessageBox::Cancel ) {
+      event->ignore();
+      return;
+    } else {
+      // remove autosaves if the message was discarded
+      m_composerBase->cleanupAutoSave();
+    }
   }
 
   event->accept();
