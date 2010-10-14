@@ -47,7 +47,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public KDialog
   Q_OBJECT
   public:
     AttachmentEditDialog( AttachmentIconItem *item, QWidget *parent, bool modal = true );
-
+    virtual ~AttachmentEditDialog();
     void accept();
 
   protected slots:

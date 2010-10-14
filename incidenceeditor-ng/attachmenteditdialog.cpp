@@ -79,6 +79,11 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
            SLOT( urlChanged( const QString& ) ) );
 }
 
+AttachmentEditDialog::~AttachmentEditDialog()
+{
+  delete mUi;
+}
+
 void AttachmentEditDialog::accept()
 {
   slotApply();
