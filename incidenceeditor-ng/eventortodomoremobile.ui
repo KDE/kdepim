@@ -645,7 +645,7 @@
       <item>
        <widget class="QDateEdit" name="mExceptionDateEdit">
         <property name="displayFormat">
-         <string>MM.dd.yyyy</string>
+         <string>dd.MM.yyyy</string>
         </property>
        </widget>
       </item>
