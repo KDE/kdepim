@@ -35,7 +35,6 @@ class QItemSelectionModel;
 
 namespace CalendarSupport {
 
-class CollectionSelectionProxyModel;
 
 class CALENDARSUPPORT_EXPORT CalendarSearch : public QObject
 {
