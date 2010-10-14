@@ -427,7 +427,7 @@ void MultiAgendaView::resizeEvent(QResizeEvent * ev)
 
 void MultiAgendaView::resizeScrollView(const QSize & size)
 {
-  const int widgetWidth = size.width() - mTimeLabels->width() - mScrollBar->width();
+  const int widgetWidth = size.width() - mLeftSplitter->width() - mScrollBar->width();
   int width = QMAX( mTopBox->sizeHint().width(), widgetWidth );
   int height = size.height();
   if ( width > widgetWidth ) {
