@@ -70,6 +70,19 @@ void GuiStateManager::pushState( int state )
   emitChangedSignal();
 }
 
+void GuiStateManager::pushUniqueState( int state )
+{
+  if ( d->mGuiStates.isEmpty() ) {
+    d->mGuiStates.push( state );
+  } else {
+    if ( d->mGuiStates.top() != state )
+      d->mGuiStates.push( state );
+  }
+
+  printStack( d->mGuiStates );
+  emitChangedSignal();
+}
+
 void GuiStateManager::popState()
 {
   d->mGuiStates.pop();

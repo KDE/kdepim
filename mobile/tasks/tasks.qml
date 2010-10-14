@@ -236,8 +236,7 @@ KPIM.MainView {
         anchors.right : parent.right
         onItemSelected: {
           taskView.itemId = itemList.currentItemId;
-          if ( !guiStateManager.inViewSingleItemState )
-            guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
+          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
         }
       }
     }

@@ -165,8 +165,7 @@ KPIM.MainView {
           eventView.itemId = selectedItemId;
           eventView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
-          if ( !guiStateManager.inViewSingleItemState )
-            guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
+          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
         }
       }
     }
@@ -210,8 +209,7 @@ KPIM.MainView {
           eventView.itemId = selectedItemId;
           eventView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
-          if ( !guiStateManager.inViewSingleItemState )
-            guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
+          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
           clearSelection();
         }
       }
@@ -255,8 +253,7 @@ KPIM.MainView {
           timelineView.itemId = selectedItemId;
           timelineView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
-          if ( !guiStateManager.inViewSingleItemState )
-            guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
+          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
         }
       }
     }
@@ -299,8 +296,7 @@ KPIM.MainView {
          if ( currentItemId > 0 ) {
           eventView.itemId = currentItemId;
           application.setCurrentEventItemId(currentItemId);
-          if ( !guiStateManager.inViewSingleItemState )
-            guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState )
+          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState )
         }
       }
     }

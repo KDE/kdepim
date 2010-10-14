@@ -123,6 +123,15 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
     void pushState( int state );
 
     /**
+     * Switches to the new gui @p state, if it is not on the top of the stack already,
+     * but stores the old one on the internal stack.
+     *
+     * This method should be used if you want to return to the previous gui state at
+     * a later point in the execution.
+     */
+    void pushUniqueState( int state );
+
+    /**
      * Switches to the gui state previously stored on the internal stack.
      */
     void popState();
