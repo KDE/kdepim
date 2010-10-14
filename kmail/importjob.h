@@ -23,7 +23,7 @@
 
 #include <qobject.h>
 #include <qlist.h>
-
+#include <qpointer.h>
 #include <sys/types.h>
 
 class QWidget;
@@ -106,7 +106,7 @@ class ImportJob : public QObject
     // The folder to which we are currently importing messages
     KMFolder *mCurrentFolder;
 
-    KPIM::ProgressItem *mProgressItem;
+    QPointer<KPIM::ProgressItem> mProgressItem;
     bool mAborted;
 };
 

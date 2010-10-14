@@ -182,7 +182,8 @@ void ImportJob::importNextMessage()
       return;
     }
     kDebug() << "Current folder of queue is now: " << mCurrentFolder->name();
-    mProgressItem->setStatus( i18n( "Importing folder %1", mCurrentFolder->name() ) );
+    if ( mProgressItem )
+      mProgressItem->setStatus( i18n( "Importing folder %1", mCurrentFolder->name() ) );
   }
 
   const KArchiveFile *file = messages.files.first();
