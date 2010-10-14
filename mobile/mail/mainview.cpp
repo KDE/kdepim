@@ -156,6 +156,7 @@ void MainView::delayedInit()
   connect( actionCollection()->action( "message_reply_to_all" ), SIGNAL( triggered( bool ) ), SLOT( replyToAll() ) );
   connect( actionCollection()->action( "message_reply_to_author" ), SIGNAL( triggered( bool ) ), SLOT( replyToAuthor() ) );
   connect( actionCollection()->action( "message_reply_to_list" ), SIGNAL( triggered( bool ) ), SLOT( replyToMailingList() ) );
+  connect( actionCollection()->action( "message_reply_without_quoting" ), SIGNAL( triggered( bool ) ), SLOT( replyWithoutQuoting() ) );
   connect( actionCollection()->action( "message_forward" ), SIGNAL( triggered( bool ) ), SLOT( forwardMessage() ) );
   connect( actionCollection()->action( "message_forward_as_attachment" ), SIGNAL( triggered( bool ) ), SLOT( forwardAsAttachment() ) );
   connect( actionCollection()->action( "message_redirect" ), SIGNAL( triggered( bool ) ), SLOT( redirect() ) );
@@ -425,11 +426,12 @@ void MainView::replyToMailingList()
   reply( item.id(), MessageComposer::ReplyList );
 }
 
-void MainView::reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy )
+void MainView::reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal )
 {
   ItemFetchJob *job = new ItemFetchJob( Item( id ), this );
   job->fetchScope().fetchFullPayload();
   job->setProperty( "replyStrategy", QVariant::fromValue( replyStrategy ) );
+  job->setProperty( "quoteOriginal", QVariant::fromValue( quoteOriginal ) );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( replyFetchResult( KJob* ) ) );
 }
 
@@ -447,6 +449,8 @@ void MainView::replyFetchResult( KJob *job )
   factory.setIdentityManager( MobileKernel::self()->identityManager() );
   factory.setReplyStrategy( fetchJob->property( "replyStrategy" ).value<MessageComposer::ReplyStrategy>() );
 
+  factory.setQuote( fetchJob->property( "quoteOriginal" ).toBool() );
+  
   ComposerView *composer = new ComposerView;
   composer->setMessage( factory.createReply().msg );
   composer->show();
@@ -546,6 +550,15 @@ void MainView::replyToMessage()
     return;
 
   reply( item.id(), MessageComposer::ReplySmart );
+}
+
+void MainView::replyWithoutQuoting()
+{
+  const Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  reply( item.id(), MessageComposer::ReplySmart, false);
 }
 
 void MainView::replyToAll()

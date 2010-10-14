@@ -78,6 +78,7 @@ class MainView : public KDeclarativeMainView
     void replyToAuthor();
     void replyToMailingList();
     void replyToMessage();
+    void replyWithoutQuoting();
     void sendAgain();
     void sendQueued();
     void sendQueuedVia();
@@ -112,7 +113,7 @@ class MainView : public KDeclarativeMainView
     void showExpireProperties();
 
   private:
-    void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
+    void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
     void forward( quint64 id, ForwardMode mode );
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
     void recoverAutoSavedMessages();

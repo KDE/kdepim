@@ -95,6 +95,14 @@ KPIM.MainView {
             }
             KPIM.Button2 {
               width: parent.width
+              buttonText : KDE.i18n( "Reply Without Quoting" )
+              onClicked : {
+                application.getAction("message_reply_without_quoting", "").trigger();
+                replyOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
               buttonText : KDE.i18n( "Discard" )
               onClicked : {
                 replyOptionsPage.visible = false

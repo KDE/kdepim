@@ -66,6 +66,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action = actionCollection->addAction("message_reply_to_list");
   action->setText( i18n("Reply to Mailing List") );
 
+  action = actionCollection->addAction("message_reply_without_quoting");
+  action->setText( i18n("Reply Without Quoting") );
+
   action = actionCollection->addAction("message_reply_variants");
 
   action = actionCollection->addAction("message_forward");
