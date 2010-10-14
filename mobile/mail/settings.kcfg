@@ -20,6 +20,7 @@
     <entry name="ComposerRequestMDN" type="Bool" />
     <entry name="ComposerUseRecentAddressCompletion" type="Bool" />
     <entry name="ComposerWordWrapAtColumn" type="Bool" />
+    <entry name="ComposerWordWrapColumn" type="Int" />
     <entry name="ComposerReplaceReplyPrefixes" type="Bool" />
     <entry name="ComposerReplaceForwardPrefixes" type="Bool" />
     <entry name="ComposerOutlookCompatibleNaming" type="Bool" />

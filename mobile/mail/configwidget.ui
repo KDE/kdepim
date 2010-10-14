@@ -14,9 +14,6 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
-   <property name="spacing">
-    <number>10</number>
-   </property>
    <item>
     <layout class="QGridLayout" name="gridLayout" rowstretch="0,1" columnstretch="0,1">
      <item row="0" column="0" colspan="2">
@@ -151,11 +148,31 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="kcfg_ComposerWordWrapAtColumn">
-         <property name="text">
-          <string>Word wrap at column</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QCheckBox" name="kcfg_ComposerWordWrapAtColumn">
+           <property name="text">
+            <string>Word wrap at column</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="kcfg_ComposerWordWrapColumn">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="minimum">
+            <number>30</number>
+           </property>
+           <property name="maximum">
+            <number>998</number>
+           </property>
+           <property name="value">
+            <number>78</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QPushButton" name="configureCompletionOrderButton">
@@ -465,5 +482,22 @@ to them has been sent</string>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>kcfg_ComposerWordWrapAtColumn</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_ComposerWordWrapColumn</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>382</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>222</x>
+     <y>379</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

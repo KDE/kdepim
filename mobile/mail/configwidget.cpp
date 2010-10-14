@@ -97,6 +97,7 @@ void ConfigWidget::loadFromExternalSettings()
   Settings::self()->setComposerUseSmartQuoting( TemplateParser::GlobalSettings::self()->smartQuote() );
   Settings::self()->setComposerUseRecentAddressCompletion( MessageComposerSettings::self()->showRecentAddressesInComposer() );
   Settings::self()->setComposerWordWrapAtColumn( MessageComposerSettings::self()->wordWrap() );
+  Settings::self()->setComposerWordWrapColumn( MessageComposerSettings::self()->lineWrapWidth() );
   Settings::self()->setComposerReplaceReplyPrefixes( MessageComposerSettings::self()->replaceReplyPrefix() );
   Settings::self()->setComposerReplaceForwardPrefixes( MessageComposerSettings::self()->replaceForwardPrefix() );
   Settings::self()->setComposerOutlookCompatibleNaming( MessageComposerSettings::self()->outlookCompatibleAttachments() );
@@ -129,6 +130,7 @@ void ConfigWidget::saveToExternalSettings()
   TemplateParser::GlobalSettings::self()->setSmartQuote( Settings::self()->composerUseSmartQuoting() );
   MessageComposerSettings::self()->setShowRecentAddressesInComposer( Settings::self()->composerUseRecentAddressCompletion() );
   MessageComposerSettings::self()->setWordWrap( Settings::self()->composerWordWrapAtColumn() );
+  MessageComposerSettings::self()->setLineWrapWidth( Settings::self()->composerWordWrapColumn() );
   MessageComposerSettings::self()->setReplaceReplyPrefix( Settings::self()->composerReplaceReplyPrefixes() );
   MessageComposerSettings::self()->setReplaceForwardPrefix( Settings::self()->composerReplaceForwardPrefixes() );
   MessageComposerSettings::self()->setOutlookCompatibleAttachments( Settings::self()->composerOutlookCompatibleNaming() );
