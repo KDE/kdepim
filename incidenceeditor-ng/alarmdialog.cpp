@@ -50,6 +50,11 @@ AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWid
   fillCombo();
 }
 
+AlarmDialog::~AlarmDialog()
+{
+  delete mUi;
+}
+
 void AlarmDialog::load( const KCalCore::Alarm::Ptr &alarm )
 {
   if ( !alarm ) {

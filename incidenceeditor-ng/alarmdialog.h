@@ -55,7 +55,7 @@ class  INCIDENCEEDITORS_NG_EXPORT AlarmDialog : public KDialog
       @p incidenceType will influence i18n strings, that will be different for to-dos.
      */
     explicit AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent = 0 );
-
+    ~AlarmDialog();
     void load( const KCalCore::Alarm::Ptr &alarm );
     void save( const KCalCore::Alarm::Ptr &alarm ) const;
     void setAllowBeginReminders( bool allow );
