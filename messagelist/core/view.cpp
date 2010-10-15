@@ -40,6 +40,7 @@
 #include <QTimer>
 #include <QPaintEvent>
 #include <QTextDocument>
+#include <QApplication>
 
 #include <KMenu>
 #include <KLocale>
@@ -2230,7 +2231,9 @@ bool View::event( QEvent *e )
   QString bckColorName = bckColor.name();
   QString txtColorName = txtColor.name();
   QString darkerColorName = darkerColor.name();
-
+  const bool textIsLeftToRight = ( QApplication::layoutDirection() == Qt::LeftToRight );
+  const QString textDirection =  textIsLeftToRight ? QLatin1String( "left" ) : QLatin1String( "right" );
+  const QString firstColumnWidth =  textIsLeftToRight ? QLatin1String( "45" ) : QLatin1String( "55" );
 
   QString tip = QString::fromLatin1(
       "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
@@ -2244,23 +2247,31 @@ bool View::event( QEvent *e )
 
       tip += QString::fromLatin1(
            "<tr>" \
-              "<td bgcolor=\"%1\" align=\"left\" valign=\"middle\">" \
+              "<td bgcolor=\"%1\" align=\"%4\" valign=\"middle\">" \
                 "<div style=\"color: %2; font-weight: bold;\">" \
                  "%3" \
                 "</div>" \
               "</td>" \
             "</tr>"
-        ).arg( txtColorName ).arg( bckColorName ).arg( Qt::escape( mi->subject() ) );
+        ).arg( txtColorName ).arg( bckColorName ).arg( Qt::escape( mi->subject() ) ).arg( textDirection );
 
       tip += QString::fromLatin1(
            "<tr>" \
               "<td align=\"center\" valign=\"middle\">" \
                 "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
         );
-
+      QString firstString;
+      QString secondString;
+      if ( textIsLeftToRight ) {
+        firstString = i18n( "From" );
+        secondString =  mi->sender();
+      } else {
+        firstString = mi->sender();
+        secondString = i18n( "From" );
+      }
       tip += QString::fromLatin1(
            "<tr>" \
-              "<td align=\"right\" valign=\"top\" width=\"45\">" \
+              "<td align=\"right\" valign=\"top\" width=\"%3\">" \
                 "<div style=\"font-weight: bold;\"><nobr>" \
                  "%1:" \
                 "</nobr></div>" \
@@ -2269,11 +2280,19 @@ bool View::event( QEvent *e )
                  "%2" \
               "</td>" \
             "</tr>"
-        ).arg( i18n( "From" ) ).arg( mi->sender() );
+        ).arg( firstString ).arg( secondString ).arg( firstColumnWidth );
+
+      if ( textIsLeftToRight ) {
+        firstString =i18nc( "Receiver of the emial", "To" );
+        secondString = mi->receiver();
+      } else {
+        firstString = mi->receiver();
+        secondString = i18nc( "Receiver of the emial", "To" );
+      }
 
       tip += QString::fromLatin1(
            "<tr>" \
-              "<td align=\"right\" valign=\"top\" width=\"45\">" \
+              "<td align=\"right\" valign=\"top\" width=\"%3\">" \
                 "<div style=\"font-weight: bold;\"><nobr>" \
                  "%1:" \
                 "</nobr></div>" \
@@ -2282,11 +2301,19 @@ bool View::event( QEvent *e )
                  "%2" \
               "</td>" \
             "</tr>"
-        ).arg( i18nc( "Receiver of the emial", "To" ) ).arg( mi->receiver() );
+        ).arg( firstString ).arg( secondString ).arg( firstColumnWidth );
+
+      if ( textIsLeftToRight ) {
+        firstString = i18n( "Date" );
+        secondString = mi->formattedDate();
+      } else {
+        firstString = mi->formattedDate();
+        secondString = i18n( "Date" );
+      }
 
       tip += QString::fromLatin1(
            "<tr>" \
-              "<td align=\"right\" valign=\"top\" width=\"45\">" \
+              "<td align=\"right\" valign=\"top\" width=\"%3\">" \
                 "<div style=\"font-weight: bold;\"><nobr>" \
                  "%1:" \
                 "</nobr></div>" \
@@ -2295,7 +2322,7 @@ bool View::event( QEvent *e )
                  "%2" \
               "</td>" \
             "</tr>"
-        ).arg( i18n( "Date" ) ).arg( mi->formattedDate() );
+        ).arg(firstString ).arg( secondString ).arg( firstColumnWidth );
 
       QString status = mi->statusDescription();
       QString tags = mi->tagListDescription();
@@ -2305,10 +2332,17 @@ bool View::event( QEvent *e )
           status += QLatin1String( ", " );
         status += tags;
       }
+      if ( textIsLeftToRight ) {
+        firstString = i18n( "Status" );
+        secondString = status;
+      } else {
+        firstString = status;
+        secondString = i18n( "Status" );
+      }
 
       tip += QString::fromLatin1(
            "<tr>" \
-              "<td align=\"right\" valign=\"top\" width=\"45\">" \
+              "<td align=\"right\" valign=\"top\" width=\"%3\">" \
                 "<div style=\"font-weight: bold;\"><nobr>" \
                  "%1:" \
                 "</nobr></div>" \
@@ -2317,11 +2351,19 @@ bool View::event( QEvent *e )
                  "%2" \
               "</td>" \
             "</tr>"
-        ).arg( i18n( "Status" ) ).arg( status );
+        ).arg( firstString ).arg( secondString ).arg( firstColumnWidth );
+
+      if ( textIsLeftToRight ) {
+        firstString = i18n( "Size" );
+        secondString = mi->formattedSize();
+      } else {
+        firstString = mi->formattedSize();
+        secondString = i18n( "Size" );
+      }
 
       tip += QString::fromLatin1(
            "<tr>" \
-              "<td align=\"right\" valign=\"top\" width=\"45\">" \
+              "<td align=\"right\" valign=\"top\" width=\"%3\">" \
                 "<div style=\"font-weight: bold;\"><nobr>" \
                  "%1:" \
                 "</nobr></div>" \
@@ -2330,8 +2372,7 @@ bool View::event( QEvent *e )
                  "%2" \
               "</td>" \
             "</tr>"
-        ).arg( i18n( "Size" ) ).arg( mi->formattedSize() );
-
+        ).arg( firstString ).arg( secondString ).arg( firstColumnWidth );
 
       tip += QString::fromLatin1(
                 "</table" \
@@ -2363,11 +2404,11 @@ bool View::event( QEvent *e )
 
         tip += QString::fromLatin1(
              "<tr>" \
-                "<td bgcolor=\"%1\" align=\"left\" valign=\"middle\">" \
+                "<td bgcolor=\"%1\" align=\"%3\" valign=\"middle\">" \
                    "<nobr>%2</nobr>" \
                 "</td>" \
               "</tr>"
-          ).arg( darkerColorName ).arg( statsText );
+          ).arg( darkerColorName ).arg( statsText ).arg( textDirection );
       }
 
     }
@@ -2378,13 +2419,13 @@ bool View::event( QEvent *e )
 
       tip += QString::fromLatin1(
            "<tr>" \
-              "<td bgcolor=\"%1\" align=\"left\" valign=\"middle\">" \
+              "<td bgcolor=\"%1\" align=\"%4\" valign=\"middle\">" \
                 "<div style=\"color: %2; font-weight: bold;\">" \
                  "%3" \
                 "</div>" \
               "</td>" \
             "</tr>"
-        ).arg( txtColorName ).arg( bckColorName ).arg( ghi->label() );
+        ).arg( txtColorName ).arg( bckColorName ).arg( ghi->label() ).arg( textDirection );
 
       QString description;
 
@@ -2530,11 +2571,11 @@ bool View::event( QEvent *e )
       {
         tip += QString::fromLatin1(
              "<tr>" \
-                "<td align=\"left\" valign=\"middle\">" \
+                "<td align=\"%2\" valign=\"middle\">" \
                    "%1" \
                 "</td>" \
               "</tr>"
-          ).arg( description );
+          ).arg( description ).arg( textDirection );
       }
 
       if ( ghi->hasChildren() )
@@ -2560,11 +2601,11 @@ bool View::event( QEvent *e )
 
         tip += QString::fromLatin1(
              "<tr>" \
-                "<td bgcolor=\"%1\" align=\"left\" valign=\"middle\">" \
+                "<td bgcolor=\"%1\" align=\"%3\" valign=\"middle\">" \
                    "<nobr>%2</nobr>" \
                 "</td>" \
               "</tr>"
-          ).arg( darkerColorName ).arg( statsText );
+          ).arg( darkerColorName ).arg( statsText ).arg( textDirection );
       }
 
     }
