@@ -1561,10 +1561,8 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, bool noHtm
                    IncidenceFormatter::durationString( oldevent ) );
 
   QString recurStr, oldrecurStr;
-  if ( event->doesRecur() ) {
+  if ( event->doesRecur() || oldevent->doesRecur() ) {
     recurStr = IncidenceFormatter::recurrenceString( event );
-  }
-  if ( oldevent->doesRecur() ) {
     oldrecurStr = IncidenceFormatter::recurrenceString( oldevent );
   }
   html += htmlRow( i18n( "Recurrence:" ), recurStr, oldrecurStr );
