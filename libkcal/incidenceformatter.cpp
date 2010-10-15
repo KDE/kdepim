@@ -1612,6 +1612,11 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
   // Invitation Duration Row
   html += htmlRow( i18n( "Duration:" ), IncidenceFormatter::durationString( todo ) );
 
+  // Completeness
+  if ( todo->percentComplete() > 0 ) {
+    html += htmlRow( i18n( "Percent Done:" ), i18n( "%1%" ).arg( todo->percentComplete() ) );
+  }
+
   // Invitation Recurrence Row
   if ( todo->doesRecur() ) {
     html += htmlRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( todo ) );
@@ -1683,11 +1688,16 @@ static QString invitationDetailsTodo( Todo *todo, Todo *oldtodo, bool noHtmlMode
                    IncidenceFormatter::durationString( todo ),
                    IncidenceFormatter::durationString( oldtodo ) );
 
-  QString recurStr, oldrecurStr;
-  if ( todo->doesRecur() ) {
-    recurStr = IncidenceFormatter::recurrenceString( todo );
+  QString completionStr, oldcompletionStr;
+  if ( todo->percentComplete() > 0 || oldtodo->percentComplete() > 0 ) {
+    completionStr = i18n( "%1%" ).arg( todo->percentComplete() );
+    oldcompletionStr = i18n( "%1%" ).arg( oldtodo->percentComplete() );
   }
-  if ( oldtodo->doesRecur() ) {
+  html += htmlRow( i18n( "Percent Done:" ), completionStr, oldcompletionStr );
+
+  QString recurStr, oldrecurStr;
+  if ( todo->doesRecur() || oldtodo->doesRecur() ) {
+    recurStr = IncidenceFormatter::recurrenceString( todo );
     oldrecurStr = IncidenceFormatter::recurrenceString( oldtodo );
   }
   html += htmlRow( i18n( "Recurrence:" ), recurStr, oldrecurStr );
