@@ -81,74 +81,36 @@ KPIM.MainView {
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       handlePosition: folderPanel.handlePosition + folderPanel.handleHeight
-      contentWidth: 240
       content: [
-        KPIM.Action {
-          id: draftButton
-          anchors.top: parent.top;
-          anchors.horizontalCenter: parent.horizontalCenter;
-          width: parent.width - 10
-          height: parent.height / 6
-          action : application.getAction("save_in_drafts");
-          checkable : true
-          onTriggered : actionPanel.collapse();
-        },
-        KPIM.Action {
-          id: signButton
-          anchors.top: draftButton.bottom;
-          anchors.horizontalCenter: parent.horizontalCenter;
-          width: parent.width - 10
-          height: parent.height / 6
-          action : application.getAction("sign_email");
-          checkable : true
-          onTriggered : actionPanel.collapse();
-        },
-        KPIM.Action {
-          id: encryptButton
-          anchors.top: signButton.bottom;
-          anchors.horizontalCenter: parent.horizontalCenter;
-          width: parent.width - 10
-          height: parent.height / 6
-          action : application.getAction("encrypt_email");
-          checkable : true
-          onTriggered : actionPanel.collapse();
-        },
-        KPIM.Button {
-          id: configureIdentityButton
-          anchors.top: encryptButton.bottom
-          anchors.horizontalCenter: parent.horizontalCenter;
-          width: parent.width - 10
-          height: parent.height / 6
-          buttonText: KDE.i18n( "Configure Identity" )
-          onClicked: {
-            actionPanel.collapse();
-            window.configureIdentity();
+          KMailComposerActions {
+            id : kmailComposerActions
+            anchors.fill : parent
+
+            scriptActions : [
+
+            KPIM.ScriptAction {
+              name: "composer_configure_identity"
+              script: {
+                actionPanel.collapse();
+                window.configureIdentity();
+              }
+            },
+            KPIM.ScriptAction {
+              name: "composer_configure_transport"
+              script: {
+                actionPanel.collapse();
+                window.configureTransport();
+              }
+            },
+            KPIM.ScriptAction {
+              name: "composer_close"
+              script: {
+                actionPanel.collapse();
+                window.close();
+              }
+            }
+            ]
           }
-        },
-        KPIM.Button {
-          id: configureTransportButton
-          anchors.top: configureIdentityButton.bottom;
-          anchors.horizontalCenter: parent.horizontalCenter;
-          width: parent.width - 10
-          height: parent.height / 6
-          buttonText: KDE.i18n( "Configure Transport" )
-          onClicked: {
-            actionPanel.collapse();
-            window.configureTransport();
-          }
-        },
-        KPIM.Button {
-          id: closeComposerButton
-          anchors.top: configureTransportButton.bottom;
-          anchors.horizontalCenter: parent.horizontalCenter;
-          width: parent.width - 10
-          height: parent.height / 6
-          buttonText: KDE.i18n( "Close Composer" )
-          onClicked: {
-            actionPanel.collapse();
-            window.close();
-          }
-        }
       ]
     }
 

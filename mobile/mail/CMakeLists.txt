@@ -86,6 +86,7 @@ install(FILES
   kmail-composer.qml
   kmail-mobile.qml
   KMailActions.qml
+  KMailComposerActions.qml
   kmail-mobile-background.png
   kmail-mobile.notifyrc
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
