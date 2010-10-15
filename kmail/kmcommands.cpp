@@ -3177,6 +3177,8 @@ void KMHandleAttachmentCommand::atmOpen()
     fname = mAtmName;
   }
 
+  KPIM::checkAndCorrectPermissionsIfPossible( fname, false, true, true );
+
   url.setPath( fname );
   lst.append( url );
   if ( (KRun::run( *mOffer, lst, autoDelete ) <= 0) && autoDelete ) {
@@ -3195,6 +3197,8 @@ void KMHandleAttachmentCommand::atmOpenWith()
     autoDelete = false;
     fname = mAtmName;
   }
+
+  KPIM::checkAndCorrectPermissionsIfPossible( fname, false, true, true );
 
   url.setPath( fname );
   lst.append( url );
