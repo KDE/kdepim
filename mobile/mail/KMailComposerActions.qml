@@ -43,8 +43,8 @@ ActionMenuContainer {
     category : "composer"
     name : "edit_menu"
     text : KDE.i18n( "Edit" )
-    FakeAction { name : "composer_search" }
-    FakeAction { name : "composer_replace" }
+    ActionListItem { name : "composer_search" }
+    ActionListItem { name : "composer_replace" }
     ActionListItem { name : "composer_clean_spaces" }
     ActionListItem { name : "composer_add_quote_char" }
     ActionListItem { name : "composer_remove_quote_char" }
