@@ -26,6 +26,11 @@
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 
+#include <KIconLoader>
+
+#include <QPixmap>
+#include <QPixmapCache>
+
 QColor EventViews::getTextColor( const QColor &c )
 {
   double luminance = ( c.red() * 0.299 ) + ( c.green() * 0.587 ) + ( c.blue() * 0.114 );
@@ -53,4 +58,14 @@ QColor EventViews::resourceColor( const Akonadi::Item &item, const PrefsPtr &pre
 int EventViews::yearDiff( const QDate &start, const QDate &end )
 {
   return end.year() - start.year();
+}
+
+QPixmap EventViews::cachedSmallIcon( const QString &name )
+{
+  QPixmap p;
+  if ( !QPixmapCache::find( name, &p ) ) {
+    p = SmallIcon( name );
+  }
+
+  return p;
 }

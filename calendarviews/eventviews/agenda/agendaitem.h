@@ -219,8 +219,7 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
     QColor mResourceColor;
 
   private:
-    void paintEventIcon( QPainter *p, int &x, int y, int ft );
-    void paintTodoIcon( QPainter *p, int &x, int y, int ft );
+    void paintIcon( QPainter *p, int &x, int y, int ft );
 
     // paint all visible icons
     void paintIcons( QPainter *p, int &x, int y, int ft );

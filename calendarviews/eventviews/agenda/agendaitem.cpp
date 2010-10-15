@@ -46,6 +46,7 @@
 #include <QPixmapCache>
 #include <QToolTip>
 
+using namespace KCalCore;
 using namespace EventViews;
 
 //-----------------------------------------------------------------------------
@@ -58,8 +59,6 @@ QPixmap *AgendaItem::groupPxmp = 0;
 QPixmap *AgendaItem::groupPxmpTent = 0;
 QPixmap *AgendaItem::organizerPxmp = 0;
 QPixmap *AgendaItem::eventPxmp = 0;
-QPixmap *AgendaItem::todoPxmp = 0;
-QPixmap *AgendaItem::completedPxmp = 0;
 
 //-----------------------------------------------------------------------------
 
@@ -723,31 +722,23 @@ bool AgendaItem::overlaps( CellItem *o ) const
 static void conditionalPaint( QPainter *p, bool condition, int &x, int y,
                               int ft, const QPixmap &pxmp )
 {
-  if ( !condition ) {
-    return;
-  }
-
-  p->drawPixmap( x, y, pxmp );
-  x += pxmp.width() + ft;
+  if ( condition ) {
+    p->drawPixmap( x, y, pxmp );
+    x += pxmp.width() + ft;
+   }
 }
 
-void AgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
+void AgendaItem::paintIcon( QPainter *p, int &x, int y, int ft )
 {
-  const KCalCore::Event::Ptr event = CalendarSupport::event( mIncidence );
-  if ( !event ) {
-    return;
-  }
-
-  QPixmap tPxmp;
-  if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+  QString iconName;
+  Incidence::Ptr incidence = mIncidence.payload<KCalCore::Incidence::Ptr>();
+  if ( incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     mSpecialEvent = true;
-    tPxmp = SmallIcon( "view-calendar-wedding-anniversary" );
-    conditionalPaint( p, true, x, y, ft, tPxmp );
-  } else if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+    iconName =  "view-calendar-wedding-anniversary";
+  } else if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     mSpecialEvent = true;
-    tPxmp = SmallIcon( "view-calendar-birthday" );
-    conditionalPaint( p, true, x, y, ft, tPxmp );
-  } else {
+    iconName = "view-calendar-birthday";
+  } else if ( incidence->type() != Incidence::TypeEvent ) {
     // Disabling the event Pixmap because:
     // 1. We don't need a pixmap to tell us an item is an event we
     //    only need one to tell us it's not, as agenda view was
@@ -756,19 +747,10 @@ void AgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
     //    from event's much easier.
     // 3. Be consistent with month view
     //conditionalPaint( p, true, x, y, ft, *eventPxmp );
-  }
-}
-
-void AgendaItem::paintTodoIcon( QPainter *p, int &x, int y, int ft )
-{
-  if ( !CalendarSupport::hasTodo( mIncidence ) ) {
-    return;
+    iconName = incidence->iconName();
   }
 
-  const bool isCompleted = mEventView->usesCompletedTodoPixmap( mIncidence, mDate );
-
-  conditionalPaint( p, !isCompleted, x, y, ft, *todoPxmp );
-  conditionalPaint( p, isCompleted, x, y, ft, *completedPxmp );
+  conditionalPaint( p, !iconName.isEmpty(), x, y, ft, cachedSmallIcon( iconName ) );
 }
 
 void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
@@ -777,8 +759,8 @@ void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
     return;
   }
 
-  paintEventIcon( p, x, y, ft );
-  paintTodoIcon( p, x, y, ft );
+  paintIcon( p, x, y, ft );
+
 #if 0
   /* sorry, this looks too cluttered. disable until we can
      make something prettier; no idea at this time -- allen */
@@ -827,9 +809,6 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     groupPxmp     = new QPixmap( SmallIcon( "meeting-attending" ) );
     groupPxmpTent = new QPixmap( SmallIcon( "meeting-attending-tentative" ) );
     organizerPxmp = new QPixmap( SmallIcon( "meeting-organizer" ) );
-    eventPxmp     = new QPixmap( SmallIcon( "view-calendar-day" ) );
-    todoPxmp      = new QPixmap( SmallIcon( "view-calendar-tasks" ) );
-    completedPxmp = new QPixmap( SmallIcon( "task-complete" ) );
   }
 
   QColor bgColor;
@@ -975,7 +954,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   if ( //( singleLineHeight > height() - 4 ) ||
        ( width() < 16 ) ) {
     int x = qRound( ( width() - 16 ) / 2.0 );
-    paintTodoIcon( &p, x, margin, ft );
+    paintIcon( &p, x, margin, ft );
     return;
   }
 

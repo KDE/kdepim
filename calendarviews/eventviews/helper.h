@@ -35,6 +35,7 @@ namespace Akonadi {
   class Item;
 }
 
+class QPixmap;
 class QDate;
 
 // Provides static methods that are useful to all views.
@@ -69,6 +70,16 @@ namespace EventViews
     (i.e. the difference in the year number of both dates)
   */
   EVENTVIEWS_EXPORT int yearDiff( const QDate &start, const QDate &end );
+
+  /**
+     Equivalent to SmallIcon( name ), but uses QPixmapCache.
+     KIconLoader already uses a cache, but it's 20x slower on my tests.
+
+     @return A new pixmap if it isn't yet in cache, otherwise returns the
+             cached one.
+  */
+  EVENTVIEWS_EXPORT QPixmap cachedSmallIcon( const QString &name );
+
 }
 
 #endif
