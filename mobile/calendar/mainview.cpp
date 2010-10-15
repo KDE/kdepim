@@ -56,7 +56,9 @@
 #include <kactioncollection.h>
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
+#ifndef _WIN32_WCE
 #include <kcolordialog.h>
+#endif
 #include <kmessagebox.h>
 #include <ksystemtimezone.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
@@ -547,6 +549,8 @@ void MainView::changeCalendarColor()
   QColor calendarColor = agendaItem->preferences()->resourceColor( id );
   QColor myColor;
 
+//FIXME: WINCE we have disabled QTableWidget for now, so the kcolordialog does not work yet.
+#ifndef _WIN32_WCE
   const int result = KColorDialog::getColor( myColor, calendarColor );
   if ( result == KColorDialog::Accepted && myColor != calendarColor ) {  
     agendaItem->preferences()->setResourceColor( id, myColor );
@@ -557,6 +561,7 @@ void MainView::changeCalendarColor()
       monthItem->updateConfig();
     }
   }
+#endif
 }
 
 
