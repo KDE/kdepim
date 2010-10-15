@@ -35,6 +35,9 @@
 #include <akonadi_next/kcolumnfilterproxymodel.h>
 #include <KCalCore/Event>
 
+#include <akonadi/etmviewstatesaver.h>
+
+#include <kviewstatemaintainer.h>
 #include <KGlobalSettings>
 #include <KLocale>
 #include <KVBox>
@@ -49,6 +52,7 @@
 #include <QSortFilterProxyModel>
 #include <QTimer>
 
+using namespace Akonadi;
 using namespace EventViews;
 using namespace Future;
 
@@ -692,10 +696,10 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
                                                         + "_subView_"
                                                         + QByteArray::number( i ) );
 
-    CalendarSupport::EntityModelStateSaver *saver =
-      new CalendarSupport::EntityModelStateSaver( checkableProxy, checkableProxy );
-    saver->addRole( Qt::CheckStateRole, "CheckState" );
-    saver->restoreConfig( g );
+    KViewStateMaintainer<ETMViewStateSaver> saver( g );
+    saver.setSelectionModel( checkableProxy->selectionModel() );
+    saver.restoreState();
+
     d->mCollectionSelectionModels[i] = checkableProxy;
   }
   d->mPendingChanges = true;
@@ -715,9 +719,9 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
                                                   "_subView_" +
                                                   QByteArray::number( idx ) );
     ++idx;
-    CalendarSupport::EntityModelStateSaver saver( i );
-    saver.addRole( Qt::CheckStateRole, "CheckState" );
-    saver.saveConfig( g );
+    KViewStateMaintainer<ETMViewStateSaver> saver( g );
+    saver.setSelectionModel( i->selectionModel() );
+    saver.saveState();
   }
 }
 
