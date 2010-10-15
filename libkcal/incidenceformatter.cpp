@@ -1649,11 +1649,13 @@ static QString invitationDetailsTodo( Todo *todo, Todo *oldtodo, bool noHtmlMode
                      IncidenceFormatter::dateToString( todo->dtStart(), false ),
                      IncidenceFormatter::dateToString( oldtodo->dtStart(), false ) );
     QString startTimeStr, oldstartTimeStr;
-    if ( !todo->doesFloat() ) {
-      startTimeStr = IncidenceFormatter::timeToString( todo->dtStart(), false );
-    }
-    if ( !oldtodo->doesFloat() ) {
-      oldstartTimeStr = IncidenceFormatter::timeToString( oldtodo->dtStart(), false );
+    if ( !todo->doesFloat() || !oldtodo->doesFloat() ) {
+      startTimeStr = todo->doesFloat() ?
+                     i18n( "All day" ) :
+                     IncidenceFormatter::timeToString( todo->dtStart(), false );
+      oldstartTimeStr = oldtodo->doesFloat() ?
+                        i18n( "All day" ) :
+                        IncidenceFormatter::timeToString( oldtodo->dtStart(), false );
     }
     html += htmlRow( i18n( "Start Time:" ), startTimeStr, oldstartTimeStr );
   }
@@ -1663,11 +1665,13 @@ static QString invitationDetailsTodo( Todo *todo, Todo *oldtodo, bool noHtmlMode
                      IncidenceFormatter::dateToString( todo->dtDue(), false ),
                      IncidenceFormatter::dateToString( oldtodo->dtDue(), false ) );
     QString endTimeStr, oldendTimeStr;
-    if ( !todo->doesFloat() ) {
-      endTimeStr = IncidenceFormatter::timeToString( todo->dtDue(), false );
-    }
-    if ( !oldtodo->doesFloat() ) {
-      oldendTimeStr = IncidenceFormatter::timeToString( oldtodo->dtDue(), false );
+    if ( !todo->doesFloat() || !oldtodo->doesFloat() ) {
+      endTimeStr = todo->doesFloat() ?
+                   i18n( "All day" ) :
+                   IncidenceFormatter::timeToString( todo->dtDue(), false );
+      oldendTimeStr = oldtodo->doesFloat() ?
+                      i18n( "All day" ) :
+                      IncidenceFormatter::timeToString( oldtodo->dtDue(), false );
     }
     html += htmlRow( i18n( "Due Time:" ), endTimeStr, oldendTimeStr );
   } else {
@@ -2528,7 +2532,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
         const QString oldPer = i18n( "%1%" ).arg( oldTodo->percentComplete() );
         const QString newPer = i18n( "%1%" ).arg( newTodo->percentComplete() );
         mChanges += i18n( "The task completed percentage has changed from %1 to %2" ).
-                    arg( oldPer, newPer );
+                    arg( oldPer ).arg( newPer );
       }
 
       if ( !oldTodo->hasStartDate() && newTodo->hasStartDate() ) {
@@ -2540,8 +2544,8 @@ class IncidenceFormatter::IncidenceCompareVisitor
       if ( oldTodo->hasStartDate() && newTodo->hasStartDate() &&
            oldTodo->dtStart() != newTodo->dtStart() ) {
         mChanges += i18n( "The task starting time has been changed from %1 to %2" ).
-                    arg( dateTimeToString( oldTodo->dtStart(), oldTodo->doesFloat(), false ),
-                         dateTimeToString( newTodo->dtStart(), newTodo->doesFloat(), false ) );
+                    arg( dateTimeToString( oldTodo->dtStart(), oldTodo->doesFloat(), false ) ).
+                    arg( dateTimeToString( newTodo->dtStart(), newTodo->doesFloat(), false ) );
       }
 
       if ( !oldTodo->hasDueDate() && newTodo->hasDueDate() ) {
@@ -2550,11 +2554,11 @@ class IncidenceFormatter::IncidenceCompareVisitor
       if ( oldTodo->hasDueDate() && !newTodo->hasDueDate() ) {
         mChanges += i18n( "The task due time has been removed" );
       }
-      if ( oldTodo->hasDueDate() && newTodo->hasDueDate() &&
-           oldTodo->dtDue() != newTodo->dtDue() ) {
+      if ( ( oldTodo->hasDueDate() && newTodo->hasDueDate() ) &&
+           ( oldTodo->dtDue() != newTodo->dtDue() ) ) {
         mChanges += i18n( "The task due time has been changed from %1 to %2" ).
-                    arg( dateTimeToString( oldTodo->dtDue(), oldTodo->doesFloat(), false ),
-                         dateTimeToString( newTodo->dtDue(), newTodo->doesFloat(), false ) );
+                    arg( dateTimeToString( oldTodo->dtDue(), oldTodo->doesFloat(), false ) ).
+                    arg( dateTimeToString( newTodo->dtDue(), newTodo->doesFloat(), false ) );
       }
     }
 
