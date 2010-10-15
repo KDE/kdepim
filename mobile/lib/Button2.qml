@@ -19,62 +19,62 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import Qt 4.7 as QML
 
-Rectangle {
-  id: mainItem
-  property string icon
-  property alias buttonText: buttonText.text
-  property alias font: buttonText.font
+QML.Item {
+  id: root
+  property alias icon: iconImage.source
+  property alias buttonText: buttonLabel.text
+  property alias font: buttonLabel.font
+  property bool enabled: true
   signal clicked
 
   property string _state
+  height: 52
 
-  radius: 10
-  border.color: "white"
-  border.width: 0
-  color : "#00000000"
-  height : rightPart.height
-
-  Image {
-    id : leftPart
-    source : "images/button-left" + mainItem._state + ".png"
-    anchors.left : parent.left
-    anchors.top : parent.top
+  QML.BorderImage {
+    id: borderImage
+    anchors.fill: parent
+    source: "images/button-border" + root._state + ".png"
+    border { left: 14; right: 14; top: 14; bottom: 14 }
+    horizontalTileMode: QML.BorderImage.Repeat
+    verticalTileMode: QML.BorderImage.Stretch
   }
-  Image {
-    source : "images/button-center" + mainItem._state + ".png"
-    anchors.left : leftPart.right
-    anchors.right : rightPart.left
-    fillMode : Image.TileHorizontally
-    anchors.top : parent.top
-  }
-  Image {
-    id : rightPart
-    source : "images/button-right" + mainItem._state + ".png"
-    anchors.right : parent.right
-    anchors.top : parent.top
+  
+  QML.Image {
+    id : iconImage
+    anchors {
+      verticalCenter : parent.verticalCenter;
+      margins: (source == "" ? 0 : 5);
+      left: (buttonText == "" ? undefined : parent.left);
+      horizontalCenter: (buttonText == "" ? parent.horizontalCenter : undefined)
+    }
   }
 
-  Text {
-    id: buttonText
-    verticalAlignment : Text.AlignVCenter
-    horizontalAlignment : Text.AlignHCenter
-    anchors.fill : parent
+  QML.Text {
+    id: buttonLabel
+    verticalAlignment : QML.Text.AlignVCenter
+    horizontalAlignment : QML.Text.AlignHCenter
+    anchors { verticalCenter: parent.verticalCenter; left: iconImage.right; right: parent.right }
+    color: root.enabled ? "black" : "gray"
   }
 
   states: [
-    State {
+    QML.State {
       name: "pressed"
       when : _mouseArea.pressed
-      PropertyChanges {
-        target: mainItem
-        _state : "-pressed"
+      QML.PropertyChanges {
+        target: root
+        _state : "-active"
+      }
+      QML.PropertyChanges {
+        target: buttonLabel
+        color: "white"
       }
     }
   ]
 
-  MouseArea {
+  QML.MouseArea {
     id : _mouseArea
     anchors.fill: parent
     onClicked: parent.clicked()
