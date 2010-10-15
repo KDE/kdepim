@@ -154,6 +154,10 @@ void ComposerView::delayedInit()
   action->setText( i18n( "Save as Template" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveAsTemplate()));
 
+  action = actionCollection()->addAction("composer_clean_spaces");
+  action->setText( i18n( "Clean Spaces" ) );
+  connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(cleanSpaces()));
+
   action = actionCollection()->addAction("urgent");
   action->setText( i18n( "Urgent" ) );
   action->setCheckable(true);
@@ -395,6 +399,12 @@ void ComposerView::saveAsTemplate()
   const MessageSender::SaveIn saveIn = MessageSender::SaveInTemplates;
   send ( method, saveIn );
 }
+
+void ComposerView::cleanSpaces()
+{
+  m_composerBase->signatureController()->cleanSpace();
+}
+
 
 void ComposerView::enableHtml()
 {

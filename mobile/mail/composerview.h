@@ -101,6 +101,7 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void saveDraft();
     void saveAsTemplate();
+    void cleanSpaces();
 
  protected:
     void closeEvent ( QCloseEvent * event );

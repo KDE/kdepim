@@ -45,7 +45,7 @@ ActionMenuContainer {
     text : KDE.i18n( "Edit" )
     FakeAction { name : "composer_search" }
     FakeAction { name : "composer_replace" }
-    FakeAction { name : "composer_clean_spaces" }
+    ActionListItem { name : "composer_clean_spaces" }
     FakeAction { name : "composer_add_quote_char" }
     FakeAction { name : "composer_remove_quote_char" }
     FakeAction { name : "composer_spell_check" }
