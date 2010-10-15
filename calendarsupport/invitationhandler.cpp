@@ -281,8 +281,6 @@ InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
   /// When we created the incidence, we *must* be the organizer.
   Q_ASSERT( d->weAreOrganizerOf( incidence ) );
 
-  int messageBoxReturnCode;
-
   if ( !d->weNeedToSendMailFor( incidence ) ) {
     return InvitationHandler::NoSendingNeeded;
   }
@@ -301,7 +299,7 @@ InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
                      "Should an email be sent to the attendees?" );
   }
 
-  messageBoxReturnCode = d->askUser( question );
+  const int messageBoxReturnCode = d->askUser( question );
   return d->sentInvitation( messageBoxReturnCode, incidence, method );
 }
 
