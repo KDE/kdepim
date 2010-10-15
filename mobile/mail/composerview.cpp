@@ -158,6 +158,12 @@ void ComposerView::delayedInit()
   action->setText( i18n( "Clean Spaces" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(cleanSpaces()));
 
+  action = actionCollection()->addAction( "composer_add_quote_char" );
+  action->setText( i18n( "Add Quote Characters" ) );
+
+  action = actionCollection()->addAction( "composer_remove_quote_char" );
+  action->setText( i18n( "Remove Quote Characters" ) );
+
   action = actionCollection()->addAction("urgent");
   action->setText( i18n( "Urgent" ) );
   action->setCheckable(true);
@@ -196,6 +202,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 
   if ( m_message )
     setMessage( m_message );
+
 }
 
 void ComposerView::setMessage(const KMime::Message::Ptr& msg)
@@ -353,6 +360,8 @@ void ComposerView::setEditor( Message::KMeditor* editor )
 {
     new ComposerAutoResizer(editor);
     m_composerBase->setEditor( editor );
+    connect( actionCollection()->action( "composer_add_quote_char" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( slotAddQuotes() ) );
+    connect( actionCollection()->action( "composer_remove_quote_char" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( slotRemoveQuotes() ) );
 }
 
 void ComposerView::closeEvent( QCloseEvent * event )
