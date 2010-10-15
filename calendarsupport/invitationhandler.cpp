@@ -156,7 +156,7 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
     }
 
     const QString question( i18n( "Sending group scheduling email failed." ) );
-    messageBoxReturnCode = askUserIfNeeded( question, KGuiItem( i18n( "Abort Update" ) ) );
+    messageBoxReturnCode = askUserIfNeeded( question, true, KGuiItem( i18n( "Abort Update" ) ) );
     if ( messageBoxReturnCode == KMessageBox::Yes ) {
       return InvitationHandler::FailAbortUpdate;
     } else {
