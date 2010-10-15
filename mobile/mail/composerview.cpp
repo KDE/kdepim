@@ -173,6 +173,14 @@ void ComposerView::delayedInit()
   action = actionCollection()->addAction( "composer_replace" );
   action->setText( i18n( "Replace" ) );
 
+  action = actionCollection()->addAction( "composer_append_signature" );
+  action->setText( i18n( "Append Signature" ) );
+
+  action = actionCollection()->addAction( "composer_prepend_signature" );
+  action->setText( i18n( "Prepend Signature" ) );
+
+  action = actionCollection()->addAction( "composer_insert_signature" );
+  action->setText( i18n( "Insert Signature at Cursor Position" ) );
 
   action = actionCollection()->addAction("urgent");
   action->setText( i18n( "Urgent" ) );
@@ -206,6 +214,10 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   signatureController->setIdentityCombo( m_composerBase->identityCombo() );
   signatureController->applyCurrentSignature();
   m_composerBase->setSignatureController( signatureController );
+
+  connect( actionCollection()->action( "composer_append_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( appendSignature() ) );
+  connect( actionCollection()->action( "composer_prepend_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( prependSignature() ) );
+  connect( actionCollection()->action( "composer_insert_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( insertSignatureAtCursor() ) );
 
   m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
   m_composerBase->recipientsEditor()->setAutoResizeView( true );

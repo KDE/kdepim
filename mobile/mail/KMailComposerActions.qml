@@ -55,9 +55,9 @@ ActionMenuContainer {
     category : "composer"
     name : "signature_menu"
     text : KDE.i18n( "Signature" )
-    FakeAction { name : "composer_append_signature" }
-    FakeAction { name : "composer_prepend_signature" }
-    FakeAction { name : "composer_insert_signature" }
+    ActionListItem { name : "composer_append_signature" }
+    ActionListItem { name : "composer_prepend_signature" }
+    ActionListItem { name : "composer_insert_signature" }
   }
 
   ActionList {
