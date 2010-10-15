@@ -156,7 +156,6 @@ void ComposerView::delayedInit()
 
   action = actionCollection()->addAction("composer_clean_spaces");
   action->setText( i18n( "Clean Spaces" ) );
-  connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(cleanSpaces()));
 
   action = actionCollection()->addAction( "composer_add_quote_char" );
   action->setText( i18n( "Add Quote Characters" ) );
@@ -215,6 +214,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   signatureController->applyCurrentSignature();
   m_composerBase->setSignatureController( signatureController );
 
+  connect( actionCollection()->action( "composer_clean_spaces" ), SIGNAL(triggered(bool)), signatureController, SLOT( cleanSpace() ) );
   connect( actionCollection()->action( "composer_append_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( appendSignature() ) );
   connect( actionCollection()->action( "composer_prepend_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( prependSignature() ) );
   connect( actionCollection()->action( "composer_insert_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( insertSignatureAtCursor() ) );
@@ -433,12 +433,6 @@ void ComposerView::saveAsTemplate()
   const MessageSender::SaveIn saveIn = MessageSender::SaveInTemplates;
   send ( method, saveIn );
 }
-
-void ComposerView::cleanSpaces()
-{
-  m_composerBase->signatureController()->cleanSpace();
-}
-
 
 void ComposerView::enableHtml()
 {
