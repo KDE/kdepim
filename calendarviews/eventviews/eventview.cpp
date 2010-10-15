@@ -571,12 +571,14 @@ void EventView::saveConfig( KConfigGroup &configGroup )
   Q_D( EventView );
   configGroup.writeEntry( "UseCustomCollectionSelection", d->collectionSelectionModel != 0 );
 
-  KConfigGroup selectionGroup =
+  if ( d->collectionSelectionModel ) {
+    KConfigGroup selectionGroup =
       configGroup.config()->group( configGroup.name() + QLatin1String( "_selectionSetup" ) );
 
-  KViewStateMaintainer<ETMViewStateSaver> maintainer( selectionGroup );
-  maintainer.setSelectionModel( d->collectionSelectionModel->selectionModel() );
-  maintainer.saveState();
+    KViewStateMaintainer<ETMViewStateSaver> maintainer( selectionGroup );
+    maintainer.setSelectionModel( d->collectionSelectionModel->selectionModel() );
+    maintainer.saveState();
+  }
 
   doSaveConfig( configGroup );
 }
