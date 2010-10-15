@@ -100,6 +100,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void mdnRequestEmail ( bool request ) { m_mdnrequested = request; }
 
     void saveDraft();
+    void saveAsTemplate();
 
  protected:
     void closeEvent ( QCloseEvent * event );

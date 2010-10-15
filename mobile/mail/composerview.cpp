@@ -150,6 +150,10 @@ void ComposerView::delayedInit()
   action->setIcon( KIcon( "document-save" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveDraft()));
 
+  action = actionCollection()->addAction("save_as_template");
+  action->setText( i18n( "Save as Template" ) );
+  connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveAsTemplate()));
+
   action = actionCollection()->addAction("urgent");
   action->setText( i18n( "Urgent" ) );
   action->setCheckable(true);
@@ -214,14 +218,14 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
     return;
 
   if ( m_composerBase->recipientsEditor()->recipients().isEmpty()
-    && saveIn != MessageSender::SaveInDrafts ) {
+    &&  saveIn != MessageSender::SaveInDrafts && saveIn != MessageSender::SaveInTemplates ) {
       KMessageBox::sorry( this,
                           i18n("You should specify at least one recipient for this message."),
                           i18n("No recipients found"));
       return;
   }
 
-  if ( m_subject.isEmpty() && saveIn != MessageSender::SaveInDrafts ) {
+  if ( m_subject.isEmpty() && saveIn != MessageSender::SaveInDrafts && saveIn != MessageSender::SaveInTemplates ) {
       const int rc = KMessageBox::questionYesNo( this,
                                                  i18n("You did not specify a subject. Do you want to send the message without specifying one?"),
                                                  i18n("No subject"));
@@ -382,6 +386,13 @@ void ComposerView::saveDraft()
   const MessageSender::SendMethod method = MessageSender::SendLater;
   const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
   m_draft = true;
+  send ( method, saveIn );
+}
+
+void ComposerView::saveAsTemplate()
+{
+  const MessageSender::SendMethod method = MessageSender::SendLater;
+  const MessageSender::SaveIn saveIn = MessageSender::SaveInTemplates;
   send ( method, saveIn );
 }
 

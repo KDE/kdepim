@@ -36,7 +36,7 @@ ActionMenuContainer {
     name : "message_menu"
     text : KDE.i18n( "Message" )
     ActionListItem { name : "save_in_drafts" }
-    FakeAction { name: "save_as_template" }
+    ActionListItem { name: "save_as_template" }
   }
 
   ActionList {
