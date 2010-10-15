@@ -75,7 +75,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "composer_configure_identity"; title: KDE.i18n( "Configure Identity" ) }
     ScriptActionItem { name : "composer_configure_transport"; title: KDE.i18n( "Configure Transport" ) }
     ScriptActionItem { name : "composer_close"; title: KDE.i18n( "Close Composer" ) }
-    FakeAction { name : "composer_open_task_switcher" }
+    ActionListItem { name : "wm_task_switch" }
   }
 
 }
