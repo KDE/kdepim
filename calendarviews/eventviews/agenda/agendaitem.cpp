@@ -764,9 +764,9 @@ void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
 #if 0
   /* sorry, this looks too cluttered. disable until we can
      make something prettier; no idea at this time -- allen */
-  conditionalPaint( p, mIconAlarm && !mSpecialEvent, x, y, ft, *alarmPxmp );
   conditionalPaint( p, mIconRecur && !mSpecialEvent, x, y, ft, *recurPxmp );
 #endif
+  conditionalPaint( p, mIconAlarm && !mSpecialEvent, x, y, ft, *alarmPxmp );
   conditionalPaint( p, mIconReadonly && !mSpecialEvent, x, y, ft, *readonlyPxmp );
   conditionalPaint( p, mIconReply, x, y, ft, *replyPxmp );
   conditionalPaint( p, mIconGroup, x, y, ft, *groupPxmp );
