@@ -1139,28 +1139,29 @@ bool FolderView::event( QEvent *e )
   QString tip = QString::fromLatin1(
       "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
     );
-
+  const QString textDirection =  ( layoutDirection() == Qt::LeftToRight ) ? "left" : "right";
   tip += QString::fromLatin1(
         "<tr>" \
-          "<td bgcolor=\"%1\" colspan=\"2\" align=\"left\" valign=\"middle\">" \
+          "<td bgcolor=\"%1\" colspan=\"2\" align=\"%4\" valign=\"middle\">" \
             "<div style=\"color: %2; font-weight: bold;\">" \
              "%3" \
             "</div>" \
           "</td>" \
         "</tr>"
-    ).arg( txtColor ).arg( bckColor ).arg( fvi->labelText() );
+    ).arg( txtColor ).arg( bckColor ).arg( fvi->labelText() ).arg(textDirection);
 
 
   tip += QString::fromLatin1(
         "<tr>" \
-          "<td align=\"left\" valign=\"top\">"
-    );
+          "<td align=\"%1\" valign=\"top\">"
+    ).arg( textDirection );
 
+  QString tipInfo;
   if ( KMFolder * fld = fvi->folder() )
   {
     if ( !fld->noContent() )
     {
-      tip += QString::fromLatin1(
+      tipInfo += QString::fromLatin1(
               "<strong>%1</strong>: %2<br>" \
               "<strong>%3</strong>: %4<br><br>"
         ).arg( i18n("Total Messages") ).arg( fld->count( !fld->isOpened() ) )
@@ -1170,11 +1171,11 @@ bool FolderView::event( QEvent *e )
       {
         QuotaInfo info = imap->quotaInfo();
         if ( info.isValid() && !info.isEmpty() )
-          tip += QString( "<strong>%1</strong>: %2<br>" ).arg( i18n( "Quota" ) ).arg( info.toString() );
+          tipInfo += QString( "<strong>%1</strong>: %2<br>" ).arg( i18n( "Quota" ) ).arg( info.toString() );
       }
 
       if ( fld->storage()->folderSize() >= 0 )
-        tip += QString::fromLatin1(
+        tipInfo += QString::fromLatin1(
                 "<strong>%1</strong>: %2<br>"
           ).arg( i18n("Storage Size") ).arg( KIO::convertSize( (KIO::filesize_t)( fld->storage()->folderSize() ) ) );
 
@@ -1183,7 +1184,7 @@ bool FolderView::event( QEvent *e )
     }
 
     if (fvi->childrenDataSize() >= 0 )
-      tip += QString::fromLatin1(
+      tipInfo += QString::fromLatin1(
               "<strong>%1</strong>: %2<br>"
         ).arg( i18n("Subfolder Storage Size") ).arg( KIO::convertSize( (KIO::filesize_t)( fvi->childrenDataSize() ) ) );
 
@@ -1217,18 +1218,24 @@ bool FolderView::event( QEvent *e )
   if ( iconPath.isEmpty() )
     iconPath = KIconLoader::global()->iconPath( "folder", -32, false );
 
-  tip += QString::fromLatin1(
-          "</td>" \
-          "<td align=\"right\" valign=\"top\">" \
+  QString tipIcon = QString::fromLatin1(
             "<table border=\"0\"><tr><td width=\"32\" height=\"32\" align=\"center\" valign=\"middle\">"
               "<img src=\"%1\" width=\"%2\" height=\"%2\">" \
             "</td></tr></table>" \
           "</td>" \
-        "</tr>" \
     ) .arg( iconPath ).arg( icon_size_found );
 
+  if ( layoutDirection() == Qt::LeftToRight )
+  {
+    tip += tipInfo + QString::fromLatin1( "</td><td align=\"%3\" valign=\"top\">" ).arg( textDirection ) + tipIcon;
+  }
+  else
+  {
+    tip += tipIcon + QString::fromLatin1( "</td><td align=\"%3\" valign=\"top\">" ).arg( textDirection ) + tipInfo;
+  }
 
   tip += QString::fromLatin1(
+      "  </tr>" \
       "</table>"
     );
   QToolTip::showText( he->globalPos(), tip, viewport(), visualItemRect( it ) );
@@ -1434,7 +1441,7 @@ void FolderView::fillContextMenuMessageRelatedActions( KMenu *menu, FolderViewIt
   }
   // search messages
   menu->addAction( mMainWidget->action( "search_messages" ) );
-  if( !nocontent ) 
+  if( !nocontent )
     // move all messages to trash
     menu->addAction( mMainWidget->action( "empty" ) );
 }
