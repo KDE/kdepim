@@ -380,8 +380,9 @@ KPIM.MainView {
     id: cancelButton
     anchors.bottom: parent.bottom;
     anchors.right: okButton.left;
-    width: 100;
-    buttonText: KDE.i18n( "Cancel" );
+    width: height * 1.5;
+    height: collectionCombo.height
+    icon: KDE.iconPath( "dialog-cancel", 64 );
     onClicked: window.cancel();
   }
 
@@ -389,8 +390,9 @@ KPIM.MainView {
     id: okButton;
     anchors.bottom: parent.bottom;
     anchors.right: parent.right;
-    width: 100;
-    buttonText: KDE.i18n( "Ok" );
+    width: height * 1.5;
+    height: collectionCombo.height
+    icon: KDE.iconPath( "document-save", 64 );
     onClicked: window.save();
   }
 }

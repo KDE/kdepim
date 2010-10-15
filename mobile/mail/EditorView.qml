@@ -95,20 +95,28 @@ Item {
         left: identityLabel.right
         top: parent.top
         bottom: parent.bottom
-        right: sendButton.left
+        right: cancelButton.left
       }
     }
 
-    KPIM.Button {
-      id: sendButton
-      anchors {
-        top: parent.top
-        bottom: parent.bottom
-        right: parent.right
-      }
-      buttonText: KDE.i18n( "Send" )
-      width: parent.parent.width / 4
-      onClicked: window.send()
+    KPIM.Button2 {
+      id: cancelButton
+      anchors.bottom: parent.bottom;
+      anchors.right: sendButton.left;
+      width: height * 1.5;
+      height: identityCombo.height
+      icon: KDE.iconPath( "dialog-cancel", 64 );
+      onClicked: window.close();
+    }
+
+    KPIM.Button2 {
+      id: sendButton;
+      anchors.bottom: parent.bottom;
+      anchors.right: parent.right;
+      width: height * 1.5;
+      height: identityCombo.height
+      icon: KDE.iconPath( "mail-folder-outbox", 64 );
+      onClicked: window.send();
     }
   }
 
