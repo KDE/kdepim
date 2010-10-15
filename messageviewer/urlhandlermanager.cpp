@@ -54,6 +54,7 @@
 
 #include <kmime/kmime_content.h>
 #include <KPIMUtils/Email>
+#include <KPIMUtils/KFileIO>
 
 #include <KMenu>
 #include <KMimeType>
@@ -802,12 +803,15 @@ namespace {
     KMime::Content *node = nodeForUrl( url, window );
     if ( !node )
       return false;
-    KUrl file = window->nodeHelper()->tempFileUrlFromNode( node );
-    if ( !file.isEmpty() ) {
+
+    const KUrl tUrl = window->nodeHelper()->tempFileUrlFromNode( node );
+    const QString fileName = tUrl.path();
+    if ( !fileName.isEmpty() ) {
+      KPIMUtils::checkAndCorrectPermissionsIfPossible( fileName, false, true, true );
       const QString icon = window->nodeHelper()->iconName( node, KIconLoader::Small );
       QDrag *drag = new QDrag( window->viewer() );
       QMimeData *mimeData = new QMimeData();
-      mimeData->setUrls( QList<QUrl>() << file );
+      mimeData->setUrls( QList<QUrl>() << tUrl );
       drag->setMimeData( mimeData );
       if ( !icon.isEmpty() ) {
         drag->setPixmap( QPixmap( icon ) );

@@ -98,7 +98,9 @@ bool AttachmentModel::dropMimeData( const QMimeData *data, Qt::DropAction action
   Q_UNUSED( column );
   Q_UNUSED( parent );
 
-  kDebug() << "data has formats" << data->formats() << "urls" << data->urls() << "action" << action;
+  kDebug() << "data has formats" << data->formats()
+           << "urls" << data->urls()
+           << "action" << int( action );
 
   if( action == Qt::IgnoreAction ) {
     return true;
@@ -153,6 +155,7 @@ QMimeData *AttachmentModel::mimeData( const QModelIndexList &indexes ) const
     KPIMUtils::kByteArrayToFile( part->data(),
                                  fileName,
                                  false, false, false );
+    KPIMUtils::checkAndCorrectPermissionsIfPossible( fileName, false, true, true );
     QUrl url;
     url.setScheme( QLatin1String( "file" ) );
     url.setPath( fileName );
