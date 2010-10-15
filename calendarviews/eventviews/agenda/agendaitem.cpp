@@ -747,7 +747,8 @@ void AgendaItem::paintIcon( QPainter *p, int &x, int y, int ft )
     //    from event's much easier.
     // 3. Be consistent with month view
     //conditionalPaint( p, true, x, y, ft, *eventPxmp );
-    iconName = incidence->iconName();
+    KDateTime::Spec spec = mEventView->preferences()->timeSpec();
+    iconName = incidence->iconName( KDateTime( mDate, spec ) );
   }
 
   conditionalPaint( p, !iconName.isEmpty(), x, y, ft, cachedSmallIcon( iconName ) );

@@ -52,12 +52,8 @@ MonthScene::MonthScene( MonthView *parent )
     mStartHeight( 0 ),
     mCurrentIndicator( 0 )
 {
-  mEventPixmap     = SmallIcon( "view-calendar-day" );
   mBirthdayPixmap  = SmallIcon( "view-calendar-birthday" );
   mAnniversaryPixmap = SmallIcon( "view-calendar-wedding-anniversary" );
-  mTodoPixmap      = SmallIcon( "view-calendar-tasks" );
-  mTodoDonePixmap  = SmallIcon( "task-complete" );
-  mJournalPixmap   = SmallIcon( "view-pim-journal" );
   mAlarmPixmap     = SmallIcon( "appointment-reminder" );
   mRecurPixmap     = SmallIcon( "appointment-recurring" );
   mReadonlyPixmap  = SmallIcon( "object-locked" );

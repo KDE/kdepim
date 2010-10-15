@@ -132,11 +132,11 @@ bool ListView::Private::ListItemVisitor::visit( Event::Ptr e )
   QPixmap eventPxmp;
 
   if ( e->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    eventPxmp = SmallIcon( "view-calendar-wedding-anniversary" );
+    eventPxmp = cachedSmallIcon( "view-calendar-wedding-anniversary" );
   } else if ( e->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
-    eventPxmp = SmallIcon( "view-calendar-birthday" );
+    eventPxmp = cachedSmallIcon( "view-calendar-birthday" );
   } else {
-    eventPxmp = SmallIcon( "view-calendar-day" );
+    eventPxmp = cachedSmallIcon( e->iconName() );
   }
 
   mItem->setIcon( Summary_Column, eventPxmp );
@@ -160,10 +160,7 @@ bool ListView::Private::ListItemVisitor::visit( Event::Ptr e )
 
 bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
 {
-  static const QPixmap todoPxmp = SmallIcon( "view-calendar-tasks" );
-  static const QPixmap todoDonePxmp = SmallIcon( "task-complete" );
-
-  mItem->setIcon( Summary_Column, t->isCompleted() ? todoDonePxmp : todoPxmp );
+  mItem->setIcon( Summary_Column, cachedSmallIcon( t->iconName() ) );
   mItem->setText( Summary_Column, t->summary() );
   if ( t->hasEnabledAlarms() ) {
     static const QPixmap alarmPxmp = SmallIcon( "appointment-reminder" );
@@ -206,7 +203,7 @@ bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
 
 bool ListView::Private::ListItemVisitor::visit( Journal::Ptr j )
 {
-  static const QPixmap jrnalPxmp = SmallIcon( "view-pim-journal" );
+  static const QPixmap jrnalPxmp = SmallIcon( j->iconName() );
   mItem->setIcon( Summary_Column, jrnalPxmp );
   if ( j->summary().isEmpty() ) {
     mItem->setText( Summary_Column, j->description().section( '\n', 0, 0 ) );

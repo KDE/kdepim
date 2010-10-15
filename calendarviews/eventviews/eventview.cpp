@@ -494,33 +494,6 @@ CalendarSupport::CollectionSelection *EventView::globalCollectionSelection()
   return EventViewPrivate::sGlobalCollectionSelection;
 }
 
-/* static */
-bool EventView::usesCompletedTodoPixmap( const Akonadi::Item &aitem, const QDate &date )
-{
-  const Todo::Ptr todo = CalendarSupport::todo( aitem );
-  if ( !todo ) {
-    return false;
-  }
-
-  if ( todo->isCompleted() ) {
-    return true;
-  } else if ( todo->recurs() ) {
-    QTime time;
-    if ( todo->allDay() ) {
-      time = QTime( 0, 0 );
-    } else {
-      time = todo->dtDue().toTimeSpec( preferences()->timeSpec() ).time();
-    }
-
-    KDateTime itemDateTime( date, time, preferences()->timeSpec() );
-
-    return itemDateTime < todo->dtDue( false );
-
-  } else {
-    return false;
-  }
-}
-
 QByteArray EventView::identifier() const
 {
   Q_D( const EventView );

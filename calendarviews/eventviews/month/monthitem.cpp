@@ -586,18 +586,9 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 
     // ret << monthScene()->eventPixmap();
 
-  } else if ( mIsTodo ) {
-
-    const bool isCompleted =
-      monthScene()->monthView()->usesCompletedTodoPixmap( item, realStartDate() );
-
-    if ( isCompleted ) {
-      ret << monthScene()->todoDonePixmap();
-    } else {
-      ret << monthScene()->todoPixmap();
-    }
-  } else if ( mIsJournal ) {
-    ret << monthScene()->journalPixmap();
+  } else if ( mIsTodo || mIsJournal ) {
+    KDateTime::Spec spec = monthScene()->monthView()->preferences()->timeSpec();
+    ret << new QPixmap( cachedSmallIcon( mIncidence->iconName( KDateTime( realStartDate(), spec ) ) ) );
   }
 
   if ( !monthScene()->mMonthView->calendar()->hasChangeRights( item ) && !specialEvent ) {

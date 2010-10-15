@@ -150,12 +150,8 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
     */
     MonthItem *selectedItem() { return mSelectedItem; }
 
-    QPixmap *eventPixmap() { return &mEventPixmap; }
     QPixmap *birthdayPixmap() { return &mBirthdayPixmap; }
     QPixmap *anniversaryPixmap() { return &mAnniversaryPixmap; }
-    QPixmap *todoPixmap() { return &mTodoPixmap; }
-    QPixmap *todoDonePixmap() { return &mTodoDonePixmap; }
-    QPixmap *journalPixmap() { return &mJournalPixmap; }
     QPixmap *alarmPixmap() { return &mAlarmPixmap; }
     QPixmap *recurPixmap() { return &mRecurPixmap; }
     QPixmap *readonlyPixmap() { return &mReadonlyPixmap; }

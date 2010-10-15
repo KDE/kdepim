@@ -136,11 +136,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     KCalPrefsPtr kcalPreferences() const;
 
     /**
-       A todo can have two pixmaps, one for completed and one for incomplete.
-    */
-    bool usesCompletedTodoPixmap( const Akonadi::Item &aItem, const QDate &date );
-
-    /**
       @return a list of selected events. Most views can probably only
       select a single event at a time, but some may be able to select
       more than one.
