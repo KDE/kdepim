@@ -583,9 +583,11 @@ void ViewerPrivate::attachmentOpenWith( KMime::Content *node )
   bool autoDelete = true;
 
   if ( linkName.isEmpty() ) {
-  autoDelete = false;
-  linkName = name;
+    autoDelete = false;
+    linkName = name;
   }
+
+  KPIMUtils::checkAndCorrectPermissionsIfPossible( linkName, false, true, true );
 
   url.setPath( linkName );
   lst.append( url );
@@ -612,6 +614,8 @@ void ViewerPrivate::attachmentOpen( KMime::Content *node )
     autoDelete = false;
     fname = name;
   }
+
+  KPIMUtils::checkAndCorrectPermissionsIfPossible( fname, false, true, true );
 
   url.setPath( fname );
   lst.append( url );
