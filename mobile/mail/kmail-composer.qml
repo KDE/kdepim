@@ -110,6 +110,9 @@ KPIM.MainView {
               }
             }
             ]
+            onDoCollapse : {
+              actionPanel.collapse();
+            }
           }
       ]
     }
