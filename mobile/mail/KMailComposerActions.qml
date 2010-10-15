@@ -48,7 +48,7 @@ ActionMenuContainer {
     ActionListItem { name : "composer_clean_spaces" }
     ActionListItem { name : "composer_add_quote_char" }
     ActionListItem { name : "composer_remove_quote_char" }
-    FakeAction { name : "composer_spell_check" }
+    ActionListItem { name : "composer_spell_check" }
   }
 
   ActionList {

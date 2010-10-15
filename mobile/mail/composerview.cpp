@@ -164,6 +164,9 @@ void ComposerView::delayedInit()
   action = actionCollection()->addAction( "composer_remove_quote_char" );
   action->setText( i18n( "Remove Quote Characters" ) );
 
+  action = actionCollection()->addAction( "composer_spell_check" );
+  action->setText( i18n( "Check Spelling" ) );
+
   action = actionCollection()->addAction("urgent");
   action->setText( i18n( "Urgent" ) );
   action->setCheckable(true);
@@ -362,6 +365,7 @@ void ComposerView::setEditor( Message::KMeditor* editor )
     m_composerBase->setEditor( editor );
     connect( actionCollection()->action( "composer_add_quote_char" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( slotAddQuotes() ) );
     connect( actionCollection()->action( "composer_remove_quote_char" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( slotRemoveQuotes() ) );
+    connect( actionCollection()->action( "composer_spell_check" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( checkSpelling() ) );
 }
 
 void ComposerView::closeEvent( QCloseEvent * event )
