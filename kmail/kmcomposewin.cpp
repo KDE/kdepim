@@ -5388,10 +5388,11 @@ void KMComposeWin::slotAttachmentDragStarted()
       KTempDir * tempDir = new KTempDir(); // will be deleted on composer close
       tempDir->setAutoDelete( true );
       mTempDirs.insert( tempDir );
-      const QString fileName = tempDir->name() + "/" + msgPart->name();
+      const QString fileName = tempDir->name() + msgPart->name();
       KPIM::kByteArrayToFile(msgPart->bodyDecodedBinary(),
                              fileName,
                              false, false, false);
+      KPIM::checkAndCorrectPermissionsIfPossible( fileName, false, true, true );
       KURL url;
       url.setPath( fileName );
       filenames << url.path();

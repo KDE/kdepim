@@ -47,6 +47,8 @@
 #include "callback.h"
 #include "stl_util.h"
 
+#include <libkdepim/kfileio.h>
+
 #include <kabc/stdaddressbook.h>
 #include <kabc/addressee.h>
 #include <dcopclient.h>
@@ -777,10 +779,12 @@ namespace {
     if ( !node )
       return false;
 
-    KURL file = window->tempFileUrlFromPartNode( node ).path();
-    if ( !file.isEmpty() ) {
+    const KURL tUrl = window->tempFileUrlFromPartNode( node );
+    const QString fileName = tUrl.path();
+    if ( !fileName.isEmpty() ) {
+      KPIM::checkAndCorrectPermissionsIfPossible( fileName, false, true, true );
       QString icon = node->msgPart().iconName( KIcon::Small );
-      KURLDrag* urlDrag = new KURLDrag( file, window );
+      KURLDrag *urlDrag = new KURLDrag( tUrl, window );
       if ( !icon.isEmpty() ) {
         QPixmap iconMap( icon );
         urlDrag->setPixmap( iconMap );
