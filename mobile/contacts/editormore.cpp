@@ -61,6 +61,8 @@ class EditorMore::Private
 
       QWidget *namePage = new QWidget;
       mNamePage.setupUi( namePage );
+      mNamePage.pronunciationTitle->hide(); // not editable, so don't confuse the user
+      mNamePage.pronunciationLabel->hide();
 
       QWidget *internetPage = new QWidget;
       mInternetPage.setupUi( internetPage );
@@ -101,6 +103,7 @@ class EditorMore::Private
 
       mPersonalPage.birthdayDateEdit->setDate( QDate() );
       mPersonalPage.anniversaryDateEdit->setDate( QDate() );
+
     }
 
     void playPronunciation()
@@ -206,7 +209,9 @@ void EditorMore::loadContact( const KABC::Addressee &contact, const Akonadi::Con
   d->mNamePage.displayNameWidget->loadContact( contact );
   // tokoe: enable when ContactMetaData is part of public API
   // d->mNamePage.displayNameWidget->setDisplayType( (DisplayNameEditWidget::DisplayType)metaData.displayNameMode() );
-  d->mNamePage.pronunciationLabel->setEnabled( !contact.sound().data().isEmpty() );
+  const bool hasSound = !contact.sound().isEmpty();
+  d->mNamePage.pronunciationTitle->setVisible( hasSound );
+  d->mNamePage.pronunciationLabel->setVisible( hasSound );
 
   // internet page
   d->mInternetPage.urlLineEdit->setText( contact.url().url() );
