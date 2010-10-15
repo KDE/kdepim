@@ -70,9 +70,25 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
       Success          /**< The invitation was sent to all attendees. */
     };
 
+    enum Action {
+      Ask,
+      SendMessage,
+      DontSendMessage
+    };
+
     bool receiveInvitation( const QString &receiver,
                             const QString &iCal,
                             const QString &type );
+
+    /**
+      When an Incidence is created/modified/deleted the user can choose to send
+      an ICal message to the other participants. By default the user will be asked
+      if he wants to send a message to other participants. In some cases it is
+      preferably though to not bother the user with this question. This method
+      allows to change the default behavior. This method applies to the
+      sendIncidence*Message() methods.
+     */
+    void setDefaultAction( Action action );
 
     /**
       Before an invitation is sent the user is asked for confirmation by means of
