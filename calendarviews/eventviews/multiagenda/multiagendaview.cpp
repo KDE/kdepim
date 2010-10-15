@@ -28,7 +28,6 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/entitymodelstatesaver.h>
 #include <calendarsupport/utils.h>
 
 #include <akonadi_next/kcheckableproxymodel.h>

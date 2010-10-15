@@ -21,7 +21,6 @@ set(calendarsupport_LIB_SRCS
   calfilterproxymodel.cpp
   collectionselection.cpp
   daterangefilterproxymodel.cpp
-  entitymodelstatesaver.cpp
   eventarchiver.cpp
   freebusydownloadjob.cpp
   freebusymanager.cpp
