@@ -21,8 +21,10 @@
 
 #include <akonadi/agentmanager.h>
 #include <akonadi/mimetypechecker.h>
-#include <kdebug.h>
+
 #include <solid/networking.h>
+
+#include <kdebug.h>
 
 using namespace Akonadi;
 
@@ -36,9 +38,7 @@ AgentStatusMonitor::AgentStatusMonitor( QObject* parent )
   connect( AgentManager::self(), SIGNAL( instanceRemoved( Akonadi::AgentInstance ) ), SLOT( updateStatus() ) );
   connect( AgentManager::self(), SIGNAL( instanceOnline( Akonadi::AgentInstance, bool ) ), SLOT( updateStatus() ) );
   connect( AgentManager::self(), SIGNAL( instanceStatusChanged( Akonadi::AgentInstance ) ), SLOT( updateStatus() ) );
-#ifndef _WIN32_WCE
   connect( Solid::Networking::notifier(), SIGNAL( statusChanged( Solid::Networking::Status ) ), SLOT( updateStatus() ) );
-#endif
   updateStatus();
 }
 
@@ -64,11 +64,9 @@ void AgentStatusMonitor::updateStatus()
     }
   }
 
-#ifndef _WIN32_WCE
   if ( Solid::Networking::status() != Solid::Networking::Connected && Solid::Networking::status() != Solid::Networking::Unknown ) {
     m_status &= ~Online;
   }
-#endif
 
   if ( m_status != oldStatus )
     emit statusChanged();
