@@ -29,7 +29,6 @@
 #include "prefs.h"
 
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/entitymodelstatesaver.h>
 #include <calendarsupport/kcalprefs.h>
 
 #include <akonadi_next/kcheckableproxymodel.h>
@@ -43,7 +42,6 @@ EventViewPrivate::EventViewPrivate( EventView *qq )
     calendar( 0 ),
     customCollectionSelection( 0 ),
     collectionSelectionModel( 0 ),
-    stateSaver( 0 ),
     mReturnPressed( false ),
     mDateRangeSelectionEnabled( true ),
     mTypeAhead( false ),
@@ -74,15 +72,11 @@ void EventViewPrivate::finishTypeAhead()
 
 void EventViewPrivate::setUpModels()
 {
-  delete stateSaver;
-  stateSaver = 0;
   delete customCollectionSelection;
   customCollectionSelection = 0;
   if ( collectionSelectionModel ) {
     customCollectionSelection =
       new CalendarSupport::CollectionSelection( collectionSelectionModel->selectionModel() );
-    stateSaver = new CalendarSupport::EntityModelStateSaver( collectionSelectionModel, q );
-    stateSaver->addRole( Qt::CheckStateRole, "CheckState" );
   }
 
   reconnectCollectionSelection();

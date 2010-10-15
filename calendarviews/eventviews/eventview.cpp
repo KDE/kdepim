@@ -31,7 +31,6 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
-#include <calendarsupport/entitymodelstatesaver.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -42,8 +41,10 @@
 
 #include <KCalUtils/RecurrenceActions>
 
-#include <KHolidays/Holidays>
+#include <akonadi/etmviewstatesaver.h>
 
+#include <kviewstatemaintainer.h>
+#include <KHolidays/Holidays>
 #include <KGuiItem>
 #include <KLocale>
 
@@ -53,6 +54,7 @@
 
 using namespace KCalCore;
 using namespace EventViews;
+using namespace Akonadi;
 using namespace Future;
 
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
@@ -553,10 +555,12 @@ void EventView::restoreConfig( const KConfigGroup &configGroup )
 
       d->setUpModels();
     }
-
     const KConfigGroup selectionGroup =
       configGroup.config()->group( configGroup.name() + QLatin1String( "_selectionSetup" ) );
-    d->stateSaver->restoreConfig( selectionGroup );
+
+    KViewStateMaintainer<ETMViewStateSaver> maintainer( selectionGroup );
+    maintainer.setSelectionModel( d->collectionSelectionModel->selectionModel() );
+    maintainer.restoreState();
   }
 
   doRestoreConfig( configGroup );
@@ -566,11 +570,13 @@ void EventView::saveConfig( KConfigGroup &configGroup )
 {
   Q_D( EventView );
   configGroup.writeEntry( "UseCustomCollectionSelection", d->collectionSelectionModel != 0 );
-  if ( d->stateSaver ) {
-    KConfigGroup selectionGroup =
+
+  KConfigGroup selectionGroup =
       configGroup.config()->group( configGroup.name() + QLatin1String( "_selectionSetup" ) );
-    d->stateSaver->saveConfig( selectionGroup );
-  }
+
+  KViewStateMaintainer<ETMViewStateSaver> maintainer( selectionGroup );
+  maintainer.setSelectionModel( d->collectionSelectionModel->selectionModel() );
+  maintainer.saveState();
 
   doSaveConfig( configGroup );
 }

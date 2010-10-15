@@ -29,10 +29,6 @@
 #include <KDateTime>
 #include <KRandom>
 
-namespace CalendarSupport {
-class EntityModelStateSaver;
-}
-
 namespace EventViews {
 
 class EventViewPrivate
@@ -52,12 +48,12 @@ class EventViewPrivate
 
   public: // virtual functions
     void setUpModels();
- 
+
   public: /// Members
     CalendarSupport::Calendar *calendar;
     CalendarSupport::CollectionSelection *customCollectionSelection;
     Future::KCheckableProxyModel *collectionSelectionModel;
-    CalendarSupport::EntityModelStateSaver *stateSaver;
+
     QByteArray identifier;
     KDateTime startDateTime;
     KDateTime endDateTime;
