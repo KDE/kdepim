@@ -1,4 +1,21 @@
 
+Friday 15 October 2010
+
+Problems addressed
+------------------
+
+* kolab/issue2786: open attachments with an application: the file name is not original but has chars attached to it (rt#5749)
+* kolab/issue3689: D'n'D a mail to the desktop: Preselect subject as filename (rt#5798)
+* kolab/issue3924: Side-by-side calender view: Unwanted extra scrollbar, even if there is enough space. (rt#5876)
+* kolab/issue3933: A large wholeday event is not shown at all days in dayview. (rt#5884)
+* kolab/issue4259: Wish: all-day event (marked as busy) should set background color for the whole day (rt#5878)
+* kolab/issue4262: Wish: add/remove attendee, option : send update mail only to changed attendees (rt#6085)
+* kolab/issue4561: Send event as ical sends it with wrong timezone. (rt#6207)
+* kolab/issue4578: Clicking on attendee links in Attendee list of invitations doesn't work
+* kolab/issue4637: Month view: long out faded event titles are not completely readable after scrolling day cell
+
+
+
 Friday 08 October 2010
 
 Problems addressed
