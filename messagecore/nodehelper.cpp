@@ -101,11 +101,9 @@ bool MessageCore::NodeHelper::isHeuristicalAttachment( KMime::Content *node )
 
 bool MessageCore::NodeHelper::isInvitation( KMime::Message* message )
 {
-  if ( message && message->contentType( false ) ) {
-    const KMime::Headers::ContentType* const contentType = message->contentType();
-    if ( contentType->mimeType().toLower() == "text/calendar" )
+  const KMime::Headers::ContentType * const contentType = message ? message->contentType( false ) : 0;
+  if ( contentType && contentType->isMediatype( "text" ) && contentType->isSubtype( "calendar" ) )
       return true;
-  }
   return false;
 }
 
