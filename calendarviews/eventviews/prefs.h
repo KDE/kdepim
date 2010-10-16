@@ -147,20 +147,11 @@ class EVENTVIEWS_EXPORT Prefs
     void setEnableToolTips( bool enable );
     bool enableToolTips() const;
 
-    void setDefaultDuration( const QDateTime &dateTime );
-    QDateTime defaultDuration() const;
-
     void setShowTodosAgendaView( bool show );
     bool showTodosAgendaView() const;
 
     void setAgendaTimeLabelsFont( const QFont &font );
     QFont agendaTimeLabelsFont() const;
-
-    void setWorkWeekMask( int mask );
-    int workWeekMask() const;
-
-    void setExcludeHolidays( bool exclude );
-    bool excludeHolidays() const;
 
     KConfigSkeleton::ItemFont *fontItem( const QString &name ) const;
 
@@ -193,9 +184,23 @@ class EVENTVIEWS_EXPORT Prefs
     bool colorMonthBusyDays() const;
     void setColorMonthBusyDays( bool enable );
 
-
     QColor viewBgBusyColor() const;
     void setViewBgBusyColor( const QColor & );
+
+    QColor holidayColor() const;
+    void setHolidayColor( const QColor &color );
+
+    QColor agendaViewBackgroundColor() const;
+    void setAgendaViewBackgroundColor( const QColor &color );
+
+    QColor workingHoursColor() const;
+    void setWorkingHoursColor( const QColor &color );
+
+    QColor todoDueTodayColor() const;
+    void setTodoDueTodayColor( const QColor &color );
+
+    QColor todoOverdueColor() const;
+    void setTodoOverdueColor( const QColor &color );
 
   private:
     class Private;

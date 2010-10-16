@@ -1064,7 +1064,7 @@ bool AgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &
     if ( start.secsTo( end ) == 15 * 60 ) {
       // One cell in the agenda view selected, e.g.
       // because of a double-click, => Use the default duration
-      QTime defaultDuration( preferences()->defaultDuration().time() );
+      QTime defaultDuration( CalendarSupport::KCalPrefs::instance()->defaultDuration().time() );
       int addSecs = ( defaultDuration.hour() * 3600 ) + ( defaultDuration.minute() * 60 );
       end = start.addSecs( addSecs );
     }

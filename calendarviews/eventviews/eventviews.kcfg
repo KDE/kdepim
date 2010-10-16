@@ -12,12 +12,6 @@
 
 <!-- General Page: Personal Tab -->
   <group name="Personal Settings">
-    <entry type="Bool" key="Use Control Center Email" name="EmailControlCenter">
-      <label>Use email settings from System Settings</label>
-      <whatsthis>Check this box to use the KDE-wide e-mail settings, which are defined using the System Settings &quot;About Me&quot; Module. Uncheck this box to be able to specify your full name and e-mail.</whatsthis>
-      <default>true</default>
-    </entry>
-
     <entry type="Enum" name="DefaultEmailAttachMethod">
       <label>Default Email Attachment Method</label>
       <whatsthis>The default way of attaching dropped emails to an event</whatsthis>
@@ -103,11 +97,6 @@
       <default>QDateTime(QDate(1752,1,1), QTime(7,0))</default>
     </entry>
 
-    <entry type="String" name="Holidays">
-      <label>Use holiday region:</label>
-      <whatsthis>Select from which region you want to use the holidays here. Defined holidays are shown as non-working days in the date navigator, the agenda view, etc.</whatsthis>
-    </entry>
-
     <entry type="DateTime" name="WorkingHoursStart">
       <label>Daily starting hour</label>
       <whatsthis>Enter the start time for the working hours here. The working hours will be marked with color by KOrganizer.</whatsthis>
@@ -120,59 +109,6 @@
       <default>QDateTime(QDate(1752,1,1), QTime(17,0))</default>
     </entry>
 
-    <entry type="Bool" key="Exclude Holidays">
-      <label>Exclude holidays</label>
-      <whatsthis>Check this box to prevent KOrganizer from marking the working hours on holidays.</whatsthis>
-      <default>true</default>
-    </entry>
-    <entry type="Bool" key="ColorMonthBusyDaysEnabled" name="ColorMonthBusyDaysEnabled">
-      <label>Color busy days with a different background color</label>
-      <whatsthis>Check this box if you want month view's background to be filled with a different color on days which have at least one all day event marked as busy. Also, you can change the background color used for this option on the Colors configuration page. Look for the "Busy days background color" setting.</whatsthis>
-      <default>false</default>
-    </entry>
-  </group>
-
-<!-- Time&Date Page: Default Values Tab -->
-  <group name="Default Datetimes">
-    <entry type="DateTime" name="StartTime">
-      <label>Default appointment time</label>
-      <whatsthis>Enter the default time for events here. The default is used if you do not supply a start time.</whatsthis>
-      <default>QDateTime(QDate(1752,1,1), QTime(10,0))</default>
-    </entry>
-
-    <entry type="DateTime" name="DefaultDuration">
-      <label>Default duration of new appointment (HH:MM)</label>
-      <whatsthis>Enter default duration for events here. The default is used if you do not supply an end time.</whatsthis>
-      <default>QDateTime(QDate(1752,1,1), QTime(2,0))</default>
-    </entry>
-
-    <entry type="Bool" key="Enable Event Reminders" name="defaultEventReminders">
-      <label>Enable reminders for new Events</label>
-      <whatsthis>Check this box if you want to enable reminders for all newly created Events. You can always turn-off the reminders in the Event editor dialog.</whatsthis>
-      <tooltip>By default, enable reminders for new events</tooltip>
-      <default>false</default>
-    </entry>
-
-    <entry type="Bool" key="Enable To-do Reminders" name="defaultTodoReminders">
-      <label>Enable reminders for new To-dos</label>
-      <whatsthis>Check this box if you want to enable reminders for all newly created To-dos. You can always turn-off the reminders in the To-do editor dialog.</whatsthis>
-      <tooltip>By default, enable reminders for new to-dos</tooltip>
-      <default>false</default>
-    </entry>
-
-
-    <entry type="Int" key="Default Reminder Time" name="ReminderTime">
-      <label>Default reminder time</label>
-      <whatsthis>Enter the default reminder time for all newly created items. The time unit is specified in the adjacent combobox.</whatsthis>
-      <tooltip>Default time for reminders</tooltip>
-      <default>15</default>
-    </entry>
-
-    <entry type="Int" key="Default Reminder Time Units" name="ReminderTimeUnits">
-      <whatsthis>Enter the default reminder time units for all newly created items. The time is specified in the adjacent spinbox.</whatsthis>
-      <tooltip>Default time unit for reminders</tooltip>
-      <default>0</default>
-    </entry>
   </group>
 
 <!-- Views Page: General Tab -->
@@ -388,6 +324,12 @@
       </choices>
       <default>MonthItemCategoryInsideResourceOutside</default>
     </entry>
+
+    <entry type="Bool" key="ColorMonthBusyDaysEnabled" name="ColorMonthBusyDaysEnabled">
+      <label>Color busy days with a different background color</label>
+      <whatsthis>Check this box if you want month view's background to be filled with a different color on days which have at least one all day event marked as busy. Also, you can change the background color used for this option on the Colors configuration page. Look for the "Busy days background color" setting.</whatsthis>
+      <default>false</default>
+    </entry>
   </group>
 
 <!-- Views Page: Todo View Tab -->
@@ -487,89 +429,6 @@
     </entry>
   </group>
 
-<!-- Group Scheduling Page -->
-  <group name="Group Scheduling">
-    <entry type="Bool" key="Use Groupware Communication">
-      <label>Use Groupware communication</label>
-      <whatsthis>Check this box to enable automatic generation of mails when creating, updating or deleting events (or to-dos) involving other attendees. You should check this box if you want to use the groupware functionality (e.g. Configuring Kontact as a KDE Kolab client).</whatsthis>
-      <default>true</default>
-    </entry>
-
-    <entry type="Bool" key="Bcc">
-      <label>Send copy to owner when mailing events</label>
-      <whatsthis>Check this box to get a copy of all e-mail messages that KOrganizer sends at your request to event attendees.</whatsthis>
-      <default>false</default>
-    </entry>
-
-    <entry type="StringList" name="AdditionalMails">
-    </entry>
-  </group>
-
-<!-- Free/Busy Page: Publish Tab -->
-  <group name="FreeBusy Publish">
-    <entry type="Bool" name="FreeBusyPublishAuto">
-      <default>false</default>
-    </entry>
-
-    <entry type="Int" name="FreeBusyPublishDelay">
-      <default>5</default>
-    </entry>
-
-    <entry type="Int" key="FreeBusyPublishDays">
-      <default>60</default>
-    </entry>
-
-    <entry type="String" name="FreeBusyPublishUrl">
-      <label>Free/Busy Publish URL</label>
-      <whatsthis>URL for publishing free/busy information</whatsthis>
-    </entry>
-
-    <entry type="String" name="FreeBusyPublishUser">
-      <label>Free/Busy Publish Username</label>
-      <whatsthis>Username for publishing free/busy information</whatsthis>
-    </entry>
-
-    <entry type="Password" name="FreeBusyPublishPassword">
-      <label>Free/Busy Publish Password</label>
-      <whatsthis>Password for publishing free/busy information</whatsthis>
-    </entry>
-
-    <entry type="Bool" name="FreeBusyPublishSavePassword">
-      <default>false</default>
-    </entry>
-  </group>
-
-<!-- Free/Busy Page: Retrieve Tab -->
-  <group name="FreeBusy Retrieve">
-    <entry type="Bool" name="FreeBusyRetrieveAuto">
-      <label>Enable Automatic Free/Busy Retrieval</label>
-      <default>false</default>
-    </entry>
-
-    <entry type="Bool" name="FreeBusyFullDomainRetrieval">
-      <label>Use full email address for retrieval</label>
-      <whatsthis>With this setting, you can change the filename that will be fetched from the server. With this checked, it will download a free/busy file called user@domain.ifb, for example nn@kde.org.ifb. Without this set, it will download user.ifb, for example nn.ifb.</whatsthis>
-      <default>false</default>
-    </entry>
-
-    <entry type="String" name="FreeBusyRetrieveUrl">
-      <label>Free/Busy Retrieval URL</label>
-    </entry>
-
-    <entry type="String" name="FreeBusyRetrieveUser">
-      <label>Free/Busy Retrieval Username</label>
-    </entry>
-
-    <entry type="Password" name="FreeBusyRetrievePassword">
-      <label>Free/Busy Retrieval Password</label>
-      <whatsthis>Password for retrieving free/busy information</whatsthis>
-    </entry>
-
-    <entry type="Bool" name="FreeBusyRetrieveSavePassword">
-      <default>false</default>
-    </entry>
-  </group>
-
 <!-- Plugins Page -->
   <group name="KOrganizer Plugins">
     <entry type="StringList" name="SelectedPlugins">
@@ -578,64 +437,6 @@
   </group>
 
 <!-- Custom Pages Page -->
-
-
-
-<!-- ARCHIVE DIALOG -->
-  <group name="Archive Dialog">
-    <entry type="Bool" key="Auto Archive">
-      <label>Regularly archive events</label>
-      <default>false</default>
-    </entry>
-
-    <entry type="Int" key="Expiry Time">
-      <label>If auto-archiving is enabled, events older than this amount will be archived. The unit of this value is specified in another field.</label>
-      <default>1</default>
-    </entry>
-
-    <entry type="Enum" key="Expiry Unit" name="ExpiryUnit">
-      <label>The unit in which the expiry time is expressed.</label>
-      <choices>
-        <choice name="UnitDays">
-          <label>In days</label>
-        </choice>
-        <choice name="UnitWeeks">
-          <label>In weeks</label>
-        </choice>
-        <choice name="UnitMonths">
-          <label>In months</label>
-        </choice>
-      </choices>
-      <default>UnitMonths</default>
-    </entry>
-
-    <entry type="String" key="Archive File">
-      <label>URL of the file where old events should be archived</label>
-    </entry>
-
-    <entry type="Bool" key="Archive Events">
-      <label>Archive events</label>
-      <default>true</default>
-    </entry>
-
-    <entry type="Bool" key="Archive Todos">
-      <label>Archive to-dos</label>
-      <default>true</default>
-    </entry>
-
-    <entry type="Enum" key="Archive Action">
-      <label>What to do when archiving</label>
-      <choices>
-        <choice name="actionDelete">
-          <label>Delete old events</label>
-        </choice>
-        <choice name="actionArchive">
-          <label>Archive old events to a separate file</label>
-        </choice>
-      </choices>
-      <default>actionArchive</default>
-    </entry>
-  </group>
 
 <!-- Options currently not visible in the GUI -->
   <group name="Hidden Options">
@@ -664,23 +465,7 @@
       <default>TodoAttachInlineFull</default>
     </entry>
 
-    <entry type="Bool" name="ShowTimeZoneSelectorInIncidenceEditor">
-      <label>Show timezone selectors in the event and todo editor dialog.</label>
-      <default>true</default>
-    </entry>
-
     <entry type="Bool" key="CompactDialogs">
-      <default>false</default>
-    </entry>
-
-    <entry name="OutlookCompatCounterProposals" type="Bool">
-      <label>Send Outlook-like pseudo counter proposals</label>
-      <default>false</default>
-    </entry>
-
-    <entry type="Bool" name="FreeBusyCheckHostname">
-      <label>Check whether hostname and retrieval email address match</label>
-      <whatsthis>With this setting you can configure whether the domain part of the free/busy URL has to match the domain part of the user ID you are looking for. For example, if this option is 'true', then looking for the free/busy data of joe@mydomain.com on the server www.yourdomain.com will fail.</whatsthis>
       <default>false</default>
     </entry>
 
@@ -694,53 +479,20 @@
 
 <!-- INTERNAL SETTINGS: Not for users to change -->
   <group name="Internal Settings">
-    <entry type="String" key="user_name" name="UserName">
-      <label>Full &amp;name</label>
-      <whatsthis>Enter your full name here. This name will be displayed as "Organizer" in to-dos and events you create.</whatsthis>
-      <default code="true">i18n(&quot;Anonymous&quot;)</default>
-    </entry>
-
-    <entry type="String" key="user_email" name="UserEmail">
-      <label>E&amp;mail address</label>
-      <whatsthis>Enter here your e-mail address. This e-mail address will be used to identify the owner of the calendar, and displayed in events and to-dos you create.</whatsthis>
-      <default code="true">i18n(&quot;nobody@nowhere&quot;)</default>
-    </entry>
-
-    <entry type="Int" key="Work Week Mask" name="WorkWeekMask">
-      <default>31</default>
-    </entry>
-
     <entry type="Int" key="DefaultResourceColorSeed">
       <default>0</default>
     </entry>
-
     <entry type="StringList" key="DefaultResourceColors">
-        <default>#c1d4e7,#d0e7c1,#e3e7c1,#e7c1e6,#a1b1c1</default>
+      <default>#c1d4e7,#d0e7c1,#e3e7c1,#e7c1e6,#a1b1c1</default>
     </entry>
-
     <entry type="Bool" key="AssignDefaultResourceColors">
       <default>true</default>
     </entry>
-
-    <entry type="StringList" name="EventTemplates">
-    </entry>
-
-    <entry type="StringList" name="TodoTemplates">
-    </entry>
-
-    <entry type="StringList" name="JournalTemplates">
-    </entry>
-
     <entry key="Decorations At Month View Top" type="StringList">
     </entry>
-
     <entry key="Decorations At Agenda View Top" type="StringList">
     </entry>
-
     <entry key="Decorations At Agenda View Bottom" type="StringList">
-    </entry>
-
-    <entry type="StringList" name="ActiveDesignerFields">
     </entry>
   </group>
 

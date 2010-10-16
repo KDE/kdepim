@@ -60,7 +60,6 @@ class BaseConfig : public PrefsBase
     void usrReadConfig();
     void usrWriteConfig();
 
-    void fillMailDefaults();
     void setTimeZoneDefault();
 };
 
@@ -102,21 +101,6 @@ QStringList BaseConfig::timeScaleTimezones() const
 
 void BaseConfig::usrSetDefaults()
 {
-  // Default should be set a bit smarter, respecting username and locale
-  // settings for example.
-
-  KEMailSettings settings;
-  QString tmp = settings.getSetting( KEMailSettings::RealName );
-  if ( !tmp.isEmpty() ) {
-    setUserName( tmp );
-  }
-  tmp = settings.getSetting( KEMailSettings::EmailAddress );
-  if ( !tmp.isEmpty() ) {
-    setUserEmail( tmp );
-  }
-
-  fillMailDefaults();
-
   setAgendaTimeLabelsFont( mDefaultAgendaTimeLabelsFont );
   setMonthViewFont( mDefaultMonthViewFont );
 
@@ -171,7 +155,6 @@ void BaseConfig::usrReadConfig()
   setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
 
   KConfigSkeleton::usrReadConfig();
-  fillMailDefaults();
 }
 
 void BaseConfig::usrWriteConfig()
@@ -192,17 +175,6 @@ void BaseConfig::usrWriteConfig()
     ++i;
   }
 
-  if ( !mFreeBusyPublishSavePassword ) {
-    KConfigSkeleton::ItemPassword *i = freeBusyPublishPasswordItem();
-    i->setValue( "" );
-    i->writeConfig( config() );
-  }
-  if ( !mFreeBusyRetrieveSavePassword ) {
-    KConfigSkeleton::ItemPassword *i = freeBusyRetrievePasswordItem();
-    i->setValue( "" );
-    i->writeConfig( config() );
-  }
-
 #if 0
   if ( mRememberRetrievePw ) {
     config()->writeEntry( "Retrieve Server Password",
@@ -216,21 +188,6 @@ void BaseConfig::usrWriteConfig()
   timeScaleConfig.writeEntry( "Timescale Timezones", timeScaleTimezones() );
 
   KConfigSkeleton::usrWriteConfig();
-}
-
-void BaseConfig::fillMailDefaults()
-{
-  userEmailItem()->swapDefault();
-  QString defEmail = userEmailItem()->value();
-  userEmailItem()->swapDefault();
-
-  if ( userEmail() == defEmail ) {
-    // No korg settings - but maybe there's a kcontrol[/kmail] setting available
-    KEMailSettings settings;
-    if ( !settings.getSetting( KEMailSettings::EmailAddress ).isEmpty() ) {
-      mEmailControlCenter = true;
-    }
-  }
 }
 
 void BaseConfig::setTimeZoneDefault()
@@ -253,7 +210,6 @@ class Prefs::Private
     Private( Prefs *parent, KCoreConfigSkeleton *appConfig )
       : mAppConfig( appConfig ), q( parent ) {}
 
-    void fillMailDefaults();
     void setTimeZoneDefault();
 
     KConfigSkeletonItem *appConfigItem( const KConfigSkeletonItem *baseConfigItem ) const;
@@ -833,16 +789,6 @@ bool Prefs::enableToolTips() const
   return d->getBool( d->mBaseConfig.enableToolTipsItem() );
 }
 
-void Prefs::setDefaultDuration( const QDateTime &dateTime )
-{
-  d->setDateTime( d->mBaseConfig.defaultDurationItem(), dateTime );
-}
-
-QDateTime Prefs::defaultDuration() const
-{
-  return d->getDateTime( d->mBaseConfig.defaultDurationItem() );
-}
-
 void Prefs::setShowTodosAgendaView( bool show )
 {
   d->setBool( d->mBaseConfig.showTodosAgendaViewItem(), show );
@@ -861,26 +807,6 @@ void Prefs::setAgendaTimeLabelsFont( const QFont &font )
 QFont Prefs::agendaTimeLabelsFont() const
 {
   return d->getFont( d->mBaseConfig.agendaTimeLabelsFontItem() );
-}
-
-void Prefs::setWorkWeekMask( int mask )
-{
-  d->setInt( d->mBaseConfig.workWeekMaskItem(), mask );
-}
-
-int Prefs::workWeekMask() const
-{
-  return d->getInt( d->mBaseConfig.workWeekMaskItem() );
-}
-
-void Prefs::setExcludeHolidays( bool exclude )
-{
-  d->setBool( d->mBaseConfig.excludeHolidaysItem(), exclude );
-}
-
-bool Prefs::excludeHolidays() const
-{
-  return d->getBool( d->mBaseConfig.excludeHolidaysItem() );
 }
 
 KDateTime::Spec Prefs::timeSpec() const
@@ -911,6 +837,56 @@ QColor Prefs::viewBgBusyColor() const
 void Prefs::setViewBgBusyColor( const QColor &color )
 {
   d->mBaseConfig.mViewBgBusyColor = color;
+}
+
+QColor Prefs::holidayColor() const
+{
+  return d->getColor( d->mBaseConfig.holidayColorItem() );
+}
+
+void Prefs::setHolidayColor( const QColor &color )
+{
+  d->mBaseConfig.mHolidayColor = color;
+}
+
+QColor Prefs::agendaViewBackgroundColor() const
+{
+  return d->getColor( d->mBaseConfig.agendaBgColorItem() );
+}
+
+void Prefs::setAgendaViewBackgroundColor( const QColor &color )
+{
+  d->mBaseConfig.mAgendaBgColor = color;
+}
+
+QColor Prefs::workingHoursColor() const
+{
+  return d->getColor( d->mBaseConfig.workingHoursColorItem() );
+}
+
+void Prefs::setWorkingHoursColor( const QColor &color )
+{
+  d->mBaseConfig.mWorkingHoursColor = color;
+}
+
+QColor Prefs::todoDueTodayColor() const
+{
+  return d->getColor( d->mBaseConfig.todoDueTodayColorItem() );
+}
+
+void Prefs::setTodoDueTodayColor( const QColor &color )
+{
+  d->mBaseConfig.mTodoDueTodayColor = color;
+}
+
+QColor Prefs::todoOverdueColor() const
+{
+  return d->getColor( d->mBaseConfig.todoOverdueColorItem() );
+}
+
+void Prefs::setTodoOverdueColor( const QColor &color )
+{
+  d->mBaseConfig.mTodoOverdueColor = color;
 }
 
 void Prefs::setColorAgendaBusyDays( bool enable )
