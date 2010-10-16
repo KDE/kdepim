@@ -10,6 +10,7 @@ include_directories(
 set(kab_mobile_srcs
   mainview.cpp
   main.cpp
+  configwidget.cpp
   contactviewitem.cpp
   contactgroupviewitem.cpp
   contactcompletionmodel.cpp
@@ -52,6 +53,9 @@ kde4_add_ui_files(kab_mobile_srcs
   editormore_personalpage.ui
 )
 
+qt4_wrap_ui(kab_mobile_srcs configwidget.ui)
+kde4_add_kcfg_files(kab_mobile_srcs settings.kcfgc)
+
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
 if (WINCE)
   SET_TARGET_PROPERTIES(kaddressbook-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
@@ -75,6 +79,7 @@ install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kaddressbook-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
+  ConfigDialog.qml
   contact-editor.qml
   contactgroup-editor.qml
   kaddressbook-mobile.qml

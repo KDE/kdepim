@@ -317,6 +317,13 @@ KPIM.MainView {
               }
             },
             KPIM.ScriptAction {
+              name : "configure"
+              script : {
+                actionPanelNew.collapse();
+                configDialog.visible = true;
+              }
+            },
+            KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
                 actionPanelNew.collapse();
@@ -414,5 +421,10 @@ KPIM.MainView {
     id : aboutDialog
     visible: false
     source: backgroundImage.source
+  }
+
+  ConfigDialog {
+    id: configDialog
+    visible: false
   }
 }
