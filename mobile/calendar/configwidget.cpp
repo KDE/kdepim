@@ -40,6 +40,16 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   ui.kcfg_DailyEndingHour->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
   ui.kcfg_DefaultAppointmentTime->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
 
+  ui.kcfg_AgendaViewColorUsage->addItem( i18n( "Category inside, calendar outside" ) );
+  ui.kcfg_AgendaViewColorUsage->addItem( i18n( "Calendar inside, category outside" ) );
+  ui.kcfg_AgendaViewColorUsage->addItem( i18n( "Only category" ) );
+  ui.kcfg_AgendaViewColorUsage->addItem( i18n( "Only calendar" ) );
+
+  ui.kcfg_MonthViewColorUsage->addItem( i18n( "Category inside, calendar outside" ) );
+  ui.kcfg_MonthViewColorUsage->addItem( i18n( "Calendar inside, category outside" ) );
+  ui.kcfg_MonthViewColorUsage->addItem( i18n( "Only category" ) );
+  ui.kcfg_MonthViewColorUsage->addItem( i18n( "Only calendar" ) );
+
   mHolidayCombo = ui.kcfg_HolidayRegion;
   mWorkDays << ui.workingPeriodMonday;
   mWorkDays << ui.workingPeriodTuesday;

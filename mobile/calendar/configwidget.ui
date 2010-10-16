@@ -240,7 +240,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout_2">
+    <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1">
      <item row="0" column="0" colspan="2">
       <widget class="QLabel" name="label_2">
        <property name="font">
@@ -380,7 +380,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout_3">
+    <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,1">
      <item row="0" column="0" colspan="2">
       <widget class="QLabel" name="label_3">
        <property name="font">
@@ -487,7 +487,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout_4">
+    <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,1">
      <item row="0" column="0" colspan="2">
       <widget class="QLabel" name="label_11">
        <property name="font">
