@@ -273,9 +273,13 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
 
   switch ( subset ) {
   case PerfectThreadingReferencesAndSubject:
-    mi->setStrippedSubjectMD5( md5Encode( Core::SubjectUtils::stripOffPrefixes( mail->subject()->asUnicodeString() ) ) );
-    mi->setSubjectIsPrefixed( mail->subject()->asUnicodeString() != Core::SubjectUtils::stripOffPrefixes( mail->subject()->asUnicodeString() ) );
+  {
+    const QString subject = mail->subject()->asUnicodeString();
+    const QString strippedSubject = Core::SubjectUtils::stripOffPrefixes( subject );
+    mi->setStrippedSubjectMD5( md5Encode( strippedSubject ) );
+    mi->setSubjectIsPrefixed( subject != strippedSubject );
     // fall through
+  }
   case PerfectThreadingPlusReferences:
     if ( !mail->references()->identifiers().isEmpty() ) {
       mi->setReferencesIdMD5( md5Encode( mail->references()->identifiers().first() ) );
@@ -306,9 +310,10 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   mi->setStatus( stat );
 
   mi->setEncryptionState( Core::MessageItem::EncryptionStateUnknown );
-  if ( mail->contentType()->isSubtype( "encrypted" )
-    || mail->contentType()->isSubtype( "pgp-encrypted" )
-    || mail->contentType()->isSubtype( "pkcs7-mime" ) ) {
+  const KMime::Headers::ContentType * const contentType = mail->contentType();
+  if ( contentType->isSubtype( "encrypted" )
+    || contentType->isSubtype( "pgp-encrypted" )
+    || contentType->isSubtype( "pkcs7-mime" ) ) {
       mi->setEncryptionState( Core::MessageItem::FullyEncrypted );
   } else if ( mail->mainBodyPart( "multipart/encrypted" )
            || mail->mainBodyPart( "application/pgp-encrypted" )
@@ -317,10 +322,10 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   }
 
   mi->setSignatureState( Core::MessageItem::SignatureStateUnknown );
-  if ( mail->contentType()->isSubtype( "signed" )
-    || mail->contentType()->isSubtype( "pgp-signature" )
-    || mail->contentType()->isSubtype( "pkcs7-signature" )
-    || mail->contentType()->isSubtype( "x-pkcs7-signature" ) ) {
+  if ( contentType->isSubtype( "signed" )
+    || contentType->isSubtype( "pgp-signature" )
+    || contentType->isSubtype( "pkcs7-signature" )
+    || contentType->isSubtype( "x-pkcs7-signature" ) ) {
       mi->setSignatureState( Core::MessageItem::FullySigned );
   } else if ( mail->mainBodyPart( "multipart/signed" )
            || mail->mainBodyPart( "application/pgp-signature" )
