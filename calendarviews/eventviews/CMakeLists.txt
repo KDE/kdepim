@@ -14,6 +14,7 @@ endif(EVENTVIEWS_NODECOS)
 
 include_directories(
     ${Boost_INCLUDE_DIR}
+	${CMAKE_SOURCE_DIR}/akonadi_next
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_BINARY_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/calendarsupport
