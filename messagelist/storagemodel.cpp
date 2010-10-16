@@ -274,9 +274,13 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
 
   switch ( subset ) {
   case PerfectThreadingReferencesAndSubject:
-    mi->setStrippedSubjectMD5( md5Encode( Core::SubjectUtils::stripOffPrefixes( mail->subject()->asUnicodeString() ) ) );
-    mi->setSubjectIsPrefixed( mail->subject()->asUnicodeString() != Core::SubjectUtils::stripOffPrefixes( mail->subject()->asUnicodeString() ) );
+  {
+    const QString subject = mail->subject()->asUnicodeString();
+    const QString strippedSubject = Core::SubjectUtils::stripOffPrefixes( subject );
+    mi->setStrippedSubjectMD5( md5Encode( strippedSubject ) );
+    mi->setSubjectIsPrefixed( subject != strippedSubject );
     // fall through
+  }
   case PerfectThreadingPlusReferences:
     if ( !mail->references()->identifiers().isEmpty() ) {
       mi->setReferencesIdMD5( md5Encode( mail->references()->identifiers().first() ) );
