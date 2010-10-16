@@ -16,67 +16,84 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+
 #include "tasklistproxy.h"
 
-#include <kcalcore/todo.h>
-
 #include <akonadi/entitytreemodel.h>
+#include <calendarsupport/kcalprefs.h>
+#include <kcalcore/todo.h>
 
 using namespace Akonadi;
 
 TaskListProxy::TaskListProxy( QObject* parent )
   : ListProxy( parent )
-{ }
+{
+}
 
-QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
+QVariant TaskListProxy::data( const QModelIndex &index, int role ) const
 {
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
   if ( item.isValid() && item.hasPayload<KCalCore::Todo::Ptr>() ) {
     const KCalCore::Todo::Ptr incidence = item.payload<KCalCore::Todo::Ptr>();
     switch ( role ) {
-    case Summary:
-      return incidence->summary();
-    case Description:
-      return incidence->description();
-    case PercentComplete:
-      return incidence->percentComplete();
+      case Summary:
+        return incidence->summary();
+      case Description:
+        return incidence->description();
+      case PercentComplete:
+        return incidence->percentComplete();
+      case BackgroundColor:
+        if ( incidence->hasDueDate() ) {
+          if ( incidence->dtDue().date() == QDate::currentDate() ) {
+            return mViewPrefs->todoDueTodayColor();
+          } else if ( incidence->isOverdue() ) {
+            return mViewPrefs->todoOverdueColor();
+          }
+        }
+        return Qt::transparent;
     }
   }
 
-  return QSortFilterProxyModel::data(index, role);
+  return QSortFilterProxyModel::data( index, role );
 }
 
-bool TaskListProxy::setData(const QModelIndex& index, const QVariant& value, int role)
+bool TaskListProxy::setData( const QModelIndex &index, const QVariant &value, int role )
 {
-  if ( role == PercentComplete )
-  {
+  if ( role == PercentComplete ) {
     Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
     if ( item.isValid() && item.hasPayload<KCalCore::Todo::Ptr>() ) {
       KCalCore::Todo::Ptr incidence = item.payload<KCalCore::Todo::Ptr>();
       if ( incidence->percentComplete() != value.toInt() ) {
-        incidence->setPercentComplete(value.toInt());
-        item.setPayload(incidence);
-        return QSortFilterProxyModel::setData(index, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+        incidence->setPercentComplete( value.toInt() );
+        item.setPayload( incidence );
+        return QSortFilterProxyModel::setData( index, QVariant::fromValue( item ), EntityTreeModel::ItemRole );
       } else {
         return true;
       }
     }
   }
-  return QSortFilterProxyModel::setData(index, value, role);
+
+  return QSortFilterProxyModel::setData( index, value, role );
 }
 
 
-void TaskListProxy::setSourceModel( QAbstractItemModel* sourceModel )
+void TaskListProxy::setSourceModel( QAbstractItemModel *sourceModel )
 {
-  ListProxy::setSourceModel(sourceModel);
+  ListProxy::setSourceModel( sourceModel );
 
   QHash<int, QByteArray> names = roleNames();
   names.insert( EntityTreeModel::ItemIdRole, "itemId" );
   names.insert( Summary, "summary" );
   names.insert( Description, "description" );
   names.insert( PercentComplete, "percentComplete" );
+  names.insert( BackgroundColor, "backgroundColor" );
+
   setRoleNames( names );
 }
 
+void TaskListProxy::setPreferences( const EventViews::PrefsPtr &preferences )
+{
+  mViewPrefs = preferences;
+}

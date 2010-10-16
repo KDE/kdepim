@@ -23,6 +23,7 @@ import Qt 4.7
 Item {
   id: itemViewTopLevel
   property alias summaryContent: itemSummary.data
+  property alias color: itemSummary.color
   property alias showCheckBox : checkBoxImage.visible
   property variant checkModel
 
@@ -47,7 +48,7 @@ Item {
     }
   }
 
-  Item {
+  Rectangle {
     anchors.fill: parent
     anchors.margins: 4
     id: itemSummary

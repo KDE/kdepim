@@ -21,26 +21,35 @@
 
 #include "listproxy.h"
 
+#include "calendarviews/eventviews/eventview.h"
+#include "calendarviews/eventviews/prefs.h"
+
 #include <akonadi/entitytreemodel.h>
 
 class TaskListProxy : public ListProxy
 {
-public:
-  enum Role {
-    // TODO: Find a better way to make this configurable. Possibly templates.
-    Summary = Akonadi::EntityTreeModel::UserRole,
-    Description,
-    PercentComplete
-  };
+  Q_OBJECT
 
-public:
-  explicit TaskListProxy( QObject* parent = 0 );
+  public:
+    enum Role {
+      // TODO: Find a better way to make this configurable. Possibly templates.
+      Summary = Akonadi::EntityTreeModel::UserRole,
+      Description,
+      PercentComplete,
+      BackgroundColor
+    };
 
-  virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
-  virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
+    explicit TaskListProxy( QObject* parent = 0 );
 
-  virtual void setSourceModel( QAbstractItemModel* sourceModel );
+    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+    virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
 
+    virtual void setSourceModel( QAbstractItemModel* sourceModel );
+
+    void setPreferences( const EventViews::PrefsPtr &preferences );
+
+  private:
+    EventViews::PrefsPtr mViewPrefs;
 };
 
 #endif // TASKLISTPROXY_H

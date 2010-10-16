@@ -68,6 +68,7 @@ MainView::MainView( QWidget *parent )
   , mCalendarPrefs( new EventViews::Prefs )
 {
   mCalendarPrefs->readConfig();
+  qobject_cast<TaskListProxy*>( itemModel() )->setPreferences( mCalendarPrefs );
 }
 
 MainView::~MainView()
