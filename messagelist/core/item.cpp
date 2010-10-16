@@ -35,11 +35,6 @@ Item::Item( Type type )
   : d( new ItemPrivate( this ) )
 {
   d->mType = type;
-  d->mChildItems = 0;
-  d->mParent = 0;
-  d->mThisItemIndexGuess = 0;
-  d->mIsViewable = false;
-  d->mInitialExpandStatus = NoExpandNeeded;
 }
 
 Item::~Item()
