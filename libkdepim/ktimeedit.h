@@ -45,6 +45,8 @@ class KDEPIM_EXPORT KTimeEdit : public QComboBox
 {
   Q_OBJECT
 
+  Q_PROPERTY( QTime time READ time WRITE setTime NOTIFY timeChanged USER true )
+
   public:
     /**
      * Creates a new time edit.
