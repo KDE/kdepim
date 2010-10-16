@@ -15,6 +15,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 set(korganizer_mobile_SRCS
   agendaviewitem.cpp
   calendarinterface.cpp
+  configwidget.cpp
   declarativewidgetwrapper.cpp
   eventlistproxy.cpp
   eventsfilterproxymodel.cpp
@@ -27,6 +28,9 @@ set(korganizer_mobile_SRCS
   timelineviewitem.cpp
   qmldateedit.cpp
 )
+
+qt4_wrap_ui(korganizer_mobile_SRCS configwidget.ui)
+kde4_add_kcfg_files(korganizer_mobile_SRCS settings.kcfgc)
 
 qt4_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
 
@@ -41,6 +45,7 @@ target_link_libraries(korganizer-mobile
   ${KDE4_KDEUI_LIBRARY}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
+  ${KDEPIMLIBS_KHOLIDAYS_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   kdepimdbusinterfaces
   kdepimmobileui
@@ -55,6 +60,7 @@ install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES korganizer-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES korganizer-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
+  ConfigDialog.qml
   korganizer-mobile.qml
   KorganizerActions.qml
   korganizer-mobile-background.png

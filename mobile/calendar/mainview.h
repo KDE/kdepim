@@ -26,6 +26,7 @@
 #include <Akonadi/Entity>
 #include <KCalCore/ScheduleMessage>
 
+#include <calendarviews/eventviews/eventview.h>
 #include <calendarviews/eventviews/prefs.h>
 
 namespace CalendarSupport {
@@ -73,7 +74,7 @@ class MainView : public KDeclarativeMainView
 
   protected Q_SLOTS:
     void delayedInit();
-    void connectQMLSlots( QDeclarativeView::Status status );
+    void qmlLoadingStateChanged( QDeclarativeView::Status status );
 
   private Q_SLOTS:
     void finishEdit( QObject *editor );
@@ -101,6 +102,7 @@ class MainView : public KDeclarativeMainView
     QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
     KPIMIdentities::IdentityManager* m_identityManager;
     CalendarSupport::IncidenceChanger *m_changer;
+    EventViews::PrefsPtr m_calendarPrefs;
 };
 
 #endif // MAINVIEW_H

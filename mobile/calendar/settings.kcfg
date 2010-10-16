@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+
+  <include>kglobalsettings.h</include>
+  <kcfgfile name="korganizer-mobilerc" />
+
+  <group name="DateAndTime">
+    <entry name="DayBegins" type="DateTime">
+      <default>QDateTime(QDate(1752,1,1), QTime(7,0))</default>
+    </entry>
+    <entry name="HolidayRegion" type="String" />
+    <entry name="WorkWeekMask" type="Int" />
+    <entry name="DailyStartingHour" type="DateTime">
+      <default>QDateTime(QDate(1752,1,1), QTime(8,0))</default>
+    </entry>
+    <entry name="DailyEndingHour" type="DateTime">
+      <default>QDateTime(QDate(1752,1,1), QTime(17,0))</default>
+    </entry>
+    <entry name="ExcludeHolidays" type="Bool" />
+    <entry name="DefaultAppointmentTime" type="DateTime" />
+    <entry name="DefaultAppointmentDuration" type="DateTime" />
+    <entry name="ReminderDefaultTime" type="Int" />
+    <entry name="ReminderDefaultUnit" type="Int" />
+    <entry name="RemindersForNewEvents" type="Bool" />
+  </group>
+
+  <group name="Views">
+    <entry name="TodosUseCategoryColors" type="Bool" />
+    <entry name="HourSize" type="Int" />
+    <entry name="ShowIconsInAgendaView" type="Bool" />
+    <entry name="ShowTodosInAgendaView" type="Bool" />
+    <entry name="ShowCurrentTimeLine" type="Bool" />
+    <entry name="AgendaViewColorUsage" type="Enum">
+      <choices>
+        <choice name="CategoryInsideResourceOutside" />
+        <choice name="ResourceInsideCategoryOutside" />
+        <choice name="CategoryOnly" />
+        <choice name="ResourceOnly" />
+      </choices>
+      <default>CategoryInsideResourceOutside</default>
+    </entry>
+    <entry name="ColorBusyDaysInAgendaView" type="Bool" />
+    <entry name="ShowTodosInMonthView" type="Bool" />
+    <entry name="MonthViewColorUsage" type="Enum">
+      <choices>
+        <choice name="MonthItemCategoryInsideResourceOutside" />
+        <choice name="MonthItemResourceInsideCategoryOutside" />
+        <choice name="MonthItemCategoryOnly" />
+        <choice name="MonthItemResourceOnly" />
+      </choices>
+      <default>MonthItemCategoryInsideResourceOutside</default>
+    </entry>
+    <entry name="ColorBusyDaysInMonthView" type="Bool" />
+  </group>
+
+  <group name="Colors">
+    <entry name="HolidayColor" type="Color" />
+    <entry name="AgendaViewBackgroundColor" type="Color" />
+    <entry name="BusyDaysBackgroundColor" type="Color" />
+    <entry name="AgendaViewTimeLineColor" type="Color" />
+    <entry name="WorkingHoursColor" type="Color" />
+    <entry name="TodoDueColor" type="Color" />
+    <entry name="TodoOverdueColor" type="Color" />
+  </group>
+
+  <group name="GroupScheduling">
+    <entry name="UseGroupwareCommunication" type="Bool"/>
+  </group>
+</kcfg>

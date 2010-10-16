@@ -85,6 +85,11 @@ void MonthViewItem::showMonth( const QDate &date )
   mView->setDateRange( start, end );
 }
 
+void MonthViewItem::setPreferences( const PrefsPtr &preferences )
+{
+  mView->setPreferences( preferences );
+}
+
 PrefsPtr MonthViewItem::preferences() const
 {
   return mView->preferences();

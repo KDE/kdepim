@@ -56,7 +56,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
   public:
     explicit AgendaViewItem( QDeclarativeItem *parent = 0 );
     ~AgendaViewItem();
-    
+
     virtual qint64 itemId() const { return -1; }
     virtual void setItemId( qint64 /*id*/ ) {}
 
@@ -76,6 +76,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
 
     qint64 selectedItemId() const;
 
+    void setPreferences( const PrefsPtr &preferences );
     PrefsPtr preferences() const;
 
     void updateConfig();
@@ -83,7 +84,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
   public slots:
     /** Unselects currently selected incidences */
     void clearSelection();
-    
+
     /** Show the following date range of equal length right after the current one. */
     void gotoNext();
     /** Show the preceeding date range. */

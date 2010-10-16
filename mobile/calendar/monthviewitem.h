@@ -31,7 +31,7 @@ class MonthViewItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
   Q_PROPERTY( QObject* calendar READ calendar WRITE setCalendar )
-  
+
   public:
     explicit MonthViewItem( QDeclarativeItem *parent = 0 );
     virtual ~MonthViewItem();
@@ -45,6 +45,7 @@ class MonthViewItem : public DeclarativeAkonadiItem
     /// Show the month from @param date.
     Q_INVOKABLE void showMonth( const QDate &date );
 
+    void setPreferences( const PrefsPtr &preferences );
     PrefsPtr preferences() const;
 
     void updateConfig();
@@ -56,7 +57,7 @@ class MonthViewItem : public DeclarativeAkonadiItem
   private Q_SLOTS:
     void emitDateClicked();
     void emitItemSelected( const Akonadi::Item &item, const QDate &activeDate );
-    
+
   private:
     MonthView *mView;
 };

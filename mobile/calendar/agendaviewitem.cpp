@@ -168,6 +168,11 @@ void AgendaViewItem::gotoPrevious()
   m_view->blockSignals( false );
 }
 
+void AgendaViewItem::setPreferences( const PrefsPtr &preferences )
+{
+  m_view->setPreferences( preferences );
+}
+
 PrefsPtr AgendaViewItem::preferences() const
 {
   return m_view->preferences();

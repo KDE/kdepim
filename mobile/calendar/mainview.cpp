@@ -24,6 +24,7 @@
 #include "agendaviewitem.h"
 #include "calendaradaptor.h"
 #include "calendarinterface.h"
+#include "configwidget.h"
 #include "eventlistproxy.h"
 #include "eventsexporthandler.h"
 #include "eventsfilterproxymodel.h"
@@ -76,20 +77,24 @@ using namespace Akonadi;
 using CalendarSupport::KCalPrefs;
 
 QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
+QML_DECLARE_TYPE( DeclarativeConfigWidget )
 QML_DECLARE_TYPE( EventViews::AgendaView )
 QML_DECLARE_TYPE( Qt::QmlDateEdit )
 QML_DECLARE_TYPE( EventsGuiStateManager )
 
 MainView::MainView( QWidget* parent )
-  : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent )
+  : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent ),
+    m_calendar( 0 ),
+    m_identityManager( 0 ),
+    m_changer( 0 ),
+    m_calendarPrefs( new EventViews::Prefs )
 {
-  m_calendar = 0;
-  m_changer = 0;
-  m_identityManager = 0;
+  m_calendarPrefs->readConfig();
 }
 
 MainView::~MainView()
 {
+  m_calendarPrefs->writeConfig();
   m_calendar->deleteLater();
 }
 
@@ -103,6 +108,7 @@ void MainView::delayedInit()
   itemFetchScope().fetchFullPayload();
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
+  qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.calendar", 4, 5, "ConfigWidget" );
   qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
   qmlRegisterType<EventViews::MonthViewItem>( "org.kde.calendarviews", 4, 5, "MonthView" );
   qmlRegisterType<EventViews::TimelineViewItem>( "org.kde.calendarviews", 4, 5, "TimelineView" );
@@ -190,7 +196,7 @@ void MainView::delayedInit()
   actionCollection()->addAction( QLatin1String( "set_calendar_colour" ), action );
 
   connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
-           this, SLOT( connectQMLSlots( QDeclarativeView::Status ) ) );
+           this, SLOT( qmlLoadingStateChanged( QDeclarativeView::Status ) ) );
 
   //register DBUS interface
   m_calendarIface = new CalendarInterface( this );
@@ -200,13 +206,29 @@ void MainView::delayedInit()
   KPIM::ReminderClient::startDaemon();
 }
 
-void MainView::connectQMLSlots( QDeclarativeView::Status status )
+void MainView::qmlLoadingStateChanged( QDeclarativeView::Status status )
 {
-  if ( status != Ready )
+  if ( status != Ready ) // We wait until the QML is completely loaded
     return;
 
   connect( m_calendarIface, SIGNAL( showDateSignal( QVariant ) ), rootObject(), SLOT( showDate( QVariant ) ) );
   connect( m_calendarIface, SIGNAL( showEventViewSignal() ), rootObject(), SLOT( showEventView() ) );
+
+  // setup the shared settings object
+  EventViews::AgendaViewItem *agendaViewItem = rootObject()->findChild<EventViews::AgendaViewItem*>();
+  Q_ASSERT( agendaViewItem );
+  if ( agendaViewItem )
+    agendaViewItem->setPreferences( m_calendarPrefs );
+
+  EventViews::MonthViewItem *monthViewItem = rootObject()->findChild<EventViews::MonthViewItem*>();
+  Q_ASSERT( monthViewItem );
+  if ( monthViewItem )
+    monthViewItem->setPreferences( m_calendarPrefs );
+
+  DeclarativeConfigWidget *configWidget = rootObject()->findChild<DeclarativeConfigWidget*>();
+  Q_ASSERT( configWidget );
+  if ( configWidget )
+    configWidget->setPreferences( m_calendarPrefs );
 }
 
 void MainView::finishEdit( QObject *editor )
@@ -524,17 +546,7 @@ void MainView::archiveOldEntries()
 
 void MainView::changeCalendarColor()
 {
-  EventViews::AgendaViewItem* agendaItem = 0;
-
-  QList<EventViews::AgendaViewItem*> agendaViews = rootObject()->findChildren<EventViews::AgendaViewItem*>();
-  if ( !agendaViews.isEmpty() )
-    agendaItem = agendaViews.first();
-
-  EventViews::MonthViewItem* monthItem = 0;
-
-  QList<EventViews::MonthViewItem*> monthViews = rootObject()->findChildren<EventViews::MonthViewItem*>();
-  if ( !monthViews.isEmpty() )
-    monthItem = monthViews.first();
+  EventViews::AgendaViewItem *agendaItem = rootObject()->findChild<EventViews::AgendaViewItem*>();
 
   if ( !agendaItem )
     return; //something is fishy
@@ -552,9 +564,11 @@ void MainView::changeCalendarColor()
 //FIXME: WINCE we have disabled QTableWidget for now, so the kcolordialog does not work yet.
 #ifndef _WIN32_WCE
   const int result = KColorDialog::getColor( myColor, calendarColor );
-  if ( result == KColorDialog::Accepted && myColor != calendarColor ) {  
+  if ( result == KColorDialog::Accepted && myColor != calendarColor ) {
     agendaItem->preferences()->setResourceColor( id, myColor );
     agendaItem->updateConfig();
+
+    EventViews::MonthViewItem *monthItem = rootObject()->findChild<EventViews::MonthViewItem*>();
 
     if ( monthItem ) {
       monthItem->preferences()->setResourceColor( id, myColor );
