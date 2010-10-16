@@ -78,6 +78,19 @@ public:
 using namespace Akonadi;
 using namespace MessageList;
 
+namespace {
+
+KMime::Message::Ptr messageForItem( const Akonadi::Item &item )
+{
+  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
+    kWarning() << "Not a message" << item.id() << item.remoteId() << item.mimeType();
+    return KMime::Message::Ptr();
+  }
+  return item.payload<KMime::Message::Ptr>();
+}
+
+}
+
 static QAtomicInt _k_attributeInitialized;
 
 StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent )
@@ -216,8 +229,8 @@ int StorageModel::initialUnreadRowCountGuess() const
 bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
                                           int row, bool bUseReceiver ) const
 {
-  Item item = itemForRow( row );
-  const KMime::Message::Ptr mail = messageForRow( row );
+  const Item item = itemForRow( row );
+  const KMime::Message::Ptr mail = messageForItem( item );
   if ( !mail ) return false;
 
   QString sender = mail->from()->asUnicodeString();
@@ -301,8 +314,8 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
 void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
                                           int row ) const
 {
-  Item item = itemForRow( row );
-  const KMime::Message::Ptr mail = messageForRow( row );
+  const Item item = itemForRow( row );
+  const KMime::Message::Ptr mail = messageForItem( item );
   Q_ASSERT( mail );
 
   Akonadi::MessageStatus stat;
@@ -486,14 +499,7 @@ Item StorageModel::itemForRow( int row ) const
 
 KMime::Message::Ptr StorageModel::messageForRow( int row ) const
 {
-  Item item = itemForRow( row );
-
-  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
-    kWarning() << "Not a message" << item.id() << item.remoteId() << item.mimeType();
-    return KMime::Message::Ptr();
-  }
-
-  return item.payload<KMime::Message::Ptr>();
+  return messageForItem( itemForRow( row ) );
 }
 
 void StorageModel::resetModelStorage()
