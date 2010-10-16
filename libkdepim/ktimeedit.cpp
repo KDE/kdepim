@@ -136,6 +136,7 @@ void KTimeEdit::Private::addTime( const QTime &time )
   mTime = time.addSecs( mTime.minute() * 60 + mTime.hour() * 3600 );
   updateText();
   emit q->timeChanged( mTime );
+  emit q->dateTimeChanged( QDateTime( QDate( 1752, 1, 1 ), mTime ) );
   emit q->timeEdited( mTime );
 }
 
@@ -161,6 +162,7 @@ void KTimeEdit::Private::subTime( const QTime &time )
   mTime.setHMS( h, m, 0 );
   updateText();
   emit q->timeChanged( mTime );
+  emit q->dateTimeChanged( QDateTime( QDate( 1752, 1, 1 ), mTime ) );
   emit q->timeEdited( mTime );
 }
 
@@ -187,6 +189,7 @@ void KTimeEdit::Private::slotActivated( int index )
   mTime = mMinumum.addSecs( index * 15 * 60 );
 
   emit q->timeChanged( mTime );
+  emit q->dateTimeChanged( QDateTime( QDate( 1752, 1, 1 ), mTime ) );
   emit q->timeEdited( mTime );
 }
 
@@ -195,6 +198,7 @@ void KTimeEdit::Private::slotTextChanged()
   if ( q->inputIsValid() ) {
     mTime = q->time();
     emit q->timeChanged( mTime );
+    emit q->dateTimeChanged( QDateTime( QDate( 1752, 1, 1 ), mTime ) );
     emit q->timeEdited( mTime );
   }
 }
@@ -259,6 +263,11 @@ QTime KTimeEdit::time() const
   return result;
 }
 
+QDateTime KTimeEdit::dateTime() const
+{
+  return QDateTime( QDate( 1752, 1, 1 ), time() );
+}
+
 QSizePolicy KTimeEdit::sizePolicy() const
 {
   // Set size policy to Fixed, because edit cannot contain more text than the
@@ -273,8 +282,15 @@ void KTimeEdit::setTime( const QTime &newTime )
     d->updateText();
   }
 
-  if ( d->mTime.isValid() )
+  if ( d->mTime.isValid() ) {
     emit timeChanged( d->mTime );
+    emit dateTimeChanged( QDateTime( QDate( 1752, 1, 1 ), d->mTime ) );
+  }
+}
+
+void KTimeEdit::setDateTime( const QDateTime &newDateTime )
+{
+  setTime( newDateTime.time() );
 }
 
 void KTimeEdit::keyPressEvent( QKeyEvent *event )

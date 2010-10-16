@@ -47,6 +47,9 @@ class KDEPIM_EXPORT KTimeEdit : public QComboBox
 
   Q_PROPERTY( QTime time READ time WRITE setTime NOTIFY timeChanged USER true )
 
+  // The dateTime property is needed to use KTimeEdit with KConfigDialogManager, because supports only QDateTime
+  Q_PROPERTY( QDateTime dateTime READ dateTime WRITE setDateTime NOTIFY dateTimeChanged )
+
   public:
     /**
      * Creates a new time edit.
@@ -65,6 +68,13 @@ class KDEPIM_EXPORT KTimeEdit : public QComboBox
      * Returns the currently selected time.
      */
     QTime time() const;
+
+    /**
+     * Returns a datetime object with the currently selected time.
+     *
+     * The date part is the dummy value 1752-01-01
+     */
+    QDateTime dateTime() const;
 
     /**
      * Returns whether the current input is a valid time.
@@ -123,6 +133,15 @@ class KDEPIM_EXPORT KTimeEdit : public QComboBox
     void timeChanged( const QTime &time );
 
     /**
+     * This signal is emitted whenever the time has been changed.
+     * Unlike timeEdited(), this signal is also emitted when the time is changed
+     * programmatically.
+     *
+     * @note The dateTime can be invalid.
+     */
+    void dateTimeChanged( const QDateTime &dateTime );
+
+    /**
      * This signal is emitted whenever the time has been edited by the user.
      * Unlike timeChanged(), this signal is not emitted when the time is changed
      * programmatically.
@@ -136,6 +155,11 @@ class KDEPIM_EXPORT KTimeEdit : public QComboBox
      * Sets the current time.
      */
     void setTime( const QTime &time );
+
+    /**
+     * Sets the current dateTime.
+     */
+    void setDateTime( const QDateTime &dateTime );
 
   protected:
     virtual void keyPressEvent( QKeyEvent *qke );
