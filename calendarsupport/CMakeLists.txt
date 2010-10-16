@@ -25,7 +25,6 @@ set(calendarsupport_LIB_SRCS
   freebusydownloadjob.cpp
   freebusymanager.cpp
   groupware.cpp
-  history.cpp
   identitymanager.cpp
   incidencechanger.cpp
   incidencefilterproxymodel.cpp
@@ -39,6 +38,8 @@ set(calendarsupport_LIB_SRCS
   modelstatesaver.cpp
   publishdialog.cpp
   utils.cpp
+
+  next/history.cpp
 )
 
 if (NOT WINCE)
