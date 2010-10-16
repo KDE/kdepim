@@ -25,6 +25,7 @@ set(calendarsupport_LIB_SRCS
   freebusydownloadjob.cpp
   freebusymanager.cpp
   groupware.cpp
+  history.cpp
   identitymanager.cpp
   incidencechanger.cpp
   incidencefilterproxymodel.cpp
