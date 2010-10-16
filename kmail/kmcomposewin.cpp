@@ -2518,7 +2518,7 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
         !GlobalSettings::self()->neverEncryptDrafts() &&
         mComposerBase->to().isEmpty() && mComposerBase->cc().isEmpty() ) {
 
-      KMessageBox::information( this, i18n("You must specify at least one receiver"
+      KMessageBox::information( this, i18n("You must specify at least one receiver "
                                             "in order to be able to encrypt a draft.")
                               );
       return;
