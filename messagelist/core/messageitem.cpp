@@ -193,7 +193,11 @@ QFont MessageItem::Private::mFontImportantMessage;
 QFont MessageItem::Private::mFontToDoMessage;
 
 MessageItem::Private::Private()
-  : mAnnotationStateChecked( false ), mTagList( 0 )
+  : mThreadingStatus( MessageItem::ParentMissing ),
+    mUniqueId( 0 ),
+    mAboutToBeRemoved( false ),
+    mAnnotationStateChecked( false ),
+    mTagList( 0 )
 {
 }
 
@@ -287,9 +291,6 @@ bool MessageItem::Private::tagListInitialized() const
 MessageItem::MessageItem()
   : Item( Message ), ModelInvariantIndex(), d( new Private )
 {
-  d->mThreadingStatus = MessageItem::ParentMissing;
-  d->mAboutToBeRemoved = false;
-  d->mUniqueId = 0;
 }
 
 MessageItem::~MessageItem()

@@ -43,7 +43,14 @@ class ItemPrivate
 {
 public:
   ItemPrivate( Item *owner )
-    : q( owner ) { }
+    : q( owner ),
+      mChildItems( 0 ),
+      mParent( 0 ),
+      mThisItemIndexGuess( 0 ),
+      mIsViewable( false ),
+      mInitialExpandStatus( Item::NoExpandNeeded )
+  {
+  }
 
   /**
    * Implements "in the middle" insertions of child items.
