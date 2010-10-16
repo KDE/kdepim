@@ -35,6 +35,11 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   Ui_ConfigWidget ui;
   ui.setupUi( this );
 
+  ui.kcfg_DayBegins->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
+  ui.kcfg_DailyStartingHour->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
+  ui.kcfg_DailyEndingHour->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
+  ui.kcfg_DefaultAppointmentTime->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
+
   mHolidayCombo = ui.kcfg_HolidayRegion;
   mWorkDays << ui.workingPeriodMonday;
   mWorkDays << ui.workingPeriodTuesday;
