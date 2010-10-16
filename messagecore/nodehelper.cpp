@@ -76,9 +76,11 @@ bool MessageCore::NodeHelper::isAttachment( KMime::Content *node )
 {
   if ( node->head().isEmpty() )
     return false;
-  if ( node->contentType( false ) &&
-       node->contentType()->mediaType().toLower() == "message" &&
-       node->contentType()->subType().toLower() == "rfc822" ) {
+
+  const KMime::Headers::ContentType * const contentType = node ? node->contentType( false ) : 0;
+  if ( contentType &&
+       contentType->mediaType().toLower() == "message" &&
+       contentType->subType().toLower() == "rfc822" ) {
     // Messages are always attachments. Normally message attachments created from KMail have a content
     // disposition, but some mail clients omit that.
     return true;
@@ -92,7 +94,9 @@ bool MessageCore::NodeHelper::isHeuristicalAttachment( KMime::Content *node )
 {
   if ( isAttachment( node ) )
     return true;
-  if ( ( node->contentType( false ) && !node->contentType()->name().isEmpty() ) ||
+
+  const KMime::Headers::ContentType * const contentType = node ? node->contentType( false ) : 0;
+  if ( ( contentType && !contentType->name().isEmpty() ) ||
        ( node->contentDisposition( false ) && !node->contentDisposition()->filename().isEmpty() ) )
     return true;
   return false;
