@@ -22,7 +22,6 @@
 
 #include "messagelist/core/settings.h"
 
-#include <KConfigGroup>
 #include <KDebug>
 
 #include <QRegExp>
@@ -30,38 +29,48 @@
 
 QString MessageList::Core::SubjectUtils::stripOffPrefixes( const QString &subject )
 {
-  KConfigGroup composerGroup( Settings::self()->config(), "Composer" );
+  static QStringList defaultReplyPrefixes = QStringList() << QLatin1String( "Re\\s*:" )
+                                                          << QLatin1String( "Re\\[\\d+\\]:" )
+                                                          << QLatin1String( "Re\\d+:" );
 
-  QStringList replyPrefixes = composerGroup.readEntry( "reply-prefixes", QStringList() );
-  if ( replyPrefixes.isEmpty() ) {
-    replyPrefixes << QLatin1String( "Re\\s*:" ) << QLatin1String( "Re\\[\\d+\\]:" ) << QLatin1String( "Re\\d+:" );
-  }
+  static QStringList defaultForwardPrefixes = QStringList() << QLatin1String( "Fwd:" )
+                                                            << QLatin1String( "FW:" );
 
-  QStringList forwardPrefixes = composerGroup.readEntry( "forward-prefixes", QStringList() );
-  if ( forwardPrefixes.isEmpty() ) {
-    forwardPrefixes << QLatin1String( "Fwd:" ) << QLatin1String( "FW:" );
-  }
+  QStringList replyPrefixes = Settings::self()->replyPrefixes();
+  if ( replyPrefixes.isEmpty() )
+    replyPrefixes = defaultReplyPrefixes;
 
-  QString str = subject;
+  QStringList forwardPrefixes = Settings::self()->forwardPrefixes();
+  if ( forwardPrefixes.isEmpty() )
+    forwardPrefixes = defaultReplyPrefixes;
+
   const QStringList prefixRegExps = replyPrefixes + forwardPrefixes;
 
   // construct a big regexp that
   // 1. is anchored to the beginning of str (sans whitespace)
   // 2. matches at least one of the part regexps in prefixRegExps
-  QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*")
-                      .arg( prefixRegExps.join(QLatin1String( ")|(?:" )) );
-  QRegExp rx( bigRegExp, Qt::CaseInsensitive );
-  if ( !rx.isValid() ) {
+  const QString bigRegExp = QString::fromLatin1( "^(?:\\s+|(?:%1))+\\s*" ).arg( prefixRegExps.join( QLatin1String( ")|(?:" ) ) );
+
+  static QString regExpPattern;
+  static QRegExp regExp;
+
+  if ( regExpPattern != bigRegExp ) {
+    // the prefixes have changed, so update the regexp
+    regExpPattern = bigRegExp;
+    regExp.setPattern( regExpPattern );
+  }
+
+  if ( !regExp.isValid() ) {
     kWarning() << "bigRegExp = \""
                << bigRegExp << "\"\n"
                << "prefix regexp is invalid!";
-  } else { // valid rx
-    QString tmp = str;
-    if ( rx.indexIn( tmp ) == 0 ) {
-      return tmp.replace( 0, rx.matchedLength(), QString() );
+  } else {
+    QString tmp = subject;
+    if ( regExp.indexIn( tmp ) == 0 ) {
+      return tmp.replace( 0, regExp.matchedLength(), QString() );
     }
   }
 
-  return str;
+  return subject;
 }
 

@@ -53,4 +53,9 @@
     </entry>
   </group>
 
+  <group name="Composer">
+    <entry name="ReplyPrefixes" key="reply-prefixes" type="StringList"/>
+    <entry name="ForwardPrefixes" key="forward-prefixes" type="StringList"/>
+  </group>
+
 </kcfg>
