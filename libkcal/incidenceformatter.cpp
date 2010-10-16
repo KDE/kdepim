@@ -4386,7 +4386,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
   if ( recurStr.isEmpty() ) {
     recurStr = i18n( "Incidence recurs" );
   }
-  // Now, append the EXDATES
+  // Now, append the EXDATEs
   DateTimeList l = recur->exDateTimes();
   DateTimeList::ConstIterator il;
   QStringList exStr;
@@ -4418,6 +4418,34 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
       break;
     case Recurrence::rYearlyPos:
       exStr << KGlobal::locale()->formatDate( (*il).date(), true );
+      break;
+    }
+  }
+
+  DateList d = recur->exDates();
+  DateList::ConstIterator dl;
+  for ( dl = d.constBegin(); dl != d.constEnd(); ++dl ) {
+    switch ( recur->recurrenceType() ) {
+    case Recurrence::rDaily:
+      exStr << KGlobal::locale()->formatDate( (*dl), true );
+      break;
+    case Recurrence::rWeekly:
+      exStr << calSys->weekDayName( (*dl), true );
+      break;
+    case Recurrence::rMonthlyPos:
+      exStr << KGlobal::locale()->formatDate( (*dl), true );
+      break;
+    case Recurrence::rMonthlyDay:
+      exStr << KGlobal::locale()->formatDate( (*dl), true );
+      break;
+    case Recurrence::rYearlyMonth:
+      exStr << calSys->monthName( (*dl), false );
+      break;
+    case Recurrence::rYearlyDay:
+      exStr << KGlobal::locale()->formatDate( (*dl), true );
+      break;
+    case Recurrence::rYearlyPos:
+      exStr << KGlobal::locale()->formatDate( (*dl), true );
       break;
     }
   }
