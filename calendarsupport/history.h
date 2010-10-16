@@ -90,18 +90,33 @@ class History : public QObject {
     explicit History( IncidenceChanger *changer, QWidget *parent = 0 );
 
     /**
-       Destroys the History instance
+       Destroys the History instance.
     */
     ~History();
 
+    /**
+       Pushes a change into the undo stack. The change can be undone calling
+       undo().
+
+       @param oldItem item containing the payload before the change. Pass an invalid item
+              if this is an incidence addition.
+       @param newitem item containing the new payload. Pass an invalid item if this is an
+              incidence deletion.
+       @param changeType Specifies if we added, deleted or edited an incidence.
+       @param whatChanged Specifies which fields were changed. Only useful when editing incidences.
+              The invitation handler will use this information to craft the i18n strings to show
+              in the dialogs.
+       @param atomicOperation If != 0, specifies which group of changes this change belongs too.
+              Will be useful for atomic undoing/redoing, not implemented yet.
+     */
     void recordChange( const Akonadi::Item &oldItem,
                        const Akonadi::Item &newItem,
                        History::ChangeType changeType,
-                       IncidenceChanger::WhatChanged whatChanged,
+                       IncidenceChanger::WhatChanged whatChanged = IncidenceChanger::NOTHING_MODIFIED,
                        const uint atomicOperationId = 0 );
 
     /**
-       Convinience method for disabling the undo/redo button when jobs are in progress,
+       Convenience method for disabling the undo/redo button when jobs are in progress,
        so callers don't have to write signal/slot/connect logic for this.
 
        Each widget registed here will be disabled/enabled depending if there are jobs
