@@ -23,6 +23,7 @@
 
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
+#include "configwidget.h"
 #include "tasklistproxy.h"
 #include "tasksactionmanager.h"
 #include "tasksfilterproxymodel.h"
@@ -58,12 +59,20 @@
 using namespace Akonadi;
 
 QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
+QML_DECLARE_TYPE( DeclarativeConfigWidget )
 
 MainView::MainView( QWidget *parent )
   : KDeclarativeMainView( "tasks", new TaskListProxy, parent )
   , mCalendarUtils( 0 )
   , mTasksActionManager( 0 )
+  , mCalendarPrefs( new EventViews::Prefs )
 {
+  mCalendarPrefs->readConfig();
+}
+
+MainView::~MainView()
+{
+  mCalendarPrefs->writeConfig();
 }
 
 void MainView::delayedInit()
@@ -75,6 +84,7 @@ void MainView::delayedInit()
   itemFetchScope().fetchFullPayload();
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
+  qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.tasks", 4, 5, "ConfigWidget" );
 
   CalendarSupport::Calendar *cal = new CalendarSupport::Calendar( entityTreeModel(),
                                                                   regularSelectedItems(),
@@ -112,7 +122,22 @@ void MainView::delayedInit()
   connect( actionCollection()->action( QLatin1String( "save_all_attachments" ) ),
            SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
 
+  connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
+           this, SLOT( qmlLoadingStateChanged( QDeclarativeView::Status ) ) );
+
   KPIM::ReminderClient::startDaemon();
+}
+
+void MainView::qmlLoadingStateChanged( QDeclarativeView::Status status )
+{
+  if ( status != Ready ) // We wait until the QML is completely loaded
+    return;
+
+  // setup the shared settings object
+  DeclarativeConfigWidget *configWidget = rootObject()->findChild<DeclarativeConfigWidget*>();
+  Q_ASSERT( configWidget );
+  if ( configWidget )
+    configWidget->setPreferences( mCalendarPrefs );
 }
 
 void MainView::finishEdit( QObject *editor )

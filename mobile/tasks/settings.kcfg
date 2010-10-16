@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+
+  <include>kglobalsettings.h</include>
+  <kcfgfile name="korganizer-mobilerc" />
+
+  <group name="DateAndTime">
+    <entry name="ReminderDefaultTime" type="Int" />
+    <entry name="ReminderDefaultUnit" type="Int" />
+    <entry name="RemindersForNewTodos" type="Bool" />
+  </group>
+
+  <group name="Views">
+    <entry name="ShowCompletedTodosAtBottom" type="Bool" />
+  </group>
+
+  <group name="Colors">
+    <entry name="TodoDueColor" type="Color" />
+    <entry name="TodoOverdueColor" type="Color" />
+  </group>
+</kcfg>

@@ -26,6 +26,9 @@
 
 #include <Akonadi/Entity>
 
+#include <calendarviews/eventviews/eventview.h>
+#include <calendarviews/eventviews/prefs.h>
+
 class KJob;
 class TasksActionManager;
 
@@ -42,6 +45,7 @@ class MainView : public KDeclarativeMainView
   Q_OBJECT
   public:
     explicit MainView( QWidget *parent = 0 );
+    ~MainView();
 
   public slots:
     void newTask();
@@ -55,6 +59,7 @@ class MainView : public KDeclarativeMainView
 
   protected slots:
     virtual void delayedInit();
+    void qmlLoadingStateChanged( QDeclarativeView::Status status );
 
   private slots:
     void finishEdit( QObject *editor );
@@ -79,6 +84,7 @@ class MainView : public KDeclarativeMainView
     QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
     Akonadi::StandardActionManager *mStandardActionManager;
     TasksActionManager *mTasksActionManager;
+    EventViews::PrefsPtr mCalendarPrefs;
 };
 
 #endif // MAINVIEW_H
