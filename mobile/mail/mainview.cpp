@@ -38,6 +38,7 @@
 #include "messageviewitem.h"
 #include "mobilekernel.h"
 #include "savemailcommand_p.h"
+#include "threadmodel.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/collection.h>
@@ -70,10 +71,14 @@
 #include <messagecomposer/akonadisender.h>
 #include <messagecore/stringutil.h>
 
+#include <kselectionproxymodel.h>
+
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
 #include <QtCore/QSignalMapper>
 #include <QtGui/QLabel>
+#include <QtGui/QItemSelectionModel>
+#include <QtGui/QTreeView>
 
 #ifdef _WIN32_WCE
 #include <identitypage.h>
@@ -82,8 +87,11 @@
 
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
-#include <QtDeclarative/QDeclarativeContext>
 #endif
+#include <QtDeclarative/QDeclarativeContext>
+#include <klinkitemselectionmodel.h>
+#include "breadcrumbnavigation.h"
+#include <qmllistselectionmodel.h>
 
 Q_DECLARE_METATYPE( KMime::Content* )
 QML_DECLARE_TYPE( MessageViewer::MessageViewItem )
@@ -111,6 +119,52 @@ MainView::~MainView()
 {
   delete mMessageSender;
 }
+
+#define VIEW(model) {                        \
+  QTreeView *view = new QTreeView;           \
+  view->setAttribute(Qt::WA_DeleteOnClose);  \
+  view->setModel(model);                     \
+  view->setWindowTitle(#model);              \
+  view->show();                              \
+}                                            \
+
+
+void MainView::insertItemModelIntoContext(QDeclarativeContext* context, QAbstractItemModel* model)
+{
+  KDeclarativeMainView::insertItemModelIntoContext(context, model);
+
+  ThreadGrouperModel *grouper = new ThreadGrouperModel(this);
+  grouper->setSourceModel(model);
+
+  ThreadModel *threads = new ThreadModel(grouper, this);
+
+  context->setContextProperty( "threads", threads );
+
+  KLinkItemSelectionModel *emailSelectionModel = new KLinkItemSelectionModel(grouper, itemSelectionModel(), this);
+
+  KSelectionProxyModel *threadContentsModel = new KSelectionProxyModel(itemSelectionModel(), this);
+  threadContentsModel->setSourceModel(model);
+
+  context->setContextProperty( "threadContents", threadContentsModel );
+
+  ThreadSelectionModel *threadSelector = new ThreadSelectionModel(threads, itemSelectionModel(), this);
+
+  QMLListSelectionModel *qmlThreadSelector = new QMLListSelectionModel(threadSelector, this);
+
+  context->setContextProperty("threadSelector", qmlThreadSelector );
+
+#if 0
+  {
+    QTreeView *view = new QTreeView;
+    view->setAttribute(Qt::WA_DeleteOnClose);
+    view->setModel(threads);
+    view->setSelectionModel(threadSelector);
+    view->setWindowTitle("threads");
+    view->show();
+  }
+#endif
+}
+
 
 void MainView::delayedInit()
 {
