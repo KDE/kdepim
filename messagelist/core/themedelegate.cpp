@@ -471,10 +471,11 @@ static inline void compute_size_hint_for_item( Theme::ContentItem * ci,
 {
   if ( ci->displaysText() )
   {
-    QFont font = ThemeDelegate::itemFont( ci, item );
-    QFontMetrics fontMetrics( font );
-    if ( fontMetrics.height() > maxh )
-      maxh = fontMetrics.height();
+    const QFont font = ThemeDelegate::itemFont( ci, item );
+    const QFontMetrics fontMetrics( font );
+    const int fontHeight = fontMetrics.height();
+    if ( fontHeight > maxh )
+      maxh = fontHeight;
     totalw += ci->displaysLongText() ? 128 : 64;
     return;
   }
@@ -508,15 +509,15 @@ static inline QSize compute_size_hint_for_row( const Theme::Row * r, int iconSiz
 
   // right aligned stuff first
   const QList< Theme::ContentItem * > * items = &( r->rightItems() );
-  QList< Theme::ContentItem * >::ConstIterator itemit;
+  QList< Theme::ContentItem * >::ConstIterator itemit, endItemIt;
 
-  for ( itemit = items->begin(); itemit != items->end() ; ++itemit )
+  for ( itemit = items->begin(), endItemIt = items->end(); itemit != endItemIt; ++itemit )
     compute_size_hint_for_item( const_cast< Theme::ContentItem * >( *itemit ), maxh, totalw, iconSize, item );
 
   // then left aligned stuff
   items = &( r->leftItems() );
 
-  for ( itemit = items->begin(); itemit != items->end() ; ++itemit )
+  for ( itemit = items->begin(), endItemIt = items->end(); itemit != endItemIt; ++itemit )
     compute_size_hint_for_item( const_cast< Theme::ContentItem * >( *itemit ), maxh, totalw, iconSize, item );
 
   return QSize( totalw, maxh );
@@ -1583,7 +1584,7 @@ QSize ThemeDelegate::sizeHintForItemTypeAndColumn( Item::Type type, int column, 
   int totalh = 0;
   int maxw = 0;
 
-  for ( QList< Theme::Row * >::ConstIterator rowit = rows->begin(); rowit != rows->end(); ++rowit )
+  for ( QList< Theme::Row * >::ConstIterator rowit = rows->begin(), endRowIt = rows->end(); rowit != endRowIt; ++rowit )
   {
     QSize sh = compute_size_hint_for_row( ( *rowit ), mTheme->iconSize(), item );
     totalh += sh.height();
