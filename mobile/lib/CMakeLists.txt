@@ -24,6 +24,7 @@ set(mobileui_SRCS
     orderedchildcollectionsmodel.cpp
     qmllistselectionmodel.cpp
     stylesheetloader.cpp
+    threadmodel.cpp
     agentstatusmonitor.cpp
 )
 
