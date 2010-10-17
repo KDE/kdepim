@@ -24,6 +24,7 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QSortFilterProxyModel>
+#include <QtGui/QItemSelectionModel>
 #include <Akonadi/EntityTreeModel>
 
 #include "mobileui_export.h"
@@ -71,6 +72,19 @@ private:
   Q_DECLARE_PRIVATE(ThreadModel)
   ThreadModelPrivate * const d_ptr;
   Q_PRIVATE_SLOT(d_func(), void populateThreadModel())
+};
+
+class ThreadSelectionModelPrivate;
+
+class MOBILEUI_EXPORT ThreadSelectionModel : public QItemSelectionModel
+{
+public:
+  explicit ThreadSelectionModel(QAbstractItemModel* model, QItemSelectionModel *selectionModel, QObject *parent = 0);
+  virtual void select(const QModelIndex& index, SelectionFlags command);
+  virtual void select(const QItemSelection& selection, SelectionFlags command);
+private:
+  Q_DECLARE_PRIVATE(ThreadSelectionModel)
+  ThreadSelectionModelPrivate * const d_ptr;
 };
 
 #endif

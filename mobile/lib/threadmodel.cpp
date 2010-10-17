@@ -437,4 +437,53 @@ int ThreadModel::rowCount(const QModelIndex& parent) const
   return d->m_threads.size();
 }
 
+class ThreadSelectionModelPrivate
+{
+  ThreadSelectionModelPrivate(ThreadSelectionModel *qq, QItemSelectionModel *selectionModel)
+    : q_ptr(qq), m_selectionModel(selectionModel)
+  {
+
+  }
+  Q_DECLARE_PUBLIC(ThreadSelectionModel)
+  ThreadSelectionModel * const q_ptr;
+
+  QItemSelectionModel * const m_selectionModel;
+
+};
+
+ThreadSelectionModel::ThreadSelectionModel(QAbstractItemModel* model, QItemSelectionModel* selectionModel, QObject *parent)
+  : QItemSelectionModel(model, parent),
+    d_ptr(new ThreadSelectionModelPrivate(this, selectionModel))
+{
+
+}
+
+void ThreadSelectionModel::select(const QModelIndex& index, QItemSelectionModel::SelectionFlags command)
+{
+  select(QItemSelection(index, index), command);
+}
+
+void ThreadSelectionModel::select(const QItemSelection& selection, QItemSelectionModel::SelectionFlags command)
+{
+  Q_D(ThreadSelectionModel);
+  QItemSelectionModel::select(selection, command);
+  QItemSelection thread;
+  foreach(const QItemSelectionRange &range, selection) {
+    for (int row = range.top(); row <= range.bottom(); ++row) {
+      static const int column = 0;
+      const QModelIndex idx = model()->index(row, column);
+      const int threadStartRow = idx.data(ThreadModel::ThreadRangeStartRole).toInt();
+      const int threadEndRow = idx.data(ThreadModel::ThreadRangeEndRole).toInt();
+      const QModelIndex threadStart = d->m_selectionModel->model()->index(threadStartRow, column);
+      const QModelIndex threadEnd = d->m_selectionModel->model()->index(threadEndRow, column);
+      Q_ASSERT(threadStart.isValid());
+      Q_ASSERT(threadEnd.isValid());
+      thread.select(threadStart, threadEnd);
+    }
+  }
+  kDebug() << thread;
+  d->m_selectionModel->select(thread, ClearAndSelect);
+}
+
+
 #include "threadmodel.moc"
