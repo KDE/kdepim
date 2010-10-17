@@ -126,11 +126,11 @@ void MainView::delayedInit()
   mCollectionModel->setDynamicSortFilter( true );
   mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 
-  MobileKernel::self()->setCollectionModel( mCollectionModel ); 
+  MobileKernel::self()->setCollectionModel( mCollectionModel );
   KSharedConfigPtr config = KSharedConfig::openConfig( "kmail-mobilerc" );
   MessageViewer::GlobalSettings::self()->setSharedConfig( config );
   MessageViewer::GlobalSettings::self()->readConfig();
-  
+
   QTime time;
   if ( debugTiming ) {
     time.start();
@@ -473,7 +473,7 @@ void MainView::replyFetchResult( KJob *job )
   factory.setReplyStrategy( fetchJob->property( "replyStrategy" ).value<MessageComposer::ReplyStrategy>() );
 
   factory.setQuote( fetchJob->property( "quoteOriginal" ).toBool() );
-  
+
   ComposerView *composer = new ComposerView;
   composer->setMessage( factory.createReply().msg );
   composer->show();
@@ -934,7 +934,7 @@ MessageViewer::MessageViewItem* MainView::messageViewerItem()
   QList<MessageViewer::MessageViewItem*> items = rootObject()->findChildren<MessageViewer::MessageViewItem* >();
   if ( !items.isEmpty() )
     item = items.first();
-  
+
   return item;
 }
 
