@@ -54,6 +54,7 @@ namespace CalendarSupport {
   };
 
   class History::Private : public QObject {
+    Q_OBJECT
     public:
       Private( History *qq ) : q( qq ) {}
       ~Private(){}

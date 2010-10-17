@@ -57,7 +57,7 @@ class IncidenceChanger;
    @author Sérgio Martins <iamsergio@gmail.com>
 */
 
-class History : public QObject {
+class CALENDARSUPPORT_EXPORT History : public QObject {
   Q_OBJECT
   public:
 
@@ -178,14 +178,14 @@ class History : public QObject {
        @param resultCode History::ResultCodeSuccess on success.
        @see lastErrorString()
      */
-    void undone( History::ResultCode resultCode );
+    void undone( CalendarSupport::History::ResultCode resultCode );
 
     /**
        This signal is emitted when an redo operation finishes.
        @param resultCode History::ResultCodeSuccess on success.
        @see lastErrorString()
      */
-    void redone( History::ResultCode resultCode );
+    void redone( CalendarSupport::History::ResultCode resultCode );
 
   private:
     //@cond PRIVATE

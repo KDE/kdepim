@@ -118,7 +118,7 @@ void History::registerUndoWidget( QWidget *w )
 void History::undo()
 {
   // Don't call undo() without the previous one finishing
-  Q_ASSERT( d->mOperationTypeInProgress != TypeNone );
+  Q_ASSERT( d->mOperationTypeInProgress == TypeNone );
 
   if ( !d->mUndoStack.isEmpty() ) {
     d->doIt( d->mUndoStack.pop(), TypeUndo );
@@ -129,8 +129,8 @@ void History::undo()
 
 void History::redo()
 {
-  // Don't call undo() without the previous one finishing
-  Q_ASSERT( d->mOperationTypeInProgress != TypeNone );
+  // Don't call redo() without the previous one finishing
+  Q_ASSERT( d->mOperationTypeInProgress == TypeNone );
 
   if ( !d->mRedoStack.isEmpty() ) {
     d->doIt( d->mRedoStack.pop(), TypeRedo );
@@ -290,3 +290,4 @@ void History::Private::finishOperation( History::ResultCode resultCode )
 
 
 #include "history.moc"
+#include "history_p.moc"
