@@ -307,6 +307,7 @@ bool IncidenceChanger::deleteIncidence( const Akonadi::Item &aitem,
 {
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( !incidence ) {
+    kDebug() << "Invalid incidence";
     return false;
   }
 
@@ -323,6 +324,7 @@ bool IncidenceChanger::deleteIncidence( const Akonadi::Item &aitem,
   const bool doDelete = sendGroupwareMessage( aitem, KCalCore::iTIPCancel,
                                               INCIDENCEDELETED, parent, atomicOperationId );
   if( !doDelete ) {
+    kDebug() << "Groupware says no";
     return false;
   }
 
