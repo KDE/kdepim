@@ -59,7 +59,7 @@ namespace CalendarSupport {
       Private( History *qq ) : q( qq ) {}
       ~Private(){}
       void updateWidgets();
-      void doIt( const Entry &entry, OperationType type );
+      bool doIt( const Entry &entry, OperationType type );
       void updateIds( Item::Id oldId, Item::Id newId );
       void finishOperation( History::ResultCode resultCode );
 
@@ -77,6 +77,7 @@ namespace CalendarSupport {
       OperationType mOperationTypeInProgress;
 
       QString mLastErrorString;
+      QHash<Akonadi::Item::Id,int> mLatestRevisionByItemId;
 
       QWidget *mParent;
 

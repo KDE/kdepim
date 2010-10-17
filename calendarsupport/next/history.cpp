@@ -71,11 +71,13 @@ void History::recordChange( const Akonadi::Item &oldItem,
       Q_ASSERT_X( !oldItem.isValid() && newItem.isValid() && newItem.hasPayload<Incidence::Ptr>(),
                   "recordChange()", "oldItem must be invalid, and newItem valid" );
       id = newItem.id();
+      d->mLatestRevisionByItemId.insert( id, newItem.revision() );
       break;
     case ChangeTypeDelete:
       Q_ASSERT_X( oldItem.isValid() && oldItem.hasPayload<Incidence::Ptr>() && !newItem.isValid(),
                   "recordChange()", "oldItem must be valid, and newItem invalid" );
       id = oldItem.id();
+      d->mLatestRevisionByItemId.remove( id );
       break;
     case ChangeTypeEdit:
       Q_ASSERT_X( oldItem.isValid() && oldItem.hasPayload<Incidence::Ptr>() &&
@@ -83,6 +85,7 @@ void History::recordChange( const Akonadi::Item &oldItem,
                   oldItem.id() == newItem.id(),
                   "recordChange()", "oldItem and newItem must be valid and have the same id" );
       id = oldItem.id();
+      d->mLatestRevisionByItemId.insert( id, newItem.revision() );
       break;
     default:
       kDebug() << "changeType = " << changeType;
@@ -115,28 +118,38 @@ void History::registerUndoWidget( QWidget *w )
     d->mUndoWidgets.append( QPointer<QWidget>( w ) );
 }
 
-void History::undo()
+bool History::undo()
 {
   // Don't call undo() without the previous one finishing
   Q_ASSERT( d->mOperationTypeInProgress == TypeNone );
 
+  bool result;
+
   if ( !d->mUndoStack.isEmpty() ) {
-    d->doIt( d->mUndoStack.pop(), TypeUndo );
+    result = d->doIt( d->mUndoStack.pop(), TypeUndo );
   } else {
     kWarning() << "Don't call undo when the undo stack is empty." << endl;
+    result = false;
   }
+
+  return result;
 }
 
-void History::redo()
+bool History::redo()
 {
   // Don't call redo() without the previous one finishing
   Q_ASSERT( d->mOperationTypeInProgress == TypeNone );
 
+  bool result;
+
   if ( !d->mRedoStack.isEmpty() ) {
-    d->doIt( d->mRedoStack.pop(), TypeRedo );
+    result = d->doIt( d->mRedoStack.pop(), TypeRedo );
   } else {
     kWarning() << "Don't call redo() when the undo stack is empty." << endl;
+    result = false;
   }
+
+  return result;
 }
 
 bool History::clear()
@@ -182,16 +195,42 @@ void History::Private::updateWidgets()
 
 void History::Private::updateIds( Item::Id oldId, Item::Id newId )
 {
-  for( int i = 0; i < mUndoStack.count(); ++i )
-    if ( mUndoStack[i].itemId == oldId )
+  for ( int i = 0; i < mUndoStack.count(); ++i ) {
+    if ( mUndoStack[i].itemId == oldId ) {
+
       mUndoStack[i].itemId = newId;
 
-  for( int i = 0; i < mRedoStack.count(); ++i )
-    if ( mRedoStack[i].itemId == oldId )
+      if ( mUndoStack[i].oldItem.isValid() )
+        mUndoStack[i].oldItem.setId( newId );
+
+      if ( mUndoStack[i].newItem.isValid() )
+        mUndoStack[i].newItem.setId( newId );
+    }
+  }
+
+  for ( int i = 0; i < mRedoStack.count(); ++i ) {
+    if ( mRedoStack[i].itemId == oldId ) {
+
       mRedoStack[i].itemId = newId;
+
+      if ( mRedoStack[i].oldItem.isValid() )
+        mRedoStack[i].oldItem.setId( newId );
+
+      if ( mRedoStack[i].newItem.isValid() )
+        mRedoStack[i].newItem.setId( newId );
+    }
+  }
+
+  if ( mEntryInProgress.oldItem.isValid() )
+    mEntryInProgress.oldItem.setId( newId );
+
+  if ( mEntryInProgress.newItem.isValid() )
+    mEntryInProgress.newItem.setId( newId );
+
+  mEntryInProgress.itemId = newId;
 }
 
-void History::Private::doIt( const Entry &entry, OperationType type )
+bool History::Private::doIt( const Entry &entry, OperationType type )
 {
   mOperationTypeInProgress = type;
   mEntryInProgress = entry;
@@ -209,15 +248,15 @@ void History::Private::doIt( const Entry &entry, OperationType type )
         e.changeType = ChangeTypeAdd;
         break;
       case ChangeTypeEdit:
-        {
-          Akonadi::Item oldItem2 = e.oldItem;
-          e.oldItem = e.newItem;
-          e.newItem = oldItem2;
-        }
         break;
       default:
         Q_ASSERT_X( false, "doIt()", "Invalid change type" );
     }
+
+    // Swap old item with new item.
+    Akonadi::Item oldItem2 = e.oldItem;
+    e.oldItem = e.newItem;
+    e.newItem = oldItem2;
   }
 
   Incidence::Ptr oldPayload = CalendarSupport::incidence( e.oldItem );
@@ -227,35 +266,39 @@ void History::Private::doIt( const Entry &entry, OperationType type )
   if ( e.changeType == ChangeTypeAdd ) {
     Akonadi::Collection collection = e.newItem.parentCollection();
     result = mChanger->addIncidence( newPayload, collection, mParent, e.atomicOperationId );
+    // now wait for mChanger to call our slot.
   } else if ( e.changeType == ChangeTypeDelete ) {
     Akonadi::Item item = e.oldItem;
-    item.setId( e.itemId );
     result = mChanger->deleteIncidence( item, e.atomicOperationId, mParent );
-
     // now wait for mChanger to call our slot.
   } else if ( e.changeType == ChangeTypeEdit ) {
+    if ( mLatestRevisionByItemId.contains( e.itemId ) ) {
+      e.newItem.setRevision( mLatestRevisionByItemId[e.itemId] );
+    }
+
     result = mChanger->changeIncidence( oldPayload, e.newItem, e.whatChanged, mParent, e.atomicOperationId );
+    // now wait for mChanger to call our slot.
   } else {
     result = false;
     Q_ASSERT_X( false, "History::Private::doIt()", "Must have at least one payload" );
   }
 
   if ( !result ) {
-    // Don't u18n yet, only after refactoring IncidenceChanger.
+    // Don't i18n yet, only after refactoring IncidenceChanger.
     mLastErrorString = "Error in incidence changer, didn't even fire the job";
-
-    if ( mOperationTypeInProgress == TypeUndo ) {
-      emit q->undone( History::ResultCodeIncidenceChangerError );
-    } else {
-      emit q->redone( History::ResultCodeIncidenceChangerError );
-    }
+    mOperationTypeInProgress = TypeNone;
   }
+
+  return result;
 }
 
-void History::Private::deleteFinished( const Akonadi::Item &, bool success )
+void History::Private::deleteFinished( const Akonadi::Item &item, bool success )
 {
   History::ResultCode resultCode = success ? History::ResultCodeSuccess :
                                              History::ResultCodeError;
+  // clean up hash
+  if ( success )
+    mLatestRevisionByItemId.remove( item.id() );
 
   finishOperation( resultCode );
 }
@@ -268,6 +311,7 @@ void History::Private::addFinished( const Akonadi::Item &item, bool success )
     resultCode = History::ResultCodeSuccess;
     // Por comentário.
     updateIds( mEntryInProgress.itemId /*old*/, item.id() /*new*/ );
+    mLatestRevisionByItemId.insert( item.id(), item.revision() );
   } else {
     resultCode = History::ResultCodeError;
   }
@@ -286,6 +330,11 @@ void History::Private::editFinished( const Akonadi::Item &oldItem,
 
   History::ResultCode resultCode = success ? History::ResultCodeSuccess :
                                              History::ResultCodeError;
+
+  if ( success )
+    mLatestRevisionByItemId[newItem.id()] = newItem.revision();
+
+  kDebug() << "Old revision was " << oldItem.revision() << " new is " << newItem.revision();
 
   finishOperation( resultCode );
 }

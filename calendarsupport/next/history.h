@@ -144,28 +144,35 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
     */
     QString lastErrorString() const;
 
-  public Q_SLOTS:
-
     /**
        Reverts the change that's ontop of the undo stack.
        Can't be called if there's an undo/redo operation running, Q_ASSERTs.
        Can be called if the stack is empty, in this case, nothing happens.
-       This function is async, listen to signal undone() to know when it finishes.
+       This function is async, listen to signal undone() to know when the operation finishes.
+
+       @return true if the job was started, otherwise false is returned and the undone() signal
+               won't be emitted.
+
        @see redo()
        @see undone()
      */
-    void undo();
+   bool undo();
 
     /**
        Reverts the change that's ontop of the redo stack.
        Can't be called if there's an undo/redo operation running, Q_ASSERTs.
        Can be called if the stack is empty, in this case, nothing happens.
-       This function is async, listen to signal redone() to know when it finishes.
+       This function is async, listen to signal redone() to know when the operation finishes.
+
+       @return true if the job was started, otherwise false is returned and the redone() signal
+               won't be emitted.
+
        @see undo()
        @see redone()
      */
-    void redo();
+    bool redo();
 
+  public Q_SLOTS:
     /**
        Clears the undo and redo stacks.
        Won't do anything if there's a undo/redo job currently running.
