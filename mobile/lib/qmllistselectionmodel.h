@@ -24,7 +24,9 @@
 
 #include <QItemSelectionModel>
 
-class QMLListSelectionModel : public QObject
+#include "mobileui_export.h"
+
+class MOBILEUI_EXPORT QMLListSelectionModel : public QObject
 {
   Q_OBJECT
   Q_PROPERTY(QList<int> selection READ selection NOTIFY selectionChanged)
