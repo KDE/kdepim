@@ -1,8 +1,12 @@
 /*
     This file is part of Blogilo, A KDE Blogging Client
 
-    Copyright (C) 2008-2009 Mehrdad Momeny <mehrdad.momeny@gmail.com>
-    Copyright (C) 2008-2009 Golnaz Nilieh <g382nilieh@gmail.com>
+    It is a modified version of "objecteditor.cpp" from
+    FlashQard project.
+
+    Copyright (C) 2008-2009 Shahab <shahab@flashqard-project.org>
+    Copyright (C) 2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
+    Copyright (C) 2010 Golnaz Nilieh <g382nilieh@gmail.com>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -22,42 +26,10 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#ifndef ADDIMAGEDIALOG_H
-#define ADDIMAGEDIALOG_H
+#include "objecteditor.h"
 
-#include "addmediadialog.h"
-
-#include <ui_editimagebase.h>
-
-class QFrame;
-class BilboMedia;
-/**
-	@author 
-*/
-
-class AddImageDialog : public AddMediaDialog
+ObjectEditor::ObjectEditor(TextEditor *_textEditor, QWidget *parent)
+   : QWidget(parent), textEditor(_textEditor)
 {
-    Q_OBJECT
-public:
-    AddImageDialog(QWidget* parent);
 
-    ~AddImageDialog();
-
-Q_SIGNALS:
-    void sigAddImage( BilboMedia *media, const int width, const int height, 
-                      const QString title, const QString link, const QString Alt_text  );
-
-protected:
-//     virtual void addOtherMediaAttributes();
-    virtual void slotButtonClicked(int button);
-
-protected slots:
-    virtual void slotSelectLocalFile();
-
-private:
-    QFrame *editFrame;
-    Ui::EditImageBase editImageWidgetUi;
-
-};
-
-#endif
+}

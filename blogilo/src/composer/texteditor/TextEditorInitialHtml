@@ -1,0 +1,157 @@
+<html>
+<head>
+
+<script type="text/javascript">
+
+function updateCSS()
+{
+   var css = objFromCpp.getCss();
+   var styleElements = document.getElementsByTagName("style");
+   
+   if (styleElements.length)
+      styleElements[0].parentNode.removeChild(styleElements[0]);
+   var h=document.getElementsByTagName("head");
+   if(!h.length)
+   {
+      alert("tag \"head\" was not found!");
+      return;
+   }
+   
+   var newStyleSheet = document.createElement("style");
+   newStyleSheet.type = "text/css";
+   h[0].appendChild(newStyleSheet);
+   newStyleSheet.appendChild(document.createTextNode(css));
+}
+
+function mouseEventHandler(mEvent)
+{
+   var node = mEvent.srcElement;
+   if (node.nodeName.toLowerCase() == "img"
+       || node.nodeName.toLowerCase() == "object")
+   {
+      objFromCpp.clickedOnObject(node.id);
+   }
+   else
+      objFromCpp.clickedOnNonObject();
+}
+
+function setReadOnly(readOnly)
+{
+   var node = document.getElementById("editableArea");
+   if (readOnly)
+      node.setAttribute("contenteditable", "false");
+   else
+      node.setAttribute("contenteditable", "true");
+}
+
+function getCurrentStyle(node, prop)
+{
+   return document.defaultView.getComputedStyle(node, null).getPropertyValue(prop);
+}
+
+function getUserSelection()
+{
+   var userSelection;
+   if (window.getSelection)
+   {
+      userSelection = window.getSelection();
+   }
+   else
+   {
+      return null;
+   }
+
+   return userSelection;
+}
+
+function getAlignment()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "text-align");
+}
+
+function getFontFamily()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "font-family");
+}
+
+function getFontSize()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "font-size");
+}
+
+function getForegroundColor()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "color");
+}
+
+function getBackgroundColor()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "background-color");
+}
+
+function getPageBackgroundColor()
+{
+   return document.styleSheets[0].cssRules[0].style.backgroundColor;
+}
+
+//NOTE: page background color will be changed by body's style
+// it will not change the html codes that you obtain using getHtml() function
+function setPageBackgroundColor(color)
+{
+   document.styleSheets[0].cssRules[0].style.backgroundColor = color;
+}
+
+function getTextDirection()
+{
+   var node = getUserSelection().anchorNode.parentNode;
+   return getCurrentStyle(node, "direction");
+}
+
+function replaceHtml(htmlString)
+{
+   var node = document.getElementById("editableArea");
+   node.innerHTML = htmlString;
+//    adjustImagesPath();
+}
+
+function getHtml()
+{
+   var node = document.getElementById("editableArea");
+   return node.innerHTML;
+}
+
+function adjustImagesPath()
+{
+   var images = document.getElementsByTagName("img");
+   for (var i=0; i<images.length; i++)
+   {
+      images[i].src = objFromCpp.getObjectPath(images[i].id);
+   }
+}
+
+function getAllImagesId()
+{
+   var images = document.getElementsByTagName("img");
+   var ids = "";
+   for (var i=0; i<images.length; i++)
+      ids += images[i].id + ",";
+   return ids;
+}
+
+function replaceId(oldId, newId)
+{
+   var node = document.getElementById(oldId);
+   node.id = newId;
+}
+
+</script>
+
+</head>
+
+<body id="editableArea" contenteditable="true" onMouseDown="javaScript:mouseEventHandler(event);"></body>
+</html>

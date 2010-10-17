@@ -48,11 +48,8 @@ AddMediaDialog::AddMediaDialog( QWidget *parent ) : KDialog( parent )
     this->resize( dialog->width(), dialog->height() );
     this->setWindowTitle( i18n("Attach media") );
 
-    connect( this, SIGNAL( okClicked() ), this, SLOT( sltOkClicked() ) );
-    connect( ui.radiobtnLocalUrl, SIGNAL( toggled( bool ) ), this, 
-             SLOT( sltMediaSourceChanged() ) );
-    connect( ui.radiobtnRemoteUrl, SIGNAL( toggled( bool ) ), this, 
-             SLOT( sltMediaSourceChanged() ) );
+    connect( ui.radiobtnLocalUrl, SIGNAL( toggled( bool ) ),
+             ui.urlReqBrowse, SLOT( setEnabled(bool)) );
     connect( ui.urlReqBrowse, SIGNAL(clicked(bool)), SLOT(slotSelectLocalFile()) );
     ui.urlReqLineEdit->setFocus();
     ui.urlReqLineEdit->setToolTip( i18n( "Type media path here." ) );
@@ -77,46 +74,61 @@ void AddMediaDialog::slotSelectLocalFile()
     ui.urlReqLineEdit->setText(path);
 }
 
-void AddMediaDialog::sltOkClicked()
+void AddMediaDialog::slotButtonClicked(int button)
 {
-    KUrl mediaUrl( ui.urlReqLineEdit->text() );
-    kDebug() << "parent ok";
-    if ( !mediaUrl.isEmpty() ) {
-        if ( mediaUrl.isValid() ) {
-            media = new BilboMedia();
-            QString name = mediaUrl.fileName();
+    if(button == KDialog::Ok){
+        KUrl mediaUrl( ui.urlReqLineEdit->text() );
+        kDebug() << "parent ok";
+        if ( !mediaUrl.isEmpty() ) {
+            if ( mediaUrl.isValid() ) {
+                media = new BilboMedia();
+                QString name = mediaUrl.fileName();
 
-            media->setName( name );
+                media->setName( name );
 
-            if ( !mediaUrl.isLocalFile() ) {
-                media->setRemoteUrl( mediaUrl.url() );
-                media->setUploaded( true );
+                if ( !mediaUrl.isLocalFile() ) {
+                    media->setRemoteUrl( mediaUrl.url() );
+                    media->setUploaded( true );
 
-                KIO::MimetypeJob* typeJob = KIO::mimetype( mediaUrl, KIO::HideProgressInfo );
+                    KIO::MimetypeJob* typeJob = KIO::mimetype( mediaUrl, KIO::HideProgressInfo );
 
-                connect( typeJob, SIGNAL( mimetype( KIO::Job *, const QString & ) ), 
-                        this,  SLOT( sltRemoteFileTypeFound( KIO::Job *, const QString & ) ) );
+                    connect( typeJob, SIGNAL( mimetype( KIO::Job *, const QString & ) ),
+                            this,  SLOT( sltRemoteFileTypeFound( KIO::Job *, const QString & ) ) );
 
-                addOtherMediaAttributes();
+//                     addOtherMediaAttributes();
 
+                } else {
+                    media->setLocalUrl( mediaUrl.toLocalFile() );
+                    media->setRemoteUrl( mediaUrl.url() );
+                    media->setUploaded( false );
+
+                    KMimeType::Ptr typePtr;
+                    typePtr = KMimeType::findByUrl( mediaUrl, 0, true, false );
+                    name = typePtr.data()->name();
+                    kDebug() << name ;
+                    media->setMimeType( name );
+                    Q_EMIT sigMediaTypeFound( media );
+
+//                     addOtherMediaAttributes();
+                }
+                _selectedMedia["url"] = media->remoteUrl().url();
+                accept();
             } else {
-                media->setLocalUrl( mediaUrl.toLocalFile() );
-                media->setRemoteUrl( mediaUrl.url() );
-                media->setUploaded( false );
-
-                KMimeType::Ptr typePtr;
-                typePtr = KMimeType::findByUrl( mediaUrl, 0, true, false );
-                name = typePtr.data()->name();
-                kDebug() << name ;
-                media->setMimeType( name );
-                Q_EMIT sigMediaTypeFound( media );
-
-                addOtherMediaAttributes();
+                KMessageBox::error( this, i18n( "The selected media address is an invalid URL." ) );
             }
-        } else {
-            KMessageBox::error( this, i18n( "The selected media address is an invalid URL." ) );
         }
+    } else {
+        KDialog::slotButtonClicked(button);
     }
+}
+QVariantMap AddMediaDialog::selectedMediaProperties() const
+{
+    return _selectedMedia;
+}
+
+BilboMedia* AddMediaDialog::selectedMedia() const
+{
+    return media;
 }
 
 void AddMediaDialog::sltRemoteFileTypeFound( KIO::Job *job, const QString &type )
@@ -131,19 +143,11 @@ void AddMediaDialog::sltRemoteFileTypeFound( KIO::Job *job, const QString &type 
 //         addOtherMediaAttributes();
 //     }
 }
-
+/*
 void AddMediaDialog::addOtherMediaAttributes()
 {
     kDebug() << "emmiting add media signal";
     Q_EMIT sigAddMedia( media );
-}
+}*/
 
-void AddMediaDialog::sltMediaSourceChanged()
-{
-    if ( ui.radiobtnRemoteUrl->isChecked() ) {
-        ui.urlReqBrowse->setEnabled( false );
-    } else {
-        ui.urlReqBrowse->setEnabled( true );
-    }
-}
 #include "composer/dialogs/addmediadialog.moc"

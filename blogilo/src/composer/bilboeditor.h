@@ -30,6 +30,7 @@
 #include <ktabwidget.h>
 #include <KUrl>
 
+class TextEditor;
 class QTextCharFormat;
 // class QProgressBar;
 // class QWebView;
@@ -45,9 +46,7 @@ class KListWidget;
 // class KPushButton;
 class KSelectAction;
 // class KStatusBar;
-
-class MediaListWidget;
-class MultiLineTextEdit;
+// class MultiLineTextEdit;
 class AddEditLink;
 class BilboMedia;
 class BilboBrowser;
@@ -97,7 +96,7 @@ public:
      * Makes BilboEditor to use @param list as its list of media files.
      * then BilboEditor can add media files to it, or remove them.
      */
-    void setMediaList( QMap <QString, BilboMedia*> *list );
+//     void setMediaList( QMap <QString, BilboMedia*> *list );
 //   void setMediaList(QMap <QString, BilboMedia*> & list);
 
     /**
@@ -145,17 +144,17 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void slotSettingsChanged();
 
-    void sltToggleSpellChecking();
+//     void sltToggleSpellChecking();
 
-    void sltSyncSpellCheckingButton( bool check );
+//     void sltSyncSpellCheckingButton( bool check );
 
-    void sltSetTextBold( bool bold );
+//     void sltSetTextBold( bool bold );
 
     /*!
     Changes the current text font into Courier fontfamily, to represent code style.
     or if text font already be in code style, uses the fontfamily it had before.
      */
-    void sltToggleCode();
+//     void sltToggleCode();
 
     /**
      * Changes the current paragraph format into Heading type or simple pargraph
@@ -164,35 +163,35 @@ protected Q_SLOTS:
      * @param index is the index of the selected format type in the related
      * combobox in toolbar.
      */
-    void sltChangeFormatType( const QString& text );
+//     void sltChangeFormatType( const QString& text );
     /*!
     Increments font size by one degree.
     there are five predefined values for font size: "small", "medium", "large",
      * "x-large", "xx-large". Bilboeditor uses "medium" as default font size.
      */
-    void sltFontSizeIncrease();
+//     void sltFontSizeIncrease();
 
     /*!
     Decrements font size by one degree.
     there are five predefined values for font size: "small", "medium", "large",
      * "x-large", "xx-large". Bilboeditor uses "medium" as default font size.
      */
-    void sltFontSizeDecrease();
+//     void sltFontSizeDecrease();
 
     /*!
     Changes Alignment of current paragraph into Right Alignment.
      */
-    void sltAlignRight();
+//     void sltAlignRight();
 
     /*!
     Changes Alignment of current paragraph into Left Alignment.
      */
-    void sltAlignLeft();
+//     void sltAlignLeft();
 
     /*!
     Switches Layout Direction of current paragraph between RightToLeft and LeftToRight Directions.
      */
-    void sltChangeLayoutDirection();
+//     void sltChangeLayoutDirection();
 
     /*!
     Opens a dialog to set link address. if cursor has selection and it is a link
@@ -214,14 +213,14 @@ protected Q_SLOTS:
     /*!
     Changes the forground color of current text.
      */
-    void sltSelectColor();
+//     void sltSelectColor();
 
     /*!
     Changes all properties of current text format into default, except Anchor,
      * AnchorName and AnchorHref properties.
     \sa defaultCharFormat
      */
-    void sltRemoveFormatting();
+//     void sltRemoveFormatting();
 
     /**
      * Creates an instance of AddImageDialog class,and opens it, to select an image.
@@ -231,10 +230,10 @@ protected Q_SLOTS:
     void sltSetImage( BilboMedia *media, const int width, const int height, 
                const QString title, const QString link, const QString Alt_text );
     
-    void sltReloadImage( const KUrl imagePath );
-
-    void sltSetImageProperties( const int index, const int width, const int height,
-                       const QString title, const QString link, const QString Alt_text );
+//     void sltReloadImage( const KUrl imagePath );
+// 
+//     void sltSetImageProperties( const int index, const int width, const int height,
+//                        const QString title, const QString link, const QString Alt_text );
     
     /**
      * Creates an instance of AddMediaDialog class,and opens it, to select a media file.
@@ -247,20 +246,20 @@ protected Q_SLOTS:
      */
 //     void sltSetMedia( BilboMedia *media );
 
-    void sltRemoveMedia( const int index );
+//     void sltRemoveMedia( const int index );
 
-    void sltMediaTypeFound( BilboMedia *media );
+//     void sltMediaTypeFound( BilboMedia *media );
 
-    void sltAddOrderedList();
+//     void sltAddOrderedList();
 
-    void sltAddUnorderedList();
+//     void sltAddUnorderedList();
 
-    void sltToggleBlockQuote();
+//     void sltToggleBlockQuote();
 
     void sltAddPostSplitter();
 
-    void slotCurrentCharFormantChanged(const QTextCharFormat &);
-    void slotCurrentBlockFormatChanged(const QTextBlockFormat &);
+//     void slotCurrentCharFormantChanged(const QTextCharFormat &);
+//     void slotCurrentBlockFormatChanged(const QTextBlockFormat &);
 
     /*!
     Sets the content of the current tab  as other tabs' contents, to apply recent
@@ -278,7 +277,7 @@ private:
     Creates actions of Bilbo editor, and assigns each one to a button, then adds each
      * button to barVisual, on the editor tab.
      */
-    void createActions();
+//     void createActions();
 
     /*!
     Creates Widget of BilboEditor.
@@ -298,7 +297,7 @@ private:
     QWidget *tabHtml;
     QWidget *tabPreview;
 
-    MultiLineTextEdit *editor;
+    TextEditor *editor;
 //     QPlainTextEdit *htmlEditor;
     KTextEditor::View *htmlEditor;
 //     QWebView *preview;
@@ -307,7 +306,7 @@ private:
 
     KToolBar *barVisual;
 
-    MediaListWidget *lstMediaFiles;
+//     KListWidget *lstMediaFiles;
 //     KPushButton *btnGetStyle;
 
     KAction *actBold;

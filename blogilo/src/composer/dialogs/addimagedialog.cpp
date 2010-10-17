@@ -69,33 +69,16 @@ void AddImageDialog::slotSelectLocalFile()
     ui.urlReqLineEdit->setText(path);
 }
 
-
-// void AddImageDialog::sltRemoteFileCopied(KJob* job)
-// {
-// //     AddMediaDialog::sltRemoteFileCopied(job);
-//     KIO::FileCopyJob *copyJob = dynamic_cast <KIO::FileCopyJob*>( job );
-//     if ( job->error() ) {
-//         copyJob->ui()->setWindow( this );
-//         copyJob->ui()->showErrorMessage();
-//     } else {
-//         //KIO::FileCopyJob *copyJob = dynamic_cast <KIO::FileCopyJob*> (job);
-//         media->setLocalUrl( copyJob->destUrl().toLocalFile() );
-//         addOtherMediaAttributes();
-//     }
-// }
-
-void AddImageDialog::addOtherMediaAttributes()
+void AddImageDialog::slotButtonClicked(int button)
 {
-//     if ( media->mimeType().contains( "image" ) ) {
-        kDebug() << "emitting add image signal";
-        Q_EMIT sigAddImage( media, editImageWidgetUi.spinboxWidth->value(), 
-                            editImageWidgetUi.spinboxHeight->value(), 
-                            editImageWidgetUi.txtTitle->text(), 
-                            editImageWidgetUi.txtLink->text(),
-                            editImageWidgetUi.txtAltText->text() );
-//     } else {
-//         KMessageBox::error( this, i18n( "The selected media is not an image file, or its format isn't supported." ) );
-//     }
+    kDebug();
+    _selectedMedia["width"] = editImageWidgetUi.spinboxWidth->value();
+    _selectedMedia["height"] = editImageWidgetUi.spinboxHeight->value();
+    _selectedMedia["title"] = editImageWidgetUi.txtTitle->text();
+    _selectedMedia["link"] = editImageWidgetUi.txtLink->text();
+    _selectedMedia["alt"] = editImageWidgetUi.txtAltText->text();
+//     kDebug()<<_selectedMedia;
+    AddMediaDialog::slotButtonClicked(button);
 }
 
 #include "composer/dialogs/addimagedialog.moc"

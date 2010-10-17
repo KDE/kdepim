@@ -28,6 +28,7 @@
 #include <QFrame>
 #include "bilbopost.h"
 
+class TextEditor;
 class BilboEditor;
 class QGridLayout;
 class QLabel;

@@ -49,7 +49,7 @@ PostEntry::PostEntry( QWidget *parent )
     kDebug();
     createUi();
     editPostWidget = new BilboEditor( this );
-    editPostWidget->setMediaList( &mMediaList );
+//     editPostWidget->setMediaList( &mMediaList );
     this->layout()->addWidget( editPostWidget );
     mTimer = new QTimer(this);
     mTimer->start(Settings::autosaveInterval() * MINUTE);

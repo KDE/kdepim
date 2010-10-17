@@ -54,6 +54,9 @@ public:
     /// AddMediaDialog destructor.
     ~AddMediaDialog();
 
+    BilboMedia *selectedMedia() const;
+    QVariantMap selectedMediaProperties() const;
+
 Q_SIGNALS:
     /**
      * when the dialog is accepted, sends a BilboMedia object to the caller function.this object
@@ -70,16 +73,18 @@ Q_SIGNALS:
     void sigMediaTypeFound( BilboMedia *media );
 
 protected:
-    virtual void addOtherMediaAttributes();
+//     virtual void addOtherMediaAttributes();
 
+    QVariantMap _selectedMedia;
     Ui::AddMediaDialogBase ui;
     BilboMedia *media;
 
 protected Q_SLOTS:
+    virtual void slotButtonClicked(int button);
     virtual void slotSelectLocalFile();
-    virtual void sltOkClicked();
+//     virtual void sltOkClicked();
     virtual void sltRemoteFileTypeFound( KIO::Job *job, const QString &type );
-    void sltMediaSourceChanged();
+//     void sltMediaSourceChanged();
 };
 
 #endif

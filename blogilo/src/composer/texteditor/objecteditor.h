@@ -1,8 +1,12 @@
 /*
     This file is part of Blogilo, A KDE Blogging Client
 
-    Copyright (C) 2008-2009 Mehrdad Momeny <mehrdad.momeny@gmail.com>
-    Copyright (C) 2008-2009 Golnaz Nilieh <g382nilieh@gmail.com>
+    It is a modified version of "objecteditor.h" from
+    FlashQard project.
+
+    Copyright (C) 2008-2009 Shahab <shahab@flashqard-project.org>
+    Copyright (C) 2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
+    Copyright (C) 2010 Golnaz Nilieh <g382nilieh@gmail.com>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -22,42 +26,31 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#ifndef ADDIMAGEDIALOG_H
-#define ADDIMAGEDIALOG_H
+#ifndef OBJECTEDITOR_H
+#define OBJECTEDITOR_H
 
-#include "addmediadialog.h"
+#include "texteditor.h"
 
-#include <ui_editimagebase.h>
-
-class QFrame;
-class BilboMedia;
-/**
-	@author 
-*/
-
-class AddImageDialog : public AddMediaDialog
+class ObjectEditor : public QWidget
 {
-    Q_OBJECT
-public:
-    AddImageDialog(QWidget* parent);
+   Q_OBJECT
 
-    ~AddImageDialog();
+   public:
+      ObjectEditor(TextEditor*, QWidget* = 0);
+      ~ObjectEditor() {}
+      
+      virtual void editObject(TextEditorObject*) = 0;
+      virtual void finishEditing() = 0;
+//      virtual bool isChanged() const = 0;
+//      virtual const TextEditorObject* getObject() const = 0;
 
-Q_SIGNALS:
-    void sigAddImage( BilboMedia *media, const int width, const int height, 
-                      const QString title, const QString link, const QString Alt_text  );
+   protected:
+      TextEditor *textEditor;
 
-protected:
-//     virtual void addOtherMediaAttributes();
-    virtual void slotButtonClicked(int button);
-
-protected slots:
-    virtual void slotSelectLocalFile();
-
-private:
-    QFrame *editFrame;
-    Ui::EditImageBase editImageWidgetUi;
-
+   signals:
+//      void changed();
+      void editingFinished();
 };
+
 
 #endif
