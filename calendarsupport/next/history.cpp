@@ -200,32 +200,56 @@ void History::Private::doIt( const Entry &entry, OperationType type )
   Entry e = entry;
 
   if ( type == TypeUndo ) {
-    // Switch newPayload with oldItem if it's an undo.
-    // This way if don't have to duplicate code for undo and redo.
-    // After this if statement, we don't care if we're undoing or
-    // redoing, we're just going to send newItem to akonadi.
-    Akonadi::Item oldItem2 = e.oldItem;
-    e.oldItem = e.newItem;
-    e.newItem = oldItem2;
+    // Invert stuff, that's what undo means.
+    switch( e.changeType ) {
+      case ChangeTypeAdd:
+        e.changeType = ChangeTypeDelete;
+        break;
+      case ChangeTypeDelete:
+        e.changeType = ChangeTypeAdd;
+        break;
+      case ChangeTypeEdit:
+        {
+          Akonadi::Item oldItem2 = e.oldItem;
+          e.oldItem = e.newItem;
+          e.newItem = oldItem2;
+        }
+        break;
+      default:
+        Q_ASSERT_X( false, "doIt()", "Invalid change type" );
+    }
   }
 
   Incidence::Ptr oldPayload = CalendarSupport::incidence( e.oldItem );
   Incidence::Ptr newPayload = CalendarSupport::incidence( e.newItem );
 
-  if ( e.changeType == ChangeTypeAdd  ) {
+  bool result;
+  if ( e.changeType == ChangeTypeAdd ) {
     Akonadi::Collection collection = e.newItem.parentCollection();
-    mChanger->addIncidence( newPayload, collection, mParent, e.atomicOperationId);
+    result = mChanger->addIncidence( newPayload, collection, mParent, e.atomicOperationId );
   } else if ( e.changeType == ChangeTypeDelete ) {
     Akonadi::Item item = e.oldItem;
     item.setId( e.itemId );
-    mChanger->deleteIncidence( item, e.atomicOperationId, mParent );
+    result = mChanger->deleteIncidence( item, e.atomicOperationId, mParent );
+
     // now wait for mChanger to call our slot.
   } else if ( e.changeType == ChangeTypeEdit ) {
-    mChanger->changeIncidence( oldPayload, e.newItem, e.whatChanged, mParent, e.atomicOperationId );
+    result = mChanger->changeIncidence( oldPayload, e.newItem, e.whatChanged, mParent, e.atomicOperationId );
   } else {
+    result = false;
     Q_ASSERT_X( false, "History::Private::doIt()", "Must have at least one payload" );
   }
 
+  if ( !result ) {
+    // Don't u18n yet, only after refactoring IncidenceChanger.
+    mLastErrorString = "Error in incidence changer, didn't even fire the job";
+
+    if ( mOperationTypeInProgress == TypeUndo ) {
+      emit q->undone( History::ResultCodeIncidenceChangerError );
+    } else {
+      emit q->redone( History::ResultCodeIncidenceChangerError );
+    }
+  }
 }
 
 void History::Private::deleteFinished( const Akonadi::Item &, bool success )
@@ -269,19 +293,19 @@ void History::Private::editFinished( const Akonadi::Item &oldItem,
 // Just to share code between {add|change|delete}Finished
 void History::Private::finishOperation( History::ResultCode resultCode )
 {
+  if ( resultCode != ResultCodeSuccess ) {
+    mLastErrorString = QLatin1String( "" );
+  } else {
+    // No very verbose. That's IncidenceChanger's fault. And that will change soon.
+    mLastErrorString = i18n( "error" );
+  }
+
   if ( mOperationTypeInProgress == TypeUndo ) {
     mRedoStack.push( mEntryInProgress );
     emit q->undone( resultCode );
   } else {
     mUndoStack.push( mEntryInProgress );
     emit q->redone( resultCode );
-  }
-
-  if ( resultCode != ResultCodeSuccess ) {
-    mLastErrorString = QLatin1String( "" );
-  } else {
-    // No very verbose. That's IncidenceChanger's fault. And that will change soon.
-    mLastErrorString = i18n( "error" );
   }
 
   mOperationTypeInProgress = TypeNone;
