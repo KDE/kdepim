@@ -124,7 +124,7 @@ void MessageViewItem::simulateMouseClick( const QPoint &_pos )
     widget = childWidget;
     pos = childWidget->mapFromGlobal( pos );
   }
-  
+
   QMouseEvent *event = new QMouseEvent( QEvent::MouseButtonPress, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
   QCoreApplication::postEvent(widget, event);
   event = new QMouseEvent( QEvent::MouseButtonRelease, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
