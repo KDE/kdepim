@@ -44,7 +44,7 @@ class ThreadGrouperModelPrivate
 {
 public:
   ThreadGrouperModelPrivate(ThreadGrouperModel *qq)
-    : q_ptr(qq), m_messageMap(this)
+    : q_ptr(qq), m_messageMap(this), m_order(ThreadGrouperModel::ThreadsWithNewRepliesOrder)
   {
   }
   Q_DECLARE_PUBLIC(ThreadGrouperModel)
@@ -59,6 +59,8 @@ public:
   mutable QHash<QByteArray, QSet<QByteArray> > m_threads;
   mutable MessageMap m_messageMap;
   mutable QHash<QByteArray, Akonadi::Item> m_threadItems;
+
+  ThreadGrouperModel::OrderScheme m_order;
 };
 
 static QHash<QByteArray, QSet<QByteArray> >::const_iterator findValue(const QHash<QByteArray, QSet<QByteArray> > &container, const QByteArray &target)
@@ -228,6 +230,18 @@ ThreadGrouperModel::ThreadGrouperModel(QObject* parent)
 ThreadGrouperModel::~ThreadGrouperModel()
 {
   delete d_ptr;
+}
+
+void ThreadGrouperModel::setThreadOrder(ThreadGrouperModel::OrderScheme order)
+{
+  Q_D(ThreadGrouperModel);
+  d->m_order = order;
+}
+
+ThreadGrouperModel::OrderScheme ThreadGrouperModel::threadOrder() const
+{
+  Q_D(const ThreadGrouperModel);
+  return d->m_order;
 }
 
 Akonadi::Item ThreadGrouperModelPrivate::threadRoot(const QModelIndex &index) const

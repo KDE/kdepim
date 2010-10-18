@@ -40,8 +40,16 @@ public:
     // FIXME Fix custom role handling in proxies.
     ThreadIdRole = Akonadi::EntityTreeModel::UserRole
   };
+
+  enum OrderScheme {
+    ThreadsWithNewRepliesOrder,
+    ThreadsStartedOrder
+  };
   ThreadGrouperModel(QObject* parent = 0);
   virtual ~ThreadGrouperModel();
+
+  void setThreadOrder(OrderScheme order);
+  OrderScheme threadOrder() const;
 
   virtual void setSourceModel(QAbstractItemModel* sourceModel);
 
