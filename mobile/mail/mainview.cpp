@@ -143,7 +143,7 @@ void MainView::insertItemModelIntoContext(QDeclarativeContext* context, QAbstrac
   KLinkItemSelectionModel *emailSelectionModel = new KLinkItemSelectionModel(grouper, itemSelectionModel(), this);
 
   KSelectionProxyModel *threadContentsModel = new KSelectionProxyModel(itemSelectionModel(), this);
-  threadContentsModel->setSourceModel(model);
+  threadContentsModel->setSourceModel(grouper);
 
   context->setContextProperty( "threadContents", threadContentsModel );
 
