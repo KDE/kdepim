@@ -20,7 +20,8 @@
 
 import Qt 4.7 as QML
 
-QML.Item {
+QML.Rectangle {
+  color : "#00000000"
   property alias model: itemListView.model
   property alias currentIndex: itemListView.currentIndex
   property int currentItemId: -1
