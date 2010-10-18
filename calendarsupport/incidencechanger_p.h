@@ -26,7 +26,7 @@
 #define CALENDARSUPPORT_INCIDENCECHANGER_P_H
 
 #include "incidencechanger.h"
-#include "groupware.h"
+#include "invitationhandler.h"
 
 #include <Akonadi/Item>
 
@@ -56,7 +56,6 @@ class IncidenceChanger::Private : public QObject
 
     Private( Akonadi::Entity::Id defaultCollectionId, Calendar *calendar ) :
       mDefaultCollectionId( defaultCollectionId ),
-      mGroupware( 0 ),
       mDestinationPolicy( IncidenceChanger::ASK_DESTINATION ),
       mCalendar( calendar )
     {
@@ -78,7 +77,6 @@ class IncidenceChanger::Private : public QObject
 
     Akonadi::Entity::Id mDefaultCollectionId;
 
-    Groupware *mGroupware;
     DestinationPolicy mDestinationPolicy;
 
     // Changes waiting for a job on the same item.id() to end
@@ -94,7 +92,7 @@ class IncidenceChanger::Private : public QObject
     Calendar *mCalendar;
 
     // Index my atomic operation id
-    QHash<uint,Groupware::SendICalMessageDialogAnswers> mSendICalDialogResults;
+    QHash<uint, InvitationHandler::SendStatus> mOperationStatus;
 
     QHash<KJob*,AddInfo> mAddInfoForJob;
 

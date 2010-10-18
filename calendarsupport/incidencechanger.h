@@ -35,7 +35,6 @@ class KJob;
 
 namespace CalendarSupport {
 
-class Groupware;
 class Calendar;
 
 class CALENDARSUPPORT_EXPORT IncidenceChanger : public QObject
@@ -75,8 +74,8 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger : public QObject
       ASK_DESTINATION          // user is asked in which collection
     };
 
-    void setGroupware( Groupware *groupware );
-
+    // TODO: Remove this from public api. If classes outside changes realy need
+    //       to send ICal message, they should use InvitationHandler.
     bool sendGroupwareMessage( const Akonadi::Item &incidence,
                                KCalCore::iTIPMethod method,
                                HowChanged action,

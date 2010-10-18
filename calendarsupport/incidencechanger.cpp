@@ -24,7 +24,7 @@
 #include "calendar.h"
 #include "calendaradaptor.h"
 #include "dndfactory.h"
-#include "groupware.h"
+#include "invitationhandler.h"
 #include "kcalprefs.h"
 #include "mailscheduler.h"
 #include "utils.h"
@@ -36,6 +36,24 @@
 #include <KMessageBox>
 
 using namespace CalendarSupport;
+
+InvitationHandler::Action actionFromStatus( InvitationHandler::SendStatus status )
+{
+  //enum SendStatus {
+  //      Canceled,        /**< Sending was canceled by the user, meaning there are
+  //                          local changes of which other attendees are not aware. */
+  //      FailKeepUpdate,  /**< Sending failed, the changes to the incidence must be kept. */
+  //      FailAbortUpdate, /**< Sending failed, the changes to the incidence must be undone. */
+  //      NoSendingNeeded, /**< In some cases it is not needed to send an invitation
+  //                          (e.g. when we are the only attendee) */
+  //      Success
+  switch ( status ) {
+  case InvitationHandler::Canceled:
+    return InvitationHandler::DontSendMessage;
+  default:
+    return InvitationHandler::Ask;
+  }
+}
 
 bool IncidenceChanger::Private::myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &newInc,
                                                          const KCalCore::Incidence::Ptr &oldInc )
@@ -126,35 +144,28 @@ bool IncidenceChanger::Private::performChange( Change *change )
     //        for group cheduling. Each implementation could then just do what
     //        it wants with the event. If no groupware is used,use the null
     //        pattern...
-    bool success = true;
     if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
-      if ( !mGroupware ) {
-          kError() << "Groupware communication enabled but no groupware instance set";
-      } else {
-        Groupware::SendICalMessageDialogAnswers dialogResults = mSendICalDialogResults[change->atomicOperationId];
-        const bool reuseDialogAnswers = ( change->atomicOperationId != 0 );
-        success = mGroupware->sendICalMessage( change->parent,
-                                               KCalCore::iTIPRequest,
-                                               newinc,
-                                               INCIDENCEEDITED,
-                                               attendeeStatusChanged,
-                                               dialogResults /* by ref */,
-                                               reuseDialogAnswers );
-        if ( change->atomicOperationId ) {
-          mSendICalDialogResults.insert( change->atomicOperationId, dialogResults );
+      InvitationHandler handler( mCalendar );
+      handler.setDialogParent( change->parent );
+      if ( mOperationStatus.contains( change->atomicOperationId ) ) {
+        handler.setDefaultAction( actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
+      }
+
+      const InvitationHandler::SendStatus status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                                                        newinc,
+                                                                                        attendeeStatusChanged );
+      if ( status == InvitationHandler::FailAbortUpdate ) {
+        kDebug() << "Sending invitations failed. Reverting changes.";
+        if ( newinc->type() == oldinc->type() ) {
+          KCalCore::IncidenceBase *i1 = newinc.data();
+          KCalCore::IncidenceBase *i2 = oldinc.data();
+
+          *i1 = *i2;
         }
+        return false;
+      } else if ( change->atomicOperationId ) {
+        mOperationStatus.insert( change->atomicOperationId, status );
       }
-    }
-
-    if ( !success ) {
-      kDebug() << "Changing incidence failed. Reverting changes.";
-      if ( newinc->type() == oldinc->type() ) {
-        KCalCore::IncidenceBase *i1 = newinc.data();
-        KCalCore::IncidenceBase *i2 = oldinc.data();
-
-        *i1 = *i2;
-      }
-      return false;
     }
   }
 
@@ -236,11 +247,6 @@ IncidenceChanger::~IncidenceChanger()
   delete d;
 }
 
-void IncidenceChanger::setGroupware( Groupware *groupware )
-{
-  d->mGroupware = groupware;
-}
-
 bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
                                              KCalCore::iTIPMethod method,
                                              HowChanged action,
@@ -257,21 +263,29 @@ bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
     emit schedule( method, aitem );
     return true;
   } else if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
-    if ( !d->mGroupware ) {
-      kError() << "Groupware communication enabled but no groupware instance set";
-      return false;
+    InvitationHandler handler( d->mCalendar );
+    handler.setDialogParent( parent );
+    if ( d->mOperationStatus.contains( atomicOperationId ) ) {
+      handler.setDefaultAction( actionFromStatus( d->mOperationStatus.value( atomicOperationId ) ) );
     }
-    Groupware::SendICalMessageDialogAnswers dialogResults = d->mSendICalDialogResults[atomicOperationId];
-    const bool reuseDialogAnswers = ( atomicOperationId != 0 );
-    const bool result =  d->mGroupware->sendICalMessage( parent, method, incidence, action, false,
-                                                         dialogResults /* byref */,
-                                                         reuseDialogAnswers );
+    InvitationHandler::SendStatus status;
+    switch ( action ) {
+      case INCIDENCEADDED:
+        status = handler.sendIncidenceCreatedMessage( method, incidence );
+        break;
+      case INCIDENCEEDITED:
+        status = handler.sendIncidenceModifiedMessage( method, incidence, false );
+        break;
+      case INCIDENCEDELETED:
+        status = handler.sendIncidenceDeletedMessage( method, incidence );
+      case NOCHANGE:
+        break;
+    };
 
-    if ( atomicOperationId ) {
-      d->mSendICalDialogResults.insert( atomicOperationId, dialogResults );
+    if ( atomicOperationId && action != NOCHANGE ) {
+      d->mOperationStatus.insert( atomicOperationId, status );
     }
-
-    return result;
+    return ( status != InvitationHandler::FailAbortUpdate );
   }
   return true;
 }
@@ -376,14 +390,9 @@ void IncidenceChanger::deleteIncidenceFinished( KJob *j )
       }
     }
 
-    if ( d->mGroupware ) {
-      if ( !d->mGroupware->doNotNotify() && notifyOrganizer ) {
-        CalendarSupport::MailScheduler scheduler(
-          static_cast<CalendarSupport::Calendar*>(d->mCalendar) );
-        scheduler.performTransaction( tmp, KCalCore::iTIPReply );
-      }
-      //reset the doNotNotify flag
-      d->mGroupware->setDoNotNotify( false );
+    if ( KCalPrefs::instance()->useGroupwareCommunication() && notifyOrganizer ) {
+      CalendarSupport::MailScheduler scheduler( d->mCalendar );
+      scheduler.performTransaction( tmp, KCalCore::iTIPReply );
     }
   }
   d->mLatestRevisionByItemId.remove( items.first().id() );
@@ -564,26 +573,23 @@ void IncidenceChanger::addIncidenceFinished( KJob *j )
     return;
   }
 
-  Q_ASSERT( incidence );
+  if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
+    Q_ASSERT( incidence );
+    InvitationHandler handler( d->mCalendar );
+    //handler.setDialogParent( 0 ); // PENDING(AKONADI_PORT) set parent, ideally the one passed in addIncidence...
+    const InvitationHandler::SendStatus status =
+        handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
 
-  if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
-    const uint atomicOperationId = d->mAddInfoForJob[j].atomicOperationId;
-    Groupware::SendICalMessageDialogAnswers dialogResults = d->mSendICalDialogResults[atomicOperationId];
-    const bool reuseDialogAnswers = ( atomicOperationId != 0 );
-
-    if ( !d->mGroupware ) {
-      kError() << "Groupware communication enabled but no groupware instance set";
-    } else if ( !d->mGroupware->sendICalMessage(
-           0, //PENDING(AKONADI_PORT) set parent, ideally the one passed in addIncidence...
-           KCalCore::iTIPRequest,
-           incidence, INCIDENCEADDED, false, dialogResults /* byref */, reuseDialogAnswers ) ) {
-      kError() << "sendIcalMessage failed.";
+    if ( status == InvitationHandler::FailAbortUpdate ) {
+      // TODO: At this point we'd need to delete the incidence again.
+      kError() << "Sending invitations failed, but did not delete the incidence";
     }
+
+    const uint atomicOperationId = d->mAddInfoForJob[j].atomicOperationId;
     if ( atomicOperationId ) {
-      d->mSendICalDialogResults.insert( atomicOperationId, dialogResults );
+      d->mOperationStatus.insert( atomicOperationId, status );
     }
   }
-
   emit incidenceAddFinished( job->item(), true );
 }
 
@@ -623,7 +629,7 @@ uint IncidenceChanger::startAtomicOperation()
 
 void IncidenceChanger::endAtomicOperation( uint atomicOperationId )
 {
-  d->mSendICalDialogResults.remove( atomicOperationId );
+  d->mOperationStatus.remove( atomicOperationId );
 }
 
 bool IncidenceChanger::changeInProgress( Akonadi::Item::Id id )
