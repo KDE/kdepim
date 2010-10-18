@@ -58,6 +58,9 @@ public slots:
   void clearSelection();
   void select(int row, int command);
 
+  bool requestNext();
+  bool requestPrevious();
+
 signals:
   void selectionChanged();
 

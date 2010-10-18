@@ -63,6 +63,38 @@ void QMLListSelectionModel::select(int row, int command)
   emit selectionChanged();
 }
 
+bool QMLListSelectionModel::requestNext()
+{
+  const QModelIndexList list = m_selectionModel->selectedRows();
+  if (list.isEmpty() || list.size() != 1)
+    return false;
+
+  const QModelIndex idx = list.first();
+  Q_ASSERT(idx.isValid());
+  const QModelIndex next = idx.sibling(idx.row() + 1, idx.column());
+  if (!next.isValid())
+    return false;
+
+  m_selectionModel->select(QItemSelection(next, next), QItemSelectionModel::ClearAndSelect);
+  return true;
+}
+
+bool QMLListSelectionModel::requestPrevious()
+{
+  const QModelIndexList list = m_selectionModel->selectedRows();
+  if (list.isEmpty() || list.size() != 1)
+    return false;
+
+  const QModelIndex idx = list.first();
+  Q_ASSERT(idx.isValid());
+  if (idx.row() == 0)
+    return false;
+
+  const QModelIndex previous = idx.sibling(idx.row() + 1, idx.column());
+  m_selectionModel->select(QItemSelection(previous, previous), QItemSelectionModel::ClearAndSelect);
+  return true;
+}
+
 void QMLListSelectionModel::clearSelection()
 {
   m_selectionModel->clearSelection();
