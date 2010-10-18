@@ -93,10 +93,35 @@ void ThemeDelegate::setTheme( const Theme * theme )
 //        about function growth limit reached. Consider using macros
 //        or just convert to member functions.
 
+static QFontMetrics cachedFontMetrics( const QFont &font )
+{
+  static QHash<QString, QFontMetrics*> fontMetricsCache;
+  const QString fontKey = font.key();
+
+  if ( !fontMetricsCache.contains( fontKey ) ) {
+    QFontMetrics *metrics = new QFontMetrics( font );
+    fontMetricsCache.insert( fontKey, metrics );
+  }
+
+  return *fontMetricsCache[ fontKey ];
+}
+
+static int cachedFontHeight( const QFont &font )
+{
+  static QHash<QString, int> fontHeightCache;
+  const QString fontKey = font.key();
+
+  if ( !fontHeightCache.contains( fontKey ) ) {
+    fontHeightCache.insert( fontKey, cachedFontMetrics( font ).height() );
+  }
+
+  return fontHeightCache[ fontKey ];
+}
+
 static inline void paint_right_aligned_elided_text( const QString &text, Theme::ContentItem * ci, QPainter * painter, int &left, int top, int &right, Qt::LayoutDirection layoutDir, const QFont &font )
 {
   painter->setFont( font );
-  QFontMetrics fontMetrics( font );
+  const QFontMetrics fontMetrics = cachedFontMetrics( font );
   int w = right - left;
   QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
   QRect rct( left, top, w, fontMetrics.height() );
@@ -119,7 +144,7 @@ static inline void paint_right_aligned_elided_text( const QString &text, Theme::
 
 static inline void compute_bounding_rect_for_right_aligned_elided_text( const QString &text, int &left, int top, int &right, QRect &outRect, Qt::LayoutDirection layoutDir, const QFont &font )
 {
-  QFontMetrics fontMetrics( font );
+  const QFontMetrics fontMetrics = cachedFontMetrics( font );
   int w = right - left;
   QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w );
   QRect rct( left, top, w, fontMetrics.height() );
@@ -135,7 +160,7 @@ static inline void compute_bounding_rect_for_right_aligned_elided_text( const QS
 static inline void paint_left_aligned_elided_text( const QString &text, Theme::ContentItem * ci, QPainter * painter, int &left, int top, int &right, Qt::LayoutDirection layoutDir, const QFont &font )
 {
   painter->setFont( font );
-  QFontMetrics fontMetrics( font );
+  const QFontMetrics fontMetrics = cachedFontMetrics( font );
   int w = right - left;
   QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
   QRect rct( left, top, w, fontMetrics.height() + 3 );
@@ -157,7 +182,7 @@ static inline void paint_left_aligned_elided_text( const QString &text, Theme::C
 
 static inline void compute_bounding_rect_for_left_aligned_elided_text( const QString &text, int &left, int top, int &right, QRect &outRect, Qt::LayoutDirection layoutDir, const QFont &font )
 {
-  QFontMetrics fontMetrics( font );
+  const QFontMetrics fontMetrics = cachedFontMetrics( font );
   int w = right - left;
   QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
   QRect rct( left, top, w, fontMetrics.height() );
@@ -472,8 +497,7 @@ static inline void compute_size_hint_for_item( Theme::ContentItem * ci,
   if ( ci->displaysText() )
   {
     const QFont font = ThemeDelegate::itemFont( ci, item );
-    const QFontMetrics fontMetrics( font );
-    const int fontHeight = fontMetrics.height();
+    const int fontHeight = cachedFontHeight( font );
     if ( fontHeight > maxh )
       maxh = fontHeight;
     totalw += ci->displaysLongText() ? 128 : 64;
