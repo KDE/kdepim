@@ -1582,14 +1582,25 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
     }
   }
 
-  const bool busyDay = makesWholeDayBusy( incidence ) && preferences()->colorAgendaBusyDays();
+  const bool makesDayBusy = makesWholeDayBusy( incidence ) && preferences()->colorAgendaBusyDays();
   for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
-    if ( busyDay ) {
+    if ( makesDayBusy ) {
       KCalCore::Event::List &busyEvents = d->mBusyDays[(*t).date()];
       busyEvents.append( event );
     }
 
     d->insertIncidence( aitem, t->toTimeSpec( timeSpec ).date(), createSelected );
+  }
+
+  // Can be multiday
+  if ( event && makesDayBusy && event->isMultiDay() ) {
+    const QDate lastVisibleDate = d->mSelectedDates.last();
+    for ( QDate date = event->dtStart().date();
+          date <= event->dtEnd().date() && date <= lastVisibleDate ;
+          date = date.addDays( 1 ) ) {
+      KCalCore::Event::List &busyEvents = d->mBusyDays[date];
+      busyEvents.append( event );
+    }
   }
 }
 
