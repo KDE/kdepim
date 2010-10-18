@@ -141,6 +141,7 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      */
     int currentState() const;
 
+  public:
     /**
      * Returns whether the current state is the home screen state.
      */
