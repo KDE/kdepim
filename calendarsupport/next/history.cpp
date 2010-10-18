@@ -108,14 +108,18 @@ void History::recordChange( const Akonadi::Item &oldItem,
 
 void History::registerRedoWidget( QWidget *w )
 {
-  if ( !d->mRedoWidgets.contains( w ) )
+  if ( !d->mRedoWidgets.contains( w ) ) {
     d->mRedoWidgets.append( QPointer<QWidget>( w ) );
+    w->setEnabled( d->isRedoAvailable() );
+  }
 }
 
 void History::registerUndoWidget( QWidget *w )
 {
-  if ( !d->mUndoWidgets.contains( w ) )
+  if ( !d->mUndoWidgets.contains( w ) ) {
     d->mUndoWidgets.append( QPointer<QWidget>( w ) );
+    w->setEnabled( d->isUndoAvailable() );
+  }
 }
 
 bool History::undo()

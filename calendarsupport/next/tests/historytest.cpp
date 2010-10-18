@@ -49,6 +49,7 @@
 #include <KSystemTimeZone>
 
 #include <QtCore/QObject>
+#include <QPushButton>
 
 using namespace Akonadi;
 using namespace KCalCore;
@@ -158,10 +159,24 @@ class HistoryTest : public QObject
 
   void testUndoAndRedo()
   {
+    QPushButton *undoButton = new QPushButton();
+    QPushButton *redoButton = new QPushButton();
+    undoButton->setEnabled( true );
+    redoButton->setEnabled( true );
+
+    mHistory->registerUndoWidget( undoButton );
+    mHistory->registerRedoWidget( redoButton );
+
+    QVERIFY( !undoButton->isEnabled() );
+    QVERIFY( !redoButton->isEnabled() );
+
     QVERIFY( mHistory->clear() );
     QVERIFY( mHistory->lastErrorString().isEmpty() );
 
-    const QString uid = "This is going to be undone";
+    QVERIFY( !undoButton->isEnabled() );
+    QVERIFY( !redoButton->isEnabled() );
+
+    const QString uid = "Some uid.";
     mPendingInsertsInETM.append( uid );
     createIncidence( uid );
     waitForETMorSignals();
@@ -171,27 +186,41 @@ class HistoryTest : public QObject
     QVERIFY( newItem.isValid() );
 
     mHistory->recordChange( oldItem, newItem, History::ChangeTypeAdd );
+    QVERIFY( undoButton->isEnabled() );
+    QVERIFY( !redoButton->isEnabled() );
 
     // delete it
     mWaitingForHistorySignals = true;
+    mPendingDeletesInETM.append( uid );
     QVERIFY( mHistory->undo() );
     waitForETMorSignals();
+    QVERIFY( !undoButton->isEnabled() );
+    QVERIFY( redoButton->isEnabled() );
 
     // redo, lets create it again
     mWaitingForHistorySignals = true;
+    mPendingInsertsInETM.append( uid );
     QVERIFY( mHistory->redo() );
     waitForETMorSignals();
+    QVERIFY( undoButton->isEnabled() );
+    QVERIFY( !redoButton->isEnabled() );
 
     // It was created again, but the entry has a new akonadi id
     // the old id should have been updated, so this undo should work
     mWaitingForHistorySignals = true;
+    mPendingDeletesInETM.append( uid );
     QVERIFY( mHistory->undo() );
     waitForETMorSignals();
+    QVERIFY( !undoButton->isEnabled() );
+    QVERIFY( redoButton->isEnabled() );
 
     // Good. Lets add it again, and test editing it.
     mWaitingForHistorySignals = true;
+    mPendingInsertsInETM.append( uid );
     QVERIFY( mHistory->redo() );
     waitForETMorSignals();
+    QVERIFY( undoButton->isEnabled() );
+    QVERIFY( !redoButton->isEnabled() );
 
     oldItem = mCalendar->itemForIncidenceUid( uid );
     newItem = oldItem;
@@ -213,15 +242,18 @@ class HistoryTest : public QObject
     Item item = mCalendar->itemForIncidenceUid( uid );
     QVERIFY( item.isValid() );
     QCOMPARE( item.payload<Incidence::Ptr>()->summary(), summary );
-    kDebug() << "Item has revision " << item.revision()
-             << "oldItem had revision " << oldItem.revision();
 
     mHistory->recordChange( oldItem, item, History::ChangeTypeEdit );
+    QVERIFY( undoButton->isEnabled() );
+    QVERIFY( !redoButton->isEnabled() );
 
+    kDebug() << "undo.";
     mWaitingForHistorySignals = true;
     mPendingUpdatesInETM.append( uid );
     QVERIFY( mHistory->undo() );
     waitForETMorSignals();
+    QVERIFY( undoButton->isEnabled() );
+    QVERIFY( redoButton->isEnabled() );
 
     item = mCalendar->itemForIncidenceUid( uid );
     QVERIFY( item.isValid() );
@@ -275,7 +307,9 @@ class HistoryTest : public QObject
     // to akonadi
     Item item2;
     item2.setId( 3333 );
-    item2.setPayload( Incidence::Ptr( new Event() ) );
+    Incidence::Ptr payload2( new Event() );
+    payload2->setUid( "payload2" );
+    item2.setPayload( payload2 );
     item2.setMimeType( "application/x-vnd.akonadi.calendar.event" );
 /*    mHistory->recordChange( Item(), item2, History::ChangeTypeAdd );
     QVERIFY( mHistory->undo() );
@@ -285,9 +319,14 @@ class HistoryTest : public QObject
     but isn't emiting signal.
 
 */
-
+    kDebug() << "Editing something that doesn't exist";
     mHistory->recordChange( item2, item2, History::ChangeTypeEdit );
+
     QVERIFY( !mHistory->undo() );
+
+    QVERIFY( undoButton->isEnabled() );
+    QVERIFY( redoButton->isEnabled() );
+
   }
 
   public Q_SLOTS:
@@ -357,8 +396,7 @@ class HistoryTest : public QObject
 
 };
 
-// No gui is needed. If the conflict dialog tries to appear, then that must be fixed.
-
-QTEST_AKONADIMAIN( HistoryTest, NoGUI )
+// For undo/redo buttons
+QTEST_AKONADIMAIN( HistoryTest, GUI )
 
 #include "historytest.moc"
