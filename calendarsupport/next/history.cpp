@@ -342,8 +342,8 @@ void History::Private::editFinished( const Akonadi::Item &oldItem,
 // Just to share code between {add|change|delete}Finished
 void History::Private::finishOperation( History::ResultCode resultCode )
 {
-  if ( resultCode != ResultCodeSuccess ) {
-    mLastErrorString = QLatin1String( "" );
+  if ( resultCode == ResultCodeSuccess ) {
+    mLastErrorString = QString();
   } else {
     // No very verbose. That's IncidenceChanger's fault. And that will change soon.
     mLastErrorString = i18n( "error" );

@@ -325,8 +325,11 @@ class HistoryTest : public QObject
     {
       mWaitingForHistorySignals = false;
 
-      if ( result != History::ResultCodeSuccess ) {
+      if ( result == History::ResultCodeSuccess ) {
+        QVERIFY( mHistory->lastErrorString().isEmpty() );
+      } else {
         qDebug() << "last error string is " << mHistory->lastErrorString();
+        QVERIFY( !mHistory->lastErrorString().isEmpty() );
       }
 
       QVERIFY( result == History::ResultCodeSuccess );
