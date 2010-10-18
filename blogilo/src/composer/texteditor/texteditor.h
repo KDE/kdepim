@@ -35,7 +35,6 @@
 #include <QtWebKit>
 #include <QUndoCommand>
 
-class QProgressDialog;
 class QWebView;
 class QAction;
 class TextEditor;
