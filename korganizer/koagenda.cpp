@@ -127,16 +127,16 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   if((tim.hour() == 0) && (mOldTime.hour()==23))
     recalculate = true;
 
-  int mins = tim.hour()*60 + tim.minute();
-  int minutesPerCell = 24 * 60 / agenda->rows();
+  const int mins = tim.hour()*60 + tim.minute();
+  const int minutesPerCell = 24 * 60 / agenda->rows();
   int y = int( mins * agenda->gridSpacingY() / minutesPerCell );
-  int today = recalculate ? todayColumn() : mOldToday;
+  const int today = recalculate ? todayColumn() : mOldToday;
   int x = int( agenda->gridSpacingX() * today );
 
   mOldTime = tim;
   mOldToday = today;
 
-  bool hideIt = !( KOPrefs::instance()->mMarcusBainsEnabled );
+  const bool hideIt = !( KOPrefs::instance()->mMarcusBainsEnabled );
 
   if ( !isHidden() && ( hideIt || ( today < 0 ) ) ) {
     hide();
@@ -159,7 +159,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   QString timeStr = KGlobal::locale()->formatTime(tim, KOPrefs::instance()->mMarcusBainsShowSeconds);
   QFontMetrics fm = fontMetrics();
   mTimeBox->setText( timeStr );
-  QSize sz( fm.width( timeStr + ' ' ), fm.height() );
+  const QSize sz( fm.width( timeStr + ' ' ), fm.height() );
   mTimeBox->setFixedSize( sz );
 
   if (y-mTimeBox->height()>=0) y-=mTimeBox->height(); else y++;
@@ -1258,7 +1258,7 @@ double KOAgenda::calcSubCellWidth( KOAgendaItem::GPtr item )
   pt1 = gridToContents( QPoint( item->cellXLeft(), item->cellYTop() ) +
                         QPoint( 1, 1 ) );
   pt1 -= pt;
-  int maxSubCells = item->subCells();
+  const int maxSubCells = item->subCells();
   double newSubCellWidth;
   if ( mAllDayMode ) {
     newSubCellWidth = double( pt1.y() ) / maxSubCells;
@@ -1282,27 +1282,28 @@ void KOAgenda::adjustItemPosition( KOAgendaItem::GPtr item )
 
 void KOAgenda::placeAgendaItem( KOAgendaItem::GPtr item, double subCellWidth )
 {
-//  kdDebug(5850) << "KOAgenda::placeAgendaItem(): " << item->incidence()->summary()
-//            << " subCellWidth: " << subCellWidth << endl;
+  // kdDebug(5850) << "KOAgenda::placeAgendaItem(): " << item->incidence()->summary()
+  //               << " subCellWidth: " << subCellWidth << endl;
 
   if ( !item ) {
     return;
   }
 
   // "left" upper corner, no subcells yet, RTL layouts have right/left switched, widths are negative then
-  QPoint pt = gridToContents( QPoint( item->cellXLeft(), item->cellYTop() ) );
-  // right lower corner
-  QPoint pt1 = gridToContents( QPoint( item->cellXLeft() + item->cellWidth(),
-                                   item->cellYBottom()+1 ) );
+  const QPoint pt = gridToContents( QPoint( item->cellXLeft(), item->cellYTop() ) );
 
-  double subCellPos = item->subCell() * subCellWidth;
+  // right lower corner
+  const QPoint pt1 = gridToContents( QPoint( item->cellXLeft() + item->cellWidth(),
+                                             item->cellYBottom()+1 ) );
+
+  const double subCellPos = item->subCell() * subCellWidth;
 
   // we need to add 0.01 to make sure we don't loose one pixed due to
   // numerics (i.e. if it would be x.9998, we want the integer, not rounded down.
-  double delta=0.01;
-  if (subCellWidth<0) delta=-delta;
+  const double delta = subCellWidth < 0 ? -0.01 : 0.01;
+
   int height, width, xpos, ypos;
-  if (mAllDayMode) {
+  if ( mAllDayMode ) {
     width = pt1.x()-pt.x();
     height = int( subCellPos + subCellWidth + delta ) - int( subCellPos );
     xpos = pt.x();

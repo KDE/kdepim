@@ -828,7 +828,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
   p.setFont(KOPrefs::instance()->mAgendaViewFont);
   QFontMetrics fm = p.fontMetrics();
 
-  int singleLineHeight = fm.boundingRect( mLabelText ).height();
+  const int singleLineHeight = fm.boundingRect( mLabelText ).height();
 
   p.eraseRect( 0, 0, width(), height() );
   paintFrame( &p, frameColor );
@@ -857,15 +857,16 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
                                          QRect(0, 0, width() - (2 * margin), -1),
                                          0,
                                          mLabelText );
-  int th = ww->boundingRect().height();
+  const int th = ww->boundingRect().height();
   delete ww;
 
-  int hlHeight = QMAX(fm.boundingRect(longH).height(),
-     QMAX(alarmPxmp->height(), QMAX(recurPxmp->height(),
-     QMAX(readonlyPxmp->height(), QMAX(replyPxmp->height(),
-     QMAX(groupPxmp->height(), organizerPxmp->height()))))));
+  // don't change this cascading identation, it's the only readable way ( besides a for )
+  const int hlHeight = QMAX( fm.boundingRect( longH ).height(),
+                             QMAX( alarmPxmp->height(), QMAX( recurPxmp->height(),
+                                                              QMAX( readonlyPxmp->height(), QMAX( replyPxmp->height(),
+                                                                                                  QMAX( groupPxmp->height(), organizerPxmp->height() ) ) ) ) ) );
 
-  bool completelyRenderable = th < (height() - 2 * ft - 2 - hlHeight);
+  const bool completelyRenderable = th < ( height() - 2 * ft - 2 - hlHeight );
 
   // case 1: do not draw text when not even a single line fits
   // Don't do this any more, always try to print out the text. Even if
@@ -873,7 +874,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
   if ( //( singleLineHeight > height()-4 ) || // ignore margin, be gentle.. Even ignore 2 pixel outside the item
        ( width() < 16 ) ) {
     int x = margin;
-    paintTodoIcon( &p, x, ft );
+    paintTodoIcon( &p, x/*by-ref*/, ft );
     return;
   }
 
@@ -891,7 +892,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
       txtWidth = width() - margin - x;
     }
 
-    int y = ((height() - 2 * ft - singleLineHeight) / 2) + fm.ascent();
+    const int y = ((height() - 2 * ft - singleLineHeight) / 2) + fm.ascent();
     KWordWrap::drawFadeoutText( &p, x, y,
                                 txtWidth, mLabelText );
     return;
@@ -988,7 +989,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
 
   p.setBackgroundColor( bgColor );
   p.setPen( textColor );
-  QString ws = ww->wrappedString();
+  const QString ws = ww->wrappedString();
   if ( ws.left( ws.length()-1 ).find( '\n' ) >= 0 )
     ww->drawText( &p, eventX, y,
                   Qt::AlignAuto | KWordWrap::FadeOut );
