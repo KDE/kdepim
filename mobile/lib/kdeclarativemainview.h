@@ -215,7 +215,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      * @note The model has to provide a public slot with the following signature:
      *       void setFilterString( const QString& )
      */
-    virtual QAbstractProxyModel* itemFilterModel() const;
+    virtual QAbstractProxyModel* createItemFilterModel() const;
 
     /**
      * Returns the object that will be used for importing data.

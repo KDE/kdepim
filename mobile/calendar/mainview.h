@@ -89,7 +89,7 @@ class MainView : public KDeclarativeMainView
 
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
-    virtual QAbstractProxyModel* itemFilterModel() const;
+    virtual QAbstractProxyModel* createItemFilterModel() const;
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
     virtual GuiStateManager* createGuiStateManager() const;

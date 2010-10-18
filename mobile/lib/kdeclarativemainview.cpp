@@ -198,7 +198,7 @@ void KDeclarativeMainView::delayedInit()
 
   d->mItemFilter = filterModel;
 
-  d->mItemFilterModel = itemFilterModel();
+  d->mItemFilterModel = createItemFilterModel();
   if ( d->mItemFilterModel ) {
     d->mItemFilterModel->setSourceModel( filterModel );
     d->mItemFilter = d->mItemFilterModel;
@@ -723,7 +723,7 @@ void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selecti
   manager->createAllActions();
 }
 
-QAbstractProxyModel* KDeclarativeMainView::itemFilterModel() const
+QAbstractProxyModel* KDeclarativeMainView::createItemFilterModel() const
 {
   return 0;
 }

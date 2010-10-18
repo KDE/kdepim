@@ -365,7 +365,7 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
                            i18n( "Do you really want to delete the selected account?" ) );
 }
 
-QAbstractProxyModel* MainView::itemFilterModel() const
+QAbstractProxyModel* MainView::createItemFilterModel() const
 {
   return new EventsFilterProxyModel();
 }
