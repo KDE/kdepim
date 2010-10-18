@@ -57,7 +57,7 @@
           </layout>
          </widget>
          <widget class="QWidget" name="contactViewPage">
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <widget class="Akonadi::ContactViewer" name="contactView" native="true"/>
            </item>
