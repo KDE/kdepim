@@ -326,7 +326,7 @@ KDeclarativeMainView::~KDeclarativeMainView()
 
 void KDeclarativeMainView::insertItemModelIntoContext(QDeclarativeContext* context, QAbstractItemModel* model)
 {
-  context->setContextProperty( "itemModel", d->mListProxy );
+  context->setContextProperty( "itemModel", model );
 
   QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( d->mItemNavigationSelectionModel, this );
   QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( d->mItemActionSelectionModel, this );
