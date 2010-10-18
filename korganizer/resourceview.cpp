@@ -74,9 +74,8 @@ static QString scrubDirectory( const QString &subRes )
   return nsubRes;
 }
 
-static QString labelFromSubResName( ResourceCalendar *resource, const QString &subRes )
+static QString labelFromSubResName( const QString &identifier, const QString &subRes )
 {
-
   DCOPRef ref( "kmail", "KMailICalIface" );
   DCOPReply reply = ref.call( "dimapAccounts" );
   if ( !reply.isValid() ) {
@@ -84,26 +83,31 @@ static QString labelFromSubResName( ResourceCalendar *resource, const QString &s
     return QString();
   }
 
-  QString label;
+  QString label, account;
   if ( (int)reply > 1 ) {
-    if( resource && !resource->resourceName().isEmpty() ) {
-      label = i18n( "My %1 (%2)" ).arg( subRes, resource->resourceName() );
-    } else {
-      label = i18n( "My %1" ).arg( scrubDirectory( subRes ) );
+    reply = ref.call( "dimapFolderAccountName", identifier );
+    if ( reply.isValid() ) {
+      const QString a = reply;
+      account = a;
     }
-  } else {
-    label = i18n( "My %1" ).arg( scrubDirectory( subRes ) );
   }
+
+  if ( account.isEmpty() ) {
+    label = i18n( "My %1" ).arg( scrubDirectory( subRes ) );
+  } else {
+    label = i18n( "My %1 (%2)" ).arg( subRes, account );
+  }
+
   return label;
 }
 
-static QString labelFromIdentifier( ResourceCalendar *resource, const QString &identifier )
+static QString labelFromIdentifier( const QString &identifier )
 {
   QString subResLabel;
   if ( identifier.contains( "/.INBOX.directory/" ) ) { // my subresource
     QString subResName = identifier;
     subResName.remove( QRegExp( "^.*/\\.INBOX\\.directory/" ) );
-    subResLabel = labelFromSubResName( resource, subResName );
+    subResLabel = labelFromSubResName( identifier, subResName );
   }
   return subResLabel;
 }
@@ -166,8 +170,8 @@ void ResourceItem::createSubresourceItems()
     setExpandable( true );
     // This resource has subresources
     QStringList::ConstIterator it;
-    for ( it=subresources.begin(); it!=subresources.end(); ++it ) {
-      QString text = labelFromIdentifier( mResource, *it );
+    for ( it = subresources.begin(); it != subresources.end(); ++it ) {
+      QString text = labelFromIdentifier( *it );
       if ( text.isEmpty() ) {
         text = mResource->labelForSubresource( *it );
       }
@@ -339,18 +343,15 @@ ResourceView::ResourceView( CalendarResources *calendar,
   mListView->setResizeMode( QListView::LastColumn );
   topLayout->addWidget( mListView );
 
-  connect( mListView, SIGNAL( clicked( QListViewItem * ) ),
-           SLOT( currentChanged( QListViewItem * ) ) );
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( addResource() ) );
-  connect( mDeleteButton, SIGNAL( clicked() ), SLOT( removeResource() ) );
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( editResource() ) );
-  connect( mListView, SIGNAL( doubleClicked ( QListViewItem *, const QPoint &,
-                                              int ) ),
-           SLOT( editResource() ) );
-  connect( mListView, SIGNAL( contextMenuRequested ( QListViewItem *,
-                                                     const QPoint &, int ) ),
-           SLOT( contextMenuRequested( QListViewItem *, const QPoint &,
-                                       int ) ) );
+  connect( mListView, SIGNAL(clicked(QListViewItem *)),
+           SLOT(currentChanged(QListViewItem *)) );
+  connect( mAddButton, SIGNAL(clicked()), SLOT(addResource()) );
+  connect( mDeleteButton, SIGNAL(clicked()), SLOT(removeResource()) );
+  connect( mEditButton, SIGNAL(clicked()), SLOT(editResource()) );
+  connect( mListView, SIGNAL(doubleClicked(QListViewItem *,const QPoint &,int)),
+           SLOT(editResource()) );
+  connect( mListView, SIGNAL(contextMenuRequested(QListViewItem *,const QPoint &,int)),
+           SLOT(contextMenuRequested(QListViewItem *,const QPoint &,int)) );
 
   updateView();
 }
@@ -501,7 +502,7 @@ void ResourceView::slotSubresourceAdded( ResourceCalendar *resource,
 
   if ( findItemByIdentifier( identifier ) ) return;
 
-  QString text = labelFromIdentifier( resource, identifier );
+  QString text = labelFromIdentifier( identifier );
   if ( text.isEmpty() ) {
     text = label;
   }
@@ -640,7 +641,7 @@ void ResourceView::editResource()
         return;
       }
 
-      item->setText( 0, labelFromSubResName( resource, newSubResourceName ) );
+      item->setText( 0, labelFromSubResName( identifier, newSubResourceName ) );
 
       KOrg::BaseView *cV = mCalendarView->viewManager()->currentView();
       if ( cV && cV == mCalendarView->viewManager()->multiAgendaView() ) {
