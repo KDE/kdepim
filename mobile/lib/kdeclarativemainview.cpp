@@ -196,25 +196,25 @@ void KDeclarativeMainView::delayedInit()
   filterModel->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   filterModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
-  d->mItemFilter = filterModel;
+  d->mItemModel = filterModel;
 
   d->mItemFilterModel = createItemFilterModel();
   if ( d->mItemFilterModel ) {
     d->mItemFilterModel->setSourceModel( filterModel );
-    d->mItemFilter = d->mItemFilterModel;
+    d->mItemModel = d->mItemFilterModel;
   }
 
   QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel( this );
-  qmlCheckable->setSourceModel( d->mItemFilter );
+  qmlCheckable->setSourceModel( d->mItemModel );
 
-  QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( d->mItemFilter, this );
+  QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( d->mItemModel, this );
   qmlCheckable->setSelectionModel( itemActionCheckModel );
 
   KSelectionProxyModel *checkedItems = new KSelectionProxyModel( itemActionCheckModel, this );
   checkedItems->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-  checkedItems->setSourceModel( d->mItemFilter );
+  checkedItems->setSourceModel( d->mItemModel );
 
-  QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( d->mItemFilter, this );
+  QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( d->mItemModel, this );
 
   if ( d->mListProxy ) {
     d->mListProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
@@ -447,7 +447,7 @@ Akonadi::EntityTreeModel* KDeclarativeMainView::entityTreeModel() const
 
 QAbstractItemModel* KDeclarativeMainView::itemModel() const
 {
-  return d->mListProxy ? static_cast<QAbstractItemModel*>( d->mListProxy ) : static_cast<QAbstractItemModel*>( d->mItemFilter );
+  return d->mListProxy ? static_cast<QAbstractItemModel*>( d->mListProxy ) : static_cast<QAbstractItemModel*>( d->mItemModel );
 }
 
 void KDeclarativeMainView::launchAccountWizard()
@@ -548,7 +548,7 @@ QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const
 
 QAbstractItemModel* KDeclarativeMainView::regularSelectedItems() const
 {
-  return d->mItemFilter;
+  return d->mItemModel;
 }
 
 Akonadi::Item KDeclarativeMainView::itemFromId( quint64 id ) const

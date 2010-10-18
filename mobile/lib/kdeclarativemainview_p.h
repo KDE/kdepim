@@ -68,7 +68,7 @@ public: /// members
   QAbstractItemModel                 *mCollectionFilter;              // Deleted by ~QObect
   Akonadi::EntityTreeModel           *mEtm;
   ListProxy                          *mListProxy;
-  QAbstractItemModel                 *mItemFilter;
+  QAbstractItemModel                 *mItemModel;
   QAbstractProxyModel                *mItemFilterModel;
   QItemSelectionModel                *mFavSelection;
   QStringListModel                   *mFavsListModel;
