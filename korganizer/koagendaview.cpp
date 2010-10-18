@@ -1048,7 +1048,7 @@ void KOAgendaView::insertIncidence( Incidence *incidence, const QDate &curDate )
   }
 
   // The date for the event is not displayed, just ignore it
-  if ( curCol >= int( mSelectedDates.count() ) ) {
+  if ( curCol >= static_cast<int>( mSelectedDates.count() ) ) {
     return;
   }
 
@@ -1363,14 +1363,24 @@ void KOAgendaView::displayIncidence( Incidence *incidence )
     }
   }
 
-  const bool busyDay = KOEventView::makesWholeDayBusy( incidence );
+  const bool makesDayBusy = KOEventView::makesWholeDayBusy( incidence );
   for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
-    if ( busyDay ) {
+    if ( makesDayBusy ) {
       Event::List &busyEvents = mBusyDays[(*t).date()];
       busyEvents.append( event );
     }
-
     insertIncidence( incidence, (*t).date() );
+  }
+
+  // Can be multiday
+  if ( event && makesDayBusy && event->isMultiDay() ) {
+    const QDate lastVisibleDate = mSelectedDates.last();
+    for ( QDate date = event->dtStart().date();
+          date <= event->dtEnd().date() && date <= lastVisibleDate ;
+          date = date.addDays( 1 ) ) {
+      Event::List &busyEvents = mBusyDays[date];
+      busyEvents.append( event );
+    }
   }
 }
 
