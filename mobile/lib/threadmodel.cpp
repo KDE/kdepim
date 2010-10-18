@@ -469,7 +469,7 @@ QVariant ThreadModel::data(const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole) {
       QString displ = firstMailIndex.data(role).toString();
-      return displ + "(" + QString::number( node->range.height() ) + ")";
+      return "(" + QString::number( node->range.height() ) + ")" + displ;
     }
     return firstMailIndex.data(role);
   }
