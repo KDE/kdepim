@@ -85,7 +85,7 @@ Akonadi::Item ThreadGrouperModelPrivate::getThreadItem(const Akonadi::Item& item
     return m_threadItems.value(identifier);
 
   QHash<QByteArray, QSet<QByteArray> >::const_iterator it = findValue(m_threads, identifier);
-  Q_ASSERT(it != m_threads.end());
+  Q_ASSERT(it != m_threads.constEnd());
   Q_ASSERT(m_threadItems.value(it.key()).isValid());
   return m_threadItems.value(it.key());
 }
