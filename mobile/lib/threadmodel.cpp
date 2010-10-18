@@ -54,11 +54,14 @@ public:
 
   Akonadi::Item threadRoot(const QModelIndex &index) const;
 
+  KDateTime getMostRecentUpdate(KMime::Message::Ptr threadRoot) const;
+
   void populateThreadGrouperModel() const;
 
   mutable QHash<QByteArray, QSet<QByteArray> > m_threads;
   mutable MessageMap m_messageMap;
   mutable QHash<QByteArray, Akonadi::Item> m_threadItems;
+  mutable QHash<QByteArray, Akonadi::Item> m_allItems;
 
   ThreadGrouperModel::OrderScheme m_order;
 };
@@ -90,6 +93,28 @@ Akonadi::Item ThreadGrouperModelPrivate::getThreadItem(const Akonadi::Item& item
   Q_ASSERT(it != m_threads.constEnd());
   Q_ASSERT(m_threadItems.value(it.key()).isValid());
   return m_threadItems.value(it.key());
+}
+
+KDateTime ThreadGrouperModelPrivate::getMostRecentUpdate(KMime::Message::Ptr threadRoot) const
+{
+  QSet<QByteArray> messages = m_threads[threadRoot->messageID()->identifier()];
+
+  KDateTime newest = threadRoot->date()->dateTime();
+
+  if (messages.isEmpty())
+    return newest;
+
+  foreach(const QByteArray &ba, messages) {
+    const Akonadi::Item item = m_allItems.value(ba);
+    Q_ASSERT(item.isValid());
+    Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
+    KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+    KDateTime messageDateTime = message->date()->dateTime();
+    if (messageDateTime > newest)
+      newest = messageDateTime;
+  }
+
+  return newest;
 }
 
 ItemLessThanComparator::ItemLessThanComparator(const ThreadGrouperModelPrivate * grouper)
@@ -127,14 +152,21 @@ bool ItemLessThanComparator::operator()(const Akonadi::Item &leftItem, const Ako
     const KMime::Message::Ptr leftThreadRootMessage = leftThreadRootItem.payload<KMime::Message::Ptr>();
     const KMime::Message::Ptr rightThreadRootMessage = rightThreadRootItem.payload<KMime::Message::Ptr>();
 
-    // FIXME : Here we order by the date of the first message in the thread.
-    // Needs to be configurable to order by the thread with the most recent reply.
+    if (m_grouper->m_order == ThreadGrouperModel::ThreadsWithNewRepliesOrder) {
+      const KDateTime leftNewest = m_grouper->getMostRecentUpdate(leftThreadRootMessage);
+      const KDateTime rightNewest = m_grouper->getMostRecentUpdate(rightThreadRootMessage);
 
-    const KDateTime leftThreadRootDateTime = leftThreadRootMessage->date()->dateTime();
-    const KDateTime rightThreadRootDateTime = rightThreadRootMessage->date()->dateTime();
-    if (leftThreadRootDateTime != rightThreadRootDateTime) {
-      return leftThreadRootDateTime > rightThreadRootDateTime;
+      if (leftNewest != rightNewest) {
+        return leftNewest > rightNewest;
+      }
+    } else {
+      const KDateTime leftThreadRootDateTime = leftThreadRootMessage->date()->dateTime();
+      const KDateTime rightThreadRootDateTime = rightThreadRootMessage->date()->dateTime();
+      if (leftThreadRootDateTime != rightThreadRootDateTime) {
+        return leftThreadRootDateTime > rightThreadRootDateTime;
+      }
     }
+
     return leftThreadRootItem.id() < rightThreadRootItem.id();
   }
 
@@ -203,6 +235,7 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
         pendingThreads[inReplyTo].insert(identifier);
         Q_ASSERT(item.isValid());
         m_threadItems[identifier] = item;
+        m_allItems[identifier] = item;
         m_messageMap[item] = identifier;
         continue;
       }
@@ -214,6 +247,7 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
         pendingThreads.remove(ba);
         m_threads[identifier].insert(ba);
       }
+      m_allItems[identifier] = item;
       m_threadItems[identifier] = item;
       m_messageMap[item] = identifier;
     }
