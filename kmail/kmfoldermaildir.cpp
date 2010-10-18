@@ -135,7 +135,8 @@ int KMFolderMaildir::open(const char *)
     if (!mIndexStream)
       rc = createIndexFromContents();
     else
-      readIndex();
+      if (!readIndex())
+        rc = createIndexFromContents();
   }
   else
   {
@@ -145,7 +146,8 @@ int KMFolderMaildir::open(const char *)
 
   mChanged = false;
 
-  //readConfig();
+  if (mIndexStream)
+    fcntl(fileno(mIndexStream), F_SETFD, FD_CLOEXEC);
 
   return rc;
 }
@@ -898,6 +900,7 @@ int KMFolderMaildir::createIndexFromContents()
     "do not want KMail to send them."));
 
   needsCompact = true;
+  mCompactable = true;
 
   invalidateFolder();
   return 0;
