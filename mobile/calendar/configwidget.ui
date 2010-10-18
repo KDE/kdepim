@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>501</width>
-    <height>1109</height>
+    <height>1066</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -164,7 +164,40 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+    </layout>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_5" columnstretch="0,1">
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="label_12">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>New Events</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <spacer name="horizontalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="1">
       <layout class="QFormLayout" name="formLayout_2">
        <item row="0" column="0">
         <widget class="QLabel" name="defaultAppointmentTimeLabel">
@@ -179,7 +212,7 @@
        <item row="1" column="0">
         <widget class="QLabel" name="defaultDurationOfNewAppointmentLabel">
          <property name="text">
-          <string>Default duration of new appointment (HH:MM):</string>
+          <string>Default duration:</string>
          </property>
         </widget>
        </item>
@@ -230,7 +263,7 @@
        </item>
       </layout>
      </item>
-     <item row="4" column="1">
+     <item row="2" column="1">
       <widget class="QCheckBox" name="kcfg_RemindersForNewEvents">
        <property name="text">
         <string>Enable reminders for new appointments</string>
@@ -345,7 +378,7 @@
      <item row="7" column="1">
       <widget class="QCheckBox" name="kcfg_ColorBusyDaysInAgendaView">
        <property name="text">
-        <string>Color busy days in agenda view with a different background color</string>
+        <string>Color busy days in agenda view</string>
        </property>
       </widget>
      </item>
@@ -373,7 +406,7 @@
      <item row="10" column="1">
       <widget class="QCheckBox" name="kcfg_ColorBusyDaysInMonthView">
        <property name="text">
-        <string>Color busy days in month view with a different background color</string>
+        <string>Color busy days in month view</string>
        </property>
       </widget>
      </item>
