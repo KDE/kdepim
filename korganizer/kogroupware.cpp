@@ -439,22 +439,32 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
         }
 
         // For existing attendees, skip the update if there are no other changes except attendees
-        if ( sendUpdate && ( sameAtts.count() > 0 ) ) {
+        if ( sameAtts.count() > 0 ) {
           QStringList attStrList;
           Attendee::List::ConstIterator it;
           for ( it = sameAtts.begin(); it != sameAtts.end(); ++it ) {
             attStrList << (*it)->fullName();
           }
           const QString recipients = attStrList.join( "," );
-
-          int newMail = KMessageBox::questionYesNoList(
-            parent,
-            i18n( "You changed the invitation \"%1\".\n"
-                  "Do you want to email an updated invitation to these attendees?" ).
-            arg( incidence->summary() ),
-            attStrList,
-            i18n( "Send Invitation Update" ),
-            KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+          int newMail;
+          if ( sendUpdate ) {
+            newMail = KMessageBox::questionYesNoList(
+              parent,
+              i18n( "You changed the invitation \"%1\".\n"
+                    "Do you want to email an updated invitation to these attendees?" ).
+              arg( incidence->summary() ),
+              attStrList,
+              i18n( "Send Invitation Update" ),
+              KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+          } else {
+            newMail = KMessageBox::questionYesNoList(
+              parent,
+              i18n( "You changed the invitation attendee list only.\n"
+                    "Do you want to email an updated invitation showing the new attendees?" ),
+              attStrList,
+              i18n( "Send Invitation Update" ),
+              KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+          }
           if ( newMail == KMessageBox::Yes ) {
             KCal::MailScheduler scheduler( mCalendar );
             scheduler.performTransaction( incidence, Scheduler::Request, recipients );
