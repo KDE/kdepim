@@ -43,7 +43,6 @@ class EventsGuiStateManager : public GuiStateManager
       ViewTimelineState
     };
 
-  public Q_SLOTS:
     /**
      * Returns whether the current state is the view day state.
      */

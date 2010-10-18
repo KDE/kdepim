@@ -37,7 +37,6 @@ class ContactsGuiStateManager : public GuiStateManager
       ViewContactGroupState
     };
 
-  public Q_SLOTS:
     /**
      * Returns whether the current state is the view contact state.
      */
