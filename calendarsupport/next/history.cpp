@@ -287,6 +287,8 @@ bool History::Private::doIt( const Entry &entry, OperationType type )
     // Don't i18n yet, only after refactoring IncidenceChanger.
     mLastErrorString = "Error in incidence changer, didn't even fire the job";
     mOperationTypeInProgress = TypeNone;
+    stack().push( mEntryInProgress ); // Back to the original stack
+    updateWidgets();
   }
 
   return result;
@@ -334,8 +336,6 @@ void History::Private::editFinished( const Akonadi::Item &oldItem,
   if ( success )
     mLatestRevisionByItemId[newItem.id()] = newItem.revision();
 
-  kDebug() << "Old revision was " << oldItem.revision() << " new is " << newItem.revision();
-
   finishOperation( resultCode );
 }
 
@@ -344,23 +344,47 @@ void History::Private::finishOperation( History::ResultCode resultCode )
 {
   if ( resultCode == ResultCodeSuccess ) {
     mLastErrorString = QString();
+    destinationStack().push( mEntryInProgress );
   } else {
-    // No very verbose. That's IncidenceChanger's fault. And that will change soon.
+    // Not very verbose. That's IncidenceChanger's fault. And that will change soon.
     mLastErrorString = i18n( "error" );
+    stack().push( mEntryInProgress );
   }
 
-  if ( mOperationTypeInProgress == TypeUndo ) {
-    mRedoStack.push( mEntryInProgress );
-    emit q->undone( resultCode );
-  } else {
-    mUndoStack.push( mEntryInProgress );
-    emit q->redone( resultCode );
-  }
+  emitDone( mOperationTypeInProgress, resultCode );
 
   mOperationTypeInProgress = TypeNone;
   updateWidgets();
 }
 
+QStack<Entry>& History::Private::stack()
+{
+  // Entries from the undo stack go to the redo stack, and vice-versa
+  if ( mOperationTypeInProgress == TypeUndo ) {
+    return mUndoStack;
+  } else {
+    return mRedoStack;
+  }
+}
+
+QStack<Entry>& History::Private::destinationStack()
+{
+  // Entries from the undo stack go to the redo stack, and vice-versa
+  if ( mOperationTypeInProgress == TypeUndo ) {
+    return mRedoStack;
+  } else {
+    return mUndoStack;
+  }
+}
+
+void History::Private::emitDone( OperationType type, History::ResultCode resultCode )
+{
+  if ( type == TypeUndo ) {
+    emit q->undone( resultCode );
+  } else {
+    emit q->redone( resultCode );
+  }
+}
 
 #include "history.moc"
 #include "history_p.moc"

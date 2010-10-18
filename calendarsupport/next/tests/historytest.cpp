@@ -268,6 +268,26 @@ class HistoryTest : public QObject
     waitForETMorSignals();
     item = mCalendar->itemForIncidenceUid( uid );
     QVERIFY( !item.isValid() );
+
+    // Now lets test yo delete something that doesn't exist, maybe deleted by another person,
+    // we try to undo an add, but there's
+    // nothing to delete, because we didn't really add any incidence
+    // to akonadi
+    Item item2;
+    item2.setId( 3333 );
+    item2.setPayload( Incidence::Ptr( new Event() ) );
+    item2.setMimeType( "application/x-vnd.akonadi.calendar.event" );
+/*    mHistory->recordChange( Item(), item2, History::ChangeTypeAdd );
+    QVERIFY( mHistory->undo() );
+
+    TODO: uncomment once IncidenceChanger bug is fixed, it returns true
+    on deleteIncidence() because it sees the incidence was deleted already.
+    but isn't emiting signal.
+
+*/
+
+    mHistory->recordChange( item2, item2, History::ChangeTypeEdit );
+    QVERIFY( !mHistory->undo() );
   }
 
   public Q_SLOTS:

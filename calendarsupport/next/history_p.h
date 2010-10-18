@@ -59,9 +59,13 @@ namespace CalendarSupport {
       Private( History *qq ) : q( qq ) {}
       ~Private(){}
       void updateWidgets();
-      bool doIt( const Entry &entry, OperationType type );
+      bool doIt( const Entry &entry, OperationType );
       void updateIds( Item::Id oldId, Item::Id newId );
-      void finishOperation( History::ResultCode resultCode );
+      void finishOperation( History::ResultCode );
+      QStack<Entry>& destinationStack();
+      QStack<Entry>& stack();
+
+      void emitDone( OperationType, History::ResultCode );
 
       bool isUndoAvailable() const;
       bool isRedoAvailable() const;
