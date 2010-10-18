@@ -233,7 +233,6 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
       const QHash<QByteArray, QSet<QByteArray> >::const_iterator end = m_threads.constEnd();
       if (it == end) {
         pendingThreads[inReplyTo].insert(identifier);
-        Q_ASSERT(item.isValid());
         m_threadItems[identifier] = item;
         m_allItems[identifier] = item;
         m_messageMap[item] = identifier;
