@@ -38,7 +38,7 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
 public:
   enum CustomRoles {
     // FIXME Fix custom role handling in proxies.
-    ThreadIdRole = Akonadi::EntityTreeModel::UserRole
+    ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 10
   };
 
   enum OrderScheme {
@@ -67,8 +67,10 @@ class MOBILEUI_EXPORT ThreadModel : public QAbstractListModel
   Q_OBJECT
 public:
   enum Roles {
-    ThreadRangeStartRole = Akonadi::EntityTreeModel::UserRole + 10,
-    ThreadRangeEndRole
+    ThreadRangeStartRole = Akonadi::EntityTreeModel::UserRole + 20,
+    ThreadRangeEndRole,
+    ThreadSizeRole,
+    ThreadUnreadCountRole
   };
   explicit ThreadModel(QAbstractItemModel *emailModel, QObject *parent = 0);
   virtual ~ThreadModel();

@@ -26,6 +26,8 @@
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Item>
 #include <KMime/Message>
+#include <akonadi/kmime/messagestatus.h>
+
 #include <map>
 
 struct ItemLessThanComparator
@@ -443,7 +445,10 @@ ThreadModel::ThreadModel(QAbstractItemModel *emailModel, QObject* parent)
   connect(emailModel, SIGNAL(modelReset()),
       this, SLOT(populateThreadModel()));
 
-  setRoleNames(emailModel->roleNames());
+  QHash<int, QByteArray> roleNames = emailModel->roleNames();
+  roleNames.insert(ThreadSizeRole, "threadSize");
+  roleNames.insert(ThreadUnreadCountRole, "threadUnreadCount");
+  setRoleNames(roleNames);
 
 }
 
@@ -466,6 +471,25 @@ QVariant ThreadModel::data(const QModelIndex& index, int role) const
       return node->range.top();
     if (role == ThreadRangeEndRole)
       return node->range.bottom();
+    if (role == ThreadSizeRole)
+      return node->range.height();
+    if (role == ThreadUnreadCountRole) {
+      int unreadCount = 0;
+      for (int row = node->range.top(); row <= node->range.bottom(); ++row) {
+        static const int column = 0;
+        const QModelIndex idx = node->range.model()->index(row, column);
+        Q_ASSERT(idx.isValid());
+        const Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+        Q_ASSERT(item.isValid());
+        Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
+        const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+        Akonadi::MessageStatus status;
+        status.setStatusFromFlags( item.flags() );
+        if (status.isUnread())
+          ++unreadCount;
+      }
+      return unreadCount;
+    }
 
     if (role == Qt::DisplayRole) {
       QString displ = firstMailIndex.data(role).toString();
