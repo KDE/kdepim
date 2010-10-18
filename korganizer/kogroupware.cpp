@@ -42,6 +42,7 @@
 #include "koincidenceeditor.h"
 #include <libemailfunctions/email.h>
 #include <libkcal/attendee.h>
+#include <libkcal/calhelper.h>
 #include <libkcal/journal.h>
 #include <libkcal/incidenceformatter.h>
 #include <kdebug.h>
@@ -280,6 +281,15 @@ static bool compareIncsExceptAttendees( Incidence *i1, Incidence *i2 )
     stringCompare( i1->location(), i2->location() );
 }
 
+static QStringList recipients( Attendee::List attendees )
+{
+  QStringList attStrList;
+  for ( Attendee::List::ConstIterator it = attendees.begin(); it != attendees.end(); ++it ) {
+    attStrList << (*it)->fullName();
+  }
+  return attStrList;
+}
+
 /* This function sends mails if necessary, and makes sure the user really
  * want to change his calendar.
  *
@@ -394,58 +404,43 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
 
           // For new attendees, send them the new incidence as a new invitation.
           if ( newAtts.count() > 0 ) {
-            QStringList attStrList;
-            for ( it = newAtts.begin(); it != newAtts.end(); ++it ) {
-              attStrList << (*it)->fullName();
-            }
-            const QString recipients = attStrList.join( "," );
-
+            const QStringList rList = recipients( newAtts );
             int newMail = KMessageBox::questionYesNoList(
               parent,
               i18n( "You are adding new attendees to the invitation \"%1\".\n"
                     "Do you want to email an invitation to these new attendees?" ).
               arg( incidence->summary() ),
-              attStrList,
+              rList,
               i18n( "New Attendees" ),
               KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
             if ( newMail == KMessageBox::Yes ) {
               KCal::MailScheduler scheduler( mCalendar );
               incidence->setRevision( 0 );
-              scheduler.performTransaction( incidence, Scheduler::Request, recipients );
+              scheduler.performTransaction( incidence, Scheduler::Request, rList.join( "," ) );
             }
           }
 
           // For removed attendees, tell them they are toast and send them a cancel.
           if ( remAtts.count() > 0 ) {
-            QStringList attStrList;
-            for ( it = remAtts.begin(); it != remAtts.end(); ++it ) {
-              attStrList << (*it)->fullName();
-            }
-            const QString recipients = attStrList.join( "," );
-
+            const QStringList rList = recipients( remAtts );
             int newMail = KMessageBox::questionYesNoList(
               parent,
               i18n( "You removed attendees from the invitation \"%1\".\n"
                     "Do you want to email a cancellation message to these attendees?" ).
               arg( incidence->summary() ),
-              attStrList,
+              rList,
               i18n( "Removed Attendees" ),
               KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
             if ( newMail == KMessageBox::Yes ) {
               KCal::MailScheduler scheduler( mCalendar );
-              scheduler.performTransaction( incidence, Scheduler::Cancel, recipients );
+              scheduler.performTransaction( incidence, Scheduler::Cancel, rList.join( "," ) );
             }
           }
         }
 
         // For existing attendees, skip the update if there are no other changes except attendees
         if ( sameAtts.count() > 0 ) {
-          QStringList attStrList;
-          Attendee::List::ConstIterator it;
-          for ( it = sameAtts.begin(); it != sameAtts.end(); ++it ) {
-            attStrList << (*it)->fullName();
-          }
-          const QString recipients = attStrList.join( "," );
+          const QStringList rList = recipients( sameAtts );
           int newMail;
           if ( sendUpdate ) {
             newMail = KMessageBox::questionYesNoList(
@@ -453,7 +448,7 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
               i18n( "You changed the invitation \"%1\".\n"
                     "Do you want to email an updated invitation to these attendees?" ).
               arg( incidence->summary() ),
-              attStrList,
+              rList,
               i18n( "Send Invitation Update" ),
               KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
           } else {
@@ -461,13 +456,13 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
               parent,
               i18n( "You changed the invitation attendee list only.\n"
                     "Do you want to email an updated invitation showing the new attendees?" ),
-              attStrList,
+              rList,
               i18n( "Send Invitation Update" ),
               KGuiItem( i18n( "Send Email" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
           }
           if ( newMail == KMessageBox::Yes ) {
             KCal::MailScheduler scheduler( mCalendar );
-            scheduler.performTransaction( incidence, Scheduler::Request, recipients );
+            scheduler.performTransaction( incidence, Scheduler::Request, rList.join( "," ) );
           }
         }
         return true;
@@ -607,10 +602,22 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
         if ( useLastDialogAnswer ) {
           rc = lastUsedDialogAnswer;
         } else {
-          txt = i18n( "You are not the organizer of this event. Editing it will "
-                      "bring your calendar out of sync with the organizer's calendar. "
-                      "Do you really want to edit it?" );
-          lastUsedDialogAnswer = rc = KMessageBox::warningYesNo( parent, txt );
+          if ( CalHelper::incOrganizerOwnsCalendar( mCalendar, incidence ) ) {
+            txt = i18n( "You are modifying the organizer's event. "
+                        "Do you really want to edit it?<p>"
+                        "If \"yes\", all the attendees will be emailed the updated invitation." );
+            lastUsedDialogAnswer = rc = KMessageBox::warningYesNo( parent, txt );
+            if ( rc == KMessageBox::Yes ) {
+              KCal::MailScheduler scheduler( mCalendar );
+              scheduler.performTransaction( incidence, Scheduler::Request,
+                                            recipients( incidence->attendees() ).join( "," ) );
+            }
+          } else {
+            txt = i18n( "You are not the organizer of this event. Editing it will "
+                        "bring your calendar out of sync with the organizer's calendar. "
+                        "Do you really want to edit it?" );
+            lastUsedDialogAnswer = rc = KMessageBox::warningYesNo( parent, txt );
+          }
         }
         return ( rc == KMessageBox::Yes );
       }
