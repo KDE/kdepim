@@ -30,13 +30,14 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 
+#include <akonadi_next/kviewstatemaintainer.h>
+
 #include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi_next/kcolumnfilterproxymodel.h>
 #include <KCalCore/Event>
 
 #include <akonadi/etmviewstatesaver.h>
 
-#include <kviewstatemaintainer.h>
 #include <KGlobalSettings>
 #include <KLocale>
 #include <KVBox>

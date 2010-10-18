@@ -36,6 +36,7 @@
 
 #include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi_next/kcolumnfilterproxymodel.h>
+#include <akonadi_next/kviewstatemaintainer.h>
 
 #include <KCalCore/Todo>
 
@@ -43,7 +44,6 @@
 
 #include <akonadi/etmviewstatesaver.h>
 
-#include <kviewstatemaintainer.h>
 #include <KHolidays/Holidays>
 #include <KGuiItem>
 #include <KLocale>
