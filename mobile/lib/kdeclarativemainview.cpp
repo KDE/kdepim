@@ -359,24 +359,6 @@ void KDeclarativeMainView::breadcrumbsSelectionChanged()
   }
 }
 
-QString KDeclarativeMainView::pathToItem( Entity::Id id )
-{
-  QString path;
-  const QModelIndexList list = EntityTreeModel::modelIndexesForItem( d->mEtm, Item( id ) );
-  if ( list.isEmpty() )
-    return QString();
-
-  QModelIndex index = list.first().parent();
-  while ( index.isValid() ) {
-    path.prepend( index.data().toString() );
-    index = index.parent();
-    if ( index.isValid() )
-      path.prepend( " / " );
-  }
-
-  return path;
-}
-
 ItemFetchScope& KDeclarativeMainView::itemFetchScope()
 {
   return d->mChangeRecorder->itemFetchScope();

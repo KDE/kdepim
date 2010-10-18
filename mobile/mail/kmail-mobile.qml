@@ -407,7 +407,6 @@ KPIM.MainView {
           {
             if (!application.isDraft(headerList.currentIndex))
             {
-              messageView.messagePath = application.pathToItem(headerList.currentItemId);
               messageView.itemId = headerList.currentItemId;
               guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
             } else {

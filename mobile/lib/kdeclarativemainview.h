@@ -115,8 +115,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
     void setAgentInstanceListSelectedRow( int row );
 
-    QString pathToItem( qint64 id );
-
     /**
      * Starts the account wizard to add and configure new resources.
      */

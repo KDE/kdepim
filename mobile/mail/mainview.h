@@ -96,6 +96,8 @@ class MainView : public KDeclarativeMainView
     void createToDo();
     void useFixedFont();
 
+    void itemSelectionChanged();
+
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
