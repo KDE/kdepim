@@ -114,6 +114,7 @@ public:
                                            int startIndex,
                                            int nbMessages );
   int dimapAccounts();
+  QString dimapFolderAccountName( const QString &folderPath );
 
   QValueList<SubResource> subresourcesKolab( const QString& contentsType );
 

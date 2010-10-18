@@ -698,7 +698,7 @@ static QString subresourceLabelForPresentation( const KMFolder * folder )
         remainder.pop_front();
         if ( dimapAccountCount() > 1 ) {
           // Fix kolab issue 2531 folder->storage() )->account() can be null
-          if( folder->storage() && static_cast<const KMFolderCachedImap*>( folder->storage() )->account() ) {
+           if( folder->storage() && static_cast<const KMFolderCachedImap*>( folder->storage() )->account() ) {
           label = i18n( "My %1 (%2)")
               .arg( remainder.join( QString::fromLatin1("/") ),
                     static_cast<const KMFolderCachedImap*>( folder->storage() )->account()->name() );
@@ -1653,6 +1653,18 @@ KMFolder* KMailICalIfaceImpl::findResourceFolder( const QString& resource )
 
   // No luck at all
   return 0;
+}
+
+QString KMailICalIfaceImpl::dimapFolderAccountName( const QString &folderPath )
+{
+  QString name;
+  KMFolder *f = findResourceFolder( folderPath );
+  if ( f ) {
+    if ( f->storage() && static_cast<const KMFolderCachedImap*>( f->storage() )->account() ) {
+      name = static_cast<const KMFolderCachedImap*>( f->storage() )->account()->name();
+    }
+  }
+  return name;
 }
 
 void KMailICalIfaceImpl::changeResourceUIName( const QString &folderPath, const QString &newName )
