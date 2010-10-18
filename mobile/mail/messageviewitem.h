@@ -56,6 +56,7 @@ class MessageViewItem : public DeclarativeAkonadiItem
 
     virtual qint64 itemId() const;
     virtual void setItemId( qint64 id );
+    virtual void setItem( const Akonadi::Item &item );
 
     virtual void scrollDown( int dist );
     virtual void scrollUp( int dist );

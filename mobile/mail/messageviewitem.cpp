@@ -70,6 +70,11 @@ void MessageViewItem::setItemId( qint64 id )
   m_viewer->setMessageItem( Akonadi::Item( id ) );
 }
 
+void MessageViewItem::setItem( const Akonadi::Item &item )
+{
+  m_viewer->setMessageItem( item );
+}
+
 QString MessageViewItem::splashMessage() const
 {
   return QString(); // TODO
