@@ -28,6 +28,7 @@ KPIM.ItemListView {
   property bool showCheckBox
   property variant checkModel
   property string collapsedSections
+  property bool showSections : true
 
   delegate: [
     KPIM.ItemListViewDelegate {
@@ -153,7 +154,7 @@ KPIM.ItemListView {
     }
   ]
 
-  section.property: "dateGroup"
+  section.property: showSections ? "dateGroup" : undefined
   section.criteria: QML.ViewSection.FullString
   section.delegate: QML.Item {
     id: sectionDelegate
