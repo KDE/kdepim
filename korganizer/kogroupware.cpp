@@ -517,19 +517,48 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
       return true;
     }
   } else if( incidence->type() == "Todo" ) {
-    if( method == Scheduler::Request )
-      // This is an update to be sent to the organizer
+    QString txt;
+    if ( method == Scheduler::Request ) {
+      txt = i18n( "Do you want to send a status update to the organizer of this task?" );
       method = Scheduler::Reply;
-
-    if ( useLastDialogAnswer ) {
-      rc = lastUsedDialogAnswer;
+      if ( useLastDialogAnswer ) {
+        rc = lastUsedDialogAnswer;
+      } else {
+        lastUsedDialogAnswer = rc = KMessageBox::questionYesNo(
+          parent, txt, i18n( "Group Scheduling Email" ),
+          KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+      }
     } else {
-      // Ask if the user wants to tell the organizer about the current status
-      const QString txt =
-        i18n( "Do you want to send a status update to the organizer of this task?" );
-      lastUsedDialogAnswer = rc = KMessageBox::questionYesNo(
-        parent, txt, i18n( "Group Scheduling Email" ),
-        KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+      if ( action == KOGlobals::INCIDENCEDELETED ) {
+        const QStringList myEmails = KOPrefs::instance()->allEmails();
+        bool askConfirmation = false;
+        for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
+          QString email = *it;
+          Attendee *me = incidence->attendeeByMail(email);
+          if ( me &&
+               ( me->status() == KCal::Attendee::Accepted ||
+                 me->status() == KCal::Attendee::Delegated ) ) {
+            askConfirmation = true;
+            break;
+          }
+        }
+
+        if ( !askConfirmation ) {
+          return true;
+        }
+
+        txt = i18n( "You had previously accepted your participation in this task. "
+                    "Do you want to send an updated response to the organizer "
+                    "removing yourself from the task?" );
+        if ( useLastDialogAnswer ) {
+          rc = lastUsedDialogAnswer;
+        } else {
+          lastUsedDialogAnswer = rc = KMessageBox::questionYesNo(
+            parent, txt, i18n( "Group Scheduling Email" ),
+            KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+          setDoNotNotify( rc == KMessageBox::No );
+        }
+      }
     }
   } else if ( incidence->type() == "Event" ) {
     QString txt;
@@ -545,7 +574,7 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
           KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
       }
     } else {
-      if( action == KOGlobals::INCIDENCEDELETED ) {
+      if ( action == KOGlobals::INCIDENCEDELETED ) {
         const QStringList myEmails = KOPrefs::instance()->allEmails();
         bool askConfirmation = false;
         for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
