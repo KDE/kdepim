@@ -115,7 +115,7 @@ void MainView::delayedInit()
   qmlRegisterType<Qt::QmlDateEdit>( "org.qt", 4, 7, "QmlDateEdit" );
   qmlRegisterUncreatableType<EventsGuiStateManager>( "org.kde.akonadi.events", 4, 5, "EventsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 
-  m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
+  m_calendar = new CalendarSupport::Calendar( entityTreeModel(), itemModel(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
   CalendarSupport::FreeBusyManager::self()->setCalendar( m_calendar );
 
@@ -238,7 +238,7 @@ void MainView::finishEdit( QObject *editor )
 
 void MainView::showRegularCalendar()
 {
-  m_calendar->setUnfilteredModel( regularSelectedItems() );
+  m_calendar->setUnfilteredModel( itemModel() );
 }
 
 void MainView::setCurrentEventItemId( qint64 id )

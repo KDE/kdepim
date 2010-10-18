@@ -546,11 +546,6 @@ QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const
   return d->mBnf->selectionModel();
 }
 
-QAbstractItemModel* KDeclarativeMainView::regularSelectedItems() const
-{
-  return d->mItemModel;
-}
-
 Akonadi::Item KDeclarativeMainView::itemFromId( quint64 id ) const
 {
   const QModelIndexList list = EntityTreeModel::modelIndexesForItem( d->mEtm, Item( id ) );

@@ -88,7 +88,7 @@ void MainView::delayedInit()
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.tasks", 4, 5, "ConfigWidget" );
 
   CalendarSupport::Calendar *cal = new CalendarSupport::Calendar( entityTreeModel(),
-                                                                  regularSelectedItems(),
+                                                                  itemModel(),
                                                                   KSystemTimeZones::local() );
   CalendarSupport::FreeBusyManager::self()->setCalendar( cal );
 
