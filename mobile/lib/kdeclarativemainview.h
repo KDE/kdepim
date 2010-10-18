@@ -242,6 +242,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
   protected:
     QItemSelectionModel* regularSelectionModel() const;
+    QAbstractProxyModel* itemFilterModel() const;
     QItemSelectionModel* itemSelectionModel() const;
     QItemSelectionModel* itemActionModel() const;
     QAbstractItemModel* selectedItemsModel() const;

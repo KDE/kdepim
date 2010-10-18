@@ -718,6 +718,11 @@ void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selecti
   manager->createAllActions();
 }
 
+QAbstractProxyModel* KDeclarativeMainView::itemFilterModel() const
+{
+  return d->mItemFilterModel;
+}
+
 QAbstractProxyModel* KDeclarativeMainView::createItemFilterModel() const
 {
   return 0;
