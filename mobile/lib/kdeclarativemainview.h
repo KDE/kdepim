@@ -249,6 +249,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
     virtual void keyPressEvent( QKeyEvent *event );
 
+    virtual QAbstractItemModel* createItemModelContext(QDeclarativeContext *context, QAbstractItemModel *model);
     virtual void insertItemModelIntoContext(QDeclarativeContext *context, QAbstractItemModel *model);
 
   private:

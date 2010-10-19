@@ -207,45 +207,7 @@ void KDeclarativeMainView::delayedInit()
   filterModel->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   filterModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
-  d->mItemModel = filterModel;
-
-  d->mItemFilterModel = createItemFilterModel();
-  if ( d->mItemFilterModel ) {
-    d->mItemFilterModel->setSourceModel( filterModel );
-    d->mItemModel = d->mItemFilterModel;
-  }
-
-  QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel( this );
-  qmlCheckable->setSourceModel( d->mItemModel );
-
-  QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( d->mItemModel, this );
-  qmlCheckable->setSelectionModel( itemActionCheckModel );
-
-  KSelectionProxyModel *checkedItems = new KSelectionProxyModel( itemActionCheckModel, this );
-  checkedItems->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-  checkedItems->setSourceModel( d->mItemModel );
-
-  QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( d->mItemModel, this );
-
-  if ( d->mListProxy ) {
-    d->mListProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
-
-    d->mListProxy->setSourceModel( qmlCheckable );
-  }
-  d->mItemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this );
-
-  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
-  d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
-
-  d->mItemActionSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemActionCheckModel, this );
-
-  if ( debugTiming ) {
-    kWarning() << "Begin inserting QML context" << time.elapsed() << &time;
-  }
-
-  if ( d->mListProxy ) {
-    insertItemModelIntoContext(context, d->mListProxy);
-  }
+  d->mItemModel = createItemModelContext(context, filterModel);
 
   context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
@@ -323,6 +285,46 @@ KDeclarativeMainView::~KDeclarativeMainView()
 {
   delete d;
 }
+
+QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model)
+{
+  d->mItemFilterModel = createItemFilterModel();
+  if ( d->mItemFilterModel ) {
+    d->mItemFilterModel->setSourceModel( model );
+    model = d->mItemFilterModel;
+  }
+
+  QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel( this );
+  qmlCheckable->setSourceModel( model );
+
+  QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( model, this );
+  qmlCheckable->setSelectionModel( itemActionCheckModel );
+
+  KSelectionProxyModel *checkedItems = new KSelectionProxyModel( itemActionCheckModel, this );
+  checkedItems->setFilterBehavior( KSelectionProxyModel::ExactSelection );
+  checkedItems->setSourceModel( model );
+
+  QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( model, this );
+
+  if ( d->mListProxy ) {
+    d->mListProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
+
+    d->mListProxy->setSourceModel( qmlCheckable );
+  }
+  d->mItemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this );
+
+  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
+  d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
+
+  d->mItemActionSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemActionCheckModel, this );
+
+  if ( d->mListProxy ) {
+    insertItemModelIntoContext(context, d->mListProxy);
+  }
+
+  return model;
+}
+
 
 void KDeclarativeMainView::insertItemModelIntoContext(QDeclarativeContext* context, QAbstractItemModel* model)
 {
