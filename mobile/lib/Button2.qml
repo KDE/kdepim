@@ -53,9 +53,7 @@ QML.Item {
 
   QML.Text {
     id: buttonLabel
-    verticalAlignment : QML.Text.AlignVCenter
-    horizontalAlignment : QML.Text.AlignHCenter
-    anchors { verticalCenter: parent.verticalCenter; left: iconImage.right; right: parent.right }
+    anchors { centerIn : parent; left: iconImage.right; right: parent.right }
     color: root.enabled ? "black" : "gray"
   }
 
