@@ -27,14 +27,19 @@
 
 #include <messagecomposer/messagefactory.h>
 #include <Akonadi/KMime/SpecialMailCollections>
+#include <akonadi/selectionproxymodel.h>
+#include <Akonadi/EntityTreeModel>
 
+class TemplateEmailModel;
+class KSelectionProxyModel;
+class QStandardItemModel;
 namespace MessageViewer {
   class MessageViewItem;
 }
 
 namespace Akonadi {
   class StandardMailActionManager;
-class EntityMimeTypeFilterModel;
+  class EntityMimeTypeFilterModel;
 }
 
 class AkonadiSender;
@@ -72,6 +77,9 @@ class MainView : public KDeclarativeMainView
     virtual void setListSelectedRow( int row );
 
     void configureIdentity();
+
+    int emailTemplateCount();
+    void newMessageFromTemplate( int index );
 
   protected slots:
     void delayedInit();
@@ -121,6 +129,7 @@ class MainView : public KDeclarativeMainView
     void createDefaultCollectionDone( KJob *job);
     void deleteItemResult( KJob *job );
     void showExpireProperties();
+    void templateFetchResult( KJob *job );
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
@@ -136,6 +145,8 @@ class MainView : public KDeclarativeMainView
     QWidget *mTransportDialog;
     Akonadi::StandardMailActionManager *mMailActionManager;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
+    TemplateEmailModel *mEmailTemplateModel;
+    QItemSelectionModel *mTemplateSelectionModel;    
 };
 
 Q_DECLARE_METATYPE( MainView::ForwardMode )

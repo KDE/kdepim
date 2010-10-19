@@ -18,7 +18,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 
-set(kmail_mobile_srcs
+set(kmail_mobile_srcs 
   attachmentproxymodel.cpp
   composerautoresizer.cpp
   composerview.cpp
@@ -34,6 +34,7 @@ set(kmail_mobile_srcs
   messageviewitem.cpp
   mobilekernel.cpp
   savemailcommand.cpp
+  templateemailmodel.cpp
 )
 
 qt4_wrap_ui(kmail_mobile_srcs configwidget.ui)

@@ -38,6 +38,7 @@
 #include "messageviewitem.h"
 #include "mobilekernel.h"
 #include "savemailcommand_p.h"
+#include "templateemailmodel.h"
 #include "threadmodel.h"
 
 #include <akonadi/agentactionmanager.h>
@@ -67,6 +68,7 @@
 #include <mailcommon/expirypropertiesdialog.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
+#include <mailcommon/mailkernel.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/akonadisender.h>
 #include <messagecore/stringutil.h>
@@ -123,7 +125,8 @@ MainView::~MainView()
 }
 
 #define VIEW(model) {                        \
-  QTreeView *view = new QTreeView;           \
+  QTreeView *view = new QTreeView( this );   \
+  view->setWindowFlags( Qt::Window );        \
   view->setAttribute(Qt::WA_DeleteOnClose);  \
   view->setModel(model);                     \
   view->setWindowTitle(#model);              \
@@ -218,7 +221,7 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
-
+   
   connect(itemSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(itemSelectionChanged()));
 
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
@@ -236,6 +239,13 @@ void MainView::delayedInit()
   MessageViewer::GlobalSettings::self()->setSharedConfig( config );
   MessageViewer::GlobalSettings::self()->readConfig();
 
+  mTemplateSelectionModel = new QItemSelectionModel( entityTreeModel(), this );
+  
+  mEmailTemplateModel = new TemplateEmailModel( mTemplateSelectionModel, this );
+  mEmailTemplateModel->setSourceModel( entityTreeModel() );
+  mEmailTemplateModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+  rootContext()->setContextProperty( "_emailTemplateModel", mEmailTemplateModel );
+ 
   QTime time;
   if ( debugTiming ) {
     time.start();
@@ -838,7 +848,8 @@ void MainView::initDefaultFolders()
   findCreateDefaultCollection( SpecialMailCollections::SentMail );
   findCreateDefaultCollection( SpecialMailCollections::Drafts );
   findCreateDefaultCollection( SpecialMailCollections::Trash );
-  //findCreateDefaultCollection( SpecialMailCollections::Templates );
+  findCreateDefaultCollection( SpecialMailCollections::Templates );
+
 }
 
 void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
@@ -854,6 +865,7 @@ void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
     connect( job, SIGNAL( result( KJob* ) ),
              this, SLOT( createDefaultCollectionDone( KJob* ) ) );
     job->requestDefaultCollection( type );
+    job->setProperty("TYPE", (int) type );
   }
 }
 
@@ -867,6 +879,10 @@ void MainView::createDefaultCollectionDone( KJob *job )
                         i18n("Error creating default collection."),
                         i18n("Internal Error"));*/
     return;
+  }
+
+  if ( (SpecialMailCollections::Type)( job->property("TYPE").toInt() ) == SpecialMailCollections::Templates ) {
+    mTemplateSelectionModel->select( EntityTreeModel::modelIndexForCollection( entityTreeModel(), CommonKernel->templatesCollectionFolder() ),  QItemSelectionModel::Select   );
   }
 
   SpecialMailCollectionsRequestJob *requestJob =
@@ -1225,6 +1241,46 @@ void MainView::useFixedFont()
     MessageViewer::GlobalSettings::self()->setUseFixedFont( !fixedFont );
     MessageViewer::GlobalSettings::self()->writeConfig();
   }
+}
+
+int MainView::emailTemplateCount()
+{
+  return mEmailTemplateModel ? mEmailTemplateModel->rowCount() : 0;
+}
+
+void MainView::newMessageFromTemplate( int index )
+{
+  Akonadi::Item item = mEmailTemplateModel->index( index, 0 ).data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
+  job->fetchScope().fetchFullPayload( true );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( templateFetchResult( KJob* ) ) );
+  
+}
+
+void MainView::templateFetchResult( KJob* job)
+{
+  const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  if ( job->error() || fetchJob->items().isEmpty() ) {
+    kDebug() << "error!!";
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n( "Could not fetch template." ),
+                        i18n( "Template Fetching Error" ) );
+    return;
+  }
+
+  const Item item = fetchJob->items().first();
+
+  KMime::Message::Ptr message = MessageCore::Util::message( item );
+  KMime::Message::Ptr newMsg(new KMime::Message);
+  newMsg->setContent( message->encodedContent() );
+  newMsg->parse();
+  // these fields need to be regenerated for the new message
+  newMsg->removeHeader("Date");
+  newMsg->removeHeader("Message-ID");
+  ComposerView *composer = new ComposerView;
+  composer->setMessage( newMsg );
+  composer->show();    
 }
 
 

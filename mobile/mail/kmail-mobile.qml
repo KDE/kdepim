@@ -35,7 +35,7 @@ KPIM.MainView {
   }
 
   QML.Component.onCompleted : updateContextActionStates();
-
+  
   function updateContextActionStates()
   {
     if ( guiStateManager.inHomeScreenState ) {
@@ -52,6 +52,49 @@ KPIM.MainView {
   }
 
   QML.SystemPalette { id: palette; colorGroup: "Active" }
+
+  QML.Rectangle {
+      id : newMailPage
+      anchors.right : kmailMobile.right
+      anchors.rightMargin : 70
+      anchors.left : kmailMobile. left
+      anchors.leftMargin : 70
+      anchors.top : kmailMobile.top
+      anchors.topMargin : 70
+      visible : false
+      color: "lightgray"
+      z: 1
+      QML.Column {
+          anchors.fill: parent
+          QML.ListView {
+              anchors.fill: parent
+              model: _emailTemplateModel
+              focus: true
+              delegate: [
+                  KPIM.Button2 {
+                    width: parent.width
+                    buttonText : display
+                    onClicked : {
+                      application.newMessageFromTemplate( index );
+                      newMailPage.visible = false
+                    }
+                  }
+                ]
+            }
+
+          KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Discard" )
+              onClicked : {
+                newMailPage.visible = false
+              }
+            }
+       }
+       onVisibleChanged: {
+          height = Math.min( application.emailTemplateCount(), 5 ) * 52; //ask on the fly, can change
+       }
+
+  }
 
   QML.Rectangle {
       id : replyOptionsPage

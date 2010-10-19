@@ -111,6 +111,10 @@ ActionMenuContainer {
   ActionListItem {
     category: "single_folder"
     name : "write_new_email"
+      onPressAndHold: {
+          newMailPage.visible = true
+          actionPanel.collapse()
+      }
   }
 
   ActionList {
