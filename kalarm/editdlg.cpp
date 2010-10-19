@@ -48,8 +48,6 @@
 #include "timespinbox.h"
 
 #include <libkdepim/maillistdrag.h>
-#include <kcal/period.h>
-#include <kcal/icaldrag.h>
 
 #include <kglobal.h>
 #include <klocale.h>
