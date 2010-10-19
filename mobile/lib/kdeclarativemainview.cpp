@@ -335,31 +335,24 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeCon
   setItemNaigationAndActionSelectionModels(itemNavigationSelectionModel, itemActionSelectionModel);
 
   if ( d->mListProxy ) {
-    insertItemModelIntoContext(context, d->mListProxy);
+    context->setContextProperty( "itemModel", d->mListProxy );
+
+    QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( d->mItemNavigationSelectionModel, this );
+    QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( d->mItemActionSelectionModel, this );
+
+    d->m_hook = new ItemSelectHook( d->mItemNavigationSelectionModel, this );
+    context->setContextProperty( "_itemSelectHook", QVariant::fromValue( static_cast<QObject*>( d->m_hook ) ) );
+
+    context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
+    context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
+
+    Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory( this );
+    bulkActionBnf->createCheckableBreadcrumbContext( d->mEtm, this );
+    context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
   }
 
   return model;
 }
-
-
-void KDeclarativeMainView::insertItemModelIntoContext(QDeclarativeContext* context, QAbstractItemModel* model)
-{
-  context->setContextProperty( "itemModel", model );
-
-  QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( d->mItemNavigationSelectionModel, this );
-  QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( d->mItemActionSelectionModel, this );
-
-  d->m_hook = new ItemSelectHook( d->mItemNavigationSelectionModel, this );
-  context->setContextProperty( "_itemSelectHook", QVariant::fromValue( static_cast<QObject*>( d->m_hook ) ) );
-
-  context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
-  context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
-
-  Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory( this );
-  bulkActionBnf->createCheckableBreadcrumbContext( d->mEtm, this );
-  context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
-}
-
 
 void KDeclarativeMainView::breadcrumbsSelectionChanged()
 {

@@ -92,6 +92,8 @@
 #include <klinkitemselectionmodel.h>
 #include "breadcrumbnavigation.h"
 #include <qmllistselectionmodel.h>
+#include <qmlcheckableproxymodel.h>
+#include <akonadibreadcrumbnavigationfactory.h>
 
 Q_DECLARE_METATYPE( KMime::Content* )
 QML_DECLARE_TYPE( MessageViewer::MessageViewItem )
@@ -128,13 +130,58 @@ MainView::~MainView()
   view->show();                              \
 }                                            \
 
-
-void MainView::insertItemModelIntoContext(QDeclarativeContext* context, QAbstractItemModel* model)
+QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model)
 {
-  KDeclarativeMainView::insertItemModelIntoContext(context, model);
-
   ThreadGrouperModel *grouper = new ThreadGrouperModel(this);
   grouper->setSourceModel(model);
+
+  model = grouper;
+
+  QAbstractProxyModel *itemFilterModel = createItemFilterModel();
+  if ( itemFilterModel ) {
+    itemFilterModel->setSourceModel( model );
+    model = itemFilterModel;
+  }
+
+  QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel( this );
+  qmlCheckable->setSourceModel( model );
+
+  QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( model, this );
+  qmlCheckable->setSelectionModel( itemActionCheckModel );
+
+  KSelectionProxyModel *checkedItems = new KSelectionProxyModel( itemActionCheckModel, this );
+  checkedItems->setFilterBehavior( KSelectionProxyModel::ExactSelection );
+  checkedItems->setSourceModel( model );
+
+  QItemSelectionModel *itemsSelectionModel = new QItemSelectionModel( model, this );
+
+  QAbstractProxyModel *_listProxy = listProxy();
+
+  if ( _listProxy ) {
+    _listProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
+
+    _listProxy->setSourceModel( qmlCheckable );
+  }
+  KLinkItemSelectionModel *itemNavigationSelectionModel = new KLinkItemSelectionModel( _listProxy, itemsSelectionModel, this );
+
+  KLinkItemSelectionModel *itemActionSelectionModel = new KLinkItemSelectionModel( _listProxy, itemActionCheckModel, this );
+  setItemNaigationAndActionSelectionModels(itemNavigationSelectionModel, itemActionSelectionModel);
+
+  if ( _listProxy ) {
+    context->setContextProperty( "itemModel", _listProxy );
+
+    QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( itemNavigationSelectionModel, this );
+    QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( itemActionSelectionModel, this );
+
+    setHook(new ItemSelectHook( itemNavigationSelectionModel, this ));
+
+    context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
+    context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
+
+    Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory( this );
+    bulkActionBnf->createCheckableBreadcrumbContext( entityTreeModel(), this );
+    context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
+  }
 
   ThreadModel *threads = new ThreadModel(grouper, this);
 
@@ -163,6 +210,8 @@ void MainView::insertItemModelIntoContext(QDeclarativeContext* context, QAbstrac
     view->show();
   }
 #endif
+
+  return model;
 }
 
 

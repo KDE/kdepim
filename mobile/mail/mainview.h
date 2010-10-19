@@ -109,7 +109,7 @@ class MainView : public KDeclarativeMainView
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
 
-    virtual void insertItemModelIntoContext(QDeclarativeContext* context, QAbstractItemModel* model);
+    virtual QAbstractItemModel* createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model);
 
   private slots:
     void qmlInitialized( QDeclarativeView::Status status );
