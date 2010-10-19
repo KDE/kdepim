@@ -85,6 +85,14 @@ ConfigWidget::ConfigWidget( QWidget *parent )
     it.next();
     mHolidayCombo->addItem( it.key(), it.value() );
   }
+
+  // UI workarounds for Maemo5
+#ifdef Q_WS_MAEMO_5
+  ui.kcfg_DayBegins->setEditable( false );
+  ui.kcfg_DailyStartingHour->setEditable( false );
+  ui.kcfg_DailyEndingHour->setEditable( false );
+  ui.kcfg_DefaultAppointmentTime->setEditable( false );
+#endif
 }
 
 void ConfigWidget::setPreferences( const EventViews::PrefsPtr &preferences )
