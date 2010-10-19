@@ -286,6 +286,23 @@ KDeclarativeMainView::~KDeclarativeMainView()
   delete d;
 }
 
+void KDeclarativeMainView::setHook(ItemSelectHook *itemSelectHook)
+{
+  d->m_hook = itemSelectHook;
+  engine()->rootContext()->setContextProperty( "_itemSelectHook", QVariant::fromValue( static_cast<QObject*>( d->m_hook ) ) );
+}
+
+
+void KDeclarativeMainView::setItemNaigationAndActionSelectionModels(QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel)
+{
+  d->mItemNavigationSelectionModel = itemNavigationSelectionModel;
+
+  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
+  d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
+
+  d->mItemActionSelectionModel = itemActionSelectionModel;
+}
+
 QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model)
 {
   d->mItemFilterModel = createItemFilterModel();
@@ -311,12 +328,11 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeCon
 
     d->mListProxy->setSourceModel( qmlCheckable );
   }
-  d->mItemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this );
+  KLinkItemSelectionModel *itemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this );
 
-  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
-  d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
+  KLinkItemSelectionModel *itemActionSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemActionCheckModel, this );
 
-  d->mItemActionSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemActionCheckModel, this );
+  setItemNaigationAndActionSelectionModels(itemNavigationSelectionModel, itemActionSelectionModel);
 
   if ( d->mListProxy ) {
     insertItemModelIntoContext(context, d->mListProxy);
@@ -705,6 +721,11 @@ void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selecti
 QAbstractProxyModel* KDeclarativeMainView::itemFilterModel() const
 {
   return d->mItemFilterModel;
+}
+
+QAbstractProxyModel* KDeclarativeMainView::listProxy() const
+{
+  return d->mListProxy;
 }
 
 QAbstractProxyModel* KDeclarativeMainView::createItemFilterModel() const
