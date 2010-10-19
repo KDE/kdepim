@@ -162,8 +162,18 @@ void KAddrBookExternal::addEmail( const QString& addr, QWidget *parent) {
   ab->setErrorHandler( 0 );
 }
 
-void KAddrBookExternal::openAddressBook(QWidget *) {
-  kapp->startServiceByDesktopName( "kaddressbook" );
+void KAddrBookExternal::openAddressBook( QWidget *parent )
+{
+  QString errStr;
+  if ( kapp->startServiceByDesktopName( "kaddressbook", QString(), &errStr ) > 0 ) {
+    QString txt;
+    if ( !errStr.isEmpty() ) {
+      txt = i18n( "<qt>Unable to open kaddressbook.<p>Error: \"%1\"</qt>" ).arg( errStr );
+    } else {
+      txt = i18n( "<qt>Unable to open kaddressbook.<p>Error:  unknown.</qt>" );
+    }
+    KMessageBox::sorry( parent, txt );
+  }
 }
 
 void KAddrBookExternal::addNewAddressee( QWidget* )
@@ -208,7 +218,7 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee& addr )
 {
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
   KABC::Resource *kabcResource = selectResourceForSaving( addressBook );
-  if( !kabcResource ) 
+  if( !kabcResource )
      return false;
   KABC::Ticket *ticket = addressBook->requestSaveTicket( kabcResource );
   bool saved = false;
