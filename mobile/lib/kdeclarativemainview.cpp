@@ -79,7 +79,8 @@
 #include <sys/utsname.h>
 
 #define VIEW(model) {                        \
-  QTreeView *view = new QTreeView;           \
+  QTreeView *view = new QTreeView( this );   \
+  view->setWindowFlags( Qt::Window );        \
   view->setAttribute(Qt::WA_DeleteOnClose);  \
   view->setModel(model);                     \
   view->setWindowTitle(#model);              \
