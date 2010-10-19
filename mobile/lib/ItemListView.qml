@@ -66,8 +66,6 @@ QML.Rectangle {
   QML.ListView {
     id: itemListView
     anchors.fill: parent
-    highlightFollowsCurrentItem: true
-    highlightRangeMode: "ApplyRange"
     focus: true
     clip: true
   }
