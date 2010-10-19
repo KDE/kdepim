@@ -207,6 +207,14 @@ static QVector<QByteArray> getRemovableItems(const QHash<QByteArray, QSet<QByteA
   return items;
 }
 
+
+static void addToPending(QHash<QByteArray, QSet<QByteArray> > &pendingThreads, const QByteArray& inReplyTo, const QByteArray& identifier)
+{
+  QSet<QByteArray> existingResponses = pendingThreads.take(identifier);
+  pendingThreads[inReplyTo].insert(identifier);
+  pendingThreads[inReplyTo].unite(existingResponses);
+}
+
 void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
 {
   Q_Q(const ThreadGrouperModel);
@@ -234,7 +242,7 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
       const QHash<QByteArray, QSet<QByteArray> >::const_iterator it = findValue(m_threads, inReplyTo);
       const QHash<QByteArray, QSet<QByteArray> >::const_iterator end = m_threads.constEnd();
       if (it == end) {
-        pendingThreads[inReplyTo].insert(identifier);
+        addToPending(pendingThreads, inReplyTo, identifier);
         m_threadItems[identifier] = item;
         m_allItems[identifier] = item;
         m_messageMap[item] = identifier;
@@ -252,6 +260,13 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
       m_threadItems[identifier] = item;
       m_messageMap[item] = identifier;
     }
+  }
+  QHash<QByteArray, QSet<QByteArray> >::const_iterator pendingIt = pendingThreads.constBegin();
+  const QHash<QByteArray, QSet<QByteArray> >::const_iterator pendingEnd = pendingThreads.constEnd();
+  for ( ; pendingIt != pendingEnd; ++pendingIt) {
+    foreach(const QByteArray &ba, pendingIt.value())
+      m_threadItems.remove(ba);
+    m_threads[pendingIt.key()].unite(pendingIt.value());
   }
 }
 
