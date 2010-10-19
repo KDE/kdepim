@@ -268,7 +268,6 @@ void MainView::delayedInit()
 
   connect( actionCollection()->action( "mark_message_important" ), SIGNAL( triggered( bool ) ), SLOT( markImportant( bool ) ) );
   connect( actionCollection()->action( "mark_message_action_item" ), SIGNAL( triggered( bool ) ), SLOT( markMailTask( bool ) ) );
-  connect( actionCollection()->action( "write_new_email" ), SIGNAL( triggered( bool ) ), SLOT( startComposer() ) );
   connect( actionCollection()->action( "send_queued_emails" ), SIGNAL( triggered( bool ) ), SLOT( sendQueued() ) );
   connect( actionCollection()->action( "send_queued_emails_via" ), SIGNAL( triggered( bool ) ), SLOT( sendQueuedVia() ) );
   connect( actionCollection()->action( "message_reply" ), SIGNAL( triggered( bool ) ), SLOT( replyToMessage() ) );
