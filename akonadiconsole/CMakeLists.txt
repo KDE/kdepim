@@ -92,5 +92,5 @@ target_link_libraries( akonadiconsole_bin
 )
 
 install( TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install( FILES akonadiconsole.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
+install( PROGRAMS akonadiconsole.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES akonadiconsoleui.rc DESTINATION ${DATA_INSTALL_DIR}/akonadiconsole )

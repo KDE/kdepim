@@ -111,7 +111,7 @@ if(QGPGME_FOUND)
 endif(QGPGME_FOUND)
 
 install(TARGETS kaddressbook ${INSTALL_TARGETS_DEFAULT_ARGS})
-install( FILES kaddressbook.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( PROGRAMS kaddressbook.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kaddressbookui.rc  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 
 

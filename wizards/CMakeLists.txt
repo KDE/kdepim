@@ -81,6 +81,6 @@ endif(KDEPIM_BUILD_EVERYTHING)
 ########### next target ###############
 
 if(KDEPIM_BUILD_EVERYTHING)
-  install(FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+  install(PROGRAMS groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
   install(FILES groupwise.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 endif(KDEPIM_BUILD_EVERYTHING)

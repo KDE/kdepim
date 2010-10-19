@@ -111,6 +111,6 @@ install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 
-install( FILES ../blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
+install( PROGRAMS ../blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
 install( FILES blogilo.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES blogiloui.rc composer/texteditor/TextEditorInitialHtml  DESTINATION  ${DATA_INSTALL_DIR}/blogilo )

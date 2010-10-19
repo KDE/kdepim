@@ -347,7 +347,7 @@ install(TARGETS kleopatra_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
-install( FILES kleopatra.desktop
+install( PROGRAMS kleopatra.desktop
                kleopatra_import.desktop
          DESTINATION ${XDG_APPS_INSTALL_DIR} )
 

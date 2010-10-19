@@ -29,5 +29,5 @@ install(TARGETS konsolekalendar  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
-install( FILES konsolekalendar.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( PROGRAMS konsolekalendar.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 
