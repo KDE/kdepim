@@ -64,9 +64,6 @@ KPIM.ActionList {
   KPIM.ScriptActionItem {
     name : "configure"
     title : KDE.i18n( "Configure" )
-    onPressAndHold: {
-      longPressed(name);
-    }
   }
 
   KPIM.ActionListItem {
@@ -79,9 +76,6 @@ KPIM.ActionList {
   KPIM.ScriptActionItem  {
     name : "show_about_dialog"
     title : KDE.i18n( "About" )
-    onPressAndHold: {
-      longPressed(name);
-    }
   }
 
   QML.Component.onCompleted :
