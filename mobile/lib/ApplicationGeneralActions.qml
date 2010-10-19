@@ -28,15 +28,26 @@ KPIM.ActionList {
   id : actions
 
   property string type
+  signal longPressed(string actionName)
 
   KPIM.ActionListItem {
     name : "quit"
+    onPressAndHold: {
+      longPressed(name);
+    }
   }
+
   KPIM.ActionListItem {
     name : "wm_task_switch"
+    onPressAndHold: {
+      longPressed(name);
+    }
   }
   KPIM.ActionListItem {
     name : "add_new_" + type
+    onPressAndHold: {
+      longPressed(name);
+    }
   }
   // TODO: implement us!
 /*  KPIM.FakeAction {
@@ -45,18 +56,32 @@ KPIM.ActionList {
 */
   KPIM.ActionListItem {
     name : "akonadi_work_offline"
+    onPressAndHold: {
+      longPressed(name);
+    }
   }
+
   KPIM.ScriptActionItem {
     name : "configure"
     title : KDE.i18n( "Configure" )
+    onPressAndHold: {
+      longPressed(name);
+    }
   }
+
   KPIM.ActionListItem {
     name : "report_bug"
+    onPressAndHold: {
+      longPressed(name);
+    }
   }
 
   KPIM.ScriptActionItem  {
     name : "show_about_dialog"
     title : KDE.i18n( "About" )
+    onPressAndHold: {
+      longPressed(name);
+    }
   }
 
   QML.Component.onCompleted :

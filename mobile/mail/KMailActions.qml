@@ -200,5 +200,12 @@ ActionMenuContainer {
     text : KDE.i18n( "Mail" )
     type : "mail"
 
+    onLongPressed : {
+      if ( actionName == "add_new_mail" ) {
+          newMailPage.visible = true
+          actionPanel.collapse()
+      }        
+    }
+
   }
 }
