@@ -192,6 +192,17 @@ void KDeclarativeMainView::delayedInit()
     kWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
   }
 
+  QDeclarativeContext *context = engine()->rootContext();
+
+  context->setContextProperty( "_breadcrumbNavigationFactory", d->mBnf );
+
+  d->mMultiBnf = new Akonadi::BreadcrumbNavigationFactory( this );
+  d->mMultiBnf->createCheckableBreadcrumbContext( d->mEtm, this );
+
+  context->setContextProperty( "_multiSelectionComponentFactory", d->mMultiBnf );
+
+  context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
+
   Akonadi::EntityMimeTypeFilterModel *filterModel = new Akonadi::EntityMimeTypeFilterModel( this );
   filterModel->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   filterModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
@@ -231,17 +242,6 @@ void KDeclarativeMainView::delayedInit()
   if ( debugTiming ) {
     kWarning() << "Begin inserting QML context" << time.elapsed() << &time;
   }
-
-  QDeclarativeContext *context = engine()->rootContext();
-
-  context->setContextProperty( "_breadcrumbNavigationFactory", d->mBnf );
-
-  d->mMultiBnf = new Akonadi::BreadcrumbNavigationFactory( this );
-  d->mMultiBnf->createCheckableBreadcrumbContext( d->mEtm, this );
-
-  context->setContextProperty( "_multiSelectionComponentFactory", d->mMultiBnf );
-
-  context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
 
   if ( d->mListProxy ) {
     insertItemModelIntoContext(context, d->mListProxy);
