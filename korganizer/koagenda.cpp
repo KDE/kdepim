@@ -1246,6 +1246,7 @@ void KOAgenda::setNoActionCursor( KOAgendaItem::GPtr moveItem, const QPoint& vie
 
 
 /** calculate the width of the column subcells of the given item
+ Note: For all day events, it's the height, this function's name is misleading
 */
 double KOAgenda::calcSubCellWidth( KOAgendaItem::GPtr item )
 {
@@ -1258,7 +1259,7 @@ double KOAgenda::calcSubCellWidth( KOAgendaItem::GPtr item )
   pt1 = gridToContents( QPoint( item->cellXLeft(), item->cellYTop() ) +
                         QPoint( 1, 1 ) );
   pt1 -= pt;
-  const int maxSubCells = item->subCells();
+  int maxSubCells = item->subCells();
   double newSubCellWidth;
   if ( mAllDayMode ) {
     newSubCellWidth = double( pt1.y() ) / maxSubCells;
@@ -1335,6 +1336,9 @@ void KOAgenda::placeAgendaItem( KOAgendaItem::GPtr item, double subCellWidth )
   place spans. When the sub cell width change of one of this items affects a
   cell, where other items are, which do not overlap in Y with the item to place,
   the display gets corrupted, although the corruption looks quite nice.
+
+  18/10/2010 UPDATE: this is fixed with to the updateWidthsRecursivley()
+  call. kolab/issue2762.
 */
 void KOAgenda::placeSubCells( KOAgendaItem::GPtr placeItem )
 {
@@ -1367,14 +1371,21 @@ void KOAgenda::placeSubCells( KOAgendaItem::GPtr placeItem )
 
   QPtrList<KOrg::CellItem> items = KOrg::CellItem::placeItem( cells,
                                                               placeItem );
+  QPtrList<KOAgendaItem> updatedCells;
 
-  placeItem->setConflictItems( AgendaItemList() );
-  double newSubCellWidth = calcSubCellWidth( placeItem );
   KOrg::CellItem *i;
+  placeItem->setConflictItems( AgendaItemList() );
+  const double newSubCellWidth = calcSubCellWidth( placeItem );
   for ( i = items.first(); i; i = items.next() ) {
     KOAgendaItem *item = static_cast<KOAgendaItem *>( i );
     placeAgendaItem( item, newSubCellWidth );
     item->addConflictItem( placeItem );
+
+    if ( placeItem->incidence() && placeItem->incidence()->doesFloat() ) {
+      // untested for non-allday incidences, hence the check.
+      updateWidthsRecursivley( item, updatedCells, placeItem->subCells() );
+    }
+
     placeItem->addConflictItem( item );
   }
   if ( items.isEmpty() ) {
@@ -1383,14 +1394,41 @@ void KOAgenda::placeSubCells( KOAgendaItem::GPtr placeItem )
   placeItem->update();
 }
 
+/** static */
+bool KOAgenda::updateWidthsRecursivley( KOAgendaItem *item,
+                                        QPtrList<KOAgendaItem> &itemsAlreadyUpdated,
+                                        int numSubCells )
+{
+  bool result = false;
+  if ( !itemsAlreadyUpdated.contains( item ) ) {
+    item->setSubCells( numSubCells );
+
+    // So we don't end up in infinit recursion due to cycles.
+    itemsAlreadyUpdated.append( item );
+
+    // Tell our neighbours too.
+    AgendaItemList list = item->conflictItems();
+
+    for ( int i = 0; i < list.count(); ++i ) {
+      KOAgendaItem::GPtr it = list[i];
+      if ( it && numSubCells > it->subCells() ) {
+        updateWidthsRecursivley( it, itemsAlreadyUpdated, numSubCells );
+        result = true;
+      }
+    }
+  }
+
+  return result;
+}
+
 int KOAgenda::columnWidth( int column )
 {
-  int start = gridToContents( QPoint( column, 0 ) ).x();
+  const int start = gridToContents( QPoint( column, 0 ) ).x();
   if (KOGlobals::self()->reverseLayout() )
     column--;
   else
     column++;
-  int end = gridToContents( QPoint( column, 0 ) ).x();
+  const int end = gridToContents( QPoint( column, 0 ) ).x();
   return end - start;
 }
 /*
@@ -1920,7 +1958,9 @@ void KOAgenda::resizeEvent ( QResizeEvent *ev )
 
 void KOAgenda::resizeAllContents()
 {
+  // For allday this is actually an height.
   double subCellWidth;
+
   if ( mItems.count() > 0 ) {
     KOAgendaItem::GPtr item;
     if ( mAllDayMode ) {

@@ -132,7 +132,7 @@ class KOAgenda : public QScrollView
     double gridSpacingX() const { return mGridSpacingX; }
     double gridSpacingY() const { return mGridSpacingY; }
 
-//    virtual QSizePolicy sizePolicy() const;
+    // virtual QSizePolicy sizePolicy() const;
 
     void clear();
 
@@ -296,6 +296,9 @@ class KOAgenda : public QScrollView
     void resizeAllContents();
 
   private:
+    static bool updateWidthsRecursivley( KOAgendaItem *item,
+                                         QPtrList<KOAgendaItem> &itemsAlreadyUpdated,
+                                         int numSubCells );
     void init();
     void marcus_bains();
     bool mAllDayMode;
