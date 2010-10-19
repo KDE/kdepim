@@ -24,13 +24,15 @@
 
 #include <QtCore/QObject>
 
+#include "mobileui_export.h"
+
 class QAbstractItemModel;
 class QDeclarativeContext;
 class QItemSelectionModel;
 
 class KBreadcrumbNavigationFactoryPrivate;
 
-class KBreadcrumbNavigationFactory : public QObject
+class MOBILEUI_EXPORT KBreadcrumbNavigationFactory : public QObject
 {
   Q_OBJECT
   Q_PROPERTY( QString selectedDisplayText READ selectedDisplayText NOTIFY selectedDisplayTextChanged )

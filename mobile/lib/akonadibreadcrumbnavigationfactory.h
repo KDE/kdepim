@@ -24,10 +24,12 @@
 
 #include "breadcrumbnavigationcontext.h"
 
+#include "mobileui_export.h"
+
 namespace Akonadi
 {
 
-class BreadcrumbNavigationFactory : public KBreadcrumbNavigationFactory
+class MOBILEUI_EXPORT BreadcrumbNavigationFactory : public KBreadcrumbNavigationFactory
 {
   Q_OBJECT
 
