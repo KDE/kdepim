@@ -364,7 +364,7 @@
         <property name="currentIndex">
          <number>3</number>
         </property>
-        <widget class="QWidget" name="WStackPage">
+        <widget class="QWidget" name="PageDisplayText">
          <layout class="QVBoxLayout">
           <property name="spacing">
            <number>6</number>
@@ -394,7 +394,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="WStackPage">
+        <widget class="QWidget" name="PageSoundFile">
          <layout class="QVBoxLayout">
           <property name="spacing">
            <number>6</number>
@@ -443,7 +443,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="WStackPage">
+        <widget class="QWidget" name="PageApplication">
          <layout class="QVBoxLayout">
           <property name="spacing">
            <number>6</number>
@@ -512,7 +512,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="WStackPage">
+        <widget class="QWidget" name="PageEmail">
          <layout class="QGridLayout">
           <property name="margin">
            <number>0</number>
