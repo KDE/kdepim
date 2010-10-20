@@ -205,10 +205,11 @@ public:
 
   /**
    * Check if the mail has references to attachments, but no attachments are added to it.
+   * If missing attachments are found, a dialog to add new attachments is shown.
    * @param attachmentKeywords a list with the keywords that indicate an attachment should be present
-   * @return true, if the mail might miss attachments, false otherwise
+   * @return true, if the mail might miss attachments, usually sending should be aborted, false otherwise
    */
-  bool checkForMissingAttachments( const QStringList &attachmentKeywords ) const;
+  bool checkForMissingAttachments( const QStringList &attachmentKeywords ) ;
 
 public slots:
 
