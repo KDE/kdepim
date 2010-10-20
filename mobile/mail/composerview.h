@@ -64,8 +64,6 @@ class ComposerView : public KDeclarativeFullScreenView
     void setBusy(bool busy);
     void setAutoSaveFileName(const QString &fileName);
 
-    void setMDNRequested( bool requestMDN );
-
   public slots:
     void setMessage( const KMime::Message::Ptr &msg );
     QObject* getAction( const QString &name ) const;
@@ -98,7 +96,6 @@ class ComposerView : public KDeclarativeFullScreenView
     void signEmail( bool sign ) { m_sign = sign; }
     void encryptEmail( bool encrypt ) { m_encrypt = encrypt; }
     void urgentEmail ( bool urgent ) { m_urgent = urgent; }
-    void mdnRequestEmail ( bool request ) { m_mdnrequested = request; }
 
     void saveDraft();
     void saveAsTemplate();
@@ -116,7 +113,6 @@ class ComposerView : public KDeclarativeFullScreenView
     bool m_busy;
     bool m_draft;
     bool m_urgent;
-    bool m_mdnrequested;
     QString m_fileName;
 };
 

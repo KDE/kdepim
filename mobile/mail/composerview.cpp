@@ -23,6 +23,7 @@
 #include "mobilekernel.h"
 #include "declarativewidgetbase.h"
 #include "declarativeidentitycombobox.h"
+#include "settings.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitycombo.h>
@@ -44,6 +45,7 @@
 #include <messagecomposer/keyresolver.h>
 #include <messagecomposer/kleo_util.h>
 #include <messagecomposer/recipientseditor.h>
+#include <messagecomposer/util.h>
 #include <akonadi/collectioncombobox.h>
 
 #include <klocalizedstring.h>
@@ -74,7 +76,6 @@ ComposerView::ComposerView(QWidget* parent) :
   m_busy( false ),
   m_draft( false ),
   m_urgent( false ),
-  m_mdnrequested( false ),
   m_fileName ( QString() )
 {
   setSubject( QString() );
@@ -267,19 +268,24 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
       }
   }
 
+  m_composerBase->setSubject( m_subject ); //needed by checkForMissingAttachments
+
+  if ( Settings::self()->composerDetectMissingAttachments() && m_composerBase->checkForMissingAttachments( Message::Util::AttachmentKeywords() ) ) {
+    return;
+  }
+
   setBusy(true);
 
   const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
   m_composerBase->setFrom( identity.fullEmailAddr() );
   m_composerBase->setReplyTo( identity.replyToAddr() );
-  m_composerBase->setSubject( m_subject );
 
   m_composerBase->setCryptoOptions( m_sign, m_encrypt, Kleo::AutoFormat );
 
   // Default till UI exists
   //  m_composerBase->setCharsets( );
   m_composerBase->setUrgent( m_urgent );
-  m_composerBase->setMDNRequested( m_mdnrequested );
+  m_composerBase->setMDNRequested( Settings::self()->composerRequestMDN() );
 
   m_composerBase->send( method, saveIn );
 }
@@ -464,11 +470,6 @@ void ComposerView::setAutoSaveFileName(const QString &fileName)
   //###: the idea is to set the filename directly in ComposerViewBase,
   // but it is not working as expected yet.
   //m_composerBase->setAutoSaveFileName( fileName );
-}
-
-void ComposerView::setMDNRequested( bool requestMDN )
-{
-  m_composerBase->setMDNRequested( requestMDN );
 }
 
 
