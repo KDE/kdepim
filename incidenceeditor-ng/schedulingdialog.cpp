@@ -98,7 +98,10 @@ SchedulingDialog::~SchedulingDialog()
 void SchedulingDialog::slotUpdateIncidenceStartEnd( const KDateTime &startDateTime,
                                                     const KDateTime &endDateTime )
 {
-#ifndef KDEPIM_MOBILE_UI
+#ifdef KDEPIM_MOBILE_UI
+  Q_UNUSED( startDateTime );
+  Q_UNUSED( endDateTime );
+#else
   mVisualWidget->slotUpdateIncidenceStartEnd( startDateTime, endDateTime );
 #endif
 }
