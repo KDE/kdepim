@@ -23,6 +23,7 @@
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QWidget>
 
+class KCModuleProxy;
 class KComboBox;
 class KConfigDialogManager;
 
@@ -40,6 +41,7 @@ class ConfigWidget : public QWidget
   private:
     KConfigDialogManager *mManager;
     KComboBox *mMapServiceBox;
+    KCModuleProxy *mLdapConfigWidget;
 };
 
 class DeclarativeConfigWidget : public QGraphicsProxyWidget
