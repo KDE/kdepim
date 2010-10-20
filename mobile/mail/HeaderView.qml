@@ -73,6 +73,14 @@ KPIM.ItemListView {
           color : model.is_unread ? "#E10909" : "#3B3B3B"
           elide: "ElideRight"
         },
+        QML.Text {
+          id : threadInfoLabel
+          visible : model.threadSize != undefined && model.threadSize > 1
+          anchors.bottom : parent.bottom
+          anchors.right : parent.right
+          height : (model.threadSize != undefined) ? 30 : 0
+          text : KDE.i18ncp("This text is only visible if messages > 1", "%2 messages, %1 unread", "%2 messages, %1 unread", model.threadUnreadCount, model.threadSize);
+        },
         QML.Image {
           id : importantFlagImage
           anchors.verticalCenter : parent.verticalCenter;
