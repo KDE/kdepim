@@ -243,11 +243,11 @@ void MainView::showRegularCalendar()
 
 void MainView::setCurrentEventItemId( qint64 id )
 {
-  const QModelIndexList list = itemModel()->match( itemModel()->index( 0, 0 ), EntityTreeModel::ItemIdRole, id, 1 );
-  if ( list.isEmpty() )
+  const QModelIndexList list = EntityTreeModel::modelIndexesForItem(itemSelectionModel()->model(), Item(id));
+  if (list.isEmpty())
     return;
-
-  setListSelectedRow( list.first().row() );
+  const QModelIndex idx = list.first();
+  itemSelectionModel()->select(QItemSelection(idx, idx), QItemSelectionModel::ClearAndSelect);
 }
 
 void MainView::newEvent()
