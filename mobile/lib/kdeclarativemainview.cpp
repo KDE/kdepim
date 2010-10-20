@@ -369,7 +369,7 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeCon
     d->m_hook = new ItemSelectHook( d->mItemNavigationSelectionModel, this );
     context->setContextProperty( "_itemSelectHook", QVariant::fromValue( static_cast<QObject*>( d->m_hook ) ) );
 
-    context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
+    context->setContextProperty( "_itemNavigationModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
     context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
 
     Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory( this );
