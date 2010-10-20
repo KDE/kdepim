@@ -119,6 +119,8 @@ KPIM.MainView {
       height: 70
       icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
       onClicked: {
+        _itemActionModel.select(-1, 1)
+        _itemNavigationModel.select(-1, 1)
         guiStateManager.popState();
       }
     }
@@ -143,6 +145,8 @@ KPIM.MainView {
         MouseArea {
           anchors.fill : parent;
           onClicked : {
+            _itemActionModel.select(-1, 1)
+            _itemNavigationModel.select(-1, 1)
             guiStateManager.popState();
           }
         }
@@ -192,6 +196,8 @@ KPIM.MainView {
         MouseArea {
           anchors.fill : parent;
           onClicked : {
+            _itemActionModel.select(-1, 1)
+            _itemNavigationModel.select(-1, 1)
             guiStateManager.popState();
           }
         }
@@ -236,6 +242,8 @@ KPIM.MainView {
         MouseArea {
           anchors.fill : parent;
           onClicked : {
+            _itemActionModel.select(-1, 1)
+            _itemNavigationModel.select(-1, 1)
             guiStateManager.popState();
           }
         }
@@ -279,6 +287,8 @@ KPIM.MainView {
         MouseArea {
           anchors.fill : parent;
           onClicked : {
+            _itemActionModel.select(-1, 1)
+            _itemNavigationModel.select(-1, 1)
             guiStateManager.popState();
           }
         }
@@ -291,6 +301,8 @@ KPIM.MainView {
       model: itemModel
       checkModel : _itemActionModel
       anchors { fill: parent; topMargin: 30; leftMargin: 40 }
+
+      navigationModel : _itemNavigationModel
 
       onItemSelected: {
          if ( currentItemId > 0 ) {
