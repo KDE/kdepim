@@ -53,19 +53,19 @@ using namespace GpgME;
 ExportSecretKeyCommand::ExportSecretKeyCommand( KeyListController * c )
     : GnuPGProcessCommand( c )
 {
-
+    setShowsOutputWindow( true );
 }
 
 ExportSecretKeyCommand::ExportSecretKeyCommand( QAbstractItemView * v, KeyListController * c )
     : GnuPGProcessCommand( v, c )
 {
-
+    setShowsOutputWindow( true );
 }
 
 ExportSecretKeyCommand::ExportSecretKeyCommand( const Key & key )
     : GnuPGProcessCommand( key )
 {
-
+    setShowsOutputWindow( true );
 }
 
 ExportSecretKeyCommand::~ExportSecretKeyCommand() {}
