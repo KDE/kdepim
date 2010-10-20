@@ -235,6 +235,7 @@ KPIM.MainView {
       QML.Connections {
         target : _itemNavigationModel
         onCurrentRowChanged : {
+          taskView.itemId = _itemNavigationModel.currentItemIdHack
           guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
         }
       }
