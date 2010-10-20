@@ -203,6 +203,13 @@ public:
   
   void setParentWidgetForGui( QWidget* );
 
+  /**
+   * Check if the mail has references to attachments, but no attachments are added to it.
+   * @param attachmentKeywords a list with the keywords that indicate an attachment should be present
+   * @return true, if the mail might miss attachments, false otherwise
+   */
+  bool checkForMissingAttachments( const QStringList &attachmentKeywords ) const;
+
 public slots:
 
   void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent );

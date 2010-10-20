@@ -63,6 +63,7 @@
 #include <QtCore/QTextCodec>
 #include <recentaddresses.h>
 #include "messagecomposersettings.h"
+#include "messagehelper.h"
 
 Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  : QObject ( parent )
@@ -1262,4 +1263,44 @@ bool Message::ComposerViewBase::inlineSigningEncryptionSelected()
   return m_cryptoMessageFormat == Kleo::InlineOpenPGPFormat;
 }
 
+bool Message::ComposerViewBase::checkForMissingAttachments( const QStringList& attachmentKeywords ) const
+{
+  if ( m_attachmentModel->rowCount() > 0 ) {
+    return false;
+  }
+
+  QStringList attachWordsList = attachmentKeywords;
+  if ( attachWordsList.isEmpty() ) {
+    return false;
+  }
+
+  QRegExp rx ( QString::fromLatin1("\\b") +
+               attachWordsList.join( QString::fromLatin1("\\b|\\b") ) +
+               QString::fromLatin1("\\b") );
+  rx.setCaseSensitivity( Qt::CaseInsensitive );
+
+  bool gotMatch = false;
+
+  // check whether the subject contains one of the attachment key words
+  // unless the message is a reply or a forwarded message
+  QString subj = subject();
+  gotMatch = ( MessageHelper::stripOffPrefixes( subj ) == subj ) && ( rx.indexIn( subj ) >= 0 );
+
+  if ( !gotMatch ) {
+    // check whether the non-quoted text contains one of the attachment key
+    // words
+    QRegExp quotationRx( QString::fromLatin1("^([ \\t]*([|>:}#]|[A-Za-z]+>))+") );
+    QTextDocument *doc = m_editor->document();
+    for ( QTextBlock it = doc->begin(); it != doc->end(); it = it.next() ) {
+      QString line = it.text();
+      gotMatch = ( quotationRx.indexIn( line ) < 0 ) &&
+                 ( rx.indexIn( line ) >= 0 );
+      if ( gotMatch ) {
+        break;
+      }
+    }
+  }
+
+  return gotMatch;
+}
 
