@@ -15,6 +15,7 @@ set(mobileui_SRCS
     favoriteslistmodel.cpp
     guistatemanager.cpp
     importhandlerbase.cpp
+    kcolorcombo.cpp
     kdeclarativeapplication.cpp
     kdeclarativefullscreenview.cpp
     kdeclarativemainview.cpp

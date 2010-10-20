@@ -128,7 +128,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="KColorCombo" name="kcfg_TodoDueColor"/>
+        <widget class="KPIM::KColorCombo" name="kcfg_TodoDueColor"/>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_10">
@@ -138,7 +138,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="KColorCombo" name="kcfg_TodoOverdueColor"/>
+        <widget class="KPIM::KColorCombo" name="kcfg_TodoOverdueColor"/>
        </item>
       </layout>
      </item>
@@ -148,7 +148,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KColorCombo</class>
+   <class>KPIM::KColorCombo</class>
    <extends>QComboBox</extends>
    <header>kcolorcombo.h</header>
   </customwidget>
