@@ -249,7 +249,7 @@ KPIM.MainView {
     visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
 
     SlideoutPanel {
-      id: actionPanelNew
+      id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handlePosition : 125
       handleHeight: 150
@@ -264,34 +264,34 @@ KPIM.MainView {
             KPIM.ScriptAction {
               name : "show_about_dialog"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 aboutDialog.visible = true
               }
             },
             KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
               }
             },
             KPIM.ScriptAction {
               name : "add_as_favorite"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 application.saveFavorite();
               }
             },
             KPIM.ScriptAction {
               name : "start_maintenance"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
               }
             }
           ]
 
-          onDoCollapse : actionPanelNew.collapse();
+          onDoCollapse : actionPanel.collapse();
         }
       ]
     }

@@ -248,7 +248,7 @@ KPIM.MainView {
     visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
 
     SlideoutPanel {
-      id: actionPanelNew
+      id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handlePosition : 125
       handleHeight: 150
@@ -263,35 +263,35 @@ KPIM.MainView {
             KPIM.ScriptAction {
               name : "show_about_dialog"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 aboutDialog.visible = true
               }
             },
             KPIM.ScriptAction {
               name : "configure"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 configDialog.visible = true;
               }
             },
             KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState )
               }
             },
             KPIM.ScriptAction {
               name : "add_as_favorite"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 application.saveFavorite();
               }
             },
             KPIM.ScriptAction {
               name : "start_maintenance"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
               }
             },
@@ -299,23 +299,23 @@ KPIM.MainView {
               name : "edit_todo"
               script : {
                 application.editIncidence( taskView.item );
-                actionPanelNew.collapse();
+                actionPanel.collapse();
               }
             }
           ]
 
-          onDoCollapse : actionPanelNew.collapse();
+          onDoCollapse : actionPanel.collapse();
         }
       ]
     }
 
     SlideoutPanel {
       anchors.fill: parent
-      handlePosition : actionPanelNew.handlePosition + actionPanelNew.handleHeight
+      handlePosition : actionPanel.handlePosition + actionPanel.handleHeight
       id: attachmentPanel
       visible: (taskView.attachmentModel.attachmentCount >= 1) && guiStateManager.inViewSingleItemState
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      handleHeight: parent.height - actionPanel.handlePosition - actionPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       content: [
         KPIM.AttachmentList {
           id: attachmentView

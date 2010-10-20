@@ -481,7 +481,7 @@ KPIM.MainView {
     visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
 
     SlideoutPanel {
-      id: actionPanelNew
+      id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handlePosition : 125
       handleHeight: 150
@@ -496,28 +496,28 @@ KPIM.MainView {
             KPIM.ScriptAction {
               name : "show_about_dialog"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 aboutDialog.visible = true
               }
             },
             KPIM.ScriptAction {
               name : "configure"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 configDialog.visible = true;
               }
             },
             KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
               }
             },
             KPIM.ScriptAction {
               name : "add_as_favorite"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 application.saveFavorite();
               }
             },
@@ -526,7 +526,7 @@ KPIM.MainView {
               script: {
                 guiStateManager.switchState( Events.EventsGuiStateManager.ViewWeekState );
                 agenda.showRange( dateEdit.date, 0 /* "Day" */ );
-                actionPanelNew.collapse();
+                actionPanel.collapse();
               }
             },
             KPIM.ScriptAction {
@@ -534,7 +534,7 @@ KPIM.MainView {
               script : {
                 guiStateManager.switchState( Events.EventsGuiStateManager.ViewWeekState );
                 agenda.showRange( dateEdit.date, 3 /** 3 days*/ );
-                actionPanelNew.collapse();
+                actionPanel.collapse();
               }
             },
             KPIM.ScriptAction {
@@ -542,7 +542,7 @@ KPIM.MainView {
               script: {
                 guiStateManager.switchState( Events.EventsGuiStateManager.ViewWeekState );
                 agenda.showRange( dateEdit.date, 1 /* "Week" */ );
-                actionPanelNew.collapse();
+                actionPanel.collapse();
               }
             },
             KPIM.ScriptAction {
@@ -550,7 +550,7 @@ KPIM.MainView {
               script: {
                 guiStateManager.switchState( Events.EventsGuiStateManager.ViewWeekState );
                 agenda.showRange( dateEdit.date, 2 /* "WorkWeek" */ );
-                actionPanelNew.collapse();
+                actionPanel.collapse();
               }
             },
             KPIM.ScriptAction {
@@ -558,50 +558,50 @@ KPIM.MainView {
               script: {
                 guiStateManager.switchState( Events.EventsGuiStateManager.ViewMonthState );
                 month.showMonth( dateEdit.date );
-                actionPanelNew.collapse();
+                actionPanel.collapse();
               }
             },
              KPIM.ScriptAction {
               name : "eventlist_layout"
               script: {
                 guiStateManager.switchState( Events.EventsGuiStateManager.ViewEventListState );
-                actionPanelNew.collapse();
+                actionPanel.collapse();
               }
             },
            KPIM.ScriptAction {
               name : "show_today"
               script : {
                 agenda.showToday();
-                actionPanelNew.collapse();
+                actionPanel.collapse();
               }
             },
             KPIM.ScriptAction {
               name : "start_maintenance"
               script : {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
               }
             },
             KPIM.ScriptAction {
               name : "edit_event"
               script: {
-                actionPanelNew.collapse();
+                actionPanel.collapse();
                 application.editIncidence( eventView.item, eventView.activeDate );
               }
             }
           ]
 
-          onDoCollapse : actionPanelNew.collapse();
+          onDoCollapse : actionPanel.collapse();
         }
       ]
     }
     SlideoutPanel {
       anchors.fill: parent
-      handlePosition : actionPanelNew.handlePosition + actionPanelNew.handleHeight
+      handlePosition : actionPanel.handlePosition + actionPanel.handleHeight
       id: attachmentPanel
       visible: (eventView.attachmentModel.attachmentCount >= 1) && guiStateManager.inViewSingleItemState
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handleHeight: parent.height - actionPanelNew.handlePosition - actionPanelNew.handleHeight - anchors.topMargin - anchors.bottomMargin
+      handleHeight: parent.height - actionPanel.handlePosition - actionPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       content: [
         KPIM.AttachmentList {
           id: attachmentView
