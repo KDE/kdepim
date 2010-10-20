@@ -22,12 +22,15 @@ import Qt 4.7 as QML
 
 QML.Rectangle {
   color : "#00000000"
+  id : _topListView
   property alias model: itemListView.model
   property alias currentIndex: itemListView.currentIndex
   property int currentItemId: -1
+  property int currentRow : -1
   property alias delegate: itemListView.delegate
   property alias count: itemListView.count
   property alias section: itemListView.section
+  property variant navigationModel
 
   signal itemSelected
 
@@ -69,4 +72,15 @@ QML.Rectangle {
     focus: true
     clip: true
   }
+  onCurrentRowChanged : {
+    if (navigationModel != undefined)
+      navigationModel.select(currentRow, 3)
+  }
+  QML.Connections {
+    target : navigationModel
+    onCurrentRowChanged : {
+      _topListView.currentRow = navigationModel.currentRow
+    }
+  }
+
 }
