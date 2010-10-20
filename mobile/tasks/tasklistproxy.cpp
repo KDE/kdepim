@@ -118,5 +118,5 @@ bool TaskListProxy::lessThan( const QModelIndex &left, const QModelIndex &right 
                              !rightItem.hasPayload<KCalCore::Todo::Ptr>() ? 0 :
                              rightItem.payload<KCalCore::Todo::Ptr>()->percentComplete();
 
-  return (leftCompleted < rightCompleted);
+  return ((leftCompleted != rightCompleted) ? (leftCompleted < rightCompleted) : (leftItem.id() < rightItem.id()));
 }
