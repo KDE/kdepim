@@ -217,8 +217,6 @@ void KDeclarativeFullScreenView::triggerTaskSwitcher()
 
 void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status status )
 {
-  kWarning() << status << QDateTime::currentDateTime();
-
   if ( status == QDeclarativeView::Error ) {
     QStringList errorMessages;
     std::transform( errors().constBegin(), errors().constEnd(), std::back_inserter( errorMessages ), boost::bind( &QDeclarativeError::toString, _1 ) );
