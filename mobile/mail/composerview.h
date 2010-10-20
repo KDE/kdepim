@@ -64,6 +64,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void setBusy(bool busy);
     void setAutoSaveFileName(const QString &fileName);
 
+    void setMDNRequested( bool requestMDN );
 
   public slots:
     void setMessage( const KMime::Message::Ptr &msg );

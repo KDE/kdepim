@@ -466,4 +466,10 @@ void ComposerView::setAutoSaveFileName(const QString &fileName)
   //m_composerBase->setAutoSaveFileName( fileName );
 }
 
+void ComposerView::setMDNRequested( bool requestMDN )
+{
+  m_composerBase->setMDNRequested( requestMDN );
+}
+
+
 #include "composerview.moc"

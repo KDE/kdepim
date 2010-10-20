@@ -37,6 +37,7 @@
 #include "messageviewer/viewer.h"
 #include "messageviewitem.h"
 #include "mobilekernel.h"
+#include "settings.h"
 #include "savemailcommand_p.h"
 #include "templateemailmodel.h"
 #include "threadmodel.h"
@@ -379,6 +380,7 @@ void MainView::recoverAutoSavedMessages()
 void MainView::startComposer()
 {
   ComposerView *composer = new ComposerView;
+  composer->setMDNRequested( Settings::self()->composerRequestMDN() );
   composer->show();
 }
 
@@ -427,6 +429,7 @@ void MainView::composeFetchResult( KJob *job )
 
   // create the composer and fill it with the retrieved message
   ComposerView *composer = new ComposerView;
+  composer->setMDNRequested( Settings::self()->composerRequestMDN() );
   composer->setMessage( msg );
   composer->show();
 }
@@ -460,6 +463,7 @@ void MainView::sendAgainFetchResult( KJob *job )
   newMsg->contentType()->setCharset( MessageViewer::NodeHelper::charset( msg.get() ) );
 
   ComposerView *composer = new ComposerView;
+  composer->setMDNRequested( Settings::self()->composerRequestMDN() );
   composer->setMessage( newMsg );
   composer->show();
 }
@@ -590,6 +594,7 @@ void MainView::replyFetchResult( KJob *job )
   factory.setQuote( fetchJob->property( "quoteOriginal" ).toBool() );
 
   ComposerView *composer = new ComposerView;
+  composer->setMDNRequested( Settings::self()->composerRequestMDN() );
   composer->setMessage( factory.createReply().msg );
   composer->show();
 }
@@ -616,6 +621,7 @@ void MainView::forwardFetchResult( KJob* job )
   factory.setIdentityManager( MobileKernel::self()->identityManager() );
 
   ComposerView *composer = new ComposerView;
+  composer->setMDNRequested( Settings::self()->composerRequestMDN() );
   const ForwardMode mode = fetchJob->property( "forwardMode" ).value<ForwardMode>();
   switch ( mode ) {
     case InLine:
@@ -1279,6 +1285,7 @@ void MainView::templateFetchResult( KJob* job)
   newMsg->removeHeader("Date");
   newMsg->removeHeader("Message-ID");
   ComposerView *composer = new ComposerView;
+  composer->setMDNRequested( Settings::self()->composerRequestMDN() );
   composer->setMessage( newMsg );
   composer->show();
 }

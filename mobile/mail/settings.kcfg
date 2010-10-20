@@ -17,7 +17,9 @@
     <entry name="ComposertInsertSignatureAboveQuote" type="Bool" />
     <entry name="ComposerPrependSeparator" type="Bool" />
     <entry name="ComposerUseSmartQuoting" type="Bool" />
-    <entry name="ComposerRequestMDN" type="Bool" />
+    <entry name="ComposerRequestMDN" type="Bool">
+      <default>false</default>
+    </entry>
     <entry name="ComposerUseRecentAddressCompletion" type="Bool" />
     <entry name="ComposerWordWrapAtColumn" type="Bool" />
     <entry name="ComposerWordWrapColumn" type="Int" />
