@@ -61,7 +61,6 @@ public: /// members
   QItemSelectionModel                *mItemActionSelectionModel;
   QHash<QString, QStringList>        mPersistedSelections;
   Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
-  ItemSelectHook                     *m_hook;
   KLineEdit                          *mFilterLineEdit;
   KLineEdit                          *mBulkActionFilterLineEdit;
   AgentStatusMonitor                 *mAgentStatusMonitor;

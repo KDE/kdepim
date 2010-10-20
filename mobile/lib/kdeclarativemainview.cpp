@@ -87,27 +87,6 @@
   view->show();                              \
 }                                            \
 
-ItemSelectHook::ItemSelectHook( QItemSelectionModel *selectionModel, QObject* parent )
-  : QObject( parent ),
-    m_selectionModel( selectionModel )
-{
-  connect( selectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
-           this, SLOT( selectionChanged() ) );
-}
-
-void ItemSelectHook::selectionChanged()
-{
-  const QModelIndexList list = m_selectionModel->selectedRows();
-  if ( list.size() != 1 )
-    return;
-
-  const QModelIndex index = list.first();
-  Q_ASSERT( index.isValid() );
-
-  const Akonadi::Item::Id itemId = index.data( Akonadi::EntityTreeModel::ItemIdRole ).toLongLong();
-  rowSelected( index.row(), itemId );
-}
-
 class ActionImageProvider : public QDeclarativeImageProvider
 {
   public:
@@ -312,13 +291,6 @@ KDeclarativeMainView::~KDeclarativeMainView()
   delete d;
 }
 
-void KDeclarativeMainView::setHook(ItemSelectHook *itemSelectHook)
-{
-  d->m_hook = itemSelectHook;
-  engine()->rootContext()->setContextProperty( "_itemSelectHook", QVariant::fromValue( static_cast<QObject*>( d->m_hook ) ) );
-}
-
-
 void KDeclarativeMainView::setItemNaigationAndActionSelectionModels(QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel)
 {
   d->mItemNavigationSelectionModel = itemNavigationSelectionModel;
@@ -366,9 +338,6 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeCon
     QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( d->mItemNavigationSelectionModel, this );
     QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( d->mItemActionSelectionModel, this );
 
-    d->m_hook = new ItemSelectHook( d->mItemNavigationSelectionModel, this );
-    context->setContextProperty( "_itemSelectHook", QVariant::fromValue( static_cast<QObject*>( d->m_hook ) ) );
-
     context->setContextProperty( "_itemNavigationModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
     context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
 
@@ -411,27 +380,6 @@ void KDeclarativeMainView::addMimeType( const QString &mimeType )
 QStringList KDeclarativeMainView::mimeTypes() const
 {
   return d->mChangeRecorder->mimeTypesMonitored();
-}
-
-bool KDeclarativeMainView::blockHook()
-{
-  return d->m_hook->blockSignals( true );
-}
-
-void KDeclarativeMainView::unblockHook( bool block )
-{
-  d->m_hook->blockSignals( block );
-}
-
-void KDeclarativeMainView::setListSelectedRow( int row )
-{
-  static const int column = 0;
-  const QModelIndex idx = d->mItemNavigationSelectionModel->model()->index( row, column );
-  const bool blocked = d->m_hook->blockSignals( true );
-  d->mItemNavigationSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
-  d->mItemActionSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
-
-  d->m_hook->blockSignals( blocked );
 }
 
 void KDeclarativeMainView::setAgentInstanceListSelectedRow( int row )

@@ -32,40 +32,6 @@ QML.Rectangle {
   property alias section: itemListView.section
   property variant navigationModel
 
-  signal itemSelected
-
-  function nextItem() {
-    if ( currentIndex < (model.itemCount - 1) ) {
-      currentIndex = currentIndex + 1;
-      currentItemId = model.itemId( currentIndex );
-      itemSelected();
-      application.setListSelectedRow(currentIndex);
-    }
-  }
-
-  function previousItem() {
-    if ( currentIndex > 0  ) {
-      currentIndex = currentIndex - 1;
-      currentItemId = model.itemId( currentIndex );
-      itemSelected();
-      application.setListSelectedRow(currentIndex);
-    }
-  }
-
-  function setSelectedRow(row, itemId)
-  {
-    itemListView.currentIndex = row;
-    currentItemId = itemId;
-    itemListView.parent.itemSelected();
-  }
-
-  QML.Connections {
-    target : _itemSelectHook
-    onRowSelected : {
-      setSelectedRow(row, itemId);
-    }
-  }
-
   QML.ListView {
     id: itemListView
     anchors.fill: parent

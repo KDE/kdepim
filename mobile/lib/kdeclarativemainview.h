@@ -41,26 +41,6 @@ class ItemFetchScope;
 class KDeclarativeMainViewPrivate;
 
 /**
- * @internal
- */
-class MOBILEUI_EXPORT ItemSelectHook : public QObject
-{
-  Q_OBJECT
-public:
-  ItemSelectHook(QItemSelectionModel *selectionModel, QObject *parent = 0);
-
-public slots:
-  void selectionChanged();
-
-signals:
-  void rowSelected(int row, qint64 itemId);
-
-private:
-  QItemSelectionModel *m_selectionModel;
-};
-
-
-/**
  * Main view for mobile applications. This class is just to share code and therefore
  * should not be instantiated by itself.
  */
@@ -128,11 +108,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void setSelectedAccount( int row );
     int selectedCollectionRow();
 
-    // FIXME: make non-virtual again once mark-as-read logic is in messageviewer
-    virtual void setListSelectedRow( int row );
-    bool blockHook();
-    void unblockHook( bool block);
-
     void setAgentInstanceListSelectedRow( int row );
 
     /**
@@ -176,7 +151,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
   Q_SIGNALS:
     void numSelectedAccountsChanged();
-    void selectedItemChanged( int row, qlonglong itemId );
     void isLoadingSelectedChanged();
 
   protected:
@@ -275,7 +249,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
     virtual QAbstractItemModel* createItemModelContext(QDeclarativeContext *context, QAbstractItemModel *model);
     void setItemNaigationAndActionSelectionModels(QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel);
-    void setHook(ItemSelectHook *itemSelecHook);
   private:
     KDeclarativeMainViewPrivate * const d;
     Q_DISABLE_COPY( KDeclarativeMainView )

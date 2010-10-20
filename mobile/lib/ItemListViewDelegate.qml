@@ -42,11 +42,6 @@ Item {
       } else {
         itemViewTopLevel.ListView.view.currentIndex = model.index;
         itemViewTopLevel.ListView.view.parent.currentItemId = model.itemId;
-
-        var block = application.blockHook();
-        itemViewTopLevel.ListView.view.parent.itemSelected();
-        application.setListSelectedRow(model.index);
-        application.unblockHook(block)
       }
     }
   }
@@ -69,15 +64,5 @@ Item {
     visible : false
     opacity : model.checkOn ? 1 : 0
     source : "images/check.png"
-  }
-
-  Connections {
-    target : application
-    onSelectedItemChanged : {
-      itemViewTopLevel.ListView.view.currentIndex = row;
-      itemViewTopLevel.ListView.view.parent.currentItemId = itemId;
-
-      itemViewTopLevel.ListView.view.parent.itemSelected();
-    }
   }
 }
