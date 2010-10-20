@@ -122,7 +122,7 @@ public:
 
 private:
     void init();
-    void ensureDialogVisible() {
+    void ensureDialogCreated() {
         if ( !showsOutputWindow )
             return;
         if ( !dialog ) {
@@ -132,6 +132,11 @@ private:
             connect( dialog, SIGNAL(cancelRequested()), q, SLOT(cancel()) );
             dialog->setWindowTitle( i18n("Subprocess Diagnostics") );
         }
+    }
+    void ensureDialogVisible() {
+        if ( !showsOutputWindow )
+            return;
+        ensureDialogCreated();
         if ( dialog->isVisible() )
             dialog->raise();
         else
@@ -296,7 +301,16 @@ bool GnuPGProcessCommand::ignoresSuccessOrFailure() const {
 }
 
 void GnuPGProcessCommand::setShowsOutputWindow( bool show ) {
+    if ( show == d->showsOutputWindow )
+        return;
     d->showsOutputWindow = show;
+    if ( show ) {
+        d->ensureDialogCreated();
+    } else {
+        if ( d->dialog )
+            d->dialog->deleteLater();
+        d->dialog = 0;
+    }
 }
 
 bool GnuPGProcessCommand::showsOutputWindow() const {
