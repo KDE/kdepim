@@ -19,6 +19,8 @@
 
 #include "tasklistproxy.h"
 
+#include "settings.h"
+
 #include <akonadi/entitytreemodel.h>
 #include <calendarsupport/kcalprefs.h>
 #include <kcalcore/todo.h>
@@ -28,6 +30,8 @@ using namespace Akonadi;
 TaskListProxy::TaskListProxy( QObject* parent )
   : ListProxy( parent )
 {
+  setDynamicSortFilter( true );
+  sort( 0 );
 }
 
 QVariant TaskListProxy::data( const QModelIndex &index, int role ) const
@@ -96,4 +100,23 @@ void TaskListProxy::setSourceModel( QAbstractItemModel *sourceModel )
 void TaskListProxy::setPreferences( const EventViews::PrefsPtr &preferences )
 {
   mViewPrefs = preferences;
+}
+
+bool TaskListProxy::lessThan( const QModelIndex &left, const QModelIndex &right ) const
+{
+  if ( !Settings::self()->showCompletedTodosAtBottom() )
+    return ListProxy::lessThan( left, right );
+
+  const Akonadi::Item leftItem = left.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+
+  const int leftCompleted = !leftItem.isValid() ? 0 :
+                            !leftItem.hasPayload<KCalCore::Todo::Ptr>() ? 0 :
+                            leftItem.payload<KCalCore::Todo::Ptr>()->percentComplete();
+
+  const int rightCompleted = !rightItem.isValid() ? 0 :
+                             !rightItem.hasPayload<KCalCore::Todo::Ptr>() ? 0 :
+                             rightItem.payload<KCalCore::Todo::Ptr>()->percentComplete();
+
+  return (leftCompleted < rightCompleted);
 }

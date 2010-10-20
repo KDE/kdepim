@@ -24,6 +24,7 @@
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
 #include "configwidget.h"
+#include "settings.h"
 #include "tasklistproxy.h"
 #include "tasksactionmanager.h"
 #include "tasksfilterproxymodel.h"
@@ -69,6 +70,10 @@ MainView::MainView( QWidget *parent )
 {
   mCalendarPrefs->readConfig();
   qobject_cast<TaskListProxy*>( itemModel() )->setPreferences( mCalendarPrefs );
+
+  // re-sort the list when config options have changed
+  connect( Settings::self(), SIGNAL( configChanged() ),
+           qobject_cast<TaskListProxy*>( itemModel() ), SLOT( invalidate() ) );
 }
 
 MainView::~MainView()
