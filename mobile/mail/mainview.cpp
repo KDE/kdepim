@@ -185,6 +185,7 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
     bulkActionBnf->createCheckableBreadcrumbContext( entityTreeModel(), this );
     context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
   }
+  return model; // The rest still in development.
 
   ThreadModel *threads = new ThreadModel(grouper, this);
 
