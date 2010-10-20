@@ -294,13 +294,13 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
 
 QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message *message ) const {
   QByteArray head = message->head();
-  KMime::Headers::Generic *header = message->nextHeader(head);
+  KMime::Headers::Base *header = KMime::HeaderParsing::extractFirstHeader( head );
   QString result;
   while ( header ) {
     result += strToHtml( header->asUnicodeString() );
     result += QLatin1String( "<br />\n" );
     delete header;
-    header = message->nextHeader(head);
+    header = KMime::HeaderParsing::extractFirstHeader( head );
   }
 
   return result;
@@ -933,12 +933,9 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   //          the mockup of Nuno. We might want to add additional items such as
   //          encryption I guess.
 
-  // Use always the brief strategy for the mobile headers.
-  const HeaderStrategy *strategy = HeaderStrategy::brief();
-
   // From
   QString linkColor ="style=\"color: #0E49A1; text-decoration: none\"";
-  QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly, linkColor );
+  QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, linkColor );
 
   if ( !vCardName().isEmpty() )
     fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName() + "\" " + linkColor + ">" + i18n( "[vCard]" ) + "</a>";
