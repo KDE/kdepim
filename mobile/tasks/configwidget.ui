@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>426</width>
-    <height>209</height>
+    <height>207</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -81,7 +81,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout_2">
+    <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1">
      <item row="0" column="0" colspan="2">
       <widget class="QLabel" name="label_3">
        <property name="font">
@@ -95,7 +95,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0" rowspan="2">
+     <item row="1" column="0">
       <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -119,10 +119,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <layout class="QFormLayout" name="formLayout_6">
-       <property name="fieldGrowthPolicy">
-        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-       </property>
+      <layout class="QFormLayout" name="formLayout">
        <item row="0" column="0">
         <widget class="QLabel" name="label_9">
          <property name="text">
@@ -131,7 +128,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="KColorButton" name="kcfg_TodoDueColor"/>
+        <widget class="KColorCombo" name="kcfg_TodoDueColor"/>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_10">
@@ -141,7 +138,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="KColorButton" name="kcfg_TodoOverdueColor"/>
+        <widget class="KColorCombo" name="kcfg_TodoOverdueColor"/>
        </item>
       </layout>
      </item>
@@ -151,9 +148,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KColorButton</class>
-   <extends>QPushButton</extends>
-   <header>kcolorbutton.h</header>
+   <class>KColorCombo</class>
+   <extends>QComboBox</extends>
+   <header>kcolorcombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
