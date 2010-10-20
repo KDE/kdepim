@@ -122,6 +122,8 @@ KPIM.MainView {
     height: 70
     icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
     onClicked: {
+      _itemActionModel.select(-1, 1)
+      _itemNavigationModel.select(-1, 1)
       guiStateManager.popState();
     }
   }
@@ -285,10 +287,10 @@ KPIM.MainView {
     onCurrentRowChanged : {
       contactList.currentRow = _itemNavigationModel.currentRow
       if ( itemModel.typeForIndex( _itemNavigationModel.currentRow ) == "contact" ) {
-        contactView.itemId = contactList.currentItemId;
+        contactView.itemId = _itemNavigationModel.currentItemIdHack;
       }
       if ( itemModel.typeForIndex( _itemNavigationModel.currentRow ) == "group" ) {
-        contactGroupView.itemId = contactList.currentItemId;
+        contactGroupView.itemId = _itemNavigationModel.currentItemIdHack;
       }
     }
   }
