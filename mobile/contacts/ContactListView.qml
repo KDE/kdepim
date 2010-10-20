@@ -28,6 +28,7 @@ KPIM.ItemListView {
 
   delegate: [
     KPIM.ItemListViewDelegate {
+      navigationModel : _top.navigationModel
       showCheckBox : _top.showCheckBox
       checkModel : _top.checkModel
       height : itemListView.height / 7

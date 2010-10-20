@@ -56,15 +56,11 @@ KPIM.MainView {
     itemId: -1
 
     onNextItemRequest: {
-      // Only go to the next message when currently a valid item is set.
-      if ( contactView.itemId >= 0 )
-        contactList.nextItem();
+      _itemNavigationModel.requestNext()
     }
 
     onPreviousItemRequest: {
-      // Only go to the previous message when currently a valid item is set.
-      if ( contactView.itemId >= 0 )
-        contactList.previousItem();
+      _itemNavigationModel.requestPrevious()
     }
 
   }
@@ -279,14 +275,20 @@ KPIM.MainView {
         anchors.right : parent.right
         model: itemModel
         checkModel : _itemActionModel
-        onItemSelected: {
-          if ( itemModel.typeForIndex( contactList.currentIndex ) == "contact" ) {
-            contactView.itemId = contactList.currentItemId;
-          }
-          if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
-            contactGroupView.itemId = contactList.currentItemId;
-          }
-        }
+
+        navigationModel : _itemNavigationModel
+      }
+    }
+  }
+  QML.Connections {
+    target : _itemNavigationModel
+    onCurrentRowChanged : {
+      contactList.currentRow = _itemNavigationModel.currentRow
+      if ( itemModel.typeForIndex( _itemNavigationModel.currentRow ) == "contact" ) {
+        contactView.itemId = contactList.currentItemId;
+      }
+      if ( itemModel.typeForIndex( _itemNavigationModel.currentRow ) == "group" ) {
+        contactGroupView.itemId = contactList.currentItemId;
       }
     }
   }
