@@ -243,23 +243,50 @@ static bool attendeeIsOrganizer( Incidence *incidence, Attendee *attendee )
   }
 }
 
-static QString firstAttendeeName( Incidence *incidence, const QString &defName )
+static QString organizerName( Incidence *incidence, const QString &defName )
 {
-  QString name;
-  if ( !incidence ) {
-    return name;
+  QString tName;
+  if ( !defName.isEmpty() ) {
+    tName = defName;
+  } else {
+    tName = i18n( "<Organizer Unknown>" );
   }
 
-  Attendee::List attendees = incidence->attendees();
-  if( attendees.count() > 0 ) {
-    Attendee *attendee = *attendees.begin();
-    name = attendee->name();
+  QString name;
+  if ( incidence ) {
+    name = incidence->organizer().name();
     if ( name.isEmpty() ) {
-      name = attendee->email();
+      name = incidence->organizer().email();
     }
-    if ( name.isEmpty() ) {
-      name = defName;
+  }
+  if ( name.isEmpty() ) {
+    name = tName;
+  }
+  return name;
+}
+
+static QString firstAttendeeName( Incidence *incidence, const QString &defName )
+{
+  QString tName;
+  if ( !defName.isEmpty() ) {
+    tName = defName;
+  } else {
+    tName = i18n( "Sender" );
+  }
+
+  QString name;
+  if ( incidence ) {
+    Attendee::List attendees = incidence->attendees();
+    if ( attendees.count() > 0 ) {
+      Attendee *attendee = *attendees.begin();
+      name = attendee->name();
+      if ( name.isEmpty() ) {
+        name = attendee->email();
+      }
     }
+  }
+  if ( name.isEmpty() ) {
+    name = tName;
   }
   return name;
 }
@@ -1855,26 +1882,12 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
     if ( iamOrganizer( event ) ) {
       return i18n( "I created this invitation" );
     } else {
-      QString orgStr;
-      if ( !event->organizer().fullName().isEmpty() ) {
-        orgStr = event->organizer().fullName();
-      } else if ( !event->organizer().email().isEmpty() ) {
-        orgStr = event->organizer().email();
-      }
+      QString orgStr = organizerName( event, sender );
       if ( senderIsOrganizer( event, sender ) ) {
-        if ( !orgStr.isEmpty() ) {
-          return i18n( "You received an invitation from %1" ).arg( orgStr );
-        } else {
-          return i18n( "You received an invitation" );
-        }
+        return i18n( "You received an invitation from %1" ).arg( orgStr );
       } else {
-        if ( !orgStr.isEmpty() ) {
-          return i18n( "You received an invitation from %1 as a representative of %2" ).
-            arg( sender, orgStr );
-        } else {
-          return i18n( "You received an invitation from %1 as the organizer's representative" ).
-            arg( sender );
-        }
+        return i18n( "You received an invitation from %1 as a representative of %2" ).
+          arg( sender, orgStr );
       }
     }
   case Scheduler::Refresh:
@@ -1890,8 +1903,7 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
   case Scheduler::Reply:
   {
     if ( replyMeansCounter( event ) ) {
-      return i18n( "%1 makes this counter proposal" ).
-        arg( firstAttendeeName( event, i18n( "Sender" ) ) );
+      return i18n( "%1 makes this counter proposal" ).arg( firstAttendeeName( event, sender ) );
     }
 
     Attendee::List attendees = event->attendees();
@@ -1903,7 +1915,7 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
       kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
                     << "but is " << attendees.count() << endl;
     }
-    QString attendeeName = firstAttendeeName( event, i18n( "Sender" ) );
+    QString attendeeName = firstAttendeeName( event, sender );
 
     QString delegatorName, dummy;
     Attendee* attendee = *attendees.begin();
@@ -1970,12 +1982,17 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
   }
 
   case Scheduler::Counter:
-    return i18n( "%1 makes this counter proposal" ).
-      arg( firstAttendeeName( event, i18n( "Sender" ) ) );
+    return i18n( "%1 makes this counter proposal" ).arg( firstAttendeeName( event, sender ) );
 
   case Scheduler::Declinecounter:
-    return i18n( "%1 declines the counter proposal" ).
-      arg( firstAttendeeName( event, i18n( "Sender" ) ) );
+  {
+    QString orgStr = organizerName( event, sender );
+    if ( senderIsOrganizer( event, sender ) ) {
+      return i18n( "%1 declines the counter proposal" ).arg( orgStr );
+    } else {
+      return i18n( "%1 declines the counter proposal on behalf of %2" ).arg( sender, orgStr );
+    }
+  }
 
   case Scheduler::NoMethod:
     return i18n("Error: iMIP message with unknown method: '%1'").
@@ -2002,26 +2019,12 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
       if ( iamOrganizer( todo ) ) {
         return i18n( "I created this task" );
       } else {
-        QString orgStr;
-        if ( !todo->organizer().fullName().isEmpty() ) {
-          orgStr = todo->organizer().fullName();
-        } else if ( !todo->organizer().email().isEmpty() ) {
-          orgStr = todo->organizer().email();
-        }
+        QString orgStr = organizerName( todo, sender );
         if ( senderIsOrganizer( todo, sender ) ) {
-          if ( !orgStr.isEmpty() ) {
-            return i18n( "You have been assigned this task by %1" ).arg( orgStr );
-          } else {
-            return i18n( "You have been assigned this task" );
-          }
+          return i18n( "You have been assigned this task by %1" ).arg( orgStr );
         } else {
-          if ( !orgStr.isEmpty() ) {
-            return i18n( "You have been assigned this task by %1 as a representative of %2" ).
-              arg( sender, orgStr );
-          } else {
-            return i18n( "You have been assigned this task by %1 as the organizer's representative" ).
-              arg( sender );
-          }
+          return i18n( "You have been assigned this task by %1 as a representative of %2" ).
+            arg( sender, orgStr );
         }
       }
     }
@@ -2038,8 +2041,7 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
   case Scheduler::Reply:
   {
     if ( replyMeansCounter( todo ) ) {
-      return i18n( "%1 makes this counter proposal" ).
-        arg( firstAttendeeName( todo, i18n( "Sender" ) ) );
+      return i18n( "%1 makes this counter proposal" ).arg( firstAttendeeName( todo, sender ) );
     }
 
     Attendee::List attendees = todo->attendees();
@@ -2051,7 +2053,7 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
       kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
                     << "but is " << attendees.count() << endl;
     }
-    QString attendeeName = firstAttendeeName( todo, i18n( "Sender" ) );
+    QString attendeeName = firstAttendeeName( todo, sender );
 
     QString delegatorName, dummy;
     Attendee* attendee = *attendees.begin();
@@ -2127,12 +2129,17 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
   }
 
   case Scheduler::Counter:
-    return i18n( "%1 makes this counter proposal" ).
-      arg( firstAttendeeName( todo, i18n( "Sender" ) ) );
+    return i18n( "%1 makes this counter proposal" ).arg( firstAttendeeName( todo, sender ) );
 
   case Scheduler::Declinecounter:
-    return i18n( "%1 declines the counter proposal" ).
-      arg( firstAttendeeName( todo, i18n( "Sender" ) ) );
+  {
+    QString orgStr = organizerName( todo, sender );
+    if ( senderIsOrganizer( todo, sender ) ) {
+      return i18n( "%1 declines the counter proposal" ).arg( orgStr );
+    } else {
+      return i18n( "%1 declines the counter proposal on behalf of %2" ).arg( sender, orgStr );
+    }
+  }
 
   case Scheduler::NoMethod:
     return i18n( "Error: iMIP message with unknown method: '%1'" ).
