@@ -33,6 +33,7 @@ KPIM.ItemListView {
       id : listDelegate
       showCheckBox : itemList.showCheckBox
       checkModel : itemList.checkModel
+      navigationModel : itemList.navigationModel
       height : itemListView.height / 7
       color: model.backgroundColor
       summaryContent: [
