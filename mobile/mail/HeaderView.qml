@@ -35,6 +35,7 @@ KPIM.ItemListView {
       id : _delegate
       showCheckBox : _top.showCheckBox
       checkModel : _top.checkModel
+      navigationModel : _top.navigationModel
       height : (_top.collapsedSections.indexOf(model.dateGroup) >= 0) ? 0 : (itemListView.height / 7)
       clip: true
       summaryContent : [

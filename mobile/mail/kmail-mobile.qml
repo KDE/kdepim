@@ -35,7 +35,7 @@ KPIM.MainView {
   }
 
   QML.Component.onCompleted : updateContextActionStates();
-  
+
   function updateContextActionStates()
   {
     if ( guiStateManager.inHomeScreenState ) {
@@ -262,18 +262,13 @@ KPIM.MainView {
     anchors.left: parent.left
     width: parent.width
     height: parent.height
-    itemId: -1
     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
     onNextItemRequest: {
-      // Only go to the next message when currently a valid item is set.
-      if ( messageView.itemId >= 0 )
-        headerList.nextItem();
+      _itemNavigationModel.requestNext()
     }
 
     onPreviousItemRequest: {
-      // Only go to the previous message when currently a valid item is set.
-      if ( messageView.itemId >= 0 )
-        headerList.previousItem();
+      _itemNavigationModel.requestPrevious()
     }
   }
 
@@ -289,6 +284,7 @@ KPIM.MainView {
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {
+          _itemActionModel.select(-1, 1)
           guiStateManager.popState();
         }
       }
@@ -427,7 +423,6 @@ KPIM.MainView {
         id: filterLineEdit
         anchors.left : parent.left
         anchors.top : parent.top
-        anchors.bottom : headerList.top
         anchors.right : parent.right
         visible : false
         height : 0
@@ -443,19 +438,17 @@ KPIM.MainView {
         anchors.right : parent.right
 
         showDeleteButton : false // too easy to accidentally hit it, although very useful...
-        onItemSelected: {
-          // Prevent reloading of the message, perhaps this should be done
-          // in messageview itself.
-          if ( messageView.itemId != headerList.currentItemId )
+      }
+      QML.Connections {
+        target : _itemNavigationModel
+
+        onCurrentRowChanged : {
+          if (!application.isDraft(_itemNavigationModel.currentRow))
           {
-            if (!application.isDraft(headerList.currentIndex))
-            {
-              messageView.itemId = headerList.currentItemId;
-              guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
-            } else {
-              application.restoreDraft(headerList.currentItemId);
-              updateContextActionStates()
-            }
+            guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
+          } else {
+            application.restoreDraft(_itemNavigationModel.currentItemIdHack);
+            updateContextActionStates()
           }
         }
       }
