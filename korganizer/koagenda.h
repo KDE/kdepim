@@ -122,7 +122,7 @@ class KOAgenda : public QScrollView
      *  This function removes the items from the view, but doesn't delete them immediately.
      *  Instead, they are queued in mItemsToDelete and later deleted by
      *  the slot deleteItemsToDelete() (called by QTimer::singleShot ) */
-    void removeIncidence( Incidence *incidence );
+    void removeIncidence( Incidence *incidence, bool relayoutNeighbours = true );
 
     void changeColumns( int columns );
 
@@ -175,7 +175,7 @@ class KOAgenda : public QScrollView
       Select the item associated with a given uid. Linear search, use carefully.
     */
     void selectItemByUID( const QString& uid );
-    bool removeAgendaItem( KOAgendaItem::GPtr item );
+    bool removeAgendaItem( KOAgendaItem::GPtr item, bool relayoutNeighbours = true );
     void showAgendaItem( KOAgendaItem::GPtr item );
 
   signals:

@@ -229,7 +229,7 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
     */
     void setHolidayMasks();
 
-    void removeIncidence( Incidence * );
+    void removeIncidence( Incidence *, bool relayoutIncidence = true );
     /**
       Updates the event indicators after a certain incidence was modified or
       removed.

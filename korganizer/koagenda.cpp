@@ -1848,7 +1848,7 @@ void KOAgenda::insertMultiItem( Event *event, const QDate &qd, int XBegin, int X
   marcus_bains();
 }
 
-void KOAgenda::removeIncidence( Incidence *incidence )
+void KOAgenda::removeIncidence( Incidence *incidence, bool relayoutNeighbours )
 {
   // First find all items to be deleted and store them
   // in its own list. Otherwise removeAgendaItem will reset
@@ -1865,7 +1865,7 @@ void KOAgenda::removeIncidence( Incidence *incidence )
   }
 
   for ( it = itemsToRemove.begin(); it != itemsToRemove.end(); ++it ) {
-    removeAgendaItem( *it );
+    removeAgendaItem( *it, relayoutNeighbours );
   }
 }
 
@@ -1885,7 +1885,7 @@ void KOAgenda::showAgendaItem( KOAgendaItem::GPtr agendaItem )
   agendaItem->show();
 }
 
-bool KOAgenda::removeAgendaItem( KOAgendaItem::GPtr item )
+bool KOAgenda::removeAgendaItem( KOAgendaItem::GPtr item, bool relayoutNeighbours )
 {
   // we found the item. Let's remove it and update the conflicts
   bool taken = false;
@@ -1899,12 +1899,15 @@ bool KOAgenda::removeAgendaItem( KOAgendaItem::GPtr item )
     taken = true;
   }
 
-  for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
-    // the item itself is also in its own conflictItems list!
-    if ( *it != thisItem ) {
-      placeSubCells( *it );
+  if ( relayoutNeighbours ) {
+    for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
+      // the item itself is also in its own conflictItems list!
+      if ( *it != thisItem ) {
+        placeSubCells( *it );
+      }
     }
   }
+
   mItemsToDelete.append( thisItem );
   QTimer::singleShot( 0, this, SLOT( deleteItemsToDelete() ) );
   return taken;

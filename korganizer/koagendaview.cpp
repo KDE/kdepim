@@ -1180,7 +1180,13 @@ void KOAgendaView::changeIncidenceDisplay( Incidence *incidence, int mode )
     case KOGlobals::INCIDENCEEDITED:
     {
       if ( mAllowAgendaUpdate ) {
-        removeIncidence( incidence );
+        /**
+         * No need to relayout neighbours, if we do, they will be re-placed
+         * and occupy the space where the item we're deleting && re-adding is.
+         * Fixes: https://issues.kolab.org/issue4113
+         * "Parallel events in the agenda view: last changed events are always on the right side"
+         **/
+        removeIncidence( incidence, false /** relayout neighbours */ );
         changeIncidenceDisplayAdded( incidence );
       }
       updateEventIndicators();
@@ -1600,10 +1606,10 @@ void KOAgendaView::finishTypeAhead()
   mAllDayAgenda->finishTypeAhead();
 }
 
-void KOAgendaView::removeIncidence( Incidence *incidence )
+void KOAgendaView::removeIncidence( Incidence *incidence, bool relayoutNeighbours )
 {
-  mAgenda->removeIncidence( incidence );
-  mAllDayAgenda->removeIncidence( incidence );
+  mAgenda->removeIncidence( incidence, relayoutNeighbours );
+  mAllDayAgenda->removeIncidence( incidence, relayoutNeighbours );
 }
 
 void KOAgendaView::updateEventIndicators()
