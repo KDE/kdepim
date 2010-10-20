@@ -21,18 +21,19 @@
 
 #include "qmllistselectionmodel.h"
 
-#include <QDebug>
+#include <KDebug>
+#include <Akonadi/EntityTreeModel>
 
 QMLListSelectionModel::QMLListSelectionModel(QItemSelectionModel *selectionModel, QObject* parent)
   : QObject(parent), m_selectionModel(selectionModel)
 {
-
+  connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(selectionChanged()));
 }
 
 QMLListSelectionModel::QMLListSelectionModel(QAbstractItemModel* model, QObject* parent)
   : QObject(parent), m_selectionModel(new QItemSelectionModel(model, this))
 {
-
+  connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(selectionChanged()));
 }
 
 QItemSelectionModel* QMLListSelectionModel::selectionModel() const
@@ -94,7 +95,6 @@ void QMLListSelectionModel::select(int row, int command)
   QItemSelection sel(idx, idx);
   QItemSelectionModel::SelectionFlags flags = static_cast<QItemSelectionModel::SelectionFlags>(command);
   m_selectionModel->select(sel, flags);
-  emit selectionChanged();
 }
 
 bool QMLListSelectionModel::requestNext()
