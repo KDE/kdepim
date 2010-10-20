@@ -62,15 +62,11 @@ KPIM.MainView {
     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
 
     onNextItemRequest: {
-      // Only go to the next message when currently a valid item is set.
-      if ( taskView.itemId >= 0 )
-        itemList.nextItem();
+        _itemNavigationModel.requestNext();
     }
 
     onPreviousItemRequest: {
-      // Only go to the previous message when currently a valid item is set.
-      if ( taskView.itemId >= 0 )
-        itemList.previousItem();
+        _itemNavigationModel.requestPrevious();
     }
 
     KPIM.Button {
@@ -234,8 +230,11 @@ KPIM.MainView {
         anchors.top : filterLineEdit.bottom
         anchors.bottom : parent.bottom
         anchors.right : parent.right
-        onItemSelected: {
-          taskView.itemId = itemList.currentItemId;
+        navigationModel : _itemNavigationModel
+      }
+      QML.Connections {
+        target : _itemNavigationModel
+        onCurrentRowChanged : {
           guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
         }
       }
