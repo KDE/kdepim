@@ -186,8 +186,8 @@ void KOGroupware::incomingDirChanged( const QString& path )
     return;
   }
   KCal::MailScheduler scheduler( mCalendar );
-  if ( action.startsWith( "accepted" ) || action.startsWith( "tentative" )
-       || action.startsWith( "delegated" ) || action.startsWith( "counter" ) ) {
+  if ( action.startsWith( "accepted" ) || action.startsWith( "tentative" ) ||
+       action.startsWith( "delegated" ) || action.startsWith( "counter" ) ) {
     // Find myself and set my status. This can't be done in the scheduler,
     // since this does not know the choice I made in the KMail bpf
     KCal::Attendee::List attendees = incidence->attendees();
@@ -205,22 +205,32 @@ void KOGroupware::incomingDirChanged( const QString& path )
         break;
       }
     }
-    if ( KOPrefs::instance()->outlookCompatCounterProposals() || !action.startsWith( "counter" ) )
-      scheduler.acceptTransaction( incidence, method, status, receiver );
-  } else if ( action.startsWith( "cancel" ) )
+    if ( KOPrefs::instance()->outlookCompatCounterProposals() || !action.startsWith( "counter" ) ) {
+      if ( scheduler.acceptTransaction( incidence, method, status, receiver ) ) {
+        mCalendar->save();
+      }
+    }
+  } else if ( action.startsWith( "cancel" ) ) {
     // Delete the old incidence, if one is present
-    scheduler.acceptTransaction( incidence, KCal::Scheduler::Cancel, status, receiver );
-  else if ( action.startsWith( "reply" ) ) {
+    if ( scheduler.acceptTransaction( incidence, KCal::Scheduler::Cancel, status, receiver ) ) {
+      mCalendar->save();
+    }
+  } else if ( action.startsWith( "reply" ) ) {
     if ( method != Scheduler::Counter ) {
-      scheduler.acceptTransaction( incidence, method, status );
+      if ( scheduler.acceptTransaction( incidence, method, status ) ) {
+        mCalendar->save();
+      }
     } else {
       // accept counter proposal
-      scheduler.acceptCounterProposal( incidence );
-      // send update to all attendees
-      sendICalMessage( mView, Scheduler::Request, incidence, 0, KOGlobals::INCIDENCEEDITED, false );
+      if ( scheduler.acceptCounterProposal( incidence ) ) {
+        mCalendar->save();
+        // send update to all attendees
+        sendICalMessage( mView, Scheduler::Request, incidence, 0, KOGlobals::INCIDENCEEDITED, false );
+      }
     }
-  } else
+  } else {
     kdError(5850) << "Unknown incoming action " << action << endl;
+  }
 
   if ( action.startsWith( "counter" ) ) {
     mView->editIncidence( incidence, QDate(), true );
