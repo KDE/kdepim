@@ -2890,6 +2890,9 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       html += i18n( "This invitation was canceled" );
     } else if ( msg->method() == Scheduler::Add ) {
       html += i18n( "This invitation was accepted" );
+    } else if ( msg->method() == Scheduler::Declinecounter ) {
+      rsvpReq = true;
+      html += rsvpRequestedStr( rsvpReq, role );
     } else {
       if ( !isDelegated ) {
         html += rsvpRequestedStr( rsvpReq, role );
@@ -3016,6 +3019,9 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       break;
 
     case Scheduler::Declinecounter:
+      html += "<tr>" + responseButtons( inc, rsvpReq, rsvpRec, helper ) + "</tr>";
+      break;
+
     case Scheduler::NoMethod:
       break;
   }
