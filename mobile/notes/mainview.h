@@ -58,8 +58,6 @@ class MainView : public KDeclarativeMainView
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
 
-    /* reimp */ void viewSingleItem(const Akonadi::Item& item);
-
   private:
     Akonadi::Collection suitableContainerCollection( const QModelIndex &parent = QModelIndex() ) const;
 };

@@ -389,14 +389,3 @@ ExportHandlerBase* MainView::exportHandler() const
 {
   return new NotesExportHandler();
 }
-
-void MainView::viewSingleItem(const Akonadi::Item& item)
-{
-  QObject* obj = rootObject()->findChild<QObject*>("noteView");
-  Q_ASSERT( obj );
-
-  Q_ASSERT(item.isValid());
-
-  obj->setProperty("noteId", item.id());
-}
-
