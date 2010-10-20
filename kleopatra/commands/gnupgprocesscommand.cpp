@@ -182,6 +182,7 @@ GnuPGProcessCommand::Private::Private( GnuPGProcessCommand * qq, KeyListControll
       canceled( false )
 {
     process.setOutputChannelMode( KProcess::OnlyStderrChannel );
+    process.setReadChannel( KProcess::StandardError );
 }
 
 GnuPGProcessCommand::Private::~Private() {}
