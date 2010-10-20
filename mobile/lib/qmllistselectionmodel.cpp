@@ -51,8 +51,10 @@ QList< int > QMLListSelectionModel::selection() const
 
 void QMLListSelectionModel::select(int row, int command)
 {
-  qDebug() << row << command;
-  Q_ASSERT(row >= 0);
+  if (row < 0) {
+    clearSelection();
+    return;
+  }
   static const int column = 0;
   const QModelIndex idx = m_selectionModel->model()->index(row, column);
   Q_ASSERT(idx.isValid());
@@ -97,8 +99,9 @@ bool QMLListSelectionModel::requestPrevious()
 
 void QMLListSelectionModel::clearSelection()
 {
-  m_selectionModel->clearSelection();
-  emit selectionChanged();
+  // Don't call QItemSelectionModel::clearSelection. It is non-virtual so
+  // item selection models in chains can't react to it properly.
+  m_selectionModel->select(QItemSelection(), QItemSelectionModel::Clear);
 }
 
 #include "qmllistselectionmodel.moc"
