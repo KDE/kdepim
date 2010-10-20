@@ -222,7 +222,7 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
-   
+
   connect(itemSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(itemSelectionChanged()));
 
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
@@ -241,12 +241,12 @@ void MainView::delayedInit()
   MessageViewer::GlobalSettings::self()->readConfig();
 
   mTemplateSelectionModel = new QItemSelectionModel( entityTreeModel(), this );
-  
+
   mEmailTemplateModel = new TemplateEmailModel( mTemplateSelectionModel, this );
   mEmailTemplateModel->setSourceModel( entityTreeModel() );
   mEmailTemplateModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
   rootContext()->setContextProperty( "_emailTemplateModel", mEmailTemplateModel );
- 
+
   QTime time;
   if ( debugTiming ) {
     time.start();
@@ -1254,7 +1254,7 @@ void MainView::newMessageFromTemplate( int index )
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
   job->fetchScope().fetchFullPayload( true );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( templateFetchResult( KJob* ) ) );
-  
+
 }
 
 void MainView::templateFetchResult( KJob* job)
@@ -1280,7 +1280,7 @@ void MainView::templateFetchResult( KJob* job)
   newMsg->removeHeader("Message-ID");
   ComposerView *composer = new ComposerView;
   composer->setMessage( newMsg );
-  composer->show();    
+  composer->show();
 }
 
 
