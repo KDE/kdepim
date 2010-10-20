@@ -132,7 +132,7 @@ bool History::undo()
   if ( !d->mUndoStack.isEmpty() ) {
     result = d->doIt( d->mUndoStack.pop(), TypeUndo );
   } else {
-    kWarning() << "Don't call undo when the undo stack is empty." << endl;
+    kWarning() << "Don't call undo when the undo stack is empty.";
     result = false;
   }
 
@@ -149,7 +149,7 @@ bool History::redo()
   if ( !d->mRedoStack.isEmpty() ) {
     result = d->doIt( d->mRedoStack.pop(), TypeRedo );
   } else {
-    kWarning() << "Don't call redo() when the undo stack is empty." << endl;
+    kWarning() << "Don't call redo() when the undo stack is empty.";
     result = false;
   }
 
