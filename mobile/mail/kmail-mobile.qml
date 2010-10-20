@@ -436,6 +436,7 @@ KPIM.MainView {
         anchors.top : filterLineEdit.bottom
         anchors.bottom : parent.bottom
         anchors.right : parent.right
+        navigationModel : _itemNavigationModel
 
         showDeleteButton : false // too easy to accidentally hit it, although very useful...
       }
