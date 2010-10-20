@@ -136,6 +136,8 @@ MainView::~MainView()
 
 QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model)
 {
+  return KDeclarativeMainView::createItemModelContext(context, model);
+
   ThreadGrouperModel *grouper = new ThreadGrouperModel(this);
   grouper->setSourceModel(model);
 
