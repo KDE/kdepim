@@ -285,6 +285,7 @@ KPIM.MainView {
         anchors.fill : parent;
         onClicked : {
           _itemActionModel.select(-1, 1)
+          _itemNavigationModel.select(-1, 1)
           guiStateManager.popState();
         }
       }
