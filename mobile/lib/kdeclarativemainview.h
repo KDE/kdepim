@@ -254,9 +254,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     virtual GuiStateManager* createGuiStateManager() const;
 
+    virtual void viewSingleItem(const Akonadi::Item &item);
+
   protected Q_SLOTS:
     void delayedInit();
     void breadcrumbsSelectionChanged();
+    void itemSelectionChanged();
 
   protected:
     QItemSelectionModel* regularSelectionModel() const;

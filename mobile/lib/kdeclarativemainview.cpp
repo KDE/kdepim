@@ -280,6 +280,31 @@ void KDeclarativeMainView::delayedInit()
   d->mAgentStatusMonitor = new  AgentStatusMonitor( this );
   d->mAgentStatusMonitor->setMimeTypeFilter( d->mChangeRecorder->mimeTypesMonitored() );
   context->setContextProperty( "agentStatusMonitor", QVariant::fromValue<QObject*>( d->mAgentStatusMonitor ) );
+
+  connect(itemSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(itemSelectionChanged()));
+}
+
+void KDeclarativeMainView::itemSelectionChanged()
+{
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
+  if (list.size() != 1) {
+    // TODO Clear messageViewerItem
+    return;
+  }
+
+  const QModelIndex itemIdx = list.first();
+  const Akonadi::Collection parentCol = itemIdx.data(Akonadi::EntityTreeModel::ParentCollectionRole).value<Akonadi::Collection>();
+  Q_ASSERT(parentCol.isValid());
+  QModelIndex index = EntityTreeModel::modelIndexForCollection(entityTreeModel(), parentCol);
+  Q_ASSERT(index.isValid());
+
+  const Akonadi::Item item = itemIdx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
+  viewSingleItem(item);
+}
+
+void KDeclarativeMainView::viewSingleItem(const Akonadi::Item& item)
+{
+  Q_UNUSED(item)
 }
 
 KDeclarativeMainView::~KDeclarativeMainView()

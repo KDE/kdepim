@@ -226,8 +226,6 @@ void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
 
-  connect(itemSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(itemSelectionChanged()));
-
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
   MobileKernel::self()->setFolderCollectionMonitor( monitor() );
 
