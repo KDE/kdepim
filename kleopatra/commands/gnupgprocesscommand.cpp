@@ -263,7 +263,10 @@ void GnuPGProcessCommand::Private::slotProcessFinished( int code, QProcess::Exit
         if ( status == QProcess::CrashExit )
             error( q->crashExitMessage( arguments ), q->errorCaption() );
         else if ( ignoresSuccessOrFailure )
-            ;
+            if ( dialog )
+                message( i18n("Process finished") );
+            else
+                ;
         else if ( code )
             error( q->errorExitMessage( arguments ), q->errorCaption() );
         else {
