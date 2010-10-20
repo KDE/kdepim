@@ -40,7 +40,7 @@ QML.Item {
     horizontalTileMode: QML.BorderImage.Repeat
     verticalTileMode: QML.BorderImage.Stretch
   }
-  
+
   QML.Image {
     id : iconImage
     anchors {
