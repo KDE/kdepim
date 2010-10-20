@@ -60,6 +60,12 @@
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
 
+#ifdef _WIN32_WCE
+#include <identitypage.h>
+#include <kcomponentdata.h>
+#include <mailtransport/transportmanagementwidget.h>
+#endif
+
 typedef DeclarativeWidgetBase<Message::KMeditor, ComposerView, &ComposerView::setEditor> DeclarativeEditor;
 typedef DeclarativeWidgetBase<MessageComposer::RecipientsEditor, ComposerView, &ComposerView::setRecipientsEditor> DeclarativeRecipientsEditor;
 
@@ -326,11 +332,24 @@ QObject* ComposerView::getAction( const QString &name ) const
 
 void ComposerView::configureIdentity()
 {
+#ifdef _WIN32_WCE
+  KComponentData instance( "kcmkmail_config_identity" ); // keep in sync with kmail for now to reuse kmail translations until after the string freeze
+  KMail::IdentityPage *page = new KMail::IdentityPage( instance, this );
+  page->setObjectName( "kcm_kpimidentities" );
+
+  KDialog dialog( this );
+  dialog.setMainWidget( page );
+  dialog.setButtons( KDialog::Ok | KDialog::Cancel );
+  dialog.setWindowState( Qt::WindowFullScreen );
+  connect( &dialog, SIGNAL( okClicked() ), page, SLOT( save() ) );
+  dialog.exec();
+#else
   KCMultiDialog dlg;
   dlg.addModule( "kcm_kpimidentities" );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
+#endif
 }
 
 void ComposerView::sendSuccessful()
@@ -342,11 +361,22 @@ void ComposerView::sendSuccessful()
 
 void ComposerView::configureTransport()
 {
+#ifdef _WIN32_WCE
+  MailTransport::TransportManagementWidget *tmw = new MailTransport::TransportManagementWidget( this );
+
+  KDialog dialog( this );
+  dialog.setMainWidget( tmw );
+  dialog.setButtons( KDialog::Ok | KDialog::Cancel );
+  dialog.setWindowState( Qt::WindowFullScreen );
+  //connect( &dialog, SIGNAL( okClicked() ), page, SLOT( save() ) );
+  dialog.exec();
+#else
   KCMultiDialog dlg;
   dlg.addModule( "kcm_mailtransport" );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
+#endif
 }
 
 void ComposerView::addAttachment()
