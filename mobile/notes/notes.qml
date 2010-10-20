@@ -53,6 +53,7 @@ KPIM.MainView {
 
   NoteView {
     id: noteView
+    objectName : "noteView"
     visible: guiStateManager.inViewSingleItemState
     anchors.left: parent.left
     anchors.topMargin : 40
@@ -84,8 +85,8 @@ KPIM.MainView {
         anchors.fill : parent;
         onClicked : {
           noteView.saveNote();
+          _itemNavigationModel.select(-1, 1)
           guiStateManager.popState();
-          noteView.noteId = -1;
         }
       }
     }
@@ -227,17 +228,14 @@ KPIM.MainView {
         anchors.top : filterLineEdit.bottom
         anchors.bottom : parent.bottom
         anchors.right : parent.right
-        onItemSelected: {
-          // Prevent reloading of the message, perhaps this should be done
-          // in messageview itself.
-          if ( noteView.noteId != headerList.currentItemId )
-          {
-            noteView.noteId = headerList.currentItemId;
-            noteView.currentNoteRow = -1;
-            noteView.currentNoteRow = headerList.currentIndex;
-
-            guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
-          }
+        navigationModel : _itemNavigationModel
+      }
+      QML.Connections {
+        target : _itemNavigationModel
+        onCurrentRowChanged : {
+          headerList.currentRow = _itemNavigationModel.currentRow
+          noteView.currentNoteRow = _itemNavigationModel.currentRow
+          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
         }
       }
     }

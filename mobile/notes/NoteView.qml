@@ -25,7 +25,6 @@ Rectangle {
   id : _topContext
   color: "#00000000" // Set a transparant color.
   property int currentNoteRow : -1
-  property int noteId : -1
   anchors.fill : parent
 
   onCurrentNoteRowChanged : {

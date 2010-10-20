@@ -45,6 +45,8 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 
+#include <QGraphicsObject>
+
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
 #include <QtDeclarative/QDeclarativeContext>
@@ -387,3 +389,14 @@ ExportHandlerBase* MainView::exportHandler() const
 {
   return new NotesExportHandler();
 }
+
+void MainView::viewSingleItem(const Akonadi::Item& item)
+{
+  QObject* obj = rootObject()->findChild<QObject*>("noteView");
+  Q_ASSERT( obj );
+
+  Q_ASSERT(item.isValid());
+
+  obj->setProperty("noteId", item.id());
+}
+
