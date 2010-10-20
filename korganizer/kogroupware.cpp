@@ -225,7 +225,8 @@ void KOGroupware::incomingDirChanged( const QString& path )
       if ( scheduler.acceptCounterProposal( incidence ) ) {
         mCalendar->save();
         // send update to all attendees
-        sendICalMessage( mView, Scheduler::Request, incidence, 0, KOGlobals::INCIDENCEEDITED, false );
+        sendICalMessage( mView, Scheduler::Request, incidence, 0,
+                         KOGlobals::INCIDENCEEDITED, false );
       }
     }
   } else {
