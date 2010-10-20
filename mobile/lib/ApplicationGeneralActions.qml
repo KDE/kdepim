@@ -26,7 +26,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.ActionList {
   id : actions
-
+  property alias configureActionVisible: configureAction.visible
   property string type
   signal longPressed(string actionName)
 
@@ -62,6 +62,7 @@ KPIM.ActionList {
   }
 
   KPIM.ScriptActionItem {
+    id : configureAction
     name : "configure"
     title : KDE.i18n( "Configure" )
   }
