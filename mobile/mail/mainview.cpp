@@ -159,7 +159,7 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
   checkedItems->setFilterBehavior( KSelectionProxyModel::ExactSelection );
   checkedItems->setSourceModel( model );
 
-  QItemSelectionModel *itemsSelectionModel = new QItemSelectionModel( model, this );
+  QItemSelectionModel *itemNavigationModel = new QItemSelectionModel( model, this );
 
   QAbstractProxyModel *_listProxy = listProxy();
 
@@ -168,7 +168,7 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 
     _listProxy->setSourceModel( qmlCheckable );
   }
-  KLinkItemSelectionModel *itemNavigationSelectionModel = new KLinkItemSelectionModel( _listProxy, itemsSelectionModel, this );
+  KLinkItemSelectionModel *itemNavigationSelectionModel = new KLinkItemSelectionModel( _listProxy, itemNavigationModel, this );
 
   KLinkItemSelectionModel *itemActionSelectionModel = new KLinkItemSelectionModel( _listProxy, itemActionCheckModel, this );
   setItemNaigationAndActionSelectionModels(itemNavigationSelectionModel, itemActionSelectionModel);
@@ -201,7 +201,7 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 
   context->setContextProperty( "threadContents", threadContentsModel );
 
-  ThreadSelectionModel *threadSelector = new ThreadSelectionModel(threads, itemSelectionModel(), this);
+  ThreadSelectionModel *threadSelector = new ThreadSelectionModel(threads, itemSelectionModel(), itemNavigationModel, this);
 
   QMLListSelectionModel *qmlThreadSelector = new QMLListSelectionModel(threadSelector, this);
 

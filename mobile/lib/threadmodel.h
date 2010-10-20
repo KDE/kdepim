@@ -88,13 +88,15 @@ class ThreadSelectionModelPrivate;
 
 class MOBILEUI_EXPORT ThreadSelectionModel : public QItemSelectionModel
 {
+  Q_OBJECT
 public:
-  explicit ThreadSelectionModel(QAbstractItemModel* model, QItemSelectionModel *selectionModel, QObject *parent = 0);
+  explicit ThreadSelectionModel(QAbstractItemModel* model, QItemSelectionModel *contentSelectionModel, QItemSelectionModel *navigationModel, QObject *parent = 0);
   virtual void select(const QModelIndex& index, SelectionFlags command);
   virtual void select(const QItemSelection& selection, SelectionFlags command);
 private:
   Q_DECLARE_PRIVATE(ThreadSelectionModel)
   ThreadSelectionModelPrivate * const d_ptr;
+  Q_PRIVATE_SLOT(d_func(), void contentSelectionChanged(QItemSelection,QItemSelection))
 };
 
 #endif

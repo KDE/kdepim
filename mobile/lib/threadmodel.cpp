@@ -304,11 +304,15 @@ Akonadi::Item ThreadGrouperModelPrivate::threadRoot(const QModelIndex &index) co
 QVariant ThreadGrouperModel::data(const QModelIndex& index, int role) const
 {
   Q_D(const ThreadGrouperModel);
+  if (!index.isValid())
+    return QVariant();
   if (role == ThreadIdRole) {
     return d->threadRoot(index).id();
   }
   if (role == Qt::DisplayRole) {
     Akonadi::Item item = QSortFilterProxyModel::data(index, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+    Q_ASSERT(item.isValid());
+    Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
     KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
     return  QSortFilterProxyModel::data(index, role).toString() + message->subject()->asUnicodeString() + " - " + message->date()->asUnicodeString();
   }
@@ -525,23 +529,27 @@ int ThreadModel::rowCount(const QModelIndex& parent) const
 
 class ThreadSelectionModelPrivate
 {
-  ThreadSelectionModelPrivate(ThreadSelectionModel *qq, QItemSelectionModel *selectionModel)
-    : q_ptr(qq), m_selectionModel(selectionModel)
+  ThreadSelectionModelPrivate(ThreadSelectionModel *qq, QItemSelectionModel *contentSelectionModel, QItemSelectionModel* navigationModel)
+    : q_ptr(qq), m_contentSelectionModel(contentSelectionModel), m_navigationModel(navigationModel)
   {
 
   }
   Q_DECLARE_PUBLIC(ThreadSelectionModel)
   ThreadSelectionModel * const q_ptr;
 
-  QItemSelectionModel * const m_selectionModel;
+  void contentSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+
+  QItemSelectionModel * const m_contentSelectionModel;
+  QItemSelectionModel * const m_navigationModel;
 
 };
 
-ThreadSelectionModel::ThreadSelectionModel(QAbstractItemModel* model, QItemSelectionModel* selectionModel, QObject *parent)
+ThreadSelectionModel::ThreadSelectionModel(QAbstractItemModel* model, QItemSelectionModel* contentSelectionModel, QItemSelectionModel* navigationModel, QObject *parent)
   : QItemSelectionModel(model, parent),
-    d_ptr(new ThreadSelectionModelPrivate(this, selectionModel))
+    d_ptr(new ThreadSelectionModelPrivate(this, contentSelectionModel, navigationModel))
 {
-
+  connect(contentSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(contentSelectionChanged(QItemSelection,QItemSelection)));
 }
 
 void ThreadSelectionModel::select(const QModelIndex& index, QItemSelectionModel::SelectionFlags command)
@@ -560,16 +568,28 @@ void ThreadSelectionModel::select(const QItemSelection& selection, QItemSelectio
       const QModelIndex idx = model()->index(row, column);
       const int threadStartRow = idx.data(ThreadModel::ThreadRangeStartRole).toInt();
       const int threadEndRow = idx.data(ThreadModel::ThreadRangeEndRole).toInt();
-      const QModelIndex threadStart = d->m_selectionModel->model()->index(threadStartRow, column);
-      const QModelIndex threadEnd = d->m_selectionModel->model()->index(threadEndRow, column);
+      const QModelIndex threadStart = d->m_contentSelectionModel->model()->index(threadStartRow, column);
+      const QModelIndex threadEnd = d->m_contentSelectionModel->model()->index(threadEndRow, column);
       Q_ASSERT(threadStart.isValid());
       Q_ASSERT(threadEnd.isValid());
       thread.select(threadStart, threadEnd);
     }
   }
   kDebug() << thread;
-  d->m_selectionModel->select(thread, ClearAndSelect);
+  d->m_contentSelectionModel->select(thread, ClearAndSelect);
 }
 
+void ThreadSelectionModelPrivate::contentSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+{
+  Q_UNUSED(selected)
+  Q_UNUSED(deselected)
+
+  const QModelIndexList list = m_contentSelectionModel->selectedRows();
+  if (list.isEmpty())
+    m_navigationModel->clearSelection();
+  if (list.size() == 1) {
+    m_navigationModel->select(list.first(), QItemSelectionModel::ClearAndSelect);
+  }
+}
 
 #include "threadmodel.moc"
