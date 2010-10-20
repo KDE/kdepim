@@ -124,7 +124,7 @@ bool QMLListSelectionModel::requestPrevious()
   if (idx.row() == 0)
     return false;
 
-  const QModelIndex previous = idx.sibling(idx.row() + 1, idx.column());
+  const QModelIndex previous = idx.sibling(idx.row() - 1, idx.column());
   m_selectionModel->select(QItemSelection(previous, previous), QItemSelectionModel::ClearAndSelect);
   return true;
 }
