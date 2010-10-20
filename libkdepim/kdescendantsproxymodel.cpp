@@ -115,7 +115,6 @@ void KDescendantsProxyModelPrivate::synchronousMappingRefresh()
 
 void KDescendantsProxyModelPrivate::scheduleProcessPendingParents() const
 {
-  Q_Q(const KDescendantsProxyModel);
   const_cast<KDescendantsProxyModelPrivate*>(this)->processPendingParents();
 }
 
