@@ -56,13 +56,13 @@ static bool haveKeyserverConfigured() {
 RefreshOpenPGPCertsCommand::RefreshOpenPGPCertsCommand( KeyListController * c )
     : GnuPGProcessCommand( c )
 {
-
+    setShowsOutputWindow( true );
 }
 
 RefreshOpenPGPCertsCommand::RefreshOpenPGPCertsCommand( QAbstractItemView * v, KeyListController * c )
     : GnuPGProcessCommand( v, c )
 {
-
+    setShowsOutputWindow( true );
 }
 
 RefreshOpenPGPCertsCommand::~RefreshOpenPGPCertsCommand() {}
