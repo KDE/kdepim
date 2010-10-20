@@ -42,7 +42,6 @@ class MainView : public KDeclarativeMainView
     void saveCurrentNoteContent( const QString &content );
 
     void startComposer();
-    void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
 
   protected slots:
     virtual void delayedInit();

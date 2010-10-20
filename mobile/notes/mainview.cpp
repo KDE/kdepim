@@ -285,8 +285,6 @@ void MainView::startComposer()
 
     Akonotes::NoteCreatorAndSelector *noteCreator = new Akonotes::NoteCreatorAndSelector( itemSelectionModel(), itemSelectionModel(), this );
     noteCreator->createNote( collection );
-    connect( itemSelectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
-             this, SLOT( onSelectionChanged( QItemSelection, QItemSelection ) ) );
 
     return;
   }
@@ -306,17 +304,6 @@ void MainView::startComposer()
 
   Akonotes::NoteCreatorAndSelector *noteCreator = new Akonotes::NoteCreatorAndSelector( regularSelectionModel(), itemSelectionModel(), this );
   noteCreator->createNote( collection );
-}
-
-void MainView::onSelectionChanged( const QItemSelection&, const QItemSelection& )
-{
-  const QModelIndexList list = itemSelectionModel()->selectedRows();
-
-  if ( list.size() != 1 )
-    return;
-
-  const QModelIndex index = list.first();
-  selectedItemChanged( index.row(), index.data( EntityTreeModel::ItemIdRole ).toLongLong() );
 }
 
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
