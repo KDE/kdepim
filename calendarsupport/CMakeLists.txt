@@ -36,7 +36,6 @@ set(calendarsupport_LIB_SRCS
   kcalprefs.cpp
   mailclient.cpp
   mailscheduler.cpp
-  modelstatesaver.cpp
   publishdialog.cpp
   utils.cpp
 
