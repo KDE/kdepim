@@ -157,7 +157,6 @@ void AttachmentFromUrlJob::doStart()
   Q_ASSERT( d->data.isEmpty() ); // Not started twice.
   KIO::TransferJob *tjob = KIO::get( d->url, KIO::NoReload,
       ( uiDelegate() ? KIO::DefaultFlags : KIO::HideProgressInfo ) );
-  KIO::Scheduler::scheduleJob( tjob );
   QObject::connect( tjob, SIGNAL(result(KJob*)), this, SLOT(transferJobResult(KJob*)) );
   QObject::connect( tjob, SIGNAL(data(KIO::Job*,QByteArray)),
                     this, SLOT(transferJobData(KIO::Job*,QByteArray)) );
