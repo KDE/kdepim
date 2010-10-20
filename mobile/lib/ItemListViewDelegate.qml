@@ -37,8 +37,8 @@ Item {
     onClicked: {
       if (showCheckBox && checkModel) {
         checkModel.select(model.index, 8)
-      } else if (navigationModel != undefined) {
-        navigationModel.select(model.index, 3)
+      } else if (itemViewTopLevel.navigationModel != undefined) {
+        itemViewTopLevel.navigationModel.select(model.index, 3)
       } else {
         itemViewTopLevel.ListView.view.currentIndex = model.index;
         itemViewTopLevel.ListView.view.parent.currentItemId = model.itemId;
