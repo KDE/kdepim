@@ -49,6 +49,38 @@ QList< int > QMLListSelectionModel::selection() const
   return list;
 }
 
+int QMLListSelectionModel::currentRow() const
+{
+  const QModelIndexList indexes = m_selectionModel->selectedRows();
+  if (indexes.size() != 1)
+    return -1;
+  Q_ASSERT(indexes.first().isValid());
+  return indexes.first().row();
+}
+
+void QMLListSelectionModel::setCurrentRow(int row)
+{
+  select(row, QItemSelectionModel::ClearAndSelect);
+}
+
+qint64 QMLListSelectionModel::currentItemId() const
+{
+  const QModelIndexList indexes = m_selectionModel->selectedRows();
+  if (indexes.size() != 1)
+    return -1;
+  Q_ASSERT(indexes.first().isValid());
+  return indexes.first().data(Akonadi::EntityTreeModel::ItemIdRole).toLongLong();
+}
+
+void QMLListSelectionModel::setCurrentItemId(qint64 itemId)
+{
+  const QModelIndexList list = Akonadi::EntityTreeModel::modelIndexesForItem(m_selectionModel->model(), Akonadi::Item(itemId));
+  if (list.size() == 1) {
+    const QModelIndex idx = list.first();
+    m_selectionModel->select(QItemSelection(idx, idx), QItemSelectionModel::ClearAndSelect);
+  }
+}
+
 void QMLListSelectionModel::select(int row, int command)
 {
   if (row < 0) {

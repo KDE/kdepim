@@ -30,6 +30,8 @@ class MOBILEUI_EXPORT QMLListSelectionModel : public QObject
 {
   Q_OBJECT
   Q_PROPERTY(QList<int> selection READ selection NOTIFY selectionChanged)
+  Q_PROPERTY(int currentRow READ currentRow WRITE setCurrentRow NOTIFY selectionChanged)
+  Q_PROPERTY(qint64 currentItemIdHack READ currentItemId WRITE setCurrentItemId NOTIFY selectionChanged)
 public:
   enum SelectionFlag {
       NoUpdate       = 0x0000,
@@ -53,6 +55,11 @@ public:
 
   QList<int> selection() const;
 
+  int currentRow() const;
+  void setCurrentRow(int row);
+
+  qint64 currentItemId() const;
+  void setCurrentItemId(qint64 itemId);
 
 public slots:
   void clearSelection();
