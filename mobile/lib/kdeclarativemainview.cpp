@@ -85,7 +85,7 @@
   view->setModel(model);                     \
   view->setWindowTitle(#model);              \
   view->show();                              \
-}
+}                                            \
 
 ItemSelectHook::ItemSelectHook( QItemSelectionModel *selectionModel, QObject* parent )
   : QObject( parent ),
