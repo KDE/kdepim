@@ -179,9 +179,7 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
     QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( itemNavigationSelectionModel, this );
     QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( itemActionSelectionModel, this );
 
-    setHook(new ItemSelectHook( itemNavigationSelectionModel, this ));
-
-    context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
+    context->setContextProperty( "_itemNavigationModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
     context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
 
     Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory( this );
@@ -190,28 +188,35 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
   }
   return model; // The rest still in development.
 
-  ThreadModel *threads = new ThreadModel(grouper, this);
+  m_threadsModel = new ThreadModel(_listProxy, this);
 
-  context->setContextProperty( "threads", threads );
+  context->setContextProperty( "_threads", m_threadsModel );
 
-  KLinkItemSelectionModel *emailSelectionModel = new KLinkItemSelectionModel(grouper, itemSelectionModel(), this);
+  QItemSelectionModel *itemThreadModel = new QItemSelectionModel( model, this );
 
-  KSelectionProxyModel *threadContentsModel = new KSelectionProxyModel(itemSelectionModel(), this);
-  threadContentsModel->setSourceModel(grouper);
+  m_threadContentsModel = new KSelectionProxyModel(itemThreadModel, this);
+  m_threadContentsModel->setSourceModel(_listProxy);
+  m_threadContentsModel->setObjectName("threadContentsModel");
 
-  context->setContextProperty( "threadContents", threadContentsModel );
+  context->setContextProperty( "_threadContents", m_threadContentsModel );
 
-  ThreadSelectionModel *threadSelector = new ThreadSelectionModel(threads, itemSelectionModel(), itemNavigationModel, this);
+  ThreadSelectionModel *threadSelector = new ThreadSelectionModel(m_threadsModel, itemThreadModel, itemNavigationModel, this);
 
   QMLListSelectionModel *qmlThreadSelector = new QMLListSelectionModel(threadSelector, this);
 
-  context->setContextProperty("threadSelector", qmlThreadSelector );
+  context->setContextProperty("_threadSelector", qmlThreadSelector );
+
+  KLinkItemSelectionModel *threadMailSelector = new KLinkItemSelectionModel(m_threadContentsModel, itemNavigationModel, this);
+
+  QMLListSelectionModel *qmlThreadMailSelector = new QMLListSelectionModel(threadMailSelector, this);
+
+  context->setContextProperty("_threadMailSelector", qmlThreadMailSelector );
 
 #if 0
   {
     QTreeView *view = new QTreeView;
     view->setAttribute(Qt::WA_DeleteOnClose);
-    view->setModel(threads);
+    view->setModel(m_threadsModel);
     view->setSelectionModel(threadSelector);
     view->setWindowTitle("threads");
     view->show();
@@ -837,6 +842,40 @@ bool MainView::isDraft( int row )
   const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
 
   return folderIsDrafts( item.parentCollection() );
+}
+
+bool MainView::isDraftThreadContent( int row )
+{
+  static const int column = 0;
+  const QModelIndex index = m_threadContentsModel->index( row, column );
+
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  return folderIsDrafts( item.parentCollection() );
+}
+
+
+bool MainView::isDraftThreadRoot( int row )
+{
+  static const int column = 0;
+  const QModelIndex index = m_threadsModel->index( row, column );
+
+  const int threadSize = index.data(ThreadModel::ThreadSizeRole).toInt();
+  if (threadSize != 1)
+    return false;
+
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  return folderIsDrafts( item.parentCollection() );
+}
+
+bool MainView::isSingleMessage(int row)
+{
+  static const int column = 0;
+  const QModelIndex index = m_threadsModel->index( row, column );
+
+  const int threadSize = index.data(ThreadModel::ThreadSizeRole).toInt();
+  return threadSize == 1;
 }
 
 // #############################################################

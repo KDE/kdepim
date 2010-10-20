@@ -33,6 +33,7 @@
 class TemplateEmailModel;
 class KSelectionProxyModel;
 class QStandardItemModel;
+class ThreadModel;
 namespace MessageViewer {
   class MessageViewItem;
 }
@@ -71,6 +72,9 @@ class MainView : public KDeclarativeMainView
     void dataChanged();
 
     bool isDraft( int row );
+    bool isDraftThreadContent( int row );
+    bool isDraftThreadRoot( int row );
+    bool isSingleMessage( int row );
     bool folderIsDrafts( const Akonadi::Collection &collection );
 
     // HACK until mark-as-read logic is in messageviewer
@@ -146,7 +150,9 @@ class MainView : public KDeclarativeMainView
     Akonadi::StandardMailActionManager *mMailActionManager;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
     TemplateEmailModel *mEmailTemplateModel;
-    QItemSelectionModel *mTemplateSelectionModel;    
+    QItemSelectionModel *mTemplateSelectionModel;
+    KSelectionProxyModel *m_threadContentsModel;
+    ThreadModel *m_threadsModel;
 };
 
 Q_DECLARE_METATYPE( MainView::ForwardMode )
