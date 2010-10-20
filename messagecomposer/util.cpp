@@ -27,6 +27,7 @@
 
 #include <KCharsets>
 #include <KDebug>
+#include <KLocalizedString>
 
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_content.h>
@@ -241,5 +242,13 @@ QByteArray Message::Util::selectCharset( const QList<QByteArray> &charsets, cons
   }
   kDebug() << "No appropriate charset found.";
   return QByteArray();
+}
+
+QStringList Message::Util::AttachmentKeywords()
+{
+  return i18nc(
+    "comma-separated list of keywords that are used to detect whether "
+    "the user forgot to attach his attachment",
+    "attachment,attached" ).split( QLatin1Char( ',' ) );
 }
 

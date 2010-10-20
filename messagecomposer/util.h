@@ -71,6 +71,7 @@ namespace Util {
     MESSAGECOMPOSER_EXPORT QByteArray selectCharset( const QList<QByteArray> &charsets,
                                                     const QString &text );
 
+    MESSAGECOMPOSER_EXPORT QStringList AttachmentKeywords();
 }
 
 }
