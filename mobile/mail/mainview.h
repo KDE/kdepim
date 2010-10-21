@@ -144,7 +144,6 @@ class MainView : public KDeclarativeMainView
     bool askToGoOnline();
     MessageViewer::MessageViewItem *messageViewerItem();
 
-    AkonadiSender *mMessageSender;
     bool mAskingToGoOnline;
     QWidget *mTransportDialog;
     Akonadi::StandardMailActionManager *mMailActionManager;

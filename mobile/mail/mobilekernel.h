@@ -25,6 +25,7 @@
 
 #include <KSharedConfig>
 
+class AkonadiSender;
 namespace KPIMIdentities {
 class IdentityManager;
 }
@@ -53,6 +54,7 @@ public:
     /*reimp*/ void syncConfig();
     /*reimp*/ KPIMIdentities::IdentityManager* identityManager();
     /*reimp*/ Akonadi::EntityMimeTypeFilterModel* collectionModel() const { return mCollectionModel; }
+    /*reimp*/ MessageSender* msgSender();
 
 //ISettings methods:
     /*reimp*/ void updateSystemTray();
@@ -61,6 +63,7 @@ public:
     /*reimp*/ qreal closeToQuotaThreshold();
     /*reimp*/ bool excludeImportantMailFromExpiry();
     /*reimp*/ bool showPopupAfterDnD();
+    /*reimp*/ QStringList customTemplates();
 
 
     /*reimp*/ ~MobileKernel();
@@ -72,6 +75,7 @@ private:
     Akonadi::ChangeRecorder *mMonitor;
     KPIMIdentities::IdentityManager *mIdentityManager;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
+    AkonadiSender *mMessageSender;
     KSharedConfig::Ptr mConfig;
 };
 

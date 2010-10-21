@@ -124,7 +124,6 @@ MainView::MainView(QWidget* parent)
 
 MainView::~MainView()
 {
-  delete mMessageSender;
 }
 
 #define VIEW(model) {                        \
@@ -269,7 +268,6 @@ void MainView::delayedInit()
   addMimeType( KMime::Message::mimeType() );
   itemFetchScope().fetchPayloadPart( MessagePart::Envelope );
   setWindowTitle( i18n( "KDE Mail" ) );
-  mMessageSender = new AkonadiSender;
 
   MailActionManager *mMailActionManager = new MailActionManager( actionCollection(), this );
   mMailActionManager->setItemSelectionModel( itemSelectionModel() );
@@ -507,7 +505,7 @@ void MainView::sendQueued()
   if ( !askToGoOnline() )
     return;
 
-  mMessageSender->sendQueued();
+  KernelIf->msgSender()->sendQueued();
 }
 
 void MainView::sendQueuedVia()
@@ -548,7 +546,7 @@ void MainView::sendQueuedVia()
 
 void MainView::sendQueuedVia( const QString &transport )
 {
-  mMessageSender->sendQueued( transport );
+  KernelIf->msgSender()->sendQueued( transport );
   delete mTransportDialog;
   mTransportDialog = 0;
 }

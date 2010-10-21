@@ -22,6 +22,7 @@
 #include <mailcommon/mailkernel.h>
 #include <mailcommon/jobscheduler.h>
 #include <kpimidentities/identitymanager.h>
+#include <messagecomposer/akonadisender.h>
 
 using namespace MailCommon;
 
@@ -34,6 +35,8 @@ MobileKernel::MobileKernel()
   mJobScheduler = new JobScheduler(0);
   mIdentityManager = new KPIMIdentities::IdentityManager( false, 0, "mIdentityManager" );
 
+  mMessageSender = new AkonadiSender;
+
   CommonKernel->registerKernelIf( this );
   CommonKernel->registerSettingsIf( this );
 }
@@ -42,6 +45,7 @@ MobileKernel::~MobileKernel()
 {
   delete mJobScheduler;
   delete mIdentityManager;
+  delete mMessageSender;
 }
 
 MobileKernel* MobileKernel::self()
@@ -78,6 +82,12 @@ KPIMIdentities::IdentityManager* MobileKernel::identityManager()
   return mIdentityManager;
 }
 
+MessageSender* MobileKernel::msgSender()
+{
+  return mMessageSender;
+}
+
+
 void MobileKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
 {
  //TODO: implement
@@ -103,3 +113,7 @@ bool MobileKernel::showPopupAfterDnD()
   return false;
 }
 
+QStringList MobileKernel::customTemplates()
+{
+  return QStringList(); //TODO: implement
+}
