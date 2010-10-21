@@ -1220,9 +1220,9 @@ displayed. Choose:</para>
 <listitem>
 <para><guilabel>Speak</guilabel> to have the alarm message spoken as
 well as being displayed. This option is only available if you have
-<application>Jovie</application> (from the kdeaccessibility package)
-installed and configured, together with a compatible speech
-synthesizer, &eg; <application>Festival</application>.</para>
+&jovie; (from the kdeaccessibility package) installed and configured,
+together with a compatible speech synthesizer, &eg;
+<application>Festival</application>.</para>
 </listitem>
 
 <listitem>
@@ -3046,10 +3046,9 @@ time.</para>
 <row>
   <entry><option>-s</option>, <option>--speak</option></entry>
   <entry>Speak the message when it is displayed. This option requires
-  <application>Jovie</application> to be installed and configured,
-  together with a compatible speech synthesizer.
-  <option>--beep</option>, <option>--play</option> and
-  <option>--play-repeat</option> cannot be specified with this
+  &jovie; to be installed and configured, together with a compatible
+  speech synthesizer. <option>--beep</option>, <option>--play</option>
+  and <option>--play-repeat</option> cannot be specified with this
   option.</entry>
 </row>
 <row>
@@ -4758,10 +4757,10 @@ packages, and the &Qt; development package.</para>
 they are installed:</para>
 
 <itemizedlist>
-<listitem><para><application>Jovie</application> (from
-kdeaccessibility package): if installed and configured, together with
-a compatible speech synthesizer package, it allows &kalarm; to speak
-alarm messages when they are displayed.</para>
+<listitem><para>&jovie; (from kdeaccessibility package): if installed
+and configured, together with a compatible speech synthesizer package,
+it allows &kalarm; to speak alarm messages when they are
+displayed.</para>
 </listitem>
 </itemizedlist>
 
