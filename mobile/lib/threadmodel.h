@@ -29,38 +29,8 @@
 
 #include "mobileui_export.h"
 
-class ThreadGrouperModelPrivate;
 class ThreadModelPrivate;
 
-class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
-{
-  Q_OBJECT
-public:
-  enum CustomRoles {
-    // FIXME Fix custom role handling in proxies.
-    ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 10
-  };
-
-  enum OrderScheme {
-    ThreadsWithNewRepliesOrder,
-    ThreadsStartedOrder
-  };
-  ThreadGrouperModel(QObject* parent = 0);
-  virtual ~ThreadGrouperModel();
-
-  void setThreadOrder(OrderScheme order);
-  OrderScheme threadOrder() const;
-
-  virtual void setSourceModel(QAbstractItemModel* sourceModel);
-
-  virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-
-private:
-  Q_DECLARE_PRIVATE(ThreadGrouperModel)
-  ThreadGrouperModelPrivate * const d_ptr;
-  Q_PRIVATE_SLOT(d_func(), void populateThreadGrouperModel())
-};
 
 class MOBILEUI_EXPORT ThreadModel : public QAbstractListModel
 {

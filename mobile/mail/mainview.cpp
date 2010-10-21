@@ -40,6 +40,7 @@
 #include "settings.h"
 #include "savemailcommand_p.h"
 #include "templateemailmodel.h"
+#include "threadgroupermodel.h"
 #include "threadmodel.h"
 
 #include <akonadi/agentactionmanager.h>
