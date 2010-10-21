@@ -250,6 +250,7 @@ QVariant AbstractKeyListModel::headerData( int section, Qt::Orientation o, int r
             case ValidUntil:       return i18n( "Valid Until" );
             case TechnicalDetails: return i18n( "Details" );
             case Fingerprint:      return i18n( "Fingerprint" );
+            case ShortKeyID:       return i18n( "Key-ID" );
             case NumColumns:       ;
             }
     return QVariant();
@@ -304,13 +305,15 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
             return Formatting::type( key );
         case Fingerprint:
             return QString::fromLatin1( key.primaryFingerprint() );
+        case ShortKeyID:
+            return QString::fromLatin1( key.keyID() );
         case NumColumns:
             break;
         }
     else if ( role == Qt::ToolTipRole )
         return Formatting::toolTip( key, toolTipOptions() );
     else if ( role == Qt::FontRole )
-        return KeyFilterManager::instance()->font( key, column == Fingerprint ? QFont( "courier" ) : QFont() );
+        return KeyFilterManager::instance()->font( key, ( column == Fingerprint || column == ShortKeyID ) ? QFont( "courier" ) : QFont() );
     else if ( role == Qt::DecorationRole )
         return column == Icon ? returnIfValid( KeyFilterManager::instance()->icon( key ) ) : QVariant() ;
     else if ( role == Qt::BackgroundRole )

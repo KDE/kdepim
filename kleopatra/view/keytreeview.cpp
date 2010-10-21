@@ -212,6 +212,7 @@ void KeyTreeView::setHierarchicalModel( AbstractKeyListModel * model ) {
     if ( m_isHierarchical ) {
         find_last_proxy( m_proxy )->setSourceModel( model );
         m_view->expandAll();
+        m_view->setColumnHidden( AbstractKeyListModel::Fingerprint, true );
     }
 }
 
