@@ -30,8 +30,9 @@
 
 MessageListProxy::MessageListProxy(QObject* parent) : ListProxy(parent)
 {
-  setDynamicSortFilter( true );
-  sort( 0, Qt::DescendingOrder );
+  // Sorting is done higher up now in the thread grouping proxy.
+//   setDynamicSortFilter( true );
+//   sort( 0, Qt::DescendingOrder );
 }
 
 QVariant MessageListProxy::data(const QModelIndex& index, int role) const
