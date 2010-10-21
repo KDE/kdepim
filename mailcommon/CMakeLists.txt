@@ -53,7 +53,7 @@ add_resource_iface( imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings
 
 qt4_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
-  ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Task.xml
+#  ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Task.xml
 )
 
 kde4_add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})
