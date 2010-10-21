@@ -33,7 +33,9 @@ class KShortcut;
 struct CustomTemplateItem;
 typedef QHash<QString,CustomTemplateItem*> CustomTemplateItemList;
 
-class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget, public Ui::CustomTemplatesBase
+class Ui_CustomTemplatesBase;
+
+class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
 {
   Q_OBJECT
 
@@ -89,6 +91,8 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget, public Ui::CustomT
     /// Whether or not to emit the changed() signal. This is useful to disable when loading
     /// templates, which changes the UI without user action
     bool mBlockChangeSignal;
+
+    Ui_CustomTemplatesBase *mUi;
 };
 
 struct CustomTemplateItem

@@ -47,44 +47,45 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
   : QWidget( parent ),
     mBlockChangeSignal( false )
 {
-  setupUi(this);
+  mUi = new Ui_CustomTemplatesBase;
+  mUi->setupUi( this );
   setObjectName(name);
 
   QFont f = KGlobalSettings::fixedFont();
-  mEdit->setFont( f );
+  mUi->mEdit->setFont( f );
 
-  mAdd->setIcon( KIcon( "list-add" ) );
-  mAdd->setEnabled( false );
-  mRemove->setIcon( KIcon( "list-remove" ) );
+  mUi->mAdd->setIcon( KIcon( "list-add" ) );
+  mUi->mAdd->setEnabled( false );
+  mUi->mRemove->setIcon( KIcon( "list-remove" ) );
 
-  mList->setColumnWidth( 0, 100 );
-  mList->header()->setStretchLastSection( true );
+  mUi->mList->setColumnWidth( 0, 100 );
+  mUi->mList->header()->setStretchLastSection( true );
 
-  mEditFrame->setEnabled( false );
+  mUi->mEditFrame->setEnabled( false );
 
-  connect( mEdit, SIGNAL( textChanged() ),
+  connect( mUi->mEdit, SIGNAL( textChanged() ),
           this, SLOT( slotTextChanged( void ) ) );
-  connect( mToEdit, SIGNAL( textChanged() ),
+  connect( mUi->mToEdit, SIGNAL( textChanged() ),
            this, SLOT( slotTextChanged() ) );
-  connect( mCCEdit, SIGNAL( textChanged() ),
+  connect( mUi->mCCEdit, SIGNAL( textChanged() ),
            this, SLOT( slotTextChanged() ) );
 
-  connect( mName, SIGNAL( textChanged( const QString & ) ),
+  connect( mUi->mName, SIGNAL( textChanged( const QString & ) ),
            this, SLOT( slotNameChanged( const QString & ) ) );
 
-  connect( mInsertCommand, SIGNAL( insertCommand(const QString&, int) ),
+  connect( mUi->mInsertCommand, SIGNAL( insertCommand(const QString&, int) ),
           this, SLOT( slotInsertCommand(const QString&, int) ) );
 
-  connect( mAdd, SIGNAL( clicked() ),
+  connect( mUi->mAdd, SIGNAL( clicked() ),
           this, SLOT( slotAddClicked() ) );
-  connect( mRemove, SIGNAL( clicked() ),
+  connect( mUi->mRemove, SIGNAL( clicked() ),
           this, SLOT( slotRemoveClicked() ) );
-  connect( mList, SIGNAL( itemSelectionChanged() ),
+  connect(mUi->mList, SIGNAL( itemSelectionChanged() ),
           this, SLOT( slotListSelectionChanged() ) );
-  connect( mType, SIGNAL( activated( int ) ),
+  connect( mUi->mType, SIGNAL( activated( int ) ),
           this, SLOT( slotTypeActivated( int ) ) );
 
-  connect( mKeySequenceWidget, SIGNAL( keySequenceChanged( const QKeySequence& ) ),
+  connect( mUi->mKeySequenceWidget, SIGNAL( keySequenceChanged( const QKeySequence& ) ),
           this, SLOT( slotShortcutChanged( const QKeySequence& ) ) );
 
 // TODO(leo) still check with kmail? kmail can do the checking
@@ -94,14 +95,14 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
   mReplyAllPix = KIconLoader().loadIcon( "mail-reply-all", KIconLoader::Small );
   mForwardPix = KIconLoader().loadIcon( "mail-forward", KIconLoader::Small );
 
-  mType->clear();
-  mType->addItem( QPixmap(), i18nc( "Message->", "Universal" ) );
-  mType->addItem( mReplyPix, i18nc( "Message->", "Reply" ) );
-  mType->addItem( mReplyAllPix, i18nc( "Message->", "Reply to All" ) );
-  mType->addItem( mForwardPix, i18nc( "Message->", "Forward" ) );
+  mUi->mType->clear();
+  mUi->mType->addItem( QPixmap(), i18nc( "Message->", "Universal" ) );
+  mUi->mType->addItem( mReplyPix, i18nc( "Message->", "Reply" ) );
+  mUi->mType->addItem( mReplyAllPix, i18nc( "Message->", "Reply to All" ) );
+  mUi->mType->addItem( mForwardPix, i18nc( "Message->", "Forward" ) );
 
-  mHelp->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
-  connect( mHelp, SIGNAL( linkActivated ( const QString& ) ),
+  mUi->mHelp->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
+  connect( mUi->mHelp, SIGNAL( linkActivated ( const QString& ) ),
           SLOT( slotHelpLinkClicked( const QString& ) ) );
 
   const QString toToolTip = i18n( "Additional recipients of the message" );
@@ -112,20 +113,20 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
   // We only want to set the tooltip/whatsthis to the lineedit, not the complete widget,
   // so we use the name here to find the lineedit. This is similar to what KMFilterActionForward
   // does.
-  KLineEdit *ccLineEdit = mCCEdit->findChild<KLineEdit*>( "addressEdit" );
-  KLineEdit *toLineEdit = mToEdit->findChild<KLineEdit*>( "addressEdit" );
+  KLineEdit *ccLineEdit = mUi->mCCEdit->findChild<KLineEdit*>( "addressEdit" );
+  KLineEdit *toLineEdit = mUi->mToEdit->findChild<KLineEdit*>( "addressEdit" );
   Q_ASSERT( ccLineEdit && toLineEdit );
 
-  mCCLabel->setToolTip( ccToolTip );
+  mUi->mCCLabel->setToolTip( ccToolTip );
   ccLineEdit->setToolTip( ccToolTip );
-  mToLabel->setToolTip( toToolTip );
+  mUi->mToLabel->setToolTip( toToolTip );
   toLineEdit->setToolTip( toToolTip );
-  mCCLabel->setWhatsThis( ccWhatsThis );
+  mUi->mCCLabel->setWhatsThis( ccWhatsThis );
   ccLineEdit->setWhatsThis( ccWhatsThis );
-  mToLabel->setWhatsThis( toWhatsThis );
+  mUi->mToLabel->setWhatsThis( toWhatsThis );
   toLineEdit->setWhatsThis( toWhatsThis );
 
-  slotNameChanged( mName->text() );
+  slotNameChanged( mUi->mName->text() );
 }
 
 void CustomTemplates::slotHelpLinkClicked( const QString& )
@@ -152,11 +153,13 @@ void CustomTemplates::slotHelpLinkClicked( const QString& )
 CustomTemplates::~CustomTemplates()
 {
   qDeleteAll( mItemList ); // no auto-delete with QHash
+  delete mUi;
+  mUi = 0;
 }
 
 void CustomTemplates::slotNameChanged( const QString& text )
 {
-  mAdd->setEnabled( !text.isEmpty() );
+  mUi->mAdd->setEnabled( !text.isEmpty() );
 }
 
 QString CustomTemplates::indexToType( int index )
@@ -181,13 +184,13 @@ QString CustomTemplates::indexToType( int index )
 
 void CustomTemplates::slotTextChanged()
 {
-  if ( mList->currentItem() ) {
-    CustomTemplateItem *vitem = mItemList[ mList->currentItem()->text( 1 ) ];
+  if ( mUi->mList->currentItem() ) {
+    CustomTemplateItem *vitem = mItemList[ mUi->mList->currentItem()->text( 1 ) ];
     if ( vitem ) {
-      vitem->mContent = mEdit->toPlainText();
+      vitem->mContent = mUi->mEdit->toPlainText();
       if ( !mBlockChangeSignal ) {
-        vitem->mTo = mToEdit->text();
-        vitem->mCC = mCCEdit->text();
+        vitem->mTo = mUi->mToEdit->text();
+        vitem->mCC = mUi->mCCEdit->text();
       }
     }
   }
@@ -209,7 +212,7 @@ void CustomTemplates::load()
         shortcut,
         static_cast<Type>( t.type() ), t.to(), t.cC() );
     mItemList.insert( *it, vitem );
-    QTreeWidgetItem *item = new QTreeWidgetItem( mList );
+    QTreeWidgetItem *item = new QTreeWidgetItem( mUi->mList );
     item->setText( 0, typeStr );
     item->setText( 1, *it );
     item->setText( 0, indexToType( t.type() ) );
@@ -229,7 +232,7 @@ void CustomTemplates::load()
     };
   }
 
-  mRemove->setEnabled( mList->topLevelItemCount() > 0 );
+  mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 );
 }
 
 void CustomTemplates::save()
@@ -243,7 +246,7 @@ void CustomTemplates::save()
   }
 
   QStringList list;
-  QTreeWidgetItemIterator lit( mList );
+  QTreeWidgetItemIterator lit( mUi->mList );
   while ( *lit ) {
     list.append( (*lit)->text( 1 ) );
     ++lit;
@@ -270,16 +273,16 @@ void CustomTemplates::save()
 
 void CustomTemplates::slotInsertCommand( const QString &cmd, int adjustCursor )
 {
-  QTextCursor cursor = mEdit->textCursor();
+  QTextCursor cursor = mUi->mEdit->textCursor();
   cursor.insertText( cmd );
   cursor.setPosition( cursor.position() + adjustCursor );
-  mEdit->setTextCursor( cursor );
-  mEdit->setFocus();
+  mUi->mEdit->setTextCursor( cursor );
+  mUi->mEdit->setFocus();
 }
 
 void CustomTemplates::slotAddClicked()
 {
-  QString str = mName->text();
+  QString str = mUi->mName->text();
   if ( !str.isEmpty() ) {
     CustomTemplateItem *vitem = mItemList[ str ];
     if ( !vitem ) {
@@ -292,13 +295,13 @@ void CustomTemplates::slotAddClicked()
                                       QString(), QString() );
       mItemList.insert( str, vitem );
       QTreeWidgetItem *item =
-        new QTreeWidgetItem( mList );
+        new QTreeWidgetItem( mUi->mList );
       item->setText( 0, indexToType( TUniversal ) );
       item->setText( 1, str );
-      mList->setCurrentItem( item );
-      mRemove->setEnabled( true );
-      mName->clear();
-      mKeySequenceWidget->setEnabled( false );
+      mUi->mList->setCurrentItem( item );
+      mUi->mRemove->setEnabled( true );
+      mUi->mName->clear();
+      mUi->mKeySequenceWidget->setEnabled( false );
       if ( !mBlockChangeSignal )
         emit changed();
     }
@@ -307,34 +310,34 @@ void CustomTemplates::slotAddClicked()
 
 void CustomTemplates::slotRemoveClicked()
 {
-  if ( !mList->currentItem() )
+  if ( !mUi->mList->currentItem() )
     return;
 
-  const QString templateName = mList->currentItem()->text( 1 );
+  const QString templateName = mUi->mList->currentItem()->text( 1 );
   mItemsToDelete.append( templateName );
   delete mItemList.take( templateName );
-  delete mList->takeTopLevelItem( mList->indexOfTopLevelItem (
-                                  mList->currentItem() ) );
-  mRemove->setEnabled( mList->topLevelItemCount() > 0 );
+  delete mUi->mList->takeTopLevelItem( mUi->mList->indexOfTopLevelItem (
+                                  mUi->mList->currentItem() ) );
+  mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 );
   if ( !mBlockChangeSignal )
     emit changed();
 }
 
 void CustomTemplates::slotListSelectionChanged()
 {
-  QTreeWidgetItem *item = mList->currentItem();
+  QTreeWidgetItem *item = mUi->mList->currentItem();
   if ( item ) {
-    mEditFrame->setEnabled( true );
-    CustomTemplateItem *vitem = mItemList[ mList->currentItem()->text( 1 ) ];
+    mUi->mEditFrame->setEnabled( true );
+    CustomTemplateItem *vitem = mItemList[ mUi->mList->currentItem()->text( 1 ) ];
     if ( vitem ) {
 
       mBlockChangeSignal = true;
-      mEdit->setText( vitem->mContent );
-      mKeySequenceWidget->setKeySequence( vitem->mShortcut.primary(),
+      mUi->mEdit->setText( vitem->mContent );
+      mUi->mKeySequenceWidget->setKeySequence( vitem->mShortcut.primary(),
                                           KKeySequenceWidget::NoValidate );
-      mType->setCurrentIndex( mType->findText( indexToType ( vitem->mType ) ) );
-      mToEdit->setText( vitem->mTo );
-      mCCEdit->setText( vitem->mCC );
+      mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( vitem->mType ) ) );
+      mUi->mToEdit->setText( vitem->mTo );
+      mUi->mCCEdit->setText( vitem->mCC );
       mBlockChangeSignal = false;
 
       // I think the logic (originally 'vitem->mType==TUniversal') was inverted here:
@@ -342,46 +345,46 @@ void CustomTemplates::slotListSelectionChanged()
       // a universal, as otherwise we won't know what sort of action to do when the
       // key sequence is activated!
       // This agrees with KMMainWidget::updateCustomTemplateMenus() -- marten
-      mKeySequenceWidget->setEnabled( vitem->mType != TUniversal );
+      mUi->mKeySequenceWidget->setEnabled( vitem->mType != TUniversal );
     }
   } else {
-    mEditFrame->setEnabled( false );
-    mEdit->clear();
+    mUi->mEditFrame->setEnabled( false );
+    mUi->mEdit->clear();
     // see above
-    mKeySequenceWidget->clearKeySequence();
-    mType->setCurrentIndex( 0 );
-    mToEdit->clear();
-    mCCEdit->clear();
+    mUi->mKeySequenceWidget->clearKeySequence();
+    mUi->mType->setCurrentIndex( 0 );
+    mUi->mToEdit->clear();
+    mUi->mCCEdit->clear();
   }
 }
 
 void CustomTemplates::slotTypeActivated( int index )
 {
-  if ( mList->currentItem() ) {
+  if ( mUi->mList->currentItem() ) {
     // mCurrentItem->setText( 0, indexToType( index ) );
-    CustomTemplateItem *vitem = mItemList[ mList->currentItem()->text( 1 ) ];
+    CustomTemplateItem *vitem = mItemList[ mUi->mList->currentItem()->text( 1 ) ];
     if ( !vitem )
       return;
 
     vitem->mType = static_cast<Type>(index);
-    mList->currentItem()->setText( 0, indexToType( vitem->mType ) );
+    mUi->mList->currentItem()->setText( 0, indexToType( vitem->mType ) );
     switch ( vitem->mType ) {
     case TReply:
-      mList->currentItem()->setIcon( 0, mReplyPix );
+      mUi->mList->currentItem()->setIcon( 0, mReplyPix );
       break;
     case TReplyAll:
-      mList->currentItem()->setIcon( 0, mReplyAllPix );
+      mUi->mList->currentItem()->setIcon( 0, mReplyAllPix );
       break;
     case TForward:
-      mList->currentItem()->setIcon( 0, mForwardPix );
+      mUi->mList->currentItem()->setIcon( 0, mForwardPix );
       break;
     default:
-      mList->currentItem()->setIcon( 0, QPixmap() );
+      mUi->mList->currentItem()->setIcon( 0, QPixmap() );
       break;
     };
 
     // see slotListSelectionChanged() above
-    mKeySequenceWidget->setEnabled( vitem->mType != TUniversal );
+    mUi->mKeySequenceWidget->setEnabled( vitem->mType != TUniversal );
 
     if ( !mBlockChangeSignal )
       emit changed();
@@ -390,11 +393,11 @@ void CustomTemplates::slotTypeActivated( int index )
 
 void CustomTemplates::slotShortcutChanged( const QKeySequence &newSeq )
 {
-    if ( mList->currentItem() )
+    if ( mUi->mList->currentItem() )
     {
-      mItemList[ mList->currentItem()->text( 1 ) ]->mShortcut =
+      mItemList[ mUi->mList->currentItem()->text( 1 ) ]->mShortcut =
           KShortcut( newSeq );
-      mKeySequenceWidget->applyStealShortcut();
+      mUi->mKeySequenceWidget->applyStealShortcut();
     }
 
     if ( !mBlockChangeSignal )
