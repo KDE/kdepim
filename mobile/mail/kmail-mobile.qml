@@ -583,7 +583,6 @@ KPIM.MainView {
       handlePosition: actionPanel.handleHeight + actionPanel.handlePosition
       handleHeight: parent.height - actionPanel.handlePosition - actionPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: attachmentView.requestedWidth
-      property bool showActions: attachmentView.showActions
       content: [
         KPIM.AttachmentList {
           id: attachmentView
