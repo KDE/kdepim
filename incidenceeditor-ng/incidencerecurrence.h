@@ -76,6 +76,13 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
     void updateWeekDays( const QDate &newStartDate );
 
   private:
+
+    /**
+       I needed save() to be const, so created this func.
+       save() calls this now, and changes members outside.
+    */
+    void writeToIncidence( const KCalCore::Incidence::Ptr &incidence ) const;
+
     KLocalizedString subsOrdinal( const KLocalizedString &text, int number ) const;
     /**
      * Return the day in the month/year on which the event recurs, starting at the

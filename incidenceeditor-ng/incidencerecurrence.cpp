@@ -28,6 +28,8 @@
 
 #include <KCalendarSystem>
 
+#include <KDebug>
+
 using namespace IncidenceEditorNG;
 
 enum {
@@ -211,7 +213,7 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
   mWasDirty = false;
 }
 
-void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
+void IncidenceRecurrence::writeToIncidence( const KCalCore::Incidence::Ptr &incidence ) const
 {
   // clear out any old settings;
   KCalCore::Recurrence *r = incidence->recurrence();
@@ -244,8 +246,6 @@ void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
     } else { // Every (last - i)th last weekday
       r->addMonthlyPos( -monthWeekFromEnd(), weekday() );
     }
-    mMonthlyInitialType = mUi->mMonthlyCombo->currentIndex();
-
   } else if ( recurrenceType == RecurrenceTypeYearly ) {
     r->setYearly( mUi->mFrequencyEdit->value() );
 
@@ -273,6 +273,12 @@ void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
 
   r->setExDates( mExceptionDates );
 
+}
+
+void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
+{
+  writeToIncidence( incidence );
+  mMonthlyInitialType = mUi->mMonthlyCombo->currentIndex();
   mYearlyInitialType = mUi->mYearlyCombo->currentIndex();
 }
 
