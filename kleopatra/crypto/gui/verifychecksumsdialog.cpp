@@ -173,6 +173,13 @@ namespace {
             proxy.setSourceModel( model );
 
             view.setModel( &proxy );
+       
+            QRect r;
+            for( int i = 0; i < proxy.columnCount(); ++i )
+                view.resizeColumnToContents( i );
+            for( int i = 0; i < proxy.rowCount(); ++i )
+                r = r.united( view.visualRect( proxy.index( proxy.columnCount() - 1, i ) ) );
+            view.setMinimumSize( QSize( qMin( 1024, r.width() + 4 * view.frameWidth() ), qMin( 512, r.height() ) ) );
         }
 
         void setBase( const QString & base ) {
