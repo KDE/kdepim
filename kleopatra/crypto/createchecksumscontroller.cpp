@@ -98,6 +98,11 @@ namespace {
             KDAB_SET_OBJECT_NAME( vlay );
 
             createdLW.addItems( created );
+            QRect r;
+            for( int i = 0; i < created.size(); ++i )
+                r = r.united( createdLW.visualRect( createdLW.model()->index( 0, i ) ) );
+            createdLW.setMinimumWidth( qMin( 1024, r.width() + 4 * createdLW.frameWidth() ) );
+
             errorsLW.addItems( errors );
 
             vlay.addWidget( &createdLB );
