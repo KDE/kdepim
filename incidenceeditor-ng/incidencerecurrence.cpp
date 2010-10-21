@@ -379,6 +379,7 @@ bool IncidenceRecurrence::isDirty() const
 
 bool IncidenceRecurrence::isValid() const
 {
+  mLastErrorString = QString();
   KCalCore::Incidence::Ptr incidence( mLoadedIncidence->clone() );
 
   // Write start and end dates to the incidence
@@ -397,13 +398,11 @@ bool IncidenceRecurrence::isValid() const
            incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) {
         return true;
       } else {
-        //        KMessageBox::sorry( 0,
-        //                            i18n("A recurring event or task must occur at least once. Adjust the recurring parameters." ) );
-        kWarning() << "A recurring event or task must occur at least once. Adjust the recurring parameters.";;
+        mLastErrorString = "A recurring event or to-do must occur at least once. Adjust the recurring parameters.";
         return false;
       }
     } else {
-      kWarning() << "the event's dtStart, or the to-do's dtDue is invalid";
+      mLastErrorString = i18n( "The event's start date or the to-do's due date is invalid." );
       return false;
     }
   }
