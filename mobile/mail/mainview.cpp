@@ -145,11 +145,12 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 
   model = grouper;
 
-  QAbstractProxyModel *itemFilterModel = createItemFilterModel();
-  if ( itemFilterModel ) {
-    itemFilterModel->setSourceModel( model );
-    model = itemFilterModel;
-  }
+  // The thread grouper proxy seems to make this crash. Disabled for now
+//   QAbstractProxyModel *itemFilterModel = createItemFilterModel();
+//   if ( itemFilterModel ) {
+//     itemFilterModel->setSourceModel( model );
+//     model = itemFilterModel;
+//   }
 
   QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel( this );
   qmlCheckable->setSourceModel( model );
