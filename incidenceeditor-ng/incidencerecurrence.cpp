@@ -229,7 +229,7 @@ void IncidenceRecurrence::writeToIncidence( const KCalCore::Incidence::Ptr &inci
     endDate = mUi->mRecurrenceEndDate->date();
   }
 
-  int recurrenceType = mUi->mRecurrenceTypeCombo->currentIndex();
+  const int recurrenceType = mUi->mRecurrenceTypeCombo->currentIndex();
   if ( recurrenceType == RecurrenceTypeDaily ) {
     r->setDaily( mUi->mFrequencyEdit->value() );
   } else if ( recurrenceType == RecurrenceTypeWeekly ) {
@@ -272,7 +272,6 @@ void IncidenceRecurrence::writeToIncidence( const KCalCore::Incidence::Ptr &inci
   }
 
   r->setExDates( mExceptionDates );
-
 }
 
 void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
@@ -376,6 +375,40 @@ bool IncidenceRecurrence::isDirty() const
   }
 
   return false;
+}
+
+bool IncidenceRecurrence::isValid() const
+{
+  KCalCore::Incidence::Ptr incidence( mLoadedIncidence->clone() );
+
+  // Write start and end dates to the incidence
+  mDateTime->save( incidence );
+
+  // Write new recurring parameters to incidence
+  writeToIncidence( incidence );
+
+  // Check if the incidence will occur at least once
+  if ( incidence->recurs() ) {
+    // dtStart for events, dtDue for to-dos
+    const KDateTime referenceDate = incidence->dateTime( KCalCore::Incidence::RoleRecurrenceStart );
+
+    if ( referenceDate.isValid() ) {
+      if ( incidence->recurrence()->recursOn( referenceDate.date(), referenceDate.timeSpec() ) ||
+           incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) {
+        return true;
+      } else {
+        //        KMessageBox::sorry( 0,
+        //                            i18n("A recurring event or task must occur at least once. Adjust the recurring parameters." ) );
+        kWarning() << "A recurring event or task must occur at least once. Adjust the recurring parameters.";;
+        return false;
+      }
+    } else {
+      kWarning() << "the event's dtStart, or the to-do's dtDue is invalid";
+      return false;
+    }
+  }
+
+  return true;
 }
 
 void IncidenceRecurrence::addException()

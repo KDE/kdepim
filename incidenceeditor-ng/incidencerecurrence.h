@@ -57,6 +57,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
+    virtual bool isValid() const;
 
     RecurrenceType currentRecurrenceType() const;
 

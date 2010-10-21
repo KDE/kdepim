@@ -355,7 +355,6 @@ void IncidenceDateTime::enableTimeEdits()
     mUi->mTimeZoneComboEnd->setFloating( wholeDayChecked, mInitialEndDT.timeSpec() );
   }
 
-
   /**
      When editing a whole-day event, unchecking mWholeDayCheck shouldn't set both
      times to 00:00. DTSTART must always be smaller than DTEND
