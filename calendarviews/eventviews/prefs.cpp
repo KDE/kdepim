@@ -479,7 +479,6 @@ Prefs::Prefs( KCoreConfigSkeleton *appConfig ) : d( new Private( this, appConfig
 
 Prefs::~Prefs()
 {
-  kDebug();
   delete d;
 }
 

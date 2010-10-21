@@ -447,15 +447,16 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
 
     removeItemFromMaps( ci );
 
-    // kDebug() << item.id();
     Q_ASSERT( ci.hasPayload<KCalCore::Incidence::Ptr>() );
     const KCalCore::Incidence::Ptr incidence = ci.payload<KCalCore::Incidence::Ptr>();
+    /*
     kDebug() << "Remove uid=" << incidence->uid()
              << "summary=" << incidence->summary()
              << "type=" << int( incidence->type() )
              << "; id= " << item.id() << "; revision=" << item.revision()
              << " calendar = "
              << q;
+    */
 
     if ( const KCalCore::Event::Ptr e = incidence.dynamicCast<KCalCore::Event>() ) {
       if ( !e->recurs() ) {
