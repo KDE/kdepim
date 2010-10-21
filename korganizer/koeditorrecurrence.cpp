@@ -1386,7 +1386,7 @@ void KOEditorRecurrence::setDateTimeStr( const QString &str )
   mDateTimeLabel->setText( str );
 }
 
-bool KOEditorRecurrence::validateInput()
+bool KOEditorRecurrence::validateInput( Incidence *incidence )
 {
   // Check input here.
   // Check if the recurrence (if set to end at a date) is scheduled to end before the event starts.
@@ -1412,6 +1412,36 @@ bool KOEditorRecurrence::validateInput()
       return false;
     }
   }
+
+  // Check if the incidence will occur at least once
+  if ( incidence && incidence->doesRecur() ) {
+    QDateTime referenceDate;
+    if ( incidence->type() == "Event" ) {
+      referenceDate = incidence->dtStart();
+    } else if ( incidence->type() == "Todo" ) {
+      // no static casts needed in e5.
+      Todo *t = static_cast<Todo*>( incidence );
+      if ( t->hasDueDate() && t->dtDue().isValid() ) {
+        // In KDE, recurrence is relative to dtDue, we must change that some day
+        referenceDate = t->dtDue();
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+
+    if ( incidence->recurrence()->recursOn( referenceDate.date() ) ||
+         incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) {
+      return true;
+    } else {
+      KMessageBox::sorry( 0,
+                          i18n("A recurring event or task must occur at least once. Adjust the recurring parameters." ) );
+      return false;
+    }
+  }
+
+
   return true;
 }
 

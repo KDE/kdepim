@@ -316,8 +316,11 @@ void KOTodoEditor::writeTodo( Todo *todo )
 
 bool KOTodoEditor::validateInput()
 {
+  Todo *todo = new Todo();
+  writeTodo( todo );
+
   if ( !mGeneral->validateInput() ) return false;
-  if ( !mRecurrence->validateInput() ) return false;
+  if ( !mRecurrence->validateInput( mTodo ) ) return false;
   if ( !mDetails->validateInput() ) return false;
   return true;
 }

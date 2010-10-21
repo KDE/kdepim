@@ -376,9 +376,12 @@ void KOEventEditor::writeEvent( Event *event )
 
 bool KOEventEditor::validateInput()
 {
+  Event *event = new Event();;
+  writeEvent( event );
+
   if ( !mGeneral->validateInput() ||
        !mDetails->validateInput() ||
-       !mRecurrence->validateInput() ) {
+       !mRecurrence->validateInput( event ) ) {
     kdDebug(5850) << "ValidateInput returns false" << endl;
     return false;
   } else {

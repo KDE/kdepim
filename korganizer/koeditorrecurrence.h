@@ -293,7 +293,7 @@ class KOEditorRecurrence : public QWidget
     void writeIncidence( Incidence * );
 
     /** Check if the input is valid. */
-    bool validateInput();
+    bool validateInput( Incidence *incidence );
 
     bool doesRecur();
 
