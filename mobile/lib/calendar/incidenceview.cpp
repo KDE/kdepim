@@ -279,9 +279,12 @@ void IncidenceView::reject( RejectReason /*reason*/, const QString &errorMessage
 
 void IncidenceView::save()
 {
-  mEditor->validate();
-  if ( mEditor->isValid() )
+  mEditor->focusInvalidField();
+  if ( mEditor->isValid() ) {
     mItemManager->save();
+  } else {
+    kDebug() << "Editor content isn't valid because: " << mEditor->lastErrorString();
+  }
 }
 
 void IncidenceView::slotSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action )
