@@ -79,6 +79,13 @@ namespace Util {
     MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances();
 
     MAILCOMMON_EXPORT bool createTodoFromMail( const Akonadi::Item &mailItem );
+
+    /**
+     * Returns the identity of the folder that contains the given
+     *  Akonadi::Item.
+     */
+    MAILCOMMON_EXPORT uint folderIdentity( const Akonadi::Item& item );
+
 }
 }
 

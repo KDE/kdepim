@@ -24,6 +24,7 @@
 
 #include <akonadi/collection.h>
 
+class MessageSender;
 
 namespace Akonadi {
   class ChangeRecorder;
@@ -36,6 +37,9 @@ namespace KPIMIdentities {
 
 namespace MailCommon {
 
+class FilterActionDict;
+class FilterDialog;
+class FilterManager;
 class JobScheduler;
   
 /** Generic interface for mail kernels.*/
@@ -54,10 +58,21 @@ public:
   virtual void syncConfig() = 0;
   virtual JobScheduler* jobScheduler() const = 0;
   virtual Akonadi::ChangeRecorder *folderCollectionMonitor() const = 0;
-
   virtual void updateSystemTray() = 0;
+  virtual MessageSender *msgSender() = 0;
 
   virtual ~IKernel() {};
+};
+
+/** Filter related interface */
+class IFilter {
+public:
+  virtual FilterActionDict *filterActionDict() const = 0;
+  virtual FilterManager *filterManager() const = 0;
+  virtual FilterManager *popFilterManager() const = 0;
+  virtual void openFilterDialog( bool popFilter = false, bool createDummyFilter = true ) = 0;
+  virtual void createFilter(  const QByteArray & field, const QString & value ) = 0;
+  virtual ~IFilter() {};
 };
 
 /** Interface to access some settings. */
@@ -71,6 +86,8 @@ public:
 
   virtual Akonadi::Collection::Id lastSelectedFolder() = 0;
   virtual void setLastSelectedFolder( const Akonadi::Collection::Id  &col ) = 0;
+
+  virtual QStringList customTemplates() = 0;
 
   virtual ~ISettings() {};
 };

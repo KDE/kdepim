@@ -191,3 +191,12 @@ bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
   return true;
 }
 
+uint MailCommon::Util::folderIdentity(const Akonadi::Item& item)
+{
+  uint id = 0;
+  if( item.isValid() && item.parentCollection().isValid() ) {
+        QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection() );
+        id = fd->identity();
+  }
+  return id;
+}

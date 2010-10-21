@@ -74,6 +74,18 @@ public:
     return mSettingsIf;
   }
 
+  /** Register the interface dealing with mail settings. This function
+   * MUST be called with a valid interface pointer, before any Kernel::self()
+   * method is used. The pointer ownership will not be transfered to Kernel. */
+  void registerFilterIf( IFilter* filterIf ) {
+    mFilterIf = filterIf;
+  }
+
+  IFilter *filterIf() const {
+    Q_ASSERT( mFilterIf );
+    return mFilterIf;
+  }
+
   /**
   * Returns the collection associated with the given @p id, or an invalid collection if not found.
   * The EntityTreeModel of the kernel is searched for the collection. Since the ETM is loaded
@@ -141,12 +153,14 @@ private:
   Akonadi::Collection::Id the_templatesCollectionFolder;
 
   IKernel* mKernelIf;
+  IFilter* mFilterIf;
   ISettings* mSettingsIf;
 };
 
 }
 
 #define KernelIf MailCommon::Kernel::self()->kernelIf()
+#define FilterIf MailCommon::Kernel::self()->filterIf()
 #define SettingsIf MailCommon::Kernel::self()->settingsIf()
 #define CommonKernel MailCommon::Kernel::self()
 
