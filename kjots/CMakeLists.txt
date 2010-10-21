@@ -127,7 +127,7 @@ install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 
-install( FILES Kjots.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( PROGRAMS Kjots.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kjots.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 install( FILES kjotsui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
 
