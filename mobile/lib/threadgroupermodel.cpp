@@ -256,12 +256,22 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
       m_messageMap[item] = identifier;
     }
   }
+
   QHash<QByteArray, QSet<QByteArray> >::const_iterator pendingIt = pendingThreads.constBegin();
   const QHash<QByteArray, QSet<QByteArray> >::const_iterator pendingEnd = pendingThreads.constEnd();
   for ( ; pendingIt != pendingEnd; ++pendingIt) {
-    foreach(const QByteArray &ba, pendingIt.value())
-      m_threadItems.remove(ba);
-    m_threads[pendingIt.key()].unite(pendingIt.value());
+    const QByteArray inReplyTo = pendingIt.key();
+    QSet<QByteArray> pendingItems = pendingIt.value();
+    if (m_threads.contains(inReplyTo)) {
+      foreach(const QByteArray &ba, pendingItems)
+        m_threadItems.remove(ba);
+      m_threads[inReplyTo].unite(pendingItems);
+    } else {
+      foreach(const QByteArray &ba, pendingItems) {
+        static const QSet<QByteArray> staticEmptySet;
+        m_threads.insert(ba, staticEmptySet);
+      }
+    }
   }
 }
 
