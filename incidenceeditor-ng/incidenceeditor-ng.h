@@ -65,10 +65,15 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     virtual bool isValid() const;
 
     /**
+       Returns the last error, which is set in isValid() on error,
+       and cleared on success.
+    */
+    QString lastErrorString() const;
+
+    /**
      * Sets focus on the invalid field.
-     * @return an i18n string with the error.
      */
-    virtual QString validate();
+    virtual void focusInvalidField();
 
     /**
      * Returns the type of the Incidence that is currently loaded.
@@ -108,6 +113,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
 
   protected:
     KCalCore::Incidence::Ptr mLoadedIncidence;
+    mutable QString mLastErrorString;
     bool mWasDirty;
 };
 

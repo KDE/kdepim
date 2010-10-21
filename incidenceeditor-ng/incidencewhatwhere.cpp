@@ -79,16 +79,19 @@ bool IncidenceWhatWhere::isDirty() const
 
 bool IncidenceWhatWhere::isValid() const
 {
-  return !mUi->mSummaryEdit->text().isEmpty();
+  if ( mUi->mSummaryEdit->text().isEmpty() ) {
+    mLastErrorString = QString();
+    return true;
+  } else {
+    mLastErrorString = i18nc( "@info", "Please specify a title." );
+    return false;
+  }
 }
 
-QString IncidenceWhatWhere::validate()
+void IncidenceWhatWhere::validate()
 {
   if ( mUi->mSummaryEdit->text().isEmpty() ) {
     mUi->mSummaryEdit->setFocus();
-    return i18nc( "@info", "Please specify a title." );
-  } else {
-    return QString();
   }
 }
 

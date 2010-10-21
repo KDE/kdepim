@@ -49,12 +49,17 @@ void IncidenceEditor::checkDirtyStatus()
 
 bool IncidenceEditor::isValid() const
 {
+  mLastErrorString = QString();
   return true;
 }
 
-QString IncidenceEditor::validate()
+QString IncidenceEditor::lastErrorString() const
 {
-  return QString();
+  return mLastErrorString;
+}
+
+void IncidenceEditor::focusInvalidField()
+{
 }
 
 KCalCore::IncidenceBase::IncidenceType IncidenceEditor::type() const

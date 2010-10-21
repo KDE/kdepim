@@ -46,7 +46,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceWhatWhere : public IncidenceEditor
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
     virtual bool isValid() const;
-    virtual QString validate();
+    virtual void validate();
 
   private:
     Ui::EventOrTodoDesktop *mUi;

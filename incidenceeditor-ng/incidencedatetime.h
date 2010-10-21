@@ -71,7 +71,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool endDateTimeEnabled() const;
 
     bool isValid() const;
-    QString validate();
 
   signals:
     // used to indicate that the widgets were activated

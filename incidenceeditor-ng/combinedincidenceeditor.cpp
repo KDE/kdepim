@@ -55,7 +55,8 @@ bool CombinedIncidenceEditor::isValid() const
 {
   foreach ( IncidenceEditor *editor, mCombinedEditors ) {
     if ( !editor->isValid() ) {
-      const QString reason = editor->validate();
+      const QString reason = editor->lastErrorString();
+      editor->focusInvalidField();
       if ( !reason.isEmpty() ) {
         KMessageBox::sorry( mParent, reason );
       }
