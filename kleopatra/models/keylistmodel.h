@@ -62,10 +62,10 @@ namespace Kleo {
             ValidUntil,
             TechnicalDetails,
             Fingerprint,
-#if 0
             /* OpenPGP only, really */
-            LongKeyID,
             ShortKeyID,
+#if 0
+            LongKeyID,
             /* X509 only, really */
             Issuer,
             Subject,
