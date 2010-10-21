@@ -22,6 +22,8 @@
 
 #include "kmmessage.h"
 #include "kmacctfolder.h"
+#include "progressmanager.h"
+
 
 #include <kprocess.h>
 #include <kaccount.h>
@@ -231,7 +233,7 @@ public:
    * indicators.
    */
   ProgressItem *mailCheckProgressItem() const {
-    return mMailCheckProgressItem;
+    return mMailCheckProgressItem.data();
   }
 
   /**
@@ -320,7 +322,7 @@ protected:
   QList<KMMessage*> mReceipts;
   QList<FolderJob*>  mJobList;
   bool mHasInbox : 1;
-  ProgressItem *mMailCheckProgressItem;
+  QPointer<ProgressItem> mMailCheckProgressItem;
   uint mIdentityId;
 private:
   // for detailed (per folder) new mail notification
