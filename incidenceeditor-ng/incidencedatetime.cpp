@@ -339,6 +339,7 @@ void IncidenceDateTime::enableTimeEdits()
 {
   // NOTE: assumes that the initial times are initialized.
   const bool wholeDayChecked = mUi->mWholeDayCheck->isChecked();
+
 #ifndef KDEPIM_MOBILE_UI
   mUi->mTimeZoneLabel->setVisible( !wholeDayChecked );
 #endif
@@ -352,6 +353,20 @@ void IncidenceDateTime::enableTimeEdits()
     mUi->mEndTimeEdit->setEnabled( !wholeDayChecked );
     mUi->mTimeZoneComboEnd->setEnabled( !wholeDayChecked );
     mUi->mTimeZoneComboEnd->setFloating( wholeDayChecked, mInitialEndDT.timeSpec() );
+  }
+
+
+  /**
+     When editing a whole-day event, unchecking mWholeDayCheck shouldn't set both
+     times to 00:00. DTSTART must always be smaller than DTEND
+   */
+  if ( sender() == mUi->mWholeDayCheck && !wholeDayChecked && // Somebody unchecked it, the incidence will now have time.
+       mUi->mStartCheck->isChecked() && mUi->mEndCheck->isChecked() && // The incidence has both start and end/due dates
+       currentStartDateTime() == currentEndDateTime() ) { // DTSTART == DTEND. This is illegal, lets correct it.
+    // Not sure about the best time here... doesn't really matter, when someone unchecks mWholeDayCheck, she will
+    // always want to set a time.
+    mUi->mStartTimeEdit->setTime( QTime( 0, 0 ) );
+    mUi->mEndTimeEdit->setTime( QTime( 1, 0 ) );
   }
 
 #ifndef KDEPIM_MOBILE_UI
