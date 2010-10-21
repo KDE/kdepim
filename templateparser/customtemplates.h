@@ -24,11 +24,11 @@
 
 #include <QHash>
 #include <QPixmap>
+#include <QWidget>
+
+#include <KShortcut>
 
 #include "templateparser_export.h"
-#include "ui_customtemplates_base.h"
-
-class KShortcut;
 
 struct CustomTemplateItem;
 typedef QHash<QString,CustomTemplateItem*> CustomTemplateItemList;
