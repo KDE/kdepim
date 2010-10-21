@@ -80,11 +80,11 @@ bool IncidenceWhatWhere::isDirty() const
 bool IncidenceWhatWhere::isValid() const
 {
   if ( mUi->mSummaryEdit->text().isEmpty() ) {
-    mLastErrorString = QString();
-    return true;
-  } else {
     mLastErrorString = i18nc( "@info", "Please specify a title." );
     return false;
+  } else {
+    mLastErrorString = QString();
+    return true;
   }
 }
 
