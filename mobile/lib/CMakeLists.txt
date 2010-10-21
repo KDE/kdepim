@@ -27,6 +27,7 @@ set(mobileui_SRCS
     stylesheetloader.cpp
     threadmodel.cpp
     threadgroupermodel.cpp
+    threadselectionmodel.cpp
     agentstatusmonitor.cpp
 )
 

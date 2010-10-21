@@ -42,6 +42,7 @@
 #include "templateemailmodel.h"
 #include "threadgroupermodel.h"
 #include "threadmodel.h"
+#include "threadselectionmodel.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/collection.h>
