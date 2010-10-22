@@ -599,9 +599,8 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
   Q_ASSERT( dynamic_cast< Message::Composer* >( job ) );
   Composer* composer = static_cast< Message::Composer* >( job );
 
-  Q_ASSERT( m_composers.contains( composer ) );
-
   if( composer->error() == Message::Composer::NoError ) {
+    Q_ASSERT( m_composers.contains( composer ) );
     // The messages were composed successfully.
     kDebug() << "NoError.";
     for( int i = 0; i < composer->resultMessages().size(); ++i ) {
