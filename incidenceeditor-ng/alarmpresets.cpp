@@ -37,6 +37,9 @@ K_GLOBAL_STATIC( QStringList, sBeforeEndPresetNames )
 K_GLOBAL_STATIC( QList<KCalCore::Alarm::Ptr>, sBeforeStartPresets )
 K_GLOBAL_STATIC( QList<KCalCore::Alarm::Ptr>, sBeforeEndPresets )
 
+static int sDefaultPresetIndex = 0;
+static int sDefaultAlarmOffset = 0; // We must save it, so we can detect that config changed.
+
 void initPresets( AlarmPresets::When when )
 {
   QList<int> hardcodedPresets;
@@ -51,12 +54,21 @@ void initPresets( AlarmPresets::When when )
                    << 2 * 24 * 60 // 2 days
                    << 5 * 24 * 60;// 5 days
 
-  const int defaultAlarmOffset = KCalPrefs::instance()->reminderTime() > 0 ? KCalPrefs::instance()->reminderTime() :
-                                                                             DEFAULT_REMINDER_OFFSET;
+  sDefaultAlarmOffset = KCalPrefs::instance()->reminderTime() > 0 ? KCalPrefs::instance()->reminderTime() :
+                                                                    DEFAULT_REMINDER_OFFSET;
 
-  if ( !hardcodedPresets.contains( defaultAlarmOffset ) ) {
-    // Lets insert the user's favorite preset:
-    hardcodedPresets.prepend( defaultAlarmOffset );
+  if ( !hardcodedPresets.contains( sDefaultAlarmOffset ) ) {
+    // Lets insert the user's favorite preset (and keep the list sorted):
+    int index;
+    for ( index = 0; index < hardcodedPresets.count(); ++index ) {
+      if ( hardcodedPresets[index] > sDefaultAlarmOffset )
+        break;
+    }
+
+    hardcodedPresets.insert( index, sDefaultAlarmOffset );
+    sDefaultPresetIndex = index;
+  } else {
+    sDefaultPresetIndex = 2;
   }
 
   switch ( when ) {
@@ -99,18 +111,34 @@ void initPresets( AlarmPresets::When when )
   }
 }
 
-QStringList availablePresets( AlarmPresets::When when )
+void checkInitNeeded( When when )
 {
+  const int currentAlarmOffset = KCalPrefs::instance()->reminderTime() > 0 ? KCalPrefs::instance()->reminderTime() :
+                                                                            DEFAULT_REMINDER_OFFSET;
+  const bool configChanged = currentAlarmOffset != sDefaultAlarmOffset;
+
   switch ( when ) {
   case AlarmPresets::BeforeStart:
-    if ( sBeforeStartPresetNames->isEmpty() ) {
+    if ( sBeforeStartPresetNames->isEmpty() || configChanged ) {
+      sBeforeStartPresetNames->clear();
       initPresets( when );
     }
+  case AlarmPresets::BeforeEnd:
+    if ( sBeforeEndPresetNames->isEmpty() || configChanged ) {
+      sBeforeEndPresetNames->clear();
+      initPresets( when );
+    }
+  }
+}
+
+QStringList availablePresets( AlarmPresets::When when )
+{
+  checkInitNeeded( when );
+
+  switch( when ) {
+  case AlarmPresets::BeforeStart:
     return *sBeforeStartPresetNames;
   case AlarmPresets::BeforeEnd:
-    if ( sBeforeEndPresetNames->isEmpty() ) {
-      initPresets( when );
-    }
     return *sBeforeEndPresetNames;
   default:
     return QStringList();
@@ -119,12 +147,11 @@ QStringList availablePresets( AlarmPresets::When when )
 
 KCalCore::Alarm::Ptr preset( When when, const QString &name )
 {
+  checkInitNeeded( when );
+
   switch ( when ) {
   case AlarmPresets::BeforeStart:
   {
-    if ( sBeforeStartPresetNames->isEmpty() ) {
-      initPresets( when );
-    }
     Q_ASSERT( sBeforeStartPresetNames->count( name ) == 1 ); // The name should exists and only once
 
     return KCalCore::Alarm::Ptr(
@@ -132,9 +159,6 @@ KCalCore::Alarm::Ptr preset( When when, const QString &name )
   }
   case AlarmPresets::BeforeEnd:
   {
-    if ( sBeforeEndPresetNames->isEmpty() ) {
-      initPresets( when );
-    }
     Q_ASSERT( sBeforeEndPresetNames->count( name ) == 1 ); // The name should exists and only once
 
     return KCalCore::Alarm::Ptr(
@@ -147,17 +171,7 @@ KCalCore::Alarm::Ptr preset( When when, const QString &name )
 
 int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm )
 {
-  switch ( when ) {
-  case AlarmPresets::BeforeStart:
-    if ( sBeforeStartPresetNames->isEmpty() ) {
-      initPresets( when );
-    }
-  case AlarmPresets::BeforeEnd:
-    if ( sBeforeEndPresetNames->isEmpty() ) {
-      initPresets( when );
-    }
-  }
-
+  checkInitNeeded( when );
   const QStringList presets = availablePresets( when );
 
   for ( int i = 0; i < presets.size(); ++i ) {
@@ -168,6 +182,13 @@ int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm )
   }
 
   return -1;
+}
+
+int defaultPresetIndex()
+{
+  // BeforeEnd would do too, index is the same.
+  checkInitNeeded( AlarmPresets::BeforeStart );
+  return sDefaultPresetIndex;
 }
 
 } // AlarmPresets

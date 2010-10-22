@@ -47,8 +47,9 @@ IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesk
     mIsTodo( false )
 {
   setObjectName( "IncidenceAlarm" );
+
   mUi->mAlarmPresetCombo->insertItems( 0, AlarmPresets::availablePresets() );
-  mUi->mAlarmPresetCombo->setCurrentIndex( 2 );
+  mUi->mAlarmPresetCombo->setCurrentIndex( AlarmPresets::defaultPresetIndex() );
   updateButtons();
 
   connect( mDateTime, SIGNAL(startDateTimeToggled(bool)),
@@ -90,7 +91,7 @@ void IncidenceAlarm::load( const KCalCore::Incidence::Ptr &incidence )
     mUi->mAlarmPresetCombo->clear();
     mUi->mAlarmPresetCombo->addItems( AlarmPresets::availablePresets( AlarmPresets::BeforeStart ) );
   }
-  mUi->mAlarmPresetCombo->setCurrentIndex( 2 );
+  mUi->mAlarmPresetCombo->setCurrentIndex( AlarmPresets::defaultPresetIndex() );
 
   handleDateTimeToggle();
   mWasDirty = false;

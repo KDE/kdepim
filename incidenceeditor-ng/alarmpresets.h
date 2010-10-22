@@ -58,6 +58,11 @@ namespace AlarmPresets {
    */
   int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm );
 
+  /**
+     Returns the index of the default preset. ( Comes from KCalPrefs ).
+   */
+  int defaultPresetIndex();
+
 }
 
 }
