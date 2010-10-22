@@ -44,10 +44,40 @@
 
 #include <utils/formatting.h>
 #include <utils/stl_util.h>
+#include <utils/action_data.h>
 
 #include "tooltippreferences.h"
 
+#include "commands/exportcertificatecommand.h"
+#include "commands/exportopenpgpcertstoservercommand.h"
+#include "commands/exportsecretkeycommand.h"
+#include "commands/importcertificatefromfilecommand.h"
+#include "commands/changepassphrasecommand.h"
+#include "commands/lookupcertificatescommand.h"
+#include "commands/reloadkeyscommand.h"
+#include "commands/refreshx509certscommand.h"
+#include "commands/refreshopenpgpcertscommand.h"
+#include "commands/detailscommand.h"
+#include "commands/deletecertificatescommand.h"
+#include "commands/decryptverifyfilescommand.h"
+#include "commands/signencryptfilescommand.h"
+#include "commands/clearcrlcachecommand.h"
+#include "commands/dumpcrlcachecommand.h"
+#include "commands/dumpcertificatecommand.h"
+#include "commands/importcrlcommand.h"
+#include "commands/changeexpirycommand.h"
+#include "commands/changeownertrustcommand.h"
+#include "commands/changeroottrustcommand.h"
+#include "commands/certifycertificatecommand.h"
+#include "commands/adduseridcommand.h"
+#include "commands/newcertificatecommand.h"
+#include "commands/checksumverifyfilescommand.h"
+#include "commands/checksumcreatefilescommand.h"
+
 #include <gpgme++/key.h>
+
+#include <KActionCollection>
+#include <KLocalizedString>
 
 #include <QAbstractItemView>
 #include <QTreeView>
@@ -94,6 +124,10 @@ public:
         views.erase( std::remove( views.begin(), views.end(), view ), views.end() );
     }
 
+    QAbstractItemView * currentView() const {
+        return tabWidget ? tabWidget->currentView() : 0 ;
+    }
+    
 public:
     void slotDestroyed( QObject * o ) {
         qDebug( "KeyListController::Private::slotDestroyed( %p )", ( void* )o );
@@ -127,7 +161,7 @@ private:
     struct action_item {
         QPointer<QAction> action;
         Command::Restrictions restrictions;
-        Command * (KeyListController::*createCommand)();
+        Command * (*createCommand)( QAbstractItemView *, KeyListController * );
     };
     std::vector<action_item> actions;
     std::vector<QAbstractItemView*> views;
@@ -270,7 +304,126 @@ TabWidget * KeyListController::tabWidget() const {
     return d->tabWidget;
 }
 
-void KeyListController::registerAction( QAction * action, Command::Restrictions restrictions, Command * (KeyListController::*create)() ) {
+void KeyListController::createActions( KActionCollection * coll ) {
+
+    const action_data action_data[] = {
+        // File menu
+        { "file_new_certificate", i18n("New Certificate..."), QString(),
+          "view-certificate-add", 0, 0, "Ctrl+N", false, true },
+        { "file_export_certificates", i18n("Export Certificates..."), QString(),
+          "view-certificate-export", 0, 0, "Ctrl+E", false, true },
+        { "file_export_certificates_to_server", i18n("Export Certificates to Server..."), QString(),
+          "view-certificate-export-server", 0, 0, "Ctrl+Shift+E", false, true },
+        { "file_export_secret_keys", i18n("Export Secret Keys..."), QString(),
+          "view-certificate-export-secret", 0, 0, QString(), false, true },
+        { "file_lookup_certificates", i18n("Lookup Certificates on Server..."), QString(),
+          "edit-find", 0, 0, "Shift+Ctrl+I", false, true },
+        { "file_import_certificates", i18n("Import Certificates..."), QString(),
+          "view-certificate-import", 0, 0, "Ctrl+I", false, true },
+        { "file_decrypt_verify_files", i18n("Decrypt/Verify Files..."), QString(),
+          "document-edit-decrypt-verify", 0, 0, QString(), false, true },
+        { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
+          "document-edit-sign-encrypt", 0, 0, QString(), false, true },
+        { "file_checksum_create_files", i18n("Create Checksum Files..."), QString(),
+          0/*"document-checksum-create"*/, 0, 0, QString(), false, true },
+        { "file_checksum_verify_files", i18n("Verify Checksum Files..."), QString(),
+          0/*"document-checksum-verify"*/, 0, 0, QString(), false, true },
+        // View menu
+        { "view_redisplay", i18n("Redisplay"), QString(),
+          "view-refresh", 0, 0, "F5", false, true },
+        { "view_stop_operations", i18n( "Stop Operation" ), QString(),
+          "process-stop", this, SLOT(cancelCommands()), "Escape", false, false },
+        { "view_certificate_details", i18n( "Certificate Details" ), QString(),
+          "dialog-information", 0, 0, QString(), false, true },
+        // Certificate menu
+        { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
+          "edit-delete", 0, 0, "Delete", false, true },
+        { "certificates_certify_certificate", i18n("Certify Certificate..."), QString(),
+          "view-certificate-sign", 0, 0, QString(), false, true },
+        { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
+          0, 0, 0, QString(), false, true },
+        { "certificates_change_owner_trust", i18n("Change Owner Trust..."), QString(),
+          0, 0, 0, QString(), false, true },
+        { "certificates_trust_root", i18n("Trust Root Certificate"), QString(),
+          0, 0, 0, QString(), false, true },
+        { "certificates_distrust_root", i18n("Distrust Root Certificate"), QString(),
+          0, 0, 0, QString(), false, true },
+        { "certificates_change_passphrase", i18n("Change Passphrase..."), QString(),
+          0, 0, 0, QString(), false, true },
+        { "certificates_add_userid", i18n("Add User-ID..."), QString(),
+          0, 0, 0, QString(), false, true },
+        { "certificates_dump_certificate", i18n("Dump Certificate"), QString(),
+          0, 0, 0, QString(), false, true },
+          // Tools menu
+        { "tools_refresh_x509_certificates", i18n("Refresh X.509 Certificates"), QString(),
+          "view-refresh", 0, 0, QString(), false, true },
+        { "tools_refresh_openpgp_certificates", i18n("Refresh OpenPGP Certificates"), QString(),
+          "view-refresh", 0, 0, QString(), false, true },
+#ifndef KDEPIM_ONLY_KLEO
+        { "crl_clear_crl_cache", i18n("Clear CRL Cache"), QString(),
+          0, 0, 0, QString(), false, true },
+        { "crl_dump_crl_cache", i18n("Dump CRL Cache"), QString(),
+          0, 0, 0, QString(), false, true },
+#endif // KDEPIM_ONLY_KLEO
+        { "crl_import_crl", i18n("Import CRL From File..."), QString(),
+          0, 0, 0, QString(), false, true },
+        // Window menu
+        // (come from TabWidget)
+        // Help menu
+        // (come from MainWindow)
+    };
+
+
+    make_actions_from_data( action_data, coll );
+
+    if ( QAction * action = coll->action( "view_stop_operations" ) )
+        connect( this, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );
+
+    // ### somehow make this better...
+    registerActionForCommand<NewCertificateCommand>(     coll->action( "file_new_certificate" ) );
+    //---
+    registerActionForCommand<LookupCertificatesCommand>( coll->action( "file_lookup_certificates" ) );
+    registerActionForCommand<ImportCertificateFromFileCommand>( coll->action( "file_import_certificates" ) );
+    //---
+    registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
+    registerActionForCommand<ExportSecretKeyCommand>(    coll->action( "file_export_secret_keys" ) );
+    registerActionForCommand<ExportOpenPGPCertsToServerCommand>( coll->action( "file_export_certificates_to_server" ) );
+    //---
+    registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
+    registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
+    //---
+    registerActionForCommand<ChecksumCreateFilesCommand>(coll->action( "file_checksum_create_files" ) );
+    registerActionForCommand<ChecksumVerifyFilesCommand>(coll->action( "file_checksum_verify_files" ) );
+
+    registerActionForCommand<ReloadKeysCommand>(         coll->action( "view_redisplay" ) );
+    //coll->action( "view_stop_operations" ) <-- already dealt with in make_actions_from_data()
+    registerActionForCommand<DetailsCommand>(            coll->action( "view_certificate_details" ) );
+
+    registerActionForCommand<ChangeOwnerTrustCommand>(   coll->action( "certificates_change_owner_trust" ) );
+    registerActionForCommand<TrustRootCommand>(          coll->action( "certificates_trust_root" ) );
+    registerActionForCommand<DistrustRootCommand>(       coll->action( "certificates_distrust_root" ) );
+    //---
+    registerActionForCommand<CertifyCertificateCommand>( coll->action( "certificates_certify_certificate" ) );
+    registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
+    registerActionForCommand<ChangePassphraseCommand>(   coll->action( "certificates_change_passphrase" ) );
+    registerActionForCommand<AddUserIDCommand>(          coll->action( "certificates_add_userid" ) );
+    //---
+    registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
+    //---
+    registerActionForCommand<DumpCertificateCommand>(    coll->action( "certificates_dump_certificate" ) );
+
+    registerActionForCommand<RefreshX509CertsCommand>(   coll->action( "tools_refresh_x509_certificates" ) );
+    registerActionForCommand<RefreshOpenPGPCertsCommand>(coll->action( "tools_refresh_openpgp_certificates" ) );
+    //---
+    registerActionForCommand<ImportCrlCommand>(          coll->action( "crl_import_crl" ) );
+    //---
+    registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
+    registerActionForCommand<DumpCrlCacheCommand>(       coll->action( "crl_dump_crl_cache" ) );
+
+    enableDisableActions( 0 );
+}
+
+void KeyListController::registerAction( QAction * action, Command::Restrictions restrictions, Command * (*create)( QAbstractItemView *, KeyListController * ) ) {
     if ( !action )
         return;
     assert( !action->isCheckable() ); // can be added later, for now, disallow
@@ -453,7 +606,19 @@ Command::Restrictions KeyListController::Private::calculateRestrictionsMask( con
 }
 
 void KeyListController::Private::slotActionTriggered() {
-    qDebug( "KeyListController::Private::slotActionTriggered: not implemented" );
+    if ( const QObject * const s = q->sender() ) {
+        const std::vector<action_item>::const_iterator it
+            = kdtools::find_if( actions, bind( &action_item::action, _1 ) == q->sender() );
+        if ( it != actions.end() )
+            if ( Command * const c = it->createCommand( this->currentView(), q ) )
+                c->start();
+            else
+                qDebug( "KeyListController::Private::slotActionTriggered: createCommand() == NULL for action(?) \"%s\"", qPrintable( s->objectName() ) );
+        else
+            qDebug( "KeyListController::Private::slotActionTriggered: I don't know anything about action(?) \"%s\"", qPrintable( s->objectName() ) );
+    } else {
+        qDebug( "KeyListController::Private::slotActionTriggered: not called through a signal/slot connection (sender() == NULL)" );
+    }
 }
 
 int KeyListController::Private::toolTipOptions() const

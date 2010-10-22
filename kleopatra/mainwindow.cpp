@@ -42,32 +42,11 @@
 #include "view/tabwidget.h"
 #include "view/keylistcontroller.h"
 
-#include "commands/exportcertificatecommand.h"
-#include "commands/exportopenpgpcertstoservercommand.h"
-#include "commands/exportsecretkeycommand.h"
+#include "commands/selftestcommand.h"
+#include "commands/importcrlcommand.h"
 #include "commands/importcertificatefromfilecommand.h"
-#include "commands/changepassphrasecommand.h"
-#include "commands/lookupcertificatescommand.h"
-#include "commands/reloadkeyscommand.h"
-#include "commands/refreshx509certscommand.h"
-#include "commands/refreshopenpgpcertscommand.h"
-#include "commands/detailscommand.h"
-#include "commands/deletecertificatescommand.h"
 #include "commands/decryptverifyfilescommand.h"
 #include "commands/signencryptfilescommand.h"
-#include "commands/clearcrlcachecommand.h"
-#include "commands/dumpcrlcachecommand.h"
-#include "commands/dumpcertificatecommand.h"
-#include "commands/importcrlcommand.h"
-#include "commands/changeexpirycommand.h"
-#include "commands/changeownertrustcommand.h"
-#include "commands/changeroottrustcommand.h"
-#include "commands/selftestcommand.h"
-#include "commands/certifycertificatecommand.h"
-#include "commands/adduseridcommand.h"
-#include "commands/newcertificatecommand.h"
-#include "commands/checksumverifyfilescommand.h"
-#include "commands/checksumcreatefilescommand.h"
 
 #include "utils/detail_p.h"
 #include "utils/gnupg-helper.h"
@@ -190,91 +169,12 @@ public:
         if ( rc == KMessageBox::No )
             qApp->quit();
     }
-    void certificateDetails() {
-        createAndStart<DetailsCommand>();
-    }
-    void reloadCertificates() {
-        createAndStart<ReloadKeysCommand>();
-    }
-
-    void refreshX509Certificates() {
-        createAndStart<RefreshX509CertsCommand>();
-    }
-    void refreshOpenPGPCertificates() {
-        createAndStart<RefreshOpenPGPCertsCommand>();
-    }
-    void changePassphrase() {
-        createAndStart<ChangePassphraseCommand>();
-    }
-    void deleteCertificates() {
-        createAndStart<DeleteCertificatesCommand>();
-    }
-    void changeCertificateExpiry() {
-        createAndStart<ChangeExpiryCommand>();
-    }
-    void changeCertificateOwnerTrust() {
-        createAndStart<ChangeOwnerTrustCommand>();
-    }
-    void trustRootCertificate() {
-        createAndStart<TrustRootCommand>();
-    }
-    void distrustRootCertificate() {
-        createAndStart<DistrustRootCommand>();
-    }
-    void signEncryptFiles() {
-        createAndStart<SignEncryptFilesCommand>();
-    }
-    void certifyCertificate() {
-        createAndStart<CertifyCertificateCommand>();
-    }
-    void addUserID() {
-        createAndStart<AddUserIDCommand>();
-    }
-    void decryptVerifyFiles() {
-        createAndStart<DecryptVerifyFilesCommand>();
-    }
-    void exportCertificates() {
-        createAndStart<ExportCertificateCommand>();
-    }
-    void exportCertificatesToServer() {
-        createAndStart<ExportOpenPGPCertsToServerCommand>();
-    }
-    void exportSecretKey() {
-        createAndStart<ExportSecretKeyCommand>();
-    }
-    void importCertificatesFromFile() {
-        createAndStart<ImportCertificateFromFileCommand>();
-    }
-    void lookupCertificates() {
-        createAndStart<LookupCertificatesCommand>();
-    }
-    void clearCrlCache() {
-        createAndStart<ClearCrlCacheCommand>();
-    }
-    void dumpCrlCache() {
-        createAndStart<DumpCrlCacheCommand>();
-    }
-    void dumpCertificate() {
-        createAndStart<DumpCertificateCommand>();
-    }
-    void importCrlFromFile() {
-        createAndStart<ImportCrlCommand>();
-    }
-    void checksumCreateFiles() {
-        createAndStart<ChecksumCreateFilesCommand>();
-    }
-    void checksumVerifyFiles() {
-        createAndStart<ChecksumVerifyFilesCommand>();
-    }
     void configureToolbars() {
         KEditToolBar dlg( q->factory() );
         dlg.exec();
     }
     void editKeybindings() {
         KShortcutsDialog::configure( q->actionCollection(), KShortcutsEditor::LetterShortcutsAllowed );
-    }
-    void newCertificate() {
-        createAndStart<NewCertificateCommand>();
     }
 
     void selfTest() {
@@ -405,54 +305,8 @@ void MainWindow::Private::setupActions() {
     coll->addAction( "key_search_bar", searchBarAction );
 
     const action_data action_data[] = {
-        // File menu
-        { "file_new_certificate", i18n("New Certificate..."), QString(),
-          "view-certificate-add", q, SLOT(newCertificate()), "Ctrl+N", false, true },
-        { "file_export_certificates", i18n("Export Certificates..."), QString(),
-          "view-certificate-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true },
-        { "file_export_certificates_to_server", i18n("Export Certificates to Server..."), QString(),
-          "view-certificate-export-server", q, SLOT(exportCertificatesToServer()), "Ctrl+Shift+E", false, true },
-        { "file_export_secret_keys", i18n("Export Secret Keys..."), QString(),
-          "view-certificate-export-secret", q, SLOT(exportSecretKey()), QString(), false, true },
-        { "file_lookup_certificates", i18n("Lookup Certificates on Server..."), QString(),
-          "edit-find", q, SLOT(lookupCertificates()), "Shift+Ctrl+I", false, true },
-        { "file_import_certificates", i18n("Import Certificates..."), QString(),
-          "view-certificate-import", q, SLOT(importCertificatesFromFile()), "Ctrl+I", false, true },
-        { "file_decrypt_verify_files", i18n("Decrypt/Verify Files..."), QString(),
-          "document-edit-decrypt-verify", q, SLOT(decryptVerifyFiles()), QString(), false, true },
-        { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
-          "document-edit-sign-encrypt", q, SLOT(signEncryptFiles()), QString(), false, true },
-        { "file_checksum_create_files", i18n("Create Checksum Files..."), QString(),
-          0/*"document-checksum-create"*/, q, SLOT(checksumCreateFiles()), QString(), false, true },
-        { "file_checksum_verify_files", i18n("Verify Checksum Files..."), QString(),
-          0/*"document-checksum-verify"*/, q, SLOT(checksumVerifyFiles()), QString(), false, true },
-        // View menu
-        { "view_redisplay", i18n("Redisplay"), QString(),
-          "view-refresh", q, SLOT(reloadCertificates()), "F5", false, true },
-        { "view_stop_operations", i18n( "Stop Operation" ), QString(),
-          "process-stop", &controller, SLOT(cancelCommands()), "Escape", false, false },
-        { "view_certificate_details", i18n( "Certificate Details" ), QString(),
-          "dialog-information", q, SLOT(certificateDetails()), QString(), false, true },
-        // Certificate menu
-        { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
-          "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
-        { "certificates_certify_certificate", i18n("Certify Certificate..."), QString(),
-          "view-certificate-sign", q, SLOT(certifyCertificate()), QString(), false, true },
-        { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
-          0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
-        { "certificates_change_owner_trust", i18n("Change Owner Trust..."), QString(),
-          0, q, SLOT(changeCertificateOwnerTrust()), QString(), false, true },
-        { "certificates_trust_root", i18n("Trust Root Certificate"), QString(),
-          0, q, SLOT(trustRootCertificate()), QString(), false, true },
-        { "certificates_distrust_root", i18n("Distrust Root Certificate"), QString(),
-          0, q, SLOT(distrustRootCertificate()), QString(), false, true },
-        { "certificates_change_passphrase", i18n("Change Passphrase..."), QString(),
-          0, q, SLOT(changePassphrase()), QString(), false, true },
-        { "certificates_add_userid", i18n("Add User-ID..."), QString(),
-          0, q, SLOT(addUserID()), QString(), false, true },
-        { "certificates_dump_certificate", i18n("Dump Certificate"), QString(),
-          0, q, SLOT(dumpCertificate()), QString(), false, true },
-          // Tools menu
+        // most have been MOVED TO keylistcontroller.cpp
+        // Tools menu
 #ifndef Q_OS_WIN
         { "tools_start_kwatchgnupg", i18n("GnuPG Log Viewer"), QString(),
           "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, true },
@@ -461,18 +315,7 @@ void MainWindow::Private::setupActions() {
         { "tools_start_kgpgconf", i18n("GnuPG Administrative Console"), QString(),
           "kgpgconf", q, SLOT(gnupgLogViewer()), QString(), false, true },
 #endif
-        { "tools_refresh_x509_certificates", i18n("Refresh X.509 Certificates"), QString(),
-          "view-refresh", q, SLOT(refreshX509Certificates()), QString(), false, true },
-        { "tools_refresh_openpgp_certificates", i18n("Refresh OpenPGP Certificates"), QString(),
-          "view-refresh", q, SLOT(refreshOpenPGPCertificates()), QString(), false, true },
-#ifndef KDEPIM_ONLY_KLEO
-        { "crl_clear_crl_cache", i18n("Clear CRL Cache"), QString(),
-          0, q, SLOT(clearCrlCache()), QString(), false, true },
-        { "crl_dump_crl_cache", i18n("Dump CRL Cache"), QString(),
-          0, q, SLOT(dumpCrlCache()), QString(), false, true },
-#endif // KDEPIM_ONLY_KLEO
-        { "crl_import_crl", i18n("Import CRL From File..."), QString(),
-          0, q, SLOT(importCrlFromFile()), QString(), false, true },
+        // most have been MOVED TO keylistcontroller.cpp
 #if 0
         { "configure_backend", i18n("Configure GnuPG Backend..."), QString(),
           0, q, SLOT(configureBackend()), QString(), false, true },
@@ -480,19 +323,15 @@ void MainWindow::Private::setupActions() {
         // Settings menu
         { "settings_self_test", i18n("Perform Self-Test"), QString(),
           0, q, SLOT(selfTest()), QString(), false, true },
-        // Window menu
-        // (come from ui.tabWidget)
         // Help menu
 #ifdef Q_WS_WIN
         { "help_about_gpg4win", i18n("About Gpg4win"), QString(),
           "gpg4win-compact", q, SLOT(aboutGpg4Win()), QString(), false, true },
 #endif
+        // most have been MOVED TO keylistcontroller.cpp
     };
 
     make_actions_from_data( action_data, /*sizeof action_data / sizeof *action_data,*/ coll );
-
-    if ( QAction * action = coll->action( "view_stop_operations" ) )
-        connect( &controller, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );
 
     if ( QAction * action = coll->action( "configure_backend" ) )
         action->setMenuRole( QAction::NoRole ); //prevent Qt OS X heuristics for config* actions
@@ -506,36 +345,7 @@ void MainWindow::Private::setupActions() {
     q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled( true );
 
-
-    // ### somehow make this better...
-    controller.registerActionForCommand<DetailsCommand>(            coll->action( "view_certificate_details" ) );
-    controller.registerActionForCommand<ReloadKeysCommand>(         coll->action( "view_redisplay" ) );
-    controller.registerActionForCommand<RefreshX509CertsCommand>(   coll->action( "view_redisplay" ) );
-    controller.registerActionForCommand<RefreshOpenPGPCertsCommand>( coll->action( "view_redisplay" ) );
-    controller.registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
-    controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
-    controller.registerActionForCommand<ChangeOwnerTrustCommand>(   coll->action( "certificates_change_owner_trust" ) );
-    controller.registerActionForCommand<TrustRootCommand>(          coll->action( "certificates_trust_root" ) );
-    controller.registerActionForCommand<DistrustRootCommand>(       coll->action( "certificates_distrust_root" ) );
-    controller.registerActionForCommand<ChangePassphraseCommand>(   coll->action( "certificates_change_passphrase" ) );
-    controller.registerActionForCommand<CertifyCertificateCommand>(    coll->action( "certificates_certify_certificate" ) );
-    controller.registerActionForCommand<AddUserIDCommand>(          coll->action( "certificates_add_userid" ) );
-    controller.registerActionForCommand<DumpCertificateCommand>(    coll->action( "certificates_dump_certificate" ) );
-    controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
-    controller.registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
-    controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
-    controller.registerActionForCommand<ExportOpenPGPCertsToServerCommand>( coll->action( "file_export_certificates_to_server" ) );
-    controller.registerActionForCommand<ExportSecretKeyCommand>(    coll->action( "file_export_secret_keys" ) );
-    controller.registerActionForCommand<ImportCertificateFromFileCommand>( coll->action( "file_import_certificates" ) );
-    controller.registerActionForCommand<LookupCertificatesCommand>( coll->action( "file_lookup_certificates" ) );
-    controller.registerActionForCommand<ChecksumCreateFilesCommand>(coll->action( "file_checksum_create_files" ) );
-    controller.registerActionForCommand<ChecksumVerifyFilesCommand>(coll->action( "file_checksum_verify_files" ) );
-    controller.registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
-    controller.registerActionForCommand<DumpCrlCacheCommand>(       coll->action( "crl_dump_crl_cache" ) );
-    controller.registerActionForCommand<ImportCrlCommand>(          coll->action( "crl_import_crl" ) );
-    controller.registerActionForCommand<SelfTestCommand>(           coll->action( "settings_self_test" ) );
-
-    controller.enableDisableActions( 0 );
+    controller.createActions( coll );
 
     ui.tabWidget.createActions( coll );
 }

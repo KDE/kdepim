@@ -44,6 +44,7 @@ class QAbstractItemView;
 class QAction;
 class QPoint;
 class QItemSelectionModel;
+class KActionCollection;
 
 namespace Kleo {
 
@@ -70,9 +71,11 @@ namespace Kleo {
 
         void registerCommand( Command * cmd );
 
+        void createActions( KActionCollection * collection );
+
         template <typename T_Command>
         void registerActionForCommand( QAction * action ) {
-            this->registerAction( action, T_Command::restrictions() /*, &KeyListController::create<T_Command>*/ );
+            this->registerAction( action, T_Command::restrictions(), &KeyListController::template create<T_Command> );
         }
 
         void enableDisableActions( const QItemSelectionModel * sm ) const;
@@ -81,7 +84,10 @@ namespace Kleo {
         bool shutdownWarningRequired() const;
 
     private:
-        void registerAction( QAction * action, Command::Restrictions restrictions , Command * (KeyListController::*create)()=0 );
+        void registerAction( QAction * action, Command::Restrictions restrictions , Command * (*create)( QAbstractItemView*, KeyListController* ) );
+
+        template <typename T_Command>
+        static Command * create( QAbstractItemView * v, KeyListController * c ) { return new T_Command( v, c ); }
 
     public Q_SLOTS:
         void addView( QAbstractItemView * view );
