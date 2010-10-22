@@ -64,7 +64,7 @@ struct IncidenceDefaultsPrivate
 
 KCalCore::Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
 {
-  const QString invalidEmail = "invalid@email.address";
+  const QString invalidEmail( i18n( "invalid@email.address" ) );
 
   KCalCore::Person::Ptr organizer( new KCalCore::Person );
   organizer->setName( i18n( "no (valid) identities found" ) );
@@ -82,7 +82,7 @@ KCalCore::Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
     foreach ( const QString &fullEmail, mEmails ) {
       QString name;
       QString email;
-      bool success = KPIMUtils::extractEmailAddressAndName( fullEmail, email, name );
+      const bool success = KPIMUtils::extractEmailAddressAndName( fullEmail, email, name );
       if ( success && email.endsWith( mGroupWareDomain ) ) {
         organizer->setName( name );
         organizer->setEmail( email );
