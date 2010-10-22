@@ -352,17 +352,14 @@ KPIM.MainView {
 
     anchors.topMargin: 40
     anchors.leftMargin: 40;
-    anchors.rightMargin: 10;
 
     contentHeight: generalEditor.height;
     clip: true;
     flickableDirection: "VerticalFlick"
 
-    Item {
-      IncidenceEditors.GeneralEditor {
-        id: generalEditor;
-        anchors.fill: parent
-      }
+    IncidenceEditors.GeneralEditor {
+      id: generalEditor;
+      anchors.fill: parent
     }
   }
 
@@ -372,7 +369,6 @@ KPIM.MainView {
     anchors.right: cancelButton.left;
     anchors.left: parent.left;
 
-    width: parent.width;
     height: parent.height / 6;
   }
 
