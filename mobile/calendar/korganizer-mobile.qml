@@ -303,13 +303,12 @@ KPIM.MainView {
       anchors { fill: parent; topMargin: 30; leftMargin: 40 }
 
       navigationModel : _itemNavigationModel
-
-      onItemSelected: {
-         if ( currentItemId > 0 ) {
-          eventView.itemId = currentItemId;
-          application.setCurrentEventItemId(currentItemId);
-          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState )
-        }
+    }
+    Connections {
+      target : _itemNavigationModel
+      onCurrentRowChanged : {
+        application.setCurrentEventItemId(_itemNavigationModel.currentItemIdHack);
+        guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState )
       }
     }
   }
