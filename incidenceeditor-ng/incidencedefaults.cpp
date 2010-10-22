@@ -126,18 +126,15 @@ KCalCore::Attendee::Ptr IncidenceDefaultsPrivate::organizerAsAttendee(
 
 void IncidenceDefaultsPrivate::eventDefaults( const KCalCore::Event::Ptr &event ) const
 {
-  KDateTime startDT = KDateTime::currentLocalDateTime();
-  if ( mStartDt.isValid() ) {
-    startDT = mStartDt;
-  }
+  const KDateTime startDT = mStartDt.isValid() ? mStartDt : KDateTime::currentLocalDateTime();
 
-  KDateTime endDT = startDT.addSecs( 3600 ); // Default event time: 1 hour
-  if ( mEndDt.isValid() ) {
-    endDT = mEndDt;
-  }
+  const QTime defaultDurationTime = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
+  const int defaultDuration = defaultDurationTime.hour()*3600 + defaultDurationTime.minute()*60;
+
+  const KDateTime endDT = mEndDt.isValid() ? mEndDt : startDT.addSecs( defaultDuration );
 
   event->setDtStart( startDT );
-  event->setDtEnd( mEndDt );
+  event->setDtEnd( endDT );
   event->setTransparency( KCalCore::Event::Opaque );
 }
 
