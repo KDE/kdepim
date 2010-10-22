@@ -1,4 +1,26 @@
 
+Friday 22 October 2010
+
+Problems addressed
+------------------
+
+* kolab/issue2762: Sometimes whole day events overlap in the view. (rt#5936)
+* kolab/issue3688: D'n'D a mail attachment from a mail window to the Desktop: wrong rights/Link broken (rt#5800)
+* kolab/issue4062: declined counterproposal asks for answer, but there are no buttons. (rt#5973)
+* kolab/issue4113: Parallel events in the agenda view: last changed events are always on the right side (rt#6011)
+* kolab/issue4259: Wish: all-day event (marked as busy) should set background color for the whole day (rt#5878)
+* kolab/issue4262: Wish: add/remove attendee, option : send update mail only to changed attendees (rt#6085)
+* kolab/issue4360: Todo with attendee is changed by the attendee, but the text of the update mail is wrong (rt#6149)
+* kolab/issue4543: Wish: Warning when a new created or edited event with recurrence isn't visible (rt#6165)
+* kolab/issue4566: change event in organizer's calendar, no update mails are sent. (rt#5906)
+* kolab/issue4574: delete event with recurrence : update mail doesn't tell the kind of change
+* kolab/issue4578: Clicking on attendee links in Attendee list of invitations doesn't work
+* kolab/issue4642: Mail attachment is read-only (rt#5950)
+* kolab/issue4643: Regression: Two dimap kolab server with different names are both called Kolab-Server in the calendar.
+* kolab/issue4646: Problem with DIMAP cache: email flags are not saved after changing flag state (rt#6215)
+
+
+
 Friday 15 October 2010
 
 Problems addressed
