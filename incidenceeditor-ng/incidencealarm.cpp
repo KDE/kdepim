@@ -35,10 +35,6 @@
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
 
-enum {
-  // Fallback in case config is invalid
-  DEFAULT_REMINDER_OFFSET = 15 // minutes
-};
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )

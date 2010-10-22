@@ -20,8 +20,12 @@
 
 #include "alarmpresets.h"
 
+#include <calendarsupport/kcalprefs.h>
+
 #include <KGlobal>
 #include <KLocale>
+
+using namespace CalendarSupport;
 
 namespace IncidenceEditorNG {
 
@@ -46,6 +50,14 @@ void initPresets( AlarmPresets::When when )
                    << 24 * 60     // 1 day
                    << 2 * 24 * 60 // 2 days
                    << 5 * 24 * 60;// 5 days
+
+  const int defaultAlarmOffset = KCalPrefs::instance()->reminderTime() > 0 ? KCalPrefs::instance()->reminderTime() :
+                                                                             DEFAULT_REMINDER_OFFSET;
+
+  if ( !hardcodedPresets.contains( defaultAlarmOffset ) ) {
+    // Lets insert the user's favorite preset:
+    hardcodedPresets.prepend( defaultAlarmOffset );
+  }
 
   switch ( when ) {
   case AlarmPresets::BeforeStart:

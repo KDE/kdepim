@@ -27,6 +27,11 @@ class QStringList;
 
 namespace IncidenceEditorNG {
 
+enum {
+  // Fallback in case config is invalid
+  DEFAULT_REMINDER_OFFSET = 15 // minutes
+};
+
 namespace AlarmPresets {
 
   enum When {
