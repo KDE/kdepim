@@ -188,7 +188,7 @@ void KDeclarativeMainView::delayedInit()
   filterModel->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   filterModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
-  d->mItemModel = createItemModelContext(context, filterModel);
+  d->mItemModel = createItemModelContext( context, filterModel );
 
   context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
@@ -261,30 +261,29 @@ void KDeclarativeMainView::delayedInit()
   d->mAgentStatusMonitor->setMimeTypeFilter( d->mChangeRecorder->mimeTypesMonitored() );
   context->setContextProperty( "agentStatusMonitor", QVariant::fromValue<QObject*>( d->mAgentStatusMonitor ) );
 
-  connect(itemSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(itemSelectionChanged()));
+  connect( itemSelectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SLOT( itemSelectionChanged() ) );
 }
 
 void KDeclarativeMainView::itemSelectionChanged()
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
-  if (list.size() != 1) {
+  if ( list.size() != 1 ) {
     // TODO Clear messageViewerItem
     return;
   }
 
-  const QModelIndex itemIdx = list.first();
-  const Akonadi::Collection parentCol = itemIdx.data(Akonadi::EntityTreeModel::ParentCollectionRole).value<Akonadi::Collection>();
-  Q_ASSERT(parentCol.isValid());
-  QModelIndex index = EntityTreeModel::modelIndexForCollection(entityTreeModel(), parentCol);
-  Q_ASSERT(index.isValid());
+  const QModelIndex itemIndex = list.first();
+  const Akonadi::Collection parentCollection = itemIndex.data( Akonadi::EntityTreeModel::ParentCollectionRole ).value<Akonadi::Collection>();
+  Q_ASSERT( parentCollection.isValid() );
+  const QModelIndex index = EntityTreeModel::modelIndexForCollection( entityTreeModel(), parentCollection );
+  Q_ASSERT( index.isValid() );
 
-  const Akonadi::Item item = itemIdx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
-  viewSingleItem(item);
+  const Akonadi::Item item = itemIndex.data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  viewSingleItem( item );
 }
 
-void KDeclarativeMainView::viewSingleItem(const Akonadi::Item& item)
+void KDeclarativeMainView::viewSingleItem( const Akonadi::Item& )
 {
-  Q_UNUSED(item)
 }
 
 KDeclarativeMainView::~KDeclarativeMainView()
@@ -292,7 +291,7 @@ KDeclarativeMainView::~KDeclarativeMainView()
   delete d;
 }
 
-void KDeclarativeMainView::setItemNaigationAndActionSelectionModels(QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel)
+void KDeclarativeMainView::setItemNaigationAndActionSelectionModels( QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel )
 {
   d->mItemNavigationSelectionModel = itemNavigationSelectionModel;
 
@@ -302,7 +301,7 @@ void KDeclarativeMainView::setItemNaigationAndActionSelectionModels(QItemSelecti
   d->mItemActionSelectionModel = itemActionSelectionModel;
 }
 
-QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model)
+QAbstractItemModel* KDeclarativeMainView::createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model )
 {
   d->mItemFilterModel = createItemFilterModel();
   if ( d->mItemFilterModel ) {
@@ -327,11 +326,11 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeCon
 
     d->mListProxy->setSourceModel( qmlCheckable );
   }
-  KLinkItemSelectionModel *itemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this );
 
+  KLinkItemSelectionModel *itemNavigationSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemSelectionModel, this );
   KLinkItemSelectionModel *itemActionSelectionModel = new KLinkItemSelectionModel( d->mListProxy, itemActionCheckModel, this );
 
-  setItemNaigationAndActionSelectionModels(itemNavigationSelectionModel, itemActionSelectionModel);
+  setItemNaigationAndActionSelectionModels( itemNavigationSelectionModel, itemActionSelectionModel );
 
   if ( d->mListProxy ) {
     context->setContextProperty( "itemModel", d->mListProxy );
@@ -348,51 +347,53 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeCon
   }
 
   StateMachineBuilder *builder = new StateMachineBuilder;
-  builder->setItemSelectionModel(itemNavigationSelectionModel);
-  builder->setNavigationModel(d->mBnf->selectionModel());
-  d->mStateMachine = builder->getMachine(this);
-  Q_ASSERT(d->mStateMachine);
-  connect(d->mStateMachine, SIGNAL(stateChanged()), SIGNAL(stateChanged()));
+  builder->setItemSelectionModel( itemNavigationSelectionModel );
+  builder->setNavigationModel( d->mBnf->selectionModel() );
+  d->mStateMachine = builder->getMachine( this );
+  Q_ASSERT( d->mStateMachine );
+  connect( d->mStateMachine, SIGNAL( stateChanged() ), SIGNAL( stateChanged() ) );
   d->mStateMachine->start();
   delete builder;
 
   return model;
 }
 
-void KDeclarativeMainView::setApplicationState(const QString& state)
+void KDeclarativeMainView::setApplicationState( const QString &state )
 {
-  d->mStateMachine->requestState(state);
+  d->mStateMachine->requestState( state );
 }
 
 QString KDeclarativeMainView::applicationState() const
 {
-  if (!d->mStateMachine)
+  if ( !d->mStateMachine )
     return QString();
 
-  QSet<QAbstractState*> set = d->mStateMachine->configuration();
-  if (set.isEmpty())
+  const QSet<QAbstractState*> set = d->mStateMachine->configuration();
+  if ( set.isEmpty() )
     return QString();
-  Q_ASSERT(!set.isEmpty());
-  QSet<QAbstractState*>::iterator it = set.begin();
-  const QSet<QAbstractState*>::iterator end = set.end();
+  Q_ASSERT( !set.isEmpty() );
+
+  QSet<QAbstractState*>::const_iterator it = set.begin();
+  const QSet<QAbstractState*>::const_iterator end = set.end();
   QObject *top = *it;
   ++it;
   for ( ; it != end; ++it ) {
     QObject *state = *it;
     QObject *parent = state->parent();
-    while (parent) {
-      if (parent == top)
+    while ( parent ) {
+      if ( parent == top )
         top = state;
       parent = parent->parent();
     }
   }
+
   return top->objectName();
 }
 
 void KDeclarativeMainView::breadcrumbsSelectionChanged()
 {
-  const int numBreadcrumbs = qobject_cast<QAbstractItemModel*>(d->mBnf->qmlBreadcrumbsModel())->rowCount();
-  const int numSelectedItems = qobject_cast<QAbstractItemModel*>(d->mBnf->qmlSelectedItemModel())->rowCount();
+  const int numBreadcrumbs = qobject_cast<QAbstractItemModel*>( d->mBnf->qmlBreadcrumbsModel() )->rowCount();
+  const int numSelectedItems = qobject_cast<QAbstractItemModel*>( d->mBnf->qmlSelectedItemModel() )->rowCount();
 
   if ( numBreadcrumbs == 0 && numSelectedItems == 0) {
     d->mGuiStateManager->switchState( GuiStateManager::HomeScreenState );
@@ -616,23 +617,24 @@ void KDeclarativeMainView::exportItems()
 }
 
 
-void KDeclarativeMainView::openAttachment(const QString& url, const QString& mimeType)
+void KDeclarativeMainView::openAttachment( const QString &url, const QString &mimeType )
 {
-   KRun::runUrl( KUrl(url), mimeType, this );
+   KRun::runUrl( KUrl( url ), mimeType, this );
   //TODO WINCE and MAEMO: if doesn't work, try KToolInvocation::invokeBrowser on maemo and a ShellExecuteEx direct API call on WinCE either inside KRun or KToolInvocation
    //KToolInvocation::invokeBrowser and QDesktopServices::openUrl goes through a web browser, at least on desktop, and that is not nice
 }
 
-void KDeclarativeMainView::saveAttachment(const QString& url)
+void KDeclarativeMainView::saveAttachment( const QString &url )
 {
-  QString  fileName = KUrl( url ).fileName();
+  QString fileName = KUrl( url ).fileName();
   if ( fileName.isEmpty() ) {
     fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
   }
-  QString targetFile  = KFileDialog::getSaveFileName( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
-                                   QString(),
-                                   this,
-                                   i18n( "Save Attachment" ) );
+
+  const QString targetFile = KFileDialog::getSaveFileName( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
+                                                           QString(),
+                                                           this,
+                                                           i18n( "Save Attachment" ) );
   if ( targetFile.isEmpty() ) {
     return;
   }
@@ -644,6 +646,7 @@ void KDeclarativeMainView::saveAttachment(const QString& url)
             i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
         return;
     }
+
     QFile::remove( targetFile );
   }
 
@@ -651,14 +654,16 @@ void KDeclarativeMainView::saveAttachment(const QString& url)
   bool success = file.open( QFile::ReadOnly );
   if ( success )
     success = file.copy( targetFile );
+
   if ( !success ) {
-      KMessageBox::error( this,
-                          i18nc( "1 = file name, 2 = error string",
-                                  "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                                  targetFile,
-                                  file.errorString() ),
-                          i18n( "Error saving attachment" ) );
+    KMessageBox::error( this,
+                        i18nc( "1 = file name, 2 = error string",
+                               "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
+                               targetFile,
+                               file.errorString() ),
+                        i18n( "Error saving attachment" ) );
   }
+
   file.close();
 }
 
@@ -748,11 +753,10 @@ GuiStateManager* KDeclarativeMainView::createGuiStateManager() const
 
 QString KDeclarativeMainView::version() const
 {
-  const static QString svn_rev = QLatin1String(KDEPIM_SVN_REVISION_STRING);
+  const static QString svn_rev = QLatin1String( KDEPIM_SVN_REVISION_STRING );
   if ( svn_rev.isEmpty() ) {
-      return i18n( "Version: %1", QLatin1String( KDEPIM_VERSION ) );
-  }
-  else {
+    return i18n( "Version: %1", QLatin1String( KDEPIM_VERSION ) );
+  } else {
     return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_SVN_REVISION_STRING, KDEPIM_SVN_LAST_CHANGE );
   }
 }

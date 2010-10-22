@@ -127,9 +127,9 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void loadFavorite( const QString &name );
     void multipleSelectionFinished();
 
-    void persistCurrentSelection(const QString &key);
-    void clearPersistedSelection(const QString &key);
-    void restorePersistedSelection(const QString &key);
+    void persistCurrentSelection( const QString &key );
+    void clearPersistedSelection( const QString &key );
+    void restorePersistedSelection( const QString &key );
 
     /**
      * Starts the import of items to the application.
@@ -147,8 +147,8 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     void exportItems();
 
-    void openAttachment(const QString& url, const QString& mimeType);
-    void saveAttachment(const QString& url);
+    void openAttachment( const QString &url, const QString &mimeType );
+    void saveAttachment( const QString &url );
 
     void reportBug();
 
@@ -232,7 +232,10 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     virtual GuiStateManager* createGuiStateManager() const;
 
-    virtual void viewSingleItem(const Akonadi::Item &item);
+    /**
+     * This method is called when a single @p item has been selected to view.
+     */
+    virtual void viewSingleItem( const Akonadi::Item &item );
 
   protected Q_SLOTS:
     void delayedInit();
@@ -251,8 +254,9 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
     virtual void keyPressEvent( QKeyEvent *event );
 
-    virtual QAbstractItemModel* createItemModelContext(QDeclarativeContext *context, QAbstractItemModel *model);
-    void setItemNaigationAndActionSelectionModels(QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel);
+    virtual QAbstractItemModel* createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model );
+    void setItemNaigationAndActionSelectionModels( QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel );
+
   private:
     KDeclarativeMainViewPrivate * const d;
     Q_DISABLE_COPY( KDeclarativeMainView )
