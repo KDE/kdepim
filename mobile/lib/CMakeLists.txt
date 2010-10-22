@@ -29,6 +29,7 @@ set(mobileui_SRCS
     threadgroupermodel.cpp
     threadselectionmodel.cpp
     agentstatusmonitor.cpp
+    modelselectiontransition.cpp
 )
 
 if (KDEQMLPLUGIN_STATIC)
