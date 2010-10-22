@@ -96,7 +96,7 @@ public:
       is required, @p GoOn if the message shall be processed by
       further filters and @p Ok otherwise.
   */
-  virtual ReturnCode process( Akonadi::Item item) const = 0;
+  virtual ReturnCode process( const Akonadi::Item& item) const = 0;
 
   /** Determines if the action depends on the body of the message
   */
@@ -144,7 +144,7 @@ public:
   static FilterAction* newAction();
 
   /** Automates the sending of MDNs from filter actions. */
-  static void sendMDN( Akonadi::Item item, KMime::MDN::DispositionType d,
+  static void sendMDN( const Akonadi::Item& item, KMime::MDN::DispositionType d,
 		       const QList<KMime::MDN::DispositionModifier> & m
 		       = QList<KMime::MDN::DispositionModifier>() );
 

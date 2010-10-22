@@ -22,6 +22,8 @@
 using MailCommon::FilterLog;
 #include <kpimutils/email.h>
 
+#ifndef KDEPIM_NO_NEPOMUK
+
 #include <nie.h>
 #include <nmo.h>
 #include <nco.h>
@@ -34,6 +36,11 @@ using MailCommon::FilterLog;
 #include <Nepomuk/Query/ResourceTerm>
 #include <Nepomuk/Query/NegationTerm>
 #include <Nepomuk/Query/ResourceTypeTerm>
+
+#include <Soprano/Vocabulary/NAO>
+#include <Soprano/Vocabulary/RDF>
+
+#endif
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -50,8 +57,6 @@ using MailCommon::FilterLog;
 #include <QByteArray>
 #include <QDataStream>
 
-#include <Soprano/Vocabulary/NAO>
-#include <Soprano/Vocabulary/RDF>
 
 #include <assert.h>
 
@@ -214,6 +219,8 @@ const QString SearchRule::asString() const
   return result;
 }
 
+#ifndef KDEPIM_NO_NEPOMUK
+
 Nepomuk::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
 {
   switch ( function() ) {
@@ -262,6 +269,8 @@ void SearchRule::addAndNegateTerm(const Nepomuk::Query::Term& term, Nepomuk::Que
     termGroup.addSubTerm( term );
   }
 }
+
+#endif
 
 QDataStream& SearchRule::operator >>( QDataStream& s ) const
 {
@@ -352,10 +361,12 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     msgContents += ", " + msg->cc()->asUnicodeString();
     msgContents += ", " + msg->bcc()->asUnicodeString();
   } else if ( field() == "<tag>" ) {
+#ifndef KDEPIM_NO_NEPOMUK    
     const Nepomuk::Resource res( item.url() );
     foreach ( const Nepomuk::Tag &tag, res.tags() )
       msgContents += tag.label();
     logContents = false;
+#endif    
   } else {
     // make sure to treat messages with multiple header lines for
     // the same header correctly
@@ -389,6 +400,7 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
   return rc;
 }
 
+#ifndef KDEPIM_NO_NEPOMUK
 void SearchRuleString::addPersonTerm(Nepomuk::Query::GroupTerm& groupTerm, const QUrl& field) const
 {
   // TODO split contents() into address/name and adapt the query accordingly
@@ -438,7 +450,7 @@ void SearchRuleString::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
   if ( !termGroup.subTerms().isEmpty() )
     addAndNegateTerm( termGroup, groupTerm );
 }
-
+#endif
 
 // helper, does the actual comparing
 bool SearchRuleString::matchesInternal( const QString & msgContents ) const
@@ -657,6 +669,8 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
   return false;
 }
 
+#ifndef KDEPIM_NO_NEPOMUK
+
 void SearchRuleNumerical::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 {
   if ( field() == "<size>" ) {
@@ -669,6 +683,7 @@ void SearchRuleNumerical::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) co
     // TODO
   }
 }
+#endif
 
 //==================================================
 //
@@ -747,6 +762,7 @@ bool SearchRuleStatus::matches( const Akonadi::Item &item ) const
   return rc;
 }
 
+#ifndef KDEPIM_NO_NEPOMUK
 void SearchRuleStatus::addTagTerm( Nepomuk::Query::GroupTerm &groupTerm, const QString &tagId ) const
 {
   // TODO handle function() == NOT
@@ -777,6 +793,7 @@ void SearchRuleStatus::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 
   // TODO
 }
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -947,15 +964,20 @@ QString SearchPattern::asString() const {
   return result;
 }
 
+#ifndef KDEPIM_NO_NEPOMUK
+
 static Nepomuk::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
 {
   if ( op == SearchPattern::OpOr )
     return Nepomuk::Query::OrTerm();
   return Nepomuk::Query::AndTerm();
 }
+#endif
 
 QString SearchPattern::asSparqlQuery() const
 {
+#ifndef KDEPIM_NO_NEPOMUK
+
   Nepomuk::Query::Query query;
 
   Nepomuk::Query::AndTerm outerGroup;
@@ -974,6 +996,9 @@ QString SearchPattern::asSparqlQuery() const
   query.setTerm( outerGroup );
   query.addRequestProperty( itemIdProperty );
   return query.toSparqlQuery();
+#else
+  return QString(); //TODO what to return in this case?
+#endif  
 }
 
 const SearchPattern & SearchPattern::operator=( const SearchPattern & other ) {

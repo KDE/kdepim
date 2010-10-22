@@ -24,8 +24,12 @@
 #include <akonadi/kmime/messagestatus.h>
 using Akonadi::MessageStatus;
 
+#ifndef KDEPIM_NO_NEPOMUK
+
 #include <Nepomuk/Query/GroupTerm>
 #include <Nepomuk/Query/ComparisonTerm>
+
+#endif
 
 #include <QList>
 #include <QString>
@@ -163,18 +167,23 @@ public:
   /** Returns the rule as string. For debugging.*/
   const QString asString() const;
 
+#ifndef KDEPIM_NO_NEPOMUK 
   /** Adds query terms to the given term group. */
   virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const = 0;
+#endif  
 
   QDataStream & operator>>( QDataStream& ) const;
 
 protected:
+#ifndef KDEPIM_NO_NEPOMUK
+  
   /** Converts function() into the corresponding Nepomuk query operator. */
   Nepomuk::Query::ComparisonTerm::Comparator nepomukComparator() const;
 
   /** Adds @p term to @p termGroup and adds a negation term inbetween if needed. */
   void addAndNegateTerm( const Nepomuk::Query::Term &term, Nepomuk::Query::GroupTerm &termGroup ) const;
-
+#endif
+  
 private:
   static Function configValueToFunc( const char * str );
   static QString functionToString( Function function );
@@ -205,13 +214,18 @@ public:
   virtual bool requiresBody() const;
 
   virtual bool matches( const Akonadi::Item &item ) const;
-  virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
 
   /** Helper for the main matches() method. Does the actual comparing. */
   bool matchesInternal( const QString & msgContents ) const;
 
-  private:
-    void addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm, const QUrl &field ) const;
+#ifndef KDEPIM_NO_NEPOMUK
+  virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+#endif
+  
+private:
+#ifndef KDEPIM_NO_NEPOMUK
+  void addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm, const QUrl &field ) const;
+#endif
 };
 
 
@@ -228,7 +242,6 @@ public:
   virtual bool isEmpty() const ;
 
   virtual bool matches( const Akonadi::Item &item ) const;
-  virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
 
   // Optimized matching not implemented, will use the unoptimized matching
   // from SearchRule
@@ -237,6 +250,10 @@ public:
   /** Helper for the main matches() method. Does the actual comparing. */
   bool matchesInternal( long numericalValue, long numericalMsgContents,
                         const QString & msgContents ) const;
+                        
+#ifndef KDEPIM_NO_NEPOMUK
+  virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+#endif
 };
 //TODO: Check if the below one is needed or not!
 // The below are used in several places and here so they are accessible.
@@ -304,7 +321,10 @@ public:
 
    virtual bool isEmpty() const ;
    virtual bool matches( const Akonadi::Item &item ) const;
+   
+#ifndef KDEPIM_NO_NEPOMUK
    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+#endif   
 
    //Not possible to implement optimized form for status searching
    using SearchRule::matches;
@@ -312,8 +332,10 @@ public:
 
    static Akonadi::MessageStatus statusFromEnglishName(const QString&);
 private:
+#ifndef KDEPIM_NO_NEPOMUK
   void addTagTerm( Nepomuk::Query::GroupTerm &groupTerm, const QString &tagId ) const;
-
+#endif
+  
 private:
    Akonadi::MessageStatus mStatus;
 };

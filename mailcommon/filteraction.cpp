@@ -116,7 +116,7 @@ bool FilterAction::folderRemoved(const Akonadi::Collection&, const Akonadi::Coll
   return false;
 }
 
-void FilterAction::sendMDN( Akonadi::Item item, KMime::MDN::DispositionType d,
+void FilterAction::sendMDN( const Akonadi::Item & item, KMime::MDN::DispositionType d,
                               const QList<KMime::MDN::DispositionModifier> & m ) {
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg ) return;
@@ -598,7 +598,7 @@ class FilterActionSendReceipt : public FilterActionWithNone
 {
 public:
   FilterActionSendReceipt();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   static FilterAction* newAction(void);
 };
 
@@ -612,7 +612,7 @@ FilterActionSendReceipt::FilterActionSendReceipt()
 {
 }
 
-FilterAction::ReturnCode FilterActionSendReceipt::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionSendReceipt::process( const Akonadi::Item& item ) const
 {
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
   MessageFactory factory( msg, item.id() );
@@ -639,7 +639,7 @@ class FilterActionTransport: public FilterActionWithString
 {
 public:
   FilterActionTransport();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   static FilterAction* newAction(void);
 };
 
@@ -653,7 +653,7 @@ FilterActionTransport::FilterActionTransport()
 {
 }
 
-FilterAction::ReturnCode FilterActionTransport::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionTransport::process( const Akonadi::Item& item ) const
 {
   if ( mParameter.isEmpty() )
     return ErrorButGoOn;
@@ -675,7 +675,7 @@ class FilterActionReplyTo: public FilterActionWithString
 {
 public:
   FilterActionReplyTo();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   static FilterAction* newAction(void);
 };
 
@@ -690,7 +690,7 @@ FilterActionReplyTo::FilterActionReplyTo()
   mParameter = "";
 }
 
-FilterAction::ReturnCode FilterActionReplyTo::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionReplyTo::process( const Akonadi::Item& item ) const
 {
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
   KMime::Headers::Generic *header = new KMime::Headers::Generic( "Reply-To", msg.get(), mParameter, "utf-8");
@@ -711,7 +711,7 @@ class FilterActionIdentity: public FilterActionWithUOID
 {
 public:
   FilterActionIdentity();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   static FilterAction* newAction();
 
   QWidget * createParamWidget( QWidget * parent ) const;
@@ -731,7 +731,7 @@ FilterActionIdentity::FilterActionIdentity()
   mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
 }
 
-FilterAction::ReturnCode FilterActionIdentity::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionIdentity::process( const Akonadi::Item& item ) const
 {
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
   KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number(mParameter), "utf-8");
@@ -779,7 +779,7 @@ class FilterActionSetStatus: public FilterActionWithStringList
 {
 public:
   FilterActionSetStatus();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item& item ) const;
   virtual bool requiresBody() const;
 
   static FilterAction* newAction();
@@ -832,7 +832,7 @@ FilterActionSetStatus::FilterActionSetStatus()
   mParameter = mParameterList.at(0);
 }
 
-FilterAction::ReturnCode FilterActionSetStatus::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionSetStatus::process( const Akonadi::Item& item ) const
 {
   const int idx = mParameterList.indexOf( mParameter );
   if ( idx < 1 ) return ErrorButGoOn;
@@ -840,7 +840,8 @@ FilterAction::ReturnCode FilterActionSetStatus::process( Akonadi::Item item ) co
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( item.flags() );
   status.set( stati[ idx - 1 ] );
-  Akonadi::Item i( item );
+  Akonadi::Item i( item.id() );
+  i.setRevision( item.revision() );
   i.setFlags( status.statusFlags() );
   new Akonadi::ItemModifyJob( i, FilterIf->filterManager() ); // TODO handle error
   return GoOn;
@@ -889,7 +890,7 @@ class FilterActionAddTag: public FilterActionWithStringList
 {
 public:
   FilterActionAddTag();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   virtual bool requiresBody() const;
 
   static FilterAction* newAction();
@@ -918,7 +919,7 @@ FilterActionAddTag::FilterActionAddTag()
   }
 }
 
-FilterAction::ReturnCode FilterActionAddTag::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionAddTag::process( const Akonadi::Item & item ) const
 {
   const int idx = mParameterList.indexOf( mParameter );
   if ( idx == -1 ) return ErrorButGoOn;
@@ -966,7 +967,7 @@ class FilterActionFakeDisposition: public FilterActionWithStringList
 {
 public:
   FilterActionFakeDisposition();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   static FilterAction* newAction() {
     return (new FilterActionFakeDisposition);
   }
@@ -1010,7 +1011,7 @@ FilterActionFakeDisposition::FilterActionFakeDisposition()
   mParameter = mParameterList.at(0);
 }
 
-FilterAction::ReturnCode FilterActionFakeDisposition::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionFakeDisposition::process( const Akonadi::Item &item ) const
 {
   const int idx = mParameterList.indexOf( mParameter );
   if ( idx < 1 ) return ErrorButGoOn;
@@ -1063,7 +1064,7 @@ class FilterActionRemoveHeader: public FilterActionWithStringList
 {
 public:
   FilterActionRemoveHeader();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   virtual QWidget* createParamWidget( QWidget* parent ) const;
   virtual void setParamWidgetValue( QWidget* paramWidget ) const;
 
@@ -1096,7 +1097,7 @@ QWidget* FilterActionRemoveHeader::createParamWidget( QWidget* parent ) const
   return cb;
 }
 
-FilterAction::ReturnCode FilterActionRemoveHeader::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionRemoveHeader::process( const Akonadi::Item& item ) const
 {
   if ( mParameter.isEmpty() ) return ErrorButGoOn;
 
@@ -1133,7 +1134,7 @@ class FilterActionAddHeader: public FilterActionWithStringList
 {
 public:
   FilterActionAddHeader();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   virtual QWidget* createParamWidget( QWidget* parent ) const;
   virtual void setParamWidgetValue( QWidget* paramWidget ) const;
   virtual void applyParamWidgetValue( QWidget* paramWidget );
@@ -1164,7 +1165,7 @@ FilterActionAddHeader::FilterActionAddHeader()
   mParameter = mParameterList.at(0);
 }
 
-FilterAction::ReturnCode FilterActionAddHeader::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionAddHeader::process( const Akonadi::Item& item ) const
 {
   if ( mParameter.isEmpty() ) return ErrorButGoOn;
 
@@ -1280,7 +1281,7 @@ class FilterActionRewriteHeader: public FilterActionWithStringList
 {
 public:
   FilterActionRewriteHeader();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   virtual QWidget* createParamWidget( QWidget* parent ) const;
   virtual void setParamWidgetValue( QWidget* paramWidget ) const;
   virtual void applyParamWidgetValue( QWidget* paramWidget );
@@ -1313,7 +1314,7 @@ FilterActionRewriteHeader::FilterActionRewriteHeader()
   mParameter = mParameterList.at(0);
 }
 
-FilterAction::ReturnCode FilterActionRewriteHeader::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionRewriteHeader::process( const Akonadi::Item & item ) const
 {
   if ( mParameter.isEmpty() || !mRegExp.isValid() )
     return ErrorButGoOn;
@@ -1460,7 +1461,7 @@ class FilterActionMove: public FilterActionWithFolder
 {
 public:
   FilterActionMove();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   virtual bool requiresBody() const;
   static FilterAction* newAction(void);
 };
@@ -1475,7 +1476,7 @@ FilterActionMove::FilterActionMove()
 {
 }
 
-FilterAction::ReturnCode FilterActionMove::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionMove::process( const Akonadi::Item & item ) const
 {
   if ( !mFolder.isValid() ) {
     const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolderName );
@@ -1502,7 +1503,7 @@ class FilterActionCopy: public FilterActionWithFolder
 {
 public:
   FilterActionCopy();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   virtual bool requiresBody() const;
   static FilterAction* newAction(void);
 };
@@ -1517,7 +1518,7 @@ FilterActionCopy::FilterActionCopy()
 {
 }
 
-FilterAction::ReturnCode FilterActionCopy::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionCopy::process( const Akonadi::Item & item ) const
 {
   // copy the message 1:1
   new Akonadi::ItemCopyJob( item, mFolder, FilterIf->filterManager() ); // TODO handle error
@@ -1538,7 +1539,7 @@ class FilterActionForward: public FilterActionWithAddress
   public:
     FilterActionForward();
     static FilterAction* newAction( void );
-    virtual ReturnCode process( Akonadi::Item item ) const;
+    virtual ReturnCode process( const Akonadi::Item & item ) const;
     virtual QWidget* createParamWidget( QWidget* parent ) const;
     virtual void applyParamWidgetValue( QWidget* paramWidget );
     virtual void setParamWidgetValue( QWidget* paramWidget ) const;
@@ -1562,7 +1563,7 @@ FilterActionForward::FilterActionForward()
 {
 }
 
-FilterAction::ReturnCode FilterActionForward::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionForward::process( const Akonadi::Item & item ) const
 {
   if ( mParameter.isEmpty() )
     return ErrorButGoOn;
@@ -1718,7 +1719,7 @@ class FilterActionRedirect: public FilterActionWithAddress
 {
 public:
   FilterActionRedirect();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   static FilterAction* newAction(void);
 };
 
@@ -1732,7 +1733,7 @@ FilterActionRedirect::FilterActionRedirect()
 {
 }
 
-FilterAction::ReturnCode FilterActionRedirect::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionRedirect::process( const Akonadi::Item & item ) const
 {
   if ( mParameter.isEmpty() )
     return ErrorButGoOn;
@@ -1763,7 +1764,7 @@ class FilterActionExec : public FilterActionWithCommand
 {
 public:
   FilterActionExec();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   static FilterAction* newAction(void);
 };
 
@@ -1777,7 +1778,7 @@ FilterActionExec::FilterActionExec()
 {
 }
 
-FilterAction::ReturnCode FilterActionExec::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionExec::process( const Akonadi::Item & item ) const
 {
   return FilterActionWithCommand::genericProcess( item, false ); // ignore output
 }
@@ -1792,7 +1793,7 @@ class FilterActionExtFilter: public FilterActionWithCommand
 {
 public:
   FilterActionExtFilter();
-  virtual ReturnCode process( Akonadi::Item item2 ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   static FilterAction* newAction(void);
 };
 
@@ -1805,7 +1806,7 @@ FilterActionExtFilter::FilterActionExtFilter()
   : FilterActionWithCommand( "filter app", i18n("Pipe Through") )
 {
 }
-FilterAction::ReturnCode FilterActionExtFilter::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionExtFilter::process( const Akonadi::Item & item ) const
 {
   return FilterActionWithCommand::genericProcess( item, true ); // use output
 }
@@ -1819,7 +1820,7 @@ class FilterActionExecSound : public FilterActionWithTest
 public:
   FilterActionExecSound();
   ~FilterActionExecSound();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   virtual bool requiresBody() const;
   static FilterAction* newAction(void);
 private:
@@ -1890,7 +1891,7 @@ FilterAction* FilterActionExecSound::newAction(void)
   return (new FilterActionExecSound());
 }
 
-FilterAction::ReturnCode FilterActionExecSound::process( Akonadi::Item ) const
+FilterAction::ReturnCode FilterActionExecSound::process( const Akonadi::Item&  ) const
 {
   if ( mParameter.isEmpty() )
     return ErrorButGoOn;
@@ -1964,7 +1965,7 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
 {
 public:
   FilterActionAddToAddressBook();
-  virtual ReturnCode process( Akonadi::Item item ) const;
+  virtual ReturnCode process( const Akonadi::Item & item ) const;
   static FilterAction* newAction();
 
   virtual bool isEmpty() const { return false; }
@@ -2009,7 +2010,7 @@ FilterActionAddToAddressBook::FilterActionAddToAddressBook()
 {
 }
 
-FilterAction::ReturnCode FilterActionAddToAddressBook::process( Akonadi::Item item ) const
+FilterAction::ReturnCode FilterActionAddToAddressBook::process( const Akonadi::Item & item ) const
 {
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
 
