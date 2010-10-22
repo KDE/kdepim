@@ -36,6 +36,7 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
   , mBulkActionFilterLineEdit( 0 )
   , mAgentStatusMonitor( 0 )
   , mGuiStateManager( 0 )
+  , mStateMachine( 0 )
 { }
 
 void KDeclarativeMainViewPrivate::restoreState()

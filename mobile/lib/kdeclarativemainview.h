@@ -50,7 +50,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     Q_PROPERTY( int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged )
     Q_PROPERTY( bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged )
     Q_PROPERTY( QString version READ version CONSTANT )
-    Q_PROPERTY( QString state READ applicationState NOTIFY stateChanged )
+    Q_PROPERTY( QString state READ applicationState WRITE setApplicationState NOTIFY stateChanged )
 
   public:
     /**
@@ -106,13 +106,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void setBulkActionFilterLineEdit( KLineEdit *lineEdit );
 
     QString applicationState() const;
+    void setApplicationState( const QString &state );
 
   public slots:
     void setSelectedAccount( int row );
 
     void setAgentInstanceListSelectedRow( int row );
-
-    void setApplicationState( const QString &state );
 
     /**
      * Starts the account wizard to add and configure new resources.

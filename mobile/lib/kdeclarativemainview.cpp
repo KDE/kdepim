@@ -350,7 +350,10 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeCon
   StateMachineBuilder *builder = new StateMachineBuilder;
   builder->setItemSelectionModel(itemNavigationSelectionModel);
   builder->setNavigationModel(d->mBnf->selectionModel());
-  builder->getMachine(this);
+  d->mStateMachine = builder->getMachine(this);
+  Q_ASSERT(d->mStateMachine);
+  connect(d->mStateMachine, SIGNAL(stateChanged()), SIGNAL(stateChanged()));
+  d->mStateMachine->start();
   delete builder;
 
   return model;
@@ -363,9 +366,27 @@ void KDeclarativeMainView::setApplicationState(const QString& state)
 
 QString KDeclarativeMainView::applicationState() const
 {
+  if (!d->mStateMachine)
+    return QString();
+
   QSet<QAbstractState*> set = d->mStateMachine->configuration();
-  Q_ASSERT(set.size() == 1);
-  return (*set.constBegin())->objectName();
+  if (set.isEmpty())
+    return QString();
+  Q_ASSERT(!set.isEmpty());
+  QSet<QAbstractState*>::iterator it = set.begin();
+  const QSet<QAbstractState*>::iterator end = set.end();
+  QObject *top = *it;
+  ++it;
+  for ( ; it != end; ++it ) {
+    QObject *state = *it;
+    QObject *parent = state->parent();
+    while (parent) {
+      if (parent == top)
+        top = state;
+      parent = parent->parent();
+    }
+  }
+  return top->objectName();
 }
 
 void KDeclarativeMainView::breadcrumbsSelectionChanged()
