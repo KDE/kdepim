@@ -11,6 +11,10 @@ set(libmailcommon_SRCS
   entitycollectionorderproxymodel.cpp
   expirejob.cpp
   expirypropertiesdialog.cpp
+  filteraction.cpp
+  filterimporterexporter.cpp
+  filterlog.cpp
+  filtermanager.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp
   folderjob.cpp
@@ -27,15 +31,11 @@ set(libmailcommon_SRCS
   messageproperty.cpp
   readablecollectionproxymodel.cpp
   regexplineedit.cpp
+  searchpattern.cpp
 )
 
 if ( NOT WINCE )
 set(libmailcommon_SRCS ${libmailcommon_SRCS}
-  filteraction.cpp
-  filterimporterexporter.cpp
-  filterlog.cpp
-  filtermanager.cpp
-  searchpattern.cpp
   soundtestwidget.cpp
 )
 endif ( NOT WINCE )
@@ -70,11 +70,16 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer
   ${KDE4_KDEUI_LIBS}
 )
 
-if ( NOT WINCE )
-target_link_libraries(mailcommon 
+if(NOT KDEPIM_NO_NEPOMUK)
+target_link_libraries(mailcommon
   ${NEPOMUK_QUERY_LIBRARIES}
   ${SOPRANO_LIBRARIES}
   niefast_apps
+)
+endif(NOT KDEPIM_NO_NEPOMUK)
+
+if ( NOT WINCE )
+target_link_libraries(mailcommon 
   incidenceeditorsng
 )
 endif (NOT WINCE)
