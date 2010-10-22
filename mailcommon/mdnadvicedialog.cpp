@@ -24,7 +24,9 @@
 #include <messagecomposer/messagefactory.h>
 #include "mailkernel.h"
 #include <messagecore/mdnstateattribute.h>
+#ifndef QT_NO_CURSOR
 #include <messageviewer/kcursorsaver.h>
+#endif
 #include <boost/shared_ptr.hpp>
 #include <messagecore/messagehelpers.h>
 #include <Akonadi/ItemModifyJob>
@@ -232,7 +234,9 @@ int MDNAdviceHelper::requestAdviceOnMDN(const char* what)
 {
  for ( int i = 0 ; i < numMdnMessageBoxes ; ++i )
     if ( !qstrcmp( what, mdnMessageBoxes[i].dontAskAgainID ) ) {
+#ifndef QT_NO_CURSOR
       const MessageViewer::KCursorSaver saver( Qt::ArrowCursor );
+#endif
       MessageComposer::MDNAdvice answer;
       answer = questionIgnoreSend( mdnMessageBoxes[i].text,
                                                     mdnMessageBoxes[i].canDeny );
