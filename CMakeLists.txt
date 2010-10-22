@@ -13,12 +13,17 @@ option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FA
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
 option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
+option(KDEPIM_NO_NEPOMUK "Build the mail libraries and applications without nepomuk dependency" FALSE)
 
 if(KDEPIM_BUILD_STATIC)
   set(LIBRARY_TYPE STATIC)
 else(KDEPIM_BUILD_STATIC)
   set(LIBRARY_TYPE SHARED)
 endif(KDEPIM_BUILD_STATIC)
+
+if(KDEPIM_NO_NEPOMUK)
+  add_definitions(-DKDEPIM_NO_NEPOMUK)
+endif(KDEPIM_NO_NEPOMUK)
 
 # cmake would not find kde for xcompile if that is not set
 if(WINCE)
