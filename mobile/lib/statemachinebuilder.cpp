@@ -23,9 +23,36 @@
 
 #include "modelselectiontransition.h"
 
-#include <QStateMachine>
-
 const char stateIdentifier[] = "state";
+
+NotifyingStateMachine::NotifyingStateMachine(QObject* parent)
+  : QStateMachine(parent)
+{
+
+}
+
+void NotifyingStateMachine::requestState(const QString& state)
+{
+  emit stateRequested(state);
+}
+
+RequestNamedTransition::RequestNamedTransition(QStateMachine *stateMachine, QState* sourceState)
+  : QSignalTransition(stateMachine, SIGNAL(stateRequested(QString)), sourceState)
+{
+
+}
+
+
+bool RequestNamedTransition::eventTest(QEvent* event)
+{
+  if (!QSignalTransition::eventTest(event))
+    return false;
+
+  QStateMachine::SignalEvent *se = static_cast<QStateMachine::SignalEvent*>(event);
+  const QString name = se->arguments().first().toString();
+  return !name.isEmpty() && name == targetState()->objectName();
+}
+
 
 class StateMachineBuilderPrivate
 {
@@ -42,6 +69,18 @@ class StateMachineBuilderPrivate
   QItemSelectionModel *m_navigationModel;
   QItemSelectionModel *m_itemSelectionModel;
 };
+
+StateMachineBuilder::StateMachineBuilder()
+  : d_ptr(new StateMachineBuilderPrivate(this))
+{
+
+}
+
+StateMachineBuilder::~StateMachineBuilder()
+{
+  delete d_ptr;
+}
+
 
 void StateMachineBuilder::setItemSelectionModel(QItemSelectionModel* model)
 {

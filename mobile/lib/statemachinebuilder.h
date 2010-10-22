@@ -24,11 +24,37 @@
 
 #include "mobileui_export.h"
 
+#include <QStateMachine>
+#include <QSignalTransition>
+
 class QObject;
-class QStateMachine;
 class QItemSelectionModel;
 
 class StateMachineBuilderPrivate;
+
+
+class MOBILEUI_EXPORT NotifyingStateMachine : public QStateMachine
+{
+  Q_OBJECT
+public:
+  NotifyingStateMachine(QObject *parent = 0);
+
+  void requestState(const QString &state);
+
+signals:
+  void stateRequested(const QString &state);
+  void stateChanged();
+};
+
+class RequestNamedTransition : public QSignalTransition
+{
+  Q_OBJECT
+public:
+  RequestNamedTransition(QStateMachine *stateMachine, QState* sourceState = 0);
+
+  virtual bool eventTest(QEvent* event);
+
+};
 
 /**
   Machines must be built by builders.
@@ -36,12 +62,13 @@ class StateMachineBuilderPrivate;
 class MOBILEUI_EXPORT StateMachineBuilder
 {
 public:
+  StateMachineBuilder();
   virtual ~StateMachineBuilder();
 
   void setNavigationModel(QItemSelectionModel *model);
   void setItemSelectionModel(QItemSelectionModel *model);
   // TODO: Decide on granularity of the interface.
-  virtual QStateMachine* getMachine(QObject *parent) const;
+  virtual NotifyingStateMachine* getMachine(QObject *parent) const;
 
 private:
   Q_DECLARE_PRIVATE(StateMachineBuilder)
