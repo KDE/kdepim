@@ -92,6 +92,8 @@ class EditorContactGroup::Private
       : q( parent )
     {
       mUi.setupUi( parent );
+      mUi.cancelButton->setIcon( SmallIcon( "dialog-cancel", 64 ) );
+      mUi.saveButton->setIcon( SmallIcon( "document-save", 64 ) );
 
       mInputs << new Recipient( mUi.recipient1, q );
       mInputs << new Recipient( mUi.recipient2, q );
