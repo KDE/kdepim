@@ -167,7 +167,7 @@ static QStringList get_file_name( QWidget * parent ) {
         }
     return files;
 }
-#endif QT_NO_FILEDIALOG
+#endif // QT_NO_FILEDIALOG
 
 bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
 {
