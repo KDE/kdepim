@@ -189,6 +189,7 @@ void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
     if ( d->mCollection.isValid() ) {
       d->mEditor->setDefaultCollection( d->mCollection );
     }
+    connect( d->mEditor, SIGNAL( cancelClicked() ) , SLOT( close() ) );
     connect( d->mEditor, SIGNAL( saveClicked() ), SLOT( save() ) );
     connect( d->mEditor, SIGNAL( collectionChanged( Akonadi::Collection ) ),
              SLOT( collectionChanged( Akonadi::Collection ) ) );

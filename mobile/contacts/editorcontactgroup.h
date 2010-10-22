@@ -54,6 +54,7 @@ class EditorContactGroup : public QWidget
   Q_SIGNALS:
     void collectionChanged( const Akonadi::Collection &collection );
 
+    void cancelClicked();
     void saveClicked();
     void requestLaunchAccountWizard();
 
