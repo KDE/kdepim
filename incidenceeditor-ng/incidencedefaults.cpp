@@ -33,9 +33,10 @@
 #include <KIO/NetAccess>
 #include <KDebug>
 #include <KLocalizedString>
-
+#include <KSystemTimeZones>
 #include <QFile>
 
+using namespace CalendarSupport;
 using namespace IncidenceEditorNG;
 
 namespace IncidenceEditorNG {
@@ -126,9 +127,16 @@ KCalCore::Attendee::Ptr IncidenceDefaultsPrivate::organizerAsAttendee(
 
 void IncidenceDefaultsPrivate::eventDefaults( const KCalCore::Event::Ptr &event ) const
 {
-  const KDateTime startDT = mStartDt.isValid() ? mStartDt : KDateTime::currentLocalDateTime();
+  KDateTime startDT;
+  if ( mStartDt.isValid() ) {
+    startDT = mStartDt;
+  } else if ( KCalPrefs::instance()->startTime().isValid() ) {
+    startDT = KDateTime( KCalPrefs::instance()->startTime(), KSystemTimeZones::local() );
+  } else {
+    startDT = KDateTime::currentLocalDateTime();
+  }
 
-  const QTime defaultDurationTime = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
+  const QTime defaultDurationTime = KCalPrefs::instance()->defaultDuration().time();
   const int defaultDuration = defaultDurationTime.hour()*3600 + defaultDurationTime.minute()*60;
 
   const KDateTime endDT = mEndDt.isValid() ? mEndDt : startDT.addSecs( defaultDuration );
