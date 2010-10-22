@@ -28,9 +28,17 @@
 #include "ui_eventortododesktop.h"
 #endif
 
+#include <calendarsupport/kcalprefs.h>
+
 #include <KDebug>
 
 using namespace IncidenceEditorNG;
+using namespace CalendarSupport;
+
+enum {
+  // Fallback in case config is invalid
+  DEFAULT_REMINDER_OFFSET = 15 // minutes
+};
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
@@ -188,7 +196,13 @@ void IncidenceAlarm::newAlarm()
 #else
   QPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type(), mUi->mTabWidget ) );
 #endif
-  dialog->setOffset( 15 );
+  const int reminderOffset = KCalPrefs::instance()->reminderTime();
+
+  if ( reminderOffset >= 0 ) {
+    dialog->setOffset( reminderOffset );
+  } else {
+    dialog->setOffset( DEFAULT_REMINDER_OFFSET );
+  }
   dialog->setUnit( AlarmDialog::Minutes );
   if ( mIsTodo && mDateTime->endDateTimeEnabled() ) {
     dialog->setWhen( AlarmDialog::BeforeEnd );
