@@ -30,6 +30,7 @@
 #include "listproxy.h"
 #include "qmlcheckableproxymodel.h"
 #include "qmllistselectionmodel.h"
+#include "statemachinebuilder.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/agentinstancemodel.h>
@@ -346,7 +347,25 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext(QDeclarativeCon
     context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
   }
 
+  StateMachineBuilder *builder = new StateMachineBuilder;
+  builder->setItemSelectionModel(itemNavigationSelectionModel);
+  builder->setNavigationModel(d->mBnf->selectionModel());
+  builder->getMachine(this);
+  delete builder;
+
   return model;
+}
+
+void KDeclarativeMainView::setApplicationState(const QString& state)
+{
+  d->mStateMachine->requestState(state);
+}
+
+QString KDeclarativeMainView::applicationState() const
+{
+  QSet<QAbstractState*> set = d->mStateMachine->configuration();
+  Q_ASSERT(set.size() == 1);
+  return (*set.constBegin())->objectName();
 }
 
 void KDeclarativeMainView::breadcrumbsSelectionChanged()

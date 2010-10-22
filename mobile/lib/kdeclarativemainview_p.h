@@ -21,6 +21,7 @@
 
 #include "kdeclarativemainview.h"
 #include "akonadibreadcrumbnavigationfactory.h"
+#include "statemachinebuilder.h"
 
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/changerecorder.h>
@@ -28,7 +29,6 @@
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi_next/kviewstatemaintainer.h>
 
-#include <QtCore/QObject>
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QStringListModel>
 
@@ -65,6 +65,7 @@ public: /// members
   KLineEdit                          *mBulkActionFilterLineEdit;
   AgentStatusMonitor                 *mAgentStatusMonitor;
   GuiStateManager                    *mGuiStateManager;
+  NotifyingStateMachine              *mStateMachine;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();
