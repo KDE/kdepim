@@ -31,13 +31,15 @@
 
 #include <QObject>
 
+class KJob;
+
 namespace CalendarSupport {
 
 class IncidenceChanger2::Private : public QObject
 {
   Q_OBJECT
   public:
-    Private( IncidenceChanger *mIncidenceChanger );
+    explicit Private( IncidenceChanger2 *mIncidenceChanger );
     ~Private();
 
   public Q_SLOTS:
@@ -46,6 +48,8 @@ class IncidenceChanger2::Private : public QObject
     void handleDeleteJobResult( KJob * );
   public:
     int mLatestOperationId;
+  private:
+    IncidenceChanger2 *q;
 };
 
 }

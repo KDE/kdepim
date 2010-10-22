@@ -40,6 +40,7 @@ set(calendarsupport_LIB_SRCS
   utils.cpp
 
   next/history.cpp
+  next/incidencechanger2.cpp
 )
 
 if (NOT WINCE)

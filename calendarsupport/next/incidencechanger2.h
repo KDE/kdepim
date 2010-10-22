@@ -25,10 +25,14 @@
 
 #include "calendarsupport_export.h"
 
+#include <Akonadi/Item>
 #include <Akonadi/Collection>
+
+#include <KCalCore/Incidence>
 
 #include <QWidget>
 #include <QObject>
+
 
 namespace CalendarSupport {
 
@@ -41,11 +45,11 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
 
     enum ResultCode {
       ResultCodeSuccess = 0
-    }
+    };
 
     enum DestinationPolicy {
       DestinationPolicyDefault, ///< The default collection is used, if it's invalid, the user is prompted. @see setDefaultCollection().
-      DestinationPolicyDefaultOnly ///< The default collection is used, if it's invalid, an error is returned, and the incidence isn't added.
+      DestinationPolicyDefaultOnly, ///< The default collection is used, if it's invalid, an error is returned, and the incidence isn't added.
       DestinationPolicyAsk      ///< User is always asked which collection to use.
     };
 

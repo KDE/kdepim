@@ -20,35 +20,48 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#include "incidencechanger.h"
-#include "incidencechanger_p.h"
+#include "incidencechanger2.h"
+#include "incidencechanger2_p.h"
 #include "calendar.h"
 
+#include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemModifyJob>
+#include <Akonadi/ItemDeleteJob>
+
+#include <KJob>
+
 using namespace Akonadi;
+using namespace KCalCore;
 using namespace CalendarSupport;
 
-IncidenceChanger2::Private()
+
+IncidenceChanger2::Private::Private( IncidenceChanger2 *qq ) : q( qq )
 {
 }
 
-IncidenceChanger2::~Private()
+IncidenceChanger2::Private::~Private()
 {
 }
 
-void IncidenceChanger2::handleCreateJobResult( KJob *job )
+void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
 {
+  Q_UNUSED( job );
 }
 
-void IncidenceChanger2::handleDeleteJobResult( KJob *job )
+void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
 {
+  Q_UNUSED( job );
 }
 
-void IncidenceChanger2::handleModifyJobResult( KJob *job )
+void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
 {
+  Q_UNUSED( job );
 }
 
-IncidenceChanger2::IncidenceChanger2( CalendarSupport::Calendar *calendar ) : QObject(), d( new Private )
+IncidenceChanger2::IncidenceChanger2( CalendarSupport::Calendar *calendar ) : QObject(),
+                                                                              d( new Private( this ) )
 {
+  Q_UNUSED( calendar );
   d->mLatestOperationId = 0;
 }
 
@@ -62,6 +75,9 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
                                         uint atomicOperationId,
                                         QWidget *parent )
 {
+  Q_UNUSED( parent );
+  Q_UNUSED( atomicOperationId );
+
   Q_ASSERT_X( incidence, "createIncidence()", "Invalid incidences not allowed" );
 
 
@@ -71,7 +87,7 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
   ItemCreateJob *createJob = new ItemCreateJob( item, collection );
 
   // TODO: remove sync exec calls from Akonadi::Groupware
-  connect( job, SIGNAL(result(KJob*)),
+  connect( createJob, SIGNAL(result(KJob*)),
            d, SLOT(handleCreateJobResult(KJob*)), Qt::QueuedConnection );
 
   return ++d->mLatestOperationId;
@@ -82,6 +98,8 @@ int IncidenceChanger2::deleteIncidence( const Item &item,
                                         QWidget *parent )
 {
   // Too harsh?
+  Q_UNUSED( atomicOperationId );
+  Q_UNUSED( parent );
   Q_ASSERT_X( item.isValid(), "deleteIncidence()", "Invalid items not allowed" );
 
   ItemDeleteJob *deleteJob = new ItemDeleteJob( item );
@@ -96,11 +114,15 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
                                         uint atomicOperationId,
                                         QWidget *parent )
 {
+  Q_UNUSED( parent );
+  Q_UNUSED( atomicOperationId );
+  Q_UNUSED( originalItem );
+
   ItemModifyJob *modifyJob = new ItemModifyJob( changedItem );
-  connect( job, SIGNAL(result( KJob *)),
+  connect( modifyJob, SIGNAL(result( KJob *)),
            d, SLOT(handleModifyJobResult(KJob *)) );
 
-  return ++d->mLatestOperationId
+  return ++d->mLatestOperationId;
 }
 
 uint IncidenceChanger2::startAtomicOperation()
@@ -111,6 +133,7 @@ uint IncidenceChanger2::startAtomicOperation()
 
 void IncidenceChanger2::endAtomicOperation( uint atomicOperationId )
 {
+  Q_UNUSED( atomicOperationId );
   //d->mOperationStatus.remove( atomicOperationId );
 }
 
