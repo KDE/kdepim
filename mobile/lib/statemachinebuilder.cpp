@@ -93,27 +93,41 @@ void StateMachineBuilder::setNavigationModel(QItemSelectionModel* model)
   Q_D(StateMachineBuilder);
   d->m_navigationModel = model;
 }
-#if 0
-QStateMachine* StateMachineBuilder::getMachine(QObject *parent) const
+
+NotifyingStateMachine* StateMachineBuilder::getMachine(QObject *parent) const
 {
-  Q_D(StateMachineBuilder);
-  QStateMachine *machine = new QStateMachine(parent);
+  Q_D(const StateMachineBuilder);
+  QStateMachine *machine = new NotifyingStateMachine(parent);
   QState *homeState = new QState(machine);
   machine->setInitialState(homeState);
+  homeState->setObjectName("Home");
   homeState->assignProperty(parent, stateIdentifier, "Home");
+  QObject::connect(homeState, SIGNAL(entered()), machine, SIGNAL(stateChanged()));
   QState *accountState = new QState(machine);
   accountState->assignProperty(parent, stateIdentifier, "Account");
+  QObject::connect(accountState, SIGNAL(entered()), machine, SIGNAL(stateChanged()));
+  accountState->setObjectName("Account");
   QState *folderState = new QState(machine);
   folderState->assignProperty(parent, stateIdentifier, "Folder");
+  QObject::connect(folderState, SIGNAL(entered()), machine, SIGNAL(stateChanged()));
+  folderState->setObjectName("Folder");
   QState *multiFolderState = new QState(machine);
   multiFolderState->assignProperty(parent, stateIdentifier, "MultiFolder");
+  QObject::connect(multiFolderState, SIGNAL(entered()), machine, SIGNAL(stateChanged()));
+  multiFolderState->setObjectName("MultiFolder");
   QState *singleItemState = new QState(machine);
   singleItemState->assignProperty(parent, stateIdentifier, "SingleItem");
+  QObject::connect(singleItemState, SIGNAL(entered()), machine, SIGNAL(stateChanged()));
+  singleItemState->setObjectName("SingleItem");
 
   QState *selectState = new QState(machine);
   selectState->assignProperty(parent, stateIdentifier, "Select");
+  QObject::connect(selectState, SIGNAL(entered()), machine, SIGNAL(stateChanged()));
+  selectState->setObjectName("Select");
   QState *bulkActionState = new QState(machine);
   bulkActionState->assignProperty(parent, stateIdentifier, "BulkAction");
+  QObject::connect(bulkActionState, SIGNAL(entered()), machine, SIGNAL(stateChanged()));
+  bulkActionState->setObjectName("BulkAction");
 
   {
   ModelSelectionTransition *homeToAccount = new ModelSelectionTransition(d->m_navigationModel,
@@ -199,8 +213,19 @@ QStateMachine* StateMachineBuilder::getMachine(QObject *parent) const
                                                                          multiFolderState);
   multiToAccount->setTargetState(folderState);
   }
+  {
+    RequestNamedTransition *transition = new RequestNamedTransition(machine, selectState);
+    homeState->addTransition(transition);
+    multiFolderState->addTransition(transition);
+  }
+  {
+    RequestNamedTransition *transition = new RequestNamedTransition(machine, bulkActionState);
+    accountState->addTransition(transition);
+    folderState->addTransition(transition);
+    multiFolderState->addTransition(transition);
+  }
 
 
 }
 
-#endif
+#include "statemachinebuilder.moc"
