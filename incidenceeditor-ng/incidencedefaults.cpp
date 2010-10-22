@@ -140,13 +140,7 @@ void IncidenceDefaultsPrivate::eventDefaults( const KCalCore::Event::Ptr &event 
 
 void IncidenceDefaultsPrivate::journalDefaults( const KCalCore::Journal::Ptr &journal ) const
 {
-  KDateTime startDT = KDateTime::currentLocalDateTime();
-  if ( mStartDt.isValid() ) {
-    startDT = mStartDt;
-  }
-
-  KDateTime endDT = startDT.addSecs( 3600 ); // Default event time: 1 hour
-
+  const KDateTime startDT = mStartDt.isValid() ? mStartDt : KDateTime::currentLocalDateTime();
   journal->setDtStart( startDT );
 }
 
