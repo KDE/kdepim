@@ -285,7 +285,7 @@ KPIM.MainView {
         anchors.fill : parent;
         onClicked : {
           _itemActionModel.select(-1, 1)
-          _threadSelector.select(-1, 1)
+          _itemNavigationModel.select(-1, 1)
           guiStateManager.popState();
         }
       }
@@ -329,7 +329,7 @@ KPIM.MainView {
                                         "You have selected \n%1\n%2\n%3",
                                         KDE.i18np("1 folder","%1 folders",collectionView.numSelected),
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
-                                        KDE.i18np("1 thread","%1 threads",threadView.count))
+                                        KDE.i18np("1 email","%1 emails",headerList.count))
 
       onSelectedClicked : {
         guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
@@ -382,7 +382,7 @@ KPIM.MainView {
 
     QML.Rectangle {
       id : emptyFolderPage
-      visible: (!application.isLoadingSelected && !guiStateManager.inHomeScreenState && collectionView.hasBreadcrumbs && threadView.count == 0)
+      visible: (!application.isLoadingSelected && !guiStateManager.inHomeScreenState && collectionView.hasBreadcrumbs && headerList.count == 0)
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
@@ -428,67 +428,29 @@ KPIM.MainView {
         visible : false
         height : 0
       }
+
       HeaderView {
-        id : threadView
-        model : _threads
+        id: headerList
+        model: itemModel
+        checkModel : _itemActionModel
         anchors.left : parent.left
         anchors.top : filterLineEdit.bottom
         anchors.bottom : parent.bottom
         anchors.right : parent.right
-        navigationModel : _threadSelector
+        navigationModel : _itemNavigationModel
+
         showDeleteButton : false // too easy to accidentally hit it, although very useful...
-        opacity : threadContentsViewContainer.opacity == 0 ? 1 : 0
       }
       QML.Connections {
-        target : _threadSelector
+        target : _itemNavigationModel
+
         onCurrentRowChanged : {
-          if (!application.isSingleMessage(_threadSelector.currentRow))
-            return;
-          if (!application.isDraftThreadRoot(_threadSelector.currentRow))
+          if (!application.isDraft(_itemNavigationModel.currentRow))
           {
             guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
           } else {
             application.restoreDraft(_itemNavigationModel.currentItemIdHack);
             updateContextActionStates()
-          }
-        }
-      }
-      QML.Item {
-        id : threadContentsViewContainer
-        anchors.left : parent.left
-        anchors.top : filterLineEdit.bottom
-        anchors.bottom : parent.bottom
-        anchors.right : parent.right
-        opacity : threadContentsView.count > 1 ? 1 : 0
-        KPIM.Button2 {
-          id : backButton
-          anchors.left : parent.left
-          anchors.right : parent.right
-          buttonText : KDE.i18n("Back to Threads")
-          // Clear
-          onClicked : _threadSelector.select(-1, 1)
-        }
-        HeaderView {
-          id : threadContentsView
-          showSections : false
-          anchors.left : parent.left
-          anchors.top : backButton.bottom
-          anchors.bottom : parent.bottom
-          anchors.right : parent.right
-
-          model : _threadContents
-          navigationModel : _threadMailSelector
-        }
-        QML.Connections {
-          target : _threadMailSelector
-          onCurrentRowChanged : {
-            if (!application.isDraftThreadContent(_threadMailSelector.currentRow))
-            {
-              guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
-            } else {
-              application.restoreDraft(threadContentsView.currentItemId);
-              updateContextActionStates()
-            }
           }
         }
       }
