@@ -37,10 +37,7 @@ MailWebView::MailWebView( QWidget *parent )
   : QTextBrowser( parent ) // krazy:exclude=qclasses
 {
   setOpenLinks( false );
-#ifdef KDEPIM_MOBILE_UI
-  setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-  setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-#endif
+
   connect( this, SIGNAL(highlighted(QString)),
            this, SIGNAL(linkHovered(QString)) );
   connect( this, SIGNAL(anchorClicked(QUrl)),
@@ -216,6 +213,34 @@ QUrl MailWebView::linkOrImageUrlAt( const QPoint & global ) const
       return ahref;
 }
 
+void MailWebView::setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy )
+{
+  switch ( orientation ) {
+    case Qt::Horizontal:
+      setHorizontalScrollBarPolicy( policy );
+      break;
+    case Qt::Vertical:
+      setVerticalScrollBarPolicy( policy );
+      break;
+    default:
+      Q_ASSERT( false );
+      break;
+  }
+}
+
+Qt::ScrollBarPolicy MailWebView::scrollBarPolicy( Qt::Orientation orientation ) const
+{
+  switch ( orientation ) {
+    case Qt::Horizontal:
+      return horizontalScrollBarPolicy();
+    case Qt::Vertical:
+      return verticalScrollBarPolicy();
+      break;
+    default:
+      Q_ASSERT( false );
+      return Qt::ScrollBarAsNeeded;
+  }
+}
 
 bool MailWebView::replaceInnerHtml( const QString & id, const function<QString()> & delayedHtml )
 {

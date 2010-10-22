@@ -92,6 +92,9 @@ public:
 
     QUrl linkOrImageUrlAt( const QPoint & global ) const;
 
+    void setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy );
+    Qt::ScrollBarPolicy scrollBarPolicy( Qt::Orientation orientation ) const;
+
 Q_SIGNALS:
 
     /// Emitted when the user right-clicks somewhere

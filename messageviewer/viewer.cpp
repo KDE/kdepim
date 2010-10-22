@@ -459,6 +459,12 @@ Akonadi::ItemFetchJob* Viewer::createFetchJob( const Akonadi::Item &item )
   return job;
 }
 
+void Viewer::setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy )
+{
+  Q_D( Viewer );
+  d->mViewer->setScrollBarPolicy( orientation, policy );
+}
+
 void Viewer::deleteMessage()
 {
   Q_D( Viewer );

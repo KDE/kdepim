@@ -46,10 +46,7 @@ MailWebView::MailWebView( QWidget *parent )
   settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
   settings()->setAttribute( QWebSettings::JavaEnabled, false );
   settings()->setAttribute( QWebSettings::PluginsEnabled, false );
-#ifdef KDEPIM_MOBILE_UI
-  page()->mainFrame()->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
-  page()->mainFrame()->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
-#endif
+
   connect( page(), SIGNAL(linkHovered(QString,QString,QString)),
            this,   SIGNAL(linkHovered(QString,QString,QString)) );
   //Fixed in qtwebkit-2.1  the   2010-08-25
@@ -260,6 +257,17 @@ QUrl MailWebView::linkOrImageUrlAt( const QPoint & global ) const
     return hit.imageUrl();
   else
     return QUrl();
+}
+
+
+void MailWebView::setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy )
+{
+  page()->mainFrame()->setScrollBarPolicy( orientation, policy );
+}
+
+Qt::ScrollBarPolicy MailWebView::scrollBarPolicy( Qt::Orientation orientation ) const
+{
+  return page()->mainFrame()->scrollBarPolicy( orientation );
 }
 
 

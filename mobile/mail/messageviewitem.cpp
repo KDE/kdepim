@@ -43,6 +43,8 @@ MessageViewItem::MessageViewItem( QDeclarativeItem* parent )
 {
   m_viewer = new Viewer( 0 );
   m_viewer->setHeaderStyleAndStrategy( HeaderStyle::mobile(), HeaderStrategy::all() );
+  m_viewer->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
+  m_viewer->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
   setWidget( m_viewer );
 
   KDescendantsProxyModel *flatProxy = new KDescendantsProxyModel( this );
