@@ -237,7 +237,7 @@ SummaryPage::SummaryPage( QWidget * parent ) : QWizardPage( parent ), m_complete
     layout->addWidget( new QLabel( i18n( "Check level:" ) ), ++row, 0 );
     layout->addWidget( m_checkLevelLabel = new QLabel, row, 1 );
 #endif
-    layout->addWidget( new QLabel( i18n( "Selected secret certificate:" ) ), ++row, 0 );
+    layout->addWidget( new QLabel( i18n( "Selected secret key:" ) ), ++row, 0 );
     layout->addWidget( m_secretKeyLabel = new QLabel, row, 1 );
     m_secretKeyLabel->setTextFormat( Qt::PlainText );
     layout->addWidget( m_resultLabel = new QLabel, ++row, 0, 1, 2, Qt::AlignCenter );
