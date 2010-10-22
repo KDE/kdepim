@@ -54,28 +54,28 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
        TODO: delete this enum from history.h
     */
     enum ChangeType {
-      ChangeTypeNone,  ///> Nothing happened.
-      ChangeTypeAdd,   ///> Represents an incidence creation.
-      ChangeTypeEdit,  ///> Represents an incidence modification.
-      ChangeTypeDelete ///> Represents an incidence deletion.
+      ChangeTypeNone,     ///> Nothing happened.
+      ChangeTypeCreate,   ///> Represents an incidence creation.
+      ChangeTypeModify,   ///> Represents an incidence modification.
+      ChangeTypeDelete    ///> Represents an incidence deletion.
     };
 
     explicit IncidenceChanger2( CalendarSupport::Calendar *calendar );
     ~IncidenceChanger2();
 
-    bool addIncidence( const KCalCore::Incidence::Ptr &incidence,
-                       const Akonadi::Collection &collection = Akonadi::Collection(),
-                       uint atomicOperationId = 0,
-                       QWidget *parent = 0 );
+    int createIncidence( const KCalCore::Incidence::Ptr &incidence,
+                         const Akonadi::Collection &collection = Akonadi::Collection(),
+                         uint atomicOperationId = 0,
+                         QWidget *parent = 0 );
 
-    bool deleteIncidence( const Akonadi::Item &item,
-                          uint atomicOperationId = 0,
-                          QWidget *parent = 0 );
+    int deleteIncidence( const Akonadi::Item &item,
+                         uint atomicOperationId = 0,
+                         QWidget *parent = 0 );
 
-    bool editIncidence( const Akonadi::Item &changedItem,
-                        const Akonadi::Item &originalItem = Akonadi::Item(),
-                        uint atomicOperationId = 0,
-                        QWidget *parent = 0 );
+    int modifyIncidence( const Akonadi::Item &changedItem,
+                         const Akonadi::Item &originalItem = Akonadi::Item(),
+                         uint atomicOperationId = 0,
+                         QWidget *parent = 0 );
 
     /**
        Some incidence operations require more than one change. Like dissociating
@@ -84,7 +84,7 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
        If you want to prevent that the same dialogs are presented multiple times
        use this function, which returns an id for your atomic operation.
 
-       Use that id on all addIncidence()/changeIncidence()/deleteIncidence() calls
+       Use that id on all createIncidence()/modifyIncidence()/deleteIncidence() calls
        that belong to the same atomic operation.
 
        TODO: Would be nice to have undo support, in case one operation,
@@ -111,8 +111,8 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     QString lastErrorString() const;
 
   Q_SIGNALS:
-    void addFinished( CalendarSupport::IncidenceChanger2::ResultCode resultCode );
-    void editFinished( CalendarSupport::IncidenceChanger2::ResultCode resultCode );
+    void createFinished( CalendarSupport::IncidenceChanger2::ResultCode resultCode );
+    void modifyFinished( CalendarSupport::IncidenceChanger2::ResultCode resultCode );
     void deleteFinished( CalendarSupport::IncidenceChanger2::ResultCode resultCode );
 
   private:

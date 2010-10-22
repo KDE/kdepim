@@ -24,11 +24,32 @@
 #include "incidencechanger_p.h"
 #include "calendar.h"
 
+using namespace Akonadi;
 using namespace CalendarSupport;
+
+IncidenceChanger2::Private()
+{
+}
+
+IncidenceChanger2::~Private()
+{
+}
+
+void IncidenceChanger2::handleCreateJobResult( KJob *job )
+{
+}
+
+void IncidenceChanger2::handleDeleteJobResult( KJob *job )
+{
+}
+
+void IncidenceChanger2::handleModifyJobResult( KJob *job )
+{
+}
 
 IncidenceChanger2::IncidenceChanger2( CalendarSupport::Calendar *calendar ) : QObject(), d( new Private )
 {
-
+  d->mLatestOperationId = 0;
 }
 
 IncidenceChanger2::~IncidenceChanger2()
@@ -36,20 +57,50 @@ IncidenceChanger2::~IncidenceChanger2()
   delete d;
 }
 
-bool IncidenceChanger2::addIncidence( const KCalCore::Incidence::Ptr &incidence,
-                                      const Akonadi::Collection &collection,
-                                      uint atomicOperationId,
-                                      QWidget *parent )
+int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
+                                        const Collection &collection,
+                                        uint atomicOperationId,
+                                        QWidget *parent )
 {
-  Q_ASSERT_X( incidence, "addIncidence()", "Invalid incidences not allowed" );
+  Q_ASSERT_X( incidence, "createIncidence()", "Invalid incidences not allowed" );
+
+
+  Item item;
+  item.setPayload<Incidence::Ptr>( incidence );
+  item.setMimeType( incidence->mimeType() );
+  ItemCreateJob *createJob = new ItemCreateJob( item, collection );
+
+  // TODO: remove sync exec calls from Akonadi::Groupware
+  connect( job, SIGNAL(result(KJob*)),
+           d, SLOT(handleCreateJobResult(KJob*)), Qt::QueuedConnection );
+
+  return ++d->mLatestOperationId;
 }
 
-bool IncidenceChanger2::deleteIncidence( const Akonadi::Item &item,
-                                         uint atomicOperationId,
-                                         QWidget *parent )
+int IncidenceChanger2::deleteIncidence( const Item &item,
+                                        uint atomicOperationId,
+                                        QWidget *parent )
 {
   // Too harsh?
   Q_ASSERT_X( item.isValid(), "deleteIncidence()", "Invalid items not allowed" );
+
+  ItemDeleteJob *deleteJob = new ItemDeleteJob( item );
+  connect( deleteJob, SIGNAL(result(KJob *)),
+           d, SLOT(handleDeleteJobResult(KJob *)) );
+
+  return ++d->mLatestOperationId;
+}
+
+int IncidenceChanger2::modifyIncidence( const Item &changedItem,
+                                        const Item &originalItem,
+                                        uint atomicOperationId,
+                                        QWidget *parent )
+{
+  ItemModifyJob *modifyJob = new ItemModifyJob( changedItem );
+  connect( job, SIGNAL(result( KJob *)),
+           d, SLOT(handleModifyJobResult(KJob *)) );
+
+  return ++d->mLatestOperationId
 }
 
 uint IncidenceChanger2::startAtomicOperation()
@@ -62,3 +113,4 @@ void IncidenceChanger2::endAtomicOperation( uint atomicOperationId )
 {
   //d->mOperationStatus.remove( atomicOperationId );
 }
+

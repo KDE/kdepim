@@ -39,6 +39,13 @@ class IncidenceChanger2::Private : public QObject
   public:
     Private( IncidenceChanger *mIncidenceChanger );
     ~Private();
+
+  public Q_SLOTS:
+    void handleCreateJobResult( KJob * );
+    void handleModifyJobResult( KJob * );
+    void handleDeleteJobResult( KJob * );
+  public:
+    int mLatestOperationId;
 };
 
 }
