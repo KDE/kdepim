@@ -398,15 +398,6 @@ void KDeclarativeMainView::setSelectedAccount( int row )
   d->mBnf->selectChild( row );
 }
 
-int KDeclarativeMainView::selectedCollectionRow()
-{
-  const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
-  if ( list.size() != 1 )
-    return -1;
-
-  return list.first().row();
-}
-
 Akonadi::EntityTreeModel* KDeclarativeMainView::entityTreeModel() const
 {
   return d->mEtm;

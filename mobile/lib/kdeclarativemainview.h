@@ -106,7 +106,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
   public slots:
     void setSelectedAccount( int row );
-    int selectedCollectionRow();
 
     void setAgentInstanceListSelectedRow( int row );
 
