@@ -306,7 +306,7 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
         case Fingerprint:
             return QString::fromLatin1( key.primaryFingerprint() );
         case ShortKeyID:
-            return QString::fromLatin1( key.keyID() );
+            return QString::fromLatin1( key.shortKeyID() );
         case NumColumns:
             break;
         }
