@@ -29,11 +29,27 @@
 
 #include "incidencechanger2.h"
 
+#include <Akonadi/Collection>
+#include <Akonadi/Item>
+
+#include <QSet>
 #include <QObject>
+#include <QPointer>
 
 class KJob;
+class QWidget;
 
 namespace CalendarSupport {
+
+  struct Change {
+    int changeId;
+    Akonadi::Item::Id itemId;
+    QPointer<QWidget> parent;
+    Akonadi::Collection usedCollection;
+    Change(){}
+    Change( int id, QWidget *p ) : changeId( id ), parent( p ){}
+    Change( const Change &other ) : changeId( other.changeId ), parent( other.parent ){}
+  };
 
 class IncidenceChanger2::Private : public QObject
 {
@@ -42,12 +58,23 @@ class IncidenceChanger2::Private : public QObject
     explicit Private( IncidenceChanger2 *mIncidenceChanger );
     ~Private();
 
+    /**
+       Returns true if, for a specific item, an ItemDeleteJob is already running, or if one already run successfully.
+    */
+    bool deleteAlreadyCalled( Akonadi::Item::Id id ) const;
+
   public Q_SLOTS:
     void handleCreateJobResult( KJob * );
     void handleModifyJobResult( KJob * );
     void handleDeleteJobResult( KJob * );
   public:
     int mLatestOperationId;
+    QHash<const KJob*,Change> mChangeForJob;
+    bool mShowDialogsOnError;
+    Akonadi::Collection::Id mDefaultCollectionId;
+    DestinationPolicy mDestinationPolicy;
+    QSet<Akonadi::Item::Id> mDeletedItemIds;
+
   private:
     IncidenceChanger2 *q;
 };

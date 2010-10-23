@@ -29,6 +29,8 @@
 #include <Akonadi/ItemDeleteJob>
 
 #include <KJob>
+#include <KLocale>
+#include <KMessageBox>
 
 using namespace Akonadi;
 using namespace KCalCore;
@@ -45,17 +47,79 @@ IncidenceChanger2::Private::~Private()
 
 void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
 {
-  Q_UNUSED( job );
+  QString errorString;
+  ResultCode resultCode = ResultCodeSuccess;
+
+  Change change = mChangeForJob.take( job );
+
+  const ItemCreateJob *j = qobject_cast<const ItemCreateJob*>( job );
+  if ( j->error() ) {
+    resultCode = ResultCodeJobError;
+    errorString = j->errorString();
+    kError() << errorString;
+    if ( mShowDialogsOnError ) {
+      KMessageBox::sorry( change.parent, i18n( "Error while trying to create calendar item. Error was: %1",
+                                               errorString ) );
+    }
+  } else {
+    resultCode = ResultCodeSuccess;
+  }
+
+  emit q->createFinished( change.changeId, change.usedCollection, resultCode, errorString );
 }
 
 void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
 {
-  Q_UNUSED( job );
+  QString errorString;
+  ResultCode resultCode;
+
+  Change change = mChangeForJob.take( job );
+
+  const ItemDeleteJob *j = qobject_cast<const ItemDeleteJob*>( job );
+  if ( j->error() ) {
+    resultCode = ResultCodeJobError;
+    errorString = j->errorString();
+    kError() << errorString;
+    if ( mShowDialogsOnError ) {
+      KMessageBox::sorry( change.parent, i18n( "Error while trying to delete calendar item. Error was: %1",
+                                               errorString ) );
+    }
+
+    // It wasn't deleted due to error
+    mDeletedItemIds.remove( change.itemId );
+
+  } else {
+    resultCode = ResultCodeSuccess;
+  }
+
+  emit q->deleteFinished( change.changeId, resultCode, errorString );
 }
 
 void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
 {
-  Q_UNUSED( job );
+  QString errorString;
+  ResultCode resultCode = ResultCodeSuccess;
+  Change change = mChangeForJob.take( job );
+
+  const ItemModifyJob *j = qobject_cast<const ItemModifyJob*>( job );
+  if ( j->error() ) {
+    resultCode = ResultCodeJobError;
+    errorString = j->errorString();
+    kError() << errorString;
+    if ( mShowDialogsOnError ) {
+      KMessageBox::sorry( change.parent, i18n( "Error while trying to modify calendar item. Error was: %1",
+                                               errorString ) );
+    }
+  } else {
+    resultCode = ResultCodeSuccess;
+  }
+
+  emit q->modifyFinished( change.changeId, resultCode, errorString );
+}
+
+bool IncidenceChanger2::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) const
+{
+  return mDeletedItemIds.contains( id );
 }
 
 IncidenceChanger2::IncidenceChanger2( CalendarSupport::Calendar *calendar ) : QObject(),
@@ -63,6 +127,7 @@ IncidenceChanger2::IncidenceChanger2( CalendarSupport::Calendar *calendar ) : QO
 {
   Q_UNUSED( calendar );
   d->mLatestOperationId = 0;
+  d->mShowDialogsOnError = true;
 }
 
 IncidenceChanger2::~IncidenceChanger2()
@@ -86,11 +151,14 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
   item.setMimeType( incidence->mimeType() );
   ItemCreateJob *createJob = new ItemCreateJob( item, collection );
 
-  // TODO: remove sync exec calls from Akonadi::Groupware
+  Change change( ++d->mLatestOperationId, parent );
+  d->mChangeForJob.insert( createJob, change );
+
+  // QueuedConnection because of possible sync exec calls.
   connect( createJob, SIGNAL(result(KJob*)),
            d, SLOT(handleCreateJobResult(KJob*)), Qt::QueuedConnection );
 
-  return ++d->mLatestOperationId;
+  return change.changeId;
 }
 
 int IncidenceChanger2::deleteIncidence( const Item &item,
@@ -101,12 +169,28 @@ int IncidenceChanger2::deleteIncidence( const Item &item,
   Q_UNUSED( atomicOperationId );
   Q_UNUSED( parent );
   Q_ASSERT_X( item.isValid(), "deleteIncidence()", "Invalid items not allowed" );
+  Change change( ++d->mLatestOperationId, parent );
+
+  if ( d->deleteAlreadyCalled( item.id() ) ) {
+    // IncidenceChanger::deleteIncidence() called twice, ignore this one.
+    kDebug() << "Item " << item.id() << " already deleted or beeping deleted, skipping";
+
+    emit deleteFinished( change.changeId, ResultCodeAlreadyDeleted,
+                         i18n( "That calendar item was already deleted, or currently being deleted." ) );
+
+    return change.changeId;
+  }
 
   ItemDeleteJob *deleteJob = new ItemDeleteJob( item );
-  connect( deleteJob, SIGNAL(result(KJob *)),
-           d, SLOT(handleDeleteJobResult(KJob *)) );
 
-  return ++d->mLatestOperationId;
+  d->mChangeForJob.insert( deleteJob, change );
+  d->mDeletedItemIds.insert( item.id() );
+
+  // QueuedConnection because of possible sync exec calls.
+  connect( deleteJob, SIGNAL(result(KJob *)),
+           d, SLOT(handleDeleteJobResult(KJob *)), Qt::QueuedConnection );
+
+  return change.changeId;
 }
 
 int IncidenceChanger2::modifyIncidence( const Item &changedItem,
@@ -117,12 +201,27 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
   Q_UNUSED( parent );
   Q_UNUSED( atomicOperationId );
   Q_UNUSED( originalItem );
+  //TODO check for invalid item.
+
+  Change change( ++d->mLatestOperationId, parent );
+
+  if ( d->deleteAlreadyCalled( changedItem.id() ) ) {
+    // IncidenceChanger::deleteIncidence() called twice, ignore this one.
+    kDebug() << "Item " << changedItem.id() << " already deleted or beeping deleted, skipping";
+
+    emit modifyFinished( change.changeId, ResultCodeAlreadyDeleted,
+                         i18n( "That calendar item was already deleted, or currently being deleted." ) );
+
+    return change.changeId;
+  }
 
   ItemModifyJob *modifyJob = new ItemModifyJob( changedItem );
-  connect( modifyJob, SIGNAL(result( KJob *)),
-           d, SLOT(handleModifyJobResult(KJob *)) );
+  d->mChangeForJob.insert( modifyJob, change );
+  // QueuedConnection because of possible sync exec calls.
+  connect( modifyJob, SIGNAL(result(KJob *)),
+           d, SLOT(handleModifyJobResult(KJob *)), Qt::QueuedConnection );
 
-  return ++d->mLatestOperationId;
+  return change.changeId;
 }
 
 uint IncidenceChanger2::startAtomicOperation()
@@ -137,3 +236,32 @@ void IncidenceChanger2::endAtomicOperation( uint atomicOperationId )
   //d->mOperationStatus.remove( atomicOperationId );
 }
 
+void IncidenceChanger2::setShowDialogsOnError( bool enable )
+{
+  d->mShowDialogsOnError = enable;
+}
+
+bool IncidenceChanger2::showDialogsOnError() const
+{
+  return d->mShowDialogsOnError;
+}
+
+void IncidenceChanger2::setDestinationPolicy( IncidenceChanger2::DestinationPolicy destinationPolicy )
+{
+  d->mDestinationPolicy = destinationPolicy;
+}
+
+IncidenceChanger2::DestinationPolicy IncidenceChanger2::destinationPolicy() const
+{
+  return d->mDestinationPolicy;
+}
+
+void IncidenceChanger2::setDefaultCollectionId( Akonadi::Collection::Id id )
+{
+  d->mDefaultCollectionId = id;
+}
+
+Collection::Id IncidenceChanger2::defaultCollectionId() const
+{
+  return d->mDefaultCollectionId;
+}

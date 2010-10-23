@@ -44,7 +44,9 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
   public:
 
     enum ResultCode {
-      ResultCodeSuccess = 0
+      ResultCodeSuccess = 0,
+      ResultCodeJobError,
+      ResultCodeAlreadyDeleted ///< That calendar item was already deleted, or currently being deleted.
     };
 
     enum DestinationPolicy {
@@ -111,13 +113,22 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     void setDestinationPolicy( DestinationPolicy destinationPolicy );
     DestinationPolicy destinationPolicy() const;
 
-    //TODO: how to id which change?
-    QString lastErrorString() const;
+    void setShowDialogsOnError( bool enable );
+    bool showDialogsOnError() const;
 
   Q_SIGNALS:
-    void createFinished( CalendarSupport::IncidenceChanger2::ResultCode resultCode );
-    void modifyFinished( CalendarSupport::IncidenceChanger2::ResultCode resultCode );
-    void deleteFinished( CalendarSupport::IncidenceChanger2::ResultCode resultCode );
+    void createFinished( int changeId,
+                         const Akonadi::Collection &collectionUsed,
+                         CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                         const QString &errorString );
+
+    void modifyFinished( int changeId,
+                         CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                         const QString &errorString );
+
+    void deleteFinished( int changeId,
+                         CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                         const QString &errorString );
 
   private:
     //@cond PRIVATE
