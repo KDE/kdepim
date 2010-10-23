@@ -37,8 +37,6 @@
 
 #include <QObject>
 
-class MailFilter;
-
 namespace KMime {
   class Content;
 }
