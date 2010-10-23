@@ -143,8 +143,10 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
   Q_UNUSED( parent );
   Q_UNUSED( atomicOperationId );
 
-  Q_ASSERT_X( incidence, "createIncidence()", "Invalid incidences not allowed" );
-
+  if ( !incidence ) {
+    kWarning() << "An invalid payload is not allowed.";
+    return -1;
+  }
 
   Item item;
   item.setPayload<Incidence::Ptr>( incidence );
@@ -168,7 +170,12 @@ int IncidenceChanger2::deleteIncidence( const Item &item,
   // Too harsh?
   Q_UNUSED( atomicOperationId );
   Q_UNUSED( parent );
-  Q_ASSERT_X( item.isValid(), "deleteIncidence()", "Invalid items not allowed" );
+
+  if ( !item.isValid() ) {
+    kWarning() << "An invalid item is not allowed.";
+    return -1;
+  }
+
   Change change( ++d->mLatestOperationId, parent );
 
   if ( d->deleteAlreadyCalled( item.id() ) ) {
@@ -201,7 +208,16 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
   Q_UNUSED( parent );
   Q_UNUSED( atomicOperationId );
   Q_UNUSED( originalItem );
-  //TODO check for invalid item.
+
+  if ( !changedItem.isValid() || !changedItem.hasPayload<Incidence::Ptr>() ) {
+    kWarning() << "An invalid item or payload is not allowed.";
+    return -1;
+  }
+
+  if ( originalItem.isValid() && !originalItem.hasPayload<Incidence::Ptr>() ) {
+    kWarning() << "The original item is valid, but doesn't have a valid payload.";
+    return -1;
+  }
 
   Change change( ++d->mLatestOperationId, parent );
 
