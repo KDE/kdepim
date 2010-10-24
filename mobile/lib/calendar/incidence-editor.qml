@@ -36,11 +36,6 @@ KPIM.MainView {
         myCalendar.day = day;
         myCalendar.month = month;
         myCalendar.year = year;
-
-        // set the initial values
-        monthSelector.value = myCalendar.month
-        daySelector.value = myCalendar.day
-        yearSelector.value = myCalendar.year - 2000
     }
   }
 
@@ -54,15 +49,6 @@ KPIM.MainView {
         myClock.hours = hour;
         myClock.minutes = minute;
     }
-  }
-
-  function setupModel(start, total, parent) {
-    var qmlstr = "import Qt 4.7; ListModel { }";
-    var newObject = Qt.createQmlObject(qmlstr, parent);
-    for(var i=start; i <= total; i++) {
-        newObject.append({"value": i});
-    }
-    return newObject;
   }
 
   SlideoutPanelContainer {
@@ -83,11 +69,6 @@ KPIM.MainView {
               top: parent.top
               bottom: parent.bottom
             }
-
-            // Calendar change -> update selector
-            onDayChanged: {
-                daySelector.value = day
-            }
           }
 
           Column {
@@ -103,10 +84,9 @@ KPIM.MainView {
             KPIM.VerticalSelector {
               id: daySelector
               height: 100
-              model: mainview.setupModel(1, myCalendar.daysInMonth, calendarWidget)
-              offset: 1
+              model: myCalendar.daysInMonth
+              beginWith: 1
 
-              currentIndex: myCalendar.day
               onValueChanged: {
                 // selector change -> update calendar
                 myCalendar.day = value;
@@ -121,10 +101,10 @@ KPIM.MainView {
             KPIM.VerticalSelector {
               id: monthSelector
               height: 100
-              model: mainview.setupModel(1, 12, calendarWidget)
-              offset: 1
+              model: 12
+              beginWith: 1
 
-              currentIndex: myCalendar.month
+              value: myCalendar.month
               onValueChanged: {
                 // selector change -> update calendar
                 myCalendar.month = value;
@@ -140,11 +120,11 @@ KPIM.MainView {
               id: yearSelector
               height: 100
               // high enough == 2050 :)
-              model: mainview.setupModel(2000, 2050, calendarWidget)
+              model: 51
               // value - 2000 because the index starts at '0'
-              offset: 2000
+              beginWith: 2000
 
-              currentIndex: myCalendar.year - 2000
+              value: myCalendar.year
               onValueChanged: {
                 myCalendar.year = value;
                 calendarWidgetOk.enabled = true;
@@ -217,9 +197,8 @@ KPIM.MainView {
             KPIM.VerticalSelector {
               id: hourSelector
               height: 100
-              model: mainview.setupModel(0, 23, clockWidget)
+              model: 24
 
-              currentIndex: myClock.hours
               onValueChanged: {
                 myClock.hours = value;
                 clockWidgetOk.enabled = true;
@@ -232,9 +211,8 @@ KPIM.MainView {
             KPIM.VerticalSelector {
               id: minuteSelector
               height: 100
-              model: mainview.setupModel(0, 59, clockWidget)
+              model: 60
 
-              currentIndex: myClock.minutes
               onValueChanged: {
                 myClock.minutes = value;
                 clockWidgetOk.enabled = true;

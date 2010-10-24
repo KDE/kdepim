@@ -20,25 +20,24 @@
 import Qt 4.7
 
 Item {
-    id: fadeselector
+    id: verticalselector
     width: 160
     height: 90
     state: "unselected"
 
     property alias model: list.model
-    property alias currentIndex: list.currentIndex
     property int value: -1
     signal selected()
 
-    property int offset: 0
+    property int beginWith: 0
 
     onValueChanged: {
-        currentIndex = value - offset;
+        list.positionViewAtIndex (value - beginWith, ListView.Center);
     }
 
     Image {
         id: inputLeft
-        source: "images/scrollinput-left" + (fadeselector.focus ? "-active" : "") + ".png"
+        source: "images/scrollinput-left" + (verticalselector.focus ? "-active" : "") + ".png"
 
         anchors.top: parent.top
         anchors.topMargin: 15
@@ -50,7 +49,7 @@ Item {
 
     BorderImage {
         id: inputCenter
-        source: "images/scrollinput-center" + (fadeselector.focus ? "-active" : "") + ".png"
+        source: "images/scrollinput-center" + (verticalselector.focus ? "-active" : "") + ".png"
 
         anchors.top: parent.top
         anchors.topMargin: 15
@@ -62,7 +61,7 @@ Item {
 
     Image {
         id: inputRight
-        source: "images/scrollinput-right" + (fadeselector.focus ? "-active" : "") + ".png"
+        source: "images/scrollinput-right" + (verticalselector.focus ? "-active" : "") + ".png"
 
         anchors.top: parent.top
         anchors.topMargin: 15
@@ -76,19 +75,19 @@ Item {
     {
         state = (state == "selected") ? "unselected" : "selected";
         if (state == "unselected")
-            fadeselector.value = newValue
+            verticalselector.value = newValue
         else
-            fadeselector.selected();
+            verticalselector.selected();
     }
 
     Component {
         id: fadeDelegate
         Item {
             id: fadewrapper
-            width: fadeselector.width
-            height: fadeselector.height
+            width: verticalselector.width
+            height: verticalselector.height
             Text {
-                text: value
+                text: list.currentIndex + beginWith
                 anchors.fill: parent
                 color: "#004bb8"
                 font.bold: true
@@ -100,7 +99,7 @@ Item {
                 hoverEnabled: true
                 anchors.fill: parent
                 onClicked: {
-                    toggleState(value)
+                    toggleState(list.currentIndex + beginWith)
                 }
             }
         }
@@ -118,14 +117,14 @@ Item {
         id: list
         clip: true
         model: 10
-        interactive: fadeselector.focus
+        interactive: verticalselector.focus
 
         delegate: fadeDelegate
         highlight: highlight
         highlightRangeMode: ListView.StrictlyEnforceRange
         highlightFollowsCurrentItem: true
         preferredHighlightBegin: 0
-        preferredHighlightEnd: fadeselector.height
+        preferredHighlightEnd: verticalselector.height
 
         anchors.fill: parent
         anchors.leftMargin: 5
@@ -138,7 +137,7 @@ Item {
         State {
             name: "selected"
             PropertyChanges {
-                target: fadeselector
+                target: verticalselector
                 focus: true
                 height: 135
                 width: 240
@@ -147,7 +146,7 @@ Item {
         State {
             name: "unselected"
             PropertyChanges {
-                target: fadeselector
+                target: verticalselector
                 focus: false
                 height: 90
                 width: 160
@@ -155,6 +154,6 @@ Item {
         }
     ]
     transitions: Transition {
-        PropertyAnimation { target: fadeselector; properties: "height, width"; duration: 500 }
+        PropertyAnimation { target: verticalselector; properties: "height, width"; duration: 500 }
     }
 }
