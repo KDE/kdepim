@@ -55,7 +55,7 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
   QString errorString;
   ResultCode resultCode = ResultCodeSuccess;
 
-  Change change = mChangeForJob.take( job );
+  const Change change = mChangeForJob.take( job );
 
   const ItemCreateJob *j = qobject_cast<const ItemCreateJob*>( job );
   const Item item = j->item();
@@ -82,10 +82,16 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
   QString errorString;
   ResultCode resultCode;
 
-  Change change = mChangeForJob.take( job );
+  const Change change = mChangeForJob.take( job );
 
   const ItemDeleteJob *j = qobject_cast<const ItemDeleteJob*>( job );
-  const Item item = j->deletedItems().first();
+  const Item::List items = j->deletedItems();
+
+  QVector<Item::Id> itemIdList;
+  foreach( const Item &item, items ) {
+    itemIdList.append( item.id() );
+  }
+
   if ( j->error() ) {
     resultCode = ResultCodeJobError;
     errorString = j->errorString();
@@ -95,25 +101,29 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
                                                errorString ) );
     }
 
-    // It wasn't deleted due to error
-    mDeletedItemIds.remove( item.id() );
-
+    foreach( const Item &item, items ) {
+      // Werent deleted due to error
+      mDeletedItemIds.remove( item.id() );
+    }
   } else {
     if ( change.recordToHistory ) {
       //TODO: check return value
-      mHistory->recordChange( Item(), item, ChangeTypeDelete, change.atomicOperationId );
+      //TODO: make History support a list of items
+      foreach( const Item &item, items ) {
+        mHistory->recordChange( item, Item(), ChangeTypeDelete, change.atomicOperationId );
+      }
     }
     resultCode = ResultCodeSuccess;
   }
 
-  emit q->deleteFinished( change.changeId, item.id(), resultCode, errorString );
+  emit q->deleteFinished( change.changeId, itemIdList, resultCode, errorString );
 }
 
 void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
 {
   QString errorString;
   ResultCode resultCode = ResultCodeSuccess;
-  Change change = mChangeForJob.take( job );
+  const Change change = mChangeForJob.take( job );
 
   const ItemModifyJob *j = qobject_cast<const ItemModifyJob*>( job );
   const Item item = j->item();
@@ -140,6 +150,47 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
 bool IncidenceChanger2::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) const
 {
   return mDeletedItemIds.contains( id );
+}
+
+// Does a queued emit, with QMetaObject::invokeMethod
+void IncidenceChanger2::Private::emitCreateFinished( int changeId,
+                                                     const Akonadi::Item &item,
+                                                     const Akonadi::Collection &collectionUsed,
+                                                     CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                                                     const QString &errorString )
+{
+  QMetaObject::invokeMethod( q, "createFinished", Qt::QueuedConnection,
+                             Q_ARG( int, changeId ),
+                             Q_ARG( Akonadi::Item, item ),
+                             Q_ARG( Akonadi::Collection, collectionUsed ),
+                             Q_ARG( CalendarSupport::IncidenceChanger2::ResultCode, resultCode ),
+                             Q_ARG( QString, errorString ) );
+}
+
+// Does a queued emit, with QMetaObject::invokeMethod
+void IncidenceChanger2::Private::emitModifyFinished( int changeId,
+                                                     const Akonadi::Item &item,
+                                                     CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                                                     const QString &errorString )
+{
+  QMetaObject::invokeMethod( q, "modifyFinished", Qt::QueuedConnection,
+                             Q_ARG( int, changeId ),
+                             Q_ARG( Akonadi::Item, item ),
+                             Q_ARG( CalendarSupport::IncidenceChanger2::ResultCode, resultCode ),
+                             Q_ARG( QString, errorString ) );
+}
+
+// Does a queued emit, with QMetaObject::invokeMethod
+void IncidenceChanger2::Private::emitDeleteFinished( int changeId,
+                                                     const QVector<Akonadi::Item::Id> &itemIdList,
+                                                     CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                                                     const QString &errorString )
+{
+  QMetaObject::invokeMethod( q, "deleteFinished", Qt::QueuedConnection,
+                             Q_ARG( int, changeId ),
+                             Q_ARG( QVector<Akonadi::Item::Id>, itemIdList ),
+                             Q_ARG( CalendarSupport::IncidenceChanger2::ResultCode, resultCode ),
+                             Q_ARG( QString, errorString ) );
 }
 
 IncidenceChanger2::IncidenceChanger2( CalendarSupport::Calendar *calendar ) : QObject(),
@@ -171,7 +222,7 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
   item.setMimeType( incidence->mimeType() );
   ItemCreateJob *createJob = new ItemCreateJob( item, collection );
 
-  Change change( ++d->mLatestOperationId, atomicOperationId, recordToHistory, parent );
+  const Change change( ++d->mLatestOperationId, atomicOperationId, recordToHistory, parent );
   d->mChangeForJob.insert( createJob, change );
 
   // QueuedConnection because of possible sync exec calls.
@@ -186,27 +237,60 @@ int IncidenceChanger2::deleteIncidence( const Item &item,
                                         bool recordToHistory,
                                         QWidget *parent )
 {
-  if ( !item.isValid() ) {
-    kWarning() << "An invalid item is not allowed.";
+  Item::List list;
+  list.append( item );
+
+  return deleteIncidences( list, atomicOperationId, recordToHistory, parent );
+}
+
+int IncidenceChanger2::deleteIncidences( const Item::List &items,
+                                         uint atomicOperationId,
+                                         bool recordToHistory,
+                                         QWidget *parent )
+{
+  if ( items.isEmpty() ) {
+    kWarning() << "Delete what?";
     return -1;
   }
 
-  Change change( ++d->mLatestOperationId, recordToHistory, atomicOperationId, parent );
+  foreach( const Item &item, items ) {
+    if ( !item.isValid() ) {
+      kWarning() << "Items must be valid!";
+      return -1;
+    }
+  }
 
-  if ( d->deleteAlreadyCalled( item.id() ) ) {
-    // IncidenceChanger::deleteIncidence() called twice, ignore this one.
-    kDebug() << "Item " << item.id() << " already deleted or beeping deleted, skipping";
+  Item::List itemsToDelete;
 
-    emit deleteFinished( change.changeId, item.id(), ResultCodeAlreadyDeleted,
-                         i18n( "That calendar item was already deleted, or currently being deleted." ) );
+  foreach( const Item &item, items ) {
+    if ( d->deleteAlreadyCalled( item.id() ) ) {
+      // IncidenceChanger::deleteIncidence() called twice, ignore this one.
+      kDebug() << "Item " << item.id() << " already deleted or beeping deleted, skipping";
+    } else {
+      itemsToDelete.append( item );
+    }
+  }
+
+  const Change change( ++d->mLatestOperationId, recordToHistory, atomicOperationId, parent );
+
+  if ( itemsToDelete.isEmpty() ) {
+    QVector<Akonadi::Item::Id> itemIdList;
+    itemIdList.append( Item().id() );
+    kDebug() << "Items already deleted or beeping deleted, skipping";
+    // Queued emit because return must be executed first, otherwise caller won't know this workId
+    d->emitDeleteFinished( change.changeId, itemIdList, ResultCodeAlreadyDeleted,
+                           i18n( "That calendar item was already deleted, or currently being deleted." ) );
 
     return change.changeId;
   }
 
-  ItemDeleteJob *deleteJob = new ItemDeleteJob( item );
+  ItemDeleteJob *deleteJob = new ItemDeleteJob( itemsToDelete );
 
   d->mChangeForJob.insert( deleteJob, change );
-  d->mDeletedItemIds.insert( item.id() );
+
+  foreach( const Item &item, itemsToDelete ) {
+    d->mDeletedItemIds.insert( item.id() );
+  }
 
   // QueuedConnection because of possible sync exec calls.
   connect( deleteJob, SIGNAL(result(KJob *)),
@@ -238,8 +322,9 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
     // IncidenceChanger::deleteIncidence() called twice, ignore this one.
     kDebug() << "Item " << changedItem.id() << " already deleted or beeping deleted, skipping";
 
-    emit modifyFinished( change.changeId, changedItem, ResultCodeAlreadyDeleted,
-                         i18n( "That calendar item was already deleted, or currently being deleted." ) );
+    // Queued emit because return must be executed first, otherwise caller won't know this workId
+    d->emitModifyFinished( change.changeId, changedItem, ResultCodeAlreadyDeleted,
+                           i18n( "That calendar item was already deleted, or currently being deleted." ) );
 
     return change.changeId;
   }

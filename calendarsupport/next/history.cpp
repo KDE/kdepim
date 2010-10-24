@@ -42,8 +42,8 @@ History::History( IncidenceChanger2 *changer ) : QObject(),
   connect( d->mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            d, SLOT(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-  connect( d->mChanger, SIGNAL(deleteFinished(int,Akonadi::Item::Id,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
-           d, SLOT(deleteFinished(int,Akonadi::Item::Id,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+  connect( d->mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           d, SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
   connect( d->mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            d, SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
@@ -300,7 +300,7 @@ bool History::Private::doIt( const Entry &entry, OperationType type, QWidget *pa
 }
 
 void History::Private::deleteFinished( int changeId,
-                                       Akonadi::Item::Id itemId,
+                                       const QVector<Akonadi::Item::Id> &itemIdList,
                                        IncidenceChanger2::ResultCode changerResultCode,
                                        const QString &errorMessage )
 {
@@ -310,8 +310,11 @@ void History::Private::deleteFinished( int changeId,
                                                    History::ResultCodeError;
 
   // clean up hash
-  if ( success )
-    mLatestRevisionByItemId.remove( itemId );
+  if ( success ) {
+    foreach( Akonadi::Item::Id itemId, itemIdList ) {
+      mLatestRevisionByItemId.remove( itemId );
+    }
+  }
 
   finishOperation( resultCode, errorMessage );
 }

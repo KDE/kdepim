@@ -94,7 +94,7 @@ namespace CalendarSupport {
                            const QString &errorMessage );
 
       void deleteFinished( int changeId,
-                           Akonadi::Item::Id itemId,
+                           const QVector<Akonadi::Item::Id> &itemId,
                            CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                            const QString &errorMessage );
 

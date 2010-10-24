@@ -80,6 +80,11 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
                          bool recordToHistory = true,
                          QWidget *parent = 0 );
 
+    int deleteIncidences( const Akonadi::Item::List &items,
+                          uint atomicOperationId = 0,
+                          bool recordToHistory = true,
+                          QWidget *parent = 0 );
+
     int modifyIncidence( const Akonadi::Item &changedItem,
                          const Akonadi::Item &originalItem = Akonadi::Item(),
                          uint atomicOperationId = 0,
@@ -147,7 +152,7 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
                          const QString &errorString );
 
     void deleteFinished( int changeId,
-                         const Akonadi::Item::Id &item,
+                         const QVector<Akonadi::Item::Id> &itemIdList,
                          CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                          const QString &errorString );
 

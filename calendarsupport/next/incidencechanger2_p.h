@@ -72,6 +72,25 @@ class IncidenceChanger2::Private : public QObject
     */
     bool deleteAlreadyCalled( Akonadi::Item::Id id ) const;
 
+    // Does a queued emit, with QMetaObject::invokeMethod
+    void emitCreateFinished( int changeId,
+                             const Akonadi::Item &item,
+                             const Akonadi::Collection &collectionUsed,
+                             CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                             const QString &errorString );
+
+    // Does a queued emit, with QMetaObject::invokeMethod
+    void emitModifyFinished( int changeId,
+                             const Akonadi::Item &item,
+                             CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                             const QString &errorString );
+
+    // Does a queued emit, with QMetaObject::invokeMethod
+    void emitDeleteFinished( int changeId,
+                             const QVector<Akonadi::Item::Id> &itemIdList,
+                             CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                             const QString &errorString );
+
   public Q_SLOTS:
     void handleCreateJobResult( KJob * );
     void handleModifyJobResult( KJob * );

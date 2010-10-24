@@ -179,6 +179,7 @@ class HistoryTest : public QObject
     QVERIFY( !undoButton->isEnabled() );
     QVERIFY( !redoButton->isEnabled() );
 
+    // Create.
     const QString uid = "Some uid.";
     mPendingInsertsInETM.append( uid );
     createIncidence( uid );
@@ -330,7 +331,6 @@ class HistoryTest : public QObject
 
     QVERIFY( undoButton->isEnabled() );
     QVERIFY( !redoButton->isEnabled() );
-
   }
 
   public Q_SLOTS:
