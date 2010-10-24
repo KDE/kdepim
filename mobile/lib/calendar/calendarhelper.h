@@ -21,7 +21,7 @@
 #define CALENDARHELPER_H
 
 #include <QObject>
-#include <QDateTime>
+#include <QDate>
 
 
 class CalendarHelper : public QObject
@@ -37,8 +37,8 @@ class CalendarHelper : public QObject
     CalendarHelper( QObject *parent = 0 );
     ~CalendarHelper();
 
-    QDateTime date() const;
-    void setDate( const QDateTime datetime );
+    QDate date() const;
+    void setDate( const QDate date );
 
     void updateOffsets();
 
@@ -64,13 +64,13 @@ class CalendarHelper : public QObject
     void updateWeeks();
 
   signals:
-    void dayChanged();
-    void daysInMonthChanged();
-    void monthChanged();
-    void yearChanged();
+    void dayChanged( int newDay );
+    void daysInMonthChanged( int newDays );
+    void monthChanged( int newMonth );
+    void yearChanged( int newYear );
 
   private:
-    QDateTime m_original;
+    QDate m_original;
     QList<QObject*> m_days;
     QList<QObject*> m_weeks;
     int m_day;

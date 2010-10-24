@@ -29,38 +29,36 @@
 CalendarHelper::CalendarHelper( QObject *parent )
     : QObject( parent )
 {
-    setDate(QDateTime::currentDateTime());
-    connect( this, SIGNAL(monthChanged()), this, SLOT(updateDays()) );
-    connect( this, SIGNAL(yearChanged()), this, SLOT(updateDays()) );
-    connect( this, SIGNAL(monthChanged()), this, SLOT(updateWeeks()) );
-    connect( this, SIGNAL(yearChanged()), this, SLOT(updateWeeks()) );
+    setDate(QDate::currentDate());
+    connect( this, SIGNAL(monthChanged(int)), this, SLOT(updateDays()) );
+    connect( this, SIGNAL(yearChanged(int)), this, SLOT(updateDays()) );
+    connect( this, SIGNAL(monthChanged(int)), this, SLOT(updateWeeks()) );
+    connect( this, SIGNAL(yearChanged(int)), this, SLOT(updateWeeks()) );
 }
 
 CalendarHelper::~CalendarHelper()
 {
 }
 
-QDateTime CalendarHelper::date() const
+QDate CalendarHelper::date() const
 {
   return m_original;
 }
 
-void CalendarHelper::setDate( const QDateTime datetime )
+void CalendarHelper::setDate( const QDate date )
 {
-  m_original = datetime;
+  m_original = date;
 
-  m_day = datetime.date().day();
-  emit dayChanged();
+  m_day = date.day();
+  emit dayChanged( m_day );
 
-  m_month = datetime.date().month();
-  emit monthChanged();
-  emit daysInMonthChanged();
+  m_month = date.month();
+  m_daysInMonth = m_original.daysInMonth();
+  emit monthChanged( m_month );
+  emit daysInMonthChanged( m_daysInMonth );
 
-  m_year = datetime.date().year();
-  emit yearChanged();
-
-  m_daysInMonth = m_original.date().daysInMonth();
-  emit daysInMonthChanged();
+  m_year = date.year();
+  emit yearChanged( m_year );
 
   updateOffsets();
 }
@@ -88,11 +86,11 @@ void CalendarHelper::setDay( const int day )
   if ( !newDate.isValid() )
     return;
 
-  m_original.setDate( newDate );
+  m_original = newDate;
   m_day = day;
 
   updateOffsets();
-  emit dayChanged();
+  emit dayChanged( m_day );
 }
 
 QString CalendarHelper::monthName() const
@@ -111,16 +109,18 @@ void CalendarHelper::setMonth( const int month )
     return;
 
   QDate newDate(m_year, month, m_day);
-  if ( !newDate.isValid() )
+  if ( !newDate.isValid() ){
     return;
+  }
 
-  m_original.setDate( newDate );
+  m_original = newDate;
   m_month = month;
   updateOffsets();
-  emit monthChanged();
 
-  m_daysInMonth = m_original.date().daysInMonth();
-  emit daysInMonthChanged();
+  m_daysInMonth = m_original.daysInMonth();
+
+  emit monthChanged( m_month );
+  emit daysInMonthChanged( m_daysInMonth );
 }
 
 int CalendarHelper::daysInMonth() const
@@ -143,10 +143,17 @@ void CalendarHelper::setYear( const int year )
   if ( !newDate.isValid() || year <= 0 )
     return;
 
-  m_original.setDate( newDate );
+  m_original = newDate;
   m_year = year;
+
+  // Check if we are changed from a Leap year to a common one (vice versa)
+  if ( m_daysInMonth != m_original.daysInMonth() ) {
+    m_daysInMonth = m_original.daysInMonth();
+    emit daysInMonthChanged( m_daysInMonth );
+  }
+
   updateOffsets();
-  emit yearChanged();
+  emit yearChanged( m_year );
 }
 
 QString CalendarHelper::dayForPosition( const int pos ) const
@@ -167,10 +174,11 @@ QString CalendarHelper::dayForPosition( const int pos ) const
     return rpos;
   }
 
-  if ( res > m_daysInMonth )
+  if ( res > m_daysInMonth ) {
     return QString();
+  }
 
-  return QString::number(res);
+  return QString::number( res );
 }
 
 int CalendarHelper::weekForPosition( const int pos ) const
@@ -180,7 +188,7 @@ int CalendarHelper::weekForPosition( const int pos ) const
       return -1;
 
   // if the position is the first week
-  if (pos == 1)
+  if ( pos == 1 )
       return m_weekOffset;
 
   // for all other weeks do the math
@@ -212,40 +220,40 @@ void CalendarHelper::registerItems( QObject *obj )
 
 void CalendarHelper::updateDays()
 {
-  QDate today = QDateTime::currentDateTime().date();
-  bool disableCurrentDay = !(m_month == today.month());
+  QDate today = QDate::currentDate();
+  bool disableCurrentDay = !( m_month == today.month() );
 
   for( int i = 0; i < m_days.size(); i++) {
     QObject *item = m_days.at(i);
-    QVariant position = item->property("dayPos");
+    QVariant position = item->property( "dayPos" );
 
     // invalid item
-    if (!position.isValid()) {
+    if ( !position.isValid() ) {
         continue;
     }
 
     if ( disableCurrentDay ) {
-        item->setProperty("currentDay", -1);
+        item->setProperty( "currentDay", -1 );
     } else {
-        item->setProperty("currentDay", today.day());
+        item->setProperty( "currentDay", today.day() );
     }
 
-    item->setProperty("text", dayForPosition(position.toInt()));
+    item->setProperty( "text", dayForPosition(position.toInt()) );
   }
 }
 
 void CalendarHelper::updateWeeks()
 {
-  for( int i = 0; i < m_weeks.size(); i++) {
-    QObject *item = m_weeks.at(i);
-    QVariant position = item->property("weekPos");
+  for( int i = 0; i < m_weeks.size(); i++ ) {
+    QObject *item = m_weeks.at( i );
+    QVariant position = item->property( "weekPos" );
 
     // invalid item
-    if (!position.isValid()) {
+    if ( !position.isValid() ) {
         continue;
     }
 
-    item->setProperty("text", weekForPosition(position.toInt()));
+    item->setProperty( "text", weekForPosition(position.toInt()) );
   }
 }
 
