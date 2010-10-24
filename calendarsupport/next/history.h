@@ -86,21 +86,39 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
     ~History();
 
     /**
-       Pushes a change into the undo stack. The change can be undone calling
+       Pushes an incidence creation into the undo stack. The creation can be undone calling
        undo().
 
-       @param oldItem item containing the payload before the change. Pass an invalid item
-              if this is an incidence addition.
-       @param newitem item containing the new payload. Pass an invalid item if this is an
-              incidence deletion.
-       @param changeType Specifies if we added, deleted or edited an incidence.
+       @param incidence The item that was created. Must be valid.
        @param atomicOperation If != 0, specifies which group of changes this change belongs too.
               Will be useful for atomic undoing/redoing, not implemented yet.
      */
-    void recordChange( const Akonadi::Item &oldItem,
-                       const Akonadi::Item &newItem,
-                       IncidenceChanger2::ChangeType changeType,
-                       const uint atomicOperationId = 0 );
+    void recordCreation( const Akonadi::Item &item,
+                         const uint atomicOperationId = 0 );
+
+    /**
+       Pushes an incidence modification into the undo stack. The modification can be undone calling
+       undo().
+
+       @param oldItem item containing the payload before the change. Must be valid.
+       @param newitem item containing the new payload. Must be valid.
+       @param atomicOperation If != 0, specifies which group of changes this change belongs too.
+              Will be useful for atomic undoing/redoing, not implemented yet.
+     */
+    void recordModification( const Akonadi::Item &oldItem,
+                             const Akonadi::Item &newItem,
+                             const uint atomicOperationId = 0 );
+
+    /**
+       Pushes an incidence deletion into the undo stack. The deletion can be undone calling
+       undo().
+
+       @param item The item to delete. Must be valid.
+       @param atomicOperation If != 0, specifies which group of changes this change belongs too.
+              Will be useful for atomic undoing/redoing, not implemented yet.
+     */
+    void recordDeletion( const Akonadi::Item &item,
+                         const uint atomicOperationId = 0 );
 
     /**
        Convenience method for disabling the undo/redo button when jobs are in progress,

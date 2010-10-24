@@ -69,7 +69,7 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
     }
   } else {
     if ( change.recordToHistory ) {
-      mHistory->recordChange( Item(), item, ChangeTypeCreate, change.atomicOperationId );
+      mHistory->recordCreation( item, change.atomicOperationId );
     }
     resultCode = ResultCodeSuccess;
   }
@@ -110,7 +110,7 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
       //TODO: check return value
       //TODO: make History support a list of items
       foreach( const Item &item, items ) {
-        mHistory->recordChange( item, Item(), ChangeTypeDelete, change.atomicOperationId );
+        mHistory->recordDeletion( item, change.atomicOperationId );
       }
     }
     resultCode = ResultCodeSuccess;
@@ -137,8 +137,7 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
     }
   } else {
     if ( change.recordToHistory ) {
-      mHistory->recordChange( change.originalItem, item, ChangeTypeModify,
-                              change.atomicOperationId );
+      mHistory->recordModification( change.originalItem, item, change.atomicOperationId );
     }
 
     resultCode = ResultCodeSuccess;

@@ -54,52 +54,66 @@ History::~History()
   delete d;
 }
 
-void History::recordChange( const Akonadi::Item &oldItem,
-                            const Akonadi::Item &newItem,
-                            IncidenceChanger2::ChangeType changeType,
-                            const uint atomicOperationId )
+void History::recordCreation( const Akonadi::Item &item,
+                              const uint atomicOperationId )
 {
-  Akonadi::Item::Id id = -1;
-
-  // First, do some asserting.
-  switch( changeType ) {
-    case IncidenceChanger2::ChangeTypeCreate:
-      Q_ASSERT_X( !oldItem.isValid() && newItem.isValid() && newItem.hasPayload<Incidence::Ptr>(),
-                  "recordChange()", "oldItem must be invalid, and newItem valid" );
-      id = newItem.id();
-      d->mLatestRevisionByItemId.insert( id, newItem.revision() );
-      break;
-    case IncidenceChanger2::ChangeTypeDelete:
-      Q_ASSERT_X( oldItem.isValid() && oldItem.hasPayload<Incidence::Ptr>() && !newItem.isValid(),
-                  "recordChange()", "oldItem must be valid, and newItem invalid" );
-      id = oldItem.id();
-      d->mLatestRevisionByItemId.remove( id );
-      break;
-    case IncidenceChanger2::ChangeTypeModify:
-      Q_ASSERT_X( oldItem.isValid() && oldItem.hasPayload<Incidence::Ptr>() &&
-                  newItem.isValid() && newItem.hasPayload<Incidence::Ptr>() &&
-                  oldItem.id() == newItem.id(),
-                  "recordChange()", "oldItem and newItem must be valid and have the same id" );
-      id = oldItem.id();
-      d->mLatestRevisionByItemId.insert( id, newItem.revision() );
-      break;
-    default:
-      kDebug() << "changeType = " << changeType;
-      Q_ASSERT_X( false, "recordChange()", "Invalid change type" );
-  }
+  Q_ASSERT_X( item.isValid() && item.hasPayload<Incidence::Ptr>(),
+              "recordCreation()", "Item must be valid and have Incidence payload." );
 
   Entry entry;
-  entry.oldItem = oldItem;
-  entry.newItem = newItem;
+  entry.itemId = item.id();
+  entry.changeType = IncidenceChanger2::ChangeTypeCreate;
+  entry.newItem = item;
   entry.atomicOperationId = atomicOperationId;
-  entry.itemId = id;
-  entry.changeType = changeType;
+  d->mLatestRevisionByItemId.insert( item.id(), item.revision() );
 
   d->mUndoStack.push( entry );
   d->mRedoStack.clear();
   //emit undoAvailable(); // nao gosto, se poder tirar.
   d->updateWidgets();
 }
+
+void History::recordModification( const Akonadi::Item &oldItem,
+                                  const Akonadi::Item &newItem,
+                                  const uint atomicOperationId )
+{
+  Q_ASSERT_X( oldItem.isValid() && oldItem.hasPayload<Incidence::Ptr>() &&
+              newItem.isValid() && newItem.hasPayload<Incidence::Ptr>() &&
+              oldItem.id() == newItem.id(),
+              "recordChange()", "oldItem and newItem must be valid and have the same id" );
+  Entry entry;
+  entry.itemId = newItem.id();
+  entry.changeType = IncidenceChanger2::ChangeTypeModify;
+  entry.atomicOperationId = atomicOperationId;
+  entry.oldItem = oldItem;
+  entry.newItem = newItem;
+  d->mLatestRevisionByItemId.insert( newItem.id(), newItem.revision() );
+
+  d->mUndoStack.push( entry );
+  d->mRedoStack.clear();
+  //emit undoAvailable(); // nao gosto, se poder tirar.
+  d->updateWidgets();
+}
+
+void History::recordDeletion( const Akonadi::Item &item,
+                              const uint atomicOperationId )
+{
+  Q_ASSERT_X( item.isValid() && item.hasPayload<Incidence::Ptr>(),
+              "recordDeletion()", "Item must be valid and have an Incidence payload." );
+
+  Entry entry;
+  entry.itemId = item.id();
+  entry.oldItem = item;
+  entry.changeType = IncidenceChanger2::ChangeTypeDelete;
+  entry.atomicOperationId = atomicOperationId;
+  d->mLatestRevisionByItemId.remove( item.id() );
+
+  d->mUndoStack.push( entry );
+  d->mRedoStack.clear();
+  //emit undoAvailable(); // nao gosto, se poder tirar.
+  d->updateWidgets();
+}
+
 
 void History::registerRedoWidget( QWidget *w )
 {
