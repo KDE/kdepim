@@ -45,7 +45,7 @@ History::History( IncidenceChanger2 *changer ) : QObject(),
   connect( d->mChanger, SIGNAL(deleteFinished(int,Akonadi::Item::Id,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            d, SLOT(deleteFinished(int,Akonadi::Item::Id,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-  connect( d->mChanger,SIGNAL(changeFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+  connect( d->mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            d, SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 }
 

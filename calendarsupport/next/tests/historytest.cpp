@@ -69,11 +69,13 @@ class HistoryTest : public QObject
   QStringList mPendingDeletesInETM;
 
   bool mWaitingForHistorySignals;
+  History::ResultCode mExpectedResult;
 
   private slots:
     void initTestCase()
     {
       mWaitingForHistorySignals = false;
+      mExpectedResult = History::ResultCodeSuccess;
       //Control::start(); //TODO: uncomment when using testrunner
       qRegisterMetaType<CalendarSupport::History::ResultCode>("CalendarSupport::History::ResultCode");
       CollectionFetchJob *job = new CollectionFetchJob( Collection::root(),
@@ -115,6 +117,7 @@ class HistoryTest : public QObject
                                                  KSystemTimeZones::local() );
 
       IncidenceChanger2 *changer = new IncidenceChanger2( mCalendar );
+      changer->setShowDialogsOnError( false );
       mHistory = new History( changer );
 
       connect( mCalendarModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
@@ -311,21 +314,22 @@ class HistoryTest : public QObject
     payload2->setUid( "payload2" );
     item2.setPayload( payload2 );
     item2.setMimeType( "application/x-vnd.akonadi.calendar.event" );
-/*    mHistory->recordChange( Item(), item2, IncidenceChanger2::ChangeTypeCreate );
+    // Fake create
+    mHistory->recordChange( Item(), item2, IncidenceChanger2::ChangeTypeCreate );
+    mWaitingForHistorySignals = true;
+    mExpectedResult = History::ResultCodeError;
     QVERIFY( mHistory->undo() );
+    waitForETMorSignals();
 
-    TODO: uncomment once IncidenceChanger bug is fixed, it returns true
-    on deleteIncidence() because it sees the incidence was deleted already.
-    but isn't emiting signal.
-
-*/
     kDebug() << "Editing something that doesn't exist";
     mHistory->recordChange( item2, item2, IncidenceChanger2::ChangeTypeModify );
-
-    QVERIFY( !mHistory->undo() );
+    mExpectedResult = History::ResultCodeError;
+    mWaitingForHistorySignals = true;
+    QVERIFY( mHistory->undo() );
+    waitForETMorSignals();
 
     QVERIFY( undoButton->isEnabled() );
-    QVERIFY( redoButton->isEnabled() );
+    QVERIFY( !redoButton->isEnabled() );
 
   }
 
@@ -391,7 +395,8 @@ class HistoryTest : public QObject
         QVERIFY( !mHistory->lastErrorString().isEmpty() );
       }
 
-      QVERIFY( result == History::ResultCodeSuccess );
+      QVERIFY( result == mExpectedResult );
+      mExpectedResult = History::ResultCodeSuccess;
     }
 
 };
