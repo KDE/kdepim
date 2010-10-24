@@ -61,7 +61,8 @@ Item {
         id: dayArea
         anchors.fill: parent
         onClicked: {
-            calendarDay.daySelected(myText.text);
+            if (myText.text != "")
+                calendarDay.daySelected(myText.text)
         }
     }
 
