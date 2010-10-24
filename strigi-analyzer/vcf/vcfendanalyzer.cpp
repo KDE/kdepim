@@ -1,18 +1,18 @@
 /*
     This file is part of KDE-PIM.
 
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007 - 2010 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -29,81 +29,119 @@ VcfEndAnalyzer::VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory )
 {
 }
 
+const char* VcfEndAnalyzer::name() const
+{
+  return "VcfEndAnalyzer";
+}
+
 bool VcfEndAnalyzer::checkHeader( const char* header, qint32 headersize ) const
 {
   return headersize >= 11 && !strncmp( "BEGIN:VCARD", header, 11 );
 }
 
 // cannot use Address::formattedAddress because it requires KComponentData
-QString VcfEndAnalyzer::formatAddress(const KABC::Address& a) const
+static QString formatAddress( const KABC::Address &address )
 {
   QStringList parts;
-  if (!a.country().isEmpty()) parts+=a.country();
-  if (!a.region().isEmpty()) parts+=a.region();
-  if (!a.postalCode().isEmpty()) parts+=a.postalCode();
-  if (!a.locality().isEmpty()) parts+=a.locality();
-  if (!a.street().isEmpty()) parts+=a.street();
-  if (!a.postOfficeBox().isEmpty()) parts+=a.postOfficeBox();
-  if (!a.extended().isEmpty()) parts+=a.extended();
-  return parts.join(", ");
+  if ( !address.country().isEmpty() )
+    parts += address.country();
+
+  if ( !address.region().isEmpty() )
+    parts += address.region();
+
+  if ( !address.postalCode().isEmpty() )
+    parts += address.postalCode();
+
+  if ( !address.locality().isEmpty() )
+    parts += address.locality();
+
+  if ( !address.street().isEmpty() )
+    parts += address.street();
+
+  if ( !address.postOfficeBox().isEmpty() )
+    parts += address.postOfficeBox();
+
+  if ( !address.extended().isEmpty() )
+    parts += address.extended();
+
+  return parts.join( QLatin1String( ", " ) );
 }
 
 /**
  * It's easier to use KABC::VCardConverter to extract the single fields from the vCard
  * than doing it manually.
  */
-STRIGI_ENDANALYZER_RETVAL VcfEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
+STRIGI_ENDANALYZER_RETVAL VcfEndAnalyzer::analyze( Strigi::AnalysisResult &index, Strigi::InputStream *stream )
 {
   using namespace KABC;
   const char* data;
 
-  int read=in->read( data, in->size(), in->size() );
+  int read = stream->read( data, stream->size(), stream->size() );
   if ( read < 0 )
     return Strigi::Error;
+
   const QByteArray text( data, read );
 
   VCardConverter converter;
-  Addressee addr = converter.parseVCard( text );
-  if ( addr.isEmpty() )
+  const Addressee contact = converter.parseVCard( text );
+  if ( contact.isEmpty() )
     return Strigi::Error;
 
-  Q_FOREACH (const QString& email, addr.emails() )
-    idx.addValue( m_factory->emailField, email.toUtf8().data() );
-  idx.addValue( m_factory->givenNameField, addr.givenName().toUtf8().data() );
-  idx.addValue( m_factory->familyNameField, addr.familyName().toUtf8().data() );
+  Q_FOREACH ( const QString& email, contact.emails() )
+    index.addValue( m_factory->emailField, email.toUtf8().data() );
 
-  if (addr.url().isValid()) idx.addValue( m_factory->homepageField, addr.url().url().toUtf8().data() );
-  if (!addr.note().isEmpty()) idx.addValue( m_factory->commentField, addr.note().toUtf8().data() );
-  idx.addValue( m_factory->typeField, "http://freedesktop.org/standards/xesam/1.0/core#Person" );
+  index.addValue( m_factory->givenNameField, contact.givenName().toUtf8().data() );
+  index.addValue( m_factory->familyNameField, contact.familyName().toUtf8().data() );
 
-  Q_FOREACH (const PhoneNumber& pn, addr.phoneNumbers() )
-      switch (pn.type()) {
-        case PhoneNumber::Cell: idx.addValue( m_factory->cellPhoneField, pn.number().toUtf8().data() ); break;
-        case PhoneNumber::Home: idx.addValue( m_factory->homePhoneField, pn.number().toUtf8().data() ); break;
-        case PhoneNumber::Work: idx.addValue( m_factory->workPhoneField, pn.number().toUtf8().data() ); break;
-        case PhoneNumber::Fax: idx.addValue( m_factory->faxPhoneField, pn.number().toUtf8().data() ); break;
-        default: idx.addValue( m_factory->otherPhoneField, pn.number().toUtf8().data() ); 
+  if ( contact.url().isValid() )
+    index.addValue( m_factory->homepageField, contact.url().url().toUtf8().data() );
+
+  if ( !contact.note().isEmpty() )
+    index.addValue( m_factory->commentField, contact.note().toUtf8().data() );
+
+  index.addValue( m_factory->typeField, "http://freedesktop.org/standards/xesam/1.0/core#Person" );
+
+  Q_FOREACH ( const PhoneNumber &number, contact.phoneNumbers() ) {
+    switch ( number.type() ) {
+      case PhoneNumber::Cell: index.addValue( m_factory->cellPhoneField, number.number().toUtf8().data() ); break;
+      case PhoneNumber::Home: index.addValue( m_factory->homePhoneField, number.number().toUtf8().data() ); break;
+      case PhoneNumber::Work: index.addValue( m_factory->workPhoneField, number.number().toUtf8().data() ); break;
+      case PhoneNumber::Fax: index.addValue( m_factory->faxPhoneField, number.number().toUtf8().data() ); break;
+      default: index.addValue( m_factory->otherPhoneField, number.number().toUtf8().data() ); 
     }
+  }
 
-  Q_FOREACH (const Address& a, addr.addresses() )
-      switch (a.type()) {
-        case Address::Home: idx.addValue( m_factory->homeAddressField, formatAddress(a).toUtf8().data() ); break;
-        case Address::Work: idx.addValue( m_factory->workAddressField, formatAddress(a).toUtf8().data() ); break;
-        default: idx.addValue( m_factory->otherAddressField, formatAddress(a).toUtf8().data() ); break;
+  Q_FOREACH ( const Address &address, contact.addresses() ) {
+    switch ( address.type() ) {
+      case Address::Home: index.addValue( m_factory->homeAddressField, formatAddress( address ).toUtf8().data() ); break;
+      case Address::Work: index.addValue( m_factory->workAddressField, formatAddress( address ).toUtf8().data() ); break;
+      default: index.addValue( m_factory->otherAddressField, formatAddress( address ).toUtf8().data() ); break;
     }
+  }
 
-  if (!addr.photo().isEmpty() && !addr.photo().isIntern())
-    idx.addValue( m_factory->photoField, addr.photo().url().toUtf8().data() );
+  if ( !contact.photo().isEmpty() && !contact.photo().isIntern())
+    index.addValue( m_factory->photoField, contact.photo().url().toUtf8().data() );
 
-  if (!addr.suffix().isEmpty())
-   idx.addValue( m_factory->suffixField, addr.suffix().toUtf8().data() );
-  if (!addr.prefix().isEmpty())
-   idx.addValue( m_factory->prefixField, addr.prefix().toUtf8().data() );
-    
+  if ( !contact.suffix().isEmpty() )
+   index.addValue( m_factory->suffixField, contact.suffix().toUtf8().data() );
+
+  if ( !contact.prefix().isEmpty() )
+   index.addValue( m_factory->prefixField, contact.prefix().toUtf8().data() );
+
   return Strigi::Ok;
 }
 
-void VcfEndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
+const char* VcfEndAnalyzerFactory::name() const
+{
+  return "VcfEndAnalyzer";
+}
+
+Strigi::StreamEndAnalyzer* VcfEndAnalyzerFactory::newInstance() const
+{
+  return new VcfEndAnalyzer( this );
+}
+
+void VcfEndAnalyzerFactory::registerFields( Strigi::FieldRegister &reg )
 {
   givenNameField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#givenName" );
   familyNameField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#familyName" );
@@ -124,7 +162,14 @@ void VcfEndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
 
   prefixField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#honorificPrefix" );
   suffixField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#honorificSuffix" );
-   
+
   typeField = reg.typeField;
 }
 
+std::list<Strigi::StreamEndAnalyzerFactory*> VcfFactoryFactory::streamEndAnalyzerFactories() const
+{
+  std::list<Strigi::StreamEndAnalyzerFactory*> list;
+  list.push_back( new VcfEndAnalyzerFactory );
+
+  return list;
+}

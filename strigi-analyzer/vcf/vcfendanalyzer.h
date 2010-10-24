@@ -1,18 +1,18 @@
 /*
     This file is part of KDE-PIM.
 
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007 - 2010 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -22,12 +22,15 @@
 #define VCFENDANALYZER_H
 
 #define STRIGI_IMPORT_API
+
+#include "config-strigi.h"
+#include "pimstrigi-analyzer_export.h"
+
+#include <kabc/vcardconverter.h>
 #include <strigi/analyzerplugin.h>
 #include <strigi/streamendanalyzer.h>
-#include <qstring.h>
-#include <kabc/vcardconverter.h>
-#include "pimstrigi-analyzer_export.h"
-#include "config-strigi.h"
+
+#include <QtCore/QString>
 
 class VcfEndAnalyzerFactory;
 
@@ -36,12 +39,11 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfEndAnalyzer : public Strigi::StreamEndAnalyze
   public:
     VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory );
 
-    const char* name() const { return "VcfEndAnalyzer"; }
+    const char* name() const;
     bool checkHeader( const char* header, qint32 headersize ) const;
-    STRIGI_ENDANALYZER_RETVAL analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
+    STRIGI_ENDANALYZER_RETVAL analyze( Strigi::AnalysisResult &index, Strigi::InputStream *stream );
 
   private:
-    QString formatAddress(const KABC::Address& a) const;
     const VcfEndAnalyzerFactory* m_factory;
 };
 
@@ -74,23 +76,17 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfEndAnalyzerFactory : public Strigi::StreamEnd
     const Strigi::RegisteredField* prefixField;
     const Strigi::RegisteredField* suffixField;
 
-
-    const char* name() const { return "VcfEndAnalyzer"; }
-    Strigi::StreamEndAnalyzer* newInstance() const { return new VcfEndAnalyzer( this ); }
+    const char* name() const;
+    Strigi::StreamEndAnalyzer* newInstance() const;
     void registerFields( Strigi::FieldRegister& );
 };
 
 class PIMSTRIGI_ANALYZER_EXPORT VcfFactoryFactory : public Strigi::AnalyzerFactoryFactory
 {
   public:
-    std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const {
-       std::list<Strigi::StreamEndAnalyzerFactory*> list;
-       list.push_back( new VcfEndAnalyzerFactory );
-
-       return list;
-    }
+    std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const;
 };
 
-STRIGI_ANALYZER_FACTORY(VcfFactoryFactory)
+STRIGI_ANALYZER_FACTORY( VcfFactoryFactory )
 
 #endif
