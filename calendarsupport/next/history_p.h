@@ -26,6 +26,7 @@
 #define CALENDARSUPPORT_HISTORY_P_H
 
 #include "history.h"
+#include "incidencechanger2.h"
 #include <KCalCore/Incidence>
 
 #include <QPointer>
@@ -48,8 +49,7 @@ namespace CalendarSupport {
     Akonadi::Item oldItem;
     Akonadi::Item newItem;
     Akonadi::Item::Id itemId;
-    History::ChangeType changeType;
-    IncidenceChanger::WhatChanged whatChanged;
+    IncidenceChanger2::ChangeType changeType;
     uint atomicOperationId;
   };
 
@@ -59,9 +59,9 @@ namespace CalendarSupport {
       Private( History *qq ) : q( qq ) {}
       ~Private(){}
       void updateWidgets();
-      bool doIt( const Entry &entry, OperationType );
+      bool doIt( const Entry &entry, OperationType, QWidget *parent = 0 );
       void updateIds( Item::Id oldId, Item::Id newId );
-      void finishOperation( History::ResultCode );
+      void finishOperation( History::ResultCode, const QString &errorString );
       QStack<Entry>& destinationStack();
       QStack<Entry>& stack();
 
@@ -70,7 +70,7 @@ namespace CalendarSupport {
       bool isUndoAvailable() const;
       bool isRedoAvailable() const;
 
-      IncidenceChanger *mChanger;
+      IncidenceChanger2 *mChanger;
       QList<QPointer<QWidget> > mUndoWidgets;
       QList<QPointer<QWidget> > mRedoWidgets;
 
@@ -87,13 +87,21 @@ namespace CalendarSupport {
 
     public Q_SLOTS:
       // to catch incidenceChanger signals
-      void addFinished( const Akonadi::Item &, bool );
-      void deleteFinished( const Akonadi::Item &, bool );
+      void createFinished( int changeId,
+                           const Akonadi::Item &item,
+                           const Akonadi::Collection &collectionUsed,
+                           CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                           const QString &errorMessage );
 
-      void editFinished( const Akonadi::Item &oldinc,
-                         const Akonadi::Item &newInc,
-                         CalendarSupport::IncidenceChanger::WhatChanged,
-                         bool success );
+      void deleteFinished( int changeId,
+                           Akonadi::Item::Id itemId,
+                           CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                           const QString &errorMessage );
+
+      void modifyFinished( int changeId,
+                           const Akonadi::Item &item,
+                           CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                           const QString &errorMessage );
 
     private:
       History *q;

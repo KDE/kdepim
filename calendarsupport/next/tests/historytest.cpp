@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
-#include <calendarsupport/next/history.h>
-#include <calendarsupport/incidencechanger.h>
-#include <calendarsupport/calendar.h>
-#include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/utils.h>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/next/history.h>
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/next/incidencechanger2.h>
 
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/Session>
@@ -114,7 +114,7 @@ class HistoryTest : public QObject
                                                  mCalendarModel,
                                                  KSystemTimeZones::local() );
 
-      IncidenceChanger *changer = new IncidenceChanger( mCalendar, this );
+      IncidenceChanger2 *changer = new IncidenceChanger2( mCalendar );
       mHistory = new History( changer );
 
       connect( mCalendarModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
@@ -185,7 +185,7 @@ class HistoryTest : public QObject
     Item newItem = mCalendar->itemForIncidenceUid( uid );
     QVERIFY( newItem.isValid() );
 
-    mHistory->recordChange( oldItem, newItem, History::ChangeTypeAdd );
+    mHistory->recordChange( oldItem, newItem, IncidenceChanger2::ChangeTypeCreate );
     QVERIFY( undoButton->isEnabled() );
     QVERIFY( !redoButton->isEnabled() );
 
@@ -243,7 +243,7 @@ class HistoryTest : public QObject
     QVERIFY( item.isValid() );
     QCOMPARE( item.payload<Incidence::Ptr>()->summary(), summary );
 
-    mHistory->recordChange( oldItem, item, History::ChangeTypeEdit );
+    mHistory->recordChange( oldItem, item, IncidenceChanger2::ChangeTypeModify );
     QVERIFY( undoButton->isEnabled() );
     QVERIFY( !redoButton->isEnabled() );
 
@@ -277,7 +277,7 @@ class HistoryTest : public QObject
     mPendingDeletesInETM.append( uid );
     deleteIncidence( uid );
     waitForETMorSignals();
-    mHistory->recordChange( item, Item(), History::ChangeTypeDelete );
+    mHistory->recordChange( item, Item(), IncidenceChanger2::ChangeTypeDelete );
     item = mCalendar->itemForIncidenceUid( uid );
     QVERIFY( !item.isValid() );
 
@@ -311,7 +311,7 @@ class HistoryTest : public QObject
     payload2->setUid( "payload2" );
     item2.setPayload( payload2 );
     item2.setMimeType( "application/x-vnd.akonadi.calendar.event" );
-/*    mHistory->recordChange( Item(), item2, History::ChangeTypeAdd );
+/*    mHistory->recordChange( Item(), item2, IncidenceChanger2::ChangeTypeCreate );
     QVERIFY( mHistory->undo() );
 
     TODO: uncomment once IncidenceChanger bug is fixed, it returns true
@@ -320,7 +320,7 @@ class HistoryTest : public QObject
 
 */
     kDebug() << "Editing something that doesn't exist";
-    mHistory->recordChange( item2, item2, History::ChangeTypeEdit );
+    mHistory->recordChange( item2, item2, IncidenceChanger2::ChangeTypeModify );
 
     QVERIFY( !mHistory->undo() );
 

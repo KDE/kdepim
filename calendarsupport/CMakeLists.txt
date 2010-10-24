@@ -1,4 +1,4 @@
-#add_subdirectory( next/tests )
+add_subdirectory( next/tests )
 
 include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}

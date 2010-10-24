@@ -26,7 +26,7 @@
 #ifndef CALENDARSUPPORT_HISTORY_H
 #define CALENDARSUPPORT_HISTORY_H
 
-#include "incidencechanger.h"
+#include "incidencechanger2.h"
 
 #include <KCalCore/Incidence>
 
@@ -36,7 +36,7 @@
 
 namespace CalendarSupport {
 
-class IncidenceChanger;
+class IncidenceChanger2;
 
 /**
    @short History class for implementing undo/redo in your application.
@@ -75,21 +75,10 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
     };
 
     /**
-       This enum describes change types.
-    */
-    enum ChangeType {
-      ChangeTypeAdd,   ///> Represents an incidence creation.
-      ChangeTypeEdit,  ///> Represents an incidence modification.
-      ChangeTypeDelete ///> Represents an incidence deletion.
-    };
-
-    /**
        Creates an History instance.
        @param changer a valid pointer to an IncidenceChanger. Ownership is not taken.
-       @param parent will be passed to dialogs created by IncidenceChanger, for example
-              those which ask if you want to send invitations.
     */
-    explicit History( IncidenceChanger *changer, QWidget *parent = 0 );
+    explicit History( IncidenceChanger2 *changer );
 
     /**
        Destroys the History instance.
@@ -105,16 +94,12 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
        @param newitem item containing the new payload. Pass an invalid item if this is an
               incidence deletion.
        @param changeType Specifies if we added, deleted or edited an incidence.
-       @param whatChanged Specifies which fields were changed. Only useful when editing incidences.
-              The invitation handler will use this information to craft the i18n strings to show
-              in the dialogs.
        @param atomicOperation If != 0, specifies which group of changes this change belongs too.
               Will be useful for atomic undoing/redoing, not implemented yet.
      */
     void recordChange( const Akonadi::Item &oldItem,
                        const Akonadi::Item &newItem,
-                       History::ChangeType changeType,
-                       IncidenceChanger::WhatChanged whatChanged = IncidenceChanger::NOTHING_MODIFIED,
+                       IncidenceChanger2::ChangeType changeType,
                        const uint atomicOperationId = 0 );
 
     /**
@@ -150,13 +135,16 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
        Can be called if the stack is empty, in this case, nothing happens.
        This function is async, listen to signal undone() to know when the operation finishes.
 
+       @param parent will be passed to dialogs created by IncidenceChanger, for example
+              those which ask if you want to send invitations.
+
        @return true if the job was started, otherwise false is returned and the undone() signal
                won't be emitted.
 
        @see redo()
        @see undone()
      */
-   bool undo();
+   bool undo( QWidget *parent = 0 );
 
     /**
        Reverts the change that's ontop of the redo stack.
@@ -164,13 +152,16 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
        Can be called if the stack is empty, in this case, nothing happens.
        This function is async, listen to signal redone() to know when the operation finishes.
 
+       @param parent will be passed to dialogs created by IncidenceChanger, for example
+              those which ask if you want to send invitations.
+
        @return true if the job was started, otherwise false is returned and the redone() signal
                won't be emitted.
 
        @see undo()
        @see redone()
      */
-    bool redo();
+    bool redo( QWidget *parent = 0 );
 
   public Q_SLOTS:
     /**

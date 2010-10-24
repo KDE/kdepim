@@ -31,25 +31,22 @@
 using namespace KCalCore;
 using namespace CalendarSupport;
 
-History::History( IncidenceChanger *changer, QWidget *parent ) : QObject( parent ),
-                                                                d( new Private( this ) )
+History::History( IncidenceChanger2 *changer ) : QObject(),
+                                                 d( new Private( this ) )
 {
   Q_ASSERT( changer );
 
-  d->mParent = parent;
   d->mChanger = changer;
   d->mOperationTypeInProgress = TypeNone;
 
-  connect( d->mChanger, SIGNAL(incidenceAddFinished(Akonadi::Item,bool)),
-           d, SLOT(addFinished(Akonadi::Item,bool)) );
+  connect( d->mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           d, SLOT(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-  connect( d->mChanger, SIGNAL(incidenceDeleteFinished(Akonadi::Item,bool)),
-           d, SLOT(deleteFinished(Akonadi::Item,bool)) );
+  connect( d->mChanger, SIGNAL(deleteFinished(int,Akonadi::Item::Id,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           d, SLOT(deleteFinished(int,Akonadi::Item::Id,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
-  connect( d->mChanger,
-  SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,CalendarSupport::IncidenceChanger::WhatChanged,bool)),
-  d,SLOT(editFinished(Akonadi::Item,Akonadi::Item,CalendarSupport::IncidenceChanger::WhatChanged,bool)) );
-
+  connect( d->mChanger,SIGNAL(changeFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           d, SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 }
 
 History::~History()
@@ -59,27 +56,26 @@ History::~History()
 
 void History::recordChange( const Akonadi::Item &oldItem,
                             const Akonadi::Item &newItem,
-                            History::ChangeType changeType,
-                            IncidenceChanger::WhatChanged whatChanged,
+                            IncidenceChanger2::ChangeType changeType,
                             const uint atomicOperationId )
 {
   Akonadi::Item::Id id = -1;
 
   // First, do some asserting.
   switch( changeType ) {
-    case ChangeTypeAdd:
+    case IncidenceChanger2::ChangeTypeCreate:
       Q_ASSERT_X( !oldItem.isValid() && newItem.isValid() && newItem.hasPayload<Incidence::Ptr>(),
                   "recordChange()", "oldItem must be invalid, and newItem valid" );
       id = newItem.id();
       d->mLatestRevisionByItemId.insert( id, newItem.revision() );
       break;
-    case ChangeTypeDelete:
+    case IncidenceChanger2::ChangeTypeDelete:
       Q_ASSERT_X( oldItem.isValid() && oldItem.hasPayload<Incidence::Ptr>() && !newItem.isValid(),
                   "recordChange()", "oldItem must be valid, and newItem invalid" );
       id = oldItem.id();
       d->mLatestRevisionByItemId.remove( id );
       break;
-    case ChangeTypeEdit:
+    case IncidenceChanger2::ChangeTypeModify:
       Q_ASSERT_X( oldItem.isValid() && oldItem.hasPayload<Incidence::Ptr>() &&
                   newItem.isValid() && newItem.hasPayload<Incidence::Ptr>() &&
                   oldItem.id() == newItem.id(),
@@ -98,7 +94,6 @@ void History::recordChange( const Akonadi::Item &oldItem,
   entry.atomicOperationId = atomicOperationId;
   entry.itemId = id;
   entry.changeType = changeType;
-  entry.whatChanged = whatChanged;
 
   d->mUndoStack.push( entry );
   d->mRedoStack.clear();
@@ -122,7 +117,7 @@ void History::registerUndoWidget( QWidget *w )
   }
 }
 
-bool History::undo()
+bool History::undo( QWidget *parent )
 {
   // Don't call undo() without the previous one finishing
   Q_ASSERT( d->mOperationTypeInProgress == TypeNone );
@@ -130,7 +125,7 @@ bool History::undo()
   bool result;
 
   if ( !d->mUndoStack.isEmpty() ) {
-    result = d->doIt( d->mUndoStack.pop(), TypeUndo );
+    result = d->doIt( d->mUndoStack.pop(), TypeUndo, parent );
   } else {
     kWarning() << "Don't call undo when the undo stack is empty.";
     result = false;
@@ -139,7 +134,7 @@ bool History::undo()
   return result;
 }
 
-bool History::redo()
+bool History::redo( QWidget *parent )
 {
   // Don't call redo() without the previous one finishing
   Q_ASSERT( d->mOperationTypeInProgress == TypeNone );
@@ -147,7 +142,7 @@ bool History::redo()
   bool result;
 
   if ( !d->mRedoStack.isEmpty() ) {
-    result = d->doIt( d->mRedoStack.pop(), TypeRedo );
+    result = d->doIt( d->mRedoStack.pop(), TypeRedo, parent );
   } else {
     kWarning() << "Don't call redo() when the undo stack is empty.";
     result = false;
@@ -234,7 +229,7 @@ void History::Private::updateIds( Item::Id oldId, Item::Id newId )
   mEntryInProgress.itemId = newId;
 }
 
-bool History::Private::doIt( const Entry &entry, OperationType type )
+bool History::Private::doIt( const Entry &entry, OperationType type, QWidget *parent )
 {
   mOperationTypeInProgress = type;
   mEntryInProgress = entry;
@@ -245,13 +240,13 @@ bool History::Private::doIt( const Entry &entry, OperationType type )
   if ( type == TypeUndo ) {
     // Invert stuff, that's what undo means.
     switch( e.changeType ) {
-      case ChangeTypeAdd:
-        e.changeType = ChangeTypeDelete;
+      case IncidenceChanger2::ChangeTypeCreate:
+        e.changeType = IncidenceChanger2::ChangeTypeDelete;
         break;
-      case ChangeTypeDelete:
-        e.changeType = ChangeTypeAdd;
+      case IncidenceChanger2::ChangeTypeDelete:
+        e.changeType = IncidenceChanger2::ChangeTypeCreate;
         break;
-      case ChangeTypeEdit:
+      case IncidenceChanger2::ChangeTypeModify:
         break;
       default:
         Q_ASSERT_X( false, "doIt()", "Invalid change type" );
@@ -267,20 +262,26 @@ bool History::Private::doIt( const Entry &entry, OperationType type )
   Incidence::Ptr newPayload = CalendarSupport::incidence( e.newItem );
 
   bool result;
-  if ( e.changeType == ChangeTypeAdd ) {
+  if ( e.changeType == IncidenceChanger2::ChangeTypeCreate ) {
     Akonadi::Collection collection = e.newItem.parentCollection();
-    result = mChanger->addIncidence( newPayload, collection, mParent, e.atomicOperationId );
+    result = mChanger->createIncidence( newPayload, collection, e.atomicOperationId,
+                                        false, /* don't record to history, we're on it */
+                                        parent );
     // now wait for mChanger to call our slot.
-  } else if ( e.changeType == ChangeTypeDelete ) {
+  } else if ( e.changeType == IncidenceChanger2::ChangeTypeDelete ) {
     Akonadi::Item item = e.oldItem;
-    result = mChanger->deleteIncidence( item, e.atomicOperationId, mParent );
+    result = mChanger->deleteIncidence( item, e.atomicOperationId,
+                                        false, /* don't record to history, we're on it */
+                                        parent );
     // now wait for mChanger to call our slot.
-  } else if ( e.changeType == ChangeTypeEdit ) {
+  } else if ( e.changeType == IncidenceChanger2::ChangeTypeModify ) {
     if ( mLatestRevisionByItemId.contains( e.itemId ) ) {
       e.newItem.setRevision( mLatestRevisionByItemId[e.itemId] );
     }
 
-    result = mChanger->changeIncidence( oldPayload, e.newItem, e.whatChanged, mParent, e.atomicOperationId );
+    result = mChanger->modifyIncidence( e.newItem, e.oldItem, e.atomicOperationId,
+                                        false, /* don't record to history, we're on it */
+                                        parent );
     // now wait for mChanger to call our slot.
   } else {
     result = false;
@@ -298,60 +299,69 @@ bool History::Private::doIt( const Entry &entry, OperationType type )
   return result;
 }
 
-void History::Private::deleteFinished( const Akonadi::Item &item, bool success )
+void History::Private::deleteFinished( int changeId,
+                                       Akonadi::Item::Id itemId,
+                                       IncidenceChanger2::ResultCode changerResultCode,
+                                       const QString &errorMessage )
 {
-  History::ResultCode resultCode = success ? History::ResultCodeSuccess :
-                                             History::ResultCodeError;
+  Q_UNUSED( changeId );
+  const bool success = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess );
+  const History::ResultCode resultCode = success ? History::ResultCodeSuccess :
+                                                   History::ResultCodeError;
+
   // clean up hash
   if ( success )
-    mLatestRevisionByItemId.remove( item.id() );
+    mLatestRevisionByItemId.remove( itemId );
 
-  finishOperation( resultCode );
+  finishOperation( resultCode, errorMessage );
 }
 
-void History::Private::addFinished( const Akonadi::Item &item, bool success )
+void History::Private::createFinished( int changeId,
+                                       const Akonadi::Item &item,
+                                       const Collection &usedCollection,
+                                       IncidenceChanger2::ResultCode changerResultCode,
+                                       const QString &errorMessage )
 {
-  History::ResultCode resultCode;
+  Q_UNUSED( changeId );
+  Q_UNUSED( usedCollection );
+  const bool success = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess );
+  const History::ResultCode resultCode = success ? History::ResultCodeSuccess :
+                                                   History::ResultCodeError;
 
   if ( success ) {
-    resultCode = History::ResultCodeSuccess;
     // Por comentário.
     updateIds( mEntryInProgress.itemId /*old*/, item.id() /*new*/ );
     mLatestRevisionByItemId.insert( item.id(), item.revision() );
-  } else {
-    resultCode = History::ResultCodeError;
   }
 
-  finishOperation( resultCode );
+  finishOperation( resultCode, errorMessage );
 }
 
-void History::Private::editFinished( const Akonadi::Item &oldItem,
-                                     const Akonadi::Item &newItem,
-                                     CalendarSupport::IncidenceChanger::WhatChanged,
-                                     bool success )
+void History::Private::modifyFinished( int changeId,
+                                       const Akonadi::Item &item,
+                                       IncidenceChanger2::ResultCode changerResultCode,
+                                       const QString &errorMessage )
 {
-  // TODO: IncidenceChanger needs not to send these ones.
-  Q_UNUSED( oldItem );
-  Q_UNUSED( newItem );
+  Q_UNUSED( changeId );
+  const bool success = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess );
+  const History::ResultCode resultCode = success ? History::ResultCodeSuccess :
+                                                   History::ResultCodeError;
 
-  History::ResultCode resultCode = success ? History::ResultCodeSuccess :
-                                             History::ResultCodeError;
+  if ( success ) {
+    mLatestRevisionByItemId[item.id()] = item.revision();
+  }
 
-  if ( success )
-    mLatestRevisionByItemId[newItem.id()] = newItem.revision();
-
-  finishOperation( resultCode );
+  finishOperation( resultCode, errorMessage );
 }
 
 // Just to share code between {add|change|delete}Finished
-void History::Private::finishOperation( History::ResultCode resultCode )
+void History::Private::finishOperation( History::ResultCode resultCode, const QString &errorString )
 {
   if ( resultCode == ResultCodeSuccess ) {
     mLastErrorString = QString();
     destinationStack().push( mEntryInProgress );
   } else {
-    // Not very verbose. That's IncidenceChanger's fault. And that will change soon.
-    mLastErrorString = i18n( "error" );
+    mLastErrorString = errorString;
     stack().push( mEntryInProgress );
   }
 

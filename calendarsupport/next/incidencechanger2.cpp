@@ -22,6 +22,7 @@
 */
 #include "incidencechanger2.h"
 #include "incidencechanger2_p.h"
+#include "history.h"
 #include "calendar.h"
 
 #include <Akonadi/ItemCreateJob>
@@ -39,10 +40,14 @@ using namespace CalendarSupport;
 
 IncidenceChanger2::Private::Private( IncidenceChanger2 *qq ) : q( qq )
 {
+  mLatestOperationId = 0;
+  mShowDialogsOnError = true;
+  mHistory = new History( q );
 }
 
 IncidenceChanger2::Private::~Private()
 {
+  delete mHistory;
 }
 
 void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
@@ -53,6 +58,7 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
   Change change = mChangeForJob.take( job );
 
   const ItemCreateJob *j = qobject_cast<const ItemCreateJob*>( job );
+  const Item item = j->item();
   if ( j->error() ) {
     resultCode = ResultCodeJobError;
     errorString = j->errorString();
@@ -62,10 +68,13 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
                                                errorString ) );
     }
   } else {
+    if ( change.recordToHistory ) {
+      mHistory->recordChange( Item(), item, ChangeTypeCreate, change.atomicOperationId );
+    }
     resultCode = ResultCodeSuccess;
   }
 
-  emit q->createFinished( change.changeId, change.usedCollection, resultCode, errorString );
+  emit q->createFinished( change.changeId, item, change.usedCollection, resultCode, errorString );
 }
 
 void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
@@ -76,6 +85,7 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
   Change change = mChangeForJob.take( job );
 
   const ItemDeleteJob *j = qobject_cast<const ItemDeleteJob*>( job );
+  const Item item = j->deletedItems().first();
   if ( j->error() ) {
     resultCode = ResultCodeJobError;
     errorString = j->errorString();
@@ -86,13 +96,17 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
     }
 
     // It wasn't deleted due to error
-    mDeletedItemIds.remove( change.itemId );
+    mDeletedItemIds.remove( item.id() );
 
   } else {
+    if ( change.recordToHistory ) {
+      //TODO: check return value
+      mHistory->recordChange( Item(), item, ChangeTypeDelete, change.atomicOperationId );
+    }
     resultCode = ResultCodeSuccess;
   }
 
-  emit q->deleteFinished( change.changeId, resultCode, errorString );
+  emit q->deleteFinished( change.changeId, item.id(), resultCode, errorString );
 }
 
 void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
@@ -102,6 +116,7 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
   Change change = mChangeForJob.take( job );
 
   const ItemModifyJob *j = qobject_cast<const ItemModifyJob*>( job );
+  const Item item = j->item();
   if ( j->error() ) {
     resultCode = ResultCodeJobError;
     errorString = j->errorString();
@@ -111,10 +126,15 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
                                                errorString ) );
     }
   } else {
+    if ( change.recordToHistory ) {
+      mHistory->recordChange( change.originalItem, item, ChangeTypeModify,
+                              change.atomicOperationId );
+    }
+
     resultCode = ResultCodeSuccess;
   }
 
-  emit q->modifyFinished( change.changeId, resultCode, errorString );
+  emit q->modifyFinished( change.changeId, item, resultCode, errorString );
 }
 
 bool IncidenceChanger2::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) const
@@ -126,8 +146,6 @@ IncidenceChanger2::IncidenceChanger2( CalendarSupport::Calendar *calendar ) : QO
                                                                               d( new Private( this ) )
 {
   Q_UNUSED( calendar );
-  d->mLatestOperationId = 0;
-  d->mShowDialogsOnError = true;
 }
 
 IncidenceChanger2::~IncidenceChanger2()
@@ -138,10 +156,10 @@ IncidenceChanger2::~IncidenceChanger2()
 int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
                                         const Collection &collection,
                                         uint atomicOperationId,
+                                        bool recordToHistory,
                                         QWidget *parent )
 {
   Q_UNUSED( parent );
-  Q_UNUSED( atomicOperationId );
 
   if ( !incidence ) {
     kWarning() << "An invalid payload is not allowed.";
@@ -153,7 +171,7 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
   item.setMimeType( incidence->mimeType() );
   ItemCreateJob *createJob = new ItemCreateJob( item, collection );
 
-  Change change( ++d->mLatestOperationId, parent );
+  Change change( ++d->mLatestOperationId, atomicOperationId, recordToHistory, parent );
   d->mChangeForJob.insert( createJob, change );
 
   // QueuedConnection because of possible sync exec calls.
@@ -165,24 +183,21 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
 
 int IncidenceChanger2::deleteIncidence( const Item &item,
                                         uint atomicOperationId,
+                                        bool recordToHistory,
                                         QWidget *parent )
 {
-  // Too harsh?
-  Q_UNUSED( atomicOperationId );
-  Q_UNUSED( parent );
-
   if ( !item.isValid() ) {
     kWarning() << "An invalid item is not allowed.";
     return -1;
   }
 
-  Change change( ++d->mLatestOperationId, parent );
+  Change change( ++d->mLatestOperationId, recordToHistory, atomicOperationId, parent );
 
   if ( d->deleteAlreadyCalled( item.id() ) ) {
     // IncidenceChanger::deleteIncidence() called twice, ignore this one.
     kDebug() << "Item " << item.id() << " already deleted or beeping deleted, skipping";
 
-    emit deleteFinished( change.changeId, ResultCodeAlreadyDeleted,
+    emit deleteFinished( change.changeId, item.id(), ResultCodeAlreadyDeleted,
                          i18n( "That calendar item was already deleted, or currently being deleted." ) );
 
     return change.changeId;
@@ -203,12 +218,9 @@ int IncidenceChanger2::deleteIncidence( const Item &item,
 int IncidenceChanger2::modifyIncidence( const Item &changedItem,
                                         const Item &originalItem,
                                         uint atomicOperationId,
+                                        bool recordToHistory,
                                         QWidget *parent )
 {
-  Q_UNUSED( parent );
-  Q_UNUSED( atomicOperationId );
-  Q_UNUSED( originalItem );
-
   if ( !changedItem.isValid() || !changedItem.hasPayload<Incidence::Ptr>() ) {
     kWarning() << "An invalid item or payload is not allowed.";
     return -1;
@@ -219,13 +231,14 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
     return -1;
   }
 
-  Change change( ++d->mLatestOperationId, parent );
+  Change change( ++d->mLatestOperationId, recordToHistory, atomicOperationId, parent );
+  change.originalItem = originalItem;
 
   if ( d->deleteAlreadyCalled( changedItem.id() ) ) {
     // IncidenceChanger::deleteIncidence() called twice, ignore this one.
     kDebug() << "Item " << changedItem.id() << " already deleted or beeping deleted, skipping";
 
-    emit modifyFinished( change.changeId, ResultCodeAlreadyDeleted,
+    emit modifyFinished( change.changeId, changedItem, ResultCodeAlreadyDeleted,
                          i18n( "That calendar item was already deleted, or currently being deleted." ) );
 
     return change.changeId;
@@ -280,4 +293,9 @@ void IncidenceChanger2::setDefaultCollectionId( Akonadi::Collection::Id id )
 Collection::Id IncidenceChanger2::defaultCollectionId() const
 {
   return d->mDefaultCollectionId;
+}
+
+History * IncidenceChanger2::history() const
+{
+  return d->mHistory;
 }

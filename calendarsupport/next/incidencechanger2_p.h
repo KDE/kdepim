@@ -41,14 +41,23 @@ class QWidget;
 
 namespace CalendarSupport {
 
+  class History;
+
   struct Change {
+    Akonadi::Item originalItem;
+
     int changeId;
-    Akonadi::Item::Id itemId;
+    uint atomicOperationId;
+    bool recordToHistory;
     QPointer<QWidget> parent;
+
     Akonadi::Collection usedCollection;
+
     Change(){}
-    Change( int id, QWidget *p ) : changeId( id ), parent( p ){}
-    Change( const Change &other ) : changeId( other.changeId ), parent( other.parent ){}
+    Change( int id, uint atomicOperId, bool recToHistory, QWidget *p ) :
+    changeId( id ), atomicOperationId( atomicOperId ), recordToHistory( recToHistory ), parent( p ){}
+
+    Change( const Change &o ) : changeId( o.changeId ), atomicOperationId( o.atomicOperationId ), recordToHistory( o.recordToHistory ),parent( o.parent ){}
   };
 
 class IncidenceChanger2::Private : public QObject
@@ -74,6 +83,8 @@ class IncidenceChanger2::Private : public QObject
     Akonadi::Collection::Id mDefaultCollectionId;
     DestinationPolicy mDestinationPolicy;
     QSet<Akonadi::Item::Id> mDeletedItemIds;
+    History *mHistory;
+    bool mHistoryEnabled;
 
   private:
     IncidenceChanger2 *q;

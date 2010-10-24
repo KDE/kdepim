@@ -37,6 +37,7 @@
 namespace CalendarSupport {
 
 class Calendar;
+class History;
 
 class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
 {
@@ -57,7 +58,6 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
 
     /**
        This enum describes change types.
-       TODO: delete this enum from history.h
     */
     enum ChangeType {
       ChangeTypeNone,     ///> Nothing happened.
@@ -72,15 +72,18 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     int createIncidence( const KCalCore::Incidence::Ptr &incidence,
                          const Akonadi::Collection &collection = Akonadi::Collection(),
                          uint atomicOperationId = 0,
+                         bool recordToHistory = true,
                          QWidget *parent = 0 );
 
     int deleteIncidence( const Akonadi::Item &item,
                          uint atomicOperationId = 0,
+                         bool recordToHistory = true,
                          QWidget *parent = 0 );
 
     int modifyIncidence( const Akonadi::Item &changedItem,
                          const Akonadi::Item &originalItem = Akonadi::Item(),
                          uint atomicOperationId = 0,
+                         bool recordToHistory = true,
                          QWidget *parent = 0 );
 
     /**
@@ -107,6 +110,21 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     */
     void endAtomicOperation( uint atomicOperationId );
 
+    /**
+       Returns a pointer to the History object. It's always a valid pointer,
+       only freed in ~IncidenceChanger.
+
+       @code
+           mIncidenceChanger->createIncidence( incidence, collection );
+
+           CalendarSupport::History *history = mIncidenceChanger->history();
+           connect( history, SIGNAL(undone(CalendarSupport:History::ResultCode)),
+                    SLOT(undone(CalendarSupport::History::ResultCode)) )
+           history->undo();
+       @endcode
+    */
+    CalendarSupport::History *history() const;
+
     void setDefaultCollectionId( Akonadi::Collection::Id id );
     Akonadi::Collection::Id defaultCollectionId() const;
 
@@ -118,15 +136,18 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
 
   Q_SIGNALS:
     void createFinished( int changeId,
+                         const Akonadi::Item &item,
                          const Akonadi::Collection &collectionUsed,
                          CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                          const QString &errorString );
 
     void modifyFinished( int changeId,
+                         const Akonadi::Item &item,
                          CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                          const QString &errorString );
 
     void deleteFinished( int changeId,
+                         const Akonadi::Item::Id &item,
                          CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                          const QString &errorString );
 
