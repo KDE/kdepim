@@ -138,7 +138,7 @@ void CalendarHelper::setYear( const int year )
   if ( m_year == year )
       return;
 
-  QDate newDate(year, m_month, m_day);
+  QDate newDate( year, m_month, m_day );
   // we dont accept years BC (so no negative years)
   if ( !newDate.isValid() || year <= 0 )
     return;
@@ -147,7 +147,7 @@ void CalendarHelper::setYear( const int year )
   m_year = year;
 
   // Check if we are changed from a Leap year to a common one (vice versa)
-  if ( m_daysInMonth != m_original.daysInMonth() ) {
+  if ( m_month == 2 && m_daysInMonth != m_original.daysInMonth() ) {
     m_daysInMonth = m_original.daysInMonth();
     emit daysInMonthChanged( m_daysInMonth );
   }
