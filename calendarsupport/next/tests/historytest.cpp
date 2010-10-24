@@ -189,7 +189,7 @@ class HistoryTest : public QObject
     Item newItem = mCalendar->itemForIncidenceUid( uid );
     QVERIFY( newItem.isValid() );
 
-    mHistory->recordChange( oldItem, newItem, IncidenceChanger2::ChangeTypeCreate );
+    mHistory->recordCreation( newItem );
     QVERIFY( undoButton->isEnabled() );
     QVERIFY( !redoButton->isEnabled() );
 
@@ -247,7 +247,7 @@ class HistoryTest : public QObject
     QVERIFY( item.isValid() );
     QCOMPARE( item.payload<Incidence::Ptr>()->summary(), summary );
 
-    mHistory->recordChange( oldItem, item, IncidenceChanger2::ChangeTypeModify );
+    mHistory->recordModification( oldItem, item );
     QVERIFY( undoButton->isEnabled() );
     QVERIFY( !redoButton->isEnabled() );
 
@@ -281,7 +281,7 @@ class HistoryTest : public QObject
     mPendingDeletesInETM.append( uid );
     deleteIncidence( uid );
     waitForETMorSignals();
-    mHistory->recordChange( item, Item(), IncidenceChanger2::ChangeTypeDelete );
+    mHistory->recordDeletion( item );
     item = mCalendar->itemForIncidenceUid( uid );
     QVERIFY( !item.isValid() );
 
@@ -316,14 +316,14 @@ class HistoryTest : public QObject
     item2.setPayload( payload2 );
     item2.setMimeType( "application/x-vnd.akonadi.calendar.event" );
     // Fake create
-    mHistory->recordChange( Item(), item2, IncidenceChanger2::ChangeTypeCreate );
+    mHistory->recordCreation( item2 );
     mWaitingForHistorySignals = true;
     mExpectedResult = History::ResultCodeError;
     QVERIFY( mHistory->undo() );
     waitForETMorSignals();
 
     kDebug() << "Editing something that doesn't exist";
-    mHistory->recordChange( item2, item2, IncidenceChanger2::ChangeTypeModify );
+    mHistory->recordModification( item2, item2  );
     mExpectedResult = History::ResultCodeError;
     mWaitingForHistorySignals = true;
     QVERIFY( mHistory->undo() );
