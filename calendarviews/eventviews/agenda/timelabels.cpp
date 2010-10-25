@@ -169,29 +169,23 @@ void TimeLabels::paintEvent( QPaintEvent * )
 {
   QPainter p( this );
 
-  int beginning;
-
-  int cw = width();
-  int ch = height();
-  int cx = 0;
+  const int ch = height();
   int cy = 0;
 
-  if ( !mSpec.isValid() ) {
-    beginning = 0;
-  } else {
-    beginning = ( mSpec.timeZone().currentOffset() -
-                  mPrefs->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
-  }
+  const int beginning = !mSpec.isValid() ? 0 :
+                                           ( mSpec.timeZone().currentOffset() -
+                                             mPrefs->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
 
   // bug:  the parameters cx and cw are the areas that need to be
   //       redrawn, not the area of the widget.  unfortunately, this
   //       code assumes the latter...
 
   // now, for a workaround...
-  cx = frameWidth() * 2;
-  cw = width();
+  const int cx = frameWidth() * 2;
+  const int cw = width();
   // end of workaround
-  int cell = ( (int)( cy / mCellHeight ) ) + beginning;  // the hour we start drawing with
+
+  int cell = static_cast<int>( cy / mCellHeight ) + beginning;  // the hour we start drawing with
   double y = ( cell - beginning ) * mCellHeight;
   QFontMetrics fm = fontMetrics();
   QString hour;
@@ -213,7 +207,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
 
   // We adjust the size of the hour font to keep it reasonable
   if ( timeHeight >  mCellHeight ) {
-    timeHeight = int( mCellHeight - 1 );
+    timeHeight = static_cast<int>( mCellHeight - 1 );
     int pointS = hourFont.pointSize();
     while ( pointS > 4 ) { // TODO: use smallestReadableFont() when added to kdelibs
       hourFont.setPointSize( pointS );
@@ -230,9 +224,9 @@ void TimeLabels::paintEvent( QPaintEvent * )
   QFont suffixFont = hourFont;
   suffixFont.setPointSize( suffixFont.pointSize() / 2 );
   QFontMetrics fmS( suffixFont );
-  int startW = mMiniWidth - frameWidth() - 2 ;
-  int tw2 = fmS.width( suffix );
-  int divTimeHeight = ( timeHeight - 1 ) / 2 - 1;
+  const int startW = mMiniWidth - frameWidth() - 2 ;
+  const int tw2 = fmS.width( suffix );
+  const int divTimeHeight = ( timeHeight - 1 ) / 2 - 1;
   //testline
   //p->drawLine(0,0,0,contentsHeight());
   while ( y < cy + ch + mCellHeight ) {
@@ -266,13 +260,13 @@ void TimeLabels::paintEvent( QPaintEvent * )
     }
 
     // center and draw the time label
-    int timeWidth = fm.width( hour );
+    const int timeWidth = fm.width( hour );
     int offset = startW - timeWidth - tw2 -1 ;
     p.setFont( hourFont );
-    p.drawText( offset, int( y + timeHeight ), hour );
+    p.drawText( offset, static_cast<int>( y + timeHeight ), hour );
     p.setFont( suffixFont );
     offset = startW - tw2;
-    p.drawText( offset, int( y + timeHeight - divTimeHeight ), suffix );
+    p.drawText( offset, static_cast<int>( y + timeHeight - divTimeHeight ), suffix );
 
     // increment indices
     y += mCellHeight;
