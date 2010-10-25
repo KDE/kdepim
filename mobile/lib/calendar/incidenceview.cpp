@@ -88,12 +88,12 @@ void IncidenceView::delayedInit()
   if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
     mInvitationDispatcher = new InvitationDispatcher( 0, this );
     mInvitationDispatcher->setItemManager( mItemManager );
-
-    connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
-             SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction) ) );
-    connect( mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString)),
-             SLOT(slotSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString) ) );
   }
+
+  connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+           SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction) ) );
+  connect( mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString)),
+           SLOT(slotSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString) ) );
 }
 
 IncidenceView::~IncidenceView()
