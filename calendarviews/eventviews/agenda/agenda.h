@@ -81,7 +81,6 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     // QSizePolicy sizePolicy() const;
     int contentsY() const { return -y(); }
     int contentsX() const { return x(); }
-    void setContentsPos( int x, int y );
 
     QScrollBar *verticalScrollBar() const;
 

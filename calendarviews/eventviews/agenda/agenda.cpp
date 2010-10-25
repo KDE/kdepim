@@ -1723,7 +1723,9 @@ void Agenda::setStartTime( const QTime &startHour )
   const double startPos =
     ( startHour.hour() / 24. + startHour.minute() / 1440. + startHour.second() / 86400. ) *
     d->mRows * gridSpacingY();
-  setContentsPos( 0, static_cast<int>( startPos ) );
+
+  verticalScrollBar()->setValue( startPos );
+
 }
 
 /*
@@ -2254,11 +2256,6 @@ QSize Agenda::sizeHint() const
 QScrollBar * Agenda::verticalScrollBar() const
 {
   return d->mScrollArea->verticalScrollBar();
-}
-
-void Agenda::setContentsPos( int x, int y )
-{
-  d->mScrollArea->ensureVisible( x, y, 0, 0 );
 }
 
 QScrollArea *Agenda::scrollArea() const
