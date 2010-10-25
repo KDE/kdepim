@@ -29,10 +29,32 @@ KPIM.MainView {
 
   QML.SystemPalette { id: palette; colorGroup: "Active" }
 
+  QML.Connections {
+    target: guiStateManager
+    onGuiStateChanged: { updateContextActionStates() }
+  }
+
+  QML.Component.onCompleted : updateContextActionStates();
+
+  function updateContextActionStates()
+  {
+    if ( guiStateManager.inHomeScreenState ) {
+      noteActions.showOnlyCategory( "home" )
+    } else if ( guiStateManager.inAccountScreenState ) {
+      noteActions.showOnlyCategory( "account" )
+    } else if ( guiStateManager.inSingleFolderScreenState ) {
+      noteActions.showOnlyCategory( "single_folder" )
+    } else if ( guiStateManager.inMultipleFolderScreenState ) {
+      noteActions.showOnlyCategory( "multiple_folder" )
+    } else if ( guiStateManager.inViewSingleItemState ) {
+      noteActions.showOnlyCategory( "note_viewer" )
+    }
+  }
+
   NoteView {
     id: noteView
     objectName : "noteView"
-    visible: application.state == "SingleItem"
+    visible: guiStateManager.inViewSingleItemState
     anchors.left: parent.left
     anchors.topMargin : 40
     anchors.bottomMargin : 10
@@ -52,7 +74,7 @@ KPIM.MainView {
 
   QML.Rectangle {
     id : backToMessageListButton
-    visible: application.state == "SingleItem"
+    visible: guiStateManager.inViewSingleItemState
     anchors.right : notesMobile.right
     anchors.rightMargin : 70
     anchors.bottom : notesMobile.bottom
@@ -64,6 +86,7 @@ KPIM.MainView {
         onClicked : {
           noteView.saveNote();
           _itemNavigationModel.select(-1, 1)
+          guiStateManager.popState();
         }
       }
     }
@@ -72,12 +95,11 @@ KPIM.MainView {
 
   QML.Item {
     id : mainWorkView
-    visible: {
-      application.state == "Home"         ||
-      application.state == "Account"      ||
-      application.state == "Folder"       ||
-      application.state == "MultiFolder"
-    }
+    visible: { guiStateManager.inHomeScreenState ||
+               guiStateManager.inAccountScreenState ||
+               guiStateManager.inSingleFolderScreenState ||
+               guiStateManager.inMultipleFolderScreenState
+             }
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -109,7 +131,7 @@ KPIM.MainView {
                                         KDE.i18np("1 note","%1 notes",headerList.count))
 
       onSelectedClicked : {
-        application.state = "BulkAction"
+        guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
       }
 
       KPIM.AgentStatusIndicator {
@@ -127,7 +149,7 @@ KPIM.MainView {
       opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
       onClicked : {
         application.persistCurrentSelection("preFavSelection");
-        application.state = "Select"
+        guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState )
       }
     }
 
@@ -160,7 +182,7 @@ KPIM.MainView {
 
     QML.Rectangle {
       id : emptyFolderPage
-      visible: (application.state != "Home" && collectionView.hasBreadcrumbs && headerList.count == 0)
+      visible: (!guiStateManager.inHomeScreenState && collectionView.hasBreadcrumbs && headerList.count == 0)
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
@@ -178,9 +200,9 @@ KPIM.MainView {
 
     QML.Rectangle {
       id : notesListPage
-      visible: { application.state == "Account" ||
-                 application.state == "Folder" ||
-                 application.state == "MultiFolder"
+      visible: { guiStateManager.inAccountScreenState ||
+                 guiStateManager.inSingleFolderScreenState ||
+                 guiStateManager.inMultipleFolderScreenState
                }
       anchors.left : collectionView.right
       anchors.top : parent.top
@@ -213,6 +235,7 @@ KPIM.MainView {
         onCurrentRowChanged : {
           headerList.currentRow = _itemNavigationModel.currentRow
           noteView.currentNoteRow = _itemNavigationModel.currentRow
+          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
         }
       }
     }
@@ -221,7 +244,7 @@ KPIM.MainView {
   SlideoutPanelContainer {
     anchors.fill: parent
 
-    visible: application.state != "BulkAction" && application.state != "Select"
+    visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
 
     SlideoutPanel {
       id: actionPanel
@@ -247,7 +270,7 @@ KPIM.MainView {
               name : "to_selection_screen"
               script : {
                 actionPanel.collapse();
-                application.state = "Select"
+                guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
               }
             },
             KPIM.ScriptAction {
@@ -261,7 +284,7 @@ KPIM.MainView {
               name : "start_maintenance"
               script : {
                 actionPanel.collapse();
-                application.state = "BulkAction"
+                guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
               }
             }
           ]
@@ -274,23 +297,23 @@ KPIM.MainView {
 
   KPIM.MultipleSelectionScreen {
     id : favoriteSelector
-    visible : application.state == "Select"
+    visible : guiStateManager.inMultipleFolderSelectionScreenState
     anchors.fill : parent
     backgroundImage : backgroundImage.source
     onFinished : {
-      application.state = "MainWork"
+      guiStateManager.popState();
       application.clearPersistedSelection("preFavSelection");
       application.multipleSelectionFinished();
     }
     onCanceled : {
-      application.state = "MainWork"
+      guiStateManager.popState();
       application.restorePersistedSelection("preFavSelection");
     }
   }
 
   KPIM.BulkActionScreen {
     id : bulkActionScreen
-    visible : application.state == "BulkAction"
+    visible : guiStateManager.inBulkActionScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -310,7 +333,7 @@ KPIM.MainView {
       showDeleteButton: false
     }
     onBackClicked : {
-      application.state = "MainWork"
+      guiStateManager.popState();
     }
   }
 
