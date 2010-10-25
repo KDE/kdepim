@@ -55,6 +55,7 @@ class KCMLdap : public KCModule
 
   private:
     void initGUI();
+    QWidget* dialogParent();
 
     QListWidget* mHostListView;
 
