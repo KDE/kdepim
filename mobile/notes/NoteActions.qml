@@ -105,13 +105,6 @@ ActionMenuContainer {
   }
 
   ActionList {
-    category : "note_viewer"
-    name : "event_viewer_attachments_menu"
-    text : KDE.i18n( "Attachments" )
-    FakeAction { name : "save_all" }
-  }
-
-  ActionList {
     name : "note_viewer_edit_menu"
     category : "note_viewer"
     text : KDE.i18n( "Edit" )
