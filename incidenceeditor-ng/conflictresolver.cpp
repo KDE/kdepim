@@ -229,7 +229,6 @@ bool ConflictResolver::findFreeSlot( const KCalCore::Period &dateTimeRange )
 
 void ConflictResolver::findAllFreeSlots()
 {
-  kDebug() << "find all free slots";
   // Uses an O(p*n) (n number of attendees, p timeframe range / timeslot resolution ) algorithm to
   // locate all free blocks in a given timeframe that match the search constraints.
   // Does so by:
@@ -243,8 +242,6 @@ void ConflictResolver::findAllFreeSlots()
   const KDateTime begin = mTimeframeConstraint.start();
   const KDateTime end =  mTimeframeConstraint.end();
 
-  kDebug() << "from " << begin << " to " << end;
-
   // calculate the time resolution
   // each timeslot in the arrays represents a unit of time
   // specified here.
@@ -252,6 +249,7 @@ void ConflictResolver::findAllFreeSlots()
     // fallback to default, if the user's value is invalid
     mSlotResolutionSeconds = DEFAULT_RESOLUTION_SECONDS;
   }
+
   // calculate the length of the timeframe in terms of the amount of timeslots.
   // Example: 1 week timeframe, with resolution of 15 minutes
   //          1 week = 10080 minutes / 15 = 672 15 min timeslots
@@ -262,6 +260,11 @@ void ConflictResolver::findAllFreeSlots()
                << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
     return;
   }
+
+  kDebug() << "from " << begin << " to " << end
+           << "; mSlotResolutionSeconds = " << mSlotResolutionSeconds
+           << "; range = " << range;
+
   // filter out attendees for which we don't have FB data
   // and which don't match the mandatory role contrstaint
   QList<KCalCore::FreeBusy::Ptr> filteredFBItems;
@@ -335,7 +338,12 @@ void ConflictResolver::findAllFreeSlots()
 //               << start_index + duration << "<=" << range;
         Q_ASSERT( ( start_index + duration ) <= range ); // sanity check
         for ( int i = start_index; i <= start_index + duration; ++i ) {
-          fbArray[i] = 1;
+          if ( i < fbArray.count() ) {
+            fbArray[i] = 1;
+          } else {
+            kError() << "DEBUG me. This shouldn't happen. start_index = " << start_index
+                     << "; duration = " << duration << "; range = " << range;
+          }
         }
       }
     }
