@@ -79,6 +79,7 @@ void TimeLabelsZone::addTimeLabels( const KDateTime::Spec &spec )
   QScrollArea *area = new QScrollArea( this );
   TimeLabels *labels = new TimeLabels( spec, 24, mPrefs, this );
   mTimeLabelsList.prepend( area );
+  area->setWidgetResizable( true );
   area->setWidget( labels );
   area->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   area->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );

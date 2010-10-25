@@ -65,6 +65,8 @@ TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows, const PrefsPtr &p
     setToolTip( i18n( "Timezone:" ) + mSpec.timeZone().name() );
   }
 
+  setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+
   updateConfig();
  }
 
@@ -100,7 +102,10 @@ void TimeLabels::colorMousePos()
 
 void TimeLabels::setCellHeight( double height )
 {
-  mCellHeight = height;
+  if ( mCellHeight != height ) {
+    mCellHeight = height;
+    updateGeometry();
+  }
 }
 
 /**
@@ -146,6 +151,9 @@ void TimeLabels::updateConfig()
   if ( mCellHeight < 4 * mAgenda->gridSpacingY() ) {
        mCellHeight = 4 * mAgenda->gridSpacingY();
   }
+
+  updateGeometry();
+
   repaint();
 }
 
@@ -155,12 +163,12 @@ void TimeLabels::setAgenda( Agenda *agenda )
   mAgenda = agenda;
 
   if ( mAgenda ) {
-    connect( mAgenda, SIGNAL(mousePosSignal(const QPoint &)),
-             this, SLOT(mousePosChanged(const QPoint &)) );
-    connect( mAgenda, SIGNAL(enterAgenda()), this, SLOT(showMousePos()) );
-    connect( mAgenda, SIGNAL(leaveAgenda()), this, SLOT(hideMousePos()) );
+    connect( mAgenda, SIGNAL(mousePosSignal(QPoint)),
+             SLOT(mousePosChanged(QPoint)) );
+    connect( mAgenda, SIGNAL(enterAgenda()), SLOT(showMousePos()) );
+    connect( mAgenda, SIGNAL(leaveAgenda()), SLOT(hideMousePos()) );
     connect( mAgenda, SIGNAL(gridSpacingYChanged(double)),
-             this, SLOT(setCellHeight(double)) );
+             SLOT(setCellHeight(double)) );
   }
 }
 
@@ -208,7 +216,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
   }
 
   // We adjust the size of the hour font to keep it reasonable
-  if ( timeHeight >  mCellHeight ) {
+  if ( timeHeight > mCellHeight ) {
     timeHeight = static_cast<int>( mCellHeight - 1 );
     int pointS = hourFont.pointSize();
     while ( pointS > 4 ) { // TODO: use smallestReadableFont() when added to kdelibs
