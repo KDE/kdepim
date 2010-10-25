@@ -170,7 +170,9 @@ void TimeLabels::paintEvent( QPaintEvent * )
   QPainter p( this );
 
   const int ch = height();
-  int cy = 0;
+
+  // We won't paint parts that aren't visible
+  const int cy = -y();// y() returns a negative value.
 
   const int beginning = !mSpec.isValid() ? 0 :
                                            ( mSpec.timeZone().currentOffset() -
