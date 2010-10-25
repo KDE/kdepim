@@ -524,8 +524,9 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
     }
   } else if( incidence->type() == "Todo" ) {
     QString txt;
-    if ( method == Scheduler::Request ) {
-      txt = i18n( "Do you want to send a status update to the organizer of this task?" );
+    if ( attendeeStatusChanged && method == Scheduler::Request ) {
+      txt = i18n( "Your status as a participant in this task changed. "
+                  "Do you want to send a status update to the task organizer?" );
       method = Scheduler::Reply;
       if ( useLastDialogAnswer ) {
         rc = lastUsedDialogAnswer;
@@ -564,6 +565,34 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
             KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
           setDoNotNotify( rc == KMessageBox::No );
         }
+      } else {
+        if ( useLastDialogAnswer ) {
+          rc = lastUsedDialogAnswer;
+        } else {
+          if ( CalHelper::incOrganizerOwnsCalendar( mCalendar, incidence ) ) {
+            txt = i18n( "<qt>"
+                        "You are modifying the organizer's task. "
+                        "Do you really want to edit it?<p>"
+                        "If \"yes\", all the attendees will be emailed the updated invitation."
+                        "</qt>" );
+            lastUsedDialogAnswer = rc = KMessageBox::warningYesNo( parent, txt );
+            if ( rc == KMessageBox::Yes ) {
+              KCal::MailScheduler scheduler( mCalendar );
+              scheduler.performTransaction( incidence, Scheduler::Request,
+                                            recipients( incidence->attendees() ).join( "," ) );
+            }
+          } else {
+            txt = i18n( "<qt>"
+                        "You are not the organizer of this task. Editing it will "
+                        "bring your invitation out of sync with the organizer's invitation. "
+                        "Do you really want to edit it?<p>"
+                        "If \"yes\", your local copy of the invitation will be different than "
+                        "the organizer and any other task participants."
+                        "</qt>" );
+            lastUsedDialogAnswer = rc = KMessageBox::warningYesNo( parent, txt );
+          }
+        }
+        return ( rc == KMessageBox::Yes );
       }
     }
   } else if ( incidence->type() == "Event" ) {
@@ -614,9 +643,11 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
           rc = lastUsedDialogAnswer;
         } else {
           if ( CalHelper::incOrganizerOwnsCalendar( mCalendar, incidence ) ) {
-            txt = i18n( "You are modifying the organizer's event. "
+            txt = i18n( "<qt>"
+                        "You are modifying the organizer's event. "
                         "Do you really want to edit it?<p>"
-                        "If \"yes\", all the attendees will be emailed the updated invitation." );
+                        "If \"yes\", all the attendees will be emailed the updated invitation."
+                        "</qt>" );
             lastUsedDialogAnswer = rc = KMessageBox::warningYesNo( parent, txt );
             if ( rc == KMessageBox::Yes ) {
               KCal::MailScheduler scheduler( mCalendar );
@@ -624,9 +655,13 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
                                             recipients( incidence->attendees() ).join( "," ) );
             }
           } else {
-            txt = i18n( "You are not the organizer of this event. Editing it will "
-                        "bring your calendar out of sync with the organizer's calendar. "
-                        "Do you really want to edit it?" );
+            txt = i18n( "<qt>"
+                        "You are not the organizer of this event. Editing it will "
+                        "bring your invitation out of sync with the organizer's invitation. "
+                        "Do you really want to edit it?<p>"
+                        "If \"yes\", your local copy of the invitation will be different than "
+                        "the organizer and any other event participants."
+                        "</qt>" );
             lastUsedDialogAnswer = rc = KMessageBox::warningYesNo( parent, txt );
           }
         }
