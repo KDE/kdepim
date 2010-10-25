@@ -1574,6 +1574,10 @@ void KMMainWidget::slotOverrideHtml()
     }
   }
   mFolderHtmlPref = !mFolderHtmlPref;
+
+  //Update mPrefererHtmlLoadExtAction
+  mPreferHtmlLoadExtAction->setEnabled( mMessageListView->currentFolder() && (mHtmlPref ? !mFolderHtmlPref : mFolderHtmlPref) ? true : false );
+
   if (mMsgView) {
     mMsgView->setHtmlOverride(mFolderHtmlPref);
     mMsgView->update( true );
@@ -1599,6 +1603,7 @@ void KMMainWidget::slotOverrideHtmlLoadExt()
     }
   }
   mFolderHtmlLoadExtPref = !mFolderHtmlLoadExtPref;
+
   if (mMsgView) {
     mMsgView->setHtmlLoadExtOverride(mFolderHtmlLoadExtPref);
     mMsgView->update( true );
