@@ -441,6 +441,7 @@ target_link_libraries(kmail
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
   kmailprivate
+  mimelib
   kdepim
 )
 
