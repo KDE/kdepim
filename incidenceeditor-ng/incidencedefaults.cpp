@@ -19,6 +19,7 @@
 */
 
 #include "incidencedefaults.h"
+#include "alarmpresets.h"
 
 #include <calendarsupport/kcalprefs.h>
 
@@ -27,6 +28,7 @@
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <KCalCore/Journal>
+#include <KCalCore/Alarm>
 
 #include <KPIMUtils/Email>
 #include <KIO/Job>
@@ -38,6 +40,7 @@
 
 using namespace CalendarSupport;
 using namespace IncidenceEditorNG;
+using namespace KCalCore;
 
 namespace IncidenceEditorNG {
 
@@ -144,6 +147,10 @@ void IncidenceDefaultsPrivate::eventDefaults( const KCalCore::Event::Ptr &event 
   event->setDtStart( startDT );
   event->setDtEnd( endDT );
   event->setTransparency( KCalCore::Event::Opaque );
+
+  if ( KCalPrefs::instance()->defaultEventReminders() ) {
+    event->addAlarm( AlarmPresets::defaultAlarm( AlarmPresets::BeforeStart ) );
+  }
 }
 
 void IncidenceDefaultsPrivate::journalDefaults( const KCalCore::Journal::Ptr &journal ) const
@@ -178,6 +185,10 @@ void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) c
   todo->setCompleted( false );
   todo->setPercentComplete( 0 );
   todo->setPriority( 5 );
+
+  if ( KCalPrefs::instance()->defaultTodoReminders() ) {
+    todo->addAlarm( AlarmPresets::defaultAlarm( AlarmPresets::BeforeEnd ) );
+  }
 }
 
 /// IncidenceDefaults

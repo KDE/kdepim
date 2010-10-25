@@ -22,10 +22,13 @@
 
 #include <calendarsupport/kcalprefs.h>
 
+#include <KCalCore/Alarm>
+
 #include <KGlobal>
 #include <KLocale>
 
 using namespace CalendarSupport;
+using namespace KCalCore;
 
 namespace IncidenceEditorNG {
 
@@ -168,6 +171,21 @@ KCalCore::Alarm::Ptr preset( When when, const QString &name )
     return KCalCore::Alarm::Ptr();
   };
 }
+
+KCalCore::Alarm::Ptr defaultAlarm( When when )
+{
+  checkInitNeeded( when );
+
+  switch ( when ) {
+  case AlarmPresets::BeforeStart:
+    return Alarm::Ptr( new Alarm( *sBeforeStartPresets->at( sDefaultPresetIndex ) ) );
+  case AlarmPresets::BeforeEnd:
+    return Alarm::Ptr( new Alarm( *sBeforeEndPresets->at( sDefaultPresetIndex ) ) );
+  default:
+    return Alarm::Ptr();
+  };
+}
+
 
 int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm )
 {

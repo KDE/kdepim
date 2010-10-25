@@ -53,6 +53,13 @@ namespace AlarmPresets {
   KCalCore::Alarm::Ptr preset( When when, const QString &name );
 
   /**
+   * Returns an Alarm configured accordingly to the default preset.
+   *
+   * Note: The caller takes ownership over the pointer.
+   */
+  KCalCore::Alarm::Ptr defaultAlarm( When when );
+
+  /**
    * Returns the index of the preset in availablePresets for the given recurrence,
    * or -1 if no preset is equal to the given recurrence.
    */
