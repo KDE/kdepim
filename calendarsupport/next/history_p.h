@@ -46,11 +46,12 @@ namespace CalendarSupport {
 
   struct Entry {
     // An history entry is something that can be done/undone
-    Akonadi::Item oldItem;
-    Akonadi::Item newItem;
-    Akonadi::Item::Id itemId;
+    Akonadi::Item::List oldItems;
+    Akonadi::Item::List newItems;
+
     IncidenceChanger2::ChangeType changeType;
     uint atomicOperationId;
+    int changeId;
   };
 
   class History::Private : public QObject {
@@ -82,6 +83,7 @@ namespace CalendarSupport {
 
       QString mLastErrorString;
       QHash<Akonadi::Item::Id,int> mLatestRevisionByItemId;
+      QHash<int,Akonadi::Item::Id> mItemIdByChangeId;
 
       QWidget *mParent;
 

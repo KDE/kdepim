@@ -121,6 +121,17 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
                          const uint atomicOperationId = 0 );
 
     /**
+       Pushes a list of incidence deletions into the undo stack. The deletions can be undone calling
+       undo() once.
+
+       @param items The list of items to delete. All items must be valid.
+       @param atomicOperation If != 0, specifies which group of changes this change belongs too.
+              Will be useful for atomic undoing/redoing, not implemented yet.
+     */
+    void recordDeletions( const Akonadi::Item::List &items,
+                          const uint atomicOperationId = 0 );
+
+    /**
        Convenience method for disabling the undo/redo button when jobs are in progress,
        so callers don't have to write signal/slot/connect logic for this.
 

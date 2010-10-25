@@ -61,9 +61,9 @@ void History::recordCreation( const Akonadi::Item &item,
               "recordCreation()", "Item must be valid and have Incidence payload." );
 
   Entry entry;
-  entry.itemId = item.id();
   entry.changeType = IncidenceChanger2::ChangeTypeCreate;
-  entry.newItem = item;
+  entry.newItems.append( item );
+  entry.newItems.append( Item() );
   entry.atomicOperationId = atomicOperationId;
   d->mLatestRevisionByItemId.insert( item.id(), item.revision() );
 
@@ -82,11 +82,10 @@ void History::recordModification( const Akonadi::Item &oldItem,
               oldItem.id() == newItem.id(),
               "recordChange()", "oldItem and newItem must be valid and have the same id" );
   Entry entry;
-  entry.itemId = newItem.id();
   entry.changeType = IncidenceChanger2::ChangeTypeModify;
   entry.atomicOperationId = atomicOperationId;
-  entry.oldItem = oldItem;
-  entry.newItem = newItem;
+  entry.oldItems.append( oldItem );
+  entry.newItems.append( newItem );
   d->mLatestRevisionByItemId.insert( newItem.id(), newItem.revision() );
 
   d->mUndoStack.push( entry );
@@ -98,15 +97,26 @@ void History::recordModification( const Akonadi::Item &oldItem,
 void History::recordDeletion( const Akonadi::Item &item,
                               const uint atomicOperationId )
 {
-  Q_ASSERT_X( item.isValid() && item.hasPayload<Incidence::Ptr>(),
-              "recordDeletion()", "Item must be valid and have an Incidence payload." );
+  Item::List list;
+  list.append( item );
+  recordDeletions( list, atomicOperationId );
+}
 
+void History::recordDeletions( const Akonadi::Item::List &items,
+                               const uint atomicOperationId )
+{
   Entry entry;
-  entry.itemId = item.id();
-  entry.oldItem = item;
   entry.changeType = IncidenceChanger2::ChangeTypeDelete;
   entry.atomicOperationId = atomicOperationId;
-  d->mLatestRevisionByItemId.remove( item.id() );
+
+  foreach( const Akonadi::Item &item, items ) {
+    Q_ASSERT_X( item.isValid() && item.hasPayload<Incidence::Ptr>(),
+                "recordDeletion()", "Item must be valid and have an Incidence payload." );
+    //cleanup
+    d->mLatestRevisionByItemId.remove( item.id() );
+    entry.oldItems.append( item );
+    entry.newItems.append( Item() );
+  }
 
   d->mUndoStack.push( entry );
   d->mRedoStack.clear();
@@ -208,39 +218,26 @@ void History::Private::updateWidgets()
 
 void History::Private::updateIds( Item::Id oldId, Item::Id newId )
 {
-  for ( int i = 0; i < mUndoStack.count(); ++i ) {
-    if ( mUndoStack[i].itemId == oldId ) {
+  QList<QStack<Entry>*> stacks;
+  stacks << &mUndoStack << &mRedoStack;
 
-      mUndoStack[i].itemId = newId;
+  for ( int i = 0; i < stacks.count(); ++i ) {
+    QStack<Entry>::iterator j;
+    for ( j = stacks[0]->begin(); j != stacks[i]->end(); ++j ) {
+      Item::List::iterator k;
+      for ( k = (*j).oldItems.begin(); k != (*j).oldItems.end(); ++k ) {
+        if ( (*k).id() == oldId ) {
+          (*k).setId( newId );
+        }
+      }
 
-      if ( mUndoStack[i].oldItem.isValid() )
-        mUndoStack[i].oldItem.setId( newId );
-
-      if ( mUndoStack[i].newItem.isValid() )
-        mUndoStack[i].newItem.setId( newId );
+      for ( k = (*j).newItems.begin(); k != (*j).newItems.end(); ++k ) {
+        if ( (*k).id() == oldId ) {
+          (*k).setId( newId );
+        }
+      }
     }
   }
-
-  for ( int i = 0; i < mRedoStack.count(); ++i ) {
-    if ( mRedoStack[i].itemId == oldId ) {
-
-      mRedoStack[i].itemId = newId;
-
-      if ( mRedoStack[i].oldItem.isValid() )
-        mRedoStack[i].oldItem.setId( newId );
-
-      if ( mRedoStack[i].newItem.isValid() )
-        mRedoStack[i].newItem.setId( newId );
-    }
-  }
-
-  if ( mEntryInProgress.oldItem.isValid() )
-    mEntryInProgress.oldItem.setId( newId );
-
-  if ( mEntryInProgress.newItem.isValid() )
-    mEntryInProgress.newItem.setId( newId );
-
-  mEntryInProgress.itemId = newId;
 }
 
 bool History::Private::doIt( const Entry &entry, OperationType type, QWidget *parent )
@@ -259,6 +256,17 @@ bool History::Private::doIt( const Entry &entry, OperationType type, QWidget *pa
         break;
       case IncidenceChanger2::ChangeTypeDelete:
         e.changeType = IncidenceChanger2::ChangeTypeCreate;
+
+        if ( e.oldItems.count() > 1 && e.atomicOperationId != 0 ) {
+          /** We're undoing a bulk delete.
+              ItemDeleteJob supports deleting a list of items,But while undoing that,
+              we can't just use one ItemCreateJob, because it's ctor only accepts one item,
+              we must create an ItemCreateJob for each.
+
+              So lets group all creations, so, in case one item fails, we can rollback.
+          */
+          e.atomicOperationId = mChanger->startAtomicOperation();
+        }
         break;
       case IncidenceChanger2::ChangeTypeModify:
         break;
@@ -267,42 +275,50 @@ bool History::Private::doIt( const Entry &entry, OperationType type, QWidget *pa
     }
 
     // Swap old item with new item.
-    Akonadi::Item oldItem2 = e.oldItem;
-    e.oldItem = e.newItem;
-    e.newItem = oldItem2;
+    Akonadi::Item::List oldItems2 = e.oldItems;
+    e.oldItems = e.newItems;
+    e.newItems = oldItems2;
   }
 
-  Incidence::Ptr oldPayload = CalendarSupport::incidence( e.oldItem );
-  Incidence::Ptr newPayload = CalendarSupport::incidence( e.newItem );
-
-  bool result;
+  int changeId = -1;
   if ( e.changeType == IncidenceChanger2::ChangeTypeCreate ) {
-    Akonadi::Collection collection = e.newItem.parentCollection();
-    result = mChanger->createIncidence( newPayload, collection, e.atomicOperationId,
-                                        false, /* don't record to history, we're on it */
-                                        parent );
+    foreach( const Item &item, e.newItems ) {
+      Incidence::Ptr newPayload = CalendarSupport::incidence( item );
+      // TODO: don't overwrite result
+      const Akonadi::Collection collection = item.parentCollection();
+      changeId = mChanger->createIncidence( newPayload, collection, e.atomicOperationId,
+                                            false, /* don't record to history, we're on it */
+                                            parent );
+      mItemIdByChangeId[e.changeId] = item.id();
+    }
     // now wait for mChanger to call our slot.
   } else if ( e.changeType == IncidenceChanger2::ChangeTypeDelete ) {
-    Akonadi::Item item = e.oldItem;
-    result = mChanger->deleteIncidence( item, e.atomicOperationId,
-                                        false, /* don't record to history, we're on it */
-                                        parent );
+    changeId = mChanger->deleteIncidences( e.oldItems,
+                                           e.atomicOperationId,
+                                           false, /* don't record to history, we're on it */
+                                           parent );
     // now wait for mChanger to call our slot.
   } else if ( e.changeType == IncidenceChanger2::ChangeTypeModify ) {
-    if ( mLatestRevisionByItemId.contains( e.itemId ) ) {
-      e.newItem.setRevision( mLatestRevisionByItemId[e.itemId] );
+    // ItemModifyJob doesn't support a bulk operation, so modify operations will only have one
+    // element, therefore first().
+    Item newItem = e.newItems.first();
+
+    if ( mLatestRevisionByItemId.contains( newItem.id() ) ) {
+      newItem.setRevision( mLatestRevisionByItemId[newItem.id()] );
     }
 
-    result = mChanger->modifyIncidence( e.newItem, e.oldItem, e.atomicOperationId,
-                                        false, /* don't record to history, we're on it */
-                                        parent );
+    changeId = mChanger->modifyIncidence( newItem, Item(), e.atomicOperationId,
+                                          false, /* don't record to history, we're on it */
+                                          parent );
     // now wait for mChanger to call our slot.
   } else {
-    result = false;
+    changeId = -1;
     Q_ASSERT_X( false, "History::Private::doIt()", "Must have at least one payload" );
   }
 
-  if ( !result ) {
+  mEntryInProgress.changeId = changeId;
+
+  if ( changeId == -1 ) {
     // Don't i18n yet, only after refactoring IncidenceChanger.
     mLastErrorString = "Error in incidence changer, didn't even fire the job";
     mOperationTypeInProgress = TypeNone;
@@ -310,7 +326,7 @@ bool History::Private::doIt( const Entry &entry, OperationType type, QWidget *pa
     updateWidgets();
   }
 
-  return result;
+  return changeId != -1;
 }
 
 void History::Private::deleteFinished( int changeId,
@@ -345,13 +361,14 @@ void History::Private::createFinished( int changeId,
   const History::ResultCode resultCode = success ? History::ResultCodeSuccess :
                                                    History::ResultCodeError;
 
+  finishOperation( resultCode, errorMessage );
+
   if ( success ) {
     // Por comentário.
-    updateIds( mEntryInProgress.itemId /*old*/, item.id() /*new*/ );
+    updateIds( mItemIdByChangeId[changeId] /*old*/, item.id() /*new*/ );
+    mItemIdByChangeId.remove( changeId );
     mLatestRevisionByItemId.insert( item.id(), item.revision() );
   }
-
-  finishOperation( resultCode, errorMessage );
 }
 
 void History::Private::modifyFinished( int changeId,
