@@ -133,10 +133,12 @@ void IncidenceDefaultsPrivate::eventDefaults( const KCalCore::Event::Ptr &event 
   KDateTime startDT;
   if ( mStartDt.isValid() ) {
     startDT = mStartDt;
-  } else if ( KCalPrefs::instance()->startTime().isValid() ) {
-    startDT = KDateTime( KCalPrefs::instance()->startTime(), KSystemTimeZones::local() );
   } else {
     startDT = KDateTime::currentLocalDateTime();
+  }
+
+  if ( KCalPrefs::instance()->startTime().isValid() ) {
+    startDT.setTime( KCalPrefs::instance()->startTime().time() );
   }
 
   const QTime defaultDurationTime = KCalPrefs::instance()->defaultDuration().time();
