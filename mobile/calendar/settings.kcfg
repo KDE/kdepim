@@ -67,5 +67,6 @@
 
   <group name="GroupScheduling">
     <entry name="UseGroupwareCommunication" type="Bool"/>
+    <default>true</default>
   </group>
 </kcfg>

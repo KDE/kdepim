@@ -22,6 +22,7 @@
 #include "clockhelper.h"
 
 #include <calendarsupport/utils.h>
+#include <calendarsupport/kcalprefs.h>
 
 #include <QtGui/QMessageBox>
 #include <QtGui/QDateEdit>
@@ -67,6 +68,7 @@ IncidenceView::IncidenceView( QWidget* parent )
   , mIncidenceMore( 0 )
   , mDateWidget( 0 )
   , mTimeWidget( 0 )
+  , mInvitationDispatcher( 0 )
 {
   setAttribute(Qt::WA_DeleteOnClose);
   QDeclarativeContext *context = engine()->rootContext();
@@ -83,14 +85,15 @@ void IncidenceView::delayedInit()
   qmlRegisterType<ClockHelper>( "ClockHelper", 4, 5, "ClockHelper" );
 
 
-  mInvitationDispatcher = new InvitationDispatcher( 0, this );
-  mInvitationDispatcher->setItemManager( mItemManager );
+  if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
+    mInvitationDispatcher = new InvitationDispatcher( 0, this );
+    mInvitationDispatcher->setItemManager( mItemManager );
 
-
-  connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
-           SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction) ) );
-  connect( mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString)),
-           SLOT(slotSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString) ) );
+    connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+             SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction) ) );
+    connect( mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString)),
+             SLOT(slotSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, QString) ) );
+  }
 }
 
 IncidenceView::~IncidenceView()
