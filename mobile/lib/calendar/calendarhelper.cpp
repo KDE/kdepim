@@ -146,7 +146,7 @@ void CalendarHelper::setYear( const int year )
   m_original = newDate;
   m_year = year;
 
-  // Check if we are changed from a Leap year to a common one (vice versa)
+  // Check if we changed from a Leap year to a common one (vice versa)
   if ( m_month == 2 && m_daysInMonth != m_original.daysInMonth() ) {
     m_daysInMonth = m_original.daysInMonth();
     emit daysInMonthChanged( m_daysInMonth );
