@@ -18,6 +18,7 @@
 */
 
 #include "timelineviewitem.h"
+#include "stylesheetloader.h"
 
 #include <KGlobal>
 #include <KGlobalSettings>
@@ -38,6 +39,7 @@ TimelineViewItem::TimelineViewItem(QDeclarativeItem* parent)
 {
   // start with the oxygen palette (which is not necessarily the default on all platforms)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
+  StyleSheetLoader::applyStyle( m_view );
   m_view->setPalette( pal );
   m_view->setDateRangeSelectionEnabled( false );
   m_view->layout()->setMargin( 0 );

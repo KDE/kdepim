@@ -235,6 +235,22 @@ QMenu::item:selected { /* when user selects item using mouse or keyboard */
 }
 
 
+/*
+ * KDGantt
+ */
+KDGantt--HeaderWidget,
+EventViews--TimelineView QHeaderView
+{
+  background-color: lightgray;
+  color: black;
+}
+
+EventViews--TimelineView QTreeWidget:item
+{
+  background-color: white;
+  color: black;
+}
+
 
 /*
  * Hacks that should not be necessary at all
