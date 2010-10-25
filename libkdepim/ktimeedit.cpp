@@ -172,16 +172,21 @@ void KTimeEdit::Private::updateText()
 
   // Set the text but without emitting signals, nor losing the cursor position
   QLineEdit *line = q->lineEdit();
-  line->blockSignals( true );
-  const int pos = line->cursorPosition();
+  int pos = 0;
+  if ( line ) {
+    line->blockSignals( true );
+    pos = line->cursorPosition();
+  }
 
   // select item with nearest time, must be done while line edit is blocked
   // as setCurrentItem() calls setText() with triggers KTimeEdit::changedText()
   q->setCurrentIndex( ( mTime.hour() * 4 ) + ( ( mTime.minute() + 7 ) / 15 ) );
 
-  line->setText( text );
-  line->setCursorPosition( pos );
-  line->blockSignals( false );
+  if ( line ) {
+    line->setText( text );
+    line->setCursorPosition( pos );
+    line->blockSignals( false );
+  }
 }
 
 void KTimeEdit::Private::slotActivated( int index )
