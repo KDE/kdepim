@@ -335,9 +335,11 @@ KPIM.MainView {
     clip: true;
     flickableDirection: "VerticalFlick"
 
-    IncidenceEditors.GeneralEditor {
-      id: generalEditor;
-      anchors.fill: parent
+    Item {
+      IncidenceEditors.GeneralEditor {
+        id: generalEditor;
+        anchors.fill: parent
+      }
     }
   }
 
