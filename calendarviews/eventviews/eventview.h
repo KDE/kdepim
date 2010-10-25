@@ -221,7 +221,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     Akonadi::Collection::Id collectionId() const;
 
     //----------------------------------------------------------------------------
-    // TODO_SPLIT: review these collection stuff
     Future::KCheckableProxyModel *takeCustomCollectionSelectionProxyModel();
     Future::KCheckableProxyModel *customCollectionSelectionProxyModel() const;
     void setCustomCollectionSelectionProxyModel( Future::KCheckableProxyModel *model );
