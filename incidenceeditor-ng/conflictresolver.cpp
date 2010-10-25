@@ -299,7 +299,7 @@ void ConflictResolver::findAllFreeSlots()
   //   iterate: through each attendee's busy period
   //     if: the period lies inside our timeframe
   //     then:
-  //       calculate the array index within the timeframe range of the beginning of the busy peiod
+  //       calculate the array index within the timeframe range of the beginning of the busy period
   //       fill from that index until the period ends with a 1, representing busy
   //     fi
   //   etareti
@@ -319,6 +319,7 @@ void ConflictResolver::findAllFreeSlots()
         if( it->end() <= end && it->start() >= begin ) {
           start_index = begin.secsTo( it->start() ) / mSlotResolutionSeconds;
           duration = it->start().secsTo( it->end() ) / mSlotResolutionSeconds;
+          duration -= 1; // vector starts at 0
           // case2: the period begins before our timeframe begins
         } else if( it->start() <= begin && it->end() <= end ) {
           start_index = 0;
@@ -334,16 +335,11 @@ void ConflictResolver::findAllFreeSlots()
         } else {
           kFatal() << "impossible condition reached" << it->start() << it->end();
         }
-//      kDebug() << start_index << "+" << duration << "="
-//               << start_index + duration << "<=" << range;
-        Q_ASSERT( ( start_index + duration ) <= range ); // sanity check
+        //      kDebug() << start_index << "+" << duration << "="
+        //               << start_index + duration << "<=" << range;
+        Q_ASSERT( ( start_index + duration ) < range ); // sanity check
         for ( int i = start_index; i <= start_index + duration; ++i ) {
-          if ( i < fbArray.count() ) {
-            fbArray[i] = 1;
-          } else {
-            kError() << "DEBUG me. This shouldn't happen. start_index = " << start_index
-                     << "; duration = " << duration << "; range = " << range;
-          }
+          fbArray[i] = 1;
         }
       }
     }
