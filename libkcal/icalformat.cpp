@@ -332,8 +332,14 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
     if ( i->schedulingID() != i->uid() ) {
       // We have a separation of scheduling ID and UID
       i = i->clone();
-      i->setUid( i->schedulingID() );
+      // DON'T change this order. setUid() emits incidenceUpdated().
+      // setSchedulingID() doesn't. If you change the order, kolab resource will
+      // catch the signal and think there isn't any schedulingId.
+      // Possible kcal improvement: create a setUids( schedulingId, uid )
+      // that changes both members and emits incidenceuIpdated() at the end.
+      const QString tempId = i->schedulingID();
       i->setSchedulingID( QString::null );
+      i->setUid( tempId );
 
       // Build the message with the cloned incidence
       message = mImpl->createScheduleComponent( i, method );
