@@ -38,6 +38,7 @@
 #include "kleo_assert.h"
 #include "kdpipeiodevice.h"
 #include "log.h"
+#include "cached.h"
 
 #include <kleo/exception.h>
 
@@ -160,6 +161,7 @@ namespace {
             : Output(),
               m_defaultLabel(),
               m_customLabel(),
+              m_errorString(),
               m_isFinalized( false ),
               m_isFinalizing( false ),
               m_cancelPending( false ),
@@ -173,10 +175,9 @@ namespace {
         void setDefaultLabel( const QString & l ) { m_defaultLabel = l; }
 
         /* reimp */ QString errorString() const {
-            if ( shared_ptr<QIODevice> io = ioDevice() )
-                return io->errorString();
-            else
-                return i18n("No output device");
+            if ( m_errorString.dirty() )
+                m_errorString = doErrorString();
+            return m_errorString;
         }
 
         /* reimp */ bool isFinalized() const { return m_isFinalized; }
@@ -205,11 +206,18 @@ namespace {
             }
         }
     private:
+        virtual QString doErrorString() const {
+            if ( shared_ptr<QIODevice> io = ioDevice() )
+                return io->errorString();
+            else
+                return i18n("No output device");
+        }
         virtual void doFinalize() = 0;
         virtual void doCancel() = 0;
     private:
         QString m_defaultLabel;
         QString m_customLabel;
+        mutable cached<QString> m_errorString;
         bool m_isFinalized   : 1;
         bool m_isFinalizing  : 1;
         bool m_cancelPending : 1;
@@ -245,7 +253,8 @@ namespace {
         }
         /* reimp */ QString label() const;
 
-        /* reimp */ QString errorString() const;
+    private:
+        /* reimp */ QString doErrorString() const;
 
     private:
         const QString m_command;
@@ -281,7 +290,9 @@ namespace {
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_buffer; }
         /* reimp */ void doFinalize();
         /* reimp */ void doCancel() {}
-        /* reimp */ QString errorString() const { return QString(); }
+
+    private:
+        /* reimp */ QString doErrorString() const { return QString(); }
     private:
         const QClipboard::Mode m_mode;
         shared_ptr<QBuffer> m_buffer;
@@ -443,7 +454,7 @@ QString ProcessStdInOutput::label() const {
         return i18nc( "e.g. \"Input to tar xf - file\"",      "Input to %1",     cmdline );
 }
 
-QString ProcessStdInOutput::errorString() const {
+QString ProcessStdInOutput::doErrorString() const {
     kleo_assert( m_proc );
     if ( m_proc->exitStatus() == QProcess::NormalExit && m_proc->exitCode() == 0 )
         return QString();
