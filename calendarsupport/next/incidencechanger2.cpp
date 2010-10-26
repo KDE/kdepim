@@ -43,6 +43,9 @@ IncidenceChanger2::Private::Private( IncidenceChanger2 *qq ) : q( qq )
   mLatestOperationId = 0;
   mShowDialogsOnError = true;
   mHistory = new History( q );
+
+  qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
+
 }
 
 IncidenceChanger2::Private::~Private()
@@ -275,7 +278,7 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
   if ( itemsToDelete.isEmpty() ) {
     QVector<Akonadi::Item::Id> itemIdList;
     itemIdList.append( Item().id() );
-    kDebug() << "Items already deleted or beeping deleted, skipping";
+    kDebug() << "Items already deleted or being deleted, skipping";
     // Queued emit because return must be executed first, otherwise caller won't know this workId
     d->emitDeleteFinished( change.changeId, itemIdList, ResultCodeAlreadyDeleted,
                            i18n( "That calendar item was already deleted, or currently being deleted." ) );

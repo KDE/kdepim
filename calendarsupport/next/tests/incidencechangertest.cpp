@@ -66,13 +66,14 @@ class IncidenceChangerTest : public QObject
   QStringList mPendingUpdatesInETM;
   QStringList mPendingDeletesInETM;
 
-  bool mWaitingForSignals;
+  bool mWaitingForIncidenceChangerSignals;
   IncidenceChanger2::ResultCode mExpectedResult;
+  IncidenceChanger2 *mChanger;
 
   private slots:
     void initTestCase()
     {
-      mWaitingForSignals = false;
+      mWaitingForIncidenceChangerSignals = false;
       mExpectedResult = IncidenceChanger2::ResultCodeSuccess;
       //Control::start(); //TODO: uncomment when using testrunner
       qRegisterMetaType<CalendarSupport::IncidenceChanger2::ResultCode>("CalendarSupport::IncidenceChanger2::ResultCode");
@@ -114,8 +115,17 @@ class IncidenceChangerTest : public QObject
                                                  mCalendarModel,
                                                  KSystemTimeZones::local() );
 
-      IncidenceChanger2 *changer = new IncidenceChanger2( mCalendar );
-      changer->setShowDialogsOnError( false );
+      mChanger = new IncidenceChanger2( mCalendar );
+      mChanger->setShowDialogsOnError( false );
+
+      connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+               SLOT(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+
+      connect( mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+               SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+
+      connect( mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+               SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
       connect( mCalendarModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
                SLOT(rowsInserted(QModelIndex,int,int)) );
@@ -125,29 +135,72 @@ class IncidenceChangerTest : public QObject
 
       connect( mCalendarModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
                SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
-
     }
 
     void testCreating()
     {
+      int changeId;
+
+      { // Create 5 incidences, wait for the signal.
+        for ( int i = 0; i < 5; ++i ) {
+          const QString uid( "uid" + QString::number( i ) );
+          const QString summary( "summary" + QString::number( i ) );
+          Incidence::Ptr incidence( new Event() );
+          incidence->setUid( uid );
+          incidence->setSummary( summary );
+          mPendingInsertsInETM.append( uid );
+          int changeId = mChanger->createIncidence( incidence,
+                                                    mCollection );
+          QVERIFY( changeId != -1 );
+        }
+        waitForSignals();
+      }
+
+      { // Invalid parameters
+        changeId = mChanger->createIncidence( Incidence::Ptr(), // Invalid payload
+                                              mCollection );
+        QVERIFY( changeId == -1 );
+      }
+
+    }
+
+    void testDeleting()
+    {
+      int changeId;
+      const Item::List incidences = mCalendar->rawIncidences();
+
+      { // Delete 5 incidences, previously created
+        foreach( const Item &item, incidences ) {
+          mPendingDeletesInETM.append( item.payload<Incidence::Ptr>()->uid() );
+        }
+        changeId = mChanger->deleteIncidences( incidences );
+        QVERIFY( changeId != -1 );
+        waitForSignals();
+      }
+
+      { // Delete something already deleted
+        mWaitingForIncidenceChangerSignals = true;
+        changeId = mChanger->deleteIncidences( incidences );
+        QVERIFY( changeId != -1 );
+        mExpectedResult = IncidenceChanger2::ResultCodeAlreadyDeleted;
+        waitForSignals();
+      }
+
     }
 
     void testModifying()
     {
     }
 
-    void testDeleting()
-    {
-    }
 
   public Q_SLOTS:
 
-    void waitForETMorSignals()
+    void waitForSignals()
     {
       while ( !mPendingInsertsInETM.isEmpty() ||
               !mPendingUpdatesInETM.isEmpty() ||
               !mPendingDeletesInETM.isEmpty() ||
-              mWaitingForSignals ) {
+              mWaitingForIncidenceChangerSignals ) {
         QTest::qWait( 1000 );
       }
     }
@@ -180,6 +233,32 @@ class IncidenceChangerTest : public QObject
         i = i.sibling( row, topLeft.column() );
       }
     }
+
+    void rowsAboutToBeRemoved( const QModelIndex &index, int start, int end )
+    {
+      Item::List list = itemsFromModel( mCalendarModel, index, start, end );
+      foreach( const Item &item, list ) {
+        Incidence::Ptr incidence = CalendarSupport::incidence( item );
+        if ( incidence && mPendingDeletesInETM.contains( incidence->uid() ) )
+          mPendingDeletesInETM.removeAll( incidence->uid() );
+      }
+    }
+
+  void deleteFinished( int changeId,
+                       const QVector<Akonadi::Item::Id> &deletedIds,
+                       CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                       const QString &errorMessage )
+  {
+    Q_UNUSED( changeId );
+    Q_UNUSED( deletedIds );
+    if ( resultCode != IncidenceChanger2::ResultCodeSuccess )
+      kDebug() << "Error string is " << errorMessage;
+
+    QVERIFY( resultCode == mExpectedResult );
+    mExpectedResult = IncidenceChanger2::ResultCodeSuccess;
+    mWaitingForIncidenceChangerSignals = false;
+  }
+
 };
 
 // For undo/redo buttons

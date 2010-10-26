@@ -223,7 +223,7 @@ void History::Private::updateIds( Item::Id oldId, Item::Id newId )
 
   for ( int i = 0; i < stacks.count(); ++i ) {
     QStack<Entry>::iterator j;
-    for ( j = stacks[0]->begin(); j != stacks[i]->end(); ++j ) {
+    for ( j = stacks[i]->begin(); j != stacks[i]->end(); ++j ) {
       Item::List::iterator k;
       for ( k = (*j).oldItems.begin(); k != (*j).oldItems.end(); ++k ) {
         if ( (*k).id() == oldId ) {
