@@ -32,7 +32,7 @@
 
 #include <config-kleopatra.h>
 
-#include "mainwindow.h"
+#include "mainwindow_desktop.h"
 #include "aboutdata.h"
 
 #include "models/keylistmodel.h"
@@ -500,4 +500,4 @@ void MainWindow::dropEvent( QDropEvent * e ) {
     e->accept();
 }
 
-#include "moc_mainwindow.cpp"
+#include "moc_mainwindow_desktop.cpp"

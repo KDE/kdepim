@@ -325,7 +325,7 @@ else(KDEPIM_ONLY_KLEO)
 endif(KDEPIM_ONLY_KLEO)
 
 set( _kleopatra_mainwindow_SRCS
-     mainwindow.cpp 
+     mainwindow_desktop.cpp 
 )
 
 add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
