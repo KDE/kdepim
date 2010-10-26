@@ -269,7 +269,8 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
     } else {
       foreach(const QByteArray &ba, pendingItems) {
         static const QSet<QByteArray> staticEmptySet;
-        m_threads.insert(ba, staticEmptySet);
+        if ( !m_threads.contains( ba ) )
+          m_threads.insert(ba, staticEmptySet);
       }
     }
   }
