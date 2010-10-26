@@ -129,7 +129,10 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     virtual CalendarSupport::Calendar *calendar() const;
 
-    virtual void setPreferences( const PrefsPtr &preferences );
+    /*
+      update config is called after prefs are set.
+    */
+    void setPreferences( const PrefsPtr &preferences );
     PrefsPtr preferences() const;
 
     virtual void setKCalPreferences( const KCalPrefsPtr &preferences );

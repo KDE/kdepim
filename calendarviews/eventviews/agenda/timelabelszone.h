@@ -64,6 +64,9 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
 
     QList<QScrollArea*> timeLabels() const;
 
+    void setPreferences( const PrefsPtr &prefs );
+    PrefsPtr preferences() const;
+
     /** Checks how much agenda is scrolled relative to it's QScrollArea
         and makes each TimeLabels scroll that amount
     */

@@ -220,6 +220,10 @@ class Agenda::Private
     }
 
   public:
+    PrefsPtr preferences() const {
+      return mAgendaView->preferences();
+    }
+
     AgendaView *mAgendaView;
     QScrollArea *mScrollArea;
 
@@ -351,7 +355,7 @@ Akonadi::Item::Id Agenda::lastSelectedItemId() const
 void Agenda::init()
 {
   d->mGridSpacingX = static_cast<double>( d->mScrollArea->width() ) / d->mColumns;
-  d->mDesiredGridSpacingY = d->mAgendaView->preferences()->hourSize();
+  d->mDesiredGridSpacingY = d->preferences()->hourSize();
   if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {
     d->mDesiredGridSpacingY = 10;
   }
@@ -864,7 +868,7 @@ void Agenda::endSelectAction( const QPoint &currentPos )
 
   emit newTimeSpanSignal( d->mSelectionStartCell, d->mSelectionEndCell );
 
-  if ( d->mAgendaView->preferences()->selectionStartsEditor() ) {
+  if ( d->preferences()->selectionStartsEditor() ) {
     if ( ( d->mSelectionStartPoint - currentPos ).manhattanLength() >
          QApplication::startDragDistance() ) {
        emit newEventSignal();
@@ -1184,7 +1188,7 @@ void Agenda::endItemAction()
         emit startMultiModify( i18n( "Dissociate event from recurrence" ) );
         KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
         KCalCore::Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
-          inc, d->mActionItem->itemDate(), d->mAgendaView->preferences()->timeSpec() ) );
+          inc, d->mActionItem->itemDate(), d->preferences()->timeSpec() ) );
         if ( newInc ) {
           // don't recreate items, they already have the correct position
           d->mAgendaView->enableAgendaUpdate( false );
@@ -1223,7 +1227,7 @@ void Agenda::endItemAction()
         emit startMultiModify( i18n( "Split future recurrences" ) );
         KCalCore::Incidence::Ptr oldIncSaved( incidence->clone() );
         KCalCore::Incidence::Ptr newInc( d->mCalendar->dissociateOccurrence(
-          inc, d->mActionItem->itemDate(), d->mAgendaView->preferences()->timeSpec(), false ) );
+          inc, d->mActionItem->itemDate(), d->preferences()->timeSpec(), false ) );
         if ( newInc ) {
           d->mAgendaView->enableAgendaUpdate( false );
 
@@ -1495,13 +1499,13 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
   db.fill(); // We don't want to see leftovers from previous paints
   QPainter dbp( &db );
   // TODO: CHECK THIS
-  //  if ( ! mAgendaView->preferences()->agendaGridBackgroundImage().isEmpty() ) {
-  //    QPixmap bgImage( d->mAgendaView->preferences()->agendaGridBackgroundImage() );
+  //  if ( ! d->preferences()->agendaGridBackgroundImage().isEmpty() ) {
+  //    QPixmap bgImage( d->preferences()->agendaGridBackgroundImage() );
   //    dbp.drawPixmap( 0, 0, cw, ch, bgImage ); FIXME
   //  }
 
   dbp.fillRect( 0, 0, cw, ch,
-                d->mAgendaView->preferences()->agendaGridBackgroundColor() );
+                d->preferences()->agendaGridBackgroundColor() );
 
   dbp.translate( -cx, -cy );
 
@@ -1515,7 +1519,7 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 
   // Highlight working hours
   if ( d->mWorkingHoursEnable && d->mHolidayMask ) {
-    const QColor workColor = d->mAgendaView->preferences()->agendaGridWorkHoursBackgroundColor();
+    const QColor workColor = d->preferences()->agendaGridWorkHoursBackgroundColor();
 
     QPoint pt1( cx, d->mWorkingHoursYTop );
     QPoint pt2( cx + cw, d->mWorkingHoursYBottom );
@@ -1561,12 +1565,12 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
   }
 
   // busy days
-  if ( d->mAgendaView->preferences()->colorAgendaBusyDays() && !d->mAllDayMode ) {
+  if ( d->preferences()->colorAgendaBusyDays() && !d->mAllDayMode ) {
     for ( int i = 0; i < busyDayMask.count(); ++i ) {
       if ( busyDayMask[i] ) {
         const QPoint pt1( cx + d->mGridSpacingX * i, 0 );
         // const QPoint pt2( cx + mGridSpacingX * ( i+1 ), ch );
-        QColor busyColor = d->mAgendaView->preferences()->viewBgBusyColor();
+        QColor busyColor = d->preferences()->viewBgBusyColor();
         busyColor.setAlpha( EventViews::BUSY_BACKGROUND_ALPHA );
         dbp.fillRect( pt1.x(), pt1.y(), d->mGridSpacingX, cy + ch, busyColor );
       }
@@ -1581,26 +1585,26 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
       // draw start day
       pt = gridToContents( d->mSelectionStartCell );
       pt1 = gridToContents( QPoint( d->mSelectionStartCell.x() + 1, d->mRows + 1 ) );
-      dbp.fillRect( QRect( pt, pt1 ), d->mAgendaView->preferences()->agendaGridHighlightColor() );
+      dbp.fillRect( QRect( pt, pt1 ), d->preferences()->agendaGridHighlightColor() );
       // draw all other days between the start day and the day of the selection end
       for ( int c = d->mSelectionStartCell.x() + 1; c < d->mSelectionEndCell.x(); ++c ) {
         pt = gridToContents( QPoint( c, 0 ) );
         pt1 = gridToContents( QPoint( c + 1, d->mRows + 1 ) );
-        dbp.fillRect( QRect( pt, pt1 ), d->mAgendaView->preferences()->agendaGridHighlightColor() );
+        dbp.fillRect( QRect( pt, pt1 ), d->preferences()->agendaGridHighlightColor() );
       }
       // draw end day
       pt = gridToContents( QPoint( d->mSelectionEndCell.x(), 0 ) );
       pt1 = gridToContents( d->mSelectionEndCell + QPoint( 1, 1 ) );
-      dbp.fillRect( QRect( pt, pt1 ), d->mAgendaView->preferences()->agendaGridHighlightColor() );
+      dbp.fillRect( QRect( pt, pt1 ), d->preferences()->agendaGridHighlightColor() );
     } else { // single day selection
       pt = gridToContents( d->mSelectionStartCell );
       pt1 = gridToContents( d->mSelectionEndCell + QPoint( 1, 1 ) );
-      dbp.fillRect( QRect( pt, pt1 ), d->mAgendaView->preferences()->agendaGridHighlightColor() );
+      dbp.fillRect( QRect( pt, pt1 ), d->preferences()->agendaGridHighlightColor() );
     }
   }
 
-  QPen hourPen( d->mAgendaView->preferences()->agendaGridBackgroundColor().dark( 150 ) );
-  QPen halfHourPen( d->mAgendaView->preferences()->agendaGridBackgroundColor().dark( 125 ) );
+  QPen hourPen( d->preferences()->agendaGridBackgroundColor().dark( 150 ) );
+  QPen halfHourPen( d->preferences()->agendaGridBackgroundColor().dark( 125 ) );
   dbp.setPen( hourPen );
 
   // Draw vertical lines of grid, start with the last line not yet visible
@@ -1762,7 +1766,7 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const QDate
   agendaItem->setCellXY( X, YTop, YBottom );
   agendaItem->setCellXRight( X );
   agendaItem->setResourceColor( EventViews::resourceColor( incidence,
-                                                           d->mAgendaView->preferences() ) );
+                                                           d->preferences() ) );
   agendaItem->installEventFilter( this );
 
   agendaItem->move( int( X * d->mGridSpacingX ), int( YTop * d->mGridSpacingY ) );
@@ -1809,7 +1813,7 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
 
   agendaItem->installEventFilter( this );
   agendaItem->setResourceColor( EventViews::resourceColor( incidence,
-                                                           d->mAgendaView->preferences() ) );
+                                                           d->preferences() ) );
   agendaItem->move( int( XBegin * d->mGridSpacingX ), 0 ) ;
   d->mItems.append( agendaItem );
 
@@ -2063,7 +2067,7 @@ void Agenda::updateConfig()
 {
   double oldGridSpacingY = d->mGridSpacingY;
 
-  d->mDesiredGridSpacingY = d->mAgendaView->preferences()->hourSize();
+  d->mDesiredGridSpacingY = d->preferences()->hourSize();
   if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {
     d->mDesiredGridSpacingY = 10;
   }
@@ -2203,11 +2207,11 @@ void Agenda::calculateWorkingHours()
 {
   d->mWorkingHoursEnable = !d->mAllDayMode;
 
-  QTime tmp = d->mAgendaView->preferences()->workingHoursStart().time();
+  QTime tmp = d->preferences()->workingHoursStart().time();
   d->mWorkingHoursYTop = int( 4 * d->mGridSpacingY *
                               ( tmp.hour() + tmp.minute() / 60. +
                                 tmp.second() / 3600. ) );
-  tmp = d->mAgendaView->preferences()->workingHoursEnd().time();
+  tmp = d->preferences()->workingHoursEnd().time();
   d->mWorkingHoursYBottom = int( 4 * d->mGridSpacingY *
                                  ( tmp.hour() + tmp.minute() / 60. +
                                    tmp.second() / 3600. ) - 1 );

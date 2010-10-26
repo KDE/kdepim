@@ -46,7 +46,7 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
   public:
     typedef QList<TimeLabels *> List;
 
-    TimeLabels( const KDateTime::Spec &spec, int rows, const PrefsPtr &preferences,
+    TimeLabels( const KDateTime::Spec &spec, int rows,
                 TimeLabelsZone *parent = 0, Qt::WFlags f = 0 );
 
     /** Calculates the minimum width */
@@ -96,7 +96,6 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
     int mMiniWidth;
     Agenda *mAgenda;
     TimeLabelsZone *mTimeLabelsZone;
-    PrefsPtr mPrefs;
 
     QFrame *mMousePos;  // shows a marker for the current mouse position in y direction
 };

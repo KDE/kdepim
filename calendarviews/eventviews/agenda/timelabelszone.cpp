@@ -77,7 +77,7 @@ void TimeLabelsZone::init()
 void TimeLabelsZone::addTimeLabels( const KDateTime::Spec &spec )
 {
   QScrollArea *area = new QScrollArea( this );
-  TimeLabels *labels = new TimeLabels( spec, 24, mPrefs, this );
+  TimeLabels *labels = new TimeLabels( spec, 24, this );
   mTimeLabelsList.prepend( area );
   area->setWidgetResizable( true );
   area->setWidget( labels );
@@ -156,6 +156,18 @@ void TimeLabelsZone::updateTimeLabelsPosition()
         area->verticalScrollBar()->setValue( adjustment );
       }
     }
+  }
+}
+
+PrefsPtr TimeLabelsZone::preferences() const
+{
+  return mPrefs;
+}
+
+void TimeLabelsZone::setPreferences( const PrefsPtr &prefs )
+{
+  if ( prefs != mPrefs ) {
+    mPrefs = prefs;
   }
 }
 

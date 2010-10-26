@@ -39,16 +39,17 @@
 
 using namespace EventViews;
 
-TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows, const PrefsPtr &preferences,
+TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
                         TimeLabelsZone *parent, Qt::WFlags f )
-  : QFrame( parent, f ), mPrefs( preferences )
+  : QFrame( parent, f )
 {
   mTimeLabelsZone = parent;
   mSpec = spec;
   mRows = rows;
   mMiniWidth = 0;
 
-  mCellHeight = mPrefs->hourSize() * 4;
+  mCellHeight = mTimeLabelsZone->preferences()->hourSize() * 4;
+  kDebug() << "DEBUG " << mCellHeight;
 
   setFrameStyle( Plain );
 
@@ -94,9 +95,9 @@ void TimeLabels::colorMousePos()
 {
   QPalette pal;
   pal.setColor( QPalette::Window, // for Oxygen
-                mPrefs->agendaMarcusBainsLineLineColor() );
+                mTimeLabelsZone->preferences()->agendaMarcusBainsLineLineColor() );
   pal.setColor( QPalette::WindowText, // for Plastique
-                mPrefs->agendaMarcusBainsLineLineColor() );
+                mTimeLabelsZone->preferences()->agendaMarcusBainsLineLineColor() );
   mMousePos->setPalette( pal );
 }
 
@@ -119,7 +120,7 @@ int TimeLabels::minimumWidth() const
 /** updates widget's internal state */
 void TimeLabels::updateConfig()
 {
-  setFont( mPrefs->agendaTimeLabelsFont() );
+  setFont( mTimeLabelsZone->preferences()->agendaTimeLabelsFont() );
 
   QString test = "20";
   if ( KGlobal::locale()->use12Clock() ) {
@@ -144,7 +145,7 @@ void TimeLabels::updateConfig()
   }
 
   // update HourSize
-  mCellHeight = mPrefs->hourSize() * 4;
+  mCellHeight = mTimeLabelsZone->preferences()->hourSize() * 4;
   // If the agenda is zoomed out so that more than 24 would be shown,
   // the agenda only shows 24 hours, so we need to take the cell height
   // from the agenda, which is larger than the configured one!
@@ -184,7 +185,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
 
   const int beginning = !mSpec.isValid() ? 0 :
                                            ( mSpec.timeZone().currentOffset() -
-                                             mPrefs->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
+                                             mTimeLabelsZone->preferences()->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
 
   // bug:  the parameters cx and cw are the areas that need to be
   //       redrawn, not the area of the widget.  unfortunately, this
@@ -200,7 +201,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
   QFontMetrics fm = fontMetrics();
   QString hour;
   int timeHeight = fm.ascent();
-  QFont hourFont = mPrefs->agendaTimeLabelsFont();
+  QFont hourFont = mTimeLabelsZone->preferences()->agendaTimeLabelsFont();
   p.setFont( font() );
 
   //TODO: rewrite this using KLocale's time formats. "am/pm" doesn't make sense
@@ -300,22 +301,22 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
     popup.addAction( KIcon( "edit-delete" ),
                      i18n( "&Remove Timezone %1", mSpec.timeZone().name() ) );
   if ( !mSpec.isValid() ||
-       !mPrefs->timeScaleTimezones().count() ||
-       mSpec == mPrefs->timeSpec() ) {
+       !mTimeLabelsZone->preferences()->timeScaleTimezones().count() ||
+       mSpec == mTimeLabelsZone->preferences()->timeSpec() ) {
     removeTimeZone->setEnabled( false );
   }
 
   QAction *activatedAction = popup.exec( QCursor::pos() );
   if ( activatedAction == editTimeZones ) {
-    QPointer<TimeScaleConfigDialog> dialog = new TimeScaleConfigDialog( mPrefs, this );
+    QPointer<TimeScaleConfigDialog> dialog = new TimeScaleConfigDialog( mTimeLabelsZone->preferences(), this );
     if ( dialog->exec() == QDialog::Accepted ) {
       mTimeLabelsZone->reset();
     }
     delete dialog;
   } else if ( activatedAction == removeTimeZone ) {
-    QStringList list = mPrefs->timeScaleTimezones();
+    QStringList list = mTimeLabelsZone->preferences()->timeScaleTimezones();
     list.removeAll( mSpec.timeZone().name() );
-    mPrefs->setTimeScaleTimezones( list );
+    mTimeLabelsZone->preferences()->setTimeScaleTimezones( list );
     mTimeLabelsZone->reset();
     hide();
     deleteLater();

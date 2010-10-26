@@ -555,6 +555,7 @@ void MultiAgendaView::setIncidenceChanger( CalendarSupport::IncidenceChanger *ch
 void MultiAgendaView::updateConfig()
 {
   EventView::updateConfig();
+  d->mTimeLabelsZone->setPreferences( preferences() );
   d->mTimeLabelsZone->updateAll();
   foreach ( AgendaView *agenda, d->mAgendaViews ) {
     agenda->updateConfig();

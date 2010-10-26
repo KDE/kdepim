@@ -1109,6 +1109,7 @@ void AgendaView::updateConfig()
   if ( d->mAgenda && d->mAllDayAgenda ) {
     d->mAgenda->updateConfig();
     d->mAllDayAgenda->updateConfig();
+    d->mTimeLabelsZone->setPreferences( preferences() );
     d->mTimeLabelsZone->updateAll();
     updateTimeBarWidth();
     setHolidayMasks();
