@@ -19,6 +19,7 @@
 
 
 #include "mobilekernel.h"
+#include <mailcommon/filtermanager.h>
 #include <mailcommon/mailkernel.h>
 #include <mailcommon/jobscheduler.h>
 #include <kpimidentities/identitymanager.h>
@@ -28,7 +29,7 @@ using namespace MailCommon;
 
 static MobileKernel * mySelf = 0;
 
-MobileKernel::MobileKernel()
+MobileKernel::MobileKernel() : mMonitor( 0 ), mCollectionModel( 0 ), mMessageSender( 0 ), mConfig( 0 )
 {
   CommonKernel; //init
   
@@ -36,8 +37,17 @@ MobileKernel::MobileKernel()
   mIdentityManager = new KPIMIdentities::IdentityManager( false, 0, "mIdentityManager" );
 
   mMessageSender = new AkonadiSender;
+  CommonKernel->registerKernelIf( this ); //register KernelIf early, it is used by the Filter classes
 
-  CommonKernel->registerKernelIf( this );
+  mFilterManager = new FilterManager();
+  mPopFilterManager = new FilterManager( true );
+  mFilterActionDict = new FilterActionDict();
+  CommonKernel->registerFilterIf( this );
+
+  //readConfig needs the registered FilterIf above
+  mFilterManager->readConfig();
+  mPopFilterManager->readConfig();
+
   CommonKernel->registerSettingsIf( this );
 }
 
@@ -117,3 +127,29 @@ QStringList MobileKernel::customTemplates()
 {
   return QStringList(); //TODO: implement
 }
+
+FilterManager* MobileKernel::filterManager() const
+{
+  return mFilterManager;
+}
+
+FilterManager* MobileKernel::popFilterManager() const
+{
+  return mPopFilterManager;
+}
+
+FilterActionDict* MobileKernel::filterActionDict() const
+{
+  return mFilterActionDict;
+}
+
+void MobileKernel::openFilterDialog(bool popFilter, bool createDummyFilter)
+{
+  //TODO: Implement filter dialog for mobile
+}
+
+void MobileKernel::createFilter(const QByteArray& field, const QString& value)
+{
+  //TODO: Implement for mobile (call the dialog with predefined values)
+}
+

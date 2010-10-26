@@ -38,7 +38,7 @@ namespace MailCommon {
   class JobScheduler;
 }
 
-class MobileKernel : public MailCommon::IKernel, public MailCommon::ISettings
+class MobileKernel : public MailCommon::IKernel, public MailCommon::ISettings, public MailCommon::IFilter
 {
 
 public:
@@ -65,6 +65,12 @@ public:
     /*reimp*/ bool showPopupAfterDnD();
     /*reimp*/ QStringList customTemplates();
 
+//IFilter methods:
+    virtual void createFilter(const QByteArray& field, const QString& value);
+    virtual MailCommon::FilterActionDict* filterActionDict() const;
+    virtual MailCommon::FilterManager* filterManager() const;
+    virtual void openFilterDialog(bool popFilter = false, bool createDummyFilter = true);
+    virtual MailCommon::FilterManager* popFilterManager() const;
 
     /*reimp*/ ~MobileKernel();
 
@@ -77,6 +83,9 @@ private:
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
     AkonadiSender *mMessageSender;
     KSharedConfig::Ptr mConfig;
+    MailCommon::FilterManager *mFilterManager;
+    MailCommon::FilterManager *mPopFilterManager;
+    MailCommon::FilterActionDict *mFilterActionDict;
 };
 
 #endif // MOBILEKERNEL_H

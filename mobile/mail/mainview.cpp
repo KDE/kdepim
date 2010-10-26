@@ -99,6 +99,7 @@
 #include <qmllistselectionmodel.h>
 #include <qmlcheckableproxymodel.h>
 #include <akonadibreadcrumbnavigationfactory.h>
+#include <mailcommon/filtermanager.h>
 
 Q_DECLARE_METATYPE( KMime::Content* )
 QML_DECLARE_TYPE( MessageViewer::MessageViewItem )
@@ -296,6 +297,7 @@ void MainView::delayedInit()
   connect( actionCollection()->action( "show_expire_properties" ), SIGNAL( triggered( bool ) ), SLOT( showExpireProperties() ) );
   connect( actionCollection()->action( "move_all_to_trash" ), SIGNAL( triggered( bool ) ), SLOT( moveToOrEmptyTrash() ) );
   connect( actionCollection()->action( "create_todo_reminder" ), SIGNAL( triggered( bool ) ), SLOT( createToDo() ) );
+  connect( actionCollection()->action( "apply_filters" ), SIGNAL( triggered( bool ) ), SLOT( applyFilters() ) );
 
   connect( itemSelectionModel()->model(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SLOT( dataChanged() ) );
 
@@ -1031,6 +1033,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall emails" ) );
 
   connect( collectionSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), this, SLOT( folderChanged() ) );
+  connect( itemActionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), this, SLOT( itemActionModelChanged() ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
@@ -1321,6 +1324,25 @@ void MainView::templateFetchResult( KJob* job)
   ComposerView *composer = new ComposerView;
   composer->setMessage( newMsg );
   composer->show();
+}
+
+void MainView::applyFilters()
+{
+  Item::List items;
+
+  foreach ( const QModelIndex &index, itemActionModel()->selectedRows() ) {
+    const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+    if ( item.isValid() )
+      items << item;
+  }
+
+  FilterIf->filterManager()->applyFilters( items );
+}
+
+void MainView::itemActionModelChanged()
+{
+  QModelIndexList indexes = itemActionModel()->selectedRows();
+  actionCollection()->action( "apply_filters" )->setEnabled( !indexes.isEmpty() );
 }
 
 

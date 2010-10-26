@@ -118,6 +118,10 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
 
   action = actionCollection->addAction("create_todo_reminder");
   action->setText( i18n("Create To-Do/Reminder") );
+
+  action = actionCollection->addAction("apply_filters");
+  action->setText( i18n("Apply Filters") );
+  action->setEnabled( false );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

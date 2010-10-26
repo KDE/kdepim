@@ -107,8 +107,10 @@ class MainView : public KDeclarativeMainView
     void moveToOrEmptyTrash();
     void createToDo();
     void useFixedFont();
+    void applyFilters();
 
     void itemSelectionChanged();
+    void itemActionModelChanged();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

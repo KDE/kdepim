@@ -612,6 +612,9 @@ KPIM.MainView {
     KPIM.Action {
       action: application.getAction( "akonadi_mark_as_action_item", "" );
     }
+    KPIM.Action {
+      action: application.getAction( "apply_filters", "" );
+    }
   }
 
   ConfigDialog {
