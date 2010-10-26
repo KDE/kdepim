@@ -454,8 +454,11 @@ static QStringList format( const std::vector<Mailbox> & mbxs ) {
     return res;
 }
 
-static QString formatVerificationResultDetails( const VerificationResult & res, const DecryptVerifyResult::SenderInfo & info )
+static QString formatVerificationResultDetails( const VerificationResult & res, const DecryptVerifyResult::SenderInfo & info, const QString& errorString )
 {
+    if( (res.error().code() == GPG_ERR_EIO || res.error().code() == GPG_ERR_NO_DATA) && !errorString.isEmpty() )
+        return i18n( "Input error: %1", errorString );
+
     const std::vector<Signature> sigs = res.signatures();
     const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
     QString details;
@@ -470,7 +473,7 @@ static QString formatVerificationResultDetails( const VerificationResult & res, 
 
 static QString formatDecryptionResultDetails( const DecryptionResult & res, const std::vector<Key> & recipients, const QString& errorString )
 {
-    if( !errorString.isEmpty() )
+    if( (res.error().code() == GPG_ERR_EIO || res.error().code() == GPG_ERR_NO_DATA) && !errorString.isEmpty() )
         return i18n( "Input error: %1", errorString );
 
     if ( res.isNull() || !res.error() || res.error().isCanceled() )
@@ -514,7 +517,7 @@ static QString formatDecryptVerifyResultDetails( const DecryptionResult & dr,
     const QString drDetails = formatDecryptionResultDetails( dr, recipients, errorString );
     if ( IsErrorOrCanceled( dr ) || !relevantInDecryptVerifyContext( vr ) )
         return drDetails;
-    return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr, info );
+    return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr, info, errorString );
 }
 
 } // anon namespace
@@ -713,7 +716,7 @@ QString DecryptVerifyResult::details() const
     if ( d->isDecryptOnly() )
         return formatDecryptionResultDetails( d->m_decryptionResult, KeyCache::instance()->findRecipients( d->m_decryptionResult ), errorString() );
     if ( d->isVerifyOnly() )
-        return formatVerificationResultDetails( d->m_verificationResult, d->makeSenderInfo() );
+        return formatVerificationResultDetails( d->m_verificationResult, d->makeSenderInfo(), errorString() );
     return formatDecryptVerifyResultDetails( d->m_decryptionResult,
     d->m_verificationResult, KeyCache::instance()->findRecipients(
     d->m_decryptionResult ), d->makeSenderInfo(), errorString() );
@@ -986,6 +989,13 @@ void DecryptTask::Private::slotResult( const DecryptionResult& result, const QBy
         }
     }
 
+    const int drErr = result.error().code();
+    const QString errorString = m_output->errorString();
+    if ( (drErr == GPG_ERR_EIO || drErr == GPG_ERR_NO_DATA) && !errorString.isEmpty() ) {
+        emitResult( q->fromDecryptResult( result.error(), errorString, auditLog ) );
+        return;
+    }
+
     emitResult( q->fromDecryptResult( result, plainText, auditLog ) );
 }
 
@@ -1129,6 +1139,13 @@ void VerifyOpaqueTask::Private::slotResult( const VerificationResult& result, co
             emitResult( q->fromDecryptResult( make_error( GPG_ERR_INTERNAL ), i18n("Caught unknown exception"), auditLog ) );
             return;
         }
+    }
+
+    const int drErr = result.error().code();
+    const QString errorString = m_output->errorString();
+    if ( (drErr == GPG_ERR_EIO || drErr == GPG_ERR_NO_DATA) && !errorString.isEmpty() ) {
+        emitResult( q->fromDecryptResult( result.error(), errorString, auditLog ) );
+        return;
     }
 
     emitResult( q->fromVerifyOpaqueResult( result, plainText, auditLog ) );
