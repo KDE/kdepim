@@ -48,11 +48,12 @@ class MonthViewItem : public DeclarativeAkonadiItem
     void setPreferences( const PrefsPtr &preferences );
     PrefsPtr preferences() const;
 
-    void updateConfig();
-
   Q_SIGNALS:
     void dateClicked( const QDate &date );
     void itemSelected( qint64 selectedItemId, const QDate &activeDate );
+
+  public Q_SLOTS:
+    void updateConfig();
 
   private Q_SLOTS:
     void emitDateClicked();

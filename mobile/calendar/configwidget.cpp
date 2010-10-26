@@ -246,6 +246,7 @@ void DeclarativeConfigWidget::load()
 void DeclarativeConfigWidget::save()
 {
   mConfigWidget->save();
+  emit configChanged();
 }
 
 #include "configwidget.moc"

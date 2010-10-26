@@ -67,6 +67,9 @@ class DeclarativeConfigWidget : public QGraphicsProxyWidget
     void load();
     void save();
 
+  Q_SIGNALS:
+    void configChanged();
+
   private:
     ConfigWidget *mConfigWidget;
 };

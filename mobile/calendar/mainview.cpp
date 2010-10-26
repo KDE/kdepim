@@ -229,6 +229,13 @@ void MainView::qmlLoadingStateChanged( QDeclarativeView::Status status )
   Q_ASSERT( configWidget );
   if ( configWidget )
     configWidget->setPreferences( m_calendarPrefs );
+
+  connect( configWidget, SIGNAL(configChanged()),
+           agendaViewItem, SLOT(updateConfig()) );
+
+  connect( configWidget, SIGNAL(configChanged()),
+           monthViewItem, SLOT(updateConfig()) );
+
 }
 
 void MainView::finishEdit( QObject *editor )

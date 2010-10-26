@@ -79,8 +79,6 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     void setPreferences( const PrefsPtr &preferences );
     PrefsPtr preferences() const;
 
-    void updateConfig();
-
   public slots:
     /** Unselects currently selected incidences */
     void clearSelection();
@@ -89,6 +87,8 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     void gotoNext();
     /** Show the preceeding date range. */
     void gotoPrevious();
+
+    void updateConfig();
 
   signals:
     void itemSelected( Akonadi::Item item, const QDate &activeDate );
