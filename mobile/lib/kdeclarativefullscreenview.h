@@ -51,7 +51,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     virtual bool winEvent ( MSG * message, long * result );
 #endif
 
-  public slots:
+  public Q_SLOTS:
     /** Triggers de-fullscreen/task switcher */
     void triggerTaskSwitcher();
 
@@ -69,13 +69,13 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     
     KActionCollection* actionCollection() const;
 
-  protected slots:
+  protected Q_SLOTS:
     /** Most initialization work should be done here instead of the ctor.
      * @note: Remember to call the base class implementation when overwriting this.
      */
     virtual void delayedInit();
 
-  private slots:
+  private Q_SLOTS:
     void setQmlFile( const QString &source );
     void slotStatusChanged ( QDeclarativeView::Status );
 
