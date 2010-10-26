@@ -31,10 +31,12 @@
 #include "tasksexporthandler.h"
 #include "tasksimporthandler.h"
 
+#include <incidenceeditor-ng/incidencedefaults.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarutils.h>
 #include <calendarsupport/freebusymanager.h>
 #include <calendarsupport/utils.h>
+#include <calendarsupport/kcalprefs.h>
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
@@ -160,9 +162,26 @@ void MainView::newTask()
   item.setMimeType( KCalCore::Todo::todoMimeType() );
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
 
-  // make it due one day from now
-  todo->setDtStart( KDateTime::currentLocalDateTime() );
-  todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
+  { // Set some defaults
+    IncidenceEditorNG::IncidenceDefaults defaults;
+    // Set the full emails manually here, to avoid that we get dependencies on
+    // KCalPrefs all over the place.
+    defaults.setFullEmails( CalendarSupport::KCalPrefs::instance()->fullEmails() );
+    // NOTE: At some point this should be generalized. That is, we now use the
+    //       freebusy url as a hack, but this assumes that the user has only one
+    //       groupware account. Which doesn't have to be the case necessarily.
+    //       This method should somehow depend on the calendar selected to which
+    //       the incidence is added.
+    if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() )
+      defaults.setGroupWareDomain( KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+
+    // make it due one day from now
+    const KDateTime now = KDateTime::currentLocalDateTime();
+    defaults.setStartDateTime( now );
+    defaults.setEndDateTime( now.addDays( 1 ) );
+
+    defaults.setDefaults( todo );
+  }
 
   item.setPayload<KCalCore::Todo::Ptr>( todo );
   editor->load( item );
