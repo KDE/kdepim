@@ -446,8 +446,11 @@ static QString formatVerificationResultDetails( const VerificationResult & res, 
     return details;
 }
 
-static QString formatDecryptionResultDetails( const DecryptionResult & res, const std::vector<Key> & recipients )
+static QString formatDecryptionResultDetails( const DecryptionResult & res, const std::vector<Key> & recipients, const QString& errorString )
 {
+    if( !errorString.isEmpty() )
+        return i18n( "Input error: %1", errorString );
+
     if ( res.isNull() || !res.error() || res.error().isCanceled() )
         return QString();
 
@@ -483,9 +486,10 @@ static QString formatDecryptVerifyResultOverview( const DecryptionResult & dr, c
 static QString formatDecryptVerifyResultDetails( const DecryptionResult & dr,
                                                  const VerificationResult & vr,
                                                  const std::vector<Key> & recipients,
-                                                 const DecryptVerifyResult::SenderInfo & info )
+                                                 const DecryptVerifyResult::SenderInfo & info,
+                                                 const QString& errorString )
 {
-    const QString drDetails = formatDecryptionResultDetails( dr, recipients );
+    const QString drDetails = formatDecryptionResultDetails( dr, recipients, errorString );
     if ( IsErrorOrCanceled( dr ) || !relevantInDecryptVerifyContext( vr ) )
         return drDetails;
     return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr, info );
@@ -674,7 +678,7 @@ QString DecryptVerifyResult::overview() const
 {
     QString ov;
     if ( d->isDecryptOnly() )
-        ov = formatDecryptionResultOverview( d->m_decryptionResult, errorString() );
+        ov = formatDecryptionResultOverview( d->m_decryptionResult );
     else if ( d->isVerifyOnly() )
         ov = formatVerificationResultOverview( d->m_verificationResult, d->makeSenderInfo() );
     else
@@ -685,10 +689,12 @@ QString DecryptVerifyResult::overview() const
 QString DecryptVerifyResult::details() const
 {
     if ( d->isDecryptOnly() )
-        return formatDecryptionResultDetails( d->m_decryptionResult, KeyCache::instance()->findRecipients( d->m_decryptionResult ) );
+        return formatDecryptionResultDetails( d->m_decryptionResult, KeyCache::instance()->findRecipients( d->m_decryptionResult ), errorString() );
     if ( d->isVerifyOnly() )
         return formatVerificationResultDetails( d->m_verificationResult, d->makeSenderInfo() );
-    return formatDecryptVerifyResultDetails( d->m_decryptionResult, d->m_verificationResult, KeyCache::instance()->findRecipients( d->m_decryptionResult ), d->makeSenderInfo() );
+    return formatDecryptVerifyResultDetails( d->m_decryptionResult,
+    d->m_verificationResult, KeyCache::instance()->findRecipients(
+    d->m_decryptionResult ), d->makeSenderInfo(), errorString() );
 }
 
 bool DecryptVerifyResult::hasError() const
@@ -809,7 +815,7 @@ void DecryptVerifyTask::Private::slotResult( const DecryptionResult& dr, const V
     const int drErr = dr.error().code();
     const QString errorString = m_output->errorString();
     if ( (drErr == GPG_ERR_EIO || drErr == GPG_ERR_NO_DATA) && !errorString.isEmpty() ) {
-        emitResult( q->fromDecryptResult( dr.error(), i18n("Caught exception: %1", errorString ), auditLog ) );
+        emitResult( q->fromDecryptResult( dr.error(), errorString, auditLog ) );
         return;
     }
 
