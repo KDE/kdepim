@@ -136,11 +136,13 @@ void checkInitNeeded( When when )
   case AlarmPresets::BeforeStart:
     if ( sBeforeStartPresetNames->isEmpty() || configChanged ) {
       sBeforeStartPresetNames->clear();
+      sBeforeStartPresets->clear();
       initPresets( when );
     }
   case AlarmPresets::BeforeEnd:
     if ( sBeforeEndPresetNames->isEmpty() || configChanged ) {
       sBeforeEndPresetNames->clear();
+      sBeforeEndPresets->clear();
       initPresets( when );
     }
   }
