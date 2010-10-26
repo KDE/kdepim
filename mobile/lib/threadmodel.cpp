@@ -60,8 +60,10 @@ void ThreadModelPrivate::populateThreadModel()
   q->beginResetModel();
   m_threads.clear();
   const int rowCount = m_emailModel->rowCount();
-  if (rowCount == 0)
+  if (rowCount == 0) {
+    q->endResetModel();
     return;
+  }
   const QModelIndex firstIdx = m_emailModel->index(0, 0);
   Akonadi::Item::Id currentThreadId = firstIdx.data(ThreadGrouperModel::ThreadIdRole).toLongLong();
   int startRow = 0;
