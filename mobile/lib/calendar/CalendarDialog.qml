@@ -42,6 +42,9 @@ Dialog {
             top: parent.top
             bottom: parent.bottom
           }
+          onDaySelected: {
+            daySelector.value = myCalendar.day
+          }
         }
 
         Column {

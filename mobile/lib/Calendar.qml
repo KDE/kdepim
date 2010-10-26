@@ -32,8 +32,11 @@ Item {
     property alias year: calendarHelper.year
     property alias daysInMonth: calendarHelper.daysInMonth
 
+    signal daySelected();
+
     CalendarHelper {
         id: calendarHelper
+        onDayChanged: calendar.daySelected()
     }
 
     Row {
@@ -43,14 +46,12 @@ Item {
         anchors.leftMargin: spacer.width + 5
 
         Text {
-            id: month
             text: KDE.i18n(calendarHelper.monthName)
             color: "#004bb8"
             font.pixelSize: 24
         }
 
         Text {
-            id: year
             text: calendarHelper.year
             color: "#004bb8"
             font.pixelSize: 24
