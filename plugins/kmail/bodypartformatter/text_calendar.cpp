@@ -104,7 +104,7 @@ class CalendarManager
 };
 
 static KStaticDeleter<CalendarManager> sCalendarDeleter;
-CalendarManager* CalendarManager::mSelf = 0;
+CalendarManager *CalendarManager::mSelf = 0;
 
 CalendarManager::CalendarManager()
 {
@@ -555,10 +555,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // get comment for tentative acceptance
       if ( callback.askForComment( status ) ) {
         bool ok = false;
-        QString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation"),
-            i18n("Comment:"), QString(), &ok );
-        if ( !ok )
+        QString comment =
+          KInputDialog::getMultiLineText( i18n( "Reaction to Invitation" ),
+                                          i18n( "Comment:" ), QString(), &ok );
+        if ( !ok ) {
           return true;
+        }
+
         if ( !comment.isEmpty() ) {
           if ( callback.outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
@@ -698,24 +701,40 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool handleDeclineCounter( const QString &iCal, KMail::Callback &callback ) const
     {
       const QString receiver = callback.receiver();
-      if ( receiver.isEmpty() )
+      if ( receiver.isEmpty() ) {
         return true;
-      Incidence* incidence = icalToString( iCal );
+      }
+
+      Incidence *incidence = icalToString( iCal );
+      Incidence *existing = CalHelper::findMyCalendarIncidenceByUid( CalendarManager::calendar(),
+                                                                     incidence->uid() );
+      if ( !existing ) {
+        KMessageBox::sorry(
+          0,
+          i18n( "Cannot locate the original invitation in your calendar.\n"
+                "You may have removed the associated incidence or calendar in the meantime.\n\n"
+                "Unable to decline the counter proprosal." ) );
+        return true;
+      }
+
       if ( callback.askForComment( Attendee::Declined ) ) {
         bool ok = false;
-        QString comment = KInputDialog::getMultiLineText( i18n("Decline Counter Proposal"),
-            i18n("Comment:"), QString(), &ok );
-        if ( !ok )
+        QString comment =
+          KInputDialog::getMultiLineText( i18n( "Decline Counter Proposal" ),
+                                          i18n( "Comment:" ), QString(), &ok );
+        if ( !ok ) {
           return true;
+        }
+
         if ( !comment.isEmpty() ) {
           if ( callback.outlookCompatibleInvitationReplyComments() ) {
-            incidence->setDescription( comment );
+            existing->setDescription( comment );
           } else {
-            incidence->addComment( comment );
+            existing->addComment( comment );
           }
         }
       }
-      return mail( incidence, callback, Attendee::NeedsAction, Scheduler::Declinecounter,
+      return mail( existing, callback, Attendee::NeedsAction, Scheduler::Declinecounter,
                    callback.sender(), DeclineCounter );
     }
 
