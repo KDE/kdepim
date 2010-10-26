@@ -221,9 +221,6 @@ private:
     }
 
 private:
-
-    Kleo::AbstractKeyListModel * flatModel;
-    Kleo::AbstractKeyListModel * hierarchicalModel;
     Kleo::KeyListController controller;
     bool firstShow : 1;
 
@@ -251,15 +248,18 @@ private:
 
 MainWindow::Private::Private( MainWindow * qq )
     : q( qq ),
-      flatModel( AbstractKeyListModel::createFlatKeyListModel( q ) ),
-      hierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel( q ) ),
       controller( q ),
       firstShow( true ),
       ui( q )
 {
     KDAB_SET_OBJECT_NAME( controller );
+    
+    AbstractKeyListModel * flatModel = AbstractKeyListModel::createFlatKeyListModel( q );
+    AbstractKeyListModel * hierarchicalModel = AbstractKeyListModel::createHierarchicalKeyListModel( q );
+
     KDAB_SET_OBJECT_NAME( flatModel );
     KDAB_SET_OBJECT_NAME( hierarchicalModel );
+
 
     controller.setFlatModel( flatModel );
     controller.setHierarchicalModel( hierarchicalModel );
