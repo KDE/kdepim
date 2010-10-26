@@ -1340,6 +1340,33 @@ static QString myStatusStr( Incidence *incidence )
   return ret;
 }
 
+static QString invitationNote( const QString &title, const QString &note,
+                               const QString &tag, const QString &color )
+{
+  QString noteStr;
+  if ( !note.isEmpty() ) {
+    noteStr += "<table border=\"0\" style=\"margin-top:4px;\">";
+    noteStr += "<tr><center><td>";
+    if ( !color.isEmpty() ) {
+      noteStr += "<font color=\"" + color + "\">";
+    }
+    if ( !title.isEmpty() ) {
+      if ( !tag.isEmpty() ) {
+        noteStr += htmlAddTag( tag, title );
+      } else {
+        noteStr += title;
+      }
+    }
+    noteStr += "&nbsp;" + note;
+    if ( !color.isEmpty() ) {
+      noteStr += "</font>";
+    }
+    noteStr += "</td></center></tr>";
+    noteStr += "</table>";
+  }
+  return noteStr;
+}
+
 static QString invitationPerson( const QString &email, const QString &name, const QString &uid,
                                  const QString &comment )
 {
@@ -1514,13 +1541,24 @@ static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
   return html;
 }
 
-static QString invitationDetailsEvent( Event *event, Event *oldevent, bool noHtmlMode )
+static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMessage *message,
+                                       bool noHtmlMode )
 {
   if ( !oldevent ) {
     return invitationDetailsEvent( event, noHtmlMode );
   }
 
-  QString html = htmlInvitationDetailsBegin();
+  QString html;
+
+  // Print extra info typically dependent on the iTIP
+  if ( message->method() == Scheduler::Declinecounter ) {
+    html += "<br>";
+    html += invitationNote( QString::null,
+                            i18n( "Please respond again to the original proposal." ),
+                            QString::null, QColor( Qt::red ).name() );
+  }
+
+  html += htmlInvitationDetailsBegin();
   html += htmlInvitationDetailsTableBegin();
 
   html += htmlRow( i18n( "What:" ),
@@ -1658,13 +1696,24 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
   return html;
 }
 
-static QString invitationDetailsTodo( Todo *todo, Todo *oldtodo, bool noHtmlMode )
+static QString invitationDetailsTodo( Todo *todo, Todo *oldtodo, ScheduleMessage *message,
+                                      bool noHtmlMode )
 {
   if ( !oldtodo ) {
     return invitationDetailsTodo( todo, noHtmlMode );
   }
 
-  QString html = htmlInvitationDetailsBegin();
+  QString html;
+
+  // Print extra info typically dependent on the iTIP
+  if ( message->method() == Scheduler::Declinecounter ) {
+    html += "<br>";
+    html += invitationNote( QString::null,
+                            i18n( "Please respond again to the original proposal." ),
+                            QString::null, QColor( Qt::red ).name() );
+  }
+
+  html += htmlInvitationDetailsBegin();
   html += htmlInvitationDetailsTableBegin();
 
   html += htmlRow( i18n( "What:" ),
@@ -1992,9 +2041,9 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
   {
     QString orgStr = organizerName( event, sender );
     if ( senderIsOrganizer( event, sender ) ) {
-      return i18n( "%1 declines the counter proposal" ).arg( orgStr );
+      return i18n( "%1 declines your counter proposal" ).arg( orgStr );
     } else {
-      return i18n( "%1 declines the counter proposal on behalf of %2" ).arg( sender, orgStr );
+      return i18n( "%1 declines your counter proposal on behalf of %2" ).arg( sender, orgStr );
     }
   }
 
@@ -2288,7 +2337,7 @@ static QString invitationAttendeeList( Incidence *incidence )
   if ( count ) {
     tmpStr += "</table>";
   } else {
-    tmpStr += "<i>" + i18n( "No attendee", "None" ) + "</i>";
+    tmpStr = QString::null;
   }
 
   return tmpStr;
@@ -2447,13 +2496,13 @@ class IncidenceFormatter::InvitationBodyVisitor
     bool visit( Event *event )
     {
       Event *oldevent = dynamic_cast<Event *>( mExistingIncidence );
-      mResult = invitationDetailsEvent( event, oldevent, mNoHtmlMode );
+      mResult = invitationDetailsEvent( event, oldevent, mMessage, mNoHtmlMode );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo )
     {
       Todo *oldtodo = dynamic_cast<Todo *>( mExistingIncidence );
-      mResult = invitationDetailsTodo( todo, oldtodo, mNoHtmlMode );
+      mResult = invitationDetailsTodo( todo, oldtodo, mMessage, mNoHtmlMode );
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal )
@@ -2480,7 +2529,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
     bool act( IncidenceBase *incidence, Incidence *existingIncidence, int method )
     {
       Incidence *inc = dynamic_cast<Incidence*>( incidence );
-      if ( !inc || !existingIncidence || inc->revision() <= existingIncidence->revision() )
+      if ( !inc || !existingIncidence  || inc->revision() <= existingIncidence->revision() )
         return false;
       mExistingIncidence = existingIncidence;
       mMethod = method;
@@ -2784,6 +2833,8 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     }
   }
 
+  Incidence *inc = dynamic_cast<Incidence*>( incBase ); // the incidence in the invitation email
+
   // First make the text of the message
   QString html;
 
@@ -2797,34 +2848,42 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   html += tableHead;
   InvitationHeaderVisitor headerVisitor;
   // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
-  if ( !headerVisitor.act( incBase, existingIncidence, msg, sender ) ) {
+  if ( !headerVisitor.act( inc, existingIncidence, msg, sender ) ) {
     return QString::null;
   }
   html += "<b>" + headerVisitor.result() + "</b>";
 
-  if ( outlookCompareStyle ) {
+  if ( outlookCompareStyle ||
+       msg->method() == Scheduler::Declinecounter ) { //use Outlook style for decline counters
     // use the Outlook 2007 Comparison Style
     InvitationBodyVisitor bodyVisitor( noHtmlMode );
-    if ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Reply ) {
-      if ( !bodyVisitor.act( incBase, existingIncidence, msg, sender ) ) {
-        return QString::null;
+    bool bodyOk;
+    if ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Reply ||
+         msg->method() == Scheduler::Declinecounter ) {
+      if ( inc && existingIncidence &&
+           inc->revision() < existingIncidence->revision() ) {
+        bodyOk = bodyVisitor.act( existingIncidence, inc, msg, sender );
+      } else {
+        bodyOk = bodyVisitor.act( inc, existingIncidence, msg, sender );
       }
     } else {
-      if ( !bodyVisitor.act( incBase, 0, msg, sender ) ) {
-        return QString::null;
-      }
+      bodyOk = bodyVisitor.act( inc, 0, msg, sender );
     }
-    html += bodyVisitor.result();
+    if ( bodyOk ) {
+      html += bodyVisitor.result();
+    } else {
+      return QString::null;
+    }
   } else {
     // use our "Classic: Comparison Style
     InvitationBodyVisitor bodyVisitor( noHtmlMode );
-    if ( !bodyVisitor.act( incBase, 0, msg, sender ) )
+    if ( !bodyVisitor.act( inc, 0, msg, sender ) )
       return QString::null;
     html += bodyVisitor.result();
 
     if ( msg->method() == Scheduler::Request ) {
       IncidenceCompareVisitor compareVisitor;
-      if ( compareVisitor.act( incBase, existingIncidence, msg->method() ) ) {
+      if ( compareVisitor.act( inc, existingIncidence, msg->method() ) ) {
         html += "<p align=\"left\">";
         html += i18n( "The following changes have been made by the organizer:" );
         html += "</p>";
@@ -2833,7 +2892,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     }
     if ( msg->method() == Scheduler::Reply ) {
       IncidenceCompareVisitor compareVisitor;
-      if ( compareVisitor.act( incBase, existingIncidence, msg->method() ) ) {
+      if ( compareVisitor.act( inc, existingIncidence, msg->method() ) ) {
         html += "<p align=\"left\">";
         if ( !sender.isEmpty() ) {
           html += i18n( "The following changes have been made by %1:" ).arg( sender );
@@ -2845,8 +2904,6 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       }
     }
   }
-
-  Incidence *inc = dynamic_cast<Incidence*>( incBase );
 
   // determine if I am the organizer for this invitation
   bool myInc = iamOrganizer( inc );
