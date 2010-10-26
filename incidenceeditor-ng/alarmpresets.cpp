@@ -43,6 +43,21 @@ K_GLOBAL_STATIC( QList<KCalCore::Alarm::Ptr>, sBeforeEndPresets )
 static int sDefaultPresetIndex = 0;
 static int sDefaultAlarmOffset = 0; // We must save it, so we can detect that config changed.
 
+
+int configuredReminderTimeInMinutes()
+{
+  QList<int> units;
+  units << 1 << 60 << 24*60;
+
+  const int configuredUnits = KCalPrefs::instance()->reminderTimeUnits();
+  const int unitsToUse = configuredUnits >= 0 && configuredUnits <= 2 ? configuredUnits : 0;
+
+  const int configuredReminderTime = KCalPrefs::instance()->reminderTime();
+  const int reminderTimeToUse =  configuredReminderTime > 0 ? configuredReminderTime : DEFAULT_REMINDER_OFFSET;
+
+  return reminderTimeToUse * units[unitsToUse];
+}
+
 void initPresets( AlarmPresets::When when )
 {
   QList<int> hardcodedPresets;
@@ -57,8 +72,7 @@ void initPresets( AlarmPresets::When when )
                    << 2 * 24 * 60 // 2 days
                    << 5 * 24 * 60;// 5 days
 
-  sDefaultAlarmOffset = KCalPrefs::instance()->reminderTime() > 0 ? KCalPrefs::instance()->reminderTime() :
-                                                                    DEFAULT_REMINDER_OFFSET;
+  sDefaultAlarmOffset = configuredReminderTimeInMinutes();
 
   if ( !hardcodedPresets.contains( sDefaultAlarmOffset ) ) {
     // Lets insert the user's favorite preset (and keep the list sorted):
@@ -67,7 +81,6 @@ void initPresets( AlarmPresets::When when )
       if ( hardcodedPresets[index] > sDefaultAlarmOffset )
         break;
     }
-
     hardcodedPresets.insert( index, sDefaultAlarmOffset );
     sDefaultPresetIndex = index;
   } else {
@@ -85,7 +98,7 @@ void initPresets( AlarmPresets::When when )
       alarm->setEnabled( true );
       if ( minutes < 60 ) {
         sBeforeStartPresetNames->append( i18nc( "@item:inlistbox", "%1 minutes before start", minutes ) );
-      } else if ( minutes <= 2*60 ) {
+      } else if ( minutes < 24*60 ) {
         sBeforeStartPresetNames->append( i18nc( "@item:inlistbox", "%1 hours before start", minutes/60 ) );
       } else {
         sBeforeStartPresetNames->append( i18nc( "@item:inlistbox", "%1 days before start", minutes/(24*60) ) );
@@ -103,7 +116,7 @@ void initPresets( AlarmPresets::When when )
       alarm->setEnabled( true );
       if ( minutes < 60 ) {
         sBeforeEndPresetNames->append( i18nc( "@item:inlistbox", "%1 minutes before due", minutes ) );
-      } else if ( minutes <= 2*60 ) {
+      } else if ( minutes < 24*60 ) {
         sBeforeEndPresetNames->append( i18nc( "@item:inlistbox", "%1 hours before due", minutes/60 ) );
       } else {
         sBeforeEndPresetNames->append( i18nc( "@item:inlistbox", "%1 days before due", minutes/(24*60) ) );
@@ -116,8 +129,7 @@ void initPresets( AlarmPresets::When when )
 
 void checkInitNeeded( When when )
 {
-  const int currentAlarmOffset = KCalPrefs::instance()->reminderTime() > 0 ? KCalPrefs::instance()->reminderTime() :
-                                                                            DEFAULT_REMINDER_OFFSET;
+  const int currentAlarmOffset = configuredReminderTimeInMinutes();
   const bool configChanged = currentAlarmOffset != sDefaultAlarmOffset;
 
   switch ( when ) {
