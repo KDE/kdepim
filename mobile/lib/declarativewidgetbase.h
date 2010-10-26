@@ -50,11 +50,10 @@ class DeclarativeWidgetBase : public QGraphicsProxyWidget
     QVariant itemChange ( GraphicsItemChange change, const QVariant& value )
     {
       if ( change == ItemSceneHasChanged ) {
-        QGraphicsScene* scene = value.value<QGraphicsScene*>();
-        if ( scene && !scene->views().isEmpty() ) {
-          ViewT* view = qobject_cast<ViewT*>( scene->views().first() );
-          (view->*(registerFunc))( m_widget );
-        }
+        if ( QGraphicsScene* scene = value.value<QGraphicsScene*>() )
+          Q_FOREACH( QGraphicsView * v, scene->views() )
+            if ( ViewT * view = qobject_cast<ViewT*>( v ) )
+              (view->*registerFunc)( m_widget );
       }
       return QGraphicsProxyWidget::itemChange ( change, value );
     }
