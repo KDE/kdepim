@@ -39,6 +39,7 @@
 #include "kdpipeiodevice.h"
 #include "log.h"
 #include "kleo_assert.h"
+#include "cached.h"
 
 #include <kleo/exception.h>
 
@@ -80,6 +81,13 @@ namespace {
         void setDefaultLabel( const QString & l ) { m_defaultLabel = l; }
         /* reimp */ void setLabel( const QString & l ) { m_customLabel = l; }
         /* reimp */ QString errorString() const {
+            if ( m_errorString.dirty() )
+                m_errorString = doErrorString();
+            return m_errorString;
+        }
+
+    private:
+        virtual QString doErrorString() const {
             if ( const shared_ptr<QIODevice> io = ioDevice() )
                 return io->errorString();
             else
@@ -89,6 +97,7 @@ namespace {
     private:
         QString m_customLabel;
         QString m_defaultLabel;
+        mutable cached<QString> m_errorString;
     };
 
 
@@ -113,7 +122,9 @@ namespace {
         /* reimp */ unsigned int classification() const { return 0U; } // plain text
         /* reimp */ unsigned long long size() const { return 0; }
         /* reimp */ QString label() const;
-        /* reimp */ QString errorString() const;
+
+    private:
+        /* reimp */ QString doErrorString() const;
 
     private:
         const QString m_command;
@@ -302,7 +313,7 @@ QString ProcessStdOutInput::label() const {
         return i18nc( "e.g. \"Output of tar xf - file\"",      "Output of %1",     cmdline );
 }
 
-QString ProcessStdOutInput::errorString() const {
+QString ProcessStdOutInput::doErrorString() const {
     kleo_assert( m_proc );
     if ( m_proc->exitStatus() == QProcess::NormalExit && m_proc->exitCode() == 0 )
         return QString();
