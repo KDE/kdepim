@@ -77,7 +77,6 @@
 
 #include <QAbstractItemView>
 #include <QFile>
-#include <QFileDialog>
 #include <QToolBar>
 #include <QWidgetAction>
 #include <QApplication>
