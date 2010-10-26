@@ -2284,7 +2284,7 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
       icalmethod = ICAL_METHOD_DECLINECOUNTER;
       break;
     default:
-      kdDebug(5800) << "ICalFormat::createScheduleMessage(): Unknow method" << endl;
+      kdDebug(5800) << "ICalFormat::createScheduleComponent(): Unknown method" << endl;
       return message;
   }
 
