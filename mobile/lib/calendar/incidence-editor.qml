@@ -30,24 +30,24 @@ KPIM.MainView {
   Connections {
     target: _incidenceview
     onShowCalendarWidget: {
-        calendarWidget.expand()
-        calendarWidgetOk.enabled = false
+       calendarWidget.expand()
+       calendarWidget.okEnabled = false
 
-        myCalendar.day = day;
-        myCalendar.month = month;
-        myCalendar.year = year;
+       calendarWidget.day = day;
+       calendarWidget.month = month;
+       calendarWidget.year = year;
     }
   }
 
   Connections {
     target: _incidenceview
     onShowClockWidget: {
-        clockWidget.expand()
-        clockWidgetOk.enabled = false
+       clockWidget.expand()
+       clockWidget.okEnabled = false
 
-        // set the initial values
-        myClock.hours = hour;
-        myClock.minutes = minute;
+       // set the initial values
+       clockWidget.hours = hour;
+       clockWidget.minutes = minute;
     }
   }
 
@@ -55,270 +55,18 @@ KPIM.MainView {
     anchors.fill: parent
     z: 50
 
-  Dialog {
-    id: calendarWidget
-    anchors.fill: parent
-    content: [
-      Item {
-        anchors.fill: parent
-
-          KPIM.Calendar {
-            id: myCalendar
-            anchors {
-              left: parent.left
-              top: parent.top
-              bottom: parent.bottom
-            }
-          }
-
-          Column {
-            spacing: 5
-            anchors {
-              top: parent.top
-              left: myCalendar.right
-              right: parent.right
-
-              topMargin: 20
-            }
-
-            KPIM.VerticalSelector {
-              id: daySelector
-              height: 100
-              model: myCalendar.daysInMonth
-              beginWith: 1
-
-              onValueChanged: {
-                // selector change -> update calendar
-                myCalendar.day = value;
-                calendarWidgetOk.enabled = true;
-              }
-              onSelected: {
-                monthSelector.state = "unselected";
-                yearSelector.state = "unselected";
-              }
-            }
-
-            KPIM.VerticalSelector {
-              id: monthSelector
-              height: 100
-              model: 12
-              beginWith: 1
-
-              value: myCalendar.month
-              onValueChanged: {
-                // selector change -> update calendar
-                myCalendar.month = value;
-                calendarWidgetOk.enabled = true;
-              }
-              onSelected: {
-                daySelector.state = "unselected";
-                yearSelector.state = "unselected";
-              }
-            }
-
-            KPIM.VerticalSelector {
-              id: yearSelector
-              height: 100
-              // high enough == 2050 :)
-              model: 51
-              // value - 2000 because the index starts at '0'
-              beginWith: 2000
-
-              value: myCalendar.year
-              onValueChanged: {
-                myCalendar.year = value;
-                calendarWidgetOk.enabled = true;
-              }
-              onSelected: {
-                daySelector.state = "unselected";
-                monthSelector.state = "unselected";
-              }
-            }
-          }
-          Row {
-            spacing: 5
-            anchors{
-              bottom: parent.bottom
-              right: parent.right
-            }
-            KPIM.Button2 {
-              id: calendarkWidgetCancel
-              buttonText: KDE.i18n( "Cancel" );
-              width: 100
-              onClicked: {
-                calendarWidget.collapse()
-                //### + reset widget
-              }
-            }
-            KPIM.Button2 {
-              id: calendarWidgetOk
-              buttonText: KDE.i18n( "Ok" );
-              width: 100
-              onClicked: {
-                calendarWidget.collapse()
-                _incidenceview.setNewDate(myCalendar.day, myCalendar.month, myCalendar.year);
-              }
-            }
-          }
-      }
-    ]
-  }
-
-    Dialog {
-      id: clockWidget
+    CalendarDialog {
+      id: calendarWidget
       anchors.fill: parent
-      content: [
-        Item {
-          anchors.fill: parent
-
-          KPIM.Clock {
-            id: myClock
-            anchors {
-              left: parent.left
-              top: parent.top
-              bottom: parent.bottom
-
-              topMargin: 25
-              bottomMargin: 25
-            }
-          }
-
-          Column {
-            spacing: 5
-            anchors {
-              top: parent.top
-              left: myClock.right
-              right: parent.right
-
-              topMargin: 100
-              leftMargin: 60
-            }
-
-            KPIM.VerticalSelector {
-              id: hourSelector
-              height: 100
-              model: 24
-
-              onValueChanged: {
-                myClock.hours = value;
-                clockWidgetOk.enabled = true;
-              }
-              onSelected: {
-                minuteSelector.state = "unselected";
-              }
-            }
-
-            KPIM.VerticalSelector {
-              id: minuteSelector
-              height: 100
-              model: 60
-
-              onValueChanged: {
-                myClock.minutes = value;
-                clockWidgetOk.enabled = true;
-              }
-              onSelected: {
-                hourSelector.state = "unselected";
-              }
-            }
-          }
-          Row {
-            spacing: 5
-            anchors{
-              bottom: parent.bottom
-              right: parent.right
-            }
-            KPIM.Button2 {
-              id: clockWidgetCancel
-              buttonText: KDE.i18n( "Cancel" );
-              width: 100
-              onClicked: {
-                clockWidget.collapse()
-                //### + reset widget
-              }
-            }
-            KPIM.Button2 {
-              id: clockWidgetOk
-              enabled: false
-              buttonText: KDE.i18n( "Ok" );
-              width: 100
-              onClicked: {
-                clockWidget.collapse()
-                _incidenceview.setNewTime(myClock.hours, myClock.minutes);
-              }
-            }
-          }
-        }
-      ]
     }
 
-    SlideoutPanel {
+    ClockDialog {
+      id: clockWidget
       anchors.fill: parent
-      titleText: KDE.i18n("More...");
-      handlePosition: 250
-      handleHeight: 120
-      // TODO: Better icons for the buttons probably.
-      content: [
-        Column {
-          id: buttonColumn
-          width: 64;
-          height: parent.height;
-          KPIM.Button {
-            id: btnGeneral
-            width: 64
-            height: 64
-            icon: KDE.iconPath( "accessories-text-editor", 64 )
-            onClicked: {
-              moreEditors.currentIndex = 0
-            }
-          }
-          KPIM.Button {
-            id: btnAttendees
-            width: 64
-            height: 64
-            icon: KDE.iconPath( "view-pim-contacts", 64 )
-            onClicked: {
-              moreEditors.currentIndex = 1
-            }
-          }
-          KPIM.Button {
-            id: btnReminder
-            width: 64
-            height: 64
-            icon: KDE.iconPath( "appointment-reminder", 64 )
-            onClicked: {
-              moreEditors.currentIndex = 2
-            }
-          }
-          KPIM.Button {
-            id: btnRecurrence
-            width: 64
-            height: 64
-            icon: KDE.iconPath( "appointment-recurring", 64 )
-            onClicked: {
-              moreEditors.currentIndex = 3
-            }
-          }
-          KPIM.Button {
-            id: btnAttachment
-            width: 64
-            height: 64
-            icon: KDE.iconPath( "mail-attachment", 64 )
-            onClicked: {
-              moreEditors.currentIndex = 4
-            }
-          }
-        },
+    }
 
-        IncidenceEditors.MoreEditor {
-          id : moreEditors
-          anchors.top: parent.top
-          anchors.bottom: parent.bottom
-          anchors.left: buttonColumn.right
-          anchors.right: parent.right
-          currentIndex : 0
-        }
-      ]
+    MorePanel {
+        anchors.fill: parent
     }
   }
 
