@@ -19,77 +19,36 @@
 
 import Qt 4.7
 
-Item {
+Image {
     id: calendarDay
     property alias text: myText.text
     property int currentDay: 0
     property int dayPos: 0
-    signal daySelected(string day)
 
     width: 54
     height: 54
+
+    source: "images/normaldate.png"
+
     Image {
-        id: inactive
-        source: "images/inactivedate.png"
-        visible: false
         anchors.fill: parent
+        source: {
+            if (myText.text == "") {
+                return "images/inactivedate.png";
+            } else if (myText.text == currentDay) {
+                return "images/activedate.png";
+            } else {
+                return "";
+            }
+        }
     }
-    Image {
-        id: normal
-        source: "images/normaldate.png"
-        visible: true
-        anchors.fill: parent
-    }
-    Image {
-        id: active
-        visible: false
-        source: "images/activedate.png"
-        anchors.fill: parent
-    }
+
     Text {
         id: myText
+        anchors.centerIn: parent
         color: "#5ba0d4"
         font.bold: true
         font.pixelSize: 26
         style: Text.Sunken
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
     }
-    MouseArea {
-        id: dayArea
-        anchors.fill: parent
-        onClicked: {
-            if (myText.text != "")
-                calendarDay.daySelected(myText.text)
-        }
-    }
-
-    states: [
-        State {
-            name: "active"
-            when: (currentDay == myText.text)
-            PropertyChanges {
-                target: active
-                visible: true
-            }
-            PropertyChanges {
-                target: inactive
-                visible: false
-            }
-        },
-        State {
-            name: "inactive"
-            when: (myText.text == "")
-            PropertyChanges {
-                target: active
-                visible: false
-            }
-            PropertyChanges {
-                target: inactive
-                visible: true
-            }
-        }
-    ]
 }
