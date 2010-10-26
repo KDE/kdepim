@@ -49,7 +49,6 @@ TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
   mMiniWidth = 0;
 
   mCellHeight = mTimeLabelsZone->preferences()->hourSize() * 4;
-  kDebug() << "DEBUG " << mCellHeight;
 
   setFrameStyle( Plain );
 

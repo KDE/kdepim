@@ -59,6 +59,8 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     QVector<QString> customColumnTitles() const;
     QVector<Future::KCheckableProxyModel*>collectionSelectionModels() const;
 
+    void setPreferences( const PrefsPtr &prefs );
+
   Q_SIGNALS:
     void showNewEventPopupSignal();
     void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );

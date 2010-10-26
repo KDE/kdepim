@@ -470,7 +470,8 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
   QLabel *l = new QLabel( title );
   layout->addWidget( l );
   l->setAlignment( Qt::AlignVCenter | Qt::AlignHCenter );
-  AgendaView *av = new AgendaView( q->startDateTime().date(),
+  AgendaView *av = new AgendaView( q->preferences(),
+                                   q->startDateTime().date(),
                                    q->endDateTime().date(),
                                    true,
                                    true, q );
@@ -550,6 +551,14 @@ void MultiAgendaView::setIncidenceChanger( CalendarSupport::IncidenceChanger *ch
   foreach ( AgendaView *agenda, d->mAgendaViews ) {
     agenda->setIncidenceChanger( changer );
   }
+}
+
+void MultiAgendaView::setPreferences( const PrefsPtr &prefs )
+{
+  foreach ( AgendaView *agenda, d->mAgendaViews ) {
+    agenda->setPreferences( prefs );
+  }
+  EventView::setPreferences( prefs );
 }
 
 void MultiAgendaView::updateConfig()
