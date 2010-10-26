@@ -2075,7 +2075,8 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
       if ( senderIsOrganizer( todo, sender ) ) {
         return i18n( "This task has been updated by the organizer %1" ).arg( orgStr );
       } else {
-        return i18n( "This task has been updated by %1 on behalf of %1" ).arg( sender, orgStr );
+        return i18n( "This task has been updated by %1 as a representative of %2" ).
+          arg( sender, orgStr );
       }
     } else {
       if ( iamOrganizer( todo ) ) {
