@@ -1929,8 +1929,13 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
     return i18n( "This invitation has been published" );
   case Scheduler::Request:
     if ( existingIncidence && event->revision() > 0 ) {
-      return i18n( "This invitation has been updated by the organizer %1" ).
-        arg( event->organizer().fullName() );
+      QString orgStr = organizerName( event, sender );
+      if ( senderIsOrganizer( event, sender ) ) {
+        return i18n( "This invitation has been updated by the organizer %1" ).arg( orgStr );
+      } else {
+        return i18n( "This invitation has been updated by %1 as a representative of %2" ).
+          arg( sender, orgStr );
+      }
     }
     if ( iamOrganizer( event ) ) {
       return i18n( "I created this invitation" );
@@ -2066,8 +2071,12 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
     return i18n("This task has been published");
   case Scheduler::Request:
     if ( existingIncidence && todo->revision() > 0 ) {
-      return i18n( "This task has been updated by the organizer %1" ).
-        arg( todo->organizer().fullName() );
+      QString orgStr = organizerName( todo, sender );
+      if ( senderIsOrganizer( todo, sender ) ) {
+        return i18n( "This task has been updated by the organizer %1" ).arg( orgStr );
+      } else {
+        return i18n( "This task has been updated by %1 on behalf of %1" ).arg( sender, orgStr );
+      }
     } else {
       if ( iamOrganizer( todo ) ) {
         return i18n( "I created this task" );
@@ -2885,7 +2894,13 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       IncidenceCompareVisitor compareVisitor;
       if ( compareVisitor.act( inc, existingIncidence, msg->method() ) ) {
         html += "<p align=\"left\">";
-        html += i18n( "The following changes have been made by the organizer:" );
+        if ( senderIsOrganizer( inc, sender ) ) {
+          html += i18n( "The following changes have been made by the organizer:" );
+        } else if ( !sender.isEmpty() ) {
+          html += i18n( "The following changes have been made by %1:" ).arg( sender );
+        } else {
+          html += i18n( "The following changes have been made:" );
+        }
         html += "</p>";
         html += compareVisitor.result();
       }
