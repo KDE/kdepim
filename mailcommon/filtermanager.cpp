@@ -4,6 +4,7 @@
 // my header
 #include "filtermanager.h"
 #include "mailkernel.h"
+#include "mailfilter.h"
 // other kmail headers
 #include "filterlog.h"
 using MailCommon::FilterLog;
@@ -25,13 +26,18 @@ using MailCommon::MessageProperty;
 
 #include <kmime/kmime_message.h>
 
+#include <progressmanager.h>
+#include <broadcaststatus.h>
+
 // other Qt headers
 
 // other headers
 #include <boost/bind.hpp>
 #include <algorithm>
 #include <assert.h>
-#include "mailfilter.h"
+#include <errno.h>
+#include <QTimer>
+
 
 using namespace MailCommon;
 
@@ -44,15 +50,25 @@ FilterManager::FilterManager( bool popFilter )
   if ( bPopFilter ) {
     kDebug() << "pPopFilter set";
   }
-  connect( KernelIf->folderCollectionMonitor(), SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
-           this, SLOT( slotFolderRemoved( const Akonadi::Collection & ) ) );
 
+  tryToMonitorCollection();
+  
   mChangeRecorder = new Akonadi::ChangeRecorder( this );
   mChangeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
   mChangeRecorder->setChangeRecordingEnabled( false );
   mChangeRecorder->fetchCollection( true );
   connect( mChangeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
            SLOT(itemAdded(Akonadi::Item,Akonadi::Collection)) );
+}
+
+void FilterManager::tryToMonitorCollection()
+{
+  if ( KernelIf->folderCollectionMonitor() ) {
+    connect( KernelIf->folderCollectionMonitor(), SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+           this, SLOT( slotFolderRemoved( const Akonadi::Collection & ) ) );
+  } else {
+    QTimer::singleShot( 0, this, SLOT( tryToMonitorCollection() ) );
+  }
 }
 
 
@@ -387,6 +403,68 @@ void FilterManager::itemAddedFetchResult( KJob *job )
   if ( fetchJob->items().count() == 1 ) {
     const Akonadi::Item item = fetchJob->items().first();
     process( item, Inbound, true, fetchJob->property( "resource" ).toString() );
+  }
+}
+
+void FilterManager::applyFilters(const QList< Akonadi::Item >& selectedMessages)
+{
+  const int msgCountToFilter = selectedMessages.size();
+
+  KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem (
+      "filter" + KPIM::ProgressManager::getUniqueID(),
+      i18n( "Filtering messages" )
+    );
+
+  progressItem->setTotalItems( msgCountToFilter );
+  Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
+  itemFetchJob->fetchScope().fetchFullPayload( true );
+  itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
+  connect( itemFetchJob, SIGNAL( itemsReceived( Akonadi::Item::List ) ), SLOT( slotItemsFetchedForFilter( Akonadi::Item::List ) ) );
+  connect( itemFetchJob, SIGNAL( result(KJob *) ), SLOT( itemsFetchJobForFilterDone( KJob* ) ) );
+}
+
+
+void FilterManager::itemsFetchJobForFilterDone( KJob *job )
+{
+  if ( job->error() )
+    kDebug() << job->errorString();
+  KPIM::BroadcastStatus::instance()->setStatusMsg( QString() );
+
+  KPIM::ProgressItem *progressItem = qobject_cast<KPIM::ProgressItem*>( job->property( "progressItem" ).value<QObject*>() );
+  progressItem->setComplete();
+}
+
+void FilterManager::slotItemsFetchedForFilter( const Akonadi::Item::List &items )
+{
+
+  KPIM::ProgressItem* progressItem;
+  if( sender()->property( "progressItem" ).value< QObject*>() ) {
+    progressItem = qobject_cast<KPIM::ProgressItem*>( sender()->property( "progressItem" ).value<QObject*>() );
+  } else {
+    progressItem = 0;
+    kWarning() << "Got invalid progress item for slotItemsFetchedFromFilter! Something went wrong...";
+  }
+
+  foreach ( const Akonadi::Item &item, items ) {
+    if( progressItem ) {
+      progressItem->incCompletedItems();
+      if ( progressItem->totalItems() - progressItem->completedItems() < 10 ||
+        !( progressItem->completedItems() % 10 ) ||
+          progressItem->completedItems() <= 10 )
+      {
+        progressItem->updateProgress();
+        const QString statusMsg = i18n( "Filtering message %1 of %2", progressItem->completedItems(),
+                                        progressItem->totalItems() );
+        KPIM::BroadcastStatus::instance()->setStatusMsg( statusMsg );
+      }
+    }
+    int filterResult = process(item, FilterManager::Explicit);
+    if (filterResult == 2)
+    {
+      // something went horribly wrong (out of space?)
+      CommonKernel->emergencyExit( i18n("Unable to process messages: " ) + QString::fromLocal8Bit(strerror(errno)));
+    }
   }
 }
 

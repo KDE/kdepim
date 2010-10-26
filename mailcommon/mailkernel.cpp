@@ -56,6 +56,7 @@ Kernel::Kernel( QObject* parent ) : QObject( parent )
   the_trashCollectionFolder = -1;
   mKernelIf = 0;
   mSettingsIf = 0;
+  mFilterIf = 0;
 }
 
 Kernel::~Kernel()

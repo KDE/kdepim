@@ -25,11 +25,11 @@
 #include "mailcommon_export.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
 #include <QPointer>
 
 namespace Akonadi {
-  class Item;
-class ChangeRecorder;
+  class ChangeRecorder;
 }
 namespace KMime {
   class Message;
@@ -124,8 +124,6 @@ public:
       Return codes are as with the above method. */
   int process( const Akonadi::Item &item, const MailFilter * filter );
 
-  void cleanup();
-
   /** Called at the beginning of an filter list update. Currently a
       no-op */
   void beginUpdate() {}
@@ -153,6 +151,9 @@ public:
   bool showLaterMsgs() const {
     return mShowLater;
   }
+
+ /** Apply the filters on the messages passed as @param selectedMessages. */
+  void applyFilters( const QList<Akonadi::Item>& selectedMessages );
 public slots:
   void slotFolderRemoved( const Akonadi::Collection &aFolder );
 
@@ -163,6 +164,12 @@ private slots:
   void itemAdded(const Akonadi::Item& item, const Akonadi::Collection& collection);
 
   void itemAddedFetchResult( KJob *job );
+
+  void itemsFetchJobForFilterDone( KJob *job );
+
+  void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
+
+  void tryToMonitorCollection();
 
 private:
   int processPop( const Akonadi::Item &item ) const;
