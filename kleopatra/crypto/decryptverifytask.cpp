@@ -395,12 +395,14 @@ static QString formatVerificationResultOverview( const VerificationResult & res,
     return text;
 }
 
-static QString formatDecryptionResultOverview( const DecryptionResult & result )
+static QString formatDecryptionResultOverview( const DecryptionResult & result, const QString& errorString = QString() )
 {
     const Error err = result.error();
 
     if ( err.isCanceled() )
         return i18n("<b>Decryption canceled.</b>");
+    else if ( !errorString.isEmpty() )
+        return i18n( "<b>Decryption failed: %1.</b>", Qt::escape( errorString ) );
     else if ( err )
         return i18n( "<b>Decryption failed: %1.</b>", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
     return i18n("<b>Decryption succeeded.</b>" );
@@ -672,7 +674,7 @@ QString DecryptVerifyResult::overview() const
 {
     QString ov;
     if ( d->isDecryptOnly() )
-        ov = formatDecryptionResultOverview( d->m_decryptionResult );
+        ov = formatDecryptionResultOverview( d->m_decryptionResult, errorString() );
     else if ( d->isVerifyOnly() )
         ov = formatVerificationResultOverview( d->m_verificationResult, d->makeSenderInfo() );
     else
@@ -803,6 +805,12 @@ void DecryptVerifyTask::Private::slotResult( const DecryptionResult& dr, const V
             emitResult( q->fromDecryptResult( make_error( GPG_ERR_INTERNAL ), i18n("Caught unknown exception"), auditLog ) );
             return;
         }
+    }
+    const int drErr = dr.error().code();
+    const QString errorString = m_output->errorString();
+    if ( (drErr == GPG_ERR_EIO || drErr == GPG_ERR_NO_DATA) && !errorString.isEmpty() ) {
+        emitResult( q->fromDecryptResult( dr.error(), i18n("Caught exception: %1", errorString ), auditLog ) );
+        return;
     }
 
     emitResult( q->fromDecryptVerifyResult( dr, vr, plainText, auditLog ) );

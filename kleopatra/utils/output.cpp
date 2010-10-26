@@ -425,7 +425,8 @@ ProcessStdInOutput::ProcessStdInOutput( const QString & cmd, const QStringList &
         throw Exception( gpg_error( GPG_ERR_INV_ARG ),
                          i18n("Command not specified") );
     m_proc->setWorkingDirectory( wd.absolutePath() );
-    m_proc->start( cmd, args, QIODevice::WriteOnly );
+    m_proc->start( cmd, args );
+    m_proc->setReadChannel( QProcess::StandardError );
     if ( !m_proc->waitForStarted() )
         throw Exception( gpg_error( GPG_ERR_EIO ),
                          i18n( "Could not start %1 process: %2", cmd, m_proc->errorString() ) );
