@@ -67,9 +67,8 @@ void ThreadModelPrivate::populateThreadModel()
   const QModelIndex firstIdx = m_emailModel->index(0, 0);
   Akonadi::Item::Id currentThreadId = firstIdx.data(ThreadGrouperModel::ThreadIdRole).toLongLong();
   int startRow = 0;
-  int row = 1;
   static const int column = 0;
-  for ( ; row < rowCount; ++row) {
+  for (int row = 1; row < rowCount; ++row) {
     const QModelIndex idx = m_emailModel->index(row, column);
     Q_ASSERT(idx.isValid());
     const Akonadi::Item::Id threadRoot = idx.data(ThreadGrouperModel::ThreadIdRole).toLongLong();
@@ -84,18 +83,11 @@ void ThreadModelPrivate::populateThreadModel()
     }
     currentThreadId = threadRoot;
   }
-  const QModelIndex idx = m_emailModel->index(row - 1, column);
-  Q_ASSERT(idx.isValid());
-  const Akonadi::Item::Id threadRoot = idx.data(ThreadGrouperModel::ThreadIdRole).toLongLong();
-  if (threadRoot != currentThreadId)
-  {
-    const QModelIndex top = m_emailModel->index(startRow, column);
-    const QModelIndex bottom = idx;
-    Q_ASSERT(top.isValid());
-    Q_ASSERT(bottom.isValid());
-    m_threads.push_back(new ThreadModelNode(top, bottom));
-    startRow = row;
-  }
+  const QModelIndex top = m_emailModel->index(startRow, column);
+  const QModelIndex bottom = m_emailModel->index(rowCount - 1, column);
+  Q_ASSERT(top.isValid());
+  Q_ASSERT(bottom.isValid());
+  m_threads.push_back(new ThreadModelNode(top, bottom));
   q->endResetModel();
 }
 
