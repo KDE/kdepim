@@ -69,6 +69,7 @@ namespace Kleo {
         void loadViews( const KConfig * cfg );
         void saveViews( KConfig * cfg ) const;
 
+        std::vector<QAbstractItemView*> views() const;
         QAbstractItemView * currentView() const;
 
         unsigned int count() const;

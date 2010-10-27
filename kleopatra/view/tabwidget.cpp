@@ -647,6 +647,16 @@ void TabWidget::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
         page->setKeyFilter( filter );
 }
 
+std::vector<QAbstractItemView*> TabWidget::views() const {
+    std::vector<QAbstractItemView*> result;
+    const unsigned int N = count();
+    result.reserve( N );
+    for ( unsigned int i = 0 ; i != N ; ++i )
+        if ( const Page * const p = d->page( i ) )
+            result.push_back( p->view() );
+    return result;
+}
+
 QAbstractItemView * TabWidget::currentView() const {
     if ( Page * const page = d->currentPage() )
         return page->view();
