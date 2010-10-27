@@ -142,7 +142,6 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
   Q_SIGNALS:
     void createFinished( int changeId,
                          const Akonadi::Item &item,
-                         const Akonadi::Collection &collectionUsed,
                          CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                          const QString &errorString );
 

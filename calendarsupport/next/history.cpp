@@ -39,8 +39,8 @@ History::History( IncidenceChanger2 *changer ) : QObject(),
   d->mChanger = changer;
   d->mOperationTypeInProgress = TypeNone;
 
-  connect( d->mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
-           d, SLOT(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+  connect( d->mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           d, SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
   connect( d->mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            d, SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
@@ -351,12 +351,11 @@ void History::Private::deleteFinished( int changeId,
 
 void History::Private::createFinished( int changeId,
                                        const Akonadi::Item &item,
-                                       const Collection &usedCollection,
                                        IncidenceChanger2::ResultCode changerResultCode,
                                        const QString &errorMessage )
 {
   Q_UNUSED( changeId );
-  Q_UNUSED( usedCollection );
+
   const bool success = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess );
   const History::ResultCode resultCode = success ? History::ResultCodeSuccess :
                                                    History::ResultCodeError;

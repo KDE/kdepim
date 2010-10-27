@@ -77,7 +77,7 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
     resultCode = ResultCodeSuccess;
   }
 
-  emit q->createFinished( change.changeId, item, change.usedCollection, resultCode, errorString );
+  emit q->createFinished( change.changeId, item, resultCode, errorString );
 }
 
 void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
@@ -157,14 +157,12 @@ bool IncidenceChanger2::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) con
 // Does a queued emit, with QMetaObject::invokeMethod
 void IncidenceChanger2::Private::emitCreateFinished( int changeId,
                                                      const Akonadi::Item &item,
-                                                     const Akonadi::Collection &collectionUsed,
                                                      CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                                                      const QString &errorString )
 {
   QMetaObject::invokeMethod( q, "createFinished", Qt::QueuedConnection,
                              Q_ARG( int, changeId ),
                              Q_ARG( Akonadi::Item, item ),
-                             Q_ARG( Akonadi::Collection, collectionUsed ),
                              Q_ARG( CalendarSupport::IncidenceChanger2::ResultCode, resultCode ),
                              Q_ARG( QString, errorString ) );
 }

@@ -91,7 +91,6 @@ namespace CalendarSupport {
       // to catch incidenceChanger signals
       void createFinished( int changeId,
                            const Akonadi::Item &item,
-                           const Akonadi::Collection &collectionUsed,
                            CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                            const QString &errorMessage );
 

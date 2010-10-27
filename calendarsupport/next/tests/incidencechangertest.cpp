@@ -70,6 +70,8 @@ class IncidenceChangerTest : public QObject
   IncidenceChanger2::ResultCode mExpectedResult;
   IncidenceChanger2 *mChanger;
 
+  QSet<int> mKnownChangeIds;
+
   private slots:
     void initTestCase()
     {
@@ -118,8 +120,8 @@ class IncidenceChangerTest : public QObject
       mChanger = new IncidenceChanger2( mCalendar );
       mChanger->setShowDialogsOnError( false );
 
-      connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
-               SLOT(createFinished(int,Akonadi::Item,Akonadi::Collection,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+      connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+               SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
       connect( mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
                SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
@@ -149,9 +151,10 @@ class IncidenceChangerTest : public QObject
           incidence->setUid( uid );
           incidence->setSummary( summary );
           mPendingInsertsInETM.append( uid );
-          int changeId = mChanger->createIncidence( incidence,
-                                                    mCollection );
+          changeId = mChanger->createIncidence( incidence,
+                                                mCollection );
           QVERIFY( changeId != -1 );
+          mKnownChangeIds.insert( changeId );
         }
         waitForSignals();
       }
@@ -160,6 +163,7 @@ class IncidenceChangerTest : public QObject
         changeId = mChanger->createIncidence( Incidence::Ptr(), // Invalid payload
                                               mCollection );
         QVERIFY( changeId == -1 );
+        mKnownChangeIds.insert( changeId );
       }
 
     }
@@ -174,6 +178,7 @@ class IncidenceChangerTest : public QObject
           mPendingDeletesInETM.append( item.payload<Incidence::Ptr>()->uid() );
         }
         changeId = mChanger->deleteIncidences( incidences );
+        mKnownChangeIds.insert( changeId );
         QVERIFY( changeId != -1 );
         waitForSignals();
       }
@@ -181,9 +186,23 @@ class IncidenceChangerTest : public QObject
       { // Delete something already deleted
         mWaitingForIncidenceChangerSignals = true;
         changeId = mChanger->deleteIncidences( incidences );
+        mKnownChangeIds.insert( changeId );
         QVERIFY( changeId != -1 );
         mExpectedResult = IncidenceChanger2::ResultCodeAlreadyDeleted;
         waitForSignals();
+      }
+
+      { // If we provide an empty list, a job won't be created
+        changeId = mChanger->deleteIncidences( Item::List() );
+        mKnownChangeIds.insert( changeId );
+        QVERIFY( changeId == -1 );
+      }
+
+      { // If we provide a list with at least one invalid item, a job won't be created
+        Item::List list;
+        list << Item();
+        changeId = mChanger->deleteIncidences( list );
+        QVERIFY( changeId == -1 );
       }
 
     }
@@ -249,19 +268,65 @@ class IncidenceChangerTest : public QObject
                        CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                        const QString &errorMessage )
   {
-    Q_UNUSED( changeId );
     Q_UNUSED( deletedIds );
-    if ( resultCode != IncidenceChanger2::ResultCodeSuccess )
+    QVERIFY( mKnownChangeIds.contains( changeId ) );
+    QVERIFY( changeId != -1 );
+
+    if ( resultCode != IncidenceChanger2::ResultCodeSuccess ) {
       kDebug() << "Error string is " << errorMessage;
+    } else {
+      QVERIFY( !deletedIds.isEmpty() );
+      foreach( Akonadi::Item::Id id , deletedIds ) {
+        QVERIFY( id != -1 );
+      }
+    }
 
     QVERIFY( resultCode == mExpectedResult );
     mExpectedResult = IncidenceChanger2::ResultCodeSuccess;
     mWaitingForIncidenceChangerSignals = false;
   }
 
+  void createFinished( int changeId,
+                       const Akonadi::Item &item,
+                       CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                       const QString &errorString )
+  {
+    QVERIFY( mKnownChangeIds.contains( changeId ) );
+    QVERIFY( changeId != -1 );
+
+    if ( resultCode == IncidenceChanger2::ResultCodeSuccess ) {
+      QVERIFY( item.isValid() );
+      QVERIFY( item.parentCollection().isValid() );
+    } else {
+      kDebug() << "Error string is " << errorString;
+    }
+
+    QVERIFY( resultCode == mExpectedResult );
+    mExpectedResult = IncidenceChanger2::ResultCodeSuccess;
+    mWaitingForIncidenceChangerSignals = false;
+  }
+
+  void modifyFinished( int changeId,
+                       const Akonadi::Item &item,
+                       CalendarSupport::IncidenceChanger2::ResultCode resultCode,
+                       const QString &errorString )
+  {
+    Q_UNUSED( item );
+    QVERIFY( mKnownChangeIds.contains( changeId ) );
+    QVERIFY( changeId != -1 );
+
+    if ( resultCode == IncidenceChanger2::ResultCodeSuccess )
+      QVERIFY( item.isValid() );
+    else
+      kDebug() << "Error string is " << errorString;
+
+    QVERIFY( resultCode == mExpectedResult );
+
+    mExpectedResult = IncidenceChanger2::ResultCodeSuccess;
+    mWaitingForIncidenceChangerSignals = false;
+  }
 };
 
-// For undo/redo buttons
-QTEST_AKONADIMAIN( IncidenceChangerTest, GUI )
+QTEST_AKONADIMAIN( IncidenceChangerTest, NoGUI )
 
 #include "incidencechangertest.moc"

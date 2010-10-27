@@ -75,7 +75,6 @@ class IncidenceChanger2::Private : public QObject
     // Does a queued emit, with QMetaObject::invokeMethod
     void emitCreateFinished( int changeId,
                              const Akonadi::Item &item,
-                             const Akonadi::Collection &collectionUsed,
                              CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                              const QString &errorString );
 
