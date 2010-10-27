@@ -182,7 +182,6 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
     return 1;
   }
   bool stopIt = false;
-  bool atLeastOneRuleMatched = false;
 
   if ( !beginFiltering( item ) )
     return 1;
@@ -198,8 +197,6 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
         // filter is applicable
 
       if ( isMatching( item, (*it) ) ) {
-        // filter matches
-        atLeastOneRuleMatched = true;
         // execute actions:
         if ( (*it)->execActions(item, stopIt) == MailFilter::CriticalError ) {
           return 2;
@@ -209,14 +206,9 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
   }
 
   Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
-  /* endFilter does a take() and addButKeepUID() to ensure the changed
-   * message is on disk. This is unnessecary if nothing matched, so just
-   * reset state and don't update the listview at all. */
-  if ( atLeastOneRuleMatched ) {
-    endFiltering( item );
-  } else {
-    MessageProperty::setFiltering( item, false );
-  }
+  
+  endFiltering( item );
+  
   if ( targetFolder.isValid() ) {
     new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
     return 0;
