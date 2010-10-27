@@ -23,7 +23,9 @@
 #include "stylesheetloader.h"
 #include "ui_configwidget.h"
 
+#ifndef _WIN32_WCE
 #include <kcmoduleproxy.h>
+#endif
 #include <kconfigdialogmanager.h>
 #include <klocale.h>
 
@@ -33,8 +35,10 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   Ui_ConfigWidget ui;
   ui.setupUi( this );
 
+#ifndef _WIN32_WCE
   mLdapConfigWidget = new KCModuleProxy( QLatin1String( "kcmldap" ) );
   ui.ldapServerSettingsLayout->addWidget( mLdapConfigWidget, 1, 1 );
+#endif
 
   mMapServiceBox = ui.kcfg_MapService;
 
@@ -52,7 +56,9 @@ void ConfigWidget::load()
   Settings::self()->setMapService( mMapServiceBox->findData( addressUrl ) );
   mManager->updateWidgets();
 
+#ifndef _WIN32_WCE
   mLdapConfigWidget->load();
+#endif
 }
 
 void ConfigWidget::save()
@@ -66,7 +72,9 @@ void ConfigWidget::save()
   group.writeEntry( "AddressUrl", addressUrl );
   config.sync();
 
+#ifndef _WIN32_WCE
   mLdapConfigWidget->save();
+#endif
 }
 
 DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
