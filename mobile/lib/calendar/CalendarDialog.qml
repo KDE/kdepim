@@ -42,8 +42,13 @@ Dialog {
             top: parent.top
             bottom: parent.bottom
           }
+          //why onDayChanged doesn't work here as onDaysInMothChanged do?
           onDaySelected: {
             daySelector.value = myCalendar.day
+          }
+
+          onDaysInMonthChanged: {
+            daySelector.setRange(daysInMonth)
           }
         }
 

@@ -71,6 +71,11 @@ Item {
         anchors.rightMargin: 5
     }
 
+    function setRange(range) {
+        list.model = range
+        list.positionViewAtIndex( value - beginWith, ListView.Center )
+    }
+
     function toggleState(newValue)
     {
         state = (state == "selected") ? "unselected" : "selected";
