@@ -4,5 +4,6 @@ configure_file(config-strigi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-strigi.h
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+add_subdirectory( ctg )
 add_subdirectory( vcf )
 add_subdirectory( ics )

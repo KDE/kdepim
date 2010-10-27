@@ -52,29 +52,30 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfEndAnalyzerFactory : public Strigi::StreamEnd
   friend class VcfEndAnalyzer;
 
   public:
+    const Strigi::RegisteredField* prefixField;
     const Strigi::RegisteredField* givenNameField;
+    const Strigi::RegisteredField* additionalNameField;
     const Strigi::RegisteredField* familyNameField;
+    const Strigi::RegisteredField* suffixField;
+    const Strigi::RegisteredField* fullnameField;
+    const Strigi::RegisteredField* nicknameField;
 
     const Strigi::RegisteredField* emailField;
     const Strigi::RegisteredField* typeField;
-    const Strigi::RegisteredField* homepageField;
-    const Strigi::RegisteredField* commentField;
+    const Strigi::RegisteredField* websiteUrlField;
+    const Strigi::RegisteredField* noteField;
 
-    const Strigi::RegisteredField* cellPhoneField;
-    const Strigi::RegisteredField* workPhoneField;
-    const Strigi::RegisteredField* homePhoneField;
-    const Strigi::RegisteredField* faxPhoneField;
-    const Strigi::RegisteredField* otherPhoneField;
+    const Strigi::RegisteredField* phoneNumberField;
+
+    const Strigi::RegisteredField* addressCountryField;
+    const Strigi::RegisteredField* addressLocalityField;
+    const Strigi::RegisteredField* addressPostOfficeBoxField;
+    const Strigi::RegisteredField* addressPostalCodeField;
+    const Strigi::RegisteredField* addressRegionField;
+    const Strigi::RegisteredField* addressStreetField;
 
     const Strigi::RegisteredField* photoField;
-
-    const Strigi::RegisteredField* homeAddressField;
-    const Strigi::RegisteredField* workAddressField;
-    const Strigi::RegisteredField* postalAddressField;
-    const Strigi::RegisteredField* otherAddressField;
-
-    const Strigi::RegisteredField* prefixField;
-    const Strigi::RegisteredField* suffixField;
+    const Strigi::RegisteredField* uidField;
 
     const char* name() const;
     Strigi::StreamEndAnalyzer* newInstance() const;

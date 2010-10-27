@@ -81,7 +81,7 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult &index
   // count completed and overdue
   int completed = 0;
   int overdue = 0;
-  foreach ( const Todo::Ptr todo, todos ) {
+  foreach ( const Todo::Ptr &todo, todos ) {
     if ( todo->isCompleted() ) {
       ++completed;
     } else if ( todo->hasDueDate() && todo->dtDue().date() < QDate::currentDate() ) {
@@ -92,6 +92,54 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult &index
   index.addValue( m_factory->todosField, static_cast<quint32>( todos.count() ) );
   index.addValue( m_factory->todosCompletedField, static_cast<quint32>( completed ) );
   index.addValue( m_factory->todosOverdueField, static_cast<quint32>( overdue ) );
+
+  // add events
+  foreach ( const Event::Ptr &event, calendar->events() ) {
+    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#Event" );
+    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo" );
+    index.addValue( m_factory->uidField, event->uid().toUtf8().data() );
+
+    if ( !event->description().isEmpty() )
+      index.addValue( m_factory->descriptionField, event->description().toUtf8().data() );
+
+    if ( !event->location().isEmpty() )
+      index.addValue( m_factory->locationField, event->location().toUtf8().data() );
+
+    if ( !event->summary().isEmpty() )
+      index.addValue( m_factory->summaryField, event->summary().toUtf8().data() );
+  }
+
+  // add todos
+  foreach ( const Todo::Ptr &todo, calendar->todos() ) {
+    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#Todo" );
+    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo" );
+    index.addValue( m_factory->uidField, todo->uid().toUtf8().data() );
+
+    if ( !todo->description().isEmpty() )
+      index.addValue( m_factory->descriptionField, todo->description().toUtf8().data() );
+
+    if ( !todo->location().isEmpty() )
+      index.addValue( m_factory->locationField, todo->location().toUtf8().data() );
+
+    if ( !todo->summary().isEmpty() )
+      index.addValue( m_factory->summaryField, todo->summary().toUtf8().data() );
+  }
+
+  // add journals
+  foreach ( const Journal::Ptr &journal, calendar->journals() ) {
+    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#Journal" );
+    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo" );
+    index.addValue( m_factory->uidField, journal->uid().toUtf8().data() );
+
+    if ( !journal->description().isEmpty() )
+      index.addValue( m_factory->descriptionField, journal->description().toUtf8().data() );
+
+    if ( !journal->location().isEmpty() )
+      index.addValue( m_factory->locationField, journal->location().toUtf8().data() );
+
+    if ( !journal->summary().isEmpty() )
+      index.addValue( m_factory->summaryField, journal->summary().toUtf8().data() );
+  }
 
   calendar->close();
 
@@ -106,6 +154,12 @@ void IcsEndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
   todosField = reg.registerField( "Todos", Strigi::FieldRegister::integerType, 1, 0 );
   todosCompletedField = reg.registerField( "Todos Completed", Strigi::FieldRegister::integerType, 1, 0 );
   todosOverdueField = reg.registerField( "Todos Overdue", Strigi::FieldRegister::integerType, 1, 0 );
+
+  descriptionField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#description" );
+  locationField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#location" );
+  summaryField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#summary" );
+  uidField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#uid" );
+  typeField = reg.typeField;
 }
 
 const char* IcsEndAnalyzerFactory::name() const

@@ -15,6 +15,11 @@ option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_NEPOMUK "Build the mail libraries and applications without nepomuk dependency" FALSE)
 
+option(AKONADI_USE_STRIGI_SEARCH "Build Akonadi with strigi as search engine." FALSE)
+if (AKONADI_USE_STRIGI_SEARCH)
+  add_definitions(-DAKONADI_USE_STRIGI_SEARCH)
+endif (AKONADI_USE_STRIGI_SEARCH)
+
 if(KDEPIM_BUILD_STATIC)
   set(LIBRARY_TYPE STATIC)
 else(KDEPIM_BUILD_STATIC)

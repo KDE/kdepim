@@ -56,6 +56,11 @@ class PIMSTRIGI_ANALYZER_EXPORT IcsEndAnalyzerFactory : public Strigi::StreamEnd
     const Strigi::RegisteredField* todosField;
     const Strigi::RegisteredField* todosCompletedField;
     const Strigi::RegisteredField* todosOverdueField;
+    const Strigi::RegisteredField* typeField;
+    const Strigi::RegisteredField* uidField;
+    const Strigi::RegisteredField* descriptionField;
+    const Strigi::RegisteredField* locationField;
+    const Strigi::RegisteredField* summaryField;
 
     const char* name() const;
     Strigi::StreamEndAnalyzer* newInstance() const;

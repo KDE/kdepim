@@ -39,34 +39,6 @@ bool VcfEndAnalyzer::checkHeader( const char* header, qint32 headersize ) const
   return headersize >= 11 && !strncmp( "BEGIN:VCARD", header, 11 );
 }
 
-// cannot use Address::formattedAddress because it requires KComponentData
-static QString formatAddress( const KABC::Address &address )
-{
-  QStringList parts;
-  if ( !address.country().isEmpty() )
-    parts += address.country();
-
-  if ( !address.region().isEmpty() )
-    parts += address.region();
-
-  if ( !address.postalCode().isEmpty() )
-    parts += address.postalCode();
-
-  if ( !address.locality().isEmpty() )
-    parts += address.locality();
-
-  if ( !address.street().isEmpty() )
-    parts += address.street();
-
-  if ( !address.postOfficeBox().isEmpty() )
-    parts += address.postOfficeBox();
-
-  if ( !address.extended().isEmpty() )
-    parts += address.extended();
-
-  return parts.join( QLatin1String( ", " ) );
-}
-
 /**
  * It's easier to use KABC::VCardConverter to extract the single fields from the vCard
  * than doing it manually.
@@ -87,46 +59,56 @@ STRIGI_ENDANALYZER_RETVAL VcfEndAnalyzer::analyze( Strigi::AnalysisResult &index
   if ( contact.isEmpty() )
     return Strigi::Error;
 
-  Q_FOREACH ( const QString& email, contact.emails() )
-    index.addValue( m_factory->emailField, email.toUtf8().data() );
+  index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#PersonContact" );
 
-  index.addValue( m_factory->givenNameField, contact.givenName().toUtf8().data() );
-  index.addValue( m_factory->familyNameField, contact.familyName().toUtf8().data() );
+  if ( !contact.prefix().isEmpty() )
+   index.addValue( m_factory->prefixField, contact.prefix().toUtf8().data() );
+
+  if ( !contact.givenName().isEmpty() )
+    index.addValue( m_factory->givenNameField, contact.givenName().toUtf8().data() );
+
+  if ( !contact.additionalName().isEmpty() )
+    index.addValue( m_factory->additionalNameField, contact.additionalName().toUtf8().data() );
+
+  if ( !contact.familyName().isEmpty() )
+    index.addValue( m_factory->familyNameField, contact.familyName().toUtf8().data() );
+
+  if ( !contact.suffix().isEmpty() )
+    index.addValue( m_factory->suffixField, contact.suffix().toUtf8().data() );
+
+  if ( !contact.formattedName().isEmpty() )
+    index.addValue( m_factory->fullnameField, contact.formattedName().toUtf8().data() );
+
+  if ( !contact.nickName().isEmpty() )
+    index.addValue( m_factory->nicknameField, contact.nickName().toUtf8().data() );
+
+  Q_FOREACH ( const QString& email, contact.emails() ) {
+    index.addValue( m_factory->emailField, email.toUtf8().data() );
+  }
 
   if ( contact.url().isValid() )
-    index.addValue( m_factory->homepageField, contact.url().url().toUtf8().data() );
+    index.addValue( m_factory->websiteUrlField, contact.url().url().toUtf8().data() );
 
   if ( !contact.note().isEmpty() )
-    index.addValue( m_factory->commentField, contact.note().toUtf8().data() );
-
-  index.addValue( m_factory->typeField, "http://freedesktop.org/standards/xesam/1.0/core#Person" );
+    index.addValue( m_factory->noteField, contact.note().toUtf8().data() );
 
   Q_FOREACH ( const PhoneNumber &number, contact.phoneNumbers() ) {
-    switch ( number.type() ) {
-      case PhoneNumber::Cell: index.addValue( m_factory->cellPhoneField, number.number().toUtf8().data() ); break;
-      case PhoneNumber::Home: index.addValue( m_factory->homePhoneField, number.number().toUtf8().data() ); break;
-      case PhoneNumber::Work: index.addValue( m_factory->workPhoneField, number.number().toUtf8().data() ); break;
-      case PhoneNumber::Fax: index.addValue( m_factory->faxPhoneField, number.number().toUtf8().data() ); break;
-      default: index.addValue( m_factory->otherPhoneField, number.number().toUtf8().data() ); 
-    }
+    index.addValue( m_factory->phoneNumberField, number.number().toUtf8().data() ); 
   }
 
   Q_FOREACH ( const Address &address, contact.addresses() ) {
-    switch ( address.type() ) {
-      case Address::Home: index.addValue( m_factory->homeAddressField, formatAddress( address ).toUtf8().data() ); break;
-      case Address::Work: index.addValue( m_factory->workAddressField, formatAddress( address ).toUtf8().data() ); break;
-      default: index.addValue( m_factory->otherAddressField, formatAddress( address ).toUtf8().data() ); break;
-    }
+    index.addValue( m_factory->addressCountryField, address.country().toUtf8().data() );
+    index.addValue( m_factory->addressLocalityField, address.locality().toUtf8().data() );
+    index.addValue( m_factory->addressPostOfficeBoxField, address.postOfficeBox().toUtf8().data() );
+    index.addValue( m_factory->addressPostalCodeField, address.postalCode().toUtf8().data() );
+    index.addValue( m_factory->addressRegionField, address.region().toUtf8().data() );
+    index.addValue( m_factory->addressStreetField, address.street().toUtf8().data() );
   }
 
   if ( !contact.photo().isEmpty() && !contact.photo().isIntern())
     index.addValue( m_factory->photoField, contact.photo().url().toUtf8().data() );
 
-  if ( !contact.suffix().isEmpty() )
-   index.addValue( m_factory->suffixField, contact.suffix().toUtf8().data() );
-
-  if ( !contact.prefix().isEmpty() )
-   index.addValue( m_factory->prefixField, contact.prefix().toUtf8().data() );
+  index.addValue( m_factory->uidField, contact.uid().toUtf8().data() );
 
   return Strigi::Ok;
 }
@@ -143,25 +125,29 @@ Strigi::StreamEndAnalyzer* VcfEndAnalyzerFactory::newInstance() const
 
 void VcfEndAnalyzerFactory::registerFields( Strigi::FieldRegister &reg )
 {
-  givenNameField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#givenName" );
-  familyNameField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#familyName" );
+  prefixField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificPrefix" );
+  givenNameField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameGiven" );
+  additionalNameField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameAdditional" );
+  familyNameField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameFamily" );
+  suffixField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nameHonorificSuffix" );
+  fullnameField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#fullname" );
+  nicknameField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#nickname" );
 
-  emailField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#emailAddress" );
-  homepageField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#homepageContactURL" );
-  commentField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#contentComment" );
+  emailField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#emailAddress" );
+  websiteUrlField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#websiteUrl" );
+  noteField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#note" );
 
-  cellPhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#cellPhoneNumber" );
-  homePhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#homePhoneNumber" );
-  workPhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#workPhoneNumber" );
-  faxPhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#faxPhoneNumber" );
-  otherPhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#phoneNumber" );
+  phoneNumberField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#phoneNumber" );
 
-  homeAddressField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#homePostalAddress" );
-  workAddressField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#workPostalAddress" );
-  otherAddressField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#postalAddress" );
+  addressCountryField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#country" );
+  addressLocalityField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#locality" );
+  addressPostOfficeBoxField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#pobox" );
+  addressPostalCodeField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#postalcode" );
+  addressRegionField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#region" );
+  addressStreetField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#streetAddress" );
 
-  prefixField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#honorificPrefix" );
-  suffixField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#honorificSuffix" );
+  uidField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contactUID" );
+  photoField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#photo" );
 
   typeField = reg.typeField;
 }
