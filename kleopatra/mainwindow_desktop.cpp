@@ -212,10 +212,6 @@ public:
 private:
     void setupActions();
 
-    unsigned int numViews() const {
-        return ui.tabWidget.count();
-    }
-
     QAbstractItemView * currentView() const {
         return ui.tabWidget.currentView();
     }
