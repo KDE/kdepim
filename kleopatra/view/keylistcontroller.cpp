@@ -124,10 +124,6 @@ public:
         views.erase( std::remove( views.begin(), views.end(), view ), views.end() );
     }
 
-    QAbstractItemView * currentView() const {
-        return tabWidget ? tabWidget->currentView() : 0 ;
-    }
-    
 public:
     void slotDestroyed( QObject * o ) {
         qDebug( "KeyListController::Private::slotDestroyed( %p )", ( void* )o );
@@ -148,6 +144,11 @@ public:
     }
     void slotActionTriggered();
     void slotCurrentViewChanged( QAbstractItemView * view ) {
+        if ( view && !kdtools::binary_search( views, view ) ) {
+            kDebug() << "you need to register view" << view << "before trying to set it as the current view!";
+            addView( view );
+        }
+        currentView = view;
         q->enableDisableActions( view ? view->selectionModel() : 0 );
     }
 
@@ -167,6 +168,7 @@ private:
     std::vector<QAbstractItemView*> views;
     std::vector<Command*> commands;
     QPointer<TabWidget> tabWidget;
+    QPointer<QAbstractItemView> currentView;
     QPointer<AbstractKeyListModel> flatModel, hierarchicalModel;
 };
 
@@ -613,7 +615,7 @@ void KeyListController::Private::slotActionTriggered() {
         const std::vector<action_item>::const_iterator it
             = kdtools::find_if( actions, bind( &action_item::action, _1 ) == q->sender() );
         if ( it != actions.end() )
-            if ( Command * const c = it->createCommand( this->currentView(), q ) )
+            if ( Command * const c = it->createCommand( this->currentView, q ) )
                 c->start();
             else
                 qDebug( "KeyListController::Private::slotActionTriggered: createCommand() == NULL for action(?) \"%s\"", qPrintable( s->objectName() ) );
