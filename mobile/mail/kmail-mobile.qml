@@ -588,6 +588,7 @@ KPIM.MainView {
     anchors.left: parent.left
     anchors.right : parent.right
     backgroundImage : backgroundImage.source
+    property bool initialized : false
 
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
@@ -603,17 +604,14 @@ KPIM.MainView {
       guiStateManager.popState();
     }
 
-    KPIM.Action {
-      action: application.getAction( "akonadi_mark_as_read", "" );
-    }
-    KPIM.Action {
-      action: application.getAction( "akonadi_mark_as_important", "" );
-    }
-    KPIM.Action {
-      action: application.getAction( "akonadi_mark_as_action_item", "" );
-    }
-    KPIM.Action {
-      action: application.getAction( "apply_filters", "" );
+    onVisibleChanged: {
+      if ( visible == true && initialized == false ) {
+        bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_read"})
+        bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_important"})
+        bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_action_item"})
+        bulkActionScreen.actionModel.append({"action": "apply_filters"})
+        initialized = true;
+      }
     }
   }
 

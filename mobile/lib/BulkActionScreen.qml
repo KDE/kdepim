@@ -30,6 +30,7 @@ QML.Rectangle {
   property alias headerList : headerList.children
   property alias actionListWidth : actionList.width
   property alias backgroundImage : _backgroundImage.source
+  property alias actionModel : actionList.actionModel
   default property alias actions: actionList.children
 
   signal backClicked()

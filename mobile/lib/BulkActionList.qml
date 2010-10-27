@@ -28,6 +28,8 @@ QML.Column {
   property alias selectedItemModel : selectedItem.model
   property alias multipleText : _multipleText.text
 
+  property alias actionModel: actionListView.model
+
   signal backClicked()
   signal triggered(string name)
 
@@ -41,6 +43,7 @@ QML.Column {
   }
 
   QML.Item {
+    id: firstItem
     anchors.left : parent.left
     anchors.right : parent.right
     height : itemHeight
@@ -101,31 +104,35 @@ QML.Column {
       }
     }
   }
-  KPIM.Action {
-    height : itemHeight
-    anchors.left : parent.left
-    anchors.right : parent.right
-    action : application.getAction("akonadi_item_delete", "")
-    onTriggered : {
-      _top.triggered("akonadi_item_delete")
+
+  QML.ListModel {
+    id: actionModel;
+    QML.ListElement {
+      action: "akonadi_item_delete"
+    }
+    QML.ListElement {
+      action: "akonadi_item_move_to_dialog"
+    }
+    QML.ListElement {
+      action: "akonadi_item_copy_to_dialog"
     }
   }
-  KPIM.Action {
-    height : itemHeight
-    anchors.left : parent.left
-    anchors.right : parent.right
-    action : application.getAction("akonadi_item_move_to_dialog", "")
-    onTriggered : {
-      _top.triggered("akonadi_item_move_to_dialog")
-    }
-  }
-  KPIM.Action {
-    height : itemHeight
-    anchors.left : parent.left
-    anchors.right : parent.right
-    action : application.getAction("akonadi_item_copy_to_dialog", "")
-    onTriggered : {
-      _top.triggered("akonadi_item_copy_to_dialog")
-    }
+
+  QML.Rectangle {
+      anchors.left : _top.left
+      anchors.right : _top.right
+      anchors.top: _top.top + itemHeight
+      height: _top.height - itemHeight
+      clip: true
+      QML.ListView {
+        anchors.fill:parent
+        model: actionModel;
+        id: actionListView;
+        delegate: KPIM.Action {
+          height : itemHeight
+          width : parent.width
+          action: application.getAction( model.action, "" )
+          }
+      }
   }
 }
