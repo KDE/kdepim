@@ -63,6 +63,7 @@ Dialog {
           height: 100
           model: 24
 
+          value: myClock.hours
           onValueChanged: {
             myClock.hours = value;
             clockWidgetOk.enabled = true;
@@ -77,6 +78,7 @@ Dialog {
           height: 100
           model: 60
 
+          value: myClock.minutes
           onValueChanged: {
             myClock.minutes = value;
             clockWidgetOk.enabled = true;

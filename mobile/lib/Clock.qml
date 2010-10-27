@@ -47,6 +47,7 @@ Image {
             origin.x: minutesHand.width/2
             origin.y: minutesHand.height*0.95
             angle: clockHelper.minutesAngle
+            Behavior on angle { PropertyAnimation {} }
         }
     }
 
@@ -64,6 +65,7 @@ Image {
             origin.x: hoursHand.width/2
             origin.y: hoursHand.height*0.95
             angle: clockHelper.hoursAngle
+            Behavior on angle { PropertyAnimation {} }
         }
     }
 
