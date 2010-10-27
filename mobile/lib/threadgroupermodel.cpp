@@ -263,8 +263,11 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
     const QByteArray inReplyTo = pendingIt.key();
     QSet<QByteArray> pendingItems = pendingIt.value();
     if (m_threads.contains(inReplyTo)) {
-      foreach(const QByteArray &ba, pendingItems)
+      foreach(const QByteArray &ba, pendingItems) {
         m_threadItems.remove(ba);
+        m_threads[inReplyTo].unite(m_threads[ba]);
+        m_threads.remove(ba);
+      }
       m_threads[inReplyTo].unite(pendingItems);
     } else {
       foreach(const QByteArray &ba, pendingItems) {
