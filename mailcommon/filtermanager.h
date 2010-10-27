@@ -159,6 +159,7 @@ public slots:
 
 signals:
   void filterListUpdated();
+  void itemNotMoved( const Akonadi::Item& item );
 
 private slots:
   void itemAdded(const Akonadi::Item& item, const Akonadi::Collection& collection);

@@ -179,12 +179,15 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
 
   if ( set == NoSet ) {
     kDebug() << "FilterManager: process() called with not filter set selected";
+    emit itemNotMoved( item );
     return 1;
   }
   bool stopIt = false;
 
-  if ( !beginFiltering( item ) )
+  if ( !beginFiltering( item ) ) {
+    emit itemNotMoved( item );
     return 1;
+  }
   for ( QList<MailFilter*>::const_iterator it = mFilters.constBegin();
         !stopIt && it != mFilters.constEnd() ; ++it ) {
 
@@ -213,6 +216,7 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
     new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
     return 0;
   }
+  emit itemNotMoved( item );
   return 1;
 }
 
