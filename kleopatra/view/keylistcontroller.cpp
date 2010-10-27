@@ -266,6 +266,8 @@ void KeyListController::setTabWidget( TabWidget * tabWidget ) {
     d->tabWidget = tabWidget;
 
     d->connectTabWidget();
+
+    d->slotCurrentViewChanged( tabWidget ? tabWidget->currentView() : 0 );
 }
 
 static const struct {
@@ -281,6 +283,7 @@ static const unsigned int numTabs2Controller = sizeof tabs2controller / sizeof *
 void KeyListController::Private::connectTabWidget() {
     if ( !tabWidget )
         return;
+    kdtools::for_each( tabWidget->views(), bind( &Private::addView, this, _1 ) );
     for ( unsigned int i = 0 ; i < numTabs2Controller ; ++i )
         connect( tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot );
 }
@@ -290,6 +293,7 @@ void KeyListController::Private::disconnectTabWidget() {
         return;
     for ( unsigned int i = 0 ; i < numTabs2Controller ; ++i )
         disconnect( tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot );
+    kdtools::for_each( tabWidget->views(), bind( &Private::removeView, this, _1 ) );
 }
 
 AbstractKeyListModel * KeyListController::flatModel() const {
