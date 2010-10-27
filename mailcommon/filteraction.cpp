@@ -64,7 +64,9 @@ using MessageComposer::MessageFactory;
 #include <QTextDocument>
 #include <QHBoxLayout>
 #include <QLabel>
+#ifndef _WIN32_WCE
 #include "soundtestwidget.h"
+#endif
 
 using namespace MailCommon;
 
@@ -1811,6 +1813,8 @@ FilterAction::ReturnCode FilterActionExtFilter::process( const Akonadi::Item & i
   return FilterActionWithCommand::genericProcess( item, true ); // use output
 }
 
+
+#ifndef _WIN32_WCE
 //=============================================================================
 // FilterActionExecSound - execute command
 // Execute a sound
@@ -1874,7 +1878,6 @@ const QString FilterActionWithTest::displayString() const
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
 
-
 FilterActionExecSound::FilterActionExecSound()
   : FilterActionWithTest( "play sound", i18n("Play Sound") ),
     mPlayer(0)
@@ -1908,6 +1911,8 @@ bool FilterActionExecSound::requiresBody() const
 {
   return false;
 }
+
+#endif
 
 FilterActionWithUrl::FilterActionWithUrl( const char* aName, const QString &aLabel )
   : FilterAction( aName, aLabel )
@@ -2200,7 +2205,9 @@ void FilterActionDict::init(void)
   insert( FilterActionRemoveHeader::newAction );
   insert( FilterActionAddHeader::newAction );
   insert( FilterActionRewriteHeader::newAction );
+#ifndef _WIN32_WCE
   insert( FilterActionExecSound::newAction );
+#endif
   insert( FilterActionAddToAddressBook::newAction );
   // Register custom filter actions below this line.
 }
