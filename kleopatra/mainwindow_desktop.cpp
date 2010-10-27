@@ -331,11 +331,11 @@ void MainWindow::Private::setupActions() {
     if ( QAction * action = coll->action( "configure_backend" ) )
         action->setMenuRole( QAction::NoRole ); //prevent Qt OS X heuristics for config* actions
 
-    KStandardAction::close( q, SLOT(close()), q->actionCollection() );
-    KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() );
-    KStandardAction::configureToolbars( q, SLOT(configureToolbars()), q->actionCollection() );
-    KStandardAction::keyBindings( q, SLOT(editKeybindings()), q->actionCollection() );
-    KStandardAction::preferences( q, SIGNAL(configDialogRequested()), q->actionCollection() );
+    KStandardAction::close( q, SLOT(close()), coll );
+    KStandardAction::quit( q, SLOT(closeAndQuit()), coll );
+    KStandardAction::configureToolbars( q, SLOT(configureToolbars()), coll );
+    KStandardAction::keyBindings( q, SLOT(editKeybindings()), coll );
+    KStandardAction::preferences( q, SIGNAL(configDialogRequested()), coll );
 
     q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled( true );
