@@ -209,6 +209,57 @@ class IncidenceChangerTest : public QObject
 
     void testModifying()
     {
+      int changeId;
+
+      // First create an incidence
+      const QString uid( "uid");
+      const QString summary( "summary");
+      Incidence::Ptr incidence( new Event() );
+      incidence->setUid( uid );
+      incidence->setSummary( summary );
+      mPendingInsertsInETM.append( uid );
+      changeId = mChanger->createIncidence( incidence,
+                                            mCollection );
+      QVERIFY( changeId != -1 );
+      mKnownChangeIds.insert( changeId );
+      waitForSignals();
+
+      { // Just a summary change
+        Item item = mCalendar->itemForIncidenceUid( uid );
+        QVERIFY( item.isValid() );
+        item.payload<Incidence::Ptr>()->setSummary( "summary2" );
+        mPendingUpdatesInETM.append( uid );
+        changeId = mChanger->modifyIncidence( item );
+        QVERIFY( changeId != -1 );
+        mKnownChangeIds.insert( changeId );
+        waitForSignals();
+        item = mCalendar->itemForIncidenceUid( uid );
+        QVERIFY( item.isValid() );
+        QVERIFY( item.payload<Incidence::Ptr>()->summary() == "summary2" );
+      }
+
+      { // Invalid item
+        changeId = mChanger->modifyIncidence( Item() );
+        QVERIFY( changeId == -1 );
+      }
+
+      { // Delete it and try do modify it, should result in error
+        Item item = mCalendar->itemForIncidenceUid( uid );
+        QVERIFY( item.isValid() );
+        mPendingDeletesInETM.append( uid );
+        changeId = mChanger->deleteIncidence( item );
+        QVERIFY( changeId != -1 );
+        mKnownChangeIds.insert( changeId );
+        waitForSignals();
+
+        mWaitingForIncidenceChangerSignals = true;
+        changeId = mChanger->modifyIncidence( item );
+        mKnownChangeIds.insert( changeId );
+        mExpectedResult = IncidenceChanger2::ResultCodeAlreadyDeleted;
+        QVERIFY( changeId != -1 );
+        waitForSignals();
+
+      }
     }
 
 
