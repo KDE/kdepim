@@ -25,6 +25,14 @@
 
 #include "mainview.h"
 
+#ifdef MAIL_SERIALIZER_PLUGIN_STATIC
+#include <QtPlugin>
+
+Q_IMPORT_PLUGIN(akonadi_serializer_addressee)
+Q_IMPORT_PLUGIN(akonadi_serializer_contactgroup)
+Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
+#endif
+
 using namespace Akonadi;
 using namespace CalendarSupport;
 using namespace IncidenceEditorNG;

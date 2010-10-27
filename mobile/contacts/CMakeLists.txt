@@ -56,6 +56,10 @@ kde4_add_ui_files(kab_mobile_srcs
 qt4_wrap_ui(kab_mobile_srcs configwidget.ui)
 kde4_add_kcfg_files(kab_mobile_srcs settings.kcfgc)
 
+if (RUNTIME_PLUGINS_STATIC)
+  add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
+endif (RUNTIME_PLUGINS_STATIC)
+
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
 if (WINCE)
   SET_TARGET_PROPERTIES(kaddressbook-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
@@ -73,6 +77,10 @@ target_link_libraries(kaddressbook-mobile
     kleo
     incidenceeditorsngmobile
 )
+
+if (RUNTIME_PLUGINS_STATIC)
+  target_link_libraries(kaddressbook-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup)
+endif (RUNTIME_PLUGINS_STATIC)
 
 configure_file(kaddressbook-mobile.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook-mobile.sh)
 

@@ -34,6 +34,10 @@ kde4_add_kcfg_files(korganizer_mobile_SRCS settings.kcfgc)
 
 qt4_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
 
+if (RUNTIME_PLUGINS_STATIC)
+  add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
+endif (RUNTIME_PLUGINS_STATIC)
+
 kde4_add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
 if (WINCE)
   SET_TARGET_PROPERTIES(korganizer-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
@@ -55,6 +59,10 @@ target_link_libraries(korganizer-mobile
   calendarsupport
   kdepim
 )
+
+if (RUNTIME_PLUGINS_STATIC)
+  target_link_libraries(korganizer-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup akonadi_serializer_kcalcore)
+endif (RUNTIME_PLUGINS_STATIC)
 
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES korganizer-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
