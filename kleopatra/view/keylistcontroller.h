@@ -66,6 +66,8 @@ namespace Kleo {
         void setHierarchicalModel( AbstractKeyListModel * model );
         AbstractKeyListModel * hierarchicalModel() const;
 
+        QAbstractItemView * currentView() const;
+
         void setTabWidget( TabWidget * tabs );
         TabWidget * tabWidget() const;
 

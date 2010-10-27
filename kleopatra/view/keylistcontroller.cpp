@@ -306,6 +306,10 @@ AbstractKeyListModel * KeyListController::hierarchicalModel() const {
     return d->hierarchicalModel;
 }
 
+QAbstractItemView * KeyListController::currentView() const {
+    return d->currentView;
+}
+
 TabWidget * KeyListController::tabWidget() const {
     return d->tabWidget;
 }
