@@ -216,13 +216,13 @@ void KeyListController::Private::slotAboutToRemoveKey( const Key & key ) {
 }
 
 void KeyListController::addView( QAbstractItemView * view ) {
-    if ( !view || std::binary_search( d->views.begin(), d->views.end(), view ) )
+    if ( !view || kdtools::binary_search( d->views, view ) )
         return;
     d->addView( view );
 }
 
 void KeyListController::removeView( QAbstractItemView * view ) {
-    if ( !view || !std::binary_search( d->views.begin(), d->views.end(), view ) )
+    if ( !view || !kdtools::binary_search( d->views, view ) )
         return;
     d->removeView( view );
 }
@@ -436,7 +436,7 @@ void KeyListController::registerAction( QAction * action, Command::Restrictions 
 }
 
 void KeyListController::registerCommand( Command * cmd ) {
-    if ( !cmd || std::binary_search( d->commands.begin(), d->commands.end(), cmd ) )
+    if ( !cmd || kdtools::binary_search( d->commands, cmd ) )
         return;
     d->addCommand( cmd );
     qDebug( "KeyListController::registerCommand( %p )", ( void* )cmd );
@@ -454,8 +454,7 @@ bool KeyListController::shutdownWarningRequired() const {
 
 // slot
 void KeyListController::cancelCommands() {
-    std::for_each( d->commands.begin(), d->commands.end(),
-                   bind( &Command::cancel, _1 ) );
+    kdtools::for_each( d->commands, mem_fn( &Command::cancel ) );
 }
 
 void KeyListController::Private::connectView( QAbstractItemView * view ) {
@@ -487,7 +486,7 @@ void KeyListController::Private::connectCommand( Command * cmd ) {
 
 void KeyListController::Private::slotDoubleClicked( const QModelIndex & idx ) {
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
-    if ( !view || !std::binary_search( views.begin(), views.end(), view ) )
+    if ( !view || !kdtools::binary_search( views, view ) )
 	return;
 
     DetailsCommand * const c = new DetailsCommand( view, q );
@@ -498,7 +497,7 @@ void KeyListController::Private::slotDoubleClicked( const QModelIndex & idx ) {
 
 void KeyListController::Private::slotActivated( const QModelIndex & idx ) {
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
-    if ( !view || !std::binary_search( views.begin(), views.end(), view ) )
+    if ( !view || !kdtools::binary_search( views, view ) )
 	return;
     
 }
@@ -512,7 +511,7 @@ void KeyListController::Private::slotSelectionChanged( const QItemSelection & ol
 
 void KeyListController::Private::slotContextMenu( const QPoint & p ) {
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
-    if ( view && std::binary_search( views.begin(), views.end(), view ) )
+    if ( view && kdtools::binary_search( views, view ) )
         emit q->contextMenuRequested( view, view->viewport()->mapToGlobal( p ) );
     else
         qDebug( "KeyListController::Private::slotContextMenu: sender is not a QAbstractItemView*!" );
@@ -520,7 +519,7 @@ void KeyListController::Private::slotContextMenu( const QPoint & p ) {
 
 void KeyListController::Private::slotCommandFinished() {
     Command * const cmd = qobject_cast<Command*>( q->sender() );
-    if ( !cmd || !std::binary_search( commands.begin(), commands.end(), cmd ) )
+    if ( !cmd || !kdtools::binary_search( commands, cmd ) )
         return;
     qDebug( "KeyListController::Private::slotCommandFinished( %p )", ( void* )cmd );
     if ( commands.size() == 1 )
