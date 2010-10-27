@@ -55,17 +55,17 @@ KPIM.MainView {
     anchors.fill: parent
     z: 50
 
-    CalendarDialog {
+    KPIM.CalendarDialog {
       id: calendarWidget
       anchors.fill: parent
     }
 
-    ClockDialog {
+    KPIM.ClockDialog {
       id: clockWidget
       anchors.fill: parent
     }
 
-    MorePanel {
+    KPIM.MorePanel {
         anchors.fill: parent
     }
   }

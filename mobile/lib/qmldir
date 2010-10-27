@@ -34,3 +34,6 @@ AgentInstanceListContainer 4.5 AgentInstanceListContainer.qml
 FavoriteManager 4.5 FavoriteManager.qml
 ReorderListDelegate 4.5 ReorderListDelegate.qml
 AgentStatusIndicator 4.5 AgentStatusIndicator.qml
+MorePanel 4.5 MorePanel.qml
+CalendarDialog 4.5 CalendarDialog.qml
+ClockDialog 4.5 ClockDialog.qml
