@@ -23,6 +23,7 @@
 
 #include "kcalprefs.h"
 #include "identitymanager.h"
+#include "categoryconfig.h"
 
 #include <KMime/HeaderParsing>
 
@@ -160,6 +161,17 @@ void KCalPrefs::usrReadConfig()
 
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
   d->mDefaultCalendarId = defaultCalendarConfig.readEntry( "Default Calendar", -1 );
+
+  // Category colors
+  KConfigGroup colorsConfig( config(), "Category Colors2" );
+  CategoryConfig cc( this );
+  const QStringList cats = cc.customCategories();
+  Q_FOREACH( const QString& i, cats ) {
+    QColor c = colorsConfig.readEntry( i, d->mDefaultCategoryColor );
+    if ( c != d->mDefaultCategoryColor ) {
+      setCategoryColor( i, c );
+    }
+  }
 
 #if 0
   config()->setGroup( "FreeBusy" );

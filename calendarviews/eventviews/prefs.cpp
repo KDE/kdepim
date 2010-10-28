@@ -111,18 +111,6 @@ void BaseConfig::usrReadConfig()
 
   // Note that the [Category Colors] group was removed after 3.2 due to
   // an algorithm change. That's why we now use [Category Colors2]
-
-  // Category colors
-  KConfigGroup colorsConfig( config(), "Category Colors2" );
-/*  CategoryConfig cc( this );
-  const QStringList cats = cc.customCategories();
-  Q_FOREACH( const QString& i, cats ) {
-    QColor c = colorsConfig.readEntry( i, mDefaultCategoryColor );
-    if ( c != mDefaultCategoryColor ) {
-      setCategoryColor( i, c );
-    }
-    }*/
-
   // Resource colors
   KConfigGroup rColorsConfig( config(), "Resources Colors" );
   const QStringList colorKeyList = rColorsConfig.keyList();
