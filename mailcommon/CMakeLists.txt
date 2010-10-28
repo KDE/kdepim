@@ -7,11 +7,12 @@ include_directories(
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
-set(libmailcommon_SRCS
+set(libmailcommon_SRCS 
   entitycollectionorderproxymodel.cpp
   expirejob.cpp
   expirypropertiesdialog.cpp
   filteraction.cpp
+  filteractionwidget.cpp
   filterimporterexporter.cpp
   filterlog.cpp
   filtermanager.cpp
@@ -31,7 +32,9 @@ set(libmailcommon_SRCS
   messageproperty.cpp
   readablecollectionproxymodel.cpp
   regexplineedit.cpp
+  rulewidgethandlermanager.cpp
   searchpattern.cpp
+  searchpatternedit.cpp
 )
 
 if ( NOT WINCE )
