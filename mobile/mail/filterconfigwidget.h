@@ -26,6 +26,8 @@
 
 namespace MailCommon {
 class MailFilter;
+class SearchPatternEdit;
+class FilterActionWidgetLister;
 }
 
 class Ui_FilterConfigWidget;
@@ -43,6 +45,8 @@ public:
 private:
   Ui_FilterConfigWidget *mUi;
   MailCommon::MailFilter *mFilter;
+  MailCommon::SearchPatternEdit *mPatternEdit;
+  MailCommon::FilterActionWidgetLister *mActionLister;
 };
 
 class DeclarativeFilterConfigWidget : public QGraphicsProxyWidget

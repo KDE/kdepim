@@ -26,6 +26,8 @@
 
 #include <stylesheetloader.h>
 #include <mailcommon/filtermanager.h>
+#include <mailcommon/searchpatternedit.h>
+#include <mailcommon/filteractionwidget.h>
 
 using namespace MailCommon;
 
@@ -33,6 +35,10 @@ FilterConfigWidget::FilterConfigWidget(QWidget* parent, Qt::WindowFlags f): QWid
 {
   mUi = new Ui_FilterConfigWidget;
   mUi->setupUi( this );
+  mPatternEdit = new SearchPatternEdit( i18n("Criteria"), this );
+  mUi->criteriaLayout->addWidget( mPatternEdit, 0, Qt::AlignTop );
+  mActionLister = new FilterActionWidgetLister( this );
+  mUi->actionsLayout->addWidget( mActionLister, 0, Qt::AlignTop );
 }
 
 FilterConfigWidget::~FilterConfigWidget()
@@ -47,11 +53,9 @@ void FilterConfigWidget::loadFilter(MailCommon::MailFilter* filter)
   if ( !mFilter )
     return;
 
-  if ( mFilter->pattern()->op() == SearchPattern::OpOr ) {
-    mUi->matchAnyRB->setChecked( true );
-  } else {
-    mUi->matchAllRB->setChecked( true );
-  }
+  mPatternEdit->setSearchPattern( mFilter->pattern() );
+
+  mActionLister->setActionList( mFilter->actions() );
 
   mUi->applyToIncomingCB->setChecked( mFilter->applyOnInbound() );
   mUi->applyToSentCB->setChecked( mFilter->applyOnOutbound() );
@@ -65,11 +69,6 @@ void FilterConfigWidget::save()
   if ( !mFilter )
     return;
   
-  if ( mUi->matchAnyRB->isChecked() ) {
-    mFilter->pattern()->setOp( SearchPattern::OpOr );     
-  } else {
-    mFilter->pattern()->setOp( SearchPattern::OpAnd );
-  }
   mFilter->setApplyOnInbound( mUi->applyToIncomingCB->isChecked() );
   mFilter->setApplyOnOutbound( mUi->applyToSentCB->isChecked() );
   mFilter->setApplyBeforeOutbound( mUi->applyBeforeSendCB->isChecked() );
