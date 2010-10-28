@@ -60,7 +60,7 @@
 #include <KCharsets>
 #include <KJob>
 #include <kio/jobuidelegate.h>
-
+#include <KLocale>
 
 #include <stdlib.h>
 
