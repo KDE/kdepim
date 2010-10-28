@@ -27,16 +27,19 @@
 
 class CategorySelectWidgetBase;
 
+namespace CalendarSupport {
+  class CategoryConfig;
+}
+
 namespace IncidenceEditorNG {
 
 class AutoCheckTreeWidget;
-class CategoryConfig;
 
 class INCIDENCEEDITORS_NG_EXPORT CategorySelectWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit CategorySelectWidget( CategoryConfig *config, QWidget *parent=0 );
+    explicit CategorySelectWidget( CalendarSupport::CategoryConfig *config, QWidget *parent=0 );
     ~CategorySelectWidget();
 
     void setCategories( const QStringList &categoryList = QStringList() );
@@ -62,14 +65,14 @@ class INCIDENCEEDITORS_NG_EXPORT CategorySelectWidget : public QWidget
   private:
     QStringList mCategoryList;
     CategorySelectWidgetBase *mWidgets;
-    CategoryConfig *mCategoryConfig;
+    CalendarSupport::CategoryConfig *mCategoryConfig;
 };
 
 class INCIDENCEEDITORS_NG_EXPORT CategorySelectDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit CategorySelectDialog( CategoryConfig *cfg, QWidget *parent = 0 );
+    explicit CategorySelectDialog( CalendarSupport::CategoryConfig *cfg, QWidget *parent = 0 );
     ~CategorySelectDialog();
 
     QStringList selectedCategories() const;

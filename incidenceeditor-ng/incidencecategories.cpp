@@ -19,21 +19,26 @@
 */
 
 #include "incidencecategories.h"
-#include "categoryconfig.h"
 #include "categoryhierarchyreader.h"
+
 #ifndef Q_OS_WINCE
-#include "categorydialog.h"
+  #include "categorydialog.h"
 #endif
+
 #include "editorconfig.h"
+
 #ifdef KDEPIM_MOBILE_UI
-#include "ui_eventortodomoremobile.h"
+  #include "ui_eventortodomoremobile.h"
 #else
-#include "ui_eventortododesktop.h"
+  #include "ui_eventortododesktop.h"
 #endif
+
+#include <calendarsupport/categoryconfig.h>
 
 #include <KConfigSkeleton>
 
 using namespace IncidenceEditorNG;
+using namespace CalendarSupport;
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceCategories::IncidenceCategories( Ui::EventOrTodoMore *ui )

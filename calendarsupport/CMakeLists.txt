@@ -21,6 +21,7 @@ set(calendarsupport_LIB_SRCS
   calendarsearch.cpp
   calendarutils.cpp
   calfilterproxymodel.cpp
+  categoryconfig.cpp
   collectionselection.cpp
   daterangefilterproxymodel.cpp
   eventarchiver.cpp

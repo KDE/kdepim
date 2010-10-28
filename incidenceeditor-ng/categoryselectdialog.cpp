@@ -19,11 +19,13 @@
 */
 
 #include "categoryselectdialog.h"
-#include "categoryconfig.h"
 #include "categoryhierarchyreader.h"
 #include "ui_categoryselectdialog_base.h"
 
+#include <calendarsupport/categoryconfig.h>
+
 using namespace IncidenceEditorNG;
+using namespace CalendarSupport;
 
 class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog_base
 {

@@ -17,18 +17,18 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef INCIDENCEEDITOR_CATEGORYCONFIG_H
-#define INCIDENCEEDITOR_CATEGORYCONFIG_H
+#ifndef CALENDARSUPPORT_CATEGORYCONFIG_H
+#define CALENDARSUPPORT_CATEGORYCONFIG_H
 
-#include "incidenceeditors-ng_export.h"
+#include "calendarsupport_export.h"
 
 #include <QObject>
 
 class KCoreConfigSkeleton;
 
-namespace IncidenceEditorNG {
+namespace CalendarSupport {
 
-class INCIDENCEEDITORS_NG_EXPORT CategoryConfig : public QObject
+class CALENDARSUPPORT_EXPORT CategoryConfig : public QObject
 {
   Q_OBJECT
   public:

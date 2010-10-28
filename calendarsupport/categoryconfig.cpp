@@ -23,7 +23,7 @@
 #include <KConfigSkeleton>
 #include <KLocalizedString>
 
-using namespace IncidenceEditorNG;
+using namespace CalendarSupport;
 
 static QStringList categoryDefaults()
 {
