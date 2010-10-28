@@ -33,10 +33,8 @@
 #include <QWidget>
 #include <QObject>
 
-
 namespace CalendarSupport {
 
-class Calendar;
 class History;
 
 class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
@@ -47,13 +45,14 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     enum ResultCode {
       ResultCodeSuccess = 0,
       ResultCodeJobError,
-      ResultCodeAlreadyDeleted ///< That calendar item was already deleted, or currently being deleted.
+      ResultCodeAlreadyDeleted, ///< That calendar item was already deleted, or currently being deleted.
+      ResultCodeInvalidDefaultCollection ///< Default collection is invalid and DestinationPolicyNeverAsk was used
     };
 
     enum DestinationPolicy {
       DestinationPolicyDefault, ///< The default collection is used, if it's invalid, the user is prompted. @see setDefaultCollection().
-      DestinationPolicyDefaultOnly, ///< The default collection is used, if it's invalid, an error is returned, and the incidence isn't added.
-      DestinationPolicyAsk      ///< User is always asked which collection to use.
+      DestinationPolicyAsk,      ///< User is always asked which collection to use.
+      DestinationPolicyNeverAsk ///< The default collection is used, if it's invalid, an error is returned, and the incidence isn't added.
     };
 
     /**
@@ -66,7 +65,7 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
       ChangeTypeDelete    ///> Represents an incidence deletion.
     };
 
-    explicit IncidenceChanger2( CalendarSupport::Calendar *calendar );
+    explicit IncidenceChanger2();
     ~IncidenceChanger2();
 
     int createIncidence( const KCalCore::Incidence::Ptr &incidence,
@@ -130,8 +129,8 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     */
     CalendarSupport::History *history() const;
 
-    void setDefaultCollectionId( Akonadi::Collection::Id id );
-    Akonadi::Collection::Id defaultCollectionId() const;
+    void setDefaultCollection( const Akonadi::Collection &collection );
+    Akonadi::Collection defaultCollection() const;
 
     void setDestinationPolicy( DestinationPolicy destinationPolicy );
     DestinationPolicy destinationPolicy() const;

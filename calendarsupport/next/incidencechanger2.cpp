@@ -23,7 +23,7 @@
 #include "incidencechanger2.h"
 #include "incidencechanger2_p.h"
 #include "history.h"
-#include "calendar.h"
+#include "utils.h"
 
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemModifyJob>
@@ -43,9 +43,9 @@ IncidenceChanger2::Private::Private( IncidenceChanger2 *qq ) : q( qq )
   mLatestOperationId = 0;
   mShowDialogsOnError = true;
   mHistory = new History( q );
+  mDestinationPolicy = DestinationPolicyDefault;
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
-
 }
 
 IncidenceChanger2::Private::~Private()
@@ -193,10 +193,9 @@ void IncidenceChanger2::Private::emitDeleteFinished( int changeId,
                              Q_ARG( QString, errorString ) );
 }
 
-IncidenceChanger2::IncidenceChanger2( CalendarSupport::Calendar *calendar ) : QObject(),
-                                                                              d( new Private( this ) )
+IncidenceChanger2::IncidenceChanger2() : QObject(),
+                                         d( new Private( this ) )
 {
-  Q_UNUSED( calendar );
 }
 
 IncidenceChanger2::~IncidenceChanger2()
@@ -210,19 +209,70 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
                                         bool recordToHistory,
                                         QWidget *parent )
 {
-  Q_UNUSED( parent );
-
   if ( !incidence ) {
     kWarning() << "An invalid payload is not allowed.";
     return -1;
   }
+
+  const Change change( ++d->mLatestOperationId, atomicOperationId, recordToHistory, parent );
+  Collection collectionToUse;
+
+  if ( collection.isValid() ) {
+    // The collection passed always has priority
+    collectionToUse = collection;
+  } else {
+    switch( d->mDestinationPolicy ) {
+      case DestinationPolicyDefault:
+        if ( d->mDefaultCollection.isValid() ) {
+          collectionToUse = d->mDefaultCollection;
+          break;
+        }
+        // else fallthrough, and ask the user.
+      case DestinationPolicyAsk:
+      {
+        int dialogCode;
+        const QStringList mimeTypes( incidence->mimeType() );
+        collectionToUse = CalendarSupport::selectCollection( parent,
+                                                             dialogCode /*by-ref*/,
+                                                             mimeTypes,
+                                                             d->mDefaultCollection );
+        if ( dialogCode != QDialog::Accepted ) {
+          kDebug() << "No valid collection to use.";
+          return -2;
+        }
+
+        if ( collectionToUse.isValid() ) {
+          kError() << "Invalid collection selected. Can't create incidence.";
+          return -2;
+        }
+      }
+      case DestinationPolicyNeverAsk:
+        if ( d->mDefaultCollection.isValid() ) {
+          collectionToUse = d->mDefaultCollection;
+        } else {
+          // error is not i18n'd, should be a bug in the application using IncidenceChanger.
+          d->emitCreateFinished( change.changeId,
+                                 Item(),
+                                 ResultCodeInvalidDefaultCollection,
+                                 QLatin1String( "Default collection is invalid and DestinationPolicyNeverAsk was used" ) );
+
+          return change.changeId;
+        }
+        break;
+    default:
+      // Never happens
+      Q_ASSERT_X( false, "createIncidence()", "unknown destination policy" );
+      return -1;
+    }
+  }
+
+
 
   Item item;
   item.setPayload<Incidence::Ptr>( incidence );
   item.setMimeType( incidence->mimeType() );
   ItemCreateJob *createJob = new ItemCreateJob( item, collection );
 
-  const Change change( ++d->mLatestOperationId, atomicOperationId, recordToHistory, parent );
   d->mChangeForJob.insert( createJob, change );
 
   // QueuedConnection because of possible sync exec calls.
@@ -265,7 +315,7 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
   foreach( const Item &item, items ) {
     if ( d->deleteAlreadyCalled( item.id() ) ) {
       // IncidenceChanger::deleteIncidence() called twice, ignore this one.
-      kDebug() << "Item " << item.id() << " already deleted or beeping deleted, skipping";
+      kDebug() << "Item " << item.id() << " already deleted or being deleted, skipping";
     } else {
       itemsToDelete.append( item );
     }
@@ -370,14 +420,14 @@ IncidenceChanger2::DestinationPolicy IncidenceChanger2::destinationPolicy() cons
   return d->mDestinationPolicy;
 }
 
-void IncidenceChanger2::setDefaultCollectionId( Akonadi::Collection::Id id )
+void IncidenceChanger2::setDefaultCollection( const Akonadi::Collection &collection )
 {
-  d->mDefaultCollectionId = id;
+  d->mDefaultCollection = collection;
 }
 
-Collection::Id IncidenceChanger2::defaultCollectionId() const
+Collection IncidenceChanger2::defaultCollection() const
 {
-  return d->mDefaultCollectionId;
+  return d->mDefaultCollection;
 }
 
 History * IncidenceChanger2::history() const

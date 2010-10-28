@@ -98,7 +98,7 @@ class IncidenceChanger2::Private : public QObject
     int mLatestOperationId;
     QHash<const KJob*,Change> mChangeForJob;
     bool mShowDialogsOnError;
-    Akonadi::Collection::Id mDefaultCollectionId;
+    Akonadi::Collection mDefaultCollection;
     DestinationPolicy mDestinationPolicy;
     QSet<Akonadi::Item::Id> mDeletedItemIds;
     History *mHistory;

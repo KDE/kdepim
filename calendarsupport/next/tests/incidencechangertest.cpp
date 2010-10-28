@@ -117,7 +117,7 @@ class IncidenceChangerTest : public QObject
                                                  mCalendarModel,
                                                  KSystemTimeZones::local() );
 
-      mChanger = new IncidenceChanger2( mCalendar );
+      mChanger = new IncidenceChanger2();
       mChanger->setShowDialogsOnError( false );
 
       connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
@@ -165,6 +165,12 @@ class IncidenceChangerTest : public QObject
         QVERIFY( changeId == -1 );
         mKnownChangeIds.insert( changeId );
       }
+
+      { // Invalid collections
+
+
+      }
+
 
     }
 

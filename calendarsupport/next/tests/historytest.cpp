@@ -116,7 +116,7 @@ class HistoryTest : public QObject
                                                  mCalendarModel,
                                                  KSystemTimeZones::local() );
 
-      IncidenceChanger2 *changer = new IncidenceChanger2( mCalendar );
+      IncidenceChanger2 *changer = new IncidenceChanger2();
       changer->setShowDialogsOnError( false );
       mHistory = new History( changer );
 
