@@ -36,7 +36,9 @@
 #include "interfaces/rulewidgethandler.h"
 #include "messageviewer/stl_util.h"
 
+#ifndef KDEPIM_NO_NEPOMUK
 #include <Nepomuk/Tag>
+#endif
 
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -163,6 +165,8 @@ namespace {
     int currentStatusValue( const QStackedWidget *valueStack ) const;
   };
 
+#ifndef KDEPIM_NO_NEPOMUK
+  
   class TagRuleWidgetHandler : public MailCommon::RuleWidgetHandler {
   public:
     TagRuleWidgetHandler() : MailCommon::RuleWidgetHandler() {}
@@ -192,6 +196,8 @@ namespace {
                  QStackedWidget *functionStack,
                  QStackedWidget *valueStack ) const;
   };
+
+#endif
 
   class NumericRuleWidgetHandler : public MailCommon::RuleWidgetHandler {
   public:
@@ -230,7 +236,10 @@ namespace {
 
 MailCommon::RuleWidgetHandlerManager::RuleWidgetHandlerManager()
 {
+#ifndef KDEPIM_NO_NEPOMUK  
   registerHandler( new TagRuleWidgetHandler() );
+#endif
+  
   registerHandler( new NumericRuleWidgetHandler() );
   registerHandler( new StatusRuleWidgetHandler() );
   registerHandler( new MessageRuleWidgetHandler() );
@@ -461,6 +470,9 @@ namespace {
       return label;
     }
 
+//FIXME: review what is this about, why is nepomuk used
+#ifndef KDEPIM_NO_NEPOMUK
+
     if ( number == 2 ) {
       KComboBox *combo =  new KComboBox( valueStack );
       combo->setObjectName( "categoryCombo" );
@@ -474,6 +486,7 @@ namespace {
                         receiver, SLOT( slotValueChanged() ) );
       return combo;
     }
+#endif
 
     return 0;
   }
@@ -1220,6 +1233,8 @@ namespace {
 
 } // anonymous namespace for StatusRuleWidgetHandler
 
+#ifndef KDEPIM_NO_NEPOMUK
+
 //=============================================================================
 //
 // class TagRuleWidgetHandler
@@ -1489,6 +1504,7 @@ namespace {
 
 } // anonymous namespace for TagRuleWidgetHandler
 
+#endif
 
 //=============================================================================
 //
