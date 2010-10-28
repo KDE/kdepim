@@ -668,16 +668,6 @@ QColor Prefs::agendaHolidaysBackgroundColor() const
   return d->getColor( d->mBaseConfig.agendaHolidaysBackgroundColorItem() );
 }
 
-void Prefs::setUnsetCategoryColor( const QColor &color )
-{
-  d->setColor( d->mBaseConfig.unsetCategoryColorItem(), color );
-}
-
-QColor Prefs::unsetCategoryColor() const
-{
-  return d->getColor( d->mBaseConfig.unsetCategoryColorItem() );
-}
-
 void Prefs::setAgendaViewColors( int colors )
 {
   d->setInt( d->mBaseConfig.agendaViewColorsItem(), colors );

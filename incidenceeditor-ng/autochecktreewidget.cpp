@@ -33,6 +33,7 @@ class AutoCheckTreeWidget::Private
 };
 //@endcond
 
+
 AutoCheckTreeWidget::AutoCheckTreeWidget( QWidget *parent )
   : QTreeWidget( parent ), d( new Private() )
 {
@@ -42,6 +43,8 @@ AutoCheckTreeWidget::AutoCheckTreeWidget( QWidget *parent )
            SIGNAL( dataChanged( const QModelIndex &, const QModelIndex & ) ),
            this,
            SLOT( slotDataChanged( const QModelIndex &, const QModelIndex & ) ) );
+
+  setColumnCount( 2 );
 }
 
 AutoCheckTreeWidget::~AutoCheckTreeWidget()
@@ -123,6 +126,8 @@ void AutoCheckTreeWidget::slotRowsInserted( const QModelIndex &parent,
     QTreeWidgetItem *item = itemFromIndex( parent );
     QTreeWidgetItem *child;
     if ( item ) {
+      QBrush b( Qt::yellow );
+      item->setBackground( 0,  b );
       for ( int i = start; i < qMax( end, item->childCount() ); ++i ) {
         child = item->child( i );
         child->setFlags( child->flags() | Qt::ItemIsUserCheckable );
@@ -156,3 +161,4 @@ void AutoCheckTreeWidget::slotDataChanged( const QModelIndex &topLeft,
 }
 
 #include "autochecktreewidget.moc"
+

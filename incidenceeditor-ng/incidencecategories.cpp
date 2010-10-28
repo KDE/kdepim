@@ -22,7 +22,7 @@
 #include "categoryconfig.h"
 #include "categoryhierarchyreader.h"
 #ifndef Q_OS_WINCE
-#include "categoryselectdialog.h"
+#include "categorydialog.h"
 #endif
 #include "editorconfig.h"
 #ifdef KDEPIM_MOBILE_UI
@@ -103,7 +103,7 @@ void IncidenceCategories::selectCategories()
 // FIXME we don't have QTreeWidget on WinCE, find an alternative !
 #ifndef Q_OS_WINCE
   CategoryConfig cc( EditorConfig::instance()->config() );
-  QPointer<CategorySelectDialog> dialog( new CategorySelectDialog( &cc ) );
+  QPointer<CategoryDialog> dialog( new CategoryDialog( &cc ) );
   dialog->setSelected( mSelectedCategories );
   dialog->exec();
 

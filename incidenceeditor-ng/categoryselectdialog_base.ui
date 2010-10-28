@@ -1,6 +1,6 @@
 <ui version="4.0" >
  <class>CategorySelectDialog_base</class>
- <widget class="QWidget" name="CategorySelectDialog_base" >
+ <widget class="QWidget" name="CategoryDialog_base" >
   <property name="geometry" >
    <rect>
     <x>0</x>

@@ -111,9 +111,6 @@ class EVENTVIEWS_EXPORT Prefs
     void setAgendaHolidaysBackgroundColor( const QColor &color ) const;
     QColor agendaHolidaysBackgroundColor() const;
 
-    void setUnsetCategoryColor( const QColor &color );
-    QColor unsetCategoryColor() const;
-
     void setAgendaViewColors( int colors );
     int agendaViewColors() const;
 
