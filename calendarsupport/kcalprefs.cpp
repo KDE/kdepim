@@ -42,9 +42,10 @@ K_GLOBAL_STATIC( KCalPrefs, globalPrefs )
 class KCalPrefs::Private
 {
   public:
-    Private() : mDefaultCalendarId( -1 )
+    Private( KCalPrefs *qq ) : mDefaultCalendarId( -1 ), q( qq )
     {
       mDefaultCategoryColor = QColor( 151, 235, 121 );
+      mCategoryConfig = new CategoryConfig( q );
     }
 
     // Groupware passwords - deprecated !?
@@ -56,11 +57,14 @@ class KCalPrefs::Private
     KDateTime::Spec mTimeSpec;
     Akonadi::Entity::Id mDefaultCalendarId;
 
+    CategoryConfig *mCategoryConfig;
     QHash<QString,QColor> mCategoryColors;
     QColor mDefaultCategoryColor;
+  private:
+    KCalPrefs *q;
 };
 
-KCalPrefs::KCalPrefs() : KCalPrefsBase(), d( new Private() )
+KCalPrefs::KCalPrefs() : KCalPrefsBase(), d( new Private( this ) )
 {
 }
 
@@ -163,16 +167,7 @@ void KCalPrefs::usrReadConfig()
   d->mDefaultCalendarId = defaultCalendarConfig.readEntry( "Default Calendar", -1 );
 
   // Category colors
-  KConfigGroup colorsConfig( config(), "Category Colors2" );
-  CategoryConfig cc( this );
-  const QStringList cats = cc.customCategories();
-  Q_FOREACH( const QString& i, cats ) {
-    QColor c = colorsConfig.readEntry( i, d->mDefaultCategoryColor );
-    if ( c != d->mDefaultCategoryColor ) {
-      setCategoryColor( i, c );
-    }
-  }
-
+  d->mCategoryColors = d->mCategoryConfig->readColors();
 #if 0
   config()->setGroup( "FreeBusy" );
   if ( mRememberRetrievePw ) {
@@ -203,12 +198,7 @@ void KCalPrefs::usrWriteConfig()
     i->writeConfig( config() );
   }
 
-  KConfigGroup colorsConfig( config(), "Category Colors2" );
-  QHash<QString, QColor>::const_iterator i = d->mCategoryColors.constBegin();
-  while ( i != d->mCategoryColors.constEnd() ) {
-    colorsConfig.writeEntry( i.key(), i.value() );
-    ++i;
-  }
+  d->mCategoryConfig->setColors( d->mCategoryColors );
 
 #if 0
   if ( mRememberRetrievePw ) {

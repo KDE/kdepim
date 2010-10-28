@@ -22,9 +22,11 @@
 
 #include "calendarsupport_export.h"
 
+#include <QHash>
 #include <QObject>
 
 class KCoreConfigSkeleton;
+class QColor;
 
 namespace CalendarSupport {
 
@@ -37,15 +39,16 @@ class CALENDARSUPPORT_EXPORT CategoryConfig : public QObject
     QStringList customCategories() const;
     void setCustomCategories( const QStringList &categories );
 
+    QHash<QString,QColor> readColors() const;
+    void setColors( const QHash<QString,QColor> &colors );
+
     void writeConfig();
 
     static const QString categorySeparator;
-
   private:
     Q_DISABLE_COPY(CategoryConfig)
     class Private;
     Private *const d;
-    Q_PRIVATE_SLOT( d, void configChanged() )
 };
 
 }

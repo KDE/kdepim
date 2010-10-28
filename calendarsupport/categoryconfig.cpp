@@ -57,14 +57,39 @@ class CategoryConfig::Private
   public:
     explicit Private( KCoreConfigSkeleton *cfg ) : config( cfg )
     {
+      mDefaultCategoryColor = QColor( 151, 235, 121 );
     }
 
-    void configChanged()
-    {
-    }
-
+    QColor mDefaultCategoryColor;
     KCoreConfigSkeleton *config;
 };
+
+QHash<QString,QColor> CategoryConfig::readColors() const
+{
+  // Category colors
+  QHash<QString,QColor> categoryColors;
+  KConfigGroup colorsConfig( d->config->config(), "Category Colors2" );
+  const QStringList cats = customCategories();
+  Q_FOREACH( const QString & category, cats ) {
+    const QColor color = colorsConfig.readEntry( category, d->mDefaultCategoryColor );
+    if ( color != d->mDefaultCategoryColor ) {
+      categoryColors.insert( category, color );
+    }
+  }
+
+  return categoryColors;
+}
+
+void CategoryConfig::setColors( const QHash<QString,QColor> &colors )
+{
+  KConfigGroup colorsConfig( d->config->config(), "Category Colors2" );
+  QHash<QString, QColor>::const_iterator i = colors.constBegin();
+  while ( i != colors.constEnd() ) {
+    colorsConfig.writeEntry( i.key(), i.value() );
+    ++i;
+  }
+}
+
 
 CategoryConfig::CategoryConfig( KCoreConfigSkeleton *cfg, QObject *parent )
   : QObject( parent ), d( new Private( cfg ) )
@@ -99,6 +124,8 @@ void CategoryConfig::setCustomCategories( const QStringList &categories )
   group.writeEntry( "Custom Categories", categories );
 }
 
+
 const QString CategoryConfig::categorySeparator( ":" );
+
 
 #include "categoryconfig.moc"
