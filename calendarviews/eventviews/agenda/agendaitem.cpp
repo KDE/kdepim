@@ -835,7 +835,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   if ( cat.isEmpty() ) {
     categoryColor = CalendarSupport::KCalPrefs::instance()->unsetCategoryColor();
   } else {
-    categoryColor = mEventView->preferences()->categoryColor( cat );
+    categoryColor = CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
   }
 
   QColor resourceColor = mResourceColor;
@@ -879,7 +879,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     frameColor = frameColor.dark( 115 );
   }
 
-  if ( !mEventView->preferences()->hasCategoryColor( cat ) ) {
+  if ( !CalendarSupport::KCalPrefs::instance()->hasCategoryColor( cat ) ) {
     categoryColor = resourceColor;
   }
 

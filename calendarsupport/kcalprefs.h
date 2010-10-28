@@ -79,6 +79,10 @@ class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
     Akonadi::Entity::Id defaultCalendarId() const;
     void setDefaultCalendarId( const Akonadi::Entity::Id );
 
+    void setCategoryColor( const QString &cat, const QColor &color );
+    QColor categoryColor( const QString &cat ) const;
+    bool hasCategoryColor( const QString &cat ) const;
+
   private:
     class Private;
     Private *const d;

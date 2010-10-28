@@ -43,6 +43,7 @@ class KCalPrefs::Private
   public:
     Private() : mDefaultCalendarId( -1 )
     {
+      mDefaultCategoryColor = QColor( 151, 235, 121 );
     }
 
     // Groupware passwords - deprecated !?
@@ -53,6 +54,9 @@ class KCalPrefs::Private
 
     KDateTime::Spec mTimeSpec;
     Akonadi::Entity::Id mDefaultCalendarId;
+
+    QHash<QString,QColor> mCategoryColors;
+    QColor mDefaultCategoryColor;
 };
 
 KCalPrefs::KCalPrefs() : KCalPrefsBase(), d( new Private() )
@@ -187,6 +191,13 @@ void KCalPrefs::usrWriteConfig()
     i->writeConfig( config() );
   }
 
+  KConfigGroup colorsConfig( config(), "Category Colors2" );
+  QHash<QString, QColor>::const_iterator i = d->mCategoryColors.constBegin();
+  while ( i != d->mCategoryColors.constEnd() ) {
+    colorsConfig.writeEntry( i.key(), i.value() );
+    ++i;
+  }
+
 #if 0
   if ( mRememberRetrievePw ) {
     config()->writeEntry( "Retrieve Server Password",
@@ -317,3 +328,23 @@ QString KCalPrefs::mailTransport() const
   return d->mMailTransport;
 }
 
+void KCalPrefs::setCategoryColor( const QString &cat, const QColor &color )
+{
+  d->mCategoryColors.insert( cat, color );
+}
+
+QColor KCalPrefs::categoryColor( const QString &cat ) const
+{
+  QColor color;
+
+  if ( !cat.isEmpty() ) {
+    color = d->mCategoryColors.value( cat );
+  }
+
+  return color.isValid() ? color : d->mDefaultCategoryColor;
+}
+
+bool KCalPrefs::hasCategoryColor( const QString &cat ) const
+{
+  return d->mCategoryColors[ cat ].isValid();
+}

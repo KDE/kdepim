@@ -620,7 +620,7 @@ QColor IncidenceMonthItem::catColor() const
   if ( cat.isEmpty() ) {
     retColor = CalendarSupport::KCalPrefs::instance()->unsetCategoryColor();
   } else {
-    retColor = monthScene()->monthView()->preferences()->categoryColor( cat );
+    retColor = CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
   }
   return retColor;
 }

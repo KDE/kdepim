@@ -43,9 +43,6 @@ class BaseConfig : public PrefsBase
     QStringList timeScaleTimezones() const;
 
   public:
-    QHash<QString,QColor> mCategoryColors;
-    QColor mDefaultCategoryColor;
-
     QHash<QString,QColor> mResourceColors;
     QColor mDefaultResourceColor;
 
@@ -65,7 +62,6 @@ class BaseConfig : public PrefsBase
 
 BaseConfig::BaseConfig() : PrefsBase()
 {
-  mDefaultCategoryColor = QColor( 151, 235, 121 );
   mDefaultResourceColor = QColor(); //Default is a color invalid
 
   mDefaultAgendaTimeLabelsFont = KGlobalSettings::generalFont();
@@ -161,15 +157,8 @@ void BaseConfig::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
 
-  KConfigGroup colorsConfig( config(), "Category Colors2" );
-  QHash<QString, QColor>::const_iterator i = mCategoryColors.constBegin();
-  while ( i != mCategoryColors.constEnd() ) {
-    colorsConfig.writeEntry( i.key(), i.value() );
-    ++i;
-  }
-
   KConfigGroup rColorsConfig( config(), "Resources Colors" );
-  i = mResourceColors.constBegin();
+  QHash<QString, QColor>::const_iterator i = mResourceColors.constBegin();
   while ( i != mResourceColors.constEnd() ) {
     rColorsConfig.writeEntry( i.key(), i.value() );
     ++i;
@@ -886,31 +875,6 @@ void Prefs::setColorAgendaBusyDays( bool enable )
 void Prefs::setColorMonthBusyDays( bool enable )
 {
   d->mBaseConfig.mColorMonthBusyDaysEnabled = enable;
-}
-
-void Prefs::setCategoryColor( const QString &cat, const QColor &color )
-{
-  d->mBaseConfig.mCategoryColors.insert( cat, color );
-}
-
-QColor Prefs::categoryColor( const QString &cat ) const
-{
-  QColor color;
-
-  if ( !cat.isEmpty() ) {
-    color = d->mBaseConfig.mCategoryColors.value( cat );
-  }
-
-  if ( color.isValid() ) {
-    return color;
-  } else {
-    return d->mBaseConfig.mDefaultCategoryColor;
-  }
-}
-
-bool Prefs::hasCategoryColor( const QString &cat ) const
-{
-    return d->mBaseConfig.mCategoryColors[ cat ].isValid();
 }
 
 void Prefs::setResourceColor ( const QString &cal, const QColor &color )

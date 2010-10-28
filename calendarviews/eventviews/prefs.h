@@ -152,11 +152,6 @@ class EVENTVIEWS_EXPORT Prefs
 
     KConfigSkeleton::ItemFont *fontItem( const QString &name ) const;
 
-    // preferences data
-    void setCategoryColor( const QString &cat, const QColor &color );
-    QColor categoryColor( const QString &cat ) const;
-    bool hasCategoryColor( const QString &cat ) const;
-
     void setResourceColor ( const QString &, const QColor & );
     QColor resourceColor( const QString & );
 
