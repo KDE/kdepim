@@ -30,6 +30,7 @@
 #include <akonadi/selectionproxymodel.h>
 #include <Akonadi/EntityTreeModel>
 
+class FilterModel;
 class TemplateEmailModel;
 class KSelectionProxyModel;
 class QStandardItemModel;
@@ -154,6 +155,7 @@ class MainView : public KDeclarativeMainView
     QItemSelectionModel *mTemplateSelectionModel;
     KSelectionProxyModel *m_threadContentsModel;
     ThreadModel *m_threadsModel;
+    FilterModel *mFilterModel;
 };
 
 Q_DECLARE_METATYPE( MainView::ForwardMode )

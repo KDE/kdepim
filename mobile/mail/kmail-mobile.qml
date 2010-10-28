@@ -525,6 +525,13 @@ KPIM.MainView {
                 }
               },
               KPIM.ScriptAction {
+                name : "filters_configure"
+                script : {
+                  actionPanel.collapse();
+                  filterConfigDialog.visible = true;
+                }
+              },
+              KPIM.ScriptAction {
                 name : "to_selection_screen"
                 script : {
                   actionPanel.collapse();
@@ -656,6 +663,12 @@ KPIM.MainView {
   ConfigDialog {
     id: configDialog
     visible: false
+  }
+
+  FilterConfigDialog {
+    id: filterConfigDialog
+    visible: false
+    filterModel: _filterModel
   }
 
   QML.Connections {

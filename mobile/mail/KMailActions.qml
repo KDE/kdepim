@@ -45,6 +45,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select multiple folders" ) }
     ActionListItem { name : "akonadi_empty_all_trash" }
     ActionListItem { name : "import_emails" }
+    ScriptActionItem { name : "filters_configure"; title: KDE.i18n( "Configure filters" ) }
   }
 
   FavoriteManager{

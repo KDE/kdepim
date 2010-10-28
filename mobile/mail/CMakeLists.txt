@@ -18,7 +18,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 
-set(kmail_mobile_srcs 
+set(kmail_mobile_srcs   
   attachmentproxymodel.cpp
   composerautoresizer.cpp
   composerview.cpp
@@ -27,6 +27,8 @@ set(kmail_mobile_srcs
   emailsexporthandler.cpp
   emailsfilterproxymodel.cpp
   emailsimporthandler.cpp
+  filterconfigwidget.cpp
+  filtermodel.cpp 
   mailactionmanager.cpp
   mainview.cpp
   main.cpp
@@ -37,7 +39,7 @@ set(kmail_mobile_srcs
   templateemailmodel.cpp
 )
 
-qt4_wrap_ui(kmail_mobile_srcs configwidget.ui)
+qt4_wrap_ui(kmail_mobile_srcs configwidget.ui filterconfigwidget.ui)
 kde4_add_kcfg_files(kmail_mobile_srcs settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)
@@ -80,6 +82,7 @@ install(FILES kmail-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   ConfigDialog.qml
+  FilterConfigDialog.qml
   HeaderView.qml
   important-email.png
   action-item-email.png
@@ -90,6 +93,8 @@ install(FILES
   KMailComposerActions.qml
   kmail-mobile-background.png
   kmail-mobile.notifyrc
+  dividing-line.png
+  dividing-line-horizontal.png
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
 

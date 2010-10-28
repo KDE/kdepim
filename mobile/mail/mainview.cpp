@@ -25,6 +25,7 @@
 #include "composerview.h"
 #include "configwidget.h"
 #include "declarativewidgetbase.h"
+#include "filterconfigwidget.h"
 #include "emailsexporthandler.h"
 #include "emailsfilterproxymodel.h"
 #include "emailsimporthandler.h"
@@ -100,10 +101,12 @@
 #include <qmlcheckableproxymodel.h>
 #include <akonadibreadcrumbnavigationfactory.h>
 #include <mailcommon/filtermanager.h>
+#include "filtermodel.h"
 
 Q_DECLARE_METATYPE( KMime::Content* )
 QML_DECLARE_TYPE( MessageViewer::MessageViewItem )
 QML_DECLARE_TYPE( DeclarativeConfigWidget )
+QML_DECLARE_TYPE( DeclarativeFilterConfigWidget )
 
 using namespace Akonadi;
 
@@ -254,6 +257,9 @@ void MainView::delayedInit()
   mEmailTemplateModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
   rootContext()->setContextProperty( "_emailTemplateModel", mEmailTemplateModel );
 
+  mFilterModel = new FilterModel;
+  rootContext()->setContextProperty( "_filterModel", mFilterModel );
+
   QTime time;
   if ( debugTiming ) {
     time.start();
@@ -262,6 +268,7 @@ void MainView::delayedInit()
 
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.mail", 4, 5, "ConfigWidget" );
+  qmlRegisterType<DeclarativeFilterConfigWidget>( "org.kde.akonadi.mail", 4, 5, "FilterConfigWidget" );
 #ifdef KDEQMLPLUGIN_STATIC
   rootContext()->setContextProperty( QLatin1String( "KDE" ), new KDEIntegration( this ) );
 #endif
