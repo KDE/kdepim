@@ -410,7 +410,12 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
     return change.changeId;
   }
 
-  ItemModifyJob *modifyJob = new ItemModifyJob( changedItem );
+  // Don't write back remote revision since we can't make sure it is the current one
+  // fixes problems with DAV resource
+  Item item = changedItem;
+  item.setRemoteRevision( QString() );
+
+  ItemModifyJob *modifyJob = new ItemModifyJob( item );
   d->mChangeForJob.insert( modifyJob, change );
   // QueuedConnection because of possible sync exec calls.
   connect( modifyJob, SIGNAL(result(KJob *)),
