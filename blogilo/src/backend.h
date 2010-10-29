@@ -161,15 +161,9 @@ Q_SIGNALS:
 private:
     KBlog::BlogPost * preparePost( BilboPost &post );
     QString errorTypeToString( KBlog::Blog::ErrorType type );
-    KBlog::Blog *mKBlog;
-    BilboBlog *mBBlog;
-//     quint16 mChecksum;
-//     QString mediaLocalUrl;
-    QList<Category> mCreatePostCategories;
-    QMap<QString, KBlog::BlogPost *> mSetPostCategoriesMap;
-    QMap<KBlog::BlogPost *, BilboPost::Status> mSubmitPostStatusMap;
-    QMap<KBlog::BlogMedia *, BilboMedia *> mPublishMediaMap;
-    bool categoryListNotSet;
+
+    class Private;
+    Private * const d;
 };
 
 #endif

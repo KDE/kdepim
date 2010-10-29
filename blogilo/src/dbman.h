@@ -70,7 +70,7 @@ public:
      * @return
      */
     QMap<QString, int> listBlogsTitle();///QString as Title, and int as blog_id
-    const BilboBlog &blog(int blog_id);
+    BilboBlog *blog(int blog_id);
 
     QList<BilboPost*> listPosts( int blog_id );
     QMap< int, QString > listPostsTitle( int blog_id );///QString as Title, and int as post_id

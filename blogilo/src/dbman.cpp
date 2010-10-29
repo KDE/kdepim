@@ -826,9 +826,9 @@ bool DBMan::clearTempEntries()
     return res;
 }
 
-const BilboBlog &DBMan::blog(int blog_id)
+BilboBlog *DBMan::blog(int blog_id)
 {
-    return *blogList().value(blog_id);
+    return blogList().value(blog_id);
 }
 
 QList< BilboBlog *> DBMan::listBlogs()

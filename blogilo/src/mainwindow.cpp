@@ -32,7 +32,7 @@
 #include "bilbomedia.h"
 #include "settings.h"
 #include "bilboblog.h"
-#include "composer/multilinetextedit.h"
+// #include "composer/multilinetextedit.h"
 #include "blogsettings.h"
 // #include "htmleditor.h"
 
@@ -630,7 +630,7 @@ void MainWindow::sltClearCache()
     while ( i.hasNext() ) {
         cacheDir.remove( i.next() );
     }
-    MultiLineTextEdit::clearCache();
+//     MultiLineTextEdit::clearCache();
 }
 
 void MainWindow::slotShowStatusMessage(const QString &message, bool isPermanent)
@@ -645,13 +645,13 @@ void MainWindow::uploadMediaObject()
     if(mCurrentBlogId == -1)
         uploadDlg->init( 0 );
     else
-        uploadDlg->init( &DBMan::self()->blog(mCurrentBlogId) );
+        uploadDlg->init( DBMan::self()->blog(mCurrentBlogId) );
 }
 
 void MainWindow::slotOpenCurrentBlogInBrowser()
 {
     if (mCurrentBlogId > -1) {
-        KUrl url( DBMan::self()->blog( mCurrentBlogId ).blogUrl() );
+        KUrl url( DBMan::self()->blog( mCurrentBlogId )->blogUrl() );
         if(url.isValid())
             KToolInvocation::invokeBrowser(url.url());
         else

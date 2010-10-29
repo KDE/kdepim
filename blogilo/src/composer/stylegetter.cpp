@@ -50,8 +50,8 @@ static const char  POST_CONTENT[] = "Temporary-Post-Used-For-Style-Detection-Con
 StyleGetter::StyleGetter( const int blogid, QObject *parent ): QObject( parent )
 {
     kDebug();
-    BilboBlog tempBlog = DBMan::self()->blog( blogid );
-    if ( tempBlog.isError() ) {
+    BilboBlog *tempBlog = DBMan::self()->blog( blogid );
+    if ( tempBlog->isError() ) {
         KMessageBox::detailedError( mParent, i18n( "Cannot fetch the selected blog style."),
                             DBMan::self()->lastErrorText()  );
         return;
@@ -74,8 +74,8 @@ StyleGetter::StyleGetter( const int blogid, QObject *parent ): QObject( parent )
     mTempPost->setContent( mPostContent );
     mTempPost->setPrivate( false );
 
-    if ( ( tempBlog.api() == BilboBlog::MOVABLETYPE_API ) ||
-         ( tempBlog.api() == BilboBlog::WORDPRESSBUGGY_API ) ) {
+    if ( ( tempBlog->api() == BilboBlog::MOVABLETYPE_API ) ||
+         ( tempBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) ) {
         mTempPost->setCreationDateTime( KDateTime( QDate(2000, 1, 1), QTime(0, 0), KDateTime::UTC ) );
     }
 
@@ -151,7 +151,7 @@ void StyleGetter::sltTempPostPublished( int blogId, BilboPost* post )
         postUrl = post->permaLink();
         if ( postUrl.isEmpty() ) {
             kDebug() << "permaLink was empty";
-            postUrl = KUrl( DBMan::self()->blog(blogId).blogUrl() );
+            postUrl = KUrl( DBMan::self()->blog(blogId)->blogUrl() );
         }
     }
 

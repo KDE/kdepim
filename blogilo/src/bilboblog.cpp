@@ -26,6 +26,7 @@
 #include <QApplication>
 #include <kblog/wordpressbuggy.h>
 #include <kblog/gdata.h>
+#include <KDebug>
 
 class BilboBlog::Private
 {
@@ -52,6 +53,7 @@ public:
 BilboBlog::BilboBlog( QObject *parent )
         : QObject( parent ), d(new Private)
 {
+    kDebug();
     d->mError = false;
     setApi(BLOGGER1_API);
 }
@@ -59,6 +61,7 @@ BilboBlog::BilboBlog( QObject *parent )
 BilboBlog::BilboBlog( const BilboBlog &blog)
         : QObject( qApp ), d(new Private)
 {
+    kDebug();
     d->mUrl = blog.url();
     d->mBlogUrl = blog.blogUrl();
     d->mBlogid = blog.blogid();
@@ -74,6 +77,8 @@ BilboBlog::BilboBlog( const BilboBlog &blog)
 
 BilboBlog::~BilboBlog()
 {
+    kDebug();
+    delete d;
 }
 
 KBlog::Blog* BilboBlog::blogBackend()
