@@ -410,6 +410,12 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
     return change.changeId;
   }
 
+  { // increment revision
+    Incidence::Ptr incidence = changeItem.payload<Incidence::Ptr>();
+    const int revision = incidence->revision();
+    incidence->setRevision( revision + 1 );
+  }
+
   // Don't write back remote revision since we can't make sure it is the current one
   // fixes problems with DAV resource
   Item item = changedItem;
