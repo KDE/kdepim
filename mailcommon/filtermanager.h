@@ -69,6 +69,9 @@ public:
       rule with "field equals value" */
   void createFilter( const QByteArray & field, const QString & value );
 
+  /** Remove a filter from the list. The filter object is not deleted. */
+  void removeFilter( MailFilter* filter );
+  
   bool beginFiltering( const Akonadi::Item &item ) const;
   void endFiltering( const Akonadi::Item &item ) const;
 

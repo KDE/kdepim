@@ -331,6 +331,14 @@ void FilterManager::setFilters( const QList<MailFilter*> &filters )
   endUpdate();
 }
 
+void FilterManager::removeFilter( MailFilter* filter )
+{
+  beginUpdate();
+  mFilters.removeAll( filter );
+  writeConfig( true );
+  endUpdate();
+}
+
 void FilterManager::slotFolderRemoved( const Akonadi::Collection & aFolder )
 {
   folderRemoved( aFolder, Akonadi::Collection() );
