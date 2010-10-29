@@ -13,6 +13,7 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=Crypto Operations
+Name[de]=Krypto-Operationen
 Comment=Configuration of Crypto Operations
-Comment[zh_TW]=設定顏色與字型
+Comment[de]=Einrichtung der Kryptografie-Operationen
 X-KDE-Keywords=sign,encrypt,email,quick mode,checksum,configuration
