@@ -115,7 +115,7 @@ QML.Rectangle {
       Mail.FilterConfigWidget {
         id: configWidget
         width: parent.width - okButton.width
-
+        visible: filterList.count > 0
         onVisibleChanged: {
           if ( visible ) {
             //configWidget.load()
