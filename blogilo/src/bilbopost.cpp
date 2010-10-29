@@ -27,63 +27,74 @@
 #include <kdatetime.h>
 #include <kdebug.h>
 
+class BilboPostPrivate
+{
+public:
+    QString mAuthor;
+    int mId;///id in DB
+//  Position mPosition;
+    bool mModifyTimeStamp;///Just for toolbox entry!
+    QList<Category> mCategoryList;
+};
+
 BilboPost::BilboPost()
-        : KBlog::BlogPost()
+        : KBlog::BlogPost(), d_ptr(new BilboPostPrivate)
 {
     kDebug();
     this->setCreationDateTime( KDateTime::currentLocalDateTime() );
     this->setModificationDateTime( KDateTime::currentLocalDateTime() );
-//     this->setLink( KUrl() );
-//     this->setPermaLink( KUrl() );
-//     this->setCategories( QStringList() );
-//     this->setCategoryList( QList<Category>() );
     this->setCommentAllowed( true );
-//     this->setContent( QString() );
-//     this->setTags( QStringList() );
-//     this->setMood( QString() );
-//     this->setMusic( QString() );
     this->setPrivate( false );
-//     this->setSummary( QString() );
     this->setTrackBackAllowed( true );
-//     this->setTitle( QString() );
-//     this->setAuthor( QString() );
-    this->mModifyTimeStamp = false;
+    d_ptr->mModifyTimeStamp = false;
     this->setId( -1 );
     this->setStatus( KBlog::BlogPost::New );
+}
+
+BilboPost::BilboPost( const KBlog::BlogPost &post )
+        : KBlog::BlogPost( post ), d_ptr(new BilboPostPrivate)
+{
+    kDebug()<<"KBlog::BlogPost";
+    d_ptr->mId = -1;
+    d_ptr->mModifyTimeStamp = false;
+}
+
+BilboPost::BilboPost( const BilboPost &post )
+        : KBlog::BlogPost(post), d_ptr(new BilboPostPrivate)
+{
+    kDebug()<<"BilboPost";
+    this->setAuthor( post.author() );
+    this->setModifyTimeStamp( post.isModifyTimeStamp() );
+    this->setId( post.id() );
+    this->setCategoryList( post.categoryList() );
 }
 
 BilboPost::~BilboPost()
 {
     kDebug();
+    delete d_ptr;
 }
 
 QString BilboPost::author() const
 {
-    return this->mAuthor;
+    return d_ptr->mAuthor;
 }
 
 void BilboPost::setId( const int id )
 {
-    this->mId = id;
+    d_ptr->mId = id;
 }
 
 int BilboPost::id() const
 {
-    return this->mId;
+    return d_ptr->mId;
 }
 
 void BilboPost::setAuthor( const QString &author )
 {
-    this->mAuthor = author;
+    d_ptr->mAuthor = author;
 }
-
-BilboPost::BilboPost( const KBlog::BlogPost &post )
-        : KBlog::BlogPost( post )
-{
-    mId = -1;
-    this->mModifyTimeStamp = false;
-}
-
+/*
 KBlog::BlogPost * BilboPost::toKBlogPost()
 {
     KBlog::BlogPost *pp = new KBlog::BlogPost( QString() );
@@ -109,7 +120,7 @@ KBlog::BlogPost * BilboPost::toKBlogPost()
     pp->setSlug( this->slug() );
 
     return pp;
-}
+}*/
 
 QString BilboPost::toString() const
 {
@@ -131,54 +142,24 @@ QString BilboPost::toString() const
     return ret;
 }
 
-BilboPost::BilboPost( const BilboPost &post )
-        : KBlog::BlogPost()
-{
-    kDebug();
-    this->setPostId(post.postId());
-    this->setCreationDateTime( post.creationDateTime() );
-    this->setModificationDateTime( post.modificationDateTime() );
-    this->setLink( post.link() );
-    this->setPermaLink( post.permaLink() );
-    this->setCategories( post.categories() );
-    this->setCategoryList( post.categoryList() );
-    this->setCommentAllowed( post.isCommentAllowed() );
-    this->setError( post.error() );
-    this->setContent( post.content() );
-    this->setTags( post.tags() );
-    this->setMood( post.mood() );
-    this->setMusic( post.music() );
-    this->setPrivate( post.isPrivate() );
-    this->setStatus( post.status() );
-    this->setSummary( post.summary() );
-    this->setTrackBackAllowed( post.isTrackBackAllowed() );
-    this->setTitle( post.title() );
-    this->setAuthor( post.author() );
-    this->setModifyTimeStamp( post.isModifyTimeStamp() );
-    this->setId( post.id() );
-    this->setStatus( post.status() );
-    this->setAdditionalContent( post.additionalContent() );
-    this->setSlug( post.slug() );
-}
-
 bool BilboPost::isModifyTimeStamp() const
 {
-    return mModifyTimeStamp;
+    return d_ptr->mModifyTimeStamp;
 }
 
 void BilboPost::setModifyTimeStamp( bool isModify )
 {
-    mModifyTimeStamp = isModify;
+    d_ptr->mModifyTimeStamp = isModify;
 }
 
 QList< Category > BilboPost::categoryList() const
 {
-    return mCategoryList;
+    return d_ptr->mCategoryList;
 }
 
 void BilboPost::setCategoryList( const QList< Category > & list )
 {
-    mCategoryList = list;
+    d_ptr->mCategoryList = list;
     QStringList cats;
     int count = list.count();
     for ( int i = 0; i < count; ++i ) {
@@ -205,4 +186,12 @@ void BilboPost::setProperties( const BilboPost& postProp )
     this->setAuthor( postProp.author() );
     this->setModifyTimeStamp( postProp.isModifyTimeStamp() );
     this->setSlug( postProp.slug() );
+}
+
+BilboPost& BilboPost::operator=(const BilboPost& other)
+{
+    KBlog::BlogPost other2 = KBlog::BlogPost::operator=(other);
+    BilboPost copy( other2 );
+    swap( copy );
+    return *this;
 }

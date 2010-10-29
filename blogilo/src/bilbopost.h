@@ -25,16 +25,12 @@
 #ifndef BILBOPOST_H
 #define BILBOPOST_H
 
-// #include <QDateTime>
-// #include <QUrl>
-
-// #include <kurl.h>
-// #include <kdatetime.h>
 #include <kblog/blogpost.h>
 #include "category.h"
+
 class QUrl;
 class QDateTime;
-// class KBlog::BlogPost;
+class BilboPostPrivate;
 
 /**
 Definition of a blog post!
@@ -59,10 +55,7 @@ public:
     int id() const;
     void setId( const int );
 
-//  Position position() const;
-//  void setPosition( const Position);
-
-    KBlog::BlogPost * toKBlogPost();
+//     KBlog::BlogPost * toKBlogPost();
     QString toString() const;
 
     bool isModifyTimeStamp() const;
@@ -75,12 +68,14 @@ public:
      * Set all properties of post to new one, instead of Title and Content!
     */
     void setProperties( const BilboPost& postProp );
+
+    /**
+      The overloaed = operator.
+    */
+    BilboPost &operator=( const BilboPost &other );
+
 private:
-    QString mAuthor;
-    int mId;///id in DB
-//  Position mPosition;
-    bool mModifyTimeStamp;///Just for toolbox entry!
-    QList<Category> mCategoryList;
+    BilboPostPrivate * d_ptr;
 };
 
 #endif

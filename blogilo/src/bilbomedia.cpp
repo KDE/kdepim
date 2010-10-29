@@ -28,89 +28,99 @@
 //#include <QMimeData>
 #include <QPixmap>
 
-BilboMedia::BilboMedia( QObject *parent )
-        : QObject( parent )
+class BilboMedia::Private
 {
-    mChecksum = 0;
+public:
+    int mBlogId;
+    int mMediaId;
+    bool mIsUploaded;
+//     bool mIsLocal;
+    KUrl mLocalUrl;
+    KUrl mRemoteUrl;
+    QString mMimeType;
+    QString mName;
+    quint16 mChecksum;
+};
+BilboMedia::BilboMedia( QObject *parent )
+        : QObject( parent ), d(new Private)
+{
+    d->mChecksum = 0;
 }
 
 BilboMedia::~BilboMedia()
 {
+    delete d;
 }
 
 int BilboMedia::blogId() const
 {
-    return mBlogId;
+    return d->mBlogId;
 }
 
 
 void BilboMedia::setBlogId( const int blog_id )
 {
-    mBlogId = blog_id;
+    d->mBlogId = blog_id;
 }
 
 int BilboMedia::mediaId() const
 {
-    return mMediaId;
+    return d->mMediaId;
 }
 
 void BilboMedia::setMediaId( const int media_id )
 {
-    mMediaId = media_id;
+    d->mMediaId = media_id;
 }
 
 bool BilboMedia::isUploaded() const
-// bool BilboMedia::isLocal() const
 {
-    return mIsUploaded;
-//     return mIsLocal;
+    return d->mIsUploaded;
 }
 
 void BilboMedia::setUploaded( bool uploaded )
-// void BilboMedia::setLocal( bool is_local )
 {
-    mIsUploaded = uploaded;
-//     mIsLocal = is_local;
+    d->mIsUploaded = uploaded;
 }
 
 KUrl BilboMedia::localUrl() const
 {
-    return mLocalUrl;
+    return d->mLocalUrl;
 }
 
 void BilboMedia::setLocalUrl( const KUrl& url )
 {
-    mLocalUrl = url;
+    d->mLocalUrl = url;
 }
 
 KUrl BilboMedia::remoteUrl() const
 {
-    return mRemoteUrl;
+    return d->mRemoteUrl;
 }
 
 void BilboMedia::setRemoteUrl( const KUrl& url )
 {
-    mRemoteUrl = url;
+    d->mRemoteUrl = url;
 }
 
 QString BilboMedia::mimeType() const
 {
-    return mMimeType;
+    return d->mMimeType;
 }
 
 void BilboMedia::setMimeType( const QString &type )
 {
-    mMimeType = type;
+    d->mMimeType = type;
 }
 
 QString BilboMedia::name() const
 {
-    return mName;
+    return d->mName;
 }
 
 void BilboMedia::setName( const QString &name )
 {
-    mName = name;
+    d->mName = name;
 }
 
 KIcon BilboMedia::icon() const
@@ -135,12 +145,12 @@ KIcon BilboMedia::icon() const
 
 quint16 BilboMedia::checksum()
 {
-    return mChecksum;
+    return d->mChecksum;
 }
 
 void BilboMedia::setCheckSum( quint16 sum )
 {
-    mChecksum = sum;
+    d->mChecksum = sum;
 }
 
 #include "bilbomedia.moc"

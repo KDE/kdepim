@@ -149,19 +149,19 @@ void Backend::entriesListed( const QList< KBlog::BlogPost > & posts )
     Q_EMIT sigEntriesListFetched( d->bBlog->id() );
 }
 
-void Backend::publishPost( const BilboPost &post )
+void Backend::publishPost( BilboPost* post )
 {
     kDebug() << "Blog Id: " << d->bBlog->id();
-    BilboPost tmpPost = post;
+//     BilboPost tmpPost = post;
     if( Settings::addPoweredBy() ) {
         QString poweredStr = "<p>=-=-=-=-=<br/>"
         "<i>Powered by <b><a href='http://blogilo.gnufolks.org/'>Blogilo</a></b></i></p>";
-        tmpPost.setContent(post.content() + poweredStr);
+        post->setContent(post->content() + poweredStr);
     }
-    KBlog::BlogPost *bp = preparePost( tmpPost );
+    preparePost( post );
     connect( d->kBlog, SIGNAL( createdPost( KBlog::BlogPost * ) ),
              this, SLOT( postPublished( KBlog::BlogPost * ) ) );
-    d->kBlog->createPost( bp );
+    d->kBlog->createPost( post );
 }
 
 void Backend::postPublished( KBlog::BlogPost *post )
@@ -303,24 +303,24 @@ void Backend::mediaUploaded( KBlog::BlogMedia * media )
     Q_EMIT sigMediaUploaded( m );
 }
 
-void Backend::modifyPost( const BilboPost &post )
+void Backend::modifyPost( BilboPost* post )
 {
     kDebug() << "Blog Id: " << d->bBlog->id();
-    BilboPost tmpPost = post;
-    KBlog::BlogPost *bp = preparePost( tmpPost );
+//     BilboPost tmpPost = post;
+    preparePost( post );
     connect( d->kBlog, SIGNAL( modifiedPost(KBlog::BlogPost*)),
              this, SLOT( postPublished(KBlog::BlogPost*)) );
-    d->kBlog->modifyPost( bp );
+    d->kBlog->modifyPost( post );
 }
 
-void Backend::removePost( BilboPost &post )
+void Backend::removePost( BilboPost* post )
 {
     kDebug() << "Blog Id: " << d->bBlog->id();
 
-    KBlog::BlogPost *bp = post.toKBlogPost();
+//     KBlog::BlogPost *bp = post.toKBlogPost();
     connect( d->kBlog, SIGNAL( removedPost(KBlog::BlogPost*)),
              this, SLOT( slotPostRemoved(KBlog::BlogPost*)) );
-    d->kBlog->removePost( bp );
+    d->kBlog->removePost( post );
 }
 
 void Backend::slotPostRemoved( KBlog::BlogPost *post )
@@ -335,12 +335,12 @@ void Backend::slotPostRemoved( KBlog::BlogPost *post )
     emit sigPostRemoved(d->bBlog->id(), BilboPost(*post));
 }
 
-void Backend::fetchPost( BilboPost &post )
+void Backend::fetchPost( BilboPost* post )
 {
-    KBlog::BlogPost *bp = post.toKBlogPost();
+//     KBlog::BlogPost *bp = post.toKBlogPost();
     connect( d->kBlog, SIGNAL( fetchedPost(KBlog::BlogPost*)),
              this, SLOT( slotPostFetched(KBlog::BlogPost*)) );
-    d->kBlog->fetchPost( bp );
+    d->kBlog->fetchPost( post );
 }
 
 void Backend::slotPostFetched( KBlog::BlogPost *post )
@@ -422,9 +422,9 @@ void Backend::savePostInDbAndEmitResult( KBlog::BlogPost *post )
     //delete post;
 }
 
-KBlog::BlogPost * Backend::preparePost( BilboPost &post )
+KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
 {
-    QString content = post.content();
+    QString content = post->content();
     QString html1 = QString();
     int i = 0;
     int found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
@@ -444,9 +444,9 @@ KBlog::BlogPost * Backend::preparePost( BilboPost &post )
     }
     if ( i != -1 )
     html1 += content.mid( i, content.length()-i).remove('\n');
-    post.setContent( html1 );
+    post->setContent( html1 );
 
-    content = post.additionalContent();
+    content = post->additionalContent();
     QString html2 = QString();
     i= 0;
     found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
@@ -466,7 +466,7 @@ KBlog::BlogPost * Backend::preparePost( BilboPost &post )
     }
     if ( i != -1 )
     html2 += content.mid( i, content.length()-i).remove('\n');
-    post.setAdditionalContent( html2 );
+    post->setAdditionalContent( html2 );
 
     //the following two lines are replaced by the above code, because '\n' characters shouldn't
     //be omitted inside <pre> blocks.
@@ -474,17 +474,17 @@ KBlog::BlogPost * Backend::preparePost( BilboPost &post )
     //post.setContent( post.content().remove('\n') );
     //post.setAdditionalContent( post.additionalContent().remove( '\n' ) );
     if ( d->bBlog->api() == BilboBlog::MOVABLETYPE_API || d->bBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
-        QStringList content = post.content().split("<!--split-->");
+        QStringList content = post->content().split("<!--split-->");
         if( content.count() == 2 ) {
-            post.setContent(content[0]);
-            post.setAdditionalContent( content[1] );
+            post->setContent(content[0]);
+            post->setAdditionalContent( content[1] );
         }
     }
 //     if( d->bBlog->api() == BilboBlog::MOVABLETYPE_API && post.categoryList().count() > 0 ) {
 //         mCreatePostCategories = post.categoryList();
 //         categoryListNotSet = true;
 //     }
-    return post.toKBlogPost();
+    return post;//.toKBlogPost();
 }
 
 #include "backend.moc"

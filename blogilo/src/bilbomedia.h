@@ -75,15 +75,8 @@ public:
     void setCheckSum( quint16 sum );
 
 private:
-    int mBlogId;
-    int mMediaId;
-    bool mIsUploaded;
-//     bool mIsLocal;
-    KUrl mLocalUrl;
-    KUrl mRemoteUrl;
-    QString mMimeType;
-    QString mName;
-    quint16 mChecksum;
+    class Private;
+    Private * const d;
 };
 
 #endif

@@ -68,7 +68,7 @@ public:
      *    Use this to publish a post to server.
      * @param post Post to publish.
      */
-    void publishPost( const BilboPost &post );
+    void publishPost( BilboPost *post );
 
     /**
      * Upload a new Media object e.g. image to server.
@@ -81,13 +81,13 @@ public:
      * Note: posiId must sets correctly.
      * @param post post to modify.
      */
-    void modifyPost( const BilboPost &post );
+    void modifyPost( BilboPost* post );
 
     /**
      * Remove an existing post from server
      * @param post post to remove.
      */
-    void removePost( BilboPost &post );
+    void removePost( BilboPost *post );
 
 //     void setPostCategories( const QString postId, const QMap<QString, bool> &categoriesList );
 
@@ -99,7 +99,7 @@ public:
     * @param post a blog post with the ID identifying the blog post to fetch.
     * @see sigPostFetched()
     */
-    void fetchPost( BilboPost &post );
+    void fetchPost( BilboPost *post );
 
 protected Q_SLOTS:
     void categoriesListed( const QList< QMap< QString, QString > > &   categories );
@@ -159,7 +159,7 @@ Q_SIGNALS:
     void sigMediaError( const QString &errorMessage, BilboMedia* media );
 
 private:
-    KBlog::BlogPost * preparePost( BilboPost &post );
+    KBlog::BlogPost* preparePost( KBlog::BlogPost* post );
     QString errorTypeToString( KBlog::Blog::ErrorType type );
 
     class Private;

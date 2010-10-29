@@ -179,7 +179,7 @@ void PostEntry::setCurrentPost( const BilboPost &post )
     kDebug();
 //     if(mCurrentPost)
 //         delete mCurrentPost;
-    mCurrentPost = post;
+    mCurrentPost = BilboPost( post );
 //     kDebug()<<"postId: "<<mCurrentPost.postId();
     this->setPostBody( mCurrentPost.content(), mCurrentPost.additionalContent() );
     this->setPostTitle( mCurrentPost.title() );
@@ -307,9 +307,9 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
             }
             connect( b, SIGNAL( sigPostPublished( int, BilboPost* ) ), this, SLOT( sltPostPublished( int, BilboPost* ) ) );
             if(isNewPost)
-                b->publishPost( mCurrentPost );
+                b->publishPost( &mCurrentPost );
             else
-                b->modifyPost( mCurrentPost );
+                b->modifyPost( &mCurrentPost );
         } else {
             deleteProgressBar();
         }

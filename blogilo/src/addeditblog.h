@@ -78,17 +78,9 @@ Q_SIGNALS:
 private:
     void showWaitWidget( QString text );
     void hideWaitWidget();
-    Ui::AddEditBlogBase ui;
-    KTabWidget *mainW;
-    bool isNewBlog;
-    BilboBlog *bBlog;
-    KBlog::Blog *mBlog;
-    QTimer* mFetchProfileIdTimer;
-    QTimer* mFetchBlogIdTimer;
-    QTimer* mFetchAPITimer;
-    bool isIdFetched;
-    WaitWidget *wait;
-    QString tmpBlogUrl;
+
+    class Private;
+    Private * const d;
 };
 
 #endif

@@ -221,7 +221,7 @@ void Toolbox::sltRemoveSelectedEntryFromServer()
         Backend *b = new Backend( mCurrentBlogId, this);
         connect(b, SIGNAL(sigPostRemoved(int,const BilboPost&)), this, SLOT(slotPostRemoved(int,const BilboPost&)) );
         connect(b, SIGNAL(sigError(const QString&)), this, SLOT(slotError(const QString&)));
-        b->removePost(post);
+        b->removePost(&post);
         statusbar->showMessage( i18n( "Removing post..." ) );
     }
 }
