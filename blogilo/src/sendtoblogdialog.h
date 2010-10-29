@@ -26,7 +26,6 @@
 #define SENDTOBLOGDIALOG_H
 
 #include <kdialog.h>
-#include "ui_sendtoblogbase.h"
 
 class SendToBlogDialog : public KDialog
 {
@@ -40,9 +39,8 @@ public:
 public slots:
     virtual void accept();
 private:
-    Ui::SendToBlogBase ui;
-    bool mIsPrivate;
-    bool mIsNew;
+    class Private;
+    Private * const d;
 };
 
 #endif // SENDTOBLOGDIALOG_H

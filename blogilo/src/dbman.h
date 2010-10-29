@@ -24,7 +24,6 @@
 
 #ifndef DBMAN_H
 #define DBMAN_H
-#include <QSqlDatabase>
 #include "bilbomedia.h"
 #include "constants.h"
 #include "category.h"
@@ -146,14 +145,13 @@ private:
     int saveTemp_LocalEntry( const BilboPost& post, int blog_id, LocalPostState state );
     QList<BilboBlog*> listBlogs();
     bool createDB();
-    QSqlDatabase db;
     bool connectDB();
-    static DBMan* mSelf;
-    KWallet::Wallet* mWallet;
-    QString mLastErrorText;
-    bool useWallet;
     void reloadBlogList();
-    QMap<int, BilboBlog*> mBlogList;
+
+    static DBMan* mSelf;
+
+    class Private;
+    Private * const d;
 };
 
 #endif

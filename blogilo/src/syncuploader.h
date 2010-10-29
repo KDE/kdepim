@@ -59,10 +59,8 @@ private slots:
     void slotMediaError( const QString &errorMessage, BilboMedia* media );
 
 private:
-    BilboMedia *mCurrentMedia;
-    QEventLoop *loop;
-    QString error;
-    bool success;
+    class Private;
+    Private * const d;
 };
 
 #endif // SYNCUPLOADER_H

@@ -95,14 +95,8 @@ private:
     void unCheckCatList();
     void setButtonsIcon();
 
-//     QButtonGroup listBlogRadioButtons;
-    QList<CatCheckBox*> listCategoryCheckBoxes;
-    int mCurrentBlogId;
-//     QMap<int, BilboBlog*> mBlogList;
-//     BlogRadioButton *blogToEdit;
-//     QDir blogToEditDir;
-//  BilboPost *currentPost;
-    KStatusBar *statusbar;
+    class Private;
+    Private * const d;
 };
 
 #endif

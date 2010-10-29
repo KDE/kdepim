@@ -136,22 +136,8 @@ private:
     void createUi();
     void setCurrentPostFromEditor();
 
-    QProgressBar *progress;
-    BilboEditor *editPostWidget;
-    QGridLayout *gridLayout;
-    QHBoxLayout *horizontalLayout;
-    QLabel *labelTitle;
-    KLineEdit *txtTitle;
-    QTimer *mTimer;
-    BilboPost mCurrentPost;
-    int mCurrentPostBlogId;
-    QMap <QString, BilboMedia*> mMediaList;
-
-    int mNumOfFilesToBeUploaded;
-    bool isUploadingMediaFilesFailed;
-    bool isNewPost;
-//     bool mIsModified;
-    bool isPostContentModified;
+    class Private;
+    Private * const d;
 };
 
 #endif

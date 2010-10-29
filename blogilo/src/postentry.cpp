@@ -40,29 +40,50 @@
 #include <QProgressBar>
 #include <QLabel>
 #include <QTimer>
+#include <qlayout.h>
 
 #define MINUTE 60000
 
+class PostEntry::Private
+{
+public:
+    QProgressBar *progress;
+    BilboEditor *editPostWidget;
+    QGridLayout *gridLayout;
+    QHBoxLayout *horizontalLayout;
+    QLabel *labelTitle;
+    KLineEdit *txtTitle;
+    QTimer *mTimer;
+    BilboPost mCurrentPost;
+    int mCurrentPostBlogId;
+    QMap <QString, BilboMedia*> mMediaList;
+
+    int mNumOfFilesToBeUploaded;
+    bool isUploadingMediaFilesFailed;
+    bool isNewPost;
+//     bool mIsModified;
+    bool isPostContentModified;
+};
 PostEntry::PostEntry( QWidget *parent )
-        : QFrame( parent )
+        : QFrame( parent ), d(new Private)
 {
     kDebug();
     createUi();
-    editPostWidget = new BilboEditor( this );
+    d->editPostWidget = new BilboEditor( this );
 //     editPostWidget->setMediaList( &mMediaList );
-    this->layout()->addWidget( editPostWidget );
-    mTimer = new QTimer(this);
-    mTimer->start(Settings::autosaveInterval() * MINUTE);
-    connect( mTimer, SIGNAL(timeout()), this, SLOT( saveTemporary() ) );
-    progress = 0;
-    mCurrentPostBlogId = -1;
-    mNumOfFilesToBeUploaded = 0;
-    isPostContentModified = false;
-    connect( editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+    layout()->addWidget( d->editPostWidget );
+    d->mTimer = new QTimer(this);
+    d->mTimer->start(Settings::autosaveInterval() * MINUTE);
+    connect( d->mTimer, SIGNAL(timeout()), this, SLOT( saveTemporary() ) );
+    d->progress = 0;
+    d->mCurrentPostBlogId = -1;
+    d->mNumOfFilesToBeUploaded = 0;
+    d->isPostContentModified = false;
+    connect( d->editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
 //     connect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
-    connect( editPostWidget, SIGNAL( sigShowStatusMessage( const QString&, bool ) ), 
+    connect( d->editPostWidget, SIGNAL( sigShowStatusMessage( const QString&, bool ) ), 
             this, SIGNAL( showStatusMessage( const QString&, bool ) ) );
-    connect( editPostWidget, SIGNAL( sigBusy( bool ) ), this, SIGNAL( sigBusy( bool ) ) );
+    connect( d->editPostWidget, SIGNAL( sigBusy( bool ) ), this, SIGNAL( sigBusy( bool ) ) );
 }
 
 void PostEntry::aboutToQuit()
@@ -74,53 +95,53 @@ void PostEntry::aboutToQuit()
 void PostEntry::settingsChanged()
 {
     kDebug();
-    mTimer->setInterval(Settings::autosaveInterval() * MINUTE);
+    d->mTimer->setInterval(Settings::autosaveInterval() * MINUTE);
     if(Settings::autosaveInterval())
-        mTimer->start();
+        d->mTimer->start();
     else
-        mTimer->stop();
+        d->mTimer->stop();
 }
 
 void PostEntry::createUi()
 {
     this->resize( 626, 307 );
-    gridLayout = new QGridLayout( this );
+    d->gridLayout = new QGridLayout( this );
 
-    horizontalLayout = new QHBoxLayout();
-    horizontalLayout->setSizeConstraint( QLayout::SetDefaultConstraint );
+    d->horizontalLayout = new QHBoxLayout();
+    d->horizontalLayout->setSizeConstraint( QLayout::SetDefaultConstraint );
 
-    labelTitle = new QLabel( this );
-    labelTitle->setText( i18nc( "noun, the post title", "Title:" ) );
-    horizontalLayout->addWidget( labelTitle );
+    d->labelTitle = new QLabel( this );
+    d->labelTitle->setText( i18nc( "noun, the post title", "Title:" ) );
+    d->horizontalLayout->addWidget( d->labelTitle );
 
-    txtTitle = new KLineEdit( this );
-    horizontalLayout->addWidget( txtTitle );
-    labelTitle->setBuddy( txtTitle );
-    connect( txtTitle, SIGNAL( textChanged( const QString& ) ), this,
+    d->txtTitle = new KLineEdit( this );
+    d->horizontalLayout->addWidget( d->txtTitle );
+    d->labelTitle->setBuddy( d->txtTitle );
+    connect( d->txtTitle, SIGNAL( textChanged( const QString& ) ), this,
              SLOT( sltTitleChanged( const QString& ) ) );
 
-    gridLayout->addLayout( horizontalLayout, 0, 0, 1, 1 );
+    d->gridLayout->addLayout( d->horizontalLayout, 0, 0, 1, 1 );
 
 }
 
 void PostEntry::sltTitleChanged( const QString& title )
 {
-    mCurrentPost.setTitle( title );
-    this->editPostWidget->setCurrentTitle( title );
+    d->mCurrentPost.setTitle( title );
+    d->editPostWidget->setCurrentTitle( title );
     Q_EMIT sigTitleChanged( title );
 }
 
 QString PostEntry::postTitle() const
 {
-    return mCurrentPost.title();
+    return d->mCurrentPost.title();
 }
 
 void PostEntry::setPostTitle( const QString & title )
 {
     kDebug();
-    this->txtTitle->setText( title );
-    mCurrentPost.setTitle( title );
-    this->editPostWidget->setCurrentTitle( title );
+    d->txtTitle->setText( title );
+    d->mCurrentPost.setTitle( title );
+    d->editPostWidget->setCurrentTitle( title );
 }
 
 void PostEntry::setPostBody( const QString & content, const QString &additionalContent )
@@ -131,27 +152,27 @@ void PostEntry::setPostBody( const QString & content, const QString &additionalC
         body = content;
     } else {
         body = content + "</p><!--split--><p>" + additionalContent;
-        mCurrentPost.setAdditionalContent(QString());
+        d->mCurrentPost.setAdditionalContent(QString());
     }
     if(body.isEmpty()){
         body = "<p></p>";//This is because of Bug #387578
     }
-    mCurrentPost.setContent( body );
-    this->editPostWidget->setHtmlContent( body );
-    isPostContentModified = false;
-    connect( editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+    d->mCurrentPost.setContent( body );
+    d->editPostWidget->setHtmlContent( body );
+    d->isPostContentModified = false;
+    connect( d->editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
 //     connect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
 }
 
 int PostEntry::currentPostBlogId()
 {
-    return mCurrentPostBlogId;
+    return d->mCurrentPostBlogId;
 }
 
 void PostEntry::setCurrentPostBlogId( int blog_id )
 {
     kDebug();
-    mCurrentPostBlogId = blog_id;
+    d->mCurrentPostBlogId = blog_id;
     if ( blog_id != -1 && DBMan::self()->blogList().contains( blog_id ) ) {
         setDefaultLayoutDirection( DBMan::self()->blogList().value( blog_id )->direction() );
     }
@@ -159,19 +180,19 @@ void PostEntry::setCurrentPostBlogId( int blog_id )
 
 void PostEntry::setCurrentPostFromEditor()
 {
-    if( isPostContentModified ) {
+    if( d->isPostContentModified ) {
         kDebug();
-        const QString& str = this->editPostWidget->htmlContent();
-        mCurrentPost.setContent( str );
-        isPostContentModified = false;
-        connect( editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+        const QString& str = d->editPostWidget->htmlContent();
+        d->mCurrentPost.setContent( str );
+        d->isPostContentModified = false;
+        connect( d->editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
     }
 }
 
 BilboPost* PostEntry::currentPost()
 {
     setCurrentPostFromEditor();
-    return &mCurrentPost;
+    return &d->mCurrentPost;
 }
 
 void PostEntry::setCurrentPost( const BilboPost &post )
@@ -179,33 +200,33 @@ void PostEntry::setCurrentPost( const BilboPost &post )
     kDebug();
 //     if(mCurrentPost)
 //         delete mCurrentPost;
-    mCurrentPost = BilboPost( post );
+    d->mCurrentPost = BilboPost( post );
 //     kDebug()<<"postId: "<<mCurrentPost.postId();
-    this->setPostBody( mCurrentPost.content(), mCurrentPost.additionalContent() );
-    this->setPostTitle( mCurrentPost.title() );
+    this->setPostBody( d->mCurrentPost.content(), d->mCurrentPost.additionalContent() );
+    this->setPostTitle( d->mCurrentPost.title() );
 }
 
 Qt::LayoutDirection PostEntry::defaultLayoutDirection()
 {
-    return this->txtTitle->layoutDirection();
+    return d->txtTitle->layoutDirection();
 }
 
 void PostEntry::setDefaultLayoutDirection( Qt::LayoutDirection direction )
 {
     kDebug();
-    this->editPostWidget->setLayoutDirection( direction );
-    this->txtTitle->setLayoutDirection( direction );
+    d->editPostWidget->setLayoutDirection( direction );
+    d->txtTitle->setLayoutDirection( direction );
 }
 
 PostEntry::~PostEntry()
 {
     kDebug();
-//     delete mCurrentPost;
+    delete d;
 }
 
 QMap< QString, BilboMedia * > & PostEntry::mediaList()
 {
-    return mMediaList;
+    return d->mMediaList;
 }
 
 bool PostEntry::uploadMediaFiles( Backend *backend )
@@ -215,14 +236,14 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
     bool result = true;
     if( !backend ) {
         localBackend = true;
-        backend = new Backend( mCurrentPostBlogId, this );
+        backend = new Backend( d->mCurrentPostBlogId, this );
     }
-    if( mMediaList.size()>0 ) {
-        progress = new QProgressBar( this );
-        this->layout()->addWidget( progress );
-        progress->setRange( 0, 0 );
-        QMap <QString, BilboMedia*>::iterator it = mMediaList.begin();
-        QMap <QString, BilboMedia*>::iterator endIt = mMediaList.end();
+    if( d->mMediaList.size()>0 ) {
+        d->progress = new QProgressBar( this );
+        layout()->addWidget( d->progress );
+        d->progress->setRange( 0, 0 );
+        QMap <QString, BilboMedia*>::iterator it = d->mMediaList.begin();
+        QMap <QString, BilboMedia*>::iterator endIt = d->mMediaList.end();
         for ( ; it != endIt; ++it ) {
             if( !it.value()->isUploaded() ){
                 BilboMedia *media = it.value();
@@ -238,8 +259,8 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
             }
         }
     }
-    if ( editPostWidget->updateMediaPaths() ) {
-        mCurrentPost.setContent( this->editPostWidget->htmlContent() );
+    if ( d->editPostWidget->updateMediaPaths() ) {
+        d->mCurrentPost.setContent( d->editPostWidget->htmlContent() );
     } else {
         kDebug() << "Updateing media pathes failed!";
     }
@@ -261,55 +282,55 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
 {
     kDebug();
     setCurrentPostFromEditor();
-    if ( mCurrentPost.content().isEmpty() || mCurrentPost.title().isEmpty() ) {
+    if ( d->mCurrentPost.content().isEmpty() || d->mCurrentPost.title().isEmpty() ) {
         if ( KMessageBox::warningContinueCancel( this,
             i18n( "Your post title or body is empty.\nAre you sure you want to submit this post?" )
             ) == KMessageBox::Cancel )
             return;
     }
     bool isNew = false;
-    if(mCurrentPost.status() == BilboPost::New)
+    if(d->mCurrentPost.status() == BilboPost::New)
         isNew = true;
-    QPointer<SendToBlogDialog> dia = new SendToBlogDialog( isNew, mCurrentPost.isPrivate(), this);
+    QPointer<SendToBlogDialog> dia = new SendToBlogDialog( isNew, d->mCurrentPost.isPrivate(), this);
     dia->setAttribute(Qt::WA_DeleteOnClose, false);
     if( dia->exec() == KDialog::Accepted ) {
         this->setCursor( Qt::BusyCursor );
-        mCurrentPost.setProperties( postData );
-        mCurrentPostBlogId = blogId;
+        d->mCurrentPost.setProperties( postData );
+        d->mCurrentPostBlogId = blogId;
 
         QString msgType;
         if(dia->isPrivate()) {
             msgType =  i18nc("Post status, e.g Draft or Published Post", "draft");
-            mCurrentPost.setPrivate(true);
+            d->mCurrentPost.setPrivate(true);
         } else {
             msgType =  i18nc("Post status, e.g Draft or Published Post", "post");
-            mCurrentPost.setPrivate(false);
+            d->mCurrentPost.setPrivate(false);
         }
 
         QString statusMsg;
         if(dia->isNew()) {
             statusMsg = i18n("Submitting new %1...", msgType);
-            isNewPost = true;
+            d->isNewPost = true;
         } else {
             statusMsg = i18n("Modifying %1...", msgType);
-            isNewPost = false;
+            d->isNewPost = false;
         }
 
         emit showStatusMessage(statusMsg, true);
-        Backend *b = new Backend(mCurrentPostBlogId, this);
+        Backend *b = new Backend(d->mCurrentPostBlogId, this);
         connect( b, SIGNAL(sigError(const QString&)), this, SLOT(sltError(const QString&)) );
         if ( uploadMediaFiles(b) ) {
             kDebug()<<"Uploading";
-            if( !progress ) {
-                progress = new QProgressBar( this );
-                this->layout()->addWidget( progress );
-                progress->setRange( 0, 0 );
+            if( !d->progress ) {
+                d->progress = new QProgressBar( this );
+                layout()->addWidget( d->progress );
+                d->progress->setRange( 0, 0 );
             }
             connect( b, SIGNAL( sigPostPublished( int, BilboPost* ) ), this, SLOT( sltPostPublished( int, BilboPost* ) ) );
-            if(isNewPost)
-                b->publishPost( &mCurrentPost );
+            if(d->isNewPost)
+                b->publishPost( &d->mCurrentPost );
             else
-                b->modifyPost( &mCurrentPost );
+                b->modifyPost( &d->mCurrentPost );
         } else {
             deleteProgressBar();
         }
@@ -319,12 +340,12 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
 void PostEntry::sltPostPublished( int blog_id, BilboPost *post )
 {
     kDebug() << "BlogId: " << blog_id << "Post Id on server: " << post->postId();
-    DBMan::self()->removeTempEntry(mCurrentPost);
+    DBMan::self()->removeTempEntry(d->mCurrentPost);
     QString msg;
     setCurrentPost(*post);
-    if ( mCurrentPost.isPrivate() ) {
+    if ( d->mCurrentPost.isPrivate() ) {
         msg = i18n( "Draft with title \"%1\" saved successfully.", post->title() );
-    } else if(mCurrentPost.status() == BilboPost::Modified){
+    } else if(d->mCurrentPost.status() == BilboPost::Modified){
         msg = i18n( "Post with title \"%1\" modified successfully.", post->title() );
     } else {
         msg = i18n( "Post with title \"%1\" published successfully.", post->title() );
@@ -339,11 +360,11 @@ void PostEntry::sltPostPublished( int blog_id, BilboPost *post )
 void PostEntry::deleteProgressBar()
 {
     kDebug();
-    if(progress){
-        this->layout()->removeWidget( progress );
-        progress->deleteLater();
+    if(d->progress){
+        this->layout()->removeWidget( d->progress );
+        d->progress->deleteLater();
     }
-    progress = 0;
+    d->progress = 0;
 }
 
 void PostEntry::saveLocally()
@@ -354,7 +375,7 @@ void PostEntry::saveLocally()
 are you sure you want to save an empty post?")) == KMessageBox::No )
             return;
     }
-    mCurrentPost.setId( DBMan::self()->saveLocalEntry( *currentPost(), mCurrentPostBlogId ) );
+    d->mCurrentPost.setId( DBMan::self()->saveLocalEntry( *currentPost(), d->mCurrentPostBlogId ) );
     emit postSavedLocally();
     emit showStatusMessage(i18n( "Post saved locally." ), false);
     kDebug()<<"Locally saved";
@@ -362,8 +383,8 @@ are you sure you want to save an empty post?")) == KMessageBox::No )
 
 void PostEntry::saveTemporary( bool force )
 {
-    if( isPostContentModified || ( !currentPost()->content().isEmpty() && force ) ) {
-        mCurrentPost.setId( DBMan::self()->saveTempEntry( *currentPost(), mCurrentPostBlogId) );
+    if( d->isPostContentModified || ( !currentPost()->content().isEmpty() && force ) ) {
+        d->mCurrentPost.setId( DBMan::self()->saveTempEntry( *currentPost(), d->mCurrentPostBlogId) );
         emit postSavedTemporary();
         kDebug()<<"Temporary saved";
     }
@@ -372,10 +393,10 @@ void PostEntry::saveTemporary( bool force )
 void PostEntry::slotPostModified()
 {
     kDebug();
-    disconnect( editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+    disconnect( d->editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
 //         disconnect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
     emit postModified();
-    isPostContentModified = true;
+    d->isPostContentModified = true;
 }
 
 #include "postentry.moc"

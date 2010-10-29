@@ -24,29 +24,38 @@
 
 #include "catcheckbox.h"
 
-CatCheckBox::CatCheckBox( QWidget* parent ): QCheckBox( parent )
+class CatCheckBox::Private
+{
+public:
+    Category mCat;
+};
+
+CatCheckBox::CatCheckBox( QWidget* parent )
+: QCheckBox( parent ), d(new Private)
 {
 }
 
 
-CatCheckBox::CatCheckBox( const QString& text, QWidget* parent ): QCheckBox( text, parent )
+CatCheckBox::CatCheckBox( const QString& text, QWidget* parent )
+: QCheckBox( text, parent ), d(new Private)
 {
 }
 
 
 CatCheckBox::~CatCheckBox()
 {
+    delete d;
 }
 
 Category CatCheckBox::category() const
 {
-    return mCat;
+    return d->mCat;
 }
 
 void CatCheckBox::setCategory( const Category & category )
 {
-    mCat = category;
-    this->setToolTip( mCat.description );
+    d->mCat = category;
+    this->setToolTip( d->mCat.description );
 }
 
 

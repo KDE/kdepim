@@ -174,22 +174,11 @@ void Backend::postPublished( KBlog::BlogPost *post )
         Q_EMIT sigError( tmp );
         return;
     }
-//     if ( categoryListNotSet ) {
-//         categoryListNotSet = false;
-//         mSetPostCategoriesMap[ post->postId()] = post;
-//         QMap<QString, bool> cats;
-//         int count = mCreatePostCategories.count();
-//         for ( int i = 0; i < count; ++i ) {
-//             cats.insert( mCreatePostCategories[i].categoryId, false );
-//         }
-//         setPostCategories( post->postId(), cats );
-//     } else {
-        kDebug()<<"isPrivate: "<<post->isPrivate();
-        d->mSubmitPostStatusMap[ post ] = post->status();
-        connect( d->kBlog, SIGNAL( fetchedPost(KBlog::BlogPost*)),
-                 this, SLOT( savePostInDbAndEmitResult(KBlog::BlogPost*)) );
-        d->kBlog->fetchPost( post );
-//     }
+    kDebug()<<"isPrivate: "<<post->isPrivate();
+    d->mSubmitPostStatusMap[ post ] = post->status();
+    connect( d->kBlog, SIGNAL( fetchedPost(KBlog::BlogPost*)),
+             this, SLOT( savePostInDbAndEmitResult(KBlog::BlogPost*)) );
+    d->kBlog->fetchPost( post );
 }
 
 void Backend::uploadMedia( BilboMedia * media )

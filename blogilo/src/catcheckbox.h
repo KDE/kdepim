@@ -45,10 +45,9 @@ public:
     Category category() const;
     void setCategory( const Category &category );
 
-private:/*
- int mCatId;
- QString mCatTitle;*/
-    Category mCat;
+private:
+    class Private;
+    Private * const d;
 };
 
 #endif

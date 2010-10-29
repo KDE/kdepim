@@ -47,15 +47,22 @@
 #include <QClipboard>
 #include <QTimer>
 
+class Toolbox::Private
+{
+public:
+    QList<CatCheckBox*> listCategoryCheckBoxes;
+    int mCurrentBlogId;
+    KStatusBar *statusbar;
+};
 Toolbox::Toolbox( QWidget *parent )
-        : QWidget( parent )
+        : QWidget( parent ), d(new Private)
 {
     kDebug();
-    mCurrentBlogId = -1;
+    d->mCurrentBlogId = -1;
     if ( parent )
-        this->statusbar = qobject_cast<KXmlGuiWindow*>( parent )->statusBar();
+        this->d->statusbar = qobject_cast<KXmlGuiWindow*>( parent )->statusBar();
     else
-        this->statusbar = new KStatusBar( this );
+        this->d->statusbar = new KStatusBar( this );
     setupUi( this );
     setButtonsIcon();
 //     frameBlog->layout()->setAlignment( Qt::AlignTop );
@@ -98,11 +105,11 @@ Toolbox::Toolbox( QWidget *parent )
 void Toolbox::setCurrentBlogId( int blog_id )
 {
     kDebug()<<blog_id;
-    if( mCurrentBlogId == blog_id )
+    if( d->mCurrentBlogId == blog_id )
         return;
 //     btnBlogEdit->setEnabled( true );
 //     btnBlogRemove->setEnabled( true );
-    mCurrentBlogId = blog_id;
+    d->mCurrentBlogId = blog_id;
     if( blog_id <= 0 )
         return;
     sltLoadCategoryListFromDB( blog_id );
@@ -116,17 +123,17 @@ void Toolbox::sltReloadCategoryList()
 {
     kDebug();
 //     QAbstractButton *btn = listBlogRadioButtons.checkedButton();
-    if ( mCurrentBlogId == -1 ) {
+    if ( d->mCurrentBlogId == -1 ) {
         KMessageBox::sorry( this, i18n( "No blog has been selected: \
 you have to select a blog from the Blogs page before asking for the list of categories." ) );
         return;
     }
 
-    Backend *b = new Backend( mCurrentBlogId );
+    Backend *b = new Backend( d->mCurrentBlogId );
     connect( b, SIGNAL( sigCategoryListFetched( int ) ), this, SLOT( sltLoadCategoryListFromDB( int ) ) );
     connect( b, SIGNAL( sigError( const QString& ) ), this, SIGNAL( sigError( const QString& ) ) );
     emit sigBusy( true );
-    statusbar->showMessage( i18n( "Requesting list of categories..." ) );
+    d->statusbar->showMessage( i18n( "Requesting list of categories..." ) );
     b->getCategoryListFromServer();
 //     this->setCursor( Qt::BusyCursor );
 }
@@ -134,7 +141,7 @@ you have to select a blog from the Blogs page before asking for the list of cate
 void Toolbox::sltUpdateEntries(int count)
 {
     kDebug();
-    if ( mCurrentBlogId == -1 ) {
+    if ( d->mCurrentBlogId == -1 ) {
         KMessageBox::sorry( this, i18n( "No blog has been selected: \
 you have to select a blog from the Blogs page before asking for the list of entries." ) );
         kDebug() << "There isn't any selected blog.";
@@ -151,11 +158,11 @@ you have to select a blog from the Blogs page before asking for the list of entr
             dia->deleteLater();
         }
     }
-    Backend *entryB = new Backend( mCurrentBlogId, this);
+    Backend *entryB = new Backend( d->mCurrentBlogId, this);
     entryB->getEntriesListFromServer( count );
     connect( entryB, SIGNAL( sigEntriesListFetched( int ) ), this, SLOT( sltLoadEntriesFromDB( int ) ) );
     connect( entryB, SIGNAL( sigError( const QString& ) ), this, SIGNAL( sigError( const QString& ) ) );
-    statusbar->showMessage( i18n( "Requesting list of entries..." ) );
+    d->statusbar->showMessage( i18n( "Requesting list of entries..." ) );
     this->setCursor( Qt::BusyCursor );
     emit sigBusy( true );
 }
@@ -181,7 +188,7 @@ void Toolbox::sltLoadEntriesFromDB( int blog_id )
         lstItem->setData( 32, listEntries[i].value("id").toInt() );
         lstEntriesList->addItem( lstItem );
     }
-    statusbar->showMessage( i18n( "List of entries received." ), STATUSTIMEOUT );
+    d->statusbar->showMessage( i18n( "List of entries received." ), STATUSTIMEOUT );
     this->unsetCursor();
     emit sigBusy( false );
 }
@@ -202,10 +209,10 @@ void Toolbox::sltLoadCategoryListFromDB( int blog_id )
     for ( i = listCategories.constBegin(); i != endIt; ++i ) {
         CatCheckBox *cb = new CatCheckBox( i->name, this );
         cb->setCategory( *i );
-        listCategoryCheckBoxes.append( cb );
+        d->listCategoryCheckBoxes.append( cb );
         frameCat->layout()->addWidget( cb );
     }
-    statusbar->showMessage( i18n( "List of categories received." ), STATUSTIMEOUT );
+    d->statusbar->showMessage( i18n( "List of categories received." ), STATUSTIMEOUT );
     this->unsetCursor();
     emit sigBusy( false );
 }
@@ -218,11 +225,11 @@ void Toolbox::sltRemoveSelectedEntryFromServer()
 \nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
     == KMessageBox::Yes) {
         BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data(32).toInt() );
-        Backend *b = new Backend( mCurrentBlogId, this);
+        Backend *b = new Backend( d->mCurrentBlogId, this);
         connect(b, SIGNAL(sigPostRemoved(int,const BilboPost&)), this, SLOT(slotPostRemoved(int,const BilboPost&)) );
         connect(b, SIGNAL(sigError(const QString&)), this, SLOT(slotError(const QString&)));
         b->removePost(&post);
-        statusbar->showMessage( i18n( "Removing post..." ) );
+        d->statusbar->showMessage( i18n( "Removing post..." ) );
     }
 }
 
@@ -231,7 +238,7 @@ void Toolbox::slotPostRemoved( int blog_id, const BilboPost &post )
     KMessageBox::information( this, i18nc( "Post removed from Blog", "Post with title \"%1\" removed from \"%2\".",
                                           post.title(), DBMan::self()->blogList().value(blog_id)->title() ) );
     sltLoadEntriesFromDB( blog_id );
-    statusbar->showMessage( i18n( "Post removed" ), STATUSTIMEOUT );
+    d->statusbar->showMessage( i18n( "Post removed" ), STATUSTIMEOUT );
     sender()->deleteLater();
 }
 
@@ -239,7 +246,7 @@ void Toolbox::slotPostRemoved( int blog_id, const BilboPost &post )
 void Toolbox::slotError(const QString& errorMessage)
 {
     KMessageBox::detailedError( this, i18n( "An error occurred in the latest transaction." ), errorMessage );
-    statusbar->showMessage( i18nc( "Operation failed", "Failed" ), STATUSTIMEOUT );
+    d->statusbar->showMessage( i18nc( "Operation failed", "Failed" ), STATUSTIMEOUT );
     sender()->deleteLater();
 }
 
@@ -279,10 +286,10 @@ void Toolbox::resetFields()
 void Toolbox::clearCatList()
 {
     kDebug();
-    foreach( CatCheckBox* cat, listCategoryCheckBoxes ){
+    foreach( CatCheckBox* cat, d->listCategoryCheckBoxes ){
         cat->deleteLater();
     }
-    listCategoryCheckBoxes.clear();
+    d->listCategoryCheckBoxes.clear();
 }
 
 void Toolbox::getFieldsValue( BilboPost &currentPost )
@@ -355,10 +362,10 @@ QList< Category > Toolbox::selectedCategories()
 {
     kDebug();
     QList<Category> list;
-    int count = listCategoryCheckBoxes.count();
+    int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
-        if ( listCategoryCheckBoxes[i]->isChecked() )
-            list.append( listCategoryCheckBoxes[i]->category() );
+        if ( d->listCategoryCheckBoxes[i]->isChecked() )
+            list.append( d->listCategoryCheckBoxes[i]->category() );
     }
     return list;
 }
@@ -367,10 +374,10 @@ QStringList Toolbox::selectedCategoriesTitle()
 {
     kDebug();
     QStringList list;
-    int count = listCategoryCheckBoxes.count();
+    int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
-        if ( listCategoryCheckBoxes[i]->isChecked() )
-            list.append( listCategoryCheckBoxes[i]->category().name );
+        if ( d->listCategoryCheckBoxes[i]->isChecked() )
+            list.append( d->listCategoryCheckBoxes[i]->category().name );
     }
     return list;
 }
@@ -385,10 +392,10 @@ QList< int > Toolbox::selectedCategoriesId()
 void Toolbox::setSelectedCategories( const QStringList &list )
 {
     unCheckCatList();
-    int count = listCategoryCheckBoxes.count();
+    int count = d->listCategoryCheckBoxes.count();
     for ( int i = 0; i < count; ++i ) {
-        if ( list.contains( listCategoryCheckBoxes[i]->category().name, Qt::CaseInsensitive ) )
-            listCategoryCheckBoxes[i]->setChecked( true );
+        if ( list.contains( d->listCategoryCheckBoxes[i]->category().name, Qt::CaseInsensitive ) )
+            d->listCategoryCheckBoxes[i]->setChecked( true );
     }
 }
 
@@ -415,7 +422,7 @@ void Toolbox::sltEntrySelected( QListWidgetItem * item )
 //     setFieldsValue(*post);
     BilboPost post = DBMan::self()->getPostInfo( item->data( 32 ).toInt() );
     kDebug() << "Emiting sigEntrySelected...";
-    Q_EMIT sigEntrySelected( post, mCurrentBlogId );
+    Q_EMIT sigEntrySelected( post, d->mCurrentBlogId );
 }
 
 void Toolbox::setCurrentPage( int index )
@@ -440,13 +447,14 @@ void Toolbox::sltEntriesCopyUrl()
 Toolbox::~Toolbox()
 {
     kDebug();
+    delete d;
 }
 
 void Toolbox::unCheckCatList()
 {
-    int count = listCategoryCheckBoxes.count();
+    int count = d->listCategoryCheckBoxes.count();
     for ( int j = 0; j < count; ++j ) {
-        listCategoryCheckBoxes[j]->setChecked( false );
+        d->listCategoryCheckBoxes[j]->setChecked( false );
     }
 }
 
@@ -526,12 +534,12 @@ void Toolbox::sltRemoveLocalEntry()
 void Toolbox::clearEntries()
 {
     kDebug();
-    if( mCurrentBlogId == -1 )
+    if( d->mCurrentBlogId == -1 )
         return;
     if ( KMessageBox::warningContinueCancel(this, i18n("Are you sure you want to clear the list of entries?")) ==
          KMessageBox::Cancel )
         return;
-    if ( DBMan::self()->clearPosts( mCurrentBlogId ) )
+    if ( DBMan::self()->clearPosts( d->mCurrentBlogId ) )
         lstEntriesList->clear();
     else
         KMessageBox::detailedSorry(this, i18n( "Cannot clear the list of entries." ) , DBMan::self()->lastErrorText());
@@ -573,7 +581,7 @@ void Toolbox::openPostInBrowser()
     else if ( !post.link().isEmpty() )
         url = post.link().pathOrUrl();
     else
-        url = DBMan::self()->blogList().value( mCurrentBlogId )->blogUrl();
+        url = DBMan::self()->blogList().value( d->mCurrentBlogId )->blogUrl();
     KToolInvocation::invokeBrowser ( url );
 }
 

@@ -29,16 +29,30 @@
 #include "bilbomedia.h"
 #include <QEventLoop>
 
+class SyncUploader::Private
+{
+public:
+    Private()
+    :mCurrentMedia(0),success(false)
+    {}
+    BilboMedia *mCurrentMedia;
+    QEventLoop *loop;
+    QString error;
+    bool success;
+};
+
 SyncUploader::SyncUploader( QObject *parent )
-    :QObject(parent),mCurrentMedia(0),success(false)
+    :QObject(parent),d(new Private)
 {
 }
 SyncUploader::~SyncUploader()
-{}
+{
+    delete d;
+}
 
 QString SyncUploader::errorMessage() const
 {
-    return error;
+    return d->error;
 }
 
 bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
@@ -48,14 +62,14 @@ bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
         kError()<<"Media or Backend is NULL";
         return false;
     }
-    loop = new QEventLoop(this);
-    mCurrentMedia = media;
+    d->loop = new QEventLoop(this);
+    d->mCurrentMedia = media;
     connect( backend, SIGNAL( sigMediaUploaded( BilboMedia* ) ), this, SLOT( slotMediaFileUploaded( BilboMedia* ) ) );
     connect( backend, SIGNAL( sigMediaError( const QString&, BilboMedia* ) ),
                 this, SLOT( slotMediaError( const QString&, BilboMedia* ) ) );
 
     backend->uploadMedia( media );
-    if( loop->exec()==0 )
+    if( d->loop->exec()==0 )
         return true;
     else
         return false;
@@ -63,20 +77,20 @@ bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
 
 void SyncUploader::slotMediaFileUploaded( BilboMedia *media )
 {
-    if(media && media == mCurrentMedia){
+    if(media && media == d->mCurrentMedia){
         kDebug();
-        this->success = true;
-        loop->exit();
+        d->success = true;
+        d->loop->exit();
     }
 }
 
 void SyncUploader::slotMediaError( const QString &errorMessage, BilboMedia* media )
 {
     kDebug();
-    if(media && media == mCurrentMedia){
-        this->success = false;
-        this->error = errorMessage;
-        loop->exit(1);
+    if(media && media == d->mCurrentMedia){
+        d->success = false;
+        d->error = errorMessage;
+        d->loop->exit(1);
     }
 }
 

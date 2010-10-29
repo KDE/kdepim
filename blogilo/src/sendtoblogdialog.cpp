@@ -23,53 +23,63 @@
 */
 
 #include "sendtoblogdialog.h"
+#include "ui_sendtoblogbase.h"
 #include <kdebug.h>
 
+class SendToBlogDialog::Private
+{
+public:
+    Ui::SendToBlogBase ui;
+    bool mIsPrivate;
+    bool mIsNew;
+};
 SendToBlogDialog::SendToBlogDialog( bool isNew, bool isPrivate, QWidget *parent )
-    : KDialog(parent)
+    : KDialog(parent), d(new Private)
 {
     kDebug()<<isNew<<isPrivate;
     QWidget *dialog = new QWidget( this );
-    ui.setupUi( dialog );
+    d->ui.setupUi( dialog );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
     this->setMainWidget( dialog );
     setWindowTitle( i18n( "Submitting as..." ) );
     if( isNew ) {
-        ui.pubAsModify->setEnabled( false );
-        ui.pubAsNewPost->setChecked( true );
+        d->ui.pubAsModify->setEnabled( false );
+        d->ui.pubAsNewPost->setChecked( true );
     } else {
-        ui.pubAsModify->setChecked( true );
+        d->ui.pubAsModify->setChecked( true );
     }
     if( isPrivate )
-        ui.saveDraft->setChecked(true);
-    mIsNew = isNew;
-    mIsPrivate = isPrivate;
+        d->ui.saveDraft->setChecked(true);
+    d->mIsNew = isNew;
+    d->mIsPrivate = isPrivate;
 }
 
 SendToBlogDialog::~SendToBlogDialog()
-{}
+{
+    delete d;
+}
 
 bool SendToBlogDialog::isPrivate()
 {
-    return mIsPrivate;
+    return d->mIsPrivate;
 }
 
 bool SendToBlogDialog::isNew()
 {
-    return mIsNew;
+    return d->mIsNew;
 }
 
 void SendToBlogDialog::accept()
 {
-    if(ui.saveDraft->isChecked()) {
-        mIsPrivate = true;
+    if(d->ui.saveDraft->isChecked()) {
+        d->mIsPrivate = true;
     } else {
-        mIsPrivate = false;
+        d->mIsPrivate = false;
     }
-    if(ui.pubAsModify->isChecked()) {
-        mIsNew = false;
+    if(d->ui.pubAsModify->isChecked()) {
+        d->mIsNew = false;
     } else {
-        mIsNew = true;
+        d->mIsNew = true;
     }
     KDialog::accept();
 }
