@@ -17,40 +17,62 @@
   02110-1301, USA.
 */
 
-#ifndef KDEPIM_ATTACHMENTFROMMIMECONTENTJOB_H
-#define KDEPIM_ATTACHMENTFROMMIMECONTENTJOB_H
+#ifndef MESSAGECORE_ATTACHMENTFROMMIMECONTENTJOB_H
+#define MESSAGECORE_ATTACHMENTFROMMIMECONTENTJOB_H
 
-#include "attachmentloadjob.h"
 #include "messagecore_export.h"
 
+#include "attachmentloadjob.h"
+
 namespace KMime {
-  class Content;
+class Content;
 }
 
-namespace KPIM {
+namespace MessageCore {
 
 /**
-*/
+ * @short A job to load an attachment from a mime content.
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ */
 class MESSAGECORE_EXPORT AttachmentFromMimeContentJob : public AttachmentLoadJob
 {
   Q_OBJECT
 
   public:
+    /**
+     * Creates a new job.
+     *
+     * @param content The mime content to load the attachment from.
+     * @param parent The parent object.
+     */
     explicit AttachmentFromMimeContentJob( const KMime::Content *content, QObject *parent = 0 );
+
+    /**
+     * Destroys the job.
+     */
     virtual ~AttachmentFromMimeContentJob();
 
-    const KMime::Content *mimeContent() const;
+    /**
+     * Sets the mime @p content to load the attachment from.
+     */
     void setMimeContent( const KMime::Content *content );
 
-  protected slots:
+    /**
+     * Returns the mime content to load the attachment from.
+     */
+    const KMime::Content *mimeContent() const;
+
+  protected Q_SLOTS:
     virtual void doStart();
 
   private:
+    //@cond PRIVATE
     class Private;
-    friend class Private;
     Private *const d;
+    //@endcond
 };
 
-} // namespace KPIM
+}
 
 #endif

@@ -63,7 +63,7 @@
 #include <KMime/Content>
 
 using namespace Message;
-using namespace KPIM;
+using namespace MessageCore;
 
 class Message::AttachmentControllerBase::Private
 {
@@ -340,10 +340,10 @@ AttachmentControllerBase::AttachmentControllerBase( Message::AttachmentModel *mo
 {
   d->model = model;
   connect( model, SIGNAL(attachUrlsRequested(KUrl::List)), this, SLOT(addAttachments(KUrl::List)) );
-  connect( model, SIGNAL(attachmentRemoved(KPIM::AttachmentPart::Ptr)),
-      this, SLOT(attachmentRemoved(KPIM::AttachmentPart::Ptr)) );
-  connect( model, SIGNAL(attachmentCompressRequested(KPIM::AttachmentPart::Ptr,bool)),
-      this, SLOT(compressAttachment(KPIM::AttachmentPart::Ptr,bool)) );
+  connect( model, SIGNAL(attachmentRemoved(MessageCore::AttachmentPart::Ptr)),
+      this, SLOT(attachmentRemoved(MessageCore::AttachmentPart::Ptr)) );
+  connect( model, SIGNAL(attachmentCompressRequested(MessageCore::AttachmentPart::Ptr,bool)),
+      this, SLOT(compressAttachment(MessageCore::AttachmentPart::Ptr,bool)) );
   connect( model, SIGNAL(encryptEnabled(bool)), this, SLOT(setEncryptEnabled(bool)) );
   connect( model, SIGNAL(signEnabled(bool)), this, SLOT(setSignEnabled(bool)) );
 

@@ -21,19 +21,19 @@
 
 #include "attachmentfromurljob.h"
 
-#include <boost/shared_ptr.hpp>
-
-#include <QFileInfo>
-
 #include <KDebug>
 #include <KGlobal>
 #include <KIO/Scheduler>
 #include <KLocale>
 #include <KMimeType>
 
-using namespace KPIM;
+#include <QtCore/QFileInfo>
 
-class KPIM::AttachmentFromUrlJob::Private
+#include <boost/shared_ptr.hpp>
+
+using namespace MessageCore;
+
+class MessageCore::AttachmentFromUrlJob::Private
 {
   public:
     Private( AttachmentFromUrlJob *qq );
@@ -42,27 +42,26 @@ class KPIM::AttachmentFromUrlJob::Private
     void transferJobResult( KJob *job );
 
     AttachmentFromUrlJob *const q;
-    KUrl url;
-    qint64 maxSize;
-    QByteArray data;
+    KUrl mUrl;
+    qint64 mMaxSize;
+    QByteArray mData;
 };
 
 AttachmentFromUrlJob::Private::Private( AttachmentFromUrlJob *qq )
-  : q( qq )
-  , maxSize( -1 )
+  : q( qq ),
+    mMaxSize( -1 )
 {
 }
 
 void AttachmentFromUrlJob::Private::transferJobData( KIO::Job *job, const QByteArray &jobData )
 {
   Q_UNUSED( job );
-  data += jobData;
-  // TODO original code used a QBuffer; why?
+  mData += jobData;
 }
 
 void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
 {
-  if( job->error() ) {
+  if ( job->error() ) {
     // TODO this loses useful stuff from KIO, like detailed error descriptions, causes+solutions,
     // ... use UiDelegate somehow?
     q->setError( job->error() );
@@ -72,41 +71,42 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
   }
 
   Q_ASSERT( dynamic_cast<KIO::TransferJob*>( job ) );
-  KIO::TransferJob *tjob = static_cast<KIO::TransferJob*>( job );
+  KIO::TransferJob *transferJob = static_cast<KIO::TransferJob*>( job );
 
   // Determine the MIME type and filename of the attachment.
-  QString mimeType = tjob->mimetype();
-  kDebug() << "Mimetype is" << tjob->mimetype();
-  QString filename = url.fileName();
-  if( filename.isEmpty() ) {
-    KMimeType::Ptr mtype = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
-    if ( mtype ) {
-      filename = i18nc( "a file called 'unknown.ext'", "unknown%1",
-                        mtype->mainExtension() );
+  const QString mimeType = transferJob->mimetype();
+  kDebug() << "Mimetype is" << mimeType;
+
+  QString fileName = mUrl.fileName();
+  if ( fileName.isEmpty() ) {
+    const KMimeType::Ptr mimeTypePtr = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
+    if ( mimeTypePtr ) {
+      fileName = i18nc( "a file called 'unknown.ext'", "unknown%1",
+                        mimeTypePtr->mainExtension() );
     } else {
-      filename = i18nc( "a filed called 'unknown'", "unknown" );
+      fileName = i18nc( "a filed called 'unknown'", "unknown" );
     }
   }
 
   // Create the AttachmentPart.
   Q_ASSERT( q->attachmentPart() == 0 ); // Not created before.
+
   AttachmentPart::Ptr part = AttachmentPart::Ptr( new AttachmentPart );
-  part->setCharset( url.fileEncoding().toLatin1() );
+  part->setCharset( mUrl.fileEncoding().toLatin1() );
   part->setMimeType( mimeType.toLatin1() );
-  part->setName( filename );
-  part->setFileName( filename );
-  part->setData( data );
+  part->setName( fileName );
+  part->setFileName( fileName );
+  part->setData( mData );
   q->setAttachmentPart( part );
   q->emitResult(); // Success.
 }
 
 
-
 AttachmentFromUrlJob::AttachmentFromUrlJob( const KUrl &url, QObject *parent )
-  : AttachmentLoadJob( parent )
-  , d( new Private( this ) )
+  : AttachmentLoadJob( parent ),
+    d( new Private( this ) )
 {
-  d->url = url;
+  d->mUrl = url;
 }
 
 AttachmentFromUrlJob::~AttachmentFromUrlJob()
@@ -116,50 +116,52 @@ AttachmentFromUrlJob::~AttachmentFromUrlJob()
 
 KUrl AttachmentFromUrlJob::url() const
 {
-  return d->url;
+  return d->mUrl;
 }
 
 void AttachmentFromUrlJob::setUrl( const KUrl &url )
 {
-  d->url = url;
+  d->mUrl = url;
 }
 
 qint64 AttachmentFromUrlJob::maximumAllowedSize() const
 {
-  return d->maxSize;
+  return d->mMaxSize;
 }
 
 void AttachmentFromUrlJob::setMaximumAllowedSize( qint64 size )
 {
-  d->maxSize = size;
+  d->mMaxSize = size;
 }
 
 void AttachmentFromUrlJob::doStart()
 {
-  if( !d->url.isValid() ) {
+  if ( !d->mUrl.isValid() ) {
     setError( KJob::UserDefinedError );
-    setErrorText( i18n( "\"%1\" not found. Please specify the full path.", d->url.prettyUrl() ) );
+    setErrorText( i18n( "\"%1\" not found. Please specify the full path.", d->mUrl.prettyUrl() ) );
     emitResult();
     return;
   }
 
-  if( d->maxSize != -1 && d->url.isLocalFile() ) {
-    const qint64 size = QFileInfo( d->url.toLocalFile() ).size();
-    if( size > d->maxSize ) {
+  if ( d->mMaxSize != -1 && d->mUrl.isLocalFile() ) {
+    const qint64 size = QFileInfo( d->mUrl.toLocalFile() ).size();
+    if ( size > d->mMaxSize ) {
       setError( KJob::UserDefinedError );
       setErrorText( i18n( "You may not attach files bigger than %1.",
-                          KGlobal::locale()->formatByteSize( d->maxSize ) ) );
+                          KGlobal::locale()->formatByteSize( d->mMaxSize ) ) );
       emitResult();
       return;
     }
   }
 
-  Q_ASSERT( d->data.isEmpty() ); // Not started twice.
-  KIO::TransferJob *tjob = KIO::get( d->url, KIO::NoReload,
+  Q_ASSERT( d->mData.isEmpty() ); // Not started twice.
+
+  KIO::TransferJob *job = KIO::get( d->mUrl, KIO::NoReload,
       ( uiDelegate() ? KIO::DefaultFlags : KIO::HideProgressInfo ) );
-  QObject::connect( tjob, SIGNAL(result(KJob*)), this, SLOT(transferJobResult(KJob*)) );
-  QObject::connect( tjob, SIGNAL(data(KIO::Job*,QByteArray)),
-                    this, SLOT(transferJobData(KIO::Job*,QByteArray)) );
+  QObject::connect( job, SIGNAL( result( KJob* ) ),
+                    this, SLOT( transferJobResult( KJob* ) ) );
+  QObject::connect( job, SIGNAL( data( KIO::Job*, QByteArray ) ),
+                    this, SLOT( transferJobData( KIO::Job*, QByteArray ) ) );
 }
 
 #include "attachmentfromurljob.moc"

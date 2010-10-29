@@ -37,11 +37,13 @@
 #include <kdebug.h>
 #include <kmime/kmime_content.h>
 
-static bool isInSkipList( KMime::Content * ) {
+static bool isInSkipList( KMime::Content* )
+{
   return false;
 }
 
-static bool isInExclusionList( KMime::Content * node ) {
+static bool isInExclusionList( KMime::Content * node )
+{
   if ( !node )
     return true;
 
@@ -51,14 +53,31 @@ static bool isInExclusionList( KMime::Content * node ) {
       return true;
     }
   }
+
   if ( node->contentType()->isMultipart()) {
     return true;
   }
+
   return false;
 }
 
+class MessageCore::AttachmentCollector::Private
+{
+  public:
+    std::vector<KMime::Content*> mAttachments;
+};
 
-void MessageCore::AttachmentCollector::collectAttachmentsFrom( KMime::Content * node )
+MessageCore::AttachmentCollector::AttachmentCollector()
+  : d( new Private )
+{
+}
+
+MessageCore::AttachmentCollector::~AttachmentCollector()
+{
+  delete d;
+}
+
+void MessageCore::AttachmentCollector::collectAttachmentsFrom( KMime::Content *node )
 {
   KMime::Content *parent;
 
@@ -87,7 +106,7 @@ void MessageCore::AttachmentCollector::collectAttachmentsFrom( KMime::Content * 
     }
 
     if ( MessageCore::NodeHelper::isHeuristicalAttachment( node ) ) {
-      mAttachments.push_back( node );
+      d->mAttachments.push_back( node );
       node = MessageCore::NodeHelper::next( node, false ); // just make double sure
       continue;
     }
@@ -96,3 +115,7 @@ void MessageCore::AttachmentCollector::collectAttachmentsFrom( KMime::Content * 
   }
 }
 
+const std::vector<KMime::Content*>& MessageCore::AttachmentCollector::attachments() const
+{
+  return d->mAttachments;
+}

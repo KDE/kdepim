@@ -88,11 +88,11 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
     virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
 
-    bool addAttachment( KPIM::AttachmentPart::Ptr part );
-    bool updateAttachment( KPIM::AttachmentPart::Ptr part );
-    bool replaceAttachment( KPIM::AttachmentPart::Ptr oldPart, KPIM::AttachmentPart::Ptr newPart );
-    bool removeAttachment( KPIM::AttachmentPart::Ptr part );
-    KPIM::AttachmentPart::List attachments() const;
+    bool addAttachment( MessageCore::AttachmentPart::Ptr part );
+    bool updateAttachment( MessageCore::AttachmentPart::Ptr part );
+    bool replaceAttachment( MessageCore::AttachmentPart::Ptr oldPart, MessageCore::AttachmentPart::Ptr newPart );
+    bool removeAttachment( MessageCore::AttachmentPart::Ptr part );
+    MessageCore::AttachmentPart::List attachments() const;
 
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation,
@@ -108,8 +108,8 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
     void signEnabled( bool enabled );
     void attachUrlsRequested( const KUrl::List &urls );
     void attachItemsRequester( const Akonadi::Item::List & );
-    void attachmentRemoved( KPIM::AttachmentPart::Ptr part );
-    void attachmentCompressRequested( KPIM::AttachmentPart::Ptr part, bool compress );
+    void attachmentRemoved( MessageCore::AttachmentPart::Ptr part );
+    void attachmentCompressRequested( MessageCore::AttachmentPart::Ptr part, bool compress );
 
   private:
     class Private;

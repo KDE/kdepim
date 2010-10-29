@@ -16,25 +16,40 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "annotationdialog.h"
 
 #include <Nepomuk/Resource>
 
 #include <KMessageBox>
 #include <KLocale>
+#include <KTextEdit>
 
 #include <QLabel>
 #include <QGridLayout>
 
-using namespace KPIM;
+using namespace MessageCore;
 
-AnnotationEditDialog::AnnotationEditDialog( const QUrl &nepomukResourceUri, QWidget *parent )
-  : KDialog( parent ),
-  mNepomukResourceUri( nepomukResourceUri )
+class AnnotationEditDialog::Private
 {
-  Nepomuk::Resource resource( mNepomukResourceUri );
-  mHasAnnotation = resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
-  if ( mHasAnnotation ) {
+  public:
+    Private( const QUrl &uri )
+      : mNepomukResourceUri( uri )
+    {
+    }
+
+    QUrl mNepomukResourceUri;
+    KTextEdit *mTextEdit;
+    bool mHasAnnotation;
+};
+
+AnnotationEditDialog::AnnotationEditDialog( const QUrl &uri, QWidget *parent )
+  : KDialog( parent ), d( new Private( uri ) )
+{
+  Nepomuk::Resource resource( d->mNepomukResourceUri );
+
+  d->mHasAnnotation = resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
+  if ( d->mHasAnnotation ) {
     setCaption( i18n( "Edit Note" ) );
     setButtons( Ok | Cancel | User1 );
     setButtonText( User1, i18n( "Delete Note" ) );
@@ -43,35 +58,38 @@ AnnotationEditDialog::AnnotationEditDialog( const QUrl &nepomukResourceUri, QWid
     setCaption( i18n( "Add Note" ) );
     setButtons( Ok | Cancel );
   }
-  setDefaultButton(KDialog::Ok);
+
+  setDefaultButton( KDialog::Ok );
 
   QLabel *label = new QLabel( i18n( "Enter the text that should be stored as a note to the mail:" ) );
   QGridLayout *grid = new QGridLayout( mainWidget() );
-  mTextEdit = new KTextEdit( this );
+  d->mTextEdit = new KTextEdit( this );
   grid->addWidget( label );
-  grid->addWidget( mTextEdit );
-  mTextEdit->setFocus();
-  if ( mHasAnnotation ) {
-    mTextEdit->setPlainText( resource.description() );
+  grid->addWidget( d->mTextEdit );
+  d->mTextEdit->setFocus();
+
+  if ( d->mHasAnnotation ) {
+    d->mTextEdit->setPlainText( resource.description() );
   }
 }
 
 AnnotationEditDialog::~AnnotationEditDialog()
 {
+  delete d;
 }
 
-void AnnotationEditDialog::slotButtonClicked ( int button )
+void AnnotationEditDialog::slotButtonClicked( int button )
 {
   if ( button == KDialog::Ok ) {
-    bool textIsEmpty = mTextEdit->toPlainText().isEmpty();
+    bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
     if ( !textIsEmpty ) {
-      Nepomuk::Resource resource( mNepomukResourceUri );
-      resource.setDescription( mTextEdit->toPlainText() );
-    }
-    else if ( mHasAnnotation && textIsEmpty ) {
-      Nepomuk::Resource resource( mNepomukResourceUri );
+      Nepomuk::Resource resource( d->mNepomukResourceUri );
+      resource.setDescription( d->mTextEdit->toPlainText() );
+    } else if ( d->mHasAnnotation && textIsEmpty ) {
+      Nepomuk::Resource resource( d->mNepomukResourceUri );
       resource.removeProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
     }
+
     accept();
   } else if ( button == KDialog::Cancel ) {
     reject();
@@ -80,7 +98,7 @@ void AnnotationEditDialog::slotButtonClicked ( int button )
                               i18n( "Do you really want to delete this note?" ),
                               i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), "edit-delete" ) );
     if ( answer == KMessageBox::Continue ) {
-      Nepomuk::Resource resource( mNepomukResourceUri );
+      Nepomuk::Resource resource( d->mNepomukResourceUri );
       resource.removeProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
       accept();
     }

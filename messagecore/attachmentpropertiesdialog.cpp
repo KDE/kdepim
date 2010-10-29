@@ -24,8 +24,6 @@
 #include "attachmentfrommimecontentjob.h"
 #include "ui_attachmentpropertiesdialog.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include <KAboutData>
 #include <KComponentData>
 #include <KDebug>
@@ -36,18 +34,20 @@
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_util.h>
 
-using namespace KPIM;
+#include <boost/shared_ptr.hpp>
 
-class KPIM::AttachmentPropertiesDialog::Private
+using namespace MessageCore;
+
+class MessageCore::AttachmentPropertiesDialog::Private
 {
   public:
     Private( AttachmentPropertiesDialog *qq )
-      : q( qq )
-      , readOnly( false )
+      : q( qq ),
+        mReadOnly( false )
     {
     }
 
-    void init( AttachmentPart::Ptr part, bool readOnly );
+    void init( const AttachmentPart::Ptr &part, bool readOnly );
     void polishUi();
     void mimeTypeChanged( const QString &type ); // slot
     void populateEncodings();
@@ -57,15 +57,15 @@ class KPIM::AttachmentPropertiesDialog::Private
     void saveToPart();
 
     AttachmentPropertiesDialog *const q;
-    bool readOnly;
-    AttachmentPart::Ptr part;
+    bool mReadOnly;
+    AttachmentPart::Ptr mPart;
     Ui::AttachmentPropertiesDialog ui;
 };
 
-void AttachmentPropertiesDialog::Private::init( AttachmentPart::Ptr part, bool readOnly )
+void AttachmentPropertiesDialog::Private::init( const AttachmentPart::Ptr &part, bool readOnly )
 {
-  this->readOnly = readOnly;
-  this->part = part;
+  mReadOnly = readOnly;
+  mPart = part;
 
   QWidget *widget = new QWidget( q );
   q->setMainWidget( widget );
@@ -81,10 +81,11 @@ void AttachmentPropertiesDialog::Private::init( AttachmentPart::Ptr part, bool r
 void AttachmentPropertiesDialog::Private::polishUi()
 {
   // Update the icon when the selected mime type changes.
-  connect( ui.mimeType, SIGNAL( currentIndexChanged ( const QString & ) ),
-           q, SLOT( mimeTypeChanged( QString ) ) );
+  connect( ui.mimeType, SIGNAL( currentIndexChanged ( const QString& ) ),
+           q, SLOT( mimeTypeChanged( const QString& ) ) );
+
   // Tweak the dialog, depending on whether it is read-only or not.
-  if( readOnly ) {
+  if ( mReadOnly ) {
     ui.mimeType->setEditable( false );
     ui.name->setReadOnly( true );
     ui.description->setReadOnly( true );
@@ -93,12 +94,12 @@ void AttachmentPropertiesDialog::Private::polishUi()
     ui.encrypt->setEnabled( false );
     ui.sign->setEnabled( false );
 
-    q->setButtons( Ok|Help );
+    q->setButtons( Ok | Help );
   } else {
     populateEncodings();
     populateMimeTypes();
 
-    q->setButtons( Ok|Cancel|Help );
+    q->setButtons( Ok | Cancel | Help );
   }
 
   q->setDefaultButton( Ok );
@@ -107,8 +108,8 @@ void AttachmentPropertiesDialog::Private::polishUi()
 
 void AttachmentPropertiesDialog::Private::mimeTypeChanged( const QString &type )
 {
-  KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
-  if( !mimeType.isNull() ) {
+  const KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
+  if ( !mimeType.isNull() ) {
     ui.mimeIcon->setPixmap( KIconLoader::global()->loadMimeTypeIcon( mimeType->iconName(),
                             KIconLoader::Desktop ) );
   } else {
@@ -212,21 +213,22 @@ void AttachmentPropertiesDialog::Private::populateMimeTypes()
        << QString::fromLatin1( "application/octet-stream" )
        << QString::fromLatin1( "application/x-gunzip" )
        << QString::fromLatin1( "application/zip" );
+
   ui.mimeType->addItems( list );
 }
 
 void AttachmentPropertiesDialog::Private::loadFromPart()
 {
-  Q_ASSERT( part );
+  Q_ASSERT( mPart );
 
-  ui.mimeType->setCurrentItem( part->mimeType(), true );
-  ui.size->setText( KGlobal::locale()->formatByteSize( part->size() ) );
-  ui.name->setText( part->name() );
-  ui.description->setText( part->description() );
-  ui.encoding->setCurrentIndex( int( part->encoding() ) );
-  ui.autoDisplay->setChecked( part->isInline() );
-  ui.encrypt->setChecked( part->isEncrypted() );
-  ui.sign->setChecked( part->isSigned() );
+  ui.mimeType->setCurrentItem( mPart->mimeType(), true );
+  ui.size->setText( KGlobal::locale()->formatByteSize( mPart->size() ) );
+  ui.name->setText( mPart->name() );
+  ui.description->setText( mPart->description() );
+  ui.encoding->setCurrentIndex( int( mPart->encoding() ) );
+  ui.autoDisplay->setChecked( mPart->isInline() );
+  ui.encrypt->setChecked( mPart->isEncrypted() );
+  ui.sign->setChecked( mPart->isSigned() );
 }
 
 static QString removeNewlines( const QString &input )
@@ -238,50 +240,52 @@ static QString removeNewlines( const QString &input )
 
 void AttachmentPropertiesDialog::Private::saveToPart()
 {
-  Q_ASSERT( part );
-  Q_ASSERT( !readOnly );
+  Q_ASSERT( mPart );
+  Q_ASSERT( !mReadOnly );
 
-  part->setMimeType( ui.mimeType->currentText().toLatin1() );
-  part->setName( removeNewlines( ui.name->text() ) );
+  mPart->setMimeType( ui.mimeType->currentText().toLatin1() );
+  mPart->setName( removeNewlines( ui.name->text() ) );
   // TODO what about fileName? Extra field??
-  part->setDescription( removeNewlines( ui.description->text() ) );
-  part->setInline( ui.autoDisplay->isChecked() );
-  part->setSigned( ui.sign->isChecked() );
-  part->setEncrypted( ui.encrypt->isChecked() );
-  part->setInline( ui.autoDisplay->isChecked() );
+  mPart->setDescription( removeNewlines( ui.description->text() ) );
+  mPart->setInline( ui.autoDisplay->isChecked() );
+  mPart->setSigned( ui.sign->isChecked() );
+  mPart->setEncrypted( ui.encrypt->isChecked() );
+  mPart->setInline( ui.autoDisplay->isChecked() );
 
-  if( ui.mimeType->currentText().startsWith( QLatin1String( "message" ) ) &&
-      ui.encoding->itemData( ui.encoding->currentIndex() ) != KMime::Headers::CE7Bit &&
-      ui.encoding->itemData( ui.encoding->currentIndex() ) != KMime::Headers::CE8Bit ) {
+  if ( ui.mimeType->currentText().startsWith( QLatin1String( "message" ) ) &&
+       ui.encoding->itemData( ui.encoding->currentIndex() ) != KMime::Headers::CE7Bit &&
+       ui.encoding->itemData( ui.encoding->currentIndex() ) != KMime::Headers::CE8Bit ) {
     kWarning() << "Encoding on message/rfc822 must be \"7bit\" or \"8bit\".";
   }
-  part->setEncoding( KMime::Headers::contentEncoding(
-                       ui.encoding->itemData( ui.encoding->currentIndex() ).toInt() ) );
+
+  mPart->setEncoding( KMime::Headers::contentEncoding(
+                      ui.encoding->itemData( ui.encoding->currentIndex() ).toInt() ) );
 }
 
-AttachmentPropertiesDialog::AttachmentPropertiesDialog( AttachmentPart::Ptr part,
+AttachmentPropertiesDialog::AttachmentPropertiesDialog( const AttachmentPart::Ptr &part,
                                                         QWidget *parent, bool readOnly )
-  : KDialog( parent )
-  , d( new Private( this ) )
+  : KDialog( parent ),
+    d( new Private( this ) )
 {
   d->init( part, readOnly );
 }
 
 AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *content,
                                                         QWidget *parent, bool readOnly )
-  : KDialog( parent )
-  , d( new Private( this ) )
+  : KDialog( parent ),
+    d( new Private( this ) )
 {
-  if( !readOnly ) {
+  if ( !readOnly ) {
     kFatal() << "Dialog must be read-only if loading from a KMime::Content.";
   }
 
-  AttachmentFromMimeContentJob *ajob = new AttachmentFromMimeContentJob( content, this );
-  ajob->exec();
-  if( ajob->error() ) {
+  AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob( content, this );
+  job->exec();
+  if ( job->error() ) {
     kError() << "AttachmentFromMimeContentJob failed.";
   }
-  AttachmentPart::Ptr part = ajob->attachmentPart();
+
+  const AttachmentPart::Ptr part = job->attachmentPart();
   d->init( part, readOnly );
 }
 
@@ -290,9 +294,9 @@ AttachmentPropertiesDialog::~AttachmentPropertiesDialog()
   delete d;
 }
 
-KPIM::AttachmentPart::Ptr AttachmentPropertiesDialog::attachmentPart() const
+AttachmentPart::Ptr AttachmentPropertiesDialog::attachmentPart() const
 {
-  return d->part;
+  return d->mPart;
 }
 
 bool AttachmentPropertiesDialog::isEncryptEnabled() const
@@ -317,9 +321,10 @@ void AttachmentPropertiesDialog::setSignEnabled( bool enabled )
 
 void AttachmentPropertiesDialog::accept()
 {
-  if( !d->readOnly ) {
+  if ( !d->mReadOnly ) {
     d->saveToPart();
   }
+
   KDialog::accept();
 }
 

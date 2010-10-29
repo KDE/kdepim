@@ -40,11 +40,11 @@ class MESSAGECOMPOSER_EXPORT AttachmentJob : public ContentJobBase
   Q_OBJECT
 
   public:
-    AttachmentJob( KPIM::AttachmentPart::Ptr part, QObject *parent = 0 );
+    AttachmentJob( MessageCore::AttachmentPart::Ptr part, QObject *parent = 0 );
     virtual ~AttachmentJob();
 
-    KPIM::AttachmentPart::Ptr attachmentPart() const;
-    void setAttachmentPart( KPIM::AttachmentPart::Ptr part );
+    MessageCore::AttachmentPart::Ptr attachmentPart() const;
+    void setAttachmentPart( MessageCore::AttachmentPart::Ptr part );
 
   protected Q_SLOTS:
     virtual void doStart();

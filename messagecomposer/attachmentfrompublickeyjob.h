@@ -30,7 +30,7 @@ namespace Message {
 /**
 */
 // TODO I have no idea how to test this.  Have a fake keyring???
-class MESSAGECOMPOSER_EXPORT AttachmentFromPublicKeyJob : public KPIM::AttachmentLoadJob
+class MESSAGECOMPOSER_EXPORT AttachmentFromPublicKeyJob : public MessageCore::AttachmentLoadJob
 {
   Q_OBJECT
 

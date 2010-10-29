@@ -60,17 +60,17 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void setEncryptEnabled( bool enabled );
     void setSignEnabled( bool enabled );
     /// compression is async...
-    void compressAttachment( KPIM::AttachmentPart::Ptr part, bool compress );
+    void compressAttachment( MessageCore::AttachmentPart::Ptr part, bool compress );
     void showContextMenu();
-    void openAttachment( KPIM::AttachmentPart::Ptr part );
-    void viewAttachment( KPIM::AttachmentPart::Ptr part );
-    void editAttachment( KPIM::AttachmentPart::Ptr part, bool openWith = false );
-    void editAttachmentWith( KPIM::AttachmentPart::Ptr part );
-    void saveAttachmentAs( KPIM::AttachmentPart::Ptr part );
-    void attachmentProperties( KPIM::AttachmentPart::Ptr part );
+    void openAttachment( MessageCore::AttachmentPart::Ptr part );
+    void viewAttachment( MessageCore::AttachmentPart::Ptr part );
+    void editAttachment( MessageCore::AttachmentPart::Ptr part, bool openWith = false );
+    void editAttachmentWith( MessageCore::AttachmentPart::Ptr part );
+    void saveAttachmentAs( MessageCore::AttachmentPart::Ptr part );
+    void attachmentProperties( MessageCore::AttachmentPart::Ptr part );
     void showAddAttachmentDialog();
     /// sets sign, encrypt, shows properties dialog if so configured
-    void addAttachment( KPIM::AttachmentPart::Ptr part );
+    void addAttachment( MessageCore::AttachmentPart::Ptr part );
     void addAttachment( const KUrl &url );
     void addAttachments( const KUrl::List &urls );
     void showAttachPublicKeyDialog();
@@ -86,7 +86,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void enableAttachPublicKey( bool enable );
     void enableAttachMyPublicKey( bool enable );
     void byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite = false);
-    void setSelectedParts( const KPIM::AttachmentPart::List &selectedParts );
+    void setSelectedParts( const MessageCore::AttachmentPart::List &selectedParts );
 
   private slots:
     void slotPutResult(KJob *job);
@@ -95,7 +95,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void attachmentRemoved( KPIM::AttachmentPart::Ptr ) )
+    Q_PRIVATE_SLOT( d, void attachmentRemoved( MessageCore::AttachmentPart::Ptr ) )
     Q_PRIVATE_SLOT( d, void compressJobResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void loadJobResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void openSelectedAttachments() )

@@ -21,18 +21,18 @@
 
 #include "attachmentcompressjob.h"
 
-#include <boost/shared_ptr.hpp>
-
-#include <QBuffer>
-#include <QTimer>
-
 #include <KDebug>
 #include <KLocalizedString>
 #include <KZip>
 
-using namespace KPIM;
+#include <QtCore/QBuffer>
+#include <QtCore/QTimer>
 
-class KPIM::AttachmentCompressJob::Private
+#include <boost/shared_ptr.hpp>
+
+using namespace MessageCore;
+
+class MessageCore::AttachmentCompressJob::Private
 {
   public:
     Private( AttachmentCompressJob *qq );
@@ -40,21 +40,21 @@ class KPIM::AttachmentCompressJob::Private
     void doStart(); // slot
 
     AttachmentCompressJob *const q;
-    AttachmentPart::Ptr originalPart;
-    AttachmentPart::Ptr compressedPart;
-    bool compressedPartLarger;
+    AttachmentPart::Ptr mOriginalPart;
+    AttachmentPart::Ptr mCompressedPart;
+    bool mCompressedPartLarger;
 };
 
 AttachmentCompressJob::Private::Private( AttachmentCompressJob *qq )
-  : q( qq )
-  , compressedPartLarger( false )
+  : q( qq ),
+    mCompressedPartLarger( false )
 {
 }
 
 void AttachmentCompressJob::Private::doStart()
 {
-  Q_ASSERT( originalPart );
-  QByteArray decoded = originalPart->data();
+  Q_ASSERT( mOriginalPart );
+  const QByteArray decoded = mOriginalPart->data();
 
   QByteArray array;
   QBuffer dev( &array );
@@ -68,7 +68,7 @@ void AttachmentCompressJob::Private::doStart()
 
   // Compress.
   zip.setCompression( KZip::DeflateCompression );
-  if( !zip.writeFile( originalPart->name(), QString( /*user*/ ), QString( /*group*/ ),
+  if( !zip.writeFile( mOriginalPart->name(), QString( /*user*/ ), QString( /*group*/ ),
                       decoded.data(), decoded.size() ) ) {
     q->setError( KJob::UserDefinedError );
     q->setErrorText( i18n( "Could not compress the attachment." ) );
@@ -76,32 +76,31 @@ void AttachmentCompressJob::Private::doStart()
     return;
   }
   zip.close();
-  compressedPartLarger = ( array.size() >= decoded.size() );
+  mCompressedPartLarger = (array.size() >= decoded.size());
 
   // Create new part.
-  Q_ASSERT( compressedPart == 0 );
-  compressedPart = AttachmentPart::Ptr( new AttachmentPart );
-  compressedPart->setName( originalPart->name() + QString::fromLatin1( ".zip" ) ); // TODO not sure name should be .zipped too
-  compressedPart->setFileName( originalPart->fileName() + QString::fromLatin1( ".zip" ) );
-  compressedPart->setDescription( originalPart->description() );
-  compressedPart->setInline( originalPart->isInline() );
-  compressedPart->setMimeType( "application/zip" );
-  compressedPart->setCompressed( true );
-  compressedPart->setEncrypted( originalPart->isEncrypted() );
-  compressedPart->setSigned( originalPart->isSigned() );
-  compressedPart->setData( array );
+  Q_ASSERT( mCompressedPart == 0 );
+  mCompressedPart = AttachmentPart::Ptr( new AttachmentPart );
+  mCompressedPart->setName( mOriginalPart->name() + QString::fromLatin1( ".zip" ) ); // TODO not sure name should be .zipped too
+  mCompressedPart->setFileName( mOriginalPart->fileName() + QString::fromLatin1( ".zip" ) );
+  mCompressedPart->setDescription( mOriginalPart->description() );
+  mCompressedPart->setInline( mOriginalPart->isInline() );
+  mCompressedPart->setMimeType( "application/zip" );
+  mCompressedPart->setCompressed( true );
+  mCompressedPart->setEncrypted( mOriginalPart->isEncrypted() );
+  mCompressedPart->setSigned( mOriginalPart->isSigned() );
+  mCompressedPart->setData( array );
   q->emitResult(); // Success.
 
   // TODO consider adding a copy constructor to AttachmentPart.
 }
 
 
-
 AttachmentCompressJob::AttachmentCompressJob( const AttachmentPart::Ptr &part, QObject *parent )
-  : KJob( parent )
-  , d( new Private( this ) )
+  : KJob( parent ),
+    d( new Private( this ) )
 {
-  d->originalPart = part;
+  d->mOriginalPart = part;
 }
 
 AttachmentCompressJob::~AttachmentCompressJob()
@@ -111,27 +110,27 @@ AttachmentCompressJob::~AttachmentCompressJob()
 
 void AttachmentCompressJob::start()
 {
-  QTimer::singleShot( 0, this, SLOT(doStart()) );
+  QTimer::singleShot( 0, this, SLOT( doStart() ) );
 }
 
 const AttachmentPart::Ptr AttachmentCompressJob::originalPart() const
 {
-  return d->originalPart;
+  return d->mOriginalPart;
 }
 
-void AttachmentCompressJob::setOriginalPart( const AttachmentPart::Ptr part )
+void AttachmentCompressJob::setOriginalPart( const AttachmentPart::Ptr &part )
 {
-  d->originalPart = part;
+  d->mOriginalPart = part;
 }
 
 AttachmentPart::Ptr AttachmentCompressJob::compressedPart() const
 {
-  return d->compressedPart;
+  return d->mCompressedPart;
 }
 
 bool AttachmentCompressJob::isCompressedPartLarger() const
 {
-  return d->compressedPartLarger;
+  return d->mCompressedPartLarger;
 }
 
 #include "attachmentcompressjob.moc"

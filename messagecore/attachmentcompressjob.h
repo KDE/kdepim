@@ -17,41 +17,76 @@
   02110-1301, USA.
 */
 
-#ifndef KDEPIM_ATTACHMENTCOMPRESSJOB_H
-#define KDEPIM_ATTACHMENTCOMPRESSJOB_H
+#ifndef MESSAGECORE_ATTACHMENTCOMPRESSJOB_H
+#define MESSAGECORE_ATTACHMENTCOMPRESSJOB_H
+
+#include "messagecore_export.h"
 
 #include "attachmentpart.h"
-#include "messagecore_export.h"
 
 #include <KDE/KJob>
 
-namespace KPIM {
+namespace MessageCore {
 
 /**
-*/
+ * @short A job to compress the attachment of an email.
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ */
 class MESSAGECORE_EXPORT AttachmentCompressJob : public KJob
 {
   Q_OBJECT
 
   public:
+    /**
+     * Creates a new attachment compress job.
+     *
+     * @param part The part of the attachment to compress.
+     * @param parent The parent object.
+     */
     explicit AttachmentCompressJob( const AttachmentPart::Ptr &part, QObject *parent = 0 );
+
+    /**
+     * Destroys the attachment compress job.
+     */
     virtual ~AttachmentCompressJob();
 
+    /**
+     * Starts the attachment compress job.
+     */
     virtual void start();
 
+    /**
+     * Sets the original @p part of the compressed attachment.
+     */
+    void setOriginalPart( const AttachmentPart::Ptr &part );
+
+    /**
+     * Returns the original part of the compressed attachment.
+     */
     const AttachmentPart::Ptr originalPart() const;
-    void setOriginalPart( const AttachmentPart::Ptr part );
-    /// does not delete it unless it failed...
+
+    /**
+     * Returns the compressed part of the attachment.
+     *
+     * @note does not delete it unless it failed...
+     */
     AttachmentPart::Ptr compressedPart() const;
+
+    /**
+     * Returns whether the compressed part is larger than the original part.
+     */
     bool isCompressedPartLarger() const;
 
   private:
+    //@cond PRIVATE
     class Private;
-    friend class Private;
     Private *const d;
+
     Q_PRIVATE_SLOT( d, void doStart() )
+    //@endcond
 };
 
-} // namespace KPIM
+}
 
 #endif

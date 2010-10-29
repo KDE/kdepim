@@ -61,10 +61,10 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     GlobalPart *globalPart() const;
     InfoPart *infoPart() const;
     TextPart *textPart() const;
-    KPIM::AttachmentPart::List attachmentParts() const;
-    void addAttachmentPart( KPIM::AttachmentPart::Ptr part );
-    void addAttachmentParts( const KPIM::AttachmentPart::List &parts );
-    void removeAttachmentPart( KPIM::AttachmentPart::Ptr part );
+    MessageCore::AttachmentPart::List attachmentParts() const;
+    void addAttachmentPart( MessageCore::AttachmentPart::Ptr part );
+    void addAttachmentParts( const MessageCore::AttachmentPart::List &parts );
+    void removeAttachmentPart( MessageCore::AttachmentPart::Ptr part );
 
     // if the message and attachments should not be encrypted regardless of settings
     void setNoCrypto( bool noCrypto );

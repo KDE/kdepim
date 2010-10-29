@@ -27,7 +27,7 @@
 #include <qtest_kde.h>
 
 #include <messagecore/attachmentcompressjob.h>
-using namespace KPIM;
+using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentCompressJobTest, NoGUI )
 

@@ -17,74 +17,193 @@
   02110-1301, USA.
 */
 
-#ifndef KDEPIM_ATTACHMENTPART_H
-#define KDEPIM_ATTACHMENTPART_H
+#ifndef MESSAGECORE_ATTACHMENTPART_H
+#define MESSAGECORE_ATTACHMENTPART_H
 
 #include "messagecore_export.h"
 
-#include <boost/shared_ptr.hpp>
+#include <kmime/kmime_headers.h>
 
 #include <QtCore/QList>
 #include <QtCore/QMetaType>
 
-#include <kmime/kmime_headers.h>
+#include <boost/shared_ptr.hpp>
 
-namespace KPIM {
+namespace MessageCore {
 
+/**
+ * @short A class that encapsulates an attachment.
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ */
 class MESSAGECORE_EXPORT AttachmentPart
 {
   public:
-    //typedef QList<AttachmentPart*> List;
+    /**
+     * Defines a pointer to an attachment object.
+     */
     typedef boost::shared_ptr<AttachmentPart> Ptr;
+
+    /**
+     * Defines a list of pointers to attachment objects.
+     */
     typedef QList<Ptr> List;
 
+    /**
+     * Creates a new attachment part.
+     */
     AttachmentPart();
+
+    /**
+     * Destroys the attachment part.
+     */
     virtual ~AttachmentPart();
 
-    /// the name= in Content-Type
-    QString name() const;
+    /**
+     * Sets the @p name of the attachment.
+     *
+     * The name will be used in the 'name=' part of
+     * the Content-Type header.
+     */
     void setName( const QString &name );
-    /// the filename= in Content-Disposition
-    QString fileName() const;
+
+    /**
+     * Returns the name of the attachment.
+     */
+    QString name() const;
+
+    /**
+     * Sets the file @p name of the attachment.
+     *
+     * The name will be used in the 'filename=' part of
+     * the Content-Disposition header.
+     */
     void setFileName( const QString &name );
-    QString description() const;
+
+    /**
+     * Returns the file name of the attachment.
+     */
+    QString fileName() const;
+
+    /**
+     * Sets the @p description of the attachment.
+     */
     void setDescription( const QString &description );
-    // otherwise "attachment"
-    bool isInline() const;  // Perhaps rename to autoDisplay, since the users of
-                            // this class aren't supposed to know MIME?
-    void setInline( bool inl );
-    // default true
-    bool isAutoEncoding() const;
+
+    /**
+     * Returns the description of the attachment.
+     */
+    QString description() const;
+
+    /**
+     * Sets whether the attachment will be displayed inline the message.
+     */
+    void setInline( bool value );
+
+    /**
+     * Returns whether the attachment will be displayed inline the message.
+     */
+    bool isInline() const;
+
+    /**
+     * Sets whether encoding of the attachment will be determined automatically.
+     */
     void setAutoEncoding( bool enabled );
-    // only if isAutoEncoding false
-    KMime::Headers::contentEncoding encoding() const;
+
+    /**
+     * Returns whether encoding of the attachment will be determined automatically.
+     */
+    bool isAutoEncoding() const;
+
+    /**
+     * Sets the @p encoding that will be used for the attachment.
+     *
+     * @note only applies if isAutoEncoding is @c false
+     */
     void setEncoding( KMime::Headers::contentEncoding encoding );
-    QByteArray charset() const;
+
+    /**
+     * Returns the encoding that will be used for the attachment.
+     */
+    KMime::Headers::contentEncoding encoding() const;
+
+    /**
+     * Sets the @p charset that will be used for the attachment.
+     */
     void setCharset( const QByteArray &charset );
-    QByteArray mimeType() const;
+
+    /**
+     * Returns the charset that will be used for the attachment.
+     */
+    QByteArray charset() const;
+
+    /**
+     * Sets the @p mimeType of the attachment.
+     */
     void setMimeType( const QByteArray &mimeType );
-    bool isCompressed() const;
+
+    /**
+     * Returns the mime type of the attachment.
+     */
+    QByteArray mimeType() const;
+
+    /**
+     * Sets whether the attachment is @p compressed.
+     */
     void setCompressed( bool compressed );
-    bool isEncrypted() const;
+
+    /**
+     * Returns whether the attachment is compressed.
+     */
+    bool isCompressed() const;
+
+    /**
+     * Sets whether the attachment is @p encrypted.
+     */
     void setEncrypted( bool encrypted );
-    bool isSigned() const;
+
+    /**
+     * Returns whether the attachment is encrypted.
+     */
+    bool isEncrypted() const;
+
+    /**
+     * Sets whether the attachment is @p signed.
+     */
     void setSigned( bool sign );
-    QByteArray data() const;
+
+    /**
+     * Returns whether the attachment is signed.
+     */
+    bool isSigned() const;
+
+    /**
+     * Sets the payload @p data of the attachment.
+     */
     void setData( const QByteArray &data );
+
+    /**
+     * Returns the payload data of the attachment.
+     */
+    QByteArray data() const;
+
+    /**
+     * Returns the size of the attachment.
+     */
     qint64 size() const;
 
-    // TODO outlook-compatible names...
-
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 // FIXME I don't understand why this doesn't work if I put it outside namespace KPIM.
-MESSAGECORE_EXPORT uint qHash( const boost::shared_ptr<KPIM::AttachmentPart> &ptr );
+MESSAGECORE_EXPORT uint qHash( const boost::shared_ptr<MessageCore::AttachmentPart>& );
 
-} // namespace KPIM
+}
 
-Q_DECLARE_METATYPE( KPIM::AttachmentPart::Ptr )
+Q_DECLARE_METATYPE( MessageCore::AttachmentPart::Ptr )
 
 #endif

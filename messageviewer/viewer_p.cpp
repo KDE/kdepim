@@ -2229,7 +2229,7 @@ void ViewerPrivate::slotAttachmentProperties()
 
 void ViewerPrivate::attachmentProperties( KMime::Content *content )
 {
-  KPIM::AttachmentPropertiesDialog *dialog = new KPIM::AttachmentPropertiesDialog( content, mMainWindow );
+  MessageCore::AttachmentPropertiesDialog *dialog = new MessageCore::AttachmentPropertiesDialog( content, mMainWindow );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
 }

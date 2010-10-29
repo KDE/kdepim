@@ -34,7 +34,7 @@
 #include <KDebug>
 
 using namespace Message;
-using namespace KPIM;
+using namespace MessageCore;
 
 class Message::AttachmentJobPrivate : public ContentJobBasePrivate
 {

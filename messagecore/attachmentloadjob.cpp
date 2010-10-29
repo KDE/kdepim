@@ -21,21 +21,20 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <QTimer>
+#include <QtCore/QTimer>
 
-using namespace KPIM;
+using namespace MessageCore;
 
-class KPIM::AttachmentLoadJob::Private
+class MessageCore::AttachmentLoadJob::Private
 {
   public:
-    AttachmentPart::Ptr part;
+    AttachmentPart::Ptr mPart;
 };
 
 
-
 AttachmentLoadJob::AttachmentLoadJob( QObject *parent )
-  : KJob( parent )
-  , d( new Private )
+  : KJob( parent ),
+    d( new Private )
 {
 }
 
@@ -46,17 +45,17 @@ AttachmentLoadJob::~AttachmentLoadJob()
 
 void AttachmentLoadJob::start()
 {
-  QTimer::singleShot( 0, this, SLOT(doStart()) );
+  QTimer::singleShot( 0, this, SLOT( doStart() ) );
 }
 
 AttachmentPart::Ptr AttachmentLoadJob::attachmentPart() const
 {
-  return d->part;
+  return d->mPart;
 }
 
-void AttachmentLoadJob::setAttachmentPart( AttachmentPart::Ptr part )
+void AttachmentLoadJob::setAttachmentPart( const AttachmentPart::Ptr &part )
 {
-  d->part = part;
+  d->mPart = part;
 }
 
 #include "attachmentloadjob.moc"

@@ -16,31 +16,50 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef MESSAGECORE_ANNOTATIONDIALOG_H
+#define MESSAGECORE_ANNOTATIONDIALOG_H
+
 #include "messagecore_export.h"
 
 #include <KDialog>
-#include <KTextEdit>
 
-namespace KPIM {
+namespace MessageCore {
 
+/**
+ * @short A dialog for editing annotations of an email.
+ *
+ * @author Thomas McGuire <mcguire@kde.org>
+ */
 class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
 {
   Q_OBJECT
 
   public:
-    AnnotationEditDialog( const QUrl &nepomukResourceUri, QWidget *parent = 0 );
+    /**
+     * Creates a new annotation edit dialog.
+     *
+     * @param uri The Nepomuk resource uri of the email.
+     * @param parent The parent widget.
+     */
+    AnnotationEditDialog( const QUrl &uri, QWidget *parent = 0 );
+
+    /**
+     * Destroys the annotation edit dialog.
+     */
     ~AnnotationEditDialog();
 
   protected:
-
     /// Reimplemented to handle button clicks
-    virtual void slotButtonClicked ( int button );
+    virtual void slotButtonClicked( int button );
 
   private:
-
-    QUrl mNepomukResourceUri;
-    KTextEdit *mTextEdit;
-    bool mHasAnnotation;
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+    //@endcond
 };
 
 }
+
+#endif

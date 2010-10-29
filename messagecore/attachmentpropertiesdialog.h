@@ -19,53 +19,94 @@
   02110-1301, USA.
 */
 
-#ifndef KDEPIM_ATTACHMENTPROPERTIESDIALOG_H
-#define KDEPIM_ATTACHMENTPROPERTIESDIALOG_H
+#ifndef MESSAGECORE_ATTACHMENTPROPERTIESDIALOG_H
+#define MESSAGECORE_ATTACHMENTPROPERTIESDIALOG_H
+
+#include "messagecore_export.h"
 
 #include "attachmentpart.h"
-#include "messagecore_export.h"
 
 #include <KDE/KDialog>
 
-namespace KPIM {
+namespace MessageCore {
 
+/**
+ * @short A dialog for editing attachment properties.
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ */
 class MESSAGECORE_EXPORT AttachmentPropertiesDialog: public KDialog
 {
   Q_OBJECT
 
   public:
-    explicit AttachmentPropertiesDialog( KPIM::AttachmentPart::Ptr part,
+    /**
+     * Creates a new attachment properties dialog.
+     *
+     * @param part The attachment part which properties to change.
+     * @param parent The parent object.
+     * @param readOnly Whether the dialog should be in read-only mode.
+     */
+    explicit AttachmentPropertiesDialog( const AttachmentPart::Ptr &part,
                                          QWidget *parent = 0, bool readOnly = false );
 
     /**
-      This converts the KMime::Content to an AttachmentPart. Therefore, saving
-      the changes to the KMime::Content is not supported, and readOnly must
-      be true.
-    */
+     * Creates a new attachment properties dialog.
+     *
+     * @param content The mime content that represents the attachment which properties to change.
+     * @param parent The parent object.
+     * @param readOnly Whether the dialog should be in read-only mode.
+     *
+     * @note This converts the KMime::Content to an AttachmentPart internally.
+     *       Therefore, saving the changes to the KMime::Content is not supported,
+     *       and readOnly must be true.
+     */
     explicit AttachmentPropertiesDialog( const KMime::Content *content,
                                          QWidget *parent = 0, bool readOnly = true );
+
+    /**
+     * Destroys the attachment properties dialog.
+     */
     virtual ~AttachmentPropertiesDialog();
 
-    KPIM::AttachmentPart::Ptr attachmentPart() const;
+    /**
+     * Returns the modified attachment.
+     */
+    AttachmentPart::Ptr attachmentPart() const;
 
-    bool isEncryptEnabled() const;
-    /** Sets whether or not this attachment can be encrypted */
+    /**
+     * Sets whether the encryption status of the attachment can be changed.
+     */
     void setEncryptEnabled( bool enabled );
-    bool isSignEnabled() const;
-    /** Sets whether or not this attachment can be signed */
+
+    /**
+     * Returns whether the encryption status of the attachment can be changed.
+     */
+    bool isEncryptEnabled() const;
+
+    /**
+     * Sets whether the signature status of the attachment can be changed.
+     */
     void setSignEnabled( bool enabled );
 
-  public slots:
+    /**
+     * Returns whether the signature status of the attachment can be changed.
+     */
+    bool isSignEnabled() const;
+
+  public Q_SLOTS:
     /* reimpl */
     virtual void accept();
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void mimeTypeChanged( const QString& ) )
+    //@endcond
 };
 
-} // namespace KMail
+}
 
 #endif

@@ -17,43 +17,73 @@
   02110-1301, USA.
 */
 
-#ifndef KDEPIM_ATTACHMENTFROMURLJOB_H
-#define KDEPIM_ATTACHMENTFROMURLJOB_H
+#ifndef MESSAGECORE_ATTACHMENTFROMURLJOB_H
+#define MESSAGECORE_ATTACHMENTFROMURLJOB_H
+
+#include "messagecore_export.h"
 
 #include "attachmentloadjob.h"
-#include "messagecore_export.h"
 
 #include <KDE/KUrl>
 
-namespace KPIM {
+namespace MessageCore {
 
 /**
-*/
+ * @short A job to load an attachment from an url.
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ */
 class MESSAGECORE_EXPORT AttachmentFromUrlJob : public AttachmentLoadJob
 {
   Q_OBJECT
 
   public:
+    /**
+     * Creates a new job.
+     *
+     * @param url The url that will be loaded as attachment.
+     * @param parent The parent object.
+     */
     explicit AttachmentFromUrlJob( const KUrl &url = KUrl(), QObject *parent = 0 );
+
+    /**
+     * Destroys the job.
+     */
     virtual ~AttachmentFromUrlJob();
 
-    KUrl url() const;
+    /**
+     * Sets the @p url that will be loaded as attachment.
+     */
     void setUrl( const KUrl &url );
-    qint64 maximumAllowedSize() const;
+
+    /**
+     * Returns the url that will be loaded as attachment.
+     */
+    KUrl url() const;
+
+    /**
+     * Sets the maximum @p size the attachment is allowed to have.
+     */
     void setMaximumAllowedSize( qint64 size );
 
-  protected slots:
+    /**
+     * Returns the maximum size the attachment is allowed to have.
+     */
+    qint64 maximumAllowedSize() const;
+
+  protected Q_SLOTS:
     virtual void doStart();
 
   private:
+    //@cond PRIVATE
     class Private;
-    friend class Private;
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void transferJobData( KIO::Job*, QByteArray ) )
     Q_PRIVATE_SLOT( d, void transferJobResult( KJob* ) )
+    //@endcond
 };
 
-} // namespace KPIM
+}
 
 #endif

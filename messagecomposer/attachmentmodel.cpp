@@ -35,7 +35,7 @@
 #include <kpimutils/kfileio.h>
 
 using namespace Message;
-using namespace KPIM;
+using namespace MessageCore;
 
 static Qt::CheckState boolToCheckState( bool checked ) // local
 {

@@ -40,7 +40,7 @@
 #include <klocalizedstring.h>
 
 using namespace Message;
-using KPIM::AttachmentPart;
+using MessageCore::AttachmentPart;
 
 class Message::ComposerPrivate : public JobBasePrivate
 {

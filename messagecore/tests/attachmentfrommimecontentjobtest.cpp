@@ -30,7 +30,7 @@
 using namespace KMime;
 
 #include <messagecore/attachmentfrommimecontentjob.h>
-using namespace KPIM;
+using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentFromMimeContentJobTest, NoGUI )
 

@@ -36,7 +36,7 @@
 #endif
 
 using namespace Message;
-using namespace KPIM;
+using MessageCore::AttachmentPart;
 
 class Message::AttachmentFromPublicKeyJob::Private
 {

@@ -46,7 +46,7 @@ using namespace Message;
 
 #include <messagecore/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
-using KPIM::AttachmentPart;
+using MessageCore::AttachmentPart;
 
 #include <gpgme++/key.h>
 

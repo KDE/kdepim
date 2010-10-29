@@ -27,7 +27,7 @@
 
 #include <messagecore/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
-using namespace KPIM;
+using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentPartTest, NoGUI )
 

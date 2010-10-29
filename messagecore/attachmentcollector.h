@@ -29,36 +29,59 @@
     your version.
 */
 
-#ifndef __MESSAGECORE_ATTACHMENTCOLLECTOR_H__
-#define __MESSAGECORE_ATTACHMENTCOLLECTOR_H__
+#ifndef MESSAGECORE_ATTACHMENTCOLLECTOR_H
+#define MESSAGECORE_ATTACHMENTCOLLECTOR_H
 
 #include "messagecore_export.h"
 
 #include <vector>
 
 namespace KMime {
-  class Content;
+class Content;
 }
 
 namespace MessageCore {
 
-  class MESSAGECORE_EXPORT AttachmentCollector {
+/**
+ * @short A helper class to collect the attachments of a email.
+ *
+ * @author Marc Mutz <mutz@kde.org>
+ * @todo: Make it a simple static method?!?
+ */
+class MESSAGECORE_EXPORT AttachmentCollector
+{
   public:
-    AttachmentCollector()
-      {}
+    /**
+     * Creates a new attachment collector.
+     */
+    AttachmentCollector();
 
-    void collectAttachmentsFrom( KMime::Content * node );
+    /**
+     * Destroys the attachment collector.
+     */
+    ~AttachmentCollector();
 
-    const std::vector<KMime::Content*> & attachments() const { return mAttachments; }
+    /**
+     * Starts collecting the attachments.
+     *
+     * @param content The email content that contains the attachments.
+     */
+    void collectAttachmentsFrom( KMime::Content *content );
+
+    /**
+     * Returns the collected attachments.
+     */
+    const std::vector<KMime::Content*>& attachments() const;
 
   private:
-    std::vector<KMime::Content*> mAttachments;
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
 
-  private: // disabled
-    AttachmentCollector( const AttachmentCollector & );
-    void operator=( const AttachmentCollector & );
-  };
+    Q_DISABLE_COPY( AttachmentCollector );
+    //@endcond
+};
 
-} // namespace MessageCore
+}
 
-#endif // __MESSAGECORE_ATTACHMENTCOLLECTOR_H__
+#endif

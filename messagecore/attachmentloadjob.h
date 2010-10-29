@@ -17,42 +17,65 @@
   02110-1301, USA.
 */
 
-#ifndef KDEPIM_ATTACHMENTLOADJOB_H
-#define KDEPIM_ATTACHMENTLOADJOB_H
+#ifndef MESSAGECORE_ATTACHMENTLOADJOB_H
+#define MESSAGECORE_ATTACHMENTLOADJOB_H
+
+#include "messagecore_export.h"
 
 #include "attachmentpart.h"
-#include "messagecore_export.h"
 
 #include <KDE/KJob>
 
-namespace KPIM {
+namespace MessageCore {
 
 /**
-*/
+ * @short A base class for jobs to load attachments from different sources.
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ */
 class MESSAGECORE_EXPORT AttachmentLoadJob : public KJob
 {
   Q_OBJECT
 
   public:
+    /**
+     * Creates a new attachment load job.
+     *
+     * @param parent The parent object.
+     */
     explicit AttachmentLoadJob( QObject *parent = 0 );
+
+    /**
+     * Destroys the attachment load job.
+     */
     virtual ~AttachmentLoadJob();
 
+    /**
+     * Starts the attachment load job.
+     */
     virtual void start();
 
+    /**
+     * Returns the loaded attachment.
+     */
     AttachmentPart::Ptr attachmentPart() const;
 
   protected:
-    /// for subclasses to set the resulting loaded part.
-    void setAttachmentPart( AttachmentPart::Ptr part );
+    /**
+     * Subclasses use this method to set the loaded @p part.
+     */
+    void setAttachmentPart( const AttachmentPart::Ptr &part );
 
-  protected slots:
+  protected Q_SLOTS:
     virtual void doStart() = 0;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
-} // namespace KPIM
+}
 
 #endif

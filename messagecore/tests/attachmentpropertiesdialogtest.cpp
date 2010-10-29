@@ -34,7 +34,7 @@ using namespace KMime;
 
 #include <messagecore/attachmentpart.h>
 #include <messagecore/attachmentpropertiesdialog.h>
-using namespace KPIM;
+using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentPropertiesDialogTest, GUI )
 

@@ -330,7 +330,7 @@ QString MessageItem::annotation() const
 
 void MessageItem::editAnnotation()
 {
-  KPIM::AnnotationEditDialog *dialog = new KPIM::AnnotationEditDialog( d->mNepomukResourceUri );
+  MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( d->mNepomukResourceUri );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
   // invalidate the cached mHasAnnotation value

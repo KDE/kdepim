@@ -22,29 +22,26 @@
 
 #include "attachmentfrommimecontentjob.h"
 
+#include <kdebug.h>
+#include <kmime/kmime_content.h>
+
 #include <boost/shared_ptr.hpp>
 
-#include <KDebug>
-
-#include "kmime/kmime_content.h"
-
-using namespace KPIM;
+using namespace MessageCore;
 using KMime::Content;
 
-class KPIM::AttachmentFromMimeContentJob::Private
+class MessageCore::AttachmentFromMimeContentJob::Private
 {
   public:
-    const Content *mimeContent;
-    QByteArray data;
+    const Content *mMimeContent;
 };
 
 
-
 AttachmentFromMimeContentJob::AttachmentFromMimeContentJob( const Content *content, QObject *parent )
-  : AttachmentLoadJob( parent )
-  , d( new Private )
+  : AttachmentLoadJob( parent ),
+    d( new Private )
 {
-  d->mimeContent = content;
+  d->mMimeContent = content;
 }
 
 AttachmentFromMimeContentJob::~AttachmentFromMimeContentJob()
@@ -54,35 +51,39 @@ AttachmentFromMimeContentJob::~AttachmentFromMimeContentJob()
 
 const Content *AttachmentFromMimeContentJob::mimeContent() const
 {
-  return d->mimeContent;
+  return d->mMimeContent;
 }
 
 void AttachmentFromMimeContentJob::setMimeContent( const Content *content )
 {
-  d->mimeContent = content;
+  d->mMimeContent = content;
 }
 
 void AttachmentFromMimeContentJob::doStart()
 {
   // Create the AttachmentPart.
   Q_ASSERT( attachmentPart() == 0 );
+
   AttachmentPart::Ptr part = AttachmentPart::Ptr( new AttachmentPart );
-  Content *content = const_cast<Content*>( d->mimeContent );
+  Content *content = const_cast<Content*>( d->mMimeContent );
   part->setData( content->decodedContent() );
 
   // Get the details from the MIME headers.
-  if( content->contentType( false ) ) {
+  if ( content->contentType( false ) ) {
     part->setMimeType( content->contentType()->mimeType() );
     part->setName( content->contentType()->name() );
   }
-  if( content->contentTransferEncoding( false ) ) {
+
+  if ( content->contentTransferEncoding( false ) ) {
     part->setEncoding( content->contentTransferEncoding()->encoding() );
   }
-  if( content->contentDisposition( false ) ) {
+
+  if ( content->contentDisposition( false ) ) {
     part->setFileName( content->contentDisposition()->filename() );
     part->setInline( content->contentDisposition()->disposition() == KMime::Headers::CDinline );
   }
-  if( content->contentDescription( false ) ) {
+
+  if ( content->contentDescription( false ) ) {
     part->setDescription( content->contentDescription()->asUnicodeString() );
   }
 

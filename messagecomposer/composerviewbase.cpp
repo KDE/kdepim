@@ -131,7 +131,7 @@ bool Message::ComposerViewBase::isComposing() const
 void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
 {
 
-  foreach( KPIM::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() )
+  foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() )
     m_attachmentModel->removeAttachment( attachment );
 
   m_msg = msg;
@@ -412,12 +412,12 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   QStringList signKeys;
 
   bool signSomething = m_sign;
-  foreach( KPIM::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+  foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
     if( attachment->isSigned() )
       signSomething = true;
   }
   bool encryptSomething = m_encrypt;
-  foreach( KPIM::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+  foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
     if( attachment->isEncrypted() )
       encryptSomething = true;
   }
@@ -930,7 +930,7 @@ void Message::ComposerViewBase::addAttachment ( const KUrl& url, const QString& 
 
 void Message::ComposerViewBase::addAttachment ( const QString& name, const QString& filename, const QString& charset, const QByteArray& data, const QByteArray& mimeType )
 {
-  KPIM::AttachmentPart::Ptr attachment = KPIM::AttachmentPart::Ptr( new KPIM::AttachmentPart() );
+  MessageCore::AttachmentPart::Ptr attachment = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart() );
   if( !data.isEmpty() ) {
     attachment->setName( name );
     attachment->setFileName( filename );
@@ -945,7 +945,7 @@ void Message::ComposerViewBase::addAttachment ( const QString& name, const QStri
 
 void Message::ComposerViewBase::addAttachmentPart ( KMime::Content* partToAttach )
 {
-  KPIM::AttachmentPart::Ptr part( new KPIM::AttachmentPart );
+  MessageCore::AttachmentPart::Ptr part( new MessageCore::AttachmentPart );
   if( partToAttach->contentType()->mimeType() == "multipart/digest" ||
       partToAttach->contentType()->mimeType() == "message/rfc822" ) {
     // if it is a digest or a full message, use the encodedContent() of the attachment,
