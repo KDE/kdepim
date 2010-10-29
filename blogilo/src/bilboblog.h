@@ -29,6 +29,7 @@
 #include <QObject>
 #include <kurl.h>
 #include <QHash>
+#include <kblog/blog.h>
 /**
 Blog definition class!
 
@@ -47,6 +48,7 @@ public:
     BilboBlog( const BilboBlog & );
     ~BilboBlog();
 
+    KBlog::Blog *blogBackend();
     /**
      * returns blog xmlrpc Url!
      * For http://bilbo.wordpress.com :
@@ -92,19 +94,8 @@ public:
     void setBlogUrl(const QString &blogUrl);
 
 private:
-    KUrl mUrl;
-    QString mBlogUrl;
-    QString mBlogid;
-    QString mUsername;
-    QString mPassword;
-    QString mTitle;
-    QString mStylePath;
-    ApiType mApi;
-    int mId;//id in DB
-    Qt::LayoutDirection mDir;
-    QString mLocalDirectory;
-    bool mError;
-    QHash<QString, bool> mSupportedFeatures;
+    class Private;
+    Private * const d;
 };
 
 #endif

@@ -24,202 +24,241 @@
 
 #include "bilboblog.h"
 #include <QApplication>
+#include <kblog/wordpressbuggy.h>
+#include <kblog/gdata.h>
+
+class BilboBlog::Private
+{
+public:
+    Private()
+    : kblog(0)
+    {}
+    KUrl mUrl;
+    QString mBlogUrl;
+    QString mBlogid;
+    QString mUsername;
+    QString mPassword;
+    QString mTitle;
+    QString mStylePath;
+    ApiType mApi;
+    int mId;//id in DB
+    Qt::LayoutDirection mDir;
+    QString mLocalDirectory;
+    bool mError;
+    QHash<QString, bool> mSupportedFeatures;
+    KBlog::Blog *kblog;
+};
 
 BilboBlog::BilboBlog( QObject *parent )
-        : QObject( parent )
+        : QObject( parent ), d(new Private)
 {
-    mError = false;
+    d->mError = false;
     setApi(BLOGGER1_API);
 }
 
 BilboBlog::BilboBlog( const BilboBlog &blog)
-        : QObject( qApp )
+        : QObject( qApp ), d(new Private)
 {
-    mUrl = blog.url();
-    mBlogUrl = blog.blogUrl();
-    mBlogid = blog.blogid();
-    mUsername = blog.username();
-    mPassword = blog.password();
-    mTitle = blog.title();
+    d->mUrl = blog.url();
+    d->mBlogUrl = blog.blogUrl();
+    d->mBlogid = blog.blogid();
+    d->mUsername = blog.username();
+    d->mPassword = blog.password();
+    d->mTitle = blog.title();
     setApi( blog.api() );
-    mId = blog.id();
-    mDir = blog.direction();
-    mLocalDirectory = blog.localDirectory();
-    mError = blog.isError();
+    d->mId = blog.id();
+    d->mDir = blog.direction();
+    d->mLocalDirectory = blog.localDirectory();
+    d->mError = blog.isError();
 }
 
 BilboBlog::~BilboBlog()
 {
 }
 
+KBlog::Blog* BilboBlog::blogBackend()
+{
+    if(!d->kblog){
+        switch ( api() ) {
+        case BilboBlog::BLOGGER1_API:
+            d->kblog = new KBlog::Blogger1( url(), this );
+            break;
+        case BilboBlog::GDATA_API:
+            d->kblog = new KBlog::GData( url(), this );
+            break;
+        case BilboBlog::METAWEBLOG_API:
+            d->kblog = new KBlog::MetaWeblog( url(), this );
+            break;
+        case BilboBlog::MOVABLETYPE_API:
+            d->kblog = new KBlog::MovableType( url(), this );
+            break;
+        case BilboBlog::WORDPRESSBUGGY_API:
+            d->kblog = new KBlog::WordpressBuggy( url(), this );
+        }
+        d->kblog->setUserAgent( APPNAME, VERSION );
+        d->kblog->setUsername( username() );
+        d->kblog->setPassword( password() );
+        d->kblog->setBlogId( blogid() );
+    }
+    return d->kblog;
+}
+
 bool BilboBlog::isError() const
 {
-    return mError;
+    return d->mError;
 }
 
 void BilboBlog::setError(bool isError)
 {
-    mError = isError;
+    d->mError = isError;
 }
 
 KUrl BilboBlog::url() const
 {
-    return mUrl;
+    return d->mUrl;
 }
 
 void BilboBlog::setUrl( const KUrl &url )
 {
-    mUrl = url;
+    d->mUrl = url;
 }
 
 QString BilboBlog::blogid() const
 {
-    return mBlogid;
+    return d->mBlogid;
 }
 
 void BilboBlog::setBlogId( const QString &url )
 {
-    mBlogid = url;
+    d->mBlogid = url;
 }
 
 QString BilboBlog::username() const
 {
-    return mUsername;
+    return d->mUsername;
 }
 
 void BilboBlog::setUsername( const QString &username )
 {
-    mUsername = username;
+    d->mUsername = username;
 }
 
 QString BilboBlog::password() const
 {
-    return mPassword;
+    return d->mPassword;
 }
 
 void BilboBlog::setPassword( const QString &password )
 {
-    mPassword = password;
+    d->mPassword = password;
 }
 
 QString BilboBlog::title() const
 {
-    return mTitle;
+    return d->mTitle;
 }
 
 void BilboBlog::setTitle( const QString &title )
 {
-    mTitle = title;
+    d->mTitle = title;
 }
-
-/*
-QString BilboBlog::stylePath() const
-{
-    return mStylePath;
-}
-
-void BilboBlog::setStylePath( const QString &path )
-{
-    mStylePath = path;
-}
-*/
 
 BilboBlog::ApiType BilboBlog::api() const
 {
-    return mApi;
+    return d->mApi;
 }
 
 void BilboBlog::setApi( const ApiType api )
 {
-    mApi = api;
+    d->mApi = api;
     switch(api) {
         case BLOGGER1_API:
-            mSupportedFeatures["uploadMedia"] = false;
-            mSupportedFeatures["category"] = false;
-            mSupportedFeatures["tag"] = false;
+            d->mSupportedFeatures["uploadMedia"] = false;
+            d->mSupportedFeatures["category"] = false;
+            d->mSupportedFeatures["tag"] = false;
             break;
         case METAWEBLOG_API:
-            mSupportedFeatures["uploadMedia"] = true;
-            mSupportedFeatures["category"] = true;
-            mSupportedFeatures["tag"] = false;
+            d->mSupportedFeatures["uploadMedia"] = true;
+            d->mSupportedFeatures["category"] = true;
+            d->mSupportedFeatures["tag"] = false;
             break;
         case MOVABLETYPE_API:
-            mSupportedFeatures["uploadMedia"] = true;
-            mSupportedFeatures["category"] = true;
-            mSupportedFeatures["tag"] = true;
+            d->mSupportedFeatures["uploadMedia"] = true;
+            d->mSupportedFeatures["category"] = true;
+            d->mSupportedFeatures["tag"] = true;
             break;
         case WORDPRESSBUGGY_API:
-            mSupportedFeatures["uploadMedia"] = true;
-            mSupportedFeatures["category"] = true;
-            mSupportedFeatures["tag"] = true;
+            d->mSupportedFeatures["uploadMedia"] = true;
+            d->mSupportedFeatures["category"] = true;
+            d->mSupportedFeatures["tag"] = true;
             break;
         case GDATA_API:
-            mSupportedFeatures["uploadMedia"] = false;
-            mSupportedFeatures["category"] = false;
-            mSupportedFeatures["tag"] = true;
+            d->mSupportedFeatures["uploadMedia"] = false;
+            d->mSupportedFeatures["category"] = false;
+            d->mSupportedFeatures["tag"] = true;
             break;
         default:
-            mSupportedFeatures["uploadMedia"] = false;
-            mSupportedFeatures["category"] = false;
-            mSupportedFeatures["tag"] = false;
+            d->mSupportedFeatures["uploadMedia"] = false;
+            d->mSupportedFeatures["category"] = false;
+            d->mSupportedFeatures["tag"] = false;
             break;
     }
 }
 
 int BilboBlog::id() const
 {
-    return mId;
+    return d->mId;
 }
 
 void BilboBlog::setId( const int id )
 {
-    mId = id;
+    d->mId = id;
 }
 
 Qt::LayoutDirection BilboBlog::direction() const
 {
-    return mDir;
+    return d->mDir;
 }
 
 void BilboBlog::setDirection( const Qt::LayoutDirection dir )
 {
-    mDir = dir;
+    d->mDir = dir;
 }
 
 QString BilboBlog::localDirectory() const
 {
-    return mLocalDirectory;
+    return d->mLocalDirectory;
 }
 
 void BilboBlog::setLocalDirectory( const QString &directory )
 {
-    mLocalDirectory = directory;
+    d->mLocalDirectory = directory;
 }
 
 QString BilboBlog::blogUrl() const
 {
-    if(mBlogUrl.isEmpty())
-        return mUrl.prettyUrl();
+    if(d->mBlogUrl.isEmpty())
+        return d->mUrl.prettyUrl();
     else
-        return mBlogUrl;
+        return d->mBlogUrl;
 }
 
 void BilboBlog::setBlogUrl(const QString &blogUrl)
 {
-    mBlogUrl = blogUrl;
+    d->mBlogUrl = blogUrl;
 }
 
 bool BilboBlog::supportUploadMedia() const
 {
-    return mSupportedFeatures["uploadMedia"];
+    return d->mSupportedFeatures["uploadMedia"];
 }
 
 bool BilboBlog::supportCategory() const
 {
-    return mSupportedFeatures["category"];
+    return d->mSupportedFeatures["category"];
 }
 
 bool BilboBlog::supportTag() const
 {
-    return mSupportedFeatures["tag"];
+    return d->mSupportedFeatures["tag"];
 }
