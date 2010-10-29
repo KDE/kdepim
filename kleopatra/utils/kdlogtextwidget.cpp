@@ -229,8 +229,8 @@ unsigned int KDLogTextWidget::minimumVisibleLines() const {
 
   Specifies the number of columns that should be visible at any one
   time. The default is 1 (one). The width is calculated using
-  QFont::averageCharWidth(), if that is available. Otherwise, the
-  width of \c M is used.
+  QFontMetrics::averageCharWidth(), if that is available. Otherwise,
+  the width of \c M is used.
 
   Get this property's value using %minimumVisibleColumns(), and set it
   using %setMinimumVisibleColumns().
@@ -369,7 +369,7 @@ void KDLogTextWidget::paintEvent( QPaintEvent * e ) {
 
     }
 
-    // ### unused optimisation: paint lines by styles to minimise pen changes.
+    // ### unused optimization: paint lines by styles to minimise pen changes.
     for ( unsigned int i = visibleLines.first, end = visibleLines.second ; i != end ; ++i ) {
         const Private::LineItem & li = d->lines[i];
         assert( !li.styleID || d->styleByID.contains( li.styleID ) );
