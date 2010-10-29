@@ -62,19 +62,16 @@
 #define TIMEOUT 5000
 
 MainWindow::MainWindow()
-    : KXmlGuiWindow(), mCurrentBlogId(__currentBlogId)
+    : KXmlGuiWindow(), activePost(0), systemTray(0), previousActivePostIndex(-1),
+    busyNumber(0), progress(0), mCurrentBlogId(__currentBlogId)
 {
     kDebug();
-    previousActivePostIndex = -1;
-    activePost = 0;
-    systemTray = 0;
-    busyNumber = 0;
-    progress = 0;
-    this->setWindowTitle( i18n("Blogilo") );
+    setWindowTitle( i18n("Blogilo") );
 
     tabPosts = new KTabWidget( this );
     tabPosts->setElideMode( Qt::ElideRight );///TODO make this Optional!
     tabPosts->setTabCloseActivatePrevious( true );
+    tabPosts->setDocumentMode(true);
     setCentralWidget( tabPosts );
 //     this->setDockOptions( QMainWindow::ForceTabbedDocks);
 
