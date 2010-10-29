@@ -42,10 +42,10 @@ ActionMenuContainer {
           actionPanel.collapse()
       }
     }
-    ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select multiple folders" ) }
+    ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select Multiple Folders" ) }
     ActionListItem { name : "akonadi_empty_all_trash" }
     ActionListItem { name : "import_emails" }
-    ScriptActionItem { name : "filters_configure"; title: KDE.i18n( "Configure filters" ) }
+    ScriptActionItem { name : "filters_configure"; title: KDE.i18n( "Configure Filters" ) }
   }
 
   FavoriteManager{

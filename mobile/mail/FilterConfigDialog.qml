@@ -72,7 +72,7 @@ QML.Rectangle {
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.bottom: parent.bottom
-      anchors.leftMargin: 5
+      anchors.leftMargin: 35
       anchors.rightMargin: 5
       clip:true
       focus: true
@@ -143,4 +143,56 @@ QML.Rectangle {
       }
     }
   }
+
+  SlideoutPanelContainer {
+    anchors.fill: parent
+    SlideoutPanel {
+      id: actionPanel
+      titleText: KDE.i18n( "Actions" )
+      handlePosition : 125
+      handleHeight: 150
+      anchors.fill: parent
+      contentWidth: 200
+      content: [
+      
+          FilterActions {
+            id : filterActions
+            anchors.fill : parent
+            scriptActions : [
+                KPIM.ScriptAction {
+                  name : "new_filter"
+                  script : {
+                    actionPanel.collapse();
+                    configWidget.newFilter();
+                    filterList.currentIndex = filterList.count - 1
+                  }
+                },
+                KPIM.ScriptAction {
+                  name : "delete_filter"
+                  script : {
+                    actionPanel.collapse();
+                    var index = filterList.currentIndex
+                    configWidget.deleteFilter( filterList.currentIndex );
+                    if ( index > 0 )
+                      filterList.currentIndex = index - 1
+                    else
+                      filterList.currentIndex = 0
+                  }
+                },
+                KPIM.ScriptAction {
+                  name : "rename_filter"
+                  script : {
+                    actionPanel.collapse();
+                    configWidget.renameFilter( filterList.currentIndex );
+                  }
+                }
+             ]
+            onDoCollapse : {
+              actionPanel.collapse();
+            }
+          }
+      ]
+    }
+  }
+ 
 }

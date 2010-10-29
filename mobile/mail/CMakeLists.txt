@@ -82,6 +82,7 @@ install(FILES kmail-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   ConfigDialog.qml
+  FilterActions.qml
   FilterConfigDialog.qml
   HeaderView.qml
   important-email.png

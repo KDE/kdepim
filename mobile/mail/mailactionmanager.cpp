@@ -122,6 +122,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action = actionCollection->addAction("apply_filters");
   action->setText( i18n("Apply Filters") );
   action->setEnabled( false );
+
+  action = actionCollection->addAction("new_filter");
+  action->setText( i18n("New Filter") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

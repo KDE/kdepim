@@ -28,6 +28,7 @@
 #include <mailcommon/filtermanager.h>
 #include <mailcommon/searchpatternedit.h>
 #include <mailcommon/filteractionwidget.h>
+#include <KInputDialog>
 
 using namespace MailCommon;
 
@@ -76,6 +77,44 @@ void FilterConfigWidget::save()
   mFilter->setStopProcessingHere( mUi->stopIfMatchesCB->isChecked() );
 }
 
+void FilterConfigWidget::newFilter()
+{
+  bool ok = false;
+  QString filterName = KInputDialog::getText( i18n( "Create filter" ), i18n( "Filter name" ), "", &ok,  this );
+  if ( ok ) {
+    MailFilter *newFilter = new MailFilter();
+    newFilter->pattern()->setName( filterName );
+    FilterIf->filterManager()->appendFilters( QList< MailFilter* > () << newFilter );
+    loadFilter( newFilter );
+  }
+}
+
+void FilterConfigWidget::deleteFilter( int filterIndex )
+{
+  QList< MailFilter* > filters = FilterIf->filterManager()->filters();
+  if ( filterIndex < 0 || filterIndex >= filters.size() )
+    return;
+
+  mPatternEdit->reset();
+  mActionLister->reset();
+  
+  MailFilter * filter = filters.at( filterIndex );
+  FilterIf->filterManager()->removeFilter( filter );
+  delete filter;
+}
+
+void FilterConfigWidget::renameFilter(int filterIndex)
+{
+  FilterManager* manager = FilterIf->filterManager();
+  MailFilter* filter = manager->filters().at( filterIndex );
+  bool ok = false;
+  QString filterName = KInputDialog::getText( i18n( "Rename filter" ), i18n( "Edit name" ), filter->name(), &ok,  this );
+  if ( ok ) {
+    manager->beginUpdate();
+    filter->pattern()->setName( filterName );
+    manager->endUpdate();
+  }
+}
 
 
 DeclarativeFilterConfigWidget::DeclarativeFilterConfigWidget( QGraphicsItem *parent )
@@ -107,6 +146,23 @@ void DeclarativeFilterConfigWidget::save()
 {
   mFilterConfigWidget->save();
   FilterIf->filterManager()->writeConfig();
+}
+
+void DeclarativeFilterConfigWidget::newFilter()
+{
+  save();
+  mFilterConfigWidget->newFilter();
+}
+
+
+void DeclarativeFilterConfigWidget::deleteFilter( int filterIndex )
+{
+  mFilterConfigWidget->deleteFilter( filterIndex );
+}
+
+void DeclarativeFilterConfigWidget::renameFilter(int filterIndex)
+{
+  mFilterConfigWidget->renameFilter( filterIndex );
 }
 
 

@@ -41,6 +41,9 @@ public:
 
     void loadFilter( MailCommon::MailFilter* filter );
     void save();
+    void newFilter();
+    void deleteFilter( int filterIndex );
+    void renameFilter( int filterIndex );
 
 private:
   Ui_FilterConfigWidget *mUi;
@@ -60,6 +63,9 @@ class DeclarativeFilterConfigWidget : public QGraphicsProxyWidget
   public Q_SLOTS:
     void loadFilter( int filterIndex );
     void save();
+    void newFilter();
+    void deleteFilter( int filterIndex );
+    void renameFilter( int filterIndex );
     
   private:
     FilterConfigWidget *mFilterConfigWidget;
