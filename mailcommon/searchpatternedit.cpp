@@ -137,6 +137,7 @@ void SearchRuleWidget::initWidget()
   mFunctionStack = new QStackedWidget( this );
   //Don't expand the widget in vertical direction
   mFunctionStack->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+  mFunctionStack->setMaximumWidth( parentWidget()->width() / 3 );
 
   hlay->addWidget( mFunctionStack );
 
@@ -159,6 +160,13 @@ void SearchRuleWidget::initWidget()
   connect( mRuleField, SIGNAL(editTextChanged( const QString & ) ),
            this, SIGNAL( fieldChanged( const QString & ) ) );
 }
+
+void SearchRuleWidget::resizeEvent(QResizeEvent* ev )
+{
+  QWidget::resizeEvent( ev );
+  mFunctionStack->setMaximumWidth( parentWidget()->width() / 3 );
+}
+
 
 void SearchRuleWidget::setRule( SearchRule::Ptr aRule )
 {

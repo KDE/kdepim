@@ -103,6 +103,7 @@ protected:
   /** Used internally to find the corresponding index into the field
       ComboBox. Returns the index if found or -1 if the search failed, */
   int indexOfRuleField( const QByteArray & aName ) const;
+  /*reimp*/ void resizeEvent( QResizeEvent* ev );
 
 protected slots:
   void slotRuleFieldChanged( const QString & );
