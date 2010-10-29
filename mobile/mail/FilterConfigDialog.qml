@@ -185,6 +185,28 @@ QML.Rectangle {
                     actionPanel.collapse();
                     configWidget.renameFilter( filterList.currentIndex );
                   }
+                },
+                KPIM.ScriptAction {
+                  name : "move_up_filter"
+                  script : {
+                    actionPanel.collapse();
+                    var index = filterList.currentIndex
+                    configWidget.moveUpFilter( filterList.currentIndex );
+                     if ( index > 0 )
+                      filterList.currentIndex = index - 1
+                    else
+                      filterList.currentIndex = 0
+                 }
+                },
+                KPIM.ScriptAction {
+                  name : "move_down_filter"
+                  script : {
+                    actionPanel.collapse();
+                    var index = filterList.currentIndex
+                    configWidget.moveDownFilter( filterList.currentIndex );
+                     if ( index + 1 < filterList.count )
+                      filterList.currentIndex = index + 1
+                 }
                 }
              ]
             onDoCollapse : {

@@ -44,6 +44,8 @@ public:
     void newFilter();
     void deleteFilter( int filterIndex );
     void renameFilter( int filterIndex );
+    void moveUpFilter( int filterIndex );
+    void moveDownFilter( int filterIndex );
 
 private:
   Ui_FilterConfigWidget *mUi;
@@ -66,6 +68,8 @@ class DeclarativeFilterConfigWidget : public QGraphicsProxyWidget
     void newFilter();
     void deleteFilter( int filterIndex );
     void renameFilter( int filterIndex );
+    void moveUpFilter( int filterIndex );
+    void moveDownFilter( int filterIndex );
     
   private:
     FilterConfigWidget *mFilterConfigWidget;

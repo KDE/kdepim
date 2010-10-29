@@ -103,7 +103,7 @@ void FilterConfigWidget::deleteFilter( int filterIndex )
   delete filter;
 }
 
-void FilterConfigWidget::renameFilter(int filterIndex)
+void FilterConfigWidget::renameFilter( int filterIndex )
 {
   FilterManager* manager = FilterIf->filterManager();
   MailFilter* filter = manager->filters().at( filterIndex );
@@ -114,6 +114,56 @@ void FilterConfigWidget::renameFilter(int filterIndex)
     filter->pattern()->setName( filterName );
     manager->endUpdate();
   }
+}
+
+void FilterConfigWidget::moveUpFilter( int filterIndex )
+{
+  if ( filterIndex <= 0 )
+    return; //first or invalid
+
+  QList<MailFilter*> filters;
+
+  FilterManager* manager = FilterIf->filterManager();
+  QList<MailFilter*>::const_iterator it;
+  for ( it = manager->filters().constBegin() ;
+        it != manager->filters().constEnd();
+        ++it ) {
+    filters.append( new MailFilter( **it ) ); // deep copy
+  }
+
+  MailFilter *untouched = filters.at( filterIndex - 1 );
+  MailFilter *moved = filters.takeAt( filterIndex );
+  filters.insert( filters.indexOf( untouched ), moved );
+
+  mPatternEdit->reset();
+  mActionLister->reset();
+
+  manager->setFilters( filters );
+}
+
+void FilterConfigWidget::moveDownFilter(int filterIndex)
+{
+  FilterManager* manager = FilterIf->filterManager();
+
+  if ( filterIndex >= manager->filters().size() -1 || filterIndex < 0)
+    return; //last or invalid
+
+  QList<MailFilter*> filters;
+
+  QList<MailFilter*>::const_iterator it;
+  for ( it = manager->filters().constBegin() ;
+        it != manager->filters().constEnd();
+        ++it ) {
+    filters.append( new MailFilter( **it ) ); // deep copy
+  }
+
+  MailFilter *moved = filters.takeAt( filterIndex );
+  filters.insert( filterIndex + 2, moved );
+
+  mPatternEdit->reset();
+  mActionLister->reset();
+
+  manager->setFilters( filters );
 }
 
 
@@ -160,9 +210,19 @@ void DeclarativeFilterConfigWidget::deleteFilter( int filterIndex )
   mFilterConfigWidget->deleteFilter( filterIndex );
 }
 
-void DeclarativeFilterConfigWidget::renameFilter(int filterIndex)
+void DeclarativeFilterConfigWidget::renameFilter( int filterIndex )
 {
   mFilterConfigWidget->renameFilter( filterIndex );
+}
+
+void DeclarativeFilterConfigWidget::moveUpFilter( int filterIndex )
+{
+  mFilterConfigWidget->moveUpFilter( filterIndex );
+}
+
+void DeclarativeFilterConfigWidget::moveDownFilter(int filterIndex)
+{
+  mFilterConfigWidget->moveDownFilter( filterIndex );
 }
 
 

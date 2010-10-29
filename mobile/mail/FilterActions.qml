@@ -33,7 +33,6 @@ ActionMenuContainer {
   ScriptActionItem { name : "new_filter"; title: KDE.i18n( "New Filter" ) }
   ScriptActionItem { name : "delete_filter"; title: KDE.i18n( "Remove Filter" ) }
   ScriptActionItem { name : "rename_filter"; title: KDE.i18n( "Rename Filter" ) }
-  FakeAction { name: "move_up" }
-  FakeAction { name: "move_down" }
-
+  ScriptActionItem { name : "move_up_filter"; title: KDE.i18n( "Move Up" ) }
+  ScriptActionItem { name : "move_down_filter"; title: KDE.i18n( "Move Down" ) }
 }
