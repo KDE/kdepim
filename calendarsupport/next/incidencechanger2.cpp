@@ -53,6 +53,24 @@ IncidenceChanger2::Private::~Private()
   delete mHistory;
 }
 
+bool IncidenceChanger2::Private::hasRights( const Collection &collection,
+                                            IncidenceChanger2::ChangeType changeType ) const
+{
+  bool result = false;
+  switch( changeType ) {
+    case ChangeTypeCreate:
+      result = collection.rights() & Akonadi::Collection::CanCreateItem;
+    case ChangeTypeModify:
+      result = collection.rights() & Akonadi::Collection::CanChangeItem;
+    case ChangeTypeDelete:
+      result = collection.rights() & Akonadi::Collection::CanDeleteItem;
+    default:
+      Q_ASSERT_X( false, "hasRights", "invalid type" );
+  }
+
+  return result && collection.isValid();
+}
+
 void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
 {
   QString errorString;
@@ -217,13 +235,14 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
   const Change change( ++d->mLatestOperationId, atomicOperationId, recordToHistory, parent );
   Collection collectionToUse;
 
-  if ( collection.isValid() ) {
+  if ( collection.isValid() && d->hasRights( collection, ChangeTypeCreate ) ) {
     // The collection passed always has priority
     collectionToUse = collection;
   } else {
     switch( d->mDestinationPolicy ) {
       case DestinationPolicyDefault:
-        if ( d->mDefaultCollection.isValid() ) {
+        if ( d->mDefaultCollection.isValid() &&
+             d->hasRights( d->mDefaultCollection, ChangeTypeCreate ) ) {
           collectionToUse = d->mDefaultCollection;
           break;
         }
@@ -241,23 +260,27 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
           return -2;
         }
 
-        if ( collectionToUse.isValid() ) {
+        if ( collectionToUse.isValid() || d->hasRights( collectionToUse, ChangeTypeCreate ) ) {
           kError() << "Invalid collection selected. Can't create incidence.";
           return -2;
         }
       }
       case DestinationPolicyNeverAsk:
-        if ( d->mDefaultCollection.isValid() ) {
+      {
+        const bool rights = d->hasRights( d->mDefaultCollection, ChangeTypeCreate );
+        if ( d->mDefaultCollection.isValid() && rights ) {
           collectionToUse = d->mDefaultCollection;
         } else {
           // error is not i18n'd, should be a bug in the application using IncidenceChanger.
           d->emitCreateFinished( change.changeId,
                                  Item(),
                                  ResultCodeInvalidDefaultCollection,
-                                 QLatin1String( "Default collection is invalid and DestinationPolicyNeverAsk was used" ) );
-
+                                 QLatin1String( "Default collection is invalid or doesn't have "
+                                                "rights and DestinationPolicyNeverAsk was used."
+                                                "rights = " + rights ) );
           return change.changeId;
         }
+      }
         break;
     default:
       // Never happens
@@ -265,8 +288,6 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
       return -1;
     }
   }
-
-
 
   Item item;
   item.setPayload<Incidence::Ptr>( incidence );
@@ -307,6 +328,11 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
     if ( !item.isValid() ) {
       kWarning() << "Items must be valid!";
       return -1;
+    }
+
+    if ( !d->hasRights( item.parentCollection(), ChangeTypeDelete ) ) {
+      kWarning() << "Item " << item.id() << " can't be deleted due to ACL restrictions";
+      return -2;
     }
   }
 
@@ -365,12 +391,17 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
     return -1;
   }
 
+  if ( !d->hasRights( changedItem.parentCollection(), ChangeTypeModify ) ) {
+    kWarning() << "Item " << changedItem.id() << " can't be deleted due to ACL restrictions";
+    return -2;
+  }
+
   Change change( ++d->mLatestOperationId, recordToHistory, atomicOperationId, parent );
   change.originalItem = originalItem;
 
   if ( d->deleteAlreadyCalled( changedItem.id() ) ) {
     // IncidenceChanger::deleteIncidence() called twice, ignore this one.
-    kDebug() << "Item " << changedItem.id() << " already deleted or beeping deleted, skipping";
+    kDebug() << "Item " << changedItem.id() << " already deleted or being deleted, skipping";
 
     // Queued emit because return must be executed first, otherwise caller won't know this workId
     d->emitModifyFinished( change.changeId, changedItem, ResultCodeAlreadyDeleted,

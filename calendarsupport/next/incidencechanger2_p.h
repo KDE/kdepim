@@ -90,6 +90,8 @@ class IncidenceChanger2::Private : public QObject
                              CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                              const QString &errorString );
 
+    bool hasRights( const Akonadi::Collection &collection, IncidenceChanger2::ChangeType ) const;
+
   public Q_SLOTS:
     void handleCreateJobResult( KJob * );
     void handleModifyJobResult( KJob * );
