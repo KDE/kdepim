@@ -74,7 +74,7 @@ if (RUNTIME_PLUGINS_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
 
 if (WINCE)
-  target_link_libraries(kmail-mobile kcm_kpimidentities)
+  target_link_libraries(kmail-mobile kcm_kpimidentities messageviewer_bodypartformatter_text_calendar)
 endif(WINCE)
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

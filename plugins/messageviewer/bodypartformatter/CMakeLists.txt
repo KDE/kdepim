@@ -31,8 +31,11 @@ qt4_add_dbus_interfaces(messageviewer_bodypartformatter_text_calendar_PART_SRCS
 
 kde4_add_ui_files(messageviewer_bodypartformatter_text_calendar_PART_SRCS ui_attendeeselector.ui)
 
-kde4_add_plugin(messageviewer_bodypartformatter_text_calendar ${messageviewer_bodypartformatter_text_calendar_PART_SRCS})
-
+if (NOT WINCE)
+  kde4_add_plugin(messageviewer_bodypartformatter_text_calendar ${messageviewer_bodypartformatter_text_calendar_PART_SRCS})
+else(NOT WINCE)
+  kde4_add_plugin(messageviewer_bodypartformatter_text_calendar STATIC ${messageviewer_bodypartformatter_text_calendar_PART_SRCS})
+endif(NOT WINCE)
 
 
 target_link_libraries(messageviewer_bodypartformatter_text_calendar
