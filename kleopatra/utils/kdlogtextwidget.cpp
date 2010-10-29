@@ -78,6 +78,11 @@ public:
 
     QPoint scrollOffset() const;
 
+    QRect lineRect( int idx ) const {
+        assert( !cache.dirty );
+        return QRect( 0, idx * cache.fontMetrics.lineSpacing, cache.dimensions.longestLineLength, cache.fontMetrics.lineSpacing-1 );
+    }
+
     struct Style {
         QColor color;
 
@@ -104,6 +109,8 @@ private:
     unsigned int historySize;
     unsigned int minimumVisibleLines;
     unsigned int minimumVisibleColumns;
+
+    bool alternatingRowColors;
 
     QBasicTimer timer;
 
@@ -240,6 +247,26 @@ unsigned int KDLogTextWidget::minimumVisibleColumns() const {
     return d->minimumVisibleColumns;
 }
 
+/*!
+  \property KDLogTextWidget::alternatingRowColors
+
+  Specifies whether the background should be drawn using
+  row-alternating colors. The default is \c false.
+
+  Get this property's value using %alternatingRowColors(), and set it
+  using %setAlternatingRowColors().
+*/
+void KDLogTextWidget::setAlternatingRowColors( bool on ) {
+    if ( on == d->alternatingRowColors )
+        return;
+    d->alternatingRowColors = on;
+    update();
+}
+
+bool KDLogTextWidget::alternatingRowColors() const {
+    return d->alternatingRowColors;
+}
+
 QSize KDLogTextWidget::minimumSizeHint() const {
     d->updateCache();
     const QSize base = QAbstractScrollArea::minimumSizeHint();
@@ -314,7 +341,36 @@ void KDLogTextWidget::paintEvent( QPaintEvent * e ) {
 
     const Private::Cache & cache = d->cache;
 
-    // ### unused optimization: paint lines by styles to minimise pen changes.
+    p.setPen( Qt::NoPen );
+
+    p.setBrush( palette().base() );
+
+    if ( d->alternatingRowColors ) {
+
+        p.drawRect( visible );
+
+#if 0 // leaves garbage
+        for ( unsigned int i = visibleLines.first % 2 ? visibleLines.first+1 : visibleLines.first,   end = visibleLines.second ; i < end ; i+=2 )
+            p.drawRect( d->lineRect( i ) );
+
+        if ( visibleLines.second >= 0 ) {
+            const int lastY = d->lineRect( visibleLines.second-1 ).y();
+            if ( lastY < visible.bottom() )
+                p.drawRect( 0, lastY+1, cache.dimensions.longestLineLength, visible.bottom() - lastY );
+        }
+#endif
+
+        p.setBrush( palette().alternateBase() );
+        for ( unsigned int i = visibleLines.first % 2 ? visibleLines.first   : visibleLines.first+1, end = visibleLines.second ; i < end ; i+=2 )
+            p.drawRect( d->lineRect( i ) );
+
+    } else {
+
+        p.drawRect( visible );
+
+    }
+
+    // ### unused optimisation: paint lines by styles to minimise pen changes.
     for ( unsigned int i = visibleLines.first, end = visibleLines.second ; i != end ; ++i ) {
         const Private::LineItem & li = d->lines[i];
         assert( !li.styleID || d->styleByID.contains( li.styleID ) );
@@ -353,10 +409,18 @@ KDLogTextWidget::Private::Private( KDLogTextWidget * qq )
       historySize( 0xFFFFFFFF ),
       minimumVisibleLines( 1 ),
       minimumVisibleColumns( 1 ),
+      alternatingRowColors( false ),
       timer(),
       cache()
 {
-
+    // PENDING(marc) find all the magic flags we need here...
+    QWidget * const vp = qq->viewport();
+    vp->setBackgroundRole( QPalette::Base );
+    vp->setAttribute( Qt::WA_StaticContents );
+    vp->setAttribute( Qt::WA_NoSystemBackground );
+#ifndef QT_NO_CURSOR
+    vp->setCursor(Qt::IBeamCursor);
+#endif
 }
 
 KDLogTextWidget::Private::~Private() {}
