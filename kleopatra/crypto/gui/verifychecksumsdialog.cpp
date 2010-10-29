@@ -179,7 +179,8 @@ namespace {
                 view.resizeColumnToContents( i );
             for( int i = 0; i < proxy.rowCount(); ++i )
                 r = r.united( view.visualRect( proxy.index( proxy.columnCount() - 1, i ) ) );
-            view.setMinimumSize( QSize( qMin( 1024, r.width() + 4 * view.frameWidth() ), qMin( 512, r.height() ) ) );
+            view.setMinimumSize( QSize( qBound( r.width() + 4 * view.frameWidth(), 4 * 100 + 4 * view.frameWidth(), 1024 ), // 100 is the default defaultSectionSize
+                                        qBound( r.height(), 100, 512 ) ) );
         }
 
         void setBase( const QString & base ) {
