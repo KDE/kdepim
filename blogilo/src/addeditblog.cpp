@@ -213,7 +213,7 @@ void AddEditBlog::gotHtml( KJob *job )
         kDebug() << "name=\"generator\" content=\"WordPress matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex( 3 );
-    
+
     textUrl = d->ui.txtUrl->text();
     while (textUrl.endsWith(QChar('/'))) {
         textUrl.remove(textUrl.length()-1, 1);
@@ -466,6 +466,7 @@ void AddEditBlog::sltReturnPressed()
 AddEditBlog::~AddEditBlog()
 {
     kDebug();
+    delete d;
 }
 
 void AddEditBlog::setSupportedFeatures( BilboBlog::ApiType api )

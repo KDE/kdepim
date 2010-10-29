@@ -128,6 +128,7 @@ DBMan::~DBMan()
 {
     kDebug();
     d->db.close();
+    delete d;
     mSelf = 0L;
 }
 

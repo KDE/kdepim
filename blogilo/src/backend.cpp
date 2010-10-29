@@ -80,6 +80,7 @@ Backend::Backend( int blog_id, QObject* parent )
 Backend::~Backend()
 {
     kDebug();
+    delete d;
 }
 
 void Backend::getCategoryListFromServer()
