@@ -37,6 +37,14 @@
 #include <klocalizedstring.h>
 #include <KColorDialog>
 #include <composer/dialogs/addimagedialog.h>
+#include <composer/dialogs/addeditlink.h>
+#include <QContextMenuEvent>
+#include <QTimer>
+#include <qwebframe.h>
+#include <qbuffer.h>
+#include <QFile>
+#include <QDir>
+#include <math.h>
 
 #define ATTACHMENT_IMAGE "image"
 #define FORWARD_ACTION(action1, action2) \
@@ -75,9 +83,9 @@ void ObjectsForJavaScript::clickedOnNonObject() {
 //----------------------------------------------------------------------
 
 WebView::WebView ( QWidget *parent )
-        : QWebView ( parent ) {
+        : KWebView ( parent ) {
     settings() -> setFontSize ( QWebSettings::DefaultFontSize, 14 );
-
+    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     setAcceptDrops ( true );
 }
 
@@ -116,7 +124,7 @@ void WebView::keyPressEvent ( QKeyEvent *event ) {
     if ( event->key() == Qt::Key_Return && ( event->modifiers() & Qt::AltModifier ) )
         emit editingFinishKeyPressed();
     else if ( event->key() == Qt::Key_F12 )
-        QMessageBox::information ( this, QString(), page() -> mainFrame() -> toHtml()
+        QMessageBox::information ( this, QString(), page()->mainFrame()->toHtml()
                                    .replace ( '<', "&lt;" ).replace ( '>', "&gt;" ).replace ( '\n', "<br>" ) );
     else
         QWebView::keyPressEvent ( event );
@@ -618,7 +626,7 @@ int TextEditor::getFontSize() const {
     fontSizeString.chop ( 2 );
     int fontSizeInt = fontSizeString.toInt();
 
-    fontSizeInt = ceil ( static_cast<double> ( fontSizeInt ) /getZoomFactor() - 0.49 );
+    fontSizeInt = ceil( static_cast<double> ( fontSizeInt ) /getZoomFactor() - 0.49 );
 
     return fontSizes.indexOf ( fontSizeInt );
 }
@@ -778,9 +786,52 @@ void TextEditor::formatTextColor()
         execCommand("foreColor", color.name());
 }
 
+
+// shamelessly copied from Qt Demo Browser
+static QUrl guessUrlFromString(const QString &string)
+{
+    QString urlStr = string.trimmed();
+    QRegExp test(QLatin1String("^[a-zA-Z]+\\:.*"));
+
+    // Check if it looks like a qualified URL. Try parsing it and see.
+    bool hasSchema = test.exactMatch(urlStr);
+    if (hasSchema) {
+        QUrl url(urlStr, QUrl::TolerantMode);
+        if (url.isValid())
+            return url;
+    }
+
+    // Might be a file.
+    if (QFile::exists(urlStr))
+        return QUrl::fromLocalFile(urlStr);
+
+    // Might be a shorturl - try to detect the schema.
+    if (!hasSchema) {
+        int dotIndex = urlStr.indexOf(QLatin1Char('.'));
+        if (dotIndex != -1) {
+            QString prefix = urlStr.left(dotIndex).toLower();
+            QString schema = (prefix == QLatin1String("ftp")) ? prefix : QLatin1String("http");
+            QUrl url(schema + QLatin1String("://") + urlStr, QUrl::TolerantMode);
+            if (url.isValid())
+                return url;
+        }
+    }
+
+    // Fall back to QUrl's own tolerant parser.
+    return QUrl(string, QUrl::TolerantMode);
+}
+
 void TextEditor::slotAddEditLink()
 {
-///TODO
+    QPointer<AddEditLink> addLinkDlg = new AddEditLink(this);
+    if( addLinkDlg->exec() ){
+        Link lnk = addLinkDlg->result();
+        QUrl url = guessUrlFromString(lnk.address);
+        if(url.isValid()){
+            execCommand("createLink", url.toString());
+            //TODO use other parameters
+        }
+    }
 }
 
 void TextEditor::slotRemoveLink()

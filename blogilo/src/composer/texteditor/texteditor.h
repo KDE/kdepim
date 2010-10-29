@@ -32,7 +32,7 @@
 
 #include <QTextEdit>
 #include <QLineEdit>
-#include <QtWebKit>
+#include <KWebView>
 #include <QUndoCommand>
 
 class QWebView;
@@ -65,7 +65,7 @@ private:
 
 //----------------------------------------------------------------------
 
-class WebView : public QWebView {
+class WebView : public KWebView {
     Q_OBJECT
 
 public:

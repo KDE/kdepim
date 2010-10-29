@@ -148,50 +148,6 @@ protected Q_SLOTS:
 
 //     void sltSyncSpellCheckingButton( bool check );
 
-//     void sltSetTextBold( bool bold );
-
-    /*!
-    Changes the current text font into Courier fontfamily, to represent code style.
-    or if text font already be in code style, uses the fontfamily it had before.
-     */
-//     void sltToggleCode();
-
-    /**
-     * Changes the current paragraph format into Heading type or simple pargraph
-     * type, according to the given parameter.
-     * 
-     * @param index is the index of the selected format type in the related
-     * combobox in toolbar.
-     */
-//     void sltChangeFormatType( const QString& text );
-    /*!
-    Increments font size by one degree.
-    there are five predefined values for font size: "small", "medium", "large",
-     * "x-large", "xx-large". Bilboeditor uses "medium" as default font size.
-     */
-//     void sltFontSizeIncrease();
-
-    /*!
-    Decrements font size by one degree.
-    there are five predefined values for font size: "small", "medium", "large",
-     * "x-large", "xx-large". Bilboeditor uses "medium" as default font size.
-     */
-//     void sltFontSizeDecrease();
-
-    /*!
-    Changes Alignment of current paragraph into Right Alignment.
-     */
-//     void sltAlignRight();
-
-    /*!
-    Changes Alignment of current paragraph into Left Alignment.
-     */
-//     void sltAlignLeft();
-
-    /*!
-    Switches Layout Direction of current paragraph between RightToLeft and LeftToRight Directions.
-     */
-//     void sltChangeLayoutDirection();
 
     /*!
     Opens a dialog to set link address. if cursor has selection and it is a link
@@ -209,18 +165,6 @@ protected Q_SLOTS:
     Removes link from current text by assigning false to the Anchor property of text format.
      */
     void sltRemoveLink();
-
-    /*!
-    Changes the forground color of current text.
-     */
-//     void sltSelectColor();
-
-    /*!
-    Changes all properties of current text format into default, except Anchor,
-     * AnchorName and AnchorHref properties.
-    \sa defaultCharFormat
-     */
-//     void sltRemoveFormatting();
 
     /**
      * Creates an instance of AddImageDialog class,and opens it, to select an image.
@@ -250,16 +194,9 @@ protected Q_SLOTS:
 
 //     void sltMediaTypeFound( BilboMedia *media );
 
-//     void sltAddOrderedList();
-
-//     void sltAddUnorderedList();
-
 //     void sltToggleBlockQuote();
 
     void sltAddPostSplitter();
-
-//     void slotCurrentCharFormantChanged(const QTextCharFormat &);
-//     void slotCurrentBlockFormatChanged(const QTextBlockFormat &);
 
     /*!
     Sets the content of the current tab  as other tabs' contents, to apply recent
@@ -298,55 +235,17 @@ private:
     QWidget *tabPreview;
 
     TextEditor *editor;
-//     QPlainTextEdit *htmlEditor;
     KTextEditor::View *htmlEditor;
-//     QWebView *preview;
-//     KHTMLPart *browserPart;
+
     BilboBrowser *preview;
 
     KToolBar *barVisual;
 
-//     KListWidget *lstMediaFiles;
-//     KPushButton *btnGetStyle;
-
-    KAction *actBold;
-    KAction *actItalic;
-    KAction *actUnderline;
-    KAction *actStrikeout;
-    KAction *actCode;
-    KAction *actFontIncrease;
-    KAction *actFontDecrease;
-    KAction *actNewParagraph;
-    KAction *actAlignRight;
-    KAction *actAlignLeft;
-    KAction *actAlignCenter;
-    KAction *actJustify;
-    KAction *actRightToLeft;
-    KAction *actAddLink;
-    KAction *actRemoveLink;
-    KAction *actRemoveFormatting;
-    KAction *actColorSelect;
-    KAction *actAddImage;
-//     KAction *actAddMedia;
-    KAction *actOrderedList;
-    KAction *actUnorderedList;
-    KAction *actBlockQuote;
-    KAction *actSplitPost;
-    KAction *actCheckSpelling;
-    KSelectAction *actFormatType;
-
-//     QProgressBar *previewProgress;
-//     KStatusBar *previewStatus;
-
-//   QString *mHtmlContent;
-
     AddEditLink *linkDialog;
-    
+
     QTextCharFormat defaultCharFormat;
     QTextBlockFormat defaultBlockFormat;
-//     QTextCharFormat lastCharFormat;
-//     QTextBlockFormat lastBlockFormat;
-    
+
     QMap <QString, BilboMedia*> *mMediaList;
 
     QString currentPostTitle;

@@ -27,7 +27,12 @@
 
 #include <kdialog.h>
 
-#include "ui_addeditlinkbase.h"
+struct Link{
+public:
+    QString address;
+    QString title;
+    QString target;
+};
 
 /**
 Implements a dialog to get user input for link parameters; address, name and target.
@@ -40,21 +45,22 @@ class AddEditLink: public KDialog
 {
     Q_OBJECT
 public:
-    AddEditLink( QWidget *parent = 0 );
+    explicit AddEditLink( const QString& address = QString(), const QString& title = QString(),
+                          const QString& target = QString(), QWidget *parent = 0 );
+    explicit AddEditLink(QWidget* parent = 0);
     ~AddEditLink();
-    void show( const QString& address = QString(), const QString& title = QString(),
-               const QString& target = QString() );
 
-Q_SIGNALS:
-    void addLink( const QString& address, const QString& target, const QString& title );
+    Link &result() const;
 
 private Q_SLOTS:
     virtual void slotButtonClicked(int button);
     void slotClearLinkCache();
 
 private:
-    KConfigGroup *confGroup;
-    Ui::AddEditLinkBase ui;
+    void initUi();
+
+    class Private;
+    Private * const d;
 };
 
 #endif

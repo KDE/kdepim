@@ -24,94 +24,115 @@
 
 #include "addeditlink.h"
 #include "settings.h"
+#include "ui_addeditlinkbase.h"
 // KConfigGroup AddEditLink::links( KGlobal::config(), QString::fromLatin1("LinksCache") );
 
-AddEditLink::AddEditLink( QWidget *parent )
-        : KDialog( parent )
+class AddEditLink::Private
 {
-    setAttribute(Qt::WA_DeleteOnClose);
-    QWidget *dialog = new QWidget( this );
-    ui.setupUi( dialog );
-    ui.btnClear->setIcon(KIcon("edit-clear"));
-    this->setMainWidget( dialog );
+public:
+    Link result;
+    KConfigGroup *confGroup;
+    Ui::AddEditLinkBase ui;
+};
+AddEditLink::AddEditLink( QWidget *parent )
+        : KDialog( parent ), d(new Private)
+{
+    initUi();
+}
 
-    this->resize( dialog->width(), dialog->height() );
-
-    confGroup = new KConfigGroup( KGlobal::config(), QString::fromLatin1("AddEditLinkDialog") );
-    QStringList linksList = confGroup->readEntry("LinksCache", QStringList());
-    ui.txtAddress->addItems(linksList);
-    KCompletion *comp = ui.txtAddress->completionObject( true );
-    comp->setItems(linksList);
-    ui.txtAddress->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
-
-    ui.txtAddress->setFocus();
-    resize( confGroup->readEntry("Size", this->size()) );
-    connect(ui.btnClear, SIGNAL(clicked(bool)), SLOT(slotClearLinkCache()) );
+AddEditLink::AddEditLink(const QString& address, const QString& title, const QString& target,
+                         QWidget* parent): KDialog(parent), d(new Private)
+{
+    if ( address.isEmpty() ) {
+        d->ui.txtAddress->insertUrl(0, QString());
+        d->ui.txtAddress->setCurrentIndex(0);
+        this->setWindowTitle( i18nc( "verb, to insert a link into the text", "Add Link" ) );
+    } else {
+        d->ui.txtAddress->setCurrentItem( address, true );
+        this->setWindowTitle( i18nc( "verb, to modify an existing link", "Edit Link" ) );
+    }
+    if ( !title.isEmpty() ) {
+        d->ui.txtTitle->setText( title );
+    }
+    if ( !target.isEmpty() ) {
+        if ( target == "_self" ) {
+            d->ui.comboTarget->setCurrentIndex( 1 );
+        } else if ( target == "_blank" ) {
+            d->ui.comboTarget->setCurrentIndex( 2 );
+        }
+    }
+    initUi();
 }
 
 AddEditLink::~AddEditLink()
 {
-    confGroup->writeEntry( "Size", size() );
-    confGroup->sync();
-    delete confGroup;
+    d->confGroup->writeEntry( "Size", size() );
+    d->confGroup->sync();
+    delete d->confGroup;
+}
+
+void AddEditLink::initUi()
+{
+    QWidget *dialog = new QWidget( this );
+    d->ui.setupUi( dialog );
+    d->ui.btnClear->setIcon(KIcon("edit-clear"));
+    this->setMainWidget( dialog );
+
+    this->resize( dialog->width(), dialog->height() );
+
+    d->confGroup = new KConfigGroup( KGlobal::config(), QString::fromLatin1("AddEditLinkDialog") );
+    QStringList linksList = d->confGroup->readEntry("LinksCache", QStringList());
+    linksList.removeDuplicates();
+    d->ui.txtAddress->addItems(linksList);
+    KCompletion *comp = d->ui.txtAddress->completionObject( true );
+    comp->setItems(linksList);
+    d->ui.txtAddress->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+
+    d->ui.txtAddress->setFocus();
+    resize( d->confGroup->readEntry("Size", this->size()) );
+    connect(d->ui.btnClear, SIGNAL(clicked(bool)), SLOT(slotClearLinkCache()) );
+}
+
+Link& AddEditLink::result() const
+{
+    return d->result;
 }
 
 void AddEditLink::slotButtonClicked( int button )
 {
     if(button == KDialog::Ok) {
-        QString link = ui.txtAddress->currentText();
+        QString link = d->ui.txtAddress->currentText();
         if ( link.isEmpty() )
             return;
         QString linkTarget;
-        if ( ui.comboTarget->currentIndex() == 1 ) {
+        if ( d->ui.comboTarget->currentIndex() == 1 ) {
             linkTarget = "_self";
-        } else if ( ui.comboTarget->currentIndex() == 2 ) {
+        } else if ( d->ui.comboTarget->currentIndex() == 2 ) {
             linkTarget = "_blank";
         }
         const QString target = linkTarget;
         if( Settings::urlCachingEnabled() ) {
-            QStringList linksList = confGroup->readEntry("LinksCache", QStringList());
+            QStringList linksList = d->confGroup->readEntry("LinksCache", QStringList());
             linksList.append(link);
-            confGroup->writeEntry("LinksCache", linksList );
-            confGroup->sync();
+            d->confGroup->writeEntry("LinksCache", linksList );
+            d->confGroup->sync();
         }
-        emit addLink( link, target, ui.txtTitle->text() );
+        d->result.address = link;
+        d->result.target = target;
+        d->result.title = d->ui.txtTitle->text();
         accept();
     } else
         KDialog::slotButtonClicked(button);
 }
 
-void AddEditLink::show( const QString& address, const QString& title, const QString& target )
-{
-    KDialog::show();
-    if ( address.isEmpty() ) {
-        ui.txtAddress->insertUrl(0, QString());
-        ui.txtAddress->setCurrentIndex(0);
-        this->setWindowTitle( i18nc( "verb, to insert a link into the text", "Add Link" ) );
-    } else {
-        ui.txtAddress->setCurrentItem( address, true );
-        this->setWindowTitle( i18nc( "verb, to modify an existing link", "Edit Link" ) );
-    }
-    if ( !title.isEmpty() ) {
-        ui.txtTitle->setText( title );
-    }
-    if ( !target.isEmpty() ) {
-        if ( target == "_self" ) {
-            ui.comboTarget->setCurrentIndex( 1 );
-        } else if ( target == "_blank" ) {
-            ui.comboTarget->setCurrentIndex( 2 );
-        }
-    }
-}
-
 void AddEditLink::slotClearLinkCache()
 {
-    confGroup->writeEntry( "LinksCache", QStringList() );
-    QString current = ui.txtAddress->currentText();
-    ui.txtAddress->clear();
-    ui.txtAddress->addItem( current );
-    ui.txtAddress->setCurrentIndex( 0 );
-    ui.txtAddress->completionObject()->clear();
+    d->confGroup->writeEntry( "LinksCache", QStringList() );
+    QString current = d->ui.txtAddress->currentText();
+    d->ui.txtAddress->clear();
+    d->ui.txtAddress->addItem( current );
+    d->ui.txtAddress->setCurrentIndex( 0 );
+    d->ui.txtAddress->completionObject()->clear();
 }
 
 #include "composer/dialogs/addeditlink.moc"
