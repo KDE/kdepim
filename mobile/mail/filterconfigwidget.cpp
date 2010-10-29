@@ -35,7 +35,7 @@ FilterConfigWidget::FilterConfigWidget(QWidget* parent, Qt::WindowFlags f): QWid
 {
   mUi = new Ui_FilterConfigWidget;
   mUi->setupUi( this );
-  mPatternEdit = new SearchPatternEdit( i18n("Criteria"), this );
+  mPatternEdit = new SearchPatternEdit( this );
   mUi->criteriaLayout->addWidget( mPatternEdit, 0, Qt::AlignTop );
   mActionLister = new FilterActionWidgetLister( this );
   mUi->actionsLayout->addWidget( mActionLister, 0, Qt::AlignTop );
