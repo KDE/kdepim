@@ -45,6 +45,7 @@ namespace CalendarSupport {
 
   struct Change {
     Akonadi::Item originalItem;
+    Akonadi::Item newItem;
 
     int changeId;
     uint atomicOperationId;
@@ -56,8 +57,6 @@ namespace CalendarSupport {
     Change(){}
     Change( int id, uint atomicOperId, bool recToHistory, QWidget *p ) :
     changeId( id ), atomicOperationId( atomicOperId ), recordToHistory( recToHistory ), parent( p ){}
-
-    Change( const Change &o ) : changeId( o.changeId ), atomicOperationId( o.atomicOperationId ), recordToHistory( o.recordToHistory ),parent( o.parent ){}
   };
 
 class IncidenceChanger2::Private : public QObject
@@ -91,11 +90,14 @@ class IncidenceChanger2::Private : public QObject
                              const QString &errorString );
 
     bool hasRights( const Akonadi::Collection &collection, IncidenceChanger2::ChangeType ) const;
+    void queueModification( const Change &change );
+    void performModification( Change change );
 
   public Q_SLOTS:
     void handleCreateJobResult( KJob * );
     void handleModifyJobResult( KJob * );
     void handleDeleteJobResult( KJob * );
+    void performNextModification( Akonadi::Item::Id id );
   public:
     int mLatestOperationId;
     QHash<const KJob*,Change> mChangeForJob;
@@ -113,7 +115,12 @@ class IncidenceChanger2::Private : public QObject
         A in progress, a modification B waiting (queued), and then a new one C comes in, we just discard
         B, and queue C. The queue always has 1 element max.
     */
-    QHash<Akonadi::Item::Id,Change*> mQueuedModification;
+    QHash<Akonadi::Item::Id,Change> mQueuedModifications;
+
+    /**
+       So we know if there's already a modification in progress
+    */
+    QHash<Akonadi::Item::Id,Change> mModificationsInProgress;
 
   private:
     IncidenceChanger2 *q;

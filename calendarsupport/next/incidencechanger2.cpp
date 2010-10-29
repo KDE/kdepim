@@ -74,6 +74,29 @@ bool IncidenceChanger2::Private::hasRights( const Collection &collection,
   return result && collection.isValid();
 }
 
+void IncidenceChanger2::Private::queueModification( const Change &change )
+{
+  // If there's already a change queued we just discard it
+  // and send the newer change, which already includes
+  // previous modifications
+  const Akonadi::Item::Id id = change.newItem.id();
+  if ( mQueuedModifications.contains( id ) ) {
+    mQueuedModifications.take( id );
+  }
+
+  mQueuedModifications[id] = change;
+}
+
+void IncidenceChanger2::Private::performNextModification( Akonadi::Item::Id id )
+{
+  mModificationsInProgress.remove( id );
+
+  if ( mQueuedModifications.contains( id ) ) {
+    const Change change = mQueuedModifications[id];
+    performModification( change );
+  }
+}
+
 void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
 {
   QString errorString;
@@ -177,6 +200,11 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
   }
 
   emit q->modifyFinished( change.changeId, item, resultCode, errorString );
+
+  qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
+  QMetaObject::invokeMethod( this, "performNextModification",
+                             Qt::QueuedConnection,
+                             Q_ARG( Akonadi::Item::Id, item.id() ) );
 }
 
 bool IncidenceChanger2::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) const
@@ -410,36 +438,50 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
 
   Change change( ++d->mLatestOperationId, recordToHistory, atomicOperationId, parent );
   change.originalItem = originalItem;
+  change.newItem = changedItem;
 
-  if ( d->deleteAlreadyCalled( changedItem.id() ) ) {
+  d->performModification( change );
+  return change.changeId;
+}
+
+void IncidenceChanger2::Private::performModification( Change change )
+{
+  const Item::Id id = change.newItem.id();
+  Q_ASSERT( change.newItem.isValid() );
+  Q_ASSERT( change.newItem.hasPayload<Incidence::Ptr>() );
+
+  if ( deleteAlreadyCalled( id ) ) {
     // IncidenceChanger::deleteIncidence() called twice, ignore this one.
-    kDebug() << "Item " << changedItem.id() << " already deleted or being deleted, skipping";
+    kDebug() << "Item " << id << " already deleted or being deleted, skipping";
 
     // Queued emit because return must be executed first, otherwise caller won't know this workId
-    d->emitModifyFinished( change.changeId, changedItem, ResultCodeAlreadyDeleted,
-                           i18n( "That calendar item was already deleted, or currently being deleted." ) );
-
-    return change.changeId;
+    emitModifyFinished( change.changeId, change.newItem, ResultCodeAlreadyDeleted,
+                        i18n( "That calendar item was already deleted, or currently being deleted." ) );
+    return;
   }
 
   { // increment revision
-    Incidence::Ptr incidence = changedItem.payload<Incidence::Ptr>();
+    Incidence::Ptr incidence = change.newItem.payload<Incidence::Ptr>();
     const int revision = incidence->revision();
     incidence->setRevision( revision + 1 );
   }
 
+  // Dav Fix.
   // Don't write back remote revision since we can't make sure it is the current one
-  // fixes problems with DAV resource
-  Item item = changedItem;
-  item.setRemoteRevision( QString() );
+  change.newItem.setRemoteRevision( QString() );
 
-  ItemModifyJob *modifyJob = new ItemModifyJob( item );
-  d->mChangeForJob.insert( modifyJob, change );
-  // QueuedConnection because of possible sync exec calls.
-  connect( modifyJob, SIGNAL(result(KJob *)),
-           d, SLOT(handleModifyJobResult(KJob *)), Qt::QueuedConnection );
-
-  return change.changeId;
+  if ( mModificationsInProgress.contains( change.newItem.id() ) ) {
+    // There's already a ItemModifyJob running for this item ID
+    // Let's wait for it to end.
+    queueModification( change );
+  } else {
+    ItemModifyJob *modifyJob = new ItemModifyJob( change.newItem );
+    mChangeForJob.insert( modifyJob, change );
+    mModificationsInProgress[change.newItem.id()] = change;
+    // QueuedConnection because of possible sync exec calls.
+    connect( modifyJob, SIGNAL(result(KJob *)),
+             SLOT(handleModifyJobResult(KJob *)), Qt::QueuedConnection );
+  }
 }
 
 uint IncidenceChanger2::startAtomicOperation()
