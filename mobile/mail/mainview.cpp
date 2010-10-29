@@ -277,8 +277,8 @@ void MainView::delayedInit()
   itemFetchScope().fetchPayloadPart( MessagePart::Envelope );
   setWindowTitle( i18n( "KDE Mail" ) );
 
-  MailActionManager *mMailActionManager = new MailActionManager( actionCollection(), this );
-  mMailActionManager->setItemSelectionModel( itemSelectionModel() );
+  MailActionManager *mailActionManager = new MailActionManager( actionCollection(), this );
+  mailActionManager->setItemSelectionModel( itemSelectionModel() );
 
   connect( actionCollection()->action( "mark_message_important" ), SIGNAL( triggered( bool ) ), SLOT( markImportant( bool ) ) );
   connect( actionCollection()->action( "mark_message_action_item" ), SIGNAL( triggered( bool ) ), SLOT( markMailTask( bool ) ) );
@@ -335,6 +335,16 @@ void MainView::delayedInit()
 
   connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
            this, SLOT( qmlInitialized( QDeclarativeView::Status ) ) );
+
+  if ( !workOffline() ) {
+    const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
+    foreach ( Akonadi::AgentInstance type, lst ) {
+      if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ||
+          type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
+        type.setIsOnline( true );
+      }
+    }
+  }
 }
 
 void MainView::qmlInitialized(QDeclarativeView::Status status)
