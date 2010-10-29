@@ -422,20 +422,12 @@ void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
 
 SearchPatternEdit::SearchPatternEdit( QWidget *parent, bool headersOnly,
                                           bool absoluteDates )
-  : QGroupBox( parent )
+  : QWidget( parent )
 {
   setObjectName( "SearchPatternEdit" );
-  setTitle( i18n("Search Criteria") );
   initLayout( headersOnly, absoluteDates );
 }
 
-SearchPatternEdit::SearchPatternEdit( const QString &title, QWidget *parent,
-                                          bool headersOnly, bool absoluteDates )
-  : QGroupBox( title, parent )
-{
-  setObjectName( "SearchPatternEdit" );
-  initLayout( headersOnly, absoluteDates );
-}
 
 SearchPatternEdit::~SearchPatternEdit()
 {

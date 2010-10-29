@@ -180,18 +180,12 @@ private:
     @author Marc Mutz <Marc@Mutz.com>
 */
 
-class MAILCOMMON_EXPORT SearchPatternEdit : public QGroupBox  {
+class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget {
   Q_OBJECT
 public:
   /** Constructor. The parent parameter is passed to the underlying
       QGroupBox, as usual. */
   explicit SearchPatternEdit( QWidget *parent = 0, bool headersOnly = false,
-                                bool absoluteDates = false );
-
-  /** Constructor. This one allows you to set a title different from
-      i18n("Search Criteria"). */
-  explicit SearchPatternEdit( const QString &title, QWidget *parent = 0,
-                                bool headersOnly = false,
                                 bool absoluteDates = false );
 
   ~SearchPatternEdit();
