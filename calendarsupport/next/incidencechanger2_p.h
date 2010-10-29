@@ -106,6 +106,15 @@ class IncidenceChanger2::Private : public QObject
     History *mHistory;
     bool mHistoryEnabled;
 
+    /** Queue modifications by ID. We can only send a modification to akonadi when the previous
+        one ended.
+
+        The container doesn't look like a queue because of an optimization: if there's a modification
+        A in progress, a modification B waiting (queued), and then a new one C comes in, we just discard
+        B, and queue C. The queue always has 1 element max.
+    */
+    QHash<Akonadi::Item::Id,Change*> mQueuedModification;
+
   private:
     IncidenceChanger2 *q;
 };

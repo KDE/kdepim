@@ -60,10 +60,13 @@ bool IncidenceChanger2::Private::hasRights( const Collection &collection,
   switch( changeType ) {
     case ChangeTypeCreate:
       result = collection.rights() & Akonadi::Collection::CanCreateItem;
+      break;
     case ChangeTypeModify:
       result = collection.rights() & Akonadi::Collection::CanChangeItem;
+      break;
     case ChangeTypeDelete:
       result = collection.rights() & Akonadi::Collection::CanDeleteItem;
+      break;
     default:
       Q_ASSERT_X( false, "hasRights", "invalid type" );
   }
@@ -149,9 +152,18 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
   const ItemModifyJob *j = qobject_cast<const ItemModifyJob*>( job );
   const Item item = j->item();
   if ( j->error() ) {
-    resultCode = ResultCodeJobError;
-    errorString = j->errorString();
-    kError() << errorString;
+    if ( deleteAlreadyCalled( item.id() ) ) {
+      // User deleted the item almost at the same time he changed it. We could just return success
+      // but the delete is probably already recorded to History, and that would make undo not work
+      // in the proper order.
+      resultCode = ResultCodeAlreadyDeleted;
+      errorString = j->errorString();
+      kWarning() << "Trying to change item " << item.id() << " while deletion is in progress.";
+    } else {
+      resultCode = ResultCodeJobError;
+      errorString = j->errorString();
+      kError() << errorString;
+    }
     if ( mShowDialogsOnError ) {
       KMessageBox::sorry( change.parent, i18n( "Error while trying to modify calendar item. Error was: %1",
                                                errorString ) );
@@ -411,7 +423,7 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
   }
 
   { // increment revision
-    Incidence::Ptr incidence = changeItem.payload<Incidence::Ptr>();
+    Incidence::Ptr incidence = changedItem.payload<Incidence::Ptr>();
     const int revision = incidence->revision();
     incidence->setRevision( revision + 1 );
   }
