@@ -420,9 +420,12 @@ namespace {
     { SearchRule::FuncRegExp,             I18N_NOOP( "matches regular expr." ) },
     { SearchRule::FuncNotRegExp,          I18N_NOOP( "does not match reg. expr." ) },
     { SearchRule::FuncIsInAddressbook,    I18N_NOOP( "is in address book" ) },
-    { SearchRule::FuncIsNotInAddressbook, I18N_NOOP( "is not in address book" ) },
+    { SearchRule::FuncIsNotInAddressbook, I18N_NOOP( "is not in address book" ) }
+#ifndef KDEPIM_NO_NEPOMUK
+    ,
     { SearchRule::FuncIsInCategory,       I18N_NOOP( "is in category" ) },
     { SearchRule::FuncIsNotInCategory,    I18N_NOOP( "is not in category" ) }
+#endif    
   };
   static const int TextFunctionCount =
     sizeof( TextFunctions ) / sizeof( *TextFunctions );
@@ -518,6 +521,7 @@ namespace {
   QString TextRuleWidgetHandler::currentValue( const QStackedWidget *valueStack,
                                                SearchRule::Function func ) const
   {
+#ifndef KDEPIM_NO_NEPOMUK    
     // here we gotta check the combobox which contains the categories
     if ( func  == SearchRule::FuncIsInCategory ||
          func  == SearchRule::FuncIsNotInCategory ) {
@@ -529,6 +533,7 @@ namespace {
         return QString();
       }
     }
+#endif
 
     //in other cases of func it is a lineedit
     const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit*>( "regExpLineEdit" );
@@ -652,6 +657,7 @@ namespace {
               valueStack->findChild<QWidget*>( "textRuleValueHider");
       valueStack->setCurrentWidget( w );
     }
+#ifndef KDEPIM_NO_NEPOMUK
     else if ( func == SearchRule::FuncIsInCategory ||
               func == SearchRule::FuncIsNotInCategory) {
       KComboBox *combo =
@@ -669,7 +675,8 @@ namespace {
       combo->blockSignals( false );
       valueStack->setCurrentWidget( combo );
     }
-    else {
+#endif
+  else {
       RegExpLineEdit *lineEdit =
               valueStack->findChild<RegExpLineEdit*>( "regExpLineEdit" );
 
@@ -703,11 +710,13 @@ namespace {
       valueStack->setCurrentWidget(
               valueStack->findChild<QWidget*>( "textRuleValueHider" ));
     }
+#ifndef KDEPIM_NO_NEPOMUK
     else if ( func == SearchRule::FuncIsInCategory ||
               func == SearchRule::FuncIsNotInCategory) {
       valueStack->setCurrentWidget(
               valueStack->findChild<QWidget*>( "categoryCombo" ));
     }
+#endif
     else {
         RegExpLineEdit *lineEdit =
                 valueStack->findChild<RegExpLineEdit*>( "regExpLineEdit" );

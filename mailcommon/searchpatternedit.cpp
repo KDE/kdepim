@@ -136,12 +136,12 @@ void SearchRuleWidget::initWidget()
   // initialize the function/value widget stack
   mFunctionStack = new QStackedWidget( this );
   //Don't expand the widget in vertical direction
-  mFunctionStack->setSizePolicy( QSizePolicy::Preferred,QSizePolicy::Fixed );
+  mFunctionStack->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
   hlay->addWidget( mFunctionStack );
 
   mValueStack = new QStackedWidget( this );
-  mValueStack->setSizePolicy( QSizePolicy::Preferred,QSizePolicy::Fixed );
+  mValueStack->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
   hlay->addWidget( mValueStack );
   hlay->setStretchFactor( mValueStack, 10 );
 
