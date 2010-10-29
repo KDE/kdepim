@@ -439,15 +439,15 @@ void KDLogTextWidget::Private::enforceHistorySize() {
         cache.dirty |= Cache::Dimensions;
 }
 
-static void set_scrollbar_properties( QScrollBar & sb, int document, int viewport, int singleStep ) {
+static void set_scrollbar_properties( QScrollBar & sb, int document, int viewport, int singleStep, Qt::Orientation o ) {
     const int min = 0;
     const int max = std::max( 0, document - viewport );
     const int value = sb.value();
-    const bool wasAtEnd = ( value == sb.maximum() && value != 0 );
+    const bool wasAtEnd = value == sb.maximum();
     sb.setRange( min, max );
     sb.setPageStep( viewport );
     sb.setSingleStep( singleStep );
-    sb.setValue( wasAtEnd ? sb.maximum() : value );
+    sb.setValue( o == Qt::Vertical && wasAtEnd ? sb.maximum() : value );
 }
 
 void KDLogTextWidget::Private::updateScrollRanges() {
@@ -458,14 +458,14 @@ void KDLogTextWidget::Private::updateScrollRanges() {
         const int document = lines.size() * cache.fontMetrics.lineSpacing ;
         const int viewport = q->viewport()->height();
         const int singleStep = cache.fontMetrics.lineSpacing;
-        set_scrollbar_properties( *sb, document, viewport, singleStep );
+        set_scrollbar_properties( *sb, document, viewport, singleStep, Qt::Vertical );
     }
 
     if ( QScrollBar * const sb = q->horizontalScrollBar() ) {
         const int document = cache.dimensions.longestLineLength;
         const int viewport = q->viewport()->width();
         const int singleStep = cache.fontMetrics.lineSpacing; // rather randomly chosen
-        set_scrollbar_properties( *sb, document, viewport, singleStep );
+        set_scrollbar_properties( *sb, document, viewport, singleStep, Qt::Horizontal );
     }
 }
 
