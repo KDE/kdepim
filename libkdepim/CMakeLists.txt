@@ -110,7 +110,11 @@ set( kcm_ldap_SRCS
      ldap/kcmldap.cpp
 )
 
-kde4_add_plugin(kcm_ldap ${kcm_ldap_SRCS})
+if (NOT WINCE)
+  kde4_add_plugin(kcm_ldap ${kcm_ldap_SRCS})
+else (NOT WINCE)
+  kde4_add_plugin(kcm_ldap STATIC ${kcm_ldap_SRCS})
+endif (NOT WINCE)
 
 target_link_libraries(kcm_ldap ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} kdepim)
 

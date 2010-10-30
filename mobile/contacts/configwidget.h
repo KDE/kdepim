@@ -41,7 +41,11 @@ class ConfigWidget : public QWidget
   private:
     KConfigDialogManager *mManager;
     KComboBox *mMapServiceBox;
+#ifndef _WIN32_WCE
     KCModuleProxy *mLdapConfigWidget;
+#else
+    QWidget *mLdapConfigWidget;
+#endif
 };
 
 class DeclarativeConfigWidget : public QGraphicsProxyWidget

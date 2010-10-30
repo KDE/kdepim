@@ -25,6 +25,8 @@
 
 #ifndef _WIN32_WCE
 #include <kcmoduleproxy.h>
+#else
+#include <libkdepim/ldap/kcmldap_p.h>
 #endif
 #include <kconfigdialogmanager.h>
 #include <klocale.h>
@@ -35,10 +37,14 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   Ui_ConfigWidget ui;
   ui.setupUi( this );
 
+//FIXME: reenable this again for wince
 #ifndef _WIN32_WCE
   mLdapConfigWidget = new KCModuleProxy( QLatin1String( "kcmldap" ) );
-  ui.ldapServerSettingsLayout->addWidget( mLdapConfigWidget, 1, 1 );
+#else
+  mLdapConfigWidget = new KCMLdap(this,QVariantList());
 #endif
+
+  ui.ldapServerSettingsLayout->addWidget( mLdapConfigWidget, 1, 1 );
 
   mMapServiceBox = ui.kcfg_MapService;
 

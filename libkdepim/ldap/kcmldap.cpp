@@ -50,7 +50,9 @@
 #include "addhostdialog_p.h"
 
 K_PLUGIN_FACTORY( KCMLdapFactory, registerPlugin<KCMLdap>(); )
+#ifndef _WIN32_WCE
 K_EXPORT_PLUGIN( KCMLdapFactory( "kcmldap" ) )
+#endif
 
 class LDAPItem : public QListWidgetItem
 {

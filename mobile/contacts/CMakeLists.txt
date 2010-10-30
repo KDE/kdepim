@@ -7,6 +7,12 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 
+if (WINCE)
+  include_directories(
+    ${CMAKE_SOURCE_DIR}
+  )
+endif(WINCE)
+
 set(kab_mobile_srcs
   mainview.cpp
   main.cpp
@@ -81,6 +87,10 @@ target_link_libraries(kaddressbook-mobile
 if (RUNTIME_PLUGINS_STATIC)
   target_link_libraries(kaddressbook-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup)
 endif (RUNTIME_PLUGINS_STATIC)
+  target_link_libraries(kaddressbook-mobile kcm_ldap)
+if (WINCE)
+
+endif (WINCE)
 
 configure_file(kaddressbook-mobile.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook-mobile.sh)
 
