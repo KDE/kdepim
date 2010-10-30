@@ -1179,6 +1179,22 @@ static QString htmlInvitationDetailsTableEnd()
   return "</table>\n";
 }
 
+static QString diffColor()
+{
+  // Color for printing comparison differences inside invitations.
+
+//  return  "#DE8519"; // hard-coded color from Outlook2007
+  return QColor( Qt::red ).name();
+}
+
+static QString noteColor()
+{
+  // Color for printing notes inside invitations.
+
+//  return qApp->palette().color( QPalette::Active, QPalette::Highlight ).name();
+  return QColor( Qt::red ).name();
+}
+
 static QString htmlRow( const QString &title, const QString &value )
 {
   if ( !value.isEmpty() ) {
@@ -1201,8 +1217,7 @@ static QString htmlRow( const QString &title, const QString &value, const QStrin
   }
 
   // if 'value' has changed, then make a special print
-//  QString color = "#DE8519"; // hard-coded color from Outlook2007, per request.
-  QString color = QColor( Qt::red ).name() ; //customer changed their mind, now they want red.
+  QString color = diffColor();
   QString newtitle = "<font color=\"" + color + "\">" + title + "</font>";
   QString newvalue = "<font color=\"" + color + "\">" + value + "</font>" +
                      "&nbsp;" +
@@ -1555,7 +1570,7 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
     html += "<br>";
     html += invitationNote( QString::null,
                             i18n( "Please respond again to the original proposal." ),
-                            QString::null, QColor( Qt::red ).name() );
+                            QString::null, noteColor() );
   }
 
   html += htmlInvitationDetailsBegin();
@@ -1710,7 +1725,7 @@ static QString invitationDetailsTodo( Todo *todo, Todo *oldtodo, ScheduleMessage
     html += "<br>";
     html += invitationNote( QString::null,
                             i18n( "Please respond again to the original proposal." ),
-                            QString::null, QColor( Qt::red ).name() );
+                            QString::null, noteColor() );
   }
 
   html += htmlInvitationDetailsBegin();
