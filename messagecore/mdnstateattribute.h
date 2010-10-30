@@ -20,48 +20,57 @@
  *
  *****************************************************************************/
 
-#ifndef MESSAGECORE_MDNSTATE_ATTRIBUTE_H
-#define MESSAGECORE_MDNSTATE_ATTRIBUTE_H
+#ifndef MESSAGECORE_MDNSTATEATTRIBUTE_H
+#define MESSAGECORE_MDNSTATEATTRIBUTE_H
 
 #include "messagecore_export.h"
+
 #include <akonadi/attribute.h>
 
-namespace Akonadi {
+namespace MessageCore {
   
-  /**
-   * @short An Attribute that keeps track of the MDN state of a mail message.
-   *
-   * Once a mail that contains a Message Disposition Notification is processed,
-   *  the outcome of the user action will be stored in this attribute.
-   *
-   * @endcode
-   *
-   * @author Leo Franchi <lfranchi@kde.org>
-   * @see Akonadi::Attribute
-   * @since 4.6
-   */
-  class MESSAGECORE_EXPORT MDNStateAttribute : public Attribute
-  {
+/**
+ * @short An Attribute that keeps track of the MDN state of a mail message.
+ *
+ * Once a mail that contains a Message Disposition Notification is processed,
+ * the outcome of the user action will be stored in this attribute.
+ *
+ * @author Leo Franchi <lfranchi@kde.org>
+ * @see Akonadi::Attribute
+ * @since 4.6
+ */
+class MESSAGECORE_EXPORT MDNStateAttribute : public Akonadi::Attribute
+{
   public:
-    /** Flags for the "MDN sent" state. */
-    typedef enum
+    /**
+     * Describes the "MDN sent" state.
+     */
+    enum MDNSentState
     {
-      MDNStateUnknown,
-      MDNNone,
-      MDNIgnore,
-      MDNDisplayed,
-      MDNDeleted,
-      MDNDispatched,
-      MDNProcessed,
-      MDNDenied,
-      MDNFailed
-    } MDNSentState;
-    
+      MDNStateUnknown, ///< The state is unknown.
+      MDNNone,         ///< No MDN has been set.
+      MDNIgnore,       ///< Ignore sending a MDN.
+      MDNDisplayed,    ///< The message has been displayed by the UA to someone reading the recipient's mailbox.
+      MDNDeleted,      ///< The message has been deleted.
+      MDNDispatched,   ///< The message has been sent somewhere in some manner without necessarily having been previously displayed to the user.
+      MDNProcessed,    ///< The message has been processed in some manner without being displayed to the user.
+      MDNDenied,       ///< The recipient does not wish the sender to be informed of the message's disposition.
+      MDNFailed        ///< A failure occurred that prevented the proper generation of an MDN.
+    };
+
     /**
      * Creates a new MDN state attribute.
+     *
+     * @param state The state the attribute will have.
      */
-    explicit MDNStateAttribute( const MDNSentState& state = MDNStateUnknown );
-    explicit MDNStateAttribute( const QByteArray& stateData );
+    explicit MDNStateAttribute( const MDNSentState &state = MDNStateUnknown );
+
+    /**
+     * Creates a new MDN state attribute.
+     *
+     * @param state The string representation of the state the attribute will have.
+     */
+    explicit MDNStateAttribute( const QByteArray &state );
     
     /**
      * Destroys the MDN state attribute.
@@ -89,12 +98,12 @@ namespace Akonadi {
     void deserialize( const QByteArray &data );
 
     /**
-     * Set the MDN state.
+     * Sets the MDN @p state.
      */
-    void setMDNState( const MDNSentState& state );
+    void setMDNState( const MDNSentState &state );
 
     /**
-     * Get the sent MDN state.
+     * Returns the MDN state.
      */
     MDNStateAttribute::MDNSentState mdnState() const;
     
@@ -103,7 +112,7 @@ namespace Akonadi {
     class Private;
     Private* const d;
     //@endcond
-  };
+};
   
 }
 

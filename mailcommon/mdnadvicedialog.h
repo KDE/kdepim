@@ -43,12 +43,12 @@ public:
   *
   * Returns whether to send an MDN or not, and the sending mode for the MDN to be created.
   *
-  * Will also set the Akonadi::MDNStateAttribute on the given item
-  *  to what the user has selected.
+  * Will also set the MessageCore::MDNStateAttribute on the given item
+  * to what the user has selected.
   */
   QPair< bool, KMime::MDN::SendingMode > checkAndSetMDNInfo( const Akonadi::Item &item, KMime::MDN::DispositionType d );
 
-  Akonadi::MDNStateAttribute::MDNSentState dispositionToSentState( KMime::MDN::DispositionType d );
+  MessageCore::MDNStateAttribute::MDNSentState dispositionToSentState( KMime::MDN::DispositionType d );
 
 
 private:

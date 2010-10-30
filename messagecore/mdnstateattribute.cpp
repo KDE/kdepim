@@ -22,66 +22,68 @@
 
 #include "mdnstateattribute.h"
 
-#include <KDebug>
-
 #include <akonadi/attributefactory.h>
 
-using namespace Akonadi;
+#include <QtCore/QByteArray>
+
+using namespace MessageCore;
 
 /**
  *  @internal
  */
 class MDNStateAttribute::Private
 {
-public:
+  public:
+    MDNSentState dataToState( const QByteArray &data )
+    {
+      MDNSentState state = MDNStateUnknown;
 
-  MDNSentState dataToState( const QByteArray& data ) {
-    MDNSentState state = MDNStateUnknown;
+      switch ( data.at( 0 ) ) {
+        case 'N': state = MDNNone; break;
+        case 'I': state = MDNIgnore; break;
+        case 'R': state = MDNDisplayed; break;
+        case 'D': state = MDNDeleted; break;
+        case 'F': state = MDNDispatched; break;
+        case 'P': state = MDNProcessed; break;
+        case 'X': state = MDNDenied; break;
+        case 'E': state = MDNFailed; break;
+        case 'U': state = MDNStateUnknown; break;
+        default: state = MDNStateUnknown; break;
+      }
 
-    switch( data.at( 0 ) ) {
-      case 'N': state = MDNNone; break;
-      case 'I': state = MDNIgnore; break;
-      case 'R': state = MDNDisplayed; break;
-      case 'D': state = MDNDeleted; break;
-      case 'F': state = MDNDispatched; break;
-      case 'P': state = MDNProcessed; break;
-      case 'X': state = MDNDenied; break;
-      case 'E': state = MDNFailed; break;
-      case 'U': state = MDNStateUnknown; break;
+      return state;
     }
 
-    return state;
-  }
+    QByteArray stateToData( const MDNSentState &state )
+    {
+      QByteArray data = "U"; // Unknown
 
-  QByteArray stateToData( const MDNSentState& state ) {
-    QByteArray data = "U"; // Unknown
+      switch ( state ) {
+        case MDNNone:         data = "N"; break;
+        case MDNIgnore:       data = "I"; break;
+        case MDNDisplayed:    data = "R"; break;
+        case MDNDeleted:      data = "D"; break;
+        case MDNDispatched:   data = "F"; break;
+        case MDNProcessed:    data = "P"; break;
+        case MDNDenied:       data = "X"; break;
+        case MDNFailed:       data = "E"; break;
+        case MDNStateUnknown: data = "U"; break;
+      }
 
-    switch( state ) {
-      case MDNNone:         data = "N"; break;
-      case MDNIgnore:       data = "I"; break;
-      case MDNDisplayed:    data = "R"; break;
-      case MDNDeleted:      data = "D"; break;
-      case MDNDispatched:   data = "F"; break;
-      case MDNProcessed:    data = "P"; break;
-      case MDNDenied:       data = "X"; break;
-      case MDNFailed:       data = "E"; break;
-      case MDNStateUnknown: data = "U"; break;
+      return data;
     }
-
-    return data;
-  }
-  
-  QByteArray mSentState;
+    
+    QByteArray mSentState;
 };
 
 MDNStateAttribute::MDNStateAttribute( const MDNSentState &state )
-: d( new Private )
+  : d( new Private )
 {
   d->mSentState = d->stateToData( state );
 }
 
 MDNStateAttribute::MDNStateAttribute( const QByteArray &stateData )
-: d( new Private )
+  : d( new Private )
 {
   d->mSentState = stateData;
 }
@@ -125,13 +127,13 @@ MDNStateAttribute::MDNSentState MDNStateAttribute::mdnState() const
 // Register the attribute when the library is loaded.
 namespace {
   
-  bool dummyMDNStateAttribute()
-  {
-    using namespace Akonadi;
-    AttributeFactory::registerAttribute<MDNStateAttribute>();
-    return true;
-  }
+bool dummyMDNStateAttribute()
+{
+  using namespace MessageCore;
+  Akonadi::AttributeFactory::registerAttribute<MDNStateAttribute>();
+  return true;
+}
   
-  const bool registeredMDNStateAttribute = dummyMDNStateAttribute();
+const bool registeredMDNStateAttribute = dummyMDNStateAttribute();
   
 }

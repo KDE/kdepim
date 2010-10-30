@@ -1018,8 +1018,8 @@ FilterAction::ReturnCode FilterActionFakeDisposition::process( const Akonadi::It
   if ( idx < 1 ) return ErrorButGoOn;
 
   if ( idx == 1 ) { // ignore
-    if( item.hasAttribute< Akonadi::MDNStateAttribute >() ) {
-      item.attribute< Akonadi::MDNStateAttribute >()->setMDNState( Akonadi::MDNStateAttribute::MDNIgnore );
+    if( item.hasAttribute< MessageCore::MDNStateAttribute >() ) {
+      item.attribute< MessageCore::MDNStateAttribute >()->setMDNState( MessageCore::MDNStateAttribute::MDNIgnore );
       Akonadi::ItemModifyJob* modifyJob = new Akonadi::ItemModifyJob( item );
       modifyJob->setIgnorePayload( true );
     }
