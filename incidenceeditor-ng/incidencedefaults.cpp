@@ -36,6 +36,7 @@
 #include <KDebug>
 #include <KLocalizedString>
 #include <KSystemTimeZones>
+
 #include <QFile>
 
 using namespace CalendarSupport;
@@ -135,10 +136,10 @@ void IncidenceDefaultsPrivate::eventDefaults( const KCalCore::Event::Ptr &event 
     startDT = mStartDt;
   } else {
     startDT = KDateTime::currentLocalDateTime();
-  }
 
-  if ( KCalPrefs::instance()->startTime().isValid() ) {
-    startDT.setTime( KCalPrefs::instance()->startTime().time() );
+    if ( KCalPrefs::instance()->startTime().isValid() ) {
+      startDT.setTime( KCalPrefs::instance()->startTime().time() );
+    }
   }
 
   const QTime defaultDurationTime = KCalPrefs::instance()->defaultDuration().time();
