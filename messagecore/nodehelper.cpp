@@ -21,9 +21,9 @@
 #include "nodehelper.h"
 
 #include <kmime/kmime_content.h>
-#include <KMime/Message>
+#include <kmime/kmime_message.h>
 
-KMime::Content *MessageCore::NodeHelper::nextSibling( const KMime::Content* node )
+KMime::Content *MessageCore::NodeHelper::nextSibling( const KMime::Content *node )
 {
   if ( !node )
     return 0;
@@ -31,8 +31,8 @@ KMime::Content *MessageCore::NodeHelper::nextSibling( const KMime::Content* node
   KMime::Content *next = 0;
   KMime::Content *parent = node->parent();
   if ( parent ) {
-    KMime::Content::List contents = parent->contents();
-    int index = contents.indexOf( const_cast<KMime::Content*>(node) ) + 1;
+    const KMime::Content::List contents = parent->contents();
+    const int index = contents.indexOf( const_cast<KMime::Content*>( node ) ) + 1;
     if ( index < contents.size() ) //next on the same level
       next =  contents.at( index );
   }
@@ -47,38 +47,39 @@ KMime::Content *MessageCore::NodeHelper::next( KMime::Content *node, bool allowC
       return child;
     }
   }
+
   if ( KMime::Content *sibling = nextSibling( node ) ) {
     return sibling;
   }
+
   for ( KMime::Content *parent = node->parent() ; parent ;
         parent = parent->parent() ) {
     if ( KMime::Content *sibling = nextSibling( parent ) ) {
       return sibling;
     }
   }
+
   return 0;
 }
 
-
-KMime::Content *MessageCore::NodeHelper::firstChild( const KMime::Content* node )
+KMime::Content *MessageCore::NodeHelper::firstChild( const KMime::Content *node )
 {
   if ( !node )
     return 0;
 
   KMime::Content *child = 0;
   if ( !node->contents().isEmpty() )
-    child = node->contents().at(0);
+    child = node->contents().at( 0 );
 
   return child;
 }
-
 
 bool MessageCore::NodeHelper::isAttachment( KMime::Content *node )
 {
   if ( node->head().isEmpty() )
     return false;
 
-  const KMime::Headers::ContentType * const contentType = node ? node->contentType( false ) : 0;
+  const KMime::Headers::ContentType* const contentType = node ? node->contentType( false ) : 0;
   if ( contentType &&
        contentType->mediaType().toLower() == "message" &&
        contentType->subType().toLower() == "rfc822" ) {
@@ -86,9 +87,11 @@ bool MessageCore::NodeHelper::isAttachment( KMime::Content *node )
     // disposition, but some mail clients omit that.
     return true;
   }
+
   if ( !node->contentDisposition( false ) )
     return false;
-  return node->contentDisposition()->disposition() == KMime::Headers::CDattachment;
+
+  return (node->contentDisposition()->disposition() == KMime::Headers::CDattachment);
 }
 
 bool MessageCore::NodeHelper::isHeuristicalAttachment( KMime::Content *node )
@@ -96,19 +99,20 @@ bool MessageCore::NodeHelper::isHeuristicalAttachment( KMime::Content *node )
   if ( isAttachment( node ) )
     return true;
 
-  const KMime::Headers::ContentType * const contentType = node ? node->contentType( false ) : 0;
+  const KMime::Headers::ContentType* const contentType = node ? node->contentType( false ) : 0;
   if ( ( contentType && !contentType->name().isEmpty() ) ||
        ( node->contentDisposition( false ) && !node->contentDisposition()->filename().isEmpty() ) )
     return true;
+
   return false;
 }
 
-bool MessageCore::NodeHelper::isInvitation( KMime::Message* message )
+bool MessageCore::NodeHelper::isInvitation( KMime::Message *message )
 {
-  const KMime::Headers::ContentType * const contentType = message ? message->contentType( false ) : 0;
+  const KMime::Headers::ContentType* const contentType = message ? message->contentType( false ) : 0;
+
   if ( contentType && contentType->isMediatype( "text" ) && contentType->isSubtype( "calendar" ) )
       return true;
+
   return false;
 }
-
-
