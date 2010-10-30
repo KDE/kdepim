@@ -38,6 +38,7 @@ History::History( IncidenceChanger2 *changer ) : QObject(),
 
   d->mChanger = changer;
   d->mOperationTypeInProgress = TypeNone;
+  d->mUndoAllInProgress = false;
 
   connect( d->mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            d, SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
@@ -173,6 +174,13 @@ bool History::redo( QWidget *parent )
   }
 
   return result;
+}
+
+bool History::undoAll()
+{
+  Q_ASSERT( d->mOperationTypeInProgress == TypeNone );
+  d->mUndoAllInProgress = true;
+ return undo();
 }
 
 bool History::clear()
@@ -363,7 +371,7 @@ void History::Private::createFinished( int changeId,
   finishOperation( resultCode, errorMessage );
 
   if ( success ) {
-    // Por comentário.
+    // TODO: add comentary
     updateIds( mItemIdByChangeId[changeId] /*old*/, item.id() /*new*/ );
     mItemIdByChangeId.remove( changeId );
     mLatestRevisionByItemId.insert( item.id(), item.revision() );
@@ -398,7 +406,20 @@ void History::Private::finishOperation( History::ResultCode resultCode, const QS
     stack().push( mEntryInProgress );
   }
 
-  emitDone( mOperationTypeInProgress, resultCode );
+  if ( mUndoAllInProgress ) {
+    if ( mUndoStack.isEmpty() ) {
+      // Everything undone.
+      emitDone( mOperationTypeInProgress, resultCode );
+      mUndoAllInProgress = false;
+    } else {
+      // Undo the next one.
+      mOperationTypeInProgress = TypeNone;
+      q->undo();
+    }
+  } else {
+    //TODO: will need to be queued.
+    emitDone ( mOperationTypeInProgress, resultCode );
+  }
 
   mOperationTypeInProgress = TypeNone;
   updateWidgets();

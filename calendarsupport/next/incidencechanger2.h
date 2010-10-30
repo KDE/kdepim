@@ -46,7 +46,8 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
       ResultCodeSuccess = 0,
       ResultCodeJobError,
       ResultCodeAlreadyDeleted, ///< That calendar item was already deleted, or currently being deleted.
-      ResultCodeInvalidDefaultCollection ///< Default collection is invalid and DestinationPolicyNeverAsk was used
+      ResultCodeInvalidDefaultCollection, ///< Default collection is invalid and DestinationPolicyNeverAsk was used
+      ResultCodeRollback
     };
 
     enum DestinationPolicy {
@@ -84,6 +85,7 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
                           bool recordToHistory = true,
                           QWidget *parent = 0 );
 
+    // todo: explain that if originalItem is invalid, it won't be recorded to history
     int modifyIncidence( const Akonadi::Item &changedItem,
                          const Akonadi::Item &originalItem = Akonadi::Item(),
                          uint atomicOperationId = 0,

@@ -85,6 +85,8 @@ namespace CalendarSupport {
       QHash<Akonadi::Item::Id,int> mLatestRevisionByItemId;
       QHash<int,Akonadi::Item::Id> mItemIdByChangeId;
 
+      bool mUndoAllInProgress;
+
       QWidget *mParent;
 
     public Q_SLOTS:

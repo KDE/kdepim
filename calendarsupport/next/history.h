@@ -192,6 +192,12 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
      */
     bool redo( QWidget *parent = 0 );
 
+
+    /**
+       Reverts every change in the undostack.
+     */
+    bool undoAll();
+
   public Q_SLOTS:
     /**
        Clears the undo and redo stacks.

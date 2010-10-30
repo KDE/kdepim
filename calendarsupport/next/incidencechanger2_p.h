@@ -28,6 +28,7 @@
 #define CALENDARSUPPORT_INCIDENCECHANGER2_P_H
 
 #include "incidencechanger2.h"
+#include "history.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
@@ -57,6 +58,33 @@ namespace CalendarSupport {
     Change(){}
     Change( int id, uint atomicOperId, bool recToHistory, QWidget *p ) :
     changeId( id ), atomicOperationId( atomicOperId ), recordToHistory( recToHistory ), parent( p ){}
+  };
+
+
+  struct AtomicOperation {
+    uint id;
+
+    // After endAtomicOperation() is called we don't accept more changes
+    bool endCalled;
+
+    // Number of changes this atomic operation is composed of
+    uint numChanges;
+
+    // Number of completed changes(jobs)
+    uint numCompletedChanges;
+
+    bool rollbackInProgress;
+
+    // So we can rollback if one change goes wrong
+    History *history;
+
+    AtomicOperation( uint ident ) : id ( ident ), endCalled( false ), numChanges( 0 ),
+      numCompletedChanges( 0 ), rollbackInProgress( false ), history( 0 ) {}
+
+    ~AtomicOperation()
+     {
+       delete history;
+     }
   };
 
 class IncidenceChanger2::Private : public QObject
@@ -92,19 +120,28 @@ class IncidenceChanger2::Private : public QObject
     bool hasRights( const Akonadi::Collection &collection, IncidenceChanger2::ChangeType ) const;
     void queueModification( const Change &change );
     void performModification( Change change );
+    bool atomicOperationIsValid( uint atomicOperationId ) const;
+
+    // TODO: find a better name
+    void atomicOperationStuff( const Change &change );
+
+    void rollbackAtomicOperation( uint atomicOperationId );
 
   public Q_SLOTS:
     void handleCreateJobResult( KJob * );
     void handleModifyJobResult( KJob * );
     void handleDeleteJobResult( KJob * );
     void performNextModification( Akonadi::Item::Id id );
+
   public:
-    int mLatestOperationId;
+    int mLatestChangeId;
     QHash<const KJob*,Change> mChangeForJob;
     bool mShowDialogsOnError;
     Akonadi::Collection mDefaultCollection;
     DestinationPolicy mDestinationPolicy;
     QSet<Akonadi::Item::Id> mDeletedItemIds;
+
+    // History object for user undo/redo
     History *mHistory;
     bool mHistoryEnabled;
 
@@ -119,8 +156,13 @@ class IncidenceChanger2::Private : public QObject
 
     /**
        So we know if there's already a modification in progress
-    */
+     */
     QHash<Akonadi::Item::Id,Change> mModificationsInProgress;
+
+    /**
+       Indexed by atomic operation id.
+    */
+    QHash<uint,AtomicOperation*> mAtomicOperations;
 
   private:
     IncidenceChanger2 *q;

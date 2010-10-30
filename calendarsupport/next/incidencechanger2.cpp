@@ -40,7 +40,7 @@ using namespace CalendarSupport;
 
 IncidenceChanger2::Private::Private( IncidenceChanger2 *qq ) : q( qq )
 {
-  mLatestOperationId = 0;
+  mLatestChangeId = 0;
   mShowDialogsOnError = true;
   mHistory = new History( q );
   mDestinationPolicy = DestinationPolicyDefault;
@@ -51,6 +51,20 @@ IncidenceChanger2::Private::Private( IncidenceChanger2 *qq ) : q( qq )
 IncidenceChanger2::Private::~Private()
 {
   delete mHistory;
+
+  if ( !mAtomicOperations.isEmpty() ||
+       !mQueuedModifications.isEmpty() ||
+       !mModificationsInProgress.isEmpty() ) {
+    kDebug() << "Normal if the application was being used. "
+                "But might indicate a memory leak if it wasn't";
+  }
+}
+
+bool IncidenceChanger2::Private::atomicOperationIsValid( uint atomicOperationId ) const
+{
+  // Changes must be done between startAtomicOperation() and endAtomicOperation()
+  return mAtomicOperations.contains( atomicOperationId ) &&
+         !mAtomicOperations[atomicOperationId]->endCalled;
 }
 
 bool IncidenceChanger2::Private::hasRights( const Collection &collection,
@@ -106,6 +120,7 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
 
   const ItemCreateJob *j = qobject_cast<const ItemCreateJob*>( job );
   const Item item = j->item();
+
   if ( j->error() ) {
     resultCode = ResultCodeJobError;
     errorString = j->errorString();
@@ -114,11 +129,16 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
       KMessageBox::sorry( change.parent, i18n( "Error while trying to create calendar item. Error was: %1",
                                                errorString ) );
     }
+    if ( change.atomicOperationId != 0 ) {
+      rollbackAtomicOperation( change.atomicOperationId );
+    }
   } else {
+    // for user undo/redo
     if ( change.recordToHistory ) {
       mHistory->recordCreation( item, change.atomicOperationId );
     }
-    resultCode = ResultCodeSuccess;
+
+    atomicOperationStuff( change );
   }
 
   emit q->createFinished( change.changeId, item, resultCode, errorString );
@@ -127,7 +147,7 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
 void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
 {
   QString errorString;
-  ResultCode resultCode;
+  ResultCode resultCode = ResultCodeSuccess;
 
   const Change change = mChangeForJob.take( job );
 
@@ -152,6 +172,10 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
       // Werent deleted due to error
       mDeletedItemIds.remove( item.id() );
     }
+
+    if ( change.atomicOperationId != 0 ) {
+      rollbackAtomicOperation( change.atomicOperationId );
+    }
   } else {
     if ( change.recordToHistory ) {
       //TODO: check return value
@@ -160,7 +184,8 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
         mHistory->recordDeletion( item, change.atomicOperationId );
       }
     }
-    resultCode = ResultCodeSuccess;
+    kDebug() << "DEBUG atomic change is " << change.atomicOperationId;
+    atomicOperationStuff( change );
   }
 
   emit q->deleteFinished( change.changeId, itemIdList, resultCode, errorString );
@@ -191,12 +216,16 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
       KMessageBox::sorry( change.parent, i18n( "Error while trying to modify calendar item. Error was: %1",
                                                errorString ) );
     }
+
+    if ( change.atomicOperationId != 0 ) {
+      rollbackAtomicOperation( change.atomicOperationId );
+    }
   } else {
-    if ( change.recordToHistory ) {
+    if ( change.recordToHistory && change.originalItem.isValid() ) {
       mHistory->recordModification( change.originalItem, item, change.atomicOperationId );
     }
 
-    resultCode = ResultCodeSuccess;
+    atomicOperationStuff( change );
   }
 
   emit q->modifyFinished( change.changeId, item, resultCode, errorString );
@@ -205,6 +234,19 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
   QMetaObject::invokeMethod( this, "performNextModification",
                              Qt::QueuedConnection,
                              Q_ARG( Akonadi::Item::Id, item.id() ) );
+}
+
+void IncidenceChanger2::Private::atomicOperationStuff( const Change &change )
+{
+  if ( change.atomicOperationId != 0 ) {
+    AtomicOperation *a = mAtomicOperations[change.atomicOperationId];
+    a->numCompletedChanges++;
+
+    if ( a->numCompletedChanges == a->numChanges && a->endCalled ) {
+      // endAtomicOperation() was already called, and all jobs completed
+      delete mAtomicOperations.take( change.atomicOperationId );
+    }
+  }
 }
 
 bool IncidenceChanger2::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) const
@@ -251,6 +293,13 @@ void IncidenceChanger2::Private::emitDeleteFinished( int changeId,
                              Q_ARG( QString, errorString ) );
 }
 
+
+void IncidenceChanger2::Private::rollbackAtomicOperation( uint atomicOperationId )
+{
+  Q_ASSERT( mAtomicOperations.contains( atomicOperationId ) );
+  mAtomicOperations[atomicOperationId]->history->undoAll();
+}
+
 IncidenceChanger2::IncidenceChanger2() : QObject(),
                                          d( new Private( this ) )
 {
@@ -272,8 +321,25 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
     return -1;
   }
 
-  const Change change( ++d->mLatestOperationId, atomicOperationId, recordToHistory, parent );
+  if ( atomicOperationId != 0 && !d->atomicOperationIsValid( atomicOperationId ) ) {
+    Q_ASSERT_X( false, "createIncidence()",
+                       "endAtomicOperation() already called for that atomicOperationId"
+                       " or startAtomicOperation() not even called" );
+    return -1;
+  }
+
+  const Change change( ++d->mLatestChangeId, atomicOperationId, recordToHistory, parent );
   Collection collectionToUse;
+
+  if ( atomicOperationId != 0 && d->mAtomicOperations[atomicOperationId]->rollbackInProgress ) {
+    // rollback is in progress, no more changes allowed.
+    // TODO: better message, and i18n
+    const QString errorMessage = "One change belonging to a group of changes failed."
+                                 "Undoing in progress.";
+
+    d->emitCreateFinished( change.changeId, Item(), ResultCodeRollback, errorMessage );
+    return change.changeId;
+  }
 
   if ( collection.isValid() && d->hasRights( collection, ChangeTypeCreate ) ) {
     // The collection passed always has priority
@@ -336,6 +402,10 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
 
   d->mChangeForJob.insert( createJob, change );
 
+  if ( atomicOperationId != 0 ) {
+    d->mAtomicOperations[atomicOperationId]->numChanges++;
+  }
+
   // QueuedConnection because of possible sync exec calls.
   connect( createJob, SIGNAL(result(KJob*)),
            d, SLOT(handleCreateJobResult(KJob*)), Qt::QueuedConnection );
@@ -364,6 +434,13 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
     return -1;
   }
 
+  if ( atomicOperationId != 0 && !d->atomicOperationIsValid( atomicOperationId ) ) {
+    Q_ASSERT_X( false, "deleteIncidence()",
+                       "endAtomicOperation() already called for that atomicOperationId"
+                       " or startAtomicOperation() not even called" );
+    return -1;
+  }
+
   foreach( const Item &item, items ) {
     if ( !item.isValid() ) {
       kWarning() << "Items must be valid!";
@@ -387,7 +464,17 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
     }
   }
 
-  const Change change( ++d->mLatestOperationId, recordToHistory, atomicOperationId, parent );
+  const Change change( ++d->mLatestChangeId, atomicOperationId, recordToHistory, parent );
+
+  if ( atomicOperationId != 0 && d->mAtomicOperations[atomicOperationId]->rollbackInProgress ) {
+    // rollback is in progress, no more changes allowed.
+    // TODO: better message, and i18n
+    const QString errorMessage = "One change belonging to a group of changes failed."
+                                 "Undoing in progress.";
+
+    d->emitDeleteFinished( change.changeId, QVector<Akonadi::Item::Id>(), ResultCodeRollback, errorMessage );
+    return change.changeId;
+  }
 
   if ( itemsToDelete.isEmpty() ) {
     QVector<Akonadi::Item::Id> itemIdList;
@@ -401,8 +488,11 @@ int IncidenceChanger2::deleteIncidences( const Item::List &items,
   }
 
   ItemDeleteJob *deleteJob = new ItemDeleteJob( itemsToDelete );
-
   d->mChangeForJob.insert( deleteJob, change );
+
+  if ( atomicOperationId != 0 ) {
+    d->mAtomicOperations[atomicOperationId]->numChanges++;
+  }
 
   foreach( const Item &item, itemsToDelete ) {
     d->mDeletedItemIds.insert( item.id() );
@@ -431,12 +521,19 @@ int IncidenceChanger2::modifyIncidence( const Item &changedItem,
     return -1;
   }
 
+  if ( atomicOperationId != 0 && !d->atomicOperationIsValid( atomicOperationId ) ) {
+    Q_ASSERT_X( false, "modifyIncidence()",
+                       "endAtomicOperation() already called for that atomicOperationId"
+                       " or startAtomicOperation() not even called" );
+    return -1;
+  }
+
   if ( !d->hasRights( changedItem.parentCollection(), ChangeTypeModify ) ) {
     kWarning() << "Item " << changedItem.id() << " can't be deleted due to ACL restrictions";
     return -2;
   }
 
-  Change change( ++d->mLatestOperationId, recordToHistory, atomicOperationId, parent );
+  Change change( ++d->mLatestChangeId, atomicOperationId, recordToHistory, parent );
   change.originalItem = originalItem;
   change.newItem = changedItem;
 
@@ -460,6 +557,17 @@ void IncidenceChanger2::Private::performModification( Change change )
     return;
   }
 
+  if ( change.atomicOperationId != 0 &&
+       mAtomicOperations[change.atomicOperationId]->rollbackInProgress ) {
+    // rollback is in progress, no more changes allowed.
+    // TODO: better message, and i18n
+    const QString errorMessage = "One change belonging to a group of changes failed."
+                                 "Undoing in progress.";
+
+    emitModifyFinished( change.changeId, change.newItem, ResultCodeRollback, errorMessage );
+    return;
+  }
+
   { // increment revision
     Incidence::Ptr incidence = change.newItem.payload<Incidence::Ptr>();
     const int revision = incidence->revision();
@@ -477,6 +585,11 @@ void IncidenceChanger2::Private::performModification( Change change )
   } else {
     ItemModifyJob *modifyJob = new ItemModifyJob( change.newItem );
     mChangeForJob.insert( modifyJob, change );
+
+    if ( change.atomicOperationId != 0 ) {
+      mAtomicOperations[change.atomicOperationId]->numChanges++;
+    }
+
     mModificationsInProgress[change.newItem.id()] = change;
     // QueuedConnection because of possible sync exec calls.
     connect( modifyJob, SIGNAL(result(KJob *)),
@@ -487,13 +600,34 @@ void IncidenceChanger2::Private::performModification( Change change )
 uint IncidenceChanger2::startAtomicOperation()
 {
   static uint latestAtomicOperationId = 0;
-  return ++latestAtomicOperationId;
+  ++latestAtomicOperationId;
+
+  kDebug() << "DEBUG start called " << latestAtomicOperationId;
+
+  AtomicOperation *atomicOperation = new AtomicOperation( latestAtomicOperationId );
+  atomicOperation->history = new History( this );
+  d->mAtomicOperations[latestAtomicOperationId] = atomicOperation;
+
+  return latestAtomicOperationId;
 }
 
 void IncidenceChanger2::endAtomicOperation( uint atomicOperationId )
 {
-  Q_UNUSED( atomicOperationId );
-  //d->mOperationStatus.remove( atomicOperationId );
+  Q_ASSERT_X( d->mAtomicOperations.contains( atomicOperationId ),
+              "endAtomicOperation()",
+              "Unknown atomic operation id, only use ids returned by startAtomicOperation()." );
+
+  kDebug() << "DEBUG end called " << atomicOperationId;
+  AtomicOperation *atomicOperation = d->mAtomicOperations[atomicOperationId];
+
+  if ( atomicOperation->numChanges == atomicOperation->numCompletedChanges ) {
+    // All jobs already ended, free stuff.
+    delete d->mAtomicOperations.take( atomicOperationId );
+  } else {
+    atomicOperation->endCalled = true;
+    // The gate closed. We will Q_ASSERT that create|modify|deleteIncidence
+    // aren't called with this atomicOperationId.
+  }
 }
 
 void IncidenceChanger2::setShowDialogsOnError( bool enable )
