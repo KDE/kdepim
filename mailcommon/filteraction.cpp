@@ -14,10 +14,9 @@ using MailCommon::MessageProperty;
 using MailCommon::RegExpLineEdit;
 
 // KD PIM headers
-#include "messagecore/stringutil.h"
+#include "messagecore/emailaddressrequester.h"
 #include "messagecore/messagehelpers.h"
-
-#include "messagecore/kmfawidgets.h"
+#include "messagecore/stringutil.h"
 
 #include "messagecomposer/messagesender.h"
 #include "messagecomposer/messagefactory.h"
@@ -59,8 +58,8 @@ using MessageComposer::MessageFactory;
 #include <assert.h>
 #include <string.h>
 #include "mdnadvicedialog.h"
+#include <messagecore/emailaddressrequester.h>
 #include <messagecore/mdnstateattribute.h>
-#include <messagecore/kmfawidgets.h>
 #include <QTextDocument>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -368,26 +367,26 @@ FilterActionWithAddress::FilterActionWithAddress( const char* aName, const QStri
 {
 }
 
-QWidget* FilterActionWithAddress::createParamWidget( QWidget* parent ) const
+QWidget* FilterActionWithAddress::createParamWidget( QWidget *parent ) const
 {
-  KMFilterActionWithAddressWidget *w = new KMFilterActionWithAddressWidget(parent);
-  w->setText( mParameter );
-  return w;
+  MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester( parent );
+  requester->setText( mParameter );
+  return requester;
 }
 
-void FilterActionWithAddress::applyParamWidgetValue( QWidget* paramWidget )
+void FilterActionWithAddress::applyParamWidgetValue( QWidget *paramWidget )
 {
-  mParameter = ((KMFilterActionWithAddressWidget*)paramWidget)->text();
+  mParameter = qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->text();
 }
 
-void FilterActionWithAddress::setParamWidgetValue( QWidget* paramWidget ) const
+void FilterActionWithAddress::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  ((KMFilterActionWithAddressWidget*)paramWidget)->setText( mParameter );
+  qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->setText( mParameter );
 }
 
-void FilterActionWithAddress::clearParamWidget( QWidget* paramWidget ) const
+void FilterActionWithAddress::clearParamWidget( QWidget *paramWidget ) const
 {
-  ((KMFilterActionWithAddressWidget*)paramWidget)->clear();
+  qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->clear();
 }
 
 //=============================================================================

@@ -130,7 +130,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="KMFilterActionWithAddressWidget" name="mToEdit" native="true">
+            <widget class="MessageCore::EmailAddressRequester" name="mToEdit" native="true">
              <property name="sizePolicy">
               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -140,7 +140,7 @@
             </widget>
            </item>
            <item>
-            <widget class="KMFilterActionWithAddressWidget" name="mCCEdit" native="true">
+            <widget class="MessageCore::EmailAddressRequester" name="mCCEdit" native="true">
              <property name="sizePolicy">
               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -282,9 +282,9 @@
    <header>templatesinsertcommand.h</header>
   </customwidget>
   <customwidget>
-   <class>KMFilterActionWithAddressWidget</class>
+   <class>MessageCore::EmailAddressRequester</class>
    <extends>QWidget</extends>
-   <header>kmfawidgets.h</header>
+   <header>emailaddressrequester.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
