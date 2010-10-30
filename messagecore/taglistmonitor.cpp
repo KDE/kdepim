@@ -19,28 +19,31 @@
 */
 
 #include "taglistmonitor.h"
+
 using namespace MessageCore;
 
-QList<TagListMonitor*> TagListMonitor::mInstances;
-
-TagListMonitor::TagListMonitor(  QObject *parent ) : QObject( parent )
+class MessageCore::TagListMonitor::Private
 {
-  mInstances.append( this );
+  public:
+    static QList<TagListMonitor*> mInstances;
+};
+
+QList<TagListMonitor*> TagListMonitor::Private::mInstances;
+
+TagListMonitor::TagListMonitor( QObject *parent )
+  : QObject( parent ), d( 0 )
+{
+  Private::mInstances.append( this );
 }
 
 TagListMonitor::~TagListMonitor()
 {
-  mInstances.removeAll( this );
+  Private::mInstances.removeAll( this );
 }
 
 void TagListMonitor::triggerUpdate()
 {
-  foreach( TagListMonitor *instance, mInstances ) {
-    instance->emitChanged();
+  foreach( TagListMonitor *instance, Private::mInstances ) {
+    emit instance->tagsChanged();
   }
-}
-
-void TagListMonitor::emitChanged()
-{
-  emit tagsChanged();
 }

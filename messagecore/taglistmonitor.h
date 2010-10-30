@@ -18,39 +18,55 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TAGLISTMONITOR_H
-#define TAGLISTMONITOR_H
+#ifndef MESSAGECORE_TAGLISTMONITOR_H
+#define MESSAGECORE_TAGLISTMONITOR_H
 
 #include "messagecore_export.h"
 
-#include <QObject>
+#include <QtCore/QObject>
 
 namespace MessageCore {
 
-  /**
-   * Emits a signal when Nepomuk tags change.
-   *
-   * Modeled after TagActioonManager
-   */
-  class MESSAGECORE_EXPORT TagListMonitor: public QObject
-  {
-    Q_OBJECT
-  public:
-    TagListMonitor( QObject *parent );
+/**
+ * @short A class that acts as central notifier for changes to tags.
+ *
+ * @author Casey Link <unnamedrambler@gmail.com>
+ */
+class MESSAGECORE_EXPORT TagListMonitor: public QObject
+{
+  Q_OBJECT
 
+  public:
+    /**
+     * Creates a new tag list monitor.
+     *
+     * @param parent The parent object.
+     */
+    TagListMonitor( QObject *parent = 0 );
+
+    /**
+     * Destroys the tag list monitor.
+     */
     ~TagListMonitor();
 
+    /**
+     * This will emit the tagsChanged() on all TagListMonitor instances.
+     */
     static void triggerUpdate();
 
-  signals:
+  Q_SIGNALS:
+    /**
+     * This signal is emitted when the triggerUpdate() method has been called.
+     */
     void tagsChanged();
 
   private:
-    void emitChanged();
-    static QList<TagListMonitor*> mInstances;
-
-  };
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+    //@endcond
+};
 
 }
 
-#endif // TAGLISTMONITOR_H
+#endif
