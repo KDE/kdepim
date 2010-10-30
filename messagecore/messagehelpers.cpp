@@ -24,34 +24,38 @@
 using namespace MessageCore;
 using namespace MessageCore::Util;
 
-KMime::Message::Ptr MessageCore::Util::message( const Akonadi::Item & item )
+KMime::Message::Ptr MessageCore::Util::message( const Akonadi::Item &item )
 {
   if ( !item.hasPayload<KMime::Message::Ptr>() ) {
     kWarning() << "Payload is not a MessagePtr!";
     return KMime::Message::Ptr();
   }
+
   return item.payload<boost::shared_ptr<KMime::Message> >();
 }
 
-bool MessageCore::Util::isStandaloneMessage( const Akonadi::Item& item )
+bool MessageCore::Util::isStandaloneMessage( const Akonadi::Item &item )
 {
   // standalone message have a valid payload, but are not, themselves valid items
   return item.hasPayload<KMime::Message::Ptr>() && !item.isValid();
 }
 
-QString MessageCore::Util::msgId( const KMime::Message::Ptr &msg )
+QString MessageCore::Util::messageId( const KMime::Message::Ptr &message )
 {
-  if ( !msg->headerByType("Message-Id") )
+  if ( !message->headerByType( "Message-Id" ) )
     return QString();
-  QString msgId = msg->headerByType("Message-Id")->asUnicodeString();
+
+  QString messageId = message->headerByType( "Message-Id" )->asUnicodeString();
 
   // search the end of the message id
-  const int rightAngle = msgId.indexOf( QString::fromLatin1(">") );
-  if (rightAngle != -1)
-    msgId.truncate( rightAngle + 1 );
+  const int rightAngle = messageId.indexOf( QLatin1Char( '>' ) );
+  if ( rightAngle != -1 )
+    messageId.truncate( rightAngle + 1 );
+
   // now search the start of the message id
-  const int leftAngle = msgId.lastIndexOf( QString::fromLatin1("<") );
-  if (leftAngle != -1)
-    msgId = msgId.mid( leftAngle );
-  return msgId;
+  const int leftAngle = messageId.lastIndexOf( QLatin1Char( '<' ) );
+  if ( leftAngle != -1 )
+    messageId = messageId.mid( leftAngle );
+
+  return messageId;
 }

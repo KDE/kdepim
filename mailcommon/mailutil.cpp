@@ -169,7 +169,7 @@ bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
   const QString txt = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
                      msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
 
-  const QString uri = "kmail:" + QString::number( mailItem.id() ) + '/' + MessageCore::Util::msgId(msg);
+  const QString uri = "kmail:" + QString::number( mailItem.id() ) + '/' + MessageCore::Util::messageId( msg );
   tf.write( msg->encodedContent() );
   tf.flush();
 

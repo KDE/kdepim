@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef MESSAGEHELPERS_H
-#define MESSAGEHELPERS_H
+#ifndef MESSAGECORE_MESSAGEHELPERS_H
+#define MESSAGECORE_MESSAGEHELPERS_H
 
 #include "messagecore_export.h"
 
@@ -26,32 +26,34 @@
 #include <KMime/Message>
 
 namespace Akonadi {
-  class Item;
+class Item;
 }
 
 namespace MessageCore {
-  namespace Util {
-    /**
-     * Retrieve the KMime::Message from the item, if there is one.
-     * @returns A valid message pointer, or 0, is the item does not contain
-     * a valid message.
-     */
-    MESSAGECORE_EXPORT KMime::Message::Ptr message( const Akonadi::Item & item );
 
-    /**
-     * Returns whether the item represents a valid KMime::Message that is not
-     * in the Akonadi store (yet). This happens when operating on messages
-     * attached to other mails, for example. Such items are not "valid", in
-     * the akonadi sense, since jobs can not sensibly use them, but they do
-     * contain a valid message pointer.
-     */
-    MESSAGECORE_EXPORT bool isStandaloneMessage( const Akonadi::Item& item );
+namespace Util {
+  /**
+   * Retrieve the KMime::Message from the item, if there is one.
+   * @returns A valid message pointer, or 0, is the item does not contain
+   * a valid message.
+   */
+  MESSAGECORE_EXPORT KMime::Message::Ptr message( const Akonadi::Item &item );
 
-    /**
-     * Get the message id as a string from a message.
-     */
-    MESSAGECORE_EXPORT QString msgId( const KMime::Message::Ptr &msg );
- }
+  /**
+   * Returns whether the item represents a valid KMime::Message that is not
+   * in the Akonadi store (yet). This happens when operating on messages
+   * attached to other mails, for example. Such items are not "valid", in
+   * the akonadi sense, since jobs can not sensibly use them, but they do
+   * contain a valid message pointer.
+   */
+  MESSAGECORE_EXPORT bool isStandaloneMessage( const Akonadi::Item &item );
+
+  /**
+   * Get the message id as a string from the @p message.
+   */
+  MESSAGECORE_EXPORT QString messageId( const KMime::Message::Ptr &message );
 }
 
-#endif // MESSAGEHELPERS_H
+}
+
+#endif
