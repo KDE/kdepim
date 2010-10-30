@@ -42,6 +42,24 @@
 
 using namespace MessageComposer;
 
+/**
+ * Strips all the user's addresses from an address list. This is used
+ * when replying.
+ */
+static QStringList stripMyAddressesFromAddressList( const QStringList& list, const KPIMIdentities::IdentityManager *manager )
+{
+  QStringList addresses( list );
+  for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ) {
+    if ( manager->thatIsMe( KPIMUtils::extractEmailAddress( *it ) ) ) {
+      it = addresses.erase( it );
+    } else {
+      ++it;
+    }
+  }
+
+  return addresses;
+}
+
 MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id, const Akonadi::Collection& col )
   : m_identityManager( 0 )
   , m_origMsg( KMime::Message::Ptr() )
@@ -110,7 +128,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
     }
     // strip all my addresses from the list of recipients
     QStringList recipients = KPIMUtils::splitAddressList( toStr );
-    toStr = MessageCore::StringUtil::stripMyAddressesFromAddressList( recipients, m_identityManager ).join(QString::fromLatin1(", "));
+    toStr = stripMyAddressesFromAddressList( recipients, m_identityManager ).join(QString::fromLatin1(", "));
     // ... unless the list contains only my addresses (reply to self)
     if ( toStr.isEmpty() && !recipients.isEmpty() )
       toStr = recipients[0];
@@ -130,7 +148,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
     }
     // strip all my addresses from the list of recipients
     QStringList recipients = KPIMUtils::splitAddressList( toStr );
-    toStr = MessageCore::StringUtil::stripMyAddressesFromAddressList( recipients, m_identityManager ).join(QString::fromLatin1(", "));
+    toStr = stripMyAddressesFromAddressList( recipients, m_identityManager ).join(QString::fromLatin1(", "));
 
     break;
   }
@@ -172,7 +190,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
     }
 
     // strip all my addresses from the list of recipients
-    toStr = MessageCore::StringUtil::stripMyAddressesFromAddressList( recipients, m_identityManager ).join(QString::fromLatin1(", "));
+    toStr = stripMyAddressesFromAddressList( recipients, m_identityManager ).join(QString::fromLatin1(", "));
 
     // merge To header and CC header into a list of CC recipients
     if( !m_origMsg->cc()->asUnicodeString().isEmpty() || !m_origMsg->to()->asUnicodeString().isEmpty() ) {
@@ -192,7 +210,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
 
     if ( !ccRecipients.isEmpty() ) {
       // strip all my addresses from the list of CC recipients
-      ccRecipients = MessageCore::StringUtil::stripMyAddressesFromAddressList( ccRecipients, m_identityManager );
+      ccRecipients = stripMyAddressesFromAddressList( ccRecipients, m_identityManager );
 
       // in case of a reply to self toStr might be empty. if that's the case
       // then propagate a cc recipient to To: (if there is any).

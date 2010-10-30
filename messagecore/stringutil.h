@@ -16,20 +16,15 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _MESSAGECORE_STRINGUTIL_H
-#define _MESSAGECORE_STRINGUTIL_H
+#ifndef MESSAGECORE_STRINGUTIL_H
+#define MESSAGECORE_STRINGUTIL_H
 
 #include "messagecore_export.h"
 #include "kmime/kmime_message.h"
 
-#include <QString>
-#include <QStringList>
+#include <QtCore/QStringList>
 
 class KUrl;
-
-namespace KPIMIdentities {
-  class IdentityManager;
-}
 
 namespace KMime
 {
@@ -48,6 +43,7 @@ namespace KMime
     }
   }
 }
+
 namespace MessageCore
 {
 
@@ -56,13 +52,6 @@ namespace MessageCore
  */
 namespace StringUtil
 {
-  /**
-   * Strips all the user's addresses from an address list. This is used
-   * when replying.
-   */
-  MESSAGECORE_EXPORT QStringList stripMyAddressesFromAddressList( const QStringList& list, const KPIMIdentities::IdentityManager* identMan );
-
-
   /**
    * Parses a mailto: url and extracts the information in the QMap (field name as key).
    */

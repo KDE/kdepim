@@ -24,7 +24,6 @@
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>
 #include <KPIMUtils/Email>
-#include <KPIMIdentities/IdentityManager>
 
 #include <kascii.h>
 #include <KConfigGroup>
@@ -167,22 +166,6 @@ static bool flushPart( QString &msg, QStringList &textParts,
   const bool appendEmptyLine = !textParts.isEmpty();
   textParts.clear();
   return appendEmptyLine;
-}
-
-QStringList stripMyAddressesFromAddressList( const QStringList& list, const KPIMIdentities::IdentityManager* identMan )
-{
-  QStringList addresses = list;
-  for( QStringList::Iterator it = addresses.begin();
-       it != addresses.end(); ) {
-    kDebug() << "Check whether" << *it <<"is one of my addresses";
-    if( identMan->thatIsMe( KPIMUtils::extractEmailAddress( *it ) ) ) {
-      kDebug() << "Removing" << *it <<"from the address list";
-      it = addresses.erase( it );
-    }
-    else
-      ++it;
-  }
-  return addresses;
 }
 
 QMap<QString, QString> parseMailtoUrl ( const KUrl& url )
