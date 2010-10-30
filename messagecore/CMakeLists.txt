@@ -21,7 +21,7 @@ set(messagecore_LIB_SRCS
    attachmentpropertiesdialog.cpp
    emailaddressrequester.cpp
    globalsettings.cpp
-   mailinglist-magic.cpp
+   mailinglist.cpp
    mdnstateattribute.cpp
    messagehelpers.cpp
    nodehelper.cpp

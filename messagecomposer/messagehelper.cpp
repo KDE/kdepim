@@ -22,8 +22,8 @@
 #include "util.h"
 #include "messagecomposersettings.h"
 
+#include "messagecore/mailinglist.h"
 #include "messagecore/stringutil.h"
-#include "messagecore/mailinglist-magic.h"
 
 #include <KDateTime>
 #include <KProtocolManager>

@@ -27,7 +27,7 @@
 #include <KIO/Job>
 #include <ksharedconfig.h>
 
-#include "messagecore/mailinglist-magic.h"
+#include "messagecore/mailinglist.h"
 using MessageCore::MailingList;
 
 namespace MailCommon {

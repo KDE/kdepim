@@ -32,10 +32,10 @@
 #include <akonadi/kmime/messagestatus.h>
 #include <kmime/kmime_dateformatter.h>
 #include <KPIMUtils/Email>
+#include <messagecore/mailinglist.h>
 #include <messagecore/stringutil.h>
 #include "messagehelper.h"
 #include "templateparser/templateparser.h"
-#include <messagecore/mailinglist-magic.h>
 #include <KLocalizedString>
 #include <kcharsets.h>
 #include <QTextCodec>
