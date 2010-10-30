@@ -162,7 +162,7 @@ KMime::Types::AddrSpecList extractAddrSpecs( const KMime::Message::Ptr &msg, con
     return result;
 
   KMime::Types::AddressList al =
-      MessageCore::StringUtil::splitAddrField( msg->headerByType( header )->asUnicodeString().toUtf8() );
+      MessageCore::StringUtil::splitAddressField( msg->headerByType( header )->asUnicodeString().toUtf8() );
   for ( KMime::Types::AddressList::const_iterator ait = al.constBegin() ; ait != al.constEnd() ; ++ait )
     for ( KMime::Types::MailboxList::const_iterator mit = (*ait).mailboxList.constBegin() ; mit != (*ait).mailboxList.constEnd() ; ++mit )
       result.push_back( (*mit).addrSpec() );

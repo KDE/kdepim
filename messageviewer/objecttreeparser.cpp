@@ -1025,7 +1025,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
   if ( mSource->htmlMail() )
     bodyText = codecFor( curNode )->toUnicode( partBody );
   else
-    bodyText = StringUtil::html2source( partBody );
+    bodyText = StringUtil::convertAngleBracketsToHtml( partBody );
 
   if ( curNode->topLevel()->textContent() == curNode  || attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
         showOnlyOneMimePart() )

@@ -43,6 +43,7 @@ using namespace KMime::HeaderParsing;
 
 namespace MessageCore
 {
+
 namespace StringUtil
 {
 
@@ -59,7 +60,7 @@ static void removeTrailingSpace( QString &line )
 // For example, for the string "> > > Hello", it would be split up in "> > > " as the quote
 // prefix, and "Hello" as the actual text.
 // The actual text is written back to the "line" parameter, and the quote prefix is returned.
-static QString splitLine( QString &line)
+static QString splitLine( QString &line )
 {
   removeTrailingSpace( line );
   int i = 0;
@@ -68,8 +69,7 @@ static QString splitLine( QString &line)
   // TODO: Replace tabs with spaces first.
 
   // Loop through the chars in the line to find the place where the quote prefix stops
-  while( i < line.length() )
-  {
+  while ( i < line.length() ) {
     const QChar c = line[i];
     const bool isAllowedQuoteChar = (c == '>') || (c == ':') || (c == '|') ||
                                     (c == ' ') || (c == '\t');
@@ -85,14 +85,12 @@ static QString splitLine( QString &line)
     startOfActualText = 0;
 
   // No quote prefix there -> nothing to do
-  if ( startOfActualText <= 0 )
-  {
+  if ( startOfActualText <= 0 ) {
     return QString();
   }
 
   // Entire line consists of only the quote prefix
-  if ( i == line.length() )
-  {
+  if ( i == line.length() ) {
     const QString quotePrefix = line.left( startOfActualText );
     line.clear();
     return quotePrefix;
@@ -101,6 +99,7 @@ static QString splitLine( QString &line)
   // Line contains both the quote prefix and the actual text, really split it up now
   const QString quotePrefix = line.left( startOfActualText );
   line = line.mid( startOfActualText );
+
   return quotePrefix;
 }
 
@@ -134,7 +133,7 @@ static bool flushPart( QString &msg, QStringList &textParts,
   }
 
   QString text;
-  foreach( const QString line, textParts ) {
+  foreach ( const QString &line, textParts ) {
 
     // An empty line in the input means that an empty line should be in the output as well.
     // Therefore, we write all of our text so far to the msg.
@@ -142,9 +141,7 @@ static bool flushPart( QString &msg, QStringList &textParts,
       if ( !text.isEmpty() )
         msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
       msg += indent + '\n';
-    }
-
-    else {
+    } else {
       if ( text.isEmpty() )
         text = line;
       else
@@ -165,20 +162,23 @@ static bool flushPart( QString &msg, QStringList &textParts,
 
   const bool appendEmptyLine = !textParts.isEmpty();
   textParts.clear();
+
   return appendEmptyLine;
 }
 
-QMap<QString, QString> parseMailtoUrl ( const KUrl& url )
+QMap<QString, QString> parseMailtoUrl( const KUrl &url )
 {
-  kDebug() << url.pathOrUrl();
   QMap<QString, QString> values = url.queryItems( KUrl::CaseInsensitiveKeys );
+
   QString to = KPIMUtils::decodeMailtoUrl( url );
-  to = to.isEmpty() ?  values.value( "to" ) : to + QString( ", " ) + values.value( "to" );
+  to = to.isEmpty() ? values.value( "to" ) : to + QString( ", " ) + values.value( "to" );
+
   values.insert( "to", to );
+
   return values;
 }
 
-QString stripSignature ( const QString & msg, bool clearSigned )
+QString stripSignature( const QString &msg, bool clearSigned )
 {
   // Following RFC 3676, only > before --
   // I prefer to not delete a SB instead of delete good mail content.
@@ -191,25 +191,29 @@ QString stripSignature ( const QString & msg, bool clearSigned )
   int posDeletingStart = 1; // to start looking at 0
 
   // While there are SB delimiters (start looking just before the deleted SB)
-  while ( ( posDeletingStart = res.indexOf( sbDelimiterSearch , posDeletingStart -1 ) ) >= 0 )
-  {
+  while ( ( posDeletingStart = res.indexOf( sbDelimiterSearch , posDeletingStart -1 ) ) >= 0 ) {
     QString prefix; // the current prefix
     QString line; // the line to check if is part of the SB
     int posNewLine = -1;
     int posSignatureBlock = -1;
+
     // Look for the SB beginning
     posSignatureBlock = res.indexOf( '-', posDeletingStart );
     // The prefix before "-- "$
-    if ( res[posDeletingStart] == '\n' ) ++posDeletingStart;
+    if ( res[posDeletingStart] == '\n' )
+      ++posDeletingStart;
+
     prefix = res.mid( posDeletingStart, posSignatureBlock - posDeletingStart );
     posNewLine = res.indexOf( '\n', posSignatureBlock ) + 1;
 
     // now go to the end of the SB
-    while ( posNewLine < res.size() && posNewLine > 0 )
-    {
+    while ( posNewLine < res.size() && posNewLine > 0 ) {
       // handle the undefined case for mid ( x , -n ) where n>1
       int nextPosNewLine = res.indexOf( '\n', posNewLine );
-      if ( nextPosNewLine < 0 ) nextPosNewLine = posNewLine - 1;
+
+      if ( nextPosNewLine < 0 )
+        nextPosNewLine = posNewLine - 1;
+
       line = res.mid( posNewLine, nextPosNewLine - posNewLine );
 
       // check when the SB ends:
@@ -220,50 +224,54 @@ QString stripSignature ( const QString & msg, bool clearSigned )
              line.mid( prefix.size() ).indexOf( commonReplySearch ) < 0 ) )
       {
         posNewLine = res.indexOf( '\n', posNewLine ) + 1;
-      }
-      else
+      } else
         break; // end of the SB
     }
+
     // remove the SB or truncate when is the last SB
     if ( posNewLine > 0 )
       res.remove( posDeletingStart, posNewLine - posDeletingStart );
     else
       res.truncate( posDeletingStart );
   }
+
   return res;
 }
 
-AddressList splitAddrField( const QByteArray & str )
+AddressList splitAddressField( const QByteArray &text )
 {
   AddressList result;
-  const char * scursor = str.begin();
-  if ( !scursor )
-    return AddressList();
-  const char * const send = str.begin() + str.length();
-  if ( !parseAddressList( scursor, send, result ) )
+  const char* begin = text.begin();
+  if ( !begin )
+    return result;
+
+  const char* const end = text.begin() + text.length();
+
+  if ( !parseAddressList( begin, end, result ) )
     kDebug() << "Error in address splitting: parseAddressList returned false!";
+
   return result;
 }
 
-QString generateMessageId( const QString& addr, const QString &msgIdSuffix )
+QString generateMessageId( const QString &address, const QString &suffix )
 {
-  const QDateTime datetime = QDateTime::currentDateTime();
+  const QDateTime dateTime = QDateTime::currentDateTime();
 
-  QString msgIdStr = '<' + datetime.toString( "yyyyMMddhhmm.sszzz" );
+  QString msgIdStr = QLatin1Char( '<' ) + dateTime.toString( "yyyyMMddhhmm.sszzz" );
 
-  if( !msgIdSuffix.isEmpty() )
-    msgIdStr += '@' + msgIdSuffix;
+  if( !suffix.isEmpty() )
+    msgIdStr += QLatin1Char( '@' ) + suffix;
   else
-    msgIdStr += '.' + KPIMUtils::toIdn( addr );
+    msgIdStr += QLatin1Char( '.' ) + KPIMUtils::toIdn( address );
 
-  msgIdStr += '>';
+  msgIdStr += QLatin1Char( '>' );
 
   return msgIdStr;
 }
 
-QByteArray html2source( const QByteArray & src )
+QByteArray convertAngleBracketsToHtml( const QByteArray &src )
 {
-  QByteArray result( 1 + 6*src.length(), '\0' );  // maximal possible length
+  QByteArray result( 1 + (6 * src.length()), '\0' );  // maximal possible length
 
   QByteArray::ConstIterator s = src.begin();
   QByteArray::Iterator d = result.begin();
@@ -658,46 +666,50 @@ QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
   return result;
 }
 
-void removePrivateHeaderFields( const KMime::Message::Ptr &msg ) {
-  msg->removeHeader("Status");
-  msg->removeHeader("X-Status");
-  msg->removeHeader("X-KMail-EncryptionState");
-  msg->removeHeader("X-KMail-SignatureState");
-  msg->removeHeader("X-KMail-MDN-Sent");
-  msg->removeHeader("X-KMail-Transport");
-  msg->removeHeader("X-KMail-Identity");
-  msg->removeHeader("X-KMail-Fcc");
-  msg->removeHeader("X-KMail-Redirect-From");
-  msg->removeHeader("X-KMail-Link-Message");
-  msg->removeHeader("X-KMail-Link-Type");
-  msg->removeHeader("X-KMail-QuotePrefix");
-  msg->removeHeader("X-KMail-CursorPos");
-  msg->removeHeader( "X-KMail-Templates" );
-  msg->removeHeader( "X-KMail-Drafts" );
-  msg->removeHeader( "X-KMail-Tag" );
+void removePrivateHeaderFields( const KMime::Message::Ptr &message )
+{
+  message->removeHeader( "Status" );
+  message->removeHeader( "X-Status" );
+  message->removeHeader( "X-KMail-EncryptionState" );
+  message->removeHeader( "X-KMail-SignatureState" );
+  message->removeHeader( "X-KMail-MDN-Sent" );
+  message->removeHeader( "X-KMail-Transport" );
+  message->removeHeader( "X-KMail-Identity" );
+  message->removeHeader( "X-KMail-Fcc" );
+  message->removeHeader( "X-KMail-Redirect-From" );
+  message->removeHeader( "X-KMail-Link-Message" );
+  message->removeHeader( "X-KMail-Link-Type" );
+  message->removeHeader( "X-KMail-QuotePrefix" );
+  message->removeHeader( "X-KMail-CursorPos" );
+  message->removeHeader( "X-KMail-Templates" );
+  message->removeHeader( "X-KMail-Drafts" );
+  message->removeHeader( "X-KMail-Tag" );
 }
 
-QByteArray asSendableString( const KMime::Message::Ptr &msg )
+QByteArray asSendableString( const KMime::Message::Ptr &originalMessage )
 {
   KMime::Message::Ptr message( new KMime::Message );
-  message->setContent( msg->encodedContent() );
+  message->setContent( originalMessage->encodedContent() );
+
   removePrivateHeaderFields( message );
-  message->removeHeader("Bcc");
+  message->removeHeader( "Bcc" );
+
   return message->encodedContent();
 }
 
-QByteArray headerAsSendableString( const KMime::Message::Ptr &msg )
+QByteArray headerAsSendableString( const KMime::Message::Ptr &originalMessage )
 {
   KMime::Message::Ptr message( new KMime::Message );
-  message->setContent( msg->encodedContent() );
+  message->setContent( originalMessage->encodedContent() );
+
   removePrivateHeaderFields( message );
-  message->removeHeader("Bcc");
+  message->removeHeader( "Bcc" );
+
   return message->head();
 }
 
-
 QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
-                           Display display, const QString& cssStyle,
+                           Display display, const QString &cssStyle,
                            Link link, AddressMode expandable, const QString& fieldName,
                            int collapseNumber )
 {
@@ -746,7 +758,7 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
 }
 
 QString emailAddrAsAnchor( KMime::Headers::Generics::MailboxList *mailboxList,
-                           Display display, const QString& cssStyle,
+                           Display display, const QString &cssStyle,
                            Link link, AddressMode expandable, const QString& fieldName,
                            int collapseNumber )
 {
@@ -755,7 +767,7 @@ QString emailAddrAsAnchor( KMime::Headers::Generics::MailboxList *mailboxList,
 }
 
 QString emailAddrAsAnchor( KMime::Headers::Generics::AddressList *addressList,
-                           Display display, const QString& cssStyle,
+                           Display display, const QString &cssStyle,
                            Link link, AddressMode expandable, const QString& fieldName,
                            int collapseNumber )
 {
@@ -763,38 +775,38 @@ QString emailAddrAsAnchor( KMime::Headers::Generics::AddressList *addressList,
   return emailAddrAsAnchor( addressList->mailboxes(), display, cssStyle, link, expandable, fieldName, collapseNumber );
 }
 
-QStringList stripAddressFromAddressList( const QString& address,
-                                         const QStringList& list )
+QStringList stripAddressFromAddressList( const QString &address,
+                                         const QStringList &list )
 {
   QStringList addresses( list );
-  QString addrSpec( KPIMUtils::extractEmailAddress( address ) );
-  for ( QStringList::Iterator it = addresses.begin();
-        it != addresses.end(); ) {
+  const QString addrSpec( KPIMUtils::extractEmailAddress( address ) );
+
+  for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ) {
     if ( kasciistricmp( addrSpec.toUtf8().data(),
          KPIMUtils::extractEmailAddress( *it ).toUtf8().data() ) == 0 ) {
-      kDebug() << "Removing" << *it << "from the address list";
       it = addresses.erase( it );
-    }
-    else
+    } else
       ++it;
   }
+
   return addresses;
 }
 
-bool addressIsInAddressList( const QString& address,
-                             const QStringList& addresses )
+bool addressIsInAddressList( const QString &address,
+                             const QStringList &addresses )
 {
-  QString addrSpec = KPIMUtils::extractEmailAddress( address );
-  for( QStringList::ConstIterator it = addresses.begin();
-       it != addresses.end(); ++it ) {
+  const QString addrSpec = KPIMUtils::extractEmailAddress( address );
+
+  for( QStringList::ConstIterator it = addresses.begin(); it != addresses.end(); ++it ) {
     if ( kasciistricmp( addrSpec.toUtf8().data(),
          KPIMUtils::extractEmailAddress( *it ).toUtf8().data() ) == 0 )
       return true;
   }
+
   return false;
 }
 
-QString guessEmailAddressFromLoginName( const QString& loginName )
+QString guessEmailAddressFromLoginName( const QString &loginName )
 {
   if ( loginName.isEmpty() )
     return QString();
@@ -986,11 +998,10 @@ QString cleanFileName( const QString &name )
   // replace all '.' with '_', not just at the start of the filename
   // but don't replace the last '.' before the file extension.
   int i = fileName.lastIndexOf( '.' );
-  if( i != -1 )
+  if ( i != -1 )
     i = fileName.lastIndexOf( '.' , i - 1 );
   
-  while( i != -1 )
-  {
+  while( i != -1 ) {
     fileName.replace( i, 1, '_' );
     i = fileName.lastIndexOf( '.', i - 1 );
   }
@@ -1002,6 +1013,5 @@ QString cleanFileName( const QString &name )
 }
 
 }
-
 
 }
