@@ -263,7 +263,7 @@ void AttachmentPropertiesDialog::Private::saveToPart()
 }
 
 AttachmentPropertiesDialog::AttachmentPropertiesDialog( const AttachmentPart::Ptr &part,
-                                                        QWidget *parent, bool readOnly )
+                                                        bool readOnly, QWidget *parent )
   : KDialog( parent ),
     d( new Private( this ) )
 {
@@ -271,14 +271,10 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const AttachmentPart::Pt
 }
 
 AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *content,
-                                                        QWidget *parent, bool readOnly )
+                                                        QWidget *parent )
   : KDialog( parent ),
     d( new Private( this ) )
 {
-  if ( !readOnly ) {
-    kFatal() << "Dialog must be read-only if loading from a KMime::Content.";
-  }
-
   AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob( content, this );
   job->exec();
   if ( job->error() ) {
@@ -286,7 +282,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *co
   }
 
   const AttachmentPart::Ptr part = job->attachmentPart();
-  d->init( part, readOnly );
+  d->init( part, true );
 }
 
 AttachmentPropertiesDialog::~AttachmentPropertiesDialog()

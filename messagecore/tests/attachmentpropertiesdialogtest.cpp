@@ -124,7 +124,7 @@ void AttachmentPropertiesDialogTest::testAttachmentPartReadOnly()
   part->setName( name );
 
   // Show the (read-only) dialog and do some changes.
-  AttachmentPropertiesDialog *dialog = new AttachmentPropertiesDialog( part, 0, true );
+  AttachmentPropertiesDialog *dialog = new AttachmentPropertiesDialog( part, true, 0 );
   dialog->show();
   KLineEdit *nameEdit = dialog->findChild<KLineEdit*>( QLatin1String( "name" ) );
   Q_ASSERT( nameEdit );

@@ -44,25 +44,23 @@ class MESSAGECORE_EXPORT AttachmentPropertiesDialog: public KDialog
      * Creates a new attachment properties dialog.
      *
      * @param part The attachment part which properties to change.
-     * @param parent The parent object.
      * @param readOnly Whether the dialog should be in read-only mode.
+     * @param parent The parent object.
      */
     explicit AttachmentPropertiesDialog( const AttachmentPart::Ptr &part,
-                                         QWidget *parent = 0, bool readOnly = false );
+                                         bool readOnly = false, QWidget *parent = 0 );
 
     /**
      * Creates a new attachment properties dialog.
      *
      * @param content The mime content that represents the attachment which properties to change.
      * @param parent The parent object.
-     * @param readOnly Whether the dialog should be in read-only mode.
      *
      * @note This converts the KMime::Content to an AttachmentPart internally.
      *       Therefore, saving the changes to the KMime::Content is not supported,
-     *       and readOnly must be true.
+     *       and the dialog is in readOnly mode.
      */
-    explicit AttachmentPropertiesDialog( const KMime::Content *content,
-                                         QWidget *parent = 0, bool readOnly = true );
+    explicit AttachmentPropertiesDialog( const KMime::Content *content, QWidget *parent = 0 );
 
     /**
      * Destroys the attachment properties dialog.
