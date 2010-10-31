@@ -1519,7 +1519,7 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 
   // Highlight working hours
   if ( d->mWorkingHoursEnable && d->mHolidayMask ) {
-    const QColor workColor = d->preferences()->agendaGridWorkHoursBackgroundColor();
+    const QColor workColor = d->preferences()->workingHoursColor();
 
     QPoint pt1( cx, d->mWorkingHoursYTop );
     QPoint pt2( cx + cw, d->mWorkingHoursYBottom );
