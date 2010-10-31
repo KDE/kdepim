@@ -315,6 +315,7 @@ class HistoryTest : public QObject
     // we try to undo an add, but there's
     // nothing to delete, because we didn't really add any incidence
     // to akonadi
+    kDebug() << "Deleting something that doesn't exist";
     Item item2;
     item2.setId( 3333 );
     Incidence::Ptr payload2( new Event() );
