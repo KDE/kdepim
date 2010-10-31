@@ -64,7 +64,7 @@ void History::recordCreation( const Akonadi::Item &item,
   Entry entry;
   entry.changeType = IncidenceChanger2::ChangeTypeCreate;
   entry.newItems.append( item );
-  entry.newItems.append( Item() );
+  entry.oldItems.append( Item() );
   entry.atomicOperationId = atomicOperationId;
   d->mLatestRevisionByItemId.insert( item.id(), item.revision() );
 

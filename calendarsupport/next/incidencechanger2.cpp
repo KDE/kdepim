@@ -46,6 +46,9 @@ IncidenceChanger2::Private::Private( IncidenceChanger2 *qq ) : q( qq )
   mDestinationPolicy = DestinationPolicyDefault;
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
+
+  qRegisterMetaType<CalendarSupport::IncidenceChanger2::ResultCode>(
+    "CalendarSupport::IncidenceChanger2::ResultCode" );
 }
 
 IncidenceChanger2::Private::~Private()
