@@ -118,7 +118,7 @@ class HistoryTest : public QObject
 
       IncidenceChanger2 *changer = new IncidenceChanger2();
       changer->setShowDialogsOnError( false );
-      mHistory = new History( changer );
+      mHistory = changer->history();
 
       connect( mCalendarModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
                SLOT(rowsInserted(QModelIndex,int,int)) );
@@ -194,6 +194,7 @@ class HistoryTest : public QObject
     QVERIFY( !redoButton->isEnabled() );
 
     // delete it
+    kDebug() << "undo creation. Should delete.";
     mWaitingForHistorySignals = true;
     mPendingDeletesInETM.append( uid );
     QVERIFY( mHistory->undo() );
@@ -202,6 +203,7 @@ class HistoryTest : public QObject
     QVERIFY( redoButton->isEnabled() );
 
     // redo, lets create it again
+    kDebug() << "redo. Should create again.";
     mWaitingForHistorySignals = true;
     mPendingInsertsInETM.append( uid );
     QVERIFY( mHistory->redo() );
@@ -211,6 +213,7 @@ class HistoryTest : public QObject
 
     // It was created again, but the entry has a new akonadi id
     // the old id should have been updated, so this undo should work
+    kDebug() << "Undoing redo, should delete";
     mWaitingForHistorySignals = true;
     mPendingDeletesInETM.append( uid );
     QVERIFY( mHistory->undo() );
@@ -219,6 +222,7 @@ class HistoryTest : public QObject
     QVERIFY( redoButton->isEnabled() );
 
     // Good. Lets add it again, and test editing it.
+    kDebug() << "Redoing, should recreate";
     mWaitingForHistorySignals = true;
     mPendingInsertsInETM.append( uid );
     QVERIFY( mHistory->redo() );
@@ -226,6 +230,7 @@ class HistoryTest : public QObject
     QVERIFY( undoButton->isEnabled() );
     QVERIFY( !redoButton->isEnabled() );
 
+    kDebug() << "Editing one, not through incidence changer";
     oldItem = mCalendar->itemForIncidenceUid( uid );
     newItem = oldItem;
     QVERIFY( oldItem.isValid() );
@@ -243,6 +248,7 @@ class HistoryTest : public QObject
     AKVERIFYEXEC( modifyJob );
     waitForETMorSignals();
 
+    kDebug() << "Undoing edition";
     Item item = mCalendar->itemForIncidenceUid( uid );
     QVERIFY( item.isValid() );
     QCOMPARE( item.payload<Incidence::Ptr>()->summary(), summary );

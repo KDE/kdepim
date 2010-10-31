@@ -187,7 +187,6 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
         mHistory->recordDeletion( item, change.atomicOperationId );
       }
     }
-    kDebug() << "DEBUG atomic change is " << change.atomicOperationId;
     atomicOperationStuff( change );
   }
 
@@ -605,8 +604,6 @@ uint IncidenceChanger2::startAtomicOperation()
   static uint latestAtomicOperationId = 0;
   ++latestAtomicOperationId;
 
-  kDebug() << "DEBUG start called " << latestAtomicOperationId;
-
   AtomicOperation *atomicOperation = new AtomicOperation( latestAtomicOperationId );
   atomicOperation->history = new History( this );
   d->mAtomicOperations[latestAtomicOperationId] = atomicOperation;
@@ -620,7 +617,6 @@ void IncidenceChanger2::endAtomicOperation( uint atomicOperationId )
               "endAtomicOperation()",
               "Unknown atomic operation id, only use ids returned by startAtomicOperation()." );
 
-  kDebug() << "DEBUG end called " << atomicOperationId;
   AtomicOperation *atomicOperation = d->mAtomicOperations[atomicOperationId];
 
   if ( atomicOperation->numChanges == atomicOperation->numCompletedChanges ) {

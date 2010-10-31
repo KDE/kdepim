@@ -62,7 +62,7 @@ namespace CalendarSupport {
       void updateWidgets();
       bool doIt( const Entry &entry, OperationType, QWidget *parent = 0 );
       void updateIds( Item::Id oldId, Item::Id newId );
-      void finishOperation( History::ResultCode, const QString &errorString );
+      void finishOperation( int changeId, History::ResultCode, const QString &errorString );
       QStack<Entry>& destinationStack();
       QStack<Entry>& stack();
 
@@ -86,6 +86,10 @@ namespace CalendarSupport {
       QHash<int,Akonadi::Item::Id> mItemIdByChangeId;
 
       bool mUndoAllInProgress;
+
+      // IncidenceChanger change ids that we're waiting for the job to finish.
+      // Just for debugging purposes
+      QSet<int> mPendingChangeIds;
 
       QWidget *mParent;
 

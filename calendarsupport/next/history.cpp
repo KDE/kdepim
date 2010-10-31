@@ -297,7 +297,7 @@ bool History::Private::doIt( const Entry &entry, OperationType type, QWidget *pa
       changeId = mChanger->createIncidence( newPayload, collection, e.atomicOperationId,
                                             false, /* don't record to history, we're on it */
                                             parent );
-      mItemIdByChangeId[e.changeId] = item.id();
+      mItemIdByChangeId[changeId] = item.id();
     }
     // now wait for mChanger to call our slot.
   } else if ( e.changeType == IncidenceChanger2::ChangeTypeDelete ) {
@@ -324,6 +324,7 @@ bool History::Private::doIt( const Entry &entry, OperationType type, QWidget *pa
     Q_ASSERT_X( false, "History::Private::doIt()", "Must have at least one payload" );
   }
 
+  mPendingChangeIds.insert( changeId );
   mEntryInProgress.changeId = changeId;
 
   if ( changeId == -1 ) {
@@ -342,7 +343,6 @@ void History::Private::deleteFinished( int changeId,
                                        IncidenceChanger2::ResultCode changerResultCode,
                                        const QString &errorMessage )
 {
-  Q_UNUSED( changeId );
   const bool success = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess );
   const History::ResultCode resultCode = success ? History::ResultCodeSuccess :
                                                    History::ResultCodeError;
@@ -354,7 +354,7 @@ void History::Private::deleteFinished( int changeId,
     }
   }
 
-  finishOperation( resultCode, errorMessage );
+  finishOperation( changeId, resultCode, errorMessage );
 }
 
 void History::Private::createFinished( int changeId,
@@ -362,13 +362,11 @@ void History::Private::createFinished( int changeId,
                                        IncidenceChanger2::ResultCode changerResultCode,
                                        const QString &errorMessage )
 {
-  Q_UNUSED( changeId );
-
   const bool success = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess );
   const History::ResultCode resultCode = success ? History::ResultCodeSuccess :
                                                    History::ResultCodeError;
 
-  finishOperation( resultCode, errorMessage );
+  finishOperation( changeId, resultCode, errorMessage );
 
   if ( success ) {
     // TODO: add comentary
@@ -392,12 +390,23 @@ void History::Private::modifyFinished( int changeId,
     mLatestRevisionByItemId[item.id()] = item.revision();
   }
 
-  finishOperation( resultCode, errorMessage );
+  finishOperation( changeId, resultCode, errorMessage );
 }
 
 // Just to share code between {add|change|delete}Finished
-void History::Private::finishOperation( History::ResultCode resultCode, const QString &errorString )
+void History::Private::finishOperation( int changeId,
+                                        History::ResultCode resultCode,
+                                        const QString &errorString )
 {
+  if ( !mPendingChangeIds.contains( changeId ) ) {
+    // IncidenceChanger was called by someother class.
+    //TODO: what if someother class modifies incidences while we're undoing?
+    kDebug() << "Not ours " << changeId;
+    return;
+  }
+
+  mPendingChangeIds.remove( changeId );
+
   if ( resultCode == ResultCodeSuccess ) {
     mLastErrorString = QString();
     destinationStack().push( mEntryInProgress );

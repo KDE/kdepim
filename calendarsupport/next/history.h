@@ -75,12 +75,6 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
     };
 
     /**
-       Creates an History instance.
-       @param changer a valid pointer to an IncidenceChanger. Ownership is not taken.
-    */
-    explicit History( IncidenceChanger2 *changer );
-
-    /**
        Destroys the History instance.
     */
     ~History();
@@ -223,6 +217,15 @@ class CALENDARSUPPORT_EXPORT History : public QObject {
     void redone( CalendarSupport::History::ResultCode resultCode );
 
   private:
+
+    /**
+       Creates an History instance.
+       Only IncidenceChanger can create an History instance.
+       @param changer a valid pointer to an IncidenceChanger. Ownership is not taken.
+    */
+    friend class IncidenceChanger2;
+    explicit History( IncidenceChanger2 *changer );
+
     //@cond PRIVATE
     class Private;
     Private *const d;
