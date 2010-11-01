@@ -706,8 +706,11 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
 
       Incidence *incidence = icalToString( iCal );
-      Incidence *existing = CalHelper::findMyCalendarIncidenceByUid( CalendarManager::calendar(),
-                                                                     incidence->uid() );
+      Incidence *existing = 0;
+      if ( CalendarManager::calendar() ) {
+        existing = CalendarManager::calendar()->incidence( incidence->uid() );
+      }
+
       if ( !existing ) {
         KMessageBox::sorry(
           0,
