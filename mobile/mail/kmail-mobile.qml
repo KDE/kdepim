@@ -451,6 +451,7 @@ KPIM.MainView {
             application.restoreDraft(_itemNavigationModel.currentItemIdHack);
             updateContextActionStates()
           }
+          _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
         }
       }
       QML.Item {
