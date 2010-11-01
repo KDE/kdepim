@@ -142,8 +142,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       if ( !vCard.isEmpty() ) {
         KABC::VCardConverter vcc;
         KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-        int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
-        if ( index >= 0 ) {
+        const int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
+        if ( index >= 0 && index < al.count() ) {
           return al[index];
         }
       }
