@@ -24,27 +24,26 @@ import org.kde.pim.mobileui 4.5 as KPIM
 QML.Item {
   id: root
 
-  width: 22
-  height: width
+  width: icon.width 
+  height: icon.height
 
   function iconFromStatus( status )
   {
     if ( (status & KPIM.AgentStatusMonitor.Sending) && (status & KPIM.AgentStatusMonitor.Receiving) ) {
-      return KDE.iconPath( "mail-folder-outbox", root.width );
+      return "images/status/sending-receiving.png";
     } else if ( status & KPIM.AgentStatusMonitor.Receiving ) {
-      return KDE.iconPath( "mail-receive", root.width );
+      return "images/status/receiving.png";
     } else if ( status & KPIM.AgentStatusMonitor.Sending ) {
-      return KDE.iconPath( "mail-folder-outbox", root.width );
+      return "images/status/sending.png";
     } else if ( status & KPIM.AgentStatusMonitor.Online ) {
-      return KDE.iconPath( "network-connect", root.width );
+      return "images/status/online.png"
     } else {
-      return KDE.iconPath( "network-disconnect", root.width );
+      return "images/status/offline.png";
     }
   }
 
   QML.Image {
     id: icon
-    anchors.fill: parent
     source: iconFromStatus( agentStatusMonitor.status )
   }
 }

@@ -1,4 +1,5 @@
 add_subdirectory(loading)
+add_subdirectory(status)
 
 FILE(GLOB IMAGES *.png)
 install(FILES ${IMAGES}
