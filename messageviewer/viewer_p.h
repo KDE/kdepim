@@ -549,7 +549,7 @@ public slots:
   void slotUrlCopy();
   void slotSaveMessage();
   /** Re-parse the current message. */
-  void update(Viewer::UpdateMode updateMode = Viewer::Delayed);
+  void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
 signals:
   void showStatusBarMessage( const QString &message );

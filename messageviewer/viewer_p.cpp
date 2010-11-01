@@ -1715,7 +1715,7 @@ const QTextCodec* ViewerPrivate::codecForName(const QByteArray& _str)
   return KGlobal::charsets()->codecForName(codec);
 }
 
-void ViewerPrivate::update( Viewer::UpdateMode updateMode )
+void ViewerPrivate::update( MessageViewer::Viewer::UpdateMode updateMode )
 {
   // Avoid flicker, somewhat of a cludge
   if ( updateMode == Viewer::Force ) {

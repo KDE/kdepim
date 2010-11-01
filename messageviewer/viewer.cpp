@@ -420,7 +420,7 @@ KUrl Viewer::urlClicked() const
   return d->mClickedUrl;
 }
 
-void Viewer::update( Viewer::UpdateMode updateMode )
+void Viewer::update( MessageViewer::Viewer::UpdateMode updateMode )
 {
   Q_D( Viewer );
   d->update( updateMode );

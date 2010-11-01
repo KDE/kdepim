@@ -51,7 +51,7 @@ class ContactPhotoMemento : public QObject, public Interface::BodyPartMemento
 
   signals:
     // TODO: Factor our update and detach into base class
-    void update( Viewer::UpdateMode );
+    void update( MessageViewer::Viewer::UpdateMode );
 
   private slots:
     void slotSearchJobFinished( KJob *job );

@@ -72,7 +72,7 @@ public:
   void detach();
 
 signals:
-  void update(Viewer::UpdateMode);
+  void update(MessageViewer::Viewer::UpdateMode);
 
 protected slots:
   void notify() {
