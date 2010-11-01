@@ -1,7 +1,7 @@
 /*
  *  kalarmapp.cpp  -  the KAlarm application object
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -285,14 +285,6 @@ int KAlarmApp::newInstance()
 		CommandOptions::Command command = options.command();
 		switch (command)
 		{
-			case CommandOptions::TRAY:
-				// Display only the system tray icon
-				if (!KSystemTrayIcon::isSystemTrayAvailable()
-				||  !initCheck()   // open the calendar, start processing execution queue
-				||  !displayTrayIcon(true))
-					exitCode = 1;
-				break;
-
 			case CommandOptions::TRIGGER_EVENT:
 			case CommandOptions::CANCEL_EVENT:
 			{
@@ -419,6 +411,16 @@ int KAlarmApp::newInstance()
 					exitCode = 1;
 				break;
 
+			case CommandOptions::TRAY:
+				// Display only the system tray icon
+				if (Preferences::showInSystemTray()  &&  KSystemTrayIcon::isSystemTrayAvailable())
+				{
+					if (!initCheck()   // open the calendar, start processing execution queue
+					||  !displayTrayIcon(true))
+						exitCode = 1;
+					break;
+				}
+				// fall throudh to NONE
 			case CommandOptions::NONE:
 				// No arguments - run interactively & display the main window
 #ifndef NDEBUG
