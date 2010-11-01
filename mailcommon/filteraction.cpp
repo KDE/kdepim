@@ -1603,8 +1603,9 @@ QWidget* FilterActionForward::createParamWidget( QWidget* parent ) const
   addressEdit->setObjectName( "addressEdit" );
   hBox->addWidget( addressEdit );
 
-  KLineEdit *lineEdit = addressEdit->findChild<KLineEdit*>( "addressEdit" );
-  Q_ASSERT( lineEdit );
+  MessageCore::EmailAddressRequester *addressRequester = qobject_cast<MessageCore::EmailAddressRequester*>( addressEdit );
+  Q_ASSERT( addressRequester );
+  KLineEdit *lineEdit = addressRequester->lineEdit();
   lineEdit->setToolTip( i18n( "The addressee to whom the message will be forwarded." ) );
   lineEdit->setWhatsThis( i18n( "The filter will forward the message to the addressee entered here." ) );
 

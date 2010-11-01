@@ -23,6 +23,8 @@
 
 #include <QtGui/QWidget>
 
+class KLineEdit;
+
 namespace MessageCore {
 
 /**
@@ -33,6 +35,8 @@ namespace MessageCore {
 class MESSAGECORE_EXPORT EmailAddressRequester : public QWidget
 {
   Q_OBJECT
+
+  Q_PROPERTY( QString text READ text WRITE setText NOTIFY textChanged USER true )
 
   public:
     /**
@@ -61,6 +65,11 @@ class MESSAGECORE_EXPORT EmailAddressRequester : public QWidget
      * Returns the text of the email address requester.
      */
     QString text() const;
+
+    /**
+     * Returns the line edit that is used by the email address requester.
+     */
+    KLineEdit* lineEdit() const;
 
   Q_SIGNALS:
     /**

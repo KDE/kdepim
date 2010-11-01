@@ -110,12 +110,8 @@ CustomTemplates::CustomTemplates( QWidget *parent, const char *name )
   const QString toWhatsThis = i18n( "When using this template, the default recipients are those you enter here. This is a comma-separated list of mail addresses." );
   const QString ccWhatsThis = i18n( "When using this template, the recipients you enter here will by default get a copy of this message. This is a comma-separated list of mail addresses." );
 
-  // We only want to set the tooltip/whatsthis to the lineedit, not the complete widget,
-  // so we use the name here to find the lineedit. This is similar to what KMFilterActionForward
-  // does.
-  KLineEdit *ccLineEdit = mUi->mCCEdit->findChild<KLineEdit*>( "addressEdit" );
-  KLineEdit *toLineEdit = mUi->mToEdit->findChild<KLineEdit*>( "addressEdit" );
-  Q_ASSERT( ccLineEdit && toLineEdit );
+  KLineEdit *ccLineEdit = mUi->mCCEdit->lineEdit();
+  KLineEdit *toLineEdit = mUi->mToEdit->lineEdit();
 
   mUi->mCCLabel->setToolTip( ccToolTip );
   ccLineEdit->setToolTip( ccToolTip );
