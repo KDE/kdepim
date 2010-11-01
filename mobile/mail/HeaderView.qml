@@ -65,9 +65,8 @@ KPIM.ItemListView {
           anchors.topMargin : 1
           anchors.left : parent.left
           anchors.leftMargin : 10
-          anchors.right: parent.right
-          anchors.rightMargin: deleteAction.width
           height : 30;
+          width: parent.width - (threadInfoLabel.visible ? threadInfoLabel.width : 0) - anchors.leftMargin - threadInfoLabel.anchors.rightMargin
           text : model.subject
           font.pointSize: 14
           color : model.is_unread ? "#E10909" : "#3B3B3B"
@@ -76,10 +75,15 @@ KPIM.ItemListView {
         QML.Text {
           id : threadInfoLabel
           visible : model.threadSize != undefined && model.threadSize > 1
-          anchors.bottom : parent.bottom
+          anchors.top : fromLabel.bottom
+          anchors.topMargin : 1
           anchors.right : parent.right
+          anchors.rightMargin: deleteAction.width
           height : (model.threadSize != undefined) ? 30 : 0
-          text : KDE.i18ncp("This text is only visible if messages > 1", "%2 messages, %1 unread", "%2 messages, %1 unread", model.threadUnreadCount, model.threadSize);
+          font.pointSize: 14
+          text : model.threadUnreadCount > 0 ? KDE.i18ncp("This text is only visible if messages > 1", "%2 messages, %1 unread", "%2 messages, %1 unread",
+                                                           model.threadUnreadCount, model.threadSize)
+                                             : KDE.i18np( "One message", "%1 messages", model.threadSize );
         },
         QML.Image {
           id : importantFlagImage
@@ -186,14 +190,11 @@ KPIM.ItemListView {
       QML.MouseArea {
         anchors.fill: parent
         onClicked: {
-          console.log( "toggle expansion in section " + section );
-          console.log( "section map before: " + _top.collapsedSections );
           if (_top.collapsedSections.indexOf(section) != -1) {
             _top.collapsedSections = _top.collapsedSections.replace(section + ",", "")
           } else {
             _top.collapsedSections += (section + ",")
           }
-          console.log( "section map after: " + _top.collapsedSections );
         }
       }
     }
