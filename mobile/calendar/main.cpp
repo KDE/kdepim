@@ -54,6 +54,8 @@ int main( int argc, char **argv )
   KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
 
+  KGlobal::locale()->insertCatalog( "libincidenceeditors" );
+
   MainView view;
   view.show();
 

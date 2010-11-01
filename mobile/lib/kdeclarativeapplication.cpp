@@ -66,6 +66,8 @@ KDeclarativeApplication::KDeclarativeApplication()
 
     setStyle( "plastique" ); // to avoid oxygen artefacts
   }
+
+  KGlobal::locale()->insertCatalog( "libkdepimmobileui" );
 }
 
 void KDeclarativeApplication::initCmdLine()

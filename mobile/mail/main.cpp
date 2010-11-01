@@ -47,6 +47,12 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
+
+  KGlobal::locale()->insertCatalog( "libmessagecore" );
+  KGlobal::locale()->insertCatalog( "libmessagecomposer" );
+  KGlobal::locale()->insertCatalog( "libmessageviewer" );
+  KGlobal::locale()->insertCatalog( "libtemplateparser" );
+
   MainView view;
   view.show();
 
