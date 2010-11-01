@@ -50,6 +50,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     Q_PROPERTY( int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged )
     Q_PROPERTY( bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged )
     Q_PROPERTY( QString version READ version CONSTANT )
+    Q_PROPERTY( QString name READ name CONSTANT )
     Q_PROPERTY( QString state READ applicationState WRITE setApplicationState NOTIFY stateChanged )
 
   public:
@@ -83,6 +84,11 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      * Returns the version of the application.
      */
     QString version() const;
+
+    /**
+     * Returns the localized name of the application.
+     */
+    QString name() const;
 
     /**
      * Returns the monitor that is used by the application.
@@ -122,6 +128,11 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      * Starts the synchronization of all collections.
      */
     void synchronizeAllItems();
+
+    /**
+     * Opens the licenses.pdf in an external viewer
+     */
+    void openLicenses();
 
     void saveFavorite();
     void loadFavorite( const QString &name );

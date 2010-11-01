@@ -616,6 +616,12 @@ void KDeclarativeMainView::exportItems()
   handler->exec();
 }
 
+void KDeclarativeMainView::openLicenses()
+{
+  //TODO: Add a licensing test and open it here
+/*  KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", "license.pdf" ),
+                                        QLatin1String("application/pdf") );*/
+}
 
 void KDeclarativeMainView::openAttachment( const QString &url, const QString &mimeType )
 {
@@ -759,6 +765,12 @@ QString KDeclarativeMainView::version() const
   } else {
     return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_SVN_REVISION_STRING, KDEPIM_SVN_LAST_CHANGE );
   }
+}
+
+QString KDeclarativeMainView::name() const
+{
+  const static QString app_name = QString( KGlobal::mainComponent().aboutData()->programName() );
+  return app_name;
 }
 
 Akonadi::ChangeRecorder* KDeclarativeMainView::monitor() const
