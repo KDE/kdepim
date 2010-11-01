@@ -21,6 +21,7 @@
 
 import Qt 4.7 as QML
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde 4.5
 
 QML.Rectangle {
   anchors.fill : parent
@@ -54,7 +55,7 @@ QML.Rectangle {
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.left : parent.left
-      buttonText : "Done"
+      buttonText : KDE.i18n("Done")
       width : 150
       onClicked : finished()
     }
@@ -63,7 +64,7 @@ QML.Rectangle {
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
-      buttonText : "Cancel"
+      buttonText : KDE.i18n("Cancel")
       width : 150
       onClicked : canceled()
     }
