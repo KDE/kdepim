@@ -76,6 +76,7 @@ EmailAddressRequester::EmailAddressRequester( QWidget *parent )
   layout->setMargin( 0 );
 
   d->mLineEdit = new KLineEdit( this );
+  d->mLineEdit->setObjectName( "addressEdit" );
   layout->addWidget( d->mLineEdit, 1 );
 
   d->mButton = new QPushButton( this );
