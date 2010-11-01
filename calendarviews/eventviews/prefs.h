@@ -102,12 +102,6 @@ class EVENTVIEWS_EXPORT Prefs
     void setTodosUseCategoryColors( bool useColors );
     bool todosUseCategoryColors() const;
 
-    void setAgendaCalendarItemsToDosOverdueBackgroundColor( const QColor &color );
-    QColor agendaCalendarItemsToDosOverdueBackgroundColor() const;
-
-    void setAgendaCalendarItemsToDosDueTodayBackgroundColor( const QColor &color );
-    QColor agendaCalendarItemsToDosDueTodayBackgroundColor() const;
-
     void setAgendaHolidaysBackgroundColor( const QColor &color ) const;
     QColor agendaHolidaysBackgroundColor() const;
 

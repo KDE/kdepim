@@ -615,26 +615,6 @@ bool Prefs::todosUseCategoryColors() const
   return d->getBool( d->mBaseConfig.todosUseCategoryColorsItem() );
 }
 
-void Prefs::setAgendaCalendarItemsToDosOverdueBackgroundColor( const QColor &color )
-{
-  d->setColor( d->mBaseConfig.agendaCalendarItemsToDosOverdueBackgroundColorItem(), color );
-}
-
-QColor Prefs::agendaCalendarItemsToDosOverdueBackgroundColor() const
-{
-  return d->getColor( d->mBaseConfig.agendaCalendarItemsToDosOverdueBackgroundColorItem() );
-}
-
-void Prefs::setAgendaCalendarItemsToDosDueTodayBackgroundColor( const QColor &color )
-{
-  d->setColor( d->mBaseConfig.agendaCalendarItemsToDosDueTodayBackgroundColorItem(), color );
-}
-
-QColor Prefs::agendaCalendarItemsToDosDueTodayBackgroundColor() const
-{
-  return d->getColor( d->mBaseConfig.agendaCalendarItemsToDosDueTodayBackgroundColorItem() );
-}
-
 void Prefs::setAgendaHolidaysBackgroundColor( const QColor &color ) const
 {
   d->setColor( d->mBaseConfig.agendaHolidaysBackgroundColorItem(), color );

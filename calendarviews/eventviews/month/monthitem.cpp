@@ -632,9 +632,9 @@ QColor IncidenceMonthItem::bgColor() const
   PrefsPtr prefs = monthScene()->monthView()->preferences();
   if ( mIsTodo && !prefs->todosUseCategoryColors() ) {
     if ( mIncidence.staticCast<Todo>()->isOverdue() ) {
-      bgColor = prefs->agendaCalendarItemsToDosOverdueBackgroundColor();
+      bgColor = prefs->todoOverdueColor();
     } else if ( mIncidence.staticCast<Todo>()->dtDue().date() == QDate::currentDate() ) {
-      bgColor = prefs->agendaCalendarItemsToDosDueTodayBackgroundColor();
+      bgColor = prefs->todoDueTodayColor();
     }
   }
 
