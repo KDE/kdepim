@@ -44,6 +44,7 @@ IncidenceChanger2::Private::Private( IncidenceChanger2 *qq ) : q( qq )
   mShowDialogsOnError = true;
   mHistory = new History( q );
   mDestinationPolicy = DestinationPolicyDefault;
+  mRespectsCollectionRights = false;
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
 
@@ -88,7 +89,7 @@ bool IncidenceChanger2::Private::hasRights( const Collection &collection,
       Q_ASSERT_X( false, "hasRights", "invalid type" );
   }
 
-  return result && collection.isValid();
+  return !collection.isValid() || !mRespectsCollectionRights || result;
 }
 
 void IncidenceChanger2::Private::queueModification( const Change &change )
@@ -637,6 +638,16 @@ void IncidenceChanger2::setShowDialogsOnError( bool enable )
 bool IncidenceChanger2::showDialogsOnError() const
 {
   return d->mShowDialogsOnError;
+}
+
+void IncidenceChanger2::setRespectsCollectionRights( bool respects )
+{
+  d->mRespectsCollectionRights = respects;
+}
+
+bool IncidenceChanger2::respectsCollectionRights() const
+{
+  return d->mRespectsCollectionRights;
 }
 
 void IncidenceChanger2::setDestinationPolicy( IncidenceChanger2::DestinationPolicy destinationPolicy )

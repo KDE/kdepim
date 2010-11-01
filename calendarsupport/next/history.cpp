@@ -401,7 +401,6 @@ void History::Private::finishOperation( int changeId,
   if ( !mPendingChangeIds.contains( changeId ) ) {
     // IncidenceChanger was called by someother class.
     //TODO: what if someother class modifies incidences while we're undoing?
-    kDebug() << "Not ours " << changeId;
     return;
   }
 

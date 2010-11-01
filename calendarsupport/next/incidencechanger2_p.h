@@ -164,6 +164,8 @@ class IncidenceChanger2::Private : public QObject
     */
     QHash<uint,AtomicOperation*> mAtomicOperations;
 
+    bool mRespectsCollectionRights;
+
   private:
     IncidenceChanger2 *q;
 };

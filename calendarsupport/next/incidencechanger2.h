@@ -140,6 +140,10 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     void setShowDialogsOnError( bool enable );
     bool showDialogsOnError() const;
 
+    //TODO: document what happens to items with invalid collections
+    void setRespectsCollectionRights( bool respect );
+    bool respectsCollectionRights() const;
+
   Q_SIGNALS:
     void createFinished( int changeId,
                          const Akonadi::Item &item,
