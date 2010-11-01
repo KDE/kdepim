@@ -524,7 +524,22 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
     }
   } else if( incidence->type() == "Todo" ) {
     QString txt;
-    if ( attendeeStatusChanged && method == Scheduler::Request ) {
+    Todo *todo = static_cast<Todo *>( incidence );
+    Todo *oldtodo = static_cast<Todo *>( oldincidence );
+    if ( todo && oldtodo &&
+         todo->percentComplete() != oldtodo->percentComplete() &&
+         method == Scheduler::Request ) {
+      txt = i18n( "Your completion status in this task has been changed. "
+                  "Do you want to send a status update to the task organizer?" );
+      method = Scheduler::Reply;
+      if ( useLastDialogAnswer ) {
+        rc = lastUsedDialogAnswer;
+      } else {
+        lastUsedDialogAnswer = rc = KMessageBox::questionYesNo(
+          parent, txt, i18n( "Group Scheduling Email" ),
+          KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
+      }
+    } else if ( attendeeStatusChanged && method == Scheduler::Request ) {
       txt = i18n( "Your status as a participant in this task changed. "
                   "Do you want to send a status update to the task organizer?" );
       method = Scheduler::Reply;
