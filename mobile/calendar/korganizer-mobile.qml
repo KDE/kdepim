@@ -309,6 +309,7 @@ KPIM.MainView {
       onCurrentRowChanged : {
         application.setCurrentEventItemId(_itemNavigationModel.currentItemIdHack);
         guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState )
+        _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
       }
     }
   }

@@ -236,6 +236,7 @@ KPIM.MainView {
           headerList.currentRow = _itemNavigationModel.currentRow
           noteView.currentNoteRow = _itemNavigationModel.currentRow
           guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
+          _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
         }
       }
     }

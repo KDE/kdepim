@@ -239,6 +239,7 @@ KPIM.MainView {
         onCurrentRowChanged : {
           taskView.itemId = _itemNavigationModel.currentItemIdHack
           guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
+          _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
         }
       }
     }

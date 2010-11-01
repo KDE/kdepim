@@ -292,6 +292,7 @@ KPIM.MainView {
       if ( itemModel.typeForIndex( _itemNavigationModel.currentRow ) == "group" ) {
         contactGroupView.itemId = _itemNavigationModel.currentItemIdHack;
       }
+      _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
     }
   }
 
