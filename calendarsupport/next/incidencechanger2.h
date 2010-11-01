@@ -42,6 +42,10 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
   Q_OBJECT
   public:
 
+    /**
+       This enum describes result codes which are returned by createFinished(), modifyfinished() and
+       deleteFinished() signals.
+     */
     enum ResultCode {
       ResultCodeSuccess = 0,
       ResultCodeJobError,
@@ -50,6 +54,11 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
       ResultCodeRollback
     };
 
+    /**
+       This enum describes destination policies.
+       Destination policies control how the createIncidence() method chooses the collection where
+       the item will be created.
+     */
     enum DestinationPolicy {
       DestinationPolicyDefault, ///< The default collection is used, if it's invalid, the user is prompted. @see setDefaultCollection().
       DestinationPolicyAsk,      ///< User is always asked which collection to use.
@@ -66,7 +75,14 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
       ChangeTypeDelete    ///> Represents an incidence deletion.
     };
 
-    explicit IncidenceChanger2();
+    /**
+       Creates a new IncidenceChanger instance.
+     */
+    IncidenceChanger2();
+
+    /**
+       Destroys this IncidenceChanger instance.
+     */
     ~IncidenceChanger2();
 
     int createIncidence( const KCalCore::Incidence::Ptr &incidence,
@@ -132,15 +148,40 @@ class CALENDARSUPPORT_EXPORT IncidenceChanger2 : public QObject
     CalendarSupport::History *history() const;
 
     void setDefaultCollection( const Akonadi::Collection &collection );
+
+
+    /**
+       Returns the defaultCollection.
+       If none is set, an invalid Collection is returned.
+       @see setDefaultCollection()
+     */
     Akonadi::Collection defaultCollection() const;
 
     void setDestinationPolicy( DestinationPolicy destinationPolicy );
+
+    /**
+       Returns the current destination policy.
+       If none is set, DestinationPolicyDefault is returned.
+       @see setDestinationPolicy()
+    */
     DestinationPolicy destinationPolicy() const;
 
     void setShowDialogsOnError( bool enable );
+
+
+    /**
+       Returns if error dialogs are shown by IncidenceChanger when an ItemModify|Create|DeleteJob()
+       fails.
+       The dialog is shown right before emitting create|delete|modifyFinshed() with ResultCode equal
+       to ResultCodeJobError.
+
+       The default is true.
+
+       @see setShowDialogsOnError
+     */
     bool showDialogsOnError() const;
 
-    //TODO: document what happens to items with invalid collections
+    //TODO: document what happens to items with invalid parent collections
     void setRespectsCollectionRights( bool respect );
     bool respectsCollectionRights() const;
 
