@@ -38,9 +38,6 @@ protected:
     QWidget * widget() const { return m_widget; }
 
 private:
-    void init();
-
-private:
     QWidget * m_widget;
 };
 

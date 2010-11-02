@@ -28,13 +28,6 @@ DeclarativeWidgetBaseHelper::DeclarativeWidgetBaseHelper( QWidget * widget, QGra
     : QGraphicsProxyWidget( parent ),
       m_widget( widget )
 {
-    init();
-}
-
-DeclarativeWidgetBaseHelper::~DeclarativeWidgetBaseHelper() {}
-
-void DeclarativeWidgetBaseHelper::init()
-{
     Q_ASSERT( m_widget );
 
     QPalette pal = m_widget->palette();
@@ -44,3 +37,5 @@ void DeclarativeWidgetBaseHelper::init()
     setWidget( m_widget );
     setFocusPolicy( Qt::StrongFocus );
 }
+
+DeclarativeWidgetBaseHelper::~DeclarativeWidgetBaseHelper() {}
