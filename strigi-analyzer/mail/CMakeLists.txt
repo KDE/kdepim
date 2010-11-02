@@ -1,4 +1,5 @@
 
+if ( ${STRIGI_VERSION} VERSION_GREATER 0.7.2 )
 include_directories(
         ${Boost_INCLUDE_DIR}
 )
@@ -27,3 +28,4 @@ target_link_libraries(mail
 )
 set_target_properties(mail PROPERTIES PREFIX strigiea_)
 install(TARGETS mail LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strigi)
+endif ()
