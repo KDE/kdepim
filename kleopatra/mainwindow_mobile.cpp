@@ -94,6 +94,9 @@
 #include <QProcess>
 #include <QPointer>
 #include <QDeclarativeItem>
+#include <QDeclarativeEngine>
+#include <QDeclarativeContext>
+#include <QVariant>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -280,6 +283,7 @@ void MainWindow::delayedInit() {
     qmlRegisterType<KeyTreeViewItem>( "org.kde.kleopatra", 2, 1, "KeyTreeView" );
     KDeclarativeFullScreenView::delayedInit();
     d->setupActions();
+    engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 }
 
 void MainWindow::registerKeyTreeView( KeyTreeView * view ) {
