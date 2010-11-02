@@ -270,7 +270,7 @@ static QString formatSigningInformation( const Signature & sig, const Key & key 
                           "Signed on %1 by %2 (Key ID: %3).",
                           formatDate( dt ),
                           signer,
-                          renderFingerprint( key.keyID() ) );
+                          renderFingerprint( key.shortKeyID() ) );
         else
             return i18n( "Signed by %1 with certificate %2.", signer, renderKey( key ) );
     }
