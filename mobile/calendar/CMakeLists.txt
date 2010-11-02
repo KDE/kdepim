@@ -25,11 +25,12 @@ set(korganizer_mobile_SRCS
   mainview.cpp
   main.cpp
   monthviewitem.cpp
+  searchwidget.cpp
   timelineviewitem.cpp
   qmldateedit.cpp
 )
 
-qt4_wrap_ui(korganizer_mobile_SRCS configwidget.ui)
+qt4_wrap_ui(korganizer_mobile_SRCS configwidget.ui searchwidget.ui)
 kde4_add_kcfg_files(korganizer_mobile_SRCS settings.kcfgc)
 
 qt4_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
@@ -73,6 +74,7 @@ install(FILES
   KorganizerActions.qml
   korganizer-mobile-background.png
   EventListView.qml
+  SearchDialog.qml
   DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )

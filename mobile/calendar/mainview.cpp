@@ -24,6 +24,8 @@
 #include "agendaviewitem.h"
 #include "calendaradaptor.h"
 #include "calendarinterface.h"
+#include "calendar/incidenceview.h"
+#include "calendar/kcalitembrowseritem.h"
 #include "configwidget.h"
 #include "eventlistproxy.h"
 #include "eventsexporthandler.h"
@@ -31,10 +33,9 @@
 #include "eventsguistatemanager.h"
 #include "eventsimporthandler.h"
 #include "monthviewitem.h"
+#include "searchwidget.h"
 #include "timelineviewitem.h"
 #include "qmldateedit.h"
-#include "calendar/incidenceview.h"
-#include "calendar/kcalitembrowseritem.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/collectionmodel.h>
@@ -78,6 +79,7 @@ using CalendarSupport::KCalPrefs;
 
 QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 QML_DECLARE_TYPE( DeclarativeConfigWidget )
+QML_DECLARE_TYPE( DeclarativeSearchWidget )
 QML_DECLARE_TYPE( EventViews::AgendaView )
 QML_DECLARE_TYPE( Qt::QmlDateEdit )
 QML_DECLARE_TYPE( EventsGuiStateManager )
@@ -109,6 +111,7 @@ void MainView::delayedInit()
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.calendar", 4, 5, "ConfigWidget" );
+  qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.calendar", 4, 5, "SearchWidget" );
   qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
   qmlRegisterType<EventViews::MonthViewItem>( "org.kde.calendarviews", 4, 5, "MonthView" );
   qmlRegisterType<EventViews::TimelineViewItem>( "org.kde.calendarviews", 4, 5, "TimelineView" );

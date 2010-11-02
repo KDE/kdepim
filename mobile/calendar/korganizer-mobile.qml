@@ -520,6 +520,13 @@ KPIM.MainView {
               }
             },
             KPIM.ScriptAction {
+              name : "search_event"
+              script : {
+                actionPanel.collapse();
+                searchDialog.visible = true;
+              }
+            },
+            KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
                 actionPanel.collapse();
@@ -672,6 +679,31 @@ KPIM.MainView {
     }
   }
 
+  KPIM.BulkActionScreen {
+    id : searchResultScreen
+    visible : guiStateManager.inSearchResultScreenState
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+    backgroundImage : backgroundImage.source
+
+    actionListWidth : 1/3 * parent.width
+    multipleText : KDE.i18np("1 calendar", "%1 calendars", collectionView.numSelected)
+    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
+    headerList : EventListView {
+      showCheckBox : true
+      id: searchResultHeaderList
+      model: itemModel
+      checkModel : _itemActionModel
+      anchors.fill : parent
+    }
+    onBackClicked : {
+      searchManager.stopSearch();
+    }
+  }
+
   Connections {
     target: homePage
     onAccountSelected : {
@@ -700,6 +732,11 @@ KPIM.MainView {
 
   ConfigDialog {
     id: configDialog
+    visible: false
+  }
+
+  SearchDialog {
+    id: searchDialog
     visible: false
   }
 }
