@@ -297,7 +297,9 @@ void MainWindow::registerKeyTreeView( KeyTreeView * view ) {
         return;
     view->setFlatModel( d->controller.flatModel() );
     view->setHierarchicalModel( d->controller.hierarchicalModel() );
-    d->controller.addView( view->view() );
+    QAbstractItemView * const v = view->view();
+    d->controller.addView( v );
+    d->controller.setCurrentView( v );
 }
 
 void MainWindow::Private::slotConfigCommitted() {
