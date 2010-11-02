@@ -97,6 +97,7 @@ namespace Kleo {
     public Q_SLOTS:
         void addView( QAbstractItemView * view );
         void removeView( QAbstractItemView * view );
+        void setCurrentView( QAbstractItemView * view );
 
         void cancelCommands();
         void updateConfig();

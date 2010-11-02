@@ -231,6 +231,10 @@ void KeyListController::removeView( QAbstractItemView * view ) {
     d->removeView( view );
 }
 
+void KeyListController::setCurrentView( QAbstractItemView * view ) {
+    d->slotCurrentViewChanged( view );
+}
+
 std::vector<QAbstractItemView*> KeyListController::views() const {
     return d->views;
 }
