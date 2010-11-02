@@ -77,6 +77,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QTreeView>
 
+#include <QtDeclarative/QDeclarativeItem>
+
 #include <sys/utsname.h>
 
 #define VIEW(model) {                        \

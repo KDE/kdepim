@@ -30,6 +30,8 @@
 #include <KABC/ContactGroup>
 #include <KLocalizedString>
 
+#include <QtDeclarative/QDeclarativeItem>
+
 using namespace Akonadi;
 
 typedef DeclarativeWidgetBase<EditorContactGroup, ContactGroupEditorView, &ContactGroupEditorView::setEditor> DeclarativeEditorContactGroup;

@@ -36,6 +36,8 @@
 #include <KABC/Addressee>
 #include <KLocalizedString>
 
+#include <QtDeclarative/QDeclarativeItem>
+
 using namespace Akonadi;
 
 typedef DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral> DeclarativeEditorGeneral;

@@ -25,6 +25,7 @@
 
 #include <kpimidentities/identitycombo.h>
 
+class QDeclarativeItem;
 
 class DeclarativeIdentityComboBox : public DeclarativeWidgetBase<KPIMIdentities::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
 {
