@@ -24,6 +24,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/libkdepim
+  ${CMAKE_SOURCE_DIR}/mobile/lib
   ${Boost_INCLUDE_DIR}
   ${QGPGME_INCLUDES}
   ${GPGME_INCLUDES} )
@@ -324,9 +325,12 @@ else(KDEPIM_ONLY_KLEO)
   set( _kleopatra_libkdepim_LIBS kdepim )
 endif(KDEPIM_ONLY_KLEO)
 
-set( _kleopatra_mainwindow_SRCS
-     mainwindow_desktop.cpp 
-)
+if (KDEPIM_MOBILE_UI)
+   set( _kleopatra_uiserver_extra_libs ${_kleopatra_uiserver_extra_libs} kdepimmobileui )
+   set( _kleopatra_mainwindow_SRCS mainwindow_mobile.cpp )
+else(KDEPIM_MOBILE_UI)
+   set( _kleopatra_mainwindow_SRCS mainwindow_desktop.cpp )
+endif(KDEPIM_MOBILE_UI)
 
 add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
 

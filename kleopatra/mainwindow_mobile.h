@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    mainwindow.h
+    mainwindow_mobile.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2010 Klarälvdalens Datakonsult AB
@@ -30,13 +30,44 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_MAINWINDOW_H__
-#define __KLEOPATRA_MAINWINDOW_H__
+#ifndef __KLEOPATRA_MAINWINDOW_MOBILE_H__
+#define __KLEOPATRA_MAINWINDOW_MOBILE_H__
 
-#ifdef KDEPIM_MOBILE_UI
-# include "mainwindow_mobile.h"
-#else
-# include "mainwindow_desktop.h"
-#endif
+#include <kdeclarativefullscreenview.h>
 
-#endif /* __KLEOPATRA_MAINWINDOW_H__ */
+#include <utils/pimpl_ptr.h>
+
+namespace Kleo {
+    class KeyTreeView;
+}
+
+class QStringList;
+
+class MainWindow : public KDeclarativeFullScreenView {
+    Q_OBJECT
+public:
+    explicit MainWindow( QWidget * parent=0 );
+    ~MainWindow();
+
+public Q_SLOTS:
+    void importCertificatesFromFile( const QStringList & files );
+
+protected Q_SLOTS:
+    /* reimp */ void delayedInit();
+
+protected:
+    /* reimp */ void closeEvent( QCloseEvent * );
+
+private:
+    void registerKeyTreeView( Kleo::KeyTreeView * view );
+
+private:
+    Q_PRIVATE_SLOT( d, void configDialogRequested() )
+    Q_PRIVATE_SLOT( d, void closeAndQuit() )
+    Q_PRIVATE_SLOT( d, void selfTest() )
+    class KeyTreeViewItem;
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
+
+#endif /* __KLEOPATRA_MAINWINDOW_MOBILE_H__ */
