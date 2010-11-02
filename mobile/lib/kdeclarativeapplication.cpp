@@ -20,11 +20,27 @@
 #include "kdeclarativeapplication.h"
 
 #include <kglobalsettings.h>
+#include <KDebug>
 #include <QFont>
 #include <KCmdLineArgs>
 
 KDeclarativeApplication::KDeclarativeApplication()
 {
+    postApplicationSetup();
+}
+
+// static
+void KDeclarativeApplication::postApplicationSetup()
+{
+  static bool run = false;
+
+  if ( run ) {
+    kDebug() << "called twice";
+    return;
+  }
+
+  run = true;
+
 #ifdef Q_OS_WINCE
   QFont f = font();
   f.setPointSize( 9 );

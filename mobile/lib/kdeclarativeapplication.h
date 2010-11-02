@@ -30,6 +30,11 @@ class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
     KDeclarativeApplication();
 
     static void initCmdLine();
+
+    /** Sets up some other stuff. Only needs to be called (after the
+        KApplication constructor) if you don't use
+        KDeclarativeApplication as your KApplication */
+    static void postApplicationSetup();
 };
 
 #endif
