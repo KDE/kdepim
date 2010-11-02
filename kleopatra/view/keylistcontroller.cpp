@@ -167,6 +167,7 @@ private:
     std::vector<action_item> actions;
     std::vector<QAbstractItemView*> views;
     std::vector<Command*> commands;
+    QPointer<QWidget> parentWidget;
     QPointer<TabWidget> tabWidget;
     QPointer<QAbstractItemView> currentView;
     QPointer<AbstractKeyListModel> flatModel, hierarchicalModel;
@@ -178,6 +179,7 @@ KeyListController::Private::Private( KeyListController * qq )
       actions(),
       views(),
       commands(),
+      parentWidget(),
       tabWidget(),
       flatModel(),
       hierarchicalModel()
@@ -270,6 +272,14 @@ void KeyListController::setTabWidget( TabWidget * tabWidget ) {
     d->connectTabWidget();
 
     d->slotCurrentViewChanged( tabWidget ? tabWidget->currentView() : 0 );
+}
+
+void KeyListController::setParentWidget( QWidget * parent ) {
+    d->parentWidget = parent;
+}
+
+QWidget * KeyListController::parentWidget() const {
+    return d->parentWidget;
 }
 
 static const struct {
@@ -500,6 +510,8 @@ void KeyListController::Private::slotDoubleClicked( const QModelIndex & idx ) {
 	return;
 
     DetailsCommand * const c = new DetailsCommand( view, q );
+    if ( parentWidget )
+        c->setParentWidget( parentWidget );
 
     c->setIndex( idx );
     c->start();
@@ -620,7 +632,11 @@ void KeyListController::Private::slotActionTriggered() {
             = kdtools::find_if( actions, bind( &action_item::action, _1 ) == q->sender() );
         if ( it != actions.end() )
             if ( Command * const c = it->createCommand( this->currentView, q ) )
+            {
+                if ( parentWidget )
+                    c->setParentWidget( parentWidget );
                 c->start();
+            }
             else
                 qDebug( "KeyListController::Private::slotActionTriggered: createCommand() == NULL for action(?) \"%s\"", qPrintable( s->objectName() ) );
         else
