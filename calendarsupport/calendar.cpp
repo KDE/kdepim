@@ -185,6 +185,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   kDebug() << "id=" << item.id()
            << "version=" << item.revision()
            << "alreadyExisted=" << alreadyExisted
+           << "; mode = " << mode
            << "; calendar = " << q;
   Q_ASSERT( mode == DontCare || alreadyExisted == ( mode == AssertExists ) );
 
