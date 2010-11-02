@@ -30,6 +30,8 @@
     your version.
 */
 
+import Qt 4.7 as QML
+import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kleopatra 2.1 as Kleo
 
@@ -40,4 +42,66 @@ KPIM.MainView {
     id: keyTreeView
     anchors.fill: parent
   }
+
+  SlideoutPanelContainer {
+    anchors.fill: parent
+
+    SlideoutPanel {
+      id: actionPanel
+      titleText: KDE.i18n( "Actions" )
+      handlePosition : 125
+      handleHeight: 150
+      anchors.fill : parent
+
+      content : [
+        KleopatraActions {
+          id : kleopatraActions
+          anchors.fill : parent
+
+/*
+          scriptActions : [
+            KPIM.ScriptAction {
+              name : "show_about_dialog"
+              script : {
+                actionPanel.collapse();
+                aboutDialog.visible = true;
+              }
+            },
+            KPIM.ScriptAction {
+              name : "configure"
+              script : {
+                actionPanel.collapse();
+                configDialog.visible = true;
+              }
+            },
+            KPIM.ScriptAction {
+              name : "to_selection_screen"
+              script : {
+                actionPanel.collapse();
+                guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
+              }
+            },
+            KPIM.ScriptAction {
+              name : "add_as_favorite"
+              script : {
+                actionPanel.collapse();
+                application.saveFavorite();
+              }
+            },
+            KPIM.ScriptAction {
+              name : "start_maintenance"
+              script : {
+                actionPanel.collapse();
+                guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
+              }
+            }
+          ]
+*/
+
+          onDoCollapse : actionPanel.collapse();
+        }
+      ]
+    }
+  }
+
 }
