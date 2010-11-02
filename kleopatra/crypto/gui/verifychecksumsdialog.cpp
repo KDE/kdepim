@@ -181,13 +181,13 @@ namespace {
             
             // define some minimum sizes
             view.header()->resizeSection( 0, qMax( view.header()->sectionSize( 0 ), 220 ) );
-            view.header()->resizeSection( 1, qMax( view.header()->sectionSize( 1 ), 60 ) );
-            view.header()->resizeSection( 2, qMax( view.header()->sectionSize( 2 ), 60 ) );
+            view.header()->resizeSection( 1, qMax( view.header()->sectionSize( 1 ), 75 ) );
+            view.header()->resizeSection( 2, qMax( view.header()->sectionSize( 2 ), 75 ) );
             view.header()->resizeSection( 3, qMax( view.header()->sectionSize( 3 ), 140 ) );
             
             for( int i = 0; i < proxy.rowCount(); ++i )
                 r = r.united( view.visualRect( proxy.index( proxy.columnCount() - 1, i ) ) );
-            view.setMinimumSize( QSize( qBound( r.width() + 4 * view.frameWidth(), 4 * 100 + 4 * view.frameWidth(), 1024 ), // 100 is the default defaultSectionSize
+            view.setMinimumSize( QSize( qBound( r.width() + 4 * view.frameWidth(), 220+75+75+140 + 4 * view.frameWidth(), 1024 ), // 100 is the default defaultSectionSize
                                         qBound( r.height(), 220, 512 ) ) );
         }
 
