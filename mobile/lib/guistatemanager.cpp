@@ -134,6 +134,11 @@ bool GuiStateManager::inViewSingleItemState() const
   return (currentState() == ViewSingleItemState);
 }
 
+bool GuiStateManager::inSearchResultScreenState() const
+{
+  return (currentState() == SearchResultScreenState);
+}
+
 void GuiStateManager::emitChangedSignal()
 {
   emit guiStateChanged();

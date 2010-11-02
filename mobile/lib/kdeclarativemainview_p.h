@@ -20,7 +20,9 @@
 #define KDECLARATIVEMAINVIEW_P_H
 
 #include "kdeclarativemainview.h"
+
 #include "akonadibreadcrumbnavigationfactory.h"
+#include "searchmanager.h"
 #include "statemachinebuilder.h"
 
 #include <akonadi/agentfilterproxymodel.h>
@@ -66,6 +68,7 @@ public: /// members
   AgentStatusMonitor                 *mAgentStatusMonitor;
   GuiStateManager                    *mGuiStateManager;
   NotifyingStateMachine              *mStateMachine;
+  SearchManager                      *mSearchManager;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();
@@ -78,6 +81,8 @@ public slots:
   void restoreState();
   void filterLineEditChanged( const QString &text );
   void bulkActionFilterLineEditChanged( const QString &text );
+  void searchStarted( const Akonadi::Collection& );
+  void searchStopped();
 };
 
 #endif // KDECLARATIVEMAINVIEW_P_H

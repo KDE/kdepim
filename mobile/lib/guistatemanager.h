@@ -41,6 +41,7 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
   Q_PROPERTY( bool inBulkActionScreenState READ inBulkActionScreenState NOTIFY guiStateChanged )
   Q_PROPERTY( bool inMultipleFolderSelectionScreenState READ inMultipleFolderSelectionScreenState NOTIFY guiStateChanged )
   Q_PROPERTY( bool inViewSingleItemState READ inViewSingleItemState NOTIFY guiStateChanged )
+  Q_PROPERTY( bool inSearchResultScreenState READ inSearchResultScreenState NOTIFY guiStateChanged )
 
   Q_ENUMS( GuiState )
 
@@ -89,6 +90,11 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
        * is shown.
        */
       ViewSingleItemState,
+
+      /**
+       * The state when the user started a search and the results are listed.
+       */
+      SearchResultScreenState,
 
       /**
        * Point of extension.
@@ -176,6 +182,11 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      * Returns whether the current state is the view single item state.
      */
     bool inViewSingleItemState() const;
+
+    /**
+     * Returns whether the current state is the search result screen state.
+     */
+    bool inSearchResultScreenState() const;
 
   Q_SIGNALS:
     void guiStateChanged();

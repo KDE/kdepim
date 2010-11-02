@@ -130,6 +130,12 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   ActionImageProvider *provider = new ActionImageProvider;
   engine()->addImageProvider( QLatin1String( "action_images" ), provider );
+
+  d->mSearchManager = new SearchManager( this );
+  connect( d->mSearchManager, SIGNAL( searchStarted( const Akonadi::Collection& ) ),
+           d, SLOT( searchStarted( const Akonadi::Collection& ) ) );
+  connect( d->mSearchManager, SIGNAL( searchStopped() ),
+           d, SLOT( searchStopped() ) );
 }
 
 void KDeclarativeMainView::delayedInit()
@@ -174,6 +180,7 @@ void KDeclarativeMainView::delayedInit()
   }
 
   QDeclarativeContext *context = engine()->rootContext();
+  context->setContextProperty( "searchManager", d->mSearchManager );
 
   context->setContextProperty( "_breadcrumbNavigationFactory", d->mBnf );
 
@@ -394,6 +401,9 @@ void KDeclarativeMainView::breadcrumbsSelectionChanged()
 {
   const int numBreadcrumbs = qobject_cast<QAbstractItemModel*>( d->mBnf->qmlBreadcrumbsModel() )->rowCount();
   const int numSelectedItems = qobject_cast<QAbstractItemModel*>( d->mBnf->qmlSelectedItemModel() )->rowCount();
+
+  if ( d->mGuiStateManager->inSearchResultScreenState() )
+    return;
 
   if ( numBreadcrumbs == 0 && numSelectedItems == 0) {
     d->mGuiStateManager->switchState( GuiStateManager::HomeScreenState );

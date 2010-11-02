@@ -26,6 +26,7 @@
 #include <akonadi/etmviewstatesaver.h>
 
 #include "favoriteslistmodel.h"
+#include "guistatemanager.h"
 
 KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
   : mChangeRecorder( 0 )
@@ -97,3 +98,23 @@ void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString
     mBulkActionFilterLineEdit->hide();
   }
 }
+
+void KDeclarativeMainViewPrivate::searchStarted( const Akonadi::Collection &searchCollection )
+{
+  const QStringList selection = QStringList() << QString::fromLatin1( "c%1" ).arg( searchCollection.id() );
+  Akonadi::ETMViewStateSaver *restorer = new Akonadi::ETMViewStateSaver;
+
+  mGuiStateManager->pushState( GuiStateManager::SearchResultScreenState );
+
+  QItemSelectionModel *selectionModel = mBnf->selectionModel();
+  selectionModel->clearSelection();
+
+  restorer->setSelectionModel( selectionModel );
+  restorer->restoreSelection( selection );
+}
+
+void KDeclarativeMainViewPrivate::searchStopped()
+{
+  mGuiStateManager->popState();
+}
+

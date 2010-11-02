@@ -43,17 +43,20 @@ KPIM.ActionList {
       longPressed(name);
     }
   }
+
   KPIM.ActionListItem {
     name : "add_new_" + type
     onPressAndHold: {
       longPressed(name);
     }
   }
-  // TODO: implement us!
-/*  KPIM.FakeAction {
+
+  KPIM.ScriptActionItem {
+    id : searchAction
     name : "search_" + type
+    title : KDE.i18n( "Search" )
   }
-*/
+
   KPIM.ActionListItem {
     name : "akonadi_work_offline"
     onPressAndHold: {

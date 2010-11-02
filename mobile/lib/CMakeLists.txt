@@ -7,6 +7,7 @@ include_directories(
 add_subdirectory( calendar )
 
 set(mobileui_SRCS
+    agentstatusmonitor.cpp
     akonadibreadcrumbnavigationfactory.cpp
     breadcrumbnavigation.cpp
     breadcrumbnavigationcontext.cpp
@@ -22,15 +23,15 @@ set(mobileui_SRCS
     kdeclarativemainview_p.cpp
     kresettingproxymodel.cpp
     listproxy.cpp
+    modelselectiontransition.cpp
     orderedchildcollectionsmodel.cpp
     qmllistselectionmodel.cpp
+    searchmanager.cpp
+    statemachinebuilder.cpp
     stylesheetloader.cpp
     threadmodel.cpp
     threadgroupermodel.cpp
     threadselectionmodel.cpp
-    agentstatusmonitor.cpp
-    modelselectiontransition.cpp
-    statemachinebuilder.cpp
 )
 
 if (KDEQMLPLUGIN_STATIC)
