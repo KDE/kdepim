@@ -156,21 +156,26 @@ public:
     explicit Private( MainWindow * qq );
     ~Private();
 
+    void start( Command * c ) {
+        c->setParentWidget( q );
+        c->start();
+    }
+
     template <typename T>
     void createAndStart() {
-        ( new T( this->currentView(), &this->controller ) )->start();
+        this->start( new T( this->currentView(), &this->controller ) );
     }
     template <typename T>
     void createAndStart( QAbstractItemView * view ) {
-        ( new T( view, &this->controller ) )->start();
+        start( new T( view, &this->controller ) );
     }
     template <typename T>
     void createAndStart( const QStringList & a ) {
-        ( new T( a, this->currentView(), &this->controller ) )->start();
+        start( new T( a, this->currentView(), &this->controller ) );
     }
     template <typename T>
     void createAndStart( const QStringList & a, QAbstractItemView * view ) {
-        ( new T( a, view, &this->controller ) )->start();
+        start( new T( a, view, &this->controller ) );
     }
 
     void closeAndQuit() {
