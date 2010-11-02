@@ -252,6 +252,7 @@ MainWindow::Private::Private( MainWindow * qq )
 
     controller.setFlatModel( flatModel );
     controller.setHierarchicalModel( hierarchicalModel );
+    controller.setParentWidget( q );
 
 }
 
