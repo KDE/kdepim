@@ -48,7 +48,6 @@ int main( int argc, char **argv )
   aboutData.setProductName( "KOrganizer Mobile/tasks" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
 
   KGlobal::locale()->insertCatalog( "libincidenceeditors" );

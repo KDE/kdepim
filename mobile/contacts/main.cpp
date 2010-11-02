@@ -39,7 +39,6 @@ int main( int argc, char **argv )
   aboutData.setProductName( "KAddressbook Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
 
   MainView view;

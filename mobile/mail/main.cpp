@@ -45,7 +45,6 @@ int main( int argc, char **argv )
   aboutData.setProductName( "KMail Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
 
   KGlobal::locale()->insertCatalog( "libmessagecore" );
