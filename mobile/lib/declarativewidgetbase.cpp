@@ -22,10 +22,11 @@
 #include "stylesheetloader.h"
 
 #include <QtGui/QGraphicsScene>
-//#include <QtDeclarative/QDeclarativeItem>
+#include <QtGui/QWidget>
 
-DeclarativeWidgetBaseHelper::DeclarativeWidgetBaseHelper( QWidget * widget, QGraphicsItem * parent )
+DeclarativeWidgetBaseHelper::DeclarativeWidgetBaseHelper( QWidget * widget, QGraphicsItem * parent, const RegisterFunction & registerFunc )
     : QGraphicsProxyWidget( parent ),
+      m_registerFunc( registerFunc ),
       m_widget( widget )
 {
     Q_ASSERT( m_widget );
@@ -39,3 +40,13 @@ DeclarativeWidgetBaseHelper::DeclarativeWidgetBaseHelper( QWidget * widget, QGra
 }
 
 DeclarativeWidgetBaseHelper::~DeclarativeWidgetBaseHelper() {}
+
+QVariant DeclarativeWidgetBaseHelper::itemChange( GraphicsItemChange change, const QVariant & value )
+{
+    if ( !m_registerFunc.empty() )
+        if ( change == ItemSceneHasChanged )
+            if ( QGraphicsScene* scene = value.value<QGraphicsScene*>() )
+                Q_FOREACH( QGraphicsView * v, scene->views() )
+                    m_registerFunc( v, m_widget );
+    return QGraphicsProxyWidget::itemChange ( change, value );
+}

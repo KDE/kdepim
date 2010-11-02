@@ -23,8 +23,11 @@
 #include "mobileui_export.h"
 
 #include <QtGui/QGraphicsProxyWidget>
-#include <QtGui/QGraphicsScene>
-#include <QtDeclarative/QDeclarativeItem>
+
+#include <boost/function.hpp>
+
+class QGraphicsView;
+class QWidget;
 
 /**
    \internal
@@ -32,12 +35,17 @@
 class MOBILEUI_EXPORT DeclarativeWidgetBaseHelper : public QGraphicsProxyWidget
 {
 protected:
-    DeclarativeWidgetBaseHelper( QWidget * widget, QGraphicsItem *parent );
+    typedef boost::function<void(QGraphicsView*,QWidget*)> RegisterFunction;
+    DeclarativeWidgetBaseHelper( QWidget * widget, QGraphicsItem *parent, const RegisterFunction & registerFunc );
     ~DeclarativeWidgetBaseHelper();
 
     QWidget * widget() const { return m_widget; }
 
+protected:
+    /* reimp */ QVariant itemChange( GraphicsItemChange change, const QVariant & value );
+
 private:
+    const RegisterFunction m_registerFunc;
     QWidget * m_widget;
 };
 
@@ -46,26 +54,20 @@ class DeclarativeWidgetBase : public DeclarativeWidgetBaseHelper
 {
   public:
     explicit DeclarativeWidgetBase( QGraphicsItem *parent = 0 )
-        : DeclarativeWidgetBaseHelper( new WidgetT, parent ) {}
+        : DeclarativeWidgetBaseHelper( new WidgetT, parent, &notify ) {}
 
     /** use this constructor if you inherit from this template to customize widget construction. */
     DeclarativeWidgetBase( WidgetT *widget, QGraphicsItem *parent )
-        : DeclarativeWidgetBaseHelper( widget, parent ) {}
-
-  protected:
-    QVariant itemChange ( GraphicsItemChange change, const QVariant& value )
-    {
-      if ( change == ItemSceneHasChanged ) {
-        if ( QGraphicsScene* scene = value.value<QGraphicsScene*>() )
-          Q_FOREACH( QGraphicsView * v, scene->views() )
-            if ( ViewT * view = qobject_cast<ViewT*>( v ) )
-              (view->*registerFunc)( widget() );
-      }
-      return QGraphicsProxyWidget::itemChange ( change, value );
-    }
+        : DeclarativeWidgetBaseHelper( widget, parent, &notify ) {}
 
   protected:
     WidgetT * widget() const { return static_cast<WidgetT*>( DeclarativeWidgetBaseHelper::widget() ); }
+
+  private:
+    static void notify( QGraphicsView * v, QWidget * w ) {
+        if ( ViewT * view = qobject_cast<ViewT*>( v ) )
+            (view->*registerFunc)( static_cast<WidgetT*>( w ) );
+    }
 };
 
 #endif
