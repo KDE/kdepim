@@ -38,7 +38,7 @@ ActionMenuContainer {
 
   menuStyle : true
 
-  actionItemHeight : height / 6 - actionItemSpacing
+  actionItemHeight : height / 7 - actionItemSpacing
   actionItemWidth : 200
   actionItemSpacing : 2
 
