@@ -2,6 +2,7 @@
 Name=Air
 Name[en_GB]=Air
 Name[es]=Aire
+Name[et]=Air
 Name[gl]=Air
 Name[ia]=Air
 Name[lt]=Oras
@@ -17,6 +18,7 @@ Name[zh_TW]=Air
 Description=An Air theme
 Description[en_GB]=An Air theme
 Description[es]=Un tema aire
+Description[et]=Airi teema
 Description[gl]=Un tema Air
 Description[ia]=Un Thema de Air
 Description[lt]=Oro tema

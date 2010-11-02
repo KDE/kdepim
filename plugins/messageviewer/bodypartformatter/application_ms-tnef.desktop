@@ -2,6 +2,7 @@
 Name=TNEF
 Name[en_GB]=TNEF
 Name[es]=TNEF
+Name[et]=TNEF
 Name[gl]=TNEF
 Name[lt]=TNEF
 Name[nb]=TNEF
@@ -16,6 +17,7 @@ Name[zh_TW]=TNEF
 Comment=A bodypart formatter plugin for TNEF attachments
 Comment[en_GB]=A bodypart formatter plugin for TNEF attachments
 Comment[es]=Un complemento de formato para el cuerpo de adjuntos TNEF
+Comment[et]=TNEF-manuste põhiosa vormindamisplugin
 Comment[gl]=Un engadido para formatar o corpo dos engadidos TNEF
 Comment[ja]=TNEF 用のメッセージ本体フォーマッタ
 Comment[nb]=Et programtillegg for  brødtekst-formatering av TNEF-vedlegg
