@@ -56,7 +56,7 @@ void DIEGeneral::hack()
   //
   // Without this hack the widget gets a width that is too large for the app. It
   // doesn't seem to matter which size you pass here.
-  m_widget->resize( QSize() );
+  widget()->resize( QSize() );
 }
 
 MobileIncidenceMore::MobileIncidenceMore( QWidget *parent )
@@ -78,12 +78,12 @@ DIEMore::DIEMore( QGraphicsItem *parent )
 
 int DIEMore::currentIndex() const
 {
-  return m_widget->currentIndex();
+  return widget()->currentIndex();
 }
 
 void DIEMore::setCurrentIndex( int index )
 {
-  m_widget->setCurrentIndex( index );
+  widget()->setCurrentIndex( index );
 }
 
 #include "declarativeeditors.moc"
