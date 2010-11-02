@@ -89,6 +89,7 @@ class PIMSTRIGI_ANALYZER_EXPORT MailEndAnalyzerFactory : public Strigi::StreamEn
     const Strigi::RegisteredField* messageContentField;
 
     const Strigi::RegisteredField* typeField;
+    const Strigi::RegisteredField* isPartOfField;
 
     const char* name() const;
     Strigi::StreamEndAnalyzer* newInstance() const;

@@ -25,6 +25,7 @@
 #include "config-strigi.h"
 #include "pimstrigi-analyzer_export.h"
 
+#include <kcalcore/incidence.h>
 #include <kcomponentdata.h>
 
 #include <strigi/analyzerplugin.h>
@@ -42,6 +43,8 @@ class PIMSTRIGI_ANALYZER_EXPORT IcsEndAnalyzer : public Strigi::StreamEndAnalyze
     STRIGI_ENDANALYZER_RETVAL analyze( Strigi::AnalysisResult &index, Strigi::InputStream *stream );
 
   private:
+    void addIncidenceValues( Strigi::AnalysisResult &index, const KCalCore::Incidence::Ptr &incidence );
+
     const IcsEndAnalyzerFactory* m_factory;
 };
 
@@ -58,9 +61,14 @@ class PIMSTRIGI_ANALYZER_EXPORT IcsEndAnalyzerFactory : public Strigi::StreamEnd
     const Strigi::RegisteredField* todosOverdueField;
     const Strigi::RegisteredField* typeField;
     const Strigi::RegisteredField* uidField;
+    const Strigi::RegisteredField* categoryField;
     const Strigi::RegisteredField* descriptionField;
+    const Strigi::RegisteredField* dtStartField;
+    const Strigi::RegisteredField* dtEndField;
+    const Strigi::RegisteredField* dtDueField;
     const Strigi::RegisteredField* locationField;
     const Strigi::RegisteredField* summaryField;
+    const Strigi::RegisteredField* isPartOfField;
 
     const char* name() const;
     Strigi::StreamEndAnalyzer* newInstance() const;

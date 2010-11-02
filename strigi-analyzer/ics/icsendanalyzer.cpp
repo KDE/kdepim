@@ -29,7 +29,15 @@
 #include <strigi/fieldtypes.h>
 #include <strigi/streamendanalyzer.h>
 
+#include <QtCore/QUrl>
+
 using namespace KCalCore;
+
+// Strigi does string-based comparison, so we need a proper string format for dates
+static QString formatComparableDate( const KDateTime &dateTime )
+{
+  return dateTime.date().toString( "yyyyMMdd" );
+}
 
 IcsEndAnalyzer::IcsEndAnalyzer( const IcsEndAnalyzerFactory *factory )
   : m_factory( factory )
@@ -47,6 +55,24 @@ bool IcsEndAnalyzer::checkHeader( const char* header, qint32 headersize ) const
   const qint32 magicLength = strlen( magic );
 
   return headersize >= magicLength && !strncmp( magic, header, magicLength );
+}
+
+void IcsEndAnalyzer::addIncidenceValues( Strigi::AnalysisResult &index, const Incidence::Ptr &incidence )
+{
+  index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo" );
+  index.addValue( m_factory->uidField, incidence->uid().toUtf8().data() );
+
+  if ( !incidence->description().isEmpty() )
+    index.addValue( m_factory->descriptionField, incidence->description().toUtf8().data() );
+
+  if ( !incidence->location().isEmpty() )
+    index.addValue( m_factory->locationField, incidence->location().toUtf8().data() );
+
+  if ( !incidence->summary().isEmpty() )
+    index.addValue( m_factory->summaryField, incidence->summary().toUtf8().data() );
+
+  foreach ( const QString &category, incidence->categories() )
+    index.addValue( m_factory->categoryField, category.toUtf8().data() );
 }
 
 /*
@@ -93,52 +119,36 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult &index
   index.addValue( m_factory->todosCompletedField, static_cast<quint32>( completed ) );
   index.addValue( m_factory->todosOverdueField, static_cast<quint32>( overdue ) );
 
+  const QUrl url( QString::fromAscii( index.path().data(), index.path().size() ) );
+  if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "collection" ) )
+    index.addValue( m_factory->isPartOfField, url.queryItemValue( "collection" ).toUtf8().data() );
+
   // add events
   foreach ( const Event::Ptr &event, calendar->events() ) {
     index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#Event" );
-    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo" );
-    index.addValue( m_factory->uidField, event->uid().toUtf8().data() );
+    addIncidenceValues( index, event );
 
-    if ( !event->description().isEmpty() )
-      index.addValue( m_factory->descriptionField, event->description().toUtf8().data() );
+    index.addValue( m_factory->dtStartField, formatComparableDate( event->dtStart() ).toUtf8().data() );
 
-    if ( !event->location().isEmpty() )
-      index.addValue( m_factory->locationField, event->location().toUtf8().data() );
-
-    if ( !event->summary().isEmpty() )
-      index.addValue( m_factory->summaryField, event->summary().toUtf8().data() );
+    if ( event->hasEndDate() )
+      index.addValue( m_factory->dtEndField, formatComparableDate( event->dtStart() ).toUtf8().data() );
   }
 
   // add todos
   foreach ( const Todo::Ptr &todo, calendar->todos() ) {
     index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#Todo" );
-    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo" );
-    index.addValue( m_factory->uidField, todo->uid().toUtf8().data() );
+    addIncidenceValues( index, todo );
 
-    if ( !todo->description().isEmpty() )
-      index.addValue( m_factory->descriptionField, todo->description().toUtf8().data() );
+    index.addValue( m_factory->dtStartField, formatComparableDate( todo->dtStart() ).toUtf8().data() );
 
-    if ( !todo->location().isEmpty() )
-      index.addValue( m_factory->locationField, todo->location().toUtf8().data() );
-
-    if ( !todo->summary().isEmpty() )
-      index.addValue( m_factory->summaryField, todo->summary().toUtf8().data() );
+    if ( todo->hasDueDate() )
+      index.addValue( m_factory->dtDueField, formatComparableDate( todo->dtDue() ).toUtf8().data() );
   }
 
   // add journals
   foreach ( const Journal::Ptr &journal, calendar->journals() ) {
     index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#Journal" );
-    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo" );
-    index.addValue( m_factory->uidField, journal->uid().toUtf8().data() );
-
-    if ( !journal->description().isEmpty() )
-      index.addValue( m_factory->descriptionField, journal->description().toUtf8().data() );
-
-    if ( !journal->location().isEmpty() )
-      index.addValue( m_factory->locationField, journal->location().toUtf8().data() );
-
-    if ( !journal->summary().isEmpty() )
-      index.addValue( m_factory->summaryField, journal->summary().toUtf8().data() );
+    addIncidenceValues( index, journal );
   }
 
   calendar->close();
@@ -155,10 +165,15 @@ void IcsEndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
   todosCompletedField = reg.registerField( "Todos Completed", Strigi::FieldRegister::integerType, 1, 0 );
   todosOverdueField = reg.registerField( "Todos Overdue", Strigi::FieldRegister::integerType, 1, 0 );
 
+  categoryField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#categories" );
   descriptionField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#description" );
+  dtStartField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#dtstart" );
+  dtEndField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#dtend" );
+  dtDueField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#due" );
   locationField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#location" );
   summaryField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#summary" );
   uidField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#uid" );
+  isPartOfField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf" );
   typeField = reg.typeField;
 }
 

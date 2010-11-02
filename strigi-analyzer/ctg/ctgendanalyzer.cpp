@@ -31,6 +31,8 @@
 
 #include <QtCore/QBuffer>
 #include <QtCore/QDebug>
+#include <QtCore/QString>
+#include <QtCore/QUrl>
 
 CtgEndAnalyzer::CtgEndAnalyzer( const CtgEndAnalyzerFactory *factory )
   : m_factory( factory )
@@ -65,6 +67,10 @@ STRIGI_ENDANALYZER_RETVAL CtgEndAnalyzer::analyze( Strigi::AnalysisResult &index
   if ( !result )
     return Strigi::Error;
 
+  const QUrl url( QString::fromAscii( index.path().data(), index.path().size() ) );
+  if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "collection" ) )
+    index.addValue( m_factory->isPartOfField, url.queryItemValue( "collection" ).toUtf8().data() );
+
   index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#ContactGroup" );
 
   index.addValue( m_factory->nameField, group.name().toUtf8().data() );
@@ -85,6 +91,7 @@ Strigi::StreamEndAnalyzer* CtgEndAnalyzerFactory::newInstance() const
 void CtgEndAnalyzerFactory::registerFields( Strigi::FieldRegister &reg )
 {
   nameField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contactGroupName" );
+  isPartOfField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf" );
 
   typeField = reg.typeField;
 }

@@ -79,6 +79,10 @@ STRIGI_ENDANALYZER_RETVAL MailEndAnalyzer::analyze( Strigi::AnalysisResult &inde
   message->setContent( text );
   message->parse();
 
+  const QUrl url( QString::fromAscii( index.path().data(), index.path().size() ) );
+  if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "collection" ) )
+    index.addValue( m_factory->isPartOfField, url.queryItemValue( "collection" ).toUtf8().data() );
+
   MessageAnalyzer analyzer( message, this );
 
   QEventLoop loop;
@@ -131,6 +135,7 @@ void MailEndAnalyzerFactory::registerFields( Strigi::FieldRegister &reg )
   referencesField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#references" );
   inReplyToField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#inReplyTo" );
   messageContentField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#plainTextMessageContent" );
+  isPartOfField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf" );
   contentTypeField = reg.mimetypeField;
   typeField = reg.typeField;
 }

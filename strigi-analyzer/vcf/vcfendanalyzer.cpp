@@ -59,6 +59,10 @@ STRIGI_ENDANALYZER_RETVAL VcfEndAnalyzer::analyze( Strigi::AnalysisResult &index
   if ( contact.isEmpty() )
     return Strigi::Error;
 
+  const QUrl url( QString::fromAscii( index.path().data(), index.path().size() ) );
+  if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "collection" ) )
+    index.addValue( m_factory->isPartOfField, url.queryItemValue( "collection" ).toUtf8().data() );
+
   index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#PersonContact" );
 
   if ( !contact.prefix().isEmpty() )
@@ -148,6 +152,7 @@ void VcfEndAnalyzerFactory::registerFields( Strigi::FieldRegister &reg )
 
   uidField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contactUID" );
   photoField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#photo" );
+  isPartOfField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf" );
 
   typeField = reg.typeField;
 }

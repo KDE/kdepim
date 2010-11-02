@@ -55,6 +55,7 @@ class PIMSTRIGI_ANALYZER_EXPORT CtgEndAnalyzerFactory : public Strigi::StreamEnd
   public:
     const Strigi::RegisteredField* nameField;
     const Strigi::RegisteredField* typeField;
+    const Strigi::RegisteredField* isPartOfField;
 
     const char* name() const;
     Strigi::StreamEndAnalyzer* newInstance() const;
