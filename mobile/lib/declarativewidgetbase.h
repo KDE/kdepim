@@ -20,12 +20,31 @@
 #ifndef DECLARATIVEWIDGETBASE_H
 #define DECLARATIVEWIDGETBASE_H
 
+#include "mobileui_export.h"
+
 #include "stylesheetloader.h"
 
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsScene>
 #include <QtDeclarative/QDeclarativeItem>
 
+/**
+   \internal
+*/
+class MOBILEUI_EXPORT DeclarativeWidgetBaseHelper : public QGraphicsProxyWidget
+{
+protected:
+    DeclarativeWidgetBaseHelper( QWidget * widget, QGraphicsItem *parent );
+    ~DeclarativeWidgetBaseHelper();
+
+    QWidget * widget() const { return m_widget; }
+
+private:
+    void init();
+
+private:
+    QWidget * m_widget;
+};
 
 template <typename WidgetT, typename ViewT, void (ViewT::*registerFunc)( WidgetT* )>
 class DeclarativeWidgetBase : public QGraphicsProxyWidget

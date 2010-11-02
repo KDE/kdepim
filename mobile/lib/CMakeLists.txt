@@ -11,6 +11,7 @@ set(mobileui_SRCS
     akonadibreadcrumbnavigationfactory.cpp
     breadcrumbnavigation.cpp
     breadcrumbnavigationcontext.cpp
+    declarativewidgetbase.cpp
     declarativeakonadiitem.cpp
     exporthandlerbase.cpp
     favoriteslistmodel.cpp
