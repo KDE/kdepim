@@ -359,4 +359,8 @@ install( FILES kleopatra_signencryptfiles.desktop
 
 install( FILES kleopatra.rc DESTINATION ${DATA_INSTALL_DIR}/kleopatra )
 
+if ( KDEPIM_MOBILE_UI )
+   install( FILES qml/kleopatra-mobile.qml DESTINATION ${DATA_INSTALL_DIR}/kleopatra )
+endif ( KDEPIM_MOBILE_UI )
+
 kde4_install_icons( ${ICON_INSTALL_DIR} )
