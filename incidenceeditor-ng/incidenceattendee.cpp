@@ -134,7 +134,7 @@ void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
       }
     }
     if ( found < 0 && !fullOrganizer.isEmpty() ) {
-      mUi->mOrganizerCombo->addItem( fullOrganizer, 0 );
+      mUi->mOrganizerCombo->insertItem( 0, fullOrganizer );
       mUi->mOrganizerCombo->setCurrentIndex( 0 );
     }
   } else { // someone else is the organizer
