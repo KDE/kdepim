@@ -86,7 +86,8 @@ void KDeclarativeApplication::postApplicationSetup()
   KGlobal::locale()->insertCatalog( "libkdepimmobileui" );
 }
 
-void KDeclarativeApplication::initCmdLine()
+// static
+void KDeclarativeApplication::preApplicationSetup()
 {
   // doesn't really belong here, but needs to be called before the ctor
   QApplication::setGraphicsSystem( "raster" );
