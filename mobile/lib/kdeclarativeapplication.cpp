@@ -96,6 +96,15 @@ void KDeclarativeApplication::preApplicationSetup()
 // static
 void KDeclarativeApplication::preApplicationSetup( const KCmdLineOptions & appOptions )
 {
+  static bool run = false;
+
+  if ( run ) {
+    kDebug() << "called twice";
+    return;
+  }
+
+  run = true;
+
   // doesn't really belong here, but needs to be called before the ctor
   QApplication::setGraphicsSystem( "raster" );
 
