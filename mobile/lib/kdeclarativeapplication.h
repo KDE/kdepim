@@ -23,6 +23,8 @@
 #include "mobileui_export.h"
 #include <kuniqueapplication.h>
 
+class KCmdLineOptions;
+
 class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
 {
   Q_OBJECT
@@ -31,7 +33,12 @@ class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
 
     /** Sets up some stuff. Only needs to be called (before the
         KApplication constructor) if you don't use
-        KDeclarativeApplication as your KApplication
+        KDeclarativeApplication as your KApplication.
+        You can pass your own options as \a applicationOptions.
+    */
+    static void preApplicationSetup( const KCmdLineOptions & applicationOptions );
+    /**
+       \overload
     */
     static void preApplicationSetup();
 

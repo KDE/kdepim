@@ -89,10 +89,17 @@ void KDeclarativeApplication::postApplicationSetup()
 // static
 void KDeclarativeApplication::preApplicationSetup()
 {
+  preApplicationSetup( KCmdLineOptions() );
+}
+
+
+// static
+void KDeclarativeApplication::preApplicationSetup( const KCmdLineOptions & appOptions )
+{
   // doesn't really belong here, but needs to be called before the ctor
   QApplication::setGraphicsSystem( "raster" );
 
-  KCmdLineOptions options;
+  KCmdLineOptions options(appOptions);
   options.add("timeit", ki18n("start timers for various parts of the application startup"));
   options.add("enable-opengl", ki18n("use OpenGL ES acceleration for rendering (for testing only)"));
   options.add("disable-opengl", ki18n("do not use OpenGL ES acceleration for rendering (for testing only)"));
