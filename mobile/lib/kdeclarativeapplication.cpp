@@ -24,7 +24,19 @@
 #include <QFont>
 #include <KCmdLineArgs>
 
+static inline bool runPreApplicationSetup( const KCmdLineOptions & opts ) {
+    KDeclarativeApplication::preApplicationSetup();
+    return true; // <-- default value of KApplication(bool) ctor
+}
+
 KDeclarativeApplication::KDeclarativeApplication()
+    : KApplication( runPreApplicationSetup( KCmdLineOptions() ) ) // inject some code before KApplication ctor runs
+{
+    postApplicationSetup();
+}
+
+KDeclarativeApplication::KDeclarativeApplication( const KCmdLineOptions & opts )
+    : KApplication( runPreApplicationSetup( opts ) ) // inject some code before KApplication ctor runs
 {
     postApplicationSetup();
 }

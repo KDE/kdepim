@@ -30,6 +30,7 @@ class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
   Q_OBJECT
   public:
     KDeclarativeApplication();
+    explicit KDeclarativeApplication( const KCmdLineOptions & applicationOptions );
 
     /** Sets up some stuff. Only needs to be called (before the
         KApplication constructor) if you don't use
