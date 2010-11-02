@@ -121,7 +121,8 @@ QML.Column {
   QML.Rectangle {
       anchors.left : _top.left
       anchors.right : _top.right
-      anchors.top: _top.top + itemHeight
+      anchors.top: _top.top
+      anchors.topMargin: itemHeight
       height: _top.height - itemHeight
       clip: true
       QML.ListView {
