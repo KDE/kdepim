@@ -36,10 +36,11 @@ set(kmail_mobile_srcs
   messageviewitem.cpp
   mobilekernel.cpp
   savemailcommand.cpp
+  searchwidget.cpp
   templateemailmodel.cpp
 )
 
-qt4_wrap_ui(kmail_mobile_srcs configwidget.ui filterconfigwidget.ui)
+qt4_wrap_ui(kmail_mobile_srcs configwidget.ui filterconfigwidget.ui searchwidget.ui)
 kde4_add_kcfg_files(kmail_mobile_srcs settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)
@@ -96,6 +97,7 @@ install(FILES
   kmail-mobile.notifyrc
   dividing-line.png
   dividing-line-horizontal.png
+  SearchDialog.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
 

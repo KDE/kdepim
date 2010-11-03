@@ -526,6 +526,13 @@ KPIM.MainView {
                 }
               },
               KPIM.ScriptAction {
+                name : "search_mail"
+                script : {
+                  actionPanel.collapse();
+                  guiStateManager.pushState( KPIM.GuiStateManager.SearchScreenState );
+                }
+              },
+              KPIM.ScriptAction {
                 name : "filters_configure"
                 script : {
                   actionPanel.collapse();
@@ -661,6 +668,33 @@ KPIM.MainView {
     }
   }
 
+  KPIM.BulkActionScreen {
+    id : searchResultScreen
+    visible : guiStateManager.inSearchResultScreenState
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+    backgroundImage : backgroundImage.source
+    property bool initialized : false
+
+    actionListWidth : 1/3 * parent.width
+    multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
+    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
+    headerList : HeaderView {
+      showCheckBox : true
+      id: searchResultHeaderList
+      model: itemModel
+      checkModel : _itemActionModel
+      anchors.fill : parent
+    }
+    onBackClicked : {
+      searchManager.stopSearch();
+    }
+  }
+
+
   ConfigDialog {
     id: configDialog
     visible: false
@@ -695,5 +729,9 @@ KPIM.MainView {
   KPIM.AboutDialog {
     id : aboutDialog
     source: backgroundImage.source
+  }
+
+  SearchDialog {
+    id : searchDialog
   }
 }
