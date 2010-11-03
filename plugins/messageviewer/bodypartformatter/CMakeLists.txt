@@ -23,7 +23,7 @@ install(TARGETS messageviewer_bodypartformatter_text_vcard  DESTINATION ${PLUGIN
 endif(NOT WINCE)
 
 ########### next target ###############
-set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp)
+set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp memorycalendarmemento.cpp )
 
 qt4_add_dbus_interfaces(messageviewer_bodypartformatter_text_calendar_PART_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
