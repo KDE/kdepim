@@ -27,6 +27,7 @@ QML.Rectangle {
   anchors.fill: parent
   z: 10
   color: "white"
+  visible: guiStateManager.inConfigScreenState
 
   QML.Flickable {
     id: configWidgetBox
@@ -59,7 +60,7 @@ QML.Rectangle {
     buttonText: KDE.i18n( "Ok" )
     onClicked: {
       configWidget.save();
-      configDialog.visible = false
+      guiStateManager.popState()
     }
   }
 
@@ -70,7 +71,7 @@ QML.Rectangle {
     width: 150
     buttonText: KDE.i18n( "Cancel" )
     onClicked: {
-      configDialog.visible = false
+      guiStateManager.popState()
     }
   }
 }

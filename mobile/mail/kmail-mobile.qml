@@ -522,7 +522,7 @@ KPIM.MainView {
                 name : "configure"
                 script : {
                   actionPanel.collapse();
-                  configDialog.visible = true;
+                  guiStateManager.pushState( KPIM.GuiStateManager.ConfigScreenState );
                 }
               },
               KPIM.ScriptAction {
@@ -694,18 +694,6 @@ KPIM.MainView {
     }
   }
 
-
-  ConfigDialog {
-    id: configDialog
-    visible: false
-  }
-
-  FilterConfigDialog {
-    id: filterConfigDialog
-    visible: false
-    filterModel: _filterModel
-  }
-
   QML.Connections {
     target: startPage
     onAccountSelected : {
@@ -731,7 +719,17 @@ KPIM.MainView {
     source: backgroundImage.source
   }
 
+  ConfigDialog {
+    id: configDialog
+  }
+
   SearchDialog {
     id : searchDialog
+  }
+
+  FilterConfigDialog {
+    id: filterConfigDialog
+    visible: false
+    filterModel: _filterModel
   }
 }

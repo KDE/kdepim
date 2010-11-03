@@ -144,6 +144,11 @@ bool GuiStateManager::inSearchResultScreenState() const
   return (currentState() == SearchResultScreenState);
 }
 
+bool GuiStateManager::inConfigScreenState() const
+{
+  return (currentState() == ConfigScreenState);
+}
+
 void GuiStateManager::emitChangedSignal()
 {
   emit guiStateChanged();

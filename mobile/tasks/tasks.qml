@@ -274,7 +274,7 @@ KPIM.MainView {
               name : "configure"
               script : {
                 actionPanel.collapse();
-                configDialog.visible = true;
+                guiStateManager.pushState( KPIM.GuiStateManager.ConfigScreenState );
               }
             },
             KPIM.ScriptAction {
@@ -431,7 +431,6 @@ KPIM.MainView {
 
   ConfigDialog {
     id: configDialog
-    visible: false
   }
 
   SearchDialog {

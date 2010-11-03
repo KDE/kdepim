@@ -43,6 +43,7 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
   Q_PROPERTY( bool inViewSingleItemState READ inViewSingleItemState NOTIFY guiStateChanged )
   Q_PROPERTY( bool inSearchScreenState READ inSearchScreenState NOTIFY guiStateChanged )
   Q_PROPERTY( bool inSearchResultScreenState READ inSearchResultScreenState NOTIFY guiStateChanged )
+  Q_PROPERTY( bool inConfigScreenState READ inConfigScreenState NOTIFY guiStateChanged )
 
   Q_ENUMS( GuiState )
 
@@ -101,6 +102,11 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
        * The state when the user started a search and the results are listed.
        */
       SearchResultScreenState,
+
+      /**
+       * The state when the main configuration dialog is shown.
+       */
+      ConfigScreenState,
 
       /**
        * Point of extension.
@@ -198,6 +204,11 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      * Returns whether the current state is the search result screen state.
      */
     bool inSearchResultScreenState() const;
+
+    /**
+     * Returns whether the current state is the config screen state.
+     */
+    bool inConfigScreenState() const;
 
   Q_SIGNALS:
     void guiStateChanged();
