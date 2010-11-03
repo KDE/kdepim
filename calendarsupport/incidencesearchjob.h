@@ -45,7 +45,7 @@ namespace CalendarSupport {
  * @code
  *
  * // Search all incidences with uid 1234
- * CalendarSupport::IncidenceSearchJob *job = new Akonadi::IncidenceSearchJob();
+ * CalendarSupport::IncidenceSearchJob *job = new CalendarSupport::IncidenceSearchJob();
  * job->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, "1234", CalendarSupport::IncidenceSearchJob::ExactMatch );
  * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
  *
