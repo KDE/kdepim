@@ -39,6 +39,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+class KLineEdit;
+
 namespace Kleo {
 
     class KeyFilter;
@@ -51,6 +53,8 @@ namespace Kleo {
 
         QString stringFilter() const;
         const boost::shared_ptr<KeyFilter> & keyFilter() const;
+
+        KLineEdit * lineEdit() const;
                                                          
     public Q_SLOTS:
         void setStringFilter( const QString & text );

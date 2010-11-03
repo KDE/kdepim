@@ -143,5 +143,9 @@ void SearchBar::setChangeKeyFilterEnabled( bool on ) {
     d->combo->setEnabled( on );
 }
 
+KLineEdit * SearchBar::lineEdit() const {
+    return d->lineEdit;
+}
+
 #include "moc_searchbar.cpp"
 
