@@ -258,6 +258,7 @@ signals:
     void clickedOnNonObjectSignal();
     void sigShowStatusMessage ( const QString&, bool );
     void sigBusy ( bool );
+    void textChanged();
 
 protected:
     virtual void focusInEvent ( QFocusEvent* );

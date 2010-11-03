@@ -79,19 +79,19 @@ Q_SIGNALS:
     void sigSetBlogStyle();
 
 protected Q_SLOTS:
-    void sltGetBlogStyle();
+    void slotGetBlogStyle();
 
-    void sltSetBlogStyle();
+    void slotSetBlogStyle();
 
-    void sltCompleted();
+    void slotCompleted();
 
-    void sltCanceled( const QString& errMsg );
+    void slotCanceled( const QString& errMsg );
 
-    void sltSetStatusBarText( const QString& text );
+    void slotSetStatusBarText( const QString& text );
 
-    void sltViewModeChanged();
+    void slotViewModeChanged();
 
-    void sltOpenRequested( const KUrl& url );
+    void slotOpenRequested( const KUrl& url );
 
 private:
     void createUi( QWidget *parent = 0 );

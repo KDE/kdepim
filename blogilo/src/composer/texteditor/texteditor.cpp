@@ -264,7 +264,7 @@ TextEditor::TextEditor ( QWidget *parent )
     connect ( webView->page(), SIGNAL ( selectionChanged() ), this, SLOT ( adjustActions() ) );
     connect ( webView->page(), SIGNAL ( selectionChanged() ), this, SIGNAL ( selectionChanged() ) );
     connect ( webView->page(), SIGNAL ( contentsChanged() ), this, SLOT ( somethingEdittedSlot() ) );
-    connect ( webView->page(), SIGNAL ( contentsChanged() ), this, SIGNAL ( contentsChanged() ) );
+    connect ( webView->page(), SIGNAL ( contentsChanged() ), this, SIGNAL ( textChanged() ) );
 //     connect ( webView, SIGNAL ( focusOutSignal() ), this, SLOT ( finishEditing() ) );
     connect ( webView, SIGNAL ( editingFinishKeyPressed() ), this, SIGNAL ( editingFinishKeyPressed() ) );
     connect ( webView, SIGNAL ( dropMimeDataSignal ( const QMimeData* ) ), this, SLOT ( dropMimeDataSlot ( const QMimeData* ) ) );
@@ -342,7 +342,6 @@ void TextEditor::createActions()
     actCheckSpelling->setCheckable( true );
     connect( actCheckSpelling, SIGNAL( triggered( bool ) ), this,
              SLOT( slotToggleSpellChecking(bool) ) );
-    connect( actCheckSpelling, SIGNAL(triggered(bool)), SLOT(getMediaList()));
     barVisual->addAction( actCheckSpelling );
 
     barVisual->addSeparator();
@@ -352,7 +351,6 @@ void TextEditor::createActions()
     actBold->setShortcut( Qt::CTRL + Qt::Key_B );
     actBold->setCheckable( true );
     FORWARD_ACTION(actBold, QWebPage::ToggleBold);
-//     connect( actBold, SIGNAL( triggered( bool ) ), this, SLOT( sltSetTextBold( bool ) ) );
     barVisual->addAction( actBold );
 
     actItalic = new KAction( KIcon( "format-text-italic" ), i18nc(
@@ -361,7 +359,6 @@ void TextEditor::createActions()
     actItalic->setShortcut( Qt::CTRL + Qt::Key_I );
     actItalic->setCheckable( true );
     FORWARD_ACTION(actItalic, QWebPage::ToggleItalic);
-//     connect( actItalic, SIGNAL( triggered( bool ) ), editor, SLOT( setTextItalic( bool ) ) );
     barVisual->addAction( actItalic );
 
     actUnderline = new KAction( KIcon( "format-text-underline" ), i18nc(
@@ -370,7 +367,6 @@ void TextEditor::createActions()
     actUnderline->setShortcut( Qt::CTRL + Qt::Key_U );
     actUnderline->setCheckable( true );
     FORWARD_ACTION(actUnderline, QWebPage::ToggleUnderline);
-//     connect( actUnderline, SIGNAL( triggered( bool ) ), editor, SLOT( setTextUnderline( bool ) ) );
     barVisual->addAction( actUnderline );
 
     actStrikeout = new KAction( KIcon( "format-text-strikethrough" ), i18nc(

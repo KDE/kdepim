@@ -92,10 +92,10 @@ Q_SIGNALS:
 
 private Q_SLOTS:
 //     void slotPostSent();
-    void sltTempPostPublished( int blogId, BilboPost* post );
-    void sltTempPostRemoved( int blog_id, const BilboPost &post );
-    void sltHtmlCopied( KJob* job );
-    void sltError( const QString & errMsg );
+    void slotTempPostPublished( int blogId, BilboPost* post );
+    void slotTempPostRemoved( int blog_id, const BilboPost &post );
+    void slotHtmlCopied( KJob* job );
+    void slotError( const QString & errMsg );
 
 private:
     void generateRandomPostStrings();

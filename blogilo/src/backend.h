@@ -107,7 +107,7 @@ protected Q_SLOTS:
     void postPublished( KBlog::BlogPost *post );
     void mediaUploaded( KBlog::BlogMedia *media );
     void error( KBlog::Blog::ErrorType type, const QString &errorMessage );
-    void sltMediaError( KBlog::Blog::ErrorType type, const QString &errorMessage, KBlog::BlogMedia *media );
+    void slotMediaError( KBlog::Blog::ErrorType type, const QString &errorMessage, KBlog::BlogMedia *media );
 //     void postCategoriesSetted( const QString &postId );
     void slotPostRemoved( KBlog::BlogPost *post );
     void slotPostFetched( KBlog::BlogPost *post );

@@ -93,7 +93,7 @@ void AddMediaDialog::slotButtonClicked(int button)
                     KIO::MimetypeJob* typeJob = KIO::mimetype( mediaUrl, KIO::HideProgressInfo );
 
                     connect( typeJob, SIGNAL( mimetype( KIO::Job *, const QString & ) ),
-                            this,  SLOT( sltRemoteFileTypeFound( KIO::Job *, const QString & ) ) );
+                            this,  SLOT( slotRemoteFileTypeFound( KIO::Job *, const QString & ) ) );
 
 //                     addOtherMediaAttributes();
 
@@ -131,7 +131,7 @@ BilboMedia* AddMediaDialog::selectedMedia() const
     return media;
 }
 
-void AddMediaDialog::sltRemoteFileTypeFound( KIO::Job *job, const QString &type )
+void AddMediaDialog::slotRemoteFileTypeFound( KIO::Job *job, const QString &type )
 {
     kDebug() << type ;
     Q_UNUSED(job);

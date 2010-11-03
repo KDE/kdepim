@@ -50,9 +50,9 @@ BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
 
     connect( mWebView, SIGNAL( loadProgress( int ) ),
             browserProgress, SLOT( setValue( int ) ) );
-    connect( mWebView, SIGNAL( loadFinished(bool) ) , this, SLOT( sltCompleted(bool) ) );
+    connect( mWebView, SIGNAL( loadFinished(bool) ) , this, SLOT( slotCompleted(bool) ) );
     connect( mWebView, SIGNAL( statusBarMessage(QString)), this,
-            SLOT( sltSetStatusBarText( const QString& ) ) );
+            SLOT( slotSetStatusBarText( const QString& ) ) );
 }
 
 BilboBrowser::~BilboBrowser()
@@ -64,12 +64,12 @@ void BilboBrowser::createUi( QWidget *parent )
 {
     btnGetStyle = new KPushButton( this );
     btnGetStyle->setText( i18n( "Get blog style" ) );
-    connect( btnGetStyle, SIGNAL( clicked( bool ) ), this, SLOT( sltGetBlogStyle() ) );
+    connect( btnGetStyle, SIGNAL( clicked( bool ) ), this, SLOT( slotGetBlogStyle() ) );
 
     viewInBlogStyle = new QCheckBox( i18n("View post in the blog style"), this );
     viewInBlogStyle->setChecked( Settings::previewInBlogStyle() );
     connect( viewInBlogStyle, SIGNAL( toggled( bool ) ), this, SLOT(
-            sltViewModeChanged() ) );
+            slotViewModeChanged() ) );
 
     QSpacerItem *horizontalSpacer = new QSpacerItem( 40, 20,
                     QSizePolicy::Expanding, QSizePolicy::Minimum );
@@ -118,7 +118,7 @@ void BilboBrowser::stop()
 {
     mWebView->stop();
 }
-void BilboBrowser::sltGetBlogStyle()
+void BilboBrowser::slotGetBlogStyle()
 {
     stop();
     int blogid = __currentBlogId;
@@ -138,10 +138,10 @@ void BilboBrowser::sltGetBlogStyle()
     StyleGetter *styleGetter = new StyleGetter( __currentBlogId, this );
     connect( styleGetter, SIGNAL( sigGetStyleProgress( int ) ), browserProgress,
             SLOT( setValue( int ) ) );
-    connect( styleGetter, SIGNAL( sigStyleFetched() ), this, SLOT( sltSetBlogStyle() ) );
+    connect( styleGetter, SIGNAL( sigStyleFetched() ), this, SLOT( slotSetBlogStyle() ) );
 }
 
-void BilboBrowser::sltSetBlogStyle()
+void BilboBrowser::slotSetBlogStyle()
 {
     browserStatus->showMessage( i18n( "Blog style fetched." ), 2000 );
     Q_EMIT sigSetBlogStyle();
@@ -151,7 +151,7 @@ void BilboBrowser::sltSetBlogStyle()
     }
 }
 
-void BilboBrowser::sltCompleted(bool ok)
+void BilboBrowser::slotCompleted(bool ok)
 {
     QTimer::singleShot( 1500, browserProgress, SLOT( hide() ) );
     if(!ok){
@@ -159,14 +159,14 @@ void BilboBrowser::sltCompleted(bool ok)
     }
 }
 
-void BilboBrowser::sltSetStatusBarText( const QString& text )
+void BilboBrowser::slotSetStatusBarText( const QString& text )
 {
     QString statusText = text;
     statusText.remove( "<qt>" );
     browserStatus->showMessage( statusText );
 }
 
-void BilboBrowser::sltViewModeChanged()
+void BilboBrowser::slotViewModeChanged()
 {
     stop();
     setHtml( currentTitle, currentContent );

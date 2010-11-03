@@ -57,17 +57,17 @@ public:
     void clearFields();
 
 public slots:
-    void sltReloadCategoryList();
-    void sltLoadCategoryListFromDB( int blog_id );
-    void sltUpdateEntries(int count = 0);
-    void sltLoadEntriesFromDB( int blog_id );
-    void sltRemoveSelectedEntryFromServer();
+    void slotReloadCategoryList();
+    void slotLoadCategoryListFromDB( int blog_id );
+    void slotUpdateEntries(int count = 0);
+    void slotLoadEntriesFromDB( int blog_id );
+    void slotRemoveSelectedEntryFromServer();
     void resetFields();
-    void sltEntrySelected( QListWidgetItem *item );
-    void sltEntriesCopyUrl();
-    void sltLocalEntrySelected( int row, int column );
+    void slotEntrySelected( QListWidgetItem *item );
+    void slotEntriesCopyUrl();
+    void slotLocalEntrySelected( int row, int column );
     void reloadLocalPosts();
-    void sltRemoveLocalEntry();
+    void slotRemoveLocalEntry();
     void clearEntries();
     void setDateTimeNow();
 

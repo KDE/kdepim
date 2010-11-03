@@ -36,11 +36,11 @@
 MediaListWidget::MediaListWidget( QWidget *parent ): KListWidget( parent )
 {
     actEdit = new KAction( i18n( "Edit properties" ), this );
-    connect( actEdit, SIGNAL( triggered( bool ) ), this, SLOT( sltEditProperties() ) );
+    connect( actEdit, SIGNAL( triggered( bool ) ), this, SLOT( slotEditProperties() ) );
     actCopyUrl = new KAction( i18n( "Copy URL" ), this );
-    connect( actCopyUrl, SIGNAL( triggered( bool ) ), this, SLOT( sltCopyUrl() ) );
+    connect( actCopyUrl, SIGNAL( triggered( bool ) ), this, SLOT( slotCopyUrl() ) );
     actRemove = new KAction( i18n( "Remove media" ), this );
-    connect( actRemove, SIGNAL( triggered( bool ) ), this, SLOT( sltRemoveMedia() ) );
+    connect( actRemove, SIGNAL( triggered( bool ) ), this, SLOT( slotRemoveMedia() ) );
 }
 
 MediaListWidget::~MediaListWidget()
@@ -60,7 +60,7 @@ void MediaListWidget::contextMenuEvent( QContextMenuEvent *event )
     }
 }
 
-void MediaListWidget::sltEditProperties()
+void MediaListWidget::slotEditProperties()
 {
 //     QWidget *temp = new QWidget( this );
     QPointer<KDialog> dialog = new KDialog( this );
@@ -72,25 +72,25 @@ void MediaListWidget::sltEditProperties()
     dialog->resize( temp->width(), temp->height() );
     dialog->setWindowModality( Qt::WindowModal );
 //     dialog->setAttribute( Qt::WA_DeleteOnClose );
-    connect( dialog, SIGNAL( okClicked() ), this, SLOT( sltSetProperties() ) );
+    connect( dialog, SIGNAL( okClicked() ), this, SLOT( slotSetProperties() ) );
     ui.spinboxWidth->setFocus();
 
     dialog->exec();
     dialog->deleteLater();
 }
-void MediaListWidget::sltSetProperties()
+void MediaListWidget::slotSetProperties()
 {
     Q_EMIT( sigSetProperties( this->currentRow(), ui.spinboxWidth->value(),
                               ui.spinboxHeight->value(), ui.txtTitle->text(), 
                               ui.txtLink->text(), ui.txtAltText->text() ) );
 }
 
-void MediaListWidget::sltCopyUrl()
+void MediaListWidget::slotCopyUrl()
 {
     QApplication::clipboard()->setText( this->currentItem()->toolTip() );
 }
 
-void MediaListWidget::sltRemoveMedia()
+void MediaListWidget::slotRemoveMedia()
 {
     kDebug() << this->currentRow();
     Q_EMIT( sigRemoveMedia( this->currentRow() ) );

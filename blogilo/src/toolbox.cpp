@@ -70,26 +70,26 @@ Toolbox::Toolbox( QWidget *parent )
 //     reloadBlogList();
     optionsDate->setDate( QDateTime::currentDateTime().date() );
     optionsTime->setTime( QDateTime::currentDateTime().time() );
-//     connect( btnBlogAdd, SIGNAL( clicked() ), this, SLOT( sltAddBlog() ) );
-//     connect( btnBlogEdit, SIGNAL( clicked() ), this, SLOT( sltEditBlog() ) );
-//     connect( btnBlogRemove, SIGNAL( clicked() ), this, SLOT( sltRemoveBlog() ) );
+//     connect( btnBlogAdd, SIGNAL( clicked() ), this, SLOT( slotAddBlog() ) );
+//     connect( btnBlogEdit, SIGNAL( clicked() ), this, SLOT( slotEditBlog() ) );
+//     connect( btnBlogRemove, SIGNAL( clicked() ), this, SLOT( slotRemoveBlog() ) );
 
-    connect( btnCatReload, SIGNAL( clicked() ), this, SLOT( sltReloadCategoryList() ) );
-    connect( btnEntriesUpdate, SIGNAL( clicked() ), this, SLOT( sltUpdateEntries() ) );
+    connect( btnCatReload, SIGNAL( clicked() ), this, SLOT( slotReloadCategoryList() ) );
+    connect( btnEntriesUpdate, SIGNAL( clicked() ), this, SLOT( slotUpdateEntries() ) );
     connect( btnEntriesClear, SIGNAL( clicked(bool) ), this, SLOT( clearEntries()) );
 
-//     connect( this, SIGNAL( sigCurrentBlogChanged( int ) ), this, SLOT( sltCurrentBlogChanged( int ) ) );
-//     connect( &listBlogRadioButtons, SIGNAL( buttonClicked( int ) ), this, SLOT( sltSetCurrentBlog() ) );
+//     connect( this, SIGNAL( sigCurrentBlogChanged( int ) ), this, SLOT( slotCurrentBlogChanged( int ) ) );
+//     connect( &listBlogRadioButtons, SIGNAL( buttonClicked( int ) ), this, SLOT( slotSetCurrentBlog() ) );
 
     connect( lstEntriesList, SIGNAL( itemDoubleClicked( QListWidgetItem* ) ),
-             this, SLOT( sltEntrySelected( QListWidgetItem* ) ) );
-//     connect( btnEntriesCopyUrl, SIGNAL( clicked( bool ) ), this, SLOT( sltEntriesCopyUrl() ) );
-    connect( btnEntriesRemove, SIGNAL( clicked(bool) ), this, SLOT( sltRemoveSelectedEntryFromServer() ) );
+             this, SLOT( slotEntrySelected( QListWidgetItem* ) ) );
+//     connect( btnEntriesCopyUrl, SIGNAL( clicked( bool ) ), this, SLOT( slotEntriesCopyUrl() ) );
+    connect( btnEntriesRemove, SIGNAL( clicked(bool) ), this, SLOT( slotRemoveSelectedEntryFromServer() ) );
 
     connect( btnOptionsNow, SIGNAL( clicked(bool)), this, SLOT( setDateTimeNow() ) );
     connect( localEntriesTable, SIGNAL( cellDoubleClicked(int,int) ),
-             this, SLOT(sltLocalEntrySelected(int,int)) );
-    connect( btnLocalRemove, SIGNAL( clicked( bool ) ) , this, SLOT( sltRemoveLocalEntry() ) );
+             this, SLOT(slotLocalEntrySelected(int,int)) );
+    connect( btnLocalRemove, SIGNAL( clicked( bool ) ) , this, SLOT( slotRemoveLocalEntry() ) );
 
     lblOptionsTrackBack->setVisible( false );
     txtOptionsTrackback->setVisible( false );
@@ -112,14 +112,14 @@ void Toolbox::setCurrentBlogId( int blog_id )
     d->mCurrentBlogId = blog_id;
     if( blog_id <= 0 )
         return;
-    sltLoadCategoryListFromDB( blog_id );
-    sltLoadEntriesFromDB( blog_id );
+    slotLoadCategoryListFromDB( blog_id );
+    slotLoadEntriesFromDB( blog_id );
     Qt::LayoutDirection ll = DBMan::self()->blogList().value( blog_id )->direction();
     frameCat->setLayoutDirection( ll );
     lstEntriesList->setLayoutDirection( ll );
 }
 
-void Toolbox::sltReloadCategoryList()
+void Toolbox::slotReloadCategoryList()
 {
     kDebug();
 //     QAbstractButton *btn = listBlogRadioButtons.checkedButton();
@@ -130,7 +130,7 @@ you have to select a blog from the Blogs page before asking for the list of cate
     }
 
     Backend *b = new Backend( d->mCurrentBlogId );
-    connect( b, SIGNAL( sigCategoryListFetched( int ) ), this, SLOT( sltLoadCategoryListFromDB( int ) ) );
+    connect( b, SIGNAL( sigCategoryListFetched( int ) ), this, SLOT( slotLoadCategoryListFromDB( int ) ) );
     connect( b, SIGNAL( sigError( const QString& ) ), this, SIGNAL( sigError( const QString& ) ) );
     emit sigBusy( true );
     d->statusbar->showMessage( i18n( "Requesting list of categories..." ) );
@@ -138,7 +138,7 @@ you have to select a blog from the Blogs page before asking for the list of cate
 //     this->setCursor( Qt::BusyCursor );
 }
 
-void Toolbox::sltUpdateEntries(int count)
+void Toolbox::slotUpdateEntries(int count)
 {
     kDebug();
     if ( d->mCurrentBlogId == -1 ) {
@@ -160,14 +160,14 @@ you have to select a blog from the Blogs page before asking for the list of entr
     }
     Backend *entryB = new Backend( d->mCurrentBlogId, this);
     entryB->getEntriesListFromServer( count );
-    connect( entryB, SIGNAL( sigEntriesListFetched( int ) ), this, SLOT( sltLoadEntriesFromDB( int ) ) );
+    connect( entryB, SIGNAL( sigEntriesListFetched( int ) ), this, SLOT( slotLoadEntriesFromDB( int ) ) );
     connect( entryB, SIGNAL( sigError( const QString& ) ), this, SIGNAL( sigError( const QString& ) ) );
     d->statusbar->showMessage( i18n( "Requesting list of entries..." ) );
     this->setCursor( Qt::BusyCursor );
     emit sigBusy( true );
 }
 
-void Toolbox::sltLoadEntriesFromDB( int blog_id )
+void Toolbox::slotLoadEntriesFromDB( int blog_id )
 {
     kDebug();
     if ( blog_id == -1 ) {
@@ -193,7 +193,7 @@ void Toolbox::sltLoadEntriesFromDB( int blog_id )
     emit sigBusy( false );
 }
 
-void Toolbox::sltLoadCategoryListFromDB( int blog_id )
+void Toolbox::slotLoadCategoryListFromDB( int blog_id )
 {
     kDebug();
     if ( blog_id == -1 ) {
@@ -217,7 +217,7 @@ void Toolbox::sltLoadCategoryListFromDB( int blog_id )
     emit sigBusy( false );
 }
 
-void Toolbox::sltRemoveSelectedEntryFromServer()
+void Toolbox::slotRemoveSelectedEntryFromServer()
 {
     if(lstEntriesList->selectedItems().count() < 1)
         return;
@@ -237,7 +237,7 @@ void Toolbox::slotPostRemoved( int blog_id, const BilboPost &post )
 {
     KMessageBox::information( this, i18nc( "Post removed from Blog", "Post with title \"%1\" removed from \"%2\".",
                                           post.title(), DBMan::self()->blogList().value(blog_id)->title() ) );
-    sltLoadEntriesFromDB( blog_id );
+    slotLoadEntriesFromDB( blog_id );
     d->statusbar->showMessage( i18n( "Post removed" ), STATUSTIMEOUT );
     sender()->deleteLater();
 }
@@ -416,7 +416,7 @@ QStringList Toolbox::currentTags()
     return t;
 }
 
-void Toolbox::sltEntrySelected( QListWidgetItem * item )
+void Toolbox::slotEntrySelected( QListWidgetItem * item )
 {
     kDebug();
 //     setFieldsValue(*post);
@@ -430,7 +430,7 @@ void Toolbox::setCurrentPage( int index )
     box->setCurrentIndex( index );
 }
 
-void Toolbox::sltEntriesCopyUrl()
+void Toolbox::slotEntriesCopyUrl()
 {
     if ( lstEntriesList->currentItem() == 0 ) {
         return;
@@ -503,7 +503,7 @@ void Toolbox::reloadLocalPosts()
     }
 }
 
-void Toolbox::sltLocalEntrySelected( int row, int column )
+void Toolbox::slotLocalEntrySelected( int row, int column )
 {
     kDebug()<<"Emitting sigEntrySelected...";
     Q_UNUSED(column);
@@ -511,7 +511,7 @@ void Toolbox::sltLocalEntrySelected( int row, int column )
     emit sigEntrySelected( post, localEntriesTable->item(row, 1)->data(32).toInt() );
 }
 
-void Toolbox::sltRemoveLocalEntry()
+void Toolbox::slotRemoveLocalEntry()
 {
     kDebug();
     if(localEntriesTable->selectedItems().count() > 0) {
@@ -560,7 +560,7 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
     connect( actEntriesOpenInBrowser, SIGNAL( triggered() ), this, SLOT( openPostInBrowser() ) );
     KAction *actEntriesCopyUrl = new KAction( KIcon("edit-copy"),
                                               i18n("Copy URL"), entriesContextMenu );
-    connect( actEntriesCopyUrl, SIGNAL( triggered(bool) ), this, SLOT( sltEntriesCopyUrl() ) );
+    connect( actEntriesCopyUrl, SIGNAL( triggered(bool) ), this, SLOT( slotEntriesCopyUrl() ) );
     KAction *actEntriesCopyTitle = new KAction( KIcon("edit-copy"),
                                                 i18n("Copy title"), entriesContextMenu );
     connect( actEntriesCopyTitle, SIGNAL( triggered(bool) ), this, SLOT( copyPostTitle() ) );

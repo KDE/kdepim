@@ -113,7 +113,7 @@ protected:
     virtual QVariant loadResource( int type, const QUrl & name );
 
 private Q_SLOTS:
-    void sltRemoteFileCopied(KJob * job);
+    void slotRemoteFileCopied(KJob * job);
     void slotCursorPositionChanged();
 
 private:

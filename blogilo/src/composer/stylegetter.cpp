@@ -81,8 +81,8 @@ StyleGetter::StyleGetter( const int blogid, QObject *parent ): QObject( parent )
 
     b = new Backend( blogid );
     connect( b, SIGNAL( sigPostPublished( int, BilboPost* ) ), this,
-             SLOT( sltTempPostPublished( int, BilboPost* ) ) );
-    connect( b, SIGNAL( sigError( const QString& ) ), this, SLOT( sltError( const QString& ) ) );
+             SLOT( slotTempPostPublished( int, BilboPost* ) ) );
+    connect( b, SIGNAL( sigError( const QString& ) ), this, SLOT( slotError( const QString& ) ) );
 
     Q_EMIT sigGetStyleProgress( 10 );
 
@@ -138,7 +138,7 @@ QString StyleGetter::styledHtml( const int blogid,
     return buffer;
 }
 
-void StyleGetter::sltTempPostPublished( int blogId, BilboPost* post )
+void StyleGetter::slotTempPostPublished( int blogId, BilboPost* post )
 {
     kDebug();
 
@@ -160,11 +160,11 @@ void StyleGetter::sltTempPostPublished( int blogId, BilboPost* post )
     mTempPost = post;
     KIO::StoredTransferJob *job = KIO::storedGet( postUrl, KIO::NoReload, KIO::HideProgressInfo );
     connect( job, SIGNAL( result( KJob* ) ),
-            this, SLOT( sltHtmlCopied( KJob* ) ) );
+            this, SLOT( slotHtmlCopied( KJob* ) ) );
 
 }
 
-void StyleGetter::sltHtmlCopied( KJob *job )
+void StyleGetter::slotHtmlCopied( KJob *job )
 {
     kDebug();
     if ( job->error() ) {
@@ -212,11 +212,11 @@ void StyleGetter::sltHtmlCopied( KJob *job )
 
     //Remove temp post from the server.
     connect( b, SIGNAL( sigPostRemoved( int, const BilboPost &) ), this,
-             SLOT( sltTempPostRemoved( int, const BilboPost & ) ) );
+             SLOT( slotTempPostRemoved( int, const BilboPost & ) ) );
     b->removePost( mTempPost );
 }
 
-void StyleGetter::sltTempPostRemoved( int blog_id, const BilboPost &post)
+void StyleGetter::slotTempPostRemoved( int blog_id, const BilboPost &post)
 {
     Q_UNUSED( blog_id );
     Q_UNUSED( post );
@@ -237,7 +237,7 @@ void StyleGetter::generateRandomPostStrings()
     mPostContent = QString( "%1%2" ).arg( POST_CONTENT ).arg( postRandomNumber );
 }
 
-void StyleGetter::sltError( const QString & errMsg )
+void StyleGetter::slotError( const QString & errMsg )
 {
     kDebug();
 //     QString err = i18n( "An Error occurred on latest transaction.\n%1", errMsg );

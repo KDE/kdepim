@@ -98,7 +98,7 @@ public:
      */
     void setCurrentTitle( const QString& title );
 
-    TextEditor* editor();
+    void replaceImageSrc(const QString& src, const QString& dest);
 
 Q_SIGNALS:
     /**
@@ -125,27 +125,27 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void slotSettingsChanged();
 
-//     void sltToggleSpellChecking();
+//     void slotToggleSpellChecking();
 
-//     void sltSyncSpellCheckingButton( bool check );
+//     void slotSyncSpellCheckingButton( bool check );
 
     /**
      * Creates an instance of AddImageDialog class,and opens it, to select an image.
      */
-    void sltAddImage();
+    void slotAddImage();
 
-    void sltSetImage( BilboMedia *media, const int width, const int height, 
+    void slotSetImage( BilboMedia *media, const int width, const int height, 
                const QString title, const QString link, const QString Alt_text );
 
     /*!
     Sets the content of the current tab  as other tabs' contents, to apply recent
      * changes. this function executes each time the user switches between tabs.
      */
-    void sltSyncEditors( int index );
+    void slotSyncEditors( int index );
 
-//     void sltGetBlogStyle();
+//     void slotGetBlogStyle();
 // 
-    void sltSetPostPreview();
+    void slotSetPostPreview();
 
 private:
 
@@ -154,7 +154,7 @@ private:
     then assigns default charachter format of the editor tab to defaultCharFormat
      * variable, to be used in remove formatting operation. then calls createActions
      * function.
-    \sa sltRemoveFormatting(), createActions()
+    \sa slotRemoveFormatting(), createActions()
      */
     void createUi();
 

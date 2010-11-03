@@ -61,14 +61,14 @@ BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
         connect( browserExtension, SIGNAL( openUrlRequestDelayed( const KUrl &,
                                           const KParts::OpenUrlArguments &,
                                           const KParts::BrowserArguments & ) ),
-                this, SLOT( sltOpenRequested( const KUrl & ) ) );
+                this, SLOT( slotOpenRequested( const KUrl & ) ) );
     }
 
-    connect( browserPart, SIGNAL( completed() ), this, SLOT( sltCompleted() ) );
+    connect( browserPart, SIGNAL( completed() ), this, SLOT( slotCompleted() ) );
     connect( browserPart, SIGNAL( canceled( const QString& ) ), this, SLOT(
-            sltCanceled( const QString& ) ) );
+            slotCanceled( const QString& ) ) );
     connect( browserPart, SIGNAL( setStatusBarText( const QString& ) ), this,
-            SLOT( sltSetStatusBarText( const QString& ) ) );
+            SLOT( slotSetStatusBarText( const QString& ) ) );
 }
 
 BilboBrowser::~BilboBrowser()
@@ -80,12 +80,12 @@ void BilboBrowser::createUi( QWidget *parent )
 {
     btnGetStyle = new KPushButton( this );
     btnGetStyle->setText( i18n( "Get blog style" ) );
-    connect( btnGetStyle, SIGNAL( clicked( bool ) ), this, SLOT( sltGetBlogStyle() ) );
+    connect( btnGetStyle, SIGNAL( clicked( bool ) ), this, SLOT( slotGetBlogStyle() ) );
 
     viewInBlogStyle = new QCheckBox( i18n("View post in the blog style"), this );
     viewInBlogStyle->setChecked( Settings::previewInBlogStyle() );
     connect( viewInBlogStyle, SIGNAL( toggled( bool ) ), this, SLOT(
-            sltViewModeChanged() ) );
+            slotViewModeChanged() ) );
 
     QSpacerItem *horizontalSpacer = new QSpacerItem( 40, 20,
                     QSizePolicy::Expanding, QSizePolicy::Minimum );
@@ -135,7 +135,7 @@ void BilboBrowser::setHtml( const QString& title, const QString& content )
 void BilboBrowser::stop()
 {
     browserPart->closeUrl();
-    sltCanceled( QString() );
+    slotCanceled( QString() );
 }
 /*
 void BilboBrowser::setBrowserDirection( Qt::LayoutDirection direction )
@@ -143,7 +143,7 @@ void BilboBrowser::setBrowserDirection( Qt::LayoutDirection direction )
     browserPart->view()->setLayoutDirection( direction );
 }*/
 
-void BilboBrowser::sltGetBlogStyle()
+void BilboBrowser::slotGetBlogStyle()
 {
     int blogid = __currentBlogId;
     if ( blogid < 0 ) {
@@ -163,10 +163,10 @@ void BilboBrowser::sltGetBlogStyle()
     StyleGetter *styleGetter = new StyleGetter( __currentBlogId, this );
     connect( styleGetter, SIGNAL( sigGetStyleProgress( int ) ), browserProgress,
             SLOT( setValue( int ) ) );
-    connect( styleGetter, SIGNAL( sigStyleFetched() ), this, SLOT( sltSetBlogStyle() ) );
+    connect( styleGetter, SIGNAL( sigStyleFetched() ), this, SLOT( slotSetBlogStyle() ) );
 }
 
-void BilboBrowser::sltSetBlogStyle()
+void BilboBrowser::slotSetBlogStyle()
 {
     browserStatus->showMessage( i18n( "Blog style fetched." ), 2000 );
     browserPart->setStatusMessagesEnabled( true );
@@ -177,12 +177,12 @@ void BilboBrowser::sltSetBlogStyle()
     }
 }
 
-void BilboBrowser::sltCompleted()
+void BilboBrowser::slotCompleted()
 {
     QTimer::singleShot( 1500, browserProgress, SLOT( hide() ) );
 }
 
-void BilboBrowser::sltCanceled( const QString& errMsg )
+void BilboBrowser::slotCanceled( const QString& errMsg )
 {
     if ( !errMsg.isEmpty() ) {
         KMessageBox::detailedError( this,
@@ -192,20 +192,20 @@ void BilboBrowser::sltCanceled( const QString& errMsg )
     QTimer::singleShot( 2000, browserProgress, SLOT( hide() ) );
 }
 
-void BilboBrowser::sltSetStatusBarText( const QString& text )
+void BilboBrowser::slotSetStatusBarText( const QString& text )
 {
     QString statusText = text;
     statusText.remove( "<qt>" );
     browserStatus->showMessage( statusText );
 }
 
-void BilboBrowser::sltViewModeChanged()
+void BilboBrowser::slotViewModeChanged()
 {
     browserPart->closeUrl();
     setHtml( currentTitle, currentContent );
 }
 
-void BilboBrowser::sltOpenRequested( const KUrl& url )
+void BilboBrowser::slotOpenRequested( const KUrl& url )
 {
     browserPart->openUrl( url );
 }

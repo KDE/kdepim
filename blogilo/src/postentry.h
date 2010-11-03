@@ -121,11 +121,9 @@ public Q_SLOTS:
     void settingsChanged();
 
 protected Q_SLOTS:
-    void sltError( const QString& errMsg );
-    void sltPostPublished( int blog_id, BilboPost *post );
-
-private Q_SLOTS:
-    void sltTitleChanged( const QString& title );
+    void slotError( const QString& errMsg );
+    void slotPostPublished( int blog_id, BilboPost *post );
+    void slotTitleChanged( const QString& title );
     void deleteProgressBar();
     void saveTemporary( bool force=false );
     void slotPostModified();

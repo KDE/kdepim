@@ -80,10 +80,10 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WFlags flags )
     connect( d->ui.btnAutoConf, SIGNAL( clicked() ), this, SLOT( autoConfigure() ) );
     connect( d->ui.btnFetch, SIGNAL( clicked() ), this, SLOT( fetchBlogId() ) );
     connect( d->ui.comboApi, SIGNAL( currentIndexChanged(int) ), this, SLOT( slotComboApiChanged(int) ) );
-    connect( d->ui.txtUrl, SIGNAL( returnPressed() ), this, SLOT( sltReturnPressed() ) );
-    connect( d->ui.txtUser, SIGNAL( returnPressed() ), this, SLOT( sltReturnPressed() ) );
-    connect( d->ui.txtPass, SIGNAL( returnPressed() ), this, SLOT( sltReturnPressed() ) );
-    connect( d->ui.txtId, SIGNAL( returnPressed() ), this, SLOT( sltReturnPressed() ) );
+    connect( d->ui.txtUrl, SIGNAL( returnPressed() ), this, SLOT( slotReturnPressed() ) );
+    connect( d->ui.txtUser, SIGNAL( returnPressed() ), this, SLOT( slotReturnPressed() ) );
+    connect( d->ui.txtPass, SIGNAL( returnPressed() ), this, SLOT( slotReturnPressed() ) );
+    connect( d->ui.txtId, SIGNAL( returnPressed() ), this, SLOT( slotReturnPressed() ) );
 
     if ( blog_id > -1 ) {
         this->setWindowTitle( i18n( "Edit blog settings" ) );
@@ -447,7 +447,7 @@ void AddEditBlog::enableOkButton( const QString & txt )
     d->ui.txtTitle->setEnabled( check );
 }
 
-void AddEditBlog::sltReturnPressed()
+void AddEditBlog::slotReturnPressed()
 {
     ///FIXME This function commented temporarilly! check its functionality! and uncomment it!
     if(this->isButtonEnabled(KDialog::Ok)){

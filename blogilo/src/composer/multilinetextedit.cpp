@@ -88,7 +88,7 @@ QVariant MultiLineTextEdit::loadResource( int type, const QUrl & name )
                     KIO::Job*  copyJob = KIO::file_copy( imageUrl, localUrl, -1, ( KIO::Overwrite | KIO::HideProgressInfo ) );
 
                     connect( copyJob, SIGNAL( result( KJob * ) ), this, 
-                            SLOT( sltRemoteFileCopied( KJob * ) ) );
+                            SLOT( slotRemoteFileCopied( KJob * ) ) );
                 }
                 return QVariant();
             }
@@ -145,7 +145,7 @@ QVariant MultiLineTextEdit::loadResource( int type, const QUrl & name )
 }
 
 
-void MultiLineTextEdit::sltRemoteFileCopied( KJob * job )
+void MultiLineTextEdit::slotRemoteFileCopied( KJob * job )
 {
     KIO::FileCopyJob *copyJob = dynamic_cast <KIO::FileCopyJob*>( job );
     

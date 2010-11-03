@@ -88,7 +88,7 @@ MainWindow::MainWindow()
     btnRemovePost->setIcon( KIcon( "tab-close" ) );
     btnRemovePost->setToolTip( i18n( "Close tab" ) );
     tabPosts->setCornerWidget( btnRemovePost, Qt::TopRightCorner );
-    connect( btnRemovePost, SIGNAL( clicked( bool ) ), this, SLOT( sltRemovePostEntry() ) );
+    connect( btnRemovePost, SIGNAL( clicked( bool ) ), this, SLOT( slotRemovePostEntry() ) );
 
     // then, setup our actions
     setupActions();
@@ -109,10 +109,10 @@ MainWindow::MainWindow()
 
     setupSystemTray();
 
-    connect( tabPosts, SIGNAL( currentChanged( int ) ), this, SLOT( sltActivePostChanged( int ) ) );
-    connect( toolbox, SIGNAL( sigEntrySelected( BilboPost &, int ) ), this, SLOT( sltNewPostOpened( BilboPost&, int ) ) );
-//     connect( toolbox, SIGNAL( sigCurrentBlogChanged( int ) ), this, SLOT( sltCurrentBlogChanged( int ) ) );
-    connect( toolbox, SIGNAL( sigError( const QString& ) ), this, SLOT( sltError( const QString& ) ) );
+    connect( tabPosts, SIGNAL( currentChanged( int ) ), this, SLOT( slotActivePostChanged( int ) ) );
+    connect( toolbox, SIGNAL( sigEntrySelected( BilboPost &, int ) ), this, SLOT( slotNewPostOpened( BilboPost&, int ) ) );
+//     connect( toolbox, SIGNAL( sigCurrentBlogChanged( int ) ), this, SLOT( slotCurrentBlogChanged( int ) ) );
+    connect( toolbox, SIGNAL( sigError( const QString& ) ), this, SLOT( slotError( const QString& ) ) );
     connect( toolbox, SIGNAL( sigBusy(bool) ), this, SLOT( slotBusy(bool) ));
 
     QList<BilboBlog*> blogList = DBMan::self()->blogList().values();
@@ -147,7 +147,7 @@ void MainWindow::setupActions()
     KAction *actNewPost = new KAction( KIcon( "document-new" ), i18n( "New Post" ), this );
     actionCollection()->addAction( QLatin1String( "new_post" ), actNewPost );
     actNewPost->setShortcut( Qt::CTRL + Qt::Key_N );
-    connect( actNewPost, SIGNAL( triggered( bool ) ), this, SLOT( sltCreateNewPost() ) );
+    connect( actNewPost, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateNewPost() ) );
 
     KAction *actAddBlog = new KAction( KIcon( "list-add" ), i18n( "Add Blog..." ), this );
     actionCollection()->addAction( QLatin1String( "add_blog" ), actAddBlog );
@@ -155,7 +155,7 @@ void MainWindow::setupActions()
 
     KAction *actPublish = new KAction( KIcon( "arrow-up" ), i18n( "Submit..." ), this );
     actionCollection()->addAction( QLatin1String( "publish_post" ), actPublish );
-    connect( actPublish, SIGNAL( triggered( bool ) ), this, SLOT( sltPublishPost() ) );
+    connect( actPublish, SIGNAL( triggered( bool ) ), this, SLOT( slotPublishPost() ) );
 
     KAction *actUpload = new KAction( KIcon( "upload-media" ), i18n( "Upload Media..." ), this );
     actionCollection()->addAction( QLatin1String( "upload_media" ), actUpload );
@@ -164,19 +164,19 @@ void MainWindow::setupActions()
     KAction *actSaveLocally = new KAction( KIcon( "document-save" ), i18n( "Save Locally" ), this );
     actionCollection()->addAction( QLatin1String( "save_locally" ), actSaveLocally );
     actSaveLocally->setShortcut( Qt::CTRL + Qt::Key_S );
-    connect( actSaveLocally, SIGNAL( triggered( bool ) ), this, SLOT( sltSavePostLocally() ) );
+    connect( actSaveLocally, SIGNAL( triggered( bool ) ), this, SLOT( slotSavePostLocally() ) );
 
     KToggleAction *actToggleToolboxVisible = new KToggleAction( i18n( "Show Toolbox" ), this );
     actionCollection()->addAction( QLatin1String( "toggle_toolbox" ), actToggleToolboxVisible );
     actToggleToolboxVisible->setShortcut( Qt::CTRL + Qt::Key_T );
     connect( actToggleToolboxVisible, SIGNAL( toggled( bool ) ),
-             this, SLOT( sltToggleToolboxVisible( bool ) ) );
+             this, SLOT( slotToggleToolboxVisible( bool ) ) );
     connect( toolboxDock, SIGNAL(visibilityChanged(bool)),
              this, SLOT( slotToolboxVisibilityChanged(bool) ) );
 
     KAction *actClearImageCache = new KAction( KIcon( "edit-clear" ), i18n( "Clear Cached Images" ), this );
     actionCollection()->addAction( QLatin1String( "clear_image_cache" ), actClearImageCache );
-    connect( actClearImageCache, SIGNAL( triggered( bool ) ), this, SLOT( sltClearCache() ) );
+    connect( actClearImageCache, SIGNAL( triggered( bool ) ), this, SLOT( slotClearCache() ) );
 
     blogs = new KSelectAction( this );
     actionCollection()->addAction( QLatin1String( "blogs_list" ), blogs );
@@ -199,7 +199,7 @@ void MainWindow::loadTempPosts()
             createPostEntry(it.value(), (*it.key()));
         }
     } else {
-        sltCreateNewPost();
+        slotCreateNewPost();
     }
 //     activePost = qobject_cast<PostEntry*>( tabPosts->currentWidget() );
     previousActivePostIndex = 0;
@@ -248,7 +248,7 @@ void MainWindow::currentBlogChanged( QAction *act )
     toolbox->setCurrentBlogId( mCurrentBlogId );
 }
 
-void MainWindow::sltCreateNewPost()
+void MainWindow::slotCreateNewPost()
 {
     kDebug();
 
@@ -341,8 +341,8 @@ void MainWindow::slotBlogAdded( const BilboBlog &blog )
     blogs->addAction( act );
     blogs->setCurrentAction( act );
     currentBlogChanged( act );
-    toolbox->sltReloadCategoryList();
-    toolbox->sltUpdateEntries( 20 );
+    toolbox->slotReloadCategoryList();
+    toolbox->slotUpdateEntries( 20 );
 }
 
 void MainWindow::slotBlogEdited( const BilboBlog &blog )
@@ -390,18 +390,18 @@ void MainWindow::setupSystemTray()
     }
 }
 
-void MainWindow::sltUploadAllChanges()
+void MainWindow::slotUploadAllChanges()
 {
     kDebug();
 }
 
-void MainWindow::sltPostTitleChanged( const QString& title )
+void MainWindow::slotPostTitleChanged( const QString& title )
 {
 //     kDebug();
     tabPosts->setTabText( tabPosts->currentIndex(), title );
 }
 
-void MainWindow::sltToggleToolboxVisible( bool isVisible )
+void MainWindow::slotToggleToolboxVisible( bool isVisible )
 {
     toolboxDock->setVisible( isVisible );
 }
@@ -411,7 +411,7 @@ void MainWindow::slotToolboxVisibilityChanged(bool)
     actionCollection()->action(QLatin1String("toggle_toolbox"))->setChecked( toolboxDock->isVisibleTo(this) );
 }
 
-void MainWindow::sltActivePostChanged( int index )
+void MainWindow::slotActivePostChanged( int index )
 {
     kDebug() << "new post index: " << index << "\tPrev Index: " << previousActivePostIndex;
 
@@ -438,7 +438,7 @@ void MainWindow::sltActivePostChanged( int index )
     previousActivePostIndex = index;
 }
 
-void MainWindow::sltPublishPost()
+void MainWindow::slotPublishPost()
 {
     kDebug();
     if ( mCurrentBlogId == -1 ) {
@@ -457,7 +457,7 @@ void MainWindow::sltPublishPost()
     activePost->submitPost( mCurrentBlogId, post );
 }
 
-void MainWindow::sltRemovePostEntry( PostEntry *widget )
+void MainWindow::slotRemovePostEntry( PostEntry *widget )
 {
     kDebug();
     if( !widget ) {
@@ -476,7 +476,7 @@ void MainWindow::sltRemovePostEntry( PostEntry *widget )
 //         tabPosts->setTabBarHidden(false);
 
 //     if( tabPosts->count() == 0 ){
-//         sltCreateNewPost();
+//         slotCreateNewPost();
 //         previousActivePostIndex = 0;
 //     }
     if( tabPosts->count() < 1 ) {
@@ -486,14 +486,14 @@ void MainWindow::sltRemovePostEntry( PostEntry *widget )
     }
 }
 
-void MainWindow::sltNewPostOpened( BilboPost &newPost, int blog_id )
+void MainWindow::slotNewPostOpened( BilboPost &newPost, int blog_id )
 {
     kDebug();
     QWidget * w = createPostEntry( blog_id, newPost );
     tabPosts->setCurrentWidget( w );
 }
 
-void MainWindow::sltSavePostLocally()
+void MainWindow::slotSavePostLocally()
 {
     kDebug();
     if(activePost && tabPosts->count() > 0) {
@@ -503,7 +503,7 @@ void MainWindow::sltSavePostLocally()
     }
 }
 
-void MainWindow::sltError( const QString & errorMessage )
+void MainWindow::slotError( const QString & errorMessage )
 {
     kDebug() << "Error message: " << errorMessage;
     KMessageBox::detailedError( this, i18n( "An error occurred in the last transaction." ), errorMessage );
@@ -540,7 +540,7 @@ void MainWindow::keyPressEvent( QKeyEvent * event )
                 toolbox->setCurrentPage( 4 );
                 break;
             case Qt::Key_W:
-                sltRemovePostEntry();
+                slotRemovePostEntry();
                 break;
             default:
                 KXmlGuiWindow::keyPressEvent( event );
@@ -558,11 +558,11 @@ void MainWindow::postManipulationDone( bool isError, const QString &customMessag
         PostEntry *entry = qobject_cast<PostEntry*>(sender());
         if(entry && KMessageBox::questionYesNo(this, i18n("%1\nDo you want to keep the post open?", customMessage),
                     QString(), KStandardGuiItem::yes(), KStandardGuiItem::no(), "KeepPostOpen") == KMessageBox::No ) {
-            sltRemovePostEntry(entry);
+            slotRemovePostEntry(entry);
         } else {
             toolbox->setFieldsValue(entry->currentPost());
         }
-        toolbox->sltLoadEntriesFromDB( mCurrentBlogId );
+        toolbox->slotLoadEntriesFromDB( mCurrentBlogId );
     }
     this->unsetCursor();
     toolbox->unsetCursor();
@@ -606,7 +606,7 @@ QWidget* MainWindow::createPostEntry(int blog_id, const BilboPost& post)
     temp->setCurrentPostBlogId( blog_id );
 
     connect( temp, SIGNAL( sigTitleChanged( const QString& ) ),
-             this, SLOT( sltPostTitleChanged( const QString& ) ) );
+             this, SLOT( slotPostTitleChanged( const QString& ) ) );
     connect( temp, SIGNAL( postPublishingDone( bool, const QString& ) ),
             this, SLOT( postManipulationDone( bool, const QString& ) ) );
     connect( this, SIGNAL( settingsChanged() ), temp, SLOT( settingsChanged() ));
@@ -623,7 +623,7 @@ QWidget* MainWindow::createPostEntry(int blog_id, const BilboPost& post)
     return temp;
 }
 
-void MainWindow::sltClearCache()
+void MainWindow::slotClearCache()
 {
     QDir cacheDir( CACHED_MEDIA_DIR );
     QStringListIterator i( cacheDir.entryList() );

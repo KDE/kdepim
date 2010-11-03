@@ -61,33 +61,33 @@ signals:
 protected slots:
     void slotOpenCurrentBlogInBrowser();
     void slotSettingsChanged();
-    void sltCreateNewPost();
+    void slotCreateNewPost();
     void addBlog();
-    void sltUploadAllChanges();
-    void sltPostTitleChanged( const QString& title );
-    void sltToggleToolboxVisible( bool isVisible );
+    void slotUploadAllChanges();
+    void slotPostTitleChanged( const QString& title );
+    void slotToggleToolboxVisible( bool isVisible );
     void slotToolboxVisibilityChanged( bool isVisible );
-    void sltActivePostChanged( int tabIndex );
+    void slotActivePostChanged( int tabIndex );
 
-    void sltNewPostOpened( BilboPost &newPost, int blog_id );
+    void slotNewPostOpened( BilboPost &newPost, int blog_id );
 
-    void sltPublishPost();
+    void slotPublishPost();
 
     /**
      * Remove @p widget from main tab wigdet (if it's NULL current Post entry will be removed)
      */
-    void sltRemovePostEntry( PostEntry *widget=0 );
+    void slotRemovePostEntry( PostEntry *widget=0 );
 
-    void sltSavePostLocally();
-//     void sltSaveAsDraft();
+    void slotSavePostLocally();
+//     void slotSaveAsDraft();
 
-    void sltError( const QString &errorMessage );
+    void slotError( const QString &errorMessage );
 
     /**
     To open temporary posts and that posts are open at previous quit.
     */
     void loadTempPosts();
-    void sltClearCache();
+    void slotClearCache();
     void uploadMediaObject();
 
 private slots:

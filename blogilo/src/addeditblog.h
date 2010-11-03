@@ -65,7 +65,7 @@ protected Q_SLOTS:
     void handleFetchAPITimeout();
     void handleFetchError( KBlog::Blog::ErrorType type, const QString& errorMsg );
 
-    void sltReturnPressed();
+    void slotReturnPressed();
     void setSupportedFeatures( BilboBlog::ApiType api );
     void slotComboApiChanged( int index );
 

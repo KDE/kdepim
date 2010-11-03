@@ -83,7 +83,7 @@ protected Q_SLOTS:
     virtual void slotButtonClicked(int button);
     virtual void slotSelectLocalFile();
 //     virtual void sltOkClicked();
-    virtual void sltRemoteFileTypeFound( KIO::Job *job, const QString &type );
+    virtual void slotRemoteFileTypeFound( KIO::Job *job, const QString &type );
 //     void sltMediaSourceChanged();
 };
 

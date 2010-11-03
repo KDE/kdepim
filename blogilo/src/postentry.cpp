@@ -65,6 +65,7 @@ public:
 //     bool mIsModified;
     bool isPostContentModified;
 };
+
 PostEntry::PostEntry( QWidget *parent )
         : QFrame( parent ), d(new Private)
 {
@@ -119,13 +120,13 @@ void PostEntry::createUi()
     d->horizontalLayout->addWidget( d->txtTitle );
     d->labelTitle->setBuddy( d->txtTitle );
     connect( d->txtTitle, SIGNAL( textChanged( const QString& ) ), this,
-             SLOT( sltTitleChanged( const QString& ) ) );
+             SLOT( slotTitleChanged( const QString& ) ) );
 
     d->gridLayout->addLayout( d->horizontalLayout, 0, 0, 1, 1 );
 
 }
 
-void PostEntry::sltTitleChanged( const QString& title )
+void PostEntry::slotTitleChanged( const QString& title )
 {
     d->mCurrentPost.setTitle( title );
     d->editPostWidget->setCurrentTitle( title );
@@ -245,8 +246,8 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
                 BilboMedia *media = (*it);
                 SyncUploader *uploader = new SyncUploader(this);
                 if( uploader->uploadMedia( backend, media ) ){
-                    d->editPostWidget->editor()->replaceImageSrc(media->localUrl().url(),
-                                                                 media->remoteUrl().url());
+                    d->editPostWidget->replaceImageSrc( media->localUrl().url(),
+                                                        media->remoteUrl().url());
                 } else {
                     QString err = i18n( "Uploading the media file %1 failed.\n%2",
                                         media->name(), uploader->errorMessage());
@@ -263,7 +264,7 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
     return result;
 }
 
-void PostEntry::sltError( const QString & errMsg )
+void PostEntry::slotError( const QString & errMsg )
 {
     kDebug();
     QString err = i18n( "An error occurred in the last transaction.\n%1", errMsg );
@@ -312,7 +313,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
 
         emit showStatusMessage(statusMsg, true);
         Backend *b = new Backend(d->mCurrentPostBlogId, this);
-        connect( b, SIGNAL(sigError(const QString&)), this, SLOT(sltError(const QString&)) );
+        connect( b, SIGNAL(sigError(const QString&)), this, SLOT(slotError(const QString&)) );
         if ( uploadMediaFiles(b) ) {
             kDebug()<<"Uploading";
             if( !d->progress ) {
@@ -332,7 +333,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
     }
 }
 
-void PostEntry::sltPostPublished( int blog_id, BilboPost *post )
+void PostEntry::slotPostPublished( int blog_id, BilboPost *post )
 {
     kDebug() << "BlogId: " << blog_id << "Post Id on server: " << post->postId();
     DBMan::self()->removeTempEntry(d->mCurrentPost);

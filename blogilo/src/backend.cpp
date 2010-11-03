@@ -246,7 +246,7 @@ void Backend::uploadMedia( BilboMedia * media )
             d->mPublishMediaMap[ m ] = media;
             connect( MWBlog, SIGNAL( createdMedia( KBlog::BlogMedia* ) ), this, SLOT( mediaUploaded( KBlog::BlogMedia* ) ) );
             connect( MWBlog, SIGNAL( errorMedia( KBlog::Blog::ErrorType, const QString &, KBlog::BlogMedia* ) ),
-                     this, SLOT( sltMediaError( KBlog::Blog::ErrorType, const QString &, KBlog::BlogMedia* ) ) );
+                     this, SLOT( slotMediaError( KBlog::Blog::ErrorType, const QString &, KBlog::BlogMedia* ) ) );
             MWBlog->createMedia( m );
             return;
             break;
@@ -349,7 +349,8 @@ void Backend::error( KBlog::Blog::ErrorType type, const QString & errorMessage )
     Q_EMIT sigError( errType );
 }
 
-void Backend::sltMediaError( KBlog::Blog::ErrorType type, const QString & errorMessage, KBlog::BlogMedia * media )
+void Backend::slotMediaError( KBlog::Blog::ErrorType type, const QString & errorMessage,
+                              KBlog::BlogMedia * media )
 {
     kDebug();
     QString errType = errorTypeToString( type );

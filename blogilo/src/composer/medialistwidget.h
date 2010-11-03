@@ -87,10 +87,10 @@ Q_SIGNALS:
                            const QString title, const QString link, const QString Alt_text );
 
 protected Q_SLOTS:
-    void sltEditProperties();
-    void sltSetProperties();
-    void sltCopyUrl();
-    void sltRemoveMedia();
+    void slotEditProperties();
+    void slotSetProperties();
+    void slotCopyUrl();
+    void slotRemoveMedia();
 
 private:
     KAction *actEdit;
