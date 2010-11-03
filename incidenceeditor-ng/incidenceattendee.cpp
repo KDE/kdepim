@@ -90,8 +90,10 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
            this, SLOT(slotSelectAddresses()) );
   connect( mUi->mSolveButton, SIGNAL(clicked(bool)),
            this, SLOT(slotSolveConflictPressed()) );
+  /* Added as part of kolab/issue2297, which is currently under review
   connect( mUi->mOrganizerCombo, SIGNAL(activated(QString)),
            this, SLOT(slotOrganizerChanged(QString)) );
+  */
   connect( mUi->mOrganizerCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()) );
 
