@@ -83,6 +83,8 @@ STRIGI_ENDANALYZER_RETVAL MailEndAnalyzer::analyze( Strigi::AnalysisResult &inde
   if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "collection" ) )
     index.addValue( m_factory->isPartOfField, url.queryItemValue( "collection" ).toUtf8().data() );
 
+  index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email" );
+
   MessageAnalyzer analyzer( message, this );
 
   QEventLoop loop;
@@ -109,6 +111,7 @@ void MailEndAnalyzer::addValue( Field field, const QString &value )
     case InReplyToField: m_index->addValue( m_factory->inReplyToField, value.toUtf8().data() ); break;
     case ContentTypeField: m_index->addValue( m_factory->contentTypeField, value.toUtf8().data() ); break;
     case MessageContentField: m_index->addValue( m_factory->messageContentField, value.toUtf8().data() ); break;
+    case SentDateField: m_index->addValue( m_factory->sentDateField, value.toUtf8().data() ); break;
     case TypeField: m_index->addValue( m_factory->typeField, value.toUtf8().data() ); break;
   }
 }
@@ -136,6 +139,7 @@ void MailEndAnalyzerFactory::registerFields( Strigi::FieldRegister &reg )
   inReplyToField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#inReplyTo" );
   messageContentField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#plainTextMessageContent" );
   isPartOfField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf" );
+  sentDateField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#sentDate" );
   contentTypeField = reg.mimetypeField;
   typeField = reg.typeField;
 }

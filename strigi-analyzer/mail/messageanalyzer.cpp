@@ -91,6 +91,9 @@ void MessageAnalyzer::processHeaders( const KMime::Message::Ptr &message )
   if ( message->subject( false ) )
     m_analyzer->addValue( MailEndAnalyzer::SubjectField, message->subject()->asUnicodeString() );
 
+  if ( message->date( false ) )
+    m_analyzer->addValue( MailEndAnalyzer::SentDateField, message->date()->dateTime().date().toString( "yyyyMMdd" ) );
+
   if ( message->from( false ) )
     addMailboxValues( MailEndAnalyzer::FromField, message->from()->mailboxes() );
 

@@ -53,6 +53,7 @@ class PIMSTRIGI_ANALYZER_EXPORT MailEndAnalyzer : public Strigi::StreamEndAnalyz
       InReplyToField,
       ContentTypeField,
       MessageContentField,
+      SentDateField,
       TypeField
     };
 
@@ -87,6 +88,7 @@ class PIMSTRIGI_ANALYZER_EXPORT MailEndAnalyzerFactory : public Strigi::StreamEn
     const Strigi::RegisteredField* inReplyToField;
     const Strigi::RegisteredField* contentTypeField;
     const Strigi::RegisteredField* messageContentField;
+    const Strigi::RegisteredField* sentDateField;
 
     const Strigi::RegisteredField* typeField;
     const Strigi::RegisteredField* isPartOfField;
