@@ -7,8 +7,8 @@
 
     Copyright (C) 2007-2008-2008 by Christian Weilbach <christian_weilbach@web.de>
     Copyright (C) 2007-2008 Antonio Aloisio <gnuton@gnuton.org>
-    Copyright (C) 2008-2009 Mehrdad Momeny <mehrdad.momeny@gmail.com>
-    Copyright (C) 2008-2009 Golnaz Nilieh <g382nilieh@gmail.com>
+    Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
+    Copyright (C) 2008-2010 Golnaz Nilieh <g382nilieh@gmail.com>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
