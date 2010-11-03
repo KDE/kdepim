@@ -90,7 +90,7 @@ void SearchJob::searchCompleteFolder()
   QDataStream stream( &packedArgs, QIODevice::WriteOnly );
   stream << (int) 'E' << url;
   KIO::SimpleJob *job = KIO::special( url, packedArgs, KIO::HideProgressInfo );
-  if ( mFolder->imapPath() != QString("/") )
+  if ( (mFolder->imapPath() != QString("/")) && mAccount->slave() )
   { // the "/ folder" of an imap account makes the kioslave stall
     KIO::Scheduler::assignJobToSlave(mAccount->slave(), job);
     connect( job, SIGNAL(infoMessage(KJob*,const QString&,const QString&)),
