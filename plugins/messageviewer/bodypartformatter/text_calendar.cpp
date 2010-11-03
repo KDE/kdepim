@@ -279,13 +279,14 @@ static QString directoryForStatus( Attendee::PartStat status )
   return dir;
 }
 
-static Incidence::Ptr icalToString( const QString &iCal )
+static Incidence::Ptr stringToIncidence( const QString &iCal )
 {
   MemoryCalendar::Ptr calendar( new MemoryCalendar( KSystemTimeZones::local() ) ) ;
   ICalFormat format;
   ScheduleMessage::Ptr message = format.parseScheduleMessage( calendar, iCal );
   if ( !message ) {
     //TODO: Error message?
+    kWarning() << "Can't parse this ical string: "  << iCal;
     return Incidence::Ptr();
   }
 
@@ -358,7 +359,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     static Attachment::Ptr findAttachment( const QString &name, const QString &iCal )
     {
-      Incidence::Ptr incidence = icalToString( iCal );
+      Incidence::Ptr incidence = stringToIncidence( iCal );
 
       // get the attachment by name from the incidence
       Attachment::List attachments = incidence->attachments();
@@ -870,7 +871,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
         return true;
       }
 
-      Incidence::Ptr incidence = icalToString( iCal );
+      Incidence::Ptr incidence = stringToIncidence( iCal );
+      kDebug() << "Handling invitation: uid is : " << incidence->uid()
+               << "; schedulingId is:" << incidence->schedulingID()
+               << "; Attendee::PartStat = " << status;
 
       // get comment for tentative acceptance
       if ( askForComment( status ) ) {
@@ -979,7 +983,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       // with the delegate as additional attendee), we also use that for updating
       // our calendar
       if ( status == Attendee::Delegated ) {
-        incidence = icalToString( iCal );
+        incidence = stringToIncidence( iCal );
         myself = findMyself( incidence, receiver );
         myself->setStatus( status );
         myself->setDelegate( delegateString );
@@ -1112,7 +1116,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( receiver.isEmpty() ) {
         return true;
       }
-      Incidence::Ptr incidence( icalToString( iCal ) );
+      Incidence::Ptr incidence( stringToIncidence( iCal ) );
       if ( askForComment( Attendee::Declined ) ) {
         bool ok = false;
         const QString comment(
@@ -1168,7 +1172,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         iCal = part->asText();
       }
 
-      Incidence::Ptr incidence = icalToString( iCal );
+      Incidence::Ptr incidence = stringToIncidence( iCal );
       if ( !incidence ) {
         KMessageBox::sorry(
           0,
@@ -1218,7 +1222,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
           mail( viewerInstance, incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
-        incidence = icalToString( iCal );
+        incidence = stringToIncidence( iCal );
         showCalendar( incidence->dtStart().date() );
         return true;
       }
@@ -1235,7 +1239,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       QString summary;
       if ( path == "record" ) {
-        incidence = icalToString( iCal );
+        incidence = stringToIncidence( iCal );
 
         int response =
           KMessageBox::questionYesNoCancel(
