@@ -27,6 +27,7 @@
 #include "contactsexporthandler.h"
 #include "contactsguistatemanager.h"
 #include "contactsimporthandler.h"
+#include "searchwidget.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/contact/contactsfilterproxymodel.h>
@@ -47,6 +48,7 @@ QML_DECLARE_TYPE( Akonadi::Contact::ContactViewItem )
 QML_DECLARE_TYPE( Akonadi::Contact::ContactGroupViewItem )
 QML_DECLARE_TYPE( ContactsGuiStateManager )
 QML_DECLARE_TYPE( DeclarativeConfigWidget )
+QML_DECLARE_TYPE( DeclarativeSearchWidget )
 
 MainView::MainView( QWidget *parent )
   : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
@@ -59,6 +61,7 @@ void MainView::delayedInit()
   qmlRegisterType<Akonadi::Contact::ContactGroupViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactGroupView" );
   qmlRegisterUncreatableType<ContactsGuiStateManager>( "org.kde.akonadi.contacts", 4, 5, "ContactsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.contacts", 4, 5, "ConfigWidget" );
+  qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.contacts", 4, 5, "SearchWidget" );
 
   ContactImageProvider *provider = new ContactImageProvider;
   provider->setModel( itemModel() );

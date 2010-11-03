@@ -44,6 +44,7 @@ set(kab_mobile_srcs
   namepartseditwidget.cpp
   mobilelineedit.cpp
   phonetypecombo.cpp
+  searchwidget.cpp
 )
 
 kde4_add_ui_files(kab_mobile_srcs
@@ -59,7 +60,7 @@ kde4_add_ui_files(kab_mobile_srcs
   editormore_personalpage.ui
 )
 
-qt4_wrap_ui(kab_mobile_srcs configwidget.ui)
+qt4_wrap_ui(kab_mobile_srcs configwidget.ui searchwidget.ui)
 kde4_add_kcfg_files(kab_mobile_srcs settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)
@@ -104,6 +105,7 @@ install(FILES
   KAddressBookActions.qml
   kaddressbook-mobile-background.png
   ContactListView.qml
+  SearchDialog.qml
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )
