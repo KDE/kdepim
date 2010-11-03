@@ -10,7 +10,8 @@ endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_subdirectory( cmake )
 
-find_package(QJson REQUIRED)
-
+find_package(QJson)
+if(QJON_FOUND)
 add_subdirectory( src )
 add_subdirectory( icons )
+endif()
