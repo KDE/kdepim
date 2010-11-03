@@ -40,7 +40,7 @@ QML.Rectangle {
 
     QML.Text {
       id: topText
-      color: black
+      color: "black"
       anchors.top: parent.top
       anchors.right: parent.right
       anchors.topMargin: 35
@@ -114,7 +114,7 @@ QML.Rectangle {
       anchors.fill: parent 
       Mail.FilterConfigWidget {
         id: configWidget
-        width: parent.width - okButton.width
+        width: parent.width
         visible: filterList.count > 0
         onVisibleChanged: {
           if ( visible ) {
