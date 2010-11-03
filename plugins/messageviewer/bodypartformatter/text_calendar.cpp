@@ -33,6 +33,7 @@
 #include "attendeeselector.h"
 #include "calendarinterface.h"
 #include "delegateselector.h"
+#include "memorycalendarmemento.h"
 
 #include <calendarsupport/groupware.h>
 
@@ -184,60 +185,73 @@ KCal::CalendarResources * CalendarManager::calendar()
 class KMInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
 {
   public:
-    KMInvitationFormatterHelper( Interface::BodyPart *bodyPart )
-      : mBodyPart( bodyPart ) {}
+  KMInvitationFormatterHelper( Interface::BodyPart *bodyPart,
+                               const KCalCore::MemoryCalendar::Ptr &calendar )
+      : mBodyPart( bodyPart ), mCalendar( calendar ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
-#ifdef KDEPIM_NO_KRESOURCES
-    KCalCore::Calendar::Ptr calendar() const { return KCalCore::Calendar::Ptr(); }
-#else
-    // NOTE: This breaks the build when build *with* the old resources. Will be
-    //       fixed after I finished the KCal -> KCalCore port *and* the
-    //       resources -> Akonadi port.
-    //       Temporary solutions: Don't build with the old resources =:)
-//    KCal::Calendar* calendar() const { return CalendarManager::calendar(); }
-#endif
+
+    KCalCore::Calendar::Ptr calendar() const
+    {
+      return mCalendar;
+    }
   private:
     Interface::BodyPart *mBodyPart;
+    KCalCore::MemoryCalendar::Ptr mCalendar;
 };
 
 class Formatter : public Interface::BodyPartFormatter
 {
   public:
-    Result format( Interface::BodyPart *bodyPart,
-                   HtmlWriter *writer ) const
+    Result format( Interface::BodyPart *bodyPart, HtmlWriter *writer ) const
     {
       if ( !writer ) {
         // Guard against crashes in createReply()
         return Ok;
       }
 
-      KMime::Message *const message = dynamic_cast<KMime::Message*>( bodyPart->topLevelContent() );
-      if ( !message ) {
-        kWarning() << "The top-level content is not a message. Cannot handle the invitation then.";
-        return Failed;
-      }
 
-      KMInvitationFormatterHelper helper( bodyPart );
-      QString source;
-      // If the bodypart does not have a charset specified, we need to fall back to utf8,
-      // not the KMail fallback encoding, so get the contents as binary and decode explicitly.
-      if ( bodyPart->contentTypeParameter( "charset" ).isEmpty() ) {
-        const QByteArray &ba = bodyPart->asBinary();
-        source = QString::fromUtf8(ba);
+      /** Formating is async now because we need to fetch incidences from akonadi.
+          Basically this method (format()) will be called twice. The first time
+          it creates the memento that fetches incidences and returns.
+
+          When the memento finishes, this is called a second time, and we can proceed.
+
+          BodyPartMementos are documented in objecttreeparser.h
+      */
+      MemoryCalendarMemento *memento = dynamic_cast<MemoryCalendarMemento*>( bodyPart->memento() );
+
+      if ( memento ) {
+        KMime::Message *const message = dynamic_cast<KMime::Message*>( bodyPart->topLevelContent() );
+        if ( !message ) {
+          kWarning() << "The top-level content is not a message. Cannot handle the invitation then.";
+          return Failed;
+        }
+
+        KMInvitationFormatterHelper helper( bodyPart, memento->calendar() );
+        QString source;
+        // If the bodypart does not have a charset specified, we need to fall back to utf8,
+        // not the KMail fallback encoding, so get the contents as binary and decode explicitly.
+        if ( bodyPart->contentTypeParameter( "charset" ).isEmpty() ) {
+          const QByteArray &ba = bodyPart->asBinary();
+          source = QString::fromUtf8(ba);
+        } else {
+          source = bodyPart->asText();
+        }
+
+        MemoryCalendar::Ptr cl( new MemoryCalendar( KSystemTimeZones::local() ) );
+        const QString html =
+          KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml(
+            source, cl, &helper, message->sender()->asUnicodeString(),
+            GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
+
+        if ( html.isEmpty() ) {
+          return AsIcon;
+        }
+        writer->queue( html );
       } else {
-        source = bodyPart->asText();
+        MemoryCalendarMemento *memento = new MemoryCalendarMemento();
+        bodyPart->setBodyPartMemento( memento );
       }
-
-      MemoryCalendar::Ptr cl( new MemoryCalendar( KSystemTimeZones::local() ) );
-      const QString html =
-        KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml(
-          source, cl, &helper, message->sender()->asUnicodeString(),
-          GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
-
-      if ( html.isEmpty() ) {
-        return AsIcon;
-      }
-      writer->queue( html );
 
       return Ok;
     }

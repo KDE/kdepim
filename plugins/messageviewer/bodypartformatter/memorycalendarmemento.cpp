@@ -45,7 +45,6 @@ void MemoryCalendarMemento::slotSearchJobFinished( KJob *job )
       mCalendar->addIncidence( incidence );
     }
 
-    kDebug() << "DEBUG YAY, " << searchJob->incidences().count();
     emit update( Viewer::Delayed );
   }
 }

@@ -196,7 +196,7 @@ void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, cons
   KMime::Content *newNode = new KMime::Content();
   newNode->setContent( KMime::CRLFtoLF( content ) );
   newNode->parse();
-/*  
+/*
   kDebug()  << "MEDIATYPE: " << newNode->contentType()->mediaType() << newNode->contentType()->mimeType()    ;
   kDebug() << "DECODEDCONTENT: " << newNode->decodedContent().left(400);
   kDebug() << "ENCODEDCONTENT: " << newNode->encodedContent().left(400);
@@ -257,7 +257,7 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
     if ( mNodeHelper->nodeProcessed( node ) ) {
       continue;
     }
-   
+
     ProcessResult processResult( mNodeHelper );
 
     KMime::ContentIndex contentIndex = node->index();
@@ -282,7 +282,21 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
 
       writeAttachmentMarkHeader( node );
       mNodeHelper->setNodeDisplayedEmbedded( node, true );
+
       const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
+
+      if ( allowAsync() && part.memento() ) {
+        // dynamic cast needed. The interface BodyPartMemento isn't a QObject. All other code
+        // that works with mementos uses the derived class, which is a QObject.
+        // But in this case we're working with external plugins and we don't know what the respective
+        // memento looks like
+
+        QObject *obj = dynamic_cast<QObject*>( part.memento() );
+        if ( obj ) {
+          QObject::connect( obj, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                            mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
+       }
+      }
 
       switch ( result ) {
       case Interface::BodyPartFormatter::AsIcon:
@@ -1556,7 +1570,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
 
     mNodeHelper->setPartMetaData( node, messagePart );
   }
-  
+
   if ( htmlWriter() )
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
   return true;
