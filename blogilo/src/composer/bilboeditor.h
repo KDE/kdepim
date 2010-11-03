@@ -90,34 +90,15 @@ public:
      */
     void setHtmlContent( const QString &content );
 
-//     QMap <QString, BilboMedia*> * mediaList();
-
-    /**
-     * Makes BilboEditor to use @param list as its list of media files.
-     * then BilboEditor can add media files to it, or remove them.
-     */
-//     void setMediaList( QMap <QString, BilboMedia*> *list );
-//   void setMediaList(QMap <QString, BilboMedia*> & list);
-
-    /**
-     * Changes the layout direction of the editor, to the given direction.
-     * @param direction is the new layout direction.
-     */
-    void setLayoutDirection( Qt::LayoutDirection direction );
-
-    /**
-     * Parses the content of htmlEditor tab, to replace media local paths with remote
-     * addresses. It's used after uploading media files, for updating html content of the
-     * post before being published.
-     * @return true if successful, and false otherwise.
-     */
-    bool updateMediaPaths();
+    QList <BilboMedia*> localImages();
 
     /**
      * Stores the given title, to be shown as the post title in preview tab.
      * @param title is the post title.
      */
     void setCurrentTitle( const QString& title );
+
+    TextEditor* editor();
 
 Q_SIGNALS:
     /**
@@ -148,24 +129,6 @@ protected Q_SLOTS:
 
 //     void sltSyncSpellCheckingButton( bool check );
 
-
-    /*!
-    Opens a dialog to set link address. if cursor has selection and it is a link
-     * itself, the link address is shown in the dialog to edit.
-     */
-    void sltAddEditLink();
-
-    /*!
-    Sets the link address given in the link dialog as AnchorHref of the current text.
-     * if link title is set in the link dialog, current text will change into that.
-     */
-    void sltSetLink( const QString& address, const QString& target, const QString& title );
-
-    /*!
-    Removes link from current text by assigning false to the Anchor property of text format.
-     */
-    void sltRemoveLink();
-
     /**
      * Creates an instance of AddImageDialog class,and opens it, to select an image.
      */
@@ -173,30 +136,6 @@ protected Q_SLOTS:
 
     void sltSetImage( BilboMedia *media, const int width, const int height, 
                const QString title, const QString link, const QString Alt_text );
-    
-//     void sltReloadImage( const KUrl imagePath );
-// 
-//     void sltSetImageProperties( const int index, const int width, const int height,
-//                        const QString title, const QString link, const QString Alt_text );
-    
-    /**
-     * Creates an instance of AddMediaDialog class,and opens it, to select a media file.
-     */
-//     void sltAddMedia();
-    
-    /**
-     * Puts the given media object in the current cursor position, of the editor.
-     * @param media is a BilboMedia object, which contains media path, mimetype and other needed information about it.
-     */
-//     void sltSetMedia( BilboMedia *media );
-
-//     void sltRemoveMedia( const int index );
-
-//     void sltMediaTypeFound( BilboMedia *media );
-
-//     void sltToggleBlockQuote();
-
-    void sltAddPostSplitter();
 
     /*!
     Sets the content of the current tab  as other tabs' contents, to apply recent
@@ -211,12 +150,6 @@ protected Q_SLOTS:
 private:
 
     /*!
-    Creates actions of Bilbo editor, and assigns each one to a button, then adds each
-     * button to barVisual, on the editor tab.
-     */
-//     void createActions();
-
-    /*!
     Creates Widget of BilboEditor.
     then assigns default charachter format of the editor tab to defaultCharFormat
      * variable, to be used in remove formatting operation. then calls createActions
@@ -225,32 +158,8 @@ private:
      */
     void createUi();
 
-    /*!
-    Prepares the html code to be used by editor->setHtml() function.
-     */
-//     QString htmlToRichtext( const QString& html );
-
-    QWidget *tabVisual;
-    QWidget *tabHtml;
-    QWidget *tabPreview;
-
-    TextEditor *editor;
-    KTextEditor::View *htmlEditor;
-
-    BilboBrowser *preview;
-
-    KToolBar *barVisual;
-
-    AddEditLink *linkDialog;
-
-    QTextCharFormat defaultCharFormat;
-    QTextBlockFormat defaultBlockFormat;
-
-    QMap <QString, BilboMedia*> *mMediaList;
-
-    QString currentPostTitle;
-    int prev_index;
-    QColor codeBackground;
+    class Private;
+    Private * const d;
 };
 
 #endif

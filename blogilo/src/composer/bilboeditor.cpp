@@ -61,20 +61,39 @@
 #include <settings.h>
 
 #define FORWARD_ACTION(action1, action2) \
-    connect(action1, SIGNAL(triggered()), editor->getAction(action2), SLOT(trigger()));\
-    connect(editor->getAction(action2), SIGNAL(changed()), SLOT(adjustActions()));
+    connect(action1, SIGNAL(triggered()), d->editor->getAction(action2), SLOT(trigger()));\
+    connect(d->editor->getAction(action2), SIGNAL(changed()), SLOT(adjustActions()));
+
+class BilboEditor::Private
+{
+public:
+    QWidget *tabVisual;
+    QWidget *tabHtml;
+    QWidget *tabPreview;
+
+    TextEditor *editor;
+    KTextEditor::View *htmlEditor;
+
+    BilboBrowser *preview;
+
+    KToolBar *barVisual;
+
+    QString currentPostTitle;
+    int prev_index;
+//     QColor codeBackground;
+};
 
 BilboEditor::BilboEditor( QWidget *parent )
-        : KTabWidget( parent )
+        : KTabWidget( parent ), d(new Private)
 {
     createUi();
-    connect( editor, SIGNAL( textChanged() ), this, SIGNAL( textChanged() ) );
-    connect( htmlEditor->document(), SIGNAL( textChanged( KTextEditor::Document * ) ),
+    connect( d->editor, SIGNAL( textChanged() ), this, SIGNAL( textChanged() ) );
+    connect( d->htmlEditor->document(), SIGNAL( textChanged( KTextEditor::Document * ) ),
              this, SIGNAL( textChanged() ) );
     connect( Settings::self(), SIGNAL(configChanged()),
              this, SLOT(slotSettingsChanged()) );
-//     editor->setCheckSpellingEnabled( Settings::enableCheckSpelling() );
-    editor->setFocus();
+//     d->editor->setCheckSpellingEnabled( Settings::enableCheckSpelling() );
+    d->editor->setFocus();
 }
 
 BilboEditor::~BilboEditor()
@@ -86,149 +105,42 @@ void BilboEditor::createUi()
 {
     ///this:
     this->resize( 600, 400 );
-    tabVisual = new QWidget( this );
-    tabHtml = new QWidget( this );
-    tabPreview = new QWidget( this );
-    this->addTab( tabVisual, i18nc( "Software", "Visual Editor" ) );
-    this->addTab( tabHtml, i18nc( "Software", "Html Editor" ) );
-    this->addTab( tabPreview, i18nc( "preview of the edited post", "Post Preview" ) );
+    d->tabVisual = new QWidget( this );
+    d->tabHtml = new QWidget( this );
+    d->tabPreview = new QWidget( this );
+    this->addTab( d->tabVisual, i18nc( "Software", "Visual Editor" ) );
+    this->addTab( d->tabHtml, i18nc( "Software", "Html Editor" ) );
+    this->addTab( d->tabPreview, i18nc( "d->preview of the edited post", "Post Preview" ) );
     connect( this, SIGNAL( currentChanged( int ) ), this, SLOT( sltSyncEditors( int ) ) );
-    prev_index = 0;
+    d->prev_index = 0;
 
-    /// Visual editor:
-    editor = new TextEditor( tabVisual );
-//     editor->enableFindReplace( true );
-//     connect( editor, SIGNAL( sigRemoteImageArrived( const KUrl ) ), this, 
-//              SLOT( sltReloadImage( const KUrl ) ) );
-//     connect( editor, SIGNAL( sigMediaTypeFound( BilboMedia* ) ), this, 
-//              SLOT( sltMediaTypeFound( BilboMedia* ) ) );
+    /// Visual d->editor:
+    d->editor = new TextEditor( d->tabVisual );
+    QVBoxLayout *vLayout = new QVBoxLayout( d->tabVisual );
+    vLayout->addWidget( d->editor );
 
-    
+    connect( d->editor, SIGNAL( checkSpellingChanged( bool ) ),
+             this, SLOT( sltSyncSpellCheckingButton( bool ) ) );
 
-//     QLabel *label = new QLabel( i18n( "Media list:" ), tabVisual );
-//     label->setMaximumHeight( 30 );
+    ///d->htmlEditor:
+    d->htmlEditor = HtmlEditor::self()->createView( d->tabHtml );
+    QGridLayout *hLayout = new QGridLayout( d->tabHtml );
+    hLayout->addWidget( d->htmlEditor );
 
-//     lstMediaFiles = new MediaListWidget( tabVisual );
-//     lstMediaFiles->setViewMode( QListView::IconMode );
-//     lstMediaFiles->setIconSize( QSize( 32, 32 ) );
-//     lstMediaFiles->setGridSize( QSize( 60, 48 ) );
-//     lstMediaFiles->setDragDropMode( QAbstractItemView::NoDragDrop );
-//     lstMediaFiles->setResizeMode( QListView::Adjust );
-//     lstMediaFiles->setMaximumHeight( 60 );
-//     connect( lstMediaFiles, SIGNAL( sigSetProperties( const int, const int,
-//                                     const int, const QString, const QString, const QString ) ), 
-//             this, SLOT( sltSetImageProperties( const int, const int, const int, 
-//                         const QString, const QString, const QString ) ) );
-//     connect( lstMediaFiles, SIGNAL( sigRemoveMedia( const int ) ), this, SLOT( sltRemoveMedia( const int ) ) );
+    ///d->preview:
+    d->preview = new BilboBrowser( d->tabPreview );
+    QGridLayout *gLayout = new QGridLayout( d->tabPreview );
+    gLayout->addWidget( d->preview );
 
-    QVBoxLayout *vLayout = new QVBoxLayout( tabVisual );
-//     vLayout->addWidget( barVisual );
-    vLayout->addWidget( editor );
-//     vLayout->addWidget( label );
-//     vLayout->addWidget( lstMediaFiles );
-
-    connect( editor, SIGNAL( checkSpellingChanged( bool ) ), this, SLOT( sltSyncSpellCheckingButton( bool ) ) );
-
-    ///htmlEditor:
-    htmlEditor = HtmlEditor::self()->createView( tabHtml );
-    QGridLayout *hLayout = new QGridLayout( tabHtml );
-    hLayout->addWidget( htmlEditor );
-
-    ///preview:
-    preview = new BilboBrowser( tabPreview );
-    QGridLayout *gLayout = new QGridLayout( tabPreview );
-    gLayout->addWidget( preview );
-
-    connect( preview, SIGNAL( sigSetBlogStyle() ), this, SLOT( 
+    connect( d->preview, SIGNAL( sigSetBlogStyle() ), this, SLOT(
             sltSetPostPreview() ) );
 
 
     this->setCurrentIndex( 0 );
 
-    currentPostTitle = i18n( "Post Title" );
-
-//     QPalette palette = QApplication::palette();
-//     codeBackground = palette.color( QPalette::Active, QPalette::Midlight );
-
-/*
-    ///defaultCharFormat
-//     defaultCharFormat = editor->currentCharFormat();
-    const QFont defaultFont = editor->document()->defaultFont();
-    defaultCharFormat.setFont( defaultFont );
-    defaultCharFormat.setForeground( editor->currentCharFormat().foreground() );
-    defaultCharFormat.setProperty( QTextFormat::FontSizeAdjustment, QVariant( 0 ) );
-    defaultCharFormat.setBackground( palette.color( QPalette::Active,
-                                                    QPalette::Base ) );
-    defaultCharFormat.setProperty( BilboTextFormat::HasCodeStyle, QVariant( false ) );
-
-    ///defaultBlockFormat
-    defaultBlockFormat = editor->textCursor().blockFormat();*/
-
-//     createActions();
+    d->currentPostTitle = i18n( "Post Title" );
 }
 
-
-void BilboEditor::sltAddEditLink()
-{
-    linkDialog = new AddEditLink( this );
-    linkDialog->setAttribute( Qt::WA_DeleteOnClose );
-    linkDialog->setWindowModality( Qt::WindowModal );
-    connect( linkDialog, SIGNAL( addLink( const QString&, const QString&, const QString& ) ),
-             this, SLOT( sltSetLink( const QString&, const QString&, const QString& ) ) );
-
-//     QTextCharFormat f = editor->currentCharFormat();
-//     if ( !f.isAnchor() ) {
-//         linkDialog->show();
-//     } else {
-//         linkDialog->show( f.anchorHref(), f.stringProperty( BilboTextFormat::AnchorTitle )
-//                           , f.stringProperty( BilboTextFormat::AnchorTarget ) );
-//     }
-}
-
-void BilboEditor::sltSetLink( const QString& address, const QString& target,
-                              const QString& title )
-{
-//     editor->setFocus( Qt::OtherFocusReason );
-// 
-//     QTextCharFormat charFormat = editor->currentCharFormat();
-//     QTextCharFormat f;
-//     QTextCursor cursor = editor->textCursor();
-// 
-//     if ( ( charFormat.isAnchor() ) && ( !editor->textCursor().hasSelection() ) ) {
-// 
-//         QTextBlock block = cursor.block();
-//         QTextBlock::iterator i;
-//         for ( i = block.begin(); !( i.atEnd() ); ++i ) {
-// 
-//             if ( i.fragment().contains( cursor.position() ) ) {
-//                 cursor.setPosition( i.fragment().position() );
-//                 cursor.movePosition( QTextCursor::NextCharacter,
-//                                      QTextCursor::KeepAnchor, i.fragment().length() );
-//                 break;
-//             }
-//         }
-//     }
-//     f.setAnchor( true );
-//     f.setAnchorHref( address );
-//     f.setProperty( BilboTextFormat::AnchorTitle, QVariant( title ) );
-//     f.setProperty( BilboTextFormat::AnchorTarget, QVariant( target ) );
-// 
-//     f.setFontUnderline( true );
-//     f.setForeground( QBrush( Qt::blue ) );
-// 
-//     cursor.mergeCharFormat( f );
-}
-
-void BilboEditor::sltRemoveLink()
-{
-    QTextCharFormat f;
-    f.setAnchor( false );
-    f.setUnderlineStyle( this->defaultCharFormat.underlineStyle() );
-    f.setForeground( this->defaultCharFormat.foreground() );
-
-//     editor->textCursor().mergeCharFormat( f );
-    editor->setFocus( Qt::MouseFocusReason );
-}
 
 void BilboEditor::sltAddImage()
 {
@@ -266,25 +178,9 @@ void BilboEditor::sltSetImage( BilboMedia *media, const int width, const int hei
         imageFormat.setAnchor( true );
         imageFormat.setAnchorHref( link );
     }
-//     editor->textCursor().insertImage( imageFormat );
+//     d->editor->textCursor().insertImage( imageFormat );
 
-    editor->setFocus( Qt::OtherFocusReason );
-}
-
-void BilboEditor::sltAddPostSplitter()
-{
-//     QTextBlockFormat f = editor->textCursor().blockFormat();
-//     QTextBlockFormat f1 = f;
-// 
-//     f.setProperty( BilboTextFormat::IsHtmlTagSign, true );
-//     f.setProperty( QTextFormat::BlockTrailingHorizontalRulerWidth, 
-//              QTextLength( QTextLength::PercentageLength, 80 ) );
-//     if ( editor->textCursor().block().text().isEmpty() ) {
-//         editor->textCursor().mergeBlockFormat( f );
-//     } else {
-//         editor->textCursor().insertBlock( f );
-//     }
-//     editor->textCursor().insertBlock( f1 );
+    d->editor->setFocus( Qt::OtherFocusReason );
 }
 
 void BilboEditor::sltSyncEditors( int index )
@@ -292,134 +188,75 @@ void BilboEditor::sltSyncEditors( int index )
     kDebug();
 
     if ( index == 0 ) {
-        if ( prev_index == 2 ) {
-            preview->stop();
+        if ( d->prev_index == 2 ) {
+            d->preview->stop();
             goto SyncEnd;
         }//An else clause can do the job of goto, No? -Mehrdad :D
-        editor->setHtmlContent(htmlEditor->document()->text());
-        editor->setFocus();
-        editor->startEditing();
+        d->editor->setHtmlContent(d->htmlEditor->document()->text());
+        d->editor->setFocus();
+        d->editor->startEditing();
     } else if ( index == 1 ) {
-        if ( prev_index == 2 ) {
-            preview->stop();
+        if ( d->prev_index == 2 ) {
+            d->preview->stop();
             goto SyncEnd;
         }
-        htmlEditor->document()->setText( editor->htmlContent() );
-        htmlEditor->setFocus();
+        d->htmlEditor->document()->setText( d->editor->htmlContent() );
+        d->htmlEditor->setFocus();
     } else {
-        if ( prev_index == 1 ) {
-            editor->setHtmlContent(htmlEditor->document()->text());
+        if ( d->prev_index == 1 ) {
+            d->editor->setHtmlContent(d->htmlEditor->document()->text());
         } else {
-            htmlEditor->document()->setText( editor->htmlContent() );
+            d->htmlEditor->document()->setText( d->editor->htmlContent() );
         }
-        preview->setHtml( currentPostTitle, htmlEditor->document()->text() );
+        d->preview->setHtml( d->currentPostTitle, d->htmlEditor->document()->text() );
     }
 SyncEnd:
-    prev_index = index;
+    d->prev_index = index;
 }
 
 QString BilboEditor::htmlContent()
 {
     if ( this->currentIndex() == 0 ) {
-        htmlEditor->document()->setText( editor->htmlContent() );
+        d->htmlEditor->document()->setText( d->editor->htmlContent() );
     }
-    return editor->htmlContent();
+    return d->editor->htmlContent();
 }
 
 void BilboEditor::setHtmlContent( const QString & content )
 {
-    this->editor->setHtmlContent(content);
-    this->htmlEditor->document()->setText( content );
-}
-
-void BilboEditor::setLayoutDirection( Qt::LayoutDirection direction )
-{
-//     QTextOption textOption = editor->document()->defaultTextOption();
-//     textOption.setTextDirection( direction );
-//     editor->document()->setDefaultTextOption( textOption );
-// 
-//     if ( direction == Qt::LeftToRight ) {
-//         this->actRightToLeft->setChecked( false );
-//     } else {
-//         this->actRightToLeft->setChecked( true );
-//     }
+    this->d->editor->setHtmlContent(content);
+    this->d->htmlEditor->document()->setText( content );
 }
 
 void BilboEditor::setCurrentTitle( const QString& title)
 {
     if ( title.isEmpty() ) {
-        currentPostTitle = i18n( "Post Title" );
+        d->currentPostTitle = i18n( "Post Title" );
     } else {
-        currentPostTitle = title;
+        d->currentPostTitle = title;
     }
 }
 
-bool BilboEditor::updateMediaPaths()
+QList< BilboMedia* > BilboEditor::localImages()
 {
-    int startIndex = 0;
-    int endIndex;
-    QString path;
-    QString htmlContent;
-    bool changed = false;
+    return d->editor->getLocalImages();
+}
 
-    if ( this->currentIndex() == 0 ) {
-        htmlContent = editor->htmlContent();
-    } else {
-        htmlContent = htmlEditor->document()->text();
-    }
-
-    startIndex = htmlContent.indexOf( QRegExp( "<([^<>]*)\"file://" ), startIndex );
-    while ( startIndex != -1 ) {
-        startIndex = htmlContent.indexOf( "file://", startIndex );
-        endIndex = htmlContent.indexOf( '\"', startIndex );
-        path = htmlContent.mid( startIndex, ( endIndex - startIndex ) );
-
-        if ( mMediaList->contains( path ) ) {
-            BilboMedia *media = mMediaList->value( path );
-
-            htmlContent.replace( startIndex, ( endIndex - startIndex ),
-                                 media->remoteUrl().url() );
-            changed = true;
-
-            mMediaList->remove( path );
-            mMediaList->insert( media->remoteUrl().url(), media );
-
-            QList < QListWidgetItem* > list;
-//             list = lstMediaFiles->findItems( media->name(), ( Qt::MatchFixedString | 
-//                 Qt::MatchCaseSensitive ) );
-            if ( list.isEmpty() ) {
-                kDebug() << "media isn't inserted in list widget";
-            } else {
-                for ( int i = 0; i < list.size(); i++ ) {
-                    if ( list.at( i )->toolTip() == path ) {
-                        list.at( i )->setToolTip( media->remoteUrl().url() );
-                        break;
-                    }
-                }
-            }
-        }
-        startIndex = htmlContent.indexOf( QRegExp( "<([^<>]*)\"file://" ), endIndex );
-    }
-    if ( changed ) {
-        if ( this->currentIndex() == 0 ) {
-            editor->setHtmlContent(htmlContent);
-        } else {
-            htmlEditor->document()->setText( htmlContent );
-        }
-    }
-    return true;
+TextEditor* BilboEditor::editor()
+{
+    return d->editor;
 }
 
 void BilboEditor::sltSetPostPreview()
 {
     if ( this->currentIndex() == 2 ) {
-        preview->setHtml( currentPostTitle, htmlEditor->document()->text() );
+        d->preview->setHtml( d->currentPostTitle, d->htmlEditor->document()->text() );
     }
 }
 
 void BilboEditor::slotSettingsChanged()
 {
-//     editor->setCheckSpellingEnabled( Settings::enableCheckSpelling() );
+//     d->editor->setCheckSpellingEnabled( Settings::enableCheckSpelling() );
 }
 
 #include "composer/bilboeditor.moc"

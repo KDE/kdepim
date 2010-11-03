@@ -34,7 +34,9 @@
 #include <QLineEdit>
 #include <KWebView>
 #include <QUndoCommand>
+#include <qjson/parser.h>
 
+class BilboMedia;
 class QWebView;
 class QAction;
 class TextEditor;
@@ -154,30 +156,24 @@ public:
 
     void setReadOnly ( bool );
 
-//       void setDocument(const Document&);
-//       const Document& getDocument();
-
     void reload();
 
     bool insertImage ( const QString& );
     bool insertImage ( const QByteArray& );
 
-    void setFontFamily ( const QString& );
-    QString getFontFamily() const;
+//     void setFontFamily ( const QString& );
+//     QString getFontFamily() const;
 
     //the range of font size is between 0 and 6
     // (xx-small to xx-large)
     void setFontSize ( int );
     int getFontSize() const;
-
+/*
     void setForegroundColor ( const QColor& );
     QColor getForegroundColor() const;
 
     void setBackgroundColor ( const QColor& );
-    QColor getBackgroundColor() const;
-
-    void setPageBackgroundColor ( const QColor& );
-    QColor getPageBackgroundColor() const;
+    QColor getBackgroundColor() const;*/
 
 //     void setAlignment ( Qt::Alignment );
     Qt::Alignment getAlignment() const;
@@ -192,7 +188,10 @@ public:
 
     void addCommand ( QUndoCommand* );
 
+    void replaceImageSrc(const QString& src, const QString& dest);
+
 public slots:
+    QList<BilboMedia*> getLocalImages();
 //       void finishEditing(); //emits editingFinished signal if anything have been edited
     void clear();
     //just shows the cursor.
@@ -283,7 +282,7 @@ private:
     QList<TextEditorObject*> objects;
     bool readOnly;
     bool objectsAreModified;
-
+    QJson::Parser parser;
     KToolBar *barVisual;
 //     KAction *alignLeftAction;
 //     KAction *alignRightAction;

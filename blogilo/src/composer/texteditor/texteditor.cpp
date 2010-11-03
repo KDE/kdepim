@@ -45,6 +45,9 @@
 #include <QFile>
 #include <QDir>
 #include <math.h>
+#include "bilbomedia.h"
+#include <kmimetype.h>
+#include "global.h"
 
 #define ATTACHMENT_IMAGE "image"
 #define FORWARD_ACTION(action1, action2) \
@@ -339,6 +342,7 @@ void TextEditor::createActions()
     actCheckSpelling->setCheckable( true );
     connect( actCheckSpelling, SIGNAL( triggered( bool ) ), this,
              SLOT( slotToggleSpellChecking(bool) ) );
+    connect( actCheckSpelling, SIGNAL(triggered(bool)), SLOT(getMediaList()));
     barVisual->addAction( actCheckSpelling );
 
     barVisual->addSeparator();
@@ -605,9 +609,9 @@ QByteArray TextEditor::loadImage ( const QString &imagePath ) {
     return file.readAll();
 }
 
-void TextEditor::setFontFamily ( const QString &family ) {
-    execCommand ( "fontName", family );
-}
+// void TextEditor::setFontFamily ( const QString &family ) {
+//     execCommand ( "fontName", family );
+// }
 
 // QString TextEditor::getFontFamily() const {
 //     return const_cast<TextEditor*> ( this ) -> evaluateJavaScript ( "getFontFamily()", false ).toString();
@@ -786,8 +790,35 @@ void TextEditor::formatTextColor()
         execCommand("foreColor", color.name());
 }
 
+QList< BilboMedia* > TextEditor::getLocalImages()
+{
+    kDebug();
+    QList< BilboMedia* > list;
+    QVariant json = evaluateJavaScript("getLocalImages()", false);
+    kDebug()<<json.toByteArray();
+    QVariantList parsedList = parser.parse(json.toByteArray()).toList();
+    foreach(const QVariant& var, parsedList){
+        BilboMedia* media = new BilboMedia(this);
+        KUrl mediaUrl (var.toMap().value("src").toString());
+        media->setLocalUrl( mediaUrl );
+        media->setMimeType( KMimeType::findByUrl( mediaUrl, 0, true )->name() );
+        media->setName(mediaUrl.fileName());
+        media->setBlogId(__currentBlogId);
+        list.append(media);
+    }
+    return list;
+}
 
-// shamelessly copied from Qt Demo Browser
+void TextEditor::replaceImageSrc(const QString& src, const QString& dest)
+{
+    QString cmd = QString("replaceImageSrc('%1','%2')").arg(src).arg(dest);
+//     kDebug()<<cmd;
+    evaluateJavaScript(cmd, true);
+//     kDebug()<< var;
+    kDebug()<<"Replaced "<<src<<" with "<<dest;
+}
+
+
 static QUrl guessUrlFromString(const QString &string)
 {
     QString urlStr = string.trimmed();

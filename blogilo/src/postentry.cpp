@@ -41,6 +41,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <qlayout.h>
+#include "composer/texteditor/texteditor.h"
 
 #define MINUTE 60000
 
@@ -224,11 +225,6 @@ PostEntry::~PostEntry()
     delete d;
 }
 
-QMap< QString, BilboMedia * > & PostEntry::mediaList()
-{
-    return d->mMediaList;
-}
-
 bool PostEntry::uploadMediaFiles( Backend *backend )
 {
     kDebug();
@@ -238,31 +234,29 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
         localBackend = true;
         backend = new Backend( d->mCurrentPostBlogId, this );
     }
-    if( d->mMediaList.size()>0 ) {
+    QList<BilboMedia*> localImages = d->editPostWidget->localImages();
+    if( localImages.size()>0 ) {
         d->progress = new QProgressBar( this );
         layout()->addWidget( d->progress );
         d->progress->setRange( 0, 0 );
-        QMap <QString, BilboMedia*>::iterator it = d->mMediaList.begin();
-        QMap <QString, BilboMedia*>::iterator endIt = d->mMediaList.end();
+        QList<BilboMedia*>::iterator it = localImages.begin();
+        QList<BilboMedia*>::iterator endIt = localImages.end();
         for ( ; it != endIt; ++it ) {
-            if( !it.value()->isUploaded() ){
-                BilboMedia *media = it.value();
+                BilboMedia *media = (*it);
                 SyncUploader *uploader = new SyncUploader(this);
-                if( !uploader->uploadMedia( backend, media ) ){
-                    QString err = i18n( "Uploading the media file %1 failed.\n%2", media->name(), uploader->errorMessage());
+                if( uploader->uploadMedia( backend, media ) ){
+                    d->editPostWidget->editor()->replaceImageSrc(media->localUrl().url(),
+                                                                 media->remoteUrl().url());
+                } else {
+                    QString err = i18n( "Uploading the media file %1 failed.\n%2",
+                                        media->name(), uploader->errorMessage());
                     emit postPublishingDone( true, err );
-                    uploader->deleteLater();
                     result = false;
                     break;
                 }
                 uploader->deleteLater();
-            }
         }
-    }
-    if ( d->editPostWidget->updateMediaPaths() ) {
         d->mCurrentPost.setContent( d->editPostWidget->htmlContent() );
-    } else {
-        kDebug() << "Updateing media pathes failed!";
     }
     if(localBackend)
         backend->deleteLater();
@@ -326,7 +320,8 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
                 layout()->addWidget( d->progress );
                 d->progress->setRange( 0, 0 );
             }
-            connect( b, SIGNAL( sigPostPublished( int, BilboPost* ) ), this, SLOT( sltPostPublished( int, BilboPost* ) ) );
+            connect( b, SIGNAL( sigPostPublished( int, BilboPost* ) ),
+                     this, SLOT( sltPostPublished( int, BilboPost* ) ) );
             if(d->isNewPost)
                 b->publishPost( &d->mCurrentPost );
             else
@@ -364,7 +359,7 @@ void PostEntry::deleteProgressBar()
         this->layout()->removeWidget( d->progress );
         d->progress->deleteLater();
     }
-    d->progress = 0;
+    d->progress = 0L;
 }
 
 void PostEntry::saveLocally()

@@ -5,5 +5,9 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
    include(${CMAKE_SOURCE_DIR}/blogilo-separate.cmake)
 endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
 
+add_subdirectory( cmake )
+
+find_package(QJson REQUIRED)
+
 add_subdirectory( src )
 add_subdirectory( icons )

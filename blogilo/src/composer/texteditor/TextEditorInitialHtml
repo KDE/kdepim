@@ -94,18 +94,6 @@ function getBackgroundColor()
    return getCurrentStyle(node, "background-color");
 }
 
-function getPageBackgroundColor()
-{
-   return document.styleSheets[0].cssRules[0].style.backgroundColor;
-}
-
-//NOTE: page background color will be changed by body's style
-// it will not change the html codes that you obtain using getHtml() function
-function setPageBackgroundColor(color)
-{
-   document.styleSheets[0].cssRules[0].style.backgroundColor = color;
-}
-
 function getTextDirection()
 {
    var node = getUserSelection().anchorNode.parentNode;
@@ -147,6 +135,64 @@ function replaceId(oldId, newId)
 {
    var node = document.getElementById(oldId);
    node.id = newId;
+}
+
+function getLocalImages()
+{
+    var images = document.getElementsByTagName("img");
+    var res = "[";
+    var re = /^file/i;//just Images src starting with "file" are valid
+    for (var i=0; i<images.length; i++) {
+        if(images[i].src.match(re)) {
+            var img = "{";
+            img += "\"src\":\"" + images[i].src + "\"";
+            img += "},";
+            res += img;
+        }
+    }
+    var re = /,$/;
+    res = res.replace(re, "");
+    res += "]";
+    return res;
+}
+
+function replaceImageSrc(src, dest)
+{
+    var html = getHtml();
+    var res = html.replace(src, dest);
+    replaceHtml(res);
+//     var images = document.getElementsByTagName("img");
+//     var count = 0;
+//     alert(images.length);
+//     for (var i=0; i<images.length; i++) {
+//         if(images[i].src == src){
+//             images[i].src = dest;
+//             ++count;
+//         }
+//     }
+//     return count;
+}
+
+function getImages()
+{
+    var images = document.getElementsByTagName("img");
+    var res = "[";
+    for (var i=0; i<images.length; i++) {
+        var img = "{";
+        img += "\"src\":\"" + images[i].src + "\", ";
+        if(images[i].alt != "")
+            img += "\"alt\":\"" + images[i].alt + "\", ";
+        if(images[i].name != "")
+            img += "\"name\":\"" + images[i].name + "\", ";
+        img += "\"width\":\"" + images[i].width + "\", ";
+        img += "\"height\":\"" + images[i].height + "\"";
+        img += "},";
+        res += img;
+    }
+    var re = /,$/;
+    res = res.replace(re, "");
+    res += "]";
+    return res;
 }
 
 </script>

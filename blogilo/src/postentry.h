@@ -63,8 +63,6 @@ public:
     Qt::LayoutDirection defaultLayoutDirection();
     void setDefaultLayoutDirection( Qt::LayoutDirection direction );
 
-    QMap <QString, BilboMedia*> & mediaList();
-
     /**
      * Will Upload media files not uploaded yet, and return true on success and false on failure.
      * @param backend A Backend instant to use! will create one if NULL
