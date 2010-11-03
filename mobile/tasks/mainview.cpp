@@ -24,6 +24,7 @@
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
 #include "configwidget.h"
+#include "searchwidget.h"
 #include "settings.h"
 #include "tasklistproxy.h"
 #include "tasksactionmanager.h"
@@ -63,6 +64,7 @@ using namespace Akonadi;
 
 QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 QML_DECLARE_TYPE( DeclarativeConfigWidget )
+QML_DECLARE_TYPE( DeclarativeSearchWidget )
 
 MainView::MainView( QWidget *parent )
   : KDeclarativeMainView( "tasks", new TaskListProxy, parent )
@@ -93,6 +95,7 @@ void MainView::delayedInit()
 
   qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.tasks", 4, 5, "ConfigWidget" );
+  qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.tasks", 4, 5, "SearchWidget" );
 
   CalendarSupport::Calendar *cal = new CalendarSupport::Calendar( entityTreeModel(),
                                                                   itemModel(),

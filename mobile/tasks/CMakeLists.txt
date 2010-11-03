@@ -13,6 +13,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(mobile_tasks_SRCS
   configwidget.cpp
+  searchwidget.cpp
   tasklistproxy.cpp
   tasksfilterproxymodel.cpp
   tasksexporthandler.cpp
@@ -22,7 +23,7 @@ set(mobile_tasks_SRCS
   main.cpp
 )
 
-qt4_wrap_ui(mobile_tasks_SRCS configwidget.ui)
+qt4_wrap_ui(mobile_tasks_SRCS configwidget.ui searchwidget.ui)
 kde4_add_kcfg_files(mobile_tasks_SRCS settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)
@@ -55,6 +56,7 @@ install(FILES
   ConfigDialog.qml
   tasks.qml
   tasks-mobile-background.png
+  SearchDialog.qml
   TaskActions.qml
   TaskListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
