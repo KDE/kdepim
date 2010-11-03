@@ -60,7 +60,6 @@ namespace Commands {
         /* reimp */ QString errorExitMessage( const QStringList & ) const;
         /* reimp */ QString successMessage( const QStringList & ) const;
 
-        /* reimp */ void postSuccessHook( QWidget * );
     private:
         GpgME::Protocol m_protocol;
     };

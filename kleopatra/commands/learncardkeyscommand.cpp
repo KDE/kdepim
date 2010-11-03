@@ -54,6 +54,8 @@ LearnCardKeysCommand::LearnCardKeysCommand( GpgME::Protocol proto )
 {
     setIgnoresSuccessOrFailure( true );
     setShowsOutputWindow( true );
+    connect( this, SIGNAL(finished()),
+             SmartCard::ReaderStatus::mutableInstance(), SLOT(updateStatus()) );
 }
 
 LearnCardKeysCommand::~LearnCardKeysCommand() {}
@@ -92,10 +94,6 @@ QString LearnCardKeysCommand::errorExitMessage( const QStringList & ) const {
 QString LearnCardKeysCommand::successMessage( const QStringList & ) const {
     // unused, since we setIgnoresSuccessOrFailure(true)
     return QString();
-}
-
-void LearnCardKeysCommand::postSuccessHook( QWidget * ) {
-    SmartCard::ReaderStatus::mutableInstance()->updateStatus();
 }
 
 #include "moc_learncardkeyscommand.cpp"
