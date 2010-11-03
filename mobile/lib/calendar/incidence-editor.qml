@@ -51,23 +51,18 @@ KPIM.MainView {
     }
   }
 
-  SlideoutPanelContainer {
+  KPIM.CalendarDialog {
+    id: calendarWidget
     anchors.fill: parent
-    z: 50
+  }
 
-    KPIM.CalendarDialog {
-      id: calendarWidget
-      anchors.fill: parent
-    }
+  KPIM.ClockDialog {
+    id: clockWidget
+    anchors.fill: parent
+  }
 
-    KPIM.ClockDialog {
-      id: clockWidget
-      anchors.fill: parent
-    }
-
-    KPIM.MorePanel {
-        anchors.fill: parent
-    }
+  KPIM.MorePanel {
+    anchors.fill: parent
   }
 
   Flickable {
