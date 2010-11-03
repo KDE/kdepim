@@ -174,7 +174,7 @@ ActionMenuContainer {
     name : "mail_viewer_view"
     text : KDE.i18n( "View" )
     ActionListItem { name : "message_fixed_font" }
-    ScriptActionItem { name : "copy_all_to_clipboard"; title : KDE.i18n( "Copy All Text to Clipboard" ) }
+    ScriptActionItem { name : "copy_all_to_clipboard"; title : KDE.i18n( "Copy mail to Clipboard" ) }
   }
 
   ActionList {
