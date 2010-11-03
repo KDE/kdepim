@@ -77,6 +77,7 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfEndAnalyzerFactory : public Strigi::StreamEnd
     const Strigi::RegisteredField* photoField;
     const Strigi::RegisteredField* uidField;
     const Strigi::RegisteredField* isPartOfField;
+    const Strigi::RegisteredField* categoriesField;
 
     const char* name() const;
     Strigi::StreamEndAnalyzer* newInstance() const;

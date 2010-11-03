@@ -109,6 +109,9 @@ STRIGI_ENDANALYZER_RETVAL VcfEndAnalyzer::analyze( Strigi::AnalysisResult &index
     index.addValue( m_factory->addressStreetField, address.street().toUtf8().data() );
   }
 
+  foreach ( const QString &category, contact.categories() )
+    index.addValue( m_factory->categoriesField, category.toUtf8().data() );
+
   if ( !contact.photo().isEmpty() && !contact.photo().isIntern())
     index.addValue( m_factory->photoField, contact.photo().url().toUtf8().data() );
 
@@ -153,6 +156,7 @@ void VcfEndAnalyzerFactory::registerFields( Strigi::FieldRegister &reg )
   uidField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contactUID" );
   photoField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#photo" );
   isPartOfField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf" );
+  categoriesField = reg.registerField( "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#categories" );
 
   typeField = reg.typeField;
 }
