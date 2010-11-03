@@ -83,7 +83,17 @@ STRIGI_ENDANALYZER_RETVAL MailEndAnalyzer::analyze( Strigi::AnalysisResult &inde
   if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "collection" ) )
     index.addValue( m_factory->isPartOfField, url.queryItemValue( "collection" ).toUtf8().data() );
 
-  index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email" );
+  // notes use the mime message format as storage format, so we have to check the mimetype here
+  bool isNote = false;
+  if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "mimetype" ) ) {
+    if ( url.queryItemValue( "mimetype" ) == QLatin1String( "text%2Fx-vnd.akonadi.note" ) )
+      isNote = true;
+  }
+
+  if ( isNote )
+    index.addValue( m_factory->typeField, "http://akonadi-project.org/ontologies/aneo#Note" );
+  else
+    index.addValue( m_factory->typeField, "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email" );
 
   MessageAnalyzer analyzer( message, this );
 
