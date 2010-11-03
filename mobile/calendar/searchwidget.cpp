@@ -21,8 +21,12 @@
 
 #include "stylesheetloader.h"
 
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
+
 #include <QtCore/QDate>
 #include <QtCore/QDebug>
+#include <QtXml/QDomDocument>
 
 SearchWidget::SearchWidget( QWidget *parent )
   : QWidget( parent )
@@ -32,8 +36,11 @@ SearchWidget::SearchWidget( QWidget *parent )
   // set defaults
   mUi.inSummaries->setChecked( true );
   mUi.inDescriptions->setChecked( true );
+  mUi.includeTodosWithoutDueDate->setChecked( true );
   mUi.startDate->setDate( QDate::currentDate() );
-  mUi.endDate->setDate( QDate::currentDate().addDays( 1 ) );
+  mUi.endDate->setDate( QDate::currentDate().addYears( 1 ) );
+  mUi.collectionCombo->setMimeTypeFilter( QStringList() << KCalCore::Event::eventMimeType()
+                                                        << KCalCore::Todo::todoMimeType() );
 
   // UI workarounds for Maemo5
 #ifdef Q_WS_MAEMO_5
@@ -45,59 +52,105 @@ SearchWidget::SearchWidget( QWidget *parent )
 QString SearchWidget::query() const
 {
 #ifdef AKONADI_USE_STRIGI_SEARCH
-  QString query;
+  QStringList containsPatternParts;
 
-  query += "<or>";
   if ( mUi.inSummaries->isChecked() ) {
-    query += QString::fromLatin1( "<contains>"
-                                  "  <field name=\"summary\"/>"
-                                  "  <string>%1</string>"
-                                  "</contains>"
-                                ).arg( mUi.searchText->text() );
+    containsPatternParts << QString::fromLatin1( "<contains>"
+                                                 "  <field name=\"summary\"/>"
+                                                 "  <string>%1</string>"
+                                                 "</contains>"
+                                               ).arg( mUi.searchText->text() );
   }
   if ( mUi.inDescriptions->isChecked() ) {
-    query += QString::fromLatin1( "<contains>"
-                                  "  <field name=\"description\"/>"
-                                  "  <string>%1</string>"
-                                  "</contains>"
-                                ).arg( mUi.searchText->text() );
+    containsPatternParts << QString::fromLatin1( "<contains>"
+                                                 "  <field name=\"description\"/>"
+                                                 "  <string>%1</string>"
+                                                 "</contains>"
+                                               ).arg( mUi.searchText->text() );
   }
   if ( mUi.inCategories->isChecked() ) {
-    query += QString::fromLatin1( "<contains>"
-                                  "  <field name=\"categories\"/>"
-                                  "  <string>%1</string>"
-                                  "</contains>"
-                                ).arg( mUi.searchText->text() );
+    containsPatternParts << QString::fromLatin1( "<contains>"
+                                                 "  <field name=\"categories\"/>"
+                                                 "  <string>%1</string>"
+                                                 "</contains>"
+                                               ).arg( mUi.searchText->text() );
   }
   if ( mUi.inLocations->isChecked() ) {
-    query += QString::fromLatin1( "<contains>"
-                                  "  <field name=\"location\"/>"
-                                  "  <string>%1</string>"
-                                  "</contains>"
-                                ).arg( mUi.searchText->text() );
-  }
-  query += "</or>";
-
-  if ( mUi.includeDateRange->isChecked() ) {
-    query.prepend( "<and>" );
-
-    const QString startDate = mUi.startDate->date().toString( "yyyyMMdd" );
-    const QString endDate = mUi.endDate->date().toString( "yyyyMMdd" );
-
-    query += QString::fromLatin1( "<greaterThanEquals>"
-                                  "  <field name=\"dtstart\"/>"
-                                  "  <string>%1</string>"
-                                  "</greaterThanEquals>"
-                                  "<lessThanEquals>"
-                                  "  <field name=\"dtstart\"/>"
-                                  "  <string>%2</string>"
-                                  "</lessThanEquals>" ).arg( startDate ).arg( endDate );
-    query.append( "</and>" );
+    containsPatternParts << QString::fromLatin1( "<contains>"
+                                                 "  <field name=\"location\"/>"
+                                                 "  <string>%1</string>"
+                                                 "</contains>"
+                                               ).arg( mUi.searchText->text() );
   }
 
-  query.prepend( "<request><query>" );
-  query += "</query></request>";
+  const QString containsPattern = containsPatternParts.isEmpty() ? QString() :
+                                                                   QLatin1String( "<or>" ) +
+                                                                   containsPatternParts.join( QLatin1String( "\n" ) ) +
+                                                                   QLatin1String( "</or>" );
 
+  const QString inCollection = QString::fromLatin1( "<equals>"
+                                                    "  <field name=\"isPartOf\"/>"
+                                                    "  <string>%1</string>"
+                                                    "</equals>"
+                                                  ).arg( mUi.collectionCombo->currentCollection().id() );
+
+  const QString startDate = mUi.startDate->date().toString( "yyyyMMdd" );
+  const QString endDate = mUi.endDate->date().toString( "yyyyMMdd" );
+
+  const QString inTimeRange = QString::fromLatin1(
+                                                   "<greaterThanEquals>"
+                                                   "  <field name=\"dtstart\"/>"
+                                                   "  <string>%1</string>"
+                                                   "</greaterThanEquals>"
+                                                   "<lessThanEquals>"
+                                                   "  <field name=\"dtstart\"/>"
+                                                   "  <string>%2</string>"
+                                                   "</lessThanEquals>"
+                                                 ).arg( startDate ).arg( endDate );
+
+
+  const QString isEvent = QString::fromLatin1(
+                                               "<equals>"
+                                               "  <field name=\"type\"/>"
+                                               "  <string>Event</string>"
+                                               "</equals>"
+                                             );
+
+  const QString isTodo = QString::fromLatin1(
+                                              "<equals>"
+                                              "  <field name=\"type\"/>"
+                                              "  <string>Todo</string>"
+                                              "</equals>"
+                                            );
+
+  QString query;
+  query += QLatin1String( "<request><query>" );
+  query += QLatin1String( "<or>" );
+
+  query += QLatin1String( "  <and>" );
+  query += isEvent;
+  query += containsPattern;
+  if ( mUi.includeDateRange->isChecked() )
+    query += inTimeRange;
+  if ( mUi.locatedInSpecificCollection->isChecked() )
+    query += inCollection;
+  query += QLatin1String( "  </and>" );
+
+  query += QLatin1String( "  <and>" );
+  query += isTodo;
+  query += containsPattern;
+  if ( !mUi.includeTodosWithoutDueDate->isChecked() )
+    query += inTimeRange;
+  if ( mUi.locatedInSpecificCollection->isChecked() )
+    query += inCollection;
+  query += QLatin1String( "  </and>" );
+
+  query += QLatin1String( "</or>" );
+  query += QLatin1String( "</query></request>" );
+
+  QDomDocument doc;
+  doc.setContent(query);
+  qDebug() << doc.toString(2);
   return query;
 #else
 

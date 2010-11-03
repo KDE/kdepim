@@ -30,11 +30,8 @@ QML.Rectangle {
 
   QML.Flickable {
     id: searchWidgetBox
+    anchors.fill: parent
     anchors.topMargin: 25
-    anchors.top: parent.top;
-    anchors.left: parent.left;
-    anchors.right: parent.right;
-    anchors.bottom: searchButton.top;
     flickableDirection: QML.Flickable.VerticalFlick
     contentHeight: searchWidget.height;
 
