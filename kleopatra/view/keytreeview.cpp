@@ -351,4 +351,30 @@ void KeyTreeView::removeKeys( const std::vector<Key> & keys ) {
 
 }
 
+static const struct {
+    const char * signal;
+    const char * slot;
+} connections[] = {
+    { SIGNAL(stringFilterChanged(QString)),
+      SLOT(setStringFilter(QString)) },
+    { SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
+      SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>)) },
+};
+static const unsigned int numConnections = sizeof connections / sizeof *connections ;
+
+void KeyTreeView::disconnectSearchBar( const QObject * bar ) {
+    for ( unsigned int i = 0 ; i < numConnections ; ++i ) {
+        disconnect( this, connections[i].signal, bar,  connections[i].slot );
+        disconnect( bar,  connections[i].signal, this, connections[i].slot );
+    }
+}
+
+bool KeyTreeView::connectSearchBar( const QObject * bar ) {
+    for ( unsigned int i = 0 ; i < numConnections ; ++i )
+        if ( !connect( this, connections[i].signal, bar,  connections[i].slot ) ||
+             !connect( bar,  connections[i].signal, this, connections[i].slot ) )
+            return false;
+    return true;
+}
+
 #include "moc_keytreeview.cpp"

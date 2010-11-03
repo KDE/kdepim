@@ -97,6 +97,9 @@ namespace Kleo {
 
         virtual KeyTreeView * clone() const { return new KeyTreeView( *this ); }
 
+        void disconnectSearchBar( const QObject * bar );
+        bool connectSearchBar( const QObject * bar );
+
     public Q_SLOTS:
         virtual void setStringFilter( const QString & text );
         virtual void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
