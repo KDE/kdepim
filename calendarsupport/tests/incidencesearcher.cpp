@@ -76,6 +76,17 @@ void IncidenceSearcher::finished( KJob *job )
  qDebug() << "Found " << incidences.count() << " incidences using " <<
    matches[mJobs.indexOf( job )];
 
+ if ( !incidences.isEmpty() ) {
+   qDebug() << "Incidences are:";
+   foreach( const KCalCore::Incidence::Ptr &incidence, incidences ) {
+     if ( incidence ) {
+       qDebug() << "Summary = " << incidence->summary() << "; uid = "
+                << incidence->uid() << "; schedulingId = " << incidence->schedulingID();
+     }
+   }
+ }
+
+
   if ( count == 4 ) {
     qDebug() << "Finished";
     qApp->quit();
