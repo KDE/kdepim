@@ -27,6 +27,7 @@ QML.Rectangle {
   anchors.fill: parent
   z: 10
   color: "white"
+  visible: guiStateManager.inSearchScreenState
 
   QML.Flickable {
     id: searchWidgetBox
@@ -52,8 +53,8 @@ QML.Rectangle {
     width: 150
     buttonText: KDE.i18n( "Search" )
     onClicked: {
+      guiStateManager.popState()
       searchManager.startSearch( searchWidget.query )
-      searchDialog.visible = false
     }
   }
 
@@ -64,7 +65,7 @@ QML.Rectangle {
     width: 150
     buttonText: KDE.i18n( "Cancel" )
     onClicked: {
-      searchDialog.visible = false
+      guiStateManager.popState()
     }
   }
 }
