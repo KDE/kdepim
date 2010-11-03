@@ -214,26 +214,27 @@ KPIM.MainView {
       anchors.right : parent.right
       color : "#00000000"
 
-      Akonadi.FilterLineEdit {
-        id: filterLineEdit
-        anchors.left : parent.left
-        anchors.top : parent.top
-        anchors.bottom : itemList.top
-        anchors.right : parent.right
-        visible : false
-        height : 0
-      }
-
       TaskListView {
         id: itemList
         model: itemModel
         checkModel : _itemActionModel
         anchors.left : parent.left
-        anchors.top : filterLineEdit.bottom
-        anchors.bottom : parent.bottom
+        anchors.top : parent.top
+        anchors.bottom : filterLineEdit.top
         anchors.right : parent.right
         navigationModel : _itemNavigationModel
       }
+
+      Akonadi.FilterLineEdit {
+        id: filterLineEdit
+        anchors.left : parent.left
+        anchors.bottom : parent.bottom
+        anchors.right : parent.right
+        visible : false
+        height : 0
+        y: height == 0 ? parent.height : parent.height - height
+      }
+
       QML.Connections {
         target : _itemNavigationModel
         onCurrentRowChanged : {

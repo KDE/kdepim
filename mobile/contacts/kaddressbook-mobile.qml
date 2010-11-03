@@ -259,26 +259,26 @@ KPIM.MainView {
                  guiStateManager.inSingleFolderScreenState ||
                  guiStateManager.inMultipleFolderScreenState }
 
-      Akonadi.FilterLineEdit {
-        id: filterLineEdit
-        anchors.left : parent.left
-        anchors.top : parent.top
-        anchors.bottom : contactList.top
-        anchors.right : parent.right
-        visible : false
-        height : 0
-      }
-
       ContactListView {
         id: contactList
         anchors.left : parent.left
-        anchors.top : filterLineEdit.bottom
-        anchors.bottom : parent.bottom
+        anchors.top : parent.top
+        anchors.bottom : filterLineEdit.top
         anchors.right : parent.right
         model: itemModel
         checkModel : _itemActionModel
 
         navigationModel : _itemNavigationModel
+      }
+
+      Akonadi.FilterLineEdit {
+        id: filterLineEdit
+        anchors.left : parent.left
+        anchors.bottom : parent.bottom
+        anchors.right : parent.right
+        visible : false
+        height : 0
+        y : height == 0 ? parent.height : parent.height - height
       }
     }
   }
