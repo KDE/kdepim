@@ -797,6 +797,8 @@ GuiStateManager* KDeclarativeMainView::guiStateManager() const
 
 void KDeclarativeMainView::setFilterLineEdit( KLineEdit *lineEdit )
 {
+  Q_ASSERT( !d->mFilterLineEdit );
+
   d->mFilterLineEdit = lineEdit;
   d->mFilterLineEdit->setFixedHeight( 0 );
   d->mFilterLineEdit->setClearButtonShown( true );
@@ -808,6 +810,8 @@ void KDeclarativeMainView::setFilterLineEdit( KLineEdit *lineEdit )
 
 void KDeclarativeMainView::setBulkActionFilterLineEdit( KLineEdit *lineEdit )
 {
+  Q_ASSERT( !d->mBulkActionFilterLineEdit );
+
   d->mBulkActionFilterLineEdit = lineEdit;
   d->mBulkActionFilterLineEdit->setFixedHeight( 0 );
   d->mBulkActionFilterLineEdit->setClearButtonShown( true );

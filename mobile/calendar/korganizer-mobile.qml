@@ -679,7 +679,7 @@ KPIM.MainView {
     }
   }
 
-  KPIM.BulkActionScreen {
+  KPIM.SearchResultScreen {
     id : searchResultScreen
     visible : guiStateManager.inSearchResultScreenState
     anchors.top: parent.top

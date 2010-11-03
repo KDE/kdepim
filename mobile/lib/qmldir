@@ -37,3 +37,4 @@ AgentStatusIndicator 4.5 AgentStatusIndicator.qml
 MorePanel 4.5 MorePanel.qml
 CalendarDialog 4.5 CalendarDialog.qml
 ClockDialog 4.5 ClockDialog.qml
+SearchResultScreen 4.5 SearchResultScreen.qml

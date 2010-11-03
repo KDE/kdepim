@@ -108,6 +108,7 @@ install(FILES
   Calendar.qml
   CalendarDay.qml
   AgentStatusIndicator.qml
+  SearchResultScreen.qml
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
