@@ -44,20 +44,18 @@ QML.Rectangle {
             QML.Column{
                 QML.Text{
                     id: caption
-                    font.pointSize: 20
+                    font.pointSize: 18
                     style: QML.Text.Raised
                     text: "About " + application.name
                 }
 
                 QML.Text{
                     id:version
-                    font.pointSize: 14
                     horizontalAlignment: QML.Text.AlignHCenter
                     text: "\n" + application.version + "\n"
                 }
 
                 QML.Text {
-                    font.pointSize: 14
                     text : KDE.i18n("This Free Software product was created as part of a commercial contract.") +
                            "\n" + application.name +
                            KDE.i18n(" is licensed under the GNU GPL version 2 or later." ) + "\n" +
@@ -65,12 +63,10 @@ QML.Rectangle {
                 }
 
                 QML.Text{
-                    font.pointSize: 14
                     text: KDE.i18n("Credits Project Komo3 (October 2009 - )") + "\n"
                 }
 
                 QML.Text{
-                    font.pointSize: 14
                     text: KDE.i18n("Scrum Master, Team Senior: Till Adam, KDAB Berlin") + "\n" +
                           KDE.i18n("Product Owner, Team Senior: Bernhard Reiter, Intevation GmbH") + "\n"
                     style: QML.Text.Raised
@@ -78,7 +74,6 @@ QML.Rectangle {
 
                 QML.Text{
                     id: mainTeam
-                    font.pointSize: 14
                     text: KDE.i18n("Main Scrum team in alphabetical order:") + "\n\n" +
                           "\t" + KDE.i18n("Heinecke, Andre (Intevation GmbH)") + "\n" +
                           "\t" + KDE.i18n("Ricks, Björn (Intevation GmbH)") + "\n" +
@@ -87,20 +82,17 @@ QML.Rectangle {
 
                 QML.Text{
                     id: satellites
-                    font.pointSize: 14
                     text: KDE.i18n("\"Satellites\" and additional support by:") + "\n\n" +
                           "\t" + KDE.i18n("Reiter, Ludwig (Intevation GmbH)") + "\n" +
                           "\t" + KDE.i18n("Wolfsteller, Felix (Intevation GmbH)") + "\n"
                 }
 
                 QML.Text{
-                    font.pointSize: 14
                     style: QML.Text.Raised
                     text: KDE.i18n("Special thanks to the two project persons from our principal.") + "\n"
                 }
 
                 QML.Text{
-                    font.pointSize: 14
                     text: KDE.i18n("This project is built upon KDE SC Kontact Desktop\n" +
                                    "client. For the outstanding work done there we\n" +
                                    "would like to thank the original authors.\n")
