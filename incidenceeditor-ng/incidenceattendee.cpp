@@ -128,8 +128,11 @@ void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
 
     int found = -1;
     const QString fullOrganizer = incidence->organizer()->fullName();
+    const QString organizerEmail = incidence->organizer()->email();
     for ( int i = 0; i < mUi->mOrganizerCombo->count(); ++i ) {
-      if ( mUi->mOrganizerCombo->itemText( i ) == fullOrganizer ) {
+      KCalCore::Person::Ptr organizerCandidate =
+        KCalCore::Person::fromFullName( mUi->mOrganizerCombo->itemText( i ) );
+      if ( organizerCandidate->email() == organizerEmail ) {
         found = i;
         mUi->mOrganizerCombo->setCurrentIndex( i );
         break;
@@ -195,7 +198,7 @@ bool IncidenceAttendee::isDirty() const
     KCalCore::Event tmp;
     tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
 
-    if ( *mLoadedIncidence->organizer() != *tmp.organizer() ) {
+    if ( mLoadedIncidence->organizer()->email() != tmp.organizer()->email() ) {
       kDebug() << "Organizer changed. Old was " << mLoadedIncidence->organizer()->name()
                << mLoadedIncidence->organizer()->email() << "; new is " << tmp.organizer()->name()
                << tmp.organizer()->email();
