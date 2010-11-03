@@ -25,8 +25,6 @@
 #include <kcalcore/todo.h>
 
 #include <QtCore/QDate>
-#include <QtCore/QDebug>
-#include <QtXml/QDomDocument>
 
 SearchWidget::SearchWidget( QWidget *parent )
   : QWidget( parent )
@@ -148,9 +146,6 @@ QString SearchWidget::query() const
   query += QLatin1String( "</or>" );
   query += QLatin1String( "</query></request>" );
 
-  QDomDocument doc;
-  doc.setContent(query);
-  qDebug() << doc.toString(2);
   return query;
 #else
 

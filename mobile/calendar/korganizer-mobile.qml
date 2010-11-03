@@ -523,7 +523,7 @@ KPIM.MainView {
               name : "search_event"
               script : {
                 actionPanel.collapse();
-                searchDialog.visible = true;
+                guiStateManager.pushState( KPIM.GuiStateManager.SearchScreenState );
               }
             },
             KPIM.ScriptAction {
@@ -737,6 +737,5 @@ KPIM.MainView {
 
   SearchDialog {
     id: searchDialog
-    visible: false
   }
 }
