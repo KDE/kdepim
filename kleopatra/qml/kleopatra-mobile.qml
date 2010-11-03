@@ -38,9 +38,31 @@ import org.kde.kleopatra 2.1 as Kleo
 KPIM.MainView {
   id: kleopatraMobile;
 
-  Kleo.KeyTreeView {
-    id: keyTreeView
-    anchors.fill: parent
+  QML.Rectangle {
+
+    anchors.fill : parent
+
+    Kleo.KeyTreeView {
+      id : keyTreeView
+
+      anchors.top    : parent.top
+      anchors.bottom : searchBar.top
+      anchors.left   : parent.left
+      anchors.right  : parent.right
+    }
+
+    Kleo.SearchBar {
+      id : searchBar
+
+      anchors.bottom : parent.bottom
+      anchors.left   : parent.left
+      anchors.right  : parent.right
+
+      visible : false
+      height  : 0
+      y       : height == 0 ? parent.height : parent.height - height
+    }
+
   }
 
   SlideoutPanelContainer {

@@ -39,6 +39,7 @@
 
 namespace Kleo {
     class KeyTreeView;
+    class SearchBar;
 }
 
 class QStringList;
@@ -57,15 +58,19 @@ protected Q_SLOTS:
 
 protected:
     /* reimp */ void closeEvent( QCloseEvent * );
+    /* reimp */ void keyPressEvent( QKeyEvent * );
 
 private:
     void registerKeyTreeView( Kleo::KeyTreeView * view );
+    void registerSearchBar( Kleo::SearchBar * bar );
 
 private:
     Q_PRIVATE_SLOT( d, void configDialogRequested() )
     Q_PRIVATE_SLOT( d, void closeAndQuit() )
     Q_PRIVATE_SLOT( d, void selfTest() )
+    Q_PRIVATE_SLOT( d, void slotSearchBarTextChanged(QString) )
     class KeyTreeViewItem;
+    class SearchBarItem;
     class Private;
     kdtools::pimpl_ptr<Private> d;
 };

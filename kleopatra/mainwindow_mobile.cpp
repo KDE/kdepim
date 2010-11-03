@@ -39,8 +39,8 @@
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 
-#if 0
 #include "view/searchbar.h"
+#if 0
 #include "view/tabwidget.h"
 #endif
 #include "view/keytreeview.h"
@@ -76,6 +76,7 @@
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KStandardDirs>
+#include <KLineEdit>
 #if 0
 #include <KShortcutsDialog>
 #include <KEditToolBar>
@@ -133,6 +134,14 @@ public:
     explicit KeyTreeViewItem( QGraphicsItem * parent=0 )
         : DeclarativeWidgetBase<KeyTreeView,MainWindow,&MainWindow::registerKeyTreeView>( parent ) {}
     ~KeyTreeViewItem() {}
+};
+
+class MainWindow::SearchBarItem : public DeclarativeWidgetBase<SearchBar,MainWindow,&MainWindow::registerSearchBar> {
+    Q_OBJECT
+public:
+    explicit SearchBarItem( QGraphicsItem * parent=0 )
+        : DeclarativeWidgetBase<SearchBar,MainWindow,&MainWindow::registerSearchBar>( parent ) {}
+    ~SearchBarItem() {}
 };
 
 static KGuiItem KStandardGuiItem_quit() {
@@ -219,6 +228,7 @@ public:
     }
 
     void slotConfigCommitted();
+    void slotSearchBarTextChanged( const QString & );
 
     void aboutGpg4Win() {
         ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
@@ -226,18 +236,26 @@ public:
 
 private:
     void setupActions();
+    void tryToConnectSearchBarToKeyTreeView() {
+        if ( searchBar && keyTreeView )
+            keyTreeView->connectSearchBar( searchBar );
+    }
 
     QAbstractItemView * currentView() const {
         return controller.currentView();
     }
 
 private:
+    QPointer<SearchBar> searchBar;
+    QPointer<KeyTreeView> keyTreeView;
     Kleo::KeyListController controller;
     bool firstShow : 1;
 };
 
 MainWindow::Private::Private( MainWindow * qq )
     : q( qq ),
+      searchBar(),
+      keyTreeView(),
       controller( q ),
       firstShow( true )
 {
@@ -287,6 +305,7 @@ void MainWindow::Private::setupActions() {
 
 void MainWindow::delayedInit() {
     qmlRegisterType<KeyTreeViewItem>( "org.kde.kleopatra", 2, 1, "KeyTreeView" );
+    qmlRegisterType<SearchBarItem>  ( "org.kde.kleopatra", 2, 1, "SearchBar"   );
     KDeclarativeFullScreenView::delayedInit();
     d->setupActions();
     engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
@@ -300,6 +319,18 @@ void MainWindow::registerKeyTreeView( KeyTreeView * view ) {
     QAbstractItemView * const v = view->view();
     d->controller.addView( v );
     d->controller.setCurrentView( v );
+    d->keyTreeView = view;
+    d->tryToConnectSearchBarToKeyTreeView();
+}
+
+void MainWindow::registerSearchBar( SearchBar * bar ) {
+    if ( !bar )
+        return;
+    d->searchBar = bar;
+    bar->setFixedHeight( 0 );
+    connect( bar,  SIGNAL(stringFilterChanged(QString)),
+             this, SLOT(slotSearchBarTextChanged(QString)) );
+    d->tryToConnectSearchBarToKeyTreeView();
 }
 
 void MainWindow::Private::slotConfigCommitted() {
@@ -337,9 +368,31 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
     e->accept();
 }
 
+void MainWindow::keyPressEvent( QKeyEvent * e ) {
+    static bool isSendingEvent = false;
+
+    if ( !isSendingEvent && d->searchBar && !e->text().isEmpty() ) {
+        const struct guard { guard() { isSendingEvent = true; } ~guard() { isSendingEvent = false; } } guard;
+        QCoreApplication::sendEvent( d->searchBar->lineEdit(), e );
+    } else {
+        KDeclarativeFullScreenView::keyPressEvent( e );
+    }
+}
+
 void MainWindow::importCertificatesFromFile( const QStringList & files ) {
     if ( !files.empty() )
         d->createAndStart<ImportCertificateFromFileCommand>( files );
+}
+
+void MainWindow::Private::slotSearchBarTextChanged( const QString & text ) {
+    if ( text.isEmpty() && searchBar && searchBar->isVisible() ) {
+        searchBar->setFixedHeight( 0 );
+        searchBar->hide();
+    } else if ( !text.isEmpty() && searchBar && !searchBar->isVisible() ) {
+        searchBar->setFixedHeight( searchBar->minimumSizeHint().height() );
+        searchBar->show();
+        searchBar->setFocus();
+    }
 }
 
 #include "moc_mainwindow_mobile.cpp"
