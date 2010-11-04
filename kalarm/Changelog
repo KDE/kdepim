@@ -1,6 +1,6 @@
 KAlarm Change Log
 
-=== Version 2.5.4 --- 1 November 2010 ===
+=== Version 2.5.4 --- 4 November 2010 ===
 - Fix crash when Try button is clicked while creating new display alarm.
 - Fix crash on KAlarm exit.
 - Fix possible crash when enabling individual alarms.
