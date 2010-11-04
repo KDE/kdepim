@@ -473,6 +473,7 @@ bool KOGroupware::sendICalMessage( QWidget* parent,
           }
           if ( newMail == KMessageBox::Yes ) {
             KCal::MailScheduler scheduler( mCalendar );
+            incidence->setRevision( incidence->revision() + 1 );
             scheduler.performTransaction( incidence, Scheduler::Request, rList.join( "," ) );
           }
         }
