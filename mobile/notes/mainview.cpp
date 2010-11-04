@@ -25,6 +25,7 @@
 #include "notesexporthandler.h"
 #include "notesfilterproxymodel.h"
 #include "notesimporthandler.h"
+#include "searchwidget.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
@@ -44,6 +45,7 @@
 
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeItem>
 
 #include <QGraphicsObject>
 
@@ -54,6 +56,8 @@
 
 using namespace Akonadi;
 
+QML_DECLARE_TYPE( DeclarativeSearchWidget )
+
 MainView::MainView( QWidget *parent )
   : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
 {
@@ -63,6 +67,8 @@ void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
   setWindowTitle( i18n( "KDE Notes" ) );
+
+  qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.notes", 4, 5, "SearchWidget" );
 
 #ifdef KDEQMLPLUGIN_STATIC
   rootContext()->setContextProperty( QLatin1String( "KDE" ), new KDEIntegration( this ) );

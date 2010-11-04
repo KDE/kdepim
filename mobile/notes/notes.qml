@@ -269,6 +269,13 @@ KPIM.MainView {
               }
             },
             KPIM.ScriptAction {
+              name : "search_note"
+              script : {
+                actionPanel.collapse();
+                guiStateManager.pushState( KPIM.GuiStateManager.SearchScreenState );
+              }
+            },
+            KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
                 actionPanel.collapse();
@@ -339,6 +346,32 @@ KPIM.MainView {
     }
   }
 
+  KPIM.SearchResultScreen {
+    id : searchResultScreen
+    visible : guiStateManager.inSearchResultScreenState
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+    backgroundImage : backgroundImage.source
+
+    actionListWidth : 1/3 * parent.width
+    multipleText : KDE.i18np("1 note book", "%1 note books", collectionView.numSelected)
+    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
+    headerList : NotesListView {
+      showCheckBox : true
+      id: searchResultHeaderList
+      model: itemModel
+      checkModel : _itemActionModel
+      anchors.fill : parent
+      showDeleteButton: false
+    }
+    onBackClicked : {
+      searchManager.stopSearch();
+    }
+  }
+
   QML.Connections {
     target: startPage
     onFavoriteSelected : {
@@ -349,5 +382,9 @@ KPIM.MainView {
   KPIM.AboutDialog {
     id : aboutDialog
     source: backgroundImage.source
+  }
+
+  SearchDialog {
+    id : searchDialog
   }
 }

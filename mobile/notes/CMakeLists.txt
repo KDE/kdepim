@@ -15,7 +15,10 @@ set(notes_mobile_SRCS
   notesimporthandler.cpp
   mainview.cpp
   main.cpp
+  searchwidget.cpp
 )
+
+qt4_wrap_ui(notes_mobile_SRCS searchwidget.ui)
 
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
@@ -49,6 +52,7 @@ install(FILES
   NoteView.qml
   NotesListView.qml
   notes-mobile-background.png
+  SearchDialog.qml
   DESTINATION ${DATA_INSTALL_DIR}/notes-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )
