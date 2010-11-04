@@ -2886,7 +2886,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     if ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Reply ||
          msg->method() == Scheduler::Declinecounter ) {
       if ( inc && existingIncidence &&
-           inc->revision() < existingIncidence->revision() ) {
+           inc->lastModified() < existingIncidence->lastModified() ) {
         bodyOk = bodyVisitor.act( existingIncidence, inc, msg, sender );
       } else {
         bodyOk = bodyVisitor.act( inc, existingIncidence, msg, sender );
@@ -3027,13 +3027,11 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     case Scheduler::Add:
     {
       if ( inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
-        html += "<tr>";
+        html += "<tr><td>";
         if ( inc->type() == "Todo" ) {
-          html += "<td colspan=\"9\">";
-          html += helper->makeLink( "reply", i18n( "[Record invitation in my task list]" ) );
+          html += helper->makeLink( "reply", i18n( "[Record in my task list]" ) );
         } else {
-          html += "<td colspan=\"13\">";
-          html += helper->makeLink( "reply", i18n( "[Record invitation in my calendar]" ) );
+          html += helper->makeLink( "reply", i18n( "[Record in my calendar]" ) );
         }
         html += "</td></tr>";
       }
@@ -3047,12 +3045,10 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     case Scheduler::Cancel:
       // Remove invitation
       if ( inc ) {
-        html += "<tr>";
+        html += "<tr><td>";
         if ( inc->type() == "Todo" ) {
-          html += "<td colspan=\"9\">";
           html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
         } else {
-          html += "<td colspan=\"13\">";
           html += helper->makeLink( "cancel", i18n( "[Remove invitation from my calendar]" ) );
         }
         html += "</td></tr>";
@@ -3094,12 +3090,31 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
         }
       }
       if ( ea && ( ea->status() != Attendee::NeedsAction ) && ( ea->status() == a->status() ) ) {
-        if ( inc && inc->revision() > 0 ) {
+        // we have seen this invitation and recorded a response
+        if ( inc->revision() > 0 &&
+             ( inc->lastModified() > existingIncidence->lastModified() ) ) {
+          // newer than we have recorded, so an update
+          html += "<tr><td>";
+          if ( inc->type() == "Todo" ) {
+            html += helper->makeLink( "reply", i18n( "[Record update in my task list]" ) );
+          } else {
+            html += helper->makeLink( "reply", i18n( "[Record update in my calendar]" ) );
+          }
+          html += "</td></tr>";
+        } else {
+          // not newer than we have recorded
           html += "<br><u><i>";
-          html += i18n( "The <b>%1</b> response has been recorded" ).arg( ea->statusStr() );
+          if ( inc->revision() > 0 ) {
+            // an update we already have recorded
+            html += i18n( "This update has been recorded" );
+          } else {
+            // not an update
+            html += i18n( "This <b>%1</b> response has been recorded" ).arg( ea->statusStr() );
+          }
           html += "</i></u>";
         }
       } else {
+        // Not seen or recorded with a response yet
         if ( inc ) {
           html += "<tr><td>";
           if ( inc->type() == "Todo" ) {
