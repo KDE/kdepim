@@ -1,6 +1,6 @@
 KAlarm Change Log
 
-=== Version 2.4.10 --- 1 Nov 2010 ===
+=== Version 2.4.10 --- 4 Nov 2010 ===
 - Fix KAlarm showing in system tray at login when configured not to show in tray.
 
 === Version 2.4.9 (KDEPIM 4.4.7) --- 19 October 2010 ===
