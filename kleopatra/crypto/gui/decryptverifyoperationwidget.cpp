@@ -82,8 +82,9 @@ private:
         QLabel            signedDataFileNameLB;
         FileNameRequester signedDataFileNameRQ;
         //------
-        QCheckBox      archiveCB;
-        QComboBox      archivesCB;
+        QHBoxLayout    hlay;
+        QCheckBox       archiveCB;
+        QComboBox       archivesCB;
 
         explicit UI( DecryptVerifyOperationWidget * q );
     } ui;
@@ -100,6 +101,7 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
       signedDataStack(),
       signedDataFileNameLB( q ),
       signedDataFileNameRQ( q ),
+      hlay(),
       archiveCB( i18n("&Input file is an archive; unpack with:"), q ),
       archivesCB( q )
 {
@@ -113,6 +115,7 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
     KDAB_SET_OBJECT_NAME( signedDataStack );
     KDAB_SET_OBJECT_NAME( signedDataFileNameLB );
     KDAB_SET_OBJECT_NAME( signedDataFileNameRQ );
+    KDAB_SET_OBJECT_NAME( hlay );
     KDAB_SET_OBJECT_NAME( archiveCB );
     KDAB_SET_OBJECT_NAME( archivesCB );
 
@@ -137,8 +140,9 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
     signedDataStack.addWidget( &signedDataFileNameLB );
     signedDataStack.addWidget( &signedDataFileNameRQ );
 
-    glay.addWidget( &archiveCB,  3, 0 );
-    glay.addWidget( &archivesCB, 3, 1 );
+    glay.addLayout( &hlay, 3, 0, 1, 2 );
+    hlay.addWidget( &archiveCB );
+    hlay.addWidget( &archivesCB, 1 );
 
     connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
              &signedDataLB, SLOT(setEnabled(bool)) );
