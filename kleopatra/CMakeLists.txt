@@ -342,6 +342,10 @@ set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
 
 target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KCMUTILS_LIBS} ${_kleopatra_uiserver_extra_libs} ${_kleopatra_libkdepim_LIBS})
+if (KDEPIM_MOBILE_UI)
+  target_link_libraries(kleopatra_bin ${QT_QTDECLARATIVE_LIBRARY})
+endif(KDEPIM_MOBILE_UI)
+
 if ( USABLE_ASSUAN_FOUND )
   target_link_libraries(kleopatra_bin ${QT_QTNETWORK_LIBRARY}) 
 ENDIF ( USABLE_ASSUAN_FOUND )
