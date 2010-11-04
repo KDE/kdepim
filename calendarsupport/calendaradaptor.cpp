@@ -422,3 +422,13 @@ void CalendarAdaptor::endBatchAdding()
   d->mLastDialogCode = -1;
 }
 
+KCalCore::Incidence::List CalendarAdaptor::incidencesFromSchedulingID( const QString &sid ) const
+{
+  return  itemsToIncidences<KCalCore::Incidence>( d->mCalendar->incidencesFromSchedulingID( sid ) );
+}
+
+KCalCore::Incidence::Ptr CalendarAdaptor::incidenceFromSchedulingID( const QString &sid ) const
+{
+  return  itemToIncidence<KCalCore::Incidence>( d->mCalendar->incidenceFromSchedulingID( sid ) );
+}
+

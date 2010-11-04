@@ -72,7 +72,8 @@ Groupware::Groupware( CalendarSupport::Calendar *cal, GroupwareUiDelegate *deleg
   setObjectName( QLatin1String( "kmgroupware_instance" ) );
 }
 
-bool Groupware::handleInvitation( const QString &receiver, const QString &iCal,
+bool Groupware::handleInvitation( const QString &receiver,
+                                  const QString &iCal,
                                   const QString &type )
 {
   const QString action = type;
