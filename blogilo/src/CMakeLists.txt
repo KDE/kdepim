@@ -3,7 +3,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_subdirectory(htmlconvertors)
 
-IF(WIN32)
 set(blogilo_SRCS
  main.cpp
  mainwindow.cpp
@@ -24,7 +23,6 @@ set(blogilo_SRCS
  blogsettings.cpp
  uploadmediadialog.cpp
  syncuploader.cpp
- composer/bilbobrowser_win.cpp
  composer/htmleditor.cpp
  composer/stylegetter.cpp
  composer/medialistwidget.cpp
@@ -37,39 +35,16 @@ set(blogilo_SRCS
  composer/texteditor/utilities.cpp
 )
 
+IF(WIN32)
+    set(blogilo_SRCS
+    ${blogilo_SRCS}
+    composer/bilbobrowser_win.cpp
+    )
 else(WIN32)
-set(blogilo_SRCS
- main.cpp
- mainwindow.cpp
- toolbox.cpp
- addeditblog.cpp
- postentry.cpp
- dbman.cpp
- global.cpp
- bilbopost.cpp
- bilboblog.cpp
- backend.cpp
- entriescountdialog.cpp
- bilbomedia.cpp
- addcategory.cpp
- catcheckbox.cpp
- sendtoblogdialog.cpp
- waitwidget.cpp
- blogsettings.cpp
- uploadmediadialog.cpp
- syncuploader.cpp
- composer/bilbobrowser.cpp
- composer/htmleditor.cpp
- composer/stylegetter.cpp
- composer/medialistwidget.cpp
- composer/bilboeditor.cpp
- composer/multilinetextedit.cpp
- composer/dialogs/addeditlink.cpp
- composer/dialogs/addmediadialog.cpp
- composer/dialogs/addeditimage.cpp
- composer/texteditor/texteditor.cpp
- composer/texteditor/utilities.cpp
-)
+    set(blogilo_SRCS
+    ${blogilo_SRCS}
+    composer/bilbobrowser.cpp
+    )
 endif(WIN32)
 
 kde4_add_ui_files(
