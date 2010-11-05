@@ -47,6 +47,7 @@ class KDeclarativeMainViewPrivate : public QObject
   Q_OBJECT
 
 public: /// members
+  KDeclarativeMainView               *q;
   Akonadi::ChangeRecorder            *mChangeRecorder;                // Deleted by ~QObect
   QAbstractItemModel                 *mCollectionFilter;              // Deleted by ~QObect
   Akonadi::EntityTreeModel           *mEtm;
@@ -71,7 +72,7 @@ public: /// members
   SearchManager                      *mSearchManager;
 
 public: /// Methods
-  KDeclarativeMainViewPrivate();
+  KDeclarativeMainViewPrivate( KDeclarativeMainView* );
 
   QAbstractItemModel* getFavoritesListModel();
   QStringList getFavoritesList();

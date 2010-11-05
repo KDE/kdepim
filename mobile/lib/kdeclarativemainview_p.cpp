@@ -28,8 +28,9 @@
 #include "favoriteslistmodel.h"
 #include "guistatemanager.h"
 
-KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
-  : mChangeRecorder( 0 )
+KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *qq )
+  : q( qq )
+  , mChangeRecorder( 0 )
   , mCollectionFilter( 0 )
   , mItemFilterModel( 0 )
   , mFavsListModel( 0 )
@@ -101,6 +102,8 @@ void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString
 
 void KDeclarativeMainViewPrivate::searchStarted( const Akonadi::Collection &searchCollection )
 {
+  q->persistCurrentSelection( "SelectionBeforeSearchStarted" );
+
   const QStringList selection = QStringList() << QLatin1String( "c1" ) // the 'Search' collection
                                               << QString::fromLatin1( "c%1" ).arg( searchCollection.id() );
   Akonadi::ETMViewStateSaver *restorer = new Akonadi::ETMViewStateSaver;
@@ -117,5 +120,7 @@ void KDeclarativeMainViewPrivate::searchStarted( const Akonadi::Collection &sear
 void KDeclarativeMainViewPrivate::searchStopped()
 {
   mGuiStateManager->popState();
-}
 
+  q->restorePersistedSelection( "SelectionBeforeSearchStarted" );
+  q->clearPersistedSelection( "SelectionBeforeSearchStarted" );
+}

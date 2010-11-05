@@ -126,7 +126,7 @@ QML_DECLARE_TYPE( GuiStateManager )
 
 KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent )
   : KDeclarativeFullScreenView( appName, parent )
-  , d( new KDeclarativeMainViewPrivate )
+  , d( new KDeclarativeMainViewPrivate( this ) )
 {
   d->mListProxy = listProxy;
 
@@ -582,9 +582,6 @@ void KDeclarativeMainView::persistCurrentSelection( const QString &key )
   saver.setSelectionModel( d->mBnf->selectionModel() );
 
   const QStringList selection = saver.selectionKeys();
-  if ( selection.isEmpty() )
-    return;
-
   d->mPersistedSelections.insert( key, selection );
 }
 
