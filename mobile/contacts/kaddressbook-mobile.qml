@@ -42,7 +42,7 @@ KPIM.MainView {
       kaddressbookActions.showOnlyCategory( "account" )
     } else if ( guiStateManager.inSingleFolderScreenState ) {
       kaddressbookActions.showOnlyCategory( "single_folder" )
-    } else if ( guiStateManager.inMultipleFolderScreenState ) {
+    } else if ( guiStateManager.inMultipleFolderScreenState || guiStateManager.inSearchResultScreenState ) {
       kaddressbookActions.showOnlyCategory( "multiple_folder" )
     } else if ( guiStateManager.inViewContactState || guiStateManager.inViewContactGroupState ) {
       kaddressbookActions.showOnlyCategory( "contact_viewer" )
@@ -298,8 +298,12 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
+    z: 100
 
-    visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
+    visible: !guiStateManager.inBulkActionScreenState &&
+             !guiStateManager.inMultipleFolderSelectionScreenState &&
+             !guiStateManager.inConfigScreenState &&
+             !guiStateManager.inSearchScreenState
 
     SlideoutPanel {
       id: actionPanel

@@ -45,7 +45,7 @@ KPIM.MainView {
       kmailActions.showOnlyCategory( "account" )
     } else if ( guiStateManager.inSingleFolderScreenState ) {
       kmailActions.showOnlyCategory( "single_folder" )
-    } else if ( guiStateManager.inMultipleFolderScreenState ) {
+    } else if ( guiStateManager.inMultipleFolderScreenState || guiStateManager.inSearchResultScreenState ) {
       kmailActions.showOnlyCategory( "multiple_folder" )
     } else if ( guiStateManager.inViewSingleItemState ) {
       kmailActions.showOnlyCategory( "mail_viewer" )
@@ -499,7 +499,13 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
-    visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
+    z: 100
+
+    visible: !guiStateManager.inBulkActionScreenState &&
+             !guiStateManager.inMultipleFolderSelectionScreenState &&
+             !guiStateManager.inConfigScreenState &&
+             !guiStateManager.inSearchScreenState
+
     SlideoutPanel {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )

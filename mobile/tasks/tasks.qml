@@ -43,7 +43,7 @@ KPIM.MainView {
       taskActions.showOnlyCategory( "account" )
     } else if ( guiStateManager.inSingleFolderScreenState ) {
       taskActions.showOnlyCategory( "single_folder" )
-    } else if ( guiStateManager.inMultipleFolderScreenState ) {
+    } else if ( guiStateManager.inMultipleFolderScreenState || guiStateManager.inSearchResultScreenState ) {
       taskActions.showOnlyCategory( "multiple_folder" )
     } else if ( guiStateManager.inViewSingleItemState ) {
       taskActions.showOnlyCategory( "todo_viewer" )
@@ -249,8 +249,12 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
+    z: 100
 
-    visible: !guiStateManager.inBulkActionScreenState && !guiStateManager.inMultipleFolderSelectionScreenState
+    visible: !guiStateManager.inBulkActionScreenState &&
+             !guiStateManager.inMultipleFolderSelectionScreenState &&
+             !guiStateManager.inConfigScreenState &&
+             !guiStateManager.inSearchScreenState
 
     SlideoutPanel {
       id: actionPanel
