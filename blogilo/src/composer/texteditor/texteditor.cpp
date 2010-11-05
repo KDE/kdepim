@@ -641,7 +641,7 @@ void TextEditor::slotAddEditLink()
 
 void TextEditor::slotRemoveLink()
 {
-///TODO
+    execCommand("unLink");
 }
 
 void TextEditor::slotToggleBlockQuote(bool )
