@@ -504,7 +504,8 @@ KPIM.MainView {
     visible: !guiStateManager.inBulkActionScreenState &&
              !guiStateManager.inMultipleFolderSelectionScreenState &&
              !guiStateManager.inConfigScreenState &&
-             !guiStateManager.inSearchScreenState
+             !guiStateManager.inSearchScreenState &&
+             !filterConfigDialog.visible
 
     SlideoutPanel {
       id: actionPanel
