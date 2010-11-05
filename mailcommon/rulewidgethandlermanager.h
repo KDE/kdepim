@@ -45,7 +45,7 @@ class QStackedWidget;
 
 namespace MailCommon {
 
-  class RuleWidgetHandler;
+class RuleWidgetHandler;
 
   /**
    * @short Singleton to manage the list of RuleWidgetHandlers

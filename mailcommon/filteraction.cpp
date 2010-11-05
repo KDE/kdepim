@@ -7,6 +7,7 @@
 #include "folderrequester.h"
 #include "mailutil.h"
 #include "mailkernel.h"
+#include "minimumcombobox.h"
 
 #include "messageproperty.h"
 using MailCommon::MessageProperty;
@@ -40,7 +41,6 @@ using MessageComposer::MessageFactory;
 // KDE headers
 #include <akonadi/collectioncombobox.h>
 #include <kabc/addressee.h>
-#include <kcombobox.h>
 #include <ktemporaryfile.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -244,7 +244,7 @@ FilterActionWithStringList::FilterActionWithStringList( const char* aName, const
 
 QWidget* FilterActionWithStringList::createParamWidget( QWidget* parent ) const
 {
-  KComboBox *cb = new KComboBox( parent );
+  MinimumComboBox *cb = new MinimumComboBox( parent );
   cb->setEditable( false );
   cb->addItems( mParameterList );
   setParamWidgetValue( cb );
@@ -253,18 +253,18 @@ QWidget* FilterActionWithStringList::createParamWidget( QWidget* parent ) const
 
 void FilterActionWithStringList::applyParamWidgetValue( QWidget* paramWidget )
 {
-  mParameter = ((KComboBox*)paramWidget)->currentText();
+  mParameter = ((MinimumComboBox*)paramWidget)->currentText();
 }
 
 void FilterActionWithStringList::setParamWidgetValue( QWidget* paramWidget ) const
 {
   const int idx = mParameterList.indexOf( mParameter );
-  ((KComboBox*)paramWidget)->setCurrentIndex( idx >= 0 ? idx : 0 );
+  ((MinimumComboBox*)paramWidget)->setCurrentIndex( idx >= 0 ? idx : 0 );
 }
 
 void FilterActionWithStringList::clearParamWidget( QWidget* paramWidget ) const
 {
-  ((KComboBox*)paramWidget)->setCurrentIndex(0);
+  ((MinimumComboBox*)paramWidget)->setCurrentIndex(0);
 }
 
 void FilterActionWithStringList::argsFromString( const QString &argsStr )
@@ -1091,7 +1091,7 @@ FilterActionRemoveHeader::FilterActionRemoveHeader()
 
 QWidget* FilterActionRemoveHeader::createParamWidget( QWidget* parent ) const
 {
-  KComboBox *cb = new KComboBox( parent );
+  MinimumComboBox *cb = new MinimumComboBox( parent );
   cb->setEditable( true );
   cb->setInsertPolicy( QComboBox::InsertAtBottom );
   setParamWidgetValue( cb );
@@ -1112,7 +1112,7 @@ FilterAction::ReturnCode FilterActionRemoveHeader::process( const Akonadi::Item&
 
 void FilterActionRemoveHeader::setParamWidgetValue( QWidget* paramWidget ) const
 {
-  KComboBox * cb = dynamic_cast<KComboBox*>(paramWidget);
+  MinimumComboBox * cb = dynamic_cast<MinimumComboBox*>(paramWidget);
   Q_ASSERT( cb );
 
   const int idx = mParameterList.indexOf( mParameter );
@@ -1184,7 +1184,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget* parent ) const
   QHBoxLayout *hbl = new QHBoxLayout( w );
   hbl->setSpacing( 4 );
   hbl->setMargin( 0 );
-  KComboBox *cb = new KComboBox( w );
+  MinimumComboBox *cb = new MinimumComboBox( w );
   cb->setObjectName( "combo" );
   cb->setEditable( true );
   cb->setInsertPolicy( QComboBox::InsertAtBottom );
@@ -1203,7 +1203,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget* parent ) const
 void FilterActionAddHeader::setParamWidgetValue( QWidget* paramWidget ) const
 {
   const int idx = mParameterList.indexOf( mParameter );
-  KComboBox *cb = paramWidget->findChild<KComboBox*>("combo");
+  MinimumComboBox *cb = paramWidget->findChild<MinimumComboBox*>("combo");
   Q_ASSERT( cb );
   cb->clear();
   cb->addItems( mParameterList );
@@ -1220,7 +1220,7 @@ void FilterActionAddHeader::setParamWidgetValue( QWidget* paramWidget ) const
 
 void FilterActionAddHeader::applyParamWidgetValue( QWidget* paramWidget )
 {
-  KComboBox *cb = paramWidget->findChild<KComboBox*>("combo");
+  MinimumComboBox *cb = paramWidget->findChild<MinimumComboBox*>("combo");
   Q_ASSERT( cb );
   mParameter = cb->currentText();
 
@@ -1231,7 +1231,7 @@ void FilterActionAddHeader::applyParamWidgetValue( QWidget* paramWidget )
 
 void FilterActionAddHeader::clearParamWidget( QWidget* paramWidget ) const
 {
-  KComboBox *cb = paramWidget->findChild<KComboBox*>("combo");
+  MinimumComboBox *cb = paramWidget->findChild<MinimumComboBox*>("combo");
   Q_ASSERT( cb );
   cb->setCurrentIndex(0);
   KLineEdit *le = paramWidget->findChild<KLineEdit*>("ledit");
@@ -1339,7 +1339,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget* parent ) const
   hbl->setSpacing( 4 );
   hbl->setMargin( 0 );
 
-  KComboBox *cb = new KComboBox( w );
+  MinimumComboBox *cb = new MinimumComboBox( w );
   cb->setEditable( true );
   cb->setObjectName( "combo" );
   cb->setInsertPolicy( QComboBox::InsertAtBottom );
@@ -1369,7 +1369,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget* parent ) const
 void FilterActionRewriteHeader::setParamWidgetValue( QWidget* paramWidget ) const
 {
   const int idx = mParameterList.indexOf( mParameter );
-  KComboBox *cb = paramWidget->findChild<KComboBox*>("combo");
+  MinimumComboBox *cb = paramWidget->findChild<MinimumComboBox*>("combo");
   Q_ASSERT( cb );
 
   cb->clear();
@@ -1392,7 +1392,7 @@ void FilterActionRewriteHeader::setParamWidgetValue( QWidget* paramWidget ) cons
 
 void FilterActionRewriteHeader::applyParamWidgetValue( QWidget* paramWidget )
 {
-  KComboBox *cb = paramWidget->findChild<KComboBox*>("combo");
+  MinimumComboBox *cb = paramWidget->findChild<MinimumComboBox*>("combo");
   Q_ASSERT( cb );
   mParameter = cb->currentText();
 
@@ -1407,7 +1407,7 @@ void FilterActionRewriteHeader::applyParamWidgetValue( QWidget* paramWidget )
 
 void FilterActionRewriteHeader::clearParamWidget( QWidget* paramWidget ) const
 {
-  KComboBox *cb = paramWidget->findChild<KComboBox*>("combo");
+  MinimumComboBox *cb = paramWidget->findChild<MinimumComboBox*>("combo");
   Q_ASSERT( cb );
   cb->setCurrentIndex(0);
 
@@ -1609,7 +1609,7 @@ QWidget* FilterActionForward::createParamWidget( QWidget* parent ) const
   lineEdit->setToolTip( i18n( "The addressee to whom the message will be forwarded." ) );
   lineEdit->setWhatsThis( i18n( "The filter will forward the message to the addressee entered here." ) );
 
-  KComboBox *templateCombo = new KComboBox( addressAndTemplate );
+  MinimumComboBox *templateCombo = new MinimumComboBox( addressAndTemplate );
   templateCombo->setObjectName( "templateCombo" );
   hBox->addWidget( templateCombo );
 
@@ -1634,7 +1634,7 @@ void FilterActionForward::applyParamWidgetValue( QWidget* paramWidget )
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::applyParamWidgetValue( addressEdit );
 
-  KComboBox *templateCombo = paramWidget->findChild<KComboBox*>( "templateCombo" );
+  MinimumComboBox *templateCombo = paramWidget->findChild<MinimumComboBox*>( "templateCombo" );
   Q_ASSERT( templateCombo );
 
   if ( templateCombo->currentIndex() == 0 ) {
@@ -1652,7 +1652,7 @@ void FilterActionForward::setParamWidgetValue( QWidget* paramWidget ) const
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::setParamWidgetValue( addressEdit );
 
-  KComboBox *templateCombo = paramWidget->findChild<KComboBox*>( "templateCombo" );
+  MinimumComboBox *templateCombo = paramWidget->findChild<MinimumComboBox*>( "templateCombo" );
   Q_ASSERT( templateCombo );
 
   if ( mTemplate.isEmpty() ) {
@@ -1675,7 +1675,7 @@ void FilterActionForward::clearParamWidget( QWidget* paramWidget ) const
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::clearParamWidget( addressEdit );
 
-  KComboBox *templateCombo = paramWidget->findChild<KComboBox*>( "templateCombo" );
+  MinimumComboBox *templateCombo = paramWidget->findChild<MinimumComboBox*>( "templateCombo" );
   Q_ASSERT( templateCombo );
 
   templateCombo->setCurrentIndex( 0 );
@@ -2051,7 +2051,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget* parent ) cons
   QWidget *widget = new QWidget( parent );
   QGridLayout *layout = new QGridLayout ( widget );
 
-  KComboBox *headerCombo = new KComboBox( widget );
+  MinimumComboBox *headerCombo = new MinimumComboBox( widget );
   headerCombo->setObjectName( "HeaderComboBox" );
   layout->addWidget( headerCombo, 0, 0, 2, 1, Qt::AlignVCenter );
 
@@ -2081,7 +2081,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget* parent ) cons
 
 void FilterActionAddToAddressBook::setParamWidgetValue( QWidget* paramWidget ) const
 {
-  KComboBox *headerCombo = paramWidget->findChild<KComboBox*>( "HeaderComboBox" );
+  MinimumComboBox *headerCombo = paramWidget->findChild<MinimumComboBox*>( "HeaderComboBox" );
   Q_ASSERT( headerCombo );
   headerCombo->clear();
   headerCombo->addItem( mFromStr, FromHeader );
@@ -2103,7 +2103,7 @@ void FilterActionAddToAddressBook::setParamWidgetValue( QWidget* paramWidget ) c
 
 void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget* paramWidget )
 {
-  KComboBox *headerCombo = paramWidget->findChild<KComboBox*>( "HeaderComboBox" );
+  MinimumComboBox *headerCombo = paramWidget->findChild<MinimumComboBox*>( "HeaderComboBox" );
   Q_ASSERT( headerCombo );
   mHeaderType = static_cast<HeaderType>( headerCombo->itemData( headerCombo->currentIndex() ).toInt() );
 
@@ -2128,7 +2128,7 @@ void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget* paramWidget )
 
 void FilterActionAddToAddressBook::clearParamWidget( QWidget* paramWidget ) const
 {
-  KComboBox *headerCombo = paramWidget->findChild<KComboBox*>( "HeaderComboBox" );
+  MinimumComboBox *headerCombo = paramWidget->findChild<MinimumComboBox*>( "HeaderComboBox" );
   Q_ASSERT( headerCombo );
   headerCombo->setCurrentItem( 0 );
 

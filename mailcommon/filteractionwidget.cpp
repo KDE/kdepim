@@ -22,8 +22,8 @@
 #include "filteraction.h"
 #include "mailkernel.h"
 #include "mailfilter.h"
+#include "minimumcombobox.h"
 
-#include <KComboBox>
 #include <KLocalizedString>
 
 #include <QGridLayout>
@@ -51,7 +51,7 @@ FilterActionWidget::FilterActionWidget( QWidget *parent, const char* name )
   QWidget *w = new QWidget( this );
   gl = new QGridLayout( w );
   gl->setContentsMargins( 0, 0, 0, 0 );
-  mComboBox = new KComboBox( gl );
+  mComboBox = new MinimumComboBox( w );
   mComboBox->setEditable( false );
   assert( mComboBox );
   gl->addWidget( mComboBox, 1, 1 );
@@ -79,7 +79,7 @@ FilterActionWidget::FilterActionWidget( QWidget *parent, const char* name )
   //   the parameter widget should grow instead.
   // o the whole widget takes all space horizontally, but is fixed vertically.
   mComboBox->adjustSize();
-  mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+  mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
   setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
   updateGeometry();
 

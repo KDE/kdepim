@@ -30,6 +30,7 @@ set(libmailcommon_SRCS
   mailutil.cpp
   mdnadvicedialog.cpp
   messageproperty.cpp
+  minimumcombobox.cpp 
   readablecollectionproxymodel.cpp
   regexplineedit.cpp
   rulewidgethandlermanager.cpp

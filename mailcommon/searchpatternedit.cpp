@@ -22,6 +22,7 @@
 #include <QStackedWidget>
 #include "rulewidgethandlermanager.h"
 using MailCommon::RuleWidgetHandlerManager;
+#include "minimumcombobox.h"
 
 #include <kcombobox.h>
 #include <klocale.h>
@@ -34,6 +35,7 @@ using MailCommon::RuleWidgetHandlerManager;
 #include <QRadioButton>
 
 #include <assert.h>
+#include <QResizeEvent>
 
 // Definition of special rule field strings
 // Note: Also see SearchRule::matches() and ruleFieldToEnglish() if
@@ -124,7 +126,7 @@ void SearchRuleWidget::initWidget()
   hlay->setMargin( 0 );
 
   // initialize the header field combo box
-  mRuleField = new KComboBox( this );
+  mRuleField = new MinimumComboBox( this );
   mRuleField->setObjectName( "mRuleField" );
   mRuleField->setEditable( true );
   mRuleField->addItems( mFilterFieldList );
@@ -137,12 +139,10 @@ void SearchRuleWidget::initWidget()
   mFunctionStack = new QStackedWidget( this );
   //Don't expand the widget in vertical direction
   mFunctionStack->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
-  mFunctionStack->setMaximumWidth( parentWidget()->width() / 3 );
 
   hlay->addWidget( mFunctionStack );
 
   mValueStack = new QStackedWidget( this );
-  mValueStack->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
   hlay->addWidget( mValueStack );
   hlay->setStretchFactor( mValueStack, 10 );
 
@@ -159,12 +159,6 @@ void SearchRuleWidget::initWidget()
            this, SLOT( slotRuleFieldChanged( const QString & ) ) );
   connect( mRuleField, SIGNAL(editTextChanged( const QString & ) ),
            this, SIGNAL( fieldChanged( const QString & ) ) );
-}
-
-void SearchRuleWidget::resizeEvent(QResizeEvent* ev )
-{
-  QWidget::resizeEvent( ev );
-  mFunctionStack->setMaximumWidth( parentWidget()->width() / 3 );
 }
 
 
