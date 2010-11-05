@@ -81,44 +81,20 @@ void WebView::sendMouseReleaseEvent()
     pageAction ( QWebPage::MoveToEndOfDocument ) -> trigger();
 }
 
-void WebView::focusOutEvent ( QFocusEvent *event )
-{
-    QWebView::focusOutEvent ( event );
-    emit focusOutSignal();
-}
-
-void WebView::focusInEvent ( QFocusEvent *event )
-{
-    QWebView::focusInEvent ( event );
-    //NOTE: enabling the codes below will correct the focus behaviours
-    //But will make some problems with font size...
-//    QMouseEvent mouseEventPress(QEvent::MouseButtonPress, QPoint(1,1), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
-//    QMouseEvent mouseEventRelease(QEvent::MouseButtonRelease, QPoint(1,1), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
-//    QApplication::sendEvent(this, &mouseEventPress);
-//    QApplication::sendEvent(this, &mouseEventRelease);
-    //  webView -> setFocus();
-}
-
-void WebView::keyPressEvent ( QKeyEvent *event )
-{
-    if ( event->key() == Qt::Key_Return && ( event->modifiers() & Qt::AltModifier ) )
-        emit editingFinishKeyPressed();
-    else if ( event->key() == Qt::Key_F12 )
-        QMessageBox::information ( this, QString(), page()->mainFrame()->toHtml()
-                                   .replace ( '<', "&lt;" ).replace ( '>', "&gt;" ).replace ( '\n', "<br>" ) );
-    else
-        QWebView::keyPressEvent ( event );
-}
-
 void WebView::dragEnterEvent ( QDragEnterEvent *event )
 {
-    if ( event->mimeData()->hasUrls() )
-        event->acceptProposedAction();
+    //uncomment lines below when drag n drop support added
+//     if ( event->mimeData()->hasText() )
+//         event->acceptProposedAction();
 }
 
 void WebView::dropEvent ( QDropEvent *event )
 {
-    emit dropMimeDataSignal ( event -> mimeData() );
+    //TODO support drag n drop
+//     QString textToInsert = event->mimeData()->text();
+//     kDebug()<<textToInsert;
+//     QString js = QString("document.execCommand(\"insertHTML\", false, \"%2\")").arg(textToInsert);
+//     page()->mainFrame()->evaluateJavaScript(js);
 }
 
 void WebView::contextMenuEvent(QContextMenuEvent* event)
@@ -209,10 +185,6 @@ TextEditor::TextEditor ( QWidget *parent )
     connect ( webView->page(), SIGNAL ( selectionChanged() ), this, SIGNAL ( selectionChanged() ) );
     connect ( webView->page(), SIGNAL ( contentsChanged() ), this, SLOT ( somethingEdittedSlot() ) );
     connect ( webView->page(), SIGNAL ( contentsChanged() ), this, SIGNAL ( textChanged() ) );
-//     connect ( webView, SIGNAL ( focusOutSignal() ), this, SLOT ( finishEditing() ) );
-    connect ( webView, SIGNAL ( editingFinishKeyPressed() ), this, SIGNAL ( editingFinishKeyPressed() ) );
-    connect ( webView, SIGNAL ( dropMimeDataSignal ( const QMimeData* ) ), this, SLOT ( dropMimeDataSlot ( const QMimeData* ) ) );
-//   webView->page()->action(QWebPage::Reload) -> setShortcut(Qt::Key_F5);
 
     createLayout();
     createActions();
@@ -422,41 +394,6 @@ void TextEditor::createActions()
     barVisual->addAction( actSplitPost );
 }
 
-/*
-void TextEditor::setDocument(const Document &newDocument)
-{
-   document = newDocument;
-   objectsAreModified = false;
-   clearObjects();
-   webView -> page() -> undoStack() -> clear();
-   addDocumentAttachmentsToObjects();
-   evaluateJavaScript(QString("replaceHtml(\"%1\")").arg(document.getText().replace("\"", "\\\"").simplified()), true);
-   updateStyle();
-}
-
-const Document& TextEditor::getDocument()
-{
-   document.setText(getHtml());
-   objectsAreModified = false;
-
-   addUsedAttachmentsToDocument();
-   //undo stack must get cleared otherwise deletion of an image can be
-   //undone while the image doesn't really exist in the attachments of
-   //the document.
-   webView -> page() -> undoStack() -> clear();
-   return document;
-}*/
-
-void TextEditor::reload()
-{
-    getAction ( QWebPage::Reload ) -> trigger();
-}
-
-void TextEditor::setCurrentTitle ( const QString &title )
-{
-
-}
-
 QString TextEditor::htmlContent()
 {
     return getHtml();
@@ -472,11 +409,6 @@ void TextEditor::setHtmlContent ( const QString& arg1 )
     QString txt = arg1;
     txt = txt.replace('\"', "\\\"").simplified();
     evaluateJavaScript(QString("replaceHtml(\"%1\")").arg(txt), true);
-}
-
-bool TextEditor::updateMediaPaths()
-{
-    return true;
 }
 
 void TextEditor::clear()
@@ -525,7 +457,6 @@ Qt::Alignment TextEditor::getAlignment() const
 
 void TextEditor::execCommand ( const QString &cmd )
 {
-//   qDebug("TextEditor::execCommand(%s)", cmd.toAscii().constData());
     QWebFrame *frame = webView->page()->mainFrame();
     QString js = QString ( "document.execCommand(\"%1\", false, null)" ).arg ( cmd );
     frame->evaluateJavaScript ( js );
@@ -533,7 +464,6 @@ void TextEditor::execCommand ( const QString &cmd )
 
 void TextEditor::execCommand ( const QString &cmd, const QString &arg )
 {
-//   qDebug("TextEditor::execCommand(%s, %s) began", cmd.toAscii().constData(), arg.toAscii().constData());
     QWebFrame *frame = webView->page()->mainFrame();
     QString js = QString ( "document.execCommand(\"%1\", false, \"%2\")" ).arg ( cmd ).arg ( arg );
     frame->evaluateJavaScript ( js );
@@ -578,10 +508,10 @@ QAction* TextEditor::getAction ( QWebPage::WebAction action ) const
         return 0;
 }
 
-void TextEditor::addCommand ( QUndoCommand *command )
-{
-    webView -> page() -> undoStack() -> push ( command );
-}
+// void TextEditor::addCommand ( QUndoCommand *command )
+// {
+//     webView -> page() -> undoStack() -> push ( command );
+// }
 
 void TextEditor::focusInEvent ( QFocusEvent *event )
 {

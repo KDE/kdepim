@@ -51,19 +51,12 @@ public:
     //just shows the cursor.
     void startEditing();
 
-signals:
-    void focusOutSignal();
-    void editingFinishKeyPressed();
-    void dropMimeDataSignal ( const QMimeData* );
-
 protected slots:
     void sendMouseReleaseEvent();
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);
-    virtual void focusOutEvent ( QFocusEvent* );
-    virtual void focusInEvent ( QFocusEvent* );
-    virtual void keyPressEvent ( QKeyEvent* );
+//     virtual void keyPressEvent ( QKeyEvent* );
     virtual void dragEnterEvent ( QDragEnterEvent* );
     virtual void dropEvent ( QDropEvent* );
 };
@@ -80,41 +73,22 @@ public:
 
     void setReadOnly ( bool );
 
-    void reload();
-
-    bool insertImage ( const QString& );
-    bool insertImage ( const QByteArray& );
-
-    //the range of font size is between 0 and 6
-    // (xx-small to xx-large)
-    void setFontSize ( int );
-    int getFontSize() const;
-
-    Qt::Alignment getAlignment() const;
-
-    //This is only a temporary zoom factor which will be
-    //changed back to Settings::settings() -> cardAppearanceZoomFactor
-    //whenever you use setDocument();
-//     void setZoomFactor ( double );
-    double getZoomFactor() const;
-
     QAction* getAction ( QWebPage::WebAction action ) const;
 
-    void addCommand ( QUndoCommand* );
+//     void addCommand ( QUndoCommand* );
 
     void replaceImageSrc(const QString& src, const QString& dest);
 
     QString plainTextContent();
     QString htmlContent();
 
-public slots:
     QList<BilboMedia*> getLocalImages();
+
+public slots:
     void clear();
     //just shows the cursor.
     void startEditing();
-    void setCurrentTitle ( const QString& title );
     void setHtmlContent ( const QString &arg1 );
-    bool updateMediaPaths();
 
     void formatIncreaseIndent();
     void formatDecreaseIndent();
@@ -142,6 +116,20 @@ signals:
 
 protected:
     virtual void focusInEvent ( QFocusEvent* );
+
+    //the range of font size is between 0 and 6
+    // (xx-small to xx-large)
+    void setFontSize ( int );
+    int getFontSize() const;
+
+    Qt::Alignment getAlignment() const;
+
+    //This is only a temporary zoom factor which will be
+    //changed back to Settings::settings() -> cardAppearanceZoomFactor
+    //whenever you use setDocument();
+//     void setZoomFactor ( double );
+    double getZoomFactor() const;
+
 
 private slots:
     void adjustActions();
