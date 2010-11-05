@@ -939,8 +939,6 @@ void Manager::loadGlobalConfiguration()
        MessageCore::GlobalSettings::self()->dateFormat() );
   mDateFormatter->setCustomFormat( MessageCore::GlobalSettings::self()->customDateFormat() );
   mDateFormatter->setFormat( type );
-
-  mDisplayMessageToolTips = Settings::self()->messageToolTipEnabled();
 }
 
 void Manager::loadConfiguration()
