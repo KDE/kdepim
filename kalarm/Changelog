@@ -1,7 +1,8 @@
 KAlarm Change Log
 
-=== Version 2.4.10 --- 4 Nov 2010 ===
+=== Version 2.4.10 --- 5 Nov 2010 ===
 - Fix KAlarm showing in system tray at login when configured not to show in tray.
+- Don't quit if no window is visible when 'show in system tray' is deselected.
 
 === Version 2.4.9 (KDEPIM 4.4.7) --- 19 October 2010 ===
 - Fix crash if alarm triggers while its deletion confirmation prompt is visible.
