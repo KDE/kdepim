@@ -23,6 +23,11 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
+#ifdef Q_OS_WINCE
+# include <windows.h>
+# include <winuser.h>
+#endif
+
 #include <QDateTime>
 
 #include "mainview.h"
@@ -38,7 +43,9 @@ Q_IMPORT_PLUGIN(akonadi_serializer_contactgroup)
 int main( int argc, char **argv )
 {
   kWarning() << "Starting main function" << QDateTime::currentDateTime();
-
+#ifdef Q_OS_WINCE
+  SetCursor( LoadCursor( NULL, IDC_WAIT ) );
+#endif
   const QByteArray& ba = QByteArray( "kmail-mobile" );
   const KLocalizedString name = ki18n( "KMail Mobile" );
   KAboutData aboutData( ba, ba, name, ba, name );
@@ -54,6 +61,9 @@ int main( int argc, char **argv )
 
   MainView view;
   view.show();
+#ifdef Q_OS_WINCE
+  SetCursor( LoadCursor( NULL, NULL ) );
+#endif
 
   return app.exec();
 }
