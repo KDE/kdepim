@@ -43,7 +43,6 @@
 #include "bilbopost.h"
 
 #include "texteditor/texteditor.h"
-#include "medialistwidget.h"
 #include "stylegetter.h"
 #include "htmleditor.h"
 #ifdef WIN32
