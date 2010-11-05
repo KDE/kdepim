@@ -2325,6 +2325,7 @@ void KMMainWidget::slotMsgActivated(KMMessage *msg)
   }
 
   if (kmkernel->folderIsDraftOrOutbox( mFolder ) ) {
+    mMsgActions->setCurrentMessage( msg );
     mMsgActions->editCurrentMessage();
     return;
   }
