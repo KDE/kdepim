@@ -1,4 +1,14 @@
 
+Friday 05 November 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4062: declined counterproposal asks for answer, but there are no buttons. (rt#5973)
+* kolab/issue4360: Todo with attendee is changed by the attendee, but the text of the update mail is wrong (rt#6149)
+
+
+
 Friday 22 October 2010
 
 Problems addressed
