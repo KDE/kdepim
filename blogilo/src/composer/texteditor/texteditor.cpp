@@ -36,8 +36,8 @@
 #include <KSelectAction>
 #include <klocalizedstring.h>
 #include <KColorDialog>
-#include <composer/dialogs/addimagedialog.h>
-#include <composer/dialogs/addeditlink.h>
+#include "composer/dialogs/addeditimage.h"
+#include "composer/dialogs/addeditlink.h"
 #include <QContextMenuEvent>
 #include <QTimer>
 #include <qwebframe.h>
@@ -48,6 +48,8 @@
 #include "bilbomedia.h"
 #include <kmimetype.h>
 #include "global.h"
+#include <qwebelement.h>
+#include <KMenu>
 
 #define ATTACHMENT_IMAGE "image"
 #define FORWARD_ACTION(action1, action2) \
@@ -75,8 +77,8 @@ QString ObjectsForJavaScript::getObjectPath ( const QString &id ) {
         return QString();
 }
 
-void ObjectsForJavaScript::clickedOnObject ( const QString &id ) {
-    emit clickedOnObjectSignal ( id );
+void ObjectsForJavaScript::clickedOnObject ( const QString &jsonData ) {
+    emit clickedOnObjectSignal ( jsonData );
 }
 
 void ObjectsForJavaScript::clickedOnNonObject() {
@@ -140,6 +142,75 @@ void WebView::dragEnterEvent ( QDragEnterEvent *event ) {
 
 void WebView::dropEvent ( QDropEvent *event ) {
     emit dropMimeDataSignal ( event -> mimeData() );
+}
+
+void WebView::contextMenuEvent(QContextMenuEvent* event)
+{
+    QWebHitTestResult hitTest = page()->mainFrame()->hitTestContent(event->pos());
+    QWebElement elm = hitTest.element();
+    if(elm.tagName().toLower() == "img"){
+        QWebElement linkElm = elm.parent();
+        bool weHaveALink = false;
+        if(linkElm.tagName().toLower() == "a"){
+            weHaveALink = true;
+        }
+        KMenu menu;
+        KAction *actEditImage = new KAction(KIcon(""), i18n("Edit Image"), &menu);
+        KAction *actRemoveImage = new KAction(KIcon(""), i18n("Remove Image"), &menu);
+        menu.addAction(actEditImage);
+        menu.addAction(actRemoveImage);
+        QAction *res = menu.exec(event->globalPos());
+        if(res == actEditImage){
+            QMap<QString, QString> img;
+            img.insert("url", elm.attribute("src"));
+            img.insert("width", elm.attribute("width"));
+            img.insert("height", elm.attribute("height"));
+            img.insert("title", elm.attribute("title"));
+            img.insert("alt", elm.attribute("alt"));
+            if(weHaveALink)
+                img.insert("link", linkElm.attribute("href"));
+            QPointer<AddEditImage> dlg = new AddEditImage(this, img);
+            if(dlg->exec()){
+                img = dlg->selectedMediaProperties();
+                elm.setAttribute("src", img["url"]);
+                if(img.value("width").isEmpty() || img.value("width")=="0")
+                    elm.removeAttribute("width");
+                else
+                    elm.setAttribute("width", img["width"]);
+                if(img.value("height").isEmpty() || img.value("height")=="0")
+                    elm.removeAttribute("height");
+                else
+                    elm.setAttribute("height", img["height"]);
+                if(img.value("title").isEmpty())
+                    elm.removeAttribute("title");
+                else
+                    elm.setAttribute("title", img["title"]);
+                if(img.value("alt").isEmpty())
+                    elm.removeAttribute("alt");
+                else
+                    elm.setAttribute("alt", img["alt"]);
+                if(weHaveALink){
+                    if(img.value("link").isEmpty())
+                        linkElm.removeFromDocument();
+                    else {
+                        linkElm.setAttribute("href", img.value("link"));
+                    }
+                } /* :(( Does not work:
+                else if(!img.value("link").isEmpty()){
+                    QWebElement tmpLink;
+                    tmpLink.setOuterXml(QString("<a href='%1'></a>").arg(img["link"]));
+                    kDebug()<<tmpLink.toOuterXml();
+                    tmpLink.appendInside(elm);
+                    kDebug()<<tmpLink.toOuterXml();
+                    elm.replace(tmpLink);
+                }*/
+            }
+        } else if(res == actRemoveImage){
+            elm.removeFromDocument();
+        }
+    } else {
+        QWebView::contextMenuEvent(event);
+    }
 }
 
 //----------------------------------------------------------------------
@@ -248,7 +319,8 @@ TextEditor::TextEditor ( QWidget *parent )
     objectsAreModified = false;
     readOnly = false;
     objForJavaScript = new ObjectsForJavaScript ( this );
-    connect ( objForJavaScript, SIGNAL ( clickedOnObjectSignal ( const QString& ) ), this, SLOT ( clickedOnObjectSlot ( const QString& ) ) );
+    connect ( objForJavaScript, SIGNAL ( clickedOnObjectSignal ( const QString& ) ),
+              this, SLOT ( clickedOnObjectSlot ( const QString& ) ) );
     connect ( objForJavaScript, SIGNAL ( clickedOnNonObjectSignal() ), this, SLOT ( clickedOnNonObjectSlot() ) );
     webView = new WebView ( this );
     connect ( webView->page()->mainFrame(), SIGNAL ( javaScriptWindowObjectCleared() ),
@@ -310,9 +382,10 @@ void TextEditor::dropMimeDataSlot ( const QMimeData *mime )
     }
 }
 
-void TextEditor::clickedOnObjectSlot ( const QString &id )
+void TextEditor::clickedOnObjectSlot ( const QString &json )
 {
-    emit clickedOnObjectSignal ( findObject ( id ) );
+    ///TODO Edit image described in json
+//     emit clickedOnObjectSignal ( json );
 }
 
 void TextEditor::clickedOnNonObjectSlot()
@@ -897,21 +970,21 @@ void TextEditor::slotToggleCode(bool )
 
 void TextEditor::slotAddImage()
 {
-    QPointer<AddImageDialog> imageDialog = new AddImageDialog( this );
+    QPointer<AddEditImage> imageDialog = new AddEditImage( this );
     imageDialog->setWindowModality( Qt::WindowModal );
     imageDialog->exec();
     if( imageDialog->result() == KDialog::Accepted){
-        QVariantMap res = imageDialog->selectedMediaProperties();
-        QString width = res["width"].toInt() > 0 ? "width=" + res["width"].toString() : QString();
-        QString height = res["height"].toInt() > 0 ? "height=" + res["height"].toString() : QString();
-        QString title = res["title"].toString().isEmpty() ? QString() : QString("title='%1'").arg(res["title"].toString());
-        QString src = res["url"].toString().isEmpty() ? QString() : QString("src='%1'").arg(res["url"].toString());
-        QString alt = res["alt"].toString().isEmpty() ? QString() : QString("alt='%1'").arg(res["alt"].toString());
+        QMap<QString, QString> res = imageDialog->selectedMediaProperties();
+        QString width = res["width"].toInt() > 0 ? "width=" + res["width"] : QString();
+        QString height = res["height"].toInt() > 0 ? "height=" + res["height"] : QString();
+        QString title = res["title"].isEmpty() ? QString() : QString("title='%1'").arg(res["title"]);
+        QString src = res["url"].isEmpty() ? QString() : QString("src='%1'").arg(res["url"]);
+        QString alt = res["alt"].isEmpty() ? QString() : QString("alt='%1'").arg(res["alt"]);
         QString html = QString ( "<img %1 %2 %3 %4 %5 />" )
                                 .arg ( width ).arg ( height ).arg( title )
                                 .arg( src ).arg( alt );
-        if( !res["link"].toString().isEmpty() ){
-            QString preHtml = QString("<a href='%1'>").arg(res["link"].toString());
+        if( !res["link"].isEmpty() ){
+            QString preHtml = QString("<a href='%1'>").arg(res["link"]);
             html = preHtml + html + "</a>";
         }
         execCommand ( "insertHTML", html );

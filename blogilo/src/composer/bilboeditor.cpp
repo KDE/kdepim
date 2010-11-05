@@ -53,7 +53,7 @@
 #endif
 
 #include "dialogs/addeditlink.h"
-#include "dialogs/addimagedialog.h"
+#include "dialogs/addeditimage.h"
 
 #include "htmlconvertors/bilbotextformat.h"
 #include "htmlconvertors/bilbotexthtmlimporter.h"
@@ -136,49 +136,6 @@ void BilboEditor::createUi()
     this->setCurrentIndex( 0 );
 
     d->currentPostTitle = i18n( "Post Title" );
-}
-
-
-void BilboEditor::slotAddImage()
-{
-    QPointer<AddImageDialog> imageDialog = new AddImageDialog( this );
-    imageDialog->setWindowModality( Qt::WindowModal );
-
-    connect( imageDialog,
-             SIGNAL( sigAddImage( BilboMedia *, const int, const int, const QString,
-                                  const QString, const QString ) ),
-             this,
-             SLOT( slotSetImage( BilboMedia *, const int, const int, const QString,
-                                 const QString, const QString ) ) );
-    imageDialog->exec();
-    imageDialog->deleteLater();
-}
-
-void BilboEditor::slotSetImage( BilboMedia *media, const int width, const int height, 
-                        const QString title, const QString link, const QString Alt_text )
-{
-    QTextImageFormat imageFormat;
-
-    imageFormat.setName( media->remoteUrl().url() );
-    if ( width != 0 ) {
-        imageFormat.setWidth( width );
-    }
-    if ( height != 0 ) {;
-        imageFormat.setHeight( height );
-    }
-    if ( !title.isEmpty() ) {
-        imageFormat.setProperty( BilboTextFormat::ImageTitle, QVariant( title ) );
-    }
-    if ( !Alt_text.isEmpty() ) {
-        imageFormat.setProperty( BilboTextFormat::ImageAlternateText, QVariant( Alt_text ) );
-    }
-    if ( !link.isEmpty() ) {
-        imageFormat.setAnchor( true );
-        imageFormat.setAnchorHref( link );
-    }
-//     d->wysiwygEditor->textCursor().insertImage( imageFormat );
-
-    d->wysiwygEditor->setFocus( Qt::OtherFocusReason );
 }
 
 void BilboEditor::slotSyncEditors( int index )

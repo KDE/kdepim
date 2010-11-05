@@ -3,6 +3,7 @@
 
 <script type="text/javascript">
 
+//---Could be removed:
 function updateCSS()
 {
    var css = objFromCpp.getCss();
@@ -26,14 +27,22 @@ function updateCSS()
 function mouseEventHandler(mEvent)
 {
    var node = mEvent.srcElement;
-   if (node.nodeName.toLowerCase() == "img"
-       || node.nodeName.toLowerCase() == "object")
+   if (node.nodeName.toLowerCase() == "img"/*
+       || node.nodeName.toLowerCase() == "object"*/)
    {
-      objFromCpp.clickedOnObject(node.id);
+        var json = '{';
+        json += '"src":"' + node.src + '"';
+        json += '"width":"' + node.width + '"';
+        json += '"height":"' + node.height + '"';
+        json += '"alt":"' + node.alt + '"';
+        json += '"title":"' + node.title + '"';
+        json += '}'
+        objFromCpp.clickedOnObject(json);
    }
    else
-      objFromCpp.clickedOnNonObject();
+        objFromCpp.clickedOnNonObject();
 }
+//-----
 
 function setReadOnly(readOnly)
 {

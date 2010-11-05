@@ -27,7 +27,7 @@
 
 #include "addmediadialog.h"
 
-#include <ui_editimagebase.h>
+#include "ui_editimagebase.h"
 
 class QFrame;
 class BilboMedia;
@@ -35,17 +35,13 @@ class BilboMedia;
 	@author 
 */
 
-class AddImageDialog : public AddMediaDialog
+class AddEditImage : public AddMediaDialog
 {
     Q_OBJECT
 public:
-    AddImageDialog(QWidget* parent);
+    AddEditImage(QWidget* parent, QMap<QString, QString> mediaToEdit = QMap<QString, QString>());
 
-    ~AddImageDialog();
-
-Q_SIGNALS:
-    void sigAddImage( BilboMedia *media, const int width, const int height, 
-                      const QString title, const QString link, const QString Alt_text  );
+    ~AddEditImage();
 
 protected:
 //     virtual void addOtherMediaAttributes();
@@ -57,6 +53,7 @@ protected slots:
 private:
     QFrame *editFrame;
     Ui::EditImageBase editImageWidgetUi;
+    bool isEditing;
 
 };
 

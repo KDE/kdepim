@@ -22,7 +22,7 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#include "addimagedialog.h"
+#include "addeditimage.h"
 
 #ifdef WIN32
 #include <QFileDialog>
@@ -35,7 +35,8 @@
 
 #include "bilbomedia.h"
 
-AddImageDialog::AddImageDialog(QWidget* parent): AddMediaDialog(parent)
+AddEditImage::AddEditImage(QWidget* parent, QMap< QString, QString > mediaToEdit)
+: AddMediaDialog(parent)
 {
     editFrame = new QFrame(this);
     editFrame->setFrameShape(QFrame::StyledPanel);
@@ -45,7 +46,25 @@ AddImageDialog::AddImageDialog(QWidget* parent): AddMediaDialog(parent)
     ui.verticalLayout->addWidget( editFrame );
 
     ui.radiobtnRemoteUrl->setEnabled( true );
-    this->setWindowTitle( i18n( "Add Image" ) );
+    if(mediaToEdit.isEmpty()){
+        setWindowTitle( i18n( "Add Image" ) );
+        isEditing = false;
+    } else {
+        isEditing = true;
+        setWindowTitle( i18n( "Edit Image" ) );
+        _selectedMedia = mediaToEdit;
+        editImageWidgetUi.spinboxWidth->setValue( mediaToEdit["width"].toInt() );
+        editImageWidgetUi.spinboxHeight->setValue( mediaToEdit["height"].toInt() );
+        editImageWidgetUi.txtTitle->setText( mediaToEdit["title"] );
+        editImageWidgetUi.txtAltText->setText( mediaToEdit["alt"] );
+        ui.urlReqLineEdit->setText( mediaToEdit["url"] );
+        if( !mediaToEdit.value("link").isEmpty() ) {
+            editImageWidgetUi.txtLink->setText( mediaToEdit["link"] );
+        } else{
+            editImageWidgetUi.labelLink->setVisible(false);
+            editImageWidgetUi.txtLink->setVisible(false);
+        }
+    }
 
 //     QStringList mimeFilter;
 //     mimeFilter << "image/gif" << "image/jpeg" << "image/png" ;
@@ -53,12 +72,12 @@ AddImageDialog::AddImageDialog(QWidget* parent): AddMediaDialog(parent)
 }
 
 
-AddImageDialog::~AddImageDialog()
+AddEditImage::~AddEditImage()
 {
     kDebug();
 }
 
-void AddImageDialog::slotSelectLocalFile()
+void AddEditImage::slotSelectLocalFile()
 {
     QString path;
 #ifdef WIN32
@@ -69,16 +88,18 @@ void AddImageDialog::slotSelectLocalFile()
     ui.urlReqLineEdit->setText(path);
 }
 
-void AddImageDialog::slotButtonClicked(int button)
+void AddEditImage::slotButtonClicked(int button)
 {
     kDebug();
-    _selectedMedia["width"] = editImageWidgetUi.spinboxWidth->value();
-    _selectedMedia["height"] = editImageWidgetUi.spinboxHeight->value();
+    _selectedMedia["width"] = QString::number(editImageWidgetUi.spinboxWidth->value());
+    _selectedMedia["height"] = QString::number(editImageWidgetUi.spinboxHeight->value());
     _selectedMedia["title"] = editImageWidgetUi.txtTitle->text();
     _selectedMedia["link"] = editImageWidgetUi.txtLink->text();
     _selectedMedia["alt"] = editImageWidgetUi.txtAltText->text();
+    if(isEditing)
+        _selectedMedia["url"] = ui.urlReqLineEdit->text();
 //     kDebug()<<_selectedMedia;
     AddMediaDialog::slotButtonClicked(button);
 }
 
-#include "composer/dialogs/addimagedialog.moc"
+#include "composer/dialogs/addeditimage.moc"

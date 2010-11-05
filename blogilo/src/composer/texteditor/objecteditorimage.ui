@@ -37,7 +37,7 @@
        </widget>
       </item>
       <item row="0" column="11">
-       <widget class="QToolButton" name="flipButton">
+       <widget class="KPushButton" name="flipButton">
         <property name="toolTip">
          <string>Flip</string>
         </property>
@@ -57,7 +57,7 @@
        </widget>
       </item>
       <item row="0" column="8">
-       <widget class="QToolButton" name="rotateRightButton">
+       <widget class="KPushButton" name="rotateRightButton">
         <property name="toolTip">
          <string>Rotate right</string>
         </property>
@@ -67,7 +67,7 @@
        </widget>
       </item>
       <item row="0" column="9">
-       <widget class="QToolButton" name="rotateLeftButton">
+       <widget class="KPushButton" name="rotateLeftButton">
         <property name="toolTip">
          <string>Rotate left</string>
         </property>
@@ -80,13 +80,6 @@
        <widget class="Line" name="line">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="13">
-       <widget class="QPushButton" name="closeButton">
-        <property name="text">
-         <string>C&amp;lose</string>
         </property>
        </widget>
       </item>
@@ -133,7 +126,7 @@
        </spacer>
       </item>
       <item row="0" column="1">
-       <widget class="QSpinBox" name="widthSpinBox">
+       <widget class="KIntSpinBox" name="widthSpinBox">
         <property name="toolTip">
          <string>Width</string>
         </property>
@@ -152,7 +145,7 @@
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QSpinBox" name="heightSpinBox">
+       <widget class="KIntSpinBox" name="heightSpinBox">
         <property name="toolTip">
          <string>Height</string>
         </property>
@@ -168,7 +161,7 @@
        </widget>
       </item>
       <item row="0" column="4">
-       <widget class="QPushButton" name="resizeButton">
+       <widget class="KPushButton" name="resizeButton">
         <property name="text">
          <string>&amp;Resize</string>
         </property>
@@ -191,7 +184,7 @@
        </spacer>
       </item>
       <item row="0" column="10">
-       <widget class="QToolButton" name="mirrorButton">
+       <widget class="KPushButton" name="mirrorButton">
         <property name="toolTip">
          <string>Mirror</string>
         </property>
@@ -207,11 +200,30 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="13">
+       <widget class="KPushButton" name="closeButton">
+        <property name="text">
+         <string>Close</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>widthSpinBox</tabstop>
   <tabstop>heightSpinBox</tabstop>
@@ -220,5 +232,6 @@
   <tabstop>mirrorButton</tabstop>
   <tabstop>flipButton</tabstop>
  </tabstops>
+ <resources/>
  <connections/>
 </ui>

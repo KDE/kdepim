@@ -107,7 +107,7 @@ void AddMediaDialog::slotButtonClicked(int button)
                     name = typePtr.data()->name();
                     kDebug() << name ;
                     media->setMimeType( name );
-                    Q_EMIT sigMediaTypeFound( media );
+//                     Q_EMIT sigMediaTypeFound( media );
 
 //                     addOtherMediaAttributes();
                 }
@@ -121,7 +121,7 @@ void AddMediaDialog::slotButtonClicked(int button)
         KDialog::slotButtonClicked(button);
     }
 }
-QVariantMap AddMediaDialog::selectedMediaProperties() const
+QMap< QString, QString > AddMediaDialog::selectedMediaProperties() const
 {
     return _selectedMedia;
 }
@@ -136,18 +136,6 @@ void AddMediaDialog::slotRemoteFileTypeFound( KIO::Job *job, const QString &type
     kDebug() << type ;
     Q_UNUSED(job);
     media->setMimeType( type );
-//     if ( !Settings::download_remote_media() ) {
-//         media->setLocalUrl( media->remoteUrl() );
-//         Q_EMIT signalAddMedia( media );
-    Q_EMIT sigMediaTypeFound( media );
-//         addOtherMediaAttributes();
-//     }
 }
-/*
-void AddMediaDialog::addOtherMediaAttributes()
-{
-    kDebug() << "emmiting add media signal";
-    Q_EMIT sigAddMedia( media );
-}*/
 
 #include "composer/dialogs/addmediadialog.moc"

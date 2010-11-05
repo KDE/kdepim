@@ -55,27 +55,10 @@ public:
     ~AddMediaDialog();
 
     BilboMedia *selectedMedia() const;
-    QVariantMap selectedMediaProperties() const;
-
-Q_SIGNALS:
-    /**
-     * when the dialog is accepted, sends a BilboMedia object to the caller function.this object
-     * contains media properties, like path and mimetype.
-     * @param media is the created BilboMedia object.
-     */
-    void sigAddMedia( BilboMedia *media );
-    
-    /**
-     * When the mimetype of a media files is determined, and set in the related
-     * BilboMedia object, this signal will be emitted.
-     * @param media is the BilboMedia object which its mimetype is set.
-     */
-    void sigMediaTypeFound( BilboMedia *media );
+    QMap<QString, QString> selectedMediaProperties() const;
 
 protected:
-//     virtual void addOtherMediaAttributes();
-
-    QVariantMap _selectedMedia;
+    QMap<QString, QString> _selectedMedia;
     Ui::AddMediaDialogBase ui;
     BilboMedia *media;
 

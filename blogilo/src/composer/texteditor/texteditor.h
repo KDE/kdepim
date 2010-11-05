@@ -58,7 +58,7 @@ public slots:
     QString getCss();
     QString getARandomName();
     QString getObjectPath ( const QString& );
-    void clickedOnObject ( const QString& );
+    void clickedOnObject ( const QString& jsonData );
     void clickedOnNonObject();
 
 private:
@@ -80,13 +80,11 @@ signals:
     void editingFinishKeyPressed();
     void dropMimeDataSignal ( const QMimeData* );
 
-private slots:
+protected slots:
     void sendMouseReleaseEvent();
 
-//   private slots:
-//      void emulateMouseRelease();
-
 protected:
+    virtual void contextMenuEvent(QContextMenuEvent* event);
     virtual void focusOutEvent ( QFocusEvent* );
     virtual void focusInEvent ( QFocusEvent* );
     virtual void keyPressEvent ( QKeyEvent* );
@@ -220,7 +218,7 @@ signals:
     void editingFinishKeyPressed();
     void selectionChanged();
     void contentsChanged();
-    void clickedOnObjectSignal ( TextEditorObject* );
+    void clickedOnObjectSignal ( TextEditorObject* image );
     void clickedOnNonObjectSignal();
     void sigShowStatusMessage ( const QString&, bool );
     void sigBusy ( bool );
@@ -235,7 +233,7 @@ private slots:
     void somethingEdittedSlot();
     void updateStyle();
     void dropMimeDataSlot ( const QMimeData* );
-    void clickedOnObjectSlot ( const QString& );
+    void clickedOnObjectSlot ( const QString& json );
     void clickedOnNonObjectSlot();
     void anObjectIsModifiedSlot();
 

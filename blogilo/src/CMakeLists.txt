@@ -32,7 +32,7 @@ set(blogilo_SRCS
  composer/multilinetextedit.cpp
  composer/dialogs/addeditlink.cpp
  composer/dialogs/addmediadialog.cpp
- composer/dialogs/addimagedialog.cpp
+ composer/dialogs/addeditimage.cpp
  composer/texteditor/texteditor.cpp
  composer/texteditor/objecteditor.cpp
  composer/texteditor/objecteditorimage.cpp
@@ -68,7 +68,7 @@ set(blogilo_SRCS
  composer/multilinetextedit.cpp
  composer/dialogs/addeditlink.cpp
  composer/dialogs/addmediadialog.cpp
- composer/dialogs/addimagedialog.cpp
+ composer/dialogs/addeditimage.cpp
  composer/texteditor/texteditor.cpp
  composer/texteditor/objecteditor.cpp
  composer/texteditor/objecteditorimage.cpp

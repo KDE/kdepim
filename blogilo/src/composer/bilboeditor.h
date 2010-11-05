@@ -130,14 +130,6 @@ protected Q_SLOTS:
 
 //     void slotSyncSpellCheckingButton( bool check );
 
-    /**
-     * Creates an instance of AddImageDialog class,and opens it, to select an image.
-     */
-    void slotAddImage();
-
-    void slotSetImage( BilboMedia *media, const int width, const int height, 
-               const QString title, const QString link, const QString Alt_text );
-
     /*!
     Sets the content of the current tab  as other tabs' contents, to apply recent
      * changes. this function executes each time the user switches between tabs.
