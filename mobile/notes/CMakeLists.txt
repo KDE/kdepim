@@ -52,7 +52,6 @@ install(FILES
   NoteView.qml
   NotesListView.qml
   notes-mobile-background.png
-  SearchDialog.qml
   DESTINATION ${DATA_INSTALL_DIR}/notes-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )

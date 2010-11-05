@@ -23,6 +23,7 @@ import org.kde 4.5
 import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kcal 4.5 as KCal
+import org.kde.akonadi.tasks 4.5 as Tasks
 
 KPIM.MainView {
   id: tasksMobile
@@ -389,27 +390,17 @@ KPIM.MainView {
 
   KPIM.SearchResultScreen {
     id : searchResultScreen
-    visible : guiStateManager.inSearchResultScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right : parent.right
-    backgroundImage : backgroundImage.source
 
-    actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
-    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-    headerList : TaskListView {
-      showCheckBox : true
-      id: searchResultHeaderList
+    itemView: TaskListView {
       model: itemModel
       checkModel : _itemActionModel
+      navigationModel : _itemNavigationModel
       anchors.fill : parent
-      showCompletionSlider: false
-    }
-    onBackClicked : {
-      searchManager.stopSearch();
     }
   }
 
@@ -434,7 +425,10 @@ KPIM.MainView {
     id: configDialog
   }
 
-  SearchDialog {
+  KPIM.SearchDialog {
     id: searchDialog
+    searchWidget: Tasks.SearchWidget {
+      anchors.fill: parent
+    }
   }
 }

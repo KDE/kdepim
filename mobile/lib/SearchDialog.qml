@@ -20,9 +20,10 @@
 import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
-import org.kde.akonadi.mail 4.5 as Mail
 
 QML.Rectangle {
+  property alias searchWidget: searchWidget.children
+
   id: searchDialog
   anchors.fill: parent
   z: 10
@@ -38,7 +39,7 @@ QML.Rectangle {
 
     QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
       anchors.fill: parent 
-      Mail.SearchWidget {
+      QML.Item {
         id: searchWidget
         width: parent.width - searchButton.width
       }
@@ -53,8 +54,7 @@ QML.Rectangle {
     width: 150
     buttonText: KDE.i18n( "Search" )
     onClicked: {
-      guiStateManager.popState()
-      searchManager.startSearch( searchWidget.query )
+      searchManager.startSearch( searchWidget.children[0].query )
     }
   }
 
@@ -63,7 +63,7 @@ QML.Rectangle {
     anchors.top: searchButton.bottom
     anchors.right: parent.right
     width: 150
-    buttonText: KDE.i18n( "Cancel" )
+    buttonText: KDE.i18n( "Back" )
     onClicked: {
       guiStateManager.popState()
     }

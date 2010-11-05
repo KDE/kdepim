@@ -97,7 +97,6 @@ install(FILES
   kmail-mobile.notifyrc
   dividing-line.png
   dividing-line-horizontal.png
-  SearchDialog.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
 

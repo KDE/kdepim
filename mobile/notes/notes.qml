@@ -23,6 +23,7 @@ import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.akonadi.notes 4.5 as Notes
 
 KPIM.MainView {
   id: notesMobile
@@ -348,27 +349,17 @@ KPIM.MainView {
 
   KPIM.SearchResultScreen {
     id : searchResultScreen
-    visible : guiStateManager.inSearchResultScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right : parent.right
-    backgroundImage : backgroundImage.source
 
-    actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18np("1 note book", "%1 note books", collectionView.numSelected)
-    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-    headerList : NotesListView {
-      showCheckBox : true
-      id: searchResultHeaderList
+    itemView: NotesListView {
       model: itemModel
       checkModel : _itemActionModel
+      navigationModel : _itemNavigationModel
       anchors.fill : parent
-      showDeleteButton: false
-    }
-    onBackClicked : {
-      searchManager.stopSearch();
     }
   }
 
@@ -384,7 +375,10 @@ KPIM.MainView {
     source: backgroundImage.source
   }
 
-  SearchDialog {
+  KPIM.SearchDialog {
     id : searchDialog
+    searchWidget: Notes.SearchWidget {
+      anchors.fill: parent
+    }
   }
 }

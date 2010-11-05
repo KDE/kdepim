@@ -25,6 +25,7 @@ import org.kde 4.5
 import org.kde.akonadi 4.5 as Akonadi
 import org.kde.messageviewer 4.5 as MessageViewer
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.akonadi.mail 4.5 as Mail
 
 KPIM.MainView {
   id: kmailMobile
@@ -670,27 +671,17 @@ KPIM.MainView {
 
   KPIM.SearchResultScreen {
     id : searchResultScreen
-    visible : guiStateManager.inSearchResultScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right : parent.right
-    backgroundImage : backgroundImage.source
-    property bool initialized : false
 
-    actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
-    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-    headerList : HeaderView {
-      showCheckBox : true
-      id: searchResultHeaderList
+    itemView: HeaderView {
       model: itemModel
       checkModel : _itemActionModel
+      navigationModel : _itemNavigationModel
       anchors.fill : parent
-    }
-    onBackClicked : {
-      searchManager.stopSearch();
     }
   }
 
@@ -723,8 +714,11 @@ KPIM.MainView {
     id: configDialog
   }
 
-  SearchDialog {
+  KPIM.SearchDialog {
     id : searchDialog
+    searchWidget: Mail.SearchWidget {
+      anchors.fill: parent
+    }
   }
 
   FilterConfigDialog {

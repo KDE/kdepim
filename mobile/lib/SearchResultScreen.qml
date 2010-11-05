@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2010 Klarälvdalens Datakonsult AB,
         a KDAB Group company, info@kdab.net,
-        author Stephen Kelly <stephen@kdab.com>
+        author Tobias Koenig <tokoe@kdab.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,46 +20,88 @@
 */
 
 import Qt 4.7 as QML
+import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi 4.5 as Akonadi
 
 QML.Rectangle {
+  property alias itemView: itemView.children
+
+  id: searchResultView
+  visible: guiStateManager.inSearchResultScreenState
   color : "white"
-  id : _top
-  property alias selectedItemModel : actionList.selectedItemModel
-  property alias multipleText : actionList.multipleText
-  property alias headerList : headerList.children
-  property alias actionListWidth : actionList.width
-  property alias backgroundImage : _backgroundImage.source
-  property alias actionModel : actionList.actionModel
-  default property alias actions: actionList.children
-
-  signal backClicked()
-
-  QML.Image {
-    id: _backgroundImage
-  }
-
-  BulkActionList {
-    id : actionList
-    anchors.top : parent.top
-    anchors.bottom : parent.bottom
-    anchors.left : parent.left
-    onBackClicked : parent.backClicked()
-    onTriggered : {
-      //mainPanel.complete(name)
-    }
-  }
 
   QML.Item {
-    id : mainPanel
+    id: collectionView
+    anchors.left : parent.left
     anchors.top : parent.top
-    anchors.right : parent.right
-    anchors.bottom : parent.bottom
-    anchors.left : actionList.right
-
-    QML.Item {
+    width: 1/3 * parent.width
+    height : 65
+    QML.ListView {
+      id : selectedItem
       anchors.fill : parent
-      id : headerList
+      model : _breadcrumbNavigationFactory.qmlSelectedItemModel();
+      delegate : Akonadi.CollectionDelegate {
+        height : 70
+        indentation : 80
+      }
     }
+    QML.Image {
+      id : topLine
+      source : "images/list-line-top.png"
+      anchors.right : selectedItem.right
+      anchors.top : selectedItem.top
+    }
+    QML.Image {
+      id : topLineFiller
+      source : "images/dividing-line-horizontal.png"
+      anchors.right : topLine.left
+      anchors.bottom : topLine.bottom
+      fillMode : QML.Image.TileHorizontally
+      width : parent.width - topLine.width
+    }
+    QML.Image {
+      id : bottomLine
+      source : "images/dividing-line-horizontal.png"
+      anchors.right : selectedItem.right
+      anchors.bottom : selectedItem.bottom
+      fillMode : QML.Image.TileHorizontally
+      width : parent.width
+    }
+    QML.Image {
+      source : "images/dividing-line.png"
+      anchors.top : selectedItem.bottom
+      anchors.right : parent.right
+      height : searchResultView.height - selectedItem.height
+      fillMode : QML.Image.TileVertically
+    }
+    QML.Image {
+      source : "images/bulk-forward-overlay.png"
+      anchors.right : parent.right
+      anchors.verticalCenter : parent.verticalCenter
+      QML.MouseArea {
+        anchors.fill : parent
+        onClicked: guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
+      }
+    }
+  }
+
+  KPIM.Button2 {
+    id: backButton
+    anchors.left: collectionView.left
+    anchors.right: collectionView.right
+    anchors.bottom: parent.bottom
+    buttonText: KDE.i18n( "Back to Search" )
+    onClicked: {
+      searchManager.stopSearch()
+    }
+  }
+
+  QML.Rectangle {
+    id: itemView
+    anchors.left: collectionView.right
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    color : "#00000000"
   }
 }

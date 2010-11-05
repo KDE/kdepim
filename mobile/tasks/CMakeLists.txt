@@ -56,7 +56,6 @@ install(FILES
   ConfigDialog.qml
   tasks.qml
   tasks-mobile-background.png
-  SearchDialog.qml
   TaskActions.qml
   TaskListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile

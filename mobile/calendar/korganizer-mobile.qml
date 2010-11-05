@@ -26,6 +26,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kcal 4.5 as KCal
 import org.kde.calendarviews 4.5 as CalendarViews
 import org.kde.akonadi.events 4.5 as Events
+import org.kde.akonadi.calendar 4.5 as Calendar
 
 KPIM.MainView {
   id: korganizerMobile
@@ -681,26 +682,17 @@ KPIM.MainView {
 
   KPIM.SearchResultScreen {
     id : searchResultScreen
-    visible : guiStateManager.inSearchResultScreenState
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right : parent.right
-    backgroundImage : backgroundImage.source
 
-    actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18np("1 calendar", "%1 calendars", collectionView.numSelected)
-    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-    headerList : EventListView {
-      showCheckBox : true
-      id: searchResultHeaderList
+    itemView: EventListView {
       model: itemModel
       checkModel : _itemActionModel
+      navigationModel : _itemNavigationModel
       anchors.fill : parent
-    }
-    onBackClicked : {
-      searchManager.stopSearch();
     }
   }
 
@@ -734,7 +726,10 @@ KPIM.MainView {
     id: configDialog
   }
 
-  SearchDialog {
+  KPIM.SearchDialog {
     id: searchDialog
+    searchWidget: Calendar.SearchWidget {
+      anchors.fill: parent
+    }
   }
 }

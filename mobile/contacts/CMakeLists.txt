@@ -105,7 +105,6 @@ install(FILES
   KAddressBookActions.qml
   kaddressbook-mobile-background.png
   ContactListView.qml
-  SearchDialog.qml
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )
