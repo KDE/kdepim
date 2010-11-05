@@ -25,63 +25,31 @@ import org.kde.akonadi 4.5 as Akonadi
 
 QML.Rectangle {
   property alias itemView: itemView.children
+  property alias resultText: collectionView.multipleSelectionText
 
   id: searchResultView
   visible: guiStateManager.inSearchResultScreenState
-  color : "white"
+  color: "white"
 
-  QML.Item {
+  Akonadi.AkonadiBreadcrumbNavigationView {
     id: collectionView
-    anchors.left : parent.left
-    anchors.top : parent.top
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.bottom: backButton.top
     width: 1/3 * parent.width
-    height : 65
-    QML.ListView {
-      id : selectedItem
-      anchors.fill : parent
-      model : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-      delegate : Akonadi.CollectionDelegate {
-        height : 70
-        indentation : 80
-      }
+
+    breadcrumbComponentFactory: _breadcrumbNavigationFactory
+
+    onHomeClicked: {
+      searchManager.stopSearch()
+      guiStateManager.popState()
+
+      // the user clicked on home, so explicitly change the state to it
+      guiStateManager.switchState( KPIM.GuiStateManager.HomeScreenState )
     }
-    QML.Image {
-      id : topLine
-      source : "images/list-line-top.png"
-      anchors.right : selectedItem.right
-      anchors.top : selectedItem.top
-    }
-    QML.Image {
-      id : topLineFiller
-      source : "images/dividing-line-horizontal.png"
-      anchors.right : topLine.left
-      anchors.bottom : topLine.bottom
-      fillMode : QML.Image.TileHorizontally
-      width : parent.width - topLine.width
-    }
-    QML.Image {
-      id : bottomLine
-      source : "images/dividing-line-horizontal.png"
-      anchors.right : selectedItem.right
-      anchors.bottom : selectedItem.bottom
-      fillMode : QML.Image.TileHorizontally
-      width : parent.width
-    }
-    QML.Image {
-      source : "images/dividing-line.png"
-      anchors.top : selectedItem.bottom
-      anchors.right : parent.right
-      height : searchResultView.height - selectedItem.height
-      fillMode : QML.Image.TileVertically
-    }
-    QML.Image {
-      source : "images/bulk-forward-overlay.png"
-      anchors.right : parent.right
-      anchors.verticalCenter : parent.verticalCenter
-      QML.MouseArea {
-        anchors.fill : parent
-        onClicked: guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
-      }
+
+    KPIM.AgentStatusIndicator {
+      anchors { top: parent.top; right: parent.right; rightMargin: 10; topMargin: 10 }
     }
   }
 
@@ -102,6 +70,6 @@ QML.Rectangle {
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.right: parent.right
-    color : "#00000000"
+    color: "#00000000"
   }
 }

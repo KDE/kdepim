@@ -678,11 +678,14 @@ KPIM.MainView {
     anchors.right : parent.right
 
     itemView: HeaderView {
+      id: searchMessageListView
       model: itemModel
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
     }
+
+    resultText: KDE.i18np( "One message found", "%1 messages found", searchMessageListView.count )
   }
 
   QML.Connections {

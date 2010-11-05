@@ -413,11 +413,14 @@ KPIM.MainView {
     anchors.right : parent.right
 
     itemView: ContactListView {
+      id: searchContactListView
       model: itemModel
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
     }
+
+    resultText: KDE.i18np( "One contact found", "%1 contacts found", searchContactListView.count )
   }
 
   QML.Connections {

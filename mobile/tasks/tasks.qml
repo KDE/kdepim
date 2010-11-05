@@ -397,11 +397,14 @@ KPIM.MainView {
     anchors.right : parent.right
 
     itemView: TaskListView {
+      id: searchTaskListView
       model: itemModel
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
     }
+
+    resultText: KDE.i18np( "One task found", "%1 tasks found", searchTaskListView.count )
   }
 
   QML.Connections {

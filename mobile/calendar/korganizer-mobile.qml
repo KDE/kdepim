@@ -689,11 +689,14 @@ KPIM.MainView {
     anchors.right : parent.right
 
     itemView: EventListView {
+      id: searchEventListView
       model: itemModel
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
     }
+
+    resultText: KDE.i18np( "One event found", "%1 events found", searchEventListView.count )
   }
 
   Connections {

@@ -356,11 +356,14 @@ KPIM.MainView {
     anchors.right : parent.right
 
     itemView: NotesListView {
+      id: searchNotesListView
       model: itemModel
       checkModel : _itemActionModel
       navigationModel : _itemNavigationModel
       anchors.fill : parent
     }
+
+    resultText: KDE.i18np( "One note found", "%1 notes found", searchNotesListView.count )
   }
 
   QML.Connections {

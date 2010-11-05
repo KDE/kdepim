@@ -101,7 +101,8 @@ void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString
 
 void KDeclarativeMainViewPrivate::searchStarted( const Akonadi::Collection &searchCollection )
 {
-  const QStringList selection = QStringList() << QString::fromLatin1( "c%1" ).arg( searchCollection.id() );
+  const QStringList selection = QStringList() << QLatin1String( "c1" ) // the 'Search' collection
+                                              << QString::fromLatin1( "c%1" ).arg( searchCollection.id() );
   Akonadi::ETMViewStateSaver *restorer = new Akonadi::ETMViewStateSaver;
 
   mGuiStateManager->pushState( GuiStateManager::SearchResultScreenState );
