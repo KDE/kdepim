@@ -67,7 +67,6 @@ void History::recordCreation( const Akonadi::Item &item,
   entry.oldItems.append( Item() );
   entry.atomicOperationId = atomicOperationId;
   d->mLatestRevisionByItemId.insert( item.id(), item.revision() );
-
   d->mUndoStack.push( entry );
   d->mRedoStack.clear();
   //emit undoAvailable(); // nao gosto, se poder tirar.
@@ -88,7 +87,6 @@ void History::recordModification( const Akonadi::Item &oldItem,
   entry.oldItems.append( oldItem );
   entry.newItems.append( newItem );
   d->mLatestRevisionByItemId.insert( newItem.id(), newItem.revision() );
-
   d->mUndoStack.push( entry );
   d->mRedoStack.clear();
   //emit undoAvailable(); // nao gosto, se poder tirar.
@@ -148,7 +146,6 @@ bool History::undo( QWidget *parent )
   Q_ASSERT( d->mOperationTypeInProgress == TypeNone );
 
   bool result;
-
   if ( !d->mUndoStack.isEmpty() ) {
     result = d->doIt( d->mUndoStack.pop(), TypeUndo, parent );
   } else {
@@ -180,7 +177,7 @@ bool History::undoAll()
 {
   Q_ASSERT( d->mOperationTypeInProgress == TypeNone );
   d->mUndoAllInProgress = true;
- return undo();
+  return undo();
 }
 
 bool History::clear()
@@ -188,6 +185,7 @@ bool History::clear()
   if ( d->mOperationTypeInProgress == TypeNone ) {
     d->mRedoStack.clear();
     d->mUndoStack.clear();
+    d->mLastErrorString.clear();
     d->updateWidgets();
     return true;
   } else {
@@ -406,13 +404,16 @@ void History::Private::finishOperation( int changeId,
 
   mPendingChangeIds.remove( changeId );
 
-  if ( resultCode == ResultCodeSuccess ) {
-    mLastErrorString = QString();
-    destinationStack().push( mEntryInProgress );
-  } else {
-    mLastErrorString = errorString;
-    stack().push( mEntryInProgress );
+  if ( !mUndoAllInProgress ) {
+    if ( resultCode == ResultCodeSuccess ) {
+      mLastErrorString = QString();
+      destinationStack().push( mEntryInProgress );
+    } else {
+      mLastErrorString = errorString;
+      stack().push( mEntryInProgress );
+    }
   }
+
 
   if ( mUndoAllInProgress ) {
     if ( mUndoStack.isEmpty() ) {
@@ -422,11 +423,13 @@ void History::Private::finishOperation( int changeId,
     } else {
       // Undo the next one.
       mOperationTypeInProgress = TypeNone;
-      q->undo();
+      if ( !q->undo() ) {
+        kWarning() << "Error while undoing";
+      }
     }
   } else {
     //TODO: will need to be queued.
-    emitDone ( mOperationTypeInProgress, resultCode );
+    emitDone( mOperationTypeInProgress, resultCode );
   }
 
   mOperationTypeInProgress = TypeNone;

@@ -64,6 +64,8 @@ void IncidenceSearcher::finished( KJob *job )
   static int count = 0;
   ++count;
 
+  Q_ASSERT( !job->error() );
+
  IncidenceSearchJob *searchJob = qobject_cast<IncidenceSearchJob*>( job );
 
  const KCalCore::Incidence::List incidences = searchJob->incidences();

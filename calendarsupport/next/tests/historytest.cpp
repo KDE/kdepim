@@ -340,6 +340,31 @@ class HistoryTest : public QObject
     QVERIFY( !redoButton->isEnabled() );
   }
 
+  void testUndoAll()
+  {
+    QStringList uidList;
+    uidList << "one" << "two" << "three" << "four" << "five";
+    mHistory->clear();
+
+    foreach( const QString &uid, uidList ) {
+      mPendingInsertsInETM.append( uid  );
+      createIncidence( uid );
+    }
+
+    waitForETMorSignals();
+
+    foreach( const QString &uid, uidList ) {
+      const Item item = mCalendar->itemForIncidenceUid( uid );
+      QVERIFY( item.isValid() );
+      mHistory->recordCreation( item );
+    }
+
+    kDebug() << "Going to undo everything now!";
+    mWaitingForHistorySignals = true;
+    QVERIFY( mHistory->undoAll() );
+    waitForETMorSignals();
+  }
+
   public Q_SLOTS:
 
     void waitForETMorSignals()
@@ -396,7 +421,11 @@ class HistoryTest : public QObject
       mWaitingForHistorySignals = false;
 
       if ( result == History::ResultCodeSuccess ) {
-        QVERIFY( mHistory->lastErrorString().isEmpty() );
+        if ( !mHistory->lastErrorString().isEmpty() ) {
+          kDebug() << "ResultCode is success, but last error is "
+                   << mHistory->lastErrorString();
+          QVERIFY( false );
+        }
       } else {
         qDebug() << "last error string is " << mHistory->lastErrorString();
         QVERIFY( !mHistory->lastErrorString().isEmpty() );
