@@ -2197,10 +2197,10 @@ void KMFolderCachedImap::slotListResult( const QStringList& folderNames,
           // as more than one namespace can be listed in the root folder we need to make sure
           // that the folder is within the current namespace
           bool isInNamespace = ( jobData.curNamespace.isEmpty() ||
-              jobData.curNamespace == mAccount->namespaceForFolder( f ) );
+                                 jobData.curNamespace == mAccount->namespaceForFolder( f ) );
           // ignore some cases
           bool ignore = root && ( f->imapPath() == "/INBOX/" ||
-              mAccount->isNamespaceFolder( name ) || !isInNamespace );
+                                  mAccount->isNamespaceFolder( name ) || !isInNamespace );
 
           // This subfolder isn't present on the server
           if( !f->imapPath().isEmpty() && !ignore  ) {
@@ -2225,8 +2225,13 @@ void KMFolderCachedImap::slotListResult( const QStringList& folderNames,
     }
   }
 
-  for ( KMFolder* doomed=toRemove.first(); doomed; doomed = toRemove.next() ) {
-    rescueUnsyncedMessagesAndDeleteFolder( doomed );
+  QPtrListIterator<KMFolder> jt( toRemove );
+  KMFolder *doomed;
+  while ( ( doomed = jt.current() ) != 0 ) {
+    ++jt;
+    if ( doomed ) {
+      rescueUnsyncedMessagesAndDeleteFolder( doomed );
+    }
   }
 
   mProgress += 5;
