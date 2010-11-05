@@ -56,37 +56,6 @@
     connect(action1, SIGNAL(triggered()), getAction(action2), SLOT(trigger()));\
     connect(getAction(action2), SIGNAL(changed()), SLOT(adjustActions()));
 
-ObjectsForJavaScript::ObjectsForJavaScript ( TextEditor *_textEditor )
-        : QObject ( _textEditor ), textEditor ( _textEditor ) {
-}
-
-QString ObjectsForJavaScript::getCss() {
-    return QString();//Settings::settings() -> makeCss();
-}
-
-QString ObjectsForJavaScript::getARandomName() {
-    QString name;
-    return Random::random()->getARandomName();
-}
-
-QString ObjectsForJavaScript::getObjectPath ( const QString &id ) {
-    TextEditorObjectImage *imageObject = dynamic_cast<TextEditorObjectImage*> ( textEditor -> findObject ( id ) );
-    if ( imageObject )
-        return imageObject -> getFilePath();
-    else
-        return QString();
-}
-
-void ObjectsForJavaScript::clickedOnObject ( const QString &jsonData ) {
-    emit clickedOnObjectSignal ( jsonData );
-}
-
-void ObjectsForJavaScript::clickedOnNonObject() {
-    emit clickedOnNonObjectSignal();
-}
-
-//----------------------------------------------------------------------
-
 WebView::WebView ( QWidget *parent )
         : KWebView ( parent ) {
     settings() -> setFontSize ( QWebSettings::DefaultFontSize, 14 );
@@ -215,116 +184,11 @@ void WebView::contextMenuEvent(QContextMenuEvent* event)
 
 //----------------------------------------------------------------------
 
-TextEditorObject::TextEditorObject ( TextEditor *_textEditor, const QString &_id )
-        : textEditor ( _textEditor ) {
-    id = _id;
-}
-
-void TextEditorObject::setId ( const QString &_id ) {
-    id = _id;
-}
-
-QString TextEditorObject::getId() const {
-    return id;
-}
-
-//----------------------------------------------------------------------
-
-TextEditorObjectImage::TextEditorObjectImage ( TextEditor *_textEditor, const QString &_id, const QImage &image )
-        : TextEditorObject ( _textEditor, _id ) {
-    setImage ( image );
-}
-
-TextEditorObjectImage::TextEditorObjectImage ( TextEditor *_textEditor, const QString &_id, const QByteArray &byteArray )
-        : TextEditorObject ( _textEditor, _id ) {
-    setByteArray ( byteArray );
-}
-
-TextEditorObjectImage::~TextEditorObjectImage() {
-    removeFile ( filePath );
-}
-
-void TextEditorObjectImage::setImage ( const QImage &image, bool replace ) {
-    QBuffer buffer;
-    QImageWriter writer ( &buffer, "jpg" );
-    if ( !writer.write ( image ) )
-        qDebug ( "TextEditorObjectImage::setImage(): could not write to buffer!" );
-
-    setByteArray ( buffer.data(), replace );
-}
-
-QImage TextEditorObjectImage::getImage() const {
-    QImage image;
-    if ( !image.load ( filePath ) )
-        qDebug ( "TextEditorObjectImage::getImage(): could not load the image" );
-    return image;
-}
-
-QString TextEditorObjectImage::getType() const {
-    return ATTACHMENT_IMAGE;
-}
-
-QByteArray TextEditorObjectImage::getByteArray() const {
-    QFile file ( filePath );
-    if ( !file.open ( QIODevice::ReadOnly ) ) {
-        qDebug ( "TextEditorObjectImage::getByteArray(): could not open the file" );
-        return QByteArray();
-    }
-
-    return file.readAll();
-}
-
-void TextEditorObjectImage::setByteArray ( const QByteArray &byteArray, bool replace ) {
-    if ( !filePath.isEmpty() )
-        removeFile ( filePath );
-
-    QString initialId = getId();
-    if ( replace )
-        setId ( Random::random() -> getARandomName() );
-
-#ifdef Q_WS_WIN
-    filePath = QDir::toNativeSeparators ( QDir::homePath() ) + QDir::separator() + "flashqard";
-    QDir().mkpath ( filePath );
-    filePath += QDir::separator() + getId();
-#else
-    filePath = QDir::tempPath() + QDir::separator() + getId();
-#endif
-    QFile::remove ( filePath ); //just in case it already exists
-    QFile file ( filePath );
-    if ( !file.open ( QIODevice::WriteOnly ) )
-        QMessageBox::warning ( 0, i18n ( "Text Editor" ),
-                               i18n ( "Unable to create a temporary file for embedded object: %1" ).arg ( getId() ) );
-
-    file.write ( byteArray );
-
-
-    textEditor -> evaluateJavaScript ( QString ( "replaceId(\"%1\", \"%2\")" ).arg ( initialId ).arg ( getId() ), false );
-    textEditor -> evaluateJavaScript ( "adjustImagesPath()", false );
-    emit modifiedSignal();
-}
-
-QString TextEditorObjectImage::getFilePath() const {
-    return filePath;
-}
-
-void TextEditorObjectImage::removeFile ( const QString &file ) {
-    if ( !QFile::remove ( file ) )
-        qDebug ( "TextEditorObjectImage::~TextEditorObjectImage(): could not remove file %s", file.toAscii().constData() );
-}
-
-//----------------------------------------------------------------------
-
 TextEditor::TextEditor ( QWidget *parent )
-        : QWidget ( parent ) {
+        : QWidget ( parent ), webView(new WebView(this))
+{
     objectsAreModified = false;
     readOnly = false;
-    objForJavaScript = new ObjectsForJavaScript ( this );
-    connect ( objForJavaScript, SIGNAL ( clickedOnObjectSignal ( const QString& ) ),
-              this, SLOT ( clickedOnObjectSlot ( const QString& ) ) );
-    connect ( objForJavaScript, SIGNAL ( clickedOnNonObjectSignal() ), this, SLOT ( clickedOnNonObjectSlot() ) );
-    webView = new WebView ( this );
-    connect ( webView->page()->mainFrame(), SIGNAL ( javaScriptWindowObjectCleared() ),
-              this, SLOT ( addJavaScriptObjectSlot() ) );
     QFile file ( KStandardDirs::locate ( "data", "blogilo/TextEditorInitialHtml" ) );
     kDebug() <<file.fileName();
     if ( !file.open ( QIODevice::ReadOnly ) )
@@ -354,11 +218,6 @@ void TextEditor::setReadOnly ( bool _readOnly )
     evaluateJavaScript ( QString ( "setReadOnly(%1)" ).arg ( readOnly?"true":"false" ), false );
 }
 
-void TextEditor::addJavaScriptObjectSlot()
-{
-    webView->page()->mainFrame()->addToJavaScriptWindowObject ( "objFromCpp", objForJavaScript );
-}
-
 void TextEditor::somethingEdittedSlot()
 {
     adjustActions();
@@ -380,18 +239,6 @@ void TextEditor::dropMimeDataSlot ( const QMimeData *mime )
 //       Downloader downloader(this);
 //       insertImage(downloader.download(urls[0]));
     }
-}
-
-void TextEditor::clickedOnObjectSlot ( const QString &json )
-{
-    ///TODO Edit image described in json
-//     emit clickedOnObjectSignal ( json );
-}
-
-void TextEditor::clickedOnNonObjectSlot()
-{
-
-    emit clickedOnNonObjectSignal();
 }
 
 void TextEditor::anObjectIsModifiedSlot() {
@@ -642,54 +489,6 @@ void TextEditor::finishEditing()
       emit editingFinished();
    }
 }*/
-
-bool TextEditor::insertImage ( const QString &imageUrl ) {
-    QByteArray byteArray = loadImage ( imageUrl );
-    return insertImage ( byteArray );
-}
-
-bool TextEditor::insertImage ( const QByteArray &byteArray ) {
-    //first just test whether it is a valid image or not
-    QImage image;
-    if ( !image.loadFromData ( byteArray ) ) {
-        QMessageBox::warning ( this, tr ( "Insert Image" ),
-                               tr ( "Inserting image failed." ) );
-        return false;
-    }
-
-    //resize if it is bigger than 700x500
-//     if ( image.size().width() > 700 || image.size().height() > 500 )
-//         image = image.scaled ( QSize ( 700, 500 ), Qt::KeepAspectRatio, Qt::SmoothTransformation );
-
-    QString id = Random::random() -> getARandomName();
-    TextEditorObjectImage *imageObject = new TextEditorObjectImage ( this, id, image );
-    connect ( imageObject, SIGNAL ( modifiedSignal() ), this, SLOT ( anObjectIsModifiedSlot() ) );
-    objects << imageObject;
-    QString path = imageObject -> getFilePath();
-#ifdef Q_WS_WIN
-    path.replace ( '\\', "\\\\" );
-#endif
-    QString html = QString ( "<img id=\\\"%1\\\" src=\\\"%2\\\" />" ).arg ( id ).arg ( path );
-    execCommand ( "insertHTML", html );
-
-    //simulate a click to activate image editor (in advanced text editor)
-    emit clickedOnObjectSignal ( imageObject );
-    return true;
-}
-
-QByteArray TextEditor::loadImage ( const QString &imagePath ) {
-    QFile file ( imagePath );
-    file.open ( QIODevice::ReadOnly );
-    return file.readAll();
-}
-
-// void TextEditor::setFontFamily ( const QString &family ) {
-//     execCommand ( "fontName", family );
-// }
-
-// QString TextEditor::getFontFamily() const {
-//     return const_cast<TextEditor*> ( this ) -> evaluateJavaScript ( "getFontFamily()", false ).toString();
-// }
 
 void TextEditor::setFontSize ( int fontSize ) {
     //setFontSize() function requires a number in the range 0-6
@@ -1057,164 +856,6 @@ QString TextEditor::getHtml() const
 //     while ( htmlParser->setTagAttribute ( html, iterator, "img", "src", "" ) );
     return html;
 }
-
-// QString TextEditor::addObject(const QByteArray &byteArray, const QString &id)
-// {
-//    QFile file (QDir::tempPath() + QDir::separator() + id);
-//    if (!file.open(QIODevice::WriteOnly))
-//    {
-//       QMessageBox::warning(0, i18n("Text Editor"),
-//                            i18n("Unable to create a temporary file for embedded object: %1").arg(id));
-//       return false;
-//    }
-//    file.write(byteArray);
-//    QFileInfo info(file);
-//    objects[id] = info.filePath();
-
-//    return info.filePath();
-// }
-
-// QString TextEditor::getObjectPath(const QString &id) const
-// {
-//    return objects[id];
-// }
-
-void TextEditor::clearObjects() {
-    while ( objects.size() )
-        delete objects.takeAt ( 0 );
-
-//    QStringList list = objects.values();
-//    for (int i=0; i<list.size(); i++)
-//       if (!QFile::remove(list[i]))
-//          qDebug("TextEditor::clearObjects(): could not remove file: %s", list[i].toAscii().constData());
-//    objects.clear();
-}
-/*
-void TextEditor::addDocumentAttachmentsToObjects()
-{
-   for (int i=0; i<document.attachmentCount(); i++)
-   {
-      if (document.getAttachmentType(i) == ATTACHMENT_IMAGE)
-      {
-         TextEditorObjectImage *imageObject = new TextEditorObjectImage(this, document.getAttachmentName(i),
-                                                                        document.attachmentToByteArray(i));
-         connect(imageObject, SIGNAL(modifiedSignal()), this, SLOT(anObjectIsModifiedSlot()));
-         objects << imageObject;
-      }
-   }
-}*/
-
-// void TextEditor::removeUnusedAttachments()
-// {
-//    QStringList ids = evaluateJavaScript("getAllImagesId()", false).toString().split(",", QString::SkipEmptyParts);
-
-//    for (int i=0; i<document.attachmentCount(); i++)
-//       if (!ids.contains(document.getAttachmentName(i)))
-//          document.deleteAttachment(i--);
-// }
-
-TextEditorObject* TextEditor::findObject ( const QString &id ) {
-    for ( int i=0; i<objects.size(); i++ )
-        if ( objects[i] -> getId() == id )
-            return objects[i];
-
-    qDebug ( "TextEditor::findObject(): returning 0" );
-    return 0;
-}
-
-/*
-void TextEditor::addUsedAttachmentsToDocument()
-{
-   document.deleteAllAttachments();
-
-   QStringList usedIds = evaluateJavaScript("getAllImagesId()", false).toString().split(",", QString::SkipEmptyParts);
-
-   for (int i=0; i<objects.size(); i++)
-   {
-      if (usedIds.contains(objects[i]->getId()))
-      {
-         document.addAttachment(objects[i]->getByteArray(), objects[i] -> getId(), objects[i] -> getType());
-         qDebug("TextEditor::addUsedAttachmentsToDocument(): adding object %s", objects[i]->getId().toAscii().constData());
-      }
-   }
-}*/
-
-
-//--------------------------------------------------------------------------------
-
-CommandResizeImage::CommandResizeImage ( TextEditorObjectImage *_imageObject, const QSize &_size )
-        : imageObject ( _imageObject ), newSize ( _size ) {
-    setText ( i18n ( "Resize image" ) );
-    initialImage = imageObject -> getImage();
-}
-
-void CommandResizeImage::undo() {
-    imageObject -> setImage ( initialImage, true );
-}
-
-void CommandResizeImage::redo() {
-    imageObject -> setImage ( initialImage.scaled ( newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ), true );
-}
-
-//----------------------------------------------------------------------
-
-CommandFlipImage::CommandFlipImage ( TextEditorObjectImage *_imageObject, Qt::Orientation _orientation )
-        : imageObject ( _imageObject ), orientation ( _orientation ) {
-    if ( orientation == Qt::Vertical )
-        setText ( i18n ( "Flip image" ) );
-    else
-        setText ( i18n ( "Mirror image" ) );
-}
-
-void CommandFlipImage::undo() {
-    redo();
-}
-
-void CommandFlipImage::redo() {
-    imageObject -> setImage ( imageObject->getImage().mirrored ( orientation==Qt::Horizontal, orientation==Qt::Vertical ), true );
-}
-
-//----------------------------------------------------------------------
-
-CommandRotateImage::CommandRotateImage ( TextEditorObjectImage *_imageObject, Rotation _rotation )
-        : imageObject ( _imageObject ), rotation ( _rotation ) {
-    if ( rotation == RotateRight )
-        setText ( i18n ( "Rotate image right" ) );
-    else
-        setText ( i18n ( "Rotate image left" ) );
-}
-
-void CommandRotateImage::undo() {
-    QMatrix matrix;
-    matrix.rotate ( rotation==RotateRight? -90 : 90 );
-    imageObject -> setImage ( imageObject->getImage().transformed ( matrix, Qt::SmoothTransformation ), true );
-}
-
-void CommandRotateImage::redo() {
-    QMatrix matrix;
-    matrix.rotate ( rotation==RotateRight? 90 : -90 );
-    imageObject -> setImage ( imageObject->getImage().transformed ( matrix, Qt::SmoothTransformation ), true );
-}
-
-// ChangeTextDirectionCommand::ChangeTextDirectionCommand(TextEditor *_textEditor, Qt::LayoutDirection _direction)
-//    : textEditor(_textEditor), direction(_direction)
-// {
-//    setText(i18n("Change text direction"));
-// }
-
-// void ChangeTextDirectionCommand::undo()
-// {
-//    qDebug("ChangeTextDirectionCommand::undo()");
-//    textEditor -> evaluateJavaScript(QString("setTextDirection(\"%1\", \"%2\")")
-//                                     .arg(direction==Qt::LeftToRight?"rtl":"ltr").arg(tagId), true);
-// }
-
-// void ChangeTextDirectionCommand::redo()
-// {
-//    qDebug("ChangeTextDirectionCommand::redo()");
-//    tagId = textEditor -> evaluateJavaScript(QString("setTextDirection(\"%1\", \"%2\")")
-//                                             .arg(direction==Qt::LeftToRight?"ltr":"rtl").arg(tagId), true).toString();
-// }
 
 
 #include "texteditor.moc"

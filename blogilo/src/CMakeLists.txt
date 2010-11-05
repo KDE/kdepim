@@ -34,8 +34,6 @@ set(blogilo_SRCS
  composer/dialogs/addmediadialog.cpp
  composer/dialogs/addeditimage.cpp
  composer/texteditor/texteditor.cpp
- composer/texteditor/objecteditor.cpp
- composer/texteditor/objecteditorimage.cpp
  composer/texteditor/utilities.cpp
 )
 
@@ -70,8 +68,6 @@ set(blogilo_SRCS
  composer/dialogs/addmediadialog.cpp
  composer/dialogs/addeditimage.cpp
  composer/texteditor/texteditor.cpp
- composer/texteditor/objecteditor.cpp
- composer/texteditor/objecteditorimage.cpp
  composer/texteditor/utilities.cpp
 )
 endif(WIN32)
@@ -92,7 +88,6 @@ kde4_add_ui_files(
   composer/dialogs/addmediadialogbase.ui
   composer/dialogs/editimagebase.ui
   composer/dialogs/addeditlinkbase.ui
-  composer/texteditor/objecteditorimage.ui
 )
 
 kde4_add_kcfg_files( blogilo_SRCS settings.kcfgc)

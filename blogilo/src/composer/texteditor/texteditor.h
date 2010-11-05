@@ -44,29 +44,6 @@ class KSelectAction;
 class KAction;
 class KToolBar;
 
-class ObjectsForJavaScript : public QObject {
-    Q_OBJECT
-
-public:
-    ObjectsForJavaScript ( TextEditor* );
-
-signals:
-    void clickedOnObjectSignal ( const QString& );
-    void clickedOnNonObjectSignal();
-
-public slots:
-    QString getCss();
-    QString getARandomName();
-    QString getObjectPath ( const QString& );
-    void clickedOnObject ( const QString& jsonData );
-    void clickedOnNonObject();
-
-private:
-    TextEditor *textEditor;
-};
-
-//----------------------------------------------------------------------
-
 class WebView : public KWebView {
     Q_OBJECT
 
@@ -90,56 +67,6 @@ protected:
     virtual void keyPressEvent ( QKeyEvent* );
     virtual void dragEnterEvent ( QDragEnterEvent* );
     virtual void dropEvent ( QDropEvent* );
-};
-
-//----------------------------------------------------------------------
-
-class TextEditorObject : public QObject {
-    Q_OBJECT
-
-public:
-    TextEditorObject ( TextEditor*, const QString& );
-    virtual ~TextEditorObject() {}
-
-    void setId ( const QString& );
-    QString getId() const;
-
-    virtual QString getType() const = 0;
-    virtual QByteArray getByteArray() const = 0;
-    //if replace is true, id gets changed
-    virtual void setByteArray ( const QByteArray&, bool replace = false ) = 0;
-
-signals:
-    void modifiedSignal();
-
-protected:
-    TextEditor *textEditor;
-
-private:
-    QString id;
-};
-
-class TextEditorObjectImage : public TextEditorObject {
-    Q_OBJECT
-
-public:
-    TextEditorObjectImage ( TextEditor*, const QString&, const QImage& = QImage() );
-    TextEditorObjectImage ( TextEditor*, const QString&, const QByteArray& = QByteArray() );
-    virtual ~TextEditorObjectImage();
-
-    void setImage ( const QImage&, bool = false );
-    QImage getImage() const;
-
-    virtual QString getType() const;
-    virtual QByteArray getByteArray() const;
-    virtual void setByteArray ( const QByteArray&, bool = false );
-
-    QString getFilePath() const;
-
-private:
-    QString filePath;
-
-    void removeFile ( const QString& );
 };
 
 //----------------------------------------------------------------------
@@ -218,8 +145,6 @@ signals:
     void editingFinishKeyPressed();
     void selectionChanged();
     void contentsChanged();
-    void clickedOnObjectSignal ( TextEditorObject* image );
-    void clickedOnNonObjectSignal();
     void sigShowStatusMessage ( const QString&, bool );
     void sigBusy ( bool );
     void textChanged();
@@ -229,33 +154,19 @@ protected:
 
 private slots:
     void adjustActions();
-    void addJavaScriptObjectSlot();
     void somethingEdittedSlot();
     void updateStyle();
     void dropMimeDataSlot ( const QMimeData* );
-    void clickedOnObjectSlot ( const QString& json );
-    void clickedOnNonObjectSlot();
     void anObjectIsModifiedSlot();
 
 private:
 //       mutable Document document;
     WebView *webView;
-    ObjectsForJavaScript *objForJavaScript;
     QList<int> fontSizes;
-    //first argument is object's id, and the other one is object's
-    //file path
-    QList<TextEditorObject*> objects;
     bool readOnly;
     bool objectsAreModified;
     QJson::Parser parser;
     KToolBar *barVisual;
-//     KAction *alignLeftAction;
-//     KAction *alignRightAction;
-//     KAction *alignCenterAction;
-//     KAction *alignJustifyAction;
-//     KAction *strikeThroughAction;
-//     KAction *numberedListAction;
-//     KAction *bulletedListAction;
 
     KAction *actBold;
     KAction *actItalic;
@@ -294,56 +205,6 @@ private:
     QColor rgbToColor ( QString ) const;
     QString getHtml() const;
 
-    QString addObject ( TextEditorObject* );
-//      QString getObjectPath(const QString&) const;
-    void clearObjects();
-    void addDocumentAttachmentsToObjects();
-    QByteArray loadImage ( const QString& );
-//      void removeUnusedAttachments();
-    TextEditorObject* findObject ( const QString& );
-    void addUsedAttachmentsToDocument();
-
-//       friend class EmbeddedTextEditor;
-    friend class ObjectsForJavaScript;
-    friend class CommandResizeImage;
-    friend class TextEditorObjectImage;
-};
-
-//----------------------------------------------------------------------
-
-class CommandResizeImage : public QUndoCommand {
-public:
-    CommandResizeImage ( TextEditorObjectImage*, const QSize& );
-    virtual void undo();
-    virtual void redo();
-
-private:
-    TextEditorObjectImage *imageObject;
-    QImage initialImage;
-    QSize newSize;
-};
-
-class CommandFlipImage : public QUndoCommand {
-public:
-    CommandFlipImage ( TextEditorObjectImage*, Qt::Orientation );
-    virtual void undo();
-    virtual void redo();
-
-private:
-    TextEditorObjectImage *imageObject;
-    Qt::Orientation orientation;
-};
-
-class CommandRotateImage : public QUndoCommand {
-public:
-    enum Rotation {RotateRight, RotateLeft};
-    CommandRotateImage ( TextEditorObjectImage*, Rotation );
-    virtual void undo();
-    virtual void redo();
-
-private:
-    TextEditorObjectImage *imageObject;
-    Rotation rotation;
 };
 
 #endif
