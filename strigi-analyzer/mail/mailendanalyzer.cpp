@@ -71,6 +71,18 @@ STRIGI_ENDANALYZER_RETVAL MailEndAnalyzer::analyze( Strigi::AnalysisResult &inde
   if ( read < 0 )
     return Strigi::Error;
 
+  const QUrl url( QString::fromAscii( index.path().data(), index.path().size() ) );
+  if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "mimetype" ) ) {
+    const QString mimeType = QUrl::fromPercentEncoding( url.queryItemValue( "mimetype" ).toLatin1() );
+
+    // The strigi analyzer plugins sometimes recognize a vCard or iCal file as mime message, therefor
+    // we have to check here that it is really a mime message
+    if ( (mimeType != QLatin1String( "message/rfc822" )) && (mimeType != QLatin1String( "text/x-vnd.akonadi.note" )) ) {
+      stream->reset( 0 );
+      return Strigi::Error; // this will allow strigi to try another analyzer
+    }
+  }
+
   m_index = &index;
 
   const QByteArray text( data, read );
@@ -79,7 +91,6 @@ STRIGI_ENDANALYZER_RETVAL MailEndAnalyzer::analyze( Strigi::AnalysisResult &inde
   message->setContent( text );
   message->parse();
 
-  const QUrl url( QString::fromAscii( index.path().data(), index.path().size() ) );
   if ( url.scheme() == QLatin1String( "akonadi" ) && url.hasQueryItem( "collection" ) )
     index.addValue( m_factory->isPartOfField, url.queryItemValue( "collection" ).toUtf8().data() );
 
