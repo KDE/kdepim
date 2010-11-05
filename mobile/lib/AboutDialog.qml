@@ -75,7 +75,9 @@ QML.Rectangle {
                 QML.Text{
                     id: mainTeam
                     text: KDE.i18n("Main Scrum team in alphabetical order:") + "\n\n" +
+                          "\t" + KDE.i18n("Brinkmann, Marcus (g10 Code GmbH)") + "\n" +
                           "\t" + KDE.i18n("Heinecke, Andre (Intevation GmbH)") + "\n" +
+                          "\t" + KDE.i18n("Koch, Werner (g10 Code)") + "\n" +
                           "\t" + KDE.i18n("Ricks, Björn (Intevation GmbH)") + "\n" +
                           "\t" + KDE.i18n("Teichmann, Sascha L. (Intevation GmbH)") + "\n"
                 }
