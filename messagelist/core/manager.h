@@ -190,7 +190,7 @@ public:
    * and false otherwise.
    */
   void setDisplayMessageToolTips( bool displayMessageToolTips )
-    { mDisplayMessageToolTips = displayMessageToolTips; };
+    { mDisplayMessageToolTips = displayMessageToolTips; saveGlobalConfiguration();};
 
   /**
    * Returns the unique id of the last selected message for the specified StorageModel.

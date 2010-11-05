@@ -76,6 +76,8 @@
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transport.h>
 
+#include <messagelist/core/settings.h>
+
 #include <kmime/kmime_mdn.h>
 #include <kmime/kmime_header_parsing.h>
 using namespace KMime;
@@ -669,6 +671,11 @@ void KMMainWidget::writeConfig()
       mMsgView->writeConfig();
       GlobalSettings::self()->setReaderWindowHeight( mMsgView->width() );
     }
+  }
+  // Sync messagelist config and pane config
+  if ( MessageList::Core::Settings::self()->messageToolTipEnabled() != GlobalSettings::self()->displayMessageToolTips() ) {
+    GlobalSettings::self()->setDisplayMessageToolTips(MessageList::Core::Settings::self()->messageToolTipEnabled());
+    GlobalSettings::self()->writeConfig();
   }
 }
 
