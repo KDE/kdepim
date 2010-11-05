@@ -322,7 +322,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
                 d->progress->setRange( 0, 0 );
             }
             connect( b, SIGNAL( sigPostPublished( int, BilboPost* ) ),
-                     this, SLOT( sltPostPublished( int, BilboPost* ) ) );
+                     this, SLOT( slotPostPublished( int, BilboPost* ) ) );
             if(d->isNewPost)
                 b->publishPost( &d->mCurrentPost );
             else

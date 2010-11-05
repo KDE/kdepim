@@ -91,7 +91,7 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WFlags flags )
         d->ui.btnFetch->setEnabled( true );
         d->ui.btnAutoConf->setEnabled( true );
         d->isNewBlog = false;
-        d->bBlog = new BilboBlog( DBMan::self()->blog( blog_id ) );
+        d->bBlog =  DBMan::self()->blog( blog_id );
         d->ui.txtUrl->setText( d->bBlog->url().url() );
         d->ui.txtUser->setText( d->bBlog->username() );
         d->ui.txtPass->setText( d->bBlog->password() );
