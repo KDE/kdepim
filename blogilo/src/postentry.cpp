@@ -153,12 +153,12 @@ void PostEntry::setPostBody( const QString & content, const QString &additionalC
     if(additionalContent.isEmpty()) {
         body = content;
     } else {
-        body = content + "</p><!--split--><p>" + additionalContent;
+        body = content + "<hr><!--split-->" + additionalContent;
         d->mCurrentPost.setAdditionalContent(QString());
     }
-    if(body.isEmpty()){
-        body = "<p></p>";//This is because of Bug #387578
-    }
+//     if(body.isEmpty()){
+//         body = "<p></p>";//This is because of Bug #387578
+//     }
     d->mCurrentPost.setContent( body );
     d->editPostWidget->setHtmlContent( body );
     d->isPostContentModified = false;

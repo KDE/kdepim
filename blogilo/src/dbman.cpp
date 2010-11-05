@@ -648,8 +648,10 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
     }
     int postId = -1, localId=-1;
     if(post.status() == KBlog::BlogPost::New) {///Post is new!
+        kDebug()<<"Post is new!";
         if(post.id() == -1){
             ///Add new post to temp_post
+            kDebug()<<"Add new post to temp_post";
             q.prepare( "INSERT OR REPLACE INTO "+ postTable +" (postid, blog_id, author, title, content,\
             text_more, c_time, m_time, is_private, is_comment_allowed, is_trackback_allowed, link, perma_link,\
             summary, slug, tags, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" );
@@ -680,6 +682,7 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
             }
         } else {
             ///Update post, with id!
+            kDebug()<<"Update post, with id!";
             q.prepare( "INSERT OR REPLACE INTO "+ postTable +" (local_id, postid, blog_id, author, title,\
             content, text_more, c_time, m_time, is_private, is_comment_allowed, is_trackback_allowed, link,\
             perma_link, summary, slug, tags, status)\
@@ -712,6 +715,7 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
             }
         }
     } else {///Post is already created at "Post" table and has a valid id, postId and blog_id. So, local_id is useless here
+        kDebug()<<"Post is already created at \"Post\" table and has a valid id, postId and blog_id. So, local_id is useless here";
         q.prepare( "INSERT OR REPLACE INTO "+ postTable +" (id, postid, blog_id, author, title,\
         content, text_more, c_time, m_time, is_private,\
         is_comment_allowed, is_trackback_allowed, link, perma_link, summary, slug, tags, status)\
@@ -810,7 +814,7 @@ bool DBMan::removeLocalEntry( int local_id )
 
 bool DBMan::removeTempEntry( const BilboPost &post )
 {
-    kDebug();
+    kDebug()<<post.toString();
     QSqlQuery q;
     if(post.status() == KBlog::BlogPost::New) {
         q.prepare( "DELETE FROM temp_post WHERE local_id=?" );

@@ -42,6 +42,8 @@
 #include <kio/job.h>
 #include <settings.h>
 
+const QRegExp splitRX("((<hr>)?<!--split-->)");
+
 class Backend::Private
 {
 public:
@@ -465,7 +467,7 @@ KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
     //post.setContent( post.content().remove('\n') );
     //post.setAdditionalContent( post.additionalContent().remove( '\n' ) );
     if ( d->bBlog->api() == BilboBlog::MOVABLETYPE_API || d->bBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
-        QStringList content = post->content().split("<!--split-->");
+        QStringList content = post->content().split(splitRX);
         if( content.count() == 2 ) {
             post->setContent(content[0]);
             post->setAdditionalContent( content[1] );
