@@ -2068,7 +2068,7 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
   }
 
   case Scheduler::NoMethod:
-    return i18n("Error: iMIP message with unknown method: '%1'").
+    return i18n("Error: iTIP message with unknown method: '%1'").
       arg( msg->method() );
   }
   return QString::null;
@@ -2220,7 +2220,7 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
   }
 
   case Scheduler::NoMethod:
-    return i18n( "Error: iMIP message with unknown method: '%1'" ).
+    return i18n( "Error: iTIP message with unknown method: '%1'" ).
       arg( msg->method() );
   }
   return QString::null;
@@ -2285,7 +2285,7 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
   case Scheduler::Declinecounter:
     return i18n( "Sender declines the counter proposal" );
   case Scheduler::NoMethod:
-    return i18n("Error: iMIP message with unknown method: '%1'").
+    return i18n("Error: iTIP message with unknown method: '%1'").
       arg( msg->method() );
   }
   return QString::null;
@@ -2310,7 +2310,7 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
     return i18n( "Addition to the free/busy list" );
   case Scheduler::NoMethod:
   default:
-    return i18n("Error: Free/Busy iMIP message with unknown method: '%1'").
+    return i18n("Error: Free/Busy iTIP message with unknown method: '%1'").
       arg( msg->method() );
   }
 }
@@ -3027,7 +3027,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     case Scheduler::Add:
     {
       if ( inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
-        html += "<tr><td>";
+        html += "<tr><td colspan=\"13\">";
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "reply", i18n( "[Record in my task list]" ) );
         } else {
@@ -3045,7 +3045,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     case Scheduler::Cancel:
       // Remove invitation
       if ( inc ) {
-        html += "<tr><td>";
+        html += "<tr><td colspan=\"13\">";
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
         } else {
