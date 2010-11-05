@@ -212,6 +212,11 @@ SyncEnd:
     d->prev_index = index;
 }
 
+QString BilboEditor::plainTextContent()
+{
+    return d->wysiwygEditor->plainTextContent();
+}
+
 QString BilboEditor::htmlContent()
 {
     if ( this->currentIndex() == 0 ) {

@@ -533,6 +533,11 @@ QString TextEditor::htmlContent()
     return getHtml();
 }
 
+QString TextEditor::plainTextContent()
+{
+    return webView->page()->mainFrame()->toPlainText();
+}
+
 void TextEditor::setHtmlContent ( const QString& arg1 )
 {
     QString txt = arg1;
@@ -973,7 +978,7 @@ QColor TextEditor::rgbToColor ( QString rgb ) const
 
 QString TextEditor::getHtml() const
 {
-    QString html = const_cast<TextEditor*> ( this ) -> evaluateJavaScript ( "getHtml()", false ).toString();
+    QString html = const_cast<TextEditor*>( this )->evaluateJavaScript( "getHtml()", false ).toString();
 //     HtmlParser *htmlParser = HtmlParser::htmlParser();
 //     int iterator = 0;
 //     while ( htmlParser->setTagAttribute ( html, iterator, "img", "src", "" ) );

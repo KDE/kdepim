@@ -379,7 +379,7 @@ are you sure you want to save an empty post?")) == KMessageBox::No )
 
 void PostEntry::saveTemporary( bool force )
 {
-    if( d->isPostContentModified || ( !currentPost()->content().isEmpty() && force ) ) {
+    if( d->isPostContentModified || ( !d->editPostWidget->plainTextContent().isEmpty() && force ) ) {
         d->mCurrentPost.setId( DBMan::self()->saveTempEntry( *currentPost(), d->mCurrentPostBlogId) );
         emit postSavedTemporary();
         kDebug()<<"Temporary saved";

@@ -161,9 +161,6 @@ public:
     bool insertImage ( const QString& );
     bool insertImage ( const QByteArray& );
 
-//     void setFontFamily ( const QString& );
-//     QString getFontFamily() const;
-
     //the range of font size is between 0 and 6
     // (xx-small to xx-large)
     void setFontSize ( int );
@@ -190,6 +187,9 @@ public:
 
     void replaceImageSrc(const QString& src, const QString& dest);
 
+    QString plainTextContent();
+    QString htmlContent();
+
 public slots:
     QList<BilboMedia*> getLocalImages();
 //       void finishEditing(); //emits editingFinished signal if anything have been edited
@@ -198,28 +198,10 @@ public slots:
     void startEditing();
     void setCurrentTitle ( const QString& title );
     void setHtmlContent ( const QString &arg1 );
-    QString htmlContent();
     bool updateMediaPaths();
 
-//     void styleParagraph();
-//     void styleHeading1();
-//     void styleHeading2();
-//     void styleHeading3();
-//     void styleHeading4();
-//     void styleHeading5();
-//     void styleHeading6();
-//     void stylePreformatted();
-//     void styleAddress();
-//     void formatStrikeThrough();
-//     void formatAlignLeft();
-//     void formatAlignCenter();
-//     void formatAlignRight();
-//     void formatAlignJustify();
     void formatIncreaseIndent();
     void formatDecreaseIndent();
-//     void formatNumberedList();
-//     void formatBulletedList();
-
     void slotToggleCode(bool);
     void slotChangeFormatType(const QString& formatText);
     void slotIncreaseFontSize();
@@ -232,22 +214,6 @@ public slots:
     void slotChangeLayoutDirection(bool rightToLeft);
     void slotAddPostSplitter();
     void slotToggleSpellChecking(bool);
-    /*
-    void alignLeftSlot();
-    void alignCenterSlot();
-    void alignRightSlot();
-    void alignJustifySlot();
-    void strikeThroughSlot();
-    void numberedListSlot();
-    void bulletedListSlot();
-
-    void alignLeftSlot();
-    void alignRightSlot();
-    void alignCenterSlot();
-    void alignJustifySlot();
-    void strikeThroughSlot();
-    void numberedListSlot();
-    void bulletedListSlot();*/
 
 signals:
     void editingFinished();

@@ -81,8 +81,9 @@ public:
      * then copies the content of HtmlEditor into the variable mHtmlContent, and returns it.
      * @return an String which contains html text
      */
-//   const QString& htmlContent();
     QString htmlContent();
+
+    QString plainTextContent();
 
     /**
      * Sets the given string as the HtmlEditor and VisualEditor content.
