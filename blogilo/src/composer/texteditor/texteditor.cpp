@@ -29,7 +29,7 @@
 #include "texteditor.h"
 #include <qimagewriter.h>
 #include <QMessageBox>
-#include "utilities.h"
+// #include "utilities.h"
 #include <kstandarddirs.h>
 #include <KDebug>
 #include <ktoolbar.h>
@@ -57,13 +57,15 @@
     connect(getAction(action2), SIGNAL(changed()), SLOT(adjustActions()));
 
 WebView::WebView ( QWidget *parent )
-        : KWebView ( parent ) {
+        : KWebView ( parent )
+{
     settings() -> setFontSize ( QWebSettings::DefaultFontSize, 14 );
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     setAcceptDrops ( true );
 }
 
-void WebView::startEditing() {
+void WebView::startEditing()
+{
     //NOTE: it needs a mouse click!
     //any better way to make the cursor visible?
     this -> setFocus();
@@ -72,18 +74,21 @@ void WebView::startEditing() {
     QTimer::singleShot ( 50, this, SLOT ( sendMouseReleaseEvent() ) );
 }
 
-void WebView::sendMouseReleaseEvent() {
+void WebView::sendMouseReleaseEvent()
+{
     QMouseEvent mouseEventRelease ( QEvent::MouseButtonRelease, QPoint ( 10,10 ), Qt::LeftButton, Qt::NoButton, Qt::NoModifier );
     QApplication::sendEvent ( this, &mouseEventRelease );
     pageAction ( QWebPage::MoveToEndOfDocument ) -> trigger();
 }
 
-void WebView::focusOutEvent ( QFocusEvent *event ) {
+void WebView::focusOutEvent ( QFocusEvent *event )
+{
     QWebView::focusOutEvent ( event );
     emit focusOutSignal();
 }
 
-void WebView::focusInEvent ( QFocusEvent *event ) {
+void WebView::focusInEvent ( QFocusEvent *event )
+{
     QWebView::focusInEvent ( event );
     //NOTE: enabling the codes below will correct the focus behaviours
     //But will make some problems with font size...
@@ -94,7 +99,8 @@ void WebView::focusInEvent ( QFocusEvent *event ) {
     //  webView -> setFocus();
 }
 
-void WebView::keyPressEvent ( QKeyEvent *event ) {
+void WebView::keyPressEvent ( QKeyEvent *event )
+{
     if ( event->key() == Qt::Key_Return && ( event->modifiers() & Qt::AltModifier ) )
         emit editingFinishKeyPressed();
     else if ( event->key() == Qt::Key_F12 )
@@ -104,12 +110,14 @@ void WebView::keyPressEvent ( QKeyEvent *event ) {
         QWebView::keyPressEvent ( event );
 }
 
-void WebView::dragEnterEvent ( QDragEnterEvent *event ) {
+void WebView::dragEnterEvent ( QDragEnterEvent *event )
+{
     if ( event->mimeData()->hasUrls() )
         event->acceptProposedAction();
 }
 
-void WebView::dropEvent ( QDropEvent *event ) {
+void WebView::dropEvent ( QDropEvent *event )
+{
     emit dropMimeDataSignal ( event -> mimeData() );
 }
 
@@ -241,7 +249,8 @@ void TextEditor::dropMimeDataSlot ( const QMimeData *mime )
     }
 }
 
-void TextEditor::anObjectIsModifiedSlot() {
+void TextEditor::anObjectIsModifiedSlot()
+{
     objectsAreModified = true;
 }
 
@@ -470,7 +479,8 @@ bool TextEditor::updateMediaPaths()
     return true;
 }
 
-void TextEditor::clear() {
+void TextEditor::clear()
+{
 //    setDocument(Document());
 }
 
@@ -479,24 +489,15 @@ void TextEditor::startEditing()
     webView -> startEditing();
 }
 
-/*
-void TextEditor::finishEditing()
+void TextEditor::setFontSize ( int fontSize )
 {
-   QString currentHtml = getHtml();
-   if ((document.getText() != currentHtml || objectsAreModified) && this->isEnabled() && !readOnly)
-   {
-      document.setText(currentHtml);
-      emit editingFinished();
-   }
-}*/
-
-void TextEditor::setFontSize ( int fontSize ) {
     //setFontSize() function requires a number in the range 0-6
     //But the function below requires a number in the range 1-7
     execCommand ( "fontSize", QString::number ( fontSize+1 ) );
 }
 
-int TextEditor::getFontSize() const {
+int TextEditor::getFontSize() const
+{
     QString fontSizeString = const_cast<TextEditor*> ( this ) -> evaluateJavaScript ( "getFontSize()",
                                                                                       false ).toString();
 
@@ -508,53 +509,13 @@ int TextEditor::getFontSize() const {
     return fontSizes.indexOf ( fontSizeInt );
 }
 
-/*
-void TextEditor::setForegroundColor ( const QColor &color ) {
-    execCommand ( "foreColor", color.name() );
-}
-
-QColor TextEditor::getForegroundColor() const {
-    return rgbToColor ( const_cast<TextEditor*> ( this ) -> evaluateJavaScript ( "getForegroundColor()", false ).toString() );
-}
-
-void TextEditor::setBackgroundColor ( const QColor &color ) {
-    execCommand ( "backColor", color.name() );
-}
-
-QColor TextEditor::getBackgroundColor() const {
-    return rgbToColor ( const_cast<TextEditor*> ( this ) -> evaluateJavaScript ( "getBackgroundColor()", false ).toString() );
-}
-
-void TextEditor::setPageBackgroundColor ( const QColor &color ) {
-    evaluateJavaScript ( QString ( "setPageBackgroundColor(\"%1\")" ).arg ( color.name() ), false );
-}
-
-QColor TextEditor::getPageBackgroundColor() const {
-    return rgbToColor ( const_cast<TextEditor*> ( this ) -> evaluateJavaScript ( "getPageBackgroundColor()", false ).toString() );
-}
-
-
-void TextEditor::setAlignment ( Qt::Alignment alignment ) {
-    if ( alignment&Qt::AlignLeft )
-        formatAlignLeft();
-    else if ( alignment&Qt::AlignRight )
-        formatAlignRight();
-    else if ( alignment&Qt::AlignCenter )
-        formatAlignCenter();
-    else if ( alignment&Qt::AlignJustify )
-        formatAlignJustify();
-}
-*/
-
-void TextEditor::setZoomFactor ( double zoom ) {
-    webView -> setTextSizeMultiplier ( zoom );
-}
-
-double TextEditor::getZoomFactor() const {
+double TextEditor::getZoomFactor() const
+{
     return webView -> textSizeMultiplier();
 }
 
-Qt::Alignment TextEditor::getAlignment() const {
+Qt::Alignment TextEditor::getAlignment() const
+{
     QString alignment = const_cast<TextEditor*> ( this ) -> evaluateJavaScript ( "getAlignment()", false ).toString();
     return alignment == "left" ? Qt::AlignLeft
            : alignment == "right" ? Qt::AlignRight
@@ -562,21 +523,24 @@ Qt::Alignment TextEditor::getAlignment() const {
            : Qt::AlignJustify;
 }
 
-void TextEditor::execCommand ( const QString &cmd ) {
+void TextEditor::execCommand ( const QString &cmd )
+{
 //   qDebug("TextEditor::execCommand(%s)", cmd.toAscii().constData());
     QWebFrame *frame = webView->page()->mainFrame();
     QString js = QString ( "document.execCommand(\"%1\", false, null)" ).arg ( cmd );
     frame->evaluateJavaScript ( js );
 }
 
-void TextEditor::execCommand ( const QString &cmd, const QString &arg ) {
+void TextEditor::execCommand ( const QString &cmd, const QString &arg )
+{
 //   qDebug("TextEditor::execCommand(%s, %s) began", cmd.toAscii().constData(), arg.toAscii().constData());
     QWebFrame *frame = webView->page()->mainFrame();
     QString js = QString ( "document.execCommand(\"%1\", false, \"%2\")" ).arg ( cmd ).arg ( arg );
     frame->evaluateJavaScript ( js );
 }
 
-bool TextEditor::queryCommandState ( const QString &cmd ) {
+bool TextEditor::queryCommandState ( const QString &cmd )
+{
     QWebFrame *frame = webView->page()->mainFrame();
     QString js = QString ( "document.queryCommandState(\"%1\", false, null)" ).arg ( cmd );
     QVariant result = frame->evaluateJavaScript ( js );
@@ -585,7 +549,8 @@ bool TextEditor::queryCommandState ( const QString &cmd ) {
 
 #define FOLLOW_CHECK(a1, a2) a1->setChecked(getAction(a2)->isChecked())
 
-void TextEditor::adjustActions() {
+void TextEditor::adjustActions()
+{
     Qt::Alignment alignment = getAlignment();
     actAlignLeft -> setChecked ( alignment&Qt::AlignLeft );
     actAlignRight -> setChecked ( alignment&Qt::AlignRight );
@@ -605,18 +570,21 @@ void TextEditor::adjustActions() {
     actUnorderedList->setChecked ( queryCommandState ( "insertUnorderedList" ) );
 }
 
-QAction* TextEditor::getAction ( QWebPage::WebAction action ) const {
+QAction* TextEditor::getAction ( QWebPage::WebAction action ) const
+{
     if ( action >= 0 && action <= 66 )
         return webView -> page() -> action ( static_cast<QWebPage::WebAction> ( action ) );
     else
         return 0;
 }
 
-void TextEditor::addCommand ( QUndoCommand *command ) {
+void TextEditor::addCommand ( QUndoCommand *command )
+{
     webView -> page() -> undoStack() -> push ( command );
 }
 
-void TextEditor::focusInEvent ( QFocusEvent *event ) {
+void TextEditor::focusInEvent ( QFocusEvent *event )
+{
     QWidget::focusInEvent ( event );
     webView -> setFocus();
 }
@@ -642,11 +610,13 @@ void TextEditor::slotChangeFormatType(const QString &formatText)
     }
 }
 
-void TextEditor::formatIncreaseIndent() {
+void TextEditor::formatIncreaseIndent()
+{
     execCommand ( "indent" );
 }
 
-void TextEditor::formatDecreaseIndent() {
+void TextEditor::formatDecreaseIndent()
+{
     execCommand ( "outdent" );
 }
 

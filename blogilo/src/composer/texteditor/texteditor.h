@@ -89,20 +89,13 @@ public:
     // (xx-small to xx-large)
     void setFontSize ( int );
     int getFontSize() const;
-/*
-    void setForegroundColor ( const QColor& );
-    QColor getForegroundColor() const;
 
-    void setBackgroundColor ( const QColor& );
-    QColor getBackgroundColor() const;*/
-
-//     void setAlignment ( Qt::Alignment );
     Qt::Alignment getAlignment() const;
 
     //This is only a temporary zoom factor which will be
     //changed back to Settings::settings() -> cardAppearanceZoomFactor
     //whenever you use setDocument();
-    void setZoomFactor ( double );
+//     void setZoomFactor ( double );
     double getZoomFactor() const;
 
     QAction* getAction ( QWebPage::WebAction action ) const;
@@ -116,7 +109,6 @@ public:
 
 public slots:
     QList<BilboMedia*> getLocalImages();
-//       void finishEditing(); //emits editingFinished signal if anything have been edited
     void clear();
     //just shows the cursor.
     void startEditing();

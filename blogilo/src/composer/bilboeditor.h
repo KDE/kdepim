@@ -25,39 +25,16 @@
 #ifndef BILBOEDITOR_H
 #define BILBOEDITOR_H
 
-#include <QTextFormat>
-
 #include <ktabwidget.h>
 #include <KUrl>
 
-class TextEditor;
-class QTextCharFormat;
-// class QProgressBar;
-// class QWebView;
-// class QPlainTextEdit;
-namespace KTextEditor
-{ 
-    class View;
-}
-
-class KAction;
-class KToolBar;
-class KListWidget;
-// class KPushButton;
-class KSelectAction;
-// class KStatusBar;
-// class MultiLineTextEdit;
-class AddEditLink;
 class BilboMedia;
-class BilboBrowser;
-
 
 /**
 * Class BilboEditor represents the editor part of BilboBlogger
 * @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
 * @author Golnaz Nilieh <g382nilieh@gmail.com>
 */
-
 class BilboEditor : public KTabWidget
 {
     Q_OBJECT
@@ -126,18 +103,12 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void slotSettingsChanged();
 
-//     void slotToggleSpellChecking();
-
-//     void slotSyncSpellCheckingButton( bool check );
-
     /*!
     Sets the content of the current tab  as other tabs' contents, to apply recent
      * changes. this function executes each time the user switches between tabs.
      */
     void slotSyncEditors( int index );
 
-//     void slotGetBlogStyle();
-// 
     void slotSetPostPreview();
 
 private:
