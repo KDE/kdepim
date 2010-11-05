@@ -34,7 +34,6 @@
 #include <QLineEdit>
 #include <KWebView>
 #include <QUndoCommand>
-#include <qjson/parser.h>
 
 class BilboMedia;
 class QWebView;
@@ -165,7 +164,6 @@ private:
     QList<int> fontSizes;
     bool readOnly;
     bool objectsAreModified;
-    QJson::Parser parser;
     KToolBar *barVisual;
 
     KAction *actBold;

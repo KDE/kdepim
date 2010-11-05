@@ -667,17 +667,18 @@ QList< BilboMedia* > TextEditor::getLocalImages()
 {
     kDebug();
     QList< BilboMedia* > list;
-    QVariant json = evaluateJavaScript("getLocalImages()", false);
-    kDebug()<<json.toByteArray();
-    QVariantList parsedList = parser.parse(json.toByteArray()).toList();
-    foreach(const QVariant& var, parsedList){
-        BilboMedia* media = new BilboMedia(this);
-        KUrl mediaUrl (var.toMap().value("src").toString());
-        media->setLocalUrl( mediaUrl );
-        media->setMimeType( KMimeType::findByUrl( mediaUrl, 0, true )->name() );
-        media->setName(mediaUrl.fileName());
-        media->setBlogId(__currentBlogId);
-        list.append(media);
+    QWebElementCollection images = webView->page()->mainFrame()->findAllElements("img");
+    foreach(const QWebElement& elm, images){
+        if(elm.attribute("src").startsWith("file://")){
+//             kDebug()<<elm.toOuterXml();
+            BilboMedia* media = new BilboMedia(this);
+            KUrl mediaUrl (elm.attribute("src"));
+            media->setLocalUrl( mediaUrl );
+            media->setMimeType( KMimeType::findByUrl( mediaUrl, 0, true )->name() );
+            media->setName(mediaUrl.fileName());
+            media->setBlogId(__currentBlogId);
+            list.append(media);
+        }
     }
     return list;
 }
