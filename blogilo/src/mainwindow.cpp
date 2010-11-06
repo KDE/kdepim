@@ -174,10 +174,6 @@ void MainWindow::setupActions()
     connect( toolboxDock, SIGNAL(visibilityChanged(bool)),
              this, SLOT( slotToolboxVisibilityChanged(bool) ) );
 
-    KAction *actClearImageCache = new KAction( KIcon( "edit-clear" ), i18n( "Clear Cached Images" ), this );
-    actionCollection()->addAction( QLatin1String( "clear_image_cache" ), actClearImageCache );
-    connect( actClearImageCache, SIGNAL( triggered( bool ) ), this, SLOT( slotClearCache() ) );
-
     blogs = new KSelectAction( this );
     actionCollection()->addAction( QLatin1String( "blogs_list" ), blogs );
 
@@ -621,16 +617,6 @@ QWidget* MainWindow::createPostEntry(int blog_id, const BilboPost& post)
 //     else
 //         tabPosts->setTabBarHidden(false);
     return temp;
-}
-
-void MainWindow::slotClearCache()
-{
-    QDir cacheDir( CACHED_MEDIA_DIR );
-    QStringListIterator i( cacheDir.entryList() );
-    while ( i.hasNext() ) {
-        cacheDir.remove( i.next() );
-    }
-//     MultiLineTextEdit::clearCache();
 }
 
 void MainWindow::slotShowStatusMessage(const QString &message, bool isPermanent)

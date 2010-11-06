@@ -37,7 +37,6 @@ static const char VERSION[] = "1.1";
 static const char APPNAME[] = "Blogilo";
 #define DATA_DIR KStandardDirs::locateLocal("data", "blogilo/")
 #define CONF_DB QString(DATA_DIR)+QString("/blogilo.db")
-#define CACHED_MEDIA_DIR KStandardDirs::locateLocal("cache", "blogilo/media/", true)
 static const int STATUSTIMEOUT = 5000;
 
 

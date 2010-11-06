@@ -11,7 +11,6 @@
     <Action name="publish_post" />
   </Menu>
   <Menu name="settings"><text>Settings</text>
-    <Action name="clear_image_cache" />
     <Action name="toggle_toolbox" />
   </Menu>
 </MenuBar>

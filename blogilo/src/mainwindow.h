@@ -87,7 +87,6 @@ protected slots:
     To open temporary posts and that posts are open at previous quit.
     */
     void loadTempPosts();
-    void slotClearCache();
     void uploadMediaObject();
 
 private slots:
