@@ -43,6 +43,7 @@ AddEditImage::AddEditImage(QWidget* parent, QMap< QString, QString > mediaToEdit
     editFrame->setFrameShadow(QFrame::Raised);
 
     editImageWidgetUi.setupUi( editFrame );
+//     editImageWidgetUi.btnKeepRatio->setIcon(KIcon("")); TODO
     ui.verticalLayout->addWidget( editFrame );
 
     ui.radiobtnRemoteUrl->setEnabled( true );
@@ -57,6 +58,7 @@ AddEditImage::AddEditImage(QWidget* parent, QMap< QString, QString > mediaToEdit
         editImageWidgetUi.spinboxHeight->setValue( mediaToEdit["height"].toInt() );
         editImageWidgetUi.txtTitle->setText( mediaToEdit["title"] );
         editImageWidgetUi.txtAltText->setText( mediaToEdit["alt"] );
+        setAlignment(mediaToEdit["align"]);
         ui.urlReqLineEdit->setText( mediaToEdit["url"] );
         if( !mediaToEdit.value("link").isEmpty() ) {
             editImageWidgetUi.txtLink->setText( mediaToEdit["link"] );
@@ -96,10 +98,37 @@ void AddEditImage::slotButtonClicked(int button)
     _selectedMedia["title"] = editImageWidgetUi.txtTitle->text();
     _selectedMedia["link"] = editImageWidgetUi.txtLink->text();
     _selectedMedia["alt"] = editImageWidgetUi.txtAltText->text();
+    _selectedMedia["align"] = getAlignment();
     if(isEditing)
         _selectedMedia["url"] = ui.urlReqLineEdit->text();
 //     kDebug()<<_selectedMedia;
     AddMediaDialog::slotButtonClicked(button);
+}
+
+QString AddEditImage::getAlignment()
+{
+    switch(editImageWidgetUi.alignment->currentIndex()){
+        case 0:
+            return QString();
+            break;
+        case 1:
+            return "right";
+            break;
+        case 2:
+        default:
+            return "left";
+            break;
+    }
+}
+
+void AddEditImage::setAlignment(const QString& align)
+{
+    if(align.isEmpty())
+        editImageWidgetUi.alignment->setCurrentIndex(0);
+    else if(align == "right")
+        editImageWidgetUi.alignment->setCurrentIndex(1);
+    else if(align == "left")
+        editImageWidgetUi.alignment->setCurrentIndex(2);
 }
 
 #include "composer/dialogs/addeditimage.moc"

@@ -120,12 +120,17 @@ void WebView::contextMenuEvent(QContextMenuEvent* event)
             img.insert("height", elm.attribute("height"));
             img.insert("title", elm.attribute("title"));
             img.insert("alt", elm.attribute("alt"));
+            img.insert("align", elm.attribute("align"));
             if(weHaveALink)
                 img.insert("link", linkElm.attribute("href"));
             QPointer<AddEditImage> dlg = new AddEditImage(this, img);
             if(dlg->exec()){
                 img = dlg->selectedMediaProperties();
                 elm.setAttribute("src", img["url"]);
+                if(img["align"].isEmpty())
+                    elm.removeAttribute("align");
+                else
+                    elm.setAttribute("align", img["align"]);
                 if(img.value("width").isEmpty() || img.value("width")=="0")
                     elm.removeAttribute("width");
                 else
@@ -317,8 +322,7 @@ void TextEditor::createActions()
     connect( actColorSelect, SIGNAL( triggered( bool ) ), this, SLOT(formatTextColor()) );
     barVisual->addAction( actColorSelect );
 
-    actRemoveFormatting = new KAction( KIcon( "draw-eraser" ), i18n(
-                                       "Remove formatting" ), this );
+    actRemoveFormatting = new KAction( KIcon( "draw-eraser" ), i18n( "Remove formatting" ), this );
     FORWARD_ACTION(actRemoveFormatting, QWebPage::RemoveFormat);
     barVisual->addAction( actRemoveFormatting );
 
@@ -508,11 +512,6 @@ QAction* TextEditor::getAction ( QWebPage::WebAction action ) const
         return 0;
 }
 
-// void TextEditor::addCommand ( QUndoCommand *command )
-// {
-//     webView -> page() -> undoStack() -> push ( command );
-// }
-
 void TextEditor::focusInEvent ( QFocusEvent *event )
 {
     QWidget::focusInEvent ( event );
@@ -646,18 +645,12 @@ void TextEditor::slotRemoveLink()
 
 void TextEditor::slotToggleBlockQuote(bool )
 {
-//     QString selection = webView->selectedText();
-//     if(selection.isEmpty())
-//         return;
-//     kDebug()<<"NOT IMPLEMENTED";
-//     return;
-//     // We have to remove selection before!
-//     QString html = QString ( "<blockquote>%1</blockquote>" ).arg ( selection );
-//     execCommand("insertHtml", html);
+    execCommand("formatBlock", "BLOCKQUOTE");
 }
 
 void TextEditor::slotToggleCode(bool )
 {
+//     execCommand("formatBlock", "CODE");
 //     QString selection = webView->selectedText();
 //     if(selection.isEmpty())
 //         return;
@@ -680,9 +673,10 @@ void TextEditor::slotAddImage()
         QString title = res["title"].isEmpty() ? QString() : QString("title='%1'").arg(res["title"]);
         QString src = res["url"].isEmpty() ? QString() : QString("src='%1'").arg(res["url"]);
         QString alt = res["alt"].isEmpty() ? QString() : QString("alt='%1'").arg(res["alt"]);
-        QString html = QString ( "<img %1 %2 %3 %4 %5 />" )
+        QString align = res["align"].isEmpty() ? QString() : QString( "align='%1'").arg(res["align"]);
+        QString html = QString ( "<img %1 %2 %3 %4 %5 %6 />" )
                                 .arg ( width ).arg ( height ).arg( title )
-                                .arg( src ).arg( alt );
+                                .arg( src ).arg( alt ).arg(align);
         if( !res["link"].isEmpty() ){
             QString preHtml = QString("<a href='%1'>").arg(res["link"]);
             html = preHtml + html + "</a>";
@@ -693,7 +687,7 @@ void TextEditor::slotAddImage()
 
 void TextEditor::slotAddPostSplitter()
 {
-//TODO
+    execCommand("insertHTML", "<hr><!--split-->");
 }
 
 void TextEditor::slotChangeLayoutDirection(bool rightToLeft)

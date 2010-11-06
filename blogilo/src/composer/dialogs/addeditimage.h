@@ -51,6 +51,8 @@ protected slots:
     virtual void slotSelectLocalFile();
 
 private:
+    QString getAlignment();
+    void setAlignment(const QString& align);
     QFrame *editFrame;
     Ui::EditImageBase editImageWidgetUi;
     bool isEditing;
