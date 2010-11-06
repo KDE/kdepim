@@ -80,7 +80,7 @@ Q_SIGNALS:
      * emitted when title of this entry changed.
      * @param title is a QString which contains new title.
      */
-    void sigTitleChanged( const QString &title );
+    void postTitleChanged( const QString &title );
     /**
      * This signal emitted when a post manipulation job e.g. Publishing a new post finished.
      * @param isError If an error occurred on publishing this will be TRUE. Otherwise FLASE

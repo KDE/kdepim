@@ -605,7 +605,7 @@ QWidget* MainWindow::createPostEntry(int blog_id, const BilboPost& post)
     temp->setCurrentPost(post);
     temp->setCurrentPostBlogId( blog_id );
 
-    connect( temp, SIGNAL( sigTitleChanged( const QString& ) ),
+    connect( temp, SIGNAL( postTitleChanged( const QString& ) ),
              this, SLOT( slotPostTitleChanged( const QString& ) ) );
     connect( temp, SIGNAL( postPublishingDone( bool, const QString& ) ),
             this, SLOT( postManipulationDone( bool, const QString& ) ) );

@@ -239,7 +239,7 @@ void PostEntry::setHtmlContent(const QString& content)
 void PostEntry::slotTitleChanged( const QString& title )
 {
     d->mCurrentPost.setTitle( title );
-    Q_EMIT sigTitleChanged( title );
+    Q_EMIT postTitleChanged( title );
 }
 
 QString PostEntry::postTitle() const
