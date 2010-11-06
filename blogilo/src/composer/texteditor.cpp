@@ -759,4 +759,4 @@ QString TextEditor::getHtml() const
 }
 
 
-#include "texteditor.moc"
+#include "composer/texteditor.moc"

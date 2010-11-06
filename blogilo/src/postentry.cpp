@@ -41,7 +41,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <qlayout.h>
-#include "composer/texteditor/texteditor.h"
+#include "composer/texteditor.h"
 
 #define MINUTE 60000
 

@@ -27,7 +27,7 @@ set(blogilo_SRCS
  composer/dialogs/addeditlink.cpp
  composer/dialogs/addmediadialog.cpp
  composer/dialogs/addeditimage.cpp
- composer/texteditor/texteditor.cpp
+ composer/texteditor.cpp
 )
 
 IF(WIN32)
@@ -78,4 +78,4 @@ install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( PROGRAMS ../blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
 install( FILES blogilo.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
-install( FILES blogiloui.rc composer/texteditor/TextEditorInitialHtml  DESTINATION  ${DATA_INSTALL_DIR}/blogilo )
+install( FILES blogiloui.rc composer/TextEditorInitialHtml  DESTINATION  ${DATA_INSTALL_DIR}/blogilo )

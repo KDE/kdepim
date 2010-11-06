@@ -42,7 +42,7 @@
 #include "bilboblog.h"
 #include "bilbopost.h"
 
-#include "texteditor/texteditor.h"
+#include "texteditor.h"
 #include "stylegetter.h"
 #include "htmleditor.h"
 #ifdef WIN32
