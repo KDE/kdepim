@@ -233,8 +233,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
            this, SLOT( slotItemChanged( Akonadi::Item, QSet<QByteArray> ) ) );
   connect( &mMonitor, SIGNAL( itemRemoved( Akonadi::Item ) ),
            this, SLOT( slotClear() ) );
-  connect( &mMonitor, SIGNAL( itemRemoved( Akonadi::Item ) ),
-           this, SIGNAL( itemRemoved() ) );
   connect( &mMonitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
            this, SLOT( slotItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
 }
@@ -2750,6 +2748,7 @@ void ViewerPrivate::slotItemMoved( const Akonadi::Item &item, const Akonadi::Col
 void ViewerPrivate::slotClear()
 {
   q->clear( Viewer::Force );
+  emit itemRemoved();
 }
 
 #include "viewer_p.moc"
