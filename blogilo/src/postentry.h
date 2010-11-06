@@ -28,7 +28,6 @@
 #include <QFrame>
 #include "bilbopost.h"
 
-class BilboEditor;
 class QGridLayout;
 class QLabel;
 class QHBoxLayout;
@@ -90,9 +89,9 @@ Q_SIGNALS:
     void postPublishingDone( bool isError, const QString &customMessage );
 
     /**
-     * This signal is emitted when the post contents (Title or content) is modified!
+     * This signal is emitted when the content of VisualEditor or HtmlEditor changes.
      */
-    void postModified();
+    void textChanged();
 
     /**
      * This signal is emitted when the post is saved temporarily!
@@ -127,6 +126,34 @@ protected Q_SLOTS:
     void deleteProgressBar();
     void saveTemporary( bool force=false );
     void slotPostModified();
+
+    /*!
+     *  Sets the content of the current tab  as other tabs' contents, to apply recent
+     * changes. this function executes each time the user switches between tabs.
+     */
+    void slotSyncEditors( int index );
+
+    void slotSetPostPreview();
+
+protected:
+    /**
+     * @brief Returns the editor current text in html format
+     * Synchronizes HtmlEditor and editor tabs, by sending content of the current one to another.
+     * then copies the content of HtmlEditor into the variable mHtmlContent, and returns it.
+     * @return an String which contains html text
+     */
+    QString htmlContent();
+
+    QString plainTextContent();
+
+    /**
+     * Sets the given string as the HtmlEditor and VisualEditor content.
+     * @param content
+     */
+    void setHtmlContent( const QString &content );
+
+    QList <BilboMedia*> localImages();
+    void replaceImageSrc(const QString& src, const QString& dest);
 
 private:
     void createUi();

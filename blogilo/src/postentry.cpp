@@ -23,11 +23,17 @@
 */
 
 #include "postentry.h"
+
+#ifdef WIN32
+#include "composer/bilbobrowser_win.h"
+#else
+#include "composer/bilbobrowser.h"
+#endif
+
 #include <kdebug.h>
 #include <klocalizedstring.h>
 #include <klineedit.h>
 #include <KMessageBox>
-#include "composer/bilboeditor.h"
 #include "bilbomedia.h"
 #include "backend.h"
 #include "dbman.h"
@@ -42,6 +48,12 @@
 #include <QTimer>
 #include <qlayout.h>
 #include "composer/texteditor.h"
+#include "composer/htmleditor.h"
+#include <ktexteditor/view.h>
+#include <ktexteditor/document.h>
+#include <QHBoxLayout>
+#include <KTabWidget>
+
 
 #define MINUTE 60000
 
@@ -49,7 +61,6 @@ class PostEntry::Private
 {
 public:
     QProgressBar *progress;
-    BilboEditor *editPostWidget;
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *labelTitle;
@@ -64,6 +75,18 @@ public:
     bool isNewPost;
 //     bool mIsModified;
     bool isPostContentModified;
+
+
+    KTabWidget *tabWidget;
+    QWidget *tabVisual;
+    QWidget *tabHtml;
+    QWidget *tabPreview;
+
+    TextEditor *wysiwygEditor;
+    KTextEditor::View *htmlEditor;
+    BilboBrowser *previewer;
+
+    int prev_index;
 };
 
 PostEntry::PostEntry( QWidget *parent )
@@ -71,9 +94,10 @@ PostEntry::PostEntry( QWidget *parent )
 {
     kDebug();
     createUi();
-    d->editPostWidget = new BilboEditor( this );
-//     editPostWidget->setMediaList( &mMediaList );
-    layout()->addWidget( d->editPostWidget );
+    connect( d->wysiwygEditor, SIGNAL( textChanged() ), this, SIGNAL( textChanged() ) );
+    connect( d->htmlEditor->document(), SIGNAL( textChanged( KTextEditor::Document * ) ),
+             this, SIGNAL( textChanged() ) );
+    layout()->addWidget( d->tabWidget );
     d->mTimer = new QTimer(this);
     d->mTimer->start(Settings::autosaveInterval() * MINUTE);
     connect( d->mTimer, SIGNAL(timeout()), this, SLOT( saveTemporary() ) );
@@ -81,11 +105,7 @@ PostEntry::PostEntry( QWidget *parent )
     d->mCurrentPostBlogId = -1;
     d->mNumOfFilesToBeUploaded = 0;
     d->isPostContentModified = false;
-    connect( d->editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
-//     connect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
-    connect( d->editPostWidget, SIGNAL( sigShowStatusMessage( const QString&, bool ) ), 
-            this, SIGNAL( showStatusMessage( const QString&, bool ) ) );
-    connect( d->editPostWidget, SIGNAL( sigBusy( bool ) ), this, SIGNAL( sigBusy( bool ) ) );
+    connect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
 }
 
 void PostEntry::aboutToQuit()
@@ -106,6 +126,38 @@ void PostEntry::settingsChanged()
 
 void PostEntry::createUi()
 {
+
+    d->tabWidget = new KTabWidget(this);
+    d->tabVisual = new QWidget( d->tabWidget );
+    d->tabHtml = new QWidget( d->tabWidget );
+    d->tabPreview = new QWidget( d->tabWidget );
+    d->tabWidget->addTab( d->tabVisual, i18nc( "Software", "Visual Editor" ) );
+    d->tabWidget->addTab( d->tabHtml, i18nc( "Software", "Html Editor" ) );
+    d->tabWidget->addTab( d->tabPreview, i18nc( "preview of the edited post", "Post Preview" ) );
+    connect( d->tabWidget, SIGNAL( currentChanged( int ) ), this, SLOT( slotSyncEditors( int ) ) );
+    d->prev_index = 0;
+
+    /// WYSIWYG Editor:
+    d->wysiwygEditor = new TextEditor( d->tabVisual );
+    QVBoxLayout *vLayout = new QVBoxLayout( d->tabVisual );
+    vLayout->addWidget( d->wysiwygEditor );
+
+    ///htmlEditor:
+    d->htmlEditor = HtmlEditor::self()->createView( d->tabHtml );
+    QGridLayout *hLayout = new QGridLayout( d->tabHtml );
+    hLayout->addWidget( d->htmlEditor );
+
+    ///previewer:
+    d->previewer = new BilboBrowser( d->tabPreview );
+    QGridLayout *gLayout = new QGridLayout( d->tabPreview );
+    gLayout->addWidget( d->previewer );
+
+    connect( d->previewer, SIGNAL( sigSetBlogStyle() ), this, SLOT(
+            slotSetPostPreview() ) );
+
+
+    d->tabWidget->setCurrentIndex( 0 );
+
     this->resize( 626, 307 );
     d->gridLayout = new QGridLayout( this );
 
@@ -126,10 +178,67 @@ void PostEntry::createUi()
 
 }
 
+void PostEntry::slotSyncEditors(int index)
+{
+    kDebug();
+
+    if ( index == 0 ) {
+        if ( d->prev_index == 2 ) {
+            d->previewer->stop();
+            goto SyncEnd;
+        }//An else clause can do the job of goto, No? -Mehrdad :D
+        d->wysiwygEditor->setHtmlContent(d->htmlEditor->document()->text());
+        d->wysiwygEditor->setFocus();
+        d->wysiwygEditor->startEditing();
+    } else if ( index == 1 ) {
+        if ( d->prev_index == 2 ) {
+            d->previewer->stop();
+            goto SyncEnd;
+        }
+        d->htmlEditor->document()->setText( d->wysiwygEditor->htmlContent() );
+        d->htmlEditor->setFocus();
+    } else {
+        if ( d->prev_index == 1 ) {
+            d->wysiwygEditor->setHtmlContent(d->htmlEditor->document()->text());
+        } else {
+            d->htmlEditor->document()->setText( d->wysiwygEditor->htmlContent() );
+        }
+        d->previewer->setHtml( d->txtTitle->text(), d->htmlEditor->document()->text() );
+    }
+SyncEnd:
+    d->prev_index = index;
+}
+
+void PostEntry::slotSetPostPreview()
+{
+    if ( d->tabWidget->currentIndex() == 2 ) {
+        d->previewer->setHtml( d->txtTitle->text(), d->htmlEditor->document()->text() );
+    }
+}
+
+QString PostEntry::htmlContent()
+{
+
+    if ( d->tabWidget->currentIndex() == 0 ) {
+        d->htmlEditor->document()->setText( d->wysiwygEditor->htmlContent() );
+    }
+    return d->wysiwygEditor->htmlContent();
+}
+
+QString PostEntry::plainTextContent()
+{
+    return d->wysiwygEditor->plainTextContent();
+}
+
+void PostEntry::setHtmlContent(const QString& content)
+{
+    d->wysiwygEditor->setHtmlContent(content);
+    d->htmlEditor->document()->setText( content );
+}
+
 void PostEntry::slotTitleChanged( const QString& title )
 {
     d->mCurrentPost.setTitle( title );
-    d->editPostWidget->setCurrentTitle( title );
     Q_EMIT sigTitleChanged( title );
 }
 
@@ -143,7 +252,6 @@ void PostEntry::setPostTitle( const QString & title )
     kDebug();
     d->txtTitle->setText( title );
     d->mCurrentPost.setTitle( title );
-    d->editPostWidget->setCurrentTitle( title );
 }
 
 void PostEntry::setPostBody( const QString & content, const QString &additionalContent )
@@ -160,9 +268,9 @@ void PostEntry::setPostBody( const QString & content, const QString &additionalC
 //         body = "<p></p>";//This is because of Bug #387578
 //     }
     d->mCurrentPost.setContent( body );
-    d->editPostWidget->setHtmlContent( body );
+    setHtmlContent( body );
     d->isPostContentModified = false;
-    connect( d->editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+    connect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
 //     connect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
 }
 
@@ -184,10 +292,10 @@ void PostEntry::setCurrentPostFromEditor()
 {
     if( d->isPostContentModified ) {
         kDebug();
-        const QString& str = d->editPostWidget->htmlContent();
+        const QString& str = htmlContent();
         d->mCurrentPost.setContent( str );
         d->isPostContentModified = false;
-        connect( d->editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+        connect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
     }
 }
 
@@ -200,8 +308,6 @@ BilboPost* PostEntry::currentPost()
 void PostEntry::setCurrentPost( const BilboPost &post )
 {
     kDebug();
-//     if(mCurrentPost)
-//         delete mCurrentPost;
     d->mCurrentPost = BilboPost( post );
 //     kDebug()<<"postId: "<<mCurrentPost.postId();
     this->setPostBody( d->mCurrentPost.content(), d->mCurrentPost.additionalContent() );
@@ -216,7 +322,7 @@ Qt::LayoutDirection PostEntry::defaultLayoutDirection()
 void PostEntry::setDefaultLayoutDirection( Qt::LayoutDirection direction )
 {
     kDebug();
-    d->editPostWidget->setLayoutDirection( direction );
+    d->tabWidget->setLayoutDirection( direction );
     d->txtTitle->setLayoutDirection( direction );
 }
 
@@ -224,6 +330,16 @@ PostEntry::~PostEntry()
 {
     kDebug();
     delete d;
+}
+
+QList< BilboMedia* > PostEntry::localImages()
+{
+    return d->wysiwygEditor->getLocalImages();
+}
+
+void PostEntry::replaceImageSrc(const QString& src, const QString& dest)
+{
+    d->wysiwygEditor->replaceImageSrc(src, dest);
 }
 
 bool PostEntry::uploadMediaFiles( Backend *backend )
@@ -235,18 +351,18 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
         localBackend = true;
         backend = new Backend( d->mCurrentPostBlogId, this );
     }
-    QList<BilboMedia*> localImages = d->editPostWidget->localImages();
-    if( localImages.size()>0 ) {
+    QList<BilboMedia*> lImages = localImages();
+    if( lImages.size()>0 ) {
         d->progress = new QProgressBar( this );
         layout()->addWidget( d->progress );
         d->progress->setRange( 0, 0 );
-        QList<BilboMedia*>::iterator it = localImages.begin();
-        QList<BilboMedia*>::iterator endIt = localImages.end();
+        QList<BilboMedia*>::iterator it = lImages.begin();
+        QList<BilboMedia*>::iterator endIt = lImages.end();
         for ( ; it != endIt; ++it ) {
                 BilboMedia *media = (*it);
                 SyncUploader *uploader = new SyncUploader(this);
                 if( uploader->uploadMedia( backend, media ) ){
-                    d->editPostWidget->replaceImageSrc( media->localUrl().url(),
+                    replaceImageSrc( media->localUrl().url(),
                                                         media->remoteUrl().url());
                 } else {
                     QString err = i18n( "Uploading the media file %1 failed.\n%2",
@@ -257,7 +373,7 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
                 }
                 uploader->deleteLater();
         }
-        d->mCurrentPost.setContent( d->editPostWidget->htmlContent() );
+        d->mCurrentPost.setContent( htmlContent() );
     }
     if(localBackend)
         backend->deleteLater();
@@ -379,7 +495,7 @@ are you sure you want to save an empty post?")) == KMessageBox::No )
 
 void PostEntry::saveTemporary( bool force )
 {
-    if( d->isPostContentModified || ( !d->editPostWidget->plainTextContent().isEmpty() && force ) ) {
+    if( d->isPostContentModified || ( !plainTextContent().isEmpty() && force ) ) {
         d->mCurrentPost.setId( DBMan::self()->saveTempEntry( *currentPost(), d->mCurrentPostBlogId) );
         emit postSavedTemporary();
         kDebug()<<"Temporary saved";
@@ -389,9 +505,9 @@ void PostEntry::saveTemporary( bool force )
 void PostEntry::slotPostModified()
 {
     kDebug();
-    disconnect( d->editPostWidget, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+    disconnect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
 //         disconnect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
-    emit postModified();
+//     emit postModified();
     d->isPostContentModified = true;
 }
 

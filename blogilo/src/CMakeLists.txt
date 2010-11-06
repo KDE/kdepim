@@ -23,7 +23,6 @@ set(blogilo_SRCS
  syncuploader.cpp
  composer/htmleditor.cpp
  composer/stylegetter.cpp
- composer/bilboeditor.cpp
  composer/dialogs/addeditlink.cpp
  composer/dialogs/addmediadialog.cpp
  composer/dialogs/addeditimage.cpp
