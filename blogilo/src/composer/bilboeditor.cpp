@@ -54,14 +54,7 @@
 #include "dialogs/addeditlink.h"
 #include "dialogs/addeditimage.h"
 
-#include "htmlconvertors/bilbotextformat.h"
-#include "htmlconvertors/bilbotexthtmlimporter.h"
-#include "htmlconvertors/htmlexporter.h"
-#include <settings.h>
-
-#define FORWARD_ACTION(action1, action2) \
-    connect(action1, SIGNAL(triggered()), d->wysiwygEditor->getAction(action2), SLOT(trigger()));\
-    connect(d->wysiwygEditor->getAction(action2), SIGNAL(changed()), SLOT(adjustActions()));
+#include "settings.h"
 
 class BilboEditor::Private
 {

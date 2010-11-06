@@ -25,31 +25,13 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include <QSettings>
-// #include "dbman.h"
-
 /**
 Global variables.
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
  @author Golnaz Nilieh <g382nilieh@gmail.com>
  */
 
-// class QSettings;
-// class Settings;
-
-// extern Settings *__conf;
-
-// extern DBMan *__db;
-
 extern int __currentBlogId;
-
-
-// enum api_type { BLOGGER_API = 0,
-//  METAWEBLOG_API,
-//  MOVABLETYPE_API,
-//  WORDPRESSBUGGY_API,
-//  GDATA_API
-// };
 
 void global_init();
 void global_end();

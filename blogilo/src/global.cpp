@@ -25,15 +25,12 @@
 #include "global.h"
 #include "dbman.h"
 #include <kdebug.h>
-// Settings *__conf;
-// DBMan *__db;
+
 int __currentBlogId;
 
 void global_init()
 {
     kDebug();
-// //  __conf = new Settings;
-//  __db = new DBMan;
     __currentBlogId = -1;
 }
 
