@@ -491,6 +491,7 @@ KPIM.MainView {
               application.restoreDraft(threadContentsView.currentItemId);
               updateContextActionStates()
             }
+            _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
           }
         }
       }
