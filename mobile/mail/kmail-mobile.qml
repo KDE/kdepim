@@ -210,24 +210,15 @@ KPIM.MainView {
       color: "lightgray"
       z: 1
       //how to calculate the height needed for buttons?
-      height: 240
+      height: 168
 
       QML.Column {
             anchors.fill: parent
-            height : 210
             KPIM.Button2 {
               width: parent.width
-              buttonText : KDE.i18n( "Mark as Read" )
+              buttonText : application.getAction("akonadi_mark_as_read", "").iconText;
               onClicked : {
                 application.getAction("akonadi_mark_as_read", "").trigger();
-                markOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Mark as Unread" )
-              onClicked : {
-                application.getAction("akonadi_mark_as_unread", "").trigger();
                 markOptionsPage.visible = false
               }
             }
