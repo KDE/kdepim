@@ -39,7 +39,7 @@ class AddEditImage : public AddMediaDialog
 {
     Q_OBJECT
 public:
-    AddEditImage(QWidget* parent, QMap<QString, QString> mediaToEdit = QMap<QString, QString>());
+    AddEditImage(QWidget* parent, QMap<QString, QString> mediaToEdit = (QMap<QString, QString>()));
 
     ~AddEditImage();
 
