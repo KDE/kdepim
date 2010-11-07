@@ -43,6 +43,7 @@ AddEditLink::AddEditLink( QWidget *parent )
 AddEditLink::AddEditLink(const QString& address, const QString& title, const QString& target,
                          QWidget* parent): KDialog(parent), d(new Private)
 {
+    initUi();
     if ( address.isEmpty() ) {
         d->ui.txtAddress->insertUrl(0, QString());
         d->ui.txtAddress->setCurrentIndex(0);
@@ -61,7 +62,6 @@ AddEditLink::AddEditLink(const QString& address, const QString& title, const QSt
             d->ui.comboTarget->setCurrentIndex( 2 );
         }
     }
-    initUi();
 }
 
 AddEditLink::~AddEditLink()

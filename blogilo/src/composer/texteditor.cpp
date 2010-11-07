@@ -51,7 +51,6 @@
 #include <qwebelement.h>
 #include <KMenu>
 
-#define ATTACHMENT_IMAGE "image"
 #define FORWARD_ACTION(action1, action2) \
     connect(action1, SIGNAL(triggered()), getAction(action2), SLOT(trigger()));\
     connect(getAction(action2), SIGNAL(changed()), SLOT(adjustActions()));
@@ -101,73 +100,96 @@ void WebView::contextMenuEvent(QContextMenuEvent* event)
 {
     QWebHitTestResult hitTest = page()->mainFrame()->hitTestContent(event->pos());
     QWebElement elm = hitTest.element();
+    QWebElement linkElm = hitTest.linkElement();
+    QMenu *menu = page()->createStandardContextMenu();
+    KAction* actEditImage = new KAction(KIcon(""), i18n("Edit Image"), menu);//TODO we need an icon
+    KAction* actRemoveImage = new KAction(KIcon("edit-delete"), i18n("Remove Image"), menu);
+    KAction* actEditLink = new KAction(KIcon("insert-link"), i18n("Edit Hyperlink"), menu);
+    KAction* actRemoveLink = new KAction(KIcon("remove-link"), i18n("Remove Hyperlink"), menu);
     if(elm.tagName().toLower() == "img"){
-        QWebElement linkElm = elm.parent();
-        bool weHaveALink = false;
-        if(linkElm.tagName().toLower() == "a"){
-            weHaveALink = true;
+        menu->addSeparator();
+        menu->addAction(actEditImage);
+        menu->addAction(actRemoveImage);
+    }
+    if( !linkElm.isNull() ) {
+        menu->addSeparator();
+        menu->addAction(actEditLink);
+        menu->addAction(actRemoveLink);
+    }
+    QAction *res = menu->exec(event->globalPos());
+    if(res == actEditImage){
+        QMap<QString, QString> img;
+        img.insert("url", elm.attribute("src"));
+        img.insert("width", elm.attribute("width"));
+        img.insert("height", elm.attribute("height"));
+        img.insert("title", elm.attribute("title"));
+        img.insert("alt", elm.attribute("alt"));
+        img.insert("align", elm.attribute("align"));
+        if( !linkElm.isNull() )
+            img.insert("link", linkElm.attribute("href"));
+        QPointer<AddEditImage> dlg = new AddEditImage(this, img);
+        if(dlg->exec()){
+            img = dlg->selectedMediaProperties();
+            elm.setAttribute("src", img["url"]);
+            if(img["align"].isEmpty())
+                elm.removeAttribute("align");
+            else
+                elm.setAttribute("align", img["align"]);
+            if(img.value("width").isEmpty() || img.value("width")=="0")
+                elm.removeAttribute("width");
+            else
+                elm.setAttribute("width", img["width"]);
+            if(img.value("height").isEmpty() || img.value("height")=="0")
+                elm.removeAttribute("height");
+            else
+                elm.setAttribute("height", img["height"]);
+            if(img.value("title").isEmpty())
+                elm.removeAttribute("title");
+            else
+                elm.setAttribute("title", img["title"]);
+            if(img.value("alt").isEmpty())
+                elm.removeAttribute("alt");
+            else
+                elm.setAttribute("alt", img["alt"]);
+            if( !linkElm.isNull() ){
+                if(img.value("link").isEmpty())
+                    linkElm.removeFromDocument();
+                else {
+                    linkElm.setAttribute("href", img.value("link"));
+                }
+            } /* :(( Does not work:
+            else if(!img.value("link").isEmpty()){
+                QWebElement tmpLink;
+                tmpLink.setOuterXml(QString("<a href='%1'></a>").arg(img["link"]));
+                kDebug()<<tmpLink.toOuterXml();
+                tmpLink.appendInside(elm);
+                kDebug()<<tmpLink.toOuterXml();
+                elm.replace(tmpLink);
+            }*/
         }
-        KMenu menu;
-        KAction *actEditImage = new KAction(KIcon(""), i18n("Edit Image"), &menu);
-        KAction *actRemoveImage = new KAction(KIcon(""), i18n("Remove Image"), &menu);
-        menu.addAction(actEditImage);
-        menu.addAction(actRemoveImage);
-        QAction *res = menu.exec(event->globalPos());
-        if(res == actEditImage){
-            QMap<QString, QString> img;
-            img.insert("url", elm.attribute("src"));
-            img.insert("width", elm.attribute("width"));
-            img.insert("height", elm.attribute("height"));
-            img.insert("title", elm.attribute("title"));
-            img.insert("alt", elm.attribute("alt"));
-            img.insert("align", elm.attribute("align"));
-            if(weHaveALink)
-                img.insert("link", linkElm.attribute("href"));
-            QPointer<AddEditImage> dlg = new AddEditImage(this, img);
-            if(dlg->exec()){
-                img = dlg->selectedMediaProperties();
-                elm.setAttribute("src", img["url"]);
-                if(img["align"].isEmpty())
-                    elm.removeAttribute("align");
-                else
-                    elm.setAttribute("align", img["align"]);
-                if(img.value("width").isEmpty() || img.value("width")=="0")
-                    elm.removeAttribute("width");
-                else
-                    elm.setAttribute("width", img["width"]);
-                if(img.value("height").isEmpty() || img.value("height")=="0")
-                    elm.removeAttribute("height");
-                else
-                    elm.setAttribute("height", img["height"]);
-                if(img.value("title").isEmpty())
-                    elm.removeAttribute("title");
-                else
-                    elm.setAttribute("title", img["title"]);
-                if(img.value("alt").isEmpty())
-                    elm.removeAttribute("alt");
-                else
-                    elm.setAttribute("alt", img["alt"]);
-                if(weHaveALink){
-                    if(img.value("link").isEmpty())
-                        linkElm.removeFromDocument();
-                    else {
-                        linkElm.setAttribute("href", img.value("link"));
-                    }
-                } /* :(( Does not work:
-                else if(!img.value("link").isEmpty()){
-                    QWebElement tmpLink;
-                    tmpLink.setOuterXml(QString("<a href='%1'></a>").arg(img["link"]));
-                    kDebug()<<tmpLink.toOuterXml();
-                    tmpLink.appendInside(elm);
-                    kDebug()<<tmpLink.toOuterXml();
-                    elm.replace(tmpLink);
-                }*/
+    } else if(res == actRemoveImage){
+        elm.removeFromDocument();
+    } else if(res == actEditLink){
+        QPointer<AddEditLink> dlg = new AddEditLink( linkElm.attribute("href"),
+                                                        linkElm.attribute("title"),
+                                                        linkElm.attribute("target"),
+                                                        this);
+        if(dlg->exec()){
+            Link lnk = dlg->result();
+            linkElm.setAttribute("href", lnk.address);
+            if(lnk.target.isEmpty()){
+                linkElm.removeAttribute("target");
+            } else {
+                linkElm.setAttribute("target", lnk.target);
             }
-        } else if(res == actRemoveImage){
-            elm.removeFromDocument();
+            if(lnk.title.isEmpty()){
+                linkElm.removeAttribute("title");
+            } else {
+                linkElm.setAttribute("title", lnk.title);
+            }
         }
-    } else {
-        QWebView::contextMenuEvent(event);
+    } else if(res == actRemoveLink) {
+        page()->mainFrame()->evaluateJavaScript("document.execCommand(\"unLink\", false, null)");
     }
 }
 
@@ -335,13 +357,13 @@ void TextEditor::createActions()
 
     actAddLink = new KAction( KIcon( "insert-link" ), i18nc(
                              "verb, to add a new link or edit an existing one",
-                             "Add/Edit Link" ), this );
+                             "Add Hyperlink" ), this );
     connect( actAddLink, SIGNAL( triggered( bool ) ), this, SLOT(slotAddEditLink()));
     barVisual->addAction( actAddLink );
 
     actRemoveLink = new KAction( KIcon( "remove-link" ), i18nc(
                                 "verb, to remove an existing link",
-                                "Remove Link" ), this );
+                                "Remove Hyperlink" ), this );
     connect( actRemoveLink, SIGNAL( triggered( bool ) ), this, SLOT(slotRemoveLink()));
     barVisual->addAction( actRemoveLink );
 
