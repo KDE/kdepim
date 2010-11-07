@@ -54,12 +54,11 @@ IncidenceSearchJob::IncidenceSearchJob( QObject * parent )
                                           "</request>"
 #else
                                           "prefix ncal:<http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#>"
-                                          "SELECT ?r WHERE {"
-                                          "{ ?r a ncal:Journal . }"
-                                          "UNION"
-                                          "{ ?r a ncal:Event . }"
-                                          "UNION"
-                                          "{ ?r a ncal:Todo . } }"
+                                          "SELECT ?r WHERE"
+                                          "{"
+                                          "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
+                                          "?r a ?subclasses ."
+                                          "}"
 #endif
                          ) );
 }
