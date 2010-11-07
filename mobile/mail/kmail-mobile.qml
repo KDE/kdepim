@@ -233,7 +233,7 @@ KPIM.MainView {
             }
             KPIM.Button2 {
               width: parent.width
-              buttonText : KDE.i18n( "Mark as Important" )
+              buttonText : application.getAction("akonadi_mark_as_important", "").iconText;
               onClicked : {
                 application.getAction("akonadi_mark_as_important", "").trigger();
                 markOptionsPage.visible = false
@@ -241,7 +241,7 @@ KPIM.MainView {
             }
             KPIM.Button2 {
               width: parent.width
-              buttonText : KDE.i18n( "Mark as Action Item" )
+              buttonText : application.getAction("akonadi_mark_as_action_item", "").iconText;
               onClicked : {
                 application.getAction("akonadi_mark_as_action_item", "").trigger();
                 markOptionsPage.visible = false
