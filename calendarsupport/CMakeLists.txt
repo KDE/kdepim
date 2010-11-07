@@ -31,7 +31,6 @@ set(calendarsupport_LIB_SRCS
   identitymanager.cpp
   incidencechanger.cpp
   incidencefilterproxymodel.cpp
-  incidencesearchjob.cpp
   incidenceviewer.cpp
   invitationhandler.cpp
   kcalmodel.cpp
@@ -44,6 +43,7 @@ set(calendarsupport_LIB_SRCS
 
   next/history.cpp
   next/incidencechanger2.cpp
+  next/incidencesearchjob.cpp
 )
 
 if (NOT WINCE)

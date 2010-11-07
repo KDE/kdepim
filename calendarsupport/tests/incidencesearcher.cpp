@@ -20,7 +20,7 @@
 
 #include "incidencesearcher.h"
 
-#include "../incidencesearchjob.h"
+#include "../next/incidencesearchjob.h"
 
 #include <KCalCore/Incidence>
 

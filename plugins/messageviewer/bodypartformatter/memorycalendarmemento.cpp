@@ -19,7 +19,7 @@
 */
 #include "memorycalendarmemento.h"
 
-#include <calendarsupport/incidencesearchjob.h>
+#include <calendarsupport/next/incidencesearchjob.h>
 #include <KSystemTimeZones>
 
 using namespace MessageViewer;
@@ -27,7 +27,6 @@ using namespace MessageViewer;
 MemoryCalendarMemento::MemoryCalendarMemento()
   : QObject( 0 ), mFinished( false )
 {
-  kDebug() << "DEBUG";
   CalendarSupport::IncidenceSearchJob *job = new CalendarSupport::IncidenceSearchJob();
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotSearchJobFinished( KJob* ) ) );
 }

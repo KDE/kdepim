@@ -1,3 +1,5 @@
+include_directories(${CMAKE_SOURCE_DIR}/calendarsupport)
+
 set ( incidencesearcher_SRC
       incidencesearcher.cpp )
 

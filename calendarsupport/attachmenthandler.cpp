@@ -28,7 +28,7 @@
 */
 #include "attachmenthandler.h"
 #include "akonadicalendar.h"
-#include "incidencesearchjob.h"
+#include "next/incidencesearchjob.h"
 
 #include <KFileDialog>
 #include <KLocale>

@@ -159,6 +159,7 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
         "?r ncal:uid ?uid ."
+        //"?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "FILTER REGEX( ?uid, \"%1\", 'i')"
         "}"
 #endif
@@ -172,7 +173,6 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
 #endif
   }
   query = query.arg( value );
-
   ItemSearchJob::setQuery( query );
   // qDebug() << query;
 }

@@ -23,7 +23,7 @@
 #include "groupware.h"
 #include "mailscheduler.h"
 #include "nepomukcalendar.h"
-#include "incidencesearchjob.h"
+#include "next/incidencesearchjob.h"
 
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
