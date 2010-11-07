@@ -58,6 +58,7 @@ IncidenceSearchJob::IncidenceSearchJob( QObject * parent )
                                           "{"
                                           "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
                                           "?r a ?subclasses ."
+                                          "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
                                           "}"
 #endif
                          ) );
@@ -101,6 +102,7 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
         "?r ncal:uid \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
+        "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "}"
 #endif
       );
@@ -129,6 +131,7 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
         "?r ncal:uid ?uid ."
+        "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "FILTER REGEX( ?uid, \"^%1\", 'i')"
         "}"
 #endif
@@ -158,7 +161,7 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
         "?r ncal:uid ?uid ."
-        //"?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "FILTER REGEX( ?uid, \"%1\", 'i')"
         "}"
 #endif
