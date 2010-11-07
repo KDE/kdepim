@@ -358,7 +358,7 @@ void TextEditor::createActions()
     actAddLink = new KAction( KIcon( "insert-link" ), i18nc(
                              "verb, to add a new link or edit an existing one",
                              "Add Hyperlink" ), this );
-    connect( actAddLink, SIGNAL( triggered( bool ) ), this, SLOT(slotAddEditLink()));
+    connect( actAddLink, SIGNAL( triggered( bool ) ), this, SLOT(slotAddLink()));
     barVisual->addAction( actAddLink );
 
     actRemoveLink = new KAction( KIcon( "remove-link" ), i18nc(
@@ -613,7 +613,6 @@ void TextEditor::replaceImageSrc(const QString& src, const QString& dest)
     kDebug()<<"Replaced "<<src<<" with "<<dest;
 }
 
-
 static QUrl guessUrlFromString(const QString &string)
 {
     QString urlStr = string.trimmed();
@@ -647,7 +646,7 @@ static QUrl guessUrlFromString(const QString &string)
     return QUrl(string, QUrl::TolerantMode);
 }
 
-void TextEditor::slotAddEditLink()
+void TextEditor::slotAddLink()
 {
     QPointer<AddEditLink> addLinkDlg = new AddEditLink(this);
     if( addLinkDlg->exec() ){

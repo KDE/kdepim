@@ -98,7 +98,7 @@ public slots:
     void slotDecreaseFontSize();
     void formatTextColor();
     void slotToggleBlockQuote(bool);
-    void slotAddEditLink();
+    void slotAddLink();
     void slotRemoveLink();
     void slotAddImage();
     void slotChangeLayoutDirection(bool rightToLeft);
