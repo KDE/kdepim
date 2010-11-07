@@ -27,12 +27,14 @@ using namespace MessageViewer;
 MemoryCalendarMemento::MemoryCalendarMemento()
   : QObject( 0 ), mFinished( false )
 {
+  kDebug() << "DEBUG";
   CalendarSupport::IncidenceSearchJob *job = new CalendarSupport::IncidenceSearchJob();
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotSearchJobFinished( KJob* ) ) );
 }
 
 void MemoryCalendarMemento::slotSearchJobFinished( KJob *job )
 {
+  kDebug();
   mFinished = true;
   CalendarSupport::IncidenceSearchJob *searchJob = static_cast<CalendarSupport::IncidenceSearchJob*>( job );
   if ( searchJob->error() ) {

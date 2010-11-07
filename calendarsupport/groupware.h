@@ -36,6 +36,7 @@
 
 #include "calendarsupport_export.h"
 #include "incidencechanger.h"
+#include "nepomukcalendar.h"
 
 #include <KCalCore/ICalFormat>
 
@@ -44,6 +45,8 @@ namespace Akonadi {
 }
 
 namespace CalendarSupport {
+
+class MailScheduler;
 
 class CALENDARSUPPORT_EXPORT GroupwareUiDelegate
 {
@@ -68,8 +71,10 @@ class CALENDARSUPPORT_EXPORT Groupware : public QObject
       int sendingErrorAnswer;
     };
 
-    static Groupware *create( CalendarSupport::Calendar *, GroupwareUiDelegate * );
+    static Groupware *create( GroupwareUiDelegate * );
     static Groupware *instance();
+
+    ~Groupware();
 
     /** Send iCal messages after asking the user
          Returns false if the user cancels the dialog, and true if the
@@ -95,31 +100,33 @@ class CALENDARSUPPORT_EXPORT Groupware : public QObject
                           IncidenceChanger::HowChanged action,
                           bool attendeeStatusChanged,
                           SendICalMessageDialogAnswers &dialogAnswers,
+                          MailScheduler &scheduler,
                           bool reuseDialogAnswers = false );
 
-    /**
-      Send counter proposal message.
-      @param oldEvent The original event provided in the invitations.
-      @param newEvent The new event as edited by the user.
-    */
-    void sendCounterProposal( KCalCore::Event::Ptr oldEvent, KCalCore::Event::Ptr newEvent ) const;
 
     // DoNotNotify is a flag indicating that the user does not want
     // updates sent back to the organizer.
     void setDoNotNotify( bool notify ) { mDoNotNotify = notify; }
     bool doNotNotify() { return mDoNotNotify; }
+    void handleInvitation( const QString &receiver,
+                           const QString &iCal,
+                           const QString &type );
+  private Q_SLOTS:
+    void finishHandlingInvitation();
 
-    bool handleInvitation( const QString &receiver, const QString &iCal, const QString &type );
+  Q_SIGNALS:
+    void handleInvitationFinished( bool success, const QString &errorMessage );
 
   protected:
-    Groupware( CalendarSupport::Calendar *, GroupwareUiDelegate * );
+    Groupware( GroupwareUiDelegate * );
 
   private:
     static Groupware *mInstance;
     KCalCore::ICalFormat mFormat;
-    Calendar *mCalendar;
     GroupwareUiDelegate *mDelegate;
     bool mDoNotNotify;
+    class Private;
+    Private *const d;
 };
 
 }

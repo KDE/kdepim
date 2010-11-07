@@ -38,6 +38,7 @@ set(calendarsupport_LIB_SRCS
   kcalprefs.cpp
   mailclient.cpp
   mailscheduler.cpp
+  nepomukcalendar.cpp
   publishdialog.cpp
   utils.cpp
 

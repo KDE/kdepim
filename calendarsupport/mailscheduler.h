@@ -23,7 +23,9 @@
 #define CALENDARSUPPORT_MAILSCHEDULER_H
 
 #include "calendarsupport_export.h"
+#include "nepomukcalendar.h"
 
+#include <KCalCore/Calendar>
 #include <KCalCore/Incidence>
 #include <KCalCore/IncidenceBase>
 #include <KCalCore/ScheduleMessage>
@@ -33,9 +35,7 @@ namespace KCalCore {
 }
 
 namespace CalendarSupport {
-
-class Calendar;
-
+  class Calendar;
 /*
   This class implements the iTIP interface using the email interface specified
   as Mail.
@@ -43,7 +43,8 @@ class Calendar;
 class CALENDARSUPPORT_EXPORT MailScheduler //: public Scheduler
 {
   public:
-    explicit MailScheduler( Calendar *calendar );
+    explicit MailScheduler( CalendarSupport::Calendar *calendar );
+    explicit MailScheduler( const NepomukCalendar::Ptr &calendar );
     virtual ~MailScheduler();
 
     bool publish ( const KCalCore::IncidenceBase::Ptr &incidence,
@@ -56,9 +57,11 @@ class CALENDARSUPPORT_EXPORT MailScheduler //: public Scheduler
                              KCalCore::iTIPMethod method,
                              const QString &recipients );
 #if 0
+
     QList<KCalCore::ScheduleMessage*> retrieveTransactions();
 
     bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
+
 #endif
 
     /** Returns the directory where the free-busy information is stored */
@@ -85,7 +88,9 @@ class CALENDARSUPPORT_EXPORT MailScheduler //: public Scheduler
     bool acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
   private:
+    KCalCore::Calendar::Ptr calendar() const;
     Calendar *mCalendar;
+    NepomukCalendar::Ptr mNepomukCalendar;
     KCalCore::ICalFormat *mFormat;
 #if 0
     QMap<KCalCore::IncidenceBase::Ptr, QString> mEventMap;

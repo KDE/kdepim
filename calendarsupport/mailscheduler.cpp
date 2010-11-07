@@ -21,6 +21,7 @@
 */
 
 #include "mailscheduler.h"
+#include "nepomukcalendar.h"
 #include "calendar.h"
 #include "calendaradaptor.h"
 #include "kcalprefs.h"
@@ -56,6 +57,17 @@ MailScheduler::MailScheduler( CalendarSupport::Calendar *calendar )
   } else {
     mFormat->setTimeSpec( KSystemTimeZones::local() );
   }
+}
+
+MailScheduler::MailScheduler( const NepomukCalendar::Ptr &nepomukCalendar )
+  : mCalendar( 0 ), mNepomukCalendar( nepomukCalendar ), mFormat( new KCalCore::ICalFormat() )
+{
+  if ( nepomukCalendar ) {
+    mFormat->setTimeSpec( nepomukCalendar->timeSpec() );
+  } else {
+    mFormat->setTimeSpec( KSystemTimeZones::local() );
+  }
+
 }
 
 MailScheduler::~MailScheduler()
@@ -123,6 +135,7 @@ bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
   return status;
 }
 #if 0
+/*
 QList<ScheduleMessage*> MailScheduler::retrieveTransactions()
 {
   QString incomingDirName = KStandardDirs::locateLocal( "data",
@@ -155,8 +168,8 @@ QList<ScheduleMessage*> MailScheduler::retrieveTransactions()
         messageString.remove( QRegExp( QLatin1String( "\n[ \t]" ) ) );
         messageString = QString::fromUtf8( messageString.toLatin1() );
 
-        CalendarAdaptor::Ptr caladaptor( new CalendarAdaptor( mCalendar, 0 ) );
-        ScheduleMessage *mess = mFormat->parseScheduleMessage( caladaptor, messageString );
+        KCalCore::Calendar::Ptr calendar = calendarr();
+        ScheduleMessage *mess = mFormat->parseScheduleMessage( calendar, messageString );
 
         if ( mess ) {
           kDebug() << "got message '" << (*it) << "'";
@@ -188,6 +201,7 @@ bool MailScheduler::deleteTransaction( const KCalCore::IncidenceBase::Ptr &incid
   }
   return status;
 }
+*/
 #endif
 
 QString MailScheduler::freeBusyDir() const
@@ -203,8 +217,9 @@ bool MailScheduler::acceptTransaction( const KCalCore::IncidenceBase::Ptr &incid
   class SchedulerAdaptor : public KCalUtils::Scheduler
   {
     public:
-      SchedulerAdaptor( MailScheduler *s, const CalendarAdaptor::Ptr &c )
-        : KCalUtils::Scheduler( c ), m_scheduler( s )
+      SchedulerAdaptor( MailScheduler *scheduler,
+                        const KCalCore::Calendar::Ptr &calendar )
+        : KCalUtils::Scheduler( calendar ), m_scheduler( scheduler )
       {
       }
 
@@ -250,8 +265,7 @@ bool MailScheduler::acceptTransaction( const KCalCore::IncidenceBase::Ptr &incid
       MailScheduler *m_scheduler;
   };
 
-  CalendarAdaptor::Ptr caladaptor( new CalendarAdaptor( mCalendar, 0 ) );
-  SchedulerAdaptor scheduleradaptor( this, caladaptor );
+  SchedulerAdaptor scheduleradaptor( this, calendar() );
   return scheduleradaptor.acceptTransaction( incidence, method, status, email );
 }
 
@@ -304,4 +318,15 @@ bool MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incid
   }
 
   return true;
+}
+
+KCalCore::Calendar::Ptr MailScheduler::calendar() const
+{
+  if ( mCalendar ) {
+    return KCalCore::Calendar::Ptr( new CalendarAdaptor( mCalendar, 0 ) );
+  } else if ( mNepomukCalendar ) {
+    return mNepomukCalendar;
+  } else {
+    return KCalCore::Calendar::Ptr();
+  }
 }

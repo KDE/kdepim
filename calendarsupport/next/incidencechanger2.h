@@ -23,7 +23,7 @@
 #ifndef CALENDARSUPPORT_INCIDENCECHANGER2_H
 #define CALENDARSUPPORT_INCIDENCECHANGER2_H
 
-#include "calendarsupport_export.h"
+#include "../calendarsupport_export.h"
 
 #include <Akonadi/Item>
 #include <Akonadi/Collection>

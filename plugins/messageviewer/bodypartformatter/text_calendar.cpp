@@ -740,7 +740,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
         IncidenceEditorNG::GroupwareIntegration::activate();
       }
 #endif
-      return CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
+      CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
+      // TODO: catch signal, and do error handling
+      return true;
     }
 
     bool cancelPastInvites( const Incidence::Ptr incidence, const QString &path ) const

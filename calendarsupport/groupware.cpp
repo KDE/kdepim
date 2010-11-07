@@ -33,7 +33,6 @@
 */
 
 #include "groupware.h"
-#include "calendaradaptor.h"
 #include "kcalprefs.h"
 #include "mailscheduler.h"
 
@@ -51,10 +50,24 @@ GroupwareUiDelegate::~GroupwareUiDelegate()
 {
 }
 
-Groupware *Groupware::create( CalendarSupport::Calendar *calendar, GroupwareUiDelegate *delegate )
+
+struct Invitation {
+  QString type;
+  QString iCal;
+  QString receiver;
+};
+
+class Groupware::Private
+{
+  public:
+    Private() {}
+    QHash<NepomukCalendar::Ptr,Invitation*> mInvitationByCalendar;
+};
+
+Groupware *Groupware::create( GroupwareUiDelegate *delegate )
 {
   if ( !mInstance ) {
-    mInstance = new Groupware( calendar, delegate );
+    mInstance = new Groupware( delegate );
   }
   return mInstance;
 }
@@ -66,20 +79,48 @@ Groupware *Groupware::instance()
   return mInstance;
 }
 
-Groupware::Groupware( CalendarSupport::Calendar *cal, GroupwareUiDelegate *delegate )
-  : QObject( 0 ), mCalendar( cal ), mDelegate( delegate ), mDoNotNotify( false )
+Groupware::Groupware( GroupwareUiDelegate *delegate )
+  : QObject( 0 ), mDelegate( delegate ), mDoNotNotify( false ), d( new Private )
 {
   setObjectName( QLatin1String( "kmgroupware_instance" ) );
 }
 
-bool Groupware::handleInvitation( const QString &receiver,
+Groupware::~Groupware()
+{
+  delete d;
+}
+
+void Groupware::handleInvitation( const QString &receiver,
                                   const QString &iCal,
                                   const QString &type )
 {
-  const QString action = type;
+  NepomukCalendar::Ptr calendar = NepomukCalendar::create();
+  connect( calendar.data(), SIGNAL(loadFinished(bool,QString)),
+           SLOT(finishHandlingInvitation()) );
 
-  CalendarAdaptor::Ptr adaptor( new CalendarAdaptor( mCalendar, 0 ) );
-  KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( adaptor, iCal );
+  Invitation *invitation = new Invitation();
+  invitation->receiver = receiver;
+  invitation->iCal = iCal;
+  invitation->type = type;
+  d->mInvitationByCalendar.insert( calendar, invitation );
+}
+
+// Our NepomukCalendar was loading, so we finish our handleInvitation() here:
+void Groupware::finishHandlingInvitation()
+{
+  QWeakPointer<NepomukCalendar> weakPtr = qobject_cast<NepomukCalendar*>( sender() )->weakPointer();
+
+  NepomukCalendar::Ptr calendar( weakPtr.toStrongRef() );
+  QScopedPointer<Invitation> invitation( d->mInvitationByCalendar.take( calendar ) );
+
+  kDebug() << "DEBUG calendar has " << calendar->incidences().count();
+
+  const QString iCal = invitation->iCal;
+  const QString receiver = invitation->receiver;
+  const QString action = invitation->type;
+
+  KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( calendar,
+                                                                         iCal );
   if ( !message ) {
     QString errorMessage;
     if ( mFormat.exception() ) {
@@ -91,16 +132,19 @@ bool Groupware::handleInvitation( const QString &receiver,
       0,
       i18n( "Error while processing an invitation or update." ),
       errorMessage );
-    return false;
+    emit handleInvitationFinished( false/*error*/, errorMessage );
+    return;
   }
 
   KCalCore::iTIPMethod method = static_cast<KCalCore::iTIPMethod>( message->method() );
   KCalCore::ScheduleMessage::Status status = message->status();
   KCalCore::Incidence::Ptr incidence = message->event().staticCast<KCalCore::Incidence>();
   if ( !incidence ) {
-    return false;
+    emit handleInvitationFinished( false/*error*/,
+                                   QLatin1String( "Invalid incidence" ) );
+    return;
   }
-  MailScheduler scheduler( mCalendar );
+  MailScheduler scheduler( calendar );
   if ( action.startsWith( QLatin1String( "accepted" ) ) ||
        action.startsWith( QLatin1String( "tentative" ) ) ||
        action.startsWith( QLatin1String( "delegated" ) ) ||
@@ -140,7 +184,8 @@ bool Groupware::handleInvitation( const QString &receiver,
       // send update to all attendees
       SendICalMessageDialogAnswers dialogAnswers;
       sendICalMessage( 0, KCalCore::iTIPRequest, incidence,
-                       IncidenceChanger::INCIDENCEEDITED, false, dialogAnswers /*byref*/ );
+                       IncidenceChanger::INCIDENCEEDITED, false,
+                       dialogAnswers /*byref*/, scheduler );
     }
   } else {
     kError() << "Unknown incoming action" << action;
@@ -151,7 +196,8 @@ bool Groupware::handleInvitation( const QString &receiver,
     item.setPayload( KCalCore::Incidence::Ptr( incidence->clone() ) );
     mDelegate->requestIncidenceEditor( item );
   }
-  return true;
+
+  emit handleInvitationFinished( true/*success*/, QString() );
 }
 
 class KOInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
@@ -175,6 +221,7 @@ bool Groupware::sendICalMessage( QWidget *parent,
                                  IncidenceChanger::HowChanged action,
                                  bool attendeeStatusChanged,
                                  SendICalMessageDialogAnswers &dialogAnswers,
+                                 MailScheduler &scheduler,
                                  bool reuseDialogAnswers )
 {
   // If there are no attendees, don't bother
@@ -352,7 +399,6 @@ bool Groupware::sendICalMessage( QWidget *parent,
       incidence->setSummary( i18n( "<placeholder>No summary given</placeholder>" ) );
     }
     // Send the mail
-    MailScheduler scheduler( mCalendar );
     if ( scheduler.performTransaction( incidence, method ) ) {
       return true;
     }
@@ -373,28 +419,6 @@ bool Groupware::sendICalMessage( QWidget *parent,
     return true;
   } else {
     return false;
-  }
-}
-
-void Groupware::sendCounterProposal( KCalCore::Event::Ptr oldEvent,
-                                     KCalCore::Event::Ptr newEvent ) const
-{
-  if ( !oldEvent || !newEvent || *oldEvent == *newEvent ||
-       !KCalPrefs::instance()->mUseGroupwareCommunication ) {
-    return;
-  }
-  if ( KCalPrefs::instance()->outlookCompatCounterProposals() ) {
-    KCalCore::Incidence::Ptr tmp = KCalCore::Incidence::Ptr( oldEvent->clone() );
-    tmp->setSummary( i18n( "Counter proposal: %1", newEvent->summary() ) );
-    tmp->setDescription( newEvent->description() );
-    tmp->addComment( i18n( "Proposed new meeting time: %1 - %2",
-                           KCalUtils::IncidenceFormatter::dateToString( newEvent->dtStart() ),
-                           KCalUtils::IncidenceFormatter::dateToString( newEvent->dtEnd() ) ) );
-    MailScheduler scheduler( mCalendar );
-    scheduler.performTransaction( tmp, KCalCore::iTIPReply );
-  } else {
-    MailScheduler scheduler( mCalendar );
-    scheduler.performTransaction( newEvent, KCalCore::iTIPCounter );
   }
 }
 

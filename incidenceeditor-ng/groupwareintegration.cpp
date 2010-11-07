@@ -93,7 +93,7 @@ bool GroupwareIntegration::isActive()
 void GroupwareIntegration::activate()
 {
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
-  CalendarSupport::Groupware::create( globalDelegate->mCalendar, &*globalDelegate );
+  CalendarSupport::Groupware::create( &*globalDelegate );
   sActivated = true;
 }
 
