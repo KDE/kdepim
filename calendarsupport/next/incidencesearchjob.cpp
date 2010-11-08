@@ -54,10 +54,12 @@ IncidenceSearchJob::IncidenceSearchJob( QObject * parent )
                                           "</request>"
 #else
                                           "prefix ncal:<http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#>"
+                                          "prefix nao:<http://www.semanticdesktop.org/ontologies/2007/08/15/nao#>"
                                           "SELECT ?r WHERE"
                                           "{"
                                           "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
                                           "?r a ?subclasses ."
+                                          "?r nao:hasSymbol \"view-pim-calendar\"^^<http://www.w3.org/2001/XMLSchema#string> ."
                                           "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
                                           "}"
 #endif
@@ -101,6 +103,7 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "SELECT ?r WHERE {"
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
+        "?r nao:hasSymbol \"view-pim-calendar\"^^<http://www.w3.org/2001/XMLSchema#string> ."
         "?r ncal:uid \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
         "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "}"
@@ -131,6 +134,7 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
         "?r ncal:uid ?uid ."
+        "?r nao:hasSymbol \"view-pim-calendar\"^^<http://www.w3.org/2001/XMLSchema#string> ."
         "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "FILTER REGEX( ?uid, \"^%1\", 'i')"
         "}"
@@ -161,6 +165,7 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
         "?r ncal:uid ?uid ."
+        "?r nao:hasSymbol \"view-pim-calendar\"^^<http://www.w3.org/2001/XMLSchema#string> ."
         "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "FILTER REGEX( ?uid, \"%1\", 'i')"
         "}"
@@ -176,7 +181,6 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
   }
   query = query.arg( value );
   ItemSearchJob::setQuery( query );
-  // qDebug() << query;
 }
 
 void IncidenceSearchJob::setLimit( int limit )
