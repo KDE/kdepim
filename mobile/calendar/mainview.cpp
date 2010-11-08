@@ -103,7 +103,7 @@ MainView::~MainView()
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
-  setWindowTitle( i18n( "KDE Calendar" ) );
+  setWindowTitle( i18n( "Calendar" ) );
 
   addMimeType( KCalCore::Event::eventMimeType() );
   addMimeType( KCalCore::Todo::todoMimeType() );

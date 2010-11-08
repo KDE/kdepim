@@ -66,7 +66,7 @@ MainView::MainView( QWidget *parent )
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
-  setWindowTitle( i18n( "KDE Notes" ) );
+  setWindowTitle( i18n( "Notes" ) );
 
   qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.notes", 4, 5, "SearchWidget" );
 

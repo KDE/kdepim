@@ -278,7 +278,7 @@ void MainView::delayedInit()
 
   addMimeType( KMime::Message::mimeType() );
   itemFetchScope().fetchPayloadPart( MessagePart::Envelope );
-  setWindowTitle( i18n( "KDE Mail" ) );
+  setWindowTitle( i18n( "Mail" ) );
 
   MailActionManager *mailActionManager = new MailActionManager( actionCollection(), this );
   mailActionManager->setItemSelectionModel( itemSelectionModel() );

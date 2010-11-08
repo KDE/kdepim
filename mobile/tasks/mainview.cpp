@@ -88,7 +88,7 @@ MainView::~MainView()
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
-  setWindowTitle( i18n( "KDE Tasks" ) );
+  setWindowTitle( i18n( "Tasks" ) );
 
   addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();
