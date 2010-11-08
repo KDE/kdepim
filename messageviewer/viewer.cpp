@@ -77,6 +77,8 @@ Viewer::~Viewer()
 void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )
 {
   Q_D(Viewer);
+  if ( message == d->message() )
+    return;
   d->setMessage( message, updateMode );
 }
 
@@ -84,6 +86,8 @@ void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )
 void Viewer::setMessageItem( const Akonadi::Item &item, UpdateMode updateMode )
 {
   Q_D(Viewer);
+  if ( d->messageItem() == item )
+    return;
   if ( !item.isValid() || item.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
     d->setMessageItem( item, updateMode );
   } else {
