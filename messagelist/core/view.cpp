@@ -1899,7 +1899,7 @@ void View::slotSelectionChanged( const QItemSelection &, const QItemSelection & 
       {
         kDebug() << "View message selected [" << static_cast< MessageItem * >( it )->subject() << "]";
         d->mWidget->viewMessageSelected( static_cast< MessageItem * >( it ) );
-        d->mLastCurrentItem = 0;
+        d->mLastCurrentItem = it;
       }
     }
     break;
