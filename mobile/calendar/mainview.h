@@ -41,6 +41,7 @@ class IdentityManager;
 class CalendarInterface;
 class KJob;
 class QDate;
+class ConfigWidget;
 
 class MainView : public KDeclarativeMainView
 {
@@ -50,6 +51,8 @@ class MainView : public KDeclarativeMainView
     explicit MainView( QWidget* parent = 0 );
 
     ~MainView();
+
+    void setConfigWidget( ConfigWidget *configWidget );
 
   public Q_SLOTS:
     void showRegularCalendar();

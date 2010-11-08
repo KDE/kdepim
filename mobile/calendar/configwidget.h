@@ -20,6 +20,9 @@
 #ifndef CONFIGWIDGET_H
 #define CONFIGWIDGET_H
 
+#include "declarativewidgetbase.h"
+#include "mainview.h"
+
 #include "calendarviews/eventviews/eventview.h"
 #include "calendarviews/eventviews/prefs.h"
 
@@ -53,7 +56,12 @@ class ConfigWidget : public QWidget
     EventViews::PrefsPtr mViewPrefs;
 };
 
-class DeclarativeConfigWidget : public QGraphicsProxyWidget
+class DeclarativeConfigWidget :
+#ifndef Q_MOC_RUN
+public DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>
+#else
+public QGraphicsProxyWidget
+#endif
 {
   Q_OBJECT
 
@@ -61,17 +69,12 @@ class DeclarativeConfigWidget : public QGraphicsProxyWidget
     explicit DeclarativeConfigWidget( QGraphicsItem *parent = 0 );
     ~DeclarativeConfigWidget();
 
-    void setPreferences( const EventViews::PrefsPtr &preferences );
-
   public Q_SLOTS:
     void load();
     void save();
 
   Q_SIGNALS:
     void configChanged();
-
-  private:
-    ConfigWidget *mConfigWidget;
 };
 
 #endif

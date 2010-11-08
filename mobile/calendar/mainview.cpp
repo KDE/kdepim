@@ -227,18 +227,19 @@ void MainView::qmlLoadingStateChanged( QDeclarativeView::Status status )
   Q_ASSERT( monthViewItem );
   if ( monthViewItem )
     monthViewItem->setPreferences( m_calendarPrefs );
+}
 
-  DeclarativeConfigWidget *configWidget = rootObject()->findChild<DeclarativeConfigWidget*>();
+void MainView::setConfigWidget(ConfigWidget* configWidget)
+{
   Q_ASSERT( configWidget );
-  if ( configWidget )
-    configWidget->setPreferences( m_calendarPrefs );
+  configWidget->setPreferences( m_calendarPrefs );
 
-  connect( configWidget, SIGNAL(configChanged()),
-           agendaViewItem, SLOT(updateConfig()) );
-
-  connect( configWidget, SIGNAL(configChanged()),
-           monthViewItem, SLOT(updateConfig()) );
-
+  EventViews::AgendaViewItem *agendaViewItem = rootObject()->findChild<EventViews::AgendaViewItem*>();
+  if ( agendaViewItem )
+    connect( configWidget, SIGNAL(configChanged()), agendaViewItem, SLOT(updateConfig()) );
+  EventViews::MonthViewItem *monthViewItem = rootObject()->findChild<EventViews::MonthViewItem*>();
+  if ( monthViewItem )
+    connect( configWidget, SIGNAL(configChanged()), monthViewItem, SLOT(updateConfig()) );
 }
 
 void MainView::finishEdit( QObject *editor )
