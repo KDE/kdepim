@@ -71,6 +71,13 @@ KPIM.ActionList {
   }
 
   KPIM.ActionListItem {
+    name : "open_manual"
+    onPressAndHold: {
+      longPressed(name);
+    }
+  }
+
+  KPIM.ActionListItem {
     name : "report_bug"
     onPressAndHold: {
       longPressed(name);

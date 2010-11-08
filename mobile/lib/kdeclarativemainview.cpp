@@ -233,6 +233,10 @@ void KDeclarativeMainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( reportBug() ) );
   actionCollection()->addAction( QLatin1String( "report_bug" ), action );
 
+  action = new KAction( i18n( "Manual" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( openManual() ) );
+  actionCollection()->addAction( QLatin1String( "open_manual" ), action );
+
   setupStandardActionManager( regularSelectionModel(), d->mItemActionSelectionModel );
 
   connect( d->mEtm, SIGNAL( modelAboutToBeReset() ), d, SLOT( saveState() ) );
@@ -623,6 +627,56 @@ void KDeclarativeMainView::exportItems()
 
   handler->setSelectionModel( regularSelectionModel() );
   handler->exec();
+}
+
+/*
+ * Copied from kdelibs/kdoctools/kio_help.cpp
+ */
+static QString lookupDocumentation( const QString &fileName )
+{
+  QStringList searches;
+
+  // assemble the local search paths
+  const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "html" );
+
+  QStringList languages = KGlobal::locale()->languageList();
+  languages.append( "en" );
+  languages.removeAll( "C" );
+
+  // this is kind of compat hack as we install our docs in en/ but the
+  // default language is en_US
+  for ( QStringList::Iterator it = languages.begin(); it != languages.end(); ++it ) {
+    if ( *it == "en_US" )
+      *it = "en";
+  }
+
+  // look up the different languages
+  foreach ( const QString &directory, localDirectories ) {
+    foreach ( const QString &language, languages ) {
+      searches.append( QString( "%1%2/%3" ).arg( directory, language, fileName ) );
+    }
+  }
+
+  foreach ( const QString &search, searches ) {
+    const QFileInfo info( search );
+    if ( info.exists() && info.isFile() && info.isReadable() )
+      return search;
+  }
+
+  return QString();
+}
+
+void KDeclarativeMainView::openManual()
+{
+  const KUrl url = lookupDocumentation( KGlobal::mainComponent().componentName() + "/manual/index.html" );
+  if ( !url.isValid() ) {
+    KMessageBox::error( this,
+                        i18n( "The manual could not be found on your system." ),
+                        i18n( "Manual not found" ) );
+    return;
+  }
+
+  KRun::runUrl( url, QLatin1String( "text/html" ), this );
 }
 
 void KDeclarativeMainView::openLicenses()

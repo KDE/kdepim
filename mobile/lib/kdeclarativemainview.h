@@ -158,6 +158,11 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     void exportItems();
 
+    /**
+     * Opens the user manual of this application in an external web browser.
+     */
+    void openManual();
+
     void openAttachment( const QString &url, const QString &mimeType );
     void saveAttachment( const QString &url );
 
