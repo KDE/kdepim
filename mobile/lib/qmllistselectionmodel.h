@@ -31,6 +31,7 @@ class MOBILEUI_EXPORT QMLListSelectionModel : public QObject
   Q_OBJECT
   Q_PROPERTY(QList<int> selection READ selection NOTIFY selectionChanged)
   Q_PROPERTY(int currentRow READ currentRow WRITE setCurrentRow NOTIFY selectionChanged)
+  Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY selectionChanged)
   Q_PROPERTY(qint64 currentItemIdHack READ currentItemId WRITE setCurrentItemId NOTIFY selectionChanged)
 public:
   enum SelectionFlag {
@@ -64,6 +65,7 @@ public:
 public slots:
   void clearSelection();
   void select(int row, int command);
+  bool hasSelection() const;
 
   bool requestNext();
   bool requestPrevious();

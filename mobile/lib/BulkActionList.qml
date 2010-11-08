@@ -125,6 +125,14 @@ QML.Column {
       anchors.topMargin: itemHeight
       height: _top.height - itemHeight
       clip: true
+      QML.Text {
+        anchors.fill : parent
+        horizontalAlignment : QML.Text.AlignHCenter
+        verticalAlignment : QML.Text.AlignVCenter
+        font.pixelSize : 22
+        text : KDE.i18n( "Please select one\nor more items\non the right." )
+        visible : !_itemActionModel.hasSelection
+      }
       QML.ListView {
         anchors.fill:parent
         model: actionModel;

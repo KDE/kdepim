@@ -50,6 +50,11 @@ QList< int > QMLListSelectionModel::selection() const
   return list;
 }
 
+bool QMLListSelectionModel::hasSelection() const
+{
+    return m_selectionModel->hasSelection();
+}
+
 int QMLListSelectionModel::currentRow() const
 {
   const QModelIndexList indexes = m_selectionModel->selectedRows();
