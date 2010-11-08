@@ -712,8 +712,9 @@ KPIM.MainView {
     source: backgroundImage.source
   }
 
-  ConfigDialog {
-    id: configDialog
+  QML.Loader {
+    anchors.fill: parent
+    source: guiStateManager.inConfigScreenState ? "ConfigDialog.qml" : ""
   }
 
   KPIM.SearchDialog {
