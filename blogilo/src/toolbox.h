@@ -87,9 +87,7 @@ protected slots:
 private:
     QStringList selectedCategoriesTitle();
     QList<Category> selectedCategories();
-    QList<int> selectedCategoriesId();
     void setSelectedCategories( const QStringList& );
-    void setSelectedCategories( const QList<int>& );
     QStringList currentTags();
     void clearCatList();
     void unCheckCatList();

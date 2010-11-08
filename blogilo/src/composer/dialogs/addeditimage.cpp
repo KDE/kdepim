@@ -36,7 +36,7 @@
 #include "bilbomedia.h"
 
 AddEditImage::AddEditImage(QWidget* parent, QMap< QString, QString > mediaToEdit)
-: AddMediaDialog(parent)
+: AddMediaDialog(parent), ratio(0)
 {
     editFrame = new QFrame(this);
     editFrame->setFrameShape(QFrame::StyledPanel);
@@ -67,7 +67,10 @@ AddEditImage::AddEditImage(QWidget* parent, QMap< QString, QString > mediaToEdit
             editImageWidgetUi.txtLink->setVisible(false);
         }
     }
-
+    connect(editImageWidgetUi.spinboxWidth, SIGNAL(valueChanged(int)),
+            this, SLOT(slotCheckRatio(int)));
+    connect(editImageWidgetUi.spinboxHeight, SIGNAL(valueChanged(int)),
+            this, SLOT(slotCheckRatio(int)) );
 //     QStringList mimeFilter;
 //     mimeFilter << "image/gif" << "image/jpeg" << "image/png" ;
 //     ui.kurlreqMediaUrl->fileDialog()->setMimeFilter( mimeFilter );
@@ -87,7 +90,12 @@ void AddEditImage::slotSelectLocalFile()
 #else
     path = KFileDialog::getImageOpenUrl( KUrl(), this, i18n("Choose a file") ).path();
 #endif
+    QImage img(path);
     ui.urlReqLineEdit->setText(path);
+    editImageWidgetUi.btnKeepRatio->setChecked(true);
+    ratio = img.width()/img.height();
+    editImageWidgetUi.spinboxWidth->setValue(img.width());
+    editImageWidgetUi.spinboxHeight->setValue(img.height());
 }
 
 void AddEditImage::slotButtonClicked(int button)
@@ -108,15 +116,15 @@ void AddEditImage::slotButtonClicked(int button)
 QString AddEditImage::getAlignment()
 {
     switch(editImageWidgetUi.alignment->currentIndex()){
-        case 0:
-            return QString();
-            break;
         case 1:
             return "right";
             break;
         case 2:
-        default:
             return "left";
+            break;
+        case 0:
+        default:
+            return QString();
             break;
     }
 }
@@ -129,6 +137,21 @@ void AddEditImage::setAlignment(const QString& align)
         editImageWidgetUi.alignment->setCurrentIndex(1);
     else if(align == "left")
         editImageWidgetUi.alignment->setCurrentIndex(2);
+}
+
+void AddEditImage::slotCheckRatio(int value)
+{
+    if(editImageWidgetUi.btnKeepRatio->isChecked() && ratio > 0) {
+        if(sender() == editImageWidgetUi.spinboxHeight){
+            editImageWidgetUi.spinboxWidth->setValue(value*ratio);
+        } else if(sender() == editImageWidgetUi.spinboxWidth){
+            editImageWidgetUi.spinboxHeight->setValue(value/ratio);
+        }
+    } else {
+        if( editImageWidgetUi.spinboxWidth->value() > 0 &&
+            editImageWidgetUi.spinboxHeight->value() > 0 )
+            ratio = editImageWidgetUi.spinboxWidth->value() / editImageWidgetUi.spinboxHeight->value();
+    }
 }
 
 #include "composer/dialogs/addeditimage.moc"

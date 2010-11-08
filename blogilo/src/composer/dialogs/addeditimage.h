@@ -49,6 +49,7 @@ protected:
 
 protected slots:
     virtual void slotSelectLocalFile();
+    void slotCheckRatio(int value);
 
 private:
     QString getAlignment();
@@ -56,7 +57,7 @@ private:
     QFrame *editFrame;
     Ui::EditImageBase editImageWidgetUi;
     bool isEditing;
-
+    int ratio;
 };
 
 #endif

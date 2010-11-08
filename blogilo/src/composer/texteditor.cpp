@@ -82,6 +82,7 @@ void WebView::sendMouseReleaseEvent()
 
 void WebView::dragEnterEvent ( QDragEnterEvent *event )
 {
+    KWebView::dragEnterEvent(event);
     //uncomment lines below when drag n drop support added
 //     if ( event->mimeData()->hasText() )
 //         event->acceptProposedAction();
@@ -89,6 +90,7 @@ void WebView::dragEnterEvent ( QDragEnterEvent *event )
 
 void WebView::dropEvent ( QDropEvent *event )
 {
+    KWebView::dropEvent(event);
     //TODO support drag n drop
 //     QString textToInsert = event->mimeData()->text();
 //     kDebug()<<textToInsert;
@@ -325,7 +327,7 @@ void TextEditor::createActions()
     formatTypes << i18n( "Heading 6" );
     formatTypes << i18n( "Pre Formatted" );
     actFormatType->setItems( formatTypes );
-    actFormatType->setMaxComboViewCount( 3 );
+//     actFormatType->setMaxComboViewCount( 3 );
     actFormatType->setCurrentAction( i18n( "Paragraph" ) );
     connect( actFormatType, SIGNAL( triggered( const QString& ) ),
              this, SLOT(slotChangeFormatType(QString)) );

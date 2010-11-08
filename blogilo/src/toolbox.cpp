@@ -382,13 +382,6 @@ QStringList Toolbox::selectedCategoriesTitle()
     return list;
 }
 
-QList< int > Toolbox::selectedCategoriesId()
-{
-    ///TODO Implement it
-    kDebug() << "NOT IMPLEMENTED YET!";
-    return QList<int>();
-}
-
 void Toolbox::setSelectedCategories( const QStringList &list )
 {
     unCheckCatList();
@@ -397,12 +390,6 @@ void Toolbox::setSelectedCategories( const QStringList &list )
         if ( list.contains( d->listCategoryCheckBoxes[i]->category().name, Qt::CaseInsensitive ) )
             d->listCategoryCheckBoxes[i]->setChecked( true );
     }
-}
-
-void Toolbox::setSelectedCategories( const QList< int > & )
-{
-    ///TODO Implement it
-    kDebug() << "NOT IMPLEMENTED YET!";
 }
 
 QStringList Toolbox::currentTags()
