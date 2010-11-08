@@ -163,6 +163,8 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
     void reportBug();
 
+    void checkAllBulkActionItems( bool select );
+
   Q_SIGNALS:
     void numSelectedAccountsChanged();
     void isLoadingSelectedChanged();

@@ -21,6 +21,7 @@
 
 import Qt 4.7 as QML
 import org.kde.akonadi 4.5 as Akonadi
+import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
   color : "white"
@@ -42,11 +43,43 @@ QML.Rectangle {
   BulkActionList {
     id : actionList
     anchors.top : parent.top
-    anchors.bottom : parent.bottom
+    anchors.bottom : selectAllButton.top
     anchors.left : parent.left
     onBackClicked : parent.backClicked()
     onTriggered : {
       //mainPanel.complete(name)
+    }
+  }
+
+  KPIM.Button2 {
+    id: selectAllButton
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    anchors.right: mainPanel.left
+    buttonText: stateHolder.state == "check_all" ? KDE.i18n( "Select All" ) : KDE.i18n( "Deselect All" )
+    onClicked: {
+      if ( stateHolder.state == "check_all" ) {
+        application.checkAllBulkActionItems( true )
+        stateHolder.state = "uncheck_all"
+      } else {
+        application.checkAllBulkActionItems( false )
+        stateHolder.state = "check_all"
+      }
+    }
+
+    QML.Item {
+      id: stateHolder
+      state: "check_all"
+
+      states: [
+        QML.State {
+          name: "check_all"
+        },
+
+        QML.State {
+          name: "uncheck_all"
+        }
+      ]
     }
   }
 

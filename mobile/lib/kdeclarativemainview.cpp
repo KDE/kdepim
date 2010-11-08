@@ -859,4 +859,17 @@ void KDeclarativeMainView::reportBug()
     KToolInvocation::invokeBrowser( url.url() );
 }
 
+void KDeclarativeMainView::checkAllBulkActionItems( bool check )
+{
+  if ( check ) {
+    d->mItemActionSelectionModel->select( QItemSelection( d->mListProxy->index( 0, 0 ),
+                                                          d->mListProxy->index( d->mListProxy->rowCount() - 1, 0 ) ),
+                                          QItemSelectionModel::Select );
+  } else {
+    d->mItemActionSelectionModel->select( QItemSelection( d->mListProxy->index( 0, 0 ),
+                                                          d->mListProxy->index( d->mListProxy->rowCount() - 1, 0 ) ),
+                                          QItemSelectionModel::Deselect );
+  }
+}
+
 #include "kdeclarativemainview.moc"
