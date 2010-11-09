@@ -361,11 +361,17 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
   }
   Akonadi::Collection collection;
 
+  // FIXME: don't use exec.
   dialogCode = dlg->exec();
   if ( dialogCode == QDialog::Accepted ) {
     collection = dlg->selectedCollection();
+
+    if ( !collection.isValid() ) {
+      kWarning() <<"An invalid collection was selected!";
+    }
   }
   delete dlg;
+
   return collection;
 }
 
