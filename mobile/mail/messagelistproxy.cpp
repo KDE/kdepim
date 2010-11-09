@@ -77,35 +77,9 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
       case IsForwardedRole:
         return messageStatus.isForwarded();
       case IsSignedRole:
-      {
-        const KMime::Headers::ContentType * const contentType = msg->contentType();
-        if ( contentType->isSubtype( "signed" )
-             || contentType->isSubtype( "pgp-signature" )
-             || contentType->isSubtype( "pkcs7-signature" )
-             || contentType->isSubtype( "x-pkcs7-signature" ) // fully singed
-             || msg->mainBodyPart( "multipart/signed" )
-             || msg->mainBodyPart( "application/pgp-signature" )
-             || msg->mainBodyPart( "application/pkcs7-signature" )
-             || msg->mainBodyPart( "application/x-pkcs7-signature" ) ) { // partially singed
-          return true;
-        }
-
-        return false;
-      }
+        return messageStatus.isSigned();
       case IsEncryptedRole:
-      {
-        const KMime::Headers::ContentType * const contentType = msg->contentType();
-        if ( contentType->isSubtype( "encrypted" )
-             || contentType->isSubtype( "pgp-encrypted" )
-             || contentType->isSubtype( "pkcs7-mime" ) // fully encrypted
-             || msg->mainBodyPart( "multipart/encrypted" )
-             || msg->mainBodyPart( "application/pgp-encrypted" )
-             || msg->mainBodyPart( "application/pkcs7-mime" ) ) { // partially encrypted
-          return true;
-        }
-
-        return false;
-      }
+        return messageStatus.isEncrypted();
       case DateGroupRole:
       {
         // simplified version taken from libmessagelist
