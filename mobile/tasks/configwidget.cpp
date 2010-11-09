@@ -40,6 +40,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
 void ConfigWidget::setPreferences( const EventViews::PrefsPtr &preferences )
 {
   mViewPrefs = preferences;
+  load();
 }
 
 void ConfigWidget::load()
@@ -84,15 +85,8 @@ void ConfigWidget::saveToExternalSettings()
 }
 
 DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
-  : QGraphicsProxyWidget( parent ), mConfigWidget( new ConfigWidget )
+  : DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>( parent )
 {
-  QPalette palette = mConfigWidget->palette();
-  palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
-  mConfigWidget->setPalette( palette );
-  StyleSheetLoader::applyStyle( mConfigWidget );
-
-  setWidget( mConfigWidget );
-  setFocusPolicy( Qt::StrongFocus );
 }
 
 DeclarativeConfigWidget::~DeclarativeConfigWidget()
@@ -101,17 +95,17 @@ DeclarativeConfigWidget::~DeclarativeConfigWidget()
 
 void DeclarativeConfigWidget::setPreferences( const EventViews::PrefsPtr &preferences )
 {
-  mConfigWidget->setPreferences( preferences );
+  widget()->setPreferences( preferences );
 }
 
 void DeclarativeConfigWidget::load()
 {
-  mConfigWidget->load();
+  widget()->load();
 }
 
 void DeclarativeConfigWidget::save()
 {
-  mConfigWidget->save();
+  widget()->save();
 }
 
 #include "configwidget.moc"

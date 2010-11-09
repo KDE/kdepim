@@ -31,6 +31,7 @@
 
 class KJob;
 class TasksActionManager;
+class ConfigWidget;
 
 namespace Akonadi {
 class StandardActionManager;
@@ -47,6 +48,8 @@ class MainView : public KDeclarativeMainView
     explicit MainView( QWidget *parent = 0 );
     ~MainView();
 
+    void setConfigWidget( ConfigWidget *configWidget );
+
   public slots:
     void newTask();
     void newSubTask();
@@ -59,7 +62,6 @@ class MainView : public KDeclarativeMainView
 
   protected slots:
     virtual void delayedInit();
-    void qmlLoadingStateChanged( QDeclarativeView::Status status );
 
   private slots:
     void finishEdit( QObject *editor );

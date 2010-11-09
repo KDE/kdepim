@@ -139,13 +139,8 @@ void MainView::delayedInit()
   KPIM::ReminderClient::startDaemon();
 }
 
-void MainView::qmlLoadingStateChanged( QDeclarativeView::Status status )
+void MainView::setConfigWidget( ConfigWidget *configWidget )
 {
-  if ( status != Ready ) // We wait until the QML is completely loaded
-    return;
-
-  // setup the shared settings object
-  DeclarativeConfigWidget *configWidget = rootObject()->findChild<DeclarativeConfigWidget*>();
   Q_ASSERT( configWidget );
   if ( configWidget )
     configWidget->setPreferences( mCalendarPrefs );
