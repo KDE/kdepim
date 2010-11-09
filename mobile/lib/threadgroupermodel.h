@@ -37,7 +37,7 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
 public:
   enum CustomRoles {
     // FIXME Fix custom role handling in proxies.
-    ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 10
+    ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 30
   };
 
   enum OrderScheme {
