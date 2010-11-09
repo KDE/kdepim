@@ -54,6 +54,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/kmime/messageflags.h>
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/kmime/specialmailcollectionsrequestjob.h>
@@ -619,6 +620,11 @@ void MainView::replyFetchResult( KJob *job )
   ComposerView *composer = new ComposerView;
   composer->setMessage( factory.createReply().msg );
   composer->show();
+
+  Item statusItem( item );
+  statusItem.setFlag( Akonadi::MessageFlags::Replied );
+  Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( statusItem );
+  modifyJob->ignorePayload();
 }
 
 void MainView::forward( quint64 id, ForwardMode mode )
@@ -662,6 +668,11 @@ void MainView::forwardFetchResult( KJob* job )
   }
 
   composer->show();
+
+  Item statusItem( item );
+  statusItem.setFlag( Akonadi::MessageFlags::Forwarded );
+  Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( statusItem );
+  modifyJob->ignorePayload();
 }
 
 void MainView::markImportant( bool checked )
@@ -683,6 +694,7 @@ void MainView::markImportant( bool checked )
   item.setFlags( status.statusFlags() );
 
   ItemModifyJob *job = new ItemModifyJob( item );
+  job->ignorePayload();
   connect( job, SIGNAL( result( KJob* ) ), SLOT( modifyDone( KJob* ) ) );
 }
 
@@ -705,6 +717,7 @@ void MainView::markMailTask( bool checked )
   item.setFlags( status.statusFlags() );
 
   ItemModifyJob *job = new ItemModifyJob( item );
+  job->ignorePayload();
   connect( job, SIGNAL( result( KJob* ) ), SLOT( modifyDone( KJob* ) ) );
 }
 
