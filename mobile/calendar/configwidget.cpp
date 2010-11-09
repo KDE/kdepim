@@ -98,6 +98,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
 void ConfigWidget::setPreferences( const EventViews::PrefsPtr &preferences )
 {
   mViewPrefs = preferences;
+  load();
 }
 
 void ConfigWidget::load()
@@ -220,6 +221,7 @@ void ConfigWidget::saveToExternalSettings()
 DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
   : DeclarativeWidgetBase< ConfigWidget, MainView, &MainView::setConfigWidget>( parent )
 {
+  connect( this, SIGNAL(configChanged()), widget(), SIGNAL(configChanged()) );
 }
 
 DeclarativeConfigWidget::~DeclarativeConfigWidget()

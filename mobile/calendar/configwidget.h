@@ -46,6 +46,9 @@ class ConfigWidget : public QWidget
     void load();
     void save();
 
+  Q_SIGNALS:
+    void configChanged();
+
   private:
     void loadFromExternalSettings();
     void saveToExternalSettings();
