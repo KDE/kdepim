@@ -25,6 +25,7 @@ import org.kde 4.5
 
 QML.Rectangle {
   anchors.fill : parent
+  anchors.topMargin : 12
   property alias backgroundImage : backgroundImage.source
 
   QML.Image {
@@ -57,7 +58,13 @@ QML.Rectangle {
       anchors.left : parent.left
       buttonText : KDE.i18n("Done")
       width : 150
-      onClicked : finished()
+      onClicked :
+      {
+        finished();
+        guiStateManager.popState();
+        application.clearPersistedSelection("preFavSelection");
+        application.multipleSelectionFinished();
+      }
     }
     KPIM.Button2 {
       id : cancelButton
@@ -66,7 +73,12 @@ QML.Rectangle {
       anchors.right : parent.right
       buttonText : KDE.i18n("Cancel")
       width : 150
-      onClicked : canceled()
+      onClicked :
+      {
+        canceled();
+        guiStateManager.popState();
+        application.restorePersistedSelection("preFavSelection");
+      }
     }
   }
 }

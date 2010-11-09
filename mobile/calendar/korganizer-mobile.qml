@@ -58,8 +58,6 @@ KPIM.MainView {
     }
   }
 
-  SystemPalette { id: palette; colorGroup: "Active" }
-
   function showDate(date)
   {
     agenda.showRange( date, 0 /* "Day" */ );
@@ -334,6 +332,7 @@ KPIM.MainView {
       buttonText : KDE.i18n("Select")
       opacity : collectionView.hasSelection ? 0 : 1
       onClicked : {
+        application.persistCurrentSelection("preFavSelection");
         guiStateManager.pushState( KPIM.GuiStateManager.MultipleFolderSelectionScreenState );
       }
     }
@@ -605,19 +604,10 @@ KPIM.MainView {
     }
   }
 
-  KPIM.MultipleSelectionScreen {
-    id : favoriteSelector
-    anchors.fill : parent
-    anchors.topMargin : 12
-    visible : guiStateManager.inMultipleFolderSelectionScreenState
-    backgroundImage : backgroundImage.source
-    onFinished : {
-      guiStateManager.popState();
-      application.multipleSelectionFinished();
-    }
-    onCanceled : {
-      guiStateManager.popState();
-    }
+  Loader {
+    anchors.fill: parent
+    source: guiStateManager.inMultipleFolderSelectionScreenState ? KDE.locate( "module", "imports/org/kde/pim/mobileui/MultipleSelectionScreen.qml" ) : ""
+    onLoaded: { item.backgroundImage = backgroundImage.source; }
   }
 
   KPIM.BulkActionScreen {

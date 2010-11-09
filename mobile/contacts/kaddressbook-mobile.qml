@@ -368,21 +368,12 @@ KPIM.MainView {
     }
   }
 
-  KPIM.MultipleSelectionScreen {
-    id : favoriteSelector
-    visible : guiStateManager.inMultipleFolderSelectionScreenState
-    anchors.fill : parent
-    backgroundImage : backgroundImage.source
-    onFinished : {
-      guiStateManager.popState();
-      application.clearPersistedSelection("preFavSelection");
-      application.multipleSelectionFinished();
-    }
-    onCanceled : {
-      guiStateManager.popState();
-      application.restorePersistedSelection("preFavSelection");
-    }
+  QML.Loader {
+    anchors.fill: parent
+    source: guiStateManager.inMultipleFolderSelectionScreenState ? KDE.locate( "module", "imports/org/kde/pim/mobileui/MultipleSelectionScreen.qml" ) : ""
+    onLoaded: { item.backgroundImage = backgroundImage.source; }
   }
+
   KPIM.BulkActionScreen {
     id : bulkActionScreen
     visible : guiStateManager.inBulkActionScreenState
