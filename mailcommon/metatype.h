@@ -16,8 +16,8 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef POP3_METATYPE_H
-#define POP3_METATYPE_H
+#ifndef MAILCOMMON_METATYPE_H
+#define MAILCOMMON_METATYPE_H
 
 #include <QtCore/QObject>
 #include <QtCore/QList>

@@ -27,8 +27,9 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
-#ifndef messageproperty_h
-#define messageproperty_h
+
+#ifndef MAILCOMMON_MESSAGEPROPERTY_H
+#define MAILCOMMON_MESSAGEPROPERTY_H
 
 #include "filteraction.h" // for KMFilterAction::ReturnCode
 
@@ -80,4 +81,4 @@ private:
 
 }
 
-#endif /*messageproperty_h*/
+#endif

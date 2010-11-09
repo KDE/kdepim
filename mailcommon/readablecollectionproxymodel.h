@@ -17,9 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef READABLECOLLECTIONPROXYMODEL_H
-#define READABLECOLLECTIONPROXYMODEL_H
-
+#ifndef MAILCOMMON_READABLECOLLECTIONPROXYMODEL_H
+#define MAILCOMMON_READABLECOLLECTIONPROXYMODEL_H
 
 #include "akonadi/entityrightsfiltermodel.h"
 #include <akonadi/collection.h>

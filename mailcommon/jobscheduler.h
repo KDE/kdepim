@@ -26,8 +26,8 @@
  *  your version.
  */
 
-#ifndef KMAIL_JOBSCHEDULER_H
-#define KMAIL_JOBSCHEDULER_H
+#ifndef MAILCOMMON_JOBSCHEDULER_H
+#define MAILCOMMON_JOBSCHEDULER_H
 
 #include "mailcommon_export.h"
 
@@ -151,6 +151,6 @@ protected:
   bool mOpeningFolder;
 };
 
-} // namespace
+}
 
-#endif /* KMAIL_JOBSCHEDULER_H */
+#endif

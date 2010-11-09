@@ -25,8 +25,8 @@
  *  you do not wish to do so, delete this exception statement from
  *  your version.
  */
-#ifndef EXPIREJOB_H
-#define EXPIREJOB_H
+#ifndef MAILCOMMON_EXPIREJOB_H
+#define MAILCOMMON_EXPIREJOB_H
 
 #include "jobscheduler.h"
 
@@ -85,5 +85,5 @@ public:
 
 } // namespace
 
-#endif /* EXPIREJOB_H */
+#endif
 

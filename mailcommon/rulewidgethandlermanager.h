@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KMAIL_RULEWIDGETHANDLERMANAGER_H__
-#define __KMAIL_RULEWIDGETHANDLERMANAGER_H__
+#ifndef MAILCOMMON_RULEWIDGETHANDLERMANAGER_H
+#define MAILCOMMON_RULEWIDGETHANDLERMANAGER_H
 
 #include "mailcommon/searchpattern.h"
 
@@ -59,7 +59,7 @@ class RuleWidgetHandler;
 
     static RuleWidgetHandlerManager * instance() {
       if ( !self )
-	self = new RuleWidgetHandlerManager();
+        self = new RuleWidgetHandlerManager();
       return self;
     }
 
@@ -98,4 +98,4 @@ class RuleWidgetHandler;
 
 } // namespace KMail
 
-#endif // __KMAIL_RULEWIDGETHANDLERMANAGER_H__
+#endif

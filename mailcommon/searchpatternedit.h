@@ -17,8 +17,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KMSEARCHPATTERNEDIT_H
-#define KMSEARCHPATTERNEDIT_H
+#ifndef MAILCOMMON_SEARCHPATTERNEDIT_H
+#define MAILCOMMON_SEARCHPATTERNEDIT_H
 
 #include "kwidgetlister.h"
 
@@ -227,4 +227,4 @@ private:
 
 }
 
-#endif // KMSEARCHPATTERNEDIT_H
+#endif

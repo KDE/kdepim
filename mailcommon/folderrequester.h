@@ -26,8 +26,8 @@
  *  your version.
  */
 
-#ifndef FOLDERREQUESTER_H
-#define FOLDERREQUESTER_H
+#ifndef MAILCOMMON_FOLDERREQUESTER_H
+#define MAILCOMMON_FOLDERREQUESTER_H
 
 #include "mailcommon_export.h"
 
@@ -117,6 +117,6 @@ class Kernel;
       Kernel *mMailCommon;
   };
 
-} // namespace KMail
+}
 
-#endif /*folderrequester_h*/
+#endif

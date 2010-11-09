@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KMAIL_REGEXPLINEEDIT_H__
-#define __KMAIL_REGEXPLINEEDIT_H__
+#ifndef MAILCOMMON_REGEXPLINEEDIT_H
+#define MAILCOMMON_REGEXPLINEEDIT_H
 
 #include <QWidget>
 
@@ -74,6 +74,6 @@ namespace MailCommon {
     KDialog * mRegExpEditDialog;
   };
 
-} // namespace KMail
+}
 
-#endif // __KMAIL_REGEXPLINEEDIT_H__
+#endif

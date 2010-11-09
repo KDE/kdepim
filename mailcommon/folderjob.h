@@ -28,8 +28,8 @@
  *  your version.
  */
 
-#ifndef FOLDERJOB_H
-#define FOLDERJOB_H
+#ifndef MAILCOMMON_FOLDERJOB_H
+#define MAILCOMMON_FOLDERJOB_H
 
 #include <kmime/kmime_message.h>
 #include <QList>

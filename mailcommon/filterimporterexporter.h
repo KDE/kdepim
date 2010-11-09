@@ -27,8 +27,8 @@
     your version.
 */
 
-#ifndef __FILTERIMPORTEREXPORTER_H__
-#define __FILTERIMPORTEREXPORTER_H__
+#ifndef MAILCOMMON_FILTERIMPORTEREXPORTER_H
+#define MAILCOMMON_FILTERIMPORTEREXPORTER_H
 
 #include <QList>
 
@@ -95,4 +95,4 @@ class FilterSelectionDialog : public KDialog
 
 }
 
-#endif /* __FILTERIMPORTEREXPORTER_H__ */
+#endif

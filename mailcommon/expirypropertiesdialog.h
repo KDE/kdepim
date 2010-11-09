@@ -1,6 +1,6 @@
 
-#ifndef EXPIRYPROPERTIESDIALOG_H
-#define EXPIRYPROPERTIESDIALOG_H
+#ifndef MAILCOMMON_EXPIRYPROPERTIESDIALOG_H
+#define MAILCOMMON_EXPIRYPROPERTIESDIALOG_H
 
 #include "mailcommon_export.h"
 
@@ -44,4 +44,5 @@ private:
 };
 
 } // namespace
-#endif // EXPIRYPROPERTIESDIALOG_H
+
+#endif

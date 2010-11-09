@@ -17,8 +17,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef SOUND_TEST_WIDGET_H
-#define SOUND_TEST_WIDGET_H
+#ifndef MAILCOMMON_SOUNDTESTWIDGET_H
+#define MAILCOMMON_SOUNDTESTWIDGET_H
 
 #include <KLineEdit>
 

@@ -18,8 +18,8 @@
 */
 
 
-#ifndef MINIMUMCOMBOBOX_H
-#define MINIMUMCOMBOBOX_H
+#ifndef MAILCOMMON_MINIMUMCOMBOBOX_H
+#define MAILCOMMON_MINIMUMCOMBOBOX_H
 
 #include <kcombobox.h>
 
@@ -36,4 +36,4 @@ namespace MailCommon {
 
 }
 
-#endif // MINIMUMCOMBOBOX_H
+#endif

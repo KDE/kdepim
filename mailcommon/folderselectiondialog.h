@@ -16,8 +16,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERSELECTIONDIALOG_H
-#define FOLDERSELECTIONDIALOG_H
+#ifndef MAILCOMMON_FOLDERSELECTIONDIALOG_H
+#define MAILCOMMON_FOLDERSELECTIONDIALOG_H
 
 #include "mailcommon_export.h"
 
@@ -82,4 +82,3 @@ private:
 }
 
 #endif
-
