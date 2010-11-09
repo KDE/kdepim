@@ -23,6 +23,8 @@
 #include "calendarsupport_export.h"
 #include "next/incidencechanger2.h"
 
+#include <KCalCore/IncidenceBase>
+
 #include <Akonadi/Item>
 #include <Akonadi/Collection>
 
@@ -174,12 +176,15 @@ class CALENDARSUPPORT_EXPORT NepomukCalendar : public KCalCore::MemoryCalendar
     void setWeakPointer( const QWeakPointer<NepomukCalendar> &pointer );
     QWeakPointer<NepomukCalendar> weakPointer() const;
 
+    bool changeIncidence( const KCalCore::Incidence::Ptr &incidence );
+
     bool jobsInProgress() const;
 
   Q_SIGNALS:
     void loadFinished( bool success, const QString &errorMessage );
     void addFinished( bool success, const QString &errorMessage );
     void deleteFinished( bool success, const QString &errorMessage );
+    void changeFinished( bool success, const QString &errorMessage );
 
   private slots:
     void deleteIncidenceFinished( KJob *j );
@@ -188,6 +193,12 @@ class CALENDARSUPPORT_EXPORT NepomukCalendar : public KCalCore::MemoryCalendar
                          const Akonadi::Item &item,
                          CalendarSupport::IncidenceChanger2::ResultCode changerResultCode,
                          const QString &errorMessage );
+
+    void modifyFinished( int changeId,
+                         const Akonadi::Item &item,
+                         CalendarSupport::IncidenceChanger2::ResultCode changerResultCode,
+                         const QString &errorMessage );
+
 
     void searchResult( KJob * );
 

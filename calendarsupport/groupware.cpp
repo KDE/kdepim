@@ -111,8 +111,9 @@ void Groupware::finishHandlingInvitation()
   QWeakPointer<NepomukCalendar> weakPtr = qobject_cast<NepomukCalendar*>( sender() )->weakPointer();
   NepomukCalendar::Ptr calendar( weakPtr.toStrongRef() );
 
-  connect( calendar.data(), SIGNAL(addFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ) );
-  connect( calendar.data(), SIGNAL(deleteFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ) );
+  connect( calendar.data(), SIGNAL(addFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ), Qt::QueuedConnection );
+  connect( calendar.data(), SIGNAL(deleteFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ), Qt::QueuedConnection );
+  connect( calendar.data(), SIGNAL(changeFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ), Qt::QueuedConnection );
 
   Invitation *invitation = d->mInvitationByCalendar.value( calendar );
 
@@ -149,6 +150,13 @@ void Groupware::finishHandlingInvitation()
     delete d->mInvitationByCalendar.take( calendar );
     return;
   }
+
+  KCalCore::Incidence::Ptr existingIncidence = calendar->incidenceFromSchedulingID( incidence->uid() );
+  if ( existingIncidence ) {
+    kDebug() << "cloning";
+    existingIncidence = KCalCore::Incidence::Ptr( existingIncidence->clone() );
+  }
+
   MailScheduler scheduler( calendar );
   if ( action.startsWith( QLatin1String( "accepted" ) ) ||
        action.startsWith( QLatin1String( "tentative" ) ) ||
@@ -200,6 +208,16 @@ void Groupware::finishHandlingInvitation()
     Akonadi::Item item;
     item.setPayload( KCalCore::Incidence::Ptr( incidence->clone() ) );
     mDelegate->requestIncidenceEditor( item );
+  }
+
+
+  if ( existingIncidence ) {
+    KCalCore::Incidence::Ptr changedIncidence = calendar->incidence( existingIncidence->uid() );
+    if ( !changedIncidence->dirtyFields().isEmpty() ) {
+      calendar->changeIncidence( changedIncidence );
+    }
+  } else {
+    kDebug() << "It didn't exist";
   }
 
   if ( !calendar->jobsInProgress() ) {

@@ -75,6 +75,9 @@ NepomukCalendar::NepomukCalendar( QWidget *parent )
   connect( d->mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
+  connect( d->mChanger, SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+
   IncidenceSearchJob *job = new IncidenceSearchJob();
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
 }
@@ -312,10 +315,8 @@ void NepomukCalendar::incidenceUpdate( const QString &uid, const KDateTime &recu
   Q_UNUSED( recurrenceId );
 }
 
-void NepomukCalendar::incidenceUpdated( const QString &uid, const KDateTime &recurrenceId )
+void NepomukCalendar::incidenceUpdated( const QString &, const KDateTime & )
 {
-  Q_UNUSED( uid );
-  Q_UNUSED( recurrenceId );
 }
 
 KCalCore::Incidence::List NepomukCalendar::incidencesFromSchedulingID( const QString &sid ) const
@@ -348,6 +349,18 @@ void NepomukCalendar::createFinished( int changeId,
 
   emit addFinished( changerResultCode == IncidenceChanger2::ResultCodeSuccess,
                     errorMessage );
+}
+
+void NepomukCalendar::modifyFinished( int changeId,
+                                      const Akonadi::Item &item,
+                                      CalendarSupport::IncidenceChanger2::ResultCode changerResultCode,
+                                      const QString &errorMessage )
+{
+  d->mJobsInProgress--;
+  Q_UNUSED( changeId );
+  Q_UNUSED( item );
+  emit changeFinished( changerResultCode == IncidenceChanger2::ResultCodeSuccess,
+                       errorMessage );
 }
 
 void NepomukCalendar::searchResult( KJob *job )
@@ -398,6 +411,17 @@ NepomukCalendar::Ptr NepomukCalendar::create( QWidget *parent )
   return nepomukCalendar;
 }
 
+bool NepomukCalendar::changeIncidence( const KCalCore::Incidence::Ptr &incidence )
+{
+  Q_ASSERT( incidence );
+  Akonadi::Item item = d->mItemsByIncidenceUid.value( incidence->uid() );
 
+  if ( item.isValid() && d->mChanger->modifyIncidence( item ) >= 0 ) {
+    d->mJobsInProgress++;
+    return true;
+  } else {
+    return false;
+  }
+}
 
 #include "nepomukcalendar.moc"
