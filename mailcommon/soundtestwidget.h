@@ -29,25 +29,56 @@ class KUrlRequester;
 
 namespace MailCommon {
 
+/**
+ * @short A widget to play a sound from a given URL.
+ */
 class SoundTestWidget : public QWidget
 {
   Q_OBJECT
-public:
-  explicit SoundTestWidget( QWidget * parent, const char * name=0 );
-  ~SoundTestWidget();
-  QString url() const;
-  void setUrl( const QString & url );
-  void clear();
-signals:
-  void testPressed();
-protected slots:
-  void playSound();
-  void openSoundDialog( KUrlRequester * );
-  void slotUrlChanged( const QString & );
 
-private:
-  KUrlRequester *m_urlRequester;
-  QPushButton *m_playButton;
+  public:
+    /**
+     * Creates a new sound test widget.
+     *
+     * @param parent The parent widget.
+     */
+    explicit SoundTestWidget( QWidget *parent = 0 );
+
+    /**
+     * Destroys the sound test widget.
+     */
+    ~SoundTestWidget();
+
+    /**
+     * Sets the @p url of the sound file to play.
+     */
+    void setUrl( const QString &url );
+
+    /**
+     * Returns the url of the sound file to play.
+     */
+    QString url() const;
+
+    /**
+     * Clears the url of the sound file to play.
+     */
+    void clear();
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted when the user clicked
+     * the Play button.
+     */
+    void testPressed();
+
+  private Q_SLOTS:
+    void playSound();
+    void openSoundDialog( KUrlRequester* );
+    void slotUrlChanged( const QString& );
+
+  private:
+    KUrlRequester *m_urlRequester;
+    QPushButton *m_playButton;
 };
 
 }

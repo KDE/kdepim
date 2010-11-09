@@ -1,5 +1,4 @@
 /*
-  kmfawidgets.h - KMFilterAction parameter widgets
   Copyright (c) 2001 Marc Mutz <mutz@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -19,108 +18,111 @@
 
 #include "soundtestwidget.h"
 
-#include <QHBoxLayout>
-#include <kiconloader.h>
-#include <kstandarddirs.h>
-#include <KUrlRequester>
 #include <kfiledialog.h>
-#include <QPushButton>
+#include <kiconloader.h>
 #include <klocalizedstring.h>
+#include <kstandarddirs.h>
+#include <kurlrequester.h>
 #include <phonon/mediaobject.h>
+
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QPushButton>
 
 using namespace MailCommon;
 
-SoundTestWidget::SoundTestWidget(QWidget *parent, const char *name)
-    : QWidget( parent )
+SoundTestWidget::SoundTestWidget( QWidget *parent )
+  : QWidget( parent )
 {
-    setObjectName( name );
-    QHBoxLayout *lay1 = new QHBoxLayout( this );
-    lay1->setMargin( 0 );
-    m_playButton = new QPushButton( this );
-    m_playButton->setObjectName( "m_playButton" );
-    m_playButton->setIcon( KIcon( "arrow-right" ) );
-    m_playButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    connect( m_playButton, SIGNAL( clicked() ), SLOT( playSound() ));
-    lay1->addWidget( m_playButton );
+  QHBoxLayout *layout = new QHBoxLayout( this );
+  layout->setMargin( 0 );
 
-    m_urlRequester = new KUrlRequester( this );
-    lay1->addWidget( m_urlRequester );
-    connect( m_urlRequester, SIGNAL( openFileDialog( KUrlRequester * )),
-             SLOT( openSoundDialog( KUrlRequester * )));
-    connect( m_urlRequester->lineEdit(), SIGNAL( textChanged ( const QString & )), SLOT( slotUrlChanged(const QString & )));
-    slotUrlChanged(m_urlRequester->lineEdit()->text() );
+  m_playButton = new QPushButton( this );
+  m_playButton->setIcon( KIcon( "arrow-right" ) );
+  m_playButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  layout->addWidget( m_playButton );
+
+  m_urlRequester = new KUrlRequester( this );
+  layout->addWidget( m_urlRequester );
+
+  connect( m_playButton, SIGNAL( clicked() ),
+           SLOT( playSound() ) );
+  connect( m_urlRequester, SIGNAL( openFileDialog( KUrlRequester* ) ),
+           SLOT( openSoundDialog( KUrlRequester* ) ) );
+  connect( m_urlRequester->lineEdit(), SIGNAL( textChanged( const QString& ) ),
+           SLOT( slotUrlChanged( const QString& ) ) );
+
+  slotUrlChanged( m_urlRequester->lineEdit()->text() );
 }
 
 SoundTestWidget::~SoundTestWidget()
 {
 }
 
-void SoundTestWidget::slotUrlChanged(const QString &_text )
+void SoundTestWidget::slotUrlChanged( const QString &url )
 {
-    m_playButton->setEnabled( !_text.isEmpty());
+  m_playButton->setEnabled( !url.isEmpty() );
 }
 
-void SoundTestWidget::openSoundDialog( KUrlRequester * )
+void SoundTestWidget::openSoundDialog( KUrlRequester* )
 {
-    static bool init = true;
-    if ( !init )
-        return;
+  static bool init = true;
+  if ( !init )
+    return;
 
-    init = false;
+  init = false;
 
-    KFileDialog *fileDialog = m_urlRequester->fileDialog();
-    fileDialog->setCaption( i18n("Select Sound File") );
-    QStringList filters;
-    filters << "audio/x-wav" << "audio/mpeg" << "application/ogg"
-            << "audio/x-adpcm";
-    fileDialog->setMimeFilter( filters );
+  KFileDialog *fileDialog = m_urlRequester->fileDialog();
+  fileDialog->setCaption( i18n( "Select Sound File" ) );
 
-   const QStringList soundDirs = KGlobal::dirs()->resourceDirs( "sound" );
+  QStringList filters;
+  filters << "audio/x-wav" << "audio/mpeg" << "application/ogg"
+          << "audio/x-adpcm";
 
-    if ( !soundDirs.isEmpty() ) {
-        KUrl soundURL;
-        QDir dir;
-        dir.setFilter( QDir::Files | QDir::Readable );
-        QStringList::ConstIterator it = soundDirs.constBegin();
-        while ( it != soundDirs.constEnd() ) {
-            dir = *it;
-            if ( dir.isReadable() && dir.count() > 2 ) {
-                soundURL.setPath( *it );
-                fileDialog->setUrl( soundURL );
-                break;
-            }
-            ++it;
-        }
+  fileDialog->setMimeFilter( filters );
+
+  const QStringList soundDirs = KGlobal::dirs()->resourceDirs( "sound" );
+
+  if ( !soundDirs.isEmpty() ) {
+    KUrl soundURL;
+    QDir dir;
+    dir.setFilter( QDir::Files | QDir::Readable );
+
+    foreach ( const QString &soundDir, soundDirs ) {
+      dir = soundDir;
+      if ( dir.isReadable() && dir.count() > 2 ) {
+        soundURL.setPath( soundDir );
+        fileDialog->setUrl( soundURL );
+        break;
+      }
     }
-
+  }
 }
 
 void SoundTestWidget::playSound()
 {
-    QString parameter= m_urlRequester->lineEdit()->text();
-    if ( parameter.isEmpty() )
-        return ;
-    QString play = parameter;
-    QString file = QString::fromLatin1("file:");
-    if (parameter.startsWith(file))
-        play = parameter.mid(file.length());
-    Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory, play );
-    player->play();
-    connect( player, SIGNAL( finished() ), player, SLOT( deleteLater() ) );
-}
+  const QString parameter = m_urlRequester->lineEdit()->text();
+  if ( parameter.isEmpty() )
+    return ;
 
+  const QString file = QLatin1String( "file:" );
+  const QString play = (parameter.startsWith( file ) ? parameter.mid( file.length() ) : parameter);
+
+  Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory, play );
+  player->play();
+  connect( player, SIGNAL( finished() ), player, SLOT( deleteLater() ) );
+}
 
 QString SoundTestWidget::url() const
 {
-    return m_urlRequester->lineEdit()->text();
+  return m_urlRequester->lineEdit()->text();
 }
 
-void SoundTestWidget::setUrl(const QString & url)
+void SoundTestWidget::setUrl( const QString &url )
 {
-    m_urlRequester->lineEdit()->setText(url);
+  m_urlRequester->lineEdit()->setText(url);
 }
 
 void SoundTestWidget::clear()
 {
-    m_urlRequester->lineEdit()->clear();
+  m_urlRequester->lineEdit()->clear();
 }
