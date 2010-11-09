@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_IMAPACLATTRIBUTE_H
-#define AKONADI_IMAPACLATTRIBUTE_H
+#ifndef MAILCOMMON_IMAPACLATTRIBUTE_H
+#define MAILCOMMON_IMAPACLATTRIBUTE_H
 
 #include "mailcommon_export.h"
 
@@ -28,7 +28,7 @@
 
 #include <kimap/acl.h>
 
-namespace Akonadi {
+namespace MailCommon {
 
 class MAILCOMMON_EXPORT ImapAclAttribute : public Akonadi::Attribute
 {

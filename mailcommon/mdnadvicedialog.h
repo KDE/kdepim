@@ -16,15 +16,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef MDNADVICEDIALOG_H
-#define MDNADVICEDIALOG_H
+#ifndef MAILCOMMON_MDNADVICEDIALOG_H
+#define MAILCOMMON_MDNADVICEDIALOG_H
 
-#include <QtCore/QString>
-#include <KDialog>
+#include "mailcommon_export.h"
+
+#include <kdialog.h>
 #include <kmime/kmime_message.h>
 #include <messagecomposer/messagefactory.h>
 
-#include "mailcommon_export.h"
+#include <QtCore/QString>
+
+namespace MailCommon {
 
 class MAILCOMMON_EXPORT MDNAdviceHelper : public QObject
 {
@@ -79,5 +82,7 @@ protected:
   // Reimplemented
   virtual void slotButtonClicked( int button );
 };
+
+}
 
 #endif

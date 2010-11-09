@@ -76,7 +76,7 @@ public:
 FolderTreeWidget::FolderTreeWidget( QWidget* parent, KXMLGUIClient* xmlGuiClient, FolderTreeWidget::TreeViewOptions options, ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy )
   : QWidget( parent ), d( new FolderTreeWidgetPrivate() )
 {
-  Akonadi::AttributeFactory::registerAttribute<Akonadi::ImapAclAttribute>();
+  Akonadi::AttributeFactory::registerAttribute<MailCommon::ImapAclAttribute>();
 
   d->folderTreeView = new FolderTreeView( xmlGuiClient, this, options & ShowUnreadCount );
   d->folderTreeView->showStatisticAnimation( options & ShowCollectionStatisticAnimation );

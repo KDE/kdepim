@@ -35,6 +35,7 @@
 #include <KLocale>
 #include <messagecore/messagehelpers.h>
 
+using namespace MailCommon;
 using MessageComposer::MessageFactory;
 
 MDNAdviceHelper* MDNAdviceHelper::s_instance = 0;

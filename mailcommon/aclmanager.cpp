@@ -339,7 +339,7 @@ class MailCommon::AclManager::Private
 
     void setCollection( const Akonadi::Collection &collection )
     {
-      const Akonadi::ImapAclAttribute *attribute = collection.attribute<Akonadi::ImapAclAttribute>();
+      const MailCommon::ImapAclAttribute *attribute = collection.attribute<MailCommon::ImapAclAttribute>();
       const QMap<QByteArray, KIMAP::Acl::Rights> rights = attribute->rights();
 
       OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = MailCommon::Util::createImapSettingsInterface( collection.resource() );
