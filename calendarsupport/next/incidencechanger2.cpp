@@ -403,7 +403,7 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
   Item item;
   item.setPayload<Incidence::Ptr>( incidence );
   item.setMimeType( incidence->mimeType() );
-  ItemCreateJob *createJob = new ItemCreateJob( item, collection );
+  ItemCreateJob *createJob = new ItemCreateJob( item, collectionToUse );
 
   d->mChangeForJob.insert( createJob, change );
 
