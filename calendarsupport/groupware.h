@@ -114,6 +114,9 @@ class CALENDARSUPPORT_EXPORT Groupware : public QObject
   private Q_SLOTS:
     void finishHandlingInvitation();
 
+    // Frees calendar if it doesn't have jobs running
+    void calendarJobFinished( bool success, const QString &errorString );
+
   Q_SIGNALS:
     void handleInvitationFinished( bool success, const QString &errorMessage );
 

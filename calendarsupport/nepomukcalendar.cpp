@@ -43,6 +43,7 @@ class NepomukCalendar::Private
       mChanger->setDestinationPolicy( IncidenceChanger2::DestinationPolicyAsk );
       mParent = parent;
       mCalendar = KCalCore::MemoryCalendar::Ptr( new KCalCore::MemoryCalendar( KCalPrefs::instance()->timeSpec() ) );
+      mJobsInProgress = 0;
     }
 
     ~Private()
@@ -55,6 +56,7 @@ class NepomukCalendar::Private
       return mItemsByIncidenceUid.value( uid );
     }
 
+    uint mJobsInProgress;
     QPointer<QWidget> mParent;
     IncidenceChanger2 *mChanger;
     KCalCore::MemoryCalendar::Ptr mCalendar;
@@ -79,6 +81,7 @@ NepomukCalendar::NepomukCalendar( QWidget *parent )
 
 NepomukCalendar::~NepomukCalendar()
 {
+  kDebug();
   delete d;
 }
 
@@ -220,7 +223,13 @@ KCalCore::Alarm::List NepomukCalendar::alarms( const KDateTime &from,
 
 bool NepomukCalendar::addIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
-  return d->mChanger->createIncidence( incidence ) != -1;
+  if ( d->mChanger->createIncidence( incidence ) >= 0 ) {
+    d->mJobsInProgress++;
+    return true;
+  } else {
+    kDebug() << "Couldn't create inicdence";
+    return false;
+  }
 }
 
 bool NepomukCalendar::deleteIncidence( const KCalCore::Incidence::Ptr &incidence )
@@ -229,6 +238,7 @@ bool NepomukCalendar::deleteIncidence( const KCalCore::Incidence::Ptr &incidence
     Akonadi::Item item = d->itemForIncidenceUid( incidence->uid() );
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( item );
     connect( job, SIGNAL(result(KJob *)), this, SLOT(deleteIncidenceFinished(KJob *)) );
+    d->mJobsInProgress++;
   }
 
   return true;
@@ -237,6 +247,11 @@ bool NepomukCalendar::deleteIncidence( const KCalCore::Incidence::Ptr &incidence
 void NepomukCalendar::deleteIncidenceFinished( KJob * j )
 {
   kDebug();
+  d->mJobsInProgress--;
+
+  QString errorString;
+  bool result = true;
+
   const Akonadi::ItemDeleteJob* job = qobject_cast<const Akonadi::ItemDeleteJob*>( j );
   Q_ASSERT( job );
   const Akonadi::Item::List items = job->deletedItems();
@@ -244,45 +259,51 @@ void NepomukCalendar::deleteIncidenceFinished( KJob * j )
   KCalCore::Incidence::Ptr tmp = CalendarSupport::incidence( items.first() );
   Q_ASSERT( tmp );
   if ( job->error() ) {
+
+    result = false;
+    errorString = job->errorString();
+
     KMessageBox::sorry( d->mParent,
                         i18n( "Unable to delete incidence %1 \"%2\": %3",
                               i18n( tmp->typeStr() ),
                               tmp->summary(),
                               job->errorString() ) );
-    return;
-  }
 
-  d->mItemsByIncidenceUid.remove( tmp->uid() );
+  } else {
+    d->mItemsByIncidenceUid.remove( tmp->uid() );
 
-  if ( !KCalPrefs::instance()->thatIsMe( tmp->organizer()->email() ) ) {
-    const QStringList myEmails = KCalPrefs::instance()->allEmails();
-    bool notifyOrganizer = false;
-    for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
-      QString email = *it;
-      KCalCore::Attendee::Ptr me = tmp->attendeeByMail( email );
-      if ( me ) {
-        if ( me->status() == KCalCore::Attendee::Accepted ||
-             me->status() == KCalCore::Attendee::Delegated ) {
-          notifyOrganizer = true;
+    if ( !KCalPrefs::instance()->thatIsMe( tmp->organizer()->email() ) ) {
+      const QStringList myEmails = KCalPrefs::instance()->allEmails();
+      bool notifyOrganizer = false;
+      for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
+        QString email = *it;
+        KCalCore::Attendee::Ptr me = tmp->attendeeByMail( email );
+        if ( me ) {
+          if ( me->status() == KCalCore::Attendee::Accepted ||
+               me->status() == KCalCore::Attendee::Delegated ) {
+            notifyOrganizer = true;
+          }
+          KCalCore::Attendee::Ptr newMe( new KCalCore::Attendee( *me ) );
+          newMe->setStatus( KCalCore::Attendee::Declined );
+          tmp->clearAttendees();
+          tmp->addAttendee( newMe );
+          break;
         }
-        KCalCore::Attendee::Ptr newMe( new KCalCore::Attendee( *me ) );
-        newMe->setStatus( KCalCore::Attendee::Declined );
-        tmp->clearAttendees();
-        tmp->addAttendee( newMe );
-        break;
       }
-    }
 
-    if ( !Groupware::instance()->doNotNotify() && notifyOrganizer ) {
-      if ( !d->mWeakPointer.isNull() ) {
-        NepomukCalendar::Ptr strongRef = d->mWeakPointer.toStrongRef();
-        MailScheduler scheduler( strongRef );
-        scheduler.performTransaction( tmp, KCalCore::iTIPReply );
+      if ( !Groupware::instance()->doNotNotify() && notifyOrganizer ) {
+        if ( !d->mWeakPointer.isNull() ) {
+          NepomukCalendar::Ptr strongRef = d->mWeakPointer.toStrongRef();
+          MailScheduler scheduler( strongRef );
+          scheduler.performTransaction( tmp, KCalCore::iTIPReply );
+        }
       }
+      //reset the doNotNotify flag
+      Groupware::instance()->setDoNotNotify( false );
     }
-    //reset the doNotNotify flag
-    Groupware::instance()->setDoNotNotify( false );
   }
+
+  emit deleteFinished( result, errorString );
 }
 
 void NepomukCalendar::incidenceUpdate( const QString &uid, const KDateTime &recurrenceId )
@@ -314,14 +335,19 @@ void NepomukCalendar::createFinished( int changeId,
                                       const QString &errorMessage )
 {
   Q_UNUSED( changeId );
+  d->mJobsInProgress--;
+
   if ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
     if ( incidence ) {
       d->mItemsByIncidenceUid[incidence->uid()] = item;
     }
   } else {
-    kWarning() << errorMessage;
+    kWarning() << "Error creating incidence:" << errorMessage;
   }
+
+  emit addFinished( changerResultCode == IncidenceChanger2::ResultCodeSuccess,
+                    errorMessage );
 }
 
 void NepomukCalendar::searchResult( KJob *job )
@@ -346,8 +372,12 @@ void NepomukCalendar::searchResult( KJob *job )
     }
   }
 
-  kDebug() << "DEBUG loadFinished";
   emit loadFinished( success, errorMessage );
+}
+
+bool NepomukCalendar::jobsInProgress() const
+{
+  return d->mJobsInProgress > 0;
 }
 
 void NepomukCalendar::setWeakPointer( const QWeakPointer<NepomukCalendar> &pointer )
@@ -367,6 +397,7 @@ NepomukCalendar::Ptr NepomukCalendar::create( QWidget *parent )
   nepomukCalendar->setWeakPointer( nepomukCalendar.toWeakRef() );
   return nepomukCalendar;
 }
+
 
 
 #include "nepomukcalendar.moc"

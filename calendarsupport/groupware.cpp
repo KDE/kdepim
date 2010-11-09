@@ -109,11 +109,14 @@ void Groupware::handleInvitation( const QString &receiver,
 void Groupware::finishHandlingInvitation()
 {
   QWeakPointer<NepomukCalendar> weakPtr = qobject_cast<NepomukCalendar*>( sender() )->weakPointer();
-
   NepomukCalendar::Ptr calendar( weakPtr.toStrongRef() );
-  QScopedPointer<Invitation> invitation( d->mInvitationByCalendar.take( calendar ) );
 
-  kDebug() << "DEBUG calendar has " << calendar->incidences().count();
+  connect( calendar.data(), SIGNAL(addFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ) );
+  connect( calendar.data(), SIGNAL(deleteFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ) );
+
+  Invitation *invitation = d->mInvitationByCalendar.value( calendar );
+
+  kDebug() << "Calendar has " << calendar->incidences().count();
 
   const QString iCal = invitation->iCal;
   const QString receiver = invitation->receiver;
@@ -132,6 +135,7 @@ void Groupware::finishHandlingInvitation()
       0,
       i18n( "Error while processing an invitation or update." ),
       errorMessage );
+    delete d->mInvitationByCalendar.take( calendar );
     emit handleInvitationFinished( false/*error*/, errorMessage );
     return;
   }
@@ -142,6 +146,7 @@ void Groupware::finishHandlingInvitation()
   if ( !incidence ) {
     emit handleInvitationFinished( false/*error*/,
                                    QLatin1String( "Invalid incidence" ) );
+    delete d->mInvitationByCalendar.take( calendar );
     return;
   }
   MailScheduler scheduler( calendar );
@@ -197,7 +202,10 @@ void Groupware::finishHandlingInvitation()
     mDelegate->requestIncidenceEditor( item );
   }
 
-  emit handleInvitationFinished( true/*success*/, QString() );
+  if ( !calendar->jobsInProgress() ) {
+    delete d->mInvitationByCalendar.take( calendar );
+    emit handleInvitationFinished( true/*success*/, QString() );
+  } // else it will be finished in calendarJobFinished() slot.
 }
 
 class KOInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
@@ -419,6 +427,17 @@ bool Groupware::sendICalMessage( QWidget *parent,
     return true;
   } else {
     return false;
+  }
+}
+
+void Groupware::calendarJobFinished( bool success, const QString &errorString )
+{
+  QWeakPointer<NepomukCalendar> weakPtr = qobject_cast<NepomukCalendar*>( sender() )->weakPointer();
+  NepomukCalendar::Ptr calendar( weakPtr.toStrongRef() );
+
+  if ( !calendar->jobsInProgress() ) {
+    delete d->mInvitationByCalendar.take( calendar );
+    emit handleInvitationFinished( success, errorString );
   }
 }
 

@@ -174,8 +174,12 @@ class CALENDARSUPPORT_EXPORT NepomukCalendar : public KCalCore::MemoryCalendar
     void setWeakPointer( const QWeakPointer<NepomukCalendar> &pointer );
     QWeakPointer<NepomukCalendar> weakPointer() const;
 
+    bool jobsInProgress() const;
+
   Q_SIGNALS:
     void loadFinished( bool success, const QString &errorMessage );
+    void addFinished( bool success, const QString &errorMessage );
+    void deleteFinished( bool success, const QString &errorMessage );
 
   private slots:
     void deleteIncidenceFinished( KJob *j );
