@@ -37,6 +37,11 @@ class MessageListProxy : public ListProxy
       IsUnreadRole,
       IsImportantRole,
       IsActionItemRole,
+      HasAttachmentRole,
+      IsRepliedRole,
+      IsForwardedRole,
+      IsSignedRole,
+      IsEncryptedRole,
       DateGroupRole
     };
 

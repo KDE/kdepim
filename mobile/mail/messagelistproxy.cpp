@@ -42,6 +42,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
     const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
     Akonadi::MessageStatus messageStatus;
     messageStatus.setStatusFromFlags(item.flags());
+
     switch ( role ) {
       case SubjectRole:
         return msg->subject()->asUnicodeString().trimmed();
@@ -69,6 +70,42 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
         return messageStatus.isImportant();
       case IsActionItemRole:
         return messageStatus.isToAct();
+      case HasAttachmentRole:
+        return messageStatus.hasAttachment();
+      case IsRepliedRole:
+        return messageStatus.isReplied();
+      case IsForwardedRole:
+        return messageStatus.isForwarded();
+      case IsSignedRole:
+      {
+        const KMime::Headers::ContentType * const contentType = msg->contentType();
+        if ( contentType->isSubtype( "signed" )
+             || contentType->isSubtype( "pgp-signature" )
+             || contentType->isSubtype( "pkcs7-signature" )
+             || contentType->isSubtype( "x-pkcs7-signature" ) // fully singed
+             || msg->mainBodyPart( "multipart/signed" )
+             || msg->mainBodyPart( "application/pgp-signature" )
+             || msg->mainBodyPart( "application/pkcs7-signature" )
+             || msg->mainBodyPart( "application/x-pkcs7-signature" ) ) { // partially singed
+          return true;
+        }
+
+        return false;
+      }
+      case IsEncryptedRole:
+      {
+        const KMime::Headers::ContentType * const contentType = msg->contentType();
+        if ( contentType->isSubtype( "encrypted" )
+             || contentType->isSubtype( "pgp-encrypted" )
+             || contentType->isSubtype( "pkcs7-mime" ) // fully encrypted
+             || msg->mainBodyPart( "multipart/encrypted" )
+             || msg->mainBodyPart( "application/pgp-encrypted" )
+             || msg->mainBodyPart( "application/pkcs7-mime" ) ) { // partially encrypted
+          return true;
+        }
+
+        return false;
+      }
       case DateGroupRole:
       {
         // simplified version taken from libmessagelist
@@ -118,6 +155,11 @@ void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   names.insert( IsUnreadRole, "is_unread" );
   names.insert( IsImportantRole, "is_important" );
   names.insert( IsActionItemRole, "is_action_item" );
+  names.insert( HasAttachmentRole, "has_attachment" );
+  names.insert( IsRepliedRole, "is_replied" );
+  names.insert( IsForwardedRole, "is_forwarded" );
+  names.insert( IsSignedRole, "is_signed" );
+  names.insert( IsEncryptedRole, "is_encrypted" );
   names.insert( DateGroupRole, "dateGroup" );
   setRoleNames( names );
   kDebug() << names << sourceModel->roleNames();
