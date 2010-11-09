@@ -181,6 +181,10 @@ SearchRule::Ptr SearchRule::createInstance( QDataStream &s )
   return createInstance( field, func, contents );
 }
 
+SearchRule::~SearchRule()
+{
+}
+
 SearchRule::Function SearchRule::configValueToFunc( const char * str ) {
   if ( !str )
     return FuncNone;
@@ -210,6 +214,36 @@ void SearchRule::writeConfig( KConfigGroup & config, int aIdx ) const {
   config.writeEntry( contents + cIdx, mContents );
 }
 
+void SearchRule::setFunction( Function function )
+{
+  mFunction = function;
+}
+
+SearchRule::Function SearchRule::function() const
+{
+  return mFunction;
+}
+
+void SearchRule::setField( const QByteArray &field )
+{
+  mField = field;
+}
+
+QByteArray SearchRule::field() const
+{
+  return mField;
+}
+
+void SearchRule::setContents( const QString &contents )
+{
+  mContents = contents;
+}
+
+QString SearchRule::contents() const
+{
+  return mContents;
+}
+
 const QString SearchRule::asString() const
 {
   QString result  = "\"" + mField + "\" <";
@@ -217,6 +251,11 @@ const QString SearchRule::asString() const
   result += "> \"" + mContents + "\"";
 
   return result;
+}
+
+bool SearchRule::requiresBody() const
+{
+  return true;
 }
 
 #ifndef KDEPIM_NO_NEPOMUK

@@ -17,33 +17,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef MAILCOMMON_SEARCHPATTERN_H_
-#define MAILCOMMON_SEARCHPATTERN_H_
-
-#include <klocale.h>
-#include <akonadi/kmime/messagestatus.h>
-using Akonadi::MessageStatus;
-
-#ifndef KDEPIM_NO_NEPOMUK
-
-#include <Nepomuk/Query/GroupTerm>
-#include <Nepomuk/Query/ComparisonTerm>
-
-#endif
-
-#include <QList>
-#include <QString>
-
-#include <boost/shared_ptr.hpp>
+#ifndef MAILCOMMON_SEARCHPATTERN_H
+#define MAILCOMMON_SEARCHPATTERN_H
 
 #include "mailcommon_export.h"
 
+#include <akonadi/kmime/messagestatus.h>
+#include <klocale.h>
+
+#ifndef KDEPIM_NO_NEPOMUK
+#include <Nepomuk/Query/GroupTerm>
+#include <Nepomuk/Query/ComparisonTerm>
+#endif
+
+#include <QtCore/QList>
+#include <QtCore/QString>
+
+#include <boost/shared_ptr.hpp>
+
+using Akonadi::MessageStatus;
+
 namespace Akonadi {
-  class Item;
+class Item;
 }
 
 namespace KMime {
-  class Message;
+class Message;
 }
 
 class KConfigGroup;
@@ -51,210 +50,365 @@ class KConfigGroup;
 namespace MailCommon {
 
 // maximum number of filter rules per filter
-const int FILTER_MAX_RULES=8;
+const int FILTER_MAX_RULES = 8;
 
-/** Incoming mail is sent through the list of mail filter
-    rules before it is placed in the associated mail folder (usually "inbox").
-    This class represents one mail filter rule. It is also used to represent
-    a search rule as used by the search dialog and folders.
-
-    @short This class represents one search pattern rule.
-*/
+/**
+ * @short This class represents one search pattern rule.
+ * Incoming mail is sent through the list of mail filter
+ * rules before it is placed in the associated mail folder (usually "inbox").
+ * This class represents one mail filter rule. It is also used to represent
+ * a search rule as used by the search dialog and folders.
+ */
 class MAILCOMMON_EXPORT SearchRule
 {
-public:
-    typedef  boost::shared_ptr<SearchRule> Ptr;
+  public:
+    /**
+     * Defines a pointer to a search rule.
+     */
+    typedef boost::shared_ptr<SearchRule> Ptr;
 
-  /** Operators for comparison of field and contents.
-      If you change the order or contents of the enum: do not forget
-      to change funcConfigNames[], sFilterFuncList and matches()
-      in SearchRule, too.
-      Also, it is assumed that these functions come in pairs of logical
-      opposites (ie. "=" <-> "!=", ">" <-> "<=", etc.).
-  */
-  enum Function { FuncNone = -1,
-                  FuncContains=0, FuncContainsNot,
-                  FuncEquals, FuncNotEqual,
-                  FuncRegExp, FuncNotRegExp,
-                  FuncIsGreater, FuncIsLessOrEqual,
-                  FuncIsLess, FuncIsGreaterOrEqual,
-                  FuncIsInAddressbook, FuncIsNotInAddressbook,
-                  FuncIsInCategory, FuncIsNotInCategory,
-                  FuncHasAttachment, FuncHasNoAttachment};
-  explicit SearchRule ( const QByteArray & field=0, Function=FuncContains,
-                 const QString &contents=QString() );
-  SearchRule ( const SearchRule &other );
+    /**
+     * Describes operators for comparison of field and contents.
+     *
+     * If you change the order or contents of the enum: do not forget
+     * to change funcConfigNames[], sFilterFuncList and matches()
+     * in SearchRule, too.
+     * Also, it is assumed that these functions come in pairs of logical
+     * opposites (ie. "=" <-> "!=", ">" <-> "<=", etc.).
+     */
+    enum Function {
+      FuncNone = -1,
+      FuncContains = 0,
+      FuncContainsNot,
+      FuncEquals,
+      FuncNotEqual,
+      FuncRegExp,
+      FuncNotRegExp,
+      FuncIsGreater,
+      FuncIsLessOrEqual,
+      FuncIsLess,
+      FuncIsGreaterOrEqual,
+      FuncIsInAddressbook,
+      FuncIsNotInAddressbook,
+      FuncIsInCategory,
+      FuncIsNotInCategory,
+      FuncHasAttachment,
+      FuncHasNoAttachment
+    };
 
-  const SearchRule & operator=( const SearchRule & other );
+    /**
+     * Creates new new search rule.
+     *
+     * @param field The field to search in.
+     * @param function The function to use for searching.
+     * @param contents The contents to search for.
+     */
+    explicit SearchRule ( const QByteArray &field = 0, Function function = FuncContains,
+                          const QString &contents = QString() );
 
-  /** Create a search rule of a certain type by instantiating the appro-
-      priate subclass depending on the @p field. */
-  static SearchRule::Ptr createInstance( const QByteArray & field=0,
-                                      Function function=FuncContains,
-                                      const QString & contents=QString() );
+    /**
+     * Creates a new search rule from an @p other rule.
+     */
+    SearchRule( const SearchRule &other );
 
-  static SearchRule::Ptr createInstance( const QByteArray & field,
-                                       const char * function,
-                                       const QString & contents );
+    /**
+     * Initializes this rule with an @p other rule.
+     */
+    const SearchRule& operator=( const SearchRule &other );
 
-  static SearchRule::Ptr createInstance( const SearchRule & other );
+    /**
+     * Creates a new search rule of a certain type by instantiating the
+     * appropriate subclass depending on the @p field.
+     *
+     * @param field The field to search in.
+     * @param function The function to use for searching.
+     * @param contents The contents to search for.
+     */
+    static SearchRule::Ptr createInstance( const QByteArray &field = 0,
+                                           Function function = FuncContains,
+                                           const QString &contents = QString() );
 
-  static SearchRule::Ptr createInstance( QDataStream& s );
+    /**
+     * Creates a new search rule of a certain type by instantiating the
+     * appropriate subclass depending on the @p field.
+     *
+     * @param field The field to search in.
+     * @param function The name of the function to use for searching.
+     * @param contents The contents to search for.
+     */
+    static SearchRule::Ptr createInstance( const QByteArray &field,
+                                           const char *function,
+                                           const QString &contents );
 
-  /** Initialize the object from a given config group.
-      @p aIdx is an identifier that is used to distinguish
-      rules within a single config group. This function does no
-      validation of the data obtained from the config file. You should
-      call isEmpty yourself if you need valid rules. */
-  static SearchRule::Ptr createInstanceFromConfig( const KConfigGroup & config, int aIdx );
+    /**
+     * Creates a new search rule by cloning an @p other rule.
+     */
+    static SearchRule::Ptr createInstance( const SearchRule &other );
 
-  virtual ~SearchRule() {}
+    /**
+     * Creates a new search rule by deseralizing its structure from a data @p stream.
+     */
+    static SearchRule::Ptr createInstance( QDataStream &stream );
 
-  /** Tries to match the rule against the given KMime::Message.
-      @return true if the rule matched, false otherwise. Must be
-      implemented by subclasses.
-  */
-  virtual bool matches( const Akonadi::Item &item ) const = 0;
+    /**
+     * Creates a new search rule from a given config @p group.
+     *
+     * @param group The config group to read the structure from.
+     * @param index The identifier that is used to distinguish
+     *              rules within a single config group.
+     *
+     * @note This function does no validation of the data obtained
+     *       from the config file. You should call isEmpty yourself
+     *       if you need valid rules.
+     */
+    static SearchRule::Ptr createInstanceFromConfig( const KConfigGroup &group, int index );
 
-  /** Determine whether the rule is worth considering. It isn't if
-      either the field is not set or the contents is empty.
-      KFilter should make sure that it's rule list contains
-      only non-empty rules, as matches doesn't check this. */
-  virtual bool isEmpty() const = 0;
+    /**
+     * Destroys the search rule.
+     */
+    virtual ~SearchRule();
 
-  /** Returns true if the rule depends on a complete message,
-      otherwise returns false. */
-  virtual bool requiresBody() const { return true; }
+    /**
+     * Tries to match the rule against the KMime::Message in the
+     * given @p item.
+     *
+     * @return true if the rule matched, false otherwise.
+     *
+     * @note Must be implemented by subclasses.
+     */
+    virtual bool matches( const Akonadi::Item &item ) const = 0;
+
+    /**
+     * Determines whether the rule is worth considering.
+     * It isn't if either the field is not set or the contents is empty.
+     * The calling code should make sure that it's rule list contains
+     * only non-empty rules, as matches doesn't check this.
+     */
+    virtual bool isEmpty() const = 0;
+
+    /**
+     * Returns true if the rule depends on a complete message,
+     * otherwise returns false.
+     */
+    virtual bool requiresBody() const;
 
 
-  /** Save the object into a given config group.
-      @p aIdx is an identifier that is used to distinguish
-      rules within a single config group. This function will happily
-      write itself even when it's not valid, assuming higher layers to
-      Do The Right Thing(TM). */
-  void writeConfig( KConfigGroup & config, int aIdx ) const;
+    /**
+     * Saves the object into a given config @p group.
+     *
+     * @param index The identifier that is used to distinguish
+     *              rules within a single config group.
+     *
+     * @note This function will happily write itself even when it's
+     *       not valid, assuming higher layers to Do The Right Thing(TM).
+     */
+    void writeConfig( KConfigGroup &group, int index ) const;
 
-  /** Return filter function. This can be any of the operators
-      defined in Function. */
-  Function function() const { return mFunction; }
+    /**
+     * Sets the filter @p function of the rule.
+     */
+    void setFunction( Function function );
 
-  /** Set filter function. */
-  void setFunction( Function aFunction ) { mFunction = aFunction; }
+    /**
+     * Returns the filter function of the rule.
+     */
+    Function function() const;
 
-  /** Return message header field name (without the trailing ':').
-      There are also six pseudo-headers:
-      @li \<message\>: Try to match against the whole message.
-      @li \<body\>: Try to match against the body of the message.
-      @li \<any header\>: Try to match against any header field.
-      @li \<recipients\>: Try to match against both To: and Cc: header fields.
-      @li \<size\>: Try to match against size of message (numerical).
-      @li \<age in days\>: Try to match against age of message (numerical).
-      @li \<status\>: Try to match against status of message (status).
-      @li \<tag\>: Try to match against message tags.
-  */
-  QByteArray field() const { return mField; }
+    /**
+     * Sets the message header field @p name.
+     *
+     * @note Make sure the name contains no trailing ':'.
+     */
+    void setField( const QByteArray &name );
 
-  /** Set message header field name (make sure there's no trailing
-      colon ':') */
-  void setField( const QByteArray & field ) { mField = field; }
+    /**
+     * Returns the message header field name (without the trailing ':').
+     *
+     * There are also six pseudo-headers:
+     * @li \<message\>: Try to match against the whole message.
+     * @li \<body\>: Try to match against the body of the message.
+     * @li \<any header\>: Try to match against any header field.
+     * @li \<recipients\>: Try to match against both To: and Cc: header fields.
+     * @li \<size\>: Try to match against size of message (numerical).
+     * @li \<age in days\>: Try to match against age of message (numerical).
+     * @li \<status\>: Try to match against status of message (status).
+     * @li \<tag\>: Try to match against message tags.
+     */
+    QByteArray field() const;
 
-  /** Return the value. This can be either a substring to search for in
-      or a regexp pattern to match against the header. */
-  QString contents() const { return mContents; }
-  /** Set the value. */
-  void setContents( const QString & aContents ) { mContents = aContents; }
+    /**
+     * Set the @p contents of the rule.
+     *
+     * This can be either a substring to search for in
+     * or a regexp pattern to match against the header.
+     */
+    void setContents( const QString &contents );
 
-  /** Returns the rule as string. For debugging.*/
-  const QString asString() const;
+    /**
+     * Returns the contents of the rule.
+     */
+    QString contents() const;
+
+    /**
+     * Returns the rule as string for debugging purpose
+     */
+    const QString asString() const;
 
 #ifndef KDEPIM_NO_NEPOMUK 
-  /** Adds query terms to the given term group. */
-  virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const = 0;
+    /**
+     * Adds query terms to the given term group.
+     */
+    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const = 0;
 #endif  
 
-  QDataStream & operator>>( QDataStream& ) const;
+    QDataStream& operator>>( QDataStream& ) const;
 
-protected:
+  protected:
 #ifndef KDEPIM_NO_NEPOMUK
-  
-  /** Converts function() into the corresponding Nepomuk query operator. */
-  Nepomuk::Query::ComparisonTerm::Comparator nepomukComparator() const;
+    /**
+     * Converts the rule function into the corresponding Nepomuk query operator.
+     */
+    Nepomuk::Query::ComparisonTerm::Comparator nepomukComparator() const;
 
-  /** Adds @p term to @p termGroup and adds a negation term inbetween if needed. */
-  void addAndNegateTerm( const Nepomuk::Query::Term &term, Nepomuk::Query::GroupTerm &termGroup ) const;
+    /**
+     * Adds @p term to @p termGroup and adds a negation term inbetween if needed.
+     */
+    void addAndNegateTerm( const Nepomuk::Query::Term &term, Nepomuk::Query::GroupTerm &termGroup ) const;
 #endif
-  
-private:
-  static Function configValueToFunc( const char * str );
-  static QString functionToString( Function function );
+    
+  private:
+    static Function configValueToFunc( const char* );
+    static QString functionToString( Function );
 
-  QByteArray mField;
-  Function mFunction;
-  QString  mContents;
+    QByteArray mField;
+    Function mFunction;
+    QString  mContents;
 };
 
 
-// subclasses representing the different kinds of searches
-
-/** This class represents a search to be performed against a string.
- *  The string can be either a message header, or a pseudo header, such
- *  as \<body\>
-    @short This class represents a search pattern rule operating on a string.
-*/
+/**
+ * @short This class represents a search pattern rule operating on a string.
+ *
+ * This class represents a search to be performed against a string.
+ * The string can be either a message header, or a pseudo header, such
+ * as \<body\>
+ */
 class SearchRuleString : public SearchRule
 {
-public:
-  explicit SearchRuleString( const QByteArray & field=0,
-                Function function=FuncContains, const QString & contents=QString() );
-  SearchRuleString( const SearchRuleString & other );
-  const SearchRuleString & operator=( const SearchRuleString & other );
+  public:
+    /**
+     * Creates new new string search rule.
+     *
+     * @param field The field to search in.
+     * @param function The function to use for searching.
+     * @param contents The contents to search for.
+     */
+    explicit SearchRuleString( const QByteArray &field = 0,
+                               Function function = FuncContains,
+                               const QString &contents = QString() );
 
-  virtual ~SearchRuleString();
-  virtual bool isEmpty() const ;
-  virtual bool requiresBody() const;
+    /**
+     * Creates a new string search rule from an @p other rule.
+     */
+    SearchRuleString( const SearchRuleString &other );
 
-  virtual bool matches( const Akonadi::Item &item ) const;
+    /**
+     * Initializes this rule with an @p other rule.
+     */
+    const SearchRuleString& operator=( const SearchRuleString &other );
 
-  /** Helper for the main matches() method. Does the actual comparing. */
-  bool matchesInternal( const QString & msgContents ) const;
+    /**
+     * Destroys the string search rule.
+     */
+    virtual ~SearchRuleString();
+
+    /**
+     * @copydoc SearchRule::isEmpty()
+     */
+    virtual bool isEmpty() const ;
+
+    /**
+     * @copydoc SearchRule::requiresBody()
+     */
+    virtual bool requiresBody() const;
+
+    /**
+     * @copydoc SearchRule::matches()
+     */
+    virtual bool matches( const Akonadi::Item &item ) const;
+
+    /**
+     * A helper method for the main matches() method.
+     * Does the actual comparing.
+     */
+    bool matchesInternal( const QString &contents ) const;
 
 #ifndef KDEPIM_NO_NEPOMUK
-  virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+    /**
+     * @copydoc SearchRule::addQueryTerms()
+     */
+    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
 #endif
-  
-private:
+    
+  private:
 #ifndef KDEPIM_NO_NEPOMUK
-  void addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm, const QUrl &field ) const;
+    /**
+     * @copydoc SearchRule::addPersonTerms()
+     */
+    void addPersonTerm( Nepomuk::Query::GroupTerm &groupTerm, const QUrl &field ) const;
 #endif
 };
 
 
-/** This class represents a search to be performed against a numerical value,
- *  such as the age of the message in days or its size.
-    @short This class represents a search pattern rule operating on numerical
-    values.
-*/
+/**
+ * @short This class represents a search pattern rule operating on numerical values.
+ *
+ * This class represents a search to be performed against a numerical value,
+ * such as the age of the message in days or its size.
+ */
 class SearchRuleNumerical : public SearchRule
 {
-public:
-  explicit SearchRuleNumerical( const QByteArray & field=0,
-                         Function function=FuncContains, const QString & contents=QString() );
-  virtual bool isEmpty() const ;
+  public:
+    /**
+     * Creates new new numerical search rule.
+     *
+     * @param field The field to search in.
+     * @param function The function to use for searching.
+     * @param contents The contents to search for.
+     */
+    explicit SearchRuleNumerical( const QByteArray &field = 0,
+                                  Function function = FuncContains,
+                                  const QString &contents = QString() );
 
-  virtual bool matches( const Akonadi::Item &item ) const;
+    /**
+     * @copydoc SearchRule::isEmpty()
+     */
+    virtual bool isEmpty() const ;
 
-  // Optimized matching not implemented, will use the unoptimized matching
-  // from SearchRule
-  using SearchRule::matches;
+    /**
+     * @copydoc SearchRule::matches()
+     */
+    virtual bool matches( const Akonadi::Item &item ) const;
 
-  /** Helper for the main matches() method. Does the actual comparing. */
-  bool matchesInternal( long numericalValue, long numericalMsgContents,
-                        const QString & msgContents ) const;
-                        
+    // Optimized matching not implemented, will use the unoptimized matching
+    // from SearchRule
+    using SearchRule::matches;
+
+    /**
+     * A helper method for the main matches() method.
+     * Does the actual comparing.
+     */
+    bool matchesInternal( long numericalValue, long numericalContents,
+                          const QString &contents ) const;
+                          
 #ifndef KDEPIM_NO_NEPOMUK
-  virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
+    /**
+     * @copydoc SearchRule::addQueryTerms()
+     */
+    virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
 #endif
 };
+
 //TODO: Check if the below one is needed or not!
 // The below are used in several places and here so they are accessible.
   struct MessageStatusInfo {
