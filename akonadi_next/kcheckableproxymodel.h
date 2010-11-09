@@ -27,13 +27,14 @@
 #include "akonadi_next_export.h"
 
 #include <QItemSelection>
+#include <QSortFilterProxyModel>
 
 namespace Future
 {
 
 class KCheckableProxyModelPrivate;
 
-class AKONADI_NEXT_EXPORT KCheckableProxyModel : public Future::KIdentityProxyModel
+class AKONADI_NEXT_EXPORT KCheckableProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
