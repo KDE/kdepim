@@ -375,6 +375,7 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
           return -2;
         }
       }
+      break;
       case DestinationPolicyNeverAsk:
       {
         const bool rights = d->hasRights( d->mDefaultCollection, ChangeTypeCreate );
@@ -386,12 +387,12 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
                                  Item(),
                                  ResultCodeInvalidDefaultCollection,
                                  QLatin1String( "Default collection is invalid or doesn't have "
-                                                "rights and DestinationPolicyNeverAsk was used."
-                                                "rights = " + rights ) );
+                                                "rights and DestinationPolicyNeverAsk was used. "
+                                                "; rights = " + rights ) );
           return change.changeId;
         }
       }
-        break;
+      break;
     default:
       // Never happens
       Q_ASSERT_X( false, "createIncidence()", "unknown destination policy" );
