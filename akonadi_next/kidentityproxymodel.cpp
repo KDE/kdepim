@@ -151,12 +151,34 @@ KIdentityProxyModel::~KIdentityProxyModel()
 /*!
     \reimp
  */
+bool KIdentityProxyModel::canFetchMore(const QModelIndex& parent) const
+{
+    if (!sourceModel())
+      return 0;
+    Q_ASSERT(parent.isValid() ? parent.model() == this : true);
+    return sourceModel()->canFetchMore(mapToSource(parent));
+}
+
+/*!
+    \reimp
+ */
 int KIdentityProxyModel::columnCount(const QModelIndex& parent) const
 {
     if (!sourceModel())
       return 0;
     Q_ASSERT(parent.isValid() ? parent.model() == this : true);
     return sourceModel()->columnCount(mapToSource(parent));
+}
+
+/*!
+    \reimp
+ */
+void KIdentityProxyModel::fetchMore(const QModelIndex& parent)
+{
+    if (!sourceModel())
+      return;
+    Q_ASSERT(parent.isValid() ? parent.model() == this : true);
+    sourceModel()->fetchMore(mapToSource(parent));
 }
 
 /*!
