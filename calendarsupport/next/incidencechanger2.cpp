@@ -369,7 +369,8 @@ int IncidenceChanger2::createIncidence( const Incidence::Ptr &incidence,
           return -2;
         }
 
-        if ( collectionToUse.isValid() || d->hasRights( collectionToUse, ChangeTypeCreate ) ) {
+        // TODO: add unit test for these two situations after reviewing API
+        if ( !collectionToUse.isValid() || !d->hasRights( collectionToUse, ChangeTypeCreate ) ) {
           kError() << "Invalid collection selected. Can't create incidence.";
           return -2;
         }
