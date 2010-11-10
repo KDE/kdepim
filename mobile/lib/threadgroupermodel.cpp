@@ -214,6 +214,7 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
 {
   Q_Q(const ThreadGrouperModel);
   m_threads.clear();
+  m_threadItems.clear();
   m_messageMap.clear();
 
   QHash<QByteArray, QSet<QByteArray> > pendingThreads;
