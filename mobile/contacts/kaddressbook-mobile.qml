@@ -65,15 +65,13 @@ KPIM.MainView {
 
   }
 
-  KPIM.Button {
-    id : editContactButton
-    visible : guiStateManager.inViewContactState
+  KPIM.ItemEditButton {
+    id: editContactButton
+    visible: guiStateManager.inViewContactState
+    actionName: "akonadi_contact_item_edit"
     anchors.bottom: backToFolderListButton.top
     anchors.right: parent.right
     anchors.margins: 12
-    width: 70
-    height: 70
-    icon: KDE.locate( "data", "mobileui/edit-button.png" );
     onClicked: {
       application.editContact( contactView.item );
     }
@@ -98,15 +96,13 @@ KPIM.MainView {
     }
   }
 
-  KPIM.Button {
-    id : editContactGroupButton
-    visible : guiStateManager.inViewContactGroupState
+  KPIM.ItemEditButton {
+    id: editContactGroupButton
+    visible: guiStateManager.inViewContactGroupState
+    actionName: "akonadi_contact_item_edit"
     anchors.bottom: backToFolderListButton.top
     anchors.right: parent.right
     anchors.margins: 12
-    width: 70
-    height: 70
-    icon: KDE.locate( "data", "mobileui/edit-button.png" );
     onClicked: {
       application.editContactGroup( contactGroupView.item );
     }
