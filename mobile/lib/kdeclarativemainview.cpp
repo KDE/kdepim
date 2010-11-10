@@ -174,8 +174,16 @@ void KDeclarativeMainView::delayedInit()
     kWarning() << "ETM created" << time.elapsed() << &time;
   }
 
+  QAbstractItemModel *mainModel = d->mEtm;
+
+  QAbstractProxyModel *mainProxyModel = createMainProxyModel();
+  if ( mainProxyModel ) {
+    mainProxyModel->setSourceModel( mainModel );
+    mainModel = mainProxyModel;
+  }
+
   d->mBnf = new Akonadi::BreadcrumbNavigationFactory( this );
-  d->mBnf->createBreadcrumbContext( d->mEtm, this );
+  d->mBnf->createBreadcrumbContext( mainModel, this );
 
   if ( debugTiming ) {
     kWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
@@ -187,11 +195,11 @@ void KDeclarativeMainView::delayedInit()
   context->setContextProperty( "_breadcrumbNavigationFactory", d->mBnf );
 
   d->mMultiBnf = new Akonadi::BreadcrumbNavigationFactory( this );
-  d->mMultiBnf->createCheckableBreadcrumbContext( d->mEtm, this );
+  d->mMultiBnf->createCheckableBreadcrumbContext( mainModel, this );
 
   context->setContextProperty( "_multiSelectionComponentFactory", d->mMultiBnf );
 
-  context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
+  context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( mainModel ) ) );
 
   Akonadi::EntityMimeTypeFilterModel *filterModel = new Akonadi::EntityMimeTypeFilterModel( this );
   filterModel->setSourceModel( d->mBnf->unfilteredChildItemModel() );
@@ -798,6 +806,11 @@ QAbstractProxyModel* KDeclarativeMainView::itemFilterModel() const
 QAbstractProxyModel* KDeclarativeMainView::listProxy() const
 {
   return d->mListProxy;
+}
+
+QAbstractProxyModel* KDeclarativeMainView::createMainProxyModel() const
+{
+  return 0;
 }
 
 QAbstractProxyModel* KDeclarativeMainView::createItemFilterModel() const

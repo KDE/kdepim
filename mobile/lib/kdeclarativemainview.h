@@ -223,6 +223,11 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
     /**
+     * Returns the a proxy model that will be used on top of the entity tree model.
+     */
+    virtual QAbstractProxyModel* createMainProxyModel() const;
+
+    /**
      * Returns the filter proxy model that will be used to filter the item list.
      * If @c 0 is returned, no filtering is done.
      *
