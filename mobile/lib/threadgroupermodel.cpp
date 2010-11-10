@@ -102,7 +102,7 @@ Akonadi::Item ThreadGrouperModelPrivate::getThreadItem(const Akonadi::Item& item
 
 KDateTime ThreadGrouperModelPrivate::getMostRecentUpdate(KMime::Message::Ptr threadRoot, Akonadi::Item::Id itemId) const
 {
-  QSet<QByteArray> messages = m_threads[identifierForMessage( threadRoot, itemId )];
+  QSet<QByteArray> messages = m_threads.value( identifierForMessage( threadRoot, itemId ) );
 
   KDateTime newest = threadRoot->date()->dateTime();
 
