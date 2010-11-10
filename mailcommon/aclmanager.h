@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+ * Copyright (c) 2010 Tobias Koenig <tokoe@kdab.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ */
 
 #ifndef MAILCOMMON_ACLMANAGER_H
 #define MAILCOMMON_ACLMANAGER_H
@@ -13,89 +31,6 @@ class QAction;
 class QItemSelectionModel;
 
 namespace MailCommon {
-
-class AclEditor : public QObject
-{
-  Q_OBJECT
-
-  Q_PROPERTY( QString userId READ userId WRITE setUserId NOTIFY userIdChanged )
-  Q_PROPERTY( Permissions permissions READ permissions WRITE setPermissions NOTIFY permissionsChanged )
-
-  Q_ENUMS( Permissions )
-
-  public:
-    /**
-     * Describes the possible permissions of an ACL.
-     */
-    enum Permissions {
-      NonePermissions,
-      ReadPermissions,
-      AppendPermissions,
-      WritePermissions,
-      AllPermissions,
-      CustomPermissions
-    };
-
-    /**
-     * Creates a new ACL editor.
-     */
-    AclEditor( QObject *parent = 0 );
-
-    /**
-     * Destroys the ACL editor.
-     */
-    ~AclEditor();
-
-    /**
-     * Sets the user @p id of the ACL.
-     */
-    void setUserId( const QString &id );
-
-    /**
-     * Returns the user id of the ACL.
-     */
-    QString userId() const;
-
-    /**
-     * Sets the @p permissions of the ACL.
-     */
-    void setPermissions( Permissions permissions );
-
-    /**
-     * Returns the permissions of the ACL.
-     */
-    Permissions permissions() const;
-
-  public Q_SLOTS:
-    /**
-     * Saves the ACL back.
-     */
-    void save();
-
-    /**
-     * Cancels the editing of the ACL.
-     */
-    void cancel();
-
-  Q_SIGNALS:
-    /**
-     * This signal is emitted when the user @p id has been changed.
-     */
-    void userIdChanged( const QString &id );
-
-    /**
-     * This signal is emitted when the @p permissions have been changed.
-     */
-    void permissionsChanged( MailCommon::AclEditor::Permissions permissions );
-
-  private:
-    //@cond PRIVATE
-    friend class AclManager;
-
-    class Private;
-    Private* const d;
-    //@endcond
-};
 
 class MAILCOMMON_EXPORT AclManager : public QObject
 {
@@ -170,15 +105,12 @@ class MAILCOMMON_EXPORT AclManager : public QObject
      */
     void collectionChanged( const Akonadi::Collection &collection );
 
-    void addAcl( AclEditor *editor );
-    void editAcl( AclEditor *editor );
-
   private:
     //@cond PRIVATE
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void selectionChanged( const QItemSelection&, const QItemSelection& ) )
+    Q_PRIVATE_SLOT( d, void selectionChanged() )
     Q_PRIVATE_SLOT( d, void addAcl() )
     Q_PRIVATE_SLOT( d, void editAcl() )
     Q_PRIVATE_SLOT( d, void deleteAcl() )

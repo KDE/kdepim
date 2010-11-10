@@ -1,105 +1,44 @@
+/*
+ * Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+ * Copyright (c) 2010 Tobias Koenig <tokoe@kdab.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ */
 
 #include "aclmanager.h"
 
+#include "aclentrydialog_p.h"
+#include "aclutils_p.h"
 #include "imapaclattribute.h"
 #include "imapsettings.h"
 #include "mailutil.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionmodifyjob.h>
+#include <akonadi/contact/contactgroupexpandjob.h>
+#include <akonadi/contact/contactgroupsearchjob.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kpimutils/email.h>
 
 #include <QtCore/QAbstractListModel>
 #include <QtGui/QAction>
 #include <QtGui/QItemSelectionModel>
 
 using namespace MailCommon;
-
-// The set of standard permission sets
-static const struct {
-  KIMAP::Acl::Rights permissions;
-  const char* userString;
-} standardPermissions[] = {
-  { KIMAP::Acl::None, I18N_NOOP2( "Permissions", "None" ) },
-  { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen, I18N_NOOP2( "Permissions", "Read" ) },
-  { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen | KIMAP::Acl::Insert | KIMAP::Acl::Post, I18N_NOOP2( "Permissions", "Append" ) },
-  { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen | KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write | KIMAP::Acl::CreateMailbox | KIMAP::Acl::DeleteMailbox | KIMAP::Acl::DeleteMessage | KIMAP::Acl::Expunge, I18N_NOOP2( "Permissions", "Write" ) },
-  { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen | KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write | KIMAP::Acl::CreateMailbox | KIMAP::Acl::DeleteMailbox | KIMAP::Acl::DeleteMessage | KIMAP::Acl::Expunge | KIMAP::Acl::Admin, I18N_NOOP2( "Permissions", "All" ) }
-};
-
-// internalRightsList is only used if permissions doesn't match the standard set
-static QString permissionsToUserString( KIMAP::Acl::Rights permissions, const QString& internalRightsList )
-{
-  for ( uint i = 0; i < sizeof( standardPermissions ) / sizeof( *standardPermissions ); ++i ) {
-    if ( KIMAP::Acl::normalizedRights( permissions ) == standardPermissions[i].permissions )
-      return i18nc( "Permissions", standardPermissions[ i ].userString );
-  }
-
-  if ( internalRightsList.isEmpty() )
-    return i18n( "Custom Permissions" ); // not very helpful, but should not happen
-  else
-    return i18n( "Custom Permissions (%1)", internalRightsList );
-}
-
-////////////// AclEditor //////////////////////
-
-class AclEditor::Private
-{
-  public:
-    Private()
-      : mPermissions( AclEditor::ReadPermissions ),
-        mShallBeSaved( false )
-    {
-    }
-
-    QString mUserId;
-    AclEditor::Permissions mPermissions;
-    bool mShallBeSaved;
-};
-
-AclEditor::AclEditor( QObject *parent )
-  : QObject( parent ), d( new Private )
-{
-}
-
-AclEditor::~AclEditor()
-{
-  delete d;
-}
-
-void AclEditor::setUserId( const QString &id )
-{
-  d->mUserId = id;
-  emit userIdChanged( d->mUserId );
-}
-
-QString AclEditor::userId() const
-{
-  return d->mUserId;
-}
-
-void AclEditor::setPermissions( Permissions permissions )
-{
-  d->mPermissions = permissions;
-  emit permissionsChanged( d->mPermissions );
-}
-
-AclEditor::Permissions AclEditor::permissions() const
-{
-  return d->mPermissions;
-}
-
-void AclEditor::save()
-{
-  d->mShallBeSaved = true;
-}
-
-void AclEditor::cancel()
-{
-  d->mShallBeSaved = false;
-}
-
-////////////// AclManager //////////////////////
 
 class AclModel : public QAbstractListModel
 {
@@ -124,7 +63,7 @@ class AclModel : public QAbstractListModel
       switch ( role ) {
         case Qt::DisplayRole:
           return QString::fromLatin1( "%1: %2" ).arg( QString::fromLatin1( right.first ) )
-                                                .arg( permissionsToUserString( right.second, QString() ) );
+                                                .arg( AclUtils::permissionsToUserString( right.second ) );
           break;
         case UserIdRole:
           return QString::fromLatin1( right.first );
@@ -133,7 +72,7 @@ class AclModel : public QAbstractListModel
           return QVariant( static_cast<int>( right.second ) );
           break;
         case PermissionsTextRole:
-          return permissionsToUserString( right.second, QString() );
+          return AclUtils::permissionsToUserString( right.second );
           break;
         default:
           return QVariant();
@@ -227,7 +166,8 @@ class MailCommon::AclManager::Private
 {
   public:
     Private( AclManager *qq )
-      : q( qq )
+      : q( qq ),
+        mChanged( false )
     {
       mAddAction = new QAction( i18n( "Add Entry..." ), q );
       q->connect( mAddAction, SIGNAL( triggered( bool ) ),
@@ -247,22 +187,22 @@ class MailCommon::AclManager::Private
 
       mSelectionModel = new QItemSelectionModel( mModel );
       q->connect( mSelectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-                  q, SLOT( selectionChanged( const QItemSelection&, const QItemSelection& ) ) );
+                  q, SLOT( selectionChanged() ) );
     }
 
     ~Private()
     {
     }
 
-    void selectionChanged( const QItemSelection &selection, const QItemSelection& )
+    void selectionChanged()
     {
-      const bool itemSelected = !selection.indexes().isEmpty();
+      const bool itemSelected = !mSelectionModel->selectedIndexes().isEmpty();
 
       bool canAdmin = (mUserRights & KIMAP::Acl::Admin);
 
       bool canAdminThisItem = canAdmin;
       if ( canAdmin && itemSelected ) {
-        const QModelIndex index = selection.indexes().first();
+        const QModelIndex index = mSelectionModel->selectedIndexes().first();
         const QString userId = index.data( AclModel::UserIdRole ).toString();
         const KIMAP::Acl::Rights rights = static_cast<KIMAP::Acl::Rights>( index.data( AclModel::PermissionsRole ).toInt() );
 
@@ -278,49 +218,38 @@ class MailCommon::AclManager::Private
 
     void addAcl()
     {
-      AclEditor *editor = new AclEditor( q );
+      AclEntryDialog dlg;
+      dlg.setCaption( i18n( "Add ACL" ) );
 
-      emit q->addAcl( editor );
+      if ( !dlg.exec() )
+        return;
 
-      if ( editor->d->mShallBeSaved ) {
-        if ( mModel->insertRow( mModel->rowCount() - 1 ) ) {
-          const QModelIndex index = mModel->index( mModel->rowCount() - 1, 0 );
-          mModel->setData( index, editor->userId(), AclModel::UserIdRole );
-          if ( editor->permissions() != AclEditor::CustomPermissions )
-            mModel->setData( index, static_cast<int>( standardPermissions[ editor->permissions() ].permissions ), AclModel::PermissionsRole );
-        }
+      if ( mModel->insertRow( mModel->rowCount() ) ) {
+        const QModelIndex index = mModel->index( mModel->rowCount() - 1, 0 );
+        mModel->setData( index, dlg.userId(), AclModel::UserIdRole );
+        mModel->setData( index, static_cast<int>( dlg.permissions() ), AclModel::PermissionsRole );
+
+        mChanged = true;
       }
-
-      delete editor;
     }
 
     void editAcl()
     {
       const QModelIndex index = mSelectionModel->selectedIndexes().first();
       const QString userId = index.data( AclModel::UserIdRole ).toString();
-      const KIMAP::Acl::Rights rights = static_cast<KIMAP::Acl::Rights>( index.data( AclModel::PermissionsRole ).toInt() );
+      const KIMAP::Acl::Rights permissions = static_cast<KIMAP::Acl::Rights>( index.data( AclModel::PermissionsRole ).toInt() );
 
-      AclEditor::Permissions permissions = AclEditor::CustomPermissions;
-      for ( int i = 0; i < 5 /*FIXME*/; ++i ) {
-        if ( standardPermissions[ i ].permissions == rights ) {
-          permissions = static_cast<AclEditor::Permissions>( i );
-          break;
-        }
-      }
+      AclEntryDialog dlg;
+      dlg.setCaption( i18n( "Edit ACL" ) );
+      dlg.setUserId( userId );
+      dlg.setPermissions( permissions );
 
-      AclEditor *editor = new AclEditor( q );
-      editor->setUserId( userId );
-      editor->setPermissions( permissions );
+      if ( !dlg.exec() )
+        return;
 
-      emit q->editAcl( editor );
-
-      if ( editor->d->mShallBeSaved ) {
-        mModel->setData( index, editor->userId(), AclModel::UserIdRole );
-        if ( editor->permissions() != AclEditor::CustomPermissions )
-          mModel->setData( index, static_cast<int>( standardPermissions[ editor->permissions() ].permissions ), AclModel::PermissionsRole );
-      }
-
-      delete editor;
+      mModel->setData( index, dlg.userId(), AclModel::UserIdRole );
+      mModel->setData( index, static_cast<int>( dlg.permissions() ), AclModel::PermissionsRole );
+      mChanged = true;
     }
 
     void deleteAcl()
@@ -335,27 +264,71 @@ class MailCommon::AclManager::Private
       }
 
       mModel->removeRow( index.row(), QModelIndex() );
+      mChanged = true;
+    }
+
+    /**
+     * We call this method if our first try to get the ACLs for the user fails.
+     * That's the case if the ACLs use a different user id than the login name.
+     *
+     * Examples:
+     *   login: testuser                acls: testuser@mydomain.org
+     *   login: testuser@mydomain.org   acls: testuser
+     */
+    static QString guessUserName( const QString &loginName, const QString &serverName )
+    {
+      if ( loginName.contains( QLatin1Char( '@' ) ) ) {
+        // strip of the domain part and use user name only
+        return loginName.left( loginName.indexOf( QLatin1Char( '@' ) ) );
+      } else {
+        int pos = serverName.lastIndexOf( QLatin1Char( '.' ) );
+        if ( pos == -1 ) // no qualified domain name, only hostname
+          return QString::fromLatin1( "%1@%2" ).arg( loginName ).arg( serverName );
+
+        pos = serverName.lastIndexOf( QLatin1Char( '.' ), pos - 1 );
+        if ( pos == -1 ) // a simple domain name e.g. mydomain.org
+          return QString::fromLatin1( "%1@%2" ).arg( loginName ).arg( serverName );
+        else
+          return QString::fromLatin1( "%1@%2" ).arg( loginName ).arg( serverName.mid( pos + 1 ) );
+      }
     }
 
     void setCollection( const Akonadi::Collection &collection )
     {
+      mCollection = collection;
+      mChanged = false;
+
       const MailCommon::ImapAclAttribute *attribute = collection.attribute<MailCommon::ImapAclAttribute>();
       const QMap<QByteArray, KIMAP::Acl::Rights> rights = attribute->rights();
 
       OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = MailCommon::Util::createImapSettingsInterface( collection.resource() );
       
+      QString loginName;
+      QString serverName;
       if ( imapSettingsInterface->isValid() ) {
-        const QDBusReply<QString> reply = imapSettingsInterface->userName();
+        QDBusReply<QString> reply = imapSettingsInterface->userName();
+        if ( reply.isValid() )
+          loginName = reply;
+
+        reply = imapSettingsInterface->imapServer();
         if ( reply.isValid() ) {
-          mImapUserName = reply;
+          serverName = reply;
         }
       }
 
       delete imapSettingsInterface;
 
+      mImapUserName = loginName;
+      if ( !rights.contains( loginName.toUtf8() ) ) {
+        const QString guessedUserName = guessUserName( loginName, serverName );
+        if ( rights.contains( guessedUserName.toUtf8() ) )
+          mImapUserName = guessedUserName;
+      }
+
       mUserRights = rights[ mImapUserName.toUtf8() ];
 
       mModel->setRights( rights );
+      selectionChanged();
     }
 
     AclManager *q;
@@ -368,6 +341,7 @@ class MailCommon::AclManager::Private
     Akonadi::Collection mCollection;
     QString mImapUserName;
     KIMAP::Acl::Rights mUserRights;
+    bool mChanged;
 };
 
 AclManager::AclManager( QObject *parent )
@@ -418,6 +392,56 @@ QAction* AclManager::deleteAction() const
 
 void AclManager::save()
 {
+  if ( !d->mCollection.isValid() || !d->mChanged )
+    return;
+
+  // refresh the collection, it might be outdated in the meantime
+  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( d->mCollection, Akonadi::CollectionFetchJob::Base );
+  if ( !job->exec() )
+    return;
+
+  if ( job->collections().isEmpty() )
+    return;
+
+  d->mCollection = job->collections().first();
+
+  d->mChanged = false;
+
+  MailCommon::ImapAclAttribute *attribute = d->mCollection.attribute<MailCommon::ImapAclAttribute>();
+  QMap<QByteArray, KIMAP::Acl::Rights> newRights;
+
+  const QMap<QByteArray, KIMAP::Acl::Rights> rights = d->mModel->rights();
+  QMapIterator<QByteArray, KIMAP::Acl::Rights> it( rights );
+  while ( it.hasNext() ) {
+    it.next();
+
+    // we can use job->exec() here, it is not a hot path
+    Akonadi::ContactGroupSearchJob *searchJob = new Akonadi::ContactGroupSearchJob( this );
+    searchJob->setQuery( Akonadi::ContactGroupSearchJob::Name, it.key() );
+    searchJob->setLimit( 1 );
+    if ( !searchJob->exec() ) {
+      continue;
+    }
+
+    if ( !searchJob->contactGroups().isEmpty() ) { // it has been a distribution list
+      Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( searchJob->contactGroups().first(), this );
+      if ( expandJob->exec() ) {
+        foreach ( const KABC::Addressee &contact, expandJob->contacts() ) {
+          const QByteArray rawEmail = KPIMUtils::extractEmailAddress( contact.preferredEmail().toUtf8() );
+          if ( !rawEmail.isEmpty() )
+            newRights[ rawEmail ] = it.value();
+        }
+      }
+    } else { // it has been a normal contact
+      const QByteArray rawEmail = KPIMUtils::extractEmailAddress( it.key() );
+      if ( !rawEmail.isEmpty() )
+        newRights[ rawEmail ] = it.value();
+    }
+  }
+
+  attribute->setRights( newRights );
+
+  new Akonadi::CollectionModifyJob( d->mCollection );
 }
 
 #include "aclmanager.moc"
