@@ -307,6 +307,11 @@ void KDeclarativeMainView::viewSingleItem( const Akonadi::Item& )
 {
 }
 
+bool KDeclarativeMainView::useFilterLineEditInCurrentState() const
+{
+  return false;
+}
+
 KDeclarativeMainView::~KDeclarativeMainView()
 {
   delete d;
@@ -895,7 +900,8 @@ void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )
        (d->mGuiStateManager->inAccountScreenState() ||
         d->mGuiStateManager->inSingleFolderScreenState() ||
         d->mGuiStateManager->inMultipleFolderScreenState() ||
-        d->mGuiStateManager->inBulkActionScreenState()) && // only in the right state
+        d->mGuiStateManager->inBulkActionScreenState() ||
+        useFilterLineEditInCurrentState()) && // only in the right state
        !event->text().isEmpty() && // only react on character input
        lineEdit && // only if a filter line edit has been set
        d->mItemFilterModel ) { // and a filter model is used

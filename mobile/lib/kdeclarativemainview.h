@@ -260,6 +260,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     virtual void viewSingleItem( const Akonadi::Item &item );
 
+    /**
+     * Returns whether the application is in a state where the filter line edit
+     * can be used.
+     */
+    virtual bool useFilterLineEditInCurrentState() const;
+
   protected Q_SLOTS:
     void delayedInit();
     void breadcrumbsSelectionChanged();
