@@ -33,7 +33,12 @@ QML.Rectangle {
   QML.Image {
     id: backgroundImage
     anchors.fill: parent
+  }
+
+  QML.Item {
+    anchors.fill: parent
     anchors.topMargin: 40
+    anchors.leftMargin: 40
     QML.Flickable{
         flickableDirection: QML.Flickable.VerticalFlick
         width: parent.width - closeButton.width
@@ -67,26 +72,39 @@ QML.Rectangle {
                 }
 
                 QML.Text{
-                    text: KDE.i18n("Scrum Master, Team Senior: Till Adam, KDAB Berlin") + "\n" +
+                    text: KDE.i18n("Scrum Master, Team Senior: Till Adam, KDAB") + "\n" +
                           KDE.i18n("Product Owner, Team Senior: Bernhard Reiter, Intevation GmbH") + "\n"
                     style: QML.Text.Raised
                 }
 
                 QML.Text{
-                    id: mainTeam
-                    text: KDE.i18n("Main Scrum team in alphabetical order:") + "\n\n" +
-                          "\t" + KDE.i18n("Brinkmann, Marcus (g10 Code GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Heinecke, Andre (Intevation GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Koch, Werner (g10 Code)") + "\n" +
-                          "\t" + KDE.i18n("Ricks, Björn (Intevation GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Teichmann, Sascha L. (Intevation GmbH)") + "\n"
-                }
-
-                QML.Text{
-                    id: satellites
-                    text: KDE.i18n("\"Satellites\" and additional support by:") + "\n\n" +
-                          "\t" + KDE.i18n("Reiter, Ludwig (Intevation GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Wolfsteller, Felix (Intevation GmbH)") + "\n"
+                    text: KDE.i18n("Development team in alphabetical order:") + "\n\n" +
+                          "\t" + KDE.i18n("Andras Mantia (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Andre Heinecke (Intevation GmbH)") + "\n" +
+                          "\t" + KDE.i18n("Andreas Holzammer (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Bertjan Broeksema (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Björn Ricks (Intevation GmbH)") + "\n" +
+                          "\t" + KDE.i18n("Casey Link (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("David Faure (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Felix Wolfsteller (Intevation GmbH)") + "\n" +
+                          "\t" + KDE.i18n("Kevin Krammer (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Kevin Ottens (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Laurent Montel (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Leo Franchi (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Ludwig Reiter (Intevation GmbH)") + "\n" +
+                          "\t" + KDE.i18n("Marc Mutz (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Marcus Brinkmann (g10 Code GmbH)") + "\n" +
+                          "\t" + KDE.i18n("Nuno Pinheiro (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Patrick Spendrin (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Romain Pokrzywka (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Sabine Faure (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Sascha L. Teichmann (Intevation GmbH)") + "\n" +
+                          "\t" + KDE.i18n("Sergio Martins (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Stephen Kelly (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Till Adam (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Tobias Koenig (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Volker Krause (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Werner Koch (g10 Code)") + "\n"
                 }
 
                 QML.Text{
