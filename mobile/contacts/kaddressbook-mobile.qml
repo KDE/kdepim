@@ -452,6 +452,7 @@ KPIM.MainView {
   QML.Loader {
     anchors.fill: parent
     source: guiStateManager.inConfigScreenState ? "ConfigDialog.qml" : ""
+    onLoaded: item.load();
   }
 
   KPIM.SearchDialog {
