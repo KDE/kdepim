@@ -823,6 +823,11 @@ QAbstractProxyModel* KDeclarativeMainView::createItemFilterModel() const
   return 0;
 }
 
+void KDeclarativeMainView::setItemFilterModel(QAbstractProxyModel* model)
+{
+  d->mItemFilterModel = model;
+}
+
 ImportHandlerBase* KDeclarativeMainView::importHandler() const
 {
   return 0;

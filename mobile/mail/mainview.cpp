@@ -160,27 +160,70 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 
   model = grouper;
 
-  model = KDeclarativeMainView::createItemModelContext( context, model );
+  QAbstractProxyModel *itemFilterModel = createItemFilterModel();
+  if ( itemFilterModel ) {
+    setItemFilterModel( itemFilterModel );
+    itemFilterModel->setSourceModel( model );
+    model = itemFilterModel;
+  }
 
-  m_threadsModel = new ThreadModel( listProxy(), this );
+  QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel( this );
+  qmlCheckable->setSourceModel( model );
+
+  QItemSelectionModel *itemActionCheckModel = new QItemSelectionModel( model, this );
+  qmlCheckable->setSelectionModel( itemActionCheckModel );
+
+  KSelectionProxyModel *checkedItems = new KSelectionProxyModel( itemActionCheckModel, this );
+  checkedItems->setFilterBehavior( KSelectionProxyModel::ExactSelection );
+  checkedItems->setSourceModel( model );
+
+  QItemSelectionModel *itemNavigationModel = new QItemSelectionModel( model, this );
+
+  QAbstractProxyModel *_listProxy = listProxy();
+
+  if ( _listProxy ) {
+    _listProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
+
+    _listProxy->setSourceModel( qmlCheckable );
+  }
+  KLinkItemSelectionModel *itemNavigationSelectionModel = new KLinkItemSelectionModel( _listProxy, itemNavigationModel, this );
+
+  KLinkItemSelectionModel *itemActionSelectionModel = new KLinkItemSelectionModel( _listProxy, itemActionCheckModel, this );
+  setItemNaigationAndActionSelectionModels(itemNavigationSelectionModel, itemActionSelectionModel);
+
+  if ( _listProxy ) {
+    context->setContextProperty( "itemModel", _listProxy );
+
+    QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( itemNavigationSelectionModel, this );
+    QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( itemActionSelectionModel, this );
+
+    context->setContextProperty( "_itemNavigationModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
+    context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
+
+    Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory( this );
+    bulkActionBnf->createCheckableBreadcrumbContext( entityTreeModel(), this );
+    context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
+  }
+
+  m_threadsModel = new ThreadModel(_listProxy, this);
 
   context->setContextProperty( "_threads", m_threadsModel );
 
   QItemSelectionModel *itemThreadModel = new QItemSelectionModel( model, this );
 
   m_threadContentsModel = new KSelectionProxyModel(itemThreadModel, this);
-  m_threadContentsModel->setSourceModel( listProxy() );
+  m_threadContentsModel->setSourceModel(_listProxy);
   m_threadContentsModel->setObjectName("threadContentsModel");
 
   context->setContextProperty( "_threadContents", m_threadContentsModel );
 
-  ThreadSelectionModel *threadSelector = new ThreadSelectionModel(m_threadsModel, itemThreadModel, itemSelectionModel(), this);
+  ThreadSelectionModel *threadSelector = new ThreadSelectionModel(m_threadsModel, itemThreadModel, itemNavigationModel, this);
 
   QMLListSelectionModel *qmlThreadSelector = new QMLListSelectionModel(threadSelector, this);
 
   context->setContextProperty("_threadSelector", qmlThreadSelector );
 
-  KLinkItemSelectionModel *threadMailSelector = new KLinkItemSelectionModel(m_threadContentsModel, itemSelectionModel(), this);
+  KLinkItemSelectionModel *threadMailSelector = new KLinkItemSelectionModel(m_threadContentsModel, itemNavigationModel, this);
 
   QMLListSelectionModel *qmlThreadMailSelector = new QMLListSelectionModel(threadMailSelector, this);
 

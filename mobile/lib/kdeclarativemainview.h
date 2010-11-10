@@ -237,6 +237,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     virtual QAbstractProxyModel* createItemFilterModel() const;
 
     /**
+     * Set the filter proxy model that will be used to filter the item list.
+     * Call this when calling createItemFilterModel() manually in your code.
+     */
+    void setItemFilterModel( QAbstractProxyModel* model );
+
+    /**
      * Returns the object that will be used for importing data.
      * If @c 0 is returned, no import functionality is offered.
      */
