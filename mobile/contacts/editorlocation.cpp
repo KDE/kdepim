@@ -101,7 +101,7 @@ class EditorLocation::Private
 
       mMapper = new QDataWidgetMapper( q );
       mMapper->setModel( mModel );
-      mMapper->addMapping( mUi.streetLineEdit, 1 );
+      mMapper->addMapping( mUi.streetLineEdit, 1, "plainText" );
       mMapper->addMapping( mUi.postOfficeBoxLineEdit, 2 );
       mMapper->addMapping( mUi.localityLineEdit, 3 );
       mMapper->addMapping( mUi.regionLineEdit, 4 );

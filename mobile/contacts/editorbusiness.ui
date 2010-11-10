@@ -144,7 +144,11 @@
     </widget>
    </item>
    <item>
-    <widget class="QTextEdit" name="noteTextEdit"/>
+    <widget class="QTextEdit" name="noteTextEdit">
+     <property name="acceptRichText">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
