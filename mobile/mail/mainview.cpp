@@ -59,6 +59,7 @@
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/kmime/specialmailcollectionsrequestjob.h>
 #include <akonadi/kmime/standardmailactionmanager.h>
+#include <akonadi_next/quotacolorproxymodel.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcmdlineargs.h>
@@ -124,13 +125,22 @@ static bool workOffline()
 MainView::MainView(QWidget* parent)
   : KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent ),
     mAskingToGoOnline( false ),
-    mTransportDialog( 0 )
+    mTransportDialog( 0 ),
+    mQuotaColorProxyModel( new QuotaColorProxyModel( this ) )
 {
   qRegisterMetaType<KMime::Content*>();
+
+  updateConfig();
 }
 
 MainView::~MainView()
 {
+}
+
+void MainView::setConfigWidget( ConfigWidget *configWidget )
+{
+  Q_ASSERT( configWidget );
+  connect( configWidget, SIGNAL( configChanged() ), this, SLOT( updateConfig() ) );
 }
 
 #define VIEW(model) {                        \
@@ -1054,6 +1064,11 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
                            i18n( "Do you really want to delete the selected account?" ) );
 }
 
+QAbstractProxyModel* MainView::createMainProxyModel() const
+{
+  return mQuotaColorProxyModel;
+}
+
 QAbstractProxyModel* MainView::createItemFilterModel() const
 {
   return new EmailsFilterProxyModel();
@@ -1313,6 +1328,12 @@ void MainView::templateFetchResult( KJob* job)
   ComposerView *composer = new ComposerView;
   composer->setMessage( newMsg );
   composer->show();
+}
+
+void MainView::updateConfig()
+{
+  mQuotaColorProxyModel->setWarningThreshold( Settings::self()->miscQuotaWarningThreshold() );
+  mQuotaColorProxyModel->setWarningColor( Settings::self()->miscQuotaWarningColor() );
 }
 
 void MainView::applyFilters()

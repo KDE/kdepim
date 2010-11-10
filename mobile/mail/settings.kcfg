@@ -42,5 +42,11 @@
 
   <group name="Misc">
     <entry name="MiscEmptyTrashAtExit" type="Bool" />
+    <entry name="MiscQuotaWarningThreshold" type="Int">
+      <default>80</default>
+    </entry>
+    <entry name="MiscQuotaWarningColor" type="Color">
+      <default>red</default>
+    </entry>
   </group>
 </kcfg>

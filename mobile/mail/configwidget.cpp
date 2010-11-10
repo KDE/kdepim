@@ -62,6 +62,8 @@ void ConfigWidget::save()
 {
   mManager->updateSettings();
   saveToExternalSettings();
+
+  emit configChanged();
 }
 
 void ConfigWidget::configureCompletionOrder()
@@ -155,15 +157,9 @@ void ConfigWidget::saveToExternalSettings()
 
 
 DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
-  : QGraphicsProxyWidget( parent ), mConfigWidget( new ConfigWidget )
+  : DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>( parent )
 {
-  QPalette palette = mConfigWidget->palette();
-  palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
-  mConfigWidget->setPalette( palette );
-  StyleSheetLoader::applyStyle( mConfigWidget );
-
-  setWidget( mConfigWidget );
-  setFocusPolicy( Qt::StrongFocus );
+  connect( this, SIGNAL( configChanged() ), widget(), SIGNAL( configChanged() ) );
 }
 
 DeclarativeConfigWidget::~DeclarativeConfigWidget()
@@ -172,12 +168,12 @@ DeclarativeConfigWidget::~DeclarativeConfigWidget()
 
 void DeclarativeConfigWidget::load()
 {
-  mConfigWidget->load();
+  widget()->load();
 }
 
 void DeclarativeConfigWidget::save()
 {
-  mConfigWidget->save();
+  widget()->save();
 }
 
 #include "configwidget.moc"

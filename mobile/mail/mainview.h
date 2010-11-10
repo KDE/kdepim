@@ -25,28 +25,30 @@
 
 #include "kdeclarativemainview.h"
 
-#include <messagecomposer/messagefactory.h>
+#include <Akonadi/EntityTreeModel>
 #include <Akonadi/KMime/SpecialMailCollections>
 #include <akonadi/selectionproxymodel.h>
-#include <Akonadi/EntityTreeModel>
 
-class FilterModel;
-class TemplateEmailModel;
-class KSelectionProxyModel;
-class QStandardItemModel;
-class ThreadModel;
+#include <messagecomposer/messagefactory.h>
+
+namespace Akonadi {
+  class EntityMimeTypeFilterModel;
+  class QuotaColorProxyModel;
+  class StandardMailActionManager;
+}
+
 namespace MessageViewer {
   class MessageViewItem;
 }
 
-namespace Akonadi {
-  class StandardMailActionManager;
-  class EntityMimeTypeFilterModel;
-}
-
 class AkonadiSender;
 class ConfigWidget;
+class FilterModel;
 class KJob;
+class KSelectionProxyModel;
+class QStandardItemModel;
+class TemplateEmailModel;
+class ThreadModel;
 
 class MainView : public KDeclarativeMainView
 {
@@ -62,6 +64,8 @@ class MainView : public KDeclarativeMainView
       AsAttachment,
       Redirect
     };
+
+    void setConfigWidget( ConfigWidget *configWidget );
 
   public Q_SLOTS:
     void startComposer();
@@ -119,6 +123,7 @@ class MainView : public KDeclarativeMainView
 
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
+    virtual QAbstractProxyModel* createMainProxyModel() const;
     virtual QAbstractProxyModel* createItemFilterModel() const;
 
     virtual ImportHandlerBase* importHandler() const;
@@ -137,6 +142,7 @@ class MainView : public KDeclarativeMainView
     void deleteItemResult( KJob *job );
     void showExpireProperties();
     void templateFetchResult( KJob *job );
+    void updateConfig();
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
@@ -156,6 +162,7 @@ class MainView : public KDeclarativeMainView
     KSelectionProxyModel *m_threadContentsModel;
     ThreadModel *m_threadsModel;
     FilterModel *mFilterModel;
+    Akonadi::QuotaColorProxyModel *mQuotaColorProxyModel;
 };
 
 Q_DECLARE_METATYPE( MainView::ForwardMode )

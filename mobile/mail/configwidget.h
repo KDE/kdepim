@@ -20,6 +20,9 @@
 #ifndef CONFIGWIDGET_H
 #define CONFIGWIDGET_H
 
+#include "declarativewidgetbase.h"
+#include "mainview.h"
+
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QWidget>
 
@@ -40,6 +43,9 @@ class ConfigWidget : public QWidget
     void configureCompletionOrder();
     void editRecentAddresses();
 
+  Q_SIGNALS:
+    void configChanged();
+
   private:
     void loadFromExternalSettings();
     void saveToExternalSettings();
@@ -47,7 +53,12 @@ class ConfigWidget : public QWidget
     KConfigDialogManager *mManager;
 };
 
-class DeclarativeConfigWidget : public QGraphicsProxyWidget
+class DeclarativeConfigWidget :
+#ifndef Q_MOC_RUN
+public DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>
+#else
+public QGraphicsProxyWidget
+#endif
 {
   Q_OBJECT
 
@@ -58,6 +69,9 @@ class DeclarativeConfigWidget : public QGraphicsProxyWidget
   public Q_SLOTS:
     void load();
     void save();
+
+  Q_SIGNALS:
+    void configChanged();
 
   private:
     ConfigWidget *mConfigWidget;
