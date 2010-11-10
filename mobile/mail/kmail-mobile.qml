@@ -714,9 +714,12 @@ KPIM.MainView {
     }
   }
 
-  FilterConfigDialog {
+  QML.Loader {
+    anchors.fill: parent
     id: filterConfigDialog
     visible: false
-    filterModel: _filterModel
+    focus: visible
+    onLoaded: { item.filterModel = _filterModel; }
+    source: visible ? "FilterConfigDialog.qml" : ""
   }
 }
