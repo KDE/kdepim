@@ -899,7 +899,7 @@ void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )
 {
   static bool isSendingEvent = false;
 
-  KLineEdit *lineEdit = (d->mGuiStateManager->inBulkActionScreenState() ? d->mBulkActionFilterLineEdit : d->mFilterLineEdit);
+  KLineEdit *lineEdit = (d->mGuiStateManager->inBulkActionScreenState() ? d->mBulkActionFilterLineEdit : d->mFilterLineEdit.data());
 
   if ( !isSendingEvent && // do not end up in a recursion
        (d->mGuiStateManager->inAccountScreenState() ||

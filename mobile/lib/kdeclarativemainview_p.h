@@ -33,6 +33,7 @@
 
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QStringListModel>
+#include <QPointer>
 
 class AgentStatusMonitor;
 class KActionCollection;
@@ -64,7 +65,7 @@ public: /// members
   QItemSelectionModel                *mItemActionSelectionModel;
   QHash<QString, QStringList>        mPersistedSelections;
   Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
-  KLineEdit                          *mFilterLineEdit;
+  QPointer<KLineEdit>                mFilterLineEdit;
   KLineEdit                          *mBulkActionFilterLineEdit;
   AgentStatusMonitor                 *mAgentStatusMonitor;
   GuiStateManager                    *mGuiStateManager;
