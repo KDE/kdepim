@@ -74,6 +74,7 @@ install(FILES
   KorganizerActions.qml
   korganizer-mobile-background.png
   EventListView.qml
+  EventListComponent.qml
   TimelineView.qml
   DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
 )

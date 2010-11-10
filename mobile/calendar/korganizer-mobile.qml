@@ -227,68 +227,9 @@ KPIM.MainView {
     onLoaded: { item.timeLineView.showRange( dateEdit.date, 1 /* "Week" */ ); }
   }
 
-  Rectangle {
-    id: eventListView
-    visible: guiStateManager.inViewEventListState
+  Loader {
     anchors.fill: parent
-    color: "#D2D1D0" // TODO: make palette work correctly. palette.window
-
-    Rectangle {
-      height: 48
-      width: 48
-      z: 5
-      color: "#00000000"
-      anchors.right : parent.right
-      anchors.rightMargin : 70
-      anchors.bottom : parent.bottom
-      anchors.bottomMargin : 70
-      Image {
-        source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
-        MouseArea {
-          anchors.fill : parent;
-          onClicked : {
-            _itemActionModel.select(-1, 1)
-            _itemNavigationModel.select(-1, 1)
-            guiStateManager.popState();
-          }
-        }
-      }
-    }
-
-    EventListView {
-      showCheckBox : false
-      id: eventList
-      model: itemModel
-      checkModel : _itemActionModel
-      anchors.left : parent.left
-      anchors.top : parent.top
-      anchors.bottom : filterLineEdit.top
-      anchors.right : parent.right
-      anchors.topMargin: 30
-      anchors.leftMargin: 40
-
-      navigationModel : _itemNavigationModel
-    }
-
-    FilterLineEdit {
-      id: filterLineEdit
-      anchors.left : parent.left
-      anchors.bottom : parent.bottom
-      anchors.right : parent.right
-      anchors.leftMargin: 40
-      visible : false
-      height : 0
-      y : height == 0 ? parent.height : parent.height - height
-    }
-
-    Connections {
-      target : _itemNavigationModel
-      onCurrentRowChanged : {
-        application.setCurrentEventItemId(_itemNavigationModel.currentItemIdHack);
-        guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState )
-        _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
-      }
-    }
+    source: guiStateManager.inViewEventListState ? "EventListComponent.qml" : ""
   }
 
   Item {
