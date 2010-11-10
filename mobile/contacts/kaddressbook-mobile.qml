@@ -439,10 +439,12 @@ KPIM.MainView {
     onContactGroupRemoved : { guiStateManager.popState(); }
   }
 
-  KPIM.AboutDialog {
+  QML.Loader {
     id : aboutDialog
+    anchors.fill: parent
     visible: false
-    source: backgroundImage.source
+    source: visible ? KDE.locate( "module", "imports/org/kde/pim/mobileui/AboutDialog.qml" ) : ""
+    onLoaded: { item.backgroundSource = backgroundImage.source; }
   }
 
   QML.Loader {

@@ -692,9 +692,12 @@ KPIM.MainView {
     }
   }
 
-  KPIM.AboutDialog {
+  Loader {
     id : aboutDialog
-    source: backgroundImage.source
+    anchors.fill: parent
+    visible: false
+    source: visible ? KDE.locate( "module", "imports/org/kde/pim/mobileui/AboutDialog.qml" ) : ""
+    onLoaded: { item.backgroundSource = backgroundImage.source; }
   }
 
   Loader {

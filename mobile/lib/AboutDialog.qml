@@ -25,10 +25,9 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
   id: aboutDialog
-  property alias source: backgroundImage.source
+  property alias backgroundSource: backgroundImage.source
   anchors.fill: parent
   color: "white"
-  visible: false
 
   QML.Image {
     id: backgroundImage
@@ -141,7 +140,7 @@ QML.Rectangle {
         width: 150
         buttonText: KDE.i18n( "Close" )
         onClicked: {
-            aboutDialog.visible = false
+            aboutDialog.parent.visible = false
         }
     }
 }
