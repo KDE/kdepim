@@ -26,7 +26,6 @@
 
 
 #include <kparts/browserextension.h>
-#include <kparts/factory.h>
 #include <kparts/event.h>
 #include <kparts/part.h>
 
