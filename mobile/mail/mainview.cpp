@@ -934,7 +934,7 @@ void MainView::createDefaultCollectionDone( KJob *job )
     kDebug() << "You do not have read/write permission to your inbox folder.";
 
   connect( SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
-           this, SLOT( initDefaultFolders() ) );
+           this, SLOT( initDefaultFolders() ), Qt::UniqueConnection );
 
   folderChanged(); //call here, as e.g trash folders cannot be detected before the special collections are set up
 }
