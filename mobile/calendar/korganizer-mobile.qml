@@ -260,10 +260,27 @@ KPIM.MainView {
       id: eventList
       model: itemModel
       checkModel : _itemActionModel
-      anchors { fill: parent; topMargin: 30; leftMargin: 40 }
+      anchors.left : parent.left
+      anchors.top : parent.top
+      anchors.bottom : filterLineEdit.top
+      anchors.right : parent.right
+      anchors.topMargin: 30
+      anchors.leftMargin: 40
 
       navigationModel : _itemNavigationModel
     }
+
+    FilterLineEdit {
+      id: filterLineEdit
+      anchors.left : parent.left
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      anchors.leftMargin: 40
+      visible : false
+      height : 0
+      y : height == 0 ? parent.height : parent.height - height
+    }
+
     Connections {
       target : _itemNavigationModel
       onCurrentRowChanged : {

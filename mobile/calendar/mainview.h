@@ -96,6 +96,7 @@ class MainView : public KDeclarativeMainView
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
     virtual GuiStateManager* createGuiStateManager() const;
+    virtual bool useFilterLineEditInCurrentState() const;
 
     void scheduleiTIPMethod( KCalCore::iTIPMethod method );
 

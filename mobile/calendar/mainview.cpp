@@ -396,6 +396,11 @@ GuiStateManager* MainView::createGuiStateManager() const
   return new EventsGuiStateManager();
 }
 
+bool MainView::useFilterLineEditInCurrentState() const
+{
+  return (guiStateManager()->currentState() == EventsGuiStateManager::ViewEventListState);
+}
+
 void MainView::uploadFreeBusy()
 {
   CalendarSupport::FreeBusyManager::self()->publishFreeBusy( this );
