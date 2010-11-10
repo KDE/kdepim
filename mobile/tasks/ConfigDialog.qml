@@ -29,6 +29,11 @@ QML.Rectangle {
   color: "white"
   visible: guiStateManager.inConfigScreenState
 
+  function load()
+  {
+    configWidget.load();
+  }
+
   QML.Flickable {
     id: configWidgetBox
     anchors.fill: parent
@@ -41,12 +46,6 @@ QML.Rectangle {
       Tasks.ConfigWidget {
         id: configWidget
         width: parent.width - okButton.width
-
-        onVisibleChanged: {
-          if ( visible ) {
-            configWidget.load()
-          }
-        }
       }
     }
   }
