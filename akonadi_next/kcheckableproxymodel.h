@@ -22,18 +22,18 @@
 #ifndef KCHECKABLEPROXYMODEL_H
 #define KCHECKABLEPROXYMODEL_H
 
+#include "kidentityproxymodel.h"
 
 #include "akonadi_next_export.h"
 
 #include <QItemSelection>
-#include <QSortFilterProxyModel>
 
 namespace Future
 {
 
 class KCheckableProxyModelPrivate;
 
-class AKONADI_NEXT_EXPORT KCheckableProxyModel : public QSortFilterProxyModel
+class AKONADI_NEXT_EXPORT KCheckableProxyModel : public Future::KIdentityProxyModel
 {
   Q_OBJECT
 public:
