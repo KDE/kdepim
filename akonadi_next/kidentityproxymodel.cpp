@@ -600,6 +600,8 @@ void KIdentityProxyModelPrivate::_k_sourceLayoutAboutToBeChanged()
 
   Q_Q(KIdentityProxyModel);
 
+  q->layoutAboutToBeChanged();
+
   foreach(const QPersistentModelIndex &proxyPersistentIndex, q->persistentIndexList()) {
       m_proxyIndexes << proxyPersistentIndex;
       Q_ASSERT(proxyPersistentIndex.isValid());
@@ -607,8 +609,6 @@ void KIdentityProxyModelPrivate::_k_sourceLayoutAboutToBeChanged()
       Q_ASSERT(srcPersistentIndex.isValid());
       m_layoutChangePersistentIndexes << srcPersistentIndex;
   }
-
-  q->layoutAboutToBeChanged();
 }
 
 void KIdentityProxyModelPrivate::_k_sourceLayoutChanged()
