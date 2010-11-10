@@ -70,6 +70,8 @@ class AKONADI_NEXT_EXPORT QuotaColorProxyModel : public Future::KIdentityProxyMo
 
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 
+    virtual void setSourceModel( QAbstractItemModel *sourceModel );
+
   private:
     //@cond PRIVATE
     class Private;

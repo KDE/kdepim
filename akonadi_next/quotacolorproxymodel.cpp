@@ -27,6 +27,8 @@
 
 using namespace Akonadi;
 
+static const int qmlForegroundRole = 1984;
+
 /**
  * @internal
  */
@@ -77,7 +79,7 @@ QColor QuotaColorProxyModel::warningColor() const
 
 QVariant QuotaColorProxyModel::data( const QModelIndex & index, int role) const
 {
-  if ( role == Qt::ForegroundRole ) {
+  if ( role == Qt::ForegroundRole || role == qmlForegroundRole ) {
     const QModelIndex sourceIndex = mapToSource( index );
     const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );
     const Collection collection = sourceModel()->data( rowIndex, EntityTreeModel::CollectionRole ).value<Collection>();
@@ -89,13 +91,24 @@ QVariant QuotaColorProxyModel::data( const QModelIndex & index, int role) const
         const qreal percentage = ( 100.0 * quota->currentValue() ) / quota->maximumValue();
 
         if ( percentage >= d->mThreshold ) {
-          return d->mColor;
+          return (role == Qt::ForegroundRole ? d->mColor : d->mColor.name());
         }
       }
     }
   }
 
   return Future::KIdentityProxyModel::data( index, role );
+}
+
+void QuotaColorProxyModel::setSourceModel( QAbstractItemModel *sourceModel )
+{
+  KIdentityProxyModel::setSourceModel( sourceModel );
+
+  if ( sourceModel ) {
+    QHash<int, QByteArray> names = sourceModel->roleNames();
+    names.insert( qmlForegroundRole, "foreground" );
+    setRoleNames( names );
+  }
 }
 
 #include "quotacolorproxymodel.moc"
