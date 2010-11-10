@@ -22,7 +22,6 @@
 #ifndef KCHECKABLEPROXYMODEL_H
 #define KCHECKABLEPROXYMODEL_H
 
-#include "kidentityproxymodel.h"
 
 #include "akonadi_next_export.h"
 
