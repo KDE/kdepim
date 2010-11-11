@@ -53,6 +53,19 @@ class ThreadModel;
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.kmailmobile.Composer" )
+  Q_CLASSINFO( "D-Bus Introspection", ""
+               "  <interface name=\"org.kde.kmailmobile.Composer\">\n"
+               "    <method name=\"openComposer\">\n"
+               "      <arg direction=\"out\" type=\"i\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"to\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"cc\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"bcc\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"subject\"/>\n"
+               "      <arg direction=\"in\" type=\"s\" name=\"body\"/>\n"
+               "    </method>\n"
+               "  </interface>\n"
+                       "")
 
   public:
     explicit MainView(QWidget* parent = 0);
@@ -90,6 +103,11 @@ class MainView : public KDeclarativeMainView
     int emailTemplateCount();
     void newMessageFromTemplate( int index );
 
+    Q_SCRIPTABLE int openComposer( const QString & to,
+                                   const QString & cc,
+                                   const QString & bcc,
+                                   const QString & subject,
+                                   const QString & body );
   protected slots:
     void delayedInit();
     void forwardMessage();

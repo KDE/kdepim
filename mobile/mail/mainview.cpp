@@ -92,6 +92,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSignalMapper>
 #include <QtCore/QTimer>
+#include <QtDBus/QDBusConnection>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtGui/QLabel>
 #include <QtGui/QItemSelectionModel>
@@ -132,6 +133,9 @@ MainView::MainView(QWidget* parent)
   qRegisterMetaType<KMime::Content*>();
 
   updateConfig();
+
+  QDBusConnection::sessionBus().registerService( "org.kde.kmailmobile.composer" );
+  QDBusConnection::sessionBus().registerObject( "/composer", this, QDBusConnection::ExportScriptableSlots );
 }
 
 MainView::~MainView()
@@ -142,6 +146,27 @@ void MainView::setConfigWidget( ConfigWidget *configWidget )
 {
   Q_ASSERT( configWidget );
   connect( configWidget, SIGNAL( configChanged() ), this, SLOT( updateConfig() ) );
+}
+
+int MainView::openComposer( const QString &to, const QString &cc, const QString &bcc,
+                            const QString &subject, const QString &body )
+{
+  KMime::Message::Ptr message = KMime::Message::Ptr( new KMime::Message );
+  message->to()->fromUnicodeString( to, "utf-8" );
+  message->cc()->fromUnicodeString( cc, "utf-8" );
+  message->bcc()->fromUnicodeString( bcc, "utf-8" );
+  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+  message->subject()->fromUnicodeString( subject, "utf-8" );
+
+  KMime::Content *bodyMessage = message->mainBodyPart();
+  bodyMessage->setBody( body.toUtf8() );
+  message->assemble();
+
+  ComposerView *composer = new ComposerView;
+  composer->setMessage( message );
+  composer->show();
+
+  return 0;
 }
 
 #define VIEW(model) {                        \
