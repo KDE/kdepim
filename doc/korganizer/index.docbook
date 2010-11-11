@@ -836,9 +836,9 @@ sidebar.</para>
 <para>To export all your <quote>active</quote> events, to-dos and journal entries
 (independent of to what resource they belong) as a new iCalendar
 file, choose the <menuchoice><guimenu>File</guimenu><guisubmenu>Export</guisubmenu>
-<guimenuitem>As iCalendar...</guimenuitem></menuchoice> menu item. To export the same
+<guimenuitem>Export as iCalendar...</guimenuitem></menuchoice> menu item. To export the same
 data as a new vCalendar file choose the <menuchoice><guimenu>File</guimenu>
-<guisubmenu>Export</guisubmenu> <guimenuitem>As vCalendar...</guimenuitem>
+<guisubmenu>Export</guisubmenu> <guimenuitem>Export as vCalendar...</guimenuitem>
 </menuchoice> menu item. The <guilabel>Save As</guilabel> dialog will pop up.
 Enter the file name and location for the new file to complete the export
 action.</para>
@@ -1174,7 +1174,7 @@ menu item, (X represents the number of days, usually 3).</para>
 days are shown next to each other.</para>
 
 <para>Switch the display to the week view by choosing the
-<menuchoice><guimenu>View</guimenu>
+<menuchoice><guimenu>Go</guimenu>
 <guimenuitem>Week</guimenuitem></menuchoice>
 menu item or pressing the <inlinemediaobject><imageobject><imagedata fileref="view-calendar-week.png"
  format="PNG"/></imageobject></inlinemediaobject><guilabel>Week</guilabel> button
