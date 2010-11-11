@@ -313,24 +313,10 @@ KPIM.MainView {
     onLoaded: { item.backgroundImage = backgroundImage.source; }
   }
 
-  KPIM.BulkActionScreen {
-    id : bulkActionScreen
-    visible : guiStateManager.inBulkActionScreenState
-    anchors.top: parent.top
+  QML.Loader {
     anchors.fill: parent
-    backgroundImage : backgroundImage.source
-
-    actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18np("1 note book", "%1 note books", collectionView.numSelected)
-    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-    headerList : NotesListView {
-      showCheckBox : true
-      id: bulkActionHeaderList
-      model: itemModel
-      checkModel : _itemActionModel
-      anchors.fill : parent
-      showDeleteButton: false
-    }
+    source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
+    onLoaded: { item.backgroundImage = backgroundImage.source }
   }
 
   KPIM.SearchResultScreen {

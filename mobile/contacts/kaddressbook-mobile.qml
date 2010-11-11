@@ -370,30 +370,10 @@ KPIM.MainView {
     onLoaded: { item.backgroundImage = backgroundImage.source; }
   }
 
-  KPIM.BulkActionScreen {
-    id : bulkActionScreen
-    visible : guiStateManager.inBulkActionScreenState
+  QML.Loader {
     anchors.fill: parent
-    backgroundImage : backgroundImage.source
-    property bool initialized : false
-
-    actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
-    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-    headerList : ContactListView {
-      showCheckBox : true
-      id: bulkActionContactList
-      model: itemModel
-      checkModel : _itemActionModel
-      anchors.fill : parent
-    }
-
-    onVisibleChanged: {
-      if ( visible == true && initialized == false ) {
-        bulkActionScreen.actionModel.append( {"action": "send_mail_to"} )
-        initialized = true;
-      }
-    }
+    source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
+    onLoaded: { item.backgroundImage = backgroundImage.source }
   }
 
   KPIM.SearchResultScreen {

@@ -47,6 +47,7 @@ install(TARGETS notes-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES notes-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(PROGRAMS notes-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
+  BulkActionComponent.qml
   notes.qml
   NoteActions.qml
   NoteView.qml

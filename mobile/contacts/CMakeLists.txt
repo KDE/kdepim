@@ -98,6 +98,7 @@ install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(PROGRAMS kaddressbook-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
+  BulkActionComponent.qml
   ConfigDialog.qml
   contact-editor.qml
   contactgroup-editor.qml
