@@ -98,6 +98,7 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include <QVariant>
+#include <QHeaderView>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -316,7 +317,8 @@ void MainWindow::registerKeyTreeView( KeyTreeView * view ) {
         return;
     view->setFlatModel( d->controller.flatModel() );
     view->setHierarchicalModel( d->controller.hierarchicalModel() );
-    QAbstractItemView * const v = view->view();
+    QTreeView * const v = view->view();
+    v->header()->setResizeMode( QHeaderView::Stretch );
     d->controller.addView( v );
     d->controller.setCurrentView( v );
     d->keyTreeView = view;
