@@ -28,8 +28,6 @@ import org.kde.akonadi.notes 4.5 as Notes
 KPIM.MainView {
   id: notesMobile
 
-  QML.SystemPalette { id: palette; colorGroup: "Active" }
-
   QML.Connections {
     target: guiStateManager
     onGuiStateChanged: { updateContextActionStates() }
@@ -319,10 +317,7 @@ KPIM.MainView {
     id : bulkActionScreen
     visible : guiStateManager.inBulkActionScreenState
     anchors.top: parent.top
-    anchors.topMargin : 12
-    anchors.bottom: parent.bottom
-    anchors.left: parent.left
-    anchors.right : parent.right
+    anchors.fill: parent
     backgroundImage : backgroundImage.source
 
     actionListWidth : 1/3 * parent.width
@@ -336,18 +331,11 @@ KPIM.MainView {
       anchors.fill : parent
       showDeleteButton: false
     }
-    onBackClicked : {
-      guiStateManager.popState();
-    }
   }
 
   KPIM.SearchResultScreen {
     id : searchResultScreen
-    anchors.top: parent.top
-    anchors.topMargin : 12
-    anchors.bottom: parent.bottom
-    anchors.left: parent.left
-    anchors.right : parent.right
+    anchors.fill: parent
 
     itemView: NotesListView {
       id: searchNotesListView

@@ -52,8 +52,6 @@ KPIM.MainView {
     }
   }
 
-  QML.SystemPalette { id: palette; colorGroup: "Active" }
-
   QML.Rectangle {
       id : newMailPage
       anchors.right : kmailMobile.right
@@ -633,11 +631,7 @@ KPIM.MainView {
   KPIM.BulkActionScreen {
     id : bulkActionScreen
     visible : guiStateManager.inBulkActionScreenState
-    anchors.top: parent.top
-    anchors.topMargin : 12
-    anchors.bottom: parent.bottom
-    anchors.left: parent.left
-    anchors.right : parent.right
+    anchors.fill: parent
     backgroundImage : backgroundImage.source
     property bool initialized : false
 
@@ -650,9 +644,6 @@ KPIM.MainView {
       model: itemModel
       checkModel : _itemActionModel
       anchors.fill : parent
-    }
-    onBackClicked : {
-      guiStateManager.popState();
     }
 
     onVisibleChanged: {

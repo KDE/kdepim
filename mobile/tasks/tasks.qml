@@ -360,11 +360,8 @@ KPIM.MainView {
   KPIM.BulkActionScreen {
     id : bulkActionScreen
     visible : guiStateManager.inBulkActionScreenState
-    anchors.top: parent.top
     anchors.topMargin : 12
-    anchors.bottom: parent.bottom
-    anchors.left: parent.left
-    anchors.right : parent.right
+    anchors.fill: parent
     backgroundImage : backgroundImage.source
 
     actionListWidth : 1/3 * parent.width
@@ -377,9 +374,6 @@ KPIM.MainView {
       checkModel : _itemActionModel
       anchors.fill : parent
       showCompletionSlider: false
-    }
-    onBackClicked : {
-      guiStateManager.popState()
     }
   }
 

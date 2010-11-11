@@ -34,7 +34,8 @@ QML.Rectangle {
   property alias actionModel : actionList.actionModel
   default property alias actions: actionList.children
 
-  signal backClicked()
+  anchors.fill: parent
+  anchors.topMargin : 12
 
   QML.Image {
     id: _backgroundImage
@@ -45,7 +46,7 @@ QML.Rectangle {
     anchors.top : parent.top
     anchors.bottom : selectAllButton.top
     anchors.left : parent.left
-    onBackClicked : parent.backClicked()
+    onBackClicked : guiStateManager.popState()
     onTriggered : {
       //mainPanel.complete(name)
     }
