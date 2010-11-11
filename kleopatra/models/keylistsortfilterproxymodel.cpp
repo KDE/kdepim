@@ -170,12 +170,16 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModel
     const QModelIndex nameIndex = sourceModel()->index( source_row, PrettyName, source_parent );
     const QString name = nameIndex.data( role ).toString();
 
+#ifndef KDEPIM_MOBILE_UI
     const QModelIndex emailIndex = sourceModel()->index( source_row, PrettyEMail, source_parent );
     const QString email = emailIndex.data( role ).toString();
+#endif
 
     const QRegExp rx = filterRegExp();
     if ( !name.contains( rx ) )
+#ifndef KDEPIM_MOBILE_UI
         if ( !email.contains( rx ) )
+#endif
             return false;
 
     //

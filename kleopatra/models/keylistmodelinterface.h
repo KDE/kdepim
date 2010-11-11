@@ -52,6 +52,7 @@ namespace Kleo {
 
         enum Columns {
             PrettyName,
+#ifndef KDEPIM_MOBILE_UI
             PrettyEMail,
             ValidFrom,
             ValidUntil,
@@ -65,6 +66,7 @@ namespace Kleo {
             Issuer,
             Subject,
             SerialNumber,
+#endif
 #endif
 
             NumColumns,
