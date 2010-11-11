@@ -4028,7 +4028,7 @@ Go</guimenu><guimenuitem>To Today</guimenuitem></menuchoice>
 <term><inlinemediaobject><imageobject><imagedata fileref="view-calendar-day.png"
  format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenu>
-View</guimenu><guimenuitem>Day</guimenuitem></menuchoice>
+Go</guimenu><guimenuitem>Day</guimenuitem></menuchoice>
 </term>
 <listitem><para><action>Switch the display to the day view.</action></para>
 <para>For more information about this action, please refer to
@@ -4040,7 +4040,7 @@ View</guimenu><guimenuitem>Day</guimenuitem></menuchoice>
 <term><inlinemediaobject><imageobject><imagedata fileref="view-calendar-upcoming-days.png"
  format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenu>
-View</guimenu><guimenuitem>Next x Days</guimenuitem></menuchoice>
+Go</guimenu><guimenuitem>Next x Days</guimenuitem></menuchoice>
 </term>
 <listitem><para><action>Switch the display to the next x day view, where x is
 defined in &korganizer; main configurations.</action></para>
@@ -4053,7 +4053,7 @@ defined in &korganizer; main configurations.</action></para>
 <term><inlinemediaobject><imageobject><imagedata
  fileref="view-calendar-workweek.png"
 format="PNG"/></imageobject></inlinemediaobject><menuchoice>
-<guimenu>View</guimenu><guimenuitem>Work
+<guimenu>Go</guimenu><guimenuitem>Work
 Week</guimenuitem></menuchoice>
 </term>
 <listitem><para><action>Switch the display to the work week
@@ -4069,7 +4069,7 @@ week are shown.</para>
 <term><inlinemediaobject><imageobject><imagedata fileref="view-calendar-week.png"
  format="PNG"/></imageobject></inlinemediaobject><menuchoice>
 <guimenu>
-View</guimenu> <guimenuitem>Week</guimenuitem></menuchoice>
+Go</guimenu> <guimenuitem>Week</guimenuitem></menuchoice>
 </term>
 <listitem><para><action>Switch the display to the week view.</action></para>
 <para>The week view provides a view similar to the day view. Events for seven
