@@ -318,6 +318,7 @@ void MainWindow::registerKeyTreeView( KeyTreeView * view ) {
     view->setFlatModel( d->controller.flatModel() );
     view->setHierarchicalModel( d->controller.hierarchicalModel() );
     QTreeView * const v = view->view();
+    v->setItemsExpandable( false );
     v->header()->setResizeMode( QHeaderView::Stretch );
     d->controller.addView( v );
     d->controller.setCurrentView( v );
