@@ -685,6 +685,7 @@ KPIM.MainView {
   QML.Loader {
     anchors.fill: parent
     source: guiStateManager.inConfigScreenState ? "ConfigDialog.qml" : ""
+    focus: guiStateManager.inConfigScreenState
     onLoaded: item.load();
   }
 
@@ -698,12 +699,14 @@ KPIM.MainView {
   QML.Loader {
     anchors.fill: parent
     source: guiStateManager.inManageFiltersState ? "FilterConfigDialog.qml" : ""
+    focus: guiStateManager.inManageFiltersState
     onLoaded: item.filterModel = _filterModel
   }
 
   QML.Loader {
     anchors.fill: parent
     source: guiStateManager.inManageAclsState ? "AclEditor.qml" : ""
+    focus: guiStateManager.inManageAclsState
     onLoaded: item.load();
   }
 }
