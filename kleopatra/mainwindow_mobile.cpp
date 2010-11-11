@@ -320,6 +320,7 @@ void MainWindow::registerKeyTreeView( KeyTreeView * view ) {
     QTreeView * const v = view->view();
     v->setItemsExpandable( false );
     v->header()->setResizeMode( QHeaderView::Stretch );
+    v->header()->hide();
     d->controller.addView( v );
     d->controller.setCurrentView( v );
     d->keyTreeView = view;
