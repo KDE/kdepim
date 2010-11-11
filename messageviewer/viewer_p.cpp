@@ -96,6 +96,7 @@
 #include <akonadi/collection.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/kmime/messagestatus.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <kleo/specialjob.h>
 
@@ -871,6 +872,14 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCa
   headerStyle()->setSourceObject( this );
   headerStyle()->setNodeHelper( mNodeHelper );
   headerStyle()->setMessagePath( mMessagePath );
+
+  if ( mMessageItem.isValid() ) {
+    Akonadi::MessageStatus status;
+    status.setStatusFromFlags( mMessageItem.flags() );
+
+    headerStyle()->setMessageStatus( status );
+  }
+
   return headerStyle()->format( aMsg );
 }
 

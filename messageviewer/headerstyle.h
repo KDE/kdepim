@@ -34,6 +34,7 @@
 
 #include "messageviewer_export.h"
 
+#include <akonadi/kmime/messagestatus.h>
 #include <KMime/Message>
 
 class QByteArray;
@@ -119,6 +120,9 @@ public:
   void setSourceObject( QObject *sourceObject ) { mSourceObject = sourceObject; }
   QObject* sourceObject() const { return mSourceObject; }
 
+  void setMessageStatus( const Akonadi::MessageStatus &status ) { mMessageStatus = status; }
+  Akonadi::MessageStatus messageStatus() const { return mMessageStatus; }
+
   static QString dateStr(const KDateTime &dateTime);
   static QByteArray dateShortStr(const KDateTime &dateTime);
 
@@ -132,6 +136,7 @@ private:
   NodeHelper *mNodeHelper;
   bool mAllowAsync;
   QObject *mSourceObject;
+  Akonadi::MessageStatus mMessageStatus;
 };
 }
 
