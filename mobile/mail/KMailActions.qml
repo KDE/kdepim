@@ -86,6 +86,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_remove_duplicates" }
     ActionListItem { name : "show_expire_properties" }
     ActionListItem { name : "export_emails" }
+    ScriptActionItem { name : "edit_acls"; title : KDE.i18n( "Edit ACLs" ); visible: aclEditor.collectionHasAcls }
   }
 
   ActionList {

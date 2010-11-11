@@ -41,6 +41,7 @@ namespace MessageViewer {
   class MessageViewItem;
 }
 
+class AclEditor;
 class AkonadiSender;
 class ConfigWidget;
 class FilterModel;
@@ -116,6 +117,7 @@ class MainView : public KDeclarativeMainView
 
     void itemSelectionChanged();
     void itemActionModelChanged();
+    void collectionSelectionChanged();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -163,6 +165,7 @@ class MainView : public KDeclarativeMainView
     ThreadModel *m_threadsModel;
     FilterModel *mFilterModel;
     Akonadi::QuotaColorProxyModel *mQuotaColorProxyModel;
+    AclEditor *mAclEditor;
 };
 
 Q_DECLARE_METATYPE( MainView::ForwardMode )

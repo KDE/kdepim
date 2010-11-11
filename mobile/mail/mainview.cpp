@@ -22,6 +22,7 @@
 
 #include "mainview.h"
 
+#include "acleditor.h"
 #include "composerview.h"
 #include "configwidget.h"
 #include "declarativewidgetbase.h"
@@ -229,6 +230,9 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 
   context->setContextProperty("_threadMailSelector", qmlThreadMailSelector );
 
+  connect( regularSelectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+           this, SLOT( collectionSelectionChanged() ) );
+
 #if 0
   {
     QTreeView *view = new QTreeView;
@@ -272,6 +276,10 @@ void MainView::delayedInit()
 
   mFilterModel = new FilterModel;
   rootContext()->setContextProperty( "_filterModel", mFilterModel );
+
+  mAclEditor = new AclEditor( actionCollection(), this );
+  rootContext()->setContextProperty( "aclEditor", mAclEditor );
+  rootContext()->setContextProperty( "aclModel", mAclEditor->model() );
 
   QTime time;
   if ( debugTiming ) {
@@ -1165,6 +1173,18 @@ void MainView::itemSelectionChanged()
     messageViewerItem()->setItem(item);
     messageViewerItem()->setMessagePath(path);
   }
+}
+
+void MainView::collectionSelectionChanged()
+{
+  const QModelIndexList indexes = regularSelectionModel()->selectedIndexes();
+  if ( indexes.isEmpty() )
+    return;
+
+  const QModelIndex index = indexes.first();
+  const Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( collection.isValid() )
+    mAclEditor->setCollection( collection );
 }
 
 MessageViewer::MessageViewItem* MainView::messageViewerItem()

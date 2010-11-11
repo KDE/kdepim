@@ -540,6 +540,13 @@ KPIM.MainView {
                 }
               },
               KPIM.ScriptAction {
+                name : "edit_acls"
+                script : {
+                  actionPanel.collapse();
+                  aclEditorView.visible = true;
+                }
+              },
+              KPIM.ScriptAction {
                 name : "to_selection_screen"
                 script : {
                   actionPanel.collapse();
@@ -726,5 +733,14 @@ KPIM.MainView {
     focus: visible
     onLoaded: { item.filterModel = _filterModel; }
     source: visible ? "FilterConfigDialog.qml" : ""
+  }
+
+  QML.Loader {
+    anchors.fill: parent
+    id: aclEditorView
+    visible: false
+    focus: visible
+    onLoaded: item.load()
+    source: visible ? "AclEditor.qml" : ""
   }
 }
