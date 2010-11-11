@@ -104,10 +104,7 @@ namespace {
         /* reimp */ QVariant data( const QModelIndex & index, int role ) const {
             if ( !index.isValid() || role != Qt::ToolTipRole )
                 return AbstractKeyListSortFilterProxyModel::data( index, role );
-            // get the fingerprint:
-            const QModelIndex fprIndex = index.sibling( index.row(), AbstractKeyListModel::Fingerprint );
-            assert( fprIndex.isValid() );
-            const QString fpr = fprIndex.data( Qt::EditRole ).toString();
+            const QString fpr = index.data( FingerprintRole ).toString();
             // find information:
             const std::vector<Import>::const_iterator it
                 = qBinaryFind( m_importsByFingerprint.begin(), m_importsByFingerprint.end(),
@@ -130,9 +127,7 @@ namespace {
             //
             // 1. Check that this is an imported key:
             //
-            const QModelIndex fprIndex = sourceModel()->index( source_row, AbstractKeyListModel::Fingerprint, source_parent );
-            assert( fprIndex.isValid() );
-            const QString fpr = fprIndex.data( Qt::EditRole ).toString();
+            const QString fpr = index.data( FingerprintRole ).toString();
 
             return std::binary_search( m_importsByFingerprint.begin(), m_importsByFingerprint.end(),
                                        fpr.toLatin1().constData(),
