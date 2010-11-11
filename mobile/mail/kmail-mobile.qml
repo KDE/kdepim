@@ -628,33 +628,9 @@ KPIM.MainView {
     onLoaded: { item.backgroundImage = backgroundImage.source; }
   }
 
-  KPIM.BulkActionScreen {
-    id : bulkActionScreen
-    visible : guiStateManager.inBulkActionScreenState
+  QML.Loader {
     anchors.fill: parent
-    backgroundImage : backgroundImage.source
-    property bool initialized : false
-
-    actionListWidth : 1/3 * parent.width
-    multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
-    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-    headerList : HeaderView {
-      showCheckBox : true
-      id: bulkActionHeaderList
-      model: itemModel
-      checkModel : _itemActionModel
-      anchors.fill : parent
-    }
-
-    onVisibleChanged: {
-      if ( visible == true && initialized == false ) {
-        bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_read"})
-        bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_important"})
-        bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_action_item"})
-        bulkActionScreen.actionModel.append({"action": "apply_filters"})
-        initialized = true;
-      }
-    }
+    source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
   }
 
   KPIM.SearchResultScreen {
