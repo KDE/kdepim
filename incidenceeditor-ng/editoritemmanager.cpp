@@ -279,7 +279,7 @@ void EditorItemManager::save()
   Q_ASSERT( updateItem.id() == d->mItem.id() );
   d->mItem = updateItem;
 
-  if ( d->mItem.isValid() ) { // A valid item needs to be modified.
+  if ( d->mItem.isValid() ) { // A valid item. Means we're modifying.
     Q_ASSERT( d->mItem.parentCollection().isValid() );
 
     if ( d->mItem.parentCollection() == d->mItemUi->selectedCollection() ) {
@@ -299,7 +299,7 @@ void EditorItemManager::save()
         connect( imjob, SIGNAL(result(KJob*)), SLOT(itemMoveResult(KJob*)) );
       }
     }
-  } else { // An invalid item needs to be created.
+  } else { // An invalid item. Means we're creating.
     Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
     Akonadi::ItemCreateJob *createJob =
