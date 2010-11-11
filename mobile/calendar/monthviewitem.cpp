@@ -16,7 +16,9 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+
 #include "monthviewitem.h"
+#include "mainview.h"
 
 #include <calendarsupport/calendar.h>
 #include <calendarviews/eventviews/month/monthview.h>
@@ -44,7 +46,7 @@ MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
   connect( mView, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
            SLOT(emitItemSelected(Akonadi::Item, QDate)) );
 
-  preferences()->readConfig();
+  setPreferences( MainView::preferences() );
 }
 
 MonthViewItem::~MonthViewItem()

@@ -54,6 +54,8 @@ class MainView : public KDeclarativeMainView
 
     void setConfigWidget( ConfigWidget *configWidget );
 
+    static EventViews::PrefsPtr preferences();
+
   public Q_SLOTS:
     void showRegularCalendar();
 
@@ -106,7 +108,7 @@ class MainView : public KDeclarativeMainView
     QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
     KPIMIdentities::IdentityManager* m_identityManager;
     CalendarSupport::IncidenceChanger *m_changer;
-    EventViews::PrefsPtr m_calendarPrefs;
+    static EventViews::PrefsPtr m_calendarPrefs;
 };
 
 #endif // MAINVIEW_H

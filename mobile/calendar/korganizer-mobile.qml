@@ -125,52 +125,15 @@ KPIM.MainView {
     }
   }
 
-  Rectangle {
-    id: monthView
-    visible: guiStateManager.inViewMonthState
+  Loader {
     anchors.fill: parent
-
-    Rectangle {
-      height: 48
-      width: 48
-      z: 5
-      color: "#00000000"
-      anchors.right : parent.right
-      anchors.rightMargin : 70
-      anchors.bottom : parent.bottom
-      anchors.bottomMargin : 70
-      Image {
-        source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
-        MouseArea {
-          anchors.fill : parent;
-          onClicked : {
-            _itemActionModel.select(-1, 1)
-            _itemNavigationModel.select(-1, 1)
-            guiStateManager.popState();
-          }
-        }
-      }
-    }
-
-    CalendarViews.MonthView {
-      id: month
-      anchors { fill: parent; topMargin: 10; leftMargin: 40 }
-      calendar: calendarModel
-      swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
-
-      onDateClicked: {
-        agenda.showRange( date, 0 );
-        guiStateManager.switchState( Events.EventsGuiStateManager.ViewDayState );
-      }
-
-      onItemSelected: {
-        if ( selectedItemId > 0 ) {
-          eventView.itemId = selectedItemId;
-          eventView.activeDate = activeDate;
-          application.setCurrentEventItemId(selectedItemId);
-          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
-        }
-      }
+    // TODO: fix full ETM reload in month view first before activating this
+    //source: guiStateManager.inViewMonthState ? "MonthViewComponent.qml" : ""
+    source: "MonthViewComponent.qml"
+    visible: guiStateManager.inViewMonthState // can be removed once the above has been activated again
+ 
+    onLoaded: {
+     item.showMonth( dateEdit.date );
     }
   }
 
@@ -378,7 +341,6 @@ KPIM.MainView {
           buttonText: KDE.i18n( "Month view" )
           width: parent.width / 4
           onClicked: {
-            month.showMonth( dateEdit.date );
             guiStateManager.pushState( Events.EventsGuiStateManager.ViewMonthState );
           }
         }
@@ -499,7 +461,6 @@ KPIM.MainView {
               name : "month_layout"
               script: {
                 guiStateManager.switchState( Events.EventsGuiStateManager.ViewMonthState );
-                month.showMonth( dateEdit.date );
                 actionPanel.collapse();
               }
             },

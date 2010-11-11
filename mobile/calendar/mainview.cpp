@@ -80,17 +80,21 @@ using CalendarSupport::KCalPrefs;
 QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 QML_DECLARE_TYPE( DeclarativeConfigWidget )
 QML_DECLARE_TYPE( DeclarativeSearchWidget )
-QML_DECLARE_TYPE( EventViews::AgendaView )
 QML_DECLARE_TYPE( Qt::QmlDateEdit )
 QML_DECLARE_TYPE( EventsGuiStateManager )
+QML_DECLARE_TYPE( EventViews::AgendaViewItem )
+QML_DECLARE_TYPE( EventViews::MonthViewItem )
+QML_DECLARE_TYPE( EventViews::TimelineViewItem )
+
+EventViews::PrefsPtr MainView::m_calendarPrefs;
 
 MainView::MainView( QWidget* parent )
   : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent ),
     m_calendar( 0 ),
     m_identityManager( 0 ),
-    m_changer( 0 ),
-    m_calendarPrefs( new EventViews::Prefs )
+    m_changer( 0 )
 {
+  m_calendarPrefs = EventViews::PrefsPtr( new  EventViews::Prefs );
   m_calendarPrefs->readConfig();
 }
 
@@ -98,6 +102,11 @@ MainView::~MainView()
 {
   m_calendarPrefs->writeConfig();
   m_calendar->deleteLater();
+}
+
+EventViews::PrefsPtr MainView::preferences()
+{
+  return m_calendarPrefs;
 }
 
 void MainView::delayedInit()
@@ -222,11 +231,6 @@ void MainView::qmlLoadingStateChanged( QDeclarativeView::Status status )
   Q_ASSERT( agendaViewItem );
   if ( agendaViewItem )
     agendaViewItem->setPreferences( m_calendarPrefs );
-
-  EventViews::MonthViewItem *monthViewItem = rootObject()->findChild<EventViews::MonthViewItem*>();
-  Q_ASSERT( monthViewItem );
-  if ( monthViewItem )
-    monthViewItem->setPreferences( m_calendarPrefs );
 }
 
 void MainView::setConfigWidget(ConfigWidget* configWidget)
