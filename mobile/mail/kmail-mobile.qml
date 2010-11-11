@@ -631,6 +631,7 @@ KPIM.MainView {
   QML.Loader {
     anchors.fill: parent
     source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
+    onLoaded: { item.backgroundImage = backgroundImage.source }
   }
 
   KPIM.SearchResultScreen {

@@ -27,7 +27,6 @@ import org.kde.pim.mobileui 4.5 as KPIM
 KPIM.BulkActionScreen {
   id : bulkActionScreen
   anchors.fill: parent
-  backgroundImage : backgroundImage.source
   property bool initialized : false
 
   actionListWidth : 1/3 * parent.width
