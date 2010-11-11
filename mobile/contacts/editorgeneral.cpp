@@ -340,6 +340,9 @@ EditorGeneral::EditorGeneral( QWidget *parent )
            SLOT( availableCollectionsChanged() ) );
   connect( d->mUi.collectionSelector->model(), SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
            SLOT( availableCollectionsChanged() ) );
+
+  d->mUi.saveButton->setIcon( SmallIcon( "document-save", 64 ) );
+  d->mUi.cancelButton->setIcon( SmallIcon( "dialog-cancel", 64 ) );
 }
 
 EditorGeneral::~EditorGeneral()
