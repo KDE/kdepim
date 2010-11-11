@@ -66,7 +66,7 @@ public: /// members
   QHash<QString, QStringList>        mPersistedSelections;
   Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
   QPointer<KLineEdit>                mFilterLineEdit;
-  KLineEdit                          *mBulkActionFilterLineEdit;
+  QPointer<KLineEdit>                mBulkActionFilterLineEdit;
   AgentStatusMonitor                 *mAgentStatusMonitor;
   GuiStateManager                    *mGuiStateManager;
   NotifyingStateMachine              *mStateMachine;

@@ -34,7 +34,6 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *
   , mCollectionFilter( 0 )
   , mItemFilterModel( 0 )
   , mFavsListModel( 0 )
-  , mBulkActionFilterLineEdit( 0 )
   , mAgentStatusMonitor( 0 )
   , mGuiStateManager( 0 )
   , mStateMachine( 0 )
