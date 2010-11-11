@@ -25,10 +25,9 @@
 
 #include "kdeclarativemainview.h"
 
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/KMime/SpecialMailCollections>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/selectionproxymodel.h>
-
 #include <messagecomposer/messagefactory.h>
 
 namespace Akonadi {

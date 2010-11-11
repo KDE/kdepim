@@ -23,10 +23,12 @@
 #include "mainview.h"
 
 #include "acleditor.h"
+#include "breadcrumbnavigation.h"
 #include "composerview.h"
 #include "configwidget.h"
 #include "declarativewidgetbase.h"
 #include "filterconfigwidget.h"
+#include "filtermodel.h"
 #include "emailsexporthandler.h"
 #include "emailsfilterproxymodel.h"
 #include "emailsguistatemanager.h"
@@ -62,11 +64,13 @@
 #include <akonadi/kmime/specialmailcollectionsrequestjob.h>
 #include <akonadi/kmime/standardmailactionmanager.h>
 #include <akonadi_next/quotacolorproxymodel.h>
+#include <akonadibreadcrumbnavigationfactory.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
 #include <kdebug.h>
+#include <klinkitemselectionmodel.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>
@@ -75,18 +79,20 @@
 #include <kselectionproxymodel.h>
 #include <kstandarddirs.h>
 #include <mailcommon/expirypropertiesdialog.h>
+#include <mailcommon/filtermanager.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
 #include <mailcommon/mailkernel.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/akonadisender.h>
 #include <messagecore/stringutil.h>
-
-#include <kselectionproxymodel.h>
+#include <qmllistselectionmodel.h>
+#include <qmlcheckableproxymodel.h>
 
 #include <QtCore/QDir>
-#include <QtCore/QTimer>
 #include <QtCore/QSignalMapper>
+#include <QtCore/QTimer>
+#include <QtDeclarative/QDeclarativeContext>
 #include <QtGui/QLabel>
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QTreeView>
@@ -99,14 +105,6 @@
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
 #endif
-#include <QtDeclarative/QDeclarativeContext>
-#include <klinkitemselectionmodel.h>
-#include "breadcrumbnavigation.h"
-#include <qmllistselectionmodel.h>
-#include <qmlcheckableproxymodel.h>
-#include <akonadibreadcrumbnavigationfactory.h>
-#include <mailcommon/filtermanager.h>
-#include "filtermodel.h"
 
 Q_DECLARE_METATYPE( KMime::Content* )
 QML_DECLARE_TYPE( EmailsGuiStateManager )
@@ -1422,7 +1420,7 @@ void MainView::applyFilters()
 
 void MainView::itemActionModelChanged()
 {
-  QModelIndexList indexes = itemActionModel()->selectedRows();
+  const QModelIndexList indexes = itemActionModel()->selectedRows();
   actionCollection()->action( "apply_filters" )->setEnabled( !indexes.isEmpty() );
 }
 
