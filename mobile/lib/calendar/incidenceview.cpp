@@ -53,6 +53,7 @@
 #include <incidenceeditor-ng/incidencesecrecy.h>
 #include <incidenceeditor-ng/invitationdispatcher.h>
 
+#include <KMessageBox>
 
 using namespace Akonadi;
 using namespace IncidenceEditorNG;
@@ -284,7 +285,12 @@ void IncidenceView::save()
 {
   mEditor->focusInvalidField();
   if ( mEditor->isValid() ) {
-    mItemManager->save();
+    if ( mCollectionCombo->currentCollection().isValid() ) {
+      mItemManager->save();
+    } else {
+      KMessageBox::sorry( this, i18n( "Please select an account" ) );
+      kDebug() << "No collection selected";
+    }
   } else {
     kDebug() << "Editor content isn't valid because: " << mEditor->lastErrorString();
   }
