@@ -52,6 +52,8 @@ class EditorGeneral : public EditorBase
     void nameChanged( const KABC::Addressee& );
 
     void saveClicked();
+    void cancelClicked();
+
     void requestLaunchAccountWizard();
 
   private:

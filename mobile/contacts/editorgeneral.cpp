@@ -332,6 +332,7 @@ EditorGeneral::EditorGeneral( QWidget *parent )
   connect( d->mUi.addPhoneButton, SIGNAL( clicked() ), SLOT( addPhoneClicked() ) );
 
   connect( d->mUi.saveButton, SIGNAL( clicked() ), SIGNAL( saveClicked() ) );
+  connect( d->mUi.cancelButton, SIGNAL( clicked() ), SIGNAL( cancelClicked() ) );
   connect( d->mUi.collectionSelector, SIGNAL( currentChanged( Akonadi::Collection ) ),
            SIGNAL( collectionChanged( Akonadi::Collection ) ) );
 
