@@ -6,11 +6,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>345</width>
-    <height>1166</height>
+    <width>343</width>
+    <height>1226</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_5">
+  <layout class="QVBoxLayout" name="verticalLayout_6">
    <item>
     <layout class="QGridLayout" name="gridLayout" rowstretch="0,1" columnstretch="0,1">
      <item row="0" column="0" colspan="2">
@@ -334,6 +334,27 @@
          </property>
         </widget>
        </item>
+       <item row="9" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,1">
+         <item>
+          <widget class="QLabel" name="howDoesThisWorkLabel">
+           <property name="text">
+            <string>How does this work?</string>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::TextBrowserInteraction</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="helpLabel">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
       </layout>
      </item>
      <item row="3" column="1">
@@ -430,7 +451,7 @@ to them has been sent</string>
     </layout>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout_4">
+    <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,1">
      <item row="0" column="0" colspan="2">
       <widget class="QLabel" name="label_8">
        <property name="font">

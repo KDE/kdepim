@@ -42,6 +42,7 @@ class ConfigWidget : public QWidget
   private Q_SLOTS:
     void configureCompletionOrder();
     void editRecentAddresses();
+    void showTemplatesHelpClicked();
 
   Q_SIGNALS:
     void configChanged();
@@ -51,6 +52,7 @@ class ConfigWidget : public QWidget
     void saveToExternalSettings();
 
     KConfigDialogManager *mManager;
+    QLabel *mHelpLabel;
 };
 
 class DeclarativeConfigWidget :

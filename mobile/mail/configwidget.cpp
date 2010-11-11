@@ -27,6 +27,7 @@
 #include "ui_configwidget.h"
 
 #include <kconfigdialogmanager.h>
+#include <klocale.h>
 #include <libkdepim/completionordereditor.h>
 #include <libkdepim/ldap/ldapclient.h>
 #include <libkdepim/recentaddresses.h>
@@ -50,6 +51,17 @@ ConfigWidget::ConfigWidget( QWidget *parent )
            this, SLOT( configureCompletionOrder() ) );
   connect( ui.editRecentAddressesButton, SIGNAL( clicked() ),
            this, SLOT( editRecentAddresses() ) );
+
+  ui.howDoesThisWorkLabel->setText( i18n( "<a href=\"help\">How does this work?</a>" ) );
+  connect( ui.howDoesThisWorkLabel, SIGNAL( linkActivated( const QString& ) ),
+           this, SLOT( showTemplatesHelpClicked() ) );
+
+  mHelpLabel = ui.helpLabel;
+  mHelpLabel->setVisible( false );
+  ui.helpLabel->setText( i18n( "<p>Here you can create and manage templates to use when<br/>"
+                               "composing new messages, replies or forwarded messages.</p>"
+                               "<p>The message templates support substitution commands,<br/>"
+                               "which can simply be typed into the above text fields.</p>" ) );
 }
 
 void ConfigWidget::load()
@@ -83,6 +95,11 @@ void ConfigWidget::editRecentAddresses()
       KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( address );
     }
   }
+}
+
+void ConfigWidget::showTemplatesHelpClicked()
+{
+  mHelpLabel->setVisible( !mHelpLabel->isVisible() );
 }
 
 void ConfigWidget::loadFromExternalSettings()
