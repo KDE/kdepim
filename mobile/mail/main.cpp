@@ -54,6 +54,7 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication app;
 
+  KGlobal::locale()->insertCatalog( "libakonadi-kmime" );
   KGlobal::locale()->insertCatalog( "libmessagecore" );
   KGlobal::locale()->insertCatalog( "libmessagecomposer" );
   KGlobal::locale()->insertCatalog( "libmessageviewer" );
