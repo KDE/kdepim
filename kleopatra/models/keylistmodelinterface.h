@@ -48,6 +48,27 @@ namespace Kleo {
     public:
         virtual ~KeyListModelInterface() {}
 
+        enum Columns {
+            PrettyName,
+            PrettyEMail,
+            ValidFrom,
+            ValidUntil,
+            TechnicalDetails,
+            Fingerprint,
+            /* OpenPGP only, really */
+            ShortKeyID,
+#if 0
+            LongKeyID,
+            /* X509 only, really */
+            Issuer,
+            Subject,
+            SerialNumber,
+#endif
+
+            NumColumns,
+            Icon = PrettyName // which column shall the icon be displayed in?
+        };
+
         virtual GpgME::Key key( const QModelIndex & idx ) const = 0;
         virtual std::vector<GpgME::Key> keys( const QList<QModelIndex> & idxs ) const = 0;
 

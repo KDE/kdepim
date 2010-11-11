@@ -55,27 +55,6 @@ namespace Kleo {
         static AbstractKeyListModel * createFlatKeyListModel( QObject * parent=0 );
         static AbstractKeyListModel * createHierarchicalKeyListModel( QObject * parent=0 );
 
-        enum Columns {
-            PrettyName,
-            PrettyEMail,
-            ValidFrom,
-            ValidUntil,
-            TechnicalDetails,
-            Fingerprint,
-            /* OpenPGP only, really */
-            ShortKeyID,
-#if 0
-            LongKeyID,
-            /* X509 only, really */
-            Issuer,
-            Subject,
-            SerialNumber,
-#endif
-
-            NumColumns,
-            Icon = PrettyName // which column shall the icon be displayed in?
-        };
-
         /* reimp */ GpgME::Key key( const QModelIndex & idx ) const;
         /* reimp */ std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
 
