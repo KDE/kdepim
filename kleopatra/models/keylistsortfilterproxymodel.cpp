@@ -165,16 +165,18 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModel
     //
     // 1. Check that name or email matches filterRegExp
     //
-    const QModelIndex nameIndex = sourceModel()->index( source_row, PrettyName, source_parent );
-    const QModelIndex emailIndex = sourceModel()->index( source_row, PrettyEMail, source_parent );
-
     const int role = filterRole();
+
+    const QModelIndex nameIndex = sourceModel()->index( source_row, PrettyName, source_parent );
     const QString name = nameIndex.data( role ).toString();
+
+    const QModelIndex emailIndex = sourceModel()->index( source_row, PrettyEMail, source_parent );
     const QString email = emailIndex.data( role ).toString();
 
     const QRegExp rx = filterRegExp();
-    if ( !name.contains( rx ) && !email.contains( rx ) )
-        return false;
+    if ( !name.contains( rx ) )
+        if ( !email.contains( rx ) )
+            return false;
 
     //
     // 2. Check that key filters match (if any are defined)
