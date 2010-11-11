@@ -1428,6 +1428,12 @@ void MainView::updateConfig()
 {
   mQuotaColorProxyModel->setWarningThreshold( Settings::self()->miscQuotaWarningThreshold() );
   mQuotaColorProxyModel->setWarningColor( Settings::self()->miscQuotaWarningColor() );
+
+  MessageViewer::MessageViewItem *item = messageViewerItem();
+  if ( item ) {
+    item->viewer()->writeConfig();
+    item->viewer()->readConfig(); // let CSS parser reread its config
+  }
 }
 
 void MainView::applyFilters()
