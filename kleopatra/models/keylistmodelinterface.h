@@ -48,6 +48,8 @@ namespace Kleo {
     public:
         virtual ~KeyListModelInterface() {}
 
+        static const int FingerprintRole = 0xF1;
+
         enum Columns {
             PrettyName,
             PrettyEMail,

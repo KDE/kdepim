@@ -320,6 +320,8 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
         return returnIfValid( KeyFilterManager::instance()->bgColor( key ) );
     else if ( role == Qt::ForegroundRole )
         return returnIfValid( KeyFilterManager::instance()->fgColor( key ) );
+    else if ( role == FingerprintRole )
+        return QString::fromLatin1( key.primaryFingerprint() );
     return QVariant();
 }
 
