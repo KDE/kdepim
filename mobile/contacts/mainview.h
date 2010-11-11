@@ -48,12 +48,14 @@ class MainView : public KDeclarativeMainView
     void editContact( const Akonadi::Item &item );
     void editContactGroup( const Akonadi::Item &item );
 
-  protected slots:
+  protected Q_SLOTS:
     virtual void delayedInit();
 
-  private slots:
+  private Q_SLOTS:
     void finishEdit( QObject *editor );
     void itemSelectionChanged( const QItemSelection &selected, const QItemSelection& );
+    void bulkActionSelectionChanged();
+    void sendMailTo();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

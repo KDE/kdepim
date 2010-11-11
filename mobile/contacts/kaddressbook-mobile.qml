@@ -375,6 +375,7 @@ KPIM.MainView {
     visible : guiStateManager.inBulkActionScreenState
     anchors.fill: parent
     backgroundImage : backgroundImage.source
+    property bool initialized : false
 
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
@@ -385,6 +386,13 @@ KPIM.MainView {
       model: itemModel
       checkModel : _itemActionModel
       anchors.fill : parent
+    }
+
+    onVisibleChanged: {
+      if ( visible == true && initialized == false ) {
+        bulkActionScreen.actionModel.append( {"action": "send_mail_to"} )
+        initialized = true;
+      }
     }
   }
 

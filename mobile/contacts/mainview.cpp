@@ -30,6 +30,7 @@
 #include "searchwidget.h"
 
 #include <akonadi/agentactionmanager.h>
+#include <akonadi/contact/contactgroupexpandjob.h>
 #include <akonadi/contact/contactsfilterproxymodel.h>
 #include <akonadi/contact/standardcontactactionmanager.h>
 #include <akonadi/itemfetchscope.h>
@@ -42,6 +43,9 @@
 #include <klocale.h>
 
 #include <QtCore/QPointer>
+#include <QtCore/QProcess>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusServiceWatcher>
 #include <QtDeclarative/QDeclarativeEngine>
 
 QML_DECLARE_TYPE( Akonadi::Contact::ContactViewItem )
@@ -89,8 +93,15 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   actionCollection()->addAction( QLatin1String( "export_vcards" ), action );
 
+  action = new KAction( i18n( "Send mail to" ), this );
+  action->setEnabled( false );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( sendMailTo() ) );
+  actionCollection()->addAction( QLatin1String( "send_mail_to" ), action );
+
   connect( itemSelectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
            this, SLOT( itemSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
+  connect( itemActionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
+           this, SLOT( bulkActionSelectionChanged() ) );
 }
 
 void MainView::itemSelectionChanged( const QItemSelection &selected, const QItemSelection& )
@@ -111,6 +122,66 @@ void MainView::itemSelectionChanged( const QItemSelection &selected, const QItem
     else if ( item.hasPayload<KABC::ContactGroup>() )
       guiStateManager()->pushState( ContactsGuiStateManager::ViewContactGroupState );
   }
+}
+
+void MainView::bulkActionSelectionChanged()
+{
+  const bool itemsChecked = !itemActionModel()->selectedIndexes().isEmpty();
+
+  actionCollection()->action( QLatin1String( "send_mail_to" ) )->setEnabled( itemsChecked );
+}
+
+void MainView::sendMailTo()
+{
+  const QModelIndexList indexes = itemActionModel()->selectedIndexes();
+  if ( indexes.isEmpty() )
+    return;
+
+  // select email addresses of all checked items
+  QStringList emailAddresses;
+  foreach ( const QModelIndex &index, indexes ) {
+    const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    if ( !item.isValid() )
+      continue;
+
+    if ( item.hasPayload<KABC::Addressee>() ) {
+      const KABC::Addressee contact = item.payload<KABC::Addressee>();
+      if ( !contact.preferredEmail().isEmpty() )
+        emailAddresses << contact.preferredEmail();
+    }
+
+    if ( item.hasPayload<KABC::ContactGroup>() ) {
+      // resolve the contact group right now
+      Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( item.payload<KABC::ContactGroup>() );
+      if ( job->exec() ) {
+        foreach ( const KABC::Addressee &contact, job->contacts() ) {
+          if ( !contact.preferredEmail().isEmpty() )
+            emailAddresses << contact.preferredEmail();
+        }
+      }
+    }
+  }
+
+  // try to open the email composer in kmail-mobile
+  QDBusInterface *interface = new QDBusInterface( "org.kde.kmailmobile.composer", "/composer" );
+  if ( !interface->isValid() ) {
+    delete interface;
+
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( "org.kde.kmailmobile.composer", QDBusConnection::sessionBus(),
+                                                            QDBusServiceWatcher::WatchForRegistration, this );
+    QEventLoop loop;
+    connect( watcher, SIGNAL( serviceRegistered( const QString& ) ), &loop, SLOT( quit() ) );
+    QProcess::startDetached( "kmail-mobile" );
+    loop.exec();
+
+    delete watcher;
+
+    interface = new QDBusInterface( "org.kde.kmailmobile.composer", "/composer" );
+  }
+
+  interface->call( "openComposer", emailAddresses.join( ", " ), QString(), QString(), QString(), QString() );
+
+  delete interface;
 }
 
 void MainView::finishEdit( QObject *editor )
