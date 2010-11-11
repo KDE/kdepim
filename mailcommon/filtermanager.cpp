@@ -57,8 +57,9 @@ FilterManager::FilterManager( bool popFilter )
   mChangeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
   mChangeRecorder->setChangeRecordingEnabled( false );
   mChangeRecorder->fetchCollection( true );
-  connect( mChangeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
-           SLOT(itemAdded(Akonadi::Item,Akonadi::Collection)) );
+  mChangeRecorder->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  connect( mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+           SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
 }
 
 void FilterManager::tryToMonitorCollection()
@@ -386,6 +387,7 @@ void FilterManager::itemAdded(const Akonadi::Item& item, const Akonadi::Collecti
     if ( mRequiresBody ) {
       Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
       job->fetchScope().fetchFullPayload( true );
+      job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
       job->setProperty( "resource", collection.resource() );
       connect( job, SIGNAL( result( KJob* ) ), SLOT( itemAddedFetchResult( KJob* ) ) );
     } else {
