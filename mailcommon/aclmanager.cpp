@@ -91,10 +91,12 @@ class AclModel : public QAbstractListModel
       switch ( role ) {
         case UserIdRole:
           right.first = value.toByteArray();
+          emit dataChanged( index, index );
           return true;
           break;
         case PermissionsRole:
           right.second = static_cast<KIMAP::Acl::Rights>( value.toInt() );
+          emit dataChanged( index, index );
           return true;
           break;
         default:
@@ -140,7 +142,7 @@ class AclModel : public QAbstractListModel
   protected:
     virtual bool insertRows( int row, int count, const QModelIndex &parent = QModelIndex() )
     {
-      beginInsertRows( parent, row, row + count );
+      beginInsertRows( parent, row, row + count - 1 );
       for ( int i = 0; i < count; ++i )
         mRights.insert( row, qMakePair( QByteArray(), KIMAP::Acl::Rights() ) );
       endInsertRows();
@@ -150,7 +152,7 @@ class AclModel : public QAbstractListModel
 
     virtual bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() )
     {
-      beginRemoveRows( parent, row, row + count );
+      beginRemoveRows( parent, row, row + count - 1 );
       for ( int i = 0; i < count; ++i )
         mRights.remove( row, count );
       endRemoveRows();
