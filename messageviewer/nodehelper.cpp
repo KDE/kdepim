@@ -64,18 +64,19 @@ NodeHelper::NodeHelper()
   // EUC-JP is the de-facto standard for UNIX systems, ISO 2022-JP
   // is the standard for Internet, and Shift-JIS is the encoding
   // for Windows and Macintosh.
-  if ( mLocalCodec->name().toLower() == "eucjp"
+  if ( mLocalCodec ) {
+    if ( mLocalCodec->name().toLower() == "eucjp"
 #if defined Q_WS_WIN || defined Q_WS_MACX
-    || mLocalCodec->name().toLower() == "shift-jis" // OK?
+        || mLocalCodec->name().toLower() == "shift-jis" // OK?
 #endif
-  )
-  {
-    mLocalCodec = QTextCodec::codecForName("jis7");
-    // QTextCodec *cdc = QTextCodec::codecForName("jis7");
-    // QTextCodec::setCodecForLocale(cdc);
-    // KGlobal::locale()->setEncoding(cdc->mibEnum());
+       )
+    {
+      mLocalCodec = QTextCodec::codecForName("jis7");
+      // QTextCodec *cdc = QTextCodec::codecForName("jis7");
+      // QTextCodec::setCodecForLocale(cdc);
+      // KGlobal::locale()->setEncoding(cdc->mibEnum());
+    }
   }
-
 }
 
 NodeHelper::~NodeHelper()
