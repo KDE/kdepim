@@ -138,7 +138,7 @@ QML.Rectangle {
         anchors.fill : parent;
         onClicked : {
           configWidget.save();
-          filterConfigDialog.parent.visible = false
+          guiStateManager.popState();
        }
       }
     }

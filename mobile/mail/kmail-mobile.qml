@@ -497,7 +497,8 @@ KPIM.MainView {
              !guiStateManager.inMultipleFolderSelectionScreenState &&
              !guiStateManager.inConfigScreenState &&
              !guiStateManager.inSearchScreenState &&
-             !filterConfigDialog.visible
+             !guiStateManager.inManageAclsState &&
+             !guiStateManager.inManageFiltersState 
 
     SlideoutPanel {
       id: actionPanel
@@ -536,14 +537,14 @@ KPIM.MainView {
                 name : "filters_configure"
                 script : {
                   actionPanel.collapse();
-                  filterConfigDialog.visible = true;
+                  guiStateManager.pushState( Mail.EmailsGuiStateManager.ManageFiltersState );
                 }
               },
               KPIM.ScriptAction {
                 name : "edit_acls"
                 script : {
                   actionPanel.collapse();
-                  aclEditorView.visible = true;
+                  guiStateManager.pushState( Mail.EmailsGuiStateManager.ManageAclsState );
                 }
               },
               KPIM.ScriptAction {
@@ -728,19 +729,13 @@ KPIM.MainView {
 
   QML.Loader {
     anchors.fill: parent
-    id: filterConfigDialog
-    visible: false
-    focus: visible
-    onLoaded: { item.filterModel = _filterModel; }
-    source: visible ? "FilterConfigDialog.qml" : ""
+    source: guiStateManager.inManageFiltersState ? "FilterConfigDialog.qml" : ""
+    onLoaded: item.filterModel = _filterModel
   }
 
   QML.Loader {
     anchors.fill: parent
-    id: aclEditorView
-    visible: false
-    focus: visible
-    onLoaded: item.load()
-    source: visible ? "AclEditor.qml" : ""
+    source: guiStateManager.inManageAclsState ? "AclEditor.qml" : ""
+    onLoaded: item.load();
   }
 }

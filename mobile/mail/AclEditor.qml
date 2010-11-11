@@ -90,7 +90,7 @@ QML.Rectangle {
     buttonText: KDE.i18n( "Save" )
     onClicked: {
       aclEditor.save();
-      parent.visible = false;
+      guiStateManager.popState();
     }
   }
 
@@ -102,7 +102,7 @@ QML.Rectangle {
     width: 150
     buttonText: KDE.i18n( "Cancel" )
     onClicked: {
-      parent.visible = false;
+      guiStateManager.popState();
     }
   }
 }

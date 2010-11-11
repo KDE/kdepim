@@ -26,6 +26,7 @@ set(kmail_mobile_srcs
   configwidget.cpp
   declarativeidentitycombobox.cpp
   emailsexporthandler.cpp
+  emailsguistatemanager.cpp
   emailsfilterproxymodel.cpp
   emailsimporthandler.cpp
   filterconfigwidget.cpp
