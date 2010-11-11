@@ -87,7 +87,7 @@ class ContactEditorView::Private : public IncidenceEditorNG::ItemEditorUi
 
     bool isValid() const
     {
-      return true;
+      return selectedCollection().isValid();
     }
 
     void load( const Item &item );
