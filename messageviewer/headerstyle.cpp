@@ -945,6 +945,24 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   imgpath.prepend( "file://" );
   imgpath.append("mobile_");
 
+  QString flagsPart;
+  const Akonadi::MessageStatus status = messageStatus();
+  if ( status.isImportant() )
+    flagsPart += "<img src=\"" + imgpath + "status_important.png\" height=\"22\" width=\"22\"/>";
+  if ( status.hasAttachment() )
+    flagsPart += "<img src=\"" + imgpath + "status_hasattachment.png\" height=\"22\" width=\"22\"/>";
+  if ( status.isToAct() )
+    flagsPart += "<img src=\"" + imgpath + "status_actionitem.png\" height=\"22\" width=\"22\"/>";
+  if ( status.isReplied() )
+    flagsPart += "<img src=\"" + imgpath + "status_replied.png\" height=\"22\" width=\"22\"/>";
+  if ( status.isForwarded() )
+    flagsPart += "<img src=\"" + imgpath + "status_forwarded.png\" height=\"22\" width=\"22\"/>";
+  if ( status.isSigned() )
+    flagsPart += "<img src=\"" + imgpath + "status_signed.png\" height=\"22\" width=\"22\"/>";
+  if ( status.isEncrypted() )
+    flagsPart += "<img src=\"" + imgpath + "status_encrypted.png\" height=\"22\" width=\"22\"/>";
+
+
   QString headerStr;
   headerStr += "<div style=\"position: absolute;\n";
   headerStr += "            top: 5px;\n";
@@ -953,7 +971,8 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   headerStr += "            height: 94px;\n";
   headerStr += "            background-image: url('" + imgpath + "bg.png');\n";
   headerStr += "            background-repeat: repeat-x;\">\n";
-  headerStr += "  <div style=\"margin-top: 10px; height: 25px; margin-left: 90px; vertical-align: bottom; font-size: 20px; color: #0E49A1;\">" + fromPart + "</div>\n";
+  headerStr += "  <div style=\"margin-top: 10px; height: 25px; margin-left: 90px; vertical-align: bottom; font-size: 20px; color: #0E49A1; float: left\">" + fromPart + "</div>\n";
+  headerStr += "  <div style=\"margin-top: 10px; height: 25px; margin-right: 15px; vertical-align: bottom; text-align: right; color: #0E49A1; float: right\">" + flagsPart + "</div><div style=\"clear: both\"/>\n";
   headerStr += "  <div style=\"height: 35px; margin-left: 90px; font-size: 20px; color: #24353F;\">" + message->subject()->asUnicodeString() + "</div>\n";
   if ( !messagePath().isEmpty() )
   {
