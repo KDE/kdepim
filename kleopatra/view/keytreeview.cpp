@@ -213,7 +213,6 @@ void KeyTreeView::setHierarchicalModel( AbstractKeyListModel * model ) {
     if ( m_isHierarchical ) {
         find_last_proxy( m_proxy )->setSourceModel( model );
         m_view->expandAll();
-        m_view->setColumnHidden( AbstractKeyListModel::Fingerprint, true );
         for ( int column = 0; column < m_view->header()->count(); ++column )
         {
             m_view->header()->resizeSection( column, qMax( m_view->header()->sectionSize( column ), m_view->header()->sectionSizeHint( column ) ) );
