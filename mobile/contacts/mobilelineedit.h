@@ -52,3 +52,4 @@ class MobileLineEdit : public QWidget
 };
 
 #endif
+
