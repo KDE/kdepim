@@ -83,7 +83,7 @@ void WebKitPartHtmlWriter::end() {
   if ( mState != Begun ) {
     kWarning() << "Called on non-begun or queued session!";
   }
-  mHtmlView->setHtml( mHtml, QUrl() );
+  mHtmlView->setHtml( mHtml, QUrl( "file:///" ) );
   mHtmlView->show();
   mHtml.clear();
 
