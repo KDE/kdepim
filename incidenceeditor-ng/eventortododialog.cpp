@@ -407,7 +407,16 @@ bool EventOrTodoDialogPrivate::isDirty() const
 
 bool EventOrTodoDialogPrivate::isValid() const
 {
-  return mEditor->isValid();
+  if ( mEditor->isValid() ) {
+    // Check if there's a selected collection.
+    if ( mCalSelector->currentCollection().isValid() ) {
+      return true;
+    } else {
+      kWarning() << "Select a collection first";
+    }
+  }
+
+  return false;
 }
 
 void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
