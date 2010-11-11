@@ -26,7 +26,11 @@ import org.kde.calendarviews 4.5 as CalendarViews
 QML.Rectangle {
   visible: guiStateManager.inViewTimelineState
   anchors.fill: parent
-  property alias timeLineView: timeline
+
+  function showRange( date, range )
+  {
+    timeline.showRange( date, range );
+  }
 
   QML.Rectangle {
     height: 48

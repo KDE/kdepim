@@ -224,7 +224,7 @@ KPIM.MainView {
   Loader {
     anchors.fill: parent
     source: guiStateManager.inViewTimelineState ? "TimelineView.qml" : ""
-    onLoaded: { item.timeLineView.showRange( dateEdit.date, 1 /* "Week" */ ); }
+    onLoaded: { item.showRange( dateEdit.date, 1 /* "Week" */ ); }
   }
 
   Loader {
