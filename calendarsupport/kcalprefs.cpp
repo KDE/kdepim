@@ -48,6 +48,11 @@ class KCalPrefs::Private
       mCategoryConfig = new CategoryConfig( q );
     }
 
+    ~Private()
+    {
+      delete mCategoryConfig;
+    }
+
     // Groupware passwords - deprecated !?
     // QString mPublishPassword;
     // QString mRetrievePassword;
