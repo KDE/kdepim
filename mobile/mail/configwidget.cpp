@@ -290,7 +290,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   helpText += "    <th align=\"left\" colspan=\"2\"></th>";
   helpText += "  </tr>";
   helpText += "  <tr>";
-  helpText += "    <th align=\"left\" colspan=\"2\">" + i18n( "Process with External Programm" ) + "</th>";
+  helpText += "    <th align=\"left\" colspan=\"2\">" + i18n( "Process with External Program" ) + "</th>";
   helpText += "  </tr>";
   helpText += "  <tr>";
   helpText += "    <th align=\"left\" colspan=\"2\"></th>";
