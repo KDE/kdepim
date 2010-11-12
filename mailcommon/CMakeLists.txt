@@ -39,6 +39,7 @@ set(libmailcommon_SRCS
   rulewidgethandlermanager.cpp
   searchpattern.cpp
   searchpatternedit.cpp
+  sendmdnhandler.cpp
 )
 
 if ( NOT WINCE )
