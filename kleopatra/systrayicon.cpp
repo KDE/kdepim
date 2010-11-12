@@ -49,8 +49,6 @@
 #include <commands/setinitialpincommand.h>
 #include <commands/learncardkeyscommand.h>
 
-#include <conf/configuredialog.h>
-
 #include <KIcon>
 #include <KLocale>
 #include <KAboutApplicationDialog>
@@ -151,24 +149,6 @@ private:
     }
 
 private:
-    void connectConfigureDialog() {
-        if ( configureDialog && q->mainWindow() )
-            connect( configureDialog, SIGNAL(configCommitted()), q->mainWindow(), SLOT(slotConfigCommitted()) );
-    }
-    void disconnectConfigureDialog() {
-        if ( configureDialog && q->mainWindow() )
-            disconnect( configureDialog, SIGNAL(configCommitted()), q->mainWindow(), SLOT(slotConfigCommitted()) );
-    }
-    void connectMainWindow() {
-        if ( q->mainWindow() )
-            connect( q->mainWindow(), SIGNAL(configDialogRequested()), q, SLOT(openOrRaiseConfigDialog()) );
-    }
-    void disconnectMainWindow() {
-        if ( q->mainWindow() )
-            connect( q->mainWindow(), SIGNAL(configDialogRequested()), q, SLOT(openOrRaiseConfigDialog()) );
-    }
-
-private:
     bool anyCardHasNullPin;
     bool anyCardCanLearnKeys;
 
@@ -189,7 +169,6 @@ private:
     QAction learnCertificatesAction;
 
     QPointer<KAboutApplicationDialog> aboutDialog;
-    QPointer<ConfigureDialog> configureDialog;
 
     QRect mainWindowPreviousGeometry;
 };
@@ -235,7 +214,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( learnCertificatesAction );
 
     connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(openOrRaiseMainWindow()) );
-    connect( &configureAction, SIGNAL(triggered()), q, SLOT(openOrRaiseConfigDialog()) );
+    connect( &configureAction, SIGNAL(triggered()), qApp, SLOT(openOrRaiseConfigDialog()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
     connect( &importClipboardAction, SIGNAL(triggered()), q, SLOT(slotImportClipboard()) );
@@ -315,8 +294,6 @@ void SysTrayIcon::openOrRaiseMainWindow() {
         if ( d->mainWindowPreviousGeometry.isValid() )
             mw->setGeometry( d->mainWindowPreviousGeometry );
         setMainWindow( mw );
-        d->connectConfigureDialog();
-        d->connectMainWindow();
     }
     open_or_raise( mw );
 }
@@ -331,15 +308,6 @@ void SysTrayIcon::doActivated() {
         d->slotLearnCertificates();
     else
         openOrRaiseMainWindow();
-}
-
-void SysTrayIcon::openOrRaiseConfigDialog() {
-    if ( !d->configureDialog ) {
-        d->configureDialog = new ConfigureDialog;
-        d->configureDialog->setAttribute( Qt::WA_DeleteOnClose );
-        d->connectConfigureDialog();
-    }
-    open_or_raise( d->configureDialog );
 }
 
 void SysTrayIcon::setAnyCardHasNullPin( bool on ) {

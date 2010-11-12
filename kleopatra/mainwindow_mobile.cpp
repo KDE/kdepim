@@ -208,10 +208,6 @@ public:
         createAndStart<SelfTestCommand>();
     }
     void configureBackend();
-    void configDialogRequested() {
-        qDebug( "configDialogRequested: not implemented" );
-    }
-
     void showHandbook();
 
     void gnupgLogViewer() {
@@ -299,7 +295,7 @@ void MainWindow::Private::setupActions() {
 
     KStandardAction::close( q, SLOT(close()), coll );
     KStandardAction::quit( q, SLOT(closeAndQuit()), coll );
-    KStandardAction::preferences( q, SIGNAL(configDialogRequested()), coll );
+    KStandardAction::preferences( qApp, SLOT(openOrRaiseConfigDialog()), coll );
 
     controller.createActions( coll );
 }

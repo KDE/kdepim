@@ -38,6 +38,7 @@
 #include "systrayicon.h"
 
 #include <smartcard/readerstatus.h>
+#include <conf/configuredialog.h>
 
 #include <utils/gnupg-helper.h>
 #include <utils/filesystemwatcher.h>
@@ -60,9 +61,11 @@
 #include <KCmdLineOptions>
 #include <KDebug>
 #include <KUrl>
+#include <KWindowSystem>
 
 #include <QFile>
 #include <QDir>
+#include <QPointer>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/range.hpp>
@@ -150,8 +153,19 @@ public:
 #endif
     }
 
+private:
+    void connectConfigureDialog() {
+        if ( configureDialog && q->mainWindow() )
+            connect( configureDialog, SIGNAL(configCommitted()), q->mainWindow(), SLOT(slotConfigCommitted()) );
+    }
+    void disconnectConfigureDialog() {
+        if ( configureDialog && q->mainWindow() )
+            disconnect( configureDialog, SIGNAL(configCommitted()), q->mainWindow(), SLOT(slotConfigCommitted()) );
+    }
+
 public:
     bool ignoreNewInstance;
+    QPointer<ConfigureDialog> configureDialog;
     SmartCard::ReaderStatus readerStatus;
 #ifndef QT_NO_SYSTEMTRAYICON
     SysTrayIcon sysTray;
@@ -319,11 +333,29 @@ MainWindow * KleopatraApplication::mainWindow() {
 void KleopatraApplication::openOrRaiseMainWindow() {
     d->sysTray.openOrRaiseMainWindow();
 }
+#endif
 
-void KleopatraApplication::openOrRaiseConfigDialog() {
-    d->sysTray.openOrRaiseConfigDialog();
+static void open_or_raise( QWidget * w ) {
+    if ( w->isMinimized() ) {
+        KWindowSystem::unminimizeWindow( w->winId());
+        w->raise();
+    } else if ( w->isVisible() ) {
+        w->raise();
+    } else {
+        w->show();
+    }
 }
 
+void KleopatraApplication::openOrRaiseConfigDialog() {
+    if ( !d->configureDialog ) {
+        d->configureDialog = new ConfigureDialog;
+        d->configureDialog->setAttribute( Qt::WA_DeleteOnClose );
+        d->connectConfigureDialog();
+    }
+    open_or_raise( d->configureDialog );
+}
+
+#ifndef QT_NO_SYSTEMTRAYICON
 void KleopatraApplication::startMonitoringSmartCard() {
     d->readerStatus.startMonitoring();
 }

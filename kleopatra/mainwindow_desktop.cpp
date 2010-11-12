@@ -335,7 +335,7 @@ void MainWindow::Private::setupActions() {
     KStandardAction::quit( q, SLOT(closeAndQuit()), coll );
     KStandardAction::configureToolbars( q, SLOT(configureToolbars()), coll );
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), coll );
-    KStandardAction::preferences( q, SIGNAL(configDialogRequested()), coll );
+    KStandardAction::preferences( qApp, SIGNAL(openOrRaiseConfigDialog()), coll );
 
     q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled( true );

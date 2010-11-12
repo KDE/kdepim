@@ -46,9 +46,6 @@ public:
 public Q_SLOTS:
     void importCertificatesFromFile( const QStringList & files );
 
-Q_SIGNALS:
-    void configDialogRequested();
-
 protected:
     void closeEvent( QCloseEvent * e );
     void showEvent( QShowEvent * e );

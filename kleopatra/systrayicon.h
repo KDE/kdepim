@@ -53,7 +53,6 @@ public:
 
 public Q_SLOTS:
     void openOrRaiseMainWindow();
-    void openOrRaiseConfigDialog();
     void setAnyCardHasNullPin( bool );
     void setAnyCardCanLearnKeys( bool );
 

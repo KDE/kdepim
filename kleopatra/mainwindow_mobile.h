@@ -65,7 +65,6 @@ private:
     void registerSearchBar( Kleo::SearchBar * bar );
 
 private:
-    Q_PRIVATE_SLOT( d, void configDialogRequested() )
     Q_PRIVATE_SLOT( d, void closeAndQuit() )
     Q_PRIVATE_SLOT( d, void selfTest() )
     Q_PRIVATE_SLOT( d, void slotSearchBarTextChanged(QString) )
