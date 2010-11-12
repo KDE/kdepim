@@ -35,6 +35,7 @@
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
 #include "mailcommon/mailkernel.h"
+#include "mailcommon/sendmdnhandler.h"
 #include "messagecore/messagehelpers.h"
 #include "messagelistproxy.h"
 #include "messageviewer/globalsettings.h"
@@ -403,6 +404,9 @@ void MainView::qmlInitialized(QDeclarativeView::Status status)
   MessageViewer::MessageViewItem* item = messageViewerItem();
 
   if ( item ) {
+    // register the send MDN handler
+    item->viewer()->addMessageLoadedHandler( new MailCommon::SendMdnHandler( MobileKernel::self(), this ) );
+
     bool fixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
     item->viewer()->setUseFixedFont( fixedFont );
     actionCollection()->action( "message_fixed_font" )->setChecked( fixedFont );

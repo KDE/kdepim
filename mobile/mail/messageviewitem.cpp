@@ -31,6 +31,7 @@
 #include <messageviewer/headerstyle.h>
 #include <messageviewer/headerstrategy.h>
 #include <messageviewer/mailwebview.h>
+#include <messageviewer/markmessagereadhandler.h>
 #include <messageviewer/viewer.h>
 #include <messageviewer/viewer_p.h>
 #include "attachmentproxymodel.h"
@@ -45,6 +46,7 @@ MessageViewItem::MessageViewItem( QDeclarativeItem* parent )
   m_viewer->setHeaderStyleAndStrategy( HeaderStyle::mobile(), HeaderStrategy::all() );
   m_viewer->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
   m_viewer->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
+  m_viewer->addMessageLoadedHandler( new MessageViewer::MarkMessageReadHandler( this ) );
   setWidget( m_viewer );
 
   KDescendantsProxyModel *flatProxy = new KDescendantsProxyModel( this );
