@@ -56,7 +56,7 @@ KPIM.ItemListView {
           anchors.right: parent.right
           height : 30;
           text : model.summary
-          font.pointSize: 14
+          font.pixelSize: 18
           elide: "ElideRight"
         }
       ]

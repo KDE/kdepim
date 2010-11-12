@@ -58,7 +58,7 @@ KPIM.ItemListView {
           anchors.rightMargin: deleteAction.width
           height : 30;
           text : model.shortContent
-          font.pointSize: 14
+          font.pixelSize: 18
           elide: "ElideRight"
           clip: true
         }, /*

@@ -60,7 +60,7 @@ KPIM.ItemListView {
           height : 30;
           text: KDE.i18n( "Details: %1", model.description )
           color: "#3B3B3B"
-          font.pointSize: 14
+          font.pixelSize: 18
           elide: "ElideRight"
         },
         KPIM.CompletionSlider {

@@ -68,7 +68,7 @@ KPIM.ItemListView {
           height : 30;
           width: parent.width - (threadInfoLabel.visible ? threadInfoLabel.width : 0) - anchors.leftMargin - threadInfoLabel.anchors.rightMargin
           text : model.subject
-          font.pointSize: 14
+          font.pixelSize: 18
           color : model.is_unread ? "#E10909" : "#3B3B3B"
           elide: "ElideRight"
         },
@@ -80,7 +80,7 @@ KPIM.ItemListView {
           anchors.right : parent.right
           anchors.rightMargin: deleteAction.width
           height : (model.threadSize != undefined) ? 30 : 0
-          font.pointSize: 14
+          font.pixelSize: 18
           text : model.threadUnreadCount > 0 ? KDE.i18ncp("This text is only visible if messages > 1", "%2 messages, %1 unread", "%2 messages, %1 unread",
                                                            model.threadUnreadCount, model.threadSize)
                                              : KDE.i18np( "One message", "%1 messages", model.threadSize );
