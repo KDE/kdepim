@@ -205,11 +205,11 @@ static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &cur
 {
   // if we have children, return first child
   if ( model->rowCount( current ) > 0 )
-    return model->index( 0, current.column(), current );
+    return model->index( 0, 0, current );
 
   // if we have siblings, return next sibling
   const QModelIndex parent = model->parent( current );
-  const QModelIndex sibling = model->index( current.row() + 1, current.column(), parent );
+  const QModelIndex sibling = model->index( current.row() + 1, 0, parent );
 
   if ( sibling.isValid() ) // found valid sibling
     return sibling;
@@ -223,7 +223,7 @@ static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &cur
   while ( currentParent.isValid() ) {
     // check if the parent has children except from us
     if ( model->rowCount( grandParent ) > currentParent.row() + 1 ) {
-      const QModelIndex index = indexBelow( model, model->index( currentParent.row() + 1, currentParent.column(), grandParent ) );
+      const QModelIndex index = indexBelow( model, model->index( currentParent.row() + 1, 0, grandParent ) );
       if ( index.isValid() )
         return index;
     }
@@ -251,7 +251,7 @@ static QModelIndex indexAbove( QAbstractItemModel *model, const QModelIndex &cur
     return parent;
 
   // find previous sibling
-  const QModelIndex previousSibling = model->index( current.row() - 1, current.column(), parent );
+  const QModelIndex previousSibling = model->index( current.row() - 1, 0, parent );
 
   // the item above us is the last child (or grandchild, or grandgrandchild... etc) of our previous sibling
   return lastChildOf( model, previousSibling );
