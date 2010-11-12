@@ -67,6 +67,7 @@ protected Q_SLOTS:
     virtual void slotEnableDisableActions() = 0;
 
 private:
+    virtual void doMainWindowSet( QWidget * );
     virtual void doMainWindowClosed( QWidget * );
     virtual void doAttentionWindowClosed( QWidget * );
     virtual void doActivated() = 0;

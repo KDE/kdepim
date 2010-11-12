@@ -57,6 +57,7 @@ public Q_SLOTS:
     void setAnyCardCanLearnKeys( bool );
 
 private:
+    /* reimp */ void doMainWindowSet( QWidget * );
     /* reimp */ void doMainWindowClosed( QWidget * );
     /* reimp */ void doActivated();
     /* reimp */ void slotEnableDisableActions();

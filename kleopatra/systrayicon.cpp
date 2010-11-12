@@ -263,6 +263,11 @@ SysTrayIcon::~SysTrayIcon() {
     KGlobal::deref();
 }
 
+void SysTrayIcon::doMainWindowSet( QWidget * mw ) {
+    if ( mw && !mw->isVisible() && d->mainWindowPreviousGeometry.isValid() )
+        mw->setGeometry( d->mainWindowPreviousGeometry );
+}
+
 void SysTrayIcon::doMainWindowClosed( QWidget * mw ) {
     d->mainWindowPreviousGeometry = mw->geometry();
 }
@@ -291,8 +296,6 @@ void SysTrayIcon::openOrRaiseMainWindow() {
     if ( !mw ) {
         mw = new MainWindow;
         mw->setAttribute( Qt::WA_DeleteOnClose );
-        if ( d->mainWindowPreviousGeometry.isValid() )
-            mw->setGeometry( d->mainWindowPreviousGeometry );
         setMainWindow( mw );
     }
     open_or_raise( mw );

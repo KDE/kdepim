@@ -137,6 +137,7 @@ void SystemTrayIcon::setMainWindow( QWidget * mw ) {
     d->mainWindow = mw;
     if ( mw )
         mw->installEventFilter( this );
+    doMainWindowSet( mw );
     slotEnableDisableActions();
 }
 
@@ -217,6 +218,7 @@ QIcon SystemTrayIcon::attentionIcon() const {
     return d->attentionIcon;
 }
 
+void SystemTrayIcon::doMainWindowSet( QWidget * ) {}
 void SystemTrayIcon::doMainWindowClosed( QWidget * ) {}
 void SystemTrayIcon::doAttentionWindowClosed( QWidget * ) {}
 
