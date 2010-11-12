@@ -30,8 +30,9 @@
 
 #include <akonadi_next/kcheckableproxymodel.h>
 
-#include <calendarsupport/calendarsearch.h>
+//#include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
+#include <calendarsupport/calendar.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -46,7 +47,7 @@ using namespace EventViews;
 
 namespace EventViews {
 
-class MonthViewPrivate
+class MonthViewPrivate : public CalendarSupport::Calendar::CalendarObserver
 {
   MonthView *q;
 
@@ -55,26 +56,32 @@ class MonthViewPrivate
 
     void addIncidence( const Akonadi::Item &incidence );
     void moveStartDate( int weeks, int months );
-    void setUpModels();
+    // void setUpModels();
     void triggerDelayedReload( EventView::Change reason );
 
   public:  /// Members
-    CalendarSupport::CalendarSearch *calendarSearch;
+    // CalendarSupport::CalendarSearch *calendarSearch;
     QTimer                           reloadTimer;
     MonthScene                      *scene;
     QDate                            selectedItemDate;
     Akonadi::Item::Id                selectedItemId;
     MonthGraphicsView *view;
 
-  // List of uids for QDate
+    // List of uids for QDate
     QMap<QDate, QStringList > mBusyDays;
+
+  protected:
+    /* reimplemented from KCalCore::Calendar::CalendarObserver */
+    void calendarIncidenceAdded( const Akonadi::Item &incidence );
+    void calendarIncidenceChanged( const Akonadi::Item &incidence );
+    void calendarIncidenceDeleted( const Akonadi::Item &incidence );
 };
 
 }
 
 MonthViewPrivate::MonthViewPrivate( MonthView *qq )
   : q( qq ),
-    calendarSearch( new CalendarSupport::CalendarSearch( qq ) ),
+    //calendarSearch( new CalendarSupport::CalendarSearch( qq ) ),
     scene( new MonthScene( qq ) ),
     selectedItemId( -1 ),
     view( new MonthGraphicsView( qq ) )
@@ -102,6 +109,7 @@ void MonthViewPrivate::moveStartDate( int weeks, int months )
   q->setDateRange( start, end );
 }
 
+/*
 void MonthViewPrivate::setUpModels()
 {
   if ( q->customCollectionSelectionProxyModel() ) {
@@ -119,6 +127,7 @@ void MonthViewPrivate::setUpModels()
   dlg->show();
 #endif
 }
+*/
 
 void MonthViewPrivate::triggerDelayedReload( EventView::Change reason )
 {
@@ -126,6 +135,21 @@ void MonthViewPrivate::triggerDelayedReload( EventView::Change reason )
   if ( !reloadTimer.isActive() ) {
     reloadTimer.start( 50 );
   }
+}
+
+void MonthViewPrivate::calendarIncidenceAdded( const Akonadi::Item & )
+{
+  triggerDelayedReload( MonthView::IncidencesAdded );
+}
+
+void MonthViewPrivate::calendarIncidenceChanged( const Akonadi::Item & )
+{
+  triggerDelayedReload( MonthView::IncidencesEdited );
+}
+
+void MonthViewPrivate::calendarIncidenceDeleted( const Akonadi::Item &incidence )
+{
+  scene->removeIncidence( incidence.id() );
 }
 
 /// MonthView
@@ -183,6 +207,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
     d->view->setFrameStyle( QFrame::NoFrame );
   }
 
+  /*
   connect( d->calendarSearch->model(), SIGNAL(rowsInserted(const QModelIndex &,int,int)),
            this, SLOT(rowsInserted(const QModelIndex &,int,int)) );
   connect( d->calendarSearch->model(), SIGNAL(rowsAboutToBeRemoved(const QModelIndex &,int,int)),
@@ -190,6 +215,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
   connect( d->calendarSearch->model(), SIGNAL(dataChanged(const QModelIndex &,const QModelIndex &)),
            this, SLOT( dataChanged(const QModelIndex &,const QModelIndex &)) );
   connect( d->calendarSearch->model(), SIGNAL(modelReset()), this, SLOT(calendarReset()) );
+  */
 
   connect( d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)),
            SIGNAL(showIncidencePopupSignal(Akonadi::Item, QDate)) );
@@ -206,17 +232,22 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
   connect( &d->reloadTimer, SIGNAL(timeout()), this, SLOT(reloadIncidences()) );
   updateConfig();
 
-  d->setUpModels();
+  // d->setUpModels();
   d->reloadTimer.start( 50 );
 }
 
 MonthView::~MonthView()
 {
+  if ( calendar() ) {
+    calendar()->unregisterObserver( d );
+  }
+
   delete d;
 }
 
 void MonthView::updateConfig()
 {
+  /*
   CalendarSupport::CalendarSearch::IncidenceTypes types;
   if ( preferences()->showTodosMonthView() ) {
     types |= CalendarSupport::CalendarSearch::Todos;
@@ -228,6 +259,7 @@ void MonthView::updateConfig()
 
   types |= CalendarSupport::CalendarSearch::Events;
   d->calendarSearch->setIncidenceTypes( types );
+  */
   d->scene->update();
   setChanges( changes() | ConfigChanged );
 }
@@ -273,8 +305,8 @@ QDateTime MonthView::selectionEnd() const
 void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
 {
   EventView::setDateRange( start, end );
-  d->calendarSearch->setStartDate( actualStartDateTime() );
-  d->calendarSearch->setEndDate( actualEndDateTime() );
+  // d->calendarSearch->setStartDate( actualStartDateTime() );
+  // d->calendarSearch->setEndDate( actualEndDateTime() );
   setChanges( changes() | DatesChanged );
   reloadIncidences();
 }
@@ -440,8 +472,7 @@ void MonthView::reloadIncidences()
 
   // build global event list
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-  const Akonadi::Item::List incidences =
-    CalendarSupport::itemsFromModel( d->calendarSearch->model() );
+  const Akonadi::Item::List incidences = calendar()->incidences(); //CalendarSupport::itemsFromModel( d->calendarSearch->model() );
 
   foreach ( const Akonadi::Item &aitem, incidences ) {
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
@@ -548,6 +579,7 @@ void MonthView::calendarReset()
   d->triggerDelayedReload( ResourcesChanged );
 }
 
+/*
 void MonthView::dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
 {
   Q_ASSERT( topLeft.parent() == bottomRight.parent() );
@@ -593,6 +625,7 @@ void MonthView::incidencesChanged( const Akonadi::Item::List &incidences )
   }
   d->triggerDelayedReload( IncidencesEdited );
 }
+*/
 
 QDate MonthView::averageDate() const
 {
@@ -614,3 +647,16 @@ bool MonthView::isBusyDay( const QDate &day ) const
 {
   return !d->mBusyDays[day].isEmpty();
 }
+
+void MonthView::setCalendar( CalendarSupport::Calendar *cal )
+{
+  Q_ASSERT( cal );
+
+  if ( calendar() ) {
+    calendar()->unregisterObserver( d );
+  }
+
+  EventView::setCalendar( cal );
+  calendar()->registerObserver( d );
+}
+

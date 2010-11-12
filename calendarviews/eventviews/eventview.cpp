@@ -470,8 +470,10 @@ QPair<KDateTime,KDateTime> EventView::actualDateRange( const KDateTime &start,
   return qMakePair( start, end );
 }
 
+/*
 void EventView::incidencesAdded( const Akonadi::Item::List & )
 {
+
 }
 
 void EventView::incidencesAboutToBeRemoved( const Akonadi::Item::List & )
@@ -481,6 +483,7 @@ void EventView::incidencesAboutToBeRemoved( const Akonadi::Item::List & )
 void EventView::incidencesChanged( const Akonadi::Item::List & )
 {
 }
+*/
 
 void EventView::handleBackendError( const QString &errorString )
 {

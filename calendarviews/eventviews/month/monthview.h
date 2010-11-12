@@ -77,6 +77,8 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
     bool isBusyDay( const QDate &day ) const;
 
+    void setCalendar( CalendarSupport::Calendar *cal );
+
   Q_SIGNALS:
     void showIncidencePopupSignal( const Akonadi::Item &item, const QDate &date );
     void showNewEventPopupSignal();
@@ -98,9 +100,9 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     virtual void calendarReset();
 
   private Q_SLOTS:
-    void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
-    void rowsInserted( const QModelIndex &parent, int start, int end );
-    void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
+    // void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
+    // void rowsInserted( const QModelIndex &parent, int start, int end );
+    // void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
 
 #ifndef QT_NO_WHEELEVENT
     virtual void wheelEvent( QWheelEvent *event );
@@ -108,9 +110,9 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     virtual void keyPressEvent( QKeyEvent *event );
     virtual void keyReleaseEvent( QKeyEvent *event );
 
-    /* reimp */void incidencesAdded( const Akonadi::Item::List &incidences );
-    /* reimp */void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );
-    /* reimp */void incidencesChanged( const Akonadi::Item::List &incidences );
+    ///* reimp */void incidencesAdded( const Akonadi::Item::List &incidences );
+    ///* reimp */void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );
+    ///* reimp */void incidencesChanged( const Akonadi::Item::List &incidences );
     /* reimp */QPair<KDateTime,KDateTime> actualDateRange( const KDateTime &start,
                                                            const KDateTime &end ) const;
 

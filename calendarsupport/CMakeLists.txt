@@ -18,7 +18,7 @@ set(calendarsupport_LIB_SRCS
   calendar.cpp
   calendaradaptor.cpp
   calendarmodel.cpp
-  calendarsearch.cpp
+  # calendarsearch.cpp
   calendarutils.cpp
   calfilterproxymodel.cpp
   categoryconfig.cpp
@@ -57,7 +57,7 @@ kde4_add_ui_files(calendarsupport_LIB_SRCS publishdialog_base.ui)
 
 kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc )
 
-qt4_add_dbus_interface(calendarsupport_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.CalendarSearchAgent.xml calendarsearchinterface)
+# qt4_add_dbus_interface(calendarsupport_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.CalendarSearchAgent.xml calendarsearchinterface)
 
 kde4_add_library(calendarsupport ${LIBRARY_TYPE} ${calendarsupport_LIB_SRCS})
 

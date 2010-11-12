@@ -480,10 +480,11 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual QPair<KDateTime,KDateTime> actualDateRange( const KDateTime &start,
                                                         const KDateTime &end ) const;
 
+    /*
     virtual void incidencesAdded( const Akonadi::Item::List &incidences );
     virtual void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );
     virtual void incidencesChanged( const Akonadi::Item::List &incidences );
-
+    */
     virtual void handleBackendError( const QString &error );
 
   private:

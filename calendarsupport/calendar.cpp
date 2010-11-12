@@ -865,7 +865,7 @@ Akonadi::Item::Id Calendar::itemIdForIncidenceUid( const QString &uid ) const
     Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
     KCalCore::Incidence::Ptr inc = item.payload<KCalCore::Incidence::Ptr>();
     if ( inc->uid() == uid ) {
-        return item.id();
+      return item.id();
     }
   }
   kWarning() << "Failed to find Akonadi::Item for KCal uid " << uid;
