@@ -94,7 +94,7 @@ ActionMenuContainer {
     name : "settings_menu"
     text : KDE.i18n( "Settings" )
     ActionListItem { name : "settings_self_test" }
-    /*ActionListItem { name : "options_configure" }*/
+    ActionListItem { name : "options_configure"  }
   }
 
 /*
