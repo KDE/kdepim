@@ -21,9 +21,11 @@
 
 #include "mailcommon_export.h"
 
+#include "foldertreewidget.h"
+#include "mailutil.h"
+
 #include <akonadi/entitytreeview.h>
 #include <akonadi/collection.h>
-#include "foldertreewidget.h"
 
 class QMouseEvent;
 
@@ -91,6 +93,10 @@ signals:
   void manualSortingChanged( bool actif );
   void prefereCreateNewTab( bool );
 private:
+  bool ignoreUnreadFolder( const Akonadi::Collection&, bool ) const;
+  bool allowedToEnterFolder( const Akonadi::Collection&, bool ) const;
+  bool trySelectNextUnreadFolder( const QModelIndex&, MailCommon::Util::SearchDirection, bool );
+
   FolderTreeWidget::ToolTipDisplayPolicy mToolTipDisplayPolicy;
   FolderTreeWidget::SortingPolicy mSortingPolicy;
   Akonadi::CollectionStatisticsDelegate *mCollectionStatisticsDelegate;

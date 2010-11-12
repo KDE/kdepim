@@ -378,26 +378,91 @@ void FolderTreeView::slotFocusPrevFolder()
 
 void FolderTreeView::selectNextUnreadFolder( bool confirm )
 {
-  QModelIndex current = selectNextFolder( currentIndex() );
-  while ( current.isValid() ) {
-    QModelIndex nextIndex;
-    if ( isUnreadFolder( current,nextIndex,FolderTreeView::Next,confirm ) ) {
-      return;
-    }
-    current = nextIndex;
-  }
-  //Move to top
-  current = model()->index( 0, 0 );
-  while ( current.isValid() ) {
-    QModelIndex nextIndex;
-    if ( isUnreadFolder( current,nextIndex, FolderTreeView::Next,confirm ) ) {
-      return;
-    }
-    current = nextIndex;
+  // find next unread collection starting from current position
+  if ( !trySelectNextUnreadFolder( currentIndex(), MailCommon::Util::ForwardSearch, confirm ) ) {
+    // if there is none, jump to the last collection and try again
+    trySelectNextUnreadFolder( model()->index( 0, 0 ), MailCommon::Util::ForwardSearch, confirm );
   }
 }
 
-bool FolderTreeView::isUnreadFolder( const QModelIndex & current, QModelIndex &index, FolderTreeView::Move move, bool confirm )
+// helper method to find last item in the model tree
+static QModelIndex lastChildOf( QAbstractItemModel *model, const QModelIndex &current )
+{
+  if ( model->rowCount( current ) == 0 )
+    return current;
+
+  return lastChildOf( model, model->index( model->rowCount( current ) - 1, 0, current ) );
+}
+
+void FolderTreeView::selectPrevUnreadFolder( bool confirm )
+{
+  // find next unread collection starting from current position
+  if ( !trySelectNextUnreadFolder( currentIndex(), MailCommon::Util::BackwardSearch, confirm ) ) {
+    // if there is none, jump to top and try again
+    const QModelIndex index = lastChildOf( model(), QModelIndex() );
+    trySelectNextUnreadFolder( index, MailCommon::Util::BackwardSearch, confirm );
+  }
+}
+
+bool FolderTreeView::trySelectNextUnreadFolder( const QModelIndex &current, MailCommon::Util::SearchDirection direction, bool confirm )
+{
+  QModelIndex index = current;
+  while ( true ) {
+    index = MailCommon::Util::nextUnreadCollection( model(), index, direction );
+
+    if ( !index.isValid() )
+      return false;
+
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( ignoreUnreadFolder( collection, confirm ) )
+      continue;
+
+    if ( allowedToEnterFolder( collection, confirm ) ) {
+      expand( index );
+      setCurrentIndex( index );
+      selectModelIndex( index );
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  return false;
+}
+
+bool FolderTreeView::ignoreUnreadFolder( const Akonadi::Collection &collection, bool confirm ) const
+{
+  if ( !confirm )
+    return false;
+
+  // Skip drafts, sent mail and templates as well, when reading mail with the
+  // space bar - but not when changing into the next folder with unread mail
+  // via ctrl+ or ctrl- so we do this only if (confirm == true), which means
+  // we are doing readOn.
+
+  return ( collection == Kernel::self()->draftsCollectionFolder() ||
+           collection == Kernel::self()->templatesCollectionFolder() ||
+           collection == Kernel::self()->sentCollectionFolder() );
+}
+
+bool FolderTreeView::allowedToEnterFolder( const Akonadi::Collection &collection, bool confirm ) const
+{
+  if ( !confirm )
+    return true;
+
+  // warn user that going to next folder - but keep track of
+  // whether he wishes to be notified again in "AskNextFolder"
+  // parameter (kept in the config file for kmail)
+  const int result = KMessageBox::questionYesNo( const_cast<FolderTreeView*>( this ),
+                                                 i18n( "<qt>Go to the next unread message in folder <b>%1</b>?</qt>" , collection.name() ),
+                                                 i18n( "Go to Next Unread Message" ),
+                                                 KGuiItem( i18n( "Go To" ) ),
+                                                 KGuiItem( i18n( "Do Not Go To" ) ), // defaults
+                                                 ":kmail_AskNextFolder", 0 );
+  return (result == KMessageBox::Yes);
+}
+
+bool FolderTreeView::isUnreadFolder( const QModelIndex &current, QModelIndex &index, FolderTreeView::Move move, bool confirm )
 {
   if ( current.isValid() ) {
 
@@ -447,21 +512,6 @@ bool FolderTreeView::isUnreadFolder( const QModelIndex & current, QModelIndex &i
     }
   }
   return false;
-}
-
-void FolderTreeView::selectPrevUnreadFolder( bool confirm )
-{
-  kDebug()<<" Need to implement FolderTreeView::selectPrevUnreadFolder()";
-
-  QModelIndex current = indexAbove( currentIndex() );
-  while ( current.isValid() ) {
-    QModelIndex nextIndex;
-    if ( isUnreadFolder( current,nextIndex,FolderTreeView::Previous, confirm ) ) {
-      return;
-    }
-    current = nextIndex;
-  }
-  //TODO start at the end.
 }
 
 Akonadi::Collection FolderTreeView::currentFolder() const
