@@ -864,34 +864,6 @@ void MainView::dataChanged()
   actionCollection()->action( "mark_message_action_item" )->setChecked( status.isToAct() );
 }
 
-// FIXME: remove and put mark-as-read logic into messageviewer (shared with kmail)
-void MainView::setListSelectedRow( int row )
-{
-  static const int column = 0;
-  const QModelIndex index = itemSelectionModel()->model()->index( row, column );
-  Q_ASSERT( index.isValid() );
-
-  itemSelectionModel()->select( QItemSelection( index, index ), QItemSelectionModel::ClearAndSelect );
-  itemActionModel()->select( QItemSelection( index, index ), QItemSelectionModel::ClearAndSelect );
-
-  // FIXME this should all be in messageviewer and happen after mail download, see also similar code in KMCommands
-  const Item fullItem = index.data( EntityTreeModel::ItemRole ).value<Item>();
-
-  MessageStatus status;
-  status.setStatusFromFlags( fullItem.flags() );
-  if ( status.isUnread() ) {
-    Item sparseItem( fullItem.id() );
-    sparseItem.setRevision( fullItem.revision() );
-
-    status.setRead();
-    sparseItem.setFlags( status.statusFlags() );
-
-    ItemModifyJob *modifyJob = new ItemModifyJob( sparseItem, this );
-    modifyJob->disableRevisionCheck();
-    modifyJob->ignorePayload();
-  }
-}
-
 void MainView::configureIdentity()
 {
 #ifdef _WIN32_WCE

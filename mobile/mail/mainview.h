@@ -95,9 +95,6 @@ class MainView : public KDeclarativeMainView
     bool isSingleMessage( int row );
     bool folderIsDrafts( const Akonadi::Collection &collection );
 
-    // HACK until mark-as-read logic is in messageviewer
-    virtual void setListSelectedRow( int row );
-
     void configureIdentity();
 
     int emailTemplateCount();
