@@ -50,7 +50,7 @@ QML.Rectangle {
                     id: caption
                     font.pointSize: 18
                     style: QML.Text.Raised
-                    text: "About " + application.name
+                    text: KDE.i18n( "About %1", application.name )
                 }
 
                 QML.Text{
@@ -61,9 +61,9 @@ QML.Rectangle {
 
                 QML.Text {
                     text : KDE.i18n("This Free Software product was created as part of a commercial contract.") +
-                           "\n" + application.name +
-                           KDE.i18n(" is licensed under the GNU GPL version 2 or later." ) + "\n" +
-                           KDE.i18n("See") + " licenses.pdf " + KDE.i18n("for details.") + "\n"
+                           "\n" +
+                           KDE.i18n("%1 is licensed under the GNU GPL version 2 or later.", application.name ) + "\n" +
+                           KDE.i18n("See %1 for details.", "licenses.pdf") + "\n"
                 }
 
                 QML.Text{
