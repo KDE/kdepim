@@ -82,6 +82,7 @@ QML.Rectangle {
                           "\t" + KDE.i18n("Andre Heinecke (Intevation GmbH)") + "\n" +
                           "\t" + KDE.i18n("Andreas Holzammer (KDAB)") + "\n" +
                           "\t" + KDE.i18n("Bertjan Broeksema (KDAB)") + "\n" +
+                          "\t" + KDE.i18n("Björn Balasz (Apliki GmbH)") + "\n" +
                           "\t" + KDE.i18n("Björn Ricks (Intevation GmbH)") + "\n" +
                           "\t" + KDE.i18n("Casey Link (KDAB)") + "\n" +
                           "\t" + KDE.i18n("David Faure (KDAB)") + "\n" +
