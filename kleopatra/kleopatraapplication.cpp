@@ -129,9 +129,12 @@ static QList<QByteArray> default_logging_options() {
 }
 
 class KleopatraApplication::Private {
+    friend class ::KleopatraApplication;
+    KleopatraApplication * const q;
 public:
-    Private()
-        : ignoreNewInstance( true )
+    explicit Private( KleopatraApplication * qq )
+        : q( qq ),
+          ignoreNewInstance( true )
     {
         KDAB_SET_OBJECT_NAME( readerStatus );
 #ifndef QT_NO_SYSTEMTRAYICON
@@ -202,7 +205,7 @@ public:
 
 
 KleopatraApplication::KleopatraApplication()
-    : KUniqueApplication(), d( new Private )
+    : KUniqueApplication(), d( new Private( this ) )
 {
     add_resources();
     d->setupKeyCache();
