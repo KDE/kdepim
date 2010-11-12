@@ -65,6 +65,11 @@ IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mRemoveButton, SIGNAL(clicked()), SLOT(removeSelectedAttachments()) );
 }
 
+IncidenceAttachment::~IncidenceAttachment()
+{
+  delete mPopupMenu;
+}
+
 void IncidenceAttachment::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
@@ -568,9 +573,9 @@ void IncidenceAttachment::addDataAttachment( const QByteArray &data,
 }
 
 void IncidenceAttachment::addUriAttachment( const QString &uri,
-                                                  const QString &mimeType,
-                                                  const QString &label,
-                                                  bool inLine )
+                                            const QString &mimeType,
+                                            const QString &label,
+                                            bool inLine )
 {
   if ( !inLine ) {
     AttachmentIconItem *item =
