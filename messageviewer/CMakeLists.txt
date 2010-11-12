@@ -56,6 +56,7 @@ set(libmessageviewer_SRCS
   kleojobexecutor.cpp
   kxface.cpp
   mailsourceviewer.cpp
+  markmessagereadhandler.cpp
   mimetreemodel.cpp
   nodehelper.cpp
   objecttreeemptysource.cpp
