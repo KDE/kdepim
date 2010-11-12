@@ -127,11 +127,9 @@ KPIM.MainView {
 
   Loader {
     anchors.fill: parent
-    // TODO: fix full ETM reload in month view first before activating this
-    //source: guiStateManager.inViewMonthState ? "MonthViewComponent.qml" : ""
-    source: "MonthViewComponent.qml"
+    source: guiStateManager.inViewMonthState ? "MonthViewComponent.qml" : ""
     visible: guiStateManager.inViewMonthState // can be removed once the above has been activated again
- 
+
     onLoaded: {
      item.showMonth( dateEdit.date );
     }
