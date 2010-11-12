@@ -24,50 +24,33 @@
 
 #include "messageviewer_export.h"
 
-#include <QWidget>
-#include <QTimer>
-#include <QStringList>
-#include <QCloseEvent>
-#include <QEvent>
-#include <QList>
-#include <QMap>
-#include <QResizeEvent>
-#include <kurl.h>
-#include <kservice.h>
-#include <kvbox.h>
-
 #include <kmime/kmime_message.h>
 
-//Akonadi includes
-#include <akonadi/item.h>
-
-class QAbstractItemModel;
-class QSplitter;
-class QTreeWidgetItem;
-class QString;
-class QTextCodec;
-class QTreeView;
-class QModelIndex;
-
-class KHBox;
-class KActionCollection;
-class KAction;
-class KSelectAction;
-class KToggleAction;
-class KToggleAction;
-class KUrl;
-class KConfigSkeleton;
+#include <QtGui/QWidget>
 
 namespace Akonadi {
-  class ItemFetchJob;
+class Item;
+class ItemFetchJob;
 }
 
+class KActionCollection;
+class KAction;
+class KToggleAction;
+class KUrl;
+
+class QAbstractItemModel;
+class QCloseEvent;
+class QEvent;
+class QResizeEvent;
+class QString;
+
 namespace MessageViewer {
-  class AttachmentStrategy;
-  class ViewerPrivate;
-  class CSSHelper;
-  class HeaderStrategy;
-  class HeaderStyle;
+
+class AttachmentStrategy;
+class CSSHelper;
+class HeaderStrategy;
+class HeaderStyle;
+class ViewerPrivate;
 
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
 

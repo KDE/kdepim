@@ -21,7 +21,9 @@
 #ifndef MAILVIEWER_P_H
 #define MAILVIEWER_P_H
 
-#include <QObject>
+#include <QtCore/QObject>
+#include <QtCore/QTimer>
+#include <QtGui/QMouseEvent>
 
 #include <KService>
 #include <KSharedConfigPtr>
