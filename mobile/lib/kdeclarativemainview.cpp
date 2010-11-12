@@ -421,7 +421,9 @@ void KDeclarativeMainView::breadcrumbsSelectionChanged()
   const int numBreadcrumbs = qobject_cast<QAbstractItemModel*>( d->mBnf->qmlBreadcrumbsModel() )->rowCount();
   const int numSelectedItems = qobject_cast<QAbstractItemModel*>( d->mBnf->qmlSelectedItemModel() )->rowCount();
 
-  if ( d->mGuiStateManager->inSearchScreenState() || d->mGuiStateManager->inSearchResultScreenState() )
+  if ( d->mGuiStateManager->inSearchScreenState() ||
+       d->mGuiStateManager->inSearchResultScreenState() ||
+       d->mGuiStateManager->inViewSingleItemState() )
     return;
 
   if ( numBreadcrumbs == 0 && numSelectedItems == 0) {
