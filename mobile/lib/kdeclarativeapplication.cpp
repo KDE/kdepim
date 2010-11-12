@@ -95,6 +95,7 @@ void KDeclarativeApplication::postApplicationSetup()
     setStyle( "plastique" ); // to avoid oxygen artefacts
   }
 
+  KGlobal::locale()->insertCatalog( "libakonadi" );
   KGlobal::locale()->insertCatalog( "libkdepimmobileui" );
 }
 
