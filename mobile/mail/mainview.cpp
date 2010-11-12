@@ -819,7 +819,7 @@ void MainView::redirect()
   forward( item.id(), Redirect );
 }
 
-Item MainView::currentItem()
+Item MainView::currentItem() const
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
 
@@ -1455,6 +1455,53 @@ void MainView::itemActionModelChanged()
   actionCollection()->action( "apply_filters" )->setEnabled( !indexes.isEmpty() );
 }
 
+bool MainView::selectNextUnreadMessageInCurrentFolder()
+{
+  const QAbstractItemModel *model = itemModel();
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
+
+  const QModelIndex currentIndex = (list.isEmpty() ? model->index( 0, 0 ) : list.first());
+
+  const int rowCount = model->rowCount( QModelIndex() );
+
+  // start from current message
+  for ( int row = currentIndex.row() + 1; row < rowCount; ++row ) {
+    const QModelIndex itemIndex = model->index( row, 0 );
+    const Akonadi::Item item = itemIndex.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    if ( !item.hasFlag( Akonadi::MessageFlags::Seen ) ) {
+      messageViewerItem()->setItem( item );
+      return true;
+    }
+  }
+
+  // no unread message found, try from begin of folder
+  for ( int row = 0; row < currentIndex.row(); ++row ) {
+    const QModelIndex itemIndex = model->index( row, 0 );
+    const Akonadi::Item item = itemIndex.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    if ( !item.hasFlag( Akonadi::MessageFlags::Seen ) ) {
+      messageViewerItem()->setItem( item );
+      return true;
+    }
+  }
+
+  return false; // no unread message in folder
+}
+
+void MainView::selectNextUnreadMessage()
+{
+  if ( selectNextUnreadMessageInCurrentFolder() )
+    return;
+
+  // since we passed a custom model in createMainProxyModel(), we have to use it here as well
+  QAbstractItemModel *model = mQuotaColorProxyModel;
+
+  // since there is no unread message left in current folder, try the next one
+  QModelIndex next = MailCommon::Util::nextUnreadCollection( model, model->index( 0, 0 ), MailCommon::Util::ForwardSearch );
+  if ( next.isValid() ) {
+    regularSelectionModel()->setCurrentIndex( next, QItemSelectionModel::ClearAndSelect );
+    selectNextUnreadMessageInCurrentFolder();
+  }
+}
 
 // #############################################################
 

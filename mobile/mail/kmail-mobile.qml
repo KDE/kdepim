@@ -282,6 +282,24 @@ KPIM.MainView {
     }
   }
 
+  QML.Rectangle {
+    id : jumpToNextUnreadMessageButton
+    visible : guiStateManager.inViewSingleItemState
+    anchors.right : kmailMobile.right
+    anchors.rightMargin : 70
+    anchors.bottom : backToMessageListButton.top
+    anchors.bottomMargin : 100
+    QML.Image {
+      source : KDE.locate( "data", "mobileui/edit-button.png" );
+      QML.MouseArea {
+        anchors.fill : parent;
+        onClicked : {
+          application.selectNextUnreadMessage()
+        }
+      }
+    }
+  }
+
   QML.Item {
     id : mainWorkView
     visible: { guiStateManager.inHomeScreenState ||

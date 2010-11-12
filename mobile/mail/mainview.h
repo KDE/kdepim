@@ -103,6 +103,8 @@ class MainView : public KDeclarativeMainView
     int emailTemplateCount();
     void newMessageFromTemplate( int index );
 
+    void selectNextUnreadMessage();
+
     Q_SCRIPTABLE int openComposer( const QString & to,
                                    const QString & cc,
                                    const QString & bcc,
@@ -169,9 +171,10 @@ class MainView : public KDeclarativeMainView
     void forward( quint64 id, ForwardMode mode );
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
     void recoverAutoSavedMessages();
-    Akonadi::Item currentItem();
+    Akonadi::Item currentItem() const;
     bool askToGoOnline();
     MessageViewer::MessageViewItem *messageViewerItem();
+    bool selectNextUnreadMessageInCurrentFolder();
 
     bool mAskingToGoOnline;
     QWidget *mTransportDialog;
