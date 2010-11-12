@@ -274,6 +274,7 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
     virtual ~IncidenceMonthItem();
 
     Akonadi::Item akonadiItem() const;
+    Akonadi::Item::Id akonadiItemId() const;
 
     virtual bool greaterThanFallback( const MonthItem *other ) const;
 
@@ -313,6 +314,7 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
     */
     QColor catColor() const;
 
+    Akonadi::Item::Id mAkonadiItemId;
     KCalCore::Incidence::Ptr mIncidence;
     int mRecurDayOffset;
     bool mIsEvent, mIsTodo, mIsJournal;

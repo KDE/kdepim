@@ -730,7 +730,7 @@ void MonthScene::removeIncidence( Akonadi::Item::Id id )
 {
   foreach ( MonthItem *manager, mManagerList ) {
     IncidenceMonthItem *imi = qobject_cast<IncidenceMonthItem*>( manager );
-    if ( imi && imi->akonadiItem().id() == id ) {
+    if ( imi && imi->akonadiItemId() == id ) {
       foreach ( MonthGraphicsItem *gitem, imi->monthGraphicsItems() ) {
         removeItem( gitem );
       }

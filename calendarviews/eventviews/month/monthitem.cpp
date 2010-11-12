@@ -288,7 +288,8 @@ QList<MonthGraphicsItem *> EventViews::MonthItem::monthGraphicsItems() const
 IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
                                         const Akonadi::Item &aitem,
                                         const QDate &recurStartDate )
-  : MonthItem( monthScene ), mIncidence( aitem.payload<Incidence::Ptr>() )
+  : MonthItem( monthScene ), mIncidence( aitem.payload<Incidence::Ptr>() ),
+    mAkonadiItemId( aitem.id() )
 {
   mIsEvent = CalendarSupport::hasEvent( aitem );
   mIsJournal = CalendarSupport::hasJournal( aitem );
@@ -694,6 +695,11 @@ Akonadi::Item IncidenceMonthItem::akonadiItem() const
   } else {
     return Akonadi::Item();
   }
+}
+
+Akonadi::Item::Id IncidenceMonthItem::akonadiItemId() const
+{
+  return mAkonadiItemId;
 }
 //-----------------------------------------------------------------
 // HOLIDAYMONTHITEM
