@@ -52,198 +52,36 @@ KPIM.MainView {
     }
   }
 
-  QML.Rectangle {
-      id : newMailPage
-      anchors.right : kmailMobile.right
-      anchors.rightMargin : 70
-      anchors.left : kmailMobile. left
-      anchors.leftMargin : 70
-      anchors.top : kmailMobile.top
-      anchors.topMargin : 70
-      visible : false
-      color: "lightgray"
-      z: 1
-      QML.Column {
-          anchors.fill: parent
-          QML.ListView {
-              anchors.fill: parent
-              model: _emailTemplateModel
-              focus: true
-              delegate: [
-                  KPIM.Button2 {
-                    width: parent.width
-                    buttonText : display
-                    onClicked : {
-                      application.newMessageFromTemplate( index );
-                      newMailPage.visible = false
-                    }
-                  }
-                ]
-            }
-
-          KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Discard" )
-              onClicked : {
-                newMailPage.visible = false
-              }
-            }
-       }
-       onVisibleChanged: {
-          height = Math.min( application.emailTemplateCount(), 5 ) * 52; //ask on the fly, can change
-       }
-
+  QML.Loader {
+    id: newMailPage
+    visible: false
+    anchors.fill: parent
+    z: 1
+    source: visible ? "NewMailPage.qml" : ""
   }
 
-  QML.Rectangle {
-      id : replyOptionsPage
-      anchors.right : kmailMobile.right
-      anchors.rightMargin : 70
-      anchors.left : kmailMobile. left
-      anchors.leftMargin : 70
-      anchors.top : kmailMobile.top
-      anchors.topMargin : 70
-      visible : false
-      color: "lightgray"
-      z: 1
-      //how to calculate the height needed for buttons?
-      height: 195
-
-      QML.Column {
-            anchors.fill: parent
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Reply to Author" )
-              onClicked : {
-                application.getAction("message_reply_to_author", "").trigger();
-                replyOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Reply to All" )
-              onClicked : {
-                application.getAction("message_reply_to_all", "").trigger();
-                replyOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Reply to List" )
-              onClicked : {
-                application.getAction("message_reply_to_list", "").trigger();
-                replyOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Reply Without Quoting" )
-              onClicked : {
-                application.getAction("message_reply_without_quoting", "").trigger();
-                replyOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Discard" )
-              onClicked : {
-                replyOptionsPage.visible = false
-              }
-            }
-          }
+  QML.Loader {
+    id: replyOptionsPage
+    visible: false
+    anchors.fill: parent
+    z: 1
+    source: visible ? "ReplyOptionsPage.qml" : ""
   }
 
-  QML.Rectangle {
-      id : forwardOptionsPage
-      anchors.right : kmailMobile.right
-      anchors.rightMargin : 70
-      anchors.left : kmailMobile. left
-      anchors.leftMargin : 70
-      anchors.top : kmailMobile.top
-      anchors.topMargin : 70
-      visible : false
-      color: "lightgray"
-      z: 1
-      //how to calculate the height needed for buttons?
-      height: 145
-
-      QML.Column {
-            anchors.fill: parent
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Forward as Attachment" )
-              onClicked : {
-                application.getAction("message_forward_as_attachment", "").trigger();
-                forwardOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Redirect" )
-              onClicked : {
-                application.getAction("message_redirect", "").trigger();
-                forwardOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Discard" )
-              onClicked : {
-                forwardOptionsPage.visible = false
-              }
-            }
-          }
+  QML.Loader {
+    id: forwardOptionsPage
+    visible: false
+    anchors.fill: parent
+    z: 1
+    source: visible ? "ForwardOptionsPage.qml" : ""
   }
 
-
-  QML.Rectangle {
-      id : markOptionsPage
-      anchors.right : kmailMobile.right
-      anchors.rightMargin : 70
-      anchors.left : kmailMobile. left
-      anchors.leftMargin : 70
-      anchors.top : kmailMobile.top
-      anchors.topMargin : 70
-      visible : false
-      color: "lightgray"
-      z: 1
-      //how to calculate the height needed for buttons?
-      height: 168
-
-      QML.Column {
-            anchors.fill: parent
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : application.getAction("akonadi_mark_as_read", "").iconText;
-              onClicked : {
-                application.getAction("akonadi_mark_as_read", "").trigger();
-                markOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : application.getAction("akonadi_mark_as_important", "").iconText;
-              onClicked : {
-                application.getAction("akonadi_mark_as_important", "").trigger();
-                markOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : application.getAction("akonadi_mark_as_action_item", "").iconText;
-              onClicked : {
-                application.getAction("akonadi_mark_as_action_item", "").trigger();
-                markOptionsPage.visible = false
-              }
-            }
-            KPIM.Button2 {
-              width: parent.width
-              buttonText : KDE.i18n( "Discard" )
-              onClicked : {
-                markOptionsPage.visible = false
-              }
-            }
-          }
+  QML.Loader {
+    id: markOptionsPage
+    visible: false
+    anchors.fill: parent
+    z: 1
+    source: visible ? "MarkAsPage.qml" : ""
   }
 
   MessageViewer.MessageView {

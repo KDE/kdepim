@@ -89,7 +89,11 @@ install(FILES
   ConfigDialog.qml
   FilterActions.qml
   FilterConfigDialog.qml
+  ForwardOptionsPage.qml
   HeaderView.qml
+  MarkAsPage.qml
+  NewMailPage.qml
+  ReplyOptionsPage.qml
   important-email.png
   action-item-email.png
   EditorView.qml
