@@ -33,48 +33,48 @@ else(MESSAGEVIEWER_NO_WEBKIT)
 endif(MESSAGEVIEWER_NO_WEBKIT)
 
 set(libmessageviewer_SRCS
-viewer_p.cpp
-viewer.cpp
-webkitparthtmlwriter.cpp
-htmlstatusbar.cpp
-headerstyle.cpp
-headerstrategy.cpp
-attachmentstrategy.cpp
-csshelper.cpp
-util.cpp
-objecttreeparser_p.cpp
-objecttreeparser.cpp
-kleojobexecutor.cpp
-bodypartformatter.cpp
-bodypartformatterfactory.cpp
-partnodebodypart.cpp
-nodehelper.cpp
-urlhandlermanager.cpp
-vcardviewer.cpp
-iconnamecache.cpp
-mailsourceviewer.cpp
-mimetreemodel.cpp
-spamheaderanalyzer.cpp
-antispamconfig.cpp
-globalsettings.cpp
-configurewidget.cpp
-htmlquotecolorer.cpp
-editorwatcher.cpp
-attachmentdialog.cpp
-objecttreeviewersource.cpp
-objecttreeemptysource.cpp
-filehtmlwriter.cpp
-teehtmlwriter.cpp
-chiasmuskeyselector.cpp
-${_mailwebview_cpp}
-findbar/findbar.cpp
-pluginloaderbase.cpp
-kxface.cpp
-csshelperbase.cpp
-contactphotomemento.cpp
-invitationsettings.cpp
-)
+  antispamconfig.cpp
+  attachmentdialog.cpp
+  attachmentstrategy.cpp
+  bodypartformatter.cpp
+  bodypartformatterfactory.cpp
+  chiasmuskeyselector.cpp
+  configurewidget.cpp
+  contactphotomemento.cpp
+  csshelper.cpp
+  csshelperbase.cpp
+  editorwatcher.cpp
+  filehtmlwriter.cpp
+  findbar/findbar.cpp
+  globalsettings.cpp
+  headerstrategy.cpp
+  headerstyle.cpp
+  htmlquotecolorer.cpp
+  htmlstatusbar.cpp
+  iconnamecache.cpp
+  invitationsettings.cpp
+  kleojobexecutor.cpp
+  kxface.cpp
+  mailsourceviewer.cpp
+  mimetreemodel.cpp
+  nodehelper.cpp
+  objecttreeemptysource.cpp
+  objecttreeparser.cpp
+  objecttreeparser_p.cpp
+  objecttreeviewersource.cpp
+  partnodebodypart.cpp
+  pluginloaderbase.cpp
+  spamheaderanalyzer.cpp
+  teehtmlwriter.cpp
+  urlhandlermanager.cpp
+  util.cpp
+  vcardviewer.cpp
+  viewer.cpp
+  viewer_p.cpp
+  webkitparthtmlwriter.cpp
 
+  ${_mailwebview_cpp}
+)
 
 kde4_add_kcfg_files(libmessageviewer_SRCS
   globalsettings_base.kcfgc
