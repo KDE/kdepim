@@ -1,4 +1,14 @@
 
+Friday 12 November 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4652: Kontact Crash in KMFolderCachedImap::rescueUnsyncedMessages
+* kolab/issue4653: Crash in KMFolderNode::parent (this=0xbfde42d8) at kmfoldernode.cpp:45
+
+
+
 Friday 05 November 2010
 
 Problems addressed
