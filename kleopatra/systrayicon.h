@@ -52,7 +52,6 @@ public:
     QDialog * attentionWindow() const;
 
 public Q_SLOTS:
-    void openOrRaiseMainWindow();
     void setAnyCardHasNullPin( bool );
     void setAnyCardCanLearnKeys( bool );
 

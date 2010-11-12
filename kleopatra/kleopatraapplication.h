@@ -51,7 +51,11 @@ public:
 
     static KCmdLineOptions commandLineOptions();
 
+    static KleopatraApplication * instance() { return qobject_cast<KleopatraApplication*>( qApp ); }
+
     /* reimp */ int newInstance();
+
+    void setMainWindow( MainWindow * mw );
 
     const MainWindow * mainWindow() const;
     MainWindow * mainWindow();

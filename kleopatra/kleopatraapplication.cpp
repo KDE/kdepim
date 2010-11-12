@@ -166,6 +166,7 @@ private:
 public:
     bool ignoreNewInstance;
     QPointer<ConfigureDialog> configureDialog;
+    QPointer<MainWindow> mainWindow;
     SmartCard::ReaderStatus readerStatus;
 #ifndef QT_NO_SYSTEMTRAYICON
     SysTrayIcon sysTray;
@@ -321,19 +322,29 @@ const SysTrayIcon * KleopatraApplication::sysTrayIcon() const {
 SysTrayIcon * KleopatraApplication::sysTrayIcon() {
     return &d->sysTray;
 }
+#endif
 
 const MainWindow * KleopatraApplication::mainWindow() const {
-    return d->sysTray.mainWindow();
+    return d->mainWindow;
 }
 
 MainWindow * KleopatraApplication::mainWindow() {
-    return d->sysTray.mainWindow();
+    return d->mainWindow;
 }
 
-void KleopatraApplication::openOrRaiseMainWindow() {
-    d->sysTray.openOrRaiseMainWindow();
-}
+void KleopatraApplication::setMainWindow( MainWindow * mainWindow ) {
+    if ( mainWindow == d->mainWindow )
+        return;
+
+    d->disconnectConfigureDialog();
+
+    d->mainWindow = mainWindow;
+#ifndef QT_NO_SYSTEMTRAYICON
+    d->sysTray.setMainWindow( mainWindow );
 #endif
+
+    d->connectConfigureDialog();
+}
 
 static void open_or_raise( QWidget * w ) {
     if ( w->isMinimized() ) {
@@ -344,6 +355,17 @@ static void open_or_raise( QWidget * w ) {
     } else {
         w->show();
     }
+}
+
+void KleopatraApplication::openOrRaiseMainWindow() {
+    MainWindow * mw = mainWindow();
+    if ( !mw ) {
+        mw = new MainWindow;
+        mw->setAttribute( Qt::WA_DeleteOnClose );
+        setMainWindow( mw );
+        d->connectConfigureDialog();
+    }
+    open_or_raise( mw );
 }
 
 void KleopatraApplication::openOrRaiseConfigDialog() {

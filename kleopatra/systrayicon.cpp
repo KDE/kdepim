@@ -37,6 +37,7 @@
 #ifndef QT_NO_SYSTEMTRAYICON
 
 #include "mainwindow.h"
+#include "kleopatraapplication.h"
 
 #include <smartcard/readerstatus.h>
 
@@ -280,27 +281,6 @@ QDialog * SysTrayIcon::attentionWindow() const {
     return static_cast<QDialog*>( SystemTrayIcon::attentionWindow() );
 }
 
-static void open_or_raise( QWidget * w ) {
-    if ( w->isMinimized() ) {
-        KWindowSystem::unminimizeWindow( w->winId());
-        w->raise();
-    } else if ( w->isVisible() ) {
-        w->raise();
-    } else {
-        w->show();
-    }
-}
-
-void SysTrayIcon::openOrRaiseMainWindow() {
-    MainWindow * mw = mainWindow();
-    if ( !mw ) {
-        mw = new MainWindow;
-        mw->setAttribute( Qt::WA_DeleteOnClose );
-        setMainWindow( mw );
-    }
-    open_or_raise( mw );
-}
-
 void SysTrayIcon::doActivated() {
     if ( const QWidget * const aw = attentionWindow() )
         if ( aw->isVisible() )
@@ -310,7 +290,7 @@ void SysTrayIcon::doActivated() {
     else if ( d->anyCardCanLearnKeys )
         d->slotLearnCertificates();
     else
-        openOrRaiseMainWindow();
+        KleopatraApplication::instance()->openOrRaiseMainWindow();
 }
 
 void SysTrayIcon::setAnyCardHasNullPin( bool on ) {
