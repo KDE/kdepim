@@ -42,7 +42,7 @@ QML.Rectangle {
         flickableDirection: QML.Flickable.VerticalFlick
         width: parent.width - closeButton.width
         height: parent.height
-        contentHeight: 1200;
+        contentHeight: 1700;
         QML.Rectangle{
         id: aboutText
             QML.Column{
