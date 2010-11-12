@@ -200,3 +200,85 @@ uint MailCommon::Util::folderIdentity(const Akonadi::Item& item)
   }
   return id;
 }
+
+static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &current )
+{
+  // if we have children, return first child
+  if ( model->rowCount( current ) > 0 )
+    return model->index( 0, current.column(), current );
+
+  // if we have siblings, return next sibling
+  const QModelIndex parent = model->parent( current );
+  const QModelIndex sibling = model->index( current.row() + 1, current.column(), parent );
+
+  if ( sibling.isValid() ) // found valid sibling
+    return sibling;
+
+  if ( !parent.isValid() ) // our parent is the tree root and we have no siblings
+    return QModelIndex(); // we reached the bottom of the tree
+
+  // iterate over our parents back to root until we find a parent with a valid sibling
+  QModelIndex currentParent = parent;
+  QModelIndex grandParent = model->parent( currentParent );
+  while ( currentParent.isValid() ) {
+    // check if the parent has children except from us
+    if ( model->rowCount( grandParent ) > currentParent.row() + 1 ) {
+      const QModelIndex index = indexBelow( model, model->index( currentParent.row() + 1, currentParent.column(), grandParent ) );
+      if ( index.isValid() )
+        return index;
+    }
+
+    currentParent = grandParent;
+    grandParent = model->parent( currentParent );
+  }
+
+  return QModelIndex(); // nothing found -> end of tree
+}
+
+static QModelIndex lastChildOf( QAbstractItemModel *model, const QModelIndex &current )
+{
+  if ( model->rowCount( current ) == 0 )
+    return current;
+
+  return lastChildOf( model, model->index( model->rowCount( current ) - 1, 0, current ) );
+}
+
+static QModelIndex indexAbove( QAbstractItemModel *model, const QModelIndex &current )
+{
+  const QModelIndex parent = model->parent( current );
+
+  if ( current.row() == 0 ) // we have no previous siblings -> our parent is the next item above us
+    return parent;
+
+  // find previous sibling
+  const QModelIndex previousSibling = model->index( current.row() - 1, current.column(), parent );
+
+  // the item above us is the last child (or grandchild, or grandgrandchild... etc) of our previous sibling
+  return lastChildOf( model, previousSibling );
+}
+
+QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, const QModelIndex &current, SearchDirection direction )
+{
+  QModelIndex index = current;
+  while ( true ) {
+    if ( direction == MailCommon::Util::ForwardSearch ) {
+      index = indexBelow( model, index );
+    } else if ( direction == MailCommon::Util::BackwardSearch ) {
+      index = indexAbove( model, index );
+    }
+
+    if ( !index.isValid() ) // reach end or top of the model
+      return QModelIndex();
+
+    // check if the index is a collection
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( collection.isValid() ) {
+
+      // check if it is unread
+      if ( collection.statistics().unreadCount() > 0 )
+        return index; // we found the next unread collection
+    }
+  }
+
+  return QModelIndex(); // no unread collection found
+}

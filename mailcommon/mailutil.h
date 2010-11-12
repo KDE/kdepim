@@ -45,6 +45,8 @@
 class KUrl;
 class KJob;
 
+class QAbstractItemModel;
+class QModelIndex;
 class QString;
 
 class OrgKdeAkonadiImapSettingsInterface;
@@ -81,12 +83,29 @@ namespace Util {
     MAILCOMMON_EXPORT bool createTodoFromMail( const Akonadi::Item &mailItem );
 
     /**
-     * Returns the identity of the folder that contains the given
-     *  Akonadi::Item.
+     * Returns the identity of the folder that contains the given Akonadi::Item.
      */
     MAILCOMMON_EXPORT uint folderIdentity( const Akonadi::Item& item );
 
+    /**
+     * Describes the direction for searching next unread collection.
+     */
+    enum SearchDirection
+    {
+      ForwardSearch,
+      BackwardSearch
+    };
+
+    /**
+     * Returns the index of the next unread collection following a given index.
+     *
+     * @param model The item model to search in.
+     * @param current The index of the collection where the search will start.
+     * @param direction The direction of search.
+     */
+    MAILCOMMON_EXPORT QModelIndex nextUnreadCollection( QAbstractItemModel *model, const QModelIndex &current, SearchDirection direction );
 }
+
 }
 
 #endif
