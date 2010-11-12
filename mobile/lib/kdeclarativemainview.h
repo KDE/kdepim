@@ -278,11 +278,21 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void itemSelectionChanged();
 
   protected:
+    /**
+     * The selection model that belongs to the item model returned by entityTreeModel()
+     * or to the one returned by createMainProxyModel().
+     */
     QItemSelectionModel* regularSelectionModel() const;
+
+    /**
+     * The selection model which provides the information about checked
+     * items in the bulk action screen.
+     */
+    QItemSelectionModel* itemActionModel() const;
+
     QAbstractProxyModel* itemFilterModel() const;
     QAbstractProxyModel* listProxy() const;
     QItemSelectionModel* itemSelectionModel() const;
-    QItemSelectionModel* itemActionModel() const;
     QAbstractItemModel* selectedItemsModel() const;
 
     Akonadi::Item itemFromId( quint64 id ) const;
