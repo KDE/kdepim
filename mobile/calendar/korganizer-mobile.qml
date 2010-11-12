@@ -128,7 +128,6 @@ KPIM.MainView {
   Loader {
     anchors.fill: parent
     source: guiStateManager.inViewMonthState ? "MonthViewComponent.qml" : ""
-    visible: guiStateManager.inViewMonthState // can be removed once the above has been activated again
 
     onLoaded: {
      item.showMonth( dateEdit.date );
