@@ -469,6 +469,23 @@ void Viewer::setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolic
   d->mViewer->setScrollBarPolicy( orientation, policy );
 }
 
+void Viewer::addMessageLoadedHandler( AbstractMessageLoadedHandler *handler )
+{
+  Q_D( Viewer );
+
+  if ( !handler )
+    return;
+
+  d->mMessageLoadedHandlers.insert( handler );
+}
+
+void Viewer::removeMessageLoadedHandler( AbstractMessageLoadedHandler *handler )
+{
+  Q_D( Viewer );
+
+  d->mMessageLoadedHandlers.remove( handler );
+}
+
 void Viewer::deleteMessage()
 {
   Q_D( Viewer );

@@ -190,7 +190,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     q( aParent ),
     mShowFullToAddressList( true ),
     mShowFullCcAddressList( true )
-
 {
   if ( !mainWindow )
     mainWindow = aParent;
@@ -1153,6 +1152,9 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item, Viewer::UpdateMod
       kWarning() << "Payload is not a MessagePtr!";
     return;
   }
+
+  foreach ( AbstractMessageLoadedHandler *handler, mMessageLoadedHandlers )
+    handler->setItem( item );
 
   setMessageInternal( mMessageItem.payload<KMime::Message::Ptr>(), updateMode );
 }

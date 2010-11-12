@@ -52,6 +52,25 @@ class HeaderStrategy;
 class HeaderStyle;
 class ViewerPrivate;
 
+/**
+ * An interface to plug in a handler that is called when
+ * an message item has been loaded into the view.
+ */
+class AbstractMessageLoadedHandler
+{
+  public:
+    
+    virtual ~AbstractMessageLoadedHandler() {}
+
+    /**
+     * This method is called whenever a message item has been loaded
+     * into the view.
+     *
+     * @param item The message item that has been loaded.
+     */
+    virtual void setItem( const Akonadi::Item &item ) = 0;
+};
+
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
 
 /**
@@ -62,7 +81,8 @@ class ViewerPrivate;
 class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 {
   Q_OBJECT
-  Q_DECLARE_PRIVATE(Viewer)
+
+  Q_DECLARE_PRIVATE( Viewer )
 
   public:
   /**
@@ -270,6 +290,18 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    * @see setScrollBarPolicy()
    */
   Qt::ScrollBarPolicy scrollBarPolicy( Qt::Orientation orientation ) const;
+
+  /**
+   * Adds a @p handler for actions that will be executed when the message
+   * has been loaded into the view.
+   */
+  void addMessageLoadedHandler( AbstractMessageLoadedHandler *handler );
+
+  /**
+   * Removes the @p handler for actions that will be executed when the message
+   * has been loaded into the view.
+   */
+  void removeMessageLoadedHandler( AbstractMessageLoadedHandler *handler );
 
 signals:
 

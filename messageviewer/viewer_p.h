@@ -21,22 +21,20 @@
 #ifndef MAILVIEWER_P_H
 #define MAILVIEWER_P_H
 
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
-#include <QtGui/QMouseEvent>
-
-#include <KService>
-#include <KSharedConfigPtr>
-#include <KUrl>
+#include "nodehelper.h"
+#include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 
 #include <akonadi/item.h>
 #include <akonadi/monitor.h>
-
-#include <kmime/kmime_message.h>
-
-#include "nodehelper.h"
-#include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 #include <kio/job.h>
+#include <kmime/kmime_message.h>
+#include <kservice.h>
+#include <ksharedconfig.h>
+#include <kurl.h>
+
+#include <QtCore/QObject>
+#include <QtCore/QTimer>
+#include <QtGui/QMouseEvent>
 
 namespace GpgME { class Error; }
 namespace KIO { class Job; }
@@ -636,7 +634,7 @@ public:
   bool mShowFullCcAddressList;
   Akonadi::Monitor mMonitor;
   QString mAppName;
-
+  QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
 };
 
 }
