@@ -206,7 +206,7 @@ TextEditor::TextEditor ( QWidget *parent )
     kDebug() <<file.fileName();
     if ( !file.open ( QIODevice::ReadOnly ) )
         QMessageBox::warning ( 0, i18n ( "TextEditor" ),
-                               i18n ( "TextEditor: Can not open template file." ) );
+                               i18n ( "TextEditor: Cannot open template file." ) );
     else
         webView -> setHtml ( QString ( file.readAll() ) );
 
