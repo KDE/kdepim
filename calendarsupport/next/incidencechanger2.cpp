@@ -180,11 +180,12 @@ void IncidenceChanger2::Private::handleDeleteJobResult( KJob *job )
     if ( change.atomicOperationId != 0 ) {
       rollbackAtomicOperation( change.atomicOperationId );
     }
-  } else {
-    if ( change.recordToHistory ) {
-      //TODO: check return value
-      //TODO: make History support a list of items
-      foreach( const Item &item, items ) {
+  } else { // success
+    foreach( const Item &item, items ) {
+      mLatestRevisionByItemId.remove( item.id() );
+      if ( change.recordToHistory ) {
+        //TODO: check return value
+        //TODO: make History support a list of items
         mHistory->recordDeletion( item, change.atomicOperationId );
       }
     }
@@ -223,7 +224,8 @@ void IncidenceChanger2::Private::handleModifyJobResult( KJob *job )
     if ( change.atomicOperationId != 0 ) {
       rollbackAtomicOperation( change.atomicOperationId );
     }
-  } else {
+  } else { // success
+    mLatestRevisionByItemId[item.id()] = item.revision();
     if ( change.recordToHistory && change.originalItem.isValid() ) {
       mHistory->recordModification( change.originalItem, item, change.atomicOperationId );
     }
@@ -573,7 +575,20 @@ void IncidenceChanger2::Private::performModification( Change change )
     return;
   }
 
-  { // increment revision
+
+  if ( mLatestRevisionByItemId.contains( id ) &&
+       mLatestRevisionByItemId[id] > change.newItem.revision() ) {
+    /* When a ItemModifyJob ends, the application can still modify the old items if the user
+     * is quick because the ETM wasn't updated yet, and we'll get a STORE error, because
+     * we are not modifying the latest revision.
+     *
+     * When a job ends, we keep the new revision in m_latestVersionByItemId
+     * so we can update the item's revision
+     */
+    change.newItem.setRevision( mLatestRevisionByItemId[id] );
+  }
+
+  { // increment revision ( KCalCore revision, not akonadi )
     Incidence::Ptr incidence = change.newItem.payload<Incidence::Ptr>();
     const int revision = incidence->revision();
     incidence->setRevision( revision + 1 );

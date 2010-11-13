@@ -166,6 +166,9 @@ class IncidenceChanger2::Private : public QObject
 
     bool mRespectsCollectionRights;
 
+    // To avoid conflicts
+    QHash<Akonadi::Item::Id, int> mLatestRevisionByItemId;
+
   private:
     IncidenceChanger2 *q;
 };
