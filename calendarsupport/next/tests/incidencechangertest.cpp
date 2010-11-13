@@ -285,8 +285,8 @@ class IncidenceChangerTest : public QObject
       waitForSignals();
 
       kDebug() << "Doing 30 modifications, but waiting for jobs to end before starting a new one.";
-      int LIMIT = 10;
-      for ( int i = 20; i < LIMIT; ++i ) {
+      const int LIMIT = 30;
+      for ( int i = 0; i < LIMIT; ++i ) {
         mWaitingForIncidenceChangerSignals = true;
         mPendingUpdatesInETM.append( uid );
         Item item = mCalendar->itemForIncidenceUid( uid );
@@ -301,14 +301,11 @@ class IncidenceChangerTest : public QObject
       Item item = mCalendar->itemForIncidenceUid( uid );
       QVERIFY( item.isValid() );
 
-      /*
-        TODO: not working yet
       kDebug() << "Doing 30 modifications, and not for jobs to end before starting a new one.";
 
       for ( int i = 0; i < LIMIT; ++i ) {
         item.payload<Incidence::Ptr>()->setSummary( QString::number( i ) );
-        kDebug() << "Sending change1 ";
-        int changeId = mChanger->modifyIncidence( item );
+        const int changeId = mChanger->modifyIncidence( item );
         QVERIFY( changeId > -1 );
         mKnownChangeIds.insert( changeId );
 
@@ -316,10 +313,9 @@ class IncidenceChangerTest : public QObject
           // Let's catch the last signal, so we don't exit our test with jobs still running
           mWaitingForIncidenceChangerSignals = true;
         }
-        QTest::qWait( 500 );
+        QTest::qWait( 100 );
       }
       waitForSignals();
-      */
 
       // Cleanup, delete the incidence
       item = mCalendar->itemForIncidenceUid( uid );
