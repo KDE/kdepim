@@ -568,7 +568,9 @@ KPIM.MainView {
   Connections {
     target: eventView
     onIncidenceRemoved : {
-      guiStateManager.popState();
+      if ( guiStateManager.inViewSingleItemState ) {
+        guiStateManager.popState();
+      }
     }
   }
 
