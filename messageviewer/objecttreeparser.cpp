@@ -209,6 +209,7 @@ void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, cons
   mNodeHelper->attachExtraContent( parentNode, newNode );
 
   ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
+  otp.setAllowAsync( allowAsync() );
   otp.parseObjectTreeInternal( newNode );
   mRawReplyString += otp.rawReplyString();
   mTextualContent += otp.textualContent();
@@ -756,6 +757,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
     }
 
     ObjectTreeParser otp( mSource, mNodeHelper, cryptProto, true );
+    otp.setAllowAsync( allowAsync() );
     otp.parseObjectTreeInternal( data );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
@@ -1487,6 +1489,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
   {
 //     if( NodeHelper::nodeProcessed( data ) )
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
+    otp.setAllowAsync( allowAsync() );
     KMime::Content* newNode = mNodeHelper->extraContents( data )[ 0 ];
     otp.parseObjectTreeInternal( newNode );
     mRawReplyString += otp.rawReplyString();
@@ -1609,6 +1612,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
 
     // Process the message, i.e. paint it by processing it with an OTP
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
+    otp.setAllowAsync( allowAsync() );
     otp.parseObjectTreeInternal( message.get() );
 
     // Don't add the resulting textual content to our textual content here.
@@ -1632,6 +1636,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( child ) {
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
+    otp.setAllowAsync( allowAsync() );
     otp.parseObjectTreeInternal( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
@@ -1718,6 +1723,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( child ) {
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
+    otp.setAllowAsync( allowAsync() );
     otp.parseObjectTreeInternal( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
