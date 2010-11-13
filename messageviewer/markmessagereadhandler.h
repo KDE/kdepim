@@ -61,7 +61,6 @@ class MESSAGEVIEWER_EXPORT MarkMessageReadHandler : public QObject, public Abstr
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void handleMessages() )
-    Q_PRIVATE_SLOT( d, void itemFetched( KJob* ) )
     //@endcond
 };
 

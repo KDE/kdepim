@@ -23,7 +23,6 @@
 
 #include "globalsettings.h"
 
-#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/kmime/messageflags.h>
 
@@ -41,7 +40,6 @@ class MarkMessageReadHandler::Private
     }
 
     void handleMessages();
-    void itemFetched( KJob* );
 
     MarkMessageReadHandler *q;
     QQueue<Akonadi::Item> mItemQueue;
@@ -51,30 +49,16 @@ class MarkMessageReadHandler::Private
 void MarkMessageReadHandler::Private::handleMessages()
 {
   while ( !mItemQueue.isEmpty() ) {
-    const Akonadi::Item item = mItemQueue.dequeue();
+    Akonadi::Item item = mItemQueue.dequeue();
 
-    // refetch the item, it might be out-of-date already
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, q );
-    q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( itemFetched( KJob* ) ) );
+    // mark as read
+    item.setFlag( Akonadi::MessageFlags::Seen );
+
+    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, q );
+    modifyJob->setIgnorePayload( true );
   }
 }
 
-void MarkMessageReadHandler::Private::itemFetched( KJob *job )
-{
-  if ( job->error() ) {
-    kWarning() << "Unable to fetch item";
-    return;
-  }
-
-  const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
-  Akonadi::Item item = fetchJob->items().first();
-
-  // mark as read
-  item.setFlag( Akonadi::MessageFlags::Seen );
-
-  Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, q );
-  modifyJob->setIgnorePayload( true );
-}
 
 MarkMessageReadHandler::MarkMessageReadHandler( QObject *parent )
   : QObject( parent ), d( new Private( this ) )
