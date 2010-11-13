@@ -274,20 +274,29 @@ MailingList MailingList::detect( const KMime::Message::Ptr &message )
 {
   MailingList mailingList;
 
-  mailingList.setPostUrls( headerToAddress(
-                           message->headerByType( "List-Post" ) ? message->headerByType( "List-Post" )->asUnicodeString() : "" ) );
-  mailingList.setHelpUrls( headerToAddress(
-                           message->headerByType( "List-Help" ) ? message->headerByType( "List-Help" )->asUnicodeString() : "" ) );
-  mailingList.setSubscribeUrls( headerToAddress(
-                                message->headerByType( "List-Subscribe" ) ? message->headerByType( "List-Subscribe" )->asUnicodeString() : "" ) );
-  mailingList.setUnsubscribeUrls( headerToAddress(
-                                  message->headerByType( "List-Unsubscribe" ) ? message->headerByType( "List-Unsubscribe" )->asUnicodeString() : "" ) );
-  mailingList.setArchiveUrls( headerToAddress(
-                              message->headerByType( "List-Arhive" ) ? message->headerByType( "List-Archive" )->asUnicodeString() : "" ) );
-  mailingList.setOwnerUrls( headerToAddress(
-                            message->headerByType( "List-Owner" ) ? message->headerByType( "List-Owner" )->asUnicodeString() : "" ) );
-  mailingList.setArchivedAtUrl( KUrl( message->headerByType( "Archived-At" ) ? message->headerByType( "Archived-At" )->asUnicodeString() : "" ) );
-  mailingList.setId( message->headerByType( "List-Id" ) ? message->headerByType( "List-Id" )->asUnicodeString() : ""  );
+  if ( message->headerByType( "List-Post" ) )
+    mailingList.setPostUrls( headerToAddress( message->headerByType( "List-Post" )->asUnicodeString() ) );
+
+  if ( message->headerByType( "List-Help" ) )
+    mailingList.setHelpUrls( headerToAddress( message->headerByType( "List-Help" )->asUnicodeString() ) );
+
+  if ( message->headerByType( "List-Subscribe" ) )
+    mailingList.setSubscribeUrls( headerToAddress( message->headerByType( "List-Subscribe" )->asUnicodeString() ) );
+
+  if ( message->headerByType( "List-Unsubscribe" ) )
+    mailingList.setUnsubscribeUrls( headerToAddress( message->headerByType( "List-Unsubscribe" )->asUnicodeString() ) );
+
+  if ( message->headerByType( "List-Arhive" ) )
+    mailingList.setArchiveUrls( headerToAddress( message->headerByType( "List-Archive" )->asUnicodeString() ) );
+
+  if ( message->headerByType( "List-Owner" ) )
+    mailingList.setOwnerUrls( headerToAddress( message->headerByType( "List-Owner" )->asUnicodeString() ) );
+
+  if ( message->headerByType( "Archived-At" ) )
+    mailingList.setArchivedAtUrl( KUrl( message->headerByType( "Archived-At" )->asUnicodeString() ) );
+
+  if ( message->headerByType( "List-Id" ) )
+    mailingList.setId( message->headerByType( "List-Id" )->asUnicodeString() );
 
   return mailingList;
 }
