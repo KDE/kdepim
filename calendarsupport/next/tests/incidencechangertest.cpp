@@ -89,7 +89,7 @@ class IncidenceChangerTest : public QObject
       // Find our collection
       Collection::List collections = job->collections();
       foreach( Collection collection, collections ) {
-        if ( collection.name() == QLatin1String( "akonadi_ical_resource_0" ) ) {
+        if ( collection.name().startsWith( QLatin1String( "akonadi_ical_resource" ) ) ) {
           mCollection = collection;
           break;
         }
@@ -264,10 +264,72 @@ class IncidenceChangerTest : public QObject
         mExpectedResult = IncidenceChanger2::ResultCodeAlreadyDeleted;
         QVERIFY( changeId != -1 );
         waitForSignals();
-
       }
     }
 
+    void testMassModifyForConflicts()
+    {
+      int changeId;
+
+      // First create an incidence
+      const QString uid( "uid");
+      const QString summary( "summary");
+      Incidence::Ptr incidence( new Event() );
+      incidence->setUid( uid );
+      incidence->setSummary( summary );
+      mPendingInsertsInETM.append( uid );
+      changeId = mChanger->createIncidence( incidence,
+                                            mCollection );
+      QVERIFY( changeId != -1 );
+      mKnownChangeIds.insert( changeId );
+      waitForSignals();
+
+      kDebug() << "Doing 30 modifications, but waiting for jobs to end before starting a new one.";
+      int LIMIT = 10;
+      for ( int i = 20; i < LIMIT; ++i ) {
+        mWaitingForIncidenceChangerSignals = true;
+        mPendingUpdatesInETM.append( uid );
+        Item item = mCalendar->itemForIncidenceUid( uid );
+        QVERIFY( item.isValid() );
+        item.payload<Incidence::Ptr>()->setSummary( QString::number( i ) );
+        int changeId = mChanger->modifyIncidence( item );
+        QVERIFY( changeId > -1 );
+        mKnownChangeIds.insert( changeId );
+        waitForSignals();
+      }
+
+      Item item = mCalendar->itemForIncidenceUid( uid );
+      QVERIFY( item.isValid() );
+
+      /*
+        TODO: not working yet
+      kDebug() << "Doing 30 modifications, and not for jobs to end before starting a new one.";
+
+      for ( int i = 0; i < LIMIT; ++i ) {
+        item.payload<Incidence::Ptr>()->setSummary( QString::number( i ) );
+        kDebug() << "Sending change1 ";
+        int changeId = mChanger->modifyIncidence( item );
+        QVERIFY( changeId > -1 );
+        mKnownChangeIds.insert( changeId );
+
+        if ( i == LIMIT-1 ) {
+          // Let's catch the last signal, so we don't exit our test with jobs still running
+          mWaitingForIncidenceChangerSignals = true;
+        }
+        QTest::qWait( 500 );
+      }
+      waitForSignals();
+      */
+
+      // Cleanup, delete the incidence
+      item = mCalendar->itemForIncidenceUid( uid );
+      QVERIFY( item.isValid() );
+      mPendingDeletesInETM.append( uid );
+      changeId = mChanger->deleteIncidence( item );
+      QVERIFY( changeId != -1 );
+      mKnownChangeIds.insert( changeId );
+      waitForSignals();
+    }
 
   public Q_SLOTS:
 
