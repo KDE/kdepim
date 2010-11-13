@@ -104,10 +104,10 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 
   qApp->setStartDragDistance(40);
 
+#ifndef Q_OS_WINCE
   m_splashScreen = new QLabel( this );
 //Take out Splashscreen, because it is loaded each time a new window is opened
 //This is too much for wince
-#ifndef Q_OS_WINCE
   QPixmap splashBackground;
   splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
   m_splashScreen->setPixmap( splashBackground );
@@ -210,6 +210,12 @@ void KDeclarativeFullScreenView::triggerTaskSwitcher()
 {
 #ifdef Q_WS_MAEMO_5
   QDBusConnection::sessionBus().call( QDBusMessage::createSignal( QLatin1String( "/" ), QLatin1String( "com.nokia.hildon_desktop" ), QLatin1String( "exit_app_view" ) ), QDBus::NoBlock );
+#elif defined(_WIN32_WCE)
+  HWND hWnd = ::FindWindow( _T( "DesktopExplorerWindow" ), NULL );
+  if (hWnd != NULL){
+    ::ShowWindow( hWnd, SW_SHOW );
+    ::SetForegroundWindow(hWnd);
+  }
 #else
   kDebug() << "not implemented for this platform";
 #endif
@@ -224,8 +230,16 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
     QCoreApplication::instance()->exit( 1 );
   }
 
-  if ( status == QDeclarativeView::Ready )
+  if ( status == QDeclarativeView::Ready ) {
+#ifndef _WIN32_WCE
     m_splashScreen->deleteLater();
+#else
+    show();
+    HWND hWnd = ::FindWindow( _T( "SplashScreen" ), NULL );
+    if (hWnd != NULL)
+      ::ShowWindow( hWnd, SW_HIDE );
+#endif
+  }
 }
 
 KActionCollection* KDeclarativeFullScreenView::actionCollection() const

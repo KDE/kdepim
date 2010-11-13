@@ -64,10 +64,11 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "libincidenceeditors" );
 
   MainView view;
-  view.show();
 
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );
+#else
+  view.show();
 #endif
 
   return app.exec();

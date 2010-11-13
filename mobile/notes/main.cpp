@@ -51,10 +51,11 @@ int main( int argc, char **argv )
   KDeclarativeApplication app;
 
   MainView view;
-  view.show();
 
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );
+#else
+  view.show();
 #endif
 
   return app.exec();
