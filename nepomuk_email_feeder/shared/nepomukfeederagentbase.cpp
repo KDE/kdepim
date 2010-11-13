@@ -35,6 +35,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/mimetypechecker.h>
 #include <Akonadi/ItemSearchJob>
+#include <akonadi/indexpolicyattribute.h>
 
 #include <nepomuk/resource.h>
 #include <nepomuk/tag.h>
@@ -66,7 +67,6 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <KConfigGroup>
-#include <../../kdepimlibs/akonadi/indexpolicyattribute.h>
 
 using namespace Akonadi;
 
