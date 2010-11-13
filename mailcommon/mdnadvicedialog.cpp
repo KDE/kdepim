@@ -201,14 +201,12 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo( cons
   }
 
   // create a minimal version of item with just the attribute we want to change
-  // so we can safely ignore any conflicts this might trigger, due to simulaneous
-  // flag changes for example.
   Akonadi::Item i( item.id() );
+  i.setRevision( item.revision() );
   i.setMimeType( item.mimeType() );
   i.addAttribute( mdnStateAttr );
   Akonadi::ItemModifyJob* modify = new Akonadi::ItemModifyJob( i );
   modify->setIgnorePayload( true );
-  modify->disableRevisionCheck();
 
   return QPair< bool, KMime::MDN::SendingMode >( doSend, s);
 }
