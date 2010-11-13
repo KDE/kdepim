@@ -134,4 +134,11 @@ class CALENDARSUPPORT_EXPORT Groupware : public QObject
 
 }
 
+//@cond PRIVATE
+inline uint qHash( const QSharedPointer<CalendarSupport::NepomukCalendar> &key )
+{
+  return qHash<CalendarSupport::NepomukCalendar>( key.data() );
+}
+//@endcond
+
 #endif
