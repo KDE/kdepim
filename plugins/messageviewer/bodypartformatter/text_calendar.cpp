@@ -202,7 +202,13 @@ class KMInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
 class Formatter : public Interface::BodyPartFormatter
 {
   public:
-    Result format( Interface::BodyPart *bodyPart, HtmlWriter *writer ) const
+    Result format( Interface::BodyPart * part, HtmlWriter * writer ) const
+    {
+      return format ( part, writer, 0 );
+    }
+
+
+    Result format( Interface::BodyPart * bodyPart, HtmlWriter * writer, QObject* asyncResultObserver ) const
     {
       if ( !writer ) {
         // Guard against crashes in createReply()
@@ -251,6 +257,11 @@ class Formatter : public Interface::BodyPartFormatter
       } else {
         MemoryCalendarMemento *memento = new MemoryCalendarMemento();
         bodyPart->setBodyPartMemento( memento );
+
+        if ( asyncResultObserver ) {
+          QObject::connect( memento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                            asyncResultObserver, SLOT(update(MessageViewer::Viewer::UpdateMode)) );
+       }
       }
 
       return Ok;

@@ -34,6 +34,8 @@
 #ifndef __KMAIL_INTERFACE_BODYPARTFORMATTER_H__
 #define __KMAIL_INTERFACE_BODYPARTFORMATTER_H__
 
+#include <QObject>
+
 namespace MessageViewer {
 
   class HtmlWriter;
@@ -62,6 +64,18 @@ namespace Interface {
   @return the result code (see above)
     */
     virtual Result format( BodyPart * part, HtmlWriter * writer ) const = 0;
+
+    /**
+      Variant of format that allows implementors to hook notifications up to
+      a listener interested in the result, for async operations.
+
+      @return the result code (see above)
+    */
+    virtual Result format( BodyPart * part, HtmlWriter * writer, QObject* asyncResultObserver ) const
+    {
+      Q_UNUSED( asyncResultObserver );
+      return format( part, writer );
+    }
   };
 
   /**
