@@ -29,6 +29,7 @@
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/entityhiddenattribute.h>
+#include <akonadi/indexpolicyattribute.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
@@ -65,6 +66,7 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <KConfigGroup>
+#include <../../kdepimlibs/akonadi/indexpolicyattribute.h>
 
 using namespace Akonadi;
 
@@ -205,6 +207,10 @@ void NepomukFeederAgentBase::collectionsReceived(const Akonadi::Collection::List
       continue;
 
     if ( entityIsHidden( collection ) )
+      continue;
+
+    IndexPolicyAttribute *indexPolicy = collection.attribute<IndexPolicyAttribute>();
+    if ( indexPolicy && !indexPolicy->indexingEnabled() )
       continue;
 
     mCollectionQueue.append( collection );

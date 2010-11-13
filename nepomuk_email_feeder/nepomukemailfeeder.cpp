@@ -33,6 +33,7 @@
 #include <gpgme++/context.h>
 
 #include <kglobal.h>
+#include <akonadi/kmime/messagestatus.h>
 
 static const int INDEX_COMPAT_LEVEL = 1; // increment when the index format for emails changes
 
@@ -65,6 +66,12 @@ void NepomukEMailFeeder::updateItem(const Akonadi::Item & item, const QUrl &grap
 {
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
+
+  Akonadi::MessageStatus status;
+  status.setStatusFromFlags( item.flags() );
+  if ( status.isSpam() )
+    return; // don't bother with indexing spam
+
   new MessageAnalyzer( item, graphUri, this );
 }
 
