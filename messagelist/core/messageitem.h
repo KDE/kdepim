@@ -30,6 +30,10 @@
 
 #include <messagelist/messagelist_export.h>
 
+namespace Akonadi {
+class Item;
+}
+
 namespace MessageList
 {
 
@@ -170,9 +174,8 @@ public:
 
   unsigned long uniqueId() const;
 
-  void setUniqueId( unsigned long uniqueId );
-
-  void setNepomukResourceURI( const QUrl &nepomukUri );
+  Akonadi::Item akonadiItem() const;
+  void setAkonadiItem( const Akonadi::Item &item );
 
   MessageItem * topmostMessage();
 

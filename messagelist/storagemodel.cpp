@@ -252,11 +252,7 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
                     sender, receiver,
                     bUseReceiver ? receiver : sender );
 
-  mi->setUniqueId( item.id() );
-
-  // Storing the Nepomuk resource URI could be avoided, since we already store the item ID, but that
-  // would mean that MessageItem needs to depend on Akonadi, which we don't want (yet?)
-  mi->setNepomukResourceURI( item.url() );
+  mi->setAkonadiItem( item );
 
   QString subject = mail->subject()->asUnicodeString();
   if ( subject.isEmpty() ) {

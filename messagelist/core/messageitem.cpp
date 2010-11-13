@@ -24,6 +24,8 @@
 #include "ontologies/email.h"
 #include "messagecore/annotationdialog.h"
 
+#include <akonadi/item.h>
+
 #include <Nepomuk/Resource>
 #include <Nepomuk/Tag>
 #include <Nepomuk/Variant>
@@ -152,10 +154,9 @@ public:
   QString mInReplyToIdMD5;          ///< set only if we're doing threading
   QString mReferencesIdMD5;         ///< set only if we're doing threading
   QString mStrippedSubjectMD5;      ///< set only if we're doing threading
-  QUrl mNepomukResourceUri;         ///< The URI under which this item can be found in Nepomuk
   EncryptionState mEncryptionState;
   SignatureState mSignatureState;
-  unsigned long mUniqueId;          ///< The unique id of this message (serial number of KMMsgBase at the moment of writing)
+  Akonadi::Item mAkonadiItem;
 
   bool mAboutToBeRemoved : 1;       ///< Set to true when this item is going to be deleted and shouldn't be selectable
   bool mSubjectIsPrefixed : 1;      ///< set only if we're doing subject based threading
@@ -194,7 +195,6 @@ QFont MessageItem::Private::mFontToDoMessage;
 
 MessageItem::Private::Private()
   : mThreadingStatus( MessageItem::ParentMissing ),
-    mUniqueId( 0 ),
     mAboutToBeRemoved( false ),
     mAnnotationStateChecked( false ),
     mTagList( 0 )
@@ -238,7 +238,7 @@ void MessageItem::Private::fillTagList() const
   // TODO: The tag pointers here could be shared between all items, there really is no point in
   //       creating them for each item that has tags
 
-  const Nepomuk::Resource resource( mNepomukResourceUri );
+  const Nepomuk::Resource resource( mAkonadiItem.url() );
   const QList< Nepomuk::Tag > nepomukTagList = resource.tags();
   if ( !nepomukTagList.isEmpty() ) {
     foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
@@ -308,7 +308,7 @@ bool MessageItem::hasAnnotation() const
   if ( d->mAnnotationStateChecked )
     return d->mHasAnnotation;
 
-  Nepomuk::Resource resource( d->mNepomukResourceUri );
+  Nepomuk::Resource resource( d->mAkonadiItem.url() );
   if ( resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) ) ) {
     d->mHasAnnotation = !resource.description().isEmpty();
   } else {
@@ -322,7 +322,7 @@ bool MessageItem::hasAnnotation() const
 QString MessageItem::annotation() const
 {
   if ( hasAnnotation() ) {
-    Nepomuk::Resource resource( d->mNepomukResourceUri );
+    Nepomuk::Resource resource( d->mAkonadiItem.url() );
     return resource.description();
   }
   else return QString();
@@ -330,7 +330,7 @@ QString MessageItem::annotation() const
 
 void MessageItem::editAnnotation()
 {
-  MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( d->mNepomukResourceUri );
+  MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem.url() );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
   // invalidate the cached mHasAnnotation value
@@ -339,7 +339,7 @@ void MessageItem::editAnnotation()
 
 QString MessageItem::contentSummary() const
 {
-  Nepomuk::Resource mail( d->mNepomukResourceUri );
+  Nepomuk::Resource mail( d->mAkonadiItem.url() );
   const QString content =
       mail.property( NepomukFast::Message::plainTextMessageContentUri() ).toString();
 
@@ -546,17 +546,17 @@ void MessageItem::setThreadingStatus( ThreadingStatus threadingStatus )
 
 unsigned long MessageItem::uniqueId() const
 {
-  return d->mUniqueId;
+  return d->mAkonadiItem.id();
 }
 
-void MessageItem::setUniqueId( unsigned long uniqueId )
+Akonadi::Item MessageList::Core::MessageItem::akonadiItem() const
 {
-  d->mUniqueId = uniqueId;
+  return d->mAkonadiItem;
 }
 
-void MessageItem::setNepomukResourceURI( const QUrl &nepomukUri )
+void MessageList::Core::MessageItem::setAkonadiItem(const Akonadi::Item& item)
 {
-  d->mNepomukResourceUri = nepomukUri;
+  d->mAkonadiItem = item;
 }
 
 MessageItem * MessageItem::topmostMessage()

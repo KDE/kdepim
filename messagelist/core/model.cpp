@@ -474,7 +474,7 @@ QVariant Model::data( const QModelIndex & index, int role ) const
     case Qt::UserRole + 2: //EntityTreeModel::ItemRole
       if( item->type() == MessageList::Core::Item::Message ) {
         MessageItem* mItem = static_cast<MessageItem*>( item );
-        return QVariant::fromValue( Akonadi::Item( mItem->uniqueId() ) );
+        return QVariant::fromValue( mItem->akonadiItem() );
       } else
         return QVariant();
       break;
