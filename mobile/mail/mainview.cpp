@@ -672,7 +672,7 @@ void MainView::replyFetchResult( KJob *job )
   Item statusItem( item );
   statusItem.setFlag( Akonadi::MessageFlags::Replied );
   Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( statusItem );
-  modifyJob->ignorePayload();
+  modifyJob->setIgnorePayload( true );
 }
 
 void MainView::forward( quint64 id, ForwardMode mode )
@@ -720,7 +720,7 @@ void MainView::forwardFetchResult( KJob* job )
   Item statusItem( item );
   statusItem.setFlag( Akonadi::MessageFlags::Forwarded );
   Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( statusItem );
-  modifyJob->ignorePayload();
+  modifyJob->setIgnorePayload( true );
 }
 
 void MainView::markImportant( bool checked )
@@ -742,7 +742,7 @@ void MainView::markImportant( bool checked )
   item.setFlags( status.statusFlags() );
 
   ItemModifyJob *job = new ItemModifyJob( item );
-  job->ignorePayload();
+  job->setIgnorePayload( true );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( modifyDone( KJob* ) ) );
 }
 
@@ -765,7 +765,7 @@ void MainView::markMailTask( bool checked )
   item.setFlags( status.statusFlags() );
 
   ItemModifyJob *job = new ItemModifyJob( item );
-  job->ignorePayload();
+  job->setIgnorePayload( true );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( modifyDone( KJob* ) ) );
 }
 
