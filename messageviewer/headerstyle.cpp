@@ -521,6 +521,9 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
         if ( photoURL.startsWith('/') )
           photoURL.prepend( "file:" );
       }
+    } else {
+      // if the memento is not finished yet, use other photo sources instead
+      useOtherPhotoSources = true;
     }
   } else {
     useOtherPhotoSources = true;
