@@ -1,5 +1,5 @@
 /*
-  This file is part of the kcalutils library.
+  This file is part of the calendarsupport library.
 
   Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
@@ -18,14 +18,14 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef KCALUTILS_SCHEDULER_H
-#define KCALUTILS_SCHEDULER_H
+#ifndef CALENDARSUPPORT_SCHEDULER_H
+#define CALENDARSUPPORT_SCHEDULER_H
 
-#include "kcalutils_export.h"
+#include "calendarsupport_export.h"
 
-#include <kcalcore/schedulemessage.h>
-#include <kcalcore/incidencebase.h>
-#include <kcalcore/calendar.h>
+#include <KCalCore/ScheduleMessage>
+#include <KCalCore/IncidenceBase>
+#include <KCalCore/Calendar>
 
 #include <QtCore/QString>
 #include <QtCore/QList>
@@ -35,19 +35,20 @@ namespace KCalCore {
   class FreeBusyCache;
 };
 
-namespace KCalUtils {
+namespace CalendarSupport {
+  class IncidenceChanger2;
 /**
   This class provides an encapsulation of iTIP transactions (RFC 2446).
   It is an abstract base class for inheritance by implementations of the
   iTIP scheme like iMIP or iRIP.
 */
-class KCALUTILS_EXPORT Scheduler
+class CALENDARSUPPORT_EXPORT Scheduler
 {
   public:
     /**
       Creates a scheduler for calendar specified as argument.
     */
-    explicit Scheduler( const  KCalCore::Calendar::Ptr &calendar );
+    Scheduler( const  KCalCore::Calendar::Ptr &calendar, CalendarSupport::IncidenceChanger2 *changer );
     virtual ~Scheduler();
 
     /**
@@ -146,9 +147,6 @@ class KCALUTILS_EXPORT Scheduler
                         KCalCore::ScheduleMessage::Status status );
 
     bool acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
-
-    KCalCore::Calendar::Ptr mCalendar;
-    KCalCore::ICalFormat *mFormat;
 
   private:
     Q_DISABLE_COPY( Scheduler )

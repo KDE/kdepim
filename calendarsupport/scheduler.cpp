@@ -20,39 +20,48 @@
   Boston, MA 02110-1301, USA.
 */
 #include "scheduler.h"
-#include "stringify.h"
+#include "next/incidencechanger2.h"
 
-#include <kcalcore/icalformat.h>
-#include <kcalcore/freebusycache.h>
-using namespace KCalCore;
+#include <KCalUtils/Stringify>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/FreeBusyCache>
 
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
 
+using namespace KCalCore;
 using namespace KCalUtils;
+using namespace CalendarSupport;
 
 //@cond PRIVATE
-struct KCalUtils::Scheduler::Private
+struct CalendarSupport::Scheduler::Private
 {
   public:
-    Private() : mFreeBusyCache( 0 )
+    Private( const KCalCore::Calendar::Ptr &calendar, IncidenceChanger2 *changer )
+      : mFreeBusyCache( 0 ), mChanger( changer ), mCalendar( calendar ), mFormat( new ICalFormat() )
     {
     }
+
+    ~Private()
+    {
+      delete mFormat;
+    }
+
     FreeBusyCache *mFreeBusyCache;
+    IncidenceChanger2 *mChanger;
+    KCalCore::Calendar::Ptr mCalendar;
+    KCalCore::ICalFormat *mFormat;
 };
 //@endcond
 
-Scheduler::Scheduler( const Calendar::Ptr &calendar ) : d( new KCalUtils::Scheduler::Private )
+Scheduler::Scheduler( const KCalCore::Calendar::Ptr &calendar, IncidenceChanger2 *changer )
+  : d( new CalendarSupport::Scheduler::Private( calendar, changer ) )
 {
-  mCalendar = calendar;
-  mFormat = new ICalFormat();
-  mFormat->setTimeSpec( calendar->timeSpec() );
 }
 
 Scheduler::~Scheduler()
 {
-  delete mFormat;
   delete d;
 }
 
@@ -112,7 +121,7 @@ bool Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase, ScheduleMes
   kDebug() << "status=" << Stringify::scheduleMessageStatus( status ); //krazy:exclude=kdebug
 
   Incidence::Ptr newInc = newIncBase.staticCast<Incidence>() ;
-  Incidence::Ptr calInc = mCalendar->incidence( newIncBase->uid() );
+  Incidence::Ptr calInc = d->mCalendar->incidence( newIncBase->uid() );
   switch ( status ) {
     case ScheduleMessage::Unknown:
     case ScheduleMessage::PublishNew:
@@ -159,7 +168,7 @@ bool Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
     return true;
   }
 
-  const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
+  const Incidence::List existingIncidences = d->mCalendar->incidencesFromSchedulingID( inc->uid() );
   kDebug() << "status=" << Stringify::scheduleMessageStatus( status ) //krazy:exclude=kdebug
            << ": found " << existingIncidences.count()
            << " incidences with schedulingID " << inc->schedulingID()
@@ -168,15 +177,15 @@ bool Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   if ( existingIncidences.isEmpty() ) {
     // Perfectly normal if the incidence doesn't exist. This is probably
     // a new invitation.
-    kDebug() << "incidence not found; calendar = " << mCalendar.data()
-             << "; incidence count = " << mCalendar->incidences().count();
+    kDebug() << "incidence not found; calendar = " << d->mCalendar.data()
+             << "; incidence count = " << d->mCalendar->incidences().count();
   }
   Incidence::List::ConstIterator incit = existingIncidences.begin();
   for ( ; incit != existingIncidences.end() ; ++incit ) {
     Incidence::Ptr existingIncidence = *incit;
     kDebug() << "Considering this found event ("
              << ( existingIncidence->isReadOnly() ? "readonly" : "readwrite" )
-             << ") :" << mFormat->toString( existingIncidence );
+             << ") :" << d->mFormat->toString( existingIncidence );
     // If it's readonly, we can't possible update it.
     if ( existingIncidence->isReadOnly() ) {
       continue;
@@ -255,7 +264,7 @@ bool Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   }
   kDebug() << "Storing new incidence with scheduling uid=" << inc->schedulingID()
            << " and uid=" << inc->uid();
-  mCalendar->addIncidence( inc );
+  d->mCalendar->addIncidence( inc );
 
   deleteTransaction( incidence );
   return true;
@@ -282,7 +291,7 @@ bool Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
     return true;
   }
 
-  const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
+  const Incidence::List existingIncidences = d->mCalendar->incidencesFromSchedulingID( inc->uid() );
   kDebug() << "Scheduler::acceptCancel="
            << Stringify::scheduleMessageStatus( status ) //krazy2:exclude=kdebug
            << ": found " << existingIncidences.count()
@@ -294,7 +303,7 @@ bool Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
     Incidence::Ptr i = *incit;
     kDebug() << "Considering this found event ("
              << ( i->isReadOnly() ? "readonly" : "readwrite" )
-             << ") :" << mFormat->toString( i );
+             << ") :" << d->mFormat->toString( i );
 
     // If it's readonly, we can't possible remove it.
     if ( i->isReadOnly() ) {
@@ -330,11 +339,11 @@ bool Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
     if ( isMine ) {
       kDebug() << "removing existing incidence " << i->uid();
       if ( i->type() == IncidenceBase::TypeEvent ) {
-        Event::Ptr event = mCalendar->event( i->uid() );
-        ret = ( event && mCalendar->deleteEvent( event ) );
+        Event::Ptr event = d->mCalendar->event( i->uid() );
+        ret = ( event && d->mCalendar->deleteEvent( event ) );
       } else if ( i->type() == IncidenceBase::TypeTodo ) {
-        Todo::Ptr todo = mCalendar->todo( i->uid() );
-        ret = ( todo && mCalendar->deleteTodo( todo ) );
+        Todo::Ptr todo = d->mCalendar->todo( i->uid() );
+        ret = ( todo && d->mCalendar->deleteTodo( todo ) );
       }
       deleteTransaction( incidence );
       return ret;
@@ -370,12 +379,12 @@ bool Scheduler::acceptReply( const IncidenceBase::Ptr &incidence, ScheduleMessag
     return acceptFreeBusy( incidence, method );
   }
   bool ret = false;
-  Event::Ptr ev = mCalendar->event( incidence->uid() );
-  Todo::Ptr to = mCalendar->todo( incidence->uid() );
+  Event::Ptr ev = d->mCalendar->event( incidence->uid() );
+  Todo::Ptr to = d->mCalendar->todo( incidence->uid() );
 
   // try harder to find the correct incidence
   if ( !ev && !to ) {
-    const Incidence::List list = mCalendar->incidences();
+    const Incidence::List list = d->mCalendar->incidences();
     for ( Incidence::List::ConstIterator it=list.constBegin(), end=list.constEnd();
           it != end; ++it ) {
       if ( (*it)->schedulingID() == incidence->uid() ) {
