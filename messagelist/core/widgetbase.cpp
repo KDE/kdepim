@@ -245,7 +245,7 @@ void Widget::populateStatusFilterCombo()
 
   d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "emblem-important" )),
                                   i18nc( "@action:inmenu Status of a message", "Important"),
-                                  Akonadi::MessageStatus::statusForwarded().toQInt32() );
+                                  Akonadi::MessageStatus::statusImportant().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-task" )),
                                   i18nc( "@action:inmenu Status of a message", "Action Item" ),
