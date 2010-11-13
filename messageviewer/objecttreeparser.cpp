@@ -134,6 +134,24 @@ public:
   }
 };
 
+ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser *topLevelParser,
+                                    bool showOnlyOneMimePart, bool keepEncryptions,
+                                    bool includeSignatures,
+                                    const AttachmentStrategy * strategy )
+  : mSource( topLevelParser->mSource ),
+    mTopLevelContent( topLevelParser->mTopLevelContent ),
+    mCryptoProtocol( topLevelParser->mCryptoProtocol ),
+    mShowOnlyOneMimePart( showOnlyOneMimePart ),
+    mKeepEncryptions( keepEncryptions ),
+    mIncludeSignatures( includeSignatures ),
+    mHasPendingAsyncJobs( false ),
+    mAllowAsync( topLevelParser->mAllowAsync ),
+    mShowRawToltecMail( false ),
+    mAttachmentStrategy( strategy ),
+    mNodeHelper( topLevelParser->mNodeHelper )
+{
+  init();
+}
 
 ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
                                     MessageViewer::NodeHelper* nodeHelper,
@@ -150,17 +168,22 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
     mHasPendingAsyncJobs( false ),
     mAllowAsync( false ),
     mShowRawToltecMail( false ),
-    mAttachmentStrategy( strategy )
+    mAttachmentStrategy( strategy ),
+    mNodeHelper( nodeHelper )
 {
-  assert( source );
-  if ( !attachmentStrategy() )
-    mAttachmentStrategy = source->attachmentStrategy();
+  init();
+}
 
-  if ( !nodeHelper ) {
+void ObjectTreeParser::init()
+{
+  assert( mSource );
+  if ( !attachmentStrategy() )
+    mAttachmentStrategy = mSource->attachmentStrategy();
+
+  if ( !mNodeHelper ) {
     mNodeHelper = new NodeHelper();
     mDeleteNodeHelper = true;
   } else {
-    mNodeHelper = nodeHelper;
     mDeleteNodeHelper = false;
   }
 }
@@ -208,8 +231,7 @@ void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, cons
   }
   mNodeHelper->attachExtraContent( parentNode, newNode );
 
-  ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-  otp.setAllowAsync( allowAsync() );
+  ObjectTreeParser otp( this );
   otp.parseObjectTreeInternal( newNode );
   mRawReplyString += otp.rawReplyString();
   mTextualContent += otp.textualContent();
@@ -284,21 +306,8 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
       writeAttachmentMarkHeader( node );
       mNodeHelper->setNodeDisplayedEmbedded( node, true );
 
-      const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
-
-      if ( allowAsync() && part.memento() ) {
-        // dynamic cast needed. The interface BodyPartMemento isn't a QObject. All other code
-        // that works with mementos uses the derived class, which is a QObject.
-        // But in this case we're working with external plugins and we don't know what the respective
-        // memento looks like
-
-        QObject *obj = dynamic_cast<QObject*>( part.memento() );
-        if ( obj ) {
-          QObject::connect( obj, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
-                            mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
-       }
-      }
-
+      QObject * asyncResultObserver = allowAsync() ? mSource->sourceObject() : 0;
+      const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter(), asyncResultObserver );
       switch ( result ) {
       case Interface::BodyPartFormatter::AsIcon:
         processResult.setNeverDisplayInline( true );
@@ -756,7 +765,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
                                                fromAddress ) );
     }
 
-    ObjectTreeParser otp( mSource, mNodeHelper, cryptProto, true );
+    ObjectTreeParser otp( this, true );
     otp.setAllowAsync( allowAsync() );
     otp.parseObjectTreeInternal( data );
     mRawReplyString += otp.rawReplyString();
@@ -1488,8 +1497,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
   if( mNodeHelper->isPermanentwWithExtraContent( data ) && mNodeHelper->extraContents( data ).size() == 1 )
   {
 //     if( NodeHelper::nodeProcessed( data ) )
-    ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-    otp.setAllowAsync( allowAsync() );
+    ObjectTreeParser otp( this );
     KMime::Content* newNode = mNodeHelper->extraContents( data )[ 0 ];
     otp.parseObjectTreeInternal( newNode );
     mRawReplyString += otp.rawReplyString();
@@ -1611,8 +1619,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
     htmlWriter()->queue( mSource->createMessageHeader( message.get() ) );
 
     // Process the message, i.e. paint it by processing it with an OTP
-    ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-    otp.setAllowAsync( allowAsync() );
+    ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( message.get() );
 
     // Don't add the resulting textual content to our textual content here.
@@ -1635,8 +1642,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
 {
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( child ) {
-    ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-    otp.setAllowAsync( allowAsync() );
+    ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
@@ -1722,8 +1728,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
 {
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( child ) {
-    ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-    otp.setAllowAsync( allowAsync() );
+    ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();

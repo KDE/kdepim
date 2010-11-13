@@ -288,11 +288,17 @@ class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   /** Internal. Copies the context of @p other, but not it's rawReplyString() */
   ObjectTreeParser( const ObjectTreeParser & other );
 public:
-  explicit ObjectTreeParser( ObjectTreeSourceIf *source, NodeHelper *nodeHelper = 0,
-                    const Kleo::CryptoBackend::Protocol * protocol=0,
-                    bool showOneMimePart=false, bool keepEncryptions=false,
-                    bool includeSignatures=true,
-                    const AttachmentStrategy * attachmentStrategy=0 );
+  explicit ObjectTreeParser( ObjectTreeSourceIf * source,
+                             NodeHelper *nodeHelper = 0,
+                             const Kleo::CryptoBackend::Protocol * protocol=0,
+                             bool showOneMimePart=false, bool keepEncryptions=false,
+                             bool includeSignatures=true,
+                             const AttachmentStrategy * attachmentStrategy=0 );
+
+  explicit ObjectTreeParser( const ObjectTreeParser *topLevelParser,
+                             bool showOneMimePart=false, bool keepEncryptions=false,
+                             bool includeSignatures=true,
+                             const AttachmentStrategy * attachmentStrategy=0 );
   virtual ~ObjectTreeParser();
 
   void setAllowAsync( bool allow ) { assert( !mHasPendingAsyncJobs ); mAllowAsync = allow; }
@@ -494,6 +500,10 @@ public: // KMReaderWin still needs this...
 
 
 private:
+
+  /** ctor helper */
+  void init();
+
   /** Change the string to `quoted' html (meaning, that the quoted
       part of the message get italized */
   QString quotedHTML(const QString& pos, bool decorate);
