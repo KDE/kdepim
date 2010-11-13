@@ -170,10 +170,13 @@ QMap<QString, QString> parseMailtoUrl( const KUrl &url )
 {
   QMap<QString, QString> values = url.queryItems( KUrl::CaseInsensitiveKeys );
 
-  QString to = KPIMUtils::decodeMailtoUrl( url );
-  to = to.isEmpty() ? values.value( "to" ) : to + QString( ", " ) + values.value( "to" );
+  QStringList to;
+  to << KPIMUtils::decodeMailtoUrl( url );
 
-  values.insert( "to", to );
+  if ( !values.value( "to" ).isEmpty() )
+    to << values.value( "to" );
+
+  values.insert( "to", to.join( ", " ) );
 
   return values;
 }
