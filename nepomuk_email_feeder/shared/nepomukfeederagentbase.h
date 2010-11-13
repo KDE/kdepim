@@ -203,6 +203,7 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
     QQueue<Akonadi::Item> mItemPipeline;
     int mTotalAmount, mProcessedAmount, mPendingJobs;
     QTimer mNepomukStartupTimeout;
+    QTimer mProcessPipelineTimer;
     Soprano::NRLModel *mNrlModel;
     Strigi::IndexManager *mStrigiIndexManager;
     int mIndexCompatLevel;

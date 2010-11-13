@@ -107,6 +107,10 @@ NepomukFeederAgentBase::NepomukFeederAgentBase(const QString& id) :
 
   checkOnline();
   QTimer::singleShot( 0, this, SLOT(selfTest()) );
+
+  mProcessPipelineTimer.setInterval( 0 );
+  mProcessPipelineTimer.setSingleShot( true );
+  connect( &mProcessPipelineTimer, SIGNAL(timeout()), SLOT(processPipeline()) );
 }
 
 NepomukFeederAgentBase::~NepomukFeederAgentBase()
@@ -123,7 +127,7 @@ void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi:
 
   if ( item.hasPayload() ) {
     mItemPipeline.enqueue( item );
-    QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
+    mProcessPipelineTimer.start();
   } else {
     const ItemFetchScope scope = fetchScopeForCollection( collection );
     if ( scope.fullPayload() || !scope.payloadParts().isEmpty() ) {
@@ -143,7 +147,7 @@ void NepomukFeederAgentBase::itemChanged(const Akonadi::Item& item, const QSet< 
   if ( item.hasPayload() ) {
     removeEntityFromNepomuk( item );
     mItemPipeline.enqueue( item );
-    QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
+    mProcessPipelineTimer.start();
   } else {
     const Collection collection = item.parentCollection();
     const ItemFetchScope scope = fetchScopeForCollection( collection );
@@ -287,7 +291,7 @@ void NepomukFeederAgentBase::itemsReceived(const Akonadi::Item::List& items)
     item.setParentCollection( mCurrentCollection );
     mItemPipeline.enqueue( item );
   }
-  QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
+  mProcessPipelineTimer.start();
 }
 
 void NepomukFeederAgentBase::notificationItemsReceived(const Akonadi::Item::List& items)
@@ -300,7 +304,7 @@ void NepomukFeederAgentBase::notificationItemsReceived(const Akonadi::Item::List
     removeEntityFromNepomuk( item );
     mItemPipeline.enqueue( item );
   }
-  QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
+  mProcessPipelineTimer.start();
 }
 
 void NepomukFeederAgentBase::tagsFromCategories(NepomukFast::Resource& resource, const QStringList& categories)
@@ -505,7 +509,7 @@ void NepomukFeederAgentBase::checkOnline()
       emit status( AgentBase::Running, i18n( "Indexing collection '%1'...", mCurrentCollection.name() ) );
     else
       emit status( AgentBase::Running, i18n( "Indexing recent changes..." ) );
-    QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
+    mProcessPipelineTimer.start();
   }
 }
 
@@ -541,7 +545,7 @@ void NepomukFeederAgentBase::processPipeline()
       emit percent( (mProcessedAmount * 100) / mTotalAmount );
     if ( !mItemPipeline.isEmpty() ) {
       // go to eventloop before processing the next one, otherwise we miss the idle status change
-      QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
+      mProcessPipelineTimer.start();
     }
   }
   processing = false;
