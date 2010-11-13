@@ -122,10 +122,8 @@ void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi:
     return;
 
   if ( item.hasPayload() ) {
-    const QUrl graph = createGraphForEntity( item );
-    mNrlModel->addStatement( item.url(), Akonadi::ItemSearchJob::akonadiItemIdUri(),
-                             QUrl( QString::number( item.id() ) ), graph );
-    updateItem( item, graph );
+    mItemPipeline.enqueue( item );
+    QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
   } else {
     const ItemFetchScope scope = fetchScopeForCollection( collection );
     if ( scope.fullPayload() || !scope.payloadParts().isEmpty() ) {
@@ -144,11 +142,8 @@ void NepomukFeederAgentBase::itemChanged(const Akonadi::Item& item, const QSet< 
   // TODO: check part identfiers if anything interesting changed at all
   if ( item.hasPayload() ) {
     removeEntityFromNepomuk( item );
-
-    const QUrl graph = createGraphForEntity( item );
-    mNrlModel->addStatement( item.url(), Akonadi::ItemSearchJob::akonadiItemIdUri(),
-                             QUrl( QString::number( item.id() ) ), graph );
-    updateItem( item, graph );
+    mItemPipeline.enqueue( item );
+    QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
   } else {
     const Collection collection = item.parentCollection();
     const ItemFetchScope scope = fetchScopeForCollection( collection );
@@ -220,6 +215,7 @@ void NepomukFeederAgentBase::processNextCollection()
 {
   if ( mCurrentCollection.isValid() )
     return;
+  mTotalAmount = 0;
   if ( mCollectionQueue.isEmpty() ) {
     emit fullyIndexed();
     return;
@@ -234,7 +230,6 @@ void NepomukFeederAgentBase::processNextCollection()
   connect( itemFetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemHeadersReceived(Akonadi::Item::List)) );
   connect( itemFetch, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
   ++mPendingJobs;
-  mTotalAmount = 0;
 }
 
 void NepomukFeederAgentBase::itemHeadersReceived(const Akonadi::Item::List& items)
@@ -276,7 +271,7 @@ void NepomukFeederAgentBase::itemFetchResult(KJob* job)
     kDebug() << job->errorString();
 
   --mPendingJobs;
-  if ( mPendingJobs == 0 ) {
+  if ( mPendingJobs == 0 && mItemPipeline.isEmpty() ) {
     mCurrentCollection = Collection();
     emit status( Idle, i18n( "Indexing completed." ) );
     processNextCollection();
@@ -290,13 +285,9 @@ void NepomukFeederAgentBase::itemsReceived(const Akonadi::Item::List& items)
   foreach ( Item item, items ) {
     // we only get here if the item is not anywhere in Nepomuk yet, so no need to delete it
     item.setParentCollection( mCurrentCollection );
-    const QUrl graph = createGraphForEntity( item );
-    mNrlModel->addStatement( item.url(), Akonadi::ItemSearchJob::akonadiItemIdUri(),
-                             QUrl( QString::number( item.id() ) ), graph );
-    updateItem( item, graph );
+    mItemPipeline.enqueue( item );
   }
-  mProcessedAmount += items.count();
-  emit percent( (mProcessedAmount * 100) / (mTotalAmount * 100) );
+  QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
 }
 
 void NepomukFeederAgentBase::notificationItemsReceived(const Akonadi::Item::List& items)
@@ -307,12 +298,9 @@ void NepomukFeederAgentBase::notificationItemsReceived(const Akonadi::Item::List
       continue;
     }
     removeEntityFromNepomuk( item );
-
-    const QUrl graph = createGraphForEntity( item );
-    mNrlModel->addStatement( item.url(), Akonadi::ItemSearchJob::akonadiItemIdUri(),
-                             QUrl( QString::number( item.id() ) ), graph );
-    updateItem( item, graph );
+    mItemPipeline.enqueue( item );
   }
+  QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
 }
 
 void NepomukFeederAgentBase::tagsFromCategories(NepomukFast::Resource& resource, const QStringList& categories)
@@ -372,8 +360,11 @@ void NepomukFeederAgentBase::selfTest()
   // try to obtain a Strigi index manager with a Soprano backend
   if ( !mStrigiIndexManager && mNeedsStrigi ) {
     mStrigiIndexManager = Strigi::IndexPluginLoader::createIndexManager( "nepomukbackend", 0 );
-    if ( !mStrigiIndexManager )
+    if ( !mStrigiIndexManager ) {
       errorMessages.append( i18n( "Nepomuk backend for Strigi is not available." ) );
+      foreach ( const std::string &plugin, Strigi::IndexPluginLoader::indexNames() )
+        kWarning() << "Available plugins are: " << plugin.c_str();
+    }
   }
 
   if ( errorMessages.isEmpty() ) {
@@ -509,6 +500,13 @@ void NepomukFeederAgentBase::doSetOnline(bool online)
 void NepomukFeederAgentBase::checkOnline()
 {
   setOnline( mSelfTestPassed && mSystemIsIdle );
+  if ( isOnline() && !mItemPipeline.isEmpty() ) {
+    if ( mCurrentCollection.isValid() )
+      emit status( AgentBase::Running, i18n( "Indexing collection '%1'...", mCurrentCollection.name() ) );
+    else
+      emit status( AgentBase::Running, i18n( "Indexing recent changes..." ) );
+    QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
+  }
 }
 
 void NepomukFeederAgentBase::systemIdle()
@@ -524,6 +522,42 @@ void NepomukFeederAgentBase::systemResumed()
   emit status( Idle, i18n( "System busy, indexing suspended." ) );
   mSystemIsIdle = false;
   checkOnline();
+}
+
+void NepomukFeederAgentBase::processPipeline()
+{
+  static bool processing = false; // guard against sub-eventloop reentrancy
+  if ( processing )
+    return;
+  processing = true;
+  if ( !mItemPipeline.isEmpty() && isOnline() ) {
+    const Akonadi::Item &item = mItemPipeline.dequeue();
+    const QUrl graph = createGraphForEntity( item );
+    mNrlModel->addStatement( item.url(), Akonadi::ItemSearchJob::akonadiItemIdUri(),
+                             QUrl( QString::number( item.id() ) ), graph );
+    updateItem( item, graph );
+    ++mProcessedAmount;
+    if ( (mProcessedAmount % 10) == 0 && mTotalAmount > 0 && mProcessedAmount <= mTotalAmount )
+      emit percent( (mProcessedAmount * 100) / mTotalAmount );
+    if ( !mItemPipeline.isEmpty() ) {
+      // go to eventloop before processing the next one, otherwise we miss the idle status change
+      QMetaObject::invokeMethod( this, "processPipeline", Qt::QueuedConnection );
+    }
+  }
+  processing = false;
+
+  if ( mItemPipeline.isEmpty() )
+    emit status( AgentBase::Idle, QString() );
+
+  if ( !isOnline() )
+    return;
+
+  if ( mPendingJobs == 0 && mCurrentCollection.isValid() && mItemPipeline.isEmpty() ) {
+    mCurrentCollection = Collection();
+    emit status( Idle, i18n( "Indexing completed." ) );
+    processNextCollection();
+    return;
+  }
 }
 
 #include "nepomukfeederagentbase.moc"

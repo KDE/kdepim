@@ -45,6 +45,7 @@
 #include <QStringList>
 #include <QtCore/QTimer>
 #include <QtCore/QDateTime>
+#include <QtCore/QQueue>
 
 namespace NepomukFast
 {
@@ -192,11 +193,14 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
     void systemIdle();
     void systemResumed();
 
+    void processPipeline();
+
   private:
     QStringList mSupportedMimeTypes;
     Akonadi::MimeTypeChecker mMimeTypeChecker;
     Akonadi::Collection::List mCollectionQueue;
     Akonadi::Collection mCurrentCollection;
+    QQueue<Akonadi::Item> mItemPipeline;
     int mTotalAmount, mProcessedAmount, mPendingJobs;
     QTimer mNepomukStartupTimeout;
     Soprano::NRLModel *mNrlModel;
