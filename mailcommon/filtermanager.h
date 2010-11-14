@@ -179,6 +179,8 @@ private slots:
 
   void tryToMonitorCollection();
 
+  void tryToFilterInboxOnStartup();
+
 private:
   int processPop( const Akonadi::Item &item ) const;
   /** Find out if a message matches the filter criteria */

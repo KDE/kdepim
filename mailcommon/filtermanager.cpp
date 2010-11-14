@@ -39,6 +39,7 @@ using MailCommon::MessageProperty;
 #include <QTimer>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
+#include <Akonadi/AgentManager>
 
 
 using namespace MailCommon;
@@ -63,12 +64,24 @@ FilterManager::FilterManager( bool popFilter )
   connect( mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
 
-  //Fecth the collection on startup and apply filters on unread messages in the inbox.
+  tryToFilterInboxOnStartup();
+}
+
+void FilterManager::tryToFilterInboxOnStartup()
+{
+  if ( !Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).isValid() )
+   {
+    QTimer::singleShot( 0, this, SLOT( tryToFilterInboxOnStartup() ) );
+    return;
+  }
+  
+  //Fetch the collection on startup and apply filters on unread messages in the inbox.
   //This is done to filter inbox even if messages were downloaded while kmail/kmail-mobile
   //was not running. Once filtering goes into its own agent, this code can be removed,
   //as at that time the inbox is always monitored.
   Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive, this );
   job->fetchScope().setContentMimeTypes( QStringList() << "message/rfc822" );
+  job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::Parent );
   connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
            this, SLOT( slotInitialCollectionsFetched( const Akonadi::Collection::List& )) );
 }
@@ -86,10 +99,11 @@ void FilterManager::tryToMonitorCollection()
 void FilterManager::slotInitialCollectionsFetched( const Akonadi::Collection::List& collections )
 {
   Q_FOREACH( Akonadi::Collection collection, collections ) {
-    if (collection.name().toLower() == "inbox") {
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection, this );
-      job->fetchScope().fetchAllAttributes();
-      connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotInitialItemsFetched(Akonadi::Item::List)) );
+    Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance( collection.resource() );
+    if ( Akonadi::SpecialMailCollections::self()->collection( Akonadi::SpecialMailCollections::Inbox, agent )  == collection ) {
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection, this );
+        job->fetchScope().fetchAllAttributes();
+        connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotInitialItemsFetched(Akonadi::Item::List)) );
     }
   }
 }
@@ -416,10 +430,8 @@ void FilterManager::endUpdate(void)
 
 void FilterManager::itemAdded(const Akonadi::Item& item, const Akonadi::Collection &collection)
 {
-  // We only filter the inboxes, not mail that arrives into other folders
-  // TODO should probably also check SpecialMailCollections once there
-  // is a method in there which directly checks for the attribute
-  if (collection.name().toLower() == "inbox") {
+  Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance( collection.resource() );
+  if ( Akonadi::SpecialMailCollections::self()->collection( Akonadi::SpecialMailCollections::Inbox, agent )  == collection ) {
     if ( mRequiresBody ) {
       Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
       job->fetchScope().fetchFullPayload( true );
@@ -469,8 +481,9 @@ void FilterManager::applyFilters(const QList< Akonadi::Item >& selectedMessages)
 
 void FilterManager::itemsFetchJobForFilterDone( KJob *job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     kDebug() << job->errorString();
+  }
   KPIM::BroadcastStatus::instance()->setStatusMsg( QString() );
 
   KPIM::ProgressItem *progressItem = qobject_cast<KPIM::ProgressItem*>( job->property( "progressItem" ).value<QObject*>() );
