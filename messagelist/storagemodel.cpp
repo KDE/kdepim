@@ -252,8 +252,6 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
                     sender, receiver,
                     bUseReceiver ? receiver : sender );
 
-  mi->setAkonadiItem( item );
-
   QString subject = mail->subject()->asUnicodeString();
   if ( subject.isEmpty() ) {
     subject = QLatin1Char( '(' ) + noSubject + QLatin1Char( ')' );
@@ -322,6 +320,7 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
     stat.setHasInvitation( true );
   }
 
+  mi->setAkonadiItem( item );
   mi->setStatus( stat );
 
   mi->setEncryptionState( Core::MessageItem::EncryptionStateUnknown );
