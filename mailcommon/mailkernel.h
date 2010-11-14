@@ -112,11 +112,11 @@ public:
   /** Returns true if this folder is the inbox on the local disk */
   bool isMainFolderCollection( const Akonadi::Collection &col );
 
-  bool folderIsDraftOrOutbox(const Akonadi::Collection &);
+  bool folderIsDraftOrOutbox(const Akonadi::Collection &collection);
   bool folderIsDrafts(const Akonadi::Collection&);
 
-  bool folderIsTemplates(const Akonadi::Collection &);
-  bool folderIsTrash( const Akonadi::Collection & );
+  bool folderIsTemplates( const Akonadi::Collection &collection );
+  bool folderIsTrash( const Akonadi::Collection &collection );
 
   Akonadi::Collection trashCollectionFromResource( const Akonadi::Collection & col );
 
@@ -124,7 +124,8 @@ public:
    * Returns true if the folder is one of the sent-mail folders.
    */
   bool folderIsSentMailFolder( const Akonadi::Collection& );
- 
+  
+  bool folderIsInbox( const Akonadi::Collection& );
 
   void initFolders();
 

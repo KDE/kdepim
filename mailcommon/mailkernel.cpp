@@ -309,6 +309,15 @@ bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
     if ( (*it).fcc() == idString ) return true;
   return false;
 }
+
+bool Kernel::folderIsInbox( const Akonadi::Collection& collection )
+{
+  if ( collection.remoteId().toLower() == "inbox" || collection.remoteId().toLower() == "/inbox" )
+    return true;
+
+  return false;
+}
+
 }
 
 #include "mailkernel.moc"
