@@ -99,8 +99,6 @@ View::View( Widget *pParent )
   setSelectionMode( QAbstractItemView::ExtendedSelection );
   viewport()->setAcceptDrops( true );
 
-  //setUniformRowHeights( true );
-
   header()->setContextMenuPolicy( Qt::CustomContextMenu );
   connect( header(), SIGNAL( customContextMenuRequested( const QPoint& ) ),
            SLOT( slotHeaderContextMenuRequested( const QPoint& ) ) );
@@ -192,6 +190,9 @@ void View::setAggregation( const Aggregation * aggregation )
 {
   d->mAggregation = aggregation;
   d->mModel->setAggregation( aggregation );
+
+  // use uniform row heights to speed up, but only if there are no group headers used
+  setUniformRowHeights( d->mAggregation->grouping() == Aggregation::NoGrouping );
 }
 
 void View::setTheme( Theme * theme )
