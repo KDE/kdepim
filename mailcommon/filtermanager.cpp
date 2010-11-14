@@ -1,46 +1,36 @@
 // -*- mode: C++; c-file-style: "gnu" -*-
 // kmfiltermgr.cpp
 
-// my header
 #include "filtermanager.h"
-#include "mailkernel.h"
-#include "mailfilter.h"
-// other kmail headers
-#include "filterlog.h"
-using MailCommon::FilterLog;
-#include "filterimporterexporter.h"
-using MailCommon::FilterImporterExporter;
-#include "messageproperty.h"
-using MailCommon::MessageProperty;
 
+#include "filterimporterexporter.h"
+#include "filterlog.h"
+#include "mailfilter.h"
+#include "mailkernel.h"
+#include "messageproperty.h"
+
+#include <akonadi/agentmanager.h>
 #include <akonadi/changerecorder.h>
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmovejob.h>
-
-// other KDE headers
-#include <kdebug.h>
-#include <klocale.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-
+#include <kdebug.h>
+#include <klocale.h>
 #include <kmime/kmime_message.h>
+#include <libkdepim/progressmanager.h>
+#include <libkdepim/broadcaststatus.h>
 
-#include <progressmanager.h>
-#include <broadcaststatus.h>
-
-// other Qt headers
+#include <QtCore/QTimer>
 
 // other headers
 #include <boost/bind.hpp>
 #include <algorithm>
 #include <assert.h>
 #include <errno.h>
-#include <QTimer>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/AgentManager>
-
 
 using namespace MailCommon;
 
@@ -69,8 +59,7 @@ FilterManager::FilterManager( bool popFilter )
 
 void FilterManager::tryToFilterInboxOnStartup()
 {
-  if ( !Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).isValid() )
-   {
+  if ( !Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).isValid() ) {
     QTimer::singleShot( 0, this, SLOT( tryToFilterInboxOnStartup() ) );
     return;
   }
@@ -80,10 +69,10 @@ void FilterManager::tryToFilterInboxOnStartup()
   //was not running. Once filtering goes into its own agent, this code can be removed,
   //as at that time the inbox is always monitored.
   Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive, this );
-  job->fetchScope().setContentMimeTypes( QStringList() << "message/rfc822" );
-  job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::Parent );
+  job->fetchScope().setContentMimeTypes( QStringList() << KMime::Message::mimeType() );
+  job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::Parent );
   connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-           this, SLOT( slotInitialCollectionsFetched( const Akonadi::Collection::List& )) );
+           this, SLOT( slotInitialCollectionsFetched( const Akonadi::Collection::List& ) ) );
 }
 
 void FilterManager::tryToMonitorCollection()
