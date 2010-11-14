@@ -53,6 +53,7 @@
 #include <ktexteditor/document.h>
 #include <QHBoxLayout>
 #include <KTabWidget>
+#include "titlelineedit.h"
 
 
 #define MINUTE 60000
@@ -64,7 +65,7 @@ public:
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *labelTitle;
-    KLineEdit *txtTitle;
+    TitleLineEdit *txtTitle;
     QTimer *mTimer;
     BilboPost mCurrentPost;
     int mCurrentPostBlogId;
@@ -162,14 +163,22 @@ void PostEntry::createUi()
     d->labelTitle->setText( i18nc( "noun, the post title", "Title:" ) );
     d->horizontalLayout->addWidget( d->labelTitle );
 
-    d->txtTitle = new KLineEdit( this );
+    d->txtTitle = new TitleLineEdit( this );
     d->horizontalLayout->addWidget( d->txtTitle );
     d->labelTitle->setBuddy( d->txtTitle );
     connect( d->txtTitle, SIGNAL( textChanged( const QString& ) ), this,
              SLOT( slotTitleChanged( const QString& ) ) );
+    connect( d->txtTitle, SIGNAL(downKeyPressed()), SLOT(slotFocusEditor()) );
 
     d->gridLayout->addLayout( d->horizontalLayout, 0, 0, 1, 1 );
+}
 
+void PostEntry::slotFocusEditor()
+{
+    if(d->tabWidget->currentIndex() == 0)
+        d->wysiwygEditor->startEditing();
+    else if(d->tabWidget->currentIndex() == 1)
+        d->htmlEditor->setFocus();
 }
 
 void PostEntry::slotSyncEditors(int index)

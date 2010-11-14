@@ -124,6 +124,7 @@ protected Q_SLOTS:
     void deleteProgressBar();
     void saveTemporary();
     void slotPostModified();
+    void slotFocusEditor();
 
     /*!
      *  Sets the content of the current tab  as other tabs' contents, to apply recent

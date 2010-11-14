@@ -6,6 +6,7 @@ set(blogilo_SRCS
  mainwindow.cpp
  toolbox.cpp
  addeditblog.cpp
+ titlelineedit.cpp
  postentry.cpp
  dbman.cpp
  global.cpp
