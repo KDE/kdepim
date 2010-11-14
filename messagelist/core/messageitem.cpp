@@ -400,11 +400,12 @@ void MessageItem::invalidateAnnotationCache()
 QColor MessageItem::textColor() const
 {
   QColor clr;
-  if ( status().isUnread() ) {
+  Akonadi::MessageStatus messageStatus = status();
+  if ( messageStatus.isUnread() ) {
     clr = d->mColorUnreadMessage;
-  } else if ( status().isImportant() ) {
+  } else if ( messageStatus.isImportant() ) {
     clr = d->mColorImportantMessage;
-  } else if ( status().isToAct() ) {
+  } else if ( messageStatus.isToAct() ) {
     clr = d->mColorToDoMessage;
   }
 
@@ -441,11 +442,12 @@ QFont MessageItem::font() const
   QFont font;
 
   // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
-  if ( status().isImportant() ) {
+  Akonadi::MessageStatus messageStatus = status();
+  if ( messageStatus.isImportant() ) {
     font = d->mFontImportantMessage;
-  } else if ( status().isUnread() ) {
+  } else if ( messageStatus.isUnread() ) {
     font = d->mFontUnreadMessage;
-  } else if ( status().isToAct() ) {
+  } else if ( messageStatus.isToAct() ) {
     font = d->mFontToDoMessage;
   } else {
     font = d->mFont;
