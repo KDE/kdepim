@@ -1322,10 +1322,15 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( const Akonadi::Item
 
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
   // QString::replace is not const.
-  QString value = msg->headerByType( mParameter.toLatin1() ) ? msg->headerByType( mParameter.toLatin1() )->asUnicodeString(): "";
+  KMime::Headers::Base *header = msg->headerByType( mParameter.toLatin1() );
+  QString value = header ? header->asUnicodeString(): "";
+  QString newValue = value.replace( mRegExp, mReplacementString );
 
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( mParameter.toLatin1(), msg.get(), value.replace( mRegExp, mReplacementString ), "utf-8" );
-  msg->setHeader( header );
+  if ( !header ) {
+    return GoOn; //TODO: Maybe create a new header by type, needs public KMime::HeaderFactory
+  }
+
+  header->fromUnicodeString( newValue, "utf-8" );
   msg->assemble();
 
   new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
