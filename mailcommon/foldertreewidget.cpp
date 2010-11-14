@@ -249,6 +249,12 @@ void FolderTreeWidget::readConfig()
   readQuotaConfig();
 }
 
+void FolderTreeWidget::restoreHeaderState( const QByteArray& data )
+{
+  d->folderTreeView->restoreHeaderState( data );
+}
+
+
 void FolderTreeWidget::slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy policy)
 {
   changeToolTipsPolicyConfig( policy );

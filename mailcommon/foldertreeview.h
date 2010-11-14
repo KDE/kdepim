@@ -59,6 +59,8 @@ public:
 
   void setTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy );
 
+  void restoreHeaderState( const QByteArray& data );
+
   Akonadi::Collection currentFolder() const;
 
 protected:

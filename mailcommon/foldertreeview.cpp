@@ -531,6 +531,13 @@ void FolderTreeView::mousePressEvent( QMouseEvent * e )
   EntityTreeView::mousePressEvent( e );
 }
 
+void FolderTreeView::restoreHeaderState( const QByteArray& data )
+{
+  header()->restoreState( data );
+  mCollectionStatisticsDelegate->setUnreadCountShown( header()->isSectionHidden( 1 ) );
+}
+
+
 }
 
 #include "foldertreeview.moc"

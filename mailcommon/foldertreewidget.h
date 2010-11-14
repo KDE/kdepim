@@ -121,6 +121,8 @@ public:
 
   void readConfig();
 
+  void restoreHeaderState( const QByteArray& data );
+
 protected:
   void changeToolTipsPolicyConfig( ToolTipDisplayPolicy );
 
