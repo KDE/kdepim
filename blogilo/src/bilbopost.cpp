@@ -32,6 +32,7 @@ class BilboPostPrivate
 public:
     QString mAuthor;
     int mId;///id in DB
+    int localId;
 //  Position mPosition;
     bool mModifyTimeStamp;///Just for toolbox entry!
     QList<Category> mCategoryList;
@@ -48,6 +49,7 @@ BilboPost::BilboPost()
     this->setTrackBackAllowed( true );
     d_ptr->mModifyTimeStamp = false;
     this->setId( -1 );
+    this->setLocalId( -1 );
     this->setStatus( KBlog::BlogPost::New );
 }
 
@@ -56,6 +58,7 @@ BilboPost::BilboPost( const KBlog::BlogPost &post )
 {
     kDebug()<<"KBlog::BlogPost";
     d_ptr->mId = -1;
+    d_ptr->localId = -1;
     d_ptr->mModifyTimeStamp = false;
 }
 
@@ -66,6 +69,7 @@ BilboPost::BilboPost( const BilboPost &post )
     this->setAuthor( post.author() );
     this->setModifyTimeStamp( post.isModifyTimeStamp() );
     this->setId( post.id() );
+    setLocalId( post.localId() );
     this->setCategoryList( post.categoryList() );
 }
 
@@ -94,33 +98,16 @@ void BilboPost::setAuthor( const QString &author )
 {
     d_ptr->mAuthor = author;
 }
-/*
-KBlog::BlogPost * BilboPost::toKBlogPost()
-{
-    KBlog::BlogPost *pp = new KBlog::BlogPost( QString() );
-    pp->setStatus( this->status() );
-    pp->setSummary( this->summary() );
-    pp->setTags( this->tags() );
-    pp->setTitle( this->title() );
-    pp->setTrackBackAllowed( this->isTrackBackAllowed() );
-    pp->setCategories( this->categories() );
-    pp->setCommentAllowed( this->isCommentAllowed() );
-    pp->setContent( this->content() );
-    pp->setPrivate( this->isPrivate() );
-    pp->setCreationDateTime( this->creationDateTime() );
-    pp->setError( this->error() );
-    pp->setModificationDateTime( this->modificationDateTime() );
-    pp->setMood( this->mood() );
-    pp->setMusic( this->music() );
-    pp->setPostId( this->postId() );
-    pp->setLink( this->link() );
-    pp->setPermaLink( this->permaLink() );
-    pp->setStatus( this->status() );
-    pp->setAdditionalContent( this->additionalContent() );
-    pp->setSlug( this->slug() );
 
-    return pp;
-}*/
+int BilboPost::localId() const
+{
+    return d_ptr->localId;
+}
+
+void BilboPost::setLocalId(const int localId)
+{
+    d_ptr->localId = localId;
+}
 
 QString BilboPost::toString() const
 {

@@ -130,16 +130,26 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
     kDebug();
-    int count = tabPosts->count();
-    for(int i =0; i<count; ++i)
-        qobject_cast<PostEntry*>(tabPosts->widget(i))->aboutToQuit();
+}
+
+bool MainWindow::queryExit()
+{
+    kDebug();
     writeConfigs();
-    qApp->quit();
+    if( !DBMan::self()->clearTempEntries() )
+        kDebug()<<"Could not erase temp_post table: "<< DBMan::self()->lastErrorText();
+    int count = tabPosts->count();
+    toolbox->getFieldsValue(activePost->currentPost());
+    for(int i =0; i<count; ++i) {
+        PostEntry* pst = qobject_cast<PostEntry*>(tabPosts->widget(i));
+        DBMan::self()->saveTempEntry(*pst->currentPost(), pst->currentPostBlogId());
+    }
+    return true;
 }
 
 void MainWindow::setupActions()
 {
-    KStandardAction::quit( this, SLOT( close() ), actionCollection() );
+    KStandardAction::quit( qApp, SLOT( quit() ), actionCollection() );
 
     KStandardAction::preferences( this, SLOT( optionsPreferences() ), actionCollection() );
 
@@ -418,7 +428,7 @@ void MainWindow::slotActivePostChanged( int index )
 
     if (( prevActivePost != 0 ) && ( index != previousActivePostIndex ) ) {
         prevPostBlogId = prevActivePost->currentPostBlogId();
-        toolbox->getFieldsValue( *prevActivePost->currentPost() );
+        toolbox->getFieldsValue( prevActivePost->currentPost() );
         prevActivePost->setCurrentPostBlogId( mCurrentBlogId );
     }
 
@@ -447,10 +457,9 @@ void MainWindow::slotPublishPost()
         kDebug() << "There isn't any post";
         return;
     }
-    BilboPost post = *activePost->currentPost();
-    toolbox->getFieldsValue( post );
+    toolbox->getFieldsValue( activePost->currentPost() );
 //     post.setPrivate( false );
-    activePost->submitPost( mCurrentBlogId, post );
+    activePost->submitPost( mCurrentBlogId, *activePost->currentPost() );
 }
 
 void MainWindow::slotRemovePostEntry( PostEntry *widget )
@@ -493,7 +502,7 @@ void MainWindow::slotSavePostLocally()
 {
     kDebug();
     if(activePost && tabPosts->count() > 0) {
-        toolbox->getFieldsValue(*activePost->currentPost());
+        toolbox->getFieldsValue(activePost->currentPost());
         activePost->saveLocally();
         toolbox->reloadLocalPosts();
     }

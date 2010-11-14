@@ -646,15 +646,17 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
         postTable = "temp_post";
         postCatTable = "temp_post_cat";
     }
-    int postId = -1, localId=-1;
-    if(post.status() == KBlog::BlogPost::New) {///Post is new!
-        kDebug()<<"Post is new!";
-        if(post.id() == -1){
+    int localId = post.localId();
+//    if(post.status() == KBlog::BlogPost::New) {///Post is new!
+//         kDebug()<<"Post is new!";
+        if(post.localId() == -1){
             ///Add new post to temp_post
             kDebug()<<"Add new post to temp_post";
-            q.prepare( "INSERT OR REPLACE INTO "+ postTable +" (postid, blog_id, author, title, content,\
-            text_more, c_time, m_time, is_private, is_comment_allowed, is_trackback_allowed, link, perma_link,\
-            summary, slug, tags, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" );
+            q.prepare( "INSERT OR REPLACE INTO "+ postTable +" (postid, blog_id,\
+            author, title, content, text_more, c_time, m_time, is_private, is_comment_allowed,\
+            is_trackback_allowed, link, perma_link, summary, slug, tags, status)\
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" );
+//             q.addBindValue( post.id() == -1 ? QVariant(QVariant::Int) : post.id() );
             q.addBindValue( post.postId() );
             q.addBindValue( blog_id );
             q.addBindValue( post.author() );
@@ -674,7 +676,7 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
             q.addBindValue( post.status() );
 
             if ( q.exec() ) {
-                localId = postId = q.lastInsertId().toInt();
+                localId = q.lastInsertId().toInt();
             } else {
                 d->mLastErrorText = q.lastError().text();
                 kDebug() << "Cannot Add new local post to database!\n\tSQL Error: " << q.lastError().text();
@@ -683,11 +685,11 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
         } else {
             ///Update post, with id!
             kDebug()<<"Update post, with id!";
-            q.prepare( "INSERT OR REPLACE INTO "+ postTable +" (local_id, postid, blog_id, author, title,\
-            content, text_more, c_time, m_time, is_private, is_comment_allowed, is_trackback_allowed, link,\
-            perma_link, summary, slug, tags, status)\
-            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" );
-            q.addBindValue( post.id() );
+            q.prepare( "UPDATE "+ postTable +" SET postid=?, blog_id=?,\
+            author=?, title=?, content=?, text_more=?, c_time=?, m_time=?, is_private=?, is_comment_allowed=?,\
+            is_trackback_allowed=?, link=?, perma_link=?, summary=?, slug=?, tags=?, status=?\
+            WHERE local_id=?" );
+//             q.addBindValue( post.id() == -1 ? QVariant(QVariant::Int) : post.id() );
             q.addBindValue( post.postId() );
             q.addBindValue( blog_id );
             q.addBindValue( post.author() );
@@ -705,16 +707,15 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
             q.addBindValue( post.slug() );
             q.addBindValue( post.tags().join(QString(',')) );
             q.addBindValue( post.status() );
+            q.addBindValue( post.localId() );
 
-            if ( q.exec() ) {
-                localId = postId = q.lastInsertId().toInt();
-            } else {
+            if ( !q.exec() ) {
                 d->mLastErrorText = q.lastError().text();
                 kDebug() << "Cannot Add new local post to database!\n\tSQL Error: " << q.lastError().text();
                 return -1;
             }
         }
-    } else {///Post is already created at "Post" table and has a valid id, postId and blog_id. So, local_id is useless here
+    /*} else {///Post is already created at "Post" table and has a valid id, postId and blog_id. So, local_id is useless here
         kDebug()<<"Post is already created at \"Post\" table and has a valid id, postId and blog_id. So, local_id is useless here";
         q.prepare( "INSERT OR REPLACE INTO "+ postTable +" (id, postid, blog_id, author, title,\
         content, text_more, c_time, m_time, is_private,\
@@ -747,7 +748,7 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
             kDebug() << "Cannot Add or Edit local post to database!\n\tSQL Error: " << q.lastError().text();
             return -1;
         }
-    }
+    }*/
 
     ///Delete previouse Categories:
     QSqlQuery qd;
@@ -777,19 +778,15 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
 //             kDebug()<<"category "<<post.categories()[i] <<" added.";
         }
     }
-    return postId;
+    return localId;
 }
 
 bool DBMan::removeLocalEntry( const BilboPost &post )
 {
     kDebug();
     QSqlQuery q;
-    if(post.status() == KBlog::BlogPost::New) {
-        q.prepare( "DELETE FROM local_post WHERE local_id=?" );
-    } else {
-        q.prepare( "DELETE FROM local_post WHERE id=?" );
-    }
-    q.addBindValue( post.id() );
+    q.prepare( "DELETE FROM local_post WHERE local_id=?" );
+    q.addBindValue( post.localId() );
     bool res = q.exec();
     if ( !res ) {
         d->mLastErrorText = q.lastError().text();
@@ -816,12 +813,8 @@ bool DBMan::removeTempEntry( const BilboPost &post )
 {
     kDebug()<<post.toString();
     QSqlQuery q;
-    if(post.status() == KBlog::BlogPost::New) {
-        q.prepare( "DELETE FROM temp_post WHERE local_id=?" );
-    } else {
-        q.prepare( "DELETE FROM temp_post WHERE id=?" );
-    }
-    q.addBindValue( post.id() );
+    q.prepare( "DELETE FROM temp_post WHERE local_id=?" );
+    q.addBindValue( post.localId() );
     bool res = q.exec();
     if ( !res ) {
         d->mLastErrorText = q.lastError().text();
@@ -1135,14 +1128,14 @@ QMap<BilboPost*, int> DBMan::listTempPosts()
 {
     QMap<BilboPost*, int> list;
     QSqlQuery q;
-    q.prepare( "SELECT id, local_id, postid, blog_id, author, title, content, text_more, c_time,\
+    q.prepare( "SELECT local_id, id, postid, blog_id, author, title, content, text_more, c_time,\
     m_time, is_private, is_comment_allowed, is_trackback_allowed, link, perma_link, summary, tags, status,\
     slug FROM temp_post ORDER BY m_time DESC" );
     if ( q.exec() ) {
         while ( q.next() ) {
             BilboPost *tmp = new BilboPost();
-            int id = q.value( 0 ).toInt();
-            int local_id = q.value( 1 ).toInt();
+            tmp->setLocalId( q.value( 0 ).toInt() );
+            tmp->setId( q.value( 1 ).toInt() );
             tmp->setPostId( q.value( 2 ).toString() );
             int blog_id = q.value( 3 ).toInt();
             tmp->setAuthor( q.value( 4 ).toString() );
@@ -1160,11 +1153,6 @@ QMap<BilboPost*, int> DBMan::listTempPosts()
             tmp->setStatus(( KBlog::BlogPost::Status ) q.value( 17 ).toInt() );
             tmp->setSlug( q.value( 18 ).toString() );
 
-            if(tmp->status() == KBlog::BlogPost::New){
-                tmp->setId(local_id);
-            } else {
-                tmp->setId(id);
-            }
             ///get Category list:
             QList<Category> catList;
             QSqlQuery q2;
@@ -1172,7 +1160,7 @@ QMap<BilboPost*, int> DBMan::listTempPosts()
             category.categoryId, category.parentId\
             FROM category JOIN temp_post_cat ON category.categoryId=temp_post_cat.categoryId\
             WHERE temp_post_cat.local_id = ?" );
-            q2.addBindValue( local_id );
+            q2.addBindValue( tmp->localId() );
 //             q2.addBindValue( blog_id );
             if ( q2.exec() ) {
                 while ( q2.next() ) {
@@ -1233,7 +1221,8 @@ BilboPost DBMan::localPost(int local_id)
     q.addBindValue(local_id);
     if ( q.exec() ) {
         if ( q.next() ) {
-            int id = q.value( 0 ).toInt();
+            tmp.setId( q.value( 0 ).toInt() );
+            tmp.setLocalId( q.value( 1 ).toInt() );
             tmp.setPostId( q.value( 2 ).toString() );
             int blog_id = q.value( 3 ).toInt();
             tmp.setAuthor( q.value( 4 ).toString() );
@@ -1252,11 +1241,6 @@ BilboPost DBMan::localPost(int local_id)
             tmp.setStatus(( KBlog::BlogPost::Status ) q.value( 17 ).toInt() );
             tmp.setSlug( q.value( 18 ).toString() );
 
-            if(tmp.status() == KBlog::BlogPost::New){
-                tmp.setId(local_id);
-            } else {
-                tmp.setId(id);
-            }
             ///get Category list:
             QList<Category> catList;
             QSqlQuery q2;

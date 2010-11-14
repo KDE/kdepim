@@ -108,12 +108,6 @@ PostEntry::PostEntry( QWidget *parent )
     connect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
 }
 
-void PostEntry::aboutToQuit()
-{
-    kDebug();
-    saveTemporary(true);
-}
-
 void PostEntry::settingsChanged()
 {
     kDebug();
@@ -308,8 +302,8 @@ BilboPost* PostEntry::currentPost()
 void PostEntry::setCurrentPost( const BilboPost &post )
 {
     kDebug();
-    d->mCurrentPost = BilboPost( post );
-//     kDebug()<<"postId: "<<mCurrentPost.postId();
+    d->mCurrentPost = post;
+    kDebug()<<"local_id: "<<d->mCurrentPost.localId();
     this->setPostBody( d->mCurrentPost.content(), d->mCurrentPost.additionalContent() );
     this->setPostTitle( d->mCurrentPost.title() );
 }
@@ -487,18 +481,23 @@ void PostEntry::saveLocally()
 are you sure you want to save an empty post?")) == KMessageBox::No )
             return;
     }
-    d->mCurrentPost.setId( DBMan::self()->saveLocalEntry( *currentPost(), d->mCurrentPostBlogId ) );
+    d->mCurrentPost.setLocalId( DBMan::self()->saveLocalEntry( *currentPost(), d->mCurrentPostBlogId ) );
     emit postSavedLocally();
     emit showStatusMessage(i18n( "Post saved locally." ), false);
     kDebug()<<"Locally saved";
 }
 
-void PostEntry::saveTemporary( bool force )
+void PostEntry::saveTemporary()
 {
-    if( d->isPostContentModified || ( !plainTextContent().isEmpty() && force ) ) {
-        d->mCurrentPost.setId( DBMan::self()->saveTempEntry( *currentPost(), d->mCurrentPostBlogId) );
-        emit postSavedTemporary();
-        kDebug()<<"Temporary saved";
+    if( d->isPostContentModified ) {
+        int res = DBMan::self()->saveTempEntry( *currentPost(), d->mCurrentPostBlogId);
+        if(res != -1) {
+            d->mCurrentPost.setLocalId( res );
+            emit postSavedTemporary();
+            kDebug()<<"Temporary saved";
+        } else {
+            kDebug()<<"Saving temporary failed: "<< DBMan::self()->lastErrorText();
+        }
     }
 }
 

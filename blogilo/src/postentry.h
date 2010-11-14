@@ -73,8 +73,6 @@ public:
 
     void saveLocally();
 
-    void aboutToQuit();
-
 Q_SIGNALS:
     /**
      * emitted when title of this entry changed.
@@ -124,7 +122,7 @@ protected Q_SLOTS:
     void slotPostPublished( int blog_id, BilboPost *post );
     void slotTitleChanged( const QString& title );
     void deleteProgressBar();
-    void saveTemporary( bool force=false );
+    void saveTemporary();
     void slotPostModified();
 
     /*!

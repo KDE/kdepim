@@ -55,6 +55,10 @@ public:
     int id() const;
     void setId( const int );
 
+    //To be used for local_post and temp_post tabels
+    int localId() const;
+    void setLocalId( const int );
+
 //     KBlog::BlogPost * toKBlogPost();
     QString toString() const;
 

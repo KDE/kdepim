@@ -50,7 +50,7 @@ public:
      *    Will set current state of toolbox (Current post) properties on input pointer!
      * @param currentPost input and output of this Function.
      */
-    void getFieldsValue( BilboPost &currentPost );
+    void getFieldsValue( BilboPost* currentPost );
     void setFieldsValue( BilboPost* post = 0 );
     void setCurrentBlogId( int blog_id );
     void setCurrentPage( int index );

@@ -292,36 +292,36 @@ void Toolbox::clearCatList()
     d->listCategoryCheckBoxes.clear();
 }
 
-void Toolbox::getFieldsValue( BilboPost &currentPost )
+void Toolbox::getFieldsValue( BilboPost* currentPost )
 {
     kDebug();
-    currentPost.setCategoryList( this->selectedCategories() );
-    currentPost.setTags( this->currentTags() );
-    currentPost.setModifyTimeStamp( this->chkOptionsTime->isChecked() );
-    if ( currentPost.status() == KBlog::BlogPost::New ) {
+    currentPost->setCategoryList( this->selectedCategories() );
+    currentPost->setTags( this->currentTags() );
+    currentPost->setModifyTimeStamp( this->chkOptionsTime->isChecked() );
+    if ( currentPost->status() == KBlog::BlogPost::New ) {
         if ( chkOptionsTime->isChecked() ) {
-            currentPost.setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
-            currentPost.setCreationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
+            currentPost->setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
+            currentPost->setCreationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
         } else {
-            currentPost.setCreationDateTime( KDateTime::currentLocalDateTime() );
-            currentPost.setModificationDateTime( KDateTime::currentLocalDateTime() );
+            currentPost->setCreationDateTime( KDateTime::currentLocalDateTime() );
+            currentPost->setModificationDateTime( KDateTime::currentLocalDateTime() );
         }
     } else {
-        currentPost.setCreationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
-        currentPost.setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
+        currentPost->setCreationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
+        currentPost->setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
     }
-    if( currentPost.creationDateTime().isUtc() || currentPost.modificationDateTime().isUtc() ){
+    if( currentPost->creationDateTime().isUtc() || currentPost->modificationDateTime().isUtc() ){
         kDebug()<<"creationDateTime was UTC!";
-        currentPost.setCreationDateTime( KDateTime( currentPost.creationDateTime().dateTime(),
+        currentPost->setCreationDateTime( KDateTime( currentPost->creationDateTime().dateTime(),
                                                     KDateTime::LocalZone ) );
-        currentPost.setModificationDateTime( KDateTime( currentPost.modificationDateTime().dateTime(),
+        currentPost->setModificationDateTime( KDateTime( currentPost->modificationDateTime().dateTime(),
                                                     KDateTime::LocalZone ) );
     }
-    currentPost.setSlug( txtSlug->text() );
-    currentPost.setPrivate(( comboOptionsStatus->currentIndex() == 1 ) ? true : false );
-    currentPost.setCommentAllowed( chkOptionsComments->isChecked() );
-    currentPost.setTrackBackAllowed( chkOptionsTrackback->isChecked() );
-    currentPost.setSummary( txtSummary->toPlainText() );
+    currentPost->setSlug( txtSlug->text() );
+    currentPost->setPrivate(( comboOptionsStatus->currentIndex() == 1 ) ? true : false );
+    currentPost->setCommentAllowed( chkOptionsComments->isChecked() );
+    currentPost->setTrackBackAllowed( chkOptionsTrackback->isChecked() );
+    currentPost->setSummary( txtSummary->toPlainText() );
 }
 
 void Toolbox::setFieldsValue( BilboPost* post )

@@ -68,7 +68,6 @@ protected slots:
     void slotToggleToolboxVisible( bool isVisible );
     void slotToolboxVisibilityChanged( bool isVisible );
     void slotActivePostChanged( int tabIndex );
-
     void slotNewPostOpened( BilboPost &newPost, int blog_id );
 
     void slotPublishPost();
@@ -104,6 +103,7 @@ private slots:
 
 protected:
     void keyPressEvent( QKeyEvent * event );
+    virtual bool queryExit();
 
 private:
     void setCurrentBlog( int blog_id );
@@ -130,6 +130,5 @@ private:
 
     KSelectAction *blogs;
     int &mCurrentBlogId;
-//     KTextEditor::Editor *mHtmlEditor;
 };
 #endif
