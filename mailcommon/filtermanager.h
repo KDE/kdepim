@@ -173,6 +173,10 @@ private slots:
 
   void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
 
+  void slotInitialCollectionsFetched( const Akonadi::Collection::List&  collections );
+
+  void slotInitialItemsFetched( const Akonadi::Item::List &items );
+
   void tryToMonitorCollection();
 
 private:

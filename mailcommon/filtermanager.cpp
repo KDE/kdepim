@@ -37,6 +37,8 @@ using MailCommon::MessageProperty;
 #include <assert.h>
 #include <errno.h>
 #include <QTimer>
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CollectionFetchScope>
 
 
 using namespace MailCommon;
@@ -60,6 +62,15 @@ FilterManager::FilterManager( bool popFilter )
   mChangeRecorder->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   connect( mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+
+  //Fecth the collection on startup and apply filters on unread messages in the inbox.
+  //This is done to filter inbox even if messages were downloaded while kmail/kmail-mobile
+  //was not running. Once filtering goes into its own agent, this code can be removed,
+  //as at that time the inbox is always monitored.
+  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive, this );
+  job->fetchScope().setContentMimeTypes( QStringList() << "message/rfc822" );
+  connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+           this, SLOT( slotInitialCollectionsFetched( const Akonadi::Collection::List& )) );
 }
 
 void FilterManager::tryToMonitorCollection()
@@ -70,6 +81,31 @@ void FilterManager::tryToMonitorCollection()
   } else {
     QTimer::singleShot( 0, this, SLOT( tryToMonitorCollection() ) );
   }
+}
+
+void FilterManager::slotInitialCollectionsFetched( const Akonadi::Collection::List& collections )
+{
+  Q_FOREACH( Akonadi::Collection collection, collections ) {
+    if (collection.name().toLower() == "inbox") {
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection, this );
+      job->fetchScope().fetchAllAttributes();
+      connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotInitialItemsFetched(Akonadi::Item::List)) );
+    }
+  }
+}
+
+void FilterManager::slotInitialItemsFetched(const Akonadi::Item::List& items)
+{
+  Akonadi::Item::List unreadItems;
+
+  Q_FOREACH( Akonadi::Item item, items ) {
+   Akonadi::MessageStatus status;
+   status.setStatusFromFlags( item.flags() );
+   if ( status.isUnread() )
+     unreadItems << item;
+  }
+
+  applyFilters( unreadItems );
 }
 
 
