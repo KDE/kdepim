@@ -262,7 +262,8 @@ void MainView::setCurrentEventItemId( qint64 id )
   if (list.isEmpty())
     return;
   const QModelIndex idx = list.first();
-  itemSelectionModel()->select(QItemSelection(idx, idx), QItemSelectionModel::ClearAndSelect);
+  itemSelectionModel()->select( QItemSelection(idx, idx), QItemSelectionModel::ClearAndSelect );
+  itemActionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
 }
 
 void MainView::newEvent()
