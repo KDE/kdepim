@@ -1171,7 +1171,12 @@ FilterAction::ReturnCode FilterActionAddHeader::process( const Akonadi::Item& it
   if ( mParameter.isEmpty() ) return ErrorButGoOn;
 
   KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( mParameter.toLatin1(), msg.get(), mValue, "utf-8" );
+  KMime::Headers::Base* header = KMime::Headers::createHeader( mParameter.toLatin1() );
+  if ( !header ) {
+    header = new KMime::Headers::Generic( mParameter.toLatin1(), msg.get(), mValue, "utf-8" );
+  } else {
+    header->fromUnicodeString( mValue, "utf-8" );
+  }
   msg->setHeader( header );
   msg->assemble();
   new Akonadi::ItemModifyJob( item, FilterIf->filterManager() );
@@ -1327,7 +1332,7 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process( const Akonadi::Item
   QString newValue = value.replace( mRegExp, mReplacementString );
 
   if ( !header ) {
-    return GoOn; //TODO: Maybe create a new header by type, needs public KMime::HeaderFactory
+    return GoOn; //TODO: Maybe create a new header by type?
   }
 
   header->fromUnicodeString( newValue, "utf-8" );
