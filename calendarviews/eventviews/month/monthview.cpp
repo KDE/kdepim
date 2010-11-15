@@ -262,6 +262,7 @@ void MonthView::updateConfig()
   */
   d->scene->update();
   setChanges( changes() | ConfigChanged );
+  QTimer::singleShot( 0, this, SLOT(reloadIncidences()) );
 }
 
 int MonthView::currentDateCount() const
@@ -476,6 +477,17 @@ void MonthView::reloadIncidences()
 
   foreach ( const Akonadi::Item &aitem, incidences ) {
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+
+    // Remove the two checks when filtering is done through a proxyModel, when calendar search is used.
+    if ( !preferences()->showTodosMonthView() &&
+         incidence->type() == KCalCore::Incidence::TypeTodo ) {
+      continue;
+    }
+
+    if ( !preferences()->showJournalsMonthView() &&
+         incidence->type() == KCalCore::Incidence::TypeJournal ) {
+      continue;
+    }
 
     KCalCore::DateTimeList dateTimeList;
 
