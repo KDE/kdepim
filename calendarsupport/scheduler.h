@@ -23,6 +23,7 @@
 #define CALENDARSUPPORT_SCHEDULER_H
 
 #include "calendarsupport_export.h"
+#include "nepomukcalendar.h"
 
 #include <KCalCore/ScheduleMessage>
 #include <KCalCore/IncidenceBase>
@@ -52,7 +53,7 @@ namespace CalendarSupport {
   It is an abstract base class for inheritance by implementations of the
   iTIP scheme like iMIP or iRIP.
 */
-  class CALENDARSUPPORT_EXPORT Scheduler : public QObject
+class CALENDARSUPPORT_EXPORT Scheduler : public QObject
 {
   Q_OBJECT
   public:
@@ -67,13 +68,14 @@ namespace CalendarSupport {
       ResultCodeSaveFreeBusyError,
       ResultCodeIncidenceOrAttendeeNotFound,
       ResultCodeIncidenceNotFound,
-      ResultCodeErrorDeletingIncidence
+      ResultCodeErrorDeletingIncidence,
+      ResultCodeErrorCreatingIncidence
     };
 
     /**
       Creates a scheduler for calendar specified as argument.
     */
-    Scheduler( const KCalCore::Calendar::Ptr &calendar,
+    Scheduler( const CalendarSupport::NepomukCalendar::Ptr &calendar,
                CalendarSupport::IncidenceChanger2 *changer );
 
     virtual ~Scheduler();
@@ -126,7 +128,7 @@ namespace CalendarSupport {
                               KCalCore::ScheduleMessage::Status status,
                               const QString &email = QString() );
 
-    virtual bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
+    virtual bool deleteTransaction( const QString &uid );
 
     /**
       Returns the directory where the free-busy information is stored.
@@ -181,7 +183,7 @@ namespace CalendarSupport {
 
   private:
     Q_DISABLE_COPY( Scheduler )
-    struct Private;
+    class Private;
     Private *const d;
 };
 

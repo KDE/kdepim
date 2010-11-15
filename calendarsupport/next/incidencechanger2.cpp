@@ -123,9 +123,10 @@ void IncidenceChanger2::Private::handleCreateJobResult( KJob *job )
   const Change change = mChangeForJob.take( job );
 
   const ItemCreateJob *j = qobject_cast<const ItemCreateJob*>( job );
-  const Item item = j->item();
+  Item item = j->item();
 
   if ( j->error() ) {
+    item = change.newItem;
     resultCode = ResultCodeJobError;
     errorString = j->errorString();
     kError() << errorString;

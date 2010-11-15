@@ -21,6 +21,7 @@
   Boston, MA 02110-1301, USA.
 */
 #include "scheduler.h"
+#include "scheduler_p.h"
 #include "next/incidencechanger2.h"
 
 #include <KCalUtils/Stringify>
@@ -35,61 +36,84 @@ using namespace KCalCore;
 using namespace KCalUtils;
 using namespace CalendarSupport;
 
-//@cond PRIVATE
-struct CalendarSupport::Scheduler::Private
-{
-  public:
-    Private( Scheduler *qq, const KCalCore::Calendar::Ptr &calendar, IncidenceChanger2 *changer )
-      : mFreeBusyCache( 0 ), mChanger( changer ), mCalendar( calendar ), mFormat( new ICalFormat() ),
-        mLatestCallId( 0 ), q( qq )
+Scheduler::Private::Private( Scheduler *qq,
+                             const CalendarSupport::NepomukCalendar::Ptr &calendar,
+                             IncidenceChanger2 *changer )
+      : mFreeBusyCache( 0 ), mChanger( changer ), mCalendar( calendar ),
+        mFormat( new ICalFormat() ), mLatestCallId( 0 ), q( qq )
     {
       qRegisterMetaType<CalendarSupport::Scheduler::ResultCode>(
         "CalendarSupport::Scheduler::ResultCode" );
+
+      connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+               SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+
+      connect( mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+               SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
+
+      connect( mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+               SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
     }
 
-    ~Private()
-    {
-      delete mFormat;
-    }
+
+Scheduler::Private::~Private()
+{
+  delete mFormat;
+}
 
     // These signals are delayed because they can't be emitted before "return callId",
     // otherwise the caller would not know the callId that was being sent in the signal
-    void emitAcceptFinished( CallId callId,
-                             ResultCode resultCode,
-                             const QString &errorMessage )
-    {
-      QMetaObject::invokeMethod( q, "acceptTransactionFinished", Qt::QueuedConnection,
-                                 Q_ARG( int, callId ),
-                                 Q_ARG( CalendarSupport::Scheduler::ResultCode, resultCode ),
-                                 Q_ARG( QString, errorMessage ) );
-    }
+void Scheduler::Private::emitOperationFinished( CallId callId,
+                                                ResultCode resultCode,
+                                                const QString &errorMessage )
+{
+  QMetaObject::invokeMethod( q, "operationFinished", Qt::QueuedConnection,
+                             Q_ARG( int, callId ),
+                             Q_ARG( CalendarSupport::Scheduler::ResultCode, resultCode ),
+                             Q_ARG( QString, errorMessage ) );
+}
 
-    void emitPublishFinished( CallId callId, ResultCode resultCode, const QString &errorMessage )
-    {
-      QMetaObject::invokeMethod( q, "publishFinished", Qt::QueuedConnection,
-                                 Q_ARG( int, callId ),
-                                 Q_ARG( CalendarSupport::Scheduler::ResultCode, resultCode ),
-                                 Q_ARG( QString, errorMessage ) );
-    }
+void Scheduler::Private::createFinished( int changeId,
+                                         const Akonadi::Item &item,
+                                         IncidenceChanger2::ResultCode changerResultCode,
+                                         const QString &errorMessage )
+{
+  Q_UNUSED( item );
+  if ( mCallIdByChangeId.contains( changeId ) ) {
+    const CallId callId = mCallIdByChangeId[changeId];
+    const ResultCode result = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ? ResultCodeSuccess : ResultCodeErrorCreatingIncidence;
 
-    void emitPerformFinished( CallId callId, ResultCode resultCode, const QString &errorMessage )
-    {
-      QMetaObject::invokeMethod( q, "performTransactionFinished", Qt::QueuedConnection,
-                                 Q_ARG( int, callId ),
-                                 Q_ARG( CalendarSupport::Scheduler::ResultCode, resultCode ),
-                                 Q_ARG( QString, errorMessage ) );
-    }
+    emitOperationFinished( callId, result, errorMessage );
+    q->deleteTransaction( item.payload<Incidence::Ptr>()->uid() );
+    mCallIdByChangeId.remove( changeId );
+  }
+}
 
-    FreeBusyCache *mFreeBusyCache;
-    IncidenceChanger2 *mChanger;
-    KCalCore::Calendar::Ptr mCalendar;
-    KCalCore::ICalFormat *mFormat;
-    CallId mLatestCallId;
-    Scheduler *q;
-};
-//@endcond
+void Scheduler::Private::deleteFinished( int changeId,
+                                         const QVector<Akonadi::Item::Id> &itemId,
+                                         IncidenceChanger2::ResultCode resultCode,
+                                         const QString &errorMessage )
+{
+  Q_UNUSED( changeId );
+  Q_UNUSED( itemId );
+  Q_UNUSED( resultCode );
+  Q_UNUSED( errorMessage );
 
-Scheduler::Scheduler( const KCalCore::Calendar::Ptr &calendar, IncidenceChanger2 *changer )
+}
+
+void Scheduler::Private::modifyFinished( int changeId,
+                                         const Akonadi::Item &item,
+                                         IncidenceChanger2::ResultCode resultCode,
+                                         const QString &errorMessage )
+{
+  Q_UNUSED( changeId );
+  Q_UNUSED( item );
+  Q_UNUSED( resultCode );
+  Q_UNUSED( errorMessage );
+}
+
+Scheduler::Scheduler( const CalendarSupport::NepomukCalendar::Ptr &calendar,
+                      IncidenceChanger2 *changer )
   : d( new CalendarSupport::Scheduler::Private( this, calendar, changer ) )
 {
 }
@@ -99,7 +123,7 @@ Scheduler::~Scheduler()
   delete d;
 }
 
-void Scheduler::setFreeBusyCache( FreeBusyCache *c )
+void Scheduler::setFreeBusyCache( KCalCore::FreeBusyCache *c )
 {
   d->mFreeBusyCache = c;
 }
@@ -134,13 +158,16 @@ CallId Scheduler::acceptTransaction( const IncidenceBase::Ptr &incidence, iTIPMe
   default:
     break;
   }
-  deleteTransaction( incidence );
+  if ( incidence ) {
+    deleteTransaction( incidence->uid() );
+  }
   kDebug() << "Unknown method!?";
   return -1;
 }
 
-bool Scheduler::deleteTransaction( const IncidenceBase::Ptr & )
+bool Scheduler::deleteTransaction( const QString &uid )
 {
+  Q_UNUSED( uid );
   return true;
 }
 
@@ -199,10 +226,10 @@ CallId Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
       errorMessage = QLatin1String( "Unhandled ScheduleMessage status" );
       break;
   }
-  deleteTransaction( newIncBase );
+  deleteTransaction( newIncBase->uid() );
 
   // Delayed signal, the caller must know this CallId first.
-  d->emitAcceptFinished( callId, resultCode, errorMessage );
+  d->emitOperationFinished( callId, resultCode, errorMessage );
 
   return callId;
 }
@@ -222,7 +249,7 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   QString errorMessage;
 
   if ( inc->type() == IncidenceBase::TypeFreeBusy ) {
-    d->emitAcceptFinished( callId, ResultCodeSuccess, QString() );
+    d->emitOperationFinished( callId, ResultCodeSuccess, QString() );
     // reply to this request is handled in korganizer's incomingdialog
     return callId;
   }
@@ -276,10 +303,10 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
         if ( existingIncidence->revision() == inc->revision() &&
              existingIncidence->lastModified() > inc->lastModified() ) {
           // This isn't an update - the found incidence was modified more recently
-          deleteTransaction( existingIncidence );
+          deleteTransaction( existingIncidence->uid() );
           errorMessage = QLatin1String( "This isn't an update - the found incidence was modified more recently" );
           kDebug() << errorMessage;
-          d->emitAcceptFinished( callId, ResultCodeNotUpdate, errorMessage );
+          d->emitOperationFinished( callId, ResultCodeNotUpdate, errorMessage );
 
           return callId;
         }
@@ -296,19 +323,19 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           *existingIncidenceBase = *incBase;
           existingIncidence->setSchedulingID( inc->uid(), oldUid );
         }
-        deleteTransaction( incidence );
+        deleteTransaction( incidence->uid() );
 
-        d->emitAcceptFinished( callId, resultCode, errorMessage );
+        d->emitOperationFinished( callId, resultCode, errorMessage );
         return callId;
       }
     } else {
       // This isn't an update - the found incidence has a bigger revision number
 
-      deleteTransaction( incidence );
+      deleteTransaction( incidence->uid() );
 
       errorMessage = QLatin1String( "This isn't an update - the found incidence has a bigger revision number" );
       kDebug() << errorMessage;
-      d->emitAcceptFinished( callId, ResultCodeNotUpdate, errorMessage );
+      d->emitOperationFinished( callId, ResultCodeNotUpdate, errorMessage );
 
       return callId;
     }
@@ -334,17 +361,22 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   }
   kDebug() << "Storing new incidence with scheduling uid=" << inc->schedulingID()
            << " and uid=" << inc->uid();
-  d->mCalendar->addIncidence( inc );
+  const int changeId = d->mChanger->createIncidence( inc );
 
-  deleteTransaction( incidence );
-  d->emitAcceptFinished( callId, ResultCodeSuccess, QString() );
+  if ( changeId > 0 ) {
+    d->mCallIdByChangeId[changeId] = callId;
+  } else {
+    d->emitOperationFinished( callId, ResultCodeErrorCreatingIncidence,
+                              QLatin1String( "Error creating incidence" ) );
+  }
+
   return callId;
 }
 
 CallId Scheduler::acceptAdd( const IncidenceBase::Ptr &incidence,
                              ScheduleMessage::Status /* status */ )
 {
-  deleteTransaction( incidence );
+  deleteTransaction( incidence->uid() );
   return -1;
 }
 
@@ -363,7 +395,7 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
 
   if ( inc->type() == IncidenceBase::TypeFreeBusy ) {
     // reply to this request is handled in korganizer's incomingdialog
-    d->emitAcceptFinished( callId, resultCode, errorMessage );
+    d->emitOperationFinished( callId, resultCode, errorMessage );
     return callId;
   }
 
@@ -422,12 +454,12 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
         Todo::Ptr todo = d->mCalendar->todo( i->uid() );
         ret = ( todo && d->mCalendar->deleteTodo( todo ) );
       }
-      deleteTransaction( incidence );
+      deleteTransaction( incidence->uid() );
 
       resultCode = ret ? ResultCodeSuccess : ResultCodeErrorDeletingIncidence;
       errorMessage = ret ? QString() : QLatin1String( "Error deleting incidence" );
 
-      d->emitAcceptFinished( callId, resultCode, errorMessage );
+      d->emitOperationFinished( callId, resultCode, errorMessage );
       return callId;
     }
   }
@@ -443,8 +475,8 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
     resultCode = ResultCodeIncidenceNotFound;
     errorMessage = QLatin1String( "Incidence not found" );
   }
-  deleteTransaction( incidence );
-  d->emitAcceptFinished( callId, resultCode, errorMessage );
+  deleteTransaction( incidence->uid() );
+  d->emitOperationFinished( callId, resultCode, errorMessage );
 
   return callId;
 }
@@ -453,7 +485,7 @@ CallId Scheduler::acceptDeclineCounter( const IncidenceBase::Ptr &incidence,
                                       ScheduleMessage::Status status )
 {
   Q_UNUSED( status );
-  deleteTransaction( incidence );
+  deleteTransaction( incidence->uid() );
   return -1;
 }
 
@@ -618,30 +650,33 @@ CallId Scheduler::acceptReply( const IncidenceBase::Ptr &incidence,
   }
 
   if ( resultCode == ResultCodeSuccess ) {
-    deleteTransaction( incidence );
+    deleteTransaction( incidence->uid() );
   }
 
-  d->emitAcceptFinished( callId, resultCode, errorMessage );
+  d->emitOperationFinished( callId, resultCode, errorMessage );
 
   return callId;
 }
 
-CallId Scheduler::acceptRefresh( const IncidenceBase::Ptr &incidence, ScheduleMessage::Status status )
+CallId Scheduler::acceptRefresh( const IncidenceBase::Ptr &incidence,
+                                 ScheduleMessage::Status status )
 {
   Q_UNUSED( status );
   // handled in korganizer's IncomingDialog
-  deleteTransaction( incidence );
+  deleteTransaction( incidence->uid() );
   return -1;
 }
 
-CallId Scheduler::acceptCounter( const IncidenceBase::Ptr &incidence, ScheduleMessage::Status status )
+CallId Scheduler::acceptCounter( const IncidenceBase::Ptr &incidence,
+                                 ScheduleMessage::Status status )
 {
   Q_UNUSED( status );
-  deleteTransaction( incidence );
+  deleteTransaction( incidence->uid() );
   return -1;
 }
 
-CallId Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod method )
+CallId Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence,
+                                  iTIPMethod method )
 {
   if ( !d->mFreeBusyCache ) {
     kError() << "Scheduler: no FreeBusyCache.";
@@ -667,15 +702,14 @@ CallId Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMetho
   }
 
   if ( d->mFreeBusyCache->saveFreeBusy( freebusy, from ) ) {
-    deleteTransaction( incidence );
+    deleteTransaction( incidence->uid() );
   } else {
     errorMessage = QLatin1String( "Error saving free busy" );
     resultCode = ResultCodeSaveFreeBusyError;
   }
 
-  d->emitAcceptFinished( callId, resultCode, errorMessage );
+  d->emitOperationFinished( callId, resultCode, errorMessage );
 
   return callId;
 }
 
-#include "scheduler.moc"
