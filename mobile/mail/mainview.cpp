@@ -50,6 +50,7 @@
 #include "threadgroupermodel.h"
 #include "threadmodel.h"
 #include "threadselectionmodel.h"
+#include "vacationmanager.h"
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/collection.h>
@@ -306,6 +307,9 @@ void MainView::delayedInit()
   mAclEditor = new AclEditor( actionCollection(), this );
   rootContext()->setContextProperty( "aclEditor", mAclEditor );
   rootContext()->setContextProperty( "aclModel", mAclEditor->model() );
+
+  VacationManager *vacationManager = new VacationManager( actionCollection(), this, this );
+  rootContext()->setContextProperty( "vacationManager", vacationManager );
 
   QTime time;
   if ( debugTiming ) {

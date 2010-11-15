@@ -181,7 +181,12 @@ KPIM.MainView {
         guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
       }
 
+      VacationScriptIndicator {
+        anchors { top: parent.top; right: agentStatusIndicator.left; rightMargin: 5; topMargin: 10 }
+      }
+
       KPIM.AgentStatusIndicator {
+        id: agentStatusIndicator
         anchors { top: parent.top; right: parent.right; rightMargin: 10; topMargin: 10 }
       }
    }

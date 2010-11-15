@@ -162,6 +162,7 @@ class MainView : public KDeclarativeMainView
     void showExpireProperties();
     void templateFetchResult( KJob *job );
     void updateConfig();
+    bool askToGoOnline();
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
@@ -169,7 +170,6 @@ class MainView : public KDeclarativeMainView
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
     void recoverAutoSavedMessages();
     Akonadi::Item currentItem() const;
-    bool askToGoOnline();
     MessageViewer::MessageViewItem *messageViewerItem();
     bool selectNextUnreadMessageInCurrentFolder();
 

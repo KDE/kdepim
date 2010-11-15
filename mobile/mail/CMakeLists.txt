@@ -6,6 +6,7 @@ add_subdirectory(tests)
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo/
+  ${CMAKE_SOURCE_DIR}/libksieve/
   ${CMAKE_SOURCE_DIR}/kmail/
   ${CMAKE_BINARY_DIR}/kmail/kcm_kpimidentities/
   ${CMAKE_SOURCE_DIR}/kmail/kcm_kpimidentities/
@@ -40,6 +41,7 @@ set(kmail_mobile_srcs
   savemailcommand.cpp
   searchwidget.cpp
   templateemailmodel.cpp
+  vacationmanager.cpp
 )
 
 qt4_wrap_ui(kmail_mobile_srcs configwidget.ui filterconfigwidget.ui searchwidget.ui)
@@ -65,6 +67,7 @@ target_link_libraries(kmail-mobile
     kdepim
     kdepimmobileui
     kmbox
+    ksieveui
     mailcommon
     messagecomposer
     messagecore
@@ -105,6 +108,7 @@ install(FILES
   kmail-mobile.notifyrc
   dividing-line.png
   dividing-line-horizontal.png
+  VacationScriptIndicator.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
 

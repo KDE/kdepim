@@ -209,5 +209,6 @@ ActionMenuContainer {
       }        
     }
 
+    ActionListItem { name : "tools_edit_vacation" }
   }
 }
