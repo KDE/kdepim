@@ -239,6 +239,7 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
     Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
     const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
     const QByteArray identifier = identifierForMessage( message, item.id() );
+    m_allItems[identifier] = item;
     if (!message->inReplyTo()->isEmpty()) {
       QByteArray _inReplyTo = message->inReplyTo()->as7BitString(false);
       const QByteArray inReplyTo = _inReplyTo.mid(1, _inReplyTo.size() -2 );
@@ -248,7 +249,6 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
       if (it == end) {
         addToPending(pendingThreads, inReplyTo, identifier);
         m_threadItems[identifier] = item;
-        m_allItems[identifier] = item;
         m_messageMap[item] = identifier;
         continue;
       }
@@ -260,7 +260,6 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
         pendingThreads.remove(ba);
         m_threads[identifier].insert(ba);
       }
-      m_allItems[identifier] = item;
       m_threadItems[identifier] = item;
       m_messageMap[item] = identifier;
     }
