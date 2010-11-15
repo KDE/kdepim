@@ -37,7 +37,7 @@ class TreeWidgetWithContextMenu : public QTreeWidget
     TreeWidgetWithContextMenu( QWidget *parent )
       : QTreeWidget( parent )
     {}
-
+#ifndef QT_NO_CONTEXTMENU
   Q_SIGNALS:
 
     /**
@@ -55,6 +55,7 @@ class TreeWidgetWithContextMenu : public QTreeWidget
     virtual void contextMenuEvent( QContextMenuEvent * event ) {
         emit contextMenuRequested( itemAt( event->pos() ), event->globalPos() );
     }
+#endif
 };
 
 /**

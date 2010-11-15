@@ -51,8 +51,10 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char
   mListView->setRootIsDecorated( true );
   mListView->setAlternatingRowColors( true );
   mListView->setSelectionMode( QAbstractItemView::SingleSelection );
+#ifndef QT_NO_CONTEXTMENU
   connect( mListView, SIGNAL( contextMenuRequested( QTreeWidgetItem*, QPoint ) ),
            this, SLOT( slotContextMenuRequested( QTreeWidgetItem*, QPoint ) ) );
+#endif
   connect( mListView, SIGNAL( itemDoubleClicked ( QTreeWidgetItem *, int ) ),
            this, SLOT( slotDoubleClicked( QTreeWidgetItem* ) ) );
   vlay->addWidget( mListView );
