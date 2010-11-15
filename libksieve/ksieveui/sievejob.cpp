@@ -22,117 +22,135 @@
 
 #include <QtCore/QTextCodec>
 
-#include <cassert>
-
 using KIO::Job;
 using KIO::UDSEntryList;
 using KIO::UDSEntry;
 
 using namespace KSieveUi;
 
-SieveJob::SieveJob( const KUrl & url, const QString & script,
-                    const QStack<Command> & commands,
-                    QObject * parent, const char * name )
-  : QObject( parent ),
-    mUrl( url ), mJob( 0 ), mDec( 0 ),
-    mScript( script ), mFileExists( DontKnow ), mCommands( commands )
+class SieveJob::Private
 {
-  setObjectName( name );
-  assert( !commands.isEmpty() );
-  schedule( commands.top() );
-}
+  public:
+    Private( SieveJob *qq )
+      : q( qq ), mJob( 0 ), mDecoder( 0 ), mFileExists( DontKnow )
+    {
+    }
 
-SieveJob::~SieveJob()
-{
-  kill();
-  delete mDec;
-  kDebug() << "~SieveJob()";
-}
+    ~Private()
+    {
+      delete mDecoder;
+    }
 
-void SieveJob::kill( KJob::KillVerbosity verbosity )
-{
-  if ( mJob ) mJob->kill( verbosity );
-}
+    void slotData( KIO::Job*, const QByteArray& );
+    void slotDataReq( KIO::Job*, QByteArray& );
+    void slotEntries( KIO::Job*, const KIO::UDSEntryList& );
+    void slotResult( KJob* );
 
-void SieveJob::setInteractive( bool interactive )
-{
-  if ( mJob && !interactive ) {
-    mJob->setUiDelegate( 0 );
-    KIO::getJobTracker()->unregisterJob(mJob);
-  }
-}
+    enum Command {
+      Get,
+      Put,
+      Activate,
+      Deactivate,
+      SearchActive,
+      List,
+      Delete
+    };
 
-void SieveJob::schedule( Command command )
+    enum Existence {
+      DontKnow,
+      Yes,
+      No
+    };
+
+    void schedule( Command command );
+
+    SieveJob *q;
+    KUrl mUrl;
+    KIO::Job * mJob;
+    QTextDecoder * mDecoder;
+    QString mScript;
+    QString mActiveScriptName;
+    Existence mFileExists;
+    QStringList mSieveCapabilities;
+    QStack<Command> mCommands;
+
+    // List of Sieve scripts on the server, used by @ref list()
+    QStringList mAvailableScripts;
+};
+
+void SieveJob::Private::schedule( Command command )
 {
   switch ( command ) {
-  case Get:
-    kDebug() << "get(" << mUrl.prettyUrl() << ")";
-    mJob = KIO::get( mUrl );
-    connect( mJob, SIGNAL(data(KIO::Job*,const QByteArray&)),
-             SLOT(slotData(KIO::Job*,const QByteArray&)) );
-    break;
-  case Put:
-    kDebug() << "put(" << mUrl.prettyUrl() << ")";
-    mJob = KIO::put( mUrl, 0600, KIO::Overwrite );
-    connect( mJob, SIGNAL(dataReq(KIO::Job*,QByteArray&)),
-             SLOT(slotDataReq(KIO::Job*,QByteArray&)) );
-    break;
-  case Activate:
-    kDebug() << "chmod(" << mUrl.prettyUrl() <<", 0700 )";
-    mJob = KIO::chmod( mUrl, 0700 );
-    break;
-  case Deactivate:
-    kDebug() << "chmod(" << mUrl.prettyUrl() <<", 0600 )";
-    mJob = KIO::chmod( mUrl, 0600 );
-    break;
-  case SearchActive:
-    kDebug() << "listDir(" << mUrl.prettyUrl() << ")";
-    {
-      KUrl url = mUrl;
-      QString query = url.query(); //save query part, because KUrl::cd() erases it
-      if ( !url.fileName().isEmpty() )
-        url.cd("..");
-      url.setQuery( query );
-      kDebug() << "listDir's real URL:" << url.prettyUrl();
-      mJob = KIO::listDir( url );
-      connect( mJob, SIGNAL(entries(KIO::Job*,const KIO::UDSEntryList&)),
-               SLOT(slotEntries(KIO::Job*,const KIO::UDSEntryList&)) );
+    case Get:
+      kDebug() << "get(" << mUrl.prettyUrl() << ")";
+      mJob = KIO::get( mUrl );
+      q->connect( mJob, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
+                  q, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );
       break;
-    }
-  case List:
-    kDebug() << "listDir(" << mUrl.prettyUrl() << ")";
-    {
-      mJob = KIO::listDir( mUrl );
-      connect( mJob, SIGNAL( entries(KIO::Job *, const KIO::UDSEntryList & ) ),
-               SLOT( slotEntries( KIO::Job *, const KIO::UDSEntryList & ) ) );
+    case Put:
+      kDebug() << "put(" << mUrl.prettyUrl() << ")";
+      mJob = KIO::put( mUrl, 0600, KIO::Overwrite );
+      q->connect( mJob, SIGNAL( dataReq( KIO::Job*, QByteArray& ) ),
+                  q, SLOT( slotDataReq( KIO::Job*, QByteArray& ) ) );
       break;
-    }
-  case Delete:
-    kDebug() << "delete(" << mUrl.prettyUrl() << ")";
-    mJob = KIO::del( mUrl );
-    break;
-  default:
-    assert( 0 );
+    case Activate:
+      kDebug() << "chmod(" << mUrl.prettyUrl() <<", 0700 )";
+      mJob = KIO::chmod( mUrl, 0700 );
+      break;
+    case Deactivate:
+      kDebug() << "chmod(" << mUrl.prettyUrl() <<", 0600 )";
+      mJob = KIO::chmod( mUrl, 0600 );
+      break;
+    case SearchActive:
+      kDebug() << "listDir(" << mUrl.prettyUrl() << ")";
+      {
+        KUrl url = mUrl;
+        const QString query = url.query(); //save query part, because KUrl::cd() erases it
+        if ( !url.fileName().isEmpty() )
+          url.cd( QLatin1String( ".." ) );
+        url.setQuery( query );
+
+        kDebug() << "listDir's real URL:" << url.prettyUrl();
+        mJob = KIO::listDir( url );
+        q->connect( mJob, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
+                    q, SLOT( slotEntries( KIO::Job*, const KIO::UDSEntryList& ) ) );
+        break;
+      }
+    case List:
+      kDebug() << "listDir(" << mUrl.prettyUrl() << ")";
+      {
+        mJob = KIO::listDir( mUrl );
+        q->connect( mJob, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
+                    q, SLOT( slotEntries( KIO::Job*, const KIO::UDSEntryList& ) ) );
+        break;
+      }
+    case Delete:
+      kDebug() << "delete(" << mUrl.prettyUrl() << ")";
+      mJob = KIO::del( mUrl );
+      break;
+    default:
+      Q_ASSERT( false );
   }
+
   // common to all jobs:
-  connect( mJob, SIGNAL(result(KJob*)), SLOT(slotResult(KJob*)) );
+  q->connect( mJob, SIGNAL( result( KJob* ) ), q, SLOT( slotResult( KJob* ) ) );
 }
 
-void SieveJob::slotData( Job *, const QByteArray & data )
+void SieveJob::Private::slotData( Job*, const QByteArray &data )
 {
   // check for end-of-data marker:
   if ( data.size() == 0 )
     return;
 
   // make sure we have a textdecoder;
-  if ( !mDec )
-    mDec = QTextCodec::codecForMib( 106 /*utf8*/ )->makeDecoder();
+  if ( !mDecoder )
+    mDecoder = QTextCodec::codecForMib( 106 /*utf8*/ )->makeDecoder();
 
   // decode utf8; add to mScript:
-  mScript += mDec->toUnicode( data.data(), data.size() );
+  mScript += mDecoder->toUnicode( data.data(), data.size() );
 }
 
-void SieveJob::slotDataReq( Job *, QByteArray & data )
+void SieveJob::Private::slotDataReq( Job*, QByteArray &data )
 {
   // check whether we have already sent our data:
   if ( mScript.isEmpty() ) {
@@ -151,44 +169,48 @@ void SieveJob::slotDataReq( Job *, QByteArray & data )
   mScript.clear();
 }
 
-void SieveJob::slotEntries( Job *, const UDSEntryList & l )
+void SieveJob::Private::slotEntries( Job*, const UDSEntryList &entries )
 {
-  // loop over entries:
-  for ( UDSEntryList::const_iterator it = l.begin() ; it != l.end() ; ++it ) {
+  foreach ( const UDSEntry &entry, entries ) {
     // Loop over all UDS atoms to find the UDSEntry::UDS_ACCESS and UDS_NAME atoms;
     // note if we find an exec'able file ( == active script )
     // or the requested filename (mUrl.fileName()).
-    const QString filename = it->stringValue( KIO::UDSEntry::UDS_NAME );
+    const QString filename = entry.stringValue( KIO::UDSEntry::UDS_NAME );
+
     mAvailableScripts.append( filename );
-    bool isActive = ( it->numberValue( KIO::UDSEntry::UDS_ACCESS ) == 0700 );
+    const bool isActive = (entry.numberValue( KIO::UDSEntry::UDS_ACCESS ) == 0700);
 
     if ( isActive )
       mActiveScriptName = filename;
 
     if ( mFileExists == DontKnow && filename == mUrl.fileName() )
       mFileExists = Yes;
-    emit item( this, filename, isActive );
+
+    emit q->item( q, filename, isActive );
+
     if ( mFileExists == Yes && !mActiveScriptName.isEmpty() )
       return; // early return if we have all information
   }
 }
 
-void SieveJob::slotResult( KJob * job )
+void SieveJob::Private::slotResult( KJob *job )
 {
-  Command lastCmd = mCommands.top();
+  const Command lastCmd = mCommands.top();
 
   // First, let's see if we come back from a SearchActive. If so, set
   // mFileExists to No if we didn't see the mUrl.fileName() during
   // listDir...
   if ( lastCmd == SearchActive && mFileExists == DontKnow && !job->error() )
     mFileExists = No;
+
   // prepare for next round:
   mCommands.pop();
-  delete mDec; mDec = 0;
+  delete mDecoder;
+  mDecoder = 0;
 
   if ( mSieveCapabilities.empty() ) {
-    mSieveCapabilities = static_cast<KIO::Job*>(job)->queryMetaData( "sieveExtensions" ).split(' ', QString::SkipEmptyParts );
-    kDebug() << "Received Sieve extensions supported:\n" << mSieveCapabilities.join("\n");
+    mSieveCapabilities = static_cast<KIO::Job*>( job )->queryMetaData( "sieveExtensions" ).split( ' ', QString::SkipEmptyParts );
+    kDebug() << "Received Sieve extensions supported:\n" << mSieveCapabilities.join( "\n" );
   }
 
   // check for errors:
@@ -198,22 +220,22 @@ void SieveJob::slotResult( KJob * job )
       static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
     }
 
-    emit result( this, false, mScript, mUrl.fileName() == mActiveScriptName );
+    emit q->result( q, false, mScript, (mUrl.fileName() == mActiveScriptName) );
 
     if ( lastCmd == List )
-      emit gotList( this, false, mAvailableScripts, mActiveScriptName );
+      emit q->gotList( q, false, mAvailableScripts, mActiveScriptName );
     else
-      emit gotScript( this, false, mScript, mUrl.fileName() == mActiveScriptName );
+      emit q->gotScript( q, false, mScript, (mUrl.fileName() == mActiveScriptName) );
 
     mJob = 0;
-    deleteLater();
+    q->deleteLater();
     return;
   }
 
   // check for new tasks:
   if ( !mCommands.empty() ) {
     // Don't fail getting a non-existent script:
-    if ( mCommands.top() == Get && mFileExists == No ) {
+    if ( (mCommands.top() == Get) && (mFileExists == No) ) {
       mScript.clear();
       mCommands.pop();
     }
@@ -221,14 +243,14 @@ void SieveJob::slotResult( KJob * job )
 
   if ( mCommands.empty() ) {
     // was last command; report success and delete this object:
-    emit result( this, true, mScript, mUrl.fileName() == mActiveScriptName );
+    emit q->result( q, true, mScript, (mUrl.fileName() == mActiveScriptName) );
     if ( lastCmd == List )
-      emit gotList( this, true, mAvailableScripts, mActiveScriptName );
+      emit q->gotList( q, true, mAvailableScripts, mActiveScriptName );
     else
-      emit gotScript( this, true, mScript, mUrl.fileName() == mActiveScriptName );
+      emit q->gotScript( q, true, mScript, (mUrl.fileName() == mActiveScriptName) );
 
     mJob = 0; // deletes itself on returning from this slot
-    deleteLater();
+    q->deleteLater();
     return;
   } else {
     // schedule the next command:
@@ -236,52 +258,128 @@ void SieveJob::slotResult( KJob * job )
   }
 }
 
-SieveJob * SieveJob::put( const KUrl & dest, const QString & script,
-                          bool makeActive, bool wasActive )
+
+SieveJob::SieveJob( QObject *parent )
+  : QObject( parent ), d( new Private( this ) )
 {
-  QStack<Command> commands;
+}
+
+SieveJob::~SieveJob()
+{
+  kill();
+
+  delete d;
+}
+
+void SieveJob::kill( KJob::KillVerbosity verbosity )
+{
+  if ( d->mJob )
+    d->mJob->kill( verbosity );
+}
+
+void SieveJob::setInteractive( bool interactive )
+{
+  if ( d->mJob && !interactive ) {
+    d->mJob->setUiDelegate( 0 );
+    KIO::getJobTracker()->unregisterJob( d->mJob );
+  }
+}
+
+QStringList SieveJob::sieveCapabilities() const
+{
+  return d->mSieveCapabilities;
+}
+
+bool SieveJob::fileExists() const
+{
+  return d->mFileExists;
+}
+
+SieveJob* SieveJob::put( const KUrl &destination, const QString &script,
+                         bool makeActive, bool wasActive )
+{
+  QStack<Private::Command> commands;
   if ( makeActive )
-    commands.push( Activate );
+    commands.push( Private::Activate );
+
   if ( wasActive )
-    commands.push( Deactivate );
-  commands.push( Put );
-  return new SieveJob( dest, script, commands );
+    commands.push( Private::Deactivate );
+
+  commands.push( Private::Put );
+
+  SieveJob *job = new SieveJob;
+  job->d->mUrl = destination;
+  job->d->mScript = script;
+  job->d->mCommands = commands;
+  job->d->schedule( job->d->mCommands.top() );
+
+  return job;
 }
 
-SieveJob * SieveJob::get( const KUrl & src )
+SieveJob* SieveJob::get( const KUrl &source )
 {
-  QStack<Command> commands;
-  commands.push( Get );
-  commands.push( SearchActive );
-  return new SieveJob( src, QString(), commands );
+  QStack<Private::Command> commands;
+  commands.push( Private::Get );
+  commands.push( Private::SearchActive );
+
+  SieveJob *job = new SieveJob;
+  job->d->mUrl = source;
+  job->d->mCommands = commands;
+  job->d->schedule( job->d->mCommands.top() );
+
+  return job;
 }
 
-SieveJob * SieveJob::list( const KUrl & src )
+SieveJob* SieveJob::list( const KUrl &source )
 {
-  QStack<Command> commands;
-  commands.push( List );
-  return new SieveJob( src, QString(), commands );
+  QStack<Private::Command> commands;
+  commands.push( Private::List );
+
+  SieveJob *job = new SieveJob;
+  job->d->mUrl = source;
+  job->d->mCommands = commands;
+  job->d->schedule( job->d->mCommands.top() );
+
+  return job;
 }
 
-SieveJob * SieveJob::del( const KUrl & url )
+SieveJob* SieveJob::del( const KUrl &url )
 {
-  QStack<Command> commands;
-  commands.push( Delete );
-  return new SieveJob( url, QString(), commands );
+  QStack<Private::Command> commands;
+  commands.push( Private::Delete );
+
+  SieveJob *job = new SieveJob;
+  job->d->mUrl = url;
+  job->d->mCommands = commands;
+  job->d->schedule( job->d->mCommands.top() );
+
+  return job;
 }
 
-SieveJob * SieveJob::desactivate( const KUrl & url )
+SieveJob* SieveJob::deactivate( const KUrl &url )
 {
-  QStack<Command> commands;
-  commands.push( Deactivate );
-  return new SieveJob( url, QString(), commands );
+  QStack<Private::Command> commands;
+  commands.push( Private::Deactivate );
+
+  SieveJob *job = new SieveJob;
+  job->d->mUrl = url;
+  job->d->mCommands = commands;
+  job->d->schedule( job->d->mCommands.top() );
+
+  return job;
 }
 
-SieveJob * SieveJob::activate( const KUrl & url )
+SieveJob* SieveJob::activate( const KUrl &url )
 {
-  QStack<Command> commands;
-  commands.push( Activate );
-  return new SieveJob( url, QString(), commands );
+  QStack<Private::Command> commands;
+  commands.push( Private::Activate );
+
+  SieveJob *job = new SieveJob;
+  job->d->mUrl = url;
+  job->d->mCommands = commands;
+  job->d->schedule( job->d->mCommands.top() );
+
+  return job;
 }
 
 #include "sievejob.moc"

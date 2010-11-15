@@ -209,7 +209,7 @@ void ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem * item, bool 
   if ( activate )
     job = KSieveUi::SieveJob::activate( u );
   else
-    job = KSieveUi::SieveJob::desactivate( u );
+    job = KSieveUi::SieveJob::deactivate( u );
   connect( job, SIGNAL(result(KSieveUi::SieveJob*,bool,const QString&,bool)),
            this, SLOT(slotRefresh()) );
 }

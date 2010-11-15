@@ -33,97 +33,135 @@ class KJob;
 
 namespace KSieveUi {
 
+/**
+ * @short A job to manage sieve scripts.
+ *
+ * This class provides functionality to manage sieve scripts
+ * on an IMAP server.
+ */
 class KSIEVEUI_EXPORT SieveJob : public QObject
 {
   Q_OBJECT
 
-  protected:
-    enum Command { Get, Put, Activate, Deactivate, SearchActive, List, Delete };
-
-    SieveJob( const KUrl & url, const QString & script,
-              const QStack<Command> & commands,
-              QObject * parent=0, const char * name=0 );
-    virtual ~SieveJob();
-
   public:
-    enum Existence { DontKnow, Yes, No };
+    /**
+     * Stores a sieve script on an IMAP server.
+     *
+     * @param destination The sieve URL that describes the destination.
+     * @param script The raw sieve script.
+     * @param makeActive If @c true, the script will be marked as active.
+     * @param wasActive If @c true, the script will be marked as inactive.
+     */
+    static SieveJob* put( const KUrl &destination, const QString &script,
+                          bool makeActive, bool wasActive );
 
     /**
-     * Store a Sieve script. If @param makeActive is set, also mark the
-     * script active
+     * Gets a sieve script from an IMAP server.
+     *
+     * @param source The sieve URL that describes the source.
      */
-    static SieveJob * put( const KUrl & dest, const QString & script,
-                           bool makeActive, bool wasActive );
+    static SieveJob* get( const KUrl &source );
 
     /**
-     * Get a specific Sieve script
+     * Lists all available scripts at the given sieve @p url.
      */
-    static SieveJob * get( const KUrl & src );
+    static SieveJob* list( const KUrl &url );
 
     /**
-     * List all available scripts
+     * Deletes the script with the given sieve @p url.
      */
-    static SieveJob * list( const KUrl & url );
+    static SieveJob* del( const KUrl &url );
 
-    static SieveJob * del( const KUrl & url );
+    /**
+     * Activates the script with the given sieve @p url.
+     */
+    static SieveJob* activate( const KUrl &url );
 
-    static SieveJob * activate( const KUrl & url );
+    /**
+     * Deactivates the script with the given sieve @p url.
+     */
+    static SieveJob* deactivate( const KUrl &url );
 
-    static SieveJob * desactivate( const KUrl & url );
-
+    /**
+     * Kills the sieve job.
+     */
     void kill( KJob::KillVerbosity verbosity = KJob::Quietly );
 
+    /**
+     * Sets whether the sieve job shall be interactive.
+     */
     void setInteractive( bool interactive );
 
-    const QStringList & sieveCapabilities() const {
-      return mSieveCapabilities;
-    }
-
-    bool fileExists() const {
-      return mFileExists;
-    }
-
-  signals:
-    void gotScript( KSieveUi::SieveJob * job, bool success,
-                    const QString & script, bool active );
+    /**
+     * Returns the sieve capabilities of the IMAP server.
+     */
+    QStringList sieveCapabilities() const;
 
     /**
-     * We got the list of available scripts
+     * Returns whether the requested sieve script exists on
+     * the IMAP server.
+     */
+    bool fileExists() const;
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted when a get job has finished.
      *
-     * @param scriptList is the list of script filenames
-     * @param activeScript lists the filename of the active script, or an
-     *        empty string if no script is active.
+     * @param job The job that has finished
+     * @param success Whether the job was successfully.
+     * @param script The downloaded sieve script.
+     * @param active Whether the script is active on the server.
+     */
+    void gotScript( KSieveUi::SieveJob *job, bool success,
+                    const QString &script, bool active );
+
+    /**
+     * This signal is emitted when a list job has finished.
+     *
+     * @param job The job that has finished.
+     * @param success Whether the job was successfully.
+     * @param scriptList The list of script filenames on the server.
+     * @param activeScript The filename of the active script, or an
+     *                     empty string if no script is active.
      */
     void gotList( KSieveUi::SieveJob *job, bool success,
                   const QStringList &scriptList, const QString &activeScript );
 
-    void result(  KSieveUi::SieveJob * job, bool success,
-                  const QString & script, bool active );
+    /**
+     * This signal is emitted for all kind of jobs when they have finished.
+     *
+     * @param job The job that has finished.
+     * @param success Whether the job was successfully.
+     * @param script The script the action was about.
+     * @param active The filename of the active script, or an
+     * @param active Whether the script is active on the server.
+     */
+    void result( KSieveUi::SieveJob *job, bool success,
+                 const QString &script, bool active );
 
-    void item( KSieveUi::SieveJob * job, const QString & filename, bool active );
+    /**
+     * This signal is emitted for each result entry of a list job.
+     *
+     * @param job The job the result belongs to.
+     * @param filename The filename of the sieve script on the server.
+     * @param active Whether the script is active on the server.
+     */
+    void item( KSieveUi::SieveJob *job, const QString &filename, bool active );
 
-  protected:
-    void schedule( Command command );
+  private:
+    //@cond PRIVATE
+    SieveJob( QObject *parent = 0 );
+    ~SieveJob();
 
-  protected slots:
-    void slotData( KIO::Job *, const QByteArray & ); // for get
-    void slotDataReq( KIO::Job *, QByteArray & ); // for put
-    void slotEntries( KIO::Job *, const KIO::UDSEntryList & ); // for listDir
-    void slotResult( KJob * ); // for all commands
+    class Private;
+    Private* const d;
 
-  protected:
-    KUrl mUrl;
-    KIO::Job * mJob;
-    QTextDecoder * mDec;
-    QString mScript;
-    QString mActiveScriptName;
-    Existence mFileExists;
-    QStringList mSieveCapabilities;
-    QStack<Command> mCommands;
-
-    // List of Sieve scripts on the server, used by @ref list()
-    QStringList mAvailableScripts;
-  };
+    Q_PRIVATE_SLOT( d, void slotData( KIO::Job*, const QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void slotDataReq( KIO::Job*, QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void slotEntries( KIO::Job*, const KIO::UDSEntryList& ) )
+    Q_PRIVATE_SLOT( d, void slotResult( KJob* ) )
+    //@endcond
+};
 
 }
 
