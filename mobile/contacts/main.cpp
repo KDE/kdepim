@@ -49,6 +49,10 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication app;
 
+  KGlobal::locale()->insertCatalog( "kabc" );
+  KGlobal::locale()->insertCatalog( "akonadicontact" );
+  KGlobal::locale()->insertCatalog( "libkdepim" );
+
   MainView view;
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );
