@@ -1,7 +1,6 @@
 /*  -*- c++ -*-
     vacationdialog.h
 
-    KMail, the KDE mail client.
     Copyright (c) 2002 Marc Mutz <mutz@kde.org>
 
     This program is free software; you can redistribute it and/or
@@ -12,10 +11,10 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef __KMAIL_VACATIONDIALOG_H__
-#define __KMAIL_VACATIONDIALOG_H__
+#ifndef KSIEVEUI_VACATIONDIALOG_H
+#define KSIEVEUI_VACATIONDIALOG_H
 
-#include "kdialog.h"
+#include <kdialog.h>
 
 class KIntSpinBox;
 class KLineEdit;
@@ -32,13 +31,15 @@ namespace KMime {
   }
 }
 
-namespace KMail {
+namespace KSieveUi {
 
-  class VacationDialog : public KDialog {
-    Q_OBJECT
+class VacationDialog : public KDialog
+{
+  Q_OBJECT
+
   public:
     explicit VacationDialog( const QString & caption, QWidget * parent=0,
-		    const char * name=0, bool modal=true );
+                             const char * name=0, bool modal=true );
     virtual ~VacationDialog();
 
     virtual void enableDomainAndSendForSpam( bool enable = true );
@@ -77,8 +78,8 @@ namespace KMail {
     QCheckBox   * mDomainCheck;
     KLineEdit   * mDomainEdit;
 
-  };
+};
 
-} // namespace KMail
+}
 
-#endif // __KMAIL_VACATIONDIALOG_H__
+#endif

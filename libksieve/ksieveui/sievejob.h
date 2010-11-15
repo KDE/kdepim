@@ -1,7 +1,6 @@
 /*  -*- c++ -*-
     sievejob.h
 
-    KMail, the KDE mail client.
     Copyright (c) 2002 Marc Mutz <mutz@kde.org>
 
     This program is free software; you can redistribute it and/or
@@ -12,13 +11,14 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef __KMAIL_SIEVE_JOB_H__
-#define __KMAIL_SIEVE_JOB_H__
+#ifndef KSIEVEUI_SIEVEJOB_H
+#define KSIEVEUI_SIEVEJOB_H
 
-#include <QObject>
-#include <QStack>
-#include <QString>
-#include <QStringList>
+#include "ksieveui_export.h"
+
+#include <QtCore/QObject>
+#include <QtCore/QStack>
+#include <QtCore/QStringList>
 
 #include <kurl.h>
 #include <kio/global.h>
@@ -30,15 +30,19 @@ namespace KIO {
 }
 
 class KJob;
-namespace KMail {
 
-  class SieveJob : public QObject {
-    Q_OBJECT
+namespace KSieveUi {
+
+class KSIEVEUI_EXPORT SieveJob : public QObject
+{
+  Q_OBJECT
+
   protected:
     enum Command { Get, Put, Activate, Deactivate, SearchActive, List, Delete };
+
     SieveJob( const KUrl & url, const QString & script,
-	      const QStack<Command> & commands,
-	      QObject * parent=0, const char * name=0 );
+              const QStack<Command> & commands,
+              QObject * parent=0, const char * name=0 );
     virtual ~SieveJob();
 
   public:
@@ -49,7 +53,7 @@ namespace KMail {
      * script active
      */
     static SieveJob * put( const KUrl & dest, const QString & script,
-			   bool makeActive, bool wasActive );
+                           bool makeActive, bool wasActive );
 
     /**
      * Get a specific Sieve script
@@ -80,8 +84,8 @@ namespace KMail {
     }
 
   signals:
-    void gotScript( KMail::SieveJob * job, bool success,
-		    const QString & script, bool active );
+    void gotScript( KSieveUi::SieveJob * job, bool success,
+                    const QString & script, bool active );
 
     /**
      * We got the list of available scripts
@@ -90,13 +94,13 @@ namespace KMail {
      * @param activeScript lists the filename of the active script, or an
      *        empty string if no script is active.
      */
-    void gotList( KMail::SieveJob *job, bool success,
+    void gotList( KSieveUi::SieveJob *job, bool success,
                   const QStringList &scriptList, const QString &activeScript );
 
-    void result(  KMail::SieveJob * job, bool success,
+    void result(  KSieveUi::SieveJob * job, bool success,
                   const QString & script, bool active );
 
-    void item( KMail::SieveJob * job, const QString & filename, bool active );
+    void item( KSieveUi::SieveJob * job, const QString & filename, bool active );
 
   protected:
     void schedule( Command command );
@@ -121,9 +125,6 @@ namespace KMail {
     QStringList mAvailableScripts;
   };
 
-} // namespace KMail
+}
 
-#endif // __KMAIL_SIEVE_JOB_H__
-
-// vim: set noet sts=2 ts=8 sw=2:
-
+#endif

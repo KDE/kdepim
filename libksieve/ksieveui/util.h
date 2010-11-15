@@ -35,72 +35,36 @@
 **   your version.
 **
 *******************************************************************************/
-#ifndef KMAILUTIL_H
-#define KMAILUTIL_H
 
-#include <stdlib.h>
-#include <QWidget>
-#include <kio/netaccess.h>
-#include <kmessagebox.h>
-#include <klocale.h>
-#include <akonadi/item.h>
-#include <kmime/kmime_message.h>
-#include <Akonadi/AgentInstance>
-#include <Akonadi/Collection>
+#ifndef KSIEVEUI_UTIL_H
+#define KSIEVEUI_UTIL_H
+
+#include "ksieveui_export.h"
+
+#include <akonadi/agentinstance.h>
+
 class KUrl;
+class QString;
 
-class OrgKdeAkonadiImapSettingsInterface;
-
-namespace Akonadi {
-  class EntityMimeTypeFilterModel;
-}
-
-#define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
-#define POP3_RESOURCE_IDENTIFIER "akonadi_pop3_resource"
-namespace KMail
+namespace KSieveUi
 {
-    /**
-     * The Util namespace contains a collection of helper functions use in
-     * various places.
-     */
+  /**
+   * The Util namespace contains a collection of helper functions use in
+   * various places.
+   */
 namespace Util {
 
-    /** Test if all required settings are set.
-      Reports problems to user via dialogs and returns false.
-      Returns true if everything is Ok. */
-    bool checkTransport( QWidget *w );
+    /**
+     * Returns the sieve url for the account with the given @p identifier.
+     */
+    KSIEVEUI_EXPORT KUrl findSieveUrlForAccount( const QString &identifier );
 
     /**
-     * Convert all sequences of "\r\n" (carriage return followed by a line
-     * feed) to a single "\n" (line feed). The conversion happens in place.
-     * Returns the length of the resulting string.
-     * @param str The string to convert.
-     * @param strLen The length of the string to convert.
-     * @return The new length of the converted string.
+     * Returns the list of configured IMAP agent instances.
      */
-    size_t crlf2lf( char* str, const size_t strLen );
-
-    /**
-     * Returns any mailing list post addresses set on the
-     *  parent collection (the mail folder) of the item.
-     */
-    QStringList mailingListsFromMessage( const Akonadi::Item& item );
-
-    /**
-     * Whether or not the mail item has the keep-reply-in-folder
-     *  attribute set.
-     */
-    Akonadi::Item::Id putRepliesInSameFolder( const Akonadi::Item& item );
-
-    void launchAccountWizard( QWidget * );
-
-    /**
-     * Handles a clicked URL, but only in case the viewer didn't handle it.
-     * Currently only support mailto.
-     */
-    void handleClickedURL( const KUrl &url, uint identity );
-
+    KSIEVEUI_EXPORT Akonadi::AgentInstance::List imapAgentInstances();
 }
+
 }
 
 #endif
