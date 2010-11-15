@@ -1092,6 +1092,7 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 					}
 				}
 				bool reschedule = false;
+				bool rescheduleWork = false;
 				if ((event->workTimeOnly() || event->holidaysExcluded())  &&  !alarm.deferred())
 				{
 					// The alarm is restricted to working hours and/or non-holidays
@@ -1105,7 +1106,9 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 					}
 					else
 						reschedule = !KAlarm::isWorkingTime(nextDT, event->eventData());
-					if (reschedule) { kDebug() << "Alarm" << alarm.type() << "at" << nextDT.dateTime() << ": not during working hours"; }
+					rescheduleWork = reschedule;
+					if (reschedule)
+						kDebug() << "Alarm" << alarm.type() << "at" << nextDT.dateTime() << ": not during working hours";
 				}
 				if (!reschedule  &&  alarm.repeatAtLogin())
 				{
@@ -1204,7 +1207,7 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 				if (reschedule)
 				{
 					// The latest repetition was too long ago, so schedule the next one
-					rescheduleAlarm(*event, alarm, false);
+					rescheduleAlarm(*event, alarm, false, (rescheduleWork ? nextDT : KDateTime()));
 					updateCalAndDisplay = true;
 					continue;
 				}
@@ -1262,11 +1265,14 @@ void KAlarmApp::alarmCompleted(const KAEvent& event)
 }
 
 /******************************************************************************
-* Reschedule the alarm for its next recurrence. If none remain, delete it.
-* If the alarm is deleted and it is the last alarm for its event, the event is
-* removed from the calendar file and from every main window instance.
+* Reschedule the alarm for its next recurrence after now. If none remain,
+* delete it.  If the alarm is deleted and it is the last alarm for its event,
+* the event is removed from the calendar file and from every main window
+* instance.
+* If 'nextDt' is valid, the event is rescheduled for the next non-working
+* time occurrence after that.
 */
-void KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updateCalAndDisplay)
+void KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updateCalAndDisplay, const KDateTime& nextDt)
 {
 	kDebug();
 	bool update = false;
@@ -1286,35 +1292,55 @@ void KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updat
 	else
 	{
 		// Reschedule the alarm for its next occurrence.
-		KAEventData::OccurType type = event.setNextOccurrence(KDateTime::currentUtcDateTime());
-		switch (type)
+		bool next = nextDt.isValid();
+		KDateTime next_dt = nextDt;
+		KDateTime now = KDateTime::currentUtcDateTime();
+		do
 		{
-			case KAEventData::NO_OCCURRENCE:
-				// All repetitions are finished, so cancel the event
-				if (cancelAlarm(event, alarm.type(), updateCalAndDisplay))
-					return;
-				break;
-			default:
-				if (!(type & KAEventData::OCCURRENCE_REPEAT))
+			KAEventData::OccurType type = event.setNextOccurrence(next ? next_dt : now);
+			switch (type)
+			{
+				case KAEventData::NO_OCCURRENCE:
+					// All repetitions are finished, so cancel the event
+					if (cancelAlarm(event, alarm.type(), updateCalAndDisplay))
+						return;
 					break;
-				// Next occurrence is a repeat, so fall through to recurrence handling
-			case KAEventData::RECURRENCE_DATE:
-			case KAEventData::RECURRENCE_DATE_TIME:
-			case KAEventData::LAST_RECURRENCE:
-				// The event is due by now and repetitions still remain, so rewrite the event
-				if (updateCalAndDisplay)
-					update = true;
-				break;
-			case KAEventData::FIRST_OR_ONLY_OCCURRENCE:
-				// The first occurrence is still due?!?, so don't do anything
-				break;
-		}
-		if (event.deferred())
-		{
-			// Just in case there's also a deferred alarm, ensure it's removed
-			event.removeExpiredAlarm(KAAlarm::DEFERRED_ALARM);
-			update = true;
-		}
+				default:
+					if (!(type & KAEventData::OCCURRENCE_REPEAT))
+						break;
+					// Next occurrence is a repeat, so fall through to recurrence handling
+				case KAEventData::RECURRENCE_DATE:
+				case KAEventData::RECURRENCE_DATE_TIME:
+				case KAEventData::LAST_RECURRENCE:
+					// The event is due by now and repetitions still remain, so rewrite the event
+					if (updateCalAndDisplay)
+						update = true;
+					break;
+				case KAEventData::FIRST_OR_ONLY_OCCURRENCE:
+					// The first occurrence is still due?!?, so don't do anything
+					break;
+			}
+			if (event.deferred())
+			{
+				// Just in case there's also a deferred alarm, ensure it's removed
+				event.removeExpiredAlarm(KAAlarm::DEFERRED_ALARM);
+				update = true;
+			}
+			if (next)
+			{
+				// The alarm is restricted to working hours and/or non-holidays.
+				// Check if the calculated next time is valid.
+				next_dt = event.mainDateTime(true).effectiveKDateTime();
+				if (event.mainDateTime(false).isDateOnly())
+				{
+					KDateTime dt(next_dt);
+					dt.setDateOnly(true);
+					next = !event.isWorkingTime(dt);
+				}
+				else
+					next = !event.isWorkingTime(next_dt);
+			}
+		} while (next && next_dt <= now);
 	}
 	event.endChanges();
 	if (update)

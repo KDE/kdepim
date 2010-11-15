@@ -1,7 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.4.10 --- 5 Nov 2010 ===
+=== Version 2.4.10 --- 15 Nov 2010 ===
 - Fix KAlarm showing in system tray at login when configured not to show in tray.
+- Fix working-time-only alarms not triggering if KAlarm is started up outside
+  working hours, after the last trigger time during working hours was missed.
 - Don't quit if no window is visible when 'show in system tray' is deselected.
 
 === Version 2.4.9 (KDEPIM 4.4.7) --- 19 October 2010 ===

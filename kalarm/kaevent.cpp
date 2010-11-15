@@ -1,7 +1,7 @@
 /*
  *  kaevent.cpp  -  represents calendar events
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -792,6 +792,21 @@ bool KAEvent::Private::mayOccurDailyDuringWork(const KDateTime& kdt) const
         }
     }
     return true;
+}
+
+/******************************************************************************
+* Check whether a date/time is during working hours and/or holidays, depending
+* on the flags set for the specified event.
+*/
+bool KAEvent::Private::isWorkingTime(const KDateTime& dt) const
+{
+    if ((mEventData->workTimeOnly()  &&  !Preferences::workDays().testBit(dt.date().dayOfWeek() - 1))
+    ||  (mEventData->holidaysExcluded()  &&  Preferences::holidays().isHoliday(dt.date())))
+        return false;
+    if (!mEventData->workTimeOnly())
+        return true;
+    return dt.isDateOnly()
+       ||  (dt.time() >= Preferences::workDayStart()  &&  dt.time() < Preferences::workDayEnd());
 }
 
 /******************************************************************************

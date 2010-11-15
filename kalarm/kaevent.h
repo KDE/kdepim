@@ -1,7 +1,7 @@
 /*
  *  kaevent.h  -  represents calendar events
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -220,6 +220,7 @@ class KAEvent
         CmdErrType         commandError() const           { return d->mCommandError; }
         static QString     commandErrorConfigGroup()      { return Private::mCmdErrConfigGroup; }
 
+        bool               isWorkingTime(const KDateTime& dt) const  { return d->isWorkingTime(dt); }
         bool               setRepetition(const Repetition& r)  { return d->mEventData->setRepetition(r); }
         void               setNoRecur()                   { d->mEventData->setNoRecur(); }
         void               setRecurrence(const KARecurrence& r)  { d->mEventData->setRecurrence(r); }
@@ -259,6 +260,7 @@ class KAEvent
                 void               setCommandError(const QString& configString);
                 void               setCommandError(CmdErrType) const;
                 DateTime           nextTrigger(TriggerType) const;
+                bool               isWorkingTime(const KDateTime&) const;
                 KAEventData::OccurType nextOccurrence(const KDateTime& preDateTime, DateTime& result, KAEventData::OccurOption o = KAEventData::IGNORE_REPETITION) const
                                          { return mEventData->nextOccurrence(preDateTime, result, Preferences::startOfDay(), o); }
                 KAEventData::OccurType previousOccurrence(const KDateTime& afterDateTime, DateTime& result, bool includeRepetitions = false) const
