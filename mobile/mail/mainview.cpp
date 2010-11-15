@@ -376,6 +376,10 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   actionCollection()->addAction( QLatin1String( "export_emails" ), action );
 
+  action = new KAction( i18n( "Show Source" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( showMessageSource() ) );
+  actionCollection()->addAction( QLatin1String( "show_message_source" ), action );
+
   // lazy load of the default single folders
   QTimer::singleShot( 3000, this, SLOT( initDefaultFolders() ) );
 
@@ -1480,6 +1484,14 @@ void MainView::selectNextUnreadMessage()
   if ( next.isValid() ) {
     regularSelectionModel()->setCurrentIndex( next, QItemSelectionModel::ClearAndSelect );
     selectNextUnreadMessageInCurrentFolder();
+  }
+}
+
+void MainView::showMessageSource()
+{
+  MessageViewer::MessageViewItem *item = messageViewerItem();
+  if ( item ) {
+    item->viewer()->slotShowMessageSource();
   }
 }
 

@@ -163,6 +163,7 @@ class MainView : public KDeclarativeMainView
     void templateFetchResult( KJob *job );
     void updateConfig();
     bool askToGoOnline();
+    void showMessageSource();
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
