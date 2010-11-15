@@ -24,6 +24,7 @@
 
 #include "acleditor.h"
 #include "breadcrumbnavigation.h"
+#include "charsetselectiondialog.h"
 #include "composerview.h"
 #include "configwidget.h"
 #include "declarativewidgetbase.h"
@@ -379,6 +380,10 @@ void MainView::delayedInit()
   action = new KAction( i18n( "Show Source" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( showMessageSource() ) );
   actionCollection()->addAction( QLatin1String( "show_message_source" ), action );
+
+  action = new KAction( i18n( "Encoding..." ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( selectOverrideEncoding() ) );
+  actionCollection()->addAction( QLatin1String( "change_message_encoding" ), action );
 
   // lazy load of the default single folders
   QTimer::singleShot( 3000, this, SLOT( initDefaultFolders() ) );
@@ -1492,6 +1497,18 @@ void MainView::showMessageSource()
   MessageViewer::MessageViewItem *item = messageViewerItem();
   if ( item ) {
     item->viewer()->slotShowMessageSource();
+  }
+}
+
+void MainView::selectOverrideEncoding()
+{
+  MessageViewer::MessageViewItem *item = messageViewerItem();
+  if ( item ) {
+    CharsetSelectionDialog dlg( this );
+    dlg.setCharset( item->viewer()->overrideEncoding() );
+
+    if ( dlg.exec() )
+      item->viewer()->setOverrideEncoding( dlg.charset() );
   }
 }
 

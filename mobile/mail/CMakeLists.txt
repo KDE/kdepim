@@ -22,6 +22,7 @@ include_directories(
 set(kmail_mobile_srcs   
   acleditor.cpp
   attachmentproxymodel.cpp
+  charsetselectiondialog.cpp
   composerautoresizer.cpp
   composerview.cpp
   configwidget.cpp
