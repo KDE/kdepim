@@ -1335,10 +1335,10 @@ void KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updat
 				{
 					KDateTime dt(next_dt);
 					dt.setDateOnly(true);
-					next = !event.isWorkingTime(dt);
+					next = !KAlarm::isWorkingTime(dt, event.eventData());
 				}
 				else
-					next = !event.isWorkingTime(next_dt);
+					next = !KAlarm::isWorkingTime(next_dt, event.eventData());
 			}
 		} while (next && next_dt <= now);
 	}
