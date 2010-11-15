@@ -953,7 +953,7 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   if ( status.isImportant() )
     flagsPart += "<img src=\"" + imgpath + "status_important.png\" height=\"22\" width=\"22\"/>";
   if ( status.hasAttachment() )
-    flagsPart += "<img src=\"" + imgpath + "status_hasattachment.png\" height=\"22\" width=\"22\"/>";
+    flagsPart += "<img src=\"" + imgpath + "status_attachment.png\" height=\"22\" width=\"22\"/>";
   if ( status.isToAct() )
     flagsPart += "<img src=\"" + imgpath + "status_actionitem.png\" height=\"22\" width=\"22\"/>";
   if ( status.isReplied() )

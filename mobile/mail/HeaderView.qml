@@ -51,6 +51,53 @@ KPIM.ItemListView {
           elide: "ElideRight"
           width: parent.width - dateLabel.width - anchors.leftMargin - dateLabel.anchors.rightMargin
         },
+        QML.Row {
+          anchors.top: parent.top
+          anchors.right: dateLabel.left
+          anchors.rightMargin: 5
+          QML.Image {
+            width: 22
+            height: 22
+            source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_important.png" )
+            visible: model.is_important
+          }
+          QML.Image {
+            width: 22
+            height: 22
+            source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_actionitem.png" )
+            visible: model.is_action_item
+          }
+          QML.Image {
+            width: 22
+            height: 22
+            source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_signed.png" )
+            visible: model.is_signed
+          }
+          QML.Image {
+            width: 22
+            height: 22
+            source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_encrypted.png" )
+            visible: model.is_encrypted
+          }
+          QML.Image {
+            width: 22
+            height: 22
+            source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_attachment.png" )
+            visible: model.has_attachment
+          }
+          QML.Image {
+            width: 22
+            height: 22
+            source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_replied.png" )
+            visible: model.is_replied
+          }
+          QML.Image {
+            width: 22
+            height: 22
+            source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_forwarded.png" )
+            visible: model.is_forwarded
+          }
+        },
         QML.Text {
           id: dateLabel
           anchors { top: parent.top; topMargin: 1; right: parent.right; rightMargin: deleteAction.width }
@@ -84,21 +131,6 @@ KPIM.ItemListView {
           text : model.threadUnreadCount > 0 ? KDE.i18ncp("This text is only visible if messages > 1", "%2 messages, %1 unread", "%2 messages, %1 unread",
                                                            model.threadUnreadCount, model.threadSize)
                                              : KDE.i18np( "One message", "%1 messages", model.threadSize );
-        },
-        QML.Image {
-          id : importantFlagImage
-          anchors.verticalCenter : parent.verticalCenter;
-          anchors.left : parent.left
-          anchors.leftMargin : 15
-          source : "important-email.png"
-          opacity : model.is_important ? 0.25 : 0
-        },
-        QML.Image {
-          id : actionFlagImage
-          anchors.verticalCenter : parent.verticalCenter;
-          anchors.left : importantFlagImage.right
-          source : "action-item-email.png"
-          opacity : model.is_action_item ? 0.25 : 0
         },
         KPIM.Action{
           id : deleteAction
