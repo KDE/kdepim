@@ -2,8 +2,6 @@ include(CheckTypeSize)
 check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
 configure_file(config-libksieve.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-libksieve.h )
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkdepim )
-
 set(libksieve_parser_SRCS
     ${CMAKE_SOURCE_DIR}/libksieve/parser/utf8validator.cpp
     ${CMAKE_SOURCE_DIR}/libksieve/parser/lexer.cpp
