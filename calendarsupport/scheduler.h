@@ -2,6 +2,7 @@
   This file is part of the calendarsupport library.
 
   Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -29,6 +30,15 @@
 
 #include <QtCore/QString>
 #include <QtCore/QList>
+#include <QtCore/QObject>
+
+/**
+   Most scheduler methods are async. They return immediately a unique identifier (a CallId) and
+   to the work in background.
+   Use the CallId to match the call with the result signal( CallId, ResultCode );
+*/
+typedef int CallId;
+
 
 namespace KCalCore {
   class ICalFormat;
@@ -42,20 +52,37 @@ namespace CalendarSupport {
   It is an abstract base class for inheritance by implementations of the
   iTIP scheme like iMIP or iRIP.
 */
-class CALENDARSUPPORT_EXPORT Scheduler
+  class CALENDARSUPPORT_EXPORT Scheduler : public QObject
 {
+  Q_OBJECT
   public:
+
+    enum ResultCode {
+      ResultCodeSuccess,
+      ResultCodeDifferentIncidenceTypes,
+      ResultCodeNewIncidenceTooOld,
+      ResultCodeUnknownStatus,
+      ResultCodeInvalidIncidence,
+      ResultCodeNotUpdate,
+      ResultCodeSaveFreeBusyError,
+      ResultCodeIncidenceOrAttendeeNotFound,
+      ResultCodeIncidenceNotFound,
+      ResultCodeErrorDeletingIncidence
+    };
+
     /**
       Creates a scheduler for calendar specified as argument.
     */
-    Scheduler( const  KCalCore::Calendar::Ptr &calendar, CalendarSupport::IncidenceChanger2 *changer );
+    Scheduler( const KCalCore::Calendar::Ptr &calendar,
+               CalendarSupport::IncidenceChanger2 *changer );
+
     virtual ~Scheduler();
 
     /**
       iTIP publish action
     */
-    virtual bool publish( const KCalCore::IncidenceBase::Ptr &incidence,
-                          const QString &recipients ) = 0;
+    virtual CallId publish( const KCalCore::IncidenceBase::Ptr &incidence,
+                            const QString &recipients ) = 0;
     /**
       Performs iTIP transaction on incidence. The method is specified as the
       method argument and can be any valid iTIP method.
@@ -63,8 +90,8 @@ class CALENDARSUPPORT_EXPORT Scheduler
       @param incidence the incidence for the transaction.
       @param method the iTIP transaction method to use.
     */
-    virtual bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                     KCalCore::iTIPMethod method ) = 0;
+    virtual CallId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                       KCalCore::iTIPMethod method ) = 0;
 
     /**
       Performs iTIP transaction on incidence to specified recipient(s).
@@ -74,14 +101,13 @@ class CALENDARSUPPORT_EXPORT Scheduler
       @param method the iTIP transaction method to use.
       @param recipients the receipients of the transaction.
     */
-    virtual bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                     KCalCore::iTIPMethod method, const QString &recipients ) = 0;
+    virtual CallId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                       KCalCore::iTIPMethod method, const QString &recipients ) = 0;
 
     /**
       Retrieves incoming iTIP transactions.
     */
-     //KDAB_TODO PTR
-    virtual QList<KCalCore::ScheduleMessage*> retrieveTransactions() = 0;
+    virtual QList<KCalCore::ScheduleMessage::Ptr> retrieveTransactions() = 0;
 
     /**
       Accepts the transaction. The incidence argument specifies the iCal
@@ -95,10 +121,10 @@ class CALENDARSUPPORT_EXPORT Scheduler
       @param email the email address of the person for whom this
       transaction is to be performed.
     */
-    bool acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                            KCalCore::iTIPMethod method,
-                            KCalCore::ScheduleMessage::Status status,
-                            const QString &email = QString() );
+    CallId acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                              KCalCore::iTIPMethod method,
+                              KCalCore::ScheduleMessage::Status status,
+                              const QString &email = QString() );
 
     virtual bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
 
@@ -118,35 +144,40 @@ class CALENDARSUPPORT_EXPORT Scheduler
     KCalCore::FreeBusyCache *freeBusyCache() const;
 
   protected:
-    bool acceptPublish( const KCalCore::IncidenceBase::Ptr &,
+    CallId acceptPublish( const KCalCore::IncidenceBase::Ptr &,
+                          KCalCore::ScheduleMessage::Status status,
+                          KCalCore::iTIPMethod method );
+
+    CallId acceptRequest( const KCalCore::IncidenceBase::Ptr &,
+                          KCalCore::ScheduleMessage::Status status,
+                          const QString &email );
+
+    CallId acceptAdd( const KCalCore::IncidenceBase::Ptr &,
+                      KCalCore::ScheduleMessage::Status status );
+
+    CallId acceptCancel( const KCalCore::IncidenceBase::Ptr &,
+                         KCalCore::ScheduleMessage::Status status,
+                         const QString &attendee );
+
+    CallId acceptDeclineCounter( const KCalCore::IncidenceBase::Ptr &,
+                                 KCalCore::ScheduleMessage::Status status );
+
+    CallId acceptReply( const KCalCore::IncidenceBase::Ptr &,
                         KCalCore::ScheduleMessage::Status status,
                         KCalCore::iTIPMethod method );
 
-    bool acceptRequest( const KCalCore::IncidenceBase::Ptr &,
-                        KCalCore::ScheduleMessage::Status status,
-                        const QString &email );
+    CallId acceptRefresh( const KCalCore::IncidenceBase::Ptr &,
+                          KCalCore::ScheduleMessage::Status status );
 
-    bool acceptAdd( const KCalCore::IncidenceBase::Ptr &,
-                    KCalCore::ScheduleMessage::Status status );
+    CallId acceptCounter( const KCalCore::IncidenceBase::Ptr &,
+                          KCalCore::ScheduleMessage::Status status );
 
-    bool acceptCancel( const KCalCore::IncidenceBase::Ptr &,
-                       KCalCore::ScheduleMessage::Status status,
-                       const QString &attendee );
+    CallId acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
 
-    bool acceptDeclineCounter( const KCalCore::IncidenceBase::Ptr &,
-                               KCalCore::ScheduleMessage::Status status );
-
-    bool acceptReply( const KCalCore::IncidenceBase::Ptr &,
-                      KCalCore::ScheduleMessage::Status status,
-                      KCalCore::iTIPMethod method );
-
-    bool acceptRefresh( const KCalCore::IncidenceBase::Ptr &,
-                        KCalCore::ScheduleMessage::Status status );
-
-    bool acceptCounter( const KCalCore::IncidenceBase::Ptr &,
-                        KCalCore::ScheduleMessage::Status status );
-
-    bool acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
+  Q_SIGNALS:
+    void acceptTransactionFinished( CallId callId, ResultCode code, const QString &errorMessage );
+    void performTransactionFinished( CallId callId, ResultCode code, const QString &errorMessage );
+    void publishFinished( CallId callId, ResultCode code, const QString &errorMessage );
 
   private:
     Q_DISABLE_COPY( Scheduler )
