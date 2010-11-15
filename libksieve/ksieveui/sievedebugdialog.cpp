@@ -1,7 +1,6 @@
 /*
     sievedebugdialog.cpp
 
-    KMail, the KDE mail client.
     Copyright (c) 2005 Martijn Klingens <klingens@kde.org>
 
     This program is free software; you can redistribute it and/or
@@ -12,36 +11,20 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-// This file is only compiled when debug is enabled, it is
-// not useful enough for non-developers to have this in releases.
-#if !defined(NDEBUG)
-
-
 #include "sievedebugdialog.h"
 
-#include <cassert>
-#include <limits.h>
-
-#include <QTimer>
-
+#include <akonadi/agentinstance.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <ksieve/error.h>
+#include <ksieve/parser.h>
+#include <ksieve/scriptbuilder.h>
 #include <ksieveui/sievejob.h>
 #include <ksieveui/util.h>
 #include <ktextedit.h>
 
-#include <kmime/kmime_header_parsing.h>
-#include <ksieve/error.h>
-#include <ksieve/parser.h>
-#include <ksieve/scriptbuilder.h>
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
-
-#include <akonadi/agentinstance.h>
-
-using KSieveUi::SieveJob;
-using KMime::Types::AddrSpecList;
+#include <QtCore/QTimer>
 
 namespace
 {
@@ -59,7 +42,7 @@ class SieveDebugDataExtractor : public KSieve::ScriptBuilder
         Days, Addresses
     };
 
-public:
+  public:
     SieveDebugDataExtractor()
     :   KSieve::ScriptBuilder()
     {
@@ -71,7 +54,7 @@ public:
         kDebug() ;
     }
 
-private:
+  private:
     void commandStart( const QString & identifier )
     {
         kDebug() << "Identifier: '" << identifier <<"'";
@@ -169,30 +152,29 @@ private:
         kDebug() ;
     }
 
-private:
+  private:
     void reset()
     {
         kDebug() ;
     }
 };
 
-} // Anon namespace
+}
 
-namespace KMail
-{
+using namespace KSieveUi;
 
 SieveDebugDialog::SieveDebugDialog( QWidget *parent )
-:   KDialog( parent ),
+  : KDialog( parent ),
     mSieveJob( 0 )
 {
     setCaption( i18n( "Sieve Diagnostics" ) );
     setButtons( Ok );
 
     // Collect all accounts
-    Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
+    const Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
     foreach ( const Akonadi::AgentInstance& type, lst )
     {
-      mResourceIdentifier<<type.identifier();
+      mResourceIdentifier << type.identifier();
     }
 
     mEdit = new KTextEdit( this );
@@ -368,10 +350,4 @@ void SieveDebugDialog::handlePutResult( SieveJob *, bool success, bool activated
     mSieveJob = 0; // job deletes itself after returning from this slot!
 }
 
-
-} // namespace KMail
-
 #include "sievedebugdialog.moc"
-
-#endif // NDEBUG
-

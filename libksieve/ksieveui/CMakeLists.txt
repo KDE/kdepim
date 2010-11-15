@@ -1,6 +1,8 @@
 include_directories( ${CMAKE_SOURCE_DIR}/libksieve )
 
 set(ksieveui_LIB_SRCS
+    managesievescriptsdialog.cpp
+    sievedebugdialog.cpp
     sievejob.cpp
     util.cpp
     vacation.cpp

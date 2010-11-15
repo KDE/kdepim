@@ -2,11 +2,6 @@
 #include "managesievescriptsdialog.h"
 #include "managesievescriptsdialog_p.h"
 
-#include "kmkernel.h"
-#include "util.h"
-#include "imapsettings.h"
-#include "mailutil.h"
-
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kwindowsystem.h>
@@ -19,16 +14,19 @@
 #include <ksieveui/sievejob.h>
 #include <ksieveui/util.h>
 
+#include <QApplication>
+#include <QButtonGroup>
 #include <QMenu>
 #include <QTreeWidget>
-#include <QButtonGroup>
 #include <QVBoxLayout>
 
 #include <cassert>
 
-bool KMail::ItemRadioButton::mTreeWidgetIsBeingCleared = false;
+using namespace KSieveUi;
 
-KMail::ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char * name )
+bool ItemRadioButton::mTreeWidgetIsBeingCleared = false;
+
+ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, const char * name )
   : KDialog( parent ),
     mContextMenuItem( 0 ),
     mSieveEditor( 0 ),
@@ -64,12 +62,12 @@ KMail::ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent, con
   slotRefresh();
 }
 
-KMail::ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
+ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 {
   clear();
 }
 
-void KMail::ManageSieveScriptsDialog::killAllJobs()
+void ManageSieveScriptsDialog::killAllJobs()
 {
   for ( QMap<KSieveUi::SieveJob*,QTreeWidgetItem*>::const_iterator it = mJobs.constBegin(),
         end = mJobs.constEnd() ; it != end ; ++it )
@@ -78,7 +76,7 @@ void KMail::ManageSieveScriptsDialog::killAllJobs()
 }
 
 
-void KMail::ManageSieveScriptsDialog::slotRefresh()
+void ManageSieveScriptsDialog::slotRefresh()
 {
   clear();
   QTreeWidgetItem *last = 0;
@@ -110,7 +108,7 @@ void KMail::ManageSieveScriptsDialog::slotRefresh()
   }
 }
 
-void KMail::ManageSieveScriptsDialog::slotResult( KSieveUi::SieveJob * job, bool success, const QString &, bool )
+void ManageSieveScriptsDialog::slotResult( KSieveUi::SieveJob * job, bool success, const QString &, bool )
 {
   QTreeWidgetItem * parent = mJobs[job];
   if ( !parent )
@@ -129,7 +127,7 @@ void KMail::ManageSieveScriptsDialog::slotResult( KSieveUi::SieveJob * job, bool
   item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
 }
 
-void KMail::ManageSieveScriptsDialog::slotItem( KSieveUi::SieveJob * job, const QString & filename, bool isActive )
+void ManageSieveScriptsDialog::slotItem( KSieveUi::SieveJob * job, const QString & filename, bool isActive )
 {
   QTreeWidgetItem * parent = mJobs[job];
   if ( !parent )
@@ -142,7 +140,7 @@ void KMail::ManageSieveScriptsDialog::slotItem( KSieveUi::SieveJob * job, const 
   }
 }
 
-void KMail::ManageSieveScriptsDialog::slotContextMenuRequested( QTreeWidgetItem *item, QPoint p )
+void ManageSieveScriptsDialog::slotContextMenuRequested( QTreeWidgetItem *item, QPoint p )
 {
   if ( !item )
     return;
@@ -165,7 +163,7 @@ void KMail::ManageSieveScriptsDialog::slotContextMenuRequested( QTreeWidgetItem 
   mContextMenuItem = 0;
 }
 
-void KMail::ManageSieveScriptsDialog::slotDeactivateScript()
+void ManageSieveScriptsDialog::slotDeactivateScript()
 {
   QTreeWidgetItem * item = mListView->currentItem();
   if ( !isFileNameItem( item ) )
@@ -177,7 +175,7 @@ void KMail::ManageSieveScriptsDialog::slotDeactivateScript()
   }
 }
 
-void KMail::ManageSieveScriptsDialog::slotSelectionChanged()
+void ManageSieveScriptsDialog::slotSelectionChanged()
 {
   QTreeWidgetItem * item = mListView->currentItem();
   if ( !isFileNameItem( item ) )
@@ -189,7 +187,7 @@ void KMail::ManageSieveScriptsDialog::slotSelectionChanged()
   }
 }
 
-void KMail::ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem * item, bool activate )
+void ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem * item, bool activate )
 {
   if ( !item )
     return;
@@ -214,7 +212,7 @@ void KMail::ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem * item
            this, SLOT(slotRefresh()) );
 }
 
-void KMail::ManageSieveScriptsDialog::addRadioButton( QTreeWidgetItem *item, const QString &text )
+void ManageSieveScriptsDialog::addRadioButton( QTreeWidgetItem *item, const QString &text )
 {
   Q_ASSERT( item && item->parent() );
   Q_ASSERT( !mListView->itemWidget( item, 0 ) );
@@ -237,7 +235,7 @@ void KMail::ManageSieveScriptsDialog::addRadioButton( QTreeWidgetItem *item, con
   buttonGroup->addButton( radioButton );
 }
 
-void KMail::ManageSieveScriptsDialog::setRadioButtonState( QTreeWidgetItem *item, bool checked )
+void ManageSieveScriptsDialog::setRadioButtonState( QTreeWidgetItem *item, bool checked )
 {
   Q_ASSERT( item && item->parent() );
 
@@ -247,7 +245,7 @@ void KMail::ManageSieveScriptsDialog::setRadioButtonState( QTreeWidgetItem *item
 }
 
 
-bool KMail::ManageSieveScriptsDialog::isRadioButtonChecked( QTreeWidgetItem *item ) const
+bool ManageSieveScriptsDialog::isRadioButtonChecked( QTreeWidgetItem *item ) const
 {
   Q_ASSERT( item && item->parent() );
 
@@ -256,7 +254,7 @@ bool KMail::ManageSieveScriptsDialog::isRadioButtonChecked( QTreeWidgetItem *ite
   return radioButton->isChecked();
 }
 
-QString KMail::ManageSieveScriptsDialog::itemText( QTreeWidgetItem *item ) const
+QString ManageSieveScriptsDialog::itemText( QTreeWidgetItem *item ) const
 {
   Q_ASSERT( item && item->parent() );
 
@@ -265,7 +263,7 @@ QString KMail::ManageSieveScriptsDialog::itemText( QTreeWidgetItem *item ) const
   return radioButton->text().remove( '&' );
 }
 
-bool KMail::ManageSieveScriptsDialog::isFileNameItem( QTreeWidgetItem *item ) const
+bool ManageSieveScriptsDialog::isFileNameItem( QTreeWidgetItem *item ) const
 {
    if ( !item || !item->parent() )
      return false;
@@ -274,7 +272,7 @@ bool KMail::ManageSieveScriptsDialog::isFileNameItem( QTreeWidgetItem *item ) co
   return ( radioButton != 0 );
 }
 
-void KMail::ManageSieveScriptsDialog::clear()
+void ManageSieveScriptsDialog::clear()
 {
   killAllJobs();
   mSelectedItems.clear();
@@ -286,7 +284,7 @@ void KMail::ManageSieveScriptsDialog::clear()
   ItemRadioButton::setTreeWidgetIsBeingCleared( false );
 }
 
-void KMail::ManageSieveScriptsDialog::slotDoubleClicked( QTreeWidgetItem * item )
+void ManageSieveScriptsDialog::slotDoubleClicked( QTreeWidgetItem * item )
 {
   if ( !isFileNameItem( item ) )
     return;
@@ -296,7 +294,7 @@ void KMail::ManageSieveScriptsDialog::slotDoubleClicked( QTreeWidgetItem * item 
   mContextMenuItem = 0;
 }
 
-void KMail::ManageSieveScriptsDialog::slotDeleteScript()
+void ManageSieveScriptsDialog::slotDeleteScript()
 {
   if ( !isFileNameItem( mContextMenuItem ) )
     return;
@@ -324,7 +322,7 @@ void KMail::ManageSieveScriptsDialog::slotDeleteScript()
            this, SLOT(slotRefresh()) );
 }
 
-void KMail::ManageSieveScriptsDialog::slotEditScript()
+void ManageSieveScriptsDialog::slotEditScript()
 {
   if ( !isFileNameItem( mContextMenuItem ) )
     return;
@@ -341,7 +339,7 @@ void KMail::ManageSieveScriptsDialog::slotEditScript()
            this, SLOT(slotGetResult(KSieveUi::SieveJob*,bool,const QString&,bool)) );
 }
 
-void KMail::ManageSieveScriptsDialog::slotNewScript()
+void ManageSieveScriptsDialog::slotNewScript()
 {
   if ( !mContextMenuItem )
     return;
@@ -373,7 +371,7 @@ void KMail::ManageSieveScriptsDialog::slotNewScript()
   slotGetResult( 0, true, QString(), false );
 }
 
-KMail::SieveEditor::SieveEditor( QWidget * parent, const char * name )
+SieveEditor::SieveEditor( QWidget * parent, const char * name )
   : KDialog( parent )
 {
   setCaption( i18n( "Edit Sieve Script" ) );
@@ -396,16 +394,16 @@ KMail::SieveEditor::SieveEditor( QWidget * parent, const char * name )
   resize( 3 * sizeHint() );
 }
 
-KMail::SieveEditor::~SieveEditor()
+SieveEditor::~SieveEditor()
 {
 }
 
-void KMail::SieveEditor::slotTextChanged()
+void SieveEditor::slotTextChanged()
 {
   enableButtonOk( !script().isEmpty() );
 }
 
-void KMail::ManageSieveScriptsDialog::slotGetResult( KSieveUi::SieveJob *, bool success, const QString & script, bool isActive )
+void ManageSieveScriptsDialog::slotGetResult( KSieveUi::SieveJob *, bool success, const QString & script, bool isActive )
 {
   if ( !success )
     return;
@@ -421,7 +419,7 @@ void KMail::ManageSieveScriptsDialog::slotGetResult( KSieveUi::SieveJob *, bool 
   mWasActive = isActive;
 }
 
-void KMail::ManageSieveScriptsDialog::slotSieveEditorOkClicked()
+void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
 {
   if ( !mSieveEditor )
     return;
@@ -430,14 +428,14 @@ void KMail::ManageSieveScriptsDialog::slotSieveEditorOkClicked()
            this, SLOT(slotPutResult(KSieveUi::SieveJob*,bool)) );
 }
 
-void KMail::ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
+void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
 {
   mSieveEditor->deleteLater(); mSieveEditor = 0;
   mCurrentURL = KUrl();
   slotRefresh();
 }
 
-void KMail::ManageSieveScriptsDialog::slotPutResult( KSieveUi::SieveJob *, bool success )
+void ManageSieveScriptsDialog::slotPutResult( KSieveUi::SieveJob *, bool success )
 {
   if ( success ) {
     KMessageBox::information( this, i18n( "The Sieve script was successfully uploaded." ),

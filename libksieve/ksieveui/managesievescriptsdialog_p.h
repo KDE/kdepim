@@ -1,5 +1,5 @@
-#ifndef __KMAIL__MANAGESIEVESCRIPTSDIALOG_P_H__
-#define __KMAIL__MANAGESIEVESCRIPTSDIALOG_P_H__
+#ifndef KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_P_H
+#define KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_P_H
 
 #include <kdialog.h>
 #include <ktextedit.h>
@@ -8,7 +8,7 @@
 #include <QRadioButton>
 #include <QTreeWidget>
 
-namespace KMail {
+namespace KSieveUi {
 
 class SieveEditor : public KDialog {
   Q_OBJECT
@@ -104,5 +104,4 @@ class ItemRadioButton : public QRadioButton
 
 }
 
-#endif /* __KMAIL__MANAGESIEVESCRIPTSDIALOG_P_H__ */
-
+#endif
