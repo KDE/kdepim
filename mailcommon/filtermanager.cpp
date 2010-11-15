@@ -88,8 +88,7 @@ void FilterManager::tryToMonitorCollection()
 void FilterManager::slotInitialCollectionsFetched( const Akonadi::Collection::List& collections )
 {
   Q_FOREACH( Akonadi::Collection collection, collections ) {
-    Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance( collection.resource() );
-    if ( Akonadi::SpecialMailCollections::self()->collection( Akonadi::SpecialMailCollections::Inbox, agent )  == collection ) {
+    if ( CommonKernel->folderIsInbox( collection ) ) {
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection, this );
         job->fetchScope().fetchAllAttributes();
         connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotInitialItemsFetched(Akonadi::Item::List)) );
@@ -419,8 +418,7 @@ void FilterManager::endUpdate(void)
 
 void FilterManager::itemAdded(const Akonadi::Item& item, const Akonadi::Collection &collection)
 {
-  Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance( collection.resource() );
-  if ( Akonadi::SpecialMailCollections::self()->collection( Akonadi::SpecialMailCollections::Inbox, agent )  == collection ) {
+  if ( CommonKernel->folderIsInbox( collection ) ) {
     if ( mRequiresBody ) {
       Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
       job->fetchScope().fetchFullPayload( true );
