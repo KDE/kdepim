@@ -24,12 +24,13 @@ KAlarm Change Log
 - Fix changes to volume not enabling OK button when editing an audio alarm
   template with no audio file specified.
 
-=== Version 2.4.7 (KDE 4.4.5) --- 2 June 2010 ===
+=== Version 2.4.7 (KDE 4.4.5) --- 3 June 2010 ===
 - Fix inability to defer non-recurring alarms.
 - Fix crash when selecting calendar type in calendar selector, if text widths
   and selector width are "exactly wrong".
 - Fix loss of time zone specification for date only alarms when converting a
   pre-2.3.2 calendar, if start-of-day time in calendar is not midnight.
+- Enable alarm edit dialogue Time Zone button in read-only mode.
 
 === Version 2.4.6 (KDE 4.4.4) --- 20 May 2010 ===
 - Fix alarm edit dialog not saving changes when invoked from alarm message
