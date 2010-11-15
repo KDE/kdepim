@@ -22,6 +22,7 @@
 #ifndef CALENDARSUPPORT_SCHEDULER_P_H
 #define CALENDARSUPPORT_SCHEDULER_P_H
 
+#include "scheduler.h"
 #include "nepomukcalendar.h"
 
 #include <Akonadi/Item>
