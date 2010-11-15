@@ -63,6 +63,18 @@ namespace Util {
      * Returns the list of configured IMAP agent instances.
      */
     KSIEVEUI_EXPORT Akonadi::AgentInstance::List imapAgentInstances();
+
+    /**
+     * Returns whether the availability of a vacation sieve script shall
+     * be checked at the start up of an application.
+     */
+    KSIEVEUI_EXPORT bool checkOutOfOfficeOnStartup();
+
+    /**
+     * Returns whether the functionality of vacation sieve script editing shall
+     * be available at all.
+     */
+    KSIEVEUI_EXPORT bool allowOutOfOfficeSettings();
 }
 
 }

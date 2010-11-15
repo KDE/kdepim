@@ -39,6 +39,7 @@
 
 #include "util.h"
 #include "imapsettings.h"
+#include "settings.h"
 
 #include <akonadi/agentmanager.h>
 #include <kimap/loginjob.h>
@@ -133,4 +134,14 @@ Akonadi::AgentInstance::List KSieveUi::Util::imapAgentInstances()
   }
 
   return relevantInstances;
+}
+
+bool KSieveUi::Util::checkOutOfOfficeOnStartup()
+{
+  return Settings::self()->checkOutOfOfficeOnStartup();
+}
+
+bool KSieveUi::Util::allowOutOfOfficeSettings()
+{
+  return Settings::self()->allowOutOfOfficeSettings();
 }
