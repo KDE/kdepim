@@ -208,7 +208,7 @@ TextEditor::TextEditor ( QWidget *parent )
         QMessageBox::warning ( 0, i18n ( "TextEditor" ),
                                i18n ( "TextEditor: Cannot open template file." ) );
     else
-        webView -> setHtml ( QString ( file.readAll() ) );
+        webView -> setContent ( file.readAll(), "application/xhtml+xml" );
 
     connect ( webView->page(), SIGNAL ( selectionChanged() ), this, SLOT ( adjustActions() ) );
     connect ( webView->page(), SIGNAL ( selectionChanged() ), this, SIGNAL ( selectionChanged() ) );
@@ -272,7 +272,7 @@ void TextEditor::createActions()
     actCheckSpelling->setCheckable( true );
     connect( actCheckSpelling, SIGNAL( triggered( bool ) ), this,
              SLOT( slotToggleSpellChecking(bool) ) );
-    barVisual->addAction( actCheckSpelling );
+//     barVisual->addAction( actCheckSpelling ); FIXME: Missing functionality
 
     barVisual->addSeparator();
     actBold = new KAction( KIcon( "format-text-bold" ), i18nc(
@@ -311,7 +311,7 @@ void TextEditor::createActions()
                            "Code" ), this );
     actCode->setCheckable( true );
     connect( actCode, SIGNAL( triggered( bool ) ), this, SLOT( slotToggleCode(bool) ) );
-    barVisual->addAction( actCode );
+//     barVisual->addAction( actCode ); FIXME: Missing functionality
 
     barVisual->addSeparator();
 
@@ -769,9 +769,7 @@ QColor TextEditor::rgbToColor ( QString rgb ) const
 QString TextEditor::getHtml() const
 {
     QString html = const_cast<TextEditor*>( this )->evaluateJavaScript( "getHtml()", false ).toString();
-//     HtmlParser *htmlParser = HtmlParser::htmlParser();
-//     int iterator = 0;
-//     while ( htmlParser->setTagAttribute ( html, iterator, "img", "src", "" ) );
+    html.remove(" xmlns=\"http://www.w3.org/1999/xhtml\"", Qt::CaseInsensitive);
     return html;
 }
 

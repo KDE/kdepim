@@ -70,12 +70,15 @@
    <item row="3" column="0" colspan="2">
     <widget class="QCheckBox" name="kcfg_urlCachingEnabled">
      <property name="text">
-      <string>Enable URL caching in the "Add Link" dialog</string>
+      <string>Enable URL caching in the &quot;Add Link&quot; dialog</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QCheckBox" name="kcfg_enableCheckSpelling">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Enable spell checking</string>
      </property>

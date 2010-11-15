@@ -221,11 +221,12 @@ void PostEntry::slotSetPostPreview()
 
 QString PostEntry::htmlContent()
 {
-
-    if ( d->tabWidget->currentIndex() == 0 ) {
+    if ( d->tabWidget->currentIndex() == 1 ) {
+        d->wysiwygEditor->setHtmlContent( d->htmlEditor->document()->text() );
+    } else {
         d->htmlEditor->document()->setText( d->wysiwygEditor->htmlContent() );
     }
-    return d->wysiwygEditor->htmlContent();
+    return d->htmlEditor->document()->text();
 }
 
 QString PostEntry::plainTextContent()
