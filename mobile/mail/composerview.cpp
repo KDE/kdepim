@@ -504,6 +504,28 @@ void ComposerView::saveAsTemplate()
   send ( method, saveIn );
 }
 
+bool ComposerView::isSigned() const
+{
+  return m_sign;
+}
+
+bool ComposerView::isEncrypted() const
+{
+  return m_encrypt;
+}
+
+void ComposerView::signEmail( bool sign )
+{
+  m_sign = sign;
+  emit cryptoStateChanged();
+}
+
+void ComposerView::encryptEmail( bool encrypt )
+{
+  m_encrypt = encrypt;
+  emit cryptoStateChanged();
+}
+
 void ComposerView::toggleUseFixedFont( bool use )
 {
   m_composerBase->editor()->setFontForWholeText( use ? KGlobalSettings::fixedFont() : KGlobalSettings::generalFont() );

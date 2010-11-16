@@ -48,6 +48,8 @@ class ComposerView : public KDeclarativeFullScreenView
   Q_OBJECT
   Q_PROPERTY( QString subject READ subject WRITE setSubject NOTIFY changed )
   Q_PROPERTY( bool busy READ busy WRITE setBusy NOTIFY busyChanged )
+  Q_PROPERTY( bool isSigned READ isSigned NOTIFY cryptoStateChanged )
+  Q_PROPERTY( bool isEncrypted READ isEncrypted NOTIFY cryptoStateChanged )
 
   public:
     explicit ComposerView(QWidget* parent = 0);
@@ -63,6 +65,9 @@ class ComposerView : public KDeclarativeFullScreenView
     bool busy() const;
     void setBusy(bool busy);
     void setAutoSaveFileName(const QString &fileName);
+
+    bool isSigned() const;
+    bool isEncrypted() const;
 
   public slots:
     void setMessage( const KMime::Message::Ptr &msg );
@@ -83,6 +88,7 @@ class ComposerView : public KDeclarativeFullScreenView
   signals:
     void changed();
     void busyChanged();
+    void cryptoStateChanged();
 
   protected slots:
     void delayedInit();
@@ -93,8 +99,8 @@ class ComposerView : public KDeclarativeFullScreenView
     void success();
     void failed( const QString &errorMessage );
 
-    void signEmail( bool sign ) { m_sign = sign; }
-    void encryptEmail( bool encrypt ) { m_encrypt = encrypt; }
+    void signEmail( bool sign );
+    void encryptEmail( bool encrypt );
     void urgentEmail ( bool urgent ) { m_urgent = urgent; }
     void requestMdn( bool value ) { m_mdnRequested = value; }
 

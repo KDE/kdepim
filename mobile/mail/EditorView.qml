@@ -58,11 +58,54 @@ Item {
 
   Binding { target: window; property: "subject"; value: subjectInput.text }
 
+  Rectangle {
+    id: cryptoIndicator
+    visible: window.isSigned || window.isEncrypted
+    anchors.top: subject.bottom
+    anchors.topMargin: 2
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: (window.isSigned || window.isEncrypted) ? 20 : 0
+
+    Row {
+      anchors.fill: parent
+      spacing: 2
+
+      Rectangle {
+        id: signedIndicator
+        visible: window.isSigned
+        color: "#BAF9CE"
+        width: (window.isEncrypted ? parent.width / 2 : parent.width)
+        height: 20
+
+        Text {
+          anchors.fill: parent
+          text: KDE.i18n( "Message will be signed" )
+          horizontalAlignment: Text.AlignHCenter
+        }
+      }
+
+      Rectangle {
+        id: encryptedIndicator
+        visible: window.isEncrypted
+        color: "#0080FF"
+        width: (window.isSigned ? parent.width / 2 : parent.width)
+        height: 20
+
+        Text {
+          anchors.fill: parent
+          text: KDE.i18n( "Message will be encrypted" )
+          horizontalAlignment: Text.AlignHCenter
+        }
+      }
+    }
+  }
+
   MessageComposer.Editor {
     id: messageContent
     height: 344;
     anchors {
-      top: subject.bottom
+      top: cryptoIndicator.bottom
       left: parent.left
       right: parent.right
       topMargin: 2
