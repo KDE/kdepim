@@ -35,7 +35,8 @@ ActionMenuContainer {
     category : "composer"
     name : "message_menu"
     text : KDE.i18n( "Message" )
-    ActionListItem { name : "save_in_drafts" }
+    ActionListItem { name: "send_later" }
+    ActionListItem { name: "save_in_drafts" }
     ActionListItem { name: "save_as_template" }
   }
 

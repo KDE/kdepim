@@ -152,6 +152,10 @@ void ComposerView::delayedInit()
   action->setCheckable(true);
   connect(action, SIGNAL(triggered(bool)), SLOT(encryptEmail(bool)));
 
+  action = actionCollection()->addAction( "send_later" );
+  action->setText( i18n( "Send Later" ) );
+  connect( action, SIGNAL( triggered( Qt::MouseButtons, Qt::KeyboardModifiers ) ), SLOT( sendLater() ) );
+
   action = actionCollection()->addAction("save_in_drafts");
   action->setText( i18n( "Save as Draft" ) );
   action->setIcon( KIcon( "document-save" ) );
@@ -453,6 +457,13 @@ void ComposerView::closeEvent( QCloseEvent * event )
   }
 
   event->accept();
+}
+
+void ComposerView::sendLater()
+{
+  const MessageSender::SendMethod method = MessageSender::SendLater;
+  const MessageSender::SaveIn saveIn = MessageSender::SaveInNone;
+  send ( method, saveIn );
 }
 
 void ComposerView::saveDraft()

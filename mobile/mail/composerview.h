@@ -97,6 +97,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void encryptEmail( bool encrypt ) { m_encrypt = encrypt; }
     void urgentEmail ( bool urgent ) { m_urgent = urgent; }
 
+    void sendLater();
     void saveDraft();
     void saveAsTemplate();
 
