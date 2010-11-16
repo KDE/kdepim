@@ -98,6 +98,9 @@ class ComposerView : public KDeclarativeFullScreenView
     void urgentEmail ( bool urgent ) { m_urgent = urgent; }
     void requestMdn( bool value ) { m_mdnRequested = value; }
 
+    void toggleUseFixedFont( bool );
+    void toggleAutomaticWordWrap( bool );
+
     void sendLater();
     void saveDraft();
     void saveAsTemplate();

@@ -31,6 +31,7 @@
 #include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transportcombobox.h>
 #include <mailtransport/transportmanager.h>
+#include <messageviewer/globalsettings.h>
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
 #include <messagecomposer/kmeditor.h>
@@ -44,6 +45,7 @@
 #include <messagecomposer/attachmentmodel.h>
 #include <messagecomposer/keyresolver.h>
 #include <messagecomposer/kleo_util.h>
+#include <messagecomposer/messagecomposersettings.h>
 #include <messagecomposer/recipientseditor.h>
 #include <messagecomposer/util.h>
 #include <akonadi/collectioncombobox.h>
@@ -203,6 +205,18 @@ void ComposerView::delayedInit()
   action->setCheckable( true );
   action->setChecked( m_mdnRequested );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( requestMdn( bool ) ) );
+
+  action = actionCollection()->addAction( "options_wordwrap" );
+  action->setText( i18n( "Wordwrap" ) );
+  action->setCheckable( true );
+  action->setChecked( MessageComposer::MessageComposerSettings::self()->wordWrap() );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( toggleAutomaticWordWrap( bool ) ) );
+
+  action = actionCollection()->addAction( "options_fixedfont" );
+  action->setText( i18n( "Use Fixed Font" ) );
+  action->setCheckable( true );
+  action->setChecked( MessageViewer::GlobalSettings::self()->useFixedFont() );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( toggleUseFixedFont( bool ) ) );
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -231,6 +245,9 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   connect( actionCollection()->action( "composer_append_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( appendSignature() ) );
   connect( actionCollection()->action( "composer_prepend_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( prependSignature() ) );
   connect( actionCollection()->action( "composer_insert_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( insertSignatureAtCursor() ) );
+
+  toggleAutomaticWordWrap( actionCollection()->action( "options_wordwrap" )->isChecked() );
+  toggleUseFixedFont( actionCollection()->action( "options_fixedfont" )->isChecked() );
 
   m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
   m_composerBase->recipientsEditor()->setAutoResizeView( true );
@@ -481,6 +498,19 @@ void ComposerView::saveAsTemplate()
   const MessageSender::SendMethod method = MessageSender::SendLater;
   const MessageSender::SaveIn saveIn = MessageSender::SaveInTemplates;
   send ( method, saveIn );
+}
+
+void ComposerView::toggleUseFixedFont( bool use )
+{
+  m_composerBase->editor()->setFontForWholeText( use ? KGlobalSettings::fixedFont() : KGlobalSettings::generalFont() );
+}
+
+void ComposerView::toggleAutomaticWordWrap( bool use )
+{
+  if ( use )
+    m_composerBase->editor()->enableWordWrap( MessageComposer::MessageComposerSettings::self()->lineWrapWidth() );
+  else
+    m_composerBase->editor()->disableWordWrap();
 }
 
 void ComposerView::enableHtml()

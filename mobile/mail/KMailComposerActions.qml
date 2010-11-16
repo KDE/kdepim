@@ -58,6 +58,8 @@ ActionMenuContainer {
     text : KDE.i18n( "Options" )
     ActionListItem { name : "options_mark_as_urgent" }
     ActionListItem { name : "options_request_mdn" }
+    ActionListItem { name : "options_wordwrap" }
+    ActionListItem { name : "options_fixedfont" }
   }
 
   ActionList {
