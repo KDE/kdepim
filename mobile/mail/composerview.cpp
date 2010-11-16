@@ -183,6 +183,9 @@ void ComposerView::delayedInit()
   action = actionCollection()->addAction( "composer_search" );
   action->setText( i18n( "Search" ) );
 
+  action = actionCollection()->addAction( "composer_search_next" );
+  action->setText( i18n( "Continue Search" ) );
+
   action = actionCollection()->addAction( "composer_replace" );
   action->setText( i18n( "Replace" ) );
 
@@ -445,6 +448,7 @@ void ComposerView::setEditor( Message::KMeditor* editor )
     connect( actionCollection()->action( "composer_remove_quote_char" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( slotRemoveQuotes() ) );
     connect( actionCollection()->action( "composer_spell_check" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( checkSpelling() ) );
     connect( actionCollection()->action( "composer_search" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( slotFind() ) );
+    connect( actionCollection()->action( "composer_search_next" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( slotFindNext() ) );
     connect( actionCollection()->action( "composer_replace" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( slotReplace() ) );
 }
 

@@ -45,6 +45,7 @@ ActionMenuContainer {
     name : "edit_menu"
     text : KDE.i18n( "Edit" )
     ActionListItem { name : "composer_search" }
+    ActionListItem { name : "composer_search_next" }
     ActionListItem { name : "composer_replace" }
     ActionListItem { name : "composer_clean_spaces" }
     ActionListItem { name : "composer_add_quote_char" }
