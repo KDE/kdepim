@@ -26,6 +26,10 @@
 #include <QtCore/QQueue>
 #include <QStringList>
 
+namespace KIO {
+class AuthInfo;
+}
+
 class KTcpSocket;
 
 namespace KManageSieve {
@@ -52,6 +56,9 @@ class Session : public QObject
   private:
     bool requestCapabilitiesAfterStartTls() const;
     void sendData( const QByteArray &data );
+    void startAuthentication();
+    QStringList requestedSaslMethod() const;
+    bool saslInteract( void *in, KIO::AuthInfo &ai );
 
   private slots:
     void dataReceived();
@@ -59,6 +66,7 @@ class Session : public QObject
     void startSsl();
 
   private:
+    KUrl m_url;
     KTcpSocket *m_socket;
     QQueue<SieveJob*> m_jobs;
     QStringList m_sieveExtensions;
@@ -66,8 +74,10 @@ class Session : public QObject
     QString m_implementation;
     enum State {
       None,
-      Capabilities,
-      StartTls
+      PreTlsCapabilities,
+      PostTlsCapabilities,
+      StartTls,
+      Authenticating
     };
     State m_state;
     bool m_supportsStartTls;
