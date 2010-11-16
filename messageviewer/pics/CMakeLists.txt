@@ -20,6 +20,7 @@ enterprise_top_right.png
 enterprise_w.png
 mobile_bg.png
 mobile_status_actionitem.png
+mobile_status_attachment.png
 mobile_status_encrypted.png
 mobile_status_forwarded.png
 mobile_status_important.png
