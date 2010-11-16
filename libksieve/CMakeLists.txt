@@ -9,6 +9,7 @@ set(libksieve_parser_SRCS
     )
 
 add_subdirectory( ksieve )
+add_subdirectory( kmanagesieve )
 add_subdirectory( ksieveui )
 add_subdirectory( tests )
 
