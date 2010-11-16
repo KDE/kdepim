@@ -75,7 +75,6 @@ class SieveJob::Private
     QString mScript;
     QString mActiveScriptName;
     Existence mFileExists;
-    QStringList mSieveCapabilities;
     QStack<Command> mCommands;
 
     // List of Sieve scripts on the server, used by @ref list()
@@ -230,11 +229,6 @@ void SieveJob::Private::slotResult( KJob *job )
   delete mDecoder;
   mDecoder = 0;
 
-  if ( mSieveCapabilities.empty() ) {
-    mSieveCapabilities = static_cast<KIO::Job*>( job )->queryMetaData( "sieveExtensions" ).split( ' ', QString::SkipEmptyParts );
-    kDebug() << "Received Sieve extensions supported:\n" << mSieveCapabilities.join( "\n" );
-  }
-
   // check for errors:
   if ( job->error() ) {
     if ( static_cast<KIO::Job*>(job)->ui() ) {
@@ -309,7 +303,10 @@ void SieveJob::setInteractive( bool interactive )
 
 QStringList SieveJob::sieveCapabilities() const
 {
-  return d->mSieveCapabilities;
+  Session* session = d->sessionForUrl( d->mUrl );
+  if ( session )
+    return session->sieveExtensions();
+  return QStringList();
 }
 
 bool SieveJob::fileExists() const

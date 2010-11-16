@@ -28,7 +28,9 @@ using namespace KManageSieve;
 
 Session::Session( QObject *parent ) :
   QObject( parent ),
-  m_socket( new KTcpSocket( this ) )
+  m_socket( new KTcpSocket( this ) ),
+  m_parsingCapabilities( false ),
+  m_supportsStartTls( false )
 {
   kDebug();
   connect( m_socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
@@ -49,6 +51,7 @@ void Session::connectToHost( const KUrl &url )
     return;
 
   m_socket->connectToHost( url.host(), url.port() ? url.port() : 2000 );
+  m_parsingCapabilities = true;
 }
 
 void Session::disconnectFromHost()
@@ -58,7 +61,6 @@ void Session::disconnectFromHost()
 
 void Session::dataReceived()
 {
-  kDebug();
   while ( m_socket->canReadLine() ) {
     const QByteArray line = m_socket->readLine();
     kDebug() << "S: " << m_socket->readLine();
@@ -68,6 +70,33 @@ void Session::dataReceived()
       disconnectFromHost();
     }
     kDebug() << r.type() << r.key() << r.value() << r.extra() << r.quantity();
+
+    // should probably be refactored into a capability job
+    if ( m_parsingCapabilities ) {
+      if ( r.type() == Response::Action ) {
+        if ( r.action().toLower().contains("ok") ) {
+          kDebug() << "Sieve server ready & awaiting authentication." << endl;
+          m_parsingCapabilities = false;
+        } else {
+          kDebug() << "Unknown action " << r.action() << "." << endl;
+        }
+      } else if ( r.key() == "IMPLEMENTATION" ) {
+        m_implementation = QString::fromLatin1( r.value() );
+        kDebug() << "Connected to Sieve server: " << r.value();
+      } else if ( r.key() == "SASL") {
+        m_saslMethods = QString::fromLatin1( r.value() ).split( ' ', QString::SkipEmptyParts );
+        kDebug() << "Server SASL authentication methods: " << m_saslMethods;
+      } else if ( r.key() == "SIEVE" ) {
+        // Save script capabilities
+        m_sieveExtensions = QString::fromLatin1( r.value() ).split( ' ', QString::SkipEmptyParts );
+        kDebug() << "Server script capabilities: " << m_sieveExtensions;
+      } else if (r.key() == "STARTTLS") {
+        kDebug() << "Server supports TLS";
+        m_supportsStartTls = true;
+      } else {
+        kDebug() << "Unrecognised key " << r.key() << endl;
+      }
+    }
   }
 }
 
@@ -79,6 +108,30 @@ void Session::socketError()
 void Session::scheduleJob(SieveJob* job)
 {
   kDebug() << job;
+}
+
+QStringList Session::sieveExtensions() const
+{
+  return m_sieveExtensions;
+}
+
+bool Session::requestCapabilitiesAfterStartTls() const
+{
+  // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
+  // not standard conform, but we need to support that anyway.
+  // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
+  QRegExp regExp( "Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)", Qt::CaseInsensitive );
+  if ( regExp.indexIn( m_implementation ) >= 0 ) {
+    const int major = regExp.cap( 1 ).toInt();
+    const int minor = regExp.cap( 2 ).toInt();
+    const int patch = regExp.cap( 3 ).toInt();
+    const QString vendor = regExp.cap( 4 );
+    if ( major < 2 || (major == 2 && (minor < 3 || (minor == 3 && patch < 11))) || (vendor == "-kolab-nocaps") ) {
+      kDebug() << "Enabling compat mode for Cyrus < 2.3.11 or Cyrus marked as \"kolab-nocaps\"";
+      return true;
+    }
+  }
+  return false;
 }
 
 #include "session.moc"

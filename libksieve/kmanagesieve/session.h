@@ -24,6 +24,7 @@
 #include <KUrl>
 #include <QtCore/QObject>
 #include <QtCore/QQueue>
+#include <QStringList>
 
 class KTcpSocket;
 
@@ -46,6 +47,11 @@ class Session : public QObject
 
     void scheduleJob( SieveJob* job );
 
+    QStringList sieveExtensions() const;
+
+  private:
+    bool requestCapabilitiesAfterStartTls() const;
+
   private slots:
     void dataReceived();
     void socketError();
@@ -53,6 +59,11 @@ class Session : public QObject
   private:
     KTcpSocket *m_socket;
     QQueue<SieveJob*> m_jobs;
+    QStringList m_sieveExtensions;
+    QStringList m_saslMethods;
+    QString m_implementation;
+    bool m_parsingCapabilities;
+    bool m_supportsStartTls;
 };
 
 }
