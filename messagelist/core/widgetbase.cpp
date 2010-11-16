@@ -1000,22 +1000,16 @@ void Widget::statusSelected( int index )
   }
 
   bool ok;
-  qint32 additionalStatusMask = static_cast< qint32 >( d->mStatusFilterCombo->itemData( index ).toInt( &ok ) );
+  const qint32 statusMask = static_cast< qint32 >( d->mStatusFilterCombo->itemData( index ).toInt( &ok ) );
   if ( !ok )
     return;
-
-  // Here we override the whole status at once.
-  // This is a restriction but at least a couple of people
-  // are telling me that this way it's more usable. Two are more than me
-  // so here we go :)
-  qint32 statusMask = 0; //mFilter ? mFilter->statusMask() : 0; <-- this would "or" with the existing mask instead
 
   // We also arbitrairly set tagId to an empty string, though we *could* allow filtering
   // by status AND tag...
   if ( d->mFilter )
     d->mFilter->setTagId( QString() );
 
-  if ( additionalStatusMask == 0)
+  if ( statusMask == 0 )
   {
     if ( d->mFilter )
     {
@@ -1026,23 +1020,10 @@ void Widget::statusSelected( int index )
       }
     }
   } else {
-    if ( statusMask & additionalStatusMask )
-    {
-      // already have this status bit (this actually never happens because of the override above)
-      if ( d->mFilter )
-      {
-        d->mFilter->setStatusMask( statusMask & ~additionalStatusMask );
-        if ( d->mFilter->isEmpty() ) {
-          resetFilter();
-          return;
-        }
-      } // else nothing to remove (but something weird happened in the code above...)
-    } else {
-      // don't have this status bit
-      if ( !d->mFilter )
-        d->mFilter = new Filter();
-      d->mFilter->setStatusMask( statusMask | additionalStatusMask );
-    }
+    // don't have this status bit
+    if ( !d->mFilter )
+      d->mFilter = new Filter();
+    d->mFilter->setStatusMask( statusMask );
   }
 
   d->mView->model()->setFilter( d->mFilter );
