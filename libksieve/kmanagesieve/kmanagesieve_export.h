@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KMANAGESIEVE_EXPORT
-# if defined(MAKE_KMANAGESIEVE_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KMANAGESIEVE_EXPORT
+# elif defined(MAKE_KMANAGESIEVE_LIB)
    /* We are building this library */ 
 #  define KMANAGESIEVE_EXPORT KDE_EXPORT
 # else
