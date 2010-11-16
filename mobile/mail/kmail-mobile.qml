@@ -104,9 +104,10 @@ KPIM.MainView {
     id : backToMessageListButton
     visible : guiStateManager.inViewSingleItemState
     anchors.right : kmailMobile.right
-    anchors.rightMargin : 70
     anchors.bottom : kmailMobile.bottom
-    anchors.bottomMargin : 100
+    anchors.margins: 12
+    width: 70
+    height: 70
     QML.Image {
       source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
       QML.MouseArea {
@@ -124,11 +125,12 @@ KPIM.MainView {
     id : jumpToNextUnreadMessageButton
     visible : guiStateManager.inViewSingleItemState
     anchors.right : kmailMobile.right
-    anchors.rightMargin : 70
     anchors.bottom : backToMessageListButton.top
-    anchors.bottomMargin : 100
+    anchors.margins: 12
+    width: 70
+    height: 70
     QML.Image {
-      source : KDE.locate( "data", "mobileui/edit-button.png" );
+      source : "next-unread-mail.png";
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {

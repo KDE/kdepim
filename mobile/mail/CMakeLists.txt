@@ -98,8 +98,6 @@ install(FILES
   MarkAsPage.qml
   NewMailPage.qml
   ReplyOptionsPage.qml
-  important-email.png
-  action-item-email.png
   EditorView.qml
   kmail-composer.qml
   kmail-mobile.qml
@@ -107,6 +105,7 @@ install(FILES
   KMailComposerActions.qml
   kmail-mobile-background.png
   kmail-mobile.notifyrc
+  next-unread-mail.png
   dividing-line.png
   dividing-line-horizontal.png
   VacationScriptIndicator.qml
