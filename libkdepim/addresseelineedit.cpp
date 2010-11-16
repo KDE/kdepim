@@ -1005,7 +1005,7 @@ void AddresseeLineEdit::mouseReleaseEvent( QMouseEvent *event )
   d->m_smartPaste = false;
 }
 
-#ifndef QT_NO_CLIPBOARD
+#ifndef QT_NO_DRAGANDDROP
 void AddresseeLineEdit::dropEvent( QDropEvent *event )
 {
   if ( !isReadOnly() ) {
@@ -1061,7 +1061,7 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
   QLineEdit::dropEvent( event );
   d->m_smartPaste = false;
 }
-#endif
+#endif // QT_NO_DRAGANDDROP
 
 void AddresseeLineEdit::cursorAtEnd()
 {
