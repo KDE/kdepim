@@ -34,6 +34,7 @@ Name[ga]=Síniú/Fíorú
 Name[gl]=Asinar/Verificar
 Name[he]=חתימה/ווידוא
 Name[hu]=Aláírás/ellenőrzés
+Name[ia]=Signar/verificar
 Name[is]=Undirrita/staðfesta
 Name[it]=Firma/verifica
 Name[ja]=署名/検証
@@ -87,6 +88,7 @@ Comment[fy]=Comment=Beskermje jo privacy troch jo berjochten te Ã»ndertekenjen
 Comment[ga]=Le do phríobháideacht a chosaint, ba chóir duit postálacha a shíniú agus a fhíorú
 Comment[gl]=Protexa a súa privacidade asinando e verificando o que publique
 Comment[hu]=Az adatok védelme az üzenetek elektronikus aláírásával, titkosításával
+Comment[ia]=Protege tu intimitate per signar e verificar messages
 Comment[is]=Verndaðu einkalífið þitt með því að undirrita og staðfesta sendingar
 Comment[it]=Proteggi la tua privacy firmando e verificando i messaggi
 Comment[ja]=投稿の署名と検証によりあなたのプライバシーを保護します
