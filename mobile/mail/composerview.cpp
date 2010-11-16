@@ -192,7 +192,7 @@ void ComposerView::delayedInit()
   action = actionCollection()->addAction( "composer_insert_signature" );
   action->setText( i18n( "Insert Signature at Cursor Position" ) );
 
-  action = actionCollection()->addAction("urgent");
+  action = actionCollection()->addAction("mark_as_urgent");
   action->setText( i18n( "Urgent" ) );
   action->setCheckable(true);
   connect(action, SIGNAL(triggered(bool)), SLOT(urgentEmail(bool)));

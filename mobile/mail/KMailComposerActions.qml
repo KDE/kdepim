@@ -54,6 +54,13 @@ ActionMenuContainer {
 
   ActionList {
     category : "composer"
+    name : "options_menu"
+    text : KDE.i18n( "Options" )
+    ActionListItem { name : "mark_as_urgent" }
+  }
+
+  ActionList {
+    category : "composer"
     name : "signature_menu"
     text : KDE.i18n( "Signature" )
     ActionListItem { name : "composer_append_signature" }
