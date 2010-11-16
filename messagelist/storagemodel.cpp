@@ -315,38 +315,16 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   Akonadi::MessageStatus stat;
   stat.setStatusFromFlags( item.flags() );
 
-  // FIXME: Attachment and invitation state should be stored on the server as well!
-  if ( MessageCore::NodeHelper::isInvitation( mail.get() ) ) {
-    stat.setHasInvitation( true );
-  }
-
   mi->setAkonadiItem( item );
   mi->setStatus( stat );
 
   mi->setEncryptionState( Core::MessageItem::EncryptionStateUnknown );
-  const KMime::Headers::ContentType * const contentType = mail->contentType();
-  if ( contentType->isSubtype( "encrypted" )
-    || contentType->isSubtype( "pgp-encrypted" )
-    || contentType->isSubtype( "pkcs7-mime" ) ) {
-      mi->setEncryptionState( Core::MessageItem::FullyEncrypted );
-  } else if ( mail->mainBodyPart( "multipart/encrypted" )
-           || mail->mainBodyPart( "application/pgp-encrypted" )
-           || mail->mainBodyPart( "application/pkcs7-mime" ) ) {
-    mi->setEncryptionState( Core::MessageItem::PartiallyEncrypted );
-  }
+  if ( stat.isEncrypted() )
+    mi->setEncryptionState( Core::MessageItem::FullyEncrypted );
 
   mi->setSignatureState( Core::MessageItem::SignatureStateUnknown );
-  if ( contentType->isSubtype( "signed" )
-    || contentType->isSubtype( "pgp-signature" )
-    || contentType->isSubtype( "pkcs7-signature" )
-    || contentType->isSubtype( "x-pkcs7-signature" ) ) {
-      mi->setSignatureState( Core::MessageItem::FullySigned );
-  } else if ( mail->mainBodyPart( "multipart/signed" )
-           || mail->mainBodyPart( "application/pgp-signature" )
-           || mail->mainBodyPart( "application/pkcs7-signature" )
-           || mail->mainBodyPart( "application/x-pkcs7-signature" ) ) {
-    mi->setSignatureState( Core::MessageItem::PartiallySigned );
-  }
+  if ( stat.isSigned() )
+    mi->setSignatureState( Core::MessageItem::FullySigned );
 
   mi->invalidateTagCache();
   mi->invalidateAnnotationCache();
@@ -358,7 +336,8 @@ void StorageModel::setMessageItemStatus( MessageList::Core::MessageItem *mi,
   Q_UNUSED( mi );
   Item item = itemForRow( row );
   item.setFlags( status.statusFlags() );
-  new ItemModifyJob( item, this );
+  ItemModifyJob *job = new ItemModifyJob( item, this );
+  job->setIgnorePayload( true );
 }
 
 QVariant StorageModel::data( const QModelIndex &index, int role ) const
