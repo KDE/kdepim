@@ -96,6 +96,7 @@ void KDeclarativeApplication::postApplicationSetup()
   }
 
   KGlobal::locale()->insertCatalog( "libakonadi" );
+  KGlobal::locale()->insertCatalog( "accountwizard" );
   KGlobal::locale()->insertCatalog( "libkdepimmobileui" );
 }
 
