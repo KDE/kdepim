@@ -51,10 +51,12 @@ class Session : public QObject
 
   private:
     bool requestCapabilitiesAfterStartTls() const;
+    void sendData( const QByteArray &data );
 
   private slots:
     void dataReceived();
     void socketError();
+    void startSsl();
 
   private:
     KTcpSocket *m_socket;
@@ -62,7 +64,12 @@ class Session : public QObject
     QStringList m_sieveExtensions;
     QStringList m_saslMethods;
     QString m_implementation;
-    bool m_parsingCapabilities;
+    enum State {
+      None,
+      Capabilities,
+      StartTls
+    };
+    State m_state;
     bool m_supportsStartTls;
 };
 

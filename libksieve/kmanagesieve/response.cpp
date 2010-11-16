@@ -123,3 +123,13 @@ bool KManageSieve::Response::parseResponse(const QByteArray& line)
   m_value = line.mid( start + 1, end - start - 1 );
   return true;
 }
+
+bool KManageSieve::Response::operationSuccessful() const
+{
+  if ( m_type == Action ) {
+    const QByteArray response = m_key.left( 2 );
+    if (response == "OK")
+      return true;
+  }
+  return false;
+}

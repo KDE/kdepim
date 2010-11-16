@@ -45,6 +45,8 @@ class Response
     QByteArray value() const;
     QByteArray extra() const;
 
+    bool operationSuccessful() const;
+
     void clear();
     bool parseResponse( const QByteArray &line );
 

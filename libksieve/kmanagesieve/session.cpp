@@ -23,13 +23,14 @@
 
 #include <kdebug.h>
 #include <ktcpsocket.h>
+#include <kio/sslui.h>
 
 using namespace KManageSieve;
 
 Session::Session( QObject *parent ) :
   QObject( parent ),
   m_socket( new KTcpSocket( this ) ),
-  m_parsingCapabilities( false ),
+  m_state( None ),
   m_supportsStartTls( false )
 {
   kDebug();
@@ -51,7 +52,7 @@ void Session::connectToHost( const KUrl &url )
     return;
 
   m_socket->connectToHost( url.host(), url.port() ? url.port() : 2000 );
-  m_parsingCapabilities = true;
+  m_state = Capabilities;
 }
 
 void Session::disconnectFromHost()
@@ -72,30 +73,39 @@ void Session::dataReceived()
     kDebug() << r.type() << r.key() << r.value() << r.extra() << r.quantity();
 
     // should probably be refactored into a capability job
-    if ( m_parsingCapabilities ) {
-      if ( r.type() == Response::Action ) {
-        if ( r.action().toLower().contains("ok") ) {
-          kDebug() << "Sieve server ready & awaiting authentication." << endl;
-          m_parsingCapabilities = false;
+    switch ( m_state ) {
+      case Capabilities:
+        if ( r.type() == Response::Action ) {
+          if ( r.action().toLower().contains("ok") ) {
+            kDebug() << "Sieve server ready & awaiting authentication." << endl;
+            m_state = StartTls;
+            // TODO: handle the non-tls case
+            sendData( "STARTTLS" );
+          } else {
+            kDebug() << "Unknown action " << r.action() << "." << endl;
+          }
+        } else if ( r.key() == "IMPLEMENTATION" ) {
+          m_implementation = QString::fromLatin1( r.value() );
+          kDebug() << "Connected to Sieve server: " << r.value();
+        } else if ( r.key() == "SASL") {
+          m_saslMethods = QString::fromLatin1( r.value() ).split( ' ', QString::SkipEmptyParts );
+          kDebug() << "Server SASL authentication methods: " << m_saslMethods;
+        } else if ( r.key() == "SIEVE" ) {
+          // Save script capabilities
+          m_sieveExtensions = QString::fromLatin1( r.value() ).split( ' ', QString::SkipEmptyParts );
+          kDebug() << "Server script capabilities: " << m_sieveExtensions;
+        } else if (r.key() == "STARTTLS") {
+          kDebug() << "Server supports TLS";
+          m_supportsStartTls = true;
         } else {
-          kDebug() << "Unknown action " << r.action() << "." << endl;
+          kDebug() << "Unrecognised key " << r.key() << endl;
         }
-      } else if ( r.key() == "IMPLEMENTATION" ) {
-        m_implementation = QString::fromLatin1( r.value() );
-        kDebug() << "Connected to Sieve server: " << r.value();
-      } else if ( r.key() == "SASL") {
-        m_saslMethods = QString::fromLatin1( r.value() ).split( ' ', QString::SkipEmptyParts );
-        kDebug() << "Server SASL authentication methods: " << m_saslMethods;
-      } else if ( r.key() == "SIEVE" ) {
-        // Save script capabilities
-        m_sieveExtensions = QString::fromLatin1( r.value() ).split( ' ', QString::SkipEmptyParts );
-        kDebug() << "Server script capabilities: " << m_sieveExtensions;
-      } else if (r.key() == "STARTTLS") {
-        kDebug() << "Server supports TLS";
-        m_supportsStartTls = true;
-      } else {
-        kDebug() << "Unrecognised key " << r.key() << endl;
-      }
+        break;
+      case StartTls:
+        if ( r.type() == Response::Action && r.operationSuccessful() ) {
+          QMetaObject::invokeMethod( this, "startSsl", Qt::QueuedConnection ); // queued to avoid deadlock with waitForEncrypted
+          m_state = None;
+        }
     }
   }
 }
@@ -132,6 +142,42 @@ bool Session::requestCapabilitiesAfterStartTls() const
     }
   }
   return false;
+}
+
+void Session::startSsl()
+{
+  kDebug();
+  m_socket->setAdvertisedSslVersion( KTcpSocket::TlsV1 );
+  m_socket->ignoreSslErrors();
+  m_socket->startClientEncryption();
+  const bool encrypted = m_socket->waitForEncrypted( 60 * 1000 );
+
+  const KSslCipher cipher = m_socket->sessionCipher();
+  if ( !encrypted || m_socket->sslErrors().count() > 0 || m_socket->encryptionMode() != KTcpSocket::SslClientMode
+        || cipher.isNull() || cipher.usedBits() == 0 )
+  {
+    kDebug() << "Initial SSL handshake failed. cipher.isNull() is" << cipher.isNull()
+              << ", cipher.usedBits() is" << cipher.usedBits()
+              << ", the socket says:" <<  m_socket->errorString()
+              << "and the list of SSL errors contains"
+              << m_socket->sslErrors().count() << "items.";
+
+    if ( !KIO::SslUi::askIgnoreSslErrors( m_socket ) ) {
+      disconnectFromHost(); // TODO error handling
+      return;
+    }
+  }
+  kDebug() << "TLS negotiation done.";
+  if ( requestCapabilitiesAfterStartTls() )
+    sendData( "CAPABILITY" );
+  m_state = Capabilities;
+}
+
+void Session::sendData(const QByteArray& data)
+{
+  kDebug() << "C: " << data;
+  m_socket->write( data );
+  m_socket->write( "\r\n" );
 }
 
 #include "session.moc"
