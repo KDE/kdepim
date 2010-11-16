@@ -73,14 +73,6 @@ namespace NodeHelper {
    *       functions like contentDisposition() yet
    */
   MESSAGECORE_EXPORT bool isHeuristicalAttachment( KMime::Content* node );
-
-  /**
-   * Returns whether the given @p message is an invitation from the iTIP protocol.
-   *
-   * @todo The node parameters here should be const, be there is no const version of
-   *       functions like contentType() yet
-   */
-  MESSAGECORE_EXPORT bool isInvitation( KMime::Message *message );
 }
 
 }
