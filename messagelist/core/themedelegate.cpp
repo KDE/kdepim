@@ -206,7 +206,7 @@ static inline const QPixmap * get_read_state_icon( Item * item )
     return Manager::instance()->pixmapMessageSent();
   if ( item->status().isRead() )
     return Manager::instance()->pixmapMessageRead();
-  if ( item->status().isUnread() )
+  if ( !item->status().isRead() )
     return Manager::instance()->pixmapMessageUnread();
   if ( item->status().isDeleted() )
     return Manager::instance()->pixmapMessageDeleted();

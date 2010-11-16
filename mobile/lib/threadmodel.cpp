@@ -146,7 +146,7 @@ QVariant ThreadModel::data(const QModelIndex& index, int role) const
         const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
         Akonadi::MessageStatus status;
         status.setStatusFromFlags( item.flags() );
-        if (status.isUnread())
+        if (!status.isRead())
           ++unreadCount;
       }
       return unreadCount;

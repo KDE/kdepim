@@ -420,15 +420,15 @@ class ItemUnreadStatusComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    if ( first->status().isUnread() )
+    if ( !first->status().isRead() )
     {
       // fist is unread
-      if ( second->status().isUnread() )
+      if ( !second->status().isRead() )
         return first->date() >= second->date(); // both are unread
       // unread comes always first with respect to non-unread
       return true;
     }
-    if ( second->status().isUnread() )
+    if ( !second->status().isRead() )
       return false;
     // both are read
     return first->date() >= second->date();

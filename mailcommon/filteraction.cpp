@@ -840,11 +840,18 @@ FilterAction::ReturnCode FilterActionSetStatus::process( const Akonadi::Item& it
 
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( item.flags() );
-  status.set( stati[ idx - 1 ] );
+
+  const Akonadi::MessageStatus newStatus = stati[ idx - 1 ];
+  if ( newStatus == Akonadi::MessageStatus::statusUnread() )
+    status.setRead( false );
+  else
+    status.set( newStatus );
+
   Akonadi::Item i( item.id() );
   i.setRevision( item.revision() );
   i.setFlags( status.statusFlags() );
   new Akonadi::ItemModifyJob( i, FilterIf->filterManager() ); // TODO handle error
+
   return GoOn;
 }
 

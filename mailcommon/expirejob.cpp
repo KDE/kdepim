@@ -134,7 +134,7 @@ void ExpireJob::itemFetchResult( KJob *job )
       && SettingsIf->excludeImportantMailFromExpiry() )
        continue;
 
-    time_t maxTime = status.isUnread() ? mMaxUnreadTime : mMaxReadTime;
+    time_t maxTime = status.isRead() ? mMaxReadTime : mMaxUnreadTime;
 
     if ( !mb->date( false ) )
       continue;

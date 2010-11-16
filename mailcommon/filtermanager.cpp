@@ -103,7 +103,7 @@ void FilterManager::slotInitialItemsFetched(const Akonadi::Item::List& items)
   Q_FOREACH( Akonadi::Item item, items ) {
    Akonadi::MessageStatus status;
    status.setStatusFromFlags( item.flags() );
-   if ( status.isUnread() )
+   if ( !status.isRead() )
      unreadItems << item;
   }
 

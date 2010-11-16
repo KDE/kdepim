@@ -24,15 +24,14 @@
 using namespace MessageList::Core;
 
 Filter::Filter()
-  : mStatusMask( 0 )
 {
 }
 
 bool Filter::match( const MessageItem * item ) const
 {
-  if ( mStatusMask != 0 )
+  if ( !mStatus.isOfUnknownStatus() )
   {
-    if ( ! ( mStatusMask & item->status().toQInt32() ) )
+    if ( !(mStatus & item->status()) )
       return false;
   }
 
@@ -60,7 +59,7 @@ bool Filter::match( const MessageItem * item ) const
 
 bool Filter::isEmpty() const
 {
-  if ( mStatusMask != 0 )
+  if ( !mStatus.isOfUnknownStatus() )
     return false;
 
   if ( !mSearchString.isEmpty() )
@@ -74,7 +73,7 @@ bool Filter::isEmpty() const
 
 void Filter::clear()
 {
-  mStatusMask = 0;
+  mStatus = Akonadi::MessageStatus();
   mSearchString.clear();
   mTagId.clear();
 }

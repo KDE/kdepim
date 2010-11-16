@@ -298,7 +298,7 @@ Model::Model( View *pParent )
   d->mCachedFiveWeeksAgoLabel = i18n( "Five Weeks Ago" );
 
   d->mCachedWatchedOrIgnoredStatusBits = Akonadi::MessageStatus::statusIgnored().toQInt32() | Akonadi::MessageStatus::statusWatched().toQInt32();
-  d->mCachedUnreadStatusBits = Akonadi::MessageStatus::statusUnread().toQInt32();
+  
 
   connect( _k_heartBeatTimer, SIGNAL(timeout()),
            this, SLOT(checkIfDateChanged()) );
@@ -2202,13 +2202,13 @@ void ModelPrivate::attachMessageToParent( Item *pParent, MessageItem *mi )
       case Aggregation::ExpandThreadsWithNewMessages: // No more new status. fall through to unread if it exists in config
       case Aggregation::ExpandThreadsWithUnreadMessages:
         // expand only if unread (or it has children marked for expansion)
-        if ( childNeedsExpanding || mi->status().isUnread() )
+        if ( childNeedsExpanding || !mi->status().isRead() )
           pParent->setInitialExpandStatus( Item::ExpandNeeded );
       break;
       case Aggregation::ExpandThreadsWithUnreadOrImportantMessages:
         // expand only if unread, important or todo (or it has children marked for expansion)
         // FIXME: Wouldn't it be nice to be able to test for bitmasks in MessageStatus ?
-        if ( childNeedsExpanding || mi->status().isUnread() || mi->status().isImportant() || mi->status().isToAct() )
+        if ( childNeedsExpanding || !mi->status().isRead() || mi->status().isImportant() || mi->status().isToAct() )
           pParent->setInitialExpandStatus( Item::ExpandNeeded );
       break;
       case Aggregation::AlwaysExpandThreads:
@@ -3238,7 +3238,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
     time_t prevDate = message->date();
     time_t prevMaxDate = message->maxDate();
     bool toDoStatus = message->status().isToAct();
-    qint32 prevUnreadStatus = message->status().toQInt32() & mCachedUnreadStatusBits;
+    bool prevUnreadStatus = !message->status().isRead();
 
     // The subject based threading cache is sorted by date: we must remove
     // the item and re-insert it since updateMessageItemData() may change the date too.
@@ -3263,7 +3263,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
        propertyChangeMask |= MaxDateChanged;
     if ( toDoStatus != message->status().isToAct() )
        propertyChangeMask |= ActionItemStatusChanged;
-    if ( prevUnreadStatus != ( message->status().toQInt32() & mCachedUnreadStatusBits ) )
+    if ( prevUnreadStatus != ( !message->status().isRead() ) )
        propertyChangeMask |= UnreadStatusChanged;
 
     if ( propertyChangeMask )

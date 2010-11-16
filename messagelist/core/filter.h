@@ -23,6 +23,8 @@
 
 #include <QString>
 
+#include <akonadi/kmime/messagestatus.h>
+
 namespace MessageList
 {
 
@@ -41,9 +43,9 @@ public:
   Filter();
 
 public:
-  qint32 mStatusMask;    ///< Messages must match this status, if non 0
-  QString mSearchString; ///< Messages must match this search string, if not empty
-  QString mTagId;        ///< Messages must have this tag, if not empty
+  Akonadi::MessageStatus mStatus;    ///< Messages must match this status, if non 0
+  QString mSearchString;             ///< Messages must match this search string, if not empty
+  QString mTagId;                    ///< Messages must have this tag, if not empty
 public:
   /**
    * Returns true if the specified parameters match this filter and false otherwise.
@@ -54,14 +56,14 @@ public:
   /**
    * Returns the currently set status mask
    */
-  qint32 statusMask() const
-   { return mStatusMask; };
+  Akonadi::MessageStatus status() const
+   { return mStatus; };
 
   /**
    * Sets the status mask for this filter.
    */
-  void setStatusMask( qint32 mask )
-   { mStatusMask = mask; };
+  void setStatus( const Akonadi::MessageStatus &status )
+   { mStatus = status; };
 
   /**
    * Returns the currently set search string.

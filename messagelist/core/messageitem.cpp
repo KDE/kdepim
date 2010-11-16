@@ -401,7 +401,7 @@ QColor MessageItem::textColor() const
 {
   QColor clr;
   Akonadi::MessageStatus messageStatus = status();
-  if ( messageStatus.isUnread() ) {
+  if ( !messageStatus.isRead() ) {
     clr = d->mColorUnreadMessage;
   } else if ( messageStatus.isImportant() ) {
     clr = d->mColorImportantMessage;
@@ -445,7 +445,7 @@ QFont MessageItem::font() const
   Akonadi::MessageStatus messageStatus = status();
   if ( messageStatus.isImportant() ) {
     font = d->mFontImportantMessage;
-  } else if ( messageStatus.isUnread() ) {
+  } else if ( !messageStatus.isRead() ) {
     font = d->mFontUnreadMessage;
   } else if ( messageStatus.isToAct() ) {
     font = d->mFontToDoMessage;

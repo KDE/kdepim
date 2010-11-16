@@ -814,14 +814,14 @@ void SearchRuleStatus::addTagTerm( Nepomuk::Query::GroupTerm &groupTerm, const Q
 
 void SearchRuleStatus::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
 {
-  if ( mStatus.isRead() || mStatus.isUnread() ) {
-    bool read = false;
-    if ( function() == FuncContains || function() == FuncEquals )
-      read = true;
-    if ( mStatus.isUnread() )
-      read = !read;
-    groupTerm.addSubTerm( Nepomuk::Query::ComparisonTerm( Vocabulary::NMO::isRead(), Nepomuk::Query::LiteralTerm( read ), Nepomuk::Query::ComparisonTerm::Equal ) );
-  }
+  bool read = false;
+  if ( function() == FuncContains || function() == FuncEquals )
+    read = true;
+
+  if ( !mStatus.isRead() )
+    read = !read;
+
+  groupTerm.addSubTerm( Nepomuk::Query::ComparisonTerm( Vocabulary::NMO::isRead(), Nepomuk::Query::LiteralTerm( read ), Nepomuk::Query::ComparisonTerm::Equal ) );
 
   if ( mStatus.isImportant() )
     addTagTerm( groupTerm, "important" );

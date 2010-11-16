@@ -294,9 +294,7 @@ Akonadi::MessageStatus Widget::currentFilterStatus() const
   if ( !d->mFilter )
     return Akonadi::MessageStatus();
 
-  Akonadi::MessageStatus ret;
-  ret.fromQInt32( d->mFilter->statusMask() );
-  return ret;
+  return d->mFilter->status();
 }
 
 QString Widget::currentFilterSearchString() const
@@ -972,7 +970,7 @@ void Widget::tagIdSelected( QVariant data )
   // by status AND tag...
 
   if ( d->mFilter )
-    d->mFilter->setStatusMask( 0 );
+    d->mFilter->setStatus( Akonadi::MessageStatus() );
 
   if ( tagId.isEmpty() )
   {
@@ -1000,7 +998,10 @@ void Widget::statusSelected( int index )
   }
 
   bool ok;
-  const qint32 statusMask = static_cast< qint32 >( d->mStatusFilterCombo->itemData( index ).toInt( &ok ) );
+
+  Akonadi::MessageStatus status;
+  status.fromQInt32( static_cast< qint32 >( d->mStatusFilterCombo->itemData( index ).toInt( &ok ) ) );
+
   if ( !ok )
     return;
 
@@ -1009,11 +1010,11 @@ void Widget::statusSelected( int index )
   if ( d->mFilter )
     d->mFilter->setTagId( QString() );
 
-  if ( statusMask == 0 )
+  if ( status.isOfUnknownStatus() )
   {
     if ( d->mFilter )
     {
-      d->mFilter->setStatusMask( 0 );
+      d->mFilter->setStatus( Akonadi::MessageStatus() );
       if ( d->mFilter->isEmpty() ) {
         resetFilter();
         return;
@@ -1023,7 +1024,7 @@ void Widget::statusSelected( int index )
     // don't have this status bit
     if ( !d->mFilter )
       d->mFilter = new Filter();
-    d->mFilter->setStatusMask( statusMask );
+    d->mFilter->setStatus( status );
   }
 
   d->mView->model()->setFilter( d->mFilter );

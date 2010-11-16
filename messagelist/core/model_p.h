@@ -344,11 +344,6 @@ public:
   qint32 mCachedWatchedOrIgnoredStatusBits;
 
   /**
-   * Cached bits that we use for fast status checks
-   */
-  qint32 mCachedUnreadStatusBits;
-
-  /**
    * Flag signaling a possibly long job batch. This is checked by other
    * classes and used to display some kind of "please wait" feedback to the user.
    */

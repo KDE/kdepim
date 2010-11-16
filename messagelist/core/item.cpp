@@ -53,7 +53,7 @@ void Item::childItemStats( ChildItemStats &stats ) const
   stats.mTotalChildCount += d->mChildItems->count();
   for( QList< Item * >::Iterator it = d->mChildItems->begin(); it != d->mChildItems->end(); ++it )
   {
-    if ( ( *it )->status().isUnread() )
+    if ( !( *it )->status().isRead() )
       stats.mUnreadChildCount++;
     if ( ( *it )->d->mChildItems )
       ( *it )->childItemStats( stats );
@@ -218,10 +218,10 @@ static inline void append_string( QString &buffer, const QString &append )
 QString Item::statusDescription() const
 {
   QString ret;
-  if( status().isUnread() )
-    append_string( ret, i18nc( "Status of an item", "Unread" ) );
-  else
+  if( status().isRead() )
     append_string( ret, i18nc( "Status of an item", "Read" ) );
+  else
+    append_string( ret, i18nc( "Status of an item", "Unread" ) );
 
   if( status().hasAttachment() )
     append_string( ret, i18nc( "Status of an item", "Has Attachment" ) );

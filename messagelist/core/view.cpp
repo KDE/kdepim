@@ -1042,7 +1042,7 @@ static inline bool message_type_matches( Item * item, MessageTypeFilter messageT
       return true;
     break;
     case MessageTypeUnreadOnly:
-      return item->status().isUnread();
+      return !item->status().isRead();
     break;
     default:
       // nuthin here

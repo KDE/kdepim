@@ -65,7 +65,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
         return KGlobal::locale()->formatDate( dt.date(), KLocale::FancyShortDate );
       }
       case IsUnreadRole:
-        return messageStatus.isUnread();
+        return !messageStatus.isRead();
       case IsImportantRole:
         return messageStatus.isImportant();
       case IsActionItemRole:

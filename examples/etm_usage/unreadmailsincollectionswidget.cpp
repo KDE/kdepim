@@ -76,7 +76,7 @@ bool UnreadMailsInCollectionsProxy::filterAcceptsRow(int source_row, const QMode
   messageStatus.setStatusFromFlags(item.flags());
 
   // Or messageStatus.isImportant();
-  return messageStatus.isUnread();
+  return !messageStatus.isRead();
 }
 
 UnreadMailsInCollectionsWidget::UnreadMailsInCollectionsWidget(QWidget* parent, Qt::WindowFlags f)
