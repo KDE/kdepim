@@ -56,7 +56,8 @@ ActionMenuContainer {
     category : "composer"
     name : "options_menu"
     text : KDE.i18n( "Options" )
-    ActionListItem { name : "mark_as_urgent" }
+    ActionListItem { name : "options_mark_as_urgent" }
+    ActionListItem { name : "options_request_mdn" }
   }
 
   ActionList {

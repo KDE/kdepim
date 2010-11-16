@@ -82,6 +82,7 @@ ComposerView::ComposerView(QWidget* parent) :
   m_busy( false ),
   m_draft( false ),
   m_urgent( false ),
+  m_mdnRequested( Settings::self()->composerRequestMDN() ),
   m_fileName ( QString() )
 {
   setSubject( QString() );
@@ -192,15 +193,16 @@ void ComposerView::delayedInit()
   action = actionCollection()->addAction( "composer_insert_signature" );
   action->setText( i18n( "Insert Signature at Cursor Position" ) );
 
-  action = actionCollection()->addAction("mark_as_urgent");
+  action = actionCollection()->addAction( "options_mark_as_urgent" );
   action->setText( i18n( "Urgent" ) );
-  action->setCheckable(true);
-  connect(action, SIGNAL(triggered(bool)), SLOT(urgentEmail(bool)));
+  action->setCheckable( true );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( urgentEmail( bool ) ) );
 
-  action = actionCollection()->addAction("options_request_mdn");
+  action = actionCollection()->addAction( "options_request_mdn" );
   action->setText( i18n( "Request Notification" ) );
-  action->setCheckable(true);
-  connect(action, SIGNAL(triggered(bool)), SLOT(mdnRequestEmail(bool)));
+  action->setCheckable( true );
+  action->setChecked( m_mdnRequested );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( requestMdn( bool ) ) );
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -295,7 +297,7 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
   // Default till UI exists
   //  m_composerBase->setCharsets( );
   m_composerBase->setUrgent( m_urgent );
-  m_composerBase->setMDNRequested( Settings::self()->composerRequestMDN() );
+  m_composerBase->setMDNRequested( m_mdnRequested );
 
   m_composerBase->send( method, saveIn );
 }
