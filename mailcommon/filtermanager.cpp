@@ -28,37 +28,51 @@
 #include <QtCore/QTimer>
 
 // other headers
-#include <boost/bind.hpp>
 #include <algorithm>
 #include <assert.h>
+#include <boost/bind.hpp>
 #include <errno.h>
 
 using namespace MailCommon;
 
-//-----------------------------------------------------------------------------
-FilterManager::FilterManager()
-  : mShowLater( false ),
-    mRequiresBody( false )
+class FilterManager::Private
 {
-  tryToMonitorCollection();
+  public:
+    Private( FilterManager *qq )
+      : q( qq ),
+        mShowLater( false ),
+        mRequiresBody( false )
+    {
+    }
 
-  mChangeRecorder = new Akonadi::ChangeRecorder( this );
-  mChangeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
-  mChangeRecorder->setChangeRecordingEnabled( false );
-  mChangeRecorder->fetchCollection( true );
-  mChangeRecorder->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  mChangeRecorder->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    void itemAddedFetchResult( KJob *job );
+    void itemsFetchJobForFilterDone( KJob *job );
+    void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
+    void slotInitialCollectionsFetched( const Akonadi::Collection::List &collections );
+    void slotInitialItemsFetched( const Akonadi::Item::List &items );
+    void slotFolderRemoved( const Akonadi::Collection &folder );
+    void tryToMonitorCollection();
+    void tryToFilterInboxOnStartup();
 
-  connect( mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-           SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+    bool isMatching( const Akonadi::Item &item, const MailFilter *filter );
+    bool beginFiltering( const Akonadi::Item &item ) const;
+    void endFiltering( const Akonadi::Item &item ) const;
+    bool atLeastOneFilterAppliesTo( const QString &accountId ) const;
+    bool atLeastOneIncomingFilterAppliesTo( const QString &accountId ) const;
+    bool folderRemoved( const Akonadi::Collection &folder, const Akonadi::Collection &newFolder );
 
-  tryToFilterInboxOnStartup();
-}
+    FilterManager *q;
+    QList<MailFilter *> mFilters;
+    Akonadi::ChangeRecorder *mChangeRecorder;
+    bool mShowLater;
+    bool mRequiresBody;
+};
 
-void FilterManager::tryToFilterInboxOnStartup()
+void FilterManager::Private::tryToFilterInboxOnStartup()
 {
   if ( !Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).isValid() ) {
-    QTimer::singleShot( 0, this, SLOT( tryToFilterInboxOnStartup() ) );
+    QTimer::singleShot( 0, q, SLOT( tryToFilterInboxOnStartup() ) );
     return;
   }
 
@@ -66,36 +80,36 @@ void FilterManager::tryToFilterInboxOnStartup()
   // This is done to filter inbox even if messages were downloaded while kmail/kmail-mobile
   // was not running. Once filtering goes into its own agent, this code can be removed,
   // as at that time the inbox is always monitored.
-  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive, this );
+  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive, q );
   job->fetchScope().setContentMimeTypes( QStringList() << KMime::Message::mimeType() );
   job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::Parent );
-  connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-           this, SLOT( slotInitialCollectionsFetched( const Akonadi::Collection::List& ) ) );
+  q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+              q, SLOT( slotInitialCollectionsFetched( const Akonadi::Collection::List& ) ) );
 }
 
-void FilterManager::tryToMonitorCollection()
+void FilterManager::Private::tryToMonitorCollection()
 {
   if ( KernelIf->folderCollectionMonitor() ) {
-    connect( KernelIf->folderCollectionMonitor(), SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
-           this, SLOT( slotFolderRemoved( const Akonadi::Collection & ) ) );
+    q->connect( KernelIf->folderCollectionMonitor(), SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+                q, SLOT( slotFolderRemoved( const Akonadi::Collection & ) ) );
   } else {
-    QTimer::singleShot( 0, this, SLOT( tryToMonitorCollection() ) );
+    QTimer::singleShot( 0, q, SLOT( tryToMonitorCollection() ) );
   }
 }
 
-void FilterManager::slotInitialCollectionsFetched( const Akonadi::Collection::List& collections )
+void FilterManager::Private::slotInitialCollectionsFetched( const Akonadi::Collection::List &collections )
 {
   foreach ( const Akonadi::Collection &collection, collections ) {
     if ( CommonKernel->folderIsInbox( collection ) ) {
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection, this );
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection, q );
       job->fetchScope().fetchAllAttributes();
-      connect( job, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
-               this, SLOT( slotInitialItemsFetched( const Akonadi::Item::List& ) ) );
+      q->connect( job, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
+                  q, SLOT( slotInitialItemsFetched( const Akonadi::Item::List& ) ) );
     }
   }
 }
 
-void FilterManager::slotInitialItemsFetched( const Akonadi::Item::List &items )
+void FilterManager::Private::slotInitialItemsFetched( const Akonadi::Item::List &items )
 {
   Akonadi::Item::List unreadItems;
 
@@ -106,357 +120,76 @@ void FilterManager::slotInitialItemsFetched( const Akonadi::Item::List &items )
      unreadItems << item;
   }
 
-  applyFilters( unreadItems );
+  q->applyFilters( unreadItems );
 }
 
-
-//-----------------------------------------------------------------------------
-FilterManager::~FilterManager()
+void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::List &items )
 {
-  writeConfig( false );
-  clear();
-}
-
-void FilterManager::clear()
-{
-  qDeleteAll( mFilters );
-  mFilters.clear();
-}
-
-//-----------------------------------------------------------------------------
-void FilterManager::readConfig(void)
-{
-  beginUpdate();
-  KSharedConfig::Ptr config = KernelIf->config();
-  clear();
-
-  mFilters = FilterImporterExporter::readFiltersFromConfig( config, false );
-  endUpdate();
-}
-
-//-----------------------------------------------------------------------------
-void FilterManager::writeConfig(bool withSync)
-{
-  KSharedConfig::Ptr config = KernelIf->config();
-
-  // Now, write out the new stuff:
-  FilterImporterExporter::writeFiltersToConfig( mFilters, config, false );
-  KConfigGroup group = config->group( "General" );
-
-  if ( withSync ) {
-    group.sync();
-  }
-}
-
-bool FilterManager::beginFiltering( const Akonadi::Item &item ) const
-{
-  //KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-  //kDebug() << "filtering" << msg->subject()->asUnicodeString();
-
-  if (MessageProperty::filtering( item ))
-    return false;
-  MessageProperty::setFiltering( item, true );
-  if ( FilterLog::instance()->isLogging() ) {
-    FilterLog::instance()->addSeparator();
-  }
-  return true;
-}
-
-void FilterManager::endFiltering( const Akonadi::Item &item ) const
-{
-  MessageProperty::setFiltering( item, false );
-}
-
-int FilterManager::process( const Akonadi::Item &item, const MailFilter * filter )
-{
-  bool stopIt = false;
-  int result = 1;
-
-  if ( !filter || !item.hasPayload<KMime::Message::Ptr>() )
-    return 1;
-
-  if ( isMatching( item, filter ) ) {
-    // do the actual filtering stuff
-    if ( !beginFiltering( item ) ) {
-      return 1;
-    }
-    if ( filter->execActions( item, stopIt ) == MailFilter::CriticalError ) {
-      return 2;
-    }
-
-    const Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
-    endFiltering( item );
-    if ( targetFolder.isValid() ) {
-      new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
-      result = 0;
-    }
+  KPIM::ProgressItem* progressItem;
+  if ( q->sender()->property( "progressItem" ).value< QObject*>() ) {
+    progressItem = qobject_cast<KPIM::ProgressItem*>( q->sender()->property( "progressItem" ).value<QObject*>() );
   } else {
-    result = 1;
+    progressItem = 0;
+    kWarning() << "Got invalid progress item for slotItemsFetchedFromFilter! Something went wrong...";
   }
-  return result;
-}
 
-int FilterManager::process( const Akonadi::Item &item, FilterSet set,
-                            bool account, const QString& accountId ) {
+  foreach ( const Akonadi::Item &item, items ) {
+    if ( progressItem ) {
+      progressItem->incCompletedItems();
 
+      const bool lessThanTenLeft = (progressItem->totalItems() - progressItem->completedItems() < 10);
+      const bool aTenthItem = !(progressItem->completedItems() % 10);
+      const bool lessThanTenAtAll = (progressItem->completedItems() <= 10);
 
-  if ( set == NoSet ) {
-    kDebug() << "FilterManager: process() called with not filter set selected";
-    emit itemNotMoved( item );
-    return 1;
-  }
-  bool stopIt = false;
-
-  if ( !beginFiltering( item ) ) {
-    emit itemNotMoved( item );
-    return 1;
-  }
-  for ( QList<MailFilter*>::const_iterator it = mFilters.constBegin();
-        !stopIt && it != mFilters.constEnd() ; ++it ) {
-
-    if ( ( ( (set&Inbound) && (*it)->applyOnInbound() ) &&
-         ( !account ||
-             ( account && (*it)->applyOnAccount( accountId ) ) ) ) ||
-         ( (set&Outbound)  && (*it)->applyOnOutbound() ) ||
-         ( (set&BeforeOutbound)  && (*it)->applyBeforeOutbound() ) ||
-         ( (set&Explicit) && (*it)->applyOnExplicit() ) ) {
-        // filter is applicable
-
-      if ( isMatching( item, (*it) ) ) {
-        // execute actions:
-        if ( (*it)->execActions(item, stopIt) == MailFilter::CriticalError ) {
-          return 2;
-        }
+      if ( lessThanTenLeft || aTenthItem || lessThanTenAtAll ) {
+        progressItem->updateProgress();
+        const QString statusMsg = i18n( "Filtering message %1 of %2", progressItem->completedItems(),
+                                        progressItem->totalItems() );
+        KPIM::BroadcastStatus::instance()->setStatusMsg( statusMsg );
       }
     }
-  }
 
-  Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
-
-  endFiltering( item );
-
-  if ( targetFolder.isValid() ) {
-    new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
-    return 0;
-  }
-  emit itemNotMoved( item );
-  return 1;
-}
-
-bool FilterManager::isMatching( const Akonadi::Item& item, const MailFilter * filter )
-{
-  bool result = false;
-  if ( FilterLog::instance()->isLogging() ) {
-    QString logText( i18n( "<b>Evaluating filter rules:</b> " ) );
-    logText.append( filter->pattern()->asString() );
-    FilterLog::instance()->add( logText, FilterLog::PatternDescription );
-  }
-  if ( filter->pattern()->matches( item ) ) {
-    if ( FilterLog::instance()->isLogging() ) {
-      FilterLog::instance()->add( i18n( "<b>Filter rules have matched.</b>" ),
-                                  FilterLog::PatternResult );
-    }
-    result = true;
-  }
-  return result;
-}
-
-bool FilterManager::atLeastOneFilterAppliesTo( const QString& accountID ) const
-{
-  QList<MailFilter*>::const_iterator it = mFilters.constBegin();
-  for ( ; it != mFilters.constEnd() ; ++it ) {
-    if ( (*it)->applyOnAccount( accountID ) ) {
-      return true;
+    const int filterResult = q->process( item, FilterManager::Explicit );
+    if ( filterResult == 2 ) {
+      // something went horribly wrong (out of space?)
+      CommonKernel->emergencyExit( i18n( "Unable to process messages: " ) + QString::fromLocal8Bit( strerror( errno ) ) );
     }
   }
-  return false;
 }
 
-bool FilterManager::atLeastOneIncomingFilterAppliesTo( const QString& accountID ) const
-{
-  QList<MailFilter*>::const_iterator it = mFilters.constBegin();
-  for ( ; it != mFilters.constEnd() ; ++it ) {
-    if ( (*it)->applyOnInbound() && (*it)->applyOnAccount( accountID ) ) {
-      return true;
-    }
-  }
-  return false;
-}
-
-//-----------------------------------------------------------------------------
-void FilterManager::openDialog( QWidget *, bool checkForEmptyFilterList )
-{
-  FilterIf->openFilterDialog( false, checkForEmptyFilterList );
-}
-
-
-//-----------------------------------------------------------------------------
-void FilterManager::createFilter( const QByteArray & field, const QString & value )
-{
-  openDialog( 0, false );
-  FilterIf->createFilter( field, value );
-}
-
-
-//-----------------------------------------------------------------------------
-const QString FilterManager::createUniqueName( const QString & name )
-{
-  QString uniqueName = name;
-  int counter = 0;
-  bool found = true;
-
-  while ( found ) {
-    found = false;
-    for ( QList<MailFilter*>::const_iterator it = mFilters.constBegin();
-          it != mFilters.constEnd(); ++it ) {
-      if ( !( (*it)->name().compare( uniqueName ) ) ) {
-        found = true;
-        ++counter;
-        uniqueName = name;
-        uniqueName += QString( " (" ) + QString::number( counter )
-                    + QString( ")" );
-        break;
-      }
-    }
-  }
-  return uniqueName;
-}
-
-
-//-----------------------------------------------------------------------------
-void FilterManager::appendFilters( const QList<MailFilter*> &filters,
-                                 bool replaceIfNameExists )
-{
-  beginUpdate();
-  if ( replaceIfNameExists ) {
-    QList<MailFilter*>::const_iterator it1 = filters.constBegin();
-    for ( ; it1 != filters.constEnd() ; ++it1 ) {
-      for ( int i = 0; i < mFilters.count(); i++ ) {
-        MailFilter *filter = mFilters[i];
-        if ( (*it1)->name() == filter->name() ) {
-          mFilters.removeAll( filter );
-          i = 0;
-        }
-      }
-    }
-  }
-  mFilters += filters;
-  writeConfig( true );
-  endUpdate();
-}
-
-void FilterManager::setFilters( const QList<MailFilter*> &filters )
-{
-  beginUpdate();
-  clear();
-  mFilters = filters;
-  writeConfig( true );
-  endUpdate();
-}
-
-void FilterManager::removeFilter( MailFilter* filter )
-{
-  beginUpdate();
-  mFilters.removeAll( filter );
-  writeConfig( true );
-  endUpdate();
-}
-
-void FilterManager::slotFolderRemoved( const Akonadi::Collection & aFolder )
-{
-  folderRemoved( aFolder, Akonadi::Collection() );
-}
-
-//-----------------------------------------------------------------------------
-bool FilterManager::folderRemoved(const Akonadi::Collection & aFolder, const Akonadi::Collection & aNewFolder)
-{
-  bool rem = false;
-  QList<MailFilter*>::const_iterator it = mFilters.constBegin();
-  for ( ; it != mFilters.constEnd() ; ++it )
-    if ( (*it)->folderRemoved(aFolder, aNewFolder) )
-      rem = true;
-
-  return rem;
-}
-
-
-//-----------------------------------------------------------------------------
-#ifndef NDEBUG
-void FilterManager::dump(void) const
-{
-  QList<MailFilter*>::const_iterator it = mFilters.constBegin();
-  for ( ; it != mFilters.constEnd() ; ++it ) {
-    kDebug() << (*it)->asString();
-  }
-}
-#endif
-
-//-----------------------------------------------------------------------------
-void FilterManager::endUpdate(void)
-{
-  mRequiresBody = std::find_if( mFilters.constBegin(), mFilters.constEnd(),
-      boost::bind( &MailFilter::requiresBody, _1 ) ) != mFilters.constEnd();
-
-  emit filterListUpdated();
-}
-
-void FilterManager::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
+void FilterManager::Private::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
   if ( CommonKernel->folderIsInbox( collection ) ) {
     if ( mRequiresBody ) {
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, q );
       job->fetchScope().fetchFullPayload( true );
       job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
       job->setProperty( "resource", collection.resource() );
-      connect( job, SIGNAL( result( KJob* ) ), SLOT( itemAddedFetchResult( KJob* ) ) );
+      q->connect( job, SIGNAL( result( KJob* ) ), SLOT( itemAddedFetchResult( KJob* ) ) );
     } else {
-      process( item, Inbound, true, collection.resource() );
+      // the monitor has fetched all headers for this message already
+      q->process( item, Inbound, true, collection.resource() );
     }
   }
 }
 
-void FilterManager::itemAddedFetchResult( KJob *job )
+void FilterManager::Private::itemAddedFetchResult( KJob *job )
 {
   if ( job->error() ) {
     kError() << job->error() << job->errorString();
     return;
   }
 
-  Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
   Q_ASSERT( fetchJob );
 
   if ( fetchJob->items().count() == 1 ) {
     const Akonadi::Item item = fetchJob->items().first();
-    process( item, Inbound, true, fetchJob->property( "resource" ).toString() );
+    q->process( item, Inbound, true, fetchJob->property( "resource" ).toString() );
   }
 }
 
-void FilterManager::applyFilters(const QList< Akonadi::Item >& selectedMessages)
-{
-  const int msgCountToFilter = selectedMessages.size();
-
-  KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem (
-      "filter" + KPIM::ProgressManager::getUniqueID(),
-      i18n( "Filtering messages" )
-    );
-
-  progressItem->setTotalItems( msgCountToFilter );
-
-  Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
-  if ( mRequiresBody )
-    itemFetchJob->fetchScope().fetchFullPayload( true );
-  else
-    itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
-  itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
-
-  connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
-           this, SLOT( slotItemsFetchedForFilter( const Akonadi::Item::List& ) ) );
-  connect( itemFetchJob, SIGNAL( result( KJob* ) ),
-           SLOT( itemsFetchJobForFilterDone( KJob* ) ) );
-}
-
-void FilterManager::itemsFetchJobForFilterDone( KJob *job )
+void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
 {
   if ( job->error() ) {
     kDebug() << job->errorString();
@@ -467,37 +200,355 @@ void FilterManager::itemsFetchJobForFilterDone( KJob *job )
   progressItem->setComplete();
 }
 
-void FilterManager::slotItemsFetchedForFilter( const Akonadi::Item::List &items )
+bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailFilter *filter )
 {
-
-  KPIM::ProgressItem* progressItem;
-  if( sender()->property( "progressItem" ).value< QObject*>() ) {
-    progressItem = qobject_cast<KPIM::ProgressItem*>( sender()->property( "progressItem" ).value<QObject*>() );
-  } else {
-    progressItem = 0;
-    kWarning() << "Got invalid progress item for slotItemsFetchedFromFilter! Something went wrong...";
+  bool result = false;
+  if ( FilterLog::instance()->isLogging() ) {
+    QString logText( i18n( "<b>Evaluating filter rules:</b> " ) );
+    logText.append( filter->pattern()->asString() );
+    FilterLog::instance()->add( logText, FilterLog::PatternDescription );
   }
 
-  foreach ( const Akonadi::Item &item, items ) {
-    if( progressItem ) {
-      progressItem->incCompletedItems();
-      if ( progressItem->totalItems() - progressItem->completedItems() < 10 ||
-        !( progressItem->completedItems() % 10 ) ||
-          progressItem->completedItems() <= 10 )
-      {
-        progressItem->updateProgress();
-        const QString statusMsg = i18n( "Filtering message %1 of %2", progressItem->completedItems(),
-                                        progressItem->totalItems() );
-        KPIM::BroadcastStatus::instance()->setStatusMsg( statusMsg );
+  if ( filter->pattern()->matches( item ) ) {
+    if ( FilterLog::instance()->isLogging() ) {
+      FilterLog::instance()->add( i18n( "<b>Filter rules have matched.</b>" ),
+                                  FilterLog::PatternResult );
+    }
+
+    result = true;
+  }
+
+  return result;
+}
+
+bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
+{
+  if ( MessageProperty::filtering( item ) )
+    return false;
+
+  MessageProperty::setFiltering( item, true );
+  if ( FilterLog::instance()->isLogging() ) {
+    FilterLog::instance()->addSeparator();
+  }
+
+  return true;
+}
+
+void FilterManager::Private::endFiltering( const Akonadi::Item &item ) const
+{
+  MessageProperty::setFiltering( item, false );
+}
+
+bool FilterManager::Private::atLeastOneFilterAppliesTo( const QString &accountId ) const
+{
+  foreach ( const MailFilter *filter, mFilters ) {
+    if ( filter->applyOnAccount( accountId ) ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool FilterManager::Private::atLeastOneIncomingFilterAppliesTo( const QString &accountId ) const
+{
+  foreach ( const MailFilter *filter, mFilters ) {
+    if ( filter->applyOnInbound() && filter->applyOnAccount( accountId ) ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void FilterManager::Private::slotFolderRemoved( const Akonadi::Collection &folder )
+{
+  folderRemoved( folder, Akonadi::Collection() );
+}
+
+bool FilterManager::Private::folderRemoved( const Akonadi::Collection &folder, const Akonadi::Collection &newFolder )
+{
+  bool removed = false;
+
+  foreach ( MailFilter *filter, mFilters ) {
+    if ( filter->folderRemoved( folder, newFolder ) )
+      removed = true;
+  }
+
+  return removed;
+}
+
+
+FilterManager::FilterManager( QObject *parent )
+  : QObject( parent ), d( new Private( this ) )
+{
+  d->tryToMonitorCollection();
+
+  d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
+  d->mChangeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
+  d->mChangeRecorder->setChangeRecordingEnabled( false );
+  d->mChangeRecorder->fetchCollection( true );
+  d->mChangeRecorder->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  d->mChangeRecorder->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+
+  connect( d->mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+           SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+
+  d->tryToFilterInboxOnStartup();
+}
+
+FilterManager::~FilterManager()
+{
+  writeConfig( false );
+  clear();
+
+  delete d;
+}
+
+void FilterManager::clear()
+{
+  qDeleteAll( d->mFilters );
+  d->mFilters.clear();
+}
+
+void FilterManager::readConfig()
+{
+  beginUpdate();
+  KSharedConfig::Ptr config = KernelIf->config();
+  clear();
+
+  d->mFilters = FilterImporterExporter::readFiltersFromConfig( config, false );
+  endUpdate();
+}
+
+void FilterManager::writeConfig( bool withSync ) const
+{
+  KSharedConfig::Ptr config = KernelIf->config();
+
+  // Now, write out the new stuff:
+  FilterImporterExporter::writeFiltersToConfig( d->mFilters, config, false );
+  KConfigGroup group = config->group( "General" );
+
+  if ( withSync ) {
+    group.sync();
+  }
+}
+
+int FilterManager::process( const Akonadi::Item &item, const MailFilter *filter )
+{
+  bool stopIt = false;
+  int result = 1;
+
+  if ( !filter || !item.hasPayload<KMime::Message::Ptr>() )
+    return 1;
+
+  if ( d->isMatching( item, filter ) ) {
+    // do the actual filtering stuff
+    if ( !d->beginFiltering( item ) ) {
+      return 1;
+    }
+
+    if ( filter->execActions( item, stopIt ) == MailFilter::CriticalError ) {
+      return 2;
+    }
+
+    const Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
+    d->endFiltering( item );
+    if ( targetFolder.isValid() ) {
+      new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
+      result = 0;
+    }
+  } else {
+    result = 1;
+  }
+
+  return result;
+}
+
+int FilterManager::process( const Akonadi::Item &item, FilterSet set,
+                            bool account, const QString &accountId )
+{
+  if ( set == NoSet ) {
+    kDebug() << "FilterManager: process() called with not filter set selected";
+    emit itemNotMoved( item );
+    return 1;
+  }
+
+  bool stopIt = false;
+
+  if ( !d->beginFiltering( item ) ) {
+    emit itemNotMoved( item );
+    return 1;
+  }
+
+  for ( QList<MailFilter*>::const_iterator it = d->mFilters.constBegin();
+        !stopIt && it != d->mFilters.constEnd() ; ++it ) {
+
+    const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
+    const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
+    const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());
+    const bool explicitOk = ((set & Explicit) && (*it)->applyOnExplicit());
+    const bool accountOk = (!account || (account && (*it)->applyOnAccount( accountId )));
+
+    if ( (inboundOk && accountOk) || outboundOk || beforeOutboundOk || explicitOk ) {
+        // filter is applicable
+
+      if ( d->isMatching( item, *it ) ) {
+        // execute actions:
+        if ( (*it)->execActions( item, stopIt ) == MailFilter::CriticalError ) {
+          return 2;
+        }
       }
     }
-    int filterResult = process(item, FilterManager::Explicit);
-    if (filterResult == 2)
-    {
-      // something went horribly wrong (out of space?)
-      CommonKernel->emergencyExit( i18n("Unable to process messages: " ) + QString::fromLocal8Bit(strerror(errno)));
+  }
+
+  Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
+
+  d->endFiltering( item );
+
+  if ( targetFolder.isValid() ) {
+    new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
+    return 0;
+  }
+
+  emit itemNotMoved( item );
+  return 1;
+}
+
+void FilterManager::openDialog( bool checkForEmptyFilterList )
+{
+  FilterIf->openFilterDialog( false, checkForEmptyFilterList );
+}
+
+void FilterManager::createFilter( const QByteArray &field, const QString &value )
+{
+  openDialog( false );
+  FilterIf->createFilter( field, value );
+}
+
+QString FilterManager::createUniqueName( const QString &name ) const
+{
+  QString uniqueName = name;
+
+  int counter = 0;
+  bool found = true;
+
+  while ( found ) {
+    found = false;
+    foreach ( const MailFilter *filter, d->mFilters ) {
+      if ( !filter->name().compare( uniqueName ) ) {
+        found = true;
+        ++counter;
+        uniqueName = name;
+        uniqueName += QString( " (" ) + QString::number( counter )
+                    + QString( ")" );
+        break;
+      }
     }
   }
+
+  return uniqueName;
+}
+
+void FilterManager::appendFilters( const QList<MailFilter*> &filters,
+                                   bool replaceIfNameExists )
+{
+  beginUpdate();
+  if ( replaceIfNameExists ) {
+    foreach ( const MailFilter *newFilter, filters ) {
+      for ( int i = 0; i < d->mFilters.count(); ++i ) {
+        MailFilter *filter = d->mFilters[ i ];
+        if ( newFilter->name() == filter->name() ) {
+          d->mFilters.removeAll( filter );
+          i = 0;
+        }
+      }
+    }
+  }
+
+  d->mFilters += filters;
+
+  writeConfig( true );
+  endUpdate();
+}
+
+void FilterManager::setFilters( const QList<MailFilter*> &filters )
+{
+  beginUpdate();
+  clear();
+  d->mFilters = filters;
+  writeConfig( true );
+  endUpdate();
+}
+
+QList<MailFilter*> FilterManager::filters() const
+{
+  return d->mFilters;
+}
+
+void FilterManager::removeFilter( MailFilter *filter )
+{
+  beginUpdate();
+  d->mFilters.removeAll( filter );
+  writeConfig( true );
+  endUpdate();
+}
+
+void FilterManager::beginUpdate()
+{
+}
+
+void FilterManager::endUpdate()
+{
+  // check if at least one filter requires the message body
+  d->mRequiresBody = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
+                                   boost::bind( &MailFilter::requiresBody, _1 ) ) != d->mFilters.constEnd();
+
+  emit filterListUpdated();
+}
+
+void FilterManager::setShowLaterMsgs( bool show )
+{
+  d->mShowLater = show;
+}
+
+bool FilterManager::showLaterMsgs() const
+{
+  return d->mShowLater;
+}
+
+#ifndef NDEBUG
+void FilterManager::dump() const
+{
+  foreach ( const MailFilter *filter, d->mFilters ) {
+    kDebug() << filter->asString();
+  }
+}
+#endif
+
+void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages )
+{
+  const int msgCountToFilter = selectedMessages.size();
+
+  KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem(
+      "filter" + KPIM::ProgressManager::getUniqueID(),
+      i18n( "Filtering messages" )
+    );
+
+  progressItem->setTotalItems( msgCountToFilter );
+
+  Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
+  if ( d->mRequiresBody )
+    itemFetchJob->fetchScope().fetchFullPayload( true );
+  else
+    itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
+  itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
+
+  connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
+           this, SLOT( slotItemsFetchedForFilter( const Akonadi::Item::List& ) ) );
+  connect( itemFetchJob, SIGNAL( result( KJob* ) ),
+           SLOT( itemsFetchJobForFilterDone( KJob* ) ) );
 }
 
 #include "filtermanager.moc"

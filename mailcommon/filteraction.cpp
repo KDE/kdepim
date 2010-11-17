@@ -373,11 +373,11 @@ QString FilterActionWithFolder::displayString() const
   return label() + QLatin1String( " \"" ) + Qt::escape( result ) + QLatin1String( "\"" );
 }
 
-bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &aFolder, const Akonadi::Collection &aNewFolder )
+bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &oldFolder, const Akonadi::Collection &newFolder )
 {
-  if ( aFolder == mFolder ) {
-    mFolder = aNewFolder;
-    if ( aNewFolder.isValid() )
+  if ( oldFolder == mFolder ) {
+    mFolder = newFolder;
+    if ( newFolder.isValid() )
       mFolderName = mFolder.id();
     return true;
   } else

@@ -19,6 +19,7 @@
 
 
 #include "mobilekernel.h"
+#include <mailcommon/filteraction.h>
 #include <mailcommon/filtermanager.h>
 #include <mailcommon/mailkernel.h>
 #include <mailcommon/jobscheduler.h>

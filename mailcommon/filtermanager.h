@@ -20,176 +20,189 @@
 #ifndef MAILCOMMON_FILTERMANAGER_H
 #define MAILCOMMON_FILTERMANAGER_H
 
-#include "filteraction.h" // for KMFilterAction::ReturnCode
-
 #include "mailcommon_export.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
-#include <QPointer>
-
-namespace Akonadi {
-  class ChangeRecorder;
-}
-namespace KMime {
-  class Message;
-}
-
-class KJob;
 
 namespace MailCommon {
+
 class MailFilter;
 
 class MAILCOMMON_EXPORT FilterManager: public QObject
 {
   Q_OBJECT
 
-public:
-  FilterManager();
-  virtual ~FilterManager();
+  public:
+    /**
+     * Describes the list of filters.
+     */
+    enum FilterSet
+    {
+      NoSet = 0x0,
+      Inbound = 0x1,
+      Outbound = 0x2,
+      Explicit = 0x4,
+      BeforeOutbound = 0x8,
+      All = Inbound|BeforeOutbound|Outbound|Explicit
+    };
 
-  /** Clears the list of filters and deletes them. */
-  void clear();
+    /**
+     * Creates a new filter manager.
+     *
+     * @param parent The parent object.
+     */
+    FilterManager( QObject *parent = 0 );
 
-  enum FilterSet { NoSet = 0x0, Inbound = 0x1, Outbound = 0x2, Explicit = 0x4,
-       BeforeOutbound = 0x8, All = Inbound|BeforeOutbound|Outbound|Explicit };
+    /**
+     * Destroys the filter manager.
+     */
+    virtual ~FilterManager();
 
-  /** Reload filter rules from config file. */
-  void readConfig(void);
+    /**
+     * Clears the list of filters and deletes them.
+     */
+    void clear();
 
-  /** Store filter rules in config file. */
-  void writeConfig(bool withSync=true);
+    /**
+     * Reloads the filter rules from config file.
+     */
+    void readConfig();
 
-  /** Open an edit dialog. If checkForEmptyFilterList is true, an empty filter
-      is created to improve the visibility of the dialog in case no filter
-      has been defined so far. */
-  void openDialog( QWidget *parent, bool checkForEmptyFilterList = true );
+    /**
+     * Stores the filter rules in config file.
+     *
+     * @param withSync If @c true the config file will be synced to disk.
+     */
+    void writeConfig( bool withSync = true ) const;
 
-  /** Open an edit dialog, create a new filter and preset the first
-      rule with "field equals value" */
-  void createFilter( const QByteArray & field, const QString & value );
+    /**
+     * Opens an edit dialog.
+     * 
+     * If @p checkForEmptyFilterList is @c true, an empty filter
+     * is created to improve the visibility of the dialog in case no filter
+     * has been defined so far.
+     */
+    void openDialog( bool checkForEmptyFilterList = true );
 
-  /** Remove a filter from the list. The filter object is not deleted. */
-  void removeFilter( MailFilter* filter );
+    /**
+     * Opens an edit dialog, creates a new filter and preset the first
+     * rule with "@p field equals @p value".
+     */
+    void createFilter( const QByteArray &field, const QString &value );
 
-  bool beginFiltering( const Akonadi::Item &item ) const;
-  void endFiltering( const Akonadi::Item &item ) const;
+    /**
+     * Removes the given @p filter from the list.
+     * The filter object is not deleted.
+     */
+    void removeFilter( MailFilter *filter );
 
-  /**
-   * Returns whether at least one filter applies to this account,
-   * which means that mail must be downloaded in order to be filtered,
-   * for example;
-   * */
-  bool atLeastOneFilterAppliesTo( const QString& accountID ) const;
+    /**
+     * Checks for existing filters with the @p name and extend the
+     * "name" to "name (i)" until no match is found for i=1..n
+     */
+    QString createUniqueName( const QString &name ) const;
 
-  /**
-   * Returns whether at least one incoming filter applies to this account,
-   * which means that mail must be downloaded in order to be filtered,
-   * for example;
-   * */
-  bool atLeastOneIncomingFilterAppliesTo( const QString & accountID ) const;
+    /**
+     * Appends the list of @p filters to the current list of filters and
+     * write everything back into the configuration. The filter manager
+     * takes ownership of the filters in the list.
+     */
+    void appendFilters( const QList<MailFilter*> &filters, bool replaceIfNameExists = false );
 
-  /** Check for existing filters with the &p name and extend the
-      "name" to "name (i)" until no match is found for i=1..n */
-  const QString createUniqueName( const QString & name );
+    /**
+     * Replace the list of filters of the filter manager with the given list of @p filters.
+     * The manager takes ownership of the filters.
+     */
+    void setFilters( const QList<MailFilter*> &filters );
 
-  /** Append the list of filters to the current list of filters and
-      write everything back into the configuration. The filter manager
-      takes ownership of the filters in the list. */
-  void appendFilters( const QList<MailFilter*> &filters,
-                      bool replaceIfNameExists = false );
+    /**
+     * Returns the filter list of the manager.
+     */
+    QList<MailFilter*> filters() const;
 
-  /** Replace the list of filters under control of the filter manager.
-   * The manager takes ownershipt of the filters. */
-  void setFilters( const QList<MailFilter*> &filters );
+    /**
+     * Process given message item by applying the filter rules one by
+     * one. You can select which set of filters (incoming or outgoing)
+     * should be used.
+     *
+     *  @param item The message item to process.
+     *  @param set Select the filter set to use.
+     *  @param account @c true if an account id is specified else @c false
+     *  @param accountId The id of the KMAccount that the message was retrieved from
+     *
+     *  @return 2 if a critical error occurred (eg out of disk space)
+     *          1 if the caller is still owner of the message and
+     *          0 otherwise. If the caller does not any longer own the message
+     *                       he *must* not delete the message or do similar stupid things. ;-)
+     */
+    int process( const Akonadi::Item &item, FilterSet set = Inbound,
+                 bool account = false, const QString &accountId = QString() );
 
-  /** @return the list of filters managed by this object */
-  const QList<MailFilter*> & filters() const { return mFilters; }
+    /**
+     * For ad-hoc filters.
+     * 
+     * Applies @p filter to message @p item.
+     * Return codes are as with the above method.
+     */
+    int process( const Akonadi::Item &item, const MailFilter *filter );
 
-  /** Process given message by applying the filter rules one by
-      one. You can select which set of filters (incoming or outgoing)
-      should be used.
+    /**
+     * Applies the filters on the given @p messages.
+     */
+    void applyFilters( const QList<Akonadi::Item> &messages );
 
-      @param msg The message to process.
-      @param aSet Select the filter set to use.
-      @param account true if an account id is specified else false
-      @param accountId The id of the KMAccount that the message was
-             retrieved from
-      @return 2 if a critical error occurred (eg out of disk space)
-      1 if the caller is still owner of the message and
-      0 otherwise. If the caller does not any longer own the message
-      he *must* not delete the message or do similar stupid things. ;-)
-  */
-  int process( const Akonadi::Item &item, FilterSet aSet = Inbound,
-	       bool account = false, const QString & accountId = QString() );
+    /**
+     * Should be called at the beginning of an filter list update.
+     */
+    void beginUpdate();
 
-  /** For ad-hoc filters. Applies @p filter to message @p item.
-      Return codes are as with the above method. */
-  int process( const Akonadi::Item &item, const MailFilter * filter );
+    /**
+     * Should be called at the end of an filter list update.
+     */
+    void endUpdate();
 
-  /** Called at the beginning of an filter list update. Currently a
-      no-op */
-  void beginUpdate() {}
-
-  /** Called at the end of an filter list update. */
-  void endUpdate();
-
-  /** Output all rules to stdout */
 #ifndef NDEBUG
-  void dump() const;
+    /**
+     * Outputs all filter rules to console. Used for debugging.
+     */
+    void dump() const;
 #endif
 
-  /** Called from the folder manager when a folder is removed.
-    Tests if the folder aFolder is used in any action. Changes
-    to aNewFolder folder in this case. Returns true if a change
-    occurred. */
-  bool folderRemoved(const Akonadi::Collection& aFolder, const Akonadi::Collection& aNewFolder);
+    /**
+     * @todo: Remove these two methods? POP3 related?
+     */
+    void setShowLaterMsgs( bool show );
+    bool showLaterMsgs() const;
 
-  /** Set the global option 'Show Download Later Messages' */
-  void setShowLaterMsgs( bool show ) {
-    mShowLater = show;
-  }
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the filter list has been updated.
+     */
+    void filterListUpdated();
 
-  /** Get the global option 'Show Download Later Messages' */
-  bool showLaterMsgs() const {
-    return mShowLater;
-  }
+    /**
+     * This signal is emitted to notify that @p item has not been moved.
+     */
+    void itemNotMoved( const Akonadi::Item &item );
 
- /** Apply the filters on the messages passed as @param selectedMessages. */
-  void applyFilters( const QList<Akonadi::Item>& selectedMessages );
-public slots:
-  void slotFolderRemoved( const Akonadi::Collection &aFolder );
+  private:
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
 
-signals:
-  void filterListUpdated();
-  void itemNotMoved( const Akonadi::Item& item );
-
-private slots:
-  void itemAdded(const Akonadi::Item& item, const Akonadi::Collection& collection);
-
-  void itemAddedFetchResult( KJob *job );
-
-  void itemsFetchJobForFilterDone( KJob *job );
-
-  void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
-
-  void slotInitialCollectionsFetched( const Akonadi::Collection::List&  collections );
-
-  void slotInitialItemsFetched( const Akonadi::Item::List &items );
-
-  void tryToMonitorCollection();
-
-  void tryToFilterInboxOnStartup();
-
-private:
-  /** Find out if a message matches the filter criteria */
-  bool isMatching( const Akonadi::Item &item, const MailFilter * filter );
-
-  QList<MailFilter *> mFilters;
-  Akonadi::ChangeRecorder *mChangeRecorder;
-  bool mShowLater;
-  bool mRequiresBody;
+    Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d, void itemAddedFetchResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void itemsFetchJobForFilterDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotItemsFetchedForFilter( const Akonadi::Item::List& ) )
+    Q_PRIVATE_SLOT( d, void slotInitialCollectionsFetched( const Akonadi::Collection::List& ) )
+    Q_PRIVATE_SLOT( d, void slotInitialItemsFetched( const Akonadi::Item::List& ) )
+    Q_PRIVATE_SLOT( d, void tryToMonitorCollection() )
+    Q_PRIVATE_SLOT( d, void tryToFilterInboxOnStartup() )
+    Q_PRIVATE_SLOT( d, void slotFolderRemoved( const Akonadi::Collection& ) )
+    //@endcond
 };
+
 }
 
-#endif /*MAILCOMMON_FILTERMANAGER_H*/
+#endif
