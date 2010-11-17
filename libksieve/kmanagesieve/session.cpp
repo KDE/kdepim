@@ -20,7 +20,6 @@
 
 #include "session.h"
 #include "response.h"
-#include "sasl-common.h"
 
 #include <kdebug.h>
 #include <ktcpsocket.h>
@@ -45,7 +44,10 @@ using namespace KManageSieve;
 Session::Session( QObject *parent ) :
   QObject( parent ),
   m_socket( new KTcpSocket( this ) ),
+  m_sasl_conn( 0 ),
+  m_sasl_client_interact( 0 ),
   m_state( None ),
+  m_pendingQuantity( -1 ),
   m_supportsStartTls( false )
 {
   kDebug();
@@ -84,6 +86,15 @@ void Session::disconnectFromHost()
 
 void Session::dataReceived()
 {
+  if ( m_pendingQuantity > 0 ) {
+    const QByteArray buffer = m_socket->read( qMin( m_pendingQuantity, m_socket->bytesAvailable() ) );
+    m_data += buffer;
+    m_pendingQuantity -= buffer.size();
+    if ( m_pendingQuantity <= 0 ) {
+      processResponse( m_lastResponse, m_data );
+    }
+  }
+
   while ( m_socket->canReadLine() ) {
     const QByteArray line = m_socket->readLine();
     kDebug() << "S: " << line;
@@ -94,50 +105,82 @@ void Session::dataReceived()
     }
     kDebug() << r.type() << r.key() << r.value() << r.extra() << r.quantity();
 
-    // should probably be refactored into a capability job
-    switch ( m_state ) {
-      case PreTlsCapabilities:
-      case PostTlsCapabilities:
-        if ( r.type() == Response::Action ) {
-          if ( r.action().toLower().contains("ok") ) {
-            kDebug() << "Sieve server ready & awaiting authentication." << endl;
-            if ( m_state == PreTlsCapabilities ) {
-              m_state = StartTls;
-              // TODO: handle the non-tls case
-              sendData( "STARTTLS" );
-            } else {
-              m_state = Authenticating;
-              startAuthentication();
-            }
-          } else {
-            kDebug() << "Unknown action " << r.action() << "." << endl;
-          }
-        } else if ( r.key() == "IMPLEMENTATION" ) {
-          m_implementation = QString::fromLatin1( r.value() );
-          kDebug() << "Connected to Sieve server: " << r.value();
-        } else if ( r.key() == "SASL") {
-          m_saslMethods = QString::fromLatin1( r.value() ).split( ' ', QString::SkipEmptyParts );
-          kDebug() << "Server SASL authentication methods: " << m_saslMethods;
-        } else if ( r.key() == "SIEVE" ) {
-          // Save script capabilities
-          m_sieveExtensions = QString::fromLatin1( r.value() ).split( ' ', QString::SkipEmptyParts );
-          kDebug() << "Server script capabilities: " << m_sieveExtensions;
-        } else if (r.key() == "STARTTLS") {
-          kDebug() << "Server supports TLS";
-          m_supportsStartTls = true;
-        } else {
-          kDebug() << "Unrecognised key " << r.key() << endl;
-        }
-        break;
-      case StartTls:
-        if ( r.type() == Response::Action && r.operationSuccessful() ) {
-          QMetaObject::invokeMethod( this, "startSsl", Qt::QueuedConnection ); // queued to avoid deadlock with waitForEncrypted
-          m_state = None;
-        }
-        break;
-      default:
-        kDebug() << "Unhandled response!";
+    m_lastResponse = r;
+    if ( r.type() == Response::Quantity ) {
+      m_data.clear();
+      m_pendingQuantity = r.quantity();
+      dataReceived(); // in case the data block is already completely in the buffer
+      return;
     }
+    processResponse( r, QByteArray() );
+  }
+}
+
+void Session::processResponse(const KManageSieve::Response& response, const QByteArray& data)
+{
+  switch ( m_state ) {
+    // should probably be refactored into a capability job
+    case PreTlsCapabilities:
+    case PostTlsCapabilities:
+      if ( response.type() == Response::Action ) {
+        if ( response.action().toLower().contains("ok") ) {
+          kDebug() << "Sieve server ready & awaiting authentication." << endl;
+          if ( m_state == PreTlsCapabilities ) {
+            m_state = StartTls;
+            // TODO: handle the non-tls case
+            sendData( "STARTTLS" );
+          } else {
+            m_state = Authenticating;
+            startAuthentication();
+          }
+        } else {
+          kDebug() << "Unknown action " << response.action() << "." << endl;
+        }
+      } else if ( response.key() == "IMPLEMENTATION" ) {
+        m_implementation = QString::fromLatin1( response.value() );
+        kDebug() << "Connected to Sieve server: " << response.value();
+      } else if ( response.key() == "SASL") {
+        m_saslMethods = QString::fromLatin1( response.value() ).split( ' ', QString::SkipEmptyParts );
+        kDebug() << "Server SASL authentication methods: " << m_saslMethods;
+      } else if ( response.key() == "SIEVE" ) {
+        // Save script capabilities
+        m_sieveExtensions = QString::fromLatin1( response.value() ).split( ' ', QString::SkipEmptyParts );
+        kDebug() << "Server script capabilities: " << m_sieveExtensions;
+      } else if (response.key() == "STARTTLS") {
+        kDebug() << "Server supports TLS";
+        m_supportsStartTls = true;
+      } else {
+        kDebug() << "Unrecognised key " << response.key() << endl;
+      }
+      break;
+    case StartTls:
+      if ( response.type() == Response::Action && response.operationSuccessful() ) {
+        QMetaObject::invokeMethod( this, "startSsl", Qt::QueuedConnection ); // queued to avoid deadlock with waitForEncrypted
+        m_state = None;
+      }
+      break;
+    case Authenticating:
+      if ( response.operationResult() == Response::Other ) {
+        if ( !saslClientStep( data ) ) {
+          disconnectFromHost(); // TODO error handling
+          return;
+        }
+      } else {
+        m_state = None;
+        sasl_dispose( &m_sasl_conn );
+        if ( response.operationSuccessful() ) {
+          kDebug() << "Authentication complete.";
+          // TODO
+        } else {
+          // TODO
+  //         error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1", QString::fromLatin1( r.getAction() ) ) );
+          disconnectFromHost();
+          return;
+        }
+      }
+      break;
+    default:
+      kDebug() << "Unhandled response!";
   }
 }
 
@@ -214,33 +257,24 @@ void Session::sendData(const QByteArray& data)
 void Session::startAuthentication()
 {
   int result;
-  sasl_conn_t *conn = NULL;
-  sasl_interact_t *client_interact = NULL;
+  m_sasl_conn = NULL;
+  m_sasl_client_interact = NULL;
   const char *out = NULL;
   uint outlen;
   const char *mechusing = NULL;
 
-  KIO::AuthInfo ai;
-  ai.url = m_url;
-  ai.username = m_url.user();
-  ai.password = m_url.password();
-  ai.keepPassword = true;
-  ai.caption = i18n("Sieve Authentication Details");
-  ai.comment = i18n("Please enter your authentication details for your sieve account "
-    "(usually the same as your email password):");
-
-  result = sasl_client_new( "sieve", m_url.host().toLatin1(), 0, 0, callbacks, 0, &conn );
+  result = sasl_client_new( "sieve", m_url.host().toLatin1(), 0, 0, callbacks, 0, &m_sasl_conn );
   if ( result != SASL_OK ) {
-    kDebug() << "sasl_client_new failed with: " << result << QString::fromUtf8( sasl_errdetail( conn ) );
+    kDebug() << "sasl_client_new failed with: " << result << QString::fromUtf8( sasl_errdetail( m_sasl_conn ) );
     disconnectFromHost(); // TODO handle error
     return;
   }
 
   do {
-    result = sasl_client_start( conn, requestedSaslMethod().join(" ").toLatin1(), &client_interact, &out, &outlen, &mechusing);
+    result = sasl_client_start( m_sasl_conn, requestedSaslMethod().join(" ").toLatin1(), &m_sasl_client_interact, &out, &outlen, &mechusing);
     if ( result == SASL_INTERACT ) {
-      if ( !saslInteract( client_interact, ai ) ) {
-        sasl_dispose( &conn );
+      if ( !saslInteract( m_sasl_client_interact ) ) {
+        sasl_dispose( &m_sasl_conn );
         disconnectFromHost(); // TODO handle error
         return;
       }
@@ -248,8 +282,8 @@ void Session::startAuthentication()
   } while ( result == SASL_INTERACT );
 
   if ( result != SASL_CONTINUE && result != SASL_OK ) {
-    kDebug() << "sasl_client_start failed with: " << result << QString::fromUtf8( sasl_errdetail( conn ) );
-    sasl_dispose( &conn );
+    kDebug() << "sasl_client_start failed with: " << result << QString::fromUtf8( sasl_errdetail( m_sasl_conn ) );
+    sasl_dispose( &m_sasl_conn );
     disconnectFromHost(); // TODO handle error;
     return;
   }
@@ -274,10 +308,19 @@ QStringList Session::requestedSaslMethod() const
   return m_saslMethods;
 }
 
-bool Session::saslInteract(void* in, KIO::AuthInfo& ai)
+bool Session::saslInteract(void* in)
 {
   kDebug();
   sasl_interact_t *interact = ( sasl_interact_t * ) in;
+
+  KIO::AuthInfo ai;
+  ai.url = m_url;
+  ai.username = m_url.user();
+  ai.password = m_url.password();
+  ai.keepPassword = true;
+  ai.caption = i18n("Sieve Authentication Details");
+  ai.comment = i18n("Please enter your authentication details for your sieve account "
+                    "(usually the same as your email password):");
 
   //some mechanisms do not require username && pass, so it doesn't need a popup
   //window for getting this info
@@ -332,5 +375,31 @@ bool Session::saslInteract(void* in, KIO::AuthInfo& ai)
   return true;
 }
 
+bool Session::saslClientStep(const QByteArray& challenge)
+{
+  int result;
+  const char *out = NULL;
+  uint outlen;
+
+  do {
+    result = sasl_client_step( m_sasl_conn, challenge.isEmpty() ? 0 : challenge.data(), challenge.size(), &m_sasl_client_interact, &out, &outlen );
+    if ( result == SASL_INTERACT ) {
+      if ( !saslInteract( m_sasl_client_interact ) ) {
+        sasl_dispose( &m_sasl_conn );
+        return false;
+      }
+    }
+  } while ( result == SASL_INTERACT );
+
+  kDebug() << "sasl_client_step: " << result;
+  if ( result != SASL_CONTINUE && result != SASL_OK ) {
+    kDebug() << "sasl_client_step failed with: " << result << QString::fromUtf8( sasl_errdetail( m_sasl_conn ) );
+    sasl_dispose( &m_sasl_conn );
+    return false;
+  }
+
+  sendData('\"' + QByteArray::fromRawData( out, outlen ).toBase64() + '\"');
+  return true;
+}
 
 #include "session.moc"

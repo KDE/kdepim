@@ -124,12 +124,22 @@ bool KManageSieve::Response::parseResponse(const QByteArray& line)
   return true;
 }
 
-bool KManageSieve::Response::operationSuccessful() const
+KManageSieve::Response::Result KManageSieve::Response::operationResult() const
 {
   if ( m_type == Action ) {
     const QByteArray response = m_key.left( 2 );
-    if (response == "OK")
-      return true;
+    if ( response == "OK" ) {
+      return Ok;
+    } else if ( response == "NO" ) {
+      return No;
+    } else if ( response == "BY"/*E*/ ) {
+      return Bye;
+    }
   }
-  return false;
+  return Other;
+}
+
+bool KManageSieve::Response::operationSuccessful() const
+{
+  return operationResult() == Ok;
 }

@@ -21,14 +21,13 @@
 #ifndef KMANAGESIEVE_SESSION_H
 #define KMANAGESIEVE_SESSION_H
 
+#include "response.h"
+#include "sasl-common.h"
+
 #include <KUrl>
 #include <QtCore/QObject>
 #include <QtCore/QQueue>
 #include <QStringList>
-
-namespace KIO {
-class AuthInfo;
-}
 
 class KTcpSocket;
 
@@ -58,7 +57,9 @@ class Session : public QObject
     void sendData( const QByteArray &data );
     void startAuthentication();
     QStringList requestedSaslMethod() const;
-    bool saslInteract( void *in, KIO::AuthInfo &ai );
+    bool saslInteract( void *in );
+    bool saslClientStep( const QByteArray &challenge );
+    void processResponse( const Response &response, const QByteArray &data );
 
   private slots:
     void dataReceived();
@@ -68,6 +69,8 @@ class Session : public QObject
   private:
     KUrl m_url;
     KTcpSocket *m_socket;
+    sasl_conn_t *m_sasl_conn;
+    sasl_interact_t *m_sasl_client_interact;
     QQueue<SieveJob*> m_jobs;
     QStringList m_sieveExtensions;
     QStringList m_saslMethods;
@@ -80,6 +83,9 @@ class Session : public QObject
       Authenticating
     };
     State m_state;
+    Response m_lastResponse;
+    QByteArray m_data;
+    qint64 m_pendingQuantity;
     bool m_supportsStartTls;
 };
 

@@ -45,6 +45,14 @@ class Response
     QByteArray value() const;
     QByteArray extra() const;
 
+    enum Result {
+      Ok,
+      No,
+      Bye,
+      Other
+    };
+
+    Result operationResult() const;
     bool operationSuccessful() const;
 
     void clear();
