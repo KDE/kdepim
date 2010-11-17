@@ -1,7 +1,7 @@
 /*
  *  kcalendar.cpp  -  kcal library calendar and event functions
  *  Program:  kalarm
- *  Copyright © 2006,2007,2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2006,2007,2009,2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,9 +65,6 @@ struct StaticStrings
 };
 K_GLOBAL_STATIC(StaticStrings, staticStrings)
 
-typedef QMap<QString, KCalEvent::Status> PropertyMap;
-static PropertyMap properties;
-
 
 /******************************************************************************
 * Convert a unique ID to indicate that the event is in a specified calendar file.
@@ -129,6 +126,8 @@ QString KCalEvent::uid(const QString& id, Status status)
 KCalEvent::Status KCalEvent::status(const KCal::Event* event, QString* param)
 {
 	// Set up a static quick lookup for type strings
+	typedef QMap<QString, KCalEvent::Status> PropertyMap;
+	static PropertyMap properties;
 	if (properties.isEmpty())
 	{
 		properties[staticStrings->ACTIVE_STATUS]     = ACTIVE;
