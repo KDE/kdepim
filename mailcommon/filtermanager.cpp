@@ -16,6 +16,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmovejob.h>
+#include <akonadi/kmime/messageparts.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
@@ -46,9 +47,10 @@ FilterManager::FilterManager()
   mChangeRecorder->setChangeRecordingEnabled( false );
   mChangeRecorder->fetchCollection( true );
   mChangeRecorder->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  mChangeRecorder->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
 
-  connect( mChangeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
-           SLOT(itemAdded(Akonadi::Item,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+           SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
 
   tryToFilterInboxOnStartup();
 }
@@ -60,10 +62,10 @@ void FilterManager::tryToFilterInboxOnStartup()
     return;
   }
 
-  //Fetch the collection on startup and apply filters on unread messages in the inbox.
-  //This is done to filter inbox even if messages were downloaded while kmail/kmail-mobile
-  //was not running. Once filtering goes into its own agent, this code can be removed,
-  //as at that time the inbox is always monitored.
+  // Fetch the collection on startup and apply filters on unread messages in the inbox.
+  // This is done to filter inbox even if messages were downloaded while kmail/kmail-mobile
+  // was not running. Once filtering goes into its own agent, this code can be removed,
+  // as at that time the inbox is always monitored.
   Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive, this );
   job->fetchScope().setContentMimeTypes( QStringList() << KMime::Message::mimeType() );
   job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::Parent );
@@ -83,20 +85,21 @@ void FilterManager::tryToMonitorCollection()
 
 void FilterManager::slotInitialCollectionsFetched( const Akonadi::Collection::List& collections )
 {
-  Q_FOREACH( Akonadi::Collection collection, collections ) {
+  foreach ( const Akonadi::Collection &collection, collections ) {
     if ( CommonKernel->folderIsInbox( collection ) ) {
-        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection, this );
-        job->fetchScope().fetchAllAttributes();
-        connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotInitialItemsFetched(Akonadi::Item::List)) );
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection, this );
+      job->fetchScope().fetchAllAttributes();
+      connect( job, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
+               this, SLOT( slotInitialItemsFetched( const Akonadi::Item::List& ) ) );
     }
   }
 }
 
-void FilterManager::slotInitialItemsFetched(const Akonadi::Item::List& items)
+void FilterManager::slotInitialItemsFetched( const Akonadi::Item::List &items )
 {
   Akonadi::Item::List unreadItems;
 
-  Q_FOREACH( Akonadi::Item item, items ) {
+  foreach ( const Akonadi::Item &item, items ) {
    Akonadi::MessageStatus status;
    status.setStatusFromFlags( item.flags() );
    if ( !status.isRead() )
@@ -397,7 +400,7 @@ void FilterManager::endUpdate(void)
   emit filterListUpdated();
 }
 
-void FilterManager::itemAdded(const Akonadi::Item& item, const Akonadi::Collection &collection)
+void FilterManager::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
   if ( CommonKernel->folderIsInbox( collection ) ) {
     if ( mRequiresBody ) {
@@ -438,14 +441,20 @@ void FilterManager::applyFilters(const QList< Akonadi::Item >& selectedMessages)
     );
 
   progressItem->setTotalItems( msgCountToFilter );
+
   Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( selectedMessages, this );
-  itemFetchJob->fetchScope().fetchFullPayload( true );
+  if ( mRequiresBody )
+    itemFetchJob->fetchScope().fetchFullPayload( true );
+  else
+    itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
   itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
-  connect( itemFetchJob, SIGNAL( itemsReceived( Akonadi::Item::List ) ), SLOT( slotItemsFetchedForFilter( Akonadi::Item::List ) ) );
-  connect( itemFetchJob, SIGNAL( result(KJob *) ), SLOT( itemsFetchJobForFilterDone( KJob* ) ) );
-}
 
+  connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
+           this, SLOT( slotItemsFetchedForFilter( const Akonadi::Item::List& ) ) );
+  connect( itemFetchJob, SIGNAL( result( KJob* ) ),
+           SLOT( itemsFetchJobForFilterDone( KJob* ) ) );
+}
 
 void FilterManager::itemsFetchJobForFilterDone( KJob *job )
 {
