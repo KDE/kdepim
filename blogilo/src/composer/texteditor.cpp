@@ -309,9 +309,9 @@ void TextEditor::createActions()
 
     actCode = new KAction( KIcon( "format-text-code" ), i18nc( "Sets text font to code style",
                            "Code" ), this );
-    actCode->setCheckable( true );
+//     actCode->setCheckable( true );
     connect( actCode, SIGNAL( triggered( bool ) ), this, SLOT( slotToggleCode(bool) ) );
-//     barVisual->addAction( actCode ); FIXME: Missing functionality
+    barVisual->addAction( actCode ); 
 
     barVisual->addSeparator();
 
@@ -673,15 +673,12 @@ void TextEditor::slotToggleBlockQuote(bool )
 
 void TextEditor::slotToggleCode(bool )
 {
-//     execCommand("formatBlock", "CODE");
-//     QString selection = webView->selectedText();
-//     if(selection.isEmpty())
-//         return;
-//     kDebug()<<"NOT IMPLEMENTED";
-//     return;
+    QString selection = webView->selectedText();
+    if(selection.isEmpty())
+        return;
 //     // We have to remove selection before!
-//     QString html = QString ( "<code>%1</code>" ).arg ( selection );
-//     execCommand("insertHtml", html);
+    QString html = QString ( "<code>%1</code>" ).arg ( selection );
+    execCommand("insertHtml", html);
 }
 
 void TextEditor::slotAddImage()
