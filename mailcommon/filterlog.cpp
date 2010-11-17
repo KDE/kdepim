@@ -43,127 +43,186 @@
 
 using namespace MailCommon;
 
-
-FilterLog * FilterLog::mSelf = NULL;
-
-
-FilterLog::FilterLog()
+class FilterLog::Private
 {
-  mSelf = this;
-  // start with logging disabled by default
-  mLogging = false;
-  // better limit the log to 512 KByte to avoid out of memory situations
-  // when the log i sgoing to become very long
-  mMaxLogSize = 512 * 1024;
-  mCurrentLogSize = 0;
-  mAllowedTypes =  meta | patternDesc | ruleResult |
-                   patternResult | appliedAction;
-}
+  public:
+    Private( FilterLog *qq )
+      : q( qq ),
+        mLogging( false ),
+        mMaxLogSize( 512 * 1024 ),
+        mCurrentLogSize( 0 ),
+        mAllowedTypes( FilterLog::Meta |
+                       FilterLog::PatternDescription |
+                       FilterLog::RuleResult |
+                       FilterLog::PatternResult |
+                       FilterLog::AppliedAction )
+    {
+    }
 
+    static FilterLog * mSelf;
 
-FilterLog::~FilterLog()
-{}
+    FilterLog *q;
+    QStringList mLogEntries;
+    bool mLogging;
+    long mMaxLogSize;
+    long mCurrentLogSize;
+    int mAllowedTypes;
+    
+    void checkLogSize();
+};
 
-
-FilterLog * FilterLog::instance()
+void FilterLog::Private::checkLogSize()
 {
-  if ( !mSelf ) mSelf = new FilterLog();
-  return mSelf;
-}
+  if ( mCurrentLogSize > mMaxLogSize && mMaxLogSize > -1 ) {
+    kDebug() << "Filter log: memory limit reached, starting to discard old items, size ="
+             << QString::number( mCurrentLogSize );
 
+    // avoid some kind of hysteresis, shrink the log to 90% of its maximum
+    while ( mCurrentLogSize > (mMaxLogSize * 0.9) ) {
+      QStringList::Iterator it = mLogEntries.begin();
+      if ( it != mLogEntries.end() ) {
+        mCurrentLogSize -= (*it).length();
+        mLogEntries.erase( it );
+        kDebug() << "Filter log: new size =" << QString::number( mCurrentLogSize );
+      } else {
+        kDebug() << "Filter log: size reduction disaster!";
+        q->clear();
+      }
+    }
 
-void FilterLog::add( const QString& logEntry, ContentType contentType )
-{
-  if ( isLogging() && ( mAllowedTypes & contentType ) )
-  {
-    QString timedLog = '[' + QTime::currentTime().toString() + "] ";
-    if ( contentType & ~meta )
-      timedLog += logEntry;
-    else
-      timedLog = logEntry;
-    mLogEntries.append( timedLog );
-    emit logEntryAdded( timedLog );
-    mCurrentLogSize += timedLog.length();
-    checkLogSize();
+    emit q->logShrinked();
   }
 }
 
+FilterLog * FilterLog::Private::mSelf = 0;
 
+
+FilterLog::FilterLog()
+  : d( new Private( this ) )
+{
+}
+
+FilterLog::~FilterLog()
+{
+  delete d;
+}
+
+FilterLog* FilterLog::instance()
+{
+  if ( !FilterLog::Private::mSelf )
+    FilterLog::Private::mSelf = new FilterLog();
+
+  return FilterLog::Private::mSelf;
+}
+
+bool FilterLog::isLogging() const
+{
+  return d->mLogging;
+}
+
+void FilterLog::setLogging( bool active )
+{
+  d->mLogging = active; 
+  emit logStateChanged();
+}
+    
 void FilterLog::setMaxLogSize( long size )
 {
   if ( size < -1)
     size = -1;
+
   // do not allow less than 1 KByte except unlimited (-1)
   if ( size >= 0 && size < 1024 )
     size = 1024;
-  mMaxLogSize = size;
+
+  d->mMaxLogSize = size;
   emit logStateChanged();
-  checkLogSize();
+  d->checkLogSize();
 }
 
+long FilterLog::maxLogSize() const
+{
+  return d->mMaxLogSize;
+}
+
+void FilterLog::setContentTypeEnabled( ContentType contentType, bool enable )
+{ 
+  if ( enable )
+    d->mAllowedTypes |= contentType;
+  else
+    d->mAllowedTypes &= ~contentType;
+
+  emit logStateChanged();
+}
+
+bool FilterLog::isContentTypeEnabled( ContentType contentType ) const
+{ 
+  return (d->mAllowedTypes & contentType);
+}
+
+void FilterLog::add( const QString &logEntry, ContentType contentType )
+{
+  if ( isLogging() && (d->mAllowedTypes & contentType) ) {
+    QString timedLog = QLatin1Char( '[' ) + QTime::currentTime().toString() + QLatin1String( "] " );
+    if ( contentType & ~Meta )
+      timedLog += logEntry;
+    else
+      timedLog = logEntry;
+
+    d->mLogEntries.append( timedLog );
+    emit logEntryAdded( timedLog );
+    d->mCurrentLogSize += timedLog.length();
+    d->checkLogSize();
+  }
+}
+
+void FilterLog::addSeparator()
+{
+  add( "------------------------------", Meta );
+}
+
+void FilterLog::clear() 
+{
+  d->mLogEntries.clear(); 
+  d->mCurrentLogSize = 0;
+  emit logShrinked();
+}
+ 
+QStringList FilterLog::logEntries() const
+{
+  return d->mLogEntries;
+}
 
 void FilterLog::dump()
 {
 #ifndef NDEBUG
   kDebug() << "----- starting filter log -----";
-  for ( QStringList::ConstIterator it = mLogEntries.constBegin();
-        it != mLogEntries.constEnd(); ++it )
-  {
-    kDebug() << *it;
+  foreach ( const QString &entry, d->mLogEntries ) {
+    kDebug() << entry;
   }
   kDebug() << "------ end of filter log ------";
 #endif
 }
 
-
-void FilterLog::checkLogSize()
+bool FilterLog::saveToFile( const QString &fileName ) const
 {
-  if ( mCurrentLogSize > mMaxLogSize && mMaxLogSize > -1 )
-  {
-    kDebug() << "Filter log: memory limit reached, starting to discard old items, size ="
-                  << QString::number( mCurrentLogSize );
-    // avoid some kind of hysteresis, shrink the log to 90% of its maximum
-    while ( mCurrentLogSize > ( mMaxLogSize * 0.9 ) )
-    {
-      QStringList::Iterator it = mLogEntries.begin();
-      if ( it != mLogEntries.end())
-      {
-        mCurrentLogSize -= (*it).length();
-        mLogEntries.erase( it );
-        kDebug() << "Filter log: new size ="
-                      << QString::number( mCurrentLogSize );
-      }
-      else
-      {
-        kDebug() << "Filter log: size reduction disaster!";
-        clear();
-      }
-    }
-    emit logShrinked();
+  QFile file( fileName );
+  if ( !file.open( QIODevice::WriteOnly ) )
+    return false;
+
+  fchmod( file.handle(), MessageViewer::Util::getWritePermissions() );
+
+  foreach ( const QString &entry, d->mLogEntries ) {
+    const QString line = entry + QLatin1Char( '\n' );
+    file.write( line.toLocal8Bit() );
   }
+
+  return true;
 }
 
-
-bool FilterLog::saveToFile( const QString &fileName )
+QString FilterLog::recode( const QString &plain )
 {
-    QFile file( fileName );
-    if( file.open( QIODevice::WriteOnly ) ) {
-      fchmod( file.handle(), MessageViewer::Util::getWritePermissions() );
-      {
-        QDataStream ds( &file );
-        for ( QStringList::const_iterator it = mLogEntries.constBegin();
-              it != mLogEntries.constEnd(); ++it )
-        {
-          const QString tmpString = *it + '\n';
-          QByteArray cstr( tmpString.toLocal8Bit() );
-          ds.writeRawData( cstr.data(), cstr.size() );
-        }
-      }
-      return true;
-    }
-    else
-      return false;
+  return Qt::escape( plain );
 }
-
 
 #include "filterlog.moc"

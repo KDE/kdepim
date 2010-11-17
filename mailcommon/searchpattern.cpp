@@ -434,7 +434,7 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     // only log headers bcause messages and bodies can be pretty large
     if ( logContents )
       msg += " (<i>" + FilterLog::recode( msgContents ) + "</i>)";
-    FilterLog::instance()->add( msg, FilterLog::ruleResult );
+    FilterLog::instance()->add( msg, FilterLog::RuleResult );
   }
   return rc;
 }
@@ -650,7 +650,7 @@ bool SearchRuleNumerical::matches( const Akonadi::Item &item ) const
                        : "<font color=#FF0000>0 = </font>" );
     msg += FilterLog::recode( asString() );
     msg += " ( <i>" + QString::number( numericalMsgContents ) + "</i> )";
-    FilterLog::instance()->add( msg, FilterLog::ruleResult );
+    FilterLog::instance()->add( msg, FilterLog::RuleResult );
   }
   return rc;
 }
@@ -796,7 +796,7 @@ bool SearchRuleStatus::matches( const Akonadi::Item &item ) const
     QString msg = ( rc ? "<font color=#00FF00>1 = </font>"
                        : "<font color=#FF0000>0 = </font>" );
     msg += FilterLog::recode( asString() );
-    FilterLog::instance()->add( msg, FilterLog::ruleResult );
+    FilterLog::instance()->add( msg, FilterLog::RuleResult );
   }
   return rc;
 }

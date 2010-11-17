@@ -128,7 +128,7 @@ MailFilter::ReturnCode MailFilter::execActions( const Akonadi::Item &item, bool&
     if ( FilterLog::instance()->isLogging() ) {
       const QString logText( i18n( "<b>Applying filter action:</b> %1",
                          (*it)->displayString() ) );
-      FilterLog::instance()->add( logText, FilterLog::appliedAction );
+      FilterLog::instance()->add( logText, FilterLog::AppliedAction );
     }
 
     FilterAction::ReturnCode result = (*it)->process( item );
@@ -138,7 +138,7 @@ MailFilter::ReturnCode MailFilter::execActions( const Akonadi::Item &item, bool&
       if ( FilterLog::instance()->isLogging() ) {
         const QString logText = QString( "<font color=#FF0000>%1</font>" )
           .arg( i18n( "A critical error occurred. Processing stops here." ) );
-        FilterLog::instance()->add( logText, FilterLog::appliedAction );
+        FilterLog::instance()->add( logText, FilterLog::AppliedAction );
       }
       // in case it's a critical error: return immediately!
       return CriticalError;
@@ -146,7 +146,7 @@ MailFilter::ReturnCode MailFilter::execActions( const Akonadi::Item &item, bool&
       if ( FilterLog::instance()->isLogging() ) {
         const QString logText = QString( "<font color=#FF0000>%1</font>" )
           .arg( i18n( "A problem was found while applying this action." ) );
-        FilterLog::instance()->add( logText, FilterLog::appliedAction );
+        FilterLog::instance()->add( logText, FilterLog::AppliedAction );
       }
     default:
       break;

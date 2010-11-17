@@ -246,12 +246,12 @@ bool FilterManager::isMatching( const Akonadi::Item& item, const MailFilter * fi
   if ( FilterLog::instance()->isLogging() ) {
     QString logText( i18n( "<b>Evaluating filter rules:</b> " ) );
     logText.append( filter->pattern()->asString() );
-    FilterLog::instance()->add( logText, FilterLog::patternDesc );
+    FilterLog::instance()->add( logText, FilterLog::PatternDescription );
   }
   if ( filter->pattern()->matches( item ) ) {
     if ( FilterLog::instance()->isLogging() ) {
       FilterLog::instance()->add( i18n( "<b>Filter rules have matched.</b>" ),
-                                  FilterLog::patternResult );
+                                  FilterLog::PatternResult );
     }
     result = true;
   }
