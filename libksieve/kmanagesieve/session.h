@@ -46,9 +46,10 @@ class Session : public QObject
     ~Session();
 
     void connectToHost( const KUrl &url );
-    void disconnectFromHost();
+    void disconnectFromHost( bool sendLogout = true );
 
     void scheduleJob( SieveJob* job );
+    void killJob( SieveJob* job );
     void sendData( const QByteArray &data );
 
     QStringList sieveExtensions() const;

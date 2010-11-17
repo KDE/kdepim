@@ -27,7 +27,7 @@ class SieveJob::Private
 {
   public:
     Private( SieveJob *qq )
-      : q( qq ), mFileExists( DontKnow )
+      : q( qq ), mFileExists( DontKnow ), mInteractive( true )
     {
     }
 
@@ -51,6 +51,7 @@ class SieveJob::Private
 
     void run( Session *session );
     bool handleResponse( const Response &response, const QByteArray &data );
+    void killed();
 
     SieveJob *q;
     KUrl mUrl;
@@ -61,6 +62,8 @@ class SieveJob::Private
 
     // List of Sieve scripts on the server, used by @ref list()
     QStringList mAvailableScripts;
+
+    bool mInteractive;
 
     static QHash<KUrl, QPointer<Session> > m_sessionPool;
 };

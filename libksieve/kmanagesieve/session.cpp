@@ -67,6 +67,7 @@ Session::Session( QObject *parent ) :
 Session::~Session()
 {
   kDebug();
+  disconnectFromHost( false );
   delete m_socket;
 }
 
@@ -81,9 +82,16 @@ void Session::connectToHost( const KUrl &url )
   m_state = PreTlsCapabilities;
 }
 
-void Session::disconnectFromHost()
+void Session::disconnectFromHost( bool sendLogout )
 {
+  if ( sendLogout )
+    sendData( "LOGOUT" );
   m_socket->disconnectFromHost();
+  if ( m_currentJob )
+    killJob( m_currentJob );
+  foreach ( SieveJob* job, m_jobs )
+    killJob( job );
+  deleteLater();
 }
 
 void Session::dataReceived()
@@ -108,7 +116,7 @@ void Session::dataReceived()
     Response r;
     if ( !r.parseResponse( line ) ) {
       kDebug() << "protocol violation!";
-      disconnectFromHost();
+      disconnectFromHost( false );
     }
     kDebug() << r.type() << r.key() << r.value() << r.extra() << r.quantity();
 
@@ -117,6 +125,9 @@ void Session::dataReceived()
       m_data.clear();
       m_pendingQuantity = r.quantity();
       dataReceived(); // in case the data block is already completely in the buffer
+      return;
+    } else if ( r.operationResult() == Response::Bye ) {
+      disconnectFromHost( false );
       return;
     }
     processResponse( r, QByteArray() );
@@ -130,7 +141,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
     case PreTlsCapabilities:
     case PostTlsCapabilities:
       if ( response.type() == Response::Action ) {
-        if ( response.action().toLower().contains("ok") ) {
+        if ( response.operationSuccessful() ) {
           kDebug() << "Sieve server ready & awaiting authentication." << endl;
           if ( m_state == PreTlsCapabilities ) {
             m_state = StartTls;
@@ -193,6 +204,12 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
           QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
         }
         break;
+      } else {
+        // we can get here in the kill current job case
+        if ( response.operationResult() != Response::Other ) {
+          QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
+          return;
+        }
       }
       kDebug() << "Unhandled response!";
   }
@@ -201,6 +218,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
 void Session::socketError()
 {
   kDebug() << m_socket->errorString();
+  disconnectFromHost( false );
 }
 
 void Session::scheduleJob(SieveJob* job)
@@ -208,6 +226,18 @@ void Session::scheduleJob(SieveJob* job)
   kDebug() << job;
   m_jobs.enqueue( job );
   QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
+}
+
+void Session::killJob(SieveJob* job)
+{
+  kDebug() << job;
+  if ( m_currentJob == job ) {
+    m_currentJob->d->killed();
+    m_currentJob = 0;
+  } else {
+    m_jobs.removeAll( job );
+    job->d->killed();
+  }
 }
 
 void Session::executeNextJob()

@@ -140,11 +140,11 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
 
   // check for errors:
   if ( !response.operationSuccessful() ) {
-    // TODO
-//     if ( static_cast<KIO::Job*>(job)->ui() ) {
+    if ( mInteractive ) {
+      // TODO
 //       static_cast<KIO::Job*>(job)->ui()->setWindow( 0 );
 //       static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
-//     }
+    }
 
     emit q->result( q, false, mScript, (mUrl.fileName() == mActiveScriptName) );
 
@@ -185,6 +185,15 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
   return true;
 }
 
+void SieveJob::Private::killed()
+{
+  emit q->result( q, false, mScript, (mUrl.fileName() == mActiveScriptName) );
+  if ( mCommands.top() == List )
+    emit q->gotList( q, false, mAvailableScripts, mActiveScriptName );
+  else
+    emit q->gotScript( q, false, mScript, (mUrl.fileName() == mActiveScriptName) );
+}
+
 SieveJob::SieveJob( QObject *parent )
   : QObject( parent ), d( new Private( this ) )
 {
@@ -199,16 +208,15 @@ SieveJob::~SieveJob()
 
 void SieveJob::kill( KJob::KillVerbosity verbosity )
 {
-  // TODO
+  Q_UNUSED( verbosity );
+  if ( d->mCommands.isEmpty() )
+    return; // done already
+  Private::sessionForUrl( d->mUrl )->killJob( this );
 }
 
 void SieveJob::setInteractive( bool interactive )
 {
-// TODO
-/*  if ( d->mJob && !interactive ) {
-    d->mJob->setUiDelegate( 0 );
-    KIO::getJobTracker()->unregisterJob( d->mJob );
-  }*/
+  d->mInteractive = interactive;
 }
 
 QStringList SieveJob::sieveCapabilities() const
