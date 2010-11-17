@@ -650,15 +650,23 @@ static QUrl guessUrlFromString(const QString &string)
 
 void TextEditor::slotAddLink()
 {
+    QString selection = webView->selectedText();
+    if(selection.isEmpty())
+        return;
     QPointer<AddEditLink> addLinkDlg = new AddEditLink(this);
     if( addLinkDlg->exec() ){
         Link lnk = addLinkDlg->result();
         QUrl url = guessUrlFromString(lnk.address);
         if(url.isValid()){
-            execCommand("createLink", url.toString());
-            //TODO use other parameters
+            execCommand( "createLink", url.toString() );
+//             QString target = lnk.target.isEmpty() ? QString() : QString("target=\"%1\"").arg(lnk.target);
+//             QString title = lnk.title.isEmpty() ? QString() : QString( "title=\"%1\"").arg(lnk.title);
+//             QString html = QString ( "<a href=\"%1\" %2 %3>%4</a>" )
+//                                 .arg ( url.toString() ).arg ( target ).arg( title ).arg ( selection );
+//             execCommand ( "insertHTML", html );//FIXME Can't understand why do this code doesn't work!? :|
         }
     }
+    addLinkDlg->deleteLater();
 }
 
 void TextEditor::slotRemoveLink()
@@ -703,6 +711,7 @@ void TextEditor::slotAddImage()
         }
         execCommand ( "insertHTML", html );
     }
+    imageDialog->deleteLater();
 }
 
 void TextEditor::slotAddPostSplitter()
