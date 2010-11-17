@@ -35,7 +35,7 @@ if (USABLE_ASSUAN_FOUND)
     include_directories(${ASSUAN_INCLUDES})
   endif(ASSUAN2_FOUND)
 endif(USABLE_ASSUAN_FOUND)
-add_definitions ( -DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS -D_ASSUAN_ONLY_GPG_ERRORS -DQT_STL )
+add_definitions ( -D_ASSUAN_ONLY_GPG_ERRORS -DQT_STL )
 remove_definitions ( -DQT_NO_STL )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
@@ -338,8 +338,6 @@ add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
 kde4_add_app_icon(_kleopatra_mainwindow_SRCS "ox*-app-kleopatra.png")
 kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
-
-set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
 
 target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KCMUTILS_LIBS} ${_kleopatra_uiserver_extra_libs} ${_kleopatra_libkdepim_LIBS})
 if (KDEPIM_MOBILE_UI)

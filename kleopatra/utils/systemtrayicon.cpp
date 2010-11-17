@@ -44,6 +44,7 @@
 #include <QApplication>
 #include <QPointer>
 #include <QDebug>
+#include <QWidget>
 
 #include <cassert>
 
