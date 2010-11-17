@@ -20,6 +20,7 @@
 
 #include "session.h"
 #include "response.h"
+#include "sievejob_p.h"
 
 #include <kdebug.h>
 #include <ktcpsocket.h>
@@ -46,6 +47,7 @@ Session::Session( QObject *parent ) :
   m_socket( new KTcpSocket( this ) ),
   m_sasl_conn( 0 ),
   m_sasl_client_interact( 0 ),
+  m_currentJob( 0 ),
   m_state( None ),
   m_pendingQuantity( -1 ),
   m_supportsStartTls( false )
@@ -91,13 +93,14 @@ void Session::dataReceived()
     m_data += buffer;
     m_pendingQuantity -= buffer.size();
     if ( m_pendingQuantity <= 0 ) {
+      kDebug() << "S: " << m_data.trimmed();
       processResponse( m_lastResponse, m_data );
     }
   }
 
   while ( m_socket->canReadLine() ) {
     const QByteArray line = m_socket->readLine();
-    kDebug() << "S: " << line;
+    kDebug() << "S: " << line.trimmed();
     Response r;
     if ( !r.parseResponse( line ) ) {
       kDebug() << "protocol violation!";
@@ -170,7 +173,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
         sasl_dispose( &m_sasl_conn );
         if ( response.operationSuccessful() ) {
           kDebug() << "Authentication complete.";
-          // TODO
+          QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
         } else {
           // TODO
   //         error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1", QString::fromLatin1( r.getAction() ) ) );
@@ -180,6 +183,13 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
       }
       break;
     default:
+      if ( m_currentJob ) {
+        if ( m_currentJob->d->handleResponse( response, data ) ) {
+          m_currentJob = 0;
+          QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
+        }
+        break;
+      }
       kDebug() << "Unhandled response!";
   }
 }
@@ -192,6 +202,16 @@ void Session::socketError()
 void Session::scheduleJob(SieveJob* job)
 {
   kDebug() << job;
+  m_jobs.enqueue( job );
+  QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
+}
+
+void Session::executeNextJob()
+{
+  if ( m_socket->state() != KTcpSocket::ConnectedState || m_state != None || m_currentJob || m_jobs.isEmpty() )
+    return;
+  m_currentJob = m_jobs.dequeue();
+  m_currentJob->d->run( this );
 }
 
 QStringList Session::sieveExtensions() const

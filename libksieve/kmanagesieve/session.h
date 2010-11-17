@@ -49,12 +49,12 @@ class Session : public QObject
     void disconnectFromHost();
 
     void scheduleJob( SieveJob* job );
+    void sendData( const QByteArray &data );
 
     QStringList sieveExtensions() const;
 
   private:
     bool requestCapabilitiesAfterStartTls() const;
-    void sendData( const QByteArray &data );
     void startAuthentication();
     QStringList requestedSaslMethod() const;
     bool saslInteract( void *in );
@@ -65,6 +65,7 @@ class Session : public QObject
     void dataReceived();
     void socketError();
     void startSsl();
+    void executeNextJob();
 
   private:
     KUrl m_url;
@@ -72,6 +73,7 @@ class Session : public QObject
     sasl_conn_t *m_sasl_conn;
     sasl_interact_t *m_sasl_client_interact;
     QQueue<SieveJob*> m_jobs;
+    SieveJob* m_currentJob;
     QStringList m_sieveExtensions;
     QStringList m_saslMethods;
     QString m_implementation;

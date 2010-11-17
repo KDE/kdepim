@@ -13,6 +13,7 @@
 */
 
 #include "sievejob.h"
+#include "sievejob_p.h"
 #include "session.h"
 
 #include <kdebug.h>
@@ -30,58 +31,6 @@ using KIO::UDSEntryList;
 using KIO::UDSEntry;
 
 using namespace KManageSieve;
-
-class SieveJob::Private
-{
-  public:
-    Private( SieveJob *qq )
-      : q( qq ), mJob( 0 ), mDecoder( 0 ), mFileExists( DontKnow )
-    {
-    }
-
-    ~Private()
-    {
-      delete mDecoder;
-    }
-
-    void slotData( KIO::Job*, const QByteArray& );
-    void slotDataReq( KIO::Job*, QByteArray& );
-    void slotEntries( KIO::Job*, const KIO::UDSEntryList& );
-    void slotResult( KJob* );
-
-    enum Command {
-      Get,
-      Put,
-      Activate,
-      Deactivate,
-      SearchActive,
-      List,
-      Delete
-    };
-
-    enum Existence {
-      DontKnow,
-      Yes,
-      No
-    };
-
-    void schedule( Command command );
-    static Session* sessionForUrl( const KUrl &url );
-
-    SieveJob *q;
-    KUrl mUrl;
-    KIO::Job * mJob;
-    QTextDecoder * mDecoder;
-    QString mScript;
-    QString mActiveScriptName;
-    Existence mFileExists;
-    QStack<Command> mCommands;
-
-    // List of Sieve scripts on the server, used by @ref list()
-    QStringList mAvailableScripts;
-
-    static QHash<KUrl, QPointer<Session> > m_sessionPool;
-};
 
 QHash<KUrl, QPointer<Session> > SieveJob::Private::m_sessionPool;
 
@@ -155,6 +104,72 @@ void SieveJob::Private::schedule( Command command )
 
   // common to all jobs:
   q->connect( mJob, SIGNAL( result( KJob* ) ), q, SLOT( slotResult( KJob* ) ) );
+}
+
+static void append_lf2crlf( QByteArray & out, const QByteArray & in ) {
+  if ( in.isEmpty() )
+    return;
+  const unsigned int oldOutSize = out.size();
+  out.resize( oldOutSize + 2 * in.size() );
+  const char * s = in.begin();
+  const char * const end = in.end();
+  char * d = out.begin() + oldOutSize;
+  char last = '\0';
+  while ( s < end ) {
+    if ( *s == '\n' && last != '\r' )
+      *d++ = '\r';
+    *d++ = last = *s++;
+  }
+  out.resize( d - out.begin() );
+}
+
+void SieveJob::Private::run( Session *session )
+{
+  switch ( mCommands.top() ) {
+    case Get:
+    {
+      const QString filename = mUrl.fileName( KUrl::ObeyTrailingSlash );
+      session->sendData( "GETSCRIPT \"" + filename.toUtf8() + "\"" );
+      break;
+    }
+    case Put:
+    {
+      const QString filename = mUrl.fileName( KUrl::ObeyTrailingSlash );
+      QByteArray encodedData;
+      append_lf2crlf( encodedData, mScript.toUtf8() );
+      session->sendData( "PUTSCRIPT \"" + filename.toUtf8() + "\" {" + QByteArray::number( encodedData.size() ) + "+}" );
+      session->sendData( encodedData );
+      break;
+    }
+    case Activate:
+    {
+      const QString filename = mUrl.fileName( KUrl::ObeyTrailingSlash );
+      session->sendData( "SETACTIVE \"" + filename.toUtf8() + "\"" );
+      break;
+    }
+    case Deactivate:
+      session->sendData( "SETACTIVE \"\"" );
+      break;
+    case List:
+    case SearchActive:
+      session->sendData( "LISTSCRIPTS" );
+      break;
+    case Delete:
+    {
+      const QString filename = mUrl.fileName( KUrl::ObeyTrailingSlash );
+      session->sendData( "DELETESCRIPT \"" + filename.toUtf8() + "\"" );
+      break;
+    }
+    default:
+      Q_ASSERT( false );
+  }
+}
+
+bool SieveJob::Private::handleResponse( const Response &response, const QByteArray &data )
+{
+  if ( response.type() == Response::Action )
+    return true;
+  return false;
 }
 
 void SieveJob::Private::slotData( Job*, const QByteArray &data )
@@ -332,6 +347,7 @@ SieveJob* SieveJob::put( const KUrl &destination, const QString &script,
   job->d->mCommands = commands;
   job->d->schedule( job->d->mCommands.top() );
 
+  Private::sessionForUrl( destination )->scheduleJob( job );
   return job;
 }
 
@@ -346,6 +362,7 @@ SieveJob* SieveJob::get( const KUrl &source )
   job->d->mCommands = commands;
   job->d->schedule( job->d->mCommands.top() );
 
+  Private::sessionForUrl( source )->scheduleJob( job );
   return job;
 }
 
@@ -359,6 +376,7 @@ SieveJob* SieveJob::list( const KUrl &source )
   job->d->mCommands = commands;
   job->d->schedule( job->d->mCommands.top() );
 
+  Private::sessionForUrl( source )->scheduleJob( job );
   return job;
 }
 
@@ -372,6 +390,7 @@ SieveJob* SieveJob::del( const KUrl &url )
   job->d->mCommands = commands;
   job->d->schedule( job->d->mCommands.top() );
 
+  Private::sessionForUrl( url )->scheduleJob( job );
   return job;
 }
 
@@ -385,6 +404,7 @@ SieveJob* SieveJob::deactivate( const KUrl &url )
   job->d->mCommands = commands;
   job->d->schedule( job->d->mCommands.top() );
 
+  Private::sessionForUrl( url )->scheduleJob( job );
   return job;
 }
 
@@ -398,6 +418,7 @@ SieveJob* SieveJob::activate( const KUrl &url )
   job->d->mCommands = commands;
   job->d->schedule( job->d->mCommands.top() );
 
+  Private::sessionForUrl( url )->scheduleJob( job );
   return job;
 }
 

@@ -33,6 +33,8 @@ class KJob;
 
 namespace KManageSieve {
 
+class Session;
+  
 /**
  * @short A job to manage sieve scripts.
  *
@@ -155,6 +157,7 @@ class KMANAGESIEVE_EXPORT SieveJob : public QObject
 
     class Private;
     Private* const d;
+    friend class Session;
 
     Q_PRIVATE_SLOT( d, void slotData( KIO::Job*, const QByteArray& ) )
     Q_PRIVATE_SLOT( d, void slotDataReq( KIO::Job*, QByteArray& ) )
