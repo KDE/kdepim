@@ -208,7 +208,7 @@ TextEditor::TextEditor ( QWidget *parent )
         QMessageBox::warning ( 0, i18n ( "TextEditor" ),
                                i18n ( "TextEditor: Cannot open template file." ) );
     else
-        webView -> setContent ( file.readAll(), "application/xhtml+xml" );
+        webView -> setContent ( file.readAll());//, "application/xhtml+xml" );
 
     connect ( webView->page(), SIGNAL ( selectionChanged() ), this, SLOT ( adjustActions() ) );
     connect ( webView->page(), SIGNAL ( selectionChanged() ), this, SIGNAL ( selectionChanged() ) );
@@ -710,7 +710,7 @@ void TextEditor::slotAddImage()
 
 void TextEditor::slotAddPostSplitter()
 {
-    execCommand("insertHTML", "<hr><!--split-->");
+    execCommand("insertHTML", "<hr/><!--split-->");
 }
 
 void TextEditor::slotChangeLayoutDirection(bool rightToLeft)

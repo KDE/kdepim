@@ -42,7 +42,7 @@
 #include <kio/job.h>
 #include <settings.h>
 
-const QRegExp splitRX("((<hr>)?<!--split-->)");
+const QRegExp splitRX("((<hr/?>)?<!--split-->)");
 
 class Backend::Private
 {
