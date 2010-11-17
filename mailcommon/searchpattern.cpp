@@ -358,8 +358,9 @@ bool SearchRuleString::isEmpty() const
 
 bool SearchRuleString::requiresBody() const
 {
-  if ( field().startsWith( '<' ) || field() == "<recipients>" )
+  if ( !field().startsWith( '<' ) || field() == "<recipients>" )
     return false;
+
   return true;
 }
 
