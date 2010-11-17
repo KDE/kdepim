@@ -108,7 +108,7 @@ void BilboBrowser::setHtml( const QString& title, const QString& content )
 
     if ( viewInBlogStyle->isChecked() ) {
         mWebView->setHtml( StyleGetter::styledHtml( __currentBlogId, title, content ),
-                           DBMan::self()->blog(__currentBlogId).url());
+                           DBMan::self()->blog(__currentBlogId)->url());
     } else {
         mWebView->setHtml( "<html><body><h2 align='center'>" + title + "</h2>" + content + "</html>" );
     }
@@ -118,6 +118,7 @@ void BilboBrowser::stop()
 {
     mWebView->stop();
 }
+
 void BilboBrowser::slotGetBlogStyle()
 {
     stop();
