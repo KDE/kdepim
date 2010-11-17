@@ -1071,9 +1071,12 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 			bool updateCalAndDisplay = false;
 			bool alarmToExecuteValid = false;
 			KAAlarm alarmToExecute;
+			bool restart = false;
 			// Check all the alarms in turn.
 			// Note that the main alarm is fetched before any other alarms.
-			for (KAAlarm alarm = event->firstAlarm();  alarm.valid();  alarm = event->nextAlarm(alarm))
+			for (KAAlarm alarm = event->firstAlarm();
+			     alarm.valid();
+			     alarm = (restart ? event->firstAlarm() : event->nextAlarm(alarm)), restart = false)
 			{
 				// Check if the alarm is due yet.
 				KDateTime nextDT = alarm.dateTime(true).effectiveKDateTime();
@@ -1207,7 +1210,14 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 				if (reschedule)
 				{
 					// The latest repetition was too long ago, so schedule the next one
-					rescheduleAlarm(*event, alarm, false, (rescheduleWork ? nextDT : KDateTime()));
+					if (rescheduleAlarm(*event, alarm, false, (rescheduleWork ? nextDT : KDateTime())))
+					{
+						// A working-time-only alarm has been rescheduled and the
+						// rescheduled time is already due. Start processing the
+						// event again.
+						alarmToExecuteValid = false;
+						restart = true;
+					}
 					updateCalAndDisplay = true;
 					continue;
 				}
@@ -1271,10 +1281,12 @@ void KAlarmApp::alarmCompleted(const KAEvent& event)
 * instance.
 * If 'nextDt' is valid, the event is rescheduled for the next non-working
 * time occurrence after that.
+* Reply = true if 'nextDt' is valid and the rescheduled event is already due.
 */
-void KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updateCalAndDisplay, const KDateTime& nextDt)
+bool KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updateCalAndDisplay, const KDateTime& nextDt)
 {
 	kDebug();
+	bool reply = false;
 	bool update = false;
 	event.startChanges();
 	if (alarm.reminder()  ||  alarm.deferred())
@@ -1303,7 +1315,7 @@ void KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updat
 				case KAEventData::NO_OCCURRENCE:
 					// All repetitions are finished, so cancel the event
 					if (cancelAlarm(event, alarm.type(), updateCalAndDisplay))
-						return;
+						return false;
 					break;
 				default:
 					if (!(type & KAEventData::OCCURRENCE_REPEAT))
@@ -1341,10 +1353,12 @@ void KAlarmApp::rescheduleAlarm(KAEvent& event, const KAAlarm& alarm, bool updat
 					next = !KAlarm::isWorkingTime(next_dt, event.eventData());
 			}
 		} while (next && next_dt <= now);
+		reply = next_dt.isValid() && (next_dt <= now);
 	}
 	event.endChanges();
 	if (update)
 		KAlarm::updateEvent(event);     // update the window lists and calendar file
+	return reply;
 }
 
 /******************************************************************************
