@@ -85,9 +85,24 @@ FilterAction::~FilterAction()
 {
 }
 
+QString FilterAction::label() const
+{
+  return mLabel;
+}
+
+QString FilterAction::name() const
+{
+  return mName;
+}
+
 bool FilterAction::requiresBody() const
 {
   return true;
+}
+
+bool FilterAction::isEmpty() const
+{
+  return false;
 }
 
 FilterAction* FilterAction::newAction()
@@ -149,11 +164,19 @@ FilterActionWithNone::FilterActionWithNone( const char* aName, const QString &aL
 {
 }
 
-const QString FilterActionWithNone::displayString() const
+QString FilterActionWithNone::displayString() const
 {
   return label();
 }
 
+void FilterActionWithNone::argsFromString( const QString& )
+{
+}
+
+QString FilterActionWithNone::argsAsString() const
+{
+  return QString();
+}
 
 //=============================================================================
 //
@@ -166,17 +189,22 @@ FilterActionWithUOID::FilterActionWithUOID( const char* aName, const QString &aL
 {
 }
 
+bool FilterActionWithUOID::isEmpty() const
+{
+  return mParameter == 0;
+}
+
 void FilterActionWithUOID::argsFromString( const QString &argsStr )
 {
   mParameter = argsStr.trimmed().toUInt();
 }
 
-const QString FilterActionWithUOID::argsAsString() const
+QString FilterActionWithUOID::argsAsString() const
 {
   return QString::number( mParameter );
 }
 
-const QString FilterActionWithUOID::displayString() const
+QString FilterActionWithUOID::displayString() const
 {
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
@@ -191,6 +219,11 @@ const QString FilterActionWithUOID::displayString() const
 FilterActionWithString::FilterActionWithString( const char* aName, const QString &aLabel )
   : FilterAction( aName, aLabel )
 {
+}
+
+bool FilterActionWithString::isEmpty() const
+{
+  return mParameter.trimmed().isEmpty();
 }
 
 QWidget* FilterActionWithString::createParamWidget( QWidget* parent ) const
@@ -221,12 +254,12 @@ void FilterActionWithString::argsFromString( const QString &argsStr )
   mParameter = argsStr;
 }
 
-const QString FilterActionWithString::argsAsString() const
+QString FilterActionWithString::argsAsString() const
 {
   return mParameter;
 }
 
-const QString FilterActionWithString::displayString() const
+QString FilterActionWithString::displayString() const
 {
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
@@ -289,6 +322,11 @@ FilterActionWithFolder::FilterActionWithFolder( const char* aName, const QString
 {
 }
 
+bool FilterActionWithFolder::isEmpty() const
+{
+  return (!mFolder.isValid() && mFolderName.isEmpty());
+}
+
 QWidget* FilterActionWithFolder::createParamWidget( QWidget* parent ) const
 {
   FolderRequester *req = new FolderRequester( parent );
@@ -325,7 +363,7 @@ void FilterActionWithFolder::argsFromString( const QString &argsStr )
     mFolderName = argsStr;
 }
 
-const QString FilterActionWithFolder::argsAsString() const
+QString FilterActionWithFolder::argsAsString() const
 {
   QString result;
   if ( mFolder.isValid() )
@@ -335,7 +373,7 @@ const QString FilterActionWithFolder::argsAsString() const
   return result;
 }
 
-const QString FilterActionWithFolder::displayString() const
+QString FilterActionWithFolder::displayString() const
 {
   QString result;
   if ( mFolder.isValid() )
@@ -788,8 +826,8 @@ public:
   virtual bool isEmpty() const { return false; }
 
   virtual void argsFromString( const QString &argsStr );
-  virtual const QString argsAsString() const;
-  virtual const QString displayString() const;
+  virtual QString argsAsString() const;
+  virtual QString displayString() const;
 };
 
 
@@ -877,7 +915,7 @@ void FilterActionSetStatus::argsFromString( const QString &argsStr )
   mParameter = mParameterList.at(0);
 }
 
-const QString FilterActionSetStatus::argsAsString() const
+QString FilterActionSetStatus::argsAsString() const
 {
   const int idx = mParameterList.indexOf( mParameter );
   if ( idx < 1 ) return QString();
@@ -885,7 +923,7 @@ const QString FilterActionSetStatus::argsAsString() const
   return stati[idx-1].statusStr();
 }
 
-const QString FilterActionSetStatus::displayString() const
+QString FilterActionSetStatus::displayString() const
 {
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
@@ -906,8 +944,8 @@ public:
   virtual bool isEmpty() const { return false; }
 
   virtual void argsFromString( const QString &argsStr );
-  virtual const QString argsAsString() const;
-  virtual const QString displayString() const;
+  virtual QString argsAsString() const;
+  virtual QString displayString() const;
 
 private:
   QStringList mLabelList;
@@ -954,7 +992,7 @@ void FilterActionAddTag::argsFromString( const QString &argsStr )
     mParameter = mParameterList.at( 0 );
 }
 
-const QString FilterActionAddTag::argsAsString() const
+QString FilterActionAddTag::argsAsString() const
 {
   const int idx = mParameterList.indexOf( mParameter );
   if ( idx == -1 ) return QString();
@@ -962,7 +1000,7 @@ const QString FilterActionAddTag::argsAsString() const
   return mParameterList.at( idx );
 }
 
-const QString FilterActionAddTag::displayString() const
+QString FilterActionAddTag::displayString() const
 {
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
@@ -983,8 +1021,8 @@ public:
   virtual bool isEmpty() const { return false; }
 
   virtual void argsFromString( const QString &argsStr );
-  virtual const QString argsAsString() const;
-  virtual const QString displayString() const;
+  virtual QString argsAsString() const;
+  virtual QString displayString() const;
 };
 
 
@@ -1051,7 +1089,7 @@ void FilterActionFakeDisposition::argsFromString( const QString &argsStr )
   mParameter = mParameterList.at(0);
 }
 
-const QString FilterActionFakeDisposition::argsAsString() const
+QString FilterActionFakeDisposition::argsAsString() const
 {
   const int idx = mParameterList.indexOf( mParameter );
   if ( idx < 1 ) return QString();
@@ -1059,7 +1097,7 @@ const QString FilterActionFakeDisposition::argsAsString() const
   return QString( QChar( idx < 2 ? 'I' : char(mdns[idx-2]) ) );
 }
 
-const QString FilterActionFakeDisposition::displayString() const
+QString FilterActionFakeDisposition::displayString() const
 {
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
@@ -1148,10 +1186,10 @@ public:
   virtual void applyParamWidgetValue( QWidget* paramWidget );
   virtual void clearParamWidget( QWidget* paramWidget ) const;
 
-  virtual const QString argsAsString() const;
+  virtual QString argsAsString() const;
   virtual void argsFromString( const QString &argsStr );
 
-  virtual const QString displayString() const;
+  virtual QString displayString() const;
 
   static FilterAction* newAction()
   {
@@ -1251,7 +1289,7 @@ void FilterActionAddHeader::clearParamWidget( QWidget* paramWidget ) const
   le->clear();
 }
 
-const QString FilterActionAddHeader::argsAsString() const
+QString FilterActionAddHeader::argsAsString() const
 {
   QString result = mParameter;
   result += '\t';
@@ -1260,7 +1298,7 @@ const QString FilterActionAddHeader::argsAsString() const
   return result;
 }
 
-const QString FilterActionAddHeader::displayString() const
+QString FilterActionAddHeader::displayString() const
 {
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
@@ -1300,10 +1338,10 @@ public:
   virtual void applyParamWidgetValue( QWidget* paramWidget );
   virtual void clearParamWidget( QWidget* paramWidget ) const;
 
-  virtual const QString argsAsString() const;
+  virtual QString argsAsString() const;
   virtual void argsFromString( const QString &argsStr );
 
-  virtual const QString displayString() const;
+  virtual QString displayString() const;
 
   static FilterAction* newAction()
   {
@@ -1437,7 +1475,7 @@ void FilterActionRewriteHeader::clearParamWidget( QWidget* paramWidget ) const
   le->clear();
 }
 
-const QString FilterActionRewriteHeader::argsAsString() const
+QString FilterActionRewriteHeader::argsAsString() const
 {
   QString result = mParameter;
   result += '\t';
@@ -1448,7 +1486,7 @@ const QString FilterActionRewriteHeader::argsAsString() const
   return result;
 }
 
-const QString FilterActionRewriteHeader::displayString() const
+QString FilterActionRewriteHeader::displayString() const
 {
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
@@ -1563,8 +1601,8 @@ class FilterActionForward: public FilterActionWithAddress
     virtual void setParamWidgetValue( QWidget* paramWidget ) const;
     virtual void clearParamWidget( QWidget* paramWidget ) const;
     virtual void argsFromString( const QString &argsStr );
-    virtual const QString argsAsString() const;
-    virtual const QString displayString() const;
+    virtual QString argsAsString() const;
+    virtual QString displayString() const;
 
 private:
 
@@ -1717,12 +1755,12 @@ void FilterActionForward::argsFromString( const QString &argsStr )
   }
 }
 
-const QString FilterActionForward::argsAsString() const
+QString FilterActionForward::argsAsString() const
 {
   return FilterActionWithAddress::argsAsString() + forwardFilterArgsSeperator + mTemplate;
 }
 
-const QString FilterActionForward::displayString() const
+QString FilterActionForward::displayString() const
 {
   if ( mTemplate.isEmpty() )
     return i18n( "Forward to %1 with default template", mParameter );
@@ -1857,6 +1895,11 @@ FilterActionWithTest::~FilterActionWithTest()
 {
 }
 
+bool FilterActionWithTest::isEmpty() const
+{
+  return mParameter.trimmed().isEmpty();
+}
+
 QWidget* FilterActionWithTest::createParamWidget( QWidget* parent ) const
 {
   SoundTestWidget *le = new SoundTestWidget(parent);
@@ -1885,12 +1928,12 @@ void FilterActionWithTest::argsFromString( const QString &argsStr )
   mParameter = argsStr;
 }
 
-const QString FilterActionWithTest::argsAsString() const
+QString FilterActionWithTest::argsAsString() const
 {
   return mParameter;
 }
 
-const QString FilterActionWithTest::displayString() const
+QString FilterActionWithTest::displayString() const
 {
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
@@ -1940,6 +1983,11 @@ FilterActionWithUrl::~FilterActionWithUrl()
 {
 }
 
+bool FilterActionWithUrl::isEmpty() const
+{
+  return mParameter.trimmed().isEmpty();
+}
+
 QWidget* FilterActionWithUrl::createParamWidget( QWidget* parent ) const
 {
   KUrlRequester *le = new KUrlRequester(parent);
@@ -1969,12 +2017,12 @@ void FilterActionWithUrl::argsFromString( const QString &argsStr )
   mParameter = argsStr;
 }
 
-const QString FilterActionWithUrl::argsAsString() const
+QString FilterActionWithUrl::argsAsString() const
 {
   return mParameter;
 }
 
-const QString FilterActionWithUrl::displayString() const
+QString FilterActionWithUrl::displayString() const
 {
   return label() + " \"" + Qt::escape( argsAsString() ) + "\"";
 }
@@ -1997,7 +2045,7 @@ public:
   virtual void applyParamWidgetValue( QWidget* paramWidget );
   virtual void clearParamWidget( QWidget* paramWidget ) const;
 
-  virtual const QString argsAsString() const;
+  virtual QString argsAsString() const;
   virtual void argsFromString( const QString &argsStr );
 
 private:
@@ -2154,7 +2202,7 @@ void FilterActionAddToAddressBook::clearParamWidget( QWidget* paramWidget ) cons
   categoryEdit->setText( mCategory );
 }
 
-const QString FilterActionAddToAddressBook::argsAsString() const
+QString FilterActionAddToAddressBook::argsAsString() const
 {
   QString result;
 
@@ -2249,3 +2297,7 @@ void FilterActionDict::insert( FilterActionNewFunc aNewFunc )
   delete action;
 }
 
+const QList<FilterActionDesc*>& FilterActionDict::list() const
+{
+  return mList;
+}
