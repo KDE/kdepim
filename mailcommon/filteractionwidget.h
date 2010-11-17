@@ -25,99 +25,137 @@
 
 #include "mailcommon_export.h"
 
-#include <KHBox>
+#include <khbox.h>
 #include <kwidgetlister.h>
 
-class QGridLayout;
 class KComboBox;
+class QGridLayout;
 
 namespace MailCommon {
 
-  class FilterAction;
+class FilterAction;
 
-/** This widgets allows to edit a single MailCommon::FilterAction (in fact
-    any derived class that is registered in
-    KMFilterActionDict). It consists of a combo box which allows to
-    select the type of actions this widget should act upon.
-
-    You can load a MailCommon::FilterAction into this widget with setAction,
-    and retrieve the result of user action with action.
-    The widget will copy it's setting into the corresponding
-    parameter widget. For that, it internally creates an instance of
-    every MailCommon::FilterAction in KMFilterActionDict and asks each
-    one to create a parameter widget.
-
-    @short A widget to edit a single MailCommon::FilterAction.
-    @author Marc Mutz <Marc@Mutz.com>
-    @see MailCommon::FilterAction MailCommon::MailFilter FilterActionWidgetLister
-
+/**
+ * @short A widget to edit a single MailCommon::FilterAction.
+ *
+ * This widgets allows to edit a single MailCommon::FilterAction (in fact
+ * any derived class that is registered in
+ * KMFilterActionDict). It consists of a combo box which allows to
+ * select the type of actions this widget should act upon.
+ *
+ * You can load a MailCommon::FilterAction into this widget with setAction,
+ * and retrieve the result of user action with action.
+ * The widget will copy it's setting into the corresponding
+ * parameter widget. For that, it internally creates an instance of
+ * every MailCommon::FilterAction in KMFilterActionDict and asks each
+ * one to create a parameter widget.
+ *
+ * @author Marc Mutz <Marc@Mutz.com>
+ * @see MailCommon::FilterAction MailCommon::MailFilter FilterActionWidgetLister
  */
 class FilterActionWidget : public KHBox
 {
   Q_OBJECT
-public:
-  /** Constructor. Creates a filter action widget with no type
-      selected. */
-  explicit FilterActionWidget( QWidget* parent=0, const char* name=0 );
 
-  /** Destructor. Clears mActionList. */
-  ~FilterActionWidget();
+  public:
+    /**
+     * Creates a filter action widget with no type selected.
+     *
+     * @param parent The parent widget.
+     */
+    explicit FilterActionWidget( QWidget *parent = 0 );
 
-  /** Set an action. The action's type is determined and the
-      corresponding widget it loaded with @p aAction's parameters and
-      then raised. If @ aAction is 0, the widget is cleared. */
-  void setAction( const MailCommon::FilterAction * aAction );
-  /** Retrieve the action. This method is necessary because the type
-      of actions can change during editing. Therefore the widget
-      always creates a new action object from the data in the combo
-      box and returns that. */
-  MailCommon::FilterAction *action() const;
+    /**
+     * Destroys the filter action widget.
+     */
+    ~FilterActionWidget();
 
-private slots:
-  void slotFilterTypeChanged( int newIdx );
+    /**
+     * Sets the filter action.
+     *
+     * The action's type is determined and the corresponding widget
+     * it loaded with @p action's parameters and then raised.
+     *
+     * If @p action is @c 0, the widget is cleared.
+     * @note The widget takes ownership of the passed action.
+     */
+    void setAction( const MailCommon::FilterAction *action );
 
-private:
-  /** This list holds an instance of every MailCommon::FilterAction
-      subclass. The only reason that these 'slave' actions exist is
-      that they are 'forced' to create parameter widgets
-      and to clear them on setAction. */
-  QList<MailCommon::FilterAction*> mActionList;
-  /** The combo box that contains the labels of all KMFilterActions.
-      It's @p activated(int) signal is internally
-      connected to the @p slotCboAction(int) slot of @p FilterActionWidget. */
-  KComboBox      *mComboBox;
+    /**
+     * Returns the filter action.
+     *
+     * This method is necessary because the type of actions can
+     * change during editing. Therefore the widget always creates a new
+     * action object from the data in the combo box and returns that.
+     */
+    MailCommon::FilterAction *action() const;
 
-  void setFilterAction( QWidget* w=0 );
-  QGridLayout *gl;
+  private:
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+
+    Q_PRIVATE_SLOT( d, void slotFilterTypeChanged( int ) )
+    //@endcond
 };
 
+/**
+ * @short A container widget for a list of FilterActionWidgets.
+ *
+ * @author Marc Mutz <Marc@Mutz.com>
+ * @see MailCommon::FilterAction MailCommon::MailFilter FilterActionWidget
+ */
 class MAILCOMMON_EXPORT FilterActionWidgetLister : public KPIM::KWidgetLister
 {
   Q_OBJECT
-public:
-  explicit FilterActionWidgetLister( QWidget *parent=0, const char* name=0 );
 
-  virtual ~FilterActionWidgetLister();
+  public:
+    /**
+     * Creates a new filter action widget lister.
+     *
+     * @param parent The parent widget.
+     */
+    explicit FilterActionWidgetLister( QWidget *parent = 0 );
 
-  void setActionList( QList<MailCommon::FilterAction*> * aList );
+    /**
+     * Destroys the filter action widget lister.
+     */
+    virtual ~FilterActionWidgetLister();
 
-  /** Updates the action list according to the current widget values */
-  void updateActionList() { regenerateActionListFromWidgets(); }
+    /**
+     * Sets the @p list of filter actions, the lister will create FilterActionWidgets for.
+     */
+    void setActionList( QList<MailCommon::FilterAction*> *list );
 
-public slots:
-  void reset();
+    /**
+     * Updates the action list according to the current action widget values.
+     */
+    void updateActionList();
 
-protected:
-  virtual void clearWidget( QWidget *aWidget );
-  virtual QWidget* createWidget( QWidget *parent );
+  public Q_SLOTS:
+    /**
+     * Resets the action widgets.
+     */
+    void reset();
 
-private:
-  void regenerateActionListFromWidgets();
-  QList<MailCommon::FilterAction*> *mActionList;
+  protected:
+    /**
+     * @copydoc KPIM::KWidgetLister::clearWidget
+     */
+    virtual void clearWidget( QWidget* );
 
+    /**
+     * @copydoc KPIM::KWidgetLister::createWidget
+     */
+    virtual QWidget* createWidget( QWidget* );
+
+  private:
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+    //@endcond
 };
-
 
 }
 
-#endif // FILTERACTIONWIDGET_H
+#endif

@@ -19,19 +19,16 @@
 
 
 #include "filteractionwidget.h"
+
 #include "filteraction.h"
-#include "mailkernel.h"
 #include "mailfilter.h"
+#include "mailkernel.h"
 #include "minimumcombobox.h"
 
 #include <KLocalizedString>
 
-#include <QGridLayout>
-#include <QLabel>
-
-#include <assert.h>
-
-
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
 
 using namespace MailCommon;
 
@@ -41,122 +38,154 @@ using namespace MailCommon;
 //
 //=============================================================================
 
-FilterActionWidget::FilterActionWidget( QWidget *parent, const char* name )
-  : KHBox( parent )
+class FilterActionWidget::Private
 {
-  setObjectName( name );
+  public:
+    Private( FilterActionWidget *qq )
+      : q( qq )
+    {
+    }
 
-  int i;
+    ~Private()
+    {
+      qDeleteAll( mActionList );
+    }
 
-  QWidget *w = new QWidget( this );
-  gl = new QGridLayout( w );
-  gl->setContentsMargins( 0, 0, 0, 0 );
-  mComboBox = new MinimumComboBox( w );
-  mComboBox->setEditable( false );
-  assert( mComboBox );
-  gl->addWidget( mComboBox, 1, 1 );
+    void setFilterAction( QWidget *widget = 0 );
+
+    void slotFilterTypeChanged( int index );
+
+    FilterActionWidget *q;
+    QList<MailCommon::FilterAction*> mActionList;
+    KComboBox *mComboBox;
+
+    QGridLayout *mLayout;
+};
+
+void FilterActionWidget::Private::setFilterAction( QWidget *widget )
+{
+  if ( mLayout->itemAtPosition( 1, 2 ) )
+    delete mLayout->itemAtPosition( 1, 2 )->widget();
+
+  if ( widget )
+    mLayout->addWidget( widget, 1, 2 );
+  else
+    mLayout->addWidget( new QLabel( i18n( "Please select an action." ), q ), 1, 2 );
+}
+
+void FilterActionWidget::Private::slotFilterTypeChanged( int index )
+{
+  setFilterAction( index < mActionList.count() ? mActionList.at( index )->createParamWidget( q ) : 0 );
+}
+
+
+FilterActionWidget::FilterActionWidget( QWidget *parent )
+  : KHBox( parent ), d( new Private( this ) )
+{
+  QWidget *widget = new QWidget( this );
+
+  d->mLayout = new QGridLayout( widget );
+  d->mLayout->setContentsMargins( 0, 0, 0, 0 );
+
+  d->mComboBox = new MinimumComboBox( widget );
+  d->mComboBox->setEditable( false );
+  Q_ASSERT( d->mComboBox );
+  d->mLayout->addWidget( d->mComboBox, 1, 1 );
 
   setSpacing( 4 );
 
+  int index;
   QList<FilterActionDesc*> list = FilterIf->filterActionDict()->list();
   QList<FilterActionDesc*>::const_iterator it;
-  for ( i=0, it = list.constBegin() ; it != list.constEnd() ; ++it, ++i ) {
+  for ( index = 0, it = list.constBegin() ; it != list.constEnd() ; ++it, ++index ) {
     //create an instance:
-    FilterAction *a = (*it)->create();
+    FilterAction *action = (*it)->create();
+
     // append to the list of actions:
-    mActionList.append( a );
+    d->mActionList.append( action );
+
     // add (i18n-ized) name to combo box
-    mComboBox->addItem( (*it)->label );
+    d->mComboBox->addItem( (*it)->label );
   }
+
   // widget for the case where no action is selected.
-  mComboBox->addItem( " " );
-  mComboBox->setCurrentIndex(i);
+  d->mComboBox->addItem( " " );
+  d->mComboBox->setCurrentIndex( index );
 
   // don't show scroll bars.
-  mComboBox->setMaxCount( mComboBox->count() );
+  d->mComboBox->setMaxCount( d->mComboBox->count() );
+
   // layout management:
   // o the combo box is not to be made larger than it's sizeHint(),
   //   the parameter widget should grow instead.
   // o the whole widget takes all space horizontally, but is fixed vertically.
-  mComboBox->adjustSize();
-  mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+  d->mComboBox->adjustSize();
+  d->mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
   setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
   updateGeometry();
 
   // redirect focus to the filter action combo box
-  setFocusProxy( mComboBox );
+  setFocusProxy( d->mComboBox );
 
   // now connect the combo box and the widget stack
-  connect( mComboBox, SIGNAL( activated( int ) ),
-          this, SLOT( slotFilterTypeChanged( int ) ) );
+  connect( d->mComboBox, SIGNAL( activated( int ) ),
+           this, SLOT( slotFilterTypeChanged( int ) ) );
 
-  setFilterAction();
-}
-
-void FilterActionWidget::setFilterAction( QWidget* w )
-{
-  if ( gl->itemAtPosition( 1, 2 ) )
-    delete gl->itemAtPosition( 1, 2 )->widget();
-
-  if ( w )
-    gl->addWidget( w, 1, 2/*, Qt::AlignTop*/ );
-  else
-    gl->addWidget( new QLabel( i18n( "Please select an action." ), this ), 1, 2 );
-}
-
-void FilterActionWidget::slotFilterTypeChanged( int newIdx )
-{
-  setFilterAction( newIdx < mActionList.count() ? mActionList.at( newIdx )->createParamWidget( this ) : 0 );
+  d->setFilterAction();
 }
 
 FilterActionWidget::~FilterActionWidget()
 {
-  qDeleteAll( mActionList );
+  delete d;
 }
 
-void FilterActionWidget::setAction( const FilterAction* aAction )
+void FilterActionWidget::setAction( const FilterAction *action )
 {
   bool found = false;
-  int count = mComboBox->count() - 1 ; // last entry is the empty one
-  QString label = ( aAction ) ? aAction->label() : QString() ;
+  const int count = d->mComboBox->count() - 1 ; // last entry is the empty one
+  const QString label = (action ? action->label() : QString());
 
-  // find the index of typeOf(aAction) in mComboBox
+  // find the index of typeOf(action) in mComboBox
   // and clear the other widgets on the way.
   for ( int i = 0; i < count ; i++ ) {
-    if ( aAction && mComboBox->itemText(i) == label ) {
-      setFilterAction( mActionList.at( i )->createParamWidget( this ) );
+    if ( action && d->mComboBox->itemText( i ) == label ) {
+      d->setFilterAction( d->mActionList.at( i )->createParamWidget( this ) );
 
       //...set the parameter widget to the settings
       // of aAction...
-      aAction->setParamWidgetValue( gl->itemAtPosition( 1, 2 )->widget() );
+      action->setParamWidgetValue( d->mLayout->itemAtPosition( 1, 2 )->widget() );
+
       //...and show the correct entry of
       // the combo box
-      mComboBox->setCurrentIndex(i); // (mm) also raise the widget, but doesn't
+      d->mComboBox->setCurrentIndex( i ); // (mm) also raise the widget, but doesn't
       found = true;
     }
   }
-  if ( found ) return;
+
+  if ( found )
+    return;
 
   // not found, so set the empty widget
-  setFilterAction();
+  d->setFilterAction();
 
-  mComboBox->setCurrentIndex( count ); // last item
+  d->mComboBox->setCurrentIndex( count ); // last item
 }
 
-FilterAction * FilterActionWidget::action() const
+FilterAction* FilterActionWidget::action() const
 {
   // look up the action description via the label
   // returned by KComboBox::currentText()...
-  FilterActionDesc *desc = FilterIf->filterActionDict()->value( mComboBox->currentText() );
-  if ( desc ) {
+  FilterActionDesc *description = FilterIf->filterActionDict()->value( d->mComboBox->currentText() );
+  if ( description ) {
     // ...create an instance...
-    FilterAction *fa = desc->create();
-    if ( fa ) {
+    FilterAction *action = description->create();
+    if ( action ) {
       // ...and apply the setting of the parameter widget.
-      fa->applyParamWidgetValue( gl->itemAtPosition( 1, 2 )->widget() );
-      return fa;
+      action->applyParamWidgetValue( d->mLayout->itemAtPosition( 1, 2 )->widget() );
+      return action;
     }
   }
+
   return 0;
 }
 
@@ -167,87 +196,108 @@ FilterAction * FilterActionWidget::action() const
 //
 //=============================================================================
 
-FilterActionWidgetLister:: FilterActionWidgetLister( QWidget *parent, const char* )
-  : KWidgetLister( 1, FILTER_MAX_ACTIONS, parent )
+class FilterActionWidgetLister::Private
 {
-  mActionList = 0;
+  public:
+    Private( FilterActionWidgetLister *qq )
+      : q( qq ), mActionList( 0 )
+    {
+    }
+
+    void regenerateActionListFromWidgets();
+
+    FilterActionWidgetLister *q;
+    QList<MailCommon::FilterAction*> *mActionList;
+};
+
+void FilterActionWidgetLister::Private::regenerateActionListFromWidgets()
+{
+  if ( !mActionList )
+    return;
+
+  mActionList->clear();
+
+  foreach ( const QWidget *widget, q->widgets() ) {
+    FilterAction *action = qobject_cast<const FilterActionWidget*>( widget )->action();
+    if ( action )
+      mActionList->append( action );
+  }
+}
+
+
+FilterActionWidgetLister:: FilterActionWidgetLister( QWidget *parent )
+  : KWidgetLister( 1, FILTER_MAX_ACTIONS, parent ), d( new Private( this ) )
+{
 }
 
 FilterActionWidgetLister::~FilterActionWidgetLister()
 {
+  delete d;
 }
 
-void FilterActionWidgetLister::setActionList( QList<FilterAction*> *aList )
+void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 {
-  assert ( aList );
+  Q_ASSERT( list );
 
-  if ( mActionList )
-    regenerateActionListFromWidgets();
+  if ( d->mActionList )
+    d->regenerateActionListFromWidgets();
 
-  mActionList = aList;
+  d->mActionList = list;
 
-  ((QWidget*)parent())->setEnabled( true );
+  static_cast<QWidget*>( parent() )->setEnabled( true );
 
-  if ( aList->count() == 0 ) {
+  if ( list->count() == 0 ) {
     slotClear();
     return;
   }
 
-  int superfluousItems = (int)mActionList->count() - widgetsMaximum();
+  int superfluousItems = (int)d->mActionList->count() - widgetsMaximum();
   if ( superfluousItems > 0 ) {
     kDebug() << "FilterActionWidgetLister: Clipping action list to"
-          << widgetsMaximum() << "items!";
+             << widgetsMaximum() << "items!";
 
     for ( ; superfluousItems ; superfluousItems-- )
-      mActionList->removeLast();
+      d->mActionList->removeLast();
   }
 
   // set the right number of widgets
-  setNumberOfShownWidgetsTo( mActionList->count() );
+  setNumberOfShownWidgetsTo( d->mActionList->count() );
 
   // load the actions into the widgets
   QList<QWidget*> widgetList = widgets();
   QList<FilterAction*>::const_iterator aIt;
   QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-  for ( aIt = mActionList->constBegin();
-        ( aIt != mActionList->constEnd() && wIt != widgetList.constEnd() );
+  for ( aIt = d->mActionList->constBegin();
+        ( aIt != d->mActionList->constEnd() && wIt != widgetList.constEnd() );
         ++aIt, ++wIt )
     qobject_cast<FilterActionWidget*>( *wIt )->setAction( ( *aIt ) );
 }
 
+void FilterActionWidgetLister::updateActionList()
+{
+  d->regenerateActionListFromWidgets();
+}
+
 void FilterActionWidgetLister::reset()
 {
-  if ( mActionList )
-    regenerateActionListFromWidgets();
+  if ( d->mActionList )
+    d->regenerateActionListFromWidgets();
 
-  mActionList = 0;
+  d->mActionList = 0;
   slotClear();
-  ((QWidget*)parent())->setEnabled( false );
+
+  static_cast<QWidget*>( parent() )->setEnabled( false );
 }
 
 QWidget* FilterActionWidgetLister::createWidget( QWidget *parent )
 {
-  return new FilterActionWidget(parent);
+  return new FilterActionWidget( parent );
 }
 
-void FilterActionWidgetLister::clearWidget( QWidget *aWidget )
+void FilterActionWidgetLister::clearWidget( QWidget *widget )
 {
-  if ( aWidget )
-    ((FilterActionWidget*)aWidget)->setAction(0);
-}
-
-void FilterActionWidgetLister::regenerateActionListFromWidgets()
-{
-  if ( !mActionList ) return;
-
-  mActionList->clear();
-
-  foreach ( const QWidget* w, widgets() ) {
-    FilterAction *a = qobject_cast<const FilterActionWidget*>( w )->action();
-    if ( a )
-      mActionList->append( a );
-  }
-
+  if ( widget )
+    static_cast<FilterActionWidget*>( widget )->setAction( 0 );
 }
 
 #include "filteractionwidget.moc"
