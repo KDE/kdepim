@@ -122,18 +122,30 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
         emit q->item( q, filename, isActive );
         break;
       }
+      case Put:
+        // TODO extract error message
+        break;
       default:
         kDebug() << "Unhandled response: " << response.key() << response.value() << response.extra() << data;
     }
-    return false; // we expect more
+    if ( lastCmd != Put )
+      return false; // we expect more
   }
 
-  Q_ASSERT( response.type() == Response::Action );
   // First, let's see if we come back from a SearchActive. If so, set
   // mFileExists to No if we didn't see the mUrl.fileName() during
   // listDir...
   if ( lastCmd == SearchActive && mFileExists == DontKnow && response.operationSuccessful() )
     mFileExists = No;
+
+  // PUTSCRIPT reports the error message in an literal after the final response sometimes
+  if ( lastCmd == Put && response.operationResult() == Response::No ) {
+    if ( response.action().size() > 3 ) {
+      const QByteArray extra = response.action().right( response.action().size() - 3 );
+      sessionForUrl( mUrl )->feedBack( extra );
+      return false;
+    }
+  }
 
   // prepare for next round:
   mCommands.pop();

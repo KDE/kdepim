@@ -134,6 +134,26 @@ void Session::dataReceived()
   }
 }
 
+void Session::feedBack(const QByteArray& data)
+{
+  Response response;
+  if ( !response.parseResponse( data ) ) {
+    // TODO syntax error
+    disconnectFromHost();
+    return;
+  }
+  m_lastResponse = response;
+
+  if ( response.type() == Response::Quantity ) {
+    m_data.clear();
+    m_pendingQuantity = response.quantity();
+    dataReceived();
+    return;
+  } else {
+    processResponse( response, QByteArray() );
+  }
+}
+
 void Session::processResponse(const KManageSieve::Response& response, const QByteArray& data)
 {
   switch ( m_state ) {

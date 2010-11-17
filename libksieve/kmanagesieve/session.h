@@ -51,6 +51,7 @@ class Session : public QObject
     void scheduleJob( SieveJob* job );
     void killJob( SieveJob* job );
     void sendData( const QByteArray &data );
+    void feedBack( const QByteArray &data );
 
     QStringList sieveExtensions() const;
 
