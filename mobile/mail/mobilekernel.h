@@ -69,8 +69,8 @@ public:
     virtual void createFilter(const QByteArray& field, const QString& value);
     virtual MailCommon::FilterActionDict* filterActionDict() const;
     virtual MailCommon::FilterManager* filterManager() const;
-    virtual void openFilterDialog(bool popFilter = false, bool createDummyFilter = true);
-    virtual MailCommon::FilterManager* popFilterManager() const;
+    virtual void openFilterDialog( bool popFilter = false,
+                                   bool createDummyFilter = true );
 
     /*reimp*/ ~MobileKernel();
 

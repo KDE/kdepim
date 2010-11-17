@@ -45,7 +45,7 @@ class MAILCOMMON_EXPORT FilterManager: public QObject
   Q_OBJECT
 
 public:
-  FilterManager(bool popFilter = false);
+  FilterManager();
   virtual ~FilterManager();
 
   /** Clears the list of filters and deletes them. */
@@ -71,7 +71,7 @@ public:
 
   /** Remove a filter from the list. The filter object is not deleted. */
   void removeFilter( MailFilter* filter );
-  
+
   bool beginFiltering( const Akonadi::Item &item ) const;
   void endFiltering( const Akonadi::Item &item ) const;
 
@@ -182,13 +182,11 @@ private slots:
   void tryToFilterInboxOnStartup();
 
 private:
-  int processPop( const Akonadi::Item &item ) const;
   /** Find out if a message matches the filter criteria */
   bool isMatching( const Akonadi::Item &item, const MailFilter * filter );
 
   QList<MailFilter *> mFilters;
   Akonadi::ChangeRecorder *mChangeRecorder;
-  bool bPopFilter;
   bool mShowLater;
   bool mRequiresBody;
 };

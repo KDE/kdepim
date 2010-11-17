@@ -69,7 +69,6 @@ class IFilter {
 public:
   virtual FilterActionDict *filterActionDict() const = 0;
   virtual FilterManager *filterManager() const = 0;
-  virtual FilterManager *popFilterManager() const = 0;
   virtual void openFilterDialog( bool popFilter = false, bool createDummyFilter = true ) = 0;
   virtual void createFilter(  const QByteArray & field, const QString & value ) = 0;
   virtual ~IFilter() {};

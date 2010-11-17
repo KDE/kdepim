@@ -32,7 +32,7 @@ static MobileKernel * mySelf = 0;
 MobileKernel::MobileKernel() : mMonitor( 0 ), mCollectionModel( 0 ), mMessageSender( 0 ), mConfig( 0 )
 {
   CommonKernel; //init
-  
+
   mJobScheduler = new JobScheduler(0);
   mIdentityManager = new KPIMIdentities::IdentityManager( false, 0, "mIdentityManager" );
 
@@ -40,13 +40,11 @@ MobileKernel::MobileKernel() : mMonitor( 0 ), mCollectionModel( 0 ), mMessageSen
   CommonKernel->registerKernelIf( this ); //register KernelIf early, it is used by the Filter classes
 
   mFilterManager = new FilterManager();
-  mPopFilterManager = new FilterManager( true );
   mFilterActionDict = new FilterActionDict();
   CommonKernel->registerFilterIf( this );
 
   //readConfig needs the registered FilterIf above
   mFilterManager->readConfig();
-  mPopFilterManager->readConfig();
 
   CommonKernel->registerSettingsIf( this );
 }
@@ -133,23 +131,22 @@ FilterManager* MobileKernel::filterManager() const
   return mFilterManager;
 }
 
-FilterManager* MobileKernel::popFilterManager() const
-{
-  return mPopFilterManager;
-}
-
 FilterActionDict* MobileKernel::filterActionDict() const
 {
   return mFilterActionDict;
 }
 
-void MobileKernel::openFilterDialog(bool popFilter, bool createDummyFilter)
+void MobileKernel::openFilterDialog( bool popFilter, bool createDummyFilter )
 {
   //TODO: Implement filter dialog for mobile
+  Q_UNUSED( popFilter );
+  Q_UNUSED( createDummyFilter );
 }
 
 void MobileKernel::createFilter(const QByteArray& field, const QString& value)
 {
   //TODO: Implement for mobile (call the dialog with predefined values)
+  Q_UNUSED( field );
+  Q_UNUSED( value );
 }
 

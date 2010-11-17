@@ -35,24 +35,20 @@
 using namespace MailCommon;
 
 //-----------------------------------------------------------------------------
-FilterManager::FilterManager( bool popFilter )
-  : bPopFilter( popFilter ),
-    mShowLater( false ),
+FilterManager::FilterManager()
+  : mShowLater( false ),
     mRequiresBody( false )
 {
-  if ( bPopFilter ) {
-    kDebug() << "pPopFilter set";
-  }
-
   tryToMonitorCollection();
-  
+
   mChangeRecorder = new Akonadi::ChangeRecorder( this );
   mChangeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
   mChangeRecorder->setChangeRecordingEnabled( false );
   mChangeRecorder->fetchCollection( true );
   mChangeRecorder->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  connect( mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-           SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+
+  connect( mChangeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
+           SLOT(itemAdded(Akonadi::Item,Akonadi::Collection)) );
 
   tryToFilterInboxOnStartup();
 }
@@ -63,7 +59,7 @@ void FilterManager::tryToFilterInboxOnStartup()
     QTimer::singleShot( 0, this, SLOT( tryToFilterInboxOnStartup() ) );
     return;
   }
-  
+
   //Fetch the collection on startup and apply filters on unread messages in the inbox.
   //This is done to filter inbox even if messages were downloaded while kmail/kmail-mobile
   //was not running. Once filtering goes into its own agent, this code can be removed,
@@ -131,11 +127,7 @@ void FilterManager::readConfig(void)
   KSharedConfig::Ptr config = KernelIf->config();
   clear();
 
-  if ( bPopFilter ) {
-    KConfigGroup group = config->group( "General" );
-    mShowLater = group.readEntry( "popshowDLmsgs", false );
-  }
-  mFilters = FilterImporterExporter::readFiltersFromConfig( config, bPopFilter );
+  mFilters = FilterImporterExporter::readFiltersFromConfig( config, false );
   endUpdate();
 }
 
@@ -145,21 +137,12 @@ void FilterManager::writeConfig(bool withSync)
   KSharedConfig::Ptr config = KernelIf->config();
 
   // Now, write out the new stuff:
-  FilterImporterExporter::writeFiltersToConfig( mFilters, config, bPopFilter );
+  FilterImporterExporter::writeFiltersToConfig( mFilters, config, false );
   KConfigGroup group = config->group( "General" );
-  if ( bPopFilter )
-      group.writeEntry("popshowDLmsgs", mShowLater);
 
- if ( withSync ) group.sync();
-}
-
-int FilterManager::processPop( const Akonadi::Item & item ) const {
-  for ( QList<MailFilter*>::const_iterator it = mFilters.begin();
-        it != mFilters.end() ; ++it )
-    if ( (*it)->pattern()->matches( item ) )
-      return (*it)->action();
-
-  return NoAction;
+  if ( withSync ) {
+    group.sync();
+  }
 }
 
 bool FilterManager::beginFiltering( const Akonadi::Item &item ) const
@@ -211,10 +194,8 @@ int FilterManager::process( const Akonadi::Item &item, const MailFilter * filter
 }
 
 int FilterManager::process( const Akonadi::Item &item, FilterSet set,
-                          bool account, const QString& accountId ) {
+                            bool account, const QString& accountId ) {
 
-  if ( bPopFilter )
-    return processPop( item );
 
   if ( set == NoSet ) {
     kDebug() << "FilterManager: process() called with not filter set selected";
@@ -248,9 +229,9 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
   }
 
   Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
-  
+
   endFiltering( item );
-  
+
   if ( targetFolder.isValid() ) {
     new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
     return 0;
@@ -302,7 +283,7 @@ bool FilterManager::atLeastOneIncomingFilterAppliesTo( const QString& accountID 
 //-----------------------------------------------------------------------------
 void FilterManager::openDialog( QWidget *, bool checkForEmptyFilterList )
 {
-  FilterIf->openFilterDialog( bPopFilter, checkForEmptyFilterList );
+  FilterIf->openFilterDialog( false, checkForEmptyFilterList );
 }
 
 
