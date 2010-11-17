@@ -18,19 +18,8 @@
 #include "sievejob.h"
 #include "session.h"
 
-#include <kdebug.h>
-#include <kio/job.h>
-#include <kio/deletejob.h>
-#include <kio/jobuidelegate.h>
-#include <kjobtrackerinterface.h>
 #include <KUrl>
-
 #include <QtCore/QPointer>
-#include <QtCore/QTextCodec>
-
-using KIO::Job;
-using KIO::UDSEntryList;
-using KIO::UDSEntry;
 
 namespace KManageSieve {
 
@@ -38,19 +27,9 @@ class SieveJob::Private
 {
   public:
     Private( SieveJob *qq )
-      : q( qq ), mJob( 0 ), mDecoder( 0 ), mFileExists( DontKnow )
+      : q( qq ), mFileExists( DontKnow )
     {
     }
-
-    ~Private()
-    {
-      delete mDecoder;
-    }
-
-    void slotData( KIO::Job*, const QByteArray& );
-    void slotDataReq( KIO::Job*, QByteArray& );
-    void slotEntries( KIO::Job*, const KIO::UDSEntryList& );
-    void slotResult( KJob* );
 
     enum Command {
       Get,
@@ -68,7 +47,6 @@ class SieveJob::Private
       No
     };
 
-    void schedule( Command command );
     static Session* sessionForUrl( const KUrl &url );
 
     void run( Session *session );
@@ -76,8 +54,6 @@ class SieveJob::Private
 
     SieveJob *q;
     KUrl mUrl;
-    KIO::Job * mJob;
-    QTextDecoder * mDecoder;
     QString mScript;
     QString mActiveScriptName;
     Existence mFileExists;

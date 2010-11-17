@@ -158,11 +158,6 @@ class KMANAGESIEVE_EXPORT SieveJob : public QObject
     class Private;
     Private* const d;
     friend class Session;
-
-    Q_PRIVATE_SLOT( d, void slotData( KIO::Job*, const QByteArray& ) )
-    Q_PRIVATE_SLOT( d, void slotDataReq( KIO::Job*, QByteArray& ) )
-    Q_PRIVATE_SLOT( d, void slotEntries( KIO::Job*, const KIO::UDSEntryList& ) )
-    Q_PRIVATE_SLOT( d, void slotResult( KJob* ) )
     //@endcond
 };
 
