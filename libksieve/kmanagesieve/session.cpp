@@ -99,8 +99,10 @@ void Session::dataReceived()
   }
 
   while ( m_socket->canReadLine() ) {
-    const QByteArray line = m_socket->readLine();
-    kDebug() << "S: " << line.trimmed();
+    QByteArray line = m_socket->readLine();
+    if ( line.endsWith( "\r\n" ) )
+      line.chop( 2 );
+    kDebug() << "S: " << line;
     Response r;
     if ( !r.parseResponse( line ) ) {
       kDebug() << "protocol violation!";

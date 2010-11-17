@@ -50,6 +50,7 @@ Session* SieveJob::Private::sessionForUrl(const KUrl& url)
 void SieveJob::Private::schedule( Command command )
 {
   kDebug() << command << mUrl << sessionForUrl( mUrl );
+  return;
   switch ( command ) {
     case Get:
       kDebug() << "get(" << mUrl.prettyUrl() << ")";
@@ -167,9 +168,91 @@ void SieveJob::Private::run( Session *session )
 
 bool SieveJob::Private::handleResponse( const Response &response, const QByteArray &data )
 {
-  if ( response.type() == Response::Action )
+  const Command lastCmd = mCommands.top();
+
+  // handle non-action responses
+  if ( response.type() != Response::Action ) {
+    switch ( lastCmd ) {
+      case Get:
+        mScript = QString::fromUtf8( data );
+        break;
+      case List:
+      case SearchActive:
+      {
+        const QString filename = QString::fromUtf8( response.key() );
+        mAvailableScripts.append( filename );
+        const bool isActive = response.extra() == "ACTIVE";
+
+        if ( isActive )
+          mActiveScriptName = filename;
+
+        if ( mFileExists == DontKnow && filename == mUrl.fileName() )
+          mFileExists = Yes;
+
+        emit q->item( q, filename, isActive );
+        break;
+      }
+      default:
+        kDebug() << "Unhandled response: " << response.key() << response.value() << response.extra() << data;
+    }
+    return false; // we expect more
+  }
+
+  Q_ASSERT( response.type() == Response::Action );
+  // First, let's see if we come back from a SearchActive. If so, set
+  // mFileExists to No if we didn't see the mUrl.fileName() during
+  // listDir...
+  if ( lastCmd == SearchActive && mFileExists == DontKnow && response.operationSuccessful() )
+    mFileExists = No;
+
+  // prepare for next round:
+  mCommands.pop();
+
+  // check for errors:
+  if ( !response.operationSuccessful() ) {
+    // TODO
+//     if ( static_cast<KIO::Job*>(job)->ui() ) {
+//       static_cast<KIO::Job*>(job)->ui()->setWindow( 0 );
+//       static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+//     }
+
+    emit q->result( q, false, mScript, (mUrl.fileName() == mActiveScriptName) );
+
+    if ( lastCmd == List )
+      emit q->gotList( q, false, mAvailableScripts, mActiveScriptName );
+    else
+      emit q->gotScript( q, false, mScript, (mUrl.fileName() == mActiveScriptName) );
+
+    q->deleteLater();
     return true;
-  return false;
+  }
+
+  // check for new tasks:
+  if ( !mCommands.empty() ) {
+    // Don't fail getting a non-existent script:
+    if ( (mCommands.top() == Get) && (mFileExists == No) ) {
+      mScript.clear();
+      mCommands.pop();
+    }
+  }
+
+  if ( mCommands.empty() ) {
+    // was last command; report success and delete this object:
+    emit q->result( q, true, mScript, (mUrl.fileName() == mActiveScriptName) );
+    if ( lastCmd == List )
+      emit q->gotList( q, true, mAvailableScripts, mActiveScriptName );
+    else
+      emit q->gotScript( q, true, mScript, (mUrl.fileName() == mActiveScriptName) );
+
+    q->deleteLater();
+    return true;
+  } else {
+    // schedule the next command:
+    run( sessionForUrl( mUrl ) );
+    return false;
+  }
+
+  return true;
 }
 
 void SieveJob::Private::slotData( Job*, const QByteArray &data )
