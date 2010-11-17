@@ -47,7 +47,7 @@ static const QByteArray VERSION_PROPERTY("VERSION");     // X-KDE-KALARM-VERSION
 static bool isUTC(const QString& localFile);
 
 /*=============================================================================
-* Class: Calendar
+* Class: KAlarm::Calendar
 *============================================================================*/
 
 const QByteArray Calendar::APPNAME("KALARM");
@@ -211,7 +211,7 @@ bool isUTC(const QString& localFile)
 }
 
 /*=============================================================================
-* Class: KCalEvent
+* Class: KAlarm::CalEvent
 *============================================================================*/
 
 // Struct to contain static strings, to allow use of K_GLOBAL_STATIC
@@ -244,9 +244,6 @@ struct StaticStrings
 	const QString TEMPLATE_UID;
 };
 K_GLOBAL_STATIC(StaticStrings, staticStrings)
-
-typedef QMap<QString, CalEvent::Type> PropertyMap;
-static PropertyMap properties;
 
 
 /******************************************************************************
@@ -309,6 +306,8 @@ QString CalEvent::uid(const QString& id, Type status)
 CalEvent::Type CalEvent::status(const KCal::Event* event, QString* param)
 {
 	// Set up a static quick lookup for type strings
+        typedef QMap<QString, CalEvent::Type> PropertyMap;
+        static PropertyMap properties;
 	if (properties.isEmpty())
 	{
 		properties[staticStrings->ACTIVE_STATUS]     = ACTIVE;
