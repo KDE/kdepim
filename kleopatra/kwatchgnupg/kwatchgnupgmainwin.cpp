@@ -66,7 +66,7 @@
 #include <QFileDialog>
 
 KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
-  : KXmlGuiWindow( parent, Qt::WType_TopLevel ), mConfig(0)
+  : KXmlGuiWindow( parent, Qt::Window ), mConfig(0)
 {
   createActions();
   createGUI();
@@ -136,7 +136,7 @@ void KWatchGnuPGMainWindow::startWatcher()
   if( mWatcher->state()== QProcess::Running ) {
 	mWatcher->kill();
 	while( mWatcher->state()== QProcess::Running ) {
-	  qApp->processEvents(QEventLoop::ExcludeUserInput);
+	  qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
 	}
 	mCentralWidget->message(i18n("[%1] Log stopped", QDateTime::currentDateTime().toString(Qt::ISODate)));
   }
