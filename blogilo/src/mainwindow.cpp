@@ -139,10 +139,12 @@ bool MainWindow::queryExit()
     if( !DBMan::self()->clearTempEntries() )
         kDebug()<<"Could not erase temp_post table: "<< DBMan::self()->lastErrorText();
     int count = tabPosts->count();
-    toolbox->getFieldsValue(activePost->currentPost());
-    for(int i =0; i<count; ++i) {
-        PostEntry* pst = qobject_cast<PostEntry*>(tabPosts->widget(i));
-        DBMan::self()->saveTempEntry(*pst->currentPost(), pst->currentPostBlogId());
+    if(count > 0) {
+        toolbox->getFieldsValue(activePost->currentPost());
+        for(int i =0; i<count; ++i) {
+            PostEntry* pst = qobject_cast<PostEntry*>(tabPosts->widget(i));
+            DBMan::self()->saveTempEntry(*pst->currentPost(), pst->currentPostBlogId());
+        }
     }
     return true;
 }
