@@ -102,6 +102,8 @@ void Session::dataReceived()
     QByteArray line = m_socket->readLine();
     if ( line.endsWith( "\r\n" ) )
       line.chop( 2 );
+    if ( line.isEmpty() )
+      continue; // ignore CRLF after data blocks
     kDebug() << "S: " << line;
     Response r;
     if ( !r.parseResponse( line ) ) {
