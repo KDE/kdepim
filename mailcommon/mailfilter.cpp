@@ -62,7 +62,7 @@ MailFilter::MailFilter( bool popFilter )
 }
 
 
-MailFilter::MailFilter( KConfigGroup & aConfig, bool popFilter )
+MailFilter::MailFilter( const KConfigGroup & aConfig, bool popFilter )
   : bPopFilter(popFilter)
 {
   readConfig( aConfig );
@@ -227,7 +227,7 @@ bool MailFilter::applyOnAccount( const QString& id ) const
 
 
 //-----------------------------------------------------------------------------
-void MailFilter::readConfig(KConfigGroup & config)
+void MailFilter::readConfig(const KConfigGroup & config)
 {
   // MKSearchPattern::readConfig ensures
   // that the pattern is purified.

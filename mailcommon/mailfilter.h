@@ -77,7 +77,7 @@ public:
   /** Constructor that initializes from given config group.
     * Filters are stored one by one in config groups, i.e.
     * one filter, one group. */
-  explicit MailFilter( KConfigGroup & aConfig, bool popFilter = false);
+  explicit MailFilter( const KConfigGroup & aConfig, bool popFilter = false);
 
   /** Copy constructor. Constructs a deep copy of @p aFilter. */
   MailFilter( const MailFilter & other );
@@ -117,7 +117,7 @@ public:
   void writeConfig( KConfigGroup& config ) const;
 
   /** Initialize from given config group. */
-  void readConfig( KConfigGroup& config );
+  void readConfig( const KConfigGroup& config );
 
   /** Remove empty rules (and actions one day). */
   void purify();

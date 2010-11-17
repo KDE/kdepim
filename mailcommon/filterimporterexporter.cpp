@@ -28,48 +28,53 @@
 */
 
 #include "filterimporterexporter.h"
+#include "filterimporterexporter_p.h"
 
-#include "mailfilter.h"
 #include "filteraction.h"
-#include "messageviewer/autoqpointer.h"
-#include "messageviewer/util.h"
+#include "mailfilter.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kfiledialog.h>
-#include <KPushButton>
+#include <kmessagebox.h>
+#include <kpushbutton.h>
+#include <messageviewer/autoqpointer.h>
+#include <messageviewer/util.h>
 
-#include <QListWidget>
-#include <QVBoxLayout>
-#include <QRegExp>
-#include <KMessageBox>
+#include <QtCore/QRegExp>
+#include <QtGui/QListWidget>
+#include <QtGui/QVBoxLayout>
 
 using namespace MailCommon;
 
-FilterSelectionDialog::FilterSelectionDialog( QWidget * parent )
-    :KDialog( parent )
+FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
+  : KDialog( parent )
 {
-    setObjectName( "filterselection" );
-    setModal( true );
-    setCaption( i18n("Select Filters") );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
-    showButtonSeparator( true );
-    QVBoxLayout * const top = new QVBoxLayout( mainWidget() );
-    filtersListWidget = new QListWidget();
-    top->addWidget( filtersListWidget );
-    filtersListWidget->setAlternatingRowColors( true );
-    filtersListWidget->setSortingEnabled( false );
-    filtersListWidget->setSelectionMode( QAbstractItemView::NoSelection );
-    QHBoxLayout * const buttonLayout = new QHBoxLayout();
-    top->addLayout( buttonLayout );
-    selectAllButton = new KPushButton( i18n( "Select All" ) );
-    buttonLayout->addWidget( selectAllButton );
-    unselectAllButton = new KPushButton( i18n( "Unselect All" ) );
-    buttonLayout->addWidget( unselectAllButton );
-    connect( selectAllButton, SIGNAL( clicked() ), this, SLOT( slotSelectAllButton() ) );
-    connect( unselectAllButton, SIGNAL( clicked() ), this, SLOT( slotUnselectAllButton() ) );
-    resize( 300, 350 );
+  setObjectName( "filterselection" );
+  setModal( true );
+  setCaption( i18n( "Select Filters" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  showButtonSeparator( true );
+
+  QVBoxLayout* const top = new QVBoxLayout( mainWidget() );
+  filtersListWidget = new QListWidget();
+  top->addWidget( filtersListWidget );
+  filtersListWidget->setAlternatingRowColors( true );
+  filtersListWidget->setSortingEnabled( false );
+  filtersListWidget->setSelectionMode( QAbstractItemView::NoSelection );
+
+  QHBoxLayout* const buttonLayout = new QHBoxLayout();
+  top->addLayout( buttonLayout );
+  selectAllButton = new KPushButton( i18n( "Select All" ) );
+  buttonLayout->addWidget( selectAllButton );
+  unselectAllButton = new KPushButton( i18n( "Unselect All" ) );
+  buttonLayout->addWidget( unselectAllButton );
+
+  connect( selectAllButton, SIGNAL( clicked() ), this, SLOT( slotSelectAllButton() ) );
+  connect( unselectAllButton, SIGNAL( clicked() ), this, SLOT( slotUnselectAllButton() ) );
+
+  resize( 300, 350 );
 }
 
 FilterSelectionDialog::~FilterSelectionDialog()
@@ -78,36 +83,39 @@ FilterSelectionDialog::~FilterSelectionDialog()
 
 void FilterSelectionDialog::setFilters( const QList<MailFilter *> &filters )
 {
-    if ( filters.isEmpty() ) {
-      enableButtonOk( false );
-      return;
-    }
+  if ( filters.isEmpty() ) {
+    enableButtonOk( false );
+    return;
+  }
 
-    originalFilters = filters;
-    filtersListWidget->clear();
-    foreach ( MailFilter *const filter, filters ) {
-        QListWidgetItem *item = new QListWidgetItem( filter->name(), filtersListWidget );
-        item->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
-        item->setCheckState( Qt::Checked );
-    }
+  originalFilters = filters;
+  filtersListWidget->clear();
+
+  foreach ( const MailFilter *filter, filters ) {
+    QListWidgetItem *item = new QListWidgetItem( filter->name(), filtersListWidget );
+    item->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
+    item->setCheckState( Qt::Checked );
+  }
 }
 
-QList<MailFilter *> FilterSelectionDialog::selectedFilters() const
+QList<MailFilter*> FilterSelectionDialog::selectedFilters() const
 {
-    QList<MailFilter *> filters;
-    const int nbFilter = filtersListWidget->count();
-    for ( int i = 0; i < nbFilter; ++i ) {
-        QListWidgetItem *item = filtersListWidget->item( i );
-        if ( item->checkState() == Qt::Checked )
-            filters << originalFilters[i];
-    }
-    return filters;
+  QList<MailFilter*> filters;
+
+  const int filterCount = filtersListWidget->count();
+  for ( int i = 0; i < filterCount; ++i ) {
+    const QListWidgetItem *item = filtersListWidget->item( i );
+    if ( item->checkState() == Qt::Checked )
+      filters << originalFilters[ i ];
+  }
+
+  return filters;
 }
 
 void FilterSelectionDialog::slotUnselectAllButton()
 {
-  const int nbFilter = filtersListWidget->count();
-  for ( int i = 0; i < nbFilter; ++i ) {
+  const int filterCount = filtersListWidget->count();
+  for ( int i = 0; i < filterCount; ++i ) {
     QListWidgetItem * const item = filtersListWidget->item( i );
     item->setCheckState( Qt::Unchecked );
   }
@@ -115,122 +123,138 @@ void FilterSelectionDialog::slotUnselectAllButton()
 
 void FilterSelectionDialog::slotSelectAllButton()
 {
-  const int nbFilter = filtersListWidget->count();
-  for ( int i = 0; i < nbFilter; ++i ) {
+  const int filterCount = filtersListWidget->count();
+  for ( int i = 0; i < filterCount; ++i ) {
     QListWidgetItem * const item = filtersListWidget->item( i );
     item->setCheckState( Qt::Checked );
   }
 }
 
-/* static */
-QList<MailFilter *> FilterImporterExporter::readFiltersFromConfig( KSharedConfig::Ptr config,
-                                                                 bool bPopFilter )
+QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedConfig::Ptr config,
+                                                                  bool bPopFilter )
 {
-    KConfigGroup group = config->group( "General" );
-    int numFilters = 0;
-    if ( bPopFilter )
-        numFilters = group.readEntry( "popfilters", 0 );
-    else
-        numFilters = group.readEntry( "filters", 0 );
+  const KConfigGroup group = config->group( "General" );
 
-    QList<MailFilter *> filters;
-    for ( int i=0 ; i < numFilters ; ++i ) {
-        QString grpName;
-        grpName.sprintf( "%s #%d", (bPopFilter ? "PopFilter" : "Filter"), i );
-        KConfigGroup group = config->group( grpName );
-        MailFilter *filter = new MailFilter( group, bPopFilter );
-        filter->purify();
-        if ( filter->isEmpty() ) {
-    #ifndef NDEBUG
-            kDebug() << "Filter" << filter->asString() << "is empty!";
-    #endif
-            delete filter;
-        } else
-            filters.append( filter );
-    }
-    return filters;
+  int numFilters = 0;
+  if ( bPopFilter )
+    numFilters = group.readEntry( "popfilters", 0 );
+  else
+    numFilters = group.readEntry( "filters", 0 );
+
+  QList<MailFilter*> filters;
+  for ( int i = 0; i < numFilters; ++i ) {
+    QString grpName;
+    grpName.sprintf( "%s #%d", (bPopFilter ? "PopFilter" : "Filter"), i );
+
+    const KConfigGroup group = config->group( grpName );
+    MailFilter *filter = new MailFilter( group, bPopFilter );
+    filter->purify();
+    if ( filter->isEmpty() ) {
+#ifndef NDEBUG
+      kDebug() << "Filter" << filter->asString() << "is empty!";
+#endif
+      delete filter;
+    } else
+      filters.append( filter );
+  }
+
+  return filters;
 }
 
-/* static */
-void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter *> &filters,
+void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &filters,
                                                    KSharedConfig::Ptr config, bool bPopFilter )
 {
-    // first, delete all filter groups:
-    const QStringList filterGroups =
-      config->groupList().filter( QRegExp( bPopFilter ? "PopFilter #\\d+" : "Filter #\\d+" ) );
-    foreach ( const QString &s, filterGroups )
-      config->deleteGroup( s );
+  // first, delete all filter groups:
+  const QStringList filterGroups =
+    config->groupList().filter( QRegExp( bPopFilter ? "PopFilter #\\d+" : "Filter #\\d+" ) );
 
-    int i = 0;
-    for ( QList<MailFilter*>::ConstIterator it = filters.constBegin() ;
-          it != filters.constEnd() ; ++it ) {
-        if ( !(*it)->isEmpty() ) {
-            QString grpName;
-            if ( bPopFilter )
-                grpName.sprintf("PopFilter #%d", i);
-            else
-                grpName.sprintf("Filter #%d", i);
-            KConfigGroup group = config->group( grpName );
-            (*it)->writeConfig( group );
-            ++i;
-        }
+  foreach ( const QString &group, filterGroups )
+    config->deleteGroup( group );
+
+  int i = 0;
+  foreach ( const MailFilter *filter, filters ) {
+    if ( !filter->isEmpty() ) {
+      const QString groupName = (bPopFilter ? QString::fromLatin1( "PopFilter #%1" ).arg( i )
+                                            : QString::fromLatin1( "Filter #%1" ).arg( i ));
+
+      KConfigGroup group = config->group( groupName );
+      filter->writeConfig( group );
+      ++i;
     }
-    KConfigGroup group = config->group( "General" );
-    if (bPopFilter)
-        group.writeEntry("popfilters", i);
-    else
-        group.writeEntry("filters", i);
+  }
 
-    config->sync();
+  KConfigGroup group = config->group( "General" );
+  if ( bPopFilter )
+    group.writeEntry("popfilters", i);
+  else
+    group.writeEntry("filters", i);
+
+  config->sync();
 }
 
+class FilterImporterExporter::Private
+{
+  public:
+    Private( QWidget *parent, bool popFilter )
+     : mParent( parent),
+       mPopFilter( popFilter )
+    {
+    }
 
-FilterImporterExporter::FilterImporterExporter( QWidget* parent, bool popFilter )
- : mParent( parent),
-   mPopFilter( popFilter )
+    QWidget *mParent;
+    bool mPopFilter;
+};
+
+
+FilterImporterExporter::FilterImporterExporter( QWidget *parent, bool popFilter )
+  : d( new Private( parent, popFilter ) )
 {
 }
 
 FilterImporterExporter::~FilterImporterExporter()
 {
+  delete d;
 }
 
 QList<MailFilter *> FilterImporterExporter::importFilters()
 {
-    const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QString(),
-                                                     mParent, i18n("Import Filters") );
-    if ( fileName.isEmpty() )
-        return QList<MailFilter *>(); // cancel
+  const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QString(),
+                                                         d->mParent, i18n( "Import Filters" ) );
+  if ( fileName.isEmpty() )
+    return QList<MailFilter*>(); // cancel
 
-    { // scoping
-        QFile f( fileName );
-        if ( !f.open( QIODevice::ReadOnly ) ) {
-            KMessageBox::error( mParent,
-                                i18n("The selected file is not readable. "
-                                     "Your file access permissions might be insufficient.") );
-            return QList<MailFilter *>();
-        }
+  {
+    QFile file( fileName );
+    if ( !file.open( QIODevice::ReadOnly ) ) {
+      KMessageBox::error( d->mParent,
+                          i18n( "The selected file is not readable. "
+                                "Your file access permissions might be insufficient.") );
+      return QList<MailFilter*>();
     }
+  }
 
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );
-    QList<MailFilter *> imported = readFiltersFromConfig( config, mPopFilter );
-    FilterSelectionDialog dlg( mParent );
-    dlg.setFilters( imported );
-    return dlg.exec() == QDialog::Accepted ? dlg.selectedFilters() : QList<MailFilter *>();
+  const KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );
+  const QList<MailFilter*> imported = readFiltersFromConfig( config, d->mPopFilter );
+
+  FilterSelectionDialog dlg( d->mParent );
+  dlg.setFilters( imported );
+
+  return (dlg.exec() == QDialog::Accepted ? dlg.selectedFilters() : QList<MailFilter*>());
 }
 
-void FilterImporterExporter::exportFilters(const QList<MailFilter *> &filters )
+void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters )
 {
-    const KUrl saveUrl = KFileDialog::getSaveUrl( QDir::homePath(), QString(),
-                                            mParent, i18n("Export Filters") );
+  const KUrl saveUrl = KFileDialog::getSaveUrl( QDir::homePath(), QString(),
+                                                d->mParent, i18n( "Export Filters" ) );
 
-    if ( saveUrl.isEmpty() || !MessageViewer::Util::checkOverwrite( saveUrl, mParent ) )
-        return;
+  if ( saveUrl.isEmpty() || !MessageViewer::Util::checkOverwrite( saveUrl, d->mParent ) )
+      return;
 
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( saveUrl.toLocalFile() );
-    MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( mParent ) );
-    dlg->setFilters( filters );
-    if ( dlg->exec() == QDialog::Accepted && dlg )
-        writeFiltersToConfig( dlg->selectedFilters(), config, mPopFilter );
+  KSharedConfig::Ptr config = KSharedConfig::openConfig( saveUrl.toLocalFile() );
+  MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );
+  dlg->setFilters( filters );
+  if ( dlg->exec() == QDialog::Accepted && dlg )
+    writeFiltersToConfig( dlg->selectedFilters(), config, d->mPopFilter );
 }
 
+#include "filterimporterexporter_p.moc"

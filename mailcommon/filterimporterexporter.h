@@ -30,67 +30,72 @@
 #ifndef MAILCOMMON_FILTERIMPORTEREXPORTER_H
 #define MAILCOMMON_FILTERIMPORTEREXPORTER_H
 
-#include <QList>
-
-#include <KSharedConfig>
-#include <KDialog>
-
 #include "mailcommon_export.h"
 
+#include <KSharedConfig>
+
+#include <QtCore/QList>
+
 class QWidget;
-class QListWidget;
-class KPushButton;
 
 namespace MailCommon
 {
 
-  class MailFilter;
+class MailFilter;
 
 /**
-    @short Utility class that provides persisting of filters to/from KConfig.
-    @author Till Adam <till@kdab.net>
+ * @short Utility class that provides persisting of filters to/from KConfig.
+ *
+ * @author Till Adam <till@kdab.net>
  */
 class MAILCOMMON_EXPORT FilterImporterExporter
 {
-public:
-      explicit FilterImporterExporter( QWidget *parent, bool popFilter = false );
-      virtual ~FilterImporterExporter();
-
-      /** Export the given filter rules to a file which
-       * is asked from the user. The list to export is also
-       * presented for confirmation/selection. */
-      void exportFilters( const QList<MailFilter *> & );
-
-      /** Import filters. Ask the user where to import them from
-       * and which filters to import. */
-      QList<MailFilter *> importFilters();
-
-      static void writeFiltersToConfig( const QList<MailFilter *> &filters,
-                                        KSharedConfig::Ptr config, bool bPopFilter );
-      static QList<MailFilter *> readFiltersFromConfig( KSharedConfig::Ptr config,
-                                                      bool bPopFilter );
-private:
-      QWidget *mParent;
-      bool mPopFilter;
-};
-
-
-class FilterSelectionDialog : public KDialog
-{
-  Q_OBJECT
   public:
-    FilterSelectionDialog( QWidget * parent = 0 );
-    virtual ~FilterSelectionDialog();
-    void setFilters( const QList<MailFilter *> &filters );
-    QList<MailFilter *> selectedFilters() const;
-  public slots:
-    void slotUnselectAllButton();
-    void slotSelectAllButton();
+    /**
+     * Creates a new filter importer/exporter.
+     *
+     * @param parent The parent widget.
+     * @param popFilter @todo Remove?
+     */
+    explicit FilterImporterExporter( QWidget *parent, bool popFilter = false );
+
+    /**
+     * Destroys the filter importer/exporter.
+     */
+    virtual ~FilterImporterExporter();
+
+    /**
+     * Exports the given @p filters to a file which
+     * is asked from the user. The list to export is also
+     * presented for confirmation/selection.
+     */
+    void exportFilters( const QList<MailFilter*> &filters );
+
+    /**
+     * Imports filters. Ask the user where to import them from
+     * and which filters to import.
+     */
+    QList<MailFilter*> importFilters();
+
+    /**
+     * Writes the given list of @p filters to the given @p config file.
+     */
+    static void writeFiltersToConfig( const QList<MailFilter*> &filters,
+                                      KSharedConfig::Ptr config, bool bPopFilter );
+
+    /**
+     * Reads a list of filters from the given @p config file.
+     */
+    static QList<MailFilter*> readFiltersFromConfig( const KSharedConfig::Ptr config,
+                                                     bool bPopFilter );
+
   private:
-    QListWidget *filtersListWidget;
-    QList<MailFilter *> originalFilters;
-    KPushButton *selectAllButton;
-    KPushButton *unselectAllButton;
+    //@cond PRIVATE
+    Q_DISABLE_COPY( FilterImporterExporter )
+
+    class Private;
+    Private* const d;
+    //@endcond
 };
 
 }
