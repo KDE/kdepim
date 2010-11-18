@@ -47,8 +47,11 @@ Rectangle {
       drag.maximumX: width - 6
       onReleased : {
         percentComplete = ((parent.x - 3)/(root.width - width - 6)) * 100
+        root.percentageUpdated();
       }
     }
   }
+
+  signal percentageUpdated();
 
 }

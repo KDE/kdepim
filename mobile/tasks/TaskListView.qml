@@ -69,8 +69,9 @@ KPIM.ItemListView {
           anchors.top: parent.top
           anchors.right: parent.right
           percentComplete : model.percentComplete
-          onPercentCompleteChanged : {
+          onPercentageUpdated : {
             application.setPercentComplete(model.index, percentComplete);
+            percentComplete : model.percentComplete
           }
         },
         QML.Image {
