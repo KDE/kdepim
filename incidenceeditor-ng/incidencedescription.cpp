@@ -40,6 +40,7 @@ class IncidenceDescriptionPrivate
     {
     }
 
+    QString mRealOriginalDescriptionEditContents;
     bool mRichTextEnabled;
 };
 
@@ -81,12 +82,17 @@ void IncidenceDescription::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
 
+  d->mRealOriginalDescriptionEditContents = QString();
+
   if ( incidence ) {
     enableRichTextDescription( incidence->descriptionIsRich() );
     if ( incidence->descriptionIsRich() ) {
       mUi->mDescriptionEdit->setHtml( incidence->richDescription() );
+      d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toHtml();
     } else {
+      QString original = incidence->description();
       mUi->mDescriptionEdit->setText( incidence->description() );
+      d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toPlainText();
     }
   } else {
     enableRichTextDescription( false );
@@ -107,12 +113,22 @@ void IncidenceDescription::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceDescription::isDirty() const
 {
+
+  /* Sometimes, what you put in a KRichTextWidget isn't the same as what you get out.
+     Line terminators (cr,lf) for example can be converted.
+
+     So, to see if the user changed something, we can't compare the original incidence
+     with the new editor content.
+
+     Instead we compare the new editor content, with the original editor content, this way
+     any tranformation regarding non-printable chars will be irrelevant.
+  */
   if ( d->mRichTextEnabled ) {
     return !mLoadedIncidence->descriptionIsRich() ||
-      mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml();
+      d->mRealOriginalDescriptionEditContents != mUi->mDescriptionEdit->toHtml();
   } else {
     return mLoadedIncidence->descriptionIsRich() ||
-      mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText();
+      d->mRealOriginalDescriptionEditContents != mUi->mDescriptionEdit->toPlainText();
   }
 }
 
@@ -127,8 +143,10 @@ void IncidenceDescription::enableRichTextDescription( bool enable )
     rt = i18nc( "@action Enable or disable rich text editting", "Disable rich text" );
     placeholder = QString( "<a href=\"show\"><font color='blue'>&lt;&lt; %1</font></a>" );
     mUi->mDescriptionEdit->enableRichTextMode();
+    d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toHtml();
   } else {
     mUi->mDescriptionEdit->switchToPlainText();
+    d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toPlainText();
   }
 
   placeholder = placeholder.arg( rt );
