@@ -19,8 +19,8 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CALENDARSUPPORT_MAILSCHEDULER_H
-#define CALENDARSUPPORT_MAILSCHEDULER_H
+#ifndef CALENDARSUPPORT_MAILSCHEDULER2_H
+#define CALENDARSUPPORT_MAILSCHEDULER2_H
 
 #include "calendarsupport_export.h"
 #include "nepomukcalendar.h"
@@ -40,12 +40,12 @@ namespace CalendarSupport {
   This class implements the iTIP interface using the email interface specified
   as Mail.
 */
-class CALENDARSUPPORT_EXPORT MailScheduler //: public Scheduler
+class CALENDARSUPPORT_EXPORT MailScheduler2 //: public Scheduler
 {
   public:
-    explicit MailScheduler( CalendarSupport::Calendar *calendar );
-    explicit MailScheduler( const NepomukCalendar::Ptr &calendar );
-    virtual ~MailScheduler();
+    explicit MailScheduler2( CalendarSupport::Calendar *calendar );
+    explicit MailScheduler2( const NepomukCalendar::Ptr &calendar );
+    virtual ~MailScheduler2();
 
     bool publish ( const KCalCore::IncidenceBase::Ptr &incidence,
                    const QString &recipients );

@@ -48,7 +48,7 @@
 
 using namespace CalendarSupport;
 
-MailScheduler::MailScheduler( CalendarSupport::Calendar *calendar )
+MailScheduler2::MailScheduler2( CalendarSupport::Calendar *calendar )
   //: Scheduler( calendar )
   : mCalendar( calendar ), mFormat( new KCalCore::ICalFormat() )
 {
@@ -59,7 +59,7 @@ MailScheduler::MailScheduler( CalendarSupport::Calendar *calendar )
   }
 }
 
-MailScheduler::MailScheduler( const NepomukCalendar::Ptr &nepomukCalendar )
+MailScheduler2::MailScheduler2( const NepomukCalendar::Ptr &nepomukCalendar )
   : mCalendar( 0 ), mNepomukCalendar( nepomukCalendar ), mFormat( new KCalCore::ICalFormat() )
 {
   if ( nepomukCalendar ) {
@@ -70,12 +70,12 @@ MailScheduler::MailScheduler( const NepomukCalendar::Ptr &nepomukCalendar )
 
 }
 
-MailScheduler::~MailScheduler()
+MailScheduler2::~MailScheduler2()
 {
   delete mFormat;
 }
 
-bool MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
+bool MailScheduler2::publish( const KCalCore::IncidenceBase::Ptr &incidence,
                              const QString &recipients )
 {
   QString from = KCalPrefs::instance()->email();
@@ -89,7 +89,7 @@ bool MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
     from, bccMe, recipients, messageText, KCalPrefs::instance()->mailTransport() );
 }
 
-bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+bool MailScheduler2::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
                                         KCalCore::iTIPMethod method,
                                         const QString &recipients )
 {
@@ -104,7 +104,7 @@ bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
     from, bccMe, recipients, messageText, KCalPrefs::instance()->mailTransport() );
 }
 
-bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+bool MailScheduler2::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
                                         KCalCore::iTIPMethod method )
 {
   QString from = KCalPrefs::instance()->email();
@@ -136,7 +136,7 @@ bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
 }
 #if 0
 /*
-QList<ScheduleMessage*> MailScheduler::retrieveTransactions()
+QList<ScheduleMessage*> MailScheduler2::retrieveTransactions()
 {
   QString incomingDirName = KStandardDirs::locateLocal( "data",
                                                         QLatin1String( "korganizer/income" ) );
@@ -189,7 +189,7 @@ QList<ScheduleMessage*> MailScheduler::retrieveTransactions()
   return messageList;
 }
 
-bool MailScheduler::deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence )
+bool MailScheduler2::deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence )
 {
   bool status;
   QFile f( mEventMap[incidence] );
@@ -204,12 +204,12 @@ bool MailScheduler::deleteTransaction( const KCalCore::IncidenceBase::Ptr &incid
 */
 #endif
 
-QString MailScheduler::freeBusyDir() const
+QString MailScheduler2::freeBusyDir() const
 {
   return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
 }
 
-bool MailScheduler::acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+bool MailScheduler2::acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
                                        KCalCore::iTIPMethod method,
                                        KCalCore::ScheduleMessage::Status status,
                                        const QString &email )
@@ -270,7 +270,7 @@ bool MailScheduler::acceptTransaction( const KCalCore::IncidenceBase::Ptr &incid
 }
 
 //AKONADI_PORT review following code
-bool MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence )
+bool MailScheduler2::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( !incidence ) {
     return false;
@@ -320,7 +320,7 @@ bool MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incid
   return true;
 }
 
-KCalCore::Calendar::Ptr MailScheduler::calendar() const
+KCalCore::Calendar::Ptr MailScheduler2::calendar() const
 {
   if ( mCalendar ) {
     return KCalCore::Calendar::Ptr( new CalendarAdaptor( mCalendar, 0 ) );
