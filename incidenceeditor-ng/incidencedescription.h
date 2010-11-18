@@ -52,6 +52,11 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 
+    // For debugging pursposes
+    bool richTextEnabled() const;
+
+    virtual void printDebugInfo() const;
+
   private slots:
     void toggleRichTextDescription();
     void enableRichTextDescription( bool enable );

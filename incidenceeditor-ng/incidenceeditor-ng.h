@@ -87,6 +87,16 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
       return mLoadedIncidence.dynamicCast<IncidenceT>();
     }
 
+    /**
+       Re-implement this and print important member values and widget
+       enabled/disabled states that could have lead to isDirty() returning
+       true when the user didn't do any interaction with the editor.
+
+       This method is called in CombinedIncidenceEditor before crashing
+       due to assert( !editor->isDirty() )
+    */
+    virtual void printDebugInfo() const;
+
   signals:
     /**
      * Signals whether the dirty status of this editor has changed. The new dirty

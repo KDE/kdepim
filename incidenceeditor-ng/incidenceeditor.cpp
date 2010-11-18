@@ -71,4 +71,9 @@ KCalCore::IncidenceBase::IncidenceType IncidenceEditor::type() const
   }
 }
 
+void IncidenceEditor::printDebugInfo() const
+{
+  // implement this in derived classes.
+}
+
 #include "moc_incidenceeditor-ng.cpp"

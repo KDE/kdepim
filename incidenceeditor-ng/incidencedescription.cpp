@@ -25,6 +25,7 @@
 #include "ui_eventortododesktop.h"
 #endif
 
+#include <KDebug>
 #include <KActionCollection>
 #include <KToolBar>
 
@@ -79,6 +80,7 @@ IncidenceDescription::~IncidenceDescription()
 void IncidenceDescription::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
+
   if ( incidence ) {
     enableRichTextDescription( incidence->descriptionIsRich() );
     if ( incidence->descriptionIsRich() ) {
@@ -174,6 +176,31 @@ void IncidenceDescription::setupToolBar()
   // By default we don't show the rich text toolbar.
   mUi->mEditToolBarPlaceHolder->setVisible( false );
   d->mRichTextEnabled = false;
+}
+
+void IncidenceDescription::printDebugInfo() const
+{
+  // We're going to crash
+  kDebug() << "RichText enabled " << d->mRichTextEnabled;
+
+  if ( mLoadedIncidence ) {
+    kDebug() << "Incidence description is rich " << mLoadedIncidence->descriptionIsRich();
+
+    if ( mLoadedIncidence->descriptionIsRich() ) {
+      kDebug() << "desc is rich, and it is " <<  mLoadedIncidence->richDescription()
+               << "; widget has " << mUi->mDescriptionEdit->toHtml()
+               << "; expression mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
+               << ( mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() );
+    } else {
+      kDebug() << "desc is not rich, and it is " <<  mLoadedIncidence->description()
+               << "; widget has " << mUi->mDescriptionEdit->toPlainText()
+               << "; expression mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() is "
+               <<  ( mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() );
+    }
+
+  } else {
+    kDebug() << "Incidence is invalid";
+  }
 }
 
 #include "moc_incidencedescription.cpp"

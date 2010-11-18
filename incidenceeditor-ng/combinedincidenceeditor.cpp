@@ -21,8 +21,7 @@
 #include "combinedincidenceeditor.h"
 
 #include <KMessageBox>
-
-#include <QDebug>
+#include <KDebug>
 
 using namespace IncidenceEditorNG;
 
@@ -98,8 +97,14 @@ void CombinedIncidenceEditor::load( const KCalCore::Incidence::Ptr &incidence )
     editor->blockSignals( true );
     editor->load( incidence );
     editor->blockSignals( false );
+
     if ( editor->isDirty() ) {
-      qDebug() << editor->objectName();
+      // We are going to crash due to assert. Print some useful info before crashing.
+      kDebug() << "Faulty editor was " << editor->objectName();
+      kDebug() << "Incidence " << incidence;
+
+      editor->printDebugInfo();
+
       Q_ASSERT_X( false, "load", "editor shouldn't be dirty" );
     }
   }
