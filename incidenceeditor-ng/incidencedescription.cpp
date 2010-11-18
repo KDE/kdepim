@@ -187,13 +187,13 @@ void IncidenceDescription::printDebugInfo() const
     kDebug() << "Incidence description is rich " << mLoadedIncidence->descriptionIsRich();
 
     if ( mLoadedIncidence->descriptionIsRich() ) {
-      kDebug() << "desc is rich, and it is " <<  mLoadedIncidence->richDescription()
-               << "; widget has " << mUi->mDescriptionEdit->toHtml()
+      kDebug() << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription() << "</desc>"
+               << "; widget has <desc>" << mUi->mDescriptionEdit->toHtml() << "</desc>"
                << "; expression mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
                << ( mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() );
     } else {
-      kDebug() << "desc is not rich, and it is " <<  mLoadedIncidence->description()
-               << "; widget has " << mUi->mDescriptionEdit->toPlainText()
+      kDebug() << "desc is not rich, and it is <desc>" << mLoadedIncidence->description() << "</desc>"
+               << "; widget has <desc>" << mUi->mDescriptionEdit->toPlainText() << "</desc>"
                << "; expression mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() is "
                <<  ( mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() );
     }
