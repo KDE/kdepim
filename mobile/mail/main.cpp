@@ -61,6 +61,7 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "libmessageviewer" );
   KGlobal::locale()->insertCatalog( "libtemplateparser" );
   KGlobal::locale()->insertCatalog( "libmailcommon" );
+  KGlobal::locale()->insertCatalog( "kmail" ); // for identity dialog
 
   MainView view;
 #ifdef Q_OS_WINCE
