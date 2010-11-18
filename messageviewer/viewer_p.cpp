@@ -2690,7 +2690,7 @@ void ViewerPrivate::toggleFullAddressList()
   toggleFullAddressList( "Cc" );
 }
 
-QString ViewerPrivate::attachmentQuickListLinkHtml( bool doShow, const QString & field ) const
+QString ViewerPrivate::recipientsQuickListLinkHtml( bool doShow, const QString & field ) const
 {
   QString imgpath( KStandardDirs::locate( "data","libmessageviewer/pics/" ) );
   QString urlHandle;
@@ -2715,7 +2715,7 @@ void ViewerPrivate::toggleFullAddressList( const QString &field )
   const bool doShow = ( field == "To" && showFullToAddressList() ) || ( field == "Cc" && showFullCcAddressList() );
   // First inject the correct icon
   if ( mViewer->replaceInnerHtml( "iconFull" + field + "AddressList",
-                                  bind( &ViewerPrivate::attachmentQuickListLinkHtml, this, doShow, field ) ) )
+                                  bind( &ViewerPrivate::recipientsQuickListLinkHtml, this, doShow, field ) ) )
   {
     // Then show/hide the full address list
     mViewer->setElementByIdVisible( "dotsFull"   + field + "AddressList", !doShow );
