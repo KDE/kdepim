@@ -64,6 +64,7 @@ int main( int argc, char **argv )
 
   KGlobal::locale()->insertCatalog( "libkcalutils" );
   KGlobal::locale()->insertCatalog( "libincidenceeditors" );
+  KGlobal::locale()->insertCatalog( "calendarsupport" );
 
   MainView view;
 
