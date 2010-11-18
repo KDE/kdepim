@@ -921,49 +921,62 @@ protected:
 
 public:
   const char * name() const { return "mobile"; }
-  HeaderStyle * next() const { return brief(); }
+  HeaderStyle * next() const { return mobileExtended(); }
   HeaderStyle * prev() const { return enterprise(); }
 
   QString format( KMime::Message *message ) const;
 };
 
-QString MobileHeaderStyle::format( KMime::Message *message ) const
-{
-  if ( !message ) return QString();
+class MobileExtendedHeaderStyle : public HeaderStyle {
+  friend class HeaderStyle;
+protected:
+  MobileExtendedHeaderStyle() : HeaderStyle() {}
+  virtual ~MobileExtendedHeaderStyle() {}
 
-  // Bertjan: This is a highly simplified header for mobile devices. It lacks
-  //          currently about almost everything except for the stuff that was in
-  //          the mockup of Nuno. We might want to add additional items such as
-  //          encryption I guess.
+public:
+  const char * name() const { return "mobileExtended"; }
+  HeaderStyle * next() const { return brief(); }
+  HeaderStyle * prev() const { return mobile(); }
+
+  QString format( KMime::Message *message ) const;
+};
+
+static QString formatMobileHeader( KMime::Message *message, bool extendedFormat, const HeaderStyle *style )
+{
+  if ( !message )
+    return QString();
 
   // From
   QString linkColor ="style=\"color: #0E49A1; text-decoration: none\"";
   QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, linkColor );
 
-  if ( !vCardName().isEmpty() )
-    fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName() + "\" " + linkColor + ">" + i18n( "[vCard]" ) + "</a>";
+  if ( !style->vCardName().isEmpty() )
+    fromPart += "&nbsp;&nbsp;<a href=\"" + style->vCardName() + "\" " + linkColor + ">" + i18n( "[vCard]" ) + "</a>";
+
+  const QString toPart = StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor );
+  const QString ccPart = StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor );
 
   // Background image
-  QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
-  imgpath.prepend( "file://" );
-  imgpath.append("mobile_");
+  const QString imagePath( QLatin1String( "file://" ) + KStandardDirs::locate( "data", "libmessageviewer/pics/" ) );
+  const QString mobileImagePath( imagePath + QLatin1String( "mobile_" ) );
+  const QString mobileExtendedImagePath( imagePath + QLatin1String( "mobileextended_" ) );
 
+  const Akonadi::MessageStatus status = style->messageStatus();
   QString flagsPart;
-  const Akonadi::MessageStatus status = messageStatus();
   if ( status.isImportant() )
-    flagsPart += "<img src=\"" + imgpath + "status_important.png\" height=\"22\" width=\"22\"/>";
+    flagsPart += "<img src=\"" + mobileImagePath + "status_important.png\" height=\"22\" width=\"22\"/>";
   if ( status.hasAttachment() )
-    flagsPart += "<img src=\"" + imgpath + "status_attachment.png\" height=\"22\" width=\"22\"/>";
+    flagsPart += "<img src=\"" + mobileImagePath + "status_attachment.png\" height=\"22\" width=\"22\"/>";
   if ( status.isToAct() )
-    flagsPart += "<img src=\"" + imgpath + "status_actionitem.png\" height=\"22\" width=\"22\"/>";
+    flagsPart += "<img src=\"" + mobileImagePath + "status_actionitem.png\" height=\"22\" width=\"22\"/>";
   if ( status.isReplied() )
-    flagsPart += "<img src=\"" + imgpath + "status_replied.png\" height=\"22\" width=\"22\"/>";
+    flagsPart += "<img src=\"" + mobileImagePath + "status_replied.png\" height=\"22\" width=\"22\"/>";
   if ( status.isForwarded() )
-    flagsPart += "<img src=\"" + imgpath + "status_forwarded.png\" height=\"22\" width=\"22\"/>";
+    flagsPart += "<img src=\"" + mobileImagePath + "status_forwarded.png\" height=\"22\" width=\"22\"/>";
   if ( status.isSigned() )
-    flagsPart += "<img src=\"" + imgpath + "status_signed.png\" height=\"22\" width=\"22\"/>";
+    flagsPart += "<img src=\"" + mobileImagePath + "status_signed.png\" height=\"22\" width=\"22\"/>";
   if ( status.isEncrypted() )
-    flagsPart += "<img src=\"" + imgpath + "status_encrypted.png\" height=\"22\" width=\"22\"/>";
+    flagsPart += "<img src=\"" + mobileImagePath + "status_encrypted.png\" height=\"22\" width=\"22\"/>";
 
 
   QString headerStr;
@@ -972,24 +985,36 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   headerStr += "            left: 0px;\n";
   headerStr += "            width: 100%;\n";
   headerStr += "            height: 94px;\n";
-  headerStr += "            background-image: url('" + imgpath + "bg.png');\n";
+  headerStr += "            background-image: url('" + (extendedFormat ? mobileExtendedImagePath : mobileImagePath) + "bg.png');\n";
   headerStr += "            background-repeat: repeat-x;\">\n";
   headerStr += "  <div style=\"margin-top: 10px; height: 25px; margin-left: 90px; vertical-align: bottom; font-size: 20px; color: #0E49A1; float: left\">" + fromPart + "</div>\n";
   headerStr += "  <div style=\"margin-top: 10px; height: 25px; margin-right: 15px; vertical-align: bottom; text-align: right; color: #0E49A1; float: right\">" + flagsPart + "</div><div style=\"clear: both\"/>\n";
-  headerStr += "  <div style=\"height: 35px; margin-left: 90px; font-size: 20px; color: #24353F;\">" + message->subject()->asUnicodeString() + "</div>\n";
-  if ( !messagePath().isEmpty() )
-  {
-    // TODO: Put these back in when we can somehow determine the path
-    //headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "in:" )+ "</td>\n";
-    headerStr += "  <div style=\"position:absolute; top: 70px; left: 47px; font-size: 15px; color: #24353F;\">" + messagePath() + "</div>\n";
+  if ( extendedFormat ) {
+    headerStr += "  <div style=\"margin-top: 10px; height: 20px; margin-left: 90px; vertical-align: bottom; font-size: 15px; color: #0E49A1\">" + toPart + ccPart + "</div>\n";
   }
-  headerStr += "  <div style=\"font-size: 15px; color: #24353F; text-align: right; margin-right: 15px;\">sent: ";
-  headerStr += dateString( message, isPrinting(), /* shortDate = */ false ) + "</div>\n";
+
+  headerStr += "  <div style=\"height: 35px; margin-left: 90px; font-size: 20px; color: #24353F;\">" + message->subject()->asUnicodeString() + "</div>\n";
+
+  if ( !style->messagePath().isEmpty() ) {
+    headerStr += "  <div style=\"margin-left: 47px; font-size: 15px; color: #24353F; float: left\">" + style->messagePath() + "</div>\n";
+  }
+
+  headerStr += "  <div style=\"font-size: 15px; color: #24353F; text-align: right; margin-right: 15px; float: right\">sent: ";
+  headerStr += dateString( message, style->isPrinting(), /* shortDate = */ false ) + "</div><div style=\"clear: both\"/>\n";
   headerStr += "</div>\n";
   headerStr += "<div style=\"margin-left: 40px; position: absolute; top: 110px;\">\n";
 
-  //kDebug() << headerStr;
   return headerStr;
+}
+
+QString MobileHeaderStyle::format( KMime::Message *message ) const
+{
+  return formatMobileHeader( message, false, this );
+}
+
+QString MobileExtendedHeaderStyle::format( KMime::Message *message ) const
+{
+  return formatMobileHeader( message, true, this );
 }
 
 // #####################
@@ -1026,6 +1051,7 @@ HeaderStyle * HeaderStyle::create( const QString & type ) {
   if ( lowerType == "plain" )  return plain();
   if ( lowerType == "enterprise" )  return enterprise();
   if ( lowerType ==  "mobile" )  return mobile();
+  if ( lowerType ==  "mobileExtended" )  return mobileExtended();
   //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:
@@ -1037,6 +1063,7 @@ HeaderStyle * plainStyle = 0;
 HeaderStyle * fancyStyle = 0;
 HeaderStyle * enterpriseStyle = 0;
 HeaderStyle * mobileStyle = 0;
+HeaderStyle * mobileExtendedStyle = 0;
 
 HeaderStyle * HeaderStyle::brief() {
   if ( !briefStyle )
@@ -1066,6 +1093,12 @@ HeaderStyle * HeaderStyle::mobile() {
   if ( !mobileStyle )
     mobileStyle = new MobileHeaderStyle();
   return mobileStyle;
+}
+
+HeaderStyle * HeaderStyle::mobileExtended() {
+  if ( !mobileExtendedStyle )
+    mobileExtendedStyle = new MobileExtendedHeaderStyle;
+  return mobileExtendedStyle;
 }
 
 QString HeaderStyle::dateStr(const KDateTime &dateTime)

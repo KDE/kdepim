@@ -80,6 +80,7 @@ public:
   static HeaderStyle * fancy();
   static HeaderStyle * enterprise();
   static HeaderStyle * mobile();
+  static HeaderStyle * mobileExtended();
 
   //
   // Methods for handling the styles:
