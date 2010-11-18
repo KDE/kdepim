@@ -46,7 +46,9 @@ FolderCollectionMonitor::FolderCollectionMonitor( QObject *parent )
   mMonitor->setAllMonitored( true );
   mMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
   mMonitor->setResourceMonitored( "akonadi_search_resource" ,  true );
+#ifndef KDEPIM_NO_NEPOMUK
   mMonitor->setResourceMonitored( "akonadi_nepomuktag_resource" ,  true );
+#endif
   mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
 }
 

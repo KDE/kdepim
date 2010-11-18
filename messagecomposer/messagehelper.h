@@ -28,7 +28,9 @@
 #include <kmime/kmime_message.h>
 #include <akonadi/item.h>
 
+#ifndef _WIN32_WCE
 #include <Nepomuk/Tag>
+#endif
 
 namespace KPIMIdentities {
 class IdentityManager;
@@ -116,8 +118,10 @@ namespace MessageHelper {
   QString MESSAGECOMPOSER_EXPORT skipKeyword( const QString& str, QChar sepChar = QLatin1Char( ':' ),
                                               bool *keywordFound = 0 );
 
+#ifndef _WIN32_WCE
   QList<Nepomuk::Tag> tagList(const Akonadi::Item &msg);
   void setTagList( const Akonadi::Item &msg, const QList<Nepomuk::Tag> &tags );
+#endif
 
   void link( const KMime::Message::Ptr &msg, const Akonadi::Item & item,const Akonadi::MessageStatus& aStatus );
 }

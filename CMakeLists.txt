@@ -225,9 +225,11 @@ else(KDEPIM_ONLY_KLEO)
   find_package(Grantlee QUIET NO_MODULE)
   macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
 
+if(NOT KDEPIM_NO_NEPOMUK)
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
-
+endif(NOT KDEPIM_NO_NEPOMUK)
+  
   find_package(LibXslt)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
 

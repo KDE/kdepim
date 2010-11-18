@@ -11,7 +11,7 @@ include_directories( ${Boost_INCLUDE_DIR}
 ########### next target ###############
 
 set(messagecore_LIB_SRCS
-   annotationdialog.cpp
+
    attachmentcollector.cpp
    attachmentcompressjob.cpp
    attachmentfrommimecontentjob.cpp
@@ -29,6 +29,13 @@ set(messagecore_LIB_SRCS
    taglistmonitor.cpp
 )
 
+if (NOT WINCE)
+  set(messagecore_LIB_SRCS
+     ${messagecore_LIB_SRCS}
+     annotationdialog.cpp
+  )
+endif (NOT WINCE)
+
 kde4_add_kcfg_files(messagecore_LIB_SRCS
   globalsettings_base.kcfgc
 )
@@ -43,7 +50,6 @@ target_link_libraries(messagecore
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
-  ${NEPOMUK_LIBRARIES}
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
@@ -51,6 +57,12 @@ target_link_libraries(messagecore
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+if(NOT KDEPIM_NO_NEPOMUK)
+target_link_libraries(messagecore
+  ${NEPOMUK_LIBRARIES}
+)
+endif(NOT KDEPIM_NO_NEPOMUK)
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KMIME_LIBS}

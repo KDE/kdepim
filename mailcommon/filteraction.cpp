@@ -39,7 +39,9 @@
 #include <messagecore/stringutil.h>
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
+#ifndef KDEPIM_NO_NEPOMUK
 #include <nepomuk/tag.h>
+#endif
 #include <phonon/mediaobject.h>
 #include <templateparser/customtemplates_kfg.h>
 #include <templateparser/customtemplates.h>
@@ -969,20 +971,24 @@ FilterAction* FilterActionAddTag::newAction()
 FilterActionAddTag::FilterActionAddTag()
   : FilterActionWithStringList( "add tag", i18n( "Add Tag" ) )
 {
+#ifndef KDEPIM_NO_NEPOMUK
   foreach( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
     mParameterList.append( tag.label() );
     mLabelList.append( tag.resourceUri().toString() );
   }
+#endif
 }
 
 FilterAction::ReturnCode FilterActionAddTag::process( const Akonadi::Item &item ) const
 {
+#ifndef KDEPIM_NO_NEPOMUK
   const int index = mParameterList.indexOf( mParameter );
   if ( index == -1 )
     return ErrorButGoOn;
 
   Nepomuk::Resource resource( item.url() );
   resource.addTag( mParameter );
+#endif
 
   return GoOn;
 }
