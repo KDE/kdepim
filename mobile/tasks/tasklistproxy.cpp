@@ -21,9 +21,11 @@
 
 #include "settings.h"
 
-#include <akonadi/entitytreemodel.h>
 #include <calendarsupport/kcalprefs.h>
-#include <kcalcore/todo.h>
+#include <calendarsupport/utils.h>
+
+#include <akonadi/entitytreemodel.h>
+#include <KCalCore/Todo>
 
 using namespace Akonadi;
 
@@ -104,19 +106,31 @@ void TaskListProxy::setPreferences( const EventViews::PrefsPtr &preferences )
 
 bool TaskListProxy::lessThan( const QModelIndex &left, const QModelIndex &right ) const
 {
-  if ( !Settings::self()->showCompletedTodosAtBottom() )
-    return ListProxy::lessThan( left, right );
-
   const Akonadi::Item leftItem = left.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
-  const int leftCompleted = !leftItem.isValid() ? 0 :
-                            !leftItem.hasPayload<KCalCore::Todo::Ptr>() ? 0 :
-                            leftItem.payload<KCalCore::Todo::Ptr>()->percentComplete();
+  const KCalCore::Todo::Ptr leftTodo = CalendarSupport::todo( leftItem );
+  const KCalCore::Todo::Ptr rightTodo = CalendarSupport::todo( rightItem );
 
-  const int rightCompleted = !rightItem.isValid() ? 0 :
-                             !rightItem.hasPayload<KCalCore::Todo::Ptr>() ? 0 :
-                             rightItem.payload<KCalCore::Todo::Ptr>()->percentComplete();
+  if ( !leftTodo || !rightTodo ) {
+    kDebug() << "This shouldn't happen, but i didn't check. Better safe than sorry.";
+    return false;
+  }
 
-  return ((leftCompleted != rightCompleted) ? (leftCompleted < rightCompleted) : (leftItem.id() < rightItem.id()));
+  const bool leftCompleted = leftTodo->isCompleted();
+  const bool rightCompleted = rightTodo->isCompleted();
+  const int leftPriority = leftTodo->priority();
+  const int rightPriority = rightTodo->priority();
+
+  if ( Settings::self()->showCompletedTodosAtBottom() && leftCompleted != rightCompleted ) {
+    return rightCompleted;
+  }
+
+  if ( leftPriority != rightPriority ) {
+    // higher priority first
+    return leftPriority > rightPriority;
+  } else {
+    // lower id first
+    return leftItem.id() < rightItem.id();
+  }
 }
