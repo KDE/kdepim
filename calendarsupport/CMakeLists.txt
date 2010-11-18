@@ -39,12 +39,12 @@ set(calendarsupport_LIB_SRCS
   mailscheduler.cpp
   nepomukcalendar.cpp
   publishdialog.cpp
-  scheduler.cpp
   utils.cpp
 
   next/history.cpp
   next/incidencechanger2.cpp
   next/incidencesearchjob.cpp
+  next/scheduler.cpp
 )
 
 if (NOT WINCE)
