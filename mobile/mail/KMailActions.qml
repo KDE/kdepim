@@ -178,6 +178,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "copy_all_to_clipboard"; title : KDE.i18n( "Copy mail to Clipboard" ) }
     ActionListItem { name : "show_message_source" }
     ActionListItem { name : "change_message_encoding" }
+    ActionListItem { name : "show_extended_headers" }
   }
 
   ActionList {

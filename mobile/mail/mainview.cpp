@@ -40,6 +40,8 @@
 #include "messagecore/messagehelpers.h"
 #include "messagelistproxy.h"
 #include "messageviewer/globalsettings.h"
+#include "messageviewer/headerstrategy.h"
+#include "messageviewer/headerstyle.h"
 #include "messageviewer/nodehelper.h"
 #include "messageviewer/viewer.h"
 #include "messageviewitem.h"
@@ -384,6 +386,11 @@ void MainView::delayedInit()
   action = new KAction( i18n( "Encoding..." ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( selectOverrideEncoding() ) );
   actionCollection()->addAction( QLatin1String( "change_message_encoding" ), action );
+
+  action = new KAction( i18n( "Show all Recipients" ), this );
+  action->setCheckable( true );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( toggleShowExtendedHeaders( bool ) ) );
+  actionCollection()->addAction( QLatin1String( "show_extended_headers" ), action );
 
   // lazy load of the default single folders
   QTimer::singleShot( 3000, this, SLOT( initDefaultFolders() ) );
@@ -1509,6 +1516,17 @@ void MainView::selectOverrideEncoding()
 
     if ( dlg.exec() )
       item->viewer()->setOverrideEncoding( dlg.charset() );
+  }
+}
+
+void MainView::toggleShowExtendedHeaders( bool value )
+{
+  MessageViewer::MessageViewItem *item = messageViewerItem();
+  if ( item ) {
+    if ( value )
+      item->viewer()->setHeaderStyleAndStrategy( MessageViewer::HeaderStyle::mobileExtended(), MessageViewer::HeaderStrategy::all() );
+    else
+      item->viewer()->setHeaderStyleAndStrategy( MessageViewer::HeaderStyle::mobile(), MessageViewer::HeaderStrategy::all() );
   }
 }
 

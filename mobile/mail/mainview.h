@@ -165,6 +165,7 @@ class MainView : public KDeclarativeMainView
     bool askToGoOnline();
     void showMessageSource();
     void selectOverrideEncoding();
+    void toggleShowExtendedHeaders( bool );
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
