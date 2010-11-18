@@ -140,6 +140,7 @@ void ComposerView::delayedInit()
   Message::AttachmentModel* attachmentModel = new Message::AttachmentModel(this);
   engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( attachmentModel ) ) );
   Message::AttachmentControllerBase* attachmentController = new Message::AttachmentControllerBase(attachmentModel, this, actionCollection());
+  attachmentController->createActions();
   m_composerBase->setAttachmentModel( attachmentModel );
   m_composerBase->setAttachmentController( attachmentController );
 

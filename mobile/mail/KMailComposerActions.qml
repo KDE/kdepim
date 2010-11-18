@@ -61,6 +61,7 @@ ActionMenuContainer {
     ActionListItem { name : "options_request_mdn" }
     ActionListItem { name : "options_wordwrap" }
     ActionListItem { name : "options_fixedfont" }
+    ActionListItem { name : "attach_public_key" }
   }
 
   ActionList {
