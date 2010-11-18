@@ -40,7 +40,12 @@ set(libmailcommon_SRCS
   searchpattern.cpp
   searchpatternedit.cpp
   sendmdnhandler.cpp
+  snippetdialog.cpp
+  snippetsmanager.cpp
+  snippetsmodel.cpp
 )
+
+kde4_add_ui_files(libmailcommon_SRCS snippetdialog.ui)
 
 if ( NOT WINCE )
 set(libmailcommon_SRCS ${libmailcommon_SRCS}
