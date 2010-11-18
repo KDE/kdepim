@@ -67,6 +67,16 @@ QString SnippetDialog::text() const
   return mUi->snippetText->toPlainText();
 }
 
+void SnippetDialog::setKeySequence( const QKeySequence &sequence )
+{
+  mUi->keyWidget->setKeySequence( sequence );
+}
+
+QKeySequence SnippetDialog::keySequence() const
+{
+  return mUi->keyWidget->keySequence();
+}
+
 void SnippetDialog::setGroupModel( QAbstractItemModel *model )
 {
   mUi->groupBox->setModel( model );

@@ -37,6 +37,9 @@ class MailCommon::SnippetItem
     void setText( const QString &text );
     QString text() const;
 
+    void setKeySequence( const QString &sequence );
+    QString keySequence() const;
+
     void appendChild( SnippetItem *child );
     void removeChild( SnippetItem *child );
     SnippetItem *child( int row ) const;
@@ -51,6 +54,7 @@ class MailCommon::SnippetItem
     bool mIsGroup;
     QString mName;
     QString mText;
+    QString mKeySequence;
 };
 
 SnippetItem::SnippetItem( bool isGroup, SnippetItem *parent )
@@ -86,6 +90,16 @@ void SnippetItem::setText( const QString &text )
 QString SnippetItem::text() const
 {
   return mText;
+}
+
+void SnippetItem::setKeySequence( const QString &sequence )
+{
+  mKeySequence = sequence;
+}
+
+QString SnippetItem::keySequence() const
+{
+  return mKeySequence;
 }
 
 void SnippetItem::appendChild( SnippetItem *item )
@@ -156,6 +170,11 @@ bool SnippetsModel::setData( const QModelIndex &index, const QVariant &value, in
       emit dataChanged( index, index );
       return true;
       break;
+    case KeySequenceRole:
+      item->setKeySequence( value.toString() );
+      emit dataChanged( index, index );
+      return true;
+      break;
     default:
       return false;
       break;
@@ -180,6 +199,9 @@ QVariant SnippetsModel::data( const QModelIndex &index, int role ) const
       break;
     case TextRole:
       return item->text();
+      break;
+    case KeySequenceRole:
+      return item->keySequence();
       break;
   }
 

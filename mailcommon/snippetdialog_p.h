@@ -39,6 +39,9 @@ class SnippetDialog : public KDialog
     void setText( const QString &text );
     QString text() const;
 
+    void setKeySequence( const QKeySequence &sequence );
+    QKeySequence keySequence() const;
+
     void setGroupModel( QAbstractItemModel *model );
 
     void setGroupIndex( const QModelIndex &index );

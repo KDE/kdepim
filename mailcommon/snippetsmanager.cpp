@@ -133,6 +133,7 @@ void SnippetsManager::Private::addSnippet()
   const QModelIndex index = mModel->index( mModel->rowCount( groupIndex ) - 1, 0, groupIndex );
   mModel->setData( index, dlg.name(), SnippetsModel::NameRole );
   mModel->setData( index, dlg.text(), SnippetsModel::TextRole );
+  mModel->setData( index, dlg.keySequence().toString(), SnippetsModel::KeySequenceRole );
 }
 
 void SnippetsManager::Private::editSnippet()
@@ -147,6 +148,7 @@ void SnippetsManager::Private::editSnippet()
   dlg.setGroupIndex( oldGroupIndex );
   dlg.setName( index.data( SnippetsModel::NameRole ).toString() );
   dlg.setText( index.data( SnippetsModel::TextRole ).toString() );
+  dlg.setKeySequence( QKeySequence::fromString( index.data( SnippetsModel::KeySequenceRole ).toString() ) );
 
   if ( !dlg.exec() )
     return;
@@ -162,6 +164,7 @@ void SnippetsManager::Private::editSnippet()
 
   mModel->setData( index, dlg.name(), SnippetsModel::NameRole );
   mModel->setData( index, dlg.text(), SnippetsModel::TextRole );
+  mModel->setData( index, dlg.keySequence().toString(), SnippetsModel::KeySequenceRole );
 }
 
 void SnippetsManager::Private::deleteSnippet()

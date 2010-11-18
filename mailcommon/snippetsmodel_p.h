@@ -35,7 +35,8 @@ class SnippetsModel : public QAbstractItemModel
     {
       IsGroupRole = Qt::UserRole + 1, ///< Returns whether the index represents a group
       NameRole,                       ///< The name of a snippet or group
-      TextRole                        ///< The text of a snippet
+      TextRole,                       ///< The text of a snippet
+      KeySequenceRole                 ///< The key sequence to activate a snippet
     };
 
     SnippetsModel( QObject *parent = 0 );
