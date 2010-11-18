@@ -38,6 +38,7 @@
 Q_IMPORT_PLUGIN(akonadi_serializer_mail)
 Q_IMPORT_PLUGIN(akonadi_serializer_addressee)
 Q_IMPORT_PLUGIN(akonadi_serializer_contactgroup)
+Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 #endif
 
 int main( int argc, char **argv )

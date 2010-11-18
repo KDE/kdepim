@@ -77,7 +77,7 @@ target_link_libraries(kmail-mobile
 )
 
 if (RUNTIME_PLUGINS_STATIC)
-  target_link_libraries(kmail-mobile akonadi_serializer_mail akonadi_serializer_addressee akonadi_serializer_contactgroup)
+  target_link_libraries(kmail-mobile akonadi_serializer_mail akonadi_serializer_addressee akonadi_serializer_contactgroup akonadi_serializer_kcalcore)
 endif (RUNTIME_PLUGINS_STATIC)
 
 if (WINCE)

@@ -46,7 +46,7 @@ target_link_libraries(tasks-mobile
 )
 
 if (RUNTIME_PLUGINS_STATIC)
-  target_link_libraries(tasks-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup akonadi_serializer_kcalcore)
+  target_link_libraries(tasks-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup akonadi_serializer_kcalcore akonadi_serializer_mail)
 endif (RUNTIME_PLUGINS_STATIC)
 
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
