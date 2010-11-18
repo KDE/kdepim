@@ -424,4 +424,9 @@ bool NepomukCalendar::changeIncidence( const KCalCore::Incidence::Ptr &incidence
   }
 }
 
+Akonadi::Item NepomukCalendar::itemForIncidenceUid( const QString &uid ) const
+{
+  return d->itemForIncidenceUid( uid );
+}
+
 #include "nepomukcalendar.moc"

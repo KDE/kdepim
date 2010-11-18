@@ -9,7 +9,6 @@
   modify it under the terms of the GNU Library General Public
   License as published by the Free Software Foundation; either
   version 2 of the License, or (at your option) any later version.
-
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -79,37 +78,63 @@ void Scheduler::Private::createFinished( int changeId,
                                          const QString &errorMessage )
 {
   Q_UNUSED( item );
+  operationFinished( changeId, item, changerResultCode,
+                     IncidenceChanger2::ChangeTypeCreate, errorMessage );
+}
+
+void Scheduler::Private::deleteFinished( int changeId,
+                                         const QVector<Akonadi::Item::Id> &itemIds,
+                                         IncidenceChanger2::ResultCode changerResultCode,
+                                         const QString &errorMessage )
+{
+  if ( mDeletedIncidenceByChangeId.contains( changeId ) ) {
+    Q_ASSERT( itemIds.count() == 1 );
+    Incidence::Ptr incidence = mDeletedIncidenceByChangeId.take( changeId );
+    Akonadi::Item item( itemIds.first() );
+    item.setPayload( incidence );
+    operationFinished( changeId, item, changerResultCode,
+                       IncidenceChanger2::ChangeTypeDelete, errorMessage );
+  }
+}
+
+void Scheduler::Private::modifyFinished( int changeId,
+                                         const Akonadi::Item &item,
+                                         IncidenceChanger2::ResultCode changerResultCode,
+                                         const QString &errorMessage )
+{
+  operationFinished( changeId, item, changerResultCode,
+                     IncidenceChanger2::ChangeTypeModify, errorMessage );
+}
+
+void Scheduler::Private::operationFinished( int changeId,
+                                            const Akonadi::Item &item,
+                                            IncidenceChanger2::ResultCode changerResultCode,
+                                            IncidenceChanger2::ChangeType changeType,
+                                            const QString &errorMessage )
+{
+  ResultCode errorCode = ResultCodeSuccess; // random value to shut up compiler
+  switch( changeType ) {
+  case IncidenceChanger2::ChangeTypeCreate:
+    errorCode = ResultCodeErrorCreatingIncidence;
+    break;
+  case IncidenceChanger2::ChangeTypeModify:
+    errorCode = ResultCodeErrorUpdatingIncidence;
+    break;
+  case IncidenceChanger2::ChangeTypeDelete:
+    errorCode = ResultCodeErrorDeletingIncidence;
+    break;
+  default:
+    Q_ASSERT( false );
+  }
+
   if ( mCallIdByChangeId.contains( changeId ) ) {
     const CallId callId = mCallIdByChangeId[changeId];
-    const ResultCode result = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ? ResultCodeSuccess : ResultCodeErrorCreatingIncidence;
+    const ResultCode result = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ? ResultCodeSuccess : errorCode;
 
     emitOperationFinished( callId, result, errorMessage );
     q->deleteTransaction( item.payload<Incidence::Ptr>()->uid() );
     mCallIdByChangeId.remove( changeId );
   }
-}
-
-void Scheduler::Private::deleteFinished( int changeId,
-                                         const QVector<Akonadi::Item::Id> &itemId,
-                                         IncidenceChanger2::ResultCode resultCode,
-                                         const QString &errorMessage )
-{
-  Q_UNUSED( changeId );
-  Q_UNUSED( itemId );
-  Q_UNUSED( resultCode );
-  Q_UNUSED( errorMessage );
-
-}
-
-void Scheduler::Private::modifyFinished( int changeId,
-                                         const Akonadi::Item &item,
-                                         IncidenceChanger2::ResultCode resultCode,
-                                         const QString &errorMessage )
-{
-  Q_UNUSED( changeId );
-  Q_UNUSED( item );
-  Q_UNUSED( resultCode );
-  Q_UNUSED( errorMessage );
 }
 
 Scheduler::Scheduler( const CalendarSupport::NepomukCalendar::Ptr &calendar,
@@ -186,6 +211,8 @@ CallId Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
 
   kDebug() << "status=" << Stringify::scheduleMessageStatus( status ); //krazy:exclude=kdebug
 
+  bool emitResult = true;
+
   Incidence::Ptr newInc = newIncBase.staticCast<Incidence>() ;
   Incidence::Ptr calInc = d->mCalendar->incidence( newIncBase->uid() );
   switch ( status ) {
@@ -203,11 +230,28 @@ CallId Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
             resultCode = ResultCodeDifferentIncidenceTypes;
             errorMessage = QLatin1String( "Cannot assign two different incidence types" );
           } else {
-            // TODO_SERGIO: put a ItemModifyJob here.
             IncidenceBase *ci = calInc.data();
             IncidenceBase *ni = newInc.data();
             *ci = *ni;
             calInc->setSchedulingID( newInc->uid(), oldUid );
+
+            Akonadi::Item item = d->mCalendar->itemForIncidenceUid( calInc->uid() );
+            item.setPayload<Incidence::Ptr>( calInc );
+
+            if ( item.isValid() ) {
+              const int changeId = d->mChanger->modifyIncidence( item );
+
+              if ( changeId >= 0 ) {
+                d->mCallIdByChangeId.insert( changeId, callId );
+                emitResult = false; // will be emited in the job result's slot.
+              } else {
+                resultCode = ResultCodeErrorUpdatingIncidence;
+                errorMessage = QLatin1String( "Error while trying to update the incidence" );
+              }
+            } else {
+              resultCode = ResultCodeIncidenceNotFound;
+              errorMessage = QLatin1String( "Couldn't find incidence in calendar" );
+            }
           }
         } else {
           resultCode = ResultCodeNewIncidenceTooOld;
@@ -226,10 +270,12 @@ CallId Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
       errorMessage = QLatin1String( "Unhandled ScheduleMessage status" );
       break;
   }
-  deleteTransaction( newIncBase->uid() );
 
-  // Delayed signal, the caller must know this CallId first.
-  d->emitOperationFinished( callId, resultCode, errorMessage );
+  if ( emitResult ) {
+    deleteTransaction( newIncBase->uid() );
+    // Delayed signal, the caller must know this CallId first.
+    d->emitOperationFinished( callId, resultCode, errorMessage );
+  }
 
   return callId;
 }
@@ -312,20 +358,39 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
         }
         kDebug() << "replacing existing incidence " << existingIncidence->uid();
 
+        bool emitResult = true;
         const QString oldUid = existingIncidence->uid();
         if ( existingIncidence->type() != inc->type() ) {
           errorMessage = QLatin1String( "Cannot assign two different incidence types" );
           resultCode = ResultCodeDifferentIncidenceTypes;
         } else {
-          //TODO_SERGIO: item modify job here.
           IncidenceBase *existingIncidenceBase = existingIncidence.data();
           IncidenceBase *incBase = inc.data();
           *existingIncidenceBase = *incBase;
           existingIncidence->setSchedulingID( inc->uid(), oldUid );
-        }
-        deleteTransaction( incidence->uid() );
 
-        d->emitOperationFinished( callId, resultCode, errorMessage );
+          Akonadi::Item item = d->mCalendar->itemForIncidenceUid( oldUid );
+          item.setPayload<Incidence::Ptr>( existingIncidence );
+          if ( item.isValid() ) {
+            const int changeId = d->mChanger->modifyIncidence( item );
+
+            if ( changeId >= 0 ) {
+              d->mCallIdByChangeId.insert( changeId, callId );
+              emitResult = false; // will be emited in the job result's slot.
+            } else {
+              resultCode = ResultCodeErrorUpdatingIncidence;
+              errorMessage = QLatin1String( "Error while trying to update the incidence" );
+            }
+          } else {
+            resultCode = ResultCodeIncidenceNotFound;
+            errorMessage = QLatin1String( "Couldn't find incidence in calendar" );
+          }
+        }
+
+        if ( emitResult ) {
+          deleteTransaction( incidence->uid() );
+          d->emitOperationFinished( callId, resultCode, errorMessage );
+        }
         return callId;
       }
     } else {
@@ -447,19 +512,31 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
       bool ret = false;
       //TODO_SERGIO: use ItemDeleteJob and make this async.
       kDebug() << "removing existing incidence " << i->uid();
-      if ( i->type() == IncidenceBase::TypeEvent ) {
-        Event::Ptr event = d->mCalendar->event( i->uid() );
-        ret = ( event && d->mCalendar->deleteEvent( event ) );
-      } else if ( i->type() == IncidenceBase::TypeTodo ) {
-        Todo::Ptr todo = d->mCalendar->todo( i->uid() );
-        ret = ( todo && d->mCalendar->deleteTodo( todo ) );
+
+      Akonadi::Item item = d->mCalendar->itemForIncidenceUid( i->uid() );
+      bool emitResult = true;
+      if ( item.isValid() ) {
+        const int changeId = d->mChanger->deleteIncidence( item );
+
+        if ( changeId >= 0 ) {
+          d->mCallIdByChangeId.insert( changeId, callId );
+          d->mDeletedIncidenceByChangeId.insert( changeId, i );
+          emitResult = false; // will be emited in the job result's slot.
+        } else {
+          resultCode = ResultCodeErrorDeletingIncidence;
+          errorMessage = QLatin1String( "Error while trying to delete the incidence" );
+        }
+      } else {
+        resultCode = ResultCodeIncidenceNotFound;
+        errorMessage = QLatin1String( "Couldn't find incidence in calendar" );
       }
-      deleteTransaction( incidence->uid() );
 
-      resultCode = ret ? ResultCodeSuccess : ResultCodeErrorDeletingIncidence;
-      errorMessage = ret ? QString() : QLatin1String( "Error deleting incidence" );
+      if ( emitResult ) {
+        deleteTransaction( incidence->uid() );
+        errorMessage = ret ? QString() : QLatin1String( "Error deleting incidence" );
+        d->emitOperationFinished( callId, resultCode, errorMessage );
+      }
 
-      d->emitOperationFinished( callId, resultCode, errorMessage );
       return callId;
     }
   }

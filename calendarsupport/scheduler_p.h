@@ -70,8 +70,15 @@ class Scheduler::Private : public QObject
                          const Akonadi::Item &item,
                          CalendarSupport::IncidenceChanger2::ResultCode resultCode,
                          const QString &errorMessage );
+
+    void operationFinished( int changeId,
+                            const Akonadi::Item &item,
+                            IncidenceChanger2::ResultCode changerResultCode,
+                            IncidenceChanger2::ChangeType changeType,
+                            const QString &errorMessage );
   public:
     QHash<CallId,int> mCallIdByChangeId;
+    QHash<int,KCalCore::Incidence::Ptr> mDeletedIncidenceByChangeId;
     KCalCore::FreeBusyCache *mFreeBusyCache;
     IncidenceChanger2 *mChanger;
     CalendarSupport::NepomukCalendar::Ptr mCalendar;

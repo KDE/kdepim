@@ -180,6 +180,8 @@ class CALENDARSUPPORT_EXPORT NepomukCalendar : public KCalCore::MemoryCalendar
 
     bool jobsInProgress() const;
 
+    Akonadi::Item itemForIncidenceUid( const QString &uid ) const;
+
   Q_SIGNALS:
     void loadFinished( bool success, const QString &errorMessage );
     void addFinished( bool success, const QString &errorMessage );

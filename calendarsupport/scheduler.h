@@ -69,7 +69,8 @@ class CALENDARSUPPORT_EXPORT Scheduler : public QObject
       ResultCodeIncidenceOrAttendeeNotFound,
       ResultCodeIncidenceNotFound,
       ResultCodeErrorDeletingIncidence,
-      ResultCodeErrorCreatingIncidence
+      ResultCodeErrorCreatingIncidence,
+      ResultCodeErrorUpdatingIncidence
     };
 
     /**
