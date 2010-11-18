@@ -92,7 +92,11 @@ if ( WIN32 )
     set( ASSUAN2_INCLUDES ${ASSUAN2_INCLUDES} )
 
     if ( _assuan2_library AND _gpg_error_library )
-      set( ASSUAN2_LIBRARIES ${_assuan2_library} ${_gpg_error_library} ws2_32 )
+      if (NOT WINCE)
+        set( ASSUAN2_LIBRARIES ${_assuan2_library} ${_gpg_error_library} ws2_32 )
+      else (NOT WINCE)
+        set( ASSUAN2_LIBRARIES ${_assuan2_library} ${_gpg_error_library} ws2 )
+      endif (NOT WINCE)
       set( ASSUAN2_FOUND             true )
     endif()
 
