@@ -239,9 +239,11 @@ KPIM.MainView {
       QML.Connections {
         target : _itemNavigationModel
         onCurrentRowChanged : {
-          taskView.itemId = _itemNavigationModel.currentItemIdHack
-          guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
-          _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
+          if ( _itemNavigationModel.currentRow != -1 ) {
+            taskView.itemId = _itemNavigationModel.currentItemIdHack
+            guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
+            _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
+          }
         }
       }
     }
