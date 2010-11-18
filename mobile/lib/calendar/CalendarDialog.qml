@@ -77,6 +77,11 @@ Dialog {
               monthSelector.state = "unselected";
               yearSelector.state = "unselected";
             }
+            Component.onCompleted: {
+                // ### TODO: instead of calling function just set value
+                // was supposed to work
+                daySelector.setValue(myCalendar.day);
+            }
           }
 
           KPIM.VerticalSelector {
@@ -85,7 +90,6 @@ Dialog {
             model: 12
             beginWith: 1
 
-            value: myCalendar.month
             onValueChanged: {
               // selector change -> update calendar
               myCalendar.month = value;
@@ -94,6 +98,11 @@ Dialog {
             onSelected: {
               daySelector.state = "unselected";
               yearSelector.state = "unselected";
+            }
+            Component.onCompleted: {
+                // ### TODO: instead of calling function just set value
+                // was supposed to work
+                monthSelector.setValue(myCalendar.month);
             }
           }
 
@@ -105,7 +114,6 @@ Dialog {
             // value - 2000 because the index starts at '0'
             beginWith: 2000
 
-            value: myCalendar.year
             onValueChanged: {
               myCalendar.year = value;
               calendarWidgetOk.enabled = true;
@@ -113,6 +121,11 @@ Dialog {
             onSelected: {
               daySelector.state = "unselected";
               monthSelector.state = "unselected";
+            }
+            Component.onCompleted: {
+                // ### TODO: instead of calling function just set value
+                // was supposed to work
+                yearSelector.setValue(myCalendar.year);
             }
           }
         }

@@ -32,7 +32,7 @@ Item {
     property int beginWith: 0
 
     onValueChanged: {
-        list.positionViewAtIndex (value - beginWith, ListView.Center);
+        list.positionViewAtIndex( value - beginWith, ListView.Center );
     }
 
     Image {
@@ -69,6 +69,14 @@ Item {
         anchors.bottomMargin: 15
         anchors.right: parent.right
         anchors.rightMargin: 5
+    }
+
+    // ### TODO: for some reason, onValueChanged is not properly
+    // setting the positionViewAtIndex when the component is just
+    // loaded. maybe a bug with the list?
+    function setValue(newValue) {
+        value = newValue;
+        list.positionViewAtIndex( value - beginWith, ListView.Center );
     }
 
     function setRange(range) {
