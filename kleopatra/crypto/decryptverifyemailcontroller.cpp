@@ -34,8 +34,6 @@
 
 #include "decryptverifyemailcontroller.h"
 
-#ifndef QT_NO_WIZARD
-
 #include "emailoperationspreferences.h"
 
 #include <crypto/gui/newresultpage.h>
@@ -489,5 +487,3 @@ void DecryptVerifyEMailController::Private::cancelAllTasks() {
 
 #include "decryptverifyemailcontroller.moc"
 #include "moc_decryptverifyemailcontroller.cpp"
-
-#endif // QT_NO_WIZARD

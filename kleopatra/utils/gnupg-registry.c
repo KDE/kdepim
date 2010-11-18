@@ -28,6 +28,8 @@
 #endif
 #endif
 
+#ifndef _WIN32_WCE
+
 #include <unistd.h>
 #include <assert.h>
 #include <windows.h>
@@ -239,12 +241,14 @@ standard_homedir (void)
     }
   return dir;
 }
+#endif
 
 
 /* Retrieve the default home directory.  */
 char *
 default_homedir (void)
 {
+#ifndef _WIN32_WCE
   char *dir;
 
   dir = getenv ("GNUPGHOME");
@@ -278,4 +282,7 @@ default_homedir (void)
     dir = "C:\\gnupg";
 
   return dir;
+#else
+  return "\\gnupg";
+#endif
 }

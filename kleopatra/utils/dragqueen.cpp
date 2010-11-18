@@ -35,7 +35,6 @@
 
 #include "dragqueen.h"
 
-#ifndef QT_NO_DRAGANDDROP
 
 #include <QDrag>
 #include <QMouseEvent>
@@ -167,8 +166,10 @@ QMimeData * DragQueen::mimeData() const {
 }
 
 void DragQueen::mousePressEvent( QMouseEvent * e ) {
+#ifndef QT_NO_DRAGANDDROP
     if ( m_data && e->button() == Qt::LeftButton )
         m_dragStartPosition = e->pos();
+#endif
     QLabel::mousePressEvent( e );
 }
 
@@ -181,6 +182,7 @@ static QPoint calculate_hot_spot( const QPoint & mouse, const QSize & pix, const
 }
 
 void DragQueen::mouseMoveEvent( QMouseEvent * e ) {
+#ifndef QT_NO_DRAGANDDROP
     if ( m_data &&
          (e->buttons() & Qt::LeftButton) &&
          ( m_dragStartPosition - e->pos() ).manhattanLength() > QApplication::startDragDistance() ) {
@@ -192,11 +194,12 @@ void DragQueen::mouseMoveEvent( QMouseEvent * e ) {
         drag->setMimeData( new MimeDataProxy( m_data ) );
         drag->exec();
     } else {
+#endif
         QLabel::mouseMoveEvent( e );
+#ifndef QT_NO_DRAGANDDROP
     }
+#endif
 }
 
 #include "moc_dragqueen.cpp"
 #include "dragqueen.moc"
-
-#endif // QT_NO_DRAGANDDROP

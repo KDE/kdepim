@@ -33,9 +33,13 @@
 #ifndef __KLEOPATRA_NEWCERTIFICATEWIZARD_NEWCERTIFICATEWIZARD_H__
 #define __KLEOPATRA_NEWCERTIFICATEWIZARD_NEWCERTIFICATEWIZARD_H__
 
-#include <QWizard>
+#include <QDialog>
 
 #ifndef QT_NO_WIZARD
+#include <QWizard>
+#else
+#include <utils/qwizard.h>
+#endif
 
 #include <utils/pimpl_ptr.h>
 
@@ -73,7 +77,5 @@ namespace Kleo {
     };
 
 }
-
-#endif // QT_NO_WIZARD
 
 #endif /* __KLEOPATRA_NEWCERTIFICATEWIZARD_NEWCERTIFICATEWIZARD_H__ */

@@ -139,7 +139,9 @@ public:
         : q( qq ),
           ignoreNewInstance( true )
     {
+#ifndef _WIN32_WCE
         KDAB_SET_OBJECT_NAME( readerStatus );
+#endif
 #ifndef QT_NO_SYSTEMTRAYICON
         KDAB_SET_OBJECT_NAME( sysTray );
 
@@ -167,7 +169,9 @@ public:
     bool ignoreNewInstance;
     QPointer<ConfigureDialog> configureDialog;
     QPointer<MainWindow> mainWindow;
+#ifndef _WIN32_WCE
     SmartCard::ReaderStatus readerStatus;
+#endif
 #ifndef QT_NO_SYSTEMTRAYICON
     SysTrayIcon sysTray;
 #endif
@@ -275,7 +279,9 @@ int KleopatraApplication::newInstance() {
     }
 
     static const _Funcs funcs[] = {
+#ifndef QT_NO_SYSTEMTRAYICON
         { "import-certificate", &KleopatraApplication::importCertificatesFromFile },
+#endif
         { "encrypt", &KleopatraApplication::encryptFiles               },
         { "sign", &KleopatraApplication::signFiles                  },
         { "encrypt-sign", &KleopatraApplication::signEncryptFiles           },

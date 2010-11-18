@@ -82,7 +82,6 @@ private:
         cmd->setParentWidget( q );
         cmd->start();
     }
-#ifndef QT_NO_WIZARD
     void create() {
         NewCertificateCommand * cmd = new NewCertificateCommand( 0 );
         cmd->setParentWidget( q );
@@ -90,7 +89,6 @@ private:
             cmd->setProtocol( (options & OpenPGPFormat) ? OpenPGP : CMS );
         cmd->start();
     }
-#endif
     void lookup() {
         Command * const cmd = new LookupCertificatesCommand( 0 );
         cmd->setParentWidget( q );
@@ -149,23 +147,17 @@ private:
             Q_UNUSED( cancel );
             QPushButton * const reload = buttonBox.addButton( i18n("Reload"),    QDialogButtonBox::ActionRole );
             QPushButton * const lookup = buttonBox.addButton( i18n("Lookup..."), QDialogButtonBox::ActionRole );
-#ifndef QT_NO_WIZARD
             QPushButton * const create = buttonBox.addButton( i18n("New..."),    QDialogButtonBox::ActionRole );
-#endif
 
             lookup->setToolTip( i18nc("@info:tooltip","Lookup certificates on server") );
             reload->setToolTip( i18nc("@info:tooltip","Refresh certificate list") );
-#ifndef QT_NO_WIZARD
             create->setToolTip( i18nc("@info:tooltip","Create a new certificate") );
-#endif
 
             connect( &buttonBox, SIGNAL(accepted()), q, SLOT(accept()) );
             connect( &buttonBox, SIGNAL(rejected()), q, SLOT(reject()) );
             connect( reload,     SIGNAL(clicked()),  q, SLOT(reload()) );
             connect( lookup,     SIGNAL(clicked()),  q, SLOT(lookup()) );
-#ifndef QT_NO_WIZARD
             connect( create,     SIGNAL(clicked()),  q, SLOT(create()) );
-#endif
             connect( KeyCache::instance().get(), SIGNAL(keysMayHaveChanged()),
                      q, SLOT(slotKeysMayHaveChanged()) );
         }

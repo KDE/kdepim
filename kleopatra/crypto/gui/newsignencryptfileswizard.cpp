@@ -34,8 +34,6 @@
 
 #include "newsignencryptfileswizard.h"
 
-#ifndef QT_NO_WIZARD
-
 #include "newresultpage.h"
 #include "signingcertificateselectionwidget.h"
 
@@ -1114,5 +1112,3 @@ void NewSignEncryptFilesWizard::setTaskCollection( const shared_ptr<TaskCollecti
 
 #include "moc_newsignencryptfileswizard.cpp"
 #include "newsignencryptfileswizard.moc"
-
-#endif // QT_NO_WIZARD

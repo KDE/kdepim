@@ -30,6 +30,8 @@
     your version.
 */
 
+#define QT_STL
+
 #include <config-kleopatra.h>
 
 #include "signerresolvepage.h"

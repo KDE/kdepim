@@ -257,34 +257,24 @@ int main( int argc, char** argv )
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( CreateChecksumsCommand );
-#ifndef QT_NO_WIZARD
       REGISTER( DecryptCommand );
-#endif // QT_NO_WIZARD
       REGISTER( DecryptFilesCommand );
       REGISTER( DecryptVerifyFilesCommand );
       REGISTER( EchoCommand );
-#ifndef QT_NO_WIZARD
       REGISTER( EncryptCommand );
-#endif // QT_NO_WIZARD
       REGISTER( EncryptFilesCommand );
       REGISTER( EncryptSignFilesCommand );
       REGISTER( ImportFilesCommand );
-#ifndef QT_NO_WIZARD
       REGISTER( PrepEncryptCommand );
       REGISTER( PrepSignCommand );
-#endif // QT_NO_WIZARD
       REGISTER( SelectCertificateCommand );
-#ifndef QT_NO_WIZARD
       REGISTER( SignCommand );
-#endif // QT_NO_WIZARD
       REGISTER( SignEncryptFilesCommand );
       REGISTER( SignFilesCommand );
 #ifndef QT_NO_DIRMODEL
       REGISTER( VerifyChecksumsCommand );
 #endif // QT_NO_DIRMODEL
-#ifndef QT_NO_WIZARD
       REGISTER( VerifyCommand );
-#endif // QT_NO_WIZARD
       REGISTER( VerifyFilesCommand );
 #undef REGISTER
 
@@ -309,7 +299,9 @@ int main( int argc, char** argv )
 #endif
       qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: KeyCache loaded";
 
+#ifndef QT_NO_SYSTEMTRAYICON
       app.startMonitoringSmartCard();
+#endif
 
       app.setIgnoreNewInstance( false );
 
@@ -339,7 +331,9 @@ int main( int argc, char** argv )
                                      "You can use Kleopatra as a certificate manager, but cryptographic plugins that "
                                      "rely on a GPG UI Server being present might not work correctly, or at all.</qt>",
                                      Qt::escape( QString::fromUtf8( e.what() ) ) ));
+#ifndef QT_NO_SYSTEMTRAYICON
       app.startMonitoringSmartCard();
+#endif
       app.setIgnoreNewInstance( false );
       rc = app.exec();
       app.setIgnoreNewInstance( true );

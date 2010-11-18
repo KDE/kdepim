@@ -33,8 +33,6 @@
 
 #include "certifycertificatecommand.h"
 
-#ifndef QT_NO_WIZARD
-
 #include "command_p.h"
 
 #include "exportopenpgpcertstoservercommand.h"
@@ -282,5 +280,3 @@ void CertifyCertificateCommand::Private::createJob() {
 #undef q
 
 #include "moc_certifycertificatecommand.cpp"
-
-#endif // QT_NO_WIZARD

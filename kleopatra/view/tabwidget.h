@@ -35,6 +35,8 @@
 
 #include <QWidget>
 
+#include <vector>
+
 #include <utils/pimpl_ptr.h>
 
 #include <boost/shared_ptr.hpp>

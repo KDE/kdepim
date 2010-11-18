@@ -416,8 +416,10 @@ void KeyListController::createActions( KActionCollection * coll ) {
     registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
     registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     //---
+#ifndef _WIN32_WCE
     registerActionForCommand<ChecksumCreateFilesCommand>(coll->action( "file_checksum_create_files" ) );
     registerActionForCommand<ChecksumVerifyFilesCommand>(coll->action( "file_checksum_verify_files" ) );
+#endif
 
     registerActionForCommand<ReloadKeysCommand>(         coll->action( "view_redisplay" ) );
     //coll->action( "view_stop_operations" ) <-- already dealt with in make_actions_from_data()
@@ -620,12 +622,14 @@ Command::Restrictions KeyListController::Private::calculateRestrictionsMask( con
 
     result |= find_root_restrictions( keys );
 
+#ifndef _WIN32_WCE
     if ( const ReaderStatus * rs = ReaderStatus::instance() ) {
         if ( rs->anyCardHasNullPin() )
             result |= Command::AnyCardHasNullPin;
         if ( rs->anyCardCanLearnKeys() )
             result |= Command::AnyCardCanLearnKeys;
     }
+#endif
 
     return result;
 }

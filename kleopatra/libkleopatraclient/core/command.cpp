@@ -580,7 +580,7 @@ void Command::Private::run() {
 
     qDebug() << "Server PID =" << out.serverPid;
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && !defined(_WIN32_WCE) 
     if ( !AllowSetForegroundWindow( (pid_t)out.serverPid ) )
         qDebug() << "AllowSetForegroundWindow(" << out.serverPid << ") failed: " << GetLastError();
 #endif
@@ -589,7 +589,7 @@ void Command::Private::run() {
         goto leave;
 
     if ( in.parentWId ) {
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32) || defined(_WIN32_WCE)
         err = send_option( ctx, "window-id", QString().sprintf( "%lx", reinterpret_cast<unsigned long>( in.parentWId ) ) );
 #else
         err = send_option( ctx, "window-id", QString().sprintf( "%lx", static_cast<unsigned long>( in.parentWId ) ) );

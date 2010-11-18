@@ -30,19 +30,25 @@ set_target_properties( kleopatraclientcore
   )
 
 
-if ( WIN32 )
+if ( WIN32 AND NOT WINCE )
 if ( ASSUAN2_FOUND )
   target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN2_LIBRARIES} ws2_32 )
 else ( ASSUAN2_FOUND )
   target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_VANILLA_LIBRARIES} ws2_32 )
 endif ( ASSUAN2_FOUND )
-else ( WIN32 )
+elseif(WINCE)
+if ( ASSUAN2_FOUND )
+  target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN2_LIBRARIES} ws2 )
+else ( ASSUAN2_FOUND )
+  target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_VANILLA_LIBRARIES} ws2 )
+endif ( ASSUAN2_FOUND )
+else (WINCE)
 if ( ASSUAN2_FOUND )
   target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN2_LIBRARIES} )
 else ( ASSUAN2_FOUND )
   target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_PTHREAD_LIBRARIES} )
 endif ( ASSUAN2_FOUND )
-endif ( WIN32 )
+endif ()
 
 install(
   TARGETS kleopatraclientcore

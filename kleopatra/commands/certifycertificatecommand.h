@@ -35,8 +35,6 @@
 
 #include <commands/command.h>
 
-#ifndef QT_NO_WIZARD
-
 namespace GpgME {
     class UserID;
 }
@@ -79,7 +77,5 @@ namespace Commands {
 
 }
 }
-
-#endif // QT_NO_WIZARD
 
 #endif // __KLEOPATRA_COMMANDS_SIGNCERTIFICATECOMMAND_H__

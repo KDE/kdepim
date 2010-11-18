@@ -39,6 +39,7 @@
 #include <gpgme++/global.h>
 
 #include <vector>
+#include <map>
 
 namespace GpgME {
     class ImportResult;

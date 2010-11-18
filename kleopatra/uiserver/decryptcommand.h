@@ -35,8 +35,6 @@
 
 #include <uiserver/decryptverifycommandemailbase.h>
 
-#ifndef QT_NO_WIZARD
-
 namespace Kleo {
 
     class DecryptCommand : public AssuanCommandMixin<DecryptCommand,DecryptVerifyCommandEMailBase> {
@@ -56,7 +54,5 @@ namespace Kleo {
     };
 
 }
-
-#endif // QT_NO_WIZARD
 
 #endif // __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__

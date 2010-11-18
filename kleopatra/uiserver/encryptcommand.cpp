@@ -34,8 +34,6 @@
 
 #include "encryptcommand.h"
 
-#ifndef QT_NO_WIZARD
-
 #include <crypto/newsignencryptemailcontroller.h>
 
 #include <utils/kleo_assert.h>
@@ -221,5 +219,3 @@ void EncryptCommand::doCanceled() {
 }
 
 #include "encryptcommand.moc"
-
-#endif // QT_NO_WIZARD

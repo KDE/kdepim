@@ -85,12 +85,24 @@ int EchoCommand::doStart() {
 
     std::string keyword;
     if ( hasOption( "inquire" ) ) {
+#ifdef QT_STL
         keyword = option("inquire").toString().toStdString();
+#else
+        const QString tmpStr = option("inquire").toString();
+        const QByteArray asc = tmpStr.toAscii();
+        keyword = std::string(asc.constData(), asc.length());
+#endif
         if ( keyword.empty() )
             return makeError( GPG_ERR_INV_ARG );
     }
 
+#ifdef QT_STL
     const std::string output = option("text").toString().toStdString();
+#else
+        const QString tmpStr = option("text").toString();
+        const QByteArray asc = tmpStr.toAscii();
+        const std::string output = std::string(asc.constData(), asc.length());
+#endif
 
     // aaand ACTION:
 

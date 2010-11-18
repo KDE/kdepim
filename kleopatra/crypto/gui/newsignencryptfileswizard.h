@@ -33,13 +33,17 @@
 #ifndef __KLEOPATRA_CRYPTO_GUI_NEWSIGNENCRYPTFILESWIZARD_H__
 #define __KLEOPATRA_CRYPTO_GUI_NEWSIGNENCRYPTFILESWIZARD_H__
 
-#include <QWizard>
-
-#ifndef QT_NO_WIZARD
-
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
+
+#include <QDialog>
+
+#ifndef QT_NO_WIZARD
+#include <QWizard>
+#else
+#include <utils/qwizard.h>
+#endif
 
 #include <vector>
 
@@ -121,7 +125,5 @@ namespace Gui {
 }
 }
 }
-
-#endif // QT_NO_WIZARD
 
 #endif /* __KLEOPATRA_CRYPTO_GUI_NEWSIGNENCRYPTFILESWIZARD_H__ */

@@ -33,9 +33,13 @@
 #ifndef __KLEOPATRA_CRYPTO_GUI_NEWRESULTPAGE_H__
 #define __KLEOPATRA_CRYPTO_GUI_NEWRESULTPAGE_H__
 
-#include <QWizardPage>
+#include <QDialog>
 
 #ifndef QT_NO_WIZARD
+#include <QWizardPage>
+#else
+#include <utils/qwizard.h>
+#endif
 
 #include <utils/pimpl_ptr.h>
 
@@ -86,7 +90,5 @@ private:
 }
 }
 }
-
-#endif // QT_NO_WIZARD
 
 #endif // __KLEOPATRA_CRYPTO_GUI_NEWRESULTPAGE_H__

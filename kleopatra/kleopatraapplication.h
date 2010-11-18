@@ -69,8 +69,10 @@ public:
 public Q_SLOTS:
     void openOrRaiseMainWindow();
     void openOrRaiseConfigDialog();
+#ifndef QT_NO_SYSTEMTRAYICON
     void startMonitoringSmartCard();
     void importCertificatesFromFile( const QStringList & files, GpgME::Protocol proto );
+#endif
     void encryptFiles( const QStringList & files, GpgME::Protocol proto );
     void signFiles( const QStringList & files, GpgME::Protocol proto );
     void signEncryptFiles( const QStringList & files, GpgME::Protocol proto );

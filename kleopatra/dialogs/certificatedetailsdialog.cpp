@@ -159,7 +159,6 @@ private:
         commandFinished( addUserIDCommand );
     }
 
-#ifndef QT_NO_WIZARD
     void slotCertifyUserIDClicked() {
         const std::vector<UserID> uids = selectedUserIDs();
         if ( uids.empty() )
@@ -169,7 +168,6 @@ private:
     void slotSignCertificateCommandFinished() {
         commandFinished( signCertificateCommand );
     }
-#endif // QT_NO_WIZARD
 
     void slotRevokeCertificateClicked() {
 
@@ -339,9 +337,7 @@ private:
         const std::vector<UserID> uids = selectedUserIDs();
         const std::vector<UserID::Signature> sigs = selectedSignatures();
 
-#ifndef QT_NO_WIZARD
         ui.certifyUserIDPB->setEnabled(      !uids.empty() &&  sigs.empty() && !signCertificateCommand );
-#endif
         ui.revokeUserIDPB->setEnabled(       !uids.empty() &&  sigs.empty() );
         ui.revokeCertificationPB->setEnabled( uids.empty() && !sigs.empty() && own( sigs ) );
     }

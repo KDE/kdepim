@@ -42,8 +42,6 @@
 #include <vector>
 #include <utility>
 
-#ifndef QT_NO_WIZARD
-
 namespace KMime {
 namespace Types {
     class Mailbox;
@@ -124,8 +122,6 @@ namespace Crypto {
 
 } // Crypto
 } // Kleo
-
-#endif // QT_NO_WIZARD
 
 #endif /* __KLEOPATRA_CRYPTO_NEWSIGNENCRYPTEMAILCONTROLLER_H__ */
 

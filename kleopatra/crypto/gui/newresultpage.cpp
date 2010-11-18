@@ -34,8 +34,6 @@
 
 #include "newresultpage.h"
 
-#ifndef QT_NO_WIZARD
-
 #include "resultlistwidget.h"
 #include "resultitemwidget.h"
 
@@ -238,5 +236,3 @@ bool NewResultPage::isComplete() const
 
 
 #include "newresultpage.moc"
-
-#endif // QT_NO_WIZARD

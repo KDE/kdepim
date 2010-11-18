@@ -35,8 +35,11 @@ if (USABLE_ASSUAN_FOUND)
     include_directories(${ASSUAN_INCLUDES})
   endif(ASSUAN2_FOUND)
 endif(USABLE_ASSUAN_FOUND)
-add_definitions ( -D_ASSUAN_ONLY_GPG_ERRORS -DQT_STL )
+add_definitions ( -D_ASSUAN_ONLY_GPG_ERRORS )
+if(NOT WINCE)
+add_definitions ( -DQT_STL )
 remove_definitions ( -DQT_NO_STL )
+endif(NOT WINCE)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 if (GCC_IS_NEWER_THAN_4_3)
@@ -52,18 +55,25 @@ if ( USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient )
   # off into ConfigureChecks.cmake..
   add_subdirectory( libkleopatraclient )
 endif ( USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient )
+if(NOT WINCE)
 add_subdirectory( kgpgconf )
 add_subdirectory( kwatchgnupg )
 add_subdirectory( tests )
+endif(NOT WINCE)
 
 if ( WIN32 )
   set( _kleopatra_extra_uiserver_SRCS
     uiserver/uiserver_win.cpp
     )
+    set( _kleopatra_extra_SRCS
+      utils/gnupg-registry.c
+    )
+  if (NOT WINCE)
   set( _kleopatra_extra_SRCS
-    utils/gnupg-registry.c
+      ${_kleopatra_extra_SRCS}
     selftest/registrycheck.cpp
     )
+  endif (NOT WINCE)
 else ( WIN32 )
   set( _kleopatra_extra_uiserver_SRCS
     uiserver/uiserver_unix.cpp
@@ -155,8 +165,6 @@ set( _kleopatra_SRCS
   selftest/gpgconfcheck.cpp
   selftest/gpgagentcheck.cpp
   selftest/libkleopatrarccheck.cpp
-
-  smartcard/readerstatus.cpp
 
   ${_kleopatra_extra_SRCS}
 
@@ -262,10 +270,6 @@ set( _kleopatra_SRCS
   commands/exportopenpgpcertstoservercommand.cpp
   commands/adduseridcommand.cpp
   commands/newcertificatecommand.cpp
-  commands/setinitialpincommand.cpp
-  commands/learncardkeyscommand.cpp
-  commands/checksumcreatefilescommand.cpp
-  commands/checksumverifyfilescommand.cpp
   
   ${_kleopatra_uiserver_files}
 
@@ -278,6 +282,25 @@ set( _kleopatra_SRCS
   systrayicon.cpp
   kleopatraapplication.cpp
   main.cpp )
+  
+ if(NOT WINCE)
+   set(_kleopatra_SRCS
+    ${_kleopatra_SRCS}
+    smartcard/readerstatus.cpp
+
+  commands/setinitialpincommand.cpp
+  commands/learncardkeyscommand.cpp
+  commands/checksumcreatefilescommand.cpp
+  commands/checksumverifyfilescommand.cpp
+  )
+ endif(NOT WINCE)
+  
+if(WINCE)
+  set(_kleopatra_SRCS
+    ${_kleopatra_SRCS}
+    utils/qwizard.cpp
+  )
+endif(WINCE)
 
 if ( KLEO_MODEL_TEST )
  add_definitions( -DKLEO_MODEL_TEST )

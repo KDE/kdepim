@@ -129,7 +129,7 @@ private:
     void runTests() {
         std::vector< shared_ptr<Kleo::SelfTest> > tests;
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && !defined(_WIN32_WCE)
         //emit q->info( i18n("Checking Windows Registry...") );
         tests.push_back( makeGpgProgramRegistryCheckSelfTest() );
 #endif
@@ -150,7 +150,9 @@ private:
 #ifndef Q_OS_WIN
         tests.push_back( makeGpgAgentConnectivitySelfTest() );
 #endif
+#ifndef _WIN32_WCE
         tests.push_back( makeLibKleopatraRcSelfTest() );
+#endif
 
         if ( !dialog && kdtools::none_of( tests, mem_fn( &Kleo::SelfTest::failed ) ) ) {
             finished();

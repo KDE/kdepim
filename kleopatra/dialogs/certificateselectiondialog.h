@@ -104,9 +104,7 @@ namespace Dialogs {
         class Private;
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void reload() )
-#ifndef QT_NO_WIZARD
         Q_PRIVATE_SLOT( d, void create() )
-#endif
         Q_PRIVATE_SLOT( d, void lookup() )
         Q_PRIVATE_SLOT( d, void slotKeysMayHaveChanged() )
         Q_PRIVATE_SLOT( d, void slotSelectionChanged() )

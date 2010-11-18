@@ -34,8 +34,6 @@
 
 #include "newcertificatewizard.h"
 
-#ifndef QT_NO_WIZARD
-
 #include "ui_chooseprotocolpage.h"
 #include "ui_enterdetailspage.h"
 #include "ui_overviewpage.h"
@@ -1471,5 +1469,3 @@ void AdvancedSettingsDialog::updateWidgetVisibility() {
 
 #include "moc_newcertificatewizard.cpp"
 #include "newcertificatewizard.moc"
-
-#endif // QT_NO_WIZARD

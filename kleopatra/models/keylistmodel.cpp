@@ -57,6 +57,9 @@
 
 #include <boost/bind.hpp>
 
+#ifdef _WIN32_WCE
+#define BOOST_ALL_NO_LIB
+#endif
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
 

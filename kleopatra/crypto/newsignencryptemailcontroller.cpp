@@ -34,8 +34,6 @@
 
 #include "newsignencryptemailcontroller.h"
 
-#ifndef QT_NO_WIZARD
-
 #include "encryptemailtask.h"
 #include "signemailtask.h"
 #include "taskcollection.h"
@@ -569,5 +567,3 @@ void NewSignEncryptEMailController::Private::ensureDialogVisible() {
 }
 
 #include "moc_newsignencryptemailcontroller.cpp"
-
-#endif // QT_NO_WIZARD

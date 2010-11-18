@@ -115,10 +115,11 @@ namespace {
         bool openNonInheritable() {
             if ( !QTemporaryFile::open() )
                 return false;
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && !defined(_WIN32_WCE)
             //QTemporaryFile (tested with 4.3.3) creates the file handle as inheritable.
             //The handle is then inherited by gpgsm, which prevents deletion of the temp file
             //in FileOutput::doFinalize()
+            //There are no inheritable handles under wince
             return SetHandleInformation( (HANDLE)_get_osfhandle( handle() ), HANDLE_FLAG_INHERIT, 0 );
 #endif
             return true;
