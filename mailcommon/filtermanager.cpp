@@ -40,7 +40,6 @@ class FilterManager::Private
   public:
     Private( FilterManager *qq )
       : q( qq ),
-        mShowLater( false ),
         mRequiresBody( false )
     {
     }
@@ -65,7 +64,6 @@ class FilterManager::Private
     FilterManager *q;
     QList<MailFilter *> mFilters;
     Akonadi::ChangeRecorder *mChangeRecorder;
-    bool mShowLater;
     bool mRequiresBody;
 };
 
@@ -317,7 +315,7 @@ void FilterManager::readConfig()
   KSharedConfig::Ptr config = KernelIf->config();
   clear();
 
-  d->mFilters = FilterImporterExporter::readFiltersFromConfig( config, false );
+  d->mFilters = FilterImporterExporter::readFiltersFromConfig( config );
   endUpdate();
 }
 
@@ -326,7 +324,7 @@ void FilterManager::writeConfig( bool withSync ) const
   KSharedConfig::Ptr config = KernelIf->config();
 
   // Now, write out the new stuff:
-  FilterImporterExporter::writeFiltersToConfig( d->mFilters, config, false );
+  FilterImporterExporter::writeFiltersToConfig( d->mFilters, config );
   KConfigGroup group = config->group( "General" );
 
   if ( withSync ) {
@@ -417,7 +415,7 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
 
 void FilterManager::openDialog( bool checkForEmptyFilterList )
 {
-  FilterIf->openFilterDialog( false, checkForEmptyFilterList );
+  FilterIf->openFilterDialog( checkForEmptyFilterList );
 }
 
 void FilterManager::createFilter( const QByteArray &field, const QString &value )
@@ -505,16 +503,6 @@ void FilterManager::endUpdate()
                                    boost::bind( &MailFilter::requiresBody, _1 ) ) != d->mFilters.constEnd();
 
   emit filterListUpdated();
-}
-
-void FilterManager::setShowLaterMsgs( bool show )
-{
-  d->mShowLater = show;
-}
-
-bool FilterManager::showLaterMsgs() const
-{
-  return d->mShowLater;
 }
 
 #ifndef NDEBUG

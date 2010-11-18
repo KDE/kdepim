@@ -55,9 +55,8 @@ class MAILCOMMON_EXPORT FilterImporterExporter
      * Creates a new filter importer/exporter.
      *
      * @param parent The parent widget.
-     * @param popFilter @todo Remove?
      */
-    explicit FilterImporterExporter( QWidget *parent, bool popFilter = false );
+    FilterImporterExporter( QWidget *parent = 0 );
 
     /**
      * Destroys the filter importer/exporter.
@@ -80,14 +79,12 @@ class MAILCOMMON_EXPORT FilterImporterExporter
     /**
      * Writes the given list of @p filters to the given @p config file.
      */
-    static void writeFiltersToConfig( const QList<MailFilter*> &filters,
-                                      KSharedConfig::Ptr config, bool bPopFilter );
+    static void writeFiltersToConfig( const QList<MailFilter*> &filters, KSharedConfig::Ptr config );
 
     /**
      * Reads a list of filters from the given @p config file.
      */
-    static QList<MailFilter*> readFiltersFromConfig( const KSharedConfig::Ptr config,
-                                                     bool bPopFilter );
+    static QList<MailFilter*> readFiltersFromConfig( const KSharedConfig::Ptr config );
 
   private:
     //@cond PRIVATE

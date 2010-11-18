@@ -39,11 +39,6 @@ namespace MailCommon {
 // maximum number of filter actions per filter
 const int FILTER_MAX_ACTIONS = 8;
 
-//Keep these corresponding to the column numbers in the dialog for easier coding
-//or change mapToAction and mapToColumn in PopHeadersView
-enum PopFilterAction { Down=0, Later=1, Delete=2, NoAction=3 };
-
-
 class MAILCOMMON_EXPORT MailFilter
 {
 public:
@@ -72,12 +67,12 @@ public:
   enum AccountType { All, ButImap, Checked };
 
   /** Constructor that initializes basic settings. */
-  MailFilter( bool popFilter = false);
+  MailFilter();
 
   /** Constructor that initializes from given config group.
     * Filters are stored one by one in config groups, i.e.
     * one filter, one group. */
-  explicit MailFilter( const KConfigGroup & aConfig, bool popFilter = false);
+  explicit MailFilter( const KConfigGroup & aConfig );
 
   /** Copy constructor. Constructs a deep copy of @p aFilter. */
   MailFilter( const MailFilter & other );
@@ -106,12 +101,6 @@ public:
   /** Determines if the filter depends on the body of the message
   */
   bool requiresBody();
-
-  /** No descriptions */
-  PopFilterAction action();
-
-  /** No descriptions */
-  void setAction(const PopFilterAction aAction);
 
   /** Write contents to given config group. */
   void writeConfig( KConfigGroup& config ) const;
@@ -306,11 +295,6 @@ public:
   const QString asString() const;
 #endif
 
-  /** No descriptions */
-  bool isPopFilter() const {
-    return bPopFilter;
-  }
-
   /** Set the mode for using automatic naming for the filter.
       If the feature is enabled, the name is derived from the
       first filter rule.
@@ -327,11 +311,9 @@ private:
   SearchPattern mPattern;
   QList<FilterAction*> mActions;
   QStringList mAccounts;
-  PopFilterAction mAction;
   QString mIcon;
   QString mToolbarName;
   KShortcut mShortcut;
-  bool bPopFilter : 1;
   bool bApplyOnInbound : 1;
   bool bApplyBeforeOutbound : 1;
   bool bApplyOnOutbound : 1;

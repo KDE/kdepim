@@ -169,12 +169,6 @@ class MAILCOMMON_EXPORT FilterManager: public QObject
     void dump() const;
 #endif
 
-    /**
-     * @todo: Remove these two methods? POP3 related?
-     */
-    void setShowLaterMsgs( bool show );
-    bool showLaterMsgs() const;
-
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the filter list has been updated.

@@ -137,10 +137,9 @@ FilterActionDict* MobileKernel::filterActionDict() const
   return mFilterActionDict;
 }
 
-void MobileKernel::openFilterDialog( bool popFilter, bool createDummyFilter )
+void MobileKernel::openFilterDialog( bool createDummyFilter )
 {
   //TODO: Implement filter dialog for mobile
-  Q_UNUSED( popFilter );
   Q_UNUSED( createDummyFilter );
 }
 

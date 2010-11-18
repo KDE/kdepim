@@ -43,27 +43,21 @@ using MailCommon::FilterLog;
 
 using namespace MailCommon;
 
-MailFilter::MailFilter( bool popFilter )
-  : bPopFilter(popFilter)
+MailFilter::MailFilter()
 {
-  if ( bPopFilter )
-    mAction = Down;
-  else {
-    bApplyOnInbound = true;
-    bApplyBeforeOutbound = false;
-    bApplyOnOutbound = false;
-    bApplyOnExplicit = true;
-    bStopProcessingHere = true;
-    bConfigureShortcut = false;
-    bConfigureToolbar = false;
-    bAutoNaming = true;
-    mApplicability = All;
-  }
+  bApplyOnInbound = true;
+  bApplyBeforeOutbound = false;
+  bApplyOnOutbound = false;
+  bApplyOnExplicit = true;
+  bStopProcessingHere = true;
+  bConfigureShortcut = false;
+  bConfigureToolbar = false;
+  bAutoNaming = true;
+  mApplicability = All;
 }
 
 
-MailFilter::MailFilter( const KConfigGroup & aConfig, bool popFilter )
-  : bPopFilter(popFilter)
+MailFilter::MailFilter( const KConfigGroup & aConfig )
 {
   readConfig( aConfig );
 }
@@ -71,53 +65,44 @@ MailFilter::MailFilter( const KConfigGroup & aConfig, bool popFilter )
 
 MailFilter::MailFilter( const MailFilter & aFilter )
 {
-  bPopFilter = aFilter.isPopFilter();
-
   mPattern = aFilter.mPattern;
 
-  if ( bPopFilter ){
-    mAction = aFilter.mAction;
-  } else {
-    bApplyOnInbound = aFilter.applyOnInbound();
-    bApplyBeforeOutbound = aFilter.applyBeforeOutbound();
-    bApplyOnOutbound = aFilter.applyOnOutbound();
-    bApplyOnExplicit = aFilter.applyOnExplicit();
-    bStopProcessingHere = aFilter.stopProcessingHere();
-    bConfigureShortcut = aFilter.configureShortcut();
-    bConfigureToolbar = aFilter.configureToolbar();
-    mToolbarName = aFilter.toolbarName();
-    mApplicability = aFilter.applicability();
-    mIcon = aFilter.icon();
-    mShortcut = aFilter.shortcut();
+  bApplyOnInbound = aFilter.applyOnInbound();
+  bApplyBeforeOutbound = aFilter.applyBeforeOutbound();
+  bApplyOnOutbound = aFilter.applyOnOutbound();
+  bApplyOnExplicit = aFilter.applyOnExplicit();
+  bStopProcessingHere = aFilter.stopProcessingHere();
+  bConfigureShortcut = aFilter.configureShortcut();
+  bConfigureToolbar = aFilter.configureToolbar();
+  mToolbarName = aFilter.toolbarName();
+  mApplicability = aFilter.applicability();
+  mIcon = aFilter.icon();
+  mShortcut = aFilter.shortcut();
 
-    QListIterator<FilterAction*> it( aFilter.mActions );
-    while ( it.hasNext() ) {
-      FilterAction *action = it.next();
-      FilterActionDesc *desc = FilterIf->filterActionDict()->value( action->name() );
-      if ( desc ) {
-        FilterAction *f = desc->create();
-        if ( f ) {
-          f->argsFromString( action->argsAsString() );
-          mActions.append( f );
-        }
+  QListIterator<FilterAction*> it( aFilter.mActions );
+  while ( it.hasNext() ) {
+    FilterAction *action = it.next();
+    FilterActionDesc *desc = FilterIf->filterActionDict()->value( action->name() );
+    if ( desc ) {
+      FilterAction *f = desc->create();
+      if ( f ) {
+        f->argsFromString( action->argsAsString() );
+        mActions.append( f );
       }
     }
-
-    mAccounts.clear();
-    QStringList::ConstIterator it2;
-    for ( it2 = aFilter.mAccounts.begin() ; it2 != aFilter.mAccounts.end() ; ++it2 )
-      mAccounts.append( *it2 );
   }
+
+  mAccounts.clear();
+  QStringList::ConstIterator it2;
+  for ( it2 = aFilter.mAccounts.begin() ; it2 != aFilter.mAccounts.end() ; ++it2 )
+    mAccounts.append( *it2 );
 }
 
 MailFilter::~MailFilter()
 {
-  if ( !bPopFilter ) {
-    qDeleteAll( mActions );
-  }
+  qDeleteAll( mActions );
 }
 
-// only for !bPopFilter
 MailFilter::ReturnCode MailFilter::execActions( const Akonadi::Item &item, bool& stopIt ) const
 {
   ReturnCode status = NoResult;
@@ -172,20 +157,6 @@ bool MailFilter::requiresBody()
   return false;
 }
 
-/** No descriptions */
-// only for bPopFilter
-void MailFilter::setAction(const PopFilterAction aAction)
-{
-  mAction = aAction;
-}
-
-// only for bPopFilter
-PopFilterAction MailFilter::action()
-{
-  return mAction;
-}
-
-// only for !bPopFilter
 bool MailFilter::folderRemoved( const Akonadi::Collection & aFolder, const Akonadi::Collection& aNewFolder )
 {
   bool rem = false;
@@ -233,87 +204,73 @@ void MailFilter::readConfig(const KConfigGroup & config)
   // that the pattern is purified.
   mPattern.readConfig(config);
 
-  if (bPopFilter) {
+  QStringList sets = config.readEntry("apply-on", QStringList() );
+  if ( sets.isEmpty() && !config.hasKey("apply-on") ) {
+    bApplyBeforeOutbound = false;
+    bApplyOnOutbound = false;
+    bApplyOnInbound = true;
+    bApplyOnExplicit = true;
+    mApplicability = ButImap;
+  } else {
+    bApplyBeforeOutbound = bool(sets.contains("before-send-mail"));
+    bApplyOnInbound = bool(sets.contains("check-mail"));
+    bApplyOnOutbound = bool(sets.contains("send-mail"));
+    bApplyOnExplicit = bool(sets.contains("manual-filtering"));
+    mApplicability = (AccountType) config.readEntry(
+          "Applicability", (int)ButImap );
+  }
+
+  bStopProcessingHere = config.readEntry( "StopProcessingHere", true );
+  bConfigureShortcut = config.readEntry( "ConfigureShortcut", false );
+  QString shortcut( config.readEntry( "Shortcut", QString() ) );
+  if ( !shortcut.isEmpty() ) {
+    KShortcut sc( shortcut );
+    setShortcut( sc );
+  }
+  bConfigureToolbar = config.readEntry( "ConfigureToolbar", false );
+  bConfigureToolbar = bConfigureToolbar && bConfigureShortcut;
+  mToolbarName = config.readEntry( "ToolbarName", name() );
+  mIcon = config.readEntry( "Icon", "system-run" );
+  bAutoNaming = config.readEntry( "AutomaticName", false );
+
+  QString actName, argsName;
+
+  mActions.clear();
+
+  int numActions = config.readEntry( "actions", 0 );
+  if (numActions > FILTER_MAX_ACTIONS) {
+    numActions = FILTER_MAX_ACTIONS ;
+    KMessageBox::information( 0, i18n("<qt>Too many filter actions in filter rule <b>%1</b>.</qt>", mPattern.name() ) );
+  }
+
+  for ( int i=0 ; i < numActions ; i++ ) {
+    actName.sprintf("action-name-%d", i);
+    argsName.sprintf("action-args-%d", i);
     // get the action description...
-    QString action = config.readEntry( "action" );
-    if ( action == "down" )
-      mAction = Down;
-    else if ( action == "later" )
-      mAction = Later;
-    else if ( action == "delete" )
-      mAction = Delete;
-    else
-      mAction = NoAction;
+    FilterActionDesc *desc = FilterIf->filterActionDict()->value(
+          config.readEntry( actName, QString() ) );
+    if ( desc ) {
+      //...create an instance...
+      FilterAction *fa = desc->create();
+      if ( fa ) {
+        //...load it with it's parameter...
+        fa->argsFromString( config.readEntry( argsName, QString() ) );
+        //...check if it's emoty and...
+        if ( !fa->isEmpty() )
+          //...append it if it's not and...
+          mActions.append( fa );
+        else
+          //...delete is else.
+          delete fa;
+      }
+    } else
+      KMessageBox::information( 0 /* app-global modal dialog box */,
+          i18n("<qt>Unknown filter action <b>%1</b><br />in filter rule <b>%2</b>.<br />Ignoring it.</qt>",
+            config.readEntry( actName, QString() ),
+            mPattern.name() ) );
   }
-  else {
-    QStringList sets = config.readEntry("apply-on", QStringList() );
-    if ( sets.isEmpty() && !config.hasKey("apply-on") ) {
-      bApplyBeforeOutbound = false;
-      bApplyOnOutbound = false;
-      bApplyOnInbound = true;
-      bApplyOnExplicit = true;
-      mApplicability = ButImap;
-    } else {
-      bApplyBeforeOutbound = bool(sets.contains("before-send-mail"));
-      bApplyOnInbound = bool(sets.contains("check-mail"));
-      bApplyOnOutbound = bool(sets.contains("send-mail"));
-      bApplyOnExplicit = bool(sets.contains("manual-filtering"));
-      mApplicability = (AccountType) config.readEntry(
-            "Applicability", (int)ButImap );
-    }
 
-    bStopProcessingHere = config.readEntry( "StopProcessingHere", true );
-    bConfigureShortcut = config.readEntry( "ConfigureShortcut", false );
-    QString shortcut( config.readEntry( "Shortcut", QString() ) );
-    if ( !shortcut.isEmpty() ) {
-      KShortcut sc( shortcut );
-      setShortcut( sc );
-    }
-    bConfigureToolbar = config.readEntry( "ConfigureToolbar", false );
-    bConfigureToolbar = bConfigureToolbar && bConfigureShortcut;
-    mToolbarName = config.readEntry( "ToolbarName", name() );
-    mIcon = config.readEntry( "Icon", "system-run" );
-    bAutoNaming = config.readEntry( "AutomaticName", false );
-
-    QString actName, argsName;
-
-    mActions.clear();
-
-    int numActions = config.readEntry( "actions", 0 );
-    if (numActions > FILTER_MAX_ACTIONS) {
-      numActions = FILTER_MAX_ACTIONS ;
-      KMessageBox::information( 0, i18n("<qt>Too many filter actions in filter rule <b>%1</b>.</qt>", mPattern.name() ) );
-    }
-
-    for ( int i=0 ; i < numActions ; i++ ) {
-      actName.sprintf("action-name-%d", i);
-      argsName.sprintf("action-args-%d", i);
-      // get the action description...
-      FilterActionDesc *desc = FilterIf->filterActionDict()->value(
-            config.readEntry( actName, QString() ) );
-      if ( desc ) {
-        //...create an instance...
-        FilterAction *fa = desc->create();
-        if ( fa ) {
-          //...load it with it's parameter...
-          fa->argsFromString( config.readEntry( argsName, QString() ) );
-          //...check if it's emoty and...
-          if ( !fa->isEmpty() )
-            //...append it if it's not and...
-            mActions.append( fa );
-          else
-            //...delete is else.
-            delete fa;
-        }
-      } else
-        KMessageBox::information( 0 /* app-global modal dialog box */,
-            i18n("<qt>Unknown filter action <b>%1</b><br />in filter rule <b>%2</b>.<br />Ignoring it.</qt>",
-              config.readEntry( actName, QString() ),
-              mPattern.name() ) );
-    }
-
-    mAccounts = config.readEntry( "accounts-set",QStringList() );
-  }
+  mAccounts = config.readEntry( "accounts-set",QStringList() );
 }
 
 
@@ -321,87 +278,66 @@ void MailFilter::writeConfig(KConfigGroup & config) const
 {
   mPattern.writeConfig(config);
 
-  if (bPopFilter) {
-    switch ( mAction ) {
-    case Down:
-      config.writeEntry( "action", "down" );
-      break;
-    case Later:
-      config.writeEntry( "action", "later" );
-      break;
-    case Delete:
-      config.writeEntry( "action", "delete" );
-      break;
-    default:
-      config.writeEntry( "action", "" );
-    }
-  } else {
-    QStringList sets;
-    if ( bApplyOnInbound )
-      sets.append( "check-mail" );
-    if ( bApplyBeforeOutbound )
-      sets.append( "before-send-mail" );
-    if ( bApplyOnOutbound )
-      sets.append( "send-mail" );
-    if ( bApplyOnExplicit )
-      sets.append( "manual-filtering" );
-    config.writeEntry( "apply-on", sets );
+  QStringList sets;
+  if ( bApplyOnInbound )
+    sets.append( "check-mail" );
+  if ( bApplyBeforeOutbound )
+    sets.append( "before-send-mail" );
+  if ( bApplyOnOutbound )
+    sets.append( "send-mail" );
+  if ( bApplyOnExplicit )
+    sets.append( "manual-filtering" );
+  config.writeEntry( "apply-on", sets );
 
-    config.writeEntry( "StopProcessingHere", bStopProcessingHere );
-    config.writeEntry( "ConfigureShortcut", bConfigureShortcut );
-    if ( !mShortcut.isEmpty() )
-      config.writeEntry( "Shortcut", mShortcut.toString() );
-    config.writeEntry( "ConfigureToolbar", bConfigureToolbar );
-    config.writeEntry( "ToolbarName", mToolbarName );
-    config.writeEntry( "Icon", mIcon );
-    config.writeEntry( "AutomaticName", bAutoNaming );
-    config.writeEntry( "Applicability", (int)mApplicability );
+  config.writeEntry( "StopProcessingHere", bStopProcessingHere );
+  config.writeEntry( "ConfigureShortcut", bConfigureShortcut );
+  if ( !mShortcut.isEmpty() )
+    config.writeEntry( "Shortcut", mShortcut.toString() );
+  config.writeEntry( "ConfigureToolbar", bConfigureToolbar );
+  config.writeEntry( "ToolbarName", mToolbarName );
+  config.writeEntry( "Icon", mIcon );
+  config.writeEntry( "AutomaticName", bAutoNaming );
+  config.writeEntry( "Applicability", (int)mApplicability );
 
-    QString key;
-    int i;
+  QString key;
+  int i;
 
-    QList<FilterAction*>::const_iterator it;
-    for ( i=0, it = mActions.begin() ; it != mActions.end() ; ++it, ++i ) {
-      config.writeEntry( key.sprintf("action-name-%d", i),
-                          (*it)->name() );
-      config.writeEntry( key.sprintf("action-args-%d", i),
-                          (*it)->argsAsString() );
-    }
-    config.writeEntry( "actions", i );
-    config.writeEntry( "accounts-set", mAccounts );
+  QList<FilterAction*>::const_iterator it;
+  for ( i=0, it = mActions.begin() ; it != mActions.end() ; ++it, ++i ) {
+    config.writeEntry( key.sprintf("action-name-%d", i),
+                        (*it)->name() );
+    config.writeEntry( key.sprintf("action-args-%d", i),
+                        (*it)->argsAsString() );
   }
+  config.writeEntry( "actions", i );
+  config.writeEntry( "accounts-set", mAccounts );
 }
 
 void MailFilter::purify()
 {
   mPattern.purify();
 
-  if (!bPopFilter) {
-    QListIterator<FilterAction*> it( mActions );
-    it.toBack();
-    while ( it.hasPrevious() ) {
-      FilterAction *action = it.previous();
-      if ( action->isEmpty() )
-        mActions.removeAll ( action );
-    }
-    // Remove invalid accounts from mAccounts - just to be tidy
-    QStringList::Iterator it2 = mAccounts.begin();
-    while ( it2 != mAccounts.end() ) {
-      if ( !Akonadi::AgentManager::self()->instance( *it2 ).isValid() )
-         it2 = mAccounts.erase( it2 );
-      else
-         ++it2;
-    }
+  QListIterator<FilterAction*> it( mActions );
+  it.toBack();
+  while ( it.hasPrevious() ) {
+    FilterAction *action = it.previous();
+    if ( action->isEmpty() )
+      mActions.removeAll ( action );
+  }
+  // Remove invalid accounts from mAccounts - just to be tidy
+  QStringList::Iterator it2 = mAccounts.begin();
+  while ( it2 != mAccounts.end() ) {
+    if ( !Akonadi::AgentManager::self()->instance( *it2 ).isValid() )
+       it2 = mAccounts.erase( it2 );
+    else
+       ++it2;
   }
 }
 
 bool MailFilter::isEmpty() const
 {
-  if (bPopFilter)
-    return mPattern.isEmpty();
-  else
-    return ( mPattern.isEmpty() && mActions.isEmpty() ) ||
-        ( ( applicability() == Checked ) && mAccounts.isEmpty() );
+  return ( mPattern.isEmpty() && mActions.isEmpty() ) ||
+           ( ( applicability() == Checked ) && mAccounts.isEmpty() );
 }
 
 QString MailFilter::toolbarName() const
@@ -420,51 +356,45 @@ const QString MailFilter::asString() const
   result += "Filter name: " + name() + '\n';
   result += mPattern.asString() + '\n';
 
-  if (bPopFilter){
+  QList<FilterAction*>::const_iterator it( mActions.begin() );
+  for ( ; it != mActions.end() ; ++it ) {
     result += "    action: ";
-    result += mAction;
+    result += (*it)->label();
+    result += ' ';
+    result += (*it)->argsAsString();
     result += '\n';
   }
-  else {
-    QList<FilterAction*>::const_iterator it( mActions.begin() );
-    for ( ; it != mActions.end() ; ++it ) {
-      result += "    action: ";
-      result += (*it)->label();
-      result += ' ';
-      result += (*it)->argsAsString();
-      result += '\n';
-    }
-    result += "This filter belongs to the following sets:";
-    if ( bApplyOnInbound )
-      result += " Inbound";
-    if ( bApplyBeforeOutbound )
-      result += " before-Outbound";
-    if ( bApplyOnOutbound )
-      result += " Outbound";
-    if ( bApplyOnExplicit )
-      result += " Explicit";
-    result += '\n';
-    if ( bApplyOnInbound && mApplicability == All ) {
-      result += "This filter applies to all accounts.\n";
-    } else if ( bApplyOnInbound && mApplicability == ButImap ) {
-      result += "This filter applies to all but IMAP accounts.\n";
-    } else if ( bApplyOnInbound ) {
-      QStringList::ConstIterator it2;
-      result += "This filter applies to the following accounts:";
-      if ( mAccounts.isEmpty() )
-        result += " None";
-      else {
-        for ( it2 = mAccounts.begin() ; it2 != mAccounts.end() ; ++it2 ) {
-          if ( Akonadi::AgentManager::self()->instance( *it2 ).isValid() ) {
-            result += ' ' + Akonadi::AgentManager::self()->instance( *it2 ).name();
-          }
+  result += "This filter belongs to the following sets:";
+  if ( bApplyOnInbound )
+    result += " Inbound";
+  if ( bApplyBeforeOutbound )
+    result += " before-Outbound";
+  if ( bApplyOnOutbound )
+    result += " Outbound";
+  if ( bApplyOnExplicit )
+    result += " Explicit";
+  result += '\n';
+  if ( bApplyOnInbound && mApplicability == All ) {
+    result += "This filter applies to all accounts.\n";
+  } else if ( bApplyOnInbound && mApplicability == ButImap ) {
+    result += "This filter applies to all but IMAP accounts.\n";
+  } else if ( bApplyOnInbound ) {
+    QStringList::ConstIterator it2;
+    result += "This filter applies to the following accounts:";
+    if ( mAccounts.isEmpty() )
+      result += " None";
+    else {
+      for ( it2 = mAccounts.begin() ; it2 != mAccounts.end() ; ++it2 ) {
+        if ( Akonadi::AgentManager::self()->instance( *it2 ).isValid() ) {
+          result += ' ' + Akonadi::AgentManager::self()->instance( *it2 ).name();
         }
       }
-      result += '\n';
     }
-    if ( bStopProcessingHere )
-      result += "If it matches, processing stops at this filter.\n";
+    result += '\n';
   }
+  if ( bStopProcessingHere )
+    result += "If it matches, processing stops at this filter.\n";
+
   return result;
 }
 #endif

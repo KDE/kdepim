@@ -130,24 +130,18 @@ void FilterSelectionDialog::slotSelectAllButton()
   }
 }
 
-QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedConfig::Ptr config,
-                                                                  bool bPopFilter )
+QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedConfig::Ptr config )
 {
   const KConfigGroup group = config->group( "General" );
 
-  int numFilters = 0;
-  if ( bPopFilter )
-    numFilters = group.readEntry( "popfilters", 0 );
-  else
-    numFilters = group.readEntry( "filters", 0 );
+  const int numFilters = group.readEntry( "filters", 0 );
 
   QList<MailFilter*> filters;
   for ( int i = 0; i < numFilters; ++i ) {
-    QString grpName;
-    grpName.sprintf( "%s #%d", (bPopFilter ? "PopFilter" : "Filter"), i );
+    const QString groupName = QString::fromLatin1( "Filter #%1" ).arg( i );
 
-    const KConfigGroup group = config->group( grpName );
-    MailFilter *filter = new MailFilter( group, bPopFilter );
+    const KConfigGroup group = config->group( groupName );
+    MailFilter *filter = new MailFilter( group );
     filter->purify();
     if ( filter->isEmpty() ) {
 #ifndef NDEBUG
@@ -161,12 +155,11 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig( const KSharedC
   return filters;
 }
 
-void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &filters,
-                                                   KSharedConfig::Ptr config, bool bPopFilter )
+void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &filters, KSharedConfig::Ptr config )
 {
   // first, delete all filter groups:
   const QStringList filterGroups =
-    config->groupList().filter( QRegExp( bPopFilter ? "PopFilter #\\d+" : "Filter #\\d+" ) );
+    config->groupList().filter( QRegExp( "Filter #\\d+" ) );
 
   foreach ( const QString &group, filterGroups )
     config->deleteGroup( group );
@@ -174,8 +167,7 @@ void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &fil
   int i = 0;
   foreach ( const MailFilter *filter, filters ) {
     if ( !filter->isEmpty() ) {
-      const QString groupName = (bPopFilter ? QString::fromLatin1( "PopFilter #%1" ).arg( i )
-                                            : QString::fromLatin1( "Filter #%1" ).arg( i ));
+      const QString groupName = QString::fromLatin1( "Filter #%1" ).arg( i );
 
       KConfigGroup group = config->group( groupName );
       filter->writeConfig( group );
@@ -184,10 +176,7 @@ void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &fil
   }
 
   KConfigGroup group = config->group( "General" );
-  if ( bPopFilter )
-    group.writeEntry("popfilters", i);
-  else
-    group.writeEntry("filters", i);
+  group.writeEntry( "filters", i );
 
   config->sync();
 }
@@ -195,19 +184,17 @@ void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &fil
 class FilterImporterExporter::Private
 {
   public:
-    Private( QWidget *parent, bool popFilter )
-     : mParent( parent),
-       mPopFilter( popFilter )
+    Private( QWidget *parent )
+     : mParent( parent)
     {
     }
 
     QWidget *mParent;
-    bool mPopFilter;
 };
 
 
-FilterImporterExporter::FilterImporterExporter( QWidget *parent, bool popFilter )
-  : d( new Private( parent, popFilter ) )
+FilterImporterExporter::FilterImporterExporter( QWidget *parent )
+  : d( new Private( parent ) )
 {
 }
 
@@ -234,7 +221,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters()
   }
 
   const KSharedConfig::Ptr config = KSharedConfig::openConfig( fileName );
-  const QList<MailFilter*> imported = readFiltersFromConfig( config, d->mPopFilter );
+  const QList<MailFilter*> imported = readFiltersFromConfig( config );
 
   FilterSelectionDialog dlg( d->mParent );
   dlg.setFilters( imported );
@@ -254,7 +241,7 @@ void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters )
   MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );
   dlg->setFilters( filters );
   if ( dlg->exec() == QDialog::Accepted && dlg )
-    writeFiltersToConfig( dlg->selectedFilters(), config, d->mPopFilter );
+    writeFiltersToConfig( dlg->selectedFilters(), config );
 }
 
 #include "filterimporterexporter_p.moc"
