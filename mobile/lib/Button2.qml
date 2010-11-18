@@ -21,7 +21,7 @@
 
 import Qt 4.7 as QML
 
-QML.Item {
+QML.Rectangle {
   id: root
   property alias icon: iconImage.source
   property alias buttonText: buttonLabel.text

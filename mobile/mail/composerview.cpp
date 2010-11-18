@@ -255,9 +255,13 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
   m_composerBase->recipientsEditor()->setAutoResizeView( true );
 
+  connect( m_composerBase->recipientsEditor(), SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ),
+           SIGNAL( recipientsCountChanged() ) );
+  connect( m_composerBase->recipientsEditor(), SIGNAL( lineDeleted( int ) ),
+           SIGNAL( recipientsCountChanged() ) );
+
   if ( m_message )
     setMessage( m_message );
-
 }
 
 void ComposerView::setMessage(const KMime::Message::Ptr& msg)
@@ -512,6 +516,17 @@ bool ComposerView::isSigned() const
 bool ComposerView::isEncrypted() const
 {
   return m_encrypt;
+}
+
+bool ComposerView::tooManyRecipients() const
+{
+  const int threshold = Settings::self()->recipientThreshold();
+  return (Settings::self()->tooManyRecipients() && (recipientsCount() > threshold));
+}
+
+int ComposerView::recipientsCount() const
+{
+  return (m_composerBase->recipientsEditor() ? m_composerBase->recipientsEditor()->recipients().count() : 0);
 }
 
 void ComposerView::signEmail( bool sign )

@@ -50,6 +50,8 @@ class ComposerView : public KDeclarativeFullScreenView
   Q_PROPERTY( bool busy READ busy WRITE setBusy NOTIFY busyChanged )
   Q_PROPERTY( bool isSigned READ isSigned NOTIFY cryptoStateChanged )
   Q_PROPERTY( bool isEncrypted READ isEncrypted NOTIFY cryptoStateChanged )
+  Q_PROPERTY( bool tooManyRecipients READ tooManyRecipients NOTIFY recipientsCountChanged )
+  Q_PROPERTY( int recipientsCount READ recipientsCount NOTIFY recipientsCountChanged )
 
   public:
     explicit ComposerView(QWidget* parent = 0);
@@ -68,6 +70,9 @@ class ComposerView : public KDeclarativeFullScreenView
 
     bool isSigned() const;
     bool isEncrypted() const;
+
+    bool tooManyRecipients() const;
+    int recipientsCount() const;
 
   public slots:
     void setMessage( const KMime::Message::Ptr &msg );
@@ -89,6 +94,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void changed();
     void busyChanged();
     void cryptoStateChanged();
+    void recipientsCountChanged();
 
   protected slots:
     void delayedInit();

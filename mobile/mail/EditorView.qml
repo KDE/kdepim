@@ -159,6 +159,8 @@ Item {
       width: height * 1.5;
       height: identityCombo.height
       icon: KDE.iconPath( "mail-folder-outbox", 64 );
+      color: window.tooManyRecipients ? "red" : "#00000000"
+      buttonText: window.recipientsCount == 0 ? "" : window.recipientsCount
       onClicked: window.send();
     }
   }
