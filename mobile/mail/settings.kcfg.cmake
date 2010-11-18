@@ -35,8 +35,7 @@
 
     <entry name="TooManyRecipients" type="Bool" key="too-many-recipients">
       <label>Warn if the number of recipients is larger than</label>
-      <default>true</default>
-      <!-- <default>${WARN_TOOMANY_RECIPIENTS_DEFAULT}</default> -->
+      <default>${WARN_TOOMANY_RECIPIENTS_DEFAULT}</default>
       <whatsthis>If the number of recipients is larger than this value, KMail Mobile will warn and ask for a confirmation before sending the mail. The warning can be turned off.</whatsthis>
     </entry>
     <entry name="RecipientThreshold" type="Int" key="recipient-threshold">

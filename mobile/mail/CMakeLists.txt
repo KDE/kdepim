@@ -46,6 +46,14 @@ set(kmail_mobile_srcs
 )
 
 qt4_wrap_ui(kmail_mobile_srcs configwidget.ui filterconfigwidget.ui searchwidget.ui)
+
+if(KDEPIM_ENTERPRISE_BUILD)
+  set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
+else(KDEPIM_ENTERPRISE_BUILD)
+  set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
+endif(KDEPIM_ENTERPRISE_BUILD)
+
+configure_file(settings.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/settings.kcfg)
 kde4_add_kcfg_files(kmail_mobile_srcs settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)

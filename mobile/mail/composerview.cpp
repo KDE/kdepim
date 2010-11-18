@@ -522,12 +522,18 @@ bool ComposerView::isEncrypted() const
 bool ComposerView::tooManyRecipients() const
 {
   const int threshold = Settings::self()->recipientThreshold();
-  return (Settings::self()->tooManyRecipients() && (recipientsCount() > threshold));
+  return (recipientsCount() > threshold);
 }
 
 int ComposerView::recipientsCount() const
 {
-  return (m_composerBase->recipientsEditor() ? m_composerBase->recipientsEditor()->recipients().count() : 0);
+  if ( !Settings::self()->tooManyRecipients() )
+    return 0;
+
+  if ( !m_composerBase->recipientsEditor() )
+    return 0;
+
+  return m_composerBase->recipientsEditor()->recipients().count();
 }
 
 void ComposerView::signEmail( bool sign )
