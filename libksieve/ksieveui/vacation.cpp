@@ -587,7 +587,7 @@ void Vacation::slotGetResult( SieveJob * job, bool success,
                                  "its list of supported Sieve extensions;\n"
                                  "without it, KMail cannot install out-of-"
                                  "office replies for you.\n"
-                                 "Please contact you system administrator." ) );
+                                 "Please contact your system administrator." ) );
     emit result( false );
     return;
   }
