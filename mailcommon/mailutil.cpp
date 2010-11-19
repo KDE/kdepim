@@ -151,7 +151,7 @@ void ensureKorganizerRunning( bool switchTo )
   }
 }
 
-bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
+static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type, const Akonadi::Item &mailItem )
 {
   KMime::Message::Ptr msg = MessageCore::Util::message( mailItem );
 
@@ -162,7 +162,7 @@ bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
   tf.setAutoRemove( true );
 
   if ( !tf.open() ) {
-    kWarning() << "CreateTodoCommand: Unable to open temp file.";
+    kWarning() << "CreateIncidenceFromMail: Unable to open temp file.";
     return false;
   }
 
@@ -180,15 +180,39 @@ bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
   mimeTypes << QLatin1String( "message/rfc822" );
 
 #ifndef _WIN32_WCE
-  IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
-                                                               txt, uris,
-                                                               QStringList(), mimeTypes,
-                                                               true /* inline */,
-                                                               Akonadi::Collection() );
+  switch ( type ) {
+    case KCalCore::IncidenceBase::TypeEvent:
+      IncidenceEditorNG::IncidenceDialogFactory::createEventEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
+                                                                    txt, uris,
+                                                                    QStringList(), mimeTypes,
+                                                                    true /* inline */,
+                                                                    Akonadi::Collection() );
+      break;
+    case KCalCore::IncidenceBase::TypeTodo:
+      IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
+                                                                   txt, uris,
+                                                                   QStringList(), mimeTypes,
+                                                                   true /* inline */,
+                                                                   Akonadi::Collection() );
+      break;
 #endif
+    default:
+      Q_ASSERT( false );
+      break;
+  }
 
   tf.close();
   return true;
+}
+
+bool MailCommon::Util::createTodoFromMail( const Akonadi::Item &mailItem )
+{
+  return createIncidenceFromMail( KCalCore::IncidenceBase::TypeTodo, mailItem );
+}
+
+bool MailCommon::Util::createEventFromMail( const Akonadi::Item &mailItem )
+{
+  return createIncidenceFromMail( KCalCore::IncidenceBase::TypeEvent, mailItem );
 }
 
 uint MailCommon::Util::folderIdentity(const Akonadi::Item& item)
