@@ -77,6 +77,7 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
     IncidenceDateTime *mIeDateTime;
     IncidenceAttendee *mIeAttendee;
     IncidenceRecurrence *mIeRecurrence;
+    bool mInitiallyDirty;
 
   public:
     EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
@@ -117,7 +118,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
     mCloseOnSave( false ),
     mItemManager( new EditorItemManager( this ) ),
     mInvitationDispatcher( 0 ),
-    mEditor( new CombinedIncidenceEditor )
+    mEditor( new CombinedIncidenceEditor ),
+    mInitiallyDirty( false )
 {
   Q_Q( EventOrTodoDialog );
   mUi->setupUi( q->mainWidget() );
@@ -161,6 +163,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
 
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
+
 
   mIeAttendee = new IncidenceAttendee( qq, mIeDateTime, mUi );
   mEditor->combine( mIeAttendee );
@@ -340,7 +343,7 @@ void EventOrTodoDialogPrivate::updateAttendeeCount( int newCount )
 void EventOrTodoDialogPrivate::updateButtonStatus( bool isDirty )
 {
   Q_Q( EventOrTodoDialog );
-  q->enableButton( KDialog::Apply, isDirty );
+  q->enableButton( KDialog::Apply, isDirty || mInitiallyDirty );
 }
 
 bool EventOrTodoDialogPrivate::containsPayloadIdentifiers(
@@ -610,11 +613,12 @@ void EventOrTodoDialog::slotButtonClicked( int button )
   switch( button ) {
   case KDialog::Ok:
   {
-    if ( d->mEditor->isDirty() ) {
+    if ( d->mEditor->isDirty() || d->mInitiallyDirty ) {
       enableButtonOk( false );
       enableButtonCancel( false );
       enableButtonApply( false );
       d->mCloseOnSave = true;
+      d->mInitiallyDirty = false;
       d->mItemManager->save();
     } else {
       close();
@@ -628,6 +632,7 @@ void EventOrTodoDialog::slotButtonClicked( int button )
     enableButtonApply( false );
 
     d->mCloseOnSave = false;
+    d->mInitiallyDirty = false;
     d->mItemManager->save();
     break;
   }
@@ -647,6 +652,12 @@ void EventOrTodoDialog::slotButtonClicked( int button )
     Q_ASSERT( false ); // Shouldn't happen
     break;
   }
+}
+
+void EventOrTodoDialog::setInitiallyDirty( bool initiallyDirty )
+{
+  Q_D( EventOrTodoDialog );
+  d->mInitiallyDirty = initiallyDirty;
 }
 
 #include "eventortododialog.moc"

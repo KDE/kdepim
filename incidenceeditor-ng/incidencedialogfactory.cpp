@@ -37,8 +37,12 @@ IncidenceDialog *IncidenceDialogFactory::create( KCalCore::IncidenceBase::Incide
   case KCalCore::IncidenceBase::TypeEvent: // Fall through
   case KCalCore::IncidenceBase::TypeTodo:
   case KCalCore::IncidenceBase::TypeJournal:
+  {
     // TODO: rename EventOrTodoDialog to IncidenceDialog
-    return new EventOrTodoDialog( parent, flags );
+    EventOrTodoDialog *dialog = new EventOrTodoDialog( parent, flags );
+    dialog->setInitiallyDirty( true );  // yep, needs to be save to akonadi
+    return dialog;
+  }
   default:
     return 0;
   }

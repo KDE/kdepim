@@ -61,6 +61,17 @@ class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public IncidenceDialog
     */
     QObject *typeAheadReceiver() const;
 
+    /**
+       By default, if you load an incidence into the editor ( load(item) ), then press [OK]
+       without changing anything, the dialog is dismissed, and the incidence isn't saved
+       to akonadi.
+
+       Call this method with @p initiallyDirty = true if you want the incidence to be saved,
+       It's useful if you're creating a dialog with an already crafted content, like in kmail's
+       "Create Todo/Reminder Feature".
+    */
+    void setInitiallyDirty( bool initiallyDirty );
+
   protected Q_SLOTS:
     virtual void slotButtonClicked( int button );
 
