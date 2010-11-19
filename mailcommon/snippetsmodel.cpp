@@ -146,6 +146,12 @@ SnippetsModel::SnippetsModel( QObject *parent )
 {
   mRootItem = new SnippetItem( true );
   mRootItem->setText( "Root" );
+
+  QHash<int, QByteArray> names = roleNames();
+
+  names.insert( IsGroupRole, "isSnippetGroup" );
+
+  setRoleNames( names );
 }
 
 SnippetsModel::~SnippetsModel()
