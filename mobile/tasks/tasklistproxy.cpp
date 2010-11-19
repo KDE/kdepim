@@ -127,8 +127,8 @@ bool TaskListProxy::lessThan( const QModelIndex &left, const QModelIndex &right 
   }
 
   if ( leftPriority != rightPriority ) {
-    // higher priority first
-    return leftPriority > rightPriority;
+    // higher priority first. ( Also note that 9 is low, and 1 is high )
+    return leftPriority < rightPriority;
   } else {
     // lower id first
     return leftItem.id() < rightItem.id();
