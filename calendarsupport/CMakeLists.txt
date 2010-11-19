@@ -32,7 +32,6 @@ set(calendarsupport_LIB_SRCS
   incidencechanger.cpp
   incidencefilterproxymodel.cpp
   incidenceviewer.cpp
-  invitationhandler.cpp
   kcalmodel.cpp
   kcalprefs.cpp
   mailclient.cpp
@@ -44,6 +43,7 @@ set(calendarsupport_LIB_SRCS
   next/history.cpp
   next/incidencechanger2.cpp
   next/incidencesearchjob.cpp
+  next/invitationhandler.cpp
   next/mailscheduler2.cpp
   next/scheduler.cpp
 )

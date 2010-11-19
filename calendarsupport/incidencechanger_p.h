@@ -26,7 +26,7 @@
 #define CALENDARSUPPORT_INCIDENCECHANGER_P_H
 
 #include "incidencechanger.h"
-#include "invitationhandler.h"
+#include "next/invitationhandler.h"
 
 #include <Akonadi/Item>
 

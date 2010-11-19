@@ -24,7 +24,6 @@
 #include "calendar.h"
 #include "calendaradaptor.h"
 #include "dndfactory.h"
-#include "invitationhandler.h"
 #include "kcalprefs.h"
 #include "mailscheduler.h"
 #include "utils.h"

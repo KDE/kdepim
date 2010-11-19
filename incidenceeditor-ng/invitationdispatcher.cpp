@@ -21,7 +21,7 @@
 #include "invitationdispatcher.h"
 
 #include <calendarsupport/calendar.h>
-#include <calendarsupport/invitationhandler.h>
+#include <calendarsupport/next/invitationhandler.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
