@@ -25,6 +25,7 @@
 #include <KCalCore/Todo>
 #include <KCalUtils/IncidenceFormatter>
 
+#include <KSystemTimeZones>
 #include <KLocale>
 #include <KGlobal>
 
@@ -75,7 +76,19 @@ bool EventListProxy::lessThan(const QModelIndex& left, const QModelIndex& right)
 
   if ( leftEvent->dtStart() == rightEvent->dtStart() )
     return leftItem.id() < rightItem.id();
-  return leftEvent->dtStart() < rightEvent->dtStart();
+
+  const KDateTime today = KDateTime::currentDateTime( KSystemTimeZones::local() );
+  const bool leftIsFuture = leftEvent->dtEnd() >= today;
+  const bool rightIsFuture = rightEvent->dtEnd() >= today;
+
+  if ( leftIsFuture != rightIsFuture ) {
+    return !leftIsFuture;
+  }
+
+  if ( leftIsFuture )
+    return leftEvent->dtStart() > rightEvent->dtStart();
+  else
+    return leftEvent->dtStart() < rightEvent->dtStart();
 }
 
 #include "eventlistproxy.moc"
