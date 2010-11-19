@@ -510,6 +510,8 @@ SnippetsManager::SnippetsManager( KActionCollection *actionCollection, QObject *
   connect( d->mEditSnippetGroupAction, SIGNAL( triggered( bool ) ), SLOT( editSnippetGroup() ) );
   connect( d->mDeleteSnippetGroupAction, SIGNAL( triggered( bool ) ), SLOT( deleteSnippetGroup() ) );
 
+  connect( d->mInsertSnippetAction, SIGNAL( triggered( bool ) ), SLOT( insertSelectedSnippet() ) );
+
   d->selectionChanged();
 
   d->load();
