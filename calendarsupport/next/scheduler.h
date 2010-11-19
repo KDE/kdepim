@@ -70,7 +70,8 @@ class CALENDARSUPPORT_EXPORT Scheduler : public QObject
       ResultCodeIncidenceNotFound,
       ResultCodeErrorDeletingIncidence,
       ResultCodeErrorCreatingIncidence,
-      ResultCodeErrorUpdatingIncidence
+      ResultCodeErrorUpdatingIncidence,
+      ResultCodeErrorSendingEmail
     };
 
     /**
@@ -142,6 +143,11 @@ class CALENDARSUPPORT_EXPORT Scheduler : public QObject
     KCalCore::FreeBusyCache *freeBusyCache() const;
 
   protected:
+
+    // This signal sis delayed because it can't be emitted before "return callId",
+    // otherwise the caller would not know the callId that was being sent in the signal
+    void emitOperationFinished( CallId, ResultCode, const QString & );
+
     CallId acceptPublish( const KCalCore::IncidenceBase::Ptr &,
                           KCalCore::ScheduleMessage::Status status,
                           KCalCore::iTIPMethod method );
@@ -173,7 +179,10 @@ class CALENDARSUPPORT_EXPORT Scheduler : public QObject
     CallId acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
 
     NepomukCalendar::Ptr calendar() const;
+
     IncidenceChanger2 * changer() const;
+
+    CallId nextCallId();
 
   Q_SIGNALS:
     void acceptTransactionFinished( CallId callId, ResultCode code, const QString &errorMessage );

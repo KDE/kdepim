@@ -60,18 +60,6 @@ Scheduler::Private::~Private()
   delete mFormat;
 }
 
-    // These signals are delayed because they can't be emitted before "return callId",
-    // otherwise the caller would not know the callId that was being sent in the signal
-void Scheduler::Private::emitOperationFinished( CallId callId,
-                                                ResultCode resultCode,
-                                                const QString &errorMessage )
-{
-  QMetaObject::invokeMethod( q, "operationFinished", Qt::QueuedConnection,
-                             Q_ARG( int, callId ),
-                             Q_ARG( CalendarSupport::Scheduler::ResultCode, resultCode ),
-                             Q_ARG( QString, errorMessage ) );
-}
-
 void Scheduler::Private::createFinished( int changeId,
                                          const Akonadi::Item &item,
                                          IncidenceChanger2::ResultCode changerResultCode,
@@ -131,7 +119,7 @@ void Scheduler::Private::operationFinished( int changeId,
     const CallId callId = mCallIdByChangeId[changeId];
     const ResultCode result = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ? ResultCodeSuccess : errorCode;
 
-    emitOperationFinished( callId, result, errorMessage );
+    q->emitOperationFinished( callId, result, errorMessage );
     q->deleteTransaction( item.payload<Incidence::Ptr>()->uid() );
     mCallIdByChangeId.remove( changeId );
   }
@@ -274,7 +262,7 @@ CallId Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
   if ( emitResult ) {
     deleteTransaction( newIncBase->uid() );
     // Delayed signal, the caller must know this CallId first.
-    d->emitOperationFinished( callId, resultCode, errorMessage );
+    emitOperationFinished( callId, resultCode, errorMessage );
   }
 
   return callId;
@@ -295,7 +283,7 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   QString errorMessage;
 
   if ( inc->type() == IncidenceBase::TypeFreeBusy ) {
-    d->emitOperationFinished( callId, ResultCodeSuccess, QString() );
+    emitOperationFinished( callId, ResultCodeSuccess, QString() );
     // reply to this request is handled in korganizer's incomingdialog
     return callId;
   }
@@ -352,7 +340,7 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           deleteTransaction( existingIncidence->uid() );
           errorMessage = QLatin1String( "This isn't an update - the found incidence was modified more recently" );
           kDebug() << errorMessage;
-          d->emitOperationFinished( callId, ResultCodeNotUpdate, errorMessage );
+          emitOperationFinished( callId, ResultCodeNotUpdate, errorMessage );
 
           return callId;
         }
@@ -389,7 +377,7 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
 
         if ( emitResult ) {
           deleteTransaction( incidence->uid() );
-          d->emitOperationFinished( callId, resultCode, errorMessage );
+          emitOperationFinished( callId, resultCode, errorMessage );
         }
         return callId;
       }
@@ -400,7 +388,7 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
 
       errorMessage = QLatin1String( "This isn't an update - the found incidence has a bigger revision number" );
       kDebug() << errorMessage;
-      d->emitOperationFinished( callId, ResultCodeNotUpdate, errorMessage );
+      emitOperationFinished( callId, ResultCodeNotUpdate, errorMessage );
 
       return callId;
     }
@@ -431,8 +419,8 @@ CallId Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   if ( changeId > 0 ) {
     d->mCallIdByChangeId[changeId] = callId;
   } else {
-    d->emitOperationFinished( callId, ResultCodeErrorCreatingIncidence,
-                              QLatin1String( "Error creating incidence" ) );
+    emitOperationFinished( callId, ResultCodeErrorCreatingIncidence,
+                           QLatin1String( "Error creating incidence" ) );
   }
 
   return callId;
@@ -460,7 +448,7 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
 
   if ( inc->type() == IncidenceBase::TypeFreeBusy ) {
     // reply to this request is handled in korganizer's incomingdialog
-    d->emitOperationFinished( callId, resultCode, errorMessage );
+    emitOperationFinished( callId, resultCode, errorMessage );
     return callId;
   }
 
@@ -534,7 +522,7 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
       if ( emitResult ) {
         deleteTransaction( incidence->uid() );
         errorMessage = ret ? QString() : QLatin1String( "Error deleting incidence" );
-        d->emitOperationFinished( callId, resultCode, errorMessage );
+        emitOperationFinished( callId, resultCode, errorMessage );
       }
 
       return callId;
@@ -553,7 +541,7 @@ CallId Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
     errorMessage = QLatin1String( "Incidence not found" );
   }
   deleteTransaction( incidence->uid() );
-  d->emitOperationFinished( callId, resultCode, errorMessage );
+  emitOperationFinished( callId, resultCode, errorMessage );
 
   return callId;
 }
@@ -730,7 +718,7 @@ CallId Scheduler::acceptReply( const IncidenceBase::Ptr &incidence,
     deleteTransaction( incidence->uid() );
   }
 
-  d->emitOperationFinished( callId, resultCode, errorMessage );
+  emitOperationFinished( callId, resultCode, errorMessage );
 
   return callId;
 }
@@ -785,7 +773,7 @@ CallId Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence,
     resultCode = ResultCodeSaveFreeBusyError;
   }
 
-  d->emitOperationFinished( callId, resultCode, errorMessage );
+  emitOperationFinished( callId, resultCode, errorMessage );
 
   return callId;
 }
@@ -800,3 +788,20 @@ IncidenceChanger2 * Scheduler::changer() const
   return d->mChanger;
 }
 
+
+// This signal is delayed because it can't be emitted before "return callId",
+// otherwise the caller would not know the callId that was being sent in the signal
+void Scheduler::emitOperationFinished( CallId callId,
+                                       ResultCode resultCode,
+                                       const QString &errorMessage )
+{
+  QMetaObject::invokeMethod( this, "operationFinished", Qt::QueuedConnection,
+                             Q_ARG( int, callId ),
+                             Q_ARG( CalendarSupport::Scheduler::ResultCode, resultCode ),
+                             Q_ARG( QString, errorMessage ) );
+}
+
+CallId CalendarSupport::Scheduler::nextCallId()
+{
+  return ++d->mLatestCallId;
+}

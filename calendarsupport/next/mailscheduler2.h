@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -66,6 +67,9 @@ class CALENDARSUPPORT_EXPORT MailScheduler2 : public Scheduler
     CallId acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
   private:
+
+    void modifyFinished( int changeId, const Akonadi::Item &item,
+                         IncidenceChanger2::ResultCode changerResultCode, const QString &errorMessage );
     //@cond private
     class Private;
     Private *const d;

@@ -50,10 +50,6 @@ class Scheduler::Private : public QObject
 
     ~Private();
 
-    // This signals are delayed because they can't be emitted before "return callId",
-    // otherwise the caller would not know the callId that was being sent in the signal
-    void emitOperationFinished( CallId, ResultCode, const QString & );
-
   public Q_SLOTS:
     // to catch incidenceChanger signals
     void createFinished( int changeId,

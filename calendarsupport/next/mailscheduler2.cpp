@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -69,11 +70,16 @@ MailScheduler2::MailScheduler2( IncidenceChanger2 *changer,
                                 const NepomukCalendar::Ptr &calendar )
   : Scheduler( calendar, changer ), d( new Private )
 {
+  Q_ASSERT( changer );
+
   if ( this->calendar() ) {
     d->mFormat->setTimeSpec( calendar->timeSpec() );
   } else {
     d->mFormat->setTimeSpec( KSystemTimeZones::local() );
   }
+
+  connect( this->changer(),SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 }
 
 MailScheduler2::~MailScheduler2()
@@ -83,35 +89,69 @@ MailScheduler2::~MailScheduler2()
 CallId MailScheduler2::publish( const KCalCore::IncidenceBase::Ptr &incidence,
                                 const QString &recipients )
 {
+  if ( !incidence ) {
+    return -1;
+  }
+
   const QString from = KCalPrefs::instance()->email();
   const bool bccMe = KCalPrefs::instance()->mBcc;
   const QString messageText = d->mFormat->createScheduleMessage( incidence, KCalCore::iTIPPublish );
 
   MailClient mailer;
-  return mailer.mailTo(
-    incidence,
-    CalendarSupport::identityManager()->identityForAddress( from ),
-    from, bccMe, recipients, messageText, KCalPrefs::instance()->mailTransport() );
+  // TODO: Why doesn't MailClient return an error message too?, a bool is not enough.
+  // TODO: Refactor MailClient, currently it execs()
+  const bool result = mailer.mailTo( incidence, CalendarSupport::identityManager()->identityForAddress( from ),
+                                     from, bccMe, recipients, messageText,
+                                     KCalPrefs::instance()->mailTransport() );
+
+  ResultCode resultCode = ResultCodeSuccess;
+  QString errorMessage;
+  if ( !result ) {
+    errorMessage = QLatin1String( "Error sending e-mail" );
+    resultCode = ResultCodeErrorSendingEmail;
+  }
+  const CallId callId = nextCallId();
+  emitOperationFinished( callId, resultCode, errorMessage );
+  return callId;
 }
 
 CallId MailScheduler2::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
                                            KCalCore::iTIPMethod method,
                                            const QString &recipients )
 {
+  if ( !incidence ) {
+    return -1;
+  }
+
   const QString from = KCalPrefs::instance()->email();
   const bool bccMe = KCalPrefs::instance()->mBcc;
   const QString messageText = d->mFormat->createScheduleMessage( incidence, method );
 
   MailClient mailer;
-  return mailer.mailTo(
-    incidence,
-    CalendarSupport::identityManager()->identityForAddress( from ),
-    from, bccMe, recipients, messageText, KCalPrefs::instance()->mailTransport() );
+  // TODO: Why doesn't MailClient return an error message too?, a bool is not enough.
+  // TODO: Refactor MailClient, currently it execs()
+  const bool result = mailer.mailTo( incidence, CalendarSupport::identityManager()->identityForAddress( from ),
+                                     from, bccMe, recipients, messageText,
+                                     KCalPrefs::instance()->mailTransport() );
+
+  ResultCode resultCode = ResultCodeSuccess;
+  QString errorMessage;
+  if ( !result ) {
+    errorMessage = QLatin1String( "Error sending e-mail" );
+    resultCode = ResultCodeErrorSendingEmail;
+  }
+  const CallId callId = nextCallId();
+  emitOperationFinished( callId, resultCode, errorMessage );
+  return callId;
 }
 
 CallId MailScheduler2::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
                                            KCalCore::iTIPMethod method )
 {
+  if ( !incidence ) {
+    return -1;
+  }
+
   const QString from = KCalPrefs::instance()->email();
   const bool bccMe = KCalPrefs::instance()->mBcc;
   const QString messageText = d->mFormat->createScheduleMessage( incidence, method );
@@ -137,7 +177,16 @@ CallId MailScheduler2::performTransaction( const KCalCore::IncidenceBase::Ptr &i
       CalendarSupport::identityManager()->identityForAddress( from ),
       from, bccMe, messageText, subject, KCalPrefs::instance()->mailTransport() );
   }
-  return status;
+
+  ResultCode resultCode = ResultCodeSuccess;
+  QString errorMessage;
+  if ( !status ) {
+    errorMessage = QLatin1String( "Error sending e-mail" );
+    resultCode = ResultCodeErrorSendingEmail;
+  }
+  const CallId callId = nextCallId();
+  emitOperationFinished( callId, resultCode, errorMessage );
+  return callId;
 }
 
 QString MailScheduler2::freeBusyDir() const
@@ -149,7 +198,7 @@ QString MailScheduler2::freeBusyDir() const
 CallId MailScheduler2::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( !incidence ) {
-    return false;
+    return -1;
   }
 
   Akonadi::Item exInc = calendar()->itemForIncidenceUid( incidence->uid() );
@@ -197,4 +246,15 @@ CallId MailScheduler2::acceptCounterProposal( const KCalCore::Incidence::Ptr &in
   }
 
   return true;
+}
+
+void MailScheduler2::modifyFinished( int changeId,
+                                    const Akonadi::Item &item,
+                                    IncidenceChanger2::ResultCode changerResultCode,
+                                    const QString &errorMessage )
+{
+  Q_UNUSED( changeId );
+  Q_UNUSED( item );
+  Q_UNUSED( changerResultCode );
+  Q_UNUSED( errorMessage );
 }
