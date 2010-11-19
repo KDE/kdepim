@@ -64,6 +64,7 @@ class MainView : public KDeclarativeMainView
     void newEvent();
     void newTodo();
     void editIncidence( const Akonadi::Item &item, const QDate &date );
+    void deleteIncidence( const Akonadi::Item &item );
     void uploadFreeBusy();
     void mailFreeBusy();
     void sendAsICalendar();

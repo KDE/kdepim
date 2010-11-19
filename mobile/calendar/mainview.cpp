@@ -325,6 +325,11 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
   editor->show();
 }
 
+void MainView::deleteIncidence( const Akonadi::Item &item )
+{
+  m_changer->deleteIncidence( item );
+}
+
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
@@ -598,6 +603,7 @@ void MainView::changeCalendarColor()
   }
 #endif
 }
+
 
 
 

@@ -488,6 +488,13 @@ KPIM.MainView {
                 actionPanel.collapse();
                 application.editIncidence( eventView.item, eventView.activeDate );
               }
+            },
+            KPIM.ScriptAction {
+              name : "incidencechanger_delete"
+              script: {
+                actionPanel.collapse();
+                application.deleteIncidence( eventView.item );
+              }
             }
           ]
 
