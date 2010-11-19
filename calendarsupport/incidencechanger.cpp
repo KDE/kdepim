@@ -255,6 +255,7 @@ bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
 {
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( !incidence ) {
+    kDebug() << "Invalid incidence";
     return false;
   }
   if ( KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() ) &&
