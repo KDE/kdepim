@@ -3471,27 +3471,6 @@ bool KAEventData::convertStartOfDay(Event* event)
 	return changed;
 }
 
-#if 0
-/******************************************************************************
-* If the calendar was written by a pre-1.9.10 version of KAlarm, or another
-* program, convert simple repetitions in events without a recurrence, to a
-* recurrence.
-* Reply = true if any conversions were done.
-*/
-bool KAEventData::convertRepetitions(KCal::CalendarLocal& calendar)
-{
-
-	bool converted = false;
-	Event::List events = calendar.rawEvents();
-	for (int i = 0, end = events.count();  i < end;  ++i)
-	{
-		if (convertRepetition(events[i]))
-			converted = true;
-	}
-	return converted;
-}
-#endif
-
 /******************************************************************************
 * Convert simple repetitions in an event without a recurrence, to a
 * recurrence. Repetitions which are an exact multiple of 24 hours are converted
@@ -3506,7 +3485,7 @@ bool KAEventData::convertRepetition(KCal::Event* event)
 	if (alarms.isEmpty())
 		return false;
 	Recurrence* recur = event->recurrence();   // guaranteed to return non-null
-	if (!recur->recurs())
+	if (recur->recurs())
 		return false;
 	bool converted = false;
 	bool readOnly = event->isReadOnly();
@@ -3521,9 +3500,9 @@ bool KAEventData::convertRepetition(KCal::Event* event)
 				if (readOnly)
 					event->setReadOnly(false);
 				if ((alarm->snoozeTime().asSeconds() % (24*3600)) != 0)
-					recur->setMinutely(alarm->snoozeTime());
+					recur->setMinutely(alarm->snoozeTime().asSeconds() / 60);
 				else
-					recur->setDaily(alarm->snoozeTime() / (24*3600));
+					recur->setDaily(alarm->snoozeTime().asDays());
 				recur->setDuration(alarm->repeatCount() + 1);
 				converted = true;
 			}
