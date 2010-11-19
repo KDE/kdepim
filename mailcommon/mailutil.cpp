@@ -166,32 +166,36 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
     return false;
   }
 
-  const QString txt = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
-                     msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
+  const QString incidenceDescription = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
+                                            msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
 
   const QString uri = "kmail:" + QString::number( mailItem.id() ) + '/' + MessageCore::Util::messageId( msg );
   tf.write( msg->encodedContent() );
   tf.flush();
 
-  QStringList uris;
-  uris << tf.fileName();
+  QStringList attachmentUris;
+  attachmentUris << tf.fileName();
 
-  QStringList mimeTypes;
-  mimeTypes << QLatin1String( "message/rfc822" );
+  QStringList attachmentMimeTypes;
+  attachmentMimeTypes << QLatin1String( "message/rfc822" );
 
 #ifndef _WIN32_WCE
   switch ( type ) {
     case KCalCore::IncidenceBase::TypeEvent:
       IncidenceEditorNG::IncidenceDialogFactory::createEventEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
-                                                                    txt, uris,
-                                                                    QStringList(), mimeTypes,
+                                                                    incidenceDescription,
+                                                                    attachmentUris,
+                                                                    QStringList() /* attendees */,
+                                                                    attachmentMimeTypes,
                                                                     true /* inline */,
                                                                     Akonadi::Collection() );
       break;
     case KCalCore::IncidenceBase::TypeTodo:
       IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
-                                                                   txt, uris,
-                                                                   QStringList(), mimeTypes,
+                                                                   incidenceDescription,
+                                                                   attachmentUris,
+                                                                   QStringList() /* attendees */,
+                                                                   attachmentMimeTypes,
                                                                    true /* inline */,
                                                                    Akonadi::Collection() );
       break;
