@@ -66,10 +66,15 @@ class CALENDARSUPPORT_EXPORT MailScheduler2 : public Scheduler
     /** Accepts a counter proposal */
     CallId acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
-  private:
+  private Q_SLOTS:
 
     void modifyFinished( int changeId, const Akonadi::Item &item,
                          IncidenceChanger2::ResultCode changerResultCode, const QString &errorMessage );
+
+    void createFinished( int changeId, const Akonadi::Item &item,
+                         IncidenceChanger2::ResultCode changerResultCode, const QString &errorMessage );
+
+
     //@cond private
     class Private;
     Private *const d;

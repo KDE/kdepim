@@ -32,9 +32,6 @@
 #include "incidencechanger2.h"
 
 #include <Akonadi/Item>
-#include <Akonadi/Collection>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemModifyJob>
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/Incidence>
@@ -62,6 +59,7 @@ class MailScheduler2::Private {
       delete mFormat;
     }
 
+    QHash<int, CallId> mCallIdByChangeId;
     KCalCore::ICalFormat *mFormat;
 };
 
@@ -77,6 +75,9 @@ MailScheduler2::MailScheduler2( IncidenceChanger2 *changer,
   } else {
     d->mFormat->setTimeSpec( KSystemTimeZones::local() );
   }
+
+  connect( this->changer(), SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
+           SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
   connect( this->changer(),SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
@@ -212,6 +213,9 @@ CallId MailScheduler2::acceptCounterProposal( const KCalCore::Incidence::Ptr &in
   }
 
   incidence->setRevision( incidence->revision() + 1 );
+  int changeId;
+  ResultCode inCaseOfError;
+  const CallId callId = nextCallId();
   if ( exInc.isValid() && exInc.hasPayload<KCalCore::Incidence::Ptr>() ) {
     KCalCore::Incidence::Ptr exIncPtr = exInc.payload<KCalCore::Incidence::Ptr>();
     incidence->setRevision( qMax( incidence->revision(), exIncPtr->revision() + 1 ) );
@@ -229,23 +233,22 @@ CallId MailScheduler2::acceptCounterProposal( const KCalCore::Incidence::Ptr &in
     }
 
     exIncPtr->updated();
-    new Akonadi::ItemModifyJob( exInc );
-    //FIXME: Add error handling
+
+    changeId = changer()->modifyIncidence( exInc );
+    d->mCallIdByChangeId.insert( changeId, callId );
+    inCaseOfError = ResultCodeErrorUpdatingIncidence;
   } else {
-    int dialogCode = 0;
-    const QString incidenceMimeType = CalendarSupport::subMimeTypeForIncidence( incidence );
-    QStringList mimeTypes( incidenceMimeType );
-    Akonadi::Collection collection = CalendarSupport::selectCollection( 0, dialogCode, mimeTypes );
-
-    Akonadi::Item item;
-    item.setPayload( KCalCore::Incidence::Ptr( incidence->clone() ) );
-    item.setMimeType( incidenceMimeType );
-
-    new Akonadi::ItemCreateJob( item, collection );
-    //FIXME: Add error handling
+    changeId = changer()->createIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) );
+    inCaseOfError = ResultCodeErrorCreatingIncidence;
   }
 
-  return true;
+  if ( changeId > 0 ) {
+    d->mCallIdByChangeId.insert( changeId, callId );
+  } else {
+    emitOperationFinished( callId, inCaseOfError, QLatin1String( "Error creating job" ) );
+  }
+
+  return callId;
 }
 
 void MailScheduler2::modifyFinished( int changeId,
@@ -253,8 +256,27 @@ void MailScheduler2::modifyFinished( int changeId,
                                     IncidenceChanger2::ResultCode changerResultCode,
                                     const QString &errorMessage )
 {
-  Q_UNUSED( changeId );
+  if ( d->mCallIdByChangeId.contains( changeId ) ) {
+    const ResultCode resultCode = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ? ResultCodeSuccess :
+                                                                                                  ResultCodeErrorUpdatingIncidence;
+    emitOperationFinished( changeId, resultCode, errorMessage );
+    d->mCallIdByChangeId.remove( changeId );
+  }
+
   Q_UNUSED( item );
-  Q_UNUSED( changerResultCode );
-  Q_UNUSED( errorMessage );
+}
+
+void MailScheduler2::createFinished( int changeId,
+                                     const Akonadi::Item &item,
+                                     IncidenceChanger2::ResultCode changerResultCode,
+                                     const QString &errorMessage )
+{
+  if ( d->mCallIdByChangeId.contains( changeId ) ) {
+    const ResultCode resultCode = ( changerResultCode == IncidenceChanger2::ResultCodeSuccess ) ? ResultCodeSuccess :
+                                                                                                  ResultCodeErrorCreatingIncidence;
+    emitOperationFinished( changeId, resultCode, errorMessage );
+    d->mCallIdByChangeId.remove( changeId );
+  }
+
+  Q_UNUSED( item );
 }
