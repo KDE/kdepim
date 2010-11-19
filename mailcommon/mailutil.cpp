@@ -195,11 +195,11 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
                                                                    true /* inline */,
                                                                    Akonadi::Collection() );
       break;
-#endif
     default:
       Q_ASSERT( false );
       break;
   }
+#endif
 
   tf.close();
   return true;
