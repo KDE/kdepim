@@ -1837,6 +1837,8 @@ void ViewerPrivate::slotToggleMimePartTree()
 
 void ViewerPrivate::slotShowMessageSource()
 {
+  if( !mMessage )
+    return;
   mNodeHelper->messageWithExtraContent( mMessage.get() );
   const QString rawMessage = QString::fromAscii(  mMessage->encodedContent() );
   const QString htmlSource = mViewer->htmlSource();
