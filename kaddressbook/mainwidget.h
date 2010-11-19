@@ -69,10 +69,6 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void itemSelectionChanged( const QModelIndex&, const QModelIndex& );
     void selectFirstItem();
 
-    void setDetailsViewVisible( bool visible );
-    void setItemViewVisible( bool visible );
-    void setCollectionViewVisible( bool visible );
-
     void setSimpleGuiMode( bool on );
 
     void restoreState();

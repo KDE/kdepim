@@ -407,27 +407,6 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
   connect( action, SIGNAL( triggered( bool ) ), mItemView, SLOT( selectAll() ) );
 
-  toggleAction = collection->add<KToggleAction>( "options_show_collectionview" );
-  toggleAction->setText( i18n( "Show Address Books View" ) );
-  toggleAction->setWhatsThis( i18n( "Toggle whether the address books view shall be visible." ) );
-  toggleAction->setCheckedState( KGuiItem( i18n( "Hide Address Books View" ) ) );
-  toggleAction->setChecked( true );
-  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setCollectionViewVisible( bool ) ) );
-
-  toggleAction = collection->add<KToggleAction>( "options_show_itemview" );
-  toggleAction->setText( i18n( "Show Contacts View" ) );
-  toggleAction->setWhatsThis( i18n( "Toggle whether the contacts view shall be visible." ) );
-  toggleAction->setCheckedState( KGuiItem( i18n( "Hide Contacts View" ) ) );
-  toggleAction->setChecked( true );
-  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setItemViewVisible( bool ) ) );
-
-  toggleAction = collection->add<KToggleAction>( "options_show_detailsview" );
-  toggleAction->setText( i18n( "Show Details View" ) );
-  toggleAction->setWhatsThis( i18n( "Toggle whether the details view shall be visible." ) );
-  toggleAction->setCheckedState( KGuiItem( i18n( "Hide Details View" ) ) );
-  toggleAction->setChecked( true );
-  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setDetailsViewVisible( bool ) ) );
-
   toggleAction = collection->add<KToggleAction>( "options_show_simplegui" );
   toggleAction->setText( i18n( "Show Simple View" ) );
   action->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
@@ -551,21 +530,6 @@ void MainWidget::selectFirstItem()
                                                   QItemSelectionModel::Rows |
                                                   QItemSelectionModel::ClearAndSelect );
   }
-}
-
-void MainWidget::setCollectionViewVisible( bool visible )
-{
-  mCollectionView->setVisible( visible );
-}
-
-void MainWidget::setItemViewVisible( bool visible )
-{
-  mItemView->setVisible( visible );
-}
-
-void MainWidget::setDetailsViewVisible( bool visible )
-{
-  mDetailsPane->setVisible( visible );
 }
 
 void MainWidget::setSimpleGuiMode( bool on )
