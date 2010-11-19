@@ -54,6 +54,14 @@ namespace IncidenceDialogFactory
                                                                 Akonadi::Collection defaultCcollection,
                                                                 QWidget *parent = 0, Qt::WFlags flags = 0 );
 
+  INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createEventEditor( const QString &summary,
+                                                                 const QString &description,
+                                                                 const QStringList &attachments,
+                                                                 const QStringList &attendees,
+                                                                 const QStringList &attachmentMimetypes,
+                                                                 bool inlineAttachment,
+                                                                 Akonadi::Collection defaultCcollection,
+                                                                 QWidget *parent = 0, Qt::WFlags flags = 0 );
 
 } // namespace IncidenceDialogFactory
 

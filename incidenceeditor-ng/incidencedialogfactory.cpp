@@ -23,6 +23,7 @@
 #include "incidencedefaults.h"
 #include "groupwareintegration.h"
 
+#include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <Akonadi/Item>
 
@@ -73,6 +74,42 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
   }
 
   IncidenceDialog *dialog = create( KCalCore::Incidence::TypeTodo,
+                                    parent, flags );
+  dialog->selectCollection( defaultCollection );
+  dialog->load( item );
+  return dialog;
+}
+
+IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summary,
+                                                             const QString &description,
+                                                             const QStringList &attachments,
+                                                             const QStringList &attendees,
+                                                             const QStringList &attachmentMimetypes,
+                                                             bool inlineAttachment,
+                                                             Akonadi::Collection defaultCollection,
+                                                             QWidget *parent, Qt::WFlags flags )
+{
+  IncidenceDefaults defaults = IncidenceDefaults::minimalIncidenceDefaults();
+  // if attach or attendee list is empty, these methods don't do anything, so
+  // it's safe to call them in every case
+  defaults.setAttachments( attachments, attachmentMimetypes, inlineAttachment );
+  defaults.setAttendees( attendees );
+
+  Event::Ptr event( new Event );
+  defaults.setDefaults( event );
+
+  event->setSummary( summary );
+  event->setDescription( description );
+
+  Akonadi::Item item;
+  item.setPayload( event );
+
+  // Construct the groupware object, it'll take care of the IncidenceEditors::EditorConfig as well
+  if ( !GroupwareIntegration::isActive() ) {
+    GroupwareIntegration::activate();
+  }
+
+  IncidenceDialog *dialog = create( KCalCore::Incidence::TypeEvent,
                                     parent, flags );
   dialog->selectCollection( defaultCollection );
   dialog->load( item );
