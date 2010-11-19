@@ -24,6 +24,7 @@
 #include "declarativewidgetbase.h"
 #include "declarativeidentitycombobox.h"
 #include "settings.h"
+#include "snippetseditor.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitycombo.h>
@@ -109,6 +110,9 @@ void ComposerView::delayedInit()
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(qmlLoaded(QDeclarativeView::Status)) );
 
+  m_snippetsEditor = new SnippetsEditor( actionCollection(), this );
+  engine()->rootContext()->setContextProperty( "snippetsEditor", m_snippetsEditor );
+  engine()->rootContext()->setContextProperty( "snippetsModel", m_snippetsEditor->model() );
 
   // ### TODO: make this happens later to show the composer as fast as possible
   m_composerBase = new Message::ComposerViewBase( this );
@@ -260,6 +264,8 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
            SIGNAL( recipientsCountChanged() ) );
   connect( m_composerBase->recipientsEditor(), SIGNAL( lineDeleted( int ) ),
            SIGNAL( recipientsCountChanged() ) );
+
+  m_snippetsEditor->setEditor( m_composerBase->editor(), "insertPlainText", SIGNAL( insertSnippet() ) );
 
   if ( m_message )
     setMessage( m_message );

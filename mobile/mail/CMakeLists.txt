@@ -41,6 +41,7 @@ set(kmail_mobile_srcs
   mobilekernel.cpp
   savemailcommand.cpp
   searchwidget.cpp
+  snippetseditor.cpp
   templateemailmodel.cpp
   vacationmanager.cpp
 )
@@ -116,6 +117,7 @@ install(FILES
   next-unread-mail.png
   dividing-line.png
   dividing-line-horizontal.png
+  SnippetsEditor.qml
   VacationScriptIndicator.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )

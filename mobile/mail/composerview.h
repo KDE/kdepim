@@ -42,6 +42,8 @@ namespace MessageComposer
   class RecipientsEditor;
 }
 
+class SnippetsEditor;
+
 /** The new KMMainWidget ;-) */
 class ComposerView : public KDeclarativeFullScreenView
 {
@@ -132,6 +134,7 @@ class ComposerView : public KDeclarativeFullScreenView
     bool m_urgent;
     bool m_mdnRequested;
     QString m_fileName;
+    SnippetsEditor *m_snippetsEditor;
 };
 
 #endif
