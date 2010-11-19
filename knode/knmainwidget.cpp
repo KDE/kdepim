@@ -757,7 +757,6 @@ void KNMainWidget::initActions()
   a_ctArtToggleShowThreads = actionCollection()->add<KToggleAction>("view_showThreads");
   a_ctArtToggleShowThreads->setText(i18n("Show T&hreads"));
   connect(a_ctArtToggleShowThreads, SIGNAL(triggered(bool) ), SLOT(slotArtToggleShowThreads()));
-  a_ctArtToggleShowThreads->setCheckedState(KGuiItem(i18n("Hide T&hreads")));
 
   a_ctArtToggleShowThreads->setChecked( knGlobals.settings()->showThreads() );
 
@@ -861,7 +860,6 @@ void KNMainWidget::initActions()
   a_ctToggleQuickSearch = actionCollection()->add<KToggleAction>("settings_show_quickSearch");
   a_ctToggleQuickSearch->setText(i18n("Show Quick Search"));
   connect(a_ctToggleQuickSearch, SIGNAL(triggered(bool) ), SLOT(slotToggleQuickSearch()));
-  a_ctToggleQuickSearch->setCheckedState(KGuiItem(i18n("Hide Quick Search")));
 }
 
 bool KNMainWidget::firstStart()
