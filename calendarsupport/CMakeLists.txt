@@ -44,6 +44,7 @@ set(calendarsupport_LIB_SRCS
   next/history.cpp
   next/incidencechanger2.cpp
   next/incidencesearchjob.cpp
+  next/mailscheduler2.cpp
   next/scheduler.cpp
 )
 

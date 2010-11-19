@@ -24,6 +24,7 @@
 
 #include "calendarsupport_export.h"
 #include "nepomukcalendar.h"
+#include "scheduler.h"
 
 #include <KCalCore/Calendar>
 #include <KCalCore/Incidence>
@@ -36,65 +37,39 @@ namespace KCalCore {
 
 namespace CalendarSupport {
   class Calendar;
+  class IncidenceChanger2;
 /*
   This class implements the iTIP interface using the email interface specified
   as Mail.
 */
-class CALENDARSUPPORT_EXPORT MailScheduler2 //: public Scheduler
+class CALENDARSUPPORT_EXPORT MailScheduler2 : public Scheduler
 {
   public:
-    explicit MailScheduler2( CalendarSupport::Calendar *calendar );
-    explicit MailScheduler2( const NepomukCalendar::Ptr &calendar );
-    virtual ~MailScheduler2();
+    MailScheduler2( CalendarSupport::IncidenceChanger2 *mChanger,
+                    const NepomukCalendar::Ptr &calendar = NepomukCalendar::Ptr() );
+    ~MailScheduler2();
 
-    bool publish ( const KCalCore::IncidenceBase::Ptr &incidence,
-                   const QString &recipients );
+    CallId publish( const KCalCore::IncidenceBase::Ptr &incidence,
+                    const QString &recipients );
 
-    bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                             KCalCore::iTIPMethod method );
+    CallId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                               KCalCore::iTIPMethod method );
 
-    bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                             KCalCore::iTIPMethod method,
-                             const QString &recipients );
-#if 0
-
-    QList<KCalCore::ScheduleMessage*> retrieveTransactions();
-
-    bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
-
-#endif
+    CallId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                               KCalCore::iTIPMethod method,
+                               const QString &recipients );
 
     /** Returns the directory where the free-busy information is stored */
     virtual QString freeBusyDir() const;
 
-    /**
-      Accepts the transaction. The incidence argument specifies the iCal
-      component on which the transaction acts. The status is the result of
-      processing a iTIP message with the current calendar and specifies the
-      action to be taken for this incidence.
-
-      @param incidence the incidence for the transaction.
-      @param method iTIP transaction method to check.
-      @param status scheduling status.
-      @param email the email address of the person for whom this
-      transaction is to be performed.
-    */
-    bool acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                            KCalCore::iTIPMethod method,
-                            KCalCore::ScheduleMessage::Status status,
-                            const QString &email );
-
     /** Accepts a counter proposal */
-    bool acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
+    CallId acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
   private:
-    KCalCore::Calendar::Ptr calendar() const;
-    Calendar *mCalendar;
-    NepomukCalendar::Ptr mNepomukCalendar;
-    KCalCore::ICalFormat *mFormat;
-#if 0
-    QMap<KCalCore::IncidenceBase::Ptr, QString> mEventMap;
-#endif
+    //@cond private
+    class Private;
+    Private *const d;
+    //@endcond
 };
 
 }

@@ -790,3 +790,13 @@ CallId Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence,
   return callId;
 }
 
+NepomukCalendar::Ptr Scheduler::calendar() const
+{
+  return d->mCalendar;
+}
+
+IncidenceChanger2 * Scheduler::changer() const
+{
+  return d->mChanger;
+}
+

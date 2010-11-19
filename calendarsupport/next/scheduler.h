@@ -108,11 +108,6 @@ class CALENDARSUPPORT_EXPORT Scheduler : public QObject
                                        KCalCore::iTIPMethod method, const QString &recipients ) = 0;
 
     /**
-      Retrieves incoming iTIP transactions.
-    */
-    virtual QList<KCalCore::ScheduleMessage::Ptr> retrieveTransactions() = 0;
-
-    /**
       Accepts the transaction. The incidence argument specifies the iCal
       component on which the transaction acts. The status is the result of
       processing a iTIP message with the current calendar and specifies the
@@ -134,7 +129,7 @@ class CALENDARSUPPORT_EXPORT Scheduler : public QObject
     /**
       Returns the directory where the free-busy information is stored.
     */
-    virtual QString freeBusyDir() = 0;
+    virtual QString freeBusyDir() const = 0;
 
     /**
       Sets the free/busy cache used to store free/busy information.
@@ -176,6 +171,9 @@ class CALENDARSUPPORT_EXPORT Scheduler : public QObject
                           KCalCore::ScheduleMessage::Status status );
 
     CallId acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
+
+    NepomukCalendar::Ptr calendar() const;
+    IncidenceChanger2 * changer() const;
 
   Q_SIGNALS:
     void acceptTransactionFinished( CallId callId, ResultCode code, const QString &errorMessage );
