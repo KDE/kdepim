@@ -359,6 +359,7 @@ void MainView::delayedInit()
   connect( actionCollection()->action( "show_expire_properties" ), SIGNAL( triggered( bool ) ), SLOT( showExpireProperties() ) );
   connect( actionCollection()->action( "move_all_to_trash" ), SIGNAL( triggered( bool ) ), SLOT( moveToOrEmptyTrash() ) );
   connect( actionCollection()->action( "create_todo_reminder" ), SIGNAL( triggered( bool ) ), SLOT( createToDo() ) );
+  connect( actionCollection()->action( "create_event" ), SIGNAL( triggered( bool ) ), SLOT( createEvent() ) );
   connect( actionCollection()->action( "apply_filters" ), SIGNAL( triggered( bool ) ), SLOT( applyFilters() ) );
 
   connect( itemSelectionModel()->model(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SLOT( dataChanged() ) );
@@ -1365,6 +1366,15 @@ void MainView::createToDo()
     return;
 
   MailCommon::Util::createTodoFromMail( item );
+}
+
+void MainView::createEvent()
+{
+  const Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  MailCommon::Util::createEventFromMail( item );
 }
 
 void MainView::useFixedFont()

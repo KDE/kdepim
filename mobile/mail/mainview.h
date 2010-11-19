@@ -128,6 +128,7 @@ class MainView : public KDeclarativeMainView
     void folderChanged();
     void moveToOrEmptyTrash();
     void createToDo();
+    void createEvent();
     void useFixedFont();
     void applyFilters();
 

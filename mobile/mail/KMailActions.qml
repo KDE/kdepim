@@ -165,6 +165,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark As..." ) }
     ActionListItem { name : "message_send_again" }
     ActionListItem { name : "create_todo_reminder" }
+    ActionListItem { name : "create_event" }
     ActionListItem { name : "message_find_in" }
     ActionListItem { name : "message_save_as" }
   }
