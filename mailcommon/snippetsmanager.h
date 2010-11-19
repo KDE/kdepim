@@ -46,6 +46,10 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
   Q_PROPERTY( QAction* addSnippetGroupAction READ addSnippetGroupAction )
   Q_PROPERTY( QAction* editSnippetGroupAction READ editSnippetGroupAction )
   Q_PROPERTY( QAction* deleteSnippetGroupAction READ deleteSnippetGroupAction )
+  Q_PROPERTY( QAction* insertSnippetAction READ insertSnippetAction )
+
+  Q_PROPERTY( bool snippetGroupSelected READ snippetGroupSelected )
+  Q_PROPERTY( QString selectedName READ selectedName )
 
   public:
     /**
@@ -60,6 +64,28 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
      * Destroys the snippets manager.
      */
     ~SnippetsManager();
+
+    /**
+     * Sets the editor object the snippet manager will act on.
+     *
+     * @param editor The editor object
+     * @param insertSnippetMethod The name of the method will be executed to
+     *                            insert a snippet into the editor. This method
+     *                            must provide a single QString parameter.
+     * @param dropSignal The signature of the signal that is emitted by the editor
+     *                   object when a snippet has been dropped on it.
+     *
+     * Example usage:
+     *
+     * @code
+     *
+     *  KMComposerEditor *editor = ...
+     *
+     *  snippetsManager->setEditor( editor, "insertPlainText", SIGNAL( insertSnippet() ) );
+     *
+     * @endcode
+     */
+    void setEditor( QObject *editor, const char *insertSnippetMethod, const char *dropSignal );
 
     /**
      * Returns the model that represents the snippets.
@@ -102,6 +128,21 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
      */
     QAction *deleteSnippetGroupAction() const;
 
+    /**
+     * Returns the action that handles inserting a snippet into the editor.
+     */
+    QAction *insertSnippetAction() const;
+
+    /**
+     * Returns whether the currently selected item is a snippet group.
+     */
+    bool snippetGroupSelected() const;
+
+    /**
+     * Returns the name of the currently selected snippet or snippet group.
+     */
+    QString selectedName() const;
+
   private:
     //@cond PRIVATE
     class Private;
@@ -114,6 +155,8 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
     Q_PRIVATE_SLOT( d, void addSnippetGroup() )
     Q_PRIVATE_SLOT( d, void editSnippetGroup() )
     Q_PRIVATE_SLOT( d, void deleteSnippetGroup() )
+    Q_PRIVATE_SLOT( d, void insertSelectedSnippet() )
+    Q_PRIVATE_SLOT( d, void insertActionSnippet() )
     //@endcond
 };
 

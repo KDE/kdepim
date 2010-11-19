@@ -6,14 +6,23 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>406</width>
-    <height>398</height>
+    <width>312</width>
+    <height>347</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>9</number>
+   </property>
+   <property name="topMargin">
+    <number>9</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
+   </property>
    <item>
     <layout class="QFormLayout" name="formLayout_2">
      <item row="0" column="0">
@@ -36,7 +45,7 @@
    </item>
    <item>
     <widget class="QWidget" name="groupWidget" native="true">
-     <layout class="QFormLayout" name="formLayout">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,0">
       <property name="margin">
        <number>0</number>
       </property>
@@ -93,7 +102,14 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KKeySequenceWidget" name="keyWidget"/>
+       <widget class="KKeySequenceWidget" name="keyWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

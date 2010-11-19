@@ -21,6 +21,10 @@
 
 #include "snippetsmodel_p.h"
 
+#include <QtCore/QDebug>
+#include <QtCore/QMimeData>
+#include <QtCore/QStringList>
+
 using namespace MailCommon;
 
 class MailCommon::SnippetItem
@@ -156,6 +160,9 @@ int SnippetsModel::columnCount( const QModelIndex& ) const
 
 bool SnippetsModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
+  if ( !index.isValid() )
+    return false;
+
   SnippetItem *item = static_cast<SnippetItem*>( index.internalPointer() );
   Q_ASSERT( item );
 
@@ -191,6 +198,9 @@ QVariant SnippetsModel::data( const QModelIndex &index, int role ) const
   SnippetItem *item = static_cast<SnippetItem*>( index.internalPointer() );
 
   switch ( role ) {
+    case Qt::DisplayRole:
+      return item->name();
+      break;
     case IsGroupRole:
       return item->isGroup();
       break;
@@ -210,10 +220,15 @@ QVariant SnippetsModel::data( const QModelIndex &index, int role ) const
 
 Qt::ItemFlags SnippetsModel::flags( const QModelIndex &index ) const
 {
-  if ( !index.isValid() )
-    return 0;
+  Qt::ItemFlags defaultFlags = QAbstractItemModel::flags( index );
 
-  return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+  if ( index.isValid() ) {
+    const SnippetItem *item = static_cast<SnippetItem*>( index.internalPointer() );
+    if ( !item->isGroup() )
+      return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
+  }
+
+  return Qt::ItemIsDropEnabled | defaultFlags;
 }
 
 QModelIndex SnippetsModel::index( int row, int column, const QModelIndex &parent ) const
@@ -274,7 +289,8 @@ bool SnippetsModel::insertRows( int row, int count, const QModelIndex &parent )
 
   beginInsertRows( parent, row, row + count - 1 );
   for ( int i = 0; i < count; ++i ) {
-    new SnippetItem( !parent.isValid(), parentItem );
+    SnippetItem * snippet = new SnippetItem( !parent.isValid(), parentItem );
+    parentItem->appendChild( snippet );
   }
   endInsertRows();
 
@@ -295,5 +311,52 @@ bool SnippetsModel::removeRows( int row, int count, const QModelIndex &parent )
     parentItem->removeChild( parentItem->child( row ) );
   endRemoveRows();
 
+  return true;
+}
+
+QStringList SnippetsModel::mimeTypes() const
+{
+  return QStringList() << QLatin1String( "text/x-kmail-textsnippet" ) << QLatin1String( "text/plain" );
+}
+
+QMimeData* SnippetsModel::mimeData( const QModelIndexList &indexes ) const
+{
+  if ( indexes.isEmpty() )
+    return 0;
+
+  const QModelIndex index = indexes.first();
+
+  SnippetItem *item = static_cast<SnippetItem*>( index.internalPointer() );
+  if ( item->isGroup() )
+    return 0;
+
+  QMimeData *mimeData = new QMimeData();
+  mimeData->setData( QLatin1String( "text/x-kmail-textsnippet" ), item->text().toUtf8() );
+  mimeData->setText( item->text() );
+
+  return mimeData;
+}
+
+bool SnippetsModel::dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent )
+{
+  if ( action == Qt::IgnoreAction )
+    return true;
+
+  if ( !data->hasFormat( QLatin1String( "text/x-kmail-textsnippet" ) ) &&
+       !data->hasText() )
+    return false;
+
+  if ( column > 1 )
+    return false;
+
+  const QModelIndex groupIndex = index( row, column, parent );
+  if ( !groupIndex.isValid() )
+    return false;
+
+  SnippetItem *item = static_cast<SnippetItem*>( groupIndex.internalPointer() );
+  if ( !item->isGroup() )
+    return false;
+
+  //TODO: forward to manager
   return true;
 }

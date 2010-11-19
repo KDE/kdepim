@@ -43,6 +43,7 @@ set(libmailcommon_SRCS
   snippetdialog.cpp
   snippetsmanager.cpp
   snippetsmodel.cpp
+  snippetvariabledialog.cpp
 )
 
 kde4_add_ui_files(libmailcommon_SRCS snippetdialog.ui)
