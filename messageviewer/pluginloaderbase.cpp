@@ -26,7 +26,7 @@
 #include <KConfigGroup>
 #include <KDebug>
 #include <KGlobal>
-#include <KLibLoader>
+#include <KLibrary>
 #include <KLocale>
 #include <KStandardDirs>
 
@@ -120,17 +120,12 @@ KLibrary::void_function_ptr PluginLoaderBase::mainFunc( const QString & type, co
 }
 
 const KLibrary * PluginLoaderBase::openLibrary( const QString & libName ) const {
-
-  const QString path = KLibLoader::findLibrary( libName );
-
-  if ( path.isEmpty() ) {
-    kWarning() << "No plugin library named \"" << libName << "\" was found!";
+  KLibrary * library = new KLibrary( libName );
+  if ( library->fileName().isEmpty() || !library->load() ) {
+    kWarning() << "Could not load plugin library" << libName << "error:" << library->errorString() << library->fileName();
+    delete library;
     return 0;
   }
-
-  const KLibrary * library = KLibLoader::self()->library( path );
-
-  kDebug( !library ) << "Could not load library '" << libName << "'";
 
   return library;
 }
