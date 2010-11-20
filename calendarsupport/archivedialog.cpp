@@ -52,6 +52,7 @@
 #include <QHBoxLayout>
 #include <QButtonGroup>
 #include <QRadioButton>
+#include <QGroupBox>
 
 #include "archivedialog.moc"
 

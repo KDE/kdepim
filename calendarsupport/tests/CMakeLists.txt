@@ -8,7 +8,7 @@ kde4_add_executable( incidencesearcher
 
 target_link_libraries( incidencesearcher
                        calendarsupport
-                       akonadi-kde
+                       ${KDEPIMLIBS_AKONADI_LIBS}
                        ${QT_QTGUI_LIBRARY}
                        ${KDE4_KDEUI_LIBS}
                        ${KDEPIMLIBS_KCALCORE_LIBS}
