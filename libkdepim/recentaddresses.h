@@ -31,12 +31,14 @@
 #define KDEPIM_RECENTADDRESSES_H
 
 #include "kdepim_export.h"
+#include <kdeversion.h>
 #include <kabc/addressee.h>
 #include <KDialog>
 #include <QStringList>
 
 class KConfig;
 class KEditListBox;
+class KEditListWidget;
 
 namespace KPIM {
 
@@ -48,7 +50,11 @@ class KDEPIM_EXPORT RecentAddressDialog : public KDialog
     QStringList addresses() const;
 
   private:
+#if KDE_IS_VERSION( 4, 5, 74 )
+    KEditListWidget *mEditor;
+#else
     KEditListBox *mEditor;
+#endif
 };
 
 /**

@@ -35,7 +35,11 @@
 #include <KDebug>
 #include <KGlobal>
 #include <KLocale>
+#if KDE_IS_VERSION( 4, 5, 74 )
+#include <KEditListWidget>
+#else
 #include <KEditListBox>
+#endif
 
 #include <QCoreApplication>
 #include <QLayout>
@@ -182,8 +186,13 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
   layout->setSpacing( spacingHint() );
   layout->setMargin( 0 );
 
+#if KDE_IS_VERSION( 4, 5, 74 )
+  mEditor = new KEditListWidget( page );
+  mEditor->setButtons( KEditListWidget::Add | KEditListWidget::Remove );
+#else
   mEditor = new KEditListBox( i18n( "Recent Addresses" ), page );
   mEditor->setButtons( KEditListBox::Add | KEditListBox::Remove );
+#endif
   layout->addWidget( mEditor );
 }
 
