@@ -27,8 +27,9 @@
 #include <kcomponentdata.h>
 #include <kiconloader.h>
 #include <klocale.h>
-#include <kparts/genericfactory.h>
 #include <kparts/statusbarextension.h>
+#include <kpluginfactory.h>
+#include <kdebug.h>
 
 K_PLUGIN_FACTORY( KAddressBookFactory, registerPlugin<KAddressBookPart>(); )
 K_EXPORT_PLUGIN( KAddressBookFactory( AboutData() ) )
