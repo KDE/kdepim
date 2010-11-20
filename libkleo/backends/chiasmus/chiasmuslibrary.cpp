@@ -69,13 +69,15 @@ Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reas
   assert( lib );
   const QString libfile = lib->urlValue().path();
   if ( !mXiaLibrary )
-    mXiaLibrary = KLibLoader::self()->library( libfile );
-  if ( !mXiaLibrary ) {
+    mXiaLibrary = new KLibrary( libfile );
+  if ( mXiaLibrary->fileName().isEmpty() || !mXiaLibrary->isLoaded() ) {
     if ( reason )
       *reason = i18n( "Failed to load %1: %2",
-                      libfile, KLibLoader::self()->lastErrorMessage() );
+                      libfile, mXiaLibrary->errorString() );
     kDebug(5150) <<"ChiasmusLibrary: loading \"" << libfile
-                  << "\" failed:" << KLibLoader::self()->lastErrorMessage();
+                  << "\" failed:" << mXiaLibrary->errorString();
+    delete mXiaLibrary;
+    mXiaLibrary = 0;
     return 0;
   }
   KLibrary::void_function_ptr symbol = mXiaLibrary->resolveFunction( "Chiasmus" );
@@ -85,6 +87,8 @@ Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reas
                       libfile, i18n( "Library does not contain the symbol \"Chiasmus\"." ) );
     kDebug(5150) <<"ChiasmusLibrary: loading \"" << libfile
                   << "\" failed: " << "Library does not contain the symbol \"Chiasmus\".";
+    delete mXiaLibrary;
+    mXiaLibrary = 0;
     return 0;
   }
 
