@@ -394,9 +394,9 @@ endif (NOT WINCE)
     macro_optional_add_subdirectory(ktimetracker)
   endif(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
 
-  if (QT_QT3SUPPORT_FOUND AND KDEPIM_BUILD_DESKTOP)
+  if (KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(kontact) # must be the last one.
-  endif (QT_QT3SUPPORT_FOUND AND KDEPIM_BUILD_DESKTOP)
+  endif (KDEPIM_BUILD_DESKTOP)
 
   # These targets depend on optional applications
   if (KDEPIMLIBS_KRESOURCES_LIBRARY)
