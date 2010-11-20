@@ -93,6 +93,20 @@ function replaceImageSrc(src, dest)
     replaceHtml(res);
 }
 
+function insertLink(href, target, title)
+{
+    if (window.getSelection)
+    {
+        var userSelection = window.getSelection();
+        var lnk = document.createElement("a");
+        lnk.href = href;
+        lnk.target = target;
+        lnk.title = title;
+        var range = userSelection.getRangeAt(0);
+        range.surroundContents(lnk);
+    } else
+        alert("Select something");
+}
 </script>
 
 </head>

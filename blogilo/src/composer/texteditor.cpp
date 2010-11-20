@@ -169,6 +169,7 @@ void WebView::contextMenuEvent(QContextMenuEvent* event)
                 elm.replace(tmpLink);
             }*/
         }
+        dlg->deleteLater();
     } else if(res == actRemoveImage){
         elm.removeFromDocument();
     } else if(res == actEditLink){
@@ -190,6 +191,7 @@ void WebView::contextMenuEvent(QContextMenuEvent* event)
                 linkElm.setAttribute("title", lnk.title);
             }
         }
+        dlg->deleteLater();
     } else if(res == actRemoveLink) {
         page()->mainFrame()->evaluateJavaScript("document.execCommand(\"unLink\", false, null)");
     }
@@ -659,11 +661,16 @@ void TextEditor::slotAddLink()
         QUrl url = guessUrlFromString(lnk.address);
         if(url.isValid()){
             execCommand( "createLink", url.toString() );
+            ///=====
 //             QString target = lnk.target.isEmpty() ? QString() : QString("target=\"%1\"").arg(lnk.target);
 //             QString title = lnk.title.isEmpty() ? QString() : QString( "title=\"%1\"").arg(lnk.title);
 //             QString html = QString ( "<a href=\"%1\" %2 %3>%4</a>" )
 //                                 .arg ( url.toString() ).arg ( target ).arg( title ).arg ( selection );
+//             kDebug()<<html;
 //             execCommand ( "insertHTML", html );//FIXME Can't understand why do this code doesn't work!? :|
+            ///=====
+//             kDebug();
+//             execCommand( QString("insertLink(%1, %2, %3)").arg(url.toString()).arg(lnk.target).arg(lnk.title) );
         }
     }
     addLinkDlg->deleteLater();

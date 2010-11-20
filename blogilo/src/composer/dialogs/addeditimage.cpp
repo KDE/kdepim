@@ -91,6 +91,8 @@ void AddEditImage::slotSelectLocalFile()
     path = KFileDialog::getImageOpenUrl( KUrl(), this, i18n("Choose a file") ).path();
 #endif
     QImage img(path);
+    if(path.isEmpty() || img.isNull())
+        return;
     ui.urlReqLineEdit->setText(path);
     editImageWidgetUi.btnKeepRatio->setChecked(true);
     ratio = img.width()/img.height();
