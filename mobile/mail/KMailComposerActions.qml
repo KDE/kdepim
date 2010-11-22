@@ -81,6 +81,12 @@ ActionMenuContainer {
     ActionListItem { name : "encrypt_email" }
   }
 
+  SnippetsList {
+    category : "composer"
+    name : "snippets_menu"
+    text : KDE.i18n( "Snippets" )
+  }
+
   ActionList {
     category : "composer"
     name : "composer_menu"

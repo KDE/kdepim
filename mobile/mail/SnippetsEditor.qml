@@ -24,19 +24,27 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
-  anchors.fill: parent
-  z: 10
-  color: "#00000000"
+  id : _topLevel
+  color : "#00000000"
+  property int actionItemHeight : 70
+  property int actionItemWidth : 200
+  property int actionItemSpacing : 0
+  property int bottomMargin
+  anchors.bottomMargin : bottomMargin
+
+  property alias model : snippetsView.model
+
+  property alias customActions : actionColumn.content
+
+  signal triggered(string triggeredName)
+  signal doCollapse()
 
   QML.ListView {
     id: snippetsView
-    anchors.left: parent.left
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
-    anchors.leftMargin: 30
-    anchors.topMargin: 10
-    width: parent.width * 0.6
+    anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
+    width: parent.width - actionColumn.width
     model: snippetsModel
+    focus: true
     clip: true
 
     delegate: QML.Item {
@@ -74,13 +82,12 @@ QML.Rectangle {
 
   KPIM.ActionMenuContainer {
     id : actionColumn
-    anchors.left: snippetsView.right
-    anchors.top: parent.top
-    anchors.right: parent.right
-    anchors.topMargin: 10
-    anchors.bottom: parent.bottom
-    actionItemWidth: width
-    actionItemHeight: 50
+    width : _topLevel.actionItemWidth
+    anchors.top : parent.top
+    anchors.bottom : parent.bottom
+    anchors.right : parent.right
+    actionItemWidth : width
+    actionItemHeight : _topLevel.actionItemHeight
 
     content : [
       KPIM.ActionListItem { name : "snippetseditor_insert_snippet" },
@@ -91,5 +98,19 @@ QML.Rectangle {
       KPIM.ActionListItem { name : "snippetseditor_edit_snippetgroup" },
       KPIM.ActionListItem { name : "snippetseditor_delete_snippetgroup" }
     ]
+
+    onTriggered: {
+      if ( triggeredName == "snippetseditor_insert_snippet" ) {
+        parent.doCollapse()
+      }
+    }
+  }
+
+  onActionItemSpacingChanged : {
+    actionColumn.refresh();
+  }
+
+  onActionItemHeightChanged : {
+    actionColumn.refresh();
   }
 }

@@ -118,6 +118,7 @@ install(FILES
   dividing-line.png
   dividing-line-horizontal.png
   SnippetsEditor.qml
+  SnippetsList.qml
   VacationScriptIndicator.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )

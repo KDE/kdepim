@@ -144,19 +144,6 @@ KPIM.MainView {
         }
       ]
     }
-
-    SlideoutPanel {
-      anchors.fill: parent
-      id: snippetsPanel
-      titleText: KDE.i18n( "Snippets" )
-      handleHeight: 150
-      handlePosition: attachmentPanel.handlePosition + attachmentPanel.handleHeight
-      content: [
-        SnippetsEditor {
-          anchors.fill: parent
-        }
-      ]
-    }
   }
 
   // ### Make it a general processing screen?
