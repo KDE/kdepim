@@ -52,6 +52,9 @@
 #include <Akonadi/AgentManager>
 #include <Akonadi/EntityTreeModel>
 #include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/kmime/messageparts.h>
 
 #include <incidenceeditor-ng/incidencedialogfactory.h>
 
@@ -153,7 +156,19 @@ void ensureKorganizerRunning( bool switchTo )
 
 static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type, const Akonadi::Item &mailItem )
 {
-  KMime::Message::Ptr msg = MessageCore::Util::message( mailItem );
+  Akonadi::Item item( mailItem );
+
+  // We need the full payload to attach the mail to the incidence
+  if ( !item.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
+    job->fetchScope().fetchFullPayload();
+    if ( job->exec() ) {
+      if ( job->items().count() == 1 )
+        item = job->items().first();
+    }
+  }
+
+  KMime::Message::Ptr msg = MessageCore::Util::message( item );
 
   if ( !msg )
     return false;
@@ -166,10 +181,9 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
     return false;
   }
 
-  const QString incidenceDescription = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
-                                            msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
+  const QString incidenceDescription = i18n( "From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
+                                             msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
 
-  const QString uri = "kmail:" + QString::number( mailItem.id() ) + '/' + MessageCore::Util::messageId( msg );
   tf.write( msg->encodedContent() );
   tf.flush();
 
