@@ -27,7 +27,7 @@
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
 #  define KSIEVEUI_EXPORT
-# elif defined(MAKE_KSIEVE_LIB)
+# elif defined(MAKE_KSIEVEUI_LIB)
    /* We are building this library */ 
 #  define KSIEVEUI_EXPORT KDE_EXPORT
 # else
