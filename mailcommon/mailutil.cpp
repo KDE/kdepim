@@ -38,6 +38,8 @@
 
 
 #include "mailutil.h"
+#include "mailutil_p.h"
+
 #include "imapsettings.h"
 #include "mailkernel.h"
 #include "calendarinterface.h"
@@ -48,6 +50,8 @@
 #include <kmime/kmime_message.h>
 #include <kpimutils/email.h>
 #include <kimap/loginjob.h>
+#include <kmenu.h>
+#include <kmessagebox.h>
 #include <mailtransport/transport.h>
 #include <Akonadi/AgentManager>
 #include <Akonadi/EntityTreeModel>
@@ -56,6 +60,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/kmime/messageparts.h>
 
+#include <incidenceeditor-ng/globalsettings.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>
 
 #include <KStandardDirs>
@@ -173,6 +178,9 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
   if ( !msg )
     return false;
 
+  bool isInlineAttachment = false;
+  QStringList attachmentUris;
+
   KTemporaryFile tf;
   tf.setAutoRemove( true );
 
@@ -184,14 +192,77 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
   const QString incidenceDescription = i18n( "From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
                                              msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
 
-  tf.write( msg->encodedContent() );
-  tf.flush();
-
-  QStringList attachmentUris;
-  attachmentUris << tf.fileName();
-
   QStringList attachmentMimeTypes;
   attachmentMimeTypes << QLatin1String( "message/rfc822" );
+
+  int action = IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethod();
+  if ( IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethod() == IncidenceEditorNG::GlobalSettings::Ask ) {
+    MailCommon::AttachmentSelectionDialog dialog;
+
+    if ( !dialog.exec() )
+      return true; // canceled by user
+
+    switch ( dialog.attachmentType() ) {
+      case MailCommon::AttachmentSelectionDialog::AttachAsLink:
+        action = IncidenceEditorNG::GlobalSettings::Link;
+        break;
+      case MailCommon::AttachmentSelectionDialog::AttachInline:
+        action = IncidenceEditorNG::GlobalSettings::InlineFull;
+        break;
+      case MailCommon::AttachmentSelectionDialog::AttachWithoutAttachments:
+        action = IncidenceEditorNG::GlobalSettings::InlineBody;
+        break;
+    }
+  }
+
+  switch ( action ) {
+    case IncidenceEditorNG::GlobalSettings::Link:
+      attachmentUris << mailItem.url().url();
+      isInlineAttachment = false;
+      break;
+    case IncidenceEditorNG::GlobalSettings::InlineFull:
+      tf.write( msg->encodedContent() );
+      tf.flush();
+
+      attachmentUris << tf.fileName();
+      isInlineAttachment = true;
+      break;
+    case IncidenceEditorNG::GlobalSettings::InlineBody:
+    {
+      if ( msg.get() == msg->textContent() || msg->textContent() == 0 ) { // no attachments
+        tf.write( msg->encodedContent() );
+        tf.flush();
+
+        attachmentUris << tf.fileName();
+        isInlineAttachment = true;
+      } else {
+        if ( KMessageBox::warningContinueCancel(
+               0,
+               i18n( "Removing attachments from an email might invalidate its signature." ),
+               i18n( "Remove Attachments" ), KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
+               "BodyOnlyInlineAttachment" ) != KMessageBox::Continue ) {
+          return true; // canceled by user
+        }
+
+        KMime::Message::Ptr newMsg( new KMime::Message() );
+        newMsg->setHead( msg->head() );
+        newMsg->setBody( msg->textContent()->body() );
+        newMsg->parse();
+        newMsg->contentTransferEncoding()->from7BitString(
+              msg->textContent()->contentTransferEncoding()->as7BitString() );
+        newMsg->contentType()->from7BitString( msg->textContent()->contentType()->as7BitString() );
+        newMsg->assemble();
+        tf.write( newMsg->encodedContent() );
+        tf.flush();
+
+        attachmentUris << tf.fileName();
+        isInlineAttachment = true;
+      }
+      break;
+    }
+    default:
+      return false;
+  }
 
 #ifndef _WIN32_WCE
   switch ( type ) {
@@ -201,7 +272,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
                                                                     attachmentUris,
                                                                     QStringList() /* attendees */,
                                                                     attachmentMimeTypes,
-                                                                    true /* inline */,
+                                                                    isInlineAttachment,
                                                                     Akonadi::Collection() );
       break;
     case KCalCore::IncidenceBase::TypeTodo:
@@ -210,7 +281,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
                                                                    attachmentUris,
                                                                    QStringList() /* attendees */,
                                                                    attachmentMimeTypes,
-                                                                   true /* inline */,
+                                                                   isInlineAttachment,
                                                                    Akonadi::Collection() );
       break;
     default:
