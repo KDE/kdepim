@@ -23,8 +23,14 @@
 #include <KDebug>
 #include <QFont>
 #include <KCmdLineArgs>
+#ifdef _WIN32_WCE
+#include <QThread>
+#endif
 
 static inline bool runPreApplicationSetup( const KCmdLineOptions & opts ) {
+#ifdef _WIN32_WCE
+  QThread::currentThread()->setPriority(QThread::HighPriority);
+#endif
     KDeclarativeApplication::preApplicationSetup();
     return true; // <-- default value of KApplication(bool) ctor
 }
