@@ -70,7 +70,7 @@ class FilterManager::Private
 void FilterManager::Private::tryToFilterInboxOnStartup()
 {
   if ( !Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).isValid() ) {
-    QTimer::singleShot( 0, q, SLOT( tryToFilterInboxOnStartup() ) );
+    QTimer::singleShot( 10000, q, SLOT( tryToFilterInboxOnStartup() ) );
     return;
   }
 
@@ -91,7 +91,7 @@ void FilterManager::Private::tryToMonitorCollection()
     q->connect( KernelIf->folderCollectionMonitor(), SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
                 q, SLOT( slotFolderRemoved( const Akonadi::Collection & ) ) );
   } else {
-    QTimer::singleShot( 0, q, SLOT( tryToMonitorCollection() ) );
+    QTimer::singleShot( 10000, q, SLOT( tryToMonitorCollection() ) );
   }
 }
 
