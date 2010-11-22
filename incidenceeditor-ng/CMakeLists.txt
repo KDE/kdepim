@@ -6,6 +6,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/calendarsupport
   ${CMAKE_BINARY_DIR}/calendarsupport
+  ${CMAKE_BINARY_DIR}/incidenceeditor-ng
   ${Boost_INCLUDE_DIR}
 )
 
@@ -17,6 +18,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   attendeeeditor.cpp
   alarmpresets.cpp
   alarmdialog.cpp
+  globalsettings.cpp
 
   ktimezonecombobox.cpp
 
@@ -27,8 +29,8 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   freebusyurldialog.cpp
 
   # Shared incidence editors code
-  incidenceeditor.cpp
   combinedincidenceeditor.cpp
+  incidenceeditor.cpp
 
   # Specific editors
   incidencealarm.cpp
@@ -55,6 +57,8 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   editorconfig.cpp
   korganizereditorconfig.cpp
 )
+
+kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc )
 
 if (NOT WINCE)
   set(incidenceeditors_ng_shared_LIB_SRCS ${incidenceeditors_ng_shared_LIB_SRCS}

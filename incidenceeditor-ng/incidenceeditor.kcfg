@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM
+    "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <include>klocale.h</include>
+  <kcfgfile name="incidenceeditorrc"/>
+
+  <group name="AttachmentHandling">
+    <entry type="Enum" name="DefaultEmailAttachMethod">
+      <label>Default Email Attachment Method</label>
+      <whatsthis>The default way of attaching dropped emails to an event</whatsthis>
+      <choices>
+        <choice name="Ask">
+          <label>Always ask</label>
+        </choice>
+        <choice name="Link">
+          <label>Only attach link to message</label>
+        </choice>
+        <choice name="InlineFull">
+          <label>Attach complete message</label>
+        </choice>
+        <choice name="InlineBody">
+          <label>Attach message without attachments</label>
+        </choice>
+      </choices>
+      <default>Ask</default>
+    </entry>
+  </group>
+
+</kcfg>
