@@ -27,6 +27,7 @@ set(kmail_mobile_srcs
   composerautoresizer.cpp
   composerview.cpp
   configwidget.cpp
+  cryptoformatselectiondialog.cpp
   declarativeidentitycombobox.cpp
   emailsexporthandler.cpp
   emailsguistatemanager.cpp
@@ -79,6 +80,7 @@ target_link_libraries(kmail-mobile
     kdepimmobileui
     kmbox
     ksieveui
+    kleo
     mailcommon
     messagecomposer
     messagecore

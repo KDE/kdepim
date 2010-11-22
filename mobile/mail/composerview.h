@@ -113,6 +113,7 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void toggleUseFixedFont( bool );
     void toggleAutomaticWordWrap( bool );
+    void setCryptoFormat();
 
     void sendLater();
     void saveDraft();
@@ -134,6 +135,7 @@ class ComposerView : public KDeclarativeFullScreenView
     bool m_mdnRequested;
     QString m_fileName;
     SnippetsEditor *m_snippetsEditor;
+    Kleo::CryptoMessageFormat m_cryptoFormat;
 };
 
 #endif

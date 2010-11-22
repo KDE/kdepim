@@ -21,6 +21,7 @@
 
 #include "attachmenteditor.h"
 #include "composerautoresizer.h"
+#include "cryptoformatselectiondialog.h"
 #include "declarativeidentitycombobox.h"
 #include "declarativewidgetbase.h"
 #include "mobilekernel.h"
@@ -86,7 +87,7 @@ ComposerView::ComposerView(QWidget* parent) :
   m_draft( false ),
   m_urgent( false ),
   m_mdnRequested( Settings::self()->composerRequestMDN() ),
-  m_fileName ( QString() )
+  m_cryptoFormat( Kleo::AutoFormat )
 {
   setSubject( QString() );
   setAttribute(Qt::WA_DeleteOnClose);
@@ -222,6 +223,10 @@ void ComposerView::delayedInit()
   action->setCheckable( true );
   action->setChecked( MessageViewer::GlobalSettings::self()->useFixedFont() );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( toggleUseFixedFont( bool ) ) );
+
+  action = actionCollection()->addAction( "options_set_cryptoformat" );
+  action->setText( i18n( "Crypto Message Format..." ) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( setCryptoFormat() ) );
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -320,7 +325,7 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
   m_composerBase->setFrom( identity.fullEmailAddr() );
   m_composerBase->setReplyTo( identity.replyToAddr() );
 
-  m_composerBase->setCryptoOptions( m_sign, m_encrypt, Kleo::AutoFormat );
+  m_composerBase->setCryptoOptions( m_sign, m_encrypt, m_cryptoFormat );
 
   // Default till UI exists
   //  m_composerBase->setCharsets( );
@@ -557,6 +562,15 @@ void ComposerView::toggleAutomaticWordWrap( bool use )
     m_composerBase->editor()->enableWordWrap( MessageComposer::MessageComposerSettings::self()->lineWrapWidth() );
   else
     m_composerBase->editor()->disableWordWrap();
+}
+
+void ComposerView::setCryptoFormat()
+{
+  CryptoFormatSelectionDialog dlg( this );
+  dlg.setCryptoFormat( m_cryptoFormat );
+
+  if ( dlg.exec() )
+    m_cryptoFormat = dlg.cryptoFormat();
 }
 
 void ComposerView::enableHtml()

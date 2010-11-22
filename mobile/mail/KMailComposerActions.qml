@@ -62,6 +62,7 @@ ActionMenuContainer {
     ActionListItem { name : "options_wordwrap" }
     ActionListItem { name : "options_fixedfont" }
     ActionListItem { name : "attach_public_key" }
+    ActionListItem { name : "options_set_cryptoformat" }
   }
 
   ActionList {
