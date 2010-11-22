@@ -24,9 +24,9 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
-
   anchors.fill: parent
   z: 10
+  color: "#00000000"
 
   QML.ListView {
     id: snippetsView
@@ -43,7 +43,7 @@ QML.Rectangle {
       id: snippetDelegate
       clip: true
       width: parent.width
-      height: 20
+      height: 70
 
       QML.Rectangle {
         id: background
@@ -52,19 +52,9 @@ QML.Rectangle {
         color: "lightsteelblue"
       }
 
-      QML.Item {
-        id: snippetSpacer
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: model.isSnippetGroup ? 0 : 20
-      }
-
       QML.Text {
-        anchors.left: snippetSpacer.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
+        anchors.fill: parent
+        anchors.leftMargin: model.isSnippetGroup ? 5 : 25
         text: model.display
         font.bold: model.isSnippetGroup
         horizontalAlignment: QML.Text.AlignLeft
