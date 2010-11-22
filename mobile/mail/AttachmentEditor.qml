@@ -94,7 +94,7 @@ Item {
     anchors.bottom : parent.bottom
     anchors.right : parent.right
     actionItemWidth : width
-    actionItemHeight : 30
+    actionItemHeight : 70
     width: parent.width/2
 
     content : [
