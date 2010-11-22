@@ -62,21 +62,6 @@ namespace MessageComposer
 
 namespace Message {
 
-class AttachmentControllerBase;
-
-
-class SignatureController;
-
-
-class AttachmentControllerBase;
-
-
-class AttachmentModel;
-
-
-class SignatureController;
-
-
 class InfoPart;
 class GlobalPart;
 class Composer;
