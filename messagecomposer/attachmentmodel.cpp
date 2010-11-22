@@ -84,6 +84,16 @@ AttachmentModel::AttachmentModel( QObject *parent )
   : QAbstractItemModel( parent )
   , d( new Private( this ) )
 {
+  QHash<int, QByteArray> names = roleNames();
+  names.insert( NameRole, "attachmentName" );
+  names.insert( SizeRole, "attachmentSize" );
+  names.insert( EncodingRole, "attachmentEncoding" );
+  names.insert( MimeTypeRole, "attachmentMimeType" );
+  names.insert( CompressRole, "attachmentIsCompressed" );
+  names.insert( EncryptRole, "attachmentIsEncrypted" );
+  names.insert( SignRole, "attachmentIsSigned" );
+
+  setRoleNames( names );
 }
 
 AttachmentModel::~AttachmentModel()
@@ -279,6 +289,20 @@ QVariant AttachmentModel::data( const QModelIndex &index, int role ) const
       kWarning() << "AttachmentPartRole and column != 0.";
       return QVariant();
     }
+  } else if ( role == NameRole ) {
+    return QVariant::fromValue( part->fileName().isEmpty() ? part->name() : part->fileName() );
+  } else if ( role == SizeRole ) {
+    return QVariant::fromValue( KGlobal::locale()->formatByteSize( part->size() ) );
+  } else if ( role == EncodingRole ) {
+    return QVariant::fromValue( KMime::nameForEncoding( part->encoding() ) );
+  } else if ( role == MimeTypeRole ) {
+    return QVariant::fromValue( part->mimeType() );
+  } else if ( role == CompressRole ) {
+    return QVariant::fromValue( part->isCompressed() );
+  } else if ( role == EncryptRole ) {
+    return QVariant::fromValue( part->isEncrypted() );
+  } else if ( role == SignRole ) {
+    return QVariant::fromValue( part->isSigned() );
   } else {
     return QVariant();
   }
