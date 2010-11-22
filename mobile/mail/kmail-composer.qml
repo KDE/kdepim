@@ -123,24 +123,11 @@ KPIM.MainView {
       handleHeight: 100
       handlePosition: actionPanel.handlePosition + actionPanel.handleHeight
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      contentWidth: attachmentView.requestedWidth
+      contentWidth: attachmentEditorView.width
       content: [
-        KPIM.AttachmentList {
-          id: attachmentView
-          model: attachmentModel
-          anchors.top: parent.top
-          anchors.left : parent.left
-          anchors.right : parent.right
-          height : ( parent.height / 6 ) * 5
-        },
-        KPIM.Action {
-          id : newAttachmentButton
-//           color : "lightsteelblue"
-          anchors.top : attachmentView.bottom
-          anchors.left : parent.left
-          anchors.right : parent.right
-          height : parent.height / 6
-          action : application.getAction("add_attachment")
+        AttachmentEditor {
+          id: attachmentEditorView
+          anchors.fill: parent
         }
       ]
     }

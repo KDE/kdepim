@@ -18,11 +18,12 @@
 */
 
 #include "composerview.h"
-#include "composerautoresizer.h"
 
-#include "mobilekernel.h"
-#include "declarativewidgetbase.h"
+#include "attachmenteditor.h"
+#include "composerautoresizer.h"
 #include "declarativeidentitycombobox.h"
+#include "declarativewidgetbase.h"
+#include "mobilekernel.h"
 #include "settings.h"
 #include "snippetseditor.h"
 
@@ -57,7 +58,6 @@
 #include <KAction>
 #include <KMessageBox>
 #include <KCMultiDialog>
-#include <KFileDialog>
 #include <KNotification>
 
 #include <qdeclarativecontext.h>
@@ -101,12 +101,6 @@ void ComposerView::delayedInit()
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
   qmlRegisterType<DeclarativeRecipientsEditor>( "org.kde.messagecomposer", 4, 5, "RecipientsEditor" );
 
-  // TODO: Really make this application-global;
-  KAction *action = actionCollection()->addAction( "add_attachment" );
-  action->setText( i18n( "Add Attachment" ) );
-  action->setIcon( KIcon( "list-add" ) );
-  connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(addAttachment()));
-
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(qmlLoaded(QDeclarativeView::Status)) );
 
@@ -148,7 +142,10 @@ void ComposerView::delayedInit()
   m_composerBase->setAttachmentModel( attachmentModel );
   m_composerBase->setAttachmentController( attachmentController );
 
-  action = actionCollection()->addAction("sign_email");
+  AttachmentEditor *attachmentEditor = new AttachmentEditor( actionCollection(), attachmentModel, attachmentController, this );
+  engine()->rootContext()->setContextProperty( "attachmentEditor", attachmentEditor );
+
+  KAction *action = actionCollection()->addAction("sign_email");
   action->setText( i18n( "Sign" ) );
   action->setIcon( KIcon( "document-sign" ) );
   action->setCheckable(true);
@@ -416,20 +413,12 @@ void ComposerView::configureTransport()
 #endif
 }
 
-void ComposerView::addAttachment()
-{
-  KUrl url = KFileDialog::getOpenUrl();
-  if (!url.isEmpty())
-    m_composerBase->addAttachment( url, QString() );
-}
-
 void ComposerView::addAttachment(KMime::Content* part)
 {
   if ( part ) {
     m_composerBase->addAttachmentPart( part );
   }
 }
-
 
 void ComposerView::success()
 {

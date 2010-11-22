@@ -21,6 +21,7 @@ include_directories(
 
 set(kmail_mobile_srcs   
   acleditor.cpp
+  attachmenteditor.cpp
   attachmentproxymodel.cpp
   charsetselectiondialog.cpp
   composerautoresizer.cpp
@@ -98,6 +99,7 @@ install(FILES kmail-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   AclEditor.qml
+  AttachmentEditor.qml
   BulkActionComponent.qml
   ConfigDialog.qml
   FilterActions.qml

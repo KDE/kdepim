@@ -103,7 +103,6 @@ class ComposerView : public KDeclarativeFullScreenView
 
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
-    void addAttachment();
     void success();
     void failed( const QString &errorMessage );
 
