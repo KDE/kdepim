@@ -477,6 +477,9 @@ void ComposerView::closeEvent( QCloseEvent * event )
       // remove autosaves if the message was discarded
       m_composerBase->cleanupAutoSave();
     }
+  } else {
+    // discard empty autosave files as well
+    m_composerBase->cleanupAutoSave();
   }
 
   event->accept();
