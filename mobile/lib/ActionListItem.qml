@@ -63,6 +63,7 @@ QML.Item {
 
     onTriggered : {
       parent.doCollapse()
+      parent.triggered(name)
     }
   }
 }
