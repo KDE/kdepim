@@ -55,6 +55,8 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 
     // TODO dnd stuff...
 
+    void setSelectedParts( const MessageCore::AttachmentPart::List &selectedParts );
+
   public slots:
     /// model sets these
     void setEncryptEnabled( bool enabled );
@@ -86,7 +88,6 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void enableAttachPublicKey( bool enable );
     void enableAttachMyPublicKey( bool enable );
     void byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite = false);
-    void setSelectedParts( const MessageCore::AttachmentPart::List &selectedParts );
 
   private slots:
     void slotPutResult(KJob *job);
