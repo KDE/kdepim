@@ -14,7 +14,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <kio/passworddialog.h>
+#include <kpassworddialog.h>
 
 #include "knaccountmanager.h"
 #include "knarticle.h"
@@ -172,10 +172,17 @@ void Scheduler::slotJobFinished( KNJobData * job )
     if ( account ) {
       QString user = account->user();
       QString pass = account->pass();
-      bool keep = false;
-      if ( KDialog::Accepted == KIO::PasswordDialog::getNameAndPassword( user, pass, &keep,
-          i18n("You need to supply a username and a\npassword to access this server"), false,
-          i18n("Authentication Failed"), account->server(), i18n("Server:") ) ) {
+
+      KPasswordDialog dlg( 0, KPasswordDialog::ShowUsernameLine );
+      dlg.setUsername( user );
+      dlg.setPassword( pass );
+      dlg.setKeepPassword( false );
+      dlg.setPrompt( i18n( "You need to supply a username and a\npassword to access this server" ) );
+      dlg.setUsernameReadOnly( false );
+      dlg.setCaption( i18n( "Authentication Failed" ) );
+      dlg.addCommentLine( i18n( "Server:" ), account->server() );
+
+      if ( dlg.exec() == KDialog::Accepted ) {
         account->setNeedsLogon( true );
         account->setUser( user );
         account->setPass( pass );
