@@ -31,7 +31,7 @@
 #include "utils/startup.h"
 
 
-#include <kparts/genericfactory.h>
+#include <kpluginfactory.h>
 #include <kparts/statusbarextension.h>
 #include <kiconloader.h>
 #include <kdebug.h>
