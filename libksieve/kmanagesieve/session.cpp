@@ -27,7 +27,7 @@
 #include <kio/sslui.h>
 #include <kio/authinfo.h>
 #include <KLocalizedString>
-#include <KIO/PasswordDialog>
+#include <KPasswordDialog>
 
 static sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
@@ -401,16 +401,17 @@ bool Session::saslInteract(void* in)
   for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
     if ( interact->id == SASL_CB_AUTHNAME || interact->id == SASL_CB_PASS ) {
       if ( m_url.user().isEmpty() || m_url.password().isEmpty()) {
-        if ( !KIO::PasswordDialog::getNameAndPassword(
-              ai.username,
-              ai.password,
-              &(ai.keepPassword),
-              ai.prompt,
-              ai.readOnly,
-              ai.caption,
-              ai.comment,
-              ai.commentLabel
-            ) == KIO::PasswordDialog::Accepted )
+
+        KPasswordDialog dlg( 0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
+        dlg.setUsername( ai.username );
+        dlg.setPassword( ai.password );
+        dlg.setKeepPassword( ai.keepPassword );
+        dlg.setPrompt( ai.prompt );
+        dlg.setUsernameReadOnly( ai.readOnly );
+        dlg.setCaption( ai.caption );
+        dlg.addCommentLine( ai.commentLabel, ai.comment );
+
+        if ( dlg.exec() != QDialog::Accepted )
         {
           // calling error() below is wrong for two reasons:
           // - ERR_ABORTED is too harsh
