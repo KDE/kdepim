@@ -145,7 +145,7 @@ SnippetsModel::SnippetsModel( QObject *parent )
   : QAbstractItemModel( parent )
 {
   mRootItem = new SnippetItem( true );
-  mRootItem->setText( "Root" );
+  mRootItem->setText( i18n("Root") );
 
   QHash<int, QByteArray> names = roleNames();
 
