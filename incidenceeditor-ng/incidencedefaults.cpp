@@ -244,7 +244,7 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
           if ( f.open( QIODevice::ReadOnly ) ) {
             const QByteArray data = f.readAll();
             f.close();
-            attachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( data, mimeType ) );
+            attachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( data.toBase64(), mimeType ) );
           } else {
             kError() << "Error opening " << *it;
           }
