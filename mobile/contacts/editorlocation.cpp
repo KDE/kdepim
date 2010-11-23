@@ -143,7 +143,7 @@ class EditorLocation::Private
     {
       const int answer = KMessageBox::questionYesNo( 0, i18n( "Do you really want to delete this address?" ),
                                                         i18n( "Delete Address" ),
-                                                        KGuiItem( "Delete" ) );
+                                                        KGuiItem( i18n("Delete") ) );
       if ( answer == KMessageBox::No )
         return;
 
