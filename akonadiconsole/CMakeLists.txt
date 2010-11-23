@@ -58,14 +58,26 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   agentwidget.ui
   agentconfigdialog.ui
   browserwidget_itemview.ui
-  browserwidget_contentview.ui
   collectionattributespage.ui
-  collectioninternalspage.ui
   collectionaclpage.ui
   dbbrowser.ui
   dbconsole.ui
   rawsocketconsole.ui
 )
+
+macro_ensure_version( "4.5.74" ${KDE_VERSION} KDE_IS_AT_LEAST_4_5_74 )
+
+if(KDE_IS_AT_LEAST_4_5_74)
+  kde4_add_ui_files(akonadiconsole_bin_SRCS
+    browserwidget_contentview.ui
+    collectioninternalspage.ui
+  )
+else(KDE_IS_AT_LEAST_4_5_74)
+  kde4_add_ui_files(akonadiconsole_bin_SRCS
+    browserwidget_contentview-45.ui
+    collectioninternalspage-45.ui
+  )
+endif(KDE_IS_AT_LEAST_4_5_74)
 
 kde4_add_kcfg_files(akonadiconsole_bin_SRCS settings.kcfgc)
 

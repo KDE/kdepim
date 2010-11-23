@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>622</width>
+    <width>507</width>
     <height>496</height>
    </rect>
   </property>
@@ -14,7 +14,7 @@
    <item row="0" column="0" colspan="2">
     <widget class="KTabWidget" name="mainTabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -76,7 +76,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="CalendarSupport::IncidenceViewer" name="incidenceView" native="true"/>
+            <widget class="CalendarSupport::IncidenceViewer" name="incidenceView"/>
            </item>
           </layout>
          </widget>
@@ -292,28 +292,19 @@
         </layout>
        </item>
        <item row="6" column="0">
-        <widget class="QGroupBox" name="groupBox">
+        <widget class="KEditListBox" name="flags">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Flags</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <widget class="KEditListWidget" name="flags">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>1</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="buttons">
-             <set>KEditListWidget::Add|KEditListWidget::Remove</set>
-            </property>
-            <property name="title" stdset="0">
-             <string>Flags</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <property name="buttons">
+          <set>KEditListBox::Add|KEditListBox::Remove</set>
+         </property>
         </widget>
        </item>
       </layout>
@@ -426,6 +417,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>KEditListBox</class>
+   <extends>QGroupBox</extends>
+   <header>keditlistbox.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
@@ -442,21 +439,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KEditListWidget</class>
-   <extends>QWidget</extends>
-   <header>keditlistwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>KTextBrowser</class>
    <extends>QTextBrowser</extends>
    <header>ktextbrowser.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KRatingWidget</class>
-   <extends>QFrame</extends>
-   <header>kratingwidget.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>CalendarSupport::IncidenceViewer</class>
@@ -472,6 +457,12 @@
    <class>Nepomuk::TagWidget</class>
    <extends>QWidget</extends>
    <header location="global">nepomuk/kmetadatatagwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KRatingWidget</class>
+   <extends>QFrame</extends>
+   <header location="global">nepomuk/kratingwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
