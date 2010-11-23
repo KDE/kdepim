@@ -30,7 +30,6 @@
 #include <kregexpeditorinterface.h>
 #include <KServiceTypeTrader>
 #include <KPushButton>
-#include <kparts/componentfactory.h>
 
 #include <QLabel>
 #include <QPushButton>
@@ -147,7 +146,7 @@ void SingleConditionWidget::toggleRegExpButton( int selected )
 void SingleConditionWidget::showRegExpDialog()
 {
   QDialog *editorDialog =
-    KParts::ComponentFactory::createPartInstanceFromQuery<QDialog>(
+    KServiceTypeTrader::createInstanceFromQuery<QDialog>(
       "KRegExpEditor/KRegExpEditor", QString() );
   if ( editorDialog ) {
     KRegExpEditorInterface *editor = qobject_cast<KRegExpEditorInterface *>( editorDialog );
