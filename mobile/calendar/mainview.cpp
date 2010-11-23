@@ -326,6 +326,14 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
   editor->show();
 }
 
+void MainView::deleteIncidence()
+{
+  const CalendarSupport::KCal::KCalItemBrowserItem *eventView = rootObject()->findChild<CalendarSupport::KCal::KCalItemBrowserItem*>();
+  Q_ASSERT( eventView );
+  if ( eventView )
+    deleteIncidence( eventView->item() );
+}
+
 void MainView::deleteIncidence( const Akonadi::Item &item )
 {
   m_changer->deleteIncidence( item );
@@ -340,12 +348,15 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   manager->createAllActions();
   manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+  manager->interceptAction( Akonadi::StandardActionManager::DeleteItems );
   manager->interceptAction( Akonadi::StandardCalendarActionManager::CreateEvent );
   manager->interceptAction( Akonadi::StandardCalendarActionManager::CreateTodo );
   manager->interceptAction( Akonadi::StandardCalendarActionManager::EditIncidence );
 
   connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
+  connect( manager->action( Akonadi::StandardActionManager::DeleteItems ), SIGNAL( triggered( bool ) ),
+           this, SLOT( deleteIncidence() ) );
   connect( manager->action( Akonadi::StandardCalendarActionManager::CreateEvent ), SIGNAL( triggered( bool ) ),
            this, SLOT( newEvent() ) );
   connect( manager->action( Akonadi::StandardCalendarActionManager::CreateTodo ), SIGNAL( triggered( bool ) ),

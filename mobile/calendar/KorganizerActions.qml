@@ -184,9 +184,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_incidence_edit" }
     ActionListItem { name : "akonadi_item_copy_to_dialog" }
     ActionListItem { name : "akonadi_item_move_to_dialog" }
-
-    // contains groupware code, which is not in sam/scam yet
-    ScriptActionItem { name : "incidencechanger_delete"; title : KDE.i18n( "Delete Event" ) }
+    ActionListItem { name : "akonadi_item_delete" }
   }
 
   ApplicationGeneralActions {

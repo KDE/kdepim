@@ -481,13 +481,6 @@ KPIM.MainView {
                 actionPanel.collapse();
                 guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState );
               }
-            },
-            KPIM.ScriptAction {
-              name : "incidencechanger_delete"
-              script: {
-                actionPanel.collapse();
-                application.deleteIncidence( eventView.item );
-              }
             }
           ]
 
