@@ -20,7 +20,12 @@
 #ifndef COLLECTIONINTERNALSPAGE_H
 #define COLLECTIONINTERNALSPAGE_H
 
+#include <kdeversion.h>
+#if KDE_IS_VERSION( 4, 5, 74 )
 #include "ui_collectioninternalspage.h"
+#else 
+#include "ui_collectioninternalspage-45.h"
+#endif
 
 #include <akonadi/collectionpropertiespage.h>
 
