@@ -11,6 +11,9 @@ set(libmailcommon_SRCS
   aclentrydialog.cpp
   aclmanager.cpp
   aclutils.cpp
+  attributeregistrar.cpp
+  collectionannotationsattribute.cpp
+  collectiongeneralpage.cpp
   entitycollectionorderproxymodel.cpp
   expirejob.cpp
   expirypropertiesdialog.cpp

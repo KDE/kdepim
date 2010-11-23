@@ -1,5 +1,4 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
   Copyright (c) 2009 Montel Laurent <montel@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
@@ -50,7 +49,7 @@ using namespace MailCommon;
 CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   : CollectionPropertiesPage( parent ), mFolderCollection( 0 )
 {
-  setObjectName( QLatin1String( "KMail::CollectionGeneralPage" ) );
+  setObjectName( QLatin1String( "MailCommon::CollectionGeneralPage" ) );
   setPageTitle( i18nc( "@title:tab General settings for a folder.", "General" ) );
 }
 
@@ -429,7 +428,7 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
   mHideInSelectionDialogCheckBox->setChecked( mFolderCollection->hideInSelectionDialog() );
 
   if ( mContentsComboBox ) {
-    const Akonadi::CollectionAnnotationsAttribute *annotationsAttribute = collection.attribute<Akonadi::CollectionAnnotationsAttribute>();
+    const CollectionAnnotationsAttribute *annotationsAttribute = collection.attribute<CollectionAnnotationsAttribute>();
     if ( annotationsAttribute ) {
       const QMap<QByteArray, QByteArray> annotations = annotationsAttribute->annotations();
       if ( annotations.contains( KOLAB_FOLDERTYPE ) )
@@ -448,7 +447,7 @@ void CollectionGeneralPage::save( Collection &collection )
       collection.setName( mNameEdit->text() );
   }
 
-  Akonadi::CollectionAnnotationsAttribute *annotationsAttribute = collection.attribute<Akonadi::CollectionAnnotationsAttribute>( Entity::AddIfMissing );
+  CollectionAnnotationsAttribute *annotationsAttribute = collection.attribute<CollectionAnnotationsAttribute>( Entity::AddIfMissing );
 
   QMap<QByteArray, QByteArray> annotations = annotationsAttribute->annotations();
   if ( mSharedSeenFlagsCheckBox && mSharedSeenFlagsCheckBox->isEnabled() ) {

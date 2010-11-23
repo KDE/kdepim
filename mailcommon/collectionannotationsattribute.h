@@ -17,22 +17,24 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONANNOTATIONSATTRIBUTE_H
-#define AKONADI_COLLECTIONANNOTATIONSATTRIBUTE_H
+#ifndef MAILCOMMON_COLLECTIONANNOTATIONSATTRIBUTE_H
+#define MAILCOMMON_COLLECTIONANNOTATIONSATTRIBUTE_H
 
 #include <akonadi/attribute.h>
 
 #include <QtCore/QMap>
 
-namespace Akonadi {
+namespace MailCommon {
 
 class CollectionAnnotationsAttribute : public Akonadi::Attribute
 {
   public:
     CollectionAnnotationsAttribute();
     CollectionAnnotationsAttribute( const QMap<QByteArray, QByteArray> &annotations );
+
     void setAnnotations( const QMap<QByteArray, QByteArray> &annotations );
     QMap<QByteArray, QByteArray> annotations() const;
+
     virtual QByteArray type() const;
     virtual Attribute *clone() const;
     virtual QByteArray serialized() const;

@@ -19,11 +19,9 @@
 
 #include "collectionannotationsattribute.h"
 
-#include <KDebug>
-#include <QByteArray>
-#include <akonadi/attribute.h>
+#include <QtCore/QByteArray>
 
-using namespace Akonadi;
+using namespace MailCommon;
 
 CollectionAnnotationsAttribute::CollectionAnnotationsAttribute()
 {
