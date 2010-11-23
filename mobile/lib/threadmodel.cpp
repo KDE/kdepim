@@ -25,6 +25,7 @@
 
 #include <KMime/Message>
 #include <akonadi/kmime/messagestatus.h>
+#include <qtimer.h>
 
 
 struct ThreadModelNode {
@@ -41,7 +42,10 @@ class ThreadModelPrivate
   ThreadModelPrivate(QAbstractItemModel *emailModel, ThreadModel *qq)
     : q_ptr(qq), m_emailModel(emailModel)
   {
-    populateThreadModel();
+    m_resetCompressor.setInterval( 0 );
+    m_resetCompressor.setSingleShot( true );
+    QObject::connect( &m_resetCompressor, SIGNAL(timeout()), qq, SLOT(populateThreadModel()) );
+    m_resetCompressor.start();
   }
   Q_DECLARE_PUBLIC(ThreadModel)
   ThreadModel * const q_ptr;
@@ -51,6 +55,8 @@ class ThreadModelPrivate
   QAbstractItemModel *m_emailModel;
 
   QVector<ThreadModelNode*> m_threads;
+
+  QTimer m_resetCompressor;
 
 };
 
@@ -95,16 +101,16 @@ ThreadModel::ThreadModel(QAbstractItemModel *emailModel, QObject* parent)
   : QAbstractListModel(parent), d_ptr(new ThreadModelPrivate(emailModel, this))
 {
   connect(emailModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-      this, SLOT(populateThreadModel()));
+      &(d_ptr->m_resetCompressor), SLOT(start()));
 
   connect(emailModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-      this, SLOT(populateThreadModel()));
+      &(d_ptr->m_resetCompressor), SLOT(start()));
 
   connect(emailModel, SIGNAL(layoutChanged()),
-      this, SLOT(populateThreadModel()));
+      &(d_ptr->m_resetCompressor), SLOT(start()));
 
   connect(emailModel, SIGNAL(modelReset()),
-      this, SLOT(populateThreadModel()));
+      &(d_ptr->m_resetCompressor), SLOT(start()));
 
   QHash<int, QByteArray> roleNames = emailModel->roleNames();
   roleNames.insert(ThreadSizeRole, "threadSize");
