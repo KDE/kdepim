@@ -224,11 +224,12 @@ void Toolbox::slotRemoveSelectedEntryFromServer()
     if( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\
 \nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
     == KMessageBox::Yes) {
-        BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data(32).toInt() );
+        BilboPost *post = new BilboPost( DBMan::self()->getPostInfo( lstEntriesList->currentItem()->
+                                                                     data(32).toInt() ) );
         Backend *b = new Backend( d->mCurrentBlogId, this);
         connect(b, SIGNAL(sigPostRemoved(int,const BilboPost&)), this, SLOT(slotPostRemoved(int,const BilboPost&)) );
         connect(b, SIGNAL(sigError(const QString&)), this, SLOT(slotError(const QString&)));
-        b->removePost(&post);
+        b->removePost(post);
         d->statusbar->showMessage( i18n( "Removing post..." ) );
     }
 }
@@ -241,7 +242,6 @@ void Toolbox::slotPostRemoved( int blog_id, const BilboPost &post )
     d->statusbar->showMessage( i18n( "Post removed" ), STATUSTIMEOUT );
     sender()->deleteLater();
 }
-
 
 void Toolbox::slotError(const QString& errorMessage)
 {
