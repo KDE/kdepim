@@ -69,6 +69,9 @@ class FilterManager::Private
 
 void FilterManager::Private::tryToFilterInboxOnStartup()
 {
+  if ( mFilters.isEmpty() )
+    return;
+
   if ( !Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).isValid() ) {
     QTimer::singleShot( 10000, q, SLOT( tryToFilterInboxOnStartup() ) );
     return;
