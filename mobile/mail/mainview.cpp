@@ -35,6 +35,7 @@
 #include "emailsguistatemanager.h"
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
+#include "mailcommon/collectiongeneralpage.h"
 #include "mailcommon/mailkernel.h"
 #include "mailcommon/sendmdnhandler.h"
 #include "messagecore/messagehelpers.h"
@@ -58,6 +59,7 @@
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionmodel.h>
+#include <akonadi/collectionpropertiesdialog.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchscope.h>
@@ -141,6 +143,8 @@ MainView::MainView(QWidget* parent)
 
   QDBusConnection::sessionBus().registerService( "org.kde.kmailmobile.composer" );
   QDBusConnection::sessionBus().registerObject( "/composer", this, QDBusConnection::ExportScriptableSlots );
+
+  Akonadi::CollectionPropertiesDialog::registerPage( new MailCommon::CollectionGeneralPageFactory );
 }
 
 MainView::~MainView()
@@ -1090,6 +1094,11 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   connect( mMailActionManager->action( StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
+
+  const QStringList pages = QStringList() << QLatin1String( "MailCommon::CollectionGeneralPage" )
+                                          << QLatin1String( "Akonadi::CachePolicyPage" );
+
+  mMailActionManager->setCollectionPropertiesPageNames( pages );
 
   mMailActionManager->setActionText( StandardActionManager::SynchronizeResources, ki18np( "Synchronize emails\nin account", "Synchronize emails\nin accounts" ) );
   mMailActionManager->action( StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
