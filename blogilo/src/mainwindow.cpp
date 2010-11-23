@@ -40,6 +40,7 @@
 #include "ui_settingsbase.h"
 #include "ui_editorsettingsbase.h"
 
+#include <kdeversion.h>
 #include <ktabwidget.h>
 #include <KStatusNotifierItem>
 #include <kstatusbar.h>
@@ -70,7 +71,11 @@ MainWindow::MainWindow()
 
     tabPosts = new KTabWidget( this );
     tabPosts->setElideMode( Qt::ElideRight );///TODO make this Optional!
+#if KDE_IS_VERSION( 4, 5, 80 )
+    tabPosts->tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
+#else
     tabPosts->setTabCloseActivatePrevious( true );
+#endif
     tabPosts->setDocumentMode(true);
     setCentralWidget( tabPosts );
 //     this->setDockOptions( QMainWindow::ForceTabbedDocks);
