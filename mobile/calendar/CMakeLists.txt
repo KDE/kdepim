@@ -52,6 +52,7 @@ target_link_libraries(korganizer-mobile
   ${KDEPIMLIBS_KCALUTILS_LIBS}
   ${KDEPIMLIBS_KHOLIDAYS_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   kdepimdbusinterfaces
   kdepimmobileui
   kdepimmobileuicalendar

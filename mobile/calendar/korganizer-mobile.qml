@@ -483,13 +483,6 @@ KPIM.MainView {
               }
             },
             KPIM.ScriptAction {
-              name : "edit_event"
-              script: {
-                actionPanel.collapse();
-                application.editIncidence( eventView.item, eventView.activeDate );
-              }
-            },
-            KPIM.ScriptAction {
               name : "incidencechanger_delete"
               script: {
                 actionPanel.collapse();

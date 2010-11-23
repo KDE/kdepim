@@ -181,7 +181,7 @@ ActionMenuContainer {
     category : "event_viewer"
     name : "event_viewer_edit_menu"
     text : KDE.i18n( "Edit" )
-    ScriptActionItem { name : "edit_event"; title : KDE.i18n( "Edit Event" ) }
+    ActionListItem { name : "akonadi_incidence_edit" }
     ActionListItem { name : "akonadi_item_copy_to_dialog" }
     ActionListItem { name : "akonadi_item_move_to_dialog" }
 
@@ -194,5 +194,7 @@ ActionMenuContainer {
     name : "application_menu"
     text : KDE.i18n( "Calendar" )
     type : "event"
+
+    addNewActionName: "akonadi_event_create"
   }
 }

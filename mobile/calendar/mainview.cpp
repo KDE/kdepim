@@ -38,6 +38,7 @@
 #include "qmldateedit.h"
 
 #include <akonadi/agentactionmanager.h>
+#include <akonadi/calendar/standardcalendaractionmanager.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchjob.h>
@@ -143,15 +144,7 @@ void MainView::delayedInit()
 
   QDBusConnection::sessionBus().registerService( "org.kde.korganizer" ); //register also as the real korganizer, so kmail can communicate with it
 
-  KAction *action = new KAction( i18n( "New Appointment" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( newEvent() ) );
-  actionCollection()->addAction( QLatin1String( "add_new_event" ), action );
-
-  action = new KAction( i18n( "New Todo" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( newTodo() ) );
-  actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
-
-  action = new KAction( i18n( "Import Events" ), this );
+  KAction *action = new KAction( i18n( "Import Events" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   actionCollection()->addAction( QLatin1String( "import_events" ), action );
 
@@ -310,6 +303,14 @@ void MainView::newTodo()
   editor->show();
 }
 
+void MainView::editIncidence()
+{
+  const CalendarSupport::KCal::KCalItemBrowserItem *eventView = rootObject()->findChild<CalendarSupport::KCal::KCalItemBrowserItem*>();
+  Q_ASSERT( eventView );
+  if ( eventView )
+    editIncidence( eventView->item(), eventView->activeDate() );
+}
+
 void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
 {
   if ( m_openItemEditors.values().contains( item.id() ) )
@@ -333,15 +334,24 @@ void MainView::deleteIncidence( const Akonadi::Item &item )
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
-  Akonadi::StandardActionManager *manager = new Akonadi::StandardActionManager( actionCollection(), this );
+  Akonadi::StandardCalendarActionManager *manager = new Akonadi::StandardCalendarActionManager( actionCollection(), this );
   manager->setCollectionSelectionModel( collectionSelectionModel );
   manager->setItemSelectionModel( itemSelectionModel );
 
   manager->createAllActions();
   manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+  manager->interceptAction( Akonadi::StandardCalendarActionManager::CreateEvent );
+  manager->interceptAction( Akonadi::StandardCalendarActionManager::CreateTodo );
+  manager->interceptAction( Akonadi::StandardCalendarActionManager::EditIncidence );
 
   connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
+  connect( manager->action( Akonadi::StandardCalendarActionManager::CreateEvent ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newEvent() ) );
+  connect( manager->action( Akonadi::StandardCalendarActionManager::CreateTodo ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newTodo() ) );
+  connect( manager->action( Akonadi::StandardCalendarActionManager::EditIncidence ), SIGNAL( triggered( bool ) ),
+           this, SLOT( editIncidence() ) );
 
   manager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize events\nin account", "Synchronize events\nin accounts" ) );
   manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
