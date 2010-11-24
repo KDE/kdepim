@@ -42,7 +42,7 @@ KPIM.ItemListView {
           anchors.top : parent.top
           anchors.topMargin : 1
           anchors.left : parent.left
-          anchors.leftMargin : 10
+          anchors.leftMargin : model.isSubTask ? 30 : 10
           anchors.right: parent.right
           anchors.rightMargin: completionSlider.width
           text: KDE.i18n( "Task: %1", model.summary )
@@ -54,7 +54,7 @@ KPIM.ItemListView {
           anchors.top : summaryLabel.bottom
           anchors.topMargin : 1
           anchors.left : parent.left
-          anchors.leftMargin : 10
+          anchors.leftMargin : model.isSubTask ? 30 : 10
           anchors.right: parent.right
           anchors.rightMargin: completionSlider.width
           height : 30;

@@ -74,6 +74,7 @@ class MainView : public KDeclarativeMainView
     void archiveOldEntries();
 
   protected:
+    virtual QAbstractItemModel* createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model );
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
 

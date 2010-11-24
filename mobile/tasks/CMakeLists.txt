@@ -13,12 +13,14 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(mobile_tasks_SRCS
   configwidget.cpp
+  hierarchyresolver.cpp
   searchwidget.cpp
   tasklistproxy.cpp
   tasksfilterproxymodel.cpp
   tasksexporthandler.cpp
   tasksimporthandler.cpp
   tasksactionmanager.cpp
+  threadgroupermodel.cpp
   mainview.cpp
   main.cpp
 )

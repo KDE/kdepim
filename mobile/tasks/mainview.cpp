@@ -31,6 +31,7 @@
 #include "tasksfilterproxymodel.h"
 #include "tasksexporthandler.h"
 #include "tasksimporthandler.h"
+#include "threadgroupermodel.h"
 
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <calendarsupport/archivedialog.h>
@@ -269,6 +270,14 @@ void MainView::editIncidence( const Akonadi::Item &item )
   connect( editor, SIGNAL( destroyed( QObject* ) ), SLOT( finishEdit( QObject* ) ) );
 
   editor->show();
+}
+
+QAbstractItemModel* MainView::createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model )
+{
+  ThreadGrouperModel *grouperModel = new ThreadGrouperModel( this );
+  grouperModel->setSourceModel( model );
+
+  return KDeclarativeMainView::createItemModelContext( context, grouperModel );
 }
 
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

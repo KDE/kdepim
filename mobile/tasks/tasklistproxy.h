@@ -35,7 +35,8 @@ class TaskListProxy : public ListProxy
       SummaryRole = Akonadi::EntityTreeModel::UserRole,
       DescriptionRole,
       PercentCompleteRole,
-      BackgroundColorRole
+      BackgroundColorRole,
+      IsSubTaskRole
     };
 
     explicit TaskListProxy( QObject* parent = 0 );
@@ -46,9 +47,6 @@ class TaskListProxy : public ListProxy
     virtual void setSourceModel( QAbstractItemModel* sourceModel );
 
     void setPreferences( const EventViews::PrefsPtr &preferences );
-
-  protected:
-    virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
 
   private:
     EventViews::PrefsPtr mViewPrefs;

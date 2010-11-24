@@ -22,7 +22,6 @@
 #include "settings.h"
 
 #include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
 
 #include <akonadi/entitytreemodel.h>
 #include <KCalCore/Todo>
@@ -32,8 +31,6 @@ using namespace Akonadi;
 TaskListProxy::TaskListProxy( QObject* parent )
   : ListProxy( parent )
 {
-  setDynamicSortFilter( true );
-  sort( 0 );
 }
 
 QVariant TaskListProxy::data( const QModelIndex &index, int role ) const
@@ -58,6 +55,8 @@ QVariant TaskListProxy::data( const QModelIndex &index, int role ) const
           }
         }
         return Qt::transparent;
+      case IsSubTaskRole:
+        return !incidence->relatedTo( KCalCore::Todo::RelTypeParent ).isEmpty();
     }
   }
 
@@ -95,6 +94,7 @@ void TaskListProxy::setSourceModel( QAbstractItemModel *sourceModel )
   names.insert( DescriptionRole, "description" );
   names.insert( PercentCompleteRole, "percentComplete" );
   names.insert( BackgroundColorRole, "backgroundColor" );
+  names.insert( IsSubTaskRole, "isSubTask" );
 
   setRoleNames( names );
 }
@@ -102,35 +102,4 @@ void TaskListProxy::setSourceModel( QAbstractItemModel *sourceModel )
 void TaskListProxy::setPreferences( const EventViews::PrefsPtr &preferences )
 {
   mViewPrefs = preferences;
-}
-
-bool TaskListProxy::lessThan( const QModelIndex &left, const QModelIndex &right ) const
-{
-  const Akonadi::Item leftItem = left.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-
-  const KCalCore::Todo::Ptr leftTodo = CalendarSupport::todo( leftItem );
-  const KCalCore::Todo::Ptr rightTodo = CalendarSupport::todo( rightItem );
-
-  if ( !leftTodo || !rightTodo ) {
-    kDebug() << "This shouldn't happen, but i didn't check. Better safe than sorry.";
-    return false;
-  }
-
-  const bool leftCompleted = leftTodo->isCompleted();
-  const bool rightCompleted = rightTodo->isCompleted();
-  const int leftPriority = leftTodo->priority();
-  const int rightPriority = rightTodo->priority();
-
-  if ( Settings::self()->showCompletedTodosAtBottom() && leftCompleted != rightCompleted ) {
-    return rightCompleted;
-  }
-
-  if ( leftPriority != rightPriority ) {
-    // higher priority first. ( Also note that 9 is low, and 1 is high )
-    return leftPriority < rightPriority;
-  } else {
-    // lower id first
-    return leftItem.id() < rightItem.id();
-  }
 }
