@@ -129,9 +129,6 @@ void MainView::delayedInit()
   connect( actionCollection()->action( QLatin1String( "save_all_attachments" ) ),
            SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
 
-  connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
-           this, SLOT( qmlLoadingStateChanged( QDeclarativeView::Status ) ) );
-
   KPIM::ReminderClient::startDaemon();
 }
 
