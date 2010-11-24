@@ -5,6 +5,7 @@ include_directories(
 )
 
 add_subdirectory( calendar )
+add_subdirectory( docs )
 
 set(mobileui_SRCS
     agentstatusmonitor.cpp

@@ -683,7 +683,7 @@ static QString lookupDocumentation( const QString &fileName )
 
 void KDeclarativeMainView::openManual()
 {
-  const KUrl url = lookupDocumentation( KGlobal::mainComponent().componentName() + "/manual/index.html" );
+  const KUrl url = lookupDocumentation( "kontact-touch/manual/index.html" );
   if ( !url.isValid() ) {
     KMessageBox::error( this,
                         i18n( "The manual could not be found on your system." ),
