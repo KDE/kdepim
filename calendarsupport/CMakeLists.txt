@@ -15,6 +15,8 @@ set(calendarsupport_LIB_SRCS
   akonadicalendar.cpp
   archivedialog.cpp
   attachmenthandler.cpp
+  attributeregistrar.cpp
+  blockalarmsattribute.cpp
   calendar.cpp
   calendaradaptor.cpp
   calendarmodel.cpp
@@ -22,6 +24,7 @@ set(calendarsupport_LIB_SRCS
   calendarutils.cpp
   calfilterproxymodel.cpp
   categoryconfig.cpp
+  collectiongeneralpage.cpp
   collectionselection.cpp
   daterangefilterproxymodel.cpp
   eventarchiver.cpp
