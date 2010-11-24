@@ -38,6 +38,7 @@ endif (WINCE)
 target_link_libraries(tasks-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDEPIMLIBS_KCALCORE_LIBS}
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   kdepimdbusinterfaces
   kdepimmobileui
   kdepimmobileuicalendar

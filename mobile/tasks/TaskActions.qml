@@ -111,7 +111,7 @@ ActionMenuContainer {
     category : "todo_viewer"
     name : "todo_viewer_todo_menu"
     text : KDE.i18n( "ToDo" )
-    ActionListItem { name : "add_new_subtask" }
+    ActionListItem { name : "akonadi_subtodo_create" }
     ActionListItem { name : "make_subtask_independent" }
     ActionListItem { name : "make_all_subtasks_independent" }
   }
@@ -127,7 +127,7 @@ ActionMenuContainer {
     category : "todo_viewer"
     name : "todo_viewer_edit_menu"
     text : KDE.i18n( "Edit" )
-    ScriptActionItem { name : "edit_todo"; title: KDE.i18n( "Edit task" ) }
+    ActionListItem { name : "akonadi_incidence_edit" }
     ActionListItem { name : "akonadi_item_copy_to_dialog" }
     ActionListItem { name : "akonadi_item_move_to_dialog" }
     ActionListItem { name : "akonadi_item_delete" }
@@ -138,5 +138,7 @@ ActionMenuContainer {
     category : "standard"
     text : KDE.i18n( "Tasks" )
     type : "task"
+
+    addNewActionName: "akonadi_todo_create"
   }
 }

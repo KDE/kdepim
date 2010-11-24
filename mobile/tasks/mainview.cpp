@@ -40,11 +40,11 @@
 #include <calendarsupport/kcalprefs.h>
 
 #include <akonadi/agentactionmanager.h>
+#include <akonadi/calendar/standardcalendaractionmanager.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/standardactionmanager.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -116,10 +116,6 @@ void MainView::delayedInit()
   connect( entityTreeModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
            mTasksActionManager, SLOT( updateActions() ) );
 
-  connect( actionCollection()->action( QLatin1String( "add_new_task" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( newTask() ) );
-  connect( actionCollection()->action( QLatin1String( "add_new_subtask" ) ),
-           SIGNAL( triggered( bool ) ), SLOT( newSubTask() ) );
   connect( actionCollection()->action( QLatin1String( "import_tasks" ) ),
            SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   connect( actionCollection()->action( QLatin1String( "export_tasks" ) ),
@@ -248,6 +244,14 @@ void MainView::setPercentComplete( int row, int percentComplete )
   itemModel()->setData( index, percentComplete, TaskListProxy::PercentComplete );
 }
 
+void MainView::editIncidence()
+{
+  const CalendarSupport::KCal::KCalItemBrowserItem *todoView = rootObject()->findChild<CalendarSupport::KCal::KCalItemBrowserItem*>();
+  Q_ASSERT( todoView );
+  if ( todoView )
+    editIncidence( todoView->item() );
+}
+
 void MainView::editIncidence( const Akonadi::Item &item )
 {
   if ( mOpenItemEditors.values().contains( item.id() ) )
@@ -266,15 +270,24 @@ void MainView::editIncidence( const Akonadi::Item &item )
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
-  mStandardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
+  mStandardActionManager = new Akonadi::StandardCalendarActionManager( actionCollection(), this );
   mStandardActionManager->setCollectionSelectionModel( collectionSelectionModel );
   mStandardActionManager->setItemSelectionModel( itemSelectionModel );
 
   mStandardActionManager->createAllActions();
   mStandardActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+  mStandardActionManager->interceptAction( Akonadi::StandardCalendarActionManager::CreateTodo );
+  mStandardActionManager->interceptAction( Akonadi::StandardCalendarActionManager::CreateSubTodo );
+  mStandardActionManager->interceptAction( Akonadi::StandardCalendarActionManager::EditIncidence );
 
   connect( mStandardActionManager->action( Akonadi::StandardActionManager::CreateResource ),
            SIGNAL( triggered( bool ) ), SLOT( launchAccountWizard() ) );
+  connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateTodo ),
+           SIGNAL( triggered( bool ) ), SLOT( newTask() ) );
+  connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateSubTodo ),
+           SIGNAL( triggered( bool ) ), SLOT( newSubTask() ) );
+  connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence ),
+           SIGNAL( triggered( bool ) ), SLOT( editIncidence() ) );
 
   mStandardActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize todos\nin account", "Synchronize todos\nin accounts" ) );
   mStandardActionManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
@@ -287,6 +300,9 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mStandardActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete todo", "Delete todos" ) );
   mStandardActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move todo\nto folder" ) );
   mStandardActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy todo\nto folder" ) );
+  mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateTodo )->setText( i18n( "New Task" ) );
+  mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateSubTodo )->setText( i18n( "New Sub Task" ) );
+  mStandardActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit task" ) );
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall todos" ) );
 }

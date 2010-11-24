@@ -64,7 +64,6 @@ void TasksActionManager::setItemSelectionModel( QItemSelectionModel *itemSelecti
 
 void TasksActionManager::updateActions()
 {
-  mActionCollection->action( QLatin1String( "add_new_subtask" ) )->setEnabled( false );
   mActionCollection->action( QLatin1String( "make_subtask_independent" ) )->setEnabled( false );
   mActionCollection->action( QLatin1String( "make_all_subtasks_independent" ) )->setEnabled( false );
 
@@ -84,8 +83,6 @@ void TasksActionManager::updateActions()
   if ( mCalendar->findChildren( item ).size() >= 1 )
     mActionCollection->action( QLatin1String( "make_all_subtasks_independent" ) )->setEnabled( true );
 
-  mActionCollection->action( QLatin1String( "add_new_subtask" ) )->setEnabled( true );
-
   // Only enable the make_subtask_independent action for todos that have a parent.
   KCalCore::Todo::Ptr todo = item.payload<KCalCore::Todo::Ptr>();
   const bool enable = !todo->relatedTo( KCalCore::Todo::RelTypeParent ).isEmpty();
@@ -94,17 +91,11 @@ void TasksActionManager::updateActions()
 
 void TasksActionManager::initActions()
 {
-  KAction *action = mActionCollection->addAction( QLatin1String( "add_new_task" ) );
-  action->setText( i18n( "New Task" ) );
-
-  action = mActionCollection->addAction( QLatin1String( "import_tasks" ) );
+  KAction *action = mActionCollection->addAction( QLatin1String( "import_tasks" ) );
   action->setText( i18n( "Import Tasks" ) );
 
   action = mActionCollection->addAction( QLatin1String( "export_tasks" ) );
   action->setText( i18n( "Export Tasks" ) );
-
-  action = mActionCollection->addAction( QLatin1String( "add_new_subtask" ) );
-  action->setText( i18n( "New Sub Task" ) );
 
   action = mActionCollection->addAction( QLatin1String( "make_subtask_independent" ) );
   action->setText( i18n( "Make Sub Task Independent" ) );
@@ -117,7 +108,6 @@ void TasksActionManager::initActions()
 
   action = mActionCollection->addAction( QLatin1String( "save_all_attachments" ) );
   action->setText( i18n( "Save All" ) );
-
 }
 
 #include "tasksactionmanager.moc"

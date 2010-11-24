@@ -312,13 +312,6 @@ KPIM.MainView {
                 actionPanel.collapse();
                 guiStateManager.pushState( KPIM.GuiStateManager.BulkActionScreenState )
               }
-            },
-            KPIM.ScriptAction {
-              name : "edit_todo"
-              script : {
-                application.editIncidence( taskView.item );
-                actionPanel.collapse();
-              }
             }
           ]
 

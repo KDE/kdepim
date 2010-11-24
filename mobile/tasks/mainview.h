@@ -34,7 +34,7 @@ class TasksActionManager;
 class ConfigWidget;
 
 namespace Akonadi {
-class StandardActionManager;
+class StandardCalendarActionManager;
 }
 
 namespace CalendarSupport {
@@ -57,6 +57,7 @@ class MainView : public KDeclarativeMainView
     void makeAllSubtasksIndependent();
     void purgeCompletedTasks();
     void setPercentComplete( int row, int percentComplete );
+    void editIncidence();
     void editIncidence( const Akonadi::Item &item );
     void saveAllAttachments();
 
@@ -84,7 +85,7 @@ class MainView : public KDeclarativeMainView
   private:
     CalendarSupport::CalendarUtils *mCalendarUtils;
     QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
-    Akonadi::StandardActionManager *mStandardActionManager;
+    Akonadi::StandardCalendarActionManager *mStandardActionManager;
     TasksActionManager *mTasksActionManager;
     EventViews::PrefsPtr mCalendarPrefs;
 };
