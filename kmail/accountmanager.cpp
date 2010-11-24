@@ -172,7 +172,8 @@ void AccountManager::processNextCheck( bool _newMail )
     // check done
     kDebug() << "account" << acct->name() << "finished check";
     mAcctChecking.removeAll( acct );
-    kmkernel->filterMgr()->deref();
+    if( kmkernel->filterMgr() )
+       kmkernel->filterMgr()->deref();
     disconnect( acct, SIGNAL( finishedCheck( bool, CheckStatus ) ),
                       this, SLOT( processNextCheck( bool ) ) );
   }
