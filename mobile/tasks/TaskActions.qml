@@ -39,6 +39,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
     ActionListItem { name : "import_tasks" }
     ActionListItem { name : "export_tasks" }
+    ActionListItem { name : "archive_old_entries" }
   }
 
   FavoriteManager{ model : favoritesList }

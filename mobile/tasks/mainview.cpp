@@ -33,6 +33,7 @@
 #include "tasksimporthandler.h"
 
 #include <incidenceeditor-ng/incidencedefaults.h>
+#include <calendarsupport/archivedialog.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarutils.h>
 #include <calendarsupport/freebusymanager.h>
@@ -71,6 +72,8 @@ MainView::MainView( QWidget *parent )
   , mCalendarUtils( 0 )
   , mTasksActionManager( 0 )
   , mCalendarPrefs( new EventViews::Prefs )
+  , mCalendar( 0 )
+  , mChanger( 0 )
 {
   mCalendarPrefs->readConfig();
   qobject_cast<TaskListProxy*>( itemModel() )->setPreferences( mCalendarPrefs );
@@ -97,20 +100,22 @@ void MainView::delayedInit()
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.tasks", 4, 5, "ConfigWidget" );
   qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.tasks", 4, 5, "SearchWidget" );
 
-  CalendarSupport::Calendar *cal = new CalendarSupport::Calendar( entityTreeModel(),
-                                                                  itemModel(),
-                                                                  KSystemTimeZones::local() );
-  CalendarSupport::FreeBusyManager::self()->setCalendar( cal );
+  mCalendar = new CalendarSupport::Calendar( entityTreeModel(), itemModel(),
+                                             KSystemTimeZones::local() );
 
-  mCalendarUtils = new CalendarSupport::CalendarUtils( cal, this );
-  cal->setParent( mCalendarUtils );
+  mChanger = new CalendarSupport::IncidenceChanger( mCalendar, this );
+
+  CalendarSupport::FreeBusyManager::self()->setCalendar( mCalendar );
+
+  mCalendarUtils = new CalendarSupport::CalendarUtils( mCalendar, this );
+  mCalendar->setParent( mCalendarUtils );
   connect( mCalendarUtils, SIGNAL( actionFinished( Akonadi::Item ) ),
           SLOT( processActionFinish( Akonadi::Item ) ) );
   connect( mCalendarUtils, SIGNAL( actionFailed( Akonadi::Item, QString ) ),
           SLOT( processActionFail( Akonadi::Item, QString ) ) );
 
   mTasksActionManager = new TasksActionManager( actionCollection(), this );
-  mTasksActionManager->setCalendar( cal );
+  mTasksActionManager->setCalendar( mCalendar );
   mTasksActionManager->setItemSelectionModel( itemSelectionModel() );
 
   connect( entityTreeModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
@@ -128,6 +133,8 @@ void MainView::delayedInit()
            SIGNAL( triggered( bool ) ), SLOT( purgeCompletedTasks() ) );
   connect( actionCollection()->action( QLatin1String( "save_all_attachments" ) ),
            SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
+  connect( actionCollection()->action( QLatin1String( "archive_old_entries" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( archiveOldEntries() ) );
 
   KPIM::ReminderClient::startDaemon();
 }
@@ -388,6 +395,12 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
   const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
 
   CalendarSupport::saveAttachments( item, this );
+}
+
+void MainView::archiveOldEntries()
+{
+  CalendarSupport::ArchiveDialog archiveDialog( mCalendar, mChanger, this );
+  archiveDialog.exec();
 }
 
 void MainView::processActionFail( const Akonadi::Item &item, const QString &msg )

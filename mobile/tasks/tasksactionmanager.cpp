@@ -108,6 +108,9 @@ void TasksActionManager::initActions()
 
   action = mActionCollection->addAction( QLatin1String( "save_all_attachments" ) );
   action->setText( i18n( "Save All" ) );
+
+  action = mActionCollection->addAction( QLatin1String( "archive_old_entries" ) );
+  action->setText( i18n( "Archive Old Entries" ) );
 }
 
 #include "tasksactionmanager.moc"

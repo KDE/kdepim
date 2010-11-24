@@ -38,7 +38,9 @@ class StandardCalendarActionManager;
 }
 
 namespace CalendarSupport {
+class Calendar;
 class CalendarUtils;
+class IncidenceChanger;
 }
 
 class MainView : public KDeclarativeMainView
@@ -69,6 +71,7 @@ class MainView : public KDeclarativeMainView
     void fetchForSaveAllAttachmentsDone( KJob* job );
     void processActionFail( const Akonadi::Item &item, const QString &msg );
     void processActionFinish( const Akonadi::Item &item );
+    void archiveOldEntries();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -88,6 +91,8 @@ class MainView : public KDeclarativeMainView
     Akonadi::StandardCalendarActionManager *mStandardActionManager;
     TasksActionManager *mTasksActionManager;
     EventViews::PrefsPtr mCalendarPrefs;
+    CalendarSupport::Calendar *mCalendar;
+    CalendarSupport::IncidenceChanger *mChanger;
 };
 
 #endif // MAINVIEW_H
