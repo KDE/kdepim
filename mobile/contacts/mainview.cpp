@@ -78,14 +78,7 @@ void MainView::delayedInit()
   addMimeType( KABC::ContactGroup::mimeType() );
   itemFetchScope().fetchFullPayload();
 
-  KAction *action = new KAction( i18n( "New Contact" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(newContact()) );
-  actionCollection()->addAction( QLatin1String( "add_new_contact" ), action );
-  action = new KAction( i18n( "New Contact Group" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(newContactGroup()) );
-  actionCollection()->addAction( QLatin1String( "add_new_contact_group" ), action );
-
-  action = new KAction( i18n( "Import Contacts" ), this );
+  KAction *action = new KAction( i18n( "Import Contacts" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   actionCollection()->addAction( QLatin1String( "import_vcards" ), action );
 

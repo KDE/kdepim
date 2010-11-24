@@ -47,7 +47,6 @@ KPIM.ActionList {
 
   KPIM.ActionListItem {
     id: addNewAction
-    name : "add_new_" + type
     onPressAndHold: {
       longPressed(name);
     }

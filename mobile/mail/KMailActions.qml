@@ -206,11 +206,13 @@ ActionMenuContainer {
     text : KDE.i18n( "Mail" )
     type : "mail"
 
+    addNewActionName: "add_new_mail"
+
     onLongPressed : {
       if ( actionName == "add_new_mail" ) {
           newMailPage.visible = true
           actionPanel.collapse()
-      }        
+      }
     }
 
     ActionListItem { name : "tools_edit_vacation" }

@@ -126,6 +126,7 @@ ActionMenuContainer {
     text : KDE.i18n( "Contacts" )
     type : "contact"
 
-    ActionListItem { name : "add_new_contact_group" }
+    addNewActionName: "akonadi_contact_create"
+    ActionListItem { name : "akonadi_contact_group_create" }
   }
 }

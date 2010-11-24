@@ -119,5 +119,7 @@ ActionMenuContainer {
     text : KDE.i18n( "Notes" )
     type : "note"
     configureActionVisible: false
+
+    addNewActionName: "add_new_note"
   }
 }
