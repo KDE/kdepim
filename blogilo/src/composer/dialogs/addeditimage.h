@@ -52,12 +52,14 @@ protected slots:
     void slotCheckRatio(int value);
 
 private:
+    void updateRatio();
     QString getAlignment();
     void setAlignment(const QString& align);
     QFrame *editFrame;
     Ui::EditImageBase editImageWidgetUi;
     bool isEditing;
-    int ratio;
+    double ratio;
+    bool settingNewImageSize;
 };
 
 #endif

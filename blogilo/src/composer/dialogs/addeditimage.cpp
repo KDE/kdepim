@@ -36,7 +36,7 @@
 #include "bilbomedia.h"
 
 AddEditImage::AddEditImage(QWidget* parent, QMap< QString, QString > mediaToEdit)
-: AddMediaDialog(parent), ratio(0)
+: AddMediaDialog(parent), ratio(0), settingNewImageSize(false)
 {
     editFrame = new QFrame(this);
     editFrame->setFrameShape(QFrame::StyledPanel);
@@ -54,8 +54,11 @@ AddEditImage::AddEditImage(QWidget* parent, QMap< QString, QString > mediaToEdit
         isEditing = true;
         setWindowTitle( i18n( "Edit Image" ) );
         _selectedMedia = mediaToEdit;
+        settingNewImageSize = true;
         editImageWidgetUi.spinboxWidth->setValue( mediaToEdit["width"].toInt() );
         editImageWidgetUi.spinboxHeight->setValue( mediaToEdit["height"].toInt() );
+        settingNewImageSize = false;
+        updateRatio();
         editImageWidgetUi.txtTitle->setText( mediaToEdit["title"] );
         editImageWidgetUi.txtAltText->setText( mediaToEdit["alt"] );
         setAlignment(mediaToEdit["align"]);
@@ -95,9 +98,11 @@ void AddEditImage::slotSelectLocalFile()
         return;
     ui.urlReqLineEdit->setText(path);
     editImageWidgetUi.btnKeepRatio->setChecked(true);
-    ratio = img.width()/img.height();
+    settingNewImageSize = true;
     editImageWidgetUi.spinboxWidth->setValue(img.width());
     editImageWidgetUi.spinboxHeight->setValue(img.height());
+    settingNewImageSize = false;
+    updateRatio();
 }
 
 void AddEditImage::slotButtonClicked(int button)
@@ -143,17 +148,26 @@ void AddEditImage::setAlignment(const QString& align)
 
 void AddEditImage::slotCheckRatio(int value)
 {
+    if(settingNewImageSize)
+        return;
+    settingNewImageSize = true;
     if(editImageWidgetUi.btnKeepRatio->isChecked() && ratio > 0) {
         if(sender() == editImageWidgetUi.spinboxHeight){
             editImageWidgetUi.spinboxWidth->setValue(value*ratio);
         } else if(sender() == editImageWidgetUi.spinboxWidth){
             editImageWidgetUi.spinboxHeight->setValue(value/ratio);
         }
-    } else {
-        if( editImageWidgetUi.spinboxWidth->value() > 0 &&
-            editImageWidgetUi.spinboxHeight->value() > 0 )
-            ratio = editImageWidgetUi.spinboxWidth->value() / editImageWidgetUi.spinboxHeight->value();
     }
+    settingNewImageSize = false;
+}
+
+void AddEditImage::updateRatio()
+{
+    if( editImageWidgetUi.spinboxWidth->value() > 0 &&
+            editImageWidgetUi.spinboxHeight->value() > 0 )
+        ratio = (double) editImageWidgetUi.spinboxWidth->value()
+                /
+                (double) editImageWidgetUi.spinboxHeight->value();
 }
 
 #include "composer/dialogs/addeditimage.moc"
