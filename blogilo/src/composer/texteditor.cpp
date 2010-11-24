@@ -50,6 +50,7 @@
 #include "global.h"
 #include <qwebelement.h>
 #include <KMenu>
+#include <QApplication>
 
 #define FORWARD_ACTION(action1, action2) \
     connect(action1, SIGNAL(triggered()), getAction(action2), SLOT(trigger()));\
