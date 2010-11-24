@@ -233,27 +233,29 @@ class Formatter : public Interface::BodyPartFormatter
           return Failed;
         }
 
-        KMInvitationFormatterHelper helper( bodyPart, memento->calendar() );
-        QString source;
-        // If the bodypart does not have a charset specified, we need to fall back to utf8,
-        // not the KMail fallback encoding, so get the contents as binary and decode explicitly.
-        if ( bodyPart->contentTypeParameter( "charset" ).isEmpty() ) {
-          const QByteArray &ba = bodyPart->asBinary();
-          source = QString::fromUtf8(ba);
-        } else {
-          source = bodyPart->asText();
-        }
+        if ( memento->finished() ) {
+          KMInvitationFormatterHelper helper( bodyPart, memento->calendar() );
+          QString source;
+          // If the bodypart does not have a charset specified, we need to fall back to utf8,
+          // not the KMail fallback encoding, so get the contents as binary and decode explicitly.
+          if ( bodyPart->contentTypeParameter( "charset" ).isEmpty() ) {
+            const QByteArray &ba = bodyPart->asBinary();
+            source = QString::fromUtf8(ba);
+          } else {
+            source = bodyPart->asText();
+          }
 
-        MemoryCalendar::Ptr cl( new MemoryCalendar( KSystemTimeZones::local() ) );
-        const QString html =
-          KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml(
-            source, cl, &helper, message->sender()->asUnicodeString(),
-            GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
+          MemoryCalendar::Ptr cl( new MemoryCalendar( KSystemTimeZones::local() ) );
+          const QString html =
+            KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml(
+              source, cl, &helper, message->sender()->asUnicodeString(),
+              GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
 
-        if ( html.isEmpty() ) {
-          return AsIcon;
+          if ( html.isEmpty() ) {
+            return AsIcon;
+          }
+          writer->queue( html );
         }
-        writer->queue( html );
       } else {
         MemoryCalendarMemento *memento = new MemoryCalendarMemento();
         bodyPart->setBodyPartMemento( memento );
@@ -261,7 +263,7 @@ class Formatter : public Interface::BodyPartFormatter
         if ( asyncResultObserver ) {
           QObject::connect( memento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
                             asyncResultObserver, SLOT(update(MessageViewer::Viewer::UpdateMode)) );
-       }
+        }
       }
 
       return Ok;
