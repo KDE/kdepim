@@ -96,13 +96,11 @@ KPIM.MainView {
       }
     }
 
-    KPIM.Button {
+    KPIM.ItemEditButton {
+      actionName: "akonadi_incidence_edit"
       anchors.bottom: backButton.top
       anchors.right: parent.right
       anchors.margins: 12
-      width: 70
-      height: 70
-      icon: KDE.locate( "data", "mobileui/edit-button.png" );
       onClicked: {
         application.editIncidence( parent.item, parent.activeDate );
         guiStateManager.popState();
