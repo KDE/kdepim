@@ -43,13 +43,13 @@ QVariant TaskListProxy::data( const QModelIndex &index, int role ) const
   if ( item.isValid() && item.hasPayload<KCalCore::Todo::Ptr>() ) {
     const KCalCore::Todo::Ptr incidence = item.payload<KCalCore::Todo::Ptr>();
     switch ( role ) {
-      case Summary:
+      case SummaryRole:
         return incidence->summary();
-      case Description:
+      case DescriptionRole:
         return incidence->description();
-      case PercentComplete:
+      case PercentCompleteRole:
         return incidence->percentComplete();
-      case BackgroundColor:
+      case BackgroundColorRole:
         if ( incidence->hasDueDate() ) {
           if ( incidence->dtDue().date() == QDate::currentDate() ) {
             return mViewPrefs->todoDueTodayColor();
@@ -66,7 +66,7 @@ QVariant TaskListProxy::data( const QModelIndex &index, int role ) const
 
 bool TaskListProxy::setData( const QModelIndex &index, const QVariant &value, int role )
 {
-  if ( role == PercentComplete ) {
+  if ( role == PercentCompleteRole ) {
     Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
     if ( item.isValid() && item.hasPayload<KCalCore::Todo::Ptr>() ) {
@@ -91,10 +91,10 @@ void TaskListProxy::setSourceModel( QAbstractItemModel *sourceModel )
 
   QHash<int, QByteArray> names = roleNames();
   names.insert( EntityTreeModel::ItemIdRole, "itemId" );
-  names.insert( Summary, "summary" );
-  names.insert( Description, "description" );
-  names.insert( PercentComplete, "percentComplete" );
-  names.insert( BackgroundColor, "backgroundColor" );
+  names.insert( SummaryRole, "summary" );
+  names.insert( DescriptionRole, "description" );
+  names.insert( PercentCompleteRole, "percentComplete" );
+  names.insert( BackgroundColorRole, "backgroundColor" );
 
   setRoleNames( names );
 }

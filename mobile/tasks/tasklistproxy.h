@@ -32,11 +32,10 @@ class TaskListProxy : public ListProxy
 
   public:
     enum Role {
-      // TODO: Find a better way to make this configurable. Possibly templates.
-      Summary = Akonadi::EntityTreeModel::UserRole,
-      Description,
-      PercentComplete,
-      BackgroundColor
+      SummaryRole = Akonadi::EntityTreeModel::UserRole,
+      DescriptionRole,
+      PercentCompleteRole,
+      BackgroundColorRole
     };
 
     explicit TaskListProxy( QObject* parent = 0 );

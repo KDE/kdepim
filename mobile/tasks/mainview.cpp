@@ -245,7 +245,7 @@ void MainView::purgeCompletedTasks()
 void MainView::setPercentComplete( int row, int percentComplete )
 {
   const QModelIndex index = itemModel()->index( row, 0 );
-  itemModel()->setData( index, percentComplete, TaskListProxy::PercentComplete );
+  itemModel()->setData( index, percentComplete, TaskListProxy::PercentCompleteRole );
 }
 
 void MainView::editIncidence()
