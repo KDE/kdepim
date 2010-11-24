@@ -57,6 +57,7 @@ ActionMenuContainer {
     text : KDE.i18n( "Account" )
     ActionListItem { name : "akonadi_resource_synchronize" }
     ActionListItem { name : "akonadi_resource_properties" }
+    ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
   }
 

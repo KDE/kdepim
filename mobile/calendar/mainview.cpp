@@ -40,6 +40,7 @@
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/calendar/standardcalendaractionmanager.h>
 #include <akonadi/collectionmodel.h>
+#include <akonadi/collectionpropertiesdialog.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
@@ -47,6 +48,7 @@
 #include <calendarsupport/archivedialog.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/collectiongeneralpage.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/freebusymanager.h>
 #include <calendarsupport/identitymanager.h>
@@ -97,6 +99,8 @@ MainView::MainView( QWidget* parent )
 {
   m_calendarPrefs = EventViews::PrefsPtr( new  EventViews::Prefs );
   m_calendarPrefs->readConfig();
+
+  Akonadi::CollectionPropertiesDialog::registerPage( new CalendarSupport::CollectionGeneralPageFactory );
 }
 
 MainView::~MainView()
@@ -377,6 +381,11 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy event\nto folder" ) );
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall events" ) );
+
+  const QStringList pages = QStringList() << QLatin1String( "CalendarSupport::CollectionGeneralPage" )
+                                          << QLatin1String( "Akonadi::CachePolicyPage" );
+
+  manager->setCollectionPropertiesPageNames( pages );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
