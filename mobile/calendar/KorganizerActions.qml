@@ -114,7 +114,7 @@ ActionMenuContainer {
   ActionList {
     category : "single_calendar"
     name : "single_calendar_calendar_menu"
-    text : KDE.i18n( "Calendar" )
+    text : KDE.i18n( "Choice" )
     ActionListItem { name : "akonadi_collection_sync" }
     ScriptActionItem { name : "show_today"; title : KDE.i18n( "Today" ) }
     ScriptActionItem { name : "day_layout"; title : KDE.i18n( "Day View" ) }
