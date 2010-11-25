@@ -81,6 +81,11 @@
 
 #include <sys/utsname.h>
 
+#ifdef Q_OS_WINCE
+#include <windows.h>
+#include <Shellapi.h>
+#endif
+
 #define VIEW(model) {                        \
   QTreeView *view = new QTreeView( this );   \
   view->setWindowFlags( Qt::Window );        \
@@ -703,9 +708,24 @@ void KDeclarativeMainView::openLicenses()
 
 void KDeclarativeMainView::openAttachment( const QString &url, const QString &mimeType )
 {
+#ifndef Q_OS_WINCE
    KRun::runUrl( KUrl( url ), mimeType, this );
-  //TODO WINCE and MAEMO: if doesn't work, try KToolInvocation::invokeBrowser on maemo and a ShellExecuteEx direct API call on WinCE either inside KRun or KToolInvocation
-   //KToolInvocation::invokeBrowser and QDesktopServices::openUrl goes through a web browser, at least on desktop, and that is not nice
+#else
+   SHELLEXECUTEINFO execinfo;
+   WCHAR wfile[2048];
+   int num = KUrl(url).toLocalFile().toWCharArray(wfile);
+   wfile[num] = '\0';
+
+   memset(&execinfo, 0, sizeof(SHELLEXECUTEINFO));
+   execinfo.cbSize = sizeof(SHELLEXECUTEINFO);
+   execinfo.lpVerb = L"open";
+   execinfo.lpFile = wfile;
+   execinfo.lpParameters = L"";
+   execinfo.lpDirectory = L"";
+   execinfo.nShow = SW_SHOWNORMAL;
+   execinfo.fMask = SEE_MASK_NOCLOSEPROCESS; // don't close process after ShellExecuteEx function exits
+   ShellExecuteEx(&execinfo);
+#endif
 }
 
 void KDeclarativeMainView::saveAttachment( const QString &url )
