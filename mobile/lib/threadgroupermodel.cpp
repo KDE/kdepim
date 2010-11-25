@@ -27,144 +27,148 @@
 
 struct ItemLessThanComparator
 {
-  ThreadGrouperModelPrivate const * m_grouper;
-  ItemLessThanComparator(const ThreadGrouperModelPrivate * grouper);
-  ItemLessThanComparator(const ItemLessThanComparator &other);
-  ItemLessThanComparator &operator=(const ItemLessThanComparator &other);
+  ThreadGrouperModelPrivate const *m_grouper;
+  ItemLessThanComparator( const ThreadGrouperModelPrivate *grouper );
+  ItemLessThanComparator( const ItemLessThanComparator &other );
+  ItemLessThanComparator &operator=( const ItemLessThanComparator &other );
 
-  bool operator()(const Akonadi::Item &left, const Akonadi::Item &right) const;
+  bool operator()( const Akonadi::Item &left, const Akonadi::Item &right ) const;
 };
 
 class ThreadGrouperModelPrivate
 {
-public:
-  ThreadGrouperModelPrivate(ThreadGrouperModel *qq)
-    : q_ptr(qq), m_order(ThreadGrouperModel::ThreadsWithNewRepliesOrder)
-  {
-  }
-  Q_DECLARE_PUBLIC(ThreadGrouperModel)
-  ThreadGrouperModel * const q_ptr;
+  public:
+    ThreadGrouperModelPrivate( ThreadGrouperModel *qq )
+      : q_ptr( qq ), m_order( ThreadGrouperModel::ThreadsWithNewRepliesOrder )
+    {
+    }
 
-  Akonadi::Item getThreadItem(const Akonadi::Item &item) const;
+    Q_DECLARE_PUBLIC( ThreadGrouperModel )
+    ThreadGrouperModel* const q_ptr;
 
-  Akonadi::Item threadRoot(const QModelIndex &index) const;
+    Akonadi::Item getThreadItem( const Akonadi::Item &item ) const;
 
-  KDateTime getMostRecentUpdate(KMime::Message::Ptr threadRoot, Akonadi::Entity::Id itemId) const;
+    Akonadi::Item threadRoot( const QModelIndex &index ) const;
 
-  void populateThreadGrouperModel() const;
+    KDateTime getMostRecentUpdate( KMime::Message::Ptr threadRoot, Akonadi::Entity::Id itemId ) const;
 
-  mutable QHash<QByteArray, QSet<QByteArray> > m_threads;
-  mutable QHash<QByteArray, Akonadi::Item> m_threadItems;
-  mutable QHash<QByteArray, Akonadi::Item> m_allItems;
+    void populateThreadGrouperModel() const;
 
-  ThreadGrouperModel::OrderScheme m_order;
+    mutable QHash<QByteArray, QSet<QByteArray> > m_threads;
+    mutable QHash<QByteArray, Akonadi::Item> m_threadItems;
+    mutable QHash<QByteArray, Akonadi::Item> m_allItems;
+
+    ThreadGrouperModel::OrderScheme m_order;
 };
 
 static QByteArray identifierForMessage( const KMime::Message::Ptr &msg, Akonadi::Item::Id id )
 {
-  QByteArray ident = msg->messageID()->identifier();
-  if ( ident.isEmpty() )
-    ident = QByteArray::number( id );
-  return ident;
+  QByteArray identifier = msg->messageID()->identifier();
+  if ( identifier.isEmpty() )
+    identifier = QByteArray::number( id );
+
+  return identifier;
 }
 
-static QHash<QByteArray, QSet<QByteArray> >::const_iterator findValue(const QHash<QByteArray, QSet<QByteArray> > &container, const QByteArray &target)
+static QHash<QByteArray, QSet<QByteArray> >::const_iterator findValue( const QHash<QByteArray, QSet<QByteArray> > &container, const QByteArray &target )
 {
   QHash<QByteArray, QSet<QByteArray> >::const_iterator it = container.constBegin();
   const QHash<QByteArray, QSet<QByteArray> >::const_iterator end = container.constEnd();
 
-  for ( ; it != end; ++it)
-  {
-    if (it.value().contains(target)) {
+  for ( ; it != end; ++it ) {
+    if ( it.value().contains( target ) ) {
       return it;
     }
   }
+
   return end;
 }
 
-Akonadi::Item ThreadGrouperModelPrivate::getThreadItem(const Akonadi::Item& item) const
+Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &item ) const
 {
-  Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
+  Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
   const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
   const QByteArray identifier = identifierForMessage( message, item.id() );
 
-  if (m_threadItems.contains(identifier))
-    return m_threadItems.value(identifier);
+  if ( m_threadItems.contains( identifier ) )
+    return m_threadItems.value( identifier );
 
-  QHash<QByteArray, QSet<QByteArray> >::const_iterator it = findValue(m_threads, identifier);
-  Q_ASSERT(it != m_threads.constEnd());
-  Q_ASSERT(m_threadItems.value(it.key()).isValid());
-  return m_threadItems.value(it.key());
+  const QHash<QByteArray, QSet<QByteArray> >::const_iterator it = findValue( m_threads, identifier );
+  Q_ASSERT( it != m_threads.constEnd() );
+  Q_ASSERT( m_threadItems.value( it.key() ).isValid() );
+  return m_threadItems.value( it.key() );
 }
 
-KDateTime ThreadGrouperModelPrivate::getMostRecentUpdate(KMime::Message::Ptr threadRoot, Akonadi::Item::Id itemId) const
+KDateTime ThreadGrouperModelPrivate::getMostRecentUpdate( KMime::Message::Ptr threadRoot, Akonadi::Item::Id itemId ) const
 {
-  QSet<QByteArray> messages = m_threads.value( identifierForMessage( threadRoot, itemId ) );
+  const QSet<QByteArray> messageIds = m_threads.value( identifierForMessage( threadRoot, itemId ) );
 
   KDateTime newest = threadRoot->date()->dateTime();
 
-  if (messages.isEmpty())
+  if ( messageIds.isEmpty() )
     return newest;
 
-  foreach(const QByteArray &ba, messages) {
-    const Akonadi::Item item = m_allItems.value(ba);
-    Q_ASSERT(item.isValid());
-    Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
-    KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-    KDateTime messageDateTime = message->date()->dateTime();
-    if (messageDateTime > newest)
+  foreach ( const QByteArray &messageId, messageIds ) {
+    const Akonadi::Item item = m_allItems.value( messageId );
+    Q_ASSERT( item.isValid() );
+    Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
+
+    const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+    const KDateTime messageDateTime = message->date()->dateTime();
+    if ( messageDateTime > newest )
       newest = messageDateTime;
   }
 
   return newest;
 }
 
-ItemLessThanComparator::ItemLessThanComparator(const ThreadGrouperModelPrivate * grouper)
-  : m_grouper(grouper)
+ItemLessThanComparator::ItemLessThanComparator( const ThreadGrouperModelPrivate *grouper )
+  : m_grouper( grouper )
 {
-
 }
 
-ItemLessThanComparator::ItemLessThanComparator(const ItemLessThanComparator &other)
+ItemLessThanComparator::ItemLessThanComparator( const ItemLessThanComparator &other )
 {
   m_grouper = other.m_grouper;
 }
 
-ItemLessThanComparator &ItemLessThanComparator::operator=(const ItemLessThanComparator &other)
+ItemLessThanComparator &ItemLessThanComparator::operator=( const ItemLessThanComparator &other )
 {
-  m_grouper = other.m_grouper;
+  if ( this != &other )
+    m_grouper = other.m_grouper;
+
   return *this;
 }
 
-bool ItemLessThanComparator::operator()(const Akonadi::Item &leftItem, const Akonadi::Item &rightItem) const
+bool ItemLessThanComparator::operator()( const Akonadi::Item &leftItem, const Akonadi::Item &rightItem ) const
 {
-  Q_ASSERT(leftItem.isValid());
-  Q_ASSERT(rightItem.isValid());
+  Q_ASSERT( leftItem.isValid() );
+  Q_ASSERT( rightItem.isValid() );
 
-  const Akonadi::Item leftThreadRootItem = m_grouper->getThreadItem(leftItem);
-  const Akonadi::Item rightThreadRootItem = m_grouper->getThreadItem(rightItem);
+  const Akonadi::Item leftThreadRootItem = m_grouper->getThreadItem( leftItem );
+  const Akonadi::Item rightThreadRootItem = m_grouper->getThreadItem( rightItem );
 
-  Q_ASSERT(rightThreadRootItem.isValid());
-  Q_ASSERT(leftThreadRootItem.isValid());
+  Q_ASSERT( rightThreadRootItem.isValid() );
+  Q_ASSERT( leftThreadRootItem.isValid() );
 
-  if (leftThreadRootItem != rightThreadRootItem) {
-    Q_ASSERT(leftThreadRootItem.hasPayload<KMime::Message::Ptr>());
-    Q_ASSERT(rightThreadRootItem.hasPayload<KMime::Message::Ptr>());
+  if ( leftThreadRootItem != rightThreadRootItem ) {
+    Q_ASSERT( leftThreadRootItem.hasPayload<KMime::Message::Ptr>() );
+    Q_ASSERT( rightThreadRootItem.hasPayload<KMime::Message::Ptr>() );
 
     const KMime::Message::Ptr leftThreadRootMessage = leftThreadRootItem.payload<KMime::Message::Ptr>();
     const KMime::Message::Ptr rightThreadRootMessage = rightThreadRootItem.payload<KMime::Message::Ptr>();
 
-    if (m_grouper->m_order == ThreadGrouperModel::ThreadsWithNewRepliesOrder) {
-      const KDateTime leftNewest = m_grouper->getMostRecentUpdate(leftThreadRootMessage, leftThreadRootItem.id());
-      const KDateTime rightNewest = m_grouper->getMostRecentUpdate(rightThreadRootMessage, rightThreadRootItem.id());
+    if ( m_grouper->m_order == ThreadGrouperModel::ThreadsWithNewRepliesOrder ) {
+      const KDateTime leftNewest = m_grouper->getMostRecentUpdate( leftThreadRootMessage, leftThreadRootItem.id() );
+      const KDateTime rightNewest = m_grouper->getMostRecentUpdate( rightThreadRootMessage, rightThreadRootItem.id() );
 
-      if (leftNewest != rightNewest) {
+      if ( leftNewest != rightNewest ) {
         return leftNewest > rightNewest;
       }
     } else {
       const KDateTime leftThreadRootDateTime = leftThreadRootMessage->date()->dateTime();
       const KDateTime rightThreadRootDateTime = rightThreadRootMessage->date()->dateTime();
-      if (leftThreadRootDateTime != rightThreadRootDateTime) {
+      if ( leftThreadRootDateTime != rightThreadRootDateTime ) {
         return leftThreadRootDateTime > rightThreadRootDateTime;
       }
     }
@@ -172,14 +176,14 @@ bool ItemLessThanComparator::operator()(const Akonadi::Item &leftItem, const Ako
     return leftThreadRootItem.id() < rightThreadRootItem.id();
   }
 
-  if (leftThreadRootItem == leftItem)
+  if ( leftThreadRootItem == leftItem )
     return true;
 
-  if (rightThreadRootItem == rightItem)
+  if ( rightThreadRootItem == rightItem )
     return false;
 
-  Q_ASSERT(leftItem.hasPayload<KMime::Message::Ptr>());
-  Q_ASSERT(rightItem.hasPayload<KMime::Message::Ptr>());
+  Q_ASSERT( leftItem.hasPayload<KMime::Message::Ptr>() );
+  Q_ASSERT( rightItem.hasPayload<KMime::Message::Ptr>() );
 
   const KMime::Message::Ptr leftMessage = leftItem.payload<KMime::Message::Ptr>();
   const KMime::Message::Ptr rightMessage = rightItem.payload<KMime::Message::Ptr>();
@@ -188,20 +192,20 @@ bool ItemLessThanComparator::operator()(const Akonadi::Item &leftItem, const Ako
   const KDateTime rightDateTime = rightMessage->date()->dateTime();
 
   // Messages in the same thread are ordered most recent last.
-  if (leftDateTime != rightDateTime) {
+  if ( leftDateTime != rightDateTime ) {
     return leftDateTime < rightDateTime;
   }
 
   return leftItem.id() < rightItem.id();
 }
 
-static QVector<QByteArray> getRemovableItems(const QHash<QByteArray, QSet<QByteArray> > &container, const QByteArray &value)
+static QVector<QByteArray> getRemovableItems( const QHash<QByteArray, QSet<QByteArray> > &container, const QByteArray &value )
 {
   QVector<QByteArray> items;
 
-  foreach(const QByteArray &ba, container[value]) {
-    items.push_back(ba);
-    items += getRemovableItems(container, ba);
+  foreach ( const QByteArray &ba, container[ value ] ) {
+    items.push_back( ba );
+    items += getRemovableItems( container, ba );
   }
 
   return items;
@@ -281,11 +285,11 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
   }
 }
 
-ThreadGrouperModel::ThreadGrouperModel(QObject* parent)
-  : QSortFilterProxyModel(parent), d_ptr(new ThreadGrouperModelPrivate(this))
+ThreadGrouperModel::ThreadGrouperModel( QObject *parent )
+  : QSortFilterProxyModel( parent ), d_ptr( new ThreadGrouperModelPrivate( this ) )
 {
-  setDynamicSortFilter(true);
-  sort(0, Qt::AscendingOrder);
+  setDynamicSortFilter( true );
+  sort( 0, Qt::AscendingOrder );
 }
 
 ThreadGrouperModel::~ThreadGrouperModel()
@@ -293,104 +297,109 @@ ThreadGrouperModel::~ThreadGrouperModel()
   delete d_ptr;
 }
 
-void ThreadGrouperModel::setThreadOrder(ThreadGrouperModel::OrderScheme order)
+void ThreadGrouperModel::setThreadOrder( ThreadGrouperModel::OrderScheme order )
 {
-  Q_D(ThreadGrouperModel);
+  Q_D( ThreadGrouperModel );
   d->m_order = order;
 }
 
 ThreadGrouperModel::OrderScheme ThreadGrouperModel::threadOrder() const
 {
-  Q_D(const ThreadGrouperModel);
+  Q_D( const ThreadGrouperModel );
   return d->m_order;
 }
 
-Akonadi::Item ThreadGrouperModelPrivate::threadRoot(const QModelIndex &index) const
+Akonadi::Item ThreadGrouperModelPrivate::threadRoot( const QModelIndex &index ) const
 {
-  const Akonadi::Item item = index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-  Q_ASSERT(item.isValid());
-  return getThreadItem(item);
+  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  Q_ASSERT( item.isValid() );
+  return getThreadItem( item );
 }
 
-QVariant ThreadGrouperModel::data(const QModelIndex& index, int role) const
+QVariant ThreadGrouperModel::data( const QModelIndex &index, int role ) const
 {
-  Q_D(const ThreadGrouperModel);
-  if (!index.isValid())
+  Q_D( const ThreadGrouperModel );
+
+  if ( !index.isValid() )
     return QVariant();
-  if (role == ThreadIdRole) {
-    return d->threadRoot(index).id();
-  }
-  if (role == Qt::DisplayRole) {
-    Akonadi::Item item = QSortFilterProxyModel::data(index, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-    Q_ASSERT(item.isValid());
-    Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
-    KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-    return  QSortFilterProxyModel::data(index, role).toString() + message->subject()->asUnicodeString() + " - " + message->date()->asUnicodeString();
+
+  if ( role == ThreadIdRole )
+    return d->threadRoot( index ).id();
+
+  if ( role == Qt::DisplayRole ) {
+    const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    Q_ASSERT( item.isValid() );
+    Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
+
+    const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+    return  QSortFilterProxyModel::data( index, role ).toString() + message->subject()->asUnicodeString() + " - " + message->date()->asUnicodeString();
   }
 
-  return QSortFilterProxyModel::data(index, role);
+  return QSortFilterProxyModel::data( index, role );
 }
 
-void ThreadGrouperModel::setSourceModel(QAbstractItemModel* sourceModel)
+void ThreadGrouperModel::setSourceModel( QAbstractItemModel *sourceModel )
 {
-  Q_D(ThreadGrouperModel);
+  Q_D( ThreadGrouperModel );
   d->populateThreadGrouperModel();
-  QSortFilterProxyModel::setSourceModel(sourceModel);
+  QSortFilterProxyModel::setSourceModel( sourceModel );
 
-  disconnect(sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-      this, SIGNAL(_q_sourceRowsAboutToBeInserted(QModelIndex,int,int)));
+  disconnect( sourceModel, SIGNAL( rowsAboutToBeInserted( QModelIndex, int, int ) ),
+              this, SIGNAL( _q_sourceRowsAboutToBeInserted( QModelIndex, int, int ) ) );
 
-  disconnect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-      this, SLOT(_q_sourceRowsInserted(QModelIndex,int,int)));
+  disconnect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
+              this, SLOT( _q_sourceRowsInserted( QModelIndex, int, int ) ) );
 
-  disconnect(sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-      this, SLOT(_q_sourceRowsAboutToBeRemoved(QModelIndex,int,int)));
+  disconnect( sourceModel, SIGNAL( rowsAboutToBeRemoved( QModelIndex, int, int ) ),
+              this, SLOT( _q_sourceRowsAboutToBeRemoved( QModelIndex, int, int ) ) );
 
-  disconnect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-      this, SLOT(_q_sourceRowsRemoved(QModelIndex,int,int)));
+  disconnect( sourceModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
+              this, SLOT( _q_sourceRowsRemoved( QModelIndex, int, int ) ) );
 
-  disconnect(sourceModel, SIGNAL(layoutAboutToBeChanged()),
-      this, SLOT(_q_sourceLayoutAboutToBeChanged()));
+  disconnect( sourceModel, SIGNAL( layoutAboutToBeChanged() ),
+              this, SLOT( _q_sourceLayoutAboutToBeChanged() ) );
 
-  disconnect(sourceModel, SIGNAL(layoutChanged()),
-      this, SLOT(_q_sourceLayoutChanged()));
+  disconnect( sourceModel, SIGNAL( layoutChanged() ),
+              this, SLOT( _q_sourceLayoutChanged() ) );
 
-  connect(sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-      this, SLOT(_q_sourceAboutToBeReset()));
+  connect( sourceModel, SIGNAL( rowsAboutToBeInserted( QModelIndex, int, int ) ),
+           this, SLOT( _q_sourceAboutToBeReset() ) );
 
-  connect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-      this, SLOT(populateThreadGrouperModel()));
+  connect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
+           this, SLOT( populateThreadGrouperModel() ) );
 
-  connect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-      this, SLOT(_q_sourceReset()));
+  connect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
+           this, SLOT( _q_sourceReset() ) );
 
-  connect(sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-      this, SLOT(_q_sourceAboutToBeReset()));
+  connect( sourceModel, SIGNAL( rowsAboutToBeRemoved( QModelIndex, int, int ) ),
+           this, SLOT( _q_sourceAboutToBeReset() ) );
 
-  connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-      this, SLOT(populateThreadGrouperModel()));
+  connect( sourceModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
+           this, SLOT( populateThreadGrouperModel() ) );
 
-  connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-      this, SLOT(_q_sourceReset()));
+  connect( sourceModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
+           this, SLOT( _q_sourceReset() ) );
 
-  connect(sourceModel, SIGNAL(layoutAboutToBeChanged()),
-      this, SLOT(_q_sourceAboutToBeReset()));
+  connect( sourceModel, SIGNAL( layoutAboutToBeChanged() ),
+           this, SLOT( _q_sourceAboutToBeReset() ) );
 
-  connect(sourceModel, SIGNAL(layoutChanged()),
-      this, SLOT(populateThreadGrouperModel()));
+  connect( sourceModel, SIGNAL( layoutChanged() ),
+           this, SLOT( populateThreadGrouperModel() ) );
 
-  connect(sourceModel, SIGNAL(layoutChanged()),
-      this, SLOT(_q_sourceReset()));
-
+  connect( sourceModel, SIGNAL( layoutChanged() ),
+           this, SLOT( _q_sourceReset() ) );
 }
 
-bool ThreadGrouperModel::lessThan(const QModelIndex& left, const QModelIndex& right) const
+bool ThreadGrouperModel::lessThan( const QModelIndex &left, const QModelIndex &right ) const
 {
-  Q_D(const ThreadGrouperModel);
-  static ItemLessThanComparator lt(d);
-  const Akonadi::Item leftItem = left.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-  const Akonadi::Item rightItem = right.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-  return lt(leftItem, rightItem);
+  Q_D( const ThreadGrouperModel );
+
+  static ItemLessThanComparator lt( d );
+
+  const Akonadi::Item leftItem = left.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+
+  return lt( leftItem, rightItem );
 }
 
 #include "threadgroupermodel.moc"

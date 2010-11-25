@@ -34,31 +34,33 @@ class ThreadGrouperModelPrivate;
 class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
 {
   Q_OBJECT
-public:
-  enum CustomRoles {
-    // FIXME Fix custom role handling in proxies.
-    ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 30
-  };
 
-  enum OrderScheme {
-    ThreadsWithNewRepliesOrder,
-    ThreadsStartedOrder
-  };
-  ThreadGrouperModel(QObject* parent = 0);
-  virtual ~ThreadGrouperModel();
+  public:
+    enum CustomRoles {
+      // FIXME Fix custom role handling in proxies.
+      ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 30
+    };
 
-  void setThreadOrder(OrderScheme order);
-  OrderScheme threadOrder() const;
+    enum OrderScheme {
+      ThreadsWithNewRepliesOrder,
+      ThreadsStartedOrder
+    };
 
-  virtual void setSourceModel(QAbstractItemModel* sourceModel);
+    ThreadGrouperModel( QObject* parent = 0 );
+    virtual ~ThreadGrouperModel();
 
-  virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    void setThreadOrder( OrderScheme order );
+    OrderScheme threadOrder() const;
 
-private:
-  Q_DECLARE_PRIVATE(ThreadGrouperModel)
-  ThreadGrouperModelPrivate * const d_ptr;
-  Q_PRIVATE_SLOT(d_func(), void populateThreadGrouperModel())
+    virtual void setSourceModel( QAbstractItemModel *sourceModel );
+
+    virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
+    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+
+  private:
+    Q_DECLARE_PRIVATE( ThreadGrouperModel )
+    ThreadGrouperModelPrivate* const d_ptr;
+    Q_PRIVATE_SLOT( d_func(), void populateThreadGrouperModel() )
 };
 
 #endif
