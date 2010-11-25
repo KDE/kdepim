@@ -85,6 +85,7 @@ MailScheduler2::MailScheduler2( IncidenceChanger2 *changer,
 
 MailScheduler2::~MailScheduler2()
 {
+  delete d;
 }
 
 CallId MailScheduler2::publish( const KCalCore::IncidenceBase::Ptr &incidence,
