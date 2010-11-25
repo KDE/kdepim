@@ -57,7 +57,10 @@ Item {
 
   Row {
     anchors.topMargin: 30
-    anchors.fill: parent
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.bottom: firstStepsLink.top
     spacing: 10
 
     Column {
@@ -102,5 +105,25 @@ Item {
         clip: true
       }
     }
+  }
+
+  Text {
+    id: firstStepsLink
+    anchors.left: parent.left
+    anchors.leftMargin: 10
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    anchors.bottomMargin: visible ? 20 : 0
+    text: KDE.i18n( "<a href=\"foobar\">First steps...</a>" )
+    textFormat: Text.RichText
+    verticalAlignment: Text.AlignTop
+    MouseArea {
+      anchors.fill: parent
+      onClicked: { application.openManual() }
+    }
+
+    visible: favsView.count < 4
+    height: visible ? 20 : 0
+    y: visible ? parent.height - height : parent.height
   }
 }
