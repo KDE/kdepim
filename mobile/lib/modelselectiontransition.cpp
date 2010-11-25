@@ -44,6 +44,11 @@ ModelSelectionTransition::ModelSelectionTransition(QItemSelectionModel* selectio
 
 }
 
+ModelSelectionTransition::~ModelSelectionTransition()
+{
+    delete d_ptr;
+}
+
 bool ModelSelectionTransition::eventTest(QEvent* event)
 {
   Q_D(ModelSelectionTransition);

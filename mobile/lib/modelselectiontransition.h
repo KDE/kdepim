@@ -40,6 +40,7 @@ public:
     AcceptSingleTopLevelSelection
   };
   ModelSelectionTransition(QItemSelectionModel *folderModel, Type type, QState* sourceState = 0);
+  virtual ~ModelSelectionTransition();
 protected:
   virtual bool eventTest(QEvent* event);
 
