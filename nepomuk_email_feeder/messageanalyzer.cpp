@@ -115,7 +115,9 @@ void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
   }
 
   if ( msg->date( false ) ) {
-    m_email.setSentDate( msg->date()->dateTime().dateTime() );
+    const QDateTime dateTime = msg->date()->dateTime().dateTime();
+    if ( dateTime.isValid() )
+      m_email.setSentDate( dateTime );
   }
 
   if ( msg->from( false ) ) {
