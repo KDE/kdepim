@@ -20,6 +20,8 @@
 
 #include "calendar.h"
 #include "calendar_p.h"
+
+#include "blockalarmsattribute.h"
 #include "utils.h"
 
 #include <KLocale>
@@ -639,12 +641,22 @@ KCalCore::Alarm::List Calendar::alarmsTo( const KDateTime &to )
   return alarms( KDateTime( QDate( 1900, 1, 1 ) ), to );
 }
 
-KCalCore::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to )
+KCalCore::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to, bool excludeBlockedAlarms )
 {
   KCalCore::Alarm::List alarmList;
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     const Akonadi::Item item = i.next().value();
+
+    if ( excludeBlockedAlarms ) {
+      // take the collection from m_collectionMap, because we need the up-to-date collection attributes
+      const Akonadi::Collection parentCollection = d->m_collectionMap.value( item.parentCollection().id() );
+      if ( parentCollection.isValid() ) {
+        if ( parentCollection.hasAttribute<BlockAlarmsAttribute>() )
+          continue; // do not include alarms from this collection
+      }
+    }
+
     KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
     if ( !incidence ) {
       continue;

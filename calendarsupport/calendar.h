@@ -739,7 +739,7 @@ class CALENDARSUPPORT_EXPORT Calendar : public QObject,
 
     Akonadi::Item journal( Akonadi::Item::Id id ) const;
 
-    KCalCore::Alarm::List alarms( const KDateTime &from, const KDateTime &to );
+    KCalCore::Alarm::List alarms( const KDateTime &from, const KDateTime &to, bool excludeBlockedAlarms = false );
     KCalCore::Alarm::List alarmsTo( const KDateTime &to );
 
     Akonadi::Item findParent( const Akonadi::Item &item ) const;
