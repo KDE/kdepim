@@ -41,16 +41,20 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
       ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 30
     };
 
-    enum OrderScheme {
-      ThreadsWithNewRepliesOrder,
-      ThreadsStartedOrder
+    enum SortingOption
+    {
+      SortByDateTime,
+      SortByDateTimeMostRecent,
+      SortBySenderReceiver,
+      SortBySubject,
+      SortBySize
     };
 
     ThreadGrouperModel( QObject* parent = 0 );
     virtual ~ThreadGrouperModel();
 
-    void setThreadOrder( OrderScheme order );
-    OrderScheme threadOrder() const;
+    void setSortingOption( SortingOption option );
+    SortingOption sortingOption() const;
 
     virtual void setSourceModel( QAbstractItemModel *sourceModel );
 

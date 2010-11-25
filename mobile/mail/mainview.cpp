@@ -191,10 +191,10 @@ int MainView::openComposer( const QString &to, const QString &cc, const QString 
 QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model)
 {
 
-  ThreadGrouperModel *grouper = new ThreadGrouperModel(this);
-  grouper->setSourceModel(model);
+  m_threadGrouperModel = new ThreadGrouperModel(this);
+  m_threadGrouperModel->setSourceModel(model);
 
-  model = grouper;
+  model = m_threadGrouperModel;
 
   QAbstractProxyModel *itemFilterModel = createItemFilterModel();
   if ( itemFilterModel ) {
@@ -322,6 +322,8 @@ void MainView::delayedInit()
   mMessageListSettingsController = new MessageListSettingsController( this );
   actionCollection()->addAction( "messagelist_change_settings", mMessageListSettingsController->editAction() );
   rootContext()->setContextProperty( "messageListSettings", mMessageListSettingsController );
+  connect( mMessageListSettingsController, SIGNAL( settingsChanged( const MessageListSettings& ) ),
+           this, SLOT( messageListSettingsChanged( const MessageListSettings& ) ) );
 
   QTime time;
   if ( debugTiming ) {
@@ -1554,6 +1556,29 @@ void MainView::toggleShowExtendedHeaders( bool value )
     else
       item->viewer()->setHeaderStyleAndStrategy( MessageViewer::HeaderStyle::mobile(), MessageViewer::HeaderStrategy::all() );
   }
+}
+
+void MainView::messageListSettingsChanged( const MessageListSettings &settings )
+{
+  switch ( settings.sortingOption() ) {
+    case MessageListSettings::SortByDateTime:
+      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortByDateTime );
+      break;
+    case MessageListSettings::SortByDateTimeMostRecent:
+      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortByDateTimeMostRecent );
+      break;
+    case MessageListSettings::SortBySenderReceiver:
+      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortBySenderReceiver );
+      break;
+    case MessageListSettings::SortBySubject:
+      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortBySubject );
+      break;
+    case MessageListSettings::SortBySize:
+      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortBySize );
+      break;
+  }
+
+  m_threadGrouperModel->sort( 0, settings.sortingOrder() );
 }
 
 // #############################################################

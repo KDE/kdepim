@@ -46,9 +46,11 @@ class ConfigWidget;
 class FilterModel;
 class KJob;
 class KSelectionProxyModel;
+class MessageListSettings;
 class MessageListSettingsController;
 class QStandardItemModel;
 class TemplateEmailModel;
+class ThreadGrouperModel;
 class ThreadModel;
 
 class MainView : public KDeclarativeMainView
@@ -168,6 +170,7 @@ class MainView : public KDeclarativeMainView
     void showMessageSource();
     void selectOverrideEncoding();
     void toggleShowExtendedHeaders( bool );
+    void messageListSettingsChanged( const MessageListSettings& );
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
@@ -185,6 +188,7 @@ class MainView : public KDeclarativeMainView
     TemplateEmailModel *mEmailTemplateModel;
     QItemSelectionModel *mTemplateSelectionModel;
     KSelectionProxyModel *m_threadContentsModel;
+    ThreadGrouperModel *m_threadGrouperModel;
     ThreadModel *m_threadsModel;
     FilterModel *mFilterModel;
     Akonadi::QuotaColorProxyModel *mQuotaColorProxyModel;

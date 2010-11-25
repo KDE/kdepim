@@ -71,7 +71,7 @@ void MessageListSettingsController::setCollection( const Akonadi::Collection &co
 
   mSettings = MessageListSettings::fromConfig( mCollectionId );
 
-  emit settingsChanged();
+  emit settingsChanged( mSettings );
 }
 
 void MessageListSettingsController::editSettings()
@@ -82,6 +82,7 @@ void MessageListSettingsController::editSettings()
   ui.setupUi( dialog.mainWidget() );
 
   ui.mSortingOption->setCurrentIndex( static_cast<int>( mSettings.sortingOption() ) );
+  ui.mSortingOrder->setCurrentIndex( mSettings.sortingOrder() == Qt::AscendingOrder ? 0 : 1 );
   ui.mGroupingOption->setCurrentIndex( static_cast<int>( mSettings.groupingOption() ) );
   ui.mUseThreading->setChecked( mSettings.useThreading() );
   ui.mSaveForCollection->setChecked( mSettings.saveForCollection() );
@@ -90,11 +91,12 @@ void MessageListSettingsController::editSettings()
     return;
 
   mSettings.setSortingOption( static_cast<MessageListSettings::SortingOption>( ui.mSortingOption->currentIndex() ) );
+  mSettings.setSortingOrder( ui.mSortingOrder->currentIndex() == 0 ? Qt::AscendingOrder : Qt::DescendingOrder );
   mSettings.setGroupingOption( static_cast<MessageListSettings::GroupingOption>( ui.mGroupingOption->currentIndex() ) );
   mSettings.setUseThreading( ui.mUseThreading->isChecked() );
   mSettings.setSaveForCollection( ui.mSaveForCollection->isChecked() );
 
   MessageListSettings::toConfig( mCollectionId, mSettings );
 
-  emit settingsChanged();
+  emit settingsChanged( mSettings );
 }

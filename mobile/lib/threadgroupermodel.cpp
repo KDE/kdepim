@@ -41,7 +41,7 @@ class ThreadGrouperModelPrivate
 {
   public:
     ThreadGrouperModelPrivate( ThreadGrouperModel *qq )
-      : q_ptr( qq ), m_order( ThreadGrouperModel::ThreadsWithNewRepliesOrder )
+      : q_ptr( qq ), m_sortingOption( ThreadGrouperModel::SortByDateTimeMostRecent )
     {
     }
 
@@ -60,7 +60,7 @@ class ThreadGrouperModelPrivate
     mutable QHash<QByteArray, QSet<QByteArray> > m_parentChildrenMap; // maps a thread leader item to all its descendant items
     mutable QHash<QByteArray, Akonadi::Item> m_items;
 
-    ThreadGrouperModel::OrderScheme m_order;
+    ThreadGrouperModel::SortingOption m_sortingOption;
 };
 
 static QByteArray identifierForMessage( const KMime::Message::Ptr &message, Akonadi::Item::Id id )
@@ -151,19 +151,53 @@ bool ItemLessThanComparator::operator()( const Akonadi::Item &leftItem, const Ak
     const KMime::Message::Ptr leftThreadRootMessage = leftThreadRootItem.payload<KMime::Message::Ptr>();
     const KMime::Message::Ptr rightThreadRootMessage = rightThreadRootItem.payload<KMime::Message::Ptr>();
 
-    if ( m_grouper->m_order == ThreadGrouperModel::ThreadsWithNewRepliesOrder ) {
-      const KDateTime leftNewest = m_grouper->getMostRecentUpdate( leftThreadRootMessage, leftThreadRootItem.id() );
-      const KDateTime rightNewest = m_grouper->getMostRecentUpdate( rightThreadRootMessage, rightThreadRootItem.id() );
+    switch ( m_grouper->m_sortingOption ) {
+      case ThreadGrouperModel::SortByDateTime:
+        {
+          const KDateTime leftThreadRootDateTime = leftThreadRootMessage->date()->dateTime();
+          const KDateTime rightThreadRootDateTime = rightThreadRootMessage->date()->dateTime();
+          if ( leftThreadRootDateTime != rightThreadRootDateTime ) {
+            return leftThreadRootDateTime > rightThreadRootDateTime;
+          }
+        }
+        break;
+      case ThreadGrouperModel::SortByDateTimeMostRecent:
+        {
+          const KDateTime leftNewest = m_grouper->getMostRecentUpdate( leftThreadRootMessage, leftThreadRootItem.id() );
+          const KDateTime rightNewest = m_grouper->getMostRecentUpdate( rightThreadRootMessage, rightThreadRootItem.id() );
 
-      if ( leftNewest != rightNewest ) {
-        return leftNewest > rightNewest;
-      }
-    } else {
-      const KDateTime leftThreadRootDateTime = leftThreadRootMessage->date()->dateTime();
-      const KDateTime rightThreadRootDateTime = rightThreadRootMessage->date()->dateTime();
-      if ( leftThreadRootDateTime != rightThreadRootDateTime ) {
-        return leftThreadRootDateTime > rightThreadRootDateTime;
-      }
+          if ( leftNewest != rightNewest ) {
+            return leftNewest > rightNewest;
+          }
+        }
+        break;
+      case ThreadGrouperModel::SortBySenderReceiver:
+        {
+          const QString leftSender = leftThreadRootMessage->sender()->asUnicodeString();
+          const QString rightSender = rightThreadRootMessage->sender()->asUnicodeString();
+
+          if ( leftSender != rightSender )
+            return leftSender < rightSender;
+        }
+        break;
+      case ThreadGrouperModel::SortBySubject:
+        {
+          const QString leftSubject = leftThreadRootMessage->subject()->asUnicodeString();
+          const QString rightSubject = rightThreadRootMessage->subject()->asUnicodeString();
+
+          if ( leftSubject != rightSubject )
+            return leftSubject < rightSubject;
+        }
+        break;
+      case ThreadGrouperModel::SortBySize:
+        {
+          const qint64 leftSize = leftThreadRootItem.size();
+          const qint64 rightSize = rightThreadRootItem.size();
+
+          if ( leftSize != rightSize )
+            return leftSize < rightSize;
+        }
+        break;
     }
 
     return leftThreadRootItem.id() < rightThreadRootItem.id();
@@ -247,16 +281,18 @@ ThreadGrouperModel::~ThreadGrouperModel()
   delete d_ptr;
 }
 
-void ThreadGrouperModel::setThreadOrder( ThreadGrouperModel::OrderScheme order )
+void ThreadGrouperModel::setSortingOption( ThreadGrouperModel::SortingOption option )
 {
   Q_D( ThreadGrouperModel );
-  d->m_order = order;
+  d->m_sortingOption = option;
+
+  invalidate();
 }
 
-ThreadGrouperModel::OrderScheme ThreadGrouperModel::threadOrder() const
+ThreadGrouperModel::SortingOption ThreadGrouperModel::sortingOption() const
 {
   Q_D( const ThreadGrouperModel );
-  return d->m_order;
+  return d->m_sortingOption;
 }
 
 Akonadi::Item ThreadGrouperModelPrivate::threadRoot( const QModelIndex &index ) const

@@ -48,7 +48,7 @@ class MessageListSettingsController : public QObject
     void setCollection( const Akonadi::Collection &collection );
 
   Q_SIGNALS:
-    void settingsChanged();
+    void settingsChanged( const MessageListSettings &settings );
 
   private Q_SLOTS:
     void editSettings();
