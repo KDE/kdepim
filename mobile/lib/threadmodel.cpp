@@ -23,155 +23,167 @@
 
 #include "threadgroupermodel.h"
 
-#include <KMime/Message>
 #include <akonadi/kmime/messagestatus.h>
-#include <qtimer.h>
+#include <kmime/kmime_message.h>
+
+#include <QtCore/QTimer>
 
 
-struct ThreadModelNode {
-  ThreadModelNode(const QModelIndex &top, const QModelIndex &bottom)
-    : range(top, bottom)
+struct ThreadModelNode
+{
+  ThreadModelNode( const QModelIndex &top, const QModelIndex &bottom )
+    : range( top, bottom )
   {
-
   }
+
   QItemSelectionRange range;
 };
 
 class ThreadModelPrivate
 {
-  ThreadModelPrivate(QAbstractItemModel *emailModel, ThreadModel *qq)
-    : q_ptr(qq), m_emailModel(emailModel)
+  ThreadModelPrivate( QAbstractItemModel *emailModel, ThreadModel *qq )
+    : q_ptr( qq ), m_emailModel( emailModel )
   {
     m_resetCompressor.setInterval( 0 );
     m_resetCompressor.setSingleShot( true );
-    QObject::connect( &m_resetCompressor, SIGNAL(timeout()), qq, SLOT(populateThreadModel()) );
+    QObject::connect( &m_resetCompressor, SIGNAL( timeout() ), qq, SLOT( populateThreadModel() ) );
     m_resetCompressor.start();
   }
-  Q_DECLARE_PUBLIC(ThreadModel)
-  ThreadModel * const q_ptr;
+
+  Q_DECLARE_PUBLIC( ThreadModel )
+  ThreadModel* const q_ptr;
 
   void populateThreadModel();
 
   QAbstractItemModel *m_emailModel;
-
   QVector<ThreadModelNode*> m_threads;
-
   QTimer m_resetCompressor;
-
 };
 
 void ThreadModelPrivate::populateThreadModel()
 {
-  Q_Q(ThreadModel);
+  Q_Q( ThreadModel );
   q->beginResetModel();
+
   m_threads.clear();
   const int rowCount = m_emailModel->rowCount();
-  if (rowCount == 0) {
+  if ( rowCount == 0 ) {
     q->endResetModel();
     return;
   }
-  const QModelIndex firstIdx = m_emailModel->index(0, 0);
-  Akonadi::Item::Id currentThreadId = firstIdx.data(ThreadGrouperModel::ThreadIdRole).toLongLong();
+
+  const QModelIndex firstIndex = m_emailModel->index( 0, 0 );
+  Akonadi::Item::Id currentThreadId = firstIndex.data( ThreadGrouperModel::ThreadIdRole ).toLongLong();
+
   int startRow = 0;
   static const int column = 0;
-  for (int row = 1; row < rowCount; ++row) {
-    const QModelIndex idx = m_emailModel->index(row, column);
-    Q_ASSERT(idx.isValid());
-    const Akonadi::Item::Id threadRoot = idx.data(ThreadGrouperModel::ThreadIdRole).toLongLong();
-    if (threadRoot != currentThreadId)
-    {
-      const QModelIndex top = m_emailModel->index(startRow, column);
-      const QModelIndex bottom = m_emailModel->index(row - 1, column);
-      Q_ASSERT(top.isValid());
-      Q_ASSERT(bottom.isValid());
-      m_threads.push_back(new ThreadModelNode(top, bottom));
+  for ( int row = 1; row < rowCount; ++row ) {
+    const QModelIndex index = m_emailModel->index( row, column );
+    Q_ASSERT( index.isValid() );
+
+    const Akonadi::Item::Id threadRoot = index.data( ThreadGrouperModel::ThreadIdRole ).toLongLong();
+    if ( threadRoot != currentThreadId ) {
+      const QModelIndex top = m_emailModel->index( startRow, column );
+      const QModelIndex bottom = m_emailModel->index( row - 1, column );
+      Q_ASSERT( top.isValid() );
+      Q_ASSERT( bottom.isValid() );
+
+      m_threads.push_back( new ThreadModelNode( top, bottom ) );
       startRow = row;
     }
+
     currentThreadId = threadRoot;
   }
-  const QModelIndex top = m_emailModel->index(startRow, column);
-  const QModelIndex bottom = m_emailModel->index(rowCount - 1, column);
-  Q_ASSERT(top.isValid());
-  Q_ASSERT(bottom.isValid());
-  m_threads.push_back(new ThreadModelNode(top, bottom));
+
+  const QModelIndex top = m_emailModel->index( startRow, column );
+  const QModelIndex bottom = m_emailModel->index( rowCount - 1, column );
+  Q_ASSERT( top.isValid() );
+  Q_ASSERT( bottom.isValid() );
+
+  m_threads.push_back( new ThreadModelNode( top, bottom ) );
   q->endResetModel();
 }
 
-ThreadModel::ThreadModel(QAbstractItemModel *emailModel, QObject* parent)
-  : QAbstractListModel(parent), d_ptr(new ThreadModelPrivate(emailModel, this))
+ThreadModel::ThreadModel( QAbstractItemModel *emailModel, QObject *parent )
+  : QAbstractListModel( parent ), d_ptr( new ThreadModelPrivate( emailModel, this ) )
 {
-  connect(emailModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-      &(d_ptr->m_resetCompressor), SLOT(start()));
+  connect( emailModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
+           &(d_ptr->m_resetCompressor), SLOT( start() ) );
 
-  connect(emailModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-      &(d_ptr->m_resetCompressor), SLOT(start()));
+  connect( emailModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
+           &(d_ptr->m_resetCompressor), SLOT( start() ) );
 
-  connect(emailModel, SIGNAL(layoutChanged()),
-      &(d_ptr->m_resetCompressor), SLOT(start()));
+  connect( emailModel, SIGNAL( layoutChanged() ),
+           &(d_ptr->m_resetCompressor), SLOT( start() ) );
 
-  connect(emailModel, SIGNAL(modelReset()),
-      &(d_ptr->m_resetCompressor), SLOT(start()));
+  connect( emailModel, SIGNAL( modelReset() ),
+           &(d_ptr->m_resetCompressor), SLOT( start() ) );
 
   QHash<int, QByteArray> roleNames = emailModel->roleNames();
-  roleNames.insert(ThreadSizeRole, "threadSize");
-  roleNames.insert(ThreadUnreadCountRole, "threadUnreadCount");
-  setRoleNames(roleNames);
-
+  roleNames.insert( ThreadSizeRole, "threadSize" );
+  roleNames.insert( ThreadUnreadCountRole, "threadUnreadCount" );
+  setRoleNames( roleNames );
 }
 
 ThreadModel::~ThreadModel()
 {
-  qDeleteAll(d_func()->m_threads);
+  qDeleteAll( d_func()->m_threads );
   delete d_ptr;
 }
 
-QVariant ThreadModel::data(const QModelIndex& index, int role) const
+QVariant ThreadModel::data( const QModelIndex &index, int role ) const
 {
-  Q_D(const ThreadModel);
-  const int idx = index.row();
-  if (idx < d->m_threads.size()) {
-    ThreadModelNode *node = d->m_threads.at(idx);
-    const QModelIndex firstMailIndex = node->range.topLeft();
-    Q_ASSERT(firstMailIndex.isValid());
+  Q_D( const ThreadModel );
 
-    if (role == ThreadRangeStartRole)
+  const int indexRow = index.row();
+  if ( indexRow < d->m_threads.size() ) {
+    const ThreadModelNode *node = d->m_threads.at( indexRow );
+    const QModelIndex firstMailIndex = node->range.topLeft();
+    Q_ASSERT( firstMailIndex.isValid() );
+
+    if ( role == ThreadRangeStartRole )
       return node->range.top();
-    if (role == ThreadRangeEndRole)
+    if ( role == ThreadRangeEndRole )
       return node->range.bottom();
-    if (role == ThreadSizeRole)
+    if ( role == ThreadSizeRole )
       return node->range.height();
-    if (role == ThreadUnreadCountRole) {
+    if ( role == ThreadUnreadCountRole ) {
       int unreadCount = 0;
-      for (int row = node->range.top(); row <= node->range.bottom(); ++row) {
+      for ( int row = node->range.top(); row <= node->range.bottom(); ++row ) {
         static const int column = 0;
-        const QModelIndex idx = node->range.model()->index(row, column);
-        Q_ASSERT(idx.isValid());
-        const Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-        Q_ASSERT(item.isValid());
-        Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
+
+        const QModelIndex index = node->range.model()->index( row, column );
+        Q_ASSERT( index.isValid() );
+
+        const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+        Q_ASSERT( item.isValid() );
+        Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
+
         const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
         Akonadi::MessageStatus status;
         status.setStatusFromFlags( item.flags() );
-        if (!status.isRead())
+        if ( !status.isRead() )
           ++unreadCount;
       }
+
       return unreadCount;
     }
 
-    if (role == Qt::DisplayRole) {
-      QString displ = firstMailIndex.data(role).toString();
-      return "(" + QString::number( node->range.height() ) + ")" + displ;
+    if ( role == Qt::DisplayRole ) {
+      const QString displayString = firstMailIndex.data( role ).toString();
+      return "(" + QString::number( node->range.height() ) + ")" + displayString;
     }
-    return firstMailIndex.data(role);
+
+    return firstMailIndex.data( role );
   }
 
   return QVariant();
 }
 
-int ThreadModel::rowCount(const QModelIndex& parent) const
+int ThreadModel::rowCount( const QModelIndex& ) const
 {
-  Q_UNUSED(parent)
-  Q_D(const ThreadModel);
+  Q_D( const ThreadModel );
+
   return d->m_threads.size();
 }
 

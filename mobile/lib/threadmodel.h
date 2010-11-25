@@ -22,36 +22,39 @@
 #ifndef THREADMODEL_H
 #define THREADMODEL_H
 
-#include <QtCore/QAbstractItemModel>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QItemSelectionModel>
-#include <Akonadi/EntityTreeModel>
-
 #include "mobileui_export.h"
 
-class ThreadModelPrivate;
+#include <Akonadi/EntityTreeModel>
 
+#include <QtCore/QAbstractItemModel>
+#include <QtGui/QItemSelectionModel>
+#include <QtGui/QSortFilterProxyModel>
+
+class ThreadModelPrivate;
 
 class MOBILEUI_EXPORT ThreadModel : public QAbstractListModel
 {
   Q_OBJECT
-public:
-  enum Roles {
-    ThreadRangeStartRole = Akonadi::EntityTreeModel::UserRole + 20,
-    ThreadRangeEndRole,
-    ThreadSizeRole,
-    ThreadUnreadCountRole
-  };
-  explicit ThreadModel(QAbstractItemModel *emailModel, QObject *parent = 0);
-  virtual ~ThreadModel();
 
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  public:
 
-private:
-  Q_DECLARE_PRIVATE(ThreadModel)
-  ThreadModelPrivate * const d_ptr;
-  Q_PRIVATE_SLOT(d_func(), void populateThreadModel())
+    enum Roles {
+      ThreadRangeStartRole = Akonadi::EntityTreeModel::UserRole + 20,
+      ThreadRangeEndRole,
+      ThreadSizeRole,
+      ThreadUnreadCountRole
+    };
+
+    explicit ThreadModel( QAbstractItemModel *emailModel, QObject *parent = 0 );
+    virtual ~ThreadModel();
+
+    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+
+  private:
+    Q_DECLARE_PRIVATE( ThreadModel )
+    ThreadModelPrivate* const d_ptr;
+    Q_PRIVATE_SLOT( d_func(), void populateThreadModel() )
 };
 
 #endif
