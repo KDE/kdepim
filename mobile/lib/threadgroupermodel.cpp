@@ -35,13 +35,11 @@ struct ItemLessThanComparator
   bool operator()(const Akonadi::Item &left, const Akonadi::Item &right) const;
 };
 
-typedef std::map<Akonadi::Item, QByteArray, ItemLessThanComparator> MessageMap;
-
 class ThreadGrouperModelPrivate
 {
 public:
   ThreadGrouperModelPrivate(ThreadGrouperModel *qq)
-    : q_ptr(qq), m_messageMap(this), m_order(ThreadGrouperModel::ThreadsWithNewRepliesOrder)
+    : q_ptr(qq), m_order(ThreadGrouperModel::ThreadsWithNewRepliesOrder)
   {
   }
   Q_DECLARE_PUBLIC(ThreadGrouperModel)
@@ -56,7 +54,6 @@ public:
   void populateThreadGrouperModel() const;
 
   mutable QHash<QByteArray, QSet<QByteArray> > m_threads;
-  mutable MessageMap m_messageMap;
   mutable QHash<QByteArray, Akonadi::Item> m_threadItems;
   mutable QHash<QByteArray, Akonadi::Item> m_allItems;
 
@@ -223,7 +220,6 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
   Q_Q(const ThreadGrouperModel);
   m_threads.clear();
   m_threadItems.clear();
-  m_messageMap.clear();
 
   QHash<QByteArray, QSet<QByteArray> > pendingThreads;
 
@@ -249,7 +245,6 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
       if (it == end) {
         addToPending(pendingThreads, inReplyTo, identifier);
         m_threadItems[identifier] = item;
-        m_messageMap[item] = identifier;
         continue;
       }
       m_threadItems.remove(identifier);
@@ -261,7 +256,6 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
         m_threads[identifier].insert(ba);
       }
       m_threadItems[identifier] = item;
-      m_messageMap[item] = identifier;
     }
   }
 
