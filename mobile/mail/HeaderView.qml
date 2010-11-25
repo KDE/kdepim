@@ -200,7 +200,7 @@ KPIM.ItemListView {
     }
   ]
 
-  section.property: showSections ? _top.groupingRole : undefined
+  section.property: showSections ? _top.groupingRole : ""
   section.criteria: QML.ViewSection.FullString
   section.delegate: QML.Item {
     id: sectionDelegate

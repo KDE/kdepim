@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MessageListSettingsEditor</class>
+ <widget class="QWidget" name="MessageListSettingsEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>412</width>
+    <height>161</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Sorting:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="mSortingOption">
+     <item>
+      <property name="text">
+       <string>By Date/Time</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>By Date/Time of Most Recent in Subtree</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>By Smart Sender/Receiver</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>By Subject</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>By Size</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QComboBox" name="mSortingOrder">
+     <item>
+      <property name="text">
+       <string>Ascending</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Descending</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QCheckBox" name="mSaveForCollection">
+     <property name="text">
+      <string>Folder always uses this sort order</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Grouping:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <widget class="QComboBox" name="mGroupingOption">
+     <item>
+      <property name="text">
+       <string>None</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>By Exact Date (of Thread Leaders)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>By Smart Sender/Receiver</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2">
+    <widget class="QCheckBox" name="mUseThreading">
+     <property name="text">
+      <string>Show threads</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>24</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

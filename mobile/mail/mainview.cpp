@@ -40,6 +40,7 @@
 #include "mailcommon/sendmdnhandler.h"
 #include "messagecore/messagehelpers.h"
 #include "messagelistproxy.h"
+#include "messagelistsettingscontroller.h"
 #include "messageviewer/globalsettings.h"
 #include "messageviewer/headerstrategy.h"
 #include "messageviewer/headerstyle.h"
@@ -317,6 +318,10 @@ void MainView::delayedInit()
 
   VacationManager *vacationManager = new VacationManager( actionCollection(), this, this );
   rootContext()->setContextProperty( "vacationManager", vacationManager );
+
+  mMessageListSettingsController = new MessageListSettingsController( this );
+  actionCollection()->addAction( "messagelist_change_settings", mMessageListSettingsController->editAction() );
+  rootContext()->setContextProperty( "messageListSettings", mMessageListSettingsController );
 
   QTime time;
   if ( debugTiming ) {
@@ -1220,8 +1225,10 @@ void MainView::collectionSelectionChanged()
 
   const QModelIndex index = indexes.first();
   const Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-  if ( collection.isValid() )
+  if ( collection.isValid() ) {
     mAclEditor->setCollection( collection );
+    mMessageListSettingsController->setCollection( collection );
+  }
 }
 
 MessageViewer::MessageViewItem* MainView::messageViewerItem()

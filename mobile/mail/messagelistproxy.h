@@ -42,7 +42,8 @@ class MessageListProxy : public ListProxy
       IsForwardedRole,
       IsSignedRole,
       IsEncryptedRole,
-      DateGroupRole
+      DateGroupRole,
+      SenderGroupRole
     };
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;

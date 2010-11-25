@@ -39,6 +39,8 @@ set(kmail_mobile_srcs
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
+  messagelistsettings.cpp
+  messagelistsettingscontroller.cpp
   messageviewitem.cpp
   mobilekernel.cpp
   savemailcommand.cpp
@@ -48,7 +50,7 @@ set(kmail_mobile_srcs
   vacationmanager.cpp
 )
 
-qt4_wrap_ui(kmail_mobile_srcs configwidget.ui filterconfigwidget.ui searchwidget.ui)
+qt4_wrap_ui(kmail_mobile_srcs configwidget.ui filterconfigwidget.ui messagelistsettingseditor.ui searchwidget.ui)
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)

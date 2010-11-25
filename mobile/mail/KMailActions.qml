@@ -108,6 +108,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
     ActionListItem { name : "prefer_html_to_plain" }
     ActionListItem { name : "load_external_ref" }
+    ActionListItem { name : "messagelist_change_settings" }
   }
 
   ActionListItem {
@@ -139,6 +140,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
     ActionListItem { name : "prefer_html_to_plain" }
     ActionListItem { name : "load_external_ref" }
+    ActionListItem { name : "messagelist_change_settings" }
   }
 
   ActionList {

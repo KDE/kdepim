@@ -46,6 +46,7 @@ class ConfigWidget;
 class FilterModel;
 class KJob;
 class KSelectionProxyModel;
+class MessageListSettingsController;
 class QStandardItemModel;
 class TemplateEmailModel;
 class ThreadModel;
@@ -188,6 +189,7 @@ class MainView : public KDeclarativeMainView
     FilterModel *mFilterModel;
     Akonadi::QuotaColorProxyModel *mQuotaColorProxyModel;
     AclEditor *mAclEditor;
+    MessageListSettingsController *mMessageListSettingsController;
 };
 
 Q_DECLARE_METATYPE( MainView::ForwardMode )

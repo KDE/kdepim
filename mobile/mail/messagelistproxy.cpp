@@ -113,6 +113,17 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
           return i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ), calendar->yearString( dDate ) );
         }
       }
+      case SenderGroupRole:
+      {
+        QStringList l;
+        foreach ( const KMime::Types::Mailbox &mbox, msg->from()->mailboxes() ) {
+          if ( mbox.hasName() )
+            l.append( mbox.name() );
+          else
+            l.append( mbox.addrSpec().asPrettyString() );
+        }
+        return l.join( ", " );
+      }
     }
   }
   return QSortFilterProxyModel::data(index, role);
@@ -135,6 +146,7 @@ void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   names.insert( IsSignedRole, "is_signed" );
   names.insert( IsEncryptedRole, "is_encrypted" );
   names.insert( DateGroupRole, "dateGroup" );
+  names.insert( SenderGroupRole, "senderGroup" );
   setRoleNames( names );
   kDebug() << names << sourceModel->roleNames();
 }
