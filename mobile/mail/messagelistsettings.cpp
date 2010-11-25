@@ -27,6 +27,7 @@
 
 MessageListSettings::MessageListSettings()
   : mSortingOption( SortByDateTimeMostRecent ),
+    mSortDescending( false ),
     mGroupingOption( GroupByDate ),
     mUseThreading( true ),
     mSaveForCollection( false )
@@ -45,6 +46,16 @@ void MessageListSettings::setSortingOption( SortingOption option )
 MessageListSettings::SortingOption MessageListSettings::sortingOption() const
 {
   return mSortingOption;
+}
+
+void MessageListSettings::setSortingOrder( Qt::SortOrder order )
+{
+  mSortDescending = (order == Qt::DescendingOrder);
+}
+
+Qt::SortOrder MessageListSettings::sortingOrder() const
+{
+  return (mSortDescending ? Qt::DescendingOrder : Qt::AscendingOrder);
 }
 
 void MessageListSettings::setGroupingOption( GroupingOption option )
@@ -79,15 +90,16 @@ bool MessageListSettings::saveForCollection() const
 
 MessageListSettings MessageListSettings::fromConfig( qint64 collectionId )
 {
-  const QString groupName = QString::fromLatin1( "Folder-%1" ).arg( collectionId );
+  const QString groupName = QString::fromLatin1( "MessageListSettings-%1" ).arg( collectionId );
 
   MessageListSettings settings;
   if ( KGlobal::config()->hasGroup( groupName ) )
     settings.mSaveForCollection = true;
 
-  const KConfigGroup group( KGlobal::config(), QString::fromLatin1( "Folder-%1" ).arg( collectionId ) );
+  const KConfigGroup group( KGlobal::config(), groupName );
 
   settings.mSortingOption = static_cast<SortingOption>( group.readEntry<int>( "SortingOption", SortByDateTimeMostRecent ) );
+  settings.mSortDescending = group.readEntry<bool>( "SortDescending", false );
   settings.mGroupingOption = static_cast<GroupingOption>( group.readEntry<int>( "GroupingOption", GroupByDate ) );
   settings.mUseThreading = group.readEntry<bool>( "UseThreading", true );
 
@@ -96,7 +108,7 @@ MessageListSettings MessageListSettings::fromConfig( qint64 collectionId )
 
 void MessageListSettings::toConfig( qint64 collectionId, const MessageListSettings &settings )
 {
-  const QString groupName = QString::fromLatin1( "Folder-%1" ).arg( collectionId );
+  const QString groupName = QString::fromLatin1( "MessageListSettings-%1" ).arg( collectionId );
 
   if ( !settings.saveForCollection() ) {
     KGlobal::config()->deleteGroup( groupName );
@@ -104,6 +116,7 @@ void MessageListSettings::toConfig( qint64 collectionId, const MessageListSettin
     KConfigGroup group( KGlobal::config(), groupName );
 
     group.writeEntry( "SortingOption", static_cast<int>( settings.mSortingOption ) );
+    group.writeEntry( "SortDescending", settings.mSortDescending );
     group.writeEntry( "GroupingOption", static_cast<int>( settings.mGroupingOption ) );
     group.writeEntry( "UseThreading", settings.mUseThreading );
   }

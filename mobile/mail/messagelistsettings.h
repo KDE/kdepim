@@ -49,6 +49,9 @@ class MessageListSettings
     void setSortingOption( SortingOption option );
     SortingOption sortingOption() const;
 
+    void setSortingOrder( Qt::SortOrder order );
+    Qt::SortOrder sortingOrder() const;
+
     void setGroupingOption( GroupingOption option );
     GroupingOption groupingOption() const;
 
@@ -63,6 +66,7 @@ class MessageListSettings
 
   private:
     SortingOption mSortingOption;
+    bool mSortDescending;
     GroupingOption mGroupingOption;
     bool mUseThreading;
     bool mSaveForCollection;
