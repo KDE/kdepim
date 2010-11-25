@@ -22,6 +22,8 @@
 #ifndef HIERARCHYRESOLVER_H
 #define HIERARCHYRESOLVER_H
 
+#include "mobileui_export.h"
+
 #include <QtCore/QByteArray>
 #include <QtCore/QSet>
 
@@ -33,7 +35,7 @@
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class HierarchyResolver
+class MOBILEUI_EXPORT HierarchyResolver
 {
   public:
     /**

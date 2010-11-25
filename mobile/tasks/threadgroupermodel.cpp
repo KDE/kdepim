@@ -21,7 +21,7 @@
 
 #include "threadgroupermodel.h"
 
-#include "hierarchyresolver.h"
+#include "../lib/hierarchyresolver.h"
 #include "settings.h"
 
 #include <calendarsupport/utils.h>

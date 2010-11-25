@@ -17,6 +17,7 @@ set(mobileui_SRCS
     exporthandlerbase.cpp
     favoriteslistmodel.cpp
     guistatemanager.cpp
+    hierarchyresolver.cpp
     importhandlerbase.cpp
     kcolorcombo.cpp
     kdeclarativeapplication.cpp
