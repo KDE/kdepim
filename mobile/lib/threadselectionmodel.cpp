@@ -48,6 +48,11 @@ ThreadSelectionModel::ThreadSelectionModel(QAbstractItemModel* model, QItemSelec
           SLOT(contentSelectionChanged(QItemSelection,QItemSelection)));
 }
 
+ThreadSelectionModel::~ThreadSelectionModel()
+{
+  delete d_ptr;
+}
+
 void ThreadSelectionModel::select(const QModelIndex& index, QItemSelectionModel::SelectionFlags command)
 {
   select(QItemSelection(index, index), command);
