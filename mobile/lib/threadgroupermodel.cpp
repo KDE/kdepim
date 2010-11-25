@@ -177,7 +177,7 @@ bool ItemLessThanComparator::operator()( const Akonadi::Item &leftItem, const Ak
           const QString rightSender = rightThreadRootMessage->sender()->asUnicodeString();
 
           if ( leftSender != rightSender )
-            return leftSender < rightSender;
+            return (leftSender.localeAwareCompare( rightSender ) < 0);
         }
         break;
       case ThreadGrouperModel::SortBySubject:
@@ -186,7 +186,7 @@ bool ItemLessThanComparator::operator()( const Akonadi::Item &leftItem, const Ak
           const QString rightSubject = rightThreadRootMessage->subject()->asUnicodeString();
 
           if ( leftSubject != rightSubject )
-            return leftSubject < rightSubject;
+            return (leftSubject.localeAwareCompare( rightSubject ) < 0);
         }
         break;
       case ThreadGrouperModel::SortBySize:
