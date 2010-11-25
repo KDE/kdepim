@@ -57,16 +57,30 @@ class MOBILEUI_EXPORT HierarchyResolver
     void addRelation( const QByteArray &child, const QByteArray &parent );
 
     /**
+     * Resolves the hierarchy.
+     */
+    void resolve();
+
+    /**
      * Returns a hash with the child node as key and its resolved top-most parent
      * node as value.
      *
      * The top-most parent of a parent node is the node itself.
      */
-    QHash<QByteArray, QByteArray> resolve() const;
+    QHash<QByteArray, QByteArray> childParentMap() const;
+
+    /**
+     * Returns a hash with the top-most parent node as key and a set of all its descendant
+     * nodes as value.
+     */
+    QHash<QByteArray, QSet<QByteArray> > parentChildrenMap() const;
 
   private:
     QSet<QByteArray> mTopNodes;
     QHash<QByteArray, QByteArray> mRelations;
+
+    QHash<QByteArray, QByteArray> mChildParentResultMap;
+    QHash<QByteArray, QSet<QByteArray> > mParentChildrenResultMap;
 };
 
 #endif

@@ -182,7 +182,8 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
     }
   }
 
-  m_threads = resolver.resolve();
+  resolver.resolve();
+  m_threads = resolver.childParentMap();
 }
 
 ThreadGrouperModel::ThreadGrouperModel( QObject *parent )
