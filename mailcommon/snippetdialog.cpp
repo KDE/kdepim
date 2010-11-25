@@ -40,6 +40,7 @@ SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupM
   mUi->snippetText->setMinimumSize( 500, 300 );
 
   mUi->groupWidget->setVisible( !inGroupMode );
+  mUi->nameEdit->setFocus();
 }
 
 SnippetDialog::~SnippetDialog()
