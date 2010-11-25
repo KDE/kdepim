@@ -107,6 +107,7 @@ MainView::~MainView()
 {
   m_calendarPrefs->writeConfig();
   m_calendar->deleteLater();
+  delete m_identityManager; 
 }
 
 EventViews::PrefsPtr MainView::preferences()
