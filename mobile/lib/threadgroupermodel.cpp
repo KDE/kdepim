@@ -21,6 +21,8 @@
 
 #include "threadgroupermodel.h"
 
+#include "hierarchyresolver.h"
+
 #include <KMime/Message>
 
 #include <map>
@@ -54,34 +56,20 @@ class ThreadGrouperModelPrivate
 
     void populateThreadGrouperModel() const;
 
-    mutable QHash<QByteArray, QSet<QByteArray> > m_threads;
-    mutable QHash<QByteArray, Akonadi::Item> m_threadItems;
-    mutable QHash<QByteArray, Akonadi::Item> m_allItems;
+    mutable QHash<QByteArray, QByteArray> m_childParentMap; // maps an item to its thread leader item
+    mutable QHash<QByteArray, QSet<QByteArray> > m_parentChildrenMap; // maps a thread leader item to all its descendant items
+    mutable QHash<QByteArray, Akonadi::Item> m_items;
 
     ThreadGrouperModel::OrderScheme m_order;
 };
 
-static QByteArray identifierForMessage( const KMime::Message::Ptr &msg, Akonadi::Item::Id id )
+static QByteArray identifierForMessage( const KMime::Message::Ptr &message, Akonadi::Item::Id id )
 {
-  QByteArray identifier = msg->messageID()->identifier();
+  QByteArray identifier = message->messageID()->identifier();
   if ( identifier.isEmpty() )
     identifier = QByteArray::number( id );
 
   return identifier;
-}
-
-static QHash<QByteArray, QSet<QByteArray> >::const_iterator findValue( const QHash<QByteArray, QSet<QByteArray> > &container, const QByteArray &target )
-{
-  QHash<QByteArray, QSet<QByteArray> >::const_iterator it = container.constBegin();
-  const QHash<QByteArray, QSet<QByteArray> >::const_iterator end = container.constEnd();
-
-  for ( ; it != end; ++it ) {
-    if ( it.value().contains( target ) ) {
-      return it;
-    }
-  }
-
-  return end;
 }
 
 Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &item ) const
@@ -90,18 +78,23 @@ Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &ite
   const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
   const QByteArray identifier = identifierForMessage( message, item.id() );
 
-  if ( m_threadItems.contains( identifier ) )
-    return m_threadItems.value( identifier );
+  const QByteArray parentIdentifier = m_childParentMap.value( identifier );
 
-  const QHash<QByteArray, QSet<QByteArray> >::const_iterator it = findValue( m_threads, identifier );
-  Q_ASSERT( it != m_threads.constEnd() );
-  Q_ASSERT( m_threadItems.value( it.key() ).isValid() );
-  return m_threadItems.value( it.key() );
+  if ( !m_items.contains( parentIdentifier ) ) {
+    /**
+     * The model knows nothing about the referenced parent item, this can happen
+     * when importing and viewing only a part of a mail thread for example.
+     * In this case we handle the item as standalone thread top node.
+     */
+    return m_items.value( identifier );
+  }
+
+  return m_items.value( parentIdentifier );
 }
 
 KDateTime ThreadGrouperModelPrivate::getMostRecentUpdate( KMime::Message::Ptr threadRoot, Akonadi::Item::Id itemId ) const
 {
-  const QSet<QByteArray> messageIds = m_threads.value( identifierForMessage( threadRoot, itemId ) );
+  const QSet<QByteArray> messageIds = m_parentChildrenMap.value( identifierForMessage( threadRoot, itemId ) );
 
   KDateTime newest = threadRoot->date()->dateTime();
 
@@ -109,7 +102,7 @@ KDateTime ThreadGrouperModelPrivate::getMostRecentUpdate( KMime::Message::Ptr th
     return newest;
 
   foreach ( const QByteArray &messageId, messageIds ) {
-    const Akonadi::Item item = m_allItems.value( messageId );
+    const Akonadi::Item item = m_items.value( messageId );
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
 
@@ -199,90 +192,47 @@ bool ItemLessThanComparator::operator()( const Akonadi::Item &leftItem, const Ak
   return leftItem.id() < rightItem.id();
 }
 
-static QVector<QByteArray> getRemovableItems( const QHash<QByteArray, QSet<QByteArray> > &container, const QByteArray &value )
-{
-  QVector<QByteArray> items;
-
-  foreach ( const QByteArray &ba, container[ value ] ) {
-    items.push_back( ba );
-    items += getRemovableItems( container, ba );
-  }
-
-  return items;
-}
-
-
-static void addToPending(QHash<QByteArray, QSet<QByteArray> > &pendingThreads, const QByteArray& inReplyTo, const QByteArray& identifier)
-{
-  QSet<QByteArray> existingResponses = pendingThreads.take(identifier);
-  pendingThreads[inReplyTo].insert(identifier);
-  pendingThreads[inReplyTo].unite(existingResponses);
-}
-
 void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
 {
-  Q_Q(const ThreadGrouperModel);
-  m_threads.clear();
-  m_threadItems.clear();
+  Q_Q( const ThreadGrouperModel );
+  m_childParentMap.clear();
+  m_parentChildrenMap.clear();
+  m_items.clear();
 
-  QHash<QByteArray, QSet<QByteArray> > pendingThreads;
-
-  if (!q->sourceModel())
+  if ( !q->sourceModel() )
     return;
+
+  HierarchyResolver resolver;
+
   const int rowCount = q->sourceModel()->rowCount();
 
-  for (int row = 0; row < rowCount; ++row) {
-    const QModelIndex idx = q->sourceModel()->index(row, 0);
-    Q_ASSERT(idx.isValid());
-    const Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-    Q_ASSERT(item.isValid());
-    Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
+  for ( int row = 0; row < rowCount; ++row ) {
+    const QModelIndex index = q->sourceModel()->index( row, 0 );
+    Q_ASSERT( index.isValid() );
+
+    const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    Q_ASSERT( item.isValid() );
+    Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
+
     const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
     const QByteArray identifier = identifierForMessage( message, item.id() );
-    m_allItems[identifier] = item;
-    if (!message->inReplyTo()->isEmpty()) {
-      QByteArray _inReplyTo = message->inReplyTo()->as7BitString(false);
-      const QByteArray inReplyTo = _inReplyTo.mid(1, _inReplyTo.size() -2 );
 
-      const QHash<QByteArray, QSet<QByteArray> >::const_iterator it = findValue(m_threads, inReplyTo);
-      const QHash<QByteArray, QSet<QByteArray> >::const_iterator end = m_threads.constEnd();
-      if (it == end) {
-        addToPending(pendingThreads, inReplyTo, identifier);
-        m_threadItems[identifier] = item;
-        continue;
-      }
-      m_threadItems.remove(identifier);
-      m_threads[it.key()].insert(identifier);
+    m_items[ identifier ] = item;
+
+    if ( !message->inReplyTo()->isEmpty() ) {
+      const QByteArray inReplyTo = message->inReplyTo()->as7BitString( false );
+      const QByteArray parentIdentifier = inReplyTo.mid( 1, inReplyTo.size() -2 ); // strip '<' and '>'
+
+      resolver.addRelation( identifier, parentIdentifier );
     } else {
-      foreach(const QByteArray &ba, getRemovableItems(pendingThreads, identifier)) {
-        m_threadItems.remove(ba);
-        pendingThreads.remove(ba);
-        m_threads[identifier].insert(ba);
-      }
-      m_threadItems[identifier] = item;
+      resolver.addNode( identifier );
     }
   }
 
-  QHash<QByteArray, QSet<QByteArray> >::const_iterator pendingIt = pendingThreads.constBegin();
-  const QHash<QByteArray, QSet<QByteArray> >::const_iterator pendingEnd = pendingThreads.constEnd();
-  for ( ; pendingIt != pendingEnd; ++pendingIt) {
-    const QByteArray inReplyTo = pendingIt.key();
-    QSet<QByteArray> pendingItems = pendingIt.value();
-    if (m_threads.contains(inReplyTo)) {
-      foreach(const QByteArray &ba, pendingItems) {
-        m_threadItems.remove(ba);
-        m_threads[inReplyTo].unite(m_threads[ba]);
-        m_threads.remove(ba);
-      }
-      m_threads[inReplyTo].unite(pendingItems);
-    } else {
-      foreach(const QByteArray &ba, pendingItems) {
-        static const QSet<QByteArray> staticEmptySet;
-        if ( !m_threads.contains( ba ) )
-          m_threads.insert(ba, staticEmptySet);
-      }
-    }
-  }
+  resolver.resolve();
+
+  m_childParentMap = resolver.childParentMap();
+  m_parentChildrenMap = resolver.parentChildrenMap();
 }
 
 ThreadGrouperModel::ThreadGrouperModel( QObject *parent )
