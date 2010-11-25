@@ -229,7 +229,7 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
     }
   }
 
-  resolver.resolve();
+  resolver.resolve( m_items.keys().toSet() );
 
   m_childParentMap = resolver.childParentMap();
   m_parentChildrenMap = resolver.parentChildrenMap();

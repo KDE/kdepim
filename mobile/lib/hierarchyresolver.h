@@ -59,7 +59,7 @@ class MOBILEUI_EXPORT HierarchyResolver
     /**
      * Resolves the hierarchy.
      */
-    void resolve();
+    void resolve( const QSet<QByteArray> &existingIdentifiers );
 
     /**
      * Returns a hash with the child node as key and its resolved top-most parent

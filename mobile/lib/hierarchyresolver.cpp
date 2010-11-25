@@ -31,7 +31,7 @@ void HierarchyResolver::addRelation( const QByteArray &child, const QByteArray &
   mRelations.insert( child, parent );
 }
 
-void HierarchyResolver::resolve()
+void HierarchyResolver::resolve( const QSet<QByteArray> &existingIdentifiers )
 {
   mChildParentResultMap.clear();
   mParentChildrenResultMap.clear();
@@ -39,7 +39,6 @@ void HierarchyResolver::resolve()
   // first insert all top nodes
   foreach ( const QByteArray &node, mTopNodes ) {
     mChildParentResultMap.insert( node, node );
-
     mParentChildrenResultMap.insert( node, QSet<QByteArray>() );
   }
 
@@ -51,19 +50,23 @@ void HierarchyResolver::resolve()
     // check if direct parent is top node
     if ( mTopNodes.contains( it.value() ) ) {
       mChildParentResultMap.insert( it.key(), it.value() );
-
       mParentChildrenResultMap[ it.value() ].insert( it.key() );
 
       continue; // we are done
     }
 
-    // iterate up the parent path
     QByteArray parentNode = it.value();
-    while ( mRelations.contains( parentNode ) )
-      parentNode = mRelations.value( parentNode );
+    if ( !existingIdentifiers.contains( parentNode ) ) {
+      mChildParentResultMap.insert( it.key(), it.key() );
+      mParentChildrenResultMap[ it.key() ].insert( it.key() );
+    } else {
+      // iterate up the parent path
+      while ( mRelations.contains( parentNode ) && existingIdentifiers.contains( mRelations.value( parentNode ) ) )
+        parentNode = mRelations.value( parentNode );
 
-    mChildParentResultMap.insert( it.key(), parentNode );
-    mParentChildrenResultMap[ parentNode ].insert( it.key() );
+      mChildParentResultMap.insert( it.key(), parentNode );
+      mParentChildrenResultMap[ parentNode ].insert( it.key() );
+    }
   }
 }
 
