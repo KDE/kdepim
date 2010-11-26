@@ -169,6 +169,7 @@ void IncidenceAlarm::editCurrentAlarm()
     updateAlarmList();
     checkDirtyStatus();
   }
+  delete dialog;
 }
 
 void IncidenceAlarm::handleDateTimeToggle()
