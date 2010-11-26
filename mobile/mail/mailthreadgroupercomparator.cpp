@@ -25,7 +25,8 @@
 
 
 MailThreadGrouperComparator::MailThreadGrouperComparator()
-  : m_sortingOption( SortByDateTimeMostRecent )
+  : mSortingOption( SortByDateTimeMostRecent ),
+    mIsOutboundCollection( false )
 {
 }
 
@@ -72,7 +73,7 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
     const KMime::Message::Ptr leftThreadRootMessage = leftThreadRootItem.payload<KMime::Message::Ptr>();
     const KMime::Message::Ptr rightThreadRootMessage = rightThreadRootItem.payload<KMime::Message::Ptr>();
 
-    switch ( m_sortingOption ) {
+    switch ( mSortingOption ) {
       case SortByDateTime:
         {
           const KDateTime leftThreadRootDateTime = leftThreadRootMessage->date()->dateTime();
@@ -94,8 +95,10 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
         break;
       case SortBySenderReceiver:
         {
-          const QString leftSender = leftThreadRootMessage->sender()->asUnicodeString();
-          const QString rightSender = rightThreadRootMessage->sender()->asUnicodeString();
+          const QString leftSender = (mIsOutboundCollection ? leftThreadRootMessage->to()->asUnicodeString()
+                                                            : leftThreadRootMessage->from()->asUnicodeString());
+          const QString rightSender = (mIsOutboundCollection ? rightThreadRootMessage->to()->asUnicodeString()
+                                                             : rightThreadRootMessage->sender()->asUnicodeString());
 
           if ( leftSender != rightSender )
             return (leftSender.localeAwareCompare( rightSender ) < 0);
@@ -149,14 +152,21 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
 
 void MailThreadGrouperComparator::setSortingOption( SortingOption option )
 {
-  m_sortingOption = option;
+  mSortingOption = option;
 
   invalidate();
 }
 
 MailThreadGrouperComparator::SortingOption MailThreadGrouperComparator::sortingOption() const
 {
-  return m_sortingOption;
+  return mSortingOption;
+}
+
+void MailThreadGrouperComparator::setIsOutboundCollection( bool outbound )
+{
+  mIsOutboundCollection = outbound;
+
+  invalidate();
 }
 
 QByteArray MailThreadGrouperComparator::identifierForMessage( const KMime::Message::Ptr &message, Akonadi::Item::Id id ) const

@@ -68,6 +68,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/kmime/messageflags.h>
+#include <akonadi/kmime/messagefolderattribute.h>
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/kmime/specialmailcollectionsrequestjob.h>
@@ -1233,6 +1234,8 @@ void MainView::collectionSelectionChanged()
   if ( collection.isValid() ) {
     mAclEditor->setCollection( collection );
     mMessageListSettingsController->setCollection( collection );
+    m_grouperComparator->setIsOutboundCollection( collection.hasAttribute<Akonadi::MessageFolderAttribute>() &&
+                                                  collection.attribute<Akonadi::MessageFolderAttribute>()->isOutboundFolder() );
   }
 }
 

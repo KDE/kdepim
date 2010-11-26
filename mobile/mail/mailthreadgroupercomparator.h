@@ -66,10 +66,17 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
     void setSortingOption( SortingOption option );
     SortingOption sortingOption() const;
 
+    /**
+     * Sets whether the currently compared items come from an outbound mail collection
+     * (e.g. outbox, sent or drafts).
+     */
+    void setIsOutboundCollection( bool outbound );
+
   private:
     QByteArray identifierForMessage( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
     KDateTime mostRecentUpdate( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
-    SortingOption m_sortingOption;
+    SortingOption mSortingOption;
+    bool mIsOutboundCollection;
 };
 
 #endif
