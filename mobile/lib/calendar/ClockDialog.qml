@@ -63,13 +63,17 @@ Dialog {
           height: 100
           model: 24
 
-          value: myClock.hours
           onValueChanged: {
             myClock.hours = value;
             clockWidgetOk.enabled = true;
           }
           onSelected: {
             minuteSelector.state = "unselected";
+          }
+          Component.onCompleted: {
+              // ### TODO: instead of calling function just set value
+              // was supposed to work
+              hourSelector.setValue(myClock.hours);
           }
         }
 
@@ -78,13 +82,17 @@ Dialog {
           height: 100
           model: 60
 
-          value: myClock.minutes
           onValueChanged: {
             myClock.minutes = value;
             clockWidgetOk.enabled = true;
           }
           onSelected: {
             hourSelector.state = "unselected";
+          }
+          Component.onCompleted: {
+              // ### TODO: instead of calling function just set value
+              // was supposed to work
+              minuteSelector.setValue(myClock.minutes);
           }
         }
       }
