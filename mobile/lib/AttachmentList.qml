@@ -153,6 +153,9 @@ Item {
       width: 48
       height: 48
       icon: KDE.iconPath( "document-save", width );
+      onClicked: {
+        saveAttachment(attachmentListView.currentAttachmentUrl);
+      }
       states: [
         State {
           name: "movingState"
