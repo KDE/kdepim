@@ -19,7 +19,7 @@ set(mobile_tasks_SRCS
   tasksexporthandler.cpp
   tasksimporthandler.cpp
   tasksactionmanager.cpp
-  threadgroupermodel.cpp
+  taskthreadgroupercomparator.cpp
   mainview.cpp
   main.cpp
 )

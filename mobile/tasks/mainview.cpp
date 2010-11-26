@@ -31,6 +31,7 @@
 #include "tasksfilterproxymodel.h"
 #include "tasksexporthandler.h"
 #include "tasksimporthandler.h"
+#include "taskthreadgroupercomparator.h"
 #include "threadgroupermodel.h"
 
 #include <incidenceeditor-ng/incidencedefaults.h>
@@ -274,7 +275,8 @@ void MainView::editIncidence( const Akonadi::Item &item )
 
 QAbstractItemModel* MainView::createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model )
 {
-  ThreadGrouperModel *grouperModel = new ThreadGrouperModel( this );
+  TaskThreadGrouperComparator *comparator = new TaskThreadGrouperComparator;
+  ThreadGrouperModel *grouperModel = new ThreadGrouperModel( comparator, this );
   grouperModel->setSourceModel( model );
 
   return KDeclarativeMainView::createItemModelContext( context, grouperModel );
