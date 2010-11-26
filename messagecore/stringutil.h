@@ -245,6 +245,13 @@ namespace StringUtil
    *  e.g. ':', '/', '\' with '_'
    */
   MESSAGECORE_EXPORT QString cleanFileName( const QString &fileName );
+
+  /**
+   * Removes the forward and reply markes (e.g. Re: or Fwd:) from a @p subject string.
+   * Additional markers to act on can be specified in the MessageCore::GlobalSettings
+   * object.
+   */
+  MESSAGECORE_EXPORT QString stripOffPrefixes( const QString &subject );
 }
 
 }

@@ -31,6 +31,7 @@ class StringUtilTest : public QObject
     void test_SmartQuote();
     void test_signatureStripping();
     void test_isCryptoPart();
+    void test_stripOffMessagePrefix();
 };
 
 #endif

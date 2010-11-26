@@ -323,3 +323,11 @@ void StringUtilTest::test_isCryptoPart()
   QVERIFY( !StringUtil::isCryptoPart( "application", "foo", QString() ) );
   QVERIFY( !StringUtil::isCryptoPart( "application", "foo", "msg.asc" ) );
 }
+
+void StringUtilTest::test_stripOffMessagePrefix()
+{
+  const QString subject = QLatin1String( "Fwd: Hello World Subject" );
+  QBENCHMARK {
+    StringUtil::stripOffPrefixes( subject );
+  }
+}

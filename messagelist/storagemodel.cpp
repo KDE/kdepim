@@ -41,7 +41,6 @@
 
 #include "core/messageitem.h"
 #include "core/settings.h"
-#include "core/subjectutils_p.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
@@ -283,7 +282,7 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
   case PerfectThreadingReferencesAndSubject:
   {
     const QString subject = mail->subject()->asUnicodeString();
-    const QString strippedSubject = Core::SubjectUtils::stripOffPrefixes( subject );
+    const QString strippedSubject = MessageCore::StringUtil::stripOffPrefixes( subject );
     mi->setStrippedSubjectMD5( md5Encode( strippedSubject ) );
     mi->setSubjectIsPrefixed( subject != strippedSubject );
     // fall through

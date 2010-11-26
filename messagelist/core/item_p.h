@@ -22,7 +22,6 @@
 #define __MESSAGELIST_CORE_ITEM_P_H__
 
 #include "core/item.h"
-#include "core/subjectutils_p.h"
 
 #include "messagecore/stringutil.h"
 
@@ -319,8 +318,8 @@ class ItemSubjectComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    int ret = SubjectUtils::stripOffPrefixes( first->subject() ).
-                compare( SubjectUtils::stripOffPrefixes( second->subject() ), Qt::CaseInsensitive );
+    int ret = MessageCore::StringUtil::stripOffPrefixes( first->subject() ).
+                compare( MessageCore::StringUtil::stripOffPrefixes( second->subject() ), Qt::CaseInsensitive );
     if ( ret < 0 )
       return false;
     // compare by date when subjects are equal
