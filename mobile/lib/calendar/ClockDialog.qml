@@ -45,6 +45,18 @@ Dialog {
           topMargin: 25
           bottomMargin: 25
         }
+
+        onHoursChanged: {
+          // ### TODO: instead of calling function just set value
+          // was supposed to work
+          hourSelector.setValue(myClock.hours);
+        }
+
+        onMinutesChanged: {
+          // ### TODO: instead of calling function just set value
+          // was supposed to work
+          minuteSelector.setValue(myClock.minutes);
+        }
       }
 
       Column {

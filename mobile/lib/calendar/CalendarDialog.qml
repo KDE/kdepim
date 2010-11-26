@@ -42,9 +42,24 @@ Dialog {
             top: parent.top
             bottom: parent.bottom
           }
+
           //why onDayChanged doesn't work here as onDaysInMothChanged do?
           onDaySelected: {
-            daySelector.value = myCalendar.day
+              // ### TODO: instead of calling function just set value
+              // was supposed to work
+              daySelector.setValue(myCalendar.day);
+          }
+
+          onMonthChanged: {
+              // ### TODO: instead of calling function just set value
+              // was supposed to work
+              monthSelector.setValue(myCalendar.month);
+          }
+
+          onYearChanged: {
+              // ### TODO: instead of calling function just set value
+              // was supposed to work
+              yearSelector.setValue(myCalendar.year);
           }
 
           onDaysInMonthChanged: {
