@@ -385,11 +385,15 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, c
 
     // check if the index is a collection
     const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    
     if ( collection.isValid() ) {
 
       // check if it is unread
-      if ( collection.statistics().unreadCount() > 0 )
-        return index; // we found the next unread collection
+      if ( collection.statistics().unreadCount() > 0 ) {
+        QSharedPointer<FolderCollection> fCollection = FolderCollection::forCollection( collection );
+        if(!fCollection->ignoreNewMail())
+          return index; // we found the next unread collection
+      }
     }
   }
 
