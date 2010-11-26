@@ -27,7 +27,7 @@ class ThreadGrouperModelPrivate
 {
   public:
     ThreadGrouperModelPrivate( ThreadGrouperComparator *comparator, ThreadGrouperModel *qq )
-      : q_ptr( qq ), m_comparator( comparator )
+      : q_ptr( qq ), m_comparator( comparator ), m_threadingEnabled( true )
     {
       Q_ASSERT( m_comparator );
 
@@ -48,6 +48,7 @@ class ThreadGrouperModelPrivate
     mutable QHash<QByteArray, Akonadi::Item> m_items;
 
     ThreadGrouperComparator *m_comparator;
+    bool m_threadingEnabled;
 };
 
 ThreadGrouperComparator::ThreadGrouperComparator()
@@ -90,6 +91,12 @@ Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &ite
 {
   const QByteArray identifier = m_comparator->identifierForItem( item );
   const QByteArray parentIdentifier = m_childParentMap.value( identifier );
+
+  /**
+   * If threading is disabled, we treat each item like it is its own thread leader.
+   */
+  if ( !m_threadingEnabled )
+    return item;
 
   if ( !m_items.contains( parentIdentifier ) ) {
     /**
@@ -236,6 +243,22 @@ bool ThreadGrouperModel::lessThan( const QModelIndex &left, const QModelIndex &r
   const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
   return d->m_comparator->lessThan( leftItem, rightItem );
+}
+
+void ThreadGrouperModel::setThreadingEnabled( bool enabled )
+{
+  Q_D( ThreadGrouperModel );
+
+  d->m_threadingEnabled = enabled;
+
+  invalidate();
+}
+
+bool ThreadGrouperModel::threadingEnabled() const
+{
+  Q_D( const ThreadGrouperModel );
+
+  return d->m_threadingEnabled;
 }
 
 #include "threadgroupermodel.moc"

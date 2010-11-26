@@ -117,6 +117,16 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
     virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
 
+    /**
+     * Set whether threading will be @p enabled.
+     */
+    void setThreadingEnabled( bool enabled );
+
+    /**
+     * Returns whether threading is enabled.
+     */
+    bool threadingEnabled() const;
+
   private:
     Q_DECLARE_PRIVATE( ThreadGrouperModel )
     ThreadGrouperModelPrivate* const d_ptr;
