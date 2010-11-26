@@ -23,12 +23,6 @@
 
 #include "hierarchyresolver.h"
 
-#include <kmime/kmime_message.h>
-#include <messagecore/stringutil.h>
-
-#include <map>
-
-
 class ThreadGrouperModelPrivate
 {
   public:
@@ -130,7 +124,6 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
 
     const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
     Q_ASSERT( item.isValid() );
-    Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
 
     const QByteArray identifier = m_comparator->identifierForItem( item );
 
@@ -179,16 +172,7 @@ QVariant ThreadGrouperModel::data( const QModelIndex &index, int role ) const
 
   if ( role == ThreadIdRole )
     return d->threadRoot( index ).id();
-/*
-  if ( role == Qt::DisplayRole ) {
-    const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-    Q_ASSERT( item.isValid() );
-    Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
 
-    const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-    return  QSortFilterProxyModel::data( index, role ).toString() + message->subject()->asUnicodeString() + " - " + message->date()->asUnicodeString();
-  }
-*/
   return QSortFilterProxyModel::data( index, role );
 }
 
