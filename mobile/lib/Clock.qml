@@ -1,5 +1,6 @@
 /*
     Copyright (C) 2010 Anselmo Lacerda Silveira de Melo <anselmolsm@gmail.com>
+    Copyright (C) 2010 Artur Duque de Souza <asouza@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -26,12 +27,16 @@ Image {
     property alias minutes: clockHelper.minutes
     property alias hours: clockHelper.hours
 
-    // selects a clock hand to move using mouse/finger
-    property alias minutesHandSelected : clockHelper.minutesHandSelected
-    property alias hoursHandSelected : clockHelper.hoursHandSelected
-
     source: "images/clock-background.png"
     smooth: true
+
+    MouseArea {
+        id: clockMArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onClicked: clockHelper.unselectAll()
+        onPositionChanged: clockHelper.setXY(mouseX, mouseY)
+    }
 
     Image {
         id: minutesHand
@@ -47,7 +52,12 @@ Image {
             origin.x: minutesHand.width/2
             origin.y: minutesHand.height*0.95
             angle: clockHelper.minutesAngle
-            Behavior on angle { PropertyAnimation {} }
+//            Behavior on angle { PropertyAnimation {} }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: clockHelper.selectMinute()
         }
     }
 
@@ -65,7 +75,12 @@ Image {
             origin.x: hoursHand.width/2
             origin.y: hoursHand.height*0.95
             angle: clockHelper.hoursAngle
-            Behavior on angle { PropertyAnimation {} }
+//            Behavior on angle { PropertyAnimation {} }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: clockHelper.selectHour()
         }
     }
 
@@ -79,16 +94,14 @@ Image {
         width: clock.width/(370/38)
     }
 
-    MouseArea {
-        id: area;
-        anchors.fill: parent;
-        onPositionChanged: clockHelper.setXY(mouseX, mouseY);
-    }
-
     ClockHelper {
-        id: clockHelper;
+        id: clockHelper
 
-        originX: area.width / 2;
-        originY: area.height / 2;
+        originX: clockMArea.width / 2
+        originY: clockMArea.height / 2
      }
+
+    function clearSelection() {
+        clockHelper.unselectAll()
+    }
 }

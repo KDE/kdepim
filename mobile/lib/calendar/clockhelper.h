@@ -1,5 +1,7 @@
 /*
   Copyright (C) 2010 Anselmo Lacerda Silveira de Melo <anselmolsm@gmail.com>
+  Copyright (C) 2010 Artur Duque de Souza <asouza@kde.org>
+  Copyright (c) 2010 Eduardo Madeira Fleury <efleury@gmail.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -23,16 +25,14 @@
 #include <QtCore/qobject.h>
 #include <QtCore/qscopedpointer.h>
 #include <QtDeclarative/qdeclarative.h>
+#include <QPoint>
 
-class ClockHelperPrivate;
 class ClockHelper : public QObject
 {
   Q_OBJECT
 
   Q_PROPERTY(qreal originX READ originX WRITE setOriginX)
   Q_PROPERTY(qreal originY READ originY WRITE setOriginY)
-  Q_PROPERTY(bool minutesHandSelected READ minutesHandSelected WRITE setMinutesHandSelected)
-  Q_PROPERTY(bool hoursHandSelected READ hoursHandSelected WRITE setHoursHandSelected)
   Q_PROPERTY(int minutes READ minutes WRITE setMinute NOTIFY minutesChanged)
   Q_PROPERTY(int minutesAngle READ minutesAngle NOTIFY minutesAngleChanged)
   Q_PROPERTY(int hours READ hours WRITE setHour NOTIFY hoursChanged)
@@ -49,6 +49,9 @@ public:
   void setOriginY(qreal x);
 
   Q_INVOKABLE void setXY(qreal x, qreal y);
+  Q_INVOKABLE void selectMinute();
+  Q_INVOKABLE void selectHour();
+  Q_INVOKABLE void unselectAll();
 
   int minutes() const;
   int minutesAngle() const;
@@ -58,24 +61,30 @@ public:
   int hoursAngle() const;
   void setHour(int hour);
 
-  void setMinutesHandSelected(bool selected);
-  bool minutesHandSelected() const;
-
-  void setHoursHandSelected(bool selected);
-  bool hoursHandSelected() const;
-
 Q_SIGNALS:
-  void minutesChanged();
-  void minutesAngleChanged();
+  void minutesChanged(int);
+  void minutesAngleChanged(int);
   void hoursChanged();
   void hoursAngleChanged();
 
-protected:
-  QScopedPointer<ClockHelperPrivate> d_ptr;
-
 private:
-  Q_DISABLE_COPY(ClockHelper)
-  Q_DECLARE_PRIVATE(ClockHelper)
+  enum ClockPart {
+    None = 0,
+    Hour,
+    Minute
+  };
+
+  void calculateAngle();
+
+  QPointF m_origin;
+  QPointF m_position;
+  qreal m_angle;
+  int m_minutes;
+  int m_minutesAngle;
+  int m_hours;
+  int m_hoursAngle;
+
+  ClockHelper::ClockPart selected;
 };
 
 QML_DECLARE_TYPE(ClockHelper)

@@ -120,6 +120,7 @@ Dialog {
           width: 100
           onClicked: {
             clockWidget.collapse()
+            myClock.clearSelection()
             //### + reset widget
           }
         }
@@ -130,6 +131,7 @@ Dialog {
           width: 100
           onClicked: {
             clockWidget.collapse()
+            myClock.clearSelection()
             _incidenceview.setNewTime(myClock.hours, myClock.minutes);
           }
         }
