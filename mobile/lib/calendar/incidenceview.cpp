@@ -150,6 +150,10 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 
 void IncidenceView::showCalendar( QObject *obj )
 {
+  /*### Workaround to force focus out, so
+   the dialog doesn't reopen incorrectly */
+  mIncidenceMore->setFocus();
+
   mDateWidget = qobject_cast<KPIM::KDateEdit*>( obj );
   if ( !mDateWidget )
     return;
@@ -168,9 +172,12 @@ void IncidenceView::setNewDate( int day, int month, int year )
 
 void IncidenceView::showClock( QObject *obj )
 {
-    mTimeWidget = qobject_cast<KPIM::KTimeEdit*>( obj );
-    if ( !mTimeWidget )
-        return;
+  /*### Workaround to force focus out, so
+    the dialog doesn't reopen incorrectly */
+  mIncidenceMore->setFocus();
+  mTimeWidget = qobject_cast<KPIM::KTimeEdit*>( obj );
+  if ( !mTimeWidget )
+    return;
 
   QTime time = mTimeWidget->time();
   emit showClockWidget( time.hour(), time.minute() );
