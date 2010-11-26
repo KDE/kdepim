@@ -46,6 +46,7 @@ class ConfigWidget;
 class FilterModel;
 class KJob;
 class KSelectionProxyModel;
+class MailThreadGrouperComparator;
 class MessageListSettings;
 class MessageListSettingsController;
 class QStandardItemModel;
@@ -188,6 +189,7 @@ class MainView : public KDeclarativeMainView
     TemplateEmailModel *mEmailTemplateModel;
     QItemSelectionModel *mTemplateSelectionModel;
     KSelectionProxyModel *m_threadContentsModel;
+    MailThreadGrouperComparator *m_grouperComparator;
     ThreadGrouperModel *m_threadGrouperModel;
     ThreadModel *m_threadsModel;
     FilterModel *mFilterModel;

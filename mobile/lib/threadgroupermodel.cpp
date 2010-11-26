@@ -23,26 +23,21 @@
 
 #include "hierarchyresolver.h"
 
-#include <KMime/Message>
+#include <kmime/kmime_message.h>
+#include <messagecore/stringutil.h>
 
 #include <map>
 
-struct ItemLessThanComparator
-{
-  ThreadGrouperModelPrivate const *m_grouper;
-  ItemLessThanComparator( const ThreadGrouperModelPrivate *grouper );
-  ItemLessThanComparator( const ItemLessThanComparator &other );
-  ItemLessThanComparator &operator=( const ItemLessThanComparator &other );
-
-  bool operator()( const Akonadi::Item &left, const Akonadi::Item &right ) const;
-};
 
 class ThreadGrouperModelPrivate
 {
   public:
-    ThreadGrouperModelPrivate( ThreadGrouperModel *qq )
-      : q_ptr( qq ), m_sortingOption( ThreadGrouperModel::SortByDateTimeMostRecent )
+    ThreadGrouperModelPrivate( ThreadGrouperComparator *comparator, ThreadGrouperModel *qq )
+      : q_ptr( qq ), m_comparator( comparator )
     {
+      Q_ASSERT( m_comparator );
+
+      m_comparator->m_grouper = this;
     }
 
     Q_DECLARE_PUBLIC( ThreadGrouperModel )
@@ -52,32 +47,54 @@ class ThreadGrouperModelPrivate
 
     Akonadi::Item threadRoot( const QModelIndex &index ) const;
 
-    KDateTime getMostRecentUpdate( KMime::Message::Ptr threadRoot, Akonadi::Entity::Id itemId ) const;
-
     void populateThreadGrouperModel() const;
 
     mutable QHash<QByteArray, QByteArray> m_childParentMap; // maps an item to its thread leader item
     mutable QHash<QByteArray, QSet<QByteArray> > m_parentChildrenMap; // maps a thread leader item to all its descendant items
     mutable QHash<QByteArray, Akonadi::Item> m_items;
 
-    ThreadGrouperModel::SortingOption m_sortingOption;
+    ThreadGrouperComparator *m_comparator;
 };
 
-static QByteArray identifierForMessage( const KMime::Message::Ptr &message, Akonadi::Item::Id id )
+ThreadGrouperComparator::ThreadGrouperComparator()
 {
-  QByteArray identifier = message->messageID()->identifier();
-  if ( identifier.isEmpty() )
-    identifier = QByteArray::number( id );
+}
 
-  return identifier;
+ThreadGrouperComparator::~ThreadGrouperComparator()
+{
+}
+
+Akonadi::Item ThreadGrouperComparator::threadItem( const Akonadi::Item &item ) const
+{
+  Q_ASSERT( m_grouper );
+
+  return m_grouper->getThreadItem( item );
+}
+
+Akonadi::Item ThreadGrouperComparator::itemForIdentifier( const QByteArray &identifier ) const
+{
+  Q_ASSERT( m_grouper );
+
+  return m_grouper->m_items.value( identifier );
+}
+
+QSet<QByteArray> ThreadGrouperComparator::threadDescendants( const QByteArray &identifier ) const
+{
+  Q_ASSERT( m_grouper );
+
+  return m_grouper->m_parentChildrenMap.value( identifier );
+}
+
+void ThreadGrouperComparator::invalidate()
+{
+  Q_ASSERT( m_grouper );
+
+  m_grouper->q_ptr->invalidate();
 }
 
 Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &item ) const
 {
-  Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
-  const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-  const QByteArray identifier = identifierForMessage( message, item.id() );
-
+  const QByteArray identifier = m_comparator->identifierForItem( item );
   const QByteArray parentIdentifier = m_childParentMap.value( identifier );
 
   if ( !m_items.contains( parentIdentifier ) ) {
@@ -92,139 +109,6 @@ Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &ite
   return m_items.value( parentIdentifier );
 }
 
-KDateTime ThreadGrouperModelPrivate::getMostRecentUpdate( KMime::Message::Ptr threadRoot, Akonadi::Item::Id itemId ) const
-{
-  const QSet<QByteArray> messageIds = m_parentChildrenMap.value( identifierForMessage( threadRoot, itemId ) );
-
-  KDateTime newest = threadRoot->date()->dateTime();
-
-  if ( messageIds.isEmpty() )
-    return newest;
-
-  foreach ( const QByteArray &messageId, messageIds ) {
-    const Akonadi::Item item = m_items.value( messageId );
-    Q_ASSERT( item.isValid() );
-    Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
-
-    const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-    const KDateTime messageDateTime = message->date()->dateTime();
-    if ( messageDateTime > newest )
-      newest = messageDateTime;
-  }
-
-  return newest;
-}
-
-ItemLessThanComparator::ItemLessThanComparator( const ThreadGrouperModelPrivate *grouper )
-  : m_grouper( grouper )
-{
-}
-
-ItemLessThanComparator::ItemLessThanComparator( const ItemLessThanComparator &other )
-{
-  m_grouper = other.m_grouper;
-}
-
-ItemLessThanComparator &ItemLessThanComparator::operator=( const ItemLessThanComparator &other )
-{
-  if ( this != &other )
-    m_grouper = other.m_grouper;
-
-  return *this;
-}
-
-bool ItemLessThanComparator::operator()( const Akonadi::Item &leftItem, const Akonadi::Item &rightItem ) const
-{
-  Q_ASSERT( leftItem.isValid() );
-  Q_ASSERT( rightItem.isValid() );
-
-  const Akonadi::Item leftThreadRootItem = m_grouper->getThreadItem( leftItem );
-  const Akonadi::Item rightThreadRootItem = m_grouper->getThreadItem( rightItem );
-
-  Q_ASSERT( rightThreadRootItem.isValid() );
-  Q_ASSERT( leftThreadRootItem.isValid() );
-
-  if ( leftThreadRootItem != rightThreadRootItem ) {
-    Q_ASSERT( leftThreadRootItem.hasPayload<KMime::Message::Ptr>() );
-    Q_ASSERT( rightThreadRootItem.hasPayload<KMime::Message::Ptr>() );
-
-    const KMime::Message::Ptr leftThreadRootMessage = leftThreadRootItem.payload<KMime::Message::Ptr>();
-    const KMime::Message::Ptr rightThreadRootMessage = rightThreadRootItem.payload<KMime::Message::Ptr>();
-
-    switch ( m_grouper->m_sortingOption ) {
-      case ThreadGrouperModel::SortByDateTime:
-        {
-          const KDateTime leftThreadRootDateTime = leftThreadRootMessage->date()->dateTime();
-          const KDateTime rightThreadRootDateTime = rightThreadRootMessage->date()->dateTime();
-          if ( leftThreadRootDateTime != rightThreadRootDateTime ) {
-            return leftThreadRootDateTime > rightThreadRootDateTime;
-          }
-        }
-        break;
-      case ThreadGrouperModel::SortByDateTimeMostRecent:
-        {
-          const KDateTime leftNewest = m_grouper->getMostRecentUpdate( leftThreadRootMessage, leftThreadRootItem.id() );
-          const KDateTime rightNewest = m_grouper->getMostRecentUpdate( rightThreadRootMessage, rightThreadRootItem.id() );
-
-          if ( leftNewest != rightNewest ) {
-            return leftNewest > rightNewest;
-          }
-        }
-        break;
-      case ThreadGrouperModel::SortBySenderReceiver:
-        {
-          const QString leftSender = leftThreadRootMessage->sender()->asUnicodeString();
-          const QString rightSender = rightThreadRootMessage->sender()->asUnicodeString();
-
-          if ( leftSender != rightSender )
-            return (leftSender.localeAwareCompare( rightSender ) < 0);
-        }
-        break;
-      case ThreadGrouperModel::SortBySubject:
-        {
-          const QString leftSubject = leftThreadRootMessage->subject()->asUnicodeString();
-          const QString rightSubject = rightThreadRootMessage->subject()->asUnicodeString();
-
-          if ( leftSubject != rightSubject )
-            return (leftSubject.localeAwareCompare( rightSubject ) < 0);
-        }
-        break;
-      case ThreadGrouperModel::SortBySize:
-        {
-          const qint64 leftSize = leftThreadRootItem.size();
-          const qint64 rightSize = rightThreadRootItem.size();
-
-          if ( leftSize != rightSize )
-            return leftSize < rightSize;
-        }
-        break;
-    }
-
-    return leftThreadRootItem.id() < rightThreadRootItem.id();
-  }
-
-  if ( leftThreadRootItem == leftItem )
-    return true;
-
-  if ( rightThreadRootItem == rightItem )
-    return false;
-
-  Q_ASSERT( leftItem.hasPayload<KMime::Message::Ptr>() );
-  Q_ASSERT( rightItem.hasPayload<KMime::Message::Ptr>() );
-
-  const KMime::Message::Ptr leftMessage = leftItem.payload<KMime::Message::Ptr>();
-  const KMime::Message::Ptr rightMessage = rightItem.payload<KMime::Message::Ptr>();
-
-  const KDateTime leftDateTime = leftMessage->date()->dateTime();
-  const KDateTime rightDateTime = rightMessage->date()->dateTime();
-
-  // Messages in the same thread are ordered most recent last.
-  if ( leftDateTime != rightDateTime ) {
-    return leftDateTime < rightDateTime;
-  }
-
-  return leftItem.id() < rightItem.id();
-}
 
 void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
 {
@@ -248,19 +132,16 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
 
-    const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-    const QByteArray identifier = identifierForMessage( message, item.id() );
+    const QByteArray identifier = m_comparator->identifierForItem( item );
 
     m_items[ identifier ] = item;
 
-    if ( !message->inReplyTo()->isEmpty() ) {
-      const QByteArray inReplyTo = message->inReplyTo()->as7BitString( false );
-      const QByteArray parentIdentifier = inReplyTo.mid( 1, inReplyTo.size() -2 ); // strip '<' and '>'
-
-      resolver.addRelation( identifier, parentIdentifier );
-    } else {
+    const QByteArray parentIdentifier = m_comparator->parentIdentifierForItem( item );
+    if ( parentIdentifier.isEmpty() )
       resolver.addNode( identifier );
-    }
+    else
+      resolver.addRelation( identifier, parentIdentifier );
+
   }
 
   resolver.resolve( m_items.keys().toSet() );
@@ -269,8 +150,9 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
   m_parentChildrenMap = resolver.parentChildrenMap();
 }
 
-ThreadGrouperModel::ThreadGrouperModel( QObject *parent )
-  : QSortFilterProxyModel( parent ), d_ptr( new ThreadGrouperModelPrivate( this ) )
+
+ThreadGrouperModel::ThreadGrouperModel( ThreadGrouperComparator *comparator, QObject *parent )
+  : QSortFilterProxyModel( parent ), d_ptr( new ThreadGrouperModelPrivate( comparator, this ) )
 {
   setDynamicSortFilter( true );
   sort( 0, Qt::AscendingOrder );
@@ -279,20 +161,6 @@ ThreadGrouperModel::ThreadGrouperModel( QObject *parent )
 ThreadGrouperModel::~ThreadGrouperModel()
 {
   delete d_ptr;
-}
-
-void ThreadGrouperModel::setSortingOption( ThreadGrouperModel::SortingOption option )
-{
-  Q_D( ThreadGrouperModel );
-  d->m_sortingOption = option;
-
-  invalidate();
-}
-
-ThreadGrouperModel::SortingOption ThreadGrouperModel::sortingOption() const
-{
-  Q_D( const ThreadGrouperModel );
-  return d->m_sortingOption;
 }
 
 Akonadi::Item ThreadGrouperModelPrivate::threadRoot( const QModelIndex &index ) const
@@ -311,7 +179,7 @@ QVariant ThreadGrouperModel::data( const QModelIndex &index, int role ) const
 
   if ( role == ThreadIdRole )
     return d->threadRoot( index ).id();
-
+/*
   if ( role == Qt::DisplayRole ) {
     const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
     Q_ASSERT( item.isValid() );
@@ -320,7 +188,7 @@ QVariant ThreadGrouperModel::data( const QModelIndex &index, int role ) const
     const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
     return  QSortFilterProxyModel::data( index, role ).toString() + message->subject()->asUnicodeString() + " - " + message->date()->asUnicodeString();
   }
-
+*/
   return QSortFilterProxyModel::data( index, role );
 }
 
@@ -380,12 +248,10 @@ bool ThreadGrouperModel::lessThan( const QModelIndex &left, const QModelIndex &r
 {
   Q_D( const ThreadGrouperModel );
 
-  static ItemLessThanComparator lt( d );
-
   const Akonadi::Item leftItem = left.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
-  return lt( leftItem, rightItem );
+  return d->m_comparator->lessThan( leftItem, rightItem );
 }
 
 #include "threadgroupermodel.moc"

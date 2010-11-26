@@ -19,7 +19,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 
-set(kmail_mobile_srcs   
+set(kmail_mobile_srcs
   acleditor.cpp
   attachmenteditor.cpp
   attachmentproxymodel.cpp
@@ -34,8 +34,9 @@ set(kmail_mobile_srcs
   emailsfilterproxymodel.cpp
   emailsimporthandler.cpp
   filterconfigwidget.cpp
-  filtermodel.cpp 
+  filtermodel.cpp
   mailactionmanager.cpp
+  mailthreadgroupercomparator.cpp
   mainview.cpp
   main.cpp
   messagelistproxy.cpp

@@ -31,6 +31,65 @@
 
 class ThreadGrouperModelPrivate;
 
+/**
+ * @short A base class for custom comperators, used by ThreadGrouperModel for sorting.
+ */
+class MOBILEUI_EXPORT ThreadGrouperComparator
+{
+  public:
+    /**
+     * Creates a thread grouper comparator.
+     */
+    ThreadGrouperComparator();
+
+    /**
+     * Destroys the thread grouper comparator.
+     */
+    virtual ~ThreadGrouperComparator();
+
+    /**
+     * Reimplement to return the unique identifier for the given @p item.
+     */
+    virtual QByteArray identifierForItem( const Akonadi::Item &item ) const = 0;
+
+    /**
+     * Reimplement to return the parent identifier for the given @p item.
+     */
+    virtual QByteArray parentIdentifierForItem( const Akonadi::Item &item ) const = 0;
+
+    /**
+     * Reimplement to return if the @p left item is smaller than the @p right item.
+     */
+    virtual bool lessThan( const Akonadi::Item &left, const Akonadi::Item &right ) const = 0;
+
+  protected:
+    /**
+     * Returns the thread item for @p item.
+     */
+    Akonadi::Item threadItem( const Akonadi::Item &item ) const;
+
+    /**
+     * Returns the item for the given item @p identifier.
+     */
+    Akonadi::Item itemForIdentifier( const QByteArray &identifier ) const;
+
+    /**
+     * Returns the set of descendants identifiers for the given thread @p identifier.
+     */
+    QSet<QByteArray> threadDescendants( const QByteArray &identifier ) const;
+
+    /**
+     * Invalidates the ThreadGrouperModel to trigger a refresh.
+     */
+    void invalidate();
+
+  private:
+    Q_DISABLE_COPY( ThreadGrouperComparator )
+    ThreadGrouperModelPrivate *m_grouper;
+
+    friend class ThreadGrouperModelPrivate;
+};
+
 class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
 {
   Q_OBJECT
@@ -41,20 +100,17 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
       ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 30
     };
 
-    enum SortingOption
-    {
-      SortByDateTime,
-      SortByDateTimeMostRecent,
-      SortBySenderReceiver,
-      SortBySubject,
-      SortBySize
-    };
+    /**
+     * Creates a new thread grouper model.
+     *
+     * @param comparator The comparator object, which abstracts type specific comparison.
+     * @param parent The parent object.
+     *
+     * @note The model does not take ownership of the comparator.
+     */
+    ThreadGrouperModel( ThreadGrouperComparator *comparator, QObject* parent = 0 );
 
-    ThreadGrouperModel( QObject* parent = 0 );
     virtual ~ThreadGrouperModel();
-
-    void setSortingOption( SortingOption option );
-    SortingOption sortingOption() const;
 
     virtual void setSourceModel( QAbstractItemModel *sourceModel );
 

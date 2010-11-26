@@ -38,6 +38,7 @@
 #include "mailcommon/collectiongeneralpage.h"
 #include "mailcommon/mailkernel.h"
 #include "mailcommon/sendmdnhandler.h"
+#include "mailthreadgroupercomparator.h"
 #include "messagecore/messagehelpers.h"
 #include "messagelistproxy.h"
 #include "messagelistsettingscontroller.h"
@@ -136,6 +137,7 @@ MainView::MainView(QWidget* parent)
   : KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent ),
     mAskingToGoOnline( false ),
     mTransportDialog( 0 ),
+    m_grouperComparator( 0 ),
     mQuotaColorProxyModel( new QuotaColorProxyModel( this ) )
 {
   qRegisterMetaType<KMime::Content*>();
@@ -150,6 +152,7 @@ MainView::MainView(QWidget* parent)
 
 MainView::~MainView()
 {
+  delete m_grouperComparator;
 }
 
 void MainView::setConfigWidget( ConfigWidget *configWidget )
@@ -190,9 +193,9 @@ int MainView::openComposer( const QString &to, const QString &cc, const QString 
 
 QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model)
 {
-
-  m_threadGrouperModel = new ThreadGrouperModel(this);
-  m_threadGrouperModel->setSourceModel(model);
+  m_grouperComparator = new MailThreadGrouperComparator;
+  m_threadGrouperModel = new ThreadGrouperModel( m_grouperComparator, this );
+  m_threadGrouperModel->setSourceModel( model );
 
   model = m_threadGrouperModel;
 
@@ -1562,19 +1565,19 @@ void MainView::messageListSettingsChanged( const MessageListSettings &settings )
 {
   switch ( settings.sortingOption() ) {
     case MessageListSettings::SortByDateTime:
-      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortByDateTime );
+      m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortByDateTime );
       break;
     case MessageListSettings::SortByDateTimeMostRecent:
-      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortByDateTimeMostRecent );
+      m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortByDateTimeMostRecent );
       break;
     case MessageListSettings::SortBySenderReceiver:
-      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortBySenderReceiver );
+      m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortBySenderReceiver );
       break;
     case MessageListSettings::SortBySubject:
-      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortBySubject );
+      m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortBySubject );
       break;
     case MessageListSettings::SortBySize:
-      m_threadGrouperModel->setSortingOption( ThreadGrouperModel::SortBySize );
+      m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortBySize );
       break;
   }
 
