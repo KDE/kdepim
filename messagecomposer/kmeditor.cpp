@@ -274,7 +274,7 @@ KUrl KMeditor::insertFile()
   fdlg->setCaption( i18nc( "@title:window", "Insert File" ) );
 
   KUrl url;
-  if ( fdlg->exec() ) {
+  if ( fdlg->exec() && fdlg ) {
     url = fdlg->selectedUrl();
     url.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( fdlg->selectedEncoding() ) );
   }
