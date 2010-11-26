@@ -1584,6 +1584,8 @@ void MainView::messageListSettingsChanged( const MessageListSettings &settings )
       break;
   }
 
+  m_threadGrouperModel->setThreadingEnabled( settings.useThreading() );
+
   m_threadGrouperModel->sort( 0, settings.sortingOrder() );
 }
 
