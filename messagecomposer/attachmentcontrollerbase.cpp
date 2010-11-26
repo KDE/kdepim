@@ -628,7 +628,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
 
   dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), QLatin1String( "document-open" ) ) );
   dialog->setMode( KFile::Files );
-  if( dialog->exec() == KDialog::Accepted ) {
+  if( dialog->exec() == KDialog::Accepted && dialog ) {
     const KUrl::List files = dialog->selectedUrls();
     foreach( const KUrl &url, files ) {
       KUrl urlWithEncoding = url;
@@ -682,7 +682,7 @@ void AttachmentControllerBase::showAttachPublicKeyDialog()
       false /* no remember choice box */,
       d->wParent, "attach public key selection dialog" );
 
-  if( dialog->exec() == KDialog::Accepted ) {
+  if( dialog->exec() == KDialog::Accepted && dialog ) {
     exportPublicKey( dialog->fingerprint() );
   }
   delete dialog;
