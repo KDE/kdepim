@@ -21,8 +21,6 @@
 
 #include "mainview.h"
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/kmime/messagefolderattribute.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kdeclarativeapplication.h>
@@ -64,8 +62,6 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "libtemplateparser" );
   KGlobal::locale()->insertCatalog( "libmailcommon" );
   KGlobal::locale()->insertCatalog( "kmail" ); // for identity dialog
-
-  Akonadi::AttributeFactory::registerAttribute<Akonadi::MessageFolderAttribute>();
 
   MainView view;
 #ifdef Q_OS_WINCE
