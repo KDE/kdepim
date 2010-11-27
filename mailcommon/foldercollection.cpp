@@ -216,22 +216,29 @@ void FolderCollection::writeConfig() const
   configGroup.writeEntry( "UseDefaultIdentity", mUseDefaultIdentity );
 
   if ( !mUseDefaultIdentity ) {
-    int identityId = -1;
-    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = Util::createImapSettingsInterface( mCollection.resource() );
-    if ( imapSettingsInterface->isValid() ) {
-      QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
-      if ( reply.isValid() ) {
-        identityId = reply;
+    uint defaultIdentityId = -1;
+
+    if ( mCollection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+      OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = Util::createImapSettingsInterface( mCollection.resource() );
+      if ( imapSettingsInterface->isValid() ) {
+        QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
+        if ( reply.isValid() ) {
+          defaultIdentityId = static_cast<uint>( reply );
+        }
       }
+      delete imapSettingsInterface;
+    } else {
+      defaultIdentityId = KernelIf->identityManager()->defaultIdentity().uoid();
     }
-    delete imapSettingsInterface;
-    if ( identityId > -1 && mIdentity != static_cast<uint>( identityId ) )
-      configGroup.writeEntry("Identity", mIdentity);
+
+    if ( mIdentity != defaultIdentityId )
+      configGroup.writeEntry( "Identity", mIdentity );
     else
       configGroup.deleteEntry( "Identity" );
+
+  } else {
+    configGroup.deleteEntry("Identity");
   }
-  else
-      configGroup.deleteEntry("Identity");
 
   configGroup.writeEntry( "PutRepliesInSameFolder", mPutRepliesInSameFolder );
   configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
