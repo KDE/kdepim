@@ -87,7 +87,8 @@ ComposerView::ComposerView(QWidget* parent) :
   m_draft( false ),
   m_urgent( false ),
   m_mdnRequested( Settings::self()->composerRequestMDN() ),
-  m_cryptoFormat( Kleo::AutoFormat )
+  m_cryptoFormat( Kleo::AutoFormat ),
+  m_presetIdentity( 0 )
 {
   setSubject( QString() );
   setAttribute(Qt::WA_DeleteOnClose);
@@ -227,6 +228,14 @@ void ComposerView::delayedInit()
   action = actionCollection()->addAction( "options_set_cryptoformat" );
   action->setText( i18n( "Crypto Message Format..." ) );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( setCryptoFormat() ) );
+}
+
+void ComposerView::setIdentityCombo( KPIMIdentities::IdentityCombo* combo )
+{
+  m_composerBase->setIdentityCombo( combo );
+
+  if ( m_presetIdentity != 0 )
+    m_composerBase->identityCombo()->setCurrentIdentity( m_presetIdentity );
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -537,6 +546,12 @@ int ComposerView::recipientsCount() const
     return 0;
 
   return m_composerBase->recipientsEditor()->recipients().count();
+}
+
+void ComposerView::setIdentity( uint identity )
+{
+  // cache the value here, because the QML identity combobox has not been created yet
+  m_presetIdentity = identity;
 }
 
 void ComposerView::signEmail( bool sign )

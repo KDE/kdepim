@@ -492,6 +492,22 @@ void MainView::startComposer()
 {
   ComposerView *composer = new ComposerView;
   composer->show();
+
+  // preset the folder/account identity of the current collection
+  const QModelIndexList indexes = regularSelectionModel()->selectedIndexes();
+  if ( indexes.isEmpty() )
+    return;
+
+  const QModelIndex index = indexes.first();
+  const Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( !collection.isValid() )
+    return;
+
+  QSharedPointer<MailCommon::FolderCollection> folderCollection = MailCommon::FolderCollection::forCollection( collection );
+  if ( folderCollection.isNull() )
+    return;
+
+  composer->setIdentity( folderCollection->identity() );
 }
 
 void MainView::restoreDraft( quint64 id )

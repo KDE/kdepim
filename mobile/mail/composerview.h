@@ -58,7 +58,7 @@ class ComposerView : public KDeclarativeFullScreenView
   public:
     explicit ComposerView(QWidget* parent = 0);
 
-    void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_composerBase->setIdentityCombo( combo ); }
+    void setIdentityCombo( KPIMIdentities::IdentityCombo* combo );
 
     void setEditor( Message::KMeditor* editor );
     void setRecipientsEditor( MessageComposer::RecipientsEditor *editor ) { m_composerBase->setRecipientsEditor( editor ); }
@@ -75,6 +75,8 @@ class ComposerView : public KDeclarativeFullScreenView
 
     bool tooManyRecipients() const;
     int recipientsCount() const;
+
+    void setIdentity( uint );
 
   public slots:
     void setMessage( const KMime::Message::Ptr &msg );
@@ -136,6 +138,7 @@ class ComposerView : public KDeclarativeFullScreenView
     QString m_fileName;
     SnippetsEditor *m_snippetsEditor;
     Kleo::CryptoMessageFormat m_cryptoFormat;
+    uint m_presetIdentity;
 };
 
 #endif
