@@ -379,6 +379,10 @@ KPIM.MainView {
       handleHeight: 150
       anchors.fill : parent
 
+      Component.onCompleted: {
+        actionPanel.expanded.connect( korganizerActions, korganizerActions.refresh );
+      }
+
       content : [
         KorganizerActions {
           id : korganizerActions

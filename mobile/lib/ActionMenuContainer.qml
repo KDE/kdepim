@@ -32,6 +32,7 @@ Item {
   property bool menuStyle : false
   property int activeCount: 0
   anchors.bottomMargin : bottomMargin
+  property string cachedCategory
 
   property alias scriptActions : myScriptActions.data
 
@@ -40,6 +41,11 @@ Item {
   signal triggered(string triggeredName)
 
   signal doCollapse()
+
+  function refresh()
+  {
+    showOnlyCategory( cachedCategory )
+  }
 
   clip: true
 
@@ -61,6 +67,7 @@ Item {
 
   function showOnlyCategory(category)
   {
+    cachedCategory = category
     itemModel.showOnlyCategory(category)
 
     var firstMenu = -1;

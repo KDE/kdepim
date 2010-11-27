@@ -308,6 +308,10 @@ KPIM.MainView {
       handleHeight: 150
       anchors.fill : parent
 
+      QML.Component.onCompleted: {
+        actionPanel.expanded.connect( kaddressbookActions, kaddressbookActions.refresh );
+      }
+
       content : [
         KAddressBookActions {
           id : kaddressbookActions

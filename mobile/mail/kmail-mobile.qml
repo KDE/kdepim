@@ -369,6 +369,11 @@ KPIM.MainView {
       handlePosition : 125
       handleHeight: 150
       anchors.fill: parent
+
+      QML.Component.onCompleted: {
+        actionPanel.expanded.connect( kmailActions, kmailActions.refresh );
+      }
+
       content: [
           KMailActions {
             id : kmailActions
