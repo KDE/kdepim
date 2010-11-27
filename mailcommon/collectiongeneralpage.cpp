@@ -473,6 +473,8 @@ void CollectionGeneralPage::save( Collection &collection )
     mFolderCollection->setPutRepliesInSameFolder( mKeepRepliesInSameFolderCheckBox->isChecked() );
     mFolderCollection->setHideInSelectionDialog( mHideInSelectionDialogCheckBox->isChecked() );
   }
+
+  mFolderCollection->writeConfig();
 }
 
 void CollectionGeneralPage::slotIdentityCheckboxChanged()
