@@ -194,6 +194,7 @@ Item {
       visible : menuStyle;
       spaceAbove : itemModel.spaceAbove;
       spaceBelow : itemModel.spaceBelow;
+      actionItemHeight: _topLevel.actionItemHeight 
     }
 
     onHeightChanged : {

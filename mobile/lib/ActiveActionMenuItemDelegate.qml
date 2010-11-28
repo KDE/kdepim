@@ -26,12 +26,13 @@ QML.Item {
 
   property int spaceAbove
   property int spaceBelow
+  property int actionItemHeight
 
   onSpaceAboveChanged : {
-    lineAbove.height = spaceAbove
+    lineAbove.height = Math.max( spaceAbove, 0 );
   }
   onSpaceBelowChanged : {
-    lineBelow.height = spaceBelow
+    lineBelow.height = Math.max( spaceBelow, 0 );
   }
 
   QML.Behavior on y { QML.NumberAnimation { duration : 250; easing.type : Easing.OutQuad } }
@@ -43,11 +44,14 @@ QML.Item {
     height : 0
   }
 
-  QML.Image {
+  QML.BorderImage {
     id : active_image
     anchors.right : _top.right
     anchors.rightMargin : -10
+    height: actionItemHeight
     source : "images/activeactionitem.png"
+    border { left: 0; right: 0; top: 20; bottom: 20 }
+    verticalTileMode: QML.BorderImage.Repeat
   }
 
   QML.Image {
