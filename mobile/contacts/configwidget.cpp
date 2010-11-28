@@ -41,10 +41,14 @@ ConfigWidget::ConfigWidget( QWidget *parent )
 #ifndef _WIN32_WCE
   mLdapConfigWidget = new KCModuleProxy( QLatin1String( "kcmldap" ) );
 #else
+#if 0
   mLdapConfigWidget = new KCMLdap(this,QVariantList());
 #endif
+#endif
 
+#ifndef _WIN32_WCE
   ui.ldapServerSettingsLayout->addWidget( mLdapConfigWidget, 1, 1 );
+#endif
 
   mMapServiceBox = ui.kcfg_MapService;
 
@@ -63,7 +67,7 @@ void ConfigWidget::load()
   Settings::self()->setMapService( mMapServiceBox->findData( addressUrl ) );
   mManager->updateWidgets();
 
-#ifndef _WIN32_WCE
+#if 0 //ndef _WIN32_WCE
   mLdapConfigWidget->load();
 #endif
 }
@@ -79,7 +83,7 @@ void ConfigWidget::save()
   group.writeEntry( "AddressUrl", addressUrl );
   config.sync();
 
-#ifndef _WIN32_WCE
+#if 0 //ndef _WIN32_WCE
   mLdapConfigWidget->save();
 #endif
 }
