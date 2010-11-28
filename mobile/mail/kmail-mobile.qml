@@ -542,7 +542,10 @@ KPIM.MainView {
 
   QML.Connections {
     target: messageView
-    onMailRemoved : { guiStateManager.popState(); }
+    onMailRemoved : {
+       if (guiStateManager.inViewSingleItemState)
+         guiStateManager.popState();
+    }
   }
 
   QML.Loader {
