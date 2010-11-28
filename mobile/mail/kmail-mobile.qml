@@ -338,6 +338,8 @@ KPIM.MainView {
         QML.Connections {
           target : _threadMailSelector
           onCurrentRowChanged : {
+            if (threadContentsView.count <= 1) // not in thread view mode
+              return
             if (!application.isDraftThreadContent(_threadMailSelector.currentRow))
             {
               guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
