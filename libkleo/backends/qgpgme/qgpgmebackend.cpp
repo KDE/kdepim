@@ -33,6 +33,7 @@
 #include "qgpgmebackend.h"
 
 #include "qgpgmecryptoconfig.h"
+#include "qgpgmenewcryptoconfig.h"
 
 #include "qgpgmekeygenerationjob.h"
 #include "qgpgmekeylistjob.h"
@@ -316,9 +317,13 @@ QString Kleo::QGpgMEBackend::displayName() const {
 
 Kleo::CryptoConfig * Kleo::QGpgMEBackend::config() const {
   if ( !mCryptoConfig ) {
-    static bool hasGpgConf = !QGpgMECryptoConfig::gpgConfPath().isEmpty();
-    if ( hasGpgConf )
-      mCryptoConfig = new QGpgMECryptoConfig();
+#ifdef _WIN32_WCE // for now...
+    if ( GpgME::hasFeature( GpgME::GpgConfEngineFeature, 0 ) )
+      mCryptoConfig = new QGpgMENewCryptoConfig;
+    else
+#endif
+      if ( !QGpgMECryptoConfig::gpgConfPath().isEmpty() )
+        mCryptoConfig = new QGpgMECryptoConfig();
   }
   return mCryptoConfig;
 }

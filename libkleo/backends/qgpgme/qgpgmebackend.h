@@ -69,7 +69,7 @@ namespace Kleo {
     const char * enumerateProtocols( int i ) const;
 
   private:
-    mutable QGpgMECryptoConfig * mCryptoConfig;
+    mutable Kleo::CryptoConfig * mCryptoConfig;
     mutable Protocol * mOpenPGPProtocol;
     mutable Protocol * mSMIMEProtocol;
   };
