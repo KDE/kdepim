@@ -36,10 +36,8 @@ QML.Item {
   }
 
   QML.Text {
-    anchors.fill: parent
+    anchors.centerIn: parent
     text : model.display
-    horizontalAlignment: QML.Text.AlignHCenter
-    verticalAlignment: QML.Text.AlignVCenter
   }
 
   QML.MouseArea {
