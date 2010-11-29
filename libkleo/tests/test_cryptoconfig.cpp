@@ -38,10 +38,16 @@
 //Added by qt3to4:
 using namespace std;
 
+#include <gpgme++/global.h>
+#include <gpgme++/error.h>
+
 #include <stdlib.h>
 #include <assert.h>
 
 int main( int argc, char** argv ) {
+
+  if ( GpgME::initializeLibrary( 0 ) )
+    return 1;
 
   KAboutData aboutData( "test_cryptoconfig", 0, ki18n("CryptoConfig Test"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
