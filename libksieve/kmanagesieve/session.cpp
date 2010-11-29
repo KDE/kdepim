@@ -138,7 +138,7 @@ void Session::feedBack(const QByteArray& data)
 {
   Response response;
   if ( !response.parseResponse( data ) ) {
-    // TODO syntax error
+    m_errorMsg = KIO::buildErrorString( KIO::ERR_UNKNOWN, i18n( "Syntax error." ) );
     disconnectFromHost();
     return;
   }
@@ -200,7 +200,8 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
     case Authenticating:
       if ( response.operationResult() == Response::Other ) {
         if ( !saslClientStep( data ) ) {
-          disconnectFromHost(); // TODO error handling
+          m_errorMsg = KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8( sasl_errdetail( m_sasl_conn ) ) );
+          disconnectFromHost();
           return;
         }
       } else {
@@ -210,8 +211,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
           kDebug() << "Authentication complete.";
           QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
         } else {
-          // TODO
-  //         error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1", QString::fromLatin1( r.getAction() ) ) );
+          KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1", QString::fromLatin1( response.action() ) ) );
           disconnectFromHost();
           return;
         }
@@ -311,7 +311,7 @@ void Session::startSsl()
               << m_socket->sslErrors().count() << "items.";
 
     if ( !KIO::SslUi::askIgnoreSslErrors( m_socket ) ) {
-      disconnectFromHost(); // TODO error handling
+      disconnectFromHost();
       return;
     }
   }
@@ -339,8 +339,8 @@ void Session::startAuthentication()
 
   result = sasl_client_new( "sieve", m_url.host().toLatin1(), 0, 0, callbacks, 0, &m_sasl_conn );
   if ( result != SASL_OK ) {
-    kDebug() << "sasl_client_new failed with: " << result << QString::fromUtf8( sasl_errdetail( m_sasl_conn ) );
-    disconnectFromHost(); // TODO handle error
+    m_errorMsg = KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8( sasl_errdetail( m_sasl_conn ) ) );
+    disconnectFromHost();
     return;
   }
 
@@ -348,17 +348,18 @@ void Session::startAuthentication()
     result = sasl_client_start( m_sasl_conn, requestedSaslMethod().join(" ").toLatin1(), &m_sasl_client_interact, &out, &outlen, &mechusing);
     if ( result == SASL_INTERACT ) {
       if ( !saslInteract( m_sasl_client_interact ) ) {
+        m_errorMsg = KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8( sasl_errdetail( m_sasl_conn ) ) );
         sasl_dispose( &m_sasl_conn );
-        disconnectFromHost(); // TODO handle error
+        disconnectFromHost();
         return;
       }
     }
   } while ( result == SASL_INTERACT );
 
   if ( result != SASL_CONTINUE && result != SASL_OK ) {
-    kDebug() << "sasl_client_start failed with: " << result << QString::fromUtf8( sasl_errdetail( m_sasl_conn ) );
+    m_errorMsg = KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8( sasl_errdetail( m_sasl_conn ) ) );
     sasl_dispose( &m_sasl_conn );
-    disconnectFromHost(); // TODO handle error;
+    disconnectFromHost();
     return;
   }
 
