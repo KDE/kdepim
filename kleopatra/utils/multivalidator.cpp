@@ -34,7 +34,7 @@
 
 #include "multivalidator.h"
 
-#include "stl_util.h"
+#include <kleo/stl_util.h>
 
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>

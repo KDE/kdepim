@@ -38,8 +38,9 @@
 
 #include <crypto/verifychecksumscontroller.h>
 
-#include <utils/stl_util.h>
 #include <utils/filedialog.h>
+
+#include <kleo/stl_util.h>
 
 #include <KLocale>
 #include <KMessageBox>

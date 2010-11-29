@@ -40,7 +40,8 @@
 #include <models/keylistsortfilterproxymodel.h>
 
 #include <utils/headerview.h>
-#include <utils/stl_util.h>
+
+#include <kleo/stl_util.h>
 
 #include <gpgme++/key.h>
 

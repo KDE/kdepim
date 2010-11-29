@@ -53,8 +53,8 @@
 #include <utils/log.h>
 #include <utils/kleo_assert.h>
 #include <utils/getpid.h>
-#include <utils/stl_util.h>
 
+#include <kleo/stl_util.h>
 #include <kleo/exception.h>
 
 #include <gpgme++/data.h>

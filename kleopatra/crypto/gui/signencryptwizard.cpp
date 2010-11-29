@@ -43,8 +43,9 @@
 #include <crypto/taskcollection.h>
 #include <crypto/certificateresolver.h>
 
-#include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
+
+#include <kleo/stl_util.h>
 
 #include <gpgme++/key.h>
 

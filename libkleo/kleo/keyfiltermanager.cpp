@@ -34,6 +34,7 @@
 #include "kconfigbasedkeyfilter.h"
 
 #include "cryptobackendfactory.h"
+#include "stl_util.h"
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
@@ -53,8 +54,6 @@
 #include <algorithm>
 #include <vector>
 #include <climits>
-
-#include <kleopatra/utils/stl_util.h>
 
 using namespace Kleo;
 using namespace boost;

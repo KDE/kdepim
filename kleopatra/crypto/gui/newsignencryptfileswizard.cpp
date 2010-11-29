@@ -49,8 +49,8 @@
 #include <utils/archivedefinition.h>
 #include <utils/path-helper.h>
 #include <utils/gui-helper.h>
-#include <utils/stl_util.h>
 
+#include <kleo/stl_util.h>
 #include <ui/filenamerequester.h>
 
 #include <KLocale>

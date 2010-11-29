@@ -43,7 +43,6 @@
 #include <smartcard/readerstatus.h>
 
 #include <utils/formatting.h>
-#include <utils/stl_util.h>
 #include <utils/action_data.h>
 
 #include "tooltippreferences.h"
@@ -73,6 +72,8 @@
 #include "commands/newcertificatecommand.h"
 #include "commands/checksumverifyfilescommand.h"
 #include "commands/checksumcreatefilescommand.h"
+
+#include <kleo/stl_util.h>
 
 #include <gpgme++/key.h>
 

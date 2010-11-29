@@ -39,7 +39,8 @@
 
 #include <crypto/taskcollection.h>
 
-#include <utils/stl_util.h>
+#include <kleo/stl_util.h>
+
 #include <boost/mem_fn.hpp>
 
 #include <KLocalizedString>

@@ -41,8 +41,7 @@
 #include <models/keycache.h>
 #include <models/predicates.h>
 
-#include <utils/stl_util.h>
-
+#include <kleo/stl_util.h>
 #include <kleo/cryptobackend.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/multideletejob.h>

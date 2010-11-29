@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_MODELS_PREDICATES_H__
 #define __KLEOPATRA_MODELS_PREDICATES_H__
 
-#include <utils/stl_util.h>
+#include <kleo/stl_util.h>
 
 #include <QByteArray>
 #include <string>

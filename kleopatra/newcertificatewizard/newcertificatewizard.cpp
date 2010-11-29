@@ -50,9 +50,9 @@
 
 #include <utils/formatting.h>
 #include <utils/validation.h>
-#include <utils/stl_util.h>
 #include <utils/filedialog.h>
 
+#include <kleo/stl_util.h>
 #include <kleo/dn.h>
 #include <kleo/oidmap.h>
 #include <kleo/keygenerationjob.h>

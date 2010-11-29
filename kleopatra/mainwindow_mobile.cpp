@@ -54,7 +54,6 @@
 
 #include "utils/detail_p.h"
 #include "utils/gnupg-helper.h"
-#include "utils/stl_util.h"
 #include "utils/action_data.h"
 #include "utils/classify.h"
 #include "utils/filedialog.h"
@@ -100,6 +99,7 @@
 #include <QVariant>
 #include <QHeaderView>
 
+#include <kleo/stl_util.h>
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
 #include <kleo/cryptoconfig.h>

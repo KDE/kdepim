@@ -40,9 +40,9 @@
 
 #include <dialogs/lookupcertificatesdialog.h>
 
-#include <utils/stl_util.h>
 #include <utils/formatting.h>
 
+#include <kleo/stl_util.h>
 #include <kleo/importfromkeyserverjob.h>
 #include <kleo/keylistjob.h>
 #include <kleo/cryptobackendfactory.h>

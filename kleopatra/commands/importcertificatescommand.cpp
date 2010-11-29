@@ -39,8 +39,8 @@
 #include <models/predicates.h>
 
 #include <utils/formatting.h>
-#include <utils/stl_util.h>
 
+#include <kleo/stl_util.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/importjob.h>
 #include <kleo/importfromkeyserverjob.h>

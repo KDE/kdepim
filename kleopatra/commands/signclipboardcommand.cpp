@@ -42,7 +42,8 @@
 
 #include <utils/input.h>
 #include <utils/output.h>
-#include <utils/stl_util.h>
+
+#include <kleo/stl_util.h>
 
 #include <KLocale>
 #include <KMessageBox>

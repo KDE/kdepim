@@ -43,10 +43,10 @@
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/classify.h>
-#include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
 #include <utils/archivedefinition.h>
 
+#include <kleo/stl_util.h>
 #include <kleo/exception.h>
 
 #include <kmime/kmime_header_parsing.h>

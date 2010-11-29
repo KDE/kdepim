@@ -42,10 +42,11 @@
 
 #include <utils/input.h>
 #include <utils/output.h>
-#include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
 
 #include "emailoperationspreferences.h"
+
+#include <kleo/stl_util.h>
 
 #include <kmime/kmime_header_parsing.h>
 

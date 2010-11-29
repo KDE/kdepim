@@ -42,10 +42,11 @@
 #include <models/predicates.h>
 
 #include <utils/gui-helper.h>
-#include <utils/stl_util.h>
 #include <utils/formatting.h>
 #include <utils/kleo_assert.h>
 #include <utils/kdsignalblocker.h>
+
+#include <kleo/stl_util.h>
 
 #include <gpgme++/key.h>
 

@@ -39,8 +39,8 @@
 #include <models/keylistsortfilterproxymodel.h>
 
 #include <utils/action_data.h>
-#include <utils/stl_util.h>
 
+#include <kleo/stl_util.h>
 #include <kleo/keyfilter.h>
 #include <kleo/keyfiltermanager.h>
 

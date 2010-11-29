@@ -40,9 +40,9 @@
 #include "smimevalidationpreferences.h"
 
 #include <utils/filesystemwatcher.h>
-#include <utils/stl_util.h>
 #include <utils/progressmanager.h>
 
+#include <kleo/stl_util.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/dn.h>
 #include <kleo/keylistjob.h>

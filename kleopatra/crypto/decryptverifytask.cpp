@@ -42,6 +42,7 @@
 #include <kleo/decryptverifyjob.h>
 #include <kleo/dn.h>
 #include <kleo/exception.h>
+#include <kleo/stl_util.h>
 
 #include <models/keycache.h>
 #include <models/predicates.h>
@@ -51,7 +52,6 @@
 #include <utils/output.h>
 #include <utils/classify.h>
 #include <utils/formatting.h>
-#include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
 #include <utils/auditlog.h>
 

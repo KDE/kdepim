@@ -39,7 +39,8 @@
 #include <models/keycache.h>
 
 #include <utils/formatting.h>
-#include <utils/stl_util.h>
+
+#include <kleo/stl_util.h>
 
 #include <KLocalizedString>
 #include <QByteArray>

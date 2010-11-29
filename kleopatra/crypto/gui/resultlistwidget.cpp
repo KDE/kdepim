@@ -40,7 +40,8 @@
 #include <crypto/taskcollection.h>
 
 #include <utils/scrollarea.h>
-#include <utils/stl_util.h>
+
+#include <kleo/stl_util.h>
 
 #include <KLocalizedString>
 #include <KPushButton>
