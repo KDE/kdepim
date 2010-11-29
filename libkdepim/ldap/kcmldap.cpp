@@ -49,8 +49,8 @@
 
 #include "addhostdialog_p.h"
 
+#ifndef Q_OS_WINCE
 K_PLUGIN_FACTORY( KCMLdapFactory, registerPlugin<KCMLdap>(); )
-#ifndef _WIN32_WCE
 K_EXPORT_PLUGIN( KCMLdapFactory( "kcmldap" ) )
 #endif
 
@@ -84,7 +84,11 @@ class LDAPItem : public QListWidgetItem
 };
 
 KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
+#ifdef Q_OS_WINCE
+  : KCModule( KGlobal::activeComponent(), parent )
+#else
   : KCModule( KCMLdapFactory::componentData(), parent )
+#endif // Q_OS_WINCE
 {
   KAboutData *about = new KAboutData( I18N_NOOP( "kcmldap" ), 0,
                                       ki18n( "LDAP Server Settings" ),
