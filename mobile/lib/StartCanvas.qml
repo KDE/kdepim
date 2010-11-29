@@ -76,7 +76,7 @@ Item {
         }
       }
 
-      ListView {
+      KPIM.DecoratedListView {
         id : accountsList
         clip: true
         width: parent.width
@@ -97,7 +97,7 @@ Item {
         width: parent.width
       }
 
-      ListView {
+      KPIM.DecoratedListView {
         id : favsView
         width: parent.width
         height: parent.height - contextContainer.height - 2 - 4 * 5

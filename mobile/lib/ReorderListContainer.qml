@@ -37,7 +37,7 @@ Rectangle {
 
   signal triggered(string triggeredName)
 
-  ListView {
+  KPIM.DecoratedListView {
     id : myList
     anchors.top : _topLevel.top
     anchors.bottom : _topLevel.bottom

@@ -65,7 +65,7 @@ QML.Rectangle {
       fillMode : QML.Image.TileVertically
     }
 
-    QML.ListView {
+    KPIM.DecoratedListView {
       id: filterList
       anchors.topMargin: 25
       anchors.top: topText.bottom

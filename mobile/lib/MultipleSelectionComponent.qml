@@ -43,7 +43,7 @@ QML.Rectangle {
     width : parent.width / 3
   }
 
-  QML.ListView {
+  KPIM.DecoratedListView {
     id : selectedView
     anchors.left : navigationView.right
     anchors.right : parent.right

@@ -69,7 +69,7 @@ Item {
     }
   }
 
-  ListView {
+  KPIM.DecoratedListView {
     property string currentMimeType
     property string currentAttachmentUrl
 

@@ -19,6 +19,7 @@
 */
 
 import Qt 4.7 as QML
+import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
   color : "#00000000"
@@ -32,7 +33,7 @@ QML.Rectangle {
   property alias section: itemListView.section
   property variant navigationModel
 
-  QML.ListView {
+  KPIM.DecoratedListView {
     id: itemListView
     anchors.fill: parent
     focus: true

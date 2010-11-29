@@ -38,7 +38,7 @@ QML.Rectangle {
 
   signal triggered(string triggeredName)
 
-  QML.ListView {
+  KPIM.DecoratedListView {
     id : myList
     anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
     width: parent.width - actionColumn.width

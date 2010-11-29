@@ -47,7 +47,7 @@ QML.Column {
     anchors.left : parent.left
     anchors.right : parent.right
     height : itemHeight
-    QML.ListView {
+    KPIM.DecoratedListView {
       id : selectedItem
       anchors.fill : parent
       delegate : CollectionDelegate {
@@ -133,7 +133,7 @@ QML.Column {
         text : KDE.i18n( "Please select one\nor more items\non the right." )
         visible : !_itemActionModel.hasSelection
       }
-      QML.ListView {
+      KPIM.DecoratedListView {
         anchors.fill:parent
         model: actionModel;
         id: actionListView;

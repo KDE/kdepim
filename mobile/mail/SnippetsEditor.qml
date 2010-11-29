@@ -39,7 +39,7 @@ QML.Rectangle {
   signal triggered(string triggeredName)
   signal doCollapse()
 
-  QML.ListView {
+  KPIM.DecoratedListView {
     id: snippetsView
     anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
     width: parent.width - actionColumn.width

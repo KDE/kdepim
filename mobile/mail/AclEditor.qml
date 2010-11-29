@@ -43,7 +43,7 @@ QML.Rectangle {
     text: KDE.i18n( "<b>Access Control List for '%1'</b>", aclEditor.collectionName )
   }
 
-  QML.ListView {
+  KPIM.DecoratedListView {
     id: aclView
     anchors.left: parent.left
     anchors.top: headLine.bottom

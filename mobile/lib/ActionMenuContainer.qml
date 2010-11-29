@@ -181,7 +181,7 @@ Item {
     }
   }
 
-  ListView {
+  KPIM.DecoratedListView {
     height : parent.height
     width : parent.actionItemWidth
     id : myListView

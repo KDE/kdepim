@@ -38,7 +38,7 @@ QML.Item { // work around strange anchoring behaviour inside Loader
 
     QML.Column {
       anchors.fill: parent
-      QML.ListView {
+      KPIM.DecoratedListView {
         anchors.fill: parent
         model: _emailTemplateModel
         focus: true

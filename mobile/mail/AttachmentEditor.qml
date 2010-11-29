@@ -25,7 +25,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 Item {
   width: 600
 
-  ListView {
+  KPIM.DecoratedListView {
     id: attachmentListView
     anchors.top: parent.top
     anchors.left: parent.left
