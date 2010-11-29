@@ -688,15 +688,19 @@ static QString lookupDocumentation( const QString &fileName )
 
 void KDeclarativeMainView::openManual()
 {
-  const KUrl url = lookupDocumentation( "kontact-touch/manual/index.html" );
-  if ( !url.isValid() ) {
+  const QString docu = lookupDocumentation( "kontact-touch/manual/index.html" );
+  KUrl url = docu;
+  bool isvalid = url.isValid();
+  
+  if ( !isvalid ) {
     KMessageBox::error( this,
                         i18n( "The manual could not be found on your system." ),
                         i18n( "Manual not found" ) );
     return;
   }
 
-  KRun::runUrl( url, QLatin1String( "text/html" ), this );
+  openAttachment( docu, QLatin1String( "text/html" ) );
+  //KRun::runUrl( url, QLatin1String( "text/html" ), this );
 }
 
 void KDeclarativeMainView::openLicenses()
