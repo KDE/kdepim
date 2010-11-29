@@ -364,7 +364,7 @@ int main( int argc, char** argv ) {
       //cout << "newlst[0]=" << newlst[0].url().local8Bit() << endl;
       //cout << "lst[0]=" << lst[0].url().local8Bit() << endl;
       assert( newlst[0] == lst[0] );
-      assert( newlst[1] == lst[1] );
+      assert( newlst[1].url() == "ldap://foo:389/?a:b c" ); // != lst[1] due to encoded space
       assert( newlst[2].url() == "ldap://server:389/?a=b,c=DE" ); // != lst[2] due to the encoded =
 
       // Reset old value
