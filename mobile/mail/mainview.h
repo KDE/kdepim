@@ -71,6 +71,8 @@ class MainView : public KDeclarativeMainView
                "  </interface>\n"
                        "")
 
+  Q_PROPERTY( bool collectionIsSentMail READ collectionIsSentMail NOTIFY currentCollectionChanged )
+
   public:
     explicit MainView(QWidget* parent = 0);
 
@@ -83,6 +85,8 @@ class MainView : public KDeclarativeMainView
     };
 
     void setConfigWidget( ConfigWidget *configWidget );
+
+    bool collectionIsSentMail() const;
 
   public Q_SLOTS:
     void startComposer();
@@ -111,6 +115,10 @@ class MainView : public KDeclarativeMainView
                                    const QString & bcc,
                                    const QString & subject,
                                    const QString & body );
+
+  Q_SIGNALS:
+    void currentCollectionChanged();
+
   protected slots:
     void delayedInit();
     void forwardMessage();
@@ -196,6 +204,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::QuotaColorProxyModel *mQuotaColorProxyModel;
     AclEditor *mAclEditor;
     MessageListSettingsController *mMessageListSettingsController;
+    Akonadi::Collection mCurrentCollection;
 };
 
 Q_DECLARE_METATYPE( MainView::ForwardMode )

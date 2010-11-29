@@ -162,6 +162,11 @@ void MainView::setConfigWidget( ConfigWidget *configWidget )
   connect( configWidget, SIGNAL( configChanged() ), this, SLOT( updateConfig() ) );
 }
 
+bool MainView::collectionIsSentMail() const
+{
+  return (SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::SentMail ) == mCurrentCollection);
+}
+
 int MainView::openComposer( const QString &to, const QString &cc, const QString &bcc,
                             const QString &subject, const QString &body )
 {
@@ -1253,6 +1258,9 @@ void MainView::collectionSelectionChanged()
     m_grouperComparator->setIsOutboundCollection( collection.hasAttribute<Akonadi::MessageFolderAttribute>() &&
                                                   collection.attribute<Akonadi::MessageFolderAttribute>()->isOutboundFolder() );
   }
+
+  mCurrentCollection = collection;
+  emit currentCollectionChanged();
 }
 
 MessageViewer::MessageViewItem* MainView::messageViewerItem()
