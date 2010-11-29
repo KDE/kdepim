@@ -110,7 +110,8 @@ int main( int argc, char** argv ) {
             break;
           }
           case Kleo::CryptoConfigEntry::ArgType_Int: {
-            assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
+            // (marc) if an entry isn't optional, you have to unset it for the default to take effect, so this assert is wrong:
+            // assert( entry->isOptional() ); // empty lists must be allowed (see https://www.intevation.de/roundup/aegypten/issue121)
             std::vector<int> lst = entry->intValueList();
             QString str;
             for( std::vector<int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
@@ -120,7 +121,8 @@ int main( int argc, char** argv ) {
             break;
           }
           case Kleo::CryptoConfigEntry::ArgType_UInt: {
-            assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
+            // (marc) if an entry isn't optional, you have to unset it for the default to take effect, so this assert is wrong:
+            // assert( entry->isOptional() ); // empty lists must be allowed (see https://www.intevation.de/roundup/aegypten/issue121)
             std::vector<uint> lst = entry->uintValueList();
             QString str;
             for( std::vector<uint>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
@@ -131,7 +133,8 @@ int main( int argc, char** argv ) {
           }
           case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
           case Kleo::CryptoConfigEntry::ArgType_URL: {
-              assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
+              // (marc) if an entry isn't optional, you have to unset it for the default to take effect, so this assert is wrong:
+              // assert( entry->isOptional() ); // empty lists must be allowed (see https://www.intevation.de/roundup/aegypten/issue121)
               KUrl::List urls = entry->urlValueList();
               cout << " url values=" << urls.toStringList().join(" ").toLocal8Bit().constData() << "\n    ";
           }
@@ -141,7 +144,8 @@ int main( int argc, char** argv ) {
           case Kleo::CryptoConfigEntry::ArgType_DirPath:
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_String: {
-            assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
+            // (marc) if an entry isn't optional, you have to unset it for the default to take effect, so this assert is wrong:
+            // assert( entry->isOptional() ); // empty lists must be allowed (see https://www.intevation.de/roundup/aegypten/issue121)
             QStringList lst = entry->stringValueList();
             cout << " string values=" << lst.join(" ").toLocal8Bit().constData();
             break;
