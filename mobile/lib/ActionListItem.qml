@@ -24,11 +24,13 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 
 QML.Item {
+  id : _top
   height : parent.height
   width : parent.width
   property string name
   property string argument : ""
   property string title : ""
+  property bool reactsOnLongPressed : false
 
   property string category
 
@@ -64,6 +66,13 @@ QML.Item {
     onTriggered : {
       parent.doCollapse()
       parent.triggered(name)
+    }
+
+    QML.Image {
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_important.png" )
+      visible: _top.reactsOnLongPressed
     }
   }
 }

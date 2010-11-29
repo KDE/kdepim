@@ -41,6 +41,7 @@ ActionMenuContainer {
           application.getAction("send_queued_emails_via", "").trigger();
           actionPanel.collapse()
       }
+      reactsOnLongPressed : true
     }
     ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select Multiple Folders" ) }
     ActionListItem { name : "akonadi_empty_all_trash" }
@@ -118,6 +119,7 @@ ActionMenuContainer {
           newMailPage.visible = true
           actionPanel.collapse()
       }
+      reactsOnLongPressed : true
   }
 
   ActionList {
@@ -154,6 +156,7 @@ ActionMenuContainer {
           replyOptionsPage.visible = true
           actionPanel.collapse()
       }
+      reactsOnLongPressed : true
     }
 
     ActionListItem {
@@ -162,6 +165,7 @@ ActionMenuContainer {
           forwardOptionsPage.visible = true
           actionPanel.collapse()
       }
+      reactsOnLongPressed : true
     }
 
     ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark As..." ) }
@@ -209,6 +213,7 @@ ActionMenuContainer {
     type : "mail"
 
     addNewActionName: "add_new_mail"
+    addNewActionReactsOnLongPressed: true
 
     onLongPressed : {
       if ( actionName == "add_new_mail" ) {

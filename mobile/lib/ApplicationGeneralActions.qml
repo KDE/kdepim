@@ -29,6 +29,7 @@ KPIM.ActionList {
   property alias configureActionVisible: configureAction.visible
   property string type
   property alias addNewActionName: addNewAction.name
+  property alias addNewActionReactsOnLongPressed: addNewAction.reactsOnLongPressed
   signal longPressed(string actionName)
 
   KPIM.ActionListItem {
