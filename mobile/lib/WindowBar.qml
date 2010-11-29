@@ -24,8 +24,8 @@ import org.kde 4.5
 QML.BorderImage {
   source: KDE.locate( "data", "mobileui/top.png" );
   border { left: 110; right: 1; top: 0; bottom: 0 }
-  horizontalTileMode: BorderImage.Repeat
-  verticalTileMode: BorderImage.Repeat
+  horizontalTileMode: QML.BorderImage.Repeat
+  verticalTileMode: QML.BorderImage.Repeat
   anchors.top: parent.top
   anchors.left: parent.left
   anchors.right: parent.right
