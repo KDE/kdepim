@@ -264,7 +264,7 @@ namespace {
     }
 
     Kleo::ChangePasswdJob * changePasswdJob() const {
-      if ( !GpgME::hasFeature( GpgME::PasswdFeature ) )
+      if ( !GpgME::hasFeature( GpgME::PasswdFeature, 0 ) )
         return 0;
       GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
       if ( !context )
