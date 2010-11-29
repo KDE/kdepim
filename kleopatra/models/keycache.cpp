@@ -46,6 +46,7 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/dn.h>
 #include <kleo/keylistjob.h>
+#include <kleo/listallkeysjob.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
@@ -95,21 +96,6 @@ namespace {
         bool operator()( const char * s ) const { return !s || !*s; }
     };
 
-    template <typename ForwardIterator, typename BinaryPredicate>
-    ForwardIterator unique_by_merge( ForwardIterator first, ForwardIterator last, BinaryPredicate pred ) {
-        first = std::adjacent_find( first, last, pred );
-        if ( first == last )
-            return last;
-
-        ForwardIterator dest = first;
-        dest->mergeWith( *++first );
-        while ( ++first != last )
-            if ( pred( *dest, *first ) )
-                dest->mergeWith( *first );
-            else
-                *++dest = *first;
-        return ++dest;
-    }
 }
 
 class KeyCache::Private {
@@ -859,29 +845,28 @@ class KeyCache::RefreshKeysJob::Private
 {
     RefreshKeysJob * const q;
 public:
-    enum KeyType {
-        PublicKeys,
-        SecretKeys
-    };
-
     Private( KeyCache * cache, RefreshKeysJob * qq );
     void doStart();
-    Error startKeyListing( const char* protocol, KeyType type );
-    void publicKeyJobDone( const KeyListResult & res, const std::vector<Key> & keys ) {
-        m_publicKeys.insert( m_publicKeys.end(), keys.begin(), keys.end() );
-        jobDone( res );
-    }
-    void secretKeyJobDone( const KeyListResult & res, const std::vector<Key> & keys ) {
-        m_secretKeys.insert( m_secretKeys.end(), keys.begin(), keys.end() );
+    Error startKeyListing( const char* protocol );
+    void listAllKeysJobDone( const KeyListResult & res, const std::vector<Key> & nextKeys ) {
+        std::vector<Key> keys;
+        keys.reserve( m_keys.size() + nextKeys.size() );
+        if ( m_keys.empty() )
+            keys = nextKeys;
+        else
+            std::merge( m_keys.begin(), m_keys.end(),
+                        nextKeys.begin(), nextKeys.end(),
+                        std::back_inserter( keys ),
+                        _detail::ByFingerprint<std::less>() );
+        m_keys.swap( keys );
         jobDone( res );
     }
     void emitDone( const KeyListResult & result );
-    void mergeKeysAndUpdateKeyCache();
+    void updateKeyCache();
 
     KeyCache * m_cache;
     uint m_jobsPending;
-    std::vector<Key> m_publicKeys;
-    std::vector<Key> m_secretKeys;
+    std::vector<Key> m_keys;
     KeyListResult m_mergedResult;
 
 private:
@@ -903,7 +888,7 @@ void KeyCache::RefreshKeysJob::Private::jobDone( const KeyListResult & result )
     m_mergedResult.mergeWith( result );
     if ( m_jobsPending > 0 )
         return;
-    mergeKeysAndUpdateKeyCache();
+    updateKeyCache();
     emitDone( m_mergedResult );
 }
 
@@ -933,10 +918,8 @@ void KeyCache::RefreshKeysJob::cancel()
 void KeyCache::RefreshKeysJob::Private::doStart()
 {
     assert( m_jobsPending == 0 );
-    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", PublicKeys ) ) );
-    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", PublicKeys ) ) );
-    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", SecretKeys ) ) );
-    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", SecretKeys ) ) );
+    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp" ) ) );
+    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime" ) ) );
 
     if ( m_jobsPending != 0 )
         return;
@@ -945,54 +928,39 @@ void KeyCache::RefreshKeysJob::Private::doStart()
     emitDone( hasError ? m_mergedResult : KeyListResult( Error( GPG_ERR_UNSUPPORTED_OPERATION ) ) );
 }
 
-void KeyCache::RefreshKeysJob::Private::mergeKeysAndUpdateKeyCache()
+void KeyCache::RefreshKeysJob::Private::updateKeyCache()
 {
-    std::sort( m_publicKeys.begin(), m_publicKeys.end(), _detail::ByFingerprint<std::less>() );
-    std::sort( m_secretKeys.begin(), m_secretKeys.end(), _detail::ByFingerprint<std::less>() );
-
-    std::vector<Key> keys;
-    keys.reserve( m_publicKeys.size() + m_secretKeys.size() );
-
-    std::merge( m_publicKeys.begin(), m_publicKeys.end(),
-                m_secretKeys.begin(), m_secretKeys.end(),
-                std::back_inserter( keys ),
-                _detail::ByFingerprint<std::less>() );
-
-    keys.erase( unique_by_merge( keys.begin(), keys.end(), _detail::ByFingerprint<std::equal_to>() ),
-                keys.end() );
-
     std::vector<Key> cachedKeys = m_cache->keys();
     std::sort( cachedKeys.begin(), cachedKeys.end(), _detail::ByFingerprint<std::less>() );
     std::vector<Key> keysToRemove;
-    std::set_difference( cachedKeys.begin(), cachedKeys.end(), keys.begin(), keys.end(), std::back_inserter( keysToRemove ), _detail::ByFingerprint<std::less>() );
+    std::set_difference( cachedKeys.begin(), cachedKeys.end(),
+                         m_keys.begin(), m_keys.end(),
+                         std::back_inserter( keysToRemove ),
+                         _detail::ByFingerprint<std::less>() );
     m_cache->remove( keysToRemove );
-    m_cache->refresh( keys );
+    m_cache->refresh( m_keys );
 }
 
-Error KeyCache::RefreshKeysJob::Private::startKeyListing( const char* backend, KeyType type )
+Error KeyCache::RefreshKeysJob::Private::startKeyListing( const char* backend )
 {
     const Kleo::CryptoBackend::Protocol * const protocol = Kleo::CryptoBackendFactory::instance()->protocol( backend );
     if ( !protocol )
         return Error();
-    Kleo::KeyListJob * const job = protocol->keyListJob( /*remote*/false, /*includeSigs*/false, /*validate*/true );
+    Kleo::ListAllKeysJob * const job = protocol->listAllKeysJob( /*includeSigs*/false, /*validate*/true );
     if ( !job )
         return Error();
-    if ( type == PublicKeys )
-        connect( job, SIGNAL(result(GpgME::KeyListResult,std::vector<GpgME::Key>)),
-                 q, SLOT(publicKeyJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>)) );
-    else
-        connect( job, SIGNAL(result(GpgME::KeyListResult,std::vector<GpgME::Key>)),
-                 q, SLOT(secretKeyJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>)) );
+    connect( job, SIGNAL(result(GpgME::KeyListResult,std::vector<GpgME::Key>)),
+             q, SLOT(listAllKeysJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>)) );
 
     const QString label = protocol == Kleo::CryptoBackendFactory::instance()->smime()
-        ? type == PublicKeys ? i18n("Listing public X.509 certificates") : i18n("Listing private X.509 certificates")
-        : type == PublicKeys ? i18n("Listing public OpenPGP certificates") : i18n("Listing private OpenPGP certificates") ;
+        ? i18n("Listing X.509 certificates")
+        : i18n("Listing OpenPGP certificates") ;
     (void)ProgressManager::createForJob( job, label );
 
     connect( q, SIGNAL(canceled()),
              job, SLOT(slotCancel()) );
 
-    const Error error = job->start( QStringList(), type == SecretKeys );
+    const Error error = job->start( true );
 
     if ( !error && !error.isCanceled() )
         ++m_jobsPending;
