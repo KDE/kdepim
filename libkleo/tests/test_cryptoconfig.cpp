@@ -30,6 +30,7 @@
 */
 
 #include "libkleo/backends/qgpgme/qgpgmecryptoconfig.h"
+#include "libkleo/backends/qgpgme/qgpgmenewcryptoconfig.h"
 
 #include <kapplication.h>
 #include <kaboutdata.h>
@@ -49,11 +50,19 @@ int main( int argc, char** argv ) {
   if ( GpgME::initializeLibrary( 0 ) )
     return 1;
 
+  const bool newCryptoConfig = argc == 2 && qstrcmp( argv[1], "--new" ) == 0;
+  if ( newCryptoConfig )
+      argc = 1; // hide from KDE
+
   KAboutData aboutData( "test_cryptoconfig", 0, ki18n("CryptoConfig Test"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app( false );
 
-  Kleo::CryptoConfig * config = new QGpgMECryptoConfig();
+  Kleo::CryptoConfig * config = 0;
+  if ( newCryptoConfig )
+      config = new QGpgMENewCryptoConfig;
+  else
+      config = new QGpgMECryptoConfig;
 
   // Dynamic querying of the options
   cout << "Components:" << endl;
