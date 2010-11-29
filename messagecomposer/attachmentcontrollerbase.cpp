@@ -622,6 +622,7 @@ void AttachmentControllerBase::attachmentProperties( AttachmentPart::Ptr part )
 
 void AttachmentControllerBase::showAddAttachmentDialog()
 {
+#ifndef KDEPIM_MOBILE_UI
   QPointer<KEncodingFileDialog> dialog = new KEncodingFileDialog(
       QString( /*startDir*/ ), QString( /*encoding*/ ), QString( /*filter*/ ),
       i18n( "Attach File" ), KFileDialog::Other, d->wParent );
@@ -637,6 +638,12 @@ void AttachmentControllerBase::showAddAttachmentDialog()
     }
   }
   delete dialog;
+#else
+  // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
+  const QString fileName = KFileDialog::getOpenFileName( KUrl(), QString(), d->wParent, i18n("Attach File" ) );
+  if ( !fileName.isEmpty() )
+    addAttachment( KUrl::fromLocalFile( fileName ) );
+#endif
 }
 
 void AttachmentControllerBase::addAttachment( AttachmentPart::Ptr part )
