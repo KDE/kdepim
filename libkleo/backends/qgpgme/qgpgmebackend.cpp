@@ -37,6 +37,7 @@
 
 #include "qgpgmekeygenerationjob.h"
 #include "qgpgmekeylistjob.h"
+#include "qgpgmelistallkeysjob.h"
 #include "qgpgmedecryptjob.h"
 #include "qgpgmedecryptverifyjob.h"
 #include "qgpgmerefreshkeysjob.h"
@@ -108,6 +109,20 @@ namespace {
       if ( validate ) mode |= GpgME::Validate;
       context->setKeyListMode( mode );
       return new Kleo::QGpgMEKeyListJob( context );
+    }
+
+    Kleo::ListAllKeysJob * listAllKeysJob( bool includeSigs, bool validate ) const {
+      GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
+      if ( !context )
+        return 0;
+
+      unsigned int mode = context->keyListMode();
+      mode |= GpgME::Local;
+      mode &= ~GpgME::Extern;
+      if ( includeSigs ) mode |= GpgME::Signatures;
+      if ( validate ) mode |= GpgME::Validate;
+      context->setKeyListMode( mode );
+      return new Kleo::QGpgMEListAllKeysJob( context );
     }
 
     Kleo::EncryptJob * encryptJob( bool armor, bool textmode ) const {

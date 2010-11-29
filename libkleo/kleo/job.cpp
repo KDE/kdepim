@@ -34,6 +34,7 @@
 #include "job.h"
 
 #include "keylistjob.h"
+#include "listallkeysjob.h"
 #include "encryptjob.h"
 #include "decryptjob.h"
 #include "decryptverifyjob.h"
@@ -98,6 +99,7 @@ bool Kleo::Job::isAuditLogSupported() const {
 #define make_job_subclass(x) make_job_subclass_ext(x,Job)
 
 make_job_subclass(KeyListJob)
+make_job_subclass(ListAllKeysJob)
 make_job_subclass(EncryptJob)
 make_job_subclass(DecryptJob)
 make_job_subclass(DecryptVerifyJob)
@@ -125,6 +127,7 @@ make_job_subclass(SpecialJob)
 #include "job.moc"
 
 #include "keylistjob.moc"
+#include "listallkeysjob.moc"
 #include "encryptjob.moc"
 #include "decryptjob.moc"
 #include "decryptverifyjob.moc"

@@ -385,6 +385,7 @@ public:
   QString name() const { return "Chiasmus"; }
   QString displayName() const { return i18n( "Chiasmus command line tool" ); }
   KeyListJob * keyListJob( bool, bool, bool ) const { return 0; }
+  ListAllKeysJob * listAllKeysJob( bool, bool ) const { return 0; }
   EncryptJob * encryptJob( bool, bool ) const { return 0; }
   DecryptJob * decryptJob() const { return 0; }
   SignJob * signJob( bool, bool ) const { return 0; }

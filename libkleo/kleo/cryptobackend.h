@@ -38,6 +38,7 @@
 namespace Kleo {
   class CryptoConfig;
   class KeyListJob;
+  class ListAllKeysJob;
   class KeyGenerationJob;
   class ImportJob;
   class ImportFromKeyserverJob;
@@ -104,6 +105,7 @@ namespace Kleo {
     virtual QString displayName() const = 0;
 
     virtual KeyListJob          * keyListJob( bool remote=false, bool includeSigs=false, bool validate=false ) const = 0;
+    virtual ListAllKeysJob      * listAllKeysJob( bool includeSigs=false, bool validate=false ) const = 0;
     virtual EncryptJob          * encryptJob( bool armor=false, bool textmode=false ) const = 0;
     virtual DecryptJob          * decryptJob() const = 0;
     virtual SignJob             * signJob( bool armor=false, bool textMode=false ) const = 0;

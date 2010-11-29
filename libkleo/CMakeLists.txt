@@ -21,6 +21,7 @@ set(libkleo_backend_qgpgme_SRCS
     backends/qgpgme/qgpgmebackend.cpp
     backends/qgpgme/threadedjobmixin.cpp
     backends/qgpgme/qgpgmekeylistjob.cpp
+    backends/qgpgme/qgpgmelistallkeysjob.cpp
     backends/qgpgme/qgpgmekeygenerationjob.cpp
     backends/qgpgme/qgpgmeimportjob.cpp
     backends/qgpgme/qgpgmeimportfromkeyserverjob.cpp
