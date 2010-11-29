@@ -40,3 +40,4 @@ ClockDialog 4.5 ClockDialog.qml
 SearchDialog 4.5 SearchDialog.qml
 SearchResultScreen 4.5 SearchResultScreen.qml
 ItemEditButton 4.5 ItemEditButton.qml
+DecoratedFlickable 4.5 DecoratedFlickable.qml

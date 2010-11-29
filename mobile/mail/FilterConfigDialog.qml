@@ -100,29 +100,29 @@ QML.Rectangle {
     }
   }
 
-  QML.Flickable {
+  KPIM.DecoratedFlickable {
     id: configWidgetBox
     anchors.left: list.right
     anchors.right: parent.right
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-    //anchors.topMargin: 25
-    flickableDirection: QML.Flickable.VerticalFlick
     contentHeight: configWidget.height;
 
-    QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
-      anchors.fill: parent 
-      Mail.FilterConfigWidget {
-        id: configWidget
-        width: parent.width
-        visible: filterList.count > 0
-        onVisibleChanged: {
-          if ( visible ) {
-            //configWidget.load()
+    content.children: [
+      QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
+        anchors.fill: parent 
+        Mail.FilterConfigWidget {
+          id: configWidget
+          width: parent.width
+          visible: filterList.count > 0
+          onVisibleChanged: {
+            if ( visible ) {
+              //configWidget.load()
+            }
           }
         }
       }
-    }
+    ]
   }
 
   QML.Rectangle {

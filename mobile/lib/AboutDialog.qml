@@ -38,87 +38,89 @@ QML.Rectangle {
     anchors.fill: parent
     anchors.topMargin: 40
     anchors.leftMargin: 40
-    QML.Flickable{
-        flickableDirection: QML.Flickable.VerticalFlick
+    KPIM.DecoratedFlickable{
         width: parent.width - closeButton.width
         height: parent.height
         contentHeight: 1700;
-        QML.Rectangle{
-        id: aboutText
-            QML.Column{
-                QML.Text{
-                    id: caption
-                    font.pointSize: 18
-                    style: QML.Text.Raised
-                    text: KDE.i18n( "About %1", application.name )
-                }
 
-                QML.Text{
-                    id:version
-                    horizontalAlignment: QML.Text.AlignHCenter
-                    text: "\n" + application.version + "\n"
-                }
+        content.children: [
+          QML.Rectangle{
+          id: aboutText
+              QML.Column{
+                  QML.Text{
+                      id: caption
+                      font.pointSize: 18
+                      style: QML.Text.Raised
+                      text: KDE.i18n( "About %1", application.name )
+                  }
 
-                QML.Text {
-                    text : KDE.i18n("This Free Software product was created as part of a commercial contract.") +
-                           "\n" +
-                           KDE.i18n("%1 is licensed under the GNU GPL version 2 or later.", application.name ) + "\n" +
-                           KDE.i18n("See %1 for details.", "licenses.pdf") + "\n"
-                }
+                  QML.Text{
+                      id:version
+                      horizontalAlignment: QML.Text.AlignHCenter
+                      text: "\n" + application.version + "\n"
+                  }
 
-                QML.Text{
-                    text: KDE.i18n("Credits Project Komo3 (October 2009 - )") + "\n"
-                }
+                  QML.Text {
+                      text : KDE.i18n("This Free Software product was created as part of a commercial contract.") +
+                             "\n" +
+                             KDE.i18n("%1 is licensed under the GNU GPL version 2 or later.", application.name ) + "\n" +
+                             KDE.i18n("See %1 for details.", "licenses.pdf") + "\n"
+                  }
 
-                QML.Text{
-                    text: KDE.i18n("Scrum Master, Team Senior: Till Adam, KDAB") + "\n" +
-                          KDE.i18n("Product Owner, Team Senior: Bernhard Reiter, Intevation GmbH") + "\n"
-                    style: QML.Text.Raised
-                }
+                  QML.Text{
+                      text: KDE.i18n("Credits Project Komo3 (October 2009 - )") + "\n"
+                  }
 
-                QML.Text{
-                    text: KDE.i18n("Development team in alphabetical order:") + "\n\n" +
-                          "\t" + KDE.i18n("Andras Mantia (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Andre Heinecke (Intevation GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Andreas Holzammer (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Bertjan Broeksema (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Björn Balazs (Apliki)") + "\n" +
-                          "\t" + KDE.i18n("Björn Ricks (Intevation GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Casey Link (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("David Faure (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Felix Wolfsteller (Intevation GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Kevin Krammer (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Kevin Ottens (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Laurent Montel (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Leo Franchi (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Ludwig Reiter (Intevation GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Marc Mutz (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Marcus Brinkmann (g10 Code GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Nuno Pinheiro (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Patrick Spendrin (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Romain Pokrzywka (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Sabine Faure (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Sascha L. Teichmann (Intevation GmbH)") + "\n" +
-                          "\t" + KDE.i18n("Sergio Martins (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Stephen Kelly (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Till Adam (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Tobias Koenig (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Volker Krause (KDAB)") + "\n" +
-                          "\t" + KDE.i18n("Werner Koch (g10 Code)") + "\n"
-                }
+                  QML.Text{
+                      text: KDE.i18n("Scrum Master, Team Senior: Till Adam, KDAB") + "\n" +
+                            KDE.i18n("Product Owner, Team Senior: Bernhard Reiter, Intevation GmbH") + "\n"
+                      style: QML.Text.Raised
+                  }
 
-                QML.Text{
-                    style: QML.Text.Raised
-                    text: KDE.i18n("Special thanks to the two project persons from our principal.") + "\n"
-                }
+                  QML.Text{
+                      text: KDE.i18n("Development team in alphabetical order:") + "\n\n" +
+                            "\t" + KDE.i18n("Andras Mantia (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Andre Heinecke (Intevation GmbH)") + "\n" +
+                            "\t" + KDE.i18n("Andreas Holzammer (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Bertjan Broeksema (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Björn Balazs (Apliki)") + "\n" +
+                            "\t" + KDE.i18n("Björn Ricks (Intevation GmbH)") + "\n" +
+                            "\t" + KDE.i18n("Casey Link (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("David Faure (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Felix Wolfsteller (Intevation GmbH)") + "\n" +
+                            "\t" + KDE.i18n("Kevin Krammer (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Kevin Ottens (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Laurent Montel (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Leo Franchi (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Ludwig Reiter (Intevation GmbH)") + "\n" +
+                            "\t" + KDE.i18n("Marc Mutz (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Marcus Brinkmann (g10 Code GmbH)") + "\n" +
+                            "\t" + KDE.i18n("Nuno Pinheiro (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Patrick Spendrin (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Romain Pokrzywka (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Sabine Faure (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Sascha L. Teichmann (Intevation GmbH)") + "\n" +
+                            "\t" + KDE.i18n("Sergio Martins (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Stephen Kelly (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Till Adam (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Tobias Koenig (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Volker Krause (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Werner Koch (g10 Code)") + "\n"
+                  }
 
-                QML.Text{
-                    text: KDE.i18n("This project is built upon KDE SC Kontact Desktop\n" +
-                                   "client. For the outstanding work done there we\n" +
-                                   "would like to thank the original authors.\n")
-                }
-             }
-          }
+                  QML.Text{
+                      style: QML.Text.Raised
+                      text: KDE.i18n("Special thanks to the two project persons from our principal.") + "\n"
+                  }
+
+                  QML.Text{
+                      text: KDE.i18n("This project is built upon KDE SC Kontact Desktop\n" +
+                                     "client. For the outstanding work done there we\n" +
+                                     "would like to thank the original authors.\n")
+                  }
+               }
+            }
+          ]
        }
     }
 

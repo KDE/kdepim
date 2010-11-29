@@ -23,7 +23,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.contacteditors 4.5 as ContactEditors
 
 KPIM.MainView {
-  Flickable {
+  KPIM.DecoratedFlickable {
     anchors.fill: parent
 
     anchors.topMargin: 40
@@ -31,15 +31,15 @@ KPIM.MainView {
     anchors.rightMargin: 4;
 
     contentHeight: editor.height;
-    clip: true;
-    flickableDirection: "VerticalFlick"
 
-    Item {
-      anchors.fill: parent
-      ContactEditors.ContactGroupEditor {
-        id: editor;
-        width: parent.width;
+    content.children: [
+      Item {
+        anchors.fill: parent
+        ContactEditors.ContactGroupEditor {
+          id: editor;
+          width: parent.width;
+        }
       }
-    }
+    ]
   }
 }

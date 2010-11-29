@@ -30,20 +30,23 @@ QML.Rectangle {
   color: "white"
   visible: guiStateManager.inSearchScreenState
 
-  QML.Flickable {
+  KPIM.DecoratedFlickable {
     id: searchWidgetBox
     anchors.fill: parent
     anchors.topMargin: 25
-    flickableDirection: QML.Flickable.VerticalFlick
-    contentHeight: searchWidget.height;
+    contentHeight: searchWidget.height
 
-    QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
-      anchors.fill: parent 
-      QML.Item {
-        id: searchWidget
-        width: parent.width - searchButton.width
+    content.children: [
+      QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
+        anchors.fill: parent 
+        QML.Item {
+          id: searchWidget
+          width: parent.width - searchButton.width
+
+          onChildrenChanged: { searchWidgetBox.contentHeight = children[0].height }
+        }
       }
-    }
+    ]
   }
 
   KPIM.Button2 {

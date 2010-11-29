@@ -65,7 +65,7 @@ KPIM.MainView {
     anchors.fill: parent
   }
 
-  Flickable {
+  KPIM.DecoratedFlickable {
     anchors.top: parent.top
     anchors.bottom: collectionCombo.top
     anchors.left: parent.left
@@ -75,15 +75,15 @@ KPIM.MainView {
     anchors.leftMargin: 40;
 
     contentHeight: generalEditor.height;
-    clip: true;
-    flickableDirection: "VerticalFlick"
 
-    Item {
-      IncidenceEditors.GeneralEditor {
-        id: generalEditor;
-        anchors.fill: parent
+    content.children: [
+      Item {
+        IncidenceEditors.GeneralEditor {
+          id: generalEditor;
+          anchors.fill: parent
+        }
       }
-    }
+    ]
   }
 
   IncidenceEditors.CollectionCombo {

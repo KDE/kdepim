@@ -23,7 +23,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.contacteditors 4.5 as ContactEditors
 
 KPIM.MainView {
-  Flickable {
+  KPIM.DecoratedFlickable {
     anchors.fill: parent
 
     anchors.topMargin: 40
@@ -31,16 +31,16 @@ KPIM.MainView {
     anchors.rightMargin: 4;
 
     contentHeight: editorGeneral.height;
-    clip: true;
-    flickableDirection: "VerticalFlick"
 
-    Item {
-      anchors.fill: parent
-      ContactEditors.ContactEditorGeneral {
-        id: editorGeneral;
-        width: parent.width;
+    content.children: [
+      Item {
+        anchors.fill: parent
+        ContactEditors.ContactEditorGeneral {
+          id: editorGeneral;
+          width: parent.width;
+        }
       }
-    }
+    ]
  }
 
   SlideoutPanelContainer {
@@ -55,19 +55,19 @@ KPIM.MainView {
       handleHeight: 120
 
       content: [
-        Flickable {
+        KPIM.DecoratedFlickable {
           anchors.fill: parent;
           contentHeight: editorBusiness.height;
-          clip: true;
-          flickableDirection: "VerticalFlick"
 
-          Column {
-            anchors.fill: parent
-            ContactEditors.ContactEditorBusiness {
-              id: editorBusiness
-              width: parent.width;
+          content.children: [
+            Column {
+              anchors.fill: parent
+              ContactEditors.ContactEditorBusiness {
+                id: editorBusiness
+                width: parent.width;
+              }
             }
-          }
+          ]
         }
       ]
     }
@@ -79,19 +79,19 @@ KPIM.MainView {
       handleHeight: 120
 
       content: [
-        Flickable {
+        KPIM.DecoratedFlickable {
           anchors.fill: parent;
           contentHeight: editorLocation.height;
-          clip: true;
-          flickableDirection: "VerticalFlick"
 
-          Column {
-            anchors.fill: parent
-            ContactEditors.ContactEditorLocation {
-              id: editorLocation
-              width: parent.width;
+          content.children: [
+            Column {
+              anchors.fill: parent
+              ContactEditors.ContactEditorLocation {
+                id: editorLocation
+                width: parent.width;
+              }
             }
-          }
+          ]
         }
       ]
     }
@@ -103,19 +103,19 @@ KPIM.MainView {
       handleHeight: 100
 
       content: [
-        Flickable {
+        KPIM.DecoratedFlickable {
           anchors.fill: parent;
           contentHeight: editorCrypto.height;
-          clip: true;
-          flickableDirection: "VerticalFlick"
 
-          Column {
-            anchors.fill: parent
-            ContactEditors.ContactEditorCrypto {
-              id: editorCrypto
-              width: parent.width;
+          content.children: [
+            Column {
+              anchors.fill: parent
+              ContactEditors.ContactEditorCrypto {
+                id: editorCrypto
+                width: parent.width;
+              }
             }
-          }
+          ]
         }
       ]
     }
@@ -127,19 +127,19 @@ KPIM.MainView {
       handleHeight: 100
 
       content: [
-        Flickable {
+        KPIM.DecoratedFlickable {
           anchors.fill: parent;
           contentHeight: editorMore.height;
-          clip: true;
-          flickableDirection: "VerticalFlick"
 
-          Column {
-            anchors.fill: parent
-            ContactEditors.ContactEditorMore {
-              id: editorMore
-              width: parent.width;
+          content.children: [
+            Column {
+              anchors.fill: parent
+              ContactEditors.ContactEditorMore {
+                id: editorMore
+                width: parent.width;
+              }
             }
-          }
+          ]
         }
       ]
     }

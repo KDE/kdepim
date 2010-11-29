@@ -24,17 +24,18 @@ import org.kde.messagecomposer 4.5 as MessageComposer
 
 KPIM.MainView {
 
-  Flickable {
+  KPIM.DecoratedFlickable {
     id: flick
     anchors.fill: parent
-    flickableDirection: Flickable.VerticalFlick
     contentHeight: editorView.contentHeight;
 
-    EditorView {
-      id: editorView
-      enabled: !window.busy
-      anchors.fill: parent
-    }
+    content.children: [
+      EditorView {
+        id: editorView
+        enabled: !window.busy
+        anchors.fill: parent
+      }
+    ]
   }
 
   SlideoutPanelContainer {
@@ -48,29 +49,29 @@ KPIM.MainView {
       handleHeight: 150
       handlePosition: 40
       content: [
-          Flickable {
+          KPIM.DecoratedFlickable {
               id: flickablerecipients
               anchors.fill: parent
-              flickableDirection: Flickable.VerticalFlick
               contentHeight: recipientsEditor.height;
-              clip: true;
 
-              Item {
-                  id: recipientswrapper
-                  anchors.top: parent.top
-                  anchors.left: parent.left
-                  anchors.right: parent.right
+              content.children: [
+                Item {
+                    id: recipientswrapper
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
-                  width: folderPanel.width
-                  height: folderPanel.height
+                    width: folderPanel.width
+                    height: folderPanel.height
 
-                  MessageComposer.RecipientsEditor {
-                      id: recipientsEditor
-                      anchors.top: parent.top
-                      anchors.left: parent.left
-                      anchors.right: parent.right
-                  }
-              }
+                    MessageComposer.RecipientsEditor {
+                        id: recipientsEditor
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                    }
+                }
+              ]
           }
       ]
     }

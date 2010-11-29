@@ -133,16 +133,17 @@ Item {
     anchors.bottom: parent.bottom
     width: _attachmentList.width - attachmentListWidth - 6
 
-    Flickable {
+    KPIM.DecoratedFlickable {
       id: previewScrollArea
       anchors.fill: parent
       contentWidth: previewImage.width
       contentHeight: previewImage.height
-      clip: true
-      Image {
-        id: previewImage
-        source: attachmentListView.currentAttachmentUrl
-      }
+      content.children: [
+        Image {
+          id: previewImage
+          source: attachmentListView.currentAttachmentUrl
+        }
+      ]
     }
 
     KPIM.Button {
