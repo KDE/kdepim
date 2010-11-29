@@ -692,26 +692,28 @@ QStringList QGpgMECryptoConfigEntry::stringValueList() const
   return mValue.toStringList();
 }
 
-QList<int> QGpgMECryptoConfigEntry::intValueList() const
+std::vector<int> QGpgMECryptoConfigEntry::intValueList() const
 {
   Q_ASSERT( mArgType == ArgType_Int );
   Q_ASSERT( isList() );
-  QList<int> ret;
+  std::vector<int> ret;
   QList<QVariant> lst = mValue.toList();
+  ret.reserve( lst.size() );
   for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
-    ret.append( (*it).toInt() );
+    ret.push_back( (*it).toInt() );
   }
   return ret;
 }
 
-QList<unsigned int> QGpgMECryptoConfigEntry::uintValueList() const
+std::vector<unsigned int> QGpgMECryptoConfigEntry::uintValueList() const
 {
   Q_ASSERT( mArgType == ArgType_UInt );
   Q_ASSERT( isList() );
-  QList<unsigned int> ret;
+  std::vector<unsigned int> ret;
   QList<QVariant> lst = mValue.toList();
+  ret.reserve( lst.size() );
   for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
-    ret.append( (*it).toUInt() );
+    ret.push_back( (*it).toUInt() );
   }
   return ret;
 }
@@ -819,10 +821,10 @@ void QGpgMECryptoConfigEntry::setStringValueList( const QStringList& lst )
   mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setIntValueList( const QList<int>& lst )
+void QGpgMECryptoConfigEntry::setIntValueList( const std::vector<int>& lst )
 {
   QList<QVariant> ret;
-  for( QList<int>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
+  for( std::vector<int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret << QVariant( *it );
   }
   mValue = ret;
@@ -833,10 +835,10 @@ void QGpgMECryptoConfigEntry::setIntValueList( const QList<int>& lst )
   mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setUIntValueList( const QList<unsigned int>& lst )
+void QGpgMECryptoConfigEntry::setUIntValueList( const std::vector<unsigned int>& lst )
 {
   QList<QVariant> ret;
-  for( QList<unsigned int>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
+  for( std::vector<unsigned int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret << QVariant( *it );
   }
   if ( ret.isEmpty() && !isOptional() )

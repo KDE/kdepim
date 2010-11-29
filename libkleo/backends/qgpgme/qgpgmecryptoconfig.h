@@ -160,8 +160,8 @@ public:
   KUrl urlValue() const;
   unsigned int numberOfTimesSet() const;
   QStringList stringValueList() const;
-  QList<int> intValueList() const;
-  QList<unsigned int> uintValueList() const;
+  std::vector<int> intValueList() const;
+  std::vector<unsigned int> uintValueList() const;
   KUrl::List urlValueList() const;
   void resetToDefault();
   void setBoolValue( bool );
@@ -171,8 +171,8 @@ public:
   void setURLValue( const KUrl& );
   void setNumberOfTimesSet( unsigned int );
   void setStringValueList( const QStringList& );
-  void setIntValueList( const QList<int>& );
-  void setUIntValueList( const QList<unsigned int>& );
+  void setIntValueList( const std::vector<int>& );
+  void setUIntValueList( const std::vector<unsigned int>& );
   void setURLValueList( const KUrl::List& );
   bool isDirty() const { return mDirty; }
 

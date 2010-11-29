@@ -52,6 +52,7 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 
 #include <cassert>
 
@@ -100,6 +101,19 @@ namespace {
     operator QList<T> () const { return m; }
   };
 
+  template <typename T>
+  class to< std::vector<T> > {
+    std::vector<T> m;
+  public:
+    to( const QVariant & v ) {
+      const QList<QVariant> vl = v.toList();
+      m.reserve( m.size() + vl.size() );
+      for ( QList<QVariant>::const_iterator it = vl.begin(), end = vl.end() ; it != end ; ++it )
+        m.push_back( to<T>( *it ) );
+    }
+    operator std::vector<T> () const { return m; }
+  };
+
   template <>
   class to<KUrl::List> {
     KUrl::List m;
@@ -139,6 +153,14 @@ namespace {
       QVariant::operator=( result );
     }
   };
+  template <typename T> struct from_helper< std::vector<T> > : public QVariant {
+    from_helper( const std::vector<T> & l ) {
+      QList<QVariant> result;
+      for ( typename std::vector<T>::const_iterator it = l.begin(), end = l.end() ; it != end ; ++it )
+        result.push_back( from( *it ) );
+      QVariant::operator=( result );
+    }
+  };
   template <> struct from_helper<KUrl::List> : public from_helper< QList<KUrl> > {
     from_helper( const KUrl::List & l ) : from_helper< QList<KUrl> >( l ) {}
   };
@@ -174,8 +196,8 @@ namespace {
     }
     unsigned int numberOfTimesSet() const { return 0; }
     QStringList stringValueList() const { return mValue.toStringList(); }
-    QList<int> intValueList() const { return to< QList<int> >( mValue ); }
-    QList<unsigned int> uintValueList() const { return to< QList<unsigned int> >( mValue ); }
+    std::vector<int> intValueList() const { return to< std::vector<int> >( mValue ); }
+    std::vector<unsigned int> uintValueList() const { return to< std::vector<unsigned int> >( mValue ); }
     KUrl::List urlValueList() const {
       if ( argType() != ArgType_Path && argType()!= ArgType_DirPath ) return mValue.toStringList();
       else return to<KUrl::List>( mValue ); }
@@ -190,8 +212,8 @@ namespace {
     }
     void setNumberOfTimesSet( unsigned int ) {}
     void setStringValueList( const QStringList & value ) { setValue( value ); }
-    void setIntValueList( const QList<int> & l ) { setValue( from( l ) ); }
-    void setUIntValueList( const QList<unsigned int> & l ) { setValue( from( l ) ); }
+    void setIntValueList( const std::vector<int> & l ) { setValue( from( l ) ); }
+    void setUIntValueList( const std::vector<unsigned int> & l ) { setValue( from( l ) ); }
     void setURLValueList( const KUrl::List & l ) { setValue( from( l ) ); }
     bool isDirty() const { return mDirty; }
 

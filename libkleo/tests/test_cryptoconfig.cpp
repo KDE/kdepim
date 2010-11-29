@@ -36,7 +36,6 @@
 #include <kcmdlineargs.h>
 #include <iostream>
 //Added by qt3to4:
-#include <Q3ValueList>
 using namespace std;
 
 #include <stdlib.h>
@@ -106,9 +105,9 @@ int main( int argc, char** argv ) {
           }
           case Kleo::CryptoConfigEntry::ArgType_Int: {
             assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
-            Q3ValueList<int> lst = entry->intValueList();
+            std::vector<int> lst = entry->intValueList();
             QString str;
-            for( Q3ValueList<int>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+            for( std::vector<int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
               str += QString::number( *it );
             }
             cout << " int values=" << str.toLocal8Bit().constData();
@@ -116,9 +115,9 @@ int main( int argc, char** argv ) {
           }
           case Kleo::CryptoConfigEntry::ArgType_UInt: {
             assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
-            Q3ValueList<uint> lst = entry->uintValueList();
+            std::vector<uint> lst = entry->uintValueList();
             QString str;
-            for( Q3ValueList<uint>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+            for( std::vector<uint>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
               str += QString::number( *it );
             }
             cout << " uint values=" << str.toLocal8Bit().constData();
