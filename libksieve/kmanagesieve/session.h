@@ -62,6 +62,7 @@ class Session : public QObject
     bool requestCapabilitiesAfterStartTls() const;
     void startAuthentication();
     QStringList requestedSaslMethod() const;
+    bool allowUnencrypted() const;
     bool saslInteract( void *in );
     bool saslClientStep( const QByteArray &challenge );
     void processResponse( const Response &response, const QByteArray &data );

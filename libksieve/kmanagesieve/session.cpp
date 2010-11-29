@@ -28,6 +28,7 @@
 #include <kio/authinfo.h>
 #include <KLocalizedString>
 #include <KPasswordDialog>
+#include <KMessageBox>
 
 static sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
@@ -164,9 +165,30 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
         if ( response.operationSuccessful() ) {
           kDebug() << "Sieve server ready & awaiting authentication." << endl;
           if ( m_state == PreTlsCapabilities ) {
-            m_state = StartTls;
-            // TODO: handle the non-tls case
-            sendData( "STARTTLS" );
+            if ( !allowUnencrypted() && !QSslSocket::supportsSsl() ) {
+              m_errorMsg = KIO::buildErrorString( KIO::ERR_SLAVE_DEFINED, i18n("Can not use TLS since the underlying Qt library does not support it.") );
+              disconnectFromHost();
+              return;
+            }
+
+            if ( !allowUnencrypted() && QSslSocket::supportsSsl() && !m_supportsStartTls &&
+                  KMessageBox::warningContinueCancel( 0,
+                            i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
+                                  "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
+                            i18n("Server Does Not Advertise TLS"), KGuiItem(i18n("&Start TLS nonetheless")), KStandardGuiItem::cancel() ) != KMessageBox::Continue )
+            {
+              m_errorMsg = KIO::buildErrorString( KIO::ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server.") );
+              disconnectFromHost();
+              return;
+            }
+
+            if ( m_supportsStartTls && QSslSocket::supportsSsl() ) {
+              m_state = StartTls;
+              sendData( "STARTTLS" );
+            } else {
+              m_state = Authenticating;
+              startAuthentication();
+            }
           } else {
             m_state = Authenticating;
             startAuthentication();
@@ -192,9 +214,12 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
       }
       break;
     case StartTls:
-      if ( response.type() == Response::Action && response.operationSuccessful() ) {
+      if ( response.operationSuccessful() ) {
         QMetaObject::invokeMethod( this, "startSsl", Qt::QueuedConnection ); // queued to avoid deadlock with waitForEncrypted
         m_state = None;
+      } else {
+        m_errorMsg = KIO::buildErrorString( KIO::ERR_SLAVE_DEFINED, i18n("The server does not seem to support TLS. Disable TLS if you want to connect without encryption.") );
+        disconnectFromHost();
       }
       break;
     case Authenticating:
@@ -488,5 +513,9 @@ void Session::setErrorMessage(const QString& msg)
   m_errorMsg = msg;
 }
 
+bool Session::allowUnencrypted() const
+{
+  return m_url.queryItem("x-allow-unencrypted") == "true";
+}
 
 #include "session.moc"
