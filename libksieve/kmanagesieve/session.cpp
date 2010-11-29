@@ -477,4 +477,15 @@ bool Session::saslClientStep(const QByteArray& challenge)
   return true;
 }
 
+QString Session::errorMessage() const
+{
+  return m_errorMsg;
+}
+
+void Session::setErrorMessage(const QString& msg)
+{
+  m_errorMsg = msg;
+}
+
+
 #include "session.moc"

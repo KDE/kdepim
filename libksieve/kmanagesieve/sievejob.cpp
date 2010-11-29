@@ -18,6 +18,8 @@
 
 #include <kdebug.h>
 #include <KUrl>
+#include <KMessageBox>
+#include <KLocalizedString>
 #include <QtCore/QPointer>
 
 using namespace KManageSieve;
@@ -99,6 +101,7 @@ void SieveJob::Private::run( Session *session )
 bool SieveJob::Private::handleResponse( const Response &response, const QByteArray &data )
 {
   const Command lastCmd = mCommands.top();
+  Session* session = sessionForUrl( mUrl );
 
   // handle non-action responses
   if ( response.type() != Response::Action ) {
@@ -123,7 +126,17 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
         break;
       }
       case Put:
-        // TODO extract error message
+        if ( response.type() == Response::KeyValuePair ) {
+          session->setErrorMessage( i18n("The script did not upload successfully.\n"
+                                         "This is probably due to errors in the script.\n"
+                                         "The server responded:\n%1", QString::fromUtf8( response.key() ) ) );
+        } else if ( response.type() == Response::Quantity ) {
+          session->setErrorMessage( i18n("The script did not upload successfully.\n"
+                                         "This is probably due to errors in the script.\n"
+                                         "The server responded:\n%1", QString::fromUtf8( data ) ) );
+        } else {
+          session->setErrorMessage( i18n("The script did not upload successfully.\nThe script may contain errors.") );
+        }
         break;
       default:
         kDebug() << "Unhandled response: " << response.key() << response.value() << response.extra() << data;
@@ -153,9 +166,10 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
   // check for errors:
   if ( !response.operationSuccessful() ) {
     if ( mInteractive ) {
-      // TODO
-//       static_cast<KIO::Job*>(job)->ui()->setWindow( 0 );
-//       static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+      if ( session->errorMessage().isEmpty() )
+        KMessageBox::error( 0, i18n( "Sieve operation failed." ), i18n( "Sieve Error" ) );
+      else
+        KMessageBox::error( 0, session->errorMessage(), i18n( "Sieve Error" ) );
     }
 
     emit q->result( q, false, mScript, (mUrl.fileName() == mActiveScriptName) );

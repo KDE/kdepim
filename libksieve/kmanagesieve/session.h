@@ -53,6 +53,9 @@ class Session : public QObject
     void sendData( const QByteArray &data );
     void feedBack( const QByteArray &data );
 
+    QString errorMessage() const;
+    void setErrorMessage( const QString &msg );
+
     QStringList sieveExtensions() const;
 
   private:
@@ -89,6 +92,7 @@ class Session : public QObject
     State m_state;
     Response m_lastResponse;
     QByteArray m_data;
+    QString m_errorMsg;
     qint64 m_pendingQuantity;
     bool m_supportsStartTls;
 };
