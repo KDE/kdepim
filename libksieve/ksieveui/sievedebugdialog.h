@@ -24,10 +24,12 @@ class KTextEdit;
 class QString;
 class QStringList;
 
+namespace KManageSieve {
+  class SieveJob;
+}
+
 namespace KSieveUi
 {
-
-class SieveJob;
 
 /**
  * Diagnostic info for Sieve. Only compiled when debug is enabled, it is
@@ -42,23 +44,23 @@ class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
     virtual ~SieveDebugDialog();
 
   protected:
-    void handlePutResult( KSieveUi::SieveJob *job, bool success, bool );
+    void handlePutResult( KManageSieve::SieveJob *job, bool success, bool );
 
   signals:
     void result( bool success );
 
   protected slots:
-    void slotGetScript( KSieveUi::SieveJob *job, bool success, const QString &script, bool active );
-    void slotGetScriptList( KSieveUi::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript );
+    void slotGetScript( KManageSieve::SieveJob *job, bool success, const QString &script, bool active );
+    void slotGetScriptList( KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript );
 
     void slotDialogOk();
-    void slotPutActiveResult( KSieveUi::SieveJob*, bool );
-    void slotPutInactiveResult( KSieveUi::SieveJob*, bool );
+    void slotPutActiveResult( KManageSieve::SieveJob*, bool );
+    void slotPutInactiveResult( KManageSieve::SieveJob*, bool );
     void slotDiagNextAccount();
     void slotDiagNextScript();
 
   protected:
-    KSieveUi::SieveJob *mSieveJob;
+    KManageSieve::SieveJob *mSieveJob;
     KUrl mUrl;
 
     KTextEdit *mEdit;

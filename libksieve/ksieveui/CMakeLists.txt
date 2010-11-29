@@ -5,7 +5,6 @@ add_subdirectory( tests )
 set(ksieveui_LIB_SRCS
     managesievescriptsdialog.cpp
     sievedebugdialog.cpp
-    sievejob.cpp
     util.cpp
     vacation.cpp
     vacationdialog.cpp
@@ -33,6 +32,7 @@ target_link_libraries(ksieveui
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ksieve
+  kmanagesieve
 )
 
 set_target_properties(ksieveui PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

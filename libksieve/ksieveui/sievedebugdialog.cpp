@@ -20,7 +20,7 @@
 #include <ksieve/error.h>
 #include <ksieve/parser.h>
 #include <ksieve/scriptbuilder.h>
-#include <ksieveui/sievejob.h>
+#include <kmanagesieve/sievejob.h>
 #include <ksieveui/util.h>
 #include <ktextedit.h>
 
@@ -216,10 +216,10 @@ void SieveDebugDialog::slotDiagNextAccount()
     } else {
         mUrl = url;
 
-        mSieveJob = SieveJob::list( mUrl );
+        mSieveJob = KManageSieve::SieveJob::list( mUrl );
 
-        connect( mSieveJob, SIGNAL( gotList( KSieveUi::SieveJob *, bool, const QStringList &, const QString & ) ),
-            SLOT( slotGetScriptList( KSieveUi::SieveJob *, bool, const QStringList &, const QString & ) ) );
+        connect( mSieveJob, SIGNAL( gotList( KManageSieve::SieveJob *, bool, const QStringList &, const QString & ) ),
+            SLOT( slotGetScriptList( KManageSieve::SieveJob *, bool, const QStringList &, const QString & ) ) );
 
         // Bypass the singleShot timer -- it's fired when we get our data
         return;
@@ -250,13 +250,13 @@ void SieveDebugDialog::slotDiagNextScript()
 
     mUrl.setFileName( scriptFile );
 
-    mSieveJob = SieveJob::get( mUrl );
+    mSieveJob = KManageSieve::SieveJob::get( mUrl );
 
-    connect( mSieveJob, SIGNAL( gotScript( KSieveUi::SieveJob *, bool, const QString &, bool ) ),
-        SLOT( slotGetScript( KSieveUi::SieveJob *, bool, const QString &, bool ) ) );
+    connect( mSieveJob, SIGNAL( gotScript( KManageSieve::SieveJob *, bool, const QString &, bool ) ),
+        SLOT( slotGetScript( KManageSieve::SieveJob *, bool, const QString &, bool ) ) );
 }
 
-void SieveDebugDialog::slotGetScript( SieveJob * /* job */, bool success,
+void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool success,
     const QString &script, bool active )
 {
     kDebug() << "( ??," << success
@@ -281,7 +281,7 @@ void SieveDebugDialog::slotGetScript( SieveJob * /* job */, bool success,
     QTimer::singleShot( 0, this, SLOT( slotDiagNextScript() ) );
 }
 
-void SieveDebugDialog::slotGetScriptList( SieveJob *job, bool success,
+void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool success,
     const QStringList &scriptList, const QString &activeScript )
 {
     kDebug() << "Success:" << success <<", List:" << scriptList.join("," ) <<
@@ -325,17 +325,17 @@ void SieveDebugDialog::slotDialogOk()
     kDebug();
 }
 
-void SieveDebugDialog::slotPutActiveResult( SieveJob * job, bool success )
+void SieveDebugDialog::slotPutActiveResult( KManageSieve::SieveJob * job, bool success )
 {
     handlePutResult( job, success, true );
 }
 
-void SieveDebugDialog::slotPutInactiveResult( SieveJob * job, bool success )
+void SieveDebugDialog::slotPutInactiveResult( KManageSieve::SieveJob * job, bool success )
 {
     handlePutResult( job, success, false );
 }
 
-void SieveDebugDialog::handlePutResult( SieveJob *, bool success, bool activated )
+void SieveDebugDialog::handlePutResult( KManageSieve::SieveJob *, bool success, bool activated )
 {
     if ( success )
     {

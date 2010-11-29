@@ -11,7 +11,7 @@
 
 
 #include <akonadi/agentinstance.h>
-#include <ksieveui/sievejob.h>
+#include <kmanagesieve/sievejob.h>
 #include <ksieveui/util.h>
 
 #include <QApplication>
@@ -71,7 +71,7 @@ ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 
 void ManageSieveScriptsDialog::killAllJobs()
 {
-  for ( QMap<KSieveUi::SieveJob*,QTreeWidgetItem*>::const_iterator it = mJobs.constBegin(),
+  for ( QMap<KManageSieve::SieveJob*,QTreeWidgetItem*>::const_iterator it = mJobs.constBegin(),
         end = mJobs.constEnd() ; it != end ; ++it )
     it.key()->kill();
   mJobs.clear();
@@ -99,18 +99,18 @@ void ManageSieveScriptsDialog::slotRefresh()
       item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
       mListView->expandItem( last );
     } else {
-      KSieveUi::SieveJob * job = KSieveUi::SieveJob::list( u );
-      connect( job, SIGNAL(item(KSieveUi::SieveJob*,const QString&,bool)),
-               this, SLOT(slotItem(KSieveUi::SieveJob*,const QString&,bool)) );
-      connect( job, SIGNAL(result(KSieveUi::SieveJob*,bool,const QString&,bool)),
-               this, SLOT(slotResult(KSieveUi::SieveJob*,bool,const QString&,bool)) );
+      KManageSieve::SieveJob * job = KManageSieve::SieveJob::list( u );
+      connect( job, SIGNAL(item(KManageSieve::SieveJob*,const QString&,bool)),
+               this, SLOT(slotItem(KManageSieve::SieveJob*,const QString&,bool)) );
+      connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
+               this, SLOT(slotResult(KManageSieve::SieveJob*,bool,const QString&,bool)) );
       mJobs.insert( job, last );
       mUrls.insert( last, u );
     }
   }
 }
 
-void ManageSieveScriptsDialog::slotResult( KSieveUi::SieveJob * job, bool success, const QString &, bool )
+void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob * job, bool success, const QString &, bool )
 {
   QTreeWidgetItem * parent = mJobs[job];
   if ( !parent )
@@ -129,7 +129,7 @@ void ManageSieveScriptsDialog::slotResult( KSieveUi::SieveJob * job, bool succes
   item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
 }
 
-void ManageSieveScriptsDialog::slotItem( KSieveUi::SieveJob * job, const QString & filename, bool isActive )
+void ManageSieveScriptsDialog::slotItem( KManageSieve::SieveJob * job, const QString & filename, bool isActive )
 {
   QTreeWidgetItem * parent = mJobs[job];
   if ( !parent )
@@ -205,12 +205,12 @@ void ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem * item, bool 
     return;
   u.setFileName( itemText( selected ) );
 
-  KSieveUi::SieveJob * job;
+  KManageSieve::SieveJob * job;
   if ( activate )
-    job = KSieveUi::SieveJob::activate( u );
+    job = KManageSieve::SieveJob::activate( u );
   else
-    job = KSieveUi::SieveJob::deactivate( u );
-  connect( job, SIGNAL(result(KSieveUi::SieveJob*,bool,const QString&,bool)),
+    job = KManageSieve::SieveJob::deactivate( u );
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
            this, SLOT(slotRefresh()) );
 }
 
@@ -319,8 +319,8 @@ void ManageSieveScriptsDialog::slotDeleteScript()
                                    KStandardGuiItem::del() )
        != KMessageBox::Continue )
     return;
-  KSieveUi::SieveJob * job = KSieveUi::SieveJob::del( u );
-  connect( job, SIGNAL(result(KSieveUi::SieveJob*,bool,const QString&,bool)),
+  KManageSieve::SieveJob * job = KManageSieve::SieveJob::del( u );
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
            this, SLOT(slotRefresh()) );
 }
 
@@ -336,9 +336,9 @@ void ManageSieveScriptsDialog::slotEditScript()
     return;
   url.setFileName( itemText( mContextMenuItem ) );
   mCurrentURL = url;
-  KSieveUi::SieveJob * job = KSieveUi::SieveJob::get( url );
-  connect( job, SIGNAL(result(KSieveUi::SieveJob*,bool,const QString&,bool)),
-           this, SLOT(slotGetResult(KSieveUi::SieveJob*,bool,const QString&,bool)) );
+  KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( url );
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
+           this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,const QString&,bool)) );
 }
 
 void ManageSieveScriptsDialog::slotNewScript()
@@ -405,7 +405,7 @@ void SieveEditor::slotTextChanged()
   enableButtonOk( !script().isEmpty() );
 }
 
-void ManageSieveScriptsDialog::slotGetResult( KSieveUi::SieveJob *, bool success, const QString & script, bool isActive )
+void ManageSieveScriptsDialog::slotGetResult( KManageSieve::SieveJob *, bool success, const QString & script, bool isActive )
 {
   if ( !success )
     return;
@@ -425,9 +425,9 @@ void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
 {
   if ( !mSieveEditor )
     return;
-  KSieveUi::SieveJob * job = KSieveUi::SieveJob::put( mCurrentURL,mSieveEditor->script(), mWasActive, mWasActive );
-  connect( job, SIGNAL(result(KSieveUi::SieveJob*,bool,const QString&,bool)),
-           this, SLOT(slotPutResult(KSieveUi::SieveJob*,bool)) );
+  KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL,mSieveEditor->script(), mWasActive, mWasActive );
+  connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,const QString&,bool)),
+           this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)) );
 }
 
 void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
@@ -437,7 +437,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
   slotRefresh();
 }
 
-void ManageSieveScriptsDialog::slotPutResult( KSieveUi::SieveJob *, bool success )
+void ManageSieveScriptsDialog::slotPutResult( KManageSieve::SieveJob *, bool success )
 {
   if ( success ) {
     KMessageBox::information( this, i18n( "The Sieve script was successfully uploaded." ),

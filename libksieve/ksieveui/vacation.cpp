@@ -15,9 +15,9 @@
 #include "vacation.h"
 
 #include "settings.h"
-#include "sievejob.h"
 #include "util.h"
 #include "vacationdialog.h"
+#include <kmanagesieve/sievejob.h>
 
 #include <akonadi/agentinstance.h>
 #include <kdebug.h>
@@ -427,12 +427,12 @@ Vacation::Vacation( QObject * parent, bool checkOnly, const char * name )
   kDebug() << "Vacation: found url \"" << mUrl.prettyUrl() <<"\"";
   if ( mUrl.isEmpty() ) // nothing to do...
     return;
-  mSieveJob = SieveJob::get( mUrl );
+  mSieveJob = KManageSieve::SieveJob::get( mUrl );
   if (checkOnly) {
     mSieveJob->setInteractive( false );
   }
-  connect( mSieveJob, SIGNAL(gotScript(KSieveUi::SieveJob*,bool,const QString&,bool)),
-     SLOT(slotGetResult(KSieveUi::SieveJob*,bool,const QString&,bool)) );
+  connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,const QString&,bool)),
+     SLOT(slotGetResult(KManageSieve::SieveJob*,bool,const QString&,bool)) );
 }
 
 Vacation::~Vacation() {
@@ -573,7 +573,7 @@ QString Vacation::defaultDomainName() {
   return Settings::outOfOfficeDomain();
 }
 
-void Vacation::slotGetResult( SieveJob * job, bool success,
+void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
                               const QString & script, bool active ) {
   kDebug() << success
                << ", ?," << active << ")" << endl
@@ -664,13 +664,13 @@ void Vacation::slotDialogOk() {
   kDebug() << "script:" << endl << script;
 
   // and commit the dialog's settings to the server:
-  mSieveJob = SieveJob::put( mUrl, script, active, mWasActive );
+  mSieveJob = KManageSieve::SieveJob::put( mUrl, script, active, mWasActive );
   if ( active )
-    connect( mSieveJob, SIGNAL(gotScript(KSieveUi::SieveJob*,bool,const QString&,bool)),
-             SLOT(slotPutActiveResult(KSieveUi::SieveJob*,bool)) );
+    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,const QString&,bool)),
+             SLOT(slotPutActiveResult(KManageSieve::SieveJob*,bool)) );
   else
-    connect( mSieveJob, SIGNAL(gotScript(KSieveUi::SieveJob*,bool,const QString&,bool)),
-             SLOT(slotPutInactiveResult(KSieveUi::SieveJob*,bool)) );
+    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,const QString&,bool)),
+             SLOT(slotPutInactiveResult(KManageSieve::SieveJob*,bool)) );
 
   // destroy the dialog:
   mDialog->delayedDestruct();
@@ -684,15 +684,15 @@ void Vacation::slotDialogCancel() {
   emit result( false );
 }
 
-void Vacation::slotPutActiveResult( SieveJob * job, bool success ) {
+void Vacation::slotPutActiveResult( KManageSieve::SieveJob * job, bool success ) {
   handlePutResult( job, success, true );
 }
 
-void Vacation::slotPutInactiveResult( SieveJob * job, bool success ) {
+void Vacation::slotPutInactiveResult( KManageSieve::SieveJob * job, bool success ) {
   handlePutResult( job, success, false );
 }
 
-void Vacation::handlePutResult( SieveJob *, bool success, bool activated ) {
+void Vacation::handlePutResult( KManageSieve::SieveJob *, bool success, bool activated ) {
   if ( success )
     KMessageBox::information( 0, activated
         ? i18n("Sieve script installed successfully on the server.\n"

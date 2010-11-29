@@ -31,9 +31,12 @@ namespace KMime {
   }
 }
 
+namespace KManageSieve {
+  class SieveJob;
+}
+
 namespace KSieveUi {
 
-class SieveJob;
 class VacationDialog;
 
 class KSIEVEUI_EXPORT Vacation : public QObject
@@ -61,7 +64,7 @@ class KSIEVEUI_EXPORT Vacation : public QObject
                              int & notificationInterval, QStringList & aliases,
                              bool & sendForSpam, QString & domainName );
     KUrl findURL() const;
-    void handlePutResult( KSieveUi::SieveJob * job, bool success, bool );
+    void handlePutResult( KManageSieve::SieveJob * job, bool success, bool );
 
 
   signals:
@@ -72,15 +75,15 @@ class KSIEVEUI_EXPORT Vacation : public QObject
 
   protected slots:
     void slotDialogDefaults();
-    void slotGetResult( KSieveUi::SieveJob * job, bool success,
+    void slotGetResult( KManageSieve::SieveJob * job, bool success,
                         const QString & script, bool active );
     void slotDialogOk();
     void slotDialogCancel();
-    void slotPutActiveResult( KSieveUi::SieveJob *, bool );
-    void slotPutInactiveResult( KSieveUi::SieveJob *, bool );
+    void slotPutActiveResult( KManageSieve::SieveJob *, bool );
+    void slotPutInactiveResult( KManageSieve::SieveJob *, bool );
   protected:
     // IO:
-    SieveJob * mSieveJob;
+    KManageSieve::SieveJob * mSieveJob;
     KUrl mUrl;
     // GUI:
     VacationDialog * mDialog;

@@ -12,7 +12,7 @@
 class QButtonGroup;
 class QTreeWidgetItem;
 
-namespace KSieveUi {
+namespace KManageSieve {
 class SieveJob;
 }
 
@@ -31,8 +31,8 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
 
   private slots:
     void slotRefresh();
-    void slotItem( KSieveUi::SieveJob *, const QString &, bool );
-    void slotResult( KSieveUi::SieveJob *, bool, const QString &, bool );
+    void slotItem( KManageSieve::SieveJob *, const QString &, bool );
+    void slotResult( KManageSieve::SieveJob *, bool, const QString &, bool );
     void slotContextMenuRequested( QTreeWidgetItem*, QPoint position );
     void slotDoubleClicked( QTreeWidgetItem* );
     void slotSelectionChanged();
@@ -40,8 +40,8 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
     void slotEditScript();
     void slotDeleteScript();
     void slotDeactivateScript();
-    void slotGetResult( KSieveUi::SieveJob *, bool, const QString &, bool );
-    void slotPutResult( KSieveUi::SieveJob *, bool );
+    void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
+    void slotPutResult( KManageSieve::SieveJob *, bool );
     void slotSieveEditorOkClicked();
     void slotSieveEditorCancelClicked();
   private:
@@ -84,7 +84,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public KDialog
     TreeWidgetWithContextMenu* mListView;
     QTreeWidgetItem *mContextMenuItem;
     SieveEditor * mSieveEditor;
-    QMap<KSieveUi::SieveJob*,QTreeWidgetItem*> mJobs;
+    QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
     QMap<QTreeWidgetItem*,KUrl> mUrls;
 
     // Maps top-level items to their child which has the radio button selection
