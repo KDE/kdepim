@@ -10,3 +10,5 @@ add_subdirectory(contacts)
 add_subdirectory(mail)
 add_subdirectory(tasks)
 add_subdirectory(notes)
+
+add_subdirectory(licenses)

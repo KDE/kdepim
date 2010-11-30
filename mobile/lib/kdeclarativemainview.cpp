@@ -706,9 +706,8 @@ void KDeclarativeMainView::openManual()
 
 void KDeclarativeMainView::openLicenses()
 {
-  //TODO: Add a licensing test and open it here
-/*  KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", "license.pdf" ),
-                                        QLatin1String("application/pdf") );*/
+  KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", "kontact-touch/licenses.pdf" ),
+                                        QLatin1String( "application/pdf" ) );
 }
 
 void KDeclarativeMainView::openAttachment( const QString &url, const QString &mimeType )
