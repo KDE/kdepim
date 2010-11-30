@@ -68,14 +68,14 @@ QString SearchWidget::query() const
                                                  "  <field name=\"contactGroupName\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inEmailAddresses->isChecked() ) {
     containsPatternParts << QString::fromLatin1( "<contains>"
                                                  "  <field name=\"emailAddress\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inPostalAddresses->isChecked() ) {
     containsPatternParts << QString::fromLatin1(
@@ -103,21 +103,21 @@ QString SearchWidget::query() const
                                                  "  <field name=\"streetAddress\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inCategories->isChecked() ) {
     containsPatternParts << QString::fromLatin1( "<contains>"
                                                  "  <field name=\"categories\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inPhoneNumbers->isChecked() ) {
     containsPatternParts << QString::fromLatin1( "<contains>"
                                                  "  <field name=\"phoneNumber\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
 
   const QString containsPattern = containsPatternParts.isEmpty() ? QString() :

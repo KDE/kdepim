@@ -57,28 +57,28 @@ QString SearchWidget::query() const
                                                  "  <field name=\"summary\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inDescriptions->isChecked() ) {
     containsPatternParts << QString::fromLatin1( "<contains>"
                                                  "  <field name=\"description\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inCategories->isChecked() ) {
     containsPatternParts << QString::fromLatin1( "<contains>"
                                                  "  <field name=\"categories\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inLocations->isChecked() ) {
     containsPatternParts << QString::fromLatin1( "<contains>"
                                                  "  <field name=\"location\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
 
   const QString containsPattern = containsPatternParts.isEmpty() ? QString() :

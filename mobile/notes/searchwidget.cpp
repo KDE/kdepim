@@ -42,14 +42,14 @@ QString SearchWidget::query() const
                                                  "  <field name=\"subject\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inContents->isChecked() ) {
     containsPatternParts << QString::fromLatin1( "<contains>"
                                                  "  <field name=\"plainTextMessageContent\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
 
   const QString containsPattern = containsPatternParts.isEmpty() ? QString() :

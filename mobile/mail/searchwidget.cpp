@@ -55,7 +55,7 @@ QString SearchWidget::query() const
                                                  "  <field name=\"subject\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inSenders->isChecked() ) {
     containsPatternParts << QString::fromLatin1(
@@ -67,7 +67,7 @@ QString SearchWidget::query() const
                                                  "  <field name=\"sender\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inRecipients->isChecked() ) {
     containsPatternParts << QString::fromLatin1(
@@ -83,14 +83,14 @@ QString SearchWidget::query() const
                                                  "  <field name=\"bcc\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
   if ( mUi.inBodyContents->isChecked() ) {
     containsPatternParts << QString::fromLatin1( "<contains>"
                                                  "  <field name=\"plainTextMessageContent\"/>"
                                                  "  <string>%1</string>"
                                                  "</contains>"
-                                               ).arg( mUi.searchText->text() );
+                                               ).arg( mUi.searchText->text().toLower() );
   }
 
   const QString containsPattern = containsPatternParts.isEmpty() ? QString() :
