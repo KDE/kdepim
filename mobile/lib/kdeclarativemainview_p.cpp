@@ -122,3 +122,31 @@ void KDeclarativeMainViewPrivate::searchStopped()
   q->restorePersistedSelection( "SelectionBeforeSearchStarted" );
   q->clearPersistedSelection( "SelectionBeforeSearchStarted" );
 }
+
+void KDeclarativeMainViewPrivate::guiStateChanged( int oldState, int newState )
+{
+  /**
+   * If we come back from the BulkActionScreen and we had a filter string
+   * entered before we entered the BulkActionScreen, we'll refresh this
+   * filter string now.
+   */
+  if ( oldState == GuiStateManager::BulkActionScreenState ) {
+    if ( newState == GuiStateManager::AccountScreenState ||
+         newState == GuiStateManager::SingleFolderScreenState ||
+         newState == GuiStateManager::MultipleFolderScreenState ) {
+
+      KLineEdit *lineEdit = mFilterLineEdit.data();
+      if ( lineEdit && mItemFilterModel ) {
+        const QString text = lineEdit->text();
+        if ( text.isEmpty() ) {
+          // just trigger a refresh of the item view
+          QMetaObject::invokeMethod( mItemFilterModel, "setFilterString", Qt::DirectConnection, Q_ARG( QString, text ) );
+        } else {
+          // trigger a refresh of the line edit and item view
+          lineEdit->clear();
+          lineEdit->setText( text );
+        }
+      }
+    }
+  }
+}

@@ -217,6 +217,7 @@ void KDeclarativeMainView::delayedInit()
   // The global screen manager
   d->mGuiStateManager = createGuiStateManager();
   context->setContextProperty( "guiStateManager", QVariant::fromValue( static_cast<QObject*>( d->mGuiStateManager ) ) );
+  connect( d->mGuiStateManager, SIGNAL( guiStateChanged( int, int ) ), d, SLOT( guiStateChanged( int, int ) ) );
 
   // A list of available favorites
   QAbstractItemModel *favsList = d->getFavoritesListModel();

@@ -85,6 +85,7 @@ public slots:
   void bulkActionFilterLineEditChanged( const QString &text );
   void searchStarted( const Akonadi::Collection& );
   void searchStopped();
+  void guiStateChanged( int oldState, int newState );
 };
 
 #endif // KDECLARATIVEMAINVIEW_P_H
