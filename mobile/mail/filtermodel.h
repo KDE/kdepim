@@ -23,18 +23,17 @@
 
 #include <QtCore/QModelIndex>
 
-
 class FilterModel : public QAbstractListModel
 {
   Q_OBJECT
-public:
-    explicit FilterModel(QObject* parent = 0);
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
-private Q_SLOTS:
+  public:
+    explicit FilterModel( QObject *parent = 0 );
+    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+
+  private Q_SLOTS:
     void filterListUpdated();
-    
 };
 
-#endif // FILTERMODEL_H
+#endif

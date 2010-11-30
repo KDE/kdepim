@@ -23,22 +23,23 @@
 #include "mailcommon/filtermanager.h"
 #include "mailcommon/mailfilter.h"
 
-FilterModel::FilterModel(QObject* parent): QAbstractListModel(parent)
+FilterModel::FilterModel( QObject *parent )
+  : QAbstractListModel( parent )
 {
-  connect( FilterIf->filterManager(), SIGNAL(filterListUpdated()), this, SLOT(filterListUpdated()));
+  connect( FilterIf->filterManager(), SIGNAL( filterListUpdated() ),
+           this, SLOT( filterListUpdated() ) );
 }
 
-QVariant FilterModel::data(const QModelIndex& index, int role) const
+QVariant FilterModel::data( const QModelIndex &index, int role ) const
 {
   if ( role == Qt::DisplayRole ) {
-    QString name = FilterIf->filterManager()->filters().at( index.row() )->name();
-    return QVariant( name );
-  } 
+    return FilterIf->filterManager()->filters().at( index.row() )->name();
+  }
 
   return QVariant();
 }
 
-int FilterModel::rowCount(const QModelIndex& parent) const
+int FilterModel::rowCount( const QModelIndex& ) const
 {
   return FilterIf->filterManager()->filters().size();
 }
@@ -47,6 +48,5 @@ void FilterModel::filterListUpdated()
 {
   reset();
 }
-
 
 #include "filtermodel.moc"
