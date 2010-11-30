@@ -170,6 +170,7 @@ void KDeclarativeMainView::delayedInit()
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
   d->mChangeRecorder->fetchCollection( true );
   d->mChangeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
+  d->mChangeRecorder->itemFetchScope().setFetchModificationTime( false );
 
   d->mEtm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
   d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
