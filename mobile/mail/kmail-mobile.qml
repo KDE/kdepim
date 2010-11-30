@@ -475,7 +475,6 @@ KPIM.MainView {
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       handlePosition: actionPanel.handleHeight + actionPanel.handlePosition
       handleHeight: parent.height - actionPanel.handlePosition - actionPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
-      contentWidth: attachmentView.requestedWidth
       content: [
         KPIM.AttachmentList {
           id: attachmentView
@@ -489,6 +488,14 @@ KPIM.MainView {
           onSaveAttachment: {
             application.saveAttachment(url);
           }
+        }
+      ]
+
+      states: [
+        QML.State {
+          name: "useRequestedWidth"
+          when: attachmentView.requestWidth
+          QML.PropertyChanges { target: attachmentPanel; contentWidth: attachmentView.requestedWidth; }
         }
       ]
     }

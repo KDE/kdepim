@@ -32,6 +32,7 @@ Item {
   property int attachmentListWidth: 300
   property int actionListWidth: 240
   property int requestedWidth: attachmentListWidth
+  property bool requestWidth: true
 
   /** Emittted when an attachment has been selected. */
   signal openAttachment(string url, string mimeType)
@@ -184,7 +185,7 @@ Item {
       name: "previewState"
       when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) == 0
       PropertyChanges { target: previewView; visible: true }
-      PropertyChanges { target: _attachmentList; requestedWidth: 1000 } // limited by SlideoutPanel to maximum width anyway
+      PropertyChanges { target: _attachmentList; requestWidth: false; }
     }
   ]
 
