@@ -45,7 +45,7 @@ set(test_cryptoconfig_SRCS test_cryptoconfig.cpp )
 
 kde4_add_executable(test_cryptoconfig TEST ${test_cryptoconfig_SRCS})
 
-target_link_libraries(test_cryptoconfig  kleo ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
+target_link_libraries(test_cryptoconfig  kleo ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
 
 ########### next target ###############
 
