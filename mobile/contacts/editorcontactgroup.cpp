@@ -94,6 +94,7 @@ class EditorContactGroup::Private
       mUi.setupUi( parent );
       mUi.cancelButton->setIcon( SmallIcon( "dialog-cancel", 64 ) );
       mUi.saveButton->setIcon( SmallIcon( "document-save", 64 ) );
+      mUi.saveButton->setEnabled( false );
 
       mInputs << new Recipient( mUi.recipient1, q );
       mInputs << new Recipient( mUi.recipient2, q );
@@ -103,6 +104,7 @@ class EditorContactGroup::Private
       mUi.collectionSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanChangeItem );
 
       QObject::connect( mUi.launchAccountWizardButton, SIGNAL( clicked() ), q, SIGNAL( requestLaunchAccountWizard() ) );
+      QObject::connect( mUi.groupName, SIGNAL( textChanged( const QString& ) ), q, SLOT( nameTextChanged( const QString& ) ) );
 
       availableCollectionsChanged();
     }
