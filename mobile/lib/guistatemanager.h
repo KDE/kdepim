@@ -211,7 +211,18 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
     bool inConfigScreenState() const;
 
   Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the current state has changed.
+     */
     void guiStateChanged();
+
+    /**
+     * This signal is emitted whenever the current state has changed.
+     *
+     * @param oldState The old state the manager was in.
+     * @param newState The new state the manager is in.
+     */
+    void guiStateChanged( int oldState, int newState );
 
   protected:
     virtual void emitChangedSignal();

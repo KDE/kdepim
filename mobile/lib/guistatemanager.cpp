@@ -55,23 +55,31 @@ void GuiStateManager::switchState( int state )
 {
   Q_ASSERT( !d->mGuiStates.isEmpty() );
 
-  d->mGuiStates.pop();
+  const int previousState = d->mGuiStates.pop();
   d->mGuiStates.push( state );
 
   printStack( d->mGuiStates );
   emitChangedSignal();
+
+  emit guiStateChanged( previousState, state );
 }
 
 void GuiStateManager::pushState( int state )
 {
+  const int previousState = (d->mGuiStates.isEmpty() ? -1 : d->mGuiStates.top());
+
   d->mGuiStates.push( state );
 
   printStack( d->mGuiStates );
   emitChangedSignal();
+
+  emit guiStateChanged( previousState, state );
 }
 
 void GuiStateManager::pushUniqueState( int state )
 {
+  const int previousState = (d->mGuiStates.isEmpty() ? -1 : d->mGuiStates.top());
+
   if ( d->mGuiStates.isEmpty() ) {
     d->mGuiStates.push( state );
   } else {
@@ -81,15 +89,19 @@ void GuiStateManager::pushUniqueState( int state )
 
   printStack( d->mGuiStates );
   emitChangedSignal();
+
+  emit guiStateChanged( previousState, state );
 }
 
 void GuiStateManager::popState()
 {
-  d->mGuiStates.pop();
+  const int previousState = d->mGuiStates.pop();
   Q_ASSERT( !d->mGuiStates.isEmpty() );
 
   printStack( d->mGuiStates );
   emitChangedSignal();
+
+  emit guiStateChanged( previousState, d->mGuiStates.top() );
 }
 
 int GuiStateManager::currentState() const
