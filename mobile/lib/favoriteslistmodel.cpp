@@ -21,13 +21,15 @@
 
 #include "favoriteslistmodel.h"
 
+#include <KConfig>
+#include <KConfigGroup>
+
 static const char * const sFavoritePrefix = "Favorite_";
 static const char * const sFavoriteOrder = "FavoriteOrder";
 static const int sFavoritePrefixLength = 9;
 
-
-FavoritesListModel::FavoritesListModel(KSharedConfigPtr config, QObject *parent)
-  : QStringListModel(parent), cfg(config)
+FavoritesListModel::FavoritesListModel( const KSharedConfigPtr &config, QObject *parent )
+  : QStringListModel( parent ), mConfig( config )
 {
   reparseConfiguration();
 }
@@ -35,89 +37,92 @@ FavoritesListModel::FavoritesListModel(KSharedConfigPtr config, QObject *parent)
 void FavoritesListModel::reparseConfiguration()
 {
   QStringList list;
-  foreach ( const QString &group, cfg->groupList() )
+  foreach ( const QString &group, mConfig->groupList() )
     if ( group.startsWith( sFavoritePrefix ) )
       list.append( QString( group ).remove( 0, sFavoritePrefixLength ) );
 
-  KConfigGroup group = cfg->group("FavoriteGeneral");
-  QStringList favsList = group.readEntry("Order", QStringList());
+  const KConfigGroup group = mConfig->group("FavoriteGeneral");
+  QStringList favsList = group.readEntry( "Order", QStringList() );
+
   QStringList::iterator it = favsList.begin();
-  while ( it != favsList.end())
-  {
-    if (!list.contains(*it))
-    {
-      it = favsList.erase(it);
+  while ( it != favsList.end() ) {
+    if ( !list.contains( *it ) ) {
+      it = favsList.erase( it );
     } else {
       ++it;
     }
   }
-  foreach (const QString &item, list)
-    if (!favsList.contains(item))
-      favsList.append(item);
-  setStringList(favsList);
+
+  foreach ( const QString &item, list ) {
+    if ( !favsList.contains( item ) )
+      favsList.append( item );
+  }
+
+  setStringList( favsList );
 }
 
 void FavoritesListModel::saveConfig()
 {
   QStringList favsList = stringList();
-  foreach ( const QString &group, cfg->groupList() ) {
+  foreach ( const QString &group, mConfig->groupList() ) {
     if ( group.startsWith( sFavoritePrefix ) ) {
       const QString name = QString( group ).remove( 0, sFavoritePrefixLength );
-      if (!favsList.contains(name)) {
-        cfg->deleteGroup(group);
+      if ( !favsList.contains( name ) ) {
+        mConfig->deleteGroup( group );
       }
     }
   }
+
   QStringList::iterator it = favsList.begin();
-  while ( it != favsList.end())
-  {
-    if (!cfg->groupList().contains(sFavoritePrefix + *it))
-    {
-      it = favsList.erase(it);
+  while ( it != favsList.end() ) {
+    if ( !mConfig->groupList().contains( sFavoritePrefix + *it ) ) {
+      it = favsList.erase( it );
     } else {
       ++it;
     }
   }
 
-  KConfigGroup group = cfg->group("FavoriteGeneral");
-  group.writeEntry("Order", favsList);
-  cfg->sync();
+  KConfigGroup group = mConfig->group( "FavoriteGeneral" );
+  group.writeEntry( "Order", favsList );
+  mConfig->sync();
 }
 
-void FavoritesListModel::moveUp(int row)
+void FavoritesListModel::moveUp( int row )
 {
-  if (row <= 0)
+  if ( row <= 0 )
     return;
+
   QStringList list = stringList();
 
-  if (row >= list.size())
+  if ( row >= list.size() )
     return;
 
-  list.move(row, row - 1);
+  list.move( row, row - 1 );
 
   // resets the model.
-  setStringList(list);
+  setStringList( list );
   saveConfig();
 }
 
-void FavoritesListModel::moveDown(int row)
+void FavoritesListModel::moveDown( int row )
 {
-  if (row < 0)
+  if ( row < 0 )
     return;
+
   QStringList list = stringList();
 
-  if (row >= list.size() - 1)
+  if ( row >= list.size() - 1 )
     return;
 
-  list.move(row, row + 1);
+  list.move( row, row + 1 );
 
   // resets the model.
-  setStringList(list);
+  setStringList( list );
   saveConfig();
 }
 
-void FavoritesListModel::removeItem(int row)
+void FavoritesListModel::removeItem( int row )
 {
-  QStringListModel::removeRow(row);
+  QStringListModel::removeRow( row );
   saveConfig();
 }

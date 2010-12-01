@@ -22,30 +22,28 @@
 #ifndef FAVORITESLISTMODEL_H
 #define FAVORITESLISTMODEL_H
 
-#include <QtGui/QStringListModel>
-
-#include <KConfig>
-#include <KConfigGroup>
 #include <KSharedConfig>
+
+#include <QtGui/QStringListModel>
 
 class FavoritesListModel : public QStringListModel
 {
   Q_OBJECT
-public:
-  FavoritesListModel(KSharedConfigPtr config, QObject *parent = 0);
 
-  void reparseConfiguration();
+  public:
+    FavoritesListModel( const KSharedConfigPtr &config, QObject *parent = 0 );
 
-public slots:
-  void moveUp(int row);
-  void moveDown(int row);
-  void removeItem(int row);
+    void reparseConfiguration();
 
-private:
-  void saveConfig();
+  public Q_SLOTS:
+    void moveUp( int row );
+    void moveDown( int row );
+    void removeItem( int row );
 
-private:
-  KSharedConfigPtr cfg;
+  private:
+    void saveConfig();
+
+    KSharedConfigPtr mConfig;
 };
 
 #endif
