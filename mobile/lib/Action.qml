@@ -51,7 +51,7 @@ Rectangle {
   Binding {
     target : buttonText
     property : "text"
-    value : { action.iconText.replace("&", ""); }
+    value : { action.text.replace("&", ""); }
   }
 
   Binding {
