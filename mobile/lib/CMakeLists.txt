@@ -120,3 +120,5 @@ install(FILES
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
   DESTINATION ${DATA_INSTALL_DIR}/mobileui)
+
+add_subdirectory( tests )
