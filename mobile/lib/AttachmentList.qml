@@ -29,7 +29,7 @@ Item {
   id: _attachmentList
   property alias model: attachmentListView.model
   property int rowHeight: 48
-  property int attachmentListWidth: 300
+  property int attachmentListWidth: 250
   property int actionListWidth: 240
 
   /** Emittted when an attachment has been selected. */
@@ -48,7 +48,7 @@ Item {
       Rectangle {
         id: background
         anchors.fill: parent
-        opacity: (wrapper.ListView.isCurrentItem ? 0.25 : 0)
+        opacity: (wrapper.ListView.isCurrentItem ? 0.4 : 0.25)
       }
       Text {
         anchors.fill: parent;
