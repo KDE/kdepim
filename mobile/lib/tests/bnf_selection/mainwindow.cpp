@@ -45,13 +45,13 @@ MainWindow::MainWindow(QWidget *parent)
   QListView *breadcrumbList = new QListView;
   vLayout->addWidget(breadcrumbList);
   breadcrumbList->setModel(m_bnf->breadcrumbItemModel());
+  QListView *selectedList = new QListView;
+  vLayout->addWidget(selectedList);
+  selectedList->setModel(m_bnf->selectedItemModel());
   QListView *childList = new QListView;
   vLayout->addWidget(childList);
   childList->setModel(m_bnf->childItemModel());
 
   layout->addLayout(vLayout);
-
-
-
 }
 
