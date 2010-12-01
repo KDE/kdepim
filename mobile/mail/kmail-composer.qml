@@ -82,6 +82,12 @@ KPIM.MainView {
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       handlePosition: folderPanel.handlePosition + folderPanel.handleHeight
+
+      Component.onCompleted: {
+        kmailComposerActions.showOnlyCategory( "composer" )
+        actionPanel.expanded.connect( kmailComposerActions, kmailComposerActions.refresh );
+      }
+
       content: [
           KMailComposerActions {
             id : kmailComposerActions
