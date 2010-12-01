@@ -244,7 +244,7 @@ void KDeclarativeMainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( synchronizeAllItems() ) );
   actionCollection()->addAction( QLatin1String( "synchronize_all_items" ), action );
 
-  action = new KAction( i18n( "Report bug or request feature" ), this );
+  action = new KAction( i18n( "Report Bug Or Request Feature" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( reportBug() ) );
   actionCollection()->addAction( QLatin1String( "report_bug" ), action );
 

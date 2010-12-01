@@ -23,6 +23,7 @@
 #include "mainview.h"
 
 #include "acleditor.h"
+#include "actionhelper.h"
 #include "breadcrumbnavigation.h"
 #include "charsetselectiondialog.h"
 #include "composerview.h"
@@ -330,6 +331,7 @@ void MainView::delayedInit()
 
   mMessageListSettingsController = new MessageListSettingsController( this );
   actionCollection()->addAction( "messagelist_change_settings", mMessageListSettingsController->editAction() );
+  actionCollection()->action( "messagelist_change_settings" )->setText( i18n( "Messagelist Display Format" ) );
   rootContext()->setContextProperty( "messageListSettings", mMessageListSettingsController );
   connect( mMessageListSettingsController, SIGNAL( settingsChanged( const MessageListSettings& ) ),
            this, SLOT( messageListSettingsChanged( const MessageListSettings& ) ) );
@@ -396,15 +398,19 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   actionCollection()->addAction( QLatin1String( "import_emails" ), action );
 
-  action = new KAction( i18n( "Export Emails" ), this );
+  action = new KAction( i18n( "Export Emails From This Account" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
-  actionCollection()->addAction( QLatin1String( "export_emails" ), action );
+  actionCollection()->addAction( QLatin1String( "export_account_emails" ), action );
+
+  action = new KAction( i18n( "Export Displayed Emails" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  actionCollection()->addAction( QLatin1String( "export_selected_emails" ), action );
 
   action = new KAction( i18n( "Show Source" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( showMessageSource() ) );
   actionCollection()->addAction( QLatin1String( "show_message_source" ), action );
 
-  action = new KAction( i18n( "Encoding..." ), this );
+  action = new KAction( i18n( "Email Encoding" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( selectOverrideEncoding() ) );
   actionCollection()->addAction( QLatin1String( "change_message_encoding" ), action );
 
@@ -1132,19 +1138,16 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   mMailActionManager->setCollectionPropertiesPageNames( pages );
 
-  mMailActionManager->setActionText( StandardActionManager::SynchronizeResources, ki18np( "Synchronize emails\nin account", "Synchronize emails\nin accounts" ) );
-  mMailActionManager->action( StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
-  mMailActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  mMailActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
-  mMailActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize emails\nin folder", "Synchronize emails\nin folders" ) );
-  mMailActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
-  mMailActionManager->action( StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
-  mMailActionManager->action( StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  mMailActionManager->setActionText( StandardActionManager::DeleteItems, ki18np( "Delete email", "Delete emails" ) );
-  mMailActionManager->action( StandardActionManager::MoveItemToMenu )->setText( i18n( "Move email\nto folder" ) );
-  mMailActionManager->action( StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy email\nto folder" ) );
+  ActionHelper::adaptStandardActionTexts( mMailActionManager );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall emails" ) );
+  mMailActionManager->action( StandardMailActionManager::MarkAllMailAsRead )->setText( i18n( "Mark Displayed Emails As Read" ) );
+  mMailActionManager->action( StandardMailActionManager::MoveAllToTrash )->setText( i18n( "Move Displayed Emails To Trash" ) );
+  mMailActionManager->action( StandardMailActionManager::MoveToTrash )->setText( i18n( "Move Email To Trash" ) );
+
+  mMailActionManager->action( StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Email To" ) );
+  mMailActionManager->action( StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Email To" ) );
+
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
 
   connect( collectionSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), this, SLOT( folderChanged() ) );
   connect( itemActionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), this, SLOT( itemActionModelChanged() ) );
@@ -1362,7 +1365,7 @@ void MainView::folderChanged()
   actionCollection()->action( "prefer_html_to_plain" )->setChecked( htmlMailOverrideInAll );
   actionCollection()->action( "load_external_ref" )->setChecked( htmlLoadExternalOverrideInAll );
 
-  actionCollection()->action( "move_all_to_trash" )->setText( i18n( "Move All to Trash" ) );
+  actionCollection()->action( "move_all_to_trash" )->setText( i18n( "Move Displayed Emails To Trash" ) );
   if ( indexes.count() == 1 ) {
     const QModelIndex index = collectionSelectionModel->selection().indexes().first();
     const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();

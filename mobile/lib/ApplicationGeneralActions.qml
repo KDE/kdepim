@@ -30,6 +30,8 @@ KPIM.ActionList {
   property string type
   property alias addNewActionName: addNewAction.name
   property alias addNewActionReactsOnLongPressed: addNewAction.reactsOnLongPressed
+  property alias searchActionTitle: searchAction.title
+  property alias configureActionTitle: configureAction.title
   signal longPressed(string actionName)
 
   KPIM.ActionListItem {
@@ -56,7 +58,6 @@ KPIM.ActionList {
   KPIM.ScriptActionItem {
     id : searchAction
     name : "search_" + type
-    title : KDE.i18n( "Search" )
   }
 
   KPIM.ActionListItem {
@@ -69,7 +70,6 @@ KPIM.ActionList {
   KPIM.ScriptActionItem {
     id : configureAction
     name : "configure"
-    title : KDE.i18n( "Configure" )
   }
 
   KPIM.ActionListItem {
@@ -88,7 +88,7 @@ KPIM.ActionList {
 
   KPIM.ScriptActionItem  {
     name : "show_about_dialog"
-    title : KDE.i18n( "About" )
+    title : KDE.i18n( "About Kontact Touch" )
   }
 
   QML.Component.onCompleted :

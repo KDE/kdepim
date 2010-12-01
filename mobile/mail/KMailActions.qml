@@ -74,7 +74,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_manage_local_subscriptions" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
-    ActionListItem { name : "export_emails" }
+    ActionListItem { name : "export_account_emails" }
   }
 
   ActionList {
@@ -86,7 +86,7 @@ ActionMenuContainer {
     ActionListItem { name : "move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
     ActionListItem { name : "show_expire_properties" }
-    ActionListItem { name : "export_emails" }
+    ActionListItem { name : "export_selected_emails" }
     ScriptActionItem { name : "edit_acls"; title : KDE.i18n( "Edit ACLs" ); visible: aclEditor.collectionHasAcls }
   }
 
@@ -105,8 +105,8 @@ ActionMenuContainer {
     category : "single_folder"
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
     ActionListItem { name : "prefer_html_to_plain" }
     ActionListItem { name : "load_external_ref" }
     ActionListItem { name : "messagelist_change_settings" }
@@ -130,16 +130,16 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_mark_all_as_read" }
     ActionListItem { name : "akonadi_move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
-    ActionListItem { name : "export_emails" }
+    ActionListItem { name : "export_selected_emails" }
   }
 
   ActionList {
     category : "multiple_folder"
     name : "multi_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ); visible: !guiStateManager.inSearchResultScreenState }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ); visible: !guiStateManager.inSearchResultScreenState }
     ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select Folders" ) }
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
     ActionListItem { name : "prefer_html_to_plain" }
     ActionListItem { name : "load_external_ref" }
     ActionListItem { name : "messagelist_change_settings" }
@@ -168,7 +168,7 @@ ActionMenuContainer {
       reactsOnLongPressed : true
     }
 
-    ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark As..." ) }
+    ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark Email As" ) }
     ActionListItem { name : "message_send_again"; visible : application.collectionIsSentMail }
     ActionListItem { name : "create_todo_reminder" }
     ActionListItem { name : "create_event" }
@@ -214,6 +214,9 @@ ActionMenuContainer {
 
     addNewActionName: "add_new_mail"
     addNewActionReactsOnLongPressed: true
+
+    searchActionTitle: KDE.i18n( "Search For Emails" )
+    configureActionTitle: KDE.i18n( "Configure Mail" )
 
     onLongPressed : {
       if ( actionName == "add_new_mail" ) {

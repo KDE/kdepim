@@ -148,7 +148,7 @@ void KDeclarativeFullScreenView::delayedInit()
 
   KAction *action = KStandardAction::close( this, SLOT(close()), this );
   mActionCollection->addAction( QLatin1String( "close" ), action );
-  action = new KAction( i18n( "Switch Windows" ), this );
+  action = new KAction( i18n( "Minimize Window" ), this );
   connect( action, SIGNAL(triggered()), SLOT(triggerTaskSwitcher()) );
   mActionCollection->addAction( QLatin1String( "wm_task_switch" ), action );
 

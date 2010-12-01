@@ -49,10 +49,10 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setText( i18n("Write New Email") );
 
   action = actionCollection->addAction("send_queued_emails");
-  action->setText( i18n("Send Queued EMails") );
+  action->setText( i18n("Send All Unsent Emails") );
 
   action = actionCollection->addAction("send_queued_emails_via");
-  action->setText( i18n("Send Queued EMails") );
+  action->setText( i18n("Send All Unsent Emails") );
 
   action = actionCollection->addAction("message_reply");
   action->setText( i18n("Reply") );
@@ -87,13 +87,13 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setText( i18n("Send Again") );
 
   action = actionCollection->addAction("message_save_as");
-  action->setText( i18n("Save As...") );
+  action->setText( i18n("Save Email As") );
 
   action = actionCollection->addAction("message_edit");
   action->setText( i18n("Edit Email") );
 
   action = actionCollection->addAction("message_find_in");
-  action->setText( i18n("Find in Message") );
+  action->setText( i18n("Find in Email") );
 
   action = actionCollection->addAction("prefer_html_to_plain");
   action->setText( i18n("Prefer HTML to Plain Text") );
@@ -111,16 +111,16 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setChecked(false);
 
   action = actionCollection->addAction("show_expire_properties");
-  action->setText( i18n("Expire Properties") );
+  action->setText( i18n("Expiration Properties") );
 
   action = actionCollection->addAction("move_all_to_trash");
-  action->setText( i18n("Move All to Trash") );
+  action->setText( i18n("Move Displayed Emails To Trash") );
 
   action = actionCollection->addAction("create_todo_reminder");
-  action->setText( i18n("Create To-Do/Reminder") );
+  action->setText( i18n("Create Task From Email") );
 
   action = actionCollection->addAction("create_event");
-  action->setText( i18n("Create Event") );
+  action->setText( i18n("Create Event From Email") );
 
   action = actionCollection->addAction("apply_filters");
   action->setText( i18n("Apply Filters") );
