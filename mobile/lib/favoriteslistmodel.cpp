@@ -85,6 +85,7 @@ void FavoritesListModel::saveConfig()
   KConfigGroup group = mConfig->group( "FavoriteGeneral" );
   group.writeEntry( "Order", favsList );
   mConfig->sync();
+  mConfig->reparseConfiguration(); // needed to make sure that the groups got really removed from the KConfig object
 }
 
 void FavoritesListModel::moveUp( int row )
