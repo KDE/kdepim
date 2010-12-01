@@ -21,6 +21,7 @@
 
 #include "mainview.h"
 
+#include "actionhelper.h"
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
 #include "configwidget.h"
@@ -304,22 +305,20 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence ),
            SIGNAL( triggered( bool ) ), SLOT( editIncidence() ) );
 
-  mStandardActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize todos\nin account", "Synchronize todos\nin accounts" ) );
-  mStandardActionManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
-  mStandardActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  mStandardActionManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
-  mStandardActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize todos\nin folder", "Synchronize todos\nin folders" ) );
-  mStandardActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
-  mStandardActionManager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
-  mStandardActionManager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  mStandardActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete todo", "Delete todos" ) );
-  mStandardActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move todo\nto folder" ) );
-  mStandardActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy todo\nto folder" ) );
+  ActionHelper::adaptStandardActionTexts( mStandardActionManager );
+
+  mStandardActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Task List Properties" ) );
+  mStandardActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Task List" ) );
+  mStandardActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Task List", "Synchronize These Task Lists" ) );
+  mStandardActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Task List", "Delete Task Lists" ) );
+  mStandardActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Task List To" ) );
+  mStandardActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Task List To" ) );
+
   mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateTodo )->setText( i18n( "New Task" ) );
   mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateSubTodo )->setText( i18n( "New Sub Task" ) );
   mStandardActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit task" ) );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall todos" ) );
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Tasks" ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )

@@ -36,9 +36,9 @@ ActionMenuContainer {
     name : "home_menu"
     text : KDE.i18n( "Home" )
     ActionListItem { name : "synchronize_all_items" }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Multiple Task Lists" ) }
     ActionListItem { name : "import_tasks" }
-    ActionListItem { name : "export_tasks" }
+    ActionListItem { name : "export_account_tasks" }
     ActionListItem { name : "archive_old_entries" }
   }
 
@@ -67,7 +67,7 @@ ActionMenuContainer {
     category : "single_folder"
     text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
-    ActionListItem { name : "export_tasks" }
+    ActionListItem { name : "export_selected_tasks" }
     ActionListItem { name : "purge_completed_tasks" }
   }
 
@@ -86,8 +86,8 @@ ActionMenuContainer {
     category : "single_folder"
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
   ActionList {
@@ -95,7 +95,7 @@ ActionMenuContainer {
     name : "multi_folder_folder_menu"
     text : KDE.i18n( "Folders" )
     ActionListItem { name : "akonadi_collection_sync" }
-    ActionListItem { name : "export_tasks" }
+    ActionListItem { name : "export_selected_tasks" }
     ActionListItem { name : "purge_completed_todos" }
   }
 
@@ -103,15 +103,15 @@ ActionMenuContainer {
     category : "multiple_folder"
     name : "multi_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ); visible: !guiStateManager.inSearchResultScreenState }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Folders" ) }
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ); visible: !guiStateManager.inSearchResultScreenState }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Task Lists" ) }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
   ActionList {
     category : "todo_viewer"
     name : "todo_viewer_todo_menu"
-    text : KDE.i18n( "ToDo" )
+    text : KDE.i18n( "Task" )
     ActionListItem { name : "akonadi_subtodo_create" }
     ActionListItem { name : "make_subtask_independent" }
     ActionListItem { name : "make_all_subtasks_independent" }
@@ -141,5 +141,8 @@ ActionMenuContainer {
     type : "task"
 
     addNewActionName: "akonadi_todo_create"
+
+    searchActionTitle: KDE.i18n( "Search For Tasks" )
+    configureActionTitle: KDE.i18n( "Configure Tasks" )
   }
 }

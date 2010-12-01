@@ -94,8 +94,11 @@ void TasksActionManager::initActions()
   KAction *action = mActionCollection->addAction( QLatin1String( "import_tasks" ) );
   action->setText( i18n( "Import Tasks" ) );
 
-  action = mActionCollection->addAction( QLatin1String( "export_tasks" ) );
+  action = mActionCollection->addAction( QLatin1String( "export_account_tasks" ) );
   action->setText( i18n( "Export Tasks" ) );
+
+  action = mActionCollection->addAction( QLatin1String( "export_selected_tasks" ) );
+  action->setText( i18n( "Export Displayed Tasks" ) );
 
   action = mActionCollection->addAction( QLatin1String( "make_subtask_independent" ) );
   action->setText( i18n( "Make Sub Task Independent" ) );
@@ -104,13 +107,13 @@ void TasksActionManager::initActions()
   action->setText( i18n( "Make All Sub Tasks Independent" ) );
 
   action = mActionCollection->addAction( QLatin1String( "purge_completed_tasks" ) );
-  action->setText( i18n( "Purge completed tasks" ) );
+  action->setText( i18n( "Delete Completed Tasks" ) );
 
   action = mActionCollection->addAction( QLatin1String( "save_all_attachments" ) );
   action->setText( i18n( "Save All" ) );
 
   action = mActionCollection->addAction( QLatin1String( "archive_old_entries" ) );
-  action->setText( i18n( "Archive Old Entries" ) );
+  action->setText( i18n( "Archive Old Tasks" ) );
 }
 
 #include "tasksactionmanager.moc"
