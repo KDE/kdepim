@@ -1297,20 +1297,44 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
   bool isHTML = false;
   const QTextCodec * codec = 0;
 
-  if ( !root ) return QString();
+  if ( !root )
+    return QString();
+
+  /*
+   * FIXME
+   * The below is weird. It tries to find a text node, then uses
+   * that for the reply string, instead of relying on the OTP to
+   * provide one. In order to make replies to encrypted mails work,
+   * I added a fall back to the rawReplyString from the OTP, but
+   * it seems to me like that one should always be used? Also, why
+   * is the legacy pgp handling in here and not handled by the OTP?
+   * Wonderous and wonderouser. I'm also not sure, but it's pretty
+   * likely that the OTP also handles the whole codec mess already.
+   * Needs to be verified.
+   */
+
+  // first try if we have a text node
   parseTextStringFromContent( root, parsedString, codec, isHTML );
 
-#if 0 //TODO port to akonadi
-  if ( mOverrideCodec || !codec )
-    codec = otp->nodeHelper()->codec( msg );
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+  // otherwise check what the OTP thinks we should use
+  if ( parsedString.isEmpty() ) {
+    // extract the already parsed reply string from the OTP
+    parsedString = otp->rawReplyString();
+  }
+
   if ( parsedString.isEmpty() )
     return QString();
 
   bool clearSigned = false;
   QString result;
+#if 0 //TODO port to akonadi
+  if (( mOverrideCodec || !codec )
+    codec = otp->nodeHelper( )->codec( msg );
+#else
+  kDebug( ) << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#endif
+
+  // FIXME why is this here and not in the OTP? - till
 
   // decrypt
   if ( allowDecryption ) {
@@ -1342,11 +1366,10 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
     }
   }
 
-  if ( result.isEmpty() ) {
-    result = codec->toUnicode( parsedString );
-    if ( result.isEmpty() )
-      return result;
-  }
+  if ( result.isEmpty() )
+    result = codec? codec->toUnicode( parsedString ) : parsedString;
+  if ( result.isEmpty() )
+    return result;
 
   // html -> plaintext conversion, if necessary:
 #ifndef TEMPLATEPARSER_NO_WEBKIT
