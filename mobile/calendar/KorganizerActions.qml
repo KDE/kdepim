@@ -65,7 +65,7 @@ ActionMenuContainer {
     category : "account"
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
   ActionList {
@@ -73,7 +73,7 @@ ActionMenuContainer {
     name : "single_folder_folder_menu"
     text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
-    ActionListItem { name : "export_events" }
+    ActionListItem { name : "export_selected_events" }
   }
 
   ActionList {
@@ -91,7 +91,7 @@ ActionMenuContainer {
     category : "single_folder"
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
   ActionList {
@@ -100,7 +100,7 @@ ActionMenuContainer {
     text : KDE.i18n( "Folders" )
 
     ActionListItem { name : "akonadi_collection_sync" }
-    ActionListItem { name : "export_events" }
+    ActionListItem { name : "export_selected_events" }
   }
 
   ActionList {
@@ -108,7 +108,7 @@ ActionMenuContainer {
     name : "multi_folder_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Calendars" ) }
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
   ActionList {
@@ -116,7 +116,7 @@ ActionMenuContainer {
     name : "single_calendar_calendar_menu"
     text : KDE.i18n( "Choice" )
     ActionListItem { name : "akonadi_collection_sync" }
-    ScriptActionItem { name : "show_today"; title : KDE.i18n( "Today" ) }
+    ScriptActionItem { name : "show_today"; title : KDE.i18n( "Show Today" ) }
     ScriptActionItem { name : "day_layout"; title : KDE.i18n( "Day View" ) }
     ScriptActionItem { name : "three_day_layout"; title : KDE.i18n( "Next Three Days View" ) }
     ScriptActionItem { name : "week_layout"; title : KDE.i18n( "Week View" ) }
@@ -129,9 +129,9 @@ ActionMenuContainer {
     category : "single_calendar"
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
     ActionListItem { name : "set_calendar_colour" }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back To Folder Selection" ) }
   }
 
   ActionList {
@@ -139,7 +139,7 @@ ActionMenuContainer {
     name : "multi_calendar_calendars_menu"
     text : KDE.i18n( "Calendars" )
     ActionListItem { name : "akonadi_collection_sync" }
-    ScriptActionItem { name : "show_today"; title : KDE.i18n( "Today" ) }
+    ScriptActionItem { name : "show_today"; title : KDE.i18n( "Show Today" ) }
     ScriptActionItem { name : "day_layout"; title : KDE.i18n( "Day View" ) }
     ScriptActionItem { name : "three_day_layout"; title : KDE.i18n( "Next Three Days View" ) }
     ScriptActionItem { name : "week_layout"; title : KDE.i18n( "Week View" ) }
@@ -152,7 +152,7 @@ ActionMenuContainer {
     category : "multiple_calendar"
     name : "multi_calendar_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Calendars" ) }
   }
 
@@ -195,5 +195,8 @@ ActionMenuContainer {
     type : "event"
 
     addNewActionName: "akonadi_event_create"
+
+    searchActionTitle: KDE.i18n( "Search For Events" )
+    configureActionTitle: KDE.i18n( "Configure Calendar" )
   }
 }

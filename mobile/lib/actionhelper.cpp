@@ -32,10 +32,4 @@ void ActionHelper::adaptStandardActionTexts( T *manager )
   manager->action( StandardActionManager::SynchronizeResources )->setText( "Synchronize This Account" );
   manager->action( StandardActionManager::ManageLocalSubscriptions )->setText( i18n( "Local Subscriptions" ) );
   manager->action( StandardActionManager::ResourceProperties )->setText( i18n( "Account Properties" ) );
-  manager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Subfolder" ) );
-  manager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Folder", "Synchronize These Folders" ) );
-  manager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Folder Properties" ) );
-  manager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Folder", "Delete Folders" ) );
-  manager->action( StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move Folder To" ) );
-  manager->action( StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy Folder To" ) );
 }

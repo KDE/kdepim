@@ -1144,8 +1144,15 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mMailActionManager->action( StandardMailActionManager::MoveAllToTrash )->setText( i18n( "Move Displayed Emails To Trash" ) );
   mMailActionManager->action( StandardMailActionManager::MoveToTrash )->setText( i18n( "Move Email To Trash" ) );
 
-  mMailActionManager->action( StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Email To" ) );
-  mMailActionManager->action( StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Email To" ) );
+  mMailActionManager->action( StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Email To" ) );
+  mMailActionManager->action( StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Email To" ) );
+
+  mMailActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Subfolder" ) );
+  mMailActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Folder", "Synchronize These Folders" ) );
+  mMailActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Folder Properties" ) );
+  mMailActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Folder", "Delete Folders" ) );
+  mMailActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Folder To" ) );
+  mMailActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Folder To" ) );
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
 

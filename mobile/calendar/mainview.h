@@ -29,6 +29,10 @@
 #include <calendarviews/eventviews/eventview.h>
 #include <calendarviews/eventviews/prefs.h>
 
+namespace Akonadi {
+class StandardCalendarActionManager;
+}
+
 namespace CalendarSupport {
 class Calendar;
 class IncidenceChanger;
@@ -112,6 +116,7 @@ class MainView : public KDeclarativeMainView
     KPIMIdentities::IdentityManager* m_identityManager;
     CalendarSupport::IncidenceChanger *m_changer;
     static EventViews::PrefsPtr m_calendarPrefs;
+    Akonadi::StandardCalendarActionManager *mActionManager;
 };
 
 #endif // MAINVIEW_H

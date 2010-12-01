@@ -21,6 +21,7 @@
 
 #include "mainview.h"
 
+#include "actionhelper.h"
 #include "agendaviewitem.h"
 #include "calendaradaptor.h"
 #include "calendarinterface.h"
@@ -95,7 +96,8 @@ MainView::MainView( QWidget* parent )
   : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent ),
     m_calendar( 0 ),
     m_identityManager( 0 ),
-    m_changer( 0 )
+    m_changer( 0 ),
+    mActionManager( 0 )
 {
   m_calendarPrefs = EventViews::PrefsPtr( new  EventViews::Prefs );
   m_calendarPrefs->readConfig();
@@ -153,11 +155,15 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   actionCollection()->addAction( QLatin1String( "import_events" ), action );
 
-  action = new KAction( i18n( "Export Events" ), this );
+  action = new KAction( i18n( "Export Events From This Account" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
-  actionCollection()->addAction( QLatin1String( "export_events" ), action );
+  actionCollection()->addAction( QLatin1String( "export_account_events" ), action );
 
-  action = new KAction( i18n( "Archive Old Entries" ), this );
+  action = new KAction( i18n( "Export Displayed Events" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  actionCollection()->addAction( QLatin1String( "export_selected_events" ), action );
+
+  action = new KAction( i18n( "Archive Old Events" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( archiveOldEntries() ) );
   actionCollection()->addAction( QLatin1String( "archive_old_entries" ), action );
 
@@ -165,7 +171,7 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( publishItemInformation() ) );
   actionCollection()->addAction( QLatin1String( "publish_item_information" ), action );
 
-  action = new KAction( i18n( "Send Invitation to Attendees" ), this );
+  action = new KAction( i18n( "Send Invitations To Attendees" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( sendInvitation() ) );
   actionCollection()->addAction( QLatin1String( "send_invitations_to_attendees" ), action );
 
@@ -173,7 +179,7 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( sendStatusUpdate() ) );
   actionCollection()->addAction( QLatin1String( "send_status_update" ), action );
 
-  action = new KAction( i18n( "Send Cancellation to Attendees" ), this );
+  action = new KAction( i18n( "Send Cancellation To Attendees" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( sendCancellation() ) );
   actionCollection()->addAction( QLatin1String( "send_cancellation_to_attendees" ), action );
 
@@ -185,7 +191,7 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( requestChange() ) );
   actionCollection()->addAction( QLatin1String( "request_change" ), action );
 
-  action = new KAction( i18n( "Send as ICalendar" ), this );
+  action = new KAction( i18n( "Send As ICalendar" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( sendAsICalendar() ) );
   actionCollection()->addAction( QLatin1String( "send_as_icalendar" ), action );
 
@@ -201,7 +207,7 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
   actionCollection()->addAction( QLatin1String( "save_all_attachments" ), action );
 
-  action = new KAction( i18n( "Set Colour" ), this );
+  action = new KAction( i18n( "Set Color Of Calendar" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( changeCalendarColor()) );
   actionCollection()->addAction( QLatin1String( "set_calendar_colour" ), action );
 
@@ -259,6 +265,7 @@ void MainView::setCurrentEventItemId( qint64 id )
   const QModelIndexList list = EntityTreeModel::modelIndexesForItem(itemSelectionModel()->model(), Item(id));
   if (list.isEmpty())
     return;
+
   const QModelIndex idx = list.first();
   itemSelectionModel()->select( QItemSelection(idx, idx), QItemSelectionModel::ClearAndSelect );
   itemActionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
@@ -347,46 +354,44 @@ void MainView::deleteIncidence( const Akonadi::Item &item )
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
-  Akonadi::StandardCalendarActionManager *manager = new Akonadi::StandardCalendarActionManager( actionCollection(), this );
-  manager->setCollectionSelectionModel( collectionSelectionModel );
-  manager->setItemSelectionModel( itemSelectionModel );
+  mActionManager = new Akonadi::StandardCalendarActionManager( actionCollection(), this );
+  mActionManager->setCollectionSelectionModel( collectionSelectionModel );
+  mActionManager->setItemSelectionModel( itemSelectionModel );
 
-  manager->createAllActions();
-  manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
-  manager->interceptAction( Akonadi::StandardActionManager::DeleteItems );
-  manager->interceptAction( Akonadi::StandardCalendarActionManager::CreateEvent );
-  manager->interceptAction( Akonadi::StandardCalendarActionManager::CreateTodo );
-  manager->interceptAction( Akonadi::StandardCalendarActionManager::EditIncidence );
+  mActionManager->createAllActions();
+  mActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+  mActionManager->interceptAction( Akonadi::StandardActionManager::DeleteItems );
+  mActionManager->interceptAction( Akonadi::StandardCalendarActionManager::CreateEvent );
+  mActionManager->interceptAction( Akonadi::StandardCalendarActionManager::CreateTodo );
+  mActionManager->interceptAction( Akonadi::StandardCalendarActionManager::EditIncidence );
 
-  connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
+  connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
-  connect( manager->action( Akonadi::StandardActionManager::DeleteItems ), SIGNAL( triggered( bool ) ),
+  connect( mActionManager->action( Akonadi::StandardActionManager::DeleteItems ), SIGNAL( triggered( bool ) ),
            this, SLOT( deleteIncidence() ) );
-  connect( manager->action( Akonadi::StandardCalendarActionManager::CreateEvent ), SIGNAL( triggered( bool ) ),
+  connect( mActionManager->action( Akonadi::StandardCalendarActionManager::CreateEvent ), SIGNAL( triggered( bool ) ),
            this, SLOT( newEvent() ) );
-  connect( manager->action( Akonadi::StandardCalendarActionManager::CreateTodo ), SIGNAL( triggered( bool ) ),
+  connect( mActionManager->action( Akonadi::StandardCalendarActionManager::CreateTodo ), SIGNAL( triggered( bool ) ),
            this, SLOT( newTodo() ) );
-  connect( manager->action( Akonadi::StandardCalendarActionManager::EditIncidence ), SIGNAL( triggered( bool ) ),
+  connect( mActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence ), SIGNAL( triggered( bool ) ),
            this, SLOT( editIncidence() ) );
 
-  manager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize events\nin account", "Synchronize events\nin accounts" ) );
-  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setIconText( manager->action( Akonadi::StandardActionManager::ResourceProperties )->text() );
-  manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  manager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
-  manager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize events\nin folder", "Synchronize events\nin folders" ) );
-  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setIconText( manager->action( Akonadi::StandardActionManager::CollectionProperties )->text() );
-  manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
-  manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  manager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete event", "Delete events" ) );
-  manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move event\nto folder" ) );
-  manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy event\nto folder" ) );
+  ActionHelper::adaptStandardActionTexts( mActionManager );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall events" ) );
+  mActionManager->action( Akonadi::StandardCalendarActionManager::CreateEvent )->setText( i18n( "New Event" ) );
+  mActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Calendar Properties" ) );
+  mActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Calendar" ) );
+  mActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Calendar", "Synchronize These Calendars" ) );
+  mActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Calendar", "Delete Calendars" ) );
+  mActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Calendar To" ) );
+  mActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Calendar To" ) );
+
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
 
   const QStringList pages = QStringList() << QLatin1String( "CalendarSupport::CollectionGeneralPage" )
                                           << QLatin1String( "Akonadi::CachePolicyPage" );
 
-  manager->setCollectionPropertiesPageNames( pages );
+  mActionManager->setCollectionPropertiesPageNames( pages );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
