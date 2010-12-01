@@ -6,10 +6,10 @@
 MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
 {
-  QStandardItemModel *model = new QStandardItemModel(this);
+  m_model = new QStandardItemModel(this);
 
   int counter = 0;
-  QStandardItem *parentItem = model->invisibleRootItem();
+  QStandardItem *parentItem = m_model->invisibleRootItem();
   for (int i = 0; i < 4; ++i) {
     QStandardItem *topItem = new QStandardItem(QString("item %0").arg(++counter));
 
@@ -29,11 +29,11 @@ MainWindow::MainWindow(QWidget *parent)
   QTreeView *tree = new QTreeView;
   layout->addWidget(tree);
 
-  tree->setModel(model);
+  tree->setModel(m_model);
 
   m_bnf = new KBreadcrumbNavigationFactory(this);
 
-  m_bnf->createBreadcrumbContext(model);
+  m_bnf->createBreadcrumbContext(m_model);
 
   tree->setSelectionModel(m_bnf->selectionModel());
 
@@ -53,5 +53,14 @@ MainWindow::MainWindow(QWidget *parent)
   childList->setModel(m_bnf->childItemModel());
 
   layout->addLayout(vLayout);
+
+  QTimer::singleShot(2000, this, SLOT(doSelects()));
 }
 
+void MainWindow::doSelects()
+{
+  QModelIndex first = m_model->index(0, 0, m_model->index(0, 0));
+  QModelIndex second = m_model->index(0, 0, m_model->index(1, 0));
+  m_bnf->selectionModel()->select( first, QItemSelectionModel::Select );
+  m_bnf->selectionModel()->select(second, QItemSelectionModel::Select );
+}

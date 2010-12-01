@@ -12,8 +12,12 @@ class MainWindow : public QWidget
 public:
   MainWindow(QWidget *parent = 0);
 
+private slots:
+  void doSelects();
+
 private:
   KBreadcrumbNavigationFactory *m_bnf;
+  QStandardItemModel *m_model;
 
 };
 
