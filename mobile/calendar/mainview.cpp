@@ -370,11 +370,11 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
            this, SLOT( editIncidence() ) );
 
   manager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize events\nin account", "Synchronize events\nin accounts" ) );
-  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setIconText( manager->action( Akonadi::StandardActionManager::ResourceProperties )->text() );
   manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
   manager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
   manager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize events\nin folder", "Synchronize events\nin folders" ) );
-  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setIconText( manager->action( Akonadi::StandardActionManager::CollectionProperties )->text() );
   manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
   manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
   manager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete event", "Delete events" ) );
