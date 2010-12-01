@@ -490,14 +490,6 @@ KPIM.MainView {
           }
         }
       ]
-
-      states: [
-        QML.State {
-          name: "useRequestedWidth"
-          when: attachmentView.requestWidth
-          QML.PropertyChanges { target: attachmentPanel; contentWidth: attachmentView.requestedWidth; }
-        }
-      ]
     }
   }
 

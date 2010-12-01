@@ -31,8 +31,6 @@ Item {
   property int rowHeight: 48
   property int attachmentListWidth: 300
   property int actionListWidth: 240
-  property int requestedWidth: attachmentListWidth
-  property bool requestWidth: true
 
   /** Emittted when an attachment has been selected. */
   signal openAttachment(string url, string mimeType)
@@ -178,14 +176,12 @@ Item {
       name: "actionState"
       when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) != 0
       PropertyChanges { target: actionView; width: actionListWidth; visible: true }
-      PropertyChanges { target: _attachmentList; requestedWidth: attachmentListWidth + actionListWidth }
     },
 
     State {
       name: "previewState"
       when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) == 0
       PropertyChanges { target: previewView; visible: true }
-      PropertyChanges { target: _attachmentList; requestWidth: false; }
     }
   ]
 
