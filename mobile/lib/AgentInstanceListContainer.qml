@@ -44,7 +44,7 @@ QML.Rectangle {
     width: parent.width - actionColumn.width
     focus: true
     clip: true
-    delegate : ReorderListDelegate {
+    delegate : AgentInstanceListDelegate {
         height: _topLevel.actionItemHeight
         width: myList.width
     }

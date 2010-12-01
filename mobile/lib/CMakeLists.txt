@@ -93,6 +93,7 @@ install(FILES
   ActionMenuContainer.qml
   AgentInstanceList.qml
   AgentInstanceListContainer.qml
+  AgentInstanceListDelegate.qml
   AttachmentList.qml
   ApplicationGeneralActions.qml
   Button.qml
