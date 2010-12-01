@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
   tree->expandAll();
   tree->setSelectionMode(QTreeView::ExtendedSelection);
 
-  QVBoxLayout *vLayout = new QVBoxLayout(this);
+  QVBoxLayout *vLayout = new QVBoxLayout;
 
   QListView *breadcrumbList = new QListView;
   vLayout->addWidget(breadcrumbList);
