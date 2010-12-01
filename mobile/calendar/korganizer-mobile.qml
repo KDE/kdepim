@@ -342,7 +342,7 @@ KPIM.MainView {
 
         KPIM.Button2 {
           id: timelineButton
-          buttonText: KDE.i18n( "Timeline View" )
+          buttonText: KDE.i18n( "Timeline" )
           width: parent.width / 4
           onClicked: {
             guiStateManager.pushState( Events.EventsGuiStateManager.ViewTimelineState );
