@@ -18,6 +18,8 @@
 */
 
 #include "mainview.h"
+
+#include "actionhelper.h"
 #include "configwidget.h"
 #include "contactviewitem.h"
 #include "contactgroupviewitem.h"
@@ -82,9 +84,13 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   actionCollection()->addAction( QLatin1String( "import_vcards" ), action );
 
-  action = new KAction( i18n( "Export Contacts" ), this );
+  action = new KAction( i18n( "Export Contacts From This Account" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
-  actionCollection()->addAction( QLatin1String( "export_vcards" ), action );
+  actionCollection()->addAction( QLatin1String( "export_account_vcards" ), action );
+
+  action = new KAction( i18n( "Export Displayed Contacts" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  actionCollection()->addAction( QLatin1String( "export_selected_vcards" ), action );
 
   action = new KAction( i18n( "Send mail to" ), this );
   action->setEnabled( false );
@@ -262,21 +268,23 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
 
-  mActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize contacts\nin account",
-                                                                                               "Synchronize contacts\nin accounts" ) );
-  mActionManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
-  mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize contacts\nin folder",
-                                                                                                 "Synchronize contacts\nin folders" ) );
-  mActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
-  mActionManager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
-  mActionManager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete contact", "Delete contacts" ) );
-  mActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move contact\nto folder" ) );
-  mActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy contact\nto folder" ) );
+  ActionHelper::adaptStandardActionTexts( mActionManager );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall contacts" ) );
+  mActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Addressbook" ) );
+  mActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Addressbook", "Synchronize These Addressbooks" ) );
+  mActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Addressbook Properties" ) );
+  mActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Addressbook", "Delete Addressbooks" ) );
+  mActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Addressbook To" ) );
+  mActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Addressbook To" ) );
+
+  mActionManager->action( Akonadi::StandardContactActionManager::CreateContact )->setText( i18n( "New Contact" ) );
+  mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup )->setText( i18n( "New Group Of Contacts" ) );
+  mActionManager->action( Akonadi::StandardContactActionManager::EditItem )->setText( i18n( "Edit Contact" ) );
+  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete Contacts" ) );
+  mActionManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Contact To" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Contact To" ) );
+
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )

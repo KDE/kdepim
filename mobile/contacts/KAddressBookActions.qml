@@ -36,7 +36,7 @@ ActionMenuContainer {
     name : "home_menu"
     text : KDE.i18n( "Home" )
     ActionListItem { name : "synchronize_all_items" }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Multiple Addressbooks" ) }
     ActionListItem { name : "import_vcards" }
   }
 
@@ -57,7 +57,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_resource_synchronize" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
-    ActionListItem { name : "export_vcards" }
+    ActionListItem { name : "export_account_vcards" }
   }
 
   ActionList {
@@ -65,7 +65,7 @@ ActionMenuContainer {
     name : "single_folder_folder_menu"
     text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
-    ActionListItem { name : "export_vcards" }
+    ActionListItem { name : "export_selected_vcards" }
   }
 
   ActionList {
@@ -83,8 +83,8 @@ ActionMenuContainer {
     category : "single_folder"
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
   ActionList {
@@ -92,16 +92,16 @@ ActionMenuContainer {
     name : "multi_folder_folder_menu"
     text : KDE.i18n( "Folders" )
     ActionListItem { name : "akonadi_collection_sync" }
-    ActionListItem { name : "export_vcards" }
+    ActionListItem { name : "export_selected_vcards" }
   }
 
   ActionList {
     category : "multiple_folder"
     name : "multi_folder_view_menu"
     text : KDE.i18n( "View" )
-    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ); visible: !guiStateManager.inSearchResultScreenState }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Folders" ) }
-    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ); visible: !guiStateManager.inSearchResultScreenState }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Addressbooks" ) }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
   /*ActionList {
@@ -127,6 +127,9 @@ ActionMenuContainer {
     type : "contact"
 
     addNewActionName: "akonadi_contact_create"
+    searchActionTitle: KDE.i18n( "Search For Contacts" )
+    configureActionTitle: KDE.i18n( "Configure Addressbook" )
+
     ActionListItem { name : "akonadi_contact_group_create" }
   }
 }
