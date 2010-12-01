@@ -712,6 +712,7 @@ void KDeclarativeMainView::openLicenses()
 
 void KDeclarativeMainView::openAttachment( const QString &url, const QString &mimeType )
 {
+  qDebug() << "opening attachment: " << url;
 #ifndef Q_OS_WINCE
    KRun::runUrl( KUrl( url ), mimeType, this );
 #else
