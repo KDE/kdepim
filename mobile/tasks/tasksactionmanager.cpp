@@ -110,7 +110,7 @@ void TasksActionManager::initActions()
   action->setText( i18n( "Delete Completed Tasks" ) );
 
   action = mActionCollection->addAction( QLatin1String( "save_all_attachments" ) );
-  action->setText( i18n( "Save All" ) );
+  action->setText( i18n( "Save All Attachments" ) );
 
   action = mActionCollection->addAction( QLatin1String( "archive_old_entries" ) );
   action->setText( i18n( "Archive Old Tasks" ) );

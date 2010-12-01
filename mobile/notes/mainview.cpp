@@ -21,6 +21,7 @@
 
 #include "mainview.h"
 
+#include "actionhelper.h"
 #include "notelistproxy.h"
 #include "notesexporthandler.h"
 #include "notesfilterproxymodel.h"
@@ -85,9 +86,13 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
   actionCollection()->addAction( QLatin1String( "import_notes" ), action );
 
-  action = new KAction( i18n( "Export Notes" ), this );
+  action = new KAction( i18n( "Export Notes From This Account" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
-  actionCollection()->addAction( QLatin1String( "export_notes" ), action );
+  actionCollection()->addAction( QLatin1String( "export_account_notes" ), action );
+
+  action = new KAction( i18n( "Export Displayed Notes" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  actionCollection()->addAction( QLatin1String( "export_selected_notes" ), action );
 }
 
 QString MainView::noteTitle( int row ) const
@@ -325,19 +330,19 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
 
-  manager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Synchronize notes\nin account", "Synchronize notes\nin accounts" ) );
-  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
-  manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
-  manager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete folder", "Delete folders" ) );
-  manager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Synchronize notes\nin folder", "Synchronize notes\nin folders" ) );
-  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
-  manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
-  manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
-  manager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete note", "Delete notes" ) );
-  manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move note\nto folder" ) );
-  manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy note\nto folder" ) );
+  ActionHelper::adaptStandardActionTexts( manager );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall notes" ) );
+  manager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Notebook Properties" ) );
+  manager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Notebook" ) );
+  manager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Notebook", "Synchronize These Notebooks" ) );
+  manager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Notebook", "Delete Notebooks" ) );
+  manager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Note To" ) );
+  manager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Note To" ) );
+  manager->action( StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Note To" ) );
+  manager->action( StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Note To" ) );
+  manager->setActionText( StandardActionManager::DeleteItems, ki18np( "Delete Note", "Delete Notes" ) );
+
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )

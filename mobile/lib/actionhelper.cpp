@@ -32,4 +32,5 @@ void ActionHelper::adaptStandardActionTexts( T *manager )
   manager->action( StandardActionManager::SynchronizeResources )->setText( "Synchronize This Account" );
   manager->action( StandardActionManager::ManageLocalSubscriptions )->setText( i18n( "Local Subscriptions" ) );
   manager->action( StandardActionManager::ResourceProperties )->setText( i18n( "Account Properties" ) );
+  manager->action( StandardActionManager::ToggleWorkOffline )->setText( i18n( "Work Offline" ) );
 }
