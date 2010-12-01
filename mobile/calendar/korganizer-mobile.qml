@@ -305,8 +305,8 @@ KPIM.MainView {
           id: dateEdit
           width: parent.width
           height: 480 / 6
-          // FIXME we'd need to translate that, QDateEdit should default to the current locale, I think
-          //displayFormat: "MM.dd.yyyy"
+          // MM.dd.yyyy
+          displayFormat: KDE.i18n( "YYYY-MM-DD" )
         }
       }
       Row {
@@ -342,7 +342,7 @@ KPIM.MainView {
 
         KPIM.Button2 {
           id: timelineButton
-          buttonText: KDE.i18n( "Timeline view" )
+          buttonText: KDE.i18n( "Timeline View" )
           width: parent.width / 4
           onClicked: {
             guiStateManager.pushState( Events.EventsGuiStateManager.ViewTimelineState );
