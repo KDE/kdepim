@@ -306,7 +306,7 @@ KPIM.MainView {
           width: parent.width
           height: 480 / 6
           // MM.dd.yyyy
-          displayFormat: KDE.i18n( "YYYY-MM-DD" )
+          displayFormat: KDE.i18n( "yyyy-MM-dd" )
         }
       }
       Row {
