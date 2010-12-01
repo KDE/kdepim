@@ -306,12 +306,10 @@ void AddEditBlog::handleFetchIDTimeout()
 {
     kDebug();
     if ( d->mFetchBlogIdTimer ) {
-        d->mFetchBlogIdTimer->deleteLater();
-        d->mFetchBlogIdTimer = 0;
+        d->mFetchBlogIdTimer->stop();
     }
     if( d->mFetchProfileIdTimer ) {
-        d->mFetchProfileIdTimer->deleteLater();
-        d->mFetchProfileIdTimer = 0;
+        d->mFetchProfileIdTimer->stop();
     }
     d->ui.txtId->setText( QString() );
     d->ui.txtId->setEnabled( true );
