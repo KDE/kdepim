@@ -1,6 +1,6 @@
 KAlarm Change Log
 
-=== Version 2.4.10 --- 21 Nov 2010 ===
+=== Version 2.4.10 --- 2 December 2010 ===
 - Fix KAlarm showing in system tray at login when configured not to show in tray.
 - Fix working-time-only alarms not triggering if KAlarm is started up outside
   working hours, after the last trigger time during working hours was missed.
@@ -8,6 +8,7 @@ KAlarm Change Log
 - Disable Defer button in new message window when deferral limit has been reached.
 - Fix reminder time shown when editing a non-recurring alarm's deferred reminder.
 - Fix conversion of pre-version 1.9.10 non-recurring alarms with simple repetition.
+- Make disabled system tray icon more distinguishable for colour blind users.
 
 === Version 2.4.9 (KDEPIM 4.4.7) --- 19 October 2010 ===
 - Fix crash if alarm triggers while its deletion confirmation prompt is visible.

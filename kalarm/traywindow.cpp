@@ -76,19 +76,15 @@ TrayWindow::TrayWindow(MainWindow* parent)
 	kDebug();
 	// Set up GUI icons
 	mIconEnabled  = loadIcon("kalarm");
+	mIconDisabled = loadIcon("kalarm-disabled");
 	if (mIconEnabled.isNull())
 		KMessageBox::sorry(parent, i18nc("@info", "Cannot load system tray icon."));
 	else
 	{
-		// Create the all alarms disabled icon, by converting the normal icon to grey
-		KIconLoader* loader = KIconLoader::global();
-		QImage icon = mIconEnabled.pixmap(loader->currentSize(KIconLoader::Panel)).toImage();
-		QImage iconDisabled = icon;
-		KIconEffect::toGray(iconDisabled, 1.0);
-		mIconDisabled = QIcon(QPixmap::fromImage(iconDisabled));
-
 		// Create the partially disabled icon, by overlaying the normal icon
 		// with a disabled indication
+		KIconLoader* loader = KIconLoader::global();
+		QImage icon = mIconEnabled.pixmap(loader->currentSize(KIconLoader::Panel)).toImage();
 		QImage disabled = loader->loadIcon("partdisabled", KIconLoader::Panel, icon.width(), KIconLoader::DefaultState, QStringList("emblems")).toImage();
 		KIconEffect::overlay(icon, disabled);
 		mIconSomeDisabled = QIcon(QPixmap::fromImage(icon));
