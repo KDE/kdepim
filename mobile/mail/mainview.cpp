@@ -186,6 +186,8 @@ int MainView::openComposer( const QString &to, const QString &cc, const QString 
   composer->setMessage( message );
   composer->show();
 
+  presetComposerIdentity( composer );
+
   return 0;
 }
 
@@ -504,6 +506,11 @@ void MainView::startComposer()
   ComposerView *composer = new ComposerView;
   composer->show();
 
+  presetComposerIdentity( composer );
+}
+
+void MainView::presetComposerIdentity( ComposerView *composer ) const
+{
   // preset the folder/account identity of the current collection
   const QModelIndexList indexes = regularSelectionModel()->selectedIndexes();
   if ( indexes.isEmpty() )
@@ -732,6 +739,8 @@ void MainView::replyFetchResult( KJob *job )
   composer->setMessage( factory.createReply().msg );
   composer->show();
 
+  presetComposerIdentity( composer );
+
   Item statusItem( item );
   statusItem.setFlag( Akonadi::MessageFlags::Replied );
   Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( statusItem );
@@ -779,6 +788,7 @@ void MainView::forwardFetchResult( KJob* job )
   }
 
   composer->show();
+  presetComposerIdentity( composer );
 
   Item statusItem( item );
   statusItem.setFlag( Akonadi::MessageFlags::Forwarded );

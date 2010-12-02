@@ -42,6 +42,7 @@ namespace MessageViewer {
 
 class AclEditor;
 class AkonadiSender;
+class ComposerView;
 class ConfigWidget;
 class FilterModel;
 class KJob;
@@ -189,6 +190,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::Item currentItem() const;
     MessageViewer::MessageViewItem *messageViewerItem();
     bool selectNextUnreadMessageInCurrentFolder();
+    void presetComposerIdentity( ComposerView *composer ) const;
 
     bool mAskingToGoOnline;
     QWidget *mTransportDialog;
