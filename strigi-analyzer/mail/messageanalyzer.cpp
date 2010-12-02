@@ -36,6 +36,8 @@
 
 #include <boost/scoped_ptr.hpp>
 
+using namespace StrigiEndAnalyzer;
+
 MessageAnalyzer::MessageAnalyzer( const KMime::Message::Ptr &message, MailEndAnalyzer* analyzer )
   : m_analyzer( analyzer ),
     m_message( message ),

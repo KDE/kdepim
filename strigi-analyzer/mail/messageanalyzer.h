@@ -36,6 +36,8 @@ class NodeHelper;
 class ObjectTreeParser;
 }
 
+namespace StrigiEndAnalyzer {
+
 class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
 {
   Q_OBJECT
@@ -68,5 +70,7 @@ class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
     MessageViewer::NodeHelper *m_nodeHelper;
     MessageViewer::ObjectTreeParser *m_otp;
 };
+
+}
 
 #endif

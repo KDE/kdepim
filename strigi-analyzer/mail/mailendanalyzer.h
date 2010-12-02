@@ -35,8 +35,11 @@
 
 #include <QtCore/QString>
 
-class MailEndAnalyzerFactory;
 class QCoreApplication;
+
+namespace StrigiEndAnalyzer {
+
+class MailEndAnalyzerFactory;
 
 class PIMSTRIGI_ANALYZER_EXPORT MailEndAnalyzer : public Strigi::StreamEndAnalyzer
 {
@@ -108,5 +111,7 @@ class PIMSTRIGI_ANALYZER_EXPORT MailFactoryFactory : public Strigi::AnalyzerFact
   private:
     KComponentData componentData;
 };
+
+}
 
 #endif

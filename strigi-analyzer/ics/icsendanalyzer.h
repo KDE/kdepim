@@ -86,6 +86,10 @@ class PIMSTRIGI_ANALYZER_EXPORT IcsFactoryFactory : public Strigi::AnalyzerFacto
     KComponentData componentData;
 };
 
+#ifndef _WIN32_WCE
 STRIGI_ANALYZER_FACTORY( IcsFactoryFactory )
+#else
+EXPORT_PLUGIN(Strigi_Plugin_Ics,IcsFactoryFactory)
+#endif
 
 #endif

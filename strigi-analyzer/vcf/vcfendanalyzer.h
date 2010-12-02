@@ -90,6 +90,10 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfFactoryFactory : public Strigi::AnalyzerFacto
     std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const;
 };
 
+#ifndef _WIN32_WCE
 STRIGI_ANALYZER_FACTORY( VcfFactoryFactory )
+#else
+EXPORT_PLUGIN(Strigi_Plugin_Vcf,VcfFactoryFactory)
+#endif
 
 #endif

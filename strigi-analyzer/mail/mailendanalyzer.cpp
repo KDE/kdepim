@@ -35,6 +35,8 @@
 
 #include <QtCore/QEventLoop>
 
+using namespace StrigiEndAnalyzer;
+
 static int s_fakeArgumentCount = 1;
 static char* s_fakeArgumentVector[2] = { "mailendanalyzer", NULL };
 
@@ -178,5 +180,8 @@ std::list<Strigi::StreamEndAnalyzerFactory*> MailFactoryFactory::streamEndAnalyz
   return list;
 }
 
-STRIGI_ANALYZER_FACTORY( MailFactoryFactory )
-
+#ifndef _WIN32_WCE
+STRIGI_ANALYZER_FACTORY( StrigiEndAnalyzer::MailFactoryFactory )
+#else
+EXPORT_PLUGIN(Strigi_Plugin_Mail,StrigiEndAnalyzer::MailFactoryFactory)
+#endif
