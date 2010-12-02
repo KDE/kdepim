@@ -340,10 +340,12 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
 
 void MainView::deleteIncidence()
 {
-  const CalendarSupport::KCal::KCalItemBrowserItem *eventView = rootObject()->findChild<CalendarSupport::KCal::KCalItemBrowserItem*>();
-  Q_ASSERT( eventView );
-  if ( eventView )
-    deleteIncidence( eventView->item() );
+  const QModelIndexList indexes = itemActionModel()->selectedRows();
+  if ( indexes.isEmpty() )
+    return;
+
+  const Akonadi::Item item = indexes.first().data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  deleteIncidence( item );
 }
 
 void MainView::deleteIncidence( const Akonadi::Item &item )
