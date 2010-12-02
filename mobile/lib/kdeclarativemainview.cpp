@@ -693,7 +693,11 @@ void KDeclarativeMainView::openManual()
   const QString path = lookupDocumentation( "kontact-touch/manual/index.html" );
   const KUrl url = path;
   const bool isValid = url.isValid();
-
+  
+  qDebug() << "manual path:  " << path;
+  qDebug() << "manual url:   " << url;
+  qDebug() << "url is valid: " << isValid;
+  
   if ( !isValid ) {
     KMessageBox::error( this,
                         i18n( "The manual could not be found on your system." ),
