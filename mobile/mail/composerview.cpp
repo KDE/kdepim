@@ -283,6 +283,8 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 
   if ( m_message )
     setMessage( m_message );
+
+  connect( MailTransport::TransportManager::self(), SIGNAL( transportsChanged() ), SLOT( transportsChanged() ) );
 }
 
 void ComposerView::setMessage(const KMime::Message::Ptr& msg)
@@ -455,6 +457,12 @@ void ComposerView::failed( const QString &errorMessage )
                         "Error while trying to send email. %1", errorMessage));
   notify->sendEvent();
   setBusy( false );
+}
+
+void ComposerView::transportsChanged()
+{
+  if ( m_composerBase->transportComboBox() )
+    m_composerBase->transportComboBox()->setCurrentTransport( MailTransport::TransportManager::self()->defaultTransportId() );
 }
 
 void ComposerView::setEditor( Message::KMeditor* editor )

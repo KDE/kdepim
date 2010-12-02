@@ -107,6 +107,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void qmlLoaded ( QDeclarativeView::Status );
     void success();
     void failed( const QString &errorMessage );
+    void transportsChanged();
 
     void signEmail( bool sign );
     void encryptEmail( bool encrypt );
