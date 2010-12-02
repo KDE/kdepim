@@ -27,7 +27,7 @@
      </item>
      <item>
       <property name="text">
-       <string>By Date/Time of Most Recent in Subtree</string>
+          <string>By Most Recent in Discussion</string>
       </property>
      </item>
      <item>
@@ -84,7 +84,7 @@
      </item>
      <item>
       <property name="text">
-       <string>By Exact Date (of Thread Leaders)</string>
+       <string>By Starting Date of Discussion</string>
       </property>
      </item>
      <item>
