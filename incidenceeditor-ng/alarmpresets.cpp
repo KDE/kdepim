@@ -139,12 +139,16 @@ void checkInitNeeded( When when )
       sBeforeStartPresets->clear();
       initPresets( when );
     }
+    break;
   case AlarmPresets::BeforeEnd:
     if ( sBeforeEndPresetNames->isEmpty() || configChanged ) {
       sBeforeEndPresetNames->clear();
       sBeforeEndPresets->clear();
       initPresets( when );
     }
+    break;
+  default:
+    Q_ASSERT_X( false, "checkInitNeeded", "Unknown preset type" );
   }
 }
 
@@ -173,7 +177,8 @@ KCalCore::Alarm::Ptr preset( When when, const QString &name )
     if ( sBeforeStartPresetNames->count( name ) != 1 ) {
       // print some debug info before crashing
       kDebug() << " name = " << name << "; when = " << when
-               << "; count = " << sBeforeStartPresetNames->count( name );
+               << "; count for name = " << sBeforeStartPresetNames->count( name )
+               <<  "; global count = " << sBeforeStartPresetNames->count();
       Q_ASSERT_X( false, "preset", "Number of presets should be one" );
     }
 
