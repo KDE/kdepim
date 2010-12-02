@@ -126,7 +126,9 @@ void MainView::delayedInit()
 
   connect( actionCollection()->action( QLatin1String( "import_tasks" ) ),
            SIGNAL( triggered( bool ) ), SLOT( importItems() ) );
-  connect( actionCollection()->action( QLatin1String( "export_tasks" ) ),
+  connect( actionCollection()->action( QLatin1String( "export_account_tasks" ) ),
+           SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
+  connect( actionCollection()->action( QLatin1String( "export_selected_tasks" ) ),
            SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   connect( actionCollection()->action( QLatin1String( "make_subtask_independent" ) ),
            SIGNAL( triggered( bool ) ), SLOT( makeTaskIndependent() ) );
