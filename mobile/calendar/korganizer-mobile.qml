@@ -474,6 +474,7 @@ KPIM.MainView {
               name : "show_today"
               script : {
                 agenda.showToday();
+                guiStateManager.switchState( Events.EventsGuiStateManager.ViewDayState );
                 actionPanel.collapse();
               }
             },
