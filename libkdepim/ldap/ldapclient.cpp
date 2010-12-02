@@ -22,6 +22,8 @@
  */
 
 #include "ldapclient.h"
+#include "ldapsession.h"
+#include "ldapqueryjob.h"
 
 #include <kldap/ldapobject.h>
 #include <kldap/ldapserver.h>
@@ -50,7 +52,8 @@ class LdapClient::Private
     Private( LdapClient *qq )
       : q( qq ),
         mJob( 0 ),
-        mActive( false )
+        mActive( false ),
+        mSession( 0 )
     {
     }
 
@@ -74,13 +77,15 @@ class LdapClient::Private
     QString mScope;
     QStringList mAttrs;
 
-    QPointer<KIO::TransferJob> mJob;
+    QPointer<KJob> mJob;
     bool mActive;
 
     KLDAP::LdapObject mCurrentObject;
     KLDAP::Ldif mLdif;
     int mClientNumber;
     int mCompletionWeight;
+
+    KLDAP::LdapSession *mSession;
 };
 
 LdapClient::LdapClient( int clientNumber, QObject *parent )
@@ -103,6 +108,11 @@ bool LdapClient::isActive() const
 void LdapClient::setServer( const KLDAP::LdapServer &server )
 {
   d->mServer = server;
+#ifdef KDEPIM_INPROCESS_LDAP
+  if ( !d->mSession )
+    d->mSession = new LdapSession( this );
+  d->mSession->connectToServer( server );
+#endif
 }
 
 const KLDAP::LdapServer LdapClient::server() const
@@ -141,7 +151,11 @@ void LdapClient::startQuery( const QString &filter )
 
   d->startParseLDIF();
   d->mActive = true;
+#ifndef KDEPIM_INPROCESS_LDAP
   d->mJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
+#else
+  d->mJob = new LdapQueryJob( url, d->mSession );
+#endif
   connect( d->mJob, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
            this, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );
   connect( d->mJob, SIGNAL( infoMessage( KJob*, const QString&, const QString& ) ),

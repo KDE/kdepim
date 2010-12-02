@@ -10,6 +10,11 @@ add_definitions(${QT_QTDBUS_DEFINITIONS})
 
 include_directories( ${Boost_INCLUDE_DIR} )
 
+option(KDEPIM_INPROCESS_LDAP FALSE "Use in-process rather than KIO slave LDAP" )
+if (KDEPIM_INPROCESS_LDAP)
+  add_definitions( -DKDEPIM_INPROCESS_LDAP )
+endif ()
+
 ########### next target ###############
 
 set(kdepim_LIB_SRCS
@@ -52,6 +57,13 @@ if (KDEPIMLIBS_KRESOURCES_LIBS)
     kresourceprefs.cpp
   )
 endif (KDEPIMLIBS_KRESOURCES_LIBS)
+
+if (KDEPIM_INPROCESS_LDAP)
+  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
+    ldap/ldapsession.cpp
+    ldap/ldapqueryjob.cpp
+  )
+endif ()
 
 kde4_add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 
