@@ -164,12 +164,12 @@ void ComposerView::delayedInit()
   connect( action, SIGNAL( triggered( Qt::MouseButtons, Qt::KeyboardModifiers ) ), SLOT( sendLater() ) );
 
   action = actionCollection()->addAction("save_in_drafts");
-  action->setText( i18n( "Save as Draft" ) );
+  action->setText( i18n( "Save As Draft" ) );
   action->setIcon( KIcon( "document-save" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveDraft()));
 
   action = actionCollection()->addAction("save_as_template");
-  action->setText( i18n( "Save as Template" ) );
+  action->setText( i18n( "Save As Template" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveAsTemplate()));
 
   action = actionCollection()->addAction("composer_clean_spaces");
@@ -185,7 +185,7 @@ void ComposerView::delayedInit()
   action->setText( i18n( "Check Spelling" ) );
 
   action = actionCollection()->addAction( "composer_search" );
-  action->setText( i18n( "Search" ) );
+  action->setText( i18n( "Search in Email" ) );
 
   action = actionCollection()->addAction( "composer_search_next" );
   action->setText( i18n( "Continue Search" ) );
@@ -226,8 +226,11 @@ void ComposerView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( toggleUseFixedFont( bool ) ) );
 
   action = actionCollection()->addAction( "options_set_cryptoformat" );
-  action->setText( i18n( "Crypto Message Format..." ) );
+  action->setText( i18n( "Crypto Message Format" ) );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( setCryptoFormat() ) );
+
+  actionCollection()->action( "attach_public_key" )->setText( i18n( "Attach Public Key" ) );
+  actionCollection()->action( "composer_insert_signature" )->setText( i18n( "Insert Signature At Cursor Position" ) );
 }
 
 void ComposerView::setIdentityCombo( KPIMIdentities::IdentityCombo* combo )

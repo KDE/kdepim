@@ -112,16 +112,6 @@ ActionMenuContainer {
     ActionListItem { name : "messagelist_change_settings" }
   }
 
-  ActionListItem {
-    category: "single_folder"
-    name : "add_new_mail"
-      onPressAndHold: {
-          newMailPage.visible = true
-          actionPanel.collapse()
-      }
-      reactsOnLongPressed : true
-  }
-
   ActionList {
     category : "multiple_folder"
     name : "multi_folder_folder_menu"
@@ -182,7 +172,7 @@ ActionMenuContainer {
     name : "mail_viewer_view"
     text : KDE.i18n( "View" )
     ActionListItem { name : "message_fixed_font" }
-    ScriptActionItem { name : "copy_all_to_clipboard"; title : KDE.i18n( "Copy mail to Clipboard" ) }
+    ScriptActionItem { name : "copy_all_to_clipboard"; title : KDE.i18n( "Copy Email To Clipboard" ) }
     ActionListItem { name : "show_message_source" }
     ActionListItem { name : "change_message_encoding" }
     ActionListItem { name : "show_extended_headers" }

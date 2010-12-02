@@ -96,7 +96,7 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setText( i18n("Find in Email") );
 
   action = actionCollection->addAction("prefer_html_to_plain");
-  action->setText( i18n("Prefer HTML to Plain Text") );
+  action->setText( i18n("Prefer HTML To Plain Text") );
   action->setCheckable(true);
   action->setChecked(false);
 

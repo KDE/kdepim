@@ -416,7 +416,7 @@ void MainView::delayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( selectOverrideEncoding() ) );
   actionCollection()->addAction( QLatin1String( "change_message_encoding" ), action );
 
-  action = new KAction( i18n( "Show all Recipients" ), this );
+  action = new KAction( i18n( "Show All Recipients" ), this );
   action->setCheckable( true );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( toggleShowExtendedHeaders( bool ) ) );
   actionCollection()->addAction( QLatin1String( "show_extended_headers" ), action );
@@ -1153,6 +1153,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mMailActionManager->action( StandardMailActionManager::MarkAllMailAsRead )->setText( i18n( "Mark Displayed Emails As Read" ) );
   mMailActionManager->action( StandardMailActionManager::MoveAllToTrash )->setText( i18n( "Move Displayed Emails To Trash" ) );
   mMailActionManager->action( StandardMailActionManager::MoveToTrash )->setText( i18n( "Move Email To Trash" ) );
+  mMailActionManager->action( StandardMailActionManager::RemoveDuplicates )->setText( i18n( "Remove Duplicate Emails" ) );
 
   mMailActionManager->action( StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Email To" ) );
   mMailActionManager->action( StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Email To" ) );
