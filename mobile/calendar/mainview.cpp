@@ -375,6 +375,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
            this, SLOT( newTodo() ) );
   connect( mActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence ), SIGNAL( triggered( bool ) ),
            this, SLOT( editIncidence() ) );
+  connect( mActionManager, SIGNAL( actionStateUpdated() ), SLOT( updateActionTexts() ) );
 
   ActionHelper::adaptStandardActionTexts( mActionManager );
 
@@ -392,6 +393,36 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
                                           << QLatin1String( "Akonadi::CachePolicyPage" );
 
   mActionManager->setCollectionPropertiesPageNames( pages );
+}
+
+void MainView::updateActionTexts()
+{
+  const Akonadi::Item::List items = mActionManager->selectedItems();
+  if ( items.count() < 1 )
+    return;
+
+  const int itemCount = items.count();
+  const Akonadi::Item item = items.first();
+  const QString mimeType = item.mimeType();
+  if ( mimeType == KCalCore::Event::eventMimeType() ) {
+    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Event", "Copy %1 Events" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Event To" ) );
+    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Event", "Delete %1 Events" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Event To" ) );
+    actionCollection()->action( "akonadi_incidence_edit" )->setText( i18n( "Edit Event" ) );
+  } else if ( mimeType == KCalCore::Todo::todoMimeType() ) {
+    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Task", "Copy %1 Tasks" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Task To" ) );
+    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Task", "Delete %1 Tasks" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Task To" ) );
+    actionCollection()->action( "akonadi_incidence_edit" )->setText( i18n( "Edit Task" ) );
+  } else if ( mimeType == KCalCore::Journal::journalMimeType() ) {
+    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Journal", "Copy %1 Journals" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Journal To" ) );
+    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Journal", "Delete %1 Journals" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Journal To" ) );
+    actionCollection()->action( "akonadi_incidence_edit" )->setText( i18n( "Edit Journal" ) );
+  }
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )

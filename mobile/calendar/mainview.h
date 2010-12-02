@@ -94,6 +94,7 @@ class MainView : public KDeclarativeMainView
     void fetchForPublishItemDone( KJob *job );
     void fetchForiTIPMethodDone( KJob *job );
     void fetchForSaveAllAttachmentsDone( KJob *job );
+    void updateActionTexts();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

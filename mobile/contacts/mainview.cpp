@@ -267,6 +267,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
            this, SLOT( editItem() ) );
   connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
+  connect( mActionManager, SIGNAL( actionStateUpdated() ), SLOT( updateActionTexts() ) );
 
   ActionHelper::adaptStandardActionTexts( mActionManager );
 
@@ -285,6 +286,30 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mActionManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Contact To" ) );
 
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
+}
+
+void MainView::updateActionTexts()
+{
+  const Akonadi::Item::List items = mActionManager->selectedItems();
+  if ( items.count() < 1 )
+    return;
+
+  const int itemCount = items.count();
+  const Akonadi::Item item = items.first();
+  const QString mimeType = item.mimeType();
+  if ( mimeType == KABC::Addressee::mimeType() ) {
+    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Contact", "Copy %1 Contacts" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Contact To" ) );
+    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Contact", "Delete %1 Contacts" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Contact To" ) );
+    actionCollection()->action( "akonadi_contact_item_edit" )->setText( i18n( "Edit Contact" ) );
+  } else if ( mimeType == KABC::ContactGroup::mimeType() ) {
+    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Group Of Contacts", "Copy %1 Groups Of Contacts" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Group Of Contacts To" ) );
+    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Group Of Contacts", "Delete %1 Groups Of Contacts" ).subs( itemCount ).toString() );
+    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Group Of Contacts To" ) );
+    actionCollection()->action( "akonadi_contact_item_edit" )->setText( i18n( "Edit Group Of Contacts" ) );
+  }
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )

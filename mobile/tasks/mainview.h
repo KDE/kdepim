@@ -72,6 +72,7 @@ class MainView : public KDeclarativeMainView
     void processActionFail( const Akonadi::Item &item, const QString &msg );
     void processActionFinish( const Akonadi::Item &item );
     void archiveOldEntries();
+    void updateActionTexts();
 
   protected:
     virtual QAbstractItemModel* createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model );

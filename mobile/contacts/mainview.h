@@ -56,6 +56,7 @@ class MainView : public KDeclarativeMainView
     void itemSelectionChanged( const QItemSelection &selected, const QItemSelection& );
     void bulkActionSelectionChanged();
     void sendMailTo();
+    void updateActionTexts();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
