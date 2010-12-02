@@ -63,18 +63,8 @@ void initHeader( const KMime::Message::Ptr &message, const KPIMIdentities::Ident
 
 
 void initFromMessage( const KMime::Message::Ptr &msg, const KMime::Message::Ptr &origMsg,
-                      KPIMIdentities::IdentityManager* identMan, bool idHeaders )
+                      KPIMIdentities::IdentityManager* identMan, uint id, bool idHeaders )
 {
-  QString idString;
-  if ( origMsg->headerByType("X-KMail-Identity") )
-    idString = origMsg->headerByType("X-KMail-Identity")->asUnicodeString().trimmed();
-  bool ok = false;
-  int id = idString.toUInt( &ok );
-
-  if ( !ok || id == 0 )
-    id = identMan->identityForAddress( origMsg->to()->asUnicodeString() + QString::fromLatin1( ", " ) +
-                                       origMsg->cc()->asUnicodeString() ).uoid();
-
   if ( idHeaders )
     MessageHelper::initHeader( msg, identMan, id );
   else {
@@ -82,6 +72,7 @@ void initFromMessage( const KMime::Message::Ptr &msg, const KMime::Message::Ptr 
                                                                    QString::number( id ), "utf-8" );
     msg->setHeader( header );
   }
+
   if ( origMsg->headerByType("X-KMail-Transport") ) {
     const QString transport = origMsg->headerByType("X-KMail-Transport")->asUnicodeString();
     KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(),

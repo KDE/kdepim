@@ -85,7 +85,8 @@ MessageFactory::MessageReply MessageFactory::createReply()
   QByteArray refStr, headerName;
   bool replyAll = true;
 
-  MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager );
+  const uint originalIdentity = identityUoid( m_origMsg );
+  MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager, originalIdentity );
   MessageCore::MailingList::name( m_origMsg, headerName, mailingListStr );
   replyToStr = m_origMsg->replyTo()->asUnicodeString();
 
@@ -316,7 +317,8 @@ KMime::Message::Ptr MessageFactory::createForward()
       ( !m_origMsg->contentType()->isText() ||
       ( m_origMsg->contentType()->isText() && m_origMsg->contentType()->subType() != "html"
         && m_origMsg->contentType()->subType() != "plain" ) ) ) {
-    MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager );
+    const uint originalIdentity = identityUoid( m_origMsg );
+    MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager, originalIdentity );
     msg->removeHeader("Content-Type");
     msg->removeHeader("Content-Transfer-Encoding");
 
@@ -346,7 +348,8 @@ KMime::Message::Ptr MessageFactory::createForward()
     msg->setHead( m_origMsg->head() );
     msg->setBody( m_origMsg->body() );
     QString oldContentType = msg->contentType()->asUnicodeString();
-    MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager );
+    const uint originalIdentity = identityUoid( m_origMsg );
+    MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager, originalIdentity );
 
     // restore the content type, MessageHelper::initFromMessage() sets the contents type to
     // text/plain, via initHeader(), for unclear reasons
@@ -386,7 +389,8 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
     // the selected mails
     MessageHelper::initHeader( msg, m_identityManager, m_origId );
   } else if( msgs.count() == 1 ) {
-    MessageHelper::initFromMessage( msg, msgs.first(), m_identityManager );
+    const uint originalIdentity = identityUoid( msgs.first() );
+    MessageHelper::initFromMessage( msg, msgs.first(), m_identityManager, originalIdentity );
     msg->subject()->fromUnicodeString( MessageHelper::forwardSubject( msgs.first() ),"utf-8" );
   }
 
@@ -530,7 +534,8 @@ KMime::Message::Ptr MessageFactory::createDeliveryReceipt()
   receiptTo.remove( QChar::fromLatin1('\n') );
 
   receipt =  KMime::Message::Ptr( new KMime::Message );
-  MessageHelper::initFromMessage( receipt, m_origMsg, m_identityManager );
+  const uint originalIdentity = identityUoid( m_origMsg );
+  MessageHelper::initFromMessage( receipt, m_origMsg, m_identityManager, originalIdentity );
   receipt->to()->fromUnicodeString( receiptTo, QString::fromLatin1("utf-8").toLatin1() );
   receipt->subject()->fromUnicodeString( i18n("Receipt: ") + m_origMsg->subject()->asUnicodeString(), "utf-8");
 
@@ -569,7 +574,8 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   //
 
   KMime::Message::Ptr receipt( new KMime::Message() );
-  MessageHelper::initFromMessage( receipt, m_origMsg, m_identityManager );
+  const uint originalIdentity = identityUoid( m_origMsg );
+  MessageHelper::initFromMessage( receipt, m_origMsg, m_identityManager, originalIdentity );
   receipt->contentType()->from7BitString( "multipart/report" );
   receipt->contentType()->setBoundary( KMime::multiPartBoundary() );
   receipt->contentType()->setCharset( "us-ascii" );

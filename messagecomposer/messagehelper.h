@@ -57,7 +57,8 @@ namespace MessageHelper {
 
   /** Initialize headers fields according to the identity and the transport
    header of the given original message */
-  void MESSAGECOMPOSER_EXPORT initFromMessage(const KMime::Message::Ptr &msg, const KMime::Message::Ptr &orgiMsg, KPIMIdentities::IdentityManager*, bool idHeaders = true);
+  void MESSAGECOMPOSER_EXPORT initFromMessage(const KMime::Message::Ptr &msg, const KMime::Message::Ptr &orgiMsg, KPIMIdentities::IdentityManager*,
+                                              uint id, bool idHeaders = true);
 
   KMime::Types::AddrSpecList MESSAGECOMPOSER_EXPORT extractAddrSpecs( const KMime::Message::Ptr &msg, const QByteArray &header );
 
