@@ -336,8 +336,8 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   manager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Notebook" ) );
   manager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Notebook", "Synchronize These Notebooks" ) );
   manager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Notebook", "Delete Notebooks" ) );
-  manager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Note To" ) );
-  manager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Note To" ) );
+  manager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Notebook To" ) );
+  manager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Notebook To" ) );
   manager->action( StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Note To" ) );
   manager->action( StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Note To" ) );
   manager->setActionText( StandardActionManager::DeleteItems, ki18np( "Delete Note", "Delete Notes" ) );
