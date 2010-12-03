@@ -36,6 +36,7 @@ target_link_libraries(strigidaemon libstrigidaemon
         akonadi_serializer_addressee
         akonadi_serializer_contactgroup
         akonadi_serializer_kcalcore
+		incidenceeditorsngmobile
         )
 install(TARGETS strigidaemon
 	RUNTIME DESTINATION bin)
