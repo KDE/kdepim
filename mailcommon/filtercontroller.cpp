@@ -22,13 +22,16 @@
 #include "filtercontroller.h"
 
 #include "filtereditdialog_p.h"
-#include "filtermodel.h"
+#include "filtermodel_p.h"
 
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QAction>
 #include <QtGui/QItemSelectionModel>
+
+using namespace MailCommon;
 
 class FilterController::Private
 {
@@ -104,7 +107,12 @@ void FilterController::Private::removeFilter()
 
   const QModelIndex index = mSelectionModel->selectedRows().first();
 
-  //TODO: kmessagebox
+  const int result = KMessageBox::questionYesNo( 0, i18n( "Do you really want to remove filter <b>%1</b>?",
+                                                          index.data( Qt::DisplayRole ).toString() ),
+                                                    i18n( "Remove Filter" ) );
+  if ( result == KMessageBox::No )
+    return;
+
   mModel->removeRow( index.row() );
 }
 
@@ -115,6 +123,9 @@ void FilterController::Private::moveUpFilter()
 
   const QModelIndex index = mSelectionModel->selectedRows().first();
   mModel->moveRow( index.row(), index.row() - 1 );
+
+  // moveRow will reset the model, so restore the selection
+  mSelectionModel->select( mModel->index( index.row() - 1, 0 ), QItemSelectionModel::ClearAndSelect );
 }
 
 void FilterController::Private::moveDownFilter()
@@ -124,6 +135,9 @@ void FilterController::Private::moveDownFilter()
 
   const QModelIndex index = mSelectionModel->selectedRows().first();
   mModel->moveRow( index.row(), index.row() + 1 );
+
+  // moveRow will reset the model, so restore the selection
+  mSelectionModel->select( mModel->index( index.row() + 1, 0 ), QItemSelectionModel::ClearAndSelect );
 }
 
 

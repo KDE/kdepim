@@ -18,35 +18,32 @@
 */
 
 
-#ifndef FILTEREDITDIALOG_P_H
-#define FILTEREDITDIALOG_P_H
+#ifndef MAILCOMMON_FILTERMODEL_H
+#define MAILCOMMON_FILTERMODEL_H
 
-#include <kdialog.h>
+#include <QtCore/QModelIndex>
 
 namespace MailCommon {
-class MailFilter;
-class SearchPatternEdit;
-class FilterActionWidgetLister;
-}
 
-class Ui_FilterConfigWidget;
-
-class FilterEditDialog : public KDialog
+class FilterModel : public QAbstractListModel
 {
   Q_OBJECT
 
   public:
-    explicit FilterEditDialog( QWidget *parent = 0 );
-    virtual ~FilterEditDialog();
+    explicit FilterModel( QObject *parent = 0 );
+    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
 
-    void load( int index );
-    void save();
+    void moveRow( int sourceRow, int destinationRow );
 
-  private:
-    Ui_FilterConfigWidget *mUi;
-    MailCommon::MailFilter *mFilter;
-    MailCommon::SearchPatternEdit *mPatternEdit;
-    MailCommon::FilterActionWidgetLister *mActionLister;
+  protected:
+    virtual bool insertRows( int row, int count, const QModelIndex &parent = QModelIndex() );
+    virtual bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() );
+
+  private Q_SLOTS:
+    void filterListUpdated();
 };
+
+}
 
 #endif

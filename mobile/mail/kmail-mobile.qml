@@ -404,13 +404,6 @@ KPIM.MainView {
                 }
               },
               KPIM.ScriptAction {
-                name : "filters_configure"
-                script : {
-                  actionPanel.collapse();
-                  guiStateManager.pushState( Mail.EmailsGuiStateManager.ManageFiltersState );
-                }
-              },
-              KPIM.ScriptAction {
                 name : "edit_acls"
                 script : {
                   actionPanel.collapse();

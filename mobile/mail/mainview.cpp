@@ -29,8 +29,7 @@
 #include "composerview.h"
 #include "configwidget.h"
 #include "declarativewidgetbase.h"
-#include "filterconfigwidget.h"
-#include "filtermodel.h"
+#include "filtereditor.h"
 #include "emailsexporthandler.h"
 #include "emailsfilterproxymodel.h"
 #include "emailsguistatemanager.h"
@@ -122,7 +121,6 @@ Q_DECLARE_METATYPE( KMime::Content* )
 QML_DECLARE_TYPE( EmailsGuiStateManager )
 QML_DECLARE_TYPE( MessageViewer::MessageViewItem )
 QML_DECLARE_TYPE( DeclarativeConfigWidget )
-QML_DECLARE_TYPE( DeclarativeFilterConfigWidget )
 QML_DECLARE_TYPE( DeclarativeSearchWidget )
 
 using namespace Akonadi;
@@ -321,8 +319,9 @@ void MainView::delayedInit()
   mEmailTemplateModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
   rootContext()->setContextProperty( "_emailTemplateModel", mEmailTemplateModel );
 
-  mFilterModel = new FilterModel;
-  rootContext()->setContextProperty( "_filterModel", mFilterModel );
+  FilterEditor *filterEditor = new FilterEditor( actionCollection(), this );
+  rootContext()->setContextProperty( "filterEditor", filterEditor );
+  rootContext()->setContextProperty( "filterModel", filterEditor->model() );
 
   mAclEditor = new AclEditor( actionCollection(), this );
   rootContext()->setContextProperty( "aclEditor", mAclEditor );
@@ -346,7 +345,6 @@ void MainView::delayedInit()
 
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.mail", 4, 5, "ConfigWidget" );
-  qmlRegisterType<DeclarativeFilterConfigWidget>( "org.kde.akonadi.mail", 4, 5, "FilterConfigWidget" );
   qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.mail", 4, 5, "SearchWidget" );
   qmlRegisterUncreatableType<EmailsGuiStateManager>( "org.kde.akonadi.mail", 4, 5, "EmailsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 #ifdef KDEQMLPLUGIN_STATIC

@@ -19,9 +19,12 @@ set(libmailcommon_SRCS
   expirypropertiesdialog.cpp
   filteraction.cpp
   filteractionwidget.cpp
+  filtercontroller.cpp
+  filtereditdialog.cpp
   filterimporterexporter.cpp
   filterlog.cpp
   filtermanager.cpp
+  filtermodel.cpp
   foldercollection.cpp
   foldercollectionmonitor.cpp
   folderjob.cpp
@@ -49,7 +52,7 @@ set(libmailcommon_SRCS
   snippetvariabledialog.cpp
 )
 
-kde4_add_ui_files(libmailcommon_SRCS snippetdialog.ui)
+kde4_add_ui_files(libmailcommon_SRCS filterconfigwidget.ui snippetdialog.ui)
 
 if ( NOT WINCE )
 set(libmailcommon_SRCS ${libmailcommon_SRCS}

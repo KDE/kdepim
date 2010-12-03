@@ -19,13 +19,12 @@
 
 #include "filtereditdialog_p.h"
 
+#include "filteractionwidget.h"
+#include "filtermanager.h"
+#include "mailfilter.h"
+#include "mailkernel.h"
+#include "searchpatternedit.h"
 #include "ui_filterconfigwidget.h"
-
-#include <mailcommon/filteractionwidget.h>
-#include <mailcommon/filtermanager.h>
-#include <mailcommon/mailfilter.h>
-#include <mailcommon/mailkernel.h>
-#include <mailcommon/searchpatternedit.h>
 
 using namespace MailCommon;
 
@@ -70,7 +69,9 @@ void FilterEditDialog::save()
   if ( !mFilter )
     return;
 
+  FilterIf->filterManager()->beginUpdate();
   mFilter->pattern()->setName( mUi->filterName->text() );
+  FilterIf->filterManager()->endUpdate();
   mFilter->setApplyOnInbound( mUi->applyToIncomingCB->isChecked() );
   mFilter->setApplyOnOutbound( mUi->applyToSentCB->isChecked() );
   mFilter->setApplyBeforeOutbound( mUi->applyBeforeSendCB->isChecked() );

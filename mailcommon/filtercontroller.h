@@ -19,8 +19,10 @@
     02110-1301, USA.
 */
 
-#ifndef FILTERCONTROLLER_H
-#define FILTERCONTROLLER_H
+#ifndef MAILCOMMON_FILTERCONTROLLER_H
+#define MAILCOMMON_FILTERCONTROLLER_H
+
+#include "mailcommon_export.h"
 
 #include <QtCore/QObject>
 
@@ -28,7 +30,9 @@ class QAbstractItemModel;
 class QAction;
 class QItemSelectionModel;
 
-class FilterController : public QObject
+namespace MailCommon {
+
+class MAILCOMMON_EXPORT FilterController : public QObject
 {
   Q_OBJECT
 
@@ -100,5 +104,7 @@ class FilterController : public QObject
     Q_PRIVATE_SLOT( d, void moveDownFilter() )
     //@endcond
 };
+
+}
 
 #endif

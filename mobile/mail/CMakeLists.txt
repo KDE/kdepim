@@ -33,10 +33,7 @@ set(kmail_mobile_srcs
   emailsguistatemanager.cpp
   emailsfilterproxymodel.cpp
   emailsimporthandler.cpp
-  filtercontroller.cpp
-  filterconfigwidget.cpp
-  filtereditdialog.cpp
-  filtermodel.cpp
+  filtereditor.cpp
   mailactionmanager.cpp
   mailthreadgroupercomparator.cpp
   mainview.cpp
@@ -53,7 +50,7 @@ set(kmail_mobile_srcs
   vacationmanager.cpp
 )
 
-qt4_wrap_ui(kmail_mobile_srcs configwidget.ui filterconfigwidget.ui messagelistsettingseditor.ui searchwidget.ui)
+qt4_wrap_ui(kmail_mobile_srcs configwidget.ui messagelistsettingseditor.ui searchwidget.ui)
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
@@ -109,8 +106,8 @@ install(FILES
   AttachmentEditor.qml
   BulkActionComponent.qml
   ConfigDialog.qml
-  FilterActions.qml
-  FilterConfigDialog.qml
+  FilterEditor.qml
+  FilterList.qml
   ForwardOptionsPage.qml
   HeaderView.qml
   MarkAsPage.qml
