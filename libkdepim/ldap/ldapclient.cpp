@@ -204,6 +204,9 @@ void LdapClient::Private::slotDone()
   if ( err && err != KIO::ERR_USER_CANCELED ) {
     emit q->error( mJob->errorString() );
   }
+#ifdef KDEPIM_INPROCESS_LDAP
+  QMetaObject::invokeMethod( mJob, "deleteLater", Qt::QueuedConnection ); // it's in a different thread
+#endif
   emit q->done();
 }
 

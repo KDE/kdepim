@@ -111,9 +111,9 @@ LdapQueryJob* LdapSession::get(const KLDAP::LdapUrl& url)
 {
   kDebug() << url;
   LdapQueryJob* job = new LdapQueryJob( url, this );
-  job->moveToThread( this ); // just to be sure
+  job->moveToThread( this ); // make sure the job is in the thread so that the result connections are queued
+  connect( job, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
   QMutexLocker locker( &m_mutex );
-  job->moveToThread( this );
   m_jobQueue.enqueue( job );
   QMetaObject::invokeMethod( this, "executeNext", Qt::QueuedConnection );
   return job;
@@ -148,5 +148,16 @@ LdapConnection& LdapSession::connection()
 {
   return m_conn;
 }
+
+void LdapSession::jobDone(KJob* job)
+{
+  if ( m_currentJob == job )
+    m_currentJob = 0;
+  QMutexLocker locker( &m_mutex );
+  m_jobQueue.removeAll( static_cast<LdapQueryJob*>( job ) );
+  locker.unlock();
+  QMetaObject::invokeMethod( this, "executeNext", Qt::QueuedConnection );
+}
+
 
 #include "ldapsession.moc"

@@ -26,6 +26,8 @@
 #include <QtCore/QQueue>
 #include <QtCore/QMutex>
 
+class KJob;
+
 namespace KLDAP {
 
 class LdapServer;
@@ -58,6 +60,7 @@ class LdapSession : public QThread
 
   private slots:
     void executeNext();
+    void jobDone( KJob* job );
 
   private:
     enum State {

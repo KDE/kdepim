@@ -32,10 +32,11 @@
 using namespace KLDAP;
 
 LdapQueryJob::LdapQueryJob( const LdapUrl& url, LdapSession* session ) :
-  KJob( session ),
+  KJob( 0 ), // to not break moveToThread
   m_url( url ),
   m_session( session )
 {
+  setAutoDelete( false ); // auto-deletion is bad in combination with cross-thread queued connections
 }
 
 void LdapQueryJob::start()
