@@ -50,6 +50,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   calendarsupport
   kdepim
+  mailcommon
   messageviewer
 )
 

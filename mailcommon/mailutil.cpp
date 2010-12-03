@@ -128,7 +128,8 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances()
   return relevantInstances;
 }
 
-void ensureKorganizerRunning( bool switchTo )
+/* static */
+void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
 {
   QString error;
   QString dbusService;

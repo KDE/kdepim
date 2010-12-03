@@ -44,6 +44,7 @@
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
+#include <mailcommon/mailutil.h>
 #include <messageviewer/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 
@@ -714,37 +715,6 @@ class UrlHandler : public Interface::BodyPartURLHandler
       return mailICal( receiver, recv, msg, subject, status, type != Forward, viewerInstance );
     }
 
-    void ensureKorganizerRunning( bool switchTo ) const
-    {
-      QString error;
-      QString dbusService;
-      int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString(),
-                                                                &error, &dbusService );
-      if ( result == 0 ) {
-        // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
-        QDBusInterface iface( "org.kde.korganizer", "/MainApplication",
-                              "org.kde.KUniqueApplication" );
-        if ( iface.isValid() ) {
-          if ( switchTo ) {
-            iface.call( "newInstance" ); // activate korganizer window
-          }
-          QDBusInterface pimIface( "org.kde.korganizer", "/korganizer_PimApplication",
-                                   "org.kde.KUniqueApplication" );
-          QDBusReply<bool> r = pimIface.call( "load" );
-          if ( !r.isValid() || !r.value() ) {
-            kWarning() << "Loading korganizer failed: " << pimIface.lastError().message();
-          }
-        } else {
-          kWarning() << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
-        }
-
-        // We don't do anything with it, we just need it to be running so that it handles
-        // the incoming directory.
-      } else {
-        kWarning() << "Couldn't start DBUS/Organizer:" << dbusService << error;
-      }
-    }
-
     bool saveFile( const QString &receiver, const QString &iCal, const QString &type ) const
     {
     // FIXME no IncidenceEditors on WinCE, anyway we don't want to depend on it just for that
@@ -1095,7 +1065,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     void showCalendar( const QDate &date ) const
     {
-      ensureKorganizerRunning( true );
+      MailCommon::Util::ensureKorganizerRunning( true );
       QDBusInterface *kontact =
         new QDBusInterface( "org.kde.kontact", "/KontactInterface",
                             "org.kde.kontact.KontactInterface", QDBusConnection::sessionBus() );
