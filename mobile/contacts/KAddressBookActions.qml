@@ -128,7 +128,7 @@ ActionMenuContainer {
 
     addNewActionName: "akonadi_contact_create"
     searchActionTitle: KDE.i18n( "Search For Contacts" )
-    configureActionTitle: KDE.i18n( "Configure Addressbook" )
+    configureActionTitle: KDE.i18n( "Configure Contacts" )
 
     ActionListItem { name : "akonadi_contact_group_create" }
   }
