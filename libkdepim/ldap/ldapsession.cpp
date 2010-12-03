@@ -26,12 +26,14 @@
 #include <kldap/ldapdefs.h>
 
 #include <KDebug>
+#include "ldapqueryjob.h"
 
 using namespace KLDAP;
 
 LdapSession::LdapSession(QObject* parent) :
   QThread(parent),
-  m_state( Disconnected )
+  m_state( Disconnected ),
+  m_currentJob( 0 )
 {
   kDebug();
 }
@@ -104,17 +106,47 @@ void LdapSession::authenticate()
   }
 }
 
-void LdapSession::addJob(KJob* job)
+// called from other thread
+LdapQueryJob* LdapSession::get(const KLDAP::LdapUrl& url)
 {
-  kDebug() << "TODO" << job;
+  kDebug() << url;
+  LdapQueryJob* job = new LdapQueryJob( url, this );
+  job->moveToThread( this ); // just to be sure
+  QMutexLocker locker( &m_mutex );
+  job->moveToThread( this );
+  m_jobQueue.enqueue( job );
+  QMetaObject::invokeMethod( this, "executeNext", Qt::QueuedConnection );
+  return job;
 }
 
 void LdapSession::run()
 {
   connectToServerInternal();
+  QMetaObject::invokeMethod( this, "executeNext", Qt::QueuedConnection );
   exec();
   disconnectFromServerInternal();
 }
 
+void LdapSession::executeNext()
+{
+  if ( m_state != Authenticated || m_currentJob )
+    return;
+  QMutexLocker locker( &m_mutex );
+  if ( m_jobQueue.isEmpty() )
+    return;
+  m_currentJob = m_jobQueue.dequeue();
+  locker.unlock();
+  m_currentJob->start();
+}
+
+LdapServer LdapSession::server() const
+{
+  return m_server;
+}
+
+LdapConnection& LdapSession::connection()
+{
+  return m_conn;
+}
 
 #include "ldapsession.moc"

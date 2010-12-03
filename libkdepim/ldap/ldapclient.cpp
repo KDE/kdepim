@@ -72,6 +72,7 @@ class LdapClient::Private
     void finishCurrentObject();
 
     void slotData( KIO::Job*, const QByteArray &data );
+    void slotData( const QByteArray &data );
     void slotInfoMessage( KJob*, const QString &info, const QString& );
     void slotDone();
 
@@ -157,11 +158,13 @@ void LdapClient::startQuery( const QString &filter )
   d->mActive = true;
 #ifndef KDEPIM_INPROCESS_LDAP
   d->mJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
-#else
-  d->mJob = new LdapQueryJob( url, d->mSession );
-#endif
   connect( d->mJob, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
            this, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );
+#else
+  d->mJob = d->mSession->get( url );
+  connect( d->mJob, SIGNAL( data( const QByteArray& ) ),
+           this, SLOT( slotData( const QByteArray& ) ) );
+#endif
   connect( d->mJob, SIGNAL( infoMessage( KJob*, const QString&, const QString& ) ),
            this, SLOT( slotInfoMessage( KJob*, const QString&, const QString& ) ) );
   connect( d->mJob, SIGNAL( result( KJob* ) ),
@@ -179,6 +182,11 @@ void LdapClient::cancelQuery()
 }
 
 void LdapClient::Private::slotData( KIO::Job*, const QByteArray &data )
+{
+  parseLDIF( data );
+}
+
+void LdapClient::Private::slotData( const QByteArray &data )
 {
   parseLDIF( data );
 }

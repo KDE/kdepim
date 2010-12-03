@@ -23,12 +23,13 @@
 
 #include <QThread>
 #include <kldap/ldapconnection.h>
-
-class KJob;
+#include <QtCore/QQueue>
+#include <QtCore/QMutex>
 
 namespace KLDAP {
 
 class LdapServer;
+class LdapQueryJob;
 
 
 class LdapSession : public QThread
@@ -42,7 +43,10 @@ class LdapSession : public QThread
     /// call this instead of the dtor
     void disconnectAndDelete();
 
-    void addJob( KJob *job );
+    LdapQueryJob* get( const LdapUrl &url );
+
+    LdapServer server() const;
+    LdapConnection& connection();
 
   protected:
     void connectToServerInternal();
@@ -51,6 +55,9 @@ class LdapSession : public QThread
 
   private:
     void authenticate();
+
+  private slots:
+    void executeNext();
 
   private:
     enum State {
@@ -61,6 +68,9 @@ class LdapSession : public QThread
     State m_state;
     LdapConnection m_conn;
     LdapServer m_server;
+    QMutex m_mutex;
+    QQueue<LdapQueryJob*> m_jobQueue;
+    LdapQueryJob* m_currentJob;
 };
 
 }

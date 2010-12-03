@@ -155,6 +155,7 @@ class KDEPIM_EXPORT LdapClient : public QObject
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void slotData( KIO::Job*, const QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void slotData( const QByteArray& ) )
     Q_PRIVATE_SLOT( d, void slotInfoMessage( KJob*, const QString&, const QString& ) )
     Q_PRIVATE_SLOT( d, void slotDone() )
     //@endcond

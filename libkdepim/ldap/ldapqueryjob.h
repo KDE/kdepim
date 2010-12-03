@@ -24,6 +24,7 @@
 #include <KJob>
 #include <kldap/ldapurl.h>
 #include "ldapsession.h"
+#include <kldap/ldapoperation.h>
 
 namespace KLDAP {
 
@@ -40,6 +41,8 @@ class LdapQueryJob : public KJob
 
   private:
     LdapUrl m_url;
+    LdapSession *m_session;
+    LdapOperation m_op;
 };
 
 }
