@@ -10,7 +10,21 @@
     <height>372</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_5">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,1,0">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="filterName"/>
+     </item>
+    </layout>
+   </item>
    <item>
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0" colspan="2">

@@ -44,6 +44,61 @@ int FilterModel::rowCount( const QModelIndex& ) const
   return FilterIf->filterManager()->filters().size();
 }
 
+void FilterModel::moveRow( int sourceRow, int destinationRow )
+{
+  if ( sourceRow == destinationRow )
+    return;
+
+  if ( sourceRow < 0 || sourceRow >= rowCount() )
+    return;
+
+  if ( destinationRow < 0 || destinationRow >= rowCount() )
+    return;
+
+  if ( !beginMoveRows( QModelIndex(), sourceRow, sourceRow, QModelIndex(), destinationRow ) )
+    return;
+
+  QList<MailCommon::MailFilter*> filters;
+
+  MailCommon::FilterManager *manager = FilterIf->filterManager();
+
+  foreach ( MailCommon::MailFilter *filter, manager->filters() ) {
+    filters.append( new MailCommon::MailFilter( *filter ) ); // deep copy
+  }
+
+  filters.move( sourceRow, destinationRow );
+  manager->setFilters( filters );
+
+  endMoveRows();
+}
+
+bool FilterModel::insertRows( int row, int count, const QModelIndex &parent )
+{
+  beginInsertRows( parent, row, row + count - 1 );
+  for ( int i = 0; i < count; ++i ) {
+    MailCommon::MailFilter *filter = new MailCommon::MailFilter();
+    FilterIf->filterManager()->appendFilters( QList<MailCommon::MailFilter*> () << filter );
+  }
+  endInsertRows();
+
+  return true;
+}
+
+bool FilterModel::removeRows( int row, int count, const QModelIndex &parent )
+{
+  const QList<MailCommon::MailFilter*> filters = FilterIf->filterManager()->filters();
+
+  beginRemoveRows( parent, row, row + count - 1 );
+  for ( int i = 0; i < count; ++i ) {
+    MailCommon::MailFilter *filter = filters.at( row );
+    FilterIf->filterManager()->removeFilter( filter );
+    delete filter;
+  }
+  endRemoveRows();
+
+  return true;
+}
+
 void FilterModel::filterListUpdated()
 {
   reset();

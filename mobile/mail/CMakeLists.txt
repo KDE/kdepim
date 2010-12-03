@@ -33,7 +33,9 @@ set(kmail_mobile_srcs
   emailsguistatemanager.cpp
   emailsfilterproxymodel.cpp
   emailsimporthandler.cpp
+  filtercontroller.cpp
   filterconfigwidget.cpp
+  filtereditdialog.cpp
   filtermodel.cpp
   mailactionmanager.cpp
   mailthreadgroupercomparator.cpp
