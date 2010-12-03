@@ -145,6 +145,18 @@ void CalendarInterface::openTodoEditor( const QString &summary,
   Q_UNUSED( attachmentMimetype );
 }
 
+void CalendarInterface::openTodoEditor( const QString &summary,
+                                        const QString &description,
+                                        const QStringList &attachmentUris,
+                                        const QStringList &attendees,
+                                        const QStringList &attachmentMimetypes,
+                                        bool attachmentIsInline )
+{
+  emit openIncidenceEditorSignal( summary, description, attachmentUris, attendees,
+                                  attachmentMimetypes, attachmentIsInline,
+                                  KCalCore::Incidence::TypeTodo );
+}
+
 void CalendarInterface::showEventView()
 {
   emit showEventViewSignal();

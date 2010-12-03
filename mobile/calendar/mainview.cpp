@@ -109,7 +109,7 @@ MainView::~MainView()
 {
   m_calendarPrefs->writeConfig();
   m_calendar->deleteLater();
-  delete m_identityManager; 
+  delete m_identityManager;
 }
 
 EventViews::PrefsPtr MainView::preferences()
@@ -227,8 +227,12 @@ void MainView::qmlLoadingStateChanged( QDeclarativeView::Status status )
   if ( status != Ready ) // We wait until the QML is completely loaded
     return;
 
-  connect( m_calendarIface, SIGNAL( showDateSignal( QVariant ) ), rootObject(), SLOT( showDate( QVariant ) ) );
-  connect( m_calendarIface, SIGNAL( showEventViewSignal() ), rootObject(), SLOT( showEventView() ) );
+  connect( m_calendarIface, SIGNAL( showDateSignal( QVariant ) ),
+           rootObject(), SLOT( showDate( QVariant ) ) );
+  connect( m_calendarIface, SIGNAL( showEventViewSignal() ),
+           rootObject(), SLOT( showEventView() ) );
+  connect( m_calendarIface, SIGNAL(openIncidenceEditorSignal(QString,QString,QStringList,QStringList,QStringList,bool,KCalCore::Incidence::IncidenceType)), SLOT(openIncidenceEditor(QString,QString,QStringList,QStringList,QStringList,bool,KCalCore::Incidence::IncidenceType)) );
+
 
   // setup the shared settings object
   EventViews::AgendaViewItem *agendaViewItem = rootObject()->findChild<EventViews::AgendaViewItem*>();
@@ -313,6 +317,32 @@ void MainView::newTodo()
   item.setPayload<KCalCore::Todo::Ptr>( todo );
   editor->load( item );
   editor->show();
+}
+
+void MainView::openIncidenceEditor( const QString &summary,
+                                    const QString &description,
+                                    const QStringList &attachmentUris,
+                                    const QStringList &attendees,
+                                    const QStringList &atttachmentMimeTypes,
+                                    bool attachmentsAreInline,
+                                    KCalCore::Incidence::IncidenceType type )
+{
+  Q_UNUSED( summary );
+  Q_UNUSED( description );
+  Q_UNUSED( attachmentUris );
+  Q_UNUSED( attendees );
+  Q_UNUSED( atttachmentMimeTypes );
+  Q_UNUSED( attachmentsAreInline );
+
+  kDebug();
+  if ( type == KCalCore::Incidence::TypeTodo ) {
+    newTodo(); // just for testing purposes. I'll replace this with the to-do crafting
+               // code
+  } else if ( type == KCalCore::Incidence::TypeEvent ) {
+    newEvent();
+  } else {
+    Q_ASSERT_X( false, "openIncidenceEditor", "Unexpected incidence type" );
+  }
 }
 
 void MainView::editIncidence()

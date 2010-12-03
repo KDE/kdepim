@@ -22,6 +22,7 @@
 #define CALENDARINTERFACE_H
 
 #include <QObject>
+#include <KCalCore/Incidence>
 
 class QDate;
 
@@ -63,6 +64,13 @@ public slots:
                          const QStringList &attendees,
                          const QString &attachmentMimetype );
 
+    void openTodoEditor( const QString &summary,
+                         const QString &description,
+                         const QStringList &attachmentUris,
+                         const QStringList &attendees,
+                         const QStringList &attachmentMimetypes,
+                         bool attachmentIsInline );
+
     void openJournalEditor( const QDate &date );
     void openJournalEditor( const QString &text, const QDate &date );
     void openJournalEditor( const QString &text );
@@ -77,6 +85,13 @@ public slots:
 signals:
     void showDateSignal(const QVariant& date);
     void showEventViewSignal();
+    void openIncidenceEditorSignal( const QString &summary,
+                                    const QString &description,
+                                    const QStringList &attachmentUris,
+                                    const QStringList &attendees,
+                                    const QStringList &attachmentMimetypes,
+                                    bool attachmentIsInline,
+                                    KCalCore::Incidence::IncidenceType type );
 };
 
 #endif // CALENDARINTERFACE_H

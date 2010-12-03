@@ -29,6 +29,8 @@
 #include <calendarviews/eventviews/eventview.h>
 #include <calendarviews/eventviews/prefs.h>
 
+#include <KCalCore/Incidence>
+
 namespace Akonadi {
 class StandardCalendarActionManager;
 }
@@ -67,6 +69,15 @@ class MainView : public KDeclarativeMainView
 
     void newEvent();
     void newTodo();
+
+    void openIncidenceEditor( const QString &summary,
+                              const QString &description,
+                              const QStringList &attachmentUris,
+                              const QStringList &attendees,
+                              const QStringList &atttachmentMimeTypes,
+                              bool attachmentIsInline,
+                              KCalCore::Incidence::IncidenceType type );
+
     void editIncidence();
     void editIncidence( const Akonadi::Item &item, const QDate &date );
     void deleteIncidence();
