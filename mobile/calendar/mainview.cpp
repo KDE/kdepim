@@ -323,26 +323,40 @@ void MainView::openIncidenceEditor( const QString &summary,
                                     const QString &description,
                                     const QStringList &attachmentUris,
                                     const QStringList &attendees,
-                                    const QStringList &atttachmentMimeTypes,
+                                    const QStringList &attachmentMimeTypes,
                                     bool attachmentsAreInline,
                                     KCalCore::Incidence::IncidenceType type )
 {
-  Q_UNUSED( summary );
-  Q_UNUSED( description );
-  Q_UNUSED( attachmentUris );
-  Q_UNUSED( attendees );
-  Q_UNUSED( atttachmentMimeTypes );
-  Q_UNUSED( attachmentsAreInline );
-
   kDebug();
+
+  IncidenceEditorNG::IncidenceDefaults defaults = IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  // if attach or attendee list is empty, these methods don't do anything, so
+  // it's safe to call them in every case
+  defaults.setAttachments( attachmentUris, attachmentMimeTypes, attachmentsAreInline );
+  defaults.setAttendees( attendees );
+
+  KCalCore::Incidence::Ptr incidence;
+
   if ( type == KCalCore::Incidence::TypeTodo ) {
-    newTodo(); // just for testing purposes. I'll replace this with the to-do crafting
-               // code
+    incidence = KCalCore::Incidence::Ptr( new KCalCore::Todo );
   } else if ( type == KCalCore::Incidence::TypeEvent ) {
-    newEvent();
+    incidence = KCalCore::Incidence::Ptr( new KCalCore::Event );
   } else {
     Q_ASSERT_X( false, "openIncidenceEditor", "Unexpected incidence type" );
+    return;
   }
+
+  defaults.setDefaults( incidence );
+  incidence->setSummary( summary );
+  incidence->setDescription( description );
+
+  Akonadi::Item item;
+  item.setPayload( incidence );
+  item.setMimeType( incidence->mimeType() );
+  IncidenceView *editor = new IncidenceView;
+  editor->setWindowTitle( i18n( "KDE Calendar" ) );
+  editor->load( item );
+  editor->show();
 }
 
 void MainView::editIncidence()
