@@ -25,75 +25,124 @@
 #include <KDebug>
 #include <QGraphicsItem>
 
-void CalendarInterface::showDate(const QDate& date)
+void CalendarInterface::showDate( const QDate &date )
 {
-  emit showDateSignal(QVariant::fromValue<QDate>(date));
+  emit showDateSignal(QVariant::fromValue<QDate>( date ) );
 }
 
-void CalendarInterface::goDate(const QDate& )
+void CalendarInterface::goDate( const QDate& )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
-void CalendarInterface::goDate(const QString& )
+void CalendarInterface::goDate( const QString& )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
-void CalendarInterface::openEventEditor(const QString& )
+void CalendarInterface::openEventEditor( const QString& )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
-void CalendarInterface::openEventEditor(const QString& summary, const QString& description, const QStringList& attachments)
+void CalendarInterface::openEventEditor( const QString &summary,
+                                         const QString &description,
+                                         const QStringList &attachments)
+{
+  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  Q_UNUSED( summary );
+  Q_UNUSED( description );
+  Q_UNUSED( attachments );
+}
+
+void CalendarInterface::openEventEditor( const QString &summary,
+                                         const QString &description,
+                                         const QStringList &attachments,
+                                         const QStringList &attendees)
+{
+  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  Q_UNUSED( summary );
+  Q_UNUSED( description );
+  Q_UNUSED( attachments );
+  Q_UNUSED( attendees );
+}
+
+void CalendarInterface::openEventEditor( const QString &summary,
+                                         const QString &description,
+                                         const QString &uri,
+                                         const QString &file,
+                                         const QStringList &attendees,
+                                         const QString &attachmentMimetype)
+{
+  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  Q_UNUSED( summary );
+  Q_UNUSED( description );
+  Q_UNUSED( uri );
+  Q_UNUSED( file );
+  Q_UNUSED( attendees );
+  Q_UNUSED( attachmentMimetype );
+}
+
+void CalendarInterface::openJournalEditor( const QDate & )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
-void CalendarInterface::openEventEditor(const QString& summary, const QString& description, const QStringList& attachments, const QStringList& attendees)
+void CalendarInterface::openJournalEditor( const QString &text, const QDate &date )
+{
+  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  Q_UNUSED( text );
+  Q_UNUSED( date );
+}
+
+void CalendarInterface::openJournalEditor( const QString &text )
+{
+  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  Q_UNUSED( text );
+}
+
+void CalendarInterface::openTodoEditor( const QString& )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
-void CalendarInterface::openEventEditor(const QString& summary, const QString& description, const QString& uri, const QString& file, const QStringList& attendees, const QString& attachmentMimetype)
+void CalendarInterface::openTodoEditor( const QString &summary,
+                                        const QString &description,
+                                        const QStringList &attachments )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-}
-
-void CalendarInterface::openJournalEditor(const QDate& date)
-{
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-}
-
-void CalendarInterface::openJournalEditor(const QString& text, const QDate& date)
-{
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-}
-
-void CalendarInterface::openJournalEditor(const QString& text)
-{
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-}
-
-void CalendarInterface::openTodoEditor(const QString& )
-{
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-}
-
-void CalendarInterface::openTodoEditor(const QString& summary, const QString& description, const QStringList& attachments)
-{
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  Q_UNUSED( summary );
+  Q_UNUSED( description );
+  Q_UNUSED( attachments );
 }
 
 
-void CalendarInterface::openTodoEditor(const QString& summary, const QString& description, const QStringList& attachments, const QStringList& attendees)
+void CalendarInterface::openTodoEditor( const QString &summary,
+                                        const QString &description,
+                                        const QStringList &attachments,
+                                        const QStringList &attendees )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  Q_UNUSED( summary );
+  Q_UNUSED( description );
+  Q_UNUSED( attachments );
+  Q_UNUSED( attendees );
 }
 
-void CalendarInterface::openTodoEditor(const QString& summary, const QString& description, const QString& uri, const QString& file, const QStringList& attendees, const QString& attachmentMimetype )
+void CalendarInterface::openTodoEditor( const QString &summary,
+                                        const QString &description,
+                                        const QString &uri,
+                                        const QString &file,
+                                        const QStringList &attendees,
+                                        const QString &attachmentMimetype )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  Q_UNUSED( summary );
+  Q_UNUSED( description );
+  Q_UNUSED( uri );
+  Q_UNUSED( file );
+  Q_UNUSED( attendees );
+  Q_UNUSED( attachmentMimetype );
 }
 
 void CalendarInterface::showEventView()
