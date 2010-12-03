@@ -66,8 +66,10 @@ if (RUNTIME_PLUGINS_STATIC)
   target_link_libraries(korganizer-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup akonadi_serializer_kcalcore akonadi_serializer_mail)
 endif (RUNTIME_PLUGINS_STATIC)
 
+configure_file(korganizer-mobile.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/korganizer-mobile.sh)
+
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES korganizer-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/korganizer-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(PROGRAMS korganizer-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   BulkActionComponent.qml

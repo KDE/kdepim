@@ -8,4 +8,4 @@ if [ "$?" -ne "0"  ]; then
         export LD_LIBRARY_PATH=$QT_DIR:$LD_LIBRARY_PATH
 fi
 
-/data/installation/kde/trunk/bin/korganizer-mobile --graphicssystem raster
+${BIN_INSTALL_DIR}/korganizer-mobile --graphicssystem raster
