@@ -264,7 +264,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
       return false;
   }
 
-#ifndef _WIN32_WCE
+#ifndef KDEPIM_MOBILE_UI
   switch ( type ) {
     case KCalCore::IncidenceBase::TypeEvent:
       IncidenceEditorNG::IncidenceDialogFactory::createEventEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
@@ -288,6 +288,24 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
       Q_ASSERT( false );
       break;
   }
+#else
+  OrgKdeKorganizerCalendarInterface *iface =
+    new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer-mobile", "/Calendar",
+                                           QDBusConnection::sessionBus() );
+  switch( type ) {
+    case KCalCore::IncidenceBase::TypeEvent:
+      iface->openEventEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ), incidenceDescription, attachmentUris,
+                              QStringList(), attachmentMimeTypes, isInlineAttachment );
+      break;
+    case KCalCore::IncidenceBase::TypeTodo:
+      iface->openTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ), incidenceDescription, attachmentUris,
+                             QStringList(), attachmentMimeTypes, isInlineAttachment );
+      break;
+  default:
+    Q_ASSERT( false );
+    break;
+  }
+  delete iface;
 #endif
 
   tf.close();
@@ -385,7 +403,7 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, c
 
     // check if the index is a collection
     const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    
+
     if ( collection.isValid() ) {
 
       // check if it is unread
