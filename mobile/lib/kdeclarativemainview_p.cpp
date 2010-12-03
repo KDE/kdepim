@@ -77,7 +77,7 @@ QAbstractItemModel* KDeclarativeMainViewPrivate::getFavoritesListModel()
 void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
 {
   if ( !text.isEmpty() && !mFilterLineEdit->isVisible() ) {
-    mFilterLineEdit->setFixedHeight( 35 );
+    mFilterLineEdit->setFixedHeight( 40 );
     mFilterLineEdit->show();
     mFilterLineEdit->setFocus();
   } else if ( text.isEmpty() && mFilterLineEdit->isVisible() ) {
@@ -89,7 +89,7 @@ void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
 void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString &text )
 {
   if ( !text.isEmpty() && !mBulkActionFilterLineEdit->isVisible() ) {
-    mBulkActionFilterLineEdit->setFixedHeight( 35 );
+    mBulkActionFilterLineEdit->setFixedHeight( 40 );
     mBulkActionFilterLineEdit->show();
     mBulkActionFilterLineEdit->setFocus();
   } else if ( text.isEmpty() && mBulkActionFilterLineEdit->isVisible() ) {
