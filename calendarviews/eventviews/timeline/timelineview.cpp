@@ -172,6 +172,7 @@ TimelineView::TimelineView( QWidget *parent )
   : EventView( parent ), d( new Private( this ) )
 {
   QVBoxLayout *vbox = new QVBoxLayout( this );
+  vbox->setMargin( 0 );
   QSplitter *splitter = new QSplitter( Qt::Horizontal, this );
   d->mLeftView = new QTreeWidget;
   d->mLeftView->setHeader( new GanttHeaderView );
