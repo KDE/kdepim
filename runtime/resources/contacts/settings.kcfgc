@@ -1,0 +1,7 @@
+File=contactsresource.kcfg
+ClassName=ContactsResourceSettings
+Mutators=true
+ItemAccessors=true
+SetUserTexts=true
+Singleton=false
+GlobalEnums=true
