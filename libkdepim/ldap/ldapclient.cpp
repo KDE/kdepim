@@ -60,6 +60,10 @@ class LdapClient::Private
     ~Private()
     {
       q->cancelQuery();
+#ifdef KDEPIM_INPROCESS_LDAP
+      mSession->disconnectAndDelete();
+      mSession = 0;
+#endif
     }
 
     void startParseLDIF();

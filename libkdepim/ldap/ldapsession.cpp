@@ -30,19 +30,27 @@
 using namespace KLDAP;
 
 LdapSession::LdapSession(QObject* parent) :
-  QObject(parent),
+  QThread(parent),
   m_state( Disconnected )
 {
   kDebug();
 }
 
+// runs in other thread
 void LdapSession::connectToServer(const KLDAP::LdapServer& server)
 {
   kDebug();
   if ( m_state != Disconnected )
     return;
   m_server = server;
-  m_conn.setServer( server );
+  start();
+}
+
+// runs in this thread
+void LdapSession::connectToServerInternal()
+{
+  kDebug();
+  m_conn.setServer( m_server );
   if ( m_conn.connect() != 0 ) {
     kWarning() << "failed to connect: " << m_conn.connectionError();
     return;
@@ -51,8 +59,18 @@ void LdapSession::connectToServer(const KLDAP::LdapServer& server)
   authenticate();
 }
 
-void LdapSession::disconnectFromServer()
+// runs in other threads
+void LdapSession::disconnectAndDelete()
 {
+  kDebug();
+  QMetaObject::invokeMethod( this, "quit", Qt::QueuedConnection );
+  QMetaObject::invokeMethod( this, "deleteLater", Qt::QueuedConnection );
+}
+
+// runs in this thread
+void LdapSession::disconnectFromServerInternal()
+{
+  kDebug();
   m_conn.close();
   m_state = Disconnected;
 }
@@ -79,7 +97,7 @@ void LdapSession::authenticate()
       m_conn.setServer( m_server );
     } else {
 //       LDAPErr( retval );
-      disconnectFromServer();
+      disconnectFromServerInternal();
       kDebug() << "error" << retval;
       return;
     }
@@ -89,6 +107,13 @@ void LdapSession::authenticate()
 void LdapSession::addJob(KJob* job)
 {
   kDebug() << "TODO" << job;
+}
+
+void LdapSession::run()
+{
+  connectToServerInternal();
+  exec();
+  disconnectFromServerInternal();
 }
 
 

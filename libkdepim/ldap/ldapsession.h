@@ -21,7 +21,7 @@
 #ifndef KLDAP_LDAPSESSION_H
 #define KLDAP_LDAPSESSION_H
 
-#include <QObject>
+#include <QThread>
 #include <kldap/ldapconnection.h>
 
 class KJob;
@@ -31,16 +31,23 @@ namespace KLDAP {
 class LdapServer;
 
 
-class LdapSession : public QObject
+class LdapSession : public QThread
 {
   Q_OBJECT
   public:
     explicit LdapSession( QObject * parent = 0 );
 
+    /// call this instead of start()
     void connectToServer( const LdapServer &server );
-    void disconnectFromServer();
+    /// call this instead of the dtor
+    void disconnectAndDelete();
 
     void addJob( KJob *job );
+
+  protected:
+    void connectToServerInternal();
+    void disconnectFromServerInternal();
+    void run();
 
   private:
     void authenticate();
