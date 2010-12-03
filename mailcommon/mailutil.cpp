@@ -266,6 +266,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
   }
 
 #ifndef KDEPIM_MOBILE_UI
+  kDebug() << "desktop";
   switch ( type ) {
     case KCalCore::IncidenceBase::TypeEvent:
       IncidenceEditorNG::IncidenceDialogFactory::createEventEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
@@ -290,8 +291,9 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
       break;
   }
 #else
+  kDebug() << "mobile";
   OrgKdeKorganizerCalendarInterface *iface =
-    new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer-mobile", "/Calendar",
+    new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
                                            QDBusConnection::sessionBus() );
   switch( type ) {
     case KCalCore::IncidenceBase::TypeEvent:
