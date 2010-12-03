@@ -49,6 +49,13 @@ public slots:
                           const QStringList &attendees,
                           const QString &attachmentMimetype );
 
+    void openEventEditor( const QString &summary,
+                          const QString &description,
+                          const QStringList &attachmentUris,
+                          const QStringList &attendees,
+                          const QStringList &attachmentMimetypes,
+                          bool attachmentIsInline );
+
     void openTodoEditor( const QString &);
     void openTodoEditor( const QString &summary,
                          const QString &description,

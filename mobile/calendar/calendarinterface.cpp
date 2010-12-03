@@ -83,6 +83,18 @@ void CalendarInterface::openEventEditor( const QString &summary,
   Q_UNUSED( attachmentMimetype );
 }
 
+void CalendarInterface::openEventEditor( const QString &summary,
+                                         const QString &description,
+                                         const QStringList &attachmentUris,
+                                         const QStringList &attendees,
+                                         const QStringList &attachmentMimetypes,
+                                         bool attachmentIsInline )
+{
+  emit openIncidenceEditorSignal( summary, description, attachmentUris, attendees,
+                                  attachmentMimetypes, attachmentIsInline,
+                                  KCalCore::Incidence::TypeEvent );
+}
+
 void CalendarInterface::openJournalEditor( const QDate & )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
