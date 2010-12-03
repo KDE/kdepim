@@ -21,6 +21,8 @@
 
 #include "hierarchyresolver.h"
 
+#include <KDebug>
+
 void HierarchyResolver::addNode( const QByteArray &identifier )
 {
   mTopNodes.insert( identifier );
@@ -28,7 +30,11 @@ void HierarchyResolver::addNode( const QByteArray &identifier )
 
 void HierarchyResolver::addRelation( const QByteArray &child, const QByteArray &parent )
 {
-  mRelations.insert( child, parent );
+  if ( child != parent )
+    mRelations.insert( child, parent );
+  else
+    //TODO_TOKOE
+    kDebug() << "child equals parent: " << parent;
 }
 
 void HierarchyResolver::resolve( const QSet<QByteArray> &existingIdentifiers )
