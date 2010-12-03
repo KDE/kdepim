@@ -261,9 +261,7 @@ void ContactEditorView::setEditorLocation( EditorLocation *editor )
 
 void ContactEditorView::setEditorCrypto( EditorCrypto *editor )
 {
-#ifndef Q_OS_WINCE
   d->addDetailEditor( editor );
-#endif
 }
 
 void ContactEditorView::setEditorMore( EditorMore *editor )
