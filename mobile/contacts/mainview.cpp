@@ -271,12 +271,12 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   ActionHelper::adaptStandardActionTexts( mActionManager );
 
-  mActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Addressbook" ) );
-  mActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Addressbook", "Synchronize These Addressbooks" ) );
-  mActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Addressbook Properties" ) );
-  mActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Addressbook", "Delete Addressbooks" ) );
-  mActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Addressbook To" ) );
-  mActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Addressbook To" ) );
+  mActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Address Book" ) );
+  mActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Address Book", "Synchronize These Address Books" ) );
+  mActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Address Book Properties" ) );
+  mActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Address Book", "Delete Address Books" ) );
+  mActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Address Book To" ) );
+  mActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Address Book To" ) );
 
   mActionManager->action( Akonadi::StandardContactActionManager::CreateContact )->setText( i18n( "New Contact" ) );
   mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup )->setText( i18n( "New Group Of Contacts" ) );

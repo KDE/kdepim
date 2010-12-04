@@ -36,7 +36,7 @@ ActionMenuContainer {
     name : "home_menu"
     text : KDE.i18n( "Home" )
     ActionListItem { name : "synchronize_all_items" }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Multiple Addressbooks" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Multiple Address Books" ) }
     ActionListItem { name : "import_vcards" }
   }
 
@@ -100,7 +100,7 @@ ActionMenuContainer {
     name : "multi_folder_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ); visible: !guiStateManager.inSearchResultScreenState }
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Addressbooks" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Address Books" ) }
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
