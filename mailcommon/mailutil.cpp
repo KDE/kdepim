@@ -131,19 +131,48 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances()
 /* static */
 void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
 {
+  // FIXME: this function returns void, but there can be errors.
+  // FIXME: this function should be inside a QObject, and async, and emit a signal when korg registered itself successfuly
+
   QString error;
+  bool result = true;
   QString dbusService;
-  QString constraint;
 
-  #ifdef KDEPIM_MOBILE_UI
-  // start the mobile korg instead of the desktop one
-  constraint = "'mobile' in Keywords";
-  #endif;
+  #if defined (Q_OS_WINCE) || defined(Q_OS_WIN32)
+    //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
+    QDBusInterface *interface = new QDBusInterface( "org.kde.korganizer", "/MainApplication" );
+    if ( !interface->isValid() ) {
+      kDebug() << "Starting korganizer...";
+      delete interface;
 
-  const int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer",
-                                                                  constraint,
-                                                                  &error, &dbusService );
-  if ( result == 0 ) {
+      QDBusServiceWatcher *watcher = new QDBusServiceWatcher( "org.kde.korganizer", QDBusConnection::sessionBus(),
+                                                              QDBusServiceWatcher::WatchForRegistration );
+      QEventLoop loop;
+      watcher->connect( watcher, SIGNAL( serviceRegistered( const QString& ) ), &loop, SLOT( quit() ) );
+      result = QProcess::startDetached( "korganizer-mobile" );
+      if ( result ) {
+        kDebug() << "Starting loop";
+        loop.exec();
+        kDebug() << "Korganizer finished starting";
+      } else {
+        kWarning() << "Failed to start korganizer with QProcess";
+      }
+
+      delete watcher;
+    }
+  #else
+    QString constraint;
+
+    #ifdef KDEPIM_MOBILE_UI
+      // start the mobile korg instead of the desktop one
+      constraint = "'mobile' in Keywords";
+    #endif
+
+     result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer",
+                                                           constraint,
+                                                           &error, &dbusService ) == 0;
+  #endif
+  if ( result ) {
     // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
     QDBusInterface iface( "org.kde.korganizer", "/MainApplication",
                           "org.kde.KUniqueApplication" );
@@ -301,6 +330,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
 #else
   kDebug() << "mobile";
   MailCommon::Util::ensureKorganizerRunning( false );
+  kDebug() << "opening editor";
   OrgKdeKorganizerCalendarInterface *iface =
     new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
                                            QDBusConnection::sessionBus() );
