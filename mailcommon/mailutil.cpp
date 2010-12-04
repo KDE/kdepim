@@ -133,8 +133,15 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
 {
   QString error;
   QString dbusService;
+  QString constraint;
+
+  #ifdef KDEPIM_MOBILE_UI
+  // start the mobile korg instead of the desktop one
+  constraint = "'mobile' in Keywords";
+  #endif;
+
   const int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer",
-                                                                  "'mobile' in Keywords",
+                                                                  constraint,
                                                                   &error, &dbusService );
   if ( result == 0 ) {
     // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
