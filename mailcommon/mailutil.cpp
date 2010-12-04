@@ -133,8 +133,9 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
 {
   QString error;
   QString dbusService;
-  int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString(),
-                                                            &error, &dbusService );
+  const int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer",
+                                                                  "'mobile' in Keywords",
+                                                                  &error, &dbusService );
   if ( result == 0 ) {
     // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
     QDBusInterface iface( "org.kde.korganizer", "/MainApplication",
@@ -292,6 +293,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
   }
 #else
   kDebug() << "mobile";
+  MailCommon::Util::ensureKorganizerRunning( false );
   OrgKdeKorganizerCalendarInterface *iface =
     new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
                                            QDBusConnection::sessionBus() );
