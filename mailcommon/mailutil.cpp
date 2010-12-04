@@ -220,7 +220,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
   QStringList attachmentUris;
 
   KTemporaryFile tf;
-  tf.setAutoRemove( true );
+  tf.setAutoRemove( false );
 
   if ( !tf.open() ) {
     kWarning() << "CreateIncidenceFromMail: Unable to open temp file.";
@@ -301,6 +301,9 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
     default:
       return false;
   }
+  kDebug() << "AttachmentUris = " << attachmentUris
+           << "; isInlineAttachment = " << isInlineAttachment
+           << "; mimeTypes = " << attachmentMimeTypes;
 
 #ifndef KDEPIM_MOBILE_UI
   kDebug() << "desktop";
@@ -312,7 +315,8 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
                                                                     QStringList() /* attendees */,
                                                                     attachmentMimeTypes,
                                                                     isInlineAttachment,
-                                                                    Akonadi::Collection() );
+                                                                    Akonadi::Collection(),
+                                                                    true /* cleanup temp files */ );
       break;
     case KCalCore::IncidenceBase::TypeTodo:
       IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ),
@@ -321,7 +325,8 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
                                                                    QStringList() /* attendees */,
                                                                    attachmentMimeTypes,
                                                                    isInlineAttachment,
-                                                                   Akonadi::Collection() );
+                                                                   Akonadi::Collection(),
+                                                                   true /* cleanup temp files */ );
       break;
     default:
       Q_ASSERT( false );

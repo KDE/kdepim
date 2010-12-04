@@ -55,9 +55,10 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
                                                             const QStringList &attachmentMimetypes,
                                                             bool inlineAttachment,
                                                             Akonadi::Collection defaultCollection,
+                                                            bool cleanupAttachmentTemporaryFiles,
                                                             QWidget *parent, Qt::WFlags flags )
 {
-  IncidenceDefaults defaults = IncidenceDefaults::minimalIncidenceDefaults();
+  IncidenceDefaults defaults = IncidenceDefaults::minimalIncidenceDefaults( cleanupAttachmentTemporaryFiles );
   // if attach or attendee list is empty, these methods don't do anything, so
   // it's safe to call them in every case
   defaults.setAttachments( attachments, attachmentMimetypes, inlineAttachment );
@@ -91,9 +92,11 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
                                                              const QStringList &attachmentMimetypes,
                                                              bool inlineAttachment,
                                                              Akonadi::Collection defaultCollection,
+                                                             bool cleanupAttachmentTemporaryFiles,
                                                              QWidget *parent, Qt::WFlags flags )
 {
-  IncidenceDefaults defaults = IncidenceDefaults::minimalIncidenceDefaults();
+  IncidenceDefaults defaults = IncidenceDefaults::minimalIncidenceDefaults( cleanupAttachmentTemporaryFiles );
+
   // if attach or attendee list is empty, these methods don't do anything, so
   // it's safe to call them in every case
   defaults.setAttachments( attachments, attachmentMimetypes, inlineAttachment );
@@ -117,5 +120,6 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
                                     parent, flags );
   dialog->selectCollection( defaultCollection );
   dialog->load( item );
+
   return dialog;
 }

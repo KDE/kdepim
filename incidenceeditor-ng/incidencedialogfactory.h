@@ -51,7 +51,8 @@ namespace IncidenceDialogFactory
                                                                 const QStringList &attendees,
                                                                 const QStringList &attachmentMimetypes,
                                                                 bool inlineAttachment,
-                                                                Akonadi::Collection defaultCcollection,
+                                                                Akonadi::Collection defaultCollection,
+                                                                bool cleanupAttachmentTemporaryFiles,
                                                                 QWidget *parent = 0, Qt::WFlags flags = 0 );
 
   INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createEventEditor( const QString &summary,
@@ -60,7 +61,8 @@ namespace IncidenceDialogFactory
                                                                  const QStringList &attendees,
                                                                  const QStringList &attachmentMimetypes,
                                                                  bool inlineAttachment,
-                                                                 Akonadi::Collection defaultCcollection,
+                                                                 Akonadi::Collection defaultCollection,
+                                                                 bool cleanupAttachmentTemporaryFiles,
                                                                  QWidget *parent = 0, Qt::WFlags flags = 0 );
 
 } // namespace IncidenceDialogFactory

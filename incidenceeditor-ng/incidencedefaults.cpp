@@ -55,6 +55,7 @@ struct IncidenceDefaultsPrivate
   KCalCore::Incidence::Ptr         mRelatedIncidence;
   KDateTime                        mStartDt;
   KDateTime                        mEndDt;
+  bool                             mCleanupTemporaryFiles;
 
   /// Methods
   KCalCore::Person::Ptr organizerAsPerson() const;
@@ -196,9 +197,10 @@ void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) c
 
 /// IncidenceDefaults
 
-IncidenceDefaults::IncidenceDefaults()
+IncidenceDefaults::IncidenceDefaults( bool cleanupAttachmentTemporaryFiles )
   : d_ptr( new IncidenceDefaultsPrivate )
 {
+  d_ptr->mCleanupTemporaryFiles = cleanupAttachmentTemporaryFiles;
 }
 
 IncidenceDefaults::IncidenceDefaults( const IncidenceDefaults &other )
@@ -253,6 +255,12 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
         }
         // TODO, this method needs better error reporting.
         KIO::NetAccess::removeTempFile( tmpFile );
+
+        if ( d_ptr->mCleanupTemporaryFiles ) {
+          QFile file( *it );
+          file.remove();
+        }
+
       } else {
         attachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( *it, mimeType ) );
       }
@@ -368,9 +376,9 @@ void IncidenceDefaults::setDefaults( const KCalCore::Incidence::Ptr &incidence )
 }
 
 /** static */
-IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults()
+IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults( bool cleanupAttachmentTemporaryFiles )
 {
-  IncidenceDefaults defaults;
+  IncidenceDefaults defaults( cleanupAttachmentTemporaryFiles );
 
   // Set the full emails manually here, to avoid that we get dependencies on
   // KCalPrefs all over the place.

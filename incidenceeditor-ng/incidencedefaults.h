@@ -32,7 +32,7 @@ class IncidenceDefaultsPrivate;
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
 {
   public:
-    IncidenceDefaults();
+    IncidenceDefaults( bool cleanupAttachmentTEmporaryFiles = false );
     IncidenceDefaults( const IncidenceDefaults &other );
     ~IncidenceDefaults();
 
@@ -105,7 +105,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
      * TODO: See if this is always called when using IncidenceDefaults.
      * If yes, this should be done inside ctor.
      */
-    static IncidenceDefaults minimalIncidenceDefaults();
+    static IncidenceDefaults minimalIncidenceDefaults( bool cleanupAttachmentTemporaryFiles = false );
 
   private:
     IncidenceDefaultsPrivate *const d_ptr;

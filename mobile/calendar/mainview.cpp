@@ -329,7 +329,7 @@ void MainView::openIncidenceEditor( const QString &summary,
 {
   kDebug();
 
-  IncidenceEditorNG::IncidenceDefaults defaults = IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
+  IncidenceEditorNG::IncidenceDefaults defaults = IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults( attachmentsAreInline );
   // if attach or attendee list is empty, these methods don't do anything, so
   // it's safe to call them in every case
   defaults.setAttachments( attachmentUris, attachmentMimeTypes, attachmentsAreInline );
