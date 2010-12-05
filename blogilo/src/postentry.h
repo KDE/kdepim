@@ -121,6 +121,7 @@ protected Q_SLOTS:
     void slotError( const QString& errMsg );
     void slotPostPublished( int blog_id, BilboPost *post );
     void slotTitleChanged( const QString& title );
+    void showProgressBar();
     void deleteProgressBar();
     void saveTemporary();
     void slotPostModified();

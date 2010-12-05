@@ -61,7 +61,7 @@
 class PostEntry::Private
 {
 public:
-    QProgressBar *progress;
+    QPointer<QProgressBar> progress;
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *labelTitle;
@@ -102,7 +102,7 @@ PostEntry::PostEntry( QWidget *parent )
     d->mTimer = new QTimer(this);
     d->mTimer->start(Settings::autosaveInterval() * MINUTE);
     connect( d->mTimer, SIGNAL(timeout()), this, SLOT( saveTemporary() ) );
-    d->progress = 0;
+    d->progress = 0L;
     d->mCurrentPostBlogId = -1;
     d->mNumOfFilesToBeUploaded = 0;
     d->isPostContentModified = false;
@@ -357,9 +357,7 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
     }
     QList<BilboMedia*> lImages = localImages();
     if( lImages.size()>0 ) {
-        d->progress = new QProgressBar( this );
-        layout()->addWidget( d->progress );
-        d->progress->setRange( 0, 0 );
+        showProgressBar();
         QList<BilboMedia*>::iterator it = lImages.begin();
         QList<BilboMedia*>::iterator endIt = lImages.end();
         for ( ; it != endIt; ++it ) {
@@ -436,11 +434,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
         connect( b, SIGNAL(sigError(const QString&)), this, SLOT(slotError(const QString&)) );
         if ( uploadMediaFiles(b) ) {
             kDebug()<<"Uploading";
-            if( !d->progress ) {
-                d->progress = new QProgressBar( this );
-                layout()->addWidget( d->progress );
-                d->progress->setRange( 0, 0 );
-            }
+            showProgressBar();
             connect( b, SIGNAL( sigPostPublished( int, BilboPost* ) ),
                      this, SLOT( slotPostPublished( int, BilboPost* ) ) );
             if(d->isNewPost)
@@ -471,6 +465,15 @@ void PostEntry::slotPostPublished( int blog_id, BilboPost *post )
     this->unsetCursor();
     emit postPublishingDone( false, msg );
     sender()->deleteLater(); //FIXME Check if this command needed or NOT -Mehrdad
+}
+
+void PostEntry::showProgressBar()
+{
+    if( !d->progress ) {
+        d->progress = new QProgressBar( this );
+        layout()->addWidget( d->progress );
+        d->progress->setRange( 0, 0 );
+    }
 }
 
 void PostEntry::deleteProgressBar()
