@@ -145,13 +145,11 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
            d, SLOT( searchStopped() ) );
 }
 
-void KDeclarativeMainView::delayedInit()
+void KDeclarativeMainView::doDelayedInitInternal()
 {
   qmlRegisterType<DeclarativeFilterLineEdit>( "org.kde.akonadi", 4, 5, "FilterLineEdit" );
   qmlRegisterType<DeclarativeBulkActionFilterLineEdit>( "org.kde.akonadi", 4, 5, "BulkActionFilterLineEdit" );
   qmlRegisterUncreatableType<GuiStateManager>( "org.kde.pim.mobileui", 4, 5, "GuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
-
-  KDeclarativeFullScreenView::delayedInit();
 
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
 

@@ -84,15 +84,13 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     void showClock( QObject *obj );
     void setNewTime( int hour, int minute );
 
-  protected slots:
-    void delayedInit();
-
   private slots:
     void slotSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action );
     void slotSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction action,
                          const QString &message );
 
   private:
+    void doDelayedInit();
     void initIncidenceMore();
 
   private:

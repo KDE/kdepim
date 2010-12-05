@@ -63,9 +63,6 @@ class MainView : public KDeclarativeMainView
     void editIncidence( const Akonadi::Item &item );
     void saveAllAttachments();
 
-  protected slots:
-    virtual void delayedInit();
-
   private slots:
     void finishEdit( QObject *editor );
     void fetchForSaveAllAttachmentsDone( KJob* job );
@@ -75,6 +72,7 @@ class MainView : public KDeclarativeMainView
     void updateActionTexts();
 
   protected:
+    virtual void doDelayedInit();
     virtual QAbstractItemModel* createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model );
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );

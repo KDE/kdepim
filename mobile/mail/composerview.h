@@ -100,9 +100,6 @@ class ComposerView : public KDeclarativeFullScreenView
     void cryptoStateChanged();
     void recipientsCountChanged();
 
-  protected slots:
-    void delayedInit();
-
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
     void success();
@@ -123,6 +120,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void saveAsTemplate();
 
  protected:
+    void doDelayedInit();
     void closeEvent ( QCloseEvent * event );
 
   private:

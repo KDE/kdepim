@@ -121,7 +121,6 @@ class MainView : public KDeclarativeMainView
     void currentCollectionChanged();
 
   protected slots:
-    void delayedInit();
     void forwardMessage();
     void forwardAsAttachment();
     void redirect();
@@ -150,6 +149,7 @@ class MainView : public KDeclarativeMainView
     void collectionSelectionChanged();
 
   protected:
+    void doDelayedInit();
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
 

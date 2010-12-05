@@ -293,10 +293,8 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 }
 
 
-void MainView::delayedInit()
+void MainView::doDelayedInit()
 {
-  KDeclarativeMainView::delayedInit();
-
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
   MobileKernel::self()->setFolderCollectionMonitor( monitor() );
 

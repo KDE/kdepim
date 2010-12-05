@@ -91,9 +91,8 @@ MainView::~MainView()
   mCalendarPrefs->writeConfig();
 }
 
-void MainView::delayedInit()
+void MainView::doDelayedInit()
 {
-  KDeclarativeMainView::delayedInit();
   setWindowTitle( i18n( "Tasks" ) );
 
   addMimeType( KCalCore::Todo::todoMimeType() );

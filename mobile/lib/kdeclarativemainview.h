@@ -273,7 +273,6 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     virtual bool useFilterLineEditInCurrentState() const;
 
   protected Q_SLOTS:
-    void delayedInit();
     void breadcrumbsSelectionChanged();
     void itemSelectionChanged();
 
@@ -303,6 +302,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void setItemNaigationAndActionSelectionModels( QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel );
 
   private:
+    void doDelayedInitInternal();
     KDeclarativeMainViewPrivate * const d;
     Q_DISABLE_COPY( KDeclarativeMainView )
 

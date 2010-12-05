@@ -300,10 +300,9 @@ void MainWindow::Private::setupActions() {
     controller.createActions( coll );
 }
 
-void MainWindow::delayedInit() {
+void MainWindow::doDelayedInit() {
     qmlRegisterType<KeyTreeViewItem>( "org.kde.kleopatra", 2, 1, "KeyTreeView" );
     qmlRegisterType<SearchBarItem>  ( "org.kde.kleopatra", 2, 1, "SearchBar"   );
-    KDeclarativeFullScreenView::delayedInit();
     d->setupActions();
     engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 }

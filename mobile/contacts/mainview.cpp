@@ -61,7 +61,7 @@ MainView::MainView( QWidget *parent )
 {
 }
 
-void MainView::delayedInit()
+void MainView::doDelayedInit()
 {
   qmlRegisterType<Akonadi::Contact::ContactViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactView" );
   qmlRegisterType<Akonadi::Contact::ContactGroupViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactGroupView" );
@@ -73,7 +73,6 @@ void MainView::delayedInit()
   provider->setModel( itemModel() );
   engine()->addImageProvider( QLatin1String( "contact_images" ), provider );
 
-  KDeclarativeMainView::delayedInit();
   setWindowTitle( i18n( "Contacts" ) );
 
   addMimeType( KABC::Addressee::mimeType() );

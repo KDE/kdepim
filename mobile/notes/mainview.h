@@ -43,10 +43,8 @@ class MainView : public KDeclarativeMainView
 
     void startComposer();
 
-  protected slots:
-    virtual void delayedInit();
-
   protected:
+    virtual void doDelayedInit();
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
 

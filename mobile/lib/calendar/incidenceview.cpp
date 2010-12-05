@@ -76,9 +76,8 @@ IncidenceView::IncidenceView( QWidget* parent )
   context->setContextProperty( "_incidenceview", this );
 }
 
-void IncidenceView::delayedInit()
+void IncidenceView::doDelayedInit()
 {
-  KDeclarativeFullScreenView::delayedInit();
   qmlRegisterType<DCollectionCombo>( "org.kde.incidenceeditors", 4, 5, "CollectionCombo" );
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );

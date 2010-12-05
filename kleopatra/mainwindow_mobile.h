@@ -53,10 +53,8 @@ public:
 public Q_SLOTS:
     void importCertificatesFromFile( const QStringList & files );
 
-protected Q_SLOTS:
-    /* reimp */ void delayedInit();
-
 protected:
+    /* reimp */ void doDelayedInit();
     /* reimp */ void closeEvent( QCloseEvent * );
     /* reimp */ void keyPressEvent( QKeyEvent * );
 

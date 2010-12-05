@@ -166,10 +166,8 @@ ContactGroupEditorView::ContactGroupEditorView( QWidget *parent )
   setWindowTitle( i18n( "KDE Contacts" ) );
 }
 
-void ContactGroupEditorView::delayedInit()
+void ContactGroupEditorView::doDelayedInit()
 {
-  KDeclarativeFullScreenView::delayedInit();
-
   qmlRegisterType<DeclarativeEditorContactGroup>( "org.kde.contacteditors", 4, 5, "ContactGroupEditor" );
 
   connect( d->mItemManager, SIGNAL( itemSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction ) ),

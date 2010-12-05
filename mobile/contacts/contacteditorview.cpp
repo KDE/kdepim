@@ -210,10 +210,8 @@ ContactEditorView::ContactEditorView( QWidget *parent )
   setWindowTitle( i18n( "KDE Contacts" ) );
 }
 
-void ContactEditorView::delayedInit()
+void ContactEditorView::doDelayedInit()
 {
-  KDeclarativeFullScreenView::delayedInit();
-
   qmlRegisterType<DeclarativeEditorGeneral>( "org.kde.contacteditors", 4, 5, "ContactEditorGeneral" );
   qmlRegisterType<DeclarativeEditorBusiness>( "org.kde.contacteditors", 4, 5, "ContactEditorBusiness" );
   qmlRegisterType<DeclarativeEditorLocation>( "org.kde.contacteditors", 4, 5, "ContactEditorLocation" );

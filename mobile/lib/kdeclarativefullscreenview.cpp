@@ -140,9 +140,6 @@ void KDeclarativeFullScreenView::delayedInit()
   if ( qmlPath.isEmpty() ) // Try harder
     qmlPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + m_qmlFileName + ".qml" );
 
-  // call setSource() only once our derived classes have set up everything
-  QMetaObject::invokeMethod( this, "setQmlFile", Qt::QueuedConnection, Q_ARG( QString, qmlPath ) );
-
   // TODO: Get this from a KXMLGUIClient?
   mActionCollection = new KActionCollection( this );
 
@@ -155,6 +152,12 @@ void KDeclarativeFullScreenView::delayedInit()
   if ( debugTiming ) {
     kWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
   }
+
+  doDelayedInitInternal();
+  doDelayedInit(); // let sub-classes do their init work
+
+  // call setSource() only once our derived classes have set up everything
+  QMetaObject::invokeMethod( this, "setQmlFile", Qt::QueuedConnection, Q_ARG( QString, qmlPath ) );
 }
 
 KDeclarativeFullScreenView::~KDeclarativeFullScreenView()

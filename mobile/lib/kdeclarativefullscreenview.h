@@ -69,13 +69,15 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     
     KActionCollection* actionCollection() const;
 
-  protected Q_SLOTS:
+  protected:
     /** Most initialization work should be done here instead of the ctor.
-     * @note: Remember to call the base class implementation when overwriting this.
      */
-    virtual void delayedInit();
+    virtual void doDelayedInit() = 0;
+    /** This is for KDeclarativeFullScreenView, don't touch! */
+    virtual void doDelayedInitInternal() {}
 
   private Q_SLOTS:
+    void delayedInit();
     void setQmlFile( const QString &source );
     void slotStatusChanged ( QDeclarativeView::Status );
 

@@ -48,9 +48,6 @@ class MainView : public KDeclarativeMainView
     void editContact( const Akonadi::Item &item );
     void editContactGroup( const Akonadi::Item &item );
 
-  protected Q_SLOTS:
-    virtual void delayedInit();
-
   private Q_SLOTS:
     void finishEdit( QObject *editor );
     void itemSelectionChanged( const QItemSelection &selected, const QItemSelection& );
@@ -59,6 +56,7 @@ class MainView : public KDeclarativeMainView
     void updateActionTexts();
 
   protected:
+    virtual void doDelayedInit();
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
 

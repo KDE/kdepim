@@ -96,7 +96,6 @@ class MainView : public KDeclarativeMainView
     void changeCalendarColor();
 
   protected Q_SLOTS:
-    void delayedInit();
     void qmlLoadingStateChanged( QDeclarativeView::Status status );
 
   private Q_SLOTS:
@@ -108,6 +107,7 @@ class MainView : public KDeclarativeMainView
     void updateActionTexts();
 
   protected:
+    void doDelayedInit();
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
 

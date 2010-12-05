@@ -117,9 +117,8 @@ EventViews::PrefsPtr MainView::preferences()
   return m_calendarPrefs;
 }
 
-void MainView::delayedInit()
+void MainView::doDelayedInit()
 {
-  KDeclarativeMainView::delayedInit();
   setWindowTitle( i18n( "Calendar" ) );
 
   addMimeType( KCalCore::Event::eventMimeType() );
