@@ -70,12 +70,13 @@ MainWindow::MainWindow()
     setWindowTitle( i18n("Blogilo") );
 
     tabPosts = new KTabWidget( this );
-    tabPosts->setElideMode( Qt::ElideRight );///TODO make this Optional!
-#if KDE_IS_VERSION( 4, 5, 80 )
-    tabPosts->tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
-#else
+    tabPosts->setElideMode( Qt::ElideRight );
+// #if KDE_IS_VERSION( 4, 5, 80 )
+///  does not build with KDE 4.5.80: Compile Error: ‘QTabBar* QTabWidget::tabBar() const’ is protected
+//     tabPosts->tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
+// #else
     tabPosts->setTabCloseActivatePrevious( true );
-#endif
+// #endif
     tabPosts->setDocumentMode(true);
     setCentralWidget( tabPosts );
 //     this->setDockOptions( QMainWindow::ForceTabbedDocks);
