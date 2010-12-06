@@ -722,6 +722,12 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
         IncidenceEditorNG::GroupwareIntegration::activate();
       }
+#else
+      static bool s_groupwareInitialized = false;
+      if ( !s_groupwareInitialized ) {
+        CalendarSupport::Groupware::create( 0 );
+        s_groupwareInitialized = true;
+      }
 #endif
       CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
       // TODO: catch signal, and do error handling
