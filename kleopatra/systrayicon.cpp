@@ -214,7 +214,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( setInitialPinAction );
     KDAB_SET_OBJECT_NAME( learnCertificatesAction );
 
-    connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(openOrRaiseMainWindow()) );
+    connect( &openCertificateManagerAction, SIGNAL(triggered()), qApp, SLOT(openOrRaiseMainWindow()) );
     connect( &configureAction, SIGNAL(triggered()), qApp, SLOT(openOrRaiseConfigDialog()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
