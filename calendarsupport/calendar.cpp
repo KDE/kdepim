@@ -188,6 +188,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
            << "version=" << item.revision()
            << "alreadyExisted=" << alreadyExisted
            << "; mode = " << mode
+           << "; Parent collection id = " << item.storageCollectionId()
            << "; calendar = " << q;
   Q_ASSERT( mode == DontCare || alreadyExisted == ( mode == AssertExists ) );
 
