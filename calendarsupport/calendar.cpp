@@ -124,6 +124,15 @@ void Calendar::Private::layoutChanged()
 {
 }
 
+void Calendar::Private::appendVirtualItems( Akonadi::Item::List &itemList )
+{
+  foreach( const Akonadi::Item &item, itemList ) {
+    if ( m_virtualItems.contains( item.id() ) ) {
+      itemList.append( m_virtualItems.value( item.id() ) );
+    }
+  }
+}
+
 void Calendar::Private::modelReset()
 {
   clear();
@@ -139,6 +148,7 @@ void Calendar::Private::clear()
   m_childToUnseenParent.clear();
   m_unseenParentToChildren.clear();
   m_itemIdsForDate.clear();
+  m_virtualItems.clear();
 }
 
 void Calendar::Private::readFromModel()
@@ -191,6 +201,17 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
            << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
            << "; parentCollection.id() = " << item.parentCollection().id() // can be a virtual collection
            << "; calendar = " << q;
+
+  if ( mode != AssertExists && alreadyExisted ) {
+    // An item from a virtual folder was inserted and we already have an item with
+    // this id, belonging to the real collection. So we just insert it in m_virtualItems
+    // so we keep track of it. Most hashes are indexed by Item::Id, and korg does lookups by Id too,
+    // so we can't just treat this item as an independent one.
+    m_virtualItems[item.id()].append( item );
+    q->notifyIncidenceAdded( item );
+    return;
+  }
+
   Q_ASSERT( mode == DontCare || alreadyExisted == ( mode == AssertExists ) );
 
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
@@ -448,6 +469,17 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
   assertInvariants();
   foreach ( const Akonadi::Item &item, items ) {
     Q_ASSERT( item.isValid() );
+
+    if ( !m_virtualItems.value( item.id() ).isEmpty() ) {
+      // We have more than one item with the same id, due to virtual folders, so we can't
+      // cleanup any hashes, to-do hierarchies, id to uid maps, etc, yet. We can only do that
+      // when the last item is removed. Just decrement and return.
+      m_virtualItems[item.id()].removeLast();
+      q->notifyIncidenceDeleted( item );
+      emit q->calendarChanged();
+      return;
+    }
+
     Akonadi::Item ci( m_itemMap.take( item.id() ) );
 
     removeItemFromMaps( ci );
@@ -620,6 +652,7 @@ Akonadi::Item::List Calendar::rawTodos( TodoSortField sortField,
       todoList.append( i.value() );
     }
   }
+  d->appendVirtualItems( todoList );
   return sortTodos( todoList, sortField, sortDirection );
 }
 
@@ -635,6 +668,7 @@ Akonadi::Item::List Calendar::rawTodosForDate( const QDate &date )
     }
     ++it;
   }
+  d->appendVirtualItems( todoList );
   return todoList;
 }
 
@@ -728,6 +762,9 @@ Akonadi::Item::List Calendar::rawEventsForDate( const QDate &date,
       }
     }
   }
+
+  d->appendVirtualItems( eventList );
+
   return sortEvents( eventList, sortField, sortDirection );
 }
 
@@ -782,6 +819,9 @@ Akonadi::Item::List Calendar::rawEvents( const QDate &start, const QDate &end,
       eventList.append( i.value() );
     }
   }
+
+  d->appendVirtualItems( eventList );
+
   return eventList;
 }
 
@@ -801,6 +841,7 @@ Akonadi::Item::List Calendar::rawEvents( EventSortField sortField,
       eventList.append( i.value() );
     }
   }
+  d->appendVirtualItems( eventList );
   return sortEvents( eventList, sortField, sortDirection );
 }
 
@@ -825,6 +866,7 @@ Akonadi::Item::List Calendar::rawJournals( JournalSortField sortField,
       journalList.append( i.value() );
     }
   }
+  d->appendVirtualItems( journalList );
   return sortJournals( journalList, sortField, sortDirection );
 }
 
@@ -840,6 +882,7 @@ Akonadi::Item::List Calendar::rawJournalsForDate( const QDate &date )
     }
     ++it;
   }
+  d->appendVirtualItems( journalList );
   return journalList;
 }
 
