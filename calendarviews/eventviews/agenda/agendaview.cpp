@@ -288,7 +288,6 @@ void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &inciden
 
 void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &incidence )
 {
-  Q_UNUSED( incidence );
   // No need to call setChanges(), that triggers a fillAgenda()
 
   mAgenda->removeIncidence( incidence );

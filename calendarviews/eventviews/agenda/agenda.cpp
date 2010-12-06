@@ -1893,7 +1893,9 @@ QList<AgendaItem::QPtr> Agenda::agendaItems( const Akonadi::Item &aitem ) const
 {
   QList<AgendaItem::QPtr> items;
   Q_FOREACH ( AgendaItem::QPtr const item, d->mItems ) {
-    if ( item && item->incidence() == aitem ) {
+    if ( item &&
+         item->incidence().id() == aitem.id() &&
+         item->incidence().parentCollection().id() == aitem.parentCollection().id() ) {
       items.push_back( item );
     }
   }
