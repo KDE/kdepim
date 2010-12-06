@@ -1891,26 +1891,26 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int X
 
 QList<AgendaItem::QPtr> Agenda::agendaItems( const Akonadi::Item &aitem ) const
 {
-  QList<AgendaItem::QPtr> items;
-  Q_FOREACH ( AgendaItem::QPtr const item, d->mItems ) {
-    if ( item &&
-         item->incidence().id() == aitem.id() &&
-         item->incidence().parentCollection().id() == aitem.parentCollection().id() ) {
-      items.push_back( item );
+  QList<AgendaItem::QPtr> agendaItems;
+  Q_FOREACH ( AgendaItem::QPtr const agendaItem, d->mItems ) {
+    if ( agendaItem &&
+         agendaItem->incidence().id() == aitem.id() &&
+         agendaItem->incidence().parentCollection().id() == aitem.parentCollection().id() ) {
+      agendaItems.push_back( agendaItem );
     }
   }
-  return items;
+  return agendaItems;
 }
 
-void Agenda::removeIncidence( const Akonadi::Item &incidence )
+void Agenda::removeIncidence( const Akonadi::Item &akonadiItem )
 {
   // First find all items to be deleted and store them
   // in its own list. Otherwise removeAgendaItem will reset
   // the current position in the iterator-loop and mess the logic up.
-  const QList<AgendaItem::QPtr> itemsToRemove = agendaItems( incidence );
+  const QList<AgendaItem::QPtr> agendaItemsToRemove = agendaItems( akonadiItem );
 
-  foreach ( AgendaItem::QPtr  const item, itemsToRemove ) {
-    removeAgendaItem( item );
+  foreach ( AgendaItem::QPtr  const agendaItem, agendaItemsToRemove ) {
+    removeAgendaItem( agendaItem );
   }
 }
 
