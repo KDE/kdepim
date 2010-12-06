@@ -39,10 +39,10 @@ namespace Kleo {
 namespace FileDialog {
 
     QString getExistingDirectory( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString() );
-    QString getOpenFileName( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & filter=QString(), QString * selectedFilter=0 );
-    QStringList getOpenFileNames( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & filter=QString(), QString * selectedFilter=0 );
-    QString getSaveFileName( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & filter=QString(), QString * selectedFilter=0 );
-    QString getSaveFileNameEx( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & proposedFileName=QString(), const QString & filter=QString(), QString * selectedFilter=0 );
+    QString getOpenFileName( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & filter=QString() );
+    QStringList getOpenFileNames( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & filter=QString() );
+    QString getSaveFileName( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & filter=QString() );
+    QString getSaveFileNameEx( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & proposedFileName=QString(), const QString & filter=QString() );
 
 }
 }
