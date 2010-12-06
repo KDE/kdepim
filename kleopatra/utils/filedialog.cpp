@@ -35,6 +35,11 @@
 
 #include "filedialog.h"
 
+#ifdef QT_NO_FILEDIALOG
+#include <KFileDialog>
+#include <KUrl>
+#endif
+
 #include <QMap>
 
 using namespace Kleo;
@@ -60,52 +65,55 @@ static void update( const QString & fname, const QString & id ) {
 QString FileDialog::getExistingDirectory( QWidget * parent, const QString & caption, const QString & dirID ) {
 #ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getExistingDirectory( parent, caption, dir( dirID ) );
+#else
+    const QString fname = KFileDialog::getExistingDirectory( dir( dirID ), parent, caption );
+#endif
     update( fname, dirID );
     return fname;
-#else
-    return QString();
-#endif // QT_NO_FILEDIALOG
 }
 
 QString FileDialog::getOpenFileName( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter ) {
 #ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getOpenFileName( parent, caption, dir( dirID ), filter );
+#else
+    Q_UNUSED( filter ); // incompatible syntax
+    const QString fname = KFileDialog::getOpenFileName( dir( dirID ), QString(), parent, caption );
+#endif
     update( fname, dirID );
     return fname;
-#else
-    return QString();
-#endif // QT_NO_FILEDIALOG
 }
 
 QStringList FileDialog::getOpenFileNames( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter ) {
 #ifndef QT_NO_FILEDIALOG
     const QStringList files = QFileDialog::getOpenFileNames( parent, caption, dir( dirID ), filter );
+#else
+    Q_UNUSED( filter ); // incompatible syntax
+    const QStringList files = KFileDialog::getOpenFileNames( dir( dirID ), QString(), parent, caption );
+#endif
     if ( !files.empty() )
         update( files.front(), dirID );
     return files;
-#else
-    return QStringList();
-#endif // QT_NO_FILEDIALOG
 }
 
 QString FileDialog::getSaveFileName( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter ) {
 #ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getSaveFileName( parent, caption, dir( dirID ), filter );
+#else
+    Q_UNUSED( filter ); // incompatible syntax
+    const QString fname = KFileDialog::getSaveFileName( dir( dirID ), QString(), parent, caption );
+#endif
     update( fname, dirID );
     return fname;
-#else
-    return QString();
-#endif // QT_NO_FILEDIALOG
 }
 
 QString FileDialog::getSaveFileNameEx( QWidget * parent, const QString & caption, const QString & dirID, const QString & proposedFileName, const QString & filter ) {
-#ifndef QT_NO_FILEDIALOG
     if ( proposedFileName.isEmpty() )
         return getSaveFileName( parent, caption, dirID, filter );
+#ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getSaveFileName( parent, caption, QDir( dir( dirID ) ).filePath( proposedFileName ), filter );
+#else
+    const QString fname = KFileDialog::getSaveFileName( QDir( dir( dirID ) ).filePath( proposedFileName ), QString(), parent, caption );
+#endif
     update( fname, dirID );
     return fname;
-#else
-    return QString();
-#endif // QT_NO_FILEDIALOG
 }
