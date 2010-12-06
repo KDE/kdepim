@@ -45,6 +45,27 @@
 #include <QApplication>
 #include <QIcon>
 
+#ifdef KLEO_STATIC_KCMODULES
+# include <KDesktopFile>
+# define KCM_IMPORT_PLUGIN( x ) extern "C" KCModule * create_##x( QWidget * parent=0, const QVariantList & args=QVariantList() );
+# define addMyModule( x ) addModule( KCModuleInfo( KDesktopFile( "services", #x ".desktop" ) ), create_##x() )
+#else // KLEO_STATIC_KCMODULES
+# define KCM_IMPORT_PLUGIN( x )
+# define addMyModule( x ) addModule( #x )
+#endif // KLEO_STATIC_KCMODULES
+
+KCM_IMPORT_PLUGIN( kleopatra_config_dirserv )
+#ifndef KDEPIM_MOBILE_UI
+KCM_IMPORT_PLUGIN( kleopatra_config_appear )
+#endif
+#ifdef HAVE_KLEOPATRACLIENT_LIBRARY
+# ifndef KDEPIM_MOBILE_UI
+KCM_IMPORT_PLUGIN( kleopatra_config_cryptooperations )
+# endif
+KCM_IMPORT_PLUGIN( kleopatra_config_smimevalidation )
+#endif
+KCM_IMPORT_PLUGIN( kleopatra_config_gnupgsystem )
+
 ConfigureDialog::ConfigureDialog( QWidget * parent )
   : KCMultiDialog( parent )
 {
@@ -56,13 +77,17 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
 #endif
   showButton( User1, true );
 
-  addModule( "kleopatra_config_dirserv" );
-  addModule( "kleopatra_config_appear" );
-#ifdef HAVE_KLEOPATRACLIENT_LIBRARY
-  addModule( "kleopatra_config_cryptooperations" );
-  addModule( "kleopatra_config_smimevalidation" );
+  addMyModule( kleopatra_config_dirserv );
+#ifndef KDEPIM_MOBILE_UI
+  addMyModule( kleopatra_config_appear );
 #endif
-  addModule( "kleopatra_config_gnupgsystem" );
+#ifdef HAVE_KLEOPATRACLIENT_LIBRARY
+# ifndef KDEPIM_MOBILE_UI
+  addMyModule( kleopatra_config_cryptooperations );
+# endif
+  addMyModule( kleopatra_config_smimevalidation );
+#endif
+  addMyModule( kleopatra_config_gnupgsystem );
 
   // We store the minimum size of the dialog on hide, because otherwise
   // the KCMultiDialog starts with the size of the first kcm, not
@@ -87,5 +112,8 @@ void ConfigureDialog::hideEvent( QHideEvent * e ) {
 
 ConfigureDialog::~ConfigureDialog() {
 }
+
+#undef addMyModule
+#undef KCM_IMPORT_PLUGIN
 
 #include "configuredialog.moc"

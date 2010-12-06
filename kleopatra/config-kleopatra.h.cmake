@@ -32,3 +32,6 @@
 #define KPATH_SEPARATOR ':'
 #endif
 #endif
+
+/* Mirrored from cmake option */
+#cmakedefine KLEO_STATIC_KCMODULES 1

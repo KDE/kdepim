@@ -1,5 +1,7 @@
 project(kleopatra)
 
+option( KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't install plugins" WINCE )
+
 include(MacroOptionalAddSubdirectory)
 
 set( kleopatra_version 2.1.0 )
@@ -301,6 +303,12 @@ if(WINCE)
     utils/qwizard.cpp
   )
 endif(WINCE)
+
+if ( KLEO_STATIC_KCMODULES )
+  set(_kleopatra_extra_libs kcm_kleopatra)
+else ( KLEO_STATIC_KCMODULES )
+  set(_kleopatra_extra_libs)
+endif ( KLEO_STATIC_KCMODULES )
 
 if ( KLEO_MODEL_TEST )
  add_definitions( -DKLEO_MODEL_TEST )

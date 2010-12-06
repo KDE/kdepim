@@ -64,12 +64,18 @@ kde4_add_kcfg_files( kcm_kleopatra_PART_SRCS
   ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/emailoperationspreferences.kcfgc
   )
 
+if ( KLEO_STATIC_KCMODULES )
+kde4_add_plugin(kcm_kleopatra STATIC ${kcm_kleopatra_PART_SRCS})
+else ( KLEO_STATIC_KCMODULES )
 kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
+endif ( KLEO_STATIC_KCMODULES )
 
 target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} kleo ${_kcm_kleopatra_extra_libs} ${_kcm_kleopatra_libkleopatraclient_extra_LIBS})
 
 
+if ( NOT KLEO_STATIC_KCMODULES )
 install(TARGETS kcm_kleopatra  DESTINATION ${PLUGIN_INSTALL_DIR})
+endif ( NOT KLEO_STATIC_KCMODULES )
 
 
 ########### install files ###############
