@@ -652,7 +652,7 @@ KCalCore::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &
 
     if ( excludeBlockedAlarms ) {
       // take the collection from m_collectionMap, because we need the up-to-date collection attributes
-      const Akonadi::Collection parentCollection = d->m_collectionMap.value( item.parentCollection().id() );
+      const Akonadi::Collection parentCollection = d->m_collectionMap.value( item.storageCollectionId() );
       if ( parentCollection.isValid() ) {
         if ( parentCollection.hasAttribute<BlockAlarmsAttribute>() )
           continue; // do not include alarms from this collection
@@ -1930,7 +1930,7 @@ bool Calendar::hasChangeRights( const Akonadi::Item &item ) const
   // if the users changes the rights, item.parentCollection()
   // can still have the old rights, so we use call collection()
   // which returns the updated one
-  const Akonadi::Collection col = collection( item.parentCollection().id() );
+  const Akonadi::Collection col = collection( item.storageCollectionId() );
   return col.rights() & Akonadi::Collection::CanChangeItem;
 }
 
@@ -1939,7 +1939,7 @@ bool Calendar::hasDeleteRights( const Akonadi::Item &item ) const
   // if the users changes the rights, item.parentCollection()
   // can still have the old rights, so we use call collection()
   // which returns the updated one
-  const Akonadi::Collection col = collection( item.parentCollection().id() );
+  const Akonadi::Collection col = collection( item.storageCollectionId() );
   return col.rights() & Akonadi::Collection::CanDeleteItem;
 }
 
