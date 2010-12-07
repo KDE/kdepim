@@ -143,11 +143,13 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
     l->setSpacing( KDialog::spacingHint() );
     l->setMargin( 0 );
     QScrollArea * s = new QScrollArea( w );
+    s->setFrameStyle( QFrame::NoFrame );
     s->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
     s->setWidgetResizable( true );
     l->addWidget( s );
     vbox = new QWidget( s->viewport() );
     vlay = new QVBoxLayout( vbox );
+    vlay->setMargin( 0 );
     s->setWidget( vbox );
     addPage( w, configOK ? QString() : i18n("GpgConf Error") );
   }
