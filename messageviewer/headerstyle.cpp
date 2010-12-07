@@ -60,6 +60,7 @@ using KPIMUtils::LinkLocator;
 #include <QImage>
 #include <QApplication>
 #include <QRegExp>
+#include <QFontMetrics>
 
 #include <kstandarddirs.h>
 #include <KApplication>
@@ -941,6 +942,25 @@ public:
   QString format( KMime::Message *message ) const;
 };
 
+static int matchingFontSize( const QString &text, int maximumWidth, int fontPixelSize )
+{
+  int pixelSize = fontPixelSize;
+  while ( true ) {
+    if ( pixelSize <= 8 )
+      break;
+
+    QFont font;
+    font.setPixelSize( pixelSize );
+    QFontMetrics fm( font );
+    if ( fm.width( text ) <= maximumWidth )
+      break;
+
+    pixelSize--;
+  }
+
+  return pixelSize;
+}
+
 static QString formatMobileHeader( KMime::Message *message, bool extendedFormat, const HeaderStyle *style )
 {
   if ( !message )
@@ -993,7 +1013,9 @@ static QString formatMobileHeader( KMime::Message *message, bool extendedFormat,
     headerStr += "  <div style=\"margin-top: 10px; height: 20px; margin-left: 90px; vertical-align: bottom; font-size: 15px; color: #0E49A1\">" + toPart + ccPart + "</div>\n";
   }
 
-  headerStr += "  <div style=\"height: 35px; margin-left: 90px; font-size: 20px; color: #24353F;\">" + message->subject()->asUnicodeString() + "</div>\n";
+  const int subjectFontSize = matchingFontSize( message->subject()->asUnicodeString(), 650, 20 );
+
+  headerStr += "  <div style=\"height: 35px; margin-left: 90px; font-size: " + QString::number( subjectFontSize ) + "px; color: #24353F;\">" + message->subject()->asUnicodeString() + "</div>\n";
 
   if ( !style->messagePath().isEmpty() ) {
     headerStr += "  <div style=\"margin-left: 47px; font-size: 15px; color: #24353F; float: left\">" + style->messagePath() + "</div>\n";
