@@ -50,6 +50,8 @@
 #include <KStandardShortcut>
 #include <KUrl>
 
+#include <solid/networking.h>
+
 #include <QApplication>
 #include <QCursor>
 #include <QObject>
@@ -660,6 +662,10 @@ void AddresseeLineEdit::Private::slotReturnPressed( const QString & )
 
 void AddresseeLineEdit::Private::slotStartLDAPLookup()
 {
+  if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+    return;
+  }
+
   const KGlobalSettings::Completion mode = q->completionMode();
 
   if ( mode == KGlobalSettings::CompletionNone ) {
