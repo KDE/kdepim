@@ -29,16 +29,18 @@ QML.Item {
 
   function iconFromStatus( status )
   {
-    if ( (status & KPIM.AgentStatusMonitor.Sending) && (status & KPIM.AgentStatusMonitor.Receiving) ) {
-      return "images/status/sending-receiving.png";
-    } else if ( status & KPIM.AgentStatusMonitor.Receiving ) {
-      return "images/status/receiving.png";
-    } else if ( status & KPIM.AgentStatusMonitor.Sending ) {
-      return "images/status/sending.png";
-    } else if ( status & KPIM.AgentStatusMonitor.Online ) {
-      return "images/status/online.png"
-    } else {
+    if ( !(status & KPIM.AgentStatusMonitor.Online) ) {
       return "images/status/offline.png";
+    } else {
+      if ( (status & KPIM.AgentStatusMonitor.Sending) && (status & KPIM.AgentStatusMonitor.Receiving) ) {
+        return "images/status/sending-receiving.png";
+      } else if ( status & KPIM.AgentStatusMonitor.Receiving ) {
+        return "images/status/receiving.png";
+      } else if ( status & KPIM.AgentStatusMonitor.Sending ) {
+        return "images/status/sending.png";
+      } else {
+        return "images/status/online.png"
+      }
     }
   }
 
