@@ -677,8 +677,6 @@ void AttachmentControllerBase::addAttachments( const KUrl::List &urls )
 
 void AttachmentControllerBase::showAttachPublicKeyDialog()
 {
-// FIXME: disabled until QTreeWidget usage has been removed
-#ifndef Q_OS_WINCE
   using Kleo::KeySelectionDialog;
   QPointer<KeySelectionDialog> dialog = new KeySelectionDialog(
       i18n( "Attach Public OpenPGP Key" ),
@@ -693,7 +691,6 @@ void AttachmentControllerBase::showAttachPublicKeyDialog()
     exportPublicKey( dialog->fingerprint() );
   }
   delete dialog;
-#endif
 }
 
 void AttachmentControllerBase::enableAttachPublicKey( bool enable )
