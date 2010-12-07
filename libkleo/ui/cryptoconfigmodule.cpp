@@ -117,6 +117,9 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, Layout
 }
 
 void Kleo::CryptoConfigModule::init( Layout layout ) {
+  if ( QLayout * l = this->layout() )
+    l->setMargin( 0 );
+
   Kleo::CryptoConfig * const config = mConfig;
   const KPageView::FaceType type=determineJanusFace( config, layout );
   setFaceType(type);
