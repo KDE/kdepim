@@ -155,6 +155,7 @@ void EditorGeneral::Private::addEmailRows( int newRowCount )
 
   mUi.gridLayout->removeWidget( mUi.phoneLabel );
   mUi.gridLayout->removeWidget( mUi.addPhoneButton );
+  mUi.gridLayout->removeWidget( mUi.cancelButton );
   mUi.gridLayout->removeWidget( mUi.saveButton );
   mUi.gridLayout->removeWidget( mUi.collectionSelector );
   mUi.gridLayout->removeWidget( mUi.launchAccountWizardButton );
@@ -180,9 +181,10 @@ void EditorGeneral::Private::addEmailRows( int newRowCount )
   }
 
   mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.cancelButton, row, 2, 1, 1 );
   mUi.gridLayout->addWidget( mUi.saveButton, row, 3, 1, 1 );
-  mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 2 );
-  mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, row, 1, 1, 2 );
+  mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, row, 1, 1, 1 );
 }
 
 void EditorGeneral::Private::clearEmailClicked()
@@ -215,6 +217,7 @@ void EditorGeneral::Private::clearEmailClicked()
 
     mUi.gridLayout->removeWidget( mUi.phoneLabel );
     mUi.gridLayout->removeWidget( mUi.addPhoneButton );
+    mUi.gridLayout->removeWidget( mUi.cancelButton );
     mUi.gridLayout->removeWidget( mUi.saveButton );
     mUi.gridLayout->removeWidget( mUi.collectionSelector );
     mUi.gridLayout->removeWidget( mUi.launchAccountWizardButton );
@@ -237,9 +240,10 @@ void EditorGeneral::Private::clearEmailClicked()
     }
 
     mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.cancelButton, row, 2, 1, 1 );
     mUi.gridLayout->addWidget( mUi.saveButton, row, 3, 1, 1 );
-    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 2 );
-    mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, row, 1, 1, 2 );
+    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, row, 1, 1, 1 );
   } else {
     last->clear();
   }
@@ -253,6 +257,7 @@ void EditorGeneral::Private::addPhoneRows( int newRowCount )
 
   // remove widgets from layout
   mUi.gridLayout->removeWidget( mUi.addPhoneButton );
+  mUi.gridLayout->removeWidget( mUi.cancelButton );
   mUi.gridLayout->removeWidget( mUi.saveButton );
   mUi.gridLayout->removeWidget( mUi.collectionSelector );
   mUi.gridLayout->removeWidget( mUi.launchAccountWizardButton );
@@ -271,9 +276,10 @@ void EditorGeneral::Private::addPhoneRows( int newRowCount )
 
   // re-add widgets
   mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.cancelButton, mLastPhoneRow + 1, 2, 1, 1 );
   mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 3, 1, 1 );
-  mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 1, 1, 2 );
-  mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, mLastPhoneRow + 1, 1, 1, 2 );
+  mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 1, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, mLastPhoneRow + 1, 1, 1, 1 );
 }
 
 void EditorGeneral::Private::clearPhoneClicked()
@@ -300,6 +306,7 @@ void EditorGeneral::Private::clearPhoneClicked()
   if ( mPhoneWidgets.count() > 2 ) {
     // remove widgets from layout
     mUi.gridLayout->removeWidget( mUi.addPhoneButton );
+    mUi.gridLayout->removeWidget( mUi.cancelButton );
     mUi.gridLayout->removeWidget( mUi.saveButton );
     mUi.gridLayout->removeWidget( mUi.collectionSelector );
     mUi.gridLayout->removeWidget( mUi.launchAccountWizardButton );
@@ -312,9 +319,10 @@ void EditorGeneral::Private::clearPhoneClicked()
 
     // re-add widgets
     mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.cancelButton, mLastPhoneRow + 1, 2, 1, 1 );
     mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 3, 1, 1 );
-    mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 1, 1, 2 );
-    mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, mLastPhoneRow + 1, 1, 1, 2 );
+    mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 1, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, mLastPhoneRow + 1, 1, 1, 1 );
   } else {
     last->mInput->clear();
     last->mType->setType( KABC::PhoneNumber::Home );
