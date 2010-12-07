@@ -27,7 +27,7 @@ class QCompleter;
 class MobileLineEdit : public QWidget
 {
   Q_OBJECT
-  
+
   public:
     explicit MobileLineEdit( QWidget *parent = 0 );
 
@@ -38,14 +38,14 @@ class MobileLineEdit : public QWidget
     QString text() const;
 
     void setCompleter( QCompleter *completer );
-    
+
   Q_SIGNALS:
     void clearClicked();
     void textEdited( const QString &text );
 
   public Q_SLOTS:
     void clear();
-    
+
   private:
     class Private;
     Private *const d;

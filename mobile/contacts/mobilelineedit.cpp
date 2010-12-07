@@ -19,6 +19,8 @@
 
 #include "mobilelineedit.h"
 
+#include <kicon.h>
+
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
@@ -49,9 +51,9 @@ MobileLineEdit::MobileLineEdit( QWidget *parent )
   box->addWidget( d->mEdit );
 
   connect( d->mEdit, SIGNAL( textEdited( QString ) ), SIGNAL( textEdited( QString ) ) );
-  
+
   d->mButton = new QPushButton( this );
-  d->mButton->setText( QLatin1String( "X" ) ); // TODO icon
+  d->mButton->setIcon( KIcon( "edit-clear-locationbar-rtl" ) );
   d->mButton->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
   box->addWidget( d->mButton );
 

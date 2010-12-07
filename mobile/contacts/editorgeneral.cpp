@@ -67,6 +67,8 @@ class EditorGeneral::Private
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
       mUi.collectionSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanChangeItem );
 
+      mUi.gridLayout->removeWidget( mUi.pictureButton );
+      mUi.gridLayout->addWidget( mUi.pictureButton, 0, 3, 3, 1, Qt::AlignTop );
       mUi.pictureButton->setType( ImageWidget::Photo );
 
       QObject::connect( mUi.launchAccountWizardButton, SIGNAL( clicked() ), q, SIGNAL( requestLaunchAccountWizard() ) );
