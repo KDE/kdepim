@@ -62,9 +62,7 @@ void ConfigWidget::load()
   Settings::self()->setMapService( mMapServiceBox->findData( addressUrl ) );
   mManager->updateWidgets();
 
-#ifndef _WIN32_WCE
   mLdapConfigWidget->load();
-#endif
 }
 
 void ConfigWidget::save()
@@ -78,9 +76,7 @@ void ConfigWidget::save()
   group.writeEntry( "AddressUrl", addressUrl );
   config.sync();
 
-#ifndef _WIN32_WCE
   mLdapConfigWidget->save();
-#endif
 }
 
 DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
