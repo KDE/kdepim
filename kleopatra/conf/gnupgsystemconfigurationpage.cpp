@@ -51,7 +51,13 @@ GnuPGSystemConfigurationPage::GnuPGSystemConfigurationPage( const KComponentData
 
   CryptoConfig * const config = CryptoBackendFactory::instance()->config();
 
-  mWidget = new CryptoConfigModule( config, CryptoConfigModule::TabbedLayout, this );
+  mWidget = new CryptoConfigModule( config,
+#ifdef KDEPIM_MOBILE_UI
+                                    CryptoConfigModule::LinearizedLayout,
+#else
+                                    CryptoConfigModule::TabbedLayout,
+#endif
+                                    this );
   lay->addWidget( mWidget );
 
   connect( mWidget, SIGNAL(changed()), this, SLOT(changed()) );
