@@ -98,10 +98,16 @@ static unsigned int num_components_with_options( const Kleo::CryptoConfig * conf
   return result;
 }
 
-static const KPageView::FaceType determineJanusFace( const Kleo::CryptoConfig * config, Kleo::CryptoConfigModule::Layout layout ) {
-  return num_components_with_options( config ) < 2
-    ? KPageView::Plain
-    : layout == Kleo::CryptoConfigModule::TabbedLayout ? KPageView::Tabbed : KPageView::List ;
+static KPageView::FaceType determineJanusFace( const Kleo::CryptoConfig * config, Kleo::CryptoConfigModule::Layout layout, bool & ok ) {
+  ok = true;
+  if ( num_components_with_options( config ) < 2 ) {
+    ok = false;
+    return KPageView::Plain;
+  }
+  return
+      layout == CryptoConfigModule::LinearizedLayout ? KPageView::Plain :
+      layout == CryptoConfigModule::TabbedLayout     ? KPageView::Tabbed :
+      /* else */                                       KPageView::List ;
 }
 
 Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent )
@@ -121,16 +127,28 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
     l->setMargin( 0 );
 
   Kleo::CryptoConfig * const config = mConfig;
-  const KPageView::FaceType type=determineJanusFace( config, layout );
+
+  bool configOK = false;
+  const KPageView::FaceType type = determineJanusFace( config, layout, configOK );
+
   setFaceType(type);
+
   QVBoxLayout * vlay = 0;
   QWidget * vbox = 0;
+
   if ( type == Plain ) {
-    vbox = new QWidget(this);
+    QWidget * w = new QWidget(this);
+    QVBoxLayout * l = new QVBoxLayout( w );
+    l->setSpacing( KDialog::spacingHint() );
+    l->setMargin( 0 );
+    QScrollArea * s = new QScrollArea( w );
+    s->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
+    s->setWidgetResizable( true );
+    l->addWidget( s );
+    vbox = new QWidget( s->viewport() );
     vlay = new QVBoxLayout( vbox );
-    vlay->setSpacing( KDialog::spacingHint() );
-    vlay->setMargin( 0 );
-    addPage( vbox, i18n("GpgConf Error") );
+    s->setWidget( vbox );
+    addPage( w, configOK ? QString() : i18n("GpgConf Error") );
   }
 
   const QStringList components = config->componentList();
@@ -140,7 +158,18 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
     Q_ASSERT( comp );
     if ( comp->groupList().empty() )
       continue;
-    if ( type != Plain ) {
+
+    CryptoConfigComponentGUI * compGUI
+        = new CryptoConfigComponentGUI( this, comp );
+    compGUI->setObjectName( *it );
+    // KJanusWidget doesn't seem to have iterators, so we store a copy...
+    mComponentGUIs.append( compGUI );
+
+    if ( type == Plain ) {
+      QGroupBox * gb = new QGroupBox( comp->description(), vbox );
+      ( new QVBoxLayout( gb ) )->addWidget( compGUI );
+      vlay->addWidget( gb );
+    } else {
       vbox = new QWidget(this);
       vlay = new QVBoxLayout( vbox );
       vlay->setSpacing( KDialog::spacingHint() );
@@ -149,33 +178,27 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
       if ( type != Tabbed )
           pageItem->setIcon( loadIcon( comp->iconName() ) );
       addPage(pageItem);
+
+      QScrollArea* scrollArea = type == Tabbed ? new QScrollArea( vbox ) : new ScrollArea( vbox );
+      scrollArea->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
+      scrollArea->setWidgetResizable( true );
+
+      vlay->addWidget( scrollArea );
+      scrollArea->setWidget( compGUI );
+
+      // Set a nice startup size
+      const int deskHeight = QApplication::desktop()->height();
+      int dialogHeight;
+      if (deskHeight > 1000) // very big desktop ?
+          dialogHeight = 800;
+      else if (deskHeight > 650) // big desktop ?
+          dialogHeight = 500;
+      else // small (800x600, 640x480) desktop
+          dialogHeight = 400;
+      assert( scrollArea->widget() );
+      if ( type != Tabbed )
+          scrollArea->setMinimumHeight( qMin( compGUI->sizeHint().height(), dialogHeight ) );
     }
-
-    QScrollArea* scrollArea = type == Tabbed ? new QScrollArea( this ) : new ScrollArea( this );
-    scrollArea->setWidgetResizable( true );
-
-    vlay->addWidget( scrollArea );
-
-    CryptoConfigComponentGUI* compGUI =
-      new CryptoConfigComponentGUI( this, comp, scrollArea );
-    compGUI->setObjectName( *it );
-    scrollArea->setWidget( compGUI );
-    scrollArea->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-    // KJanusWidget doesn't seem to have iterators, so we store a copy...
-    mComponentGUIs.append( compGUI );
-
-    // Set a nice startup size
-    const int deskHeight = QApplication::desktop()->height();
-    int dialogHeight;
-    if (deskHeight > 1000) // very big desktop ?
-      dialogHeight = 800;
-    else if (deskHeight > 650) // big desktop ?
-      dialogHeight = 500;
-    else // small (800x600, 640x480) desktop
-      dialogHeight = 400;
-    assert( scrollArea->widget() );
-    if ( type != Tabbed )
-        scrollArea->setMinimumHeight( qMin( compGUI->sizeHint().height(), dialogHeight ) );
   }
   if ( mComponentGUIs.empty() ) {
       const QString msg = i18n("The gpgconf tool used to provide the information "

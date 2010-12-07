@@ -57,7 +57,7 @@ namespace Kleo {
   class KLEO_EXPORT CryptoConfigModule : public KPageWidget {
     Q_OBJECT
   public:
-    enum Layout { TabbedLayout, IconListLayout };
+    enum Layout { TabbedLayout, IconListLayout, LinearizedLayout };
     explicit CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0 );
     explicit CryptoConfigModule( Kleo::CryptoConfig* config, Layout layout, QWidget * parent=0 );
 
