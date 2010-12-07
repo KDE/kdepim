@@ -163,18 +163,12 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
 
   KVBox *sideBox = new KVBox( d->mLeftSplitter );
 
-  EventIndicator *eiSpacer = new EventIndicator( EventIndicator::Top, sideBox );
-  eiSpacer->changeColumns( 0 );
-
   // compensate for the frame the agenda views but not the timelabels have
   QWidget *timeLabelTopAlignmentSpacer = new QWidget( sideBox );
 
   d->mTimeLabelsZone = new TimeLabelsZone( sideBox, PrefsPtr( new Prefs() ) );
 
   QWidget *timeLabelBotAlignmentSpacer = new QWidget( sideBox );
-
-  eiSpacer = new EventIndicator( EventIndicator::Bottom, sideBox );
-  eiSpacer->changeColumns( 0 );
 
   d->mLeftBottomSpacer = new QWidget( topSideBox );
 
@@ -205,15 +199,8 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   d->mRightSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
   d->mRightDummyWidget = new QWidget( d->mRightSplitter );
-  sideBox = new KVBox( d->mRightSplitter );
 
-  eiSpacer = new EventIndicator( EventIndicator::Top, sideBox );
-  eiSpacer->setFixedHeight( eiSpacer->minimumHeight() );
-  eiSpacer->changeColumns( 0 );
-  d->mScrollBar = new QScrollBar( Qt::Vertical, sideBox );
-  eiSpacer = new EventIndicator( EventIndicator::Bottom, sideBox );
-  eiSpacer->setFixedHeight( eiSpacer->minimumHeight() );
-  eiSpacer->changeColumns( 0 );
+  d->mScrollBar = new QScrollBar( Qt::Vertical, d->mRightSplitter );
 
   d->mRightBottomSpacer = new QWidget( topSideBox );
   topLevelLayout->addWidget( topSideBox );

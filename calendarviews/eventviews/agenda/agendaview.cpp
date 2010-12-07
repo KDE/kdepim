@@ -78,11 +78,30 @@ class EventIndicator::Private
     {
       mEnabled.resize( mColumns );
 
-      if ( mLocation == Top ) {
-        mPixmap = SmallIcon( "arrow-up-double" );
-      } else {
-        mPixmap = SmallIcon( "arrow-down-double" );
-      }
+      QChar ch;
+      // Dashed up and down arrow characters
+      ch = QChar( mLocation == Top ? 0x21e1 : 0x21e3 );
+      QFont font = q->font();
+      font.setPixelSize( KIconLoader::global()->currentSize( KIconLoader::Dialog ) );
+      QFontMetrics fm( font );
+      QRect rect = fm.boundingRect( ch ).adjusted( -2, -2, 2, 2 );
+      mPixmap = QPixmap( rect.size() );
+      mPixmap.fill( Qt::transparent );
+      QPainter p( &mPixmap );
+      p.setOpacity( 0.33 );
+      p.setFont( font );
+      p.setPen( q->palette().text().color() );
+      p.drawText( -rect.left(), -rect.top(), ch );
+    }
+
+    void adjustGeometry()
+    {
+      QRect rect;
+      rect.setWidth( q->parentWidget()->width() );
+      rect.setHeight( q->height() );
+      rect.setLeft( 0 );
+      rect.setTop( mLocation == EventIndicator::Top ? 0 : q->parentWidget()->height() - rect.height() );
+      q->setGeometry( rect );
     }
 
   public:
@@ -95,7 +114,9 @@ class EventIndicator::Private
 EventIndicator::EventIndicator( Location loc, QWidget *parent )
   : QFrame( parent ), d( new Private( this, loc ) )
 {
-  setMinimumHeight( d->mPixmap.height() );
+  setAttribute( Qt::WA_TransparentForMouseEvents );
+  setFixedHeight( d->mPixmap.height() );
+  parent->installEventFilter( this );
 }
 
 EventIndicator::~EventIndicator()
@@ -103,26 +124,28 @@ EventIndicator::~EventIndicator()
   delete d;
 }
 
-void EventIndicator::paintEvent( QPaintEvent *event )
+void EventIndicator::paintEvent( QPaintEvent * )
 {
-  QFrame::paintEvent( event );
-
   QPainter painter( this );
 
+  const double cellWidth = static_cast<double>( width() ) / d->mColumns;
+  const bool isRightToLeft = QApplication::isRightToLeft();
+  const uint pixmapOffset = isRightToLeft ? 0 : ( cellWidth - d->mPixmap.width() );
   for ( int i = 0; i < d->mColumns; ++i ) {
     if ( d->mEnabled[ i ] ) {
-      const double cellWidth = static_cast<double>( contentsRect().right() ) / d->mColumns;
-
-      const uint halfPixmapWidth = d->mPixmap.width() / 2;
-      const uint halfColumnWidth = cellWidth / 2;
-
-      const int xOffset = QApplication::isRightToLeft() ?
-                          ( d->mColumns - 1 - i ) * cellWidth + halfColumnWidth - halfPixmapWidth :
-                          i * cellWidth + halfColumnWidth - halfPixmapWidth;
-
-      painter.drawPixmap( QPoint( xOffset, 0 ), d->mPixmap );
+      const int xOffset = ( isRightToLeft ? ( d->mColumns - 1 - i ) : i )
+                          * cellWidth;
+      painter.drawPixmap( xOffset + pixmapOffset, 0, d->mPixmap );
     }
   }
+}
+
+bool EventIndicator::eventFilter( QObject *, QEvent * event )
+{
+  if ( event->type() == QEvent::Resize ) {
+    d->adjustGeometry();
+  }
+  return false;
 }
 
 void EventIndicator::changeColumns( int columns )
@@ -130,6 +153,8 @@ void EventIndicator::changeColumns( int columns )
   d->mColumns = columns;
   d->mEnabled.resize( d->mColumns );
 
+  show();
+  raise();
   update();
 }
 
@@ -180,7 +205,6 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
     KHBox *mBottomDayLabelsFrame;
     KHBox *mAllDayFrame;
     QWidget *mTimeBarHeaderFrame;
-    QGridLayout *mAgendaLayout;
     QSplitter *mSplitterAgenda;
     QList<QLabel *> mTimeBarHeaders;
 
@@ -529,29 +553,18 @@ void AgendaView::init( const QDate &start, const QDate &end )
 
   /* Create the main agenda widget and the related widgets */
   QWidget *agendaFrame = new QWidget( d->mSplitterAgenda );
-  d->mAgendaLayout = new QGridLayout( agendaFrame );
-  d->mAgendaLayout->setMargin( 0 );
-  d->mAgendaLayout->setHorizontalSpacing( 2 );
-  d->mAgendaLayout->setVerticalSpacing( 0 );
-
-  // Create event indicator bars
-  d->mEventIndicatorTop = new EventIndicator( EventIndicator::Top, agendaFrame );
-  d->mAgendaLayout->addWidget( d->mEventIndicatorTop, 0, 1 );
-  d->mEventIndicatorBottom = new EventIndicator( EventIndicator::Bottom, agendaFrame );
-  d->mAgendaLayout->addWidget( d->mEventIndicatorBottom, 2, 1 );
-
-  // Alignment and description widgets
-  QWidget *dummyAgendaRight = new QWidget( agendaFrame );
-  d->mAgendaLayout->addWidget( dummyAgendaRight, 0, 2 );
+  QHBoxLayout* agendaLayout = new QHBoxLayout( agendaFrame );
+  agendaLayout->setMargin( 0 );
+  agendaLayout->setSpacing( SPACING );
 
   // Create agenda
   AgendaScrollArea *scrollArea = new AgendaScrollArea( false, this, d->mIsInteractive,
                                                        agendaFrame );
   d->mAgenda = scrollArea->agenda();
 
-  d->mAgendaLayout->addWidget( scrollArea, 1, 1, 1, 2 );
-  d->mAgendaLayout->setColumnStretch( 1, 1 );
-  QWidget *dummyAllDayRight = new QWidget( d->mAllDayFrame );
+  // Create event indicator bars
+  d->mEventIndicatorTop = new EventIndicator( EventIndicator::Top, scrollArea->viewport() );
+  d->mEventIndicatorBottom = new EventIndicator( EventIndicator::Bottom, scrollArea->viewport() );
 
   // Create time labels
   d->mTimeLabelsZone = new TimeLabelsZone( this, preferences(), d->mAgenda );
@@ -559,7 +572,9 @@ void AgendaView::init( const QDate &start, const QDate &end )
   // This timeLabelsZoneLayout is for adding some spacing
   // to align timelabels, to agenda's grid
   QVBoxLayout *timeLabelsZoneLayout = new QVBoxLayout();
-  d->mAgendaLayout->addLayout( timeLabelsZoneLayout, 1, 0 );
+
+  agendaLayout->addLayout( timeLabelsZoneLayout );
+  agendaLayout->addWidget( scrollArea );
 
   timeLabelsZoneLayout->addSpacing( scrollArea->frameWidth() );
   timeLabelsZoneLayout->addWidget( d->mTimeLabelsZone );
@@ -585,9 +600,12 @@ void AgendaView::init( const QDate &start, const QDate &end )
 
   if ( !d->mIsSideBySide ) {
     /* Make the all-day and normal agendas line up with each other */
-    dummyAllDayRight->setFixedWidth( style()->pixelMetric( QStyle::PM_ScrollBarExtent ) -
-                                     d->mAgendaLayout->horizontalSpacing() );
-    dummyAgendaRight->setFixedWidth( dummyAllDayRight->width() );
+    int margin = style()->pixelMetric( QStyle::PM_ScrollBarExtent );
+    if ( style()->styleHint( QStyle::SH_ScrollView_FrameOnlyAroundContents ) ) {
+      // Needed for some styles. Oxygen needs it, Plastique does not.
+      margin -= scrollArea->frameWidth();
+    }
+    d->mAllDayFrame->layout()->addItem( new QSpacerItem( margin, 0 ) );
   }
 
   updateTimeBarWidth();

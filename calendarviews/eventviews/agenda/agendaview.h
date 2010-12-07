@@ -70,6 +70,7 @@ class EVENTVIEWS_EXPORT EventIndicator : public QFrame
 
   protected:
     void paintEvent( QPaintEvent *event );
+    bool eventFilter( QObject *, QEvent * );
 
   private:
     class Private;
