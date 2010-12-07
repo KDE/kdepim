@@ -66,6 +66,7 @@
 #include <QComboBox>
 
 #include <cassert>
+#include <memory>
 
 using namespace Kleo;
 
@@ -159,15 +160,14 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
     if ( comp->groupList().empty() )
       continue;
 
-    CryptoConfigComponentGUI * compGUI
-        = new CryptoConfigComponentGUI( this, comp );
+    std::auto_ptr<CryptoConfigComponentGUI> compGUI( new CryptoConfigComponentGUI( this, comp ) );
     compGUI->setObjectName( *it );
     // KJanusWidget doesn't seem to have iterators, so we store a copy...
-    mComponentGUIs.append( compGUI );
+    mComponentGUIs.append( compGUI.get() );
 
     if ( type == Plain ) {
       QGroupBox * gb = new QGroupBox( comp->description(), vbox );
-      ( new QVBoxLayout( gb ) )->addWidget( compGUI );
+      ( new QVBoxLayout( gb ) )->addWidget( compGUI.release() );
       vlay->addWidget( gb );
     } else {
       vbox = new QWidget(this);
@@ -184,7 +184,8 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
       scrollArea->setWidgetResizable( true );
 
       vlay->addWidget( scrollArea );
-      scrollArea->setWidget( compGUI );
+      const QSize compGUISize = compGUI->sizeHint();
+      scrollArea->setWidget( compGUI.release() );
 
       // Set a nice startup size
       const int deskHeight = QApplication::desktop()->height();
@@ -197,7 +198,7 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
           dialogHeight = 400;
       assert( scrollArea->widget() );
       if ( type != Tabbed )
-          scrollArea->setMinimumHeight( qMin( compGUI->sizeHint().height(), dialogHeight ) );
+          scrollArea->setMinimumHeight( qMin( compGUISize.height(), dialogHeight ) );
     }
   }
   if ( mComponentGUIs.empty() ) {
