@@ -41,12 +41,21 @@ Q_IMPORT_PLUGIN(akonadi_serializer_contactgroup)
 Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 #endif
 
+#ifdef KDEPIM_STATIC_LIBS
+extern bool ___MailTransport____INIT();
+#endif
+
 int main( int argc, char **argv )
 {
   kWarning() << "Starting main function" << QDateTime::currentDateTime();
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, IDC_WAIT ) );
 #endif
+
+#ifdef KDEPIM_STATIC_LIBS
+    ___MailTransport____INIT();
+#endif
+
   const QByteArray& ba = QByteArray( "kmail-mobile" );
   const KLocalizedString name = ki18n( "KMail Mobile" );
   KAboutData aboutData( ba, ba, name, ba, name );
