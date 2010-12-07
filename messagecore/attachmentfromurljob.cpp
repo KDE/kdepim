@@ -61,6 +61,7 @@ void AttachmentFromUrlJob::Private::transferJobData( KIO::Job *job, const QByteA
 
 void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
 {
+#ifndef KDEPIM_MOBILE_UI
   if ( job->error() ) {
     // TODO this loses useful stuff from KIO, like detailed error descriptions, causes+solutions,
     // ... use UiDelegate somehow?
@@ -87,6 +88,22 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
       fileName = i18nc( "a filed called 'unknown'", "unknown" );
     }
   }
+#else
+  Q_UNUSED( job );
+  const QString filePath = mUrl.toLocalFile();
+  const QFileInfo fileInfo( filePath );
+  const QString fileName = fileInfo.fileName();
+  QFile file( filePath );
+  if ( file.open( QFile::ReadOnly ) ) {
+    mData = file.readAll();
+  } else {
+    q->setError( KJob::UserDefinedError );
+    q->setErrorText( i18n( "Could not read file %1.", fileName ) );
+    q->emitResult();
+    return;
+  }
+  const QString mimeType = KMimeType::findByContent( mData )->name();
+#endif
 
   // Create the AttachmentPart.
   Q_ASSERT( q->attachmentPart() == 0 ); // Not created before.
@@ -156,12 +173,16 @@ void AttachmentFromUrlJob::doStart()
 
   Q_ASSERT( d->mData.isEmpty() ); // Not started twice.
 
+#ifndef KDEPIM_MOBILE_UI
   KIO::TransferJob *job = KIO::get( d->mUrl, KIO::NoReload,
       ( uiDelegate() ? KIO::DefaultFlags : KIO::HideProgressInfo ) );
   QObject::connect( job, SIGNAL( result( KJob* ) ),
                     this, SLOT( transferJobResult( KJob* ) ) );
   QObject::connect( job, SIGNAL( data( KIO::Job*, QByteArray ) ),
                     this, SLOT( transferJobData( KIO::Job*, QByteArray ) ) );
+#else
+  d->transferJobResult( 0 );
+#endif
 }
 
 #include "attachmentfromurljob.moc"
