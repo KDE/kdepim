@@ -85,6 +85,7 @@ class ContactGroupEditorView::Private : public IncidenceEditorNG::ItemEditorUi
   public:
     Item mItem;
     Collection mCollection;
+    Collection mDefaultCollection;
 
     IncidenceEditorNG::EditorItemManager *mItemManager;
 
@@ -186,6 +187,9 @@ void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
   d->mEditor = editor;
 
   if ( d->mEditor != 0 ) {
+    if ( d->mDefaultCollection.isValid() ) {
+      d->mEditor->setDefaultCollection( d->mDefaultCollection );
+    }
     if ( d->mCollection.isValid() ) {
       d->mEditor->setDefaultCollection( d->mCollection );
     }
@@ -196,6 +200,11 @@ void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
     connect( d->mEditor, SIGNAL( requestLaunchAccountWizard() ),
              this, SIGNAL( requestLaunchAccountWizard() ) );
   }
+}
+
+void ContactGroupEditorView::setDefaultCollection( const Collection &collection )
+{
+  d->mDefaultCollection = collection;
 }
 
 void ContactGroupEditorView::loadContactGroup( const Item &item )

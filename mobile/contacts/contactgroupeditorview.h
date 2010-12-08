@@ -40,6 +40,8 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
 
     void setEditor( EditorContactGroup *editor );
 
+    void setDefaultCollection( const Akonadi::Collection &collection );
+
   public Q_SLOTS:
     void loadContactGroup( const Akonadi::Item &item );
 

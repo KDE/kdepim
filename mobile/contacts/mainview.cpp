@@ -191,6 +191,14 @@ void MainView::newContact()
 {
   ContactEditorView *editor = new ContactEditorView;
   connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+
+  if ( regularSelectionModel()->hasSelection() ) {
+    const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( collection.isValid() )
+      editor->setDefaultCollection( collection );
+  }
+
   editor->show();
 }
 
@@ -198,6 +206,14 @@ void MainView::newContactGroup()
 {
   ContactGroupEditorView *editor = new ContactGroupEditorView;
   connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+
+  if ( regularSelectionModel()->hasSelection() ) {
+    const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( collection.isValid() )
+      editor->setDefaultCollection( collection );
+  }
+
   editor->show();
 }
 

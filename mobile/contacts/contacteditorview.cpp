@@ -99,6 +99,7 @@ class ContactEditorView::Private : public IncidenceEditorNG::ItemEditorUi
     Item mItem;
     ContactMetaData mContactMetaData;
     Collection mCollection;
+    Collection mDefaultCollection;
 
     IncidenceEditorNG::EditorItemManager *mItemManager;
 
@@ -234,6 +235,9 @@ void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
   d->mEditorGeneral = editor;
 
   if ( d->mEditorGeneral != 0 ) {
+    if ( d->mDefaultCollection.isValid() ) {
+      d->mEditorGeneral->setDefaultCollection( d->mDefaultCollection );
+    }
     if ( d->mCollection.isValid() ) {
       d->mEditorGeneral->setDefaultCollection( d->mCollection );
     }
@@ -278,6 +282,11 @@ void ContactEditorView::setEditorMore( EditorMore *editor )
            d->mEditorMore, SLOT( updateName( const KABC::Addressee& ) ) );
   connect( d->mEditorMore, SIGNAL( nameChanged( const KABC::Addressee& ) ),
            d->mEditorGeneral, SLOT( updateName( const KABC::Addressee& ) ) );
+}
+
+void ContactEditorView::setDefaultCollection( const Akonadi::Collection &collection )
+{
+  d->mDefaultCollection = collection;
 }
 
 void ContactEditorView::loadContact( const Item &item )
