@@ -41,23 +41,30 @@ QML.Rectangle {
     KPIM.DecoratedFlickable{
         width: parent.width - closeButton.width
         height: parent.height
+        contentWidth: width - 10
         contentHeight: 1700;
 
         content.children: [
           QML.Rectangle{
-          id: aboutText
+              id: aboutText
+              anchors.fill: parent
               QML.Column{
+                  anchors.fill: parent
                   QML.Text{
                       id: caption
                       font.pointSize: 18
                       style: QML.Text.Raised
                       text: KDE.i18n( "About %1", application.name )
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
                   }
 
                   QML.Text{
                       id:version
                       horizontalAlignment: QML.Text.AlignHCenter
                       text: "\n" + application.version + "\n"
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
                   }
 
                   QML.Text {
@@ -65,16 +72,22 @@ QML.Rectangle {
                              "\n" +
                              KDE.i18n("%1 is licensed under the GNU GPL version 2 or later.", application.name ) + "\n" +
                              KDE.i18n("See %1 for details.", "licenses.pdf") + "\n"
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
                   }
 
                   QML.Text{
                       text: KDE.i18n("Credits Project Komo3 (October 2009 - )") + "\n"
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
                   }
 
                   QML.Text{
                       text: KDE.i18n("Scrum Master, Team Senior: Till Adam, KDAB") + "\n" +
                             KDE.i18n("Product Owner, Team Senior: Bernhard Reiter, Intevation GmbH") + "\n"
                       style: QML.Text.Raised
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
                   }
 
                   QML.Text{
@@ -106,17 +119,23 @@ QML.Rectangle {
                             "\t" + KDE.i18n("Tobias Koenig (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Volker Krause (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Werner Koch (g10 Code)") + "\n"
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
                   }
 
                   QML.Text{
                       style: QML.Text.Raised
                       text: KDE.i18n("Special thanks to the two project persons from our principal.") + "\n"
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
                   }
 
                   QML.Text{
                       text: KDE.i18n("This project is built upon KDE SC Kontact Desktop\n" +
                                      "client. For the outstanding work done there we\n" +
                                      "would like to thank the original authors.\n")
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
                   }
                }
             }
