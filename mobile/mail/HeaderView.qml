@@ -108,6 +108,14 @@ KPIM.ItemListView {
           horizontalAlignment: "AlignRight"
         },
         QML.Text {
+          id: sizeLabel
+          anchors { bottom: parent.bottom; bottomMargin: 1; right: parent.right; rightMargin: deleteAction.width }
+          text: model.size
+          color: "#0C55BB"
+          font.pixelSize: 16
+          horizontalAlignment: "AlignRight"
+        },
+        QML.Text {
           id: subjectLabel
           anchors.top : fromLabel.bottom
           anchors.topMargin : 1

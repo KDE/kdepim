@@ -64,6 +64,10 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
           return KGlobal::locale()->formatTime( dt.time() );
         return KGlobal::locale()->formatDate( dt.date(), KLocale::FancyShortDate );
       }
+      case SizeRole:
+      {
+        return KGlobal::locale()->formatByteSize( qMax( 0LL, item.size() ) );
+      }
       case IsUnreadRole:
         return !messageStatus.isRead();
       case IsImportantRole:
@@ -137,6 +141,7 @@ void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   names.insert( SubjectRole, "subject" );
   names.insert( FromRole, "from" );
   names.insert( DateRole, "date" );
+  names.insert( SizeRole, "size" );
   names.insert( IsUnreadRole, "is_unread" );
   names.insert( IsImportantRole, "is_important" );
   names.insert( IsActionItemRole, "is_action_item" );
