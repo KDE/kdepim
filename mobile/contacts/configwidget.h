@@ -22,13 +22,13 @@
 
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QWidget>
-#ifdef Q_OS_WINCE
-#include <linkdepim/ldap/kcmldap_p>
-#endif
 
 class KCModuleProxy;
 class KComboBox;
 class KConfigDialogManager;
+#ifdef Q_OS_WINCE
+class KCMLdap;
+#endif
 
 class ConfigWidget : public QWidget
 {
