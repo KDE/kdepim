@@ -820,6 +820,9 @@ void Widget::messageSortingSelected( QAction *action )
   if ( !action )
     return;
 
+  if ( !d->mStorageModel )
+    return;
+
   bool ok;
   SortOrder::MessageSorting ord = static_cast< SortOrder::MessageSorting >( action->data().toInt( &ok ) );
 
@@ -840,6 +843,9 @@ void Widget::messageSortDirectionSelected( QAction *action )
     return;
   if ( !action )
     return;
+  if ( !d->mStorageModel )
+    return;
+
 
   bool ok;
   SortOrder::SortDirection ord = static_cast< SortOrder::SortDirection >( action->data().toInt( &ok ) );
@@ -862,6 +868,9 @@ void Widget::groupSortingSelected( QAction *action )
   if ( !action )
     return;
 
+  if ( !d->mStorageModel )
+    return;
+
   bool ok;
   SortOrder::GroupSorting ord = static_cast< SortOrder::GroupSorting >( action->data().toInt( &ok ) );
 
@@ -882,6 +891,9 @@ void Widget::groupSortDirectionSelected( QAction *action )
     return;
   if ( !action )
     return;
+  if ( !d->mStorageModel )
+    return;
+
 
   bool ok;
   SortOrder::SortDirection ord = static_cast< SortOrder::SortDirection >( action->data().toInt( &ok ) );
@@ -915,6 +927,10 @@ void Widget::slotViewHeaderSectionClicked( int logicalIndex )
 
   if ( logicalIndex >= d->mTheme->columns().count() )
     return;
+
+  if ( !d->mStorageModel )
+    return;
+
 
   const Theme::Column * column = d->mTheme->column( logicalIndex );
   if ( !column )
