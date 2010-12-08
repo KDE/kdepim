@@ -49,9 +49,6 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
     TimeLabels( const KDateTime::Spec &spec, int rows,
                 TimeLabelsZone *parent = 0, Qt::WFlags f = 0 );
 
-    /** Calculates the minimum width */
-    virtual int minimumWidth() const;
-
     /** updates widget's internal state */
     void updateConfig();
 
@@ -78,6 +75,8 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
     QString headerToolTip() const;
 
     QSize sizeHint() const;
+
+    QSize minimumSizeHint() const;
 
   private slots:
     /** update the position of the marker showing the mouse position */

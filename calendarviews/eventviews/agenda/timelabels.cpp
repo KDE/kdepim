@@ -50,8 +50,6 @@ TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
 
   mCellHeight = mTimeLabelsZone->preferences()->hourSize() * 4;
 
-  setFrameStyle( Plain );
-
   setBackgroundRole( QPalette::Background );
 
   mMousePos = new QFrame( this );
@@ -65,7 +63,7 @@ TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
     setToolTip( i18n( "Timezone:" ) + mSpec.timeZone().name() );
   }
 
-  setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+  setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
 
   updateConfig();
  }
@@ -108,12 +106,11 @@ void TimeLabels::setCellHeight( double height )
   }
 }
 
-/**
-   Calculates the minimum width.
-*/
-int TimeLabels::minimumWidth() const
+QSize TimeLabels::minimumSizeHint() const
 {
-  return mMiniWidth;
+  QSize sh = QFrame::sizeHint();
+  sh.setWidth( mMiniWidth );
+  return sh;
 }
 
 /** updates widget's internal state */
@@ -135,8 +132,6 @@ void TimeLabels::updateConfig()
   sFont.setPointSize( sFont.pointSize() / 2 );
   QFontMetrics fmS( sFont );
   mMiniWidth += fmS.width( test ) + frameWidth() * 2 + 4 ;
-  // update geometry restrictions based on new settings
-  setFixedWidth( mMiniWidth );
 
   /** Can happen if all resources are disabled */
   if ( !mAgenda ) {
@@ -234,7 +229,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
   QFont suffixFont = hourFont;
   suffixFont.setPointSize( suffixFont.pointSize() / 2 );
   QFontMetrics fmS( suffixFont );
-  const int startW = mMiniWidth - frameWidth() - 2 ;
+  const int startW = cw - frameWidth() - 2 ;
   const int tw2 = fmS.width( suffix );
   const int divTimeHeight = ( timeHeight - 1 ) / 2 - 1;
   //testline
