@@ -56,18 +56,13 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   categoryhierarchyreader.cpp
   editorconfig.cpp
   korganizereditorconfig.cpp
+
+  autochecktreewidget.cpp
+  categoryselectdialog.cpp
+  categorydialog.cpp
 )
 
 kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc )
-
-if (NOT WINCE)
-  set(incidenceeditors_ng_shared_LIB_SRCS ${incidenceeditors_ng_shared_LIB_SRCS}
-    # pending: replace QTreeWidget with QListWidget
-    autochecktreewidget.cpp
-    categoryselectdialog.cpp
-    categorydialog.cpp
-  )
-endif (NOT WINCE)
 
 ### Build the desktop version
 
