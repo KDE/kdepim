@@ -97,11 +97,11 @@ QML.Column {
       source : "images/bulk-back-overlay.png"
       anchors.right : parent.right
       anchors.verticalCenter : parent.verticalCenter
-      QML.MouseArea {
-        id : back_ma
-        anchors.fill : parent
-        onClicked : _top.backClicked()
-      }
+    }
+    QML.MouseArea {
+      id : back_ma
+      anchors.fill : parent
+      onClicked : _top.backClicked()
     }
   }
 
