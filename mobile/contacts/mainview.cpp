@@ -34,9 +34,11 @@
 #include "libkdepim/ldap/ldapsearchdialog.h"
 
 #include <akonadi/agentactionmanager.h>
+#include <akonadi/collectiondialog.h>
 #include <akonadi/contact/contactgroupexpandjob.h>
 #include <akonadi/contact/contactsfilterproxymodel.h>
 #include <akonadi/contact/standardcontactactionmanager.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchscope.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
@@ -59,7 +61,8 @@ QML_DECLARE_TYPE( DeclarativeConfigWidget )
 QML_DECLARE_TYPE( DeclarativeSearchWidget )
 
 MainView::MainView( QWidget *parent )
-  : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
+  : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent ),
+  mLdapSearchDialog( 0 )
 {
 }
 
@@ -383,10 +386,50 @@ GuiStateManager* MainView::createGuiStateManager() const
 
 void MainView::searchLdap()
 {
-  static KLDAP::LdapSearchDialog* ldapSearchDialog = 0;
-  if ( !ldapSearchDialog )
-    ldapSearchDialog = new KLDAP::LdapSearchDialog( this );
-  ldapSearchDialog->show();
+  if ( !mLdapSearchDialog ) {
+    mLdapSearchDialog = new KLDAP::LdapSearchDialog( this );
+    connect( mLdapSearchDialog, SIGNAL(contactsAdded()), SLOT(importFromLdap()) );
+  }
+  mLdapSearchDialog->show();
+}
+
+void MainView::importFromLdap()
+{
+  Q_ASSERT( mLdapSearchDialog );
+  const KABC::Addressee::List contacts = mLdapSearchDialog->selectedContacts();
+  if ( contacts.isEmpty() ) // nothing to import
+    return;
+
+  const QStringList mimeTypes( KABC::Addressee::mimeType() );
+
+  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( this );
+  dlg->setMimeTypeFilter( mimeTypes );
+  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  dlg->setCaption( i18n( "Select Address Book" ) );
+  dlg->setDescription( i18n( "Select the address book the imported contact(s) shall be saved in:" ) );
+
+  const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
+  const Akonadi::Collection defCollection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( defCollection.isValid() )
+    dlg->setDefaultCollection( defCollection );
+
+  if ( !dlg->exec() || !dlg ) {
+    delete dlg;
+    return;
+  }
+
+  const Akonadi::Collection collection = dlg->selectedCollection();
+  delete dlg;
+  if ( !collection.isValid() )
+    return;
+
+  foreach ( const KABC::Addressee &addr, contacts ) {
+    Akonadi::Item item;
+    item.setPayload<KABC::Addressee>( addr );
+    item.setMimeType( KABC::Addressee::mimeType() );
+
+    new Akonadi::ItemCreateJob( item, collection );
+  }
 }
 
 #include "mainview.moc"

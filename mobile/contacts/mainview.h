@@ -25,6 +25,10 @@
 
 #include <Akonadi/Entity>
 
+namespace KLDAP {
+class LdapSearchDialog;
+}
+
 namespace Akonadi
 {
   class Item;
@@ -54,6 +58,7 @@ class MainView : public KDeclarativeMainView
     void bulkActionSelectionChanged();
     void sendMailTo();
     void searchLdap();
+    void importFromLdap();
     void updateActionTexts();
 
   protected:
@@ -72,6 +77,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::StandardContactActionManager *mActionManager;
     ContactListProxy *mContactListProxy;
     QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
+    KLDAP::LdapSearchDialog* mLdapSearchDialog;
 };
 
 #endif // MAINVIEW_H
