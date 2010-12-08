@@ -34,14 +34,10 @@ class MobileLineEdit : public QWidget
     ~MobileLineEdit();
 
     void setText( const QString &text );
-
     QString text() const;
-
-    void setCompleter( QCompleter *completer );
 
   Q_SIGNALS:
     void clearClicked();
-    void textEdited( const QString &text );
 
   public Q_SLOTS:
     void clear();

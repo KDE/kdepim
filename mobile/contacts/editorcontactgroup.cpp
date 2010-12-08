@@ -34,45 +34,12 @@
 #include <QtGui/QCompleter>
 #include <QtGui/QSortFilterProxyModel>
 
-/**
- * @short Model that filters out all contacts without email address.
- */
-class ContactsWithEmailFilterModel : public QSortFilterProxyModel
-{
-  public:
-    ContactsWithEmailFilterModel( QObject *parent )
-      : QSortFilterProxyModel( parent )
-    {
-      // contact names should be sorted correctly
-      setSortLocaleAware( true );
-    }
-
-  protected:
-    virtual bool filterAcceptsRow( int row, const QModelIndex &parent ) const
-    {
-      const QModelIndex index = sourceModel()->index( row, Akonadi::ContactCompletionModel::EmailColumn, parent );
-      if ( !index.isValid() )
-        return false;
-
-      return !index.data().toString().isEmpty();
-    }
-};
-
 class Recipient
 {
   public:
-    Recipient( MobileLineEdit *input, QObject *receiver ) : mInput( input )
+    Recipient( MobileLineEdit *input, QObject *receiver )
+      : mInput( input )
     {
-      ContactsWithEmailFilterModel *filter = new ContactsWithEmailFilterModel( mInput );
-      filter->setSourceModel( Akonadi::ContactCompletionModel::self() );
-
-      QCompleter *completer = new QCompleter( filter, mInput );
-      completer->setCompletionColumn( Akonadi::ContactCompletionModel::NameAndEmailColumn );
-      completer->setCaseSensitivity( Qt::CaseInsensitive );
-
-      QObject::connect( completer, SIGNAL( activated( const QModelIndex& ) ), receiver, SLOT( completed( const QModelIndex& ) ) );
-      mInput->setCompleter( completer );
-
       QObject::connect( mInput, SIGNAL( clearClicked() ), receiver, SLOT( clearRecipientClicked() ) );
     }
 
@@ -134,10 +101,6 @@ class EditorContactGroup::Private
 
     void fetchResult( KJob *job );
 
-    void completed( const QModelIndex &index );
-
-    void textEdited( const QString &text );
-
     void clearRecipientClicked();
 
     void availableCollectionsChanged()
@@ -181,53 +144,6 @@ void EditorContactGroup::Private::fetchResult( KJob *job )
     } else {
       recipient->mInput->setText( contact.fullEmail( recipient->mPreferredEmail ) );
     }
-
-    // if the text is edited afterwards, this might no longer be a contact reference
-    QObject::connect( recipient->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
-  }
-}
-
-void EditorContactGroup::Private::completed( const QModelIndex &index )
-{
-  Akonadi::Item item;
-  if ( index.isValid() ) {
-    item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  }
-
-  Q_FOREACH( Recipient *recipient, mInputs ) {
-    if ( recipient->mInput == q->sender()->parent() ) {
-      recipient->mItem = item;
-
-      const KABC::Addressee contact = item.payload<KABC::Addressee>();
-      recipient->mInput->setText( contact.fullEmail( contact.preferredEmail() ) );
-
-      // if the text is edited afterwards, this might no longer be a contact reference
-      QObject::connect( recipient->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
-
-      break;
-    }
-  }
-}
-
-void EditorContactGroup::Private::textEdited( const QString &text )
-{
-  Q_FOREACH( Recipient *recipient, mInputs ) {
-    if ( recipient->mInput == q->sender() ) {
-      QString namePart;
-      QString emailPart;
-      KABC::Addressee::parseEmailAddress( text, namePart, emailPart );
-
-      // check if only the email changed, otherwise this is no longer a contact reference
-      const KABC::Addressee contact = recipient->mItem.payload<KABC::Addressee>();
-      if ( text != contact.fullEmail( emailPart ) ) {
-        recipient->mItem = Akonadi::Item();
-        recipient->mPreferredEmail = QString();
-
-        QObject::disconnect( recipient->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
-      }
-
-      break;
-    }
   }
 }
 
@@ -249,11 +165,6 @@ void EditorContactGroup::Private::clearRecipientClicked()
     target->mInput->setText( source->mInput->text() );
     target->mItem = source->mItem;
     target->mPreferredEmail = source->mPreferredEmail;
-
-    if ( source->mItem.isValid() ) {
-      QObject::disconnect( source->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
-      QObject::connect( target->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
-    }
   }
 
   Recipient *last = mInputs.last();
@@ -385,19 +296,7 @@ void EditorContactGroup::saveContactGroup( KABC::ContactGroup &contactGroup ) co
         namePart = emailPart;
       }
 
-      if ( input->mItem.isValid() ) {
-        const Akonadi::Item item = input->mItem;
-        KABC::ContactGroup::ContactReference ref;
-        ref.setUid( QString::number( item.id() ) );
-
-        if ( !emailPart.isEmpty() ) {
-          if ( !item.hasPayload<KABC::Addressee>() || item.payload<KABC::Addressee>().preferredEmail() != emailPart ) {
-            ref.setPreferredEmail( emailPart );
-          }
-        }
-
-        contactGroup.append( ref );
-      } else if ( !emailPart.isEmpty() ) {
+      if ( !emailPart.isEmpty() ) {
         contactGroup.append( KABC::ContactGroup::Data( namePart, emailPart ) );
       }
     }

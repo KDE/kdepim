@@ -19,6 +19,8 @@
 
 #include "mobilelineedit.h"
 
+#include <libkdepim/addresseelineedit.h>
+
 #include <kicon.h>
 
 #include <QtGui/QHBoxLayout>
@@ -36,7 +38,7 @@ class MobileLineEdit::Private
     }
 
   public:
-    QLineEdit *mEdit;
+    KPIM::AddresseeLineEdit *mEdit;
     QPushButton *mButton;
 };
 
@@ -47,10 +49,8 @@ MobileLineEdit::MobileLineEdit( QWidget *parent )
   box->setMargin( 0 );
   box->setSpacing( 0 );
 
-  d->mEdit = new QLineEdit( this );
+  d->mEdit = new KPIM::AddresseeLineEdit( this );
   box->addWidget( d->mEdit );
-
-  connect( d->mEdit, SIGNAL( textEdited( QString ) ), SIGNAL( textEdited( QString ) ) );
 
   d->mButton = new QPushButton( this );
   d->mButton->setIcon( KIcon( "edit-clear-locationbar-rtl" ) );
@@ -74,11 +74,6 @@ void MobileLineEdit::setText( const QString &text )
 QString MobileLineEdit::text() const
 {
   return d->mEdit->text();
-}
-
-void MobileLineEdit::setCompleter( QCompleter *completer )
-{
-  d->mEdit->setCompleter( completer );
 }
 
 void MobileLineEdit::clear()
