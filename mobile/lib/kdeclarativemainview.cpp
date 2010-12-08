@@ -219,10 +219,10 @@ void KDeclarativeMainView::doDelayedInitInternal()
   connect( d->mGuiStateManager, SIGNAL( guiStateChanged( int, int ) ), d, SLOT( guiStateChanged( int, int ) ) );
 
   // A list of available favorites
-  QAbstractItemModel *favsList = d->getFavoritesListModel();
-  favsList->setParent( this );
+  d->mFavoritesController = new FavoritesController( KGlobal::config(), this );
+  d->mFavoritesController->setCollectionSelectionModel( d->mBnf->selectionModel() );
 
-  context->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
+  context->setContextProperty( "favoritesList", d->mFavoritesController->model() );
 
   // A list of agent instances
   Akonadi::AgentInstanceModel *agentInstanceModel = new Akonadi::AgentInstanceModel( this );
@@ -542,27 +542,12 @@ void KDeclarativeMainView::saveFavorite()
   if ( !ok || name.isEmpty() )
     return;
 
-  ETMViewStateSaver saver;
-  saver.setSelectionModel( d->mBnf->selectionModel() );
-
-  KConfigGroup config( KGlobal::config(), sFavoritePrefix + name );
-  saver.saveState( config );
-  config.sync();
-  d->mFavsListModel->setStringList( d->getFavoritesList() );
+  d->mFavoritesController->saveFavorite( name );
 }
 
 void KDeclarativeMainView::loadFavorite( const QString &name )
 {
-  ETMViewStateSaver *saver = new ETMViewStateSaver;
-  saver->setSelectionModel( d->mBnf->selectionModel() );
-
-  KConfigGroup config( KGlobal::config(), sFavoritePrefix + name );
-  if ( !config.isValid() ) {
-    delete saver;
-    return;
-  }
-
-  saver->restoreState( config );
+  d->mFavoritesController->loadFavorite( name );
 }
 
 void KDeclarativeMainView::multipleSelectionFinished()

@@ -22,6 +22,7 @@
 #include "kdeclarativemainview.h"
 
 #include "akonadibreadcrumbnavigationfactory.h"
+#include "favoritescontroller.h"
 #include "searchmanager.h"
 #include "statemachinebuilder.h"
 
@@ -39,9 +40,6 @@ class AgentStatusMonitor;
 class KActionCollection;
 class KLineEdit;
 
-static const char * const sFavoritePrefix = "Favorite_";
-static const int sFavoritePrefixLength = 9;
-
 class ListProxy;
 class KDeclarativeMainViewPrivate : public QObject
 {
@@ -49,14 +47,12 @@ class KDeclarativeMainViewPrivate : public QObject
 
 public: /// members
   KDeclarativeMainView               *q;
-  Akonadi::ChangeRecorder            *mChangeRecorder;                // Deleted by ~QObect
-  QAbstractItemModel                 *mCollectionFilter;              // Deleted by ~QObect
+  Akonadi::ChangeRecorder            *mChangeRecorder;                // Deleted by ~QObject
+  QAbstractItemModel                 *mCollectionFilter;              // Deleted by ~QObject
   Akonadi::EntityTreeModel           *mEtm;
   ListProxy                          *mListProxy;
   QAbstractItemModel                 *mItemModel;
   QAbstractProxyModel                *mItemFilterModel;
-  QItemSelectionModel                *mFavSelection;
-  QStringListModel                   *mFavsListModel;
   Akonadi::AgentFilterProxyModel     *mAgentInstanceFilterModel;
   QItemSelectionModel                *mAgentInstanceSelectionModel;
   Akonadi::BreadcrumbNavigationFactory *mBnf;
@@ -71,12 +67,10 @@ public: /// members
   GuiStateManager                    *mGuiStateManager;
   NotifyingStateMachine              *mStateMachine;
   SearchManager                      *mSearchManager;
+  FavoritesController                *mFavoritesController;
 
 public: /// Methods
   KDeclarativeMainViewPrivate( KDeclarativeMainView* );
-
-  QAbstractItemModel* getFavoritesListModel();
-  QStringList getFavoritesList();
 
 public slots:
   void saveState();

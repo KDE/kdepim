@@ -15,6 +15,7 @@ set(mobileui_SRCS
     declarativewidgetbase.cpp
     declarativeakonadiitem.cpp
     exporthandlerbase.cpp
+    favoritescontroller.cpp
     favoriteslistmodel.cpp
     guistatemanager.cpp
     hierarchyresolver.cpp

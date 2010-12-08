@@ -25,7 +25,6 @@
 
 #include <akonadi/etmviewstatesaver.h>
 
-#include "favoriteslistmodel.h"
 #include "guistatemanager.h"
 
 KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *qq )
@@ -33,10 +32,10 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *
   , mChangeRecorder( 0 )
   , mCollectionFilter( 0 )
   , mItemFilterModel( 0 )
-  , mFavsListModel( 0 )
   , mAgentStatusMonitor( 0 )
   , mGuiStateManager( 0 )
   , mStateMachine( 0 )
+  , mFavoritesController( 0 )
 { }
 
 void KDeclarativeMainViewPrivate::restoreState()
@@ -55,23 +54,6 @@ void KDeclarativeMainViewPrivate::saveState()
   KConfigGroup cfg( KGlobal::config(), "SelectionState" );
   saver.saveState( cfg );
   cfg.sync();
-}
-
-QStringList KDeclarativeMainViewPrivate::getFavoritesList()
-{
-  QStringList names;
-  foreach ( const QString &group, KGlobal::config()->groupList() )
-    if ( group.startsWith( sFavoritePrefix ) )
-      names.append( QString( group ).remove( 0, sFavoritePrefixLength ) );
-  return names;
-}
-
-QAbstractItemModel* KDeclarativeMainViewPrivate::getFavoritesListModel()
-{
-  if (!mFavsListModel)
-    mFavsListModel = new FavoritesListModel( KGlobal::config() );
-
-  return mFavsListModel;
 }
 
 void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
