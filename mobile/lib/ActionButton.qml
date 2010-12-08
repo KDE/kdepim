@@ -34,6 +34,7 @@ KPIM.Button {
   height: 70
   action: application.getAction( actionName, "" )
   enabled: action.enabled
+  opacity: enabled ? 1 : 0.65
 
   onClicked : { action.triggered( true ) }
 }
