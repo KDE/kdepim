@@ -124,7 +124,7 @@ class EditorMore::Private
     {
       CalendarSupport::CategoryConfig config( Settings::self(), 0 );
 
-      IncidenceEditorNG::CategorySelectDialog dlg( &config, q );
+      IncidenceEditorNG::CategorySelectDialog dlg( &config, 0 );
       dlg.setCategoryList( mCategories );
       dlg.setSelected( mCategories );
       if ( dlg.exec() ) {
