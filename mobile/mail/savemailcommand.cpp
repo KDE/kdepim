@@ -172,6 +172,7 @@ void SaveMailCommand::slotFetchDone(KJob *job)
 
     kDebug() << mUrl << mTotalSize;
 
+#ifndef KDEPIM_MOBILE_UI
     mJob = KIO::put( mUrl, -1 /*TODO: See MessageViewer::Util::getWritePermissions() */ );
     mJob->setTotalSize( mTotalSize );
     mJob->setAsyncDataEnabled( true );
@@ -179,6 +180,25 @@ void SaveMailCommand::slotFetchDone(KJob *job)
       SLOT(slotSaveDataReq()));
     connect(mJob, SIGNAL(result(KJob*)),
       SLOT(slotSaveResult(KJob*)));
+#else
+    if ( QFile::exists( mUrl.toLocalFile() ) && KMessageBox::warningContinueCancel( 0 /*parentWidget()*/,
+          i18n("File %1 exists.\nDo you want to replace it?",
+          mUrl.prettyUrl()), i18n("Save to File"), KGuiItem(i18n("&Replace")) ) != KMessageBox::Continue)
+    {
+      emitResult( Failed );
+      return;
+    }
+    QFile file( mUrl.toLocalFile() );
+    if ( file.open( QFile::WriteOnly ) ) {
+      foreach ( const Akonadi::Item &item, mMessages ) {
+        slotMessageRetrievedForSaving( item );
+        file.write( mData );
+      }
+      emitResult( OK );
+    } else {
+      emitResult( Failed );
+    }
+#endif
 }
 
 //remove after the move to kdepimlibs
@@ -224,6 +244,7 @@ void SaveMailCommand::slotMessageRetrievedForSaving(const Akonadi::Item &msg)
     mData = str;
     mData.resize( mData.size() - 1 );
     mOffset = 0;
+#ifndef KDEPIM_MOBILE_UI
     QByteArray data;
     int size;
     // Unless it is great than 64 k send the whole message. kio buffers for us.
@@ -235,6 +256,7 @@ void SaveMailCommand::slotMessageRetrievedForSaving(const Akonadi::Item &msg)
     data = QByteArray( mData, size );
     mJob->sendAsyncData( data );
     mOffset += size;
+#endif
   }
   ++mMsgListIndex;
 }
