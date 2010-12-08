@@ -24,6 +24,10 @@
 #include <kuniqueapplication.h>
 #include <kdebug.h>
 
+#ifdef Q_OS_WINCE
+#include <windows.h>
+#endif
+
 class KCmdLineOptions;
 
 class MOBILEUI_EXPORT KDeclarativeApplicationBase : public KUniqueApplication
@@ -70,6 +74,11 @@ class KDeclarativeApplication : public KDeclarativeApplicationBase
         m_mainView = new T;
         m_mainView->show();
       } else {
+#ifdef Q_OS_WINCE
+      HWND hWnd = ::FindWindow( _T( "SplashScreen" ), NULL );
+      if (hWnd != NULL)
+        ::ShowWindow( hWnd, SW_HIDE );
+#endif
         m_mainView->raise();
       }
 
