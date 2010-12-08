@@ -210,7 +210,7 @@ int main( int argc, char** argv )
   KCmdLineArgs::init(argc, argv, &aboutData);
 
 #ifdef KDEPIM_MOBILE_UI
-  KDeclarativeApplication::preApplicationSetup( KleopatraApplication::commandLineOptions() );
+  KDeclarativeApplicationBase::preApplicationSetup( KleopatraApplication::commandLineOptions() );
 #else
   KCmdLineArgs::addCmdLineOptions( KleopatraApplication::commandLineOptions() );
 #endif
@@ -219,7 +219,7 @@ int main( int argc, char** argv )
 
   KleopatraApplication app;
 #ifdef KDEPIM_MOBILE_UI
-  KDeclarativeApplication::postApplicationSetup();
+  KDeclarativeApplicationBase::postApplicationSetup();
 #endif
 
   qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";

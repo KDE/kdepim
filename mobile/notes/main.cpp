@@ -48,14 +48,10 @@ int main( int argc, char **argv )
   aboutData.setProductName( "KJots Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication app;
-
-  MainView view;
+  KDeclarativeApplication<MainView> app;
 
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );
-#else
-  view.show();
 #endif
 
   return app.exec();

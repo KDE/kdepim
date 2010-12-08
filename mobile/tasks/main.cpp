@@ -57,16 +57,13 @@ int main( int argc, char **argv )
   aboutData.setProductName( "KOrganizer Mobile/tasks" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication app;
+  KDeclarativeApplication<MainView> app;
 
   KGlobal::locale()->insertCatalog( "libkcalutils" );
   KGlobal::locale()->insertCatalog( "libincidenceeditors" );
 
-  MainView view;
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );
-#else
-  view.show();
 #endif
 
   return app.exec();

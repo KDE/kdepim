@@ -47,17 +47,14 @@ int main( int argc, char **argv )
   aboutData.setProductName( "KAddressbook Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication app;
+  KDeclarativeApplication<MainView> app;
 
   KGlobal::locale()->insertCatalog( "kabc" );
   KGlobal::locale()->insertCatalog( "akonadicontact" );
   KGlobal::locale()->insertCatalog( "libkdepim" );
 
-  MainView view;
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );
-#else
-  view.show();
 #endif
 
   return app.exec();

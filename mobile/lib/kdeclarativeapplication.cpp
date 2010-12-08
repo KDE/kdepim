@@ -28,27 +28,28 @@
 #endif
 
 static inline bool runPreApplicationSetup( const KCmdLineOptions & opts ) {
+  Q_UNUSED( opts );
 #ifdef _WIN32_WCE
   QThread::currentThread()->setPriority(QThread::HighPriority);
 #endif
-    KDeclarativeApplication::preApplicationSetup();
+    KDeclarativeApplicationBase::preApplicationSetup();
     return true; // <-- default value of KApplication(bool) ctor
 }
 
-KDeclarativeApplication::KDeclarativeApplication()
-    : KApplication( runPreApplicationSetup( KCmdLineOptions() ) ) // inject some code before KApplication ctor runs
+KDeclarativeApplicationBase::KDeclarativeApplicationBase()
+    : KUniqueApplication( runPreApplicationSetup( KCmdLineOptions() ) ) // inject some code before KApplication ctor runs
 {
     postApplicationSetup();
 }
 
-KDeclarativeApplication::KDeclarativeApplication( const KCmdLineOptions & opts )
-    : KApplication( runPreApplicationSetup( opts ) ) // inject some code before KApplication ctor runs
+KDeclarativeApplicationBase::KDeclarativeApplicationBase( const KCmdLineOptions & opts )
+    : KUniqueApplication( runPreApplicationSetup( opts ) ) // inject some code before KApplication ctor runs
 {
     postApplicationSetup();
 }
 
 // static
-void KDeclarativeApplication::postApplicationSetup()
+void KDeclarativeApplicationBase::postApplicationSetup()
 {
   static bool run = false;
 
@@ -107,14 +108,14 @@ void KDeclarativeApplication::postApplicationSetup()
 }
 
 // static
-void KDeclarativeApplication::preApplicationSetup()
+void KDeclarativeApplicationBase::preApplicationSetup()
 {
   preApplicationSetup( KCmdLineOptions() );
 }
 
 
 // static
-void KDeclarativeApplication::preApplicationSetup( const KCmdLineOptions & appOptions )
+void KDeclarativeApplicationBase::preApplicationSetup( const KCmdLineOptions & appOptions )
 {
   static bool run = false;
 

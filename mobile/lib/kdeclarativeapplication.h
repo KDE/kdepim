@@ -22,15 +22,16 @@
 
 #include "mobileui_export.h"
 #include <kuniqueapplication.h>
+#include <kdebug.h>
 
 class KCmdLineOptions;
 
-class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
+class MOBILEUI_EXPORT KDeclarativeApplicationBase : public KUniqueApplication
 {
   Q_OBJECT
   public:
-    KDeclarativeApplication();
-    explicit KDeclarativeApplication( const KCmdLineOptions & applicationOptions );
+    KDeclarativeApplicationBase();
+    explicit KDeclarativeApplicationBase( const KCmdLineOptions & applicationOptions );
 
     /** Sets up some stuff. Only needs to be called (before the
         KApplication constructor) if you don't use
@@ -49,6 +50,34 @@ class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
         KApplication constructor) if you don't use
         KDeclarativeApplication as your KApplication */
     static void postApplicationSetup();
+};
+
+template <typename T>
+class KDeclarativeApplication : public KDeclarativeApplicationBase
+{
+  public:
+    KDeclarativeApplication() : KDeclarativeApplicationBase(), m_mainView( 0 ) {}
+    explicit KDeclarativeApplication( const KCmdLineOptions &applicationOptions ) : KDeclarativeApplicationBase( applicationOptions ), m_mainView( 0 ) {}
+    virtual ~KDeclarativeApplication()
+    {
+      delete m_mainView;
+    }
+
+    int newInstance()
+    {
+      kDebug();
+      if ( !m_mainView ) {
+        m_mainView = new T;
+        m_mainView->show();
+      } else {
+        m_mainView->raise();
+      }
+
+      return 0;
+    }
+
+  private:
+    T* m_mainView;
 };
 
 #endif

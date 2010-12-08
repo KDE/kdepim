@@ -62,7 +62,7 @@ int main( int argc, char **argv )
   aboutData.setProductName( "KMail Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication app;
+  KDeclarativeApplication<MainView> app;
 
   KGlobal::locale()->insertCatalog( "libakonadi-kmime" );
   KGlobal::locale()->insertCatalog( "libmessagecore" );
@@ -73,11 +73,8 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "kmail" ); // for identity dialog
   KGlobal::locale()->insertCatalog( "libksieve" ); // for out of office reply dialog
 
-  MainView view;
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );
-#else
-  view.show();
 #endif
 
   return app.exec();
