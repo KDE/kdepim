@@ -29,6 +29,7 @@
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/selectionproxymodel.h>
 #include <messagecomposer/messagefactory.h>
+#include <kpimutils/networkaccesshelper.h>
 
 namespace Akonadi {
   class EntityMimeTypeFilterModel;
@@ -207,6 +208,7 @@ class MainView : public KDeclarativeMainView
     AclEditor *mAclEditor;
     MessageListSettingsController *mMessageListSettingsController;
     Akonadi::Collection mCurrentCollection;
+    KPIMUtils::NetworkAccessHelper *mNetworkAccessHelper;
 };
 
 Q_DECLARE_METATYPE( MainView::ForwardMode )
