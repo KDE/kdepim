@@ -20,14 +20,6 @@
 import Qt 4.7 as QML
 import org.kde.pim.mobileui 4.5 as KPIM
 
-KPIM.Button {
-  property variant action
-  property string actionName
-
-  id: itemEditButton
-  width: 70
-  height: 70
+KPIM.ActionButton {
   icon: KDE.locate( "data", "mobileui/edit-button.png" );
-  action: application.getAction( actionName, "" )
-  enabled: action.enabled
 }

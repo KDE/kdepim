@@ -219,10 +219,11 @@ void KDeclarativeMainView::doDelayedInitInternal()
   connect( d->mGuiStateManager, SIGNAL( guiStateChanged( int, int ) ), d, SLOT( guiStateChanged( int, int ) ) );
 
   // A list of available favorites
-  d->mFavoritesController = new FavoritesController( KGlobal::config(), this );
-  d->mFavoritesController->setCollectionSelectionModel( d->mBnf->selectionModel() );
+  d->mFavoritesEditor = new FavoritesEditor( actionCollection(), KGlobal::config(), this );
+  d->mFavoritesEditor->setCollectionSelectionModel( d->mBnf->selectionModel() );
 
-  context->setContextProperty( "favoritesList", d->mFavoritesController->model() );
+  context->setContextProperty( "favoritesEditor", d->mFavoritesEditor );
+  context->setContextProperty( "favoritesList", d->mFavoritesEditor->model() );
 
   // A list of agent instances
   Akonadi::AgentInstanceModel *agentInstanceModel = new Akonadi::AgentInstanceModel( this );
@@ -542,12 +543,12 @@ void KDeclarativeMainView::saveFavorite()
   if ( !ok || name.isEmpty() )
     return;
 
-  d->mFavoritesController->saveFavorite( name );
+  d->mFavoritesEditor->saveFavorite( name );
 }
 
 void KDeclarativeMainView::loadFavorite( const QString &name )
 {
-  d->mFavoritesController->loadFavorite( name );
+  d->mFavoritesEditor->loadFavorite( name );
 }
 
 void KDeclarativeMainView::multipleSelectionFinished()

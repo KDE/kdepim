@@ -26,8 +26,6 @@ import org.kde.pim.mobileui 4.5 as KPIM
 QML.Item {
   id : reorderList_top
   width : parent.width
-  //property alias listElementContent : _listElementContent.data
-  //property alias listContent : _listContent.data
 
   property string category
 
@@ -42,9 +40,20 @@ QML.Item {
   property alias actionItemWidth : _listContent.actionItemWidth
 
   property alias model : _listContent.model
-
   property alias showChildren : _listContent.visible
-  signal triggered(string triggeredName)
+
+  default property alias content : _listContent.content
+
+  signal triggered( string triggeredName )
+  signal currentIndexChanged( int index )
+
+  onVisibleChanged :
+  {
+    if (!visible)
+      height = -actionItemSpacing
+    else
+      height = actionItemHeight
+  }
 
   KPIM.Button {
     id : nameItem
@@ -52,7 +61,7 @@ QML.Item {
     width : parent.width
 
     onClicked : {
-      reorderList_top.triggered(reorderList_top.name)
+      reorderList_top.triggered( reorderList_top.name )
       showChildren = true
     }
   }
@@ -67,7 +76,11 @@ QML.Item {
     visible : false
 
     onTriggered : {
-      actionList_top.triggered(triggeredName)
+      reorderList_top.triggered( triggeredName )
+    }
+
+    onCurrentIndexChanged : {
+      reorderList_top.currentIndexChanged( index )
     }
   }
 }

@@ -15,6 +15,7 @@ set(mobileui_SRCS
     declarativewidgetbase.cpp
     declarativeakonadiitem.cpp
     exporthandlerbase.cpp
+    favoriteseditor.cpp
     favoritescontroller.cpp
     favoriteslistmodel.cpp
     guistatemanager.cpp
@@ -77,6 +78,7 @@ install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   qmldir
   Action.qml
+  ActionButton.qml
   ActiveActionMenuItemDelegate.qml
   BulkActionScreen.qml
   BulkActionList.qml

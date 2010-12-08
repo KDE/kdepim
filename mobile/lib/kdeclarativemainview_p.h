@@ -22,7 +22,7 @@
 #include "kdeclarativemainview.h"
 
 #include "akonadibreadcrumbnavigationfactory.h"
-#include "favoritescontroller.h"
+#include "favoriteseditor.h"
 #include "searchmanager.h"
 #include "statemachinebuilder.h"
 
@@ -67,7 +67,7 @@ public: /// members
   GuiStateManager                    *mGuiStateManager;
   NotifyingStateMachine              *mStateMachine;
   SearchManager                      *mSearchManager;
-  FavoritesController                *mFavoritesController;
+  FavoritesEditor                    *mFavoritesEditor;
 
 public: /// Methods
   KDeclarativeMainViewPrivate( KDeclarativeMainView* );

@@ -35,7 +35,7 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *
   , mAgentStatusMonitor( 0 )
   , mGuiStateManager( 0 )
   , mStateMachine( 0 )
-  , mFavoritesController( 0 )
+  , mFavoritesEditor( 0 )
 { }
 
 void KDeclarativeMainViewPrivate::restoreState()

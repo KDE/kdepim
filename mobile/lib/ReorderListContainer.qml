@@ -35,7 +35,10 @@ Rectangle {
   property alias model : myList.model
   property alias delegate : myList.delegate
 
-  signal triggered(string triggeredName)
+  default property alias content : actionColumn.children
+
+  signal triggered( string triggeredName )
+  signal currentIndexChanged( int index )
 
   KPIM.DecoratedListView {
     id : myList
@@ -49,6 +52,10 @@ Rectangle {
         height: _root.actionItemHeight
         width: ListView.view.width;
     }
+
+    onCurrentIndexChanged : {
+      _topLevel.currentIndexChanged( currentIndex )
+    }
   }
 
   Column {
@@ -57,29 +64,5 @@ Rectangle {
     anchors.bottom : parent.bottom
     anchors.right : parent.right
     width : 100
-    Image { source : "images/moveup.png"
-      MouseArea {
-        anchors.fill : parent
-        onClicked : {
-          favoritesList.moveUp(myList.currentIndex);
-        }
-      }
-    }
-    Image { source : "images/movedown.png"
-      MouseArea {
-        anchors.fill : parent
-        onClicked : {
-          favoritesList.moveDown(myList.currentIndex);
-        }
-      }
-    }
-    Image { source :  KDE.locate( "data", "mobileui/delete-button.png" );
-      MouseArea {
-        anchors.fill : parent
-        onClicked : {
-          favoritesList.removeItem(myList.currentIndex);
-        }
-      }
-    }
   }
 }

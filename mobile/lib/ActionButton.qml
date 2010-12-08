@@ -1,6 +1,5 @@
 /*
-  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Copyright (C) 2010 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,30 +18,22 @@
 */
 
 import Qt 4.7 as QML
-import org.kde 4.5
-import org.kde.pim.mobileui 4.5
+import org.kde.pim.mobileui 4.5 as KPIM
 
-ReorderList {
-  id: _root
-  category : "home"
+/**
+ * @short A button that is connected with a QAction
+ *
+ * The button will update its enabled state according to the
+ * associated action.
+ */
+KPIM.Button {
+  property variant action
+  property string actionName
 
-  name : "favorites_list"
-  text : KDE.i18n( "Favorites" )
+  width: 70
+  height: 70
+  action: application.getAction( actionName, "" )
+  enabled: action.enabled
 
-  ActionButton {
-    icon : "images/moveup.png"
-    actionName : "favoriteseditor_moveup"
-  }
-
-  ActionButton {
-    icon : "images/movedown.png"
-    actionName : "favoriteseditor_movedown"
-  }
-
-  ActionButton {
-    icon : KDE.locate( "data", "mobileui/delete-button.png" )
-    actionName : "favoriteseditor_remove"
-  }
-
-  onCurrentIndexChanged : { favoritesEditor.setRowSelected( index ) }
+  onClicked : { action.triggered( true ) }
 }
