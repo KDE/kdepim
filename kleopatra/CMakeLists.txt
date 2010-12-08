@@ -370,10 +370,6 @@ kde4_add_app_icon(_kleopatra_mainwindow_SRCS "ox*-app-kleopatra.png")
 kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
-if (WINCE)
-  SET_TARGET_PROPERTIES(kleopatra_bin PROPERTIES LINK_FLAGS " /FIXED:NO")
-endif (WINCE)
-
 target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KCMUTILS_LIBS} ${_kleopatra_uiserver_extra_libs} ${_kleopatra_libkdepim_LIBS})
 if (KDEPIM_MOBILE_UI)
   target_link_libraries(kleopatra_bin ${QT_QTDECLARATIVE_LIBRARY})
