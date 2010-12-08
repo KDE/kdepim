@@ -346,11 +346,14 @@ void FilterActionWithFolder::clearParamWidget( QWidget *paramWidget ) const
 
 void FilterActionWithFolder::argsFromString( const QString &argsStr )
 {
-  mFolder = CommonKernel->collectionFromId( argsStr );
-  if ( mFolder.isValid() )
+  bool ok = false;
+  const Akonadi::Collection::Id id = argsStr.toLongLong( &ok );
+  if ( ok ) {
+    mFolder = Akonadi::Collection( id );
     mFolderName= QString::number( mFolder.id() );
-  else
+  } else {
     mFolderName = argsStr;
+  }
 }
 
 QString FilterActionWithFolder::argsAsString() const
