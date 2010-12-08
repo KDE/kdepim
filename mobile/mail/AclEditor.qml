@@ -43,42 +43,33 @@ QML.Rectangle {
     text: KDE.i18n( "<b>Access Control List for '%1'</b>", aclEditor.collectionName )
   }
 
-  KPIM.DecoratedListView {
+  KPIM.ReorderListContainer {
     id: aclView
     anchors.left: parent.left
     anchors.top: headLine.bottom
+    anchors.right: parent.right
     anchors.bottom: okButton.top
     anchors.leftMargin: 30
     anchors.topMargin: 10
-    width: parent.width * 0.6
+
     model: aclModel
-    clip: true
 
-    delegate: KPIM.ReorderListDelegate {
-      height: 20
-      width: parent.width
+    onCurrentIndexChanged : { aclEditor.setRowSelected( index ) }
+
+    KPIM.ActionButton {
+      icon : KDE.locate( "data", "mobileui/add-button.png" )
+      actionName : "acleditor_add"
     }
 
-    onCurrentIndexChanged : {
-      aclEditor.setRowSelected( currentIndex )
+    KPIM.ActionButton {
+      icon : KDE.locate( "data", "mobileui/edit-button.png" )
+      actionName : "acleditor_edit"
     }
-  }
 
-  KPIM.ActionMenuContainer {
-    id : actionColumn
-    anchors.left: aclView.right
-    anchors.top: parent.top
-    anchors.right: parent.right
-    anchors.bottom: parent.bottom
-    anchors.topMargin: 50
-    actionItemWidth: width
-    actionItemHeight: 70
-
-    content : [
-      KPIM.ActionListItem { name : "acleditor_add" },
-      KPIM.ActionListItem { name : "acleditor_edit" },
-      KPIM.ActionListItem { name : "acleditor_delete" }
-    ]
+    KPIM.ActionButton {
+      icon : KDE.locate( "data", "mobileui/delete-button.png" )
+      actionName : "acleditor_delete"
+    }
   }
 
   KPIM.Button2 {
