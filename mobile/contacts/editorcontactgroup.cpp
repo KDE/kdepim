@@ -171,7 +171,7 @@ void EditorContactGroup::Private::clearRecipientClicked()
   if ( mInputs.count() > 2 ) {
     // remove widgets from layout
     mUi.gridLayout->removeWidget( mUi.addRecipientButton );
-
+    mUi.gridLayout->removeWidget( mUi.cancelButton );
     mUi.gridLayout->removeWidget( mUi.saveButton );
     mUi.gridLayout->removeWidget( mUi.collectionSelector );
 
@@ -182,9 +182,9 @@ void EditorContactGroup::Private::clearRecipientClicked()
     delete last;
 
     // re-add widgets
-    mUi.gridLayout->addWidget( mUi.addRecipientButton, mLastRow, 2, 1, 1 );
-
-    mUi.gridLayout->addWidget( mUi.saveButton, row, 2, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.addRecipientButton, mLastRow, 2, 1, 2 );
+    mUi.gridLayout->addWidget( mUi.cancelButton, row, 2, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.saveButton, row, 3, 1, 1 );
     mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 1 );
   } else {
     last->mInput->clear();
@@ -201,7 +201,7 @@ void EditorContactGroup::Private::addRows( int newRowCount )
 
   // remove widgets from layout
   mUi.gridLayout->removeWidget( mUi.addRecipientButton );
-
+  mUi.gridLayout->removeWidget( mUi.cancelButton );
   mUi.gridLayout->removeWidget( mUi.saveButton );
   mUi.gridLayout->removeWidget( mUi.collectionSelector );
 
@@ -215,9 +215,9 @@ void EditorContactGroup::Private::addRows( int newRowCount )
   }
 
   // re-add widgets
-  mUi.gridLayout->addWidget( mUi.addRecipientButton, mLastRow, 2, 1, 1 );
-
-  mUi.gridLayout->addWidget( mUi.saveButton, row, 2, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.addRecipientButton, mLastRow, 2, 1, 2 );
+  mUi.gridLayout->addWidget( mUi.cancelButton, row, 2, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.saveButton, row, 3, 1, 1 );
   mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 1 );
 }
 
