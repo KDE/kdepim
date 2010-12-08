@@ -269,7 +269,9 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   toggleAutomaticWordWrap( actionCollection()->action( "options_wordwrap" )->isChecked() );
   toggleUseFixedFont( actionCollection()->action( "options_fixedfont" )->isChecked() );
 
+#ifdef Q_WS_MAEMO_5
   m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
+#endif
   m_composerBase->recipientsEditor()->setAutoResizeView( true );
 
   connect( m_composerBase->recipientsEditor(), SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ),
