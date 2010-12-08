@@ -36,6 +36,7 @@
 #include "importcertificatescommand_p.h"
 
 #include "utils/classify.h"
+#include "utils/filedialog.h"
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/importjob.h>
@@ -149,7 +150,6 @@ void ImportCertificateFromFileCommand::doStart()
     d->setWaitForMoreJobs( false );
 }
 
-#ifndef QT_NO_FILEDIALOG
 static QStringList get_file_name( QWidget * parent ) {
     const QString certificateFilter = i18n("Certificates") + " (*.asc *.cer *.cert *.crt *.der *.pem *.gpg *.p7c *.p12 *.pfx *.pgp)";
     const QString anyFilesFilter = i18n("Any files") + " (*)";
@@ -159,7 +159,12 @@ static QStringList get_file_name( QWidget * parent ) {
         previousDir = group.readPathEntry( "last-open-file-directory", QDir::homePath() );
     }
     // ### use Kleo::FileDialog?
+#ifndef QT_NO_FILEDIALOG
     const QStringList files = QFileDialog::getOpenFileNames( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
+#else
+    QStringList files;
+    files << Kleo::FileDialog::getOpenFileName( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
+#endif
     if ( !files.empty() )
         if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
             KConfigGroup group( config, "Import Certificate" );
@@ -167,14 +172,11 @@ static QStringList get_file_name( QWidget * parent ) {
         }
     return files;
 }
-#endif // QT_NO_FILEDIALOG
 
 bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
 {
-#ifndef QT_NO_FILEDIALOG
     if ( files.empty() )
         files = get_file_name( parentWidgetOrView() );
-#endif // QT_NO_FILEDIALOG
     return !files.empty();
 }
 
