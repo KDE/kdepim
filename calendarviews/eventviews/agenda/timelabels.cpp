@@ -235,13 +235,14 @@ void TimeLabels::paintEvent( QPaintEvent * )
   //testline
   //p->drawLine(0,0,0,contentsHeight());
   while ( y < cy + ch + mCellHeight ) {
-    QPen pen;
+    QColor lineColor, textColor;
+    textColor = palette().color( QPalette::WindowText );
     if ( cell < 0 || cell >= 24 ) {
-      pen.setColor( QColor( 150, 150, 150 ) );
-    } else {
-      pen.setColor( palette().color( QPalette::WindowText ) );
+      textColor.setAlphaF( 0.5 );
     }
-    p.setPen( pen );
+    lineColor = textColor;
+    lineColor.setAlphaF( lineColor.alphaF() / 5. );
+    p.setPen( lineColor );
 
     // hour, full line
     p.drawLine( cx, int( y ), cw + 2, int( y ) );
@@ -264,7 +265,8 @@ void TimeLabels::paintEvent( QPaintEvent * )
       }
     }
 
-    // center and draw the time label
+    // draw the time label
+    p.setPen( textColor );
     const int timeWidth = fm.width( hour );
     int offset = startW - timeWidth - tw2 -1 ;
     p.setFont( hourFont );
