@@ -131,5 +131,6 @@ ActionMenuContainer {
     configureActionTitle: KDE.i18n( "Configure Contacts" )
 
     ActionListItem { name : "akonadi_contact_group_create" }
+    ActionListItem { name : "search_ldap" }
   }
 }

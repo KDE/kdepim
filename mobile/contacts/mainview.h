@@ -53,6 +53,7 @@ class MainView : public KDeclarativeMainView
     void itemSelectionChanged( const QItemSelection &selected, const QItemSelection& );
     void bulkActionSelectionChanged();
     void sendMailTo();
+    void searchLdap();
     void updateActionTexts();
 
   protected:

@@ -31,6 +31,8 @@
 #include "contactsimporthandler.h"
 #include "searchwidget.h"
 
+#include "libkdepim/ldap/ldapsearchdialog.h"
+
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/contact/contactgroupexpandjob.h>
 #include <akonadi/contact/contactsfilterproxymodel.h>
@@ -96,6 +98,10 @@ void MainView::doDelayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( sendMailTo() ) );
   actionCollection()->addAction( QLatin1String( "send_mail_to" ), action );
 
+  action = new KAction( "Search in LDAP directory", this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(searchLdap()) );
+  actionCollection()->addAction( QLatin1String( "search_ldap" ), action );
+  
   connect( itemSelectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
            this, SLOT( itemSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
   connect( itemActionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
@@ -373,6 +379,14 @@ ExportHandlerBase* MainView::exportHandler() const
 GuiStateManager* MainView::createGuiStateManager() const
 {
   return new ContactsGuiStateManager();
+}
+
+void MainView::searchLdap()
+{
+  static KLDAP::LdapSearchDialog* ldapSearchDialog = 0;
+  if ( !ldapSearchDialog )
+    ldapSearchDialog = new KLDAP::LdapSearchDialog( this );
+  ldapSearchDialog->show();
 }
 
 #include "mainview.moc"
