@@ -95,7 +95,7 @@ namespace HTMLPrettyFormatter
   const QString reformat( const QString &src );
 };
 
-class MailSourceViewer : public KTabWidget
+class MailSourceViewer : public QWidget
 {
 Q_OBJECT
 public:
@@ -106,6 +106,7 @@ public:
   void setDisplayedSource( const QString &source );
 
 private:
+  KTabWidget *mTabWidget;
   bool mShowHTMLBrowser;
   KTextBrowser *mRawBrowser;
 #ifndef NDEBUG

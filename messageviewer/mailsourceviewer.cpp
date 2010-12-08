@@ -32,15 +32,19 @@
 #include <config-messageviewer.h>
 
 #include "mailsourceviewer.h"
-#include <QApplication>
-#include <QIcon>
-#include <QTabBar>
-#include <kwindowsystem.h>
-#include <KLocalizedString>
 
-#include <QRegExp>
-#include <QShortcut>
 #include <kiconloader.h>
+#include <KLocalizedString>
+#include <kstandardguiitem.h>
+#include <kwindowsystem.h>
+
+#include <QtCore/QRegExp>
+#include <QtGui/QApplication>
+#include <QtGui/QIcon>
+#include <QtGui/QPushButton>
+#include <QtGui/QShortcut>
+#include <QtGui/QTabBar>
+#include <QtGui/QVBoxLayout>
 
 namespace MessageViewer {
 
@@ -141,26 +145,35 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
 }
 
 MailSourceViewer::MailSourceViewer( QWidget *parent )
-  : KTabWidget( parent ), mRawSourceHighLighter( 0 )
+  : QWidget( parent ), mRawSourceHighLighter( 0 )
 {
   setLayoutDirection( Qt::LeftToRight );
   setAttribute( Qt::WA_DeleteOnClose );
+
+  QVBoxLayout *layout = new QVBoxLayout( this );
+  mTabWidget = new KTabWidget( this );
+  layout->addWidget( mTabWidget );
+
+  QPushButton *closeButton = new QPushButton( KStandardGuiItem::close().text(), this );
+  connect( closeButton, SIGNAL( clicked() ), SLOT( close() ) );
+  layout->addWidget( closeButton );
+
   mRawBrowser = new KTextBrowser();
-  addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
-  setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
+  mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
+  mTabWidget->setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
   mRawBrowser->setLineWrapMode( QTextEdit::NoWrap );
   mRawBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
 
 #ifndef NDEBUG
   mHtmlBrowser = new KTextBrowser();
-  addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
-  setTabToolTip( 2, i18n( "HTML code for displaying the message to the user" ) );
+  mTabWidget->addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
+  mTabWidget->setTabToolTip( 2, i18n( "HTML code for displaying the message to the user" ) );
   mHtmlBrowser->setLineWrapMode( QTextEdit::NoWrap );
   mHtmlBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
   mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser );
 #endif
 
-  setCurrentIndex( 0 );
+  mTabWidget->setCurrentIndex( 0 );
 
   // combining the shortcuts in one qkeysequence() did not work...
   QShortcut* shortcut = new QShortcut( this );
