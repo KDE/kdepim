@@ -22,6 +22,9 @@
 
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QWidget>
+#ifdef Q_OS_WINCE
+#include <linkdepim/ldap/kcmldap_p>
+#endif
 
 class KCModuleProxy;
 class KComboBox;
@@ -44,7 +47,7 @@ class ConfigWidget : public QWidget
 #ifndef _WIN32_WCE
     KCModuleProxy *mLdapConfigWidget;
 #else
-    QWidget *mLdapConfigWidget;
+    KCMLdap *mLdapConfigWidget;
 #endif
 };
 
