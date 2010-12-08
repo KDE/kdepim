@@ -60,10 +60,12 @@ ActionMenuContainer {
     model : agentInstanceList
   }
 
-  FilterList {
+  FilterEditor {
     category : "home"
     name : "filter_menu"
     text : KDE.i18n( "Filter" )
+
+    model: filterModel
   }
 
   ActionListItem {

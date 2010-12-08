@@ -107,7 +107,6 @@ install(FILES
   BulkActionComponent.qml
   ConfigDialog.qml
   FilterEditor.qml
-  FilterList.qml
   ForwardOptionsPage.qml
   HeaderView.qml
   MarkAsPage.qml

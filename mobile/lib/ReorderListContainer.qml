@@ -47,6 +47,7 @@ Rectangle {
     anchors.left : _topLevel.left
     anchors.right : actionColumn.left
     interactive: count * actionItemHeight > height
+    focus: true
 
     delegate : ReorderListDelegate {
         height: _topLevel.actionItemHeight

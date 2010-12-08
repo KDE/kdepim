@@ -40,6 +40,7 @@ QML.Item {
   property alias actionItemWidth : _listContent.actionItemWidth
 
   property alias model : _listContent.model
+  property alias delegate : _listContent.delegate
   property alias showChildren : _listContent.visible
 
   default property alias content : _listContent.content
