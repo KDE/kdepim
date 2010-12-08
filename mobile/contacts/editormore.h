@@ -50,6 +50,7 @@ class EditorMore : public EditorBase
 
     Q_PRIVATE_SLOT( d, void playPronunciation() )
     Q_PRIVATE_SLOT( d, void addCustomField() )
+    Q_PRIVATE_SLOT( d, void configureCategories() )
 };
 
 #endif

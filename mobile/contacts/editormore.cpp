@@ -23,11 +23,16 @@
 #include "customfieldeditordialog.h"
 #include "customfieldeditwidget.h"
 #include "customfieldmanager_p.h"
+#include "settings.h"
 #include "ui_editormore.h"
+#include "ui_editormore_categoriespage.h"
 #include "ui_editormore_customfieldspage.h"
 #include "ui_editormore_namepage.h"
 #include "ui_editormore_internetpage.h"
 #include "ui_editormore_personalpage.h"
+
+#include <calendarsupport/categoryconfig.h>
+#include <incidenceeditor-ng/categoryselectdialog.h>
 
 #include <KABC/Addressee>
 
@@ -54,6 +59,7 @@ class EditorMore::Private
       mMapper->setMapping( mUi.internetPageButton, 1 );
       mMapper->setMapping( mUi.personalPageButton, 2 );
       mMapper->setMapping( mUi.customFieldsPageButton, 3 );
+      mMapper->setMapping( mUi.categoriesPageButton, 4 );
 
       // tokoe: enable when ContactMetaData is part of public API
       mUi.customFieldsPageButton->hide();
@@ -73,10 +79,14 @@ class EditorMore::Private
       QWidget *customFieldsPage = new QWidget;
       mCustomFieldsPage.setupUi( customFieldsPage );
 
+      QWidget *categoriesPage = new QWidget;
+      mCategoriesPage.setupUi( categoriesPage );
+
       mUi.pageWidget->insertWidget( 0, namePage );
       mUi.pageWidget->insertWidget( 1, internetPage );
       mUi.pageWidget->insertWidget( 2, personalPage );
       mUi.pageWidget->insertWidget( 3, customFieldsPage );
+      mUi.pageWidget->insertWidget( 4, categoriesPage );
 
       connect( mUi.namePageButton, SIGNAL( clicked() ),
                mMapper, SLOT( map() ) );
@@ -85,6 +95,8 @@ class EditorMore::Private
       connect( mUi.personalPageButton, SIGNAL( clicked() ),
                mMapper, SLOT( map() ) );
       connect( mUi.customFieldsPageButton, SIGNAL( clicked() ),
+               mMapper, SLOT( map() ) );
+      connect( mUi.categoriesPageButton, SIGNAL( clicked() ),
                mMapper, SLOT( map() ) );
       connect( mMapper, SIGNAL( mapped( int ) ),
                mUi.pageWidget, SLOT( setCurrentIndex( int ) ) );
@@ -101,9 +113,24 @@ class EditorMore::Private
       connect( mCustomFieldsPage.addCustomFieldButton, SIGNAL( clicked() ),
                q, SLOT( addCustomField() ) );
 
+      connect( mCategoriesPage.categoriesButton, SIGNAL( clicked() ),
+               q, SLOT( configureCategories() ) );
+
       mPersonalPage.birthdayDateEdit->setDate( QDate() );
       mPersonalPage.anniversaryDateEdit->setDate( QDate() );
+    }
 
+    void configureCategories()
+    {
+      CalendarSupport::CategoryConfig config( Settings::self(), 0 );
+
+      IncidenceEditorNG::CategorySelectDialog dlg( &config, q );
+      dlg.setCategoryList( mCategories );
+      dlg.setSelected( mCategories );
+      if ( dlg.exec() ) {
+        mCategories = dlg.selectedCategories();
+        mCategoriesPage.categoriesEdit->setText( mCategories.join( ", " ) );
+      }
     }
 
     void playPronunciation()
@@ -154,10 +181,12 @@ class EditorMore::Private
     Ui::InternetPage mInternetPage;
     Ui::PersonalPage mPersonalPage;
     Ui::CustomFieldsPage mCustomFieldsPage;
+    Ui::CategoriesPage mCategoriesPage;
     QSignalMapper *mMapper;
 
     KABC::Addressee mContact;
     CustomField::List mLocalCustomFields;
+    QStringList mCategories;
 };
 
 static QString loadCustom( const KABC::Addressee &contact, const QString &key )
@@ -226,6 +255,10 @@ void EditorMore::loadContact( const KABC::Addressee &contact, const Akonadi::Con
 
   // tokoe: enable when ContactMetaData is part of public API
   // loadCustomFields( contact, metaData );
+
+  // categories page
+  d->mCategories = contact.categories();
+  d->mCategoriesPage.categoriesEdit->setText( d->mCategories.join( ", " ) );
 }
 
 void EditorMore::loadCustomFields( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData )
@@ -336,6 +369,9 @@ void EditorMore::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData
 
   // tokoe: enable when ContactMetaData is part of public API
   // saveCustomFields( contact, metaData );
+
+  // categories page
+  contact.setCategories( d->mCategories );
 }
 
 void EditorMore::saveCustomFields( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const

@@ -54,6 +54,7 @@ kde4_add_ui_files(kab_mobile_srcs
   editorgeneral.ui
   editorlocation.ui
   editormore.ui
+  editormore_categoriespage.ui
   editormore_customfieldspage.ui
   editormore_namepage.ui
   editormore_internetpage.ui
@@ -83,6 +84,7 @@ target_link_libraries(kaddressbook-mobile
     kdepimmobileui
     kleo
     incidenceeditorsngmobile
+    calendarsupport
 )
 
 if (RUNTIME_PLUGINS_STATIC)
