@@ -106,13 +106,18 @@ QColumnView,
 QColumnView .QWidget,
 QColumnView .QAbstractItemView,
 QColumnView QListView,
-QListWidget,
-QListWidget::item:!selected
+.QListWidget,
+.QListWidget::item:!selected
 {
   background-color: rgba(0,0,0,0);
   color: black;
 }
 
+KCompletionBox,
+KCompletionBox::item:!selected
+{
+  background-color: white;
+}
 
 /* QComboBox */
 QComboBox::drop-down, QComboBox::down-arrow {
