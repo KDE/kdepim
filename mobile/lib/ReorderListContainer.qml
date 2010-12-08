@@ -49,7 +49,7 @@ Rectangle {
     interactive: count * actionItemHeight > height
 
     delegate : ReorderListDelegate {
-        height: _root.actionItemHeight
+        height: _topLevel.actionItemHeight
         width: ListView.view.width;
     }
 
