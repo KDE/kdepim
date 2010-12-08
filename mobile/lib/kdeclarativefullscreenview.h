@@ -80,6 +80,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     void delayedInit();
     void setQmlFile( const QString &source );
     void slotStatusChanged ( QDeclarativeView::Status );
+    void closeAkonadi();
 
   private:
 #ifdef Q_OS_WINCE

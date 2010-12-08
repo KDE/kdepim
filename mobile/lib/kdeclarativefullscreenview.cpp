@@ -21,6 +21,7 @@
 #include "stylesheetloader.h"
 
 #include <akonadi/control.h>
+#include <akonadi/servermanager.h>
 
 #include <KDebug>
 #include <KGlobalSettings>
@@ -145,6 +146,11 @@ void KDeclarativeFullScreenView::delayedInit()
 
   KAction *action = KStandardAction::close( this, SLOT(close()), this );
   mActionCollection->addAction( QLatin1String( "close" ), action );
+
+  action = new KAction( "Akonadi " + KStandardGuiItem::quit().text(), this ); //FIXME: use proper i18n after string freeze
+  connect( action, SIGNAL( triggered() ), SLOT( closeAkonadi() ) );
+  mActionCollection->addAction( QLatin1String( "quit_akonadi" ), action );
+
   action = new KAction( i18n( "Minimize Window" ), this );
   connect( action, SIGNAL(triggered()), SLOT(triggerTaskSwitcher()) );
   mActionCollection->addAction( QLatin1String( "wm_task_switch" ), action );
@@ -180,6 +186,19 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
   if ( debugTiming ) {
     kWarning() << "setSourceDone" << t.elapsed() << &t;
   }
+}
+
+void KDeclarativeFullScreenView::closeAkonadi()
+{
+  //FIXME: use proper i18n after string freeze
+  const QString message = QLatin1String( "Shutting down Akonadi will disable notifications\nabout new emails and upcoming events." );
+  const int result = KMessageBox::warningContinueCancel( 0, message );
+
+  if ( result == KMessageBox::Cancel )
+    return;
+
+  Akonadi::ServerManager::self()->stop();
+  close();
 }
 
 #ifdef Q_OS_WINCE

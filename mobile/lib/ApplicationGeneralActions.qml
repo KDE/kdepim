@@ -42,6 +42,13 @@ KPIM.ActionList {
   }
 
   KPIM.ActionListItem {
+    name : "quit_akonadi"
+    onPressAndHold: {
+      longPressed(name);
+    }
+  }
+
+  KPIM.ActionListItem {
     name : "wm_task_switch"
     onPressAndHold: {
       longPressed(name);
