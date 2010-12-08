@@ -298,6 +298,14 @@ void MainView::newEvent()
 
   item.setPayload<KCalCore::Event::Ptr>( event );
   editor->load( item );
+
+  if ( regularSelectionModel()->hasSelection() ) {
+    const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( collection.isValid() )
+      editor->setDefaultCollection( collection );
+  }
+
   editor->show();
 }
 
@@ -315,6 +323,14 @@ void MainView::newTodo()
 
   item.setPayload<KCalCore::Todo::Ptr>( todo );
   editor->load( item );
+
+  if ( regularSelectionModel()->hasSelection() ) {
+    const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( collection.isValid() )
+      editor->setDefaultCollection( collection );
+  }
+
   editor->show();
 }
 

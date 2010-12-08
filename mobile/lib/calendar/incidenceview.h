@@ -20,6 +20,7 @@
 #ifndef INCIDENCEVIEW_H
 #define INCIDENCEVIEW_H
 
+#include <Akonadi/Collection>
 #include <Akonadi/Item>
 #include <kcalcore/incidence.h>
 
@@ -62,6 +63,8 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     void setGeneralEditor( MobileIncidenceGeneral * );
     void setMoreEditor( MobileIncidenceMore * );
 
+    void setDefaultCollection( const Akonadi::Collection &collection );
+
   public: /// ItemEditorUi function implementations
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
     virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
@@ -98,6 +101,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     Akonadi::Item mItem;
     IncidenceEditorNG::EditorItemManager *mItemManager;
     Akonadi::CollectionComboBox *mCollectionCombo;
+    Akonadi::Collection mDefaultCollection;
     IncidenceEditorNG::CombinedIncidenceEditor *mEditor;
     IncidenceEditorNG::IncidenceDateTime *mEditorDateTime;
 

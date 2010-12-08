@@ -119,7 +119,11 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mItem );
   mCollectionCombo->setMimeTypeFilter( QStringList() << incidence->mimeType() );
   mCollectionCombo->setAccessRightsFilter( Collection::CanCreateItem );
-  mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
+
+  if ( mDefaultCollection.isValid() )
+    mCollectionCombo->setDefaultCollection( mDefaultCollection );
+  else
+    mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
 }
 
 void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
@@ -224,6 +228,11 @@ void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
   mIncidenceMore = editorWidget;
   if ( mEditorDateTime != 0 ) // IncidenceGeneral was not set yet.
     initIncidenceMore();
+}
+
+void IncidenceView::setDefaultCollection( const Akonadi::Collection &collection )
+{
+  mDefaultCollection = collection;
 }
 
 /// ItemEditorUi methods
