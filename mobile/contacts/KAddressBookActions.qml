@@ -118,6 +118,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_item_copy_to_dialog" }
     ActionListItem { name : "akonadi_item_move_to_dialog" }
     ActionListItem { name : "akonadi_item_delete" }
+    ActionListItem { name : "export_single_contact_vcard" }
   }
 
   ApplicationGeneralActions {

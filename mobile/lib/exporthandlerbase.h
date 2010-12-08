@@ -37,6 +37,7 @@ class MOBILEUI_EXPORT ExportHandlerBase : public QObject
     ~ExportHandlerBase();
 
     void setSelectionModel( QItemSelectionModel *model );
+    void setItemSelectionModel( QItemSelectionModel *model );
 
   public Q_SLOTS:
     void exec();
@@ -51,6 +52,7 @@ class MOBILEUI_EXPORT ExportHandlerBase : public QObject
 
   private:
     QItemSelectionModel *mSelectionModel;
+    QItemSelectionModel *mItemSelectionModel;
 };
 
 #endif

@@ -96,6 +96,10 @@ void MainView::doDelayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( exportItems() ) );
   actionCollection()->addAction( QLatin1String( "export_selected_vcards" ), action );
 
+  action = new KAction( i18n( "Export Contact" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( exportSingleItem() ) );
+  actionCollection()->addAction( QLatin1String( "export_single_contact_vcard" ), action );
+
   action = new KAction( i18n( "Send mail to" ), this );
   action->setEnabled( false );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( sendMailTo() ) );

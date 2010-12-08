@@ -159,6 +159,14 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void exportItems();
 
     /**
+     * Starts the export of a single item from the application.
+     *
+     * The actual work is done by the ExportHandlerBase objects returned
+     * by the exportHandler() method.
+     */
+    void exportSingleItem();
+
+    /**
      * Opens the user manual of this application in an external web browser.
      */
     void openManual();

@@ -635,6 +635,16 @@ void KDeclarativeMainView::exportItems()
   handler->exec();
 }
 
+void KDeclarativeMainView::exportSingleItem()
+{
+  ExportHandlerBase *handler = exportHandler();
+  if ( !handler )
+    return;
+
+  handler->setItemSelectionModel( itemSelectionModel() );
+  handler->exec();
+}
+
 /*
  * Copied from kdelibs/kdoctools/kio_help.cpp
  */
