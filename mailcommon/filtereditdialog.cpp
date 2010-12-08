@@ -69,9 +69,13 @@ void FilterEditDialog::save()
   if ( !mFilter )
     return;
 
+  mPatternEdit->updateSearchPattern();
+  mActionLister->updateActionList();
+
   FilterIf->filterManager()->beginUpdate();
   mFilter->pattern()->setName( mUi->filterName->text() );
   FilterIf->filterManager()->endUpdate();
+
   mFilter->setApplyOnInbound( mUi->applyToIncomingCB->isChecked() );
   mFilter->setApplyOnOutbound( mUi->applyToSentCB->isChecked() );
   mFilter->setApplyBeforeOutbound( mUi->applyBeforeSendCB->isChecked() );
