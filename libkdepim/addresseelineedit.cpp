@@ -209,7 +209,9 @@ void AddresseeLineEdit::Private::init()
   if ( m_useCompletion ) {
     if ( !s_static->ldapTimer ) {
       s_static->ldapTimer = new QTimer;
+      fprintf( stderr, "tokoe_debug: before 'new KLDAP::LdapClientSearch'\n" );
       s_static->ldapSearch = new KLDAP::LdapClientSearch;
+      fprintf( stderr, "tokoe_debug: after 'new KLDAP::LdapClientSearch'\n" );
     }
 
     updateLDAPWeights();
@@ -238,6 +240,7 @@ void AddresseeLineEdit::Private::init()
 
 void AddresseeLineEdit::Private::startLoadingLDAPEntries()
 {
+  fprintf( stderr, "tokoe_debug: entering startLoadingLDAPEntries()\n" );
   QString text( s_static->ldapText );
 
   // TODO cache last?
@@ -249,20 +252,25 @@ void AddresseeLineEdit::Private::startLoadingLDAPEntries()
   }
 
   if ( text.isEmpty() ) {
+    fprintf( stderr, "tokoe_debug: leaving startLoadingLDAPEntries()\n" );
     return;
   }
 
   s_static->ldapSearch->startSearch( text );
+  fprintf( stderr, "tokoe_debug: leaving startLoadingLDAPEntries()\n" );
 }
 
 void AddresseeLineEdit::Private::stopLDAPLookup()
 {
+  fprintf( stderr, "tokoe_debug: entering stopLDAPLookup()\n" );
   s_static->ldapSearch->cancelSearch();
   s_static->ldapLineEdit = 0;
+  fprintf( stderr, "tokoe_debug: leaving stopLDAPLookup()\n" );
 }
 
 void AddresseeLineEdit::Private::updateLDAPWeights()
 {
+  fprintf( stderr, "tokoe_debug: entering updateLDAPWeights()\n" );
   /* Add completion sources for all ldap server, 0 to n. Added first so
    * that they map to the LdapClient::clientNumber() */
   s_static->ldapSearch->updateCompletionWeights();
@@ -276,6 +284,7 @@ void AddresseeLineEdit::Private::updateLDAPWeights()
 
     clientIndex++;
   }
+  fprintf( stderr, "tokoe_debug: leaving updateLDAPWeights()\n" );
 }
 
 void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bool autoSuggest )
@@ -662,30 +671,38 @@ void AddresseeLineEdit::Private::slotReturnPressed( const QString & )
 
 void AddresseeLineEdit::Private::slotStartLDAPLookup()
 {
+  fprintf( stderr, "tokoe_debug: entering slotStartLDAPLookup( unconnected=%d )\n", (Solid::Networking::status() == Solid::Networking::Unconnected) );
   if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+    fprintf( stderr, "tokoe_debug: leaving slotStartLDAPLookup( state=%d )\n", Solid::Networking::status() );
     return;
   }
 
   const KGlobalSettings::Completion mode = q->completionMode();
 
   if ( mode == KGlobalSettings::CompletionNone ) {
+    fprintf( stderr, "tokoe_debug: leaving slotStartLDAPLookup()\n" );
     return;
   }
 
   if ( !s_static->ldapSearch->isAvailable() ) {
+    fprintf( stderr, "tokoe_debug: leaving slotStartLDAPLookup()\n" );
     return;
   }
 
   if ( s_static->ldapLineEdit != q ) {
+    fprintf( stderr, "tokoe_debug: leaving slotStartLDAPLookup()\n" );
     return;
   }
 
   startLoadingLDAPEntries();
+  fprintf( stderr, "tokoe_debug: leaving slotStartLDAPLookup()\n" );
 }
 
 void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::List &results )
 {
+  fprintf( stderr, "tokoe_debug: entering slotLDAPSearchData()\n" );
   if ( results.isEmpty() || s_static->ldapLineEdit != q ) {
+    fprintf( stderr, "tokoe_debug: leaving slotLDAPSearchData()\n" );
     return;
   }
 
@@ -713,6 +730,7 @@ void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::Li
       doCompletion( m_lastSearchMode );
     }
   }
+  fprintf( stderr, "tokoe_debug: leaving slotLDAPSearchData()\n" );
 }
 
 void AddresseeLineEdit::Private::slotEditCompletionOrder()
