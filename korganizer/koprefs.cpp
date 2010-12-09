@@ -58,6 +58,8 @@ static K3StaticDeleter<KOPrefs> insd;
 
 KOPrefs::KOPrefs() : KOPrefsBase()
 {
+  KGlobal::locale()->insertCatalog( "calendarsupport" );
+      
   mDefaultCategoryColor = QColor( 151, 235, 121 );
   mDefaultResourceColor = QColor(); //Default is a color invalid
 
