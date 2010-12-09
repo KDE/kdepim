@@ -38,7 +38,6 @@ ActionMenuContainer {
     ActionListItem { name : "synchronize_all_items" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Multiple Calendars" ) }
     ActionListItem { name : "import_events" }
-    ActionListItem { name : "archive_old_entries" }
   }
 
   FavoriteManager{ model : favoritesList }
@@ -74,6 +73,7 @@ ActionMenuContainer {
     text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
     ActionListItem { name : "export_selected_events" }
+    ActionListItem { name : "archive_old_entries" }
   }
 
   ActionList {
@@ -101,6 +101,7 @@ ActionMenuContainer {
 
     ActionListItem { name : "akonadi_collection_sync" }
     ActionListItem { name : "export_selected_events" }
+    ActionListItem { name : "archive_old_entries" }
   }
 
   ActionList {
