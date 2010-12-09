@@ -39,6 +39,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Multiple Task Lists" ) }
     ActionListItem { name : "import_tasks" }
     ActionListItem { name : "export_account_tasks" }
+    ActionListItem { name : "configure_categories" }
   }
 
   FavoriteManager{ model : favoritesList }

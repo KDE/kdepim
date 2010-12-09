@@ -70,6 +70,7 @@ class MainView : public KDeclarativeMainView
     void processActionFinish( const Akonadi::Item &item );
     void archiveOldEntries();
     void updateActionTexts();
+    void configureCategories();
 
   protected:
     virtual void doDelayedInit();

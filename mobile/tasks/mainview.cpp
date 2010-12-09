@@ -35,10 +35,13 @@
 #include "taskthreadgroupercomparator.h"
 #include "threadgroupermodel.h"
 
+#include <incidenceeditor-ng/categoryeditdialog.h>
+#include <incidenceeditor-ng/editorconfig.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <calendarsupport/archivedialog.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarutils.h>
+#include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/freebusymanager.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
@@ -139,6 +142,10 @@ void MainView::doDelayedInit()
            SIGNAL( triggered( bool ) ), SLOT( saveAllAttachments() ) );
   connect( actionCollection()->action( QLatin1String( "archive_old_entries" ) ),
            SIGNAL( triggered( bool ) ), SLOT( archiveOldEntries() ) );
+
+  KAction *action = new KAction( i18n( "Configure Categories" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureCategories() ) );
+  actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 
   KPIM::ReminderClient::startDaemon();
 }
@@ -403,6 +410,14 @@ ImportHandlerBase* MainView::importHandler() const
 ExportHandlerBase* MainView::exportHandler() const
 {
   return new TasksExportHandler();
+}
+
+void MainView::configureCategories()
+{
+  CalendarSupport::CategoryConfig config( IncidenceEditorNG::EditorConfig::instance()->config(), 0 );
+  IncidenceEditorNG::CategoryEditDialog dialog( &config, 0 );
+  if ( dialog.exec() )
+    config.writeConfig();
 }
 
 Item MainView::currentItem() const

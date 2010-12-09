@@ -60,6 +60,7 @@ class MainView : public KDeclarativeMainView
     void searchLdap();
     void importFromLdap();
     void updateActionTexts();
+    void configureCategories();
 
   protected:
     virtual void doDelayedInit();

@@ -70,6 +70,7 @@
 #include <kmessagebox.h>
 #include <ksystemtimezone.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
+#include <incidenceeditor-ng/editorconfig.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
@@ -214,7 +215,7 @@ void MainView::doDelayedInit()
   actionCollection()->addAction( QLatin1String( "set_calendar_colour" ), action );
 
   action = new KAction( i18n( "Configure Categories" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureCategories()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureCategories() ) );
   actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 
   connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
@@ -524,9 +525,10 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 
 void MainView::configureCategories()
 {
-  CalendarSupport::CategoryConfig config( Settings::self(), 0 );
+  CalendarSupport::CategoryConfig config( IncidenceEditorNG::EditorConfig::instance()->config(), 0 );
   IncidenceEditorNG::CategoryEditDialog dialog( &config, 0 );
-  dialog.exec();
+  if ( dialog.exec() )
+    config.writeConfig();
 }
 
 QAbstractProxyModel* MainView::createItemFilterModel() const

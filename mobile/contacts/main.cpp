@@ -26,6 +26,8 @@
 # include <winuser.h>
 #endif
 
+#include <incidenceeditor-ng/korganizereditorconfig.h>
+
 #include "mainview.h"
 
 #ifdef MAIL_SERIALIZER_PLUGIN_STATIC
@@ -42,6 +44,8 @@ int main( int argc, char **argv )
 #endif
   const QByteArray& ba = QByteArray( "kaddressbook-mobile" );
   const KLocalizedString name = ki18n( "KAddressBook Mobile" );
+
+  IncidenceEditorNG::EditorConfig::setEditorConfig( new IncidenceEditorNG::KOrganizerEditorConfig ); //FIXME: use our own config for contacts
 
   KAboutData aboutData( ba, ba, name, ba, name );
   aboutData.setProductName( "KAddressbook Mobile" ); //has to match the bugzilla product name

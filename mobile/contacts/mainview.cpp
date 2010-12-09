@@ -40,10 +40,14 @@
 #include <akonadi/contact/standardcontactactionmanager.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchscope.h>
+#include <calendarsupport/categoryconfig.h>
+#include <incidenceeditor-ng/categoryeditdialog.h>
+#include <incidenceeditor-ng/editorconfig.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <kconfigskeleton.h>
 #include <kfiledialog.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -106,9 +110,13 @@ void MainView::doDelayedInit()
   actionCollection()->addAction( QLatin1String( "send_mail_to" ), action );
 
   action = new KAction( "Search in LDAP directory", this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(searchLdap()) );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( searchLdap() ) );
   actionCollection()->addAction( QLatin1String( "search_ldap" ), action );
-  
+
+  action = new KAction( i18n( "Configure Categories" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureCategories() ) );
+  actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
+
   connect( itemSelectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
            this, SLOT( itemSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
   connect( itemActionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
@@ -393,7 +401,7 @@ void MainView::searchLdap()
 {
   if ( !mLdapSearchDialog ) {
     mLdapSearchDialog = new KLDAP::LdapSearchDialog( this );
-    connect( mLdapSearchDialog, SIGNAL(contactsAdded()), SLOT(importFromLdap()) );
+    connect( mLdapSearchDialog, SIGNAL( contactsAdded() ), SLOT( importFromLdap() ) );
   }
   mLdapSearchDialog->show();
 }
@@ -435,6 +443,14 @@ void MainView::importFromLdap()
 
     new Akonadi::ItemCreateJob( item, collection );
   }
+}
+
+void MainView::configureCategories()
+{
+  CalendarSupport::CategoryConfig config( IncidenceEditorNG::EditorConfig::instance()->config(), 0 );
+  IncidenceEditorNG::CategoryEditDialog dialog( &config, 0 );
+  if ( dialog.exec() )
+    config.writeConfig();
 }
 
 #include "mainview.moc"
