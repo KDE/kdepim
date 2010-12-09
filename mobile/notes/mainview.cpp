@@ -333,6 +333,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   manager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Notebook Properties" ) );
   manager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Notebook" ) );
+  manager->action( StandardActionManager::CreateCollection )->setProperty( "ContentMimeTypes", QStringList( "application/x-vnd.akonadi.note" ) );
   manager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Notebook", "Synchronize These Notebooks" ) );
   manager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Notebook", "Delete Notebooks" ) );
   manager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Notebook To" ) );

@@ -319,6 +319,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   mStandardActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Task List Properties" ) );
   mStandardActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Task List" ) );
+  mStandardActionManager->action( StandardActionManager::CreateCollection )->setProperty( "ContentMimeTypes", QStringList( KCalCore::Todo::todoMimeType() ) );
   mStandardActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Task List", "Synchronize These Task Lists" ) );
   mStandardActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Task List", "Delete Task Lists" ) );
   mStandardActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Task List To" ) );

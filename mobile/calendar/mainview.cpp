@@ -443,6 +443,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mActionManager->action( Akonadi::StandardCalendarActionManager::CreateEvent )->setText( i18n( "New Event" ) );
   mActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Calendar Properties" ) );
   mActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Calendar" ) );
+  mActionManager->action( StandardActionManager::CreateCollection )->setProperty( "ContentMimeTypes", QStringList( KCalCore::Event::eventMimeType() ) );
   mActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Calendar", "Synchronize These Calendars" ) );
   mActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Calendar", "Delete Calendars" ) );
   mActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Calendar To" ) );

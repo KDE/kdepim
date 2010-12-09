@@ -300,6 +300,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   ActionHelper::adaptStandardActionTexts( mActionManager );
 
   mActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Address Book" ) );
+  mActionManager->action( StandardActionManager::CreateCollection )->setProperty( "ContentMimeTypes", QStringList( KABC::Addressee::mimeType() ) );
   mActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Address Book", "Synchronize These Address Books" ) );
   mActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Address Book Properties" ) );
   mActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Address Book", "Delete Address Books" ) );
