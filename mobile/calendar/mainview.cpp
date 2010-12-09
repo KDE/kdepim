@@ -35,6 +35,7 @@
 #include "eventsimporthandler.h"
 #include "monthviewitem.h"
 #include "searchwidget.h"
+#include "settings.h"
 #include "timelineviewitem.h"
 #include "qmldateedit.h"
 
@@ -48,6 +49,7 @@
 #include <akonadi/standardactionmanager.h>
 #include <calendarsupport/archivedialog.h>
 #include <calendarsupport/calendar.h>
+#include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectiongeneralpage.h>
 #include <calendarsupport/collectionselection.h>
@@ -67,6 +69,7 @@
 #endif
 #include <kmessagebox.h>
 #include <ksystemtimezone.h>
+#include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
@@ -209,6 +212,10 @@ void MainView::doDelayedInit()
   action = new KAction( i18n( "Set Color Of Calendar" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( changeCalendarColor()) );
   actionCollection()->addAction( QLatin1String( "set_calendar_colour" ), action );
+
+  action = new KAction( i18n( "Configure Categories" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureCategories()) );
+  actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 
   connect( this, SIGNAL( statusChanged( QDeclarativeView::Status ) ),
            this, SLOT( qmlLoadingStateChanged( QDeclarativeView::Status ) ) );
@@ -513,6 +520,13 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
                            i18nc( "@title:window", "Delete Account?" ) );
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
+}
+
+void MainView::configureCategories()
+{
+  CalendarSupport::CategoryConfig config( Settings::self(), 0 );
+  IncidenceEditorNG::CategoryEditDialog dialog( &config, 0 );
+  dialog.exec();
 }
 
 QAbstractProxyModel* MainView::createItemFilterModel() const

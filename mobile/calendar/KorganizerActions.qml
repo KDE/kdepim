@@ -38,6 +38,7 @@ ActionMenuContainer {
     ActionListItem { name : "synchronize_all_items" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Multiple Calendars" ) }
     ActionListItem { name : "import_events" }
+    ActionListItem { name : "configure_categories" }
   }
 
   FavoriteManager{ model : favoritesList }

@@ -105,6 +105,7 @@ class MainView : public KDeclarativeMainView
     void fetchForiTIPMethodDone( KJob *job );
     void fetchForSaveAllAttachmentsDone( KJob *job );
     void updateActionTexts();
+    void configureCategories();
 
   protected:
     void doDelayedInit();
