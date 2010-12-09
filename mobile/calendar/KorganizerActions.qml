@@ -62,7 +62,7 @@ ActionMenuContainer {
 
   ActionList {
     category : "account"
-    name : "single_folder_view_menu"
+    name : "account_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
