@@ -20,10 +20,10 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef CATEGORYEDITDIALOG_H
-#define CATEGORYEDITDIALOG_H
+#ifndef INCIDENCEEDITOR_CATEGORYEDITDIALOG_H
+#define INCIDENCEEDITOR_CATEGORYEDITDIALOG_H
 
-#include "korganizer_export.h"
+#include "incidenceeditors-ng_export.h"
 
 #include <KDialog>
 
@@ -37,7 +37,9 @@ namespace CalendarSupport {
   class CategoryConfig;
 }
 
-class KORGANIZER_CORE_EXPORT CategoryEditDialog : public KDialog
+namespace IncidenceEditorNG {
+
+class INCIDENCEEDITORS_NG_EXPORT CategoryEditDialog : public KDialog
 {
   Q_OBJECT
   public:
@@ -71,5 +73,7 @@ class KORGANIZER_CORE_EXPORT CategoryEditDialog : public KDialog
     CalendarSupport::CategoryConfig *mCategoryConfig;
     Ui::CategoryEditDialog_base *mWidgets;
 };
+
+}
 
 #endif

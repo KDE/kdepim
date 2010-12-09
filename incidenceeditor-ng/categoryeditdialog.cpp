@@ -22,8 +22,9 @@
 */
 
 #include "categoryeditdialog.h"
+
+#include "categoryhierarchyreader.h"
 #include "ui_categoryeditdialog_base.h"
-#include "incidenceeditor-ng/categoryhierarchyreader.h"
 
 #include <calendarsupport/categoryconfig.h>
 
@@ -33,6 +34,7 @@
 #include <QList>
 #include <QStringList>
 
+using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
 
 CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,

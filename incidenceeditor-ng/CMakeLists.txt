@@ -58,6 +58,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   korganizereditorconfig.cpp
 
   autochecktreewidget.cpp
+  categoryeditdialog.cpp
   categoryselectdialog.cpp
   categorydialog.cpp
 )
@@ -78,7 +79,9 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   groupwareintegration.cpp
 )
 
+
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
+  categoryeditdialog_base.ui
   categoryselectdialog_base.ui
   categorydialog_base.ui
   template_management_dialog_base.ui
@@ -119,6 +122,7 @@ endif(NOT WINCE)
   )
 
   kde4_add_ui_files(incidenceeditors_ng_mobile_LIB_SRCS
+    categoryeditdialog_base.ui
     categoryselectdialog_base.ui
     categorydialog_base.ui
     editoralarms_base.ui
