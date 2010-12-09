@@ -742,11 +742,6 @@ void MainView::replyFetchResult( KJob *job )
   composer->show();
 
   presetComposerIdentity( composer );
-
-  Item statusItem( item );
-  statusItem.setFlag( Akonadi::MessageFlags::Replied );
-  Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( statusItem );
-  modifyJob->setIgnorePayload( true );
 }
 
 void MainView::forward( quint64 id, ForwardMode mode )
@@ -791,11 +786,6 @@ void MainView::forwardFetchResult( KJob* job )
 
   composer->show();
   presetComposerIdentity( composer );
-
-  Item statusItem( item );
-  statusItem.setFlag( Akonadi::MessageFlags::Forwarded );
-  Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( statusItem );
-  modifyJob->setIgnorePayload( true );
 }
 
 void MainView::markImportant( bool checked )
