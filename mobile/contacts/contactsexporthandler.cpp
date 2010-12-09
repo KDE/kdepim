@@ -109,12 +109,12 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
                                          KGuiItem( i18n( "Export to One File" ) ) ) ) {
       case KMessageBox::Yes:
         {
-          const KUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
-          if ( baseUrl.isEmpty() )
+          const QString path = KFileDialog::getExistingDirectory();
+          if ( path.isEmpty() )
             return true; // user canceled export
 
           foreach ( const KABC::Addressee &contact, contacts ) {
-            fileName = baseUrl.url() + QDir::separator() + contactFileName( contact ) + QLatin1String( ".vcf" );
+            fileName = path + QDir::separator() + contactFileName( contact ) + QLatin1String( ".vcf" );
 
             const bool tmpOk = exportVCard( fileName, converter.createVCard( contact, KABC::VCardConverter::v3_0 ) );
 
