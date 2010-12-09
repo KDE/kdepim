@@ -36,5 +36,14 @@ KPIM.Button {
   enabled: action.enabled
   opacity: enabled ? 1 : 0.65
 
-  onClicked : { action.triggered( true ) }
+  onClicked : { action.trigger() }
+
+  QML.Connections {
+    target : action
+    onChanged : {
+      border.width = action.checked ? 2 : 0
+    }
+  }
+
+  border.width : action.checked ? 2 : 0
 }

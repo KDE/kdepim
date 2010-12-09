@@ -22,86 +22,79 @@
 import Qt 4.7
 import org.kde.pim.mobileui 4.5 as KPIM
 
-Item {
+KPIM.ReorderListContainer {
   width: 600
 
-  KPIM.DecoratedListView {
-    id: attachmentListView
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    width: parent.width / 2
-    model: attachmentModel
+  model: attachmentModel
+
+  delegate: Item {
+    id: wrapper
+    width: parent.width
+    height: 70
     clip: true
 
-    delegate: Item {
-      id: wrapper
-      width: parent.width
-      height: 70
-      clip: true
+    Rectangle {
+      id: background
+      anchors.fill: parent
+      opacity: (wrapper.ListView.isCurrentItem ? 0.25 : 0)
+    }
+    Text {
+      id: attachmentName
+      anchors.fill: parent;
+      text: model.attachmentName;
+      horizontalAlignment: "AlignLeft";
+      verticalAlignment: "AlignTop";
+    }
+    Row {
+      id: cryptoIcons
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
 
-      Rectangle {
-        id: background
-        anchors.fill: parent
-        opacity: (wrapper.ListView.isCurrentItem ? 0.25 : 0)
+      Image {
+        width: 22
+        height: 22
+        source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_signed.png" )
+        visible: model.attachmentIsSigned
       }
-      Text {
-        id: attachmentName
-        anchors.fill: parent;
-        text: model.attachmentName;
-        horizontalAlignment: "AlignLeft";
-        verticalAlignment: "AlignTop";
-      }
-      Row {
-        id: cryptoIcons
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-
-        Image {
-          width: 22
-          height: 22
-          source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_signed.png" )
-          visible: model.attachmentIsSigned
-        }
-        Image {
-          width: 22
-          height: 22
-          source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_encrypted.png" )
-          visible: model.attachmentIsEncrypted
-        }
-      }
-      Text {
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        text: model.attachmentSize
-      }
-      MouseArea {
-        anchors.fill: parent
-        onClicked: {
-          wrapper.ListView.view.currentIndex = model.index
-        }
+      Image {
+        width: 22
+        height: 22
+        source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_encrypted.png" )
+        visible: model.attachmentIsEncrypted
       }
     }
-
-    onCurrentIndexChanged : {
-      attachmentEditor.setRowSelected( currentIndex )
+    Text {
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      text: model.attachmentSize
+    }
+    MouseArea {
+      anchors.fill: parent
+      onClicked: {
+        wrapper.ListView.view.currentIndex = model.index
+      }
     }
   }
 
-  KPIM.ActionMenuContainer {
-    id : actionColumn
-    anchors.top : parent.top
-    anchors.bottom : parent.bottom
-    anchors.right : parent.right
-    actionItemWidth : width
-    actionItemHeight : 70
-    width: parent.width/2
+  onCurrentIndexChanged : { attachmentEditor.setRowSelected( index ) }
 
-    content : [
-      KPIM.ActionListItem { name : "attach" },
-      KPIM.ActionListItem { name : "remove" },
-      KPIM.ActionListItem { name : "toggle_attachment_signed" },
-      KPIM.ActionListItem { name : "toggle_attachment_encrypted" }
-    ]
+  KPIM.ActionButton {
+    icon : KDE.locate( "data", "kmail-mobile/add-attachment-button.png" )
+    actionName : "attach"
+  }
+
+  KPIM.ActionButton {
+    icon : KDE.locate( "data", "kmail-mobile/remove-attachment-button.png" )
+    actionName : "remove"
+  }
+
+  KPIM.ActionButton {
+    icon : KDE.locate( "data", "kmail-mobile/toggle-signature-button.png" )
+    actionName : "toggle_attachment_signed"
+  }
+
+  KPIM.ActionButton {
+    icon : KDE.locate( "data", "kmail-mobile/toggle-encryption-button.png" )
+    actionName : "toggle_attachment_encrypted"
   }
 }

@@ -125,6 +125,10 @@ install(FILES
   SnippetsEditor.qml
   SnippetsList.qml
   VacationScriptIndicator.qml
+  add-attachment-button.png
+  remove-attachment-button.png
+  toggle-signature-button.png
+  toggle-encryption-button.png
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
 
