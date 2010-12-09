@@ -22,12 +22,10 @@
 
 #include "messagecore_export.h"
 
+#include <akonadi/item.h>
+#include <akonadi/kmime/messagestatus.h>
 #include <boost/shared_ptr.hpp>
 #include <KMime/Message>
-
-namespace Akonadi {
-class Item;
-}
 
 namespace MessageCore {
 
@@ -52,6 +50,25 @@ namespace Util {
    * Get the message id as a string from the @p message.
    */
   MESSAGECORE_EXPORT QString messageId( const KMime::Message::Ptr &message );
+
+  /**
+   * Adds private headers to the given @p message that links it to the original message.
+   *
+   * @param message The message to add the link information to.
+   * @param id The item id of the original message.
+   * @param status The status (replied or forwarded) that links the message to the original message.
+   */
+  MESSAGECORE_EXPORT void addLinkInformation( const KMime::Message::Ptr &message, Akonadi::Item::Id item, const Akonadi::MessageStatus &status );
+
+  /**
+   * Reads the private headers of the given @p message to extract link information to its original message.
+   *
+   * @param message The message to read the link information from.
+   * @param id Will contain the item id of the original message.
+   * @param status Will contain the status (replied or forwarded) that linked the message to the original message.
+   * @returns Whether the mail contains valid link information or not.
+   */
+  MESSAGECORE_EXPORT bool getLinkInformation( const KMime::Message::Ptr &message, Akonadi::Item::Id &id, Akonadi::MessageStatus &status );
 }
 
 }

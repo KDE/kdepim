@@ -33,6 +33,7 @@
 #include <kmime/kmime_dateformatter.h>
 #include <KPIMUtils/Email>
 #include <messagecore/mailinglist.h>
+#include <messagecore/messagehelpers.h>
 #include <messagecore/stringutil.h>
 #include "messagehelper.h"
 #include "templateparser/templateparser.h"
@@ -287,7 +288,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
 
   applyCharset( msg );
 
-  link( msg, m_id, Akonadi::MessageStatus::statusReplied() );
+  MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusReplied() );
   if ( m_parentFolderId > 0 ) {
     KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), QString::number( m_parentFolderId ), "utf-8" );
     msg->setHeader( header );
@@ -369,7 +370,7 @@ KMime::Message::Ptr MessageFactory::createForward()
 
   applyCharset( msg );
 
-  link( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
+  MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
   msg->assemble();
   return msg;
 }
@@ -419,13 +420,13 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
 #else
     kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
-    link( fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
+    MessageCore::Util::addLinkInformation( fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
     attachments << msgPart;
   }
 
   applyCharset( msg );
 
-  link( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
+  MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
 //   msg->assemble();
   return QPair< KMime::Message::Ptr, QList< KMime::Content* > >( msg, QList< KMime::Content* >() << attachments );
 }
@@ -518,7 +519,7 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   msg->setHeader( header );
   msg->assemble();
 
-  link( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
+  MessageCore::Util::addLinkInformation( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
   return msg;
 }
 
@@ -675,7 +676,7 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
     part->fromUnicodeString( QString::fromLatin1( fMsg->encodedContent() ) );
     part->assemble();
 
-    link( fMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
+    MessageCore::Util::addLinkInformation( fMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
     digest->addContent( part );
   }
   digest->assemble();
@@ -820,32 +821,6 @@ bool MessageFactory::MDNMDNUnknownOption( KMime::Message::Ptr msg )
     return true;
   }
   return false;
-}
-
-void MessageFactory::link( const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const Akonadi::MessageStatus& aStatus )
-{
-  Q_ASSERT( aStatus.isReplied() || aStatus.isForwarded() || aStatus.isDeleted() );
-
-  QString message = msg->headerByType( "X-KMail-Link-Message" ) ? msg->headerByType( "X-KMail-Link-Message" )->asUnicodeString() : QString();
-  if ( !message.isEmpty() )
-    message += QChar::fromLatin1(',');
-  QString type = msg->headerByType( "X-KMail-Link-Type" ) ? msg->headerByType( "X-KMail-Link-Type" )->asUnicodeString(): QString();
-  if ( !type.isEmpty() )
-    type += QChar::fromLatin1(',');
-
-  message += QString::number( id );
-  if ( aStatus.isReplied() )
-    type += QString::fromLatin1("reply");
-  else if ( aStatus.isForwarded() )
-    type += QString::fromLatin1("forward");
-  else if ( aStatus.isDeleted() )
-    type += QString::fromLatin1("deleted");
-
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Link-Message", msg.get(), message, QString::fromLatin1("utf-8").toLatin1() );
-  msg->setHeader( header );
-
-  header = new KMime::Headers::Generic( "X-KMail-Link-Type", msg.get(), type, QString::fromLatin1("utf-8").toLatin1() );
-  msg->setHeader( header );
 }
 
 

@@ -59,3 +59,52 @@ QString MessageCore::Util::messageId( const KMime::Message::Ptr &message )
 
   return messageId;
 }
+
+void MessageCore::Util::addLinkInformation( const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const Akonadi::MessageStatus &status )
+{
+  Q_ASSERT( status.isReplied() || status.isForwarded() || status.isDeleted() );
+
+  QString message = msg->headerByType( "X-KMail-Link-Message" ) ? msg->headerByType( "X-KMail-Link-Message" )->asUnicodeString() : QString();
+  if ( !message.isEmpty() )
+    message += QChar::fromLatin1( ',' );
+
+  QString type = msg->headerByType( "X-KMail-Link-Type" ) ? msg->headerByType( "X-KMail-Link-Type" )->asUnicodeString(): QString();
+  if ( !type.isEmpty() )
+    type += QChar::fromLatin1( ',' );
+
+  message += QString::number( id );
+  if ( status.isReplied() )
+    type += QLatin1String( "reply" );
+  else if ( status.isForwarded() )
+    type += QLatin1String( "forward" );
+
+  KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Link-Message", msg.get(), message, "utf-8" );
+  msg->setHeader( header );
+
+  header = new KMime::Headers::Generic( "X-KMail-Link-Type", msg.get(), type, "utf-8" );
+  msg->setHeader( header );
+}
+
+bool MessageCore::Util::getLinkInformation( const KMime::Message::Ptr &msg, Akonadi::Item::Id &id, Akonadi::MessageStatus &status )
+{
+  id = -1;
+  status = Akonadi::MessageStatus();
+
+  if ( !msg->headerByType( "X-KMail-Link-Message" ) || !msg->headerByType( "X-KMail-Link-Type" ) )
+    return false;
+
+  const QStringList messages = msg->headerByType( "X-KMail-Link-Message" )->asUnicodeString().split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+  const QStringList types = msg->headerByType( "X-KMail-Link-Type" )->asUnicodeString().split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+  if ( messages.isEmpty() || types.isEmpty() )
+    return false;
+
+  id = messages.first().toLongLong();
+
+  const QString type = types.first();
+  if ( type == QLatin1String( "reply" ) )
+    status.setReplied();
+  else if ( type == QLatin1String( "forward" ) )
+    status.setForwarded();
+
+  return true;
+}

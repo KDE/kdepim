@@ -123,8 +123,6 @@ namespace MessageHelper {
   QList<Nepomuk::Tag> tagList(const Akonadi::Item &msg);
   void setTagList( const Akonadi::Item &msg, const QList<Nepomuk::Tag> &tags );
 #endif
-
-  void link( const KMime::Message::Ptr &msg, const Akonadi::Item & item,const Akonadi::MessageStatus& aStatus );
 }
 
 

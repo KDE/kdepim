@@ -237,8 +237,6 @@ public:
   */
   static bool MDNMDNUnknownOption( KMime::Message::Ptr msg );
 
-  static void link( const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const Akonadi::MessageStatus& aStatus );
-
 private:
     /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,
