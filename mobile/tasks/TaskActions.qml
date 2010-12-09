@@ -39,7 +39,6 @@ ActionMenuContainer {
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Multiple Task Lists" ) }
     ActionListItem { name : "import_tasks" }
     ActionListItem { name : "export_account_tasks" }
-    ActionListItem { name : "archive_old_entries" }
   }
 
   FavoriteManager{ model : favoritesList }
@@ -68,6 +67,7 @@ ActionMenuContainer {
     text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
     ActionListItem { name : "export_selected_tasks" }
+    ActionListItem { name : "archive_old_entries" }
     ActionListItem { name : "purge_completed_tasks" }
   }
 
@@ -96,6 +96,7 @@ ActionMenuContainer {
     text : KDE.i18n( "Folders" )
     ActionListItem { name : "akonadi_collection_sync" }
     ActionListItem { name : "export_selected_tasks" }
+    ActionListItem { name : "archive_old_entries" }
     ActionListItem { name : "purge_completed_todos" }
   }
 
