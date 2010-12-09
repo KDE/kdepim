@@ -102,9 +102,9 @@ bool MessageCore::Util::getLinkInformation( const KMime::Message::Ptr &msg, Akon
 
   const QString type = types.first();
   if ( type == QLatin1String( "reply" ) )
-    status.setReplied();
+    status = Akonadi::MessageStatus::statusReplied();
   else if ( type == QLatin1String( "forward" ) )
-    status.setForwarded();
+    status = Akonadi::MessageStatus::statusForwarded();
 
   return true;
 }
