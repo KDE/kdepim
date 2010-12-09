@@ -33,6 +33,7 @@
 
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
+#include <messagecore/messagehelpers.h>
 #include <messagecore/stringutil.h>
 #include <mailtransport/transportcombobox.h>
 #include <mailtransport/messagequeuejob.h>
@@ -589,6 +590,10 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
     extras << m_msg->headerByType( "X-KMail-Drafts" );
   if( m_msg->headerByType( "X-KMail-Templates" ) )
     extras << m_msg->headerByType( "X-KMail-Templates" );
+  if( m_msg->headerByType( "X-KMail-Link-Message" ) )
+    extras << m_msg->headerByType( "X-KMail-Link-Message" );
+  if( m_msg->headerByType( "X-KMail-Link-Type" ) )
+    extras << m_msg->headerByType( "X-KMail-Link-Type" );
 
   infoPart->setExtraHeaders( extras );
 }
@@ -658,6 +663,18 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
   } else {
     qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
+  }
+
+  Akonadi::Item::Id originalMessageId;
+  Akonadi::MessageStatus linkStatus;
+  if ( MessageCore::Util::getLinkInformation( message, originalMessageId, linkStatus ) ) {
+    if ( linkStatus == Akonadi::MessageStatus::statusReplied() ) {
+      qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsReplied,
+                                             QVariant( originalMessageId ) );
+    } else if ( linkStatus == Akonadi::MessageStatus::statusForwarded() ) {
+      qjob->sentActionAttribute().addAction( MailTransport::SentActionAttribute::Action::MarkAsForwarded,
+                                             QVariant( originalMessageId ) );
+    }
   }
 
   fillQueueJobHeaders( qjob, message, infoPart );
