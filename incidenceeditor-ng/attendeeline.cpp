@@ -36,22 +36,6 @@
 
 using namespace IncidenceEditorNG;
 
-IncidenceEditorNG::AttendeeCheckBox::AttendeeCheckBox( QWidget *parent )
-  : QCheckBox( parent )
-{
-}
-
-void AttendeeCheckBox::keyPressEvent( QKeyEvent *ev )
-{
-  if ( ev->key() == Qt::Key_Left ) {
-    emit leftPressed();
-  } else if ( ev->key() == Qt::Key_Right ) {
-    emit rightPressed();
-  } else {
-    QAbstractButton::keyPressEvent( ev );
-  }
-}
-
 typedef QPair<QString, QIcon> TextIconPair;
 
 AttendeeComboBox::AttendeeComboBox( QWidget *parent )
@@ -159,7 +143,7 @@ AttendeeLine::AttendeeLine( QWidget *parent )
   : MultiplyingLine( parent ),
     mRoleCombo( new AttendeeComboBox( this ) ),
     mStateCombo( new AttendeeComboBox( this ) ),
-    mResponseCheck( new AttendeeCheckBox( this ) ),
+    mResponseCombo( new AttendeeComboBox( this ) ),
     mEdit( new AttendeeLineEdit( this ) ),
     mData( new AttendeeData( QString(), QString() ) ),
     mModified( false )
@@ -179,7 +163,10 @@ AttendeeLine::AttendeeLine( QWidget *parent )
   mRoleCombo->addItem( DesktopIcon( "meeting-chair", 48 ),
                        KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
-  mResponseCheck->setIcon( DesktopIcon( "mail-meeting-request-reply", 48 ) );
+  mResponseCombo->addItem( DesktopIcon( "meeting-participant-request-response", 48 ),
+                           i18n( "Request Response" ) );
+  mResponseCombo->addItem( DesktopIcon( "meeting-participant-no-response", 48 ),
+                           i18n( "Request No Response" ) );
 #else
   mRoleCombo->addItem( SmallIcon( "meeting-participant" ),
                        KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::ReqParticipant ) );
@@ -190,9 +177,11 @@ AttendeeLine::AttendeeLine( QWidget *parent )
   mRoleCombo->addItem( SmallIcon( "meeting-chair" ),
                        KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
-  mResponseCheck->setIcon( SmallIcon( "mail-meeting-request-reply" ) );
+  mResponseCombo->addItem( SmallIcon( "meeting-participant-request-response" ),
+                           i18n( "Request Response" ) );
+  mResponseCombo->addItem( SmallIcon( "meeting-participant-no-response" ),
+                           i18n( "Request No Response" ) );
 #endif
-  mResponseCheck->setChecked( true );
 
   mEdit->setToolTip( i18nc( "@info:tooltip",
                             "Enter the name or email address of the attendee." ) );
@@ -210,8 +199,8 @@ AttendeeLine::AttendeeLine( QWidget *parent )
 
   setActions( EventActions );
 
-  mResponseCheck->setToolTip( i18nc( "@info:tooltip", "Request a response from the attendee" ) );
-  mResponseCheck->setWhatsThis( i18nc( "@info:whatsthis",
+  mResponseCombo->setToolTip( i18nc( "@info:tooltip", "Request a response from the attendee" ) );
+  mResponseCombo->setWhatsThis( i18nc( "@info:whatsthis",
                                        "Edits whether to send an email to the "
                                        "attendee to request a response concerning "
                                        "attendance." ) );
@@ -220,7 +209,7 @@ AttendeeLine::AttendeeLine( QWidget *parent )
   topLayout->addWidget( mRoleCombo );
   topLayout->addWidget( mEdit );
   topLayout->addWidget( mStateCombo );
-  topLayout->addWidget( mResponseCheck );
+  topLayout->addWidget( mResponseCombo );
 
   connect( mEdit, SIGNAL( returnPressed() ), SLOT( slotReturnPressed() ) );
   connect( mEdit, SIGNAL( deleteMe() ),
@@ -236,10 +225,10 @@ AttendeeLine::AttendeeLine( QWidget *parent )
   connect( mEdit, SIGNAL( rightPressed() ), mStateCombo, SLOT( setFocus() ) );
   connect( mStateCombo, SIGNAL( leftPressed() ), mEdit, SLOT( setFocus() ) );
 
-  connect( mStateCombo, SIGNAL( rightPressed() ), mResponseCheck, SLOT( setFocus() ) );
+  connect( mStateCombo, SIGNAL( rightPressed() ), mResponseCombo, SLOT( setFocus() ) );
 
-  connect( mResponseCheck, SIGNAL( leftPressed() ), mStateCombo, SLOT( setFocus() ) );
-  connect( mResponseCheck, SIGNAL( rightPressed() ), SIGNAL( rightPressed() ) );
+  connect( mResponseCombo, SIGNAL( leftPressed() ), mStateCombo, SLOT( setFocus() ) );
+  connect( mResponseCombo, SIGNAL( rightPressed() ), SIGNAL( rightPressed() ) );
 
   connect( mEdit, SIGNAL( editingFinished() ),
            SLOT( slotHandleChange() ), Qt::QueuedConnection );
@@ -250,7 +239,7 @@ AttendeeLine::AttendeeLine( QWidget *parent )
 
   connect( mRoleCombo, SIGNAL( itemChanged() ), this, SLOT( slotComboChanged() ) );
   connect( mStateCombo, SIGNAL( itemChanged() ), this, SLOT( slotComboChanged() ) );
-  connect( mResponseCheck, SIGNAL( stateChanged( int ) ), this, SLOT( slotComboChanged() ) );
+  connect( mResponseCombo, SIGNAL( itemChanged() ), this, SLOT( slotComboChanged() ) );
 
 }
 
@@ -264,7 +253,7 @@ void AttendeeLine::clear()
   mEdit->clear();
   mRoleCombo->setCurrentIndex( 0 );
   mStateCombo->setCurrentIndex( 0 );
-  mResponseCheck->setChecked( true );
+  mResponseCombo->setCurrentIndex( 0 );
   mUid.clear();
 }
 
@@ -298,7 +287,7 @@ void AttendeeLine::dataFromFields()
 
   mData->setRole( AttendeeData::Role( mRoleCombo->currentIndex() ) );
   mData->setStatus( AttendeeData::PartStat( mStateCombo->currentIndex() ) );
-  mData->setRSVP( mResponseCheck->isChecked() );
+  mData->setRSVP( mResponseCombo->currentIndex() == 0 );
   mData->setUid( mUid );
 
   clearModified();
@@ -323,7 +312,7 @@ void AttendeeLine::fieldsFromData()
   } else {
     mStateCombo->setCurrentIndex( AttendeeData::NeedsAction );
   }
-  mResponseCheck->setChecked( mData->RSVP() );
+  mResponseCombo->setCurrentIndex( mData->RSVP() ? 0 : 1 );
   mUid = mData->uid();
 }
 
@@ -332,12 +321,12 @@ void AttendeeLine::fixTabOrder( QWidget *previous )
   setTabOrder( previous, mRoleCombo );
   setTabOrder( mRoleCombo, mEdit );
   setTabOrder( mEdit, mStateCombo );
-  setTabOrder( mStateCombo, mResponseCheck );
+  setTabOrder( mStateCombo, mResponseCombo );
 }
 
 QWidget *AttendeeLine::tabOut() const
 {
-  return mResponseCheck;
+  return mResponseCombo;
 }
 
 bool AttendeeLine::isActive() const

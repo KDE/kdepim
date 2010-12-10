@@ -70,20 +70,6 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeComboBox : public QToolButton
     int mCurrentIndex;
 };
 
-class INCIDENCEEDITORS_NG_EXPORT AttendeeCheckBox : public QCheckBox
-{
-  Q_OBJECT
-  public:
-    explicit AttendeeCheckBox( QWidget *parent );
-
-  signals:
-    void leftPressed();
-    void rightPressed();
-
-  protected:
-    void keyPressEvent( QKeyEvent *ev );
-};
-
 class INCIDENCEEDITORS_NG_EXPORT AttendeeLineEdit : public KPIM::AddresseeLineEdit
 {
   Q_OBJECT
@@ -154,7 +140,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeLine : public KPIM::MultiplyingLine
 
     AttendeeComboBox *mRoleCombo;
     AttendeeComboBox *mStateCombo;
-    AttendeeCheckBox *mResponseCheck;
+    AttendeeComboBox *mResponseCombo;
     AttendeeLineEdit *mEdit;
     QSharedPointer<AttendeeData> mData;
     QString mUid;
