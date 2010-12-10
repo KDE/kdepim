@@ -455,6 +455,8 @@ private slots:
 
   void slotClear();
 
+  void slotMessageRendered();
+
 public slots:
   /** An URL has been activate with a click. */
   void slotUrlOpen( const QUrl &url = QUrl());
