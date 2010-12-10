@@ -23,6 +23,7 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/collection.h>
 #include <akonadi/entitydisplayattribute.h>
+#include <akonadi/collectionmodifyjob.h>
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <klineedit.h>
@@ -458,9 +459,36 @@ void CollectionGeneralPage::save( Collection &collection )
     annotations[ KOLAB_INCIDENCESFOR ] = incidencesForToString( static_cast<IncidencesFor>( mIncidencesForComboBox->currentIndex() ) ).toLatin1();
 
   if ( mContentsComboBox ) {
-    const QByteArray kolabName = kolabNameFromType( contentsTypeFromString( mContentsComboBox->currentText() ) );
-    if ( !kolabName.isEmpty() )
+      const CollectionGeneralPage::FolderContentsType type = contentsTypeFromString( mContentsComboBox->currentText() );
+    const QByteArray kolabName = kolabNameFromType( type ) ;
+    if ( !kolabName.isEmpty() ) {
+      QString iconName;
+      switch( type ) {
+      case ContentsTypeCalendar:
+        iconName= QString::fromLatin1( "view-calendar" );
+        break;
+      case ContentsTypeContact:
+        iconName= QString::fromLatin1( "view-pim-contacts" );
+        break;
+      case ContentsTypeNote:
+        iconName = QString::fromLatin1( "view-pim-notes" );
+        break;
+      case ContentsTypeTask:
+        iconName = QString::fromLatin1( "view-pim-tasks" );
+        break;
+      case ContentsTypeJournal:
+        iconName = QString::fromLatin1( "view-pim-journal" );
+        break;
+      case ContentsTypeMail:
+      default:
+        break;
+      }
+
+      Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Entity::AddIfMissing );
+      attribute->setIconName( iconName );
+      new Akonadi::CollectionModifyJob( collection );
       annotations[ KOLAB_FOLDERTYPE ] = kolabName;
+    }
   }
 
   annotationsAttribute->setAnnotations( annotations );
