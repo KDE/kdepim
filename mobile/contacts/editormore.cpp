@@ -32,7 +32,7 @@
 #include "ui_editormore_personalpage.h"
 
 #include <calendarsupport/categoryconfig.h>
-#include <incidenceeditor-ng/categoryselectdialog.h>
+#include <incidenceeditor-ng/categorydialog.h>
 
 #include <KABC/Addressee>
 
@@ -124,7 +124,7 @@ class EditorMore::Private
     {
       CalendarSupport::CategoryConfig config( Settings::self(), 0 );
 
-      IncidenceEditorNG::CategorySelectDialog dlg( &config, 0 );
+      IncidenceEditorNG::CategoryDialog dlg( &config, 0 );
       dlg.setCategoryList( mCategories );
       dlg.setSelected( mCategories );
       if ( dlg.exec() ) {
