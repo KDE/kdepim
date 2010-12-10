@@ -100,7 +100,7 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
   if(ident.bcc().isEmpty())
     message->bcc()->clear();
   else
-    message->bcc()->addAddress(ident.primaryEmailAddress().toUtf8(), ident.fullName());
+    message->bcc()->addAddress(ident.bcc().toUtf8(), ident.fullName());
 
   if ( ident.organization().isEmpty() )
     message->removeHeader("Organization");
