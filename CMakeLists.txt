@@ -38,6 +38,10 @@ if(WINCE)
     add_definitions(-DKDEPIM_STATIC_LIBS)
 endif(WINCE)
 
+
+# Default
+set(KDEPIM_BUILD_EVERYTHING TRUE)
+
 # if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
 # FIXME build the mobile applications ?
 if(KDEPIM_ENTERPRISE_BUILD)
@@ -52,14 +56,12 @@ else()
     set(KDEPIM_MOBILE_UI FALSE)
     set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
     message(STATUS "Only libkleo and Kleopatra will be built.")
-  elseif(KDEPIM_MOBILE_UI)
+  endif()
+endif()
+
+if(KDEPIM_MOBILE_UI)
     # Build the mobile applications
     set(KDEPIM_BUILD_MOBILE TRUE)
-  else()
-    # Default
-    set(KDEPIM_BUILD_EVERYTHING TRUE)
-    message(STATUS "Enterprise build is disabled.")
-  endif()
 endif()
 
 # config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
