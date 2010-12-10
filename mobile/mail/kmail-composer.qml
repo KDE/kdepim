@@ -61,9 +61,6 @@ KPIM.MainView {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    width: folderPanel.width
-                    height: folderPanel.height
-
                     MessageComposer.RecipientsEditor {
                         id: recipientsEditor
                         anchors.top: parent.top
