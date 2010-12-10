@@ -708,9 +708,9 @@ void ViewerPrivate::displayMessage()
   mColorBar->update();
 
   htmlWriter()->queue("</body></html>");
-  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( injectAttachments() ) );
-  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( toggleFullAddressList() ) );
-  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotMessageRendered() ) );
+  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( injectAttachments() ), Qt::UniqueConnection );
+  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( toggleFullAddressList() ), Qt::UniqueConnection );
+  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotMessageRendered() ), Qt::UniqueConnection );
   htmlWriter()->flush();
 }
 
