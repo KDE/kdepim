@@ -131,7 +131,7 @@ void FindBar::searchText( bool backward)
   MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
 
   if ( backward )
-    searchOptions = MailWebView::FindBackward;
+    searchOptions |= MailWebView::FindBackward;
   if ( m_caseSensitiveAct->isChecked() )
     searchOptions |= MailWebView::FindCaseSensitively;
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
