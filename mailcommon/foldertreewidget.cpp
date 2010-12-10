@@ -170,7 +170,9 @@ void FolderTreeWidget::selectCollectionFolder( const Akonadi::Collection & col )
   if ( rows.size() < 1 )
     return;
   const QModelIndex colIndex = rows.first();
-  d->folderTreeView->selectionModel()->select(colIndex, QItemSelectionModel::SelectCurrent);
+  d->folderTreeView->selectionModel()->select(colIndex,
+                                              QItemSelectionModel::SelectCurrent
+                                              | QItemSelectionModel::Rows);
   d->folderTreeView->setExpanded( colIndex, true );
   d->folderTreeView->scrollTo( colIndex );
 }
