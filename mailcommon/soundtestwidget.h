@@ -70,6 +70,12 @@ class SoundTestWidget : public QWidget
      * the Play button.
      */
     void testPressed();
+    
+    /**
+     * This signal is emitted when the user
+     * enters a new URL.
+     */
+    void textChanged( const QString& );
 
   private Q_SLOTS:
     void playSound();

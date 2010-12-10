@@ -215,6 +215,10 @@ void SearchRuleWidget::slotFunctionChanged()
   RuleWidgetHandlerManager::instance()->update( ruleField,
                                                 mFunctionStack,
                                                 mValueStack );
+  const QString prettyValue = RuleWidgetHandlerManager::instance()->prettyValue( ruleField,
+                                                                                 mFunctionStack,
+                                                                                 mValueStack );
+  emit contentsChanged( prettyValue );
 }
 
 void SearchRuleWidget::slotValueChanged()
@@ -466,14 +470,20 @@ void SearchPatternEdit::initLayout(bool headersOnly, bool absoluteDates)
   mRuleLister->slotClear();
 
   if ( !mRuleLister->widgets().isEmpty() ) {
-    SearchRuleWidget *srw = static_cast<SearchRuleWidget*>( mRuleLister->widgets().first() );
-    connect( srw, SIGNAL(fieldChanged(const QString &)),
-             this, SLOT(slotAutoNameHack()) );
-    connect( srw, SIGNAL(contentsChanged(const QString &)),
-             this, SLOT(slotAutoNameHack()) );
+    for (int i = 0; i < mRuleLister->widgets().count(); i++) {
+      SearchRuleWidget *srw = static_cast<SearchRuleWidget*>( mRuleLister->widgets().at(i) );
+      connect( srw, SIGNAL( fieldChanged( const QString & ) ),
+               this, SLOT( slotAutoNameHack() ) );
+      connect( srw, SIGNAL( contentsChanged( const QString & ) ),
+               this, SLOT( slotAutoNameHack() ) );
+    }
   } else
     kDebug() << "No first SearchRuleWidget, though slotClear() has been called!";
 
+  connect( mRuleLister, SIGNAL( widgetAdded( QWidget * ) ),
+           this, SLOT( slotRuleAdded( QWidget * ) ) );
+  connect( mRuleLister, SIGNAL( widgetRemoved() ), this, SIGNAL( patternChanged() ) );
+  
   layout->addWidget( mRuleLister );
 }
 
@@ -493,11 +503,13 @@ void SearchPatternEdit::setSearchPattern( SearchPattern *aPattern )
   blockSignals(false);
 
   setEnabled( true );
+  emit patternChanged();
 }
 
 void SearchPatternEdit::setHeadersOnly( bool headersOnly )
 {
   mRuleLister->setHeadersOnly( headersOnly );
+  emit patternChanged();
 }
 
 void SearchPatternEdit::reset()
@@ -509,6 +521,7 @@ void SearchPatternEdit::reset()
   blockSignals(false);
 
   setEnabled( false );
+  emit patternChanged();
 }
 
 void SearchPatternEdit::slotRadioClicked(QAbstractButton *aRBtn)
@@ -518,6 +531,8 @@ void SearchPatternEdit::slotRadioClicked(QAbstractButton *aRBtn)
       mPattern->setOp( SearchPattern::OpAnd );
     else
       mPattern->setOp( SearchPattern::OpOr );
+
+    emit patternChanged();
   }
 }
 
@@ -525,6 +540,14 @@ void SearchPatternEdit::slotAutoNameHack()
 {
   mRuleLister->regenerateRuleListFromWidgets();
   emit maybeNameChanged();
+  emit patternChanged();
 }
 
+void SearchPatternEdit::slotRuleAdded(QWidget* newRuleWidget)
+{
+  SearchRuleWidget *srw = static_cast<SearchRuleWidget*>( newRuleWidget );
+  connect( srw, SIGNAL( fieldChanged( const QString & ) ), this, SLOT( slotAutoNameHack() ) );
+  connect( srw, SIGNAL( contentsChanged( const QString & ) ), this, SLOT( slotAutoNameHack() ) );
+  emit patternChanged();
+}
 #include "searchpatternedit.moc"

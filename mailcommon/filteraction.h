@@ -27,6 +27,7 @@
 #include <kmime/kmime_mdn.h>
 #include <kmime/kmime_message.h>
 
+#include <QObject>
 #include <QtCore/QList>
 #include <QtCore/QMultiHash>
 #include <QtCore/QStringList>
@@ -58,8 +59,9 @@ namespace MailCommon {
  * @author Marc Mutz <Marc@Mutz.com>, based on work by Stefan Taferner <taferner@kde.org>.
  * @see Filter FilterMgr
  */
-class MAILCOMMON_EXPORT FilterAction
+class MAILCOMMON_EXPORT FilterAction : public QObject
 {
+  Q_OBJECT
   public:
 
     /**
@@ -79,7 +81,7 @@ class MAILCOMMON_EXPORT FilterAction
      * The action is initialized with an identifier @p name and
      * an i18n'd @p label.
      */
-    FilterAction( const char *name, const QString &label );
+    FilterAction( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * Destroys the filter action.
@@ -180,6 +182,13 @@ class MAILCOMMON_EXPORT FilterAction
     static void sendMDN( const Akonadi::Item& item, KMime::MDN::DispositionType d,
                          const QList<KMime::MDN::DispositionModifier> & m = QList<KMime::MDN::DispositionModifier>() );
 
+  signals:
+    /**
+     * Called to notify that the current FilterAction has had some
+     * value modification
+     */
+    void filterActionModified();
+
   private:
     QString mName;
     QString mLabel;
@@ -202,11 +211,12 @@ class MAILCOMMON_EXPORT FilterAction
  */
 class FilterActionWithNone : public FilterAction
 {
+  Q_OBJECT
   public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithNone( const char *name, const QString &label );
+    FilterActionWithNone( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::argsFromString
@@ -241,11 +251,12 @@ class FilterActionWithNone : public FilterAction
  */
 class FilterActionWithString : public FilterAction
 {
+  Q_OBJECT
   public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithString( const char *name, const QString &label );
+    FilterActionWithString( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::isEmpty
@@ -308,11 +319,12 @@ class FilterActionWithString : public FilterAction
  */
 class FilterActionWithUOID : public FilterAction
 {
+  Q_OBJECT
   public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithUOID( const char* name, const QString &label );
+    FilterActionWithUOID( const char* name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::isEmpty
@@ -361,11 +373,12 @@ class FilterActionWithUOID : public FilterAction
  */
 class FilterActionWithStringList : public FilterActionWithString
 {
+  Q_OBJECT
   public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithStringList( const char *name, const QString &label );
+    FilterActionWithStringList( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::createParamWidget
@@ -413,11 +426,12 @@ class FilterActionWithStringList : public FilterActionWithString
  */
 class FilterActionWithFolder : public FilterAction
 {
+  Q_OBJECT
   public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithFolder( const char *name, const QString &label );
+    FilterActionWithFolder( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::isEmpty
@@ -487,11 +501,12 @@ class FilterActionWithFolder : public FilterAction
  */
 class FilterActionWithAddress : public FilterActionWithString
 {
+  Q_OBJECT
   public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithAddress( const char *name, const QString &label );
+    FilterActionWithAddress( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::createParamWidget
@@ -537,11 +552,12 @@ class FilterActionWithAddress : public FilterActionWithString
  */
 class FilterActionWithUrl : public FilterAction
 {
+  Q_OBJECT
   public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithUrl( const char *name, const QString &label );
+    FilterActionWithUrl( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::~FilterAction
@@ -595,11 +611,12 @@ class FilterActionWithUrl : public FilterAction
 
 class FilterActionWithCommand : public FilterActionWithUrl
 {
+  Q_OBJECT
   public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithCommand( const char *name, const QString &label );
+    FilterActionWithCommand( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::createParamWidget
@@ -636,11 +653,12 @@ class FilterActionWithCommand : public FilterActionWithUrl
 
 class FilterActionWithTest : public FilterAction
 {
+  Q_OBJECT
   public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithTest( const char *name, const QString &label );
+    FilterActionWithTest( const char *name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::~FilterAction

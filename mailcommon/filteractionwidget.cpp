@@ -106,6 +106,9 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
 
     // add (i18n-ized) name to combo box
     d->mComboBox->addItem( (*it)->label );
+
+    // Register the FilterAction modification signal
+    connect( action, SIGNAL( filterActionModified() ), this, SIGNAL( filterModified() ) );
   }
 
   // widget for the case where no action is selected.
@@ -131,6 +134,8 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
   connect( d->mComboBox, SIGNAL( activated( int ) ),
            this, SLOT( slotFilterTypeChanged( int ) ) );
 
+  connect( d->mComboBox, SIGNAL( activated( int ) ),
+           this, SIGNAL( filterModified() ) );
   d->setFilterAction();
 }
 
@@ -269,8 +274,10 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
   QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
   for ( aIt = d->mActionList->constBegin();
         ( aIt != d->mActionList->constEnd() && wIt != widgetList.constEnd() );
-        ++aIt, ++wIt )
+        ++aIt, ++wIt ) {
     qobject_cast<FilterActionWidget*>( *wIt )->setAction( ( *aIt ) );
+    connect( qobject_cast<FilterActionWidget*>( *wIt ), SIGNAL( filterModified() ), this, SIGNAL( filterModified() ) );
+  }
 }
 
 void FilterActionWidgetLister::updateActionList()
@@ -296,8 +303,10 @@ QWidget* FilterActionWidgetLister::createWidget( QWidget *parent )
 
 void FilterActionWidgetLister::clearWidget( QWidget *widget )
 {
-  if ( widget )
+  if ( widget ) {
     static_cast<FilterActionWidget*>( widget )->setAction( 0 );
+    static_cast<FilterActionWidget*>( widget )->disconnect( this );
+  }
 }
 
 #include "filteractionwidget.moc"

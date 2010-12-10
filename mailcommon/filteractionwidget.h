@@ -90,6 +90,9 @@ class FilterActionWidget : public KHBox
      */
     MailCommon::FilterAction *action() const;
 
+  signals:
+    void filterModified();
+
   private:
     //@cond PRIVATE
     class Private;
@@ -138,6 +141,9 @@ class MAILCOMMON_EXPORT FilterActionWidgetLister : public KPIM::KWidgetLister
      */
     void reset();
 
+  signals:
+    void filterModified();
+    
   protected:
     /**
      * @copydoc KPIM::KWidgetLister::clearWidget

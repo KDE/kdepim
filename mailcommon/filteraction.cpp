@@ -1,5 +1,5 @@
 // kmfilteraction.cpp
-
+#include "filteractionwidget.h"
 #include "filteraction.h"
 
 #include "filtermanager.h"
@@ -59,8 +59,8 @@ using MessageComposer::MessageFactory;
 
 using namespace MailCommon;
 
-FilterAction::FilterAction( const char *name, const QString &label )
-  : mName( name ), mLabel( label )
+FilterAction::FilterAction( const char *name, const QString &label, QObject *parent )
+  : QObject( parent ), mName( name ), mLabel( label )
 {
 }
 
@@ -145,8 +145,8 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
 //
 //=============================================================================
 
-FilterActionWithNone::FilterActionWithNone( const char *name, const QString &label )
-  : FilterAction( name, label )
+FilterActionWithNone::FilterActionWithNone( const char *name, const QString &label, QObject *parent )
+  : FilterAction( name, label, parent )
 {
 }
 
@@ -170,8 +170,8 @@ QString FilterActionWithNone::argsAsString() const
 //
 //=============================================================================
 
-FilterActionWithUOID::FilterActionWithUOID( const char *name, const QString &label )
-  : FilterAction( name, label ), mParameter( 0 )
+FilterActionWithUOID::FilterActionWithUOID( const char *name, const QString &label, QObject *parent )
+  : FilterAction( name, label, parent ), mParameter( 0 )
 {
 }
 
@@ -202,8 +202,8 @@ QString FilterActionWithUOID::displayString() const
 //
 //=============================================================================
 
-FilterActionWithString::FilterActionWithString( const char *name, const QString &label )
-  : FilterAction( name, label )
+FilterActionWithString::FilterActionWithString( const char *name, const QString &label, QObject *parent )
+  : FilterAction( name, label, parent )
 {
 }
 
@@ -217,6 +217,8 @@ QWidget* FilterActionWithString::createParamWidget( QWidget *parent ) const
   KLineEdit *lineEdit = new KLineEdit( parent );
   lineEdit->setClearButtonShown( true );
   lineEdit->setText( mParameter );
+
+  connect( lineEdit, SIGNAL( textChanged( QString ) ), this, SIGNAL( filterActionModified() ) );
 
   return lineEdit;
 }
@@ -257,8 +259,8 @@ QString FilterActionWithString::displayString() const
 //
 //=============================================================================
 
-FilterActionWithStringList::FilterActionWithStringList( const char *name, const QString &label )
-  : FilterActionWithString( name, label )
+FilterActionWithStringList::FilterActionWithStringList( const char *name, const QString &label, QObject *parent )
+  : FilterActionWithString( name, label, parent )
 {
 }
 
@@ -268,6 +270,9 @@ QWidget* FilterActionWithStringList::createParamWidget( QWidget *parent ) const
   comboBox->setEditable( false );
   comboBox->addItems( mParameterList );
   setParamWidgetValue( comboBox );
+
+  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
+           this, SIGNAL( filterActionModified() ) );
 
   return comboBox;
 }
@@ -306,8 +311,8 @@ void FilterActionWithStringList::argsFromString( const QString &argsStr )
 //
 //=============================================================================
 
-FilterActionWithFolder::FilterActionWithFolder( const char *name, const QString &label )
-  : FilterAction( name, label )
+FilterActionWithFolder::FilterActionWithFolder( const char *name, const QString &label, QObject *parent )
+  : FilterAction( name, label, parent )
 {
 }
 
@@ -321,6 +326,9 @@ QWidget* FilterActionWithFolder::createParamWidget( QWidget *parent ) const
   FolderRequester *requester = new FolderRequester( parent );
   requester->setShowOutbox( false );
   setParamWidgetValue( requester );
+
+  connect( requester, SIGNAL( folderChanged( Akonadi::Collection )),
+           this, SIGNAL( filterActionModified()) );
 
   return requester;
 }
@@ -395,8 +403,8 @@ bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &oldFolder
 //
 //=============================================================================
 
-FilterActionWithAddress::FilterActionWithAddress( const char *name, const QString &label )
-  : FilterActionWithString( name, label )
+FilterActionWithAddress::FilterActionWithAddress( const char *name, const QString &label, QObject *parent )
+  : FilterActionWithString( name, label, parent )
 {
 }
 
@@ -404,6 +412,9 @@ QWidget* FilterActionWithAddress::createParamWidget( QWidget *parent ) const
 {
   MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester( parent );
   requester->setText( mParameter );
+
+  connect( requester, SIGNAL( textChanged() ), this, SIGNAL( filterActionModified() ) );
+
   return requester;
 }
 
@@ -428,8 +439,8 @@ void FilterActionWithAddress::clearParamWidget( QWidget *paramWidget ) const
 //
 //=============================================================================
 
-FilterActionWithCommand::FilterActionWithCommand( const char *name, const QString &label )
-  : FilterActionWithUrl( name, label )
+FilterActionWithCommand::FilterActionWithCommand( const char *name, const QString &label, QObject *parent )
+  : FilterActionWithUrl( name, label, parent )
 {
 }
 
@@ -639,7 +650,7 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
 class FilterActionSendReceipt : public FilterActionWithNone
 {
   public:
-    FilterActionSendReceipt();
+    FilterActionSendReceipt( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     static FilterAction* newAction();
 };
@@ -649,8 +660,8 @@ FilterAction* FilterActionSendReceipt::newAction()
   return new FilterActionSendReceipt;
 }
 
-FilterActionSendReceipt::FilterActionSendReceipt()
-  : FilterActionWithNone( "confirm delivery", i18n( "Confirm Delivery" ) )
+FilterActionSendReceipt::FilterActionSendReceipt( QObject *parent )
+  : FilterActionWithNone( "confirm delivery", i18n( "Confirm Delivery" ), parent )
 {
 }
 
@@ -682,7 +693,7 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( const Akonadi::Item &
 class FilterActionTransport: public FilterActionWithString
 {
   public:
-    FilterActionTransport();
+    FilterActionTransport( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     static FilterAction* newAction();
 };
@@ -692,8 +703,8 @@ FilterAction* FilterActionTransport::newAction()
   return new FilterActionTransport;
 }
 
-FilterActionTransport::FilterActionTransport()
-  : FilterActionWithString( "set transport", i18n( "Set Transport To" ) )
+FilterActionTransport::FilterActionTransport( QObject *parent )
+  : FilterActionWithString( "set transport", i18n( "Set Transport To" ), parent )
 {
 }
 
@@ -720,7 +731,7 @@ FilterAction::ReturnCode FilterActionTransport::process( const Akonadi::Item &it
 class FilterActionReplyTo: public FilterActionWithString
 {
   public:
-    FilterActionReplyTo();
+    FilterActionReplyTo( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     static FilterAction* newAction();
 };
@@ -730,8 +741,8 @@ FilterAction* FilterActionReplyTo::newAction()
   return new FilterActionReplyTo;
 }
 
-FilterActionReplyTo::FilterActionReplyTo()
-  : FilterActionWithString( "set Reply-To", i18n( "Set Reply-To To" ) )
+FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
+  : FilterActionWithString( "set Reply-To", i18n( "Set Reply-To To" ), parent )
 {
   mParameter = "";
 }
@@ -756,7 +767,7 @@ FilterAction::ReturnCode FilterActionReplyTo::process( const Akonadi::Item &item
 class FilterActionIdentity: public FilterActionWithUOID
 {
   public:
-    FilterActionIdentity();
+    FilterActionIdentity( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     static FilterAction* newAction();
 
@@ -771,8 +782,8 @@ FilterAction* FilterActionIdentity::newAction()
   return new FilterActionIdentity;
 }
 
-FilterActionIdentity::FilterActionIdentity()
-  : FilterActionWithUOID( "set identity", i18n( "Set Identity To" ) )
+FilterActionIdentity::FilterActionIdentity( QObject *parent )
+  : FilterActionWithUOID( "set identity", i18n( "Set Identity To" ), parent )
 {
   mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
 }
@@ -793,6 +804,8 @@ QWidget* FilterActionIdentity::createParamWidget( QWidget *parent ) const
 {
   KPIMIdentities::IdentityCombo *comboBox = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), parent );
   comboBox->setCurrentIdentity( mParameter );
+
+  connect( comboBox, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( filterActionModified() ) );
 
   return comboBox;
 }
@@ -829,7 +842,7 @@ void FilterActionIdentity::setParamWidgetValue( QWidget *paramWidget ) const
 class FilterActionSetStatus: public FilterActionWithStringList
 {
   public:
-    FilterActionSetStatus();
+    FilterActionSetStatus( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     virtual bool requiresBody() const;
 
@@ -863,8 +876,8 @@ FilterAction* FilterActionSetStatus::newAction()
   return new FilterActionSetStatus;
 }
 
-FilterActionSetStatus::FilterActionSetStatus()
-  : FilterActionWithStringList( "set status", i18n( "Mark As" ) )
+FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
+  : FilterActionWithStringList( "set status", i18n( "Mark As" ), parent )
 {
   // if you change this list, also update
   // FilterActionSetStatus::stati above
@@ -950,7 +963,7 @@ QString FilterActionSetStatus::displayString() const
 class FilterActionAddTag: public FilterActionWithStringList
 {
   public:
-    FilterActionAddTag();
+    FilterActionAddTag( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     virtual bool requiresBody() const;
 
@@ -971,8 +984,8 @@ FilterAction* FilterActionAddTag::newAction()
   return new FilterActionAddTag;
 }
 
-FilterActionAddTag::FilterActionAddTag()
-  : FilterActionWithStringList( "add tag", i18n( "Add Tag" ) )
+FilterActionAddTag::FilterActionAddTag( QObject *parent )
+  : FilterActionWithStringList( "add tag", i18n( "Add Tag" ), parent )
 {
 #ifndef KDEPIM_NO_NEPOMUK
   foreach( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
@@ -1036,7 +1049,7 @@ QString FilterActionAddTag::displayString() const
 class FilterActionFakeDisposition: public FilterActionWithStringList
 {
   public:
-    FilterActionFakeDisposition();
+    FilterActionFakeDisposition( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     static FilterAction* newAction()
     {
@@ -1065,8 +1078,8 @@ static const KMime::MDN::DispositionType mdns[] =
 static const int numMDNs = sizeof( mdns ) / sizeof( *mdns );
 
 
-FilterActionFakeDisposition::FilterActionFakeDisposition()
-  : FilterActionWithStringList( "fake mdn", i18n( "Send Fake MDN" ) )
+FilterActionFakeDisposition::FilterActionFakeDisposition( QObject *parent )
+  : FilterActionWithStringList( "fake mdn", i18n( "Send Fake MDN" ), parent )
 {
   // if you change this list, also update
   // mdns above
@@ -1141,7 +1154,7 @@ QString FilterActionFakeDisposition::displayString() const
 class FilterActionRemoveHeader: public FilterActionWithStringList
 {
   public:
-    FilterActionRemoveHeader();
+    FilterActionRemoveHeader( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
@@ -1154,8 +1167,8 @@ FilterAction* FilterActionRemoveHeader::newAction()
   return new FilterActionRemoveHeader;
 }
 
-FilterActionRemoveHeader::FilterActionRemoveHeader()
-  : FilterActionWithStringList( "remove header", i18n( "Remove Header" ) )
+FilterActionRemoveHeader::FilterActionRemoveHeader( QObject *parent )
+  : FilterActionWithStringList( "remove header", i18n( "Remove Header" ), parent )
 {
   mParameterList << ""
                  << "Reply-To"
@@ -1173,6 +1186,9 @@ QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   setParamWidgetValue( comboBox );
+  
+  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
+           this, SIGNAL( filterActionModified() ) );
 
   return comboBox;
 }
@@ -1217,7 +1233,7 @@ void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
 class FilterActionAddHeader: public FilterActionWithStringList
 {
   public:
-    FilterActionAddHeader();
+    FilterActionAddHeader( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
@@ -1238,8 +1254,8 @@ class FilterActionAddHeader: public FilterActionWithStringList
     QString mValue;
 };
 
-FilterActionAddHeader::FilterActionAddHeader()
-  : FilterActionWithStringList( "add header", i18n( "Add Header" ) )
+FilterActionAddHeader::FilterActionAddHeader( QObject *parent )
+  : FilterActionWithStringList( "add header", i18n( "Add Header" ), parent )
 {
   mParameterList << ""
                  << "Reply-To"
@@ -1296,6 +1312,11 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
   layout->addWidget( lineEdit, 1 );
 
   setParamWidgetValue( widget );
+  
+  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
+           this, SIGNAL( filterActionModified() ) );
+  connect( lineEdit, SIGNAL( textChanged( QString ) ),
+           this, SIGNAL( filterActionModified() ) );
 
   return widget;
 }
@@ -1387,7 +1408,7 @@ void FilterActionAddHeader::argsFromString( const QString &argsStr )
 class FilterActionRewriteHeader: public FilterActionWithStringList
 {
   public:
-    FilterActionRewriteHeader();
+    FilterActionRewriteHeader( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;
@@ -1409,8 +1430,8 @@ class FilterActionRewriteHeader: public FilterActionWithStringList
     QString mReplacementString;
 };
 
-FilterActionRewriteHeader::FilterActionRewriteHeader()
-  : FilterActionWithStringList( "rewrite header", i18n( "Rewrite Header" ) )
+FilterActionRewriteHeader::FilterActionRewriteHeader( QObject *parent )
+  : FilterActionWithStringList( "rewrite header", i18n( "Rewrite Header" ), parent )
 {
   mParameterList << ""
                  << "Subject"
@@ -1478,6 +1499,13 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
   layout->addWidget( lineEdit, 1 );
 
   setParamWidgetValue( widget );
+
+  connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
+           this, SIGNAL( filterActionModified() ) );
+  connect( regExpLineEdit, SIGNAL( textChanged( QString ) ),
+           this, SIGNAL( filterActionModified() ) );
+  connect( lineEdit, SIGNAL( textChanged( QString ) ),
+           this, SIGNAL( filterActionModified() ) );
 
   return widget;
 }
@@ -1578,7 +1606,7 @@ void FilterActionRewriteHeader::argsFromString( const QString &argsStr )
 class FilterActionMove: public FilterActionWithFolder
 {
   public:
-    FilterActionMove();
+    FilterActionMove( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     virtual bool requiresBody() const;
     static FilterAction* newAction();
@@ -1589,8 +1617,8 @@ FilterAction* FilterActionMove::newAction()
   return new FilterActionMove;
 }
 
-FilterActionMove::FilterActionMove()
-  : FilterActionWithFolder( "transfer", i18n( "Move Into Folder" ) )
+FilterActionMove::FilterActionMove( QObject *parent )
+  : FilterActionWithFolder( "transfer", i18n( "Move Into Folder" ), parent )
 {
 }
 
@@ -1622,7 +1650,7 @@ bool FilterActionMove::requiresBody() const
 class FilterActionCopy: public FilterActionWithFolder
 {
   public:
-    FilterActionCopy();
+    FilterActionCopy( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     virtual bool requiresBody() const;
     static FilterAction* newAction();
@@ -1633,8 +1661,8 @@ FilterAction* FilterActionCopy::newAction()
   return new FilterActionCopy;
 }
 
-FilterActionCopy::FilterActionCopy()
-  : FilterActionWithFolder( "copy", i18n( "Copy Into Folder" ) )
+FilterActionCopy::FilterActionCopy( QObject *parent )
+  : FilterActionWithFolder( "copy", i18n( "Copy Into Folder" ), parent )
 {
 }
 
@@ -1659,7 +1687,7 @@ bool FilterActionCopy::requiresBody() const
 class FilterActionForward: public FilterActionWithAddress
 {
   public:
-    FilterActionForward();
+    FilterActionForward( QObject *parent = 0 );
     static FilterAction* newAction();
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
@@ -1679,8 +1707,8 @@ FilterAction *FilterActionForward::newAction()
   return new FilterActionForward;
 }
 
-FilterActionForward::FilterActionForward()
-  : FilterActionWithAddress( "forward", i18n( "Forward To" ) )
+FilterActionForward::FilterActionForward( QObject *parent )
+  : FilterActionWithAddress( "forward", i18n( "Forward To" ), parent )
 {
 }
 
@@ -1748,6 +1776,11 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
   templateCombo->setEnabled( templateCombo->count() > 1 );
   templateCombo->setToolTip( i18n( "The template used when forwarding" ) );
   templateCombo->setWhatsThis( i18n( "Set the forwarding template that will be used with this filter." ) );
+
+  connect( templateCombo, SIGNAL( currentIndexChanged( int ) ),
+           this, SIGNAL( filterActionModified() ) );
+  connect( addressRequester, SIGNAL( textChanged() ),
+           this, SIGNAL( filterActionModified() ) );
 
   return addressAndTemplate;
 }
@@ -1841,7 +1874,7 @@ QString FilterActionForward::displayString() const
 class FilterActionRedirect: public FilterActionWithAddress
 {
   public:
-    FilterActionRedirect();
+    FilterActionRedirect( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     static FilterAction* newAction();
 };
@@ -1851,8 +1884,8 @@ FilterAction* FilterActionRedirect::newAction()
   return new FilterActionRedirect;
 }
 
-FilterActionRedirect::FilterActionRedirect()
-  : FilterActionWithAddress( "redirect", i18n( "Redirect To" ) )
+FilterActionRedirect::FilterActionRedirect( QObject *parent )
+  : FilterActionWithAddress( "redirect", i18n( "Redirect To" ), parent )
 {
 }
 
@@ -1889,7 +1922,7 @@ FilterAction::ReturnCode FilterActionRedirect::process( const Akonadi::Item &ite
 class FilterActionExec : public FilterActionWithCommand
 {
   public:
-    FilterActionExec();
+    FilterActionExec( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     static FilterAction* newAction();
 };
@@ -1899,8 +1932,8 @@ FilterAction* FilterActionExec::newAction()
   return new FilterActionExec();
 }
 
-FilterActionExec::FilterActionExec()
-  : FilterActionWithCommand( "execute", i18n( "Execute Command" ) )
+FilterActionExec::FilterActionExec( QObject *parent )
+  : FilterActionWithCommand( "execute", i18n( "Execute Command" ), parent )
 {
 }
 
@@ -1918,7 +1951,7 @@ FilterAction::ReturnCode FilterActionExec::process( const Akonadi::Item &item ) 
 class FilterActionExtFilter: public FilterActionWithCommand
 {
   public:
-    FilterActionExtFilter();
+    FilterActionExtFilter( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     static FilterAction* newAction();
 };
@@ -1928,8 +1961,8 @@ FilterAction* FilterActionExtFilter::newAction()
   return new FilterActionExtFilter;
 }
 
-FilterActionExtFilter::FilterActionExtFilter()
-  : FilterActionWithCommand( "filter app", i18n( "Pipe Through" ) )
+FilterActionExtFilter::FilterActionExtFilter( QObject *parent )
+  : FilterActionWithCommand( "filter app", i18n( "Pipe Through" ), parent )
 {
 }
 
@@ -1947,7 +1980,7 @@ FilterAction::ReturnCode FilterActionExtFilter::process( const Akonadi::Item &it
 class FilterActionExecSound : public FilterActionWithTest
 {
   public:
-    FilterActionExecSound();
+    FilterActionExecSound( QObject *parent = 0 );
     ~FilterActionExecSound();
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     virtual bool requiresBody() const;
@@ -1957,8 +1990,8 @@ class FilterActionExecSound : public FilterActionWithTest
     mutable Phonon::MediaObject* mPlayer;
 };
 
-FilterActionWithTest::FilterActionWithTest( const char *name, const QString &label )
-  : FilterAction( name, label )
+FilterActionWithTest::FilterActionWithTest( const char *name, const QString &label, QObject *parent )
+  : FilterAction( name, label, parent )
 {
 }
 
@@ -1975,6 +2008,9 @@ QWidget* FilterActionWithTest::createParamWidget( QWidget *parent ) const
 {
   SoundTestWidget *soundWidget = new SoundTestWidget( parent );
   soundWidget->setUrl( mParameter );
+
+  connect( soundWidget, SIGNAL( textChanged( QString ) ),
+           this, SIGNAL( filterActionModified() ) );
 
   return soundWidget;
 }
@@ -2010,7 +2046,7 @@ QString FilterActionWithTest::displayString() const
   return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
-FilterActionExecSound::FilterActionExecSound()
+FilterActionExecSound::FilterActionExecSound( QObject *parent )
   : FilterActionWithTest( "play sound", i18n( "Play Sound" ) ),
     mPlayer( 0 )
 {
@@ -2047,8 +2083,8 @@ bool FilterActionExecSound::requiresBody() const
 
 #endif
 
-FilterActionWithUrl::FilterActionWithUrl( const char *name, const QString &label )
-  : FilterAction( name, label )
+FilterActionWithUrl::FilterActionWithUrl( const char *name, const QString &label, QObject *parent )
+  : FilterAction( name, label, parent )
 {
 }
 
@@ -2065,6 +2101,8 @@ QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
 {
   KUrlRequester *requester = new KUrlRequester( parent );
   requester->setUrl( KUrl( mParameter ) );
+
+  connect( requester, SIGNAL( textChanged( QString ) ), this, SIGNAL( filterActionModified() ) );
 
   return requester;
 }
@@ -2110,7 +2148,7 @@ QString FilterActionWithUrl::displayString() const
 class FilterActionAddToAddressBook: public FilterActionWithStringList
 {
   public:
-    FilterActionAddToAddressBook();
+    FilterActionAddToAddressBook( QObject *parent = 0 );
     virtual ReturnCode process( const Akonadi::Item &item ) const;
     static FilterAction* newAction();
 
@@ -2144,8 +2182,8 @@ FilterAction* FilterActionAddToAddressBook::newAction()
   return new FilterActionAddToAddressBook;
 }
 
-FilterActionAddToAddressBook::FilterActionAddToAddressBook()
-  : FilterActionWithStringList( "add to address book", i18n( "Add to Address Book" ) ),
+FilterActionAddToAddressBook::FilterActionAddToAddressBook( QObject *parent )
+  : FilterActionWithStringList( "add to address book", i18n( "Add to Address Book" ), parent ),
     mFromStr( i18nc( "Email sender", "From" ) ),
     mToStr( i18nc( "Email recipient", "To" ) ),
     mCCStr( i18n( "CC" ) ),
@@ -2215,6 +2253,11 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
         "If it is not accessible, the filter will fallback to the default address book.</p>" ) );
   layout->addWidget( collectionComboBox, 1, 2 );
 
+  connect( categoryEdit, SIGNAL( textChanged( QString ) ),
+           this, SIGNAL( filterActionModified() ) );
+  connect( headerCombo, SIGNAL( currentIndexChanged( int ) ),
+           this, SIGNAL( filterActionModified() ) );
+  
   setParamWidgetValue( widget );
 
   return widget;
@@ -2258,9 +2301,11 @@ void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
 
   // it might be that the model of collectionComboBox has not finished loading yet, so
   // we use the previously 'stored' value from the 'collectionId' property
-  if ( collection.isValid() )
+  if ( collection.isValid() ) {
     mCollectionId = collection.id();
-  else {
+    connect( collectionComboBox, SIGNAL( currentIndexChanged( int ) ),
+             this, SIGNAL( filterActionModified() ) );
+  } else {
     const QVariant value = collectionComboBox->property( "collectionId" );
     if ( value.isValid() )
       mCollectionId = value.toLongLong();
@@ -2381,3 +2426,5 @@ const QList<FilterActionDesc*>& FilterActionDict::list() const
 {
   return mList;
 }
+
+#include "filteraction.moc"

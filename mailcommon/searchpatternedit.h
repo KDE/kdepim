@@ -212,11 +212,13 @@ signals:
     /** This signal is emitted whenever the name of the processed
         search pattern may have changed. */
   void maybeNameChanged();
-
+  /** This signal is emitted wherenever the search pattern changes in some
+      way */
+  void patternChanged();
 private slots:
   void slotRadioClicked( QAbstractButton *aRBtn );
   void slotAutoNameHack();
-
+  void slotRuleAdded( QWidget *widget );
 private:
   void initLayout( bool headersOnly, bool absoluteDates );
 
