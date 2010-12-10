@@ -53,6 +53,10 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,
   mWidgets->mButtonAddSubcategory->setIcon( KIcon( "list-add" ) );
   mWidgets->mButtonRemove->setIcon( KIcon( "list-remove" ) );
 
+#ifndef KDEPIM_MOBILE_UI
+  mWidgets->mCategories->setDragDropMode( QAbstractItemView::InternalMove );
+#endif
+
   // unfortunately, kde-core-devel will not allow this code in KDialog
   // because these button's functionality cannot be easily generalized.
   setButtonToolTip( Ok, i18n( "Apply changes and close" ) );

@@ -58,9 +58,6 @@
        <property name="toolTip" >
         <string>Add the entry as a subcategory of the selected category</string>
        </property>
-       <property name="statusTip" >
-        <string/>
-       </property>
        <property name="whatsThis" >
         <string>Click this button to insert the entry as a subcategory of the currently selected category.</string>
        </property>
@@ -73,9 +70,6 @@
       <widget class="KPushButton" name="mButtonRemove" >
        <property name="toolTip" >
         <string>Remove the selected category</string>
-       </property>
-       <property name="statusTip" >
-        <string/>
        </property>
        <property name="whatsThis" >
         <string>Click this button to remove the selected category from the category list.</string>
@@ -110,9 +104,6 @@
      </property>
      <property name="whatsThis" >
       <string>This is a list of all the categories available. You can create as many sub-categories as you want here.</string>
-     </property>
-     <property name="dragDropMode" >
-      <enum>QAbstractItemView::InternalMove</enum>
      </property>
      <property name="selectionMode" >
       <enum>QAbstractItemView::ExtendedSelection</enum>
