@@ -477,6 +477,11 @@ void ComposerView::setEditor( Message::KMeditor* editor )
     connect( actionCollection()->action( "composer_replace" ), SIGNAL( triggered(bool) ), m_composerBase->editor(), SLOT( slotReplace() ) );
 }
 
+void ComposerView::setRecipientsEditor( MessageComposer::RecipientsEditor *editor )
+{
+  m_composerBase->setRecipientsEditor( editor );
+}
+
 void ComposerView::closeEvent( QCloseEvent * event )
 {
   if ( m_composerBase->editor()->document()->isModified() || m_composerBase->recipientsEditor()->isModified() || !m_subject.isEmpty() ) {

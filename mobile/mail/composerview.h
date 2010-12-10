@@ -61,7 +61,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo );
 
     void setEditor( Message::KMeditor* editor );
-    void setRecipientsEditor( MessageComposer::RecipientsEditor *editor ) { m_composerBase->setRecipientsEditor( editor ); }
+    void setRecipientsEditor( MessageComposer::RecipientsEditor *editor );
 
     QString subject() const;
     void setSubject( const QString &subject );
