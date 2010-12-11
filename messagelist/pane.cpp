@@ -367,6 +367,8 @@ void Pane::Private::onCloseTabClicked()
 
 void Pane::Private::onCurrentTabChanged()
 {
+  emit q->currentTabChanged();
+
   Widget *w = static_cast<Widget*>( q->currentWidget() );
   QItemSelectionModel *s = mWidgetSelectionHash[w];
 
@@ -378,8 +380,6 @@ void Pane::Private::onCurrentTabChanged()
 
   connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
            q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
-
-  emit q->currentTabChanged();
 }
 
 void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
