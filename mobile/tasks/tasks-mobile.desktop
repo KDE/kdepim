@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Tasks
+Name[ca]=Tasques del KDE
 Name[en_GB]=KDE Tasks
 Name[es]=Tareas de KDE
 Name[et]=KDE ülesanded

@@ -1,6 +1,7 @@
 [Global]
 IconName=mail-mobile
 Comment=KDE e-mail client
+Comment[ca]=Client de correu electrònic del KDE
 Comment[de]=E-Mail-Programm für KDE
 Comment[en_GB]=KDE e-mail client
 Comment[es]=Cliente de correo de KDE
@@ -25,6 +26,7 @@ Comment[x-test]=xxKDE e-mail clientxx
 Comment[zh_CN]=KDE 邮件客户端
 Comment[zh_TW]=KDE 收發信軟體
 Name=KDE Mail
+Name[ca]=Correu del KDE
 Name[de]=KDE-E-Mail
 Name[en_GB]=KDE Mail
 Name[es]=Correo de KDE
@@ -51,6 +53,7 @@ Name[zh_TW]=KDE 郵件軟體
 
 [Event/sendfailed]
 Name=Error while sending email
+Name[ca]=Error en enviar correu
 Name[de]=Fehler beim Versenden der E-Mail
 Name[en_GB]=Error while sending email
 Name[es]=Error al enviar correo
@@ -74,6 +77,7 @@ Name[x-test]=xxError while sending emailxx
 Name[zh_CN]=发送邮件时出错
 Name[zh_TW]=傳送郵件時發生錯誤
 Comment=There was an error while trying to send the e-mail.
+Comment[ca]=S'ha produït un error en provar d'enviar el correu electrònic.
 Comment[en_GB]=There was an error while trying to send the e-mail.
 Comment[es]=Ocurrió un error mientras se intentaba enviar el correo.
 Comment[et]=Kirja saatmisel tekkis viga.

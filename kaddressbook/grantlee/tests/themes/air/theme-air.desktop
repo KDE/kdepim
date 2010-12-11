@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Air
+Name[ca]=Aire
 Name[de]=Air
 Name[en_GB]=Air
 Name[es]=Aire
@@ -21,6 +22,7 @@ Name[uk]=Air
 Name[x-test]=xxAirxx
 Name[zh_TW]=Air
 Description=An Air theme
+Description[ca]=Un tema aire
 Description[de]=Ein Air-Design
 Description[en_GB]=An Air theme
 Description[es]=Un tema aire

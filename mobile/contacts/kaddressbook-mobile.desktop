@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Contacts
+Name[ca]=Contactes del KDE
 Name[en_GB]=KDE Contacts
 Name[es]=Contactos de KDE
 Name[et]=KDE kontaktid
