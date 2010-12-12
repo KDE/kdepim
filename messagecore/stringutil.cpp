@@ -1000,17 +1000,19 @@ QString cleanFileName( const QString &name )
   fileName.replace( '/', '_' );
   fileName.replace( '\\', '_' );
 
+#ifdef KDEPIM_ENTERPRISE_BUILD
   // replace all '.' with '_', not just at the start of the filename
   // but don't replace the last '.' before the file extension.
   int i = fileName.lastIndexOf( '.' );
   if ( i != -1 )
     i = fileName.lastIndexOf( '.' , i - 1 );
-  
+
   while( i != -1 ) {
     fileName.replace( i, 1, '_' );
     i = fileName.lastIndexOf( '.', i - 1 );
   }
-  
+#endif
+
   // replace all '~' with '_', not just leading '~' either.
   fileName.replace( '~', '_' );
 
