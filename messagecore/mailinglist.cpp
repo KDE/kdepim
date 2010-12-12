@@ -286,7 +286,7 @@ MailingList MailingList::detect( const KMime::Message::Ptr &message )
   if ( message->headerByType( "List-Unsubscribe" ) )
     mailingList.setUnsubscribeUrls( headerToAddress( message->headerByType( "List-Unsubscribe" )->asUnicodeString() ) );
 
-  if ( message->headerByType( "List-Arhive" ) )
+  if ( message->headerByType( "List-Archive" ) )
     mailingList.setArchiveUrls( headerToAddress( message->headerByType( "List-Archive" )->asUnicodeString() ) );
 
   if ( message->headerByType( "List-Owner" ) )
