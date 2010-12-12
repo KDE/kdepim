@@ -200,6 +200,8 @@ void LdapClient::Private::slotDone()
 {
   endParseLDIF();
   mActive = false;
+  if ( !mJob )
+    return;
   int err = mJob->error();
   if ( err && err != KIO::ERR_USER_CANCELED ) {
     emit q->error( mJob->errorString() );
