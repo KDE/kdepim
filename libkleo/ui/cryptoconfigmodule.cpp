@@ -64,6 +64,7 @@
 #include <QCheckBox>
 #include <QStyle>
 #include <QComboBox>
+#include <QGroupBox>
 
 #include <cassert>
 #include <memory>
