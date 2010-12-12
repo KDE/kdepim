@@ -172,8 +172,9 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
   {
     mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeWeekly );
     handleRecurrenceTypeChange( RecurrenceTypeWeekly );
-    QBitArray disableDays( 7, 0 );
-    disableDays.setBit( mDateTime->startDate().dayOfWeek(), 1 );
+    QBitArray disableDays( 7/*size*/, 0/*default value*/ );
+    // dayOfWeek returns between 1 and 7
+    disableDays.setBit( mDateTime->startDate().dayOfWeek()-1, 1 );
     mUi->mWeekDayCombo->setDays( r->days(), disableDays );
     setFrequency( f );
     break;
