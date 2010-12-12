@@ -161,6 +161,8 @@ void LdapClient::startQuery( const QString &filter )
   connect( d->mJob, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
            this, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );
 #else
+  if ( !d->mSession )
+    return;
   d->mJob = d->mSession->get( url );
   connect( d->mJob, SIGNAL( data( const QByteArray& ) ),
            this, SLOT( slotData( const QByteArray& ) ) );
