@@ -81,13 +81,12 @@ void MarkMessageReadHandler::setItem( const Akonadi::Item &item )
 
   d->mItemQueue.enqueue( item );
 
-  if ( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() &&
-       MessageViewer::GlobalSettings::self()->delayedMarkTime() != 0 ) {
-    d->mTimer.start( MessageViewer::GlobalSettings::self()->delayedMarkTime() * 1000 );
-    return;
+  if ( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() ) {
+    if ( MessageViewer::GlobalSettings::self()->delayedMarkTime() != 0 )
+      d->mTimer.start( MessageViewer::GlobalSettings::self()->delayedMarkTime() * 1000 );
+    else
+      d->handleMessages();
   }
-
-  d->handleMessages();
 }
 
 #include "markmessagereadhandler.moc"
