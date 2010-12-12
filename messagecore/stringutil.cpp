@@ -18,6 +18,7 @@
 */
 #include "stringutil.h"
 
+#include "config-enterprise.h"
 #include "globalsettings.h"
 
 #include <kmime/kmime_charfreq.h>

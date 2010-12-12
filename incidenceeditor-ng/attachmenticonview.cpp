@@ -29,6 +29,8 @@
 
 #include "attachmenticonview.h"
 
+#include "config-enterprise.h"
+
 #include <KIconLoader>
 #include <KLocale>
 #include <KTemporaryFile>
