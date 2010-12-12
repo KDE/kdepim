@@ -2605,4 +2605,17 @@ void KMKernel::updateExpireFolder( const QString& oldFolderName, const QString& 
 
 }
 
+void KMKernel::checkTrashFolderAccount(KMFolder * folder )
+{
+  if ( !acctMgr() ) return;
+
+  QStringList actList = acctMgr()->getAccounts();
+  QStringList::Iterator it( actList.begin() );
+  for( ; it != actList.end() ; ++it ) {
+    KMAccount* act = acctMgr()->findByName( *it );
+    if ( act && ( act->trash() == folder->idString() ) ) {
+      act->setTrash( the_trashFolder->idString() );
+    }
+  }
+}
 #include "kmkernel.moc"

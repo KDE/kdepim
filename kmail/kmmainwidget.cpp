@@ -1446,6 +1446,7 @@ void KMMainWidget::slotRemoveFolder()
                                            KMessageBox::Notify | KMessageBox::Dangerous )
       == KMessageBox::Continue )
   {
+    kmkernel->checkTrashFolderAccount( mFolder );
     KMail::FolderUtil::deleteFolder( mFolder, this );
   }
 }

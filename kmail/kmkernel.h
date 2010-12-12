@@ -264,6 +264,7 @@ public:
   static KSharedConfig::Ptr config();
   static int storageDebug();
 
+
   void init();
   void setupDBus();
   void readConfig();
@@ -417,6 +418,8 @@ public:
   void selectFolder( KMFolder *folder );
 
   void updateExpireFolder( const QString& oldFolderName, const QString& newFolderName );
+
+  void checkTrashFolderAccount(KMFolder * folder );
 
 public slots:
   void toggleMainWin();
