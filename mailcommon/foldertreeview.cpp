@@ -108,6 +108,7 @@ void FolderTreeView::readConfig()
   if ( iIconSize < 16 || iIconSize > 32 )
     iIconSize = 22;
   setIconSize( QSize( iIconSize, iIconSize ) );
+  setTooltipsPolicy( static_cast<FolderTreeWidget::ToolTipDisplayPolicy>( myGroup.readEntry( "ToolTipDisplayPolicy", static_cast<int>( FolderTreeWidget::DisplayAlways ) ) ) );
   setSortingPolicy( ( FolderTreeWidget::SortingPolicy )myGroup.readEntry( "SortingPolicy", ( int ) mSortingPolicy ) );
 }
 
