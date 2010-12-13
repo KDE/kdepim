@@ -366,17 +366,19 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
     ds.setDevice( &tf );
   }
 
-  if ( ds.writeRawData( data.data(), data.size() ) == -1)
-    {
-      QFile *f = static_cast<QFile *>( ds.device() );
-      KMessageBox::error( parent,
-                          i18nc( "1 = file name, 2 = error string",
-                                 "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                                 f->fileName(),
-                                 f->errorString() ),
-                          i18n( "Error saving attachment" ) );
-      return false;
-    }
+  const int bytesWritten = ds.writeRawData( data.data(), data.size() );
+  if ( bytesWritten != data.size() ) {
+    QFile *f = static_cast<QFile *>( ds.device() );
+    KMessageBox::error( parent,
+                        i18nc( "1 = file name, 2 = error string",
+                               "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
+                               f->fileName(),
+                               f->errorString() ),
+                        i18n( "Error saving attachment" ) );
+    // Remove the newly created empty or partial file
+    f->remove();
+    return false;
+  }
 
   if ( !url.isLocalFile() )
     {
