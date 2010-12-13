@@ -3,6 +3,7 @@ install(FILES
         back-to-list-button.png
         delete-button.png
         edit-button.png
+        long-press-indicator.png
         movedown-button.png
         moveup-button.png
         top.png

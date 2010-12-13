@@ -71,7 +71,7 @@ QML.Item {
     QML.Image {
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
-      source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_important.png" )
+      source: KDE.locate( "data", "mobileui/long-press-indicator.png" )
       visible: _top.reactsOnLongPressed
     }
   }
