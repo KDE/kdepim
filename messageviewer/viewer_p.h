@@ -637,6 +637,7 @@ public:
   Akonadi::Monitor mMonitor;
   QString mAppName;
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
+  Akonadi::Item::Id mPreviouslyViewedItem;
 };
 
 }

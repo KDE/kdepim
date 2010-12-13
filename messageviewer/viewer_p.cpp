@@ -189,7 +189,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mJob( 0 ),
     q( aParent ),
     mShowFullToAddressList( true ),
-    mShowFullCcAddressList( true )
+    mShowFullCcAddressList( true ),
+    mPreviouslyViewedItem( -1 )
 {
   if ( !mainWindow )
     mainWindow = aParent;
@@ -2764,12 +2765,22 @@ void ViewerPrivate::slotClear()
 
 void ViewerPrivate::slotMessageRendered()
 {
-  if(!mMessageItem.isValid()) {
+  if ( !mMessageItem.isValid() ) {
     return;
   }
+
+  /**
+   * This slot might be called multiple times for the same message if
+   * some asynchronous mementos are involved in rendering. Therefor we
+   * have to make sure we execute the MessageLoadedHandlers only once.
+   */
+  if ( mMessageItem.id() == mPreviouslyViewedItem )
+    return;
+
+  mPreviouslyViewedItem = mMessageItem.id();
+
   foreach ( AbstractMessageLoadedHandler *handler, mMessageLoadedHandlers )
     handler->setItem( mMessageItem );
 }
-
 
 #include "viewer_p.moc"
