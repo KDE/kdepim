@@ -377,14 +377,25 @@ void KOAttendeeEditor::clearAttendeeInput()
 
 void KOAttendeeEditor::expandAttendee()
 {
-  KABC::Addressee::List aList = expandDistList( mNameEdit->text() );
-  if ( !aList.isEmpty() ) {
-    int index = selectedIndex();
-    for ( KABC::Addressee::List::iterator itr = aList.begin(); itr != aList.end(); ++itr ) {
-      insertAttendeeFromAddressee( (*itr) );
+  /* When return is pressed mNameEdit emits returnPressed() and then a textChanged() signal.
+   * The textChanged() signal triggers the updateAttendee() slot to be called which will
+   * change the wrong Attendee, because after expandAttendee() is executed, the currentItem()
+   * will be some other Attendee.
+   * That's why we delay this call with a singleShot
+   * */
+  if ( sender() != mNameEdit ) {
+    KABC::Addressee::List aList = expandDistList( mNameEdit->text() );
+    KCal::Attendee *current = currentAttendee();
+    if ( !aList.isEmpty() ) {
+      for ( KABC::Addressee::List::iterator itr = aList.begin(); itr != aList.end(); ++itr ) {
+        insertAttendeeFromAddressee( (*itr) );
+      }
+      removeAttendee( current );
+      setSelected( 0 );
     }
-    setSelected( index );
-    removeAttendee( currentAttendee() );
+  } else {
+    // delay this call.
+    QTimer::singleShot( 0, this, SLOT(expandAttendee()) );
   }
 }
 
@@ -409,7 +420,7 @@ void KOAttendeeEditor::updateAttendee()
     email = mNameEdit->text();
   }
 
-  bool iAmTheOrganizer = mOrganizerCombo &&
+  const bool iAmTheOrganizer = mOrganizerCombo &&
     KOPrefs::instance()->thatIsMe( mOrganizerCombo->currentText() );
   if ( iAmTheOrganizer ) {
     bool myself =
