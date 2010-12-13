@@ -50,6 +50,7 @@ Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfiles
 Name=Sign & Encrypt File
 Name[ca]=Signa i encripta un fitxer
 Name[de]=Datei signieren & verschlüsseln
+Name[el]=Υπογραφή & κρυπτογράφηση αρχείου
 Name[en_GB]=Sign & Encrypt File
 Name[es]=Firmar y cifrar archivo
 Name[et]=Faili allkirjastamine ja krüptimine
