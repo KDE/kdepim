@@ -21,9 +21,11 @@
 #ifndef KOATTENDEEEDITOR_H
 #define KOATTENDEEEDITOR_H
 
-#include <qwidget.h>
 #include <libkcal/attendee.h>
 #include <kabc/addressee.h>
+
+#include <qwidget.h>
+#include <qtimer.h>
 
 class QBoxLayout;
 class QComboBox;
@@ -123,6 +125,7 @@ class KOAttendeeEditor : public QWidget
   private:
     KABC::Addressee::List expandDistList( const QString &text ) const;
     bool mDisableItemUpdate;
+    QTimer mExpandDistListTimer;
 };
 
 #endif

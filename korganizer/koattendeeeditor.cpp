@@ -55,6 +55,10 @@
 
 using namespace KCal;
 
+enum {
+  EXPAND_DISTLIST_TIMEOUT = 2000 // milisecs
+};
+
 KOAttendeeEditor::KOAttendeeEditor( QWidget * parent, const char *name ) :
     QWidget( parent, name ),
     mDisableItemUpdate( true )
@@ -200,6 +204,8 @@ void KOAttendeeEditor::initEditWidgets(QWidget * parent, QBoxLayout * layout)
 #ifdef KORG_NOKABC
   mAddressBookButton->hide();
 #endif
+
+  connect( &mExpandDistListTimer, SIGNAL(timeout()), SLOT(expandAttendee()) );
 }
 
 void KOAttendeeEditor::openAddressBook()
@@ -377,6 +383,8 @@ void KOAttendeeEditor::clearAttendeeInput()
 
 void KOAttendeeEditor::expandAttendee()
 {
+  mExpandDistListTimer.stop();
+
   /* When return is pressed mNameEdit emits returnPressed() and then a textChanged() signal.
    * The textChanged() signal triggers the updateAttendee() slot to be called which will
    * change the wrong Attendee, because after expandAttendee() is executed, the currentItem()
@@ -401,6 +409,8 @@ void KOAttendeeEditor::expandAttendee()
 
 void KOAttendeeEditor::updateAttendee()
 {
+  mExpandDistListTimer.stop();
+
   Attendee *a = currentAttendee();
   if ( !a || mDisableItemUpdate )
     return;
@@ -445,6 +455,15 @@ void KOAttendeeEditor::updateAttendee()
   a->setRSVP( mRsvpButton->isChecked() );
 
   updateCurrentItem();
+
+  /*
+   * This editor has dynamic insertion, we don't know when the user finished writting
+   * the attendee's name. He doesn't press any button when he's done. So how can we
+   * know when to expand the distlist?
+   *
+   * After a 2 seconds without typing, we expand it.
+   */
+  mExpandDistListTimer.start( EXPAND_DISTLIST_TIMEOUT, true );
 }
 
 void KOAttendeeEditor::fillAttendeeInput( KCal::Attendee *a )
