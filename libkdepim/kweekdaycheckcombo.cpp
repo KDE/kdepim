@@ -24,6 +24,7 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KCalendarSystem>
+#include <KDebug>
 
 using namespace KPIM;
 
@@ -78,7 +79,10 @@ int KWeekdayCheckCombo::weekdayIndex( const QDate &date ) const
   if ( !date.isValid() )
     return -1;
   const int weekStart = KGlobal::locale()->weekStartDay() - 1; // Values 1 - 7, we need 0 - 6
-  return ( date.dayOfWeek() + weekStart + 6 ) % 7;
+  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  const int dayOfWeek = calSys->dayOfWeek( date );
+
+  return ( dayOfWeek + weekStart + 6 ) % 7;
 }
 
 void KWeekdayCheckCombo::setDays( const QBitArray &days,  const QBitArray &disableDays )
