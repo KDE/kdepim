@@ -206,7 +206,10 @@ void KCheckComboBox::setCheckedItems( const QStringList &items )
 {
   for ( int r = 0; r < model()->rowCount( rootModelIndex() ); ++r ) {
     QModelIndex indx = model()->index( r, modelColumn(), rootModelIndex() );
-    QString text = indx.data().toString();
+
+    // DisplayRole has " SubCategory"
+    // UserRole has "Category:SubCategory"
+    QString text = indx.data( Qt::UserRole ).toString();
     bool found = items.contains( text );
     model()->setData( indx, found ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole );
   }
