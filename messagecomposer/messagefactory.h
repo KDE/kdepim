@@ -186,7 +186,7 @@ public:
    *    Any mailing-list addresses specifed in the original message
    *    itself will be added by MessageFactory, so no need to add those manually.
    */
-  void setMailingListAddresses( const QStringList& listAddresses );
+  void setMailingListAddresses( const KMime::Types::Mailbox::List& listAddresses );
 
   /**
    *  Set the identity that is set for the folder in which the given message is.
@@ -269,7 +269,7 @@ private:
   MessageComposer::ReplyStrategy m_replyStrategy;
   QString m_selection, m_template;
   bool m_quote, m_allowDecryption;
-  QStringList m_mailingListAddresses;
+  KMime::Types::Mailbox::List m_mailingListAddresses;
   Akonadi::Item::Id m_id;
 
 };
