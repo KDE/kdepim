@@ -60,6 +60,15 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     virtual bool eventFilter( QObject *receiver, QEvent *event );
 
   public Q_SLOTS:
+    /**
+     * Sets the currently selected items. Items that are not found in the model
+     * are silently ignored.
+     *
+     * @param items The items that will be set to checked.
+     * TODO: pass the Role, now it's using Qt::UserRole because that's what korganizer needs
+     * (and korg is the only user) but to make KCheckComboBox an independent component,
+     * we must remove that hardcoded role.
+     */
     void setCheckedItems( const QStringList &items );
 
   Q_SIGNALS:
