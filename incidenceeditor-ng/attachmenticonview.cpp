@@ -52,7 +52,7 @@ AttachmentIconItem::AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QL
     // for the enteprise, inline attachments are the default
 #ifdef KDEPIM_ENTERPRISE_BUILD
     mAttachment =
-      KCalCore::Attachment::Ptr( new KCalCore::Attachment( '\0' ) ); //use the non-uri constructor
+      KCalCore::Attachment::Ptr( new KCalCore::Attachment( QByteArray() ) ); //use the non-uri constructor
                                                                      // as we want inline by default
 #else
     mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( QString() ) );
