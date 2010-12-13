@@ -21,6 +21,7 @@
 
 #include "messagecore_export.h"
 #include "kmime/kmime_message.h"
+#include "kmime/kmime_header_parsing.h"
 
 #include <QtCore/QStringList>
 
@@ -252,6 +253,31 @@ namespace StringUtil
    * object.
    */
   MESSAGECORE_EXPORT QString stripOffPrefixes( const QString &subject );
+
+  /**
+   * Converts an unicode string that contains a comma separated list of email addresses into a list of mailbox objects.
+   */
+  MESSAGECORE_EXPORT KMime::Types::Mailbox::List mailboxListFromUnicodeString( const QString &addresses );
+
+  /**
+   * Converts an unicode string that contains an email address into a mailbox object.
+   */
+  MESSAGECORE_EXPORT KMime::Types::Mailbox mailboxFromUnicodeString( const QString &address );
+
+  /**
+   * Converts a 7bit string that contains a comma separated list of email addresses into a list of mailbox objects.
+   */
+  MESSAGECORE_EXPORT KMime::Types::Mailbox::List mailboxListFrom7BitString( const QByteArray &addresses );
+
+  /**
+   * Converts a 7bit string that contains an email address into a mailbox object.
+   */
+  MESSAGECORE_EXPORT KMime::Types::Mailbox mailboxFrom7BitString( const QByteArray &address );
+
+  /**
+   * Converts a list of mailbox objects to a unicode string that contains the comma separated list of email addresses.
+   */
+  MESSAGECORE_EXPORT QString mailboxListToUnicodeString( const KMime::Types::Mailbox::List &addresses );
 }
 
 }

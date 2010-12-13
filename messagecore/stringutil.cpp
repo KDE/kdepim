@@ -1067,6 +1067,63 @@ QString stripOffPrefixes( const QString &subject )
   return subject;
 }
 
+/**
+ * Inherit from MailboxList to access the protected parse() method.
+ */
+class DummyHeader : public KMime::Headers::Generics::MailboxList
+{
+  public:
+    void parseData( const QByteArray &data )
+    {
+      const char *cursor = data.constData();
+      KMime::Headers::Generics::MailboxList::parse( cursor, cursor + data.length() );
+    }
+};
+
+KMime::Types::Mailbox::List mailboxListFromUnicodeString( const QString &addresses )
+{
+  DummyHeader header;
+  header.fromUnicodeString( addresses, "utf-8" );
+  return header.mailboxes();
+}
+
+KMime::Types::Mailbox mailboxFromUnicodeString( const QString &address )
+{
+  DummyHeader header;
+  header.fromUnicodeString( address, "utf-8" );
+
+  const KMime::Types::Mailbox::List mailboxes = header.mailboxes();
+  Q_ASSERT( mailboxes.size() == 1 );
+  return mailboxes.first();
+}
+
+KMime::Types::Mailbox::List mailboxListFrom7BitString( const QByteArray &addresses )
+{
+  DummyHeader header;
+  header.from7BitString( addresses );
+  return header.mailboxes();
+}
+
+KMime::Types::Mailbox mailboxFrom7BitString( const QByteArray &address )
+{
+  DummyHeader header;
+  header.from7BitString( address );
+
+  const KMime::Types::Mailbox::List mailboxes = header.mailboxes();
+  Q_ASSERT( mailboxes.size() == 1 );
+  return mailboxes.first();
+}
+
+QString mailboxListToUnicodeString( const KMime::Types::Mailbox::List &addresses )
+{
+  DummyHeader header;
+  foreach ( const KMime::Types::Mailbox &mailbox, addresses )
+    header.addAddress( mailbox );
+
+  return header.asUnicodeString();
 }
 
 }
+
+}
+
