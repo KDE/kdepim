@@ -198,11 +198,12 @@ void SchedulingDialog::slotRowSelectionChanged( const QModelIndex &current,
   const QDate startDate = period.start().date();
 
   const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  const int dayOfWeek = calSys->dayOfWeek( startDate );
   const QString dayLabel =
     ki18nc( "@label Day of week followed by day of the month, then the month. "
             "Example: Monday, 12 June",
             "%1, %2 %3" ).
-    subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).
+    subs( calSys->weekDayName( dayOfWeek, KCalendarSystem::LongDayName ) ).
     subs( startDate.day() ).
     subs( calSys->monthName( startDate ) ).toString();
 
