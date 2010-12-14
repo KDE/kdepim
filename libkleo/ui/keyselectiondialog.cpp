@@ -428,10 +428,6 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   connect( le, SIGNAL(textChanged(const QString&)),
 	   this, SLOT(slotSearch(const QString&)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
-#ifdef KDEPIM_MOBILE_UI
-  lbSearchFor->hide();
-  le->hide();
-#endif
 
   mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), 0, page );
   mKeyListView->setObjectName( "mKeyListView" );
