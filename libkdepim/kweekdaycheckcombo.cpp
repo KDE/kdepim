@@ -73,11 +73,13 @@ int KWeekdayCheckCombo::weekdayIndex( const QDate &date ) const
 {
   if ( !date.isValid() )
     return -1;
-  const int weekStart = KGlobal::locale()->weekStartDay() - 1; // Values 1 - 7, we need 0 - 6
+  const int weekStart = KGlobal::locale()->weekStartDay();
   const KCalendarSystem *calSys = KGlobal::locale()->calendar();
-  const int dayOfWeek = calSys->dayOfWeek( date );
+  const int dayOfWeek = calSys->dayOfWeek( date ) - 1; // Values 1 - 7, we need 0 - 6
 
-  return ( dayOfWeek + weekStart + 6 ) % 7;
+  // kDebug() << "dayOfWeek = " << dayOfWeek << " weekStart = " << weekStart
+  // << "; result " << ( ( dayOfWeek + weekStart ) % 7 ) << "; date = " << date;
+  return ( 1 + dayOfWeek +  ( 7 - weekStart ) ) % 7;
 }
 
 void KWeekdayCheckCombo::setDays( const QBitArray &days,  const QBitArray &disableDays )
@@ -88,9 +90,11 @@ void KWeekdayCheckCombo::setDays( const QBitArray &days,  const QBitArray &disab
   const int weekStart = KGlobal::locale()->weekStartDay();
   for ( int i = 0; i < 7; ++i ) {
     // i is the nr of the combobox, not the day of week!
-    // label=(i+weekStart+6)%7 + 1;
-    // index in CheckBox array(=day): label-1
-    const int index = ( i + weekStart + 6 ) % 7;
+    const int index = ( 1 + i +  ( 7 - weekStart ) ) % 7;
+
+    // kDebug() << "Checking for i = " << i << "; index = " << index << days.testBit( i );
+    // kDebug() << "Disabling? for i = " << i << "; index = " << index << !disableDays.testBit( i );
+
     if ( days.testBit( i ) ) {
       checkedDays << itemText( index );
     }
