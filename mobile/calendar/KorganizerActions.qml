@@ -125,6 +125,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "work_week_layout"; title : KDE.i18n( "Work Week View" ) }
     ScriptActionItem { name : "month_layout"; title : KDE.i18n( "Month View" ) }
     ScriptActionItem { name : "eventlist_layout"; title : KDE.i18n( "Event List View" ) }
+    ScriptActionItem { name : "timeline_layout"; title : KDE.i18n( "Timeline" ) }
   }
 
   ActionList {
@@ -148,6 +149,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "work_week_layout"; title : KDE.i18n( "Work Week View" ) }
     ScriptActionItem { name : "month_layout"; title : KDE.i18n( "Month View" ) }
     ScriptActionItem { name : "eventlist_layout"; title : KDE.i18n( "Event List View" ) }
+    ScriptActionItem { name : "timeline_layout"; title : KDE.i18n( "Timeline" ) }
   }
 
   ActionList {

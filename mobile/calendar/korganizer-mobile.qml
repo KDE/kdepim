@@ -463,14 +463,21 @@ KPIM.MainView {
                 actionPanel.collapse();
               }
             },
-             KPIM.ScriptAction {
+            KPIM.ScriptAction {
               name : "eventlist_layout"
               script: {
                 guiStateManager.switchState( Events.EventsGuiStateManager.ViewEventListState );
                 actionPanel.collapse();
               }
             },
-           KPIM.ScriptAction {
+            KPIM.ScriptAction {
+              name : "timeline_layout"
+              script: {
+                guiStateManager.switchState( Events.EventsGuiStateManager.ViewTimelineState );
+                actionPanel.collapse();
+              }
+            },
+            KPIM.ScriptAction {
               name : "show_today"
               script : {
                 agenda.showToday();
