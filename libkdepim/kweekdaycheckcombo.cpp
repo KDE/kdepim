@@ -35,15 +35,13 @@ KWeekdayCheckCombo::KWeekdayCheckCombo(QWidget* parent,bool first5Checked ): KCh
   QStringList checkedItems;
   for ( int i = 0; i < 7; ++i ) {
     // i is the nr of the combobox, not the day of week!
-    // label=(i+weekStart+6)%7 + 1;
-    // index in CheckBox array(=day): label-1
-    const int index = ( i + weekStart + 6 ) % 7;
+    const int dayOfWeek = ( i + weekStart + 6 ) % 7;
 
-    const QString weekDayName = calSys->weekDayName( index + 1, KCalendarSystem::ShortDayName );
+    const QString weekDayName = calSys->weekDayName( dayOfWeek + 1, KCalendarSystem::ShortDayName );
     addItem( weekDayName );
     // by default Monday - Friday should be checked
     // which corresponds to index 0 - 4;
-    if ( first5Checked && index < 5 ) {
+    if ( first5Checked && dayOfWeek < 5 ) {
       checkedItems << weekDayName;
     }
   }
