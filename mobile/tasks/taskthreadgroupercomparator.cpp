@@ -68,7 +68,10 @@ bool TaskThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
   Q_ASSERT( rightThreadRootItem.isValid() );
   Q_ASSERT( leftThreadRootItem.isValid() );
 
-  if ( leftThreadRootItem != rightThreadRootItem ) {
+  const bool leftItemIsThreadLeader = (leftThreadRootItem == leftItem);
+  const bool rightItemIsThreadLeader = (rightThreadRootItem == rightItem);
+
+  if ( leftItemIsThreadLeader && rightItemIsThreadLeader ) {
     const KCalCore::Todo::Ptr leftTodo = CalendarSupport::todo( leftThreadRootItem );
     const KCalCore::Todo::Ptr rightTodo = CalendarSupport::todo( rightThreadRootItem );
 
@@ -95,15 +98,24 @@ bool TaskThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
     }
 
     return leftThreadRootItem.id() < rightThreadRootItem.id();
+  } else if ( leftItemIsThreadLeader && !rightItemIsThreadLeader ) {
+    if ( leftThreadRootItem == rightThreadRootItem )
+      return true; // right item is in thread of left thread leader -> right item located below left item
+    else
+      return lessThan( leftThreadRootItem, rightThreadRootItem ); // based on thread leaders order
+  } else if ( !leftItemIsThreadLeader && rightItemIsThreadLeader ) {
+    if ( leftThreadRootItem == rightThreadRootItem )
+      return false; // left item is in thread of right thread leader -> left item must be located below right item
+    else
+      return lessThan( leftThreadRootItem, rightThreadRootItem ); // based on thread leaders order
+  } else if ( !leftItemIsThreadLeader && !rightItemIsThreadLeader ) {
+    if ( leftThreadRootItem == rightThreadRootItem ) // both in the same thread
+      return leftItem.id() < rightItem.id(); // default
+    else
+      return lessThan( leftThreadRootItem, rightThreadRootItem ); // based on thread leaders order
   }
 
-  if ( leftThreadRootItem == leftItem )
-    return true;
-
-  if ( rightThreadRootItem == rightItem )
-    return false;
-
-  return leftItem.id() < rightItem.id();
+  return leftItem.id() < rightItem.id(); // default
 }
 
 #include "taskthreadgroupercomparator.moc"

@@ -296,6 +296,10 @@ QAbstractItemModel* MainView::createItemModelContext( QDeclarativeContext *conte
   ThreadGrouperModel *grouperModel = new ThreadGrouperModel( comparator, this );
   grouperModel->setSourceModel( model );
 
+  // trigger a resort whenever the task status has changed
+  connect( model, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
+           grouperModel, SLOT( invalidate() ) );
+
   return KDeclarativeMainView::createItemModelContext( context, grouperModel );
 }
 
