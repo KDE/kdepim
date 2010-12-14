@@ -53,7 +53,6 @@ KWeekdayCheckCombo::KWeekdayCheckCombo(QWidget* parent,bool first5Checked ): KCh
 
 KWeekdayCheckCombo::~KWeekdayCheckCombo()
 {
-
 }
 
 QBitArray KWeekdayCheckCombo::days() const
@@ -63,9 +62,7 @@ QBitArray KWeekdayCheckCombo::days() const
 
   for ( int i = 0; i < 7; ++i ) {
     // i is the nr of the combobox, not the day of week!
-    // label=(i+weekStart+6)%7 + 1;
-    // index in CheckBox array(=day): label-1
-    const int index = ( i + weekStart + 6 ) % 7;
+    const int index = ( 1 + i +  ( 7 - weekStart ) ) % 7;
     days.setBit( i, itemCheckState( index ) == Qt::Checked );
   }
 
