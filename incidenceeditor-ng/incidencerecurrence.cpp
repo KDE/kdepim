@@ -811,13 +811,16 @@ void IncidenceRecurrence::setDefaults()
 
   setFrequency( 1 );
 
-  QBitArray days( 7 );
-  days.fill( 0 );
-  const int day = mUi->mWeekDayCombo->weekdayIndex( mDateTime->startDate() );
-  days.setBit( day );
+  // -1 because we want between 0 and 6
+  const int day = KGlobal::locale()->calendar()->dayOfWeek( mDateTime->startDate() ) - 1;
+
+  QBitArray checkDays( 7, 0 );
+  checkDays.setBit( day );
+
   QBitArray disableDays( 7, 0 );
-  disableDays.setBit( day, 1 );
-  mUi->mWeekDayCombo->setDays( days, disableDays );
+  disableDays.setBit( day );
+
+  mUi->mWeekDayCombo->setDays( checkDays, disableDays );
 
   mUi->mMonthlyCombo->setCurrentIndex( 0 ); // Recur on the nth of the month
   mUi->mYearlyCombo->setCurrentIndex( 0 );  // Recur on the nth of the month
