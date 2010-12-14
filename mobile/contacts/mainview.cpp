@@ -421,10 +421,12 @@ void MainView::importFromLdap()
   dlg->setCaption( i18n( "Select Address Book" ) );
   dlg->setDescription( i18n( "Select the address book the imported contact(s) shall be saved in:" ) );
 
-  const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
-  const Akonadi::Collection defCollection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-  if ( defCollection.isValid() )
-    dlg->setDefaultCollection( defCollection );
+  if ( regularSelectionModel()->hasSelection() ) {
+    const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
+    const Akonadi::Collection defaultCollection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( defaultCollection.isValid() )
+      dlg->setDefaultCollection( defaultCollection );
+  }
 
   if ( !dlg->exec() || !dlg ) {
     delete dlg;
