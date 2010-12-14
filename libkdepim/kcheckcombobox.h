@@ -136,8 +136,9 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
 
     /**
      * Returns The currently selected items.
+     * @param role The role the returned values belong to.
      */
-    QStringList checkedItems() const;
+    QStringList checkedItems( int role = Qt::DisplayRole ) const;
 
   public Q_SLOTS:
     /**
@@ -145,11 +146,9 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
      * are silently ignored.
      *
      * @param items The items that will be set to checked.
-     * TODO: pass the Role, now it's using Qt::UserRole because that's what korganizer needs
-     * (and korg is the only user) but to make KCheckComboBox an independent component,
-     * we must remove that hardcoded role.
+     * @param role The role @p items belong to.
      */
-    void setCheckedItems( const QStringList &items );
+    void setCheckedItems( const QStringList &items, int role = Qt::DisplayRole );
 
   Q_SIGNALS:
     /**

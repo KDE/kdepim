@@ -183,8 +183,7 @@ void KCheckComboBox::setItemCheckState( int index, Qt::CheckState state )
   setItemData( index, state, Qt::CheckStateRole );
 }
 
-// TODO (BIC) pass the role as parameter to this method
-QStringList KCheckComboBox::checkedItems() const
+QStringList KCheckComboBox::checkedItems( int role ) const
 {
   QStringList items;
   if ( model() ) {
@@ -192,24 +191,18 @@ QStringList KCheckComboBox::checkedItems() const
     const QModelIndexList indexes = model()->match( index, Qt::CheckStateRole,
                                                     Qt::Checked, -1, Qt::MatchExactly );
     foreach ( const QModelIndex &index, indexes ) {
-      if ( index.data( Qt::UserRole ).isNull() ) {
-        items += index.data( Qt::DisplayRole ).toString();
-      } else {
-        items += index.data( Qt::UserRole ).toString();
-      }
+      items += index.data( role ).toString();
     }
   }
   return items;
 }
 
-void KCheckComboBox::setCheckedItems( const QStringList &items )
+void KCheckComboBox::setCheckedItems( const QStringList &items, int role )
 {
   for ( int r = 0; r < model()->rowCount( rootModelIndex() ); ++r ) {
     const QModelIndex indx = model()->index( r, modelColumn(), rootModelIndex() );
 
-    // DisplayRole has " SubCategory"
-    // UserRole has "Category:SubCategory"
-    const QString text = indx.data( Qt::UserRole ).toString();
+    const QString text = indx.data( role ).toString();
     const bool found = items.contains( text );
     model()->setData( indx, found ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole );
   }
