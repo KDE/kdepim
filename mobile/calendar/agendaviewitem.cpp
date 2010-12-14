@@ -148,7 +148,8 @@ void AgendaViewItem::clearSelection()
 
 void AgendaViewItem::gotoNext()
 {
-  const QDate start = endDate().addDays( 1 );
+  const QDate start = (m_currentRange == WorkWeek ? startDate().addDays( 7 )
+                                                  : endDate().addDays( 1 ));
   const QDate end = start.addDays( startDate().daysTo( endDate() ) );
   m_view->blockSignals( true );
   m_view->showDates( start, end );
@@ -158,7 +159,8 @@ void AgendaViewItem::gotoNext()
 
 void AgendaViewItem::gotoPrevious()
 {
-  const QDate end = startDate().addDays( - 1 );
+  const QDate end = (m_currentRange == WorkWeek ? endDate().addDays( -7 )
+                                                : startDate().addDays( -1 ));
   const QDate start = end.addDays( - startDate().daysTo( endDate() ) );
   m_view->blockSignals( true );
   m_view->showDates( start, end );
