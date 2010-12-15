@@ -127,6 +127,13 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
      */
     bool threadingEnabled() const;
 
+    /**
+     * Sets whether the model shall be repopulated on data change.
+     *
+     * @note Must be called before setSourceModel() to have any effect.
+     */
+    void setDynamicModelRepopulation( bool enabled );
+
   private:
     Q_DECLARE_PRIVATE( ThreadGrouperModel )
     ThreadGrouperModelPrivate* const d_ptr;

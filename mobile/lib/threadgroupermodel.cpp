@@ -27,7 +27,7 @@ class ThreadGrouperModelPrivate
 {
   public:
     ThreadGrouperModelPrivate( ThreadGrouperComparator *comparator, ThreadGrouperModel *qq )
-      : q_ptr( qq ), m_comparator( comparator ), m_threadingEnabled( true )
+      : q_ptr( qq ), m_comparator( comparator ), m_threadingEnabled( true ), m_dynamicModelRepopulation( false )
     {
       Q_ASSERT( m_comparator );
 
@@ -49,6 +49,7 @@ class ThreadGrouperModelPrivate
 
     ThreadGrouperComparator *m_comparator;
     bool m_threadingEnabled;
+    bool m_dynamicModelRepopulation;
 };
 
 ThreadGrouperComparator::ThreadGrouperComparator()
@@ -233,6 +234,10 @@ void ThreadGrouperModel::setSourceModel( QAbstractItemModel *sourceModel )
 
   connect( sourceModel, SIGNAL( layoutChanged() ),
            this, SLOT( _q_sourceReset() ) );
+
+  if ( d->m_dynamicModelRepopulation )
+    connect( sourceModel, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
+             this, SLOT( populateThreadGrouperModel() ) );
 }
 
 bool ThreadGrouperModel::lessThan( const QModelIndex &left, const QModelIndex &right ) const
@@ -259,6 +264,13 @@ bool ThreadGrouperModel::threadingEnabled() const
   Q_D( const ThreadGrouperModel );
 
   return d->m_threadingEnabled;
+}
+
+void ThreadGrouperModel::setDynamicModelRepopulation( bool enabled )
+{
+  Q_D( ThreadGrouperModel );
+
+  d->m_dynamicModelRepopulation = enabled;
 }
 
 #include "threadgroupermodel.moc"
