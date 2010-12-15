@@ -102,6 +102,10 @@ if ( NOT WINCE )
 target_link_libraries(mailcommon 
   incidenceeditorsng
 )
+else( NOT WINCE )
+target_link_libraries(mailcommon 
+  incidenceeditorsngmobile
+)
 endif (NOT WINCE)
 
 set_target_properties( mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
