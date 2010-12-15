@@ -294,6 +294,7 @@ QAbstractItemModel* MainView::createItemModelContext( QDeclarativeContext *conte
 {
   TaskThreadGrouperComparator *comparator = new TaskThreadGrouperComparator;
   ThreadGrouperModel *grouperModel = new ThreadGrouperModel( comparator, this );
+  grouperModel->setDynamicModelRepopulation( true );
   grouperModel->setSourceModel( model );
 
   // trigger a resort whenever the task status has changed
