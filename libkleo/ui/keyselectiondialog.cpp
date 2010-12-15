@@ -402,6 +402,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 #endif
   }
 
+#ifndef KDEPIM_MOBILE_UI
   QPushButton * const searchExternalPB =
     new QPushButton( i18n( "Search for &External Certificates" ), page );
   mTopLayout->addWidget( searchExternalPB, 0, Qt::AlignLeft );
@@ -410,6 +411,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   if ( initialQuery.isEmpty() ) {
     searchExternalPB->hide();
   }
+#endif
 
   QHBoxLayout * hlay = new QHBoxLayout();
   mTopLayout->addLayout( hlay );
