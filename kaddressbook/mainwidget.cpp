@@ -376,7 +376,7 @@ void MainWidget::setupGui()
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
 
-#ifdef GRANTLEE_FOUND
+#if 0 // disabled because Grantlee supports no i18n for KDE 4.6 yet
  Akonadi::GrantleeContactFormatter *formatter =
        new Akonadi::GrantleeContactFormatter( KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
 
