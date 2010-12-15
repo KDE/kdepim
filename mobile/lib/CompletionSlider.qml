@@ -36,7 +36,7 @@ Rectangle {
   }
   Image {
     anchors.verticalCenter : parent.verticalCenter
-    x : 3 + ((percentComplete/100) * (root.width - width - 6))
+    x : 3 + ((model.percentComplete/100) * (root.width - width - 6))
     source : "images/sliderhandle.png";
 
     MouseArea {
@@ -46,12 +46,10 @@ Rectangle {
       drag.minimumX: 3
       drag.maximumX: width - 6
       onReleased : {
-        percentComplete = ((parent.x - 3)/(root.width - width - 6)) * 100
-        root.percentageUpdated();
+        root.percentageUpdated(((parent.x - 3)/(root.width - width - 6)) * 100);
       }
     }
   }
 
-  signal percentageUpdated();
-
+  signal percentageUpdated(real value);
 }
