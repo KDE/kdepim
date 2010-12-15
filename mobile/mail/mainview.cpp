@@ -1318,6 +1318,7 @@ void MainView::preferHTML(bool useHtml)
     }
 
     item->viewer()->setHtmlOverride( useHtml );
+    item->viewer()->update( MessageViewer::Viewer::Force );
   }
 }
 
@@ -1343,6 +1344,7 @@ void MainView::loadExternalReferences(bool load)
     }
 
     item->viewer()->setHtmlLoadExtOverride( load );
+    item->viewer()->update( MessageViewer::Viewer::Force );
   }
 }
 
@@ -1373,7 +1375,9 @@ void MainView::folderChanged()
       htmlLoadExternalOverrideInAll = false;
   }
   actionCollection()->action( "prefer_html_to_plain" )->setChecked( htmlMailOverrideInAll );
+  preferHTML( htmlMailOverrideInAll );
   actionCollection()->action( "load_external_ref" )->setChecked( htmlLoadExternalOverrideInAll );
+  loadExternalReferences( htmlLoadExternalOverrideInAll );
 
   actionCollection()->action( "move_all_to_trash" )->setText( i18n( "Move Displayed Emails To Trash" ) );
   if ( indexes.count() == 1 ) {
