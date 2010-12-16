@@ -385,6 +385,7 @@ void MainView::doDelayedInit()
   connect( actionCollection()->action( "create_todo_reminder" ), SIGNAL( triggered( bool ) ), SLOT( createToDo() ) );
   connect( actionCollection()->action( "create_event" ), SIGNAL( triggered( bool ) ), SLOT( createEvent() ) );
   connect( actionCollection()->action( "apply_filters" ), SIGNAL( triggered( bool ) ), SLOT( applyFilters() ) );
+  connect( actionCollection()->action( "apply_filters_bulk_action" ), SIGNAL( triggered( bool ) ), SLOT( applyFiltersBulkAction() ) );
 
   connect( itemSelectionModel()->model(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SLOT( dataChanged() ) );
 
@@ -1533,6 +1534,19 @@ void MainView::updateConfig()
 }
 
 void MainView::applyFilters()
+{
+  Item::List items;
+
+  foreach ( const QModelIndex &index, itemSelectionModel()->selectedRows() ) {
+    const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+    if ( item.isValid() )
+      items << item;
+  }
+
+  FilterIf->filterManager()->applyFilters( items );
+}
+
+void MainView::applyFiltersBulkAction()
 {
   Item::List items;
 

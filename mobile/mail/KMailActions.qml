@@ -94,6 +94,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_remove_duplicates" }
     ActionListItem { name : "show_expire_properties" }
     ActionListItem { name : "export_selected_emails" }
+    ActionListItem { name : "apply_filters" }
     ScriptActionItem { name : "edit_acls"; title : KDE.i18n( "Edit ACLs" ); visible: aclEditor.collectionHasAcls }
   }
 
@@ -128,6 +129,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
     ActionListItem { name : "export_selected_emails" }
+    ActionListItem { name : "apply_filters" }
   }
 
   ActionList {
@@ -171,6 +173,7 @@ ActionMenuContainer {
     ActionListItem { name : "create_event" }
     ActionListItem { name : "message_find_in" }
     ActionListItem { name : "message_save_as" }
+    ActionListItem { name : "apply_filters" }
   }
 
 

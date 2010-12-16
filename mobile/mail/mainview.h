@@ -145,6 +145,7 @@ class MainView : public KDeclarativeMainView
     void createEvent();
     void useFixedFont();
     void applyFilters();
+    void applyFiltersBulkAction();
 
     void itemSelectionChanged();
     void collectionSelectionChanged();

@@ -46,7 +46,7 @@ KPIM.BulkActionScreen {
       bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_read"})
       bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_important"})
       bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_action_item"})
-      bulkActionScreen.actionModel.append({"action": "apply_filters"})
+      bulkActionScreen.actionModel.append({"action": "apply_filters_bulk_action"})
       initialized = true;
     }
   }

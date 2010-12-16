@@ -134,6 +134,10 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
   action->setText( i18n( "Apply Filters" ) );
   action->setEnabled( false );
 
+  action = actionCollection->addAction( "apply_filters_bulk_action" );
+  action->setText( i18n( "Apply Filters" ) );
+  action->setEnabled( false );
+
   action = actionCollection->addAction( "new_filter" );
   action->setText( i18n( "New Filter" ) );
 }
@@ -155,13 +159,15 @@ void MailActionManager::setItemActionSelectionModel( QItemSelectionModel *select
 void MailActionManager::updateActions()
 {
   if ( m_itemActionSelectionModel )
-    m_actionCollection->action( "apply_filters" )->setEnabled( m_itemActionSelectionModel->hasSelection() );
+    m_actionCollection->action( "apply_filters_bulk_action" )->setEnabled( m_itemActionSelectionModel->hasSelection() );
 
   if ( !m_itemSelectionModel->hasSelection() ) {
     m_actionCollection->action( "mark_message_important" )->setEnabled( false );
     m_actionCollection->action( "mark_message_action_item" )->setEnabled( false );
     return;
   }
+
+  m_actionCollection->action( "apply_filters" )->setEnabled( true );
 
   const QModelIndexList list = m_itemSelectionModel->selectedRows();
   if ( list.size() != 1 )
