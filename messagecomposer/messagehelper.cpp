@@ -87,20 +87,23 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
   const KPIMIdentities::Identity & ident =
     identMan->identityForUoidOrDefault( id );
 
-  if(ident.fullEmailAddr().isEmpty())
+  if ( ident.fullEmailAddr().isEmpty() )
     message->from()->clear();
   else
     message->from()->addAddress(ident.primaryEmailAddress().toUtf8(), ident.fullName());
 
-  if(ident.replyToAddr().isEmpty())
+  if ( ident.replyToAddr().isEmpty() )
     message->replyTo()->clear();
   else
     message->replyTo()->addAddress(ident.primaryEmailAddress().toUtf8(), ident.fullName());
 
-  if(ident.bcc().isEmpty())
+  if ( ident.bcc().isEmpty() )
     message->bcc()->clear();
-  else
-    message->bcc()->addAddress(ident.bcc().toUtf8(), ident.fullName());
+  else {
+    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.bcc() );
+    foreach ( const KMime::Types::Mailbox &mailbox, mailboxes )
+      message->bcc()->addAddress( mailbox );
+  }
 
   if ( ident.organization().isEmpty() )
     message->removeHeader("Organization");

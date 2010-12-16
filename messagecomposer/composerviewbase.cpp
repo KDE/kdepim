@@ -1103,8 +1103,18 @@ KPIMIdentities::IdentityCombo* Message::ComposerViewBase::identityCombo()
 void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent )
 {
   if ( oldIdent.bcc() != ident.bcc() ) {
-    m_recipientsEditor->removeRecipient( oldIdent.bcc(), MessageComposer::Recipient::Bcc );
-    m_recipientsEditor->addRecipient( ident.bcc(), MessageComposer::Recipient::Bcc );
+    const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( oldIdent.bcc() );
+    foreach ( const KMime::Types::Mailbox &recipient, oldRecipients ) {
+      m_recipientsEditor->removeRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
+                                           MessageComposer::Recipient::Bcc );
+    }
+
+    const KMime::Types::Mailbox::List newRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.bcc() );
+    foreach ( const KMime::Types::Mailbox &recipient, newRecipients ) {
+      m_recipientsEditor->addRecipient( MessageCore::StringUtil::mailboxListToUnicodeString( KMime::Types::Mailbox::List() << recipient ),
+                                        MessageComposer::Recipient::Bcc );
+    }
+
     m_recipientsEditor->setFocusBottom();
   }
 
