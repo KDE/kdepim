@@ -39,6 +39,7 @@
 #include "mailcommon/mailkernel.h"
 #include "mailcommon/sendmdnhandler.h"
 #include "mailthreadgroupercomparator.h"
+#include "messagecomposer/messagehelper.h"
 #include "messagecore/messagehelpers.h"
 #include "messagelistproxy.h"
 #include "messagelistsettingscontroller.h"
@@ -185,7 +186,7 @@ int MainView::openComposer( const QString &to, const QString &cc, const QString 
   composer->setMessage( message );
   composer->show();
 
-  presetComposerIdentity( composer );
+  composer->setIdentity( currentFolderIdentity() );
 
   return 0;
 }
@@ -500,29 +501,35 @@ void MainView::recoverAutoSavedMessages()
 
 void MainView::startComposer()
 {
+  KMime::Message::Ptr msg( new KMime::Message() );
+
+  const uint identity = currentFolderIdentity();
+  MessageHelper::initHeader( msg, MobileKernel::self()->identityManager(), identity );
+
   ComposerView *composer = new ComposerView;
+  composer->setMessage( msg );
   composer->show();
 
-  presetComposerIdentity( composer );
+  composer->setIdentity( identity );
 }
 
-void MainView::presetComposerIdentity( ComposerView *composer ) const
+uint MainView::currentFolderIdentity() const
 {
   // preset the folder/account identity of the current collection
   const QModelIndexList indexes = regularSelectionModel()->selectedIndexes();
   if ( indexes.isEmpty() )
-    return;
+    return 0;
 
   const QModelIndex index = indexes.first();
   const Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   if ( !collection.isValid() )
-    return;
+    return 0;
 
   QSharedPointer<MailCommon::FolderCollection> folderCollection = MailCommon::FolderCollection::forCollection( collection );
   if ( folderCollection.isNull() )
-    return;
+    return 0;
 
-  composer->setIdentity( folderCollection->identity() );
+  return folderCollection->identity();
 }
 
 void MainView::restoreDraft( quint64 id )
@@ -741,7 +748,7 @@ void MainView::replyFetchResult( KJob *job )
   composer->setMessage( factory.createReply().msg );
   composer->show();
 
-  presetComposerIdentity( composer );
+  composer->setIdentity( currentFolderIdentity() );
 }
 
 void MainView::forward( quint64 id, ForwardMode mode )
@@ -785,7 +792,7 @@ void MainView::forwardFetchResult( KJob* job )
   }
 
   composer->show();
-  presetComposerIdentity( composer );
+  composer->setIdentity( currentFolderIdentity() );
 }
 
 void MainView::markImportant( bool checked )

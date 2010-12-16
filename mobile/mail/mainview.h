@@ -191,7 +191,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::Item currentItem() const;
     MessageViewer::MessageViewItem *messageViewerItem();
     bool selectNextUnreadMessageInCurrentFolder();
-    void presetComposerIdentity( ComposerView *composer ) const;
+    uint currentFolderIdentity() const;
 
     bool mAskingToGoOnline;
     QWidget *mTransportDialog;

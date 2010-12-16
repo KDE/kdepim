@@ -235,8 +235,14 @@ void ComposerView::setIdentityCombo( KPIMIdentities::IdentityCombo* combo )
 {
   m_composerBase->setIdentityCombo( combo );
 
-  if ( m_presetIdentity != 0 )
+  if ( m_presetIdentity != 0 ) {
+    m_currentIdentity = m_presetIdentity;
     m_composerBase->identityCombo()->setCurrentIdentity( m_presetIdentity );
+  } else {
+    m_currentIdentity = m_composerBase->identityCombo()->currentIdentity();
+  }
+
+  connect( combo, SIGNAL( identityChanged( uint ) ), SLOT( identityChanged( uint ) ) );
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -463,6 +469,15 @@ void ComposerView::transportsChanged()
 {
   if ( m_composerBase->transportComboBox() )
     m_composerBase->transportComboBox()->setCurrentTransport( MailTransport::TransportManager::self()->defaultTransportId() );
+}
+
+void ComposerView::identityChanged( uint newIdentity )
+{
+  const KPIMIdentities::Identity identity = MobileKernel::self()->identityManager()->identityForUoid( newIdentity );
+  const KPIMIdentities::Identity oldIdentity = MobileKernel::self()->identityManager()->identityForUoid( m_currentIdentity );
+  m_composerBase->identityChanged( identity, oldIdentity );
+
+  m_currentIdentity = newIdentity;
 }
 
 void ComposerView::setEditor( Message::KMeditor* editor )

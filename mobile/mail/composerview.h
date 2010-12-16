@@ -105,6 +105,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void success();
     void failed( const QString &errorMessage );
     void transportsChanged();
+    void identityChanged( uint );
 
     void signEmail( bool sign );
     void encryptEmail( bool encrypt );
@@ -138,6 +139,7 @@ class ComposerView : public KDeclarativeFullScreenView
     SnippetsEditor *m_snippetsEditor;
     Kleo::CryptoMessageFormat m_cryptoFormat;
     uint m_presetIdentity;
+    uint m_currentIdentity;
 };
 
 #endif
