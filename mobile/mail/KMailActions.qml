@@ -183,6 +183,7 @@ ActionMenuContainer {
     ActionListItem { name : "show_message_source" }
     ActionListItem { name : "change_message_encoding" }
     ActionListItem { name : "show_extended_headers" }
+    ActionListItem { name : "prefer_html_to_plain_viewer" }
   }
 
   ActionList {

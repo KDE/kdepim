@@ -100,6 +100,11 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setCheckable(true);
   action->setChecked(false);
 
+  action = actionCollection->addAction("prefer_html_to_plain_viewer");
+  action->setText( i18n("Prefer HTML To Plain Text") );
+  action->setCheckable(true);
+  action->setChecked(false);
+
   action = actionCollection->addAction("load_external_ref");
   action->setText( i18n("Load External References") );
   action->setCheckable(true);

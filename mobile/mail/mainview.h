@@ -137,6 +137,7 @@ class MainView : public KDeclarativeMainView
     void saveMessage();
     void findInMessage();
     void preferHTML( bool useHtml );
+    void preferHtmlViewer( bool useHtml );
     void loadExternalReferences( bool load );
     void folderChanged();
     void moveToOrEmptyTrash();

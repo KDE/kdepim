@@ -377,6 +377,7 @@ void MainView::doDelayedInit()
   connect( actionCollection()->action( "message_fixed_font" ), SIGNAL( triggered( bool ) ), SLOT( useFixedFont() ) );
   connect( actionCollection()->action( "save_favorite" ), SIGNAL( triggered( bool ) ), SLOT( saveFavorite() ) );
   connect( actionCollection()->action( "prefer_html_to_plain" ), SIGNAL( triggered( bool ) ), SLOT( preferHTML( bool ) ) );
+  connect( actionCollection()->action( "prefer_html_to_plain_viewer" ), SIGNAL( triggered( bool ) ), SLOT( preferHtmlViewer( bool ) ) );
   connect( actionCollection()->action( "load_external_ref" ), SIGNAL( triggered( bool ) ), SLOT( loadExternalReferences( bool ) ) );
   connect( actionCollection()->action( "show_expire_properties" ), SIGNAL( triggered( bool ) ), SLOT( showExpireProperties() ) );
   connect( actionCollection()->action( "move_all_to_trash" ), SIGNAL( triggered( bool ) ), SLOT( moveToOrEmptyTrash() ) );
@@ -1327,6 +1328,22 @@ void MainView::preferHTML(bool useHtml)
     item->viewer()->setHtmlOverride( useHtml );
     item->viewer()->update( MessageViewer::Viewer::Force );
   }
+
+  // update the viewer specific state according to the folder wide state
+  QAction *action = actionCollection()->action( "prefer_html_to_plain_viewer" );
+  disconnect( action, SIGNAL( triggered( bool ) ), this, SLOT( preferHtmlViewer( bool ) ) );
+  action->setChecked( useHtml );
+  connect( action, SIGNAL( triggered( bool ) ), this, SLOT( preferHtmlViewer( bool ) ) );
+}
+
+void MainView::preferHtmlViewer( bool useHtml )
+{
+  MessageViewer::MessageViewItem* item = messageViewerItem();
+
+  if ( item ) {
+    item->viewer()->setHtmlOverride( useHtml );
+    item->viewer()->update( MessageViewer::Viewer::Force );
+  }
 }
 
 void MainView::loadExternalReferences(bool load)
@@ -1382,6 +1399,7 @@ void MainView::folderChanged()
       htmlLoadExternalOverrideInAll = false;
   }
   actionCollection()->action( "prefer_html_to_plain" )->setChecked( htmlMailOverrideInAll );
+  actionCollection()->action( "prefer_html_to_plain_viewer" )->setChecked( htmlMailOverrideInAll );
   preferHTML( htmlMailOverrideInAll );
   actionCollection()->action( "load_external_ref" )->setChecked( htmlLoadExternalOverrideInAll );
   loadExternalReferences( htmlLoadExternalOverrideInAll );
