@@ -160,6 +160,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   }
 
   KGlobal::locale()->insertCatalog( QLatin1String( "libkdepimmobileui" ) );
+  KGlobal::locale()->insertCatalog( QLatin1String( "libincidenceeditors" ) ); // for category dialog
 
   if ( debugTiming ) {
     kWarning() << "Catalog inserted" << time.elapsed() << &time;
