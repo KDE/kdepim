@@ -357,6 +357,7 @@ void MainView::doDelayedInit()
 
   MailActionManager *mailActionManager = new MailActionManager( actionCollection(), this );
   mailActionManager->setItemSelectionModel( itemSelectionModel() );
+  mailActionManager->setItemActionSelectionModel( itemActionModel() );
 
   connect( actionCollection()->action( "mark_message_important" ), SIGNAL( triggered( bool ) ), SLOT( markImportant( bool ) ) );
   connect( actionCollection()->action( "mark_message_action_item" ), SIGNAL( triggered( bool ) ), SLOT( markMailTask( bool ) ) );
@@ -1168,7 +1169,6 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
 
   connect( collectionSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), this, SLOT( folderChanged() ) );
-  connect( itemActionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), this, SLOT( itemActionModelChanged() ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
@@ -1543,12 +1543,6 @@ void MainView::applyFilters()
   }
 
   FilterIf->filterManager()->applyFilters( items );
-}
-
-void MainView::itemActionModelChanged()
-{
-  const QModelIndexList indexes = itemActionModel()->selectedRows();
-  actionCollection()->action( "apply_filters" )->setEnabled( !indexes.isEmpty() );
 }
 
 bool MainView::selectNextUnreadMessageInCurrentFolder()

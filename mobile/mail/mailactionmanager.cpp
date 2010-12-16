@@ -154,6 +154,9 @@ void MailActionManager::setItemActionSelectionModel( QItemSelectionModel *select
 
 void MailActionManager::updateActions()
 {
+  if ( m_itemActionSelectionModel )
+    m_actionCollection->action( "apply_filters" )->setEnabled( m_itemActionSelectionModel->hasSelection() );
+
   if ( !m_itemSelectionModel->hasSelection() ) {
     m_actionCollection->action( "mark_message_important" )->setEnabled( false );
     m_actionCollection->action( "mark_message_action_item" )->setEnabled( false );

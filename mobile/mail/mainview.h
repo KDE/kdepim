@@ -147,7 +147,6 @@ class MainView : public KDeclarativeMainView
     void applyFilters();
 
     void itemSelectionChanged();
-    void itemActionModelChanged();
     void collectionSelectionChanged();
 
   protected:
