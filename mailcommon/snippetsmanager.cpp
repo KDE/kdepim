@@ -529,7 +529,11 @@ void SnippetsManager::setEditor( QObject *editor, const char *insertSnippetMetho
   d->mEditor = editor;
   d->mEditorInsertMethod = insertSnippetMethod;
 
-  connect( editor, dropSignal, this, SLOT( insertSelectedSnippet() ) );
+  if ( dropSignal ) {
+    const int index = editor->metaObject()->indexOfSignal( QMetaObject::normalizedSignature( dropSignal + 1 ).data() ); // skip the leading '2'
+    if ( index != -1 )
+      connect( editor, dropSignal, this, SLOT( insertSelectedSnippet() ) );
+  }
 }
 
 QAbstractItemModel *SnippetsManager::model() const
