@@ -88,7 +88,8 @@ KPIM.MainView {
     id: messageView
     visible : guiStateManager.inViewSingleItemState
     anchors.left: parent.left
-    width: parent.width
+    anchors.leftMargin: 30
+    width: parent.width - 30
     height: parent.height
     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
     onNextItemRequest: {
