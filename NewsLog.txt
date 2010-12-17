@@ -1,4 +1,14 @@
 
+Friday 17 December 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4119: Enter a distribution list as attendee into an event, should expand the members of the dist list into the attendee field (rt#6027)
+* kolab/issue4660: Add local distribuion list as attendee to event , wrong substitution
+
+
+
 Friday 12 November 2010
 
 Problems addressed
