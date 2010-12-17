@@ -106,6 +106,7 @@ KPIM.MainView {
     anchors.right : kmailMobile.right
     anchors.bottom : kmailMobile.bottom
     anchors.margins: 12
+    color : "#00000000"
     width: 70
     height: 70
     QML.Image {
@@ -127,6 +128,7 @@ KPIM.MainView {
     anchors.right : kmailMobile.right
     anchors.bottom : backToMessageListButton.top
     anchors.margins: 12
+    color : "#00000000"
     width: 70
     height: 70
     QML.Image {
