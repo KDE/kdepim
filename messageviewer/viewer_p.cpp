@@ -1281,11 +1281,20 @@ void ViewerPrivate::createWidgets() {
   connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
 #endif
+
   mBox = new KHBox( mSplitter );
+
+#ifndef KDEPIM_MOBILE_UI
   mColorBar = new HtmlStatusBar( mBox );
+  KVBox *readerBox = new KVBox( mBox );
+#else // for mobile ui we position the HTML status bar on the right side
+  KVBox *readerBox = new KVBox( mBox );
+  mColorBar = new HtmlStatusBar( mBox );
+#endif
+
   mColorBar->setObjectName( "mColorBar" );
   mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
-  KVBox *readerBox = new KVBox( mBox );
+
   mViewer = new MailWebView( readerBox );
   mViewer->setObjectName( "mViewer" );
 
