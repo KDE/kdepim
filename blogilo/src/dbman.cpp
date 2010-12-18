@@ -811,7 +811,7 @@ bool DBMan::removeLocalEntry( int local_id )
 
 bool DBMan::removeTempEntry( const BilboPost &post )
 {
-    kDebug()<<post.toString();
+    kDebug();
     QSqlQuery q;
     q.prepare( "DELETE FROM temp_post WHERE local_id=?" );
     q.addBindValue( post.localId() );
