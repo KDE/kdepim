@@ -178,6 +178,11 @@ void Backend::postPublished( KBlog::BlogPost *post )
         return;
     }
     kDebug()<<"isPrivate: "<<post->isPrivate();
+    if(post->isPrivate() && d->bBlog->api() == BilboBlog::GDATA_API){
+        //GData do not support fetching drafts!
+        savePostInDbAndEmitResult(post);
+        return;
+    }
     d->mSubmitPostStatusMap[ post ] = post->status();
     connect( d->kBlog, SIGNAL( fetchedPost(KBlog::BlogPost*)),
              this, SLOT( savePostInDbAndEmitResult(KBlog::BlogPost*)) );
