@@ -40,7 +40,7 @@ AddEditLink::AddEditLink( QWidget *parent )
     initUi();
     d->ui.txtAddress->insertUrl(0, QString());
     d->ui.txtAddress->setCurrentIndex(0);
-//     this->setWindowTitle( i18nc( "verb, to insert a link into the text", "Add Link" ) );//TODO uncomment
+    this->setWindowTitle( i18nc( "verb, to insert a link into the text", "Add Link" ) );
 }
 
 AddEditLink::AddEditLink(const QString& address, const QString& title, const QString& target,

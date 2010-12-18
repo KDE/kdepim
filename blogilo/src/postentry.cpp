@@ -494,7 +494,12 @@ void PostEntry::saveLocally()
 are you sure you want to save an empty post?")) == KMessageBox::No )
             return;
     }
-    d->mCurrentPost.setLocalId( DBMan::self()->saveLocalEntry( *currentPost(), d->mCurrentPostBlogId ) );
+    int resId = DBMan::self()->saveLocalEntry( *currentPost(), d->mCurrentPostBlogId );
+    if(resId == -1){
+        KMessageBox::detailedSorry(this, i18n("Saving post locally failed."), DBMan::self()->lastErrorText());
+        return;
+    }
+    d->mCurrentPost.setLocalId( resId );
     emit postSavedLocally();
     emit showStatusMessage(i18n( "Post saved locally." ), false);
     kDebug()<<"Locally saved";
