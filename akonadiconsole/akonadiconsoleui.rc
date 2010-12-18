@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui version="2" name="akonadiconsole" >
+<kpartgui version="3" name="akonadiconsole" >
 
  <MenuBar>
   <Menu name="edit">
@@ -19,6 +19,7 @@
     <Action name="akonadi_collection_move_to_menu"/>
     <Separator/>
     <Action name="akonadi_collection_sync"/>
+    <Action name="akonadi_collection_sync_recursive"/>
     <Action name="akonadi_manage_local_subscriptions" />
     <Separator/>
     <Action name="akonadi_collection_delete"/>
@@ -56,6 +57,7 @@
   <Action name="akonadi_collection_delete"/>
   <Separator/>
   <Action name="akonadi_collection_sync"/>
+  <Action name="akonadi_collection_sync_recursive"/>
   <Action name="akonadiconsole_akonadi2xml"/>
   <Separator/>
   <Action name="akonadi_collection_properties"/>
@@ -74,6 +76,7 @@
   <Action name="akonadi_collection_delete"/>
   <Separator/>
   <Action name="akonadi_collection_sync"/>
+  <Action name="akonadi_collection_sync_recursive"/>
   <Action name="akonadiconsole_akonadi2xml"/>
   <Separator/>
   <Action name="akonadi_collection_properties"/>
