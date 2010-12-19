@@ -162,11 +162,12 @@ void FolderTreeWidget::disableContextMenuAndExtraColumn()
 
 void FolderTreeWidget::selectCollectionFolder( const Akonadi::Collection & col )
 {
+
+  //TODO fix it when we select an col in imap folder. Doesn't work for the moment Don't know why
   const QModelIndex idx = d->folderTreeView->model()->index( 0, 0, QModelIndex() );
   const QModelIndexList rows = d->folderTreeView->model()->match( idx,
                     Akonadi::EntityTreeModel::CollectionIdRole, col.id(), -1,
                     Qt::MatchRecursive | Qt::MatchExactly );
-
   if ( rows.size() < 1 )
     return;
   const QModelIndex colIndex = rows.first();
