@@ -192,7 +192,6 @@ RecipientsPicker* RecipientsEditor::picker() const
 
 void RecipientsEditor::slotLineAdded( MultiplyingLine* line )
 {
-  
   // subtract 1 here, because we want the number of lines
   // before this line was added.
   int count = lines().size() - 1;
@@ -217,7 +216,7 @@ void RecipientsEditor::slotLineAdded( MultiplyingLine* line )
         }
       }
     } else {
-      RecipientLineNG* last_rec = qobject_cast< RecipientLineNG* >( lines().last() );
+      RecipientLineNG* last_rec = qobject_cast< RecipientLineNG* >( lines().at(lines().count()-2) );
       if( last_rec )
         rec->setRecipientType( last_rec->recipientType() );
     }
