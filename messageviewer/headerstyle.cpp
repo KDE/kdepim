@@ -1000,60 +1000,46 @@ static QString formatMobileHeader( KMime::Message *message, bool extendedFormat,
 
 
   QString headerStr;
-  headerStr += "<div style=\"position: absolute;\n";
-  headerStr += "            top: 5px;\n";
-  headerStr += "            left: 0px;\n";
-  headerStr += "            width: 100%;\n";
-  headerStr += "            height: 94px;\n";
-  headerStr += "            background-image: url('" + (extendedFormat ? mobileExtendedImagePath : mobileImagePath) + "bg.png');\n";
-  headerStr += "            background-repeat: repeat-x;\">\n";
-#ifdef MESSAGEVIEWER_NO_WEBKIT
-  headerStr += "  <table width=\"100%\">";
-  headerStr += "    <tr>";
-  headerStr += "      <td align=\"left\">";
-  headerStr += "        <div style=\"margin-top: 10px; height: 25px; margin-left: 90px; vertical-align: bottom; font-size: 20px; color: #0E49A1\">" + fromPart + "</div>\n";
-  headerStr += "      </td>";
-  headerStr += "      <td align=\"right\">";
-  headerStr += "        <div style=\"margin-top: 10px; height: 25px; margin-right: 15px; vertical-align: bottom; text-align: right; color: #0E49A1\">" + flagsPart + "</div>\n";
-  headerStr += "      </td>";
-  headerStr += "    </tr>";
-  headerStr += "  </table>";
-#else
-  headerStr += "  <div style=\"margin-top: 10px; height: 25px; margin-left: 90px; vertical-align: bottom; font-size: 20px; color: #0E49A1; float: left\">" + fromPart + "</div>\n";
-  headerStr += "  <div style=\"margin-top: 10px; height: 25px; margin-right: 15px; vertical-align: bottom; text-align: right; color: #0E49A1; float: right\">" + flagsPart + "</div><div style=\"clear: both\"/>\n";
-#endif
+  headerStr += "<div style=\"width: 100%\">\n";
+  headerStr += "  <table width=\"100%\" bgcolor=\"#B4E3F7\">\n";
+  headerStr += "    <tr>\n";
+  headerStr += "      <td valign=\"bottom\" width=\"80%\">\n";
+  headerStr += "        <div style=\"text-align: left; font-size: 20px; color: #0E49A1\">" + fromPart + "</div>\n";
+  headerStr += "      </td>\n";
+  headerStr += "      <td valign=\"bottom\" width=\"20%\" align=\"right\">\n";
+  headerStr += "        <div style=\"text-align: right; color: #0E49A1;\">" + flagsPart + "</div>\n";
+  headerStr += "      </td>\n";
+  headerStr += "    </tr>\n";
+  headerStr += "  </table>\n";
+  headerStr += "  <table width=\"100%\" bgcolor=\"#B4E3F7\">\n";
   if ( extendedFormat ) {
-    headerStr += "  <div style=\"margin-top: 10px; height: 20px; margin-left: 90px; vertical-align: bottom; font-size: 15px; color: #0E49A1\">" + toPart + ccPart + "</div>\n";
+    headerStr += "    <tr>\n";
+    headerStr += "      <td valign=\"bottom\" colspan=\"2\">\n";
+    headerStr += "        <div style=\"height: 20px; font-size: 15px; color: #0E49A1\">" + toPart + ccPart + "</div>\n";
+    headerStr += "      </td>\n";
+    headerStr += "    </tr>\n";
   }
 
   const int subjectFontSize = matchingFontSize( message->subject()->asUnicodeString(), 650, 20 );
-
-  headerStr += "  <div style=\"height: 35px; margin-left: 90px; font-size: " + QString::number( subjectFontSize ) + "px; color: #24353F;\">" + message->subject()->asUnicodeString() + "</div>\n";
-
-#ifdef MESSAGEVIEWER_NO_WEBKIT
-  headerStr += "  <table width=\"100%\">";
-  headerStr += "    <tr>";
-  headerStr += "      <td align=\"left\">";
+  headerStr += "    <tr>\n";
+  headerStr += "      <td valign=\"bottom\" colspan=\"2\">\n";
+  headerStr += "        <div style=\"height: 35px; font-size: " + QString::number( subjectFontSize ) + "px; color: #24353F;\">" + message->subject()->asUnicodeString() + "</div>\n";
+  headerStr += "      </td>\n";
+  headerStr += "    </tr>\n";
+  headerStr += "    <tr>\n";
+  headerStr += "      <td align=\"left\" width=\"50%\">\n";
   if ( !style->messagePath().isEmpty() ) {
-    headerStr += "  <div style=\"margin-left: 47px; font-size: 15px; color: #24353F\">" + style->messagePath() + "</div>\n";
+    headerStr += "        <div style=\"font-size: 15px; color: #24353F\">" + style->messagePath() + "</div>\n";
   }
-  headerStr += "      </td>";
-  headerStr += "      <td align=\"right\">";
+  headerStr += "      </td>\n";
+  headerStr += "      <td align=\"right\" width=\"50%\">\n";
   headerStr += "        <div style=\"font-size: 15px; color: #24353F; text-align: right; margin-right: 15px\">sent: ";
   headerStr += dateString( message, style->isPrinting(), /* shortDate = */ false ) + "</div>\n";
-  headerStr += "      </td>";
-  headerStr += "    </tr>";
-  headerStr += "  </table>";
-#else
-  if ( !style->messagePath().isEmpty() ) {
-    headerStr += "  <div style=\"margin-left: 47px; font-size: 15px; color: #24353F; float: left\">" + style->messagePath() + "</div>\n";
-  }
-
-  headerStr += "  <div style=\"font-size: 15px; color: #24353F; text-align: right; margin-right: 15px; float: right\">sent: ";
-  headerStr += dateString( message, style->isPrinting(), /* shortDate = */ false ) + "</div><div style=\"clear: both\"/>\n";
-#endif
+  headerStr += "      </td>\n";
+  headerStr += "    </tr>\n";
+  headerStr += "  </table>\n";
+  headerStr += "  <br/>\n";
   headerStr += "</div>\n";
-  headerStr += "<div style=\"margin-left: 40px; position: absolute; top: 110px;\">\n";
 
   return headerStr;
 }
