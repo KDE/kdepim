@@ -281,13 +281,17 @@ class ItemDateComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    if ( first->date() < second->date() )
-      return false;
     // When the dates are equal compare by subject too
     // This is useful, for example, in kernel mailing list where people
     // send out multiple messages with patch parts at exactly the same time.
     if ( first->date() == second->date() )
       return first->subject() >= second->subject();
+    if ( first->date() == static_cast<uint>( -1 ) ) // invalid is always smaller
+      return false;
+    if ( second->date() == static_cast<uint>( -1 ) )
+      return true;
+    if ( first->date() < second->date() )
+      return false;
     return true;
   }
 };
