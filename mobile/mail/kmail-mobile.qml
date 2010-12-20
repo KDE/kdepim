@@ -89,8 +89,10 @@ KPIM.MainView {
     visible : guiStateManager.inViewSingleItemState
     anchors.left: parent.left
     anchors.leftMargin: 30
+    anchors.top: parent.top
+    anchors.topMargin: 35
     width: parent.width - 30
-    height: parent.height
+    height: parent.height - 35
     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
     onNextItemRequest: {
       _itemNavigationModel.requestNext()
