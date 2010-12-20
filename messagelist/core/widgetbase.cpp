@@ -51,6 +51,7 @@
 #include <KDE/KLineEdit>
 #include <KDE/KLocale>
 #include <KDE/KMenu>
+#include <KDE/KStandardDirs>
 
 #include <akonadi/kmime/messagestatus.h>
 
@@ -251,11 +252,11 @@ void Widget::populateStatusFilterCombo()
                                   i18nc( "@action:inmenu Status of a message", "Action Item" ),
                                   Akonadi::MessageStatus::statusToAct().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-thread-watch" )),
+  d->mStatusFilterCombo->addItem( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) ),
                                   i18nc( "@action:inmenu Status of a message", "Watched" ),
                                   Akonadi::MessageStatus::statusWatched().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-thread-ignored" )),
+  d->mStatusFilterCombo->addItem( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) ),
                                   i18nc( "@action:inmenu Status of a message", "Ignored" ),
                                   Akonadi::MessageStatus::statusIgnored().toQInt32() );
 

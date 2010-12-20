@@ -46,6 +46,7 @@
 #include <KGlobalSettings>
 #include <KApplication>
 #include <KLocale>
+#include <KStandardDirs>
 
 using namespace MessageList::Core;
 
@@ -69,8 +70,8 @@ Manager::Manager()
   mPixmapMessageSent = new QPixmap( SmallIcon( QLatin1String( "mail-sent" ) ) );
   mPixmapMessageForwarded = new QPixmap( SmallIcon( QLatin1String( "mail-forwarded" ) ) );
   mPixmapMessageImportant = new QPixmap( SmallIcon( QLatin1String( "emblem-important" ) ) ); // "flag"
-  mPixmapMessageWatched = new QPixmap( SmallIcon( QLatin1String( "mail-thread-watch" ) ) );
-  mPixmapMessageIgnored = new QPixmap( SmallIcon( QLatin1String( "mail-thread-ignored" ) ) );
+  mPixmapMessageWatched = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) );
+  mPixmapMessageIgnored = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) );
   mPixmapMessageSpam = new QPixmap( SmallIcon( QLatin1String( "mail-mark-junk" ) ) );
   mPixmapMessageHam = new QPixmap( SmallIcon( QLatin1String( "mail-mark-notjunk" ) ) );
   mPixmapMessageFullySigned = new QPixmap( SmallIcon( QLatin1String( "mail-signed-verified" ) ) );
@@ -91,8 +92,8 @@ Manager::Manager()
   else
     mPixmapShowMore = new QPixmap( SmallIcon( QLatin1String( "arrow-right" ) ) );
   mPixmapShowLess = new QPixmap( SmallIcon( QLatin1String( "arrow-down" ) ) );
-  mPixmapVerticalLine = new QPixmap( SmallIcon( QLatin1String( "mail-vertical-separator-line" ) ) );
-  mPixmapHorizontalSpacer = new QPixmap( SmallIcon( QLatin1String( "mail-horizontal-space" ) ) );
+  mPixmapVerticalLine = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-vertical-separator-line.png" ) ) );
+  mPixmapHorizontalSpacer = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-horizontal-space.png" ) ) );
 
   mCachedLocalizedUnknownText = i18nc( "Unknown date", "Unknown" ) ;
 
