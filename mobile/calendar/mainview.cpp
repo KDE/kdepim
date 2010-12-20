@@ -284,6 +284,11 @@ void MainView::setCurrentEventItemId( qint64 id )
 
 void MainView::newEvent()
 {
+  newEvent( QDate::currentDate() );
+}
+
+void MainView::newEvent( const QDate &date )
+{
   IncidenceView *editor = new IncidenceView;
   editor->setWindowTitle( i18n( "KDE Calendar" ) );
   Item item;
@@ -291,6 +296,12 @@ void MainView::newEvent()
   KCalCore::Event::Ptr event( new KCalCore::Event );
 
   IncidenceEditorNG::IncidenceDefaults defaults;
+
+  {
+    KDateTime dateTime = KDateTime::currentLocalDateTime();
+    dateTime.setDate( date );
+    defaults.setStartDateTime( dateTime );
+  }
   // Set the full emails manually here, to avoid that we get dependencies on
   // KCalPrefs all over the place.
   defaults.setFullEmails( CalendarSupport::KCalPrefs::instance()->fullEmails() );

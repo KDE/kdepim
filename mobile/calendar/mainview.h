@@ -68,6 +68,7 @@ class MainView : public KDeclarativeMainView
     void setCurrentEventItemId( qint64 id );
 
     void newEvent();
+    void newEvent( const QDate &date );
     void newTodo();
 
     void openIncidenceEditor( const QString &summary,
