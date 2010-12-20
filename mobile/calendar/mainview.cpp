@@ -236,10 +236,8 @@ void MainView::qmlLoadingStateChanged( QDeclarativeView::Status status )
 
   connect( m_calendarIface, SIGNAL( showDateSignal( QVariant ) ),
            rootObject(), SLOT( showDate( QVariant ) ) );
-  connect( m_calendarIface, SIGNAL( showEventViewSignal() ),
-           rootObject(), SLOT( showEventView() ) );
-  connect( m_calendarIface, SIGNAL(openIncidenceEditorSignal(QString,QString,QStringList,QStringList,QStringList,bool,KCalCore::Incidence::IncidenceType)), SLOT(openIncidenceEditor(QString,QString,QStringList,QStringList,QStringList,bool,KCalCore::Incidence::IncidenceType)) );
-
+  connect( m_calendarIface, SIGNAL( openIncidenceEditorSignal( QString, QString, QStringList, QStringList, QStringList, bool, KCalCore::Incidence::IncidenceType ) ),
+           this, SLOT( openIncidenceEditor( QString, QString, QStringList, QStringList, QStringList, bool, KCalCore::Incidence::IncidenceType ) ) );
 
   // setup the shared settings object
   EventViews::AgendaViewItem *agendaViewItem = rootObject()->findChild<EventViews::AgendaViewItem*>();

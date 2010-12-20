@@ -64,11 +64,6 @@ KPIM.MainView {
     guiStateManager.pushState( Events.EventsGuiStateManager.ViewDayState );
   }
 
-  function showEventView()
-  {
-    guiStateManager.pushState( KPIM.GuiStateManager.ViewSingleItemState );
-  }
-
   KCal.IncidenceView {
     id: eventView
     anchors { fill: parent; topMargin: 48; leftMargin: 48 }
