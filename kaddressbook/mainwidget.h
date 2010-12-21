@@ -29,11 +29,14 @@ namespace Akonadi {
 class Collection;
 class ContactGroupViewer;
 class ContactViewer;
-class ContactsFilterModel;
 class EntityMimeTypeFilterModel;
 class EntityTreeView;
 class Item;
 class ItemView;
+}
+
+namespace AkonadiFuture {
+class ContactsFilterModel;
 class StandardContactActionManager;
 }
 
@@ -94,7 +97,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     Akonadi::EntityMimeTypeFilterModel *mCollectionTree;
     Akonadi::EntityMimeTypeFilterModel *mItemTree;
     Akonadi::EntityMimeTypeFilterModel *mAllContactsModel;
-    Akonadi::ContactsFilterModel *mContactsFilterModel;
+    AkonadiFuture::ContactsFilterModel *mContactsFilterModel;
 
     QuickSearchWidget *mQuickSearchWidget;
     Akonadi::EntityTreeView *mCollectionView;
@@ -107,7 +110,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     Akonadi::ContactViewer *mContactDetails;
     Akonadi::ContactGroupViewer *mContactGroupDetails;
     QTextBrowser *mEmptyDetails;
-    Akonadi::StandardContactActionManager *mActionManager;
+    AkonadiFuture::StandardContactActionManager *mActionManager;
 
     XXPortManager *mXXPortManager;
     ModelColumnManager *mModelColumnManager;

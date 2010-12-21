@@ -27,7 +27,9 @@ namespace Akonadi {
 
 class Collection;
 class ItemFetchScope;
+}
 
+namespace AkonadiFuture {
 /**
  * @short Job that fetches all items of a collection recursive.
  *

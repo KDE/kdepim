@@ -32,7 +32,7 @@ class KActionCollection;
 class QItemSelectionModel;
 class QWidget;
 
-namespace Akonadi {
+namespace AkonadiFuture {
 
 /**
  * @short Manages contact specific actions for collection and item views.
@@ -48,7 +48,7 @@ class KADDRESSBOOK_EXPORT StandardContactActionManager : public QObject
      * Describes the supported actions.
      */
     enum Type {
-      CreateContact = StandardActionManager::LastType + 1, ///< Creates a new contact
+      CreateContact = Akonadi::StandardActionManager::LastType + 1, ///< Creates a new contact
       CreateContactGroup,                                  ///< Creates a new contact group
       EditItem,                                            ///< Edits the selected contact resp. contact group
       CreateAddressBook,                                   ///< Creates a new address book

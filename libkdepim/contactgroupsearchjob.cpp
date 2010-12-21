@@ -25,13 +25,13 @@
 
 using namespace KPIM;
 
-class ContactGroupSearchJob::Private
+class KPIM::ContactGroupSearchJob::Private
 {
   public:
     int mLimit;
 };
 
-ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
+KPIM::ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
   : Akonadi::ItemSearchJob( QString(), parent ), d( new Private )
 {
   fetchScope().fetchFullPayload();
@@ -43,19 +43,19 @@ ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
                                           "SELECT ?r WHERE { ?r a nco:ContactGroup }" ) );
 }
 
-ContactGroupSearchJob::~ContactGroupSearchJob()
+KPIM::ContactGroupSearchJob::~ContactGroupSearchJob()
 {
   delete d;
 }
 
-void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value )
+void KPIM::ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value )
 {
   // Exact match was the default in 4.4, so we have to keep it and ContactSearchJob has something
   // else as default
   setQuery( criterion, value, ExactMatch );
 }
 
-void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
+void KPIM::ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
 {
   QString query = QString::fromLatin1(
             "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
@@ -98,12 +98,12 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value,
   Akonadi::ItemSearchJob::setQuery( query );
 }
 
-void ContactGroupSearchJob::setLimit( int limit )
+void KPIM::ContactGroupSearchJob::setLimit( int limit )
 {
   d->mLimit = limit;
 }
 
-KABC::ContactGroup::List ContactGroupSearchJob::contactGroups() const
+KABC::ContactGroup::List KPIM::ContactGroupSearchJob::contactGroups() const
 {
   KABC::ContactGroup::List contactGroups;
 

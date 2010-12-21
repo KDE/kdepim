@@ -27,14 +27,14 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 
 class QStringList;
 
-namespace Akonadi
+namespace AkonadiFuture
 {
 
 /**
 * Holds an ordered list of remoteIds for child collections and items in a model.
 * @since 4.3
 */
-class AKONADI_NEXT_EXPORT CollectionChildOrderAttribute : public Attribute
+class AKONADI_NEXT_EXPORT CollectionChildOrderAttribute : public Akonadi::Attribute
 {
 public:
   /**

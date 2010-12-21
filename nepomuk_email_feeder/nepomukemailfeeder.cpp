@@ -29,8 +29,9 @@
 #include <akonadi/itemfetchscope.h>
 
 using namespace Akonadi;
+using namespace AkonadiFuture;
 
-Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
+AkonadiFuture::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
   NepomukFeederAgent<NepomukFast::Mailbox>( id )
 {
   addSupportedMimeType( "message/rfc822" );

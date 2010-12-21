@@ -74,6 +74,7 @@
 #include <akonadi_next/modeltest.h>
 
 using namespace Akonadi;
+using namespace AkonadiFuture;
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionAttributePageFactory, CollectionAttributePage)
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionInternalsPageFactory, CollectionInternalsPage)

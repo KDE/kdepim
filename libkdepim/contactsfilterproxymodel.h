@@ -26,7 +26,7 @@
 
 #include <QtGui/QSortFilterProxyModel>
 
-namespace Akonadi {
+namespace AkonadiFuture {
 
 /**
  * @short A proxy model for \a ContactsTreeModel models.

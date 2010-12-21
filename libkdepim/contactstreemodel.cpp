@@ -28,6 +28,7 @@
 #include <klocale.h>
 
 using namespace Akonadi;
+using namespace AkonadiFuture;
 
 class ContactsTreeModel::Private
 {
@@ -62,7 +63,7 @@ ContactsTreeModel::Columns ContactsTreeModel::columns() const
   return d->mColumns;
 }
 
-QVariant ContactsTreeModel::entityData( const Item &item, int column, int role ) const
+QVariant ContactsTreeModel::entityData( const Akonadi::Item &item, int column, int role ) const
 {
   if ( item.mimeType() == KABC::Addressee::mimeType() ) {
     if ( !item.hasPayload<KABC::Addressee>() ) {
@@ -175,7 +176,7 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
   return EntityTreeModel::entityData( item, column, role );
 }
 
-QVariant ContactsTreeModel::entityData( const Collection &collection, int column, int role ) const
+QVariant ContactsTreeModel::entityData( const Akonadi::Collection &collection, int column, int role ) const
 {
   if ( role == Qt::DisplayRole ) {
     switch ( column ) {
@@ -214,7 +215,7 @@ QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orien
             return i18nc( "@title:column, address books overview", "Address Books" );
             break;
         }
-      } else if ( headerGroup == EntityTreeModel::ItemListHeaders ) {
+      } else if ( headerGroup == Akonadi::EntityTreeModel::ItemListHeaders ) {
         if ( section < 0 || section >= d->mColumns.count() )
           return QVariant();
 

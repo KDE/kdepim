@@ -29,6 +29,7 @@ static bool contactMatchesFilter( const KABC::Addressee &contact, const QString 
 static bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &filterString );
 
 using namespace Akonadi;
+using namespace AkonadiFuture;
 
 class ContactsFilterModel::Private
 {

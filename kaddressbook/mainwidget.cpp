@@ -142,7 +142,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
-  mContactsFilterModel = new Akonadi::ContactsFilterModel( this );
+  mContactsFilterModel = new AkonadiFuture::ContactsFilterModel( this );
   mContactsFilterModel->setSourceModel( mItemTree );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
            mContactsFilterModel, SLOT( setFilterString( const QString& ) ) );
@@ -173,15 +173,15 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 
-  mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
+  mActionManager = new AkonadiFuture::StandardContactActionManager( guiClient->actionCollection(), this );
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 
   mActionManager->createAllActions();
 
-  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
+  connect( mActionManager->action( AkonadiFuture::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
            this, SLOT( newContact() ) );
-  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
+  connect( mActionManager->action( AkonadiFuture::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
            this, SLOT( newGroup() ) );
   connect( mActionManager, SIGNAL( editItem( const Akonadi::Item& ) ),
            this, SLOT( editItem( const Akonadi::Item& ) ) );

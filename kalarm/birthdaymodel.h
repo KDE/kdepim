@@ -37,7 +37,7 @@ namespace Akonadi
  * This model provides the EntityTreeModel for all contacts.
  * The model is accessable via the static instance() method.
  */
-class BirthdayModel : public Akonadi::ContactsTreeModel
+class BirthdayModel : public AkonadiFuture::ContactsTreeModel
 {
     public:
 	enum {   // data columns
@@ -57,7 +57,7 @@ class BirthdayModel : public Akonadi::ContactsTreeModel
 
         virtual QVariant entityData(const Akonadi::Item&, int column, int role = Qt::DisplayRole) const;
         virtual QVariant entityData(const Akonadi::Collection& collection, int column, int role = Qt::DisplayRole) const
-                                    { return Akonadi::ContactsTreeModel::entityData(collection, column, role); }
+                                    { return AkonadiFuture::ContactsTreeModel::entityData(collection, column, role); }
 
   private:
 	BirthdayModel(Akonadi::ChangeRecorder* recorder);

@@ -24,7 +24,7 @@
 
 #include "akonadi_next_export.h"
 
-namespace Akonadi {
+namespace AkonadiFuture {
 
 /**
  * @short A proxy model that colors collection text if they're above a given quota

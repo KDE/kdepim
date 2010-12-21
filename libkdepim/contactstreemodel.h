@@ -26,7 +26,7 @@
 
 #include <akonadi/entitytreemodel.h>
 
-namespace Akonadi {
+namespace AkonadiFuture {
 
 /**
  * @short A model for contacts and contact groups as stored in Akonadi.
@@ -34,7 +34,7 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */
-class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
+class KDEPIM_EXPORT ContactsTreeModel : public Akonadi::EntityTreeModel
 {
   Q_OBJECT
 
@@ -115,7 +115,7 @@ class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
      * @param monitor The ChangeRecorder whose entities should be represented in the model.
      * @param parent The parent object.
      */
-    explicit ContactsTreeModel( ChangeRecorder *monitor, QObject *parent = 0 );
+    explicit ContactsTreeModel( Akonadi::ChangeRecorder *monitor, QObject *parent = 0 );
 
     /**
      * Destroys the contacts tree model.
@@ -132,8 +132,8 @@ class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
      */
     Columns columns() const;
 
-    virtual QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
-    virtual QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant entityData( const Akonadi::Item &item, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant entityData( const Akonadi::Collection &collection, int column, int role = Qt::DisplayRole ) const;
     virtual QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;
     virtual int entityColumnCount( HeaderGroup headerGroup ) const;
 

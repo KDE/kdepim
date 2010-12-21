@@ -20,6 +20,7 @@
 #include "itembrowser.h"
 
 using namespace Akonadi;
+using namespace AkonadiFuture;
 
 #include <akonadi/item.h>
 
@@ -38,12 +39,12 @@ void ItemBrowser::setItem( const Akonadi::Item &item )
   ItemMonitor::setItem( item );
 }
 
-void ItemBrowser::itemAdded( const Item &item )
+void ItemBrowser::itemAdded( const Akonadi::Item &item )
 {
   setHtml( itemToRichText( item ) );
 }
 
-void ItemBrowser::itemChanged( const Item &item )
+void ItemBrowser::itemChanged( const Akonadi::Item &item )
 {
   setHtml( itemToRichText( item ) );
 }
@@ -53,7 +54,7 @@ void ItemBrowser::itemRemoved()
   setHtml( QLatin1String( "<html><body><center>The watched item has been deleted</center></body></html>" ) );
 }
 
-QString ItemBrowser::itemToRichText( const Item &item )
+QString ItemBrowser::itemToRichText( const Akonadi::Item &item )
 {
   return QString::fromUtf8( item.payloadData() );
 }

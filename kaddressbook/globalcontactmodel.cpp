@@ -48,7 +48,7 @@ GlobalContactModel::GlobalContactModel()
   mMonitor->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
   mMonitor->setMimeTypeMonitored( KABC::ContactGroup::mimeType(), true );
 
-  mModel = new Akonadi::ContactsTreeModel( mMonitor );
+  mModel = new AkonadiFuture::ContactsTreeModel( mMonitor );
 }
 
 GlobalContactModel::~GlobalContactModel()
@@ -66,7 +66,7 @@ GlobalContactModel* GlobalContactModel::instance()
   return mInstance;
 }
 
-Akonadi::ContactsTreeModel* GlobalContactModel::model() const
+AkonadiFuture::ContactsTreeModel* GlobalContactModel::model() const
 {
   return mModel;
 }

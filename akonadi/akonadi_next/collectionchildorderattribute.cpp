@@ -26,6 +26,7 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 #include <kdebug.h>
 
 using namespace Akonadi;
+using namespace AkonadiFuture;
 
 class CollectionChildOrderAttribute::Private
 {
@@ -43,7 +44,7 @@ CollectionChildOrderAttribute::~ CollectionChildOrderAttribute()
   delete d;
 }
 
-QByteArray Akonadi::CollectionChildOrderAttribute::type() const
+QByteArray CollectionChildOrderAttribute::type() const
 {
   return "COLLECTIONCHILDORDER";
 }

@@ -26,6 +26,7 @@
 #include <QtCore/QVariant>
 
 using namespace Akonadi;
+using namespace AkonadiFuture;
 
 class RecursiveItemFetchJob::Private
 {

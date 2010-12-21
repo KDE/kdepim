@@ -46,7 +46,7 @@ class ModelColumnManager : public QObject
      * @param model The model that shall be managed.
      * @param parent The parent object.
      */
-    explicit ModelColumnManager( Akonadi::ContactsTreeModel *model, QObject *parent = 0 );
+    explicit ModelColumnManager( AkonadiFuture::ContactsTreeModel *model, QObject *parent = 0 );
 
     /**
      * Loads the user configuration and applies it to the model.
@@ -71,8 +71,8 @@ class ModelColumnManager : public QObject
     void adaptHeaderView();
 
   private:
-    Akonadi::ContactsTreeModel *mModel;
-    Akonadi::ContactsTreeModel::Columns mColumns;
+    AkonadiFuture::ContactsTreeModel *mModel;
+    AkonadiFuture::ContactsTreeModel::Columns mColumns;
     QWidget *mWidget;
 };
 

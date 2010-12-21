@@ -24,9 +24,13 @@
 namespace Akonadi
 {
   class ChangeRecorder;
-  class ContactsTreeModel;
   class Monitor;
   class Session;
+}
+
+namespace AkonadiFuture
+{
+  class ContactsTreeModel;
 }
 
 /**
@@ -51,7 +55,7 @@ class GlobalContactModel
     /**
      * Returns the item model of the global instance.
      */
-    Akonadi::ContactsTreeModel* model() const;
+    AkonadiFuture::ContactsTreeModel* model() const;
 
   private:
     GlobalContactModel();
@@ -60,7 +64,7 @@ class GlobalContactModel
 
     Akonadi::Session *mSession;
     Akonadi::ChangeRecorder *mMonitor;
-    Akonadi::ContactsTreeModel *mModel;
+    AkonadiFuture::ContactsTreeModel *mModel;
 };
 
 #endif

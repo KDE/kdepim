@@ -29,6 +29,7 @@
 typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 
 using namespace Akonadi;
+using namespace AkonadiFuture;
 
 KCalItemBrowser::KCalItemBrowser( QWidget* parent )
     : ItemBrowser( parent ), d( 0 )
@@ -40,7 +41,7 @@ KCalItemBrowser::~KCalItemBrowser()
 {
 }
 
-QString KCalItemBrowser::itemToRichText( const Item& item )
+QString KCalItemBrowser::itemToRichText( const Akonadi::Item& item )
 {
     if ( !item.hasPayload<IncidencePtr>() ) {
         return QString();

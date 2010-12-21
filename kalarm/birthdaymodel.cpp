@@ -34,7 +34,7 @@
 BirthdayModel* BirthdayModel::mInstance = 0;
 
 BirthdayModel::BirthdayModel(Akonadi::ChangeRecorder* recorder)
-    : Akonadi::ContactsTreeModel(recorder)
+    : AkonadiFuture::ContactsTreeModel(recorder)
 {
     setColumns(Columns() << FullName << Birthday);
 }
@@ -72,11 +72,11 @@ QVariant BirthdayModel::entityData(const Akonadi::Item& item, int column, int ro
 {
     if (columns().at(column) == Birthday  &&  role == Qt::DisplayRole)
     {
-        QDate date = Akonadi::ContactsTreeModel::entityData(item, column, DateRole).toDate();
+        QDate date = AkonadiFuture::ContactsTreeModel::entityData(item, column, DateRole).toDate();
         if (date.isValid())
             return KGlobal::locale()->formatDate(date, KLocale::ShortDate);
     }
-    return Akonadi::ContactsTreeModel::entityData(item, column, role);
+    return AkonadiFuture::ContactsTreeModel::entityData(item, column, role);
 }
 
 

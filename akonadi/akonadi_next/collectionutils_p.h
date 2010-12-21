@@ -22,42 +22,42 @@
 
 #include <QtCore/QStringList>
 
-namespace Akonadi {
+namespace AkonadiFuture {
 
 /**
  * @internal
  */
 namespace CollectionUtils
 {
-  inline bool isVirtualParent( const Collection &collection )
+  inline bool isVirtualParent( const Akonadi::Collection &collection )
   {
-    return (collection.parent() == Collection::root().id() &&
+    return (collection.parent() == Akonadi::Collection::root().id() &&
             collection.resource() == QLatin1String( "akonadi_search_resource" ));
   }
 
-  inline bool isVirtual( const Collection &collection )
+  inline bool isVirtual( const Akonadi::Collection &collection )
   {
     return (collection.resource() == QLatin1String( "akonadi_search_resource" ));
   }
 
-  inline bool isResource( const Collection &collection )
+  inline bool isResource( const Akonadi::Collection &collection )
   {
-    return (collection.parent() == Collection::root().id());
+    return (collection.parent() == Akonadi::Collection::root().id());
   }
 
-  inline bool isStructural( const Collection &collection )
+  inline bool isStructural( const Akonadi::Collection &collection )
   {
     return collection.contentMimeTypes().isEmpty();
   }
 
-  inline bool isFolder( const Collection &collection )
+  inline bool isFolder( const Akonadi::Collection &collection )
   {
-    return (collection.parent() != Collection::root().id() &&
+    return (collection.parent() != Akonadi::Collection::root().id() &&
             collection.resource() != QLatin1String( "akonadi_search_resource" ) &&
             !collection.contentMimeTypes().isEmpty());
   }
 
-  inline QString defaultIconName( const Collection &col )
+  inline QString defaultIconName( const Akonadi::Collection &col )
   {
     if ( CollectionUtils::isVirtualParent( col ) )
       return QLatin1String( "edit-find" );
@@ -69,7 +69,7 @@ namespace CollectionUtils
       return QLatin1String( "folder-grey" );
 
     const QStringList content = col.contentMimeTypes();
-    if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::mimeType() )) ) {
+    if ( content.size() == 1 || (content.size() == 2 && content.contains( Akonadi::Collection::mimeType() )) ) {
       if ( content.contains( QLatin1String( "text/x-vcard" ) ) || content.contains( QLatin1String( "text/directory" ) )
                                                                || content.contains( QLatin1String( "text/vcard" ) ) )
         return QLatin1String( "x-office-address-book" );

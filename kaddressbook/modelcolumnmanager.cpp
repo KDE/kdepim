@@ -32,7 +32,7 @@
 #include <QtGui/QMenu>
 #include <QtGui/QWidget>
 
-ModelColumnManager::ModelColumnManager( Akonadi::ContactsTreeModel *model, QObject *parent )
+ModelColumnManager::ModelColumnManager( AkonadiFuture::ContactsTreeModel *model, QObject *parent )
   : QObject( parent ), mModel( model ), mWidget( 0 )
 {
 }
@@ -40,17 +40,17 @@ ModelColumnManager::ModelColumnManager( Akonadi::ContactsTreeModel *model, QObje
 void ModelColumnManager::load()
 {
   const QList<int> settingsColumns = Settings::contactModelColumns();
-  Akonadi::ContactsTreeModel::Columns columns;
+  AkonadiFuture::ContactsTreeModel::Columns columns;
 
   foreach( int column, settingsColumns )
-    columns.append( (Akonadi::ContactsTreeModel::Column)column );
+    columns.append( (AkonadiFuture::ContactsTreeModel::Column)column );
 
   mModel->setColumns( columns );
 }
 
 void ModelColumnManager::store()
 {
-  const Akonadi::ContactsTreeModel::Columns columns = mModel->columns();
+  const AkonadiFuture::ContactsTreeModel::Columns columns = mModel->columns();
   QList<int> settingsColumns;
 
   foreach( int column, columns )
@@ -71,72 +71,72 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
     if ( event->type() == QEvent::ContextMenu ) {
       QMenu menu;
 
-      Akonadi::ContactsTreeModel::Columns columns = mModel->columns();
+      AkonadiFuture::ContactsTreeModel::Columns columns = mModel->columns();
 
       QAction *fullNameAction = menu.addAction( i18n( "Full Name" ) );
       fullNameAction->setCheckable( true );
-      fullNameAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::FullName ) );
+      fullNameAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::FullName ) );
       fullNameAction->setEnabled( false );
 
       QAction *birthdayAction = menu.addAction( KABC::Addressee::birthdayLabel() );
       birthdayAction->setCheckable( true );
-      birthdayAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::Birthday ) );
+      birthdayAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::Birthday ) );
 
       QAction *homeAddressAction = menu.addAction( i18n( "Home Address" ) );
       homeAddressAction->setCheckable( true );
-      homeAddressAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::HomeAddress ) );
+      homeAddressAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::HomeAddress ) );
 
       QAction *businessAddressAction = menu.addAction( i18n( "Business Address" ) );
       businessAddressAction->setCheckable( true );
-      businessAddressAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::BusinessAddress ) );
+      businessAddressAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::BusinessAddress ) );
 
       QAction *phoneNumbersAction = menu.addAction( i18n( "Phone Numbers" ) );
       phoneNumbersAction->setCheckable( true );
-      phoneNumbersAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::PhoneNumbers ) );
+      phoneNumbersAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::PhoneNumbers ) );
 
       QAction *preferredEmailAction = menu.addAction( i18n( "Preferred EMail" ) );
       preferredEmailAction->setCheckable( true );
-      preferredEmailAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::PreferredEmail ) );
+      preferredEmailAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::PreferredEmail ) );
 
       QAction *allEmailsAction = menu.addAction( i18n( "All EMails" ) );
       allEmailsAction->setCheckable( true );
-      allEmailsAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::AllEmails ) );
+      allEmailsAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::AllEmails ) );
 
       QAction *organizationAction = menu.addAction( KABC::Addressee::organizationLabel() );
       organizationAction->setCheckable( true );
-      organizationAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::Organization ) );
+      organizationAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::Organization ) );
 
       QAction *homepageAction = menu.addAction( KABC::Addressee::urlLabel() );
       homepageAction->setCheckable( true );
-      homepageAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::Homepage ) );
+      homepageAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::Homepage ) );
 
       QAction *noteAction = menu.addAction( KABC::Addressee::noteLabel() );
       noteAction->setCheckable( true );
-      noteAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::Note ) );
+      noteAction->setChecked( columns.contains( AkonadiFuture::ContactsTreeModel::Note ) );
 
       if ( menu.exec( ((QContextMenuEvent*)event)->globalPos() ) ) {
-        Akonadi::ContactsTreeModel::Columns columns;
+        AkonadiFuture::ContactsTreeModel::Columns columns;
 
         if ( fullNameAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::FullName;
+          columns << AkonadiFuture::ContactsTreeModel::FullName;
         if ( birthdayAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::Birthday;
+          columns << AkonadiFuture::ContactsTreeModel::Birthday;
         if ( homeAddressAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::HomeAddress;
+          columns << AkonadiFuture::ContactsTreeModel::HomeAddress;
         if ( businessAddressAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::BusinessAddress;
+          columns << AkonadiFuture::ContactsTreeModel::BusinessAddress;
         if ( phoneNumbersAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::PhoneNumbers;
+          columns << AkonadiFuture::ContactsTreeModel::PhoneNumbers;
         if ( preferredEmailAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::PreferredEmail;
+          columns << AkonadiFuture::ContactsTreeModel::PreferredEmail;
         if ( allEmailsAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::AllEmails;
+          columns << AkonadiFuture::ContactsTreeModel::AllEmails;
         if ( organizationAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::Organization;
+          columns << AkonadiFuture::ContactsTreeModel::Organization;
         if ( homepageAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::Homepage;
+          columns << AkonadiFuture::ContactsTreeModel::Homepage;
         if ( noteAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::Note;
+          columns << AkonadiFuture::ContactsTreeModel::Note;
 
         mModel->setColumns( columns );
         QTimer::singleShot( 0, this, SLOT( adaptHeaderView() ) );

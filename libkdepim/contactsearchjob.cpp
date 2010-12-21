@@ -25,13 +25,13 @@
 
 using namespace KPIM;
 
-class ContactSearchJob::Private
+class KPIM::ContactSearchJob::Private
 {
   public:
     int mLimit;
 };
 
-ContactSearchJob::ContactSearchJob( QObject * parent )
+  KPIM::ContactSearchJob::ContactSearchJob( QObject * parent )
   : Akonadi::ItemSearchJob( QString(), parent ), d( new Private() )
 {
   fetchScope().fetchFullPayload();
@@ -43,17 +43,17 @@ ContactSearchJob::ContactSearchJob( QObject * parent )
                                           "SELECT ?r WHERE { ?r a nco:PersonContact }" ) );
 }
 
-ContactSearchJob::~ContactSearchJob()
+KPIM::ContactSearchJob::~ContactSearchJob()
 {
   delete d;
 }
 
-void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
+void KPIM::ContactSearchJob::setQuery( Criterion criterion, const QString &value )
 {
   setQuery( criterion, value, ContainsMatch );
 }
 
-void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
+void KPIM::ContactSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
 {
   if ( match == StartsWithMatch && value.size() < 4 )
     match = ExactMatch;
@@ -235,12 +235,12 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
   Akonadi::ItemSearchJob::setQuery( query );
 }
 
-void ContactSearchJob::setLimit( int limit )
+void KPIM::ContactSearchJob::setLimit( int limit )
 {
   d->mLimit = limit;
 }
 
-KABC::Addressee::List ContactSearchJob::contacts() const
+KABC::Addressee::List KPIM::ContactSearchJob::contacts() const
 {
   KABC::Addressee::List contacts;
 
