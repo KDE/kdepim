@@ -414,7 +414,7 @@ void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
 
   foreach ( const QWidget *w, widgets() ) {
     SearchRule::Ptr r = qobject_cast<const SearchRuleWidget*>( w )->rule();
-    if ( r )
+    if ( r && !r->isEmpty() )
       mRuleList->append( r );
   }
 }
