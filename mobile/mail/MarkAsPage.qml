@@ -43,7 +43,7 @@ QML.Item {
       anchors.fill: parent
       KPIM.Button2 {
         width: parent.width
-        buttonText : application.getAction("akonadi_mark_as_read", "").iconText;
+        buttonText : application.getAction("akonadi_mark_as_read", "").text;
         onClicked : {
           application.getAction("akonadi_mark_as_read", "").trigger();
           root.parent.visible = false
@@ -51,7 +51,7 @@ QML.Item {
       }
       KPIM.Button2 {
         width: parent.width
-        buttonText : application.getAction("akonadi_mark_as_important", "").iconText;
+        buttonText : application.getAction("akonadi_mark_as_important", "").text;
         onClicked : {
           application.getAction("akonadi_mark_as_important", "").trigger();
           root.parent.visible = false
@@ -59,7 +59,7 @@ QML.Item {
       }
       KPIM.Button2 {
         width: parent.width
-        buttonText : application.getAction("akonadi_mark_as_action_item", "").iconText;
+        buttonText : application.getAction("akonadi_mark_as_action_item", "").text;
         onClicked : {
           application.getAction("akonadi_mark_as_action_item", "").trigger();
           root.parent.visible = false
