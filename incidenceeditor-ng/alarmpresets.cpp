@@ -84,7 +84,7 @@ void initPresets( AlarmPresets::When when )
     hardcodedPresets.insert( index, sDefaultAlarmOffset );
     sDefaultPresetIndex = index;
   } else {
-    sDefaultPresetIndex = 2;
+    sDefaultPresetIndex = hardcodedPresets.indexOf( sDefaultAlarmOffset );
   }
 
   switch ( when ) {
