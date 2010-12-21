@@ -435,7 +435,8 @@ static QModelIndex indexAbove( QAbstractItemModel *model, const QModelIndex &cur
   return lastChildOf( model, previousSibling );
 }
 
-QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, const QModelIndex &current, SearchDirection direction )
+QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, const QModelIndex &current, SearchDirection direction,
+                                                    bool (*ignoreCollectionCallback)( const Akonadi::Collection &collection ) )
 {
   QModelIndex index = current;
   while ( true ) {
@@ -455,8 +456,11 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model, c
 
       // check if it is unread
       if ( collection.statistics().unreadCount() > 0 ) {
+        if ( ignoreCollectionCallback && ignoreCollectionCallback( collection ) )
+          continue;
+
         QSharedPointer<FolderCollection> fCollection = FolderCollection::forCollection( collection );
-        if(!fCollection->ignoreNewMail())
+        if ( !fCollection->ignoreNewMail() )
           return index; // we found the next unread collection
       }
     }

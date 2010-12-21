@@ -103,8 +103,10 @@ namespace Util {
      * @param model The item model to search in.
      * @param current The index of the collection where the search will start.
      * @param direction The direction of search.
+     * @param ignoreCollectionCallback A callback method to ignore certain collections by returning @c true.
      */
-    MAILCOMMON_EXPORT QModelIndex nextUnreadCollection( QAbstractItemModel *model, const QModelIndex &current, SearchDirection direction );
+    MAILCOMMON_EXPORT QModelIndex nextUnreadCollection( QAbstractItemModel *model, const QModelIndex &current, SearchDirection direction,
+                                                        bool (*ignoreCollectionCallback)( const Akonadi::Collection &collection ) = 0 );
 }
 
 }
