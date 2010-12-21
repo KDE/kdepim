@@ -903,24 +903,35 @@ QString MessageFactory::replaceHeadersInString( const KMime::Message::Ptr &msg, 
 
 void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
 {
-  if( MessageComposer::MessageComposerSettings::forceReplyCharset() ) {
+  if ( MessageComposer::MessageComposerSettings::forceReplyCharset() ) {
+    // first convert the body from its current encoding to unicode representation
+    QTextCodec *bodyCodec = KGlobal::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
+    if ( !bodyCodec )
+      bodyCodec = KGlobal::charsets()->codecForName( QLatin1String( "UTF-8" ) );
+
+    const QString body = bodyCodec->toUnicode( msg->body() );
+
+    // then apply the encoding of the original message
     msg->contentType()->setCharset( m_origMsg->contentType()->charset() );
 
     QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
-    if( !codec ) {
+    if ( !codec ) {
       kError() << "Could not get text codec for charset" << msg->contentType()->charset();
-    } else if( !codec->canEncode( QString::fromUtf8( msg->body() ) ) ) { // charset can't encode body, fall back to preferred
+    } else if ( !codec->canEncode( body ) ) { // charset can't encode body, fall back to preferred
       const QStringList charsets = MessageComposer::MessageComposerSettings::preferredCharsets();
+
       QList<QByteArray> chars;
-      foreach( QString charset, charsets )
+      foreach ( const QString &charset, charsets )
         chars << charset.toAscii();
-      QByteArray fallbackCharset = Message::Util::selectCharset( chars, QString::fromUtf8( msg->body() ) );
-      if( fallbackCharset.isEmpty() ) // UTF-8 as fall-through
+
+      QByteArray fallbackCharset = Message::Util::selectCharset( chars, body );
+      if ( fallbackCharset.isEmpty() ) // UTF-8 as fall-through
         fallbackCharset = "UTF-8";
+
       codec = KGlobal::charsets()->codecForName( QString::fromLatin1( fallbackCharset ) );
-      msg->setBody( codec->fromUnicode( QString::fromUtf8( msg->body() ) ) );
+      msg->setBody( codec->fromUnicode( body ) );
     } else {
-      msg->setBody( codec->fromUnicode( QString::fromUtf8( msg->body() ) ) );
+      msg->setBody( codec->fromUnicode( body ) );
     }
   }
 }
