@@ -34,6 +34,7 @@
 #include <klocale.h>
 #include <kpushbutton.h>
 #include <klineedit.h>
+#include <kmessagebox.h>
 #include <KColorScheme>
 
 using namespace MessageViewer;
@@ -120,13 +121,13 @@ void FindBar::autoSearch( const QString& str )
 {
   m_findPrevBtn->setEnabled( !str.isEmpty() );
   m_findNextBtn->setEnabled( !str.isEmpty() );
-  if( str.length() > 2 )
-    QTimer::singleShot(0, this, SLOT( searchText() ) );
+  if ( !str.isEmpty() )
+    QTimer::singleShot( 0, this, SLOT( searchText() ) );
   else
     clearSelections();
 }
 
-void FindBar::searchText( bool backward)
+void FindBar::searchText( bool backward, bool isAutoSearch )
 {
   MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
 
@@ -145,7 +146,16 @@ void FindBar::searchText( bool backward)
   }
   mLastSearchStr = m_search->text();
   bool found = m_view->findText( mLastSearchStr, searchOptions );
+
   setFoundMatch( found );
+
+  if ( !found && !isAutoSearch ) {
+    if ( backward ) {
+      KMessageBox::information( this, QString( "Beginning of message reached.\nPhrase '%1' could not be found." ).arg( mLastSearchStr ) ); //TODO: i18n after string freeze
+    } else {
+      KMessageBox::information( this, QString( "End of message reached.\nPhrase '%1' could not be found." ).arg( mLastSearchStr ) ); //TODO: i18n after string freeze
+    }
+  }
 }
 
 void FindBar::setFoundMatch( bool match )
@@ -154,9 +164,6 @@ void FindBar::setFoundMatch( bool match )
 
   if (!m_search->text().isEmpty()) {
     KColorScheme::BackgroundRole bgColorScheme;
-
-    m_findPrevBtn->setEnabled( match );
-    m_findNextBtn->setEnabled( match );
 
     if (match)
       bgColorScheme = KColorScheme::PositiveBackground;
@@ -177,12 +184,12 @@ void FindBar::setFoundMatch( bool match )
 
 void FindBar::findNext()
 {
-  searchText( false );
+  searchText( false, false );
 }
 
 void FindBar::findPrev()
 {
-  searchText( true );
+  searchText( true, false );
 }
 
 void FindBar::caseSensitivityChanged()

@@ -62,7 +62,7 @@ class FindBar : public QWidget
     void findNext();
     void findPrev();
     void autoSearch( const QString& str );
-    void searchText( bool backward = false );
+    void searchText( bool backward = false, bool isAutoSearch = true );
   private slots:
     void caseSensitivityChanged();
     void highlightAllChanged();
