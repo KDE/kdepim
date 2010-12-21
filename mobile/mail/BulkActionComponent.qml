@@ -43,6 +43,7 @@ KPIM.BulkActionScreen {
 
   QML.Component.onCompleted: {
     if ( initialized == false ) {
+      bulkActionScreen.actionModel.set( 0, { "action" : "akonadi_move_to_trash" } )
       bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_read"})
       bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_important"})
       bulkActionScreen.actionModel.append({"action": "akonadi_mark_as_action_item"})
