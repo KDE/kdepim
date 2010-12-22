@@ -36,7 +36,8 @@ Rectangle {
   }
   Image {
     anchors.verticalCenter : parent.verticalCenter
-    x : 3 + ((model.percentComplete/100) * (root.width - width - 6))
+    property bool dirtyBit
+    x : 3 + ((model.percentComplete/100) * (root.width - width - 6)) + (dirtyBit ? 0 : 0)
     source : "images/sliderhandle.png";
 
     MouseArea {
@@ -47,6 +48,7 @@ Rectangle {
       drag.maximumX: width - 6
       onReleased : {
         root.percentageUpdated(((parent.x - 3)/(root.width - width - 6)) * 100);
+        parent.dirtyBit = !parent.dirtyBit
       }
     }
   }
