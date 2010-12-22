@@ -381,14 +381,6 @@ endif (NOT WINCE)
   endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
   macro_optional_add_subdirectory(strigi-analyzer)
 
-  if(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
-    macro_optional_add_subdirectory(runtime)
-  endif(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
-
-  if (BUILD_runtime)
-    include_directories(${CMAKE_SOURCE_DIR}/runtime ${CMAKE_BINARY_DIR}/runtime)
-  endif (BUILD_runtime)
-
   if (KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(kalarm)
   endif (KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW AND KDEPIM_BUILD_DESKTOP)
