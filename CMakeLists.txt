@@ -353,7 +353,7 @@ endif (NOT WINCE)
     macro_optional_add_subdirectory(korganizer)
 
     # disabled until Strigi dep is removed
-    if (NOT WINCE)
+    if (NOT WINCE AND NOT KDEPIM_NO_NEPOMUK)
       if (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
         add_subdirectory( nepomuk_email_feeder )
       endif (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
