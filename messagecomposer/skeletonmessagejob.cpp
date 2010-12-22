@@ -149,7 +149,7 @@ void SkeletonMessageJobPrivate::doStart()
   // User-Agent
   if ( !infoPart->userAgent().isEmpty() ) {
     QStringList extraInfo;
-    extraInfo << QLatin1String( KDEPIM_SVN_REVISION_STRING ) << QLatin1String( KDEPIM_SVN_LAST_CHANGE );
+    extraInfo << QLatin1String( KDEPIM_GIT_REVISION_STRING ) << QLatin1String( KDEPIM_GIT_LAST_CHANGE );
     KMime::Headers::UserAgent *ua = new KMime::Headers::UserAgent( message );
     ua->fromUnicodeString( KProtocolManager::userAgentForApplication( infoPart->userAgent(), QLatin1String( KDEPIM_VERSION ), extraInfo ), "utf-8" );
     message->setHeader( ua );

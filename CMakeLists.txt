@@ -68,18 +68,22 @@ endif()
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
 
 ############### generate kdepim-version.h ###############
-# Support for the SVN revision number in kdepim-version.h
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
-  if (NOT KdeSubversion_FOUND)
-    find_package(KdeSubversion)
-  endif (NOT KdeSubversion_FOUND)
-  if (KdeSubversion_FOUND)
-    KdeSubversion_WC_INFO(${PROJECT_SOURCE_DIR} KDEPIM)
-    string(SUBSTRING "${KDEPIM_WC_LAST_CHANGED_DATE}" 0 10 KDEPIM_WC_LAST_CHANGED_DATE)
-    set(kdepim_svn_revision "svn-${KDEPIM_WC_REVISION}")
-    set(kdepim_svn_last_change "${KDEPIM_WC_LAST_CHANGED_DATE}")
-  endif (KdeSubversion_FOUND)
-endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
+# Support for the GIT revision number in kdepim-version.h
+if(EXISTS "${kdepim_SOURCE_DIR}/.git")
+  find_package(Git)
+  if(GIT_FOUND)
+    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+                    WORKING_DIRECTORY ${kdepim_SOURCE_DIR}
+                    OUTPUT_VARIABLE kdepim_git_revision)
+    string(REGEX REPLACE "\n" "" kdepim_git_revision "${kdepim_git_revision}")
+    set(kdepim_git_revision "git-${kdepim_git_revision}")
+
+    execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --oneline --format=%ci
+                    WORKING_DIRECTORY ${kdepim_SOURCE_DIR}
+                    OUTPUT_VARIABLE kdepim_git_last_change)
+    string(REGEX REPLACE " [0-9:+ ]*\n" "" kdepim_git_last_change "${kdepim_git_last_change}")
+  endif()
+endif()
 
 # KDEPIM_VERSION 
 # Version scheme: "x.y.z build".

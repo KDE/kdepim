@@ -33,10 +33,10 @@
 
 #define KDEPIM_VERSION "@KDEPIM_VERSION@"
 
-/* SVN revision number, of the form "svn-xxxxxxxx" */
-#define KDEPIM_SVN_REVISION_STRING "@kdepim_svn_revision@"
+/* GIT revision number, of the form "git-xxxxxxxx" */
+#define KDEPIM_GIT_REVISION_STRING "@kdepim_git_revision@"
 
 /* Date of last commit, of the form "YYYY-MM-DD" */
-#define KDEPIM_SVN_LAST_CHANGE "@kdepim_svn_last_change@"
+#define KDEPIM_GIT_LAST_CHANGE "@kdepim_git_last_change@"
 
 #endif

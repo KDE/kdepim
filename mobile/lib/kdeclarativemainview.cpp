@@ -877,11 +877,11 @@ GuiStateManager* KDeclarativeMainView::createGuiStateManager() const
 
 QString KDeclarativeMainView::version() const
 {
-  const static QString svn_rev = QLatin1String( KDEPIM_SVN_REVISION_STRING );
+  const static QString svn_rev = QLatin1String( KDEPIM_GIT_REVISION_STRING );
   if ( svn_rev.isEmpty() ) {
     return i18n( "Version: %1", QLatin1String( KDEPIM_VERSION ) );
   } else {
-    return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_SVN_REVISION_STRING, KDEPIM_SVN_LAST_CHANGE );
+    return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_GIT_REVISION_STRING, KDEPIM_GIT_LAST_CHANGE );
   }
 }
 
