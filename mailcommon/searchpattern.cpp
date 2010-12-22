@@ -56,6 +56,7 @@ using MailCommon::FilterLog;
 #include <QRegExp>
 #include <QByteArray>
 #include <QDataStream>
+#include <QXmlStreamWriter>
 
 
 #include <assert.h>
@@ -286,7 +287,7 @@ Nepomuk::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
   return Nepomuk::Query::ComparisonTerm::Equal;
 }
 
-void SearchRule::addAndNegateTerm(const Nepomuk::Query::Term& term, Nepomuk::Query::GroupTerm& termGroup) const
+bool SearchRule::isNegated() const
 {
   bool negate = false;
   switch ( function() ) {
@@ -300,7 +301,12 @@ void SearchRule::addAndNegateTerm(const Nepomuk::Query::Term& term, Nepomuk::Que
     default:
       break;
   }
-  if ( negate ) {
+  return negate;
+}
+
+void SearchRule::addAndNegateTerm(const Nepomuk::Query::Term& term, Nepomuk::Query::GroupTerm& termGroup) const
+{
+  if ( isNegated() ) {
     Nepomuk::Query::NegationTerm neg;
     neg.setSubTerm( term );
     termGroup.addSubTerm( neg );
@@ -310,6 +316,32 @@ void SearchRule::addAndNegateTerm(const Nepomuk::Query::Term& term, Nepomuk::Que
 }
 
 #endif
+
+QString SearchRule::xesamComparator() const
+{
+  switch ( function() ) {
+    case SearchRule::FuncContains:
+    case SearchRule::FuncContainsNot:
+    return QLatin1String("contains");
+    case SearchRule::FuncEquals:
+    case SearchRule::FuncNotEqual:
+    return QLatin1String("equals");
+    case SearchRule::FuncIsGreater:
+    return QLatin1String("greaterThan");
+    case SearchRule::FuncIsGreaterOrEqual:
+      return QLatin1String("greaterThanEquals");
+    case SearchRule::FuncIsLess:
+      return QLatin1String("lessThan");
+    case SearchRule::FuncIsLessOrEqual:
+      return QLatin1String("lessThanEquals");
+      // FIXME how to handle the below? full text?
+    case SearchRule::FuncRegExp:
+    case SearchRule::FuncNotRegExp:
+    default:
+      kDebug() << "Unhandled function type: " << function();
+  }
+  return QLatin1String("equals");
+}
 
 QDataStream& SearchRule::operator >>( QDataStream& s ) const
 {
@@ -605,6 +637,29 @@ bool SearchRuleString::matchesInternal( const QString & msgContents ) const
   return false;
 }
 
+void SearchRuleString::addXesamClause( QXmlStreamWriter& stream ) const
+{
+  const QString func = xesamComparator();
+
+  stream.writeStartElement( func );
+
+  if ( field().toLower() == "subject" ||
+       field().toLower() == "to" ||
+       field().toLower() == "cc" ||
+       field().toLower() == "bcc" ||
+       field().toLower() == "from" ||
+       field().toLower() == "sender" ) {
+    stream.writeStartElement( QLatin1String("field") );
+    stream.writeAttribute( QLatin1String("name"), field().toLower() );
+  } else {
+    stream.writeStartElement( QLatin1String("fullTextFields") );
+  }
+  stream.writeEndElement();
+  stream.writeTextElement( QLatin1String("string"), contents() );
+
+  stream.writeEndElement();
+}
+
 
 //==================================================
 //
@@ -725,6 +780,12 @@ void SearchRuleNumerical::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) co
 }
 #endif
 
+void SearchRuleNumerical::addXesamClause( QXmlStreamWriter & stream ) const
+{
+
+}
+
+
 //==================================================
 //
 // class SearchRuleStatus
@@ -834,6 +895,12 @@ void SearchRuleStatus::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) const
   // TODO
 }
 #endif
+
+void SearchRuleStatus::addXesamClause( QXmlStreamWriter & stream ) const
+{
+
+}
+
 
 // ----------------------------------------------------------------------------
 
@@ -1039,6 +1106,41 @@ QString SearchPattern::asSparqlQuery() const
 #else
   return QString(); //TODO what to return in this case?
 #endif  
+}
+
+QString MailCommon::SearchPattern::asXesamQuery() const
+{
+  QString query;
+  QXmlStreamWriter stream( &query );
+  stream.setAutoFormatting(true);
+  stream.writeStartDocument();
+  stream.writeStartElement( QLatin1String("request" ) );
+  stream.writeAttribute( QLatin1String("xmlns"), QLatin1String("http://freedesktop.org/standards/xesam/1.0/query") );
+  stream.writeStartElement( QLatin1String("query") );
+
+  const bool needsOperator = count() > 1;
+  if ( needsOperator ) {
+    if ( mOperator == SearchPattern::OpOr ) {
+      stream.writeStartElement( QLatin1String("or") );
+    } else if ( mOperator == SearchPattern::OpAnd ) {
+      stream.writeStartElement( QLatin1String("and") );
+    } else {
+      Q_ASSERT(false); // can't happen (TM)
+    }
+  }
+
+  QListIterator<SearchRule::Ptr> it( *this );
+  while( it.hasNext() ) {
+    const SearchRule::Ptr rule = it.next();
+    rule->addXesamClause( stream );
+  }
+
+  if ( needsOperator )
+    stream.writeEndElement(); // operator
+  stream.writeEndElement(); // query
+  stream.writeEndElement(); // request
+  stream.writeEndDocument();
+  return query;
 }
 
 const SearchPattern & SearchPattern::operator=( const SearchPattern & other ) {

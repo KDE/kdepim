@@ -37,6 +37,8 @@
 
 using Akonadi::MessageStatus;
 
+class QXmlStreamWriter;
+
 namespace Akonadi {
 class Item;
 }
@@ -261,9 +263,20 @@ class MAILCOMMON_EXPORT SearchRule
     virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const = 0;
 #endif  
 
+    /**
+     * Adds a serialization of the rule in XESAM format into the stream.
+     */
+    virtual void addXesamClause( QXmlStreamWriter& stream ) const = 0;
+
     QDataStream& operator>>( QDataStream& ) const;
 
-  protected:
+
+protected:
+    /**
+     * Helper that returns whether the rule has a negated function.
+     */
+    bool isNegated() const;
+
 #ifndef KDEPIM_NO_NEPOMUK
     /**
      * Converts the rule function into the corresponding Nepomuk query operator.
@@ -275,7 +288,11 @@ class MAILCOMMON_EXPORT SearchRule
      */
     void addAndNegateTerm( const Nepomuk::Query::Term &term, Nepomuk::Query::GroupTerm &termGroup ) const;
 #endif
-    
+    /**
+     * Converts the rule function into the corresponding Xesam query operator.
+     */
+    QString xesamComparator() const;
+
   private:
     static Function configValueToFunc( const char* );
     static QString functionToString( Function );
@@ -350,7 +367,11 @@ class SearchRuleString : public SearchRule
     virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
 #endif
     
-  private:
+    /**
+     * @copydoc SearchRule::addXesamClause(QXmlStreamWriter& stream )
+     */
+    virtual void addXesamClause(QXmlStreamWriter &stream) const;
+private:
 #ifndef KDEPIM_NO_NEPOMUK
     /**
      * @copydoc SearchRule::addPersonTerms()
@@ -407,6 +428,11 @@ class SearchRuleNumerical : public SearchRule
      */
     virtual void addQueryTerms( Nepomuk::Query::GroupTerm &groupTerm ) const;
 #endif
+
+    /**
+     * @copydoc SearchRule::addXesamClause(QXmlStreamWriter& stream )
+     */
+    virtual void addXesamClause(QXmlStreamWriter &stream) const;
 };
 
 //TODO: Check if the below one is needed or not!
@@ -484,7 +510,12 @@ public:
    using SearchRule::matches;
 
 
-   static Akonadi::MessageStatus statusFromEnglishName(const QString&);
+  static Akonadi::MessageStatus statusFromEnglishName(const QString&);
+  /**
+   * @copydoc SearchRule::addXesamClause(QXmlStreamWriter& stream )
+   */
+  virtual void addXesamClause(QXmlStreamWriter &stream) const;
+
 private:
 #ifndef KDEPIM_NO_NEPOMUK
   void addTagTerm( Nepomuk::Query::GroupTerm &groupTerm, const QString &tagId ) const;
@@ -599,6 +630,9 @@ public:
 
   /** Returns the pattern as a SPARQL query. */
   QString asSparqlQuery() const;
+
+  /** Returns the pattern as a XESAM query. */
+  QString asXesamQuery() const;
 
   /** Overloaded assignment operator. Makes a deep copy. */
   const SearchPattern & operator=( const SearchPattern & aPattern );
