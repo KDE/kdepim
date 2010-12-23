@@ -309,10 +309,9 @@ void Message::ComposerViewBase::readyForSending()
 void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 {
   if ( job->error() ) {
-    //     setEnabled( true );
-    QString msg = i18n( "Expanding email addresses in message failed: %1", job->errorString() );
-    emit failed( msg );
-    return;
+    qWarning() << "An error occured while resolving the email addresses:" << job->errorString();
+    // This error could be caused by a broken search infrastructure, so we ignore it for now
+    // to not block sending emails completly.
   }
 
   const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
@@ -321,7 +320,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     mExpandedTo = resolveJob->expandedTo();
     mExpandedCc = resolveJob->expandedCc();
     mExpandedBcc = resolveJob->expandedBcc();
- } else { // saved to draft, so keep the old values, not very nice.
+  } else { // saved to draft, so keep the old values, not very nice.
     mExpandedFrom = from();
     foreach( const MessageComposer::Recipient::Ptr &r, m_recipientsEditor->recipients() ) {
       switch( r->type() ) {
