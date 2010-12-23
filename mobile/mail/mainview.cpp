@@ -159,6 +159,24 @@ MainView::MainView(QWidget* parent)
 MainView::~MainView()
 {
   delete m_grouperComparator;
+
+  const Akonadi::Collection trashCollection = CommonKernel->trashCollectionFolder();
+  if ( trashCollection.isValid() ) {
+    if ( Settings::self()->miscEmptyTrashAtExit() ) {
+      if ( trashCollection.statistics().count() > 0 ) {
+        qDebug( "Emptying trash..." );
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( trashCollection, this );
+        if ( job->exec() ) {
+          const Akonadi::Item::List items = job->items();
+          if ( !items.isEmpty() ) {
+            Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob( items, this );
+            deleteJob->exec();
+            qDebug( "done" );
+          }
+        }
+      }
+    }
+  }
 }
 
 void MainView::setConfigWidget( ConfigWidget *configWidget )
