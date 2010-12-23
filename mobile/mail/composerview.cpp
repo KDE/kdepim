@@ -61,6 +61,7 @@
 #include <KCMultiDialog>
 #include <KNotification>
 
+#include <QtCore/QTimer>
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
 
@@ -264,8 +265,16 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   Message::SignatureController *signatureController = new Message::SignatureController( this );
   signatureController->setEditor( m_composerBase->editor() );
   signatureController->setIdentityCombo( m_composerBase->identityCombo() );
-  signatureController->applyCurrentSignature();
+  signatureController->suspend(); // ComposerView::identityChanged will update the signature
   m_composerBase->setSignatureController( signatureController );
+
+  if ( MessageComposer::MessageComposerSettings::self()->autoTextSignature() == QLatin1String( "auto" ) ) {
+    if ( MessageComposer::MessageComposerSettings::self()->prependSignature() ) {
+      QTimer::singleShot( 0, m_composerBase->signatureController(), SLOT( prependSignature() ) );
+    } else {
+      QTimer::singleShot( 0, m_composerBase->signatureController(), SLOT( appendSignature() ) );
+    }
+  }
 
   connect( actionCollection()->action( "composer_clean_spaces" ), SIGNAL(triggered(bool)), signatureController, SLOT( cleanSpace() ) );
   connect( actionCollection()->action( "composer_append_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT( appendSignature() ) );
