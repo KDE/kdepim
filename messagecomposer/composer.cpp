@@ -195,6 +195,9 @@ void ComposerPrivate::composeStep2()
 
 void ComposerPrivate::contentJobPreInlineFinished( KJob *job )
 {
+  if ( job->error() ) // taken care of by KCompositeJob
+    return;
+
   Q_Q( Composer );
 
   Q_ASSERT( format & Kleo::InlineOpenPGPFormat );
@@ -231,13 +234,16 @@ void ComposerPrivate::contentJobPreInlineFinished( KJob *job )
 
 void ComposerPrivate::contentJobPreCryptFinished( KJob *job )
 {
+  if ( job->error() ) // taken care of by KCompositeJob
+    return;
+
   Q_Q( Composer );
 
   // we're signing or encrypting or both, so add an additional job to the process
   Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
   ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
 
-  
+
   if( sign ) {
     SignJob* sJob = new SignJob( q );
     sJob->setContent( cjob->content() );
