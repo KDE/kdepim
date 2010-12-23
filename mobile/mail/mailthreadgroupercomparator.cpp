@@ -66,7 +66,9 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
   Q_ASSERT( rightThreadRootItem.isValid() );
   Q_ASSERT( leftThreadRootItem.isValid() );
 
-  if ( leftThreadRootItem != rightThreadRootItem ) {
+  const bool leftItemIsThreadLeader = (leftThreadRootItem == leftItem);
+  const bool rightItemIsThreadLeader = (rightThreadRootItem == rightItem);
+  if ( leftItemIsThreadLeader && rightItemIsThreadLeader ) {
     Q_ASSERT( leftThreadRootItem.hasPayload<KMime::Message::Ptr>() );
     Q_ASSERT( rightThreadRootItem.hasPayload<KMime::Message::Ptr>() );
 
@@ -134,26 +136,36 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
     }
 
     return leftThreadRootItem.id() < rightThreadRootItem.id();
-  }
 
-  if ( leftThreadRootItem == leftItem )
-    return true;
+  } else if ( leftItemIsThreadLeader && !rightItemIsThreadLeader ) {
+    if ( leftThreadRootItem == rightThreadRootItem )
+      return true; // right item is in thread of left thread leader -> right item located below left item
+    else
+      return lessThan( leftThreadRootItem, rightThreadRootItem ); // based on thread leaders order
+  } else if ( !leftItemIsThreadLeader && rightItemIsThreadLeader ) {
+    if ( leftThreadRootItem == rightThreadRootItem )
+      return false; // left item is in thread of right thread leader -> left item must be located below right item
+    else
+      return lessThan( leftThreadRootItem, rightThreadRootItem ); // based on thread leaders order
+  } else if ( !leftItemIsThreadLeader && !rightItemIsThreadLeader ) {
+    if ( leftThreadRootItem == rightThreadRootItem ) { // both in the same thread
+      Q_ASSERT( leftItem.hasPayload<KMime::Message::Ptr>() );
+      Q_ASSERT( rightItem.hasPayload<KMime::Message::Ptr>() );
 
-  if ( rightThreadRootItem == rightItem )
-    return false;
+      const KMime::Message::Ptr leftMessage = leftItem.payload<KMime::Message::Ptr>();
+      const KMime::Message::Ptr rightMessage = rightItem.payload<KMime::Message::Ptr>();
 
-  Q_ASSERT( leftItem.hasPayload<KMime::Message::Ptr>() );
-  Q_ASSERT( rightItem.hasPayload<KMime::Message::Ptr>() );
+      const KDateTime leftDateTime = leftMessage->date()->dateTime();
+      const KDateTime rightDateTime = rightMessage->date()->dateTime();
 
-  const KMime::Message::Ptr leftMessage = leftItem.payload<KMime::Message::Ptr>();
-  const KMime::Message::Ptr rightMessage = rightItem.payload<KMime::Message::Ptr>();
+      // Messages in the same thread are ordered most recent last.
+      if ( leftDateTime != rightDateTime ) {
+        return leftDateTime < rightDateTime;
+      }
 
-  const KDateTime leftDateTime = leftMessage->date()->dateTime();
-  const KDateTime rightDateTime = rightMessage->date()->dateTime();
-
-  // Messages in the same thread are ordered most recent last.
-  if ( leftDateTime != rightDateTime ) {
-    return leftDateTime < rightDateTime;
+      return leftItem.id() < rightItem.id(); // default
+    } else
+      return lessThan( leftThreadRootItem, rightThreadRootItem ); // based on thread leaders order
   }
 
   return leftItem.id() < rightItem.id();
