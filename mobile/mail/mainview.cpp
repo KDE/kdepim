@@ -1708,6 +1708,9 @@ void MainView::messageListSettingsChanged( const MessageListSettings &settings )
     case MessageListSettings::SortBySize:
       m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortBySize );
       break;
+    case MessageListSettings::SortByActionItem:
+      m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortByActionItem );
+      break;
   }
 
   m_threadGrouperModel->setThreadingEnabled( settings.useThreading() );

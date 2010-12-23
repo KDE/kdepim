@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>412</width>
+    <width>413</width>
     <height>161</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
      </item>
      <item>
       <property name="text">
-          <string>By Most Recent in Discussion</string>
+       <string>By Most Recent in Discussion</string>
       </property>
      </item>
      <item>
@@ -43,6 +43,11 @@
      <item>
       <property name="text">
        <string>By Size</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>By Action Item Status</string>
       </property>
      </item>
     </widget>

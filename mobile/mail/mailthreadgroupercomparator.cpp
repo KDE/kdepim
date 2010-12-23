@@ -21,8 +21,8 @@
 
 #include "mailthreadgroupercomparator.h"
 
+#include <akonadi/kmime/messageflags.h>
 #include <messagecore/stringutil.h>
-
 
 MailThreadGrouperComparator::MailThreadGrouperComparator()
   : mSortingOption( SortByDateTimeMostRecent ),
@@ -120,6 +120,15 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
 
           if ( leftSize != rightSize )
             return leftSize < rightSize;
+        }
+        break;
+      case SortByActionItem:
+        {
+          const bool leftIsActionItem = leftThreadRootItem.flags().contains( Akonadi::MessageFlags::ToAct );
+          const bool rightIsActionItem = rightThreadRootItem.flags().contains( Akonadi::MessageFlags::ToAct );
+
+          if ( leftIsActionItem != rightIsActionItem )
+            return leftIsActionItem;
         }
         break;
     }
