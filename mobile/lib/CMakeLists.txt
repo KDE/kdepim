@@ -12,6 +12,7 @@ set(mobileui_SRCS
     akonadibreadcrumbnavigationfactory.cpp
     breadcrumbnavigation.cpp
     breadcrumbnavigationcontext.cpp
+    collectionfetchwatcher.cpp
     declarativewidgetbase.cpp
     declarativeakonadiitem.cpp
     exporthandlerbase.cpp

@@ -26,6 +26,7 @@
 #include "actionhelper.h"
 #include "breadcrumbnavigation.h"
 #include "charsetselectiondialog.h"
+#include "collectionfetchwatcher.h"
 #include "composerview.h"
 #include "configwidget.h"
 #include "declarativewidgetbase.h"
@@ -1634,7 +1635,9 @@ void MainView::selectNextUnreadMessage()
   QModelIndex next = MailCommon::Util::nextUnreadCollection( model, model->index( 0, 0 ), MailCommon::Util::ForwardSearch );
   if ( next.isValid() ) {
     regularSelectionModel()->setCurrentIndex( next, QItemSelectionModel::ClearAndSelect );
-    selectNextUnreadMessageInCurrentFolder();
+    AkonadiFuture::CollectionFetchWatcher *watcher = new AkonadiFuture::CollectionFetchWatcher( next, model, this );
+    connect( watcher, SIGNAL( collectionFetched( const QModelIndex& ) ), SLOT( selectNextUnreadMessageInCurrentFolder() ) );
+    watcher->start();
   }
 }
 

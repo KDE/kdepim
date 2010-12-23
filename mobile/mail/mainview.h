@@ -183,6 +183,7 @@ class MainView : public KDeclarativeMainView
     void selectOverrideEncoding();
     void toggleShowExtendedHeaders( bool );
     void messageListSettingsChanged( const MessageListSettings& );
+    bool selectNextUnreadMessageInCurrentFolder();
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
@@ -191,7 +192,6 @@ class MainView : public KDeclarativeMainView
     void recoverAutoSavedMessages();
     Akonadi::Item currentItem() const;
     MessageViewer::MessageViewItem *messageViewerItem();
-    bool selectNextUnreadMessageInCurrentFolder();
     uint currentFolderIdentity() const;
 
     bool mAskingToGoOnline;
