@@ -75,6 +75,7 @@ QML.Rectangle {
   QML.MouseArea {
     id : _mouseArea
     anchors.fill: parent
+    enabled: parent.enabled
     onClicked: parent.clicked()
   }
 }
