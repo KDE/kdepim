@@ -112,6 +112,10 @@ QVariant NotificationModel::data(const QModelIndex& index, int role) const
             case NotificationMessage::Modify: return QString( "Modify" );
             case NotificationMessage::Move: return QString( "Move" );
             case NotificationMessage::Remove: return QString( "Delete" );
+            case NotificationMessage::Link: return QString( "Link" );
+            case NotificationMessage::Unlink: return QString( "Unlink" );
+            case NotificationMessage::Subscribe: return QString( "Subscribe" );
+            case NotificationMessage::Unsubscribe: return QString( "Unsubscribe" );
             default: return QString( "Invalid" );
           }
         }
