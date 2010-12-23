@@ -569,7 +569,7 @@ void MainView::composeFetchResult( KJob *job )
 {
   const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetchJob->items().isEmpty() ) {
-    kDebug() << "error!!";
+    kDebug() << "error:" << job->errorText();
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Could not restore a draft." ),
