@@ -274,4 +274,5 @@ private:
 Q_DECLARE_OPERATORS_FOR_FLAGS( KRss::Item::Status )
 Q_DECLARE_METATYPE( KRss::Item::Status )
 
+
 #endif // KRSS_ITEM_H

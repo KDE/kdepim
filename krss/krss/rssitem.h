@@ -122,4 +122,6 @@ private:
 
 } // namespace KRss
 
+Q_DECLARE_METATYPE( KRss::RssItem )
+
 #endif // KRSS_RSSITEM_H

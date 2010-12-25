@@ -13,8 +13,8 @@ include_directories (
     ${CMAKE_BINARY_DIR}/akregator/interfaces
     # re-enable when moving libkrss into kdepimlibs
     #${LIBKRSS_INCLUDE_DIR}
-    ${CMAKE_SOURCE_DIR}/krss/
-)
+    ${krss_SOURCE_DIR}
+    )
 
 ########### next target ###############
 
