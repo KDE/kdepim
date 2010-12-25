@@ -4,7 +4,7 @@ set(feeditemmodel_example_SRCS
     main.cpp
 )
 
-include_directories( ${CMAKE_SOURCE_DIR}/krss )
+include_directories( ${krss_SOURCE_DIR} )
 
 kde4_add_executable(example_feeditemmodel ${feeditemmodel_example_SRCS} )
 
