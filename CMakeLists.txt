@@ -315,6 +315,12 @@ set(libknoteseditor_SRCS
   add_subdirectory(messagecore)
 if (NOT WINCE)
   add_subdirectory(messagelist)
+else (NOT WINCE)
+  # We need to compile runtime in kdepim because of the static
+  # linking of korgac and the applications need to link against
+  # plugins like the serializer plugins. If the korgac would
+  # move to runtime this can be avoided
+  add_subdirectory(runtime)
 endif (NOT WINCE)
   add_subdirectory(templateparser)
 

@@ -26,6 +26,7 @@
 #include "actionhelper.h"
 #include "breadcrumbnavigation.h"
 #include "charsetselectiondialog.h"
+#include "collectionfetchwatcher.h"
 #include "composerview.h"
 #include "configwidget.h"
 #include "declarativewidgetbase.h"
@@ -37,9 +38,11 @@
 #include "mailactionmanager.h"
 #include "mailcommon/collectiongeneralpage.h"
 #include "mailcommon/mailkernel.h"
+#include "mailcommon/redirectdialog.h"
 #include "mailcommon/sendmdnhandler.h"
 #include "mailthreadgroupercomparator.h"
 #include "messagecomposer/messagehelper.h"
+#include "messagecomposer/messagecomposersettings.h"
 #include "messagecore/messagehelpers.h"
 #include "messagelistproxy.h"
 #include "messagelistsettingscontroller.h"
@@ -90,6 +93,7 @@
 #include <kselectionproxymodel.h>
 #include <kstandarddirs.h>
 #include <mailcommon/expirypropertiesdialog.h>
+#include <mailcommon/filteraction.h>
 #include <mailcommon/filtermanager.h>
 #include <mailcommon/foldercollection.h>
 #include <mailcommon/mailutil.h>
@@ -155,6 +159,24 @@ MainView::MainView(QWidget* parent)
 MainView::~MainView()
 {
   delete m_grouperComparator;
+
+  const Akonadi::Collection trashCollection = CommonKernel->trashCollectionFolder();
+  if ( trashCollection.isValid() ) {
+    if ( Settings::self()->miscEmptyTrashAtExit() ) {
+      if ( trashCollection.statistics().count() > 0 ) {
+        qDebug( "Emptying trash..." );
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( trashCollection, this );
+        if ( job->exec() ) {
+          const Akonadi::Item::List items = job->items();
+          if ( !items.isEmpty() ) {
+            Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob( items, this );
+            deleteJob->exec();
+            qDebug( "done" );
+          }
+        }
+      }
+    }
+  }
 }
 
 void MainView::setConfigWidget( ConfigWidget *configWidget )
@@ -547,7 +569,7 @@ void MainView::composeFetchResult( KJob *job )
 {
   const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetchJob->items().isEmpty() ) {
-    kDebug() << "error!!";
+    kDebug() << "error:" << job->errorText();
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Could not restore a draft." ),
@@ -775,27 +797,55 @@ void MainView::forwardFetchResult( KJob* job )
   MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
   factory.setIdentityManager( MobileKernel::self()->identityManager() );
 
-  ComposerView *composer = new ComposerView;
   const ForwardMode mode = fetchJob->property( "forwardMode" ).value<ForwardMode>();
-  switch ( mode ) {
-    case InLine:
-      composer->setMessage( factory.createForward() );
-      break;
-    case AsAttachment: {
-      QPair< KMime::Message::Ptr, QList< KMime::Content* > > forwardMessage = factory.createAttachedForward( QList< KMime::Message::Ptr >() << item.payload<KMime::Message::Ptr>());
-      //the invokeMethods are there to be sure setMessage and addAttachment is called after composer->delayedInit
-      QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection, Q_ARG( KMime::Message::Ptr, forwardMessage.first ) );
-      foreach ( KMime::Content* attach, forwardMessage.second )
-        QMetaObject::invokeMethod( composer, "addAttachment", Qt::QueuedConnection, Q_ARG( KMime::Content*, attach ) );
-      break;
+  if ( mode == Redirect ) {
+    const MailCommon::RedirectDialog::SendMode sendMode = MessageComposer::MessageComposerSettings::self()->sendImmediate()
+                                                            ? MailCommon::RedirectDialog::SendNow
+                                                            : MailCommon::RedirectDialog::SendLater;
+
+    MailCommon::RedirectDialog dlg( sendMode, this );
+    if ( !dlg.exec() )
+      return;
+
+    if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( this, MailTransport::TransportManager::IfNoTransportExists ) )
+      return;
+
+    factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
+    const KMime::Message::Ptr redirectMessage = factory.createRedirect( dlg.to() );
+    if ( !redirectMessage )
+      return;
+
+    MessageStatus status;
+    status.setStatusFromFlags( item.flags() );
+    if ( !status.isRead() )
+      MailCommon::FilterAction::sendMDN( item, KMime::MDN::Dispatched );
+
+    const MessageSender::SendMethod method = (dlg.sendMode() == MailCommon::RedirectDialog::SendNow)
+                                               ? MessageSender::SendImmediate
+                                               : MessageSender::SendLater;
+
+    MobileKernel::self()->msgSender()->send( redirectMessage, method );
+
+  } else {
+    ComposerView *composer = new ComposerView;
+    switch ( mode ) {
+      case InLine:
+        composer->setMessage( factory.createForward() );
+        break;
+      case AsAttachment: {
+        QPair< KMime::Message::Ptr, QList< KMime::Content* > > forwardMessage = factory.createAttachedForward( QList< KMime::Message::Ptr >() << item.payload<KMime::Message::Ptr>());
+        //the invokeMethods are there to be sure setMessage and addAttachment is called after composer->delayedInit
+        QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection, Q_ARG( KMime::Message::Ptr, forwardMessage.first ) );
+        foreach ( KMime::Content* attach, forwardMessage.second )
+          QMetaObject::invokeMethod( composer, "addAttachment", Qt::QueuedConnection, Q_ARG( KMime::Content*, attach ) );
+        break;
+      }
     }
-    case Redirect:
-      composer->setMessage( factory.createRedirect( "" ) );
-      break;
+
+    composer->show();
+    composer->setIdentity( currentFolderIdentity() );
   }
 
-  composer->show();
-  composer->setIdentity( currentFolderIdentity() );
 }
 
 void MainView::markImportant( bool checked )
@@ -1603,7 +1653,9 @@ void MainView::selectNextUnreadMessage()
   QModelIndex next = MailCommon::Util::nextUnreadCollection( model, model->index( 0, 0 ), MailCommon::Util::ForwardSearch );
   if ( next.isValid() ) {
     regularSelectionModel()->setCurrentIndex( next, QItemSelectionModel::ClearAndSelect );
-    selectNextUnreadMessageInCurrentFolder();
+    AkonadiFuture::CollectionFetchWatcher *watcher = new AkonadiFuture::CollectionFetchWatcher( next, model, this );
+    connect( watcher, SIGNAL( collectionFetched( const QModelIndex& ) ), SLOT( selectNextUnreadMessageInCurrentFolder() ) );
+    watcher->start();
   }
 }
 
@@ -1655,6 +1707,9 @@ void MainView::messageListSettingsChanged( const MessageListSettings &settings )
       break;
     case MessageListSettings::SortBySize:
       m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortBySize );
+      break;
+    case MessageListSettings::SortByActionItem:
+      m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortByActionItem );
       break;
   }
 

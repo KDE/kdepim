@@ -36,7 +36,8 @@ class MessageListSettings
       SortByDateTimeMostRecent,
       SortBySenderReceiver,
       SortBySubject,
-      SortBySize
+      SortBySize,
+      SortByActionItem
     };
 
     enum GroupingOption

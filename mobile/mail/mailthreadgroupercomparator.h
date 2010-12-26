@@ -35,7 +35,8 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
       SortByDateTimeMostRecent,
       SortBySenderReceiver,
       SortBySubject,
-      SortBySize
+      SortBySize,
+      SortByActionItem
     };
 
     /**

@@ -41,6 +41,7 @@ set(libmailcommon_SRCS
   messageproperty.cpp
   minimumcombobox.cpp 
   readablecollectionproxymodel.cpp
+  redirectdialog.cpp
   regexplineedit.cpp
   rulewidgethandlermanager.cpp
   searchpattern.cpp
