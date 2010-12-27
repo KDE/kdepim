@@ -139,6 +139,7 @@ ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser *topLevelParser,
                                     bool includeSignatures,
                                     const AttachmentStrategy * strategy )
   : mSource( topLevelParser->mSource ),
+    mNodeHelper( topLevelParser->mNodeHelper ),
     mTopLevelContent( topLevelParser->mTopLevelContent ),
     mCryptoProtocol( topLevelParser->mCryptoProtocol ),
     mShowOnlyOneMimePart( showOnlyOneMimePart ),
@@ -147,8 +148,7 @@ ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser *topLevelParser,
     mHasPendingAsyncJobs( false ),
     mAllowAsync( topLevelParser->mAllowAsync ),
     mShowRawToltecMail( false ),
-    mAttachmentStrategy( strategy ),
-    mNodeHelper( topLevelParser->mNodeHelper )
+    mAttachmentStrategy( strategy )
 {
   init();
 }
@@ -160,6 +160,7 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
                                     bool includeSignatures,
                                     const AttachmentStrategy * strategy )
   : mSource( source ),
+    mNodeHelper( nodeHelper ),
     mTopLevelContent( 0 ),
     mCryptoProtocol( protocol ),
     mShowOnlyOneMimePart( showOnlyOneMimePart ),
@@ -168,8 +169,7 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
     mHasPendingAsyncJobs( false ),
     mAllowAsync( false ),
     mShowRawToltecMail( false ),
-    mAttachmentStrategy( strategy ),
-    mNodeHelper( nodeHelper )
+    mAttachmentStrategy( strategy )
 {
   init();
 }
