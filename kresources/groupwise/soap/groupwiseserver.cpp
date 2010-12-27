@@ -268,7 +268,8 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
                                   const QString &password, const KDateTime::Spec & spec, QObject *parent )
   : QObject( parent ),
     mUrl( url ), mUser( user ), mPassword( password ),
-    mSSL( url.left(6)=="https:" ), m_sock( 0 ), mTimeSpec( spec ), mError( 0 )
+    mSSL( url.left(6)=="https:" ), m_sock( 0 ), mError( 0 ), mTimeSpec( spec )
+
 {
   setObjectName( "groupwiseserver" );
   mBinding = new GroupWiseBinding;

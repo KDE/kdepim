@@ -39,7 +39,7 @@ class JobTrackerModel::Private
 {
 public:
   Private( const char *name, JobTrackerModel* _q )
-    :tracker( name), q(_q), currentColor( Qt::white )
+    : q( _q ), tracker( name ), currentColor( Qt::white )
   {
 
   }
@@ -60,10 +60,11 @@ public:
       return row;
   }
 
-  JobTracker tracker;
-  QColor currentColor;
 private:
   JobTrackerModel* const q;
+public:
+  JobTracker tracker;
+  QColor currentColor;
 };
 
 JobTrackerModel::JobTrackerModel( const char *name, QObject* parent )
