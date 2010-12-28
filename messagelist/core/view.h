@@ -349,6 +349,12 @@ public:
    */
   QString currentFilterSearchString() const;
 
+  /**
+   * Called to hide or show the specified row from the view.
+   * @reimp
+   */
+  virtual void setRowHidden( int row, const QModelIndex & parent, bool hide );
+
 protected:
   /**
    * Reimplemented in order to catch QHelpEvent

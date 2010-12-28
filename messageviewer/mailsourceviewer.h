@@ -35,6 +35,7 @@
 #include <QSyntaxHighlighter>
 #include <KTabWidget>
 #include <KTextBrowser>
+#include <KDialog>
 class QString;
 class QWidget;
 class QShowEvent;
@@ -95,7 +96,7 @@ namespace HTMLPrettyFormatter
   const QString reformat( const QString &src );
 };
 
-class MailSourceViewer : public QWidget
+class MailSourceViewer : public KDialog
 {
 Q_OBJECT
 public:

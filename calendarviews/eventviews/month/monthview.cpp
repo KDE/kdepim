@@ -106,7 +106,29 @@ void MonthViewPrivate::moveStartDate( int weeks, int months )
   end = end.addDays( weeks * 7 );
   start = start.addMonths( months );
   end = end.addMonths( months );
+
+#ifndef KDEPIM_MOBILE_UI
+  KCalCore::DateList dateList;
+  QDate d = start.date();
+  while ( d <= end.date() ) {
+    dateList.append( d );
+    d = d.addDays( 1 );
+  }
+
+  /**
+   * If we call q->setDateRange( start, end ); directly,
+   * it will change the selected dates in month view,
+   * but the application won't know about it.
+   * The correct way is to emit datesSelected()
+   * #250256
+   * */
+  emit q->datesSelected( dateList );
+#else
+  // korg-mobile doesn't use korg's date navigator.
+  // Before creating a solution with no #ifndef, we must first extract the remaining views from
+  // korg, and review the API.
   q->setDateRange( start, end );
+#endif
 }
 
 /*

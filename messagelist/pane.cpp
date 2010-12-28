@@ -218,7 +218,7 @@ bool Pane::focusPreviousMessageItem( MessageList::Core::MessageTypeFilter messag
     if ( w->view()->model()->isLoading() )
       return true;
 
-    return w->focusNextMessageItem( messageTypeFilter, centerItem, loop );
+    return w->focusPreviousMessageItem( messageTypeFilter, centerItem, loop );
   } else {
     return false;
   }

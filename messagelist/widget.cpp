@@ -156,7 +156,7 @@ bool Widget::focusNextMessageItem( MessageList::Core::MessageTypeFilter messageT
 
 bool Widget::focusPreviousMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop )
 {
-  return view()->focusNextMessageItem( messageTypeFilter, centerItem, loop );
+  return view()->focusPreviousMessageItem( messageTypeFilter, centerItem, loop );
 }
 
 void Widget::selectFocusedMessageItem( bool centerItem )

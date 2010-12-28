@@ -314,8 +314,8 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
     */
     QColor catColor() const;
 
-    Akonadi::Item::Id mAkonadiItemId;
     KCalCore::Incidence::Ptr mIncidence;
+    Akonadi::Item::Id mAkonadiItemId;
     int mRecurDayOffset;
     bool mIsEvent, mIsTodo, mIsJournal;
 };

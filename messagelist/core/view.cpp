@@ -2593,4 +2593,23 @@ QString View::currentFilterSearchString() const
   return d->mWidget->currentFilterSearchString();
 }
 
+void View::setRowHidden( int row, const QModelIndex & parent, bool hide )
+{
+  const QModelIndex rowModelIndex = model()->index( row, 0, parent );
+  const Item*  const rowItem = static_cast< Item * >( rowModelIndex.internalPointer() );
+
+  if ( rowItem ) {
+    const bool currentlyHidden = isRowHidden( row, parent );
+
+    if ( currentlyHidden != hide ) {
+      if ( currentMessageItem() == rowItem ) {
+        selectionModel()->clear();
+        selectionModel()->clearSelection();
+      }
+    }
+  }
+
+  QTreeView::setRowHidden( row, parent, hide );
+}
+
 #include "view.moc"
