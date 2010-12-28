@@ -1044,6 +1044,30 @@ bool MainView::isSingleMessage(int row)
   return threadSize == 1;
 }
 
+bool MainView::isTemplateThreadContent( int row )
+{
+  static const int column = 0;
+  const QModelIndex index = m_threadContentsModel->index( row, column );
+
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  return folderIsTemplates( item.parentCollection() );
+}
+
+bool MainView::isTemplateThreadRoot( int row )
+{
+  static const int column = 0;
+  const QModelIndex index = m_threadsModel->index( row, column );
+
+  const int threadSize = index.data( ThreadModel::ThreadSizeRole ).toInt();
+  if ( threadSize != 1 )
+    return false;
+
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  return folderIsTemplates( item.parentCollection() );
+}
+
 // #############################################################
 // ### Share the code between these marks with KMail Desktop?
 
@@ -1121,6 +1145,29 @@ bool MainView::folderIsDrafts( const Collection &collection )
   const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
   for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).drafts() == idString )
+      return true;
+  }
+
+  return false;
+}
+
+bool MainView::folderIsTemplates( const Collection &collection )
+{
+  const Collection defaultTemplatesCollection = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Templates );
+
+  // check if this is the default templates folder
+  if ( collection == defaultTemplatesCollection )
+    return true;
+
+  // check for invalid collection
+  const QString idString = QString::number( collection.id() );
+  if ( idString.isEmpty() )
+    return false;
+
+  // search the identities if the folder matches the drafts-folder
+  const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
+  for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
+    if ( (*it).templates() == idString )
       return true;
   }
 
@@ -1521,6 +1568,14 @@ void MainView::useFixedFont()
 int MainView::emailTemplateCount()
 {
   return mEmailTemplateModel ? mEmailTemplateModel->rowCount() : 0;
+}
+
+void MainView::restoreTemplate( quint64 id )
+{
+  ItemFetchJob *job = new ItemFetchJob( Item( id ), this );
+  job->fetchScope().fetchFullPayload();
+  job->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( templateFetchResult( KJob* ) ) );
 }
 
 void MainView::newMessageFromTemplate( int index )

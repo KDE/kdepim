@@ -93,6 +93,7 @@ class MainView : public KDeclarativeMainView
   public Q_SLOTS:
     void startComposer();
     void restoreDraft( quint64 id );
+    void restoreTemplate( quint64 id );
 
     void markImportant( bool checked );
     void markMailTask( bool checked );
@@ -103,6 +104,9 @@ class MainView : public KDeclarativeMainView
     bool isDraftThreadRoot( int row );
     bool isSingleMessage( int row );
     bool folderIsDrafts( const Akonadi::Collection &collection );
+    bool isTemplateThreadContent( int row );
+    bool isTemplateThreadRoot( int row );
+    bool folderIsTemplates( const Akonadi::Collection &collection );
 
     void configureIdentity();
 

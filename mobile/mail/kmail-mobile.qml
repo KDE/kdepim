@@ -308,6 +308,9 @@ KPIM.MainView {
           {
             application.restoreDraft(_itemNavigationModel.currentItemIdHack);
             updateContextActionStates()
+          } else if ( application.isTemplateThreadRoot(_threadSelector.currentRow ) ) {
+            application.restoreTemplate(_itemNavigationModel.currentItemIdHack);
+            updateContextActionStates()
           } else {
             guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
           }
@@ -348,6 +351,9 @@ KPIM.MainView {
             if (application.isDraftThreadContent(_threadMailSelector.currentRow))
             {
               application.restoreDraft(threadContentsView.currentItemId);
+              updateContextActionStates()
+            } else if ( application.isTemplateThreadContent( _threadMailSelector.currentRow ) ) {
+              application.restoreTemplate(threadContentsView.currentItemId);
               updateContextActionStates()
             } else {
               guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
