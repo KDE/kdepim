@@ -89,7 +89,8 @@ ComposerView::ComposerView(QWidget* parent) :
   m_urgent( false ),
   m_mdnRequested( Settings::self()->composerRequestMDN() ),
   m_cryptoFormat( Kleo::AutoFormat ),
-  m_presetIdentity( 0 )
+  m_presetIdentity( 0 ),
+  m_mayAutoSign( true )
 {
   setSubject( QString() );
   setAttribute(Qt::WA_DeleteOnClose);
@@ -268,7 +269,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   signatureController->suspend(); // ComposerView::identityChanged will update the signature
   m_composerBase->setSignatureController( signatureController );
 
-  if ( MessageComposer::MessageComposerSettings::self()->autoTextSignature() == QLatin1String( "auto" ) ) {
+  if ( MessageComposer::MessageComposerSettings::self()->autoTextSignature() == QLatin1String( "auto" ) && m_mayAutoSign ) {
     if ( MessageComposer::MessageComposerSettings::self()->prependSignature() ) {
       QTimer::singleShot( 0, m_composerBase->signatureController(), SLOT( prependSignature() ) );
     } else {
@@ -297,14 +298,15 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   m_snippetsEditor->setEditor( m_composerBase->editor(), "insertPlainText", SIGNAL( insertSnippet() ) );
 
   if ( m_message )
-    setMessage( m_message );
+    setMessage( m_message, m_mayAutoSign );
 
   connect( MailTransport::TransportManager::self(), SIGNAL( transportsChanged() ), SLOT( transportsChanged() ) );
 }
 
-void ComposerView::setMessage(const KMime::Message::Ptr& msg)
+void ComposerView::setMessage(const KMime::Message::Ptr& msg, bool mayAutoSign)
 {
   m_message = msg;
+  m_mayAutoSign = mayAutoSign;
   if ( status() != QDeclarativeView::Ready )
     return;
 

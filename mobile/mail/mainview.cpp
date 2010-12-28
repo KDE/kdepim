@@ -509,7 +509,7 @@ void MainView::recoverAutoSavedMessages()
 
       // load the autosaved message in a new composer
       ComposerView *composer = new ComposerView;
-      composer->setMessage( messagePtr );
+      composer->setMessage( messagePtr, false );
       composer->setAutoSaveFileName( savedMessage.fileName() );
       composer->show();
 
@@ -602,7 +602,7 @@ void MainView::composeFetchResult( KJob *job )
 
   // create the composer and fill it with the retrieved message
   ComposerView *composer = new ComposerView;
-  composer->setMessage( msg );
+  composer->setMessage( msg, false );
   composer->show();
 }
 
@@ -635,7 +635,7 @@ void MainView::sendAgainFetchResult( KJob *job )
   newMsg->contentType()->setCharset( MessageViewer::NodeHelper::charset( msg.get() ) );
 
   ComposerView *composer = new ComposerView;
-  composer->setMessage( newMsg );
+  composer->setMessage( newMsg, false );
   composer->show();
 }
 
@@ -1542,7 +1542,6 @@ void MainView::newMessageFromTemplate( int index )
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
   job->fetchScope().fetchFullPayload( true );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( templateFetchResult( KJob* ) ) );
-
 }
 
 void MainView::templateFetchResult( KJob* job)
@@ -1567,7 +1566,7 @@ void MainView::templateFetchResult( KJob* job)
   newMsg->removeHeader("Date");
   newMsg->removeHeader("Message-ID");
   ComposerView *composer = new ComposerView;
-  composer->setMessage( newMsg );
+  composer->setMessage( newMsg, false );
   composer->show();
 }
 

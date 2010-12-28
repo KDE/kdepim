@@ -79,7 +79,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void setIdentity( uint );
 
   public slots:
-    void setMessage( const KMime::Message::Ptr &msg );
+    void setMessage( const KMime::Message::Ptr &msg, bool mayAutoSign = true );
     QObject* getAction( const QString &name ) const;
 
     /// Send clicked in the user interface
@@ -140,6 +140,7 @@ class ComposerView : public KDeclarativeFullScreenView
     Kleo::CryptoMessageFormat m_cryptoFormat;
     uint m_presetIdentity;
     uint m_currentIdentity;
+    bool m_mayAutoSign;
 };
 
 #endif
