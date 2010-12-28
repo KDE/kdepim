@@ -244,10 +244,9 @@ void IncidenceAttendee::changeStatusForMe( KCalCore::Attendee::PartStat stat )
   mAttendeeEditor->clear();
 
   foreach ( const AttendeeData::Ptr &attendee, attendees ) {
-    if ( config->thatIsMe( attendee->email() ) &&
-         mLoadedIncidence->organizer()->email() == attendee->email() ) {
+    if ( config->thatIsMe( attendee->email() ) )
       attendee->setStatus( stat );
-    }
+
     mAttendeeEditor->addAttendee( attendee );
   }
 
