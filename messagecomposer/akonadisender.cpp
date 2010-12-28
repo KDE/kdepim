@@ -154,6 +154,7 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   qjob->addressAttribute().setBcc( bcc );
 
   MessageCore::StringUtil::removePrivateHeaderFields( message );
+  message->assemble();
 
   // Queue the message.
   connect( qjob, SIGNAL(result(KJob*)), this, SLOT(queueJobResult(KJob*)) );

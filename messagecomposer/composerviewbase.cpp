@@ -677,6 +677,10 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
   }
 
   fillQueueJobHeaders( qjob, message, infoPart );
+
+  MessageCore::StringUtil::removePrivateHeaderFields( message );
+  message->assemble();
+
   connect( qjob, SIGNAL( result(KJob*) ), this, SLOT( slotQueueResult( KJob* ) ) );
   m_pendingQueueJobs++;
   qjob->start();
