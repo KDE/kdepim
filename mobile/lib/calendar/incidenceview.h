@@ -38,6 +38,7 @@ class CollectionComboBox;
 }
 
 namespace IncidenceEditorNG {
+class IncidenceAttendee;
 class IncidenceDateTime;
 class InvitationDispatcher;
 }
@@ -107,11 +108,13 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
 
     /// We need this because we can't rely on the order in which those two are added.
     MobileIncidenceMore *mIncidenceMore;
+    MobileIncidenceGeneral *mIncidenceGeneral;
 
     KPIM::KDateEdit *mDateWidget;
     KPIM::KTimeEdit *mTimeWidget;
 
     IncidenceEditorNG::InvitationDispatcher *mInvitationDispatcher;
+    IncidenceEditorNG::IncidenceAttendee *mIncidenceAttendee;
 };
 
 #endif // INCIDENCEVIEW_H
