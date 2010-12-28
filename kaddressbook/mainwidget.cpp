@@ -319,6 +319,7 @@ void MainWidget::setupGui()
 {
   // the horizontal main layout
   QHBoxLayout *layout = new QHBoxLayout( this );
+  layout->setMargin( 0 );
 
   // The splitter that contains the three main parts of the gui
   //   - collection view on the left
