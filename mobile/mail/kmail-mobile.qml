@@ -304,12 +304,12 @@ KPIM.MainView {
         onCurrentRowChanged : {
           if (!application.isSingleMessage(_threadSelector.currentRow))
             return;
-          if (!application.isDraftThreadRoot(_threadSelector.currentRow))
+          if (application.isDraftThreadRoot(_threadSelector.currentRow))
           {
-            guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
-          } else {
             application.restoreDraft(_itemNavigationModel.currentItemIdHack);
             updateContextActionStates()
+          } else {
+            guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
           }
           _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
         }
@@ -345,12 +345,12 @@ KPIM.MainView {
           onCurrentRowChanged : {
             if (threadContentsView.count <= 1) // not in thread view mode
               return
-            if (!application.isDraftThreadContent(_threadMailSelector.currentRow))
+            if (application.isDraftThreadContent(_threadMailSelector.currentRow))
             {
-              guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
-            } else {
               application.restoreDraft(threadContentsView.currentItemId);
               updateContextActionStates()
+            } else {
+              guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
             }
             _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
           }

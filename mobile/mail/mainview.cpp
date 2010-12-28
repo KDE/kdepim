@@ -1021,14 +1021,13 @@ bool MainView::isDraftThreadContent( int row )
   return folderIsDrafts( item.parentCollection() );
 }
 
-
 bool MainView::isDraftThreadRoot( int row )
 {
   static const int column = 0;
   const QModelIndex index = m_threadsModel->index( row, column );
 
-  const int threadSize = index.data(ThreadModel::ThreadSizeRole).toInt();
-  if (threadSize != 1)
+  const int threadSize = index.data( ThreadModel::ThreadSizeRole ).toInt();
+  if ( threadSize != 1 )
     return false;
 
   const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
