@@ -99,7 +99,6 @@ class MainView : public KDeclarativeMainView
     void modifyDone( KJob *job );
     void dataChanged();
 
-    bool isDraft( int row );
     bool isDraftThreadContent( int row );
     bool isDraftThreadRoot( int row );
     bool isSingleMessage( int row );

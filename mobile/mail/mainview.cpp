@@ -1011,18 +1011,6 @@ void MainView::configureIdentity()
 #endif
 }
 
-bool MainView::isDraft( int row )
-{
-  static const int column = 0;
-  const QModelIndex index = itemSelectionModel()->model()->index( row, column );
-  kDebug() << "itemSelectionModel " << itemSelectionModel() << " model" << itemSelectionModel()->model() << " idx->model()" << index.model();
-  itemSelectionModel()->select( QItemSelection( index, index ), QItemSelectionModel::ClearAndSelect );
-
-  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
-
-  return folderIsDrafts( item.parentCollection() );
-}
-
 bool MainView::isDraftThreadContent( int row )
 {
   static const int column = 0;
