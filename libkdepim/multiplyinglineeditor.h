@@ -73,6 +73,7 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
 {
   Q_OBJECT
   Q_PROPERTY( bool autoResizeView READ autoResizeView WRITE setAutoResizeView )
+  Q_PROPERTY( bool dynamicSizeHint READ dynamicSizeHint WRITE setDynamicSizeHint )
 
   public:
 
@@ -142,6 +143,13 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
      */
     void setAutoResizeView( bool resize );
     bool autoResizeView();
+
+    /**
+     * Sets whether the size hint of the editor shall be calculated
+     * dynamically by the number of lines. Default is @c true.
+     */
+    void setDynamicSizeHint( bool dynamic );
+    bool dynamicSizeHint() const;
 
   signals:
     void focusUp();

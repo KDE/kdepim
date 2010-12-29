@@ -84,6 +84,13 @@ class MultiplyingLineView : public QScrollArea
     void setAutoResize( bool resize );
     bool autoResize();
 
+    /**
+     * Sets whether the size hint of the editor shall be calculated
+     * dynamically by the number of lines. Default is @c true.
+     */
+    void setDynamicSizeHint( bool dynamic );
+    bool dynamicSizeHint() const;
+
     QList<MultiplyingLine*> lines() const;
 
   public slots:
@@ -127,6 +134,7 @@ class MultiplyingLineView : public QScrollArea
     QLayout *mTopLayout;
     MultiplyingLineFactory *mMultiplyingLineFactory;
     bool mAutoResize;
+    bool mDynamicSizeHint;
 };
 }
 

@@ -152,4 +152,14 @@ bool MultiplyingLineEditor::autoResizeView()
   return mView->autoResize();
 }
 
+void MultiplyingLineEditor::setDynamicSizeHint( bool dynamic )
+{
+  mView->setDynamicSizeHint( dynamic );
+}
+
+bool MultiplyingLineEditor::dynamicSizeHint() const
+{
+  return mView->dynamicSizeHint();
+}
+
 #include "multiplyinglineeditor.moc"
