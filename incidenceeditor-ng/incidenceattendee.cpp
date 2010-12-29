@@ -69,6 +69,10 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
+#ifdef KDEPIM_MOBILE_UI
+  mAttendeeEditor->setDynamicSizeHint( false );
+#endif
+
   connect( mAttendeeEditor, SIGNAL(countChanged(int)),
            SIGNAL(attendeeCountChanged(int)) );
   connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine *)),
