@@ -325,6 +325,8 @@ bool IncidenceChanger::deleteIncidence( const Akonadi::Item &aitem,
     return false;
   }
 
+  kDebug() << "Deleting incidence " << incidence->summary() << "; id = " << aitem.id();
+
   if ( !isNotDeleted( aitem.id() ) ) {
     kDebug() << "Item already deleted, skipping and returning true";
     return true;
