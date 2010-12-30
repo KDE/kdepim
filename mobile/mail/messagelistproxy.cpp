@@ -28,6 +28,11 @@
 #include <KLocale>
 #include <KGlobal>
 
+inline uint qHash( const QDate &date )
+{
+  return date.toJulianDay();
+}
+
 MessageListProxy::MessageListProxy(QObject* parent) : ListProxy(parent)
 {
   // Sorting is done higher up now in the thread grouping proxy.
@@ -59,10 +64,22 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
       }
       case DateRole:
       {
-        const KDateTime& dt = msg->date()->dateTime();
-        if ( dt.date() == QDate::currentDate() )
-          return KGlobal::locale()->formatTime( dt.time() );
-        return KGlobal::locale()->formatDate( dt.date(), KLocale::FancyShortDate );
+        static QHash<QDate, QString> dateNameHash;
+
+        const KDateTime &dateTime = msg->date()->dateTime();
+        const QDate date = dateTime.date();
+        if ( date == QDate::currentDate() ) {
+          return KGlobal::locale()->formatTime( dateTime.time() );
+        }
+
+        const QHash<QDate, QString>::const_iterator key = dateNameHash.find( date );
+        if ( key != dateNameHash.end() )
+          return *key;
+
+        const QString dateName = KGlobal::locale()->formatDate( date, KLocale::FancyShortDate );
+        dateNameHash.insert( date, dateName );
+
+        return dateName;
       }
       case SizeRole:
       {
@@ -114,7 +131,16 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
         } else if ( calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this year
           return calendar->monthName( dDate );
         } else { // in previous years
-          return i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ), calendar->yearString( dDate ) );
+          static QHash<int, QString> yearNameHash;
+
+          QString yearName;
+          if ( yearNameHash.contains( dDate.year() ) ) {
+            yearName = yearNameHash.value( dDate.year() );
+          } else {
+            yearName = calendar->yearString( dDate );
+            yearNameHash.insert( dDate.year(), yearName );
+          }
+          return i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ), yearName );
         }
       }
       case SenderGroupRole:
