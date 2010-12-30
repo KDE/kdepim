@@ -82,6 +82,8 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
     m_glWidget->setAutoFillBackground(false);
     setViewport(m_glWidget);
     Akonadi::Control::widgetNeedsAkonadi( m_glWidget );
+  } else {
+    Akonadi::Control::widgetNeedsAkonadi( this );
   }
 #else
   Akonadi::Control::widgetNeedsAkonadi( this );
