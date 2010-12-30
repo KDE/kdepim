@@ -491,6 +491,12 @@ Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
 
   result.setMimeType( newIncidence->mimeType() );
 
+  // There's no editor that has the relatedTo property. We must set it here, by hand.
+  // Otherwise it gets lost.
+  // FIXME: Why don't we clone() incidenceInEditor then pass the clone to save(),
+  // I wonder if we're not leaking other properties.
+  newIncidence->setRelatedTo( incidenceInEditor->relatedTo() );
+
   mEditor->save( newIncidence );
 
   // TODO: Remove this once we support moving of events/todo's
