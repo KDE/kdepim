@@ -338,6 +338,10 @@ void IncidenceDefaults::setDefaults( const KCalCore::Incidence::Ptr &incidence )
   incidence->setResources( QStringList() );
   incidence->setPriority( 0 );
 
+  if ( d->mRelatedIncidence ) {
+    incidence->setRelatedTo( d->mRelatedIncidence->uid() );
+  }
+
   incidence->clearAlarms();
   incidence->clearAttachments();
   incidence->clearAttendees();
@@ -371,7 +375,7 @@ void IncidenceDefaults::setDefaults( const KCalCore::Incidence::Ptr &incidence )
     break;
   default:
     kDebug() << "Unsupported incidence type, keeping current values. Type: "
-             << int( incidence->type() );
+             << static_cast<int>( incidence->type() );
   }
 }
 
