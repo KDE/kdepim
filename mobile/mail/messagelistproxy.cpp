@@ -72,8 +72,8 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
           return KGlobal::locale()->formatTime( dateTime.time() );
         }
 
-        const QHash<QDate, QString>::const_iterator key = dateNameHash.find( date );
-        if ( key != dateNameHash.end() )
+        const QHash<QDate, QString>::const_iterator key = dateNameHash.constFind( date );
+        if ( key != dateNameHash.constEnd() )
           return *key;
 
         const QString dateName = KGlobal::locale()->formatDate( date, KLocale::FancyShortDate );
