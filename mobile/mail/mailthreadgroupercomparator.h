@@ -73,11 +73,18 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
      */
     void setIsOutboundCollection( bool outbound );
 
+  protected:
+    virtual void resetCaches();
+
   private:
     QByteArray identifierForMessage( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
     KDateTime mostRecentUpdate( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
+    KMime::Message::Ptr messageForItem( const Akonadi::Item &item ) const;
+
     SortingOption mSortingOption;
     bool mIsOutboundCollection;
+    mutable QHash<Akonadi::Item::Id, KMime::Message::Ptr> mMessageCache;
+    mutable QHash<Akonadi::Item::Id, KDateTime> mMostRecentCache;
 };
 
 #endif

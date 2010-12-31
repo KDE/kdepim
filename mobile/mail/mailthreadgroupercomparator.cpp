@@ -72,8 +72,8 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
     Q_ASSERT( leftThreadRootItem.hasPayload<KMime::Message::Ptr>() );
     Q_ASSERT( rightThreadRootItem.hasPayload<KMime::Message::Ptr>() );
 
-    const KMime::Message::Ptr leftThreadRootMessage = leftThreadRootItem.payload<KMime::Message::Ptr>();
-    const KMime::Message::Ptr rightThreadRootMessage = rightThreadRootItem.payload<KMime::Message::Ptr>();
+    const KMime::Message::Ptr leftThreadRootMessage = messageForItem( leftThreadRootItem );
+    const KMime::Message::Ptr rightThreadRootMessage = messageForItem( rightThreadRootItem );
 
     switch ( mSortingOption ) {
       case SortByDateTime:
@@ -152,8 +152,8 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
       Q_ASSERT( leftItem.hasPayload<KMime::Message::Ptr>() );
       Q_ASSERT( rightItem.hasPayload<KMime::Message::Ptr>() );
 
-      const KMime::Message::Ptr leftMessage = leftItem.payload<KMime::Message::Ptr>();
-      const KMime::Message::Ptr rightMessage = rightItem.payload<KMime::Message::Ptr>();
+      const KMime::Message::Ptr leftMessage = messageForItem( leftItem );
+      const KMime::Message::Ptr rightMessage = messageForItem( rightItem );
 
       const KDateTime leftDateTime = leftMessage->date()->dateTime();
       const KDateTime rightDateTime = rightMessage->date()->dateTime();
@@ -190,6 +190,12 @@ void MailThreadGrouperComparator::setIsOutboundCollection( bool outbound )
   invalidate();
 }
 
+void MailThreadGrouperComparator::resetCaches()
+{
+  mMessageCache.clear();
+  mMostRecentCache.clear();
+}
+
 QByteArray MailThreadGrouperComparator::identifierForMessage( const KMime::Message::Ptr &message, Akonadi::Item::Id id ) const
 {
   QByteArray identifier = message->messageID()->identifier();
@@ -201,25 +207,44 @@ QByteArray MailThreadGrouperComparator::identifierForMessage( const KMime::Messa
 
 KDateTime MailThreadGrouperComparator::mostRecentUpdate( const KMime::Message::Ptr &threadRoot, Akonadi::Item::Id itemId ) const
 {
+  const QHash<Akonadi::Item::Id, KDateTime>::const_iterator it = mMostRecentCache.find( itemId );
+  if ( it != mMostRecentCache.end() )
+    return *it;
+
   const QSet<QByteArray> messageIds = threadDescendants( identifierForMessage( threadRoot, itemId ) );
 
   KDateTime newest = threadRoot->date()->dateTime();
 
-  if ( messageIds.isEmpty() )
+  if ( messageIds.isEmpty() ) {
+    mMostRecentCache.insert( itemId, newest );
     return newest;
+  }
 
   foreach ( const QByteArray &messageId, messageIds ) {
     const Akonadi::Item item = itemForIdentifier( messageId );
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
 
-    const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+    const KMime::Message::Ptr message = messageForItem( item );
     const KDateTime messageDateTime = message->date()->dateTime();
     if ( messageDateTime > newest )
       newest = messageDateTime;
   }
 
+  mMostRecentCache.insert( itemId, newest );
   return newest;
+}
+
+KMime::Message::Ptr MailThreadGrouperComparator::messageForItem( const Akonadi::Item &item ) const
+{
+  const QHash<Akonadi::Item::Id, KMime::Message::Ptr>::const_iterator it = mMessageCache.find( item.id() );
+  if ( it != mMessageCache.end() )
+    return *it;
+
+  KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+  mMessageCache.insert( item.id(), message );
+
+  return message;
 }
 
 #include "mailthreadgroupercomparator.moc"
