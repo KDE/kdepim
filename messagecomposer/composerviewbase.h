@@ -25,6 +25,7 @@
 #include "messagesender.h"
 #include "recipient.h"
 
+#include <akonadi/collection.h>
 #include <KDE/KMime/Message>
 
 #include <QObject>
@@ -39,7 +40,6 @@ class QWidget;
 namespace Akonadi
 {
   class CollectionComboBox;
-  class Collection;
 }
 
 namespace MailTransport
@@ -286,7 +286,8 @@ private:
   KPIMIdentities::IdentityManager* m_identMan;
   Message::KMeditor* m_editor;
   MailTransport::TransportComboBox* m_transport;
-  Akonadi::CollectionComboBox* m_fcc;
+  Akonadi::CollectionComboBox* m_fccCombo;
+  Akonadi::Collection m_fccCollection;
   QWidget* m_parentWidget;
   
   // List of active composer jobs. For example, saving as draft, autosaving and printing

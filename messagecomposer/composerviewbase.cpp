@@ -77,7 +77,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  , m_identMan( 0 )
  , m_editor( 0 )
  , m_transport( 0 )
- , m_fcc( 0 )
+ , m_fccCombo( 0 )
  , m_sign( false )
  , m_encrypt( false )
  , m_neverEncrypt( false )
@@ -537,8 +537,12 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
    // TODO splitAddressList and expandAliases ugliness should be handled by a
   // special AddressListEdit widget... (later: see RecipientsEditor)
 
-  if ( m_fcc ) {
-    infoPart->setFcc( QString::number( m_fcc->currentCollection().id() ) );
+  if ( m_fccCombo ) {
+    infoPart->setFcc( QString::number( m_fccCombo->currentCollection().id() ) );
+  } else {
+    if ( m_fccCollection.isValid() ) {
+      infoPart->setFcc( QString::number( m_fccCollection.id() ) );
+    }
   }
 
   infoPart->setTransportId( m_transport->currentTransportId() );
@@ -655,9 +659,9 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
     qjob->dispatchModeAttribute().setDispatchMode( MailTransport::DispatchModeAttribute::Manual );
 
   if ( !infoPart->fcc().isEmpty() ) {
-    qjob->sentBehaviourAttribute().setSentBehaviour(
-                      MailTransport::SentBehaviourAttribute::MoveToCollection );
-    const Akonadi::Collection sentCollection( infoPart->fcc().toInt() );
+    qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::MoveToCollection );
+
+    const Akonadi::Collection sentCollection( infoPart->fcc().toLongLong() );
     qjob->sentBehaviourAttribute().setMoveToCollection( sentCollection );
   } else {
     qjob->sentBehaviourAttribute().setSentBehaviour(
@@ -1199,21 +1203,23 @@ KPIMIdentities::IdentityManager* Message::ComposerViewBase::identityManager()
 
 void Message::ComposerViewBase::setFcc ( const Akonadi::Collection& fccCollection )
 {
-  if ( m_fcc ) {
-    m_fcc->setDefaultCollection( fccCollection );
+  if ( m_fccCombo ) {
+    m_fccCombo->setDefaultCollection( fccCollection );
+  } else {
+    m_fccCollection = fccCollection;
   }
 }
 
 
 void Message::ComposerViewBase::setFccCombo ( Akonadi::CollectionComboBox* fcc )
 {
-  m_fcc = fcc;
+  m_fccCombo = fcc;
 }
 
 Akonadi::CollectionComboBox* Message::ComposerViewBase::fccCombo()
 {
 
-  return m_fcc;
+  return m_fccCombo;
 }
 
 void Message::ComposerViewBase::setFrom(const QString& from)
