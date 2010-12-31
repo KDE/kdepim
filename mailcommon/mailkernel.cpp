@@ -48,12 +48,6 @@ K_GLOBAL_STATIC( KernelPrivate, sInstance )
 
 Kernel::Kernel( QObject* parent ) : QObject( parent )
 {
-  the_draftsCollectionFolder = -1;
-  the_inboxCollectionFolder = -1;
-  the_outboxCollectionFolder = -1;
-  the_sentCollectionFolder = -1;
-  the_templatesCollectionFolder = -1;
-  the_trashCollectionFolder = -1;
   mKernelIf = 0;
   mSettingsIf = 0;
   mFilterIf = 0;
@@ -88,44 +82,32 @@ Akonadi::Collection Kernel::collectionFromId( const QString &idString ) const
 
 Akonadi::Collection Kernel::trashCollectionFolder()
 {
-  if ( the_trashCollectionFolder < 0 )
-    the_trashCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash ).id();
-  return collectionFromId( the_trashCollectionFolder );
+  return Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash );
 }
 
 Akonadi::Collection Kernel::inboxCollectionFolder()
 {
-  if ( the_inboxCollectionFolder < 0 )
-    the_inboxCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).id();
-  return collectionFromId( the_inboxCollectionFolder );
+  return Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox );
 }
 
 Akonadi::Collection Kernel::outboxCollectionFolder()
 {
-  if ( the_outboxCollectionFolder < 0 )
-    the_outboxCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Outbox ).id();
-  return collectionFromId( the_outboxCollectionFolder );
+  return Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Outbox );
 }
 
 Akonadi::Collection Kernel::sentCollectionFolder()
 {
-  if ( the_sentCollectionFolder < 0 )
-    the_sentCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail ).id();
-  return collectionFromId( the_sentCollectionFolder );
+  return Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail );
 }
 
 Akonadi::Collection Kernel::draftsCollectionFolder()
 {
-  if ( the_draftsCollectionFolder < 0 )
-    the_draftsCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts ).id();
-  return collectionFromId( the_draftsCollectionFolder );
+  return Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
 }
 
 Akonadi::Collection Kernel::templatesCollectionFolder()
 {
-  if ( the_templatesCollectionFolder < 0 )
-    the_templatesCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates ).id();
-  return collectionFromId( the_templatesCollectionFolder );
+  return Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
 }
 
 bool Kernel::isSystemFolderCollection( const Akonadi::Collection &col)
@@ -147,8 +129,6 @@ bool Kernel::isMainFolderCollection( const Akonadi::Collection &col )
 void Kernel::initFolders()
 {
   kDebug() << "KMail is initialize and looking for default specialcollection folders.";
-  the_draftsCollectionFolder = the_inboxCollectionFolder = the_outboxCollectionFolder = the_sentCollectionFolder
-    = the_templatesCollectionFolder = the_trashCollectionFolder = -1;
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Outbox );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::SentMail );

@@ -146,13 +146,6 @@ private:
   Kernel( QObject* parent = 0 );
   friend class KernelPrivate;
   
-  Akonadi::Collection::Id the_inboxCollectionFolder;
-  Akonadi::Collection::Id the_outboxCollectionFolder;
-  Akonadi::Collection::Id the_sentCollectionFolder;
-  Akonadi::Collection::Id the_trashCollectionFolder;
-  Akonadi::Collection::Id the_draftsCollectionFolder;
-  Akonadi::Collection::Id the_templatesCollectionFolder;
-
   IKernel* mKernelIf;
   IFilter* mFilterIf;
   ISettings* mSettingsIf;
