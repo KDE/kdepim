@@ -178,15 +178,14 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
         it != ac.attachments().end() ; ++it ) {
     addAttachmentPart( *it );
   }
-  
-  QString transportName;
-  if( m_msg->headerByType( "X-KMail-Transport" ) )
-    transportName = m_msg->headerByType("X-KMail-Transport")->asUnicodeString();
-  if ( !transportName.isEmpty() ) {
-    MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( transportName );
-    if ( transport )
-      m_transport->setCurrentTransport( transport->id() );
-  }
+
+  int transportId = -1;
+  if ( m_msg->headerByType( "X-KMail-Transport" ) )
+    transportId = m_msg->headerByType( "X-KMail-Transport" )->asUnicodeString().toInt();
+
+  const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( transportId );
+  if ( transport )
+    m_transport->setCurrentTransport( transport->id() );
 
   // Set the HTML text and collect HTML images
   if ( isHTMLMail( m_msg.get() ) ) {
