@@ -160,22 +160,13 @@ void FolderTreeWidget::disableContextMenuAndExtraColumn()
   d->folderTreeView->disableContextMenuAndExtraColumn();
 }
 
-void FolderTreeWidget::selectCollectionFolder( const Akonadi::Collection & col )
+void FolderTreeWidget::selectCollectionFolder( const Akonadi::Collection &collection )
 {
+  const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( d->folderTreeView->model(), collection );
 
-  //TODO fix it when we select an col in imap folder. Doesn't work for the moment Don't know why
-  const QModelIndex idx = d->folderTreeView->model()->index( 0, 0, QModelIndex() );
-  const QModelIndexList rows = d->folderTreeView->model()->match( idx,
-                    Akonadi::EntityTreeModel::CollectionIdRole, col.id(), -1,
-                    Qt::MatchRecursive | Qt::MatchExactly );
-  if ( rows.size() < 1 )
-    return;
-  const QModelIndex colIndex = rows.first();
-  d->folderTreeView->selectionModel()->select(colIndex,
-                                              QItemSelectionModel::SelectCurrent
-                                              | QItemSelectionModel::Rows);
-  d->folderTreeView->setExpanded( colIndex, true );
-  d->folderTreeView->scrollTo( colIndex );
+  d->folderTreeView->selectionModel()->select( index, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows );
+  d->folderTreeView->setExpanded( index, true );
+  d->folderTreeView->scrollTo( index );
 }
 
 void FolderTreeWidget::setSelectionMode( QAbstractItemView::SelectionMode mode )
