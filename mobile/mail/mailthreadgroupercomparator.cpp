@@ -207,8 +207,8 @@ QByteArray MailThreadGrouperComparator::identifierForMessage( const KMime::Messa
 
 KDateTime MailThreadGrouperComparator::mostRecentUpdate( const KMime::Message::Ptr &threadRoot, Akonadi::Item::Id itemId ) const
 {
-  const QHash<Akonadi::Item::Id, KDateTime>::const_iterator it = mMostRecentCache.find( itemId );
-  if ( it != mMostRecentCache.end() )
+  const QHash<Akonadi::Item::Id, KDateTime>::const_iterator it = mMostRecentCache.constFind( itemId );
+  if ( it != mMostRecentCache.constEnd() )
     return *it;
 
   const QSet<QByteArray> messageIds = threadDescendants( identifierForMessage( threadRoot, itemId ) );
@@ -237,8 +237,8 @@ KDateTime MailThreadGrouperComparator::mostRecentUpdate( const KMime::Message::P
 
 KMime::Message::Ptr MailThreadGrouperComparator::messageForItem( const Akonadi::Item &item ) const
 {
-  const QHash<Akonadi::Item::Id, KMime::Message::Ptr>::const_iterator it = mMessageCache.find( item.id() );
-  if ( it != mMessageCache.end() )
+  const QHash<Akonadi::Item::Id, KMime::Message::Ptr>::const_iterator it = mMessageCache.constFind( item.id() );
+  if ( it != mMessageCache.constEnd() )
     return *it;
 
   KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
