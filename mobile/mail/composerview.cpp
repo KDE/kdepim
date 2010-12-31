@@ -356,6 +356,11 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
   m_composerBase->setFrom( identity.fullEmailAddr() );
   m_composerBase->setReplyTo( identity.replyToAddr() );
 
+  if ( !identity.fcc().isEmpty() ) {
+    const Akonadi::Collection customSentFolder( identity.fcc().toLongLong() );
+    m_composerBase->setFcc( customSentFolder );
+  }
+
   m_composerBase->setCryptoOptions( m_sign, m_encrypt, m_cryptoFormat );
 
   // Default till UI exists
