@@ -899,10 +899,25 @@ void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, Messag
 {
   Akonadi::Collection target;
 
+  // preinitialize with the default collections
   if ( saveIn == MessageSender::SaveInTemplates ) {
     target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
   } else {
     target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
+  }
+
+  // overwrite with identity specific collections if available
+  const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+  if ( !identity.isNull() ) { // we have a valid identity
+    if ( saveIn == MessageSender::SaveInTemplates ) {
+      if ( !identity.templates().isEmpty() ) { // the user has specified a custom templates collection
+        target = Akonadi::Collection( identity.templates().toLongLong() );
+      }
+    } else {
+      if ( !identity.drafts().isEmpty() ) { // the user has specified a custom drafts collection
+        target = Akonadi::Collection( identity.drafts().toLongLong() );
+      }
+    }
   }
 
   if ( !target.isValid() ) {
