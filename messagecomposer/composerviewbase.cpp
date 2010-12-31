@@ -66,6 +66,15 @@
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
 
+static QStringList encodeIdn( const QStringList &emails )
+{
+  QStringList encoded;
+  foreach ( const QString &email, emails )
+    encoded << KPIMUtils::normalizeAddressesAndEncodeIdn( email );
+
+  return encoded;
+}
+
 Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  : QObject ( parent )
  , m_msg( KMime::Message::Ptr( new KMime::Message ) )
@@ -721,21 +730,21 @@ void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueue
 {
   MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( infoPart->transportId() );
   if ( transport && transport->specifySenderOverwriteAddress() )
-    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( transport->senderOverwriteAddress() ) );
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
   else
-    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( infoPart->from() ) ) );
   // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
   //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
   if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
     KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
-    qjob->addressAttribute().setTo( cleanEmailList( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) );
+    qjob->addressAttribute().setTo( cleanEmailList( encodeIdn( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) ) );
     message->removeHeader( "X-KMail-EncBccRecipients" );
     message->assemble();
     kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
   } else {
-    qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
-    qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
-    qjob->addressAttribute().setBcc( cleanEmailList( infoPart->bcc() ) );
+    qjob->addressAttribute().setTo( cleanEmailList( encodeIdn( infoPart->to() ) ) );
+    qjob->addressAttribute().setCc( cleanEmailList( encodeIdn( infoPart->cc() ) ) );
+    qjob->addressAttribute().setBcc( cleanEmailList( encodeIdn( infoPart->bcc() ) ) );
   }
 }
 void Message::ComposerViewBase::initAutoSave()

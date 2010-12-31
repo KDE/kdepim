@@ -33,6 +33,7 @@
 #include <KProtocolManager>
 
 #include <kmime/kmime_message.h>
+#include <kpimutils/email.h>
 
 using namespace Message;
 
@@ -68,17 +69,17 @@ void SkeletonMessageJobPrivate::doStart()
   {
     KMime::Headers::From *from = new KMime::Headers::From( message );
     KMime::Types::Mailbox address;
-    address.fromUnicodeString( infoPart->from() );
+    address.fromUnicodeString( KPIMUtils::normalizeAddressesAndEncodeIdn( infoPart->from() ) );
     from->addAddress( address );
     message->setHeader( from );
   }
-  
+
   // To:
   {
     KMime::Headers::To *to = new KMime::Headers::To( message );
     foreach( const QString &a, infoPart->to() ) {
       KMime::Types::Mailbox address;
-      address.fromUnicodeString( a );
+      address.fromUnicodeString( KPIMUtils::normalizeAddressesAndEncodeIdn( a ) );
       to->addAddress( address );
     }
     message->setHeader( to );
@@ -89,7 +90,7 @@ void SkeletonMessageJobPrivate::doStart()
   {
     KMime::Headers::ReplyTo *replyTo = new KMime::Headers::ReplyTo( message );
     KMime::Types::Mailbox address;
-    address.fromUnicodeString( infoPart->replyTo() );
+    address.fromUnicodeString( KPIMUtils::normalizeAddressesAndEncodeIdn( infoPart->replyTo() ) );
     replyTo->addAddress( address );
     message->setHeader( replyTo );
   }
@@ -99,7 +100,7 @@ void SkeletonMessageJobPrivate::doStart()
     KMime::Headers::Cc *cc = new KMime::Headers::Cc( message );
     foreach( const QString &a, infoPart->cc() ) {
       KMime::Types::Mailbox address;
-      address.fromUnicodeString( a );
+      address.fromUnicodeString( KPIMUtils::normalizeAddressesAndEncodeIdn( a ) );
       cc->addAddress( address );
     }
     message->setHeader( cc );
@@ -110,7 +111,7 @@ void SkeletonMessageJobPrivate::doStart()
     KMime::Headers::Bcc *bcc = new KMime::Headers::Bcc( message );
     foreach( const QString &a, infoPart->bcc() ) {
       KMime::Types::Mailbox address;
-      address.fromUnicodeString( a );
+      address.fromUnicodeString( KPIMUtils::normalizeAddressesAndEncodeIdn( a ) );
       bcc->addAddress( address );
     }
     message->setHeader( bcc );
