@@ -88,6 +88,11 @@ void ThreadGrouperComparator::invalidate()
   m_grouper->q_ptr->invalidate();
 }
 
+void ThreadGrouperComparator::resetCaches()
+{
+}
+
+
 Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &item ) const
 {
   const QByteArray identifier = m_comparator->identifierForItem( item );
@@ -110,7 +115,6 @@ Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &ite
 
   return m_items.value( parentIdentifier );
 }
-
 
 void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
 {
@@ -149,6 +153,8 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
 
   m_childParentMap = resolver.childParentMap();
   m_parentChildrenMap = resolver.parentChildrenMap();
+
+  m_comparator->resetCaches();
 }
 
 
