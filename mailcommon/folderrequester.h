@@ -35,8 +35,10 @@
 #include <ksharedconfig.h>
 #include <akonadi/collection.h>
 
+#include <QtGui/QKeyEvent>
 #include <QtGui/QWidget>
-#include <QKeyEvent>
+
+class KJob;
 
 namespace MailCommon {
 
@@ -95,7 +97,7 @@ class Kernel;
       void slotOpenDialog();
 
       /** Update the information we have about the current folder. */
-      void slotCollectionsReceived( const Akonadi::Collection::List& );
+      void slotCollectionsReceived( KJob* );
 
     signals:
       /** Emitted when the folder changed */
