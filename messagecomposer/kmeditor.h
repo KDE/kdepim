@@ -176,6 +176,12 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     void fillComposerTextPart( Message::TextPart* textPart ) const;
 
+    /**
+     * Overloaded function from KRichTextEdit to deal with problems viewing HTML formatted
+     * emails in MS Outlook.
+     */
+    QString toCleanHtml() const;
+
   public Q_SLOTS:
 
     void slotAddQuotes();
