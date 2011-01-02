@@ -39,10 +39,14 @@
 #include <QShortcut>
 #include <QTextLayout>
 #include <QTimer>
+#ifdef MESSAGECOMPOSER_NO_WEBKIT
+#include <KDebug>
+#else
 #include <QWebElement>
 #include <QWebElementCollection>
 #include <QWebFrame>
 #include <QWebPage>
+#endif
 
 using namespace KPIMTextEdit;
 
@@ -692,6 +696,10 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 
 QString KMeditor::toCleanHtml() const
 {
+#ifdef MESSAGECOMPOSER_NO_WEBKIT
+  kWarning() << "Webkit has been disabled, toCleanHtml will not work!";
+  return toHtml();
+#else
   const QString textEditHTML = toHtml();
 
   // construct a non-visual QWebPage - that'll hook us into Qt's HTML parser from WebKit
@@ -723,6 +731,7 @@ QString KMeditor::toCleanHtml() const
     listElement.setStyleProperty( QString::fromAscii( "margin-left" ), QString( ) );
   }
   return webframe->toHtml();
+#endif
 }
 
 #include "kmeditor.moc"

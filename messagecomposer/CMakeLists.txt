@@ -9,6 +9,11 @@ include_directories(
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+option(MESSAGECOMPOSER_NO_WEBKIT "Message composer without webkit" FALSE)
+if(MESSAGECOMPOSER_NO_WEBKIT)
+  add_definitions( -DMESSAGECOMPOSER_NO_WEBKIT=1 )
+endif(MESSAGECOMPOSER_NO_WEBKIT)
+
 add_subdirectory( tests )
 
 set( messagecomposer_src
@@ -84,7 +89,10 @@ kde4_add_kcfg_files(messagecomposer_src
 
 kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
 target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
- messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} )
+ messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} )
+if(MESSAGECOMPOSER_NO_WEBKIT)
+target_link_libraries( messagecomposer ${QT_QTWEBKIT_LIBRARY} )
+endif(MESSAGECOMPOSER_NO_WEBKIT)
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
