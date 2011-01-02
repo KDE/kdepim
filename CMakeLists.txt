@@ -81,7 +81,7 @@ if(EXISTS "${kdepim_SOURCE_DIR}/.git")
     execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --oneline --format=%ci
                     WORKING_DIRECTORY ${kdepim_SOURCE_DIR}
                     OUTPUT_VARIABLE kdepim_git_last_change)
-    string(REGEX REPLACE " [0-9:+ ]*\n" "" kdepim_git_last_change "${kdepim_git_last_change}")
+    string(REGEX REPLACE " [0-9:-+ ]*\n" "" kdepim_git_last_change "${kdepim_git_last_change}")
   endif()
 endif()
 
