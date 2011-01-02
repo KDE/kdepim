@@ -714,22 +714,23 @@ QString KMeditor::toCleanHtml() const
   // if you have three or more empty lines. It's best to replace empty <p> elements with <br>.
   // As per http://www.w3.org/TR/xhtml1/dtds.html#a_dtd_XHTML-1.0-Strict, <br> elements are still proper
   // HTML.
-  QWebElementCollection paragraphs = docElement.findAll( QString::fromAscii( "p" ) );
-  foreach (QWebElement paraElement, paragraphs) {
+  const QWebElementCollection paragraphs = docElement.findAll( QLatin1String( "p" ) );
+  foreach ( QWebElement paraElement, paragraphs ) { // krazy:exclude=foreach
     QString paraContent = paraElement.toPlainText();
     // Only make a change when the paragraph content is empty
     if ( paraContent.isEmpty() ) {
-      paraElement.replace( QString::fromAscii( "<br />" ) );
+      paraElement.replace( QLatin1String( "<br />" ) );
     }
   }
   // fix 2 - ordered and unordered lists - MS Outlook treats margin-left:0px; as
   // a non-existing number; e.g: "1. First item" turns into "First Item"
-  QWebElementCollection lists = docElement.findAll( QString::fromAscii( "ol,ul" ) );
-  foreach (QWebElement listElement, lists) {
+  const QWebElementCollection lists = docElement.findAll( QLatin1String( "ol,ul" ) );
+  foreach ( QWebElement listElement, lists ) { // krazy:exclude=foreach
     //TODO in the future, we may want to explicitly set the margin-left=0 with the Composer window itself, which
     //     would be overwritten here again. This will likely require a rewrite of the KMEditor altogether, though.
-    listElement.setStyleProperty( QString::fromAscii( "margin-left" ), QString( ) );
+    listElement.setStyleProperty( QLatin1String( "margin-left" ), QString( ) );
   }
+
   return webframe->toHtml();
 #endif
 }
