@@ -103,6 +103,7 @@ bool IncidenceDateTime::eventFilter(QObject *obj, QEvent *event)
 void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
+  mLoadingIncidence = true;
 
   // We can only handle events or todos.
   if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<KCalCore::Todo>() ) {
@@ -131,6 +132,7 @@ void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
   }
 
   mWasDirty = false;
+  mLoadingIncidence = false;
 }
 
 void IncidenceDateTime::save( const KCalCore::Incidence::Ptr &incidence )

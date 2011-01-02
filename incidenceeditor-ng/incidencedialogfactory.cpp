@@ -30,7 +30,8 @@
 using namespace IncidenceEditorNG;
 using namespace KCalCore;
 
-IncidenceDialog *IncidenceDialogFactory::create( KCalCore::IncidenceBase::IncidenceType type,
+IncidenceDialog *IncidenceDialogFactory::create( bool needsSaving,
+                                                 KCalCore::IncidenceBase::IncidenceType type,
                                                  QWidget *parent, Qt::WFlags flags )
 {
   switch ( type ) {
@@ -40,7 +41,10 @@ IncidenceDialog *IncidenceDialogFactory::create( KCalCore::IncidenceBase::Incide
   {
     // TODO: rename EventOrTodoDialog to IncidenceDialog
     EventOrTodoDialog *dialog = new EventOrTodoDialog( parent, flags );
-    dialog->setInitiallyDirty( true );  // yep, needs to be save to akonadi
+
+    // needs to be save to akonadi?, apply button should be turned on if so.
+    dialog->setInitiallyDirty( needsSaving /* mInitiallyDirty */ );
+
     return dialog;
   }
   default:
@@ -78,7 +82,8 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
     GroupwareIntegration::activate();
   }
 
-  IncidenceDialog *dialog = create( KCalCore::Incidence::TypeTodo,
+  IncidenceDialog *dialog = create( true, /* no need for, we're not editing an existing to-do */
+                                    KCalCore::Incidence::TypeTodo,
                                     parent, flags );
   dialog->selectCollection( defaultCollection );
   dialog->load( item );
@@ -116,7 +121,8 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
     GroupwareIntegration::activate();
   }
 
-  IncidenceDialog *dialog = create( KCalCore::Incidence::TypeEvent,
+  IncidenceDialog *dialog = create( false, /* no need for saving, we're not editing an existing event */
+                                    KCalCore::Incidence::TypeEvent,
                                     parent, flags );
   dialog->selectCollection( defaultCollection );
   dialog->load( item );

@@ -125,6 +125,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     KCalCore::Incidence::Ptr mLoadedIncidence;
     mutable QString mLastErrorString;
     bool mWasDirty;
+    bool mLoadingIncidence;
 };
 
 } // IncidenceEditorNG

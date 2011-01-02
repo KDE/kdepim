@@ -35,6 +35,10 @@ namespace IncidenceDialogFactory
   /**
     Creates a new IncidenceDialog for given type. Returns 0 for unsupported types.
 
+    @param needsSaving If true, the editor will be initialy dirty, and needs saving.
+                       Apply button will be turned on. This is used for example when
+                       we fill the editor with data that's not yet in akonadi, like
+                       the "Create To-do/Reminder" in KMail.
     @param type   The Incidence type for which to create a dialog.
     @param parent The parent widget of the dialog
     @param flags  The window flags for the dialog.
@@ -42,7 +46,8 @@ namespace IncidenceDialogFactory
     TODO: Implement support for Journals.
     NOTE: There is no editor for Incidence::TypeFreeBusy
   */
-  INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *create( KCalCore::IncidenceBase::IncidenceType type,
+  INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *create( bool needsSaving,
+                                                      KCalCore::IncidenceBase::IncidenceType type,
                                                       QWidget *parent = 0, Qt::WFlags flags = 0 );
 
   INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createTodoEditor( const QString &summary,
