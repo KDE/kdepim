@@ -5,7 +5,8 @@
 
   <kcfgfile name="messagecorerc" />
   <include>qtextcodec.h</include>
-
+  <include>kglobalsettings.h</include>
+  
   <group name="General">
     <entry name="disregardUmask" type="Bool">
       <label>Disregard the user's umask setting and use "read-write for the user only" instead</label>
@@ -21,6 +22,10 @@
   <group name="Fonts">
     <entry name="UseDefaultFonts" type="Bool" key="defaultFonts">
       <default>true</default>
+    </entry>
+    <entry name="PrintFont" type="Font" key="print-font">
+      <label>Specifies the font to use for printing</label>
+      <default code="true">KGlobalSettings::generalFont()</default>
     </entry>
   </group>
 
@@ -40,6 +45,30 @@
     key="encoding">
       <default></default>
       <whatsthis>Changing this from its default 'Auto' will force the use of the specified encoding for all emails, regardless of what they specify themselves.</whatsthis>
+    </entry>
+    <entry name="QuotedText3" type="Color">
+      <label>This is the colour used in the 3rd level of quoted text</label>
+      <default>#006000</default>
+    </entry>
+    <entry name="QuotedText2" type="Color">
+      <label>This is the colour used in the 2nd level of quoted text</label>
+      <default>#007000</default>
+    </entry>
+    <entry name="QuotedText1" type="Color">
+      <label>This is the colour used in the 1st level of quoted text</label>
+      <default>#008000</default>
+    </entry>
+    <entry name="MisspelledColor" type="Color">
+      <label>This is the colour used to hightlight mispelled words</label>
+      <default>red</default>
+    </entry>
+    <entry name="PgpSignedMessageColor" type="Color" key="PGPMessageOkKeyOk">
+      <label>This is the colour used for hightlighting all signed messages</label>
+      <default code="yes">KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::PositiveBackground ).color()</default>
+    </entry>
+    <entry name="PgpEncryptedMessageColor" type="Color" key="PGPMessageEncr">
+      <label>This is the colour used for highlighting all encrypted messages</label>
+      <default>#0080FF</default>
     </entry>
   </group>
 

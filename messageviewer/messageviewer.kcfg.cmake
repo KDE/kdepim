@@ -131,6 +131,10 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>How attachments are shown</label>
       <default>Smart</default>
     </entry>
+    <entry name="RecycleQuoteColors" type="Bool">
+      <label>Specifies whether to reuse the quote colour, beyond the 3rd level</label>
+      <default>false</default>
+    </entry>
   </group>
 
   <group name="TextIndex">
@@ -144,6 +148,14 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="notSendWhenEncrypted" type="Bool" key="not-send-when-encrypted">
       <label>Do not send MDNs in response to encrypted messages</label>
       <default>true</default>
+    </entry>
+    <entry name="DefaultPolicy" type="Int" key="default-policy">
+      <label>Specifies the default policy to use, for the Message Disposition Notifications (for internal use only)</label>
+      <default>0</default>
+    </entry>
+    <entry name="QuoteMessage" type="Int" key="quote-message">
+      <label>Specifies the default quoting action to take, when replying to a message (for internal use only)</label>
+      <default>0</default>
     </entry>
   </group>
 
