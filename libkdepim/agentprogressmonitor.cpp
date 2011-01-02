@@ -19,9 +19,11 @@
 
 #include "agentprogressmonitor.h"
 
+#include <Akonadi/AgentManager>
+
 #include <KDebug>
 
-#include <Akonadi/AgentManager>
+#include <QtCore/QPointer>
 
 using namespace Akonadi;
 using namespace KPIM;
@@ -43,7 +45,7 @@ class AgentProgressMonitor::Private
 
     AgentProgressMonitor *const q;
     AgentInstance agent;
-    ProgressItem *const item;
+    QPointer<ProgressItem> const item;
 };
 
 void AgentProgressMonitor::Private::abort()
@@ -53,10 +55,12 @@ void AgentProgressMonitor::Private::abort()
 
 void AgentProgressMonitor::Private::instanceProgressChanged( const AgentInstance &instance )
 {
-  if( agent == instance ) {
+  if ( !item )
+    return;
+
+  if ( agent == instance ) {
     agent = instance;
-//     kDebug() << "Progress changed to" << agent.progress();
-    if( agent.progress() >= 0 ) {
+    if ( agent.progress() >= 0 ) {
       item->setProgress( agent.progress() );
     }
   }
@@ -64,28 +68,25 @@ void AgentProgressMonitor::Private::instanceProgressChanged( const AgentInstance
 
 void AgentProgressMonitor::Private::instanceStatusChanged( const AgentInstance &instance )
 {
-  if( agent == instance ) {
+  if ( !item )
+    return;
+
+  if ( agent == instance ) {
     agent = instance;
-//     kDebug() << "Status changed to" << agent.status() << "message" << agent.statusMessage();
     item->setStatus( agent.statusMessage() );
-    switch( agent.status() ) {
+    switch ( agent.status() ) {
       case AgentInstance::Idle:
-      {
         item->setComplete();
         break;
-      }
       case AgentInstance::Running:
-      {
         break;
-      }
       case AgentInstance::Broken: 
-      {
         item->disconnect( q ); // avoid abort call
         item->cancel();
         item->setComplete();
         break;
-      }
-      default: Q_ASSERT( false );
+      default:
+        Q_ASSERT( false );
     }
   }
 }
