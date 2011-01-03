@@ -160,6 +160,7 @@ ArchiveDialog::ArchiveDialog( CalendarSupport::Calendar *cal, CalendarSupport::I
            "will not be modified or deleted. You can later load or merge the "
            "file like any other calendar. It is not saved in a special "
            "format, it uses the iCalendar format." ) );
+  mArchiveFile->fileDialog()->setOperationMode( KFileDialog::Saving );
   l->setBuddy( mArchiveFile->lineEdit() );
   fileLayout->addWidget( mArchiveFile );
   topLayout->addLayout( fileLayout );
