@@ -25,9 +25,11 @@
 #include <KCalCore/Todo>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KSystemTimeZones>
-#include <KLocale>
 #include <KGlobal>
+#include <KLocale>
+#include <KSystemTimeZones>
+
+#include <QtGui/QItemSelection>
 
 EventListProxy::EventListProxy(QObject* parent) : ListProxy(parent)
 {
@@ -52,16 +54,57 @@ QVariant EventListProxy::data(const QModelIndex& index, int role) const
   return QSortFilterProxyModel::data(index, role);
 }
 
-void EventListProxy::setSourceModel(QAbstractItemModel* sourceModel)
+void EventListProxy::setSourceModel( QAbstractItemModel *model )
 {
-  ListProxy::setSourceModel(sourceModel);
+  if ( sourceModel() )
+    disconnect( sourceModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
+                this, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
+
+  ListProxy::setSourceModel( model );
+
+  connect( sourceModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
+           this, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
+
   QHash<int, QByteArray> names = roleNames();
   names.insert( Akonadi::EntityTreeModel::ItemIdRole, "itemId" );
   names.insert( SummaryRole, "summary" );
   names.insert( BeginRole, "begin" );
   names.insert( DurationRole, "duration" );
   setRoleNames( names );
-  kDebug() << names << sourceModel->roleNames();
+}
+
+KDateTime EventListProxy::startDateTimeForItem( const Akonadi::Item &item ) const
+{
+  const QHash<Akonadi::Item::Id, DateTimeHashEntry>::const_iterator it = mDateTimeHash.constFind( item.id() );
+  if ( it != mDateTimeHash.constEnd() )
+    return (*it).startDateTime;
+
+  const KCalCore::Event::Ptr event = item.payload<KCalCore::Event::Ptr>();
+
+  DateTimeHashEntry entry;
+  entry.startDateTime = event->dtStart();
+  entry.endDateTime = event->dtEnd();
+
+  mDateTimeHash.insert( item.id(), entry );
+
+  return entry.startDateTime;
+}
+
+KDateTime EventListProxy::endDateTimeForItem( const Akonadi::Item &item ) const
+{
+  const QHash<Akonadi::Item::Id, DateTimeHashEntry>::const_iterator it = mDateTimeHash.constFind( item.id() );
+  if ( it != mDateTimeHash.constEnd() )
+    return (*it).endDateTime;
+
+  const KCalCore::Event::Ptr event = item.payload<KCalCore::Event::Ptr>();
+
+  DateTimeHashEntry entry;
+  entry.startDateTime = event->dtStart();
+  entry.endDateTime = event->dtEnd();
+
+  mDateTimeHash.insert( item.id(), entry );
+
+  return entry.endDateTime;
 }
 
 bool EventListProxy::lessThan(const QModelIndex& left, const QModelIndex& right) const
@@ -71,24 +114,46 @@ bool EventListProxy::lessThan(const QModelIndex& left, const QModelIndex& right)
   if ( !leftItem.hasPayload<KCalCore::Event::Ptr>() || !rightItem.hasPayload<KCalCore::Event::Ptr>() )
     return leftItem.id() < rightItem.id();
 
-  const KCalCore::Event::Ptr leftEvent = leftItem.payload<KCalCore::Event::Ptr>();
-  const KCalCore::Event::Ptr rightEvent = rightItem.payload<KCalCore::Event::Ptr>();
+  const KDateTime leftDateTimeStart = startDateTimeForItem( leftItem );
+  const KDateTime leftDateTimeEnd = endDateTimeForItem( leftItem );
+  const KDateTime rightDateTimeStart = startDateTimeForItem( rightItem );
+  const KDateTime rightDateTimeEnd = endDateTimeForItem( rightItem );
 
-  if ( leftEvent->dtStart() == rightEvent->dtStart() )
+  if ( leftDateTimeStart == rightDateTimeStart )
     return leftItem.id() < rightItem.id();
 
   const KDateTime today = KDateTime::currentDateTime( KSystemTimeZones::local() );
-  const bool leftIsFuture = leftEvent->dtEnd() >= today;
-  const bool rightIsFuture = rightEvent->dtEnd() >= today;
+  const bool leftIsFuture = (leftDateTimeEnd >= today);
+  const bool rightIsFuture = (rightDateTimeEnd >= today);
 
   if ( leftIsFuture != rightIsFuture ) {
     return !leftIsFuture;
   }
 
   if ( leftIsFuture )
-    return leftEvent->dtStart() > rightEvent->dtStart();
+    return leftDateTimeStart > rightDateTimeStart;
   else
-    return leftEvent->dtStart() < rightEvent->dtStart();
+    return leftDateTimeStart < rightDateTimeStart;
+}
+
+void EventListProxy::dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
+{
+  QItemSelection selection;
+  selection.select( topLeft, bottomRight );
+
+  foreach ( const QModelIndex &index, selection.indexes() ) {
+    const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    if ( !item.hasPayload<KCalCore::Event::Ptr>() )
+      continue;
+
+    const KCalCore::Event::Ptr event = item.payload<KCalCore::Event::Ptr>();
+
+    DateTimeHashEntry entry;
+    entry.startDateTime = event->dtStart();
+    entry.endDateTime = event->dtEnd();
+
+    mDateTimeHash.insert( item.id(), entry );
+  }
 }
 
 #include "eventlistproxy.moc"

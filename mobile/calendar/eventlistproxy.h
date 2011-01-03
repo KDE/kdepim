@@ -21,7 +21,9 @@
 #define EVENTLISTPROXY_H
 
 #include "listproxy.h"
+
 #include <akonadi/entitytreemodel.h>
+#include <kdatetime.h>
 
 /** Proxy model to provide roles for accessing KMime::Message properties from QML. */
 class EventListProxy : public ListProxy
@@ -39,6 +41,21 @@ class EventListProxy : public ListProxy
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     void setSourceModel(QAbstractItemModel* sourceModel);
     bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
+
+  private Q_SLOTS:
+    void dataChanged( const QModelIndex&, const QModelIndex& );
+
+  private:
+    KDateTime startDateTimeForItem( const Akonadi::Item &item ) const;
+    KDateTime endDateTimeForItem( const Akonadi::Item &item ) const;
+
+    struct DateTimeHashEntry
+    {
+      KDateTime startDateTime;
+      KDateTime endDateTime;
+    };
+
+    mutable QHash<Akonadi::Item::Id, DateTimeHashEntry> mDateTimeHash;
 };
 
 #endif // EVENTLISTPROXY_H
