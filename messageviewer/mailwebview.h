@@ -22,7 +22,7 @@
 
 #include <qglobal.h> // make sure we have Q_OS_WINCE defined
 
-#ifdef MESSAGEVIEWER_NO_WEBKIT
+#ifdef KDEPIM_NO_WEBKIT
 # include <QTextBrowser>
 #else
 # ifdef Q_OS_WINCE
@@ -37,7 +37,7 @@
 namespace MessageViewer {
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
-#ifdef MESSAGEVIEWER_NO_WEBKIT
+#ifdef KDEPIM_NO_WEBKIT
 class MailWebView : public QTextBrowser // krazy:exclude=qclasses
 #else
 # ifdef Q_OS_WINCE
@@ -103,7 +103,7 @@ Q_SIGNALS:
     void popupMenu( const QString &url, const QPoint &point );
 
     void linkHovered( const QString & link, const QString & title=QString(), const QString & textContent=QString() );
-#ifdef MESSAGEVIEWER_NO_WEBKIT
+#ifdef KDEPIM_NO_WEBKIT
     void linkClicked( const QUrl & link );
 #endif
 

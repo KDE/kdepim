@@ -60,7 +60,7 @@
 #include <QWebElement>
 #include <QTextCodec>
 #include <QWebFrame>
-#ifdef TEMPLATEPARSER_NO_WEBKIT
+#ifdef KDEPIM_NO_WEBKIT
 # include <QTextBrowser>
 #else
 # include <QtWebKit/QWebPage>
@@ -1372,7 +1372,7 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
     return result;
 
   // html -> plaintext conversion, if necessary:
-#ifdef TEMPLATEPARSER_NO_WEBKIT
+#ifdef KDEPIM_NO_WEBKIT
     if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
       QTextDocument doc;
       doc.setHtml( result );

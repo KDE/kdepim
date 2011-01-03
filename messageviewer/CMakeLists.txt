@@ -21,17 +21,15 @@ add_subdirectory(about)
 add_subdirectory(tests)
 add_subdirectory(pics)
 
-option(MESSAGEVIEWER_NO_WEBKIT "Use QTextBrowser instead of WebKit for the message viewer" FALSE)
-if(MESSAGEVIEWER_NO_WEBKIT)
-  add_definitions( -DMESSAGEVIEWER_NO_WEBKIT=1 )
+if(KDEPIM_NO_WEBKIT)
   set(_mailwebview_cpp mailwebview_textbrowser.cpp )
   set(_mailwebview_lib )
-else(MESSAGEVIEWER_NO_WEBKIT)
+else()
   set(_mailwebview_cpp mailwebview_webkit.cpp )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
   endif(NOT WINCE)
-endif(MESSAGEVIEWER_NO_WEBKIT)
+endif()
 
 set(libmessageviewer_SRCS
   antispamconfig.cpp

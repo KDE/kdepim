@@ -22,7 +22,7 @@
 
 #include <KDebug>
 
-#ifndef MESSAGEVIEWER_NO_WEBKIT
+#ifndef KDEPIM_NO_WEBKIT
 #include <QWebPage>
 #include <QWebFrame>
 #include <QWebElement>
@@ -36,7 +36,7 @@ HTMLQuoteColorer::HTMLQuoteColorer()
 
 QString HTMLQuoteColorer::process( const QString &htmlSource )
 {
-#ifndef MESSAGEVIEWER_NO_WEBKIT
+#ifndef KDEPIM_NO_WEBKIT
   // Create a DOM Document from the HTML source
   QWebPage page(0);
   QWebFrame *frame = page.mainFrame();

@@ -14,6 +14,7 @@ option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_B
 option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_NEPOMUK "Build the mail libraries and applications without nepomuk dependency" FALSE)
+option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 if(KDEPIM_BUILD_STATIC)
   set(LIBRARY_TYPE STATIC)
@@ -24,6 +25,10 @@ endif(KDEPIM_BUILD_STATIC)
 if(KDEPIM_NO_NEPOMUK)
   add_definitions(-DKDEPIM_NO_NEPOMUK)
 endif(KDEPIM_NO_NEPOMUK)
+
+if(KDEPIM_NO_WEBKIT)
+  add_definitions(-DKDEPIM_NO_WEBKIT)
+endif()
 
 # cmake would not find kde for xcompile if that is not set
 if(WINCE)

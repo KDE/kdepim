@@ -39,7 +39,7 @@
 #include <QShortcut>
 #include <QTextLayout>
 #include <QTimer>
-#ifdef MESSAGECOMPOSER_NO_WEBKIT
+#ifdef KDEPIM_NO_WEBKIT
 #include <KDebug>
 #else
 #include <QWebElement>
@@ -696,7 +696,7 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
 
 QString KMeditor::toCleanHtml() const
 {
-#ifdef MESSAGECOMPOSER_NO_WEBKIT
+#ifdef KDEPIM_NO_WEBKIT
   kWarning() << "Webkit has been disabled, toCleanHtml will not work!";
   return toHtml();
 #else
