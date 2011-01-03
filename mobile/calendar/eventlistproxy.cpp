@@ -37,7 +37,7 @@ EventListProxy::EventListProxy(QObject* parent) : ListProxy(parent)
   sort( 0, Qt::DescendingOrder );
 
   mCurrentDateTimeReference = QDateTime::currentMSecsSinceEpoch();
-  mToday = KDateTime::currentDateTime( KSystemTimeZones::local() );
+  mToday = KDateTime::currentLocalDateTime();
 }
 
 QVariant EventListProxy::data(const QModelIndex& index, int role) const
@@ -127,7 +127,7 @@ bool EventListProxy::lessThan(const QModelIndex& left, const QModelIndex& right)
 
   if ( (mCurrentDateTimeReference + 60000) < QDateTime::currentMSecsSinceEpoch() ) {
     mCurrentDateTimeReference = QDateTime::currentMSecsSinceEpoch();
-    mToday = KDateTime::currentDateTime( KSystemTimeZones::local() );
+    mToday = KDateTime::currentLocalDateTime();
   }
 
   const bool leftIsFuture = (leftDateTimeEnd >= mToday);
