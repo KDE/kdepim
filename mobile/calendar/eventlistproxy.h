@@ -56,6 +56,8 @@ class EventListProxy : public ListProxy
     };
 
     mutable QHash<Akonadi::Item::Id, DateTimeHashEntry> mDateTimeHash;
+    mutable qint64 mCurrentDateTimeReference;
+    mutable KDateTime mToday;
 };
 
 #endif // EVENTLISTPROXY_H
