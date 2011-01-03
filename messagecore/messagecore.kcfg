@@ -47,23 +47,23 @@
       <whatsthis>Changing this from its default 'Auto' will force the use of the specified encoding for all emails, regardless of what they specify themselves.</whatsthis>
     </entry>
     <entry name="QuotedText3" type="Color">
-      <label>This is the colour used in the 3rd level of quoted text</label>
+      <label>This is the color used in the 3rd level of quoted text</label>
       <default>#006000</default>
     </entry>
     <entry name="QuotedText2" type="Color">
-      <label>This is the colour used in the 2nd level of quoted text</label>
+      <label>This is the color used in the 2nd level of quoted text</label>
       <default>#007000</default>
     </entry>
     <entry name="QuotedText1" type="Color">
-      <label>This is the colour used in the 1st level of quoted text</label>
+      <label>This is the color used in the 1st level of quoted text</label>
       <default>#008000</default>
     </entry>
     <entry name="MisspelledColor" type="Color">
-      <label>This is the colour used to hightlight mispelled words</label>
+      <label>This is the color used to highlight misspelled words</label>
       <default>red</default>
     </entry>
     <entry name="PgpSignedMessageColor" type="Color" key="PGPMessageOkKeyOk">
-      <label>This is the colour used for hightlighting all signed messages</label>
+      <label>This is the color used for highlighting all signed messages</label>
       <default code="yes">KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::PositiveBackground ).color()</default>
     </entry>
     <entry name="PgpEncryptedMessageColor" type="Color" key="PGPMessageEncr">

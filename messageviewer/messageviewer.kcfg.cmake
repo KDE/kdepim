@@ -132,7 +132,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>Smart</default>
     </entry>
     <entry name="RecycleQuoteColors" type="Bool">
-      <label>Specifies whether to reuse the quote colour, beyond the 3rd level</label>
+      <label>Specifies whether to reuse the quote color, beyond the 3rd level</label>
       <default>false</default>
     </entry>
   </group>
