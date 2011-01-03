@@ -476,19 +476,9 @@ Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
   Q_ASSERT( mEditor->incidence<KCalCore::Incidence>() );
 
   KCalCore::Incidence::Ptr incidenceInEditor = mEditor->incidence<KCalCore::Incidence>();
-  KCalCore::Incidence::Ptr newIncidence;
+  KCalCore::Incidence::Ptr newIncidence( incidenceInEditor->clone() );
 
   Akonadi::Item result = item;
-  if ( incidenceInEditor->type() == KCalCore::Incidence::TypeEvent ) {
-    newIncidence = KCalCore::Event::Ptr( new KCalCore::Event );
-  } else if ( incidenceInEditor->type() == KCalCore::Incidence::TypeTodo ) {
-    newIncidence = KCalCore::Todo::Ptr( new KCalCore::Todo );
-  } else if ( incidenceInEditor->type() == KCalCore::Incidence::TypeJournal ) {
-    newIncidence = KCalCore::Journal::Ptr( new KCalCore::Journal );
-  } else {
-    Q_ASSERT_X( false, "save", "Invalid Incidence type" );
-  }
-
   result.setMimeType( newIncidence->mimeType() );
 
   // There's no editor that has the relatedTo property. We must set it here, by hand.
