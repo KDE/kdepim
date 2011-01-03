@@ -98,6 +98,7 @@ void ItemEditorPrivate::itemMoveResult( KJob *job )
 
   if ( job->error() ) {
     // TODO: What is reasonable behavior at this point?
+    kError() << job->errorString();
 //     mItemUi->reject( ItemEditorUi::ItemFetchFailed, job->errorString() );
     return;
   }
