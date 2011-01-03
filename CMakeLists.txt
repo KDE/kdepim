@@ -15,11 +15,6 @@ option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_NEPOMUK "Build the mail libraries and applications without nepomuk dependency" FALSE)
 
-option(AKONADI_USE_STRIGI_SEARCH "Build Akonadi with strigi as search engine." FALSE)
-if (AKONADI_USE_STRIGI_SEARCH)
-  add_definitions(-DAKONADI_USE_STRIGI_SEARCH)
-endif (AKONADI_USE_STRIGI_SEARCH)
-
 if(KDEPIM_BUILD_STATIC)
   set(LIBRARY_TYPE STATIC)
 else(KDEPIM_BUILD_STATIC)
@@ -205,9 +200,9 @@ else(KDEPIM_ONLY_KLEO)
 
 # Otherwise...
 ############### Find the stuff we need ###############
-
-  find_package(Akonadi QUIET NO_MODULE 1.3.60)
-  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
+  set(AKONADI_MIN_VERSION 1.4.91)
+  find_package(Akonadi QUIET NO_MODULE ${AKONADI_MIN_VERSION})
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries" "http://pim.kde.org/akonadi" TRUE "${AKONADI_MIN_VERSION}" "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
   macro_log_feature(ZLIB_FOUND "ZLib" "The Zlib compression library" "http://www.zlib.net" TRUE "" "")
@@ -254,7 +249,7 @@ endif()
 
 ############### Needed commands before building anything ###############
 
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
+add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS} ${AKONADI_DEFINITIONS})
 
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim  ${Boost_INCLUDE_DIR})
 
