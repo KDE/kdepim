@@ -39,14 +39,6 @@
 #include <QShortcut>
 #include <QTextLayout>
 #include <QTimer>
-#ifdef KDEPIM_NO_WEBKIT
-#include <KDebug>
-#else
-#include <QWebElement>
-#include <QWebElementCollection>
-#include <QWebFrame>
-#include <QWebPage>
-#endif
 
 using namespace KPIMTextEdit;
 
@@ -692,47 +684,6 @@ void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
     textPart->setCleanHtml( toCleanHtml() );
     textPart->setEmbeddedImages( embeddedImages() );
   }
-}
-
-QString KMeditor::toCleanHtml() const
-{
-#ifdef KDEPIM_NO_WEBKIT
-  kWarning() << "Webkit has been disabled, toCleanHtml will not work!";
-  return toHtml();
-#else
-  const QString textEditHTML = toHtml();
-
-  // construct a non-visual QWebPage - that'll hook us into Qt's HTML parser from WebKit
-  QWebPage webpage( 0 );
-  QWebFrame *webframe = webpage.mainFrame();
-  webframe->setHtml( textEditHTML );
-  QWebElement docElement = webframe->documentElement();
-
-  // fix 1 - empty lines should show as empty lines - MS Outlook treats margin-top:0px; as
-  // a non-existing line.
-  // Although we can simply remove the margin-top style property, we still get unwanted results
-  // if you have three or more empty lines. It's best to replace empty <p> elements with <br>.
-  // As per http://www.w3.org/TR/xhtml1/dtds.html#a_dtd_XHTML-1.0-Strict, <br> elements are still proper
-  // HTML.
-  const QWebElementCollection paragraphs = docElement.findAll( QLatin1String( "p" ) );
-  foreach ( QWebElement paraElement, paragraphs ) { // krazy:exclude=foreach
-    QString paraContent = paraElement.toPlainText();
-    // Only make a change when the paragraph content is empty
-    if ( paraContent.isEmpty() ) {
-      paraElement.replace( QLatin1String( "<br />" ) );
-    }
-  }
-  // fix 2 - ordered and unordered lists - MS Outlook treats margin-left:0px; as
-  // a non-existing number; e.g: "1. First item" turns into "First Item"
-  const QWebElementCollection lists = docElement.findAll( QLatin1String( "ol,ul" ) );
-  foreach ( QWebElement listElement, lists ) { // krazy:exclude=foreach
-    //TODO in the future, we may want to explicitly set the margin-left=0 with the Composer window itself, which
-    //     would be overwritten here again. This will likely require a rewrite of the KMEditor altogether, though.
-    listElement.setStyleProperty( QLatin1String( "margin-left" ), QString( ) );
-  }
-
-  return webframe->toHtml();
-#endif
 }
 
 #include "kmeditor.moc"
