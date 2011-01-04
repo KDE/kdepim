@@ -192,6 +192,11 @@ class MESSAGECORE_EXPORT AttachmentPart
      */
     qint64 size() const;
 
+    /**
+     * Returns whether the specified attachment part is an encapsulated message
+     * (message/rfc822) or a collection of encapsulated messages (multipart/digest)
+     */
+    bool isMessageOrMessageCollection() const;
   private:
     //@cond PRIVATE
     class Private;
