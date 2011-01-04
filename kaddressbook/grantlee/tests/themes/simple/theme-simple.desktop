@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Simple
 Name[ca]=Senzill
+Name[ca@valencia]=Senzill
 Name[de]=Einfach
 Name[el]=Απλό
 Name[en_GB]=Simple
@@ -26,6 +27,7 @@ Name[x-test]=xxSimplexx
 Name[zh_TW]=簡單
 Description=A Simple theme
 Description[ca]=Un tema senzill
+Description[ca@valencia]=Un tema senzill
 Description[de]=Ein einfaches Design
 Description[el]=Ένα απλό θέμα
 Description[en_GB]=A Simple theme

@@ -49,6 +49,7 @@ Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfiles
 [Desktop Action kleoencryptsignfiles]
 Name=Sign & Encrypt File
 Name[ca]=Signa i encripta un fitxer
+Name[ca@valencia]=Signa i encripta un fitxer
 Name[de]=Datei signieren & verschlüsseln
 Name[el]=Υπογραφή & κρυπτογράφηση αρχείου
 Name[en_GB]=Sign & Encrypt File
@@ -80,7 +81,7 @@ Exec=kleopatra --encrypt-sign %F
 Name=Encrypt File
 Name[ar]=تشفير الملف
 Name[ca]=Encriptatge de fitxer
-Name[ca@valencia]=Xifrat de fitxer
+Name[ca@valencia]=Encriptatge de fitxer
 Name[cs]=Zašifrovat soubor
 Name[da]=Kryptér fil
 Name[de]=Datei verschlüsseln
