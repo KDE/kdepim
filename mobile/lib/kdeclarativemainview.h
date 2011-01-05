@@ -172,7 +172,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void openManual();
 
     void openAttachment( const QString &url, const QString &mimeType );
-    void saveAttachment( const QString &url );
+    void saveAttachment( const QString &url, const QString &defaultFileName = QString() );
 
     void reportBug();
 
