@@ -223,3 +223,8 @@ qint64 AttachmentPart::size() const
 {
   return d->mSize;
 }
+
+bool AttachmentPart::isMessageOrMessageCollection() const
+{
+  return ( mimeType() == "message/rfc822" ) || ( mimeType() == "multipart/digest" );
+}
