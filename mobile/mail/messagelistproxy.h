@@ -49,7 +49,6 @@ class MessageListProxy : public ListProxy
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     void setSourceModel(QAbstractItemModel* sourceModel);
-    bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
 };
 
 #endif
