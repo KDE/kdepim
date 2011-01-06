@@ -21,10 +21,10 @@
 #include "templateparser.h"
 #ifndef Q_OS_WINCE
 #include "customtemplates_kfg.h"
-#include "globalsettings_base.h"
 #include "templatesconfiguration_kfg.h"
 #include "templatesconfiguration.h"
 #endif
+#include "globalsettings_base.h"
 
 
 #include "messagecore/stringutil.h"
@@ -1098,7 +1098,6 @@ QString TemplateParser::findTemplate()
   // kDebug() << "Trying to find template for mode" << mode;
 
   QString tmpl;
-
 #ifndef Q_OS_WINCE
 
 #if 0
@@ -1193,6 +1192,7 @@ QString TemplateParser::findTemplate()
       return tmpl;  // use identity-specific template
     }
   }
+#endif
 
   switch( mMode ) { // use the global template
   case NewMessage:
@@ -1213,7 +1213,6 @@ QString TemplateParser::findTemplate()
   }
 
   mQuoteString = DefaultTemplates::defaultQuoteString();
-#endif
   return tmpl;
 }
 
