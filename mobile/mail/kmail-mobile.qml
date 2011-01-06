@@ -524,6 +524,16 @@ KPIM.MainView {
       navigationModel : _itemNavigationModel
       anchors.fill : parent
     }
+    QML.Connections {
+      target : _itemNavigationModel
+      onCurrentRowChanged : {
+        if ( !application.isSingleMessage( _itemNavigationModel.currentRow ) )
+          return;
+
+        guiStateManager.pushUniqueState( KPIM.GuiStateManager.ViewSingleItemState );
+        _itemActionModel.select( _itemNavigationModel.currentRow, 3 );
+      }
+    }
 
     resultText: KDE.i18np( "One message found", "%1 messages found", searchMessageListView.count )
   }
