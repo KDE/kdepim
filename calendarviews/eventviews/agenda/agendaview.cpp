@@ -257,6 +257,8 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
         QDate::currentDate() is returned */
     static QList<QDate> generateDateList( const QDate &start, const QDate &end );
 
+    void changeColumns( int numColumns );
+
     void insertIncidence( const Akonadi::Item &incidence,
                           const QDate &curDate, bool createSelected );
 
@@ -266,6 +268,18 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
     void calendarIncidenceChanged( const Akonadi::Item &incidence );
     void calendarIncidenceDeleted( const Akonadi::Item &incidence );
 };
+
+void AgendaView::Private::changeColumns( int numColumns )
+{
+  // mMinY, mMaxY and mEnabled must all have the same size.
+  // Make sure you preserve this order because mEventIndicatorTop->changeColumns()
+  // can trigger a lot of stuff, and code will be executed when mMinY wasn't resized yet.
+  mMinY.resize( numColumns );
+  mMaxY.resize( numColumns );
+  mEventIndicatorTop->changeColumns( numColumns );
+  mEventIndicatorBottom->changeColumns( numColumns );
+}
+
 
 /** static */
 QList<QDate> AgendaView::Private::generateDateList( const QDate &start,
@@ -1459,14 +1473,10 @@ void AgendaView::fillAgenda()
   if ( changes().testFlag( DatesChanged ) ) {
     d->mAllDayAgenda->changeColumns( d->mSelectedDates.count() );
     d->mAgenda->changeColumns( d->mSelectedDates.count() );
-    d->mEventIndicatorTop->changeColumns( d->mSelectedDates.count() );
-    d->mEventIndicatorBottom->changeColumns( d->mSelectedDates.count() );
+    d->changeColumns( d->mSelectedDates.count() );
 
     createDayLabels( false );
     setHolidayMasks();
-
-    d->mMinY.resize( d->mSelectedDates.count() );
-    d->mMaxY.resize( d->mSelectedDates.count() );
 
     d->mAgenda->setDateList( d->mSelectedDates );
   }
