@@ -511,7 +511,11 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   : KDialog( parent ), d( new Private( this ) )
 {
   setCaption( i18n( "Import Contacts from LDAP" ) );
+#ifdef _WIN32_WCE
+  setButtons( Help | User1 | Cancel );
+#else
   setButtons( Help | User1 | User2 | Cancel );
+#endif
   setDefaultButton( User1 );
   setModal( false );
   showButtonSeparator( true );
@@ -590,7 +594,9 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   resize( QSize( 600, 400 ).expandedTo( minimumSizeHint() ) );
 
   setButtonText( User1, i18n( "Add Selected" ) );
+#ifndef _WIN32_WCE
   setButtonText( User2, i18n( "Configure LDAP Servers..." ) );
+#endif
 
   connect( d->mRecursiveCheckbox, SIGNAL( toggled( bool ) ),
            this, SLOT( slotSetScope( bool ) ) );
@@ -602,7 +608,9 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   d->mSearchEdit->setFocus();
 
   connect( this, SIGNAL( user1Clicked() ), this, SLOT( slotUser1() ) );
+#ifndef _WIN32_WCE
   connect( this, SIGNAL( user2Clicked() ), this, SLOT( slotUser2() ) );
+#endif
   d->slotSelectionChanged();
   d->restoreSettings();
 }
