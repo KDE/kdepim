@@ -183,6 +183,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void isLoadingSelectedChanged();
     void stateChanged();
 
+    /**
+     * This signal is emitted whenever the collection has been changed but
+     * before the item list is updated.
+     */
+    void collectionSelectionChanged();
+
   protected:
     /**
      * Creates a new main view for a mobile application.

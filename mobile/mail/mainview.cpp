@@ -299,8 +299,8 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 
   context->setContextProperty("_threadMailSelector", qmlThreadMailSelector );
 
-  connect( regularSelectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           this, SLOT( collectionSelectionChanged() ) );
+  connect( this, SIGNAL( collectionSelectionChanged() ),
+           this, SLOT( slotCollectionSelectionChanged() ) );
 
 #if 0
   {
@@ -1349,7 +1349,7 @@ void MainView::itemSelectionChanged()
   }
 }
 
-void MainView::collectionSelectionChanged()
+void MainView::slotCollectionSelectionChanged()
 {
   const QModelIndexList indexes = regularSelectionModel()->selectedIndexes();
   if ( indexes.isEmpty() )

@@ -151,7 +151,7 @@ class MainView : public KDeclarativeMainView
     void applyFiltersBulkAction();
 
     void itemSelectionChanged();
-    void collectionSelectionChanged();
+    void slotCollectionSelectionChanged();
 
   protected:
     void doDelayedInit();

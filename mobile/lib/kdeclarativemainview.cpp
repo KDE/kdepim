@@ -190,6 +190,8 @@ void KDeclarativeMainView::doDelayedInitInternal()
   d->mBnf = new Akonadi::BreadcrumbNavigationFactory( this );
   d->mBnf->createBreadcrumbContext( mainModel, this );
 
+  connect( d->mBnf, SIGNAL( collectionSelectionChanged() ), SIGNAL( collectionSelectionChanged() ) );
+
   if ( debugTiming ) {
     kWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
   }
