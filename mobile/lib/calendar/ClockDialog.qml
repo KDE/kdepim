@@ -40,7 +40,7 @@ Dialog {
         anchors {
           left: parent.left
           top: parent.top
-          bottom: parent.bottom
+          bottom: amPmSwitch.top
 
           topMargin: 25
           bottomMargin: 25
@@ -56,6 +56,24 @@ Dialog {
           // ### TODO: instead of calling function just set value
           // was supposed to work
           minuteSelector.setValue(myClock.minutes);
+        }
+      }
+
+      KPIM.Switch {
+        id: amPmSwitch
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: myClock.horizontalCenter
+
+        onOnChanged: {
+          if ( on ) { // pm selected
+            if ( myClock.hours < 12 ) {
+              myClock.hours = myClock.hours + 12;
+            }
+          } else { // am selected
+            if ( myClock.hours >= 12 ) {
+              myClock.hours = myClock.hours - 12;
+            }
+          }
         }
       }
 
@@ -77,6 +95,7 @@ Dialog {
 
           onValueChanged: {
             myClock.hours = value;
+            amPmSwitch.setOn( myClock.hours >= 12 );
             clockWidgetOk.enabled = true;
           }
           onSelected: {
@@ -107,6 +126,7 @@ Dialog {
               minuteSelector.setValue(myClock.minutes);
           }
         }
+
       }
       Row {
         spacing: 5
