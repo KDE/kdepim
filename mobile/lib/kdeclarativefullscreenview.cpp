@@ -192,8 +192,7 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
 
 void KDeclarativeFullScreenView::closeAkonadi()
 {
-  //FIXME: use proper i18n after string freeze
-  const QString message = QLatin1String( "Shutting down Akonadi will disable notifications\nabout new emails and upcoming events." );
+  const QString message = i18n( "Shutting down Akonadi will disable notifications\nabout new emails and upcoming events." );
   const int result = KMessageBox::warningContinueCancel( 0, message );
 
   if ( result == KMessageBox::Cancel )
