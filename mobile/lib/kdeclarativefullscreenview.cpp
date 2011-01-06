@@ -149,7 +149,7 @@ void KDeclarativeFullScreenView::delayedInit()
   KAction *action = KStandardAction::close( this, SLOT(close()), this );
   mActionCollection->addAction( QLatin1String( "close" ), action );
 
-  action = new KAction( "Akonadi " + KStandardGuiItem::quit().text(), this ); //FIXME: use proper i18n after string freeze
+  action = new KAction( i18n( "Full Shutdown" ), this );
   connect( action, SIGNAL( triggered() ), SLOT( closeAkonadi() ) );
   mActionCollection->addAction( QLatin1String( "quit_akonadi" ), action );
 
@@ -192,7 +192,7 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
 
 void KDeclarativeFullScreenView::closeAkonadi()
 {
-  const QString message = i18n( "Shutting down Akonadi will disable notifications\nabout new emails and upcoming events." );
+  const QString message = i18n( "A full shutdown will disable notifications\nabout new emails and upcoming events." );
   const int result = KMessageBox::warningContinueCancel( 0, message );
 
   if ( result == KMessageBox::Cancel )
