@@ -160,6 +160,7 @@ void EventIndicator::changeColumns( int columns )
 
 void EventIndicator::enableColumn( int column, bool enable )
 {
+  Q_ASSERT( column < d->mEnabled.count() );
   d->mEnabled[ column ] = enable;
 }
 
