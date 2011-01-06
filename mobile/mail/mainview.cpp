@@ -1324,16 +1324,16 @@ void MainView::saveMessage()
 void MainView::itemSelectionChanged()
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
-  if (list.size() != 1) {
+  if ( list.size() != 1 ) {
     // TODO Clear messageViewerItem
     return;
   }
 
   const QModelIndex itemIdx = list.first();
-  const Akonadi::Collection parentCol = itemIdx.data(Akonadi::EntityTreeModel::ParentCollectionRole).value<Akonadi::Collection>();
-  Q_ASSERT(parentCol.isValid());
-  QModelIndex index = EntityTreeModel::modelIndexForCollection(entityTreeModel(), parentCol);
-  Q_ASSERT(index.isValid());
+  const Akonadi::Item item = itemIdx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
+
+  QModelIndex index = EntityTreeModel::modelIndexForCollection( entityTreeModel(), Akonadi::Collection( item.storageCollectionId() ) );
+  Q_ASSERT( index.isValid() );
 
   QString path;
   while ( index.isValid() ) {
@@ -1343,10 +1343,9 @@ void MainView::itemSelectionChanged()
       path.prepend( " / " );
   }
 
-  if (messageViewerItem()) {
-    const Akonadi::Item item = itemIdx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
-    messageViewerItem()->setItem(item);
-    messageViewerItem()->setMessagePath(path);
+  if ( messageViewerItem() ) {
+    messageViewerItem()->setItem( item );
+    messageViewerItem()->setMessagePath( path );
   }
 }
 
