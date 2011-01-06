@@ -579,7 +579,7 @@ namespace {
 
 }
 
-bool foundSMIMEData( const QString aUrl,
+bool foundSMIMEData( const QString &aUrl,
                      QString& displayName,
                      QString& libName,
                      QString& keyId )

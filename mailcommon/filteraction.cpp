@@ -2208,7 +2208,7 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process( const Akonadi::I
 
   const QStringList emails = KPIMUtils::splitAddressList( headerLine );
 
-  foreach ( const QString singleEmail, emails ) {
+  foreach ( const QString& singleEmail, emails ) {
     QString name, email;
     KABC::Addressee::parseEmailAddress( singleEmail, name, email );
 

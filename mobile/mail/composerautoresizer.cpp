@@ -67,8 +67,8 @@ void ComposerAutoResizer::textEditChanged()
   const QRect contentsRect = mEdit->contentsRect();
 
   // sets the size of the widget dynamically
-  mEdit->setMinimumHeight( qMax( mMinimumHeight, size.height() + (frameRect.height() - contentsRect.height() - 1) ) );
-  mEdit->setMaximumHeight( qMax( mMinimumHeight, size.height() + (frameRect.height() - contentsRect.height() - 1) ) );
+  mEdit->setMinimumHeight( qMax( mMinimumHeight, size.height() + (frameRect.height() - contentsRect.height()) ) );
+  mEdit->setMaximumHeight( qMax( mMinimumHeight, size.height() + (frameRect.height() - contentsRect.height()) ) );
 
   const QGraphicsProxyWidget *proxy = mEdit->graphicsProxyWidget();
   QGraphicsItem *proxyItem = proxy->parentItem();

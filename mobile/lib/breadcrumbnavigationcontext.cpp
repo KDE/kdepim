@@ -138,6 +138,7 @@ void KBreadcrumbNavigationFactory::createBreadcrumbContext( QAbstractItemModel *
   Q_D(KBreadcrumbNavigationFactory);
 
   d->m_selectionModel = new QItemSelectionModel( model, parent );
+  connect( d->m_selectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SIGNAL( collectionSelectionChanged() ) );
 
   KSelectionProxyModel *currentCollectionSelectionModel = new KSelectionProxyModel( d->m_selectionModel, parent );
   currentCollectionSelectionModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
