@@ -55,6 +55,9 @@ class MOBILEUI_EXPORT ThreadModel : public QAbstractListModel
     Q_DECLARE_PRIVATE( ThreadModel )
     ThreadModelPrivate* const d_ptr;
     Q_PRIVATE_SLOT( d_func(), void populateThreadModel() )
+    Q_PRIVATE_SLOT( d_func(), void slotRowsInserted( QModelIndex, int, int ) )
+    Q_PRIVATE_SLOT( d_func(), void slotRowsRemoved( QModelIndex, int, int ) )
+    Q_PRIVATE_SLOT( d_func(), void slotResetModel() )
 };
 
 #endif

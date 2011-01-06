@@ -32,6 +32,7 @@ set(mobileui_SRCS
     modelselectiontransition.cpp
     orderedchildcollectionsmodel.cpp
     qmllistselectionmodel.cpp
+    rangemanager.cpp
     searchmanager.cpp
     statemachinebuilder.cpp
     stylesheetloader.cpp
