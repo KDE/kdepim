@@ -732,30 +732,28 @@ void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence,
       // TODO if ( rmp.first().pos() != mDateTime->startDate().day() ) { warn user }
       // NOTE: This silencly changes the recurrence when:
       //       rmp.first().pos() != mDateTime->startDate().day()
-      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyDay );
+      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyPos );
     } else { // (month.last() - n)th day
       // TODO: Handle recurrences we cannot represent
       // QDate startDate = mDateTime->startDate();
       // const int dayFromEnd = startDate.daysInMonth() - startDate.day();
       // if ( qAbs( rmp.first().pos() ) != dayFromEnd ) { /* warn user */ }
-      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyDayInverted );
+      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyPosInverted );
     }
   } else { // Monthly by day
 
     // check if we have any setting for which day (vcs import is broken and
     // does not set any day, thus we need to check)
-    int day = currentDate().day();
-    if ( !recurrence->monthDays().isEmpty() ) {
-      day = recurrence->monthDays().first();
-    }
+    const int day = recurrence->monthDays().isEmpty() ? currentDate().day() :
+                                                        recurrence->monthDays().first();
 
     // Days from the end are after the ones from the begin, so correct for the
     // negative sign and add 30 (index starting at 0)
     // TODO: Do similar checks as in the monthlyPos case
     if ( day > 0 && day <= 31 ) {
-      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyPos );
+      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyDay );
     } else if ( day < 0 ) {
-      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyPosInverted );
+      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyDayInverted );
     }
   }
 
