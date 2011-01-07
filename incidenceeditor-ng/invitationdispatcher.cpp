@@ -53,6 +53,9 @@ InvitationDispatcherPrivate::InvitationDispatcherPrivate( CalendarSupport::Calen
 bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &oldInc,
                                                            const KCalCore::Incidence::Ptr &newInc )
 {
+  Q_ASSERT( oldInc );
+  Q_ASSERT( newInc );
+
   KCalCore::Attendee::Ptr oldMe( oldInc->attendeeByMails(
                                    CalendarSupport::KCalPrefs::instance()->allEmails() ) );
   KCalCore::Attendee::Ptr newMe( newInc->attendeeByMails(
