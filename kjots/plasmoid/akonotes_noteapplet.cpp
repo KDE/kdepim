@@ -44,7 +44,6 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
-#include <akonadi/control.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -65,8 +64,6 @@ AkonotesNoteApplet::AkonotesNoteApplet( QObject* parent, const QVariantList& arg
 {
   setAspectRatioMode( Plasma::IgnoreAspectRatio );
   setBackgroundHints( Plasma::Applet::NoBackground );
-
-  Akonadi::Control::start();
 
   m_subject = new Plasma::LineEdit( this );
   m_subject->installEventFilter( this );

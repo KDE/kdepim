@@ -26,7 +26,6 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/control.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entityrightsfiltermodel.h>
@@ -46,7 +45,6 @@ K_EXPORT_PLASMA_APPLET( akonotes_list, AkonotesListApplet )
 AkonotesListApplet::AkonotesListApplet(QObject* parent, const QVariantList& args)
     : PopupApplet(parent, args)
 {
-  Akonadi::Control::start();
 
   setHasConfigurationInterface( true );
   setPopupIcon( "kjots" );
