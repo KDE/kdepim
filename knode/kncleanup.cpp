@@ -80,10 +80,8 @@ void KNCleanUp::start()
 void KNCleanUp::reset()
 {
   mColList.clear();
-  if(d_lg) {
-    delete d_lg;
-    d_lg=0;
-  }
+  delete d_lg;
+  d_lg=0;
 }
 
 

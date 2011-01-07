@@ -1285,11 +1285,7 @@ void KNComposer::slotExternalEditor()
   if(editorCommand.isEmpty())
     KMessageBox::sorry(this, i18n("No editor configured.\nPlease do this in the settings dialog."));
 
-  if(e_ditorTempfile) {       // shouldn't happen...
-    delete e_ditorTempfile;
-    e_ditorTempfile=0;
-  }
-
+  delete e_ditorTempfile;
   e_ditorTempfile=new KTemporaryFile();
 
   if(!e_ditorTempfile->open()) {
