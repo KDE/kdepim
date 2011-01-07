@@ -75,6 +75,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
     void removeExceptions();
     void updateRemoveExceptionButton();
     void updateWeekDays( const QDate &newStartDate );
+    void handleStartDateChange( const QDate & );
+    void handleEndDateChange( const QDate & );
 
   private:
 
@@ -116,6 +118,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
      * the month of @param date.
      */
     int weekdayCountForMonth( const QDate &date ) const;
+
+    QDate currentDate() const;
 
   private:
 #ifdef KDEPIM_MOBILE_UI

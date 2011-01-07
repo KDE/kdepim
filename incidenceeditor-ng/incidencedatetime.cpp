@@ -646,34 +646,10 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL(endTimeChanged(QTime)) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
-  //TODO: do something with tmpl, note: this wasn't used in the old code either.
-//   Q_UNUSED( tmpl );
+  const KDateTime rightNow = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
 
-  KDateTime endDT = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
-  if ( todo->hasDueDate() ) {
-    endDT = todo->dtDue();
-    if ( todo->recurs() && mActiveDate.isValid() ) {
-      KDateTime dt( mActiveDate, QTime( 0, 0, 0 ) );
-      dt = dt.addSecs( -1 );
-      endDT.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
-    }
-    if ( endDT.isUtc() ) {
-      endDT = endDT.toLocalZone();
-    }
-  }
-
-  KDateTime startDT = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
-  if ( todo->hasStartDate() ) {
-    startDT = todo->dtStart();
-    if ( todo->recurs() && mActiveDate.isValid() && todo->hasDueDate() ) {
-      int days = todo->dtStart( true ).daysTo( todo->dtDue( true ) );
-      startDT.setDate( startDT.date().addDays( -days ) );
-    }
-    if ( startDT.isUtc() ) {
-      startDT = startDT.toLocalZone();
-    }
-  }
-
+  const KDateTime endDT   = todo->hasDueDate() ? todo->dtDue( true /** first */ ) : rightNow;
+  const KDateTime startDT = todo->hasStartDate() ? todo->dtStart( true /** first */ ) : rightNow;
   setDateTimes( startDT, endDT );
 }
 
@@ -708,18 +684,18 @@ void IncidenceDateTime::save( const KCalCore::Event::Ptr &event )
 
 void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
 {
-  todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
-
   if ( mUi->mStartCheck->isChecked() ) {
-    KDateTime todoDT = currentStartDateTime();
-    todo->setDtStart( todoDT );
+    todo->setDtStart( currentStartDateTime() );
+    // Set allday must be executed after setDtStart
+    todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
   } else {
     todo->setHasStartDate( false );
   }
 
   if ( mUi->mEndCheck->isChecked() ) {
-    KDateTime todoDT = currentEndDateTime();
-    todo->setDtDue( todoDT );
+    todo->setDtDue( currentEndDateTime(), true /** first */ );
+    // Set allday must be executed after setDtDue
+    todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
   } else {
     todo->setHasDueDate( false );
   }

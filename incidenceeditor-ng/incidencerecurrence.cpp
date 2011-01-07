@@ -76,10 +76,14 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
 
   connect( mDateTime, SIGNAL(endDateTimeToggled(bool)),
            SLOT( handleDateTimeToggle() ) );
+
   connect( mDateTime, SIGNAL(startDateChanged(QDate)),
-           SLOT(fillCombos()) );
-  connect( mDateTime, SIGNAL(startDateChanged(QDate)),
-           SLOT(updateWeekDays(QDate)) );
+           SLOT(handleStartDateChange(QDate)) );
+  connect( mDateTime, SIGNAL(endDateChanged(QDate)),
+           SLOT(handleEndDateChange(QDate)) );
+
+  connect( mDateTime, SIGNAL(startDateChanged(QDate)), mUi->mExceptionDateEdit,
+           SLOT(setDate(QDate)) );
   connect( mDateTime, SIGNAL(startDateChanged(QDate)), mUi->mExceptionDateEdit,
            SLOT(setDate(QDate)) );
   connect( mUi->mExceptionAddButton, SIGNAL(clicked()),
@@ -146,8 +150,11 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
   // We must be sure that the date/time in mDateTime is the correct date time.
   // So don't depend on CombinedIncidenceEditor or whatever external factor to
   // load the date/time before loading the recurrence
+
+  mCurrentDate = mLoadedIncidence->dateTime( KCalCore::IncidenceBase::RoleRecurrenceStart ).date();
+
   mDateTime->load( incidence );
-  mCurrentDate = mDateTime->startDate();
+  mDateTime->endDate();
   fillCombos();
   setDefaults();
 
@@ -174,7 +181,7 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
     handleRecurrenceTypeChange( RecurrenceTypeWeekly );
     QBitArray disableDays( 7/*size*/, 0/*default value*/ );
     // dayOfWeek returns between 1 and 7
-    disableDays.setBit( mDateTime->startDate().dayOfWeek()-1, 1 );
+    disableDays.setBit( currentDate().dayOfWeek()-1, 1 );
     mUi->mWeekDayCombo->setDays( r->days(), disableDays );
     setFrequency( f );
     break;
@@ -252,15 +259,15 @@ void IncidenceRecurrence::writeToIncidence( const KCalCore::Incidence::Ptr &inci
 
     if ( mUi->mYearlyCombo->currentIndex() == 0 ) {       //Every nth of month
       r->addYearlyDate( dayOfMonthFromStart() );
-      r->addYearlyMonth( mDateTime->startDate().month() );
+      r->addYearlyMonth( currentDate().month() );
     } else if ( mUi->mYearlyCombo->currentIndex() == 1 ) {//Every (last - n)th last day of month
       r->addYearlyDate( dayOfMonthFromEnd() );
-      r->addYearlyMonth( mDateTime->startDate().month() );
+      r->addYearlyMonth( currentDate().month() );
     } else if ( mUi->mYearlyCombo->currentIndex() == 2 ) {//Every ith weekday of month
-      r->addYearlyMonth( mDateTime->startDate().month() );
+      r->addYearlyMonth( currentDate().month() );
       r->addYearlyPos( monthWeekFromStart(), weekday() );
     } else if ( mUi->mYearlyCombo->currentIndex() == 3 ) {//Every (last - i)th last weekday of month
-      r->addYearlyMonth( mDateTime->startDate().month() );
+      r->addYearlyMonth( currentDate().month() );
       r->addYearlyPos( monthWeekFromEnd(), weekday() );
     } else { // The lth day of the year (l : 1 - 356)
       r->addYearlyDay( dayOfYearFromStart() );
@@ -434,7 +441,9 @@ void IncidenceRecurrence::fillCombos()
   // - the (month.weekCount() - i)th day of the month
   const int currentMonthlyIndex = mUi->mMonthlyCombo->currentIndex();
   mUi->mMonthlyCombo->clear();
-  const QDate startDate = mDateTime->startDate();
+  const QDate date = ( mLoadedIncidence &&
+                       mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ? mDateTime->endDate() :
+                                                                                     mDateTime->startDate();
   QString item = subsOrdinal(
     ki18nc( "example: the 30th", "the %1" ), dayOfMonthFromStart() ).toString();
   mUi->mMonthlyCombo->addItem( item );
@@ -446,18 +455,18 @@ void IncidenceRecurrence::fillCombos()
   item = subsOrdinal(
     ki18nc( "example: the 5th Wednesday", "the %1 %2" ), monthWeekFromStart() ).
          subs(
-           calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
+           calSys->weekDayName( date.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
   mUi->mMonthlyCombo->addItem( item );
 
   if ( monthWeekFromEnd() == 1 ) {
     item = ki18nc( "example: the last Wednesday", "the last %1" ).
            subs( calSys->weekDayName(
-                   startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
+                   date.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
   } else {
     item = subsOrdinal(
       ki18nc( "example: the 5th to last Wednesday", "the %1 to last %2" ), monthWeekFromEnd() ).
            subs( calSys->weekDayName(
-                   startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
+                   date.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
   }
   mUi->mMonthlyCombo->addItem( item );
   mUi->mMonthlyCombo->setCurrentIndex( currentMonthlyIndex == -1 ? 0 : currentMonthlyIndex );
@@ -470,38 +479,38 @@ void IncidenceRecurrence::fillCombos()
   // - the ${m}th day of the year
   const int currentYearlyIndex = mUi->mYearlyCombo->currentIndex();
   mUi->mYearlyCombo->clear();
-  const QString longMonthName = calSys->monthName( startDate );
-  item = subsOrdinal( ki18nc( "example: the 5th of June", "the %1 of %2" ), startDate.day() ).
+  const QString longMonthName = calSys->monthName( date );
+  item = subsOrdinal( ki18nc( "example: the 5th of June", "the %1 of %2" ), date.day() ).
          subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
   item = subsOrdinal(
     ki18nc( "example: the 3rd to last day of June", "the %1 to last day of %2" ),
-    startDate.daysInMonth() - startDate.day() ).subs( longMonthName ).toString();
+    date.daysInMonth() - date.day() ).subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
   item = subsOrdinal(
     ki18nc( "example: the 4th Wednesday of June", "the %1 %2 of %3" ), monthWeekFromStart() ).
-         subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).
+         subs( calSys->weekDayName( date.dayOfWeek(), KCalendarSystem::LongDayName ) ).
          subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
   if ( monthWeekFromEnd() == 1 ) {
     item = ki18nc( "example: the last Wednesday of June", "the last %1 of %2" ).
-           subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).
+           subs( calSys->weekDayName( date.dayOfWeek(), KCalendarSystem::LongDayName ) ).
            subs( longMonthName ).toString();
   } else {
     item = subsOrdinal(
       ki18nc( "example: the 4th to last Wednesday of June", "the %1 to last %2 of %3 " ),
       monthWeekFromEnd() ).
-           subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).
+           subs( calSys->weekDayName( date.dayOfWeek(), KCalendarSystem::LongDayName ) ).
            subs( longMonthName ).toString();
   }
   mUi->mYearlyCombo->addItem( item );
 
   item = subsOrdinal(
     ki18nc( "example: the 15th day of the year", "the %1 day of the year" ),
-    startDate.dayOfYear() ).toString();
+    date.dayOfYear() ).toString();
   mUi->mYearlyCombo->addItem( item );
   mUi->mYearlyCombo->setCurrentIndex( currentYearlyIndex == -1 ? 0 : currentYearlyIndex );
 }
@@ -612,18 +621,18 @@ void IncidenceRecurrence::updateWeekDays( const QDate &newStartDate )
 
 short IncidenceRecurrence::dayOfMonthFromStart() const
 {
-  return mDateTime->startDate().day();
+  return currentDate().day();
 }
 
 short IncidenceRecurrence::dayOfMonthFromEnd() const
 {
-  const QDate start = mDateTime->startDate();
+  const QDate start = currentDate();
   return start.daysInMonth() - start.day();
 }
 
 short IncidenceRecurrence::dayOfYearFromStart() const
 {
-  return mDateTime->startDate().dayOfYear();
+  return currentDate().dayOfYear();
 }
 
 int IncidenceRecurrence::duration() const
@@ -640,7 +649,7 @@ int IncidenceRecurrence::duration() const
 
 short IncidenceRecurrence::monthWeekFromStart() const
 {
-  QDate date = mDateTime->startDate();
+  const QDate date = currentDate();
 
   int count = 1;
   QDate tmp = date.addDays( -7 );
@@ -655,7 +664,7 @@ short IncidenceRecurrence::monthWeekFromStart() const
 
 short IncidenceRecurrence::monthWeekFromEnd() const
 {
-  QDate date = mDateTime->startDate();
+  const QDate date = currentDate();
 
   int count = 1;
   QDate tmp = date.addDays( 7 );
@@ -718,7 +727,7 @@ void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence,
 
     // check if we have any setting for which day (vcs import is broken and
     // does not set any day, thus we need to check)
-    int day = mDateTime->startDate().day();
+    int day = currentDate().day();
     if ( !recurrence->monthDays().isEmpty() ) {
       day = recurrence->monthDays().first();
     }
@@ -745,7 +754,7 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
 
   if ( recurenceType == KCalCore::Recurrence::rYearlyDay ) {
 
-    int day = mDateTime->startDate().dayOfYear();
+    int day = currentDate().dayOfYear();
     if ( !recurrence->yearDays().isEmpty() ) {
       day = recurrence->yearDays().first();
     }
@@ -755,12 +764,12 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
 
   } else if ( recurenceType == KCalCore::Recurrence::rYearlyMonth ) {
 
-    int day = mDateTime->startDate().day();
+    int day = currentDate().day();
     if ( !recurrence->yearDates().isEmpty() ) {
       day = recurrence->yearDates().first();
     }
 
-    int month = mDateTime->startDate().month();
+    int month = currentDate().month();
     if ( !recurrence->yearMonths().isEmpty() ) {
       month = recurrence->yearMonths().first();
     }
@@ -776,14 +785,14 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
 
   } else { //KCalCore::Recurrence::rYearlyPos
 
-    int month = mDateTime->startDate().month();
+    int month = currentDate().month();
     if ( !recurrence->yearMonths().isEmpty() ) {
       month = recurrence->yearMonths().first();
     }
 
     // count is the nth weekday of the month or the ith last weekday of the month.
-    int count = ( mDateTime->startDate().day() - 1 ) / 7;
-    int day = mDateTime->startDate().dayOfWeek();
+    int count = ( currentDate().day() - 1 ) / 7;
+    int day = currentDate().dayOfWeek();
     if ( !recurrence->yearPositions().isEmpty() ) {
       count = recurrence->yearPositions().first().pos();
       day = recurrence->yearPositions().first().day();
@@ -806,13 +815,13 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
 void IncidenceRecurrence::setDefaults()
 {
   mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndNever );
-  mUi->mRecurrenceEndDate->setDate( mDateTime->startDate() );
+  mUi->mRecurrenceEndDate->setDate( currentDate() );
   mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeNone );
 
   setFrequency( 1 );
 
   // -1 because we want between 0 and 6
-  const int day = KGlobal::locale()->calendar()->dayOfWeek( mDateTime->startDate() ) - 1;
+  const int day = KGlobal::locale()->calendar()->dayOfWeek( currentDate() ) - 1;
 
   QBitArray checkDays( 7, 0 );
   checkDays.setBit( day );
@@ -885,7 +894,7 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
   mUi->mExceptionsLabel->setVisible( enable );
   mUi->mExceptionDateEdit->setVisible( enable );
   mUi->mExceptionAddButton->setVisible( enable );
-  mUi->mExceptionAddButton->setEnabled( mUi->mExceptionDateEdit->date() >= mDateTime->startDate() );
+  mUi->mExceptionAddButton->setEnabled( mUi->mExceptionDateEdit->date() >= currentDate() );
   mUi->mExceptionRemoveButton->setVisible( enable );
   mUi->mExceptionRemoveButton->setEnabled( mUi->mExceptionList->selectedItems().count() > 0 );
   mUi->mExceptionList->setVisible( enable );
@@ -895,7 +904,7 @@ QBitArray IncidenceRecurrence::weekday() const
 {
   QBitArray days( 7 );
   // QDate::dayOfWeek() -> returns [1 - 7], 1 == monday
-  days.setBit( mDateTime->startDate().dayOfWeek() - 1, true );
+  days.setBit( currentDate().dayOfWeek() - 1, true );
   return days;
 }
 
@@ -927,4 +936,35 @@ RecurrenceType IncidenceRecurrence::currentRecurrenceType() const
   Q_ASSERT_X( currentIndex >= 0 && currentIndex < RecurrenceTypeUnknown, "currentRecurrenceType",
               "Keep the combo-box values in sync with the enum" );
   return static_cast<RecurrenceType>( currentIndex );
+}
+
+
+void IncidenceRecurrence::handleStartDateChange( const QDate &date )
+{
+  // If it's a to-do, recurrence is calculated from dtDue.
+  // ( not rfc compliant, but it's what we have now )
+  if ( !( mLoadedIncidence &&
+          mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ) {
+    fillCombos();
+    updateWeekDays( date );
+  }
+}
+
+void IncidenceRecurrence::handleEndDateChange( const QDate &date )
+{
+  // If it's a to-do, recurrence is calculated from dtDue, not dtStart.
+  // ( not rfc compliant, but it's what we have now )
+  if ( mLoadedIncidence &&
+       mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) {
+    fillCombos();
+    updateWeekDays( date );
+  }
+}
+
+QDate IncidenceRecurrence::currentDate() const
+{
+  // If it's a to-do, recurrence is calculated from dtDue, not dtStart.
+  // ( not rfc compliant, but it's what we have now )
+  return ( mLoadedIncidence && mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ? mDateTime->endDate():
+                                                                                             mDateTime->startDate();
 }
