@@ -1180,27 +1180,29 @@ bool ActionManager::saveURL()
 
 void ActionManager::exportHTML()
 {
-  HTMLExportSettings settings( "KOrganizer" );
+  HTMLExportSettings *settings = new HTMLExportSettings( "KOrganizer" );
+  mSettingsToFree.insert( settings );
   // Manually read in the config, because parametrized kconfigxt objects don't
   // seem to load the config theirselves
-  settings.readConfig();
+  settings->readConfig();
 
   const QDate qd1 = QDate::currentDate();
   QDate qd2 = qd1;
 
-  if ( settings.monthView() ) {
+  if ( settings->monthView() ) {
     qd2.addMonths( 1 );
   } else {
     qd2.addDays( 7 );
   }
-  settings.setDateStart( QDateTime( qd1 ) );
-  settings.setDateEnd( QDateTime( qd2 ) );
-  exportHTML( &settings );
+  settings->setDateStart( QDateTime( qd1 ) );
+  settings->setDateEnd( QDateTime( qd2 ) );
+  exportHTML( settings );
 }
 
 void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings )
 {
   if ( !settings || settings->outputFile().isEmpty() ) {
+    kWarning() << "Settings is null, or the output file is empty " << settings;
     return;
   }
 
@@ -1231,6 +1233,7 @@ void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings )
     }
   }
 
+  connect( exportJob, SIGNAL(result(KJob*)), SLOT(handleExportJobResult(KJob*)) );
   exportJob->start();
 }
 
@@ -2111,5 +2114,17 @@ void ActionManager::openEventEditor( const QString &summary,
   Q_UNUSED( attachmentIsInline );
   kWarning() << "Not implemented in korg-desktop";
 }
+
+void ActionManager::handleExportJobResult( KJob *job )
+{
+  HtmlExportJob *htmlExportJob = qobject_cast<HtmlExportJob*>( job );
+  Q_ASSERT( htmlExportJob );
+
+  if ( mSettingsToFree.contains( htmlExportJob->settings() ) ) {
+    mSettingsToFree.remove( htmlExportJob->settings() );
+    delete htmlExportJob->settings();
+  }
+}
+
 
 #include "actionmanager.moc"

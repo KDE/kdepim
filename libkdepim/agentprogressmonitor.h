@@ -40,8 +40,7 @@ class AgentProgressMonitor : public QObject
 
   protected:
     // used by our friend ProgressManager
-    AgentProgressMonitor( const Akonadi::AgentInstance &agent,
-        ProgressItem *item );
+    AgentProgressMonitor( const Akonadi::AgentInstance &agent, ProgressItem *item );
     ~AgentProgressMonitor();
 
   private:
@@ -51,7 +50,6 @@ class AgentProgressMonitor : public QObject
     Q_PRIVATE_SLOT( d, void abort() )
     Q_PRIVATE_SLOT( d, void instanceProgressChanged( const Akonadi::AgentInstance& ) )
     Q_PRIVATE_SLOT( d, void instanceStatusChanged( const Akonadi::AgentInstance& ) )
-
 };
 
 }

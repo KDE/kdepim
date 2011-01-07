@@ -24,9 +24,8 @@
 
 #include <kjob.h>
 
-#include <kcalcore/incidence.h>
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
@@ -63,6 +62,7 @@ class HtmlExportJob : public KJob
     void addHoliday( const QDate &date, const QString &name );
 
     virtual void start();
+    HTMLExportSettings* settings() const;
 
   protected:
     void createWeekView( QTextStream *ts );

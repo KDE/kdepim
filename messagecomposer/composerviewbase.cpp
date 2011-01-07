@@ -66,6 +66,15 @@
 #include "messagecomposersettings.h"
 #include "messagehelper.h"
 
+static QStringList encodeIdn( const QStringList &emails )
+{
+  QStringList encoded;
+  foreach ( const QString &email, emails )
+    encoded << KPIMUtils::normalizeAddressesAndEncodeIdn( email );
+
+  return encoded;
+}
+
 Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  : QObject ( parent )
  , m_msg( KMime::Message::Ptr( new KMime::Message ) )
@@ -77,7 +86,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  , m_identMan( 0 )
  , m_editor( 0 )
  , m_transport( 0 )
- , m_fcc( 0 )
+ , m_fccCombo( 0 )
  , m_sign( false )
  , m_encrypt( false )
  , m_neverEncrypt( false )
@@ -178,15 +187,14 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
         it != ac.attachments().end() ; ++it ) {
     addAttachmentPart( *it );
   }
-  
-  QString transportName;
-  if( m_msg->headerByType( "X-KMail-Transport" ) )
-    transportName = m_msg->headerByType("X-KMail-Transport")->asUnicodeString();
-  if ( !transportName.isEmpty() ) {
-    MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( transportName );
-    if ( transport )
-      m_transport->setCurrentTransport( transport->id() );
-  }
+
+  int transportId = -1;
+  if ( m_msg->headerByType( "X-KMail-Transport" ) )
+    transportId = m_msg->headerByType( "X-KMail-Transport" )->asUnicodeString().toInt();
+
+  const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( transportId );
+  if ( transport )
+    m_transport->setCurrentTransport( transport->id() );
 
   // Set the HTML text and collect HTML images
   if ( isHTMLMail( m_msg.get() ) ) {
@@ -537,8 +545,12 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
    // TODO splitAddressList and expandAliases ugliness should be handled by a
   // special AddressListEdit widget... (later: see RecipientsEditor)
 
-  if ( m_fcc ) {
-    infoPart->setFcc( QString::number( m_fcc->currentCollection().id() ) );
+  if ( m_fccCombo ) {
+    infoPart->setFcc( QString::number( m_fccCombo->currentCollection().id() ) );
+  } else {
+    if ( m_fccCollection.isValid() ) {
+      infoPart->setFcc( QString::number( m_fccCollection.id() ) );
+    }
   }
 
   infoPart->setTransportId( m_transport->currentTransportId() );
@@ -655,9 +667,9 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
     qjob->dispatchModeAttribute().setDispatchMode( MailTransport::DispatchModeAttribute::Manual );
 
   if ( !infoPart->fcc().isEmpty() ) {
-    qjob->sentBehaviourAttribute().setSentBehaviour(
-                      MailTransport::SentBehaviourAttribute::MoveToCollection );
-    const Akonadi::Collection sentCollection( infoPart->fcc().toInt() );
+    qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::MoveToCollection );
+
+    const Akonadi::Collection sentCollection( infoPart->fcc().toLongLong() );
     qjob->sentBehaviourAttribute().setMoveToCollection( sentCollection );
   } else {
     qjob->sentBehaviourAttribute().setSentBehaviour(
@@ -677,6 +689,10 @@ void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Messa
   }
 
   fillQueueJobHeaders( qjob, message, infoPart );
+
+  MessageCore::StringUtil::removePrivateHeaderFields( message );
+  message->assemble();
+
   connect( qjob, SIGNAL( result(KJob*) ), this, SLOT( slotQueueResult( KJob* ) ) );
   m_pendingQueueJobs++;
   qjob->start();
@@ -714,21 +730,21 @@ void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueue
 {
   MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( infoPart->transportId() );
   if ( transport && transport->specifySenderOverwriteAddress() )
-    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( transport->senderOverwriteAddress() ) );
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
   else
-    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( infoPart->from() ) ) );
   // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
   //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
   if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
     KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
-    qjob->addressAttribute().setTo( cleanEmailList( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) );
+    qjob->addressAttribute().setTo( cleanEmailList( encodeIdn( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) ) );
     message->removeHeader( "X-KMail-EncBccRecipients" );
     message->assemble();
     kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
   } else {
-    qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
-    qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
-    qjob->addressAttribute().setBcc( cleanEmailList( infoPart->bcc() ) );
+    qjob->addressAttribute().setTo( cleanEmailList( encodeIdn( infoPart->to() ) ) );
+    qjob->addressAttribute().setCc( cleanEmailList( encodeIdn( infoPart->cc() ) ) );
+    qjob->addressAttribute().setBcc( cleanEmailList( encodeIdn( infoPart->bcc() ) ) );
   }
 }
 void Message::ComposerViewBase::initAutoSave()
@@ -895,10 +911,25 @@ void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, Messag
 {
   Akonadi::Collection target;
 
+  // preinitialize with the default collections
   if ( saveIn == MessageSender::SaveInTemplates ) {
     target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
   } else {
     target = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
+  }
+
+  // overwrite with identity specific collections if available
+  const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+  if ( !identity.isNull() ) { // we have a valid identity
+    if ( saveIn == MessageSender::SaveInTemplates ) {
+      if ( !identity.templates().isEmpty() ) { // the user has specified a custom templates collection
+        target = Akonadi::Collection( identity.templates().toLongLong() );
+      }
+    } else {
+      if ( !identity.drafts().isEmpty() ) { // the user has specified a custom drafts collection
+        target = Akonadi::Collection( identity.drafts().toLongLong() );
+      }
+    }
   }
 
   if ( !target.isValid() ) {
@@ -1180,21 +1211,23 @@ KPIMIdentities::IdentityManager* Message::ComposerViewBase::identityManager()
 
 void Message::ComposerViewBase::setFcc ( const Akonadi::Collection& fccCollection )
 {
-  if ( m_fcc ) {
-    m_fcc->setDefaultCollection( fccCollection );
+  if ( m_fccCombo ) {
+    m_fccCombo->setDefaultCollection( fccCollection );
+  } else {
+    m_fccCollection = fccCollection;
   }
 }
 
 
 void Message::ComposerViewBase::setFccCombo ( Akonadi::CollectionComboBox* fcc )
 {
-  m_fcc = fcc;
+  m_fccCombo = fcc;
 }
 
 Akonadi::CollectionComboBox* Message::ComposerViewBase::fccCombo()
 {
 
-  return m_fcc;
+  return m_fccCombo;
 }
 
 void Message::ComposerViewBase::setFrom(const QString& from)

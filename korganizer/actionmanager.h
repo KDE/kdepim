@@ -367,6 +367,7 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     QWidget *dialogParent();
 
   private slots:
+    void handleExportJobResult( KJob* );
     void dumpText( const QString & );  // only for debugging purposes
 
     void slotResourcesChanged(bool);
@@ -450,6 +451,7 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mCollectionViewStateSaver;
     KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mCollectionSelectionModelStateSaver;
     bool mIsClosing;
+    QSet<KOrg::HTMLExportSettings*> mSettingsToFree;
 };
 
 #endif

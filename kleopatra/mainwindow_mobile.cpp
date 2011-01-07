@@ -189,19 +189,7 @@ public:
     }
 
     void closeAndQuit() {
-        const QString app = KGlobal::mainComponent().aboutData()->programName();
-        const int rc = KMessageBox::questionYesNoCancel( q,
-                                                         i18n("%1 may be used by other applications as a service.\n"
-                                                              "You may instead want to close this window without exiting %1.", app ),
-                                                         i18n("Really Quit?"), KStandardGuiItem_close(), KStandardGuiItem_quit(), KStandardGuiItem::cancel(),
-                                                         "really-quit-" + app.toLower() );
-        if ( rc == KMessageBox::Cancel )
-            return;
-        if ( !q->close() )
-            return;
-        // WARNING: 'this' might be deleted at this point!
-        if ( rc == KMessageBox::No )
-            qApp->quit();
+        qApp->quit();
     }
 
     void selfTest() {

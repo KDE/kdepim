@@ -88,6 +88,11 @@ void ThreadGrouperComparator::invalidate()
   m_grouper->q_ptr->invalidate();
 }
 
+void ThreadGrouperComparator::resetCaches()
+{
+}
+
+
 Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &item ) const
 {
   const QByteArray identifier = m_comparator->identifierForItem( item );
@@ -110,7 +115,6 @@ Akonadi::Item ThreadGrouperModelPrivate::getThreadItem( const Akonadi::Item &ite
 
   return m_items.value( parentIdentifier );
 }
-
 
 void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
 {
@@ -149,6 +153,8 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
 
   m_childParentMap = resolver.childParentMap();
   m_parentChildrenMap = resolver.parentChildrenMap();
+
+  m_comparator->resetCaches();
 }
 
 
@@ -188,52 +194,17 @@ void ThreadGrouperModel::setSourceModel( QAbstractItemModel *sourceModel )
 {
   Q_D( ThreadGrouperModel );
   d->populateThreadGrouperModel();
+
+  connect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
+           this, SLOT( populateThreadGrouperModel() ) );
+
+  connect( sourceModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
+           this, SLOT( populateThreadGrouperModel() ) );
+
+  connect( sourceModel, SIGNAL( layoutChanged() ),
+           this, SLOT( populateThreadGrouperModel() ) );
+
   QSortFilterProxyModel::setSourceModel( sourceModel );
-
-  disconnect( sourceModel, SIGNAL( rowsAboutToBeInserted( QModelIndex, int, int ) ),
-              this, SIGNAL( _q_sourceRowsAboutToBeInserted( QModelIndex, int, int ) ) );
-
-  disconnect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
-              this, SLOT( _q_sourceRowsInserted( QModelIndex, int, int ) ) );
-
-  disconnect( sourceModel, SIGNAL( rowsAboutToBeRemoved( QModelIndex, int, int ) ),
-              this, SLOT( _q_sourceRowsAboutToBeRemoved( QModelIndex, int, int ) ) );
-
-  disconnect( sourceModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
-              this, SLOT( _q_sourceRowsRemoved( QModelIndex, int, int ) ) );
-
-  disconnect( sourceModel, SIGNAL( layoutAboutToBeChanged() ),
-              this, SLOT( _q_sourceLayoutAboutToBeChanged() ) );
-
-  disconnect( sourceModel, SIGNAL( layoutChanged() ),
-              this, SLOT( _q_sourceLayoutChanged() ) );
-
-  connect( sourceModel, SIGNAL( rowsAboutToBeInserted( QModelIndex, int, int ) ),
-           this, SLOT( _q_sourceAboutToBeReset() ) );
-
-  connect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
-           this, SLOT( populateThreadGrouperModel() ) );
-
-  connect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
-           this, SLOT( _q_sourceReset() ) );
-
-  connect( sourceModel, SIGNAL( rowsAboutToBeRemoved( QModelIndex, int, int ) ),
-           this, SLOT( _q_sourceAboutToBeReset() ) );
-
-  connect( sourceModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
-           this, SLOT( populateThreadGrouperModel() ) );
-
-  connect( sourceModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
-           this, SLOT( _q_sourceReset() ) );
-
-  connect( sourceModel, SIGNAL( layoutAboutToBeChanged() ),
-           this, SLOT( _q_sourceAboutToBeReset() ) );
-
-  connect( sourceModel, SIGNAL( layoutChanged() ),
-           this, SLOT( populateThreadGrouperModel() ) );
-
-  connect( sourceModel, SIGNAL( layoutChanged() ),
-           this, SLOT( _q_sourceReset() ) );
 
   if ( d->m_dynamicModelRepopulation )
     connect( sourceModel, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),

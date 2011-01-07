@@ -47,6 +47,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
   private slots:
     void selectCategories();
     void setCategories( const QStringList &categories );
+    void setCategoriesFromCombo();
 
   private:
     QStringList mSelectedCategories;

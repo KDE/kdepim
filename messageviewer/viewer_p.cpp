@@ -644,12 +644,16 @@ int ViewerPrivate::pointsToPixel(int pointSize) const
 
 void ViewerPrivate::displaySplashPage( const QString &info )
 {
-// FIXME: add loading screen that doesn't eat 15Mb
-#ifndef KDEPIM_MOBILE_UI
   mMsgDisplay = false;
   adjustLayout();
 
-  QString location = KStandardDirs::locate("data", "kmail/about/main.html");//FIXME(Andras) copy to $KDEDIR/share/apps/mailviewer
+#ifdef KDEPIM_MOBILE_UI
+  const QString location = KStandardDirs::locate( "data", "messageviewer/about/main_mobile.html" );
+  QString content = KPIMUtils::kFileToByteArray( location );
+  content = content.arg( "" ); // infopage stylesheet
+  content = content.arg( "" ); // rtl infopage stylesheet
+#else
+  const QString location = KStandardDirs::locate( "data", "kmail/about/main.html" ); //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
   QString content = KPIMUtils::kFileToByteArray( location );
   content = content.arg( KStandardDirs::locate( "data", "kdeui/about/kde_infopage.css" ) );
   if ( QApplication::isRightToLeft() )
@@ -657,14 +661,14 @@ void ViewerPrivate::displaySplashPage( const QString &info )
                            "kdeui/about/kde_infopage_rtl.css" ) +  "\";");
   else
     content = content.arg( "" );
-
-  QString fontSize = QString::number( pointsToPixel( mCSSHelper->bodyFont().pointSize() ) );
-  QString catchPhrase = ""; //not enough space for a catch phrase at default window size i18n("Part of the Kontact Suite");
-  QString quickDescription = i18n("The KDE email client.");
-
-  mViewer->setHtml( content.arg(fontSize).arg(mAppName).arg(catchPhrase).arg(quickDescription).arg(info), KUrl::fromPath( location ) );
-  mViewer->show();
 #endif
+
+  const QString fontSize = QString::number( pointsToPixel( mCSSHelper->bodyFont().pointSize() ) );
+  const QString catchPhrase = ""; //not enough space for a catch phrase at default window size i18n("Part of the Kontact Suite");
+  const QString quickDescription = i18n( "The KDE email client." );
+
+  mViewer->setHtml( content.arg( fontSize ).arg( mAppName ).arg( catchPhrase ).arg( quickDescription ).arg( info ), KUrl::fromPath( location ) );
+  mViewer->show();
 }
 
 void ViewerPrivate::enableMessageDisplay()

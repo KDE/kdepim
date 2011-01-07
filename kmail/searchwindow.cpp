@@ -91,7 +91,7 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
   setCaption( i18n( "Find Messages" ) );
   setButtons( User1 | User2 | Close );
   setDefaultButton( User1 );
-  setButtonGuiItem( User1, KGuiItem( i18nc( "@action:button Search for messags", "&Search" ), "edit-find" ) );
+  setButtonGuiItem( User1, KGuiItem( i18nc( "@action:button Search for messages", "&Search" ), "edit-find" ) );
   setButtonGuiItem( User2, KStandardGuiItem::stop() );
 
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
@@ -100,7 +100,6 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
                                                                IconSize( KIconLoader::Small ) ) );
 
   KSharedConfig::Ptr config = KMKernel::self()->config();
-  KConfigGroup group( config, "SearchDialog" );
 
   QWidget *searchWidget = new QWidget( this );
   QVBoxLayout *vbl = new QVBoxLayout( searchWidget );
@@ -269,8 +268,8 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
   mStatusBar->insertPermanentItem( QString(), 1, 1 );
   mStatusBar->setItemAlignment( 1, Qt::AlignLeft | Qt::AlignVCenter );
 
-  const int mainWidth = group.readEntry( "SearchWidgetWidth", 0 );
-  const int mainHeight = group.readEntry( "SearchWidgetHeight", 0 );
+  const int mainWidth = GlobalSettings::self()->searchWidgetWidth();
+  const int mainHeight = GlobalSettings::self()->searchWidgetHeight();
 
   if ( mainWidth || mainHeight )
     resize( mainWidth, mainHeight );
@@ -357,16 +356,14 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
 
 SearchWindow::~SearchWindow()
 {
-  if ( mResultModel ) {
-    KSharedConfig::Ptr config = KMKernel::self()->config();
-    KConfigGroup group( config, "SearchDialog" );
-    group.writeEntry( "SubjectWidth", mLbxMatches->columnWidth( 0 ) );
-    group.writeEntry( "SenderWidth", mLbxMatches->columnWidth( 1 ) );
-    group.writeEntry( "DateWidth", mLbxMatches->columnWidth( 2 ) );
-    group.writeEntry( "FolderWidth", mLbxMatches->columnWidth( 3 ) );
-    group.writeEntry( "SearchWidgetWidth", width() );
-    group.writeEntry( "SearchWidgetHeight", height() );
-    config->sync();
+  if ( mResultModel ) {    
+    GlobalSettings::self()->setSubjectWidth( mLbxMatches->columnWidth( 0 ) );
+    GlobalSettings::self()->setSenderWidth( mLbxMatches->columnWidth( 1 ) );
+    GlobalSettings::self()->setDateWidth( mLbxMatches->columnWidth( 2 ) );
+    GlobalSettings::self()->setFolderWidth( mLbxMatches->columnWidth( 3 ) );
+    GlobalSettings::self()->setSearchWidgetWidth( width() );
+    GlobalSettings::self()->setSearchWidgetHeight( height() );
+    GlobalSettings::self()->requestSync();
   }
 }
 
@@ -487,15 +484,24 @@ void SearchWindow::slotSearch()
 
   mTimer->start( 200 );
 
-  kDebug() << searchPattern.asSparqlQuery();
 
+#ifdef AKONADI_USE_STRIGI_SEARCH
+  const QString query = searchPattern.asXesamQuery();
+  const QString queryLanguage = "XESAM";
+#else
+  const QString query = searchPattern.asSparqlQuery();
+  const QString queryLanguage = "SPARQL";
+#endif
+
+  kDebug() << query;
   if ( !mFolder.isValid() ) {
     // FIXME if another app created a virtual 'Last Search' folder without
     // out custom attributes it will result in problems
-    mSearchJob = new Akonadi::SearchCreateJob( mSearchFolderEdt->text(), searchPattern.asSparqlQuery(), this );
+    mSearchJob = new Akonadi::SearchCreateJob( mSearchFolderEdt->text(), query, this );
   } else {
     Akonadi::PersistentSearchAttribute *attribute = mFolder.attribute<Akonadi::PersistentSearchAttribute>();
-    attribute->setQueryString( searchPattern.asSparqlQuery() );
+    attribute->setQueryLanguage( queryLanguage );
+    attribute->setQueryString( query );
     mSearchJob = new Akonadi::CollectionModifyJob( mFolder, this );
   }
 
@@ -542,13 +548,10 @@ void SearchWindow::searchDone( KJob* job )
     mResultModel->setCollection( mFolder );
     mLbxMatches->setModel( mResultModel );
 
-    KSharedConfig::Ptr config = KMKernel::self()->config();
-    KConfigGroup group( config, "SearchDialog" );
-
-    mLbxMatches->setColumnWidth( 0, group.readEntry( "SubjectWidth", 150 ) );
-    mLbxMatches->setColumnWidth( 1, group.readEntry( "SenderWidth", 120 ) );
-    mLbxMatches->setColumnWidth( 2, group.readEntry( "DateWidth", 120 ) );
-    mLbxMatches->setColumnWidth( 3, group.readEntry( "FolderWidth", 100 ) );
+    mLbxMatches->setColumnWidth( 0, GlobalSettings::self()->subjectWidth() );
+    mLbxMatches->setColumnWidth( 1, GlobalSettings::self()->senderWidth() );
+    mLbxMatches->setColumnWidth( 2, GlobalSettings::self()->dateWidth() );
+    mLbxMatches->setColumnWidth( 3, GlobalSettings::self()->folderWidth() );
     mLbxMatches->setColumnWidth( 4, 0 );
     mLbxMatches->header()->setSortIndicator( 2, Qt::DescendingOrder );
     mLbxMatches->header()->setStretchLastSection( false );

@@ -93,17 +93,20 @@ class MainView : public KDeclarativeMainView
   public Q_SLOTS:
     void startComposer();
     void restoreDraft( quint64 id );
+    void restoreTemplate( quint64 id );
 
     void markImportant( bool checked );
     void markMailTask( bool checked );
     void modifyDone( KJob *job );
     void dataChanged();
 
-    bool isDraft( int row );
     bool isDraftThreadContent( int row );
     bool isDraftThreadRoot( int row );
     bool isSingleMessage( int row );
     bool folderIsDrafts( const Akonadi::Collection &collection );
+    bool isTemplateThreadContent( int row );
+    bool isTemplateThreadRoot( int row );
+    bool folderIsTemplates( const Akonadi::Collection &collection );
 
     void configureIdentity();
 
@@ -148,7 +151,7 @@ class MainView : public KDeclarativeMainView
     void applyFiltersBulkAction();
 
     void itemSelectionChanged();
-    void collectionSelectionChanged();
+    void slotCollectionSelectionChanged();
 
   protected:
     void doDelayedInit();

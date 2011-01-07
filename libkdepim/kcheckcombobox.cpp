@@ -54,7 +54,8 @@ class KCheckComboBox::Private
     void makeInsertedItemsCheckable(const QModelIndex &, int start, int end);
     QString squeeze( const QString &text );
     void updateCheckedItems( const QModelIndex &topLeft = QModelIndex(),
-                             const QModelIndex &bottomRight = QModelIndex() );
+                             const QModelIndex &bottomRight = QModelIndex(),
+                             int role = Qt::DisplayRole );
     void toggleCheckState();
 
   public:
@@ -98,12 +99,13 @@ QString KCheckComboBox::Private::squeeze( const QString &text )
 }
 
 void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
-                                                  const QModelIndex &bottomRight )
+                                                  const QModelIndex &bottomRight,
+                                                  int role )
 {
   Q_UNUSED( topLeft );
   Q_UNUSED( bottomRight );
 
-  const QStringList items = q->checkedItems();
+  const QStringList items = q->checkedItems( role );
   QString text;
   if ( items.isEmpty() ) {
     text = mDefaultText;
@@ -206,7 +208,7 @@ void KCheckComboBox::setCheckedItems( const QStringList &items, int role )
     const bool found = items.contains( text );
     model()->setData( indx, found ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole );
   }
-  d->updateCheckedItems();
+  d->updateCheckedItems( QModelIndex(), QModelIndex(), role );
 }
 
 QString KCheckComboBox::defaultText() const

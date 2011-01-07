@@ -148,11 +148,13 @@ void AttachmentControllerBase::setSelectedParts( const AttachmentPart::List &sel
 {
   d->selectedParts = selectedParts;
   const int selectedCount = selectedParts.count();
+  const bool enableEditAction = (selectedCount == 1) &&
+                                ( !selectedParts.first()->isMessageOrMessageCollection() );
 
   d->openContextAction->setEnabled( selectedCount > 0 );
   d->viewContextAction->setEnabled( selectedCount > 0 );
-  d->editContextAction->setEnabled( selectedCount == 1 );
-  d->editWithContextAction->setEnabled( selectedCount == 1 );
+  d->editContextAction->setEnabled( enableEditAction );
+  d->editWithContextAction->setEnabled( enableEditAction );
   d->removeAction->setEnabled( selectedCount > 0 );
   d->removeContextAction->setEnabled( selectedCount > 0 );
   d->saveAsAction->setEnabled( selectedCount == 1 );

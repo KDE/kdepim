@@ -737,7 +737,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
     bool cancelPastInvites( const Incidence::Ptr incidence, const QString &path ) const
     {
       QString warnStr;
-      KDateTime now = KDateTime::currentDateTime( KSystemTimeZones::local() );
+      KDateTime now = KDateTime::currentLocalDateTime();
       QDate today = now.date();
       Incidence::IncidenceType type = Incidence::TypeUnknown;
       if ( incidence->type() == Incidence::TypeEvent ) {

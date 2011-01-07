@@ -21,13 +21,16 @@
 #define MESSAGEVIEWER_ATTACHMENTPROXYMODEL_H
 
 #include <messageviewer/mimetreemodel.h>
+
 #include <QtGui/QSortFilterProxyModel>
 
 namespace MessageViewer {
   class NodeHelper;
 }
 
-/** Proxy model to provide roles for accessing attachment properties from QML. */
+/**
+ * @short A proxy model to provide roles for accessing attachment properties from QML.
+ */
 class AttachmentProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
@@ -38,22 +41,21 @@ class AttachmentProxyModel : public QSortFilterProxyModel
       AttachmentUrlRole = MessageViewer::MimeTreeModel::UserRole
     };
 
-    explicit AttachmentProxyModel(QObject* parent = 0);
+    explicit AttachmentProxyModel( QObject *parent = 0 );
     ~AttachmentProxyModel();
 
-    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
-    void setSourceModel(QAbstractItemModel* sourceModel);
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
+    void setSourceModel( QAbstractItemModel *sourceModel );
+    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
 
-  signals:
+  Q_SIGNALS:
     void rowCountChanged();
 
-  private slots:
+  private Q_SLOTS:
     void slotModelReset();
 
   private:
     MessageViewer::NodeHelper *m_nodeHelper;
 };
 
-#endif // MESSAGEVIEWER_ATTACHMENTPROXYMODEL_H
-
+#endif

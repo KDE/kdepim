@@ -172,7 +172,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void openManual();
 
     void openAttachment( const QString &url, const QString &mimeType );
-    void saveAttachment( const QString &url );
+    void saveAttachment( const QString &url, const QString &defaultFileName = QString() );
 
     void reportBug();
 
@@ -182,6 +182,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void numSelectedAccountsChanged();
     void isLoadingSelectedChanged();
     void stateChanged();
+
+    /**
+     * This signal is emitted whenever the collection has been changed but
+     * before the item list is updated.
+     */
+    void collectionSelectionChanged();
 
   protected:
     /**

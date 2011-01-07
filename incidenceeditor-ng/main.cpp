@@ -96,10 +96,9 @@ int main( int argc, char **argv )
     defaults.setDefaults( journal );
     item.setPayload<KCalCore::Journal::Ptr>( journal );
   } else if ( args->count() == 1 ) {
-    qint64 id = -1;
     if ( argc == 2 ) {
       bool ok = false;
-      id = QString( argv[1] ).toLongLong( &ok );
+      qint64 id = QString( argv[1] ).toLongLong( &ok );
       if ( !ok ) {
         std::cerr << "Invalid akonadi item id given." << std::endl;
         return 1;

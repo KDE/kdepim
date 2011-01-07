@@ -340,8 +340,8 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     QColor signedColor = defaultSignedColor;
     QColor encryptedColor = defaultEncryptedColor;
     if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-      signedColor = reader.readEntry( "PGPMessageOkKeyOk", defaultSignedColor );
-      encryptedColor = reader.readEntry( "PGPMessageEncr", defaultEncryptedColor );
+      signedColor = MessageCore::GlobalSettings::self()->pgpSignedMessageColor();
+      encryptedColor = MessageCore::GlobalSettings::self()->pgpEncryptedMessageColor();
     }
 
     p.setColor( QPalette::Window, signedColor );
@@ -442,7 +442,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     setMsg( aMsg );
   }
 
-  mComposerBase->identityCombo()->setFocus();
+  mComposerBase->recipientsEditor()->setFocus();
   editor->updateActionStates(); // set toolbar buttons to correct values
 
   mDone = true;
@@ -547,7 +547,7 @@ void KMComposeWin::readConfig( bool reload /* = false */ )
   }
   mBtnFcc->setChecked( GlobalSettings::self()->stickyFcc() );
   mBtnTransport->setChecked( GlobalSettings::self()->stickyTransport() );
-  QString currentTransport = GlobalSettings::self()->currentTransport();
+  const int currentTransport = GlobalSettings::self()->currentTransport().isEmpty() ? -1 : GlobalSettings::self()->currentTransport().toInt();
   mBtnDictionary->setChecked( GlobalSettings::self()->stickyDictionary() );
 
   mEdtFrom->setCompletionMode( (KGlobalSettings::Completion)GlobalSettings::self()->completionMode() );
@@ -591,9 +591,8 @@ void KMComposeWin::readConfig( bool reload /* = false */ )
   const KPIMIdentities::Identity & ident =
     kmkernel->identityManager()->identityForUoid( mId );
 
-  if ( mBtnTransport->isChecked() && !currentTransport.isEmpty() ) {
-    Transport *transport =
-        TransportManager::self()->transportByName( currentTransport );
+  if ( mBtnTransport->isChecked() && currentTransport != -1 ) {
+    const Transport *transport = TransportManager::self()->transportById( currentTransport );
     if ( transport )
       mComposerBase->transportComboBox()->setCurrentTransport( transport->id() );
   }
@@ -1043,17 +1042,16 @@ void KMComposeWin::setQuotePrefix( uint uoid )
 //-----------------------------------------------------------------------------
 void KMComposeWin::getTransportMenu()
 {
-  QStringList availTransports;
-
   mActNowMenu->clear();
   mActLaterMenu->clear();
-  availTransports = TransportManager::self()->transportNames();
-  QStringList::Iterator it;
-  for ( it = availTransports.begin(); it != availTransports.end() ; ++it ) {
-    QAction *action1 = new QAction( (*it).replace( '&', "&&" ), mActNowMenu );
-    QAction *action2 = new QAction( (*it).replace( '&', "&&" ), mActLaterMenu );
-    action1->setData( TransportManager::self()->transportByName( *it )->id() );
-    action2->setData( TransportManager::self()->transportByName( *it )->id() );
+
+  const QList<Transport*> transports = TransportManager::self()->transports();
+  foreach ( Transport *transport, transports ) {
+    const QString name = transport->name().replace( '&', "&&" );
+    QAction *action1 = new QAction( name, mActNowMenu );
+    QAction *action2 = new QAction( name, mActLaterMenu );
+    action1->setData( transport->id() );
+    action2->setData( transport->id() );
     mActNowMenu->addAction( action1 );
     mActLaterMenu->addAction( action2 );
   }
@@ -1781,74 +1779,69 @@ void KMComposeWin::autoSaveMessage()
 bool KMComposeWin::encryptToSelf()
 {
   // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
-  KConfigGroup group( KMKernel::self()->config(), "Composer" );
-  return group.readEntry( "crypto-encrypt-to-self", true );
+  return GlobalSettings::self()->cryptoEncryptToSelf();
 }
 
 bool KMComposeWin::showKeyApprovalDialog()
 {
-  KConfigGroup group( KMKernel::self()->config(), "Composer" );
-  return group.readEntry( "crypto-show-keys-for-approval", true );
+  return GlobalSettings::self()->cryptoShowKeysForApproval();
 }
 
 int KMComposeWin::encryptKeyNearExpiryWarningThresholdInDays() {
-  const KConfigGroup composer( KMKernel::self()->config(), "Composer" );
-  if ( ! composer.readEntry( "crypto-warn-when-near-expire", true ) ) {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
     return -1;
   }
-  const int num = composer.readEntry( "crypto-warn-encr-key-near-expire-int", 14 );
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays();
   return qMax( 1, num );
 }
 
 int KMComposeWin::signingKeyNearExpiryWarningThresholdInDays()
 {
-  const KConfigGroup composer( KMKernel::self()->config(), "Composer" );
-  if ( ! composer.readEntry( "crypto-warn-when-near-expire", true ) ) {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
     return -1;
   }
-  const int num = composer.readEntry( "crypto-warn-sign-key-near-expire-int", 14 );
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays();
   return qMax( 1, num );
 }
 
 int KMComposeWin::encryptRootCertNearExpiryWarningThresholdInDays()
 {
-  const KConfigGroup composer( KMKernel::self()->config(), "Composer" );
-  if ( ! composer.readEntry( "crypto-warn-when-near-expire", true ) ) {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
     return -1;
   }
-  const int num = composer.readEntry( "crypto-warn-encr-root-near-expire-int", 14 );
+  const int num =
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays();
   return qMax( 1, num );
 }
 
 int KMComposeWin::signingRootCertNearExpiryWarningThresholdInDays() {
-  const KConfigGroup composer( KMKernel::self()->config(), "Composer" );
-  if ( ! composer.readEntry( "crypto-warn-when-near-expire", true ) ) {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
     return -1;
   }
   const int num =
-  composer.readEntry( "crypto-warn-sign-root-near-expire-int", 14 );
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays();
   return qMax( 1, num );
 }
 
 int KMComposeWin::encryptChainCertNearExpiryWarningThresholdInDays()
 {
-  const KConfigGroup composer( KMKernel::self()->config(), "Composer" );
-  if ( ! composer.readEntry( "crypto-warn-when-near-expire", true ) ) {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
     return -1;
   }
   const int num =
-  composer.readEntry( "crypto-warn-encr-chaincert-near-expire-int", 14 );
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays();
   return qMax( 1, num );
 }
 
 int KMComposeWin::signingChainCertNearExpiryWarningThresholdInDays()
 {
-  const KConfigGroup composer( KMKernel::self()->config(), "Composer" );
-  if ( ! composer.readEntry( "crypto-warn-when-near-expire", true ) ) {
+  if ( ! MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() ) {
     return -1;
   }
   const int num =
-  composer.readEntry( "crypto-warn-sign-chaincert-near-expire-int", 14 );
+  MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays();;
   return qMax( 1, num );
 }
 
@@ -1967,11 +1960,9 @@ void KMComposeWin::slotInsertFile()
   mRecentAction->addUrl( u );
   // Prevent race condition updating list when multiple composers are open
   {
-    KSharedConfig::Ptr config = KMKernel::self()->config();
-    KConfigGroup group( config, "Composer" );
     QString encoding = MessageViewer::NodeHelper::encodingForName( u.fileEncoding() ).toLatin1();
-    QStringList urls = group.readEntry( "recent-urls", QStringList() );
-    QStringList encodings = group.readEntry( "recent-encodings", QStringList() );
+    QStringList urls = GlobalSettings::self()->recentUrls();
+    QStringList encodings = GlobalSettings::self()->recentEncodings();
     // Prevent config file from growing without bound
     // Would be nicer to get this constant from KRecentFilesAction
     int mMaxRecentFiles = 30;
@@ -1986,9 +1977,9 @@ void KMComposeWin::slotInsertFile()
     }
     urls.prepend( u.prettyUrl() );
     encodings.prepend( encoding );
-    group.writeEntry( "recent-urls", urls );
-    group.writeEntry( "recent-encodings", encodings );
-    mRecentAction->saveEntries( config->group( QString() ) );
+    GlobalSettings::self()->setRecentUrls( urls );
+    GlobalSettings::self()->setRecentEncodings( encodings );
+    mRecentAction->saveEntries( KMKernel::self()->config()->group( QString() ) );
   }
   slotInsertRecentFile( u );
 }
@@ -2011,9 +2002,8 @@ void KMComposeWin::slotInsertRecentFile( const KUrl &u )
 
   // Get the encoding previously used when inserting this file
   QString encoding;
-  KConfigGroup group( KMKernel::self()->config(), "Composer" );
-  const QStringList urls = group.readEntry( "recent-urls", QStringList() );
-  const QStringList encodings = group.readEntry( "recent-encodings", QStringList() );
+  const QStringList urls = GlobalSettings::self()->recentUrls();
+  const QStringList encodings = GlobalSettings::self()->recentEncodings();
   const int index = urls.indexOf( u.prettyUrl() );
   if ( index != -1 ) {
     encoding = encodings[ index ];
@@ -2789,16 +2779,13 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
   // If the transport sticky checkbox is not checked, set the transport
   // from the new identity
   if ( !mBtnTransport->isChecked() && !mIgnoreStickyFields ) {
-    QString transportName = ident.transport();
-    Transport *transport =
-        TransportManager::self()->transportByName( transportName, false );
+    const int transportId = ident.transport().isEmpty() ? -1 : ident.transport().toInt();
+    const Transport *transport = TransportManager::self()->transportById( transportId, true );
     if ( !transport ) {
       mMsg->removeHeader( "X-KMail-Transport" );
-      mComposerBase->transportComboBox()->setCurrentTransport(
-                               TransportManager::self()->defaultTransportId() );
-    }
-    else {
-      KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", mMsg.get(), transportName, "utf-8" );
+      mComposerBase->transportComboBox()->setCurrentTransport( TransportManager::self()->defaultTransportId() );
+    } else {
+      KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", mMsg.get(), QString::number( transport->id() ), "utf-8" );
       mMsg->setHeader( header );
       mComposerBase->transportComboBox()->setCurrentTransport( transport->id() );
     }

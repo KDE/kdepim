@@ -159,6 +159,24 @@ MainView::MainView(QWidget* parent)
 MainView::~MainView()
 {
   delete m_grouperComparator;
+
+  const Akonadi::Collection trashCollection = CommonKernel->trashCollectionFolder();
+  if ( trashCollection.isValid() ) {
+    if ( Settings::self()->miscEmptyTrashAtExit() ) {
+      if ( trashCollection.statistics().count() > 0 ) {
+        qDebug( "Emptying trash..." );
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( trashCollection, this );
+        if ( job->exec() ) {
+          const Akonadi::Item::List items = job->items();
+          if ( !items.isEmpty() ) {
+            Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob( items, this );
+            deleteJob->exec();
+            qDebug( "done" );
+          }
+        }
+      }
+    }
+  }
 }
 
 void MainView::setConfigWidget( ConfigWidget *configWidget )
@@ -281,8 +299,8 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
 
   context->setContextProperty("_threadMailSelector", qmlThreadMailSelector );
 
-  connect( regularSelectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           this, SLOT( collectionSelectionChanged() ) );
+  connect( this, SIGNAL( collectionSelectionChanged() ),
+           this, SLOT( slotCollectionSelectionChanged() ) );
 
 #if 0
   {
@@ -491,7 +509,7 @@ void MainView::recoverAutoSavedMessages()
 
       // load the autosaved message in a new composer
       ComposerView *composer = new ComposerView;
-      composer->setMessage( messagePtr );
+      composer->setMessage( messagePtr, false );
       composer->setAutoSaveFileName( savedMessage.fileName() );
       composer->show();
 
@@ -551,7 +569,7 @@ void MainView::composeFetchResult( KJob *job )
 {
   const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetchJob->items().isEmpty() ) {
-    kDebug() << "error!!";
+    kDebug() << "error:" << job->errorText();
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Could not restore a draft." ),
@@ -584,7 +602,7 @@ void MainView::composeFetchResult( KJob *job )
 
   // create the composer and fill it with the retrieved message
   ComposerView *composer = new ComposerView;
-  composer->setMessage( msg );
+  composer->setMessage( msg, false );
   composer->show();
 }
 
@@ -617,7 +635,7 @@ void MainView::sendAgainFetchResult( KJob *job )
   newMsg->contentType()->setCharset( MessageViewer::NodeHelper::charset( msg.get() ) );
 
   ComposerView *composer = new ComposerView;
-  composer->setMessage( newMsg );
+  composer->setMessage( newMsg, false );
   composer->show();
 }
 
@@ -993,18 +1011,6 @@ void MainView::configureIdentity()
 #endif
 }
 
-bool MainView::isDraft( int row )
-{
-  static const int column = 0;
-  const QModelIndex index = itemSelectionModel()->model()->index( row, column );
-  kDebug() << "itemSelectionModel " << itemSelectionModel() << " model" << itemSelectionModel()->model() << " idx->model()" << index.model();
-  itemSelectionModel()->select( QItemSelection( index, index ), QItemSelectionModel::ClearAndSelect );
-
-  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
-
-  return folderIsDrafts( item.parentCollection() );
-}
-
 bool MainView::isDraftThreadContent( int row )
 {
   static const int column = 0;
@@ -1015,14 +1021,13 @@ bool MainView::isDraftThreadContent( int row )
   return folderIsDrafts( item.parentCollection() );
 }
 
-
 bool MainView::isDraftThreadRoot( int row )
 {
   static const int column = 0;
   const QModelIndex index = m_threadsModel->index( row, column );
 
-  const int threadSize = index.data(ThreadModel::ThreadSizeRole).toInt();
-  if (threadSize != 1)
+  const int threadSize = index.data( ThreadModel::ThreadSizeRole ).toInt();
+  if ( threadSize != 1 )
     return false;
 
   const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
@@ -1037,6 +1042,30 @@ bool MainView::isSingleMessage(int row)
 
   const int threadSize = index.data(ThreadModel::ThreadSizeRole).toInt();
   return threadSize == 1;
+}
+
+bool MainView::isTemplateThreadContent( int row )
+{
+  static const int column = 0;
+  const QModelIndex index = m_threadContentsModel->index( row, column );
+
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  return folderIsTemplates( item.parentCollection() );
+}
+
+bool MainView::isTemplateThreadRoot( int row )
+{
+  static const int column = 0;
+  const QModelIndex index = m_threadsModel->index( row, column );
+
+  const int threadSize = index.data( ThreadModel::ThreadSizeRole ).toInt();
+  if ( threadSize != 1 )
+    return false;
+
+  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  return folderIsTemplates( item.parentCollection() );
 }
 
 // #############################################################
@@ -1116,6 +1145,29 @@ bool MainView::folderIsDrafts( const Collection &collection )
   const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
   for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).drafts() == idString )
+      return true;
+  }
+
+  return false;
+}
+
+bool MainView::folderIsTemplates( const Collection &collection )
+{
+  const Collection defaultTemplatesCollection = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Templates );
+
+  // check if this is the default templates folder
+  if ( collection == defaultTemplatesCollection )
+    return true;
+
+  // check for invalid collection
+  const QString idString = QString::number( collection.id() );
+  if ( idString.isEmpty() )
+    return false;
+
+  // search the identities if the folder matches the drafts-folder
+  const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
+  for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
+    if ( (*it).templates() == idString )
       return true;
   }
 
@@ -1272,16 +1324,16 @@ void MainView::saveMessage()
 void MainView::itemSelectionChanged()
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
-  if (list.size() != 1) {
+  if ( list.size() != 1 ) {
     // TODO Clear messageViewerItem
     return;
   }
 
   const QModelIndex itemIdx = list.first();
-  const Akonadi::Collection parentCol = itemIdx.data(Akonadi::EntityTreeModel::ParentCollectionRole).value<Akonadi::Collection>();
-  Q_ASSERT(parentCol.isValid());
-  QModelIndex index = EntityTreeModel::modelIndexForCollection(entityTreeModel(), parentCol);
-  Q_ASSERT(index.isValid());
+  const Akonadi::Item item = itemIdx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
+
+  QModelIndex index = EntityTreeModel::modelIndexForCollection( entityTreeModel(), Akonadi::Collection( item.storageCollectionId() ) );
+  Q_ASSERT( index.isValid() );
 
   QString path;
   while ( index.isValid() ) {
@@ -1291,14 +1343,13 @@ void MainView::itemSelectionChanged()
       path.prepend( " / " );
   }
 
-  if (messageViewerItem()) {
-    const Akonadi::Item item = itemIdx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
-    messageViewerItem()->setItem(item);
-    messageViewerItem()->setMessagePath(path);
+  if ( messageViewerItem() ) {
+    messageViewerItem()->setItem( item );
+    messageViewerItem()->setMessagePath( path );
   }
 }
 
-void MainView::collectionSelectionChanged()
+void MainView::slotCollectionSelectionChanged()
 {
   const QModelIndexList indexes = regularSelectionModel()->selectedIndexes();
   if ( indexes.isEmpty() )
@@ -1518,13 +1569,20 @@ int MainView::emailTemplateCount()
   return mEmailTemplateModel ? mEmailTemplateModel->rowCount() : 0;
 }
 
+void MainView::restoreTemplate( quint64 id )
+{
+  ItemFetchJob *job = new ItemFetchJob( Item( id ), this );
+  job->fetchScope().fetchFullPayload();
+  job->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( templateFetchResult( KJob* ) ) );
+}
+
 void MainView::newMessageFromTemplate( int index )
 {
   Akonadi::Item item = mEmailTemplateModel->index( index, 0 ).data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
   job->fetchScope().fetchFullPayload( true );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( templateFetchResult( KJob* ) ) );
-
 }
 
 void MainView::templateFetchResult( KJob* job)
@@ -1549,7 +1607,7 @@ void MainView::templateFetchResult( KJob* job)
   newMsg->removeHeader("Date");
   newMsg->removeHeader("Message-ID");
   ComposerView *composer = new ComposerView;
-  composer->setMessage( newMsg );
+  composer->setMessage( newMsg, false );
   composer->show();
 }
 
@@ -1689,6 +1747,9 @@ void MainView::messageListSettingsChanged( const MessageListSettings &settings )
       break;
     case MessageListSettings::SortBySize:
       m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortBySize );
+      break;
+    case MessageListSettings::SortByActionItem:
+      m_grouperComparator->setSortingOption( MailThreadGrouperComparator::SortByActionItem );
       break;
   }
 

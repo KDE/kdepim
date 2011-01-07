@@ -78,7 +78,6 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
      */
     void setDefaultText( const QString &text );
 
-
     /**
      * Returns wether or not the text will be squeezed to fit in the combo's line
      * edit. This property is false by default.

@@ -32,6 +32,7 @@ set(mobileui_SRCS
     modelselectiontransition.cpp
     orderedchildcollectionsmodel.cpp
     qmllistselectionmodel.cpp
+    rangemanager.cpp
     searchmanager.cpp
     statemachinebuilder.cpp
     stylesheetloader.cpp
@@ -120,6 +121,7 @@ install(FILES
   SearchDialog.qml
   SearchResultScreen.qml
   ItemEditButton.qml
+  Switch.qml
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css

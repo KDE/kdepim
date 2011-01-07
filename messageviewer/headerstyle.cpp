@@ -1033,7 +1033,7 @@ static QString formatMobileHeader( KMime::Message *message, bool extendedFormat,
   }
   headerStr += "      </td>\n";
   headerStr += "      <td align=\"right\" width=\"50%\">\n";
-  headerStr += "        <div style=\"font-size: 15px; color: #24353F; text-align: right; margin-right: 15px\">sent: ";
+  headerStr += "        <div style=\"font-size: 15px; color: #24353F; text-align: right; margin-right: 15px\">" + i18n( "sent: " );
   headerStr += dateString( message, style->isPrinting(), /* shortDate = */ false ) + "</div>\n";
   headerStr += "      </td>\n";
   headerStr += "    </tr>\n";

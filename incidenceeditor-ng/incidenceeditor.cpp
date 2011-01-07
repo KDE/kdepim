@@ -25,7 +25,7 @@
 using namespace IncidenceEditorNG;
 
 IncidenceEditor::IncidenceEditor( QObject *parent )
-  : QObject( parent ), mWasDirty( false )
+  : QObject( parent ), mWasDirty( false ), mLoadingIncidence( false )
 {
 }
 
@@ -40,6 +40,10 @@ void IncidenceEditor::checkDirtyStatus()
     return;
   }
 
+  if ( mLoadingIncidence ) {
+    // Still loading the incidence, ignore changes to widgets.
+    return;
+  }
   const bool dirty = isDirty();
   if ( mWasDirty != dirty ) {
     mWasDirty = dirty;

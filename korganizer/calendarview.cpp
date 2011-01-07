@@ -210,6 +210,9 @@ CalendarView::CalendarView( QWidget *parent )
   connect( mDateNavigatorContainer, SIGNAL(datesSelected(const KCalCore::DateList &)),
            mDateNavigator, SLOT(selectDates(const KCalCore::DateList &)) );
 
+  connect( mViewManager, SIGNAL(datesSelected(KCalCore::DateList)),
+           mDateNavigator, SLOT(selectDates(KCalCore::DateList)) );
+
   connect( mDateNavigatorContainer, SIGNAL(incidenceDropped(Akonadi::Item,QDate)),
            SLOT(addIncidenceOn(Akonadi::Item,QDate)) );
   connect( mDateNavigatorContainer, SIGNAL(incidenceDroppedMove(Akonadi::Item,QDate)),
@@ -1328,9 +1331,9 @@ KOrg::BaseView *CalendarView::currentView() const
 void CalendarView::configureCurrentView()
 {
   KOrg::BaseView *const view = currentView();
-  if ( !view || !view->hasConfigurationDialog() )
-    return;
-  view->showConfigurationDialog( this );
+  if ( view && view->hasConfigurationDialog() ) {
+    view->showConfigurationDialog( this );
+  }
 }
 
 void CalendarView::newSubTodo()
@@ -1340,6 +1343,8 @@ void CalendarView::newSubTodo()
     if ( CalendarSupport::hasTodo( item ) ) {
       newSubTodo( item );
     }
+  } else {
+    kWarning() << "newSubTodo() called, but creating is disabled";
   }
 }
 
@@ -1347,6 +1352,7 @@ void CalendarView::newSubTodo( const Akonadi::Collection &collection )
 {
   if ( mCreatingEnabled ) {
     if ( !CalendarSupport::hasTodo( selectedTodo() ) ) {
+      kWarning() << "CalendarSupport::hasTodo() is false";
       return;
     }
 
@@ -1361,13 +1367,15 @@ void CalendarView::newSubTodo( const Akonadi::Collection &collection )
     item.setPayload( todo );
 
     IncidenceEditorNG::IncidenceDialog *dialog = mDialogManager->createDialog( item );
-//    connectIncidenceEditor( dialog );
+    //    connectIncidenceEditor( dialog );
     if ( collection.isValid() ) {
       dialog->selectCollection( collection );
     } else {
       dialog->selectCollection( defaultCollection( KCalCore::Todo::todoMimeType() ) );
     }
     dialog->load( item );
+  } else {
+    kWarning() << "newSubTodo(Collection) called, but creating is disabled";
   }
 }
 
@@ -1381,12 +1389,16 @@ void CalendarView::newSubTodo( const Akonadi::Item &parentEvent )
     defaults.setDefaults( todo );
     todo->setAllDay( false );
 
+    Q_ASSERT( !todo->relatedTo().isEmpty() );
+
     Akonadi::Item item;
     item.setPayload( todo );
 
     IncidenceEditorNG::IncidenceDialog *dialog = mDialogManager->createDialog( item );
-//    connectIncidenceEditor( dialog );
+     //    connectIncidenceEditor( dialog );
     dialog->load( item );
+  } else {
+    kWarning() << "newSubTodo(Item) called, but creating is disabled";
   }
 }
 
@@ -1394,7 +1406,6 @@ void CalendarView::newFloatingEvent()
 {
   if ( mCreatingEnabled ) {
     const QDate date = activeDate();
-
     newEvent( QDateTime( date, QTime( 12, 0, 0 ) ),
               QDateTime( date, QTime( 12, 0, 0 ) ), true );
   }

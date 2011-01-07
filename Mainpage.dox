@@ -81,4 +81,3 @@
         */
 // DOXYGEN_NAME=kdepim
 // DOXYGEN_ENABLE=YES
-// DOXYGEN_SET_EXCLUDE += @topdir@/runtime

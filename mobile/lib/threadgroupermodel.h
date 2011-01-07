@@ -83,6 +83,11 @@ class MOBILEUI_EXPORT ThreadGrouperComparator
      */
     void invalidate();
 
+    /**
+     * This method is called whenever the comparator should reset its caches.
+     */
+    virtual void resetCaches();
+
   private:
     Q_DISABLE_COPY( ThreadGrouperComparator )
     ThreadGrouperModelPrivate *m_grouper;

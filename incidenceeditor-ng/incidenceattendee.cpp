@@ -69,6 +69,10 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
+#ifdef KDEPIM_MOBILE_UI
+  mAttendeeEditor->setDynamicSizeHint( false );
+#endif
+
   connect( mAttendeeEditor, SIGNAL(countChanged(int)),
            SIGNAL(attendeeCountChanged(int)) );
   connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine *)),
@@ -244,10 +248,9 @@ void IncidenceAttendee::changeStatusForMe( KCalCore::Attendee::PartStat stat )
   mAttendeeEditor->clear();
 
   foreach ( const AttendeeData::Ptr &attendee, attendees ) {
-    if ( config->thatIsMe( attendee->email() ) &&
-         mLoadedIncidence->organizer()->email() == attendee->email() ) {
+    if ( config->thatIsMe( attendee->email() ) )
       attendee->setStatus( stat );
-    }
+
     mAttendeeEditor->addAttendee( attendee );
   }
 

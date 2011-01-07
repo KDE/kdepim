@@ -21,25 +21,26 @@
 #ifndef COMPOSERAUTORESIZER_H
 #define COMPOSERAUTORESIZER_H
 
-#include<QTextEdit>
 #include <QtDeclarative/QDeclarativeItem>
+#include <QtGui/QTextEdit>
 
 class ComposerAutoResizer : public QObject
 {
-    Q_OBJECT
-public:
-    ComposerAutoResizer(QWidget *parent);
-    QDeclarativeItem *findFlickable(QGraphicsItem *parent);
+  Q_OBJECT
 
-private Q_SLOTS:
+  public:
+    ComposerAutoResizer( QWidget *parent );
+
+    QDeclarativeItem *findFlickable( QGraphicsItem *parent ) const;
+
+  private Q_SLOTS:
     void textEditChanged();
 
-private:
-    QTextEdit *composer;
-    QFrame *edit;
-    int minimumHeight;
-    QDeclarativeItem *flickable;
+  private:
+    QTextEdit *mComposer;
+    QFrame *mEdit;
+    int mMinimumHeight;
+    QDeclarativeItem *mFlickable;
 };
 
-#endif /* COMPOSERAUTORESIZER_H */
-
+#endif

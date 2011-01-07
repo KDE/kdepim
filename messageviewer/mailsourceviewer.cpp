@@ -145,18 +145,17 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
 }
 
 MailSourceViewer::MailSourceViewer( QWidget *parent )
-  : QWidget( parent ), mRawSourceHighLighter( 0 )
+  : KDialog( parent ), mRawSourceHighLighter( 0 )
 {
-  setLayoutDirection( Qt::LeftToRight );
   setAttribute( Qt::WA_DeleteOnClose );
+  setButtons( Close );
 
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  mTabWidget = new KTabWidget( this );
+  QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
+  layout->setMargin( 0 );
+  mTabWidget = new KTabWidget;
   layout->addWidget( mTabWidget );
 
-  QPushButton *closeButton = new QPushButton( KStandardGuiItem::close().text(), this );
-  connect( closeButton, SIGNAL( clicked() ), SLOT( close() ) );
-  layout->addWidget( closeButton );
+  connect( this, SIGNAL(closeClicked()), SLOT( close() ) );
 
   mRawBrowser = new KTextBrowser();
   mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );

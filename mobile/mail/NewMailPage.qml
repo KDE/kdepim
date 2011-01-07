@@ -24,9 +24,17 @@ import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
-QML.Item { // work around strange anchoring behaviour inside Loader
+QML.Rectangle { // work around strange anchoring behaviour inside Loader
   id : root
   anchors.fill: parent
+  color: "white"
+  z: 10
+
+  QML.MouseArea {
+    anchors.fill : parent
+    onClicked : {} // do nothing
+  }
+
   QML.Rectangle {
     anchors.right : parent.right
     anchors.rightMargin : 70

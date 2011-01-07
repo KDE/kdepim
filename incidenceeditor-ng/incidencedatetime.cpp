@@ -103,6 +103,7 @@ bool IncidenceDateTime::eventFilter(QObject *obj, QEvent *event)
 void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
+  mLoadingIncidence = true;
 
   // We can only handle events or todos.
   if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<KCalCore::Todo>() ) {
@@ -131,6 +132,7 @@ void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
   }
 
   mWasDirty = false;
+  mLoadingIncidence = false;
 }
 
 void IncidenceDateTime::save( const KCalCore::Incidence::Ptr &incidence )
@@ -706,32 +708,20 @@ void IncidenceDateTime::save( const KCalCore::Event::Ptr &event )
 
 void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
 {
-  if ( mUi->mWholeDayCheck->isChecked() ) { // All day todo
-    todo->setAllDay( true );
+  todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
 
-    if ( mUi->mStartCheck->isChecked() ) {
-      KDateTime todoDT = currentStartDateTime();
-      todoDT.setDateOnly( true );
-      todo->setDtStart( todoDT );
-    }
+  if ( mUi->mStartCheck->isChecked() ) {
+    KDateTime todoDT = currentStartDateTime();
+    todo->setDtStart( todoDT );
+  } else {
+    todo->setHasStartDate( false );
+  }
 
-    if ( mUi->mEndCheck->isChecked() ) {
-      KDateTime todoDT = currentEndDateTime();
-      todoDT.setDateOnly( true );
-      todo->setDtDue( todoDT );
-    }
-  } else { // Timed todo
-    todo->setAllDay( false );
-
-    if ( mUi->mStartCheck->isChecked() ) {
-      KDateTime todoDT = currentStartDateTime();
-      todo->setDtStart( todoDT );
-    }
-
-    if ( mUi->mEndCheck->isChecked() ) {
-      KDateTime todoDT = currentEndDateTime();
-      todo->setDtDue( todoDT );
-    }
+  if ( mUi->mEndCheck->isChecked() ) {
+    KDateTime todoDT = currentEndDateTime();
+    todo->setDtDue( todoDT );
+  } else {
+    todo->setHasDueDate( false );
   }
 }
 

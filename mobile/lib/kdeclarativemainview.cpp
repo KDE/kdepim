@@ -190,6 +190,8 @@ void KDeclarativeMainView::doDelayedInitInternal()
   d->mBnf = new Akonadi::BreadcrumbNavigationFactory( this );
   d->mBnf->createBreadcrumbContext( mainModel, this );
 
+  connect( d->mBnf, SIGNAL( collectionSelectionChanged() ), SIGNAL( collectionSelectionChanged() ) );
+
   if ( debugTiming ) {
     kWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
   }
@@ -738,15 +740,23 @@ void KDeclarativeMainView::openAttachment( const QString &url, const QString &mi
 #endif
 }
 
-void KDeclarativeMainView::saveAttachment( const QString &url )
+void KDeclarativeMainView::saveAttachment( const QString &url , const QString &defaultFileName)
 {
-  QString fileName = KUrl( url ).fileName();
-  if ( fileName.isEmpty() ) {
-    fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
+  QString fileName = defaultFileName;
+  if ( defaultFileName.isEmpty() ) {
+    fileName = KUrl( url ).fileName();
+    if ( fileName.isEmpty() ) {
+      fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
+    }
   }
-
+  QStringList patterns = KMimeType::findByUrl( url, 0, true, true, 0 )->patterns();
+  QString filter = QString();
+  if ( !patterns.isEmpty() ) {
+    filter += patterns.join( QLatin1String( "\n" ) );
+    filter += i18n( "\n*|all files" );
+  }
   const QString targetFile = KFileDialog::getSaveFileName( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
-                                                           QString(),
+                                                           filter,
                                                            this,
                                                            i18n( "Save Attachment" ) );
   if ( targetFile.isEmpty() ) {

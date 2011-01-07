@@ -153,6 +153,7 @@
 #include <kaction.h>
 #include <kvbox.h>
 #include <ktreewidgetsearchline.h>
+#include <Solid/Networking>
 
 // Qt includes
 #include <QByteArray>
@@ -436,7 +437,7 @@ void KMMainWidget::slotEndCheckMail()
                           KNotification::CloseOnTimeout );
   }
 
-  if ( mBeepOnNew ) {
+  if ( GlobalSettings::self()->beepOnMail() ) {
     KNotification::beep();
   }
 }
@@ -831,9 +832,6 @@ void KMMainWidget::readConfig()
   }
 
   { // area for config group "General"
-    KConfigGroup group( config, "General" );
-    mBeepOnNew = group.readEntry( "beep-on-mail", false );
-    mConfirmEmpty = group.readEntry( "confirm-before-empty", true );
     if ( !mStartupDone )
     {
       // check mail on startup
@@ -1484,7 +1482,7 @@ void KMMainWidget::slotEmptyFolder()
 
   if (!mCurrentFolder) return;
   const bool isTrash = CommonKernel->folderIsTrash( mCurrentFolder->collection() );
-  if (mConfirmEmpty)
+  if ( GlobalSettings::self()->confirmBeforeEmpty() )
   {
     const QString title = (isTrash) ? i18n("Empty Trash") : i18n("Move to Trash");
     const QString text = (isTrash) ?
@@ -4151,15 +4149,21 @@ void KMMainWidget::slotMessageSelected(const Akonadi::Item &item)
   delete mShowBusySplashTimer;
   mShowBusySplashTimer = 0;
   if ( mMsgView ) {
-    mShowBusySplashTimer = new QTimer( this );
-    mShowBusySplashTimer->setSingleShot( true );
-    connect( mShowBusySplashTimer, SIGNAL( timeout() ), this, SLOT( slotShowBusySplash() ) );
-    mShowBusySplashTimer->start( GlobalSettings::self()->folderLoadingTimeout() ); //TODO: check if we need a different timeout setting for this
+    // The current selection was cleared, so we'll remove the previously
+    // selected message from the preview pane
+    if ( !item.isValid() ) {
+      mMsgView->clear();
+    } else {
+      mShowBusySplashTimer = new QTimer( this );
+      mShowBusySplashTimer->setSingleShot( true );
+      connect( mShowBusySplashTimer, SIGNAL( timeout() ), this, SLOT( slotShowBusySplash() ) );
+      mShowBusySplashTimer->start( GlobalSettings::self()->folderLoadingTimeout() ); //TODO: check if we need a different timeout setting for this
 
-    Akonadi::ItemFetchJob *itemFetchJob = MessageViewer::Viewer::createFetchJob( item );
-    connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
-             SLOT(itemsReceived(Akonadi::Item::List)) );
-    connect( itemFetchJob, SIGNAL(result(KJob *)), SLOT(itemsFetchDone(KJob *)) );
+      Akonadi::ItemFetchJob *itemFetchJob = MessageViewer::Viewer::createFetchJob( item );
+      connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
+              SLOT(itemsReceived(Akonadi::Item::List)) );
+      connect( itemFetchJob, SIGNAL(result(KJob *)), SLOT(itemsFetchDone(KJob *)) );
+    }
   }
 }
 
@@ -4206,9 +4210,29 @@ void KMMainWidget::slotCollectionProperties()
   if ( !mCurrentFolder )
     return;
 
-  Akonadi::CollectionAttributesSynchronizationJob sync( mCurrentFolder->collection() );
-  sync.exec();
+  if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+    // FIXME post message freeze, pop up a message box informing the user
+    // that the information on the dialog might not be current.
+    slotCollectionPropertiesContinued( 0 );
+  } else {
+    Akonadi::CollectionAttributesSynchronizationJob *sync
+        = new Akonadi::CollectionAttributesSynchronizationJob( mCurrentFolder->collection() );
+    sync->setProperty( "collectionId", mCurrentFolder->collection().id() );
+    connect( sync, SIGNAL( result( KJob* ) ),
+             this, SLOT( slotCollectionPropertiesContinued( KJob* ) ) );
+    sync->start();
+  }
+}
 
+void KMMainWidget::slotCollectionPropertiesContinued( KJob* job )
+{
+  if ( job ) {
+    Akonadi::CollectionAttributesSynchronizationJob *sync
+        = dynamic_cast<Akonadi::CollectionAttributesSynchronizationJob *>( job );
+    Q_ASSERT( sync );
+    if ( sync->property( "collectionId" ) != mCurrentFolder->collection().id() )
+      return;
+  }
   Akonadi::CollectionFetchJob fetch( mCurrentFolder->collection(), Akonadi::CollectionFetchJob::Base );
   fetch.fetchScope().setIncludeStatistics( true );
   fetch.exec();

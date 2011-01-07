@@ -110,6 +110,46 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <min>30</min>
         <max>998</max>
       </entry>
+    <entry name="CryptoWarningUnencrypted" type="Bool" key="crypto-warning-unencrypted">
+        <label>Warn before sending unencrypted messages.</label>
+        <default>false</default>
+    </entry>
+    <entry name="CryptoWarningUnsigned" type="Bool" key="crypto-warning-unsigned">
+        <label>Warn before sending unsigned messages</label>
+        <default>false</default>
+    </entry>
+    <entry name="CryptoWarnRecvNotInCert" type="Bool" key="crypto-warn-recv-not-in-cert">
+        <label>Warn if the receiver's address is not in the certificate</label>
+        <default>true</default>
+    </entry>
+    <entry name="CryptoWarnWhenNearExpire" type="Bool" key="crypto-warn-when-near-expire">
+        <label>Warn if certificates/keys expire soon (configure thresholds below)</label>
+        <default>true</default>
+    </entry>
+    <entry name="CryptoWarnSignKeyNearExpiryThresholdDays" type="Int" key="crypto-warn-sign-key-near-expire-int">
+        <label>The minimum number of days that the signature certificate should be valid before issuing a warning</label>
+        <default>14</default>
+    </entry>
+    <entry name="CryptoWarnSignChaincertNearExpiryThresholdDays" type="Int" key="crypto-warn-sign-chaincert-near-expire-int">
+        <label>The minimum number of days that the CA certificate should be valid before issuing a warning</label>
+        <default>14</default>
+    </entry>
+    <entry name="CryptoWarnSignRootNearExpiryThresholdDays" type="Int" key="crypto-warn-sign-root-near-expire-int">
+        <label>The minimum number of days that the root certificate should be valid before issuing a warning</label>
+        <default>14</default>
+    </entry>
+    <entry name="CryptoWarnEncrKeyNearExpiryThresholdDays" type="Int" key="crypto-warn-encr-key-near-expire-int">
+        <label>The minimum number of days that the encryption certificate should be valid before issuing a warning</label>
+        <default>14</default>
+    </entry>
+    <entry name="CryptoWarnEncrChaincertNearExpiryThresholdDays" type="Int" key="crypto-warn-encr-chaincert-near-expire-int">
+        <label>The minimum number of days that all certificates in the chain should be valid before issuing a warning</label>
+        <default>14</default>
+    </entry>
+    <entry name="CryptoWarnEncrRootNearExpiryThresholdDays" type="Int" key="crypto-warn-encr-root-near-expire-int">
+        <label>The minimum number of days that the root certificate should be valid before issuing a warning</label>
+        <default>14</default>
+    </entry>
   </group>
 
   <group name="sending mail">

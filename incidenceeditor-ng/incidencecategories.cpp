@@ -34,8 +34,8 @@
 #endif
 
 #include <calendarsupport/categoryconfig.h>
-
 #include <KConfigSkeleton>
+#include <QDebug>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
@@ -59,7 +59,7 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
   CategoryHierarchyReaderQComboBox( mUi->mCategoryCombo ).read( cc.customCategories() );
 
   connect( mUi->mCategoryCombo, SIGNAL(checkedItemsChanged(QStringList)),
-           SLOT(setCategories(QStringList)) );
+           SLOT(setCategoriesFromCombo()) );
 #endif
 }
 
@@ -70,7 +70,7 @@ void IncidenceCategories::load( const KCalCore::Incidence::Ptr &incidence )
 #ifdef KDEPIM_MOBILE_UI
     setCategories( mLoadedIncidence->categories() );
 #else
-    mUi->mCategoryCombo->setCheckedItems( mLoadedIncidence->categories() );
+    mUi->mCategoryCombo->setCheckedItems( mLoadedIncidence->categories(), Qt::UserRole );
 #endif
   } else {
     mSelectedCategories.clear();
@@ -127,3 +127,10 @@ void IncidenceCategories::setCategories( const QStringList &categories )
   checkDirtyStatus();
 }
 
+void IncidenceCategories::setCategoriesFromCombo()
+{
+#ifndef KDEPIM_MOBILE_UI
+  const QStringList categories = mUi->mCategoryCombo->checkedItems( Qt::UserRole );
+  setCategories( categories );
+#endif
+}

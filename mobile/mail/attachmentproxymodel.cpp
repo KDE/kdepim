@@ -18,17 +18,18 @@
 */
 
 #include "attachmentproxymodel.h"
-#include <KDebug>
-#include <QStringList>
+
 #include <messageviewer/nodehelper.h>
 
-Q_DECLARE_METATYPE(KMime::Content*)
+#include <QtCore/QStringList>
 
-AttachmentProxyModel::AttachmentProxyModel(QObject* parent) :
-  QSortFilterProxyModel(parent),
-  m_nodeHelper( new MessageViewer::NodeHelper )
+Q_DECLARE_METATYPE( KMime::Content* )
+
+AttachmentProxyModel::AttachmentProxyModel( QObject* parent )
+  : QSortFilterProxyModel( parent ),
+    m_nodeHelper( new MessageViewer::NodeHelper )
 {
-  connect( this, SIGNAL(modelReset()), SLOT(slotModelReset()) );
+  connect( this, SIGNAL( modelReset() ), SLOT( slotModelReset() ) );
 }
 
 AttachmentProxyModel::~AttachmentProxyModel()
@@ -36,9 +37,9 @@ AttachmentProxyModel::~AttachmentProxyModel()
   delete m_nodeHelper;
 }
 
-bool AttachmentProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
+bool AttachmentProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const
 {
-  const QModelIndex sourceIndex = sourceModel()->index( source_row, 0, source_parent );
+  const QModelIndex sourceIndex = sourceModel()->index( sourceRow, 0, sourceParent );
   const QString mimeType = sourceIndex.data( MessageViewer::MimeTreeModel::MimeTypeRole ).toString();
 
   // filter out structutral nodes and crypto stuff
@@ -55,25 +56,27 @@ bool AttachmentProxyModel::filterAcceptsRow(int source_row, const QModelIndex& s
   if ( sourceIndex.data( MessageViewer::MimeTreeModel::MainBodyPartRole ).toBool() )
     return false;
 
-  return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+  return QSortFilterProxyModel::filterAcceptsRow( sourceRow, sourceParent );
 }
 
-void AttachmentProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
+void AttachmentProxyModel::setSourceModel( QAbstractItemModel *sourceModel )
 {
-  QSortFilterProxyModel::setSourceModel(sourceModel);
+  QSortFilterProxyModel::setSourceModel( sourceModel );
+
   QHash<int, QByteArray> names = roleNames();
   names.insert( MessageViewer::MimeTreeModel::MimeTypeRole, "mimeType" );
   names.insert( AttachmentProxyModel::AttachmentUrlRole, "attachmentUrl" );
   setRoleNames( names );
 }
 
-QVariant AttachmentProxyModel::data(const QModelIndex& index, int role) const
+QVariant AttachmentProxyModel::data( const QModelIndex &index, int role ) const
 {
   if ( role == AttachmentUrlRole ) {
     KMime::Content *content = index.data( MessageViewer::MimeTreeModel::ContentRole ).value<KMime::Content*>();
     return m_nodeHelper->writeNodeToTempFile( content );
   }
-  return QSortFilterProxyModel::data(index, role);
+
+  return QSortFilterProxyModel::data( index, role );
 }
 
 void AttachmentProxyModel::slotModelReset()

@@ -73,7 +73,8 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
       }
 
       IncidenceEditorNG::IncidenceDialog *dialog =
-        IncidenceEditorNG::IncidenceDialogFactory::create( incidence->type() );
+        IncidenceEditorNG::IncidenceDialogFactory::create( false /*needs initial saving?*/,
+                                                           incidence->type() );
       dialog->setIsCounterProposal( true );
       dialog->load( item, QDate::currentDate() );
     }

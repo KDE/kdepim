@@ -24,9 +24,16 @@ import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
-QML.Item {
+QML.Rectangle {
   id: root
   anchors.fill: parent
+  color: "white"
+  z: 10
+
+  QML.MouseArea {
+    anchors.fill : parent
+    onClicked : {} // do nothing
+  }
 
   QML.Rectangle {
     anchors.right : parent.right

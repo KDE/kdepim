@@ -21,10 +21,10 @@
 #include "templateparser.h"
 #ifndef Q_OS_WINCE
 #include "customtemplates_kfg.h"
-#include "globalsettings_base.h"
 #include "templatesconfiguration_kfg.h"
 #include "templatesconfiguration.h"
 #endif
+#include "globalsettings_base.h"
 
 
 #include "messagecore/stringutil.h"
@@ -60,10 +60,10 @@
 #include <QWebElement>
 #include <QTextCodec>
 #include <QWebFrame>
-#ifndef TEMPLATEPARSER_NO_WEBKIT
-# include <QtWebKit/QWebPage>
-#else
+#ifdef KDEPIM_NO_WEBKIT
 # include <QTextBrowser>
+#else
+# include <QtWebKit/QWebPage>
 #endif
 
 namespace TemplateParser {
@@ -1098,7 +1098,6 @@ QString TemplateParser::findTemplate()
   // kDebug() << "Trying to find template for mode" << mode;
 
   QString tmpl;
-
 #ifndef Q_OS_WINCE
 
 #if 0
@@ -1193,6 +1192,7 @@ QString TemplateParser::findTemplate()
       return tmpl;  // use identity-specific template
     }
   }
+#endif
 
   switch( mMode ) { // use the global template
   case NewMessage:
@@ -1213,7 +1213,6 @@ QString TemplateParser::findTemplate()
   }
 
   mQuoteString = DefaultTemplates::defaultQuoteString();
-#endif
   return tmpl;
 }
 
@@ -1372,18 +1371,18 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
     return result;
 
   // html -> plaintext conversion, if necessary:
-#ifndef TEMPLATEPARSER_NO_WEBKIT
-  if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
-    QWebPage doc;
-    doc.mainFrame()->setHtml( result );
-    result = doc.mainFrame()->toPlainText();
-  }
+#ifdef KDEPIM_NO_WEBKIT
+    if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
+      QTextDocument doc;
+      doc.setHtml( result );
+      result = doc.toPlainText();
+    }
 #else
-  if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
-    QTextDocument doc;
-    doc.setHtml( result );
-    result = doc.toPlainText();
-  }
+    if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
+      QWebPage doc;
+      doc.mainFrame()->setHtml( result );
+      result = doc.mainFrame()->toPlainText();
+    }
 #endif
 
   // strip the signature (footer):

@@ -602,8 +602,7 @@ void CSVImportDialog::setFile( const QString &fileName )
     return;
   }
 
-  if ( mDevice )
-    delete mDevice;
+  delete mDevice;
 
   mDevice = file;
 

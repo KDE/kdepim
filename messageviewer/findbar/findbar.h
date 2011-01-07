@@ -26,7 +26,7 @@ class KLineEdit;
 class SearchLineWidget;
 class QPushButton;
 
-#ifdef MESSAGEVIEWER_NO_WEBKIT
+#ifdef KDEPIM_NO_WEBKIT
 # define MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
 #endif
 

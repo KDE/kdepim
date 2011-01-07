@@ -129,6 +129,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   m_splitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
   QHBoxLayout *layout = new QHBoxLayout( this );
+  layout->setMargin( 0 );
 
   KStandardDirs KStd;
   m_templateEngine = new Engine(this);

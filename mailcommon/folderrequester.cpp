@@ -119,22 +119,36 @@ void FolderRequester::setFolder( const Akonadi::Collection&col )
     setCollectionFullPath( mCollection );
     mFolderId = QString::number( mCollection.id() );
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( mCollection, Akonadi::CollectionFetchJob::Base, this );
-    connect( job, SIGNAL( collectionsReceived( Akonadi::Collection::List ) ),
-             this, SLOT( slotCollectionsReceived( Akonadi::Collection::List ) ) );
+    connect( job, SIGNAL( result( KJob* ) ),
+             this, SLOT( slotCollectionsReceived( KJob* ) ) );
   }
   else if ( !mMustBeReadWrite ) // the Local Folders root node was selected
     edit->setText( i18n("Local Folders") );
   emit folderChanged( mCollection );
 }
 
-void FolderRequester::slotCollectionsReceived( const Akonadi::Collection::List& list )
+void FolderRequester::slotCollectionsReceived( KJob *job )
 {
-  Q_ASSERT( list.size() == 1 ); // we only start jobs on a single collection
-  const Akonadi::Collection col = list.first();
-  // in case this is still the collection we are interested in, update
-  if ( col.id() == mCollection.id() ) {
-    mCollection = col;
-    setCollectionFullPath( col );
+  if ( job->error() ) {
+    mCollection = Akonadi::Collection();
+    edit->setText( i18n( "Please select a folder" ) );
+    return;
+  }
+
+  const Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
+  const Akonadi::Collection::List collections = fetchJob->collections();
+
+  if ( !collections.isEmpty() ) {
+    const Akonadi::Collection collection = collections.first();
+    // in case this is still the collection we are interested in, update
+    if ( collection.id() == mCollection.id() ) {
+      mCollection = collection;
+      setCollectionFullPath( collection );
+    }
+  } else {
+    // the requested collection doesn't exists anymore
+    mCollection = Akonadi::Collection();
+    edit->setText( i18n( "Please select a folder" ) );
   }
 }
 

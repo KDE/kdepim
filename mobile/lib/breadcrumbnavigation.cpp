@@ -127,24 +127,25 @@ void KNavigatingProxyModel::navigationSelectionChanged( const QItemSelection &se
 
 void KNavigatingProxyModel::updateNavigation()
 {
-  beginResetModel();
-
   if ( !sourceModel() ) {
     setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
-    endResetModel();
     return;
   }
 
   if ( m_selectionModel->selection().isEmpty() ) {
+    beginResetModel();
+
+    blockSignals( true ); // prevent KSelectionProxyModel to emit modelReset, we'll do it some lines below ourself
     setFilterBehavior( KSelectionProxyModel::ExactSelection );
+    blockSignals( false );
+
     const QModelIndex top = sourceModel()->index( 0, 0 );
     const QModelIndex bottom = sourceModel()->index( sourceModel()->rowCount() - 1, 0 );
     silentSelect( QItemSelection( top, bottom ), QItemSelectionModel::Select );
+    endResetModel();
   } else if ( filterBehavior() != KSelectionProxyModel::ChildrenOfExactSelection ) {
     setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
   }
-
-  endResetModel();
 }
 
 KForwardingItemSelectionModel::KForwardingItemSelectionModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent )

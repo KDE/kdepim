@@ -70,8 +70,10 @@ bool MailWebView::event( QEvent *event )
     const QWebFrame * const frame = page()->currentFrame();
     const QWebHitTestResult hit = frame->hitTestContent( contextMenuEvent->pos() );
     kDebug() << "Right-clicked URL:" << hit.linkUrl();
+#ifdef Q_OS_WINCE
     if ( !hit.linkUrl().isEmpty() )
-      emit popupMenu( hit.linkUrl().toString(), mapToGlobal( contextMenuEvent->pos() ) );
+#endif
+    emit popupMenu( hit.linkUrl().toString(), mapToGlobal( contextMenuEvent->pos() ) );
     event->accept();
     return true;
   }

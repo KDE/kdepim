@@ -180,7 +180,7 @@ MessageActions::MessageActions( KActionCollection *ac, QWidget* parent ) :
 
   mMonitor = new Akonadi::Monitor( this );
   //FIXME: Attachment fetching is not needed here, but on-demand loading is not supported ATM
-  mMonitor->itemFetchScope().fetchFullPayload();
+  mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
   connect( mMonitor, SIGNAL(itemChanged( Akonadi::Item, QSet<QByteArray> )), SLOT(slotItemModified( Akonadi::Item, QSet<QByteArray> )));
 
   updateActions();
@@ -206,12 +206,13 @@ void MessageActions::setCurrentMessage( const Akonadi::Item &msg )
 
 void MessageActions::slotItemModified( const Akonadi::Item &  item, const QSet< QByteArray > &  partIdentifiers )
 {
-  if ( item.id() == mCurrentItem.id() && item.remoteId() == mCurrentItem.remoteId() )
+  Q_UNUSED( partIdentifiers );
+  if ( item == mCurrentItem )
     mCurrentItem = item;
   const int numberOfVisibleItems = mVisibleItems.count();
   for( int i = 0; i < numberOfVisibleItems; ++i ) {
     Akonadi::Item it = mVisibleItems[i];
-    if ( item.id() == it.id() && item.remoteId() == it.remoteId() ) {
+    if ( item == it ) {
       mVisibleItems[i] = item;
     }
   }
@@ -269,11 +270,11 @@ void MessageActions::updateActions()
 
   if ( mCurrentItem.hasPayload<KMime::Message::Ptr>() ) {
 
-    Akonadi::Item messageItem = mCurrentItem;
-
-    if ( messageItem.payloadData().simplified().isEmpty() ) {
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( messageItem, this );
+    if ( !mCurrentItem.loadedPayloadParts().contains( Akonadi::MessagePart::Header ) ) {
+      mMailingListActionMenu->setEnabled( false );
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCurrentItem, this );
       job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
+      connect( job, SIGNAL(result(KJob*)), SLOT(slotUpdateActionsFetchDone(KJob*)) );
     } else {
       updateMailingListActions( mCurrentItem );
     }
@@ -292,7 +293,10 @@ void MessageActions::slotUpdateActionsFetchDone(KJob* job)
     return;
 
   Akonadi::Item  messageItem = fetchJob->items().first();
-  updateMailingListActions( messageItem );
+  if ( messageItem == mCurrentItem ) {
+    mCurrentItem = messageItem;
+    updateMailingListActions( messageItem );
+  }
 }
 
 void MessageActions::updateMailingListActions( const Akonadi::Item& messageItem )

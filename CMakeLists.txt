@@ -14,11 +14,7 @@ option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_B
 option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_NEPOMUK "Build the mail libraries and applications without nepomuk dependency" FALSE)
-
-option(AKONADI_USE_STRIGI_SEARCH "Build Akonadi with strigi as search engine." FALSE)
-if (AKONADI_USE_STRIGI_SEARCH)
-  add_definitions(-DAKONADI_USE_STRIGI_SEARCH)
-endif (AKONADI_USE_STRIGI_SEARCH)
+option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 if(KDEPIM_BUILD_STATIC)
   set(LIBRARY_TYPE STATIC)
@@ -29,6 +25,10 @@ endif(KDEPIM_BUILD_STATIC)
 if(KDEPIM_NO_NEPOMUK)
   add_definitions(-DKDEPIM_NO_NEPOMUK)
 endif(KDEPIM_NO_NEPOMUK)
+
+if(KDEPIM_NO_WEBKIT)
+  add_definitions(-DKDEPIM_NO_WEBKIT)
+endif()
 
 # cmake would not find kde for xcompile if that is not set
 if(WINCE)
@@ -81,7 +81,7 @@ if(EXISTS "${kdepim_SOURCE_DIR}/.git")
     execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --oneline --format=%ci
                     WORKING_DIRECTORY ${kdepim_SOURCE_DIR}
                     OUTPUT_VARIABLE kdepim_git_last_change)
-    string(REGEX REPLACE " [0-9:+ ]*\n" "" kdepim_git_last_change "${kdepim_git_last_change}")
+    string(REGEX REPLACE " [-0-9:+ ]*\n" "" kdepim_git_last_change "${kdepim_git_last_change}")
   endif()
 endif()
 
@@ -114,7 +114,7 @@ endif()
 #    3.2 alpha1
 
 if (NOT DEFINED KDEPIM_DEV_VERSION)
-    set( KDEPIM_DEV_VERSION "beta3" )
+    set( KDEPIM_DEV_VERSION "beta4" )
 endif (NOT DEFINED KDEPIM_DEV_VERSION)
 
 set( KDEPIM_VERSION "4.6 ${KDEPIM_DEV_VERSION}" )
@@ -205,9 +205,9 @@ else(KDEPIM_ONLY_KLEO)
 
 # Otherwise...
 ############### Find the stuff we need ###############
-
-  find_package(Akonadi QUIET NO_MODULE 1.3.60)
-  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
+  set(AKONADI_MIN_VERSION 1.4.91)
+  find_package(Akonadi QUIET NO_MODULE ${AKONADI_MIN_VERSION})
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries" "http://pim.kde.org/akonadi" TRUE "${AKONADI_MIN_VERSION}" "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
   macro_log_feature(ZLIB_FOUND "ZLib" "The Zlib compression library" "http://www.zlib.net" TRUE "" "")
@@ -254,7 +254,7 @@ endif()
 
 ############### Needed commands before building anything ###############
 
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
+add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS} ${AKONADI_DEFINITIONS})
 
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim  ${Boost_INCLUDE_DIR})
 

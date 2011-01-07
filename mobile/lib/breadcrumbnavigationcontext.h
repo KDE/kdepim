@@ -84,6 +84,7 @@ class MOBILEUI_EXPORT KBreadcrumbNavigationFactory : public QObject
 
   Q_SIGNALS:
     void selectedDisplayTextChanged();
+    void collectionSelectionChanged();
 
   protected:
     virtual QAbstractItemModel* getBreadcrumbNavigationModel( QAbstractItemModel *model );

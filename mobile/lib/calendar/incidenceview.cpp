@@ -21,6 +21,8 @@
 #include "calendarhelper.h"
 #include "clockhelper.h"
 
+#include "ui_eventortodomobile.h"
+
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 
@@ -41,6 +43,7 @@
 #include <qdeclarativeengine.h>
 #include <qdeclarativecontext.h>
 
+#include <incidenceeditor-ng/editorconfig.h>
 #include <incidenceeditor-ng/incidencealarm.h>
 #include <incidenceeditor-ng/incidenceattachment.h>
 #include <incidenceeditor-ng/incidenceattendee.h>
@@ -67,9 +70,11 @@ IncidenceView::IncidenceView( QWidget* parent )
   , mEditor( new CombinedIncidenceEditor( parent ) )
   , mEditorDateTime( 0 )
   , mIncidenceMore( 0 )
+  , mIncidenceGeneral( 0 )
   , mDateWidget( 0 )
   , mTimeWidget( 0 )
   , mInvitationDispatcher( 0 )
+  , mIncidenceAttendee( 0 )
 {
   setAttribute(Qt::WA_DeleteOnClose);
   QDeclarativeContext *context = engine()->rootContext();
@@ -128,6 +133,8 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 
 void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 {
+  mIncidenceGeneral = editorWidget;
+
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
   Incidence::Ptr incidencePtr = CalendarSupport::incidence( mItem );
 
@@ -147,8 +154,31 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
   mEditor->combine( editor );
   mEditor->load( incidencePtr );
 
-  if ( mIncidenceMore != 0 ) // IncidenceMore was set *before* general.
+  const QStringList allEmails = IncidenceEditorNG::EditorConfig::instance()->allEmails();
+  const KCalCore::Attendee::Ptr me = incidencePtr->attendeeByMails( allEmails );
+
+  if ( incidencePtr->attendeeCount() > 1 &&
+       me && ( me->status() == KCalCore::Attendee::NeedsAction ||
+               me->status() == KCalCore::Attendee::Tentative ||
+               me->status() == KCalCore::Attendee::InProcess ) ) {
+    editorWidget->mUi->mInvitationBar->show();
+  } else {
+    editorWidget->mUi->mInvitationBar->hide();
+  }
+
+  if ( mIncidenceMore != 0 ) { // IncidenceMore was set *before* general.
     initIncidenceMore();
+
+    connect( editorWidget->mUi->mAcceptInvitationButton, SIGNAL( clicked() ),
+             mIncidenceAttendee, SLOT( acceptForMe() ), Qt::UniqueConnection );
+    connect( editorWidget->mUi->mDeclineInvitationButton, SIGNAL( clicked() ),
+             mIncidenceAttendee, SLOT( declineForMe() ), Qt::UniqueConnection  );
+  }
+
+  connect( editorWidget->mUi->mAcceptInvitationButton, SIGNAL( clicked() ),
+           editorWidget->mUi->mInvitationBar, SLOT( hide() ) );
+  connect( editorWidget->mUi->mDeclineInvitationButton, SIGNAL( clicked() ),
+           editorWidget->mUi->mInvitationBar, SLOT( hide() ) );
 }
 
 void IncidenceView::showCalendar( QObject *obj )
@@ -205,8 +235,8 @@ void IncidenceView::initIncidenceMore()
   editor = new IncidenceEditorNG::IncidenceDescription( mIncidenceMore->mUi );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorNG::IncidenceAttendee( 0, mEditorDateTime, mIncidenceMore->mUi );
-  mEditor->combine( editor );
+  mIncidenceAttendee = new IncidenceEditorNG::IncidenceAttendee( 0, mEditorDateTime, mIncidenceMore->mUi );
+  mEditor->combine( mIncidenceAttendee );
 
   editor = new IncidenceEditorNG::IncidenceAlarm( mEditorDateTime, mIncidenceMore->mUi );
   mEditor->combine( editor );
@@ -226,8 +256,16 @@ void IncidenceView::initIncidenceMore()
 void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
 {
   mIncidenceMore = editorWidget;
+
   if ( mEditorDateTime != 0 ) // IncidenceGeneral was not set yet.
     initIncidenceMore();
+
+  if ( mIncidenceGeneral ) {
+    connect( mIncidenceGeneral->mUi->mAcceptInvitationButton, SIGNAL( clicked() ),
+             mIncidenceAttendee, SLOT( acceptForMe() ), Qt::UniqueConnection );
+    connect( mIncidenceGeneral->mUi->mDeclineInvitationButton, SIGNAL( clicked() ),
+             mIncidenceAttendee, SLOT( declineForMe() ), Qt::UniqueConnection  );
+  }
 }
 
 void IncidenceView::setDefaultCollection( const Akonadi::Collection &collection )

@@ -38,6 +38,7 @@
 #include "simplestringlisteditor.h"
 #include "folderrequester.h"
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
+#include "globalsettings.h"
 #include "kmkernel.h"
 #endif
 
@@ -516,9 +517,7 @@ namespace KMail {
 #endif
 
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
-    KConfigGroup geometry( KMKernel::self()->config(), "Geometry" );
-    if ( geometry.hasKey( "Identity Dialog size" ) )
-      resize( geometry.readEntry( "Identity Dialog size", QSize() ));
+    resize( GlobalSettings::self()->identityDialogSize() );
 #endif
     mNameEdit->setFocus();
 
@@ -529,8 +528,7 @@ namespace KMail {
 
   IdentityDialog::~IdentityDialog() {
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
-    KConfigGroup geometry( KMKernel::self()->config(), "Geometry" );
-    geometry.writeEntry( "Identity Dialog size", size() );
+    GlobalSettings::self()->setIdentityDialogSize( size() );
 #endif
   }
 
@@ -730,11 +728,10 @@ namespace KMail {
     // "Advanced" tab:
     mReplyToEdit->setText( ident.replyToAddr() );
     mBccEdit->setText( ident.bcc() );
-    QString transportName = ident.transport();
-    Transport *transport =
-              TransportManager::self()->transportByName( transportName, false );
-    mTransportCheck->setChecked( transport != 0 );
-    mTransportCombo->setEnabled( transport != 0 );
+    const int transportId = ident.transport().isEmpty() ? -1 : ident.transport().toInt();
+    const Transport *transport = TransportManager::self()->transportById( transportId, true );
+    mTransportCheck->setChecked( transportId != -1 );
+    mTransportCombo->setEnabled( transportId != -1 );
     if ( transport )
       mTransportCombo->setCurrentTransport( transport->id() );
     mDictionaryCombo->setCurrentByDictionaryName( ident.dictionary() );
@@ -810,8 +807,8 @@ namespace KMail {
     // "Advanced" tab:
     ident.setReplyToAddr( mReplyToEdit->text() );
     ident.setBcc( mBccEdit->text() );
-    ident.setTransport( ( mTransportCheck->isChecked() ) ?
-                          mTransportCombo->currentText() : QString() );
+    ident.setTransport( mTransportCheck->isChecked() ? QString::number( mTransportCombo->currentTransportId() )
+                                                     : QString() );
     ident.setDictionary( mDictionaryCombo->currentDictionaryName() );
     Akonadi::Collection collection = mFccCombo->folderCollection();
     if ( collection.isValid() ) {

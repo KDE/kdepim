@@ -1666,17 +1666,9 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
   }
 
   // Now search all public keys for matching keys
-  std::vector<GpgME::Key> matchingKeys = lookup( QStringList( person ) );
+  std::vector<GpgME::Key> matchingKeys = lookup( QStringList( address ) );
   matchingKeys.erase( std::remove_if( matchingKeys.begin(), matchingKeys.end(),
                       NotValidEncryptionKey ), matchingKeys.end() );
-  // if no keys match the complete address look for keys which match
-  // the canonical mail address
-  if ( matchingKeys.empty() ) {
-    matchingKeys = lookup( QStringList( address ) );
-    matchingKeys.erase( std::remove_if( matchingKeys.begin(), matchingKeys.end(),
-                                        NotValidEncryptionKey ),
-                                        matchingKeys.end() );
-  }
 
   // if called with quite == true (from EncryptionPreferenceCounter), we only want to
   // check if there are keys for this recipients, not (yet) their validity, so

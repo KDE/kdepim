@@ -125,19 +125,16 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   qjob->setMessage( message );
 
   // Get transport.
-  QString transportName = mCustomTransport;
-  kDebug() << "Custom transportName:" << mCustomTransport;
-  if( transportName.isEmpty() ) {
-    transportName = message->headerByType( "X-KMail-Transport"  ) ? message->headerByType( "X-KMail-Transport" )->asUnicodeString() : QString();
-    kDebug() << "TransportName from headers:" << transportName;
+  int transportId = -1;
+  if ( !mCustomTransport.isEmpty() ) {
+    transportId = TransportManager::self()->transportByName( mCustomTransport, true )->id();
+  } else {
+    transportId = message->headerByType( "X-KMail-Transport"  ) ? message->headerByType( "X-KMail-Transport" )->asUnicodeString().toInt() : -1;
   }
-  if( transportName.isEmpty() ) {
-    transportName = TransportManager::self()->defaultTransportName();
-    kDebug() << "Default transport" << TransportManager::self()->defaultTransportName();
-  }
-  Transport *transport = TransportManager::self()->transportByName( transportName );
+
+  const Transport *transport = TransportManager::self()->transportById( transportId );
   Q_ASSERT( transport );
-  kDebug() << "Using transport (" << transportName << "," << transport->id() << ")";
+  kDebug() << "Using transport (" << transport->name() << "," << transport->id() << ")";
   qjob->transportAttribute().setTransportId( transport->id() );
 
   // if we want to manually queue it for sending later, then do it
@@ -154,6 +151,7 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
   qjob->addressAttribute().setBcc( bcc );
 
   MessageCore::StringUtil::removePrivateHeaderFields( message );
+  message->assemble();
 
   // Queue the message.
   connect( qjob, SIGNAL(result(KJob*)), this, SLOT(queueJobResult(KJob*)) );

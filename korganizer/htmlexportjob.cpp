@@ -26,10 +26,10 @@
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
 
-#include <kcalcore/calendar.h>
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
-#include <kcalutils/incidenceformatter.h>
+#include <KCalCore/Calendar>
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <akonadi/contact/contactsearchjob.h>
 
@@ -147,6 +147,7 @@ void HtmlExportJob::finishExport()
 
   bool saveStatus;
   QString errorMessage;
+  Q_ASSERT( d->mSettings );
   KUrl dest( d->mSettings->outputFile() );
   if ( dest.isLocalFile() ) {
     saveStatus = save( dest.toLocalFile() );
@@ -174,7 +175,7 @@ void HtmlExportJob::finishExport()
 
   KMessageBox::information( d->mParentWidget, saveMessage,
                i18nc( "@title:window", "Export Status" ) );
-  deleteLater();
+  emitResult();
 }
 
 bool HtmlExportJob::save( const QString &fileName )
@@ -884,6 +885,11 @@ QDate HtmlExportJob::fromDate() const
 QDate HtmlExportJob::toDate() const
 {
   return d->mSettings->dateEnd().date();
+}
+
+HTMLExportSettings* HtmlExportJob::settings() const
+{
+  return d->mSettings;
 }
 
 #include "htmlexportjob.moc"
