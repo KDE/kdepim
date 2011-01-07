@@ -1335,7 +1335,7 @@ void QWizardPrivate::updateMinMaxSizes(const QWizardLayoutInfo &info)
         q->setMaximumHeight(maximumHeight);
     }
 
-    setFixedSize( QApplication::desktop()->screenGeometry().size() );
+    q->setFixedSize( QApplication::desktop()->screenGeometry().size() );
 }
 
 void QWizardPrivate::updateCurrentPage()
