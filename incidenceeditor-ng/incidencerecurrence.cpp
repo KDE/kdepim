@@ -761,29 +761,26 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
 
   if ( recurenceType == KCalCore::Recurrence::rYearlyDay ) {
 
-    int day = currentDate().dayOfYear();
-    if ( !recurrence->yearDays().isEmpty() ) {
-      day = recurrence->yearDays().first();
-    }
-
+    /*
+    const int day = recurrence->yearDays().isEmpty() ? currentDate().dayOfYear() :
+                                                       recurrence->yearDays().first();
+    */
     // TODO Check if day has actually the same value as in the combo.
     mUi->mYearlyCombo->setCurrentIndex( 4 );
-
   } else if ( recurenceType == KCalCore::Recurrence::rYearlyMonth ) {
 
-    int day = currentDate().day();
-    if ( !recurrence->yearDates().isEmpty() ) {
-      day = recurrence->yearDates().first();
-    }
+    const int day = recurrence->yearDates().isEmpty() ? currentDate().day() :
+                                                        recurrence->yearDates().first();
 
+    /*
     int month = currentDate().month();
     if ( !recurrence->yearMonths().isEmpty() ) {
       month = recurrence->yearMonths().first();
     }
+    */
 
     // TODO check month and day to be correct values with respect to what is
     //      presented in the combo box.
-
     if ( day > 0 ) {
       mUi->mYearlyCombo->setCurrentIndex( 0 );
     } else {
@@ -792,10 +789,12 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
 
   } else { //KCalCore::Recurrence::rYearlyPos
 
+    /*
     int month = currentDate().month();
     if ( !recurrence->yearMonths().isEmpty() ) {
       month = recurrence->yearMonths().first();
     }
+    */
 
     // count is the nth weekday of the month or the ith last weekday of the month.
     int count = ( currentDate().day() - 1 ) / 7;
@@ -807,7 +806,6 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
 
     // TODO check month,count and day to be correct values with respect to what is
     //      presented in the combo box.
-
     if ( count > 0 ) {
       mUi->mYearlyCombo->setCurrentIndex( 2 );
     } else {
