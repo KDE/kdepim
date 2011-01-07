@@ -63,6 +63,16 @@ enum {
   ComboIndexMonthlyPosInverted  // Last Monday of the Month
 };
 
+enum {
+  // Indexes of the year combo, keep in sync with descriptions.
+  ComboIndexYearlyMonth = 0,
+  ComboIndexYearlyMonthInverted,
+  ComboIndexYearlyPos,
+  ComboIndexYearlyPosInverted,
+  ComboIndexYearlyDay
+};
+
+
 #ifdef KDEPIM_MOBILE_UI
 IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
 #else
@@ -766,7 +776,7 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
                                                        recurrence->yearDays().first();
     */
     // TODO Check if day has actually the same value as in the combo.
-    mUi->mYearlyCombo->setCurrentIndex( 4 );
+    mUi->mYearlyCombo->setCurrentIndex( ComboIndexYearlyDay );
   } else if ( recurenceType == KCalCore::Recurrence::rYearlyMonth ) {
 
     const int day = recurrence->yearDates().isEmpty() ? currentDate().day() :
@@ -782,9 +792,9 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
     // TODO check month and day to be correct values with respect to what is
     //      presented in the combo box.
     if ( day > 0 ) {
-      mUi->mYearlyCombo->setCurrentIndex( 0 );
+      mUi->mYearlyCombo->setCurrentIndex( ComboIndexYearlyMonth );
     } else {
-      mUi->mYearlyCombo->setCurrentIndex( 1 );
+      mUi->mYearlyCombo->setCurrentIndex( ComboIndexYearlyMonthInverted );
     }
 
   } else { //KCalCore::Recurrence::rYearlyPos
@@ -807,9 +817,9 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
     // TODO check month,count and day to be correct values with respect to what is
     //      presented in the combo box.
     if ( count > 0 ) {
-      mUi->mYearlyCombo->setCurrentIndex( 2 );
+      mUi->mYearlyCombo->setCurrentIndex( ComboIndexYearlyPos );
     } else {
-      mUi->mYearlyCombo->setCurrentIndex( 3 );
+      mUi->mYearlyCombo->setCurrentIndex( ComboIndexYearlyPosInverted );
     }
   }
 
