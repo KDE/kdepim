@@ -83,6 +83,16 @@ QSpinBox
   padding: 4px;
 }
 
+KLineEdit
+{
+  background-color: white;
+  border: 2px;
+  border-color: grey;
+  border-radius: 8px;
+  border-style: inset;
+  padding: 4px;
+  padding-right: 48px
+}
 
 
 /*
