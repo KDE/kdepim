@@ -2175,6 +2175,7 @@ QWizard::QWizard(QWidget *parent, Qt::WindowFlags flags)
 {
     Q_D(QWizard);
     d->init();
+    setMaximumSize( QDesktopWidget::screenGeometry().size() );
 }
 
 /*!
