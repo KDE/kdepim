@@ -53,8 +53,15 @@ Description of available recurrence types:
 7 - rYearlyMonth - 10th of July
 8 - rYearlyDay   - on the 117th day of the year
 9 - rYearlyPos   - 1st Wednesday of July
-
 */
+
+enum {
+  // Indexes of the month combo, keep in sync with descriptions.
+  ComboIndexMonthlyDay = 0,     // 11th of June
+  ComboIndexMonthlyDayInverted, // 20th of June ( 11 to end )
+  ComboIndexMonthlyPos,         // 1st Monday of the Month
+  ComboIndexMonthlyPosInverted  // Last Monday of the Month
+};
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
@@ -65,7 +72,7 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
 {
   setObjectName( "IncidenceRecurrence" );
   // Set some sane defaults
-  mUi->mRecurrenceTypeCombo->setCurrentIndex( 0 );
+  mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeNone );
   mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndNever );
   mUi->mRecurrenceEndStack->setCurrentIndex( 0 );
   mUi->mRepeatStack->setCurrentIndex( 0 );
@@ -715,13 +722,13 @@ void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence,
       // TODO if ( rmp.first().pos() != mDateTime->startDate().day() ) { warn user }
       // NOTE: This silencly changes the recurrence when:
       //       rmp.first().pos() != mDateTime->startDate().day()
-      mUi->mMonthlyCombo->setCurrentIndex( 0 );
+      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyDay );
     } else { // (month.last() - n)th day
       // TODO: Handle recurrences we cannot represent
       // QDate startDate = mDateTime->startDate();
       // const int dayFromEnd = startDate.daysInMonth() - startDate.day();
       // if ( qAbs( rmp.first().pos() ) != dayFromEnd ) { /* warn user */ }
-      mUi->mMonthlyCombo->setCurrentIndex( 1 );
+      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyDayInverted );
     }
   } else { // Monthly by day
 
@@ -736,9 +743,9 @@ void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence,
     // negative sign and add 30 (index starting at 0)
     // TODO: Do similar checks as in the monthlyPos case
     if ( day > 0 && day <= 31 ) {
-      mUi->mMonthlyCombo->setCurrentIndex( 2 );
+      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyPos );
     } else if ( day < 0 ) {
-      mUi->mMonthlyCombo->setCurrentIndex( 3 );
+      mUi->mMonthlyCombo->setCurrentIndex( ComboIndexMonthlyPosInverted );
     }
   }
 
