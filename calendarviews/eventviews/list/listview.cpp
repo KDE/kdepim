@@ -438,9 +438,7 @@ void ListView::changeIncidenceDisplay( const Akonadi::Item & aitem, int action )
   case CalendarSupport::IncidenceChanger::INCIDENCEDELETED:
   {
     item = d->getItemForIncidence( aitem );
-    if ( item ) {
-      delete item;
-    }
+    delete item;
     break;
   }
   default:
