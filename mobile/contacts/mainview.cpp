@@ -415,7 +415,7 @@ void MainView::importFromLdap()
 
   const QStringList mimeTypes( KABC::Addressee::mimeType() );
 
-  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( this );
+  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( entityTreeModel(), this );
   dlg->setMimeTypeFilter( mimeTypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   dlg->setCaption( i18n( "Select Address Book" ) );
