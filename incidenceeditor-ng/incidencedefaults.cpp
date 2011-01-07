@@ -171,11 +171,11 @@ void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) c
   }
 
   if ( mEndDt.isValid() ) {
-    todo->setDtDue( mEndDt );
+    todo->setDtDue( mEndDt, true /** first */ );
   } else if ( relatedTodo && relatedTodo->hasDueDate() ) {
-    todo->setDtDue( relatedTodo->dtDue() );
+    todo->setDtDue( relatedTodo->dtDue( true ), true /** first */ );
   } else {
-    todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
+    todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ), true /** first */ );
   }
 
   if ( mStartDt.isValid() ) {
