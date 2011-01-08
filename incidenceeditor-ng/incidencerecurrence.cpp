@@ -262,11 +262,11 @@ void IncidenceRecurrence::writeToIncidence( const KCalCore::Incidence::Ptr &inci
   } else if ( recurrenceType == RecurrenceTypeMonthly ) {
     r->setMonthly( mUi->mFrequencyEdit->value() );
 
-    if ( mUi->mMonthlyCombo->currentIndex() == 0 ) {      // Every nth
+    if ( mUi->mMonthlyCombo->currentIndex() == ComboIndexMonthlyDay ) {      // Every nth
       r->addMonthlyDate( dayOfMonthFromStart() );
-    } else if ( mUi->mMonthlyCombo->currentIndex() == 1 ) { // Every (last - n)th last day
+    } else if ( mUi->mMonthlyCombo->currentIndex() == ComboIndexMonthlyDayInverted ) { // Every (last - n)th last day
       r->addMonthlyDate( -dayOfMonthFromEnd() );
-    } else if ( mUi->mMonthlyCombo->currentIndex() == 2 ) { // Every ith weekday
+    } else if ( mUi->mMonthlyCombo->currentIndex() == ComboIndexMonthlyPos ) { // Every ith weekday
       r->addMonthlyPos( monthWeekFromStart(), weekday() );
     } else { // Every (last - i)th last weekday
       r->addMonthlyPos( -monthWeekFromEnd(), weekday() );
@@ -274,18 +274,18 @@ void IncidenceRecurrence::writeToIncidence( const KCalCore::Incidence::Ptr &inci
   } else if ( recurrenceType == RecurrenceTypeYearly ) {
     r->setYearly( mUi->mFrequencyEdit->value() );
 
-    if ( mUi->mYearlyCombo->currentIndex() == 0 ) {       //Every nth of month
+    if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyMonth ) {       //Every nth of month
       r->addYearlyDate( dayOfMonthFromStart() );
       r->addYearlyMonth( currentDate().month() );
-    } else if ( mUi->mYearlyCombo->currentIndex() == 1 ) {//Every (last - n)th last day of month
-      r->addYearlyDate( dayOfMonthFromEnd() );
+    } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyMonthInverted ) {//Every (last - n)th last day of month
+      r->addYearlyDate( -dayOfMonthFromEnd() );
       r->addYearlyMonth( currentDate().month() );
-    } else if ( mUi->mYearlyCombo->currentIndex() == 2 ) {//Every ith weekday of month
+    } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyPos ) {//Every ith weekday of month
       r->addYearlyMonth( currentDate().month() );
       r->addYearlyPos( monthWeekFromStart(), weekday() );
-    } else if ( mUi->mYearlyCombo->currentIndex() == 3 ) {//Every (last - i)th last weekday of month
+    } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyPosInverted ) {//Every (last - i)th last weekday of month
       r->addYearlyMonth( currentDate().month() );
-      r->addYearlyPos( monthWeekFromEnd(), weekday() );
+      r->addYearlyPos( -monthWeekFromEnd(), weekday() );
     } else { // The lth day of the year (l : 1 - 356)
       r->addYearlyDay( dayOfYearFromStart() );
     }
@@ -644,7 +644,7 @@ short IncidenceRecurrence::dayOfMonthFromStart() const
 short IncidenceRecurrence::dayOfMonthFromEnd() const
 {
   const QDate start = currentDate();
-  return start.daysInMonth() - start.day();
+  return start.daysInMonth() - start.day() + 1;
 }
 
 short IncidenceRecurrence::dayOfYearFromStart() const
