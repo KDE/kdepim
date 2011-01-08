@@ -126,7 +126,7 @@ void ItemEditorPrivate::modifyResult( KJob *job )
   } else {
     Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob*>( job );
     Q_ASSERT(createJob);
-    mItem = createJob->item();
+    q->load( createJob->item() );
     emit q->itemSaveFinished( EditorItemManager::Create );
   }
 
@@ -235,9 +235,7 @@ void EditorItemManager::load( const Akonadi::Item &item )
   } else {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
     job->setFetchScope( d->mFetchScope );
-
     connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
-    return;
   }
 }
 

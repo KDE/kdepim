@@ -184,7 +184,7 @@ void InvitationDispatcher::setItemManager( EditorItemManager *manager )
   }
 
   d->mManager = manager;
-  connect( manager, SIGNAL( destroyed() ), SLOT( resetManager() ) );
+  connect( manager, SIGNAL(destroyed()), SLOT(resetManager()));
 
   qRegisterMetaType<IncidenceEditorNG::EditorItemManager::SaveAction>( "IncidenceEditorNG::EditorItemManager::SaveAction" );
 
