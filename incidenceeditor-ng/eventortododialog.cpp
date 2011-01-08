@@ -440,10 +440,11 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   const QStringList allEmails = IncidenceEditorNG::EditorConfig::instance()->allEmails();
   KCalCore::Attendee::Ptr me = incidence->attendeeByMails( allEmails );
 
-  if ( incidence->attendeeCount() > 1 &&
+  if ( incidence->attendeeCount() > 1 && // >1 because you won't drink alone
        me && ( me->status() == KCalCore::Attendee::NeedsAction ||
                me->status() == KCalCore::Attendee::Tentative ||
                me->status() == KCalCore::Attendee::InProcess ) ) {
+    // Show the invitation bar: "You are invited [accept] [decline]"
     mUi->mInvitationBar->show();
   } else {
     mUi->mInvitationBar->hide();
@@ -547,7 +548,6 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
   setModal( false );
   showButtonSeparator( false );
 
-  // TODO: Implement these.
   connect( d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
            d->mIeAttendee, SLOT(acceptForMe()) );
   connect( d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
