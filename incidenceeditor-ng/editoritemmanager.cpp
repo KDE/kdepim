@@ -111,8 +111,10 @@ void ItemEditorPrivate::modifyResult( KJob *job )
 
   if ( job->error() ) {
     if ( qobject_cast<Akonadi::ItemModifyJob*>( job ) ) {
+      kError() << "Modify failed " << job->errorString();
       emit q->itemSaveFailed( EditorItemManager::Modify, job->errorString() );
     } else {
+      kError() << "Creation failed " << job->errorString();
       emit q->itemSaveFailed( EditorItemManager::Create, job->errorString() );
     }
     return;
