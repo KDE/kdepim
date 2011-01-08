@@ -195,7 +195,8 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
            << "\nTo:" << to
            << "\nCC:" << cc
            << "\nSubject:" << subject << "\nBody: \n" << body
-           << "\nAttachment:\n" << attachment;
+           << "\nAttachment:\n" << attachment
+           << "\nmailTransport: " << mailTransport;
 
   QTime timer;
   timer.start();
@@ -203,13 +204,17 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   MailTransport::Transport *transport =
     MailTransport::TransportManager::self()->transportByName( mailTransport );
 
-  if( ! transport ) {
+  if ( !transport ) {
     transport =
       MailTransport::TransportManager::self()->transportByName(
         MailTransport::TransportManager::self()->defaultTransportName() );
   }
-  if( ! transport ) {
-    kWarning() << "Error fetching transport";
+
+  if ( !transport ) {
+    // TODO: we need better error handling. Currently korganizer just says "Error sending invitation".
+    // Using a boolean for errors isn't granular enough.
+    kWarning() << "Error fetching transport; mailTransport"
+               << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
     return false;
   }
 
