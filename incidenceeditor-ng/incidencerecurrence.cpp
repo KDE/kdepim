@@ -278,14 +278,14 @@ void IncidenceRecurrence::writeToIncidence( const KCalCore::Incidence::Ptr &inci
       r->addYearlyDate( dayOfMonthFromStart() );
       r->addYearlyMonth( currentDate().month() );
     } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyMonthInverted ) {//Every (last - n)th last day of month
-      r->addYearlyDate( dayOfMonthFromEnd() );
+      r->addYearlyDate( -dayOfMonthFromEnd() );
       r->addYearlyMonth( currentDate().month() );
     } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyPos ) {//Every ith weekday of month
       r->addYearlyMonth( currentDate().month() );
       r->addYearlyPos( monthWeekFromStart(), weekday() );
     } else if ( mUi->mYearlyCombo->currentIndex() == ComboIndexYearlyPosInverted ) {//Every (last - i)th last weekday of month
       r->addYearlyMonth( currentDate().month() );
-      r->addYearlyPos( monthWeekFromEnd(), weekday() );
+      r->addYearlyPos( -monthWeekFromEnd(), weekday() );
     } else { // The lth day of the year (l : 1 - 356)
       r->addYearlyDay( dayOfYearFromStart() );
     }
@@ -644,7 +644,7 @@ short IncidenceRecurrence::dayOfMonthFromStart() const
 short IncidenceRecurrence::dayOfMonthFromEnd() const
 {
   const QDate start = currentDate();
-  return start.daysInMonth() - start.day();
+  return start.daysInMonth() - start.day() + 1;
 }
 
 short IncidenceRecurrence::dayOfYearFromStart() const
