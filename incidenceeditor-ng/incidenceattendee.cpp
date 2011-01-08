@@ -171,7 +171,6 @@ void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
 void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
 {
   incidence->clearAttendees();
-
   AttendeeData::List attendees = mAttendeeEditor->attendees();
 
   foreach ( AttendeeData::Ptr attendee, attendees ) {
@@ -243,6 +242,7 @@ bool IncidenceAttendee::isDirty() const
 void IncidenceAttendee::changeStatusForMe( KCalCore::Attendee::PartStat stat )
 {
   const IncidenceEditorNG::EditorConfig *config = IncidenceEditorNG::EditorConfig::instance();
+  Q_ASSERT( config );
 
   AttendeeData::List attendees = mAttendeeEditor->attendees();
   mAttendeeEditor->clear();
@@ -284,10 +284,11 @@ void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 {
   AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( line->data() );
   if ( !data ) {
+    kDebug() << "dynamic cast failed";
     return;
   }
 
-  // For some reason, when pressing enter (in stead of tab) the editingFinished()
+  // For some reason, when pressing enter (instead of tab) the editingFinished()
   // signal is emitted twice. Check if there is already a job running to prevent
   // that we end up with the group members twice.
   if ( mMightBeGroupLines.key( QWeakPointer<KPIM::MultiplyingLine>( line ) ) != 0 ) {
@@ -379,14 +380,14 @@ void IncidenceAttendee::slotSelectAddresses()
 
 void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
 {
-  int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
+  const int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
   QScopedPointer<SchedulingDialog> dialog( new SchedulingDialog( mDateTime->startDate(),
                                                                  mDateTime->startTime(),
                                                                  duration, mConflictResolver,
                                                                  mParentWidget ) );
   dialog->slotUpdateIncidenceStartEnd( mDateTime->currentStartDateTime(),
                                        mDateTime->currentEndDateTime() );
-  if( dialog->exec() == KDialog::Accepted ) {
+  if ( dialog->exec() == KDialog::Accepted ) {
     kDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
     mDateTime->setStartDate( dialog->selectedStartDate() );
     mDateTime->setStartTime( dialog->selectedStartTime() );
@@ -462,8 +463,6 @@ void IncidenceAttendee::slotEventDurationChanged()
   if ( start >= end ) { // This can happen, especially for todos.
     return;
   }
-
-  // kDebug() << start << end;
 
   mConflictResolver->setEarliestDateTime( start );
   mConflictResolver->setLatestDateTime( end );
