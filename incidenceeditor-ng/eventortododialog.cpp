@@ -123,7 +123,6 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
 {
   Q_Q( EventOrTodoDialog );
   mUi->setupUi( q->mainWidget() );
-
   QGridLayout *layout = new QGridLayout( mUi->mCalSelectorPlaceHolder );
   layout->setSpacing( 0 );
   layout->addWidget( mCalSelector );
@@ -568,12 +567,11 @@ void EventOrTodoDialog::load( const Akonadi::Item &item, const QDate &activeDate
 {
   Q_D( EventOrTodoDialog );
   d->mIeDateTime->setActiveDate( activeDate );
-
-  if ( item.isValid() ) {
+  if ( item.isValid() ) { // We're editing
     d->mItemManager->load( item );
     // TODO: Remove this once we support moving of events/todo's
     d->mCalSelector->setEnabled( false );
-  } else {
+  } else { // We're creating
     Q_ASSERT( d->hasSupportedPayload( item ) );
     d->load( item );
     show();
