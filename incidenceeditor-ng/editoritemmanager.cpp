@@ -200,13 +200,22 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
   case EditorItemManager::AfterSave:
     if ( d->mItem.isValid() && d->mItem.hasPayload() ) {
       return d->mItem;
+    } else {
+      kDebug() << "Won't return mItem because isValid = " << d->mItem.isValid()
+               << "; and haPayload is " << d->mItem.hasPayload();
     }
     break;
   case EditorItemManager::BeforeSave:
     if ( d->mPrevItem.isValid() && d->mPrevItem.hasPayload() ) {
       return d->mPrevItem;
+    } else {
+      kDebug() << "Won't return mPrevItem because isValid = " << d->mPrevItem.isValid()
+               << "; and haPayload is " << d->mPrevItem.hasPayload();
     }
     break;
+  default:
+    kDebug() << "state = " << state;
+    Q_ASSERT_X( false, "EditorItemManager::item", "Unknown enum value" ) ;
   }
   return Akonadi::Item();
 }
@@ -312,14 +321,12 @@ void EditorItemManager::save()
 void EditorItemManager::setFetchScope( const Akonadi::ItemFetchScope &fetchScope )
 {
   Q_D( ItemEditor );
-
   d->mFetchScope = fetchScope;
 }
 
 Akonadi::ItemFetchScope &EditorItemManager::fetchScope()
 {
   Q_D( ItemEditor );
-
   return d->mFetchScope;
 }
 
@@ -332,6 +339,6 @@ bool ItemEditorUi::isValid() const
   return true;
 }
 
-}
+} // namespace
 
 #include "editoritemmanager.moc"
