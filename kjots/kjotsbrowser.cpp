@@ -26,11 +26,14 @@
 
 #include <QTextDocument>
 #include <QStackedWidget>
+#include <QItemSelectionModel>
 
 #include <krun.h>
 #include <kdebug.h>
+#include <Akonadi/EntityTreeModel>
 
-KJotsBrowser::KJotsBrowser ( QWidget *parent ) : QTextBrowser(parent)
+KJotsBrowser::KJotsBrowser ( QItemSelectionModel *selectionModel, QWidget *parent )
+  : QTextBrowser(parent), m_itemSelectionModel( selectionModel )
 {
     setWordWrapMode(QTextOption::WordWrap);
 }
@@ -49,27 +52,35 @@ void KJotsBrowser::delayedInitialization ()
 */
 void KJotsBrowser::linkClicked(const QUrl& link)
 {
-// TODO: PORT
-#if 0
     //Stop QTextBrowser from being stupid by giving it an invalid url.
     QUrl url;
     setSource(url);
 
     QString anchor = link.fragment();
-    if ( anchor.size() ) {
+
+    if ( link.toString().startsWith("#") && anchor.startsWith( QLatin1String( "book_" ) )
+            || anchor.startsWith( QLatin1String( "page_" ) ) ) {
         scrollToAnchor(anchor);
         return;
     }
 
     if ( link.scheme() == "kjots" ) {
-        quint64 target = link.path().mid(1).toULongLong();
-        bookshelf->jumpToId(target);
+        const quint64 targetId = link.path().mid(1).toULongLong();
+        if (link.host().endsWith("book")) {
+          const QModelIndex colIndex = Akonadi::EntityTreeModel::modelIndexForCollection(m_itemSelectionModel->model(), Akonadi::Collection(targetId));
+          if (!colIndex.isValid())
+            return;
+          m_itemSelectionModel->select(colIndex, QItemSelectionModel::ClearAndSelect);
+        } else {
+          Q_ASSERT(link.host().endsWith("page"));
+          const QModelIndexList itemIndexes = Akonadi::EntityTreeModel::modelIndexesForItem(m_itemSelectionModel->model(), Akonadi::Item(targetId));
+          if (itemIndexes.size() != 1)
+            return;
+          m_itemSelectionModel->select(itemIndexes.first(), QItemSelectionModel::ClearAndSelect);
+        }
     } else {
         new KRun ( link, this );
     }
-
-    return;
-#endif
 }
 
 #include "kjotsbrowser.moc"

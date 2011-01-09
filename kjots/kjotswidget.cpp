@@ -192,7 +192,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   layout->addWidget( m_splitter );
 
-  browser = new KJotsBrowser( stackedWidget );
+  browser = new KJotsBrowser( treeview->selectionModel(), stackedWidget );
   stackedWidget->addWidget( browser );
   stackedWidget->setCurrentWidget( browser );
 

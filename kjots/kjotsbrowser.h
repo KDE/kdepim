@@ -26,17 +26,22 @@
 
 #include <KTextBrowser>
 
+class QItemSelectionModel;
+
 class KJotsBrowser : public QTextBrowser
 {
 Q_OBJECT
 public:
-    explicit KJotsBrowser ( QWidget* );
+    explicit KJotsBrowser ( QItemSelectionModel *selectionModel, QWidget* );
     virtual ~KJotsBrowser ();
 
     void delayedInitialization ();
 
 protected slots:
     void linkClicked(const QUrl&);
+
+private:
+    QItemSelectionModel *m_itemSelectionModel;
 };
 
 #endif
