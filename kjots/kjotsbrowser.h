@@ -33,7 +33,7 @@ public:
     explicit KJotsBrowser ( QWidget* );
     virtual ~KJotsBrowser ();
 
-    void DelayedInitialization ();
+    void delayedInitialization ();
 
 protected slots:
     void linkClicked(const QUrl&);

@@ -39,7 +39,7 @@ KJotsBrowser::~KJotsBrowser()
 {
 }
 
-void KJotsBrowser::DelayedInitialization ()
+void KJotsBrowser::delayedInitialization ()
 {
     connect(this, SIGNAL(anchorClicked(const QUrl&)), SLOT(linkClicked(const QUrl&)));
 }
