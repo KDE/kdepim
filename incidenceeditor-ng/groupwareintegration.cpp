@@ -58,9 +58,11 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
 
       CalendarSupport::CalendarModel *calendarModel =
         new CalendarSupport::CalendarModel( monitor, this );
+      calendarModel->setObjectName( "Groupware calendar model" );
 
       mCalendar = new CalendarSupport::Calendar( calendarModel, calendarModel,
                                                  KSystemTimeZones::local() );
+      mCalendar->setObjectName( "Groupware calendar" );
       mCalendar->setOwner( KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
                                              CalendarSupport::KCalPrefs::instance()->email() ) );
     }

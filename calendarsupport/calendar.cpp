@@ -44,6 +44,7 @@ Calendar::Private::Private( QAbstractItemModel *treeModel, QAbstractItemModel *m
   m_filterProxy = new CalFilterProxyModel( q );
   m_filterProxy->setFilter( mDefaultFilter );
   m_filterProxy->setSourceModel( model );
+  m_filterProxy->setObjectName( "Implements KCalCore filtering functionality" );
 
   // user information...
   mOwner.setName( i18n( "Unknown Name" ) );
