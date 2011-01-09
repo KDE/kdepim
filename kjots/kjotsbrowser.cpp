@@ -30,7 +30,7 @@
 #include <krun.h>
 #include <kdebug.h>
 
-KJotsBrowser::KJotsBrowser ( QWidget *parent ) : KTextBrowser(parent)
+KJotsBrowser::KJotsBrowser ( QWidget *parent ) : QTextBrowser(parent)
 {
     setWordWrapMode(QTextOption::WordWrap);
 }

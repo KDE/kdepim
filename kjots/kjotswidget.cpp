@@ -102,6 +102,7 @@
 #include "kjotslockattribute.h"
 #include "localresourcecreator.h"
 #include <krandom.h>
+#include "kjotsbrowser.h"
 
 Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextCursor)
@@ -191,7 +192,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   layout->addWidget( m_splitter );
 
-  browser = new KTextBrowser( stackedWidget );
+  browser = new KJotsBrowser( stackedWidget );
   stackedWidget->addWidget( browser );
   stackedWidget->setCurrentWidget( browser );
 
@@ -507,7 +508,7 @@ void KJotsWidget::delayedInitialization()
 
   treeview->delayedInitialization();
   editor->delayedInitialization( m_xmlGuiClient->actionCollection() );
-//   browser->delayedInitialization( m_xmlGuiClient->actionCollection() );
+  browser->delayedInitialization();
 
 
   connect( treeview->itemDelegate(), SIGNAL(closeEditor(QWidget *,QAbstractItemDelegate::EndEditHint) ),

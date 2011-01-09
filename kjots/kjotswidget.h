@@ -49,7 +49,7 @@ class KJob;
 class KReplaceDialog;
 class KSelectionProxyModel;
 class KTextEdit;
-class KTextBrowser;
+class KJotsBrowser;
 class KXMLGUIClient;
 
 namespace Akonadi
@@ -177,7 +177,7 @@ private slots:
 private:
   KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;
-  KTextBrowser   *browser;
+  KJotsBrowser   *browser;
   QStackedWidget *stackedWidget;
   KActionMenu    *bookmarkMenu;
   Akonadi::EntityTreeModel *m_kjotsModel;

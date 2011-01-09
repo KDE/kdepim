@@ -26,7 +26,7 @@
 
 #include <KTextBrowser>
 
-class KJotsBrowser : public KTextBrowser
+class KJotsBrowser : public QTextBrowser
 {
 Q_OBJECT
 public:
