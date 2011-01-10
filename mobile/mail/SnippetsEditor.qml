@@ -90,13 +90,13 @@ QML.Rectangle {
     actionItemHeight : _topLevel.actionItemHeight
 
     content : [
-      KPIM.ActionListItem { name : "snippetseditor_insert_snippet" },
-      KPIM.ActionListItem { name : "snippetseditor_add_snippet" },
-      KPIM.ActionListItem { name : "snippetseditor_edit_snippet" },
-      KPIM.ActionListItem { name : "snippetseditor_delete_snippet" },
-      KPIM.ActionListItem { name : "snippetseditor_add_snippetgroup" },
-      KPIM.ActionListItem { name : "snippetseditor_edit_snippetgroup" },
-      KPIM.ActionListItem { name : "snippetseditor_delete_snippetgroup" }
+      KPIM.ActionListItem { name : "snippetseditor_insert_snippet"; title: KDE.i18n("Insert\nSnippet") },
+      KPIM.ActionListItem { name : "snippetseditor_add_snippet"; title: KDE.i18n("Add\nSnippet") },
+      KPIM.ActionListItem { name : "snippetseditor_edit_snippet"; title: KDE.i18n("Edit\nSnippet") },
+      KPIM.ActionListItem { name : "snippetseditor_delete_snippet"; title: KDE.i18n("Delete\nSnippet") },
+      KPIM.ActionListItem { name : "snippetseditor_add_snippetgroup"; title: KDE.i18n("Add\nSnippetgroup") },
+      KPIM.ActionListItem { name : "snippetseditor_edit_snippetgroup"; title: KDE.i18n("Edit\nSnippetgroup") },
+      KPIM.ActionListItem { name : "snippetseditor_delete_snippetgroup"; title: KDE.i18n("Delete\nSnippetgroup") }
     ]
 
     onTriggered: {
