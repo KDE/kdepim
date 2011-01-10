@@ -27,10 +27,18 @@
 #include <QThread>
 #endif
 
+#ifdef KDELIBS_STATIC_LIBS
+int staticInitKConfigGroupGui();
+#endif
+
 static inline bool runPreApplicationSetup( const KCmdLineOptions & opts ) {
   Q_UNUSED( opts );
 #ifdef _WIN32_WCE
   QThread::currentThread()->setPriority(QThread::HighPriority);
+#endif
+#ifdef KDELIBS_STATIC_LIBS
+  //This is needed to get KConfig working with QColor
+  staticInitKConfigGroupGui();
 #endif
     KDeclarativeApplicationBase::preApplicationSetup();
     return true; // <-- default value of KApplication(bool) ctor
