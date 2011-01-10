@@ -133,7 +133,7 @@ static const int ft = 2; // frame thickness
 
 MonthGraphicsItem::MonthGraphicsItem( MonthItem *manager )
   : QGraphicsItem( 0, manager->monthScene() ),
-    mMonthItem( manager )
+    mMonthItem( manager ), mToolTipNeedsUpdate( false )
 {
   QTransform transform;
   transform = transform.translate( 0.5, 0.5 );
@@ -332,8 +332,7 @@ void MonthGraphicsItem::paint( QPainter *p, const QStyleOptionGraphicsItem *, QW
 void MonthGraphicsItem::setStartDate( const QDate &date )
 {
   mStartDate = date;
-
-  setToolTip( mMonthItem->toolTipText( date ) );
+  mToolTipNeedsUpdate = true;
 }
 
 QDate MonthGraphicsItem::endDate() const
@@ -386,6 +385,10 @@ void MonthGraphicsItem::updateGeometry()
           mMonthItem->monthScene()->maxRowCount() ) {
     hide();
   } else {
+    if ( mToolTipNeedsUpdate ) {
+      setToolTip( mMonthItem->toolTipText( mStartDate ) );
+      mToolTipNeedsUpdate = false;
+    }
     show();
     update();
   }
