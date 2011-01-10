@@ -95,7 +95,7 @@ void MonthViewPrivate::addIncidence( const Akonadi::Item &incidence )
   Q_UNUSED( incidence );
   //TODO: add some more intelligence here...
   q->setChanges( q->changes() | EventView::IncidencesAdded );
-  q->reloadIncidences();
+  reloadTimer.start( 50 );
 }
 
 void MonthViewPrivate::moveStartDate( int weeks, int months )
@@ -284,7 +284,7 @@ void MonthView::updateConfig()
   */
   d->scene->update();
   setChanges( changes() | ConfigChanged );
-  QTimer::singleShot( 0, this, SLOT(reloadIncidences()) );
+  d->reloadTimer.start( 50 );
 }
 
 int MonthView::currentDateCount() const
@@ -331,7 +331,7 @@ void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
   // d->calendarSearch->setStartDate( actualStartDateTime() );
   // d->calendarSearch->setEndDate( actualEndDateTime() );
   setChanges( changes() | DatesChanged );
-  reloadIncidences();
+  d->reloadTimer.start( 50 );
 }
 
 bool MonthView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
@@ -364,7 +364,7 @@ void MonthView::changeIncidenceDisplay( const Akonadi::Item &incidence, int acti
   // called by one of the MonthItem objects. So only schedule a reload
   // as event
   setChanges( changes() | IncidencesEdited );
-  QTimer::singleShot( 0, this, SLOT(reloadIncidences()) );
+  d->reloadTimer.start( 50 );
 }
 
 void MonthView::updateView()
