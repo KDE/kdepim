@@ -86,12 +86,12 @@ KPIM.ActionList {
     }
   }
 
-  KPIM.ActionListItem {
+  /*KPIM.ActionListItem {
     name : "report_bug"
     onPressAndHold: {
       longPressed(name);
     }
-  }
+  }*/
 
   KPIM.ScriptActionItem  {
     name : "show_about_dialog"
