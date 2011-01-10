@@ -81,6 +81,7 @@ KPIM.ActionList {
 
   KPIM.ActionListItem {
     name : "open_manual"
+    title: KDE.i18n( "First Steps" )
     onPressAndHold: {
       longPressed(name);
     }
