@@ -64,7 +64,7 @@
     </entry>
     <entry name="PgpSignedMessageColor" type="Color" key="PGPMessageOkKeyOk">
       <label>This is the color used for highlighting all signed messages</label>
-      <default code="yes">KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::PositiveBackground ).color()</default>
+      <default code="true">KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::PositiveBackground ).color()</default>
     </entry>
     <entry name="PgpEncryptedMessageColor" type="Color" key="PGPMessageEncr">
       <label>This is the colour used for highlighting all encrypted messages</label>
