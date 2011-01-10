@@ -87,6 +87,8 @@ class CALENDARSUPPORT_EXPORT Calendar : public QObject,
                                         public KCalCore::IncidenceBase::IncidenceObserver
 {
   Q_OBJECT
+
+  Q_PROPERTY( int incidencesCount READ incidencesCount NOTIFY calendarChanged )
   public:
 
     /**
@@ -750,6 +752,11 @@ class CALENDARSUPPORT_EXPORT Calendar : public QObject,
 
     Akonadi::Item::Id itemIdForIncidenceUid( const QString &uid ) const;
     Akonadi::Item itemForIncidenceUid( const QString &uid ) const;
+
+    /**
+     * Returns the number of incidences in the calendar.
+     */
+    int incidencesCount() const;
 
     using QObject::event;   // prevent warning about hidden virtual method
 

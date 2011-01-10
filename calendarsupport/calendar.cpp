@@ -1987,3 +1987,7 @@ bool Calendar::hasDeleteRights( const Akonadi::Item &item ) const
   return col.rights() & Akonadi::Collection::CanDeleteItem;
 }
 
+int Calendar::incidencesCount() const
+{
+  return d->m_model->rowCount();
+}
