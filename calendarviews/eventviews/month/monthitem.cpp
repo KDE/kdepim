@@ -222,12 +222,17 @@ int MonthItem::daySpan() const
 
 bool MonthItem::greaterThan( const MonthItem *e1, const MonthItem *e2 )
 {
-  if ( !e1->startDate().isValid() || !e2->startDate().isValid() ) {
+  const QDate leftStartDate = e1->startDate();
+  const QDate rightStartDate = e2->startDate();
+
+  if ( !leftStartDate.isValid() || !rightStartDate.isValid() ) {
     return false;
   }
 
-  if ( e1->startDate() == e2->startDate() ) {
-    if ( e1->daySpan() == e2->daySpan() ) {
+  if ( leftStartDate == rightStartDate ) {
+    const int leftDaySpan = e1->daySpan();
+    const int rightDaySpan = e2->daySpan();
+    if ( leftDaySpan == rightDaySpan ) {
       if ( e1->allDay() && !e2->allDay() ) {
         return true;
       }
@@ -236,11 +241,11 @@ bool MonthItem::greaterThan( const MonthItem *e1, const MonthItem *e2 )
       }
       return e1->greaterThanFallback( e2 );
     } else {
-      return e1->daySpan() >  e2->daySpan();
+      return leftDaySpan >  rightDaySpan;
     }
   }
 
-  return e1->startDate() < e2->startDate();
+  return leftStartDate < rightStartDate;
 }
 
 bool MonthItem::greaterThanFallback( const MonthItem *other ) const
