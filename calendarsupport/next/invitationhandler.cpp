@@ -173,7 +173,8 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
 
 bool InvitationHandler::Private::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence )
 {
-  return KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
+  return KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() ) ||
+         incidence->organizer()->email().isEmpty();
 }
 
 bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence )
