@@ -710,8 +710,13 @@ void KDeclarativeMainView::openManual()
                         i18n( "Manual not found" ) );
     return;
   }
-
+#ifdef Q_WS_MAEMO_5
+  // opening the browser with a website via desktop file is defect on maemo5
+  // try to call the bowser directly
+  KProcess::startDetached( QLatin1String("/usr/bin/browser"), QStringList() << QLatin1String("--url") << path );
+#else
   openAttachment( path, QLatin1String( "text/html" ) );
+#endif
 }
 
 void KDeclarativeMainView::openLicenses()
