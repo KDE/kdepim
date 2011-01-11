@@ -29,6 +29,7 @@
 #include "timelineview_p.h"
 #include "helper.h"
 
+#include <kdgantt2/kdganttgraphicsitem.h>
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttabstractrowcontroller.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
@@ -201,6 +202,7 @@ TimelineView::TimelineView( QWidget *parent )
   d->mGantt->setModel( model );
   d->mGantt->viewport()->setFixedWidth( 8000 );
 
+  d->mGantt->viewport()->installEventFilter( this );
 
 #if 0
   d->mGantt->setCalendarMode( true );
@@ -417,6 +419,27 @@ QDate TimelineView::startDate() const
 QDate TimelineView::endDate() const
 {
   return d->mEndDate;
+}
+
+bool TimelineView::eventFilter( QObject *object, QEvent *event )
+{
+  if ( event->type() == QEvent::ToolTip ) {
+    QHelpEvent *helpEvent = static_cast<QHelpEvent*>( event );
+    QGraphicsItem *item = d->mGantt->itemAt( helpEvent->pos() );
+    if ( item ) {
+      if ( item->type() == KDGantt::GraphicsItem::Type ) {
+        KDGantt::GraphicsItem *graphicsItem = static_cast<KDGantt::GraphicsItem*>( item );
+        const QModelIndex itemIndex = graphicsItem->index();
+
+        QStandardItemModel *itemModel = qobject_cast<QStandardItemModel*>( d->mGantt->model() );
+        TimelineSubItem *timelineItem = dynamic_cast<TimelineSubItem*>( itemModel->item( itemIndex.row(), itemIndex.column() ) );
+        if ( timelineItem )
+          timelineItem->updateToolTip();
+      }
+    }
+  }
+
+  return EventView::eventFilter( object, event );
 }
 
 #include "timelineview.moc"

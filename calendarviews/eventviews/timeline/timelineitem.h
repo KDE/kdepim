@@ -83,10 +83,13 @@ class TimelineSubItem : public QStandardItem
 
     TimelineItem *parent() { return mParent; }
 
+    void updateToolTip();
+
   private:
     Akonadi::Item mIncidence;
     KDateTime mStart;
     TimelineItem *mParent;
+    bool mToolTipNeedsUpdate;
 };
 
 }

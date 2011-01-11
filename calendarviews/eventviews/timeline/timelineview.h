@@ -65,6 +65,9 @@ class EVENTVIEWS_EXPORT TimelineView : public EventView
     void showNewEventPopupSignal();
     void showIncidencePopupSignal( Akonadi::Item, const QDate & );
 
+  protected:
+    virtual bool eventFilter( QObject *object, QEvent *event );
+
   private:
     class Private;
     Private *const d;

@@ -116,13 +116,9 @@ TimelineSubItem::TimelineSubItem( const Akonadi::Item &incidence,
                                   TimelineItem *parent
                                 )
   : QStandardItem(), mIncidence( incidence ),
-    mParent( parent )
+    mParent( parent ), mToolTipNeedsUpdate( true )
 {
   setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
-  setData( IncidenceFormatter::toolTipStr(
-                  CalendarSupport::displayName( incidence.parentCollection() ),
-                  CalendarSupport::incidence( incidence ), originalStart().date(),
-                  true, CalendarSupport::KCalPrefs::instance()->timeSpec() ), Qt::ToolTipRole );
   if ( !CalendarSupport::incidence( incidence )->isReadOnly() ) {
     setFlags( Qt::ItemIsSelectable );
   }
@@ -150,4 +146,17 @@ void TimelineSubItem::setEndTime(const QDateTime& dt)
 QDateTime TimelineSubItem::endTime() const
 {
   return data( KDGantt::EndTimeRole ).toDateTime();
+}
+
+void TimelineSubItem::updateToolTip()
+{
+  if ( !mToolTipNeedsUpdate )
+    return;
+
+  mToolTipNeedsUpdate = false;
+
+  setData( IncidenceFormatter::toolTipStr(
+                  CalendarSupport::displayName( mIncidence.parentCollection() ),
+                  CalendarSupport::incidence( mIncidence ), originalStart().date(),
+                  true, CalendarSupport::KCalPrefs::instance()->timeSpec() ), Qt::ToolTipRole );
 }
