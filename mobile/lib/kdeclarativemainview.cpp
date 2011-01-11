@@ -656,7 +656,10 @@ static QString lookupDocumentation( const QString &fileName )
   QStringList searches;
 
   // assemble the local search paths
-  const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "html" );
+  // all files on /usr/share/doc are deleted instantly on maemo5 by docpurge
+  // therefore manual must be installed in data dir
+  const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "data" );
+  //const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "html" );
 
   qDebug() << "localDirectories:" << localDirectories;
 
@@ -676,7 +679,7 @@ static QString lookupDocumentation( const QString &fileName )
   // look up the different languages
   foreach ( const QString &directory, localDirectories ) {
     foreach ( const QString &language, languages ) {
-      searches.append( QString( "%1%2/%3" ).arg( directory, language, fileName ) );
+      searches.append( QString( "%1%2/%3/%4" ).arg( directory, QLatin1String("kontact-touch"), language, fileName ) );
     }
   }
 
@@ -693,7 +696,7 @@ static QString lookupDocumentation( const QString &fileName )
 
 void KDeclarativeMainView::openManual()
 {
-  const QString path = lookupDocumentation( "kontact-touch/manual/index.html" );
+  const QString path = lookupDocumentation( "manual/index.html" );
   const KUrl url = path;
   const bool isValid = url.isValid();
   
