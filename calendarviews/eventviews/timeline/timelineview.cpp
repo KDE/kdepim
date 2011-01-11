@@ -329,6 +329,15 @@ void TimelineView::showDates( const QDate &start, const QDate &end )
   }
 
   // add incidences
+
+  /**
+   * We remove the model from the view here while we fill it with items,
+   * because every call to insertIncidence will cause the view to do an expensive
+   * updateScene() call otherwise.
+   */
+  QAbstractItemModel *ganttModel = d->mGantt->model();
+  d->mGantt->setModel( 0 );
+
   Akonadi::Item::List events;
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   for ( QDate day = start; day <= end; day = day.addDays( 1 ) ) {
@@ -339,6 +348,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end )
       d->insertIncidence( i, day );
     }
   }
+  d->mGantt->setModel( ganttModel );
   d->splitterMoved();
 }
 
