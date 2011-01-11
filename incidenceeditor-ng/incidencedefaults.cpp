@@ -161,6 +161,7 @@ void IncidenceDefaultsPrivate::journalDefaults( const KCalCore::Journal::Ptr &jo
 {
   const KDateTime startDT = mStartDt.isValid() ? mStartDt : KDateTime::currentLocalDateTime();
   journal->setDtStart( startDT );
+  journal->setAllDay( true );
 }
 
 void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) const
