@@ -45,6 +45,10 @@ using namespace KCalCore;
 
 namespace IncidenceEditorNG {
 
+enum {
+  UNSPECIFED_PRIORITY = 0
+};
+
 struct IncidenceDefaultsPrivate
 {
   /// Members
@@ -189,7 +193,12 @@ void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) c
 
   todo->setCompleted( false );
   todo->setPercentComplete( 0 );
-  todo->setPriority( 5 );
+
+  // I had a bunch of to-dos and couldn't distinguish between those that had priority '5'
+  // because I wanted, and those that had priority '5' because it was set by default
+  // and I forgot to unset it.
+  // So don't be smart and try to guess a good default priority for the user, just use unspecified.
+  todo->setPriority( UNSPECIFED_PRIORITY );
 
   if ( KCalPrefs::instance()->defaultTodoReminders() ) {
     todo->addAlarm( AlarmPresets::defaultAlarm( AlarmPresets::BeforeEnd ) );
