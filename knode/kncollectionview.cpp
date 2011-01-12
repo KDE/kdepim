@@ -172,6 +172,7 @@ void KNCollectionView::removeGroup(KNGroup *g)
   if (!g->listItem())
     return;
 
+  g->listItem()->setHidden( true ); // work around bug 248256
   delete g->listItem();
   g->setListItem(0);
 }
