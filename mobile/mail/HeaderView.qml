@@ -29,7 +29,6 @@ KPIM.ItemListView {
   property variant checkModel
   property string collapsedSections
   property bool showSections : true
-  property string groupingRole : "dateGroup"
 
   delegate: [
     KPIM.ItemListViewDelegate {
@@ -37,7 +36,7 @@ KPIM.ItemListView {
       showCheckBox : _top.showCheckBox
       checkModel : _top.checkModel
       navigationModel : _top.navigationModel
-      height : (_top.collapsedSections.indexOf(model[groupingRole]) >= 0) ? 0 : (itemListView.height / 7)
+      height : (_top.collapsedSections.indexOf(model.grouperString) >= 0) ? 0 : (itemListView.height / 7)
       clip: true
       summaryContent : [
         QML.Text {
@@ -208,7 +207,7 @@ KPIM.ItemListView {
     }
   ]
 
-  section.property: showSections ? _top.groupingRole : ""
+  section.property: showSections ? "grouperString" : ""
   section.criteria: QML.ViewSection.FullString
   section.delegate: QML.Item {
     id: sectionDelegate

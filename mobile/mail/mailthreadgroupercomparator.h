@@ -39,6 +39,13 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
       SortByActionItem
     };
 
+    enum GroupingOption
+    {
+      GroupByNone,
+      GroupByDate,
+      GroupBySenderReceiver
+    };
+
     /**
      * Creates a new mail thread grouper comparator.
      */
@@ -67,24 +74,38 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
     void setSortingOption( SortingOption option );
     SortingOption sortingOption() const;
 
+    void setGroupingOption( GroupingOption option );
+    GroupingOption groupingOption() const;
+
     /**
      * Sets whether the currently compared items come from an outbound mail collection
      * (e.g. outbox, sent or drafts).
      */
     void setIsOutboundCollection( bool outbound );
 
+    virtual QString grouperString( const Akonadi::Item &item ) const;
+
   protected:
     virtual void resetCaches();
 
   private:
     QByteArray identifierForMessage( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
-    KDateTime mostRecentUpdate( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
+    KDateTime mostRecentDateTimeInThread( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
+    Akonadi::Item::Id mostRecentIdInThread( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
     KMime::Message::Ptr messageForItem( const Akonadi::Item &item ) const;
 
     SortingOption mSortingOption;
+    GroupingOption mGroupingOption;
     bool mIsOutboundCollection;
     mutable QHash<Akonadi::Item::Id, KMime::Message::Ptr> mMessageCache;
-    mutable QHash<Akonadi::Item::Id, KDateTime> mMostRecentCache;
+
+    struct MostRecentEntry
+    {
+      Akonadi::Item::Id id;
+      KDateTime dateTime;
+    };
+
+    mutable QHash<Akonadi::Item::Id, MostRecentEntry> mMostRecentCache;
 };
 
 #endif

@@ -296,7 +296,6 @@ KPIM.MainView {
         navigationModel : _threadSelector
         showDeleteButton : false // too easy to accidentally hit it, although very useful...
         opacity : threadContentsViewContainer.opacity == 0 ? 1 : 0
-        groupingRole : messageListSettings.groupingRole
         showSections : messageListSettings.groupingRole != ""
       }
       QML.Connections {

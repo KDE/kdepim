@@ -60,6 +60,11 @@ ThreadGrouperComparator::~ThreadGrouperComparator()
 {
 }
 
+QString ThreadGrouperComparator::grouperString( const Akonadi::Item& ) const
+{
+  return QString();
+}
+
 Akonadi::Item ThreadGrouperComparator::threadItem( const Akonadi::Item &item ) const
 {
   Q_ASSERT( m_grouper );
@@ -186,6 +191,9 @@ QVariant ThreadGrouperModel::data( const QModelIndex &index, int role ) const
 
   if ( role == ThreadIdRole )
     return d->threadRoot( index ).id();
+  else if ( role == GrouperRole ) {
+    return d->m_comparator->grouperString( index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>() );
+  }
 
   return QSortFilterProxyModel::data( index, role );
 }
@@ -209,6 +217,10 @@ void ThreadGrouperModel::setSourceModel( QAbstractItemModel *sourceModel )
   if ( d->m_dynamicModelRepopulation )
     connect( sourceModel, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
              this, SLOT( populateThreadGrouperModel() ) );
+
+  QHash<int, QByteArray> names = roleNames();
+  names.insert( GrouperRole, "grouperString" );
+  setRoleNames( names );
 }
 
 bool ThreadGrouperModel::lessThan( const QModelIndex &left, const QModelIndex &right ) const
@@ -228,6 +240,7 @@ void ThreadGrouperModel::setThreadingEnabled( bool enabled )
   d->m_threadingEnabled = enabled;
 
   invalidate();
+  reset();
 }
 
 bool ThreadGrouperModel::threadingEnabled() const

@@ -1753,6 +1753,18 @@ void MainView::messageListSettingsChanged( const MessageListSettings &settings )
       break;
   }
 
+  switch ( settings.groupingOption() ) {
+    case MessageListSettings::GroupByDate:
+      m_grouperComparator->setGroupingOption( MailThreadGrouperComparator::GroupByDate );
+      break;
+    case MessageListSettings::GroupBySenderReceiver:
+      m_grouperComparator->setGroupingOption( MailThreadGrouperComparator::GroupBySenderReceiver );
+      break;
+    case MessageListSettings::GroupByNone:
+      m_grouperComparator->setGroupingOption( MailThreadGrouperComparator::GroupByNone );
+      break;
+  }
+
   m_threadGrouperModel->setThreadingEnabled( settings.useThreading() );
 
   m_threadGrouperModel->sort( 0, settings.sortingOrder() );
