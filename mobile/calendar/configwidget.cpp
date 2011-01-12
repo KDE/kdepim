@@ -32,32 +32,32 @@ using namespace CalendarSupport;
 ConfigWidget::ConfigWidget( QWidget *parent )
   : QWidget( parent )
 {
-  Ui_ConfigWidget ui;
-  ui.setupUi( this );
+  mUi = new Ui_ConfigWidget;
+  mUi->setupUi( this );
 
-  ui.kcfg_DayBegins->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
-  ui.kcfg_DailyStartingHour->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
-  ui.kcfg_DailyEndingHour->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
-  ui.kcfg_DefaultAppointmentTime->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
+  mUi->kcfg_DayBegins->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
+  mUi->kcfg_DailyStartingHour->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
+  mUi->kcfg_DailyEndingHour->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
+  mUi->kcfg_DefaultAppointmentTime->setProperty( "kcfg_property", QByteArray( "dateTime" ) );
 
-  ui.kcfg_AgendaViewColorUsage->addItem( i18n( "Category inside, calendar outside" ) );
-  ui.kcfg_AgendaViewColorUsage->addItem( i18n( "Calendar inside, category outside" ) );
-  ui.kcfg_AgendaViewColorUsage->addItem( i18n( "Only category" ) );
-  ui.kcfg_AgendaViewColorUsage->addItem( i18n( "Only calendar" ) );
+  mUi->kcfg_AgendaViewColorUsage->addItem( i18n( "Category inside, calendar outside" ) );
+  mUi->kcfg_AgendaViewColorUsage->addItem( i18n( "Calendar inside, category outside" ) );
+  mUi->kcfg_AgendaViewColorUsage->addItem( i18n( "Only category" ) );
+  mUi->kcfg_AgendaViewColorUsage->addItem( i18n( "Only calendar" ) );
 
-  ui.kcfg_MonthViewColorUsage->addItem( i18n( "Category inside, calendar outside" ) );
-  ui.kcfg_MonthViewColorUsage->addItem( i18n( "Calendar inside, category outside" ) );
-  ui.kcfg_MonthViewColorUsage->addItem( i18n( "Only category" ) );
-  ui.kcfg_MonthViewColorUsage->addItem( i18n( "Only calendar" ) );
+  mUi->kcfg_MonthViewColorUsage->addItem( i18n( "Category inside, calendar outside" ) );
+  mUi->kcfg_MonthViewColorUsage->addItem( i18n( "Calendar inside, category outside" ) );
+  mUi->kcfg_MonthViewColorUsage->addItem( i18n( "Only category" ) );
+  mUi->kcfg_MonthViewColorUsage->addItem( i18n( "Only calendar" ) );
 
-  mHolidayCombo = ui.kcfg_HolidayRegion;
-  mWorkDays << ui.workingPeriodMonday;
-  mWorkDays << ui.workingPeriodTuesday;
-  mWorkDays << ui.workingPeriodWednesday;
-  mWorkDays << ui.workingPeriodThursday;
-  mWorkDays << ui.workingPeriodFriday;
-  mWorkDays << ui.workingPeriodSaturday;
-  mWorkDays << ui.workingPeriodSunday;
+  mHolidayCombo = mUi->kcfg_HolidayRegion;
+  mWorkDays << mUi->workingPeriodMonday;
+  mWorkDays << mUi->workingPeriodTuesday;
+  mWorkDays << mUi->workingPeriodWednesday;
+  mWorkDays << mUi->workingPeriodThursday;
+  mWorkDays << mUi->workingPeriodFriday;
+  mWorkDays << mUi->workingPeriodSaturday;
+  mWorkDays << mUi->workingPeriodSunday;
 
   mManager = new KConfigDialogManager( this, Settings::self() );
 
@@ -86,13 +86,28 @@ ConfigWidget::ConfigWidget( QWidget *parent )
     mHolidayCombo->addItem( it.key(), it.value() );
   }
 
+  mUi->kcfg_DayBegins->installEventFilter( this );
+  mUi->kcfg_DailyStartingHour->installEventFilter( this );
+  mUi->kcfg_DailyEndingHour->installEventFilter( this );
+  mUi->kcfg_DefaultAppointmentTime->installEventFilter( this );
+
+  connect( this, SIGNAL( dayBeginsFocus( QObject* ) ), SLOT( showClock( QObject* ) ) );
+  connect( this, SIGNAL( dailyStartingHourFocus( QObject* ) ), SLOT( showClock( QObject* ) ) );
+  connect( this, SIGNAL( dailyEndingHourFocus( QObject* ) ), SLOT( showClock( QObject* ) ) );
+  connect( this, SIGNAL( defaultAppointmentTimeFocus( QObject* ) ), SLOT( showClock( QObject* ) ) );
+
   // UI workarounds for Maemo5
 #ifdef Q_WS_MAEMO_5
-  ui.kcfg_DayBegins->setEditable( false );
-  ui.kcfg_DailyStartingHour->setEditable( false );
-  ui.kcfg_DailyEndingHour->setEditable( false );
-  ui.kcfg_DefaultAppointmentTime->setEditable( false );
+  mUi->kcfg_DayBegins->setEditable( false );
+  mUi->kcfg_DailyStartingHour->setEditable( false );
+  mUi->kcfg_DailyEndingHour->setEditable( false );
+  mUi->kcfg_DefaultAppointmentTime->setEditable( false );
 #endif
+}
+
+ConfigWidget::~ConfigWidget()
+{
+  delete mUi;
 }
 
 void ConfigWidget::setPreferences( const EventViews::PrefsPtr &preferences )
@@ -218,10 +233,50 @@ void ConfigWidget::saveToExternalSettings()
   mViewPrefs->writeConfig();
 }
 
+void ConfigWidget::showClock( QObject *object )
+{
+  setFocus();
+  mFocusedTimeWidget = qobject_cast<KPIM::KTimeEdit*>( object );
+  if ( !mFocusedTimeWidget )
+    return;
+
+  const QTime time = mFocusedTimeWidget->time();
+  emit showClockWidget( time.hour(), time.minute() );
+}
+
+void ConfigWidget::setNewTime( int hour, int minute )
+{
+  if ( mFocusedTimeWidget == 0 )
+    return;
+
+  mFocusedTimeWidget->setTime( QTime( hour, minute ) );
+}
+
+bool ConfigWidget::eventFilter( QObject *object, QEvent *event )
+{
+  if ( event->type() == QEvent::FocusIn ) {
+    if ( object == mUi->kcfg_DayBegins ) {
+      emit dayBeginsFocus( object );
+    } else if ( object == mUi->kcfg_DailyStartingHour ) {
+      emit dailyStartingHourFocus( object );
+    } else if ( object == mUi->kcfg_DailyEndingHour ) {
+      emit dailyEndingHourFocus( object );
+    } else if ( object == mUi->kcfg_DefaultAppointmentTime ) {
+      emit defaultAppointmentTimeFocus( object );
+    }
+
+    return true;
+  } else {
+    // standard event processing
+    return QObject::eventFilter( object, event );
+  }
+}
+
 DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
   : DeclarativeWidgetBase< ConfigWidget, MainView, &MainView::setConfigWidget>( parent )
 {
-  connect( this, SIGNAL(configChanged()), widget(), SIGNAL(configChanged()) );
+  connect( this, SIGNAL( configChanged() ), widget(), SIGNAL( configChanged() ) );
+  connect( widget(), SIGNAL( showClockWidget( int, int ) ), this, SIGNAL( showClockWidget( int, int ) ) );
 }
 
 DeclarativeConfigWidget::~DeclarativeConfigWidget()
@@ -237,6 +292,11 @@ void DeclarativeConfigWidget::save()
 {
   widget()->save();
   emit configChanged();
+}
+
+void DeclarativeConfigWidget::setNewTime( int hour, int minute )
+{
+  widget()->setNewTime( hour, minute );
 }
 
 #include "configwidget.moc"

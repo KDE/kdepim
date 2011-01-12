@@ -34,6 +34,30 @@ QML.Rectangle {
     configWidget.load();
   }
 
+  QML.Connections {
+    target: configWidget
+    onShowClockWidget: {
+       clockWidget.expand()
+       clockWidget.okEnabled = false
+
+       // set the initial values
+       clockWidget.hours = hour;
+       clockWidget.minutes = minute;
+    }
+  }
+
+  QML.Connections {
+    target: clockWidget
+    onTimeChanged: {
+      configWidget.setNewTime( hour, minute );
+    }
+  }
+
+  KPIM.ClockDialog {
+    id: clockWidget
+    anchors.fill: parent
+  }
+
   KPIM.DecoratedFlickable {
     id: configWidgetBox
     anchors.fill: parent
