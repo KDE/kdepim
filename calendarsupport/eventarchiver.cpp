@@ -224,6 +224,8 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
   KUrl archiveURL( KCalPrefs::instance()->mArchiveFile );
   QString archiveFile;
 
+#ifndef Q_OS_WINCE
+  // There is no KIO::NetAccess availabe for Windows CE
   if ( KIO::NetAccess::exists( archiveURL, KIO::NetAccess::SourceSide, widget ) ) {
     if( !KIO::NetAccess::download( archiveURL, archiveFile, widget ) ) {
       kDebug() << "Can't download archive file";
@@ -240,6 +242,10 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
   } else {
     archiveFile = tmpFileName;
   }
+#else
+  archiveFile = archiveURL.toLocalFile();
+  archiveStore.setFileName( archiveFile );
+#endif // Q_OS_WINCE
 
   // Save archive calendar
   if ( !archiveStore.save() ) {
@@ -255,6 +261,7 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
     return;
   }
 
+#ifndef Q_OS_WINCE
   // Upload if necessary
   KUrl srcUrl;
   srcUrl.setPath( archiveFile );
@@ -267,8 +274,9 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
     }
   }
 
-  QFile::remove( tmpFileName );
   KIO::NetAccess::removeTempFile( archiveFile );
+#endif // Q_OS_WINCE
+  QFile::remove( tmpFileName );
 
   // Delete archived events from calendar
   foreach(const Akonadi::Item &item, incidences) {
