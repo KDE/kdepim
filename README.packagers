@@ -75,6 +75,31 @@ started with 'kcmshell4 kcm_akonadi'. The test is in the tab 'Akonadi Server
 Configuration' and is started with the 'Test...' button.
 
 
+KDEPIM-Runtime
+--------------
+(most of) The kdepim applications can use one or several Akonadi Resources in order
+to fetch and store PIM data.
+
+It is usually a good idea to install the kdepim-runtime package when installing
+one of the KDEPIM applications. As the module name indicates, it is only needed at
+runtime.
+
+The kdepim-runtime module contains applications and plugins, for example
+Akonadi resources or KIO slaves, that are needed by all applications making use
+of the PIM API in kdepimlibs.
+
+Third-party applications which use the PIM API can be installed without installing
+the rest of KDEPIM, only KDEPIM-Runtime (and of course kdepimlibs) is needed.
+
+If you don't install KDEPIM-Runtime for third-party applications which use the PIM
+API of kdepimlibs, these applications will fail to work at runtime.
+
+Note that not all parts of kdepimlibs require KDEPIM-Runtime at runtime, only
+the parts that access the Akonadi store in some way, like 'kcalcore', 'kabc' or
+'akonadi'. Other parts, like 'kmime' or 'gpgme++' are not accessing the Akonadi
+store and therefore don't need KDEPIM-Runtime.
+
+
 Kontact Plugins
 ---------------
 Kontact is a container application which embeds other PIM applications such as
@@ -106,29 +131,6 @@ is not enough here, you need to actually send the mail.
 A common packaging error is that gpg-agent is not running or that it is wrongly
 configured. This will result in KMail failing on crypto operations with error
 messages that give no indication of the real problem, such as 'bad passphrase'.
-
-
-Runtime split
--------------
-The KDEPIM sources have a top-level directory named 'runtime'. Please package
-this directory separately. It contains applications and plugins, for example
-Akonadi resources or KIO slaves, that are needed by all applications making use
-of the PIM API in kdepimlibs.
-
-By packaging 'runtime' separately, third-party applications which use the PIM
-API can be installed without installing the rest of KDEPIM, only 'runtime' (and
-of course kdepimlibs) is needed.
-
-If you don't install 'runtime' for third-party applications which use the PIM
-API of kdepimlibs, these applications will fail to work at runtime.
-
-Note that not all parts of kdepimlibs require kdepim/runtime at runtime, only
-the parts that access the Akonadi store in some way, like 'kcal', 'kabc' or
-'akonadi'. Other parts, like 'kmime' or 'gpgme++' are not accessing the Akonadi
-store and therefore don't need kdepim/runtime.
-
-The tarballs released by the KDE project are already split, there is a 'kdepim'
-tarball as well as a 'kdepim-runtime' tarball.
 
 
 Libraries inside KDEPIM
