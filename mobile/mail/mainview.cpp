@@ -1196,7 +1196,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   //creating actions that doesn't make sense in mobile.
   QList<StandardActionManager::Type> standardActions;
   standardActions << StandardActionManager::CreateCollection << StandardActionManager::CopyCollections
-   << StandardActionManager:: DeleteCollections << StandardActionManager::SynchronizeCollections
+   << StandardActionManager::DeleteCollections << StandardActionManager::SynchronizeCollections
    << StandardActionManager::CollectionProperties << StandardActionManager::CopyItems
    << StandardActionManager::Paste << StandardActionManager::DeleteItems
    << StandardActionManager::ManageLocalSubscriptions << StandardActionManager::AddToFavoriteCollections
@@ -1238,11 +1238,15 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   mMailActionManager->action( StandardMailActionManager::MarkAllMailAsRead )->setText( i18n( "Mark Displayed Emails As Read" ) );
   mMailActionManager->action( StandardMailActionManager::MoveAllToTrash )->setText( i18n( "Move Displayed Emails To Trash" ) );
-  mMailActionManager->action( StandardMailActionManager::MoveToTrash )->setText( i18n( "Move Email To Trash" ) );
+  mMailActionManager->action( StandardMailActionManager::MoveToTrash )->setText( i18n( "Move To Trash" ) );
   mMailActionManager->action( StandardMailActionManager::RemoveDuplicates )->setText( i18n( "Remove Duplicate Emails" ) );
+  mMailActionManager->action( StandardMailActionManager::MarkMailAsRead )->setText( i18n( "Read" ) );
+  mMailActionManager->action( StandardMailActionManager::MarkMailAsUnread )->setText( i18n( "Unread" ) );
+  mMailActionManager->action( StandardMailActionManager::MarkMailAsImportant )->setText( i18n( "Important" ) );
+  mMailActionManager->action( StandardMailActionManager::MarkMailAsActionItem )->setText( i18n( "Action Item" ) );
 
-  mMailActionManager->action( StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Email To" ) );
-  mMailActionManager->action( StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Email To" ) );
+  mMailActionManager->action( StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy To" ) );
+  mMailActionManager->action( StandardActionManager::MoveItemToDialog )->setText( i18n( "Move To" ) );
 
   mMailActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Subfolder" ) );
   mMailActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Folder", "Synchronize These Folders" ) );
@@ -1251,9 +1255,58 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mMailActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Folder To" ) );
   mMailActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Folder To" ) );
 
+  connect(mMailActionManager, SIGNAL( actionStateUpdated() ), this, SLOT( mailActionStateUpdated() ) );
+
   actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
 
   connect( collectionSelectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), this, SLOT( folderChanged() ) );
+}
+
+void MainView::mailActionStateUpdated()
+{
+  const Akonadi::Item::List selectedItems = mMailActionManager->selectedItems();
+  bool itemIsSelected = !selectedItems.isEmpty();
+
+  if ( itemIsSelected ) {
+    bool allMarkedAsImportant = true;
+    bool allMarkedAsRead = true;
+    bool allMarkedAsActionItem = true;
+    
+    foreach ( const Akonadi::Item &item, selectedItems ) {
+      Akonadi::MessageStatus status;
+      status.setStatusFromFlags( item.flags() );
+      if ( !status.isImportant() )
+        allMarkedAsImportant = false;
+      if ( !status.isRead() )
+        allMarkedAsRead = false;
+      if ( !status.isToAct() )
+        allMarkedAsActionItem = false;
+    }
+
+    QAction *action = mMailActionManager->action( Akonadi::StandardMailActionManager::MarkMailAsRead );
+    if ( action ) {
+      if ( allMarkedAsRead )
+        action->setText( i18n( "Unread" ) );
+      else
+        action->setText( i18n( "Read" ) );
+    }
+
+    action = mMailActionManager->action( Akonadi::StandardMailActionManager::MarkMailAsImportant );
+    if ( action ) {
+      if ( allMarkedAsImportant )
+        action->setText( i18n( "Unimportant" ) );
+      else
+        action->setText( i18n( "Important" ) );
+    }
+
+    action = mMailActionManager->action( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
+    if ( action ) {
+      if ( allMarkedAsActionItem )
+        action->setText( i18n( "No Action Item" ) );
+      else
+        action->setText( i18n( "Action Item" ) );
+    }
+  }
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )

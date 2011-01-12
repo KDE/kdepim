@@ -120,6 +120,7 @@ class MainView : public KDeclarativeMainView
                                    const QString & bcc,
                                    const QString & subject,
                                    const QString & body );
+    void mailActionStateUpdated();
 
   Q_SIGNALS:
     void currentCollectionChanged();
