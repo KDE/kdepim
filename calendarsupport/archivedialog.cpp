@@ -282,6 +282,7 @@ void ArchiveDialog::slotUser1()
     accept();
   } else {
     archiver.runOnce( mCalendar, mChanger, mDateEdit->date(), this );
+    accept();
   }
 }
 
