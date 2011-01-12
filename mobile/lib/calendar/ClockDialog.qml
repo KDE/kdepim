@@ -33,6 +33,8 @@ Dialog {
 
   property bool blockSignalEmission: false
 
+  signal timeChanged( int hour, int minute )
+
   content: [
     Item {
       anchors.fill: parent
@@ -159,7 +161,7 @@ Dialog {
           onClicked: {
             clockWidget.collapse()
             myClock.clearSelection()
-            _incidenceview.setNewTime(hourSelector.value, minuteSelector.value);
+            timeChanged(hourSelector.value, minuteSelector.value);
           }
         }
       }

@@ -31,6 +31,8 @@ Dialog {
   property alias month: myCalendar.month
   property alias year: myCalendar.year
 
+  signal dateChanged( int day, int month, int year )
+
   content: [
     Item {
       anchors.fill: parent
@@ -165,7 +167,7 @@ Dialog {
             width: 100
             onClicked: {
               calendarWidget.collapse()
-              _incidenceview.setNewDate(myCalendar.day, myCalendar.month, myCalendar.year);
+              dateChanged( myCalendar.day, myCalendar.month, myCalendar.year )
             }
           }
         }
