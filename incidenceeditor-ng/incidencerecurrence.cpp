@@ -99,10 +99,6 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   connect( mDateTime, SIGNAL(endDateChanged(QDate)),
            SLOT(handleEndDateChange(QDate)) );
 
-  connect( mDateTime, SIGNAL(startDateChanged(QDate)), mUi->mExceptionDateEdit,
-           SLOT(setDate(QDate)) );
-  connect( mDateTime, SIGNAL(startDateChanged(QDate)), mUi->mExceptionDateEdit,
-           SLOT(setDate(QDate)) );
   connect( mUi->mExceptionAddButton, SIGNAL(clicked()),
            SLOT(addException()));
   connect( mUi->mExceptionRemoveButton, SIGNAL(clicked()),
@@ -960,6 +956,7 @@ void IncidenceRecurrence::handleStartDateChange( const QDate &date )
           mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ) {
     fillCombos();
     updateWeekDays( date );
+    mUi->mExceptionDateEdit->setDate( date );
   }
 }
 
@@ -971,6 +968,7 @@ void IncidenceRecurrence::handleEndDateChange( const QDate &date )
        mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) {
     fillCombos();
     updateWeekDays( date );
+    mUi->mExceptionDateEdit->setDate( date );
   }
 }
 
