@@ -160,16 +160,16 @@ namespace MessageViewer {
   QString CSSHelperBase::cssDefinitions( bool fixed ) const {
     return
       commonCssDefinitions()
-/*      +
-      "@media screen {\n\n" */
+      +
+      "@media screen {\n\n"
       +
       screenCssDefinitions( this, fixed )
       +
-/*      "}\n"
+      "}\n"
       "@media print {\n\n"
       +
       printCssDefinitions( fixed )
-      + */
+      +
       "\n";
   }
 
