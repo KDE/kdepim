@@ -52,6 +52,7 @@ namespace KMime {
 
 namespace GpgME {
   class Error;
+  class ImportResult;
 }
 
 
@@ -403,6 +404,9 @@ private:
   /** Writes out the block that we use when the node is encrypted,
       but we've just kicked off async decryption. */
   void writeDecryptionInProgressBlock();
+
+  /** Writes out the information contained in a GpgME::ImportResult */
+  void writeCertificateImportResult( const GpgME::ImportResult & res );
 
 
   /** Returns the contents of the given multipart/encrypted

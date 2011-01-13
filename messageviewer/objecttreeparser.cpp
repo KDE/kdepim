@@ -870,6 +870,65 @@ void ObjectTreeParser::writeDecryptionInProgressBlock()
   htmlWriter()->queue( writeSigstatFooter( messagePart ) );
 }
 
+void ObjectTreeParser::writeCertificateImportResult( const GpgME::ImportResult & res )
+{
+    if ( res.error() ) {
+      htmlWriter()->queue( i18n( "Sorry, certificate could not be imported.<br />"
+                                  "Reason: %1", QString::fromLocal8Bit( res.error().asString() ) ) );
+      return;
+    }
+
+    const int nImp = res.numImported();
+    const int nUnc = res.numUnchanged();
+    const int nSKImp = res.numSecretKeysImported();
+    const int nSKUnc = res.numSecretKeysUnchanged();
+    if ( !nImp && !nSKImp && !nUnc && !nSKUnc ) {
+      htmlWriter()->queue( i18n( "Sorry, no certificates were found in this message." ) );
+      return;
+    }
+    QString comment = "<b>" + i18n( "Certificate import status:" ) + "</b><br/>&nbsp;<br/>";
+    if ( nImp )
+      comment += i18np( "1 new certificate was imported.",
+                        "%1 new certificates were imported.", nImp ) + "<br/>";
+    if ( nUnc )
+      comment += i18np( "1 certificate was unchanged.",
+                        "%1 certificates were unchanged.", nUnc ) + "<br/>";
+    if ( nSKImp )
+      comment += i18np( "1 new secret key was imported.",
+                        "%1 new secret keys were imported.", nSKImp ) + "<br/>";
+    if ( nSKUnc )
+      comment += i18np( "1 secret key was unchanged.",
+                        "%1 secret keys were unchanged.", nSKUnc ) + "<br/>";
+    comment += "&nbsp;<br/>";
+    htmlWriter()->queue( comment );
+    if ( !nImp && !nSKImp ) {
+      htmlWriter()->queue( "<hr>" );
+      return;
+    }
+    const std::vector<GpgME::Import> imports = res.imports();
+    if ( imports.empty() ) {
+      htmlWriter()->queue( i18n( "Sorry, no details on certificate import available." ) + "<hr>" );
+      return;
+    }
+    htmlWriter()->queue( "<b>" + i18n( "Certificate import details:" ) + "</b><br/>" );
+    for ( std::vector<GpgME::Import>::const_iterator it = imports.begin() ; it != imports.end() ; ++it ) {
+      if ( (*it).error() ) {
+        htmlWriter()->queue( i18nc( "Certificate import failed.", "Failed: %1 (%2)", (*it).fingerprint(),
+                                QString::fromLocal8Bit( (*it).error().asString() ) ) );
+      } else if ( (*it).status() & ~GpgME::Import::ContainedSecretKey ) {
+        if ( (*it).status() & GpgME::Import::ContainedSecretKey ) {
+          htmlWriter()->queue( i18n( "New or changed: %1 (secret key available)", (*it).fingerprint() ) );
+        } else {
+          htmlWriter()->queue( i18n( "New or changed: %1", (*it).fingerprint() ) );
+        }
+      }
+      htmlWriter()->queue( "<br/>" );
+    }
+
+    htmlWriter()->queue( "<hr>" );
+}
+
+
 bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
                                     QByteArray& decryptedData,
                                     bool& signatureFound,
@@ -1533,11 +1592,10 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
 
   PartMetaData messagePart;
   // if we already have a decrypted node for this encrypted node, don't do the decryption again
-  if( mNodeHelper->isPermanentwWithExtraContent( data ) && mNodeHelper->extraContents( data ).size() == 1 )
+  if ( KMime::Content * newNode = mNodeHelper->decryptedNodeForContent( data ) )
   {
 //     if( NodeHelper::nodeProcessed( data ) )
     ObjectTreeParser otp( this );
-    KMime::Content* newNode = mNodeHelper->extraContents( data )[ 0 ];
     otp.parseObjectTreeInternal( newNode );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
@@ -1679,8 +1737,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
 
 bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * node, ProcessResult & result )
 {
-  KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
-  if ( child ) {
+  if ( KMime::Content * child = mNodeHelper->decryptedNodeForContent( node ) ) {
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
     mRawReplyString += otp.rawReplyString();
@@ -1765,8 +1822,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
 
 bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node, ProcessResult & result )
 {
-  KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
-  if ( child ) {
+  if ( KMime::Content * child = mNodeHelper->decryptedNodeForContent( node ) ) {
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
     mRawReplyString += otp.rawReplyString();
@@ -1780,12 +1836,14 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
     return false;
 
   const Kleo::CryptoBackend::Protocol * smimeCrypto = Kleo::CryptoBackendFactory::instance()->smime();
+  if ( !smimeCrypto )
+    return false;
 
   const QString smimeType = node->contentType()->parameter("smime-type").toLower();
 
   if ( smimeType == "certs-only" ) {
     result.setNeverDisplayInline( true );
-    if ( !smimeCrypto || !htmlWriter() )
+    if ( !htmlWriter() )
       return false;
 
     if ( !GlobalSettings::self()->autoImportKeys() )
@@ -1796,65 +1854,10 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
     Kleo::ImportJob *import = smimeCrypto->importJob();
     KleoJobExecutor executor;
     const GpgME::ImportResult res = executor.exec( import, certData );
-    if ( res.error() ) {
-      htmlWriter()->queue( i18n( "Sorry, certificate could not be imported.<br />"
-                                  "Reason: %1", QString::fromLocal8Bit( res.error().asString() ) ) );
-      return true;
-    }
-
-    const int nImp = res.numImported();
-    const int nUnc = res.numUnchanged();
-    const int nSKImp = res.numSecretKeysImported();
-    const int nSKUnc = res.numSecretKeysUnchanged();
-    if ( !nImp && !nSKImp && !nUnc && !nSKUnc ) {
-      htmlWriter()->queue( i18n( "Sorry, no certificates were found in this message." ) );
-      return true;
-    }
-    QString comment = "<b>" + i18n( "Certificate import status:" ) + "</b><br/>&nbsp;<br/>";
-    if ( nImp )
-      comment += i18np( "1 new certificate was imported.",
-                        "%1 new certificates were imported.", nImp ) + "<br/>";
-    if ( nUnc )
-      comment += i18np( "1 certificate was unchanged.",
-                        "%1 certificates were unchanged.", nUnc ) + "<br/>";
-    if ( nSKImp )
-      comment += i18np( "1 new secret key was imported.",
-                        "%1 new secret keys were imported.", nSKImp ) + "<br/>";
-    if ( nSKUnc )
-      comment += i18np( "1 secret key was unchanged.",
-                        "%1 secret keys were unchanged.", nSKUnc ) + "<br/>";
-    comment += "&nbsp;<br/>";
-    htmlWriter()->queue( comment );
-    if ( !nImp && !nSKImp ) {
-      htmlWriter()->queue( "<hr>" );
-      return true;
-    }
-    const std::vector<GpgME::Import> imports = res.imports();
-    if ( imports.empty() ) {
-      htmlWriter()->queue( i18n( "Sorry, no details on certificate import available." ) + "<hr>" );
-      return true;
-    }
-    htmlWriter()->queue( "<b>" + i18n( "Certificate import details:" ) + "</b><br/>" );
-    for ( std::vector<GpgME::Import>::const_iterator it = imports.begin() ; it != imports.end() ; ++it ) {
-      if ( (*it).error() ) {
-        htmlWriter()->queue( i18nc( "Certificate import failed.", "Failed: %1 (%2)", (*it).fingerprint(),
-                                QString::fromLocal8Bit( (*it).error().asString() ) ) );
-      } else if ( (*it).status() & ~GpgME::Import::ContainedSecretKey ) {
-        if ( (*it).status() & GpgME::Import::ContainedSecretKey ) {
-          htmlWriter()->queue( i18n( "New or changed: %1 (secret key available)", (*it).fingerprint() ) );
-        } else {
-          htmlWriter()->queue( i18n( "New or changed: %1", (*it).fingerprint() ) );
-        }
-      }
-      htmlWriter()->queue( "<br/>" );
-    }
-
-    htmlWriter()->queue( "<hr>" );
+    writeCertificateImportResult( res );
     return true;
   }
 
-  if ( !smimeCrypto )
-    return false;
   CryptoProtocolSaver cpws( this, smimeCrypto );
 
   bool isSigned      = smimeType == "signed-data";
