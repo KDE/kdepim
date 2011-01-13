@@ -21,9 +21,7 @@
 #include "incidencecategories.h"
 #include "categoryhierarchyreader.h"
 
-#ifndef Q_OS_WINCE
-  #include "categorydialog.h"
-#endif
+#include "categorydialog.h"
 
 #include "editorconfig.h"
 
@@ -105,8 +103,6 @@ bool IncidenceCategories::isDirty() const
 void IncidenceCategories::selectCategories()
 {
 #ifdef KDEPIM_MOBILE_UI
-// FIXME we don't have QTreeWidget on WinCE, find an alternative !
-#ifndef Q_OS_WINCE
   CategoryConfig cc( EditorConfig::instance()->config() );
   QPointer<CategoryDialog> dialog( new CategoryDialog( &cc ) );
   dialog->setSelected( mSelectedCategories );
@@ -114,7 +110,6 @@ void IncidenceCategories::selectCategories()
 
   setCategories( dialog->selectedCategories() );
   delete dialog;
-#endif
 #endif
 }
 
