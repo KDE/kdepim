@@ -58,6 +58,10 @@ class CalendarHelper : public QObject
     Q_INVOKABLE bool isCurrentDay( const QString &text ) const;
     Q_INVOKABLE void registerItems( QObject *obj );
 
+    Q_INVOKABLE void nextMonth();
+    Q_INVOKABLE void previousMonth();
+    Q_INVOKABLE void nextYear();
+    Q_INVOKABLE void previousYear();
 
   protected slots:
     void updateDays();
