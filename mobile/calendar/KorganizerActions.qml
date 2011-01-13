@@ -59,6 +59,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
+    ActionListItem { name : "archive_old_entries" }
   }
 
   ActionList {

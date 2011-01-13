@@ -59,6 +59,7 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_resource_synchronize" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
+    ActionListItem { name : "archive_old_entries" }
     ActionListItem { name : "purge_completed_tasks" }
   }
 
