@@ -67,6 +67,10 @@ KeyFilter::FontDescription::FontDescription( const FontDescription & other )
 
 }
 
+KeyFilter::FontDescription::~FontDescription() {
+    delete d;
+}
+
 KeyFilter::FontDescription KeyFilter::FontDescription::create( bool b, bool i, bool s ) {
     FontDescription fd;
     fd.d->bold = b;
