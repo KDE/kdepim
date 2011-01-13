@@ -63,6 +63,15 @@ KPIM.MainView {
       y       : height == 0 ? parent.height : parent.height - height
     }
 
+    QML.Rectangle {
+      anchors.fill : parent
+      visible : !application.certificatesAvailable
+
+      QML.Text {
+        text : KDE.i18n( "No certificates loaded yet." );
+        anchors.centerIn : parent
+      }
+    }
   }
 
   SlideoutPanelContainer {

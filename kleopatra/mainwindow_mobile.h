@@ -46,12 +46,18 @@ class QStringList;
 
 class MainWindow : public KDeclarativeFullScreenView {
     Q_OBJECT
+    Q_PROPERTY( bool certificatesAvailable READ certificatesAvailable NOTIFY certificatesAvailabilityChanged )
 public:
     explicit MainWindow( QWidget * parent=0 );
     ~MainWindow();
 
+    bool certificatesAvailable() const;
+
 public Q_SLOTS:
     void importCertificatesFromFile( const QStringList & files );
+
+Q_SIGNALS:
+    void certificatesAvailabilityChanged();
 
 protected:
     /* reimp */ void doDelayedInit();

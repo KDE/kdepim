@@ -308,6 +308,15 @@ void MainWindow::registerKeyTreeView( KeyTreeView * view ) {
     d->controller.setCurrentView( v );
     d->keyTreeView = view;
     d->tryToConnectSearchBarToKeyTreeView();
+
+    connect( v->model(), SIGNAL( rowsInserted( QModelIndex, int, int ) ),
+             SIGNAL( certificatesAvailabilityChanged() ) );
+    connect( v->model(), SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
+             SIGNAL( certificatesAvailabilityChanged() ) );
+    connect( v->model(), SIGNAL( modelReset() ),
+             SIGNAL( certificatesAvailabilityChanged() ) );
+
+    emit certificatesAvailabilityChanged();
 }
 
 void MainWindow::registerSearchBar( SearchBar * bar ) {
@@ -380,6 +389,10 @@ void MainWindow::Private::slotSearchBarTextChanged( const QString & text ) {
         searchBar->show();
         searchBar->setFocus();
     }
+}
+
+bool MainWindow::certificatesAvailable() const {
+    return (d->keyTreeView && d->keyTreeView->view()->model()->rowCount());
 }
 
 #include "moc_mainwindow_mobile.cpp"
