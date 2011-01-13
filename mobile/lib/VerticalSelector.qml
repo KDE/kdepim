@@ -30,6 +30,7 @@ Item {
     signal selected()
 
     property int beginWith: 0
+    property variant displayTexts
 
     onValueChanged: {
         list.positionViewAtIndex( value - beginWith, ListView.Center );
@@ -100,7 +101,7 @@ Item {
             width: verticalselector.width
             height: verticalselector.height
             Text {
-                text: list.currentIndex + beginWith
+                text: displayTexts ? displayTexts[list.currentIndex + beginWith] : list.currentIndex + beginWith
                 anchors.fill: parent
                 color: "#004bb8"
                 font.bold: true

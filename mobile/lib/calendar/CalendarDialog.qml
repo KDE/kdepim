@@ -107,6 +107,20 @@ Dialog {
             model: 12
             beginWith: 1
 
+            displayTexts : [ "dummy",
+                             KDE.i18n( "Jan" ),
+                             KDE.i18n( "Feb" ),
+                             KDE.i18n( "Mar" ),
+                             KDE.i18n( "Apr" ),
+                             KDE.i18n( "May" ),
+                             KDE.i18n( "Jun" ),
+                             KDE.i18n( "Jul" ),
+                             KDE.i18n( "Aug" ),
+                             KDE.i18n( "Sep" ),
+                             KDE.i18n( "Oct" ),
+                             KDE.i18n( "Nov" ),
+                             KDE.i18n( "Dec" ) ];
+
             onValueChanged: {
               // selector change -> update calendar
               myCalendar.month = value;
