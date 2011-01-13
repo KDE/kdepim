@@ -240,7 +240,8 @@ void IncidenceRecurrence::writeToIncidence( const KCalCore::Incidence::Ptr &inci
   KCalCore::Recurrence *r = incidence->recurrence();
   r->unsetRecurs(); // Why not clear() ?
 
-  if ( mUi->mRecurrenceTypeCombo->currentIndex() == RecurrenceTypeNone ) {
+  if ( mUi->mRecurrenceTypeCombo->currentIndex() == RecurrenceTypeNone ||
+       !mUi->mRecurrenceTypeCombo->isEnabled() ) {
     return;
   }
 
@@ -419,6 +420,7 @@ bool IncidenceRecurrence::isValid() const
            incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) {
         return true;
       } else {
+        // TODO: i18n
         mLastErrorString = "A recurring event or to-do must occur at least once. Adjust the recurring parameters.";
         return false;
       }
