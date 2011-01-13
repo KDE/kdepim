@@ -748,7 +748,7 @@ void KDeclarativeMainView::openAttachment( const QString &url, const QString &mi
 #endif
 }
 
-void KDeclarativeMainView::saveAttachment( const QString &url , const QString &defaultFileName)
+void KDeclarativeMainView::saveAttachment( const QString &url, const QString &defaultFileName )
 {
   QString fileName = defaultFileName;
   if ( defaultFileName.isEmpty() ) {
