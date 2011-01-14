@@ -659,9 +659,6 @@ static QString lookupDocumentation( const QString &fileName )
   // all files on /usr/share/doc are deleted instantly on maemo5 by docpurge
   // therefore manual must be installed in data dir
   const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "data" );
-  //const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "html" );
-
-  qDebug() << "localDirectories:" << localDirectories;
 
   QStringList languages = KGlobal::locale()->languageList();
   languages.append( "en" );
@@ -674,8 +671,6 @@ static QString lookupDocumentation( const QString &fileName )
       *it = "en";
   }
 
-  qDebug() << "languages:" << languages;
-
   // look up the different languages
   foreach ( const QString &directory, localDirectories ) {
     foreach ( const QString &language, languages ) {
@@ -684,9 +679,7 @@ static QString lookupDocumentation( const QString &fileName )
   }
 
   foreach ( const QString &search, searches ) {
-    qDebug() << "check search:" << search;
     const QFileInfo info( search );
-    qDebug() << "  exists=" << info.exists() << "isFile=" << info.isFile() << "isReadable=" << info.isReadable();
     if ( info.exists() && info.isFile() && info.isReadable() )
       return search;
   }
@@ -699,11 +692,7 @@ void KDeclarativeMainView::openManual()
   const QString path = lookupDocumentation( "manual/index.html" );
   const KUrl url = path;
   const bool isValid = url.isValid();
-  
-  qDebug() << "manual path:  " << path;
-  qDebug() << "manual url:   " << url;
-  qDebug() << "url is valid: " << isValid;
-  
+
   if ( !isValid ) {
     KMessageBox::error( this,
                         i18n( "The manual could not be found on your system." ),
