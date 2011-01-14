@@ -183,6 +183,7 @@ void MainView::setConfigWidget( ConfigWidget *configWidget )
 {
   Q_ASSERT( configWidget );
   connect( configWidget, SIGNAL( configChanged() ), this, SLOT( updateConfig() ) );
+  connect( configWidget, SIGNAL( showTemplatesHelp() ), this, SLOT( showTemplatesHelp() ) );
 }
 
 bool MainView::collectionIsSentMail() const
@@ -1750,6 +1751,11 @@ void MainView::selectNextUnreadMessage()
     connect( watcher, SIGNAL( collectionFetched( const QModelIndex& ) ), SLOT( selectNextUnreadMessageInCurrentFolder() ) );
     watcher->start();
   }
+}
+
+void MainView::showTemplatesHelp()
+{
+  openDocumentation( QLatin1String( "mail/templateshelp.html" ) );
 }
 
 void MainView::showMessageSource()
