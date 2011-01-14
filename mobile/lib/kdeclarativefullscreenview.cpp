@@ -261,6 +261,7 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
     HWND hWnd = ::FindWindow( _T( "SplashScreen" ), NULL );
     if (hWnd != NULL)
       ::ShowWindow( hWnd, SW_HIDE );
+    SetCursor( LoadCursor( NULL, NULL ) );
 #endif
   }
 }

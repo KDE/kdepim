@@ -72,13 +72,10 @@ class KDeclarativeApplication : public KDeclarativeApplicationBase
       kDebug();
       if ( !m_mainView ) {
         m_mainView = new T;
+#ifndef Q_OS_WINCE
         m_mainView->show();
-      } else {
-#ifdef Q_OS_WINCE
-      HWND hWnd = ::FindWindow( _T( "SplashScreen" ), NULL );
-      if (hWnd != NULL)
-        ::ShowWindow( hWnd, SW_HIDE );
 #endif
+      } else {
         m_mainView->raise();
       }
 
