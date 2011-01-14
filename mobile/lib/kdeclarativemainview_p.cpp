@@ -22,6 +22,7 @@
 #include <KDE/KGlobal>
 #include <KDE/KLineEdit>
 #include <KDE/KSharedConfig>
+#include <KDE/KProcess>
 
 #include <akonadi/etmviewstatesaver.h>
 
