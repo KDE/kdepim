@@ -29,6 +29,8 @@
 
 using namespace KPIM;
 
+namespace KPIM {
+
 class KColorComboDelegate : public QAbstractItemDelegate
 {
     public:
@@ -46,6 +48,8 @@ class KColorComboDelegate : public QAbstractItemDelegate
         virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
         virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
+
+}
 
 static QBrush k_colorcombodelegate_brush(const QModelIndex &index, int role)
 {
