@@ -179,12 +179,21 @@ void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) c
     todo->setDtDue( mEndDt, true /** first */ );
   } else if ( relatedTodo && relatedTodo->hasDueDate() ) {
     todo->setDtDue( relatedTodo->dtDue( true ), true /** first */ );
+    todo->setAllDay( relatedTodo->allDay() );
+  } else if ( relatedTodo ) {
+    todo->setHasDueDate( false );
   } else {
     todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ), true /** first */ );
   }
 
   if ( mStartDt.isValid() ) {
     todo->setDtStart( mStartDt );
+  } else if ( relatedTodo && !relatedTodo->hasStartDate() ) {
+    todo->setHasStartDate( false );
+  } else if ( relatedTodo && relatedTodo->hasStartDate() &&
+              relatedTodo->dtStart() <= todo->dtDue() ) {
+    todo->setDtStart( relatedTodo->dtStart() );
+    todo->setAllDay( relatedTodo->allDay() );
   } else if ( !mEndDt.isValid() || ( KDateTime::currentLocalDateTime() < mEndDt ) ) {
     todo->setDtStart( KDateTime::currentLocalDateTime() );
   } else {
