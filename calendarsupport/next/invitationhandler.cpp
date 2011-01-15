@@ -385,9 +385,9 @@ InvitationHandler::SendStatus
 InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
                                                 const KCalCore::Incidence::Ptr &incidence )
 {
+  Q_ASSERT( incidence );
   // For a modified incidence, either we are the organizer or someone else.
   if ( d->weAreOrganizerOf( incidence ) ) {
-
     if ( d->weNeedToSendMailFor( incidence ) ) {
       QString question;
       if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
