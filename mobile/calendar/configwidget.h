@@ -32,6 +32,11 @@
 class KComboBox;
 class KConfigDialogManager;
 class QCheckBox;
+class Ui_ConfigWidget;
+
+namespace KPIM {
+class KTimeEdit;
+}
 
 class ConfigWidget : public QWidget
 {
@@ -39,6 +44,7 @@ class ConfigWidget : public QWidget
 
   public:
     explicit ConfigWidget( QWidget *parent = 0 );
+    ~ConfigWidget();
 
     void setPreferences( const EventViews::PrefsPtr &preferences );
 
@@ -46,17 +52,33 @@ class ConfigWidget : public QWidget
     void load();
     void save();
 
+    void setNewTime( int hour, int minute );
+
   Q_SIGNALS:
     void configChanged();
+    void showClockWidget( int hour, int minute );
+
+    void dayBeginsFocus( QObject *object );
+    void dailyStartingHourFocus( QObject *object );
+    void dailyEndingHourFocus( QObject *object );
+    void defaultAppointmentTimeFocus( QObject *object );
+
+  protected:
+    bool eventFilter( QObject *object, QEvent *event );
+
+  private Q_SLOTS:
+    void showClock( QObject *object );
 
   private:
     void loadFromExternalSettings();
     void saveToExternalSettings();
 
+    Ui_ConfigWidget *mUi;
     KConfigDialogManager *mManager;
     KComboBox *mHolidayCombo;
     QVector<QCheckBox*> mWorkDays;
     EventViews::PrefsPtr mViewPrefs;
+    KPIM::KTimeEdit *mFocusedTimeWidget;
 };
 
 class DeclarativeConfigWidget :
@@ -76,8 +98,11 @@ public QGraphicsProxyWidget
     void load();
     void save();
 
+    void setNewTime( int hour, int minute );
+
   Q_SIGNALS:
     void configChanged();
+    void showClockWidget( int hour, int minute );
 };
 
 #endif

@@ -310,7 +310,10 @@
        </widget>
       </item>
       <item>
-       <widget class="KComboBox" name="mPriorityCombo">
+        <widget class="KComboBox" name="mPriorityCombo">
+        <property name="maxVisibleItems">
+          <number>6</number>
+        </property>
         <property name="currentIndex">
          <number>0</number>
         </property>

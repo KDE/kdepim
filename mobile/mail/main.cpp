@@ -74,9 +74,5 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "libksieve" ); // for out of office reply dialog
   KGlobal::locale()->insertCatalog( "akonadi_imap_resource" ); // for account status indicators
 
-#ifdef Q_OS_WINCE
-  SetCursor( LoadCursor( NULL, NULL ) );
-#endif
-
   return app.exec();
 }

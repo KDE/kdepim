@@ -51,6 +51,20 @@ KPIM.MainView {
     }
   }
 
+  Connections {
+    target: clockWidget
+    onTimeChanged: {
+      _incidenceview.setNewTime( hour, minute );
+    }
+  }
+
+  Connections {
+    target: calendarWidget
+    onDateChanged: {
+      _incidenceview.setNewDate( day, month, year );
+    }
+  }
+
   KPIM.MorePanel {
     anchors.fill: parent
   }

@@ -70,6 +70,9 @@ void MonthItem::updateMonthGraphicsItems()
   qDeleteAll( mMonthGraphicsItemList );
   mMonthGraphicsItemList.clear();
 
+  const QDate monthStartDate = startDate();
+  const QDate monthEndDate = endDate();
+
   // For each row of the month view, create an item to build the whole
   // MonthItem's MonthGraphicsItems.
   for ( QDate d = mMonthScene->mMonthView->actualStartDateTime().date();
@@ -78,18 +81,18 @@ void MonthItem::updateMonthGraphicsItems()
 
     int span;
     QDate start;
-    if ( startDate() <= d && endDate() >= end ) { // MonthItem takes the whole line
+    if ( monthStartDate <= d && monthEndDate >= end ) { // MonthItem takes the whole line
       span = 6;
       start = d;
-    } else if ( startDate() >= d && endDate() <= end ) { // starts and ends on this line
-      start = startDate();
+    } else if ( monthStartDate >= d && monthEndDate <= end ) { // starts and ends on this line
+      start = monthStartDate;
       span = daySpan();
-    } else if ( d <= endDate() && endDate() <= end ) { // MonthItem ends on this line
-      span = mMonthScene->getLeftSpan( endDate() );
+    } else if ( d <= monthEndDate && monthEndDate <= end ) { // MonthItem ends on this line
+      span = mMonthScene->getLeftSpan( monthEndDate );
       start = d;
-    } else if ( d <= startDate() && startDate() <= end ) { // MonthItem begins on this line
-      span = mMonthScene->getRightSpan( startDate() );
-      start = startDate();
+    } else if ( d <= monthStartDate && monthStartDate <= end ) { // MonthItem begins on this line
+      span = mMonthScene->getRightSpan( monthStartDate );
+      start = monthStartDate;
     } else { // MonthItem is not on the line
       continue;
     }
@@ -222,12 +225,17 @@ int MonthItem::daySpan() const
 
 bool MonthItem::greaterThan( const MonthItem *e1, const MonthItem *e2 )
 {
-  if ( !e1->startDate().isValid() || !e2->startDate().isValid() ) {
+  const QDate leftStartDate = e1->startDate();
+  const QDate rightStartDate = e2->startDate();
+
+  if ( !leftStartDate.isValid() || !rightStartDate.isValid() ) {
     return false;
   }
 
-  if ( e1->startDate() == e2->startDate() ) {
-    if ( e1->daySpan() == e2->daySpan() ) {
+  if ( leftStartDate == rightStartDate ) {
+    const int leftDaySpan = e1->daySpan();
+    const int rightDaySpan = e2->daySpan();
+    if ( leftDaySpan == rightDaySpan ) {
       if ( e1->allDay() && !e2->allDay() ) {
         return true;
       }
@@ -236,11 +244,11 @@ bool MonthItem::greaterThan( const MonthItem *e1, const MonthItem *e2 )
       }
       return e1->greaterThanFallback( e2 );
     } else {
-      return e1->daySpan() >  e2->daySpan();
+      return leftDaySpan >  rightDaySpan;
     }
   }
 
-  return e1->startDate() < e2->startDate();
+  return leftStartDate < rightStartDate;
 }
 
 bool MonthItem::greaterThanFallback( const MonthItem *other ) const

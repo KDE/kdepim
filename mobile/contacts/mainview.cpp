@@ -109,7 +109,7 @@ void MainView::doDelayedInit()
   connect( action, SIGNAL( triggered( bool ) ), SLOT( sendMailTo() ) );
   actionCollection()->addAction( QLatin1String( "send_mail_to" ), action );
 
-  action = new KAction( "Search in LDAP directory", this );
+  action = new KAction( i18n( "Search in LDAP directory" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( searchLdap() ) );
   actionCollection()->addAction( QLatin1String( "search_ldap" ), action );
 

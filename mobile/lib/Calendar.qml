@@ -222,8 +222,38 @@ Item {
         anchors.topMargin: calendarGrid.headlineHeight
         anchors.leftMargin: calendarGrid.weekNumberWidth
 
-        onPressed: selectDay(mouse)
-        onPositionChanged: selectDay(mouse)
+        property int oldX : 0
+        property int oldY : 0
+
+        onPressed: {
+          oldX = mouseX;
+          oldY = mouseY;
+        }
+
+        onReleased: {
+          var xDiff = oldX - mouseX;
+          var yDiff = oldY - mouseY;
+
+          if ( Math.abs( xDiff ) > width * 0.3 || Math.abs( yDiff ) > height * 0.3 ) {
+            // distance is width enough to be a swipe action
+
+            if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+              if ( oldX > mouseX )
+                calendarHelper.previousMonth();
+              else
+                calendarHelper.nextMonth();
+            } else {
+              if ( oldY > mouseY )
+                calendarHelper.previousYear();
+              else
+                calendarHelper.nextYear();
+            }
+          } else {
+            selectDay(mouse);
+          }
+        }
+
+        //onPositionChanged: selectDay(mouse)
 
         function selectDay(mouse) {
             if ((mouse.x < 0) || (mouse.x >= width) || (mouse.y < 0) || (mouse.y >= height))

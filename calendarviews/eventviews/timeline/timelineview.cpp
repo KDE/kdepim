@@ -29,6 +29,7 @@
 #include "timelineview_p.h"
 #include "helper.h"
 
+#include <kdgantt2/kdganttgraphicsitem.h>
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttabstractrowcontroller.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
@@ -201,6 +202,7 @@ TimelineView::TimelineView( QWidget *parent )
   d->mGantt->setModel( model );
   d->mGantt->viewport()->setFixedWidth( 8000 );
 
+  d->mGantt->viewport()->installEventFilter( this );
 
 #if 0
   d->mGantt->setCalendarMode( true );
@@ -329,6 +331,15 @@ void TimelineView::showDates( const QDate &start, const QDate &end )
   }
 
   // add incidences
+
+  /**
+   * We remove the model from the view here while we fill it with items,
+   * because every call to insertIncidence will cause the view to do an expensive
+   * updateScene() call otherwise.
+   */
+  QAbstractItemModel *ganttModel = d->mGantt->model();
+  d->mGantt->setModel( 0 );
+
   Akonadi::Item::List events;
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   for ( QDate day = start; day <= end; day = day.addDays( 1 ) ) {
@@ -339,6 +350,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end )
       d->insertIncidence( i, day );
     }
   }
+  d->mGantt->setModel( ganttModel );
   d->splitterMoved();
 }
 
@@ -407,6 +419,27 @@ QDate TimelineView::startDate() const
 QDate TimelineView::endDate() const
 {
   return d->mEndDate;
+}
+
+bool TimelineView::eventFilter( QObject *object, QEvent *event )
+{
+  if ( event->type() == QEvent::ToolTip ) {
+    QHelpEvent *helpEvent = static_cast<QHelpEvent*>( event );
+    QGraphicsItem *item = d->mGantt->itemAt( helpEvent->pos() );
+    if ( item ) {
+      if ( item->type() == KDGantt::GraphicsItem::Type ) {
+        KDGantt::GraphicsItem *graphicsItem = static_cast<KDGantt::GraphicsItem*>( item );
+        const QModelIndex itemIndex = graphicsItem->index();
+
+        QStandardItemModel *itemModel = qobject_cast<QStandardItemModel*>( d->mGantt->model() );
+        TimelineSubItem *timelineItem = dynamic_cast<TimelineSubItem*>( itemModel->item( itemIndex.row(), itemIndex.column() ) );
+        if ( timelineItem )
+          timelineItem->updateToolTip();
+      }
+    }
+  }
+
+  return EventView::eventFilter( object, event );
 }
 
 #include "timelineview.moc"

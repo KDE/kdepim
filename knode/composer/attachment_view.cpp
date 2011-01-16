@@ -74,7 +74,7 @@ void AttachmentView::editCurrentAttachment()
 
   AttachmentViewItem *item = static_cast< AttachmentViewItem * >( currentItem() );
   QPointer<KNComposer::AttachmentPropertiesDlg> dlg = new KNComposer::AttachmentPropertiesDlg( item->mAttachment, this );
-  if ( dlg->exec() == QDialog::Accepted ) {
+  if ( dlg->exec() == QDialog::Accepted && dlg ) {
     item->emitDataChanged(); // notify the changes
   }
   delete dlg;

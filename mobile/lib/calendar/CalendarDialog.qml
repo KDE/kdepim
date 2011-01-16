@@ -31,6 +31,8 @@ Dialog {
   property alias month: myCalendar.month
   property alias year: myCalendar.year
 
+  signal dateChanged( int day, int month, int year )
+
   content: [
     Item {
       anchors.fill: parent
@@ -105,6 +107,20 @@ Dialog {
             model: 12
             beginWith: 1
 
+            displayTexts : [ "dummy",
+                             KDE.i18n( "Jan" ),
+                             KDE.i18n( "Feb" ),
+                             KDE.i18n( "Mar" ),
+                             KDE.i18n( "Apr" ),
+                             KDE.i18n( "May" ),
+                             KDE.i18n( "Jun" ),
+                             KDE.i18n( "Jul" ),
+                             KDE.i18n( "Aug" ),
+                             KDE.i18n( "Sep" ),
+                             KDE.i18n( "Oct" ),
+                             KDE.i18n( "Nov" ),
+                             KDE.i18n( "Dec" ) ];
+
             onValueChanged: {
               // selector change -> update calendar
               myCalendar.month = value;
@@ -165,7 +181,7 @@ Dialog {
             width: 100
             onClicked: {
               calendarWidget.collapse()
-              _incidenceview.setNewDate(myCalendar.day, myCalendar.month, myCalendar.year);
+              dateChanged( myCalendar.day, myCalendar.month, myCalendar.year )
             }
           }
         }

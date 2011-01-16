@@ -366,6 +366,7 @@ void IncidenceView::slotSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAc
   dlg->setInformativeText( i18n( "Reason:\n\n" ) + message );
   dlg->addButton( i18n( "Ok" ), QMessageBox::AcceptRole );
   dlg->exec();
+  delete dlg;
 }
 
 void IncidenceView::cancel()

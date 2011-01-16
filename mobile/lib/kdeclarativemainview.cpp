@@ -656,9 +656,9 @@ static QString lookupDocumentation( const QString &fileName )
   QStringList searches;
 
   // assemble the local search paths
-  const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "html" );
-
-  qDebug() << "localDirectories:" << localDirectories;
+  // all files on /usr/share/doc are deleted instantly on maemo5 by docpurge
+  // therefore manual must be installed in data dir
+  const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "data" );
 
   QStringList languages = KGlobal::locale()->languageList();
   languages.append( "en" );
@@ -671,19 +671,15 @@ static QString lookupDocumentation( const QString &fileName )
       *it = "en";
   }
 
-  qDebug() << "languages:" << languages;
-
   // look up the different languages
   foreach ( const QString &directory, localDirectories ) {
     foreach ( const QString &language, languages ) {
-      searches.append( QString( "%1%2/%3" ).arg( directory, language, fileName ) );
+      searches.append( QString( "%1%2/%3/%4" ).arg( directory, QLatin1String("kontact-touch"), language, fileName ) );
     }
   }
 
   foreach ( const QString &search, searches ) {
-    qDebug() << "check search:" << search;
     const QFileInfo info( search );
-    qDebug() << "  exists=" << info.exists() << "isFile=" << info.isFile() << "isReadable=" << info.isReadable();
     if ( info.exists() && info.isFile() && info.isReadable() )
       return search;
   }
@@ -693,14 +689,10 @@ static QString lookupDocumentation( const QString &fileName )
 
 void KDeclarativeMainView::openManual()
 {
-  const QString path = lookupDocumentation( "kontact-touch/manual/index.html" );
+  const QString path = lookupDocumentation( "manual/index.html" );
   const KUrl url = path;
   const bool isValid = url.isValid();
-  
-  qDebug() << "manual path:  " << path;
-  qDebug() << "manual url:   " << url;
-  qDebug() << "url is valid: " << isValid;
-  
+
   if ( !isValid ) {
     KMessageBox::error( this,
                         i18n( "The manual could not be found on your system." ),
@@ -708,7 +700,23 @@ void KDeclarativeMainView::openManual()
     return;
   }
 
-  openAttachment( path, QLatin1String( "text/html" ) );
+  d->openHtml( path );
+}
+
+void KDeclarativeMainView::openDocumentation( const QString &relativePath )
+{
+  const QString path = lookupDocumentation( relativePath );
+  const KUrl url = path;
+  const bool isValid = url.isValid();
+
+  if ( !isValid ) {
+    KMessageBox::error( this,
+                        i18n( "The documentation could not be found on your system." ),
+                        i18n( "Documentation not found" ) );
+    return;
+  }
+
+  d->openHtml( path );
 }
 
 void KDeclarativeMainView::openLicenses()
@@ -740,7 +748,7 @@ void KDeclarativeMainView::openAttachment( const QString &url, const QString &mi
 #endif
 }
 
-void KDeclarativeMainView::saveAttachment( const QString &url , const QString &defaultFileName)
+void KDeclarativeMainView::saveAttachment( const QString &url, const QString &defaultFileName )
 {
   QString fileName = defaultFileName;
   if ( defaultFileName.isEmpty() ) {

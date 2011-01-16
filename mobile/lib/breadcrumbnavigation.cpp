@@ -122,7 +122,26 @@ void KNavigatingProxyModel::_sourceRowsRemoved( const QModelIndex &parent, int s
 
 void KNavigatingProxyModel::navigationSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
-  updateNavigation();
+  if (deselected.size() != 1)
+    return updateNavigation();
+
+  const QItemSelectionRange range = deselected.first();
+  if (range.parent().isValid())
+    return updateNavigation();
+
+  // When a top level item is removed this slot may be invoked before the source rows
+  // removed handler. In that case we need to make sure we don't update the navigation
+  // structures here, but wait for that to be done in the rows removed handler.
+  int rows = range.height();
+  foreach(const QItemSelectionRange &selRange, m_selectionModel->selection()) {
+    if (!selRange.parent().isValid()) {
+      rows += selRange.height();
+    } else {
+      return updateNavigation();
+    }
+  }
+  if (rows != m_selectionModel->model()->rowCount())
+    return updateNavigation();
 }
 
 void KNavigatingProxyModel::updateNavigation()

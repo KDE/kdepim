@@ -176,10 +176,18 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
   CalendarSupport::CalendarAdaptor::Ptr cal( new CalendarSupport::CalendarAdaptor( calendar, widget ) );
   FileStorage storage( cal );
 
+  QString tmpFileName;
+  // KSaveFile can not be called with an open File Handle on Windows.
+  // So we use KTemporaryFile only to generate a unique filename
+  // and then close/delete the file again. This file must be deleted
+  // here.
+  {
+    KTemporaryFile tmpFile;
+    tmpFile.open();
+    tmpFileName = tmpFile.fileName();
+  }
   // Save current calendar to disk
-  KTemporaryFile tmpFile;
-  tmpFile.open();
-  storage.setFileName( tmpFile.fileName() );
+  storage.setFileName( tmpFileName );
   if ( !storage.save() ) {
     kDebug() << "Can't save calendar to temp file";
     return;
@@ -190,11 +198,12 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
     new MemoryCalendar( CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   FileStorage archiveStore( archiveCalendar );
-  archiveStore.setFileName( tmpFile.fileName() );
+  archiveStore.setFileName( tmpFileName );
   ICalFormat *format = new ICalFormat();
   archiveStore.setSaveFormat( format );
   if ( !archiveStore.load() ) {
     kDebug() << "Can't load calendar from temp file";
+    QFile::remove( tmpFileName );
     return;
   }
 
@@ -215,20 +224,28 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
   KUrl archiveURL( KCalPrefs::instance()->mArchiveFile );
   QString archiveFile;
 
+#ifndef Q_OS_WINCE
+  // There is no KIO::NetAccess availabe for Windows CE
   if ( KIO::NetAccess::exists( archiveURL, KIO::NetAccess::SourceSide, widget ) ) {
     if( !KIO::NetAccess::download( archiveURL, archiveFile, widget ) ) {
       kDebug() << "Can't download archive file";
+      QFile::remove( tmpFileName );
       return;
     }
     // Merge with events to be archived.
     archiveStore.setFileName( archiveFile );
     if ( !archiveStore.load() ) {
       kDebug() << "Can't merge with archive file";
+      QFile::remove( tmpFileName );
       return;
     }
   } else {
-    archiveFile = tmpFile.fileName();
+    archiveFile = tmpFileName;
   }
+#else
+  archiveFile = archiveURL.toLocalFile();
+  archiveStore.setFileName( archiveFile );
+#endif // Q_OS_WINCE
 
   // Save archive calendar
   if ( !archiveStore.save() ) {
@@ -240,9 +257,11 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
     }
     KMessageBox::error( widget, i18n( "Cannot write archive file %1. %2",
                                       archiveStore.fileName(), errmess ) );
+    QFile::remove( tmpFileName );
     return;
   }
 
+#ifndef Q_OS_WINCE
   // Upload if necessary
   KUrl srcUrl;
   srcUrl.setPath( archiveFile );
@@ -250,11 +269,14 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
     if ( !KIO::NetAccess::upload( archiveFile, archiveURL, widget ) ) {
       KMessageBox::error( widget, i18n( "Cannot write archive. %1",
                                         KIO::NetAccess::lastErrorString() ) );
+      QFile::remove( tmpFileName );
       return;
     }
   }
 
   KIO::NetAccess::removeTempFile( archiveFile );
+#endif // Q_OS_WINCE
+  QFile::remove( tmpFileName );
 
   // Delete archived events from calendar
   foreach(const Akonadi::Item &item, incidences) {

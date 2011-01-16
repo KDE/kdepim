@@ -22,6 +22,7 @@
 #include <KDE/KGlobal>
 #include <KDE/KLineEdit>
 #include <KDE/KSharedConfig>
+#include <KDE/KProcess>
 
 #include <akonadi/etmviewstatesaver.h>
 
@@ -132,3 +133,15 @@ void KDeclarativeMainViewPrivate::guiStateChanged( int oldState, int newState )
     }
   }
 }
+
+void KDeclarativeMainViewPrivate::openHtml( const QString &path )
+{
+#ifdef Q_WS_MAEMO_5
+  // opening the browser with a website via desktop file is defect on maemo5
+  // try to call the bowser directly
+  KProcess::startDetached( QLatin1String("/usr/bin/browser"), QStringList() << QLatin1String("--url") << path );
+#else
+  q->openAttachment( path, QLatin1String( "text/html" ) );
+#endif
+}
+

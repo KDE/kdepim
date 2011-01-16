@@ -72,6 +72,8 @@ public: /// members
 public: /// Methods
   KDeclarativeMainViewPrivate( KDeclarativeMainView* );
 
+  void openHtml( const QString &path );
+
 public slots:
   void saveState();
   void restoreState();

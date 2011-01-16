@@ -86,6 +86,7 @@ namespace Kleo {
             swap( copy );
             return *this;
         }
+        ~FontDescription();
 
         static FontDescription create( bool bold, bool italic, bool strikeOut );
         static FontDescription create( const QFont & font, bool bold, bool italic, bool strikeOut );

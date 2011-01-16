@@ -34,7 +34,7 @@ Item {
 
   /** Emittted when an attachment has been selected. */
   signal openAttachment(string url, string mimeType)
-  signal saveAttachment(string url)
+  signal saveAttachment(string url, string fileName)
 
   Component {
     id: attachmentDelegate
@@ -63,6 +63,7 @@ Item {
           wrapper.ListView.view.currentIndex = model.index
           wrapper.ListView.view.currentMimeType = model.mimeType;
           wrapper.ListView.view.currentAttachmentUrl = model.attachmentUrl;
+          wrapper.ListView.view.currentFileName = model.display;
         }
       }
     }
@@ -71,6 +72,7 @@ Item {
   KPIM.DecoratedListView {
     property string currentMimeType
     property string currentAttachmentUrl
+    property string currentFileName
 
     id: attachmentListView
     anchors.top: parent.top
@@ -87,6 +89,7 @@ Item {
         attachmentListView.currentIndex = -1
         attachmentListView.currentMimeType = "";
         attachmentListView.currentAttachmentUrl = "";
+        attachmentListView.currentFileName = "";
       }
     }
   }
@@ -119,7 +122,7 @@ Item {
       height: parent.height / 6
       buttonText: KDE.i18n( "Save" )
       onClicked: {
-         saveAttachment(attachmentListView.currentAttachmentUrl);
+         saveAttachment(attachmentListView.currentAttachmentUrl, attachmentListView.currentFileName);
       }
     }
   }
@@ -154,7 +157,7 @@ Item {
       height: 48
       icon: KDE.iconPath( "document-save", width );
       onClicked: {
-        saveAttachment(attachmentListView.currentAttachmentUrl);
+        saveAttachment(attachmentListView.currentAttachmentUrl, attachmentListView.currentFileName);
       }
       states: [
         State {

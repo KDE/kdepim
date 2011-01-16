@@ -62,6 +62,11 @@ class MOBILEUI_EXPORT ThreadGrouperComparator
      */
     virtual bool lessThan( const Akonadi::Item &left, const Akonadi::Item &right ) const = 0;
 
+    /**
+     * Returns the grouper string for the given @p item.
+     */
+    virtual QString grouperString( const Akonadi::Item &item ) const;
+
   protected:
     /**
      * Returns the thread item for @p item.
@@ -102,7 +107,8 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
   public:
     enum CustomRoles {
       // FIXME Fix custom role handling in proxies.
-      ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 30
+      ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 30,
+      GrouperRole
     };
 
     /**

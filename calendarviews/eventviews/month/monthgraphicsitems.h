@@ -196,6 +196,8 @@ class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
 
     // The current item is part of a MonthItem
     MonthItem *mMonthItem;
+
+    bool mToolTipNeedsUpdate;
 };
 
 }

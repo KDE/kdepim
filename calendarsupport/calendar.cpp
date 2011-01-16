@@ -195,13 +195,15 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const bool alreadyExisted = m_itemMap.contains( item.id() );
   const Akonadi::Item::Id id = item.id();
 
-  kDebug() << "id=" << item.id()
-           << "version=" << item.revision()
-           << "alreadyExisted=" << alreadyExisted
-           << "; mode = " << mode
-           << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
-           << "; parentCollection.id() = " << item.parentCollection().id() // can be a virtual collection
-           << "; calendar = " << q;
+  if ( q->objectName() != QLatin1String( "Groupware calendar" ) ) { // too much noise otherwise
+    // TODO: remove this debug message in a few months
+    kDebug() << "id=" << item.id()
+             << "version=" << item.revision()
+             << "alreadyExisted=" << alreadyExisted
+             << "; mode = " << mode
+             << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
+             << "; parentCollection.id() = " << item.parentCollection().id(); // can be a virtual collection
+  }
 
   if ( mode != AssertExists && alreadyExisted ) {
     // An item from a virtual folder was inserted and we already have an item with
@@ -320,8 +322,10 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     if ( m_uidToItemId.value( ui ) != item.id() ) {
       kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
               << "; item uid = "  << ui.uid
-              << "; calendar = " << q
-              << "; existed in cache = " << existedInUidMap;
+              << "; calendar = " << q->objectName()
+              << "; existed in cache = " << existedInUidMap
+              << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
+              << "; parentCollection.id() = " << item.parentCollection().id(); // can be a virtual collection
       Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
     }
 
@@ -1987,3 +1991,7 @@ bool Calendar::hasDeleteRights( const Akonadi::Item &item ) const
   return col.rights() & Akonadi::Collection::CanDeleteItem;
 }
 
+int Calendar::incidencesCount() const
+{
+  return d->m_model->rowCount();
+}

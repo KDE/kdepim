@@ -45,6 +45,10 @@ using namespace KCalCore;
 
 namespace IncidenceEditorNG {
 
+enum {
+  UNSPECIFED_PRIORITY = 0
+};
+
 struct IncidenceDefaultsPrivate
 {
   /// Members
@@ -161,6 +165,7 @@ void IncidenceDefaultsPrivate::journalDefaults( const KCalCore::Journal::Ptr &jo
 {
   const KDateTime startDT = mStartDt.isValid() ? mStartDt : KDateTime::currentLocalDateTime();
   journal->setDtStart( startDT );
+  journal->setAllDay( true );
 }
 
 void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) const
@@ -174,12 +179,21 @@ void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) c
     todo->setDtDue( mEndDt, true /** first */ );
   } else if ( relatedTodo && relatedTodo->hasDueDate() ) {
     todo->setDtDue( relatedTodo->dtDue( true ), true /** first */ );
+    todo->setAllDay( relatedTodo->allDay() );
+  } else if ( relatedTodo ) {
+    todo->setHasDueDate( false );
   } else {
     todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ), true /** first */ );
   }
 
   if ( mStartDt.isValid() ) {
     todo->setDtStart( mStartDt );
+  } else if ( relatedTodo && !relatedTodo->hasStartDate() ) {
+    todo->setHasStartDate( false );
+  } else if ( relatedTodo && relatedTodo->hasStartDate() &&
+              relatedTodo->dtStart() <= todo->dtDue() ) {
+    todo->setDtStart( relatedTodo->dtStart() );
+    todo->setAllDay( relatedTodo->allDay() );
   } else if ( !mEndDt.isValid() || ( KDateTime::currentLocalDateTime() < mEndDt ) ) {
     todo->setDtStart( KDateTime::currentLocalDateTime() );
   } else {
@@ -188,7 +202,12 @@ void IncidenceDefaultsPrivate::todoDefaults( const KCalCore::Todo::Ptr &todo ) c
 
   todo->setCompleted( false );
   todo->setPercentComplete( 0 );
-  todo->setPriority( 5 );
+
+  // I had a bunch of to-dos and couldn't distinguish between those that had priority '5'
+  // because I wanted, and those that had priority '5' because it was set by default
+  // and I forgot to unset it.
+  // So don't be smart and try to guess a good default priority for the user, just use unspecified.
+  todo->setPriority( UNSPECIFED_PRIORITY );
 
   if ( KCalPrefs::instance()->defaultTodoReminders() ) {
     todo->addAlarm( AlarmPresets::defaultAlarm( AlarmPresets::BeforeEnd ) );

@@ -218,6 +218,38 @@ void CalendarHelper::registerItems( QObject *obj )
   }
 }
 
+void CalendarHelper::nextMonth()
+{
+  QDate date( m_year, m_month, m_day );
+  date = date.addMonths( 1 );
+
+  setDate( date );
+}
+
+void CalendarHelper::previousMonth()
+{
+  QDate date( m_year, m_month, m_day );
+  date = date.addMonths( -1 );
+
+  setDate( date );
+}
+
+void CalendarHelper::nextYear()
+{
+  QDate date( m_year, m_month, m_day );
+  date = date.addYears( 1 );
+
+  setDate( date );
+}
+
+void CalendarHelper::previousYear()
+{
+  QDate date( m_year, m_month, m_day );
+  date = date.addYears( -1 );
+
+  setDate( date );
+}
+
 void CalendarHelper::updateDays()
 {
   QDate today = QDate::currentDate();

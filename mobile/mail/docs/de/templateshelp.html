@@ -1,0 +1,313 @@
+<html>
+  <body>
+   <p>Hier können Sie Vorlagen erstellen und verwalten, die beim <br /> 
+      Erstellen, Antworten und Weiterleiten von Nachrichten verwendet werden.</p>
+   <p>Die Nachrichtenvorlagen unterstützen Ersetzungsbefehle, die zusammen mit<br />
+       den benutzerdefinierten Texten in die oberen Textfelder eingesetzt werden können.</p>
+
+    <br/>
+    <table>
+      <tr>
+        <th align="left" colspan="2">Ursprüngliche Nachricht</th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left">Befehl</th>
+        <th align="left">Beschreibung</th>
+      </tr>
+      <tr>
+        <td>%QUOTE</td>
+        <td>Zitierter Nachrichtentext</td>
+      </tr>
+      <tr>
+        <td>%TEXT</td>
+        <td>Original-Nachrichtentext</td>
+      </tr>
+      <tr>
+        <td>%OMSGID</td>
+        <td>Nachrichtenkennung (Message ID)</td>
+      </tr>
+      <tr>
+        <td>%ODATE</td>
+        <td>Datum</td>
+      </tr>
+      <tr>
+        <td>%ODATESHORT</td>
+        <td>Datum im Kurzformat</td>
+      </tr>
+      <tr>
+        <td>%ODATEEN</td>
+        <td>Datum in C-Lokalisierung</td>
+      </tr>
+      <tr>
+        <td>%ODOW</td>
+        <td>Wochentag</td>
+      </tr>
+      <tr>
+        <td>%OTIME</td>
+        <td>Uhrzeit</td>
+      </tr>
+      <tr>
+        <td>%OTIMELONG</td>
+        <td>Zeit im Langformat</td>
+      </tr>
+      <tr>
+        <td>%OTIMELONGEN</td>
+        <td>Zeit im Langformat</td>
+      </tr>
+      <tr>
+        <td>%OTOADDR</td>
+        <td>Adresse im „An“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OTONAME</td>
+        <td>Name im „An“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OTOFNAME</td>
+        <td>Vorname im „An“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OTOLNAME</td>
+        <td>Nachname im „An“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OCCADDR</td>
+        <td>Adresse im „Kopie“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OCCNAME</td>
+        <td>Name im „Kopie“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OCCFNAME</td>
+        <td>Vorname im „Kopie“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OCCLNAME</td>
+        <td>Nachname im „Kopie“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OFROMADDR</td>
+        <td>Adresse im „Von“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OFROMNAME</td>
+        <td>Name im „Von“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OFROMFNAME</td>
+        <td>Vorname im „Von“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OFROMLNAME</td>
+        <td>Nachname im „Von“-Feld</td>
+      </tr>
+      <tr>
+        <td>%OADDRESSEESADDR</td>
+        <td>Adressen aller Empfänger</td>
+      </tr>
+      <tr>
+        <td>%OFULLSUBJECT</td>
+        <td>Betreff</td>
+      </tr>
+      <tr>
+        <td>%QHEADERS</td>
+        <td>Nachrichtenvorspann (als Zitat)</td>
+      </tr>
+      <tr>
+        <td>%HEADERS</td>
+        <td>Nachrichtenvorspann (unverändert)</td>
+      </tr>
+      <tr>
+        <td>%OHEADER=<i>header-name</i></td>
+        <td>Inhalt des Nachrichtenvorspanns</td>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2">Aktuelle Nachricht</th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left">Befehl</th>
+        <th align="left">Beschreibung</th>
+      </tr>
+      <tr>
+        <td>%MSGID</td>
+        <td>Nachrichtenkennung (Message ID)</td>
+      </tr>
+      <tr>
+        <td>%DATE</td>
+        <td>Datum</td>
+      </tr>
+      <tr>
+        <td>%DATESHORT</td>
+        <td>Datum im Kurzformat</td>
+      </tr>
+      <tr>
+        <td>%DATEEN</td>
+        <td>Datum in C-Lokalisierung</td>
+      </tr>
+      <tr>
+        <td>%DOW</td>
+        <td>Wochentag</td>
+      </tr>
+      <tr>
+        <td>%TIME</td>
+        <td>Uhrzeit</td>
+      </tr>
+      <tr>
+        <td>%TIMELONG</td>
+        <td>Zeit im Langformat</td>
+      </tr>
+      <tr>
+        <td>%TIMELONGEN</td>
+        <td>Zeit in C-Lokalisierung</td>
+      </tr>
+      <tr>
+        <td>%TOADDR</td>
+        <td>Adresse im „An“-Feld</td>
+      </tr>
+      <tr>
+        <td>%TONAME</td>
+        <td>Name im „An“-Feld</td>
+      </tr>
+      <tr>
+        <td>%TOFNAME</td>
+        <td>Vorname im „An“-Feld</td>
+      </tr>
+      <tr>
+        <td>%TOLNAME</td>
+        <td>Nachname im „An“-Feld</td>
+      </tr>
+      <tr>
+        <td>%CCADDR</td>
+        <td>Adresse im „Kopie“-Feld</td>
+      </tr>
+      <tr>
+        <td>%CCNAME</td>
+        <td>Name im „Kopie“-Feld</td>
+      </tr>
+      <tr>
+        <td>%CCFNAME</td>
+        <td>Vorname im „Kopie“-Feld</td>
+      </tr>
+      <tr>
+        <td>%CCLNAME</td>
+        <td>Nachname im „Kopie“-Feld</td>
+      </tr>
+      <tr>
+        <td>%FROMADDR</td>
+        <td>Adresse im „Von“-Feld</td>
+      </tr>
+      <tr>
+        <td>%FROMNAME</td>
+        <td>Name im „Von“-Feld</td>
+      </tr>
+      <tr>
+        <td>%FROMFNAME</td>
+        <td>Vorname im „Von“-Feld</td>
+      </tr>
+      <tr>
+        <td>%FROMLNAME</td>
+        <td>Nachname im „Von“-Feld</td>
+      </tr>
+      <tr>
+        <td>%FULLSUBJECT</td>
+        <td>Betreff</td>
+      </tr>
+      <tr>
+        <td>%HEADER=<i>header-name</i></td>
+        <td>Inhalt des Nachrichtenvorspanns</td>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2">Mit externem Programm vorverarbeiten</th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left">Befehl</th>
+        <th align="left">Beschreibung</th>
+      </tr>
+      <tr>
+        <td>%SYSTEM=<i>command</i></td>
+        <td>Ausgabe des Programms einsetzen</td>
+      </tr>
+      <tr>
+        <td>%QUOTEPIPE=<i>command</i></td>
+        <td>Text der Originalnachricht an Programm übergeben und Ergebnis als Zitat einfügen</td>
+      </tr>
+      <tr>
+        <td>%TEXTPIPE=<i>command</i></td>
+        <td>Text der Originalnachricht an Programm übergeben und Ergebnis einfügen</td>
+      </tr>
+      <tr>
+        <td>%MSGPIPE=<i>command</i></td>
+        <td>Originalnachricht mit Vorspann an Programm übergeben und Ergebnis einfügen</td>
+      </tr>
+      <tr>
+        <td>%BODYPIPE=<i>command</i></td>
+        <td>Text dieser Nachricht an Programm übergeben und Ergebnis einfügen</td>
+      </tr>
+      <tr>
+        <td>%CLEARPIPE=<i>command</i></td>
+        <td>Text dieser Nachricht an Programm übergeben und durch Ergebnis ersetzen</td>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2">Diverses</th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left">Befehl</th>
+        <th align="left">Beschreibung</th>
+      </tr>
+      <tr>
+        <td>%SIGNATURE</td> 
+        <td>Signatur</td>
+      </tr>
+      <tr>
+        <td>%INSERT=<i>file name</i></td>
+        <td>Dateiinhalt einfügen</td>
+      </tr>
+      <tr>
+        <td>%-</td>
+        <td>Verwerfen bis zur nächsten Zeile</td>
+      </tr>
+      <tr>
+        <td>%REM=<i>comment</i></td>
+        <td>Kommentar zur Vorlage</td>
+      </tr>
+      <tr>
+        <td>%NOP</td>
+        <td>Keine Aktion</td>
+      </tr>
+      <tr>
+        <td>%CLEAR</td>
+        <td>Erzeugte Nachricht löschen</td>
+      </tr>
+      <tr>
+        <td>%DEBUG</td>
+        <td>Fehlersuche einschalten</td>
+      </tr>
+      <tr>
+        <td>%DEBUGOFF</td>
+        <td>Fehlersuche ausschalten</td>
+      </tr>
+    </table>
+  </body>
+</html>

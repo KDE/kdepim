@@ -2,6 +2,7 @@ project( kmail-mobile )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+add_subdirectory(docs)
 add_subdirectory(tests)
 
 include_directories(
@@ -133,3 +134,4 @@ install(FILES
 )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
+

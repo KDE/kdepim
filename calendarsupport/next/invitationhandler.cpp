@@ -173,7 +173,8 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
 
 bool InvitationHandler::Private::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence )
 {
-  return KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
+  return KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() ) ||
+         incidence->organizer()->email().isEmpty();
 }
 
 bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence )
@@ -384,12 +385,9 @@ InvitationHandler::SendStatus
 InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
                                                 const KCalCore::Incidence::Ptr &incidence )
 {
-  Q_ASSERT( incidence->type() == KCalCore::Incidence::TypeEvent ||
-            incidence->type() == KCalCore::Incidence::TypeTodo );
-
+  Q_ASSERT( incidence );
   // For a modified incidence, either we are the organizer or someone else.
   if ( d->weAreOrganizerOf( incidence ) ) {
-
     if ( d->weNeedToSendMailFor( incidence ) ) {
       QString question;
       if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
@@ -400,26 +398,32 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
         question = i18n( "You removed the invitation \"%1\".\n"
                          "Do you want to email the attendees that the todo is canceled?",
                          incidence->summary() );
+      }  else if ( incidence->type() == KCalCore::Incidence::TypeJournal ) {
+        question = "You removed the invitation" + incidence->summary() + ".\n"
+                    "Do you want to email the attendees that the journal is canceled?"; //TODO: i18n
       }
 
-      int messageBoxReturnCode = d->askUserIfNeeded( question, false );
+      const int messageBoxReturnCode = d->askUserIfNeeded( question, false );
       return d->sentInvitation( messageBoxReturnCode, incidence, method );
     } else {
       return NoSendingNeeded;
     }
 
-  } else if ( incidence->type() == KCalCore::Incidence::TypeTodo ) {
+  } else if ( incidence->type() != KCalCore::Incidence::TypeEvent  ) {
 
     if ( method == KCalCore::iTIPRequest ) {
       // This is an update to be sent to the organizer
       method = KCalCore::iTIPReply;
     }
 
-    const QString question = i18n( "Do you want to send a status update to the "
-                                   "organizer of this task?" );
-    int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
-    return d->sentInvitation( messageBoxReturnCode, incidence, method );
+    const QString question = ( incidence->type() == KCalCore::Incidence::TypeTodo ) ?
+                                     i18n( "Do you want to send a status update to the "
+                                           "organizer of this task?" ) :
+                                           "Do you want to send a status update to the " // TODO: i18n
+                                           "organizer of this journal?";
 
+    const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+    return d->sentInvitation( messageBoxReturnCode, incidence, method );
   } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
 
     const QStringList myEmails = KCalPrefs::instance()->allEmails();

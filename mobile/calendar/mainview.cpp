@@ -25,6 +25,7 @@
 #include "agendaviewitem.h"
 #include "calendaradaptor.h"
 #include "calendarinterface.h"
+#include "calendar/clockhelper.h"
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
 #include "configwidget.h"
@@ -136,6 +137,7 @@ void MainView::doDelayedInit()
   qmlRegisterType<EventViews::MonthViewItem>( "org.kde.calendarviews", 4, 5, "MonthView" );
   qmlRegisterType<EventViews::TimelineViewItem>( "org.kde.calendarviews", 4, 5, "TimelineView" );
   qmlRegisterType<Qt::QmlDateEdit>( "org.qt", 4, 7, "QmlDateEdit" );
+  qmlRegisterType<ClockHelper>( "ClockHelper", 4, 5, "ClockHelper" );
   qmlRegisterUncreatableType<EventsGuiStateManager>( "org.kde.akonadi.events", 4, 5, "EventsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), itemModel(), KSystemTimeZones::local() );

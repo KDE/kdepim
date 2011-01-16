@@ -170,7 +170,7 @@ namespace MessageViewer {
       +
       printCssDefinitions( fixed )
       +
-      "}\n";
+      "\n";
   }
 
   QString CSSHelperBase::htmlHead( bool /*fixed*/ ) const {
@@ -363,12 +363,16 @@ namespace MessageViewer {
             fgColor,
             background )
       +
-      QString::fromLatin1( "table {\n"
+/* This shouldn't be necessary because font properties are inherited
+   automatically and causes wrong font settings with QTextBrowser
+   because it doesn't understand the inherit statement
+        QString::fromLatin1( "table {\n"
                            "  font-family: inherit ! important;\n"
                            "  font-size: inherit ! important;\n"
                            "  font-weight: inherit ! important;\n"
                            "}\n\n" )
       +
+      */
       QString( "a {\n"
                "  color: %1 ! important;\n"
                "  text-decoration: none ! important;\n"

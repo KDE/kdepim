@@ -341,7 +341,7 @@ KPIM.MainView {
           }
 
           onSaveAttachment: {
-            application.saveAttachment(url);
+            application.saveAttachment(url, fileName);
           }
         }
       ]

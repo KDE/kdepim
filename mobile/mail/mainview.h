@@ -120,6 +120,7 @@ class MainView : public KDeclarativeMainView
                                    const QString & bcc,
                                    const QString & subject,
                                    const QString & body );
+    void mailActionStateUpdated();
 
   Q_SIGNALS:
     void currentCollectionChanged();
@@ -187,6 +188,7 @@ class MainView : public KDeclarativeMainView
     void toggleShowExtendedHeaders( bool );
     void messageListSettingsChanged( const MessageListSettings& );
     bool selectNextUnreadMessageInCurrentFolder();
+    void showTemplatesHelp();
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );

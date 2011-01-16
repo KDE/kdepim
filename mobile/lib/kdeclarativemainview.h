@@ -171,6 +171,11 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     void openManual();
 
+    /**
+     * Opens the HTML based documentation located at the given relative @p path.
+     */
+    void openDocumentation( const QString &path );
+
     void openAttachment( const QString &url, const QString &mimeType );
     void saveAttachment( const QString &url, const QString &defaultFileName = QString() );
 

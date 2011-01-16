@@ -28,12 +28,17 @@ Dialog {
   id: clockWidget
   property alias okEnabled: clockWidgetOk.enabled
 
-  property alias hours: myClock.hours
-  property alias minutes: myClock.minutes
+  property alias hours: hourSelector.value
+  property alias minutes: minuteSelector.value
+
+  property bool blockSignalEmission: false
+
+  signal timeChanged( int hour, int minute )
 
   content: [
     Item {
       anchors.fill: parent
+
 
       KPIM.Clock {
         id: myClock
@@ -47,9 +52,11 @@ Dialog {
         }
 
         onHoursChanged: {
+          if ( clockWidget.blockSignalEmission )
+            return;
           // ### TODO: instead of calling function just set value
           // was supposed to work
-          hourSelector.setValue(myClock.hours);
+          hourSelector.setValue(amPmSwitch.on ? myClock.hours + 12 : myClock.hours);
         }
 
         onMinutesChanged: {
@@ -66,12 +73,12 @@ Dialog {
 
         onOnChanged: {
           if ( on ) { // pm selected
-            if ( myClock.hours < 12 ) {
-              myClock.hours = myClock.hours + 12;
+            if ( hourSelector.value < 12 ) {
+              hourSelector.setValue( hourSelector.value + 12 );
             }
           } else { // am selected
-            if ( myClock.hours >= 12 ) {
-              myClock.hours = myClock.hours - 12;
+            if ( hourSelector.value >= 12 ) {
+              hourSelector.setValue( hourSelector.value - 12 );
             }
           }
         }
@@ -94,9 +101,11 @@ Dialog {
           model: 24
 
           onValueChanged: {
-            myClock.hours = value;
-            amPmSwitch.setOn( myClock.hours >= 12 );
+            clockWidget.blockSignalEmission = true;
+            myClock.hours = value >= 12 ? value - 12 : value;
+            amPmSwitch.setOn( value >= 12 );
             clockWidgetOk.enabled = true;
+            clockWidget.blockSignalEmission = false;
           }
           onSelected: {
             minuteSelector.state = "unselected";
@@ -152,7 +161,7 @@ Dialog {
           onClicked: {
             clockWidget.collapse()
             myClock.clearSelection()
-            _incidenceview.setNewTime(myClock.hours, myClock.minutes);
+            timeChanged(hourSelector.value, minuteSelector.value);
           }
         }
       }

@@ -1,0 +1,313 @@
+<html>
+  <body>
+    <p>Here you can create and manage templates to use when<br/>
+       composing new messages, replies or forwarded messages.</p>
+    <p>The message templates support substitution commands,<br/>
+       which can be used together with custom text inside the above text fields.</p>
+
+    <br/>
+    <table>
+      <tr>
+        <th align="left" colspan="2">Original Message</th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left">Command</th>
+        <th align="left">Description</th>
+      </tr>
+      <tr>
+        <td>%QUOTE</td>
+        <td>Quoted Message Text</td>
+      </tr>
+      <tr>
+        <td>%TEXT</td>
+        <td>Message Text as Is</td>
+      </tr>
+      <tr>
+        <td>%OMSGID</td>
+        <td>Message Id</td>
+      </tr>
+      <tr>
+        <td>%ODATE</td>
+        <td>Date</td>
+      </tr>
+      <tr>
+        <td>%ODATESHORT</td>
+        <td>Date in Short Format</td>
+      </tr>
+      <tr>
+        <td>%ODATEEN</td>
+        <td>Date in C Locale</td>
+      </tr>
+      <tr>
+        <td>%ODOW</td>
+        <td>Day of Week</td>
+      </tr>
+      <tr>
+        <td>%OTIME</td>
+        <td>Time</td>
+      </tr>
+      <tr>
+        <td>%OTIMELONG</td>
+        <td>Time in Long Format</td>
+      </tr>
+      <tr>
+        <td>%OTIMELONGEN</td>
+        <td>Time in C Locale</td>
+      </tr>
+      <tr>
+        <td>%OTOADDR</td>
+        <td>To Field Address</td>
+      </tr>
+      <tr>
+        <td>%OTONAME</td>
+        <td>To Field Name</td>
+      </tr>
+      <tr>
+        <td>%OTOFNAME</td>
+        <td>To Field First Name</td>
+      </tr>
+      <tr>
+        <td>%OTOLNAME</td>
+        <td>To Field Last Name</td>
+      </tr>
+      <tr>
+        <td>%OCCADDR</td>
+        <td>CC Field Address</td>
+      </tr>
+      <tr>
+        <td>%OCCNAME</td>
+        <td>CC Field Name</td>
+      </tr>
+      <tr>
+        <td>%OCCFNAME</td>
+        <td>CC Field First Name</td>
+      </tr>
+      <tr>
+        <td>%OCCLNAME</td>
+        <td>CC Field Last Name</td>
+      </tr>
+      <tr>
+        <td>%OFROMADDR</td>
+        <td>From Field Address</td>
+      </tr>
+      <tr>
+        <td>%OFROMNAME</td>
+        <td>From Field Name</td>
+      </tr>
+      <tr>
+        <td>%OFROMFNAME</td>
+        <td>From Field First Name</td>
+      </tr>
+      <tr>
+        <td>%OFROMLNAME</td>
+        <td>From Field Last Name</td>
+      </tr>
+      <tr>
+        <td>%OADDRESSEESADDR</td>
+        <td>Addresses of all recipients</td>
+      </tr>
+      <tr>
+        <td>%OFULLSUBJECT</td>
+        <td>Subject</td>
+      </tr>
+      <tr>
+        <td>%QHEADERS</td>
+        <td>Quoted Headers</td>
+      </tr>
+      <tr>
+        <td>%HEADERS</td>
+        <td>Headers as Is</td>
+      </tr>
+      <tr>
+        <td>%OHEADER=<i>header-name</i></td>
+        <td>Header Content</td>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2">Current Message</th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left">Command</th>
+        <th align="left">Description</th>
+      </tr>
+      <tr>
+        <td>%MSGID</td>
+        <td>Message Id</td>
+      </tr>
+      <tr>
+        <td>%DATE</td>
+        <td>Date</td>
+      </tr>
+      <tr>
+        <td>%DATESHORT</td>
+        <td>Date in Short Format</td>
+      </tr>
+      <tr>
+        <td>%DATEEN</td>
+        <td>Date in C Locale</td>
+      </tr>
+      <tr>
+        <td>%DOW</td>
+        <td>Day of Week</td>
+      </tr>
+      <tr>
+        <td>%TIME</td>
+        <td>Time</td>
+      </tr>
+      <tr>
+        <td>%TIMELONG</td>
+        <td>Time in Long Format</td>
+      </tr>
+      <tr>
+        <td>%TIMELONGEN</td>
+        <td>Time in C Locale</td>
+      </tr>
+      <tr>
+        <td>%TOADDR</td>
+        <td>To Field Address</td>
+      </tr>
+      <tr>
+        <td>%TONAME</td>
+        <td>To Field Name</td>
+      </tr>
+      <tr>
+        <td>%TOFNAME</td>
+        <td>To Field First Name</td>
+      </tr>
+      <tr>
+        <td>%TOLNAME</td>
+        <td>To Field Last Name</td>
+      </tr>
+      <tr>
+        <td>%CCADDR</td>
+        <td>CC Field Address</td>
+      </tr>
+      <tr>
+        <td>%CCNAME</td>
+        <td>CC Field Name</td>
+      </tr>
+      <tr>
+        <td>%CCFNAME</td>
+        <td>CC Field First Name</td>
+      </tr>
+      <tr>
+        <td>%CCLNAME</td>
+        <td>CC Field Last Name</td>
+      </tr>
+      <tr>
+        <td>%FROMADDR</td>
+        <td>From Field Address</td>
+      </tr>
+      <tr>
+        <td>%FROMNAME</td>
+        <td>From Field Name</td>
+      </tr>
+      <tr>
+        <td>%FROMFNAME</td>
+        <td>From Field First Name</td>
+      </tr>
+      <tr>
+        <td>%FROMLNAME</td>
+        <td>From Field Last Name</td>
+      </tr>
+      <tr>
+        <td>%FULLSUBJECT</td>
+        <td>Subject</td>
+      </tr>
+      <tr>
+        <td>%HEADER=<i>header-name</i></td>
+        <td>Header Content</td>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2">Process with External Program</th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left">Command</th>
+        <th align="left">Description</th>
+      </tr>
+      <tr>
+        <td>%SYSTEM=<i>command</i></td>
+        <td>Arbitrary Command</td>
+      </tr>
+      <tr>
+        <td>%QUOTEPIPE=<i>command</i></td>
+        <td>Pipe Original Message Body and Insert Result as Quoted Text</td>
+      </tr>
+      <tr>
+        <td>%TEXTPIPE=<i>command</i></td>
+        <td>Pipe Original Message Body and Insert Result as Is</td>
+      </tr>
+      <tr>
+        <td>%MSGPIPE=<i>command</i></td>
+        <td>Pipe Original Message with Headers and Insert Result as Is</td>
+      </tr>
+      <tr>
+        <td>%BODYPIPE=<i>command</i></td>
+        <td>Pipe Current Message Body and Insert Result as Is</td>
+      </tr>
+      <tr>
+        <td>%CLEARPIPE=<i>command</i></td>
+        <td>Pipe Current Message Body and Replace with Result</td>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2">Miscellaneous</th>
+      </tr>
+      <tr>
+        <th align="left" colspan="2"></th>
+      </tr>
+      <tr>
+        <th align="left">Command</th>
+        <th align="left">Description</th>
+      </tr>
+      <tr>
+        <td>%SIGNATURE</td> 
+        <td>Signature</td>
+      </tr>
+      <tr>
+        <td>%INSERT=<i>file name</i></td>
+        <td>Insert File Content</td>
+      </tr>
+      <tr>
+        <td>%-</td>
+        <td>Discard to Next Line</td>
+      </tr>
+      <tr>
+        <td>%REM=<i>comment</i></td>
+        <td>Template Comment</td>
+      </tr>
+      <tr>
+        <td>%NOP</td>
+        <td>No Operation</td>
+      </tr>
+      <tr>
+        <td>%CLEAR</td>
+        <td>Clear Generated Message</td>
+      </tr>
+      <tr>
+        <td>%DEBUG</td>
+        <td>Turn Debug On</td>
+      </tr>
+      <tr>
+        <td>%DEBUGOFF</td>
+        <td>Turn Debug Off</td>
+      </tr>
+    </table>
+  </body>
+</html>

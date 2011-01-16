@@ -24,6 +24,10 @@
 #include <akonadi/kmime/messageflags.h>
 #include <messagecore/stringutil.h>
 
+#include <klocale.h>
+#include <kglobal.h>
+#include <kcalendarsystem.h>
+
 MailThreadGrouperComparator::MailThreadGrouperComparator()
   : mSortingOption( SortByDateTimeMostRecent ),
     mIsOutboundCollection( false )
@@ -87,8 +91,8 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
         break;
       case SortByDateTimeMostRecent:
         {
-          const KDateTime leftNewest = mostRecentUpdate( leftThreadRootMessage, leftThreadRootItem.id() );
-          const KDateTime rightNewest = mostRecentUpdate( rightThreadRootMessage, rightThreadRootItem.id() );
+          const KDateTime leftNewest = mostRecentDateTimeInThread( leftThreadRootMessage, leftThreadRootItem.id() );
+          const KDateTime rightNewest = mostRecentDateTimeInThread( rightThreadRootMessage, rightThreadRootItem.id() );
 
           if ( leftNewest != rightNewest ) {
             return leftNewest > rightNewest;
@@ -183,11 +187,89 @@ MailThreadGrouperComparator::SortingOption MailThreadGrouperComparator::sortingO
   return mSortingOption;
 }
 
+void MailThreadGrouperComparator::setGroupingOption( GroupingOption option )
+{
+  mGroupingOption = option;
+
+  invalidate();
+}
+
+MailThreadGrouperComparator::GroupingOption MailThreadGrouperComparator::groupingOption() const
+{
+  return mGroupingOption;
+}
+
 void MailThreadGrouperComparator::setIsOutboundCollection( bool outbound )
 {
   mIsOutboundCollection = outbound;
 
   invalidate();
+}
+
+QString MailThreadGrouperComparator::grouperString( const Akonadi::Item &item ) const
+{
+  KMime::Message::Ptr msg;
+
+  if ( mSortingOption == SortByDateTimeMostRecent ) {
+    const Akonadi::Item::Id newestItem = mostRecentIdInThread( messageForItem( item ), item.id() );
+    msg = messageForItem( Akonadi::Item( newestItem ) );
+  } else {
+    const Akonadi::Item rootItem = threadItem( item );
+    msg = messageForItem( rootItem );
+  }
+
+  if ( mGroupingOption == GroupByDate ) {
+    // simplified version taken from libmessagelist
+    const KDateTime& dt = msg->date()->dateTime();
+    const QDate dDate = dt.date();
+    const KCalendarSystem *calendar = KGlobal::locale()->calendar();
+    int daysAgo = -1;
+    if ( calendar->isValid( dDate ) && calendar->isValid( QDate::currentDate() ) ) {
+      daysAgo = dDate.daysTo( QDate::currentDate() );
+    }
+
+    if ( daysAgo < 0 || !dt.isValid() ) // In the future or invalid
+      return i18n( "Unknown" );
+    else if( daysAgo == 0 ) // Today
+      return i18n( "Today" );
+    else if ( daysAgo == 1 ) // Yesterday
+      return i18n( "Yesterday" );
+    else if ( daysAgo > 1 && daysAgo < calendar->daysInWeek( QDate::currentDate() ) ) // Within last seven days
+      return KGlobal::locale()->calendar()->weekDayName( dDate );
+    else if( calendar->month( dDate ) == calendar->month( QDate::currentDate() ) && calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this month
+      const int startOfWeekDaysAgo = ( calendar->daysInWeek( QDate::currentDate() ) + calendar->dayOfWeek( QDate::currentDate() ) -
+                                       KGlobal::locale()->weekStartDay() ) % calendar->daysInWeek( QDate::currentDate() );
+      const int weeksAgo = ( ( daysAgo - startOfWeekDaysAgo ) / calendar->daysInWeek( QDate::currentDate() ) ) + 1;
+      if ( weeksAgo == 0 )
+        return KGlobal::locale()->calendar()->weekDayName( dDate );
+      else
+        return i18np( "One Week Ago", "%1 Weeks Ago", weeksAgo );
+    } else if ( calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this year
+      return calendar->monthName( dDate );
+    } else { // in previous years
+      static QHash<int, QString> yearNameHash;
+
+      QString yearName;
+      if ( yearNameHash.contains( dDate.year() ) ) {
+        yearName = yearNameHash.value( dDate.year() );
+      } else {
+        yearName = calendar->yearString( dDate );
+        yearNameHash.insert( dDate.year(), yearName );
+      }
+      return i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ), yearName );
+    }
+  } else if ( mGroupingOption == GroupBySenderReceiver ) {
+    QStringList l;
+    foreach ( const KMime::Types::Mailbox &mbox, msg->from()->mailboxes() ) {
+      if ( mbox.hasName() )
+        l.append( mbox.name() );
+      else
+        l.append( mbox.addrSpec().asPrettyString() );
+    }
+    return l.join( ", " );
+  } else {
+    return QLatin1String( "dummy" );
+  }
 }
 
 void MailThreadGrouperComparator::resetCaches()
@@ -205,19 +287,63 @@ QByteArray MailThreadGrouperComparator::identifierForMessage( const KMime::Messa
   return identifier;
 }
 
-KDateTime MailThreadGrouperComparator::mostRecentUpdate( const KMime::Message::Ptr &threadRoot, Akonadi::Item::Id itemId ) const
+KDateTime MailThreadGrouperComparator::mostRecentDateTimeInThread( const KMime::Message::Ptr &threadRoot, Akonadi::Item::Id itemId ) const
 {
-  const QHash<Akonadi::Item::Id, KDateTime>::const_iterator it = mMostRecentCache.constFind( itemId );
+  const QHash<Akonadi::Item::Id, MostRecentEntry>::const_iterator it = mMostRecentCache.constFind( itemId );
   if ( it != mMostRecentCache.constEnd() )
-    return *it;
+    return (*it).dateTime;
 
   const QSet<QByteArray> messageIds = threadDescendants( identifierForMessage( threadRoot, itemId ) );
 
   KDateTime newest = threadRoot->date()->dateTime();
+  Akonadi::Item::Id newestId = itemId;
 
   if ( messageIds.isEmpty() ) {
-    mMostRecentCache.insert( itemId, newest );
+    MostRecentEntry entry;
+    entry.id = newestId;
+    entry.dateTime = newest;
+    mMostRecentCache.insert( itemId, entry );
     return newest;
+  }
+
+  foreach ( const QByteArray &messageId, messageIds ) {
+    const Akonadi::Item item = itemForIdentifier( messageId );
+    Q_ASSERT( item.isValid() );
+    Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
+
+    const KMime::Message::Ptr message = messageForItem( item );
+    const KDateTime messageDateTime = message->date()->dateTime();
+    if ( messageDateTime > newest ) {
+      newest = messageDateTime;
+      newestId = item.id();
+    }
+  }
+
+  MostRecentEntry entry;
+  entry.id = newestId;
+  entry.dateTime = newest;
+
+  mMostRecentCache.insert( itemId, entry );
+  return newest;
+}
+
+Akonadi::Item::Id MailThreadGrouperComparator::mostRecentIdInThread( const KMime::Message::Ptr &threadRoot, Akonadi::Item::Id itemId ) const
+{
+  const QHash<Akonadi::Item::Id, MostRecentEntry>::const_iterator it = mMostRecentCache.constFind( itemId );
+  if ( it != mMostRecentCache.constEnd() )
+    return (*it).id;
+
+  const QSet<QByteArray> messageIds = threadDescendants( identifierForMessage( threadRoot, itemId ) );
+
+  KDateTime newest = threadRoot->date()->dateTime();
+  Akonadi::Item::Id newestId = itemId;
+
+  if ( messageIds.isEmpty() ) {
+    MostRecentEntry entry;
+    entry.id = newestId;
+    entry.dateTime = newest;
+    mMostRecentCache.insert( itemId, entry );
+    return itemId;
   }
 
   foreach ( const QByteArray &messageId, messageIds ) {
@@ -229,10 +355,15 @@ KDateTime MailThreadGrouperComparator::mostRecentUpdate( const KMime::Message::P
     const KDateTime messageDateTime = message->date()->dateTime();
     if ( messageDateTime > newest )
       newest = messageDateTime;
+      newestId = item.id();
   }
 
-  mMostRecentCache.insert( itemId, newest );
-  return newest;
+  MostRecentEntry entry;
+  entry.id = newestId;
+  entry.dateTime = newest;
+
+  mMostRecentCache.insert( itemId, entry );
+  return itemId;
 }
 
 KMime::Message::Ptr MailThreadGrouperComparator::messageForItem( const Akonadi::Item &item ) const
