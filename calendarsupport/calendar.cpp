@@ -322,8 +322,10 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     if ( m_uidToItemId.value( ui ) != item.id() ) {
       kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
               << "; item uid = "  << ui.uid
-              << "; calendar = " << q
-              << "; existed in cache = " << existedInUidMap;
+              << "; calendar = " << q->objectName()
+              << "; existed in cache = " << existedInUidMap
+              << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
+              << "; parentCollection.id() = " << item.parentCollection().id(); // can be a virtual collection
       Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
     }
 
