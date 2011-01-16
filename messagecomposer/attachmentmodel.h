@@ -54,7 +54,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
       MimeTypeRole,
       CompressRole,
       EncryptRole,
-      SignRole,
+      SignRole
     };
 
     /**

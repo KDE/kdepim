@@ -71,7 +71,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
     Ui::EventOrTodoDesktop *mUi;
 #endif
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( IncidenceDescription );
+    Q_DECLARE_PRIVATE( IncidenceDescription )
     IncidenceDescriptionPrivate * const d;
     //@endcond
 };

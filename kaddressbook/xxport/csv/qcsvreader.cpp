@@ -89,7 +89,7 @@ bool QCsvReader::read( QIODevice *device )
     QuotedField,
     QuotedFieldEnd,
     NormalField,
-    EmptyField,
+    EmptyField
   };
 
   int row, column;

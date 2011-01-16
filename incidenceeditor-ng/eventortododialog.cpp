@@ -57,7 +57,7 @@ enum Tabs {
   AttendeesTab,
   AlarmsTab,
   RecurrenceTab,
-  AttachmentsTab,
+  AttachmentsTab
 };
 
 class EventOrTodoDialogPrivate : public ItemEditorUi

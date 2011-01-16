@@ -59,9 +59,9 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void saveFinished() );
+    Q_PRIVATE_SLOT( d, void saveFinished() )
     Q_PRIVATE_SLOT( d, void saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction,
-                                        const QString & ) );
+                                        const QString & ) )
     Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection & ) )
 };
 
