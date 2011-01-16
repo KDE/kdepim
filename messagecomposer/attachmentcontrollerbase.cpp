@@ -611,7 +611,7 @@ void AttachmentControllerBase::slotPutResult(KJob *job)
 void AttachmentControllerBase::attachmentProperties( AttachmentPart::Ptr part )
 {
   QPointer<AttachmentPropertiesDialog> dialog = new AttachmentPropertiesDialog(
-      part, d->wParent );
+      part, false, d->wParent );
 
   dialog->setEncryptEnabled( d->encryptEnabled );
   dialog->setSignEnabled( d->signEnabled );
