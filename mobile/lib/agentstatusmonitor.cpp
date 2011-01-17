@@ -52,6 +52,7 @@ void AgentStatusMonitor::updateStatus()
   const AgentStatus oldStatus = m_status;
 
   m_status = Offline;
+  qDebug() << "tokoe: check instance status";
   foreach ( const AgentInstance &instance, AgentManager::self()->instances() ) {
     if ( instance.type().identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) ) {
       if ( instance.status() == AgentInstance::Running )
@@ -59,12 +60,15 @@ void AgentStatusMonitor::updateStatus()
     } else if ( instance.type().capabilities().contains( QLatin1String( "Resource" ) ) && m_mimeTypeChecker.containsWantedMimeType( instance.type().mimeTypes() ) ) {
       if ( instance.status() == AgentInstance::Running  )
         m_status |= Receiving;
-      if ( instance.isOnline() )
+      if ( instance.isOnline() ) {
         m_status |= Online;
+        qDebug() << "tokoe: instance is online:" << instance.name();
+      }
     }
   }
 
   if ( Solid::Networking::status() != Solid::Networking::Connected && Solid::Networking::status() != Solid::Networking::Unknown ) {
+    qDebug() << "tokoe: network is down -> removing online flag";
     m_status &= ~Online;
   }
 
