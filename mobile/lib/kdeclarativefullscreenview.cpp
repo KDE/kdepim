@@ -295,4 +295,19 @@ void KDeclarativeFullScreenView::setActionTitle(const QString& name, const QStri
     action->setText( title );
 }
 
+void KDeclarativeFullScreenView::bringToFront()
+{
+#ifdef Q_WS_WIN
+  const WCHAR * windowName = ( const WCHAR *)m_qmlFileName.utf16();
+  HWND windowID = ::FindWindow( NULL, windowName );
+  if ( windowID ) {
+    ::SetForegroundWindow((HWND)(((ULONG)windowID) | 0x01 ));
+  } else {
+    kError() << "Failed to find the Window for Application " << m_qmlFileName;
+  }
+#else
+  activateWindow();
+  raise();
+#endif
+}
 #include "kdeclarativefullscreenview.moc"
