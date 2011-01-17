@@ -62,6 +62,7 @@ KPIM.MainView {
   {
     agenda.showRange( date, 0 /* "Day" */ );
     guiStateManager.pushState( Events.EventsGuiStateManager.ViewDayState );
+    application.bringToFront();
   }
 
   KCal.IncidenceView {
