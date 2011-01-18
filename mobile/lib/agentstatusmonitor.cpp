@@ -52,8 +52,9 @@ void AgentStatusMonitor::updateStatus()
   const AgentStatus oldStatus = m_status;
 
   m_status = Offline;
-  qDebug() << "tokoe: check instance status";
+  qDebug() << "tokoe: check instances status";
   foreach ( const AgentInstance &instance, AgentManager::self()->instances() ) {
+    qDebug() << "tokoe:   check instance status:" << instance.name();
     if ( instance.type().identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) ) {
       if ( instance.status() == AgentInstance::Running )
         m_status |= Sending;
@@ -62,7 +63,7 @@ void AgentStatusMonitor::updateStatus()
         m_status |= Receiving;
       if ( instance.isOnline() ) {
         m_status |= Online;
-        qDebug() << "tokoe: instance is online:" << instance.name();
+        qDebug() << "tokoe:   instance is online:" << instance.name();
       }
     }
   }
