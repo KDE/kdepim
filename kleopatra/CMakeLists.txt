@@ -305,6 +305,7 @@ if(WINCE)
 endif(WINCE)
 
 if ( KLEO_STATIC_KCMODULES )
+  add_definitions( -DKLEO_STATIC_KCMODULES )
   set(_kleopatra_extra_libs kcm_kleopatra)
 else ( KLEO_STATIC_KCMODULES )
   set(_kleopatra_extra_libs)
