@@ -44,6 +44,12 @@ QML.Item {
   property alias showChildren : _listContent.visible
   property alias menuStyle : _listContent.menuStyle
 
+  function preselectAction()
+  {
+    actionList_top.triggered(actionList_top.name)
+    showChildren = true
+  }
+
   onVisibleChanged :
   {
     if (!visible)

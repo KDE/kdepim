@@ -45,6 +45,18 @@ Item {
   function refresh()
   {
     showOnlyCategory( cachedCategory )
+    selectTopItem()
+  }
+
+  function selectTopItem()
+  {
+    for ( var i = 0; i < itemModel.children.length; ++i ) {
+      if ( itemModel.children[i].visible ) {
+        if ( itemModel.children[i].preselectAction )
+          itemModel.children[i].preselectAction();
+        return;
+      }
+    }
   }
 
   clip: true
