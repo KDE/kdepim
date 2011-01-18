@@ -1681,10 +1681,25 @@ void MainView::applyFilters()
 {
   Item::List items;
 
-  foreach ( const QModelIndex &index, itemSelectionModel()->selectedRows() ) {
+  const QModelIndexList itemIndexes = itemSelectionModel()->selectedRows();
+  foreach ( const QModelIndex &index, itemIndexes ) {
     const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
     if ( item.isValid() )
       items << item;
+  }
+
+  if ( itemIndexes.isEmpty() ) {
+    // if no items have been selected, use all items of the currently selected collections
+    foreach ( const QModelIndex &index, regularSelectionModel()->selectedRows() ) {
+      const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+      if ( collection.isValid() ) {
+        ItemFetchJob *fetchJob = new ItemFetchJob( collection );
+        fetchJob->fetchScope().fetchFullPayload();
+        if ( fetchJob->exec() ) {
+          items << fetchJob->items();
+        }
+      }
+    }
   }
 
   FilterIf->filterManager()->applyFilters( items );
