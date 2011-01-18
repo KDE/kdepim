@@ -24,6 +24,19 @@
 #include <QtGui/QGraphicsScene>
 #include <QtGui/QWidget>
 
+#ifdef _WIN32_WCE
+bool DeclarativeWidgetBaseHelper::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::Hide) {
+        QWidget *wid = static_cast<QWidget *>(obj);
+        wid->show();
+        qDebug("Ate hide event");
+    }
+   
+    return QObject::eventFilter(obj, event);
+}
+#endif
+
 DeclarativeWidgetBaseHelper::DeclarativeWidgetBaseHelper( QWidget * widget, QGraphicsItem * parent, const RegisterFunction & registerFunc )
     : QGraphicsProxyWidget( parent ),
       m_registerFunc( registerFunc ),
@@ -37,9 +50,17 @@ DeclarativeWidgetBaseHelper::DeclarativeWidgetBaseHelper( QWidget * widget, QGra
     StyleSheetLoader::applyStyle( m_widget );
     setWidget( m_widget );
     setFocusPolicy( Qt::StrongFocus );
+#ifdef _WIN32_WCE
+    m_widget->installEventFilter(this);
+#endif
 }
 
-DeclarativeWidgetBaseHelper::~DeclarativeWidgetBaseHelper() {}
+DeclarativeWidgetBaseHelper::~DeclarativeWidgetBaseHelper()
+{
+#ifdef _WIN32_WCE
+    m_widget->removeEventFilter(this);
+#endif
+}
 
 QVariant DeclarativeWidgetBaseHelper::itemChange( GraphicsItemChange change, const QVariant & value )
 {

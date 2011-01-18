@@ -43,6 +43,9 @@ protected:
 
 protected:
     /* reimp */ QVariant itemChange( GraphicsItemChange change, const QVariant & value );
+#ifdef _WIN32_WCE
+    bool eventFilter(QObject *obj, QEvent *event);
+#endif
 
 private:
     const RegisterFunction m_registerFunc;
