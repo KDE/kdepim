@@ -649,8 +649,14 @@ namespace {
             ui.uploadToKeyserverPB      ->setVisible(  pgp() );
             ui.makeBackupPB             ->setVisible(  pgp() );
             ui.createRevocationRequestPB->setVisible(  pgp() && false ); // not implemented
-            ui.sendRequestByEMailPB     ->setVisible( !pgp() );
+            
+#ifdef KDEPIM_MOBILE_UI
+            ui.sendCertificateByEMailPB ->setVisible(  false );
+            ui.sendRequestByEMailPB     ->setVisible(  false );
+#else
             ui.sendCertificateByEMailPB ->setVisible(  pgp() );
+            ui.sendRequestByEMailPB     ->setVisible( !pgp() );
+#endif
 
             if ( !error && !pgp() ) {
                 if ( signingAllowed() && !encryptionAllowed() )
