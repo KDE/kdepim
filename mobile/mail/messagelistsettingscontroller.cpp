@@ -85,7 +85,7 @@ void MessageListSettingsController::editSettings()
   ui.mSortingOrder->setCurrentIndex( mSettings.sortingOrder() == Qt::AscendingOrder ? 0 : 1 );
   ui.mGroupingOption->setCurrentIndex( static_cast<int>( mSettings.groupingOption() ) );
   ui.mUseThreading->setChecked( mSettings.useThreading() );
-  ui.mSaveForCollection->setChecked( mSettings.saveForCollection() );
+  ui.mUseGlobalSettings->setChecked( mSettings.useGlobalSettings() );
 
   if ( !dialog.exec() )
     return;
@@ -94,7 +94,7 @@ void MessageListSettingsController::editSettings()
   mSettings.setSortingOrder( ui.mSortingOrder->currentIndex() == 0 ? Qt::AscendingOrder : Qt::DescendingOrder );
   mSettings.setGroupingOption( static_cast<MessageListSettings::GroupingOption>( ui.mGroupingOption->currentIndex() ) );
   mSettings.setUseThreading( ui.mUseThreading->isChecked() );
-  mSettings.setSaveForCollection( ui.mSaveForCollection->isChecked() );
+  mSettings.setUseGlobalSettings( ui.mUseGlobalSettings->isChecked() );
 
   MessageListSettings::toConfig( mCollectionId, mSettings );
 

@@ -1675,6 +1675,18 @@ void MainView::updateConfig()
     item->viewer()->writeConfig();
     item->viewer()->readConfig(); // let CSS parser reread its config
   }
+
+  if ( !regularSelectionModel() )
+    return;
+
+  const QModelIndexList indexes = regularSelectionModel()->selectedIndexes();
+  if ( indexes.isEmpty() )
+    return;
+
+  const QModelIndex index = indexes.first();
+  const Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( collection.isValid() && mMessageListSettingsController )
+    mMessageListSettingsController->setCollection( collection );
 }
 
 void MainView::applyFilters()

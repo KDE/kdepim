@@ -20,6 +20,7 @@
 #include "configwidget.h"
 
 #include "messagecomposer/messagecomposersettings.h"
+#include "messagelistsettings.h"
 #include "messageviewer/globalsettings.h"
 #include "settings.h"
 #include "stylesheetloader.h"
@@ -123,6 +124,15 @@ void ConfigWidget::loadFromExternalSettings()
                                                      MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
   Settings::self()->setInvitationsAutomaticSending( MessageViewer::GlobalSettings::self()->automaticSending() );
   Settings::self()->setInvitationsDeleteAfterReply( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
+
+  // Message List
+  {
+    const MessageListSettings settings = MessageListSettings::fromDefaultConfig();
+    Settings::self()->setMessageListSortingOption( settings.sortingOption() );
+    Settings::self()->setMessageListSortingOrder( settings.sortingOrder() );
+    Settings::self()->setMessageListGroupingOption( settings.groupingOption() );
+    Settings::self()->setMessageListUseThreading( settings.useThreading() );
+  }
 }
 
 void ConfigWidget::saveToExternalSettings()
@@ -156,6 +166,18 @@ void ConfigWidget::saveToExternalSettings()
   MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationComparisons( Settings::self()->invitationsOutlookCompatible() );
   MessageViewer::GlobalSettings::self()->setAutomaticSending( Settings::self()->invitationsAutomaticSending() );
   MessageViewer::GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply( Settings::self()->invitationsDeleteAfterReply() );
+
+  // Message List
+  {
+    MessageListSettings settings = MessageListSettings::fromDefaultConfig();
+
+    settings.setSortingOption( static_cast<MessageListSettings::SortingOption>( Settings::self()->messageListSortingOption() ) );
+    settings.setSortingOrder( static_cast<Qt::SortOrder>( Settings::self()->messageListSortingOrder() ) );
+    settings.setGroupingOption( static_cast<MessageListSettings::GroupingOption>( Settings::self()->messageListGroupingOption() ) );
+    settings.setUseThreading( Settings::self()->messageListUseThreading() );
+
+    MessageListSettings::toDefaultConfig( settings );
+  }
 
   Settings::self()->writeConfig();
   MessageViewer::GlobalSettings::self()->writeConfig();

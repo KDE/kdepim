@@ -62,4 +62,36 @@
       <default>red</default>
     </entry>
   </group>
+
+  <group name="MessageList">
+    <entry name="MessageListSortingOption" type="Enum">
+      <choices>
+        <choice name="SortByDateTime" />
+        <choice name="SortByDateTimeMostRecent" />
+        <choice name="SortBySenderReceiver" />
+        <choice name="SortBySubject" />
+        <choice name="SortBySize" />
+        <choice name="SortByActionItem" />
+      </choices>
+      <default>SortByDateTimeMostRecent</default>
+    </entry>
+    <entry name="MessageListSortingOrder" type="Enum">
+      <choices>
+        <choice name="Ascending" />
+        <choice name="Descending" />
+      </choices>
+      <default>Ascending</default>
+    </entry>
+    <entry name="MessageListGroupingOption" type="Enum">
+      <choices>
+        <choice name="GroupByNone" />
+        <choice name="GroupByDate" />
+        <choice name="GroupBySenderReceiver" />
+      </choices>
+      <default>GroupByDate</default>
+    </entry>
+    <entry name="MessageListUseThreading" type="Bool">
+      <default>true</default>
+    </entry>
+  </group>
 </kcfg>
