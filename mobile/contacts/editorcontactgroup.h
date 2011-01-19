@@ -67,6 +67,7 @@ class EditorContactGroup : public QWidget
     Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void clearRecipientClicked() )
     Q_PRIVATE_SLOT( d, void availableCollectionsChanged() )
+    Q_PRIVATE_SLOT( d, void disableSaveButton() )
 };
 
 #endif
