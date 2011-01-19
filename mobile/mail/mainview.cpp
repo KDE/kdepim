@@ -1413,9 +1413,9 @@ void MainView::slotCollectionSelectionChanged()
   const Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   if ( collection.isValid() ) {
     mAclEditor->setCollection( collection );
-    mMessageListSettingsController->setCollection( collection );
     m_grouperComparator->setIsOutboundCollection( collection.hasAttribute<Akonadi::MessageFolderAttribute>() &&
                                                   collection.attribute<Akonadi::MessageFolderAttribute>()->isOutboundFolder() );
+    mMessageListSettingsController->setCollection( collection );
   }
 
   mCurrentCollection = collection;

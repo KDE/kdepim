@@ -178,8 +178,6 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
 void MailThreadGrouperComparator::setSortingOption( SortingOption option )
 {
   mSortingOption = option;
-
-  invalidate();
 }
 
 MailThreadGrouperComparator::SortingOption MailThreadGrouperComparator::sortingOption() const
@@ -190,8 +188,6 @@ MailThreadGrouperComparator::SortingOption MailThreadGrouperComparator::sortingO
 void MailThreadGrouperComparator::setGroupingOption( GroupingOption option )
 {
   mGroupingOption = option;
-
-  invalidate();
 }
 
 MailThreadGrouperComparator::GroupingOption MailThreadGrouperComparator::groupingOption() const
@@ -202,7 +198,10 @@ MailThreadGrouperComparator::GroupingOption MailThreadGrouperComparator::groupin
 void MailThreadGrouperComparator::setIsOutboundCollection( bool outbound )
 {
   mIsOutboundCollection = outbound;
+}
 
+void MailThreadGrouperComparator::invalidateModel()
+{
   invalidate();
 }
 
