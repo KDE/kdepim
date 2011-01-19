@@ -94,9 +94,9 @@ QML.Rectangle {
       KPIM.ActionListItem { name : "snippetseditor_add_snippet"; title: KDE.i18n("Add\nSnippet") },
       KPIM.ActionListItem { name : "snippetseditor_edit_snippet"; title: KDE.i18n("Edit\nSnippet") },
       KPIM.ActionListItem { name : "snippetseditor_delete_snippet"; title: KDE.i18n("Delete\nSnippet") },
-      KPIM.ActionListItem { name : "snippetseditor_add_snippetgroup"; title: KDE.i18n("Add\nSnippetgroup") },
-      KPIM.ActionListItem { name : "snippetseditor_edit_snippetgroup"; title: KDE.i18n("Edit\nSnippetgroup") },
-      KPIM.ActionListItem { name : "snippetseditor_delete_snippetgroup"; title: KDE.i18n("Delete\nSnippetgroup") }
+      KPIM.ActionListItem { name : "snippetseditor_add_snippetgroup"; title: KDE.i18n("Add\nGroup") },
+      KPIM.ActionListItem { name : "snippetseditor_edit_snippetgroup"; title: KDE.i18n("Edit\nGroup") },
+      KPIM.ActionListItem { name : "snippetseditor_delete_snippetgroup"; title: KDE.i18n("Delete\nGroup") }
     ]
 
     onTriggered: {
