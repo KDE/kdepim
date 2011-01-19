@@ -33,6 +33,7 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *
   , mChangeRecorder( 0 )
   , mCollectionFilter( 0 )
   , mItemFilterModel( 0 )
+  , mBnf( 0 )
   , mAgentStatusMonitor( 0 )
   , mGuiStateManager( 0 )
   , mStateMachine( 0 )

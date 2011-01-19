@@ -567,6 +567,9 @@ void KDeclarativeMainView::multipleSelectionFinished()
 
 QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const
 {
+  if ( !d->mBnf )
+    return 0;
+
   return d->mBnf->selectionModel();
 }
 
