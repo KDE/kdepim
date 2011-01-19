@@ -57,6 +57,8 @@ InvitationHandler::Action actionFromStatus( InvitationHandler::SendStatus status
 bool IncidenceChanger::Private::myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &newInc,
                                                          const KCalCore::Incidence::Ptr &oldInc )
 {
+  Q_ASSERT( newInc );
+  Q_ASSERT( oldInc );
   KCalCore::Attendee::Ptr oldMe = oldInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
   KCalCore::Attendee::Ptr newMe = newInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
 
@@ -65,6 +67,7 @@ bool IncidenceChanger::Private::myAttendeeStatusChanged( const KCalCore::Inciden
 
 void IncidenceChanger::Private::queueChange( Change *change )
 {
+  Q_ASSERT( change );
   // If there's already a change queued we just discard it
   // and send the newer change, which already includes
   // previous modifications
@@ -93,6 +96,7 @@ void IncidenceChanger::Private::performNextChange( Akonadi::Item::Id id )
 
 bool IncidenceChanger::Private::performChange( Change *change )
 {
+  Q_ASSERT( change );
   Akonadi::Item newItem = change->newItem;
   const KCalCore::Incidence::Ptr oldinc =  change->oldInc;
   const KCalCore::Incidence::Ptr newinc = CalendarSupport::incidence( newItem );
