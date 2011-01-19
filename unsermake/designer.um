@@ -1,0 +1,182 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase,utilities
+
+class DesignerHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "designer"
+
+	def requirements(self):
+		return ([], ["autodeps", "mocs"])
+	
+	def extensions(self):
+		return ['.ui','.ui3', '.ui4']
+	
+	def source(self, program, base, ext):
+
+		rulef = program.mfile
+
+		sourcedir = ''
+		if program.mfile.in_srcdir(base + ext):
+			sourcedir = rulef.source
+		else:
+			sourcedir = rulef.build
+	
+		ui_files = []
+		if rulef.is_defined("UNSERMAKE_UIFILES"):
+			ui_files = rulef.definition("UNSERMAKE_UIFILES")
+
+		uifile_version = 0
+
+		if ext == '.ui':
+			if base in rulef.definition("QT3_UIFILES"):
+				uifile_version = 3
+			elif base in rulef.definition("QT4_UIFILES"):
+				uifile_version = 4
+			else:
+				# If UIC3_PATH is undefined we're using KDE 3, and we can assume a qt3-format .ui file.
+				if not utilities.subst_vars.has_key("UIC3_PATH"):
+					uifile_version = 3
+				else:
+					utilities.print_error( "%s: Unknown UIC version for %s. Rerun make -f Makefile.cvs.\n"
+										   % (rulef.filename, rulef.dirname + "/" + base + ext) )
+		else:
+			if ext == '.ui3':
+				uifile_version = 3
+			else:
+				if ext == '.ui4':
+					uifile_version = 4
+				else: # can't happen
+					utilities.print_error("%s: Unknown extension, can't happen\n" % (rulef.filename))
+					return
+
+		if uifile_version == 3:
+			# If UIC3_PATH is undefined we're using KDE 3
+			if utilities.subst_vars.has_key("UIC3_PATH"):
+				uic_version = "$(UIC3_PATH)"
+			else:
+				uic_version = "$(UIC)"
+
+			outputfile = rulef.build + base + ".cpp"
+		else:
+			if not utilities.subst_vars.has_key("UIC3_PATH"):
+				utilities.print_error( "%s: You cannot use Qt 4 .ui-files with Qt/KDE 3! Please use a Qt 4-based build system.\n" 
+									   % (rulef.filename) )
+			uic_version = "$(UIC)"
+			outputfile = rulef.build + "ui_" + base + ".h"
+
+		rules = ["@echo '%s %s%s'" % (utilities.creating_text, outputfile, utilities.normal)]
+
+		if not base in ui_files:
+			if not program.mfile.get_opt("qtonly"):
+				rules.append("@echo '#include <kdialog.h>' > %s" % (outputfile))
+				rules.append("@echo '#include <klocale.h>' >> %s" % (outputfile))
+				canon_source = utilities.canon_name(base)
+				rules.append("@adir=`cd %s && pwd` ;\\" % sourcedir)
+
+				if uifile_version == 3:
+					rules.append( "%s -tr ${UIC_TR} -i %s.h $$adir/%s%s > %s.temp ; ret=$$?; \\"
+								  % (uic_version, base, base, ext, outputfile) )
+				else:
+					rules.append( "%s -tr ${UIC_TR} $$adir/%s%s > %s.temp ; ret=$$?; \\"
+								  % (uic_version, base, ext, outputfile) )
+
+				line = 'sed -e "s,${UIC_TR}( \"\" ),QString::null,g" %s.temp ' % (outputfile)
+				line = line + '| sed -e "s,image\([0-9][0-9]*\)_data,img\\1_%s,g" ' % canon_source
+				line = line + '>> %s ;\\' % (outputfile)
+				rules.append( line )
+
+				if uifile_version == 3:
+					rules.append('rm -f %s.temp ;\\' % (outputfile))
+				else:
+					rules.append('rm -f %s.temp' % (outputfile))
+			else:
+				if uifile_version == 3:
+					rules.append( "@%s -i %s.h %s%s > %s ; ret=$$?; \\"
+								  % (uic_version, base, sourcedir + base, ext, outputfile) )
+				else:
+					rules.append( "@%s %s%s > %s ; ret=$$?; \\"
+								  % (uic_version, base, ext, outputfile) )
+
+			if uifile_version == 3:
+				rules.append( "if test \"$$ret\" = 0; then echo '#include \"%s.moc\"' >> %s; else rm -f %s; exit $$ret; fi"
+							  % (base, outputfile, outputfile) )
+
+				rulef.insertTarget(outputfile,
+								   [sourcedir + base + ext, rulef.build + base + ".h"],
+								   rules)
+
+				# If UIC3_PATH is undefined we're using KDE 3
+				if utilities.subst_vars.has_key("UIC3_PATH") and not program.mfile.get_opt("qtonly"):
+                    # In KDE4, it is the .h file who has translatable strings
+					rulef.insertTarget(rulef.build + base + ".h", [sourcedir + base + ext],
+								  	["@echo '%s %s.h%s'" % (utilities.creating_text, rulef.build + base, utilities.normal),
+									"@%s -tr ${UIC_TR} -o %s.temp $?" % (uic_version, base),
+                                    "@echo '#include <klocale.h>' > $@",
+                                    "@sed -e 's/${UIC_TR}(\"\")/QString()/g;s/${UIC_TR}(\"\", 0)/QString()/g' %s.temp >> $@" % (base),
+									"@rm -f %s.temp" % (base) ])
+				else:
+                    # In KDE3, the .h has not any translatable string
+                    # And for pure Qt3/Qt4, we do not need any modification
+					rulef.insertTarget(rulef.build + base + ".h", [sourcedir + base + ext],
+								   ["@echo '%s %s.h%s'" % (utilities.creating_text, rulef.build + base, utilities.normal),
+									"@%s -o $@ $?" % (uic_version)])
+
+			
+				rulef.insertTarget(rulef.build + base + program.objext,
+								   [rulef.build + base + ".h", rulef.build + base + ".moc"])
+			else:
+				rulef.insertTarget(outputfile, [sourcedir + base + ".ui"],
+								   rules)
+			
+			rulef.add_define("UNSERMAKE_UIFILES", base)
+			if uifile_version == 3:
+				program.cleanfiles.extend([base + ".h", base + ".cpp"])
+			else:
+				program.cleanfiles.append( "ui_" + base + ".h")
+			
+		if uifile_version == 3:
+			program.handle_source(base, ".cpp")
+
+	def create_source(self, program, base, ext):
+		# Detect the file type if the extension is plain '.ui'
+		rulef = program.mfile
+		ui_path = rulef.dirname + "/" + base + ext
+		if ext == '.ui':
+			try:
+				fileToSearch = open( ui_path, 'r' )
+			except IOError:
+				utilities.print_error("%s: Unable to open %s\n" % (rulef.filename, ui_path))
+				return
+
+			searchterm = "<(?:UI|ui) version=\"(\\d+)\\.(\\d+)"
+			patternprog = re.compile( searchterm )
+
+			major_version = '3'
+			minor_version = '0'
+			for line in fileToSearch.readlines():
+				a_match = patternprog.search( line )
+				if ( a_match ):
+					major_version = a_match.group( 1 )
+					minor_version = a_match.group( 2 )
+					break
+
+			if major_version == '3':
+				rulef.add_define("QT3_UIFILES", base)
+				ext = '.ui3'
+			elif major_version == '4':
+				rulef.add_define("QT4_UIFILES", base)
+				ext = '.ui4'
+			else:
+				utilities.print_error("%s: Unable to detect the required UIC version for %s\n" % (rulef.filename, ui_path))
+				return
+
+			
+		# Add rules for Qt 3 .ui files
+		if ext == '.ui3':
+			value = base + "=" + base + ".h=" + base + ".cpp"
+			if not value in rulef.definition("METASOURCES"):
+				rulef.add_define("METASOURCES", value)
+
+handlerbase.register_handler(DesignerHandler())

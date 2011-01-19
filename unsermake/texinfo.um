@@ -1,0 +1,17 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase
+
+class TEXInfo_Handler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "texinfo"
+
+	def create(self, amfile):
+		# TODO: support for texinfo
+		for define in amfile.defines():
+			if define.endswith( '_TEXINFOS' ):
+				amfile.del_define(define)
+				amfile.add_define(define, [])
+		
+handlerbase.register_handler(TEXInfo_Handler())

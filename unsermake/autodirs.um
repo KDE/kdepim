@@ -1,0 +1,29 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase, utilities
+
+class AutoDIRSHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "autodirs"
+
+	def create(self, amfile):
+		if not amfile.is_defined("SUBDIRS"):
+			return
+		
+		subdirs = amfile.definition_rec("SUBDIRS")
+
+		if subdirs == ['$(AUTODIRS)']:
+			subdirs = []
+			for entry in os.listdir(amfile.dirname):
+				if entry == 'CVS' or entry[0] == '.':
+					continue
+				if not os.path.isdir(amfile.dirname + "/" + entry):
+					continue
+				if os.path.exists(amfile.dirname + "/" + entry + "/Makefile.am"):
+					subdirs.append(entry)
+
+			amfile.del_define("SUBDIRS")
+			amfile.add_define("SUBDIRS", subdirs)
+
+handlerbase.register_handler(AutoDIRSHandler())

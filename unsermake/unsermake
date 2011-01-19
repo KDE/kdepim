@@ -1,0 +1,16 @@
+#! /bin/sh
+
+self="$0"
+if test -L "$self"; then
+    try=`readlink $self 2>/dev/null` && self=$try
+fi
+mods=`dirname $self`
+directory=`dirname $mods`
+mod=`basename $mods`
+if test -n "$PYTHONPATH"; then
+   export PYTHONPATH=$directory:$PYTHONPATH
+else
+   export PYTHONPATH=$directory
+fi
+exec python -c "import $mod; $mod.main()" --modules $mods "$@"
+

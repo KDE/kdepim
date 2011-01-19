@@ -1,0 +1,116 @@
+# -*-python-*-
+# vim: ts=4 noet
+# Copyright (C) 2004 Simon Hausmann <hausmann@kde.org>
+# Licensed under whatever license unsermake is available
+
+import handlerbase
+import program
+import utilities
+
+class PCHHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "pch"
+
+	def requirements(self):
+		return (["kdeinit"], [])
+		
+	def inclusion_candidates(self, amfile, bin):
+		candidates = []
+		for src in amfile.definition_rec(bin.canon_name + '_SOURCES'):
+			match = utilities.extre.match(src)
+			base = match.group(1)
+			ext = match.group(2)
+			if ext not in utilities.cppext:
+				continue	
+			for h in utilities.hext:
+				candidate = amfile.dirname + "/" + base + h
+				if os.path.exists(candidate):
+					candidates.extend([base + h])
+		return candidates
+
+	def make_auto_pch_rule(self, amfile, bin):
+		header = amfile.build + bin.canon_name + "_pch.h"
+
+		candidates = self.inclusion_candidates(amfile, bin)
+		if not len(candidates):
+			return []
+
+		lines = [ '@echo ''%s %s%s''' % (utilities.creating_text, header, utilities.normal),
+				  '@echo "#if defined(__cplusplus)"> %s' % header,
+				  '@for header in %s; do \\' % string.join(candidates),
+				  '    echo "#include \\"$$header\\"" >> %s; \\' % header,
+				  'done',
+				  '@echo "#endif" >> %s' % header ]
+
+		amfile.insertTarget(header, '', lines)
+		bin.cleanfiles.extend([header])
+
+		return [amfile.build, bin.canon_name + "_pch.h"]
+
+	def shuffle_binaries(self, amfile):
+
+		for bin in amfile.binaries.values():
+
+			pchvarname = bin.canon_name + "_PCH"
+			header = amfile.value_list(pchvarname)
+
+			if not header:
+				continue
+
+			if len(header) > 1:
+				print "%s: there can be only one header file to precompile, skipping" % pchvarname
+				continue
+
+			header = header[0]
+
+			# TODO: move to a create function
+			if header == "AUTO":
+				header = self.make_auto_pch_rule(amfile, bin)
+				if not len(header):
+					print "%s: AUTO specified but can't find candidates for inclusion" % pchvarname
+					continue
+				dir = header[0]
+				header = header[1]
+			else:
+				dir = amfile.source
+
+			pchdir = amfile.build + bin.canon_name + ".gch"
+
+#			print '%s: PCH = %s / pchdir %s' % (amfile.filename, header, pchdir)
+
+			# first create rules for precompiling the header
+			cxxlines = ["@test -d %s || mkdir -p %s" % (pchdir, pchdir)]
+			clines = ["@test -d %s || mkdir -p %s" % (pchdir, pchdir)]
+
+			splittedheader = string.split(header, ".")
+			base = splittedheader[0]
+			ext = "." + splittedheader[1]
+
+			pic = '';
+			if bin.type == program.PTYPE_LTLIBRARY:
+				pic = '-fPIC -DPIC'
+
+			cxxtarget = pchdir + '/c++'
+			ctarget = pchdir + '/c'
+
+			cxxlines.extend(bin.compile_lines(dir, base, ext, "-x c++-header " + pic, 1, 1, "_cxx", cxxtarget))
+			clines.extend(bin.compile_lines(dir, base, ext, "-x c-header " + pic, 0, 1, "_c", ctarget))
+
+			amfile.insertTarget(cxxtarget, dir + header, cxxlines)
+			amfile.insertTarget(ctarget, dir + header, clines)
+
+			# now create target rules for forcing the inclusion of the pch with -include
+			amfile.add_define(amfile.canon_subdir + '_' + bin.canon_name + "_CPPFLAGS", "-include " + bin.canon_name, 'unsermake_enable_pch')
+
+			# the *_target_PCHDEP variable is what the actual objects depend on, to make sure the
+			# precompiled header gets created before the first inclusion
+			amfile.add_define(amfile.canon_subdir + "_" + bin.canon_name + "_PCHDEP", pchdir + "/c++" + ' ' + pchdir + '/c', 'unsermake_enable_pch')
+
+			amfile.dep_files.append('%s.U%s' % (base + "_cxx", bin.objext[1:]))
+			amfile.dep_files.append('%s.U%s' % (base + "_c", bin.objext[1:]))
+
+			bin.cleanfiles.extend([bin.canon_name + ".gch/c++", bin.canon_name + ".gch/c"])
+
+
+# register_handler(PCHHandler())
+

@@ -1,0 +1,50 @@
+# -*-python-*-
+# vim: ts=4
+
+class DISTHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "dist"
+
+	def tag_DIST(self):
+		foundfiles = {}
+		for file in os.listdir(self.dirname):
+			if file == 'CVS' or file[0] == '.' or file == 'Makefile' or file[-1] == '~' or (file[0] == '#' and file[-1] == '#'):
+				continue
+			if not os.path.isfile(self.dirname + "/" + file):
+				continue
+			if file.endswith('.moc') or file.endswith('.moc.cpp') or file.endswith('.lo') or file.endswith('.la') or file.endswith('.o'):
+				continue
+			if file.endswith('.all_cpp.cpp'):
+				continue
+			foundfiles[file] = 1
+
+		# doing this for MAINTAINERCLEANFILES would be wrong
+		for mark in ["EXTRA_DIST", "DIST_COMMON", '_SOURCES', '_HEADERS', 'CLEANFILES', 'DISTCLEANFILES', '_OBJECTS']:
+			res = []
+			if mark[0] == '_':
+				for define in self.defines():
+					if define.endswith(mark):
+						res.extend(self.definition_rec(define))
+			else:
+				res = self.value_list(mark)
+			for file in res:
+				# no need to put 0s where no 1s were
+				if foundfiles.has_key(file):
+					foundfiles[file] = 0
+
+		dead_files = ["Makefile", "config.cache", "config.log", "stamp-h",
+					  "stamp-h1", "config.h", "Makefile", 
+					  "config.status", "config.h", "libtool", "core"]
+		for file in dead_files:
+			if foundfiles.has_key(file):
+				foundfiles[file] = 0
+
+		KDE_DIST = []
+		for file in foundfiles.keys():
+			if foundfiles[file] == 1:
+				KDE_DIST.append(file)
+
+		if len(KDE_DIST):
+			print "%s: KDE_DIST" % self.filename, KDE_DIST
+
+# TODO register_handler(DISTHandler())

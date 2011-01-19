@@ -1,0 +1,40 @@
+# -*-python-*-
+# vim: ts=4
+# Copyright (C) 2003 Simon Hausmann <hausmann@kde.org>
+# Licensed under whatever license unsermake is available
+
+import handlerbase
+
+class RCHandler( handlerbase.HandlerBase ):
+	def __init__( self ):
+		self.name = "checkrcs"
+
+	def collect( self, amfile ):
+
+		rcfiles = ''
+
+		for define in amfile.defines():
+			if define.endswith( '_DATA' ):
+
+				for file in amfile.definition_rec( define ):
+					if file.endswith( '.rc' ):
+						rcfiles = rcfiles + file + ' '
+
+		checks = [ '@if test -n "$(XMLLINT)"; then \\',
+				   '    for rcf in %s; do \\' % rcfiles,
+				   '        rc=%s$$rcf; \\' % amfile.source,
+				   '        if head -n 1 $$rc | egrep -q "DOCTYPE|xml"; then \\',
+				   '            echo checking $$rc; \\',
+				   '            if ! $(XMLLINT) --noout $$rc; then \\',
+				   '                exit 1 ;\\',
+				   '            fi \\',
+				   '        fi \\',
+				   '    done \\',
+				   'fi' ]
+
+		if len( rcfiles ):
+			checkTargetName = 'install-check-rcfiles-' + amfile.canon_subdir
+			amfile.insertTarget( checkTargetName, '', checks, phony=1 )
+			amfile.insertTarget( 'install-data', checkTargetName, phony=1 )
+
+handlerbase.register_handler( RCHandler() )

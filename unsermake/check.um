@@ -1,0 +1,104 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase
+
+class Test_Handler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "check"
+
+	def create(self, amfile):
+		if not amfile.is_defined("TESTS"):
+			return
+		
+		l =  ['@cd $(top_builddir)/$(subdir) ;\\',
+			  'failed=0; all=0; xfail=0; xpass=0; skip=0; \\',
+			  'srcdir=$(srcdir); export srcdir; \\',
+			  'list=\'$(TESTS)\'; \\',
+			  'if test -n "$$list"; then \\',
+			  '  for tst in $$list; do \\',
+			  '    if test -f ./$$tst; then dir=./; \\',
+			  ## Note: Solaris 2.7 seems to expand TESTS using VPATH.  That is
+			  ## why we also try `dir='
+			  '    elif test -f $$tst; then dir=; \\',
+			  '    else dir="$(srcdir)/"; fi; \\',
+			  '    if $(TESTS_ENVIRONMENT) $${dir}$$tst; then \\',
+			  ## Success
+			  '      all=`expr $$all + 1`; \\',
+			  '      case " $(XFAIL_TESTS) " in \\',
+			  '      *" $$tst "*) \\',
+			  '	xpass=`expr $$xpass + 1`; \\',
+			  '	failed=`expr $$failed + 1`; \\',
+			  '	echo "XPASS: $$tst"; \\',
+			  '      ;; \\',
+			  '      *) \\',
+			  '	echo "PASS: $$tst"; \\',
+			  '      ;; \\',
+			  '      esac; \\',
+			  '    elif test $$? -ne 77; then \\',
+			  ## Failure
+			  '      all=`expr $$all + 1`; \\',
+			  '      case " $(XFAIL_TESTS) " in \\',
+			  '      *" $$tst "*) \\',
+			  '	xfail=`expr $$xfail + 1`; \\',
+			  '	echo "XFAIL: $$tst"; \\',
+			  '      ;; \\',
+			  '      *) \\',
+			  '	failed=`expr $$failed + 1`; \\',
+			  '	echo "FAIL: $$tst"; \\',
+			  '      ;; \\',
+			  '      esac; \\',
+			  '    else \\',
+			  ## Skipped
+			  '      skip=`expr $$skip + 1`; \\',
+			  '      echo "SKIP: $$tst"; \\',
+			  '    fi; \\',
+			  '  done; \\',
+			  ## Prepare the banner
+			  '  if test "$$failed" -eq 0; then \\',
+			  '    if test "$$xfail" -eq 0; then \\',
+			  '      banner="All $$all tests passed"; \\',
+			  '    else \\',
+			  '      banner="All $$all tests behaved as expected ($$xfail expected failures)"; \\',
+			  '    fi; \\',
+			  '  else \\',
+			  '    if test "$$xpass" -eq 0; then \\',
+			  '      banner="$$failed of $$all tests failed"; \\',
+			  '    else \\',
+			  '      banner="$$failed of $$all tests did not behave as expected ($$xpass unexpected passes)"; \\',
+			  '    fi; \\',
+			  '  fi; \\',
+			  ## DASHES should contain the largest line of the banner.
+			  '  dashes="$$banner"; \\',
+			  '  skipped=""; \\',
+			  '  if test "$$skip" -ne 0; then \\',
+			  '    skipped="($$skip tests were not run)"; \\',
+			  '    test `echo "$$skipped" | wc -c` -gt `echo "$$banner" | wc -c` && \\',
+			  '      dashes="$$skipped"; \\',
+			  '  fi; \\',
+			  '  report=""; \\',
+			  '  if test "$$failed" -ne 0 && test -n "$(PACKAGE_BUGREPORT)"; then \\',
+			  '    report="Please report to $(PACKAGE_BUGREPORT)"; \\',
+			  '    test `echo "$$report" | wc -c` -gt `echo "$$banner" | wc -c` && \\',
+			  '      dashes="$$report"; \\',
+			  '  fi; \\',
+			  '  dashes=`echo "$$dashes" | sed s/./=/g`; \\',
+			  '  echo "$$dashes"; \\',
+			  '  echo "$$banner"; \\',
+			  '  test -n "$$skipped" && echo "$$skipped"; \\',
+			  '  test -n "$$report" && echo "$$report"; \\',
+			  '  echo "$$dashes"; \\',
+			  '  test "$$failed" -eq 0; \\',
+			  'else :; fi']
+
+		deps = amfile.replace_builddir(amfile.definition_rec("TESTS"))
+		amfile.insertTarget("check-TESTS-" + amfile.canon_subdir, deps, l, phony=1)
+
+	def collect(self, amfile):
+		if amfile.is_defined("TESTS"):
+			subcheck = "check-TESTS-" + amfile.canon_subdir
+			amfile.insertTarget("check", [ subcheck ], phony=1)
+			if amfile.is_target("check-am"):
+				amfile.insertTarget(subcheck, ["check-am", "all"], phony=1)
+
+handlerbase.register_handler(Test_Handler())

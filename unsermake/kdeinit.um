@@ -1,0 +1,97 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase
+import program
+
+class KDEINIT_Handler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "kdeinit"	
+
+	def shuffle_binaries(self, amfile):
+		newbins = []
+		
+		for bin in amfile.binaries.values():
+			if bin.prefix == 'kdeinit':
+				if not bin.type == program.PTYPE_LTLIBRARY:
+					print '%s: warning, %s is in kdeinit, but is not a LTLIBRARY!' % (amfile.filename,
+																					  bin.name)
+					return
+
+				assert(bin.canon_name.endswith('_la') and bin.name.endswith('.la'))
+				canon_name = bin.canon_name[:-3]
+				name = bin.name[:-3]
+				
+				ldflags = amfile.value_of(bin.canon_name + '_LDFLAGS')
+				# don't retain -module or $(KDE_PLUGIN) arguments.
+				# It's a lib we build.
+				# care for them also at string end
+				ldflags = string.strip (string.replace (ldflags + ' ', '-module ', ' '))
+				ldflags = string.strip (string.replace (ldflags + ' ', '$(KDE_PLUGIN) ', ' '))
+				# first, we add the definitions for libkdeinit_<bin>.la
+				amfile.add_define('libkdeinit_' + canon_name + '_la_LDFLAGS',
+								  ldflags + ' -avoid-version -no-undefined')
+				amfile.add_define('libkdeinit_' + canon_name + '_la_SOURCES',
+								  amfile.value_of(bin.canon_name + '_SOURCES') )
+				amfile.add_define('libkdeinit_' + canon_name + '_la_LIBADD',
+								  amfile.value_of(bin.canon_name + '_LIBADD') )
+
+				lines=["@echo 'extern \"C\" int kdemain(int, char* []);' > $@",
+					   "@echo 'int main( int argc, char* argv[] ) { return kdemain(argc, argv); }' >> $@"]
+				amfile.insertTarget(amfile.build + 'kdeinit_' + canon_name + '.cpp', [], lines)
+				lines=["@echo '#include <kdemacros.h>' > $@",
+					   "@echo 'extern \"C\" int kdemain(int, char* []);' >> $@",
+					   "@echo 'extern \"C\" KDE_EXPORT int kdeinitmain( int argc, char* argv[] ) { return kdemain(argc, argv); }' >> $@"]
+				amfile.insertTarget(amfile.build + 'kdeinit_' + canon_name + '.la.cpp', [], lines)
+
+				amfile.insertTarget("clean-kdeinit_%s" % canon_name, "",
+				                    "rm -f $(top_builddir)/%s/kdeinit_%s.cpp $(top_builddir)/%s/kdeinit_%s.la.cpp" % (amfile.subdir, canon_name, amfile.subdir, canon_name), phony=1)
+				amfile.insertTarget("clean", "clean-kdeinit_%s" % canon_name )
+
+				import copy
+				
+				# then we clone bin, rename the important bits,
+				# and re-parse the sources (easier than trying to
+				# reconstruct the objects and such from scratch)
+
+				kdeinitlib = copy.copy(bin)
+				kdeinitlib.set_type(program.PTYPE_LTLIBRARY)
+				kdeinitlib.name = 'libkdeinit_' + bin.name
+				kdeinitlib.canon_name = 'libkdeinit_' + bin.canon_name
+				kdeinitlib.final_sources = {}
+				kdeinitlib.prefix = 'lib'
+
+				pchvar = bin.canon_name + "_PCH"
+				if amfile.is_defined(pchvar):
+					amfile.add_define(kdeinitlib.canon_name + '_PCH', amfile.value_list(pchvar))
+					amfile.del_define(pchvar)
+
+				# now do the same thing for the <bin> definition
+
+				amfile.add_define(canon_name + '_LDFLAGS', '$(KDE_RPATH) $(all_libraries)')
+				amfile.add_define(canon_name + '_SOURCES', 'kdeinit_' + canon_name + '.cpp' )
+				amfile.add_define(canon_name + '_LDADD', kdeinitlib.name)
+
+				kdeinit = copy.copy(bin)
+				kdeinit.set_type(program.PTYPE_PROGRAM)
+				kdeinit.final_sources = {}
+				kdeinit.prefix = 'bin'
+				kdeinit.name = name
+				kdeinit.canon_name = canon_name
+
+				# now it's time to redefine the stuff for <bin.la>
+				amfile.del_define(bin.canon_name + '_SOURCES')
+				amfile.add_define(bin.canon_name + '_SOURCES', 'kdeinit_' + canon_name + '.la.cpp')
+				amfile.del_define(bin.canon_name + '_LIBADD')
+				amfile.add_define(bin.canon_name + '_LIBADD', kdeinitlib.name)
+
+				amfile.add_define('lib_LTLIBRARIES', kdeinitlib.name)
+				amfile.add_define('bin_PROGRAMS', kdeinit.name)
+				
+				newbins.append(kdeinit)
+				newbins.append(kdeinitlib)
+				
+		for prog in newbins:
+			amfile.binaries[prog.name] = prog
+			
+handlerbase.register_handler(KDEINIT_Handler())

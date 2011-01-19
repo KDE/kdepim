@@ -1,0 +1,57 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase, utilities
+
+class KCFGHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "kcfg"
+
+	def requirements(self):
+		return ([], ["autodeps"])
+
+	def extensions(self):
+		return ['.kcfgc']
+
+	def source(self, program, base, ext):
+		sourcename = base
+
+		rulef = program.mfile
+		
+		sourcedir = ''
+		if program.mfile.in_srcdir( base + ext ):
+			sourcedir = rulef.source
+		else:
+			sourcedir = rulef.build
+
+		kcfg = ""
+		kcfgre = re.compile("File=(.*\.kcfg)")
+		lines = open(program.mfile.dirname + "/" + base + ext).readlines()
+		for line in lines:
+			match = kcfgre.match(line)
+			if match:
+				kcfg = match.group(1)
+		
+		if not len(kcfg):
+			utilities.print_error("%s: Could not find 'File=.*kcfg' line\n" % program.mfile.dirname + "/" + base + ext)
+			kcfg = "unknown.kcfg"
+					
+		rulef.insertTarget(rulef.build + sourcename + ".cpp",
+				   rulef.build + sourcename + ".h")
+		rulef.insertTarget(rulef.build + sourcename + ".h",
+					[sourcedir + base + ".kcfgc",
+					 sourcedir + kcfg,
+					 "$(KCFG_DEPENDENCIES)"],
+					["@echo '%s %s.h%s'" % (utilities.creating_text, rulef.build + sourcename, utilities.normal),
+					 "@echo '%s %s.cpp%s'" % (utilities.creating_text, rulef.build + sourcename, utilities.normal),
+					 "@$(KCONFIG_COMPILER) -d " + rulef.build + " " + sourcedir + kcfg + " " + sourcedir + base + ".kcfgc ||"
+						"( rm -f " + rulef.build + sourcename + ".h; false )"])
+		rulef.insertTarget(rulef.build + sourcename + program.objext,
+						   rulef.build + sourcename + ".h")
+			
+		program.handle_source(sourcename, ".cpp")
+
+		program.cleanfiles.extend([sourcename + ".cpp",
+					   sourcename + ".h"])
+
+handlerbase.register_handler(KCFGHandler())

@@ -1,0 +1,142 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase, amfile
+
+class AutoDepsHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "autodeps"
+
+	def create_header_list(self, cpp2headers, list):
+		new_list = list[:]
+		changed = False
+		for file in list:
+			if cpp2headers.has_key(file):
+				match = cpp2headers[file]
+				for head in match:
+					if not head in new_list:
+						new_list.append(head)
+						changed = True
+		if not changed:
+			return list
+		return self.create_header_list(cpp2headers, new_list)
+						   
+	def create(self, makefile):
+
+		import utilities
+		cppfiles, hfiles = utilities.list_source_files(makefile.dirname)
+
+		# first we start collecting all includes
+		includere = re.compile("^[ \t]*#include\s*[<\"](.*?)[>\"]")
+		cpp2headers = {}
+		allheaders = {}
+		
+		for (base, ext) in hfiles + cppfiles:
+			file = base + ext
+			cpp2headers[file] = []
+			lines = open(makefile.dirname + "/" + file).readlines()
+			for line in lines:
+				match = includere.match(line)
+				if match:
+					if match.group(1) == file:
+						print "%s: file %s seems to include itself. Ignoring." % \
+									(makefile.filename, file)
+						continue
+					header = match.group(1)
+					if not header in cpp2headers[file]:
+						cpp2headers[file].append(header)
+					allheaders[match.group(1)] = 1
+
+		for file in cpp2headers.keys():
+			if not allheaders.has_key(file): # assume leaf
+				files = self.create_header_list(cpp2headers, cpp2headers[file])
+				files.sort()
+				if file in files:
+					print_error("%s: file %s seems to include itself\n" % (self.filename, file))
+				for header in files:
+					if string.find(header, '/') == -1:
+						makefile.add_define("__um_includes_" + header, file)
+						
+		return
+
+	def collect(self, makefile):
+		for targ in makefile.targets.values():
+			if targ.target.startswith(makefile.build):
+				target = targ.target[len(makefile.build):]
+				if makefile.is_defined("__um_includes_" + target):
+					files = makefile.definition("__um_includes_" + target)
+					for file in files:
+						match = utilities.extre.match(file)
+						if match:
+							base = match.group(1)
+							makefile.insertTarget(makefile.build + base + ".o",
+												  makefile.build + target)
+							makefile.insertTarget(makefile.build + base + ".lo",
+												  makefile.build + target)
+
+	# below is a quite radical idea of mine, but it's pretty complex to get right
+	def nonsense_fornow(self):	
+		# first collect the include paths
+		flags = string.split(makefile.default_includes)
+		if makefile.is_defined("AM_CPPFLAGS"):
+			flags.extend(makefile.definition_rec("AM_CPPFLAGS"))
+		if makefile.is_defined("INCLUDES"):
+			flags.extend(makefile.definition_rec("INCLUDES"))
+
+		# in src/build dirs we collect include directories that are either
+		# below srcdir or below builddir
+		src_dirs = []
+		build_dirs = []
+		
+		last_is_i = False
+		for flag in flags:
+			if last_is_i:
+				search_dirs.append(flag)
+				last_is_i = False
+			else:
+				if flag.startswith("-I"):
+					if flag == "-I":
+						last_is_i = True
+					else:
+						src = False
+						flag = flag[2:]
+						if flag.startswith("$(top_srcdir)"):
+							flag = flag[len("$(top_srcdir)"):]
+							src = True
+						elif flag.startswith("$(top_builddir)"):
+							flag = flag[len("$(top_builddir)"):]
+						else:
+							continue
+						
+						if len(flag):
+							flag = os.path.normpath(flag)
+							if flag[0] == '/':
+								flag = flag[1:] + "/"
+
+						if src:
+							if not flag in src_dirs:
+								src_dirs.append(flag)
+						else:
+							if not flag in build_dirs:
+								build_dirs.append(flag)
+
+		header_paths = {}
+		for header in allheaders.keys():
+			path = None
+			for dir in src_dirs:
+				if os.path.exists(amfile._topsrcdir + dir + header):
+					path = dir + header
+					break
+			if path:
+				header_paths[header] = path
+
+		for file in cpp2headers.keys():
+			for header in cpp2headers[file]:
+				if header_paths.has_key(header):
+					makefile.insertTarget("$(srcdir)/" + file, "$(top_srcdir)/" + header_paths[header])
+					print makefile.dirname + "/" + file, header_paths[header]
+				else:
+					print makefile.subdir + "/" + file, "no path for", header
+
+	
+handlerbase.register_handler(AutoDepsHandler())

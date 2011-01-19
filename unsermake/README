@@ -1,0 +1,117 @@
+unsermake is written in python, so it does not have to be compiled.
+To use unsermake, simply ensure that unsermake is in $PATH
+by setting something like:
+
+export PATH=~/projects/kde/kdenonbeta/unsermake:$PATH
+
+At this point building KDE modules as usual, starting with
+"unsermake -f Makefile.cvs" should work.  You should see the text:
+
+*** YOU'RE USING UNSERMAKE.
+*** GOOD LUCK!! :)
+
+Keep in mind that unsermake is still unstable (but hey, you were brave enough
+to check out kdenonbeta, so you must like punishment) and may not work for
+all modules / projects at all times.
+
+There are some target forwards in the generated Makefiles that make possible
+to call make install or make clean. Keep in mind, that as soon as you need to
+pass options to unsermake, you can't rely on them and need to call unsermake
+directly. In kdesdk/scripts there is a makeobj that makes this transparently
+if you alias make to makeobj
+
+If you are compiling KDE 3.3 (or earlier) packages you should use the old
+unsermake. This is in cvs branch "old_unsermake".
+
+You can disable the use of unsermake in KDE modules in using
+UNSERMAKE=no make -f Makefile.cvs
+
+You can set the make variable VERBOSE (make VERBOSE=...) to modify the output
+of the generated Makefiles:
+- if it is not set (the default), messages are accumulated while the
+  process is running. if an error occurs, the command is output and
+  after that the accumulated messages. if no error occurs, only the
+  messages are output.
+- if it is set, the behaviour is like regular automake output: the
+  command is output before it is started and messages appear as they
+  are generated.
+  this mode of operation is the most natural one, but is highly
+  inappropriate for parallel builds and generally clutters the output.
+
+If you want to compile everything in a subdir but not in it's subdirs, you
+used to do make -C amor all-am. This doesn't work with non-recursive
+make. But you can do unsermake -C amor SUBDIRS=
+
+If you want to hot fix something, you used to patch the generated Makefiles.
+This doesn't work because the generated Makefiles do not clone the Makefile.am
+variables. But for a hot fix you can copy the variables over from Makefile.am
+to Makefile and hot fix there (e.g. SUBDIRS line).
+
+
+Precompiled Header support:
+===========================
+
+Requirements: gcc >= 3.4
+
+The supported is modelled after how it works in Qt's qmake. It works per
+target, by specifying a variable that says which header file to precompile
+and then include forcibly to all sources of the target. For example:
+
+myproject.h:
+#if defined(__cplusplus)
+#include <aheaderfilethatsioftenused.h>
+#include <anotherone.h>
+#include <noproblemtouseacoupleofthem.h>
+#include <usuallythemorethebetter.h>
+#include <althoughtoomuchofthemcanhurtperformance.h>
+#endif
+
+Assume this is part of a library called libfoo.la. Then in addition to variables
+like libfoo_la_SOURCES you specify libfoo_la_PCH = myproject.h. If you're lazy
+you can also specify libfoo_la_PCH = AUTO, which will make unsermake pick up
+header files to which a corresponding source file exists. For example:
+
+libfoo_la_SOURCES = blah.cpp hey.cpp
+libfoo_la_PCH = AUTO
+
+That'll make it precompile blah.h and hey.h (if they exist) and include them
+when compiling the _SOURCES. Note that AUTO may not always give you best 
+performance though. Best is a wise choice of most often used/included header
+files.
+
+To actually enable the pch support you need to have the unsermake_enable_pch
+automake conditional set. If you use KDE's admin/ infrastructure you get that
+by specifying --enable-pch with configure.
+
+Caveats:
+
+1) Keep in mind that by the inclusion of the precompiled headers some preprocessor
+   tricks simply don't work. kdelibs's -DQT_NO_TRANSLATION on the commandline and
+   the unsetting of it in some .cpp files is an example for that.
+
+2) If you have the same source file in multiple _SOURCES in a Makefile.am then you
+   can't use unsermake's PCH support for targets this source is compiled for. That
+   is because you would end up with two rules for the source with different dependencies
+   (one depending on the pch of the one target and the other on another pch (or none)) .
+   A workaround is to use two difference sources:
+ 
+   libfoo_la_SOURCES = yoyo.cpp
+   libblah_la_SOURCES = yoyo.cpp
+   libblah_la_PCH = AUTO
+   
+   That has to become:
+
+   yoyo_foo.cpp: $(srcdir)/yoyo.cpp
+        -rm -f yoyo_foo.cpp
+        $(LN_S) $(srcdir)/yoyo.cpp yoyo_foo.cpp
+
+   yoyo_bar.cpp: $(srcdir)/yoyo.cpp
+        -rm -f yoyo_bar.cpp
+        $(LN_S) $(srcdir)/yoyo.cpp yoyo_bar.cpp
+
+   libfoo_la_SOURCES = yoyo_foo.cpp
+   libblah_la_SOURCES = yoyo_blah.cpp
+   libblah_la_PCH = AUTO
+
+   Note that this workaround breaks with srcdir == builddir when yoyo.cpp include yoyo.moc! :(
+

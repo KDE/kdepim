@@ -1,0 +1,23 @@
+- kdebindings: various problems, including
+dcopjava/tests/Makefile.am: unknown source extension .java for test.class
+kdeobjc/kangaroo/Makefile.am: unknown source extension .m for kangaroo
+
+- kde-i18n got top level build trees as subdirs - not yet supported
+
+- comments aren't stripped out correctly. At least in INCLUDES
+
+- pics_DATA = *.png does not work - as it does in automake + srcdir=builddir, it's nice to support it too
+
+- make nofinal
+
+- add better error message for recursion problems
+
+- add support for 'export'. Info:make Node: Variables/Recursion
+
+- Possible code cleanups:
+	* Command line parsing can be ported to optparse, perhaps
+
+- automake allows to specify nodist_ and dist_ prefices (not used in 
+  KDE fortunately). unsermake should at least ignore these:
+     dist_sbin_SCRIPTS = my_script
+

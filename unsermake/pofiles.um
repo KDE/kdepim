@@ -1,0 +1,125 @@
+# -*-python-*-
+# vim: set ts=4
+
+import handlerbase
+
+class POFILES_Handler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "pofiles"
+
+	def __toplevel(self, amfile, kdelang):
+
+		files = os.listdir(amfile.dirname)
+		restfiles = []
+		for entry in files:
+			if not os.path.exists(amfile.dirname + "/" + entry):
+				continue
+			
+			if os.path.isdir(amfile.dirname + "/" + entry):
+				continue
+
+			if entry == "CVS" or entry[0] == '.' or entry.startswith( "Makefile") or \
+				   entry.endswith( "~") or (entry.startswith("#") and entry.endswith("#")) or \
+				   entry.endswith( ".gmo") or entry.endswith( ".po"):
+				continue
+
+			restfiles.append(entry)
+
+		if len(restfiles):
+			amfile.insertTarget("install-data", "install-nls-files", phony=1)
+			ideps = []
+			urules = []
+			mkdir = ['$(mkinstalldirs) $(DESTDIR)$(kde_locale)/' + kdelang]
+			for file in restfiles:
+				amfile.insertTarget('$(DESTDIR)$(kde_locale)/%s/%s' % (kdelang, file),
+									'$(srcdir)/%s' % file,
+									mkdir + ['$(INSTALL_DATA) $(srcdir)/%s $(DESTDIR)$(kde_locale)/%s/%s' % (file, kdelang, file)])
+				amfile.insertTarget('install-nls-files', '$(DESTDIR)$(kde_locale)/%s/%s' % (kdelang, file), phony=1)
+				urules.append('-rm -f $(DESTDIR)$(kde_locale)/%s/%s' % (kdelang, file));
+			amfile.insertTarget("uninstall", "uninstall-nls-files", [], phony=1)
+			amfile.insertTarget("uninstall-nls-files", [], urules, phony=1)
+
+	def collect(self, amfile):
+
+		if not amfile.is_defined('POFILES'):
+			return
+
+		if amfile.is_defined("KDE_LANG"):
+			kdelang = amfile.definition_rec('KDE_LANG')
+			if not len(kdelang) == 1:
+				print_error("%s: KDE_LANG is not a value but a(n empty) list\n" % amfile.filename)
+			kdelang = kdelang[0]
+		else:
+			kdelang = ''
+			
+		pofiles = amfile.definition_rec('POFILES')
+
+		# Either find the pofiles in the directory (AUTO) or use
+		# only the specified po files.
+		if pofiles == ['AUTO']:
+			pofiles = []
+			for file in os.listdir(amfile.dirname):
+				if file.endswith(".po"):
+					pofiles.append(file)
+			if os.path.exists(amfile.dirname + "/charset" ) and os.path.exists(amfile.dirname + "/kdelibs/kdelibs.po" ):
+				self.__toplevel(amfile, kdelang)
+
+		if not len(pofiles):
+			return
+		
+		self.__POFILES(amfile, pofiles, kdelang)
+
+	def __POFILES(self, amfile, pofiles, kdelang):
+		gmofiles = []
+
+		allrule = "all-nls-" + amfile.canon_subdir
+		
+		for pofile in pofiles:
+			assert(pofile.endswith(".po"))
+			pofile = pofile[:-3]
+			amfile.insertTarget(amfile.build + pofile + ".gmo",
+							   amfile.source + pofile + ".po",
+							   ["rm -f " + amfile.build + pofile + ".gmo",
+								"$(GMSGFMT) -o %s.gmo %s.po" % (amfile.build + pofile, amfile.source + pofile)])
+			gmofiles.append(pofile + ".gmo")
+			amfile.insertTarget(allrule, amfile.build + pofile + ".gmo", phony=1)
+
+		if len(gmofiles):
+			amfile.insertTarget("clean-nls", [],
+							   ["-rm -f " + string.join(gmofiles)], phony=1)
+			amfile.insertTarget("clean", "clean-nls", phony=1)
+			amfile.insertTarget("all-" + amfile.canon_subdir, allrule, phony=1)
+		
+		urules = []
+
+		for pofile in pofiles:
+			pofile = pofile[:-3]
+			if kdelang:
+				installdir = "$(DESTDIR)$(kde_locale)/%s/LC_MESSAGES/" % kdelang
+				amfile.insertTarget(installdir + pofile + ".mo",
+								   amfile.build + pofile + ".gmo",
+								   ["@$(mkinstalldirs) " + installdir,
+									"@echo $(INSTALL_DATA) %s.gmo %s.mo" % (amfile.build + pofile, installdir + pofile),
+									"@$(INSTALL_DATA) %s.gmo %s.mo" % (amfile.build + pofile, installdir + pofile)])
+				urules.append("-rm -f " + installdir + pofile + ".mo")
+				amfile.insertTarget("install-data", installdir + pofile + ".mo", phony=1)
+			else:
+				# FILENAME == LANG
+				installdir = "$(DESTDIR)$(kde_locale)/%s/LC_MESSAGES" % pofile
+				if amfile.is_defined("PACKAGE"):
+					installfile = installdir + "/" + amfile.definition_rec("PACKAGE")[0] + ".mo"
+				else:
+					installfile = installdir + "/" + "$(PACKAGE).mo"
+					
+				amfile.insertTarget(installfile,
+								   amfile.build + pofile + ".gmo",
+								   ["@$(mkinstalldirs) " + installdir,
+									"@echo $(INSTALL_DATA) %s.gmo %s" % (amfile.build + pofile, installfile),
+									"@$(INSTALL_DATA) %s.gmo %s" % (amfile.build + pofile, installfile)])
+				urules.append("-rm -f " + installfile)
+				amfile.insertTarget("install-data", installfile, phony=1)
+				
+		amfile.insertTarget("uninstall-nls-" + amfile.canon_subdir, [], urules, phony=1)
+		amfile.insertTarget("uninstall", "uninstall-nls-" + amfile.canon_subdir, phony=1)
+
+handlerbase.register_handler(POFILES_Handler())

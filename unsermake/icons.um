@@ -1,0 +1,163 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase
+
+class KDE_ICON_Handler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "icons"
+
+	def create(self, amfile):
+		
+		uninstall = []
+		icons = []
+		
+		for define in amfile.defines():
+			if define.endswith('_ICON'):
+				if define[:-5] == 'KDE':
+					destdir = '$(kde_icondir)'
+				else:
+					dirkey = '%sdir' % define[:-5]
+					ndirkey = '%s_%sdir' % (amfile.canon_subdir, define[:-5])
+					amfile.add_define(ndirkey, amfile.definition_rec(dirkey))
+					destdir = '$(%s)' % ndirkey
+
+				iconauto = 0
+				appnames = []
+				rhs = amfile.definition_rec(define)
+				if rhs != ['AUTO']:
+					appnames = rhs
+				else:
+					iconauto = 1
+
+				files = os.listdir(amfile.dirname)
+				iconfiles = []
+				for entry in files:
+					if not os.path.exists(amfile.dirname + "/" + entry):
+						continue
+
+					ext = utilities.extre.match(entry)
+					if not ext:
+						continue
+						
+					if ext.group(2) in ['.xpm', '.png', '.mng', '.svg', '.svgz']:
+						if iconauto:
+							iconfiles.append((ext.group(1), ext.group(2)))
+						else:
+							for app in appnames:
+								if ext.group(1).endswith('-' + app):
+									iconfiles.append((ext.group(1), ext.group(2)))
+
+				for base, ext in iconfiles:
+					index = string.find(base, '-') + 1
+					if not index:
+						sys.stderr.write('%s: unknown icon format (%s)\n' %
+										 (amfile.filename, base + ext))
+						continue
+					if index != 0:
+						nindex = string.find(base, '-', index) + 1
+						if nindex != 0:
+							index = nindex
+					appname = base[index:]
+					prefix = base[:index]
+					if prefix[-1] == '-':
+						prefix = prefix[:-1]
+
+					if prefix == 'mini':
+						prefix = 'lo16-app'
+					elif prefix == 'lo':
+						prefix = 'lo16-app'
+					elif prefix == 'large':
+						prefix == 'hi48-app'
+					elif len(prefix) == 3:
+						prefix = prefix + '-app'
+
+					if not string.count(prefix, '-') == 1:
+						sys.stderr.write('%s: unknown icon format (%s)\n' %
+										 (amfile.filename, base + ext))
+						continue
+
+					type = prefix[string.find(prefix, '-')+1:]
+					prefix = prefix[:string.find(prefix, '-')]
+
+					type_hash = {
+						'action': 'actions',
+						'app': 'apps',
+						'device': 'devices',
+						'filesys': 'filesystems',
+						'mime': 'mimetypes'}
+
+					if not type_hash.has_key(type):
+						sys.stderr.write('%s: unknown icon type %s (%s)\n' %
+										 (amfile.filename, type, base + ext))
+						continue
+
+					dir_hash = {
+						'los' : 'locolor/16x16',
+						'lom' : 'locolor/32x32',
+						'him' : 'hicolor/32x32',
+						'hil' : 'hicolor/48x48',
+						'lo16' : 'locolor/16x16',
+						'lo22' : 'locolor/22x22',
+						'lo32' : 'locolor/32x32',
+						'hi16' : 'hicolor/16x16',
+						'hi22' : 'hicolor/22x22',
+						'hi32' : 'hicolor/32x32',
+						'hi48' : 'hicolor/48x48',
+						'hi64' : 'hicolor/64x64',
+						'hi128' : 'hicolor/128x128',
+						'hisc' : 'hicolor/scalable',
+						'cr16' : 'crystalsvg/16x16',
+						'cr22' : 'crystalsvg/22x22',
+						'cr32' : 'crystalsvg/32x32',
+						'cr48' : 'crystalsvg/48x48',
+						'cr64' : 'crystalsvg/64x64',
+						'cr128' : 'crystalsvg/128x128',
+						'crsc' : 'crystalsvg/scalable',
+						}
+
+					
+					if not dir_hash.has_key(prefix):
+						sys.stderr.write('%s: unknown icon prefix %s\n' %
+										 (amfile.filename, prefix))
+						continue
+
+					dir = dir_hash[prefix] + "/" + type_hash[type]
+					newfile = appname + ext
+
+					install = ['@test -d $(DESTDIR)%s/%s || $(mkinstalldirs) $(DESTDIR)%s/%s' %
+							   (destdir, dir, destdir, dir)]
+					destfile = '$(DESTDIR)%s/%s/%s' % (destdir, dir, newfile)
+					install.append('$(INSTALL_DATA) %s %s' %
+								   ("$(srcdir)/" + base + ext, destfile))
+					icons.append("$(srcdir)/" + base + ext)
+					amfile.insertTarget('install-kde-icons-%s' % amfile.canon_subdir,
+											  destfile, phony=1)
+					amfile.insertTarget(destfile,
+										amfile.source + base + ext,
+										install)
+					uninstall.append('-rm -f %s' % destfile)
+
+		if len(uninstall):
+			amfile.insertTarget('uninstall-kde-icons-%s' % amfile.canon_subdir, [],
+								uninstall, phony=1)
+
+		defined = amfile.is_defined("KDE_ICON")
+		amfile.del_define("KDE_ICON")
+		if len(icons):
+			amfile.add_define("KDE_ICON", icons)
+		elif defined:
+			print "%s: KDE_ICON used but no icons present" % amfile.filename
+			amfile.add_define("KDE_ICON", "")
+
+	def collect(self, amfile):
+		install_key = 'install-kde-icons-%s' % amfile.canon_subdir
+		if amfile.targets.has_key(install_key):
+			amfile.insertTarget('install-data', install_key, phony=1)
+			amfile.insertTarget('uninstall', 'un' + install_key, phony=1)
+		if amfile.is_defined("KDE_ICON"):
+			amfile.insertTarget('all-%s' % amfile.canon_subdir,
+								"$(KDE_ICON)")
+		
+
+handlerbase.register_handler(KDE_ICON_Handler())

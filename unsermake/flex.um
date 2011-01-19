@@ -1,0 +1,44 @@
+# -*-python-*-
+# vim: bs=4
+
+import handlerbase
+
+class FlexHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "flex"
+
+	def extensions(self):
+		return ['.ll', '.l']
+	
+	def source(self, program, base, ext):
+
+		rulef = program.mfile
+		
+		sourcedir = ''
+		if program.mfile.in_srcdir(base + ext):
+			sourcedir = rulef.source
+		else:
+			sourcedir = rulef.build
+
+		rext = '.cc'
+		if ext == '.l':
+			rext = '.c'
+
+		variable = 'LEX_OUTPUT_ROOT'
+		if program.mfile.is_defined('LEX_OUTPUT_ROOT'):
+			variable = rulef.canon_subdir + '_LEX_OUTPUT_ROOT'
+			rulef.add_define(variable, program.mfile.definition_rec('LEX_OUTPUT_ROOT'))
+			
+		compile = '$(LEX) ' + program.handle_variable('LFLAGS')
+		rules = ["absdir=`cd %s && pwd` ;\\" % sourcedir,
+				 "cd %s && %s $$absdir/%s" % (rulef.build, compile, base + ext)]
+		rules.append("sed '/^#/ s|$(%s)\.c|%s|' %s$(%s).c > %s" % (variable, base + rext,
+																   rulef.build, variable,
+																   rulef.build + base + rext))
+		rules.append("rm -f %s$(%s).c" % (rulef.build, variable))
+		rulef.insertTarget(rulef.build + base + rext, [sourcedir + base + ext], rules)
+
+		program.handle_source(base, rext)
+		program.cleanfiles.extend([base + rext])
+			
+handlerbase.register_handler(FlexHandler())

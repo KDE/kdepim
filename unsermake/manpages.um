@@ -1,0 +1,110 @@
+# vim:syntax=python:ts=4:noet
+#
+# manpages.um - Copyright (C) Frerich Raabe <raabe@kde.org>
+# Licensed under whatever license unsermake is available.
+
+import handlerbase
+
+class ManpageHandler( handlerbase.HandlerBase ):
+	def __init__( self ):
+		self.name = "manpages"
+		self.manDbFileRx = re.compile( "^man-([^\.]+)\.([0-9nl])\.docbook$" )
+
+	def create( self, amfile ):
+		if not amfile.is_defined( "KDE_MANS" ):
+			return
+
+		if amfile.is_defined( "KDE_LANG" ):
+			lang = amfile.definition_rec( "KDE_LANG" )[ 0 ]
+		else:
+			lang = "en"
+
+		manDbFiles = amfile.definition_rec( "KDE_MANS" )
+		if manDbFiles[ 0 ] == 'AUTO':
+			manDbFiles = []
+			for file in os.listdir( amfile.subdir ):
+				if self.manDbFileRx.match( file ):
+					manDbFiles.append( file )
+
+		generatedManfiles = []
+		installedManfiles = []
+
+		manTarget = "mans-%s" % amfile.canon_subdir
+
+		createdManpageTarget = 0
+
+		for file in manDbFiles:
+			if not os.path.exists( amfile.subdir + "/" + file ):
+				utilities.print_error( "%s: Manpage source file '%s' does not exist!\n" % ( amfile.filename, file ) )
+				continue
+
+			match = self.manDbFileRx.match( file )
+			if not match:
+				utilities.print_error( "%s: File '%s' does not comply to expected format ('man-<appname>.<sect>.docbook') for manpage sources!\n" % ( amfile.filename, file ) )
+				continue
+
+			appname = match.group( 1 )
+			mansect = match.group( 2 )
+
+			manfile = appname + "." + mansect
+
+			generatedManfiles.append( amfile.build + manfile )
+
+			deps = amfile.value_list("KDE_DOCS_DEPS")
+			amfile.insertTarget( amfile.build + manfile,
+			                     [ amfile.source + file, "$(KDE_XSL_MAN_STYLESHEET)" ] + deps,
+			                     [ '@if test -n "$(MEINPROC)" && test -n "$(KDE_XSL_MAN_STYLESHEET)"; then \\',
+			                       '  echo generating %s; \\' % ( amfile.build + manfile ),
+			                       '  $(MEINPROC) --check --stylesheet $(KDE_XSL_MAN_STYLESHEET) %s; \\' % ( amfile.source + file ),
+					       '  mv manpage.troff %s; \\' % ( amfile.build + manfile ),
+			                       'fi' ] )
+			amfile.insertTarget( manTarget, amfile.build + manfile, phony = 1 )
+
+			if lang == "en":
+				targetdir = "$(DESTDIR)$(mandir)/man%s/" % mansect
+			else:
+				targetdir = "$(DESTDIR)$(mandir)/%s/man%s/" % ( lang, mansect )
+
+			installedManfiles.append( targetdir + manfile )
+
+			amfile.insertTarget( targetdir + manfile,
+			                     [ amfile.build + manfile, "$(UNSERMAKE_FORCE_INSTALL)" ],
+			                     [ "@test -d %s || $(mkinstalldirs) %s" % ( targetdir, targetdir ),
+			                       "@if test -f %s; then \\" % ( amfile.build + manfile ),
+			                       "  echo '%s %s%s'; \\" % ( utilities.installing_text, manfile, utilities.normal ),
+			                       "  $(INSTALL_DATA) %s %s; \\" % ( amfile.build + manfile, targetdir),
+			                       "fi" ] )
+			amfile.insertTarget( "install-%s" % manTarget, targetdir + manfile, phony = 1 )
+
+			createdManpageTarget = 1
+
+		if createdManpageTarget:
+			if not amfile.is_defined("KDE_XSL_MAN_STYLESHEET"):
+				amfile.add_define( "KDE_XSL_MAN_STYLESHEET", "$(kde_datadir)/ksgmltools2/customization/kde-man.xsl")
+
+			cmds = []
+			for f in generatedManfiles:
+				cmds.append( "-rm -f %s" % f )
+			amfile.insertTarget( "clean-%s" % manTarget, "", cmds, phony = 1 )
+
+			cmds = []
+			for f in installedManfiles:
+				cmds.append( "-rm -f %s" % f )
+			amfile.insertTarget( "uninstall-%s" % manTarget, "", cmds, phony = 1 )
+
+	def collect( self, amfile ):
+		manTarget = "mans-%s" % amfile.canon_subdir
+		if amfile.is_target( manTarget ):
+			amfile.insertTarget( "clean", "clean-%s" % manTarget, phony = 1 )
+			amfile.insertTarget( "install", "install-%s" % manTarget, phony = 1 )
+			amfile.insertTarget( "uninstall", "uninstall-%s" % manTarget, phony = 1 )
+			amfile.insertTarget( "mans", manTarget, phony = 1 )
+			amfile.insertTarget( "all", "mans", phony = 1 )
+		
+		# hook to check if compiling against the correct version
+		man = amfile.expand("$(KDE_XSL_MAN_STYLESHEET)")
+		if not os.path.exists(man):	
+			amfile.del_define("KDE_XSL_MAN_STYLESHEET")
+			amfile.add_define("KDE_XSL_MAN_STYLESHEET", "")
+
+handlerbase.register_handler( ManpageHandler() )

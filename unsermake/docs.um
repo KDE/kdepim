@@ -1,0 +1,157 @@
+# -*-python-*-
+# vim: ts=4	
+
+import handlerbase
+
+class DocsHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "docs"
+		# sync with manpages.um
+		self.manDbFileRx = re.compile( "^man-([^\.]+)\.([0-9nl])\.docbook$" )
+
+	def create(self, amfile):
+		if not amfile.is_defined("KDE_DOCS"):
+			return
+		
+		docs = amfile.definition_rec("KDE_DOCS")
+
+		if amfile.is_defined("KDE_LANG"):
+			kdelang = amfile.definition_rec('KDE_LANG')
+			if not len(kdelang) == 1:
+				print_error("%s: KDE_LANG is not a value but a(n empty) list\n" % amfile.filename)
+			kdelang = kdelang[0]
+		else:
+			kdelang = ''
+			
+		# Either find the files in the directory (AUTO) or use
+		# only the specified po files.
+		if docs[0] == 'AUTO':
+			appname = os.path.basename(amfile.subdir)
+			if appname == 'en':
+				print_error("%s: KDE_DOCS = AUTO relies on the directory name. Yours is 'en' - you most likely want something else, e.g. KDE_DOCS = myapp\n" % amfile.filename)
+		else:
+			appname = docs[0]
+
+		if len(docs) > 2 and docs[1] == '-':
+			files = docs[2:]
+		else:
+			files = []
+			for file in os.listdir(amfile.subdir):
+				if (file in ['CVS', 'core', 'index.cache.bz2']) or file.startswith('Makefile') or file[0] == '.' or file[-1] == '~' or (file[0] == '#' and file[-1] == '#'):
+					continue
+				if self.manDbFileRx.match(file):
+					continue
+				if os.path.isfile(amfile.subdir + "/" + file):
+					files.append(file)
+
+			if not len(files):
+				return
+
+		dep_files = []
+		for file in files:
+			dep_files.append(amfile.source + file)
+						   
+		if 'index.docbook' in files:
+
+			deps = amfile.value_list("KDE_DOCS_DEPS")
+			# amfile.add_define('MEINPROC', '$(kde_bindir)/meinproc')
+			# amfile.add_define("KDE_XSL_STYLESHEET", "$(kde_datadir)/ksgmltools2/customization/kde-chunk.xsl")
+
+			amfile.insertTarget(amfile.build + "index.cache.bz2",
+							   ["$(KDE_XSL_STYLESHEET)"] + dep_files + deps,
+							   '@if test -n "$(MEINPROC)"; then echo $(MEINPROC) --check --cache %sindex.cache.bz2 '
+							   '%sindex.docbook; $(MEINPROC) --check --cache %sindex.cache.bz2 %sindex.docbook; fi'
+							   % (amfile.build, amfile.source, amfile.build, amfile.source))
+
+			amfile.insertTarget("docs-%s" % amfile.canon_subdir, amfile.build + "index.cache.bz2", phony=1)
+
+			install_docs = "install-docs-%s" % amfile.canon_subdir
+			targetdir = "$(DESTDIR)$(kde_htmldir)/%s/%s" % (kdelang, appname)
+			
+			amfile.insertTarget(install_docs, targetdir + "/common", phony=1)
+			amfile.insertTarget(targetdir + "/common", ['$(UNSERMAKE_FORCE_INSTALL)'],
+								["-rm -f %s/common" % targetdir,
+								 "$(LN_S) $(kde_libs_htmldir)/%s/common %s/common" % (kdelang, targetdir)])
+			
+			amfile.insertTarget(install_docs, targetdir + "/index.cache.bz2", phony=1)
+			amfile.insertTarget(targetdir + "/index.cache.bz2",
+								[amfile.build + "index.cache.bz2", '$(UNSERMAKE_FORCE_INSTALL)'],
+								["$(mkinstalldirs) " + targetdir,
+								 "@if test -f %sindex.cache.bz2; then \\" % amfile.build,
+								 "  echo $(INSTALL_DATA) %sindex.cache.bz2 %s/ ;\\" %
+								 (amfile.build, targetdir),
+								 "  $(INSTALL_DATA) %sindex.cache.bz2 %s/; \\" %
+								 (amfile.build, targetdir),
+								 "fi"])
+								
+			amfile.insertTarget("uninstall-docs-%s" % amfile.canon_subdir, "", 
+							   "-rm -rf $(kde_htmldir)/%s/%s" % (kdelang, appname), phony=1)
+			amfile.insertTarget("clean-docs-%s" % amfile.canon_subdir, "",
+							   "-rm -f " + amfile.build + "index.cache.bz2", phony=1)
+			
+		else:
+			amfile.insertTarget("docs-%s" % amfile.canon_subdir, dep_files, phony=1)
+
+		install_nls = "install-nls-%s" % amfile.canon_subdir
+		for file in files:
+			targetdir = "$(DESTDIR)$(kde_htmldir)/%s/%s" % (kdelang, appname)
+			lines = ["$(mkinstalldirs) " + targetdir,
+					 "@echo $(INSTALL_DATA) %s %s/%s ;\\" % (amfile.source + file,
+															 targetdir, file),
+					 "$(INSTALL_DATA) %s %s/%s" % (amfile.source + file,
+												   targetdir, file)]
+
+			amfile.insertTarget(install_nls,
+								"%s/%s" % (targetdir, file))
+			amfile.insertTarget("%s/%s" % (targetdir, file),
+								[amfile.source + file, '$(UNSERMAKE_FORCE_INSTALL)'], lines)
+		
+		if appname == 'common':
+			lines = ["@echo \"merging common and language specific dir\" ;\\",
+					 "if test ! -f $(kde_htmldir)/en/common/kde-common.css; then echo 'no english docs found in $(kde_htmldir)/en/common/'; exit 1; fi",
+					 "@com_files=`cd $(kde_htmldir)/en/common && echo *` ;\\",
+					 "cd $(DESTDIR)$(kde_htmldir)/%s/common ;\\" % kdelang,
+					 "if test -n \"$$com_files\"; then for p in $$com_files ; do \\",
+					 "  case \" " + string.join(files) + " \" in \\",
+					 "    *\" $$p \"*) ;; \\",
+					 "    *) test ! -f $$p && echo $(LN_S) ../../en/common/$$p $(DESTDIR)$(kde_htmldir)/%s/common/$$p && $(LN_S) ../../en/common/$$p $$p ;; \\" % kdelang,
+					 "  esac ; \\",
+					 "done ; fi ; true"]
+			
+			amfile.insertTarget(install_nls, install_nls + "-common", phony=1)
+			amfile.insertTarget(install_nls + "-common", [], lines, phony=1)
+			
+		amfile.insertTarget("uninstall-nls-%s" % amfile.canon_subdir, "",
+						   ["for base in %s; do \\" % string.join(files),
+							"  rm -f $(DESTDIR)$(kde_htmldir)/%s/%s/$$base ;\\" % (kdelang, appname),
+							"done"], phony=1)
+
+	#amfile.insertTarget("distdir", "distdir-nls-%s" % amfile.canon_subdir)
+	#amfile.insertTarget("distdir-nls-%s" % amfile.canon_subdir, "",
+	#                   ["for file in $files; do \\",
+	#                    "  cp %s$$file $(distdir); \\" % amfile.source,
+	#                    "done"])
+
+	def collect(self, amfile):
+		# adding default targets
+		amfile.insertTarget("all", "docs", phony=1)
+
+		install = "install-nls-%s" % amfile.canon_subdir
+		if amfile.is_target(install):
+			amfile.insertTarget("install-data", install, phony=1)
+			amfile.insertTarget("uninstall", "un" + install, phony=1)
+			amfile.insertTarget("install", "install-data", phony=1)
+
+		install = "install-docs-%s" % amfile.canon_subdir
+		if amfile.is_target(install):
+			amfile.insertTarget("install-data", install, phony=1)
+			amfile.insertTarget("uninstall", "un" + install, phony=1)
+			amfile.insertTarget("clean", "clean-docs-%s" % amfile.canon_subdir, phony=1)
+
+		install = "docs-%s" % amfile.canon_subdir
+		if amfile.is_target(install):
+			amfile.insertTarget("docs", install, phony=1)
+		else:
+			amfile.insertTarget("docs", "", phony=1)
+			
+handlerbase.register_handler(DocsHandler())

@@ -1,0 +1,144 @@
+# NOTE: I extended it in the sxi
+make:
+	- rules and dependencies
+	- purely text and file (time stamp) based
+	- commands are shell scripts
+	- macro language build in (mostly unused within KDE)
+
+projects:
+	nested directory structure
+	- some directories have icons, some have docu,
+	  some have only have some READMEs and are there
+	  to give more structures
+	- most contain code to build binaries, libraries, usually only very few
+	  targets per directory (one lib, one exe, very seldom more than that) 
+	 
+automake:
+	- has strictly nothing to do with autoconf, but relies
+	  on it. Because of this, many confuse them
+	- every directory contains a Makefile.am file that describes
+	  in a syntax related to make's what should be built, installed,
+	  distributed (only used wrongly in KDE :) for this directory only.
+	  This all by using only simple variable assignments. 
+	- based on purely recursive make (SUBDIRS = ), even though later
+	  versions give basic support to build targets (binaries, libraries)
+  	  from subdirs' object files
+	- to new users it became attractive as it made deploying GNU standards
+	  more comfortable and people love ./configure && make && sudo make install
+	- became popular even to convert older projects to automake because it 
+	  deployed gcc's dependency tracking transparently. Most developers 
+          rely on this feature without even beeing aware it's there.
+
+recursion:
+	- automake makes recursive make a natural thing even though it's not. 
+	  But as more and more free software developers start their make
+	  "career" with automake, they often have no idea what they're doing
+	  and get their Makefile.am written by copy & paste or through kdevelop
+	  (which I still consider a good thing - if better code gets written because
+	  of this)
+	- because you describe the target and its dependencies on a per directory
+	  base and most often a directory only has a limited set of targets, the
+	  Makefile.am files are very easy to understand and write. This is a definite
+	  advantage as pure make is just too limited.
+	- recursion in itself is bad though as it adds a really huge overhead to a 
+	  rather basic problem: give structure to your project
+	- even though only two icons changed, a make install call can take forever
+	  as it evalutates tons of Makefiles that describe targets and dependencies
+	  for files completely unrelated.
+	- inter-target dependencies can only be expressed through the order the subdirs
+	  are listed in SUBDIRS
+	- parallel make can only taken advantage of in one single directory. So if you
+	  want to have the power of parallel make, you need to put more sources in one
+	  directory - which is counter productive to the "give structure" need.
+	- the earned structure can be used very effectively if you only want to have 
+	  a part build or installed. Then you can change into these subdirs and call
+	  make there - you basically start with a subtree. But even there the other
+	  subdirectories can harm you. For this, automake added some workarounds, e.g.
+	  make all-am doesn't start the recursion.
+	  
+	
+some theory:
+	- make creates a directed acyclic graph (DAG) of the target it reads in. The 
+          vertices of this graph are the files in the file system, the edges of this
+	  graph are the inter-file depencies. Each vertice has a set of commands to
+	  update it when one dependency's time stamp is newer.
+	- some targets aren't files but phony/pseudo targets. E.g. 'all', 'install',
+	  these are usually labeled in the Makefile
+	- a call to 'make', will read in Makefile (actually it has a list of file names
+	  it goes through, Makefile is just the one about everyone on UNIX uses) and 
+	  update the first target it finds. This is per tradition all or default.
+	... big fat example ...
+
+recursive make considered harmful:
+	- recursive make has quite some disadvantages, but those harming an (more or less)
+	  average KDE developer most:
+	- make needs to recurse through every directory, starting the process
+	    again and again, even though nothing needs to be done - taking tons
+	    of time
+	- all of kdecore needs to be build before kdeui can be started to build,
+	    even those parts not depending on stuff in kdecore that needs to be
+	    compiled (e.g. only relying on headers already there)
+	- one can't build parts of a module without having quite some knowledge of
+	    the whole thing (or do trial & error).
+	    Example: what needs to be build in koffice to get a working kpresenter?
+		
+so is automake considered harmful?:
+	- using automake is still better than about every other solution I've seen 
+	  so far. There might be ways to build huge projects, that solve the one or 
+	  the other aspect better as automake does, but automake marks the best 
+	  compromise to what we need.
+	- the biggest problem of a build system within a project is: does any 
+	  affected(!) developer understands it? KDE is developing a desktop environment,
+	  not a build system, still we've seen enough KDE specific problems that
+	  made KDE specific features in the build system necessary.
+	- it always was the aim to make it easy to write Makefiles that build normal
+	  KDE applications. Beginners should be able to finish standard tasks copying
+	  and pasting with some little thinking (still one would wish they would pick
+	  better origins :)
+	- syntactic sugar within our Makefiles were part of our history for quite some
+	  time and that can't be taken back. Writing Makefile syntax is hard enough 
+	  without repeating tons of MOC rules.
+
+automake -> automoc -> am_edit:
+	- a central piece of our build system nowadays is a perl script named am_edit,
+	  that meanwhile has most likely more lines than automake itself.
+	- it "patches" the automake generated files and expands things automake didn't
+	  understand to the things we want it to do. E.g. METASOURCES = AUTO is just
+	  a variable assignment to automake, but am_edit will start grepping through
+	  all header files for Q_OBJECT lines and add MOC rules.
+	- technically we're no longer use automake, but we use something like automake++ 
+	  - which doesn't make it easier to maintain and understand. As with graphical
+	  user interfaces, developers make their own image of how things work when they
+	  put something into their Makefile. 
+
+am2:
+	- As the perl code of am_edit is quite a mess and perl isn't really the language
+	  of choice for me, I was always toying around with the idea of replacing it with
+	  something people understand. 
+	- In Spring 2000 I tried to replace the current code base with a python replacement,
+          but it became clear quite quickly that "fixing" the language problem wasn't the
+	  solution to the mess - with patching automake output you always have to understand
+	  what automake saw when it output things and create your own output. It's basically
+	  impossible to code that without looking hacky.
+	- but with teambuilder (and later distcc) becoming popular, the problems of KDE's 
+	  recursive build system became obvious - you could compile Qt in about no time with
+	  10 clients while KDE seemed to take forever and the team builder monitor showed that
+	  building KDE didn't came near filling the compile farm
+	- the rest of the story: I took a week off and it rained
+
+unsermake:
+	- am2 wasn't really a good name to start with, so we decided that the new automake
+	  replacment should do what we want: so it's short for unser (replacement for auto)make 
+	- it reads Makefile.am syntax just as automake does, but creates very different output
+	  taking advantage of the rather general way of specifying targets.
+	- it creates all rules and dependencies relative to the toplevel so that make doesn't
+	  need to recurse. Advantage of this is that all dependencies are known to a single instance
+	  so that plural make can be taken advantage of - but also all dependencies have to be
+	  for all files
+	- the key problem after starting wasn't getting compiling and linking done, but don't
+	  loose the advantage of beeing able to compile from a subdir and only build the stuff
+	  inside that subdir. For bigger non-recursive projects you can _only_ build from the
+          toplevel - which would have been a too high price.
+	- for this unsermake creates three files per subdirectory that are included by each other,
+	  so that variables in there can be overwritten to specify where e.g. the top_builddir
+	  (e.g. top_builddir = . for kdelibs/, top_builddir = .. for kdelibs/kdecore)

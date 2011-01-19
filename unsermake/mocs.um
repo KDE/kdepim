@@ -1,0 +1,302 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase, utilities
+
+class MOCHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "mocs"
+
+	def requirements(self):
+		return (["designer"], ["autodeps"])
+
+	def create(self, amfile):
+
+		for program in amfile.binaries.values():
+			program.has_auto_moc = 0
+		
+		amfile.has_auto_moc = 0
+		got_metasources = 0
+
+		value = amfile.value_list('METASOURCES')
+		if value:
+			got_metasources = 1
+
+		moc_list = value
+		if 'USE_AUTOMOC' in value:
+			utilities.print_error("%s: USE_AUTOMOC is unsupported\n" % amfile.filename)
+		if 'AUTO' in value:
+			amfile.has_auto_moc = 1
+		amfile.del_define("METASOURCES")
+				
+		for program in amfile.binaries.values():
+			value = amfile.value_list(program.canon_name + '_METASOURCES')
+			if value:
+				got_metasources = 1
+				moc_list.extend(value)
+			if 'USE_AUTOMOC' in value:
+				utilities.print_error("%s: USE_AUTOMOC is unsupported\n" % amfile.filename)
+			if 'AUTO' in value:
+				if amfile.has_auto_moc:
+					sys.stderr.write("%s: defines METASOURCES = AUTO twice\n" %
+									 amfile.filename)
+				amfile.binaries[program.name].has_auto_moc = 1
+				if amfile.has_auto_moc:
+					utilities.print_error("%s: METASOURCES = AUTO used twice\n" % amfile.filename)
+				amfile.has_auto_moc = 1
+				amfile.del_define(program.canon_name + '_METASOURCES')
+
+		if not got_metasources:
+			return
+
+		moc_files = self.find_moc_candidates(amfile, moc_list)
+		moc_files = self.prune_moc_candidates(amfile, moc_files)
+		self.check_moc_candidates(amfile, moc_files)
+		for mocfile, list in moc_files.items():
+			rhs = list[1]
+			if len(list) == 3:
+				rhs = "%s=%s" % (list[1], list[2])
+			amfile.add_define("METASOURCES", "%s=%s/%s" % (mocfile, list[0], rhs))
+			
+		amfile.add_define("METASOURCES", [])
+		
+	def tag_META_INCLUDES(self, amfile):
+		# Gets the list of user defined directories -
+		# relative to $srcdir - where header files could be located.
+
+		headerdirs = ['.']
+		if not amfile.is_defined("META_INCLUDES"):
+			return headerdirs
+
+		for dir in amfile.definition("META_INCLUDES"):
+			dir = string.replace(dir, "$(srcdir)", ".")
+
+			if not amfile.in_srcdir(dir):
+				sys.stderr.write("%s: Warning: %s [META_INCLUDES] can't "
+								 "be found. Must be a relative path to "
+								 "$(srcdir)!\n" % (amfile.filename, dir))
+			else:
+				headerdirs.append(dir)
+				
+		return headerdirs
+	
+	def find_moc_candidates(self, amfile, moc_list):
+
+		headerdirs = self.tag_META_INCLUDES(amfile)
+		moc_files = {}
+		commentre = re.compile('^\s*//\s*Q_OBJECT')
+		hfilere = re.compile("([^.].+)\.(h|H|hh|hxx|hpp|h\+\+)$")
+		
+		for dir in headerdirs:
+			hfiles = []
+			for file in os.listdir(amfile.dirname + "/" + dir):
+				match = hfilere.match(file)
+				if match:
+					hfiles.append((match.group(1), match.group(2)))
+
+			moc_headers = []
+			for hf, ext in hfiles:
+				# ignore generated headers
+				if os.path.exists(amfile.dirname + "/" + hf + ".ui"):
+					continue
+				if os.path.exists(amfile.dirname + "/" + hf + ".ui3"):
+					continue
+				if os.path.exists(amfile.dirname + "/" + hf + ".ui4"):
+					continue
+
+				hfData =  open( os.path.join(amfile.dirname,
+											 dir, hf + "." + ext)).readlines()
+				for line in hfData:
+					if not string.find(line, "Q_OBJECT") == -1:
+						if not commentre.match(line):
+							moc_headers.append((hf, ext))
+							break
+
+			for hf, ext in moc_headers:
+				if not amfile.has_auto_moc and not (hf + ".moc") in moc_list:
+					continue
+				if moc_files.has_key(hf):
+					sys.stderr.write("%s: Multiple header files found for %s\n"
+									 % (amfile.filename, hf) )
+					continue
+				moc_files[hf] = [dir, "%s.%s" % ( hf, ext) ]
+				
+		return moc_files
+
+	def prune_moc_candidates(self, amfile, moc_files):
+		
+		if amfile.has_auto_moc or not len(moc_files):
+			return moc_files
+		
+		# The programmer has specified a moc list. Prune out the moc candidates
+		# list that we found based on looking at the header files. This generates
+		# a warning if the programmer gets the list wrong, but this doesn't have
+		# to be fatal here.
+
+		pruned_mocs = {}
+
+		moc_list = amfile.value_list("METASOURCES")
+		
+		for prog in amfile.binaries.values():
+			if prog.has_auto_moc:
+				continue
+
+			moc_list.extend(amfile.value_list(prog.canon_name + "_METASOURCES"))
+
+		if len(moc_list):
+			for mocname in moc_list:
+				match = utilities.extre.match(mocname)
+				if not match:
+					utilities.print_error('%s: no moc file (nor AUTO): %s\n'
+								% (amfile.filename, mocname))
+					continue
+				mocname = match.group(1) # without extension
+				assert(match.group(2) == '.moc')
+
+				if moc_files.has_key(mocname):
+					pruned_mocs[mocname] = moc_files[mocname]
+				else:
+					sys.stderr.write("%s: Warning: no moc-able header file for %s\n"
+									 % (amfile.filename, mocname))
+
+			return pruned_mocs
+
+		return moc_files
+
+	def check_moc_candidates(self, amfile, moc_files):
+		# Finds the cpp files (If they exist).
+		# The cpp files get appended to the header file
+
+		if not len(moc_files):
+			return
+
+		import utilities
+		cppfiles, hfiles = utilities.list_source_files(amfile.dirname)
+		
+		if not len(cppfiles):
+			return
+
+		moc2cpp = {}
+		mocre = re.compile("[ \t]*#include\s*[<\"](.*\.moc)[>\"]")
+		for (base, ext) in cppfiles:
+			file = base + ext
+			lines = open(amfile.dirname + "/" + file).readlines()
+			for line in lines:
+				match = mocre.match(line)
+				if match:
+					try:
+						moc2cpp[match.group(1)].append(file)
+					except:
+						moc2cpp[match.group(1)] = [file]
+
+		deped = []
+		new_objs = []
+		for mocfile in moc_files.keys():
+			try:
+				cppfiles = moc2cpp[mocfile + ".moc"]
+			except:
+				cppfiles = []
+			if len(cppfiles) == 1:
+				moc_files[mocfile].append(cppfiles[0])
+				deped.append(mocfile)
+			elif len(cppfiles) == 0:
+				new_objs.append(mocfile)
+				if amfile.has_auto_moc:
+					continue
+				sys.stderr.write("%s: Warning: No c++ file includes %s.moc\n" % (amfile.filename, mocfile))
+			else:
+				# We can't decide which file to use, so it's fatal. Although as a
+				# guess we could use the mocFile.cpp file if it's in the list???
+				sys.stderr.write("%s: Error: Multiple c++ files include %s.moc\n" % (amfile.filename, mocfile))
+				utilities.print_error("%s: \t%s\n" % (amfile.filename, string.join(cppfiles)))
+				return
+
+		if amfile.has_auto_moc and len(new_objs):
+			hits = []
+			for prog in amfile.binaries.values():
+				if prog.has_auto_moc:
+					hits.append(prog)
+			if not len(hits) and len(amfile.binaries) == 1:
+				hits.extend(amfile.binaries.values())
+			if not len(hits) == 1:
+				utilities.print_error("%s: not all moc files are included in cpp files\n"
+							"\tand there are more than one targets that could link\n"
+							"\tto them: %s\n" % (amfile.filename, string.join(new_objs)))
+		
+			else:
+				for obj in new_objs:
+					amfile.add_define(hits[0].canon_name + "_SOURCES", obj + ".moc.cpp")
+					list = moc_files[obj]
+					assert(len(list) == 2)
+					dir = list[0]
+					if len(dir) and dir[0] == '.':
+						subdir_dir = amfile.source + dir[1:]
+						if not subdir_dir[-1] == '/':
+							subdir_dir = subdir_dir + '/'
+					else:
+						subdir_dir = amfile.build
+					amfile.insertTarget(amfile.build + obj + ".moc.cpp", subdir_dir + list[1],
+										["@echo '%s %s.moc.cpp%s'" % (utilities.creating_text, amfile.build + obj, utilities.normal),
+										"@$(MOC) $? -o $@"])
+
+	def collect(self, amfile):
+
+		# adding default targets
+		amfile.insertTarget("mocs", "", phony=1)
+
+		# Add the rules for generating moc source from header files
+		# For Automoc output *.moc.cpp but normally we'll output *.moc
+		# (We must compile *.moc.cpp separately. *.moc files are included
+		# in the appropriate *.cpp file by the programmer)
+
+		if not amfile.is_defined("METASOURCES"):
+			return
+			
+		metasources = amfile.definition("METASOURCES")
+
+		mocs = []
+		mocre = re.compile('^([^=]*)=(.*)$')
+		
+		for mocfile in metasources:
+
+			match = mocre.match(mocfile)
+			if not match: # eventually not uptodate Makefile
+				continue
+			mocfile = match.group(1)
+			hfile = match.group(2)
+			dir = ''
+			cppfile = ''
+
+			index = string.rfind(hfile, '/')
+			if index > 0:
+				dir = hfile[:index]
+				hfile = hfile[index+1:]
+				
+			index = string.find(hfile, '=')
+			if index > 0:
+				cppfile = hfile[index+1:]
+				hfile = hfile[:index]
+
+			if len(dir) and dir[0] == '.':
+				subdir_dir = amfile.source + dir[1:]
+				if not subdir_dir[-1] == '/':
+					subdir_dir = subdir_dir + '/'
+			else:
+				subdir_dir = amfile.build
+				
+			if cppfile:
+				amfile.insertTarget(amfile.build + mocfile + ".moc",
+								   subdir_dir + hfile,
+								  ["@echo '%s %s.moc%s'" % (utilities.creating_text, amfile.build + mocfile, utilities.normal),
+								   "@$(MOC) $? -o $@"])
+				mocs.append(amfile.build + mocfile + ".moc")
+			else:
+				mocs.append(amfile.build + mocfile + ".moc.cpp")
+
+		if len(mocs):
+			amfile.add_define(amfile.canon_subdir + "_MOCS", mocs)
+			amfile.insertTarget("mocs", "$(%s_MOCS)" % amfile.canon_subdir, phony=1)
+			amfile.insertTarget("clean-metasources-%s" % amfile.canon_subdir, "", "-rm -f $(%s_MOCS)" % amfile.canon_subdir, phony=1)
+			amfile.insertTarget("clean", "clean-metasources-%s" % amfile.canon_subdir, phony=1)
+		
+handlerbase.register_handler(MOCHandler())

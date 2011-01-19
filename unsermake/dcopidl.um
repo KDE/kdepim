@@ -1,0 +1,80 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase,utilities
+
+class IDLHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "dcopidl"
+
+	def requirements(self):
+		return ([], ["autodeps"])
+	
+	def extensions(self):
+		return ['.stub', '.skel']
+
+	def source(self, program, base, ext):
+		sourcename = base + "_" + ext[1:]
+
+		rulef = program.mfile
+		
+		sourcedir = ''
+		if program.mfile.in_srcdir( base + ".h" ):
+			sourcedir = rulef.source
+		else:
+			value = program.mfile.value_of(base + "_DIR")
+			if value:
+				sourcedir = re.sub('^\$\(srcdir\)', rulef.source, value)
+				if not sourcedir[-1] == '/':
+					sourcedir = sourcedir + '/'
+			else:
+				sourcedir = rulef.build
+				
+		if program.mfile.value_of(base + "_DCOPIDLNG"):
+			dcopidl = "KDECONFIG=\"$(KDECONFIG)\" $(DCOPIDLNG)"
+		else:
+			dcopidl = "$(DCOPIDL)"
+					
+		rulef.insertTarget(rulef.build + base + ".kidl",
+				   [sourcedir + base + ".h",
+					"$(DCOP_DEPENDENCIES)"],
+				   ["@echo '%s %s.kidl%s'" % (utilities.creating_text, rulef.build + base, utilities.normal),
+					"@adir=`cd %s && pwd` ;\\" % sourcedir,
+					dcopidl + " $$adir/" + base + ".h > " + rulef.build + base + ".kidl "
+					"|| ( rm -f " + rulef.build + base + ".kidl ;"
+					" false )"])
+		
+		if ext == '.skel':
+			rulef.insertTarget(rulef.build + sourcename + ".cpp", [rulef.build + base + ".kidl",
+																   "$(DCOPIDL2CPP)"],
+					   ["@echo '%s %s.cpp%s'" % (utilities.creating_text, rulef.build + sourcename, utilities.normal),
+						"@$(DCOPIDL2CPP) --c++-suffix cpp "
+						"--no-stub %s" % rulef.build + base + ".kidl"])
+		else: #elif ext == '.stub':
+			rulef.insertTarget(rulef.build + sourcename + ".cpp",
+					   rulef.build + sourcename + ".h")
+			rulef.insertTarget(rulef.build + sourcename + ".h", [rulef.build + base + ".kidl",
+																 "$(DCOPIDL2CPP)"],
+					   ["@echo '%s %s.h%s'" % (utilities.creating_text, rulef.build + sourcename, utilities.normal),
+						"@$(DCOPIDL2CPP) --c++-suffix cpp "
+						"--no-skel %s" % rulef.build + base + ".kidl"])
+			rulef.insertTarget(rulef.build + sourcename + ".o",
+							   rulef.build + sourcename + ".h")
+			rulef.insertTarget(rulef.build + sourcename + ".lo",
+							   rulef.build + sourcename + ".h")
+			
+		#else:
+		#	rulef.insertTarget(rulef.build + sourcename + ".cpp",
+		#			   rulef.build + sourcename + ".h")
+		#	program.mfile.insertTarget(rulef.build + sourcename + ".h", [rulef.build + base + ".kidl",
+		#								   "$(DCOPIDL2CPP)"],
+		#				 ["$(DCOPIDL2CPP) --c++-suffix cpp "
+		#				  "--no-stub --no-skel %s" % rulef.build + base + ".kidl"])
+			
+		program.handle_source(sourcename, ".cpp")
+
+		program.cleanfiles.extend([sourcename + ".cpp",
+								   sourcename + ".h",
+								   base + ".kidl"])
+
+handlerbase.register_handler(IDLHandler())

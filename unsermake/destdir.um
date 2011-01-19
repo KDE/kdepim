@@ -1,0 +1,35 @@
+# -*-python-*-
+# vim: ts=4	
+
+import handlerbase
+
+class DESTDIRHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "destdir"
+
+	def handle_DESTDIR(self, filename, target):
+		rules = []
+		changed=0
+		for rule in target._rules:
+			if re.search('^\s*(@.*@)*\s*\$\(mkinstalldirs\)', rule) != None \
+			   or re.search('^\s*(@.*@)*\s*\$\(INSTALL\S*\)', rule) != None \
+			   or re.search('^\s*(@.*@)*\s*-?rm.* \S*$', rule) != None:
+				if not re.search('\$\(DESTDIR\)', rule):
+					if not changed:
+						sys.stderr.write('%s: install/rm commands without DESTDIR in target %s\n' % (filename, target.target))
+				
+					rule = re.sub(r"^(.*) ([^\s]+)\s*$", r"\1 $(DESTDIR)\2", rule)
+					changed=1
+			rules.append(rule)
+			
+		if changed:
+			target._rules = rules
+	
+	def parse(self, amfile):
+		
+		for t in ['install-exec-local' , 'install-data-local', 'uninstall-local']:
+			tar = amfile.target(t)
+			if tar:
+				self.handle_DESTDIR(amfile.filename, tar)
+
+handlerbase.register_handler(DESTDIRHandler())

@@ -1,0 +1,42 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase, program
+
+class AssemblerHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "assembler"
+
+	def extensions(self):
+		return ['.s', '.S']
+
+	def source(self, prog, base, ext):
+		line = 'set '
+		if prog.type == program.PTYPE_LTLIBRARY:
+			line = line + "$(LIBTOOL) --mode=compile "
+
+		line = line + "$(CCAS) "
+		line += prog.handle_variable("CCASFLAGS")
+		line = line + "-o $@ "
+
+		rulef = prog.mfile
+
+		dir = rulef.source
+		insource = 1
+		if rulef.target(rulef.build + base + ext) \
+			   or rulef.target(base + ext):
+			dir = rulef.build
+			
+		line = line + "-c %s ;\\" % (dir + base + ext)
+		lines = [ "@$(V_ECHO) 'assembling %s'; \\" % (rulef.source + base + ext), line, '$(V_EXEC)']
+		rulef.insertTarget(rulef.build + base + prog.objext,
+						   rulef.source + base + ext,
+						   lines)
+
+		prog.mfile.translate_target(base + ext)
+		prog.mfile.translate_target(base + prog.objext)
+		
+		rulef.add_define(prog.canon_name + "_OBJECTS",
+						 rulef.build + base + prog.objext)
+
+handlerbase.register_handler(AssemblerHandler())

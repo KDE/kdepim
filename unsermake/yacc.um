@@ -1,0 +1,61 @@
+# -*-python-*-
+# vim: ts=4
+
+import handlerbase
+
+class YaccHandler(handlerbase.HandlerBase):
+	def __init__(self):
+		self.name = "yacc"
+
+	def extensions(self):
+		return ['.yy', '.y']
+
+	def source(self, program, base, ext):
+
+		rulef = program.mfile
+		
+		sourcedir = ''
+		if program.mfile.in_srcdir(base + ext):
+			sourcedir = rulef.source
+		else:
+			sourcedir = rulef.build
+
+		rext = '.cc'
+		if ext == '.y':
+			rext = '.c'
+			
+		output = rulef.build + base
+		compile = 'sdir=`cd %s && pwd`; cd %s && $(YACC) ' % (sourcedir, rulef.build)
+		compile += program.handle_variable('YFLAGS') + '$$sdir/%s' % (base + ext)
+		rules = [ compile ]
+		rules.append("sed '/^#/ s|y\.tab\.c|%s|' %s > %s ;\\" % (base + rext, rulef.build + 'y.tab.c', output + rext))
+		rules.append("rm -f " + rulef.build + 'y.tab.c')
+		rules.append('if test -f ' + rulef.build + 'y.tab.h; then \\')
+		rules.append('to=`echo "%s_H" | sed \\' % base)
+		rules.append("    -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/' \\")
+		rules.append("    -e 's/[^ABCDEFGHIJKLMNOPQRSTUVWXYZ]/_/g'`; \\")
+		rules.append('sed "/^#/ s/Y_TAB_H/$$to/g" ' + rulef.build + 'y.tab.h > ' + output + ".ht; \\")
+		rules.append('rm -f ' + rulef.build + 'y.tab.h; \\')
+		rules.append('if cmp -s %s.ht %s.h; then \\' % (output, output))
+		rules.append('    rm -f %s.ht ;\\' % output)
+		rules.append('else \\')
+		rules.append('    mv %s.ht %s.h; \\' % (output, output))
+		rules.append('fi; \\')
+		rules.append('fi')
+		rules.append('if test -f y.output; then \\')
+		rules.append('    mv y.output %s.output; \\' % output)
+		rules.append('fi')
+	
+		rulef.insertTarget(rulef.build + base + rext, [sourcedir + base + ext], rules)
+
+		program.handle_source(base, rext)
+		program.cleanfiles.extend([base + rext])
+
+		rulef.insertTarget(rulef.build + base + '.h',
+		 				   rulef.build + base + rext,
+						   ["@if test ! -f $@; then \\",
+							"rm -f %s; \\" % (rulef.build + base + rext),
+							"$(MAKE) %s; \\" % (rulef.build + base + rext),
+							"else :; fi"])
+
+handlerbase.register_handler(YaccHandler())
