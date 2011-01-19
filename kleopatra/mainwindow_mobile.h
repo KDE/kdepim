@@ -72,6 +72,7 @@ private:
     Q_PRIVATE_SLOT( d, void closeAndQuit() )
     Q_PRIVATE_SLOT( d, void selfTest() )
     Q_PRIVATE_SLOT( d, void slotSearchBarTextChanged(QString) )
+    Q_PRIVATE_SLOT( d, void slotConfigCommitted() )
     class KeyTreeViewItem;
     class SearchBarItem;
     class Private;
