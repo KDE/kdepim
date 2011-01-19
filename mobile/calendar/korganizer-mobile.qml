@@ -349,7 +349,7 @@ KPIM.MainView {
         buttonText: KDE.i18n( "New Appointment" )
         // TODO: Make sure that the correct default calender is selected in
         //       the incidence editor.
-        onClicked : { application.newEvent( dateEdit.date ); }
+        onClicked : { application.newEventWithDate( dateEdit.date ); }
 
       }
     }
