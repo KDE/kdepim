@@ -49,6 +49,8 @@ InvitationHandler::Action actionFromStatus( InvitationHandler::SendResult result
   switch ( result ) {
   case InvitationHandler::ResultCanceled:
     return InvitationHandler::ActionDontSendMessage;
+  case InvitationHandler::ResultSuccess:
+    return InvitationHandler::ActionSendMessage;
   default:
     return InvitationHandler::ActionAsk;
   }
