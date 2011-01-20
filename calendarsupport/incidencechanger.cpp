@@ -36,9 +36,9 @@
 
 using namespace CalendarSupport;
 
-InvitationHandler::Action actionFromStatus( InvitationHandler::SendStatus status )
+InvitationHandler::Action actionFromStatus( InvitationHandler::SendResult result )
 {
-  //enum SendStatus {
+  //enum SendResult {
   //      Canceled,        /**< Sending was canceled by the user, meaning there are
   //                          local changes of which other attendees are not aware. */
   //      FailKeepUpdate,  /**< Sending failed, the changes to the incidence must be kept. */
@@ -46,11 +46,11 @@ InvitationHandler::Action actionFromStatus( InvitationHandler::SendStatus status
   //      NoSendingNeeded, /**< In some cases it is not needed to send an invitation
   //                          (e.g. when we are the only attendee) */
   //      Success
-  switch ( status ) {
-  case InvitationHandler::Canceled:
-    return InvitationHandler::DontSendMessage;
+  switch ( result ) {
+  case InvitationHandler::ResultCanceled:
+    return InvitationHandler::ActionDontSendMessage;
   default:
-    return InvitationHandler::Ask;
+    return InvitationHandler::ActionAsk;
   }
 }
 
@@ -154,10 +154,10 @@ bool IncidenceChanger::Private::performChange( Change *change )
         handler.setDefaultAction( actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
       }
 
-      const InvitationHandler::SendStatus status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                        newinc,
-                                                                                        attendeeStatusChanged );
-      if ( status == InvitationHandler::FailAbortUpdate ) {
+      const InvitationHandler::SendResult result = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                                                          newinc,
+                                                                                          attendeeStatusChanged );
+      if ( result == InvitationHandler::ResultFailAbortUpdate ) {
         kDebug() << "Sending invitations failed. Reverting changes.";
         if ( newinc->type() == oldinc->type() ) {
           KCalCore::IncidenceBase *i1 = newinc.data();
@@ -167,7 +167,7 @@ bool IncidenceChanger::Private::performChange( Change *change )
         }
         return false;
       } else if ( change->atomicOperationId ) {
-        mOperationStatus.insert( change->atomicOperationId, status );
+        mOperationStatus.insert( change->atomicOperationId, result );
       }
     }
   }
@@ -272,7 +272,7 @@ bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
     if ( d->mOperationStatus.contains( atomicOperationId ) ) {
       handler.setDefaultAction( actionFromStatus( d->mOperationStatus.value( atomicOperationId ) ) );
     }
-    InvitationHandler::SendStatus status;
+    InvitationHandler::SendResult status;
     switch ( action ) {
       case INCIDENCEADDED:
         status = handler.sendIncidenceCreatedMessage( method, incidence );
@@ -289,7 +289,7 @@ bool IncidenceChanger::sendGroupwareMessage( const Akonadi::Item &aitem,
     if ( atomicOperationId && action != NOCHANGE ) {
       d->mOperationStatus.insert( atomicOperationId, status );
     }
-    return ( status != InvitationHandler::FailAbortUpdate );
+    return ( status != InvitationHandler::ResultFailAbortUpdate );
   }
   return true;
 }
@@ -583,10 +583,10 @@ void IncidenceChanger::addIncidenceFinished( KJob *j )
     Q_ASSERT( incidence );
     InvitationHandler handler( d->mCalendar );
     //handler.setDialogParent( 0 ); // PENDING(AKONADI_PORT) set parent, ideally the one passed in addIncidence...
-    const InvitationHandler::SendStatus status =
+    const InvitationHandler::SendResult status =
         handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
 
-    if ( status == InvitationHandler::FailAbortUpdate ) {
+    if ( status == InvitationHandler::ResultFailAbortUpdate ) {
       // TODO: At this point we'd need to delete the incidence again.
       kError() << "Sending invitations failed, but did not delete the incidence";
     }

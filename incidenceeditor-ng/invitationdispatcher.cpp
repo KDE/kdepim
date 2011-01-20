@@ -71,11 +71,11 @@ void InvitationDispatcherPrivate::sentEventInvitationMessage()
 {
   const KCalCore::Incidence::Ptr newInc =
     CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
-  const CalendarSupport::InvitationHandler::SendStatus status =
+  const CalendarSupport::InvitationHandler::SendResult status =
       mInvitationHandler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, newInc );
 
   switch ( status ) {
-  case CalendarSupport::InvitationHandler::FailAbortUpdate:
+  case CalendarSupport::InvitationHandler::ResultFailAbortUpdate:
     // Okay, at this point we have a new event which is already stored
     // in our calendar, and we need to undo the save.
     mManager->revertLastSave();
@@ -100,8 +100,8 @@ void InvitationDispatcherPrivate::sentEventModifiedMessage()
   const KCalCore::Incidence::Ptr newInc =
     CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
 
-  CalendarSupport::InvitationHandler::SendStatus status =
-    CalendarSupport::InvitationHandler::Success;
+  CalendarSupport::InvitationHandler::SendResult status =
+    CalendarSupport::InvitationHandler::ResultSuccess;
 
   if ( mIsCounterProposal ) {
     status = mInvitationHandler.sendCounterProposal( oldInc, newInc );
@@ -113,7 +113,7 @@ void InvitationDispatcherPrivate::sentEventModifiedMessage()
   }
 
   switch ( status ) {
-  case CalendarSupport::InvitationHandler::FailAbortUpdate:
+  case CalendarSupport::InvitationHandler::ResultFailAbortUpdate:
     // Okay, at this point we have an modified event which is already stored
     // in our calendar, and we need to undo the last changes.
     mManager->revertLastSave();
