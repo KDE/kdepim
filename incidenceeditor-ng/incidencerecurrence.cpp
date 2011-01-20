@@ -622,16 +622,19 @@ void IncidenceRecurrence::updateWeekDays( const QDate &newStartDate )
   const int oldStartDayIndex = mUi->mWeekDayCombo->weekdayIndex( mCurrentDate );
   const int newStartDayIndex = mUi->mWeekDayCombo->weekdayIndex( newStartDate );
 
-  if ( oldStartDayIndex < 0 || newStartDayIndex < 0 ) {
-    return;
+  if ( oldStartDayIndex >= 0 ) {
+    mUi->mWeekDayCombo->setItemCheckState( oldStartDayIndex, Qt::Unchecked );
+    mUi->mWeekDayCombo->setItemEnabled( oldStartDayIndex, true );
   }
 
-  mUi->mWeekDayCombo->setItemCheckState( oldStartDayIndex, Qt::Unchecked );
-  mUi->mWeekDayCombo->setItemEnabled( oldStartDayIndex, true );
-  mUi->mWeekDayCombo->setItemCheckState( newStartDayIndex, Qt::Checked );
-  mUi->mWeekDayCombo->setItemEnabled( newStartDayIndex, false );
+  if ( newStartDayIndex >= 0 ) {
+    mUi->mWeekDayCombo->setItemCheckState( newStartDayIndex, Qt::Checked );
+    mUi->mWeekDayCombo->setItemEnabled( newStartDayIndex, false );
+  }
 
-  mCurrentDate = newStartDate;
+  if ( newStartDate.isValid() ) {
+    mCurrentDate = newStartDate;
+  }
 }
 
 short IncidenceRecurrence::dayOfMonthFromStart() const
