@@ -42,7 +42,7 @@ QML.Rectangle {
         width: parent.width - closeButton.width
         height: parent.height
         contentWidth: width - 10
-        contentHeight: 1700;
+        contentHeight: 1800;
 
         content.children: [
           QML.Rectangle{
@@ -134,6 +134,15 @@ QML.Rectangle {
                       text: KDE.i18n("This project is built upon KDE SC Kontact Desktop\n" +
                                      "client. For the outstanding work done there we\n" +
                                      "would like to thank the original authors.\n")
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
+                  }
+
+                  QML.Text{
+                      textFormat: QML.Text.RichText
+                      text: KDE.i18n("For more information and to give feedback<br/>") + "\n" +
+                            KDE.i18n("please take a look at ") +
+                            KDE.i18n("<a href=\"http://userbase.kde.org/Kontact_Touch\">Kontact Touch at KDE Userbase</a>")
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
