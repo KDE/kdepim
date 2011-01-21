@@ -195,12 +195,16 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const bool alreadyExisted = m_itemMap.contains( item.id() );
   const Akonadi::Item::Id id = item.id();
 
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  Q_ASSERT( incidence );
+
   if ( q->objectName() != QLatin1String( "Groupware calendar" ) ) { // too much noise otherwise
     // TODO: remove this debug message in a few months
     kDebug() << "id=" << item.id()
              << "version=" << item.revision()
              << "alreadyExisted=" << alreadyExisted
              << "; mode = " << mode
+             << "; uid = " << incidence->uid()
              << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
              << "; parentCollection.id() = " << item.parentCollection().id(); // can be a virtual collection
   }
@@ -217,11 +221,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
 
   Q_ASSERT( mode == DontCare || alreadyExisted == ( mode == AssertExists ) );
 
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-  Q_ASSERT( incidence );
-
   if ( alreadyExisted ) {
-
     if ( !m_itemMap.contains( id ) ) {
       // Item was deleted almost at the same time the change was made
       // ignore this change
