@@ -48,6 +48,7 @@ class TimelineViewItem : public DeclarativeAkonadiItem
       Week,
       WorkWeek,
       Next3Days,
+      Next7Days,
       LastRange
     };
 
