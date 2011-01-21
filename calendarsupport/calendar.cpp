@@ -240,7 +240,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
                << "; m_itemMap.value( id ).storageCollectionId() = "
                << m_itemMap.value( id ).storageCollectionId()
                << "; item.isValid() = " << item.isValid()
-               << "; calendar = " << q;
+               << "; calendar = " << q->objectName();
       Q_ASSERT_X( false, "updateItem", "updated item has different collection id" );
       return;
     }
