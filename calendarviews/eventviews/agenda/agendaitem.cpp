@@ -833,7 +833,10 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     cat = categories.first();
   }
   if ( cat.isEmpty() ) {
-    categoryColor = CalendarSupport::KCalPrefs::instance()->unsetCategoryColor();
+    if ( mEventView->preferences()->agendaViewColors() == PrefsBase::CategoryOnly )
+      categoryColor = CalendarSupport::KCalPrefs::instance()->unsetCategoryColor();
+    else
+      categoryColor = QColor( 0, 0, 0, 0 ); // transparent
   } else {
     categoryColor = CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
   }
