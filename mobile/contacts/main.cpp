@@ -57,6 +57,7 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "akonadicontact" );
   KGlobal::locale()->insertCatalog( "libkdepim" );
   KGlobal::locale()->insertCatalog( "libkldap" ); // for ldap server dialog
+  KGlobal::locale()->insertCatalog( "calendarsupport" ); // for categories
 
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );
