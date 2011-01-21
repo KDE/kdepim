@@ -75,6 +75,7 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "akonadi_imap_resource" ); // for account status indicators
   KGlobal::locale()->insertCatalog( "libkcalutils" ); // for invitation handling
   KGlobal::locale()->insertCatalog( "libkleopatra" ); // for Krypto format settings in identity dialog
+  KGlobal::locale()->insertCatalog( "libkpimidentities" ); // for signature settings in identity dialog
 
   return app.exec();
 }
