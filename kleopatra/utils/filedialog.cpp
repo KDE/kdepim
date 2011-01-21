@@ -127,7 +127,7 @@ QString FileDialog::getSaveFileName( QWidget * parent, const QString & caption, 
 #ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getSaveFileName( parent, caption, dir( dirID ), filter );
 #else
-    const QString fname = KFileDialog::getSaveFileName( dir( dirID ), qt2KdeFilter( filter ), parent, caption );
+    const QString fname = KFileDialog::getSaveFileName( dirID.isEmpty() ? KUrl() : dir( dirID ), qt2KdeFilter( filter ), parent, caption );
 #endif
     update( fname, dirID );
     return fname;
@@ -135,10 +135,11 @@ QString FileDialog::getSaveFileName( QWidget * parent, const QString & caption, 
 
 QString FileDialog::getSaveFileNameEx( QWidget * parent, const QString & caption, const QString & dirID, const QString & proposedFileName, const QString & filter ) {
     if ( proposedFileName.isEmpty() )
-        return getSaveFileName( parent, caption, dirID, filter );
 #ifndef QT_NO_FILEDIALOG
+        return getSaveFileName( parent, caption, dirID, filter );
     const QString fname = QFileDialog::getSaveFileName( parent, caption, QDir( dir( dirID ) ).filePath( proposedFileName ), filter );
 #else
+        return getSaveFileName( parent, caption, QString(), filter );
     const QString fname = KFileDialog::getSaveFileName( QDir( dir( dirID ) ).filePath( proposedFileName ), qt2KdeFilter( filter ), parent, caption );
 #endif
     update( fname, dirID );
