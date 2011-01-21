@@ -74,6 +74,7 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "libksieve" ); // for out of office reply dialog
   KGlobal::locale()->insertCatalog( "akonadi_imap_resource" ); // for account status indicators
   KGlobal::locale()->insertCatalog( "libkcalutils" ); // for invitation handling
+  KGlobal::locale()->insertCatalog( "libkleopatra" ); // for Krypto format settings in identity dialog
 
   return app.exec();
 }
