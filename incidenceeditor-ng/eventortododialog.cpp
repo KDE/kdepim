@@ -450,6 +450,9 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
     mUi->mInvitationBar->hide();
   }
 
+  kDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
+           << "; storage " << item.storageCollectionId();
+
   mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() << "text/calendar" );
   if ( item.parentCollection().isValid() ) {
     mCalSelector->setDefaultCollection( item.parentCollection() );
