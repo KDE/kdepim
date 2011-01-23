@@ -627,10 +627,14 @@ QColor IncidenceMonthItem::catColor() const
     cat = categories.first();
   }
   if ( cat.isEmpty() ) {
-    if ( monthScene()->monthView()->preferences()->monthViewColors() == PrefsBase::MonthItemCategoryOnly )
+    if ( monthScene()->monthView()->preferences()->monthViewColors() == PrefsBase::MonthItemCategoryOnly ||
+         monthScene()->monthView()->preferences()->monthViewColors() == PrefsBase::MonthItemCategoryInsideResourceOutside ) {
       retColor = CalendarSupport::KCalPrefs::instance()->unsetCategoryColor();
-    else
+    } else {
+      // We ( both enterprise/e3 and master ) only use transparent for MonthItemResourceInsideCategoryOutside scheme.
+      // It looks ugly using transparent for the interior.
       retColor = QColor( 0, 0, 0, 0 ); // transparent
+    }
   } else {
     retColor = CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
   }
