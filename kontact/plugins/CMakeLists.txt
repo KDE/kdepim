@@ -1,3 +1,5 @@
+option(KONTACT_ENABLE_MIXEDMODE_SUMMARY_PLUGINS "Build the Special Dates and Planner plugins for Kontact." FALSE)
+
 remove_definitions(-DKDE_DEFAULT_DEBUG_AREA=5600) #remove kontact debug area
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5602)
 
@@ -9,8 +11,10 @@ if(QGPGME_FOUND)
     add_subdirectory( korganizer )
   endif (BUILD_kmail AND BUILD_korganizer)
   add_subdirectory( summary )
-  add_subdirectory( specialdates )
-  add_subdirectory( planner )
+  if(KONTACT_ENABLE_MIXEDMODE_SUMMARY_PLUGINS)
+    add_subdirectory( specialdates )
+    add_subdirectory( planner )
+  endif()
 endif(QGPGME_FOUND)
 if (BUILD_knotes)
   add_subdirectory( knotes )
