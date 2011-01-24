@@ -277,7 +277,7 @@ endif(NOT KORG_NOPRINTER)
   install( FILES korganizer.upd  DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
   install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ical2vcal DESTINATION ${BIN_INSTALL_DIR})
 
-  install( FILES org.kde.Korganizer.Calendar.xml org.kde.korganizer.Korganizer.xml DESTINATION ${KDE4_DBUS_INTERFACES_DIR})
+  install( FILES org.kde.Korganizer.Calendar.xml org.kde.korganizer.Korganizer.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
 else(KMAIL_SUPPORTED)
   message(STATUS "KOrganizer will NOT be built.")
