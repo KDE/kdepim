@@ -118,17 +118,6 @@ void MessageViewItem::scrollUp( int dist )
   m_viewer->slotScrollUp( dist );
 }
 
-void MessageViewItem::simulateMouseClick( const QPoint &pos )
-{
-  QWidget *widget = m_viewer->d_ptr->mViewer;
-
-  QMouseEvent *event = new QMouseEvent( QEvent::MouseButtonPress, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
-  QCoreApplication::postEvent( widget, event );
-
-  event = new QMouseEvent( QEvent::MouseButtonRelease, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
-  QCoreApplication::postEvent( widget, event );
-}
-
 Viewer* MessageViewItem::viewer()
 {
     return m_viewer;
