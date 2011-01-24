@@ -129,6 +129,7 @@ set(krss_LIB_HDRS
    feedvisitor.h
    searchfeed.h
    netfeed.h
+   netresource.h
    treenode.h
    treenodevisitor.h
    feedlist.h
