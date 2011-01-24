@@ -71,6 +71,29 @@ namespace KMail {
 
 const int SearchWindow::MSGID_COLUMN = 4;
 
+SearchWidgetItem::SearchWidgetItem(QTreeWidget* parent)
+  : QTreeWidgetItem( parent )
+{
+}
+
+SearchWidgetItem::~SearchWidgetItem()
+{
+}
+
+bool SearchWidgetItem::operator<(const QTreeWidgetItem &other)const
+{
+  const int column = treeWidget()->sortColumn();
+  if ( column == 2 ) //Date
+  {
+    QDateTime current = data( 2, dateItemType ).value<QDateTime>();
+    QDateTime next = other.data( 2, dateItemType ).value<QDateTime>();
+    return current < next;
+
+  }
+  return QTreeWidgetItem::operator<( other );
+}
+
+
 MatchListView::MatchListView( QWidget *parent, SearchWindow* sw ) :
       QTreeWidget( parent ),
       mSearchWindow( sw )
@@ -583,12 +606,13 @@ void SearchWindow::slotAddMsg( int idx )
     fName = pFolder->name();
   }
 
-  QTreeWidgetItem *newItem = new QTreeWidgetItem( mLbxMatches );
+  QTreeWidgetItem *newItem = new SearchWidgetItem( mLbxMatches );
   newItem->setText( 0, msg->subject() );
   newItem->setText( 1, from );
   newItem->setText( 2, msg->dateStr() );
   newItem->setText( 3, fName );
   newItem->setText( 4,QString::number( mFolder->serNum( idx ) ) );
+  newItem->setData( 2, SearchWidgetItem::dateItemType, QDateTime::fromTime_t( msg->date() ));
   mLbxMatches->addTopLevelItem( newItem );
   if ( unget ) {
     mFolder->unGetMsg( idx );

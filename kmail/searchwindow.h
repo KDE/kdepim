@@ -184,6 +184,19 @@ private:
 
 };
 
+class SearchWidgetItem : public QTreeWidgetItem
+{
+public:
+  SearchWidgetItem(QTreeWidget* parent);
+  ~SearchWidgetItem();
+  enum SearchWidgetItemType {
+    dateItemType = Qt::UserRole + 1
+  };
+private:
+  bool operator<(const QTreeWidgetItem &other)const;
+
+};
+
 // QTreeWidget sub-class for dnd support
 // Internal, only used by SearchWindow.
 class MatchListView : public QTreeWidget
