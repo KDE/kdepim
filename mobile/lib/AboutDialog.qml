@@ -68,10 +68,9 @@ QML.Rectangle {
                   }
 
                   QML.Text {
-                      text : KDE.i18n("This Free Software product was created as part of a commercial contract.") +
-                             "\n" +
-                             KDE.i18n("%1 is licensed under the GNU GPL version 2 or later.", application.name ) + "\n" +
-                             KDE.i18n("See %1 for details.", "licenses.pdf") + "\n"
+                      text : KDE.i18n("This Free Software product was created as part of a commercial contract.\n" +
+                                      "%1 is licensed under the GNU GPL version 2 or later.\n" +
+                                      "See %2 for details.", application.name, "licenses.pdf") + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
@@ -131,18 +130,18 @@ QML.Rectangle {
                   }
 
                   QML.Text{
-                      text: KDE.i18n("This project is built upon KDE SC Kontact Desktop") + "\n" +
-                            KDE.i18n("client. For the outstanding work done there we") + "\n" +
-                            KDE.i18n("would like to thank the original authors.") + "\n"
+                      text: KDE.i18n("This project is built upon KDE SC Kontact Desktop client.\n" +
+                                     "client. For the outstanding work done there we\n" +
+                                     "would like to thank the original authors.\n")
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
 
                   QML.Text{
                       textFormat: QML.Text.RichText
-                      text: KDE.i18n("For more information and to give feedback<br/>") + "\n" +
-                            KDE.i18n("please take a look at ") +
-                            KDE.i18n("<a href=\"http://userbase.kde.org/Kontact_Touch\">Kontact Touch at KDE Userbase</a>")
+                      text: KDE.i18n("For more information and to give feedback<br/>\n" +
+                                     "please take a look at " +
+                                     "<a href=\"http://userbase.kde.org/Kontact_Touch\">Kontact Touch at KDE Userbase</a>")
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
