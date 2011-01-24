@@ -832,18 +832,9 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   if ( !categories.isEmpty() ) {
     cat = categories.first();
   }
-  if ( cat.isEmpty() ) {
-    if ( mEventView->preferences()->agendaViewColors() == PrefsBase::CategoryOnly ||
-         mEventView->preferences()->agendaViewColors() == PrefsBase::CategoryInsideResourceOutside ) {
-      categoryColor = CalendarSupport::KCalPrefs::instance()->unsetCategoryColor();
-    } else {
-      // We ( both enterprise/e3 and master ) only use transparent for MonthItemResourceInsideCategoryOutside scheme.
-      // It looks ugly using transparent for the interior.
-      categoryColor = QColor( 0, 0, 0, 0 ); // transparent
-    }
-  } else {
-    categoryColor = CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
-  }
+
+  categoryColor = cat.isEmpty() ? CalendarSupport::KCalPrefs::instance()->unsetCategoryColor() :
+                                  CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
 
   QColor resourceColor = mResourceColor;
   if ( !resourceColor.isValid() ) {
@@ -878,13 +869,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     bgColor = frameColor;
   }
 
-  if ( mSelected ) {
-    frameColor = QColor( 85 + frameColor.red() * 2 / 3,
-                         85 + frameColor.green() * 2 / 3,
-                         85 + frameColor.blue() * 2 / 3 );
-  } else {
-    frameColor = frameColor.dark( 115 );
-  }
+  frameColor = EventView::itemFrameColor( frameColor, mSelected );
 
   if ( !CalendarSupport::KCalPrefs::instance()->hasCategoryColor( cat ) ) {
     categoryColor = resourceColor;

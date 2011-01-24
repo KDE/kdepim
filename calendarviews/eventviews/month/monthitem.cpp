@@ -619,26 +619,15 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 
 QColor IncidenceMonthItem::catColor() const
 {
-  QColor retColor;
   Q_ASSERT( mIncidence );
   const QStringList categories = mIncidence->categories();
   QString cat;
   if ( !categories.isEmpty() ) {
     cat = categories.first();
   }
-  if ( cat.isEmpty() ) {
-    if ( monthScene()->monthView()->preferences()->monthViewColors() == PrefsBase::MonthItemCategoryOnly ||
-         monthScene()->monthView()->preferences()->monthViewColors() == PrefsBase::MonthItemCategoryInsideResourceOutside ) {
-      retColor = CalendarSupport::KCalPrefs::instance()->unsetCategoryColor();
-    } else {
-      // We ( both enterprise/e3 and master ) only use transparent for MonthItemResourceInsideCategoryOutside scheme.
-      // It looks ugly using transparent for the interior.
-      retColor = QColor( 0, 0, 0, 0 ); // transparent
-    }
-  } else {
-    retColor = CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
-  }
-  return retColor;
+
+  return cat.isEmpty() ? CalendarSupport::KCalPrefs::instance()->unsetCategoryColor() :
+                         CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
 }
 
 QColor IncidenceMonthItem::bgColor() const
@@ -683,23 +672,18 @@ QColor IncidenceMonthItem::frameColor() const
 
   PrefsPtr prefs = monthScene()->monthView()->preferences();
   if ( prefs->monthViewColors() == PrefsBase::MonthItemResourceOnly ||
-       prefs->monthViewColors() == PrefsBase::MonthItemCategoryInsideResourceOutside ) {
+       prefs->monthViewColors() == PrefsBase::MonthItemCategoryInsideResourceOutside ||
+       ( mIncidence->categories().isEmpty() && prefs->monthViewColors() == PrefsBase::MonthItemResourceInsideCategoryOutside ) ) {
     Q_ASSERT( mIncidence );
     const QString id = QString::number( akonadiItem().storageCollectionId() );
-    if ( id.isEmpty() ) {
-      // item got removed from calendar, give up.
-      return QColor();
+    if ( !id.isEmpty() ) {
+      frameColor = prefs->resourceColor( id );
     }
-    frameColor = prefs->resourceColor( id );
   } else {
     frameColor = catColor();
   }
 
-  if ( !frameColor.isValid() ) {
-    frameColor = Qt::black;
-  }
-
-  return frameColor;
+  return EventView::itemFrameColor( frameColor, selected() );
 }
 
 Akonadi::Item IncidenceMonthItem::akonadiItem() const
