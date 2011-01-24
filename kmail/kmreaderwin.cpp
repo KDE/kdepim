@@ -2187,22 +2187,9 @@ void KMReaderWin::slotToggleMimePartTree()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotCopySelectedText()
 {
-  QString selection;
-  if ( htmlMail() ) {
-    QMimeData *mimeData = new QMimeData();
-    selection = mViewer->selectedTextAsHTML();
-    mimeData->setText(selection);
-    if(!selection.isEmpty()) {
-      selection.replace( QChar::Nbsp, ' ' );
-      mimeData->setHtml(selection);
-    }
-    QApplication::clipboard()->setMimeData( mimeData, QClipboard::Clipboard );
-  } else {
-    selection = mViewer->selectedText();
-    selection.replace( QChar::Nbsp, ' ' );
-    QApplication::clipboard()->setText( selection );
-  }
-
+  QString selection = mViewer->selectedText();
+  selection.replace( QChar::Nbsp, ' ' );
+  QApplication::clipboard()->setText( selection );
 }
 
 
