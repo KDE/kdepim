@@ -28,6 +28,7 @@ KPIM.BulkActionScreen {
   id : bulkActionScreen
   anchors.fill: parent
   property bool initialized : false
+  property alias model: bulkActionHeaderList.model
 
   actionListWidth : 1/3 * parent.width
   multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
@@ -35,7 +36,7 @@ KPIM.BulkActionScreen {
   headerList : HeaderView {
     showCheckBox : true
     id: bulkActionHeaderList
-    model: itemModel
+//    model: itemModel
     checkModel : _itemActionModel
     anchors.fill : parent
     showSections: false
