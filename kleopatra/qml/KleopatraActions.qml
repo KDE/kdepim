@@ -51,7 +51,7 @@ ActionMenuContainer {
     ActionListItem { name : "file_import_certificates" }
     ActionListItem { name : "file_export_certificates" }
     ActionListItem { name : "file_export_secret_keys" }
-    ActionListItem { name : "file_export_certificates_to_server" }
+    /* ActionListItem { name : "file_export_certificates_to_server" } */
     ActionListItem { name : "file_quit" }
   }
 
