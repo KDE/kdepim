@@ -403,7 +403,11 @@ bool MultiplyingLineView::autoResize()
 
 void MultiplyingLineView::setDynamicSizeHint( bool dynamic )
 {
+#ifdef Q_OS_WINCE
+  mDynamicSizeHint = true;
+#else
   mDynamicSizeHint = dynamic;
+#endif
 }
 
 bool MultiplyingLineView::dynamicSizeHint() const
