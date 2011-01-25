@@ -328,7 +328,7 @@ KPIM.MainView {
           id : backButton
           anchors.left : parent.left
           anchors.right : parent.right
-          buttonText : KDE.i18n("Back to Threads")
+          buttonText : KDE.i18n("Back to Message List")
           // Clear
           onClicked : _threadSelector.select(-1, 1)
         }
