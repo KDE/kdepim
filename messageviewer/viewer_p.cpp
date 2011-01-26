@@ -1721,7 +1721,7 @@ KMime::Content* ViewerPrivate::findContentByType(KMime::Content *content, const 
         if (c->contentType()->mimeType() ==  type)
             return c;
     }
-    return 0L;
+    return 0;
 
 }
 
