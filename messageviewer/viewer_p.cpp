@@ -562,7 +562,7 @@ KMime::Content::List ViewerPrivate::selectedContents()
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
-  Q_FOREACH(QModelIndex index, selectedRows)
+  Q_FOREACH( const QModelIndex &index, selectedRows )
   {
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
      if ( content )
@@ -726,7 +726,7 @@ void ViewerPrivate::collectionFetchedForStoringDecryptedMessage( KJob* job )
     return;
 
   Akonadi::Collection col;
-  Q_FOREACH( Akonadi::Collection c, static_cast<Akonadi::CollectionFetchJob*>( job )->collections() ) {
+  Q_FOREACH( const Akonadi::Collection &c, static_cast<Akonadi::CollectionFetchJob*>( job )->collections() ) {
     if ( c == mMessageItem.parentCollection() ) {
       col = c;
       break;
@@ -2182,7 +2182,7 @@ void ViewerPrivate::slotAttachmentOpenWith()
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
-  Q_FOREACH(QModelIndex index, selectedRows)
+  Q_FOREACH( const QModelIndex &index, selectedRows )
   {
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
      attachmentOpenWith( content );
@@ -2196,7 +2196,7 @@ void ViewerPrivate::slotAttachmentOpen()
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
-  Q_FOREACH(QModelIndex index, selectedRows)
+  Q_FOREACH( const QModelIndex &index, selectedRows )
   {
     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
     attachmentOpen( content );
