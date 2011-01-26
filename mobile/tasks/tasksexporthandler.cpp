@@ -48,7 +48,7 @@ QStringList TasksExportHandler::mimeTypes() const
 
 bool TasksExportHandler::exportItems( const Akonadi::Item::List &items )
 {
-  const QString fileName = KFileDialog::getSaveFileName( KUrl( "calendar.ics" ) );
+  const QString fileName = KFileDialog::getSaveFileName( KUrl( "calendar.ics" ), QLatin1String( "*.ics" ) );
   if ( fileName.isEmpty() )
     return true;
 
