@@ -596,8 +596,9 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
     // ret << monthScene()->eventPixmap();
 
   } else if ( mIsTodo || mIsJournal ) {
-    KDateTime::Spec spec = monthScene()->monthView()->preferences()->timeSpec();
-    ret << new QPixmap( cachedSmallIcon( mIncidence->iconName( KDateTime( realStartDate(), spec ) ) ) );
+    KDateTime occurrenceDateTime = mIncidence->dateTime( Incidence::RoleRecurrenceStart );
+    occurrenceDateTime.setDate( realStartDate() );
+    ret << new QPixmap( cachedSmallIcon( mIncidence->iconName( occurrenceDateTime ) ) );
   }
 
   if ( !monthScene()->mMonthView->calendar()->hasChangeRights( item ) && !specialEvent ) {
