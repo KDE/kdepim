@@ -840,7 +840,6 @@ class UrlHandler : public Interface::BodyPartURLHandler
           } else {
             queryStr = i18n( "Do you really want to cancel this invitation?" );
           }
-        }
         } else if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
           return false;
         } else {
