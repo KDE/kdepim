@@ -1375,6 +1375,22 @@ void MainView::saveMessage()
   command->execute();
 }
 
+QString MainView::itemStorageCollectionAsPath( const Akonadi::Item &item ) const
+{
+  QModelIndex index = EntityTreeModel::modelIndexForCollection( entityTreeModel(), Akonadi::Collection( item.storageCollectionId() ) );
+  Q_ASSERT( index.isValid() );
+
+  QString path;
+  while ( index.isValid() ) {
+    path.prepend( index.data().toString() );
+    index = index.parent();
+    if ( index.isValid() )
+      path.prepend( " / " );
+  }
+
+  return path;
+}
+
 void MainView::itemSelectionChanged()
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
@@ -1386,16 +1402,7 @@ void MainView::itemSelectionChanged()
   const QModelIndex itemIdx = list.first();
   const Akonadi::Item item = itemIdx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
-  QModelIndex index = EntityTreeModel::modelIndexForCollection( entityTreeModel(), Akonadi::Collection( item.storageCollectionId() ) );
-  Q_ASSERT( index.isValid() );
-
-  QString path;
-  while ( index.isValid() ) {
-    path.prepend( index.data().toString() );
-    index = index.parent();
-    if ( index.isValid() )
-      path.prepend( " / " );
-  }
+  const QString path = itemStorageCollectionAsPath( item );
 
   if ( messageViewerItem() ) {
     messageViewerItem()->setItem( item );
@@ -1744,6 +1751,8 @@ bool MainView::selectNextUnreadMessageInCurrentFolder()
     const QModelIndex itemIndex = model->index( row, 0 );
     const Akonadi::Item item = itemIndex.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
     if ( !item.hasFlag( Akonadi::MessageFlags::Seen ) ) {
+      const QString path = itemStorageCollectionAsPath( item );
+      messageViewerItem()->setMessagePath( path );
       messageViewerItem()->setItem( item );
       return true;
     }
@@ -1754,6 +1763,8 @@ bool MainView::selectNextUnreadMessageInCurrentFolder()
     const QModelIndex itemIndex = model->index( row, 0 );
     const Akonadi::Item item = itemIndex.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
     if ( !item.hasFlag( Akonadi::MessageFlags::Seen ) ) {
+      const QString path = itemStorageCollectionAsPath( item );
+      messageViewerItem()->setMessagePath( path );
       messageViewerItem()->setItem( item );
       return true;
     }

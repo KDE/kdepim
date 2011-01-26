@@ -198,6 +198,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::Item currentItem() const;
     MessageViewer::MessageViewItem *messageViewerItem();
     uint currentFolderIdentity() const;
+    QString itemStorageCollectionAsPath( const Akonadi::Item& ) const;
 
     bool mAskingToGoOnline;
     QWidget *mTransportDialog;
