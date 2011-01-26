@@ -295,7 +295,7 @@ void EventOrTodoDialogPrivate::saveTemplate( const QString &templateName )
   KCalCore::Incidence::Ptr incidence( new KCalCore::Event );
   mEditor->save( incidence );
 
-  QString fileName = "templates/" + incidence->type();
+  QString fileName = "templates/" + incidence->typeStr();
   fileName.append( '/' + templateName );
   fileName = KStandardDirs::locateLocal( "data", "korganizer/" + fileName );
 
