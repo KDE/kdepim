@@ -133,6 +133,10 @@ void ConfigWidget::loadFromExternalSettings()
     Settings::self()->setMessageListGroupingOption( settings.groupingOption() );
     Settings::self()->setMessageListUseThreading( settings.useThreading() );
   }
+
+  // MDN
+  Settings::self()->setMDNPolicy( MessageViewer::GlobalSettings::self()->defaultPolicy() );
+  Settings::self()->setMDNQuoteType( MessageViewer::GlobalSettings::self()->quoteMessage() );
 }
 
 void ConfigWidget::saveToExternalSettings()
@@ -178,6 +182,10 @@ void ConfigWidget::saveToExternalSettings()
 
     MessageListSettings::toDefaultConfig( settings );
   }
+
+  // MDN
+  MessageViewer::GlobalSettings::self()->setDefaultPolicy( Settings::self()->mDNPolicy() );
+  MessageViewer::GlobalSettings::self()->setQuoteMessage( Settings::self()->mDNQuoteType() );
 
   Settings::self()->writeConfig();
   MessageViewer::GlobalSettings::self()->writeConfig();

@@ -94,4 +94,43 @@
       <default>true</default>
     </entry>
   </group>
+  <group name="MDN">
+    <entry name="notSendWhenEncrypted" type="Bool" key="not-send-when-encrypted">
+      <label>Do not send MDNs in response to encrypted messages</label>
+      <default>true</default>
+    </entry>
+    <entry name="MDNPolicy" type="Enum" key="default-policy">
+      <label>Specifies the default policy to use, for the Message Disposition Notifications (for internal use only)</label>
+      <choices>
+        <choice name="Ignore">
+          <label>Ignore</label>
+        </choice>
+        <choice name="Ask">
+          <label>Ask</label>
+        </choice>
+        <choice name="Deny">
+          <label>Deny</label>
+        </choice>
+        <choice name="AlwaysSend">
+          <label>Always send</label>
+        </choice>
+      </choices>
+      <default>Ignore</default>
+    </entry>
+    <entry name="MDNQuoteType" type="Enum" key="quote-message">
+      <label>Specifies the default quoting action to take, when replying to a message (for internal use only)</label>
+      <choices>
+        <choice name="Nothing">
+          <label>Nothing</label>
+        </choice>
+        <choice name="FullMessage">
+          <label>Full message</label>
+        </choice>
+        <choice name="OnlyHeaders">
+          <label>Only headers</label>
+        </choice>
+      </choices>
+      <default>Nothing</default>
+    </entry>
+  </group>
 </kcfg>

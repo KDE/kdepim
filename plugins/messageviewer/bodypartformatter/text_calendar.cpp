@@ -834,6 +834,13 @@ class UrlHandler : public Interface::BodyPartURLHandler
           } else {
             queryStr = i18n( "Do you still want to record this invitation in your calendar?" );
          }
+        } else if ( path == "cancel" ) {
+          if ( type == Incidence::TypeTodo ) {
+            queryStr = i18n( "Do you really want to cancel this task?" );
+          } else {
+            queryStr = i18n( "Do you really want to cancel this invitation?" );
+          }
+        }
         } else if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
           return false;
         } else {
