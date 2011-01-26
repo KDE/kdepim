@@ -381,7 +381,7 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
   }
 
   QString titleText;
-  QString confidenceString = QString();
+  QString confidenceString;
   if ( spamError == noError )
   {
     if ( confidence >= 0 )
