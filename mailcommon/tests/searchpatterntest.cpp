@@ -20,7 +20,7 @@
 
 #include <qtest_kde.h>
 
-#include "kmsearchpattern.cpp"
+#include "searchpattern.cpp"
 #include "filterlog.cpp"
 
 #include <QDir>
@@ -68,7 +68,7 @@ class SearchPatternTest : public QObject
       KConfig config( configFile );
       KConfigGroup cfgGroup( &config, "Filter #0" );
 
-      KMSearchPattern pattern( cfgGroup );
+      SearchPattern pattern( cfgGroup );
       qDebug() << pattern.asString();
 
       QFile file( sparqlFile );
