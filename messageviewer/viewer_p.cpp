@@ -258,7 +258,7 @@ KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
     QString path = url.path(KUrl::RemoveTrailingSlash);
     if ( path.contains(':') ) {
       //if the content was not found, it might be in an extra node. Get the index of the extra node (the first part of the url),
-      //and use the remaining part as a ContentIndex to find the node insde the extra node
+      //and use the remaining part as a ContentIndex to find the node inside the extra node
       int i = path.left( path.indexOf(':') ).toInt();
       path = path.mid( path.indexOf(':') + 1 );
       KMime::ContentIndex idx(path);
