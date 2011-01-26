@@ -470,7 +470,7 @@ void KXFace::ReadFace(char *fbuf)
   register char *s, *t;
 
   t = s = fbuf;
-  for(i = strlen(s); i > 0; i--)
+  for(i = strlen(s); i > 0; --i)
   {
     c = (int)*(s++);
     if ((c >= '0') && (c <= '9'))
@@ -544,14 +544,14 @@ void KXFace::Gen(register char *f)
 {
   register int m, l, k, j, i, h;
 
-  for (j = 0; j < HEIGHT;  j++)
+  for (j = 0; j < HEIGHT;  ++j)
   {
-    for (i = 0; i < WIDTH;  i++)
+    for (i = 0; i < WIDTH;  ++i)
     {
       h = i + j * WIDTH;
       k = 0;
-      for (l = i - 2; l <= i + 2; l++)
-        for (m = j - 2; m <= j; m++)
+      for (l = i - 2; l <= i + 2; ++l)
+        for (m = j - 2; m <= j; ++m)
       {
         if ((l >= i) && (m == j))
           continue;
