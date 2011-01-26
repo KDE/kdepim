@@ -833,7 +833,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
             queryStr = i18n( "Do you still want to record this task in your calendar?" );
           } else {
             queryStr = i18n( "Do you still want to record this invitation in your calendar?" );
-         }
+          }
         } else if ( path == "cancel" ) {
           if ( type == Incidence::TypeTodo ) {
             queryStr = i18n( "Do you really want to cancel this task?" );
