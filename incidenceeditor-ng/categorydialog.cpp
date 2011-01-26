@@ -53,7 +53,7 @@ CategoryWidget::CategoryWidget( CategoryConfig *cc, QWidget *parent )
 
   mWidgets->mButtonAdd->setIcon( KIcon( "list-add" ) );
   mWidgets->mButtonRemove->setIcon( KIcon( "list-remove" ) );
-  mWidgets->mLineEdit->setClickMessage( "Click to add a new category" );
+  mWidgets->mLineEdit->setClickMessage( i18n("Click to add a new category") );
 
   connect( mWidgets->mLineEdit, SIGNAL(textChanged(QString)),
            SLOT(handleTextChanged(QString)) );
