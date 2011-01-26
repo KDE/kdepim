@@ -594,7 +594,7 @@ QByteArray NodeHelper::path(const KMime::Content* node)
     }
   }
   QString subpath;
-  return NodeHelper::path(p) + subpath.sprintf( ":%X/%X[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType().constData(), const_cast<KMime::Content*>(node)->contentType()->subType().constData(), nth ).toLocal8Bit();
+  return NodeHelper::path(p) + subpath.sprintf( ":%s/%s[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType().constData(), const_cast<KMime::Content*>(node)->contentType()->subType().constData(), nth ).toLocal8Bit();
 }
 
 QString NodeHelper::fileName( const KMime::Content *node )

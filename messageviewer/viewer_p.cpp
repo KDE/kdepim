@@ -331,9 +331,10 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
 
   const QString filenameText = NodeHelper::fileName( node );
 
-  AttachmentDialog dialog( mMainWindow, filenameText, offer ? offer->name() : QString(),
+  QPointer<AttachmentDialog> dialog = new AttachmentDialog( mMainWindow, filenameText, offer ? offer->name() : QString(),
                            QString::fromLatin1( "askSave_" ) + mimetype->name() );
-  const int choice = dialog.exec();
+  const int choice = dialog->exec();
+  delete dialog;
 
   if ( choice == AttachmentDialog::Save ) {
     Util::saveContents( mMainWindow, KMime::Content::List() << node );

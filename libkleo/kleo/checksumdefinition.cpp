@@ -65,11 +65,13 @@ Q_GLOBAL_STATIC( QString, _installPath )
 QString ChecksumDefinition::installPath() {
     const QMutexLocker locker( &installPathMutex );
     QString * const ip = _installPath();
-    if ( ip->isEmpty() )
-        if ( QCoreApplication::instance() )
+    if ( ip->isEmpty() ) {
+        if ( QCoreApplication::instance() ) {
             *ip = QCoreApplication::applicationDirPath();
-        else
+        } else {
             qWarning( "checksumdefinition.cpp: installPath() called before QCoreApplication was constructed" );
+        }
+    }
     return *ip;
 }
 void ChecksumDefinition::setInstallPath( const QString & ip ) {

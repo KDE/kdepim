@@ -204,6 +204,7 @@ QGpgMENewCryptoConfigGroup* QGpgMENewCryptoConfigComponent::group(const QString&
 
 void QGpgMENewCryptoConfigComponent::sync( bool runtime )
 {
+  Q_UNUSED( runtime )
     // ### how to pass --runtime to gpgconf? -> marcus: not yet supported (2010-11-20)
     if ( const Error err = m_component.save() ) {
         const QString wmsg = i18n( "Error from gpgconf while saving configuration: %1", QString::fromLocal8Bit( err.asString() ) );
