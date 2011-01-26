@@ -165,7 +165,7 @@ void ExpiryPropertiesDialog::accept()
                         i18n( "No Folder Selected" ) );
     return;
   }
-  if ( expireToFolder )
+  if ( expireToFolder && moveToRB->isChecked() )
   {
     if ( expireToFolder->idString() == mFolder->idString() )
     {
