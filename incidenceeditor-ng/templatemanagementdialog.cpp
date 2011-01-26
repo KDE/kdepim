@@ -47,8 +47,8 @@
 using namespace IncidenceEditorNG;
 
 TemplateManagementDialog::TemplateManagementDialog(
-  QWidget *parent, const QStringList &templates, KCalCore::IncidenceBase::IncidenceType type )
-  : KDialog( parent ), m_templates( templates ), m_type( type ), m_changed( false )
+  QWidget *parent, const QStringList &templates, const QString &incidenceType )
+  : KDialog( parent ), m_templates( templates ), m_type( incidenceType ), m_changed( false )
 {
   QString m_type_translated = i18n( qPrintable( m_type ) );
   setCaption( i18n( "Manage %1 Templates", m_type_translated ) );

@@ -43,6 +43,7 @@
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
+#include <KCalUtils/Stringify>
 
 #include <KMessageBox>
 #include <KStandardDirs>
@@ -277,7 +278,8 @@ void EventOrTodoDialogPrivate::manageTemplates()
   QStringList &templates =
     IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() );
   QPointer<IncidenceEditorNG::TemplateManagementDialog> dialog(
-      new IncidenceEditorNG::TemplateManagementDialog( q, templates, mEditor->type() ) );
+      new IncidenceEditorNG::TemplateManagementDialog( q, templates,
+                                                       KCalUtils::Stringify::incidenceType( mEditor->type() ) ) );
   q->connect( dialog, SIGNAL( loadTemplate( const QString& ) ),
               SLOT( loadTemplate( const QString& ) ) );
   q->connect( dialog, SIGNAL( templatesChanged( const QStringList& ) ),
