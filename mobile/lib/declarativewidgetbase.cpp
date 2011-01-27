@@ -25,15 +25,15 @@
 #include <QtGui/QWidget>
 
 #ifdef _WIN32_WCE
-bool DeclarativeWidgetBaseHelper::eventFilter(QObject *obj, QEvent *event)
+bool DeclarativeWidgetBaseHelper::eventFilter( QObject *object, QEvent *event )
 {
-    if (event->type() == QEvent::Hide) {
-        QWidget *wid = static_cast<QWidget *>(obj);
-        wid->show();
+    if ( object == this && event->type() == QEvent::Hide ) {
+        QWidget *widget = static_cast<QWidget*>( object );
+        QMetaObject::invokeMethod( widget, "show", Qt::QueuedConnection );
         qDebug("Ate hide event");
     }
-   
-    return QObject::eventFilter(obj, event);
+
+    return QGraphicsProxyWidget::eventFilter( object, event );
 }
 #endif
 
@@ -51,14 +51,14 @@ DeclarativeWidgetBaseHelper::DeclarativeWidgetBaseHelper( QWidget * widget, QGra
     setWidget( m_widget );
     setFocusPolicy( Qt::StrongFocus );
 #ifdef _WIN32_WCE
-    m_widget->installEventFilter(this);
+    m_widget->installEventFilter( this );
 #endif
 }
 
 DeclarativeWidgetBaseHelper::~DeclarativeWidgetBaseHelper()
 {
 #ifdef _WIN32_WCE
-    m_widget->removeEventFilter(this);
+    m_widget->removeEventFilter( this );
 #endif
 }
 

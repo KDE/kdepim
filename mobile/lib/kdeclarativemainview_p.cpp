@@ -60,11 +60,11 @@ void KDeclarativeMainViewPrivate::saveState()
 
 void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
 {
-  if ( !text.isEmpty() && !mFilterLineEdit->isVisible() ) {
+  if ( !text.isEmpty() ) {
     mFilterLineEdit->setFixedHeight( 40 );
     mFilterLineEdit->show();
     mFilterLineEdit->setFocus();
-  } else if ( text.isEmpty() && mFilterLineEdit->isVisible() ) {
+  } else if ( text.isEmpty() ) {
     mFilterLineEdit->setFixedHeight( 0 );
     mFilterLineEdit->hide();
   }
@@ -72,11 +72,11 @@ void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
 
 void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString &text )
 {
-  if ( !text.isEmpty() && !mBulkActionFilterLineEdit->isVisible() ) {
+  if ( !text.isEmpty() ) {
     mBulkActionFilterLineEdit->setFixedHeight( 40 );
     mBulkActionFilterLineEdit->show();
     mBulkActionFilterLineEdit->setFocus();
-  } else if ( text.isEmpty() && mBulkActionFilterLineEdit->isVisible() ) {
+  } else if ( text.isEmpty() ) {
     mBulkActionFilterLineEdit->setFixedHeight( 0 );
     mBulkActionFilterLineEdit->hide();
   }
