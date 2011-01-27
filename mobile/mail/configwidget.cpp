@@ -33,6 +33,8 @@
 #include <libkdepim/ldap/ldapclient.h>
 #include <libkdepim/recentaddresses.h>
 
+#include <QtGui/QLineEdit>
+
 using namespace MessageComposer;
 
 ConfigWidget::ConfigWidget( QWidget *parent )
@@ -45,6 +47,12 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   ui.kcfg_ComposerTemplatesReplyToSender->setProperty( "kcfg_property", QByteArray( "plainText" ) );
   ui.kcfg_ComposerTemplatesReplyToAll->setProperty( "kcfg_property", QByteArray( "plainText" ) );
   ui.kcfg_ComposerTemplatesForwardMessage->setProperty( "kcfg_property", QByteArray( "plainText" ) );
+
+  {
+    QLineEdit *lineEdit = ui.kcfg_ComposerWordWrapColumn->findChild<QLineEdit*>();
+    if ( lineEdit )
+      lineEdit->setReadOnly( true );
+  }
 
   mManager = new KConfigDialogManager( this, Settings::self() );
 
