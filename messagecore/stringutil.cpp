@@ -489,6 +489,7 @@ QByteArray stripEmailAddr( const QByteArray& aStr )
   return result;
 }
 
+#ifndef MESSAGECORE_NO_DEPRECATED
 QString stripEmailAddr( const QString& aStr )
 {
   //kDebug() << "(" << aStr << ")";
@@ -635,6 +636,7 @@ QString stripEmailAddr( const QString& aStr )
   //kDebug() << "Returns \"" << result << "\"";
   return result;
 }
+#endif
 
 QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
 {
