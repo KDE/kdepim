@@ -22,6 +22,7 @@
 #include "kdeclarativemainview.h"
 
 #include "akonadibreadcrumbnavigationfactory.h"
+#include "declarativewidgetbase.h"
 #include "favoriteseditor.h"
 #include "searchmanager.h"
 #include "statemachinebuilder.h"
@@ -31,6 +32,7 @@
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi_next/kviewstatemaintainer.h>
+#include <klineedit.h>
 
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QStringListModel>
@@ -38,7 +40,6 @@
 
 class AgentStatusMonitor;
 class KActionCollection;
-class KLineEdit;
 
 class ListProxy;
 class KDeclarativeMainViewPrivate : public QObject
@@ -82,6 +83,23 @@ public slots:
   void searchStarted( const Akonadi::Collection& );
   void searchStopped();
   void guiStateChanged( int oldState, int newState );
+};
+
+class DeclarativeBulkActionFilterLineEdit :
+#ifndef Q_MOC_RUN
+public DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit>
+#else
+public QGraphicsProxyWidget
+#endif
+{
+  Q_OBJECT
+
+  public:
+    explicit DeclarativeBulkActionFilterLineEdit( QGraphicsItem *parent = 0 );
+    ~DeclarativeBulkActionFilterLineEdit();
+
+  public Q_SLOTS:
+    void clear();
 };
 
 #endif // KDECLARATIVEMAINVIEW_P_H

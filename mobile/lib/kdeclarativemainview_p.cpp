@@ -146,3 +146,16 @@ void KDeclarativeMainViewPrivate::openHtml( const QString &path )
 #endif
 }
 
+DeclarativeBulkActionFilterLineEdit::DeclarativeBulkActionFilterLineEdit( QGraphicsItem *parent )
+  : DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit>( parent )
+{
+}
+
+DeclarativeBulkActionFilterLineEdit::~DeclarativeBulkActionFilterLineEdit()
+{
+}
+
+void DeclarativeBulkActionFilterLineEdit::clear()
+{
+  widget()->clear();
+}

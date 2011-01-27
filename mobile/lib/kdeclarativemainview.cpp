@@ -124,7 +124,6 @@ class ActionImageProvider : public QDeclarativeImageProvider
 using namespace Akonadi;
 
 typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setFilterLineEdit> DeclarativeFilterLineEdit;
-typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit> DeclarativeBulkActionFilterLineEdit;
 QML_DECLARE_TYPE( DeclarativeFilterLineEdit )
 QML_DECLARE_TYPE( DeclarativeBulkActionFilterLineEdit )
 QML_DECLARE_TYPE( AgentStatusMonitor )
