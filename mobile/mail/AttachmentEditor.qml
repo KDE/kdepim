@@ -37,6 +37,7 @@ KPIM.ReorderListContainer {
       id: background
       anchors.fill: parent
       opacity: (wrapper.ListView.isCurrentItem ? 0.25 : 0)
+      color: "lightsteelblue"
     }
     Text {
       id: attachmentName
