@@ -173,7 +173,8 @@ ActionMenuContainer {
     ActionListItem { name : "send_status_update" }
     ActionListItem { name : "send_cancellation_to_attendees" }
     ActionListItem { name : "request_update" }
-    ActionListItem { name : "request_change" }
+    /* doesn't do anything useful atm */
+    /*ActionListItem { name : "request_change" }*/
     ActionListItem { name : "send_as_icalendar" }
     ActionListItem { name : "mail_freebusy" }
     ActionListItem { name : "upload_freebusy" }
