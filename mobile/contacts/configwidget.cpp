@@ -50,6 +50,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   mManager = new KConfigDialogManager( this, Settings::self() );
 
   mMapServiceBox->addItem( i18n( "None" ), QString() );
+  mMapServiceBox->addItem( i18n( "OpenStreetMap" ), QLatin1String( "http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c" ) );
   mMapServiceBox->addItem( i18n( "Google Maps" ), QLatin1String( "http://maps.google.com/maps?q=%n,%l,%s" ) );
 }
 
@@ -57,7 +58,7 @@ void ConfigWidget::load()
 {
   KConfig config( "akonadi_contactrc" );
   const KConfigGroup group( &config, "Show Address Settings" );
-  const QString addressUrl = group.readEntry( "AddressUrl", QString::fromLatin1( "http://maps.google.com/maps?q=%n,%l,%s" ) );
+  const QString addressUrl = group.readEntry( "AddressUrl", QString::fromLatin1( "http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c" ) );
 
   Settings::self()->setMapService( mMapServiceBox->findData( addressUrl ) );
   mManager->updateWidgets();
