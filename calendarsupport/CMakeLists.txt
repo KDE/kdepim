@@ -33,6 +33,7 @@ set(calendarsupport_LIB_SRCS
   groupware.cpp
   identitymanager.cpp
   incidencechanger.cpp
+  incidencefetchjob.cpp
   incidencefilterproxymodel.cpp
   incidenceviewer.cpp
   kcalmodel.cpp
