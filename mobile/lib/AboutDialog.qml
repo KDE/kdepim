@@ -131,7 +131,7 @@ QML.Rectangle {
 
                   QML.Text{
                       text: KDE.i18n("This project is built upon KDE SC Kontact Desktop client.\n" +
-                                     "client. For the outstanding work done there we\n" +
+                                     "For the outstanding work done there we\n" +
                                      "would like to thank the original authors.\n")
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
