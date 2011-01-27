@@ -237,7 +237,7 @@ int MDNAdviceHelper::requestAdviceOnMDN(const char* what)
       const MessageViewer::KCursorSaver saver( Qt::ArrowCursor );
 #endif
       MessageComposer::MDNAdvice answer;
-      answer = questionIgnoreSend( mdnMessageBoxes[i].text,
+      answer = questionIgnoreSend( i18n( mdnMessageBoxes[i].text ),
                                                     mdnMessageBoxes[i].canDeny );
       switch ( answer ) {
         case MessageComposer::MDNSend:
