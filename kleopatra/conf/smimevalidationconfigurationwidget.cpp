@@ -148,6 +148,7 @@ struct SMIMECryptoConfigEntries {
           mDoNotCheckCertPolicyConfigEntry( configEntry( "gpgsm", "Security", "disable-policy-checks", CryptoConfigEntry::ArgType_None, false ) ),
           mNeverConsultConfigEntry( configEntry( "gpgsm", "Security", "disable-crl-checks", CryptoConfigEntry::ArgType_None, false ) ),
           mAllowMarkTrustedConfigEntry( configEntry( "gpg-agent", "Security", "allow-mark-trusted", CryptoConfigEntry::ArgType_None, false ) ),
+          mNoAllowMarkTrustedConfigEntry( configEntry( "gpg-agent", "Security", "no-allow-mark-trusted", CryptoConfigEntry::ArgType_None, false ) ),
           mFetchMissingConfigEntry( configEntry( "gpgsm", "Security", "auto-issuer-key-retrieve", CryptoConfigEntry::ArgType_None, false ) ),
           // dirmngr-0.9.0 options
           mIgnoreServiceURLEntry( configEntry( "dirmngr", "OCSP", "ignore-ocsp-service-url", CryptoConfigEntry::ArgType_None, false ) ),
@@ -180,6 +181,8 @@ struct SMIMECryptoConfigEntries {
     CryptoConfigEntry * const mNeverConsultConfigEntry;
     CryptoConfigEntry * const mAllowMarkTrustedConfigEntry;
     CryptoConfigEntry * const mFetchMissingConfigEntry;
+    // gnupg 2.0.17+ option that should inhibit allow-mark-trusted display
+    CryptoConfigEntry * const mNoAllowMarkTrustedConfigEntry;
     // dirmngr-0.9.0 options
     CryptoConfigEntry * const mIgnoreServiceURLEntry;
     CryptoConfigEntry * const mIgnoreHTTPDPEntry;
@@ -242,6 +245,8 @@ void SMimeValidationConfigurationWidget::load() {
         d->ui.doNotCheckCertPolicyCB->setChecked( e.mDoNotCheckCertPolicyConfigEntry->boolValue() );
     if ( e.mNeverConsultConfigEntry )
         d->ui.neverConsultCB->setChecked( e.mNeverConsultConfigEntry->boolValue() );
+    if ( e.mNoAllowMarkTrustedConfigEntry )
+        d->ui.allowMarkTrustedCB->hide(); // this option was only here to _enable_ allow-mark-trusted, and makes no sense if it's already default on
     if ( e.mAllowMarkTrustedConfigEntry )
         d->ui.allowMarkTrustedCB->setChecked( e.mAllowMarkTrustedConfigEntry->boolValue() );
     if ( e.mFetchMissingConfigEntry )
