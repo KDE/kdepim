@@ -2281,6 +2281,10 @@ AgendaScrollArea::AgendaScrollArea( bool isAllDay, AgendaView *agendaView,
                           agendaView->preferences()->hourSize(), isInteractive );
   }
 
+#ifdef KDEPIM_MOBILE_UI
+  setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+#endif
+
   setWidgetResizable( true );
   setWidget( mAgenda );
   setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
