@@ -40,6 +40,13 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *
   , mFavoritesEditor( 0 )
 { }
 
+void KDeclarativeMainViewPrivate::initializeStateSaver()
+{
+  restoreState();
+  connect( mEtm, SIGNAL( modelAboutToBeReset() ), this, SLOT( saveState() ) );
+  connect( mEtm, SIGNAL( modelReset() ), this, SLOT( restoreState() ) );
+}
+
 void KDeclarativeMainViewPrivate::restoreState()
 {
   Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;

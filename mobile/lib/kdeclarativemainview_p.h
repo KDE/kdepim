@@ -76,6 +76,7 @@ public: /// Methods
   void openHtml( const QString &path );
 
 public slots:
+  void initializeStateSaver();
   void saveState();
   void restoreState();
   void filterLineEditChanged( const QString &text );

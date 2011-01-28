@@ -256,8 +256,6 @@ void KDeclarativeMainView::doDelayedInitInternal()
 
   setupStandardActionManager( regularSelectionModel(), d->mItemActionSelectionModel );
 
-  connect( d->mEtm, SIGNAL( modelAboutToBeReset() ), d, SLOT( saveState() ) );
-  connect( d->mEtm, SIGNAL( modelReset() ), d, SLOT( restoreState() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), d, SLOT( saveState() ) );
 
   connect( d->mBnf->selectedItemModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SIGNAL( isLoadingSelectedChanged() ) );
@@ -273,7 +271,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
     kWarning() << "Restoring state" << time.elapsed() << &time;
   }
 
-  d->restoreState();
+  QTimer::singleShot(1000, d, SLOT(initializeStateSaver()));
 
   if ( debugTiming ) {
     kWarning() << "restore state done" << time.elapsed() << &time;
