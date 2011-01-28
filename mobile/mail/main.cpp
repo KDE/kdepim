@@ -76,6 +76,7 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "libkcalutils" ); // for invitation handling
   KGlobal::locale()->insertCatalog( "libkleopatra" ); // for Krypto format settings in identity dialog
   KGlobal::locale()->insertCatalog( "libkpimidentities" ); // for signature settings in identity dialog
+  KGlobal::locale()->insertCatalog( "calendarsupport" ); // for error messages while updating events and tasks
 
   return app.exec();
 }
