@@ -67,7 +67,7 @@ KPIM.MainView {
 
   KCal.IncidenceView {
     id: eventView
-    anchors { fill: parent; topMargin: 48; leftMargin: 48 }
+    anchors { fill: parent; topMargin: 40; leftMargin: 40 }
     visible: guiStateManager.inViewSingleItemState
     z: 0
 
