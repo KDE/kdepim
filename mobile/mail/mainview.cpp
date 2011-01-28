@@ -480,9 +480,12 @@ void MainView::qmlInitialized(QDeclarativeView::Status status)
     // register the send MDN handler
     item->viewer()->addMessageLoadedHandler( new MailCommon::SendMdnHandler( MobileKernel::self(), this ) );
 
-    bool fixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
+    const bool fixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
     item->viewer()->setUseFixedFont( fixedFont );
     actionCollection()->action( "message_fixed_font" )->setChecked( fixedFont );
+
+    actionCollection()->action( "show_extended_headers" )->setChecked( true );
+    toggleShowExtendedHeaders( true );
   }
 }
 
