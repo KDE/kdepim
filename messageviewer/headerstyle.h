@@ -125,7 +125,7 @@ public:
   Akonadi::MessageStatus messageStatus() const { return mMessageStatus; }
 
   static QString dateStr(const KDateTime &dateTime);
-  static QByteArray dateShortStr(const KDateTime &dateTime);
+  static QString dateShortStr(const KDateTime &dateTime);
 
 private:
 

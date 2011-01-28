@@ -93,9 +93,9 @@ static QString dateString( KMime::Message *message, bool printing, bool shortDat
     return locale->formatDateTime( dateTime );
   } else {
     if ( shortDate )
-      return MessageViewer::HeaderStyle::dateStr( message->date()->dateTime() );
-    else
       return MessageViewer::HeaderStyle::dateShortStr( message->date()->dateTime() );
+    else
+      return MessageViewer::HeaderStyle::dateStr( message->date()->dateTime() );
   }
 }
 
@@ -1147,16 +1147,9 @@ QString HeaderStyle::dateStr(const KDateTime &dateTime)
               unixTime, MessageCore::GlobalSettings::self()->customDateFormat() );
 }
 
-QByteArray HeaderStyle::dateShortStr(const KDateTime &dateTime)
+QString HeaderStyle::dateShortStr(const KDateTime &dateTime)
 {
-    const time_t unixTime = dateTime.toTime_t();
-
-    QByteArray result = ctime(&unixTime);
-
-    if (result[result.length()-1]=='\n')
-        result.truncate(result.length()-1);
-
-    return result;
+  return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyShortDate );
 }
 
 }
