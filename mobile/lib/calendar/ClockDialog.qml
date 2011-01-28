@@ -39,104 +39,79 @@ Dialog {
     Item {
       anchors.fill: parent
 
-
-      KPIM.Clock {
-        id: myClock
-        anchors {
-          left: parent.left
-          top: parent.top
-          bottom: amPmSwitch.top
-
-          topMargin: 25
-          bottomMargin: 25
-        }
-
-        onHoursChanged: {
-          if ( clockWidget.blockSignalEmission )
-            return;
-          // ### TODO: instead of calling function just set value
-          // was supposed to work
-          hourSelector.setValue(amPmSwitch.on ? myClock.hours + 12 : myClock.hours);
-        }
-
-        onMinutesChanged: {
-          // ### TODO: instead of calling function just set value
-          // was supposed to work
-          minuteSelector.setValue(myClock.minutes);
-        }
+      MouseArea {
+        anchors.fill: parent
+        onClicked: {}
       }
 
-      KPIM.Switch {
-        id: amPmSwitch
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: myClock.horizontalCenter
+      Item {
+        id: digitalClock
+        anchors.fill: parent
 
-        onOnChanged: {
-          if ( on ) { // pm selected
-            if ( hourSelector.value < 12 ) {
-              hourSelector.setValue( hourSelector.value + 12 );
-            }
-          } else { // am selected
-            if ( hourSelector.value >= 12 ) {
-              hourSelector.setValue( hourSelector.value - 12 );
+        Row {
+          anchors.centerIn: parent
+
+          Text {
+            property int value: 0
+
+            id: hourSelector
+            width: digitalClock.width/2.5
+
+            text: value < 10 ? "0" + value : value
+            color: "#004bb8"
+            font.bold: true
+            font.pixelSize: 100
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
+            style: Text.Sunken
+
+            MouseArea {
+              anchors.fill: parent
+
+              onClicked: {
+                hoursTable.currentHour = hourSelector.value;
+                hoursTable.visible = true
+              }
             }
           }
+
+          Text {
+            text: ":"
+            width: digitalClock.width - hourSelector.width - minuteSelector.width
+            color: "#004bb8"
+            font.bold: true
+            font.pixelSize: 100
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            style: Text.Sunken
+          }
+
+          Text {
+            property int value: 0
+
+            id: minuteSelector
+            width: digitalClock.width/2.5
+
+            text: value < 10 ? "0" + value : value
+            color: "#004bb8"
+            font.bold: true
+            font.pixelSize: 100
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            style: Text.Sunken
+
+            MouseArea {
+              anchors.fill: parent
+
+              onClicked: {
+                minutesTable.currentMinute = minuteSelector.value;
+                minutesTable.visible = true
+              }
+            }
+          }
         }
       }
 
-      Column {
-        spacing: 5
-        anchors {
-          top: parent.top
-          left: myClock.right
-          right: parent.right
-
-          topMargin: 100
-          leftMargin: 60
-        }
-
-        KPIM.VerticalSelector {
-          id: hourSelector
-          height: 100
-          model: 24
-
-          onValueChanged: {
-            clockWidget.blockSignalEmission = true;
-            myClock.hours = value >= 12 ? value - 12 : value;
-            amPmSwitch.setOn( value >= 12 );
-            clockWidgetOk.enabled = true;
-            clockWidget.blockSignalEmission = false;
-          }
-          onSelected: {
-            minuteSelector.state = "unselected";
-          }
-          Component.onCompleted: {
-              // ### TODO: instead of calling function just set value
-              // was supposed to work
-              hourSelector.setValue(myClock.hours);
-          }
-        }
-
-        KPIM.VerticalSelector {
-          id: minuteSelector
-          height: 100
-          model: 60
-
-          onValueChanged: {
-            myClock.minutes = value;
-            clockWidgetOk.enabled = true;
-          }
-          onSelected: {
-            hourSelector.state = "unselected";
-          }
-          Component.onCompleted: {
-              // ### TODO: instead of calling function just set value
-              // was supposed to work
-              minuteSelector.setValue(myClock.minutes);
-          }
-        }
-
-      }
       Row {
         spacing: 5
         anchors{
@@ -149,22 +124,164 @@ Dialog {
           width: 100
           onClicked: {
             clockWidget.collapse()
-            myClock.clearSelection()
-            //### + reset widget
           }
         }
         KPIM.Button2 {
           id: clockWidgetOk
-          enabled: false
           buttonText: KDE.i18n( "Ok" );
           width: 100
           onClicked: {
             clockWidget.collapse()
-            myClock.clearSelection()
-            timeChanged(hourSelector.value, minuteSelector.value);
+            timeChanged(clockWidget.hours, clockWidget.minutes);
           }
         }
       }
     }
   ]
+
+  Rectangle {
+    id: hoursTable
+    visible: false
+
+    property int currentHour
+
+    signal selectionFinished( int value )
+
+    Grid {
+      anchors.fill: parent
+      spacing: 3
+      columns: 6
+      rows: 4
+
+      Repeater {
+        model: 24
+        Image {
+          width: (hoursTable.width-(3*5))/6
+          height: (hoursTable.height-(3*3))/4
+
+          source: "images/normaldate.png"
+
+          Image {
+            anchors.fill: parent
+            source: {
+              if ( hourText.text == hoursTable.currentHour ) {
+                return "images/activedate.png";
+              } else {
+                return "";
+              }
+            }
+          }
+
+          Text {
+            id: hourText
+            anchors.centerIn: parent
+            color: "#5ba0d4"
+            font.bold: true
+            font.pixelSize: 26
+            style: Text.Sunken
+            text: index
+          }
+
+          MouseArea {
+            anchors.fill: parent
+            onClicked: {
+              hoursTable.currentHour = index
+              hoursTable.selectionFinished( index )
+              hoursTable.visible = false
+            }
+          }
+        }
+      }
+    }
+
+    Behavior on visible {
+      ParallelAnimation {
+        PropertyAnimation { target: hoursTable; property: "x"; from: mapFromItem(hourSelector, hourSelector.width/2, 0).x; to: 0; duration: 200 }
+        PropertyAnimation { target: hoursTable; property: "y"; from: mapFromItem(hourSelector, 0, hourSelector.height/2).y; to: 0; duration: 200 }
+        PropertyAnimation { target: hoursTable; property: "width"; from: 0; to: clockWidget.width; duration: 200 }
+        PropertyAnimation { target: hoursTable; property: "height"; from: 0; to: clockWidget.height; duration: 200 }
+      }
+    }
+  }
+
+  Connections {
+    target: hoursTable
+    onSelectionFinished: {
+      hourSelector.value = value
+      clockWidgetOk.enabled = true
+    }
+  }
+
+  Rectangle {
+    id: minutesTable
+    visible: false
+
+    property int currentMinute
+
+    signal selectionFinished( int value )
+
+    Grid {
+      anchors.fill: parent
+      spacing: 3
+      columns: 10
+      rows: 6
+
+      Repeater {
+        model: 60
+        Image {
+          width: (minutesTable.width-(3*9))/10
+          height: (minutesTable.height-(3*5))/6
+
+          source: "images/normaldate.png"
+
+          Image {
+            anchors.fill: parent
+            source: {
+              if ( minuteText.text == minutesTable.currentMinute ) {
+                return "images/activedate.png";
+              } else {
+                return "";
+              }
+            }
+          }
+
+          Text {
+            id: minuteText
+            anchors.centerIn: parent
+            color: "#5ba0d4"
+            font.bold: true
+            font.pixelSize: 26
+            style: Text.Sunken
+            text: index
+          }
+
+          MouseArea {
+            anchors.fill: parent
+            onClicked: {
+              minutesTable.currentMinute = index
+              minutesTable.selectionFinished( index )
+              minutesTable.visible = false
+            }
+          }
+        }
+      }
+    }
+
+    Behavior on visible {
+      ParallelAnimation {
+        PropertyAnimation { target: minutesTable; property: "x"; from: mapFromItem(minuteSelector, minuteSelector.width/2, 0).x; to: 0; duration: 200 }
+        PropertyAnimation { target: minutesTable; property: "y"; from: mapFromItem(minuteSelector, 0, minuteSelector.height/2).y; to: 0; duration: 200 }
+        PropertyAnimation { target: minutesTable; property: "width"; from: 0; to: clockWidget.width; duration: 200 }
+        PropertyAnimation { target: minutesTable; property: "height"; from: 0; to: clockWidget.height; duration: 200 }
+      }
+    }
+  }
+
+  Connections {
+    target: minutesTable
+    onSelectionFinished: {
+      minuteSelector.value = value
+      clockWidgetOk.enabled = true
+    }
+  }
 }
