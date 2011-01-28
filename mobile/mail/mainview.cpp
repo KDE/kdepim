@@ -486,9 +486,20 @@ void MainView::qmlInitialized(QDeclarativeView::Status status)
 
     actionCollection()->action( "show_extended_headers" )->setChecked( true );
     toggleShowExtendedHeaders( true );
+
+    connect( item->viewer(), SIGNAL( deleteMessage( const Akonadi::Item& ) ),
+             this, SLOT( slotDeleteMessage( const Akonadi::Item& ) ) );
   }
 }
 
+void MainView::slotDeleteMessage( const Akonadi::Item &item )
+{
+  if ( !item.isValid() )
+    return;
+
+  Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( item );
+  job->start();
+}
 
 void MainView::recoverAutoSavedMessages()
 {

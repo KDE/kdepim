@@ -189,6 +189,7 @@ class MainView : public KDeclarativeMainView
     void messageListSettingsChanged( const MessageListSettings& );
     bool selectNextUnreadMessageInCurrentFolder();
     void showTemplatesHelp();
+    void slotDeleteMessage( const Akonadi::Item &item );
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
