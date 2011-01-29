@@ -159,9 +159,7 @@ install(TARGETS knodepart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(knode_SRCS knode.cpp knapplication.cpp main.cpp )
 
-
-# todo: move to Oxygen icon
-kde4_add_app_icon(knode_SRCS "hi*-app-knode2.png")
+kde4_add_app_icon(knode_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-knode.png")
 
 kde4_add_executable(knode ${knode_SRCS})
 
@@ -178,5 +176,4 @@ install( FILES knode_config_identity.desktop knode_config_accounts.desktop knode
 install( FILES headers.rc knodeui.rc knreaderui.rc kncomposerui.rc  DESTINATION ${DATA_INSTALL_DIR}/knode)
 install(FILES org.kde.knode.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
-kde4_install_icons( ${ICON_INSTALL_DIR}   )
-
+add_subdirectory(icons)
