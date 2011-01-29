@@ -41,6 +41,15 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
   public:
     GroupwareUiDelegate()
     {
+    }
+
+    void setCalendar( CalendarSupport::Calendar *calendar )
+    {
+      mCalendar = calendar;
+    }
+
+    void createCalendar()
+    {
       Akonadi::Session *session = new Akonadi::Session( "GroupwareIntegration", this );
       Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
 
@@ -71,6 +80,7 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
     {
       const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
       if ( !incidence ) {
+        kWarning() << "Incidence is null, won't open the editor";
         return;
       }
 
@@ -93,10 +103,15 @@ bool GroupwareIntegration::isActive()
   return sActivated;
 }
 
-void GroupwareIntegration::activate()
+void GroupwareIntegration::activate( CalendarSupport::Calendar *calendar )
 {
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
   CalendarSupport::Groupware::create( &*globalDelegate );
+  if ( calendar ) {
+    globalDelegate->setCalendar( calendar );
+  } else {
+    globalDelegate->createCalendar();
+  }
   sActivated = true;
 }
 
