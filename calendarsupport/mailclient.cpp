@@ -249,24 +249,32 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
 
   // Set the first multipart, the body message.
   KMime::Content *bodyMessage = new KMime::Content;
+  KMime::Headers::ContentDisposition *bodyDisposition =
+    new KMime::Headers::ContentDisposition( bodyMessage );
+  bodyDisposition->setDisposition( KMime::Headers::CDinline );
   bodyMessage->contentType()->setMimeType( "text/plain" );
+  bodyMessage->contentType()->setCharset( "utf-8" );
+  bodyMessage->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
   bodyMessage->setBody( body.toUtf8() );
+  message->addContent( bodyMessage );
 
   // Set the sedcond multipart, the attachment.
   if ( !attachment.isEmpty() ) {
     KMime::Content *attachMessage = new KMime::Content;
     KMime::Headers::ContentDisposition *attachDisposition =
       new KMime::Headers::ContentDisposition( attachMessage );
-    attachDisposition->setFilename( QLatin1String( "cal.ics" ) );
     attachDisposition->setDisposition( KMime::Headers::CDattachment );
     attachMessage->contentType()->setMimeType( "text/calendar" );
+    attachMessage->contentType()->setCharset( "utf-8" );
+    attachMessage->contentType()->setName( QLatin1String( "cal.ics" ), "utf-8" );
+    attachMessage->contentType()->setParameter( QLatin1String( "method" ), QLatin1String( "request" ) );
     attachMessage->setHeader( attachDisposition );
+    attachMessage->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
     attachMessage->setBody( attachment.toUtf8() );
     message->addContent( attachMessage );
   }
 
   // Job done, attach the both multiparts and assemble the message.
-  message->addContent( bodyMessage );
   message->assemble();
 
   // Put the newly created item in the MessageQueueJob.
