@@ -146,9 +146,12 @@ void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
       mUi->mOrganizerCombo->insertItem( 0, fullOrganizer );
       mUi->mOrganizerCombo->setCurrentIndex( 0 );
     }
+
+    mUi->mOrganizerLabel->setVisible( false );
   } else { // someone else is the organizer
     mUi->mOrganizerStack->setCurrentIndex( 1 );
     mUi->mOrganizerLabel->setText( incidence->organizer()->fullName() );
+    mUi->mOrganizerLabel->setVisible( true );
   }
 
   mAttendeeEditor->clear();
@@ -192,7 +195,11 @@ void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
       incidence->addAttendee( attendee );
     }
   }
-  incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
+
+  if ( mUi->mOrganizerStack->currentIndex() == 0 )
+    incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
+  else
+    incidence->setOrganizer( mUi->mOrganizerLabel->text() );
 }
 
 bool IncidenceAttendee::isDirty() const
