@@ -601,7 +601,6 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
     setDateTimes( startDT, KDateTime() );
   } else {
     // set the start/end time from the template, only as a last resort #190545
-    kDebug() << "DEBUG dtStart is valid " << journal->dtStart().isValid();
     if ( !journal->dtStart().isValid() ) {
       setTimes( journal->dtStart(), KDateTime() );
     }
