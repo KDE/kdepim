@@ -189,6 +189,7 @@ class MainView : public KDeclarativeMainView
     void messageListSettingsChanged( const MessageListSettings& );
     bool selectNextUnreadMessageInCurrentFolder();
     void showTemplatesHelp();
+    void slotDeleteMessage( const Akonadi::Item &item );
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
@@ -198,6 +199,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::Item currentItem() const;
     MessageViewer::MessageViewItem *messageViewerItem();
     uint currentFolderIdentity() const;
+    QString itemStorageCollectionAsPath( const Akonadi::Item& ) const;
 
     bool mAskingToGoOnline;
     QWidget *mTransportDialog;

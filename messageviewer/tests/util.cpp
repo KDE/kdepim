@@ -22,7 +22,7 @@
 
 KMime::Message::Ptr readAndParseMail( const QString &mailFile )
 {
-  QFile file( MAIL_DATA_DIR + '/' + mailFile );
+  QFile file( QString( MAIL_DATA_DIR ) + '/' + mailFile );
   Q_ASSERT( file.open( QIODevice::ReadOnly ) );
   const QByteArray data = KMime::CRLFtoLF( file.readAll() );
   Q_ASSERT( !data.isEmpty() );

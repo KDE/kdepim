@@ -44,6 +44,9 @@ class TextBrowser : public KTextBrowser
     TextBrowser( QWidget *parent = 0 )
       : KTextBrowser( parent )
     {
+#ifdef KDEPIM_MOBILE_UI
+      setFrameStyle( QFrame::NoFrame );
+#endif
     }
 
     void setSource( const QUrl &name )

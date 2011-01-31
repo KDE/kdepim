@@ -278,10 +278,15 @@ void EventArchiver::archiveIncidences( CalendarSupport::Calendar *calendar, Cale
 #endif // Q_OS_WINCE
   QFile::remove( tmpFileName );
 
+  // We don't want it to ask to send invitations for each incidence.
+  const uint atomicOperationId = changer->startAtomicOperation();
+
   // Delete archived events from calendar
   foreach(const Akonadi::Item &item, incidences) {
-    changer->deleteIncidence( item, 0, widget );
+    changer->deleteIncidence( item, atomicOperationId, widget );
   }
+  changer->endAtomicOperation( atomicOperationId );
+
   emit eventsDeleted();
 }
 

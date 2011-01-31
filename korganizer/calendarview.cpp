@@ -833,7 +833,7 @@ void CalendarView::changeIncidenceDisplay( const Akonadi::Item &item, int action
     }
   } else {
     mViewManager->currentView()->updateView();
-    if ( mTodoList ) {
+    if ( mTodoList && mViewManager->currentView()->identifier() != "DefaultTodoView" ) {
       mTodoList->updateView();
     }
   }
@@ -842,11 +842,14 @@ void CalendarView::changeIncidenceDisplay( const Akonadi::Item &item, int action
 void CalendarView::updateView( const QDate &start, const QDate &end,
                                const bool updateTodos )
 {
-  if ( updateTodos ) {
+  const bool currentViewIsTodoView = mViewManager->currentView()->identifier() == "DefaultTodoView";
+
+  if ( updateTodos && !currentViewIsTodoView ) {
+    // Update the sidepane todoView
     mTodoList->updateView();
   }
 
-  if ( start.isValid() && end.isValid() ) {
+  if ( start.isValid() && end.isValid() && !( currentViewIsTodoView && !updateTodos ) ) {
     mViewManager->updateView( start, end );
   }
 
@@ -2185,7 +2188,6 @@ void CalendarView::updateFilter()
   emit filtersUpdated( filters, pos + 1 );
 
   mCalendar->setFilter( mCurrentFilter );
-  updateView();
 }
 
 void CalendarView::filterActivated( int filterNo )

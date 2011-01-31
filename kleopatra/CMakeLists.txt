@@ -305,6 +305,7 @@ if(WINCE)
 endif(WINCE)
 
 if ( KLEO_STATIC_KCMODULES )
+  add_definitions( -DKLEO_STATIC_KCMODULES )
   set(_kleopatra_extra_libs kcm_kleopatra)
 else ( KLEO_STATIC_KCMODULES )
   set(_kleopatra_extra_libs)
@@ -366,7 +367,7 @@ endif(KDEPIM_MOBILE_UI)
 add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
 
 
-kde4_add_app_icon(_kleopatra_mainwindow_SRCS "ox*-app-kleopatra.png")
+kde4_add_app_icon(_kleopatra_mainwindow_SRCS "hi*-app-kleopatra.png")
 kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 

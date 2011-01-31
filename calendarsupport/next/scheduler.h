@@ -44,7 +44,7 @@ typedef int CallId;
 namespace KCalCore {
   class ICalFormat;
   class FreeBusyCache;
-};
+}
 
 namespace CalendarSupport {
   class IncidenceChanger2;

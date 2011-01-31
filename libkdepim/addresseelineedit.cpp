@@ -796,7 +796,11 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
     if ( collection.isValid() ) {
       const Akonadi::EntityDisplayAttribute *attribute =
         collection.attribute<Akonadi::EntityDisplayAttribute>();
-      const QString sourceString = ( attribute ? attribute->displayName() : collection.name() );
+
+      QString sourceString = collection.name();
+      if ( attribute && !attribute->displayName().isEmpty() )
+        sourceString = attribute->displayName();
+
       const int index = q->addCompletionSource( sourceString, 1 );
       kDebug() << "\treceived: " << sourceString << "index: " << index;
       s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), index );

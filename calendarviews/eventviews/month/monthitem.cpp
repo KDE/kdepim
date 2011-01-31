@@ -596,8 +596,9 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
     // ret << monthScene()->eventPixmap();
 
   } else if ( mIsTodo || mIsJournal ) {
-    KDateTime::Spec spec = monthScene()->monthView()->preferences()->timeSpec();
-    ret << new QPixmap( cachedSmallIcon( mIncidence->iconName( KDateTime( realStartDate(), spec ) ) ) );
+    KDateTime occurrenceDateTime = mIncidence->dateTime( Incidence::RoleRecurrenceStart );
+    occurrenceDateTime.setDate( realStartDate() );
+    ret << new QPixmap( cachedSmallIcon( mIncidence->iconName( occurrenceDateTime ) ) );
   }
 
   if ( !monthScene()->mMonthView->calendar()->hasChangeRights( item ) && !specialEvent ) {
@@ -619,19 +620,15 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 
 QColor IncidenceMonthItem::catColor() const
 {
-  QColor retColor;
   Q_ASSERT( mIncidence );
   const QStringList categories = mIncidence->categories();
   QString cat;
   if ( !categories.isEmpty() ) {
     cat = categories.first();
   }
-  if ( cat.isEmpty() ) {
-    retColor = CalendarSupport::KCalPrefs::instance()->unsetCategoryColor();
-  } else {
-    retColor = CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
-  }
-  return retColor;
+
+  return cat.isEmpty() ? CalendarSupport::KCalPrefs::instance()->unsetCategoryColor() :
+                         CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
 }
 
 QColor IncidenceMonthItem::bgColor() const
@@ -676,23 +673,18 @@ QColor IncidenceMonthItem::frameColor() const
 
   PrefsPtr prefs = monthScene()->monthView()->preferences();
   if ( prefs->monthViewColors() == PrefsBase::MonthItemResourceOnly ||
-       prefs->monthViewColors() == PrefsBase::MonthItemCategoryInsideResourceOutside ) {
+       prefs->monthViewColors() == PrefsBase::MonthItemCategoryInsideResourceOutside ||
+       ( mIncidence->categories().isEmpty() && prefs->monthViewColors() == PrefsBase::MonthItemResourceInsideCategoryOutside ) ) {
     Q_ASSERT( mIncidence );
     const QString id = QString::number( akonadiItem().storageCollectionId() );
-    if ( id.isEmpty() ) {
-      // item got removed from calendar, give up.
-      return QColor();
+    if ( !id.isEmpty() ) {
+      frameColor = prefs->resourceColor( id );
     }
-    frameColor = prefs->resourceColor( id );
   } else {
     frameColor = catColor();
   }
 
-  if ( !frameColor.isValid() ) {
-    frameColor = Qt::black;
-  }
-
-  return frameColor;
+  return EventView::itemFrameColor( frameColor, selected() );
 }
 
 Akonadi::Item IncidenceMonthItem::akonadiItem() const

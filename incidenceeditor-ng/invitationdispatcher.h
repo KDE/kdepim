@@ -55,11 +55,11 @@ class  INCIDENCEEDITORS_NG_EXPORT InvitationDispatcher : public QObject
 
   private:
     InvitationDispatcherPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( InvitationDispatcher );
-    Q_DISABLE_COPY( InvitationDispatcher );
+    Q_DECLARE_PRIVATE( InvitationDispatcher )
+    Q_DISABLE_COPY( InvitationDispatcher )
 
-    Q_PRIVATE_SLOT( d_ptr, void processItemSave( IncidenceEditorNG::EditorItemManager::SaveAction ) );
-    Q_PRIVATE_SLOT( d_ptr, void resetManager() );
+    Q_PRIVATE_SLOT( d_ptr, void processItemSave( IncidenceEditorNG::EditorItemManager::SaveAction ) )
+    Q_PRIVATE_SLOT( d_ptr, void resetManager() )
 };
 
 }

@@ -128,6 +128,10 @@ void TimelineViewItem::showRange( const QDate &date, int range )
     m_view->showDates( date, date.addDays( 3 ) );
     break;
   }
+  case Next7Days: {
+    m_view->showDates( date, date.addDays( 7 ) );
+    break;
+  }
   default:;
   }
 }

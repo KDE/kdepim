@@ -64,9 +64,8 @@ void AgentStatusMonitor::updateStatus()
     }
   }
 
-  if ( Solid::Networking::status() != Solid::Networking::Connected && Solid::Networking::status() != Solid::Networking::Unknown ) {
+  if ( Solid::Networking::status() != Solid::Networking::Connected && Solid::Networking::status() != Solid::Networking::Unknown )
     m_status &= ~Online;
-  }
 
   if ( m_status != oldStatus )
     emit statusChanged();

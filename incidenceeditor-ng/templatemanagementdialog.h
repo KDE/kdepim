@@ -52,7 +52,7 @@ class INCIDENCEEDITORS_NG_EXPORT TemplateManagementDialog: public KDialog
   Q_OBJECT
   public:
     TemplateManagementDialog( QWidget *parent, const QStringList &templates,
-                              KCalCore::IncidenceBase::IncidenceType incidenceType );
+                              const QString &incidenceType );
 
   signals:
     /* Emitted whenever the user hits apply, indicating that the currently

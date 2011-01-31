@@ -59,18 +59,21 @@ class MessageListSettings
     void setUseThreading( bool threading );
     bool useThreading() const;
 
-    void setSaveForCollection( bool save );
-    bool saveForCollection() const;
+    void setUseGlobalSettings( bool value );
+    bool useGlobalSettings() const;
 
     static MessageListSettings fromConfig( qint64 collectionId );
     static void toConfig( qint64 collectionId, const MessageListSettings &settings );
+
+    static MessageListSettings fromDefaultConfig();
+    static void toDefaultConfig( const MessageListSettings &settings );
 
   private:
     SortingOption mSortingOption;
     bool mSortDescending;
     GroupingOption mGroupingOption;
     bool mUseThreading;
-    bool mSaveForCollection;
+    bool mUseGlobalSettings;
 };
 
 #endif

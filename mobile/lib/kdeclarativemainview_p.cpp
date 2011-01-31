@@ -33,11 +33,19 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *
   , mChangeRecorder( 0 )
   , mCollectionFilter( 0 )
   , mItemFilterModel( 0 )
+  , mBnf( 0 )
   , mAgentStatusMonitor( 0 )
   , mGuiStateManager( 0 )
   , mStateMachine( 0 )
   , mFavoritesEditor( 0 )
 { }
+
+void KDeclarativeMainViewPrivate::initializeStateSaver()
+{
+  restoreState();
+  connect( mEtm, SIGNAL( modelAboutToBeReset() ), this, SLOT( saveState() ) );
+  connect( mEtm, SIGNAL( modelReset() ), this, SLOT( restoreState() ) );
+}
 
 void KDeclarativeMainViewPrivate::restoreState()
 {
@@ -59,11 +67,11 @@ void KDeclarativeMainViewPrivate::saveState()
 
 void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
 {
-  if ( !text.isEmpty() && !mFilterLineEdit->isVisible() ) {
+  if ( !text.isEmpty() ) {
     mFilterLineEdit->setFixedHeight( 40 );
     mFilterLineEdit->show();
     mFilterLineEdit->setFocus();
-  } else if ( text.isEmpty() && mFilterLineEdit->isVisible() ) {
+  } else if ( text.isEmpty() ) {
     mFilterLineEdit->setFixedHeight( 0 );
     mFilterLineEdit->hide();
   }
@@ -71,11 +79,11 @@ void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
 
 void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString &text )
 {
-  if ( !text.isEmpty() && !mBulkActionFilterLineEdit->isVisible() ) {
+  if ( !text.isEmpty() ) {
     mBulkActionFilterLineEdit->setFixedHeight( 40 );
     mBulkActionFilterLineEdit->show();
     mBulkActionFilterLineEdit->setFocus();
-  } else if ( text.isEmpty() && mBulkActionFilterLineEdit->isVisible() ) {
+  } else if ( text.isEmpty() ) {
     mBulkActionFilterLineEdit->setFixedHeight( 0 );
     mBulkActionFilterLineEdit->hide();
   }
@@ -145,3 +153,16 @@ void KDeclarativeMainViewPrivate::openHtml( const QString &path )
 #endif
 }
 
+DeclarativeBulkActionFilterLineEdit::DeclarativeBulkActionFilterLineEdit( QGraphicsItem *parent )
+  : DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit>( parent )
+{
+}
+
+DeclarativeBulkActionFilterLineEdit::~DeclarativeBulkActionFilterLineEdit()
+{
+}
+
+void DeclarativeBulkActionFilterLineEdit::clear()
+{
+  widget()->clear();
+}

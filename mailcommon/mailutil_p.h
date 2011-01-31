@@ -46,6 +46,7 @@ class AttachmentSelectionDialog : public KDialog
         mButtonCode( KDialog::Cancel )
     {
       setButtons( User1 | User2 | User3 | Cancel );
+      setWindowTitle( i18n( "Create Todo/Reminder") );
       setButtonText( User1, i18n( "Attach inline without attachments" ) );
       setButtonText( User2, i18n( "Attach &inline" ) );
       setButtonText( User3, i18n( "Attach as &link" ) );

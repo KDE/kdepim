@@ -195,12 +195,16 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const bool alreadyExisted = m_itemMap.contains( item.id() );
   const Akonadi::Item::Id id = item.id();
 
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  Q_ASSERT( incidence );
+
   if ( q->objectName() != QLatin1String( "Groupware calendar" ) ) { // too much noise otherwise
     // TODO: remove this debug message in a few months
     kDebug() << "id=" << item.id()
              << "version=" << item.revision()
              << "alreadyExisted=" << alreadyExisted
              << "; mode = " << mode
+             << "; uid = " << incidence->uid()
              << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
              << "; parentCollection.id() = " << item.parentCollection().id(); // can be a virtual collection
   }
@@ -217,11 +221,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
 
   Q_ASSERT( mode == DontCare || alreadyExisted == ( mode == AssertExists ) );
 
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-  Q_ASSERT( incidence );
-
   if ( alreadyExisted ) {
-
     if ( !m_itemMap.contains( id ) ) {
       // Item was deleted almost at the same time the change was made
       // ignore this change
@@ -240,8 +240,9 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
                << "; m_itemMap.value( id ).storageCollectionId() = "
                << m_itemMap.value( id ).storageCollectionId()
                << "; item.isValid() = " << item.isValid()
-               << "; calendar = " << q;
+               << "; calendar = " << q->objectName();
       Q_ASSERT_X( false, "updateItem", "updated item has different collection id" );
+      return;
     }
     // update-only goes here
   } else {
@@ -317,7 +318,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     knowParent = parentIt != m_uidToItemId.constEnd();
   }
 
-  if ( alreadyExisted ) {
+  if ( alreadyExisted ) { // We're updating an existing item
     const bool existedInUidMap = m_uidToItemId.contains( ui );
     if ( m_uidToItemId.value( ui ) != item.id() ) {
       kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
@@ -325,8 +326,11 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
               << "; calendar = " << q->objectName()
               << "; existed in cache = " << existedInUidMap
               << "; storageCollection.id() = " << item.storageCollectionId() // the real collection
-              << "; parentCollection.id() = " << item.parentCollection().id(); // can be a virtual collection
+              << "; parentCollection.id() = " << item.parentCollection().id() // can be a virtual collection
+              << "; hasParent = " << hasParent
+              << "; knowParent = " << knowParent;
       Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
+      return;
     }
 
     QHash<Akonadi::Item::Id,Akonadi::Item::Id>::Iterator oldParentIt = m_childToParent.find( id );
@@ -357,7 +361,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
       }
     }
 
-  } else {
+  } else { // We're inserting a new item
     m_uidToItemId.insert( ui, item.id() );
 
     //check for already known children:

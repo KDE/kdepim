@@ -186,6 +186,9 @@ void KeyTreeView::init() {
     m_proxy->setFilterFixedString( m_stringFilter );
     m_proxy->setKeyFilter( m_keyFilter );
     m_view->setModel( m_proxy );
+#ifdef KDEPIM_MOBILE_UI
+    m_view->setFrameStyle( QFrame::NoFrame );
+#endif
 }
 
 KeyTreeView::~KeyTreeView() {}

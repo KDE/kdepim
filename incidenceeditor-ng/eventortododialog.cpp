@@ -43,6 +43,7 @@
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
+#include <KCalUtils/Stringify>
 
 #include <KMessageBox>
 #include <KStandardDirs>
@@ -57,7 +58,7 @@ enum Tabs {
   AttendeesTab,
   AlarmsTab,
   RecurrenceTab,
-  AttachmentsTab,
+  AttachmentsTab
 };
 
 class EventOrTodoDialogPrivate : public ItemEditorUi
@@ -277,7 +278,8 @@ void EventOrTodoDialogPrivate::manageTemplates()
   QStringList &templates =
     IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() );
   QPointer<IncidenceEditorNG::TemplateManagementDialog> dialog(
-      new IncidenceEditorNG::TemplateManagementDialog( q, templates, mEditor->type() ) );
+      new IncidenceEditorNG::TemplateManagementDialog( q, templates,
+                                                       KCalUtils::Stringify::incidenceType( mEditor->type() ) ) );
   q->connect( dialog, SIGNAL( loadTemplate( const QString& ) ),
               SLOT( loadTemplate( const QString& ) ) );
   q->connect( dialog, SIGNAL( templatesChanged( const QStringList& ) ),
@@ -295,7 +297,7 @@ void EventOrTodoDialogPrivate::saveTemplate( const QString &templateName )
   KCalCore::Incidence::Ptr incidence( new KCalCore::Event );
   mEditor->save( incidence );
 
-  QString fileName = "templates/" + incidence->type();
+  QString fileName = "templates/" + incidence->typeStr();
   fileName.append( '/' + templateName );
   fileName = KStandardDirs::locateLocal( "data", "korganizer/" + fileName );
 
@@ -449,6 +451,9 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   } else {
     mUi->mInvitationBar->hide();
   }
+
+  kDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
+           << "; storage " << item.storageCollectionId();
 
   mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() << "text/calendar" );
   if ( item.parentCollection().isValid() ) {

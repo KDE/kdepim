@@ -66,6 +66,7 @@ ActionMenuContainer {
     category : "account"
     name : "account_view_menu"
     text : KDE.i18n( "View" )
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
@@ -93,6 +94,7 @@ ActionMenuContainer {
     category : "single_folder"
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
@@ -111,6 +113,7 @@ ActionMenuContainer {
     name : "multi_folder_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select Calendars" ) }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Switch To Editing Mode" ) }
   }
 
@@ -131,7 +134,7 @@ ActionMenuContainer {
 
   ActionList {
     category : "single_calendar"
-    name : "single_folder_view_menu"
+    name : "single_calendar_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add View As Favorite" ) }
     ActionListItem { name : "set_calendar_colour" }
@@ -170,7 +173,8 @@ ActionMenuContainer {
     ActionListItem { name : "send_status_update" }
     ActionListItem { name : "send_cancellation_to_attendees" }
     ActionListItem { name : "request_update" }
-    ActionListItem { name : "request_change" }
+    /* doesn't do anything useful atm */
+    /*ActionListItem { name : "request_change" }*/
     ActionListItem { name : "send_as_icalendar" }
     ActionListItem { name : "mail_freebusy" }
     ActionListItem { name : "upload_freebusy" }

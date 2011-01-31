@@ -24,6 +24,7 @@
 #include "mailscheduler.h"
 #include "nepomukcalendar.h"
 #include "next/incidencesearchjob.h"
+#include "incidencefetchjob.h"
 
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
@@ -78,7 +79,11 @@ NepomukCalendar::NepomukCalendar( QWidget *parent )
   connect( d->mChanger, SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
+#ifdef KDEPIM_NO_NEPOMUK
+  IncidenceFetchJob *job = new IncidenceFetchJob( this );
+#else
   IncidenceSearchJob *job = new IncidenceSearchJob();
+#endif
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
 }
 
@@ -372,8 +377,12 @@ void NepomukCalendar::searchResult( KJob *job )
     errorMessage = job->errorString();
   } else {
     success = true;
+#ifdef KDEPIM_NO_NEPOMUK
+    IncidenceFetchJob *searchJob = qobject_cast<IncidenceFetchJob*>( job );
+#else
     IncidenceSearchJob *searchJob = qobject_cast<IncidenceSearchJob*>( job );
-    Akonadi::Item::List list = searchJob->items();
+#endif
+    const Akonadi::Item::List list = searchJob->items();
     foreach( const Akonadi::Item &item, list ) {
       if ( item.hasPayload<KCalCore::Incidence::Ptr>() ) {
         KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();

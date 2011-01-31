@@ -66,6 +66,7 @@ class EditorGeneral : public EditorBase
     Q_PRIVATE_SLOT( d, void clearEmailClicked() )
     Q_PRIVATE_SLOT( d, void clearPhoneClicked() )
     Q_PRIVATE_SLOT( d, void availableCollectionsChanged() )
+    Q_PRIVATE_SLOT( d, void disableSaveButton() )
 };
 
 #endif

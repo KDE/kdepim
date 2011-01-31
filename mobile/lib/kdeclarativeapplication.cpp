@@ -113,6 +113,7 @@ void KDeclarativeApplicationBase::postApplicationSetup()
   KGlobal::locale()->insertCatalog( "libakonadi" );
   KGlobal::locale()->insertCatalog( "accountwizard" );
   KGlobal::locale()->insertCatalog( "libkdepimmobileui" );
+  KGlobal::locale()->insertCatalog( "akonadi_serializer_plugins" ); // for conflict handling
 }
 
 // static

@@ -60,7 +60,6 @@ class MessageViewItem : public DeclarativeAkonadiItem
 
     virtual void scrollDown( int dist );
     virtual void scrollUp( int dist );
-    virtual void simulateMouseClick( const QPoint &pos );
 
   public slots:
     void saveAllAttachments();

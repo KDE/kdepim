@@ -480,12 +480,26 @@ void MainView::qmlInitialized(QDeclarativeView::Status status)
     // register the send MDN handler
     item->viewer()->addMessageLoadedHandler( new MailCommon::SendMdnHandler( MobileKernel::self(), this ) );
 
-    bool fixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
+    const bool fixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
     item->viewer()->setUseFixedFont( fixedFont );
     actionCollection()->action( "message_fixed_font" )->setChecked( fixedFont );
+
+    actionCollection()->action( "show_extended_headers" )->setChecked( true );
+    toggleShowExtendedHeaders( true );
+
+    connect( item->viewer(), SIGNAL( deleteMessage( const Akonadi::Item& ) ),
+             this, SLOT( slotDeleteMessage( const Akonadi::Item& ) ) );
   }
 }
 
+void MainView::slotDeleteMessage( const Akonadi::Item &item )
+{
+  if ( !item.isValid() )
+    return;
+
+  Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( item );
+  job->start();
+}
 
 void MainView::recoverAutoSavedMessages()
 {
@@ -1375,6 +1389,22 @@ void MainView::saveMessage()
   command->execute();
 }
 
+QString MainView::itemStorageCollectionAsPath( const Akonadi::Item &item ) const
+{
+  QModelIndex index = EntityTreeModel::modelIndexForCollection( entityTreeModel(), Akonadi::Collection( item.storageCollectionId() ) );
+  Q_ASSERT( index.isValid() );
+
+  QString path;
+  while ( index.isValid() ) {
+    path.prepend( index.data().toString() );
+    index = index.parent();
+    if ( index.isValid() )
+      path.prepend( " / " );
+  }
+
+  return path;
+}
+
 void MainView::itemSelectionChanged()
 {
   const QModelIndexList list = itemSelectionModel()->selectedRows();
@@ -1386,16 +1416,7 @@ void MainView::itemSelectionChanged()
   const QModelIndex itemIdx = list.first();
   const Akonadi::Item item = itemIdx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
-  QModelIndex index = EntityTreeModel::modelIndexForCollection( entityTreeModel(), Akonadi::Collection( item.storageCollectionId() ) );
-  Q_ASSERT( index.isValid() );
-
-  QString path;
-  while ( index.isValid() ) {
-    path.prepend( index.data().toString() );
-    index = index.parent();
-    if ( index.isValid() )
-      path.prepend( " / " );
-  }
+  const QString path = itemStorageCollectionAsPath( item );
 
   if ( messageViewerItem() ) {
     messageViewerItem()->setItem( item );
@@ -1413,9 +1434,9 @@ void MainView::slotCollectionSelectionChanged()
   const Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   if ( collection.isValid() ) {
     mAclEditor->setCollection( collection );
-    mMessageListSettingsController->setCollection( collection );
     m_grouperComparator->setIsOutboundCollection( collection.hasAttribute<Akonadi::MessageFolderAttribute>() &&
                                                   collection.attribute<Akonadi::MessageFolderAttribute>()->isOutboundFolder() );
+    mMessageListSettingsController->setCollection( collection );
   }
 
   mCurrentCollection = collection;
@@ -1675,16 +1696,43 @@ void MainView::updateConfig()
     item->viewer()->writeConfig();
     item->viewer()->readConfig(); // let CSS parser reread its config
   }
+
+  if ( !regularSelectionModel() )
+    return;
+
+  const QModelIndexList indexes = regularSelectionModel()->selectedIndexes();
+  if ( indexes.isEmpty() )
+    return;
+
+  const QModelIndex index = indexes.first();
+  const Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( collection.isValid() && mMessageListSettingsController )
+    mMessageListSettingsController->setCollection( collection );
 }
 
 void MainView::applyFilters()
 {
   Item::List items;
 
-  foreach ( const QModelIndex &index, itemSelectionModel()->selectedRows() ) {
+  const QModelIndexList itemIndexes = itemSelectionModel()->selectedRows();
+  foreach ( const QModelIndex &index, itemIndexes ) {
     const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
     if ( item.isValid() )
       items << item;
+  }
+
+  if ( itemIndexes.isEmpty() ) {
+    // if no items have been selected, use all items of the currently selected collections
+    foreach ( const QModelIndex &index, regularSelectionModel()->selectedRows() ) {
+      const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+      if ( collection.isValid() ) {
+        ItemFetchJob *fetchJob = new ItemFetchJob( collection );
+        fetchJob->fetchScope().fetchFullPayload();
+        if ( fetchJob->exec() ) {
+          items << fetchJob->items();
+        }
+      }
+    }
   }
 
   FilterIf->filterManager()->applyFilters( items );
@@ -1717,6 +1765,8 @@ bool MainView::selectNextUnreadMessageInCurrentFolder()
     const QModelIndex itemIndex = model->index( row, 0 );
     const Akonadi::Item item = itemIndex.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
     if ( !item.hasFlag( Akonadi::MessageFlags::Seen ) ) {
+      const QString path = itemStorageCollectionAsPath( item );
+      messageViewerItem()->setMessagePath( path );
       messageViewerItem()->setItem( item );
       return true;
     }
@@ -1727,6 +1777,8 @@ bool MainView::selectNextUnreadMessageInCurrentFolder()
     const QModelIndex itemIndex = model->index( row, 0 );
     const Akonadi::Item item = itemIndex.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
     if ( !item.hasFlag( Akonadi::MessageFlags::Seen ) ) {
+      const QString path = itemStorageCollectionAsPath( item );
+      messageViewerItem()->setMessagePath( path );
       messageViewerItem()->setItem( item );
       return true;
     }

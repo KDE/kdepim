@@ -65,6 +65,12 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
      */
     QString getActionIconName( const QString &name ) const;
 
+
+    /**
+     * Brings the View to the foreground
+     */
+    void bringToFront();
+
     void setActionTitle( const QString& name, const QString& title);
     
     KActionCollection* actionCollection() const;

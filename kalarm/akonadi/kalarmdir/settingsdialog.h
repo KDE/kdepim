@@ -23,10 +23,13 @@
 #define KALARMDIR_SETTINGSDIALOG_H
 
 #include "ui_settingsdialog.h"
+#include "ui_alarmtypewidget.h"
+#include "kacalendar.h"
 
 #include <KDE/KDialog>
 
 class KConfigDialogManager;
+class AlarmTypeWidget;
 
 namespace Akonadi_KAlarm_Dir_Resource
 {
@@ -37,14 +40,17 @@ class SettingsDialog : public KDialog
 {
         Q_OBJECT
     public:
-        explicit SettingsDialog(WId windowId, Settings*);
+        SettingsDialog(WId windowId, Settings*);
+	void setAlarmTypes(KAlarm::CalEvent::Types);
+	KAlarm::CalEvent::Types alarmTypes() const;
 
     private Q_SLOTS:
         void save();
         void validate();
 
     private:
-        Ui::SettingsDialog ui;
+        Ui::SettingsDialog    ui;
+        AlarmTypeWidget*      mTypeSelector;
         KConfigDialogManager* mManager;
         Akonadi_KAlarm_Dir_Resource::Settings* mSettings;
 };

@@ -239,8 +239,8 @@ void ThreadGrouperModel::setThreadingEnabled( bool enabled )
 
   d->m_threadingEnabled = enabled;
 
+  d->populateThreadGrouperModel();
   invalidate();
-  reset();
 }
 
 bool ThreadGrouperModel::threadingEnabled() const

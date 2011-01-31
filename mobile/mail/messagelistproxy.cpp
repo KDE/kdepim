@@ -63,7 +63,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
       {
         static QHash<QDate, QString> dateNameHash;
 
-        const KDateTime &dateTime = msg->date()->dateTime();
+        const KDateTime &dateTime = msg->date()->dateTime().toLocalZone();
         const QDate date = dateTime.date();
         if ( date == QDate::currentDate() ) {
           return KGlobal::locale()->formatTime( dateTime.time() );

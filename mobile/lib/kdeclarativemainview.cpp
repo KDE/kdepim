@@ -36,6 +36,7 @@
 #include <akonadi/agentinstancemodel.h>
 #include <akonadi/agentmanager.h>
 #include <akonadi/changerecorder.h>
+#include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/itemfetchscope.h>
@@ -123,7 +124,6 @@ class ActionImageProvider : public QDeclarativeImageProvider
 using namespace Akonadi;
 
 typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setFilterLineEdit> DeclarativeFilterLineEdit;
-typedef DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit> DeclarativeBulkActionFilterLineEdit;
 QML_DECLARE_TYPE( DeclarativeFilterLineEdit )
 QML_DECLARE_TYPE( DeclarativeBulkActionFilterLineEdit )
 QML_DECLARE_TYPE( AgentStatusMonitor )
@@ -256,8 +256,6 @@ void KDeclarativeMainView::doDelayedInitInternal()
 
   setupStandardActionManager( regularSelectionModel(), d->mItemActionSelectionModel );
 
-  connect( d->mEtm, SIGNAL( modelAboutToBeReset() ), d, SLOT( saveState() ) );
-  connect( d->mEtm, SIGNAL( modelReset() ), d, SLOT( restoreState() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), d, SLOT( saveState() ) );
 
   connect( d->mBnf->selectedItemModel(), SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SIGNAL( isLoadingSelectedChanged() ) );
@@ -273,7 +271,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
     kWarning() << "Restoring state" << time.elapsed() << &time;
   }
 
-  d->restoreState();
+  QTimer::singleShot(1000, d, SLOT(initializeStateSaver()));
 
   if ( debugTiming ) {
     kWarning() << "restore state done" << time.elapsed() << &time;
@@ -538,10 +536,25 @@ void KDeclarativeMainView::synchronizeAllItems()
 
 void KDeclarativeMainView::saveFavorite()
 {
+  QString collectionName;
+  if ( regularSelectionModel()->hasSelection() ) {
+    const QModelIndexList indexes = regularSelectionModel()->selectedRows();
+    if ( indexes.count() == 1 ) {
+      const Akonadi::Collection collection = indexes.first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      collectionName = collection.name();
+
+      const Akonadi::EntityDisplayAttribute *attribute = collection.attribute<Akonadi::EntityDisplayAttribute>();
+      if ( attribute ) {
+        if ( !attribute->displayName().isEmpty() )
+          collectionName = attribute->displayName();
+      }
+    }
+  }
+
   bool ok;
   const QString name = KInputDialog::getText( i18n( "Select name for favorite" ),
                                               i18n( "Favorite name" ),
-                                              QString(), &ok, this );
+                                              collectionName, &ok, this );
 
   if ( !ok || name.isEmpty() )
     return;
@@ -567,6 +580,9 @@ void KDeclarativeMainView::multipleSelectionFinished()
 
 QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const
 {
+  if ( !d->mBnf )
+    return 0;
+
   return d->mBnf->selectionModel();
 }
 

@@ -258,7 +258,7 @@ KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
     QString path = url.path(KUrl::RemoveTrailingSlash);
     if ( path.contains(':') ) {
       //if the content was not found, it might be in an extra node. Get the index of the extra node (the first part of the url),
-      //and use the remaining part as a ContentIndex to find the node insde the extra node
+      //and use the remaining part as a ContentIndex to find the node inside the extra node
       int i = path.left( path.indexOf(':') ).toInt();
       path = path.mid( path.indexOf(':') + 1 );
       KMime::ContentIndex idx(path);
@@ -331,9 +331,10 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
 
   const QString filenameText = NodeHelper::fileName( node );
 
-  AttachmentDialog dialog( mMainWindow, filenameText, offer ? offer->name() : QString(),
+  QPointer<AttachmentDialog> dialog = new AttachmentDialog( mMainWindow, filenameText, offer ? offer->name() : QString(),
                            QString::fromLatin1( "askSave_" ) + mimetype->name() );
-  const int choice = dialog.exec();
+  const int choice = dialog->exec();
+  delete dialog;
 
   if ( choice == AttachmentDialog::Save ) {
     Util::saveContents( mMainWindow, KMime::Content::List() << node );
@@ -561,7 +562,7 @@ KMime::Content::List ViewerPrivate::selectedContents()
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
-  Q_FOREACH(QModelIndex index, selectedRows)
+  Q_FOREACH( const QModelIndex &index, selectedRows )
   {
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
      if ( content )
@@ -725,7 +726,7 @@ void ViewerPrivate::collectionFetchedForStoringDecryptedMessage( KJob* job )
     return;
 
   Akonadi::Collection col;
-  Q_FOREACH( Akonadi::Collection c, static_cast<Akonadi::CollectionFetchJob*>( job )->collections() ) {
+  Q_FOREACH( const Akonadi::Collection &c, static_cast<Akonadi::CollectionFetchJob*>( job )->collections() ) {
     if ( c == mMessageItem.parentCollection() ) {
       col = c;
       break;
@@ -1721,7 +1722,7 @@ KMime::Content* ViewerPrivate::findContentByType(KMime::Content *content, const 
         if (c->contentType()->mimeType() ==  type)
             return c;
     }
-    return 0L;
+    return 0;
 
 }
 
@@ -2181,7 +2182,7 @@ void ViewerPrivate::slotAttachmentOpenWith()
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
-  Q_FOREACH(QModelIndex index, selectedRows)
+  Q_FOREACH( const QModelIndex &index, selectedRows )
   {
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
      attachmentOpenWith( content );
@@ -2195,7 +2196,7 @@ void ViewerPrivate::slotAttachmentOpen()
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
-  Q_FOREACH(QModelIndex index, selectedRows)
+  Q_FOREACH( const QModelIndex &index, selectedRows )
   {
     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
     attachmentOpen( content );

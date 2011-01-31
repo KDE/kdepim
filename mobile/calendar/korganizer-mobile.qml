@@ -62,11 +62,12 @@ KPIM.MainView {
   {
     agenda.showRange( date, 0 /* "Day" */ );
     guiStateManager.pushState( Events.EventsGuiStateManager.ViewDayState );
+    application.bringToFront();
   }
 
   KCal.IncidenceView {
     id: eventView
-    anchors { fill: parent; topMargin: 48; leftMargin: 48 }
+    anchors { fill: parent; topMargin: 40; leftMargin: 40 }
     visible: guiStateManager.inViewSingleItemState
     z: 0
 
@@ -177,7 +178,7 @@ KPIM.MainView {
   Loader {
     anchors.fill: parent
     source: guiStateManager.inViewTimelineState ? "TimelineView.qml" : ""
-    onLoaded: { item.showRange( dateEdit.date, 1 /* "Week" */ ); }
+    onLoaded: { item.showRange( dateEdit.date, 4 /* Next 7 days */ ); }
   }
 
   Loader {
@@ -348,7 +349,7 @@ KPIM.MainView {
         buttonText: KDE.i18n( "New Appointment" )
         // TODO: Make sure that the correct default calender is selected in
         //       the incidence editor.
-        onClicked : { application.newEvent( dateEdit.date ); }
+        onClicked : { application.newEventWithDate( dateEdit.date ); }
 
       }
     }

@@ -76,6 +76,9 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ), IconSize( KIconLoader::Small ) ) );
 #endif
   showButton( User1, true );
+#ifdef _WIN32_WCE
+  showButton( Help , false );
+#endif
 
   addMyModule( kleopatra_config_dirserv );
 #ifndef KDEPIM_MOBILE_UI
@@ -99,7 +102,9 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   if ( width != 0 && height != 0 ) {
      setMinimumSize( width, height );
   }
-
+#ifdef _WIN32_WCE
+  setWindowState( Qt::WindowFullScreen );
+#endif
 }
 
 void ConfigureDialog::hideEvent( QHideEvent * e ) {

@@ -6,17 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>456</width>
-    <height>212</height>
+    <width>640</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>StackedWidget</string>
   </property>
   <property name="currentIndex">
-   <number>2</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="page">
+   <property name="minimumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gridLayout_13">
     <item row="0" column="0" colspan="3">
      <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -125,6 +137,18 @@
    </layout>
   </widget>
   <widget class="QWidget" name="mAttendeeWidget">
+   <property name="minimumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gridLayout_9">
     <item row="0" column="0">
      <widget class="QLabel" name="label_3">
@@ -237,6 +261,18 @@
    </layout>
   </widget>
   <widget class="QWidget" name="page_2">
+   <property name="minimumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="1">
      <widget class="KComboBox" name="mAlarmPresetCombo">
@@ -328,6 +364,18 @@
    </layout>
   </widget>
   <widget class="QWidget" name="page_3">
+   <property name="minimumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0" colspan="3">
      <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -717,6 +765,18 @@
    </layout>
   </widget>
   <widget class="QWidget" name="page_4">
+   <property name="minimumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>640</width>
+     <height>440</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gridLayout_5">
     <item row="0" column="0" rowspan="3">
      <widget class="QWidget" name="mAttachmentViewPlaceHolder" native="true">

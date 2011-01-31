@@ -39,7 +39,7 @@ QML.Item {
     } else if ( status == 1 ) {
       return "images/status/receiving.png";
     } else {
-      return KDE.iconPath( "dialog-warning" );
+      return KDE.iconPath( "dialog-warning", 26 );
     }
   }
 

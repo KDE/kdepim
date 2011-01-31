@@ -21,13 +21,17 @@
 
 #include "incidenceeditors-ng_export.h"
 
+namespace CalendarSupport {
+  class Calendar;
+}
+
 namespace IncidenceEditorNG {
 
 class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
 {
   public:
     static bool isActive();
-    static void activate();
+    static void activate( CalendarSupport::Calendar *calendar = 0 );
 
   private:
     static bool sActivated;

@@ -51,7 +51,7 @@ ActionMenuContainer {
     ActionListItem { name : "file_import_certificates" }
     ActionListItem { name : "file_export_certificates" }
     ActionListItem { name : "file_export_secret_keys" }
-    ActionListItem { name : "file_export_certificates_to_server" }
+    /* ActionListItem { name : "file_export_certificates_to_server" } */
     ActionListItem { name : "file_quit" }
   }
 
@@ -78,7 +78,7 @@ ActionMenuContainer {
     ActionListItem { name : "certificates_dump_certificate" }
   }
 
-  ActionList {
+  /*ActionList {
     category : "home"
     name : "tools_menu"
     text : KDE.i18n( "Tools" )
@@ -87,7 +87,7 @@ ActionMenuContainer {
     ActionListItem { name : "crl_import_crl" }
     ActionListItem { name : "crl_clear_crl_cache" }
     ActionListItem { name : "crl_dump_crl_cache" }
-  }
+  }*/
 
   ActionList {
     category : "home"

@@ -1471,7 +1471,6 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
   const MessageViewer::KCursorSaver idle( MessageViewer::KBusyPtr::idle() );
 #endif
 
-#ifndef Q_OS_WINCE
   Kleo::KeyApprovalDialog dlg( items, senderKeys );
 
   if ( dlg.exec() == QDialog::Rejected )
@@ -1499,7 +1498,6 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
       saveContactPreference( items[i].address, pref );
     }
   }
-#endif
 
   // show a warning if the user didn't select an encryption key for
   // herself:
@@ -1601,8 +1599,6 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, c
   const bool opgp = containsOpenPGP( mCryptoMessageFormats );
   const bool x509 = containsSMIME( mCryptoMessageFormats );
 
-// FIXME restore when KeySelectionDialog doesn't depend on QTreeWidget anymore
-#ifndef Q_OS_WINCE
   Kleo::KeySelectionDialog dlg( i18n("Encryption Key Selection"),
 				msg, KPIMUtils::extractEmailAddress( person ), selectedKeys,
                                 Kleo::KeySelectionDialog::ValidEncryptionKeys
@@ -1619,9 +1615,6 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, c
   if ( !keys.empty() && dlg.rememberSelection() )
     setKeysForAddress( person, dlg.pgpKeyFingerprints(), dlg.smimeFingerprints() );
   return keys;
-#else
-    return std::vector<GpgME::Key>();
-#endif
 }
 
 

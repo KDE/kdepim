@@ -747,8 +747,9 @@ void AgendaItem::paintIcon( QPainter *p, int &x, int y, int ft )
     //    from event's much easier.
     // 3. Be consistent with month view
     //conditionalPaint( p, true, x, y, ft, *eventPxmp );
-    KDateTime::Spec spec = mEventView->preferences()->timeSpec();
-    iconName = incidence->iconName( KDateTime( mDate, spec ) );
+    KDateTime occurrenceDateTime = incidence->dateTime( Incidence::RoleRecurrenceStart );
+    occurrenceDateTime.setDate( mDate );
+    iconName = incidence->iconName( occurrenceDateTime );
   }
 
   conditionalPaint( p, !iconName.isEmpty(), x, y, ft, cachedSmallIcon( iconName ) );
@@ -832,11 +833,9 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   if ( !categories.isEmpty() ) {
     cat = categories.first();
   }
-  if ( cat.isEmpty() ) {
-    categoryColor = CalendarSupport::KCalPrefs::instance()->unsetCategoryColor();
-  } else {
-    categoryColor = CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
-  }
+
+  categoryColor = cat.isEmpty() ? CalendarSupport::KCalPrefs::instance()->unsetCategoryColor() :
+                                  CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
 
   QColor resourceColor = mResourceColor;
   if ( !resourceColor.isValid() ) {
@@ -871,13 +870,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     bgColor = frameColor;
   }
 
-  if ( mSelected ) {
-    frameColor = QColor( 85 + frameColor.red() * 2 / 3,
-                         85 + frameColor.green() * 2 / 3,
-                         85 + frameColor.blue() * 2 / 3 );
-  } else {
-    frameColor = frameColor.dark( 115 );
-  }
+  frameColor = EventView::itemFrameColor( frameColor, mSelected );
 
   if ( !CalendarSupport::KCalPrefs::instance()->hasCategoryColor( cat ) ) {
     categoryColor = resourceColor;

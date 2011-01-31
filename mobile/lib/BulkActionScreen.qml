@@ -46,7 +46,10 @@ QML.Rectangle {
     anchors.top : parent.top
     anchors.bottom : selectAllButton.top
     anchors.left : parent.left
-    onBackClicked : guiStateManager.popState()
+    onBackClicked : {
+      guiStateManager.popState()
+      bulkActionFilterLineEdit.clear()
+    }
     onTriggered : {
       //mainPanel.complete(name)
     }

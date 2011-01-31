@@ -49,6 +49,7 @@ Item {
         id: background
         anchors.fill: parent
         opacity: (wrapper.ListView.isCurrentItem ? 0.4 : 0.25)
+        color: "lightsteelblue"
       }
       Text {
         anchors.fill: parent;

@@ -197,7 +197,7 @@ void ThreadModelPrivate::slotRowsRemoved( const QModelIndex&, int start, int end
 
 void ThreadModelPrivate::slotResetModel()
 {
-  q_ptr->reset();
+  populateThreadModel();
 }
 
 void ThreadModelPrivate::populateThreadModel()
@@ -223,14 +223,14 @@ void ThreadModelPrivate::populateThreadModel()
 
     const Akonadi::Item::Id threadRoot = index.data( ThreadGrouperModel::ThreadIdRole ).toLongLong();
     if ( threadRoot != currentThreadId ) {
-      m_rangeManager.insertRange( m_rangeManager.count(), (row - 1) - startRow );
+      m_rangeManager.insertRange( m_rangeManager.count(), row - startRow );
       startRow = row;
     }
 
     currentThreadId = threadRoot;
   }
 
-  m_rangeManager.insertRange( m_rangeManager.count(), (rowCount - 1) - startRow );
+  m_rangeManager.insertRange( m_rangeManager.count(), rowCount - startRow );
   q->endResetModel();
 }
 

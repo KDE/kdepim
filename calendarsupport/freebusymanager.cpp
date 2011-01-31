@@ -480,7 +480,7 @@ struct FreeBusyManagerStatic
 
 }
 
-K_GLOBAL_STATIC( FreeBusyManagerStatic, sManagerInstance );
+K_GLOBAL_STATIC( FreeBusyManagerStatic, sManagerInstance )
 
 /// FreeBusyManager
 

@@ -206,10 +206,12 @@ KOTodoModel::~KOTodoModel()
 
 void KOTodoModel::setCalendar( CalendarSupport::Calendar *cal )
 {
-  mCalendar = cal;
-  // old todos might no longer be valid, so clear them
-  clearTodos();
-  reloadTodos();
+  if ( cal != mCalendar ) {
+    mCalendar = cal;
+    // old todos might no longer be valid, so clear them
+    clearTodos();
+    reloadTodos();
+  }
 }
 
 void KOTodoModel::clearTodos()
@@ -534,12 +536,12 @@ KOTodoModel::TodoTreeNode *KOTodoModel::insertTodo( const Akonadi::Item &todoIte
 
 void KOTodoModel::setFlatView( bool flatView )
 {
-  if ( mFlatView == flatView ) {
-    return;
+  if ( mFlatView != flatView ) {
+    mFlatView = flatView;
+    reloadTodos();
+    // Tell both views, so they can disable drag n drop if needed
+    emit flatViewChanged( flatView );
   }
-
-  mFlatView = flatView;
-  reloadTodos();
 }
 
 Qt::ItemFlags KOTodoModel::flags( const QModelIndex &index ) const

@@ -334,6 +334,9 @@ void MainWindow::Private::slotConfigCommitted() {
 }
 
 void MainWindow::closeEvent( QCloseEvent * e ) {
+
+    d->closeAndQuit();
+
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
     kDebug();

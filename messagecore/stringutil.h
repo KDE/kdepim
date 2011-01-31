@@ -91,10 +91,12 @@ namespace StringUtil
    */
   MESSAGECORE_EXPORT QByteArray stripEmailAddr( const QByteArray &addresses );
 
+#ifndef MESSAGECORE_NO_DEPRECATED
   /**
    * Does the same as the above function. Shouldn't be used.
    */
   MESSAGECORE_EXPORT_DEPRECATED QString stripEmailAddr( const QString& emailAddr );
+#endif
 
   /**
    * Quotes the following characters which have a special meaning in HTML:

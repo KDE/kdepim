@@ -139,11 +139,13 @@ private:
         tests.push_back( makeGpgSmEngineCheckSelfTest() );
         //emit q->info( i18n("Checking gpgconf installation...") );
         tests.push_back( makeGpgConfEngineCheckSelfTest() );
+#ifndef Q_OS_WINCE
         for ( unsigned int i = 0 ; i < numComponents ; ++i ) {
             //emit q->info( i18n("Checking %1 configuration...", components[i]) );
             tests.push_back( makeGpgConfCheckConfigurationSelfTest( components[i] ) );
         }
-#ifdef HAVE_KLEOPATRACLIENT_LIBRARY
+#endif
+#if defined( HAVE_KLEOPATRACLIENT_LIBRARY ) && !defined ( Q_OS_WINCE )
         //emit q->info( i18n("Checking Ui Server connectivity...") );
         tests.push_back( makeUiServerConnectivitySelfTest() );
 #endif

@@ -73,6 +73,10 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "kmail" ); // for identity dialog
   KGlobal::locale()->insertCatalog( "libksieve" ); // for out of office reply dialog
   KGlobal::locale()->insertCatalog( "akonadi_imap_resource" ); // for account status indicators
+  KGlobal::locale()->insertCatalog( "libkcalutils" ); // for invitation handling
+  KGlobal::locale()->insertCatalog( "libkleopatra" ); // for Krypto format settings in identity dialog
+  KGlobal::locale()->insertCatalog( "libkpimidentities" ); // for signature settings in identity dialog
+  KGlobal::locale()->insertCatalog( "calendarsupport" ); // for error messages while updating events and tasks
 
   return app.exec();
 }

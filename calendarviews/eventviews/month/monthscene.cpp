@@ -204,9 +204,13 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
 
   font.setPixelSize( dayLabelsHeight - 10 );
   p->setFont( font );
-  for ( QDate d = mMonthView->actualStartDateTime().date();
-        d <= mMonthView->actualStartDateTime().date().addDays( 6 ); d = d.addDays( 1 ) ) {
-    MonthCell *cell = mScene->mMonthCellMap[ d ];
+
+  const QDate start = mMonthView->actualStartDateTime().date();
+  const QDate end = mMonthView->actualEndDateTime().date();
+
+  for ( QDate d = start;
+        d <= start.addDays( 6 ); d = d.addDays( 1 ) ) {
+    MonthCell *cell = mScene->mMonthCellMap.value( d );
 
     if ( !cell ) {
       // This means drawBackground() is being called before reloadIncidences(). Can happen with some
@@ -231,9 +235,14 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
   const QList<QDate> workDays = CalendarSupport::workDays( mMonthView->actualStartDateTime().date(),
                                                            mMonthView->actualEndDateTime().date() );
 
-  for ( QDate d = mMonthView->actualStartDateTime().date();
-        d <= mMonthView->actualEndDateTime().date();
-        d = d.addDays( 1 ) ) {
+
+  for ( QDate d = start; d <= end; d = d.addDays( 1 ) ) {
+    if ( !mScene->mMonthCellMap.contains( d ) ) {
+      // This means drawBackground() is being called before reloadIncidences(). Can happen with some
+      // themes. Bug  #190191
+      return;
+    }
+
     MonthCell *cell = mScene->mMonthCellMap[ d ];
 
     QColor color;

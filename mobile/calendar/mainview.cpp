@@ -284,10 +284,10 @@ void MainView::setCurrentEventItemId( qint64 id )
 
 void MainView::newEvent()
 {
-  newEvent( QDate::currentDate() );
+  newEventWithDate( QDate::currentDate() );
 }
 
-void MainView::newEvent( const QDate &date )
+void MainView::newEventWithDate( const QDate &date )
 {
   IncidenceView *editor = new IncidenceView;
   editor->setWindowTitle( i18n( "KDE Calendar" ) );

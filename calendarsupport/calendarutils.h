@@ -83,7 +83,7 @@ private:
   CalendarUtilsPrivate * const d_ptr;
   Q_DECLARE_PRIVATE( CalendarUtils )
 
-  Q_PRIVATE_SLOT( d_ptr, void handleChangeFinish( Akonadi::Item, Akonadi::Item, CalendarSupport::IncidenceChanger::WhatChanged, bool ) );
+  Q_PRIVATE_SLOT( d_ptr, void handleChangeFinish( Akonadi::Item, Akonadi::Item, CalendarSupport::IncidenceChanger::WhatChanged, bool ) )
 };
 
 }

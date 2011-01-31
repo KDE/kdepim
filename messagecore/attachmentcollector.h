@@ -78,7 +78,7 @@ class MESSAGECORE_EXPORT AttachmentCollector
     class Private;
     Private* const d;
 
-    Q_DISABLE_COPY( AttachmentCollector );
+    Q_DISABLE_COPY( AttachmentCollector )
     //@endcond
 };
 

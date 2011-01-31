@@ -62,4 +62,75 @@
       <default>red</default>
     </entry>
   </group>
+
+  <group name="MessageList">
+    <entry name="MessageListSortingOption" type="Enum">
+      <choices>
+        <choice name="SortByDateTime" />
+        <choice name="SortByDateTimeMostRecent" />
+        <choice name="SortBySenderReceiver" />
+        <choice name="SortBySubject" />
+        <choice name="SortBySize" />
+        <choice name="SortByActionItem" />
+      </choices>
+      <default>SortByDateTimeMostRecent</default>
+    </entry>
+    <entry name="MessageListSortingOrder" type="Enum">
+      <choices>
+        <choice name="Ascending" />
+        <choice name="Descending" />
+      </choices>
+      <default>Ascending</default>
+    </entry>
+    <entry name="MessageListGroupingOption" type="Enum">
+      <choices>
+        <choice name="GroupByNone" />
+        <choice name="GroupByDate" />
+        <choice name="GroupBySenderReceiver" />
+      </choices>
+      <default>GroupByDate</default>
+    </entry>
+    <entry name="MessageListUseThreading" type="Bool">
+      <default>true</default>
+    </entry>
+  </group>
+  <group name="MDN">
+    <entry name="notSendWhenEncrypted" type="Bool" key="not-send-when-encrypted">
+      <label>Do not send MDNs in response to encrypted messages</label>
+      <default>true</default>
+    </entry>
+    <entry name="MDNPolicy" type="Enum" key="default-policy">
+      <label>Specifies the default policy to use, for the Message Disposition Notifications (for internal use only)</label>
+      <choices>
+        <choice name="Ignore">
+          <label>Ignore</label>
+        </choice>
+        <choice name="Ask">
+          <label>Ask</label>
+        </choice>
+        <choice name="Deny">
+          <label>Deny</label>
+        </choice>
+        <choice name="AlwaysSend">
+          <label>Always send</label>
+        </choice>
+      </choices>
+      <default>Ignore</default>
+    </entry>
+    <entry name="MDNQuoteType" type="Enum" key="quote-message">
+      <label>Specifies the default quoting action to take, when replying to a message (for internal use only)</label>
+      <choices>
+        <choice name="Nothing">
+          <label>Nothing</label>
+        </choice>
+        <choice name="FullMessage">
+          <label>Full message</label>
+        </choice>
+        <choice name="OnlyHeaders">
+          <label>Only headers</label>
+        </choice>
+      </choices>
+      <default>Nothing</default>
+    </entry>
+  </group>
 </kcfg>

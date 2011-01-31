@@ -278,25 +278,26 @@ KPIM.MainView {
       anchors.right : parent.right
       color : "#00000000"
 
-      Akonadi.FilterLineEdit {
-        id: filterLineEdit
-        anchors.left : parent.left
-        anchors.top : parent.top
-        anchors.right : parent.right
-        visible : false
-        height : 0
-      }
       HeaderView {
         id : threadView
         model : _threads
         anchors.left : parent.left
-        anchors.top : filterLineEdit.bottom
-        anchors.bottom : parent.bottom
+        anchors.top : parent.top
+        anchors.bottom : filterLineEdit.top
         anchors.right : parent.right
         navigationModel : _threadSelector
         showDeleteButton : false // too easy to accidentally hit it, although very useful...
         opacity : threadContentsViewContainer.opacity == 0 ? 1 : 0
         showSections : messageListSettings.groupingRole != ""
+      }
+      Akonadi.FilterLineEdit {
+        id: filterLineEdit
+        anchors.left : parent.left
+        anchors.bottom : parent.bottom
+        anchors.right : parent.right
+        visible : false
+        height : 0
+        y : height == 0 ? parent.height : parent.height - height
       }
       QML.Connections {
         target : _threadSelector
@@ -319,15 +320,15 @@ KPIM.MainView {
       QML.Item {
         id : threadContentsViewContainer
         anchors.left : parent.left
-        anchors.top : filterLineEdit.bottom
-        anchors.bottom : parent.bottom
+        anchors.top : parent.top
+        anchors.bottom : filterLineEdit.top
         anchors.right : parent.right
         opacity : threadContentsView.count > 1 ? 1 : 0
         KPIM.Button2 {
           id : backButton
           anchors.left : parent.left
           anchors.right : parent.right
-          buttonText : KDE.i18n("Back to Threads")
+          buttonText : KDE.i18n("Back to Message List")
           // Clear
           onClicked : _threadSelector.select(-1, 1)
         }
@@ -505,7 +506,10 @@ KPIM.MainView {
   QML.Loader {
     anchors.fill: parent
     source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
-    onLoaded: { item.backgroundImage = backgroundImage.source }
+    onLoaded: {
+      item.backgroundImage = backgroundImage.source
+      item.model = itemModel
+    }
   }
 
   KPIM.SearchResultScreen {

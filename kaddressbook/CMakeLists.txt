@@ -97,8 +97,7 @@ set( kaddressbook_SRCS
   mainwindow.cpp
 )
 
-# todo: more appropriate icon?
-kde4_add_app_icon(kaddressbook_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/view-pim-contacts.png")
+kde4_add_app_icon(kaddressbook_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-kaddressbook.png")
 
 kde4_add_executable(kaddressbook ${kaddressbook_SRCS})
 

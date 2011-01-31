@@ -279,6 +279,12 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     Changes changes() const;
 
+    /**
+     * Returns a variation of @p color that will be used for the border
+     * of an agenda or month item.
+     */
+    static QColor itemFrameColor( const QColor &color, bool selected );
+
   public Q_SLOTS:
     /**
       Shows given incidences. Depending on the actual view it might not

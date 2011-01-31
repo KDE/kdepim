@@ -125,6 +125,11 @@ class EditorGeneral::Private
       mUi.launchAccountWizardButton->setVisible( !available );
     }
 
+    void disableSaveButton()
+    {
+      mUi.saveButton->setEnabled( false );
+    }
+
   private:
     void addEmailRows( int newRowCount );
     void addPhoneRows( int newRowCount );
@@ -341,6 +346,7 @@ EditorGeneral::EditorGeneral( QWidget *parent )
 
   connect( d->mUi.addPhoneButton, SIGNAL( clicked() ), SLOT( addPhoneClicked() ) );
 
+  connect( d->mUi.saveButton, SIGNAL( clicked() ), SLOT( disableSaveButton() ) ); // prevent double clicks
   connect( d->mUi.saveButton, SIGNAL( clicked() ), SIGNAL( saveClicked() ) );
   connect( d->mUi.cancelButton, SIGNAL( clicked() ), SIGNAL( cancelClicked() ) );
   connect( d->mUi.collectionSelector, SIGNAL( currentChanged( Akonadi::Collection ) ),

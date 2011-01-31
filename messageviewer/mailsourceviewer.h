@@ -94,7 +94,7 @@ namespace HTMLPrettyFormatter
                       );
 
   const QString reformat( const QString &src );
-};
+}
 
 class MailSourceViewer : public KDialog
 {

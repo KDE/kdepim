@@ -498,6 +498,11 @@ void ComposerView::identityChanged( uint newIdentity )
   const KPIMIdentities::Identity oldIdentity = MobileKernel::self()->identityManager()->identityForUoid( m_currentIdentity );
   m_composerBase->identityChanged( identity, oldIdentity );
 
+  if ( !identity.isNull() && !identity.transport().isEmpty() ) {
+    if ( m_composerBase->transportComboBox() )
+      m_composerBase->transportComboBox()->setCurrentTransport( identity.transport().toInt() );
+  }
+
   m_currentIdentity = newIdentity;
 }
 

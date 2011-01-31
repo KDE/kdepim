@@ -53,7 +53,7 @@ KPIM.MainView {
   KCal.IncidenceView {
     id: taskView
     visible: guiStateManager.inViewSingleItemState
-    anchors { fill: parent; topMargin: 48; leftMargin: 48 }
+    anchors { fill: parent; topMargin: 40; leftMargin: 40 }
     width: parent.width
     height: parent.height
 

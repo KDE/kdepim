@@ -92,7 +92,7 @@ class IncidenceChanger::Private : public QObject
     Calendar *mCalendar;
 
     // Index my atomic operation id
-    QHash<uint, InvitationHandler::SendStatus> mOperationStatus;
+    QHash<uint, InvitationHandler::SendResult> mOperationStatus;
 
     QHash<KJob*,AddInfo> mAddInfoForJob;
 

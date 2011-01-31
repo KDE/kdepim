@@ -60,20 +60,20 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
     InvitationHandler( CalendarSupport::Calendar *cal );
     ~InvitationHandler();
 
-    enum SendStatus {
-      Canceled,        /**< Sending was canceled by the user, meaning there are
-                          local changes of which other attendees are not aware. */
-      FailKeepUpdate,  /**< Sending failed, the changes to the incidence must be kept. */
-      FailAbortUpdate, /**< Sending failed, the changes to the incidence must be undone. */
-      NoSendingNeeded, /**< In some cases it is not needed to send an invitation
-                          (e.g. when we are the only attendee) */
-      Success          /**< The invitation was sent to all attendees. */
+    enum SendResult {
+      ResultCanceled,        /**< Sending was canceled by the user, meaning there are
+                                  local changes of which other attendees are not aware. */
+      ResultFailKeepUpdate,  /**< Sending failed, the changes to the incidence must be kept. */
+      ResultFailAbortUpdate, /**< Sending failed, the changes to the incidence must be undone. */
+      ResultNoSendingNeeded, /**< In some cases it is not needed to send an invitation
+                                (e.g. when we are the only attendee) */
+      ResultSuccess          /**< The invitation was sent to all attendees. */
     };
 
     enum Action {
-      Ask,
-      SendMessage,
-      DontSendMessage
+      ActionAsk,
+      ActionSendMessage,
+      ActionDontSendMessage
     };
 
     bool receiveInvitation( const QString &receiver,
@@ -103,7 +103,7 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    SendStatus sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
+    SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
                                             const KCalCore::Incidence::Ptr &incidence );
 
     /**
@@ -111,7 +111,7 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
       @param incidence The modified incidence.
       @param attendeeSatusChanged ????
      */
-    SendStatus sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
+    SendResult sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
                                              const KCalCore::Incidence::Ptr &incidence,
                                              bool attendeeStatusChanged );
 
@@ -119,7 +119,7 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
       Handles sending of ivitations for deleted incidences.
       @param incidence The deleted incidence.
      */
-    SendStatus sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
+    SendResult sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
                                             const KCalCore::Incidence::Ptr &incidence );
 
     /**
@@ -127,7 +127,7 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
       @param oldEvent The original event provided in the invitations.
       @param newEvent The new event as edited by the user.
     */
-    SendStatus sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
+    SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
                                     const KCalCore::Incidence::Ptr &newIncidence ) const;
 
   Q_SIGNALS:

@@ -46,8 +46,10 @@ KPIM.MainView {
       id : keyTreeView
 
       anchors.top    : parent.top
+      anchors.topMargin : 35
       anchors.bottom : searchBar.top
       anchors.left   : parent.left
+      anchors.leftMargin : 30
       anchors.right  : parent.right
     }
 

@@ -20,6 +20,7 @@
 #include "configwidget.h"
 
 #include "messagecomposer/messagecomposersettings.h"
+#include "messagelistsettings.h"
 #include "messageviewer/globalsettings.h"
 #include "settings.h"
 #include "stylesheetloader.h"
@@ -31,6 +32,8 @@
 #include <libkdepim/completionordereditor.h>
 #include <libkdepim/ldap/ldapclient.h>
 #include <libkdepim/recentaddresses.h>
+
+#include <QtGui/QLineEdit>
 
 using namespace MessageComposer;
 
@@ -44,6 +47,12 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   ui.kcfg_ComposerTemplatesReplyToSender->setProperty( "kcfg_property", QByteArray( "plainText" ) );
   ui.kcfg_ComposerTemplatesReplyToAll->setProperty( "kcfg_property", QByteArray( "plainText" ) );
   ui.kcfg_ComposerTemplatesForwardMessage->setProperty( "kcfg_property", QByteArray( "plainText" ) );
+
+  {
+    QLineEdit *lineEdit = ui.kcfg_ComposerWordWrapColumn->findChild<QLineEdit*>();
+    if ( lineEdit )
+      lineEdit->setReadOnly( true );
+  }
 
   mManager = new KConfigDialogManager( this, Settings::self() );
 
@@ -123,6 +132,19 @@ void ConfigWidget::loadFromExternalSettings()
                                                      MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
   Settings::self()->setInvitationsAutomaticSending( MessageViewer::GlobalSettings::self()->automaticSending() );
   Settings::self()->setInvitationsDeleteAfterReply( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
+
+  // Message List
+  {
+    const MessageListSettings settings = MessageListSettings::fromDefaultConfig();
+    Settings::self()->setMessageListSortingOption( settings.sortingOption() );
+    Settings::self()->setMessageListSortingOrder( settings.sortingOrder() );
+    Settings::self()->setMessageListGroupingOption( settings.groupingOption() );
+    Settings::self()->setMessageListUseThreading( settings.useThreading() );
+  }
+
+  // MDN
+  Settings::self()->setMDNPolicy( MessageViewer::GlobalSettings::self()->defaultPolicy() );
+  Settings::self()->setMDNQuoteType( MessageViewer::GlobalSettings::self()->quoteMessage() );
 }
 
 void ConfigWidget::saveToExternalSettings()
@@ -156,6 +178,22 @@ void ConfigWidget::saveToExternalSettings()
   MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationComparisons( Settings::self()->invitationsOutlookCompatible() );
   MessageViewer::GlobalSettings::self()->setAutomaticSending( Settings::self()->invitationsAutomaticSending() );
   MessageViewer::GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply( Settings::self()->invitationsDeleteAfterReply() );
+
+  // Message List
+  {
+    MessageListSettings settings = MessageListSettings::fromDefaultConfig();
+
+    settings.setSortingOption( static_cast<MessageListSettings::SortingOption>( Settings::self()->messageListSortingOption() ) );
+    settings.setSortingOrder( static_cast<Qt::SortOrder>( Settings::self()->messageListSortingOrder() ) );
+    settings.setGroupingOption( static_cast<MessageListSettings::GroupingOption>( Settings::self()->messageListGroupingOption() ) );
+    settings.setUseThreading( Settings::self()->messageListUseThreading() );
+
+    MessageListSettings::toDefaultConfig( settings );
+  }
+
+  // MDN
+  MessageViewer::GlobalSettings::self()->setDefaultPolicy( Settings::self()->mDNPolicy() );
+  MessageViewer::GlobalSettings::self()->setQuoteMessage( Settings::self()->mDNQuoteType() );
 
   Settings::self()->writeConfig();
   MessageViewer::GlobalSettings::self()->writeConfig();

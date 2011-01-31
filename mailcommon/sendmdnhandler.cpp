@@ -93,7 +93,7 @@ void SendMdnHandler::Private::handleMessages()
 
       const KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::ManualAction, KMime::MDN::Displayed, mdnSend.second, quote );
       if ( mdn ) {
-        if( !mKernel->msgSender()->send( mdn, MessageSender::SendLater ) ) {
+        if( !mKernel->msgSender()->send( mdn ) ) {
           kDebug() << "Sending failed.";
         }
       }
