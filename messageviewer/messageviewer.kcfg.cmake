@@ -172,13 +172,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <entry name="LegacyMangleFromToHeaders" type="Bool">
         <label>Mangle From:/To: headers in replies to replies</label>
         <whatsthis>Microsoft Outlook has a number of shortcomings in its implementation of the iCalendar standard; this option works around one of them. If you have problems with Outlook users not being able to get your replies, try setting this option.</whatsthis>
-        <default>false</default>
+        <default>${LEGACY_MANGLE_FROM_TO_HEADERS}</default>
       </entry>
 
       <entry name="LegacyBodyInvites" type="Bool">
         <label>Send groupware invitations in the mail body</label>
         <whatsthis>Microsoft Outlook has a number of shortcomings in its implementation of the iCalendar standard; this option works around one of them. If you have problems with Outlook users not being able to get your invitations, try setting this option.</whatsthis>
-        <default>false</default>
+        <default>${LEGACY_BODY_INVITES}</default>
       </entry>
 
      <entry name="ExchangeCompatibleInvitations" type="Bool">
