@@ -1096,12 +1096,25 @@ Akonadi::Item::List Calendar::incidences( const QDate &date )
 
 Akonadi::Item::List Calendar::incidences()
 {
-  return itemsFromModel( d->m_filterProxy );
+  if ( d->m_filterProxy->filter() == 0 || !d->m_filterProxy->filter()->isEnabled() ) {
+    // Lets skip the filterProxy and return m_itemMap, which is cheaper.
+    return rawIncidences();
+  } else {
+    return itemsFromModel( d->m_filterProxy );
+  }
 }
 
 Akonadi::Item::List Calendar::rawIncidences()
 {
-  return itemsFromModel( d->m_model );
+  // The following code is 100x faster than: return itemsFromModel( d->m_model )
+  QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
+  Akonadi::Item::List list;
+  while ( i.hasNext() ) {
+    i.next();
+    list.append( i.value() );
+  }
+
+  return list;
 }
 
 Akonadi::Item::List Calendar::sortEvents( const Akonadi::Item::List &eventList_,
