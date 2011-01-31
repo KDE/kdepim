@@ -553,7 +553,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       msg->to()->fromUnicodeString( to, "utf-8" );
       msg->from()->fromUnicodeString( receiver, "utf-8" );
 
-      if ( !GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+      if ( !GlobalSettings::self()->legacyBodyInvites() ) {
         msg->contentType()->from7BitString( "text/calendar; method=reply; charset=\"utf-8\"" );
         msg->setBody( iCal.toUtf8() );
       } else {
