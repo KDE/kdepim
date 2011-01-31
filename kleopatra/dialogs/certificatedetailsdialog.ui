@@ -1,85 +1,78 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>CertificateDetailsDialog</class>
- <widget class="QDialog" name="CertificateDetailsDialog" >
-  <property name="geometry" >
+ <widget class="QWidget" name="CertificateDetailsDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>666</width>
-    <height>514</height>
+    <height>449</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Certificate Details</string>
   </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QTabWidget" name="tabWidget" >
-     <widget class="QWidget" name="overviewTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>644</width>
-        <height>417</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+    <widget class="QTabWidget" name="tabWidget">
+     <widget class="QWidget" name="overviewTab">
+      <attribute name="title">
        <string>Overview</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="1" column="1" >
-        <widget class="QGroupBox" name="overviewActionsGB" >
-         <property name="title" >
+      <layout class="QGridLayout">
+       <item row="1" column="1">
+        <widget class="QGroupBox" name="overviewActionsGB">
+         <property name="title">
           <string>Actions</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout" >
+         <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QPushButton" name="changePassphrasePB" >
-            <property name="text" >
+           <widget class="QPushButton" name="changePassphrasePB">
+            <property name="text">
              <string>Change Passphrase...</string>
             </property>
-            <property name="autoDefault" >
+            <property name="autoDefault">
              <bool>false</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="changeTrustLevelPB" >
-            <property name="text" >
+           <widget class="QPushButton" name="changeTrustLevelPB">
+            <property name="text">
              <string>Trust Certifications Made by This Certificate...</string>
             </property>
-            <property name="autoDefault" >
+            <property name="autoDefault">
              <bool>false</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="changeExpiryDatePB" >
-            <property name="text" >
+           <widget class="QPushButton" name="changeExpiryDatePB">
+            <property name="text">
              <string>Change Expiry Date...</string>
             </property>
-            <property name="autoDefault" >
+            <property name="autoDefault">
              <bool>false</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="revokeCertificatePB" >
-            <property name="text" >
+           <widget class="QPushButton" name="revokeCertificatePB">
+            <property name="text">
              <string>Revoke This Certificate...</string>
             </property>
-            <property name="autoDefault" >
+            <property name="autoDefault">
              <bool>false</bool>
             </property>
            </widget>
           </item>
           <item>
-           <spacer name="verticalSpacer" >
-            <property name="orientation" >
+           <spacer name="verticalSpacer">
+            <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>0</width>
               <height>1</height>
@@ -90,47 +83,47 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="0" colspan="2" >
-        <widget class="QTextBrowser" name="overviewLB" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+       <item row="0" column="0" colspan="2">
+        <widget class="QTextBrowser" name="overviewLB">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>1</verstretch>
           </sizepolicy>
          </property>
-         <property name="frameShape" >
+         <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
-         <property name="openLinks" >
+         <property name="openLinks">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="1" column="0" >
-        <widget class="QGroupBox" name="groupBox_2" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>1</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="title" >
+         <property name="title">
           <string>Photo</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2" >
+         <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QLabel" name="photoLB" >
-            <property name="text" >
-             <string>&lt;p>At the moment, Kleopatra does not support photos in certificates. It has no support for adding, nor for displaying them. This is for the following reasons:&lt;/p>
-&lt;ul>
-&lt;li>Photos give a false sense of security.&lt;/li>
-&lt;li>Photos increase the size of certificates.&lt;/li>
-&lt;/ul></string>
+           <widget class="QLabel" name="photoLB">
+            <property name="text">
+             <string>&lt;p&gt;At the moment, Kleopatra does not support photos in certificates. It has no support for adding, nor for displaying them. This is for the following reasons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Photos give a false sense of security.&lt;/li&gt;
+&lt;li&gt;Photos increase the size of certificates.&lt;/li&gt;
+&lt;/ul&gt;</string>
             </property>
-            <property name="scaledContents" >
+            <property name="scaledContents">
              <bool>false</bool>
             </property>
-            <property name="wordWrap" >
+            <property name="wordWrap">
              <bool>true</bool>
             </property>
            </widget>
@@ -140,65 +133,57 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="certificationsTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>644</width>
-        <height>417</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+     <widget class="QWidget" name="certificationsTab">
+      <attribute name="title">
        <string>User-IDs &amp;&amp; Certifications</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_6" >
+      <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2" >
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QTreeView" name="certificationsTV" >
-           <property name="selectionMode" >
+          <widget class="QTreeView" name="certificationsTV">
+           <property name="selectionMode">
             <enum>QAbstractItemView::ExtendedSelection</enum>
            </property>
-           <property name="allColumnsShowFocus" >
+           <property name="allColumnsShowFocus">
             <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_5" >
+          <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QGroupBox" name="userIDsActionsGB" >
-             <property name="title" >
+            <widget class="QGroupBox" name="userIDsActionsGB">
+             <property name="title">
               <string>User-IDs</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_3" >
+             <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
-               <widget class="QPushButton" name="addUserIDPB" >
-                <property name="text" >
+               <widget class="QPushButton" name="addUserIDPB">
+                <property name="text">
                  <string>Add...</string>
                 </property>
-                <property name="autoDefault" >
+                <property name="autoDefault">
                  <bool>false</bool>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="revokeUserIDPB" >
-                <property name="text" >
+               <widget class="QPushButton" name="revokeUserIDPB">
+                <property name="text">
                  <string>Revoke...</string>
                 </property>
-                <property name="autoDefault" >
+                <property name="autoDefault">
                  <bool>false</bool>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="certifyUserIDPB" >
-                <property name="text" >
+               <widget class="QPushButton" name="certifyUserIDPB">
+                <property name="text">
                  <string>Certify...</string>
                 </property>
-                <property name="autoDefault" >
+                <property name="autoDefault">
                  <bool>false</bool>
                 </property>
                </widget>
@@ -207,17 +192,17 @@
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="certificationsActionGB" >
-             <property name="title" >
+            <widget class="QGroupBox" name="certificationsActionGB">
+             <property name="title">
               <string>Certifications</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4" >
+             <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
-               <widget class="QPushButton" name="revokeCertificationPB" >
-                <property name="text" >
+               <widget class="QPushButton" name="revokeCertificationPB">
+                <property name="text">
                  <string>Revoke...</string>
                 </property>
-                <property name="autoDefault" >
+                <property name="autoDefault">
                  <bool>false</bool>
                 </property>
                </widget>
@@ -226,11 +211,11 @@
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacer_2" >
-             <property name="orientation" >
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
-             <property name="sizeHint" stdset="0" >
+             <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
                <height>40</height>
@@ -239,21 +224,21 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="expandAllCertificationsPB" >
-             <property name="text" >
+            <widget class="QPushButton" name="expandAllCertificationsPB">
+             <property name="text">
               <string>Expand All</string>
              </property>
-             <property name="autoDefault" >
+             <property name="autoDefault">
               <bool>false</bool>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="collapseAllCertificationsPB" >
-             <property name="text" >
+            <widget class="QPushButton" name="collapseAllCertificationsPB">
+             <property name="text">
               <string>Collapse All</string>
              </property>
-             <property name="autoDefault" >
+             <property name="autoDefault">
               <bool>false</bool>
              </property>
             </widget>
@@ -263,81 +248,65 @@
         </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="showCertificationsPB" >
-         <property name="text" >
+        <widget class="QPushButton" name="showCertificationsPB">
+         <property name="text">
           <string/>
          </property>
-         <property name="autoDefault" >
+         <property name="autoDefault">
           <bool>false</bool>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="detailsTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>644</width>
-        <height>417</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+     <widget class="QWidget" name="detailsTab">
+      <attribute name="title">
        <string>Technical Details</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_7" >
+      <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout" >
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QLabel" name="detailsLeftLB" />
+          <widget class="QLabel" name="detailsLeftLB"/>
          </item>
          <item>
-          <widget class="QLabel" name="detailsRightLB" />
+          <widget class="QLabel" name="detailsRightLB"/>
          </item>
         </layout>
        </item>
        <item>
-        <widget class="KDHorizontalLine" name="subkeyHLine" />
+        <widget class="KDHorizontalLine" name="subkeyHLine"/>
        </item>
        <item>
-        <widget class="QTreeView" name="subkeyTV" >
-         <property name="selectionMode" >
+        <widget class="QTreeView" name="subkeyTV">
+         <property name="selectionMode">
           <enum>QAbstractItemView::NoSelection</enum>
          </property>
-         <property name="rootIsDecorated" >
+         <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="allColumnsShowFocus" >
+         <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="chainTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>644</width>
-        <height>417</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+     <widget class="QWidget" name="chainTab">
+      <attribute name="title">
        <string>Chain</string>
       </attribute>
-      <layout class="QVBoxLayout" >
+      <layout class="QVBoxLayout">
        <item>
-        <widget class="QTreeWidget" name="chainTW" >
-         <property name="allColumnsShowFocus" >
+        <widget class="QTreeWidget" name="chainTW">
+         <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
-         <property name="headerHidden" >
+         <property name="headerHidden">
           <bool>true</bool>
          </property>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>1</string>
           </property>
          </column>
@@ -345,30 +314,22 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="dumpTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>644</width>
-        <height>417</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+     <widget class="QWidget" name="dumpTab">
+      <attribute name="title">
        <string>Dump</string>
       </attribute>
-      <layout class="QVBoxLayout" >
+      <layout class="QVBoxLayout">
        <item>
-        <widget class="QLabel" name="label" >
-         <property name="text" >
+        <widget class="QLabel" name="label">
+         <property name="text">
           <string>This is a dump of all information the backend has about this certificate:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="KDLogTextWidget" native="1" name="dumpLTW" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
+        <widget class="KDLogTextWidget" name="dumpLTW" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -377,16 +338,6 @@
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Close|QDialogButtonBox::Help</set>
-     </property>
     </widget>
    </item>
   </layout>
@@ -408,32 +359,16 @@
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>CertificateDetailsDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>295</x>
-     <y>573</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>changePassphrasePB</sender>
    <signal>clicked()</signal>
    <receiver>CertificateDetailsDialog</receiver>
    <slot>slotChangePassphraseClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>748</x>
      <y>390</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>782</x>
      <y>350</y>
     </hint>
@@ -445,11 +380,11 @@
    <receiver>CertificateDetailsDialog</receiver>
    <slot>slotChangeTrustLevelClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>742</x>
      <y>400</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>784</x>
      <y>402</y>
     </hint>
@@ -461,11 +396,11 @@
    <receiver>CertificateDetailsDialog</receiver>
    <slot>slotChangeExpiryDateClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>742</x>
      <y>448</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>780</x>
      <y>450</y>
     </hint>
@@ -477,11 +412,11 @@
    <receiver>CertificateDetailsDialog</receiver>
    <slot>slotRevokeCertificateClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>728</x>
      <y>496</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>778</x>
      <y>498</y>
     </hint>
@@ -493,11 +428,11 @@
    <receiver>CertificateDetailsDialog</receiver>
    <slot>slotAddUserIDClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>738</x>
      <y>100</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>780</x>
      <y>100</y>
     </hint>
@@ -509,11 +444,11 @@
    <receiver>CertificateDetailsDialog</receiver>
    <slot>slotRevokeUserIDClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>738</x>
      <y>150</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>778</x>
      <y>152</y>
     </hint>
@@ -525,11 +460,11 @@
    <receiver>CertificateDetailsDialog</receiver>
    <slot>slotCertifyUserIDClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>736</x>
      <y>190</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>780</x>
      <y>190</y>
     </hint>
@@ -541,11 +476,11 @@
    <receiver>CertificateDetailsDialog</receiver>
    <slot>slotRevokeCertificationClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>732</x>
      <y>272</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>780</x>
      <y>272</y>
     </hint>
@@ -557,11 +492,11 @@
    <receiver>CertificateDetailsDialog</receiver>
    <slot>slotShowCertificationsClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>748</x>
      <y>510</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>776</x>
      <y>490</y>
     </hint>
@@ -573,11 +508,11 @@
    <receiver>certificationsTV</receiver>
    <slot>expandAll()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>665</x>
      <y>424</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>525</x>
      <y>320</y>
     </hint>
@@ -589,11 +524,11 @@
    <receiver>certificationsTV</receiver>
    <slot>collapseAll()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>701</x>
      <y>464</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>585</x>
      <y>352</y>
     </hint>

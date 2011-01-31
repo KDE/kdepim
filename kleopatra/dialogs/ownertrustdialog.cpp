@@ -37,7 +37,7 @@
 
 #include <utils/formatting.h>
 
-#include <QPushButton>
+#include <kpushbutton.h>
 
 #include <cassert>
 
@@ -76,19 +76,22 @@ private:
 
     struct UI : public Ui::OwnerTrustDialog {
         explicit UI( Dialogs::OwnerTrustDialog * qq )
-            : Ui::OwnerTrustDialog()
+            : Ui::OwnerTrustDialog(), q( qq )
         {
-            setupUi( qq );
+            setupUi( qq->mainWidget() );
+            qq->setButtons( KDialog::Ok | KDialog::Cancel );
         }
 
         QPushButton * okPB() const {
-            return buttonBox->button( QDialogButtonBox::Ok );
+            return q->button( KDialog::Ok );
         }
+
+        Dialogs::OwnerTrustDialog *q;
     } ui;
 };
 
 OwnerTrustDialog::OwnerTrustDialog( QWidget * p, Qt::WindowFlags f )
-    : QDialog( p, f ), d( new Private( this ) )
+    : KDialog( p, f ), d( new Private( this ) )
 {
 
 }
