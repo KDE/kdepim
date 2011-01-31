@@ -317,6 +317,11 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
   return model;
 }
 
+bool MainView::doNotUseFilterLineEditInCurrentState() const
+{
+  // do not use filter line edit when in thread contents view
+  return (m_threadContentsModel->rowCount() > 0);
+}
 
 void MainView::doDelayedInit()
 {

@@ -291,6 +291,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     virtual bool useFilterLineEditInCurrentState() const;
 
+    /**
+     * Returns whether the application is in a state where the filter line edit
+     * must not be used.
+     */
+    virtual bool doNotUseFilterLineEditInCurrentState() const;
+
   protected Q_SLOTS:
     void breadcrumbsSelectionChanged();
     void itemSelectionChanged();

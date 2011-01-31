@@ -170,6 +170,8 @@ class MainView : public KDeclarativeMainView
 
     virtual QAbstractItemModel* createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model);
 
+    virtual bool doNotUseFilterLineEditInCurrentState() const;
+
   private slots:
     void qmlInitialized( QDeclarativeView::Status status );
     void sendAgainFetchResult( KJob *job );
