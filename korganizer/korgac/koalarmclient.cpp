@@ -95,6 +95,8 @@ KOAlarmClient::KOAlarmClient( QObject *parent, const char *name )
 
 KOAlarmClient::~KOAlarmClient()
 {
+  emit saveAllSignal();
+  saveLastCheckTime();
   delete mCalendar;
   delete mDocker;
   delete mDialog;
@@ -120,6 +122,7 @@ void KOAlarmClient::checkAlarms()
     Incidence *incidence = mCalendar->incidence( (*it)->parent()->uid() );
     createReminder( mCalendar, incidence, from, (*it)->text() );
   }
+  saveLastCheckTime();
 }
 
 void KOAlarmClient::createReminder( KCal::CalendarResources *calendar,
