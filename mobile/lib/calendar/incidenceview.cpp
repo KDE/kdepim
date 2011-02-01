@@ -315,6 +315,10 @@ Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mItem );
   mEditor->save( incidence );
 
+  // Mark the incidence as changed
+  if ( mItem.isValid() )
+    incidence->setRevision( incidence->revision() + 1 );
+
   Akonadi::Item result = item;
   result.setPayload<KCalCore::Incidence::Ptr>( incidence );
   result.setMimeType( mItem.mimeType() );
