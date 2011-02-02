@@ -717,18 +717,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     bool saveFile( const QString &receiver, const QString &iCal, const QString &type ) const
     {
-    // FIXME no IncidenceEditors on WinCE, anyway we don't want to depend on it just for that
-#ifndef Q_OS_WINCE
       if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
         IncidenceEditorNG::GroupwareIntegration::activate();
       }
-#else
-      static bool s_groupwareInitialized = false;
-      if ( !s_groupwareInitialized ) {
-        CalendarSupport::Groupware::create( 0 );
-        s_groupwareInitialized = true;
-      }
-#endif
+
       CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
       // TODO: catch signal, and do error handling
       return true;
