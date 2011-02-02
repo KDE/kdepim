@@ -342,9 +342,6 @@ void MainView::doDelayedInit()
   mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 
   MobileKernel::self()->setCollectionModel( mCollectionModel );
-  KSharedConfigPtr config = KSharedConfig::openConfig( "kmail-mobilerc" );
-  MessageViewer::GlobalSettings::self()->setSharedConfig( config );
-  MessageViewer::GlobalSettings::self()->readConfig();
 
   mTemplateSelectionModel = new QItemSelectionModel( entityTreeModel(), this );
 
