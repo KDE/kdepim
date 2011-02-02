@@ -53,6 +53,9 @@ class CALENDARSUPPORT_EXPORT GroupwareUiDelegate
   public:
     virtual ~GroupwareUiDelegate();
     virtual void requestIncidenceEditor( const Akonadi::Item &item ) = 0;
+
+    virtual void setCalendar( CalendarSupport::Calendar *calendar ) = 0;
+    virtual void createCalendar() = 0;
 };
 
 class CALENDARSUPPORT_EXPORT Groupware : public QObject
