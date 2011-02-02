@@ -149,6 +149,7 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
     Q_DECLARE_PRIVATE( ThreadGrouperModel )
     ThreadGrouperModelPrivate* const d_ptr;
     Q_PRIVATE_SLOT( d_func(), void populateThreadGrouperModel() )
+    Q_PRIVATE_SLOT( d_func(), void resort() )
 };
 
 #endif
