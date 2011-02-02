@@ -312,7 +312,9 @@ Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
     return item;
   }
 
-  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mItem );
+  KCalCore::Incidence::Ptr incidenceInEditor = mEditor->incidence<KCalCore::Incidence>();
+  KCalCore::Incidence::Ptr incidence( incidenceInEditor->clone() );
+
   mEditor->save( incidence );
 
   // Mark the incidence as changed
