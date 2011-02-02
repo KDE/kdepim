@@ -210,7 +210,8 @@ QString MailThreadGrouperComparator::grouperString( const Akonadi::Item &item ) 
   KMime::Message::Ptr msg;
 
   if ( mSortingOption == SortByDateTimeMostRecent ) {
-    const Akonadi::Item::Id newestItem = mostRecentIdInThread( messageForItem( item ), item.id() );
+    const Akonadi::Item rootItem = threadItem( item );
+    const Akonadi::Item::Id newestItem = mostRecentIdInThread( messageForItem( rootItem ), rootItem.id() );
     msg = messageForItem( Akonadi::Item( newestItem ) );
   } else {
     const Akonadi::Item rootItem = threadItem( item );
