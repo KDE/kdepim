@@ -36,6 +36,8 @@
 
 using namespace IncidenceEditorNG;
 
+namespace IncidenceEditorNG {
+
 class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
 {
   public:
@@ -95,6 +97,8 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
 
     CalendarSupport::Calendar *mCalendar;
 };
+
+}
 
 CalendarSupport::GroupwareUiDelegate* GroupwareIntegration::sDelegate = 0;
 
