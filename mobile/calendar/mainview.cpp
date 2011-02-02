@@ -26,6 +26,7 @@
 #include "calendaradaptor.h"
 #include "calendarinterface.h"
 #include "calendar/clockhelper.h"
+#include "calendar/groupwareuidelegate.h"
 #include "calendar/incidenceview.h"
 #include "calendar/kcalitembrowseritem.h"
 #include "configwidget.h"
@@ -72,6 +73,7 @@
 #include <ksystemtimezone.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>
+#include <incidenceeditor-ng/groupwareintegration.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
@@ -143,6 +145,11 @@ void MainView::doDelayedInit()
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), itemModel(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
   CalendarSupport::FreeBusyManager::self()->setCalendar( m_calendar );
+
+  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
+    IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new GroupwareUiDelegate );
+    IncidenceEditorNG::GroupwareIntegration::activate( m_calendar );
+  }
 
   m_changer = new CalendarSupport::IncidenceChanger( m_calendar, this );
 
