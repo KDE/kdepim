@@ -51,6 +51,7 @@ class ItemEditorPrivate
     Akonadi::ItemFetchScope mFetchScope;
     Akonadi::Monitor *mItemMonitor;
     ItemEditorUi *mItemUi;
+    bool mIsCounterProposal;
 
   public:
     ItemEditorPrivate( EditorItemManager *qq );
@@ -62,7 +63,7 @@ class ItemEditorPrivate
 };
 
 ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
-  : q_ptr( qq ), mItemMonitor( 0 )
+  : q_ptr( qq ), mItemMonitor( 0 ), mIsCounterProposal( false )
 {
   mFetchScope.fetchFullPayload();
   mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
@@ -309,11 +310,15 @@ void EditorItemManager::save()
       }
     }
   } else { // An invalid item. Means we're creating.
-    Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
+    if ( d->mIsCounterProposal ) {
+      emit itemSaveFinished( EditorItemManager::Modify );
+    } else {
+      Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
-    Akonadi::ItemCreateJob *createJob =
-      new Akonadi::ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
-    connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+      Akonadi::ItemCreateJob *createJob =
+        new Akonadi::ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
+      connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+    }
   }
 }
 
@@ -327,6 +332,12 @@ Akonadi::ItemFetchScope &EditorItemManager::fetchScope()
 {
   Q_D( ItemEditor );
   return d->mFetchScope;
+}
+
+void EditorItemManager::setIsCounterProposal( bool isCounterProposal )
+{
+  Q_D( ItemEditor );
+  d->mIsCounterProposal = isCounterProposal;
 }
 
 ItemEditorUi::~ItemEditorUi()
