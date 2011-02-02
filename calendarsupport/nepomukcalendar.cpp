@@ -80,7 +80,7 @@ NepomukCalendar::NepomukCalendar( QWidget *parent )
            SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
 #ifdef KDEPIM_NO_NEPOMUK
-  IncidenceFetchJob *job = new IncidenceFetchJob( this );
+  IncidenceFetchJob *job = new IncidenceFetchJob();
 #else
   IncidenceSearchJob *job = new IncidenceSearchJob();
 #endif
