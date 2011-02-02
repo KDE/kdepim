@@ -23,6 +23,8 @@
 */
 
 #include "mailclient.h"
+
+#include "config-enterprise.h"
 #include "kdepim-version.h"
 
 #include <Akonadi/Collection>
@@ -220,6 +222,18 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
 
   const int transportId = transport->id();
 
+  // gather config values
+  KConfig config( "mailviewerrc" );
+
+  KConfigGroup configGroup( &config, QLatin1String( "Invitations" ) );
+  const bool outlookConformInvitation = configGroup.readEntry( "LegacyBodyInvites",
+#ifdef KDEPIM_ENTERPRISE_BUILD
+                                                               true
+#else
+                                                               false
+#endif
+                                                             );
+
   // Now build the message we like to send. The message KMime::Message::Ptr instance
   // will be the root message that has 2 additional message. The body itself and
   // the attached cal.ics calendar file.
@@ -239,7 +253,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   message->date()->setDateTime( KDateTime::currentLocalDateTime() );
   message->subject()->fromUnicodeString( subject, "utf-8" );
 
-  if ( false /* Outlook compatible mode */ ) {
+  if ( outlookConformInvitation ) {
     message->contentType()->setMimeType( "text/calendar" );
     message->contentType()->setCharset( "utf-8" );
     message->contentType()->setName( QLatin1String( "cal.ics" ), "utf-8" );
