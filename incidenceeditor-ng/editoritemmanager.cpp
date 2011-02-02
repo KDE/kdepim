@@ -200,7 +200,7 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
 
   switch ( state ) {
   case EditorItemManager::AfterSave:
-    if ( d->mItem.isValid() && d->mItem.hasPayload() ) {
+    if ( d->mItem.hasPayload() ) {
       return d->mItem;
     } else {
       kDebug() << "Won't return mItem because isValid = " << d->mItem.isValid()
@@ -208,7 +208,7 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
     }
     break;
   case EditorItemManager::BeforeSave:
-    if ( d->mPrevItem.isValid() && d->mPrevItem.hasPayload() ) {
+    if ( d->mPrevItem.hasPayload() ) {
       return d->mPrevItem;
     } else {
       kDebug() << "Won't return mPrevItem because isValid = " << d->mPrevItem.isValid()
@@ -224,7 +224,6 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
 
 void EditorItemManager::load( const Akonadi::Item &item )
 {
-  Q_ASSERT( item.isValid() );
   Q_D( ItemEditor );
 
   if ( item.hasPayload() ) {
