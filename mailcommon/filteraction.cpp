@@ -924,6 +924,16 @@ bool FilterActionSetStatus::requiresBody() const
   return false;
 }
 
+static QString realStatusString( const QString &statusStr )
+{
+  QString result( statusStr );
+
+  if ( result.size() == 2 )
+    result.remove( QLatin1Char( 'U' ) );
+
+  return result;
+}
+
 void FilterActionSetStatus::argsFromString( const QString &argsStr )
 {
   if ( argsStr.length() == 1 ) {
@@ -931,7 +941,7 @@ void FilterActionSetStatus::argsFromString( const QString &argsStr )
 
     for ( int i = 0 ; i < StatiCount ; ++i ) {
       status = stati[i];
-      if ( status.statusStr()[0] == argsStr[0].toLatin1() ) {
+      if ( realStatusString( status.statusStr() ) == argsStr.toLatin1() ) {
         mParameter = mParameterList.at( i + 1 );
         return;
       }
@@ -947,7 +957,7 @@ QString FilterActionSetStatus::argsAsString() const
   if ( index < 1 )
     return QString();
 
-  return stati[index - 1].statusStr();
+  return realStatusString( stati[index - 1].statusStr() );
 }
 
 QString FilterActionSetStatus::displayString() const
