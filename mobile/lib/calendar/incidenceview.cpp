@@ -79,6 +79,11 @@ IncidenceView::IncidenceView( QWidget* parent )
   setAttribute(Qt::WA_DeleteOnClose);
   QDeclarativeContext *context = engine()->rootContext();
   context->setContextProperty( "_incidenceview", this );
+
+  if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
+    mInvitationDispatcher = new InvitationDispatcher( 0, this );
+    mInvitationDispatcher->setItemManager( mItemManager );
+  }
 }
 
 void IncidenceView::doDelayedInit()
@@ -88,12 +93,6 @@ void IncidenceView::doDelayedInit()
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
   qmlRegisterType<CalendarHelper>( "CalendarHelper", 4, 5, "CalendarHelper" );
   qmlRegisterType<ClockHelper>( "ClockHelper", 4, 5, "ClockHelper" );
-
-
-  if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
-    mInvitationDispatcher = new InvitationDispatcher( 0, this );
-    mInvitationDispatcher->setItemManager( mItemManager );
-  }
 
   connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
            SLOT(slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction) ) );
@@ -271,6 +270,12 @@ void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
 void IncidenceView::setDefaultCollection( const Akonadi::Collection &collection )
 {
   mDefaultCollection = collection;
+}
+
+void IncidenceView::setIsCounterProposal( bool isCounterProposal )
+{
+  mItemManager->setIsCounterProposal( isCounterProposal );
+  mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
 }
 
 /// ItemEditorUi methods
