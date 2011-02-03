@@ -103,7 +103,8 @@ KPIM.ActionList {
   {
     for (var i = 0; i < children.length; ++i )
     {
-      children[i].triggered.connect(actions, triggered);
+      if (children[i].triggered)
+        children[i].triggered.connect(actions, triggered);
     }
   }
 }
