@@ -33,7 +33,7 @@
 
 #include <calendarsupport/categoryconfig.h>
 #include <KConfigSkeleton>
-#include <QDebug>
+#include <KDebug>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
@@ -129,3 +129,11 @@ void IncidenceCategories::setCategoriesFromCombo()
   setCategories( categories );
 #endif
 }
+
+
+void IncidenceCategories::printDebugInfo() const
+{
+  kDebug() << "mSelectedCategories = " << mSelectedCategories;
+  kDebug() << "mLoadedIncidence->categories() = " << mLoadedIncidence->categories();
+}
+
