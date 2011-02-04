@@ -81,6 +81,7 @@ target_link_libraries(kmail-mobile
     akonadi_next
     kdepim
     kdepimmobileui
+    kdepimmobileuicalendar
     kmbox
     ksieveui
     kleo

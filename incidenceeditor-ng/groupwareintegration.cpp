@@ -36,10 +36,21 @@
 
 using namespace IncidenceEditorNG;
 
+namespace IncidenceEditorNG {
+
 class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
 {
   public:
     GroupwareUiDelegate()
+    {
+    }
+
+    void setCalendar( CalendarSupport::Calendar *calendar )
+    {
+      mCalendar = calendar;
+    }
+
+    void createCalendar()
     {
       Akonadi::Session *session = new Akonadi::Session( "GroupwareIntegration", this );
       Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
@@ -69,8 +80,10 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
 
     void requestIncidenceEditor( const Akonadi::Item &item )
     {
+#ifndef KDEPIM_MOBILE_UI
       const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
       if ( !incidence ) {
+        kWarning() << "Incidence is null, won't open the editor";
         return;
       }
 
@@ -79,12 +92,15 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
                                                            incidence->type() );
       dialog->setIsCounterProposal( true );
       dialog->load( item, QDate::currentDate() );
+#endif
     }
 
     CalendarSupport::Calendar *mCalendar;
 };
 
-K_GLOBAL_STATIC( GroupwareUiDelegate, globalDelegate )
+}
+
+CalendarSupport::GroupwareUiDelegate* GroupwareIntegration::sDelegate = 0;
 
 bool GroupwareIntegration::sActivated = false;
 
@@ -93,10 +109,23 @@ bool GroupwareIntegration::isActive()
   return sActivated;
 }
 
-void GroupwareIntegration::activate()
+void GroupwareIntegration::activate( CalendarSupport::Calendar *calendar )
 {
+  if ( !sDelegate )
+    sDelegate = new GroupwareUiDelegate;
+
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
-  CalendarSupport::Groupware::create( &*globalDelegate );
+  CalendarSupport::Groupware::create( sDelegate );
+  if ( calendar ) {
+    sDelegate->setCalendar( calendar );
+  } else {
+    sDelegate->createCalendar();
+  }
   sActivated = true;
 }
 
+void GroupwareIntegration::setGlobalUiDelegate( CalendarSupport::GroupwareUiDelegate *delegate )
+{
+  delete sDelegate;
+  sDelegate = delegate;
+}

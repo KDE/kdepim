@@ -121,6 +121,8 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
       None    /**< Nothing happened. */
     };
 
+    void setIsCounterProposal( bool isCounterProposal );
+
   Q_SIGNALS:
     void itemSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action );
 

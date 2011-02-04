@@ -23,6 +23,8 @@
 */
 
 #include "mailclient.h"
+
+#include "config-enterprise.h"
 #include "kdepim-version.h"
 
 #include <Akonadi/Collection>
@@ -220,18 +222,22 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
 
   const int transportId = transport->id();
 
+  // gather config values
+  KConfig config( "mailviewerrc" );
+
+  KConfigGroup configGroup( &config, QLatin1String( "Invitations" ) );
+  const bool outlookConformInvitation = configGroup.readEntry( "LegacyBodyInvites",
+#ifdef KDEPIM_ENTERPRISE_BUILD
+                                                               true
+#else
+                                                               false
+#endif
+                                                             );
+
   // Now build the message we like to send. The message KMime::Message::Ptr instance
   // will be the root message that has 2 additional message. The body itself and
   // the attached cal.ics calendar file.
   KMime::Message::Ptr message = KMime::Message::Ptr( new KMime::Message );
-  // We need to set following 4 lines by hand else KMime::Content::addContent
-  // will create a new Content instance for us to attach the main message
-  // what we don't need cause we already have the main message instance where
-  // 2 additional messages are attached.
-  KMime::Headers::ContentType *ct = message->contentType();
-  ct->setMimeType( "multipart/mixed" );
-  ct->setBoundary( KMime::multiPartBoundary() );
-  ct->setCategory( KMime::Headers::CCcontainer );
   message->contentTransferEncoding()->clear();  // 7Bit, decoded.
 
   // Set the headers
@@ -247,26 +253,59 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   message->date()->setDateTime( KDateTime::currentLocalDateTime() );
   message->subject()->fromUnicodeString( subject, "utf-8" );
 
-  // Set the first multipart, the body message.
-  KMime::Content *bodyMessage = new KMime::Content;
-  bodyMessage->contentType()->setMimeType( "text/plain" );
-  bodyMessage->setBody( body.toUtf8() );
+  if ( outlookConformInvitation ) {
+    message->contentType()->setMimeType( "text/calendar" );
+    message->contentType()->setCharset( "utf-8" );
+    message->contentType()->setName( QLatin1String( "cal.ics" ), "utf-8" );
+    message->contentType()->setParameter( QLatin1String( "method" ), QLatin1String( "request" ) );
 
-  // Set the sedcond multipart, the attachment.
-  if ( !attachment.isEmpty() ) {
-    KMime::Content *attachMessage = new KMime::Content;
-    KMime::Headers::ContentDisposition *attachDisposition =
-      new KMime::Headers::ContentDisposition( attachMessage );
-    attachDisposition->setFilename( QLatin1String( "cal.ics" ) );
-    attachDisposition->setDisposition( KMime::Headers::CDattachment );
-    attachMessage->contentType()->setMimeType( "text/calendar" );
-    attachMessage->setHeader( attachDisposition );
-    attachMessage->setBody( attachment.toUtf8() );
-    message->addContent( attachMessage );
+    if ( !attachment.isEmpty() ) {
+      KMime::Headers::ContentDisposition *disposition =
+        new KMime::Headers::ContentDisposition( message.get() );
+      disposition->setDisposition( KMime::Headers::CDinline );
+      message->setHeader( disposition );
+      message->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
+      message->setBody( attachment.toUtf8() );
+    }
+  } else {
+    // We need to set following 4 lines by hand else KMime::Content::addContent
+    // will create a new Content instance for us to attach the main message
+    // what we don't need cause we already have the main message instance where
+    // 2 additional messages are attached.
+    KMime::Headers::ContentType *ct = message->contentType();
+    ct->setMimeType( "multipart/mixed" );
+    ct->setBoundary( KMime::multiPartBoundary() );
+    ct->setCategory( KMime::Headers::CCcontainer );
+
+    // Set the first multipart, the body message.
+    KMime::Content *bodyMessage = new KMime::Content;
+    KMime::Headers::ContentDisposition *bodyDisposition =
+      new KMime::Headers::ContentDisposition( bodyMessage );
+    bodyDisposition->setDisposition( KMime::Headers::CDinline );
+    bodyMessage->contentType()->setMimeType( "text/plain" );
+    bodyMessage->contentType()->setCharset( "utf-8" );
+    bodyMessage->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
+    bodyMessage->setBody( body.toUtf8() );
+    message->addContent( bodyMessage );
+
+    // Set the sedcond multipart, the attachment.
+    if ( !attachment.isEmpty() ) {
+      KMime::Content *attachMessage = new KMime::Content;
+      KMime::Headers::ContentDisposition *attachDisposition =
+        new KMime::Headers::ContentDisposition( attachMessage );
+      attachDisposition->setDisposition( KMime::Headers::CDattachment );
+      attachMessage->contentType()->setMimeType( "text/calendar" );
+      attachMessage->contentType()->setCharset( "utf-8" );
+      attachMessage->contentType()->setName( QLatin1String( "cal.ics" ), "utf-8" );
+      attachMessage->contentType()->setParameter( QLatin1String( "method" ), QLatin1String( "request" ) );
+      attachMessage->setHeader( attachDisposition );
+      attachMessage->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
+      attachMessage->setBody( attachment.toUtf8() );
+      message->addContent( attachMessage );
+    }
   }
 
   // Job done, attach the both multiparts and assemble the message.
-  message->addContent( bodyMessage );
   message->assemble();
 
   // Put the newly created item in the MessageQueueJob.

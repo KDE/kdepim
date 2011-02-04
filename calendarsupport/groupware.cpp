@@ -206,6 +206,7 @@ void Groupware::finishHandlingInvitation()
 
   if ( mDelegate && action.startsWith( QLatin1String( "counter" ) ) ) {
     Akonadi::Item item;
+    item.setMimeType( incidence->mimeType() );
     item.setPayload( KCalCore::Incidence::Ptr( incidence->clone() ) );
     mDelegate->requestIncidenceEditor( item );
   }

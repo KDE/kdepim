@@ -43,6 +43,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
+    /**reimp*/ void printDebugInfo() const;
 
   private slots:
     void selectCategories();
@@ -50,6 +51,15 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
     void setCategoriesFromCombo();
 
   private:
+
+    /** If the incidence comes from outside of KDE it can contain unknown categories.
+     * KOrganizer usually checks for these, but it can happen that it checks before the
+     * items are in the ETM, due to akonadi's async nature.
+     * So we make the check inside the editor, and add new categories to config. This way
+     * the editor can be used standalone too.
+     * */
+    void checkForUnknownCategories( const QStringList &categoriesToCheck );
+
     QStringList mSelectedCategories;
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;

@@ -301,7 +301,6 @@ if(WINCE)
   set(_kleopatra_SRCS
     ${_kleopatra_SRCS}
     utils/qwizard.cpp
-    utils/splashscreen_wince.cpp
   )
 endif(WINCE)
 

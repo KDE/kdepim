@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_DIALOGS_CERTIFICATEDETAILSDIALOG_H__
 #define __KLEOPATRA_DIALOGS_CERTIFICATEDETAILSDIALOG_H__
 
-#include <QDialog>
+#include <kdialog.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -46,7 +46,7 @@ namespace GpgME {
 namespace Kleo {
 namespace Dialogs {
 
-    class CertificateDetailsDialog : public QDialog {
+    class CertificateDetailsDialog : public KDialog {
         Q_OBJECT
     public:
         explicit CertificateDetailsDialog( QWidget * parent=0, Qt::WindowFlags f=0 );

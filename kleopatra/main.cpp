@@ -94,10 +94,6 @@ namespace Kleo {
 
 #include <cassert>
 
-#ifdef _WIN32_WCE
-#include <utils/splashscreen_wince.h>
-#endif
-
 using namespace boost;
 
 static const int SPLASHSCREEN_TIMEOUT = 5000; // 5s
@@ -199,9 +195,6 @@ static void fillKeyCache( SplashScreen * splash, Kleo::UiServer * server ) {
 
 int main( int argc, char** argv )
 {
-#ifdef _WIN32_WCE
-    Kleo::showWinceSplashscreen();
-#endif    
     QTime timer;
     timer.start();
 

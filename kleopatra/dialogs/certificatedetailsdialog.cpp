@@ -406,7 +406,8 @@ private:
         explicit UI( Dialogs::CertificateDetailsDialog * qq )
             : Ui_CertificateDetailsDialog()
         {
-            setupUi( qq );
+            setupUi( qq->mainWidget() );
+            qq->setButtons( KDialog::Help | KDialog::Close );
 
             chainTW->header()->setResizeMode( 0, QHeaderView::Stretch );
 
@@ -420,7 +421,7 @@ private:
 };
 
 CertificateDetailsDialog::CertificateDetailsDialog( QWidget * p, Qt::WindowFlags f )
-    : QDialog( p, f ), d( new Private( this ) )
+    : KDialog( p, f ), d( new Private( this ) )
 {
 
 }

@@ -37,6 +37,7 @@
 
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>
+#include <incidenceeditor-ng/groupwareintegration.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <calendarsupport/archivedialog.h>
 #include <calendarsupport/calendar.h>
@@ -111,6 +112,10 @@ void MainView::doDelayedInit()
   mChanger = new CalendarSupport::IncidenceChanger( mCalendar, this );
 
   CalendarSupport::FreeBusyManager::self()->setCalendar( mCalendar );
+
+  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
+    IncidenceEditorNG::GroupwareIntegration::activate( mCalendar );
+  }
 
   mCalendarUtils = new CalendarSupport::CalendarUtils( mCalendar, this );
   mCalendar->setParent( mCalendarUtils );

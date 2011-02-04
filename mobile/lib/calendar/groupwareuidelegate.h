@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-    Copyright (c) 2010 Andreas Holzammer <andreas.holzammer@kdab.com>
+    Copyright (c) 2011 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,14 +17,27 @@
     02110-1301, USA.
 */
 
-#ifndef __KLEOPATRA_UTILS_SPLASHSCREEN_WINCE_H__
-#define __KLEOPATRA_UTILS_SPLASHSCREEN_WINCE_H__
+#ifndef GROUPWAREUIDELEGATE_H
+#define GROUPWAREUIDELEGATE_H
 
-namespace Kleo {
+#include "mobileuicalendar_export.h"
 
-  void showWinceSplashscreen();
+#include <calendarsupport/groupware.h>
 
-}
+#include <QtCore/QObject>
 
-#endif // __KLEOPATRA_UTILS_SPLASHSCREEN_WINCE_H__
+class MOBILEUICALENDAR_EXPORT GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
+{
+  public:
+    GroupwareUiDelegate();
 
+    void setCalendar( CalendarSupport::Calendar *calendar );
+    void createCalendar();
+
+    void requestIncidenceEditor( const Akonadi::Item &item );
+
+  private:
+    CalendarSupport::Calendar *mCalendar;
+};
+
+#endif

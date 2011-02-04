@@ -21,16 +21,24 @@
 
 #include "incidenceeditors-ng_export.h"
 
+namespace CalendarSupport {
+  class Calendar;
+  class GroupwareUiDelegate;
+}
+
 namespace IncidenceEditorNG {
 
 class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
 {
   public:
     static bool isActive();
-    static void activate();
+    static void activate( CalendarSupport::Calendar *calendar = 0 );
+
+    static void setGlobalUiDelegate( CalendarSupport::GroupwareUiDelegate *delegate );
 
   private:
     static bool sActivated;
+    static CalendarSupport::GroupwareUiDelegate* sDelegate;
 };
 
 }

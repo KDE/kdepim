@@ -120,7 +120,8 @@ private:
         explicit UI( Dialogs::ExpiryDialog * qq )
             : Ui::ExpiryDialog()
         {
-            setupUi( qq );
+            setupUi( qq->mainWidget() );
+            qq->setButtons( KDialog::Ok | KDialog::Cancel );
 
             assert( inCB->count() == NumPeriods );
 
@@ -130,7 +131,7 @@ private:
 };
 
 ExpiryDialog::ExpiryDialog( QWidget * p, Qt::WindowFlags f )
-    : QDialog( p, f ), d( new Private( this ) )
+    : KDialog( p, f ), d( new Private( this ) )
 {
 
 }
