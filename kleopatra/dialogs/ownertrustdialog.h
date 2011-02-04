@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_DIALOGS_OWNERTRUSTDIALOG_H__
 #define __KLEOPATRA_DIALOGS_OWNERTRUSTDIALOG_H__
 
-#include <QDialog>
+#include <kdialog.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -42,7 +42,7 @@
 namespace Kleo {
 namespace Dialogs {
 
-    class OwnerTrustDialog : public QDialog {
+    class OwnerTrustDialog : public KDialog {
         Q_OBJECT
     public:
         explicit OwnerTrustDialog( QWidget * parent=0, Qt::WindowFlags f=0 );

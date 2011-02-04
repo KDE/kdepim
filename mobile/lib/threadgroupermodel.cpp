@@ -42,6 +42,7 @@ class ThreadGrouperModelPrivate
     Akonadi::Item threadRoot( const QModelIndex &index ) const;
 
     void populateThreadGrouperModel() const;
+    void resort();
 
     mutable QHash<QByteArray, QByteArray> m_childParentMap; // maps an item to its thread leader item
     mutable QHash<QByteArray, QSet<QByteArray> > m_parentChildrenMap; // maps a thread leader item to all its descendant items
@@ -162,6 +163,12 @@ void ThreadGrouperModelPrivate::populateThreadGrouperModel() const
   m_comparator->resetCaches();
 }
 
+void ThreadGrouperModelPrivate::resort()
+{
+  Q_Q( ThreadGrouperModel );
+
+  q->sort( 0, q->sortOrder() );
+}
 
 ThreadGrouperModel::ThreadGrouperModel( ThreadGrouperComparator *comparator, QObject *parent )
   : QSortFilterProxyModel( parent ), d_ptr( new ThreadGrouperModelPrivate( comparator, this ) )
@@ -205,6 +212,8 @@ void ThreadGrouperModel::setSourceModel( QAbstractItemModel *sourceModel )
 
   connect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
            this, SLOT( populateThreadGrouperModel() ) );
+  connect( sourceModel, SIGNAL( rowsInserted( QModelIndex, int, int ) ),
+           this, SLOT( resort() ) );
 
   connect( sourceModel, SIGNAL( rowsRemoved( QModelIndex, int, int ) ),
            this, SLOT( populateThreadGrouperModel() ) );

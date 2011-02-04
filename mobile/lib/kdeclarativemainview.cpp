@@ -319,6 +319,11 @@ bool KDeclarativeMainView::useFilterLineEditInCurrentState() const
   return false;
 }
 
+bool KDeclarativeMainView::doNotUseFilterLineEditInCurrentState() const
+{
+  return false;
+}
+
 KDeclarativeMainView::~KDeclarativeMainView()
 {
   delete d;
@@ -975,6 +980,7 @@ void KDeclarativeMainView::keyPressEvent( QKeyEvent *event )
         useFilterLineEditInCurrentState()) && // only in the right state
        !event->text().isEmpty() && // only react on character input
        lineEdit && // only if a filter line edit has been set
+       !doNotUseFilterLineEditInCurrentState() &&
        d->mItemFilterModel ) { // and a filter model is used
     isSendingEvent = true;
     QCoreApplication::sendEvent( lineEdit, event );

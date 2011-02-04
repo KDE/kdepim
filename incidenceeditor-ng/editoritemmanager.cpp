@@ -51,6 +51,7 @@ class ItemEditorPrivate
     Akonadi::ItemFetchScope mFetchScope;
     Akonadi::Monitor *mItemMonitor;
     ItemEditorUi *mItemUi;
+    bool mIsCounterProposal;
 
   public:
     ItemEditorPrivate( EditorItemManager *qq );
@@ -62,7 +63,7 @@ class ItemEditorPrivate
 };
 
 ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
-  : q_ptr( qq ), mItemMonitor( 0 )
+  : q_ptr( qq ), mItemMonitor( 0 ), mIsCounterProposal( false )
 {
   mFetchScope.fetchFullPayload();
   mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
@@ -200,7 +201,7 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
 
   switch ( state ) {
   case EditorItemManager::AfterSave:
-    if ( d->mItem.isValid() && d->mItem.hasPayload() ) {
+    if ( d->mItem.hasPayload() ) {
       return d->mItem;
     } else {
       kDebug() << "Won't return mItem because isValid = " << d->mItem.isValid()
@@ -208,7 +209,7 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
     }
     break;
   case EditorItemManager::BeforeSave:
-    if ( d->mPrevItem.isValid() && d->mPrevItem.hasPayload() ) {
+    if ( d->mPrevItem.hasPayload() ) {
       return d->mPrevItem;
     } else {
       kDebug() << "Won't return mPrevItem because isValid = " << d->mPrevItem.isValid()
@@ -224,7 +225,6 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
 
 void EditorItemManager::load( const Akonadi::Item &item )
 {
-  Q_ASSERT( item.isValid() );
   Q_D( ItemEditor );
 
   if ( item.hasPayload() ) {
@@ -310,11 +310,15 @@ void EditorItemManager::save()
       }
     }
   } else { // An invalid item. Means we're creating.
-    Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
+    if ( d->mIsCounterProposal ) {
+      emit itemSaveFinished( EditorItemManager::Modify );
+    } else {
+      Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
-    Akonadi::ItemCreateJob *createJob =
-      new Akonadi::ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
-    connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+      Akonadi::ItemCreateJob *createJob =
+        new Akonadi::ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
+      connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+    }
   }
 }
 
@@ -328,6 +332,12 @@ Akonadi::ItemFetchScope &EditorItemManager::fetchScope()
 {
   Q_D( ItemEditor );
   return d->mFetchScope;
+}
+
+void EditorItemManager::setIsCounterProposal( bool isCounterProposal )
+{
+  Q_D( ItemEditor );
+  d->mIsCounterProposal = isCounterProposal;
 }
 
 ItemEditorUi::~ItemEditorUi()

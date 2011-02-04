@@ -555,6 +555,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       if ( !GlobalSettings::self()->legacyBodyInvites() ) {
         msg->contentType()->from7BitString( "text/calendar; method=reply; charset=\"utf-8\"" );
+        msg->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
         msg->setBody( iCal.toUtf8() );
       } else {
         KMime::Content *text = new KMime::Content;
@@ -563,8 +564,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
         text->setBody( "" );
         msg->addContent( text );
         KMime::Content *body = new KMime::Content;
-        body->contentType()->from7BitString( "text/calendar; name=\"cal.ics\";method=\"reply\"" );
-        text->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+        body->contentType()->from7BitString( "text/calendar; name=\"cal.ics\"; method=\"reply\"; charset=\"utf-8\"" );
+        body->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
         body->setBody( iCal.toUtf8() );
         msg->addContent( body );
       }
@@ -717,18 +718,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     bool saveFile( const QString &receiver, const QString &iCal, const QString &type ) const
     {
-    // FIXME no IncidenceEditors on WinCE, anyway we don't want to depend on it just for that
-#ifndef Q_OS_WINCE
       if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
         IncidenceEditorNG::GroupwareIntegration::activate();
       }
-#else
-      static bool s_groupwareInitialized = false;
-      if ( !s_groupwareInitialized ) {
-        CalendarSupport::Groupware::create( 0 );
-        s_groupwareInitialized = true;
-      }
-#endif
+
       CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
       // TODO: catch signal, and do error handling
       return true;

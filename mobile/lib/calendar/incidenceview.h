@@ -65,6 +65,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     void setMoreEditor( MobileIncidenceMore * );
 
     void setDefaultCollection( const Akonadi::Collection &collection );
+    void setIsCounterProposal( bool isCounterProposal );
 
   public: /// ItemEditorUi function implementations
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;

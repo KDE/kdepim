@@ -538,7 +538,7 @@ void ComposerView::closeEvent( QCloseEvent * event )
                                                     KStandardGuiItem::cancel() );
 
     if ( rc == KMessageBox::Yes ) {
-      connect( this, SIGNAL( sentSuccessfully() ), this, SLOT( deleteLater() ) );
+      connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( deleteLater() ) );
       saveDraft();
       event->ignore();
       return;

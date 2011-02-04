@@ -50,6 +50,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   freeperiodmodel.cpp
   conflictresolver.cpp
   schedulingdialog.cpp
+  groupwareintegration.cpp
 
   incidencedefaults.cpp
 
@@ -76,7 +77,6 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   incidencedialogfactory.cpp
   eventortododialog.cpp
   visualfreebusywidget.cpp
-  groupwareintegration.cpp
 )
 
 

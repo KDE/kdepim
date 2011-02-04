@@ -79,6 +79,7 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
     IncidenceAttendee *mIeAttendee;
     IncidenceRecurrence *mIeRecurrence;
     bool mInitiallyDirty;
+    Akonadi::Item mItem;
 
   public:
     EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
@@ -473,6 +474,8 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   handleRecurrenceChange( mIeRecurrence->currentRecurrenceType() );
   handleAlarmCountChange( incidence->alarms().count() );
 
+  mItem = item;
+
   q->show();
 }
 
@@ -499,6 +502,11 @@ Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
 
   // Make sure that we don't loose uid for existing incidence
   newIncidence->setUid( mEditor->incidence<KCalCore::Incidence>()->uid() );
+
+  // Mark the incidence as changed
+  if ( mItem.isValid() )
+    newIncidence->setRevision( newIncidence->revision() + 1 );
+
   result.setPayload<KCalCore::Incidence::Ptr>( newIncidence );
   return result;
 }

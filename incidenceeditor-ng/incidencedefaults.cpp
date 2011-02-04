@@ -21,6 +21,8 @@
 #include "incidencedefaults.h"
 #include "alarmpresets.h"
 
+#include "config-enterprise.h"
+
 #include <calendarsupport/kcalprefs.h>
 
 #include <KABC/Addressee>
@@ -371,9 +373,9 @@ void IncidenceDefaults::setDefaults( const KCalCore::Incidence::Ptr &incidence )
 
   const KCalCore::Person::Ptr organizerAsPerson = d->organizerAsPerson();
   incidence->setOrganizer( organizerAsPerson );
-  // Added as part of kolab/issue2297 which is currently under review. In the meantime
-  // comment it out as it can lead KOrg to take all CPU.
-  //incidence->addAttendee( d->organizerAsAttendee( organizerAsPerson ) );
+#ifdef KDEPIM_ENTERPRISE_BUILD
+  incidence->addAttendee( d->organizerAsAttendee( organizerAsPerson ) );
+#endif
   foreach ( const KCalCore::Attendee::Ptr &attendee, d->mAttendees ) {
     incidence->addAttendee( attendee );
   }

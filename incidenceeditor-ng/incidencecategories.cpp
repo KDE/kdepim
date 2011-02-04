@@ -33,7 +33,7 @@
 
 #include <calendarsupport/categoryconfig.h>
 #include <KConfigSkeleton>
-#include <QDebug>
+#include <KDebug>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
@@ -68,6 +68,7 @@ void IncidenceCategories::load( const KCalCore::Incidence::Ptr &incidence )
 #ifdef KDEPIM_MOBILE_UI
     setCategories( mLoadedIncidence->categories() );
 #else
+    checkForUnknownCategories( mLoadedIncidence->categories() );
     mUi->mCategoryCombo->setCheckedItems( mLoadedIncidence->categories(), Qt::UserRole );
 #endif
   } else {
@@ -127,5 +128,35 @@ void IncidenceCategories::setCategoriesFromCombo()
 #ifndef KDEPIM_MOBILE_UI
   const QStringList categories = mUi->mCategoryCombo->checkedItems( Qt::UserRole );
   setCategories( categories );
+#endif
+}
+
+void IncidenceCategories::printDebugInfo() const
+{
+  kDebug() << "mSelectedCategories = " << mSelectedCategories;
+  kDebug() << "mLoadedIncidence->categories() = " << mLoadedIncidence->categories();
+}
+
+void IncidenceCategories::checkForUnknownCategories( const QStringList &categoriesToCheck )
+{
+#ifndef KDEPIM_MOBILE_UI // desktop only
+  CalendarSupport::CategoryConfig cc( EditorConfig::instance()->config() );
+
+  QStringList existingCategories( cc.customCategories() );
+  bool found = false;
+  foreach( const QString &categoryToCheck, categoriesToCheck ) {
+    if ( !existingCategories.contains( categoryToCheck ) ) {
+      existingCategories.append( categoryToCheck );
+      found = true;
+    }
+  }
+
+  cc.setCustomCategories( existingCategories );
+  cc.writeConfig();
+
+  if ( found ) {
+    //update the combo with newly found categories
+    CategoryHierarchyReaderQComboBox( mUi->mCategoryCombo ).read( existingCategories );
+  }
 #endif
 }

@@ -448,6 +448,11 @@ void IncidenceRecurrence::addException()
 
 void IncidenceRecurrence::fillCombos()
 {
+  if ( !currentDate().isValid() ) {
+    // Can happen if you're editing with keyboard
+    return;
+  }
+
   const KCalendarSystem *calSys = KGlobal::locale()->calendar();
   // Next the monthly combo. This contains the following elements:
   // - nth day of the month
@@ -668,12 +673,17 @@ int IncidenceRecurrence::duration() const
 short IncidenceRecurrence::monthWeekFromStart() const
 {
   const QDate date = currentDate();
-
-  int count = 1;
-  QDate tmp = date.addDays( -7 );
-  while ( tmp.month() == date.month() ) {
-    tmp = tmp.addDays( -7 ); // Count backward
-    ++count;
+  int count;
+  if ( date.isValid() ) {
+    count = 1;
+    QDate tmp = date.addDays( -7 );
+    while ( tmp.month() == date.month() ) {
+      tmp = tmp.addDays( -7 ); // Count backward
+      ++count;
+    }
+  } else {
+    // date can be invalid if you're editing the date with your keyboard
+    count = -1;
   }
 
   // 1 is the first week, 4/5 is the last week of the month
@@ -683,12 +693,17 @@ short IncidenceRecurrence::monthWeekFromStart() const
 short IncidenceRecurrence::monthWeekFromEnd() const
 {
   const QDate date = currentDate();
-
-  int count = 1;
-  QDate tmp = date.addDays( 7 );
-  while ( tmp.month() == date.month() ) {
-    tmp = tmp.addDays( 7 );  // Count forward
-    ++count;
+  int count;
+  if ( date.isValid() ) {
+    count = 1;
+    QDate tmp = date.addDays( 7 );
+    while ( tmp.month() == date.month() ) {
+      tmp = tmp.addDays( 7 );  // Count forward
+      ++count;
+    }
+  } else {
+    // date can be invalid if you're editing the date with your keyboard
+    count = -1;
   }
 
   // 1 is the last week, 4/5 is the first week of the month
@@ -957,8 +972,8 @@ void IncidenceRecurrence::handleStartDateChange( const QDate &date )
 {
   // If it's a to-do, recurrence is calculated from dtDue.
   // ( not rfc compliant, but it's what we have now )
-  if ( !( mLoadedIncidence &&
-          mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ) {
+  if ( currentDate().isValid() && !( mLoadedIncidence &&
+                                     mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) ) {
     fillCombos();
     updateWeekDays( date );
     mUi->mExceptionDateEdit->setDate( date );
@@ -969,7 +984,7 @@ void IncidenceRecurrence::handleEndDateChange( const QDate &date )
 {
   // If it's a to-do, recurrence is calculated from dtDue, not dtStart.
   // ( not rfc compliant, but it's what we have now )
-  if ( mLoadedIncidence &&
+  if ( currentDate().isValid() && mLoadedIncidence &&
        mLoadedIncidence->type() == KCalCore::Incidence::TypeTodo ) {
     fillCombos();
     updateWeekDays( date );

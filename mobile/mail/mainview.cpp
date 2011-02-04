@@ -25,6 +25,7 @@
 #include "acleditor.h"
 #include "actionhelper.h"
 #include "breadcrumbnavigation.h"
+#include "calendar/groupwareuidelegate.h"
 #include "charsetselectiondialog.h"
 #include "collectionfetchwatcher.h"
 #include "composerview.h"
@@ -79,6 +80,7 @@
 #include <akonadi/kmime/standardmailactionmanager.h>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadibreadcrumbnavigationfactory.h>
+#include <incidenceeditor-ng/groupwareintegration.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcmdlineargs.h>
@@ -317,9 +319,18 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
   return model;
 }
 
+bool MainView::doNotUseFilterLineEditInCurrentState() const
+{
+  // do not use filter line edit when in thread contents view
+  return (m_threadContentsModel->rowCount() > 0);
+}
 
 void MainView::doDelayedInit()
 {
+  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
+    IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new GroupwareUiDelegate );
+  }
+
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
   MobileKernel::self()->setFolderCollectionMonitor( monitor() );
 
@@ -331,9 +342,6 @@ void MainView::doDelayedInit()
   mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 
   MobileKernel::self()->setCollectionModel( mCollectionModel );
-  KSharedConfigPtr config = KSharedConfig::openConfig( "kmail-mobilerc" );
-  MessageViewer::GlobalSettings::self()->setSharedConfig( config );
-  MessageViewer::GlobalSettings::self()->readConfig();
 
   mTemplateSelectionModel = new QItemSelectionModel( entityTreeModel(), this );
 
