@@ -123,10 +123,7 @@ ChangePassphraseCommand::~ChangePassphraseCommand() { kDebug(); }
 void ChangePassphraseCommand::doStart() {
 
     const std::vector<Key> keys = d->keys();
-    if ( keys.size() != 1 ||
-         keys.front().protocol() != GpgME::OpenPGP ||
-         !keys.front().hasSecret() ||
-         keys.front().subkey(0).isNull() ) {
+    if ( keys.size() != 1 || !keys.front().hasSecret() ) {
         d->finished();
         return;
     }
