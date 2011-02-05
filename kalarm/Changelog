@@ -1,6 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.4.10 --- 2 December 2010 ===
+=== Version 2.4.11 --- 5 February 2011 ===
+- Fix initialisation of library global statics.
+
+=== Version 2.4.10 (KDEPIM 4.4.8) --- 2 December 2010 ===
 - Fix KAlarm showing in system tray at login when configured not to show in tray.
 - Fix working-time-only alarms not triggering if KAlarm is started up outside
   working hours, after the last trigger time during working hours was missed.

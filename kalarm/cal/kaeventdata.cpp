@@ -47,58 +47,58 @@ QByteArray KAEventData::icalProductId()
 // Note that all custom property names are prefixed with X-KDE-KALARM- in the calendar file.
 
 // Event properties
-static const QByteArray FLAGS_PROPERTY("FLAGS");              // X-KDE-KALARM-FLAGS property
-static const QString DATE_ONLY_FLAG        = QLatin1String("DATE");
-static const QString EMAIL_BCC_FLAG        = QLatin1String("BCC");
-static const QString CONFIRM_ACK_FLAG      = QLatin1String("ACKCONF");
-static const QString KORGANIZER_FLAG       = QLatin1String("KORG");
-static const QString EXCLUDE_HOLIDAYS_FLAG = QLatin1String("EXHOLIDAYS");
-static const QString WORK_TIME_ONLY_FLAG   = QLatin1String("WORKTIME");
-static const QString DEFER_FLAG            = QLatin1String("DEFER");   // default defer interval for this alarm
-static const QString LATE_CANCEL_FLAG      = QLatin1String("LATECANCEL");
-static const QString AUTO_CLOSE_FLAG       = QLatin1String("LATECLOSE");
-static const QString TEMPL_AFTER_TIME_FLAG = QLatin1String("TMPLAFTTIME");
-static const QString KMAIL_SERNUM_FLAG     = QLatin1String("KMAIL");
+const QByteArray KAEventData::FLAGS_PROPERTY("FLAGS");              // X-KDE-KALARM-FLAGS property
+const QString    KAEventData::DATE_ONLY_FLAG        = QLatin1String("DATE");
+const QString    KAEventData::EMAIL_BCC_FLAG        = QLatin1String("BCC");
+const QString    KAEventData::CONFIRM_ACK_FLAG      = QLatin1String("ACKCONF");
+const QString    KAEventData::KORGANIZER_FLAG       = QLatin1String("KORG");
+const QString    KAEventData::EXCLUDE_HOLIDAYS_FLAG = QLatin1String("EXHOLIDAYS");
+const QString    KAEventData::WORK_TIME_ONLY_FLAG   = QLatin1String("WORKTIME");
+const QString    KAEventData::DEFER_FLAG            = QLatin1String("DEFER");   // default defer interval for this alarm
+const QString    KAEventData::LATE_CANCEL_FLAG      = QLatin1String("LATECANCEL");
+const QString    KAEventData::AUTO_CLOSE_FLAG       = QLatin1String("LATECLOSE");
+const QString    KAEventData::TEMPL_AFTER_TIME_FLAG = QLatin1String("TMPLAFTTIME");
+const QString    KAEventData::KMAIL_SERNUM_FLAG     = QLatin1String("KMAIL");
 
-static const QByteArray NEXT_RECUR_PROPERTY("NEXTRECUR");     // X-KDE-KALARM-NEXTRECUR property
-static const QByteArray REPEAT_PROPERTY("REPEAT");            // X-KDE-KALARM-REPEAT property
-static const QByteArray ARCHIVE_PROPERTY("ARCHIVE");          // X-KDE-KALARM-ARCHIVE property
-static const QString ARCHIVE_REMINDER_ONCE_TYPE = QLatin1String("ONCE");
-static const QByteArray LOG_PROPERTY("LOG");                  // X-KDE-KALARM-LOG property
-static const QString xtermURL = QLatin1String("xterm:");
-static const QString displayURL = QLatin1String("display:");
+const QByteArray KAEventData::NEXT_RECUR_PROPERTY("NEXTRECUR");     // X-KDE-KALARM-NEXTRECUR property
+const QByteArray KAEventData::REPEAT_PROPERTY("REPEAT");            // X-KDE-KALARM-REPEAT property
+const QByteArray KAEventData::ARCHIVE_PROPERTY("ARCHIVE");          // X-KDE-KALARM-ARCHIVE property
+const QString    KAEventData::ARCHIVE_REMINDER_ONCE_TYPE = QLatin1String("ONCE");
+const QByteArray KAEventData::LOG_PROPERTY("LOG");                  // X-KDE-KALARM-LOG property
+const QString    KAEventData::xtermURL = QLatin1String("xterm:");
+const QString    KAEventData::displayURL = QLatin1String("display:");
 
 // - General alarm properties
-static const QByteArray TYPE_PROPERTY("TYPE");                // X-KDE-KALARM-TYPE property
-static const QString FILE_TYPE                  = QLatin1String("FILE");
-static const QString AT_LOGIN_TYPE              = QLatin1String("LOGIN");
-static const QString REMINDER_TYPE              = QLatin1String("REMINDER");
-static const QString REMINDER_ONCE_TYPE         = QLatin1String("REMINDER_ONCE");
-static const QString TIME_DEFERRAL_TYPE         = QLatin1String("DEFERRAL");
-static const QString DATE_DEFERRAL_TYPE         = QLatin1String("DATE_DEFERRAL");
-static const QString DISPLAYING_TYPE            = QLatin1String("DISPLAYING");   // used only in displaying calendar
-static const QString PRE_ACTION_TYPE            = QLatin1String("PRE");
-static const QString POST_ACTION_TYPE           = QLatin1String("POST");
-static const QString SOUND_REPEAT_TYPE          = QLatin1String("SOUNDREPEAT");
-static const QByteArray NEXT_REPEAT_PROPERTY("NEXTREPEAT");   // X-KDE-KALARM-NEXTREPEAT property
+const QByteArray KAEventData::TYPE_PROPERTY("TYPE");                // X-KDE-KALARM-TYPE property
+const QString    KAEventData::FILE_TYPE                  = QLatin1String("FILE");
+const QString    KAEventData::AT_LOGIN_TYPE              = QLatin1String("LOGIN");
+const QString    KAEventData::REMINDER_TYPE              = QLatin1String("REMINDER");
+const QString    KAEventData::REMINDER_ONCE_TYPE         = QLatin1String("REMINDER_ONCE");
+const QString    KAEventData::TIME_DEFERRAL_TYPE         = QLatin1String("DEFERRAL");
+const QString    KAEventData::DATE_DEFERRAL_TYPE         = QLatin1String("DATE_DEFERRAL");
+const QString    KAEventData::DISPLAYING_TYPE            = QLatin1String("DISPLAYING");   // used only in displaying calendar
+const QString    KAEventData::PRE_ACTION_TYPE            = QLatin1String("PRE");
+const QString    KAEventData::POST_ACTION_TYPE           = QLatin1String("POST");
+const QString    KAEventData::SOUND_REPEAT_TYPE          = QLatin1String("SOUNDREPEAT");
+const QByteArray KAEventData::NEXT_REPEAT_PROPERTY("NEXTREPEAT");   // X-KDE-KALARM-NEXTREPEAT property
 // - Display alarm properties
-static const QByteArray FONT_COLOUR_PROPERTY("FONTCOLOR");    // X-KDE-KALARM-FONTCOLOR property
+const QByteArray KAEventData::FONT_COLOUR_PROPERTY("FONTCOLOR");    // X-KDE-KALARM-FONTCOLOR property
 // - Email alarm properties
-static const QByteArray EMAIL_ID_PROPERTY("EMAILID");         // X-KDE-KALARM-EMAILID property
+const QByteArray KAEventData::EMAIL_ID_PROPERTY("EMAILID");         // X-KDE-KALARM-EMAILID property
 // - Audio alarm properties
-static const QByteArray VOLUME_PROPERTY("VOLUME");            // X-KDE-KALARM-VOLUME property
-static const QByteArray SPEAK_PROPERTY("SPEAK");              // X-KDE-KALARM-SPEAK property
+const QByteArray KAEventData::VOLUME_PROPERTY("VOLUME");            // X-KDE-KALARM-VOLUME property
+const QByteArray KAEventData::SPEAK_PROPERTY("SPEAK");              // X-KDE-KALARM-SPEAK property
 // - Command alarm properties
-static const QByteArray CANCEL_ON_ERROR_PROPERTY("ERRCANCEL");// X-KDE-KALARM-ERRCANCEL property
+const QByteArray KAEventData::CANCEL_ON_ERROR_PROPERTY("ERRCANCEL");// X-KDE-KALARM-ERRCANCEL property
 
 // Event status strings
-static const QString DISABLED_STATUS            = QLatin1String("DISABLED");
+const QString    KAEventData::DISABLED_STATUS            = QLatin1String("DISABLED");
 
 // Displaying event ID identifier
-static const QString DISP_DEFER = QLatin1String("DEFER");
-static const QString DISP_EDIT  = QLatin1String("EDIT");
+const QString    KAEventData::DISP_DEFER = QLatin1String("DEFER");
+const QString    KAEventData::DISP_EDIT  = QLatin1String("EDIT");
 
-static const QString SC = QLatin1String(";");
+const QString    KAEventData::SC = QLatin1String(";");
 
 struct AlarmData
 {

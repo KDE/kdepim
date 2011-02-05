@@ -1,7 +1,7 @@
 /*
  *  kaeventdata.h  -  represents calendar alarm and event data
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -518,6 +518,47 @@ public:
 		bool               mDisplayingEdit;   // show Edit button (applies to displaying calendar only)
 		bool               mEnabled;          // false if event is disabled
 		mutable bool       mUpdated;          // event has been updated but not written to calendar file
+
+		static const QByteArray FLAGS_PROPERTY;
+		static const QString DATE_ONLY_FLAG;
+		static const QString EMAIL_BCC_FLAG;
+		static const QString CONFIRM_ACK_FLAG;
+		static const QString KORGANIZER_FLAG;
+		static const QString EXCLUDE_HOLIDAYS_FLAG;
+		static const QString WORK_TIME_ONLY_FLAG;
+		static const QString DEFER_FLAG;
+		static const QString LATE_CANCEL_FLAG;
+		static const QString AUTO_CLOSE_FLAG;
+		static const QString TEMPL_AFTER_TIME_FLAG;
+		static const QString KMAIL_SERNUM_FLAG;
+		static const QByteArray NEXT_RECUR_PROPERTY;
+		static const QByteArray REPEAT_PROPERTY;
+		static const QByteArray ARCHIVE_PROPERTY;
+		static const QString ARCHIVE_REMINDER_ONCE_TYPE;
+		static const QByteArray LOG_PROPERTY;
+		static const QString xtermURL;
+		static const QString displayURL;
+		static const QByteArray TYPE_PROPERTY;
+		static const QString FILE_TYPE;
+		static const QString AT_LOGIN_TYPE;
+		static const QString REMINDER_TYPE;
+		static const QString REMINDER_ONCE_TYPE;
+		static const QString TIME_DEFERRAL_TYPE;
+		static const QString DATE_DEFERRAL_TYPE;
+		static const QString DISPLAYING_TYPE;
+		static const QString PRE_ACTION_TYPE;
+		static const QString POST_ACTION_TYPE;
+		static const QString SOUND_REPEAT_TYPE;
+		static const QByteArray NEXT_REPEAT_PROPERTY;
+		static const QByteArray FONT_COLOUR_PROPERTY;
+		static const QByteArray EMAIL_ID_PROPERTY;
+		static const QByteArray VOLUME_PROPERTY;
+		static const QByteArray SPEAK_PROPERTY;
+		static const QByteArray CANCEL_ON_ERROR_PROPERTY;
+		static const QString DISABLED_STATUS;
+		static const QString DISP_DEFER;
+		static const QString DISP_EDIT;
+		static const QString SC;
 };
 
 #endif // KAEVENTDATA_H
