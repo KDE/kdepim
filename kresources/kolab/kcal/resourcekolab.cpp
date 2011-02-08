@@ -348,7 +348,11 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
       if ( mLastKnownRevisions[uid] < i->revision() ) {
         mLastKnownRevisions[uid] = i->revision();
       } else {
-        ignoreThisUpdate = true;
+        /*
+         * "ignoreThisUpdate = true;" will cause issue/kolab4698, because recording the
+         * attendee status in the calendar doesn't bump the SEQUENCE/revision.
+         **/
+        ignoreThisUpdate = !i->dirtyFields().contains( Incidence::FieldAttendees );
       }
 
       if ( ignoreThisUpdate ) {
@@ -657,6 +661,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
     delete (*it);
   }
 
+  incidencebase->resetDirtyFields();
   return rc;
 }
 
