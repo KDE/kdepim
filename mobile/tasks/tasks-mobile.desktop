@@ -29,7 +29,7 @@ Name[uk]=Завдання KDE
 Name[x-test]=xxKDE Tasksxx
 Name[zh_CN]=KDE 任务
 Name[zh_TW]=KDE 工作簿
-Exec=tasks-mobile.sh
+Exec=tasks-mobile
 
 Icon=tasks-mobile
 Type=Application

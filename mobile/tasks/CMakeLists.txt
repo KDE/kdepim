@@ -52,7 +52,6 @@ if (RUNTIME_PLUGINS_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
 
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES tasks-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(PROGRAMS tasks-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   BulkActionComponent.qml
