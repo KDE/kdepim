@@ -69,7 +69,7 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
 
     void customCollectionsChanged( ConfigDialogInterface *dlg );
 
-    void showDates( const QDate &start, const QDate &end );
+    void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
     void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     void updateView();
     void updateConfig();

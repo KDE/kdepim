@@ -384,8 +384,9 @@ int MultiAgendaView::currentDateCount() const
   return 0;
 }
 
-void MultiAgendaView::showDates( const QDate &start, const QDate &end )
+void MultiAgendaView::showDates( const QDate &start, const QDate &end, const QDate &preferredMonth )
 {
+  Q_UNUSED( preferredMonth );
   d->mStartDate = start;
   d->mEndDate = end;
   slotResizeScrollView();

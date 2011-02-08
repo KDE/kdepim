@@ -325,9 +325,9 @@ QDateTime MonthView::selectionEnd() const
   return selectionStart();
 }
 
-void MonthView::setDateRange( const KDateTime &start, const KDateTime &end )
+void MonthView::setDateRange( const KDateTime &start, const KDateTime &end, const QDate &preferredMonth )
 {
-  EventView::setDateRange( start, end );
+  EventView::setDateRange( start, end, preferredMonth );
   // d->calendarSearch->setStartDate( actualStartDateTime() );
   // d->calendarSearch->setEndDate( actualEndDateTime() );
   setChanges( changes() | DatesChanged );
@@ -431,15 +431,19 @@ void MonthView::moveFwdMonth()
   d->moveStartDate( 0, 1 );
 }
 
-void MonthView::showDates( const QDate &start, const QDate &end )
+void MonthView::showDates( const QDate &start, const QDate &end, const QDate &preferedMonth )
 {
   Q_UNUSED( start );
   Q_UNUSED( end );
+  Q_UNUSED( preferedMonth );
   d->triggerDelayedReload( DatesChanged );
 }
 
 QPair<KDateTime,KDateTime> MonthView::actualDateRange( const KDateTime &start,
-                                                       const KDateTime & ) const {
+                                                       const KDateTime &,
+                                                       const QDate &preferredMonth ) const
+{
+  Q_UNUSED( preferredMonth );
   KDateTime dayOne( start );
   dayOne.setDate( QDate( start.date().year(), start.date().month(), 1 ) );
   const int weekdayCol = ( dayOne.date().dayOfWeek() + 7 - KGlobal::locale()->weekStartDay() ) % 7;

@@ -83,7 +83,7 @@ class EVENTVIEWS_EXPORT ListView : public EventView
 
   public slots:
     virtual void updateView();
-    virtual void showDates( const QDate &start, const QDate &end );
+    virtual void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void clearSelection();
