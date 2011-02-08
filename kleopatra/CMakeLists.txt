@@ -4,8 +4,8 @@ option( KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't inst
 
 include(MacroOptionalAddSubdirectory)
 
-set( kleopatra_version 2.1.0 )
-set( kleopatra_release TRUE )
+set( kleopatra_version 2.1.1 )
+set( kleopatra_release FALSE )
 
 if (NOT kleopatra_release)
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
