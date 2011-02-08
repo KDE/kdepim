@@ -30,7 +30,7 @@ Name[uk]=Пошта KDE
 Name[x-test]=xxKDE Mailxx
 Name[zh_CN]=KDE 电子邮件
 Name[zh_TW]=KDE 郵件軟體
-Exec=kmail-mobile.sh
+Exec=kmail-mobile
 
 Icon=kmail-mobile
 Type=Application
