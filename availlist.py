@@ -5,6 +5,10 @@ import os
 
 COMMITS_IN_CURRENT_BRANCH = []
 
+# prints debug info about this commit
+#COMMIT_TO_DEBUG = 'bf77b149ca72d1591cd4e054dca4571d81a52f74'
+COMMIT_TO_DEBUG = []
+
 def run_git_branch_contains( commit ):
     return os.popen( 'git branch --contains ' + commit ).readlines()
 
@@ -21,7 +25,7 @@ def run_git_branch():
     return os.popen( 'git branch' ).readlines()
 
 def run_git_log( branch ):
-    return os.popen( 'git log --format="%P" ' + branch ).readlines()
+    return os.popen( 'git log --format="%H" ' + branch ).readlines()
 
 # returns current branch
 def current_branch():
@@ -50,7 +54,13 @@ def branch_contains( branch, commit ):
     global COMMITS_IN_CURRENT_BRANCH
     if not COMMITS_IN_CURRENT_BRANCH:
         COMMITS_IN_CURRENT_BRANCH = run_git_log( branch )
-    return commit + "\n" in COMMITS_IN_CURRENT_BRANCH
+
+    contains = commit + "\n" in COMMITS_IN_CURRENT_BRANCH
+
+    if commit == COMMIT_TO_DEBUG:
+        print( "DEBUG: branch_contains, " + commit + ', contains=' + str(contains) + ', branch=' + branch )
+
+    return contains
 
 # Parses "git notes list" output and returns a list of commits with notes
 def get_objects_with_notes():
@@ -71,6 +81,9 @@ def get_objects_with_notes():
         else:
             print( "Invalid line: " + line )
 
+    if COMMIT_TO_DEBUG in result:
+        print( "DEBUG get_objects_with_notes has " + COMMIT_TO_DEBUG )
+
     return result
 
 # Returns the avail list
@@ -83,8 +96,13 @@ def get_avail_list():
     for commit in commits:
         lines = run_git_show( commit, True )
         if is_relevant_note( lines ):
+            if commit == COMMIT_TO_DEBUG:
+                print( "DEBUG: get_avail_list: Found " + COMMIT_TO_DEBUG )
             result = result + run_git_show( commit, False )
             result.append( separator )
+        else:
+            if commit == COMMIT_TO_DEBUG:
+                print( "DEBUG get_avail_list: Discarded " + COMMIT_TO_DEBUG )
     return result, len(commits)
 
 # Prints the avail list
