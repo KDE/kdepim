@@ -49,7 +49,7 @@ class EVENTVIEWS_EXPORT TimelineView : public EventView
     virtual int currentDateCount() const;
 
     // ensure start and end are valid before calling this.
-    virtual void showDates( const QDate &, const QDate & );
+    virtual void showDates( const QDate &, const QDate &, const QDate &preferredMonth = QDate() );
 
     // FIXME: we already have startDateTime() in the base class
     // why aren't we using it.

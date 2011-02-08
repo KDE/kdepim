@@ -321,7 +321,7 @@ class KALARM_CAL_EXPORT KAEvent
 #ifdef USE_AKONADI
 //        explicit KAEvent(const QSharedPointer<const KCalCore::Event>&);
         explicit KAEvent(const KCalCore::ConstEventPtr&);
-        void               set(const KCalCore::ConstEventPtr& e) { d->set(e); }
+        void               set(const KCalCore::ConstEventPtr& e)   { d->set(e); }
 #else
         explicit KAEvent(const KCal::Event*);
         void               set(const KCal::Event* e)               { d->set(e); }
@@ -347,13 +347,13 @@ class KALARM_CAL_EXPORT KAEvent
         void               setCompatibility(KAlarm::Calendar::Compat c) { if (c != d->mCompatibility) { d->mCompatibility = c; } }
         void               setReadOnly(bool ro)                    { if (ro != d->mReadOnly) { d->mReadOnly = ro; } }
 #endif
-        void               setTime(const KDateTime& dt)            { d->mNextMainDateTime = dt; }
+        void               setTime(const KDateTime& dt)            { d->mNextMainDateTime = dt; d->mTriggerChanged = true; }
         void               setSaveDateTime(const KDateTime& dt)    { d->mSaveDateTime = dt; }
         void               setLateCancel(int lc)                   { d->mLateCancel = lc; }
         void               setAutoClose(bool ac)                   { d->mAutoClose = ac; }
         void               setRepeatAtLogin(bool rl)               { d->setRepeatAtLogin(rl); }
-        void               setExcludeHolidays(bool ex)             { d->mExcludeHolidays = ex; }
-        void               setWorkTimeOnly(bool wto)               { d->mWorkTimeOnly = wto; }
+        void               setExcludeHolidays(bool ex)             { d->mExcludeHolidays = ex ? Private::mHolidays : 0; d->mTriggerChanged = true; }
+        void               setWorkTimeOnly(bool wto)               { d->mWorkTimeOnly = wto; d->mTriggerChanged = true; }
         void               setKMailSerialNumber(unsigned long n)   { d->mKMailSerialNumber = n; }
         void               setLogFile(const QString& logfile);
         void               setReminder(int minutes, bool onceOnly) { d->setReminder(minutes, onceOnly); }
@@ -386,8 +386,6 @@ class KALARM_CAL_EXPORT KAEvent
 #else
         void               clearResourceId()                       { d->mResourceId.clear(); }
 #endif
-        void               updateWorkHours() const                 { if (d->mWorkTimeOnly) d->calcTriggerTimes(); }
-        void               updateHolidays() const                  { if (d->mExcludeHolidays) d->calcTriggerTimes(); }
         void               removeExpiredAlarm(KAAlarm::Type t)     { d->removeExpiredAlarm(t); }
         void               incrementRevision()                     { ++d->mRevision; }
 
@@ -525,7 +523,7 @@ class KALARM_CAL_EXPORT KAEvent
                                                           { return d->nextOccurrence(preDateTime, result, o); }
         OccurType          previousOccurrence(const KDateTime& afterDateTime, DateTime& result, bool includeRepetitions = false) const
                                                           { return d->previousOccurrence(afterDateTime, result, includeRepetitions); }
-        void               setNoRecur()                   { d->clearRecur(); d->calcTriggerTimes(); }
+        void               setNoRecur()                   { d->clearRecur(); }
         void               setRecurrence(const KARecurrence& r)   { d->setRecurrence(r); }
         bool               setRecurMinutely(int freq, int count, const KDateTime& end);
         bool               setRecurDaily(int freq, const QBitArray& days, int count, const QDate& end);
@@ -557,8 +555,7 @@ class KALARM_CAL_EXPORT KAEvent
         static void setDefaultFont(const QFont& f)        { Private::mDefaultFont = f; }
         static void setStartOfDay(const QTime&);
         static void setHolidays(const KHolidays::HolidayRegion&);
-        static void setWorkTime(const QBitArray& days, const QTime& start, const QTime& end)
-                                                          { Private::mWorkDays = days;  Private::mWorkDayStart = start;  Private::mWorkDayEnd = end; }
+        static void setWorkTime(const QBitArray& days, const QTime& start, const QTime& end);
 
     private:
 #ifdef USE_AKONADI
@@ -685,6 +682,7 @@ class KALARM_CAL_EXPORT KAEvent
                 static QBitArray   mWorkDays;          // working days of the week
                 static QTime       mWorkDayStart;      // start time of the working day
                 static QTime       mWorkDayEnd;        // end time of the working day
+                static int         mWorkTimeIndex;     // incremented every time working days/times are changed
 #ifndef USE_AKONADI
                 AlarmResource*     mResource;          // resource which owns the event (for convenience - not used by this class)
 #endif
@@ -726,11 +724,14 @@ class KALARM_CAL_EXPORT KAEvent
                 QString            mEmailSubject;      // SUMMARY: subject line of email
                 QStringList        mEmailAttachments;  // ATTACH: email attachment file names
                 mutable int        mChangeCount;       // >0 = inhibit calling calcTriggerTimes()
-                mutable bool       mChanged;           // true if need to recalculate trigger times while mChangeCount > 0
+                mutable bool       mTriggerChanged;    // true if need to recalculate trigger times
                 QString            mLogFile;           // alarm output is to be logged to this URL
                 float              mSoundVolume;       // volume for sound file, or < 0 for unspecified
                 float              mFadeVolume;        // initial volume for sound file, or < 0 for no fade
                 int                mFadeSeconds;       // fade time for sound file, or 0 if none
+                mutable const KHolidays::HolidayRegion*
+                                   mExcludeHolidays;   // non-null to not trigger alarms on holidays (= mHolidays when trigger calculated)
+                mutable int        mWorkTimeOnly;      // non-zero to trigger alarm only during working hours (= mWorkTimeIndex when trigger calculated)
                 KAlarm::CalEvent::Type mCategory;      // event category (active, archived, template, ...)
 #ifdef USE_AKONADI
                 KAlarm::Calendar::Compat mCompatibility; // event's storage format compatibility
@@ -746,8 +747,6 @@ class KALARM_CAL_EXPORT KAEvent
                 bool               mRepeatSound;       // whether to repeat the sound file while the alarm is displayed
                 bool               mSpeak;             // whether to speak the message when the alarm is displayed
                 bool               mCopyToKOrganizer;  // KOrganizer should hold a copy of the event
-                bool               mExcludeHolidays;   // don't trigger alarms on holidays
-                bool               mWorkTimeOnly;      // trigger alarm only during working hours
                 bool               mReminderOnceOnly;  // the reminder is output only for the first recurrence
                 bool               mMainExpired;       // main alarm has expired (in which case a deferral alarm will exist)
                 bool               mArchiveRepeatAtLogin; // if now archived, original event was repeat-at-login
@@ -756,6 +755,52 @@ class KALARM_CAL_EXPORT KAEvent
                 bool               mDisplayingDefer;   // show Defer button (applies to displaying calendar only)
                 bool               mDisplayingEdit;    // show Edit button (applies to displaying calendar only)
                 bool               mEnabled;           // false if event is disabled
+
+            public:
+                static const QByteArray FLAGS_PROPERTY;
+                static const QString DATE_ONLY_FLAG;
+                static const QString EMAIL_BCC_FLAG;
+                static const QString CONFIRM_ACK_FLAG;
+                static const QString KORGANIZER_FLAG;
+                static const QString EXCLUDE_HOLIDAYS_FLAG;
+                static const QString WORK_TIME_ONLY_FLAG;
+                static const QString DEFER_FLAG;
+                static const QString LATE_CANCEL_FLAG;
+                static const QString AUTO_CLOSE_FLAG;
+                static const QString TEMPL_AFTER_TIME_FLAG;
+                static const QString KMAIL_SERNUM_FLAG;
+                static const QByteArray NEXT_RECUR_PROPERTY;
+                static const QByteArray REPEAT_PROPERTY;
+                static const QByteArray ARCHIVE_PROPERTY;
+                static const QString ARCHIVE_REMINDER_ONCE_TYPE;
+                static const QByteArray LOG_PROPERTY;
+                static const QString xtermURL;
+                static const QString displayURL;
+                static const QByteArray TYPE_PROPERTY;
+                static const QString FILE_TYPE;
+                static const QString AT_LOGIN_TYPE;
+                static const QString REMINDER_TYPE;
+                static const QString REMINDER_ONCE_TYPE;
+                static const QString TIME_DEFERRAL_TYPE;
+                static const QString DATE_DEFERRAL_TYPE;
+                static const QString DISPLAYING_TYPE;
+                static const QString PRE_ACTION_TYPE;
+                static const QString POST_ACTION_TYPE;
+                static const QString SOUND_REPEAT_TYPE;
+                static const QByteArray NEXT_REPEAT_PROPERTY;
+                static const QByteArray FONT_COLOUR_PROPERTY;
+                static const QByteArray EMAIL_ID_PROPERTY;
+                static const QByteArray VOLUME_PROPERTY;
+                static const QByteArray SPEAK_PROPERTY;
+                static const QByteArray CANCEL_ON_ERROR_PROPERTY;
+                static const QByteArray DONT_SHOW_ERROR_PROPERTY;
+                static const QString DISABLED_STATUS;
+                static const QString DISP_DEFER;
+                static const QString DISP_EDIT;
+                static const QString CMD_ERROR_VALUE;
+                static const QString CMD_ERROR_PRE_VALUE;
+                static const QString CMD_ERROR_POST_VALUE;
+                static const QString SC;
         };
 
         QSharedDataPointer<class Private> d;

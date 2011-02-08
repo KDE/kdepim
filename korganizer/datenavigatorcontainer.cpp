@@ -68,23 +68,23 @@ DateNavigatorContainer::~DateNavigatorContainer()
 
 void DateNavigatorContainer::connectNavigatorView( KDateNavigator *v )
 {
-  connect( v, SIGNAL(datesSelected(const KCalCore::DateList &)),
-           SIGNAL(datesSelected(const KCalCore::DateList &)) );
+  connect( v, SIGNAL(datesSelected(KCalCore::DateList)),
+           SIGNAL(datesSelected(KCalCore::DateList)) );
 
   connect( v, SIGNAL(incidenceDropped(Akonadi::Item,QDate)),
            SIGNAL(incidenceDropped(Akonadi::Item,QDate)) );
   connect( v, SIGNAL(incidenceDroppedMove(Akonadi::Item,QDate)),
            SIGNAL(incidenceDroppedMove(Akonadi::Item,QDate)) );
 
-  connect( v, SIGNAL(newEventSignal(const QDate &)),
-           SIGNAL(newEventSignal(const QDate &)) );
-  connect( v, SIGNAL(newTodoSignal(const QDate &)),
-           SIGNAL(newTodoSignal(const QDate &)) );
-  connect( v, SIGNAL(newJournalSignal(const QDate &)),
-           SIGNAL(newJournalSignal(const QDate &)) );
+  connect( v, SIGNAL(newEventSignal(QDate)),
+           SIGNAL(newEventSignal(QDate)) );
+  connect( v, SIGNAL(newTodoSignal(QDate)),
+           SIGNAL(newTodoSignal(QDate)) );
+  connect( v, SIGNAL(newJournalSignal(QDate)),
+           SIGNAL(newJournalSignal(QDate)) );
 
-  connect( v, SIGNAL(weekClicked(const QDate &)),
-           SIGNAL(weekClicked(const QDate &)) );
+  connect( v, SIGNAL(weekClicked(QDate,QDate)),
+           SIGNAL(weekClicked(QDate,QDate)) );
 
   connect( v, SIGNAL(goPrevious()), SIGNAL(goPrevious()) );
   connect( v, SIGNAL(goNext()), SIGNAL(goNext()) );
@@ -92,12 +92,11 @@ void DateNavigatorContainer::connectNavigatorView( KDateNavigator *v )
   connect( v, SIGNAL(nextYearClicked()), SIGNAL(nextYearClicked()) );
   connect( v, SIGNAL(prevYearClicked()), SIGNAL(prevYearClicked()) );
 
-  connect( v, SIGNAL(prevMonthClicked()), this, SLOT(goPrevMonth()) );
-  connect( v, SIGNAL(nextMonthClicked()), this, SLOT(goNextMonth()) );
+  connect( v, SIGNAL(prevMonthClicked()), SLOT(goPrevMonth()) );
+  connect( v, SIGNAL(nextMonthClicked()), SLOT(goNextMonth()) );
 
   connect( v, SIGNAL(monthSelected(int)), SIGNAL(monthSelected(int) ) );
   connect( v, SIGNAL(yearSelected(int)), SIGNAL(yearSelected(int)) );
-
 }
 
 void DateNavigatorContainer::setCalendar( CalendarSupport::Calendar *cal )

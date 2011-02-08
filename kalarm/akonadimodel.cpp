@@ -20,6 +20,7 @@
 
 #include "akonadimodel.h"
 #include "alarmtext.h"
+#include "autoqpointer.h"
 #include "collectionattribute.h"
 #include "eventattribute.h"
 #include "preferences.h"
@@ -792,8 +793,6 @@ void AkonadiModel::slotUpdateDisabledColour(const QColor&)
 
 /******************************************************************************
 * Called when the definition of holidays has changed.
-* Update the next trigger time for all alarms which are set to recur only on
-* non-holidays.
 */
 static bool checkItem_excludesHolidays(const Item& item)
 {
@@ -801,10 +800,7 @@ static bool checkItem_excludesHolidays(const Item& item)
     {
         const KAEvent event = item.payload<KAEvent>();
         if (event.isValid()  &&  event.holidaysExcluded())
-        {
-            event.updateHolidays();
             return true;
-        }
     }
     return false;
 }
@@ -818,8 +814,6 @@ void AkonadiModel::slotUpdateHolidays()
 
 /******************************************************************************
 * Called when the definition of working hours has changed.
-* Update the next trigger time for all alarms which are set to recur only
-* during working hours.
 */
 static bool checkItem_workTimeOnly(const Item& item)
 {
@@ -827,10 +821,7 @@ static bool checkItem_workTimeOnly(const Item& item)
     {
         const KAEvent event = item.payload<KAEvent>();
         if (event.isValid()  &&  event.workTimeOnly())
-        {
-            event.updateWorkHours();
             return true;
-        }
     }
     return false;
 }
@@ -1057,7 +1048,10 @@ QString AkonadiModel::whatsThisText(int column) const
 */
 AgentInstanceCreateJob* AkonadiModel::addCollection(KAlarm::CalEvent::Type type, QWidget* parent)
 {
-    AgentTypeDialog dlg(parent);
+    // Use AutoQPointer to guard against crash on application exit while
+    // the dialogue is still open. It prevents double deletion (both on
+    // deletion of parent, and on return from this function).
+    AutoQPointer<AgentTypeDialog> dlg = new AgentTypeDialog(parent);
     QString mimeType;
     switch (type)
     {
@@ -1073,11 +1067,11 @@ AgentInstanceCreateJob* AkonadiModel::addCollection(KAlarm::CalEvent::Type type,
         default:
             return 0;
     }
-    dlg.agentFilterProxyModel()->addMimeTypeFilter(mimeType);
-    dlg.agentFilterProxyModel()->addCapabilityFilter(QLatin1String("Resource"));
-    if (dlg.exec() != QDialog::Accepted)
+    dlg->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
+    dlg->agentFilterProxyModel()->addCapabilityFilter(QLatin1String("Resource"));
+    if (dlg->exec() != QDialog::Accepted)
         return 0;
-    const AgentType agentType = dlg.agentType();
+    const AgentType agentType = dlg->agentType();
     if (!agentType.isValid())
         return 0;
     AgentInstanceCreateJob* job = new AgentInstanceCreateJob(agentType, parent);

@@ -273,8 +273,9 @@ int TimelineView::currentDateCount() const
 }
 
 /*virtual*/
-void TimelineView::showDates( const QDate &start, const QDate &end )
+void TimelineView::showDates( const QDate &start, const QDate &end, const QDate &preferredMonth )
 {
+  Q_UNUSED( preferredMonth );
   Q_ASSERT_X( calendar(), "showDates()", "set a CalendarSupport::Calendar" );
   Q_ASSERT_X( start.isValid(), "showDates()", "start date must be valid" );
   Q_ASSERT_X( end.isValid(), "showDates()", "end date must be valid" );

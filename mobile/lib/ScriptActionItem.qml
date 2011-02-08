@@ -25,7 +25,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Item {
   height : parent.height
-  width : parent.width
+  width : (parent ? parent.width : 0)
   property string name
   property string title
 

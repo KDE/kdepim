@@ -62,7 +62,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
 
     virtual QDateTime selectionEnd() const;
 
-    virtual void setDateRange( const KDateTime &start, const KDateTime &end );
+    virtual void setDateRange( const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate() );
 
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
 
@@ -114,7 +114,8 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     ///* reimp */void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );
     ///* reimp */void incidencesChanged( const Akonadi::Item::List &incidences );
     /* reimp */QPair<KDateTime,KDateTime> actualDateRange( const KDateTime &start,
-                                                           const KDateTime &end ) const;
+                                                           const KDateTime &end,
+                                                           const QDate &preferredMonth = QDate() ) const;
 
     // Compute and update the whole view
     void reloadIncidences();
@@ -123,7 +124,7 @@ class EVENTVIEWS_EXPORT MonthView : public EventView
     /**
      * @deprecated
      */
-    void showDates( const QDate &start, const QDate &end );
+    void showDates( const QDate &start, const QDate &end, const QDate &preferedMonth = QDate() );
 
   private:
     MonthViewPrivate * const d;

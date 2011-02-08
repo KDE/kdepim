@@ -1384,8 +1384,9 @@ QDate AgendaView::endDate() const
   return d->mSelectedDates.last();
 }
 
-void AgendaView::showDates( const QDate &start, const QDate &end )
+void AgendaView::showDates( const QDate &start, const QDate &end, const QDate &preferredMonth )
 {
+  Q_UNUSED( preferredMonth );
   if ( !d->mSelectedDates.isEmpty() &&
        d->mSelectedDates.first() == start &&
        d->mSelectedDates.last() == end ) {

@@ -319,8 +319,9 @@ void ListView::updateView()
   kDebug() << "not implemented yet";
 }
 
-void ListView::showDates( const QDate &start, const QDate &end )
+void ListView::showDates( const QDate &start, const QDate &end, const QDate &preferredMonth )
 {
+  Q_UNUSED( preferredMonth );
   clear();
 
   d->mStartDate = start;

@@ -81,7 +81,13 @@ class DateNavigatorContainer: public QFrame
     void newEventSignal( const QDate & );
     void newTodoSignal( const QDate & );
     void newJournalSignal( const QDate & );
-    void weekClicked( const QDate & );
+
+    /**
+     * @param preferredMonth Holds the month that should be selected when the week crosses months.
+                             It's a QDate instead of uint so it can be easily feed to KCalendarSystem's
+                             functions.
+     * */
+    void weekClicked( const QDate &week, const QDate &preferredMonth );
 
     void goPrevious();
     void goNext();
