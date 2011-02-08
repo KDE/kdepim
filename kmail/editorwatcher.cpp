@@ -166,12 +166,24 @@ void EditorWatcher::checkEditDone()
 {
   if ( mEditorRunning || (mFileOpen && mHaveInotify) || mDone )
     return;
+
+  static QStringList readOnlyMimeTypes;
+  if ( readOnlyMimeTypes.isEmpty() ) {
+    readOnlyMimeTypes << "message/rfc822"
+                      << "application/pdf";
+  }
+
   // protect us against double-deletion by calling this method again while
   // the subeventloop of the message box is running
   mDone = true;
+
+  // check if it's a mime type that's mostly handled read-only
+  const bool isReadOnlyMimeType = ( readOnlyMimeTypes.contains( mMimeType ) ||
+                                    mMimeType.startsWith( "image/" ) );
+
   // nobody can edit that fast, we seem to be unable to detect
   // when the editor will be closed
-  if ( mEditTime.elapsed() <= 3000 ) {
+  if ( mEditTime.elapsed() <= 3000 && !isReadOnlyMimeType ) {
     KMessageBox::information(
       mParentWidget,
       i18n( "KMail is unable to detect when the chosen editor is closed. "
