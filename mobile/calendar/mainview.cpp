@@ -66,6 +66,7 @@
 #include <kactioncollection.h>
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
+#include <kcolorcombo.h>
 #ifndef _WIN32_WCE
 #include <kcolordialog.h>
 #endif
@@ -82,6 +83,51 @@
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtGui/QGraphicsItem>
+
+#ifdef Q_OS_WINCE
+class WinCEColorDialog : public KDialog
+{
+  public:
+    WinCEColorDialog( QWidget *parent = 0 )
+      : KDialog( parent )
+    {
+      QHBoxLayout *layout = new QHBoxLayout( mainWidget() );
+
+      QLabel *label = new QLabel( i18n( "Color:" ) );
+      mComboBox = new KPIM::KColorCombo;
+
+      layout->addWidget( label );
+      layout->addWidget( mComboBox );
+      layout->setStretch( 1, 1 );
+    }
+
+    void setColor( const QColor &color )
+    {
+      mComboBox->setColor( color );
+    }
+
+    QColor color() const
+    {
+      return mComboBox->color();
+    }
+
+    static int getColor( QColor &color )
+    {
+      WinCEColorDialog dialog;
+      dialog.setColor( color );
+
+      const int status = dialog.exec();
+
+      if ( status == KDialog::Accepted )
+        color = dialog.color();
+
+      return status;
+    }
+
+  private:
+    KPIM::KColorCombo *mComboBox;
+};
+#endif
 
 Q_DECLARE_METATYPE(KCalCore::iTIPMethod)
 
@@ -779,9 +825,11 @@ void MainView::changeCalendarColor()
   QColor calendarColor = agendaItem->preferences()->resourceColor( id );
   QColor myColor;
 
-//FIXME: WINCE we have disabled QTableWidget for now, so the kcolordialog does not work yet.
-#ifndef _WIN32_WCE
+#ifdef Q_OS_WINCE
+  const int result = WinCEColorDialog::getColor( myColor );
+#else
   const int result = KColorDialog::getColor( myColor, calendarColor );
+#endif
   if ( result == KColorDialog::Accepted && myColor != calendarColor ) {
     agendaItem->preferences()->setResourceColor( id, myColor );
     agendaItem->updateConfig();
@@ -793,7 +841,6 @@ void MainView::changeCalendarColor()
       monthItem->updateConfig();
     }
   }
-#endif
 }
 
 

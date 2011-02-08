@@ -31,6 +31,7 @@ QML.Rectangle {
 
   property string _state
   height: 52
+  color: "#00000000" // Set a transparant color.
 
   QML.BorderImage {
     id: borderImage
