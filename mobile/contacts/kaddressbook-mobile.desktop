@@ -29,7 +29,7 @@ Name[tr]=KDE Bağlantılar
 Name[uk]=Контакти KDE
 Name[x-test]=xxKDE Contactsxx
 Name[zh_TW]=KDE 聯絡人
-Exec=kaddressbook-mobile.sh
+Exec=kaddressbook-mobile
 
 Icon=kaddressbook-mobile
 Type=Application
