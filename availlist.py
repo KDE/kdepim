@@ -37,6 +37,12 @@ def current_branch():
             return branch
     return ""
 
+def sort_key( commit ):
+    if commit + "\n" in COMMITS_IN_CURRENT_BRANCH:
+        return len(COMMITS_IN_CURRENT_BRANCH) - COMMITS_IN_CURRENT_BRANCH.index( commit + "\n" )
+    else:
+        return 0
+
 # Returns True if this is a PENDING note.
 def is_relevant_note( note_lines ):
     for note_line in note_lines:
@@ -89,6 +95,9 @@ def get_objects_with_notes():
 # Returns the avail list
 def get_avail_list():
     commits = get_objects_with_notes()
+
+    # sort, git-notes returns a random order
+    commits = sorted( commits, key=sort_key )
 
     result = []
     separator = '---------------------------------------------------------------------'
