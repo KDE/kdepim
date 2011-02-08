@@ -30,7 +30,7 @@ Name[uk]=Календар KDE
 Name[x-test]=xxKDE Calendarxx
 Name[zh_CN]=KDE 日历
 Name[zh_TW]=KDE 行事曆
-Exec=korganizer-mobile.sh
+Exec=korganizer-mobile
 
 Icon=korganizer-mobile
 Type=Application
