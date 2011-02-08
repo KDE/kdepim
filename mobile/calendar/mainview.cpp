@@ -830,7 +830,7 @@ void MainView::changeCalendarColor()
 #else
   const int result = KColorDialog::getColor( myColor, calendarColor );
 #endif
-  if ( result == KColorDialog::Accepted && myColor != calendarColor ) {
+  if ( result == KDialog::Accepted && myColor != calendarColor ) {
     agendaItem->preferences()->setResourceColor( id, myColor );
     agendaItem->updateConfig();
 
