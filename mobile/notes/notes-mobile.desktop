@@ -30,7 +30,7 @@ Name[uk]=Нотатки KDE
 Name[x-test]=xxKDE Notesxx
 Name[zh_CN]=KDE 便笺
 Name[zh_TW]=KDE 便條紙
-Exec=notes-mobile.sh
+Exec=notes-mobile
 
 Icon=notes-mobile
 Type=Application
