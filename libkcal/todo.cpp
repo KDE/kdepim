@@ -272,7 +272,7 @@ void Todo::setPercentComplete( int v )
     mHasCompletedDate = false;
     mCompleted = QDateTime();
   }
-
+  setFieldDirty( FieldPercentComplete );
   updated();
 }
 

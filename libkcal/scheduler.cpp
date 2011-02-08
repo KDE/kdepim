@@ -586,6 +586,9 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
           attEv->setStatus(attIn->status());
           attEv->setDelegate(attIn->delegate());
           attEv->setDelegator(attIn->delegator());
+          Incidence *incidence = ev ? static_cast<Incidence*>( ev ) :
+                                      static_cast<Incidence*>( to );
+          incidence->setFieldDirty( Incidence::FieldAttendees );
           ret = true;
           found = true;
         }

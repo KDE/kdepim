@@ -37,6 +37,7 @@ IncidenceBase::IncidenceBase()
   setUid( CalFormat::createUniqueId() );
 
   mAttendees.setAutoDelete( true );
+  resetDirtyFields();
 }
 
 IncidenceBase::IncidenceBase(const IncidenceBase &i) :
@@ -64,6 +65,7 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i) :
   mObservers.clear();
 
   mAttendees.setAutoDelete( true );
+  resetDirtyFields();
 }
 
 IncidenceBase::~IncidenceBase()
@@ -234,11 +236,13 @@ void IncidenceBase::setFloats(bool f)
 
 void IncidenceBase::addComment(const QString& comment)
 {
+  setFieldDirty( FieldComment );
   mComments += comment;
 }
 
 bool IncidenceBase::removeComment( const QString& comment)
 {
+  setFieldDirty( FieldComment );
   bool found = false;
   QStringList::Iterator i;
 
@@ -254,6 +258,7 @@ bool IncidenceBase::removeComment( const QString& comment)
 
 void IncidenceBase::clearComments()
 {
+  setFieldDirty( FieldComment );
   mComments.clear();
 }
 
@@ -271,6 +276,7 @@ void IncidenceBase::addAttendee(Attendee *a, bool doupdate)
   if (a->name().left(7).upper() == "MAILTO:")
     a->setName(a->name().remove(0,7));
 
+  setFieldDirty( FieldAttendees );
   mAttendees.append(a);
   if (doupdate) updated();
 }
@@ -299,6 +305,7 @@ void IncidenceBase::removeAttendee(const char *n)
 void IncidenceBase::clearAttendees()
 {
   if (mReadOnly) return;
+  setFieldDirty( FieldAttendees );
   mAttendees.clear();
 }
 
@@ -434,3 +441,18 @@ QPtrList<IncidenceBase::Observer> IncidenceBase::observers() const
   return mObservers;
 }
 
+
+QMap<IncidenceBase::Field,bool> IncidenceBase::dirtyFields() const
+{
+  return mDirtyFields;
+}
+
+void IncidenceBase::resetDirtyFields()
+{
+  mDirtyFields.clear();
+}
+
+void IncidenceBase::setFieldDirty( IncidenceBase::Field field )
+{
+  mDirtyFields.insert( field, true );
+}
