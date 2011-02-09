@@ -443,9 +443,8 @@ QPair<KDateTime,KDateTime> MonthView::actualDateRange( const KDateTime &start,
                                                        const KDateTime &,
                                                        const QDate &preferredMonth ) const
 {
-  Q_UNUSED( preferredMonth );
-  KDateTime dayOne( start );
-  dayOne.setDate( QDate( start.date().year(), start.date().month(), 1 ) );
+  KDateTime dayOne = preferredMonth.isValid() ? KDateTime( preferredMonth ) : start;
+  dayOne.setDate( QDate( dayOne.date().year(), dayOne.date().month(), 1 ) );
   const int weekdayCol = ( dayOne.date().dayOfWeek() + 7 - KGlobal::locale()->weekStartDay() ) % 7;
   KDateTime actualStart = dayOne.addDays( -weekdayCol );
   actualStart.setTime( QTime( 0, 0, 0, 0 ) );
