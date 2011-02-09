@@ -86,7 +86,7 @@ QML.Rectangle {
                   }
 
                   QML.Text{
-                      text: KDE.i18n("Scrumish team:") + "\n\n" +
+                      text: KDE.i18nc("People working 'Scrum'-like. Scrum is a development method", "Scrumish team:") + "\n\n" +
                             "\t" + KDE.i18n("Andre Heinecke (Intevation)") + "\n" +
                             "\t" + KDE.i18n("Andreas Holzammer (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Bertjan Broeksema (KDAB)") + "\n" +
@@ -102,13 +102,13 @@ QML.Rectangle {
                   }
 
                   QML.Text{
-                      text: KDE.i18n("Scrumish Master: Till Adam, KDAB") + "\n" +
-                            KDE.i18n("Productly Owner: Bernhard Reiter, Intevation") + "\n"
+                      text: KDE.i18nc("'Scrum Master'-like role", "Scrumish Master: Till Adam, KDAB") + "\n" +
+                            KDE.i18nc("'Product Owner'-like role", "Productly Owner: Bernhard Reiter, Intevation") + "\n"
                       width: parent.width
                   }
 
                   QML.Text{
-                      text: KDE.i18n("Team satellites:") + "\n\n" +
+                      text: KDE.i18nc("People being remote from the 'Scrum'-like team", "Team satellites:") + "\n\n" +
                             "\t" + KDE.i18n("Andras Mantia (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Casey Link (KDAB)") + "\n" +
                             "\t" + KDE.i18n("David Faure (KDAB)") + "\n" +
