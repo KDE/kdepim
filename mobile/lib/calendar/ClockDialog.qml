@@ -121,7 +121,7 @@ Dialog {
         KPIM.Button2 {
           id: clockWidgetCancel
           buttonText: KDE.i18n( "Cancel" );
-          width: 100
+          width: 130
           onClicked: {
             clockWidget.collapse()
           }
@@ -129,7 +129,7 @@ Dialog {
         KPIM.Button2 {
           id: clockWidgetOk
           buttonText: KDE.i18n( "Ok" );
-          width: 100
+          width: 130
           onClicked: {
             clockWidget.collapse()
             timeChanged(clockWidget.hours, clockWidget.minutes);
