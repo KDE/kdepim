@@ -42,7 +42,7 @@ QML.Rectangle {
         width: parent.width - closeButton.width
         height: parent.height
         contentWidth: width - 10
-        contentHeight: 1800;
+        contentHeight: 1900;
 
         content.children: [
           QML.Rectangle{
@@ -59,9 +59,13 @@ QML.Rectangle {
                       width: parent.width
                   }
 
+                  QML.Image {
+                    id: platformLogo
+                    source: KDE.locate( "data", "mobileui/built-on-the-kde-platform.png" )
+                  }
+
                   QML.Text{
                       id:version
-                      horizontalAlignment: QML.Text.AlignHCenter
                       text: "\n" + application.version + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
