@@ -343,7 +343,7 @@ void MainView::newEvent()
 void MainView::newEventWithDate( const QDate &date )
 {
   IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "KDE Calendar" ) );
+  editor->setWindowTitle( i18n( "Kontact Touch Calendar" ) );
   Item item;
   item.setMimeType( KCalCore::Event::eventMimeType() );
   KCalCore::Event::Ptr event( new KCalCore::Event );
@@ -384,7 +384,7 @@ void MainView::newEventWithDate( const QDate &date )
 void MainView::newTodo()
 {
   IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "KDE Calendar" ) );
+  editor->setWindowTitle( i18n( "Kontact Touch Calendar" ) );
   Item item;
   item.setMimeType( KCalCore::Todo::todoMimeType() );
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
@@ -441,7 +441,7 @@ void MainView::openIncidenceEditor( const QString &summary,
   item.setPayload( incidence );
   item.setMimeType( incidence->mimeType() );
   IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "KDE Calendar" ) );
+  editor->setWindowTitle( i18n( "Kontact Touch Calendar" ) );
   editor->load( item );
   editor->show();
 }
@@ -460,7 +460,7 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
     return; // An editor for this item is already open.
 
   IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "KDE Calendar" ) );
+  editor->setWindowTitle( i18n( "Kontact Touch Calendar" ) );
   editor->load( item, date );
 
   m_openItemEditors.insert( editor, item.id() );
