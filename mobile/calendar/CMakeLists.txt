@@ -35,6 +35,10 @@ kde4_add_kcfg_files(korganizer_mobile_SRCS settings.kcfgc)
 
 qt4_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
 
+if (WIN32)
+   set(korganizer_mobile_SRCS ${korganizer_mobile_SRCS} korganizer-mobile.rc)
+endif (WIN32)
+
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)

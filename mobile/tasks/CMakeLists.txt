@@ -27,6 +27,10 @@ set(mobile_tasks_SRCS
 qt4_wrap_ui(mobile_tasks_SRCS configwidget.ui searchwidget.ui)
 kde4_add_kcfg_files(mobile_tasks_SRCS settings.kcfgc)
 
+if (WIN32)
+   set(mobile_tasks_SRCS ${mobile_tasks_SRCS} tasks-mobile.rc)
+endif (WIN32)
+
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DKCALCORE_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)

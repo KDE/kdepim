@@ -20,6 +20,10 @@ set(notes_mobile_SRCS
 
 qt4_wrap_ui(notes_mobile_SRCS searchwidget.ui)
 
+if (WIN32)
+   set(notes_mobile_SRCS ${notes_mobile_SRCS} notes-mobile.rc)
+endif (WIN32)
+
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
