@@ -1,6 +1,6 @@
 [Global]
 IconName=mail-mobile
-Comment=KDE e-mail client
+Comment=KDE Kontact Touch e-mail client
 Comment[ca]=Client de correu electrònic del KDE
 Comment[ca@valencia]=Client de correu electrònic del KDE
 Comment[de]=E-Mail-Programm für KDE
@@ -29,12 +29,12 @@ Comment[uk]=Поштовий клієнт KDE
 Comment[x-test]=xxKDE e-mail clientxx
 Comment[zh_CN]=KDE 邮件客户端
 Comment[zh_TW]=KDE 收發信軟體
-Name=KDE Mail
+Name=Kontact Touch Mail
 Name[ca]=Correu del KDE
 Name[ca@valencia]=Correu del KDE
 Name[de]=KDE-E-Mail
 Name[el]=Αλληλογραφία KDE
-Name[en_GB]=KDE Mail
+Name[en_GB]=Kontact Touch Mail
 Name[es]=Correo de KDE
 Name[et]=KDE e-post
 Name[fr]=Messagerie KDE
