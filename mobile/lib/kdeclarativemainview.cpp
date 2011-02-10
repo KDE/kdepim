@@ -742,8 +742,13 @@ void KDeclarativeMainView::openDocumentation( const QString &relativePath )
 
 void KDeclarativeMainView::openLicenses()
 {
+#ifdef Q_WS_MAEMO_5
+  KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", "kontact-touch/licenses.html" ),
+                                        QLatin1String( "text/html" ) );
+#else
   KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", "kontact-touch/licenses.pdf" ),
                                         QLatin1String( "application/pdf" ) );
+#endif
 }
 
 void KDeclarativeMainView::openAttachment( const QString &url, const QString &mimeType )
