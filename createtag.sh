@@ -36,6 +36,12 @@ function check_environment_for_tagging_setup()
     echo "E3_BASE_GIT_DIR is not set, aborting."
     return 1
   fi
+  # do not allow Git work dirs
+  if ( test -h "$E3_BASE_GIT_DIR/kdepim/.git/refs" ) then
+    echo "E3_BASE_GIT_DIR seems to be a Git work dir."
+    echo "Please use a real Git repo instead, aborting."
+    return 1
+  fi
   return 0
 }
 
@@ -49,6 +55,25 @@ function get_time
   TIME=`date --utc +%k%M%S`
 }
 
+function svn_repos_outofdate
+{
+  savepath=`pwd`
+  cd $1
+  for cb in $2
+  do
+    cd $cb
+    echo -n "Check that $cb is up-to-date... "
+    foo="`svn status | grep '^M'`"
+    if ( test "$foo" ) then
+      echo "$cb has local changes, aborting."
+      exit 1
+    fi
+    echo "yep"
+    cd ..
+  done
+  cd $savepath
+}
+
 function get_svn_revision
 {
   SVN_REVISION=""
@@ -56,7 +81,7 @@ function get_svn_revision
   savepath=`pwd`
   cd $1
   if ( test -d .svn) then
-    svn up
+    svn up >/dev/null 2>&1
     if ( test $? -eq 0 ) then
       SVN_REVISION=`svn info | grep "Revision:" | awk '{print $2}'`
     else
@@ -65,6 +90,29 @@ function get_svn_revision
   else
     echo "$1 is not an svn repo"
   fi
+  echo "$1 revision is $SVN_REVISION"
+  cd $savepath
+}
+
+function git_repos_outofdate
+{
+  savepath=`pwd`
+  cd $1
+  for cb in $2
+  do
+    echo -n "Check that $cb enterprise/e3 is up-to-date... "
+    cd $cb
+    if ( test ! "`grep refs/heads/enterprise/e3 .git/HEAD`" ) then
+      git checkout enterprise/e3
+    fi
+    foo="`git status -s | grep ' ^M'`"
+    if ( test "$foo" ) then
+      echo "$cb enterprise/e3 branch has local changes, aborting."
+      exit 1
+    fi
+    echo "yep"
+    cd ..
+  done
   cd $savepath
 }
 
@@ -74,8 +122,11 @@ function get_git_revision
 
   savepath=`pwd`
   cd $1
+  if ( test ! "`grep refs/heads/enterprise/e3 .git/HEAD`" ) then
+    git checkout enterprise/e3
+  fi
   if ( test -d .git) then
-    git pull --rebase
+    git pull --rebase >/dev/null 2>&1
     if ( test $? -eq 0 ) then
       GIT_REVISION=`git rev-parse --short HEAD`
     else
@@ -84,6 +135,7 @@ function get_git_revision
   else
     echo "$1 is not a git repo"
   fi
+  echo "$1 enterprise/e3 branch revision is $GIT_REVISION"
   cd $savepath
 }
 
@@ -103,18 +155,10 @@ function change_file_version
 # $2: current date
 function change_version_numbers
 {
-  CURDIR_FOR_VERSION_NUMBERS_CHANGE=`pwd | awk -F/ '{print $NF}'`
-  if ( test "$CURDIR_FOR_VERSION_NUMBERS_CHANGE" != "kdepim" ) then
-    echo "Wrong working directory, the current directory needs to be the kdepim source directory."
-    return 1
-  fi
-
-  CURDIFF=`git diff --name-only`
-  if ( test -n "$CURDIFF" ) then
-    echo "$PWD is not clean!"
-    echo "Cannot proceed with the tagging. Press <enter> to continue"
-    read
-    return 1
+  savepath=`pwd`
+  cd $E3_BASE_GIT_DIR/kdepim
+  if ( test ! "`grep refs/heads/enterprise/e3 .git/HEAD`" ) then
+    git checkout enterprise/e3
   fi
 
   change_file_version "kmail/kmversion.h" $1 $2
@@ -124,9 +168,9 @@ function change_version_numbers
   PAGER=cat git diff
   echo "Going to check in the above diff, press enter to continue or CTRL+C to abort."
   read
-  git commit --message "GIT_SILENT: Update version numbers for today's release."
-  git push
-  return 0
+  git commit --message "GIT_SILENT: Update version numbers for today's release." -q --all
+  git push --all
+  cd $savepath
 }
 
 # $1: Repo location
@@ -236,6 +280,9 @@ echo "- that the translations are up-to-date"
 echo "- that the NewsLog.txt is up-to-dated"
 echo "Press enter to continue or CTRL+C to abort."
 read
+
+git_repos_outofdate $E3_BASE_GIT_DIR "kdepim kdelibs"
+svn_repos_outofdate $E3_BASE_SOURCE_DIR "kde-l10n"
 
 get_git_revision $E3_BASE_GIT_DIR/kdepim
 KDEPIM_REVISION="$GIT_REVISION" #will be used in application version numbers
