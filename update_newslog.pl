@@ -194,7 +194,7 @@ sub Commit() {
     }
     if(&prompt("y", "Last chance.. really commit and push?")) {
       system("git commit --message \"update for today's tagging\" -q $logFile");
-      system("git push");
+      system("git push --all");
       &Message("[commit ok]\n");
       &Cleanup();
     }
