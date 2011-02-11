@@ -20,8 +20,6 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.            #
 ###########################################################################
 
-#TODO:  variable for $HOME/projects/e3
-
 baseName="enterprise35.0"
 
 function check_environment_for_tagging_setup()
@@ -34,7 +32,10 @@ function check_environment_for_tagging_setup()
     echo "E3_BASE_SOURCE_DIR is not set, aborting."
     return 1
   fi
-
+  if ( test ! -n "$E3_BASE_GIT_DIR") then
+    echo "E3_BASE_GIT_DIR is not set, aborting."
+    return 1
+  fi
   return 0
 }
 
@@ -209,8 +210,8 @@ We created the following tags for enterprise35:
   git@git.kde.org/kdepim $1
   svn.kde.org/home/kde/tags/kdepim/$1/kde-l10n
 
-The NewsLog.txt has been updated in the e35 branch.
-Updated German translations are also included.
+The NewsLog.txt has been updated in the kdepim tag.
+Updated German translations are included in the kde-l10n tag.
 
 EOF
 }
@@ -236,10 +237,10 @@ echo "- that the NewsLog.txt is up-to-dated"
 echo "Press enter to continue or CTRL+C to abort."
 read
 
-get_git_revision $HOME/projects/e3/kdepim
+get_git_revision $E3_BASE_GIT_DIR/kdepim
 KDEPIM_REVISION="$GIT_REVISION" #will be used in application version numbers
 
-get_git_revision $HOME/projects/e3/kdelibs
+get_git_revision $E3_BASE_GIT_DIR/kdelibs
 KDELIBS_REVISION="$GIT_REVISION" #not used at this time
 
 get_svn_revision $E3_BASE_SOURCE_DIR/kde-l10n
@@ -250,8 +251,8 @@ if ( test "$KDEPIM_REVISION" -a \
           "$L10N_REVISION" ) then
   change_version_numbers $GIT_REVISION $DATE
   if ( test $? -eq 0 ) then
-    addGitTag $HOME/projects/e3 kdelibs $tagName
-    addGitTag $HOME/projects/e3 kdepim $tagName
+    addGitTag $E3_BASE_GIT_DIR kdelibs $tagName
+    addGitTag $E3_BASE_GIT_DIR kdepim $tagName
     addSvnTag $baseName "/branches/kdepim/enterprise/" "kde-l10n" $tagName
 
     mailNag $tagName
