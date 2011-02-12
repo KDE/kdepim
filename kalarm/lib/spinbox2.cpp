@@ -776,5 +776,3 @@ static QRect spinBoxEditFieldRect(const QWidget* w, const QStyleOptionSpinBox& o
 	}
 	return r;
 }
-
-// vim: et sw=4:
