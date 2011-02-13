@@ -295,7 +295,6 @@ void IncidenceDateTime::enableStartEdit( bool enable )
 
   if ( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
     mUi->mWholeDayCheck->setEnabled( true );
-    mUi->mWholeDayCheck->setChecked( mLoadedIncidence->allDay() );
   } else {
     mUi->mWholeDayCheck->setEnabled( false );
     mUi->mWholeDayCheck->setChecked( false );
@@ -319,7 +318,6 @@ void IncidenceDateTime::enableEndEdit( bool enable )
 
   if( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
     mUi->mWholeDayCheck->setEnabled( true );
-    mUi->mWholeDayCheck->setChecked( mLoadedIncidence->allDay() );
   } else {
     mUi->mWholeDayCheck->setEnabled( false );
     mUi->mWholeDayCheck->setChecked( false );
