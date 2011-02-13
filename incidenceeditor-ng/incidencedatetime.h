@@ -116,6 +116,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void save( const KCalCore::Journal::Ptr &journal );
     void setDateTimes( const KDateTime &start, const KDateTime &end );
     void setTimes( const KDateTime &start, const KDateTime &end );
+    void setTimeZoneLabelEnabled( bool enable );
 
   private:
     KCalCore::ICalTimeZones *mTimeZones;

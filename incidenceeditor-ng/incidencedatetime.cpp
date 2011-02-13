@@ -295,9 +295,11 @@ void IncidenceDateTime::enableStartEdit( bool enable )
 
   if ( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
     mUi->mWholeDayCheck->setEnabled( true );
+    setTimeZoneLabelEnabled( !mUi->mWholeDayCheck->isChecked() );
   } else {
     mUi->mWholeDayCheck->setEnabled( false );
     mUi->mWholeDayCheck->setChecked( false );
+    setTimeZoneLabelEnabled( false );
   }
 
   if ( enable ) {
@@ -318,9 +320,11 @@ void IncidenceDateTime::enableEndEdit( bool enable )
 
   if( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
     mUi->mWholeDayCheck->setEnabled( true );
+    setTimeZoneLabelEnabled( !mUi->mWholeDayCheck->isChecked() );
   } else {
     mUi->mWholeDayCheck->setEnabled( false );
     mUi->mWholeDayCheck->setChecked( false );
+    setTimeZoneLabelEnabled( false );
   }
 
   if ( enable ) {
@@ -340,9 +344,7 @@ void IncidenceDateTime::enableTimeEdits()
   // NOTE: assumes that the initial times are initialized.
   const bool wholeDayChecked = mUi->mWholeDayCheck->isChecked();
 
-#ifndef KDEPIM_MOBILE_UI
-  mUi->mTimeZoneLabel->setVisible( !wholeDayChecked );
-#endif
+  setTimeZoneLabelEnabled( !wholeDayChecked );
 
   if ( mUi->mStartCheck->isChecked() ) {
     mUi->mStartTimeEdit->setEnabled( !wholeDayChecked );
@@ -807,6 +809,15 @@ bool IncidenceDateTime::isValid() const
     mLastErrorString = QString();
     return true;
   }
+}
+
+void IncidenceDateTime::setTimeZoneLabelEnabled( bool enable )
+{
+  #ifndef KDEPIM_MOBILE_UI
+    mUi->mTimeZoneLabel->setVisible( enable );
+  #else
+    Q_UNUSED( enable );
+  #endif
 }
 
 #include "moc_incidencedatetime.cpp"
