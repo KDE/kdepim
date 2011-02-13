@@ -541,6 +541,18 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
       result = result.arg( tempFileName );
   }
 
+  return result;
+}
+
+namespace {
+
+/**
+ * Substitutes placeholders in the command line with the
+ * content of the correspoding header in the message.
+ * %{From} -> Joe Author <joe@acme.com>
+ */
+void substituteMessageHeaders( const KMime::Message::Ptr &aMsg, QString &result )
+{
   // And finally, replace the %{foo} with the content of the foo
   // header field:
   QRegExp header_rx( "%\\{([a-z0-9-]+)\\}", Qt::CaseInsensitive );
@@ -550,8 +562,19 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
     result.replace( idx, header_rx.matchedLength(), replacement );
     idx += replacement.length();
   }
+}
 
-  return result;
+/**
+ * Substitutes placeholders in the command line with the
+ * corresponding information from the item. Currently supported
+ * are %{itemid} and %{itemurl}.
+ */
+void substituteCommandLineArgsForItem( const Akonadi::Item &item, QString &commandLine )
+{
+  commandLine.replace( QLatin1String( "%{itemurl}" ), item.url( Akonadi::Item::UrlWithMimeType ).url() );
+  commandLine.replace( QLatin1String( "%{itemid}" ), QString::number( item.id() ) );
+}
+
 }
 
 FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi::Item &item, bool withOutput ) const
@@ -572,6 +595,9 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
   atmList.append( inFile );
 
   QString commandLine = substituteCommandLineArgsFor( aMsg, atmList );
+  substituteCommandLineArgsForItem( item, commandLine );
+  substituteMessageHeaders( aMsg, commandLine );
+
   if ( commandLine.isEmpty() ) {
     qDeleteAll( atmList );
     atmList.clear();
@@ -1196,7 +1222,7 @@ QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   setParamWidgetValue( comboBox );
-  
+
   connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
            this, SIGNAL( filterActionModified() ) );
 
@@ -1322,7 +1348,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
   layout->addWidget( lineEdit, 1 );
 
   setParamWidgetValue( widget );
-  
+
   connect( comboBox, SIGNAL( currentIndexChanged( int ) ),
            this, SIGNAL( filterActionModified() ) );
   connect( lineEdit, SIGNAL( textChanged( QString ) ),
@@ -2436,5 +2462,6 @@ const QList<FilterActionDesc*>& FilterActionDict::list() const
 {
   return mList;
 }
+
 
 #include "filteraction.moc"
