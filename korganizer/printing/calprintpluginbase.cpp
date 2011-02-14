@@ -969,6 +969,7 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
   int textY=mSubHeaderHeight+3; // gives the relative y-coord of the next printed entry
   Event::List::ConstIterator it;
 
+  unsigned int visibleEventsCounter = 0;
   for( it = eventList.begin(); it != eventList.end() && textY<box.height(); ++it ) {
     Event *currEvent = *it;
     if ( ( !printRecurDaily  && currEvent->recurrenceType() == Recurrence::rDaily  ) ||
@@ -989,6 +990,22 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
       str = currEvent->summary();
     }
     drawIncidence( p, box, timeText, str, textY );
+    visibleEventsCounter++;
+
+    if ( textY >= box.height() ) {
+      const QChar downArrow( 0x21e3 );
+      const unsigned int invisibleIncidences = ((eventList.count() - visibleEventsCounter) + mCalendar->todos( qd ).count());
+      const QString warningMsg = QString( "%1 (%2)" ).arg( downArrow ).arg( invisibleIncidences );
+
+      QFontMetrics fm( p.font() );
+      QRect msgRect = fm.boundingRect( warningMsg );
+      msgRect.setRect( box.right() - msgRect.width() - 2, box.bottom() - msgRect.height() - 2, msgRect.width(), msgRect.height() );
+
+      p.save();
+      p.setPen( Qt::red );
+      p.drawText( msgRect, Qt::AlignLeft, warningMsg );
+      p.restore();
+    }
   }
 
   if ( textY < box.height() ) {
