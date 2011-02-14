@@ -265,7 +265,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
       disposition->setDisposition( KMime::Headers::CDinline );
       message->setHeader( disposition );
       message->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
-      message->setBody( attachment.toUtf8() );
+      message->setBody( KMime::CRLFtoLF( attachment.toUtf8() ) );
     }
   } else {
     // We need to set following 4 lines by hand else KMime::Content::addContent
@@ -285,7 +285,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
     bodyMessage->contentType()->setMimeType( "text/plain" );
     bodyMessage->contentType()->setCharset( "utf-8" );
     bodyMessage->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
-    bodyMessage->setBody( body.toUtf8() );
+    bodyMessage->setBody( KMime::CRLFtoLF( body.toUtf8() ) );
     message->addContent( bodyMessage );
 
     // Set the sedcond multipart, the attachment.
@@ -300,7 +300,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
       attachMessage->contentType()->setParameter( QLatin1String( "method" ), QLatin1String( "request" ) );
       attachMessage->setHeader( attachDisposition );
       attachMessage->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
-      attachMessage->setBody( attachment.toUtf8() );
+      attachMessage->setBody( KMime::CRLFtoLF( attachment.toUtf8() ) );
       message->addContent( attachMessage );
     }
   }

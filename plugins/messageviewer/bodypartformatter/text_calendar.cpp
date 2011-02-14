@@ -556,7 +556,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( !GlobalSettings::self()->legacyBodyInvites() ) {
         msg->contentType()->from7BitString( "text/calendar; method=reply; charset=\"utf-8\"" );
         msg->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
-        msg->setBody( iCal.toUtf8() );
+        msg->setBody( KMime::CRLFtoLF( iCal.toUtf8() ) );
       } else {
         KMime::Content *text = new KMime::Content;
         text->contentType()->from7BitString( "text/plain; charset=\"us-ascii\"" );
@@ -566,7 +566,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         KMime::Content *body = new KMime::Content;
         body->contentType()->from7BitString( "text/calendar; name=\"cal.ics\"; method=\"reply\"; charset=\"utf-8\"" );
         body->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
-        body->setBody( iCal.toUtf8() );
+        body->setBody( KMime::CRLFtoLF( iCal.toUtf8() ) );
         msg->addContent( body );
       }
 
