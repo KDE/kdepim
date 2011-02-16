@@ -5,8 +5,6 @@ Problems addressed
 ------------------
 
 * kolab/issue3374: Window behaviour of Kontact is undesirable sometimes if a message box comes up (rt#5730)
-* kolab/issue4382: Wrong reappearing of a suspended alarm after restart (rt#6160)
-* kolab/issue4474: Wish: No "attachment cannot be edited" warning should be displayed. (rt#6114)
 * kolab/issue4698: Invitation action 'record response in my calendar' doesn't save status of attendee (#rt10002)
 
 
