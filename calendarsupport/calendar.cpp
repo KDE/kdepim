@@ -74,6 +74,10 @@ Calendar::Private::Private( QAbstractItemModel *treeModel, QAbstractItemModel *m
 
   connect( m_treeModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
            this, SLOT(dataChangedInTreeModel(QModelIndex,QModelIndex)) );
+
+  connect( m_treeModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+           SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
+
   /*
   connect( m_monitor, SIGNAL(itemLinked(const Akonadi::Item,Akonadi::Collection)),
            this, SLOT(itemAdded(const Akonadi::Item,Akonadi::Collection)) );
@@ -123,6 +127,33 @@ void Calendar::Private::rowsAboutToBeRemoved( const QModelIndex &parent, int sta
 
 void Calendar::Private::layoutChanged()
 {
+
+}
+
+void Calendar::Private::onRowsMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                                     const QModelIndex &destinationParent, int destinationRow )
+{
+  Q_ASSERT( sourceEnd >= sourceStart );
+  Q_ASSERT( sourceStart >= 0 );
+  Q_ASSERT( destinationRow >= 0 );
+
+  const Akonadi::Collection sourceCollection = collectionFromIndex( sourceParent );
+  const Akonadi::Collection destinationCollection = collectionFromIndex( destinationParent );
+
+  if ( sourceCollection.isValid() && destinationCollection.isValid() &&
+       sourceCollection.id() != destinationCollection.id() ) {
+    const int numItems = sourceEnd - sourceStart + 1;
+    Akonadi::Item::List movedItems = itemsFromModel( m_treeModel, destinationParent, destinationRow,
+                                                     destinationRow + numItems - 1 );
+    foreach( const Akonadi::Item &item, movedItems ) {
+      if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+        // We have old items ( that think they belong to another collection ) inside m_itemMap
+        if ( m_itemMap.contains( item.id() ) )
+          m_itemMap.insert( item.id(), item );
+          q->notifyIncidenceChanged( item );
+      }
+    }
+  }
 }
 
 void Calendar::Private::appendVirtualItems( Akonadi::Item::List &itemList )

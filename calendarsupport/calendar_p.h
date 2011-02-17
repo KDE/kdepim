@@ -151,6 +151,9 @@ class Calendar::Private : public QObject
     void layoutChanged();
     void modelReset();
     void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
+
+    void onRowsMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                      const QModelIndex &destinationParent, int destinationRow );
 };
 
 }
