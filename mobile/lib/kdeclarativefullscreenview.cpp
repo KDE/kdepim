@@ -211,6 +211,10 @@ void KDeclarativeFullScreenView::closeAllFrontends(const QString &qmlFileName)
                << QLatin1String( "kmail-mobile" )
                << QLatin1String( "kaddressbook-mobile" )
                << QLatin1String( "korganizer-mobile" );
+  if ( !applications.contains( qmlFileName + QLatin1String( "-mobile" ) ) &&
+       !applications.contains( qmlFileName ) ){
+    return;
+  }
   foreach( const QString &app, applications ) {
     if ( app.startsWith( qmlFileName ) )
       continue;
