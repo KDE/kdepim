@@ -21,12 +21,15 @@
 #include "calendar.h"
 #include "calendar_p.h"
 
+#include "collectionselection.h"
 #include "blockalarmsattribute.h"
 #include "utils.h"
 
 #include <KLocale>
-
+#include <KSelectionProxyModel>
+#include <Akonadi/EntityMimeTypeFilterModel>
 #include <QtCore/QMultiHash>
+#include <QItemSelection>
 
 using namespace CalendarSupport;
 
@@ -76,7 +79,7 @@ Calendar::Private::Private( QAbstractItemModel *treeModel, QAbstractItemModel *m
            this, SLOT(dataChangedInTreeModel(QModelIndex,QModelIndex)) );
 
   connect( m_treeModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-           SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
+           SLOT(onRowsMovedInTreeModel(QModelIndex,int,int,QModelIndex,int)) );
 
   /*
   connect( m_monitor, SIGNAL(itemLinked(const Akonadi::Item,Akonadi::Collection)),
@@ -130,8 +133,8 @@ void Calendar::Private::layoutChanged()
 
 }
 
-void Calendar::Private::onRowsMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
-                                     const QModelIndex &destinationParent, int destinationRow )
+void Calendar::Private::onRowsMovedInTreeModel( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                                                const QModelIndex &destinationParent, int destinationRow )
 {
   Q_ASSERT( sourceEnd >= sourceStart );
   Q_ASSERT( sourceStart >= 0 );
@@ -145,14 +148,37 @@ void Calendar::Private::onRowsMoved( const QModelIndex &sourceParent, int source
     const int numItems = sourceEnd - sourceStart + 1;
     Akonadi::Item::List movedItems = itemsFromModel( m_treeModel, destinationParent, destinationRow,
                                                      destinationRow + numItems - 1 );
-    foreach( const Akonadi::Item &item, movedItems ) {
-      if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-        // We have old items ( that think they belong to another collection ) inside m_itemMap
-        if ( m_itemMap.contains( item.id() ) )
-          m_itemMap.insert( item.id(), item );
-          q->notifyIncidenceChanged( item );
+
+    { // Start hack
+      // KSelectionProxyModel doesn't honour rowsMoved() yet, so, if the source model emitted rowsMoved
+      // (items changing collection) we could only catch it in the onLayoutChanged() slot, which isn't
+      // performant. So we listen to the source model's rowsMoved() and check manuall if it when in or
+      // out of the selection, and notify the application.
+      Akonadi::EntityMimeTypeFilterModel *m = qobject_cast<Akonadi::EntityMimeTypeFilterModel*>( m_model );
+      if ( m ) {
+        KSelectionProxyModel *sm = qobject_cast<KSelectionProxyModel*>( m->sourceModel() );
+        if ( sm ) {
+          CollectionSelection collectionSelection( sm->selectionModel() );
+          const bool sourceCollectionIsSelected = collectionSelection.contains( sourceCollection.id() );
+          const bool destinationCollectionIsSelected = collectionSelection.contains( destinationCollection.id() );
+          if ( sourceCollectionIsSelected && destinationCollectionIsSelected ) {
+            foreach( const Akonadi::Item item, movedItems ) {
+              if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+                // We have old items ( that think they belong to another collection ) inside m_itemMap
+                if ( m_itemMap.contains( item.id() ) ) {
+                  m_itemMap.insert( item.id(), item );
+                }
+                q->notifyIncidenceChanged( item );
+              }
+            }
+          } else if ( !sourceCollectionIsSelected && destinationCollectionIsSelected ) { // Added
+            itemsAdded( movedItems );
+          } else if ( sourceCollectionIsSelected && !destinationCollectionIsSelected ) { // Removed
+            itemsRemoved( movedItems );
+          }
+        }
       }
-    }
+    } // end hack
   }
 }
 
