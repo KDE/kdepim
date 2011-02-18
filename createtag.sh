@@ -3,7 +3,6 @@
 #TODO
 # if user cancels after showing the diff for the versioning, revert
 #   the changes to the version.h files
-# is the correct git revision being put into the version strings?
 
 ###########################################################################
 # Copyright (c) 2010-2011 Klarälvdalens Datakonsult AB,                   #
@@ -301,7 +300,7 @@ L10N_REVISION="$SVN_REVISION" #not used at this time
 if ( test "$KDEPIM_REVISION" -a \
           "$KDELIBS_REVISION" -a \
           "$L10N_REVISION" ) then
-  change_version_numbers $GIT_REVISION $DATE
+  change_version_numbers $KDEPIM_REVISION $DATE
   if ( test $? -eq 0 ) then
     addGitTag $E3_BASE_GIT_DIR kdelibs $tagName
     addGitTag $E3_BASE_GIT_DIR kdepim $tagName
