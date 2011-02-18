@@ -291,7 +291,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
 
     if ( item.storageCollectionId() != m_itemMap.value( id ).storageCollectionId() ) {
       // there was once a bug that resulted in items forget their collectionId...
-      kDebug() << "item.storageCollectionId() = " << item.storageCollectionId()
+      kError() << "item.storageCollectionId() = " << item.storageCollectionId()
                << "; m_itemMap.value( id ).storageCollectionId() = "
                << m_itemMap.value( id ).storageCollectionId()
                << "; item.isValid() = " << item.isValid()
@@ -328,14 +328,14 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   } else if ( const KCalCore::Journal::Ptr j = CalendarSupport::journal( item ) ) {
     date = j->dtStart().date().toString();
   } else {
-    kDebug() << "Item id is " << item.id()
+    kError() << "Item id is " << item.id()
              << item.hasPayload<KCalCore::Incidence::Ptr>()
              << item.hasPayload<KCalCore::Event::Ptr>()
              << item.hasPayload<KCalCore::Todo::Ptr>()
              << item.hasPayload<KCalCore::Journal::Ptr>();
     KCalCore::Incidence::Ptr p = CalendarSupport::incidence( item );
     if ( p ) {
-      kDebug() << "incidence uid is " << p->uid()
+      kError() << "incidence uid is " << p->uid()
                << " and type is " << p->typeStr();
     }
 
@@ -376,7 +376,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   if ( alreadyExisted ) { // We're updating an existing item
     const bool existedInUidMap = m_uidToItemId.contains( ui );
     if ( m_uidToItemId.value( ui ) != item.id() ) {
-      kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
+      kError()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
               << "; item uid = "  << ui.uid
               << "; calendar = " << q->objectName()
               << "; existed in cache = " << existedInUidMap
@@ -462,6 +462,7 @@ void Calendar::Private::itemChanged( const Akonadi::Item &item )
   Q_ASSERT( item.isValid() );
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( !incidence ) {
+    kWarning() << "Really? No incidence for item.id() " << item.id();
     return;
   }
   updateItem( item, AssertExists );
@@ -570,6 +571,7 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
     } else if ( const KCalCore::Journal::Ptr j = incidence.dynamicCast<KCalCore::Journal>() ) {
       m_itemIdsForDate.remove( j->dtStart().date().toString(), item.id() );
     } else {
+      kError() << "Unsupported incidence type: " << incidence;
       Q_ASSERT( false );
       continue;
     }
