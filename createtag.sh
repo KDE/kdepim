@@ -1,5 +1,10 @@
 #!/bin/sh
 
+#TODO
+# if user cancels after showing the diff for the versioning, revert
+#   the changes to the version.h files
+# is the correct git revision being put into the version strings?
+
 ###########################################################################
 # Copyright (c) 2010-2011 Klarälvdalens Datakonsult AB,                   #
 #                                    a KDAB Group company <info@kdab.com> #
