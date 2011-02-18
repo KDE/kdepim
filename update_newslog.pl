@@ -46,6 +46,9 @@ my($Prog) = 'update_newslog.pl';
 my
  $VERSION = '0.95';    #split line so MakeMaker can find the version here
 
+# do not allow Git work dirs
+-l ".git/refs" && die "Seems you are running this from a Git work dir.\nPlease change to a real Git repo instead\n";
+
 my($logFile) = "NewsLog.txt";
 -f "$logFile" || die "Cannot locate the E35 NewsLog.txt.\nAre you in the E35 branch?\nIs your branch up-to-date?\n";
 
