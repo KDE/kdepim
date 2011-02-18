@@ -1709,11 +1709,14 @@ bool KMFolderCachedImap::deleteMessages()
 
   if( !msgsForDeletion.isEmpty() ) {
     if ( GlobalSettings::self()->mailLossDebug() ) {
-      kdDebug(5006) << k_funcinfo << label()
-                    << " Going to locally delete " << msgsForDeletion.count()
+      kdDebug(5006) << k_funcinfo << label() << " Going to locally delete " << msgsForDeletion.count()
                     << " messages, with the uids " << uids.join( "," ) << endl;
     }
-    removeMsg( msgsForDeletion );
+      if ( !GlobalSettings::self()->mailLossDebug() || KMessageBox::warningYesNo(
+             0, i18n( "<qt><p>Mails on the server in folder <b>%1</b> were deleted. "
+                 "Do you want to delete them locally?<br>UIDs: %2</p></qt>" )
+             .arg( folder()->prettyURL() ).arg( uids.join(",") ) ) == KMessageBox::Yes )
+        removeMsg( msgsForDeletion );
   }
 
   if ( mUserRightsState == KMail::ACLJobs::Ok && !( mUserRights & KMail::ACLJobs::Delete ) )
