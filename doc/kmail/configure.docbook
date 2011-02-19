@@ -2003,7 +2003,7 @@ Exchange understands. The invitation will be sent as an attachment with name <fi
 <para>When viewing updated invitations, this option enables the differences between the previous
 and current invitations to be displayed in a way very much like Microsoft Outlook(tm). 
 This is the default. The user can turn this option off if they want to see the invitation
-update differences shown in the the "classic" KMail style.
+update differences shown in the "classic" KMail style.
 </para>
 </listitem>
 </varlistentry>
