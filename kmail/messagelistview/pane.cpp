@@ -169,6 +169,28 @@ bool Pane::isFolderOpen( KMFolder * fld ) const
   return messageListViewWidgetWithFolder( fld ) != 0;
 }
 
+void Pane::changeFolderName( KMFolder *fld, Core::Widget *w )
+{
+  if ( w && fld )
+  {
+    setTabText( indexOf( w ), fld->label() );
+  }
+}
+
+void Pane::changeFolderIcon( KMFolder *fld, Core::Widget *w )
+{
+  if ( w && fld )
+  {
+    QIcon icon;
+    FolderViewItem * fvi = mMainWidget->mainFolderView()->findItemByFolder( fld );
+    if ( fvi )
+      icon = SmallIcon( fvi->normalIcon() );
+    else
+      icon = QIcon(); // FIXME: find a nicer empty icon
+    setTabIcon( indexOf(w), icon );
+  }
+}
+
 void Pane::setCurrentFolder( KMFolder *fld, bool preferEmptyTab, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
 {
   // This function is quite critical, mainly because of the "appearance"

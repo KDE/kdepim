@@ -114,6 +114,19 @@ void Widget::setFolder( KMFolder * fld, const QIcon &icon, Core::PreSelectionMod
   // Set the storage _after_ setting the icon so it can be overridden
   // from inside setStorageModel().
   setStorageModel( fld ? new StorageModel( fld ) : 0, preSelectionMode );
+  connect(fld, SIGNAL( nameChanged() ), this, SLOT( slotNameChanged() ) );
+  connect(fld, SIGNAL( iconsChanged() ), this, SLOT( slotIconsChanged() ) );
+  
+}
+
+void Widget::slotIconsChanged()
+{
+  mPane->changeFolderIcon( folder(), this );
+}
+
+void Widget::slotNameChanged()
+{
+  mPane->changeFolderName( folder(), this );
 }
 
 KMFolder * Widget::folder() const

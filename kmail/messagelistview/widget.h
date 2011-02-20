@@ -417,6 +417,8 @@ private:
 
 private slots:
   void animateIcon();
+  void slotNameChanged();
+  void slotIconsChanged();
 
 };
 

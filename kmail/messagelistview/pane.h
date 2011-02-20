@@ -25,6 +25,7 @@
 #include <QList>
 
 #include <messagelist/core/enums.h>
+#include <messagelist/core/widgetbase.h>
 
 class KMMessage;
 class KMMsgBase;
@@ -91,6 +92,8 @@ protected:
   QToolButton * mNewTabButton;       ///< The "New Tab" button in the top left corner
   QToolButton * mCloseTabButton;     ///< The "Close Tab" button in the top right corner
 public:
+  void changeFolderName( KMFolder *fld, MessageList::Core::Widget *w );
+  void changeFolderIcon( KMFolder *fld, MessageList::Core::Widget *w );
 
   /**
    * Returns the KMMainWidget this Pane is currently bound to
