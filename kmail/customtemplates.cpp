@@ -233,7 +233,7 @@ void CustomTemplates::load()
     };
   }
 
-  mRemove->setEnabled( mList->topLevelItemCount() > 0 );
+  mRemove->setEnabled( mList->topLevelItemCount() > 0  && mList->currentItem() );
 }
 
 void CustomTemplates::save()
@@ -330,6 +330,7 @@ void CustomTemplates::slotListSelectionChanged()
   QTreeWidgetItem *item = mList->currentItem();
   if ( item ) {
     mEditFrame->setEnabled( true );
+    mRemove->setEnabled( true );
     CustomTemplateItem *vitem = mItemList[ mList->currentItem()->text( 1 ) ];
     if ( vitem ) {
 
