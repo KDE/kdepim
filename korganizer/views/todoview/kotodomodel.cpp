@@ -747,8 +747,9 @@ QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
     }
   }
 
-  // item for recurring todos
-  if ( role == Qt::DecorationRole && index.column() == DueDateColumn ) {
+  // icon for recurring todos
+  // It's in the summary column so you don't accidentally click the checkbox ( which increments the next occurrence date ).
+  if ( role == Qt::DecorationRole && index.column() == SummaryColumn ) {
     if ( todo->recurs() ) {
       return QVariant( QIcon( KOGlobals::self()->smallIcon( "task-recurring" ) ) );
     }
@@ -919,7 +920,8 @@ bool KOTodoModel::setData( const QModelIndex &index, const QVariant &value, int 
 
     return true;
   } else {
-    KOHelper::showSaveIncidenceErrorMsg( 0, todo ); //TODO pass parent
+    if ( !( role == Qt::CheckStateRole && index.column() == 0 ) )
+      KOHelper::showSaveIncidenceErrorMsg( 0, todo ); //TODO pass parent
     return false;
   }
 }

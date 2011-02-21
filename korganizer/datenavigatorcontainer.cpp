@@ -69,7 +69,7 @@ DateNavigatorContainer::~DateNavigatorContainer()
 void DateNavigatorContainer::connectNavigatorView( KDateNavigator *v )
 {
   connect( v, SIGNAL(datesSelected(KCalCore::DateList)),
-           SIGNAL(datesSelected(KCalCore::DateList)) );
+           SLOT(handleDatesSelectedSignal(KCalCore::DateList)) );
 
   connect( v, SIGNAL(incidenceDropped(Akonadi::Item,QDate)),
            SIGNAL(incidenceDropped(Akonadi::Item,QDate)) );
@@ -84,7 +84,7 @@ void DateNavigatorContainer::connectNavigatorView( KDateNavigator *v )
            SIGNAL(newJournalSignal(QDate)) );
 
   connect( v, SIGNAL(weekClicked(QDate,QDate)),
-           SIGNAL(weekClicked(QDate,QDate)) );
+           SLOT(handleWeekClickedSignal(QDate,QDate)) );
 
   connect( v, SIGNAL(goPrevious()), SIGNAL(goPrevious()) );
   connect( v, SIGNAL(goNext()), SIGNAL(goNext()) );
@@ -351,7 +351,7 @@ void DateNavigatorContainer::goPrevMonth()
                          p.second );
 }
 
-QPair<QDate,QDate> DateNavigatorContainer::dateLimits( int offset )
+QPair<QDate,QDate> DateNavigatorContainer::dateLimits( int offset ) const
 {
   const KCalendarSystem *calSys = KOGlobals::self()->calendarSystem();
   QDate firstMonth, lastMonth;
@@ -368,6 +368,66 @@ QPair<QDate,QDate> DateNavigatorContainer::dateLimits( int offset )
   QPair<QDate,QDate> lastMonthBoundary = KODayMatrix::matrixLimits( lastMonth );
 
   return qMakePair( firstMonthBoundary.first, lastMonthBoundary.second );
+}
+
+QDate DateNavigatorContainer::monthOfNavigator( int navigatorIndex ) const
+{
+  if ( navigatorIndex == 0 ) {
+    return mNavigatorView->month();
+  }
+
+  if ( navigatorIndex <= mExtraViews.count() && navigatorIndex >= 0 ) {
+    return mExtraViews[navigatorIndex-1]->month();
+  } else {
+    return QDate();
+  }
+}
+
+void DateNavigatorContainer::handleDatesSelectedSignal( const KCalCore::DateList &dateList )
+{
+  Q_ASSERT( sender() );
+  // When we have more than one KDateNavigator, both can have the same selection ( because they can share weeks )
+  // The month that we send in the datesSelected() signal should be the one belonging to the KDatenavigator with
+  // the earliest month
+  const QDate firstDate = dateList.first();
+  KDateNavigator *navigator = firstNavigatorForDate( firstDate );
+  navigator = navigator ? navigator : qobject_cast<KDateNavigator*>( sender() );
+
+  emit datesSelected( dateList, navigator->month() );
+}
+
+void DateNavigatorContainer::handleWeekClickedSignal( const QDate &week, const QDate & )
+{
+  Q_ASSERT( sender() );
+  KDateNavigator *navigator = firstNavigatorForDate( week );
+  navigator = navigator ? navigator : qobject_cast<KDateNavigator*>( sender() );
+
+  emit weekClicked( week, navigator->month() );
+}
+
+KDateNavigator* DateNavigatorContainer::firstNavigatorForDate( const QDate &date ) const
+{
+  KDateNavigator *navigator = 0;
+  if ( date.isValid() ) {
+    QPair<QDate,QDate> limits = KODayMatrix::matrixLimits( mNavigatorView->month() );
+
+    if ( date >= limits.first && date <= limits.second ) {
+      // The date is in the first navigator
+      navigator = mNavigatorView;
+    } else {
+      foreach ( KDateNavigator *nav, mExtraViews ) {
+        if ( nav ) {
+          limits = KODayMatrix::matrixLimits( nav->month() );
+          if ( date >= limits.first && date <= limits.second ) {
+            navigator = nav;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return navigator;
 }
 
 #include "datenavigatorcontainer.moc"

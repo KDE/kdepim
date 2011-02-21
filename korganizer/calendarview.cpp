@@ -43,6 +43,7 @@
 #include "koviewmanager.h"
 #include "navigatorbar.h"
 #include "publishdialog.h"
+#include "kodaymatrix.h"
 #include "htmlexportsettings.h"
 #include "views/agendaview/koagendaview.h"
 #include "views/monthview/monthview.h"
@@ -142,7 +143,7 @@ CalendarView::CalendarView( QWidget *parent )
   mDateNavigatorContainer = new DateNavigatorContainer( mLeftSplitter );
   mDateNavigatorContainer->setObjectName( "CalendarView::DateNavigator" );
 
-  mTodoList = new KOTodoView( mLeftSplitter );
+  mTodoList = new KOTodoView( true/*sidebar*/, mLeftSplitter );
   mTodoList->setObjectName( "todolist" );
 
   mEventViewerBox = new KVBox( mLeftSplitter );
@@ -205,8 +206,8 @@ CalendarView::CalendarView( QWidget *parent )
   connect( mDateNavigatorContainer, SIGNAL(goNext()),
            mDateNavigator, SLOT(selectNext()) );
 
-  connect( mDateNavigatorContainer, SIGNAL(datesSelected(KCalCore::DateList)),
-           mDateNavigator, SLOT(selectDates(KCalCore::DateList)) );
+  connect( mDateNavigatorContainer, SIGNAL(datesSelected(KCalCore::DateList,QDate)),
+           mDateNavigator, SLOT(selectDates(KCalCore::DateList,QDate)) );
 
   connect( mViewManager, SIGNAL(datesSelected(KCalCore::DateList)),
            mDateNavigator, SLOT(selectDates(KCalCore::DateList)) );
@@ -615,7 +616,9 @@ void CalendarView::goToday()
 void CalendarView::goNext()
 {
   if ( dynamic_cast<MonthView*>( mViewManager->currentView() ) ) {
-    mDateNavigator->selectNextMonth();
+    const QDate month = mDateNavigatorContainer->monthOfNavigator( 0 );
+    QPair<QDate,QDate> limits = KODayMatrix::matrixLimits( month );
+    mDateNavigator->selectNextMonth( month, limits.first, limits.second );
   } else {
     mDateNavigator->selectNext();
   }
@@ -624,7 +627,9 @@ void CalendarView::goNext()
 void CalendarView::goPrevious()
 {
   if ( dynamic_cast<MonthView*>( mViewManager->currentView() ) ) {
-    mDateNavigator->selectPreviousMonth();
+    const QDate month = mDateNavigatorContainer->monthOfNavigator( 0 );
+    QPair<QDate,QDate> limits = KODayMatrix::matrixLimits( month );
+    mDateNavigator->selectPreviousMonth( month, limits.first, limits.second  );
   } else {
     mDateNavigator->selectPrevious();
   }
@@ -838,6 +843,7 @@ void CalendarView::changeIncidenceDisplay( const Akonadi::Item &item, int action
 }
 
 void CalendarView::updateView( const QDate &start, const QDate &end,
+                               const QDate &preferredMonth,
                                const bool updateTodos )
 {
   const bool currentViewIsTodoView = mViewManager->currentView()->identifier() == "DefaultTodoView";
@@ -848,7 +854,7 @@ void CalendarView::updateView( const QDate &start, const QDate &end,
   }
 
   if ( start.isValid() && end.isValid() && !( currentViewIsTodoView && !updateTodos ) ) {
-    mViewManager->updateView( start, end );
+    mViewManager->updateView( start, end, preferredMonth );
   }
 
   mDateNavigatorContainer->updateView();
@@ -859,7 +865,7 @@ void CalendarView::updateView()
   DateList tmpList = mDateNavigator->selectedDates();
 
   // We assume that the navigator only selects consecutive days.
-  updateView( tmpList.first(), tmpList.last() );
+  updateView( tmpList.first(), tmpList.last(), QDate() /**preferredMonth*/ );
 }
 
 void CalendarView::updateUnmanagedViews()
@@ -1284,7 +1290,7 @@ void CalendarView::newJournal()
 void CalendarView::newJournal( const QDate &date )
 {
   if ( mCreatingEnabled ) {
-    newJournal( QString(), date );
+    newJournal( QString(), date.isValid() ? date : activeDate( true ) );
   }
 }
 
@@ -1309,6 +1315,7 @@ void CalendarView::newJournal( const QString &text, const QDate &date )
     IncidenceEditorNG::IncidenceDefaults defaults = IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults();
 
     Journal::Ptr journal( new Journal );
+    defaults.setStartDateTime( KDateTime( date ) );
     defaults.setDefaults( journal );
 
     journal->setSummary( text );
@@ -2166,7 +2173,7 @@ void CalendarView::showDates( const DateList &selectedDates, const QDate &prefer
   mNavigatorBar->selectDates( selectedDates );
 
   if ( mViewManager->currentView() ) {
-    updateView( selectedDates.first(), selectedDates.last(), false );
+    updateView( selectedDates.first(), selectedDates.last(), preferredMonth, false );
   } else {
     mViewManager->showAgendaView();
   }

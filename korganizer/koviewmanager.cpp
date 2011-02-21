@@ -277,10 +277,10 @@ void KOViewManager::updateView()
   }
 }
 
-void KOViewManager::updateView( const QDate &start, const QDate &end )
+void KOViewManager::updateView( const QDate &start, const QDate &end, const QDate &preferredMonth )
 {
   if ( mCurrentView && mCurrentView != mTodoView ) {
-    mCurrentView->setDateRange( KDateTime( start ), KDateTime( end ) );
+    mCurrentView->setDateRange( KDateTime( start ), KDateTime( end ), preferredMonth );
   } else if ( mTodoView ) {
     mTodoView->updateView();
   }
@@ -574,7 +574,7 @@ void KOViewManager::selectNextX()
 void KOViewManager::showTodoView()
 {
   if ( !mTodoView ) {
-    mTodoView = new KOTodoView( mMainView->viewStack() );
+    mTodoView = new KOTodoView( false /*not sidebar*/, mMainView->viewStack() );
     mTodoView->setCalendar( mMainView->calendar() );
     mTodoView->setIdentifier( "DefaultTodoView" );
     mTodoView->setCalendar( mMainView->calendar() );

@@ -570,7 +570,7 @@ void KODayMatrix::mouseReleaseEvent( QMouseEvent *e )
   for ( int i = mSelStart; i <= mSelEnd; ++i ) {
     daylist.append( mDays[i] );
   }
-  emit selected( ( const DateList )daylist );
+  emit selected( static_cast<const DateList>(daylist) );
 }
 
 void KODayMatrix::mouseMoveEvent( QMouseEvent *e )
@@ -899,7 +899,7 @@ QPair<QDate,QDate> KODayMatrix::matrixLimits( const QDate &month )
   const int dayOfWeek = calSys->dayOfWeek( d );
   const int weekstart = KGlobal::locale()->weekStartDay();
 
-  d = d.addDays( weekstart - dayOfWeek );
+  d = d.addDays( -( 7 + dayOfWeek - weekstart ) % 7 );
 
   if ( dayOfWeek == weekstart ) {
     d = d.addDays( -7 ); // Start on the second line

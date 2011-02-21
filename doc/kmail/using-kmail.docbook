@@ -1350,7 +1350,9 @@ text, <symbol>&percnt;1</symbol> the first attachment and so
 on. Additionally, the whole message is fed into the program's
 <acronym>stdin</acronym>; and every occurrence of
 <symbol>&percnt;{foo}</symbol> is replaced by the content of the foo
-header.</para>
+header. If you need to identify the message via its storage location in the
+Akonadi store, you can use the %{itemid} or %{itemurl} placeholders to
+achieve that.</para>
 
 <!-- fixme: still correct? -->
 <warning><para>This currently only works if the message has

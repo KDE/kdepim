@@ -245,6 +245,41 @@ Collection CollectionCheckListModel::collection(const QModelIndex& index) const
 }
 
 /******************************************************************************
+* Return model data for one index.
+*/
+QVariant CollectionCheckListModel::data(const QModelIndex& index, int role) const
+{
+    const Collection collection = mModel->collection(index);
+    if (collection.isValid())
+    {
+        // This is a Collection row
+        switch (role)
+        {
+            case Qt::FontRole:
+            {
+                if (!collection.hasAttribute<CollectionAttribute>())
+                    break;
+                CollectionAttribute* attr = collection.attribute<CollectionAttribute>();
+                if (!attr->enabled())
+                    break;
+                QStringList mimeTypes = collection.contentMimeTypes();
+                if (attr->isStandard(mAlarmType)  &&  mimeTypes.contains(KAlarm::CalEvent::mimeType(mAlarmType)))
+                {
+                    // It's the standard collection for a mime type
+                    QFont font = qvariant_cast<QFont>(Future::KCheckableProxyModel::data(index, role));
+                    font.setBold(true);
+                    return font;
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    return Future::KCheckableProxyModel::data(index, role);
+}
+
+/******************************************************************************
 * Set model data for one index.
 * If the change is to disable a collection, check for eligibility and prevent
 * the change if necessary.
@@ -328,7 +363,9 @@ void CollectionCheckListModel::selectionChanged(const QItemSelection& selected, 
 
 /*=============================================================================
 = Class: CollectionFilterCheckListModel
-= Proxy model providing a checkable collection list, filtered by mime type.
+= Proxy model providing a checkable collection list. The model contains all
+= alarm types, but returns only one type at any given time. The selected alarm
+= type may be changed as desired.
 =============================================================================*/
 CollectionFilterCheckListModel::CollectionFilterCheckListModel(QObject* parent)
     : QSortFilterProxyModel(parent),
@@ -354,7 +391,6 @@ void CollectionFilterCheckListModel::setEventTypeFilter(KAlarm::CalEvent::Type t
         }
         mAlarmType = type;
         setSourceModel(newModel);
-//        invalidateFilter();
     }
 }
 
@@ -410,7 +446,6 @@ CollectionView::CollectionView(CollectionFilterCheckListModel* model, QWidget* p
 
 void CollectionView::setModel(QAbstractItemModel* model)
 {
-    model->setData(QModelIndex(), viewOptions().font, Qt::FontRole);
     QListView::setModel(model);
 }
 
@@ -553,9 +588,9 @@ bool CollectionControlModel::isEnabled(const Collection& collection, KAlarm::Cal
        &&  col.attribute<CollectionAttribute>()->isEnabled(type);
 }
 
-void CollectionControlModel::setEnabled(const Collection& collection, KAlarm::CalEvent::Type type, bool enabled)
+void CollectionControlModel::setEnabled(const Collection& collection, KAlarm::CalEvent::Types types, bool enabled)
 {
-    kDebug() << "id:" << collection.id() << ", alarm type" << type << "->" << enabled;
+    kDebug() << "id:" << collection.id() << ", alarm types" << types << "->" << enabled;
     if (!collection.isValid()  ||  (!enabled && !instance()->collections().contains(collection)))
         return;
     Collection col = collection;
@@ -563,9 +598,9 @@ void CollectionControlModel::setEnabled(const Collection& collection, KAlarm::Ca
     KAlarm::CalEvent::Types alarmTypes = !col.hasAttribute<CollectionAttribute>() ? KAlarm::CalEvent::EMPTY
                                          : col.attribute<CollectionAttribute>()->enabled();
     if (enabled)
-        alarmTypes |= static_cast<KAlarm::CalEvent::Types>(type & KAlarm::CalEvent::ALL);
+        alarmTypes |= static_cast<KAlarm::CalEvent::Types>(types & KAlarm::CalEvent::ALL);
     else
-        alarmTypes &= ~type;
+        alarmTypes &= ~types;
     instance()->statusChanged(collection, AkonadiModel::Enabled, static_cast<int>(alarmTypes));
 }
 

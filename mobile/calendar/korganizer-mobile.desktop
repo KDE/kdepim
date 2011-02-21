@@ -30,7 +30,7 @@ Name[uk]=Календар KDE
 Name[x-test]=xxKDE Calendarxx
 Name[zh_CN]=KDE 日历
 Name[zh_TW]=KDE 行事曆
-Exec=korganizer-mobile.sh
+Exec=korganizer-mobile
 
 Icon=korganizer-mobile
 Type=Application
@@ -51,6 +51,7 @@ Keywords[fr]=mobile
 Keywords[gl]=móbil
 Keywords[ia]=mobile
 Keywords[it]=mobile
+Keywords[ja]=モバイル
 Keywords[kk]=mobile
 Keywords[km]=ចល័ត
 Keywords[lt]=mobilus

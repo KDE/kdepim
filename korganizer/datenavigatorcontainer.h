@@ -57,6 +57,15 @@ class DateNavigatorContainer: public QFrame
                            bool highlightTodos,
                            bool highlightJournals ) const;
     void setUpdateNeeded();
+
+    /**
+       Returns the month of the specified KDateNavigator.
+       The first navigatorIndex is 0.
+       Returns a QDate instead of uint so it can be easily feed to KCalendarSystem's
+       functions.
+       An invalid QDate() is returned if the index is too big or too small.
+    */
+    QDate monthOfNavigator( int navigatorIndex = 0 ) const;
   public slots:
 
     /**
@@ -75,7 +84,7 @@ class DateNavigatorContainer: public QFrame
     void goNextMonth();
 
   signals:
-    void datesSelected( const KCalCore::DateList & );
+    void datesSelected( const KCalCore::DateList &, const QDate &preferredMonth );
     void incidenceDropped( const Akonadi::Item &, const QDate & );
     void incidenceDroppedMove( const Akonadi::Item &, const QDate & );
     void newEventSignal( const QDate & );
@@ -126,6 +135,10 @@ class DateNavigatorContainer: public QFrame
         the other parts of the splitter are resized earlier now */
     void resizeAllContents();
 
+  private slots:
+    void handleDatesSelectedSignal( const KCalCore::DateList & );
+    void handleWeekClickedSignal( const QDate &, const QDate & );
+
   private:
     /* Returns the first day of the first KDateNavigator, and the last day
        of the last KDateNavigator.
@@ -134,7 +147,12 @@ class DateNavigatorContainer: public QFrame
        January and February and want to know the boundaries of,
        for e.g. displaying February and March, use monthOffset = 1.
     */
-    QPair<QDate,QDate> dateLimits( int monthOffset = 0 );
+    QPair<QDate,QDate> dateLimits( int monthOffset = 0 ) const;
+
+    /* Returns the first KDateNavigator that displays date, or 0 if
+     * no KDateNavigator displays it.
+     */
+    KDateNavigator* firstNavigatorForDate( const QDate &date ) const;
 
     KDateNavigator *mNavigatorView;
 

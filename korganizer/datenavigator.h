@@ -28,7 +28,7 @@
 #ifndef DATENAVIGATOR_H
 #define DATENAVIGATOR_H
 
-#include <kcalcore/incidencebase.h>
+#include <KCalCore/IncidenceBase>
 
 #include <QObject>
 
@@ -49,7 +49,7 @@ class DateNavigator : public QObject
     int datesCount() const;
 
   public slots:
-    void selectDates( const KCalCore::DateList & );
+    void selectDates( const KCalCore::DateList &, const QDate &preferredMonth = QDate() );
     void selectDate( const QDate & );
 
     void selectDates( int count );

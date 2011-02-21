@@ -54,11 +54,11 @@ int DateNavigator::datesCount() const
   return mSelectedDates.count();
 }
 
-void DateNavigator::selectDates( const DateList &dateList )
+void DateNavigator::selectDates( const DateList &dateList, const QDate &preferredMonth )
 {
   if ( dateList.count() > 0 ) {
     mSelectedDates = dateList;
-    emitSelected();
+    emitSelected( preferredMonth );
   }
 }
 
@@ -70,7 +70,6 @@ void DateNavigator::selectDate( const QDate &date )
     kDebug() << "an invalid date was passed as a parameter!";
     d = QDate::currentDate();
   }
-
   mSelectedDates.clear();
   mSelectedDates.append( d );
 
