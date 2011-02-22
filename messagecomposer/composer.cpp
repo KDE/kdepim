@@ -345,6 +345,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     headers->setHeader( skeletonMessage->cc() );
     headers->setHeader( skeletonMessage->subject() );
     headers->setHeader( skeletonMessage->date() );
+    headers->setHeader( skeletonMessage->messageID() );
 
     KMime::Headers::Generic *realTo =
       new KMime::Headers::Generic( "X-KMail-EncBccRecipients",

@@ -198,4 +198,20 @@ void SkeletonMessageJobTest::testAddresses()
   }
 }
 
+void SkeletonMessageJobTest::testMessageID()
+{
+  Composer *composer = new Composer();
+  InfoPart *infoPart = composer->infoPart();
+  GlobalPart* globalPart = composer->globalPart();
+  Q_ASSERT( infoPart );
+
+  SkeletonMessageJob *sjob = new SkeletonMessageJob( infoPart, globalPart, composer );
+  QVERIFY( sjob->exec() );
+  KMime::Message *message = sjob->message();
+  QVERIFY( message->messageID( false ) );
+  QVERIFY( !message->messageID( false )->isEmpty() );
+  delete sjob;
+  delete composer;
+}
+
 #include "skeletonmessagejobtest.moc"
