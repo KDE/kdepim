@@ -283,19 +283,23 @@ void MessageFactoryTest::testCreateRedirect()
 
   QRegExp rx( QString::fromAscii( "Resent-Message-ID: ([^\n]*)" ) );
   rx.indexIn( QString::fromAscii( rdir->head() ) );
-  
+
+  QRegExp rxmessageid( QString::fromAscii( "Message-ID: ([^\n]+)" ) );
+  rxmessageid.indexIn( QString::fromAscii( rdir->head() ) );
+  kWarning() << "messageid:" << rxmessageid.cap(1) << "(" << rdir->head() << ")";
   QString baseline = QString::fromLatin1( "From: me@me.me\n"
                                           "Cc: cc@cc.cc\n"
                                           "Bcc: bcc@bcc.bcc\n"
                                           "Subject: Test Email Subject\n"
                                           "Date: %2\n"
+                                          "Message-ID: %3\n"
                                           "Disposition-Notification-To: me@me.me\n"
                                           "MIME-Version: 1.0\n"
                                           "Content-Transfer-Encoding: 7Bit\n"
                                           "Content-Type: text/plain; charset=\"us-ascii\"\n"
-                                          "Resent-Message-ID: %3\n"
-                                          "Resent-Date: %4\n"
-                                          "Resent-From: %5\n"
+                                          "Resent-Message-ID: %4\n"
+                                          "Resent-Date: %5\n"
+                                          "Resent-From: %6\n"
                                           "To: %1\n"
                                           "Resent-To: redir@redir.com\n"
                                           "Resent-Cc: cc@cc.cc\n"
@@ -304,7 +308,7 @@ void MessageFactoryTest::testCreateRedirect()
                                           "X-KMail-Recipients: redir@redir.com\n"
                                           "\n"
                                           "All happy families are alike; each unhappy family is unhappy in its own way." );
-  baseline = baseline.arg( redirectTo ).arg( datetime ).arg( rx.cap(1) ).arg( datetime ).arg( QLatin1String( "another <another@another.com>" ) );
+  baseline = baseline.arg( redirectTo ).arg( datetime ).arg( rxmessageid.cap(1) ).arg( rx.cap(1) ).arg( datetime ).arg( QLatin1String( "another <another@another.com>" ) );
 
 //   kDebug() << baseline.toLatin1();
 //   kDebug() << "instead:" << rdir->encodedContent();
@@ -339,19 +343,23 @@ void MessageFactoryTest::testCreateResend()
   QRegExp rx( QString::fromAscii( "Resent-Message-ID: ([^\n]*)" ) );
   rx.indexIn( QString::fromAscii( rdir->head() ) );
 
+  QRegExp rxmessageid( QString::fromAscii( "Message-ID: ([^\n]+)" ) );
+  rxmessageid.indexIn( QString::fromAscii( rdir->head() ) );
+  
   QString baseline = QString::fromLatin1( "From: me@me.me\n"
                                           "To: %1\n"
                                           "Cc: cc@cc.cc\n"
                                           "Bcc: bcc@bcc.bcc\n"
                                           "Subject: Test Email Subject\n"
                                           "Date: %2\n"
+                                          "Message-ID: %3\n"
                                           "Disposition-Notification-To: me@me.me\n"
                                           "MIME-Version: 1.0\n"
                                           "Content-Transfer-Encoding: 7Bit\n"
                                           "Content-Type: text/plain; charset=\"us-ascii\"\n"
                                           "\n"
                                           "All happy families are alike; each unhappy family is unhappy in its own way." );
-  baseline = baseline.arg( msg->to()->asUnicodeString() ).arg( datetime );
+  baseline = baseline.arg( msg->to()->asUnicodeString() ).arg( datetime ).arg( rxmessageid.cap(1) );
 
   kDebug() << baseline.toLatin1();
   kDebug() << "instead:" << rdir->encodedContent();
