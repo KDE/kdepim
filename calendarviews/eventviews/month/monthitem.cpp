@@ -357,19 +357,9 @@ QDate IncidenceMonthItem::realStartDate() const
     return QDate();
   }
 
-  KDateTime dt;
-  if ( mIsEvent || mIsJournal ) {
-    dt = mIncidence->dtStart();
-  } else if ( mIsTodo ) {
-    dt = mIncidence.staticCast<Todo>()->dtDue();
-  }
-
-  QDate start;
-  if ( dt.isDateOnly() ) {
-    start = dt.date();
-  } else {
-    start = dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
-  }
+  const KDateTime dt = mIncidence->dateTime( Incidence::RoleDisplayStart );
+  const QDate start = dt.isDateOnly() ? dt.date() :
+                                        dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
 
   return start.addDays( mRecurDayOffset );
 }
@@ -380,13 +370,8 @@ QDate IncidenceMonthItem::realEndDate() const
   }
 
   const KDateTime dt = mIncidence->dateTime( KCalCore::Incidence::RoleDisplayEnd );
-
-  QDate end;
-  if ( dt.isDateOnly() ) {
-    end = dt.date();
-  } else {
-    end = dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
-  }
+  const QDate end = dt.isDateOnly() ? dt.date() :
+                                      dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
 
   return end.addDays( mRecurDayOffset );
 }
