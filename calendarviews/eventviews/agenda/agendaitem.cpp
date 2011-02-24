@@ -817,7 +817,8 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
 
   if ( CalendarSupport::hasTodo( mIncidence ) &&
        !mEventView->preferences()->todosUseCategoryColors() ) {
-    if ( CalendarSupport::todo( mIncidence )->isOverdue() ) {
+    if ( CalendarSupport::todo( mIncidence )->isOverdue() &&
+         QDateTime::currentDateTime().date() >= mDate ) {
       bgColor = mEventView->preferences()->todoOverdueColor();
     } else if ( CalendarSupport::todo( mIncidence )->dtDue().date() == QDateTime::currentDateTime().date() &&
                 CalendarSupport::todo( mIncidence )->dtDue().date() == mDate ) {
@@ -828,7 +829,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
   Q_ASSERT( incidence );
   QColor categoryColor;
-  QStringList categories = incidence->categories();
+  const QStringList categories = incidence->categories();
   QString cat;
   if ( !categories.isEmpty() ) {
     cat = categories.first();
