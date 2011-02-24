@@ -817,11 +817,13 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
 
   if ( CalendarSupport::hasTodo( mIncidence ) &&
        !mEventView->preferences()->todosUseCategoryColors() ) {
-    if ( CalendarSupport::todo( mIncidence )->isOverdue() &&
-         QDateTime::currentDateTime().date() >= mDate ) {
+    Todo::Ptr todo = CalendarSupport::todo( mIncidence );
+    Q_ASSERT( todo );
+    const QDate dueDate = todo->dtDue().date();
+    const QDate today = QDateTime::currentDateTime().date();
+    if ( todo->isOverdue() && today >= mDate ) {
       bgColor = mEventView->preferences()->todoOverdueColor();
-    } else if ( CalendarSupport::todo( mIncidence )->dtDue().date() == QDateTime::currentDateTime().date() &&
-                CalendarSupport::todo( mIncidence )->dtDue().date() == mDate ) {
+    } else if ( dueDate == today && dueDate == mDate ) {
       bgColor = mEventView->preferences()->todoDueTodayColor();
     }
   }
