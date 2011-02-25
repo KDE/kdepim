@@ -43,6 +43,7 @@
 #include <boost/mem_fn.hpp>
 
 #include <algorithm>
+#include <iterator>
 
 using namespace Kleo;
 using namespace GpgME;
