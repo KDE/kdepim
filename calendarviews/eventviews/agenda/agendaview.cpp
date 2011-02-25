@@ -1547,7 +1547,7 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   }
 
   if ( incidence->recurs() ) {
-    int eventDuration = event ? incDtStart.daysTo( incDtEnd ) : 0;
+    const int eventDuration = event ? incDtStart.daysTo( incDtEnd ) : 0;
 
     // if there's a multiday event that starts before firstVisibleDateTime but ends after
     // lets include it. timesInInterval() ignores incidences that aren't totaly inside
@@ -1587,7 +1587,7 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
     }
   }
 
-  // ToDo items shall be displayed today if they are already overdude
+  // ToDo items shall be displayed today if they are overdue
   const KDateTime dateTimeToday = KDateTime( today, timeSpec );
   if ( todo &&
        todo->isOverdue() &&

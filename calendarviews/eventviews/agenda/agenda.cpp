@@ -1786,10 +1786,10 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const QDate
   Insert all-day AgendaItem into agenda.
 */
 AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDate &qd,
-                                      int XBegin, int XEnd, bool isSelected )
+                                           int XBegin, int XEnd, bool isSelected )
 {
   if ( !d->mAllDayMode ) {
-    kDebug() << "using this in non all-day mode is illegal.";
+    kError() << "using this in non all-day mode is illegal.";
     return 0;
   }
 
@@ -1805,9 +1805,9 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );
 
-  double startIt = d->mGridSpacingX * ( agendaItem->cellXLeft() );
-  double endIt = d->mGridSpacingX * ( agendaItem->cellWidth() +
-                                      agendaItem->cellXLeft() );
+  const double startIt = d->mGridSpacingX * ( agendaItem->cellXLeft() );
+  const double endIt = d->mGridSpacingX * ( agendaItem->cellWidth() +
+                                            agendaItem->cellXLeft() );
 
   agendaItem->resize( int( endIt ) - int( startIt ), int( d->mGridSpacingY ) );
 
