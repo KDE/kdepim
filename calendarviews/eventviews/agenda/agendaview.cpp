@@ -432,14 +432,13 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
     }
     columnDate = curDate;
     beginX = endX = curCol;
-
   } else {
     return;
   }
 
   const KDateTime::Spec timeSpec = q->preferences()->timeSpec();
-
-  if ( todo && todo->isOverdue() ) {
+  const QDate today = KDateTime::currentDateTime( timeSpec ).date();
+  if ( todo && todo->isOverdue() && today >= curDate ) {
     mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol,
                                      createSelected );
   } else if ( incidence->allDay() ) {
