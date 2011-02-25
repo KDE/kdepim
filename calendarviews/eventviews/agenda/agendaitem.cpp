@@ -908,7 +908,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   QString longH;
   if ( !isMultiItem() ) {
     shortH = KGlobal::locale()->formatTime(
-      incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
+      incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
     if ( CalendarSupport::hasEvent( mIncidence ) ) {
       longH = i18n( "%1 - %2",
                     shortH,
