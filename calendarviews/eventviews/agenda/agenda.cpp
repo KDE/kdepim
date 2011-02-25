@@ -1917,6 +1917,7 @@ void Agenda::removeIncidence( const Akonadi::Item &akonadiItem )
 void Agenda::showAgendaItem( AgendaItem::QPtr agendaItem )
 {
   if ( !agendaItem ) {
+    kError() << "Show what?";
     return;
   }
 

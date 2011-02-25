@@ -328,7 +328,6 @@ void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &inciden
 void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &incidence )
 {
   // No need to call setChanges(), that triggers a fillAgenda()
-
   mAgenda->removeIncidence( incidence );
   mAllDayAgenda->removeIncidence( incidence );
   mAgenda->checkScrollBoundaries();
@@ -1522,7 +1521,7 @@ void AgendaView::fillAgenda()
 
 void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelected )
 {
-  QDate today = QDate::currentDate();
+  const QDate today = QDate::currentDate();
   KCalCore::DateTimeList::iterator t;
 
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );

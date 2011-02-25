@@ -552,12 +552,12 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
       return;
     }
 
-    Akonadi::Item ci( m_itemMap.take( item.id() ) );
+    Akonadi::Item oldItem( m_itemMap.take( item.id() ) );
 
-    removeItemFromMaps( ci );
+    removeItemFromMaps( oldItem );
 
-    Q_ASSERT( ci.hasPayload<KCalCore::Incidence::Ptr>() );
-    const KCalCore::Incidence::Ptr incidence = ci.payload<KCalCore::Incidence::Ptr>();
+    Q_ASSERT( oldItem.hasPayload<KCalCore::Incidence::Ptr>() );
+    const KCalCore::Incidence::Ptr incidence = oldItem.payload<KCalCore::Incidence::Ptr>();
     /*
     kDebug() << "Remove uid=" << incidence->uid()
              << "summary=" << incidence->summary()
@@ -583,8 +583,11 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
       continue;
     }
 
+    // oldItem will almost always be the same as item, but, when you move an item from one collection
+    // and the destination collection isn't selected, itemsRemoved() is called, and they will differ
+    // on the parentCollection id.
+    q->notifyIncidenceDeleted( oldItem );
     incidence->unRegisterObserver( q );
-    q->notifyIncidenceDeleted( item );
   }
   emit q->calendarChanged();
   assertInvariants();
@@ -787,7 +790,7 @@ Akonadi::Item::List Calendar::rawEventsForDate( const QDate &date,
 {
   Akonadi::Item::List eventList;
   // Find the hash for the specified date
-  QString dateStr = date.toString();
+  const QString dateStr = date.toString();
   // Iterate over all non-recurring, single-day events that start on this date
   QMultiHash<QString, Akonadi::Item::Id>::const_iterator it =
     d->m_itemIdsForDate.constFind( dateStr );
