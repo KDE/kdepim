@@ -528,6 +528,12 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
   m_unseenParentToChildren[unseen_parent].removeAll( item.id() );
 
   m_uidToItemId.remove( unseen_item );
+  m_itemDateForItemId.remove( item.id() );
+
+  const QList<QString> entriesToDelete = m_itemIdsForDate.keys( item.id() );
+  foreach( const QString &entryToDelete, entriesToDelete ) {
+    m_itemIdsForDate.remove( entryToDelete );
+  }
 }
 
 void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
