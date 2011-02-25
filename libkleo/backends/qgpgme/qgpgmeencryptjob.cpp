@@ -117,7 +117,7 @@ static QGpgMEEncryptJob::result_type encrypt_qba( Context * ctx, const std::vect
 }
 
 Error QGpgMEEncryptJob::start( const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust ) {
-  run( bind( &encrypt_qba, _1, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded ) );
+  run( boost::bind( &encrypt_qba, _1, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded ) );
   return Error();
 }
 
