@@ -110,7 +110,7 @@ static void move_selected_from_to( KeyTreeView & from, KeyTreeView & to ) {
 
 static void remove_all_keys_not_xyz( KeyTreeView & ktv, Protocol proto ) {
     const std::vector<Key> k
-        = kdtools::copy_if< std::vector<Key> >( ktv.keys(), bind( &Key::protocol, _1 ) != proto );
+        = kdtools::copy_if< std::vector<Key> >( ktv.keys(), boost::bind( &Key::protocol, _1 ) != proto );
     ktv.removeKeys( k );
 }
 
@@ -550,7 +550,7 @@ namespace {
 
         void setArchiveDefinition( const QString & adName ) {
             const std::vector< shared_ptr<ArchiveDefinition> >::const_iterator
-                it = kdtools::find_if( m_archiveDefinitions, bind( &ArchiveDefinition::id, _1 ) == adName );
+                it = kdtools::find_if( m_archiveDefinitions, boost::bind( &ArchiveDefinition::id, _1 ) == adName );
             if ( it != m_archiveDefinitions.end() )
                 m_archive.setCurrentIndex( it - m_archiveDefinitions.begin() );
         }

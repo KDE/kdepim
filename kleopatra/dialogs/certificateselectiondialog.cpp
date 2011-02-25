@@ -284,10 +284,10 @@ void CertificateSelectionDialog::Private::filterAllowedKeys( std::vector<Key> & 
 
     switch ( options & AnyFormat ) {
     case OpenPGPFormat:
-        end = std::remove_if( keys.begin(), end, bind( &Key::protocol, _1 ) != GpgME::OpenPGP );
+        end = std::remove_if( keys.begin(), end, boost::bind( &Key::protocol, _1 ) != GpgME::OpenPGP );
         break;
     case CMSFormat:
-        end = std::remove_if( keys.begin(), end, bind( &Key::protocol, _1 ) != GpgME::CMS );
+        end = std::remove_if( keys.begin(), end, boost::bind( &Key::protocol, _1 ) != GpgME::CMS );
         break;
     default:
     case AnyFormat:
@@ -296,10 +296,10 @@ void CertificateSelectionDialog::Private::filterAllowedKeys( std::vector<Key> & 
 
     switch ( options & AnyCertificate ) {
     case SignOnly:
-        end = std::remove_if( keys.begin(), end, !bind( &Key::canReallySign, _1 ) );
+        end = std::remove_if( keys.begin(), end, !boost::bind( &Key::canReallySign, _1 ) );
         break;
     case EncryptOnly:
-        end = std::remove_if( keys.begin(), end, !bind( &Key::canEncrypt, _1 ) );
+        end = std::remove_if( keys.begin(), end, !boost::bind( &Key::canEncrypt, _1 ) );
         break;
     default:
     case AnyCertificate:
@@ -307,7 +307,7 @@ void CertificateSelectionDialog::Private::filterAllowedKeys( std::vector<Key> & 
     }
 
     if ( options & SecretKeys )
-        end = std::remove_if( keys.begin(), end, !bind( &Key::hasSecret, _1 ) );
+        end = std::remove_if( keys.begin(), end, !boost::bind( &Key::hasSecret, _1 ) );
 
     keys.erase( end, keys.end() );
 }

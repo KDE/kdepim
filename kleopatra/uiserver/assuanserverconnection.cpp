@@ -281,7 +281,7 @@ private:
     void nohupDone( AssuanCommand * cmd ) {
         const std::vector< shared_ptr<AssuanCommand> >::iterator it
             = std::find_if( nohupedCommands.begin(), nohupedCommands.end(),
-                            bind( &shared_ptr<AssuanCommand>::get, _1 ) == cmd );
+                            boost::bind( &shared_ptr<AssuanCommand>::get, _1 ) == cmd );
         assert( it != nohupedCommands.end() );
         nohupedCommands.erase( it );
         if ( nohupedCommands.empty() && closed )
@@ -725,7 +725,7 @@ private:
         QStringList sl;
         std::transform( c.begin(), c.end(),
                         std::back_inserter( sl ),
-                        bind( &KMime::Types::Mailbox::prettyAddress, _1 ) );
+                        boost::bind( &KMime::Types::Mailbox::prettyAddress, _1 ) );
         return dumpStringList( sl );
     }
 
@@ -764,13 +764,13 @@ private:
         mementos.clear();
         files.clear();
         std::for_each( inputs.begin(), inputs.end(),
-                       bind( &Input::finalize, _1 ) );
+                       boost::bind( &Input::finalize, _1 ) );
         inputs.clear();
         std::for_each( outputs.begin(), outputs.end(),
-                       bind( &Output::finalize, _1 ) );
+                       boost::bind( &Output::finalize, _1 ) );
         outputs.clear();
         std::for_each( messages.begin(), messages.end(),
-                       bind( &Input::finalize, _1 ) );
+                       boost::bind( &Input::finalize, _1 ) );
         messages.clear();
         bias = GpgME::UnknownProtocol;
     }
@@ -1298,11 +1298,11 @@ void AssuanCommand::done( const GpgME::Error& err ) {
     d->done = true;
 
     std::for_each( d->messages.begin(), d->messages.end(),
-                   bind( &Input::finalize, _1 ) );
+                   boost::bind( &Input::finalize, _1 ) );
     std::for_each( d->inputs.begin(), d->inputs.end(),
-                   bind( &Input::finalize, _1 ) );
+                   boost::bind( &Input::finalize, _1 ) );
     std::for_each( d->outputs.begin(), d->outputs.end(),
-                   bind( &Output::finalize, _1 ) );
+                   boost::bind( &Output::finalize, _1 ) );
     d->messages.clear();
     d->inputs.clear();
     d->outputs.clear();

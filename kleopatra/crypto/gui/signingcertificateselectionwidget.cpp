@@ -122,12 +122,12 @@ std::vector<GpgME::Key> SigningCertificateSelectionWidget::Private::candidates( 
     std::vector<GpgME::Key> keys = KeyCache::instance()->keys();
     std::vector<GpgME::Key>::iterator end = keys.end();
 
-    end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::protocol, _1 ) != prot );
-    end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::hasSecret, _1 ) );
-    assert( kdtools::all( keys.begin(), end, bind( &GpgME::Key::hasSecret, _1 ) ) );
-    end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::canReallySign, _1 ) );
-    end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::isExpired, _1 ) );
-    end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::isRevoked, _1 ) );
+    end = std::remove_if( keys.begin(), end, boost::bind( &GpgME::Key::protocol, _1 ) != prot );
+    end = std::remove_if( keys.begin(), end, !boost::bind( &GpgME::Key::hasSecret, _1 ) );
+    assert( kdtools::all( keys.begin(), end, boost::bind( &GpgME::Key::hasSecret, _1 ) ) );
+    end = std::remove_if( keys.begin(), end, !boost::bind( &GpgME::Key::canReallySign, _1 ) );
+    end = std::remove_if( keys.begin(), end, boost::bind( &GpgME::Key::isExpired, _1 ) );
+    end = std::remove_if( keys.begin(), end, boost::bind( &GpgME::Key::isRevoked, _1 ) );
     keys.erase( end, keys.end() );
     return keys;
 }

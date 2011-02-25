@@ -122,7 +122,7 @@ Error QGpgMEEncryptJob::start( const std::vector<Key> & recipients, const QByteA
 }
 
 void QGpgMEEncryptJob::start( const std::vector<Key> & recipients, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & cipherText, bool alwaysTrust ) {
-  run( bind( &encrypt,
+  run( boost::bind( &encrypt,
              _1, _2,
              recipients,
              _3, _4,

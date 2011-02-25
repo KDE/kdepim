@@ -263,7 +263,7 @@ void DeleteCertificatesCommand::Private::slotDialogAccepted() {
     std::vector<Key>::iterator
         pgpBegin = keys.begin(),
         pgpEnd = std::stable_partition( pgpBegin, keys.end(),
-                                        bind( &GpgME::Key::protocol, _1 ) != CMS ),
+                                        boost::bind( &GpgME::Key::protocol, _1 ) != CMS ),
         cmsBegin = pgpEnd,
         cmsEnd = keys.end() ;
 

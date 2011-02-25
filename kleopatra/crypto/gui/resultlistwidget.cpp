@@ -150,7 +150,7 @@ void ResultListWidget::Private::setupMulti()
 void ResultListWidget::Private::addResultWidget( ResultItemWidget* widget )
 {
     assert( widget );
-    assert( kdtools::any( m_collections, !bind( &TaskCollection::isEmpty, _1 ) ) );
+    assert( kdtools::any( m_collections, !boost::bind( &TaskCollection::isEmpty, _1 ) ) );
     
     assert( m_scrollArea );
     assert( m_scrollArea->widget() );
@@ -173,7 +173,7 @@ void ResultListWidget::Private::allTasksDone() {
 void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & result )
 {
     assert( result );
-    assert( kdtools::any( m_collections, !bind( &TaskCollection::isEmpty, _1 ) ) );
+    assert( kdtools::any( m_collections, !boost::bind( &TaskCollection::isEmpty, _1 ) ) );
     ResultItemWidget* wid = new ResultItemWidget( result );
     q->connect( wid, SIGNAL(detailsToggled(bool)), q, SLOT(detailsToggled(bool)) );
     q->connect( wid, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );

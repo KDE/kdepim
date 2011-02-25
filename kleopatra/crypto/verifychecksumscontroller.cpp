@@ -87,7 +87,7 @@ static const Qt::CaseSensitivity fs_cs = HAVE_UNIX ? Qt::CaseSensitive : Qt::Cas
 #if 0
 static QStringList fs_sort( QStringList l ) {
     int (*QString_compare)(const QString&,const QString&,Qt::CaseSensitivity) = &QString::compare;
-    kdtools::sort( l, bind( QString_compare, _1, _2, fs_cs ) < 0 );
+    kdtools::sort( l, boost::bind( QString_compare, _1, _2, fs_cs ) < 0 );
     return l;
 }
 
@@ -99,7 +99,7 @@ static QStringList fs_intersect( QStringList l1, QStringList l2 ) {
     std::set_intersection( l1.begin(), l1.end(),
                            l2.begin(), l2.end(),
                            std::back_inserter( result ),
-                           bind( QString_compare, _1, _2, fs_cs ) < 0 );
+                           boost::bind( QString_compare, _1, _2, fs_cs ) < 0 );
     return result;
 }
 #endif
@@ -119,14 +119,14 @@ namespace {
         const QList<QRegExp> m_regexps;
         explicit matches_any( const QList<QRegExp> & regexps ) : m_regexps( regexps ) {}
         bool operator()( const QString & s ) const {
-            return kdtools::any( m_regexps, bind( &QRegExp::exactMatch, _1, s ) );
+            return kdtools::any( m_regexps, boost::bind( &QRegExp::exactMatch, _1, s ) );
         }
     };
     struct matches_none_of : std::unary_function<QString,bool> {
         const QList<QRegExp> m_regexps;
         explicit matches_none_of( const QList<QRegExp> & regexps ) : m_regexps( regexps ) {}
         bool operator()( const QString & s ) const {
-            return kdtools::none_of( m_regexps, bind( &QRegExp::exactMatch, _1, s ) );
+            return kdtools::none_of( m_regexps, boost::bind( &QRegExp::exactMatch, _1, s ) );
         }
     };
 }
@@ -438,7 +438,7 @@ static std::vector<SumFile> find_sums_by_input_files( const QStringList & files,
             qDebug( "find_sums_by_input_files:   found %d subdirs, prepending", dirs.size() );
             kdtools::transform( dirs,
                                 std::inserter( inputs, inputs.begin() ),
-                                bind( &QDir::absoluteFilePath, cref(dir), _1 ) );
+                                boost::bind( &QDir::absoluteFilePath, cref(dir), _1 ) );
         } else if ( is_sum_file( fileName ) ) {
             qDebug( "find_sums_by_input_files:   it's a sum file" );
             dirs2sums[fi.dir()].insert( fileName );
@@ -493,7 +493,7 @@ static std::vector<SumFile> find_sums_by_input_files( const QStringList & files,
 static QStringList c_lang_environment() {
     QStringList env = QProcess::systemEnvironment();
     env.erase( std::remove_if( env.begin(), env.end(),
-                               bind( &QRegExp::exactMatch,
+                               boost::bind( &QRegExp::exactMatch,
                                      QRegExp( "^LANG=.*", fs_cs ), _1 ) ),
                env.end() );
     env.push_back( "LANG=C" );
@@ -590,9 +590,9 @@ void VerifyChecksumsController::Private::run() {
     const QString scanning = i18n("Scanning directories...");
     emit progress( 0, 0, scanning );
 
-    const function<void(int)> progressCb = bind( &Private::progress, this, _1, 0, scanning );
+    const function<void(int)> progressCb = boost::bind( &Private::progress, this, _1, 0, scanning );
     const function<void(const QString&,VerifyChecksumsDialog::Status)>
-        statusCb = bind( &Private::status, this, _1, _2 );
+        statusCb = boost::bind( &Private::status, this, _1, _2 );
     const std::vector<SumFile> sumfiles = find_sums_by_input_files( files, errors, progressCb, checksumDefinitions );
 
     Q_FOREACH( const SumFile & sumfile, sumfiles )

@@ -82,10 +82,10 @@ public:
         const std::vector<Key> encrypt = KeyCache::instance()->findEncryptionKeysByMailbox( mb );
         kdtools::separate_if( signers,
                               std::back_inserter( pgpSigners ), std::back_inserter( cmsSigners ),
-                              bind( &Key::protocol, _1 ) == OpenPGP );
+                              boost::bind( &Key::protocol, _1 ) == OpenPGP );
         kdtools::separate_if( encrypt,
                               std::back_inserter( pgpEncryptToSelfKeys ), std::back_inserter( cmsEncryptToSelfKeys ),
-                              bind( &Key::protocol, _1 ) == OpenPGP );
+                              boost::bind( &Key::protocol, _1 ) == OpenPGP );
     }
 
 private:

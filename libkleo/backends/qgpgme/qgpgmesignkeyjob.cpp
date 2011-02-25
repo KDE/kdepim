@@ -86,7 +86,7 @@ Error QGpgMESignKeyJob::start( const Key & key ) {
       opts |= GpgSignKeyEditInteractor::NonRevocable;
   if ( m_exportable )
       opts |= GpgSignKeyEditInteractor::Exportable;
-  run( bind( &sign_key, _1, key, m_userIDsToSign, m_checkLevel, m_signingKey, opts ) );
+  run( boost::bind( &sign_key, _1, key, m_userIDsToSign, m_checkLevel, m_signingKey, opts ) );
   m_started = true;
   return Error();
 }

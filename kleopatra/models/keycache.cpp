@@ -268,7 +268,7 @@ std::vector<Key> KeyCache::findByFingerprint( const std::vector<std::string> & f
     std::vector<std::string> sorted;
     sorted.reserve( fprs.size() );
     std::remove_copy_if( fprs.begin(), fprs.end(), std::back_inserter( sorted ),
-                         bind( is_string_empty(), bind( &std::string::c_str, _1 ) ) );
+                         boost::bind( is_string_empty(), boost::bind( &std::string::c_str, _1 ) ) );
 
     std::sort( sorted.begin(), sorted.end(), _detail::ByFingerprint<std::less>() );
 
@@ -289,7 +289,7 @@ std::vector<Key> KeyCache::findByEMailAddress( const char * email ) const {
     result.reserve( std::distance( pair.first, pair.second ) );
     std::transform( pair.first, pair.second,
                     std::back_inserter( result ),
-                    bind( &std::pair<std::string,Key>::second, _1 ) );
+                    boost::bind( &std::pair<std::string,Key>::second, _1 ) );
     return result;
 }
 
@@ -325,7 +325,7 @@ std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::stri
 
     std::vector<std::string> keyids;
     std::remove_copy_if( ids.begin(), ids.end(), std::back_inserter( keyids ),
-                         bind( is_string_empty(), bind( &std::string::c_str, _1 ) ) );
+                         boost::bind( is_string_empty(), boost::bind( &std::string::c_str, _1 ) ) );
 
     // this is just case-insensitive string search:
     std::sort( keyids.begin(), keyids.end(), _detail::ByFingerprint<std::less>() );
@@ -360,7 +360,7 @@ std::vector<Subkey> KeyCache::findSubkeysByKeyID( const std::vector<std::string>
     std::vector<std::string> sorted;
     sorted.reserve( ids.size() );
     std::remove_copy_if( ids.begin(), ids.end(), std::back_inserter( sorted ),
-                         bind( is_string_empty(), bind( &std::string::c_str, _1 ) ) );
+                         boost::bind( is_string_empty(), boost::bind( &std::string::c_str, _1 ) ) );
 
     std::sort( sorted.begin(), sorted.end(), _detail::ByKeyID<std::less>() );
 
@@ -380,7 +380,7 @@ std::vector<Key> KeyCache::findRecipients( const DecryptionResult & res ) const 
     const std::vector<Subkey> subkeys = findSubkeysByKeyID( keyids );
     std::vector<Key> result;
     result.reserve( subkeys.size() );
-    std::transform( subkeys.begin(), subkeys.end(), std::back_inserter( result ), bind( &Subkey::parent, _1 ) );
+    std::transform( subkeys.begin(), subkeys.end(), std::back_inserter( result ), boost::bind( &Subkey::parent, _1 ) );
 
     std::sort( result.begin(), result.end(), _detail::ByFingerprint<std::less>() );
     result.erase( std::unique( result.begin(), result.end(), _detail::ByFingerprint<std::equal_to>() ), result.end() );
@@ -555,10 +555,10 @@ std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, 
     // extract chain-ids, identifying issuers:
     std::vector<const char *> chainIDs;
     chainIDs.reserve( last - first );
-    std::transform( boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), first, last ),
-                    boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), last,  last ),
+    std::transform( boost::make_filter_iterator( !boost::bind( &Key::isRoot, _1 ), first, last ),
+                    boost::make_filter_iterator( !boost::bind( &Key::isRoot, _1 ), last,  last ),
                     std::back_inserter( chainIDs ),
-                    bind( &Key::chainID, _1 ) );
+                    boost::bind( &Key::chainID, _1 ) );
     std::sort( chainIDs.begin(), chainIDs.end(), _detail::ByFingerprint<std::less>() );
 
     const std::vector<const char*>::iterator lastUniqueChainID = std::unique( chainIDs.begin(), chainIDs.end(), _detail::ByFingerprint<std::less>() );
@@ -634,7 +634,7 @@ void KeyCache::remove( const Key & key ) {
             = std::equal_range( d->by.keyid.begin(), d->by.keyid.end(), keyid,
                                 _detail::ByKeyID<std::less>() );
         const std::vector<Key>::iterator it
-            = std::remove_if( begin( range ), end( range ), bind( _detail::ByFingerprint<std::equal_to>(), fpr, _1 ) );
+            = std::remove_if( begin( range ), end( range ), boost::bind( _detail::ByFingerprint<std::equal_to>(), fpr, _1 ) );
         d->by.keyid.erase( it, end( range ) );
     }
 
@@ -643,7 +643,7 @@ void KeyCache::remove( const Key & key ) {
             = std::equal_range( d->by.shortkeyid.begin(), d->by.shortkeyid.end(), shortkeyid,
                                 _detail::ByShortKeyID<std::less>() );
         const std::vector<Key>::iterator it
-            = std::remove_if( begin( range ), end( range ), bind( _detail::ByFingerprint<std::equal_to>(), fpr, _1 ) );
+            = std::remove_if( begin( range ), end( range ), boost::bind( _detail::ByFingerprint<std::equal_to>(), fpr, _1 ) );
         d->by.shortkeyid.erase( it, end( range ) );
     }
 
@@ -661,7 +661,7 @@ void KeyCache::remove( const Key & key ) {
         const std::pair<std::vector<std::pair<std::string,Key> >::iterator,std::vector<std::pair<std::string,Key> >::iterator> range
             = std::equal_range( d->by.email.begin(), d->by.email.end(), email, ByEMail<std::less>() );
         const std::vector< std::pair<std::string,Key> >::iterator it
-            = std::remove_if( begin( range ), end( range ), bind( qstricmp, fpr, bind( &Key::primaryFingerprint, bind( &std::pair<std::string,Key>::second,_1 ) ) ) == 0 );
+            = std::remove_if( begin( range ), end( range ), boost::bind( qstricmp, fpr, boost::bind( &Key::primaryFingerprint, boost::bind( &std::pair<std::string,Key>::second,_1 ) ) ) == 0 );
         d->by.email.erase( it, end( range ) );
     }
 
@@ -690,7 +690,7 @@ const std::vector<GpgME::Key> & KeyCache::keys() const
 std::vector<Key> KeyCache::secretKeys() const
 {
     std::vector<Key> keys = this->keys();
-    keys.erase( std::remove_if( keys.begin(), keys.end(), !bind( &Key::hasSecret, _1 ) ), keys.end() );
+    keys.erase( std::remove_if( keys.begin(), keys.end(), !boost::bind( &Key::hasSecret, _1 ) ), keys.end() );
     return keys;
 }
 
@@ -731,7 +731,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     sorted.reserve( keys.size() );
     std::remove_copy_if( keys.begin(), keys.end(),
                          std::back_inserter( sorted ),
-                         bind( is_string_empty(), bind( &Key::primaryFingerprint, _1 ) ) );
+                         boost::bind( is_string_empty(), boost::bind( &Key::primaryFingerprint, _1 ) ) );
 
     Q_FOREACH( const Key & key, sorted )
         remove( key ); // this is sub-optimal, but makes implementation from here on much easier
@@ -771,8 +771,8 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     // 3.5a: insert into chain-id index:
     std::vector<Key> by_chainid;
     by_chainid.reserve( sorted.size() + d->by.chainid.size() );
-    std::merge( boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), sorted.begin(), sorted.end() ),
-                boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), sorted.end(),   sorted.end() ),
+    std::merge( boost::make_filter_iterator( !boost::bind( &Key::isRoot, _1 ), sorted.begin(), sorted.end() ),
+                boost::make_filter_iterator( !boost::bind( &Key::isRoot, _1 ), sorted.end(),   sorted.end() ),
                 d->by.chainid.begin(), d->by.chainid.end(),
                 std::back_inserter( by_chainid ),
                 lexicographically<_detail::ByChainID,_detail::ByFingerprint>() );

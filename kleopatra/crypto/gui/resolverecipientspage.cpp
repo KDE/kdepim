@@ -460,7 +460,7 @@ void ResolveRecipientsPage::Private::completeChangedInternal()
 {
     const bool isComplete = q->isComplete();
     const std::vector<Key> keys = q->resolvedCertificates();
-    const bool haveSecret = std::find_if( keys.begin(), keys.end(), bind( &Key::hasSecret, _1 ) ) != keys.end();
+    const bool haveSecret = std::find_if( keys.begin(), keys.end(), boost::bind( &Key::hasSecret, _1 ) ) != keys.end();
     if ( isComplete && !haveSecret )
         q->setExplanation( i18n( "<b>Warning:</b> None of the selected certificates seem to be your own. You will not be able to decrypt the encrypted data again." ) );
     else

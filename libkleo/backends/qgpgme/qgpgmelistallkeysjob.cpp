@@ -132,7 +132,7 @@ static QGpgMEListAllKeysJob::result_type list_keys( Context * ctx, bool mergeKey
 }
 
 Error QGpgMEListAllKeysJob::start( bool mergeKeys ) {
-  run( bind( &list_keys, _1, mergeKeys ) );
+  run( boost::bind( &list_keys, _1, mergeKeys ) );
   return Error();
 }
 

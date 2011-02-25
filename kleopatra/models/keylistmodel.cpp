@@ -183,7 +183,7 @@ std::vector<Key> AbstractKeyListModel::keys( const QList<QModelIndex> & indexes 
     result.reserve( indexes.size() );
     std::transform( indexes.begin(), indexes.end(),
                     std::back_inserter( result ),
-                    bind( &AbstractKeyListModel::key, this, _1 ) );
+                    boost::bind( &AbstractKeyListModel::key, this, _1 ) );
     result.erase( std::unique( result.begin(), result.end(), _detail::ByFingerprint<std::equal_to>() ), result.end() );
     return result;
 }
@@ -201,7 +201,7 @@ QList<QModelIndex> AbstractKeyListModel::indexes( const std::vector<Key> & keys 
                     std::back_inserter( result ),
                     // if some compilers are complaining about ambigious overloads, use this line instead:
                     //bind( static_cast<QModelIndex(AbstractKeyListModel::*)(const Key&,int)const>( &AbstractKeyListModel::index ), this, _1, 0 ) );
-                    bind( &AbstractKeyListModel::index, this, _1, 0 ) );
+                    boost::bind( &AbstractKeyListModel::index, this, _1, 0 ) );
     return result;
 }
 
@@ -228,7 +228,7 @@ QList<QModelIndex> AbstractKeyListModel::addKeys( const std::vector<Key> & keys 
     sorted.reserve( keys.size() );
     std::remove_copy_if( keys.begin(), keys.end(),
 			 std::back_inserter( sorted ),
-			 bind( &Key::isNull, _1 ) );
+			 boost::bind( &Key::isNull, _1 ) );
     std::sort( sorted.begin(), sorted.end(), _detail::ByFingerprint<std::less>() );
     return doAddKeys( sorted );
 }

@@ -292,11 +292,11 @@ int KleopatraApplication::newInstance() {
     };
 
     const _Funcs * const it1 = std::find_if( begin( funcs ), end( funcs ),
-                                             bind( &KCmdLineArgs::isSet, args, bind( &_Funcs::opt, _1 ) ) );
+                                             boost::bind( &KCmdLineArgs::isSet, args, boost::bind( &_Funcs::opt, _1 ) ) );
 
     if ( const Func func = it1 == end( funcs ) ? 0 : it1->func ) {
         const _Funcs * it2 = std::find_if( it1+1, end( funcs ),
-                                           bind( &KCmdLineArgs::isSet, args, bind( &_Funcs::opt, _1 ) ) );
+                                           boost::bind( &KCmdLineArgs::isSet, args, boost::bind( &_Funcs::opt, _1 ) ) );
         if ( it2 != end( funcs ) ) {
             kDebug() << "ambiguous command" << it1->opt << "vs." << it2->opt;
             return 1;

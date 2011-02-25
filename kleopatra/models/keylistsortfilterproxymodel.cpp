@@ -87,7 +87,7 @@ std::vector<Key> AbstractKeyListSortFilterProxyModel::keys( const QList<QModelIn
     QList<QModelIndex> mapped;
     std::transform( indexes.begin(), indexes.end(),
                     std::back_inserter( mapped ),
-                    bind( &QAbstractProxyModel::mapToSource, this, _1 ) );
+                    boost::bind( &QAbstractProxyModel::mapToSource, this, _1 ) );
     return klmi->keys( mapped );
 }
 
@@ -104,7 +104,7 @@ QList<QModelIndex> AbstractKeyListSortFilterProxyModel::indexes( const std::vect
         QList<QModelIndex> mapped;
         std::transform( source.begin(), source.end(),
                         std::back_inserter( mapped ),
-                        bind( &QAbstractProxyModel::mapFromSource, this, _1 ) );
+                        boost::bind( &QAbstractProxyModel::mapFromSource, this, _1 ) );
         return mapped;
     } else {
         return QList<QModelIndex>();

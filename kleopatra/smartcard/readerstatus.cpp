@@ -373,7 +373,7 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
         return ci;
     klc->setKeyListMode( Ephemeral );
 
-    if ( kdtools::any( keyPairInfos, !bind( &parse_keypairinfo_and_lookup_key, klc.get(), _1 ) ) )
+    if ( kdtools::any( keyPairInfos, !boost::bind( &parse_keypairinfo_and_lookup_key, klc.get(), _1 ) ) )
         ci.status = ReaderStatus::CardCanLearnKeys;
 
     qDebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
@@ -477,7 +477,7 @@ namespace {
 
             QStringList files = gnupgHome.entryList( QStringList( QLatin1String( "reader_*.status" ) ), QDir::Files, QDir::Name );
             bool * dummy = 0;
-            kdtools::sort( files, bind( parseFileName, _1, dummy ) < bind( parseFileName, _2, dummy ) );
+            kdtools::sort( files, boost::bind( parseFileName, _1, dummy ) < boost::bind( parseFileName, _2, dummy ) );
 
             std::vector<QByteArray> contents;
 
@@ -683,11 +683,11 @@ public:
 
 private:
     bool anyCardHasNullPinImpl() const {
-        return kdtools::any( cardInfos(), bind( &CardInfo::status, _1 ) == CardHasNullPin );
+        return kdtools::any( cardInfos(), boost::bind( &CardInfo::status, _1 ) == CardHasNullPin );
     }
 
     bool anyCardCanLearnKeysImpl() const {
-        return kdtools::any( cardInfos(), bind( &CardInfo::status, _1 ) == CardCanLearnKeys );
+        return kdtools::any( cardInfos(), boost::bind( &CardInfo::status, _1 ) == CardCanLearnKeys );
     }
 
 private:

@@ -161,11 +161,11 @@ static std::vector<Mailbox> extractMailboxes( const std::vector<Key> & signers )
 
 static bool keyContainsMailbox( const Key & key, const Mailbox & mbox ) {
     const std::vector<Mailbox> mbxs = extractMailboxes( key );
-    return std::find_if( mbxs.begin(), mbxs.end(), bind( mailbox_equal, mbox, _1, Qt::CaseInsensitive ) ) != mbxs.end();
+    return std::find_if( mbxs.begin(), mbxs.end(), boost::bind( mailbox_equal, mbox, _1, Qt::CaseInsensitive ) ) != mbxs.end();
 }
 
 static bool keysContainMailbox( const std::vector<Key> & keys, const Mailbox & mbox ) {
-    return std::find_if( keys.begin(), keys.end(), bind( keyContainsMailbox, _1, mbox ) ) != keys.end();
+    return std::find_if( keys.begin(), keys.end(), boost::bind( keyContainsMailbox, _1, mbox ) ) != keys.end();
 }
 
 static bool relevantInDecryptVerifyContext( const VerificationResult & r ) {
@@ -326,7 +326,7 @@ public:
     const std::vector<Key> signers;
     bool hasInformativeSender() const { return !informativeSender.addrSpec().isEmpty(); }
     bool conflicts() const { return hasInformativeSender() && hasKeys() && !keysContainMailbox( signers, informativeSender ); }
-    bool hasKeys() const { return kdtools::any( signers, !bind( &Key::isNull, _1 ) ); }
+    bool hasKeys() const { return kdtools::any( signers, !boost::bind( &Key::isNull, _1 ) ); }
     std::vector<Mailbox> signerMailboxes() const {return extractMailboxes( signers ); }
 };
 
@@ -371,7 +371,7 @@ static QString formatVerificationResultOverview( const VerificationResult & res,
     if ( bad > 0 ) {
         return i18np("<b>Invalid signature.</b>", "<b>%1 invalid signatures.</b>", bad );
     }
-    const uint warn = std::count_if( sigs.begin(), sigs.end(), !bind( IsGoodOrValid, _1 ) );
+    const uint warn = std::count_if( sigs.begin(), sigs.end(), !boost::bind( IsGoodOrValid, _1 ) );
     if ( warn > 0 )
         return i18np("<b>Not enough information to check signature validity.</b>", "<b>%1 signatures could not be verified.</b>", warn );
 
@@ -428,7 +428,7 @@ static QString formatSignature( const Signature & sig, const Key & key, const De
 
 static QStringList format( const std::vector<Mailbox> & mbxs ) {
     QStringList res;
-    std::transform( mbxs.begin(), mbxs.end(), std::back_inserter( res ), bind( &Mailbox::prettyAddress, _1 ) );
+    std::transform( mbxs.begin(), mbxs.end(), std::back_inserter( res ), boost::bind( &Mailbox::prettyAddress, _1 ) );
     return res;
 }
 

@@ -439,7 +439,7 @@ void CertifyCertificateDialog::setSelectedUserIDs( const std::vector<UserID> & u
     Q_FOREACH( const UserID & uid, uids ) {
         kleo_assert( qstrcmp( uid.parent().primaryFingerprint(), fpr ) == 0 );
         const unsigned int idx =
-            std::distance( all.begin(), kdtools::find_if( all, bind( UidEqual(), _1, uid ) ) );
+            std::distance( all.begin(), kdtools::find_if( all, boost::bind( UidEqual(), _1, uid ) ) );
         if ( idx < all.size() )
             indexes.push_back( idx );
     }

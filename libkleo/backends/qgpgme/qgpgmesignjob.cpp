@@ -124,12 +124,12 @@ static QGpgMESignJob::result_type sign_qba( Context * ctx,
 }
 
 Error QGpgMESignJob::start( const std::vector<Key> & signers, const QByteArray & plainText, SignatureMode mode ) {
-  run( bind( &sign_qba, _1, signers, plainText, mode, mOutputIsBase64Encoded ) );
+  run( boost::bind( &sign_qba, _1, signers, plainText, mode, mOutputIsBase64Encoded ) );
   return Error();
 }
 
 void QGpgMESignJob::start( const std::vector<Key> & signers, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & signature, SignatureMode mode ) {
-  run( bind( &sign, _1, _2, signers, _3, _4, mode, mOutputIsBase64Encoded ), plainText, signature );
+  run( boost::bind( &sign, _1, _2, signers, _3, _4, mode, mOutputIsBase64Encoded ), plainText, signature );
 }
 
 SigningResult QGpgMESignJob::exec( const std::vector<Key> & signers, const QByteArray & plainText, SignatureMode mode, QByteArray & signature ) {

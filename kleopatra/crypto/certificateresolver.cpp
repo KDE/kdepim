@@ -60,18 +60,18 @@ using namespace KMime::HeaderParsing;
 std::vector< std::vector<Key> > CertificateResolver::resolveRecipients( const std::vector<Mailbox> & recipients, Protocol proto ) {
     std::vector< std::vector<Key> > result;
     std::transform( recipients.begin(), recipients.end(),
-                    std::back_inserter( result ), bind( &resolveRecipient, _1, proto ) );
+                    std::back_inserter( result ), boost::bind( &resolveRecipient, _1, proto ) );
     return result;
 }
 
 std::vector<Key> CertificateResolver::resolveRecipient( const Mailbox & recipient, Protocol proto ) {
     std::vector<Key> result = KeyCache::instance()->findByEMailAddress( recipient.address() );
     std::vector<Key>::iterator end = std::remove_if( result.begin(), result.end(), 
-                                                     !bind( &Key::canEncrypt, _1 ) );
+                                                     !boost::bind( &Key::canEncrypt, _1 ) );
     
     if ( proto != UnknownProtocol )
         end = std::remove_if( result.begin(), end,
-                              bind( &Key::protocol, _1 ) != proto );
+                              boost::bind( &Key::protocol, _1 ) != proto );
 
     result.erase( end, result.end() );
     return result;
@@ -80,7 +80,7 @@ std::vector<Key> CertificateResolver::resolveRecipient( const Mailbox & recipien
 std::vector< std::vector<Key> > CertificateResolver::resolveSigners( const std::vector<Mailbox> & signers, Protocol proto ) {
     std::vector< std::vector<Key> > result;
     std::transform( signers.begin(), signers.end(),
-                    std::back_inserter( result ), bind( &resolveSigner, _1, proto ) );
+                    std::back_inserter( result ), boost::bind( &resolveSigner, _1, proto ) );
     return result;
 }
 
@@ -88,12 +88,12 @@ std::vector<Key> CertificateResolver::resolveSigner( const Mailbox & signer, Pro
     std::vector<Key> result = KeyCache::instance()->findByEMailAddress( signer.address() );
     std::vector<Key>::iterator end
         = std::remove_if( result.begin(), result.end(),
-                          !bind( &Key::hasSecret, _1 ) );
+                          !boost::bind( &Key::hasSecret, _1 ) );
     end = std::remove_if( result.begin(), end,
-                          !bind( &Key::canReallySign, _1 ) );
+                          !boost::bind( &Key::canReallySign, _1 ) );
     if ( proto != UnknownProtocol )
         end = std::remove_if( result.begin(), end,
-                              bind( &Key::protocol, _1 ) != proto );
+                              boost::bind( &Key::protocol, _1 ) != proto );
     result.erase( end, result.end() );
     return result;
 }

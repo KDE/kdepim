@@ -142,7 +142,7 @@ static const Qt::CaseSensitivity fs_cs = HAVE_UNIX ? Qt::CaseSensitive : Qt::Cas
 
 static QStringList fs_sort( QStringList l ) {
     int (*QString_compare)(const QString&,const QString&,Qt::CaseSensitivity) = &QString::compare;
-    kdtools::sort( l, bind( QString_compare, _1, _2, fs_cs ) < 0 );
+    kdtools::sort( l, boost::bind( QString_compare, _1, _2, fs_cs ) < 0 );
     return l;
 }
 
@@ -154,7 +154,7 @@ static QStringList fs_intersect( QStringList l1, QStringList l2 ) {
     std::set_intersection( l1.begin(), l1.end(),
                            l2.begin(), l2.end(),
                            std::back_inserter( result ),
-                           bind( QString_compare, _1, _2, fs_cs ) < 0 );
+                           boost::bind( QString_compare, _1, _2, fs_cs ) < 0 );
     return result;
 }
 
@@ -173,7 +173,7 @@ namespace {
         const QList<QRegExp> m_regexps;
         explicit matches_any( const QList<QRegExp> & regexps ) : m_regexps( regexps ) {}
         bool operator()( const QString & s ) const {
-            return kdtools::any( m_regexps, bind( &QRegExp::exactMatch, _1, s ) );
+            return kdtools::any( m_regexps, boost::bind( &QRegExp::exactMatch, _1, s ) );
         }
     };
 }
@@ -338,7 +338,7 @@ static QStringList remove_checksum_files( QStringList l, const QList<QRegExp> & 
     QStringList::iterator end = l.end();
     Q_FOREACH( const QRegExp & rx, rxs )
         end = std::remove_if( l.begin(), end,
-                              bind( &QRegExp::exactMatch, rx, _1 ) );
+                              boost::bind( &QRegExp::exactMatch, rx, _1 ) );
     l.erase( end, l.end() );
     return l;
 }
@@ -493,7 +493,7 @@ static std::vector<Dir> find_dirs_by_input_files( const QStringList & files, con
             dirs2files[ dir ] = remove_checksum_files( dir.entryList( QDir::Files ), patterns );
             kdtools::transform( dir.entryList( QDir::Dirs|QDir::NoDotAndDotDot ),
                                 std::inserter( inputs, inputs.begin() ),
-                                bind( &QDir::absoluteFilePath, cref(dir), _1 ) );
+                                boost::bind( &QDir::absoluteFilePath, cref(dir), _1 ) );
         } else {
             dirs2files[fi.dir()].push_back( file );
         }
@@ -599,7 +599,7 @@ void CreateChecksumsController::Private::run() {
 
     const bool haveSumFiles
         = kdtools::all( files, matches_any( get_patterns( checksumDefinitions ) ) );
-    const function<void(int)> progressCb = bind( &Private::progress, this, _1, 0, scanning );
+    const function<void(int)> progressCb = boost::bind( &Private::progress, this, _1, 0, scanning );
     const std::vector<Dir> dirs = haveSumFiles
         ? find_dirs_by_sum_files( files, allowAddition, progressCb, checksumDefinitions )
         : find_dirs_by_input_files( files, checksumDefinition, allowAddition, progressCb, checksumDefinitions ) ;
