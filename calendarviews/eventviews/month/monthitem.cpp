@@ -624,8 +624,8 @@ QColor IncidenceMonthItem::bgColor() const
   if ( mIsTodo && !prefs->todosUseCategoryColors() ) {
     Todo::Ptr todo = CalendarSupport::todo( akonadiItem() );
     Q_ASSERT( todo );
-    const QDate dueDate = todo->dtDue().date();
-    const QDate today = QDate::currentDate();
+    const QDate dueDate = todo->dtDue().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+    const QDate today = KDateTime::currentDateTime( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
     if ( todo->isOverdue() && today >= startDate() )
     {
       bgColor = prefs->todoOverdueColor();
