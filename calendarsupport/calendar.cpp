@@ -206,6 +206,7 @@ void Calendar::Private::clear()
   m_childToUnseenParent.clear();
   m_unseenParentToChildren.clear();
   m_itemIdsForDate.clear();
+  m_itemDateForItemId.clear();
   m_virtualItems.clear();
 }
 
