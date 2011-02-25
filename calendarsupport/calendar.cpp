@@ -166,9 +166,9 @@ void Calendar::Private::onRowsMovedInTreeModel( const QModelIndex &sourceParent,
               if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
                 // We have old items ( that think they belong to another collection ) inside m_itemMap
                 if ( m_itemMap.contains( item.id() ) ) {
-                  m_itemMap.insert( item.id(), item );
+                  itemsRemoved( movedItems );
+                  itemsAdded( movedItems );
                 }
-                q->notifyIncidenceChanged( item );
               }
             }
           } else if ( !sourceCollectionIsSelected && destinationCollectionIsSelected ) { // Added
