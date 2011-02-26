@@ -159,5 +159,7 @@ void IncidenceCategories::checkForUnknownCategories( const QStringList &categori
     //update the combo with newly found categories
     CategoryHierarchyReaderQComboBox( mUi->mCategoryCombo ).read( existingCategories );
   }
+#else
+  Q_UNUSED( categoriesToCheck )
 #endif
 }
