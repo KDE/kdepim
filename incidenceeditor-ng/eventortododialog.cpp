@@ -80,7 +80,6 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
     IncidenceRecurrence *mIeRecurrence;
     bool mInitiallyDirty;
     Akonadi::Item mItem;
-
   public:
     EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
     ~EventOrTodoDialogPrivate();
@@ -456,10 +455,13 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   kDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
            << "; storage " << item.storageCollectionId();
 
-  mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() << "text/calendar" );
   if ( item.parentCollection().isValid() ) {
     mCalSelector->setDefaultCollection( item.parentCollection() );
   }
+
+  const QStringList mimeTypes = QStringList() << incidence->mimeType() << "text/calendar";
+  if ( mCalSelector->mimeTypeFilter() != mimeTypes )
+    mCalSelector->setMimeTypeFilter( mimeTypes );
 
   if ( mEditor->type() == KCalCore::Incidence::TypeTodo ) {
     q->setWindowIcon( SmallIcon( "view-calendar-tasks" ) );
@@ -475,7 +477,6 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   handleAlarmCountChange( incidence->alarms().count() );
 
   mItem = item;
-
   q->show();
 }
 
