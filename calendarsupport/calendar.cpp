@@ -270,8 +270,12 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     // this id, belonging to the real collection. So we just insert it in m_virtualItems
     // so we keep track of it. Most hashes are indexed by Item::Id, and korg does lookups by Id too,
     // so we can't just treat this item as an independent one.
-    m_virtualItems[item.id()].append( item );
-    q->notifyIncidenceAdded( item );
+    if ( m_itemMap[id].parentCollection().id() != item.parentCollection().id() ) {
+      m_virtualItems[item.id()].append( item );
+      q->notifyIncidenceAdded( item );
+    } else {
+      kError() << "Item " << item.id() << " is already known.";
+    }
     return;
   }
 
