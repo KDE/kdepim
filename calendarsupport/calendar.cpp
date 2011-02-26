@@ -295,14 +295,8 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     }
 
     if ( item.storageCollectionId() != m_itemMap.value( id ).storageCollectionId() ) {
-      // there was once a bug that resulted in items forget their collectionId...
-      kError() << "item.storageCollectionId() = " << item.storageCollectionId()
-               << "; m_itemMap.value( id ).storageCollectionId() = "
-               << m_itemMap.value( id ).storageCollectionId()
-               << "; item.isValid() = " << item.isValid()
-               << "; calendar = " << q->objectName();
-      Q_ASSERT_X( false, "updateItem", "updated item has different collection id" );
-      return;
+      // An item moved happened, update our internal copy, the storateCollectionId has changed.
+      m_itemMap.insert( id, item );
     }
     // update-only goes here
   } else {
