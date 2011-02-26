@@ -383,7 +383,11 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
               << "; parentCollection.id() = " << item.parentCollection().id() // can be a virtual collection
               << "; hasParent = " << hasParent
               << "; knowParent = " << knowParent;
-      Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
+      if ( existedInUidMap ) {
+        Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
+      } else {
+        Q_ASSERT_X( false, "updateItem", "Item not found inside m_uidToItemId" );
+      }
       return;
     }
 
