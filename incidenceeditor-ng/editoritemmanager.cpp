@@ -98,9 +98,13 @@ void ItemEditorPrivate::itemMoveResult( KJob *job )
   Q_ASSERT( job );
 
   if ( job->error() ) {
+    Akonadi::ItemMoveJob *moveJob = qobject_cast<Akonadi::ItemMoveJob*>( job );
+    Q_ASSERT( moveJob );
+    Q_ASSERT( !moveJob->items().isEmpty() );
     // TODO: What is reasonable behavior at this point?
-    kError() << job->errorString();
-//     mItemUi->reject( ItemEditorUi::ItemFetchFailed, job->errorString() );
+    kError() << "Error while moving item " << moveJob->items().first().id() << " to collection "
+             << moveJob->destinationCollection() << job->errorString();
+    // mItemUi->reject( ItemEditorUi::ItemFetchFailed, job->errorString() );
     return;
   }
 }
@@ -304,9 +308,11 @@ void EditorItemManager::save()
       // 1) ItemModify( d->mItem );
       // 2) ItemMove( d->mItem,d->mItemUi->selectedCollection() )
       } else {
-        Akonadi::ItemMoveJob *imjob =
+        Q_ASSERT( d->mItem.isValid() );
+        Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
+        Akonadi::ItemMoveJob *itemMoveJob =
           new Akonadi::ItemMoveJob( d->mItem, d->mItemUi->selectedCollection() );
-        connect( imjob, SIGNAL(result(KJob*)), SLOT(itemMoveResult(KJob*)) );
+        connect( itemMoveJob, SIGNAL(result(KJob*)), SLOT(itemMoveResult(KJob*)) );
       }
     }
   } else { // An invalid item. Means we're creating.
