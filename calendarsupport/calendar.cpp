@@ -296,7 +296,23 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
 
     if ( item.storageCollectionId() != m_itemMap.value( id ).storageCollectionId() ) {
       // An item moved happened, update our internal copy, the storateCollectionId has changed.
+      Akonadi::Collection::Id oldCollectionId = m_itemMap.value( id ).storageCollectionId();
       m_itemMap.insert( id, item );
+      if ( item.isValid() ) {
+        UnseenItem oldUi;
+        UnseenItem newUi;
+        oldUi.collection = oldCollectionId;
+        oldUi.uid = incidence->uid();
+        if ( m_uidToItemId.contains( oldUi ) ) {
+          newUi.collection = item.storageCollectionId();
+          newUi.uid = oldUi.uid;
+          m_uidToItemId.remove( oldUi );
+          m_uidToItemId.insert( newUi, item.id() );
+        } else {
+          Q_ASSERT_X( false, "Calendar::Private::updateItem", "Item wasn't found in m_uidToItemId" );
+          return;
+        }
+      }
     }
     // update-only goes here
   } else {
@@ -418,7 +434,6 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
         }
       }
     }
-
   } else { // We're inserting a new item
     m_uidToItemId.insert( ui, item.id() );
 
