@@ -233,6 +233,7 @@ void NepomukFeederAgentBase::processNextCollection()
   if ( mCurrentCollection.isValid() )
     return;
   mTotalAmount = 0;
+  mProcessedAmount = 0;
   if ( mCollectionQueue.isEmpty() ) {
     emit fullyIndexed();
     return;
@@ -569,7 +570,7 @@ void NepomukFeederAgentBase::processPipeline()
                              QUrl( QString::number( item.id() ) ), graph );
     updateItem( item, graph );
     ++mProcessedAmount;
-    if ( (mProcessedAmount % 10) == 0 && mTotalAmount > 0 && mProcessedAmount <= mTotalAmount )
+    if ( (mProcessedAmount % 100) == 0 && mTotalAmount > 0 && mProcessedAmount <= mTotalAmount )
       emit percent( (mProcessedAmount * 100) / mTotalAmount );
     if ( !mItemPipeline.isEmpty() ) {
       // go to eventloop before processing the next one, otherwise we miss the idle status change
