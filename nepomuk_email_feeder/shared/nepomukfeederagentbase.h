@@ -151,6 +151,11 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
      */
     void setIndexCompatibilityLevel( int level );
 
+    /**
+     * Sets whether the 'Only feed when system is idle' functionality shall be used.
+     */
+    void disableIdleDetection( bool value );
+
   public slots:
     /** Trigger a complete update of all items. */
     void updateAll();
@@ -212,6 +217,7 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
     bool mNeedsStrigi;
     bool mSelfTestPassed;
     bool mSystemIsIdle;
+    bool mIdleDetectionDisabled;
 };
 
 #endif
