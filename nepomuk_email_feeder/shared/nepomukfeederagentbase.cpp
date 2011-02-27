@@ -70,9 +70,16 @@
 
 using namespace Akonadi;
 
-static inline bool entityIsHidden( const Entity &entity )
+static inline bool indexingDisabled( const Collection &collection )
 {
-  return entity.hasAttribute<EntityHiddenAttribute>();
+  if ( collection.hasAttribute<EntityHiddenAttribute>() )
+    return true;
+
+  IndexPolicyAttribute *indexPolicy = collection.attribute<IndexPolicyAttribute>();
+  if ( indexPolicy && !indexPolicy->indexingEnabled() )
+      return true;
+
+  return false;
 }
 
 NepomukFeederAgentBase::NepomukFeederAgentBase(const QString& id) :
@@ -124,7 +131,7 @@ NepomukFeederAgentBase::~NepomukFeederAgentBase()
 
 void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi::Collection& collection)
 {
-  if ( entityIsHidden( collection ) )
+  if ( indexingDisabled( collection ) )
     return;
 
   if ( item.hasPayload() ) {
@@ -143,7 +150,7 @@ void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi:
 
 void NepomukFeederAgentBase::itemChanged(const Akonadi::Item& item, const QSet< QByteArray >& partIdentifiers)
 {
-  if ( entityIsHidden( item.parentCollection() ) )
+  if ( indexingDisabled( item.parentCollection() ) )
     return;
   // TODO: check part identfiers if anything interesting changed at all
   if ( item.hasPayload() ) {
@@ -170,6 +177,8 @@ void NepomukFeederAgentBase::itemRemoved(const Akonadi::Item& item)
 void NepomukFeederAgentBase::collectionAdded(const Akonadi::Collection& collection, const Akonadi::Collection& parent)
 {
   Q_UNUSED( parent );
+  if ( indexingDisabled( collection ) )
+    return;
   updateCollection( collection, createGraphForEntity( collection ) );
 }
 
@@ -177,6 +186,8 @@ void NepomukFeederAgentBase::collectionChanged(const Akonadi::Collection& collec
 {
   Q_UNUSED( partIdentifiers );
   removeEntityFromNepomuk( collection );
+  if ( indexingDisabled( collection ) )
+    return;
   updateCollection( collection, createGraphForEntity( collection ) );
 }
 
@@ -206,11 +217,7 @@ void NepomukFeederAgentBase::collectionsReceived(const Akonadi::Collection::List
     if ( !mMimeTypeChecker.isWantedCollection( collection ) )
       continue;
 
-    if ( entityIsHidden( collection ) )
-      continue;
-
-    IndexPolicyAttribute *indexPolicy = collection.attribute<IndexPolicyAttribute>();
-    if ( indexPolicy && !indexPolicy->indexingEnabled() )
+    if ( indexingDisabled( collection ) )
       continue;
 
     mCollectionQueue.append( collection );
