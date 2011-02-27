@@ -35,7 +35,6 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/mimetypechecker.h>
 #include <Akonadi/ItemSearchJob>
-#include <akonadi/indexpolicyattribute.h>
 
 #include <nepomuk/resource.h>
 #include <nepomuk/tag.h>
