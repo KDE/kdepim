@@ -402,7 +402,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
       if ( existedInUidMap ) {
         Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
       } else {
-
+        kDebug() << "m_uidToItemId has size " << m_uidToItemId.count();
         QMapIterator<UnseenItem, Akonadi::Item::Id> i( m_uidToItemId );
         while ( i.hasNext() ) {
           i.next();
