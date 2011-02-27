@@ -391,7 +391,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   if ( alreadyExisted ) { // We're updating an existing item
     const bool existedInUidMap = m_uidToItemId.contains( ui );
     if ( m_uidToItemId.value( ui ) != item.id() ) {
-      kError()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
+      kError()<< "Ignoring item. item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
               << "; item uid = "  << ui.uid
               << "; calendar = " << q->objectName()
               << "; existed in cache = " << existedInUidMap
@@ -410,6 +410,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
             kDebug() << " key " << i.key().uid << i.key().collection << " has value " << i.value();
           }
         }
+        kError() << "Possible cause is that the resource isn't explicitly setting an uid ( and a random one is generated )";
         Q_ASSERT_X( false, "updateItem", "Item not found inside m_uidToItemId" );
       }
       return;
