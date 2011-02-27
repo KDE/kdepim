@@ -402,6 +402,14 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
       if ( existedInUidMap ) {
         Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
       } else {
+
+        QMapIterator<UnseenItem, Akonadi::Item::Id> i( m_uidToItemId );
+        while ( i.hasNext() ) {
+          i.next();
+          if ( i.key().uid == ui.uid || i.value() == item.id() ) {
+            kDebug() << " key " << i.key().uid << i.key().collection << " has value " << i.value();
+          }
+        }
         Q_ASSERT_X( false, "updateItem", "Item not found inside m_uidToItemId" );
       }
       return;
