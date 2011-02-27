@@ -295,14 +295,24 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     }
 
     if ( item.storageCollectionId() != m_itemMap.value( id ).storageCollectionId() ) {
-      // there was once a bug that resulted in items forget their collectionId...
-      kError() << "item.storageCollectionId() = " << item.storageCollectionId()
-               << "; m_itemMap.value( id ).storageCollectionId() = "
-               << m_itemMap.value( id ).storageCollectionId()
-               << "; item.isValid() = " << item.isValid()
-               << "; calendar = " << q->objectName();
-      Q_ASSERT_X( false, "updateItem", "updated item has different collection id" );
-      return;
+      // An item moved happened, update our internal copy, the storateCollectionId has changed.
+      Akonadi::Collection::Id oldCollectionId = m_itemMap.value( id ).storageCollectionId();
+      m_itemMap.insert( id, item );
+      if ( item.isValid() ) {
+        UnseenItem oldUi;
+        UnseenItem newUi;
+        oldUi.collection = oldCollectionId;
+        oldUi.uid = incidence->uid();
+        if ( m_uidToItemId.contains( oldUi ) ) {
+          newUi.collection = item.storageCollectionId();
+          newUi.uid = oldUi.uid;
+          m_uidToItemId.remove( oldUi );
+          m_uidToItemId.insert( newUi, item.id() );
+        } else {
+          Q_ASSERT_X( false, "Calendar::Private::updateItem", "Item wasn't found in m_uidToItemId" );
+          return;
+        }
+      }
     }
     // update-only goes here
   } else {
@@ -381,7 +391,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   if ( alreadyExisted ) { // We're updating an existing item
     const bool existedInUidMap = m_uidToItemId.contains( ui );
     if ( m_uidToItemId.value( ui ) != item.id() ) {
-      kError()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
+      kError()<< "Ignoring item. item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
               << "; item uid = "  << ui.uid
               << "; calendar = " << q->objectName()
               << "; existed in cache = " << existedInUidMap
@@ -389,7 +399,20 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
               << "; parentCollection.id() = " << item.parentCollection().id() // can be a virtual collection
               << "; hasParent = " << hasParent
               << "; knowParent = " << knowParent;
-      Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
+      if ( existedInUidMap ) {
+        Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
+      } else {
+        kDebug() << "m_uidToItemId has size " << m_uidToItemId.count();
+        QMapIterator<UnseenItem, Akonadi::Item::Id> i( m_uidToItemId );
+        while ( i.hasNext() ) {
+          i.next();
+          if ( i.key().uid == ui.uid || i.value() == item.id() ) {
+            kDebug() << " key " << i.key().uid << i.key().collection << " has value " << i.value();
+          }
+        }
+        kError() << "Possible cause is that the resource isn't explicitly setting an uid ( and a random one is generated )";
+        Q_ASSERT_X( false, "updateItem", "Item not found inside m_uidToItemId" );
+      }
       return;
     }
 
@@ -420,7 +443,6 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
         }
       }
     }
-
   } else { // We're inserting a new item
     m_uidToItemId.insert( ui, item.id() );
 

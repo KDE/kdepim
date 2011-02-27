@@ -80,7 +80,6 @@ class EventOrTodoDialogPrivate : public ItemEditorUi
     IncidenceRecurrence *mIeRecurrence;
     bool mInitiallyDirty;
     Akonadi::Item mItem;
-
   public:
     EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
     ~EventOrTodoDialogPrivate();
@@ -130,6 +129,9 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   layout->addWidget( mCalSelector );
 
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+
+  q->connect( mCalSelector, SIGNAL(currentChanged(Akonadi::Collection)),
+              SLOT(handleSelectedCollectionChange(Akonadi::Collection)) );
 
   if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
     mInvitationDispatcher = new InvitationDispatcher( 0, q );
@@ -371,7 +373,7 @@ void EventOrTodoDialogPrivate::handleItemSaveFail( EditorItemManager::SaveAction
   if ( retry ) {
     mItemManager->save();
   } else {
-    updateButtonStatus( mEditor->isDirty() );
+    updateButtonStatus( isDirty() );
     q->enableButtonOk( true );
     q->enableButtonCancel( true );
   }
@@ -396,7 +398,7 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveActi
     // disabled at this point).
     q->enableButtonOk( true );
     q->enableButtonCancel( true );
-    q->enableButtonApply( mEditor->isDirty() );
+    q->enableButtonApply( isDirty() );
   }
 }
 
@@ -407,7 +409,11 @@ bool EventOrTodoDialogPrivate::hasSupportedPayload( const Akonadi::Item &item ) 
 
 bool EventOrTodoDialogPrivate::isDirty() const
 {
-  return mEditor->isDirty();
+  if ( mItem.isValid() ) {
+    return mEditor->isDirty() || mCalSelector->currentCollection().id() != mItem.storageCollectionId();
+  } else {
+    return mEditor->isDirty();
+  }
 }
 
 bool EventOrTodoDialogPrivate::isValid() const
@@ -456,9 +462,14 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   kDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
            << "; storage " << item.storageCollectionId();
 
-  mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() << "text/calendar" );
   if ( item.parentCollection().isValid() ) {
     mCalSelector->setDefaultCollection( item.parentCollection() );
+  }
+
+  if ( !mCalSelector->mimeTypeFilter().contains( "text/calendar" ) ||
+       !mCalSelector->mimeTypeFilter().contains( incidence->mimeType() ) )
+  {
+    mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() << "text/calendar" );
   }
 
   if ( mEditor->type() == KCalCore::Incidence::TypeTodo ) {
@@ -521,7 +532,7 @@ void EventOrTodoDialogPrivate::reject( RejectReason reason, const QString &error
   Q_UNUSED( reason );
 
   Q_Q( EventOrTodoDialog );
-  kDebug() << "Rejecting:" << errorMessage;
+  kError() << "Rejecting:" << errorMessage;
   q->deleteLater();
 }
 
@@ -620,7 +631,7 @@ void EventOrTodoDialog::slotButtonClicked( int button )
   switch( button ) {
   case KDialog::Ok:
   {
-    if ( d->mEditor->isDirty() || d->mInitiallyDirty ) {
+    if ( d->isDirty() || d->mInitiallyDirty ) {
       enableButtonOk( false );
       enableButtonCancel( false );
       enableButtonApply( false );
@@ -644,11 +655,11 @@ void EventOrTodoDialog::slotButtonClicked( int button )
     break;
   }
   case KDialog::Cancel:
-    if ( d->mEditor->isDirty() &&
+    if ( d->isDirty() &&
          KMessageBox::questionYesNo( this, i18nc( "@info", "Do you really want to cancel?" ),
                  i18nc( "@title:window", "KOrganizer Confirmation" ) ) == KMessageBox::Yes ) {
       KDialog::reject(); // Discard current changes
-    } else if ( !d->mEditor->isDirty() ) {
+    } else if ( !d->isDirty() ) {
       KDialog::reject(); // No pending changes, just close the dialog.
     } // else { // the user wasn't finished editting after all }
     break;
@@ -665,6 +676,14 @@ void EventOrTodoDialog::setInitiallyDirty( bool initiallyDirty )
 {
   Q_D( EventOrTodoDialog );
   d->mInitiallyDirty = initiallyDirty;
+}
+
+void EventOrTodoDialog::handleSelectedCollectionChange( const Akonadi::Collection &collection )
+{
+  Q_D( EventOrTodoDialog );
+  if ( d->mItem.parentCollection().isValid() ) {
+    enableButton( Apply, collection.id() != d->mItem.parentCollection().id() );
+  }
 }
 
 #include "eventortododialog.moc"
