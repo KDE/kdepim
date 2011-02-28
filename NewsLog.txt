@@ -5,7 +5,7 @@ Problems addressed
 ------------------
 
 * kolab/issue4474: Wish: No "attachment cannot be edited" warning should be displayed. (rt#6114)
-* kolab/issue4701: calendar print of a month: If more than 5 events are at one
+* kolab/issue4701: calendar print of a month: If more than 5 events are at one day, one event is not printed (rt#10006)
 
 
 Friday 11 February 2011
