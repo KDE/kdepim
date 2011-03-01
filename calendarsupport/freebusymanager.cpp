@@ -34,6 +34,7 @@
 */
 
 #include "freebusymanager.h"
+#include "freebusymanager_p.h"
 #include "calendar.h"
 #include "freebusydownloadjob.h"
 #include "kcalprefs.h"
@@ -44,7 +45,6 @@
 
 #include <KCalCore/Event>
 #include <KCalCore/FreeBusy>
-#include <KCalCore/ICalFormat>
 #include <KCalCore/Person>
 
 #include <KDebug>
@@ -58,7 +58,6 @@
 
 #include <QDir>
 #include <QFile>
-#include <QPointer>
 #include <QRegExp>
 #include <QTextStream>
 #include <QTimer>
@@ -108,46 +107,6 @@ bool fbExists( const KUrl &url )
 }
 
 /// FreeBusyManagerPrivate
-
-namespace CalendarSupport {
-
-class FreeBusyManagerPrivate
-{
-  FreeBusyManager *const q_ptr;
-  Q_DECLARE_PUBLIC( FreeBusyManager )
-
-  public: /// Members
-    CalendarSupport::Calendar *mCalendar;
-    KCalCore::ICalFormat mFormat;
-
-    QStringList mRetrieveQueue;
-    QMap<KUrl, QString> mFreeBusyUrlEmailMap;
-
-    // Free/Busy uploading
-    QDateTime mNextUploadTime;
-    int mTimerID;
-    bool mUploadingFreeBusy;
-    bool mBrokenUrl;
-
-    // the parentWidget to use while doing our "recursive" retrieval
-    QPointer<QWidget>  mParentWidgetForRetrieval;
-
-  public: /// Functions
-    FreeBusyManagerPrivate( FreeBusyManager *q );
-    void checkFreeBusyUrl();
-    QString freeBusyDir() const;
-    KUrl freeBusyUrl( const QString &email ) const;
-    QString freeBusyToIcal( const KCalCore::FreeBusy::Ptr & );
-    KCalCore::FreeBusy::Ptr iCalToFreeBusy( const QByteArray &freeBusyData );
-    KCalCore::FreeBusy::Ptr ownerFreeBusy();
-    QString ownerFreeBusyAsString();
-    void processFreeBusyDownloadResult( KJob *_job );
-    void processFreeBusyUploadResult( KJob *_job );
-    bool processRetrieveQueue();
-    void uploadFreeBusy();
-};
-
-}
 
 FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
   : q_ptr( q ),
@@ -653,7 +612,7 @@ void FreeBusyManager::mailFreeBusy(int daysToPublish, QWidget* parentWidget)
   if ( !d->mCalendar ) {
     return;
   }
-  
+
   KDateTime start = KDateTime::currentUtcDateTime().toTimeSpec( d->mCalendar->timeSpec() );
   KDateTime end = start.addDays( daysToPublish );
 
