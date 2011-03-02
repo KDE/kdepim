@@ -173,13 +173,19 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
 
 bool InvitationHandler::Private::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence )
 {
-  return KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() ) ||
-         incidence->organizer()->email().isEmpty();
+  const QString email = incidence->organizer()->email();
+  return KCalPrefs::instance()->thatIsMe( email ) || email.isEmpty();
 }
 
 bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence )
 {
-  Q_ASSERT( weAreOrganizerOf( incidence ) );
+  if ( !weAreOrganizerOf( incidence ) ) {
+    kError() << "We should be the organizer of ths incidence."
+             << "; email= "       << incidence->organizer()->email()
+             << "; thatIsMe() = " << KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
+    Q_ASSERT( false );
+    return false;
+  }
 
   if ( incidence->attendees().isEmpty() ) {
     return false;
