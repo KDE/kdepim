@@ -352,7 +352,8 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
          * "ignoreThisUpdate = true;" will cause issue/kolab4698, because recording the
          * attendee status in the calendar doesn't bump the SEQUENCE/revision.
          **/
-        ignoreThisUpdate = !i->dirtyFields().contains( Incidence::FieldAttendees );
+        ignoreThisUpdate = !( i->dirtyFields().contains( Incidence::FieldAttendees ) ||
+                              i->dirtyFields().contains( Incidence::FieldUnknown ) ); // ( FieldUnknown is used when you assign for example ).
       }
 
       if ( ignoreThisUpdate ) {

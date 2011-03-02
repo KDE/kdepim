@@ -93,6 +93,9 @@ IncidenceBase& IncidenceBase::operator=( const IncidenceBase& i )
   mSyncStatus = i.mSyncStatus;
   mComments = i.mComments;
 
+  mDirtyFields.clear();
+  mDirtyFields.insert( FieldUnknown, true );
+
   return *this;
 }
 
@@ -129,9 +132,6 @@ bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
            syncStatus() == i2.syncStatus() );
   // no need to compare mObserver
 }
-
-
-
 
 void IncidenceBase::setUid(const QString &uid)
 {

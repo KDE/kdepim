@@ -298,7 +298,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     */
     void unRegisterObserver( Observer * );
     /**
-      Call this to notify the observers after the IncidenceBas object has
+      Call this to notify the observers after the IncidenceBase object has
       changed.
     */
     void updated();
