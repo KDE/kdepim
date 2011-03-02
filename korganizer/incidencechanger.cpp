@@ -35,6 +35,7 @@
 #include <klocale.h>
 
 
+
 bool IncidenceChanger::beginChange( Incidence *incidence,
                                     ResourceCalendar *res, const QString &subRes )
 {
@@ -296,7 +297,14 @@ bool IncidenceChanger::incidencesEqual( Incidence *inc1, Incidence *inc2 )
 bool IncidenceChanger::assignIncidence( Incidence *inc1, Incidence *inc2 )
 {
   AssignmentVisitor v;
-  return v.act( inc1, inc2 );
+  const bool result = v.act( inc1, inc2 );
+
+  if ( result ) {
+    // IncidenceBase::operator= doesn't emit updated()
+    inc1->updated();
+  }
+
+  return result;
 }
 
 bool IncidenceChanger::myAttendeeStatusChanged( Incidence *oldInc, Incidence *newInc )
