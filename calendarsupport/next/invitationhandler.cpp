@@ -372,11 +372,13 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
               "bring your calendar out of sync with the organizer's calendar. "
               "Do you really want to edit it?" );
       const int messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
-      return d->sentInvitation( messageBoxReturnCode, incidence, method );
-
+      if ( messageBoxReturnCode == KMessageBox::No ) {
+        return ResultFailAbortUpdate;
+      } else {
+        return d->sentInvitation( messageBoxReturnCode, incidence, method );
+      }
     }
   }
-
   Q_ASSERT( false ); // Shouldn't happen.
   return ResultNoSendingNeeded;
 }
