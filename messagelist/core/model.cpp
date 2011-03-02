@@ -2785,15 +2785,13 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
           {
             Q_ASSERT( ( *it )->parent() );
             Q_ASSERT( ( *it )->parent() != mi );
-#if 1
-            Q_ASSERT( ( ( *it )->threadingStatus() == MessageItem::ImperfectParentFound ) || ( ( *it )->threadingStatus() == MessageItem::ParentMissing ) );
-#else
-            if(!(( ( *it )->threadingStatus() == MessageItem::ImperfectParentFound ) || ( ( *it )->threadingStatus() == MessageItem::ParentMissing )))
-            {
-              kDebug() << "GOT A MESSAGE " << ( *it ) << " WITH THREADING STATUS " << ( *it )->threadingStatus();
-              Q_ASSERT( false );
+
+            if ( !( ( (*it)->threadingStatus() == MessageItem::ImperfectParentFound ) ||
+                    ( (*it)->threadingStatus() == MessageItem::ParentMissing ) ) ) {
+              kError() << "Got message " << (*it) << " with threading status" << (*it)->threadingStatus();
+              Q_ASSERT_X( false, "ModelPrivate::viewItemJobStepInternalForJobPass1Fill", "Wrong threading status" );
             }
-#endif
+
             // If the item was already attached to the view then
             // re-attach it immediately. This will avoid a message
             // being displayed for a short while in the view and then
