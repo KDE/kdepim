@@ -33,6 +33,7 @@
 #include <qcstring.h>
 #include <qdatastream.h>
 #include <qsplitter.h>
+#include <qvaluelist.h>
 
 #include <dcopclient.h>
 #include <dcopref.h>
@@ -278,7 +279,9 @@ void AlarmDialog::slotUser3()
 void AlarmDialog::dismissCurrent()
 {
   ItemList selection = selectedItems();
+  QStringList dismissedUids;
   for ( ItemList::Iterator it = selection.begin(); it != selection.end(); ++it ) {
+    dismissedUids.append( (*it)->mUid );
     if ( (*it)->itemBelow() )
       (*it)->itemBelow()->setSelected( true );
     else if ( (*it)->itemAbove() )
@@ -292,6 +295,11 @@ void AlarmDialog::dismissCurrent()
     updateButtons();
     showDetails();
   }
+
+  // Suspended alarms are stored in config. If we dismiss a suspended alarm we
+  // must remove it from config, otherwise it popsup next time we start korgac
+  removeFromConfig( dismissedUids );
+
   emit reminderCount( activeCount() );
 }
 
@@ -748,4 +756,41 @@ void AlarmDialog::keyPressEvent( QKeyEvent *e )
     }
   }
   KDialog::keyPressEvent( e );
+}
+
+void AlarmDialog::removeFromConfig(const QStringList &uids )
+{
+  KConfig *config = kapp->config();
+  KLockFile::Ptr lock = config->lockFile();
+  if ( lock.data()->lock() != KLockFile::LockOK ) {
+    kdError() << "Could not aquire lock.";
+    return;
+  }
+
+  config->setGroup( "General" );
+  const int oldNumReminders = config->readNumEntry( "Reminders", 0 );
+  QValueList<QPair<QString,QDateTime> > newReminders;
+  // Delete everything
+  for ( int i = 1; i <= oldNumReminders; ++i ) {
+    const QString group( QString( "Incidence-%1" ).arg( i ) );
+    config->setGroup( group );
+    const QString uid = config->readEntry( "UID" );
+    const QDateTime remindAtDate = config->readDateTimeEntry( "RemindAt" );
+    if ( !uids.contains( uid ) ) {
+      newReminders.append( qMakePair<QString,QDateTime>( uid, remindAtDate ) );
+    }
+    config->deleteGroup( group );
+  }
+
+  config->setGroup( "General" );
+  config->writeEntry( "Reminders", newReminders.count() );
+
+  //Write everything except those which have an uid we dont want
+  for ( int i = 0; i < newReminders.count(); ++i ) {
+    config->setGroup( QString( "Incidence-%1" ).arg( i + 1 ) );
+    config->writeEntry( "UID", newReminders[i].first );
+    config->writeEntry( "RemindAt", newReminders[i].second );
+  }
+  config->sync();
+  lock.data()->unlock();
 }

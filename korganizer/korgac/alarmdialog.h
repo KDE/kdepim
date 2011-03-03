@@ -91,6 +91,8 @@ class AlarmDialog : public KDialogBase {
                                               const QDateTime &reminderAt,
                                               QString &displayStr );
 
+    // Removes each Incidence-X group that has one of the specified uids
+    void removeFromConfig( const QStringList &uids );
     void readLayout();
     void writeLayout();
     AlarmListItem *searchByUid( const QString &uid );
