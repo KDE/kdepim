@@ -322,7 +322,7 @@ void AlarmDialog::edit()
   if ( !incidence ) {
     return;
   }
-  QDate dt = selection.first()->mRemindAt.date();
+  const QDate dt = selection.first()->mRemindAt.date();
 
   if ( incidence->isReadOnly() ) {
     KMessageBox::sorry(

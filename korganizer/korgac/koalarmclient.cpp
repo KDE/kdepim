@@ -46,47 +46,47 @@ KOAlarmClient::KOAlarmClient( QObject *parent, const char *name )
 
   mDocker = new AlarmDockWindow;
   mDocker->show();
-  connect( this, SIGNAL( reminderCount( int ) ), mDocker, SLOT( slotUpdate( int ) ) );
-  connect( mDocker, SIGNAL( quitSignal() ), SLOT( slotQuit() ) );
+  connect( this, SIGNAL(reminderCount(int)), mDocker, SLOT(slotUpdate(int)) );
+  connect( mDocker, SIGNAL(quitSignal()), SLOT(slotQuit()) );
 
   KConfig c( locate( "config", "korganizerrc" ) );
   c.setGroup( "Time & Date" );
-  QString tz = c.readEntry( "TimeZoneId" );
+  const QString tz = c.readEntry( "TimeZoneId" );
   kdDebug(5890) << "TimeZone: " << tz << endl;
 
   mCalendar = new CalendarResources( tz );
   mCalendar->readConfig();
   mCalendar->load();
 
-  connect( &mCheckTimer, SIGNAL( timeout() ), SLOT( checkAlarms() ) );
+  connect( &mCheckTimer, SIGNAL(timeout()), SLOT(checkAlarms()) );
 
   KConfig *config = kapp->config();
   config->setGroup( "Alarms" );
-  int interval = config->readNumEntry( "Interval", 60 );
+  const int interval = config->readNumEntry( "Interval", 60 );
   kdDebug(5890) << "KOAlarmClient check interval: " << interval << " seconds."
                 << endl;
   mLastChecked = config->readDateTimeEntry( "CalendarsLastChecked" );
 
   // load reminders that were active when quitting
   config->setGroup( "General" );
-  int numReminders = config->readNumEntry( "Reminders", 0 );
+  const int numReminders = config->readNumEntry( "Reminders", 0 );
   for ( int i = 1; i <= numReminders; ++i ) {
-    QString group( QString( "Incidence-%1" ).arg( i ) );
+    const QString group( QString( "Incidence-%1" ).arg( i ) );
     config->setGroup( group );
-    QString uid = config->readEntry( "UID" );
-    QDateTime dt = config->readDateTimeEntry( "RemindAt" );
+    const QString uid = config->readEntry( "UID" );
+    const QDateTime remindAtDate = config->readDateTimeEntry( "RemindAt" );
     if ( !uid.isEmpty() ) {
       Incidence *i = mCalendar->incidence( uid );
       if ( i && !i->alarms().isEmpty() ) {
-        createReminder( mCalendar, i, dt, QString() );
+        createReminder( mCalendar, i, remindAtDate, QString() );
       }
     }
     config->deleteGroup( group );
   }
   config->setGroup( "General" );
-  if (numReminders) {
-     config->writeEntry( "Reminders", 0 );
-     config->sync();
+  if ( numReminders ) {
+   config->writeEntry( "Reminders", 0 );
+   config->sync();
   }
 
   checkAlarms();
@@ -127,7 +127,7 @@ void KOAlarmClient::checkAlarms()
 
 void KOAlarmClient::createReminder( KCal::CalendarResources *calendar,
                                     KCal::Incidence *incidence,
-                                    const QDateTime &dt,
+                                    const QDateTime &remindAtDate,
                                     const QString &displayText )
 {
   if ( !incidence )
@@ -138,10 +138,10 @@ void KOAlarmClient::createReminder( KCal::CalendarResources *calendar,
     connect( mDialog, SIGNAL(reminderCount(int)), mDocker, SLOT(slotUpdate(int)) );
     connect( mDocker, SIGNAL(suspendAllSignal()), mDialog, SLOT(suspendAll()) );
     connect( mDocker, SIGNAL(dismissAllSignal()), mDialog, SLOT(dismissAll()) );
-    connect( this, SIGNAL( saveAllSignal() ), mDialog, SLOT( slotSave() ) );
+    connect( this, SIGNAL(saveAllSignal()), mDialog, SLOT(slotSave()) );
   }
 
-  mDialog->addIncidence( incidence, dt, displayText );
+  mDialog->addIncidence( incidence, remindAtDate, displayText );
   mDialog->wakeUp();
   saveLastCheckTime();
 }
@@ -184,16 +184,16 @@ void KOAlarmClient::dumpDebug()
   KConfig *cfg = kapp->config();
 
   cfg->setGroup( "Alarms" );
-  QDateTime lastChecked = cfg->readDateTimeEntry( "CalendarsLastChecked" );
+  const QDateTime lastChecked = cfg->readDateTimeEntry( "CalendarsLastChecked" );
 
   kdDebug(5890) << "Last Check: " << lastChecked << endl;
 }
 
 QStringList KOAlarmClient::dumpAlarms()
 {
-  QDateTime start = QDateTime( QDateTime::currentDateTime().date(),
+  const QDateTime start = QDateTime( QDateTime::currentDateTime().date(),
                                QTime( 0, 0 ) );
-  QDateTime end = start.addDays( 1 ).addSecs( -1 );
+  const QDateTime end = start.addDays( 1 ).addSecs( -1 );
 
   QStringList lst;
   // Don't translate, this is for debugging purposes.
