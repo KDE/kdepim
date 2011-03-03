@@ -690,11 +690,11 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
     checkableProxy->setSourceModel( columnFilterProxy );
     checkableProxy->setSelectionModel( qsm );
 
-    const KConfigGroup g = configGroup.config()->group( configGroup.name()
-                                                        + "_subView_"
-                                                        + QByteArray::number( i ) );
+    const KConfigGroup group = configGroup.config()->group( configGroup.name() +
+                                                            "_subView_"        +
+                                                            QByteArray::number( i ) );
 
-    KViewStateMaintainer<ETMViewStateSaver> saver( g );
+    KViewStateMaintainer<ETMViewStateSaver> saver( group );
     saver.setSelectionModel( checkableProxy->selectionModel() );
     saver.restoreState();
 
@@ -712,13 +712,13 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
   const QStringList titleList = d->mCustomColumnTitles.toList();
   configGroup.writeEntry( "ColumnTitles", titleList );
   int idx = 0;
-  Q_FOREACH ( KCheckableProxyModel *i, d->mCollectionSelectionModels ) {
-    KConfigGroup g = configGroup.config()->group( configGroup.name() +
-                                                  "_subView_" +
-                                                  QByteArray::number( idx ) );
+  foreach( KCheckableProxyModel *checkableProxyModel, d->mCollectionSelectionModels ) {
+    KConfigGroup group = configGroup.config()->group( configGroup.name() +
+                                                      "_subView_"        +
+                                                      QByteArray::number( idx ) );
     ++idx;
-    KViewStateMaintainer<ETMViewStateSaver> saver( g );
-    saver.setSelectionModel( i->selectionModel() );
+    KViewStateMaintainer<ETMViewStateSaver> saver( group );
+    saver.setSelectionModel( checkableProxyModel->selectionModel() );
     saver.saveState();
   }
 }
