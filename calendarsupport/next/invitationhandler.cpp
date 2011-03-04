@@ -304,7 +304,14 @@ InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
                                                 const KCalCore::Incidence::Ptr &incidence )
 {
   /// When we created the incidence, we *must* be the organizer.
-  Q_ASSERT( d->weAreOrganizerOf( incidence ) );
+
+  if ( !d->weAreOrganizerOf( incidence ) ) {
+    kError() << "We should be the organizer of ths incidence!"
+             << "; email= "       << incidence->organizer()->email()
+             << "; thatIsMe() = " << KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
+    Q_ASSERT( false );
+    return InvitationHandler::ResultFailAbortUpdate;
+  }
 
   if ( !d->weNeedToSendMailFor( incidence ) ) {
     return InvitationHandler::ResultNoSendingNeeded;
@@ -335,7 +342,6 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
 {
   // For a modified incidence, either we are the organizer or someone else.
   if ( d->weAreOrganizerOf( incidence ) ) {
-
     if ( d->weNeedToSendMailFor( incidence ) ) {
       QString question = i18n( "You changed the invitation \"%1\".\n"
                                "Do you want to email the attendees an update message?",
