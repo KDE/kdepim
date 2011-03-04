@@ -56,7 +56,7 @@ function get_date
 
 function get_time
 {
-  TIME=`date --utc +%k%M%S`
+  TIME=`date --utc +%k%M%S | awk '{print $1}'`
 }
 
 function svn_repos_outofdate
