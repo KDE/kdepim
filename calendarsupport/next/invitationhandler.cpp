@@ -174,7 +174,9 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
 bool InvitationHandler::Private::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence )
 {
   const QString email = incidence->organizer()->email();
-  return KCalPrefs::instance()->thatIsMe( email ) || email.isEmpty();
+  return KCalPrefs::instance()->thatIsMe( email ) ||
+         email.isEmpty() ||
+         email == QLatin1String( "invalid@email.address" );
 }
 
 bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence )

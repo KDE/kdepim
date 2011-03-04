@@ -107,6 +107,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
      */
     static IncidenceDefaults minimalIncidenceDefaults( bool cleanupAttachmentTemporaryFiles = false );
 
+    // Returns the e-mail address used for the organizer when we can't find anything useful
+    // This is something like "invalid@invalid"
+    static QString invalidEmailAddress();
+
   private:
     IncidenceDefaultsPrivate *const d_ptr;
     Q_DECLARE_PRIVATE( IncidenceDefaults )

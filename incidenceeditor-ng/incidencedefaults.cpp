@@ -76,7 +76,7 @@ struct IncidenceDefaultsPrivate
 
 KCalCore::Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
 {
-  const QString invalidEmail( i18n( "invalid@email.address" ) );
+  const QString invalidEmail = IncidenceDefaults::invalidEmailAddress();
 
   KCalCore::Person::Ptr organizer( new KCalCore::Person );
   organizer->setName( i18n( "no (valid) identities found" ) );
@@ -417,4 +417,11 @@ IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults( bool cleanupAttac
   if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() )
     defaults.setGroupWareDomain( KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
   return defaults;
+}
+
+/** static */
+QString IncidenceDefaults::invalidEmailAddress()
+{
+  static const QString invalidEmail( i18n( "invalid@email.address" ) );
+  return invalidEmail;
 }
