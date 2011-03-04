@@ -305,8 +305,10 @@ void AlarmDialog::dismissCurrent()
 
 void AlarmDialog::dismissAll()
 {
+  QStringList uids;
   for ( QListViewItemIterator it( mIncidenceListView ) ; it.current() ; ) {
     AlarmListItem *item = static_cast<AlarmListItem*>( it.current() );
+    uids.append( item->mUid );
     if ( !item->isVisible() ) {
       ++it;
       continue;
@@ -317,6 +319,10 @@ void AlarmDialog::dismissAll()
   setTimer();
   writeLayout();
   accept();
+
+  // We probably could just remove everything
+  removeFromConfig( uids );
+
   emit reminderCount( activeCount() );
 }
 
