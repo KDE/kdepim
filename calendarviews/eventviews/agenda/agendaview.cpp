@@ -348,7 +348,7 @@ void EventViews::AgendaView::Private::setChanges( EventView::Changes changes,
 
   const int incidenceOperations = IncidencesAdded | IncidencesEdited | IncidencesDeleted;
 
-  // If changes has a flag turned on, other than incidence operations, than update both agendas
+  // If changes has a flag turned on, other than incidence operations, then update both agendas
   if ( ( ones ^ incidenceOperations ) & changes ) {
     mUpdateAllDayAgenda = true;
     mUpdateAgenda = true;
@@ -386,12 +386,8 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
   KCalCore::Event::Ptr event = CalendarSupport::event( aitem );
   KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
 
-  int curCol = mSelectedDates.first().daysTo( curDate );
-
   // In case incidence->dtStart() isn't visible (crosses bounderies)
-  if ( curCol < 0 ) {
-    curCol = 0;
-  }
+  const int curCol = qMax( mSelectedDates.first().daysTo( curDate ), 0 );
 
   // The date for the event is not displayed, just ignore it
   if ( curCol >= mSelectedDates.count() ) {
@@ -414,7 +410,7 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
   int endX;
   QDate columnDate;
   if ( event ) {
-    QDate firstVisibleDate = mSelectedDates.first();
+    const QDate firstVisibleDate = mSelectedDates.first();
     // its crossing bounderies, lets calculate beginX and endX
     if ( curDate < firstVisibleDate ) {
       beginX = curCol + firstVisibleDate.daysTo( curDate );
@@ -441,19 +437,18 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
     mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol,
                                      createSelected );
   } else if ( incidence->allDay() ) {
-      mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX,
-                                       createSelected );
+    mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX,
+                                     createSelected );
   } else if ( event && event->isMultiDay( timeSpec ) ) {
-    int startY = mAgenda->timeToY( event->dtStart().toTimeSpec( timeSpec ).time() );
+    const int startY = mAgenda->timeToY( event->dtStart().toTimeSpec( timeSpec ).time() );
     QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
     if ( endtime == QTime( 0, 0, 0 ) ) {
       endtime = QTime( 23, 59, 59 );
     }
-    int endY = mAgenda->timeToY( endtime ) - 1;
+    const int endY = mAgenda->timeToY( endtime ) - 1;
     if ( ( beginX <= 0 && curCol == 0 ) || beginX == curCol ) {
       mAgenda->insertMultiItem( aitem, columnDate, beginX, endX, startY, endY,
                                 createSelected );
-
     }
     if ( beginX == curCol ) {
       mMaxY[curCol] = mAgenda->timeToY( QTime( 23, 59 ) );
