@@ -475,7 +475,15 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
       endY = mAgenda->timeToY( endtime ) - 1;
     }
     if ( todo ) {
-      QTime t = todo->dtDue().toTimeSpec( timeSpec ).time();
+      QTime t;
+      if ( todo->recurs() ) {
+        // The time we get depends on the curDate, because of daylight savings changes
+        const KDateTime ocurrrenceDateTime = KDateTime( curDate, todo->dtDue().time(),
+                                                        todo->dtDue().timeSpec() );
+        t = ocurrrenceDateTime.toTimeSpec( timeSpec ).time();
+      } else {
+        t = todo->dtDue().toTimeSpec( timeSpec ).time();
+      }
 
       if ( t == QTime( 0, 0 ) && !todo->recurs() ) {
         // To-dos due at 00h00 are drawn at the previous day and ending at
