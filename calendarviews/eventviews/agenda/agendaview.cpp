@@ -477,7 +477,10 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
     if ( todo ) {
       QTime t = todo->dtDue().toTimeSpec( timeSpec ).time();
 
-      if ( t == QTime( 0, 0 ) ) {
+      if ( t == QTime( 0, 0 ) && !todo->recurs() ) {
+        // To-dos due at 00h00 are drawn at the previous day and ending at
+        // 23h59. For recurring to-dos, that's not being done because it wasn't
+        // implemented yet in ::fillAgenda().
         t = QTime( 23, 59 );
       }
 
