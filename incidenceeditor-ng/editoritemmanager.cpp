@@ -136,10 +136,10 @@ void ItemEditorPrivate::itemMoveResult( KJob *job )
   if ( job->error() ) {
     Akonadi::ItemMoveJob *moveJob = qobject_cast<Akonadi::ItemMoveJob*>( job );
     Q_ASSERT( moveJob );
-    Q_ASSERT( !moveJob->items().isEmpty() );
+    //Q_ASSERT( !moveJob->items().isEmpty() );
     // TODO: What is reasonable behavior at this point?
-    kError() << "Error while moving item " << moveJob->items().first().id() << " to collection "
-             << moveJob->destinationCollection() << job->errorString();
+    kError() << "Error while moving item ";// << moveJob->items().first().id() << " to collection "
+             //<< moveJob->destinationCollection() << job->errorString();
     emit q->itemSaveFailed( EditorItemManager::Move, job->errorString() );
   } else {
     // Fetch the item again, we want a new mItem, which has an updated parentCollection
