@@ -357,7 +357,8 @@ QDate IncidenceMonthItem::realStartDate() const
     return QDate();
   }
 
-  const KDateTime dt = mIncidence->dateTime( Incidence::RoleDisplayStart );
+  // TODO: uncomment when we depend on kdepimlibs 4.7: const KDateTime dt = mIncidence->dateTime( Incidence::RoleDisplayStart );
+  const KDateTime dt = mIncidence->dtStart();
   const QDate start = dt.isDateOnly() ? dt.date() :
                                         dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
 
