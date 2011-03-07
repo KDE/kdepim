@@ -356,11 +356,24 @@ QDate IncidenceMonthItem::realStartDate() const
   if ( !mIncidence ) {
     return QDate();
   }
+  KDateTime dt;
+  if ( mIsEvent || mIsJournal ) {
+    dt = mIncidence->dtStart();
+  } else if ( mIsTodo ) {
+    dt = mIncidence.staticCast<Todo>()->dtDue();
+  }
+
+  QDate start;
+  if ( dt.isDateOnly() ) {
+    start = dt.date();
+  } else {
+    start = dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+  }
 
   // TODO: uncomment when we depend on kdepimlibs 4.7: const KDateTime dt = mIncidence->dateTime( Incidence::RoleDisplayStart );
-  const KDateTime dt = mIncidence->dtStart();
-  const QDate start = dt.isDateOnly() ? dt.date() :
-                                        dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+  //const KDateTime dt = mIncidence->dateTime( Incidence::RoleDisplayStart );
+  //const QDate start = dt.isDateOnly() ? dt.date() :
+  //                                      dt.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
 
   return start.addDays( mRecurDayOffset );
 }
