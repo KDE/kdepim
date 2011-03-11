@@ -304,6 +304,27 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     void updated();
     void updatedSilent();
 
+   /**
+      Call this when a group of updates is going to be made. This suppresses
+      change notifications until endUpdates() is called, at which point
+      updated() will automatically be called.
+    */
+    void startUpdates();
+
+    /**
+      Call this when a group of updates is complete, to notify observers that
+      the instance has changed. This should be called in conjunction with
+      startUpdates().
+    */
+    void endUpdates();
+
+    /**
+      Call this instead of endUpdates() if you don't want to notify observers that
+      the instance has changed.  This should be called in conjunction with
+      startUpdates().
+    */
+    void cancelUpdates();
+
     // For debugging/Testing purposes.
     QPtrList<Observer> observers() const;
 
@@ -361,6 +382,9 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     int mSyncStatus;                      // status (for sync)
 
     QPtrList<Observer> mObservers;
+
+    // each startUpdates() increments this, each endUpdates() decrements this
+    int mUpdateGroupLevel;
 
     class Private;
     Private *d;

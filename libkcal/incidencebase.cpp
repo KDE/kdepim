@@ -32,7 +32,7 @@ using namespace KCal;
 
 IncidenceBase::IncidenceBase()
   : mReadOnly( false ), mFloats( true ), mDuration( 0 ), mHasDuration( false ),
-    mPilotId( 0 ), mSyncStatus( SYNCMOD )
+    mPilotId( 0 ), mSyncStatus( SYNCMOD ), mUpdateGroupLevel( 0 )
 {
   setUid( CalFormat::createUniqueId() );
 
@@ -43,6 +43,7 @@ IncidenceBase::IncidenceBase()
 IncidenceBase::IncidenceBase(const IncidenceBase &i) :
   CustomProperties( i )
 {
+  mUpdateGroupLevel = 0;
   mReadOnly = i.mReadOnly;
   mDtStart = i.mDtStart;
   mDuration = i.mDuration;
@@ -433,6 +434,31 @@ void IncidenceBase::updatedSilent()
     Observer *o = it.current();
     ++it;
     o->incidenceUpdatedSilent( this );
+  }
+}
+
+void IncidenceBase::startUpdates()
+{
+  ++mUpdateGroupLevel;
+}
+
+void IncidenceBase::endUpdates()
+{
+  if ( mUpdateGroupLevel > 0 ) {
+    if ( --mUpdateGroupLevel == 0 ) {
+      updated();
+    }
+  } else {
+    kdWarning() << "startUpdates() not called() before endUpdates()";
+  }
+}
+
+void IncidenceBase::cancelUpdates()
+{
+  if ( mUpdateGroupLevel != 0 ) {
+    mUpdateGroupLevel = 0;
+  } else {
+    kdWarning() << "startUpdates() not called() before cancelUpdates()";
   }
 }
 
