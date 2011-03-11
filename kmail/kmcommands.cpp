@@ -3177,7 +3177,8 @@ void KMHandleAttachmentCommand::atmOpen()
     fname = mAtmName;
   }
 
-  KPIM::checkAndCorrectPermissionsIfPossible( fname, false, true, true );
+  // kolab/issue4642 Mail attachment is read-only
+  //  KPIM::checkAndCorrectPermissionsIfPossible( fname, false, true, true );
 
   url.setPath( fname );
   lst.append( url );
@@ -3198,7 +3199,8 @@ void KMHandleAttachmentCommand::atmOpenWith()
     fname = mAtmName;
   }
 
-  KPIM::checkAndCorrectPermissionsIfPossible( fname, false, true, true );
+  // kolab/issue4642 Mail attachment is read-only
+  //KPIM::checkAndCorrectPermissionsIfPossible( fname, false, true, true );
 
   url.setPath( fname );
   lst.append( url );
