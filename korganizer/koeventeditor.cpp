@@ -290,10 +290,16 @@ bool KOEventEditor::processInput()
       } else {
         if ( mRecurIncidence && mRecurIncidenceAfterDissoc ) {
           writeEvent( mEvent );
-          mChanger->addIncidence( mEvent, mResource, mSubResource, this, false );
 
-          mChanger->changeIncidence( mRecurIncidence, mRecurIncidenceAfterDissoc,
-                                     KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE, this, true );
+          mRecurIncidence->startUpdates();
+          const bool success = mChanger->changeIncidence( mRecurIncidence, mRecurIncidenceAfterDissoc,
+                                                          KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE, this, false );
+          if ( success ) {
+            mRecurIncidence->endUpdates();
+            mChanger->addIncidence( mEvent, mResource, mSubResource, this, true );
+          } else {
+            mRecurIncidence->cancelUpdates();
+          }
         } else {
           mEvent->startUpdates();
           writeEvent( mEvent );
