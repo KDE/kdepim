@@ -279,8 +279,8 @@ bool KOEventEditor::processInput()
     } else {
       kdDebug(5850) << "Event changed" << endl;
       //IncidenceChanger::assignIncidence( mEvent, event );
-      writeEvent( mEvent );
       if ( mIsCounter ) {
+        writeEvent( mEvent );
         KOGroupware::instance()->sendCounterProposal( mCalendar, oldEvent, mEvent );
         // add dummy event at the position of the counter proposal
         Event *event = mEvent->clone();
@@ -289,13 +289,20 @@ bool KOEventEditor::processInput()
         mChanger->addIncidence( event, mResource, mSubResource, this );
       } else {
         if ( mRecurIncidence && mRecurIncidenceAfterDissoc ) {
+          writeEvent( mEvent );
           mChanger->addIncidence( mEvent, mResource, mSubResource, this, false );
 
           mChanger->changeIncidence( mRecurIncidence, mRecurIncidenceAfterDissoc,
                                      KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE, this, true );
-
         } else {
-          mChanger->changeIncidence( oldEvent, mEvent, KOGlobals::NOTHING_MODIFIED, this );
+          mEvent->startUpdates();
+          writeEvent( mEvent );
+          const bool success = mChanger->changeIncidence( oldEvent, mEvent, KOGlobals::NOTHING_MODIFIED, this );
+          if ( success ) {
+            mEvent->endUpdates();
+          } else {
+            mEvent->cancelUpdates();
+          }
         }
       }
     }

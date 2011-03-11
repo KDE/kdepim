@@ -141,8 +141,15 @@ bool KOJournalEditor::processInput()
 
   if ( mJournal ) {
     Journal *oldJournal = mJournal->clone();
+    mJournal->startUpdates();
     writeJournal( mJournal );
-    mChanger->changeIncidence( oldJournal, mJournal, KOGlobals::NOTHING_MODIFIED, this );
+    const bool success = mChanger->changeIncidence( oldJournal, mJournal, KOGlobals::NOTHING_MODIFIED, this );
+    if ( success ) {
+      mJournal->endUpdates();
+    } else {
+      mJournal->cancelUpdates();
+    }
+
     delete oldJournal;
   } else {
     mJournal = new Journal;

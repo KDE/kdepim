@@ -210,6 +210,7 @@ bool KOTodoEditor::processInput()
     } else {
       kdDebug(5850) << "Todo changed\n";
       //IncidenceChanger::assignIncidence( mTodo, todo );
+      mTodo->startUpdates();
       writeTodo( mTodo );
 
       KOGlobals::WhatChanged whatChanged;
@@ -220,7 +221,12 @@ bool KOTodoEditor::processInput()
         whatChanged = KOGlobals::NOTHING_MODIFIED;
       }
 
-      mChanger->changeIncidence( oldTodo, mTodo, whatChanged, this );
+      const bool success = mChanger->changeIncidence( oldTodo, mTodo, whatChanged, this );
+      if ( success ) {
+        mTodo->endUpdates();
+      } else {
+        mTodo->cancelUpdates();
+      }
     }
     delete todo;
     delete oldTodo;
