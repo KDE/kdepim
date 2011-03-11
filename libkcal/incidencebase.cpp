@@ -412,12 +412,14 @@ void IncidenceBase::unRegisterObserver( IncidenceBase::Observer *observer )
 
 void IncidenceBase::updated()
 {
-  QPtrListIterator<Observer> it(mObservers);
-  while( it.current() ) {
-    Observer *o = it.current();
-    ++it;
-    if ( o ) {
-      o->incidenceUpdated( this );
+  if ( mUpdateGroupLevel == 0 ) {
+    QPtrListIterator<Observer> it(mObservers);
+    while( it.current() ) {
+      Observer *o = it.current();
+      ++it;
+      if ( o ) {
+        o->incidenceUpdated( this );
+      }
     }
   }
 }
