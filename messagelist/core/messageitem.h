@@ -96,13 +96,9 @@ public:
 public:
 
   /// Returns the list of tags for this item.
-  /// The tags are fetched from Nepomuk, you need to call setNepomukResourceURI() before so that
-  /// the correct Nepomuk::Resource is used for the tags.
   virtual QList< Tag * > tagList() const;
 
   /// Returns true if this message has an annotation.
-  /// This is the case if the Nepomuk::Resource that is associated with the URI set by
-  /// setNepomukResourceURI() has a description which is not empty
   virtual bool hasAnnotation() const;
 
   /// Returns the annotation of the message, given that hasAnnotation() is true
