@@ -106,6 +106,19 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
     SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
                                             const KCalCore::Incidence::Ptr &incidence );
 
+
+    /**
+       Checks if the incidence should really be modified.
+
+       If the user is not the organizer of this incidence, he will be asked if he really
+       wants to proceed.
+
+       Only create the ItemModifyJob if this method returns true.
+
+       @param incidence The modified incidence. It may not be null.
+     */
+    bool handleIncidenceAboutToBeModified( const KCalCore::Incidence::Ptr &incidence );
+
     /**
       Handles sending of invitations for modified incidences.
       @param incidence The modified incidence.

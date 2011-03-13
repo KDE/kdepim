@@ -139,7 +139,6 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
   // deletion notification.
 
   if ( messageBoxReturnCode == KMessageBox::Yes ) {
-
     // We will be sending out a message here. Now make sure there is some summary
     // Yes, we do modify the incidence here, but we still keep the Ptr
     // semantics, because this change is only for sending and not stored int the
@@ -337,6 +336,37 @@ InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
   return d->sentInvitation( messageBoxReturnCode, incidence, method );
 }
 
+bool InvitationHandler::handleIncidenceAboutToBeModified( const KCalCore::Incidence::Ptr &incidence )
+{
+  Q_ASSERT( incidence );
+  if ( !d->weAreOrganizerOf( incidence ) ) {
+    switch( incidence->type() ) {
+      case KCalCore::Incidence::TypeEvent:
+      {
+        const QString question =
+          i18n( "You are not the organizer of this event. Editing it will "
+                "bring your calendar out of sync with the organizer's calendar. "
+                "Do you really want to edit it?" );
+        const int messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
+        return messageBoxReturnCode != KMessageBox::No;
+      }
+        break;
+      case KCalCore::Incidence::TypeJournal:
+      case KCalCore::Incidence::TypeTodo:
+        // Not sure why we handle to-dos differently regarding this
+        return true;
+        break;
+      default:
+        kError() << "Unknown incidence type: " << incidence->type() << incidence->typeStr();
+        Q_ASSERT_X( false, "InvitationHandler::handleIncidenceAboutToBeModified()",
+                           "Unknown incidence type" );
+        return false;
+    }
+  } else {
+    return true;
+  }
+}
+
 InvitationHandler::SendResult
 InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
                                                  const KCalCore::Incidence::Ptr &incidence,
@@ -345,8 +375,8 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
   // For a modified incidence, either we are the organizer or someone else.
   if ( d->weAreOrganizerOf( incidence ) ) {
     if ( d->weNeedToSendMailFor( incidence ) ) {
-      QString question = i18n( "You changed the invitation \"%1\".\n"
-                               "Do you want to email the attendees an update message?",
+      const QString question = i18n( "You changed the invitation \"%1\".\n"
+                                     "Do you want to email the attendees an update message?",
                                incidence->summary() );
 
       const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
@@ -363,34 +393,21 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
       method = KCalCore::iTIPReply;
     }
 
-    QString question = i18n( "Do you want to send a status update to the "
-                             "organizer of this task?" );
+    const QString question = i18n( "Do you want to send a status update to the "
+                                   "organizer of this task?" );
     const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
     return d->sentInvitation( messageBoxReturnCode, incidence, method );
 
   } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
-
     if ( attendeeStatusChanged && method == KCalCore::iTIPRequest ) {
-
       method = KCalCore::iTIPReply;
       const QString question =
         i18n( "Your status as an attendee of this event changed. "
               "Do you want to send a status update to the event organizer?" );
       const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
       return d->sentInvitation( messageBoxReturnCode, incidence, method );
-
     } else {
-
-      const QString question =
-        i18n( "You are not the organizer of this event. Editing it will "
-              "bring your calendar out of sync with the organizer's calendar. "
-              "Do you really want to edit it?" );
-      const int messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
-      if ( messageBoxReturnCode == KMessageBox::No ) {
-        return ResultFailAbortUpdate;
-      } else {
-        return d->sentInvitation( messageBoxReturnCode, incidence, method );
-      }
+      return d->sentInvitation( KMessageBox::Yes, incidence, method );
     }
   }
   Q_ASSERT( false ); // Shouldn't happen.
@@ -416,7 +433,7 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
                          incidence->summary() );
       }  else if ( incidence->type() == KCalCore::Incidence::TypeJournal ) {
         question = "You removed the invitation" + incidence->summary() + ".\n"
-                    "Do you want to email the attendees that the journal is canceled?"; //TODO: i18n
+                   "Do you want to email the attendees that the journal is canceled?"; //TODO: i18n
       }
 
       const int messageBoxReturnCode = d->askUserIfNeeded( question, false );
