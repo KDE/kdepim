@@ -20,6 +20,9 @@
 
 #include "editoritemmanager.h"
 
+#include <calendarsupport/next/invitationhandler.h>
+#include <utils.h>
+
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
@@ -337,14 +340,33 @@ void EditorItemManager::save()
   if ( d->mItem.isValid() ) { // A valid item. Means we're modifying.
     Q_ASSERT( d->mItem.parentCollection().isValid() );
 
+    CalendarSupport::InvitationHandler invitationHandler( 0 );
+    KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( d->mItem );
+
     if ( d->mItem.parentCollection() == d->mItemUi->selectedCollection() ) {
-      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( d->mItem );
-      connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+      const bool modify = invitationHandler.handleIncidenceAboutToBeModified( incidence );
+      if ( modify ) {
+        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( d->mItem );
+        connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+      } else {
+        emit itemSaveFailed( EditorItemManager::Modify, QString() );
+        Akonadi::Item item;
+        item.setId( d->mItem.id() );
+        load( item );
+      }
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
       if ( d->mItemUi->isDirty() ) {
-        d->createMoveAndModifyTransactionJob();
+        const bool modify = invitationHandler.handleIncidenceAboutToBeModified( incidence );
+        if ( modify ) {
+          d->createMoveAndModifyTransactionJob();
+        } else {
+          emit itemSaveFailed( EditorItemManager::Modify, QString() );
+          Akonadi::Item item;
+          item.setId( d->mItem.id() );
+          load( item );
+        }
       } else {
         Akonadi::ItemMoveJob *itemMoveJob =
           new Akonadi::ItemMoveJob( d->mItem, d->mItemUi->selectedCollection() );
