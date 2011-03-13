@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>StackedWidget</string>
+   <string comment="KDE::DoNotExtract">StackedWidget</string>
   </property>
   <property name="currentIndex">
    <number>0</number>

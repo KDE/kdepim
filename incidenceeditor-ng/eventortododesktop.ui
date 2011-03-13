@@ -821,7 +821,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string comment="@label">TextLabel</string>
+              <string comment="KDE::DoNotExtract">TextLabel</string>
              </property>
             </widget>
            </item>

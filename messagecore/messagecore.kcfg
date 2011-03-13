@@ -67,7 +67,7 @@
       <default code="true">KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::PositiveBackground ).color()</default>
     </entry>
     <entry name="PgpEncryptedMessageColor" type="Color" key="PGPMessageEncr">
-      <label>This is the colour used for highlighting all encrypted messages</label>
+      <label>This is the color used for highlighting all encrypted messages</label>
       <default>#0080FF</default>
     </entry>
   </group>
