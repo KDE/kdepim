@@ -21,9 +21,10 @@
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
+#define MOBILEUICALENDAR_EXPORT
 
 #ifndef MOBILEUICALENDAR_EXPORT
-# if defined(KDEPIM_STATIC_LIBS)
+# if defined(KDEPIM_STATIC_LIBS) || defined(KDEPIMMOBILEUICALENDAR_STATIC_LIB)
    /* No export/import for static libraries */
 #  define MOBILEUICALENDAR_EXPORT
 # elif defined(MAKE_KDEPIMMOBILEUICALENDAR_LIB)
