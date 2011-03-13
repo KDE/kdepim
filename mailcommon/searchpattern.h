@@ -302,7 +302,7 @@ protected:
     QString  mContents;
 };
 
-// Needed for MSVC 2010, as it seems to not implicit cast a pointer to long anymore
+// Needed for MSVC 2010, as it seems to not implicit cast for a pointer anymore
 #ifdef _MSC_VER
 uint qHash(SearchRule::Ptr sr);
 #endif
