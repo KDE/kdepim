@@ -66,7 +66,8 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
                                 const QString &mailTransport )
 {
   KCalCore::Attendee::List attendees = incidence->attendees();
-  if ( attendees.count() == 0 ) {
+  if ( attendees.isEmpty() ) {
+    kWarning() << "There are no attendees to e-mail";
     return false;
   }
 
@@ -108,6 +109,7 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
   }
   if( toList.count() == 0 && ccList.count() == 0 ) {
     // Not really to be called a groupware meeting, eh
+    kWarning() << "There are really no attendees to e-mail";
     return false;
   }
   QString to;
@@ -127,7 +129,7 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
     subject = i18n( "Free Busy Object" );
   }
 
-  QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
+  const QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
   return send( identity, from, to, cc, subject, body, false,
                bccMe, attachment, mailTransport );
@@ -139,8 +141,7 @@ bool MailClient::mailOrganizer( const KCalCore::IncidenceBase::Ptr &incidence,
                                 const QString &attachment,
                                 const QString &sub, const QString &mailTransport )
 {
-  QString to = incidence->organizer()->fullName();
-
+  const QString to = incidence->organizer()->fullName();
   QString subject = sub;
 
   if ( incidence->type() != KCalCore::Incidence::TypeFreeBusy ) {
@@ -172,7 +173,7 @@ bool MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
   } else {
     subject = i18n( "Free Busy Message" );
   }
-  QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
+  const QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
   return send( identity, from, recipients, QString(), subject, body, false,
                bccMe, attachment, mailTransport );
@@ -215,7 +216,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   if ( !transport ) {
     // TODO: we need better error handling. Currently korganizer just says "Error sending invitation".
     // Using a boolean for errors isn't granular enough.
-    kWarning() << "Error fetching transport; mailTransport"
+    kError() << "Error fetching transport; mailTransport"
                << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
     return false;
   }
