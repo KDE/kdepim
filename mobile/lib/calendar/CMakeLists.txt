@@ -22,6 +22,7 @@ kde4_add_ui_files(mobileui_calendar_SRCS
   ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/eventortodomoremobile.ui
 )
 
+add_definitions( -DKDEPIMMOBILEUICALENDAR_STATIC_LIB )
 kde4_add_library(kdepimmobileuicalendar STATIC ${mobileui_calendar_SRCS})
 
 target_link_libraries(kdepimmobileuicalendar
