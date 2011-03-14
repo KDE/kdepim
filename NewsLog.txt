@@ -1,4 +1,15 @@
 
+Monday 14 March 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4096: User with write access to a calendar folder should be able to change the events (even if he is not the organizer (rt#5999)
+* kolab/issue4371: Decryption with kgpg (rt#5667)
+* kolab/issue4642: Mail attachment is read-only (rt#5950)
+
+
+
 Thursday 03 March 2011
 
 Problems addressed
