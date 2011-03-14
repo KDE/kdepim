@@ -536,11 +536,20 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
   GpgME::Key key;
 
   if ( doCheck && cryptProto ) {
+#ifdef DEBUG_SIGNATURE
+    kDebug() << "tokoe: doCheck and cryptProto";
+#endif
     GpgME::VerificationResult result;
     if ( data ) { // detached
+#ifdef DEBUG_SIGNATURE
+      kDebug() << "tokoe: is detached signature";
+#endif
       const VerifyDetachedBodyPartMemento * m
         = dynamic_cast<VerifyDetachedBodyPartMemento*>( mNodeHelper->bodyPartMemento( &sign, "verifydetached" ) );
       if ( !m ) {
+#ifdef DEBUG_SIGNATURE
+        kDebug() << "tokoe: no memento available";
+#endif
         Kleo::VerifyDetachedJob * job = cryptProto->verifyDetachedJob();
         if ( !job ) {
           cryptPlugError = CANT_VERIFY_SIGNATURES;
@@ -550,9 +559,15 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
           VerifyDetachedBodyPartMemento * newM
             = new VerifyDetachedBodyPartMemento( job, cryptProto->keyListJob(), signaturetext, plainData );
           if ( allowAsync() ) {
+#ifdef DEBUG_SIGNATURE
+            kDebug() << "tokoe: allowAsync";
+#endif
             QObject::connect( newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
                               mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
             if ( newM->start() ) {
+#ifdef DEBUG_SIGNATURE
+              kDebug() << "tokoe: new memento started";
+#endif
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
             } else {
@@ -565,21 +580,33 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
           mNodeHelper->setBodyPartMemento( &sign, "verifydetached", newM );
         }
       } else if ( m->isRunning() ) {
+#ifdef DEBUG_SIGNATURE
+        kDebug() << "tokoe: memento is running";
+#endif
         messagePart.inProgress = true;
         mHasPendingAsyncJobs = true;
         m = 0;
       }
 
       if ( m ) {
+#ifdef DEBUG_SIGNATURE
+        kDebug() << "tokoe: memento finished, assign result";
+#endif
         result = m->verifyResult();
         messagePart.auditLogError = m->auditLogError();
         messagePart.auditLog = m->auditLogAsHtml();
         key = m->signingKey();
       }
     } else { // opaque
+#ifdef DEBUG_SIGNATURE
+      kDebug() << "tokoe: is opaque signature";
+#endif
       const VerifyOpaqueBodyPartMemento * m
         = dynamic_cast<VerifyOpaqueBodyPartMemento*>( mNodeHelper->bodyPartMemento( &sign, "verifyopaque" ) );
       if ( !m ) {
+#ifdef DEBUG_SIGNATURE
+        kDebug() << "tokoe: no memento available";
+#endif
         Kleo::VerifyOpaqueJob * job = cryptProto->verifyOpaqueJob();
         if ( !job ) {
           cryptPlugError = CANT_VERIFY_SIGNATURES;
@@ -588,9 +615,15 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
           VerifyOpaqueBodyPartMemento * newM
             = new VerifyOpaqueBodyPartMemento( job, cryptProto->keyListJob(), signaturetext );
           if ( allowAsync() ) {
+#ifdef DEBUG_SIGNATURE
+            kDebug() << "tokoe: allowAsync";
+#endif
             QObject::connect( newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(),
                               SLOT(update(MessageViewer::Viewer::UpdateMode)) );
             if ( newM->start() ) {
+#ifdef DEBUG_SIGNATURE
+              kDebug() << "tokoe: new memento started";
+#endif
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
             } else {
@@ -603,12 +636,18 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
           mNodeHelper->setBodyPartMemento( &sign, "verifyopaque", newM );
         }
       } else if ( m->isRunning() ) {
+#ifdef DEBUG_SIGNATURE
+        kDebug() << "tokoe: memento is running";
+#endif
         messagePart.inProgress = true;
         mHasPendingAsyncJobs = true;
         m = 0;
       }
 
       if ( m ) {
+#ifdef DEBUG_SIGNATURE
+        kDebug() << "tokoe: memento finished, assign result";
+#endif
         result = m->verifyResult();
         cleartext = m->plainText();
         messagePart.auditLogError = m->auditLogError();
