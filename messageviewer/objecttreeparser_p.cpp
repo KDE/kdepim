@@ -161,6 +161,8 @@ bool VerifyDetachedBodyPartMemento::start() {
 #ifdef DEBUG_SIGNATURE
   kDebug() << "tokoe: VerifyDetachedBodyPartMemento started";
 #endif
+  connect( m_job, SIGNAL(result(const GpgME::VerificationResult&)),
+           this, SLOT(slotResult(const GpgME::VerificationResult&)) );
   if ( const Error err = m_job->start( m_signature, m_plainText ) ) {
     m_vr = VerificationResult( err );
 #ifdef DEBUG_SIGNATURE
@@ -168,8 +170,6 @@ bool VerifyDetachedBodyPartMemento::start() {
 #endif
     return false;
   }
-  connect( m_job, SIGNAL(result(const GpgME::VerificationResult&)),
-           this, SLOT(slotResult(const GpgME::VerificationResult&)) );
   setRunning( true );
   return true;
 }
