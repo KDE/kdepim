@@ -502,10 +502,10 @@ void MonthView::reloadIncidences()
 
   foreach ( const Akonadi::Item &aitem, incidences ) {
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+    const bool isTodo = incidence->type() == KCalCore::Incidence::TypeTodo;
 
     // Remove the two checks when filtering is done through a proxyModel, when calendar search is used.
-    if ( !preferences()->showTodosMonthView() &&
-         incidence->type() == KCalCore::Incidence::TypeTodo ) {
+    if ( !preferences()->showTodosMonthView() && isTodo ) {
       continue;
     }
 
@@ -520,6 +520,11 @@ void MonthView::reloadIncidences()
       // Get a list of all dates that the recurring event will happen
       dateTimeList = incidence->recurrence()->timesInInterval(
         actualStartDateTime(), actualEndDateTime() );
+
+      if ( isTodo ) {
+        KCalCore::Todo::Ptr todo = CalendarSupport::todo( aitem );
+        removeFilteredOccurrences( todo, dateTimeList );
+      }
     } else {
       KDateTime dateToAdd;
 

@@ -1559,6 +1559,11 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
     const KDateTime startDateTimeWithOffset = firstVisibleDateTime.addDays( -eventDuration );
     dateTimeList = incidence->recurrence()->timesInInterval( startDateTimeWithOffset,
                                                              lastVisibleDateTime );
+
+    if ( todo ) {
+      removeFilteredOccurrences( todo, dateTimeList );
+    }
+
   } else {
     KDateTime dateToAdd; // date to add to our date list
     KDateTime incidenceStart;
