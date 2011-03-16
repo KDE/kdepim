@@ -1140,10 +1140,14 @@ void KOAgenda::endItemAction()
                                     KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY :
                                     KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE;
 
-        mChanger->changeIncidence( oldIncSaved, inc, wc, this );
+        const bool success = mChanger->changeIncidence( oldIncSaved, inc, wc, this );
 
-        mActionItem->dissociateFromMultiItem();
-        mActionItem->setIncidence( incToChange );
+        if ( success ) {
+          mActionItem->dissociateFromMultiItem();
+          mActionItem->setIncidence( incToChange );
+        } else {
+          incToChange = 0;
+        }
       }
     }
 
@@ -1155,7 +1159,6 @@ void KOAgenda::endItemAction()
       }
 
       KOAgendaItem *modif = placeItem;
-
       AgendaItemList oldconflictItems = placeItem->conflictItems();
 
       AgendaItemList::Iterator it;
@@ -1176,7 +1179,6 @@ void KOAgenda::endItemAction()
       kdDebug() << "Modified." << endl;
       mAgendaView->updateEventDates( modif, useLastGroupwareDialogAnswer, mResPair.first, mResPair.second, addIncidence );
     } else {
-
       mActionItem->resetMove();
       placeSubCells( mActionItem );
 
