@@ -54,6 +54,8 @@
 
 #include <cassert>
 
+#include <KDebug>
+
 namespace Kleo {
 namespace _detail {
 
@@ -99,8 +101,11 @@ namespace _detail {
 
   private:
       /* reimp */ void run() {
+          kDebug() << "tokoe: Thread::run started";
           const QMutexLocker locker( &m_mutex );
+          kDebug() << "tokoe: Thread::run: after mutex";
           m_result = m_function();
+          kDebug() << "tokoe: Thread::run: after m_function call";
       }
   private:
       mutable QMutex m_mutex;
@@ -143,6 +148,7 @@ namespace _detail {
 
     void lateInitialization() {
       assert( m_ctx );
+      kDebug() << "tokoe: ThreadedJobMixin: connect finished signal";
       connect( &m_thread, SIGNAL(finished()), this, SLOT(slotFinished()) );
       m_ctx->setProgressProvider( this );
     }
@@ -178,15 +184,18 @@ namespace _detail {
     virtual void resultHook( const result_type & ) {}
 
     void slotFinished() {
+      kDebug() << "tokoe: ThreadedJobMixin::slotFinished called";
       const T_result r = m_thread.result();
       m_auditLog = boost::get<boost::tuples::length<T_result>::value-2>( r );
       m_auditLogError = boost::get<boost::tuples::length<T_result>::value-1>( r );
       resultHook( r );
+      kDebug() << "tokoe: ThreadedJobMixin::slotFinished: emit result signal";
       emit this->done();
       doEmitResult( r );
       this->deleteLater();
     }
     /* reimp */ void slotCancel() {
+      kDebug() << "tokoe: ThreadedJobMixin::slotCancel called";
       if ( m_ctx ) m_ctx->cancelPendingOperation();
     }
     /* reimp */ QString auditLogAsHtml() const { return m_auditLog; }

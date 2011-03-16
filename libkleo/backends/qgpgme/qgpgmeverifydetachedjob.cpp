@@ -38,6 +38,7 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
+#include <KDebug>
 #include <KLocale>
 
 #include <cassert>
@@ -51,25 +52,30 @@ using namespace boost;
 QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( Context * context )
   : mixin_type( context )
 {
+  kDebug();
   lateInitialization();
 }
 
 QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {}
 
 static QGpgMEVerifyDetachedJob::result_type verify_detached( Context * ctx, QThread * thread, const weak_ptr<QIODevice> & signature_, const weak_ptr<QIODevice> & signedData_ ) {
+  kDebug() << "tokoe: start verify_detached";
   const shared_ptr<QIODevice> signature = signature_.lock();
   const shared_ptr<QIODevice> signedData = signedData_.lock();
 
   const _detail::ToThreadMover sgMover( signature,  thread );
   const _detail::ToThreadMover sdMover( signedData, thread );
 
+  kDebug() << "tokoe: setup data provider";
   QGpgME::QIODeviceDataProvider sigDP( signature );
   Data sig( &sigDP );
 
   QGpgME::QIODeviceDataProvider dataDP( signedData );
   Data data( &dataDP );
 
+  kDebug() << "tokoe: execute ctx->verifyDetachedSignature";
   const VerificationResult res = ctx->verifyDetachedSignature( sig, data );
+  kDebug() << "tokoe: after execute ctx->verifyDetachedSignature";
   Error ae;
   const QString log = _detail::audit_log_as_html( ctx, ae );
 
@@ -77,13 +83,16 @@ static QGpgMEVerifyDetachedJob::result_type verify_detached( Context * ctx, QThr
 }
 
 static QGpgMEVerifyDetachedJob::result_type verify_detached_qba( Context * ctx, const QByteArray & signature, const QByteArray & signedData ) {
+  kDebug() << "tokoe: start verify_detached_qba";
   QGpgME::QByteArrayDataProvider sigDP( signature );
   Data sig( &sigDP );
 
   QGpgME::QByteArrayDataProvider dataDP( signedData );
   Data data( &dataDP );
 
+  kDebug() << "tokoe: execute ctx->verifyDetachedSignature";
   const VerificationResult res = ctx->verifyDetachedSignature( sig, data );
+  kDebug() << "tokoe: after execute ctx->verifyDetachedSignature";
   Error ae;
   const QString log = _detail::audit_log_as_html( ctx, ae );
 
