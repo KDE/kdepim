@@ -1,4 +1,12 @@
 
+Thursday 16 March 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4096 (partly): User with write access to a calendar folder should be able to change the events (even if he is not the organizer)(rt#5999)
+
+
 Monday 14 March 2011
 
 Problems addressed
@@ -14,7 +22,6 @@ Thursday 03 March 2011
 Problems addressed
 ------------------
 
-* kolab/issue4096: User with write access to a calendar folder should be able to change the events (even if he is not the organizer (rt#5999)
 * kolab/issue4382: Wrong reappearing of a suspended alarm after restart (rt#6160)
 
 
