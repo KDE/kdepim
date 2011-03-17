@@ -28,11 +28,14 @@
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>
 #include <strigi/streamendanalyzer.h>
+#include <strigi/kmpsearcher.h>
 
 #include <QtCore/QBuffer>
 #include <QtCore/QDebug>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
+
+using namespace Strigi;
 
 CtgEndAnalyzer::CtgEndAnalyzer( const CtgEndAnalyzerFactory *factory )
   : m_factory( factory )
@@ -46,7 +49,10 @@ const char* CtgEndAnalyzer::name() const
 
 bool CtgEndAnalyzer::checkHeader( const char* header, qint32 headersize ) const
 {
-  return headersize >= 54 && strstr( header, "<contactGroup" );
+  // initialize a searcher with the string we are looking for
+  KmpSearcher ctgSearcher( "<contactGroup" );
+
+  return headersize >= 54 && ctgSearcher.search ( header, headersize );
 }
 
 STRIGI_ENDANALYZER_RETVAL CtgEndAnalyzer::analyze( Strigi::AnalysisResult &index, Strigi::InputStream *stream )
