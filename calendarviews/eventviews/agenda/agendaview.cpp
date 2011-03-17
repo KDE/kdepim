@@ -440,12 +440,25 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
     mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX,
                                      createSelected );
   } else if ( event && event->isMultiDay( timeSpec ) ) {
-    const int startY = mAgenda->timeToY( event->dtStart().toTimeSpec( timeSpec ).time() );
-    QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
-    if ( endtime == QTime( 0, 0, 0 ) ) {
-      endtime = QTime( 23, 59, 59 );
+    // TODO: We need a better isMultiDay(), one that receives the occurrence.
+
+    // In the single-day handling code there's a neat comment on why
+    // we're calculating the start time this way
+    const QTime startTime = KDateTime( curDate,
+                                       event->dtStart().time(),
+                                       event->dtStart().timeSpec() ).toTimeSpec( timeSpec ).time();
+
+    // In the single-day handling code there's a neat comment on why we use the
+    // duration instead of fetching the end time directly
+    const int durationOfFirstOccurrence = event->dtStart().secsTo( event->dtEnd() );
+    QTime endTime = startTime.addSecs( durationOfFirstOccurrence );
+
+    const int startY = mAgenda->timeToY( startTime );
+
+    if ( endTime == QTime( 0, 0, 0 ) ) {
+      endTime = QTime( 23, 59, 59 );
     }
-    const int endY = mAgenda->timeToY( endtime ) - 1;
+    const int endY = mAgenda->timeToY( endTime ) - 1;
     if ( ( beginX <= 0 && curCol == 0 ) || beginX == curCol ) {
       mAgenda->insertMultiItem( aitem, columnDate, beginX, endX, startY, endY,
                                 createSelected );
@@ -466,13 +479,29 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
     }
   } else {
     int startY = 0, endY = 0;
-    if ( event ) {
-      startY = mAgenda->timeToY( incidence->dtStart().toTimeSpec( timeSpec ).time() );
-      QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
-      if ( endtime == QTime( 0, 0, 0 ) ) {
-        endtime = QTime( 23, 59, 59 );
+    if ( event ) { // Single day events fall here
+      // Don't use event->dtStart().toTimeSpec( timeSpec ).time().
+      // If it's a UTC recurring event it should have a different time when it crosses DST,
+      // so we must use curDate here, so we get the correct time.
+      //
+      // The nth occurrence doesn't always have the same time as the 1st occurrence.
+      const QTime startTime = KDateTime( curDate,
+                                         event->dtStart().time(),
+                                         event->dtStart().timeSpec() ).toTimeSpec( timeSpec ).time();
+
+      // We could just fetch the end time directly from dtEnd() instead of adding a duration to the
+      // start time. This way is best because it preserves the duration of the event. There are some
+      // corner cases where the duration would be messed up, for example a UTC event that when
+      // converted to local has dtStart() in day light saving time, but dtEnd() outside DST.
+      // It could create events with 0 duration.
+      const int durationOfFirstOccurrence = event->dtStart().secsTo( event->dtEnd() );
+      QTime endTime = startTime.addSecs( durationOfFirstOccurrence );
+
+      startY = mAgenda->timeToY( startTime );
+      if ( endTime == QTime( 0, 0, 0 ) ) {
+        endTime = QTime( 23, 59, 59 );
       }
-      endY = mAgenda->timeToY( endtime ) - 1;
+      endY = mAgenda->timeToY( endTime ) - 1;
     }
     if ( todo ) {
       QTime t;
