@@ -1580,7 +1580,10 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   }
 
   if ( incidence->recurs() ) {
-    const int eventDuration = event ? incDtStart.daysTo( incDtEnd ) : 0;
+    // timed incidences occur in [dtStart(), dtEnd()[. All-day incidences occur in [dtStart(), dtEnd()]
+    // so we subtract 1 second in the timed case
+    const int secsToAdd = incidence->allDay() ? 0 : -1;
+    const int eventDuration = event ? incDtStart.daysTo( incDtEnd.addSecs( secsToAdd ) ) : 0;
 
     // if there's a multiday event that starts before firstVisibleDateTime but ends after
     // lets include it. timesInInterval() ignores incidences that aren't totaly inside
