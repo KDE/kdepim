@@ -989,10 +989,12 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
     } else {
       str = currEvent->summary();
     }
-    drawIncidence( p, box, timeText, str, textY );
-    visibleEventsCounter++;
 
-    if ( textY >= box.height() ) {
+    const int newHeight = calculateIncidenceHeight( p, box, timeText, str, textY );
+    if ( newHeight < (box.height() - 5) ) {
+      drawIncidence( p, box, timeText, str, textY );
+      visibleEventsCounter++;
+    } else {
       const QChar downArrow( 0x21e3 );
       const unsigned int invisibleIncidences = ((eventList.count() - visibleEventsCounter) + mCalendar->todos( qd ).count());
       const QString warningMsg = QString( "%1 (%2)" ).arg( downArrow ).arg( invisibleIncidences );
@@ -1008,7 +1010,8 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
     }
   }
 
-  if ( textY < box.height() ) {
+  unsigned int visibleTodosCounter = 0;
+  if ( textY < (box.height() - 5) ) {
     Todo::List todos = mCalendar->todos( qd );
     Todo::List::ConstIterator it2;
     for ( it2 = todos.begin(); it2 != todos.end() && textY <box.height(); ++it2 ) {
@@ -1043,11 +1046,61 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
       } else {
         str = summaryStr;
       }
-      drawIncidence( p, box, timeText, i18n("To-do: %1").arg( str ), textY );
+      const int newHeight = calculateIncidenceHeight( p, box, timeText, i18n("To-do: %1").arg( str ), textY );
+      if ( newHeight < box.height() ) {
+        drawIncidence( p, box, timeText, i18n("To-do: %1").arg( str ), textY );
+        visibleTodosCounter++;
+      } else {
+        const QChar downArrow( 0x21e3 );
+        const unsigned int invisibleIncidences = (todos.count() - visibleTodosCounter);
+        const QString warningMsg = QString( "%1 (%2)" ).arg( downArrow ).arg( invisibleIncidences );
+
+        QFontMetrics fm( p.font() );
+        QRect msgRect = fm.boundingRect( warningMsg );
+        msgRect.setRect( box.right() - msgRect.width() - 2, box.bottom() - msgRect.height() - 2, msgRect.width(), msgRect.height() );
+
+        p.save();
+        p.setPen( Qt::red );
+        p.drawText( msgRect, Qt::AlignLeft, warningMsg );
+        p.restore();
+      }
     }
   }
 
   p.setFont( oldFont );
+}
+
+int CalPrintPluginBase::calculateIncidenceHeight( QPainter &p, const QRect &dayBox, const QString &time, const QString &summary, int _textY ) const
+{
+  int textY = _textY;
+
+  int flags = Qt::AlignLeft | Qt::AlignTop;
+  QFontMetrics fm = p.fontMetrics();
+  QRect timeBound = p.boundingRect( dayBox.x() + 5, dayBox.y() + textY,
+                                    dayBox.width() - 10, fm.lineSpacing(),
+                                    flags, time );
+
+  int summaryWidth = time.isEmpty() ? 0 : timeBound.width() + 4;
+  int summaryHeight = time.isEmpty() ? 0 : timeBound.height() + 1;
+
+  // first check if the summary matches right to the time
+  QRect summaryBound = QRect( dayBox.x() + 5 + summaryWidth, dayBox.y() + textY,
+                              dayBox.width() - summaryWidth -5, dayBox.height() );
+
+  KWordWrap *ww = KWordWrap::formatText( fm, summaryBound, flags, summary );
+  if (!ww->wrappedString().contains("\n")) { // does match right to the time
+    textY += ww->boundingRect().height();
+    delete ww;
+  } else { // does not match, so place it below the time to save space
+    QRect summaryBound = QRect( dayBox.x() + 10, dayBox.y() + summaryHeight + textY,
+                                dayBox.width() - 10, dayBox.height() );
+
+    KWordWrap *ww = KWordWrap::formatText( fm, summaryBound, flags, summary );
+    textY += ww->boundingRect().height() + summaryHeight;
+    delete ww;
+  }
+
+  return textY;
 }
 
 // TODO TODO TODO
@@ -1055,7 +1108,7 @@ void CalPrintPluginBase::drawIncidence( QPainter &p, const QRect &dayBox, const 
 {
   kdDebug(5850) << "summary = " << summary << endl;
 
-  int flags = Qt::AlignLeft;
+  int flags = Qt::AlignLeft | Qt::AlignTop;
   QFontMetrics fm = p.fontMetrics();
   QRect timeBound = p.boundingRect( dayBox.x() + 5, dayBox.y() + textY,
                                     dayBox.width() - 10, fm.lineSpacing(),
@@ -1063,15 +1116,26 @@ void CalPrintPluginBase::drawIncidence( QPainter &p, const QRect &dayBox, const 
   p.drawText( timeBound, flags, time );
 
   int summaryWidth = time.isEmpty() ? 0 : timeBound.width() + 4;
+  int summaryHeight = time.isEmpty() ? 0 : timeBound.height() + 1;
+
+  // first check if the summary matches right to the time
   QRect summaryBound = QRect( dayBox.x() + 5 + summaryWidth, dayBox.y() + textY,
                               dayBox.width() - summaryWidth -5, dayBox.height() );
 
   KWordWrap *ww = KWordWrap::formatText( fm, summaryBound, flags, summary );
-  ww->drawText( &p, dayBox.x() + 5 + summaryWidth, dayBox.y() + textY, flags );
+  if (!ww->wrappedString().contains("\n")) { // does match right to the time
+    ww->drawText( &p, dayBox.x() + 5 + summaryWidth, dayBox.y() + textY, flags );
+    textY += ww->boundingRect().height();
+    delete ww;
+  } else { // does not match, so place it below the time to save space
+    QRect summaryBound = QRect( dayBox.x() + 10, dayBox.y() + summaryHeight + textY,
+                                dayBox.width() - 10, dayBox.height() );
 
-  textY += ww->boundingRect().height();
-
-  delete ww;
+    KWordWrap *ww = KWordWrap::formatText( fm, summaryBound, flags, summary );
+    ww->drawText( &p, dayBox.x() + 10, dayBox.y() + summaryHeight + textY, flags );
+    textY += ww->boundingRect().height() + summaryHeight;
+    delete ww;
+  }
 }
 
 

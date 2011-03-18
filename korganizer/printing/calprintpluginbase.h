@@ -523,6 +523,8 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
   protected:
     void drawIncidence( QPainter &p, const QRect &dayBox, const QString &time,
                         const QString &summary, int &textY );
+    int calculateIncidenceHeight( QPainter &p, const QRect &dayBox, const QString &time,
+                                  const QString &summary, int _textY ) const;
 
   protected:
     bool mUseColors;
