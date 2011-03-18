@@ -1124,6 +1124,7 @@ void KOAgenda::endItemAction()
 
       Incidence* oldIncSaved = inc->clone();
       KOGlobals::WhichOccurrences chosenOption;
+      inc->startUpdates();
       incToChange = mCalendarView->singleOccurrenceOrAll( inc,
                                                           KOGlobals::EDIT,
                                                           chosenOption,
@@ -1136,18 +1137,22 @@ void KOAgenda::endItemAction()
         useLastGroupwareDialogAnswer = true;
         addIncidence = true;
         mAgendaView->enableAgendaUpdate( true );
-        KOGlobals::WhatChanged wc = chosenOption == KOGlobals::ONLY_THIS_ONE ?
-                                    KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY :
-                                    KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE;
+        const KOGlobals::WhatChanged whatChanged = chosenOption == KOGlobals::ONLY_THIS_ONE ?
+                                                           KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY :
+                                                          KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE;
 
-        const bool success = mChanger->changeIncidence( oldIncSaved, inc, wc, this );
+        const bool success = mChanger->changeIncidence( oldIncSaved, inc, whatChanged, this );
 
         if ( success ) {
           mActionItem->dissociateFromMultiItem();
           mActionItem->setIncidence( incToChange );
+          inc->endUpdates();
         } else {
+          inc->cancelUpdates();
           incToChange = 0;
         }
+      } else {
+        inc->endUpdates();
       }
     }
 
