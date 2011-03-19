@@ -438,7 +438,9 @@ bool IncidenceDateTime::isDirty( const KCalCore::Event::Ptr &event ) const
     }
   } else {
     if ( currentStartDateTime() != mInitialStartDT ||
-         currentEndDateTime() != mInitialEndDT ) {
+         currentEndDateTime() != mInitialEndDT ||
+         currentStartDateTime().timeSpec() != mInitialStartDT.timeSpec() ||
+         currentEndDateTime().timeSpec() != mInitialEndDT.timeSpec() ) {
       return true;
     }
   }
@@ -504,9 +506,9 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
-           SIGNAL( endTimeChanged( QTime ) ) );
+           SIGNAL(endTimeChanged(QTime) ) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
-           SIGNAL( endDateChanged( QDate ) ) );
+           SIGNAL(endDateChanged(QDate) ) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()) );
 
