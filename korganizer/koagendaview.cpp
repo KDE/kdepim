@@ -876,6 +876,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item,
     kdDebug() << "Weird, application has a bug?" << endl;
     return;
   }
+  incidence->startUpdates();
   Incidence *oldIncidence = incidence->clone();
 
   QTime startTime( 0, 0, 0 ), endTime( 0, 0, 0 );
@@ -925,12 +926,12 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item,
     if ( incidence->dtStart() == startDt && ev->dtEnd() == endDt ) {
       // No change
       delete oldIncidence;
+      incidence->cancelUpdates();
       return;
     }
     incidence->setDtStart( startDt );
     ev->setDtEnd( endDt );
   } else if ( incidence->type() == "Todo" ) {
-
     // To-do logic must be reviewed.
 
     Todo *td = static_cast<Todo*>( incidence );
@@ -943,6 +944,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item,
     if ( td->dtDue() == endDt ) {
       // No change
       delete oldIncidence;
+      incidence->cancelUpdates();
       return;
     }
 
@@ -973,7 +975,10 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item,
   if ( !result ) {
     mPendingChanges = true;
     QTimer::singleShot( 0, this, SLOT(updateView()) );
+    incidence->cancelUpdates();
     return;
+  } else {
+    incidence->endUpdates();
   }
 
   // don't update the agenda as the item already has the correct coordinates.
