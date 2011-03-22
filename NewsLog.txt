@@ -1,11 +1,14 @@
+Monday 21 March 2011
+
+Prolems addressed
+-----------------
+
+* kolab/issue4096: User with write access to a calendar folder should be able to change the events (even if he is not the organizer)(rt#5999)
 
 Friday 18 March 2011
 
 Problems addressed
 ------------------
-
-* kolab/issue4096: User with write access to a calendar folder should be able to change the events (even if he is not the organizer (rt#5999)
-
 
 
 Thursday 16 March 2011
