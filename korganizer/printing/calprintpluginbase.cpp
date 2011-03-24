@@ -991,7 +991,7 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
     }
 
     const int newHeight = calculateIncidenceHeight( p, box, timeText, str, textY );
-    if ( newHeight < (box.height() - 5) ) {
+    if ( newHeight < (box.height() - 8) ) {
       drawIncidence( p, box, timeText, str, textY );
       visibleEventsCounter++;
     } else {
@@ -1001,7 +1001,7 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
 
       QFontMetrics fm( p.font() );
       QRect msgRect = fm.boundingRect( warningMsg );
-      msgRect.setRect( box.right() - msgRect.width() - 2, box.bottom() - msgRect.height() - 2, msgRect.width(), msgRect.height() );
+      msgRect.setRect( box.right() - msgRect.width() - 4, box.bottom() - msgRect.height() - 4, msgRect.width() + 4, msgRect.height() + 4 );
 
       p.save();
       p.setPen( Qt::red );
@@ -1011,7 +1011,7 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
   }
 
   unsigned int visibleTodosCounter = 0;
-  if ( textY < (box.height() - 5) ) {
+  if ( textY < (box.height() - 8) ) {
     Todo::List todos = mCalendar->todos( qd );
     Todo::List::ConstIterator it2;
     for ( it2 = todos.begin(); it2 != todos.end() && textY <box.height(); ++it2 ) {
@@ -1047,7 +1047,7 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
         str = summaryStr;
       }
       const int newHeight = calculateIncidenceHeight( p, box, timeText, i18n("To-do: %1").arg( str ), textY );
-      if ( newHeight < box.height() ) {
+      if ( newHeight < box.height() - 8 ) {
         drawIncidence( p, box, timeText, i18n("To-do: %1").arg( str ), textY );
         visibleTodosCounter++;
       } else {
@@ -1057,7 +1057,7 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
 
         QFontMetrics fm( p.font() );
         QRect msgRect = fm.boundingRect( warningMsg );
-        msgRect.setRect( box.right() - msgRect.width() - 2, box.bottom() - msgRect.height() - 2, msgRect.width(), msgRect.height() );
+        msgRect.setRect( box.right() - msgRect.width() - 4, box.bottom() - msgRect.height() - 4, msgRect.width() + 4, msgRect.height() + 4 );
 
         p.save();
         p.setPen( Qt::red );
