@@ -47,6 +47,7 @@ class FilterManager::Private
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     void itemAddedFetchResult( KJob *job );
     void itemsFetchJobForFilterDone( KJob *job );
+    void moveJobResult( KJob* );
     void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
     void slotInitialCollectionsFetched( const Akonadi::Collection::List &collections );
     void slotInitialItemsFetched( const Akonadi::Item::List &items );
@@ -201,6 +202,14 @@ void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
   progressItem->setComplete();
 }
 
+void FilterManager::Private::moveJobResult( KJob *job )
+{
+  if ( job->error() ) {
+    kError() << "Error while moving items. " << job->error() << job->errorString();
+    // TODO: kmail should tell the user that this failed
+  }
+}
+
 bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailFilter *filter )
 {
   bool result = false;
@@ -340,8 +349,10 @@ int FilterManager::process( const Akonadi::Item &item, const MailFilter *filter 
   bool stopIt = false;
   int result = 1;
 
-  if ( !filter || !item.hasPayload<KMime::Message::Ptr>() )
+  if ( !filter || !item.hasPayload<KMime::Message::Ptr>() ) {
+    kError() << "Filter is null or item doesn't have correct payload.";
     return 1;
+  }
 
   if ( d->isMatching( item, filter ) ) {
     // do the actual filtering stuff
@@ -356,8 +367,11 @@ int FilterManager::process( const Akonadi::Item &item, const MailFilter *filter 
     const Akonadi::Collection targetFolder = MessageProperty::filterFolder( item );
     d->endFiltering( item );
     if ( targetFolder.isValid() ) {
-      new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
+      Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
+      connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveResult(KJob*)) );
       result = 0;
+    } else {
+      kWarning() << "Target folder is invalid";
     }
   } else {
     result = 1;
@@ -408,8 +422,11 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
   d->endFiltering( item );
 
   if ( targetFolder.isValid() ) {
-    new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
+    Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
+    connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveResult(KJob*)) );
     return 0;
+  } else {
+    kWarning() << "Target collection isn't valid";
   }
 
   emit itemNotMoved( item );
