@@ -1,3 +1,12 @@
+
+Friday 25 March 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4701: calendar print of a month: If more than 5 events are at one day, one event is not printed (rt#10006)
+
+
 Monday 21 March 2011
 
 Prolems addressed
