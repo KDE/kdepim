@@ -193,7 +193,7 @@ void FilterManager::Private::itemAddedFetchResult( KJob *job )
 void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << job->errorString();
+    kError() << "Error while fetching items. " << job->error() << job->errorString();
   }
   KPIM::BroadcastStatus::instance()->setStatusMsg( QString() );
 
