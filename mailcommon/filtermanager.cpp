@@ -370,8 +370,6 @@ int FilterManager::process( const Akonadi::Item &item, const MailFilter *filter 
       Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
       connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveResult(KJob*)) );
       result = 0;
-    } else {
-      kWarning() << "Target folder is invalid";
     }
   } else {
     result = 1;
@@ -425,8 +423,6 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
     Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
     connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveResult(KJob*)) );
     return 0;
-  } else {
-    kWarning() << "Target collection isn't valid";
   }
 
   emit itemNotMoved( item );
