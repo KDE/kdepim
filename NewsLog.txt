@@ -1,4 +1,13 @@
 
+Friday 01 April 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4721: The mail_todo icon is just in 16x16 in kmail.
+
+
+
 Friday 25 March 2011
 
 Problems addressed
