@@ -56,6 +56,11 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
 #endif
 #endif
 
+#ifdef Q_OS_WIN
+  // Idle detection does not work on Windows see BUG 270135
+  disableIdleDetection( true );
+#endif
+
   // failsafe in case we don't have / lost G13 support
   if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !GpgME::hasFeature( GpgME::G13VFSFeature ) )
     Settings::self()->setIndexEncryptedContent( Settings::NoIndexing );

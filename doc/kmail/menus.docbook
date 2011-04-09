@@ -83,7 +83,7 @@ and attachments.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>Tools</guimenu>
+<guimenu>File</guimenu>
 <guimenuitem>Import Messages...</guimenuitem>
 </menuchoice>
 </term>

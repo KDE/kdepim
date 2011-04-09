@@ -66,10 +66,11 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     }
     else
       enableButton(User3, false);
-  }
-  else {
+  } else {
     mContactViewer->setRawContact(KABC::Addressee());
     enableButton(User1, false);
+    showButton(User2, false);
+    showButton(User3, false);
   }
   connect( this, SIGNAL( user1Clicked() ), SLOT( slotUser1() ) );
   connect( this, SIGNAL( user2Clicked() ), SLOT( slotUser2() ) );
