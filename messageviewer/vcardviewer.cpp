@@ -61,7 +61,6 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     }
   } else {
     mAddresseeView->setPlainText(i18n("Failed to parse vCard."));
-    mContactViewer->setRawContact(KABC::Addressee());
     enableButton(User1, false);
     showButton(User2, false);
     showButton(User3, false);
