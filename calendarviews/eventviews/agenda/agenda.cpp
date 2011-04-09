@@ -2068,22 +2068,25 @@ int Agenda::minimumHeight() const
 
 void Agenda::updateConfig()
 {
-  double oldGridSpacingY = d->mGridSpacingY;
+  const double oldGridSpacingY = d->mGridSpacingY;
 
   d->mDesiredGridSpacingY = d->preferences()->hourSize();
   if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {
     d->mDesiredGridSpacingY = 10;
   }
 
+  /*
   // make sure that there are not more than 24 per day
   d->mGridSpacingY = static_cast<double>( height() ) / d->mRows;
-  if ( d->mGridSpacingY < d->mDesiredGridSpacingY ) {
+  if ( d->mGridSpacingY < d->mDesiredGridSpacingY  || true) {
     d->mGridSpacingY = d->mDesiredGridSpacingY;
   }
+  */
 
   //can be two doubles equal?, it's better to compare them with an epsilon
-  if ( fabs( oldGridSpacingY - d->mGridSpacingY ) > 0.1 ) {
-//    resizeContents( int( mGridSpacingX * mColumns ), int( mGridSpacingY * mRows ) );
+  if ( fabs( oldGridSpacingY - d->mDesiredGridSpacingY ) > 0.1 ) {
+    d->mGridSpacingY = d->mDesiredGridSpacingY;
+    updateGeometry();
   }
 
   calculateWorkingHours();

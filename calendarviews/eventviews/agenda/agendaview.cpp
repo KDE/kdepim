@@ -627,8 +627,8 @@ void AgendaView::init( const QDate &start, const QDate &end )
   timeLabelsZoneLayout->addSpacing( scrollArea->frameWidth() );
 
   // Scrolling
-  connect( d->mAgenda, SIGNAL(zoomView(const int,QPoint,const Qt::Orientation)),
-           SLOT(zoomView(const int,QPoint,const Qt::Orientation)) );
+  connect( d->mAgenda, SIGNAL(zoomView(int,QPoint,Qt::Orientation)),
+           SLOT(zoomView(int,QPoint,Qt::Orientation)) );
 
   // Event indicator updates
   connect( d->mAgenda, SIGNAL(lowerYChanged(int)),
