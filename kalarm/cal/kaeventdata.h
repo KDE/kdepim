@@ -494,8 +494,8 @@ public:
 		mutable int        mChangeCount;      // >0 = inhibit calling notifyChanges()
 		mutable bool       mChanged;          // true if need to recalculate trigger times while mChangeCount > 0
 		QString            mLogFile;          // alarm output is to be logged to this URL
-		float              mSoundVolume;      // volume for sound file, or < 0 for unspecified
-		float              mFadeVolume;       // initial volume for sound file, or < 0 for no fade
+		float              mSoundVolume;      // volume for sound file (range 0 - 1), or < 0 for unspecified
+		float              mFadeVolume;       // initial volume for sound file (range 0 - 1), or < 0 for no fade
 		int                mFadeSeconds;      // fade time for sound file, or 0 if none
 		KCalEvent::Status  mCategory;         // event category (active, archived, template, ...)
 		bool               mCancelOnPreActErr;// cancel alarm if pre-alarm action fails
