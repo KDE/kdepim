@@ -1,7 +1,7 @@
 /*
  *  kaevent.h  -  represents calendar events
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -599,8 +599,8 @@ class KALARM_CAL_EXPORT KAEvent
                 mutable int        mChangeCount;       // >0 = inhibit calling calcTriggerTimes()
                 mutable bool       mChanged;           // true if need to recalculate trigger times while mChangeCount > 0
                 QString            mLogFile;           // alarm output is to be logged to this URL
-                float              mSoundVolume;       // volume for sound file, or < 0 for unspecified
-                float              mFadeVolume;        // initial volume for sound file, or < 0 for no fade
+                float              mSoundVolume;       // volume for sound file (range 0 - 1), or < 0 for unspecified
+                float              mFadeVolume;        // initial volume for sound file (range 0 - 1), or < 0 for no fade
                 int                mFadeSeconds;       // fade time for sound file, or 0 if none
                 KAlarm::CalEvent::Type mCategory;      // event category (active, archived, template, ...)
                 bool               mCancelOnPreActErr; // cancel alarm if pre-alarm action fails

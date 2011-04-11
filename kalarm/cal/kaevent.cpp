@@ -1,7 +1,7 @@
 /*
  *  kaevent.cpp  -  represents calendar events
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -903,14 +903,14 @@ void KAEvent::readAlarm(const Alarm* alarm, AlarmData& data, bool audioMain, boo
                 int   fadeSecs = 0;
                 QStringList list = property.split(QLatin1Char(';'), QString::KeepEmptyParts);
                 data.soundVolume = list[0].toFloat(&ok);
-                if (!ok)
+                if (!ok  ||  data.soundVolume > 1.0f)
                     data.soundVolume = -1;
                 if (data.soundVolume >= 0  &&  list.count() >= 3)
                 {
                     fadeVolume = list[1].toFloat(&ok);
                     if (ok)
                         fadeSecs = static_cast<int>(list[2].toUInt(&ok));
-                    if (ok  &&  fadeVolume >= 0  &&  fadeSecs > 0)
+                    if (ok  &&  fadeVolume >= 0  &&  fadeVolume <= 1.0f  &&  fadeSecs > 0)
                     {
                         data.fadeVolume  = fadeVolume;
                         data.fadeSeconds = fadeSecs;
