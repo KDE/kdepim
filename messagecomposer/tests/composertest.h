@@ -33,6 +33,7 @@ class ComposerTest : public QObject
   private Q_SLOTS:
     void testAttachments();
     void testAutoSave();
+    void testNonAsciiHeaders();
 
     // TODO test the code for autodetecting the charset of a text attachment.
     // TODO figure out what CTE testing has to be done.

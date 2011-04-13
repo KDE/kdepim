@@ -93,6 +93,47 @@ void ComposerTest::testAutoSave()
   QCOMPARE( composer->resultMessages().size(), 1 );
 }
 
+void ComposerTest::testNonAsciiHeaders()
+{
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+
+  const QString mailbox = QLatin1String(" <bla@example.com>");
+  const QString fromDisplayName = QString::fromUtf8("Hellö");
+  const QString toDisplayName = QString::fromUtf8("æſłĸð");
+  const QString ccDisplayName = QString::fromUtf8("Вася");
+  const QString bccDisplayName = QString::fromUtf8("ĸłſðđøþĸµ»«„¢þµ¢”«ł„·ĸ”");
+  const QString replyToDisplayName = QString::fromUtf8("æĸſłð˝đВасяðæĸđ");
+  const QString from = fromDisplayName + mailbox;
+  const QString to = toDisplayName + mailbox;
+  const QString cc = ccDisplayName + mailbox;
+  const QString bcc = bccDisplayName + mailbox;
+  const QString replyto = replyToDisplayName + mailbox;
+
+  composer->infoPart()->setFrom( from );
+  composer->infoPart()->setTo( QStringList() << to );
+  composer->infoPart()->setCc( QStringList() << cc );
+  composer->infoPart()->setBcc( QStringList() << bcc );
+  composer->infoPart()->setReplyTo( replyto );
+
+  QVERIFY( composer->exec() );
+  QCOMPARE( composer->resultMessages().size(), 1 );
+  const KMime::Message::Ptr message = composer->resultMessages().first();
+  kDebug() << message->encodedContent();
+  QCOMPARE( message->bcc( false )->displayNames().size(), 1 );
+  QCOMPARE( message->to( false )->displayNames().size(), 1 );
+  QCOMPARE( message->cc( false )->displayNames().size(), 1 );
+  QCOMPARE( message->from( false )->displayNames().size(), 1 );
+  QCOMPARE( message->replyTo( false )->displayNames().size(), 1 );
+  QCOMPARE( message->from()->displayNames().first().toUtf8(), fromDisplayName.toUtf8() );
+  QCOMPARE( message->to()->displayNames().first().toUtf8(), toDisplayName.toUtf8() );
+  QCOMPARE( message->cc()->displayNames().first().toUtf8(), ccDisplayName.toUtf8() );
+  QCOMPARE( message->bcc()->displayNames().first().toUtf8(), bccDisplayName.toUtf8() );
+  QCOMPARE( message->replyTo()->displayNames().first().toUtf8(), replyToDisplayName.toUtf8() );
+  delete composer;
+  composer = 0;
+}
+
 void ComposerTest::fillComposerData( Composer* composer )
 {
   composer->globalPart()->setFallbackCharsetEnabled( true );
