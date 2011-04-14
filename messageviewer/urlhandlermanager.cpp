@@ -929,7 +929,7 @@ namespace {
             url.pathOrUrl() ), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel() ) != KMessageBox::Yes)
           return true;
       }
-      if ( !MessageViewer::Util::handleUrlOnMac( url.pathOrUrl() ) ) {
+      if ( !MessageViewer::Util::handleUrlWithQDesktopServices( url.pathOrUrl() ) ) {
         KRun *runner = new KRun( url, w->viewer() ); // will delete itself
         runner->setRunExecutables( false );
       }

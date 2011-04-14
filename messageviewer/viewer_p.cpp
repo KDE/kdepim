@@ -308,11 +308,11 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
   }
 
-  // special case treatment on mac
+  // special case treatment on mac and windows
   QString atmName = name;
   if ( name.isEmpty() )
     atmName = mNodeHelper->tempFileUrlFromNode( node ).toLocalFile();
-  if ( Util::handleUrlOnMac( atmName ) )
+  if ( Util::handleUrlWithQDesktopServices( atmName ) )
     return;
 
   if ( mimetype.isNull() || mimetype->name() == "application/octet-stream" ) {
