@@ -779,7 +779,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   }
 
   QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
-  imgpath.prepend( "file://" );
+  imgpath.prepend( "file:///" );
   imgpath.append("enterprise_");
   const QString borderSettings( " padding-top: 0px; padding-bottom: 0px; border-width: 0px " );
   QString headerStr;
@@ -977,7 +977,7 @@ static QString formatMobileHeader( KMime::Message *message, bool extendedFormat,
   const QString ccPart = StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor );
 
   // Background image
-  const QString imagePath( QLatin1String( "file://" ) + KStandardDirs::locate( "data", "libmessageviewer/pics/" ) );
+  const QString imagePath( QLatin1String( "file:///" ) + KStandardDirs::locate( "data", "libmessageviewer/pics/" ) );
   const QString mobileImagePath( imagePath + QLatin1String( "mobile_" ) );
   const QString mobileExtendedImagePath( imagePath + QLatin1String( "mobileextended_" ) );
 

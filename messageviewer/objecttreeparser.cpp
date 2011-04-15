@@ -362,7 +362,7 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
   if ( result.isImage() && node->parent() &&
         node->parent()->contentType()->subType() == "related" && mSource->htmlMail() && !showOnlyOneMimePart() ) {
     QString fileName = mNodeHelper->writeNodeToTempFile( node );
-    QString href = "file://" + fileName;
+    QString href = "file:///" + fileName;
     QByteArray cid = node->contentID()->identifier();
     htmlWriter()->embedPart( cid, href );
     nodeHelper()->setNodeDisplayedEmbedded( node, true );
@@ -785,7 +785,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
 
 void ObjectTreeParser::writeDeferredDecryptionBlock()
 {
-  const QString iconName = "file://" + KIconLoader::global()->iconPath( "document-decrypt",
+  const QString iconName = "file:///" + KIconLoader::global()->iconPath( "document-decrypt",
                                                                         KIconLoader::Small );
   const QString decryptedData = "<div style=\"font-size:large; text-align:center;"
         "padding-top:20pt;\">"

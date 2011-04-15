@@ -2140,11 +2140,11 @@ QString ViewerPrivate::attachmentInjectionHtml() const
 
   QString link("");
   if ( headerStyle() == HeaderStyle::fancy() ) {
-    link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\"file://"+imgpath+imgSrc+"\"/></a></div>";
+    link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\"file:///"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
     html.prepend( QString::fromLatin1("<div style=\"float:left;\">%1&nbsp;</div>" ).arg(i18n("Attachments:")) );
   } else {
-    link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\"file://"+imgpath+imgSrc+"\"/></a></div>";
+    link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\"file:///"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
   }
 
@@ -2721,7 +2721,7 @@ QString ViewerPrivate::recipientsQuickListLinkHtml( bool doShow, const QString &
     altText = i18n("Show full address list");
   }
 
-  return "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file://" + imgpath + imgSrc + "\""
+  return "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file:///" + imgpath + imgSrc + "\""
                  "alt=\"" + altText + "\" /></a></span>";
 }
 
