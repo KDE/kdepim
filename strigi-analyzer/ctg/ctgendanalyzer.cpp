@@ -22,13 +22,21 @@
 
 #include "ctgendanalyzer.h"
 
+#include "config-strigi.h"
+
 #include <kabc/contactgroup.h>
 #include <kabc/contactgrouptool.h>
 
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>
 #include <strigi/streamendanalyzer.h>
+
+// FIXME: Remove when we require strigi > 0.7.2
+#ifdef HAVE_KMPSEARCHER_H
 #include <strigi/kmpsearcher.h>
+#else
+#include "kmpsearcher.h"
+#endif
 
 #include <QtCore/QBuffer>
 #include <QtCore/QDebug>

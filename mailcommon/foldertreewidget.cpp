@@ -309,7 +309,7 @@ void FolderTreeWidget::applyFilter( const QString &filter )
 {
   d->label->setText( filter.isEmpty() ? i18n( "You can start typing to filter the list of folders." )
                                       : i18n( "Path: (%1)", filter ) );
-  d->filterTreeViewModel->setFilterFixedString( filter );
+  d->filterTreeViewModel->setFilterWildcard( filter );
   d->folderTreeView->expandAll();
 }
 

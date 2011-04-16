@@ -102,13 +102,13 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
   return IconNameCache::instance()->iconPath( fileName, iconSize );
 }
 
-#ifdef Q_WS_MACX
+#if defined Q_WS_WIN || defined Q_WS_MACX
 #include <QDesktopServices>
 #endif
 
-bool Util::handleUrlOnMac( const KUrl& url )
+bool Util::handleUrlWithQDesktopServices( const KUrl& url )
 {
-#ifdef Q_WS_MACX
+#if defined Q_WS_WIN || defined Q_WS_MACX
   QDesktopServices::openUrl( url );
   return true;
 #else

@@ -308,11 +308,11 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
   }
 
-  // special case treatment on mac
+  // special case treatment on mac and windows
   QString atmName = name;
   if ( name.isEmpty() )
     atmName = mNodeHelper->tempFileUrlFromNode( node ).toLocalFile();
-  if ( Util::handleUrlOnMac( atmName ) )
+  if ( Util::handleUrlWithQDesktopServices( atmName ) )
     return;
 
   if ( mimetype.isNull() || mimetype->name() == "application/octet-stream" ) {
@@ -2140,11 +2140,11 @@ QString ViewerPrivate::attachmentInjectionHtml() const
 
   QString link("");
   if ( headerStyle() == HeaderStyle::fancy() ) {
-    link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\"file://"+imgpath+imgSrc+"\"/></a></div>";
+    link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\"file:///"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
     html.prepend( QString::fromLatin1("<div style=\"float:left;\">%1&nbsp;</div>" ).arg(i18n("Attachments:")) );
   } else {
-    link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\"file://"+imgpath+imgSrc+"\"/></a></div>";
+    link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\"file:///"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
   }
 
@@ -2721,7 +2721,7 @@ QString ViewerPrivate::recipientsQuickListLinkHtml( bool doShow, const QString &
     altText = i18n("Show full address list");
   }
 
-  return "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file://" + imgpath + imgSrc + "\""
+  return "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file:///" + imgpath + imgSrc + "\""
                  "alt=\"" + altText + "\" /></a></span>";
 }
 

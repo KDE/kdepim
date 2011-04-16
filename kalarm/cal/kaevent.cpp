@@ -1007,14 +1007,14 @@ void KAEvent::readAlarm(const Alarm* alarm, AlarmData& data, bool audioMain, boo
                 int   fadeSecs = 0;
                 QStringList list = property.split(QLatin1Char(';'), QString::KeepEmptyParts);
                 data.soundVolume = list[0].toFloat(&ok);
-                if (!ok)
+                if (!ok  ||  data.soundVolume > 1.0f)
                     data.soundVolume = -1;
                 if (data.soundVolume >= 0  &&  list.count() >= 3)
                 {
                     fadeVolume = list[1].toFloat(&ok);
                     if (ok)
                         fadeSecs = static_cast<int>(list[2].toUInt(&ok));
-                    if (ok  &&  fadeVolume >= 0  &&  fadeSecs > 0)
+                    if (ok  &&  fadeVolume >= 0  &&  fadeVolume <= 1.0f  &&  fadeSecs > 0)
                     {
                         data.fadeVolume  = fadeVolume;
                         data.fadeSeconds = fadeSecs;
@@ -2987,7 +2987,7 @@ bool KAEvent::Private::setDisplaying(const KAEvent::Private& event, KAAlarm::Typ
 * Reinstate the original event from the 'displaying' event.
 */
 #ifdef USE_AKONADI
-void KAEvent::Private::reinstateFromDisplaying(const ConstEventPtr& kcalEvent, Akonadi::Collection::Id collectionId, bool& showEdit, bool& showDefer)
+void KAEvent::Private::reinstateFromDisplaying(const ConstEventPtr& kcalEvent, Akonadi::Collection::Id& collectionId, bool& showEdit, bool& showDefer)
 #else
 void KAEvent::Private::reinstateFromDisplaying(const Event* kcalEvent, QString& resourceID, bool& showEdit, bool& showDefer)
 #endif
