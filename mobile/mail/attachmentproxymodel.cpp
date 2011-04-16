@@ -53,8 +53,10 @@ bool AttachmentProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &s
     return false;
 
   // filter out the main body part
-  if ( sourceIndex.data( MessageViewer::MimeTreeModel::MainBodyPartRole ).toBool() )
+  if ( sourceIndex.data( MessageViewer::MimeTreeModel::MainBodyPartRole ).toBool()
+    || sourceIndex.data( MessageViewer::MimeTreeModel::AlternativeBodyPartRole ).toBool() ) {
     return false;
+  }
 
   return QSortFilterProxyModel::filterAcceptsRow( sourceRow, sourceParent );
 }
