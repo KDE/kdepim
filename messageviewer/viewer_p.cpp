@@ -943,8 +943,8 @@ void ViewerPrivate::initHtmlWidget()
            this, SLOT(slotUrlOn(QString,QString,QString)) );
   connect( mViewer, SIGNAL(linkClicked(QUrl)),
            this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
-  connect( mViewer, SIGNAL(popupMenu(QString,QPoint) ),
-           SLOT(slotUrlPopup(QString,QPoint)) );
+  connect( mViewer, SIGNAL(popupMenu(QUrl,QPoint) ),
+           SLOT(slotUrlPopup(QUrl,QPoint)) );
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
@@ -1772,7 +1772,11 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 {
   Q_UNUSED(title)
   Q_UNUSED(textContent)
-  const KUrl url(link);
+
+  // The "link" we get here is not URL-encoded, and therefore there is no way the KUrl or QUrl could
+  // parse it correctly. To workaround that, we use QWebFrame::hitTestContent() on the mouse position
+  // to get the URL before WebKit managed to mangle it.
+  KUrl url( mViewer->linkOrImageUrlAt( QCursor::pos() ) );
   if ( url.protocol() == "kmail" || url.protocol() == "x-kmail" || url.protocol() == "attachment" ||
        ( url.protocol().isEmpty() && url.path().isEmpty() ) ) {
     mViewer->setAcceptDrops( false );
@@ -1799,7 +1803,7 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
   emit showStatusBarMessage( msg );
 }
 
-void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
+void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QPoint& aPos)
 {
   const KUrl url( aUrl );
   mClickedUrl = url;
