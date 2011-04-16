@@ -1,11 +1,15 @@
 KAlarm Change Log
 
-=== Version 2.5.4 --- 12 April 2011 ===
+=== Version 2.5.4 --- 16 April 2011 ===
 - Don't reactivate start-at-login without prompting, after user switches it off,
   except if KAlarm is session restored.
 - Show error message and set read-only if location is blank for new resource.
+
+=== Version 2.4.11 (KDEPIM 4.4.11) --- 16 April 2011 ===
 - Fix bad borders round left hand buttons of time spinboxes in Oxygen style.
+- Fix initialisation of library global statics.
 - Ensure sound volume is not out of range when reading from calendar.
+- Fix New Alarm dialogue from system tray menu restoring other windows.
 
 === Version 2.4.10 (KDEPIM 4.4.8) --- 2 December 2010 ===
 - Fix KAlarm showing in system tray at login when configured not to show in tray.
