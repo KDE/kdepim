@@ -218,6 +218,12 @@ QVariant MimeTreeModel::data(const QModelIndex & index, int role) const
       return false;
     return topLevelMsg->mainBodyPart() == content;
   }
+  if ( role == AlternativeBodyPartRole ) {
+    KMime::Message* topLevelMsg = dynamic_cast<KMime::Message*>( d->root );
+    if ( !topLevelMsg )
+      return false;
+    return topLevelMsg->mainBodyPart( content->contentType()->mimeType() ) == content;
+  }
   return QVariant();
 }
 
