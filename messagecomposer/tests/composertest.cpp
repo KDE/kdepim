@@ -120,6 +120,8 @@ void ComposerTest::testNonAsciiHeaders()
   QCOMPARE( composer->resultMessages().size(), 1 );
   const KMime::Message::Ptr message = composer->resultMessages().first();
   kDebug() << message->encodedContent();
+  message->assemble();
+  message->parse();
   QCOMPARE( message->bcc( false )->displayNames().size(), 1 );
   QCOMPARE( message->to( false )->displayNames().size(), 1 );
   QCOMPARE( message->cc( false )->displayNames().size(), 1 );
