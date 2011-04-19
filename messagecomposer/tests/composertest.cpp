@@ -136,6 +136,20 @@ void ComposerTest::testNonAsciiHeaders()
   composer = 0;
 }
 
+void ComposerTest::testBug271192()
+{
+  const QString displayName = QString::fromUtf8( "Интернет-компания example" );
+  const QString mailbox = QLatin1String( "example@example.com" );
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+  composer->infoPart()->setTo( QStringList() << (displayName + QLatin1String(" <") + mailbox + QLatin1String(">") ) );
+  QVERIFY( composer->exec() );
+  QCOMPARE( composer->resultMessages().size(), 1 );
+  const KMime::Message::Ptr message = composer->resultMessages().first();
+  QCOMPARE( message->to()->displayNames().size(), 1 );
+  QCOMPARE( message->to()->displayNames().first().toUtf8(), displayName.toUtf8() );
+}
+
 void ComposerTest::fillComposerData( Composer* composer )
 {
   composer->globalPart()->setFallbackCharsetEnabled( true );
