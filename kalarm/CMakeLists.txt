@@ -112,7 +112,7 @@ qt4_add_dbus_adaptor(kalarm_bin_SRCS org.kde.kalarm.kalarm.xml dbushandler.h DBu
 if (KMAIL_SUPPORTED)
    qt4_add_dbus_interfaces(kalarm_bin_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml)
 endif (KMAIL_SUPPORTED)
-qt4_add_dbus_interfaces(kalarm_bin_SRCS ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.KSpeech.xml)
+qt4_add_dbus_interfaces(kalarm_bin_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.KSpeech.xml)
 
 if( BUILD_akonadi )
   kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/akonadi/kalarmresource.kcfg org.kde.Akonadi.KAlarm.Settings)
