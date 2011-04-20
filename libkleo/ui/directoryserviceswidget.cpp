@@ -287,7 +287,7 @@ namespace {
     private:
         std::vector<Item>::iterator findExistingUrl( const KUrl & url ) {
             return std::find_if( m_items.begin(), m_items.end(),
-                                 bind( KUrl_compare(), url, bind( &Item::url, _1 ) ) );
+                                 boost::bind( KUrl_compare(), url, boost::bind( &Item::url, _1 ) ) );
         }
     };
 

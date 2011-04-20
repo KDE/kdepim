@@ -235,6 +235,8 @@ private slots:
   void slotQueueResult( KJob *job );
   void slotCreateItemResult( KJob * );
   void slotAutoSaveComposeResult( KJob *job );
+  void slotFccCollectionCheckResult( KJob *job );
+
 private:
   bool isHTMLMail( KMime::Content* root );
   /**

@@ -1007,14 +1007,14 @@ void KAEvent::readAlarm(const Alarm* alarm, AlarmData& data, bool audioMain, boo
                 int   fadeSecs = 0;
                 QStringList list = property.split(QLatin1Char(';'), QString::KeepEmptyParts);
                 data.soundVolume = list[0].toFloat(&ok);
-                if (!ok)
+                if (!ok  ||  data.soundVolume > 1.0f)
                     data.soundVolume = -1;
                 if (data.soundVolume >= 0  &&  list.count() >= 3)
                 {
                     fadeVolume = list[1].toFloat(&ok);
                     if (ok)
                         fadeSecs = static_cast<int>(list[2].toUInt(&ok));
-                    if (ok  &&  fadeVolume >= 0  &&  fadeSecs > 0)
+                    if (ok  &&  fadeVolume >= 0  &&  fadeVolume <= 1.0f  &&  fadeSecs > 0)
                     {
                         data.fadeVolume  = fadeVolume;
                         data.fadeSeconds = fadeSecs;
@@ -2043,6 +2043,31 @@ KAEvent::Actions KAEvent::actions() const
     }
 }
 
+#ifdef USE_AKONADI
+/******************************************************************************
+* Initialise an Item with the event.
+* Note that the event is not updated with the Item ID.
+* Reply = true if successful,
+*         false if event's category does not match collection's mime types.
+*/
+bool KAEvent::setItemPayload(Akonadi::Item& item, const QStringList& collectionMimeTypes) const
+{
+    QString mimetype;
+    switch (d->mCategory)
+    {
+        case KAlarm::CalEvent::ACTIVE:      mimetype = KAlarm::MIME_ACTIVE;    break;
+        case KAlarm::CalEvent::ARCHIVED:    mimetype = KAlarm::MIME_ARCHIVED;  break;
+        case KAlarm::CalEvent::TEMPLATE:    mimetype = KAlarm::MIME_TEMPLATE;  break;
+        default:                            Q_ASSERT(0);  return false;
+    }
+    if (!collectionMimeTypes.contains(mimetype))
+        return false;
+    item.setMimeType(mimetype);
+    item.setPayload<KAEvent>(*this);
+    return true;
+}
+#endif
+
 /******************************************************************************
 * Update an existing KCal::Event with the KAEvent::Private data.
 * If 'setCustomProperties' is true, all the KCal::Event's existing custom
@@ -2962,7 +2987,7 @@ bool KAEvent::Private::setDisplaying(const KAEvent::Private& event, KAAlarm::Typ
 * Reinstate the original event from the 'displaying' event.
 */
 #ifdef USE_AKONADI
-void KAEvent::Private::reinstateFromDisplaying(const ConstEventPtr& kcalEvent, Akonadi::Collection::Id collectionId, bool& showEdit, bool& showDefer)
+void KAEvent::Private::reinstateFromDisplaying(const ConstEventPtr& kcalEvent, Akonadi::Collection::Id& collectionId, bool& showEdit, bool& showDefer)
 #else
 void KAEvent::Private::reinstateFromDisplaying(const Event* kcalEvent, QString& resourceID, bool& showEdit, bool& showDefer)
 #endif

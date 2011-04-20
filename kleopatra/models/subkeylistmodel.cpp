@@ -113,7 +113,7 @@ std::vector<Subkey> SubkeyListModel::subkeys( const QList<QModelIndex> & indexes
     result.reserve( indexes.size() );
     std::transform( indexes.begin(), indexes.end(),
                     std::back_inserter( result ),
-                    bind( &SubkeyListModel::subkey, this, _1 ) );
+                    boost::bind( &SubkeyListModel::subkey, this, _1 ) );
     return result;
 }
 
@@ -132,7 +132,7 @@ QList<QModelIndex> SubkeyListModel::indexes( const std::vector<Subkey> & subkeys
                     std::back_inserter( result ),
                     // if some compilers are complaining about ambigious overloads, use this line instead:
                     //bind( static_cast<QModelIndex(SubKeyListModel::*)(const Subkey&,int)const>( &SubkeyListModel::index ), this, _1, 0 ) );
-                    bind( &SubkeyListModel::index, this, _1, 0 ) );
+                    boost::bind( &SubkeyListModel::index, this, _1, 0 ) );
     return result;
 }
 

@@ -220,14 +220,3 @@ void KJotsTreeView::changeColor()
     model()->setData(idx, myColor, Qt::BackgroundRole );
   }
 }
-
-void KJotsTreeView::rowsInserted(const QModelIndex& parent, int start, int end)
-{
-  QTreeView::rowsInserted(parent, start, end);
-  for ( int row = start; row <= end; ++row )
-  {
-    static const int column = 0;
-    const QModelIndex index = model()->index(row, column, parent);
-    expand(index);
-  }
-}

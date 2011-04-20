@@ -416,20 +416,20 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
             const std::vector<Key> recipients = wizard->resolvedRecipients();
             kdtools::copy_if( recipients.begin(), recipients.end(),
                               std::back_inserter( pgpRecipients ),
-                              bind( &Key::protocol, _1 ) == GpgME::OpenPGP );
+                              boost::bind( &Key::protocol, _1 ) == GpgME::OpenPGP );
             kdtools::copy_if( recipients.begin(), recipients.end(),
                               std::back_inserter( cmsRecipients ),
-                              bind( &Key::protocol, _1 ) == GpgME::CMS );
+                              boost::bind( &Key::protocol, _1 ) == GpgME::CMS );
             kleo_assert( pgpRecipients.size() + cmsRecipients.size() == recipients.size() );
         }
         if ( sign ) {
             const std::vector<Key> signers = wizard->resolvedSigners();
             kdtools::copy_if( signers.begin(), signers.end(),
                               std::back_inserter( pgpSigners ),
-                              bind( &Key::protocol, _1 ) == GpgME::OpenPGP );
+                              boost::bind( &Key::protocol, _1 ) == GpgME::OpenPGP );
             kdtools::copy_if( signers.begin(), signers.end(),
                               std::back_inserter( cmsSigners ),
-                              bind( &Key::protocol, _1 ) == GpgME::CMS );
+                              boost::bind( &Key::protocol, _1 ) == GpgME::CMS );
             kleo_assert( pgpSigners.size() + cmsSigners.size() == signers.size() );
         }
 
@@ -505,7 +505,7 @@ void SignEncryptFilesController::Private::schedule() {
 shared_ptr<SignEncryptFilesTask> SignEncryptFilesController::Private::takeRunnable( GpgME::Protocol proto ) {
     const std::vector< shared_ptr<SignEncryptFilesTask> >::iterator it
         = std::find_if( runnable.begin(), runnable.end(),
-                        bind( &Task::protocol, _1 ) == proto );
+                        boost::bind( &Task::protocol, _1 ) == proto );
     if ( it == runnable.end() )
         return shared_ptr<SignEncryptFilesTask>();
 

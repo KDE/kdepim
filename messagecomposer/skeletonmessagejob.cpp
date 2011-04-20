@@ -17,6 +17,7 @@
   02110-1301, USA.
 */
 
+#include "messagecomposersettings.h"
 #include "skeletonmessagejob.h"
 #include "kdepim-version.h"
 
@@ -26,6 +27,8 @@
 
 #include <QTextCodec>
 #include <QTimer>
+#include <QHostInfo>
+#include <QUrl>
 
 #include <KCharsets>
 #include <KDebug>
@@ -132,6 +135,23 @@ void SkeletonMessageJobPrivate::doStart()
     message->setHeader( date );
   }
 
+  // Message-ID
+  {
+    KMime::Headers::MessageID *messageId = new KMime::Headers::MessageID();
+    QByteArray fqdn;
+    if( MessageComposer::MessageComposerSettings::self()->useCustomMessageIdSuffix() ) {
+      fqdn = QUrl::toAce( MessageComposer::MessageComposerSettings::self()->customMsgIDSuffix() );
+    }
+    if( fqdn.isEmpty() ) {
+        fqdn = QUrl::toAce( QHostInfo::localHostName() );
+    }
+    if( fqdn.isEmpty() ) {
+      kWarning() << "Unable to generate a Message-ID, falling back to 'localhost.localdomain'.";
+      fqdn = "local.domain";
+    }
+    messageId->generate( fqdn );
+    message->setHeader( messageId );
+  }
   // Extras
 
   foreach( KMime::Headers::Base* extra, infoPart->extraHeaders() ) {

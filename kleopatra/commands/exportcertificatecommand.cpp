@@ -152,7 +152,7 @@ void ExportCertificateCommand::doStart()
     if ( keys.empty() )
         return;
 
-    const std::vector<Key>::iterator firstCms = std::partition( keys.begin(), keys.end(), bind( &GpgME::Key::protocol, _1 ) != CMS );
+    const std::vector<Key>::iterator firstCms = std::partition( keys.begin(), keys.end(), boost::bind( &GpgME::Key::protocol, _1 ) != CMS );
 
     std::vector<Key> openpgp, cms; 
     std::copy( keys.begin(), firstCms, std::back_inserter( openpgp ) ); 

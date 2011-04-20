@@ -74,6 +74,7 @@ class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public IncidenceDialog
 
   protected Q_SLOTS:
     virtual void slotButtonClicked( int button );
+    void handleSelectedCollectionChange( const Akonadi::Collection &collection );
 
   private:
     EventOrTodoDialogPrivate *const d_ptr;

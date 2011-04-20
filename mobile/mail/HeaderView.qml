@@ -108,6 +108,7 @@ KPIM.ItemListView {
         },
         QML.Text {
           id: sizeLabel
+          visible:  model.threadSize == undefined || model.threadSize <= 1
           anchors { bottom: parent.bottom; bottomMargin: 1; right: parent.right; rightMargin: deleteAction.width }
           text: model.size
           color: "#0C55BB"

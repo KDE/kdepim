@@ -128,7 +128,7 @@ retry:
 
 Error QGpgMEKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
   mSecretOnly = secretOnly;
-  run( bind( &list_keys, _1, patterns, secretOnly ) );
+  run( boost::bind( &list_keys, _1, patterns, secretOnly ) );
   return Error();
 }
 

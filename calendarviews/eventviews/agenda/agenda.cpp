@@ -1786,10 +1786,10 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const QDate
   Insert all-day AgendaItem into agenda.
 */
 AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDate &qd,
-                                      int XBegin, int XEnd, bool isSelected )
+                                           int XBegin, int XEnd, bool isSelected )
 {
   if ( !d->mAllDayMode ) {
-    kDebug() << "using this in non all-day mode is illegal.";
+    kError() << "using this in non all-day mode is illegal.";
     return 0;
   }
 
@@ -1805,9 +1805,9 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );
 
-  double startIt = d->mGridSpacingX * ( agendaItem->cellXLeft() );
-  double endIt = d->mGridSpacingX * ( agendaItem->cellWidth() +
-                                      agendaItem->cellXLeft() );
+  const double startIt = d->mGridSpacingX * ( agendaItem->cellXLeft() );
+  const double endIt = d->mGridSpacingX * ( agendaItem->cellWidth() +
+                                            agendaItem->cellXLeft() );
 
   agendaItem->resize( int( endIt ) - int( startIt ), int( d->mGridSpacingY ) );
 
@@ -1917,6 +1917,7 @@ void Agenda::removeIncidence( const Akonadi::Item &akonadiItem )
 void Agenda::showAgendaItem( AgendaItem::QPtr agendaItem )
 {
   if ( !agendaItem ) {
+    kError() << "Show what?";
     return;
   }
 
@@ -2067,22 +2068,25 @@ int Agenda::minimumHeight() const
 
 void Agenda::updateConfig()
 {
-  double oldGridSpacingY = d->mGridSpacingY;
+  const double oldGridSpacingY = d->mGridSpacingY;
 
   d->mDesiredGridSpacingY = d->preferences()->hourSize();
   if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {
     d->mDesiredGridSpacingY = 10;
   }
 
+  /*
   // make sure that there are not more than 24 per day
   d->mGridSpacingY = static_cast<double>( height() ) / d->mRows;
-  if ( d->mGridSpacingY < d->mDesiredGridSpacingY ) {
+  if ( d->mGridSpacingY < d->mDesiredGridSpacingY  || true) {
     d->mGridSpacingY = d->mDesiredGridSpacingY;
   }
+  */
 
   //can be two doubles equal?, it's better to compare them with an epsilon
-  if ( fabs( oldGridSpacingY - d->mGridSpacingY ) > 0.1 ) {
-//    resizeContents( int( mGridSpacingX * mColumns ), int( mGridSpacingY * mRows ) );
+  if ( fabs( oldGridSpacingY - d->mDesiredGridSpacingY ) > 0.1 ) {
+    d->mGridSpacingY = d->mDesiredGridSpacingY;
+    updateGeometry();
   }
 
   calculateWorkingHours();

@@ -20,6 +20,9 @@
 
 #include "editoritemmanager.h"
 
+#include <calendarsupport/next/invitationhandler.h>
+#include <utils.h>
+
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
@@ -29,6 +32,7 @@
 #include <Akonadi/ItemMoveJob>
 #include <Akonadi/Monitor>
 #include <Akonadi/Session>
+#include <Akonadi/TransactionSequence>
 
 #include <KJob>
 #include <KLocale>
@@ -52,6 +56,7 @@ class ItemEditorPrivate
     Akonadi::Monitor *mItemMonitor;
     ItemEditorUi *mItemUi;
     bool mIsCounterProposal;
+    EditorItemManager::SaveAction currentAction;
 
   public:
     ItemEditorPrivate( EditorItemManager *qq );
@@ -60,6 +65,8 @@ class ItemEditorPrivate
     void itemMoveResult( KJob *job );
     void modifyResult( KJob *job );
     void setupMonitor();
+    void createMoveAndModifyTransactionJob();
+    void moveAndModifyTransactionFinished( KJob *job );
 };
 
 ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
@@ -69,10 +76,37 @@ ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
   mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 }
 
+
+void ItemEditorPrivate::createMoveAndModifyTransactionJob()
+{
+  Q_Q( EditorItemManager );
+  Akonadi::TransactionSequence *transaction = new Akonadi::TransactionSequence;
+  q->connect( transaction, SIGNAL(result(KJob*)), SLOT(moveAndModifyTransactionFinished(KJob*)) );
+  new Akonadi::ItemModifyJob( mItem, transaction );
+  new Akonadi::ItemMoveJob( mItem, mItemUi->selectedCollection(), transaction );
+}
+
+void ItemEditorPrivate::moveAndModifyTransactionFinished( KJob *job )
+{
+  Q_Q( EditorItemManager );
+  if ( job->error() ) {
+    kError() << "Error while moving and modifying " << job->errorString();
+    mItemUi->reject( ItemEditorUi::ItemMoveFailed, job->errorString() );
+  } else {
+    Akonadi::Item item;
+    item.setId( mItem.id() );
+    currentAction = EditorItemManager::MoveAndModify;
+    q->load( item );
+  }
+}
+
 void ItemEditorPrivate::itemFetchResult( KJob *job )
 {
   Q_ASSERT( job );
   Q_Q( EditorItemManager );
+
+  EditorItemManager::SaveAction action = currentAction;
+  currentAction = EditorItemManager::None;
 
   if ( job->error() ) {
     mItemUi->reject( ItemEditorUi::ItemFetchFailed, job->errorString() );
@@ -88,6 +122,10 @@ void ItemEditorPrivate::itemFetchResult( KJob *job )
   Akonadi::Item item = fetchJob->items().first();
   if ( mItemUi->hasSupportedPayload( item ) ) {
     q->load( item );
+    if ( action != EditorItemManager::None ) {
+      // Finally enable ok/apply buttons, we've finished loading
+      emit q->itemSaveFinished( action );
+    }
   } else {
     mItemUi->reject( ItemEditorUi::ItemHasInvalidPayload );
   }
@@ -96,12 +134,24 @@ void ItemEditorPrivate::itemFetchResult( KJob *job )
 void ItemEditorPrivate::itemMoveResult( KJob *job )
 {
   Q_ASSERT( job );
+  Q_Q( EditorItemManager );
 
   if ( job->error() ) {
+    Akonadi::ItemMoveJob *moveJob = qobject_cast<Akonadi::ItemMoveJob*>( job );
+    Q_ASSERT( moveJob );
+    //Q_ASSERT( !moveJob->items().isEmpty() );
     // TODO: What is reasonable behavior at this point?
-    kError() << job->errorString();
-//     mItemUi->reject( ItemEditorUi::ItemFetchFailed, job->errorString() );
-    return;
+    kError() << "Error while moving item ";// << moveJob->items().first().id() << " to collection "
+             //<< moveJob->destinationCollection() << job->errorString();
+    emit q->itemSaveFailed( EditorItemManager::Move, job->errorString() );
+  } else {
+    // Fetch the item again, we want a new mItem, which has an updated parentCollection
+    Akonadi::Item item( mItem.id() );
+    // set currentAction, so the fetchResult slot emits itemSavedFinished( Move );
+    // We could emit it here, but we should only enable ok/apply buttons after the loading
+    // is complete
+    currentAction = EditorItemManager::Move;
+    q->load( item );
   }
 }
 
@@ -126,7 +176,7 @@ void ItemEditorPrivate::modifyResult( KJob *job )
     emit q->itemSaveFinished( EditorItemManager::Modify );
   } else {
     Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob*>( job );
-    Q_ASSERT(createJob);
+    Q_ASSERT( createJob );
     q->load( createJob->item() );
     emit q->itemSaveFinished( EditorItemManager::Create );
   }
@@ -253,9 +303,7 @@ void EditorItemManager::revertLastSave()
     if ( !job->exec() ) {
       kDebug() << "Revert failed, could not delete item." << job->errorText();
     }
-
   } else if ( d->mItem.isValid() ) {
-
     // No payload in the previous item and the current item is valid, so the last
     // call to save created a new item and reverting that means that we have to
     // delete it.
@@ -292,21 +340,37 @@ void EditorItemManager::save()
   if ( d->mItem.isValid() ) { // A valid item. Means we're modifying.
     Q_ASSERT( d->mItem.parentCollection().isValid() );
 
+    CalendarSupport::InvitationHandler invitationHandler( 0 );
+    KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( d->mItem );
+
     if ( d->mItem.parentCollection() == d->mItemUi->selectedCollection() ) {
-      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( d->mItem );
-      connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+      const bool modify = invitationHandler.handleIncidenceAboutToBeModified( incidence );
+      if ( modify ) {
+        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( d->mItem );
+        connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+      } else {
+        emit itemSaveFailed( EditorItemManager::Modify, QString() );
+        Akonadi::Item item;
+        item.setId( d->mItem.id() );
+        load( item );
+      }
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
       if ( d->mItemUi->isDirty() ) {
-        Q_ASSERT_X( false, "ItemEditor::save()",
-                    "Moving of modified items not implemented yet" );
-      // 1) ItemModify( d->mItem );
-      // 2) ItemMove( d->mItem,d->mItemUi->selectedCollection() )
+        const bool modify = invitationHandler.handleIncidenceAboutToBeModified( incidence );
+        if ( modify ) {
+          d->createMoveAndModifyTransactionJob();
+        } else {
+          emit itemSaveFailed( EditorItemManager::Modify, QString() );
+          Akonadi::Item item;
+          item.setId( d->mItem.id() );
+          load( item );
+        }
       } else {
-        Akonadi::ItemMoveJob *imjob =
+        Akonadi::ItemMoveJob *itemMoveJob =
           new Akonadi::ItemMoveJob( d->mItem, d->mItemUi->selectedCollection() );
-        connect( imjob, SIGNAL(result(KJob*)), SLOT(itemMoveResult(KJob*)) );
+        connect( itemMoveJob, SIGNAL(result(KJob*)), SLOT(itemMoveResult(KJob*)) );
       }
     }
   } else { // An invalid item. Means we're creating.
@@ -348,6 +412,7 @@ bool ItemEditorUi::isValid() const
 {
   return true;
 }
+
 
 } // namespace
 

@@ -228,7 +228,7 @@ static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Prot
 #else
     std::transform( css.begin(), css.end(),
                     std::back_inserter( micalgs ),
-                    bind( &QString::toLower, bind( &QString::fromLatin1, bind( &GpgME::CreatedSignature::hashAlgorithmAsString, _1 ), -1 ) ) );
+                    boost::bind( &QString::toLower, boost::bind( &QString::fromLatin1, boost::bind( &GpgME::CreatedSignature::hashAlgorithmAsString, _1 ), -1 ) ) );
 #endif
     if ( proto == GpgME::OpenPGP )
         for ( QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it )

@@ -307,7 +307,7 @@ namespace MessageViewer {
       .arg( mBodyFont.family() )
       .arg( pointsToPixel( helper->mPaintDevice, mBodyFont.pointSize() ) );
     const QString background = ( mBackingPixmapOn
-                         ? QString( "  background-image:url(file://%1) ! important;\n" )
+                         ? QString( "  background-image:url(file:///%1) ! important;\n" )
                            .arg( mBackingPixmapStr )
                          : QString( "  background-color: %1 ! important;\n" )
                            .arg( bgColor ) );

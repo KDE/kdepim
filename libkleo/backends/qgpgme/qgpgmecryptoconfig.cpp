@@ -50,6 +50,7 @@
 #include <QFile>
 #include <cstdlib>
 #include <QTextCodec>
+#include <iterator>
 
 // Just for the Q_ASSERT in the dtor. Not thread-safe, but who would
 // have 2 threads talking to gpgconf anyway? :)

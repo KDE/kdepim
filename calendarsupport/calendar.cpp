@@ -166,9 +166,9 @@ void Calendar::Private::onRowsMovedInTreeModel( const QModelIndex &sourceParent,
               if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
                 // We have old items ( that think they belong to another collection ) inside m_itemMap
                 if ( m_itemMap.contains( item.id() ) ) {
-                  m_itemMap.insert( item.id(), item );
+                  itemsRemoved( movedItems );
+                  itemsAdded( movedItems );
                 }
-                q->notifyIncidenceChanged( item );
               }
             }
           } else if ( !sourceCollectionIsSelected && destinationCollectionIsSelected ) { // Added
@@ -206,6 +206,7 @@ void Calendar::Private::clear()
   m_childToUnseenParent.clear();
   m_unseenParentToChildren.clear();
   m_itemIdsForDate.clear();
+  m_itemDateForItemId.clear();
   m_virtualItems.clear();
 }
 
@@ -269,8 +270,12 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     // this id, belonging to the real collection. So we just insert it in m_virtualItems
     // so we keep track of it. Most hashes are indexed by Item::Id, and korg does lookups by Id too,
     // so we can't just treat this item as an independent one.
-    m_virtualItems[item.id()].append( item );
-    q->notifyIncidenceAdded( item );
+    if ( m_itemMap[id].parentCollection().id() != item.parentCollection().id() ) {
+      m_virtualItems[item.id()].append( item );
+      q->notifyIncidenceAdded( item );
+    } else {
+      kError() << "Item " << item.id() << " is already known.";
+    }
     return;
   }
 
@@ -290,14 +295,24 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
     }
 
     if ( item.storageCollectionId() != m_itemMap.value( id ).storageCollectionId() ) {
-      // there was once a bug that resulted in items forget their collectionId...
-      kError() << "item.storageCollectionId() = " << item.storageCollectionId()
-               << "; m_itemMap.value( id ).storageCollectionId() = "
-               << m_itemMap.value( id ).storageCollectionId()
-               << "; item.isValid() = " << item.isValid()
-               << "; calendar = " << q->objectName();
-      Q_ASSERT_X( false, "updateItem", "updated item has different collection id" );
-      return;
+      // An item moved happened, update our internal copy, the storateCollectionId has changed.
+      Akonadi::Collection::Id oldCollectionId = m_itemMap.value( id ).storageCollectionId();
+      m_itemMap.insert( id, item );
+      if ( item.isValid() ) {
+        UnseenItem oldUi;
+        UnseenItem newUi;
+        oldUi.collection = oldCollectionId;
+        oldUi.uid = incidence->uid();
+        if ( m_uidToItemId.contains( oldUi ) ) {
+          newUi.collection = item.storageCollectionId();
+          newUi.uid = oldUi.uid;
+          m_uidToItemId.remove( oldUi );
+          m_uidToItemId.insert( newUi, item.id() );
+        } else {
+          Q_ASSERT_X( false, "Calendar::Private::updateItem", "Item wasn't found in m_uidToItemId" );
+          return;
+        }
+      }
     }
     // update-only goes here
   } else {
@@ -376,7 +391,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   if ( alreadyExisted ) { // We're updating an existing item
     const bool existedInUidMap = m_uidToItemId.contains( ui );
     if ( m_uidToItemId.value( ui ) != item.id() ) {
-      kError()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
+      kError()<< "Ignoring item. item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
               << "; item uid = "  << ui.uid
               << "; calendar = " << q->objectName()
               << "; existed in cache = " << existedInUidMap
@@ -384,7 +399,20 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
               << "; parentCollection.id() = " << item.parentCollection().id() // can be a virtual collection
               << "; hasParent = " << hasParent
               << "; knowParent = " << knowParent;
-      Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
+      if ( existedInUidMap ) {
+        Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
+      } else {
+        kDebug() << "m_uidToItemId has size " << m_uidToItemId.count();
+        QMapIterator<UnseenItem, Akonadi::Item::Id> i( m_uidToItemId );
+        while ( i.hasNext() ) {
+          i.next();
+          if ( i.key().uid == ui.uid || i.value() == item.id() ) {
+            kDebug() << " key " << i.key().uid << i.key().collection << " has value " << i.value();
+          }
+        }
+        kError() << "Possible cause is that the resource isn't explicitly setting an uid ( and a random one is generated )";
+        Q_ASSERT_X( false, "updateItem", "Item not found inside m_uidToItemId" );
+      }
       return;
     }
 
@@ -415,7 +443,6 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
         }
       }
     }
-
   } else { // We're inserting a new item
     m_uidToItemId.insert( ui, item.id() );
 
@@ -527,6 +554,12 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
   m_unseenParentToChildren[unseen_parent].removeAll( item.id() );
 
   m_uidToItemId.remove( unseen_item );
+  m_itemDateForItemId.remove( item.id() );
+
+  const QList<QString> entriesToDelete = m_itemIdsForDate.keys( item.id() );
+  foreach( const QString &entryToDelete, entriesToDelete ) {
+    m_itemIdsForDate.remove( entryToDelete );
+  }
 }
 
 void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
@@ -545,12 +578,12 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
       return;
     }
 
-    Akonadi::Item ci( m_itemMap.take( item.id() ) );
+    Akonadi::Item oldItem( m_itemMap.take( item.id() ) );
 
-    removeItemFromMaps( ci );
+    removeItemFromMaps( oldItem );
 
-    Q_ASSERT( ci.hasPayload<KCalCore::Incidence::Ptr>() );
-    const KCalCore::Incidence::Ptr incidence = ci.payload<KCalCore::Incidence::Ptr>();
+    Q_ASSERT( oldItem.hasPayload<KCalCore::Incidence::Ptr>() );
+    const KCalCore::Incidence::Ptr incidence = oldItem.payload<KCalCore::Incidence::Ptr>();
     /*
     kDebug() << "Remove uid=" << incidence->uid()
              << "summary=" << incidence->summary()
@@ -576,8 +609,11 @@ void Calendar::Private::itemsRemoved( const Akonadi::Item::List &items )
       continue;
     }
 
+    // oldItem will almost always be the same as item, but, when you move an item from one collection
+    // and the destination collection isn't selected, itemsRemoved() is called, and they will differ
+    // on the parentCollection id.
+    q->notifyIncidenceDeleted( oldItem );
     incidence->unRegisterObserver( q );
-    q->notifyIncidenceDeleted( item );
   }
   emit q->calendarChanged();
   assertInvariants();
@@ -780,7 +816,7 @@ Akonadi::Item::List Calendar::rawEventsForDate( const QDate &date,
 {
   Akonadi::Item::List eventList;
   // Find the hash for the specified date
-  QString dateStr = date.toString();
+  const QString dateStr = date.toString();
   // Iterate over all non-recurring, single-day events that start on this date
   QMultiHash<QString, Akonadi::Item::Id>::const_iterator it =
     d->m_itemIdsForDate.constFind( dateStr );

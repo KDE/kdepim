@@ -457,11 +457,11 @@ private:
 
     bool needShowAllRecipients( Protocol proto ) const {
         if ( sign )
-            if ( const unsigned int num = kdtools::count_if( ui.signers, bind( &Line::wasInitiallyAmbiguous, _1, proto ) ) )
+            if ( const unsigned int num = kdtools::count_if( ui.signers, boost::bind( &Line::wasInitiallyAmbiguous, _1, proto ) ) )
                 if ( num != ui.signers.size() )
                     return true;
         if ( encrypt )
-            if ( const unsigned int num = kdtools::count_if( ui.recipients, bind( &Line::wasInitiallyAmbiguous, _1, proto ) ) )
+            if ( const unsigned int num = kdtools::count_if( ui.recipients, boost::bind( &Line::wasInitiallyAmbiguous, _1, proto ) ) )
                 if ( num != ui.recipients.size() )
                     return true;
         return false;
@@ -771,8 +771,8 @@ bool SignEncryptEMailConflictDialog::isComplete() const {
 }
 
 bool SignEncryptEMailConflictDialog::Private::isComplete( Protocol proto ) const {
-    return ( !sign    || kdtools::none_of( ui.signers,    bind( &Line::isStillAmbiguous, _1, proto ) ) )
-        && ( !encrypt || kdtools::none_of( ui.recipients, bind( &Line::isStillAmbiguous, _1, proto ) ) )
+    return ( !sign    || kdtools::none_of( ui.signers,    boost::bind( &Line::isStillAmbiguous, _1, proto ) ) )
+        && ( !encrypt || kdtools::none_of( ui.recipients, boost::bind( &Line::isStillAmbiguous, _1, proto ) ) )
         ;
 }
 
@@ -784,7 +784,7 @@ static std::vector<Key> get_keys( const std::vector<Line> & lines, Protocol prot
     std::vector<Key> keys;
     keys.reserve( lines.size() );
     kdtools::transform( lines, std::back_inserter( keys ),
-                        bind( &Line::key, _1, proto ) ); 
+                        boost::bind( &Line::key, _1, proto ) ); 
     kleo_assert( kdtools::none_of( keys, mem_fn( &Key::isNull ) ) );
     return keys;
 }

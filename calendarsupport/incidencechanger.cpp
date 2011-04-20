@@ -142,7 +142,6 @@ bool IncidenceChanger::Private::performChange( Change *change )
     }
 
     kDebug() << "Changing incidence";
-    const bool attendeeStatusChanged = myAttendeeStatusChanged( oldinc, newinc );
     const int revision = newinc->revision();
     newinc->setRevision( revision + 1 );
     // FIXME: Use a generic method for this! Ideally, have an interface class
@@ -152,24 +151,19 @@ bool IncidenceChanger::Private::performChange( Change *change )
     if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
       InvitationHandler handler( mCalendar );
       handler.setDialogParent( change->parent );
+
       if ( mOperationStatus.contains( change->atomicOperationId ) ) {
         handler.setDefaultAction( actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
       }
 
-      const InvitationHandler::SendResult result = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                          newinc,
-                                                                                          attendeeStatusChanged );
-      if ( result == InvitationHandler::ResultFailAbortUpdate ) {
-        kDebug() << "Sending invitations failed. Reverting changes.";
+      const bool modify = handler.handleIncidenceAboutToBeModified( newinc );
+      if ( !modify ) {
         if ( newinc->type() == oldinc->type() ) {
           KCalCore::IncidenceBase *i1 = newinc.data();
           KCalCore::IncidenceBase *i2 = oldinc.data();
-
           *i1 = *i2;
         }
         return false;
-      } else if ( change->atomicOperationId ) {
-        mOperationStatus.insert( change->atomicOperationId, result );
       }
     }
   }
@@ -187,7 +181,8 @@ bool IncidenceChanger::Private::performChange( Change *change )
   newItem.setRemoteRevision( QString() );
 
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( newItem );
-  connect( job, SIGNAL(result( KJob *)), this, SLOT(changeIncidenceFinished(KJob *)) );
+  // TODO_SERGIO: Remove this Qt::QueuedConnection after removing all job.exec()'s inside mailclient.cpp
+  connect( job, SIGNAL(result( KJob *)), this, SLOT(changeIncidenceFinished(KJob *)), Qt::QueuedConnection );
   return true;
 }
 
@@ -214,11 +209,11 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob *j )
   oldItem.setPayload<KCalCore::Incidence::Ptr>( oldInc );
   oldItem.setMimeType( oldInc->mimeType() );
   oldItem.setId( newItem.id() );
+  const KCalCore::Incidence::Ptr newInc = CalendarSupport::incidence( newItem );
 
   if ( job->error() ) {
     kWarning() << "Item modify failed:" << job->errorString();
 
-    const KCalCore::Incidence::Ptr newInc = CalendarSupport::incidence( newItem );
     KMessageBox::sorry( change->parent,
                         i18n( "Unable to save changes for incidence %1 \"%2\": %3",
                               i18n( newInc->typeStr() ),
@@ -226,6 +221,21 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob *j )
                               job->errorString() ) );
     emit incidenceChangeFinished( oldItem, newItem, change->action, false );
   } else {
+    InvitationHandler handler( mCalendar );
+    handler.setDialogParent( change->parent );
+
+    if ( mOperationStatus.contains( change->atomicOperationId ) ) {
+      handler.setDefaultAction( actionFromStatus( mOperationStatus.value( change->atomicOperationId ) ) );
+    }
+    const bool attendeeStatusChanged = myAttendeeStatusChanged( oldInc, newInc );
+    InvitationHandler::SendResult result = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                              newInc,
+                                                              attendeeStatusChanged );
+
+    if ( change->atomicOperationId ) {
+      mOperationStatus.insert( change->atomicOperationId, result );
+    }
+
     emit incidenceChangeFinished( oldItem, newItem, change->action, true );
   }
 

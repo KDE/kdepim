@@ -109,6 +109,7 @@ class MultiAgendaView::Private
 
     ~Private()
     {
+      qDeleteAll( mSelectionSavers );
     }
 
     void addView( const Akonadi::Collection &collection );
@@ -136,6 +137,7 @@ class MultiAgendaView::Private
     int mCustomNumberOfColumns;
     QLabel *mLabel;
     QWidget *mRightDummyWidget;
+    QHash<QString, KViewStateMaintainer<ETMViewStateSaver>* > mSelectionSavers;
 };
 
 MultiAgendaView::MultiAgendaView( QWidget *parent )
@@ -689,15 +691,15 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
     KCheckableProxyModel *checkableProxy = new KCheckableProxyModel( this );
     checkableProxy->setSourceModel( columnFilterProxy );
     checkableProxy->setSelectionModel( qsm );
+    const QString groupName = configGroup.name() + "_subView_" + QByteArray::number( i );
+    const KConfigGroup group = configGroup.config()->group( groupName );
 
-    const KConfigGroup g = configGroup.config()->group( configGroup.name()
-                                                        + "_subView_"
-                                                        + QByteArray::number( i ) );
+    if ( !d->mSelectionSavers.contains( groupName ) ) {
+      d->mSelectionSavers.insert( groupName, new KViewStateMaintainer<ETMViewStateSaver>( group ) );
+      d->mSelectionSavers[groupName]->setSelectionModel( checkableProxy->selectionModel() );
+    }
 
-    KViewStateMaintainer<ETMViewStateSaver> saver( g );
-    saver.setSelectionModel( checkableProxy->selectionModel() );
-    saver.restoreState();
-
+    d->mSelectionSavers[groupName]->restoreState();
     d->mCollectionSelectionModels[i] = checkableProxy;
   }
   d->mPendingChanges = true;
@@ -712,14 +714,16 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
   const QStringList titleList = d->mCustomColumnTitles.toList();
   configGroup.writeEntry( "ColumnTitles", titleList );
   int idx = 0;
-  Q_FOREACH ( KCheckableProxyModel *i, d->mCollectionSelectionModels ) {
-    KConfigGroup g = configGroup.config()->group( configGroup.name() +
-                                                  "_subView_" +
-                                                  QByteArray::number( idx ) );
+  foreach( KCheckableProxyModel *checkableProxyModel, d->mCollectionSelectionModels ) {
+    const QString groupName = configGroup.name() + "_subView_" + QByteArray::number( idx );
+    KConfigGroup group = configGroup.config()->group( groupName );
     ++idx;
-    KViewStateMaintainer<ETMViewStateSaver> saver( g );
-    saver.setSelectionModel( i->selectionModel() );
-    saver.saveState();
+    KViewStateMaintainer<ETMViewStateSaver> saver( group );
+    if ( !d->mSelectionSavers.contains( groupName ) ) {
+      d->mSelectionSavers.insert( groupName, new KViewStateMaintainer<ETMViewStateSaver>( group ) );
+      d->mSelectionSavers[groupName]->setSelectionModel( checkableProxyModel->selectionModel() );
+    }
+    d->mSelectionSavers[groupName]->saveState();
   }
 }
 

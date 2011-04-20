@@ -38,8 +38,6 @@ public:
 protected:
   virtual void contextMenuEvent( QContextMenuEvent *event );
 
-  virtual void rowsInserted(const QModelIndex& parent, int start, int end);
-
 protected slots:
   void renameEntry();
   void copyLinkAddress();

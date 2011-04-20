@@ -88,7 +88,7 @@ QStringList Kleo::makeRelativeTo( const QString & base, const QStringList & file
 QStringList Kleo::makeRelativeTo( const QDir & baseDir, const QStringList & fileNames ) {
     return kdtools::transform<QStringList>
         ( fileNames,
-          bind( &QDir::relativeFilePath, &baseDir, _1 ) );
+          boost::bind( &QDir::relativeFilePath, &baseDir, _1 ) );
 }
 
 void Kleo::recursivelyRemovePath( const QString & path ) {

@@ -117,12 +117,12 @@ static QGpgMEEncryptJob::result_type encrypt_qba( Context * ctx, const std::vect
 }
 
 Error QGpgMEEncryptJob::start( const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust ) {
-  run( bind( &encrypt_qba, _1, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded ) );
+  run( boost::bind( &encrypt_qba, _1, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded ) );
   return Error();
 }
 
 void QGpgMEEncryptJob::start( const std::vector<Key> & recipients, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & cipherText, bool alwaysTrust ) {
-  run( bind( &encrypt,
+  run( boost::bind( &encrypt,
              _1, _2,
              recipients,
              _3, _4,

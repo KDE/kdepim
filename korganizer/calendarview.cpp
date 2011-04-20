@@ -862,10 +862,11 @@ void CalendarView::updateView( const QDate &start, const QDate &end,
 
 void CalendarView::updateView()
 {
-  DateList tmpList = mDateNavigator->selectedDates();
+  const DateList tmpList = mDateNavigator->selectedDates();
+  const QDate month = mDateNavigatorContainer->monthOfNavigator();
 
   // We assume that the navigator only selects consecutive days.
-  updateView( tmpList.first(), tmpList.last(), QDate() /**preferredMonth*/ );
+  updateView( tmpList.first(), tmpList.last(), month /**preferredMonth*/ );
 }
 
 void CalendarView::updateUnmanagedViews()
@@ -2387,15 +2388,15 @@ void CalendarView::editIncidence()
   editIncidence( selectedIncidence() );
 }
 
-bool CalendarView::editIncidence( const Akonadi::Item::Id &uid )
+bool CalendarView::editIncidence( Akonadi::Item::Id id )
 {
-  Akonadi::Item item = mCalendar->incidence( uid );
+  Akonadi::Item item = mCalendar->incidence( id );
   return editIncidence( item );
 }
 
-bool CalendarView::showIncidence( const Akonadi::Item::Id &uid )
+bool CalendarView::showIncidence( Akonadi::Item::Id id )
 {
-  Akonadi::Item item = mCalendar->incidence( uid );
+  Akonadi::Item item = mCalendar->incidence( id );
   if ( !CalendarSupport::hasIncidence( item ) ) {
     return false;
   }
@@ -2403,9 +2404,9 @@ bool CalendarView::showIncidence( const Akonadi::Item::Id &uid )
   return true;
 }
 
-bool CalendarView::showIncidenceContext( const Akonadi::Item::Id &uid )
+bool CalendarView::showIncidenceContext( Akonadi::Item::Id id )
 {
-  Akonadi::Item item = mCalendar->incidence( uid );
+  Akonadi::Item item = mCalendar->incidence( id );
   if ( !CalendarSupport::hasIncidence( item ) ) {
     return false;
   }

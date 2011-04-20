@@ -39,6 +39,7 @@
 #include <akonadi_next/kviewstatemaintainer.h>
 
 #include <KCalCore/Todo>
+#include <KCalCore/CalFilter>
 
 #include <KCalUtils/RecurrenceActions>
 
@@ -641,6 +642,22 @@ QColor EventView::itemFrameColor( const QColor &color, bool selected )
     return Qt::black;
   }
 }
+
+void EventView::removeFilteredOccurrences( const KCalCore::Todo::Ptr &todo, QList< KDateTime > &list )
+{
+  Q_ASSERT( todo );
+
+  if ( todo->recurs() && calendar()->filter() &&
+        ( calendar()->filter()->criteria() & KCalCore::CalFilter::HideCompletedTodos ) ) {
+    QMutableListIterator<KDateTime> i( list );
+    while( i.hasNext() ) {
+      if ( i.next() < todo->dtDue() ) {
+        i.remove();
+      }
+    }
+  }
+}
+
 
 #include "eventview.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;

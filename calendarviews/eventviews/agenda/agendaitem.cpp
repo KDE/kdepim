@@ -817,10 +817,13 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
 
   if ( CalendarSupport::hasTodo( mIncidence ) &&
        !mEventView->preferences()->todosUseCategoryColors() ) {
-    if ( CalendarSupport::todo( mIncidence )->isOverdue() ) {
+    Todo::Ptr todo = CalendarSupport::todo( mIncidence );
+    Q_ASSERT( todo );
+    const QDate dueDate = todo->dtDue().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+    const QDate today = KDateTime::currentDateTime( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date();
+    if ( todo->isOverdue() && today >= mDate ) {
       bgColor = mEventView->preferences()->todoOverdueColor();
-    } else if ( CalendarSupport::todo( mIncidence )->dtDue().date() ==
-                QDateTime::currentDateTime().date() ) {
+    } else if ( dueDate == today && dueDate == mDate ) {
       bgColor = mEventView->preferences()->todoDueTodayColor();
     }
   }
@@ -828,7 +831,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mIncidence );
   Q_ASSERT( incidence );
   QColor categoryColor;
-  QStringList categories = incidence->categories();
+  const QStringList categories = incidence->categories();
   QString cat;
   if ( !categories.isEmpty() ) {
     cat = categories.first();
@@ -884,16 +887,16 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     bgColor = bgColor.light( EventView::BRIGHTNESS_FACTOR );
   }
 
-  QColor textColor = EventViews::getTextColor( bgColor );
+  const QColor textColor = EventViews::getTextColor( bgColor );
   p.setPen( textColor );
 
   p.setFont( mEventView->preferences()->agendaViewFont() );
   QFontMetrics fm = p.fontMetrics();
 
-  int singleLineHeight = fm.boundingRect( mLabelText ).height();
+  const int singleLineHeight = fm.boundingRect( mLabelText ).height();
 
-  bool roundTop = !prevMultiItem();
-  bool roundBottom = !nextMultiItem();
+  const bool roundTop = !prevMultiItem();
+  const bool roundBottom = !nextMultiItem();
 
   drawRoundedRect( &p, QRect( fmargin, fmargin, width() - fmargin * 2, height() - fmargin * 2 ),
                    mSelected, bgColor, true, ft, roundTop, roundBottom );
@@ -904,8 +907,15 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   QString shortH;
   QString longH;
   if ( !isMultiItem() ) {
-    shortH = KGlobal::locale()->formatTime(
-      incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
+    // TODO: When we depend on kdepimlibs 4.7, replace with: shortH
+    // KGlobal::locale()->formatTime(incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).toTimeSpec( mEventView->preferences()->timeSpec() ).time() )
+    if ( incidence->type() == Incidence::TypeEvent ) {
+      shortH = KGlobal::locale()->formatTime( incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
+    } else if ( incidence->type() == Incidence::TypeTodo ) {
+      Todo::Ptr todo = CalendarSupport::todo( mIncidence );
+      if ( todo )
+        shortH = KGlobal::locale()->formatTime( todo->dtDue().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
+    }
     if ( CalendarSupport::hasEvent( mIncidence ) ) {
       longH = i18n( "%1 - %2",
                     shortH,
@@ -939,7 +949,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
                                            qMax( groupPxmp->height(),
                                                  organizerPxmp->height() ) ) ) ) ) );
 
-  bool completelyRenderable = th < ( height() - 2 * ft - 2 - hlHeight );
+  const bool completelyRenderable = th < ( height() - 2 * ft - 2 - hlHeight );
 
   // case 1: do not draw text when not even a single line fits
   // Don't do this any more, always try to print out the text.
@@ -948,7 +958,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   if ( //( singleLineHeight > height() - 4 ) ||
        ( width() < 16 ) ) {
     int x = qRound( ( width() - 16 ) / 2.0 );
-    paintIcon( &p, x, margin, ft );
+    paintIcon( &p, x/*by-ref*/, margin, ft );
     return;
   }
 
@@ -958,16 +968,16 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
 
     if ( incidence->allDay() ) {
       x += visRect.left();
-      int y =  qRound( ( height() - 16 ) / 2.0 );
+      const int y =  qRound( ( height() - 16 ) / 2.0 );
       paintIcons( &p, x, y, ft );
       txtWidth = visRect.right() - margin - x;
     } else {
-      int y =  qRound( ( height() - 16 ) / 2.0 );
+      const int y =  qRound( ( height() - 16 ) / 2.0 );
       paintIcons( &p, x, y, ft );
       txtWidth = width() - margin - x;
     }
 
-    int y = ( ( height() - singleLineHeight ) / 2 ) + fm.ascent();
+    const int y = ( ( height() - singleLineHeight ) / 2 ) + fm.ascent();
     KWordWrap::drawFadeoutText( &p, x, y, txtWidth, mLabelText );
     return;
   }

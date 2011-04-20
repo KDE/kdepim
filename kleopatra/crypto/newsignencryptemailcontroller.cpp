@@ -153,22 +153,22 @@ namespace {
 
 static bool has_perfect_match( bool sign, bool encrypt, Protocol proto, const std::vector<Sender> & senders, const std::vector<Recipient> & recipients ) {
     if ( sign )
-        if ( !kdtools::all( senders,    bind( count_signing_certificates( proto ), _1 ) == 1 ) )
+        if ( !kdtools::all( senders,    boost::bind( count_signing_certificates( proto ), _1 ) == 1 ) )
             return false;
     if ( encrypt )
-        if ( !kdtools::all( senders,    bind( count_encrypt_certificates( proto ), _1 ) == 1 ) ||
-             !kdtools::all( recipients, bind( count_encrypt_certificates( proto ), _1 ) == 1 ) )
+        if ( !kdtools::all( senders,    boost::bind( count_encrypt_certificates( proto ), _1 ) == 1 ) ||
+             !kdtools::all( recipients, boost::bind( count_encrypt_certificates( proto ), _1 ) == 1 ) )
             return false;
     return true;
 }
 
 static bool has_partial_match( bool sign, bool encrypt, Protocol proto, const std::vector<Sender> & senders, const std::vector<Recipient> & recipients ) {
     if ( sign )
-        if ( !kdtools::all( senders,    bind( count_signing_certificates( proto ), _1 ) >= 1 ) )
+        if ( !kdtools::all( senders,    boost::bind( count_signing_certificates( proto ), _1 ) >= 1 ) )
             return false;
     if ( encrypt )
-        if ( !kdtools::all( senders,    bind( count_encrypt_certificates( proto ), _1 ) >= 1 ) ||
-             !kdtools::all( recipients, bind( count_encrypt_certificates( proto ), _1 ) >= 1 ) )
+        if ( !kdtools::all( senders,    boost::bind( count_encrypt_certificates( proto ), _1 ) >= 1 ) ||
+             !kdtools::all( recipients, boost::bind( count_encrypt_certificates( proto ), _1 ) >= 1 ) )
             return false;
     return true;
 }
@@ -497,7 +497,7 @@ void NewSignEncryptEMailController::Private::schedule() {
 shared_ptr<Task> NewSignEncryptEMailController::Private::takeRunnable( GpgME::Protocol proto ) {
     const std::vector< shared_ptr<Task> >::iterator it
         = std::find_if( runnable.begin(), runnable.end(),
-                        bind( &Task::protocol, _1 ) == proto );
+                        boost::bind( &Task::protocol, _1 ) == proto );
     if ( it == runnable.end() )
         return shared_ptr<Task>();
 

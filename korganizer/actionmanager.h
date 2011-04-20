@@ -158,9 +158,9 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
       @param force If true, all recurrences and sub-todos (if applicable) will
       be deleted without prompting for confirmation.
     */
-    virtual bool deleteIncidence( const Akonadi::Item::Id &uid, bool force = false );
+    virtual bool deleteIncidence( Akonadi::Item::Id id, bool force = false );
 
-    bool editIncidence( const Akonadi::Item::Id &uid );
+    bool editIncidence( Akonadi::Item::Id id );
 
     /**
       Add an incidence to the active calendar.
@@ -169,14 +169,14 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     bool addIncidence( const QString &ical );
     //bool addIncidence( const Akonadi::Item::Id &ical );
 
-    bool showIncidence( const Akonadi::Item::Id &uid );
+    bool showIncidence( Akonadi::Item::Id id );
 
     /**
       Show an incidence in context. This means showing the todo, agenda or
       journal view (as appropriate) and scrolling it to show the incidence.
       @param uid Unique ID of the incidence to show.
     */
-    bool showIncidenceContext( const Akonadi::Item::Id &uid );
+    bool showIncidenceContext( Akonadi::Item::Id id );
 
     /**
      * Called by KOrganizerUniqueAppHandler in the kontact plugin
@@ -248,7 +248,7 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     /**
       Emitted when the "New" action is activated.
     */
-    void actionNew( const KUrl &url = KUrl() );
+    //void actionNewMainWindow( const KUrl &url = KUrl() );
     void toggleMenuBar();
     /**
       When change is made to options dialog, the topwidget will catch this
@@ -299,7 +299,7 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     void checkAutoExport();
 
     /** open new window */
-    void file_new();
+    //void file_new();
 
     /** open a file, load it into the calendar. */
     void file_open();
@@ -310,11 +310,11 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     */
     void file_open( const KUrl &url );
 
-    /** import a calendar from another program like ical. */
+    /** import a non-ics calendar from another program like ical. */
     void file_icalimport();
 
-    /** open a calendar and add the contents to the current calendar. */
-    void file_merge();
+    /** import a generic ics file */
+    void file_import();
 
     /** delete or archive old entries in your calendar for speed/space. */
     void file_archive();

@@ -266,7 +266,7 @@ void IncidenceDateTime::updateStartDate( const QDate &newDate )
 
 void IncidenceDateTime::updateStartSpec()
 {
-  QDate prevDate = mCurrentStartDateTime.date();
+  const QDate prevDate = mCurrentStartDateTime.date();
 
   if ( mUi->mEndCheck->isChecked() &&
        currentEndDateTime().timeSpec() == mCurrentStartDateTime.timeSpec() ) {
@@ -438,7 +438,9 @@ bool IncidenceDateTime::isDirty( const KCalCore::Event::Ptr &event ) const
     }
   } else {
     if ( currentStartDateTime() != mInitialStartDT ||
-         currentEndDateTime() != mInitialEndDT ) {
+         currentEndDateTime() != mInitialEndDT ||
+         currentStartDateTime().timeSpec() != mInitialStartDT.timeSpec() ||
+         currentEndDateTime().timeSpec() != mInitialEndDT.timeSpec() ) {
       return true;
     }
   }
@@ -504,9 +506,9 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
-           SIGNAL( endTimeChanged( QTime ) ) );
+           SIGNAL(endTimeChanged(QTime) ) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
-           SIGNAL( endDateChanged( QDate ) ) );
+           SIGNAL(endDateChanged(QDate) ) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()) );
 
@@ -517,6 +519,7 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   if ( !isTemplate ) {
     KDateTime startDT = event->dtStart();
     KDateTime endDT = event->dtEnd();
+    /*
     if ( event->recurs() && mActiveDate.isValid() ) {
       // Consider the active date when editing recurring Events.
       KDateTime kdt( mActiveDate, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
@@ -533,6 +536,7 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
         }
       }
     }
+    */
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
     if ( startDT.isUtc() ) {
       startDT = startDT.toLocalZone();
@@ -588,12 +592,14 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
   if ( !isTemplate ) {
     KDateTime startDT = journal->dtStart();
 
+    /*
     if ( journal->recurs() && mActiveDate.isValid() ) {
       // Consider the active date when editing recurring journals
       KDateTime kdt( mActiveDate, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
       kdt = kdt.addSecs( -1 );
       startDT.setDate( journal->recurrence()->getNextDateTime( kdt ).date() );
     }
+    */
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
     if ( startDT.isUtc() ) {
       startDT = startDT.toLocalZone();

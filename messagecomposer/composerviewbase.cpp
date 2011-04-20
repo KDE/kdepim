@@ -39,6 +39,7 @@
 #include <mailtransport/messagequeuejob.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/itemcreatejob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <kpimidentities/identitycombo.h>
 #include <messagecore/attachmentcollector.h>
 #include <messagecore/nodehelper.h>
@@ -1216,8 +1217,24 @@ void Message::ComposerViewBase::setFcc ( const Akonadi::Collection& fccCollectio
   } else {
     m_fccCollection = fccCollection;
   }
+  Akonadi::CollectionFetchJob * const checkFccCollectionJob =
+    new Akonadi::CollectionFetchJob( fccCollection, Akonadi::CollectionFetchJob::Base );
+  connect( checkFccCollectionJob, SIGNAL( result( KJob* ) ),
+           SLOT( slotFccCollectionCheckResult( KJob* ) ) );
 }
 
+void Message::ComposerViewBase::slotFccCollectionCheckResult( KJob* job )
+{
+  if( job->error() ) {
+    const Akonadi::Collection sentMailCol =
+      Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail );
+    if ( m_fccCombo ) {
+      m_fccCombo->setDefaultCollection( sentMailCol );
+    } else {
+      m_fccCollection = sentMailCol;
+    }
+  }
+}
 
 void Message::ComposerViewBase::setFccCombo ( Akonadi::CollectionComboBox* fcc )
 {

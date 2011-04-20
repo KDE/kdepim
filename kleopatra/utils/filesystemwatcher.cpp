@@ -120,15 +120,15 @@ static QStringList list_dir_absolute( const QString & path, const QStringList & 
     QStringList entries = dir.entryList( QDir::AllEntries|QDir::NoDotAndDotDot );
     QStringList::iterator end = 
         std::remove_if( entries.begin(), entries.end(),
-                        bind( is_blacklisted, _1, cref( blacklist ) ) );
+                        boost::bind( is_blacklisted, _1, cref( blacklist ) ) );
     if ( !whitelist.empty() )
         end = std::remove_if( entries.begin(), end,
-                              !bind( is_whitelisted, _1, cref( whitelist ) ) );
+                              !boost::bind( is_whitelisted, _1, cref( whitelist ) ) );
     entries.erase( end, entries.end() );
     kdtools::sort( entries );
 
     std::transform( entries.begin(), entries.end(), entries.begin(),
-                    bind( &QDir::absoluteFilePath, &dir, _1 ) );
+                    boost::bind( &QDir::absoluteFilePath, &dir, _1 ) );
 
     return entries;
 }
@@ -256,7 +256,7 @@ void FileSystemWatcher::blacklistFiles( const QStringList& paths )
     QStringList blacklisted;
     d->m_paths.erase( kdtools::separate_if( d->m_paths.begin(), d->m_paths.end(),
                                             std::back_inserter( blacklisted ), d->m_paths.begin(),
-                                            bind( is_blacklisted, _1, cref( d->m_blacklist ) ) ).second, d->m_paths.end() );
+                                            boost::bind( is_blacklisted, _1, cref( d->m_blacklist ) ) ).second, d->m_paths.end() );
     if ( d->m_watcher && !blacklisted.empty() )
         d->m_watcher->removePaths( blacklisted );
 }

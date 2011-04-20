@@ -308,11 +308,11 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
   }
 
-  // special case treatment on mac
+  // special case treatment on mac and windows
   QString atmName = name;
   if ( name.isEmpty() )
     atmName = mNodeHelper->tempFileUrlFromNode( node ).toLocalFile();
-  if ( Util::handleUrlOnMac( atmName ) )
+  if ( Util::handleUrlWithQDesktopServices( atmName ) )
     return;
 
   if ( mimetype.isNull() || mimetype->name() == "application/octet-stream" ) {
@@ -943,8 +943,8 @@ void ViewerPrivate::initHtmlWidget()
            this, SLOT(slotUrlOn(QString,QString,QString)) );
   connect( mViewer, SIGNAL(linkClicked(QUrl)),
            this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
-  connect( mViewer, SIGNAL(popupMenu(QString,QPoint) ),
-           SLOT(slotUrlPopup(QString,QPoint)) );
+  connect( mViewer, SIGNAL(popupMenu(QUrl,QPoint) ),
+           SLOT(slotUrlPopup(QUrl,QPoint)) );
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
@@ -1772,7 +1772,11 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 {
   Q_UNUSED(title)
   Q_UNUSED(textContent)
-  const KUrl url(link);
+
+  // The "link" we get here is not URL-encoded, and therefore there is no way the KUrl or QUrl could
+  // parse it correctly. To workaround that, we use QWebFrame::hitTestContent() on the mouse position
+  // to get the URL before WebKit managed to mangle it.
+  KUrl url( mViewer->linkOrImageUrlAt( QCursor::pos() ) );
   if ( url.protocol() == "kmail" || url.protocol() == "x-kmail" || url.protocol() == "attachment" ||
        ( url.protocol().isEmpty() && url.path().isEmpty() ) ) {
     mViewer->setAcceptDrops( false );
@@ -1799,7 +1803,7 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
   emit showStatusBarMessage( msg );
 }
 
-void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
+void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QPoint& aPos)
 {
   const KUrl url( aUrl );
   mClickedUrl = url;
@@ -2140,11 +2144,11 @@ QString ViewerPrivate::attachmentInjectionHtml() const
 
   QString link("");
   if ( headerStyle() == HeaderStyle::fancy() ) {
-    link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\"file://"+imgpath+imgSrc+"\"/></a></div>";
+    link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\"file:///"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
     html.prepend( QString::fromLatin1("<div style=\"float:left;\">%1&nbsp;</div>" ).arg(i18n("Attachments:")) );
   } else {
-    link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\"file://"+imgpath+imgSrc+"\"/></a></div>";
+    link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\"file:///"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
   }
 
@@ -2721,7 +2725,7 @@ QString ViewerPrivate::recipientsQuickListLinkHtml( bool doShow, const QString &
     altText = i18n("Show full address list");
   }
 
-  return "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file://" + imgpath + imgSrc + "\""
+  return "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file:///" + imgpath + imgSrc + "\""
                  "alt=\"" + altText + "\" /></a></span>";
 }
 

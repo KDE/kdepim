@@ -431,9 +431,9 @@ static QStringList extract_local_files( const QMimeData * data ) {
     QStringList result;
     std::transform( urls.begin(), end,
                     std::back_inserter( result ),
-                    bind( &QUrl::toLocalFile, _1 ) );
+                    boost::bind( &QUrl::toLocalFile, _1 ) );
     result.erase( std::remove_if( result.begin(), result.end(),
-                                  bind( &QString::isEmpty, _1 ) ), result.end() );
+                                  boost::bind( &QString::isEmpty, _1 ) ), result.end() );
     return result;
 }
 

@@ -73,7 +73,7 @@ bool MailWebView::event( QEvent *event )
 #ifdef Q_OS_WINCE
     if ( !hit.linkUrl().isEmpty() )
 #endif
-    emit popupMenu( hit.linkUrl().toString(), mapToGlobal( contextMenuEvent->pos() ) );
+    emit popupMenu( hit.linkUrl(), mapToGlobal( contextMenuEvent->pos() ) );
     event->accept();
     return true;
   }

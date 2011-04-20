@@ -395,6 +395,12 @@ static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &cur
   if ( !parent.isValid() ) // our parent is the tree root and we have no siblings
     return QModelIndex(); // we reached the bottom of the tree
 
+  // We are the last child, the next index to check is our uncle, parent's first sibling
+  const QModelIndex parentsSibling = parent.sibling( parent.row()+1 , 0 );
+  if ( parentsSibling.isValid() ) {
+    return parentsSibling;
+  }
+
   // iterate over our parents back to root until we find a parent with a valid sibling
   QModelIndex currentParent = parent;
   QModelIndex grandParent = model->parent( currentParent );

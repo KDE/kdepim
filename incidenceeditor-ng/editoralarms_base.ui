@@ -470,7 +470,7 @@
              <string>Use the adjacent file browser to help you find the file you want to use when running an application when the reminder triggers.</string>
             </property>
             <property name="filter">
-             <string>*.*|All files</string>
+             <string>*|All files</string>
             </property>
            </widget>
           </item>

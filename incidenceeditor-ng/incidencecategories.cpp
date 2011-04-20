@@ -51,6 +51,7 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
            SLOT(selectCategories()) );
 #else
+  Q_ASSERT( EditorConfig::instance() );
   CategoryConfig cc( EditorConfig::instance()->config() );
   mUi->mCategoryCombo->setDefaultText( i18nc( "@item:inlistbox", "Select Categories" ) );
   mUi->mCategoryCombo->setSqueezeText( true );
@@ -158,5 +159,7 @@ void IncidenceCategories::checkForUnknownCategories( const QStringList &categori
     //update the combo with newly found categories
     CategoryHierarchyReaderQComboBox( mUi->mCategoryCombo ).read( existingCategories );
   }
+#else
+  Q_UNUSED( categoriesToCheck )
 #endif
 }

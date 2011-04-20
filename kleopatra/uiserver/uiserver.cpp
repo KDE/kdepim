@@ -146,7 +146,7 @@ void UiServer::enableCryptoCommands( bool on ) {
         return;
     d->cryptoCommandsEnabled = on;
     kdtools::for_each( d->connections,
-                       bind( &AssuanServerConnection::enableCryptoCommands, _1, on ) );
+                       boost::bind( &AssuanServerConnection::enableCryptoCommands, _1, on ) );
 }
 
 QString UiServer::socketName() const {

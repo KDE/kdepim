@@ -85,7 +85,7 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
       fileName = i18nc( "a file called 'unknown.ext'", "unknown%1",
                         mimeTypePtr->mainExtension() );
     } else {
-      fileName = i18nc( "a filed called 'unknown'", "unknown" );
+      fileName = i18nc( "a file called 'unknown'", "unknown" );
     }
   }
 #else

@@ -282,7 +282,7 @@ void LookupCertificatesCommand::Private::slotImportRequested( const std::vector<
     kdtools::separate_if( keys.begin(), keys.end(),
                           std::back_inserter( pgp ),
                           std::back_inserter( cms ),
-                          bind( &Key::protocol, _1 ) == OpenPGP );
+                          boost::bind( &Key::protocol, _1 ) == OpenPGP );
 
     setWaitForMoreJobs( true );
     if ( !pgp.empty() )

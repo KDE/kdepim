@@ -30,6 +30,7 @@ class SkeletonMessageJobTest : public QObject
     void testSubject();
     void testAddresses_data();
     void testAddresses();
+    void testMessageID();
 };
 
 #endif

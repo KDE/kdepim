@@ -120,12 +120,12 @@ static QGpgMESignEncryptJob::result_type sign_encrypt_qba( Context * ctx, const 
 }
 
 Error QGpgMESignEncryptJob::start( const std::vector<Key> & signers, const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust ) {
-  run( bind( &sign_encrypt_qba, _1, signers, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded ) );
+  run( boost::bind( &sign_encrypt_qba, _1, signers, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded ) );
   return Error();
 }
 
 void QGpgMESignEncryptJob::start( const std::vector<Key> & signers, const std::vector<Key> & recipients, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & cipherText, bool alwaysTrust ) {
-    run( bind( &sign_encrypt, _1, _2, signers, recipients, _3, _4, alwaysTrust, mOutputIsBase64Encoded ), plainText, cipherText );
+    run( boost::bind( &sign_encrypt, _1, _2, signers, recipients, _3, _4, alwaysTrust, mOutputIsBase64Encoded ), plainText, cipherText );
 }
 
 std::pair<SigningResult,EncryptionResult> QGpgMESignEncryptJob::exec( const std::vector<Key> & signers, const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust, QByteArray & cipherText ) {

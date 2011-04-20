@@ -60,7 +60,7 @@ static QGpgMEImportFromKeyserverJob::result_type importfromkeyserver( Context * 
 }
 
 Error QGpgMEImportFromKeyserverJob::start( const std::vector<Key> & keys ) {
-  run( bind( &importfromkeyserver, _1, keys ) );
+  run( boost::bind( &importfromkeyserver, _1, keys ) );
   return Error();
 }
 

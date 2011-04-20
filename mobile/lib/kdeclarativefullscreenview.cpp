@@ -44,6 +44,7 @@
 
 #include <boost/bind.hpp>
 #include <algorithm>
+#include <iterator>
 
 #ifdef Q_OS_WINCE
 #include <windows.h>
@@ -297,7 +298,7 @@ void KDeclarativeFullScreenView::setActionTitle(const QString& name, const QStri
 
 void KDeclarativeFullScreenView::bringToFront()
 {
-#ifdef Q_WS_WIN
+#ifdef Q_WS_WINCE
   const WCHAR * windowName = ( const WCHAR *)m_qmlFileName.utf16();
   HWND windowID = ::FindWindow( NULL, windowName );
   if ( windowID ) {

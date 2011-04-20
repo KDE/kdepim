@@ -743,18 +743,18 @@ struct FilterActionDesc
  * @author Marc Mutz <Marc@Mutz.com>, based on work by Stefan Taferner <taferner@kde.org>
  * @see FilterAction FilterActionDesc Filter
  */
-class MAILCOMMON_EXPORT FilterActionDict : public QMultiHash<QString, FilterActionDesc*>
+class FilterActionDict : public QMultiHash<QString, FilterActionDesc*>
 {
   public:
     /**
      * Creates the filter action dictionary.
      */
-    FilterActionDict();
+    MAILCOMMON_EXPORT FilterActionDict();
 
     /**
      * Destroys the filter action dictionary.
      */
-    virtual ~FilterActionDict();
+    MAILCOMMON_EXPORT virtual ~FilterActionDict();
 
     /**
      * Overloaded member function, provided for convenience. Thin
@@ -765,13 +765,13 @@ class MAILCOMMON_EXPORT FilterActionDict : public QMultiHash<QString, FilterActi
      * instance of the action internally and deletes it again after
      * querying it for name and label.
      */
-    void insert( FilterActionNewFunc aNewFunc );
+    MAILCOMMON_EXPORT void insert( FilterActionNewFunc aNewFunc );
 
     /**
      * Provides read-only access to a list of all known filter
      * actions.
      */
-    const QList<FilterActionDesc*>& list() const;
+    MAILCOMMON_EXPORT const QList<FilterActionDesc*>& list() const;
 
   protected:
     /**

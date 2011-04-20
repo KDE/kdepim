@@ -70,10 +70,14 @@ kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfg
 
 if (NOT WINCE)
 
+set(incidenceeditors_ng_shared_LIB_SRCS
+  ${incidenceeditors_ng_shared_LIB_SRCS}
+  incidencedialog.cpp
+)
+
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
   templatemanagementdialog.cpp
-  incidencedialog.cpp
   incidencedialogfactory.cpp
   eventortododialog.cpp
   visualfreebusywidget.cpp

@@ -174,6 +174,8 @@ void TemplateManagementDialog::slotApplyTemplate()
     const QString &cur = item->text();
     if ( !cur.isEmpty() && cur != m_newTemplate ) {
       emit loadTemplate( cur );
+      slotOk();
+      accept();
     }
   }
 }

@@ -59,7 +59,7 @@ SessionData::SessionData()
 shared_ptr<SessionDataHandler> SessionDataHandler::instance() {
     mutex.lock();
     static SessionDataHandler handler;
-    return shared_ptr<SessionDataHandler>( &handler, bind( &QMutex::unlock, &mutex ) );
+    return shared_ptr<SessionDataHandler>( &handler, boost::bind( &QMutex::unlock, &mutex ) );
 }
 
 SessionDataHandler::SessionDataHandler()

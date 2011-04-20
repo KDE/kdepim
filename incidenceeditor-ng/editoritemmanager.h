@@ -118,7 +118,9 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     enum SaveAction {
       Create, /**< A new item was created */
       Modify, /**< An existing item was modified */
-      None    /**< Nothing happened. */
+      None,   /**< Nothing happened. */
+      Move,    /**< An existing item was moved to another collection */
+      MoveAndModify /**< An existing item was moved to another collection and modified */
     };
 
     void setIsCounterProposal( bool isCounterProposal );
@@ -141,6 +143,7 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     Q_PRIVATE_SLOT(d_ptr, void itemFetchResult( KJob* ) )
     Q_PRIVATE_SLOT(d_ptr, void itemMoveResult( KJob* ) )
     Q_PRIVATE_SLOT(d_ptr, void modifyResult( KJob* ) )
+    Q_PRIVATE_SLOT(d_ptr, void moveAndModifyTransactionFinished( KJob *job ) )
 };
 
 class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
@@ -148,7 +151,8 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
   public:
     enum RejectReason {
       ItemFetchFailed,      ///> Either the fetchjob failed or no items where returned
-      ItemHasInvalidPayload ///> The fetched item has an invalid payload
+      ItemHasInvalidPayload, ///> The fetched item has an invalid payload
+      ItemMoveFailed ///> Item move failed
     };
 
     virtual ~ItemEditorUi();

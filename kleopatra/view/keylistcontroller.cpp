@@ -300,7 +300,7 @@ static const unsigned int numTabs2Controller = sizeof tabs2controller / sizeof *
 void KeyListController::Private::connectTabWidget() {
     if ( !tabWidget )
         return;
-    kdtools::for_each( tabWidget->views(), bind( &Private::addView, this, _1 ) );
+    kdtools::for_each( tabWidget->views(), boost::bind( &Private::addView, this, _1 ) );
     for ( unsigned int i = 0 ; i < numTabs2Controller ; ++i )
         connect( tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot );
 }
@@ -310,7 +310,7 @@ void KeyListController::Private::disconnectTabWidget() {
         return;
     for ( unsigned int i = 0 ; i < numTabs2Controller ; ++i )
         disconnect( tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot );
-    kdtools::for_each( tabWidget->views(), bind( &Private::removeView, this, _1 ) );
+    kdtools::for_each( tabWidget->views(), boost::bind( &Private::removeView, this, _1 ) );
 }
 
 AbstractKeyListModel * KeyListController::flatModel() const {
@@ -608,14 +608,14 @@ Command::Restrictions KeyListController::Private::calculateRestrictionsMask( con
     if ( keys.size() == 1 )
         result |= Command::OnlyOneKey;
 
-    if ( kdtools::all( keys.begin(), keys.end(), bind( &Key::hasSecret, _1 ) ) )
+    if ( kdtools::all( keys.begin(), keys.end(), boost::bind( &Key::hasSecret, _1 ) ) )
         result |= Command::NeedSecretKey;
-    else if ( !kdtools::any( keys.begin(), keys.end(), bind( &Key::hasSecret, _1 ) ) )
+    else if ( !kdtools::any( keys.begin(), keys.end(), boost::bind( &Key::hasSecret, _1 ) ) )
         result |= Command::MustNotBeSecretKey;
 
-    if ( kdtools::all( keys.begin(), keys.end(), bind( &Key::protocol, _1 ) == OpenPGP ) )
+    if ( kdtools::all( keys.begin(), keys.end(), boost::bind( &Key::protocol, _1 ) == OpenPGP ) )
         result |= Command::MustBeOpenPGP;
-    else if ( kdtools::all( keys.begin(), keys.end(), bind( &Key::protocol, _1 ) == CMS ) )
+    else if ( kdtools::all( keys.begin(), keys.end(), boost::bind( &Key::protocol, _1 ) == CMS ) )
         result |= Command::MustBeCMS;
 
     if ( all_secret_are_not_owner_trust_ultimate( keys ) )
@@ -638,7 +638,7 @@ Command::Restrictions KeyListController::Private::calculateRestrictionsMask( con
 void KeyListController::Private::slotActionTriggered() {
     if ( const QObject * const s = q->sender() ) {
         const std::vector<action_item>::const_iterator it
-            = kdtools::find_if( actions, bind( &action_item::action, _1 ) == q->sender() );
+            = kdtools::find_if( actions, boost::bind( &action_item::action, _1 ) == q->sender() );
         if ( it != actions.end() )
             if ( Command * const c = it->createCommand( this->currentView, q ) )
             {

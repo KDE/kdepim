@@ -1,7 +1,7 @@
 /*
  *  functions.cpp  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -508,11 +508,15 @@ UpdateStatus modifyEvent(KAEvent& oldEvent, KAEvent& newEvent, QWidget* msgParen
             // deleted it since KAlarm asked KOrganizer to set it up.
             deleteFromKOrganizer(oldId);
         }
-#ifndef USE_AKONADI
+#ifdef USE_AKONADI
+        // Update the event in the calendar file, and get the new event ID
+        AlarmCalendar* cal = AlarmCalendar::resources();
+        if (!cal->modifyEvent(oldId, newEvent))
+            status = UPDATE_FAILED;
+#else
         // Delete from the window lists to prevent the event's invalid
         // pointer being accessed.
         EventListModel::alarms()->removeEvent(oldId);
-#endif
 
         // Update the event in the calendar file, and get the new event ID
         KAEvent* newev = new KAEvent(newEvent);
@@ -522,16 +526,19 @@ UpdateStatus modifyEvent(KAEvent& oldEvent, KAEvent& newEvent, QWidget* msgParen
             delete newev;
             status = UPDATE_FAILED;
         }
+#endif
         else
         {
+#ifndef USE_AKONADI
             newEvent = *newev;
+#endif
             if (!cal->save())
                 status = SAVE_FAILED;
             if (status == UPDATE_OK)
             {
-                if (newev->copyToKOrganizer())
+                if (newEvent.copyToKOrganizer())
                 {
-                    UpdateStatus st = sendToKOrganizer(newev);    // tell KOrganizer to show the new event
+                    UpdateStatus st = sendToKOrganizer(&newEvent);    // tell KOrganizer to show the new event
                     if (st > status)
                         status = st;
                 }
@@ -541,7 +548,7 @@ UpdateStatus modifyEvent(KAEvent& oldEvent, KAEvent& newEvent, QWidget* msgParen
 
 #ifndef USE_AKONADI
                 // Update the window lists
-                EventListModel::alarms()->addEvent(newev);
+                EventListModel::alarms()->addEvent(&newEvent);
 #endif
             }
         }
@@ -1101,11 +1108,7 @@ void displayKOrgUpdateError(QWidget* parent, UpdateError code, UpdateStatus korg
 */
 void editNewAlarm(EditAlarmDlg::Type type, QWidget* parent)
 {
-    // Use AutoQPointer to guard against crash on application exit while
-    // the dialogue is still open. It prevents double deletion (both on
-    // deletion of parent, and on return from this function).
-    AutoQPointer<EditAlarmDlg> editDlg = EditAlarmDlg::create(false, type, parent);
-    execNewAlarmDlg(editDlg);
+    execNewAlarmDlg(EditAlarmDlg::create(false, type, parent));
 }
 
 /******************************************************************************
@@ -1134,10 +1137,7 @@ void editNewAlarm(KAEvent::Action action, QWidget* parent, const AlarmText* text
         default:
             return;
     }
-    // Use AutoQPointer to guard against crash on application exit while
-    // the dialogue is still open. It prevents double deletion (both on
-    // deletion of parent, and on return from this function).
-    AutoQPointer<EditAlarmDlg> editDlg = EditAlarmDlg::create(false, type, parent);
+    EditAlarmDlg* editDlg = EditAlarmDlg::create(false, type, parent);
     if (setAction  ||  text)
         editDlg->setAction(action, *text);
     execNewAlarmDlg(editDlg);
@@ -1149,50 +1149,71 @@ void editNewAlarm(KAEvent::Action action, QWidget* parent, const AlarmText* text
 */
 void editNewAlarm(const KAEvent* preset, QWidget* parent)
 {
-    // Use AutoQPointer to guard against crash on application exit while
-    // the dialogue is still open. It prevents double deletion (both on
-    // deletion of parent, and on return from this function).
-    AutoQPointer<EditAlarmDlg> editDlg = EditAlarmDlg::create(false, preset, true, parent);
-    execNewAlarmDlg(editDlg);
+    execNewAlarmDlg(EditAlarmDlg::create(false, preset, true, parent));
 }
 
 /******************************************************************************
 * Common code for editNewAlarm() variants.
 */
-void execNewAlarmDlg(EditAlarmDlg* editDlg, bool alreadyExecuted)
+void execNewAlarmDlg(EditAlarmDlg* editDlg)
 {
-    if (alreadyExecuted  ||  editDlg->exec() == QDialog::Accepted)
+    // Create a PrivateNewAlarmDlg parented by editDlg.
+    // It will be deleted when editDlg is closed.
+    new PrivateNewAlarmDlg(editDlg);
+    editDlg->show();
+    editDlg->raise();
+    editDlg->activateWindow();
+}
+
+PrivateNewAlarmDlg::PrivateNewAlarmDlg(EditAlarmDlg* dlg)
+    : QObject(dlg)
+{
+    connect(dlg, SIGNAL(accepted()), SLOT(okClicked()));
+}
+
+/******************************************************************************
+* Called when the dialogue is accepted (e.g. by clicking the OK button).
+* Creates the event specified in the instance's dialogue.
+*/
+void PrivateNewAlarmDlg::okClicked()
+{
+    accept(static_cast<EditAlarmDlg*>(parent()));
+}
+
+/******************************************************************************
+* Creates the event specified in a given dialogue.
+*/
+void PrivateNewAlarmDlg::accept(EditAlarmDlg* editDlg)
+{
+    KAEvent event;
+#ifdef USE_AKONADI
+    Collection calendar;
+#else
+    AlarmResource* calendar;
+#endif
+    editDlg->getEvent(event, calendar);
+
+    // Add the alarm to the displayed lists and to the calendar file
+#ifdef USE_AKONADI
+    UpdateStatus status = addEvent(event, &calendar, editDlg);
+#else
+    UpdateStatus status = addEvent(event, calendar, editDlg);
+#endif
+    switch (status)
     {
-        KAEvent event;
-#ifdef USE_AKONADI
-        Collection calendar;
-#else
-        AlarmResource* calendar;
-#endif
-        editDlg->getEvent(event, calendar);
-
-        // Add the alarm to the displayed lists and to the calendar file
-#ifdef USE_AKONADI
-        UpdateStatus status = addEvent(event, &calendar, editDlg);
-#else
-        UpdateStatus status = addEvent(event, calendar, editDlg);
-#endif
-        switch (status)
-        {
-            case UPDATE_FAILED:
-                return;
-            case UPDATE_KORG_ERR:
-            case UPDATE_KORG_ERRSTART:
-            case UPDATE_KORG_FUNCERR:
-                displayKOrgUpdateError(editDlg, ERR_ADD, status, 1);
-                break;
-            default:
-                break;
-        }
-        Undo::saveAdd(event, calendar);
-
-        outputAlarmWarnings(editDlg, &event);
+        case UPDATE_FAILED:
+            return;
+        case UPDATE_KORG_ERR:
+        case UPDATE_KORG_ERRSTART:
+        case UPDATE_KORG_FUNCERR:
+            displayKOrgUpdateError(editDlg, ERR_ADD, status, 1);
+            break;
+        default:
+            break;
     }
+    Undo::saveAdd(event, calendar);
+
+    outputAlarmWarnings(editDlg, &event);
 }
 
 /******************************************************************************
@@ -1307,7 +1328,7 @@ void editAlarm(KAEvent* event, QWidget* parent)
         {
             // Event has been deleted while the user was editing the alarm,
             // so treat it as a new alarm.
-            execNewAlarmDlg(editDlg, true);
+            PrivateNewAlarmDlg().accept(editDlg);
             return;
         }
         KAEvent newEvent;

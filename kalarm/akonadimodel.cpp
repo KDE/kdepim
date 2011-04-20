@@ -1,3 +1,6 @@
+#ifdef __GNUC__
+#warning Editing the directory path of a calendar produces errors
+#endif
 /*
  *  akonadimodel.cpp  -  KAlarm calendar file access using Akonadi
  *  Program:  kalarm
@@ -25,6 +28,7 @@
 #include "eventattribute.h"
 #include "preferences.h"
 #include "synchtimer.h"
+#include "kalarmdirsettings.h"
 
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/agentinstancecreatejob.h>
@@ -693,7 +697,7 @@ QString AkonadiModel::timeToAlarmText(const DateTime& dateTime) const
 void AkonadiModel::signalDataChanged(bool (*checkFunc)(const Item&), int startColumn, int endColumn, const QModelIndex& parent)
 {
     int start = -1;
-    int end;
+    int end   = -1;
     for (int row = 0, count = rowCount(parent);  row < count;  ++row)
     {
         const QModelIndex ix = index(row, 0, parent);
@@ -1050,7 +1054,10 @@ AgentInstanceCreateJob* AkonadiModel::addCollection(KAlarm::CalEvent::Type type,
     if (!agentType.isValid())
         return 0;
     AgentInstanceCreateJob* job = new AgentInstanceCreateJob(agentType, parent);
-    job->configure(parent);    // cause the user to be prompted for configuration
+    if (agentType.identifier() == QLatin1String("akonadi_kalarm_dir_resource"))
+        mPendingColCreateJobs[job] = CollTypeData(type, parent);
+    else
+        job->configure(parent);    // cause the user to be prompted for configuration
     connect(job, SIGNAL(result(KJob*)), SLOT(addCollectionJobDone(KJob*)));
     job->start();
     return job;
@@ -1070,7 +1077,27 @@ void AkonadiModel::addCollectionJobDone(KJob* j)
         emit collectionAdded(job, false);
     }
     else
+    {
+        QMap<KJob*, CollTypeData>::iterator it = mPendingColCreateJobs.find(j);
+        if (it != mPendingColCreateJobs.end())
+        {
+            // Set the default alarm type for a directory resource config dialog
+            AgentInstance agent = static_cast<AgentInstanceCreateJob*>(job)->instance();
+            OrgKdeAkonadiKAlarmDirSettingsInterface *iface = new OrgKdeAkonadiKAlarmDirSettingsInterface("org.freedesktop.Akonadi.Resource." + agent.identifier(),
+                    "/Settings", QDBusConnection::sessionBus(), this);
+            if (!iface->isValid())
+                kError() << "Error creating D-Bus interface for KAlarmDir configuration.";
+            else
+            {
+                iface->setAlarmTypes(KAlarm::CalEvent::mimeTypes(it.value().alarmType));
+                iface->writeConfig();
+                agent.reconfigure();
+            }
+            agent.configure(it.value().parent);
+            delete iface;
+        }
         emit collectionAdded(job, true);
+    }
 }
 
 /******************************************************************************
@@ -1304,8 +1331,11 @@ bool AkonadiModel::addEvent(KAEvent& event, Collection& collection)
 {
     kDebug() << "ID:" << event.id();
     Item item;
-    if (!setItemPayload(item, event, collection))
+    if (!event.setItemPayload(item, collection.contentMimeTypes()))
+    {
+        kWarning() << "Invalid mime type for collection";
         return false;
+    }
     event.setItemId(item.id());
 kDebug()<<"-> item id="<<item.id();
     ItemCreateJob* job = new ItemCreateJob(item, collection);
@@ -1332,41 +1362,19 @@ bool AkonadiModel::updateEvent(KAEvent& event)
 bool AkonadiModel::updateEvent(Akonadi::Entity::Id itemId, KAEvent& newEvent)
 {
 kDebug()<<"item id="<<itemId;
-    QModelIndex ix = itemIndex(itemId);
+    const QModelIndex ix = itemIndex(itemId);
     if (!ix.isValid())
         return false;
-    Collection collection = ix.data(ParentCollectionRole).value<Collection>();
+    const Collection collection = ix.data(ParentCollectionRole).value<Collection>();
     Item item = ix.data(ItemRole).value<Item>();
 kDebug()<<"item id="<<item.id()<<", revision="<<item.revision();
-    if (!setItemPayload(item, newEvent, collection))
+    if (!newEvent.setItemPayload(item, collection.contentMimeTypes()))
+    {
+        kWarning() << "Invalid mime type for collection";
         return false;
+    }
 //    setData(ix, QVariant::fromValue(item), ItemRole);
     queueItemModifyJob(item);
-    return true;
-}
-
-/******************************************************************************
-* Initialise an Item with an event.
-* Note that the event is not updated with the Item ID.
-* The event's 'updated' flag is cleared.
-*/
-bool AkonadiModel::setItemPayload(Item& item, KAEvent& event, const Collection& collection)
-{
-    QString mimetype;
-    switch (event.category())
-    {
-        case KAlarm::CalEvent::ACTIVE:      mimetype = KAlarm::MIME_ACTIVE;    break;
-        case KAlarm::CalEvent::ARCHIVED:    mimetype = KAlarm::MIME_ARCHIVED;  break;
-        case KAlarm::CalEvent::TEMPLATE:    mimetype = KAlarm::MIME_TEMPLATE;  break;
-        default:                            Q_ASSERT(0);  return false;
-    }
-    if (!collection.contentMimeTypes().contains(mimetype))
-    {
-        kWarning() << "Invalid mime type for Collection";
-        return false;
-    }
-    item.setMimeType(mimetype);
-    item.setPayload<KAEvent>(event);
     return true;
 }
 

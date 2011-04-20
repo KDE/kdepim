@@ -139,7 +139,7 @@ std::vector<UserID> UserIDListModel::userIDs( const QList<QModelIndex> & indexes
     result.reserve( indexes.size() );
     std::transform( indexes.begin(), indexes.end(),
                     std::back_inserter( result ),
-                    bind( &UserIDListModel::userID, this, _1, strict ) );
+                    boost::bind( &UserIDListModel::userID, this, _1, strict ) );
     return result;
 }
 
@@ -155,7 +155,7 @@ std::vector<UserID::Signature> UserIDListModel::signatures( const QList<QModelIn
     result.reserve( indexes.size() );
     std::transform( indexes.begin(), indexes.end(),
                     std::back_inserter( result ),
-                    bind( &UserIDListModel::signature, this, _1 ) );
+                    boost::bind( &UserIDListModel::signature, this, _1 ) );
     return result;
 }
 
@@ -183,7 +183,7 @@ QModelIndex UserIDListModel::index( const UserID::Signature & sig, int col ) con
     const std::vector<UserID::Signature> sigs = uid.signatures();
     const std::vector<UserID::Signature>::const_iterator it
         = std::find_if( sigs.begin(), sigs.end(),
-                        bind( qstricmp, bind( &UserID::Signature::signerKeyID, _1 ), sig.signerKeyID() ) == 0 );
+                        boost::bind( qstricmp, boost::bind( &UserID::Signature::signerKeyID, _1 ), sig.signerKeyID() ) == 0 );
     if ( it == sigs.end() )
         return QModelIndex();
     return createIndex( std::distance( sigs.begin(), it ), col, pidx.row() );

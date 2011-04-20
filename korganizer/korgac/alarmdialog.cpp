@@ -34,6 +34,10 @@
 #include <calendarsupport/mailclient.h>
 #include <calendarsupport/utils.h>
 
+#include <incidenceeditor-ng/incidencedialog.h>
+#include <incidenceeditor-ng/incidencedialogfactory.h>
+#include <incidenceeditor-ng/groupwareintegration.h>
+
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <KCalUtils/IncidenceFormatter>
@@ -85,6 +89,12 @@ class ReminderListItem : public QTreeWidgetItem
     KDateTime mTrigger;
     KDateTime mHappening;
     bool mNotified;
+};
+
+struct ConfItem {
+  QString uid;
+  KUrl akonadiUrl;
+  QDateTime remindAt;
 };
 
 bool ReminderListItem::operator<( const QTreeWidgetItem &other ) const
@@ -391,6 +401,7 @@ void AlarmDialog::dismissAll()
 
 void AlarmDialog::dismiss( ReminderList selections )
 {
+  QList<Akonadi::Item::Id> ids;
   for ( ReminderList::Iterator it = selections.begin(); it != selections.end(); ++it ) {
     kDebug() << "removing " << CalendarSupport::incidence( (*it)->mIncidence )->summary();
     if ( mIncidenceTree->itemBelow( *it ) ) {
@@ -399,8 +410,12 @@ void AlarmDialog::dismiss( ReminderList selections )
       mIncidenceTree->setCurrentItem( mIncidenceTree->itemAbove( *it ) );
     }
     mIncidenceTree->removeItemWidget( *it, 0 );
+    ids.append( (*it)->mIncidence.id() );
     delete *it;
   }
+
+  // TODO 4.7: enable and test this
+  //removeFromConfig( ids );
 }
 
 void AlarmDialog::edit()
@@ -419,55 +434,10 @@ void AlarmDialog::edit()
     return;
   }
 
-  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.korganizer" ) ) {
-    if ( KToolInvocation::startServiceByDesktopName( "korganizer", QString() ) ) {
-      KMessageBox::error(
-        this,
-        i18nc( "@info",
-               "Could not start KOrganizer so editing is not possible." ) );
-      return;
-    }
-  }
-  org::kde::korganizer::Korganizer korganizer(
-    "org.kde.korganizer", "/Korganizer", QDBusConnection::sessionBus() );
-
-  kDebug() << "editing incidence " << incidence->summary();
-  if ( !korganizer.editIncidence( incidence->uid() ) ) {
-    KMessageBox::error(
-      this,
-      i18nc( "@info",
-             "An internal KOrganizer error occurred attempting to modify \"%1\"",
-             cleanSummary( incidence->summary() ) ) );
-  }
-
-  // get desktop # where korganizer (or kontact) runs
-  QString object =
-    QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kontact" ) ?
-    "kontact/MainWindow_1" : "korganizer/MainWindow_1";
-  QDBusInterface korganizerObj( "org.kde.korganizer", '/' + object );
-#ifdef Q_WS_X11
-  QDBusReply<int> reply = korganizerObj.call( "winId" );
-  if ( reply.isValid() ) {
-    int window = reply;
-    int desktop = KWindowSystem::windowInfo( window, NET::WMDesktop ).desktop();
-    if ( KWindowSystem::currentDesktop() == desktop ) {
-      KWindowSystem::minimizeWindow( winId(), false );
-    } else {
-      KWindowSystem::setCurrentDesktop( desktop );
-    }
-    KWindowSystem::activateWindow( KWindowSystem::transientFor( window ) );
-  }
-#elif defined(Q_WS_WIN)
-  // WId is a typedef to a void* on windows
-  QDBusReply<qlonglong> reply = korganizerObj.call( "winId" );
-  if ( reply.isValid() ) {
-    qlonglong window = reply;
-    KWindowSystem::minimizeWindow( winId(), false );
-    KWindowSystem::allowExternalProcessWindowActivation();
-    KWindowSystem::activateWindow( reinterpret_cast<WId>(window) );
-  }
+#ifndef KDEPIM_MOBILE_UI
+  openIncidenceEditorNG( selection.first()->mIncidence );
 #else
-  // TODO (mac)
+  openIncidenceEditorThroughKOrganizer( incidence );
 #endif
 }
 
@@ -536,7 +506,7 @@ void AlarmDialog::setTimer()
   while ( *it ) {
     ReminderListItem *item = static_cast<ReminderListItem *>( *it );
     if ( item->mRemindAt > QDateTime::currentDateTime() ) {
-      int secs = QDateTime::currentDateTime().secsTo( item->mRemindAt );
+      const int secs = QDateTime::currentDateTime().secsTo( item->mRemindAt );
       nextReminderAt = nextReminderAt <= 0 ? secs : qMin( nextReminderAt, secs );
     }
     ++it;
@@ -564,6 +534,7 @@ void AlarmDialog::show()
       (*it)->setSelected( true );
       break;
     }
+    ++it;
   }
 
   // reset the default suspend time
@@ -782,7 +753,7 @@ void AlarmDialog::closeEvent( QCloseEvent * )
 
 void AlarmDialog::updateButtons()
 {
-  int count = selectedItems().count();
+  const int count = selectedItems().count();
   kDebug() << "selected items=" << count;
   enableButton( User3, count > 0 );  // enable Dismiss, if >1 selected
   enableButton( User1, count == 1 ); // enable Edit, if only 1 selected
@@ -839,9 +810,9 @@ KDateTime AlarmDialog::triggerDateForIncidence( const Incidence::Ptr &incidence,
                                                 const QDateTime &reminderAt,
                                                 QString &displayStr )
 {
-  // Will be simplified in trunk, with roles.
   KDateTime result;
 
+  Q_ASSERT( !incidence->alarms().isEmpty() );
   Alarm::Ptr alarm = incidence->alarms().first();
 
   if ( incidence->recurs() ) {
@@ -871,15 +842,19 @@ void AlarmDialog::slotCalendarChanged()
     if ( item ) {
       Incidence::Ptr incidence = CalendarSupport::incidence( *it );
       QString displayStr;
-      const KDateTime dateTime = triggerDateForIncidence( incidence,
-                                                          item->mRemindAt,
-                                                          displayStr );
 
-      const QString summary = cleanSummary( incidence->summary() );
+      // Yes, alarms can be empty, if someone edited the incidence and removed all alarms
+      if ( !incidence->alarms().isEmpty() ) {
+        const KDateTime dateTime = triggerDateForIncidence( incidence,
+                                                            item->mRemindAt,
+                                                            displayStr );
 
-      if ( displayStr != item->text( 1 ) || summary != item->text( 0 ) ) {
-        item->setText( 1, displayStr );
-        item->setText( 0, summary );
+        const QString summary = cleanSummary( incidence->summary() );
+
+        if ( displayStr != item->text( 1 ) || summary != item->text( 0 ) ) {
+          item->setText( 1, displayStr );
+          item->setText( 0, summary );
+        }
       }
     }
   }
@@ -895,6 +870,114 @@ void AlarmDialog::keyPressEvent( QKeyEvent *e )
   }
 
   KDialog::keyPressEvent( e );
+}
+
+bool AlarmDialog::openIncidenceEditorThroughKOrganizer( const Incidence::Ptr &incidence )
+{
+  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.korganizer" ) ) {
+    if ( KToolInvocation::startServiceByDesktopName( "korganizer", QString() ) ) {
+      KMessageBox::error(
+        this,
+        i18nc( "@info",
+               "Could not start KOrganizer so editing is not possible." ) );
+      return false;
+    }
+  }
+  org::kde::korganizer::Korganizer korganizer(
+    "org.kde.korganizer", "/Korganizer", QDBusConnection::sessionBus() );
+
+  kDebug() << "editing incidence " << incidence->summary();
+  if ( !korganizer.editIncidence( incidence->uid() ) ) {
+    KMessageBox::error(
+      this,
+      i18nc( "@info",
+             "An internal KOrganizer error occurred attempting to modify \"%1\"",
+             cleanSummary( incidence->summary() ) ) );
+  }
+
+  // get desktop # where korganizer (or kontact) runs
+  QString object =
+    QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kontact" ) ?
+    "kontact/MainWindow_1" : "korganizer/MainWindow_1";
+  QDBusInterface korganizerObj( "org.kde.korganizer", '/' + object );
+#ifdef Q_WS_X11
+  QDBusReply<int> reply = korganizerObj.call( "winId" );
+  if ( reply.isValid() ) {
+    int window = reply;
+    int desktop = KWindowSystem::windowInfo( window, NET::WMDesktop ).desktop();
+    if ( KWindowSystem::currentDesktop() == desktop ) {
+      KWindowSystem::minimizeWindow( winId(), false );
+    } else {
+      KWindowSystem::setCurrentDesktop( desktop );
+    }
+    KWindowSystem::activateWindow( KWindowSystem::transientFor( window ) );
+  }
+#elif defined(Q_WS_WIN)
+  // WId is a typedef to a void* on windows
+  QDBusReply<qlonglong> reply = korganizerObj.call( "winId" );
+  if ( reply.isValid() ) {
+    qlonglong window = reply;
+    KWindowSystem::minimizeWindow( winId(), false );
+    KWindowSystem::allowExternalProcessWindowActivation();
+    KWindowSystem::activateWindow( reinterpret_cast<WId>(window) );
+  }
+#else
+  // TODO (mac)
+#endif
+return true;
+}
+
+bool AlarmDialog::openIncidenceEditorNG( const Akonadi::Item &item )
+{
+  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
+    //TODO: Why do we need this to have a simple editor?
+    IncidenceEditorNG::GroupwareIntegration::activate( mCalendar );
+  }
+  Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  IncidenceEditorNG::IncidenceDialog *dialog = IncidenceEditorNG::IncidenceDialogFactory::create( false/*doesn't need initial saving*/,
+                                                                                                  incidence->type(), this );
+  dialog->load( item );
+  return true;
+}
+
+void AlarmDialog::removeFromConfig( const QList<Akonadi::Item::Id> &ids )
+{
+  KSharedConfig::Ptr config = KGlobal::config();
+  KConfigGroup genGroup( config, "General" );
+
+  const int oldNumReminders = genGroup.readEntry( "Reminders", 0 );
+
+  QList<ConfItem> newReminders;
+  // Delete everything
+  for ( int i = 1; i <= oldNumReminders; ++i ) {
+    const QString group( QString( "Incidence-%1" ).arg( i ) );
+    KConfigGroup incGroup( config, group );
+    const QString uid = incGroup.readEntry( "UID" );
+    const QDateTime remindAtDate = incGroup.readEntry( "RemindAt", QDateTime() );
+    const KUrl akonadiUrl = incGroup.readEntry( "AkonadiUrl" );
+    const Akonadi::Item::Id id = Akonadi::Item::fromUrl( akonadiUrl ).id();
+    if ( !ids.contains( id ) ) {
+      ConfItem ci;
+      ci.akonadiUrl = akonadiUrl;
+      ci.remindAt = remindAtDate;
+      ci.uid = uid;
+      newReminders.append( ci );
+    }
+    config->deleteGroup( group );
+  }
+
+  genGroup.writeEntry( "Reminders", newReminders.count() );
+
+  //Write everything except those which have an uid we dont want
+  for ( int i = 0; i < newReminders.count(); ++i ) {
+    const QString group( QString( "Incidence-%1" ).arg( i + 1 ) );
+    KConfigGroup incGroup( config, group );
+    incGroup.writeEntry( "UID", newReminders[i].uid );
+    incGroup.writeEntry( "RemindAt", newReminders[i].remindAt );
+    incGroup.writeEntry( "AkonadiUrl", newReminders[i].akonadiUrl );
+    incGroup.sync();
+  }
+  genGroup.sync();
 }
 
 #include "alarmdialog.moc"

@@ -347,9 +347,9 @@ void KeyTreeView::removeKeys( const std::vector<Key> & keys ) {
     m_keys.swap( newKeys );
 
     if ( m_flatModel )
-        kdtools::for_each( sorted, bind( &AbstractKeyListModel::removeKey, m_flatModel, _1 ) );
+        kdtools::for_each( sorted, boost::bind( &AbstractKeyListModel::removeKey, m_flatModel, _1 ) );
     if ( m_hierarchicalModel )
-        kdtools::for_each( sorted, bind( &AbstractKeyListModel::removeKey, m_hierarchicalModel, _1 ) );
+        kdtools::for_each( sorted, boost::bind( &AbstractKeyListModel::removeKey, m_hierarchicalModel, _1 ) );
 
 }
 

@@ -1876,7 +1876,7 @@ void KMMainWidget::copyMessageSelected( const QList<Akonadi::Item> &selectMsg, c
       command, SIGNAL( completed( KMCommand * ) ),
       this, SLOT( slotCopyMessagesCompleted( KMCommand * ) )
     );
-
+  command->start();
   BroadcastStatus::instance()->setStatusMsg( i18n( "Copying messages..." ) );
 }
 
@@ -2933,7 +2933,7 @@ void KMMainWidget::setupActions()
     actionCollection()->addAction("addressbook", action );
     connect(action, SIGNAL(triggered(bool)), SLOT(slotAddrBook()));
     if (KStandardDirs::findExe("kaddressbook").isEmpty())
-	    action->setEnabled(false);
+      action->setEnabled(false);
   }
 
   {
@@ -4171,6 +4171,8 @@ void KMMainWidget::slotMessageSelected(const Akonadi::Item &item)
 void KMMainWidget::itemsReceived(const Akonadi::Item::List &list )
 {
   Q_ASSERT( list.size() == 1 );
+  delete mShowBusySplashTimer;
+  mShowBusySplashTimer = 0;
 
   if ( !mMsgView )
     return;

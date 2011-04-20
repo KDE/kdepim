@@ -74,10 +74,11 @@ namespace Util {
     bool MESSAGEVIEWER_EXPORT checkOverwrite( const KUrl &url, QWidget *w );
 
     /**
-     * Delegates opening a URL to the Max OSX mechanisms for that.
-     * Returns false if it did nothing (such as on other platforms.
+     * Delegates opening a URL to the QDesktopServices mechanisms for that
+     * on Windows and MacOSX.
+     * Returns false if it did nothing (such as on other platforms).
      */
-    bool MESSAGEVIEWER_EXPORT handleUrlOnMac( const KUrl& url );
+    bool MESSAGEVIEWER_EXPORT handleUrlWithQDesktopServices( const KUrl& url );
 
     /**
      * evaluates GlobalSettings->disregardUmask()

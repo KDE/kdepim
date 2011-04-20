@@ -188,6 +188,7 @@ class MAILCOMMON_EXPORT FilterManager: public QObject
     Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d, void itemAddedFetchResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemsFetchJobForFilterDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void moveJobResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotItemsFetchedForFilter( const Akonadi::Item::List& ) )
     Q_PRIVATE_SLOT( d, void slotInitialCollectionsFetched( const Akonadi::Collection::List& ) )
     Q_PRIVATE_SLOT( d, void slotInitialItemsFetched( const Akonadi::Item::List& ) )

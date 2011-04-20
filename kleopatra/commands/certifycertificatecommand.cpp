@@ -174,8 +174,8 @@ void CertifyCertificateCommand::doStart() {
     }
 
     std::vector<Key> secKeys = KeyCache::instance()->secretKeys();
-    std::vector<Key>::iterator it = std::remove_if( secKeys.begin(), secKeys.end(), !bind( &Key::canCertify, _1 ) );
-    it = std::remove_if( it, secKeys.end(), bind( &Key::protocol, _1 ) != OpenPGP );
+    std::vector<Key>::iterator it = std::remove_if( secKeys.begin(), secKeys.end(), !boost::bind( &Key::canCertify, _1 ) );
+    it = std::remove_if( it, secKeys.end(), boost::bind( &Key::protocol, _1 ) != OpenPGP );
     secKeys.erase( it, secKeys.end() );
 
     if ( secKeys.empty() ) {

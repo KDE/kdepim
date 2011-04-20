@@ -35,7 +35,6 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/mimetypechecker.h>
 #include <Akonadi/ItemSearchJob>
-#include <akonadi/indexpolicyattribute.h>
 
 #include <nepomuk/resource.h>
 #include <nepomuk/tag.h>
@@ -50,6 +49,7 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KIdleTime>
+#include <KNotification>
 
 #include <Soprano/Vocabulary/NAO>
 
@@ -70,9 +70,16 @@
 
 using namespace Akonadi;
 
-static inline bool entityIsHidden( const Entity &entity )
+static inline bool indexingDisabled( const Collection &collection )
 {
-  return entity.hasAttribute<EntityHiddenAttribute>();
+  if ( collection.hasAttribute<EntityHiddenAttribute>() )
+    return true;
+
+  IndexPolicyAttribute *indexPolicy = collection.attribute<IndexPolicyAttribute>();
+  if ( indexPolicy && !indexPolicy->indexingEnabled() )
+      return true;
+
+  return false;
 }
 
 NepomukFeederAgentBase::NepomukFeederAgentBase(const QString& id) :
@@ -87,7 +94,8 @@ NepomukFeederAgentBase::NepomukFeederAgentBase(const QString& id) :
   mInitialUpdateDone( false ),
   mNeedsStrigi( false ),
   mSelfTestPassed( false ),
-  mSystemIsIdle( false )
+  mSystemIsIdle( false ),
+  mIdleDetectionDisabled( false )
 {
   // initialize Nepomuk
   Nepomuk::ResourceManager::instance()->init();
@@ -124,7 +132,7 @@ NepomukFeederAgentBase::~NepomukFeederAgentBase()
 
 void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi::Collection& collection)
 {
-  if ( entityIsHidden( collection ) )
+  if ( indexingDisabled( collection ) )
     return;
 
   if ( item.hasPayload() ) {
@@ -143,7 +151,7 @@ void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi:
 
 void NepomukFeederAgentBase::itemChanged(const Akonadi::Item& item, const QSet< QByteArray >& partIdentifiers)
 {
-  if ( entityIsHidden( item.parentCollection() ) )
+  if ( indexingDisabled( item.parentCollection() ) )
     return;
   // TODO: check part identfiers if anything interesting changed at all
   if ( item.hasPayload() ) {
@@ -170,6 +178,8 @@ void NepomukFeederAgentBase::itemRemoved(const Akonadi::Item& item)
 void NepomukFeederAgentBase::collectionAdded(const Akonadi::Collection& collection, const Akonadi::Collection& parent)
 {
   Q_UNUSED( parent );
+  if ( indexingDisabled( collection ) )
+    return;
   updateCollection( collection, createGraphForEntity( collection ) );
 }
 
@@ -177,6 +187,8 @@ void NepomukFeederAgentBase::collectionChanged(const Akonadi::Collection& collec
 {
   Q_UNUSED( partIdentifiers );
   removeEntityFromNepomuk( collection );
+  if ( indexingDisabled( collection ) )
+    return;
   updateCollection( collection, createGraphForEntity( collection ) );
 }
 
@@ -206,11 +218,7 @@ void NepomukFeederAgentBase::collectionsReceived(const Akonadi::Collection::List
     if ( !mMimeTypeChecker.isWantedCollection( collection ) )
       continue;
 
-    if ( entityIsHidden( collection ) )
-      continue;
-
-    IndexPolicyAttribute *indexPolicy = collection.attribute<IndexPolicyAttribute>();
-    if ( indexPolicy && !indexPolicy->indexingEnabled() )
+    if ( indexingDisabled( collection ) )
       continue;
 
     mCollectionQueue.append( collection );
@@ -226,6 +234,7 @@ void NepomukFeederAgentBase::processNextCollection()
   if ( mCurrentCollection.isValid() )
     return;
   mTotalAmount = 0;
+  mProcessedAmount = 0;
   if ( mCollectionQueue.isEmpty() ) {
     emit fullyIndexed();
     return;
@@ -405,7 +414,7 @@ void NepomukFeederAgentBase::selfTest()
   emit status( Broken, i18n( "Nepomuk not operational" ) );
   if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.pim.nepomukfeeder.selftestreport" ) ) )
     return;
-  KMessageBox::error( 0, message, i18n( "Nepomuk Indexing Disabled" ), KMessageBox::Notify | KMessageBox::AllowLink );
+  KNotification::event( KNotification::Warning, i18n( "Nepomuk Indexing Disabled" ), message );
   QDBusConnection::sessionBus().unregisterService( QLatin1String( "org.kde.pim.nepomukfeeder.selftestreport" ) );
 }
 
@@ -488,6 +497,11 @@ void NepomukFeederAgentBase::setIndexCompatibilityLevel(int level)
   mIndexCompatLevel = level;
 }
 
+void NepomukFeederAgentBase::disableIdleDetection( bool value )
+{
+  mIdleDetectionDisabled = value;
+}
+
 bool NepomukFeederAgentBase::needsReIndexing() const
 {
   const KConfigGroup grp( componentData().config(), "InitialIndexing" );
@@ -509,7 +523,11 @@ void NepomukFeederAgentBase::doSetOnline(bool online)
 
 void NepomukFeederAgentBase::checkOnline()
 {
-  setOnline( mSelfTestPassed && mSystemIsIdle );
+  if ( mIdleDetectionDisabled )
+    setOnline( mSelfTestPassed );
+  else
+    setOnline( mSelfTestPassed && mSystemIsIdle );
+
   if ( isOnline() && !mItemPipeline.isEmpty() ) {
     if ( mCurrentCollection.isValid() )
       emit status( AgentBase::Running, i18n( "Indexing collection '%1'...", mCurrentCollection.name() ) );
@@ -521,6 +539,9 @@ void NepomukFeederAgentBase::checkOnline()
 
 void NepomukFeederAgentBase::systemIdle()
 {
+  if ( mIdleDetectionDisabled )
+    return;
+
   emit status( Idle, i18n( "System idle, ready to index data." ) );
   mSystemIsIdle = true;
   KIdleTime::instance()->catchNextResumeEvent();
@@ -529,6 +550,9 @@ void NepomukFeederAgentBase::systemIdle()
 
 void NepomukFeederAgentBase::systemResumed()
 {
+  if ( mIdleDetectionDisabled )
+    return;
+
   emit status( Idle, i18n( "System busy, indexing suspended." ) );
   mSystemIsIdle = false;
   checkOnline();
@@ -547,7 +571,7 @@ void NepomukFeederAgentBase::processPipeline()
                              QUrl( QString::number( item.id() ) ), graph );
     updateItem( item, graph );
     ++mProcessedAmount;
-    if ( (mProcessedAmount % 10) == 0 && mTotalAmount > 0 && mProcessedAmount <= mTotalAmount )
+    if ( (mProcessedAmount % 100) == 0 && mTotalAmount > 0 && mProcessedAmount <= mTotalAmount )
       emit percent( (mProcessedAmount * 100) / mTotalAmount );
     if ( !mItemPipeline.isEmpty() ) {
       // go to eventloop before processing the next one, otherwise we miss the idle status change

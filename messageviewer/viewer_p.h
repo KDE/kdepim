@@ -465,7 +465,7 @@ public slots:
   void slotUrlOn(const QString & link, const QString & title, const QString & textContent);
 
   /** The user presses the right mouse button on an URL. */
-  void slotUrlPopup(const QString &, const QPoint& mousePos);
+  void slotUrlPopup(const QUrl &, const QPoint& mousePos);
 
   /** The user selected "Find" from the menu. */
   void slotFind();

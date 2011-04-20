@@ -193,7 +193,7 @@ ImportCertificatesCommand::ImportCertificatesCommand( QAbstractItemView * v, Key
 ImportCertificatesCommand::~ImportCertificatesCommand() {}
 
 static QString format_ids( const QStringList & ids ) {
-    return kdtools::transform_if<QStringList>( ids, Qt::escape, !bind( &QString::isEmpty, _1 ) ).join( "<br>" );
+    return kdtools::transform_if<QStringList>( ids, Qt::escape, !boost::bind( &QString::isEmpty, _1 ) ).join( "<br>" );
 }
 
 static QString make_tooltip( const QStringList & ids ) {
@@ -365,9 +365,9 @@ void ImportCertificatesCommand::Private::tryToFinish() {
     if ( waitForMoreJobs || !jobs.empty() )
         return;
 
-    if ( kdtools::any( results, bind( &Error::code, bind( &ImportResult::error, _1 ) ) ) ) {
+    if ( kdtools::any( results, boost::bind( &Error::code, boost::bind( &ImportResult::error, _1 ) ) ) ) {
         setImportResultProxyModel( results, ids );
-        if ( kdtools::all( results, bind( &Error::isCanceled, bind( &ImportResult::error, _1 ) ) ) )
+        if ( kdtools::all( results, boost::bind( &Error::isCanceled, boost::bind( &ImportResult::error, _1 ) ) ) )
             emit q->canceled();
         else
             for ( unsigned int i = 0, end = results.size() ; i != end ; ++i )
