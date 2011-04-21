@@ -97,7 +97,7 @@ bool MainTextJobPrivate::chooseCharsetAndEncode()
   const QList<QByteArray> charsets = q->globalPart()->charsets();
   if( charsets.isEmpty() ) {
     q->setError( JobBase::BugError );
-    q->setErrorText( i18n( "No charsets were available for encoding." ) );
+    q->setErrorText( i18n( "No charsets were available for encoding. Please check your configuration and make sure it contains at least one charset for sending." ) );
     return false;
   }
 
