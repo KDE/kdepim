@@ -657,12 +657,7 @@ void MainWindow::updateKeepArchived(int days)
 void MainWindow::selectEvent(const QString& eventID)
 {
 	mListView->clearSelection();
-	QModelIndex index = EventListModel::alarms()->eventIndex(eventID);
-	if (index.isValid())
-	{
-		mListView->select(index);
-		mListView->scrollTo(index);
-	}
+	mListView->select(eventID, true);
 }
 
 /******************************************************************************

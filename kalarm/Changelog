@@ -1,5 +1,9 @@
 KAlarm Change Log
 
+=== Version 2.4.12 --- 22 April 2011 ===
+- Fix KAlarm button in alarm window not always showing main window and not
+  highlighting the alarm in the main window.
+
 === Version 2.4.11 (KDEPIM 4.4.11) --- 16 April 2011 ===
 - Fix bad borders round left hand buttons of time spinboxes in Oxygen style.
 - Fix initialisation of library global statics.
