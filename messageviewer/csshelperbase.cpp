@@ -30,7 +30,7 @@
 */
 
 #include <config-messageviewer.h>
-
+#include <messagecore/globalsettings.h>
 #include "csshelperbase.h"
 
 #include <KColorScheme>
@@ -89,8 +89,15 @@ namespace MessageViewer {
     cPgpWarnH = QColor( 0xFF, 0xFF, 0x40 ); // light yellow
     cPgpErrH  = Qt::red;
 
-    for ( int i = 0 ; i < 3 ; ++i )
-      mQuoteColor[i] = QColor( 0x00, 0x80 - i * 0x10, 0x00 ); // shades of green
+    if(MessageCore::GlobalSettings::self()->useDefaultColors()) {
+      for ( int i = 0 ; i < 3 ; ++i ) {
+        mQuoteColor[i] = QColor( 0x00, 0x80 - i * 0x10, 0x00 ); // shades of green
+      }
+    } else {
+      mQuoteColor[0] = MessageCore::GlobalSettings::self()->quotedText1();
+      mQuoteColor[1] = MessageCore::GlobalSettings::self()->quotedText2();
+      mQuoteColor[2] = MessageCore::GlobalSettings::self()->quotedText3();
+    }
     mRecycleQuoteColors = false;
 
     QFont defaultFont = KGlobalSettings::generalFont();
