@@ -117,7 +117,7 @@ class Calendar::Private : public QObject
     //parent to children map for alread cached children
     QHash<Akonadi::Item::Id, QList<Akonadi::Item::Id> > m_parentToChildren;
 
-    QMap<UnseenItem, Akonadi::Item::Id> m_uidToItemId;
+    QMap<UnseenItem, Akonadi::Item::Id> m_unseenItemToItemId;
 
     // child to parent map, unknown/not cached parent items
     QHash<Akonadi::Item::Id, UnseenItem> m_childToUnseenParent;
