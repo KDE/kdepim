@@ -119,6 +119,8 @@ class Calendar::Private : public QObject
 
     QMap<UnseenItem, Akonadi::Item::Id> m_unseenItemToItemId;
 
+    QHash<QString,Akonadi::Item::Id> m_uidToItemId;
+
     // child to parent map, unknown/not cached parent items
     QHash<Akonadi::Item::Id, UnseenItem> m_childToUnseenParent;
 

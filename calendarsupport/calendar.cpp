@@ -208,6 +208,7 @@ void Calendar::Private::clear()
   m_itemIdsForDate.clear();
   m_itemDateForItemId.clear();
   m_virtualItems.clear();
+  m_uidToItemId.clear();
 }
 
 void Calendar::Private::readFromModel()
@@ -364,6 +365,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   }
 
   m_itemMap.insert( id, item );
+  m_uidToItemId.insert( incidence->uid(), id );
 
   UnseenItem ui;
   ui.collection = item.storageCollectionId();
@@ -536,6 +538,8 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
 
   unseen_item.uid   = CalendarSupport::incidence( item )->uid();
   unseen_parent.uid = CalendarSupport::incidence( item )->relatedTo();
+
+  m_uidToItemId.remove( unseen_item.uid );
 
   if ( m_childToParent.contains( item.id() ) ) {
     Akonadi::Item::Id parentId = m_childToParent.take( item.id() );
@@ -1016,19 +1020,15 @@ bool Calendar::isChild( const Akonadi::Item &parent, const Akonadi::Item &child 
 
 Akonadi::Item::Id Calendar::itemIdForIncidenceUid( const QString &uid ) const
 {
-  QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
-  while ( i.hasNext() ) {
-    i.next();
-    const Akonadi::Item item = i.value();
-    Q_ASSERT( item.isValid() );
-    Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-    KCalCore::Incidence::Ptr inc = item.payload<KCalCore::Incidence::Ptr>();
-    if ( inc->uid() == uid ) {
-      return item.id();
-    }
+  Akonadi::Item::Id id = -1;
+
+  if ( d->m_uidToItemId.contains( uid ) ) {
+    id = d->m_uidToItemId[uid];
+  } else {
+    kWarning() << "Failed to find Akonadi::Item for KCal uid " << uid;  
   }
-  kWarning() << "Failed to find Akonadi::Item for KCal uid " << uid;
-  return -1;
+
+  return id;
 }
 
 Akonadi::Item Calendar::itemForIncidenceUid( const QString &uid ) const
