@@ -86,30 +86,21 @@ QML.Rectangle {
                   }
 
                   QML.Text{
-                      text: KDE.i18nc("'Scrum' is a software development methodology", "Scrum team:") + "\n\n" +
-                            "\t" + KDE.i18n("Andre Heinecke (Intevation)") + "\n" +
-                            "\t" + KDE.i18n("Andreas Holzammer (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Bertjan Broeksema (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Björn Balazs (Apliki)") + "\n" +
-                            "\t" + KDE.i18n("Björn Ricks (Intevation)") + "\n" +
-                            "\t" + KDE.i18n("Marcus Brinkmann (g10 Code)") + "\n" +
-                            "\t" + KDE.i18n("Sascha L. Teichmann (Intevation)") + "\n" +
-                            "\t" + KDE.i18n("Stephen Kelly (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Volker Krause (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Werner Koch (g10 Code)") + "\n"
+                      text: KDE.i18n("Scrum Master, Team Senior: Till Adam, KDAB") + "\n" +
+                            KDE.i18n("Product Owner, Team Senior: Bernhard Reiter, Intevation") + "\n"
+                      style: QML.Text.Raised
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
 
                   QML.Text{
-                      text: KDE.i18nc("Special role in Scrum", "Scrum Master: Till Adam, KDAB") + "\n" +
-                            KDE.i18nc("Speical role in Scrum", "Product Owner: Bernhard Reiter, Intevation") + "\n"
-                      width: parent.width
-                  }
-
-                  QML.Text{
-                      text: KDE.i18nc("People being remote from the 'Scrum'-team", "Team satellites:") + "\n\n" +
+                      text: KDE.i18n("Development team in alphabetical order:") + "\n\n" +
                             "\t" + KDE.i18n("Andras Mantia (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Andre Heinecke (Intevation)") + "\n" +
+                            "\t" + KDE.i18n("Andreas Holzammer (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Bertjan Broeksema (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Björn Balazs (Apliki)") + "\n" +
+                            "\t" + KDE.i18n("Björn Ricks (Intevation)") + "\n" +
                             "\t" + KDE.i18n("Casey Link (KDAB)") + "\n" +
                             "\t" + KDE.i18n("David Faure (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Felix Wolfsteller (Intevation)") + "\n" +
@@ -119,12 +110,18 @@ QML.Rectangle {
                             "\t" + KDE.i18n("Leo Franchi (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Ludwig Reiter (Intevation)") + "\n" +
                             "\t" + KDE.i18n("Marc Mutz (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Marcus Brinkmann (g10 Code)") + "\n" +
                             "\t" + KDE.i18n("Nuno Pinheiro (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Patrick Spendrin (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Romain Pokrzywka (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Sabine Faure (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Sascha L. Teichmann (Intevation)") + "\n" +
                             "\t" + KDE.i18n("Sergio Martins (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Tobias Koenig (KDAB)") + "\n"
+                            "\t" + KDE.i18n("Stephen Kelly (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Till Adam (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Tobias Koenig (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Volker Krause (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Werner Koch (g10 Code)") + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
