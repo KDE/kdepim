@@ -96,7 +96,6 @@ void QMLListSelectionModel::select(int row, int command)
   static const int column = 0;
   const QModelIndex idx = m_selectionModel->model()->index(row, column);
   Q_ASSERT(idx.isValid());
-  qDebug() << idx << idx.data();
   QItemSelection sel(idx, idx);
   QItemSelectionModel::SelectionFlags flags = static_cast<QItemSelectionModel::SelectionFlags>(command);
   m_selectionModel->select(sel, flags);

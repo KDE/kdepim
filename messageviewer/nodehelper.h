@@ -110,7 +110,7 @@ public:
     void removeAllExtraContent( KMime::Content *topLevelNode );
 
     /** Get the extra nodes attached to the @param topLevelNode and all sub-nodes of @param topLevelNode */
-    QList<KMime::Content*> extraContents( KMime::Content *topLevelNode );
+    QList<KMime::Content*> extraContents( KMime::Content *topLevelNode ) const;
 
     /** Return a modified message (node tree) starting from @param topLevelNode that has the original nodes and the extra nodes.
         The caller has the responsibility to delete the new message.
@@ -122,7 +122,7 @@ public:
      *  implying that the given node is an encrypted node or otherwise a type of
      *  node that needs extra handling.
      */
-    bool isPermanentwWithExtraContent( KMime::Content* node );
+    bool isPermanentWithExtraContent( KMime::Content* node ) const;
 
      /** Get a QTextCodec suitable for this message part */
     const QTextCodec * codec( KMime::Content* node );
@@ -210,8 +210,6 @@ public:
      */
     static const QTextCodec* codecForName(const QByteArray& _str);
 
-    static QByteArray path(const KMime::Content* node);
-
     /**
      * Returns a usable filename for a node, that can be the filename from the
      * content disposition header, or if that one is empty, the name from the
@@ -254,6 +252,8 @@ public:
 
     static AttachmentDisplayInfo attachmentDisplayInfo( KMime::Content *node );
 
+    KMime::Content * decryptedNodeForContent( KMime::Content * content ) const;
+
     /**
      * This function returns the unencrypted message that is based on @p originalMessage.
      * All encrypted MIME parts are removed and replaced by their decrypted plain-text versions.
@@ -283,11 +283,12 @@ private:
     static QString cleanSubject( KMime::Message *message, const QStringList& prefixRegExps,
                                  bool replace, const QString& newPrefix );
 
-    void clearBodyPartMemento( QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap );
-
     void mergeExtraNodes( KMime::Content *node );
     void cleanFromExtraNodes( KMime::Content *node );
 
+    QString persistentIndex( const KMime::Content * node ) const;
+
+private:
     QList<KMime::Content*> mProcessedNodes;
     QList<KMime::Content*> mNodesUnderProcess;
     QMap<KMime::Content *, KMMsgEncryptionState> mEncryptionState;
@@ -296,7 +297,7 @@ private:
     QSet<KMime::Content *> mDisplayHiddenNodes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
-    QMap<KMime::Content*, QMap<QByteArray, Interface::BodyPartMemento*> > mBodyPartMementoMap;
+    QMap<QString, QMap<QByteArray, Interface::BodyPartMemento*> > mBodyPartMementoMap;
     QStringList mTempFiles;
     QStringList mTempDirs;
     QMap<KMime::Content*, PartMetaData> mPartMetaDatas;

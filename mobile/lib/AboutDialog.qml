@@ -42,7 +42,7 @@ QML.Rectangle {
         width: parent.width - closeButton.width
         height: parent.height
         contentWidth: width - 10
-        contentHeight: 1800;
+        contentHeight: 1900;
 
         content.children: [
           QML.Rectangle{
@@ -59,44 +59,57 @@ QML.Rectangle {
                       width: parent.width
                   }
 
+                  QML.Image {
+                    id: platformLogo
+                    source: KDE.locate( "data", "mobileui/built-on-the-kde-platform.png" )
+                  }
+
                   QML.Text{
                       id:version
-                      horizontalAlignment: QML.Text.AlignHCenter
                       text: "\n" + application.version + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
 
                   QML.Text {
-                      text : KDE.i18n("This Free Software product was created as part of a commercial contract.\n" +
-                                      "%1 is licensed under the GNU GPL version 2 or later.\n" +
-                                      "See %2 for details.", application.name, "licenses.pdf") + "\n"
+                      text : KDE.i18n("This Free Software product was created as part of a commercial contract. " +
+                                      "Kontact Touch is licensed under the GNU GPL version 2 or later and other Free Software licenses. " +
+                                      "See %1 for details.", "licenses.pdf") + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
 
                   QML.Text{
-                      text: KDE.i18n("Credits Project Komo3 (October 2009 - )") + "\n"
+                      text: KDE.i18n("Credits Project Komo3 (October 2009 - Januar 2011)") + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
 
                   QML.Text{
-                      text: KDE.i18n("Scrum Master, Team Senior: Till Adam, KDAB") + "\n" +
-                            KDE.i18n("Product Owner, Team Senior: Bernhard Reiter, Intevation") + "\n"
-                      style: QML.Text.Raised
-                      wrapMode: QML.Text.WordWrap
-                      width: parent.width
-                  }
-
-                  QML.Text{
-                      text: KDE.i18n("Development team in alphabetical order:") + "\n\n" +
-                            "\t" + KDE.i18n("Andras Mantia (KDAB)") + "\n" +
+                      text: KDE.i18nc("'Scrum' is a software development methodology", "Scrum team:") + "\n\n" +
                             "\t" + KDE.i18n("Andre Heinecke (Intevation)") + "\n" +
                             "\t" + KDE.i18n("Andreas Holzammer (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Bertjan Broeksema (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Björn Balazs (Apliki)") + "\n" +
                             "\t" + KDE.i18n("Björn Ricks (Intevation)") + "\n" +
+                            "\t" + KDE.i18n("Marcus Brinkmann (g10 Code)") + "\n" +
+                            "\t" + KDE.i18n("Sascha L. Teichmann (Intevation)") + "\n" +
+                            "\t" + KDE.i18n("Stephen Kelly (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Volker Krause (KDAB)") + "\n" +
+                            "\t" + KDE.i18n("Werner Koch (g10 Code)") + "\n"
+                      wrapMode: QML.Text.WordWrap
+                      width: parent.width
+                  }
+
+                  QML.Text{
+                      text: KDE.i18nc("Special role in Scrum", "Scrum Master: Till Adam, KDAB") + "\n" +
+                            KDE.i18nc("Speical role in Scrum", "Product Owner: Bernhard Reiter, Intevation") + "\n"
+                      width: parent.width
+                  }
+
+                  QML.Text{
+                      text: KDE.i18nc("People being remote from the 'Scrum'-team", "Team satellites:") + "\n\n" +
+                            "\t" + KDE.i18n("Andras Mantia (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Casey Link (KDAB)") + "\n" +
                             "\t" + KDE.i18n("David Faure (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Felix Wolfsteller (Intevation)") + "\n" +
@@ -106,18 +119,12 @@ QML.Rectangle {
                             "\t" + KDE.i18n("Leo Franchi (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Ludwig Reiter (Intevation)") + "\n" +
                             "\t" + KDE.i18n("Marc Mutz (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Marcus Brinkmann (g10 Code)") + "\n" +
                             "\t" + KDE.i18n("Nuno Pinheiro (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Patrick Spendrin (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Romain Pokrzywka (KDAB)") + "\n" +
                             "\t" + KDE.i18n("Sabine Faure (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Sascha L. Teichmann (Intevation)") + "\n" +
                             "\t" + KDE.i18n("Sergio Martins (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Stephen Kelly (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Till Adam (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Tobias Koenig (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Volker Krause (KDAB)") + "\n" +
-                            "\t" + KDE.i18n("Werner Koch (g10 Code)") + "\n"
+                            "\t" + KDE.i18n("Tobias Koenig (KDAB)") + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
@@ -130,9 +137,9 @@ QML.Rectangle {
                   }
 
                   QML.Text{
-                      text: KDE.i18n("This project is built upon KDE SC Kontact Desktop client.\n" +
-                                     "For the outstanding work done there we\n" +
-                                     "would like to thank the original authors.\n")
+                      text: KDE.i18n("This product is built upon the KDE Platform 4 and the " +
+                                     "Kontact Desktop Client. " +
+                                     "Thanks to all contributors!\n")
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }

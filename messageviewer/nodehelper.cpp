@@ -31,6 +31,7 @@
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>
+#include <kmime/kmime_headers.h>
 #include <kmimetype.h>
 #include <kdebug.h>
 #include <kascii.h>
@@ -43,6 +44,9 @@
 #include <QDir>
 #include <QTextCodec>
 
+#include <string>
+#include <sstream>
+#include <algorithm>
 
 
 namespace MessageViewer {
@@ -106,8 +110,8 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
   mProcessedNodes.removeAll( node );
 
   //avoid double addition of extra nodes, eg. encrypted attachments
-  for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
-    if ( node == dynamic_cast<KMime::Content*>( it.key() ) ) {
+  const QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.find( node );
+  if ( it != mExtraContents.end() ) {
       Q_FOREACH( KMime::Content* c, it.value() ) {
         KMime::Content * p = c->parent();
         if ( p )
@@ -115,8 +119,7 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
       }
       qDeleteAll( it.value() );
       //kDebug() << "mExtraContents deleted for" << it.key();
-      mExtraContents.remove( it.key() );
-    }
+      mExtraContents.erase( it );
   }
 
   //kDebug() << "Node UNprocessed: " << node;
@@ -136,17 +139,27 @@ bool NodeHelper::nodeProcessed( KMime::Content* node ) const
   return mProcessedNodes.contains( node );
 }
 
+static void clearBodyPartMemento(QMap<QByteArray, Interface::BodyPartMemento*> & bodyPartMementoMap)
+{
+  for ( QMap<QByteArray, Interface::BodyPartMemento*>::iterator
+        it = bodyPartMementoMap.begin(), end = bodyPartMementoMap.end();
+        it != end; ++it ) {
+    Interface::BodyPartMemento *memento = it.value();
+    memento->detach();
+    delete memento;
+  }
+  bodyPartMementoMap.clear();
+}
+
+
 void NodeHelper::clear()
 {
   mProcessedNodes.clear();
   mEncryptionState.clear();
   mSignatureState.clear();
   mOverrideCodecs.clear();
-  for ( QMap<KMime::Content*, QMap< QByteArray, Interface::BodyPartMemento*> >::iterator
-        it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
-        it != end; ++it ) {
-    clearBodyPartMemento( it.value() );
-  }
+  std::for_each( mBodyPartMementoMap.begin(), mBodyPartMementoMap.end(),
+                 &clearBodyPartMemento );
   mBodyPartMementoMap.clear();
 
   for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
@@ -164,19 +177,6 @@ void NodeHelper::clear()
 }
 
 
-void NodeHelper::clearBodyPartMemento(QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap)
-{
-  for ( QMap<QByteArray, Interface::BodyPartMemento*>::iterator
-        it = bodyPartMementoMap.begin(), end = bodyPartMementoMap.end();
-        it != end; ++it ) {
-    Interface::BodyPartMemento *memento = it.value();
-    memento->detach();
-    delete memento;
-  }
-  bodyPartMementoMap.clear();
-}
-
-
 void NodeHelper::setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state )
 {
   mEncryptionState[node] = state;
@@ -184,10 +184,7 @@ void NodeHelper::setEncryptionState( KMime::Content* node, const KMMsgEncryption
 
 KMMsgEncryptionState NodeHelper::encryptionState( KMime::Content *node ) const
 {
-  if ( mEncryptionState.contains( node ) )
-    return mEncryptionState[node];
-
-  return KMMsgNotEncrypted;
+  return mEncryptionState.value( node, KMMsgNotEncrypted );
 }
 
 void NodeHelper::setSignatureState( KMime::Content* node, const KMMsgSignatureState state )
@@ -197,15 +194,12 @@ void NodeHelper::setSignatureState( KMime::Content* node, const KMMsgSignatureSt
 
 KMMsgSignatureState NodeHelper::signatureState( KMime::Content *node ) const
 {
-  if ( mSignatureState.contains( node ) )
-    return mSignatureState[node];
-
-  return KMMsgNotSigned;
+  return mSignatureState.value( node, KMMsgNotSigned );
 }
 
 PartMetaData NodeHelper::partMetaData(KMime::Content* node)
 {
-  return mPartMetaDatas.value( node );
+  return mPartMetaDatas.value( node, PartMetaData() );
 }
 
 void NodeHelper::setPartMetaData(KMime::Content* node, const PartMetaData& metaData)
@@ -552,7 +546,7 @@ const QTextCodec * NodeHelper::codec( KMime::Content* node )
   if (! node )
     return mLocalCodec;
 
-  const QTextCodec *c = mOverrideCodecs[node];
+  const QTextCodec *c = mOverrideCodecs.value( node, 0 );
   if ( !c ) {
     // no override-codec set for this message, try the CT charset parameter:
     c = codecForName( node->contentType()->charset() );
@@ -579,24 +573,6 @@ const QTextCodec* NodeHelper::codecForName(const QByteArray& _str)
   return KGlobal::charsets()->codecForName(codec);
 }
 
-QByteArray NodeHelper::path(const KMime::Content* node)
-{
-  if ( !node->parent() ) {
-    return QByteArray( ":" );
-  }
-  const KMime::Content *p = node->parent();
-
-  // count number of siblings with the same type as us:
-  int nth = 0;
-  for ( KMime::Content *c = MessageCore::NodeHelper::firstChild(p); c != node; c = MessageCore::NodeHelper::nextSibling(c) ) {
-    if ( c->contentType()->mediaType() == const_cast<KMime::Content*>(node)->contentType()->mediaType() && c->contentType()->subType() == const_cast<KMime::Content*>(node)->contentType()->subType() ) {
-      ++nth;
-    }
-  }
-  QString subpath;
-  return NodeHelper::path(p) + subpath.sprintf( ":%s/%s[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType().constData(), const_cast<KMime::Content*>(node)->contentType()->subType().constData(), nth ).toLocal8Bit();
-}
-
 QString NodeHelper::fileName( const KMime::Content *node )
 {
   QString name = const_cast<KMime::Content*>( node )->contentDisposition()->filename();
@@ -611,29 +587,34 @@ QString NodeHelper::fileName( const KMime::Content *node )
 Interface::BodyPartMemento *NodeHelper::bodyPartMemento( KMime::Content *node,
                                                          const QByteArray &which ) const
 {
-  if ( !mBodyPartMementoMap.contains( node ) )
+  const QMap< QString, QMap<QByteArray,Interface::BodyPartMemento*> >::const_iterator nit
+    = mBodyPartMementoMap.find( persistentIndex( node ) );
+  if ( nit == mBodyPartMementoMap.end() )
     return 0;
   const QMap<QByteArray,Interface::BodyPartMemento*>::const_iterator it =
-  mBodyPartMementoMap[node].find( which.toLower() );
-  return it != mBodyPartMementoMap[node].end() ? it.value() : 0 ;
+    nit->find( which.toLower() );
+  return it != nit->end() ? it.value() : 0 ;
 }
 
  //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalSetBodyPartMemento replacement
 void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &which,
                                      Interface::BodyPartMemento *memento )
 {
-  const QMap<QByteArray,Interface::BodyPartMemento*>::iterator it =
-    mBodyPartMementoMap[node].lowerBound( which.toLower() );
+  QMap<QByteArray,Interface::BodyPartMemento*> & mementos
+    = mBodyPartMementoMap[persistentIndex(node)];
 
-  if ( it != mBodyPartMementoMap[node].end() && it.key() == which.toLower() ) {
+  const QMap<QByteArray,Interface::BodyPartMemento*>::iterator it =
+    mementos.lowerBound( which.toLower() );
+
+  if ( it != mementos.end() && it.key() == which.toLower() ) {
     delete it.value();
     if ( memento ) {
       it.value() = memento;
     } else {
-      mBodyPartMementoMap[node].erase( it );
+      mementos.erase( it );
     }
   } else {
-    mBodyPartMementoMap[node].insert( which.toLower(), memento );
+    mementos.insert( which.toLower(), memento );
   }
 }
 
@@ -666,26 +647,30 @@ void NodeHelper::setNodeDisplayedHidden( KMime::Content* node, bool displayedHid
   }
 }
 
-QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
+/*!
+  Creates a persistent index string that bridges the gap between the
+  permanent nodes and the temporary ones.
+
+  Used internally for robust indexing.
+*/
+QString NodeHelper::persistentIndex( const KMime::Content * node ) const
 {
   if ( !node )
     return QString();
-  else {
-    QString indexStr = node->index().toString();
-    //if the node is an extra node, prepent the index of the extra node to the url
-    for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
-      QList<KMime::Content*> extraNodes = it.value();
-      for ( int i = 0; i < extraNodes.size(); ++i )  {
-        if ( node->topLevel() == extraNodes[i] ) {
-          indexStr.prepend( QString("%1:").arg(i) );
-          it = mExtraContents.end();
-          --it;
-          break;
-        }
-      }
-    }
-    return QString( "attachment:%1?place=%2" ).arg( indexStr ).arg( place );
-  }
+
+  QString indexStr = node->index().toString();
+  const KMime::Content * const topLevel = node->topLevel();
+  //if the node is an extra node, prepend the index of the extra node to the url
+  Q_FOREACH( const QList<KMime::Content*> & extraNodes, mExtraContents )
+    for ( int i = 0; i < extraNodes.size(); ++i )
+      if ( topLevel == extraNodes[i] )
+        return indexStr.prepend( QString("%1:").arg(i) );
+  return indexStr;
+}
+
+QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
+{
+  return QString( "attachment:%1?place=%2" ).arg( persistentIndex( node ), place );
 }
 
 QString NodeHelper::fixEncoding( const QString &encoding )
@@ -803,24 +788,29 @@ void NodeHelper::attachExtraContent( KMime::Content *topLevelNode, KMime::Conten
 
 void NodeHelper::removeAllExtraContent( KMime::Content *topLevelNode )
 {
-  if ( mExtraContents.contains( topLevelNode ) ) {
-    qDeleteAll( mExtraContents[topLevelNode] );
-    mExtraContents.remove( topLevelNode );
-  }    
+  const QMap< KMime::Content*, QList<KMime::Content*> >::iterator it
+    = mExtraContents.find( topLevelNode );
+  if ( it != mExtraContents.end() ) {
+    qDeleteAll( *it );
+    mExtraContents.erase( it );
+  }
 }
 
-QList< KMime::Content* > NodeHelper::extraContents( KMime::Content *topLevelnode )
+QList< KMime::Content* > NodeHelper::extraContents( KMime::Content *topLevelnode ) const
 {
- if ( mExtraContents.contains( topLevelnode ) ) {
-    return mExtraContents[topLevelnode];
- } else {
-  return QList< KMime::Content* >();
- }
+  const QMap< KMime::Content*, QList<KMime::Content*> >::const_iterator it
+    = mExtraContents.find( topLevelnode );
+  if ( it == mExtraContents.end() )
+    return QList<KMime::Content*>();
+  else
+    return *it;
 }
 
-bool NodeHelper::isPermanentwWithExtraContent( KMime::Content* node )
+bool NodeHelper::isPermanentWithExtraContent( KMime::Content* node ) const
 {
-  return mExtraContents.contains( node ) && mExtraContents[ node ].size() > 0;
+  const QMap< KMime::Content*, QList<KMime::Content*> >::const_iterator it
+    = mExtraContents.find( node );
+  return it != mExtraContents.end() && !it->empty();
 }
 
 
@@ -917,11 +907,12 @@ NodeHelper::AttachmentDisplayInfo NodeHelper::attachmentDisplayInfo( KMime::Cont
   return info;
 }
 
-static KMime::Content* decryptedNodeForContent( KMime::Content *content, NodeHelper *nodeHelper )
+KMime::Content * NodeHelper::decryptedNodeForContent( KMime::Content * content ) const
 {
-  if ( !nodeHelper->extraContents( content ).isEmpty() ) {
-    if ( nodeHelper->extraContents( content ).size() == 1 ) {
-      return nodeHelper->extraContents( content ).first();
+  const QList<KMime::Content*> xc = extraContents( content );
+  if ( !xc.empty() ) {
+    if ( xc.size() == 1 ) {
+      return xc.front();
     } else {
       kWarning() << "WTF, encrypted node has multiple extra contents?";
     }
@@ -947,18 +938,18 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
       if ( subType == "signed" ) {
         isSignature = true;
       } else if ( subType == "encrypted" ) {
-        decryptedNode = decryptedNodeForContent( curNode, this );
+        decryptedNode = decryptedNodeForContent( curNode );
       }
     } else if ( type == "application" ) {
       if ( subType == "octet-stream" ) {
-        decryptedNode = decryptedNodeForContent( curNode, this );
+        decryptedNode = decryptedNodeForContent( curNode );
       } else if ( subType == "pkcs7-signature" ) {
         isSignature = true;
       } else if ( subType == "pkcs7-mime" ) {
         // note: subtype pkcs7-mime can also be signed
         //       and we do NOT want to remove the signature!
         if ( encryptionState( curNode ) != KMMsgNotEncrypted ) {
-        decryptedNode = decryptedNodeForContent( curNode, this );
+          decryptedNode = decryptedNodeForContent( curNode );
         }
       }
     }

@@ -21,6 +21,8 @@
 #ifndef CALENDARSUPPORT_INCIDENCEFETCHJOB_H
 #define CALENDARSUPPORT_INCIDENCEFETCHJOB_H
 
+#include "calendarsupport_export.h"
+
 #include <akonadi/job.h>
 #include <akonadi/mimetypechecker.h>
 #include <KCalCore/Incidence>
@@ -33,7 +35,7 @@ namespace CalendarSupport {
  * This is a Strigi/Nepomuk-free replacement for an IncidenceSearchJob without a query.
  * @internal
  */
-class IncidenceFetchJob : public Akonadi::Job
+class CALENDARSUPPORT_EXPORT IncidenceFetchJob : public Akonadi::Job
 {
   Q_OBJECT
   public:

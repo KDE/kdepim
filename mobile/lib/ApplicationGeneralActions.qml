@@ -87,25 +87,9 @@ KPIM.ActionList {
     }
   }
 
-  /*KPIM.ActionListItem {
-    name : "report_bug"
-    onPressAndHold: {
-      longPressed(name);
-    }
-  }*/
-
   KPIM.ScriptActionItem  {
     name : "show_about_dialog"
     title : KDE.i18n( "About Kontact Touch" )
-  }
-
-  QML.Component.onCompleted :
-  {
-    for (var i = 0; i < children.length; ++i )
-    {
-      if (children[i].triggered)
-        children[i].triggered.connect(actions, triggered);
-    }
   }
 }
 

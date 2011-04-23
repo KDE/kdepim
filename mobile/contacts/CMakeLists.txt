@@ -64,6 +64,10 @@ kde4_add_ui_files(kab_mobile_srcs
 qt4_wrap_ui(kab_mobile_srcs configwidget.ui searchwidget.ui)
 kde4_add_kcfg_files(kab_mobile_srcs settings.kcfgc)
 
+if (WIN32)
+   set(kab_mobile_srcs ${kab_mobile_srcs} kaddressbook-mobile.rc)
+endif (WIN32)
+
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif (RUNTIME_PLUGINS_STATIC)
