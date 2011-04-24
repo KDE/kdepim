@@ -80,7 +80,7 @@ QML.Rectangle {
                   }
 
                   QML.Text{
-                      text: KDE.i18n("Credits Project Komo3 (October 2009 - Januar 2011)") + "\n"
+                      text: KDE.i18n("Credits Project Komo3 (October 2009 - January 2011)") + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
