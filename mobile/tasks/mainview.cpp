@@ -170,7 +170,7 @@ void MainView::finishEdit( QObject *editor )
 void MainView::newTask()
 {
   IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "KDE Tasks" ) );
+  editor->setWindowTitle( i18n( "Kontact Touch Tasks" ) );
 
   Item item;
   item.setMimeType( KCalCore::Todo::todoMimeType() );
@@ -226,7 +226,7 @@ void MainView::newSubTask()
 
   item.setPayload<KCalCore::Todo::Ptr>( todo );
   IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "KDE Tasks" ) );
+  editor->setWindowTitle( i18n( "Kontact Touch Tasks" ) );
   editor->load( item );
   editor->show();
 }
@@ -286,7 +286,7 @@ void MainView::editIncidence( const Akonadi::Item &item )
     return; // An editor for this item is already open.
 
   IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "KDE Tasks" ) );
+  editor->setWindowTitle( i18n( "Kontact Touch Tasks" ) );
   editor->load( item, QDate() );
 
   mOpenItemEditors.insert(  editor, item.id() );

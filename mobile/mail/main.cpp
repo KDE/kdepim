@@ -57,7 +57,7 @@ int main( int argc, char **argv )
 #endif
 
   const QByteArray& ba = QByteArray( "kmail-mobile" );
-  const KLocalizedString name = ki18n( "KMail Mobile" );
+  const KLocalizedString name = ki18n( "Kontact Touch Mail" );
   KAboutData aboutData( ba, ba, name, ba, name );
   aboutData.setProductName( "KMail Mobile" ); //has to match the bugzilla product name
 

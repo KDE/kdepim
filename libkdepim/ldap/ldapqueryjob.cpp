@@ -39,6 +39,11 @@ LdapQueryJob::LdapQueryJob( const LdapUrl& url, LdapSession* session ) :
   setAutoDelete( false ); // auto-deletion is bad in combination with cross-thread queued connections
 }
 
+void LdapQueryJob::triggerStart()
+{
+  start();
+}
+
 void LdapQueryJob::start()
 {
   kDebug();

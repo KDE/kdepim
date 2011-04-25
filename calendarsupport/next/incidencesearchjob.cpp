@@ -55,7 +55,7 @@ IncidenceSearchJob::IncidenceSearchJob( QObject * parent )
 #else
                                           "prefix ncal:<http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#>"
                                           "prefix nao:<http://www.semanticdesktop.org/ontologies/2007/08/15/nao#>"
-                                          "SELECT ?r WHERE"
+                                          "SELECT DISTINCT ?r WHERE"
                                           "{"
                                           "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
                                           "?r a ?subclasses ."

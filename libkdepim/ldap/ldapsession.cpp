@@ -136,7 +136,7 @@ void LdapSession::executeNext()
     return;
   m_currentJob = m_jobQueue.dequeue();
   locker.unlock();
-  m_currentJob->start();
+  QMetaObject::invokeMethod( m_currentJob, "triggerStart", Qt::QueuedConnection );
 }
 
 LdapServer LdapSession::server() const

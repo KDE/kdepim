@@ -825,13 +825,16 @@ void CalendarView::endMultiModify()
 
 void CalendarView::changeIncidenceDisplay( const Akonadi::Item &item, int action )
 {
-  mDateNavigatorContainer->updateView();
+  if ( mDateNavigatorContainer->isVisible() ) {
+    mDateNavigatorContainer->updateView();
+  }
+
   mDialogManager->updateSearchDialog();
 
   if ( CalendarSupport::hasIncidence( item ) ) {
     // If there is an event view visible update the display
     mViewManager->currentView()->changeIncidenceDisplay( item, action );
-    if ( mTodoList ) {
+    if ( mTodoList && mTodoList->isVisible() ) {
       mTodoList->changeIncidenceDisplay( item, action );
     }
   } else {
@@ -848,7 +851,7 @@ void CalendarView::updateView( const QDate &start, const QDate &end,
 {
   const bool currentViewIsTodoView = mViewManager->currentView()->identifier() == "DefaultTodoView";
 
-  if ( updateTodos && !currentViewIsTodoView ) {
+  if ( updateTodos && !currentViewIsTodoView && mTodoList->isVisible() ) {
     // Update the sidepane todoView
     mTodoList->updateView();
   }
@@ -857,7 +860,9 @@ void CalendarView::updateView( const QDate &start, const QDate &end,
     mViewManager->updateView( start, end, preferredMonth );
   }
 
-  mDateNavigatorContainer->updateView();
+  if ( mDateNavigatorContainer->isVisible() ) {
+    mDateNavigatorContainer->updateView();
+  }
 }
 
 void CalendarView::updateView()
@@ -871,7 +876,9 @@ void CalendarView::updateView()
 
 void CalendarView::updateUnmanagedViews()
 {
-  mDateNavigatorContainer->updateDayMatrix();
+  if ( mDateNavigatorContainer->isVisible() ) {
+    mDateNavigatorContainer->updateDayMatrix();
+  }
 }
 
 int CalendarView::msgItemDelete( const Akonadi::Item &item )
@@ -2282,6 +2289,7 @@ void CalendarView::showDateNavigator( bool show )
 {
   if ( show ) {
     mDateNavigatorContainer->show();
+    mDateNavigatorContainer->updateView();
   } else {
     mDateNavigatorContainer->hide();
   }
@@ -2291,6 +2299,7 @@ void CalendarView::showTodoView( bool show )
 {
   if ( show ) {
     mTodoList->show();
+    mTodoList->updateView();
   } else {
     mTodoList->hide();
   }

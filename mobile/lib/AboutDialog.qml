@@ -42,7 +42,7 @@ QML.Rectangle {
         width: parent.width - closeButton.width
         height: parent.height
         contentWidth: width - 10
-        contentHeight: 1800;
+        contentHeight: 1900;
 
         content.children: [
           QML.Rectangle{
@@ -59,24 +59,28 @@ QML.Rectangle {
                       width: parent.width
                   }
 
+                  QML.Image {
+                    id: platformLogo
+                    source: KDE.locate( "data", "mobileui/built-on-the-kde-platform.png" )
+                  }
+
                   QML.Text{
                       id:version
-                      horizontalAlignment: QML.Text.AlignHCenter
                       text: "\n" + application.version + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
 
                   QML.Text {
-                      text : KDE.i18n("This Free Software product was created as part of a commercial contract.\n" +
-                                      "%1 is licensed under the GNU GPL version 2 or later.\n" +
-                                      "See %2 for details.", application.name, "licenses.pdf") + "\n"
+                      text : KDE.i18n("This Free Software product was created as part of a commercial contract. " +
+                                      "Kontact Touch is licensed under the GNU GPL version 2 or later and other Free Software licenses. " +
+                                      "See %1 for details.", "licenses.pdf") + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
 
                   QML.Text{
-                      text: KDE.i18n("Credits Project Komo3 (October 2009 - )") + "\n"
+                      text: KDE.i18n("Credits Project Komo3 (October 2009 - January 2011)") + "\n"
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }
@@ -130,9 +134,9 @@ QML.Rectangle {
                   }
 
                   QML.Text{
-                      text: KDE.i18n("This project is built upon KDE SC Kontact Desktop client.\n" +
-                                     "For the outstanding work done there we\n" +
-                                     "would like to thank the original authors.\n")
+                      text: KDE.i18n("This product is built upon the KDE Platform 4 and the " +
+                                     "Kontact Desktop Client. " +
+                                     "Thanks to all contributors!\n")
                       wrapMode: QML.Text.WordWrap
                       width: parent.width
                   }

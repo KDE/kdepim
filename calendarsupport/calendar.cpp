@@ -208,6 +208,7 @@ void Calendar::Private::clear()
   m_itemIdsForDate.clear();
   m_itemDateForItemId.clear();
   m_virtualItems.clear();
+  m_uidToItemId.clear();
 }
 
 void Calendar::Private::readFromModel()
@@ -303,13 +304,13 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
         UnseenItem newUi;
         oldUi.collection = oldCollectionId;
         oldUi.uid = incidence->uid();
-        if ( m_uidToItemId.contains( oldUi ) ) {
+        if ( m_unseenItemToItemId.contains( oldUi ) ) {
           newUi.collection = item.storageCollectionId();
           newUi.uid = oldUi.uid;
-          m_uidToItemId.remove( oldUi );
-          m_uidToItemId.insert( newUi, item.id() );
+          m_unseenItemToItemId.remove( oldUi );
+          m_unseenItemToItemId.insert( newUi, item.id() );
         } else {
-          Q_ASSERT_X( false, "Calendar::Private::updateItem", "Item wasn't found in m_uidToItemId" );
+          Q_ASSERT_X( false, "Calendar::Private::updateItem", "Item wasn't found in m_unseenItemToItemId" );
           return;
         }
       }
@@ -364,6 +365,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   }
 
   m_itemMap.insert( id, item );
+  m_uidToItemId.insert( incidence->uid(), id );
 
   UnseenItem ui;
   ui.collection = item.storageCollectionId();
@@ -378,20 +380,20 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
   const QString parentUID = incidence->relatedTo();
   const bool hasParent = !parentUID.isEmpty();
   UnseenItem parentItem;
-  QMap<UnseenItem,Akonadi::Item::Id>::const_iterator parentIt = m_uidToItemId.constEnd();
+  QMap<UnseenItem,Akonadi::Item::Id>::const_iterator parentIt = m_unseenItemToItemId.constEnd();
   bool knowParent = false;
   bool parentNotChanged = false;
   if ( hasParent ) {
     parentItem.collection = item.storageCollectionId();
     parentItem.uid = parentUID;
-    parentIt = m_uidToItemId.constFind( parentItem );
-    knowParent = parentIt != m_uidToItemId.constEnd();
+    parentIt = m_unseenItemToItemId.constFind( parentItem );
+    knowParent = parentIt != m_unseenItemToItemId.constEnd();
   }
 
   if ( alreadyExisted ) { // We're updating an existing item
-    const bool existedInUidMap = m_uidToItemId.contains( ui );
-    if ( m_uidToItemId.value( ui ) != item.id() ) {
-      kError()<< "Ignoring item. item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
+    const bool existedInUidMap = m_unseenItemToItemId.contains( ui );
+    if ( m_unseenItemToItemId.value( ui ) != item.id() ) {
+      kError()<< "Ignoring item. item.id() = " << item.id() << "; cached id = " << m_unseenItemToItemId.value( ui )
               << "; item uid = "  << ui.uid
               << "; calendar = " << q->objectName()
               << "; existed in cache = " << existedInUidMap
@@ -402,8 +404,8 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
       if ( existedInUidMap ) {
         Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
       } else {
-        kDebug() << "m_uidToItemId has size " << m_uidToItemId.count();
-        QMapIterator<UnseenItem, Akonadi::Item::Id> i( m_uidToItemId );
+        kDebug() << "m_unseenItemToItemId has size " << m_unseenItemToItemId.count();
+        QMapIterator<UnseenItem, Akonadi::Item::Id> i( m_unseenItemToItemId );
         while ( i.hasNext() ) {
           i.next();
           if ( i.key().uid == ui.uid || i.value() == item.id() ) {
@@ -411,7 +413,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
           }
         }
         kError() << "Possible cause is that the resource isn't explicitly setting an uid ( and a random one is generated )";
-        Q_ASSERT_X( false, "updateItem", "Item not found inside m_uidToItemId" );
+        Q_ASSERT_X( false, "updateItem", "Item not found inside m_unseenItemToItemId" );
       }
       return;
     }
@@ -444,7 +446,7 @@ void Calendar::Private::updateItem( const Akonadi::Item &item, UpdateMode mode )
       }
     }
   } else { // We're inserting a new item
-    m_uidToItemId.insert( ui, item.id() );
+    m_unseenItemToItemId.insert( ui, item.id() );
 
     //check for already known children:
     const QList<Akonadi::Item::Id> orphanedChildren = m_unseenParentToChildren.value( ui );
@@ -537,6 +539,8 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
   unseen_item.uid   = CalendarSupport::incidence( item )->uid();
   unseen_parent.uid = CalendarSupport::incidence( item )->relatedTo();
 
+  m_uidToItemId.remove( unseen_item.uid );
+
   if ( m_childToParent.contains( item.id() ) ) {
     Akonadi::Item::Id parentId = m_childToParent.take( item.id() );
     m_parentToChildren[parentId].removeAll( item.id() );
@@ -553,7 +557,7 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
 
   m_unseenParentToChildren[unseen_parent].removeAll( item.id() );
 
-  m_uidToItemId.remove( unseen_item );
+  m_unseenItemToItemId.remove( unseen_item );
   m_itemDateForItemId.remove( item.id() );
 
   const QList<QString> entriesToDelete = m_itemIdsForDate.keys( item.id() );
@@ -1016,19 +1020,15 @@ bool Calendar::isChild( const Akonadi::Item &parent, const Akonadi::Item &child 
 
 Akonadi::Item::Id Calendar::itemIdForIncidenceUid( const QString &uid ) const
 {
-  QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
-  while ( i.hasNext() ) {
-    i.next();
-    const Akonadi::Item item = i.value();
-    Q_ASSERT( item.isValid() );
-    Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-    KCalCore::Incidence::Ptr inc = item.payload<KCalCore::Incidence::Ptr>();
-    if ( inc->uid() == uid ) {
-      return item.id();
-    }
+  Akonadi::Item::Id id = -1;
+
+  if ( d->m_uidToItemId.contains( uid ) ) {
+    id = d->m_uidToItemId[uid];
+  } else {
+    kWarning() << "Failed to find Akonadi::Item for KCal uid " << uid;  
   }
-  kWarning() << "Failed to find Akonadi::Item for KCal uid " << uid;
-  return -1;
+
+  return id;
 }
 
 Akonadi::Item Calendar::itemForIncidenceUid( const QString &uid ) const

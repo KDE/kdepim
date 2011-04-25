@@ -48,7 +48,7 @@ static bool exportVCard( const QString &fileName, const QByteArray &data )
 {
   KUrl url( fileName );
   if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
-    if ( KMessageBox::questionYesNo( 0, i18n( "Do you want to overwrite file \"%1\"", url.toLocalFile() ) ) == KMessageBox::No )
+    if ( KMessageBox::questionYesNo( 0, i18n( "Do you want to overwrite file \"%1\"?", url.toLocalFile() ) ) == KMessageBox::No )
       return false;
   }
 

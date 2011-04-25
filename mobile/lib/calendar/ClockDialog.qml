@@ -121,7 +121,7 @@ Dialog {
         KPIM.Button2 {
           id: clockWidgetCancel
           buttonText: KDE.i18n( "Cancel" );
-          width: 100
+          width: 130
           onClicked: {
             clockWidget.collapse()
           }
@@ -129,7 +129,7 @@ Dialog {
         KPIM.Button2 {
           id: clockWidgetOk
           buttonText: KDE.i18n( "Ok" );
-          width: 100
+          width: 130
           onClicked: {
             clockWidget.collapse()
             timeChanged(clockWidget.hours, clockWidget.minutes);
@@ -217,20 +217,27 @@ Dialog {
     visible: false
 
     property int currentMinute
+    property variant minutesOffset: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
     signal selectionFinished( int value )
+
+    onCurrentMinuteChanged : {
+      // round input values to a multiple of 5
+      currentMinute = (Math.round(currentMinute/5)*5 == 60) ? 0 : Math.round(currentMinute/5)*5
+    }
 
     Grid {
       anchors.fill: parent
       spacing: 3
-      columns: 10
-      rows: 6
+      columns: 4
+      rows: 3
 
       Repeater {
-        model: 60
+        model: 12
+
         Image {
-          width: (minutesTable.width-(3*9))/10
-          height: (minutesTable.height-(3*5))/6
+          width: (minutesTable.width-(3*3))/4
+          height: (minutesTable.height-(3*2))/3
 
           source: "images/normaldate.png"
 
@@ -252,14 +259,14 @@ Dialog {
             font.bold: true
             font.pixelSize: 26
             style: Text.Sunken
-            text: index
+            text: minutesTable.minutesOffset[ index ]
           }
 
           MouseArea {
             anchors.fill: parent
             onClicked: {
-              minutesTable.currentMinute = index
-              minutesTable.selectionFinished( index )
+              minutesTable.currentMinute = minutesTable.minutesOffset[ index ]
+              minutesTable.selectionFinished( minutesTable.minutesOffset[ index ] )
               minutesTable.visible = false
             }
           }
