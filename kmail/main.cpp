@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
   app.setEventLoopReached();
   app.delayedInstanceCreation();
 
-#if !KDE_IS_VERSION(4,6,0)
+#if !KDE_IS_VERSION(4,6,2)
   // Start Akonadi
   if ( !Akonadi::Control::start( kmkernel->getKMMainWidget() ) ) {
     //TODO: add message box after string freeze
