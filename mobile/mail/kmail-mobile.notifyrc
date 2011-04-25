@@ -1,7 +1,17 @@
 [Global]
 IconName=mail-mobile
 Comment=KDE Kontact Touch e-mail client
+Comment[ia]=Cliente de e-posta de Touch de Kontact de KDE
+Comment[pt]=Cliente de e-mail do Kontact Touch para o KDE
+Comment[pt_BR]=Cliente de e-mail do Kontact Touch para o KDE
+Comment[uk]=Клієнт електронної пошти KDE Kontact Touch
+Comment[x-test]=xxKDE Kontact Touch e-mail clientxx
 Name=Kontact Touch Mail
+Name[ia]=Posta de Touch de Kontact
+Name[pt]=Correio do Kontact Touch
+Name[pt_BR]=E-mail do Kontact Touch
+Name[uk]=Пошта Kontact Touch
+Name[x-test]=xxKontact Touch Mailxx
 
 [Event/sendfailed]
 Name=Error while sending email

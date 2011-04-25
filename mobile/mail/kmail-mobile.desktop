@@ -2,6 +2,11 @@
 Version=1.0
 Encoding=UTF-8
 Name=Kontact Touch Mail
+Name[ia]=Posta de Touch de Kontact
+Name[pt]=Correio do Kontact Touch
+Name[pt_BR]=E-mail do Kontact Touch
+Name[uk]=Пошта Kontact Touch
+Name[x-test]=xxKontact Touch Mailxx
 Exec=kmail-mobile
 
 Icon=kmail-mobile

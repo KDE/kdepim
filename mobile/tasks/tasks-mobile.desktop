@@ -2,6 +2,11 @@
 Version=1.0
 Encoding=UTF-8
 Name=Kontact Touch Tasks
+Name[ia]=Cargas de Touch de Kontact
+Name[pt]=Tarefas do Kontact Touch
+Name[pt_BR]=Tarefas do Kontact Touch
+Name[uk]=Завдання Kontact Touch
+Name[x-test]=xxKontact Touch Tasksxx
 Exec=tasks-mobile
 
 Icon=tasks-mobile

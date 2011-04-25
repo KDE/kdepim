@@ -2,6 +2,11 @@
 Version=1.0
 Encoding=UTF-8
 Name=Kontact Touch Contacts
+Name[ia]=Contactos de Touch de Kontact
+Name[pt]=Contactos do Kontact Touch
+Name[pt_BR]=Contatos do Kontact Touch
+Name[uk]=Контакти Kontact Touch
+Name[x-test]=xxKontact Touch Contactsxx
 Exec=kaddressbook-mobile
 
 Icon=kaddressbook-mobile
