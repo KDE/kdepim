@@ -1,6 +1,8 @@
 KAlarm Change Log
 
-=== Version 2.4.12 --- 22 April 2011 ===
+=== Version 2.4.12 --- 26 April 2011 ===
+- Fix crash on some systems when New Alarm dialogue is displayed from system tray
+  icon menu.
 - Fix KAlarm button in alarm window not always showing main window and not
   highlighting the alarm in the main window.
 
