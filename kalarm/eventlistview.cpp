@@ -1,7 +1,7 @@
 /*
  *  eventlistview.cpp  -  base class for widget showing list of alarms
  *  Program:  kalarm
- *  Copyright © 2007-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2007-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -63,15 +63,18 @@ KAEvent* EventListView::event(int row) const
 
 /******************************************************************************
 * Select one event and make it the current item.
+* Optionally scroll to ensure that the  event is visible.
 */
-void EventListView::select(const QString& eventId)
+void EventListView::select(const QString& eventId, bool scrollToEvent)
 {
-	select(eventModel()->eventIndex(eventId));
+	select(eventModel()->eventIndex(eventId), scrollToEvent);
 }
 
-void EventListView::select(const QModelIndex& index)
+void EventListView::select(const QModelIndex& index, bool scrollToIndex)
 {
 	selectionModel()->select(index, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
+	if (scrollToIndex)
+		scrollTo(index);
 }
 
 /******************************************************************************
