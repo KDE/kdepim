@@ -49,7 +49,7 @@ int main( int argc, char **argv )
   MainWindow *window = new MainWindow;
   window->show();
 
-#if !KDE_IS_VERSION(4,6,0)
+#if !KDE_IS_VERSION(4,6,2)
   if ( !Akonadi::Control::start( window ) ) {
     //TODO: add message box after string freeze
     kWarning() << "Unable to start Akonadi server, exit application";

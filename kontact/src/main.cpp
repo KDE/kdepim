@@ -199,7 +199,7 @@ int main( int argc, char **argv )
 
   KontactApp app;
 
-#if !KDE_IS_VERSION(4,6,0)
+#if !KDE_IS_VERSION(4,6,2)
   // KDE 4.4: do akonadi startup before creating any window, since creating
   // the window loads kmail. In 4.5 we'll do this startup async instead.
   Akonadi::Control::start( 0 );

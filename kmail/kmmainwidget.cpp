@@ -189,7 +189,7 @@ KMMainWidget::KMMainWidget( QWidget *parent, KXMLGUIClient *aGUIClient,
     mVacationIndicatorActive( false ),
     mGoToFirstUnreadMessageInSelectedFolder( false )
 {
-#if KDE_IS_VERSION(4,6,0)
+#if KDE_IS_VERSION(4,6,2)
   Akonadi::Control::widgetNeedsAkonadi(this);
   Akonadi::ServerManager::start();
 #endif
