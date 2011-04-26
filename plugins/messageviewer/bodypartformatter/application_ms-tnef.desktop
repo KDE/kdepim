@@ -2,6 +2,7 @@
 Name=TNEF
 Name[ca]=TNEF
 Name[ca@valencia]=TNEF
+Name[da]=TNEF
 Name[de]=TNEF
 Name[el]=TNEF
 Name[en_GB]=TNEF
@@ -28,6 +29,7 @@ Name[zh_TW]=TNEF
 Comment=A bodypart formatter plugin for TNEF attachments
 Comment[ca]=Un connector formatador del cos per adjunts TNEF
 Comment[ca@valencia]=Un connector formatador del cos per adjunts TNEF
+Comment[da]=Et bodypart formaterings-plugin til TNEF-bilag
 Comment[de]=Ein Inhaltsformatierungs-Modul für TNEF (Outlook) Anhänge
 Comment[en_GB]=A bodypart formatter plugin for TNEF attachments
 Comment[es]=Un complemento de formato para el cuerpo de adjuntos TNEF
