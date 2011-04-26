@@ -86,6 +86,7 @@ id=sha256sum
 Name=sha256sum
 Name[ca]=sha256sum
 Name[ca@valencia]=sha256sum
+Name[da]=sha256sum
 Name[de]=sha256sum
 Name[el]=sha256sum
 Name[en_GB]=sha256sum

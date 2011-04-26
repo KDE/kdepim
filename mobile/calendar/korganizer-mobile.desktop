@@ -2,6 +2,8 @@
 Version=1.0
 Encoding=UTF-8
 Name=Kontact Touch Calendar
+Name[da]=Kontact Touch Kalender
+Name[et]=Kontact Touchi kalender
 Name[ia]=Calendario de Touch de Kontact
 Name[pt]=Calendário do Kontact Touch
 Name[pt_BR]=Calendário do Kontact Touch
@@ -19,6 +21,7 @@ X-DBUS-ServiceName=org.kde.korganizer
 Keywords=mobile
 Keywords[ca]=mòbil
 Keywords[ca@valencia]=mòbil
+Keywords[da]=mobil
 Keywords[de]=Mobil
 Keywords[el]=κινητό
 Keywords[en_GB]=mobile
