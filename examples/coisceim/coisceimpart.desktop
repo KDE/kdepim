@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=CoisceimPart
+X-KDE-ServiceTypes=KParts/ReadOnlyPart
+X-KDE-Library=coisceimpart
+Type=Service
+Icon=byobu

@@ -5,4 +5,5 @@ macro_optional_add_subdirectory(akonalendar)
 macro_optional_add_subdirectory(etm_usage)
 macro_optional_add_subdirectory(kabc)
 macro_optional_add_subdirectory(mailreader)
+macro_optional_add_subdirectory(coisceim)
 

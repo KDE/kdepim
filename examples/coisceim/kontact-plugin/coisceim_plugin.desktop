@@ -1,0 +1,20 @@
+[Desktop Entry]
+Type=Service
+Icon=byobu
+X-KDE-ServiceTypes=Kontact/Plugin,KPluginInfo
+
+X-KDE-Library=kontact_coisceimplugin
+X-KDE-KontactPluginVersion=9
+X-KDE-KontactPartLibraryName=coisceimpart
+X-KDE-KontactPartExecutableName=coisceim
+X-KDE-KontactPartLoadOnStart=false
+X-KDE-KontactPluginHasSummary=false
+
+X-KDE-PluginInfo-Name=kontact_coisceimplugin
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-AllowEmptySettings=true
+
+Comment=Coisceim Plugin
+Name=Trips
