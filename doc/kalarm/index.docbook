@@ -41,7 +41,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2010-09-30</date>
+<date>2011-04-29</date>
 <releaseinfo>2.06.00 (&kde; 4.6)</releaseinfo>
 
 <abstract>
@@ -4764,9 +4764,6 @@ displayed.</para>
 </listitem>
 </itemizedlist>
 
-<para>&kalarm; uses about 12 Mb of memory to run, but this may vary
-depending on your platform and configuration.</para>
-
 <para>You can find a list of changes in the
 <filename>Changelog</filename> file, or at <ulink
 url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>.</para>
@@ -4786,16 +4783,6 @@ new folder using a command similar to
 change to the folder which has been created.</para>
 
 &install.compile.documentation;
-
-<note><para>If you have more than one version of &kde; installed
-(e.g. &kde; 2 and &kde; 3), this may possibly install &kalarm; into
-the wrong &kde; folder. If necessary, you can give the &kde; folder
-as a parameter to
-<userinput><command>./configure</command></userinput> . For example,
-if your &kde; is installed in <filename>/opt/kde2</filename>:</para>
-
-<para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde2</replaceable></userinput></para>
-</note>
 
 <warning><para>If you install &kalarm; into a folder different from
 where &kde; is installed, it will not run correctly unless you make
