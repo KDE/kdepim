@@ -2251,6 +2251,11 @@ from the context menu.</para>
 </listitem>
 
 <listitem>
+<para>Run &kalarm; with the command line option
+<option>--disable-all</option>.</para>
+</listitem>
+
+<listitem>
 <para>Stop &kalarm; as described in
 <link linkend="quitting">Quitting &kalarm;</link>.</para>
 </listitem>
@@ -2903,6 +2908,14 @@ time.</para>
   <entry><option>-d</option>, <option>--disable</option></entry>
   <entry>Disable the alarm. It will not trigger until it has been
   manually enabled.</entry>
+</row>
+<row>
+  <entry><option>-d</option>, <option>--disable-all</option></entry>
+  <entry>Disable alarm monitoring. This prevents any alarms from
+  being triggered until you re-enable alarms or restart &kalarm;, &eg;
+  at next login.
+  <option>--triggerEvent</option> cannot be specified with this
+  option.</entry>
 </row>
 <row>
   <entry><option>-e</option>, <option>--exec <replaceable>commandline</replaceable></option></entry>
