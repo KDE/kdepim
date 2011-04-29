@@ -4600,7 +4600,7 @@ holds your &kalarm; preferences.</para>
 holds your alarm calendar configuration.</para>
 
 <para>($<envar>KDEHOME</envar> is usually
-<filename class="directory">~/.kde</filename> or similar.)</para>
+<filename class="directory">&tilde;/.kde</filename> or similar.)</para>
 </answer>
 </qandaentry>
 
@@ -4656,18 +4656,9 @@ files whose format is defined by the document
 Internet Calendaring and Scheduling Core Object Specification
 (iCalendar)</ulink>. This is the standard format used by all kdepim
 applications. &kalarm; uses certain non-standard properties, in
-conformance with RFC2445. In the VEVENT component:
-<literal>X-KDE-KALARM-FLAGS</literal>,
-<literal>X-KDE-KALARM-NEXTRECUR</literal>,
-<literal>X-KDE-KALARM-REPEAT</literal>,
-<literal>X-KDE-KALARM-ARCHIVE</literal>,
-<literal>X-KDE-KALARM-LOG</literal>, and in the VALARM component:
-<literal>X-KDE-KALARM-TYPE</literal>,
-<literal>X-KDE-KALARM-NEXTREPEAT</literal>,
-<literal>X-KDE-KALARM-FONTCOLOR</literal>,
-<literal>X-KDE-KALARM-VOLUME</literal>,
-<literal>X-KDE-KALARM-SPEAK</literal>,
-<literal>X-KDE-KALARM-EMAILID</literal>.</para>
+conformance with RFC2445. These are documented in the
+<filename>DESIGN.html</filename> file which is distributed with
+&kalarm;.</para>
 </answer>
 </qandaentry>
 
@@ -4708,11 +4699,11 @@ that the session manager has time to do its job) before starting
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 &David.Jarvie; &David.Jarvie.mail;
+Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 &David.Jarvie; &David.Jarvie.mail;
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 &David.Jarvie; &David.Jarvie.mail;
+Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 &David.Jarvie; &David.Jarvie.mail;
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
@@ -4737,8 +4728,8 @@ application, which has been available for &kde; 2 onwards.
 
 &install.intro.documentation;
 
-<para>&kalarm; is available for &kde; 2 and as standalone packages for
-&kde; 3 and &kde; 4 from
+<para>&kalarm; is also available as a standalone package for &kde; 4,
+as well as older versions for &kde; 3 and &kde; 2, from
 <ulink url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>
 </para>
 
