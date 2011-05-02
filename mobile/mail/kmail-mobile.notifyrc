@@ -2,6 +2,7 @@
 IconName=mail-mobile
 Comment=KDE Kontact Touch e-mail client
 Comment[da]=KDE Kontact Touch e-mail-klient
+Comment[es]=Cliente de correo KDE Kontact táctil
 Comment[et]=KDE Kontact Touchi e-posti klient
 Comment[ia]=Cliente de e-posta de Touch de Kontact de KDE
 Comment[nl]=Aanraak-e-mailclient van KDE Kontact
@@ -12,6 +13,7 @@ Comment[uk]=Клієнт електронної пошти KDE Kontact Touch
 Comment[x-test]=xxKDE Kontact Touch e-mail clientxx
 Name=Kontact Touch Mail
 Name[da]=Kontact Touch E-mail
+Name[es]=Correo Kontact táctil
 Name[et]=Kontact Touchi e-post
 Name[ia]=Posta de Touch de Kontact
 Name[nl]=Aanraak-e-mail van Kontact
