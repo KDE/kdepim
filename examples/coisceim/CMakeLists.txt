@@ -46,7 +46,7 @@ set (coisceim_part_SRCS
   coisceimpart.cpp
 )
 
-kde4_add_library(coisceim_widget ${coisceim_widget_SRCS})
+kde4_add_library(coisceim_widget ${LIBRARY_TYPE} ${coisceim_widget_SRCS})
 
 qt4_generate_dbus_interface(coisceimwidget.h
   org.kde.coisceim.CoisceimWidget.xml
