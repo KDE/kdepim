@@ -79,6 +79,45 @@
 #include <QtGui/QSplitter>
 #include <QtGui/QStackedWidget>
 
+
+
+namespace {
+static bool isStructuralCollection( const Akonadi::Collection &collection )
+{
+  QStringList mimeTypes;
+  mimeTypes << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType();
+  const QStringList collectionMimeTypes = collection.contentMimeTypes();
+  foreach ( const QString &mimeType, mimeTypes ) {
+    if ( collectionMimeTypes.contains( mimeType ) )
+      return false;
+  }
+  return true;
+}
+
+class StructuralCollectionsNotCheckableProxy : public Future::KCheckableProxyModel {
+public:
+  StructuralCollectionsNotCheckableProxy(QObject* parent)
+      :Future::KCheckableProxyModel(parent)
+  { }
+
+  /* reimp */ QVariant data( const QModelIndex &index, int role ) const
+  {
+    if ( !index.isValid() )
+      return QVariant();
+
+    if ( role == Qt::CheckStateRole ) {
+      // Don't show the checkbox if the collection can't contain incidences
+      const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      if ( collection.isValid() && isStructuralCollection( collection ) ) {
+        return QVariant();
+      }
+    }
+    return Future::KCheckableProxyModel::data( index, role );
+  }
+};
+
+}
+
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient )
 {
@@ -141,7 +180,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionTree->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   mCollectionSelectionModel = new QItemSelectionModel( mCollectionTree );
-  Future::KCheckableProxyModel *checkableProxyModel = new Future::KCheckableProxyModel( this );
+  StructuralCollectionsNotCheckableProxy *checkableProxyModel = new StructuralCollectionsNotCheckableProxy( this );
   checkableProxyModel->setSelectionModel( mCollectionSelectionModel );
   checkableProxyModel->setSourceModel( mCollectionTree );
 

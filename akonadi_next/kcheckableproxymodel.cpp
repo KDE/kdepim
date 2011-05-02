@@ -76,7 +76,7 @@ void KCheckableProxyModel::setSelectionModel(QItemSelectionModel* itemSelectionM
 
 Qt::ItemFlags KCheckableProxyModel::flags(const QModelIndex& index) const
 {
-  if (!index.isValid())
+  if (!index.isValid() || index.column() != 0)
     return Future::KIdentityProxyModel::flags(index);
   return Future::KIdentityProxyModel::flags(index) | Qt::ItemIsUserCheckable;
 }
@@ -87,6 +87,8 @@ QVariant KCheckableProxyModel::data(const QModelIndex& index, int role) const
 
   if (role == Qt::CheckStateRole)
   {
+    if (index.column() != 0)
+      return QVariant();
     if (!d->m_itemSelectionModel)
       return Qt::Unchecked;
 
@@ -100,6 +102,8 @@ bool KCheckableProxyModel::setData(const QModelIndex& index, const QVariant& val
   Q_D(KCheckableProxyModel);
   if (role == Qt::CheckStateRole)
   {
+    if (index.column() != 0)
+      return false;
     if (!d->m_itemSelectionModel)
       return false;
 
