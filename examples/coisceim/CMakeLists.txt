@@ -61,6 +61,10 @@ target_link_libraries(coisceim_widget
                       ${KDEPIMLIBS_KMIME_LIBS}
 )
 
+set_target_properties(coisceim_widget
+    PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
+)
+
 kde4_add_executable(coisceim ${coisceim_SRCS})
 
 target_link_libraries(coisceim
@@ -75,7 +79,7 @@ target_link_libraries(coisceimpart
 )
 
 install(TARGETS coisceim ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
+install(TARGETS coisceim_widget ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(FILES coisceimpart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
 install(TARGETS coisceimpart  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
