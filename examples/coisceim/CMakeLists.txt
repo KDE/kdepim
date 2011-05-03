@@ -1,24 +1,10 @@
 project(coisceim)
 
-find_package(KDE4 REQUIRED)
-find_package(Akonadi REQUIRED)
-find_package(KdepimLibs REQUIRED)
-
-include(KDE4Defaults)
-include(MacroLibrary)
-include(CheckIncludeFiles)
-
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-include_directories(
-  ${QT_INCLUDES}
-  ${KDE4_INCLUDES}
-  ${KDEPIMLIBS_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
-)
+include_directories( ${Boost_INCLUDE_DIRS} )
 
 set (coisceim_widget_SRCS
-  main.cpp
   coisceimwidget.cpp
   note.cpp
   foldercontentswidget.cpp
@@ -60,18 +46,13 @@ qt4_add_dbus_adaptor(coisceim_widget_SRCS
 
 target_link_libraries(coisceim_widget
   ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  messageviewer messagelist kdepim kpgp kleo ${KDEPIMLIBS_AKONADI_LIBS} messagecore
-                      akonadi-kmime akonadi_next ${KDE4_KDEUI_LIBS}
-                      calendarsupport
-                      ${QGPGME_LIBRARIES}
-                      ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-                      ${KDE4_KIO_LIBS}
-                      ${KDEPIMLIBS_KABC_LIBS}
-                      ${KDEPIMLIBS_KMIME_LIBS}
+  akonadi_next messageviewer calendarsupport
+)
+
+set_target_properties(coisceim_widget
+    PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
 kde4_add_executable(coisceim ${coisceim_SRCS})
@@ -88,7 +69,7 @@ target_link_libraries(coisceimpart
 )
 
 install(TARGETS coisceim ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
+install(TARGETS coisceim_widget ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(FILES coisceimpart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
 install(TARGETS coisceimpart  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

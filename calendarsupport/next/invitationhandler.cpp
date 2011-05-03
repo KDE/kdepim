@@ -432,8 +432,9 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
                          "Do you want to email the attendees that the todo is canceled?",
                          incidence->summary() );
       }  else if ( incidence->type() == KCalCore::Incidence::TypeJournal ) {
-        question = "You removed the invitation" + incidence->summary() + ".\n"
-                   "Do you want to email the attendees that the journal is canceled?"; //TODO: i18n
+        question = i18n( "You removed the invitation \"%1\".\n"
+                         "Do you want to email the attendees that the journal is canceled?",
+                         incidence->summary() );
       }
 
       const int messageBoxReturnCode = d->askUserIfNeeded( question, false );
@@ -452,8 +453,8 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
     const QString question = ( incidence->type() == KCalCore::Incidence::TypeTodo ) ?
                                      i18n( "Do you want to send a status update to the "
                                            "organizer of this task?" ) :
-                                           "Do you want to send a status update to the " // TODO: i18n
-                                           "organizer of this journal?";
+                                     i18n( "Do you want to send a status update to the "
+                                           "organizer of this journal?" );
 
     const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
     return d->sentInvitation( messageBoxReturnCode, incidence, method );
