@@ -2985,8 +2985,7 @@ time.</para>
   format <replaceable>nX</replaceable>, where
   <replaceable>n</replaceable> is a number and
   <replaceable>X</replaceable> is one of the following letters: W
-  (weeks), D (days). To specify a reminder after the alarm, prefix
-  <replaceable>period</replaceable> with <replaceable>+</replaceable>, &eg; +3D.
+  (weeks), D (days).
   The default value of <replaceable>period</replaceable> is 1
   minute.</entry>
 </row>
