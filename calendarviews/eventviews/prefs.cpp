@@ -695,6 +695,16 @@ bool Prefs::enableMonthItemIcons() const
   return d->getBool( d->mBaseConfig.enableMonthItemIconsItem() );
 }
 
+bool Prefs::showTimeInMonthView() const
+{
+  return d->getBool( d->mBaseConfig.showTimeInMonthViewItem() );
+}
+
+void Prefs::setShowTimeInMonthView( bool show )
+{
+  d->setBool( d->mBaseConfig.showTimeInMonthViewItem(), show );
+}
+
 bool Prefs::showTodosMonthView() const
 {
   return d->getBool( d->mBaseConfig.showTodosMonthViewItem() );

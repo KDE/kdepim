@@ -531,7 +531,7 @@ void IncidenceMonthItem::updateSelection( const Akonadi::Item &incidence, const 
 QString IncidenceMonthItem::text( bool end ) const
 {
   QString ret = mIncidence->summary();
-  if ( !allDay() ) { // Prepend the time str to the text
+  if ( !allDay() && monthScene()->monthView()->preferences()->showTimeInMonthView() ) { // Prepend the time str to the text
     QString timeStr;
     if ( mIsTodo ) {
       KCalCore::Todo::Ptr todo = mIncidence.staticCast<Todo>();
