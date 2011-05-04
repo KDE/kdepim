@@ -2986,6 +2986,7 @@ time.</para>
   <replaceable>n</replaceable> is a number and
   <replaceable>X</replaceable> is one of the following letters: W
   (weeks), D (days). To specify a reminder after the alarm, prefix
+  <replaceable>period</replaceable> with <replaceable>+</replaceable>, &eg; +3D.
   The default value of <replaceable>period</replaceable> is 1
   minute.</entry>
 </row>
@@ -3055,7 +3056,7 @@ time.</para>
   the same format as described for <option>--late-cancel</option>.
   By default, the reminder will occur before the alarm. To specify a
   reminder after the alarm, prefix <replaceable>period</replaceable>
-  with <replaceable>+</replaceable>, &eg; +3D.This option cannot be
+  with <replaceable>+</replaceable>, &eg; +3D. This option cannot be
   specified with <option>--exec</option>, <option>--mail</option> or
   <option>--reminder-once</option>.</entry>
 </row>
