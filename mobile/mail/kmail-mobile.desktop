@@ -6,6 +6,7 @@ Name[da]=Kontact Touch E-mail
 Name[es]=Correo Kontact táctil
 Name[et]=Kontact Touchi e-post
 Name[ia]=Posta de Touch de Kontact
+Name[it]=Kontact Touch Mail
 Name[kk]=Kontact Touch поштасы
 Name[nl]=Aanraak-e-mail van Kontact
 Name[pt]=Correio do Kontact Touch
@@ -13,6 +14,7 @@ Name[pt_BR]=E-mail do Kontact Touch
 Name[sv]=Kontact Touch e-post
 Name[uk]=Пошта Kontact Touch
 Name[x-test]=xxKontact Touch Mailxx
+Name[zh_TW]=Kontact Touch Mail
 Exec=kmail-mobile
 
 Icon=kmail-mobile

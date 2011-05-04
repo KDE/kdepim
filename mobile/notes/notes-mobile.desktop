@@ -6,6 +6,7 @@ Name[da]=Kontact Touch Noter
 Name[es]=Notas Kontact táctil
 Name[et]=Kontact Touchi märkmed
 Name[ia]=Notas de Touch de Kontact
+Name[it]=Kontact Touch Notes
 Name[kk]=Kontact Touch жазбалары
 Name[nl]=Aanraaknotities van Kontact
 Name[pt]=Notas do Kontact Touch
@@ -13,6 +14,7 @@ Name[pt_BR]=Notas do Kontact Touch
 Name[sv]=Kontact Touch anteckningar
 Name[uk]=Нотатки Kontact Touch
 Name[x-test]=xxKontact Touch Notesxx
+Name[zh_TW]=Kontact Touch Notes
 Exec=notes-mobile
 
 Icon=notes-mobile

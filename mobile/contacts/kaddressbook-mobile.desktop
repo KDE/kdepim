@@ -6,6 +6,7 @@ Name[da]=Kontact Touch Kontakter
 Name[es]=Contactos Kontact táctil
 Name[et]=Kontact Touchi kontaktid
 Name[ia]=Contactos de Touch de Kontact
+Name[it]=Kontact Touch Contacts
 Name[kk]=Kontact Touch контакттары
 Name[nl]=Aanraakcontacten van Kontact
 Name[pt]=Contactos do Kontact Touch
@@ -13,6 +14,7 @@ Name[pt_BR]=Contatos do Kontact Touch
 Name[sv]=Kontact Touch kontakter
 Name[uk]=Контакти Kontact Touch
 Name[x-test]=xxKontact Touch Contactsxx
+Name[zh_TW]=Kontact Touch 聯絡人
 Exec=kaddressbook-mobile
 
 Icon=kaddressbook-mobile
