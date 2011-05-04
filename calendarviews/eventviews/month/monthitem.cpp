@@ -310,7 +310,7 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
     if ( years > 0 ) {
       inc = KCalCore::Incidence::Ptr( inc->clone() );
       inc->setReadOnly( false );
-      inc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years, inc->summary() ) );
+      inc->setDescription( i18np( "%2 1 year", "%2 %1 years", years, i18n( "Age:" ) ) );
       inc->setReadOnly( true );
       mIncidence = inc;
     }
