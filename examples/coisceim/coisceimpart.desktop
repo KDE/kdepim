@@ -1,5 +1,11 @@
 [Desktop Entry]
 Name=CoisceimPart
+Name[ia]=CoisceimPart
+Name[nl]=CoisceimPart
+Name[pt]=CoisceimPart
+Name[sv]=Coisceim-delprogram
+Name[uk]=CoisceimPart
+Name[x-test]=xxCoisceimPartxx
 X-KDE-ServiceTypes=KParts/ReadOnlyPart
 X-KDE-Library=coisceimpart
 Type=Service
