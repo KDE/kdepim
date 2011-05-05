@@ -109,13 +109,16 @@ bool fbExists( const KUrl &url )
 /// FreeBusyManagerPrivate
 
 FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
-  : q_ptr( q ),
+  : QObject(),
+    q_ptr( q ),
     mCalendar( 0 ),
     mTimerID( 0 ),
     mUploadingFreeBusy( false ),
     mBrokenUrl( false ),
     mParentWidgetForRetrieval( 0 )
 {
+  connect( this, SIGNAL(freeBusyUrlRetrieved(const QString&, const KUrl&)),
+           this, SLOT(onFreeBusyUrlRetrieved(const QString&, const KUrl&)) );
 }
 
 void FreeBusyManagerPrivate::checkFreeBusyUrl()
@@ -129,7 +132,7 @@ QString FreeBusyManagerPrivate::freeBusyDir() const
   return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
 }
 
-KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
+void FreeBusyManagerPrivate::freeBusyUrl( const QString &email )
 {
   // First check if there is a specific FB url for this email
   QString configFile = KStandardDirs::locateLocal( "data",
@@ -144,14 +147,29 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
       cachedUrl.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
       cachedUrl.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
     }
-    return replaceVariablesUrl( cachedUrl, email );
+    emit freeBusyUrlRetrieved( email, replaceVariablesUrl( cachedUrl, email ) );
   }
   // Try with the url configurated by preferred email in kcontactmanager
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
   job->setQuery( Akonadi::ContactSearchJob::Email, email );
-  if ( !job->exec() ) {
-    return KUrl();
-  }
+  job->setProperty( "contactEmail", QVariant::fromValue( email ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(contactSearchJobFinished(KJob*)) );
+  job->start();
+}
+
+void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
+{
+  QString email = _job->property( "contactEmail" ).toString();
+
+  if ( _job->error() )
+    emit freeBusyUrlRetrieved( email, KUrl() );
+
+  Akonadi::ContactSearchJob *job = qobject_cast<Akonadi::ContactSearchJob*>( _job );
+  QString configFile = KStandardDirs::locateLocal( "data",
+                                                   QLatin1String( "korganizer/freebusyurls" ) );
+  KConfig cfg( configFile );
+  KConfigGroup group = cfg.group( email );
+  QString url = group.readEntry( QLatin1String( "url" ) );
 
   QString pref;
   const KABC::Addressee::List contacts = job->contacts();
@@ -163,22 +181,22 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
       url = group.readEntry ( "url" );
       if ( !url.isEmpty() ) {
         kDebug() << "Taken url from preferred email:" << url;
-        return replaceVariablesUrl( KUrl( url ), email );
+        emit freeBusyUrlRetrieved( email, replaceVariablesUrl( KUrl( url ), email ) );
       }
     }
   }
   // None found. Check if we do automatic FB retrieving then
   if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto ) {
     // No, so no FB list here
-    return KUrl();
+    emit freeBusyUrlRetrieved( email, KUrl() );
   }
 
   // Sanity check: Don't download if it's not a correct email
   // address (this also avoids downloading for "(empty email)").
   int emailpos = email.indexOf( QLatin1Char( '@' ) );
   if( emailpos == -1 ) {
-     kDebug() << "No '@' found in" << email;
-     return KUrl();
+    kDebug() << "No '@' found in" << email;
+    emit freeBusyUrlRetrieved( email, KUrl() );
   }
 
   const QString emailHost = email.mid( emailpos + 1 );
@@ -193,7 +211,7 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
          !emailHost.endsWith( QLatin1Char( '.' ) + hostDomain ) ) {
       // Host names do not match
       kDebug() << "Host '" << hostDomain << "' doesn't match email '" << email << '\'';
-      return KUrl();
+      emit freeBusyUrlRetrieved( email, KUrl() );
     }
   }
 
@@ -209,7 +227,7 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
 
     // no need to cache this URL as this is pretty fast to get from the config value.
     // return the fullpath URL
-    return fullpathURL;
+    emit freeBusyUrlRetrieved( email, fullpathURL );
  }
 
  // else we search for a fb file in the specified URL with known possible extensions
@@ -233,11 +251,11 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
      // write the URL to the cache
      KConfigGroup group = cfg.group( email );
      group.writeEntry( "url", dirURL.prettyUrl() ); // prettyURL() does not write user nor password
-     return dirURL;
+     emit freeBusyUrlRetrieved( email, dirURL );
    }
  }
 
- return KUrl();
+ emit freeBusyUrlRetrieved( email, KUrl() );
 }
 
 QString FreeBusyManagerPrivate::freeBusyToIcal( const KCalCore::FreeBusy::Ptr &freebusy )
@@ -350,22 +368,26 @@ void FreeBusyManagerPrivate::processFreeBusyUploadResult( KJob *_job )
 
 bool FreeBusyManagerPrivate::processRetrieveQueue()
 {
-  Q_Q( FreeBusyManager );
-
   if ( mRetrieveQueue.isEmpty() ) {
     return true;
   }
 
   QString email = mRetrieveQueue.takeFirst();
-  KUrl freeBusyUrlForEmail = freeBusyUrl( email );
+  freeBusyUrl( email );
+  return true;
+}
+
+void FreeBusyManagerPrivate::onFreeBusyUrlRetrieved( const QString &email, const KUrl &freeBusyUrlForEmail )
+{
+  Q_Q( FreeBusyManager );
 
   if ( !freeBusyUrlForEmail.isValid() ) {
     kDebug() << "Invalid FreeBusy URL" << freeBusyUrlForEmail.prettyUrl() << email;
-    return false;
+    return;
   }
 
   if ( mFreeBusyUrlEmailMap.contains( freeBusyUrlForEmail ) ) {
-    return true; // Already in progress.
+    return; // Already in progress.
   }
 
   mFreeBusyUrlEmailMap.insert( freeBusyUrlForEmail, email );
@@ -375,7 +397,7 @@ bool FreeBusyManagerPrivate::processRetrieveQueue()
   q->connect( job, SIGNAL(result(KJob *)), SLOT(processFreeBusyDownloadResult(KJob *)) );
   job->start();
 
-  return true;
+  return;
 }
 
 void FreeBusyManagerPrivate::uploadFreeBusy()
@@ -764,3 +786,4 @@ void FreeBusyManager::timerEvent( QTimerEvent * )
 }
 
 #include "freebusymanager.moc"
+#include "freebusymanager_p.moc"

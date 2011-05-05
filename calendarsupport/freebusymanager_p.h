@@ -46,8 +46,10 @@ namespace CalendarSupport {
 
 class FreeBusyManager;
 
-class FreeBusyManagerPrivate
+class FreeBusyManagerPrivate : public QObject
 {
+  Q_OBJECT
+
   FreeBusyManager *const q_ptr;
   Q_DECLARE_PUBLIC( FreeBusyManager )
 
@@ -71,7 +73,7 @@ class FreeBusyManagerPrivate
     FreeBusyManagerPrivate( FreeBusyManager *q );
     void checkFreeBusyUrl();
     QString freeBusyDir() const;
-    KUrl freeBusyUrl( const QString &email ) const;
+    void freeBusyUrl( const QString &email );
     QString freeBusyToIcal( const KCalCore::FreeBusy::Ptr & );
     KCalCore::FreeBusy::Ptr iCalToFreeBusy( const QByteArray &freeBusyData );
     KCalCore::FreeBusy::Ptr ownerFreeBusy();
@@ -80,6 +82,13 @@ class FreeBusyManagerPrivate
     void processFreeBusyUploadResult( KJob *_job );
     bool processRetrieveQueue();
     void uploadFreeBusy();
+
+  public slots:
+    void contactSearchJobFinished( KJob *_job );
+    void onFreeBusyUrlRetrieved( const QString &email, const KUrl &url );
+
+  signals:
+    void freeBusyUrlRetrieved( const QString &email, const KUrl &url );
 };
 
 }
