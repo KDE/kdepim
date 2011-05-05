@@ -42,6 +42,7 @@
 #include <KCalCore/CalFilter>
 
 #include <KCalUtils/RecurrenceActions>
+#include <Akonadi/EntityDisplayAttribute>
 
 #include <akonadi/etmviewstatesaver.h>
 
@@ -658,6 +659,16 @@ void EventView::removeFilteredOccurrences( const KCalCore::Todo::Ptr &todo, QLis
   }
 }
 
+/** static */
+QString EventView::iconForItem( const Akonadi::Item &item )
+{
+  QString iconName;
+  const Akonadi::Collection collection = item.parentCollection();
+  if ( collection.isValid() && collection.hasAttribute<Akonadi::EntityDisplayAttribute>() )
+    iconName = collection.attribute<Akonadi::EntityDisplayAttribute>()->iconName();
+
+  return iconName;
+}
 
 #include "eventview.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;
