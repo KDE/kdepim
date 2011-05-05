@@ -12,6 +12,7 @@ Name[pt_BR]=Calendário do Kontact Touch
 Name[sv]=Kontakt Touch kalender
 Name[uk]=Календар Kontact Touch
 Name[x-test]=xxKontact Touch Calendarxx
+Name[zh_TW]=Kontact Touch 行事曆
 Exec=korganizer-mobile
 
 Icon=korganizer-mobile

@@ -12,6 +12,7 @@ Name[pt_BR]=Contatos do Kontact Touch
 Name[sv]=Kontact Touch kontakter
 Name[uk]=Контакти Kontact Touch
 Name[x-test]=xxKontact Touch Contactsxx
+Name[zh_TW]=Kontact Touch 聯絡人
 Exec=kaddressbook-mobile
 
 Icon=kaddressbook-mobile
