@@ -287,9 +287,9 @@ void IncidenceAlarm::updateButtons()
     mUi->mAlarmRemoveButton->setEnabled( true );
     mUi->mAlarmToggleButton->setEnabled( true );
     if ( mAlarms.at( mUi->mAlarmList->currentIndex().row() )->enabled() ) {
-      mUi->mAlarmToggleButton->setText( i18nc( "Disable currently selected alarm", "Disable" ) );
+      mUi->mAlarmToggleButton->setText( i18nc( "Disable currently selected reminder", "Disable" ) );
     } else {
-      mUi->mAlarmToggleButton->setText( i18nc( "Enable currently selected alarm", "Enable" ) );
+      mUi->mAlarmToggleButton->setText( i18nc( "Enable currently selected reminder", "Enable" ) );
     }
   } else {
     mUi->mAlarmConfigureButton->setEnabled( false );
@@ -317,26 +317,26 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
     action = i18n( "Play an audio file" );
     break;
   default:
-    action = i18n( "Invalid Alarm." );
+    action = i18n( "Invalid Reminder." );
     return action;
   }
 
-  QString offsetUnit = i18nc( "The alarm is set to X minutes before/after the event", "minutes" );
+  QString offsetUnit = i18nc( "The reminder is set to X minutes before/after the event", "minutes" );
   const int offset = alarm->hasStartOffset() ? alarm->startOffset().asSeconds() / 60 :
                      alarm->endOffset().asSeconds() / 60; // make minutes
 
   int useoffset = offset;
   if ( offset % ( 24 * 60 ) == 0 && offset != 0 ) { // divides evenly into days?
     useoffset =  offset / 60 / 24;
-    offsetUnit = i18nc( "The alarm is set to X days before/after the event", "days" );
+    offsetUnit = i18nc( "The reminder is set to X days before/after the event", "days" );
   } else if ( offset % 60 == 0 && offset != 0 ) { // divides evenly into hours?
-    offsetUnit = i18nc( "The alarm is set to X hours before/after the event", "hours" );
+    offsetUnit = i18nc( "The reminder is set to X hours before/after the event", "hours" );
     useoffset = offset / 60;
   }
 
   QString repeatStr;
   if ( alarm->repeatCount() > 0 ) {
-    repeatStr = i18nc( "The alarm is configured to repeat after snooze", "(Repeats)" );
+    repeatStr = i18nc( "The reminder is configured to repeat after snooze", "(Repeats)" );
   }
 
   if ( alarm->enabled() ) {
