@@ -12,6 +12,7 @@ Name[pt_BR]=E-mail do Kontact Touch
 Name[sv]=Kontact Touch e-post
 Name[uk]=Пошта Kontact Touch
 Name[x-test]=xxKontact Touch Mailxx
+Name[zh_TW]=Kontact Touch Mail
 Exec=kmail-mobile
 
 Icon=kmail-mobile

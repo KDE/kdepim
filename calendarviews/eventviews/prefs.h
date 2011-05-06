@@ -126,6 +126,9 @@ class EVENTVIEWS_EXPORT Prefs
     bool enableMonthItemIcons() const;
     void setEnableMonthItemIcons( bool enable );
 
+    bool showTimeInMonthView() const;
+    void setShowTimeInMonthView( bool show );
+
     bool showTodosMonthView() const;
     void setShowTodosMonthView( bool show );
 

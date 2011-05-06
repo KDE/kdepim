@@ -22,11 +22,12 @@
 #ifndef COISCEIMWIDGET_H
 #define COISCEIMWIDGET_H
 
+#include "coisceim_widget_export.h"
 #include <QWidget>
 
 class TripModel;
 
-class CoisceimWidget : public QWidget
+class COISCEIM_WIDGET_EXPORT CoisceimWidget : public QWidget
 {
   Q_OBJECT
   Q_CLASSINFO("D-Bus Interface", "org.kde.coisceim.CoisceimWidget")

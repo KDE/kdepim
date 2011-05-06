@@ -310,7 +310,7 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
     if ( years > 0 ) {
       inc = KCalCore::Incidence::Ptr( inc->clone() );
       inc->setReadOnly( false );
-      inc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years, inc->summary() ) );
+      inc->setDescription( i18np( "%2 1 year", "%2 %1 years", years, i18n( "Age:" ) ) );
       inc->setReadOnly( true );
       mIncidence = inc;
     }
@@ -531,7 +531,7 @@ void IncidenceMonthItem::updateSelection( const Akonadi::Item &incidence, const 
 QString IncidenceMonthItem::text( bool end ) const
 {
   QString ret = mIncidence->summary();
-  if ( !allDay() ) { // Prepend the time str to the text
+  if ( !allDay() && monthScene()->monthView()->preferences()->showTimeInMonthView() ) { // Prepend the time str to the text
     QString timeStr;
     if ( mIsTodo ) {
       KCalCore::Todo::Ptr todo = mIncidence.staticCast<Todo>();

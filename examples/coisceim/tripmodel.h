@@ -22,13 +22,14 @@
 #ifndef TRIPMODEL_H
 #define TRIPMODEL_H
 
+#include "coisceim_widget_export.h"
 #include "mixedtreemodel.h"
 
 class CreateTripWidget;
 class Trip;
 class TripWidget;
 
-class TripModel : public MixedTreeModel
+class COISCEIM_WIDGET_EXPORT TripModel : public MixedTreeModel
 {
   Q_OBJECT
   Q_ENUMS(CustomRoles)

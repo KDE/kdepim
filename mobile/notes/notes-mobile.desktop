@@ -12,6 +12,7 @@ Name[pt_BR]=Notas do Kontact Touch
 Name[sv]=Kontact Touch anteckningar
 Name[uk]=Нотатки Kontact Touch
 Name[x-test]=xxKontact Touch Notesxx
+Name[zh_TW]=Kontact Touch Notes
 Exec=notes-mobile
 
 Icon=notes-mobile

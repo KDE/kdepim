@@ -11,6 +11,7 @@ Comment[pt_BR]=Cliente de e-mail do Kontact Touch para o KDE
 Comment[sv]=KDE Kontact Touch e-postklient
 Comment[uk]=Клієнт електронної пошти KDE Kontact Touch
 Comment[x-test]=xxKDE Kontact Touch e-mail clientxx
+Comment[zh_TW]=KDE Kontact Touch 收發信軟體
 Name=Kontact Touch Mail
 Name[da]=Kontact Touch E-mail
 Name[es]=Correo Kontact táctil
@@ -22,6 +23,7 @@ Name[pt_BR]=E-mail do Kontact Touch
 Name[sv]=Kontact Touch e-post
 Name[uk]=Пошта Kontact Touch
 Name[x-test]=xxKontact Touch Mailxx
+Name[zh_TW]=Kontact Touch Mail
 
 [Event/sendfailed]
 Name=Error while sending email

@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year><year>2009</year><year>2010</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year><year>2009</year><year>2010</year><year>2011</year>
 <holder>&David.Jarvie;</holder>
 </copyright>
 
@@ -42,7 +42,7 @@
 <!-- Don't change format of date and version of the documentation -->
 
 <date>2011-04-29</date>
-<releaseinfo>2.06.00 (&kde; 4.6)</releaseinfo>
+<releaseinfo>2.07.00 (&kde; 4.7)</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -1591,18 +1591,22 @@ shifts.</para></warning>
 <title>Reminder</title>
 
 <para>For a display alarm, check <guilabel>Reminder</guilabel> if you
-want to display a reminder in advance of the main alarm and of each of
-its recurrences (if any). Enter how long in advance using the edit
-controls beside the check box.</para>
+want to display a reminder either before or after the main alarm and
+each of its recurrences (if any). Enter how long in advance or
+afterwards, using the edit controls beside the check box. Note that
+if the alarm recurs, the reminder period is normally limited to
+being less than the recurrence or sub-repetition interval.</para>
 
 <note><para>Reminders are not displayed for sub-repetitions within a
-recurrence. Reminders are only shown before each main
-recurrence of the alarm.</para></note>
+recurrence. Reminders are only shown for each main recurrence of the
+alarm.</para></note>
 
 <para>If the alarm recurs, check <guilabel>Reminder for first
-recurrence only</guilabel> if you only want a reminder before the
-alarm's first recurrence. If this is not checked, the reminder period
-is limited to being less than the recurrence interval.</para>
+recurrence only</guilabel> if you only want a reminder for the alarm's
+first recurrence. If this is checked, and it is an advance reminder,
+the reminder period is not subject to the normal limit of being less
+than the recurrence or sub-repetition interval.</para>
+
 
 </sect2>
 
@@ -1929,11 +1933,15 @@ minutes) the message should be redisplayed. Then click
 window.</para>
 
 <note><para>The time the alarm is deferred to must be earlier than its
-next scheduled occurrence or next reminder. For this reason, the
-<guibutton>Defer...</guibutton> button in the alarm message window and
-the <guibutton>OK</guibutton> button in the Deferral dialog are
-disabled one minute before the next occurrence or
-reminder.</para></note>
+next scheduled occurrence or next advance reminder. For this reason,
+the <guibutton>Defer...</guibutton> button in the alarm message window
+and the <guibutton>OK</guibutton> button in the Deferral dialog are
+disabled one minute before the next occurrence or advance
+reminder.</para>
+<para>Note that if a reminder is configured <emphasis>after</emphasis>
+the alarm, you <emphasis>can</emphasis> defer the alarm past its
+reminder time. In this case, the reminder will be
+suppressed.</para></note>
 
 <note><para>The <guibutton>Defer...</guibutton> button is not
 available for alarms which are displayed at login due to the
@@ -2240,6 +2248,11 @@ until the next time you log in.</para>
 and uncheck
 <menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice>
 from the context menu.</para>
+</listitem>
+
+<listitem>
+<para>Run &kalarm; with the command line option
+<option>--disable-all</option>.</para>
 </listitem>
 
 <listitem>
@@ -2897,6 +2910,14 @@ time.</para>
   manually enabled.</entry>
 </row>
 <row>
+  <entry><option>-d</option>, <option>--disable-all</option></entry>
+  <entry>Disable alarm monitoring. This prevents any alarms from
+  being triggered until you re-enable alarms or restart &kalarm;, &eg;
+  at next login.
+  <option>--triggerEvent</option> cannot be specified with this
+  option.</entry>
+</row>
+<row>
   <entry><option>-e</option>, <option>--exec <replaceable>commandline</replaceable></option></entry>
   <entry>Specify a shell command to execute. If specified, this option
   must be the last &kalarm; option in &kalarm;'s command line. All
@@ -2957,9 +2978,14 @@ time.</para>
   <entry><option>-l</option>, <option>--late-cancel
   <replaceable>period</replaceable></option></entry>
   <entry>Cancel the alarm if it cannot be triggered within the
-  specified <replaceable>period</replaceable> after the correct
-  time. The <replaceable>period</replaceable> is specified in
-  the same format as described for <option>--reminder</option>.
+  specified <replaceable>period</replaceable> after the correct time.
+  Hours/minutes are specified in the format
+  <replaceable>nHnM</replaceable>, where <replaceable>n</replaceable>
+  is a number, &eg; 3H30M. Other time periods are specified in the
+  format <replaceable>nX</replaceable>, where
+  <replaceable>n</replaceable> is a number and
+  <replaceable>X</replaceable> is one of the following letters: W
+  (weeks), D (days).
   The default value of <replaceable>period</replaceable> is 1
   minute.</entry>
 </row>
@@ -3024,22 +3050,23 @@ time.</para>
   <entry><option>-R</option>, <option>--reminder
   <replaceable>period</replaceable></option></entry>
   <entry>Output a reminder alarm the specified length of time before
-  the main alarm and each of its recurrences (if any). Hours/minutes are
-  specified in the format <replaceable>nHnM</replaceable>, where
-  <replaceable>n</replaceable> is a number, &eg; 3H30M. Other time
-  periods are specified in the format <replaceable>nX</replaceable>,
-  where <replaceable>n</replaceable> is a number and
-  <replaceable>X</replaceable> is one of the following letters: W
-  (weeks), D (days). This option cannot be specified with
-  <option>--exec</option>, <option>--mail</option> or
+  or after the main alarm and each of its recurrences (if any).
+  The <replaceable>period</replaceable> is specified in
+  the same format as described for <option>--late-cancel</option>.
+  By default, the reminder will occur before the alarm. To specify a
+  reminder after the alarm, prefix <replaceable>period</replaceable>
+  with <replaceable>+</replaceable>, &eg; +3D. This option cannot be
+  specified with <option>--exec</option>, <option>--mail</option> or
   <option>--reminder-once</option>.</entry>
 </row>
 <row>
   <entry><option>--reminder-once
   <replaceable>period</replaceable></option></entry>
   <entry>Output a reminder alarm once, the specified length of time
-  before the first recurrence of the alarm. No reminder will be 
-  displayed before subsequent recurrences (if any). This option cannot
+  before or after the first recurrence of the alarm. No reminder will
+  be displayed before or after subsequent recurrences (if any). The
+  <replaceable>period</replaceable> is specified in the same format as
+  described for <option>--reminder</option>. This option cannot
   be specified with <option>--exec</option>, <option>--mail</option>
   or <option>--reminder</option>.</entry>
 </row>
@@ -3484,9 +3511,10 @@ played.</para>
 <varlistentry>
 <term><parameter>reminderMins</parameter></term>
 <listitem>
-<para>Specifies the number of minutes in advance of the main alarm
-and of each of its recurrences (if any) at which a reminder alarm
-should be displayed. Specify 0 if no reminder is required.</para>
+<para>Specifies the number of minutes in advance of the main alarm and
+of each of its recurrences (if any) at which a reminder alarm should
+be displayed. Specify a negative value for a reminder to be displayed
+after the main alarm. Specify 0 if no reminder is required.</para>
 </listitem>
 </varlistentry>
 
@@ -3716,9 +3744,10 @@ played.</para>
 <varlistentry>
 <term><parameter>reminderMins</parameter></term>
 <listitem>
-<para>Specifies the number of minutes in advance of the main alarm
-and of each of its recurrences (if any) at which a reminder alarm
-should be displayed. Specify 0 if no reminder is required.</para>
+<para>Specifies the number of minutes in advance of the main alarm and
+of each of its recurrences (if any) at which a reminder alarm should
+be displayed. Specify a negative value for a reminder to be displayed
+after the main alarm. Specify 0 if no reminder is required.</para>
 </listitem>
 </varlistentry>
 
@@ -4600,7 +4629,7 @@ holds your &kalarm; preferences.</para>
 holds your alarm calendar configuration.</para>
 
 <para>($<envar>KDEHOME</envar> is usually
-<filename class="directory">~/.kde</filename> or similar.)</para>
+<filename class="directory">&tilde;/.kde</filename> or similar.)</para>
 </answer>
 </qandaentry>
 
@@ -4656,18 +4685,9 @@ files whose format is defined by the document
 Internet Calendaring and Scheduling Core Object Specification
 (iCalendar)</ulink>. This is the standard format used by all kdepim
 applications. &kalarm; uses certain non-standard properties, in
-conformance with RFC2445. In the VEVENT component:
-<literal>X-KDE-KALARM-FLAGS</literal>,
-<literal>X-KDE-KALARM-NEXTRECUR</literal>,
-<literal>X-KDE-KALARM-REPEAT</literal>,
-<literal>X-KDE-KALARM-ARCHIVE</literal>,
-<literal>X-KDE-KALARM-LOG</literal>, and in the VALARM component:
-<literal>X-KDE-KALARM-TYPE</literal>,
-<literal>X-KDE-KALARM-NEXTREPEAT</literal>,
-<literal>X-KDE-KALARM-FONTCOLOR</literal>,
-<literal>X-KDE-KALARM-VOLUME</literal>,
-<literal>X-KDE-KALARM-SPEAK</literal>,
-<literal>X-KDE-KALARM-EMAILID</literal>.</para>
+conformance with RFC2445. These are documented in the
+<filename>DESIGN.html</filename> file which is distributed with
+&kalarm;.</para>
 </answer>
 </qandaentry>
 
@@ -4708,11 +4728,11 @@ that the session manager has time to do its job) before starting
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 &David.Jarvie; &David.Jarvie.mail;
+Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 &David.Jarvie; &David.Jarvie.mail;
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 &David.Jarvie; &David.Jarvie.mail;
+Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 &David.Jarvie; &David.Jarvie.mail;
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
@@ -4737,8 +4757,8 @@ application, which has been available for &kde; 2 onwards.
 
 &install.intro.documentation;
 
-<para>&kalarm; is available for &kde; 2 and as standalone packages for
-&kde; 3 and &kde; 4 from
+<para>&kalarm; is also available as a standalone package for &kde; 4,
+as well as older versions for &kde; 3 and &kde; 2, from
 <ulink url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>
 </para>
 

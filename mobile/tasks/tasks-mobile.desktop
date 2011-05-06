@@ -12,6 +12,7 @@ Name[pt_BR]=Tarefas do Kontact Touch
 Name[sv]=Kontact Touch uppgifter
 Name[uk]=Завдання Kontact Touch
 Name[x-test]=xxKontact Touch Tasksxx
+Name[zh_TW]=Kontact Touch Tasks
 Exec=tasks-mobile
 
 Icon=tasks-mobile
