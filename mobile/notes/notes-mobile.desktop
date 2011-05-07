@@ -17,3 +17,4 @@ Exec=notes-mobile
 
 Icon=notes-mobile
 Type=Application
+Categories=Qt;KDE;Utility;TextTools;

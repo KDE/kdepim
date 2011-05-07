@@ -18,6 +18,7 @@ Exec=korganizer-mobile
 Icon=korganizer-mobile
 Type=Application
 MimeType=text/calendar;
+Categories=Qt;KDE;Office;Calendar;
 X-KDE-ServiceTypes=DBUS/Organizer
 X-KDE-StartupNotify=true
 X-DBUS-StartupType=Unique
