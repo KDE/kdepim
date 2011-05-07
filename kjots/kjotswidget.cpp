@@ -39,6 +39,7 @@
 #include <QPointer>
 #include <QPrinter>
 #include <QAbstractTextDocumentLayout>
+#include <QDBusConnection>
 
 // Akonadi
 #include <akonadi/control.h>
@@ -401,6 +402,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   connect( m_kjotsModel, SIGNAL(modelReset()), SLOT(restoreState()));
 
   restoreState();
+
+  QDBusConnection::sessionBus().registerObject( "/KJotsWidget", this, QDBusConnection::ExportScriptableContents );
 }
 
 KJotsWidget::~KJotsWidget()
