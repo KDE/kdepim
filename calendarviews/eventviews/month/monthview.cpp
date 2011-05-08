@@ -28,7 +28,7 @@
 #include "monthscene.h"
 #include "prefs.h"
 
-#include <akonadi_next/kcheckableproxymodel.h>
+#include <kcheckableproxymodel.h>
 
 //#include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>

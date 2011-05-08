@@ -28,13 +28,13 @@
 using namespace Akonadi;
 
 TodoCheckableProxyModel::TodoCheckableProxyModel(QObject* parent)
-  : Future::KCheckableProxyModel(parent)
+  : KCheckableProxyModel(parent)
 {
 }
 
 void TodoCheckableProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 {
-  Future::KCheckableProxyModel::setSourceModel(sourceModel);
+  KCheckableProxyModel::setSourceModel(sourceModel);
 
   QItemSelectionModel *selectionModel = new QItemSelectionModel(sourceModel, this);
   setSelectionModel(selectionModel);

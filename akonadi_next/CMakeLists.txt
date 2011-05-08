@@ -24,7 +24,6 @@ set( akonadi_next_SRCS
   notecreatorandselector.cpp
   quotacolorproxymodel.cpp
   incidenceattachmentmodel.cpp
-  kcheckableproxymodel.cpp
   kcolumnfilterproxymodel.cpp
   amazingcompleter.cpp
   amazingdelegate.cpp

@@ -34,9 +34,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi_next/kcolumnfilterproxymodel.h>
-#include <kviewstatemaintainer.h>
 
 #include <KCalCore/Todo>
 #include <KCalCore/CalFilter>
@@ -48,6 +46,8 @@
 #include <KHolidays/Holidays>
 #include <KGuiItem>
 #include <KLocale>
+#include <kcheckableproxymodel.h>
+#include <kviewstatemaintainer.h>
 
 #include <QApplication>
 #include <QKeyEvent>

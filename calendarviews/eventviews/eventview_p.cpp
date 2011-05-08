@@ -31,7 +31,7 @@
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
 
-#include <akonadi_next/kcheckableproxymodel.h>
+#include <kcheckableproxymodel.h>
 
 #include <QtGui/QApplication>
 

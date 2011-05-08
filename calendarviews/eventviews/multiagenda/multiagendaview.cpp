@@ -31,8 +31,8 @@
 #include <calendarsupport/utils.h>
 
 #include <kviewstatemaintainer.h>
+#include <kcheckableproxymodel.h>
 
-#include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi_next/kcolumnfilterproxymodel.h>
 #include <KCalCore/Event>
 

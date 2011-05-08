@@ -57,10 +57,7 @@ namespace CalendarSupport {
   class KCalPrefs;
 }
 
-namespace Future {
-  class KCheckableProxyModel;
-}
-
+class KCheckableProxyModel;
 class KConfigGroup;
 
 namespace EventViews {
@@ -225,9 +222,9 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     Akonadi::Collection::Id collectionId() const;
 
     //----------------------------------------------------------------------------
-    Future::KCheckableProxyModel *takeCustomCollectionSelectionProxyModel();
-    Future::KCheckableProxyModel *customCollectionSelectionProxyModel() const;
-    void setCustomCollectionSelectionProxyModel( Future::KCheckableProxyModel *model );
+    KCheckableProxyModel *takeCustomCollectionSelectionProxyModel();
+    KCheckableProxyModel *customCollectionSelectionProxyModel() const;
+    void setCustomCollectionSelectionProxyModel( KCheckableProxyModel *model );
 
     CalendarSupport::CollectionSelection *customCollectionSelection() const;
 

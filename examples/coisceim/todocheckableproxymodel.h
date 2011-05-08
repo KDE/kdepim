@@ -22,9 +22,9 @@
 #ifndef TODOCHECKABLEPROXYMODEL_H
 #define TODOCHECKABLEPROXYMODEL_H
 
-#include <akonadi_next/kcheckableproxymodel.h>
+#include <kcheckableproxymodel.h>
 
-class TodoCheckableProxyModel : public Future::KCheckableProxyModel
+class TodoCheckableProxyModel : public KCheckableProxyModel
 {
   Q_OBJECT
 public:
