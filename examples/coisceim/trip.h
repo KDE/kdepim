@@ -37,16 +37,6 @@ namespace Akonadi
 class ChangeRecorder;
 }
 
-class ISM : public QItemSelectionModel
-{
-  Q_OBJECT
-public:
-  explicit ISM(QAbstractItemModel* model, QObject* parent);
-
-  virtual void select(const QModelIndex& index, SelectionFlags command);
-  virtual void select(const QItemSelection& selection, SelectionFlags command);
-};
-
 class Trip : public QObject
 {
   Q_OBJECT

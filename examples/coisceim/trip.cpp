@@ -36,28 +36,6 @@
 
 using namespace Akonadi;
 
-ISM::ISM(QAbstractItemModel* model, QObject*parent)
-  : QItemSelectionModel(model, parent)
-{
-
-}
-
-void ISM::select(const QModelIndex& index, QItemSelectionModel::SelectionFlags command)
-{
-  kDebug() << index;
-    QItemSelectionModel::select(index, command);
-    kDebug() << this << index << selectedRows();
-}
-
-void ISM::select(const QItemSelection& selection, QItemSelectionModel::SelectionFlags command)
-{
-  kDebug() << selection;
-    QItemSelectionModel::select(selection, command);
-    kDebug() << this << selection << selectedRows();
-}
-
-
-
 Trip::Trip(const QPersistentModelIndex &index, Akonadi::ChangeRecorder *changeRecorder, TripComponentFactory *factory, QObject* parent)
   : QObject(parent), m_index(index), m_changeRecorder(changeRecorder)
 {
@@ -86,9 +64,9 @@ Trip::Trip(const QPersistentModelIndex &index, Akonadi::ChangeRecorder *changeRe
   m_todoModel->setSourceModel(factory->createTodoModel(m_todoChangeRecorder));
   m_notesModel->setSourceModel(factory->createNotesModel(m_notesChangeRecorder));
 
-  QItemSelectionModel *mailItemSelection = new ISM(m_mailModel, this);
-  QItemSelectionModel *todoItemSelection = new ISM(m_todoModel, this);
-  QItemSelectionModel *notesItemSelection = new ISM(m_notesModel, this);
+  QItemSelectionModel *mailItemSelection = new QItemSelectionModel(m_mailModel, this);
+  QItemSelectionModel *todoItemSelection = new QItemSelectionModel(m_todoModel, this);
+  QItemSelectionModel *notesItemSelection = new QItemSelectionModel(m_notesModel, this);
 
   m_mailSelection = new QMLListSelectionModel(mailItemSelection, this);
   m_todoSelection = new QMLListSelectionModel(todoItemSelection, this);
