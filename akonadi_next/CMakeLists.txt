@@ -23,7 +23,6 @@ set( akonadi_next_SRCS
   note.cpp
   notecreatorandselector.cpp
   quotacolorproxymodel.cpp
-  incidenceattachmentmodel.cpp
   kcolumnfilterproxymodel.cpp
   amazingcompleter.cpp
   amazingdelegate.cpp
@@ -39,7 +38,6 @@ target_link_libraries(akonadi_next
                       ${KDE4_KIO_LIBS}
                       ${KDEPIMLIBS_KABC_LIBS}
                       ${KDEPIMLIBS_KMIME_LIBS}
-                      ${KDEPIMLIBS_KCALCORE_LIBS}
 )
 
 set_target_properties(akonadi_next PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
