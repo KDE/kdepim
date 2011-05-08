@@ -48,7 +48,7 @@ target_link_libraries(coisceim_widget
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
-  akonadi_next messageviewer calendarsupport
+  messageviewer calendarsupport
 )
 
 set_target_properties(coisceim_widget
