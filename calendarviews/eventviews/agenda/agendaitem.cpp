@@ -738,18 +738,6 @@ void AgendaItem::paintIcon( QPainter *p, int &x, int y, int ft )
   } else if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     mSpecialEvent = true;
     // We don't draw icon. The icon is drawn already, because it's the Akonadi::Collection's icon
-  } else if ( incidence->type() != Incidence::TypeEvent ) {
-    // Disabling the event Pixmap because:
-    // 1. We don't need a pixmap to tell us an item is an event we
-    //    only need one to tell us it's not, as agenda view was
-    //    designed for events.
-    // 2. If only to-dos have a pixmap they will be distinguished
-    //    from event's much easier.
-    // 3. Be consistent with month view
-    //conditionalPaint( p, true, x, y, ft, *eventPxmp );
-    KDateTime occurrenceDateTime = incidence->dateTime( Incidence::RoleRecurrenceStart );
-    occurrenceDateTime.setDate( mDate );
-    iconName = incidence->iconName( occurrenceDateTime );
   }
 
   conditionalPaint( p, !iconName.isEmpty(), x, y, ft, cachedSmallIcon( iconName ) );
@@ -770,6 +758,16 @@ void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
     if ( !iconName.isEmpty() && iconName != "view-calendar" && iconName != "office-calendar" ) {
       conditionalPaint( p, true, x, y, ft, SmallIcon( iconName ) );
     }
+  }
+
+  Incidence::Ptr incidence = mIncidence.payload<KCalCore::Incidence::Ptr>();
+  const bool isTodo = incidence && incidence->type() == Incidence::TypeTodo;
+
+  if ( isTodo && icons.contains( EventViews::EventView::TaskIcon ) ) {
+    KDateTime occurrenceDateTime = incidence->dateTime( Incidence::RoleRecurrenceStart );
+    occurrenceDateTime.setDate( mDate );
+    const QString iconName = incidence->iconName( occurrenceDateTime );
+    conditionalPaint( p, !mSpecialEvent, x, y, ft, SmallIcon( iconName ) );
   }
 
   if ( icons.contains( EventView::RecurringIcon ) )
