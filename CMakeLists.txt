@@ -134,16 +134,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.5.63 REQUIRED)
-
-### remove the following when requiring kdelibs 4.5 ###
-if ( NOT KDE4_KCMUTILS_LIBS )
-  set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
-endif()
-if ( NOT KDE4_KEMOTICONS_LIBS )
-  set( KDE4_KEMOTICONS_LIBS ${KDE4_KUTILS_LIBS} )
-endif()
-### end of 4.4 compat code ###
+find_package(KdepimLibs 4.6.41 REQUIRED)
 
 ############### Load the CTest options ###############
 

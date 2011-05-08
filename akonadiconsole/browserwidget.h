@@ -20,13 +20,8 @@
 #ifndef BROWSERWIDGET_H
 #define BROWSERWIDGET_H
 
-#include <kdeversion.h>
 #include <ui_browserwidget_itemview.h>
-#if KDE_IS_VERSION( 4, 5, 74 )
 #include <ui_browserwidget_contentview.h>
-#else
-#include <ui_browserwidget_contentview-45.h>
-#endif
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
