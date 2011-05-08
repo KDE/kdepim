@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Nepomuk EMail Feeder
 Name[ar]=مغذي البريد الإلكتروني لنبومك
+Name[bs]=Nepomuk EMail dovod
 Name[ca]=Alimentador de correus del Nepomuk
 Name[ca@valencia]=Alimentador de correus del Nepomuk
 Name[da]=Nepomuk e-mail-feeder
@@ -40,6 +41,7 @@ Name[zh_CN]=Nepomuk 邮件采集器
 Name[zh_TW]=Nepomuk EMail Feeder
 Comment=Extension to push emails into Nepomuk
 Comment[ar]=امتداد لدفع البريد الإلكتروني داخل نبومك
+Comment[bs]=Produžeci za stavljanje elektonske pošte u Nepomuk
 Comment[ca]=Extensió per a introduir correus en el Nepomuk
 Comment[ca@valencia]=Extensió per a introduir correus en el Nepomuk
 Comment[da]=Udvidelse til at skubbe e-mail ind i Nepomuk
