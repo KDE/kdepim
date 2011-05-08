@@ -737,7 +737,7 @@ void AgendaItem::paintIcon( QPainter *p, int &x, int y, int ft )
     iconName =  "view-calendar-wedding-anniversary";
   } else if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     mSpecialEvent = true;
-    iconName = "view-calendar-birthday";
+    // We don't draw icon. The icon is drawn already, because it's the Akonadi::Collection's icon
   } else if ( incidence->type() != Incidence::TypeEvent ) {
     // Disabling the event Pixmap because:
     // 1. We don't need a pixmap to tell us an item is an event we
@@ -763,17 +763,35 @@ void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
 
   paintIcon( p, x, y, ft );
 
-#if 0
-  /* sorry, this looks too cluttered. disable until we can
-     make something prettier; no idea at this time -- allen */
-  conditionalPaint( p, mIconRecur && !mSpecialEvent, x, y, ft, *recurPxmp );
-#endif
-  conditionalPaint( p, mIconAlarm && !mSpecialEvent, x, y, ft, *alarmPxmp );
-  conditionalPaint( p, mIconReadonly && !mSpecialEvent, x, y, ft, *readonlyPxmp );
-  conditionalPaint( p, mIconReply, x, y, ft, *replyPxmp );
-  conditionalPaint( p, mIconGroup, x, y, ft, *groupPxmp );
-  conditionalPaint( p, mIconGroupTent, x, y, ft, *groupPxmpTent );
-  conditionalPaint( p, mIconOrganizer, x, y, ft, *organizerPxmp );
+  QSet<EventView::ItemIcon> icons = mEventView->preferences()->agendaViewIcons();
+
+  if ( icons.contains( EventViews::EventView::CalendarCustomIcon ) ) {
+    const QString iconName = EventView::iconForItem( mIncidence );
+    if ( !iconName.isEmpty() && iconName != "view-calendar" && iconName != "office-calendar" ) {
+      conditionalPaint( p, true, x, y, ft, SmallIcon( iconName ) );
+    }
+  }
+
+  if ( icons.contains( EventView::RecurringIcon ) )
+    conditionalPaint( p, mIconRecur && !mSpecialEvent, x, y, ft, *recurPxmp );
+
+  if ( icons.contains( EventView::ReminderIcon ) )
+    conditionalPaint( p, mIconAlarm && !mSpecialEvent, x, y, ft, *alarmPxmp );
+
+  if ( icons.contains( EventView::ReadOnlyIcon ) )
+    conditionalPaint( p, mIconReadonly && !mSpecialEvent, x, y, ft, *readonlyPxmp );
+
+  if ( icons.contains( EventView::ReplyIcon ) )
+    conditionalPaint( p, mIconReply, x, y, ft, *replyPxmp );
+
+  if ( icons.contains( EventView::AttendingIcon ) )
+    conditionalPaint( p, mIconGroup, x, y, ft, *groupPxmp );
+
+  if ( icons.contains( EventView::TentativeIcon ) )
+    conditionalPaint( p, mIconGroupTent, x, y, ft, *groupPxmpTent );
+
+  if ( icons.contains( EventView::OrganizerIcon ) )
+    conditionalPaint( p, mIconOrganizer, x, y, ft, *organizerPxmp );
 }
 
 void AgendaItem::paintEvent( QPaintEvent *ev )

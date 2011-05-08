@@ -577,14 +577,27 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 
   bool specialEvent = false;
   Akonadi::Item item = akonadiItem();
+
+  const QSet<EventView::ItemIcon> icons = monthScene()->monthView()->preferences()->monthViewIcons();
+
+  if ( icons.contains( EventViews::EventView::CalendarCustomIcon ) ) {
+    const QString iconName = EventView::iconForItem( item );
+    if ( !iconName.isEmpty() && iconName != "view-calendar" && iconName != "office-calendar" ) {
+      ret << new QPixmap( cachedSmallIcon( iconName ) );
+    }
+  }
+
   if ( mIsEvent ) {
     if ( mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
       specialEvent = true;
       ret << monthScene()->anniversaryPixmap();
     } else if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
       specialEvent = true;
-      ret << monthScene()->birthdayPixmap();
+       // Disabling birthday icon because it's the birthday agent's icon
+       // and we allow to display the agent's icon now.
+      //ret << monthScene()->birthdayPixmap();
     }
+
     // smartins: Disabling the event Pixmap because:
     // 1. Save precious space so we can read the event's title better.
     // 2. We don't need a pixmap to tell us an item is an event we
@@ -594,26 +607,28 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
 
     // ret << monthScene()->eventPixmap();
 
-  } else if ( mIsTodo || mIsJournal ) {
+  } else if ( ( mIsTodo || mIsJournal ) && icons.contains( mIsTodo ? EventView::TaskIcon : EventView::JournalIcon ) ) {
     KDateTime occurrenceDateTime = mIncidence->dateTime( Incidence::RoleRecurrenceStart );
     occurrenceDateTime.setDate( realStartDate() );
     ret << new QPixmap( cachedSmallIcon( mIncidence->iconName( occurrenceDateTime ) ) );
   }
 
-  if ( !monthScene()->mMonthView->calendar()->hasChangeRights( item ) && !specialEvent ) {
+  if ( icons.contains( EventView::ReadOnlyIcon ) && !monthScene()->mMonthView->calendar()->hasChangeRights( item ) && !specialEvent ) {
     ret << monthScene()->readonlyPixmap();
   }
-#if 0
+
   /* sorry, this looks too cluttered. disable until we can
      make something prettier; no idea at this time -- allen */
-  if ( mIncidence->hasEnabledAlarms() && !specialEvent ) {
+  if ( icons.contains( EventView::ReminderIcon ) &&
+       mIncidence->hasEnabledAlarms() && !specialEvent ) {
     ret << monthScene()->alarmPixmap();
   }
-  if ( mIncidence->recurs() && !specialEvent ) {
+  if ( icons.contains( EventView::RecurringIcon ) &&
+       mIncidence->recurs() && !specialEvent ) {
     ret << monthScene()->recurPixmap();
   }
   //TODO: check what to do with Reply
-#endif
+
   return ret;
 }
 

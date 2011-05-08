@@ -89,6 +89,20 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
   Q_OBJECT
   public:
 
+    enum ItemIcon {
+      CalendarCustomIcon = 0,
+      TaskIcon,
+      JournalIcon,
+      RecurringIcon,
+      ReminderIcon,
+      ReadOnlyIcon,
+      ReplyIcon,
+      AttendingIcon,
+      TentativeIcon,
+      OrganizerIcon,
+      IconCount = 10 // Always keep at the end
+    };
+
     enum Change {
       NothingChanged = 0,
       IncidencesAdded = 1,
@@ -288,6 +302,8 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * of an agenda or month item.
      */
     static QColor itemFrameColor( const QColor &color, bool selected );
+
+    static QString iconForItem( const Akonadi::Item &);
 
   public Q_SLOTS:
     /**
