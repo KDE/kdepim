@@ -59,6 +59,9 @@ kde4_add_executable(coisceim ${coisceim_SRCS})
 
 target_link_libraries(coisceim
   coisceim_widget
+  ${QT_QTCORE_LIBRARIES}
+  ${KDE4_KDECORE_LIBS}
+  ${KDE4_KDEUI_LIBS}
 )
 
 kde4_add_plugin(coisceimpart ${coisceim_part_SRCS})
