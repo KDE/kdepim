@@ -43,7 +43,7 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/selectionproxymodel.h>
 #include <akonadi/standardactionmanager.h>
-#include <akonadi_next/kviewstatemaintainer.h>
+#include <kviewstatemaintainer.h>
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
 #include <kselectionproxymodel.h>
@@ -333,7 +333,7 @@ void KDeclarativeMainView::setItemNaigationAndActionSelectionModels( QItemSelect
 {
   d->mItemNavigationSelectionModel = itemNavigationSelectionModel;
 
-  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
+  d->mItemViewStateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
   d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
 
   d->mItemActionSelectionModel = itemActionSelectionModel;

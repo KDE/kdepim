@@ -26,7 +26,6 @@ set( akonadi_next_SRCS
   incidenceattachmentmodel.cpp
   kcheckableproxymodel.cpp
   kcolumnfilterproxymodel.cpp
-  kviewstatemaintainer.cpp
   amazingcompleter.cpp
   amazingdelegate.cpp
 )

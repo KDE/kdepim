@@ -36,7 +36,7 @@
 
 #include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi_next/kcolumnfilterproxymodel.h>
-#include <akonadi_next/kviewstatemaintainer.h>
+#include <kviewstatemaintainer.h>
 
 #include <KCalCore/Todo>
 #include <KCalCore/CalFilter>
