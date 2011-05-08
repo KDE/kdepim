@@ -22,7 +22,7 @@
 #include "snippetseditor.h"
 
 #include <kactioncollection.h>
-#include <kdescendantsproxymodel_p.h>
+#include <kdescendantsproxymodel.h>
 #include <mailcommon/snippetsmanager.h>
 
 #include <QtCore/QAbstractItemModel>

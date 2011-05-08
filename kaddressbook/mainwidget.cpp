@@ -22,7 +22,7 @@
 
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
-#include "kdescendantsproxymodel_p.h"
+#include <kdescendantsproxymodel.h>
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "quicksearchwidget.h"

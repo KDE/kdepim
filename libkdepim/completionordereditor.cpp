@@ -31,7 +31,7 @@
 
 #include "completionordereditor.h"
 #include "completionordereditor_p.h"
-#include "kdescendantsproxymodel_p.h"
+#include <kdescendantsproxymodel.h>
 #include "ldap/ldapclient.h"
 
 #include <akonadi/changerecorder.h>

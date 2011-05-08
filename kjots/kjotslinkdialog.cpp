@@ -34,7 +34,7 @@
 
 #include "KJotsSettings.h"
 #include "kjotsbookshelfentryvalidator.h"
-#include "kdescendantsproxymodel_p.h"
+#include <kdescendantsproxymodel.h>
 #include <Akonadi/EntityTreeModel>
 
 KJotsLinkDialog::KJotsLinkDialog( QAbstractItemModel *kjotsModel, QWidget *parent)
