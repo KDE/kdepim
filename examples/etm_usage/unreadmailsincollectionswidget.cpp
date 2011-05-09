@@ -32,12 +32,12 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <ksharedconfig.h>
+#include <kcheckableproxymodel.h>
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitytreeview.h>
 #include <akonadi/etmviewstatesaver.h>
 
-#include <akonadi_next/kcheckableproxymodel.h>
 #include "mailmodel.h"
 
 #include <Akonadi/ChangeRecorder>
@@ -108,7 +108,7 @@ UnreadMailsInCollectionsWidget::UnreadMailsInCollectionsWidget(QWidget* parent, 
 
   m_checkedItemModel = new QItemSelectionModel(collectionFilter);
 
-  m_checkableProxy = new Future::KCheckableProxyModel(this);
+  m_checkableProxy = new KCheckableProxyModel(this);
   m_checkableProxy->setSelectionModel(m_checkedItemModel);
   m_checkableProxy->setSourceModel(collectionFilter);
 

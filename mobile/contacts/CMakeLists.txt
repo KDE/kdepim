@@ -83,7 +83,6 @@ target_link_libraries(kaddressbook-mobile
     ${KDEPIMLIBS_KABC_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDE4_KCMUTILS_LIBS}
-    akonadi_next
     kdepim
     kdepimmobileui
     kleo

@@ -52,7 +52,6 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>
 
-#include <kdeversion.h>
 #include <KSaveFile>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -1171,9 +1170,7 @@ void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
 
   m_editor->setRichTextSupport( KRichTextWidget::FullTextFormattingSupport |
                                KRichTextWidget::FullListSupport |
-#if KDE_IS_VERSION(4, 5, 60)
                                KRichTextWidget::SupportDirection |
-#endif
                                KRichTextWidget::SupportAlignment |
                                KRichTextWidget::SupportRuleLine |
                                KRichTextWidget::SupportHyperlinks );

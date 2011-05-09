@@ -32,6 +32,7 @@ set(calendarsupport_LIB_SRCS
   freebusymanager.cpp
   groupware.cpp
   identitymanager.cpp
+  incidenceattachmentmodel.cpp
   incidencechanger.cpp
   incidencefetchjob.cpp
   incidencefilterproxymodel.cpp
@@ -68,7 +69,6 @@ kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc )
 kde4_add_library(calendarsupport ${LIBRARY_TYPE} ${calendarsupport_LIB_SRCS})
 
 target_link_libraries(calendarsupport
-  akonadi_next
   kdepimdbusinterfaces
   kdepim
   ${KDEPIMLIBS_AKONADI_LIBS}

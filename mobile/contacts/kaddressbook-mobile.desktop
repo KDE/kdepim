@@ -17,3 +17,5 @@ Exec=kaddressbook-mobile
 
 Icon=kaddressbook-mobile
 Type=Application
+Categories=Qt;KDE;Office;ContactManagement;
+

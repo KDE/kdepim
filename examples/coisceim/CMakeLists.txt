@@ -48,7 +48,7 @@ target_link_libraries(coisceim_widget
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
-  akonadi_next messageviewer calendarsupport
+  messageviewer calendarsupport
 )
 
 set_target_properties(coisceim_widget
@@ -59,6 +59,9 @@ kde4_add_executable(coisceim ${coisceim_SRCS})
 
 target_link_libraries(coisceim
   coisceim_widget
+  ${QT_QTCORE_LIBRARIES}
+  ${KDE4_KDECORE_LIBS}
+  ${KDE4_KDEUI_LIBS}
 )
 
 kde4_add_plugin(coisceimpart ${coisceim_part_SRCS})

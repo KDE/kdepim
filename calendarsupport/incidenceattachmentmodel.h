@@ -24,19 +24,22 @@
 
 #include <QtCore/QAbstractListModel>
 
-#include "akonadi_next_export.h"
+#include "calendarsupport_export.h"
 #include <akonadi/attribute.h>
 #include <kcalcore/incidence.h>
 #include <akonadi/item.h>
 
 class QAbstractItemModel;
 
-namespace Akonadi
+namespace Akonadi {
+class Item;
+}
+
+namespace CalendarSupport
 {
 class IncidenceAttachmentModelPrivate;
-class Item;
 
-class AKONADI_NEXT_EXPORT IncidenceAttachmentModel : public QAbstractListModel
+class CALENDARSUPPORT_EXPORT IncidenceAttachmentModel : public QAbstractListModel
 {
   Q_OBJECT
   Q_PROPERTY( int attachmentCount READ rowCount NOTIFY rowCountChanged )

@@ -14,6 +14,7 @@ X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=GnuPG System
 Name[ar]=نظام GnuPG
+Name[bs]=GnuPG Sistem
 Name[ca]=Sistema GnuPG
 Name[ca@valencia]=Sistema GnuPG
 Name[cs]=Systém GnuPG
@@ -55,6 +56,7 @@ Name[zh_CN]=GnuPG 系统
 Name[zh_TW]=GnuPG 系統
 Comment=Configuration of GnuPG System options
 Comment[ar]=ضبط خيارات نظام GnuPG
+Comment[bs]=Podešavanje GnuPG opcija sistema
 Comment[ca]=Configuració de les opcions del sistema GnuPG
 Comment[ca@valencia]=Configuració de les opcions del sistema GnuPG
 Comment[cs]=Nastavení možností GnuPG

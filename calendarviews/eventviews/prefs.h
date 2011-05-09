@@ -26,6 +26,7 @@
 #define EVENTVIEWS_PREFS_H
 
 #include "eventviews_export.h"
+#include "eventview.h"
 
 #include <KConfigSkeleton>
 #include <KDateTime>
@@ -190,6 +191,12 @@ class EVENTVIEWS_EXPORT Prefs
 
     QColor todoOverdueColor() const;
     void setTodoOverdueColor( const QColor &color );
+
+    QSet<EventViews::EventView::ItemIcon> agendaViewIcons() const;
+    void setAgendaViewIcons( const QSet<EventViews::EventView::ItemIcon> &icons );
+
+    QSet<EventViews::EventView::ItemIcon> monthViewIcons() const;
+    void setMonthViewIcons( const QSet<EventViews::EventView::ItemIcon> &icons );
 
   private:
     class Private;

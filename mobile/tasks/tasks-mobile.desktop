@@ -17,3 +17,4 @@ Exec=tasks-mobile
 
 Icon=tasks-mobile
 Type=Application
+Categories=Qt;KDE;Office;Calendar;

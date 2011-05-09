@@ -26,9 +26,10 @@
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/ItemFetchJob>
 
+using namespace CalendarSupport;
 using namespace Akonadi;
 
-namespace Akonadi
+namespace CalendarSupport 
 {
 
 class IncidenceAttachmentModelPrivate

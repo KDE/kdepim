@@ -30,12 +30,12 @@
 #include "itemviewerwidget.h"
 
 #include <kselectionproxymodel.h>
+#include <kcheckableproxymodel.h>
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/entitymimetypefiltermodel.h>
-#include "akonadi_next/kcheckableproxymodel.h"
 
 using namespace Akonadi;
 
@@ -62,7 +62,7 @@ Checkable2::Checkable2(QWidget* parent, Qt::WindowFlags f)
   collectionFilter->setSourceModel(etm);
   collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
 
-  Future::KCheckableProxyModel *checkablePM = new Future::KCheckableProxyModel(this);
+  KCheckableProxyModel *checkablePM = new KCheckableProxyModel(this);
 
   QItemSelectionModel *checkSelection = new QItemSelectionModel(collectionFilter, this);
 

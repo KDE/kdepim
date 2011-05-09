@@ -49,6 +49,7 @@ class KCheckComboBox::Private
       , mSeparator( QLatin1String( "," ) )
       , mSqueezeText( false )
       , mIgnoreHide( false )
+      , mAlwaysShowDefaultText( false )
     { }
 
     void makeInsertedItemsCheckable(const QModelIndex &, int start, int end);
@@ -63,6 +64,7 @@ class KCheckComboBox::Private
     QString mDefaultText;
     bool mSqueezeText;
     bool mIgnoreHide;
+    bool mAlwaysShowDefaultText;
 };
 
 }
@@ -107,7 +109,7 @@ void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
 
   const QStringList items = q->checkedItems( role );
   QString text;
-  if ( items.isEmpty() ) {
+  if ( items.isEmpty() || mAlwaysShowDefaultText ) {
     text = mDefaultText;
   } else {
     text = items.join( mSeparator );
@@ -345,6 +347,19 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
       break;
   }
   return KComboBox::eventFilter( receiver, event );
+}
+
+bool KCheckComboBox::alwaysShowDefaultText() const
+{
+  return d->mAlwaysShowDefaultText;
+}
+
+void  KCheckComboBox::setAlwaysShowDefaultText( bool always )
+{
+  if ( always != d->mAlwaysShowDefaultText ) {
+    d->mAlwaysShowDefaultText = always;
+    d->updateCheckedItems();
+  }
 }
 
 #include "kcheckcombobox.moc"

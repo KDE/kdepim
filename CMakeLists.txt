@@ -116,10 +116,10 @@ endif()
 #    3.2 alpha1
 
 if (NOT DEFINED KDEPIM_DEV_VERSION)
-    set( KDEPIM_DEV_VERSION "beta5" )
+    set( KDEPIM_DEV_VERSION "pre" )
 endif (NOT DEFINED KDEPIM_DEV_VERSION)
 
-set( KDEPIM_VERSION "4.6 ${KDEPIM_DEV_VERSION}" )
+set( KDEPIM_VERSION "4.7 ${KDEPIM_DEV_VERSION}" )
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
 ############### search packages used by KDE ###############
@@ -134,16 +134,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.5.63 REQUIRED)
-
-### remove the following when requiring kdelibs 4.5 ###
-if ( NOT KDE4_KCMUTILS_LIBS )
-  set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
-endif()
-if ( NOT KDE4_KEMOTICONS_LIBS )
-  set( KDE4_KEMOTICONS_LIBS ${KDE4_KUTILS_LIBS} )
-endif()
-### end of 4.4 compat code ###
+find_package(KdepimLibs 4.6.41 REQUIRED)
 
 ############### Load the CTest options ###############
 

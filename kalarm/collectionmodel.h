@@ -25,8 +25,8 @@
 #include "kacalendar.h"
 
 #include <akonadi/favoritecollectionsmodel.h>
-#include <akonadi_next/kcheckableproxymodel.h>
-#include <libkdepim/kdescendantsproxymodel_p.h>
+#include <kcheckableproxymodel.h>
+#include <kdescendantsproxymodel.h>
 
 #include <QSortFilterProxyModel>
 #include <QListView>
@@ -64,7 +64,7 @@ class CollectionListModel : public KDescendantsProxyModel
 = Class: CollectionCheckListModel
 = Proxy model providing a checkable collection list, for a specified mime type.
 =============================================================================*/
-class CollectionCheckListModel : public Future::KCheckableProxyModel
+class CollectionCheckListModel : public KCheckableProxyModel
 {
         Q_OBJECT
     public:

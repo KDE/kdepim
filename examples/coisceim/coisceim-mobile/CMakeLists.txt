@@ -25,6 +25,7 @@ target_link_libraries(coisceim-mobile
   kdepim
   eventviews
   coisceim_widget
+  messageviewer
 )
 
 install(TARGETS coisceim-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

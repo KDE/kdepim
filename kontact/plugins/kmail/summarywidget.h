@@ -27,7 +27,7 @@
 
 #include <KontactInterface/Summary>
 
-#include <akonadi_next/kviewstatemaintainer.h>
+#include <kviewstatemaintainer.h>
 
 namespace KontactInterface {
   class Plugin;
@@ -40,9 +40,7 @@ namespace Akonadi {
   class ETMViewStateSaver;
 }
 
-namespace Future {
-  class KCheckableProxyModel;
-}
+class KCheckableProxyModel;
 
 class QGridLayout;
 class QLabel;
@@ -79,8 +77,8 @@ class SummaryWidget : public KontactInterface::Summary
     KontactInterface::Plugin *mPlugin;
     Akonadi::ChangeRecorder *mChangeRecorder;
     Akonadi::EntityTreeModel *mModel;
-    Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mModelState;
-    Future::KCheckableProxyModel *mModelProxy;
+    KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mModelState;
+    KCheckableProxyModel *mModelProxy;
     QItemSelectionModel *mSelectionModel;
     int mTimeOfLastMessageCountUpdate;
 };

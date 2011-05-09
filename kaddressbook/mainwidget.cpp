@@ -22,7 +22,7 @@
 
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
-#include "kdescendantsproxymodel_p.h"
+#include <kdescendantsproxymodel.h>
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "quicksearchwidget.h"
@@ -34,7 +34,6 @@
 #include "grantleecontactgroupformatter.h"
 #endif
 
-#include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
@@ -58,6 +57,7 @@
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kapplication.h>
+#include <kcheckableproxymodel.h>
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -94,10 +94,10 @@ static bool isStructuralCollection( const Akonadi::Collection &collection )
   return true;
 }
 
-class StructuralCollectionsNotCheckableProxy : public Future::KCheckableProxyModel {
+class StructuralCollectionsNotCheckableProxy : public KCheckableProxyModel {
 public:
   StructuralCollectionsNotCheckableProxy(QObject* parent)
-      :Future::KCheckableProxyModel(parent)
+      : KCheckableProxyModel(parent)
   { }
 
   /* reimp */ QVariant data( const QModelIndex &index, int role ) const
@@ -112,7 +112,7 @@ public:
         return QVariant();
       }
     }
-    return Future::KCheckableProxyModel::data( index, role );
+    return KCheckableProxyModel::data( index, role );
   }
 };
 
