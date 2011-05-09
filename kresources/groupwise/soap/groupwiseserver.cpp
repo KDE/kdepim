@@ -1440,11 +1440,11 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 void GroupwiseServer::slotSslErrors(const QList<KSslError> & errors)
 {
 
-  bool untrusted = false;
+  // bool untrusted = false;
   foreach( const KSslError& err, errors ) {
     // ignore untrusted certs for now, we can't handle it async
     if ( err.error() == KSslError::UntrustedCertificate ) {
-      untrusted = true;
+      //untrusted = true;
       mErrors.clear();
       m_sock->ignoreSslErrors();
       break;
