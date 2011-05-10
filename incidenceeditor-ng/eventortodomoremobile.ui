@@ -69,10 +69,10 @@
     <item row="1" column="0" colspan="3">
      <widget class="KRichTextWidget" name="mDescriptionEdit">
       <property name="toolTip">
-       <string extracomment="@info:tooltip">Set the description in plain text or rich text.</string>
+       <string comment="@info:tooltip">Set the description in plain text or rich text.</string>
       </property>
       <property name="whatsThis">
-       <string extracomment="@info:whatsthis">Sets the description for this event, to-do or journal. This will be displayed in a reminder if one is set, as well as in a tooltip when you hover over the event.</string>
+       <string comment="@info:whatsthis">Sets the description for this event, to-do or journal. This will be displayed in a reminder if one is set, as well as in a tooltip when you hover over the event.</string>
       </property>
       <property name="tabChangesFocus">
        <bool>true</bool>
@@ -88,7 +88,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string extracomment="@label">Categories:</string>
+       <string comment="@label">Categories:</string>
       </property>
      </widget>
     </item>
@@ -111,10 +111,10 @@
        </sizepolicy>
       </property>
       <property name="toolTip">
-       <string extracomment="@info:tooltip">Set the secrecy level</string>
+       <string comment="@info:tooltip">Set the secrecy level</string>
       </property>
       <property name="whatsThis">
-       <string extracomment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
+       <string comment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
       </property>
       <property name="text">
        <string>Access:</string>
@@ -127,10 +127,10 @@
     <item row="3" column="1">
      <widget class="KComboBox" name="mSecrecyCombo">
       <property name="toolTip">
-       <string extracomment="@info:tooltip">Set the secrecy level</string>
+       <string comment="@info:tooltip">Set the secrecy level</string>
       </property>
       <property name="whatsThis">
-       <string extracomment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
+       <string comment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
       </property>
      </widget>
     </item>
@@ -185,10 +185,10 @@
            </sizepolicy>
           </property>
           <property name="toolTip">
-           <string extracomment="@info:tooltip">Set the organizer identity</string>
+           <string comment="@info:tooltip">Set the organizer identity</string>
           </property>
           <property name="whatsThis">
-           <string extracomment="@info:whatsthis">Sets the identity corresponding to the organizer of this to-do or event. Identities can be set in the 'Personal' section of the KOrganizer configuration, or in the Personal'-&gt;'About Me'-&gt;'Password &amp; User Account' section of the System Settings. In addition, identities are gathered from your KMail settings and from your address book. If you choose to set it globally for KDE in the System Settings, be sure to check 'Use email settings from System Settings' in the 'Personal' section of the KOrganizer configuration.</string>
+           <string comment="@info:whatsthis">Sets the identity corresponding to the organizer of this to-do or event. Identities can be set in the 'Personal' section of the KOrganizer configuration, or in the Personal'-&gt;'About Me'-&gt;'Password &amp; User Account' section of the System Settings. In addition, identities are gathered from your KMail settings and from your address book. If you choose to set it globally for KDE in the System Settings, be sure to check 'Use email settings from System Settings' in the 'Personal' section of the KOrganizer configuration.</string>
           </property>
           <property name="sizeAdjustPolicy">
            <enum>QComboBox::AdjustToMinimumContentsLength</enum>
@@ -665,7 +665,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string extracomment="@label">occurrence(s)</string>
+             <string comment="@label">occurrence(s)</string>
             </property>
            </widget>
           </item>
@@ -797,10 +797,10 @@
        </sizepolicy>
       </property>
       <property name="toolTip">
-       <string extracomment="@info:tooltip">Add an attachment</string>
+       <string comment="@info:tooltip">Add an attachment</string>
       </property>
       <property name="whatsThis">
-       <string extracomment="@info:whatsthis">Shows a dialog used to select an attachment to add to this event or to-do as link or as inline data.</string>
+       <string comment="@info:whatsthis">Shows a dialog used to select an attachment to add to this event or to-do as link or as inline data.</string>
       </property>
       <property name="text">
        <string>Add</string>
@@ -819,10 +819,10 @@
        </sizepolicy>
       </property>
       <property name="toolTip">
-       <string extracomment="@info:tooltip">Remove the selected attachment</string>
+       <string comment="@info:tooltip">Remove the selected attachment</string>
       </property>
       <property name="whatsThis">
-       <string extracomment="@info:whatsthis">Removes the attachment selected in the list above from this event or to-do.</string>
+       <string comment="@info:whatsthis">Removes the attachment selected in the list above from this event or to-do.</string>
       </property>
       <property name="text">
        <string>Remove</string>
