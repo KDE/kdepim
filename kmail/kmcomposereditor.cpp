@@ -44,7 +44,7 @@
 #include <QFileInfo>
 
 KMComposerEditor::KMComposerEditor( KMComposeWin *win,QWidget *parent)
- :KMeditor(parent),m_composerWin(win)
+ :KMeditor(parent, "kmailrc"),m_composerWin(win)
 {
 }
 

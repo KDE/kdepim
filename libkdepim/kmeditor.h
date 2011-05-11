@@ -61,6 +61,12 @@ class KDEPIM_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     explicit KMeditor( QWidget *parent = 0 );
 
+    /**
+     * Constructs a KMeditor object.
+     */
+    explicit KMeditor( QWidget *parent, const QString& configFile );
+
+
     virtual ~KMeditor();
 
     //Redefine it for each apps

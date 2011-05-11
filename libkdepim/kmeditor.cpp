@@ -28,6 +28,7 @@
 #include <KProcess>
 #include <KPushButton>
 #include <KTemporaryFile>
+#include <kdeversion.h>
 
 #include <QApplication>
 #include <QClipboard>
@@ -212,6 +213,17 @@ KMeditor::KMeditor( const QString &text, QWidget *parent )
 KMeditor::KMeditor( QWidget *parent )
  : TextEdit( parent ), d( new KMeditorPrivate( this ) )
 {
+  d->init();
+}
+
+KMeditor::KMeditor( QWidget *parent, const QString & configFile )
+#if KDE_IS_VERSION(4,6,0)
+ : TextEdit( parent, configFile ), d( new KMeditorPrivate( this ) )
+#else
+ : TextEdit( parent ), d( new KMeditorPrivate( this ) )
+#endif
+{
+  Q_UNUSED( configFile )
   d->init();
 }
 
