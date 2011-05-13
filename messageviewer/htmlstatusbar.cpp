@@ -109,8 +109,8 @@ QString HtmlStatusBar::message() const {
   switch ( mode() ) {
   case Util::Html: // bold: "HTML Message"
   case Util::MultipartHtml:
-    return i18nc( "<qt>'HTML Message' with html linebreaks between each letter and in bold text.",
-                 "<b><br />H<br />T<br />M<br />L<br /> "
+    return i18nc( "'HTML Message' with html linebreaks between each letter and in bold text.",
+                 "<qt><b><br />H<br />T<br />M<br />L<br /> "
                  "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</b></qt>" );
   case Util::Normal: // normal: "No HTML Message"
     return i18nc("'No HTML Message' with html linebreaks between each letter.",
@@ -118,7 +118,7 @@ QString HtmlStatusBar::message() const {
                  "<br />H<br />T<br />M<br />L<br /> "
                  "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</qt>" );
   case Util::MultipartPlain: // normal: "Plain Message"
-    return i18nc("<qt>'Plain Message' with html linebreaks between each letter.",
+    return i18nc("'Plain Message' with html linebreaks between each letter.",
                  "<qt><br />P<br />l<br />a<br />i<br />n<br /> "
                  "<br />M<br />e<br />s<br />s<br />a<br />g<br />e<br /></qt>" );
   default:
