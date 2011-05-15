@@ -41,7 +41,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2011-04-29</date>
+<date>2011-05-13</date>
 <releaseinfo>2.07.00 (&kde; 4.7)</releaseinfo>
 
 <abstract>
@@ -495,6 +495,15 @@ from the context menu.</para>
 
 <para>See <link linkend="enable-disable">Enabling and Disabling Alarms</link>
 for how to enable and disable alarms, either individually or as a whole.</para>
+
+</sect2>
+
+<sect2>
+<title>Setting an Alarm to Wake from Suspend</title>
+
+<para>See <link linkend="wake-suspend">Wake From Suspend</link> for
+how to configure an alarm to wake up your system from suspension or
+hibernation.</para>
 
 </sect2>
 
@@ -2312,6 +2321,74 @@ from the context menu.</para>
 </sect2>
 </sect1>
 
+<sect1 id="wake-suspend">
+<title>Wake From Suspend</title>
+
+<para>It is possible to configure a selected alarm to wake your
+computer from hibernation or suspension when the alarm triggers, so
+that the alarm action can occur even when the system was shut down.
+This function is controlled by a dialog which is accessed by selecting
+<menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Wake From Suspend</guimenuitem></menuchoice>. The dialog
+allows the Wake From Suspend alarm to be set, cancelled or
+displayed.</para>
+
+<para>Use of the Wake From Suspend function requires
+administrative privileges. You will be prompted for the root password
+when you set or cancel a Wake From Suspend alarm.</para>
+
+<note><para>Wake From Suspend is not supported on some computers,
+especially older ones, and some computers only support setting a
+wakeup time up to 24 hours ahead. There may also be restrictions on
+which suspend mode the function will wake from. You should consider
+setting up test alarms to check your system's capability before
+relying on this feature.</para></note>
+
+<warning><para>Your computer can only schedule a single Wake From
+Suspend at a time. If you use this function with &kalarm;, you must
+ensure that this does not conflict with any other application which
+also uses Wake From Suspend. Whenever an application schedules or
+clears Wake From Suspend, this cancels any previously set Wake From
+Suspend, no matter whether set by &kalarm; or any other
+application.</para></warning>
+
+<para>The Wake From Suspend dialog is used in conjunction with the
+alarm list in &kalarm;'s main window.</para>
+
+<itemizedlist>
+<listitem>
+<para><guibutton>Use highlighted alarm</guibutton>: this sets the
+alarm currently highlighted in the alarm list as the Wake From Suspend
+alarm. Any existing scheduled Wake From Susplend is cancelled, as
+explained above. The button is enabled only if exactly one alarm is
+highlighted.</para>
+</listitem>
+
+<listitem>
+<para><guibutton>Cancel wake from suspend</guibutton>: this cancels
+any existing Wake From Suspend (whether set by &kalarm; or any other
+application - see above). Note that this only cancels the wakeup
+function associated with the alarm; the alarm itself is not deleted
+and will continue to operate as normal.</para>
+</listitem>
+
+<listitem>
+<para><guibutton>Show current alarm</guibutton>: this highlights the
+current Wake From Suspend alarm in the alarm list, so that it can be
+identified. The button is disabled if no Wake From Suspend is
+currently configured.</para>
+</listitem>
+
+<listitem>
+<para>The <guilabel>Number of minutes before alarm to wake from
+suspend</guilabel> control allows you, if you wish, to ensure that the
+system has time to fully restore itself before the alarm triggers, so
+that the alarm can trigger at the correct time.</para>
+</listitem>
+</itemizedlist>
+
+</sect1>
+
 <sect1 id="quitting">
 <title>Quitting &kalarm;</title>
 
@@ -2910,7 +2987,7 @@ time.</para>
   manually enabled.</entry>
 </row>
 <row>
-  <entry><option>-d</option>, <option>--disable-all</option></entry>
+  <entry><option>--disable-all</option></entry>
   <entry>Disable alarm monitoring. This prevents any alarms from
   being triggered until you re-enable alarms or restart &kalarm;, &eg;
   at next login.
