@@ -2359,7 +2359,7 @@ alarm list in &kalarm;'s main window.</para>
 <listitem>
 <para><guibutton>Use highlighted alarm</guibutton>: this sets the
 alarm currently highlighted in the alarm list as the Wake From Suspend
-alarm. Any existing scheduled Wake From Susplend is cancelled, as
+alarm. Any existing scheduled Wake From Suspend is cancelled, as
 explained above. The button is enabled only if exactly one alarm is
 highlighted.</para>
 </listitem>
