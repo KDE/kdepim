@@ -1,5 +1,5 @@
 /*
- *  wakedlg.h  -  dialog to configure wake-from-suspend alarms
+ *  calendarmigrator.h  -  migrates or creates KAlarm Akonadi resources
  *  Program:  kalarm
  *  Copyright © 2011 by David Jarvie <djarvie@kde.org>
  *
@@ -18,39 +18,39 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef WAKEDLG_H
-#define WAKEDLG_H
+#ifndef CALENDARMIGRATOR_H
+#define CALENDARMIGRATOR_H
 
-#include <kdialog.h>
+#include "kacalendar.h"
 
-class QTimer;
-class KAEvent;
-class MainWindow;
-class Ui_WakeFromSuspendDlgWidget;
+#include <akonadi/agentinstance.h>
+#include <akonadi/collection.h>
 
-class WakeFromSuspendDlg : public KDialog
+#include <QColor>
+
+class KConfigGroup;
+class KJob;
+namespace KRES { class Resource; }
+
+class CalendarCreator;
+
+class CalendarMigrator : public QObject
 {
         Q_OBJECT
     public:
-        static WakeFromSuspendDlg* create(QWidget* parent);
+        ~CalendarMigrator();
+        static void execute();
 
     private slots:
-        void slotSelectedEventChanged();
-        void showWakeClicked();
-        void useWakeClicked();
-        void cancelWakeClicked();
-        bool checkPendingAlarm();
+        void calendarCreated(CalendarCreator*);
 
     private:
-        explicit WakeFromSuspendDlg(QWidget* parent);
-        bool setTime(unsigned triggerTime);
+        CalendarMigrator(QObject* parent = 0);
+        void migrateOrCreate();
 
-        static WakeFromSuspendDlg* mInstance;   // the one and only instance of the dialog
-        Ui_WakeFromSuspendDlgWidget* mUi;
-        MainWindow* mMainWindow;
-        QTimer*     mTimer;
+        QList<CalendarCreator*> mCalendarsPending;   // pending calendar migration or creation jobs
 };
 
-#endif // WAKEDLG_H
+#endif // CALENDARMIGRATOR_H
 
 // vim: et sw=4:
