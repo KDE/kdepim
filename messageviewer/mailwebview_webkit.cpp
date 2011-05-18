@@ -117,6 +117,7 @@ void MailWebView::scrollPageUp( int percent )
 
 QString MailWebView::selectedText() const
 {
+  //TODO: For html selection see: http://stackoverflow.com/questions/3905619/html-document-selection-using-javascript
   return SuperClass::selectedText();
 }
 
