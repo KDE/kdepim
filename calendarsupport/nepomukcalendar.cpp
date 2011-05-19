@@ -79,11 +79,16 @@ NepomukCalendar::NepomukCalendar( QWidget *parent )
   connect( d->mChanger, SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)),
            SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger2::ResultCode,QString)) );
 
+  IncidenceFetchJob *job = new IncidenceFetchJob();
+
+/*
 #ifdef KDEPIM_NO_NEPOMUK
   IncidenceFetchJob *job = new IncidenceFetchJob();
 #else
   IncidenceSearchJob *job = new IncidenceSearchJob();
 #endif
+*/
+
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
 }
 
@@ -377,11 +382,15 @@ void NepomukCalendar::searchResult( KJob *job )
     errorMessage = job->errorString();
   } else {
     success = true;
+
+  IncidenceFetchJob *searchJob = qobject_cast<IncidenceFetchJob*>( job );
+/*
 #ifdef KDEPIM_NO_NEPOMUK
     IncidenceFetchJob *searchJob = qobject_cast<IncidenceFetchJob*>( job );
 #else
     IncidenceSearchJob *searchJob = qobject_cast<IncidenceSearchJob*>( job );
 #endif
+*/
     const Akonadi::Item::List list = searchJob->items();
     foreach( const Akonadi::Item &item, list ) {
       if ( item.hasPayload<KCalCore::Incidence::Ptr>() ) {
