@@ -180,7 +180,7 @@ unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *st
   return conf.readEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModel->id() ), defValue );
 }
 
-void Manager::savePreSelectedMessageForStorageModel( const StorageModel * storageModel, unsigned long uniqueIdOfMessage )
+void Manager::savePreSelectedMessageForStorageModelId( const QString &storageModelId, unsigned long uniqueIdOfMessage )
 {
   KConfigGroup conf( Settings::self()->config(),
                      "MessageListView::StorageModelSelectedMessages" );
@@ -191,9 +191,9 @@ void Manager::savePreSelectedMessageForStorageModel( const StorageModel * storag
     // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
     qulonglong val = uniqueIdOfMessage;
 
-    conf.writeEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModel->id() ), val );
+    conf.writeEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModelId ), val );
   } else
-    conf.deleteEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModel->id() ) );
+    conf.deleteEntry( QString( QLatin1String( "MessageUniqueIdForStorageModel%1" ) ).arg( storageModelId ) );
 }
 
 const Aggregation * Manager::aggregation( const QString &id )
