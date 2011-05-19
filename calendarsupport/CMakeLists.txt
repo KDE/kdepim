@@ -44,6 +44,7 @@ set(calendarsupport_LIB_SRCS
   publishdialog.cpp
   utils.cpp
 
+  next/akonadicalendar.cpp
   next/history.cpp
   next/incidencechanger2.cpp
   next/incidencesearchjob.cpp
