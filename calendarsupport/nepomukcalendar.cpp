@@ -24,7 +24,7 @@
 #include "mailscheduler.h"
 #include "nepomukcalendar.h"
 #include "next/incidencesearchjob.h"
-#include "incidencefetchjob.h"
+#include "next/incidencefetchjob.h"
 
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>

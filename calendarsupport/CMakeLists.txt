@@ -33,7 +33,6 @@ set(calendarsupport_LIB_SRCS
   identitymanager.cpp
   incidenceattachmentmodel.cpp
   incidencechanger.cpp
-  incidencefetchjob.cpp
   incidencefilterproxymodel.cpp
   incidenceviewer.cpp
   kcalmodel.cpp
@@ -47,6 +46,7 @@ set(calendarsupport_LIB_SRCS
   next/akonadicalendar.cpp
   next/history.cpp
   next/incidencechanger2.cpp
+  next/incidencefetchjob.cpp
   next/incidencesearchjob.cpp
   next/invitationhandler.cpp
   next/mailscheduler2.cpp

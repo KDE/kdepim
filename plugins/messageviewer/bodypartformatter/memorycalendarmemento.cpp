@@ -19,7 +19,7 @@
 */
 #include "memorycalendarmemento.h"
 
-#include <calendarsupport/incidencefetchjob.h>
+#include <calendarsupport/next/incidencefetchjob.h>
 #include <KSystemTimeZones>
 
 using namespace MessageViewer;
