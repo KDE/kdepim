@@ -368,7 +368,7 @@ int FilterManager::process( const Akonadi::Item &item, const MailFilter *filter 
     d->endFiltering( item );
     if ( targetFolder.isValid() ) {
       Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
-      connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveResult(KJob*)) );
+      connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
       result = 0;
     }
   } else {
@@ -421,7 +421,7 @@ int FilterManager::process( const Akonadi::Item &item, FilterSet set,
 
   if ( targetFolder.isValid() ) {
     Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob( item, targetFolder, this );
-    connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveResult(KJob*)) );
+    connect( moveJob, SIGNAL(result(KJob*)), SLOT(moveJobResult(KJob*)) );
     return 0;
   }
 
