@@ -59,31 +59,31 @@ QByteArray iconSetToArray( const QSet<EventViews::EventView::ItemIcon> &set )
 
 QByteArray agendaViewIconDefaults()
 {
-  static QByteArray iconDefaults;
-  if ( iconDefaults.isEmpty() ) {
-    iconDefaults[EventViews::EventView::CalendarCustomIcon] = 1;
-    iconDefaults[EventViews::EventView::TaskIcon]           = 1;
-    iconDefaults[EventViews::EventView::JournalIcon]        = 1;
-    iconDefaults[EventViews::EventView::RecurringIcon]      = 1;
-    iconDefaults[EventViews::EventView::ReminderIcon]       = 1;
-    iconDefaults[EventViews::EventView::ReadOnlyIcon]       = 1;
-    iconDefaults[EventViews::EventView::ReplyIcon]          = 0;
-  }
+  QByteArray iconDefaults;
+
+  iconDefaults[EventViews::EventView::CalendarCustomIcon] = 1;
+  iconDefaults[EventViews::EventView::TaskIcon]           = 1;
+  iconDefaults[EventViews::EventView::JournalIcon]        = 1;
+  iconDefaults[EventViews::EventView::RecurringIcon]      = 1;
+  iconDefaults[EventViews::EventView::ReminderIcon]       = 1;
+  iconDefaults[EventViews::EventView::ReadOnlyIcon]       = 1;
+  iconDefaults[EventViews::EventView::ReplyIcon]          = 0;
+
   return iconDefaults;
 }
 
 QByteArray monthViewIconDefaults()
 {
-  static QByteArray iconDefaults;
-  if ( iconDefaults.isEmpty() ) {
-    iconDefaults[EventViews::EventView::CalendarCustomIcon] = 1;
-    iconDefaults[EventViews::EventView::TaskIcon]           = 1;
-    iconDefaults[EventViews::EventView::JournalIcon]        = 1;
-    iconDefaults[EventViews::EventView::RecurringIcon]      = 0;
-    iconDefaults[EventViews::EventView::ReminderIcon]       = 0;
-    iconDefaults[EventViews::EventView::ReadOnlyIcon]       = 1;
-    iconDefaults[EventViews::EventView::ReplyIcon]          = 0;
-  }
+  QByteArray iconDefaults;
+
+  iconDefaults[EventViews::EventView::CalendarCustomIcon] = 1;
+  iconDefaults[EventViews::EventView::TaskIcon]           = 1;
+  iconDefaults[EventViews::EventView::JournalIcon]        = 1;
+  iconDefaults[EventViews::EventView::RecurringIcon]      = 0;
+  iconDefaults[EventViews::EventView::ReminderIcon]       = 0;
+  iconDefaults[EventViews::EventView::ReadOnlyIcon]       = 1;
+  iconDefaults[EventViews::EventView::ReplyIcon]          = 0;
+
   return iconDefaults;
 }
 
