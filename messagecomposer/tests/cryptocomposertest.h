@@ -61,7 +61,7 @@ class CryptoComposerTest : public QObject
     void fillComposerCryptoData( Message::Composer* composer );
 
     // convenience, shared code
-    bool runSMIMETest( bool sign, bool enc, bool opaque );
+    void runSMIMETest( bool sign, bool enc, bool opaque );
 };
 
 #endif
