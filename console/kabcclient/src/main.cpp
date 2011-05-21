@@ -117,7 +117,7 @@ int main(int argc, char** argv)
 
     cmdLineOptions.add("match-case", ki18n("Match key fields case sensitive. UID is always matched case sensitive"));
 
-    cmdLineOptions.add(ki18n("+[input data]"), ki18n("Input to use instead of reading stdin"));
+    cmdLineOptions.add("+[input data]", ki18n("Input to use instead of reading stdin"));
 
     KCmdLineArgs::addCmdLineOptions(cmdLineOptions);
     KCmdLineArgs::init(argc, argv, &aboutData);
