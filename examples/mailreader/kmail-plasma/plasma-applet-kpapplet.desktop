@@ -68,6 +68,7 @@ Name[xh]=KMail
 Name[x-test]=xxKMailxx
 Name[zh_CN]=KMail
 Name[zh_TW]=郵件管理_KMail
+# ctxt: KMail plasma widget's comment, NOT translators' e-mail addresses.
 Comment=Your emails
 Comment[bs]=Vaše elektronske adrese
 Comment[ca]=Els vostres correus
