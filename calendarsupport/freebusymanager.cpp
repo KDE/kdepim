@@ -183,6 +183,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
       if ( !url.isEmpty() ) {
         kDebug() << "Taken url from preferred email:" << url;
         emit freeBusyUrlRetrieved( email, replaceVariablesUrl( KUrl( url ), email ) );
+        return;
       }
     }
   }
@@ -190,6 +191,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto ) {
     // No, so no FB list here
     emit freeBusyUrlRetrieved( email, KUrl() );
+    return;
   }
 
   // Sanity check: Don't download if it's not a correct email
@@ -198,6 +200,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   if( emailpos == -1 ) {
     kDebug() << "No '@' found in" << email;
     emit freeBusyUrlRetrieved( email, KUrl() );
+    return;
   }
 
   const QString emailHost = email.mid( emailpos + 1 );
@@ -213,6 +216,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
       // Host names do not match
       kDebug() << "Host '" << hostDomain << "' doesn't match email '" << email << '\'';
       emit freeBusyUrlRetrieved( email, KUrl() );
+      return;
     }
   }
 
@@ -229,6 +233,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
     // no need to cache this URL as this is pretty fast to get from the config value.
     // return the fullpath URL
     emit freeBusyUrlRetrieved( email, fullpathURL );
+    return;
  }
 
  // else we search for a fb file in the specified URL with known possible extensions
@@ -253,6 +258,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
      KConfigGroup group = cfg.group( email );
      group.writeEntry( "url", dirURL.prettyUrl() ); // prettyURL() does not write user nor password
      emit freeBusyUrlRetrieved( email, dirURL );
+     return;
    }
  }
 
