@@ -148,6 +148,7 @@ void FreeBusyManagerPrivate::freeBusyUrl( const QString &email )
       cachedUrl.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
     }
     emit freeBusyUrlRetrieved( email, replaceVariablesUrl( cachedUrl, email ) );
+    return;
   }
   // Try with the url configurated by preferred email in kcontactmanager
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
