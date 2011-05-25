@@ -117,8 +117,8 @@ FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
     mBrokenUrl( false ),
     mParentWidgetForRetrieval( 0 )
 {
-  connect( this, SIGNAL(freeBusyUrlRetrieved(const QString&, const KUrl&)),
-           this, SLOT(onFreeBusyUrlRetrieved(const QString&, const KUrl&)) );
+  connect( this, SIGNAL(freeBusyUrlRetrieved(QString,KUrl)),
+           SLOT(finishProcessRetrieveQueue(QString,KUrl)) );
 }
 
 void FreeBusyManagerPrivate::checkFreeBusyUrl()
@@ -391,7 +391,8 @@ bool FreeBusyManagerPrivate::processRetrieveQueue()
   return true;
 }
 
-void FreeBusyManagerPrivate::onFreeBusyUrlRetrieved( const QString &email, const KUrl &freeBusyUrlForEmail )
+void FreeBusyManagerPrivate::finishProcessRetrieveQueue( const QString &email,
+                                                         const KUrl &freeBusyUrlForEmail )
 {
   Q_Q( FreeBusyManager );
 
@@ -716,6 +717,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
   d->mRetrieveQueue.append( email );
 
   if ( d->mRetrieveQueue.count() > 1 ) {
+    // TODO: true should always emit
     return true;
   }
 

@@ -85,7 +85,7 @@ class FreeBusyManagerPrivate : public QObject
 
   public slots:
     void contactSearchJobFinished( KJob *_job );
-    void onFreeBusyUrlRetrieved( const QString &email, const KUrl &url );
+    void finishProcessRetrieveQueue( const QString &email, const KUrl &url );
 
   signals:
     void freeBusyUrlRetrieved( const QString &email, const KUrl &url );
