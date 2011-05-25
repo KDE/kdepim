@@ -74,7 +74,7 @@ void FilterManager::Private::tryToFilterInboxOnStartup()
     return;
 
   if ( !Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).isValid() ) {
-    QTimer::singleShot( 10000, q, SLOT( tryToFilterInboxOnStartup() ) );
+    QTimer::singleShot( 1000, q, SLOT( tryToFilterInboxOnStartup() ) );
     return;
   }
 
@@ -304,7 +304,7 @@ FilterManager::FilterManager( QObject *parent )
   connect( d->mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
 
-  d->tryToFilterInboxOnStartup();
+  connect( this, SIGNAL(filterListUpdated()), SLOT(tryToFilterInboxOnStartup()) );
 }
 
 FilterManager::~FilterManager()
