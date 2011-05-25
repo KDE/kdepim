@@ -202,7 +202,7 @@ void MessageFactoryTest::testCreateReplyKeepCharsetEncoding()
   TestCSSHelper testCSSHelper;
   MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, true, 0 );
   otp.parseObjectTree( reply.msg.get() );
   QVERIFY( otp.textualContent().contains( replyStr ) );*/
 
@@ -389,7 +389,7 @@ void MessageFactoryTest::testCreateMDN()
   TestCSSHelper testCSSHelper;
   TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, true, 0 );
   MessageViewer::ProcessResult pResult( nh ); */
 
 //   kDebug() << MessageCore::NodeHelper::firstChild( mdn->mainBodyPart() )->encodedContent();

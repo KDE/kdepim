@@ -295,12 +295,12 @@ public:
   explicit ObjectTreeParser( ObjectTreeSourceIf * source,
                              NodeHelper *nodeHelper = 0,
                              const Kleo::CryptoBackend::Protocol * protocol=0,
-                             bool showOneMimePart=false, bool keepEncryptions=false,
+                             bool showOneMimePart=false,
                              bool includeSignatures=true,
                              const AttachmentStrategy * attachmentStrategy=0 );
 
   explicit ObjectTreeParser( const ObjectTreeParser *topLevelParser,
-                             bool showOneMimePart=false, bool keepEncryptions=false,
+                             bool showOneMimePart=false,
                              bool includeSignatures=true,
                              const AttachmentStrategy * attachmentStrategy=0 );
   virtual ~ObjectTreeParser();
@@ -350,11 +350,6 @@ public:
   bool showOnlyOneMimePart() const { return mShowOnlyOneMimePart; }
   void setShowOnlyOneMimePart( bool show ) {
     mShowOnlyOneMimePart = show;
-  }
-
-  bool keepEncryptions() const { return mKeepEncryptions; }
-  void setKeepEncryptions( bool keep ) {
-    mKeepEncryptions = keep;
   }
 
   bool includeSignatures() const { return mIncludeSignatures; }
@@ -568,7 +563,6 @@ private:
   /// the children can be completely displayed again.
   bool mShowOnlyOneMimePart;
 
-  bool mKeepEncryptions;
   bool mIncludeSignatures;
   bool mHasPendingAsyncJobs;
   bool mAllowAsync;

@@ -1277,7 +1277,7 @@ void TemplateParser::parseTextStringFromContent( KMime::Content * root,
     isHTML = curNode->contentType()->isHTMLText();
     // now parse the TEXT message part we want to quote
     MessageViewer::EmptySource emptySource;
-    MessageViewer::ObjectTreeParser otp( &emptySource, 0, 0, true, false, true );
+    MessageViewer::ObjectTreeParser otp( &emptySource, 0, 0, true, true );
     otp.parseObjectTree( curNode );
     parsedString = otp.plainTextContent();
     codec = otp.nodeHelper()->codec( curNode );
