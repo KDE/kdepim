@@ -321,6 +321,7 @@ void FreeBusyManagerPrivate::processFreeBusyDownloadResult( KJob *_job )
   FreeBusyDownloadJob *job = qobject_cast<FreeBusyDownloadJob *>( _job );
   Q_ASSERT( job );
   if ( job->error() ) {
+    kError() << "Error downloading freebusy" << _job->errorString();
     KMessageBox::sorry(
       mParentWidgetForRetrieval,
       i18n( "Failed to download free/busy data from: %1\nReason: %2",
@@ -341,9 +342,10 @@ void FreeBusyManagerPrivate::processFreeBusyDownloadResult( KJob *_job )
       KCalCore::Person::Ptr p = fb->organizer();
       p->setEmail( email );
       q->saveFreeBusy( fb, p );
-
+      kDebug() << "Freebusy retrieved for " << email;
       emit q->freeBusyRetrieved( fb, email );
     } else {
+      kError() << "Error downloading freebusy, invalid fb.";
       KMessageBox::sorry(
         mParentWidgetForRetrieval,
         i18n( "Failed to parse free/busy information that was retrieved from: %1",
@@ -399,7 +401,8 @@ void FreeBusyManagerPrivate::finishProcessRetrieveQueue( const QString &email,
   }
 
   if ( mFreeBusyUrlEmailMap.contains( freeBusyUrlForEmail ) ) {
-    return; // Already in progress.
+    kDebug() << "Download already in progress for " << freeBusyUrlForEmail;
+    return;
   }
 
   mFreeBusyUrlEmailMap.insert( freeBusyUrlForEmail, email );
@@ -685,6 +688,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
 
   kDebug() << email;
   if ( email.isEmpty() ) {
+    kDebug() << "Email is empty";
     return false;
   }
 
@@ -692,7 +696,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
 
   if ( KCalPrefs::instance()->thatIsMe( email ) ) {
     // Don't download our own free-busy list from the net
-    kDebug() << "freebusy of owner";
+    kDebug() << "freebusy of owner, not downloading";
     emit freeBusyRetrieved( d->ownerFreeBusy(), email );
     return true;
   }
@@ -700,12 +704,14 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
   // Check for cached copy of free/busy list
   KCalCore::FreeBusy::Ptr fb = loadFreeBusy( email );
   if ( fb ) {
+    kDebug() << "Found a cached copy for " << email;
     emit freeBusyRetrieved( fb, email );
     return true;
   }
 
   // Don't download free/busy if the user does not want it.
   if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto && !forceDownload ) {
+    kDebug() << "Not downloading freebusy";
     return false;
   }
 
@@ -713,6 +719,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
 
   if ( d->mRetrieveQueue.count() > 1 ) {
     // TODO: true should always emit
+    kWarning() << "Returning true without emit, is this correct?";
     return true;
   }
 
