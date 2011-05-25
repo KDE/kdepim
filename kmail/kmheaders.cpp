@@ -3090,9 +3090,15 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
     bool unread_exists = false;
     bool jumpToUnread = (GlobalSettings::self()->actionEnterFolder() ==
                          GlobalSettings::EnumActionEnterFolder::SelectFirstUnreadNew) ||
+                        (GlobalSettings::self()->actionEnterFolder() ==
+                         GlobalSettings::EnumActionEnterFolder::SelectLastUnreadNew) ||
                         forceJumpToUnread;
     HeaderItem *oldestItem = 0;
     HeaderItem *newestItem = 0;
+    HeaderItem *oldestNewItem = 0;
+    HeaderItem *newestNewItem = 0;
+    HeaderItem *oldestNewOrUnreadItem = 0;
+    HeaderItem *newestNewOrUnreadItem = 0;
     QMemArray<SortCacheItem *> sortCache(mFolder->count());
     bool error = false;
 
@@ -3388,8 +3394,10 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
             // we always jump to new messages, but we only jump to
             // unread messages if we are told to do so
             if ( ( mFolder->getMsgBase(new_kci->id())->isNew() &&
-                   GlobalSettings::self()->actionEnterFolder() ==
-                   GlobalSettings::EnumActionEnterFolder::SelectFirstNew ) ||
+                   (GlobalSettings::self()->actionEnterFolder() ==
+                    GlobalSettings::EnumActionEnterFolder::SelectFirstNew ||
+                    GlobalSettings::self()->actionEnterFolder() ==
+                    GlobalSettings::EnumActionEnterFolder::SelectLastNew ) ) ||
                  ( ( mFolder->getMsgBase(new_kci->id())->isNew() ||
                      mFolder->getMsgBase(new_kci->id())->isUnread() ) &&
                    jumpToUnread ) )
@@ -3405,6 +3413,31 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
             if ( !newestItem || mFolder->getMsgBase( newestItem->msgId() )->date() <
                   mFolder->getMsgBase( new_kci->id() )->date() ) {
               newestItem = khi;
+            }
+
+            if ( mFolder->getMsgBase(new_kci->id())->isNew() ) {
+              if ( !oldestNewItem || mFolder->getMsgBase( oldestNewItem->msgId() )->date() >
+                   mFolder->getMsgBase( new_kci->id() )->date() ) {
+                oldestNewItem = khi;
+              }
+
+              if ( !newestNewItem || mFolder->getMsgBase( newestNewItem->msgId() )->date() <
+                    mFolder->getMsgBase( new_kci->id() )->date() ) {
+                newestNewItem = khi;
+              }
+            }
+
+            if ( mFolder->getMsgBase(new_kci->id())->isNew() ||
+                 mFolder->getMsgBase(new_kci->id())->isUnread() ) {
+              if ( !oldestNewOrUnreadItem || mFolder->getMsgBase( oldestNewOrUnreadItem->msgId() )->date() >
+                   mFolder->getMsgBase( new_kci->id() )->date() ) {
+                oldestNewOrUnreadItem = khi;
+              }
+
+              if ( !newestNewOrUnreadItem || mFolder->getMsgBase( newestNewOrUnreadItem->msgId() )->date() <
+                    mFolder->getMsgBase( new_kci->id() )->date() ) {
+                newestNewOrUnreadItem = khi;
+              }
             }
         }
         // If we are sorting by date and ascending the top level items are sorted
@@ -3466,8 +3499,10 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
             HeaderItem *item = static_cast<HeaderItem*>(firstChild());
             while (item) {
               if ( ( mFolder->getMsgBase(item->msgId())->isNew() &&
-                     GlobalSettings::self()->actionEnterFolder() ==
-                     GlobalSettings::EnumActionEnterFolder::SelectFirstNew ) ||
+                     (GlobalSettings::self()->actionEnterFolder() ==
+                      GlobalSettings::EnumActionEnterFolder::SelectFirstNew ||
+                      GlobalSettings::self()->actionEnterFolder() ==
+                      GlobalSettings::EnumActionEnterFolder::SelectLastNew ) ) ||
                    ( ( mFolder->getMsgBase(item->msgId())->isNew() ||
                        mFolder->getMsgBase(item->msgId())->isUnread() ) &&
                      jumpToUnread ) )
@@ -3500,9 +3535,27 @@ bool KMHeaders::readSortOrder( bool set_selection, bool forceJumpToUnread )
 
         // There is an unread item to select, so select it
         } else {
-            setCurrentItemByIndex(first_unread);
-            makeHeaderVisible();
-            center( contentsX(), itemPos(mItems[first_unread]), 0, 9.0 );
+            if ( GlobalSettings::self()->actionEnterFolder() ==
+                 GlobalSettings::EnumActionEnterFolder::SelectFirstNew && newestNewItem != 0 ) {
+              setCurrentItemByIndex( newestNewItem->msgId() );
+            }
+            else if ( GlobalSettings::self()->actionEnterFolder() ==
+                      GlobalSettings::EnumActionEnterFolder::SelectLastNew && oldestNewItem != 0 ) {
+              setCurrentItemByIndex( oldestNewItem->msgId() );
+            }
+            else if ( GlobalSettings::self()->actionEnterFolder() ==
+                 GlobalSettings::EnumActionEnterFolder::SelectFirstUnreadNew && newestNewOrUnreadItem != 0 ) {
+              setCurrentItemByIndex( newestNewOrUnreadItem->msgId() );
+            }
+            else if ( GlobalSettings::self()->actionEnterFolder() ==
+                      GlobalSettings::EnumActionEnterFolder::SelectLastUnreadNew && oldestNewOrUnreadItem != 0 ) {
+              setCurrentItemByIndex( oldestNewOrUnreadItem->msgId() );
+            }
+            else {
+              setCurrentItemByIndex(first_unread);
+              makeHeaderVisible();
+              center( contentsX(), itemPos(mItems[first_unread]), 0, 9.0 );
+            }
         }
 
     // we are told to not change the selection

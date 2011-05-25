@@ -4589,13 +4589,17 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent, const char * name )
                 "When entering a folder:"), this );
   mActionEnterFolder->insertStringList( QStringList()
       << i18n("continuation of \"When entering a folder:\"",
-              "Jump to First New Message")
+              "Jump to Most Recent New Message")
       << i18n("continuation of \"When entering a folder:\"",
-              "Jump to First Unread or New Message")
+              "Jump to Oldest New Message")
+      << i18n("continuation of \"When entering a folder:\"",
+              "Jump to Most Recent Unread or New Message")
+      << i18n("continuation of \"When entering a folder:\"",
+              "Jump to Oldest Unread or New Message")
       << i18n("continuation of \"When entering a folder:\"",
               "Jump to Last Selected Message")
       << i18n("continuation of \"When entering a folder:\"",
-              "Jump to Newest Message")
+              "Jump to Most Recent Message")
       << i18n("continuation of \"When entering a folder:\"",
               "Jump to Oldest Message") );
   hlay->addWidget( label );

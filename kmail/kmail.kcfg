@@ -22,7 +22,9 @@
         <whatsthis></whatsthis>
         <choices>
           <choice name="SelectFirstNew"/>
+          <choice name="SelectLastNew"/>
           <choice name="SelectFirstUnreadNew"/>
+          <choice name="SelectLastUnreadNew"/>
           <choice name="SelectLastSelected"/>
           <choice name="SelectNewest"/>
           <choice name="SelectOldest"/>
