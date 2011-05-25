@@ -44,6 +44,15 @@
 #include <gpgme++/keylistresult.h>
 #include <messagecore/tests/util.h>
 
+// This is used to override the default message output handler. In unit tests, the special message
+// output handler can write messages to stdout delayed, i.e. after the actual kDebug() call. This
+// interfers with KPGP, since KPGP reads output from stdout, which needs to be kept clean.
+void nullMessageOutput(QtMsgType type, const char *msg)
+{
+  Q_UNUSED(type);
+  Q_UNUSED(msg);
+}
+
 bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f ) {
 
   // store it in a KMime::Message, that's what OTP needs
@@ -74,16 +83,10 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
 
     return true;
   } else if( f & Kleo::InlineOpenPGPFormat ) {
+    qInstallMsgHandler(nullMessageOutput);
     otp.processTextPlainSubtype( resultMessage, pResult );
-
-#if 0 // Crap
-    otp.writeBodyString( resultMessage->encodedContent(),
-                           resultMessage->from()->asUnicodeString() ,
-                           nh->codec( resultMessage ),
-                           pResult, true );
-#endif
-                          
-    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgPartiallySigned );
+    qInstallMsgHandler(0);
+    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgFullySigned );
 
     return true;
   } else if( f & Kleo::AnySMIME ) {
@@ -148,16 +151,10 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     return true;
     
   } else if( f & Kleo::InlineOpenPGPFormat ) {
+    qInstallMsgHandler(nullMessageOutput);
     otp.processTextPlainSubtype( resultMessage, pResult );
-
-#if 0 // Crap
-    otp.writeBodyString( resultMessage->encodedContent(),
-                           resultMessage->from()->asUnicodeString() ,
-                           nh->codec( resultMessage ),
-                           pResult, true );
-#endif
-
-    Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgPartiallyEncrypted );
+    qInstallMsgHandler(0);
+    Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
 
     return true;
   } else if( f & Kleo::AnySMIME) {
@@ -213,17 +210,11 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     Q_ASSERT( otp.rawDecryptedBody() == origContent );
     return true;
   } else if( f & Kleo::InlineOpenPGPFormat ) {
+    qInstallMsgHandler(nullMessageOutput);
     otp.processTextPlainSubtype( resultMessage.get(), pResult );
-
-#if 0
-    otp.writeBodyString( resultMessage->encodedContent(),
-                           resultMessage->from()->asUnicodeString() ,
-                           nh->codec( resultMessage.get() ),
-                           pResult, true );
-#endif
-
-    Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgPartiallyEncrypted );
-    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgPartiallySigned );
+    qInstallMsgHandler(0);
+    Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
+    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgFullySigned );
 
     return true;
   } else if( f & Kleo::AnySMIME ) {
