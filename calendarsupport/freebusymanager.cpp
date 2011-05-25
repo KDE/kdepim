@@ -316,10 +316,10 @@ QString FreeBusyManagerPrivate::ownerFreeBusyAsString()
 
 void FreeBusyManagerPrivate::processFreeBusyDownloadResult( KJob *_job )
 {
-  Q_ASSERT( dynamic_cast<FreeBusyDownloadJob *>( _job ) );
   Q_Q( FreeBusyManager );
 
-  FreeBusyDownloadJob *job = static_cast<FreeBusyDownloadJob *>( _job );
+  FreeBusyDownloadJob *job = qobject_cast<FreeBusyDownloadJob *>( _job );
+  Q_ASSERT( job );
   if ( job->error() ) {
     KMessageBox::sorry(
       mParentWidgetForRetrieval,
