@@ -132,7 +132,7 @@ QString FreeBusyManagerPrivate::freeBusyDir() const
   return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
 }
 
-void FreeBusyManagerPrivate::freeBusyUrl( const QString &email )
+void FreeBusyManagerPrivate::fetchFreeBusyUrl( const QString &email )
 {
   // First check if there is a specific FB url for this email
   QString configFile = KStandardDirs::locateLocal( "data",
@@ -387,7 +387,7 @@ bool FreeBusyManagerPrivate::processRetrieveQueue()
   }
 
   QString email = mRetrieveQueue.takeFirst();
-  freeBusyUrl( email );
+  fetchFreeBusyUrl( email );
   return true;
 }
 
