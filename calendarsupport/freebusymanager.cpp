@@ -240,37 +240,36 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
     kDebug() << "Found url. email=" << email << "; url=" << fullpathURL;
     emit freeBusyUrlRetrieved( email, fullpathURL );
     return;
- }
+  }
 
- // else we search for a fb file in the specified URL with known possible extensions
+  // else we search for a fb file in the specified URL with known possible extensions
+  const QStringList extensions = QStringList() << "xfb" << "ifb" << "vfb";
+  QStringList::ConstIterator ext;
+  for ( ext = extensions.constBegin(); ext != extensions.constEnd(); ++ext ) {
+    // build a url for this extension
+    const KUrl sourceUrl = KCalPrefs::instance()->mFreeBusyRetrieveUrl;
+    KUrl dirURL = replaceVariablesUrl( sourceUrl, email );
+    if ( KCalPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
+      dirURL.addPath( email + '.' + (*ext) );
+    } else {
+      // Cut off everything left of the @ sign to get the user name.
+      const QString emailName = email.left( emailpos );
+      dirURL.addPath( emailName + '.' + (*ext ) );
+    }
+    dirURL.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
+    dirURL.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
+    if ( fbExists( dirURL ) ) {
+      // write the URL to the cache
+      KConfigGroup group = cfg.group( email );
+      group.writeEntry( "url", dirURL.prettyUrl() ); // prettyURL() does not write user nor password
+      kDebug() << "Found url email=" << email << "; url=" << dirURL;
+      emit freeBusyUrlRetrieved( email, dirURL );
+      return;
+    }
+  }
 
- const QStringList extensions = QStringList() << "xfb" << "ifb" << "vfb";
- QStringList::ConstIterator ext;
- for ( ext = extensions.constBegin(); ext != extensions.constEnd(); ++ext ) {
-   // build a url for this extension
-   const KUrl sourceUrl = KCalPrefs::instance()->mFreeBusyRetrieveUrl;
-   KUrl dirURL = replaceVariablesUrl( sourceUrl, email );
-   if ( KCalPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
-     dirURL.addPath( email + '.' + (*ext) );
-   } else {
-     // Cut off everything left of the @ sign to get the user name.
-     const QString emailName = email.left( emailpos );
-     dirURL.addPath( emailName + '.' + (*ext ) );
-   }
-   dirURL.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
-   dirURL.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
-   if ( fbExists( dirURL ) ) {
-     // write the URL to the cache
-     KConfigGroup group = cfg.group( email );
-     group.writeEntry( "url", dirURL.prettyUrl() ); // prettyURL() does not write user nor password
-     kDebug() << "Found url email=" << email << "; url=" << dirURL;
-     emit freeBusyUrlRetrieved( email, dirURL );
-     return;
-   }
- }
-
- kDebug() << "Returning invalid url";
- emit freeBusyUrlRetrieved( email, KUrl() );
+  kDebug() << "Returning invalid url";
+  emit freeBusyUrlRetrieved( email, KUrl() );
 }
 
 QString FreeBusyManagerPrivate::freeBusyToIcal( const KCalCore::FreeBusy::Ptr &freebusy )
