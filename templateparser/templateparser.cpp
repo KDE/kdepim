@@ -36,8 +36,6 @@
 
 #include <akonadi/collection.h>
 
-#include <libkpgp/kpgpblock.h>
-
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
 
@@ -1264,7 +1262,6 @@ QString TemplateParser::pipe( const QString &cmd, const QString &buf )
 
 void TemplateParser::parseTextStringFromContent( KMime::Content * root,
                                                  QString& parsedString,
-                                                 const QTextCodec*& codec,
                                                  bool& isHTML ) const
 {
   if ( !root )
@@ -1280,7 +1277,6 @@ void TemplateParser::parseTextStringFromContent( KMime::Content * root,
     MessageViewer::ObjectTreeParser otp( &emptySource, 0, 0, true, true );
     otp.parseObjectTree( curNode );
     parsedString = otp.plainTextContent();
-    codec = otp.nodeHelper()->codec( curNode );
   }
 }
 
@@ -1294,7 +1290,6 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
 
   QString parsedString;
   bool isHTML = false;
-  const QTextCodec * codec = 0;
 
   if ( !root )
     return QString();
@@ -1313,7 +1308,7 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
    */
 
   // first try if we have a text node
-  parseTextStringFromContent( root, parsedString, codec, isHTML );
+  parseTextStringFromContent( root, parsedString, isHTML );
 
   // otherwise check what the OTP thinks we should use
   if ( parsedString.isEmpty() ) {
@@ -1325,39 +1320,6 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
     return QString();
 
   QString result = parsedString;
-
-  // FIXME why is this here and not in the OTP? - till
-#if 0
-  // decrypt
-  if ( allowDecryption ) {
-    QList<Kpgp::Block> pgpBlocks;
-    QList<QByteArray>  nonPgpBlocks;
-    if ( Kpgp::Module::prepareMessageForDecryption( parsedString,
-                                                    pgpBlocks,
-                                                    nonPgpBlocks ) ) {
-      // Only decrypt/strip off the signature if there is only one OpenPGP
-      // block in the message
-      if ( pgpBlocks.count() == 1 ) {
-        Kpgp::Block &block = pgpBlocks.first();
-        if ( block.type() == Kpgp::PgpMessageBlock ||
-             block.type() == Kpgp::ClearsignedBlock ) {
-          if ( block.type() == Kpgp::PgpMessageBlock ) {
-            // try to decrypt this OpenPGP block
-            block.decrypt();
-          } else {
-            // strip off the signature
-            block.verify();
-            clearSigned = true;
-          }
-
-          result = codec->toUnicode( nonPgpBlocks.first() )
-              + codec->toUnicode( block.text() )
-              + codec->toUnicode( nonPgpBlocks.last() );
-        }
-      }
-    }
-  }
-#endif
 
   // html -> plaintext conversion, if necessary:
 #ifdef KDEPIM_NO_WEBKIT

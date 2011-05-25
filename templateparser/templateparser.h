@@ -207,7 +207,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     (khz, June 05 2002)*/ //TODO Review if we can get rid of it
     void parseTextStringFromContent( KMime::Content * root,
                                      QString& parsedString,
-                                     const QTextCodec*& codec,
                                      bool& isHTML ) const;
 
     /**
