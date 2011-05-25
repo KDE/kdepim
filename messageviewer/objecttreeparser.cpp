@@ -350,14 +350,10 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
 void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & result ) {
   // ### (mmutz) default handling should go into the respective
   // ### bodypartformatters.
-  if ( !htmlWriter() ) {
-    kWarning() << "no htmlWriter()";
-    return;
-  }
 
   // always show images in multipart/related when showing in html, not with an additional icon
-  if ( result.isImage() && node->parent() &&
-        node->parent()->contentType()->subType() == "related" && mSource->htmlMail() && !showOnlyOneMimePart() ) {
+  if ( htmlWriter() && result.isImage() && node->parent() &&
+       node->parent()->contentType()->subType() == "related" && mSource->htmlMail() && !showOnlyOneMimePart() ) {
     QString fileName = mNodeHelper->writeNodeToTempFile( node );
     QString href = "file:///" + fileName;
     QByteArray cid = node->contentID()->identifier();
@@ -379,10 +375,10 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     if ( as )
       asIcon = as->defaultDisplay( node ) == AttachmentStrategy::AsIcon;
 
-   // Show it inline if showOnlyOneMimePart(), which means the user clicked the image
-   // in the message structure viewer manually, and therefore wants to see the full image
-   if ( result.isImage() && showOnlyOneMimePart() && !result.neverDisplayInline() )
-     asIcon = false;
+  // Show it inline if showOnlyOneMimePart(), which means the user clicked the image
+  // in the message structure viewer manually, and therefore wants to see the full image
+  if ( result.isImage() && showOnlyOneMimePart() && !result.neverDisplayInline() )
+    asIcon = false;
 
   // neither image nor text -> show as icon
   if ( !result.isImage()
@@ -396,22 +392,26 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     */
 
   if ( asIcon ) {
-    if ( !( as && as->defaultDisplay( node ) == AttachmentStrategy::None ) ||
-         showOnlyOneMimePart() ) {
-      // Write the node as icon only
-      writePartIcon( node );
-    } else {
-      mNodeHelper->setNodeDisplayedHidden( node, true );
+    if ( htmlWriter() ) {
+      if ( !( as && as->defaultDisplay( node ) == AttachmentStrategy::None ) ||
+          showOnlyOneMimePart() ) {
+        // Write the node as icon only
+        writePartIcon( node );
+      } else {
+        mNodeHelper->setNodeDisplayedHidden( node, true );
+      }
     }
   } else if ( result.isImage() ) {
     // Embed the image
-    mNodeHelper->setNodeDisplayedEmbedded( node, true );
-    writePartIcon( node, true );
+    if ( htmlWriter() ) {
+      mNodeHelper->setNodeDisplayedEmbedded( node, true );
+      writePartIcon( node, true );
+    }
   } else {
     mNodeHelper->setNodeDisplayedEmbedded( node, true );
-    writeBodyString( node->decodedContent(),
-                     NodeHelper::fromAsString( node ),
-                     codecFor( node ), result, false );
+    writeBodyStringWrapper( node->decodedContent(),
+                            NodeHelper::fromAsString( node ),
+                            codecFor( node ), result, false );
   }
   // end of ###
 }
@@ -1031,14 +1031,11 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str )
   return false;
 }
 
-bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, ProcessResult & ) {
+bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, ProcessResult & )
+{
   const QByteArray partBody( curNode->decodedContent() );
 
   mRawDecryptedBody = partBody;
-  if ( curNode->topLevel()->textContent() == curNode ) {
-    mPlainTextContent += curNode->decodedText();
-    mPlainTextContentCharset = NodeHelper::charset( curNode );
-  }
 
   if ( !htmlWriter() )
     return true;
@@ -1215,26 +1212,11 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
 bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, ProcessResult & result )
 {
   const bool isFirstTextPart = ( curNode->topLevel()->textContent() == curNode );
-
-  if ( !htmlWriter() ) {
-    mRawDecryptedBody = curNode->decodedContent();
-    if ( isFirstTextPart ) {
-      mPlainTextContent += curNode->decodedText();
-      mPlainTextContentCharset += NodeHelper::charset( curNode );
-    }
-    return true;
-  }
+  mRawDecryptedBody = curNode->decodedContent();
 
   if ( !isFirstTextPart && attachmentStrategy()->defaultDisplay( curNode ) != AttachmentStrategy::Inline &&
        !showOnlyOneMimePart() )
     return false;
-
-  // TODO: Remove code duplication
-  mRawDecryptedBody = curNode->decodedContent();
-  if ( isFirstTextPart ) {
-    mPlainTextContent += curNode->decodedText();
-    mPlainTextContentCharset = NodeHelper::charset( curNode );
-  }
 
   QString label = NodeHelper::fileName( curNode );
 
@@ -1262,18 +1244,29 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
       htmlStr += "<br/>" + comment;
     htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
 
-    htmlWriter()->queue( htmlStr );
+    if ( htmlWriter() ) {
+      htmlWriter()->queue( htmlStr );
+    }
   }
   // process old style not-multipart Mailman messages to
   // enable verification of the embedded messages' signatures
   if ( !isMailmanMessage( curNode ) ||
         !processMailmanMessage( curNode ) ) {
-      writeBodyString( mRawDecryptedBody, NodeHelper::fromAsString( curNode ),
-                      codecFor( curNode ), result, !bDrawFrame );
+      const QString oldPlainText = mPlainTextContent;
+      writeBodyStringWrapper( mRawDecryptedBody, NodeHelper::fromAsString( curNode ),
+                              codecFor( curNode ), result, !bDrawFrame );
+
+      // Revert changes to mPlainTextContent made by writeBodyStringWrapper if this is not the first
+      // text part. The plain text content shall not contain any text/plain attachment, as it is content
+      // of the main text node.
+      if ( !isFirstTextPart ) {
+        mPlainTextContent = oldPlainText;
+      }
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
   }
-  if ( bDrawFrame )
+  if ( bDrawFrame && htmlWriter() ) {
     htmlWriter()->queue( "</td></tr></table>" );
+  }
 
   return true;
 }
@@ -2030,26 +2023,17 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   return true;
 }
 
-void ObjectTreeParser::writeBodyString( const QByteArray & bodyString,
-                                        const QString & fromAddress,
-                                        const QTextCodec * codec,
-                                        ProcessResult & result,
-                                        bool decorate )
+void ObjectTreeParser::writeBodyStringWrapper( const QByteArray & bodyString,
+                                               const QString & fromAddress,
+                                               const QTextCodec * codec,
+                                               ProcessResult & result,
+                                               bool decorate )
 {
-  // FIXME: This is wrong, it means that inline PGP messages will not be decrypted when there is no
-  //        HTML writer. Even if there would be a HTML writer, the decrypted inline PGP text is not
-  //        added to the textual content.
-  //        The solution would be to remove this if statement and make writeBodyStr() add the
-  //        decrypted string to the textual content as well, and removing any manual modifictions
-  //        of the textual content by callers of this method.
-  if ( !htmlWriter() )
-    return;
-
   assert( codec );
   KMMsgSignatureState inlineSignatureState = result.inlineSignatureState();
   KMMsgEncryptionState inlineEncryptionState = result.inlineEncryptionState();
-  writeBodyStr( bodyString, codec, fromAddress,
-                inlineSignatureState, inlineEncryptionState, decorate );
+  writeBodyString( bodyString, codec, fromAddress,
+                   inlineSignatureState, inlineEncryptionState, decorate );
   result.setInlineSignatureState( inlineSignatureState );
   result.setInlineEncryptionState( inlineEncryptionState );
 }
@@ -2794,20 +2778,20 @@ void ObjectTreeParser::writeAttachmentMarkFooter()
 
 
 //-----------------------------------------------------------------------------
-void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *aCodec,
-                              const QString& fromAddress )
+void ObjectTreeParser::writeBodyString( const QByteArray& aStr, const QTextCodec *aCodec,
+                                        const QString& fromAddress )
 {
   KMMsgSignatureState dummy1;
   KMMsgEncryptionState dummy2;
-  writeBodyStr( aStr, aCodec, fromAddress, dummy1, dummy2, false );
+  writeBodyString( aStr, aCodec, fromAddress, dummy1, dummy2, false );
 }
 
 //-----------------------------------------------------------------------------
-void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *aCodec,
-                              const QString& fromAddress,
-                              KMMsgSignatureState&  inlineSignatureState,
-                              KMMsgEncryptionState& inlineEncryptionState,
-                              bool decorate )
+void ObjectTreeParser::writeBodyString( const QByteArray& aStr, const QTextCodec *aCodec,
+                                        const QString& fromAddress,
+                                        KMMsgSignatureState&  inlineSignatureState,
+                                        KMMsgEncryptionState& inlineEncryptionState,
+                                        bool decorate )
 {
   bool goodSignature = false;
   Kpgp::Module* pgp = Kpgp::Module::getKpgp();
@@ -2835,12 +2819,15 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
       QList<Kpgp::Block>::iterator pbit =  pgpBlocks.begin();
       QListIterator<QByteArray> npbit( nonPgpBlocks );
       QString htmlStr;
+      QString plainTextStr;
       for( ; pbit != pgpBlocks.end(); ++pbit )
       {
           // insert the next Non-OpenPGP block
           QByteArray str( npbit.next() );
           if( !str.isEmpty() ) {
-            htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
+            const QString text = aCodec->toUnicode( str );
+            plainTextStr += text;
+            htmlStr += quotedHTML( text, decorate );
             kDebug() << "Non-empty Non-OpenPGP block found: '" << str  << "'";
             // treat messages with empty lines before the first clearsigned
             // block as fully signed/encrypted
@@ -2930,7 +2917,9 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
               htmlStr += writeSigstatHeader( messagePart, 0, fromAddress );
 
               if ( couldDecrypt || !isEncrypted ) {
-                htmlStr += quotedHTML( aCodec->toUnicode( block.text() ), decorate );
+                const QString text = aCodec->toUnicode( block.text() );
+                plainTextStr += text;
+                htmlStr += quotedHTML( text, decorate );
               }
               else {
                 htmlStr += QString( "<div align=\"center\">%1</div>" )
@@ -2938,15 +2927,19 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
               }
               htmlStr += writeSigstatFooter( messagePart );
           }
-          else // block is neither message block nor clearsigned block
-            htmlStr += quotedHTML( aCodec->toUnicode( block.text() ),
-                                    decorate );
+          else { // block is neither message block nor clearsigned block
+            const QString text = aCodec->toUnicode( block.text() );
+            plainTextStr += text;
+            htmlStr += quotedHTML( text, decorate );
+          }
       }
 
       // add the last Non-OpenPGP block
       QByteArray str( nonPgpBlocks.last() );
       if( !str.isEmpty() ) {
-        htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
+        const QString text = aCodec->toUnicode( str );
+        plainTextStr += text;
+        htmlStr += quotedHTML( text, decorate );
         // Even if the trailing Non-OpenPGP block isn't empty we still
         // consider the message part fully signed/encrypted because else
         // all inline signed mailing list messages would only be partially
@@ -2959,10 +2952,19 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
         if( inlineEncryptionState == KMMsgPartiallyEncrypted )
           inlineEncryptionState = KMMsgFullyEncrypted;
       }
-      htmlWriter()->queue( htmlStr );
+      if ( htmlWriter() ) {
+        htmlWriter()->queue( htmlStr );
+      }
+      mPlainTextContent += plainTextStr;
   }
-  else
-    htmlWriter()->queue( quotedHTML( aCodec->toUnicode( aStr ), decorate ) );
+  else { // No inline PGP encryption
+    const QString plainText = aCodec->toUnicode( aStr );
+    mPlainTextContent += plainText;
+    if ( htmlWriter() ) {
+      htmlWriter()->queue( quotedHTML( plainText, decorate ) );
+    }
+  }
+  mPlainTextContentCharset = aCodec->name();
 }
 
 

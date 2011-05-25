@@ -76,10 +76,12 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
   } else if( f & Kleo::InlineOpenPGPFormat ) {
     otp.processTextPlainSubtype( resultMessage, pResult );
 
+#if 0 // Crap
     otp.writeBodyString( resultMessage->encodedContent(),
                            resultMessage->from()->asUnicodeString() ,
                            nh->codec( resultMessage ),
                            pResult, true );
+#endif
                           
     Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgPartiallySigned );
 
@@ -148,10 +150,12 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
   } else if( f & Kleo::InlineOpenPGPFormat ) {
     otp.processTextPlainSubtype( resultMessage, pResult );
 
+#if 0 // Crap
     otp.writeBodyString( resultMessage->encodedContent(),
                            resultMessage->from()->asUnicodeString() ,
                            nh->codec( resultMessage ),
                            pResult, true );
+#endif
 
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgPartiallyEncrypted );
 
@@ -211,10 +215,12 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
   } else if( f & Kleo::InlineOpenPGPFormat ) {
     otp.processTextPlainSubtype( resultMessage.get(), pResult );
 
+#if 0
     otp.writeBodyString( resultMessage->encodedContent(),
                            resultMessage->from()->asUnicodeString() ,
                            nh->codec( resultMessage.get() ),
                            pResult, true );
+#endif
 
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgPartiallyEncrypted );
     Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgPartiallySigned );
