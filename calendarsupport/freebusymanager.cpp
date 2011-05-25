@@ -160,10 +160,14 @@ void FreeBusyManagerPrivate::freeBusyUrl( const QString &email )
 
 void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
 {
-  QString email = _job->property( "contactEmail" ).toString();
+  const QString email = _job->property( "contactEmail" ).toString();
 
-  if ( _job->error() )
+  if ( _job->error() ) {
+    kError() << "Error while searching for contact: "
+             << _job->errorString() << " ;email = " << email;
     emit freeBusyUrlRetrieved( email, KUrl() );
+    return;
+  }
 
   Akonadi::ContactSearchJob *job = qobject_cast<Akonadi::ContactSearchJob*>( _job );
   QString configFile = KStandardDirs::locateLocal( "data",
@@ -177,9 +181,9 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   foreach ( const KABC::Addressee &contact, contacts ) {
     pref = contact.preferredEmail();
     if ( !pref.isEmpty() && pref != email ) {
-      kDebug() << "Preferred email of" << email << "is" << pref;
       group = cfg.group( pref );
       url = group.readEntry ( "url" );
+      kDebug() << "Preferred email of" << email << "is" << pref;
       if ( !url.isEmpty() ) {
         kDebug() << "Taken url from preferred email:" << url;
         emit freeBusyUrlRetrieved( email, replaceVariablesUrl( KUrl( url ), email ) );
@@ -190,6 +194,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   // None found. Check if we do automatic FB retrieving then
   if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto ) {
     // No, so no FB list here
+    kDebug() << "No automatic retrieving";
     emit freeBusyUrlRetrieved( email, KUrl() );
     return;
   }
@@ -198,7 +203,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   // address (this also avoids downloading for "(empty email)").
   int emailpos = email.indexOf( QLatin1Char( '@' ) );
   if( emailpos == -1 ) {
-    kDebug() << "No '@' found in" << email;
+    kWarning() << "No '@' found in" << email;
     emit freeBusyUrlRetrieved( email, KUrl() );
     return;
   }
@@ -232,6 +237,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
 
     // no need to cache this URL as this is pretty fast to get from the config value.
     // return the fullpath URL
+    kDebug() << "Found url. email=" << email << "; url=" << fullpathURL;
     emit freeBusyUrlRetrieved( email, fullpathURL );
     return;
  }
@@ -257,11 +263,13 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
      // write the URL to the cache
      KConfigGroup group = cfg.group( email );
      group.writeEntry( "url", dirURL.prettyUrl() ); // prettyURL() does not write user nor password
+     kDebug() << "Found url email=" << email << "; url=" << dirURL;
      emit freeBusyUrlRetrieved( email, dirURL );
      return;
    }
  }
 
+ kDebug() << "Returning invalid url";
  emit freeBusyUrlRetrieved( email, KUrl() );
 }
 
