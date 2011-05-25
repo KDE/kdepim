@@ -80,10 +80,10 @@ class FreeBusyManagerPrivate : public QObject
     QString ownerFreeBusyAsString();
     void processFreeBusyDownloadResult( KJob *_job );
     void processFreeBusyUploadResult( KJob *_job );
-    void processRetrieveQueue();
     void uploadFreeBusy();
 
   public slots:
+    void processRetrieveQueue();
     void contactSearchJobFinished( KJob *_job );
     void finishProcessRetrieveQueue( const QString &email, const KUrl &url );
 
