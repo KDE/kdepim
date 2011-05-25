@@ -33,6 +33,13 @@ using namespace MessageViewer;
 
 QTEST_KDEMAIN( ObjectTreeParserTester, GUI )
 
+void ObjectTreeParserTester::initTestCase()
+{
+  setenv("GNUPGHOME", KDESRCDIR "../../messagecore/tests/gnupg_home" , 1 );
+  setenv("LC_ALL", "C", 1);
+  setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromAscii(  "/.kde-unit-test" ) ), 1 );
+}
+
 void ObjectTreeParserTester::test_parsePlainMessage()
 {
   KMime::Message::Ptr msg( new KMime::Message() );
@@ -130,3 +137,33 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
 
   QCOMPARE( otp.plainTextContent().toAscii().data(), "asdfasdf" );
 }
+
+// This is used to override the default message output handler. In unit tests, the special message
+// output handler can write messages to stdout delayed, i.e. after the actual kDebug() call. This
+// interfers with KPGP, since KPGP reads output from stdout, which needs to be kept clean.
+void nullMessageOutput(QtMsgType type, const char *msg)
+{
+  Q_UNUSED(type);
+  Q_UNUSED(msg);
+}
+
+void ObjectTreeParserTester::test_inlinePGPDecryption()
+{
+  KMime::Message::Ptr msg = readAndParseMail( "inlinepgpencrypted.mbox" );
+
+  QCOMPARE( msg->subject()->as7BitString( false ).constData(), "inlinepgpencrypted" );
+  QCOMPARE( msg->contents().size(), 0 );
+
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  NodeHelper nodeHelper;
+  MessageCore::Test::TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+
+  qInstallMsgHandler(nullMessageOutput);
+  otp.parseObjectTree( msg.get() );
+  qInstallMsgHandler(0);
+
+  QCOMPARE( otp.plainTextContent().toAscii().data(), "some random text" );
+}
+
