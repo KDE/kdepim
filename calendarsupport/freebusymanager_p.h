@@ -80,7 +80,7 @@ class FreeBusyManagerPrivate : public QObject
     QString ownerFreeBusyAsString();
     void processFreeBusyDownloadResult( KJob *_job );
     void processFreeBusyUploadResult( KJob *_job );
-    bool processRetrieveQueue();
+    void processRetrieveQueue();
     void uploadFreeBusy();
 
   public slots:

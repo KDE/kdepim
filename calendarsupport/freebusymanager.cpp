@@ -380,15 +380,12 @@ void FreeBusyManagerPrivate::processFreeBusyUploadResult( KJob *_job )
   mUploadingFreeBusy = false;
 }
 
-bool FreeBusyManagerPrivate::processRetrieveQueue()
+void FreeBusyManagerPrivate::processRetrieveQueue()
 {
-  if ( mRetrieveQueue.isEmpty() ) {
-    return true;
+  if ( !mRetrieveQueue.isEmpty() ) {
+    const QString email = mRetrieveQueue.takeFirst();
+    fetchFreeBusyUrl( email );
   }
-
-  QString email = mRetrieveQueue.takeFirst();
-  fetchFreeBusyUrl( email );
-  return true;
 }
 
 void FreeBusyManagerPrivate::finishProcessRetrieveQueue( const QString &email,
@@ -411,8 +408,6 @@ void FreeBusyManagerPrivate::finishProcessRetrieveQueue( const QString &email,
                                                       mParentWidgetForRetrieval );
   q->connect( job, SIGNAL(result(KJob *)), SLOT(processFreeBusyDownloadResult(KJob *)) );
   job->start();
-
-  return;
 }
 
 void FreeBusyManagerPrivate::uploadFreeBusy()
@@ -721,7 +716,8 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
     return true;
   }
 
-  return d->processRetrieveQueue();
+  d->processRetrieveQueue();
+  return true;
 }
 
 void FreeBusyManager::cancelRetrieval()
