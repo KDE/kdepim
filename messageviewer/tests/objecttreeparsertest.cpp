@@ -57,8 +57,8 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   otp.parseObjectTree( msg.get() );
 
   // Check that the textual content and the charset have the expected values
-  QCOMPARE( otp.textualContent(), QString( "This is the message text." ) );
-  QCOMPARE( otp.textualContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
+  QCOMPARE( otp.plainTextContent(), QString( "This is the message text." ) );
+  QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
 
   // Check that the message was not modified in any way
   QCOMPARE( msg->encodedContent().constData(), content.constData() );
@@ -77,7 +77,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   msg->parse();
   ObjectTreeParser otp2( &emptySource );
   otp2.parseObjectTree( msg.get() );
-  QCOMPARE( otp2.textualContentCharset().constData(), msg->defaultCharset().constData() );
+  QCOMPARE( otp2.plainTextContentCharset().constData(), msg->defaultCharset().constData() );
 }
 
 void ObjectTreeParserTester::test_parseEncapsulatedMessage()
@@ -103,8 +103,8 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   QCOMPARE( msg->contents().at( 1 )->contents().first()->contents().at( 1 )->contents().size(), 0 );
 
   // Check that the textual content and the charset have the expected values
-  QCOMPARE( otp.textualContent(), QString( "This is the encapsulating message." ) );
-  QCOMPARE( otp.textualContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
+  QCOMPARE( otp.plainTextContent(), QString( "This is the encapsulating message." ) );
+  QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
 
   // Check that the objecttreeparser did process the encapsulated message
   KMime::Message::Ptr encapsulated = msg->contents().at( 1 )->bodyAsMessage();
@@ -128,5 +128,5 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( msg.get() );
 
-  QCOMPARE( otp.textualContent().toAscii().data(), "asdfasdf" );
+  QCOMPARE( otp.plainTextContent().toAscii().data(), "asdfasdf" );
 }

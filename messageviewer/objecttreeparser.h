@@ -125,7 +125,7 @@ KMime::Content.
 \par Basics
 
 The ObjectTreeParser basically has two modes: Generating the HTML code for the Viewer, or only
-extracting the textualContent() for situations where only the message text is needed, for example
+extracting the plainTextContent() for situations where only the message text is needed, for example
 when inline forwarding a message. The mode depends on the ObjectTreeSourceIf passed to the
 constructor: If ObjectTreeSourceIf::htmlWriter() is not 0, then the HTML code generation mode is
 used.
@@ -330,9 +330,15 @@ public:
 
   /*! @return the text of the message, ie. what would appear in the
       composer's text editor if this was edited. */
-  QString textualContent() const { return mTextualContent; }
+  QString plainTextContent() const { return mPlainTextContent; }
 
-  QByteArray textualContentCharset() const { return mTextualContentCharset; }
+  /**
+   * The original charset of MIME part the plain text was extracted from.
+   * 
+   * If there were more than one text/plain MIME parts in the mail, the this is the charset
+   * of the last MIME part processed.
+   */
+  QByteArray plainTextContentCharset() const { return mPlainTextContentCharset; }
 
   void setCryptoProtocol( const Kleo::CryptoBackend::Protocol * protocol ) {
     mCryptoProtocol = protocol;
@@ -545,8 +551,8 @@ private:
   ObjectTreeSourceIf* mSource;
   NodeHelper* mNodeHelper;
   QByteArray mRawDecryptedBody;
-  QByteArray mTextualContentCharset;
-  QString mTextualContent;
+  QByteArray mPlainTextContentCharset;
+  QString mPlainTextContent;
   KMime::Content *mTopLevelContent;
   const Kleo::CryptoBackend::Protocol * mCryptoProtocol;
 

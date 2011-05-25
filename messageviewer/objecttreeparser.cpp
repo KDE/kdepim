@@ -234,9 +234,9 @@ void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, cons
   ObjectTreeParser otp( this );
   otp.parseObjectTreeInternal( newNode );
   mRawDecryptedBody += otp.rawDecryptedBody();
-  mTextualContent += otp.textualContent();
-  if ( !otp.textualContentCharset().isEmpty() )
-    mTextualContentCharset = otp.textualContentCharset();
+  mPlainTextContent += otp.plainTextContent();
+  if ( !otp.plainTextContentCharset().isEmpty() )
+    mPlainTextContentCharset = otp.plainTextContentCharset();
 }
 
 
@@ -769,9 +769,9 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
     otp.setAllowAsync( allowAsync() );
     otp.parseObjectTreeInternal( data );
     mRawDecryptedBody += otp.rawDecryptedBody();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
+    mPlainTextContent += otp.plainTextContent();
+    if ( !otp.plainTextContentCharset().isEmpty() )
+      mPlainTextContentCharset = otp.plainTextContentCharset();
 
     if ( htmlWriter() )
       htmlWriter()->queue( writeSigstatFooter( messagePart ) );
@@ -1039,8 +1039,8 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
 
   mRawDecryptedBody = partBody;
   if ( curNode->topLevel()->textContent() == curNode ) {
-    mTextualContent += curNode->decodedText();
-    mTextualContentCharset = NodeHelper::charset( curNode );
+    mPlainTextContent += curNode->decodedText();
+    mPlainTextContentCharset = NodeHelper::charset( curNode );
   }
 
   if ( !htmlWriter() )
@@ -1222,8 +1222,8 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
   if ( !htmlWriter() ) {
     mRawDecryptedBody = curNode->decodedContent();
     if ( isFirstTextPart ) {
-      mTextualContent += curNode->decodedText();
-      mTextualContentCharset += NodeHelper::charset( curNode );
+      mPlainTextContent += curNode->decodedText();
+      mPlainTextContentCharset += NodeHelper::charset( curNode );
     }
     return true;
   }
@@ -1235,8 +1235,8 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
   // TODO: Remove code duplication
   mRawDecryptedBody = curNode->decodedContent();
   if ( isFirstTextPart ) {
-    mTextualContent += curNode->decodedText();
-    mTextualContentCharset = NodeHelper::charset( curNode );
+    mPlainTextContent += curNode->decodedText();
+    mPlainTextContentCharset = NodeHelper::charset( curNode );
   }
 
   QString label = NodeHelper::fileName( curNode );
@@ -1289,9 +1289,9 @@ void ObjectTreeParser::stdChildHandling( KMime::Content * child ) {
   otp.setShowOnlyOneMimePart( false );
   otp.parseObjectTreeInternal( child );
   mRawDecryptedBody += otp.rawDecryptedBody();
-  mTextualContent += otp.textualContent();
-  if ( !otp.textualContentCharset().isEmpty() )
-    mTextualContentCharset = otp.textualContentCharset();
+  mPlainTextContent += otp.plainTextContent();
+  if ( !otp.plainTextContentCharset().isEmpty() )
+    mPlainTextContentCharset = otp.plainTextContentCharset();
 }
 
 QString ObjectTreeParser::defaultToltecReplacementText()
@@ -1501,9 +1501,9 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
     KMime::Content* newNode = mNodeHelper->extraContents( data )[ 0 ];
     otp.parseObjectTreeInternal( newNode );
     mRawDecryptedBody += otp.rawDecryptedBody();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
+    mPlainTextContent += otp.plainTextContent();
+    if ( !otp.plainTextContentCharset().isEmpty() )
+      mPlainTextContentCharset = otp.plainTextContentCharset();
 
     messagePart = mNodeHelper->partMetaData( node );
   } else {
@@ -1645,9 +1645,9 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
     mRawDecryptedBody += otp.rawDecryptedBody();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
+    mPlainTextContent += otp.plainTextContent();
+    if ( !otp.plainTextContentCharset().isEmpty() )
+      mPlainTextContentCharset = otp.plainTextContentCharset();
     return true;
   }
 
@@ -1731,9 +1731,9 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
     mRawDecryptedBody += otp.rawDecryptedBody();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
+    mPlainTextContent += otp.plainTextContent();
+    if ( !otp.plainTextContentCharset().isEmpty() )
+      mPlainTextContentCharset = otp.plainTextContentCharset();
     return true;
   }
 
@@ -2021,8 +2021,8 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   {
   if ( !htmlWriter() ) {
     mRawDecryptedBody = curNode->decodedContent();
-    mTextualContent += curNode->decodedText();
-    mTextualContentCharset = NodeHelper::charset( curNode );
+    mPlainTextContent += curNode->decodedText();
+    mPlainTextContentCharset = NodeHelper::charset( curNode );
     return true;
   }
 
