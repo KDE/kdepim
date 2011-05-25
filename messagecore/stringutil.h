@@ -62,11 +62,8 @@ namespace StringUtil
    * Strips the signature blocks from a message text. "-- " is considered as a signature block separator.
    *
    * @param message The message to remove the signature block from.
-   * @param clearSigned Before a message is cryptographically signed
-   *                    all trailing whitespace is removed.
-   *                    Therefore the signature separator loses the trailing space.
    */
-  MESSAGECORE_EXPORT QString stripSignature( const QString &message, bool clearSigned );
+  MESSAGECORE_EXPORT QString stripSignature( const QString &message );
 
   /**
    * Splits the given address list @p text into separate addresses.

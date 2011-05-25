@@ -184,12 +184,11 @@ QMap<QString, QString> parseMailtoUrl( const KUrl &url )
   return values;
 }
 
-QString stripSignature( const QString &msg, bool clearSigned )
+QString stripSignature( const QString &msg )
 {
   // Following RFC 3676, only > before --
   // I prefer to not delete a SB instead of delete good mail content.
-  const QRegExp sbDelimiterSearch = clearSigned ?
-      QRegExp( "(^|\n)[> ]*--\\s?\n" ) : QRegExp( "(^|\n)[> ]*-- \n" );
+  const QRegExp sbDelimiterSearch = QRegExp( "(^|\n)[> ]*-- \n" );
   // The regular expression to look for prefix change
   const QRegExp commonReplySearch = QRegExp( "^[ ]*>" );
 

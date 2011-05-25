@@ -1263,9 +1263,9 @@ QString TemplateParser::pipe( const QString &cmd, const QString &buf )
 }
 
 void TemplateParser::parseTextStringFromContent( KMime::Content * root,
-                                           QByteArray& parsedString,
-                                           const QTextCodec*& codec,
-                                           bool& isHTML ) const
+                                                 QString& parsedString,
+                                                 const QTextCodec*& codec,
+                                                 bool& isHTML ) const
 {
   if ( !root )
     return;
@@ -1279,7 +1279,7 @@ void TemplateParser::parseTextStringFromContent( KMime::Content * root,
     MessageViewer::EmptySource emptySource;
     MessageViewer::ObjectTreeParser otp( &emptySource, 0, 0, true, false, true );
     otp.parseObjectTree( curNode );
-    parsedString = otp.rawReplyString();
+    parsedString = otp.textualContent();
     codec = otp.nodeHelper()->codec( curNode );
   }
 }
@@ -1292,7 +1292,7 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
   Q_ASSERT( root );
   Q_ASSERT( otp->nodeHelper()->nodeProcessed( root ) );
 
-  QByteArray parsedString;
+  QString parsedString;
   bool isHTML = false;
   const QTextCodec * codec = 0;
 
@@ -1318,23 +1318,16 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
   // otherwise check what the OTP thinks we should use
   if ( parsedString.isEmpty() ) {
     // extract the already parsed reply string from the OTP
-    parsedString = otp->rawReplyString();
+    parsedString = otp->textualContent();
   }
 
   if ( parsedString.isEmpty() )
     return QString();
 
-  bool clearSigned = false;
-  QString result;
-#if 0 //TODO port to akonadi
-  if (( mOverrideCodec || !codec )
-    codec = otp->nodeHelper( )->codec( msg );
-#else
-  kDebug( ) << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+  QString result = parsedString;
 
   // FIXME why is this here and not in the OTP? - till
-
+#if 0
   // decrypt
   if ( allowDecryption ) {
     QList<Kpgp::Block> pgpBlocks;
@@ -1364,11 +1357,7 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
       }
     }
   }
-
-  if ( result.isEmpty() )
-    result = codec? codec->toUnicode( parsedString ) : parsedString;
-  if ( result.isEmpty() )
-    return result;
+#endif
 
   // html -> plaintext conversion, if necessary:
 #ifdef KDEPIM_NO_WEBKIT
@@ -1387,7 +1376,7 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
 
   // strip the signature (footer):
   if ( aStripSignature )
-    return MessageCore::StringUtil::stripSignature( result, clearSigned );
+    return MessageCore::StringUtil::stripSignature( result );
   else
     return result;
 }

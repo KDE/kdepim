@@ -206,7 +206,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     THIS FUNCTION WILL BE REPLACED ONCE KMime IS FULLY INTEGRATED
     (khz, June 05 2002)*/ //TODO Review if we can get rid of it
     void parseTextStringFromContent( KMime::Content * root,
-                                     QByteArray& parsedString,
+                                     QString& parsedString,
                                      const QTextCodec*& codec,
                                      bool& isHTML ) const;
 

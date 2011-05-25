@@ -285,8 +285,12 @@ the Viewer to scroll to the attachment.
 */
 class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   class CryptoProtocolSaver;
-  /** Internal. Copies the context of @p other, but not it's rawReplyString() */
+  /**
+   * @internal
+   * Copies the context of @p other, but not it's rawDecryptedBody, plainTextContent or htmlContent.
+   */
   ObjectTreeParser( const ObjectTreeParser & other );
+
 public:
   explicit ObjectTreeParser( ObjectTreeSourceIf * source,
                              NodeHelper *nodeHelper = 0,
@@ -306,7 +310,23 @@ public:
 
   bool hasPendingAsyncJobs() const { return mHasPendingAsyncJobs; }
 
-  QByteArray rawReplyString() const { return mRawReplyString; }
+  /**
+   * The origin and purpose of this function is unknown, the ancient wisdom about it got lost during
+   * the centuries.
+   *
+   * Historicans believe that the intent of the function is to return the raw body of the mail,
+   * i.e. no charset decoding has been done yet. Sometimes CTE decoding has been done, sometimes
+   * not. For encrypted parts, this returns the content of the decrypted part. For a mail with
+   * multiple MIME parts, the results are conecated together. Not all parts are included in this.
+   *
+   * Although conecating multiple undecoded body parts with potentially different CTEs together might
+   * not seem to make any sense in these modern times, it is assumed that initally this function
+   * performed quite well, but the ancient scrolls got damaged with the ravages of time
+   * and were re-written multiple times.
+   *
+   * Do not use. Use plainTextContent() and htmlContent() instead.
+   */
+  QByteArray rawDecryptedBody() const { return mRawDecryptedBody; }
 
   /*! @return the text of the message, ie. what would appear in the
       composer's text editor if this was edited. */
@@ -524,7 +544,7 @@ private:
 private:
   ObjectTreeSourceIf* mSource;
   NodeHelper* mNodeHelper;
-  QByteArray mRawReplyString;
+  QByteArray mRawDecryptedBody;
   QByteArray mTextualContentCharset;
   QString mTextualContent;
   KMime::Content *mTopLevelContent;

@@ -233,7 +233,7 @@ void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, cons
 
   ObjectTreeParser otp( this );
   otp.parseObjectTreeInternal( newNode );
-  mRawReplyString += otp.rawReplyString();
+  mRawDecryptedBody += otp.rawDecryptedBody();
   mTextualContent += otp.textualContent();
   if ( !otp.textualContentCharset().isEmpty() )
     mTextualContentCharset = otp.textualContentCharset();
@@ -768,7 +768,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
     ObjectTreeParser otp( this, true );
     otp.setAllowAsync( allowAsync() );
     otp.parseObjectTreeInternal( data );
-    mRawReplyString += otp.rawReplyString();
+    mRawDecryptedBody += otp.rawDecryptedBody();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
       mTextualContentCharset = otp.textualContentCharset();
@@ -800,7 +800,7 @@ void ObjectTreeParser::writeDeferredDecryptionBlock()
   messagePart.isDecryptable = true;
   messagePart.isEncrypted = true;
   messagePart.isSigned = false;
-  mRawReplyString += decryptedData.toUtf8();
+  mRawDecryptedBody += decryptedData.toUtf8();
 
   if ( htmlWriter() ) { //TODO: check if this check should be here or at the beginning of the method
     htmlWriter()->queue( writeSigstatHeader( messagePart,
@@ -1037,7 +1037,7 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str )
 bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, ProcessResult & ) {
   const QByteArray partBody( curNode->decodedContent() );
 
-  mRawReplyString = partBody;
+  mRawDecryptedBody = partBody;
   if ( curNode->topLevel()->textContent() == curNode ) {
     mTextualContent += curNode->decodedText();
     mTextualContentCharset = NodeHelper::charset( curNode );
@@ -1220,7 +1220,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
   const bool isFirstTextPart = ( curNode->topLevel()->textContent() == curNode );
 
   if ( !htmlWriter() ) {
-    mRawReplyString = curNode->decodedContent();
+    mRawDecryptedBody = curNode->decodedContent();
     if ( isFirstTextPart ) {
       mTextualContent += curNode->decodedText();
       mTextualContentCharset += NodeHelper::charset( curNode );
@@ -1233,7 +1233,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
     return false;
 
   // TODO: Remove code duplication
-  mRawReplyString = curNode->decodedContent();
+  mRawDecryptedBody = curNode->decodedContent();
   if ( isFirstTextPart ) {
     mTextualContent += curNode->decodedText();
     mTextualContentCharset = NodeHelper::charset( curNode );
@@ -1271,7 +1271,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
   // enable verification of the embedded messages' signatures
   if ( !isMailmanMessage( curNode ) ||
         !processMailmanMessage( curNode ) ) {
-      writeBodyString( mRawReplyString, NodeHelper::fromAsString( curNode ),
+      writeBodyString( mRawDecryptedBody, NodeHelper::fromAsString( curNode ),
                       codecFor( curNode ), result, !bDrawFrame );
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
   }
@@ -1288,7 +1288,7 @@ void ObjectTreeParser::stdChildHandling( KMime::Content * child ) {
   ObjectTreeParser otp( *this );
   otp.setShowOnlyOneMimePart( false );
   otp.parseObjectTreeInternal( child );
-  mRawReplyString += otp.rawReplyString();
+  mRawDecryptedBody += otp.rawDecryptedBody();
   mTextualContent += otp.textualContent();
   if ( !otp.textualContentCharset().isEmpty() )
     mTextualContentCharset = otp.textualContentCharset();
@@ -1448,7 +1448,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
       writeBodyString( cstr, NodeHelper::fromAsString( node ),
                         codecFor( node ), result, false );
     }
-    mRawReplyString += cstr;
+    mRawDecryptedBody += cstr;
     return true;
   }
 
@@ -1500,7 +1500,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
     ObjectTreeParser otp( this );
     KMime::Content* newNode = mNodeHelper->extraContents( data )[ 0 ];
     otp.parseObjectTreeInternal( newNode );
-    mRawReplyString += otp.rawReplyString();
+    mRawDecryptedBody += otp.rawDecryptedBody();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
       mTextualContentCharset = otp.textualContentCharset();
@@ -1570,7 +1570,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
         createAndParseTempNode( node, decryptedData.constData(),"encrypted data" );
       }
     } else {
-      mRawReplyString += decryptedData;
+      mRawDecryptedBody += decryptedData;
       if ( htmlWriter() ) {
         // print the error message that was returned in decryptedData
         // (utf8-encoded)
@@ -1644,7 +1644,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
   if ( child ) {
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
-    mRawReplyString += otp.rawReplyString();
+    mRawDecryptedBody += otp.rawDecryptedBody();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
       mTextualContentCharset = otp.textualContentCharset();
@@ -1661,7 +1661,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
         writeBodyString( cstr, NodeHelper::fromAsString( node ),
                           codecFor( node ), result, false );
       }
-      mRawReplyString += cstr;
+      mRawDecryptedBody += cstr;
     } else if ( !mSource->decryptMessage() ) {
       writeDeferredDecryptionBlock();
     } else {
@@ -1706,7 +1706,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
         // fixing the missing attachments bug #1090-b
         createAndParseTempNode( node, decryptedData.constData(), "encrypted data" );
       } else {
-        mRawReplyString += decryptedData;
+        mRawDecryptedBody += decryptedData;
         if ( htmlWriter() ) {
           // print the error message that was returned in decryptedData
           // (utf8-encoded)
@@ -1730,7 +1730,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
   if ( child ) {
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
-    mRawReplyString += otp.rawReplyString();
+    mRawDecryptedBody += otp.rawDecryptedBody();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
       mTextualContentCharset = otp.textualContentCharset();
@@ -2020,7 +2020,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   bool ObjectTreeParser::processApplicationChiasmusTextSubtype( KMime::Content * curNode, ProcessResult & result )
   {
   if ( !htmlWriter() ) {
-    mRawReplyString = curNode->decodedContent();
+    mRawDecryptedBody = curNode->decodedContent();
     mTextualContent += curNode->decodedText();
     mTextualContentCharset = NodeHelper::charset( curNode );
     return true;
