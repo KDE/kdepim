@@ -73,7 +73,7 @@ class FreeBusyManagerPrivate : public QObject
     FreeBusyManagerPrivate( FreeBusyManager *q );
     void checkFreeBusyUrl();
     QString freeBusyDir() const;
-    void freeBusyUrl( const QString &email );
+    void fetchFreeBusyUrl( const QString &email );
     QString freeBusyToIcal( const KCalCore::FreeBusy::Ptr & );
     KCalCore::FreeBusy::Ptr iCalToFreeBusy( const QByteArray &freeBusyData );
     KCalCore::FreeBusy::Ptr ownerFreeBusy();
