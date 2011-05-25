@@ -179,7 +179,7 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
   MessageViewer::ObjectTreeParser otp( &emptySource );//All default are ok
   otp.parseObjectTree( msgContent );
 
-  m_editor->setText( otp.textualContent() );
+  m_editor->setPlainText( otp.textualContent() );
 
   // Load the attachments
   MessageCore::AttachmentCollector ac;
