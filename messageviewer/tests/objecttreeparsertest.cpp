@@ -188,3 +188,20 @@ void ObjectTreeParserTester::test_HTML()
   QCOMPARE( otp.htmlContentCharset().data(), "windows-1252" );
 }
 
+void ObjectTreeParserTester::test_HTMLOnly()
+{
+  KMime::Message::Ptr msg = readAndParseMail( "htmlonly.mbox" );
+
+  QCOMPARE( msg->subject()->as7BitString( false ).constData(), "HTML test" );
+  QCOMPARE( msg->contents().size(), 0 );
+
+  EmptySource emptySource;
+  ObjectTreeParser otp( &emptySource );
+
+  otp.parseObjectTree( msg.get() );
+
+  QCOMPARE( otp.plainTextContent().toAscii().data(), "" );
+  QVERIFY( otp.htmlContent().contains( "<b>SOME</b> HTML text." ) );
+}
+
+

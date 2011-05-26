@@ -36,6 +36,7 @@ class ObjectTreeParserTester : public QObject
     void test_missingContentTypeHeader();
     void test_inlinePGPDecryption();
     void test_HTML();
+    void test_HTMLOnly();
 };
 
 #endif
