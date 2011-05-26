@@ -209,6 +209,19 @@ ObjectTreeParser::~ObjectTreeParser()
   }
 }
 
+void ObjectTreeParser::copyContentFrom( const ObjectTreeParser *other )
+{
+  mRawDecryptedBody += other->rawDecryptedBody();
+  mPlainTextContent += other->plainTextContent();
+  mHtmlContent += other->htmlContent();
+  if ( !other->plainTextContentCharset().isEmpty() ) {
+    mPlainTextContentCharset = other->plainTextContentCharset();
+  }
+  if ( !other->htmlContentCharset().isEmpty() ) {
+    mHtmlContentCharset = other->htmlContentCharset();
+  }
+}
+
 void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, const char* content, const char* cntDesc )
 {
 //  kDebug() << "CONTENT: " << QByteArray( content ).left( 100 ) << " CNTDESC: " << cntDesc;
@@ -230,10 +243,7 @@ void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, cons
 
   ObjectTreeParser otp( this );
   otp.parseObjectTreeInternal( newNode );
-  mRawDecryptedBody += otp.rawDecryptedBody();
-  mPlainTextContent += otp.plainTextContent();
-  if ( !otp.plainTextContentCharset().isEmpty() )
-    mPlainTextContentCharset = otp.plainTextContentCharset();
+  copyContentFrom( &otp );
 }
 
 
@@ -765,10 +775,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
     ObjectTreeParser otp( this, true );
     otp.setAllowAsync( allowAsync() );
     otp.parseObjectTreeInternal( data );
-    mRawDecryptedBody += otp.rawDecryptedBody();
-    mPlainTextContent += otp.plainTextContent();
-    if ( !otp.plainTextContentCharset().isEmpty() )
-      mPlainTextContentCharset = otp.plainTextContentCharset();
+    copyContentFrom( &otp );
 
     if ( htmlWriter() )
       htmlWriter()->queue( writeSigstatFooter( messagePart ) );
@@ -1035,16 +1042,21 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
 {
   const QByteArray partBody( curNode->decodedContent() );
 
+  QString bodyText;
+  const QString bodyHTML = codecFor( curNode )->toUnicode( partBody );
+  mHtmlContent += bodyHTML;
+  mHtmlContentCharset = NodeHelper::charset( curNode );
   mRawDecryptedBody = partBody;
 
   if ( !htmlWriter() )
     return true;
 
-  QString bodyText;
-  if ( mSource->htmlMail() )
-    bodyText = codecFor( curNode )->toUnicode( partBody );
-  else
+  if ( mSource->htmlMail() ) {
+    bodyText = bodyHTML;
+  }
+  else {
     bodyText = StringUtil::convertAngleBracketsToHtml( partBody );
+  }
 
   if ( curNode->topLevel()->textContent() == curNode  || attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
         showOnlyOneMimePart() )
@@ -1278,10 +1290,7 @@ void ObjectTreeParser::stdChildHandling( KMime::Content * child ) {
   ObjectTreeParser otp( *this );
   otp.setShowOnlyOneMimePart( false );
   otp.parseObjectTreeInternal( child );
-  mRawDecryptedBody += otp.rawDecryptedBody();
-  mPlainTextContent += otp.plainTextContent();
-  if ( !otp.plainTextContentCharset().isEmpty() )
-    mPlainTextContentCharset = otp.plainTextContentCharset();
+  copyContentFrom( &otp );
 }
 
 QString ObjectTreeParser::defaultToltecReplacementText()
@@ -1479,11 +1488,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
     ObjectTreeParser otp( this );
     KMime::Content* newNode = mNodeHelper->extraContents( data )[ 0 ];
     otp.parseObjectTreeInternal( newNode );
-    mRawDecryptedBody += otp.rawDecryptedBody();
-    mPlainTextContent += otp.plainTextContent();
-    if ( !otp.plainTextContentCharset().isEmpty() )
-      mPlainTextContentCharset = otp.plainTextContentCharset();
-
+    copyContentFrom( &otp );
     messagePart = mNodeHelper->partMetaData( node );
   } else {
     QByteArray decryptedData;
@@ -1623,10 +1628,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
   if ( child ) {
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
-    mRawDecryptedBody += otp.rawDecryptedBody();
-    mPlainTextContent += otp.plainTextContent();
-    if ( !otp.plainTextContentCharset().isEmpty() )
-      mPlainTextContentCharset = otp.plainTextContentCharset();
+    copyContentFrom( &otp );
     return true;
   }
 
@@ -1702,10 +1704,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
   if ( child ) {
     ObjectTreeParser otp( this );
     otp.parseObjectTreeInternal( child );
-    mRawDecryptedBody += otp.rawDecryptedBody();
-    mPlainTextContent += otp.plainTextContent();
-    if ( !otp.plainTextContentCharset().isEmpty() )
-      mPlainTextContentCharset = otp.plainTextContentCharset();
+    copyContentFrom( &otp );
     return true;
   }
 
@@ -1993,6 +1992,10 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   {
   if ( !htmlWriter() ) {
     mRawDecryptedBody = curNode->decodedContent();
+
+    // ### Surely this is totally wrong? The decoded text of this node is just garbage, since it is
+    //     encrypted. This whole if statement should be removed, and the decrypted body
+    //     should be added to mPlainTextContent. Needs testing with Chiasmus though, which I don't have.
     mPlainTextContent += curNode->decodedText();
     mPlainTextContentCharset = NodeHelper::charset( curNode );
     return true;

@@ -328,9 +328,20 @@ public:
    */
   QByteArray rawDecryptedBody() const { return mRawDecryptedBody; }
 
-  /*! @return the text of the message, ie. what would appear in the
-      composer's text editor if this was edited. */
+  /**
+   * The text of the message, ie. what would appear in the
+   * composer's text editor if this was edited or replied to.
+   * This is usually the content of the first text/plain MIME part.
+   */  
   QString plainTextContent() const { return mPlainTextContent; }
+
+  /**
+   * Similar to plainTextContent(), but returns the HTML source of the first text/html MIME part.
+   *
+   * Not to be consfused with the HTML code that the message viewer widget displays, that HTML
+   * is written out by htmlWriter() and a totally different pair of shoes.
+   */
+  QString htmlContent() const { return mHtmlContent; }
 
   /**
    * The original charset of MIME part the plain text was extracted from.
@@ -339,6 +350,7 @@ public:
    * of the last MIME part processed.
    */
   QByteArray plainTextContentCharset() const { return mPlainTextContentCharset; }
+  QByteArray htmlContentCharset() const { return mHtmlContentCharset; }
 
   void setCryptoProtocol( const Kleo::CryptoBackend::Protocol * protocol ) {
     mCryptoProtocol = protocol;
@@ -545,12 +557,16 @@ private:
   void dumpToFile( const char *, const char *, size_t ) {}
 #endif
 
+  void copyContentFrom( const ObjectTreeParser *other );
+
 private:
   ObjectTreeSourceIf* mSource;
   NodeHelper* mNodeHelper;
   QByteArray mRawDecryptedBody;
   QByteArray mPlainTextContentCharset;
+  QByteArray mHtmlContentCharset;
   QString mPlainTextContent;
+  QString mHtmlContent;
   KMime::Content *mTopLevelContent;
   const Kleo::CryptoBackend::Protocol * mCryptoProtocol;
 
