@@ -103,6 +103,12 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QPointer>
+#ifdef KDEPIM_NO_WEBKIT
+# include <QTextBrowser>
+#else
+# include <QtWebKit/QWebPage>
+# include <QtWebKit/QWebFrame>
+#endif
 
 // other includes
 #include <sstream>
@@ -3304,3 +3310,19 @@ KMime::Content* ObjectTreeParser::findTypeNot( KMime::Content * content, const Q
     return 0;
 }
 
+QString ObjectTreeParser::convertedTextContent() const
+{
+  if ( mPlainTextContent.isEmpty() ) {
+#ifdef KDEPIM_NO_WEBKIT
+      QTextDocument doc;
+      doc.setHtml( mHtmlContent );
+      return doc.toPlainText();
+#else
+      QWebPage doc;
+      doc.mainFrame()->setHtml( mHtmlContent );
+      return doc.mainFrame()->toPlainText();
+#endif
+  } else {
+    return mPlainTextContent;
+  }
+}

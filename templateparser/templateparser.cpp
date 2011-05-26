@@ -55,14 +55,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
-#include <QWebElement>
 #include <QTextCodec>
-#include <QWebFrame>
-#ifdef KDEPIM_NO_WEBKIT
-# include <QTextBrowser>
-#else
-# include <QtWebKit/QWebPage>
-#endif
 
 namespace TemplateParser {
 
@@ -1320,21 +1313,6 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
     return QString();
 
   QString result = parsedString;
-
-  // html -> plaintext conversion, if necessary:
-#ifdef KDEPIM_NO_WEBKIT
-    if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
-      QTextDocument doc;
-      doc.setHtml( result );
-      result = doc.toPlainText();
-    }
-#else
-    if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
-      QWebPage doc;
-      doc.mainFrame()->setHtml( result );
-      result = doc.mainFrame()->toPlainText();
-    }
-#endif
 
   // strip the signature (footer):
   if ( aStripSignature )

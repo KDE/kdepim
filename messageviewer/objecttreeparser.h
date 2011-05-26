@@ -344,6 +344,12 @@ public:
   QString htmlContent() const { return mHtmlContent; }
 
   /**
+   * Returns a plain text version of the content, which is either plainTextContent() if that exists,
+   * or htmlContent() converted to plain text otherwise.
+   */
+  QString convertedTextContent() const;
+
+  /**
    * The original charset of MIME part the plain text was extracted from.
    * 
    * If there were more than one text/plain MIME parts in the mail, the this is the charset
