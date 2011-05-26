@@ -65,6 +65,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
 
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.plainTextContent(), QString( "This is the message text." ) );
+  QVERIFY( otp.htmlContent().isEmpty() );
   QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
 
   // Check that the message was not modified in any way
@@ -112,6 +113,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.plainTextContent(), QString( "This is the encapsulating message." ) );
   QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
+  QVERIFY( otp.htmlContent().isEmpty() );
 
   // Check that the objecttreeparser did process the encapsulated message
   KMime::Message::Ptr encapsulated = msg->contents().at( 1 )->bodyAsMessage();
@@ -136,6 +138,7 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
   otp.parseObjectTree( msg.get() );
 
   QCOMPARE( otp.plainTextContent().toAscii().data(), "asdfasdf" );
+  QVERIFY( otp.htmlContent().isEmpty() );
 }
 
 // This is used to override the default message output handler. In unit tests, the special message
@@ -165,5 +168,23 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
   qInstallMsgHandler(0);
 
   QCOMPARE( otp.plainTextContent().toAscii().data(), "some random text" );
+  QVERIFY( otp.htmlContent().isEmpty() );
+}
+
+void ObjectTreeParserTester::test_HTML()
+{
+  KMime::Message::Ptr msg = readAndParseMail( "html.mbox" );
+
+  QCOMPARE( msg->subject()->as7BitString( false ).constData(), "HTML test" );
+  QCOMPARE( msg->contents().size(), 2 );
+
+  EmptySource emptySource;
+  ObjectTreeParser otp( &emptySource );
+
+  otp.parseObjectTree( msg.get() );
+
+  QCOMPARE( otp.plainTextContent().toAscii().data(), "Some HTML text" );
+  QVERIFY( otp.htmlContent().contains( "Some <span style=\" font-weight:600;\">HTML</span> text" ) );
+  QCOMPARE( otp.htmlContentCharset().data(), "windows-1252" );
 }
 

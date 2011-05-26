@@ -1333,6 +1333,8 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     return false;
 
   KMime::Content* dataHtml = findType( child, "text/html", false, true );
+  KMime::Content* dataPlain = findType( child, "text/plain", false, true );
+
   if ( !dataHtml ) {
     // If we didn't find the HTML part as the first child of the multipart/alternative, it might
     // be that this is a HTML message with images, and text/plain and multipart/related are the
@@ -1348,9 +1350,19 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     if ( !dataHtml && mSource->htmlMail() ) {
       dataHtml = findType( child, "multipart/mixed", false, true );
     }
-
   }
-  KMime::Content* dataPlain = findType( child, "text/plain", false, true );
+
+  // If there is no HTML writer, process both the HTML and the plain text nodes, as we're collecting
+  // the plainTextContent and the htmlContent
+  if ( !htmlWriter() ) {
+    if ( dataPlain ) {
+      stdChildHandling( dataPlain );
+    }
+    if ( dataHtml ) {
+      stdChildHandling( dataHtml );
+    }
+    return true;
+  }
 
   if ( ( mSource->htmlMail() && dataHtml) ||
         (dataHtml && dataPlain && dataPlain->body().isEmpty()) ) {
@@ -1361,7 +1373,7 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     return true;
   }
 
-  if ( !htmlWriter() || (!mSource->htmlMail() && dataPlain) ) {
+  if ( !mSource->htmlMail() && dataPlain ) {
     mNodeHelper->setNodeProcessed( dataHtml, false );
     stdChildHandling( dataPlain );
     mSource->setHtmlMode( Util::MultipartPlain );

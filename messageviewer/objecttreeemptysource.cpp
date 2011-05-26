@@ -36,7 +36,7 @@ EmptySource::~EmptySource()
 
 bool EmptySource::htmlMail()
 {
-  return false;
+  return true;
 }
 
 bool EmptySource::decryptMessage()
