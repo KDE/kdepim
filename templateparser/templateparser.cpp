@@ -1269,7 +1269,7 @@ void TemplateParser::parseTextStringFromContent( KMime::Content * root,
     MessageViewer::EmptySource emptySource;
     MessageViewer::ObjectTreeParser otp( &emptySource, 0, 0, true, true );
     otp.parseObjectTree( curNode );
-    parsedString = otp.plainTextContent();
+    parsedString = otp.convertedTextContent();
   }
 }
 
@@ -1306,7 +1306,7 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
   // otherwise check what the OTP thinks we should use
   if ( parsedString.isEmpty() ) {
     // extract the already parsed reply string from the OTP
-    parsedString = otp->plainTextContent();
+    parsedString = otp->convertedTextContent();
   }
 
   if ( parsedString.isEmpty() )
