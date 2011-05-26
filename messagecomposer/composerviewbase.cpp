@@ -108,32 +108,6 @@ Message::ComposerViewBase::~ComposerViewBase()
 
 }
 
-// Checks if the mail is a HTML mail.
-// The catch here is that encapsulated messages can also have a HTML part, so we make
-// sure that only messages where the first HTML part is in the same multipart/alternative container
-// as the frist plain text part are counted as HTML mail
-bool Message::ComposerViewBase::isHTMLMail( KMime::Content *root )
-{
-  if ( !root )
-    return false;
-
-  using namespace MessageViewer;
-  KMime::Content *firstTextPart = ObjectTreeParser::findType( root, "text/plain", true, true );
-  KMime::Content *firstHtmlPart = ObjectTreeParser::findType( root, "text/html", true, true );
-  if ( !firstTextPart || !firstHtmlPart )
-    return false;
-
-  KMime::Content *parent = firstTextPart->parent();
-  if ( !parent || parent != firstHtmlPart->parent() )
-    return false;
-
-  if ( !parent->contentType()->isMultipart() ||
-       parent->contentType()->subType() != "alternative" )
-    return false;
-
-  return true;
-}
-
 bool Message::ComposerViewBase::isComposing() const
 {
   return !m_composers.isEmpty();
@@ -198,22 +172,9 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
     m_transport->setCurrentTransport( transport->id() );
 
   // Set the HTML text and collect HTML images
-  if ( isHTMLMail( m_msg.get() ) ) {
-    KMime::Content *htmlNode = MessageViewer::ObjectTreeParser::findType( msgContent, "text/html", true, true );
-    Q_ASSERT( htmlNode );
-    KMime::Content *parentNode = htmlNode->parent();
-    if ( parentNode && parentNode->contentType()->isMultipart() ) {
-      emit enableHtml();
-
-      const QByteArray htmlCharset = htmlNode->contentType()->charset();
-      const QByteArray htmlBodyDecoded = htmlNode->decodedContent();
-      const QTextCodec *codec = MessageViewer::NodeHelper::codecForName( htmlCharset );
-      if ( codec ) {
-        m_editor->setHtml( codec->toUnicode( htmlBodyDecoded ) );
-      } else {
-        m_editor->setHtml( QString::fromLocal8Bit( htmlBodyDecoded ) );
-      }
-    }
+  if ( !otp.htmlContent().isEmpty() ) {
+    m_editor->setHtml( otp.htmlContent() );
+    emit enableHtml();
     collectImages( m_msg.get() );
   }
   

@@ -238,7 +238,6 @@ private slots:
   void slotFccCollectionCheckResult( KJob *job );
 
 private:
-  bool isHTMLMail( KMime::Content* root );
   /**
   * Searches the mime tree, where root is the root node, for embedded images,
   * extracts them froom the body and adds them to the editor.
