@@ -1291,13 +1291,7 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
    * FIXME
    * The below is weird. It tries to find a text node, then uses
    * that for the reply string, instead of relying on the OTP to
-   * provide one. In order to make replies to encrypted mails work,
-   * I added a fall back to the rawReplyString from the OTP, but
-   * it seems to me like that one should always be used? Also, why
-   * is the legacy pgp handling in here and not handled by the OTP?
-   * Wonderous and wonderouser. I'm also not sure, but it's pretty
-   * likely that the OTP also handles the whole codec mess already.
-   * Needs to be verified.
+   * provide one.
    */
 
   // first try if we have a text node
