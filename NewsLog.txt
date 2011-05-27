@@ -1,4 +1,13 @@
 
+Friday 27 May 2011
+
+Problems addressed
+------------------
+
+* kolab/issue4303: Wish: New choices for the option KMail->Misc->Folder->When entering a folder - part 2 (rt#5993)
+
+
+
 Friday 01 April 2011
 
 Problems addressed
