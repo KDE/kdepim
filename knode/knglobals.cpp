@@ -19,6 +19,7 @@
 
 #include <kconfig.h>
 #include <kstaticdeleter.h>
+#include <kdebug.h>
 
 #include "knconfigmanager.h"
 #include "knnetaccess.h"
@@ -139,3 +140,45 @@ void KNGlobals::setStatusMsg(const QString &text, int id)
   if(top)
     top->setStatusMsg(text, id);
 }
+
+void KNGlobals::reset()
+{
+  delete mMemManager;
+  mMemManager = 0;
+  kdDebug(5003) << "Memory Manager deleted" << endl;
+
+  /* Already deleted via static deleter
+  delete mScoreManager;
+  mScoreManager = 0;
+  kdDebug(5003) << "Score manager deleted" << endl;
+  */
+
+  delete mFolManager;
+  mFolManager = 0;
+  kdDebug(5003) << "Folder Manager deleted" << endl;
+
+  delete mFilManager;
+  mFilManager = 0;
+  kdDebug(5003) << "Filter Manager deleted" << endl;
+
+  delete mArtManager;
+  mArtManager = 0;
+  kdDebug(5003) << "Article Manager deleted" << endl;
+
+  delete mGrpManager;
+  mGrpManager = 0;
+  kdDebug(5003) << "Group Manager deleted" << endl;
+
+  delete mAccManager;
+  mAccManager = 0;
+  kdDebug(5003) << "Account Manager deleted" << endl;
+
+  delete mNetAccess;
+  mNetAccess = 0;
+  kdDebug(5003) << "Net deleted" << endl;
+
+  delete mCfgManager;
+  mCfgManager = 0;
+  kdDebug(5003) << "Config deleted" << endl;
+}
+

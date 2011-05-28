@@ -266,33 +266,10 @@ KNMainWidget::~KNMainWidget()
   delete a_ccel;
 
   h_drView->clear(); //avoid some random crashes in KNHdrViewItem::~KNHdrViewItem()
-
-  delete n_etAccess;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Net deleted" << endl;
-
-  delete a_rtManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Article Manager deleted" << endl;
+  knGlobals.reset();
 
   delete a_rtFactory;
   kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Article Factory deleted" << endl;
-
-  delete g_rpManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Group Manager deleted" << endl;
-
-  delete f_olManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Folder Manager deleted" << endl;
-
-  delete f_ilManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Filter Manager deleted" << endl;
-
-  delete a_ccManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Account Manager deleted" << endl;
-
-  delete c_fgManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Config deleted" << endl;
-
-  delete m_emManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Memory Manager deleted" << endl;
 
   delete p_gp;
   kdDebug(5003) << "KNMainWidget::~KNMainWidget() : PGP deleted" << endl;

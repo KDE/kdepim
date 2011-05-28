@@ -78,6 +78,8 @@ class KDE_EXPORT KNGlobals {
     /** forwarded to top->setStatusMsg() if available */
     void setStatusMsg(const QString& text = QString::null, int id = SB_MAIN);
 
+    void reset();
+
 private:
     KSharedConfig::Ptr c_onfig;
 
