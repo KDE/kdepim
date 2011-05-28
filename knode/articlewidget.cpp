@@ -274,12 +274,12 @@ void ArticleWidget::disableActions()
   mFancyToggle->setEnabled( false );
 }
 
-
-
 void ArticleWidget::readConfig()
 {
   KNConfigManager *cfgMgr = knGlobals.configManager();
+  Q_ASSERT( cfgMgr );
   KNConfig::ReadNewsViewer *rnViewer = cfgMgr->readNewsViewer();
+  Q_ASSERT( rnViewer );
 
   mFixedFontToggle->setChecked( rnViewer->useFixedFont() );
   mFancyToggle->setChecked( rnViewer->interpretFormatTags() );
