@@ -102,7 +102,8 @@ namespace MessageViewer {
 
     QFont defaultFont = KGlobalSettings::generalFont();
     QFont defaultFixedFont = KGlobalSettings::fixedFont();
-    mBodyFont = mPrintFont = defaultFont;
+    mBodyFont = MessageCore::GlobalSettings::self()->bodyFont();
+    mPrintFont = MessageCore::GlobalSettings::self()->printFont();
     mFixedFont = mFixedPrintFont = defaultFixedFont;
     defaultFont.setItalic( true );
     for ( int i = 0 ; i < 3 ; ++i )
