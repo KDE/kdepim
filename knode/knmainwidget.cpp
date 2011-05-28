@@ -238,37 +238,9 @@ KNMainWidget::~KNMainWidget()
   disconnect( c_olView, SIGNAL(itemSelectionChanged()),
               this, SLOT(slotCollectionSelected()) );
 
-  //delete a_ccel;
+  knGlobals.reset(); // cleanup
 
   h_drView->clear(); //avoid some random crashes in KNHdrViewItem::~KNHdrViewItem()
-
-  delete knGlobals.scheduler();
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Scheduler deleted";
-
-  delete a_rtManager;
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Article Manager deleted";
-
-  delete a_rtFactory;
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Article Factory deleted";
-
-  delete g_rpManager;
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Group Manager deleted";
-
-  delete f_olManager;
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Folder Manager deleted";
-
-  delete f_ilManager;
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Filter Manager deleted";
-
-  delete a_ccManager;
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Account Manager deleted";
-
-  delete c_fgManager;
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Config deleted";
-
-  delete knGlobals.memoryManager();
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Memory Manager deleted";
-
 }
 
 void KNMainWidget::initStatusBar()
