@@ -192,39 +192,39 @@ void KNGlobals::reset()
 {
   delete mMemManager;
   mMemManager = 0;
-  kDebug() << "Memory Manager deleted" << endl;
+  kDebug() << "Memory Manager deleted";
 
   delete mScoreManager;
   mScoreManager = 0;
-  kdDebug() << "Score manager deleted" << endl;
+  kDebug() << "Score manager deleted";
 
   delete mFolManager;
   mFolManager = 0;
-  kDebug() << "Folder Manager deleted" << endl;
+  kDebug() << "Folder Manager deleted";
 
   delete mFilManager;
   mFilManager = 0;
-  kDebug() << "Filter Manager deleted" << endl;
+  kDebug() << "Filter Manager deleted";
 
   delete mArtManager;
   mArtManager = 0;
-  kDebug() << "Article Manager deleted" << endl;
+  kDebug() << "Article Manager deleted";
 
   delete mGrpManager;
   mGrpManager = 0;
-  kDebug() << "Group Manager deleted" << endl;
+  kDebug() << "Group Manager deleted";
 
   delete mAccManager;
   mAccManager = 0;
-  kDebug() << "Account Manager deleted" << endl;
+  kDebug() << "Account Manager deleted";
 
   delete mCfgManager;
   mCfgManager = 0;
-  kDebug() << "Config deleted" << endl;
+  kDebug() << "Config deleted";
 
   delete mScheduler;
   mScheduler = 0;
-  kDebug() << "Scheduler deleted" << endl;
+  kDebug() << "Scheduler deleted";
 
   delete mArticleFactory;
   mArticleFactory = 0;
