@@ -1190,33 +1190,47 @@ void KMMainWidget::slotArchiveFolder()
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotRemoveFolder()
 {
+  const QValueList<QGuardedPtr<KMFolder> > folders = folderTree()->selectedFolders();
+
+  if ( folders.count() > 1 ) {
+    for ( int i = 0; i < folders.count(); ++i ) {
+      QGuardedPtr<KMFolder> folder = folders[ i ];
+      removeFolder( folder );
+    }
+  } else {
+    removeFolder( mFolder );
+  }
+}
+
+void KMMainWidget::removeFolder(KMFolder *folder)
+{
   QString str;
   QDir dir;
 
-  if ( !mFolder ) return;
-  if ( mFolder->isSystemFolder() ) return;
-  if ( mFolder->isReadOnly() ) return;
-  if ( mFolder->mailCheckInProgress() ) {
-    KMessageBox::sorry( this, i18n( "It is not possible to delete this folder right now because it "
+  if ( !folder ) return;
+  if ( folder->isSystemFolder() ) return;
+  if ( folder->isReadOnly() ) return;
+  if ( folder->mailCheckInProgress() ) {
+    KMessageBox::sorry( this, i18n( "It is not possible to delete folder <b>%1</b> right now because it "
                                     "is being syncronized. Please wait until the syncronization of "
-                                    "this folder is complete and then try again." ),
+                                    "this folder is complete and then try again." ).arg( folder->label() ),
                               i18n( "Unable to delete folder" ) );
     return;
   }
 
   QString title;
-  if ( mFolder->folderType() == KMFolderTypeSearch ) {
+  if ( folder->folderType() == KMFolderTypeSearch ) {
     title = i18n("Delete Search");
     str = i18n("<qt>Are you sure you want to delete the search <b>%1</b>?<br>"
                 "Any messages it shows will still be available in their original folder.</qt>")
-           .arg( QStyleSheet::escape( mFolder->label() ) );
+           .arg( QStyleSheet::escape( folder->label() ) );
   } else {
     title = i18n("Delete Folder");
-    if ( mFolder->count() == 0 ) {
-      if ( !mFolder->child() || mFolder->child()->isEmpty() ) {
+    if ( folder->count() == 0 ) {
+      if ( !folder->child() || folder->child()->isEmpty() ) {
         str = i18n("<qt>Are you sure you want to delete the empty folder "
                    "<b>%1</b>?</qt>")
-              .arg( QStyleSheet::escape( mFolder->label() ) );
+              .arg( QStyleSheet::escape( folder->label() ) );
       }
       else {
         str = i18n("<qt>Are you sure you want to delete the empty folder "
@@ -1224,22 +1238,22 @@ void KMMainWidget::slotRemoveFolder()
                    "not be empty and their contents will be discarded as well. "
                    "<p><b>Beware</b> that discarded messages are not saved "
                    "into your Trash folder and are permanently deleted.</qt>")
-              .arg( QStyleSheet::escape( mFolder->label() ) );
+              .arg( QStyleSheet::escape( folder->label() ) );
       }
     } else {
-      if ( !mFolder->child() || mFolder->child()->isEmpty() ) {
+      if ( !folder->child() || folder->child()->isEmpty() ) {
         str = i18n("<qt>Are you sure you want to delete the folder "
                    "<b>%1</b>, discarding its contents? "
                    "<p><b>Beware</b> that discarded messages are not saved "
                    "into your Trash folder and are permanently deleted.</qt>")
-              .arg( QStyleSheet::escape( mFolder->label() ) );
+              .arg( QStyleSheet::escape( folder->label() ) );
       }
       else {
         str = i18n("<qt>Are you sure you want to delete the folder <b>%1</b> "
                    "and all its subfolders, discarding their contents? "
                    "<p><b>Beware</b> that discarded messages are not saved "
                    "into your Trash folder and are permanently deleted.</qt>")
-            .arg( QStyleSheet::escape( mFolder->label() ) );
+            .arg( QStyleSheet::escape( folder->label() ) );
       }
     }
   }
@@ -1248,7 +1262,7 @@ void KMMainWidget::slotRemoveFolder()
                                          KGuiItem( i18n("&Delete"), "editdelete"))
       == KMessageBox::Continue)
   {
-    KMail::FolderUtil::deleteFolder( mFolder, this );
+    KMail::FolderUtil::deleteFolder( folder, this );
   }
 }
 
@@ -3455,15 +3469,20 @@ void KMMainWidget::updateFolderMenu()
                                i18n( "E&mpty Trash" ) :
                                i18n( "&Move All Messages to Trash" ) );
 
-  mRemoveFolderAction->setEnabled( mFolder &&
-                                   !mFolder->isSystemFolder() &&
-                                   mFolder->canDeleteMessages() &&
-                                   !multiFolder && !mFolder->noContent() &&
-                                   !mFolder->mailCheckInProgress() );
-  mRemoveFolderAction->setText( mFolder &&
-                                mFolder->folderType() == KMFolderTypeSearch ?
-                                i18n( "&Delete Search" ) :
-                                i18n( "&Delete Folder" ) );
+  if ( multiFolder ) {
+    mRemoveFolderAction->setEnabled( true );
+    mRemoveFolderAction->setText( i18n( "&Delete Folders" ) );
+  } else {
+    mRemoveFolderAction->setEnabled( mFolder &&
+                                     !mFolder->isSystemFolder() &&
+                                     mFolder->canDeleteMessages() &&
+                                     !multiFolder && !mFolder->noContent() &&
+                                     !mFolder->mailCheckInProgress() );
+    mRemoveFolderAction->setText( mFolder &&
+                                  mFolder->folderType() == KMFolderTypeSearch ?
+                                  i18n( "&Delete Search" ) :
+                                  i18n( "&Delete Folder" ) );
+  }
 
   if ( mArchiveFolderAction )
     mArchiveFolderAction->setEnabled( mFolder && !multiFolder );

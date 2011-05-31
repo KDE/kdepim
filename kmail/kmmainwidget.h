@@ -444,6 +444,8 @@ private:
 
   void setupFolderView();
 
+  void removeFolder(KMFolder *folder);
+
 private slots:
   void slotRequestFullSearchFromQuickSearch();
   void updateVactionScriptStatus( bool active );
