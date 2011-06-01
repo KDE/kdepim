@@ -87,7 +87,8 @@ namespace _detail {
   template <typename T_result>
   class Thread : public QThread {
   public:
-      explicit Thread( QObject * parent=0 ) : QThread( parent ) {}
+      explicit Thread( QObject * parent=0 ) : QThread( parent ) { kDebug() << "tokoe: created thread" << this; }
+      ~Thread() { kDebug() << "tokoe: destroyed thread" << this; }
 
       void setFunction( const boost::function<T_result()> & function ) {
           const QMutexLocker locker( &m_mutex );
@@ -101,11 +102,11 @@ namespace _detail {
 
   private:
       /* reimp */ void run() {
-          kDebug() << "tokoe: Thread::run started";
+          kDebug() << "tokoe: Thread::run started" << this;
           const QMutexLocker locker( &m_mutex );
-          kDebug() << "tokoe: Thread::run: after mutex";
+          kDebug() << "tokoe: Thread::run: after mutex" << this;
           m_result = m_function();
-          kDebug() << "tokoe: Thread::run: after m_function call";
+          kDebug() << "tokoe: Thread::run: after m_function call" << this;
       }
   private:
       mutable QMutex m_mutex;
@@ -148,7 +149,7 @@ namespace _detail {
 
     void lateInitialization() {
       assert( m_ctx );
-      kDebug() << "tokoe: ThreadedJobMixin: connect finished signal";
+      kDebug() << "tokoe: ThreadedJobMixin: connect finished signal" << this;
       connect( &m_thread, SIGNAL(finished()), this, SLOT(slotFinished()) );
       m_ctx->setProgressProvider( this );
     }
@@ -184,18 +185,18 @@ namespace _detail {
     virtual void resultHook( const result_type & ) {}
 
     void slotFinished() {
-      kDebug() << "tokoe: ThreadedJobMixin::slotFinished called";
+      kDebug() << "tokoe: ThreadedJobMixin::slotFinished called" << this;
       const T_result r = m_thread.result();
       m_auditLog = boost::get<boost::tuples::length<T_result>::value-2>( r );
       m_auditLogError = boost::get<boost::tuples::length<T_result>::value-1>( r );
       resultHook( r );
-      kDebug() << "tokoe: ThreadedJobMixin::slotFinished: emit result signal";
+      kDebug() << "tokoe: ThreadedJobMixin::slotFinished: emit result signal" << this;
       emit this->done();
       doEmitResult( r );
       this->deleteLater();
     }
     /* reimp */ void slotCancel() {
-      kDebug() << "tokoe: ThreadedJobMixin::slotCancel called";
+      kDebug() << "tokoe: ThreadedJobMixin::slotCancel called" << this;
       if ( m_ctx ) m_ctx->cancelPendingOperation();
     }
     /* reimp */ QString auditLogAsHtml() const { return m_auditLog; }
