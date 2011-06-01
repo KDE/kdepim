@@ -1587,9 +1587,23 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
 
   // If a 1 day event
   if ( event->dtStart().date() == event->dtEnd().date() ) {
+    QDateTime newDateToUse = event->dtStart();
+    QDateTime oldDateToUse = oldevent->dtStart();
+    const int exDatesCount = event->recurrence()->exDates().count();
+    if ( event->doesRecur() && oldevent->doesRecur() &&
+         exDatesCount == oldevent->recurrence()->exDates().count() + 1 &&
+         event->dtStart() == oldevent->dtStart() && event->dtEnd() == oldevent->dtEnd() )
+    {
+      // kolab/issue4735 - When you delete an occurrence of a recurring event, the date
+      // of the occurrence should be used. This is a bit of an hack because we don't support
+      // recurrence-id yet
+      newDateToUse = QDateTime( event->recurrence()->exDates()[exDatesCount-1], QTime( -1, -1 ) );
+      oldDateToUse = newDateToUse;
+    }
+
     html += htmlRow( i18n( "Date:" ),
-                     IncidenceFormatter::dateToString( event->dtStart(), false ),
-                     IncidenceFormatter::dateToString( oldevent->dtStart(), false ) );
+                     IncidenceFormatter::dateToString( newDateToUse, false ),
+                     IncidenceFormatter::dateToString( oldDateToUse, false ) );
     QString spanStr , oldspanStr;
     if ( !event->doesFloat() ) {
       spanStr = IncidenceFormatter::timeToString( event->dtStart(), true ) +
