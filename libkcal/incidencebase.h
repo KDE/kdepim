@@ -45,7 +45,7 @@ class FreeBusy;
 class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
 {
   public:
-    // Only FieldPercentComplete and FieldAttendees are currently set.
+    // Only FieldPercentComplete, FieldAttendees and FieldRecurrence are currently set.
     // The rest of this feature will be implemented when it's needed.
     enum Field {
       FieldDtStart,         ///> Field representing the DTSTART component.

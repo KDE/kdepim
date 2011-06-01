@@ -842,6 +842,7 @@ QString Incidence::schedulingID() const
 void Incidence::recurrenceUpdated( Recurrence *recurrence )
 {
   if ( recurrence == mRecurrence )
+    setFieldDirty( FieldRecurrence );
     updated();
 }
 
