@@ -173,6 +173,7 @@ void IncidenceAttachmentModelPrivate::setItem( const Akonadi::Item& item )
 int IncidenceAttachmentModel::rowCount( const QModelIndex& parent ) const
 {
   Q_D( const IncidenceAttachmentModel );
+  Q_UNUSED( parent );
   if ( !d->m_incidence )
     return 0;
   return d->m_incidence->attachments().size();
