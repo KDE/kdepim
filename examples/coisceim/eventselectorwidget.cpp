@@ -26,7 +26,7 @@
 #include <QTextBrowser>
 #include <QTreeView>
 
-#include <calendarsupport/incidenceviewer.h>
+#include <calendarsupport/next/incidenceviewer.h>
 
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
