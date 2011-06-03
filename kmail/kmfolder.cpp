@@ -132,8 +132,8 @@ KMFolder::KMFolder( KMFolderDir* aParent, const QString& aFolderName,
   connect( mStorage, SIGNAL( contentsTypeChanged( KMail::FolderContentsType ) ),
                 this, SLOT( slotContentsTypeChanged( KMail::FolderContentsType ) ) );
 
-  connect( mStorage, SIGNAL( folderSizeChanged() ),
-           this, SLOT( slotFolderSizeChanged() ) );
+  connect( mStorage, SIGNAL(folderSizeChanged(KMFolder *)),
+           this, SLOT(slotFolderSizeChanged(KMFolder *)) );
 
   //FIXME: Centralize all the readConfig calls somehow - Zack
   // Meanwhile, readConfig must be done before registerWithMessageDict, since

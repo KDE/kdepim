@@ -499,7 +499,7 @@ signals:
   void searchDone( KMFolder*, Q_UINT32, const KMSearchPattern*, bool );
 
   /** Emitted when the folder's size changes. */
-  void folderSizeChanged();
+  void folderSizeChanged( KMFolder * );
 
   /**
    *  Emitted when the sync state, i.e. mailCheckInProgress(), changes.

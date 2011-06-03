@@ -991,6 +991,9 @@ static bool removeDirAndContentsRecursively( const QString & path )
   QDir d;
   d.setPath( path );
   d.setFilter( QDir::Files | QDir::Dirs | QDir::Hidden | QDir::NoSymLinks );
+  if ( !d.exists() ) {
+    return false;
+  }
 
   const QFileInfoList *list = d.entryInfoList();
   QFileInfoListIterator it( *list );
@@ -1151,7 +1154,7 @@ void KMFolderMaildir::slotDirSizeJobResult( KIO::Job* job )
       mSize = dirsize->totalSize();
       //kdDebug(5006) << k_funcinfo << "dirSizeJob completed. Folder "
       //  << location() << " has size " << mSize << endl;
-      emit folderSizeChanged();
+      emit folderSizeChanged( folder() );
     }
     // remove the completed job from the queue
     s_DirSizeJobQueue.pop_front();

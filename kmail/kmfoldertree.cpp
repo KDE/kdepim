@@ -1218,6 +1218,9 @@ void KMFolderTree::contentsMousePressEvent(QMouseEvent * e)
 void KMFolderTree::contentsMouseReleaseEvent(QMouseEvent* me)
 {
   QListViewItem *lvi = currentItem(); // Needed for when branches are clicked on
+  if ( !lvi ) {
+    return;
+  }
   ButtonState btn = me->button();
   doFolderSelected(lvi, true);
 
@@ -1648,20 +1651,24 @@ void KMFolderTree::slotRenameFolder(QListViewItem *item, int col,
 void KMFolderTree::slotUpdateCountsDelayed(KMFolder * folder)
 {
 //  kdDebug(5006) << "KMFolderTree::slotUpdateCountsDelayed()" << endl;
-  if ( !mFolderToUpdateCount.contains( folder->idString() ) )
-  {
-//    kdDebug( 5006 )<< "adding " << folder->idString() << " to updateCountList " << endl;
-    mFolderToUpdateCount.insert( folder->idString(),folder );
+
+  if ( !folder ) {
+    return;
   }
-  if ( !mUpdateCountTimer->isActive() )
+
+  if ( !mFolderToUpdateCount.contains( folder->idString() ) ) {
+//    kdDebug( 5006 )<< "adding " << folder->idString() << " to updateCountList " << endl;
+    mFolderToUpdateCount.insert( folder->idString(), folder );
+  }
+  if ( !mUpdateCountTimer->isActive() ) {
     mUpdateCountTimer->start( 500 );
+  }
 }
 
 
 void KMFolderTree::slotUpdateCountTimeout()
 {
 //  kdDebug(5006) << "KMFolderTree::slotUpdateCountTimeout()" << endl;
-
   QMap<QString,KMFolder*>::iterator it;
   for ( it= mFolderToUpdateCount.begin();
       it!=mFolderToUpdateCount.end();

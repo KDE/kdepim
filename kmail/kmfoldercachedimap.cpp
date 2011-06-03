@@ -2549,7 +2549,7 @@ void KMFolderCachedImap::setQuotaInfo( const QuotaInfo & info )
       if ( wasCloseToQuota != isCloseToQuota() ) {
         emit closeToQuotaChanged();
       }
-      emit folderSizeChanged();
+      emit folderSizeChanged( folder() );
     }
 }
 
