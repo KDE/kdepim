@@ -1,4 +1,15 @@
 
+Friday 03 June 2011
+
+Problems addressed
+------------------
+
+* kolab/issue3954: A group of selected folders cannot be deleted (rt#5895)
+* kolab/issue4479: Change used kontact plugins crash (Kontact::MainWindow::addPlugin at mainwindow.cpp:719) (rt#6193)
+* kolab/issue4735: Canceling of one event of a recurring event. Update mail improvement (rt#10008)
+
+
+
 Friday 27 May 2011
 
 Problems addressed
