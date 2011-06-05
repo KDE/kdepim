@@ -21,7 +21,6 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kiconloader.h>
-#include <ksvgrenderer.h>
 
 #include <QtGui/QLayout>
 #include <QtGui/QLabel>
@@ -32,6 +31,7 @@
 #include <QtGui/QProgressBar>
 #include <QtGui/QPainter>
 #include <QtGui/QFileDialog>
+#include <QtSvg/QSvgRenderer>
 
 using namespace Kleo::KioAvoidance;
 
@@ -151,7 +151,7 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
             // Special stuff for SVG icons
             img = QImage(60, 60, QImage::Format_ARGB32_Premultiplied);
             img.fill(0);
-            KSvgRenderer renderer(*it);
+            QSvgRenderer renderer(*it);
             if (renderer.isValid()) {
                 QPainter p(&img);
                 renderer.render(&p);
