@@ -237,6 +237,8 @@ void AkonotesNoteApplet::collectionFetchDone( KJob *job )
 
   msg->subject( true )->fromUnicodeString( title, encoding );
   msg->contentType( true )->setMimeType( "text/plain" );
+  msg->contentType()->setCharset("utf-8");
+  msg->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
   msg->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
   // Need a non-empty body part so that the serializer regards this as a valid message.
   msg->mainBodyPart()->fromUnicodeString( " " );
@@ -305,6 +307,8 @@ void AkonotesNoteApplet::saveItem()
 
   msg->subject()->fromUnicodeString( m_subject->text(), encoding );
   msg->mainBodyPart()->fromUnicodeString( m_content->nativeWidget()->toPlainText() );
+  msg->contentType(true)->setCharset("utf-8");
+  msg->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
   msg->assemble();
   m_item.setPayload( msg );
 
