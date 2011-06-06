@@ -116,10 +116,10 @@ endif()
 #    3.2 alpha1
 
 if (NOT DEFINED KDEPIM_DEV_VERSION)
-    set( KDEPIM_DEV_VERSION "rc2" )
+    set( KDEPIM_DEV_VERSION "" )
 endif (NOT DEFINED KDEPIM_DEV_VERSION)
 
-set( KDEPIM_VERSION "4.6 ${KDEPIM_DEV_VERSION}" )
+set( KDEPIM_VERSION "4.6.0" )
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
 ############### search packages used by KDE ###############
