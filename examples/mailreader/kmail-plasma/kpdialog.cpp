@@ -36,11 +36,6 @@
 
 //KDE
 #include <KDebug>
-#include <KColorScheme>
-#include <KIcon>
-#include <KIconLoader>
-#include <KMimeType>
-#include <KRun>
 
 //plasma
 #include <Plasma/Dialog>
