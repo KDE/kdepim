@@ -18,14 +18,15 @@
  ***************************************************************************/
 
 // Akonadi
-#include "akonadi_next/entitytreeview.h"
-#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/changerecorder.h>
+#include <akonadi/entitytreeview.h>
+#include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/monitor.h>
 #include <akonadi/selectionproxymodel.h>
 #include <akonadi/session.h>
-#include <akonadi/statisticstooltipproxymodel.h>
+#include <akonadi/statisticsproxymodel.h>
 
 #include <messagelist/pane.h>
 
@@ -126,13 +127,13 @@ void KPDialog::setupPane()
     // Setup the core model
     Akonadi::Session *session = new Akonadi::Session( "KPApplet", m_folderListWidget );
 
-      Akonadi::Monitor *monitor = new Akonadi::Monitor( m_folderListWidget );
+      Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( m_folderListWidget );
       monitor->setCollectionMonitored( Akonadi::Collection::root() );
       monitor->fetchCollection( true );
       monitor->setMimeTypeMonitored( "message/rfc822", true );
       monitor->itemFetchScope().fetchFullPayload(true);
 
-      Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( session, monitor, m_folderListWidget );
+      Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( monitor, m_folderListWidget );
       entityModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
       // Create the collection view
@@ -142,14 +143,14 @@ void KPDialog::setupPane()
 
 
       // Setup the message folders collection...
-      Akonadi::EntityFilterProxyModel *collectionFilter = new Akonadi::EntityFilterProxyModel( m_folderListWidget );
+      Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel( m_folderListWidget );
       collectionFilter->setSourceModel( entityModel );
       //collectionFilter->addMimeTypeInclusionFilter( "message/rfc822" );
       collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-      collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+      collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
       // ... with statistics...
-      Akonadi::StatisticsToolTipProxyModel *statisticsProxyModel = new Akonadi::StatisticsToolTipProxyModel( m_folderListWidget );
+      Akonadi::StatisticsProxyModel *statisticsProxyModel = new Akonadi::StatisticsProxyModel( m_folderListWidget );
       statisticsProxyModel->setSourceModel( collectionFilter );
 
       // ... and sortable
@@ -159,7 +160,7 @@ void KPDialog::setupPane()
       sortModel->setSourceModel( statisticsProxyModel );
       // Use the model
       m_folderListView->setModel( sortModel );
-      entityModel->setRootCollection(Akonadi::Collection::root());
+      //entityModel->setRootCollection(Akonadi::Collection::root());
       
       // Now make the message list multi-tab pane
       m_messagePane = new MessageList::Pane( entityModel, m_folderListView->selectionModel(), m_messageListWidget );
