@@ -408,7 +408,7 @@ private:
         {
             setupUi( qq->mainWidget() );
             qq->setButtons( KDialog::Help | KDialog::Close );
-
+            qq->setHelp(QString(), "kleopatra");
             chainTW->header()->setResizeMode( 0, QHeaderView::Stretch );
 
             dumpLTW->setFont( KGlobalSettings::fixedFont() );
