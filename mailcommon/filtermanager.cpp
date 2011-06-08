@@ -40,7 +40,7 @@ class FilterManager::Private
   public:
     Private( FilterManager *qq )
       : q( qq ),
-        mRequiresBody( false )
+        mRequiresBody( false ), mInboundFiltersExist( false )
     {
     }
 
@@ -66,11 +66,12 @@ class FilterManager::Private
     QList<MailFilter *> mFilters;
     Akonadi::ChangeRecorder *mChangeRecorder;
     bool mRequiresBody;
+    bool mInboundFiltersExist;
 };
 
 void FilterManager::Private::tryToFilterInboxOnStartup()
 {
-  if ( mFilters.isEmpty() )
+  if ( mFilters.isEmpty() || !mInboundFiltersExist )
     return;
 
   if ( !Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).isValid() ) {
@@ -517,6 +518,9 @@ void FilterManager::endUpdate()
   // check if at least one filter requires the message body
   d->mRequiresBody = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
                                    boost::bind( &MailFilter::requiresBody, _1 ) ) != d->mFilters.constEnd();
+  // check if at least one filter is to be applied on inbound mail
+  d->mInboundFiltersExist = std::find_if( d->mFilters.constBegin(), d->mFilters.constEnd(),
+                                          boost::bind( &MailFilter::applyOnInbound, _1 ) ) != d->mFilters.constEnd();
 
   emit filterListUpdated();
 }
