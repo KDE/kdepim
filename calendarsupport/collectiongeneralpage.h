@@ -28,6 +28,7 @@
 #include <akonadi/collectionpropertiespage.h>
 
 class KLineEdit;
+class KIconButton;
 class QCheckBox;
 
 namespace CalendarSupport {
@@ -45,7 +46,9 @@ class CALENDARSUPPORT_EXPORT CollectionGeneralPage : public Akonadi::CollectionP
 
   private:
     QCheckBox *mBlockAlarmsCheckBox;
-    KLineEdit   *mNameEdit;
+    KLineEdit *mNameEdit;
+    QCheckBox *mIconCheckBox;
+    KIconButton *mIconButton;
 };
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionGeneralPageFactory, CollectionGeneralPage )

@@ -21,6 +21,7 @@
 #include "collectionmodel.h"
 #include "autoqpointer.h"
 #include "collectionattribute.h"
+#include "compatibilityattribute.h"
 #include "preferences.h"
 
 #include <akonadi/collectiondialog.h>
@@ -39,6 +40,7 @@
 
 using namespace Akonadi;
 using KAlarm::CollectionAttribute;
+using KAlarm::CompatibilityAttribute;
 
 static Collection::Rights writableRights = Collection::CanChangeItem | Collection::CanCreateItem | Collection::CanDeleteItem;
 
@@ -229,7 +231,7 @@ QVariant CollectionListModel::data(const QModelIndex& index, int role) const
 = checked status is equivalent to whether it is selected or not.
 = An alarm type is specified, whereby Collections which are enabled for that
 = alarm type are checked; Collections which do not contain that alarm type, or
-= which are disabled for that alarm type, are unchedked.
+= which are disabled for that alarm type, are unchecked.
 =============================================================================*/
 
 CollectionListModel* CollectionCheckListModel::mModel = 0;
@@ -276,7 +278,8 @@ QVariant CollectionCheckListModel::data(const QModelIndex& index, int role) cons
         {
             case Qt::FontRole:
             {
-                if (!collection.hasAttribute<CollectionAttribute>())
+                if (!collection.hasAttribute<CollectionAttribute>()
+                ||  !AkonadiModel::isCompatible(collection))
                     break;
                 CollectionAttribute* attr = collection.attribute<CollectionAttribute>();
                 if (!attr->enabled())
@@ -316,7 +319,8 @@ bool CollectionCheckListModel::setData(const QModelIndex& index, const QVariant&
             {
                 QString errmsg;
                 QWidget* messageParent = qobject_cast<QWidget*>(QObject::parent());
-                if (attr->standard() != KAlarm::CalEvent::EMPTY)
+                if (attr->standard() != KAlarm::CalEvent::EMPTY
+                &&  AkonadiModel::isCompatible(collection))
                 {
                     // It's the standard collection for some alarm type.
                     if (attr->isStandard(KAlarm::CalEvent::ACTIVE))
@@ -352,7 +356,6 @@ bool CollectionCheckListModel::setData(const QModelIndex& index, const QVariant&
 */
 void CollectionCheckListModel::slotRowsInserted(const QModelIndex& parent, int start, int end)
 {
-#warning Rows are inserted even when not inserted in AkonadiModel
     for (int row = start;  row <= end;  ++row)
     {
         const QModelIndex ix = mapToSource(index(row, 0, parent));
@@ -363,7 +366,8 @@ void CollectionCheckListModel::slotRowsInserted(const QModelIndex& parent, int s
 }
 
 /******************************************************************************
-* Called when the user has ticked/unticked a collection to enable/disable it.
+* Called when the user has ticked/unticked a collection to enable/disable it
+* (or when the selection changes for any other reason).
 */
 void CollectionCheckListModel::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
@@ -384,16 +388,21 @@ void CollectionCheckListModel::collectionStatusChanged(const Collection& collect
 {
     if (!collection.isValid())
         return;
-    if (change == AkonadiModel::AlarmTypes)
+    switch (change)
     {
-        kDebug() << "AlarmTypes" << collection.id();
-        QModelIndex ix = mapFromSource(mModel->collectionIndex(collection));
-        if (ix.isValid())
-        {
-            setSelectionStatus(collection, ix);
-            emit collectionTypeChange(this);
-        }
+        case AkonadiModel::Enabled:
+            break;
+        case AkonadiModel::AlarmTypes:
+            kDebug() << "AlarmTypes" << collection.id();
+            break;
+        default:
+            return;
     }
+    QModelIndex ix = mapFromSource(mModel->collectionIndex(collection));
+    if (ix.isValid())
+        setSelectionStatus(collection, ix);
+    if (change == AkonadiModel::AlarmTypes)
+        emit collectionTypeChange(this);
 }
 
 /******************************************************************************
@@ -421,6 +430,7 @@ CollectionFilterCheckListModel::CollectionFilterCheckListModel(QObject* parent)
       mTemplateModel(new CollectionCheckListModel(KAlarm::CalEvent::TEMPLATE, this)),
       mAlarmType(KAlarm::CalEvent::EMPTY)
 {
+    setDynamicSortFilter(true);
     connect(mActiveModel, SIGNAL(collectionTypeChange(CollectionCheckListModel*)), SLOT(collectionTypeChanged(CollectionCheckListModel*)));
     connect(mArchivedModel, SIGNAL(collectionTypeChange(CollectionCheckListModel*)), SLOT(collectionTypeChanged(CollectionCheckListModel*)));
     connect(mTemplateModel, SIGNAL(collectionTypeChange(CollectionCheckListModel*)), SLOT(collectionTypeChanged(CollectionCheckListModel*)));
@@ -712,13 +722,21 @@ void CollectionControlModel::statusChanged(const Collection& collection, Akonadi
 */
 bool CollectionControlModel::isWritable(const Akonadi::Collection& collection, KAlarm::CalEvent::Type type, bool ignoreEnabledStatus)
 {
+    if (!collection.isValid())
+        return false;
     Collection col = collection;
     AkonadiModel::instance()->refresh(col);    // update with latest data
-    if (!col.hasAttribute<CollectionAttribute>()
-    ||  col.attribute<CollectionAttribute>()->compatibility() != KAlarm::Calendar::Current)
+    if ((col.rights() & writableRights) != writableRights
+    ||  !AkonadiModel::isCompatible(col))
         return false;
-    return (ignoreEnabledStatus || isEnabled(col, type))
-       &&  (col.rights() & writableRights) == writableRights;
+    if (ignoreEnabledStatus)
+        return true;
+
+    // Check the collection's enabled status
+    if (!instance()->collections().contains(col)
+    ||  !col.hasAttribute<CollectionAttribute>())
+        return false;
+    return col.attribute<CollectionAttribute>()->isEnabled(type);
 }
 
 /******************************************************************************
@@ -738,7 +756,8 @@ Collection CollectionControlModel::getStandard(KAlarm::CalEvent::Type type, bool
         &&  cols[i].contentMimeTypes().contains(mimeType))
         {
             if (cols[i].hasAttribute<CollectionAttribute>()
-            &&  (cols[i].attribute<CollectionAttribute>()->standard() & type))
+            &&  (cols[i].attribute<CollectionAttribute>()->standard() & type)
+            &&  AkonadiModel::isCompatible(cols[i]))
                 return cols[i];
             defalt = (defalt == -1) ? i : -2;
         }
@@ -755,7 +774,8 @@ bool CollectionControlModel::isStandard(Akonadi::Collection& collection, KAlarm:
     if (!instance()->collections().contains(collection))
         return false;
     AkonadiModel::instance()->refresh(collection);    // update with latest data
-    if (!collection.hasAttribute<CollectionAttribute>())
+    if (!collection.hasAttribute<CollectionAttribute>()
+    ||  !AkonadiModel::isCompatible(collection))
         return false;
     return collection.attribute<CollectionAttribute>()->isStandard(type);
 }
@@ -769,6 +789,8 @@ KAlarm::CalEvent::Types CollectionControlModel::standardTypes(const Collection& 
         return KAlarm::CalEvent::EMPTY;
     Collection col = collection;
     AkonadiModel::instance()->refresh(col);    // update with latest data
+    if (!AkonadiModel::isCompatible(col))
+        return KAlarm::CalEvent::EMPTY;
     KAlarm::CalEvent::Types stdTypes = col.hasAttribute<CollectionAttribute>()
                                      ? col.attribute<CollectionAttribute>()->standard()
                                      : KAlarm::CalEvent::EMPTY;
@@ -799,6 +821,8 @@ void CollectionControlModel::setStandard(Akonadi::Collection& collection, KAlarm
 {
     AkonadiModel* model = AkonadiModel::instance();
     model->refresh(collection);    // update with latest data
+    if (!AkonadiModel::isCompatible(collection))
+        standard = false;   // the collection isn't writable
     if (standard)
     {
         // The collection is being set as standard.
@@ -855,6 +879,8 @@ void CollectionControlModel::setStandard(Akonadi::Collection& collection, KAlarm
 {
     AkonadiModel* model = AkonadiModel::instance();
     model->refresh(collection);    // update with latest data
+    if (!AkonadiModel::isCompatible(collection))
+        types = KAlarm::CalEvent::EMPTY;   // the collection isn't writable
     if (types)
     {
         // The collection is being set as standard for at least one mime type.

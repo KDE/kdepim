@@ -98,8 +98,6 @@ UnreadMailsInCollectionsWidget::UnreadMailsInCollectionsWidget(QWidget* parent, 
   m_etm = new MailModel(m_changeRecorder, this);
   m_etm->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
-  VIEW(m_etm);
-
   Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
 
   collectionFilter->setSourceModel(m_etm);

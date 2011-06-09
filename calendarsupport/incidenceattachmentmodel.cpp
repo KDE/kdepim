@@ -170,7 +170,7 @@ void IncidenceAttachmentModelPrivate::setItem( const Akonadi::Item& item )
   emit q->rowCountChanged();
 }
 
-int IncidenceAttachmentModel::rowCount( const QModelIndex& parent ) const
+int IncidenceAttachmentModel::rowCount( const QModelIndex & ) const
 {
   Q_D( const IncidenceAttachmentModel );
   Q_UNUSED( parent );

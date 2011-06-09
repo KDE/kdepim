@@ -25,43 +25,16 @@
 
 #include "KJotsMain.h"
 
-#include <QtGui/QPrinter>
-#include <QtGui/QPrintDialog>
-#include <QCheckBox>
-#include <QTextCharFormat>
-
-//Added by qt3to4:
-#include <kactionmenu.h>
-
 #include <Akonadi/AttributeFactory>
 
-#include <kio/job.h>
-#include <kio/copyjob.h>
-#include <kio/netaccess.h>
 #include <kicon.h>
-#include <kfinddialog.h>
-#include <kfind.h>
-#include <kreplacedialog.h>
-#include <kreplace.h>
-#include <ktemporaryfile.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kapplication.h>
-#include <kbookmarkmenu.h>
-#include <kconfigdialog.h>
 #include <kdebug.h>
-#include <kencodingfiledialog.h>
 #include <kglobalsettings.h>
 #include <kinputdialog.h>
-#include <kmessagebox.h>
-#include <kmenu.h>
-#include <krun.h>
-#include <kstandarddirs.h>
-#include <kstandardshortcut.h>
 #include <kstandardaction.h>
-#include <kfontaction.h>
-#include <kfontsizeaction.h>
 #include <kstatusbar.h>
 
 #include "KJotsSettings.h"
@@ -71,6 +44,7 @@
 #include "kjotswidget.h"
 #include "kjotslockattribute.h"
 
+#include <QApplication>
 
 //----------------------------------------------------------------------
 // KJOTSMAIN
@@ -126,6 +100,6 @@ void KJotsMain::onQuit()
 {
 //     component->queryClose();
     deleteLater();
-    KApplication::kApplication()->quit();
+    qApp->quit();
 }
 

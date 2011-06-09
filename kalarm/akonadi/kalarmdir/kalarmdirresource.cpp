@@ -24,8 +24,6 @@
 #include "kalarmdirresource.h"
 #include "kalarmresourcecommon.h"
 #include "autoqpointer.h"
-#include "collectionattribute.h"
-#include "eventattribute.h"
 #include "kacalendar.h"
 
 #include "kalarmdirsettingsadaptor.h"
@@ -59,7 +57,6 @@
 using namespace Akonadi;
 using namespace KCalCore;
 using namespace Akonadi_KAlarm_Dir_Resource;
-using KAlarm::CollectionAttribute;
 using KAlarmResourceCommon::errorMessage;
 
 static bool isFileValid(const QString& file);
@@ -403,6 +400,8 @@ KAEvent KAlarmDirResource::loadFile(const QString& path, const QString& file)
         kWarning() << "File" << path << ": event contains no alarms";
         return KAEvent();
     }
+    // Convert event to current KAlarm format if possible
+    KAlarm::Calendar::Compat compat = KAlarmResourceCommon::getCompatibility(fileStorage);
     KAEvent event(kcalEvent);
     const QString mime = KAlarm::CalEvent::mimeType(event.category());
     if (mime.isEmpty())
@@ -415,7 +414,7 @@ KAEvent KAlarmDirResource::loadFile(const QString& path, const QString& file)
         kWarning() << "KAEvent has wrong alarm type for resource:" << mime;
         return KAEvent();
     }
-    event.setCompatibility(KAlarmResourceCommon::getCompatibility(fileStorage));
+    event.setCompatibility(compat);
     return event;
 }
 
