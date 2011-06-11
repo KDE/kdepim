@@ -32,7 +32,6 @@
 #include <akonadi/kmime/messagefolderattribute.h>
 #include <akonadi/selectionproxymodel.h>
 
-#include <KDE/KCodecs>
 #include <KDE/KLocale>
 #include <Nepomuk/ResourceManager>
 #include <Soprano/Statement>
@@ -47,6 +46,7 @@
 #include <QtCore/QScopedPointer>
 #include <QtGui/QItemSelectionModel>
 #include <QtCore/QMimeData>
+#include <QtCore/QCryptographicHash>
 
 namespace MessageList
 {
@@ -267,9 +267,9 @@ static QByteArray md5Encode( const QByteArray &str )
 {
   if ( str.trimmed().isEmpty() ) return QByteArray();
 
-  KMD5 md5( str.trimmed() );
-  static const int Base64EncodedMD5Len = 22;
-  return md5.base64Digest().left( Base64EncodedMD5Len );
+  QCryptographicHash c( QCryptographicHash::Md5 );
+  c.addData( str.trimmed() );
+  return c.result();
 }
 
 void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem *mi,
