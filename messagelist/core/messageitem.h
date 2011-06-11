@@ -226,7 +226,7 @@ class MESSAGELIST_EXPORT FakeItem : public MessageItem
     virtual bool hasAnnotation() const;
 
   private:
-    FakeItemPrivate * const d;
+    Q_DECLARE_PRIVATE( FakeItem )
 };
 
 } // namespace Core

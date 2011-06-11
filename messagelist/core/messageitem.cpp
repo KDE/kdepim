@@ -602,23 +602,28 @@ void MessageItem::setToDoMessageFont( const QFont &font )
   MessageItemPrivate::mFontToDoMessage = font;
 }
 
+FakeItemPrivate::FakeItemPrivate( FakeItem *qq ) : MessageItemPrivate( qq )
+{
+}
+
 FakeItem::FakeItem()
-  : d( new FakeItemPrivate() )
+  : MessageItem( new FakeItemPrivate( this ) )
 {
 }
 
 FakeItem::~FakeItem()
 {
-  delete d;
 }
 
 QList< MessageItem::Tag * > FakeItem::tagList() const
 {
+  Q_D( const FakeItem );
   return d->mFakeTags;
 }
 
 void FakeItem::setFakeTags( const QList< MessageItem::Tag* > &tagList )
 {
+  Q_D( FakeItem );
   d->mFakeTags = tagList;
 }
 

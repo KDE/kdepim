@@ -29,12 +29,6 @@
 namespace MessageList {
 namespace Core {
 
-class FakeItemPrivate
-{
-  public:
-    QList<MessageItem::Tag*> mFakeTags;
-};
-
 class MessageItemPrivate : public ItemPrivate
 {
 public:
@@ -95,6 +89,13 @@ private:
   // List of all tags. If this is 0, it means we have not yet calculated this list. It is calculated
   // on demand when needed.
   mutable QList< MessageItem::Tag * > * mTagList;
+};
+
+class FakeItemPrivate : public MessageItemPrivate
+{
+  public:
+    FakeItemPrivate( FakeItem *qq );
+    QList<MessageItem::Tag*> mFakeTags;
 };
 
 }
