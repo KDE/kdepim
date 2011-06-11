@@ -140,25 +140,25 @@ public:
 
   void setEncryptionState( EncryptionState state );
 
-  QString messageIdMD5() const;
+  QByteArray messageIdMD5() const;
 
-  void setMessageIdMD5( const QString &md5 );
+  void setMessageIdMD5( const QByteArray &md5 );
 
-  QString inReplyToIdMD5() const;
+  QByteArray inReplyToIdMD5() const;
 
-  void setInReplyToIdMD5( const QString &md5 );
+  void setInReplyToIdMD5( const QByteArray &md5 );
 
-  QString referencesIdMD5() const;
+  QByteArray referencesIdMD5() const;
 
-  void setReferencesIdMD5( const QString &md5 );
+  void setReferencesIdMD5( const QByteArray &md5 );
 
   void setSubjectIsPrefixed( bool subjectIsPrefixed );
 
   bool subjectIsPrefixed() const;
 
-  QString strippedSubjectMD5() const;
+  QByteArray strippedSubjectMD5() const;
 
-  void setStrippedSubjectMD5( const QString &md5 );
+  void setStrippedSubjectMD5( const QByteArray &md5 );
 
   bool aboutToBeRemoved() const;
 

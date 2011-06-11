@@ -1443,7 +1443,7 @@ MessageItem * ModelPrivate::findMessageParent( MessageItem * mi )
   // we have the ID in the "In-Reply-To" field. This is actually done by using
   // MD5 caches of the message ids because of speed. Collisions are very unlikely.
 
-  QString md5 = mi->inReplyToIdMD5();
+  QByteArray md5 = mi->inReplyToIdMD5();
   if ( !md5.isEmpty() )
   {
     // have an In-Reply-To field MD5
@@ -1660,11 +1660,11 @@ MessageItem * ModelPrivate::guessMessageParent( MessageItem * mi )
 
 
   // Do subject based threading
-  QString md5 = mi->strippedSubjectMD5();
+  const QByteArray md5 = mi->strippedSubjectMD5();
   if ( !md5.isEmpty() )
   {
     QList< MessageItem * > * messagesWithTheSameStrippedSubject =
-        mThreadingCacheMessageSubjectMD5ToMessageItem.value( mi->strippedSubjectMD5(), 0 );
+        mThreadingCacheMessageSubjectMD5ToMessageItem.value( md5, 0 );
 
     if ( messagesWithTheSameStrippedSubject )
     {
@@ -2825,7 +2825,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
       // we have the ID in the "In-Reply-To" field. This is actually done by using
       // MD5 caches of the message ids because of speed. Collisions are very unlikely.
 
-      QString md5 = mi->inReplyToIdMD5();
+      const QByteArray md5 = mi->inReplyToIdMD5();
 
       if ( !md5.isEmpty() )
       {

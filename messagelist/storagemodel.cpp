@@ -263,18 +263,13 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
   return true;
 }
 
-static QString md5Encode( const QByteArray &str )
+static QByteArray md5Encode( const QByteArray &str )
 {
-  if ( str.trimmed().isEmpty() ) return QString();
+  if ( str.trimmed().isEmpty() ) return QByteArray();
 
   KMD5 md5( str.trimmed() );
   static const int Base64EncodedMD5Len = 22;
-  return QString::fromLatin1( md5.base64Digest().left( Base64EncodedMD5Len ) );
-}
-
-static QString md5Encode( const QString &str )
-{
-  return md5Encode( str.toUtf8() );
+  return md5.base64Digest().left( Base64EncodedMD5Len );
 }
 
 void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem *mi,
@@ -288,7 +283,7 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
   {
     const QString subject = mail->subject()->asUnicodeString();
     const QString strippedSubject = MessageCore::StringUtil::stripOffPrefixes( subject );
-    mi->setStrippedSubjectMD5( md5Encode( strippedSubject ) );
+    mi->setStrippedSubjectMD5( md5Encode( strippedSubject.toUtf8() ) );
     mi->setSubjectIsPrefixed( subject != strippedSubject );
     // fall through
   }

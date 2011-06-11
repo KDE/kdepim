@@ -150,10 +150,10 @@ public:
   void invalidateAnnotationCache();
 
   ThreadingStatus mThreadingStatus;
-  QString mMessageIdMD5;            ///< always set
-  QString mInReplyToIdMD5;          ///< set only if we're doing threading
-  QString mReferencesIdMD5;         ///< set only if we're doing threading
-  QString mStrippedSubjectMD5;      ///< set only if we're doing threading
+  QByteArray mMessageIdMD5;            ///< always set
+  QByteArray mInReplyToIdMD5;          ///< set only if we're doing threading
+  QByteArray mReferencesIdMD5;         ///< set only if we're doing threading
+  QByteArray mStrippedSubjectMD5;      ///< set only if we're doing threading
   EncryptionState mEncryptionState;
   SignatureState mSignatureState;
   Akonadi::Item mAkonadiItem;
@@ -476,32 +476,32 @@ void MessageItem::setEncryptionState( EncryptionState state )
   d->mEncryptionState = state;
 }
 
-QString MessageItem::messageIdMD5() const
+QByteArray MessageItem::messageIdMD5() const
 {
   return d->mMessageIdMD5;
 }
 
-void MessageItem::setMessageIdMD5( const QString &md5 )
+void MessageItem::setMessageIdMD5( const QByteArray &md5 )
 {
   d->mMessageIdMD5 = md5;
 }
 
-QString MessageItem::inReplyToIdMD5() const
+QByteArray MessageItem::inReplyToIdMD5() const
 {
   return d->mInReplyToIdMD5;
 }
 
-void MessageItem::setInReplyToIdMD5( const QString &md5 )
+void MessageItem::setInReplyToIdMD5( const QByteArray& md5 )
 {
   d->mInReplyToIdMD5 = md5;
 }
 
-QString MessageItem::referencesIdMD5() const
+QByteArray MessageItem::referencesIdMD5() const
 {
   return d->mReferencesIdMD5;
 }
 
-void MessageItem::setReferencesIdMD5( const QString &md5 )
+void MessageItem::setReferencesIdMD5( const QByteArray& md5 )
 {
   d->mReferencesIdMD5 = md5;
 }
@@ -516,12 +516,12 @@ bool MessageItem::subjectIsPrefixed() const
   return d->mSubjectIsPrefixed;
 }
 
-QString MessageItem::strippedSubjectMD5() const
+QByteArray MessageItem::strippedSubjectMD5() const
 {
   return d->mStrippedSubjectMD5;
 }
 
-void MessageItem::setStrippedSubjectMD5( const QString &md5 )
+void MessageItem::setStrippedSubjectMD5( const QByteArray& md5 )
 {
   d->mStrippedSubjectMD5 = md5;
 }
