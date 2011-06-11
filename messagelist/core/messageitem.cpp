@@ -116,17 +116,17 @@ void MessageItem::Tag::setPriority( int priority )
 }
 
 
-QColor MessageItem::Private::mColorNewMessage;
-QColor MessageItem::Private::mColorUnreadMessage;
-QColor MessageItem::Private::mColorImportantMessage;
-QColor MessageItem::Private::mColorToDoMessage;
-QFont MessageItem::Private::mFont;
-QFont MessageItem::Private::mFontNewMessage;
-QFont MessageItem::Private::mFontUnreadMessage;
-QFont MessageItem::Private::mFontImportantMessage;
-QFont MessageItem::Private::mFontToDoMessage;
+QColor MessageItemPrivate::mColorNewMessage;
+QColor MessageItemPrivate::mColorUnreadMessage;
+QColor MessageItemPrivate::mColorImportantMessage;
+QColor MessageItemPrivate::mColorToDoMessage;
+QFont MessageItemPrivate::mFont;
+QFont MessageItemPrivate::mFontNewMessage;
+QFont MessageItemPrivate::mFontUnreadMessage;
+QFont MessageItemPrivate::mFontImportantMessage;
+QFont MessageItemPrivate::mFontToDoMessage;
 
-MessageItem::Private::Private()
+MessageItemPrivate::MessageItemPrivate()
   : mThreadingStatus( MessageItem::ParentMissing ),
     mAboutToBeRemoved( false ),
     mAnnotationStateChecked( false ),
@@ -134,12 +134,12 @@ MessageItem::Private::Private()
 {
 }
 
-MessageItem::Private::~Private()
+MessageItemPrivate::~MessageItemPrivate()
 {
   invalidateTagCache();
 }
 
-void MessageItem::Private::invalidateTagCache()
+void MessageItemPrivate::invalidateTagCache()
 {
   if ( mTagList ) {
     qDeleteAll( *mTagList );
@@ -148,25 +148,25 @@ void MessageItem::Private::invalidateTagCache()
   }
 }
 
-void MessageItem::Private::invalidateAnnotationCache()
+void MessageItemPrivate::invalidateAnnotationCache()
 {
   mAnnotationStateChecked = false;
 }
 
-const MessageItem::Tag* MessageItem::Private::bestTag() const
+const MessageItem::Tag* MessageItemPrivate::bestTag() const
 {
-  const Tag *best = 0;
-  foreach( const Tag* tag, getTagList() ) {
+  const MessageItem::Tag *best = 0;
+  foreach( const MessageItem::Tag* tag, getTagList() ) {
     if ( !best || tag->priority() < best->priority() )
       best = tag;
   }
   return best;
 }
 
-void MessageItem::Private::fillTagList() const
+void MessageItemPrivate::fillTagList() const
 {
   Q_ASSERT( !mTagList );
-  mTagList = new QList<Tag*>;
+  mTagList = new QList<MessageItem::Tag*>;
 
   // TODO: The tag pointers here could be shared between all items, there really is no point in
   //       creating them for each item that has tags
@@ -179,8 +179,8 @@ void MessageItem::Private::fillTagList() const
       if ( !nepomukTag.symbols().isEmpty() ) {
         symbol = nepomukTag.symbols().first();
       }
-      Tag *messageListTag =
-          new Tag( SmallIcon( symbol ),
+      MessageItem::Tag *messageListTag =
+          new MessageItem::Tag( SmallIcon( symbol ),
                    nepomukTag.label(), nepomukTag.resourceUri().toString() );
       if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
         const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
@@ -208,7 +208,7 @@ void MessageItem::Private::fillTagList() const
   }
 }
 
-QList<MessageItem::Tag*> MessageItem::Private::getTagList() const
+QList<MessageItem::Tag*> MessageItemPrivate::getTagList() const
 {
   if ( !mTagList )
     fillTagList();
@@ -216,13 +216,13 @@ QList<MessageItem::Tag*> MessageItem::Private::getTagList() const
   return *mTagList;
 }
 
-bool MessageItem::Private::tagListInitialized() const
+bool MessageItemPrivate::tagListInitialized() const
 {
   return mTagList != 0;
 }
 
 MessageItem::MessageItem()
-  : Item( Message ), ModelInvariantIndex(), d( new Private )
+  : Item( Message ), ModelInvariantIndex(), d( new MessageItemPrivate )
 {
 }
 
@@ -293,9 +293,9 @@ QString MessageItem::contentSummary() const
   return ret;
 }
 
-const MessageItem::Tag * MessageItem::Private::findTagInternal( const QString &szTagId ) const
+const MessageItem::Tag * MessageItemPrivate::findTagInternal( const QString &szTagId ) const
 {
-  foreach( const Tag *tag, getTagList() ) {
+  foreach( const MessageItem::Tag *tag, getTagList() ) {
     if ( tag->id() == szTagId )
       return tag;
   }
@@ -518,55 +518,55 @@ void MessageItem::subTreeToList( QList< MessageItem * > &list )
 
 void MessageItem::setNewMessageColor( const QColor &color )
 {
-  MessageItem::Private::mColorNewMessage = color;
+  MessageItemPrivate::mColorNewMessage = color;
 }
 
 
 void MessageItem::setUnreadMessageColor( const QColor &color )
 {
-  MessageItem::Private::mColorUnreadMessage = color;
+  MessageItemPrivate::mColorUnreadMessage = color;
 }
 
 
 void MessageItem::setImportantMessageColor( const QColor &color )
 {
-  MessageItem::Private::mColorImportantMessage = color;
+  MessageItemPrivate::mColorImportantMessage = color;
 }
 
 
 void MessageItem::setToDoMessageColor( const QColor &color )
 {
-  MessageItem::Private::mColorToDoMessage = color;
+  MessageItemPrivate::mColorToDoMessage = color;
 }
 
 
 void MessageItem::setGeneralFont( const QFont &font )
 {
-  MessageItem::Private::mFont = font;
+  MessageItemPrivate::mFont = font;
 }
 
 void MessageItem::setNewMessageFont( const QFont &font )
 {
-  MessageItem::Private::mFontNewMessage = font;
+  MessageItemPrivate::mFontNewMessage = font;
 }
 
 void MessageItem::setUnreadMessageFont( const QFont &font )
 {
-  MessageItem::Private::mFontUnreadMessage = font;
+  MessageItemPrivate::mFontUnreadMessage = font;
 }
 
 void MessageItem::setImportantMessageFont( const QFont &font )
 {
-  MessageItem::Private::mFontImportantMessage = font;
+  MessageItemPrivate::mFontImportantMessage = font;
 }
 
 void MessageItem::setToDoMessageFont( const QFont &font )
 {
-  MessageItem::Private::mFontToDoMessage = font;
+  MessageItemPrivate::mFontToDoMessage = font;
 }
 
 FakeItem::FakeItem()
-  : d( new Private() )
+  : d( new FakeItemPrivate() )
 {
 }
 

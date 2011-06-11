@@ -25,35 +25,36 @@
 
 #include <Akonadi/Item>
 
-using namespace MessageList::Core;
+namespace MessageList {
+namespace Core {
 
-class FakeItem::Private
+class FakeItemPrivate
 {
   public:
-    QList<Tag*> mFakeTags;
+    QList<MessageItem::Tag*> mFakeTags;
 };
 
-class MessageItem::Private
+class MessageItemPrivate
 {
 public:
 
-  Private();
-  ~Private();
+  MessageItemPrivate();
+  ~MessageItemPrivate();
 
   /**
    * Linear search in the list of tags. The lists of tags
    * associated to a message are supposed to be very short (c'mon.. you won't add more than a couple of tags to a single msg).
    * so a linear search is better than a hash lookup in most cases.
    */
-  const Tag *findTagInternal( const QString &szTagId ) const;
+  const MessageItem::Tag *findTagInternal( const QString &szTagId ) const;
 
   /// Returns the list of tags. This is calculated on demand and cached in mTagList
-  QList<Tag*> getTagList() const;
+  QList<MessageItem::Tag*> getTagList() const;
 
   bool tagListInitialized() const;
 
   /// Returns the tag with the highest priority, or 0 if there are no tags
-  const Tag* bestTag() const;
+  const MessageItem::Tag* bestTag() const;
 
   /// Deletes the internal list of tags
   void invalidateTagCache();
@@ -61,13 +62,13 @@ public:
   /// Deletes the cache of the annotation
   void invalidateAnnotationCache();
 
-  ThreadingStatus mThreadingStatus;
+  MessageItem::ThreadingStatus mThreadingStatus;
   QByteArray mMessageIdMD5;            ///< always set
   QByteArray mInReplyToIdMD5;          ///< set only if we're doing threading
   QByteArray mReferencesIdMD5;         ///< set only if we're doing threading
   QByteArray mStrippedSubjectMD5;      ///< set only if we're doing threading
-  EncryptionState mEncryptionState;
-  SignatureState mSignatureState;
+  MessageItem::EncryptionState mEncryptionState;
+  MessageItem::SignatureState mSignatureState;
   Akonadi::Item mAkonadiItem;
 
   bool mAboutToBeRemoved : 1;       ///< Set to true when this item is going to be deleted and shouldn't be selectable
@@ -92,7 +93,10 @@ private:
 
   // List of all tags. If this is 0, it means we have not yet calculated this list. It is calculated
   // on demand when needed.
-  mutable QList< Tag * > * mTagList;
+  mutable QList< MessageItem::Tag * > * mTagList;
 };
+
+}
+}
 
 #endif

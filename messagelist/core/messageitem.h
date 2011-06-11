@@ -40,6 +40,8 @@ namespace MessageList
 namespace Core
 {
 
+class MessageItemPrivate;
+
 class MESSAGELIST_EXPORT MessageItem : public Item, public ModelInvariantIndex
 {
 public:
@@ -198,9 +200,11 @@ public:
   static void setToDoMessageFont( const QFont &font );
 
 private:
-  class Private;
-  Private * const d;
+  MessageItemPrivate * const d;
 };
+
+
+class FakeItemPrivate;
 
 /// A message item that can have a fake tag list and a fake annotation
 class MESSAGELIST_EXPORT FakeItem : public MessageItem
@@ -220,9 +224,7 @@ class MESSAGELIST_EXPORT FakeItem : public MessageItem
     virtual bool hasAnnotation() const;
 
   private:
-
-    class Private;
-    Private * const d;
+    FakeItemPrivate * const d;
 };
 
 } // namespace Core
