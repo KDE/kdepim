@@ -262,35 +262,25 @@ QString Item::statusDescription() const
   return ret;
 }
 
-const QString & Item::formattedSize()
+QString Item::formattedSize() const
 {
-  if ( d_ptr->mFormattedSize.isEmpty() )
-    d_ptr->mFormattedSize = KIO::convertSize( ( KIO::filesize_t ) size() );
-  return d_ptr->mFormattedSize;
+  return KIO::convertSize( ( KIO::filesize_t ) size() );
 }
 
-const QString & Item::formattedDate()
+QString Item::formattedDate() const
 {
-  if ( d_ptr->mFormattedDate.isEmpty() )
-  {
-    if ( static_cast< uint >( date() ) == static_cast< uint >( -1 ) )
-      d_ptr->mFormattedDate = Manager::instance()->cachedLocalizedUnknownText();
-    else
-      d_ptr->mFormattedDate = Manager::instance()->dateFormatter()->dateString( date() );
-  }
-  return d_ptr->mFormattedDate;
+  if ( static_cast< uint >( date() ) == static_cast< uint >( -1 ) )
+    return Manager::instance()->cachedLocalizedUnknownText();
+  else
+    return Manager::instance()->dateFormatter()->dateString( date() );
 }
 
-const QString & Item::formattedMaxDate()
+QString Item::formattedMaxDate() const
 {
-  if ( d_ptr->mFormattedMaxDate.isEmpty() )
-  {
-    if ( static_cast< uint >( maxDate() ) == static_cast< uint >( -1 ) )
-      d_ptr->mFormattedMaxDate = Manager::instance()->cachedLocalizedUnknownText();
-    else
-      d_ptr->mFormattedMaxDate = Manager::instance()->dateFormatter()->dateString( maxDate() );
-  }
-  return d_ptr->mFormattedMaxDate;
+  if ( static_cast< uint >( maxDate() ) == static_cast< uint >( -1 ) )
+    return Manager::instance()->cachedLocalizedUnknownText();
+  else
+    return Manager::instance()->dateFormatter()->dateString( maxDate() );
 }
 
 bool Item::recomputeMaxDate()
@@ -437,7 +427,6 @@ size_t Item::size() const
 void Item::setSize( size_t size )
 {
   d_ptr->mSize = size;
-  d_ptr->mFormattedSize.clear();
 }
 
 time_t Item::date() const
@@ -448,7 +437,6 @@ time_t Item::date() const
 void Item::setDate( time_t date )
 {
   d_ptr->mDate = date;
-  d_ptr->mFormattedDate.clear();
 }
 
 time_t Item::maxDate() const
@@ -459,7 +447,6 @@ time_t Item::maxDate() const
 void Item::setMaxDate( time_t date )
 {
   d_ptr->mMaxDate = date;
-  d_ptr->mFormattedMaxDate.clear();
 }
 
 const QString &Item::sender() const

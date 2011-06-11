@@ -246,9 +246,6 @@ public:
   int mThisItemIndexGuess;                    ///< The guess for the index in the parent's child list
   QString mSubject;                           ///< The subject of the message (or group subject)
   bool mIsViewable;                           ///< Is this item attacched to the viewable root ?
-  QString mFormattedSize;                     ///< The size above formatted as string, this is done only on request
-  QString mFormattedDate;                     ///< The formatted date of the message, formatting takes time so it is done only on request
-  QString mFormattedMaxDate;                  ///< The maximum date above formatted (lazily)
   Akonadi::MessageStatus mStatus;             ///< The status of the message (may be extended to groups in the future)
   Item::Type mType : 4;                       ///< The type of this item
   Item::InitialExpandStatus mInitialExpandStatus : 4; ///< The expand status we have to honor when we attach to the viewable root

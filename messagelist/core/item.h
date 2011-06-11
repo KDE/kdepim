@@ -279,9 +279,9 @@ public:
 
   /**
    * A string with a text rappresentation of size(). This is computed on-the-fly
-   * and cached until the size() changes.
+   * and not cached.
    */
-  const QString & formattedSize();
+  QString formattedSize() const;
 
   /**
    * Returns the date of this item
@@ -295,9 +295,9 @@ public:
 
   /**
    * A string with a text rappresentation of date() obtained via Manager. This is computed on-the-fly
-   * and cached until the size() changes.
+   * and not cached.
    */
-  const QString & formattedDate();
+  QString formattedDate() const;
 
   /**
    * Returns the maximum date in the subtree originating from this item.
@@ -312,9 +312,9 @@ public:
 
   /**
    * A string with a text rappresentation of maxDate() obtained via Manager. This is computed on-the-fly
-   * and cached until the size() changes.
+   * and not cached.
    */
-  const QString & formattedMaxDate();
+  QString formattedMaxDate() const;
 
   /**
    * Recompute the maximum date from the current children list.
