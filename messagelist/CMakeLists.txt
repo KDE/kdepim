@@ -7,6 +7,7 @@ option(KDEPIM_FOLDEROPEN_PROFILE "Enable debug output for timing folder loading"
 configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messagelist.h)
 
 add_subdirectory(pics)
+add_subdirectory(tests)
 
 include_directories(
     ${Boost_INCLUDE_DIRS}
