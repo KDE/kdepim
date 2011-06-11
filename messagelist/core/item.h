@@ -348,9 +348,9 @@ public:
   const QString & senderOrReceiver() const;
 
   /**
-   * Sets the sender or the receiver: this should depend on the underlying StorageModel settings.
+   * Returns whether sender or receiver is supposed to be displayed.
    */
-  void setSenderOrReceiver( const QString &senderOrReceiver );
+  bool useReceiver() const;
 
   /**
    * Returns the subject associated to this Item.
@@ -370,7 +370,7 @@ public:
   void initialSetup( time_t date, size_t size,
                      const QString &sender,
                      const QString &receiver,
-                     const QString &senderOrReceiver );
+                     bool useReceiver );
 
   /**
    * This is meant to be called right after the constructor for MessageItem objects.

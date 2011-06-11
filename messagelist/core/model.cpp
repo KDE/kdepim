@@ -1371,7 +1371,7 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
     // not found
 
     ghi = new GroupHeaderItem( groupLabel );
-    ghi->initialSetup( date, mi->size(), mi->sender(), mi->receiver(), mi->senderOrReceiver() );
+    ghi->initialSetup( date, mi->size(), mi->sender(), mi->receiver(), mi->useReceiver() );
 
     switch( mAggregation->groupExpandPolicy() )
     {

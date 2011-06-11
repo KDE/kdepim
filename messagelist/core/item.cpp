@@ -471,12 +471,12 @@ void Item::setReceiver( const QString &receiver )
 
 const QString &Item::senderOrReceiver() const
 {
-  return d_ptr->mSenderOrReceiver;
+  return d_ptr->mUseReceiver ? d_ptr->mReceiver : d_ptr->mSender;
 }
 
-void Item::setSenderOrReceiver( const QString &senderOrReceiver )
+bool Item::useReceiver() const
 {
-  d_ptr->mSenderOrReceiver = senderOrReceiver;
+  return d_ptr->mUseReceiver;
 }
 
 const QString &Item::subject() const
@@ -492,14 +492,14 @@ void Item::setSubject( const QString &subject )
 void MessageList::Core::Item::initialSetup( time_t date, size_t size,
                                             const QString &sender,
                                             const QString &receiver,
-                                            const QString &senderOrReceiver )
+                                            bool useReceiver )
 {
   d_ptr->mDate = date;
   d_ptr->mMaxDate = date;
   d_ptr->mSize = size;
   d_ptr->mSender = sender;
   d_ptr->mReceiver = receiver;
-  d_ptr->mSenderOrReceiver = senderOrReceiver;
+  d_ptr->mUseReceiver = useReceiver;
 }
 
 void MessageList::Core::Item::setSubjectAndStatus(const QString &subject,
