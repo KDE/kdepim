@@ -199,6 +199,8 @@ public:
   static void setImportantMessageFont( const QFont &font );
   static void setToDoMessageFont( const QFont &font );
 
+protected:
+  MessageItem( MessageItemPrivate* dd );
 private:
   Q_DECLARE_PRIVATE( MessageItem )
 };

@@ -227,6 +227,11 @@ MessageItem::MessageItem()
 {
 }
 
+MessageItem::MessageItem ( MessageItemPrivate* dd )
+  : Item ( Message, dd ), ModelInvariantIndex()
+{
+}
+
 MessageItem::~MessageItem()
 {
 }
