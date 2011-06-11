@@ -34,11 +34,11 @@ class ItemSizeTest : public QObject
       qDebug() << sizeof(Item);
       QVERIFY( sizeof(Item) <= 16 );
       qDebug() << sizeof(ItemPrivate);
-      QVERIFY( sizeof(ItemPrivate) <= 136 );
+      QVERIFY( sizeof(ItemPrivate) <= 128 );
       qDebug() << sizeof(MessageItem);
       QVERIFY( sizeof(MessageItem) <= 32 );
       qDebug() << sizeof(MessageItemPrivate);
-      QVERIFY( sizeof(MessageItemPrivate) <= 200 );
+      QVERIFY( sizeof(MessageItemPrivate) <= 184 );
     }
 };
 

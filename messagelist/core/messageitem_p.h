@@ -57,14 +57,14 @@ public:
   /// Deletes the cache of the annotation
   void invalidateAnnotationCache();
 
-  MessageItem::ThreadingStatus mThreadingStatus;
   QByteArray mMessageIdMD5;            ///< always set
   QByteArray mInReplyToIdMD5;          ///< set only if we're doing threading
   QByteArray mReferencesIdMD5;         ///< set only if we're doing threading
   QByteArray mStrippedSubjectMD5;      ///< set only if we're doing threading
-  MessageItem::EncryptionState mEncryptionState;
-  MessageItem::SignatureState mSignatureState;
   Akonadi::Item mAkonadiItem;
+  MessageItem::ThreadingStatus mThreadingStatus : 4;
+  MessageItem::EncryptionState mEncryptionState : 4;
+  MessageItem::SignatureState mSignatureState : 4;
 
   bool mAboutToBeRemoved : 1;       ///< Set to true when this item is going to be deleted and shouldn't be selectable
   bool mSubjectIsPrefixed : 1;      ///< set only if we're doing subject based threading
