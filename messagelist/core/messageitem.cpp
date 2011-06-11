@@ -126,8 +126,9 @@ QFont MessageItemPrivate::mFontUnreadMessage;
 QFont MessageItemPrivate::mFontImportantMessage;
 QFont MessageItemPrivate::mFontToDoMessage;
 
-MessageItemPrivate::MessageItemPrivate()
-  : mThreadingStatus( MessageItem::ParentMissing ),
+MessageItemPrivate::MessageItemPrivate( MessageItem* qq )
+  : ItemPrivate( qq ),
+    mThreadingStatus( MessageItem::ParentMissing ),
     mAboutToBeRemoved( false ),
     mAnnotationStateChecked( false ),
     mTagList( 0 )
@@ -222,22 +223,23 @@ bool MessageItemPrivate::tagListInitialized() const
 }
 
 MessageItem::MessageItem()
-  : Item( Message ), ModelInvariantIndex(), d( new MessageItemPrivate )
+  : Item( Message, new MessageItemPrivate( this ) ), ModelInvariantIndex()
 {
 }
 
 MessageItem::~MessageItem()
 {
-  delete d;
 }
 
 QList< MessageItem::Tag * > MessageItem::tagList() const
 {
+  Q_D( const MessageItem );
   return d->getTagList();
 }
 
 bool MessageItem::hasAnnotation() const
 {
+  Q_D( const MessageItem );
   if ( d->mAnnotationStateChecked )
     return d->mHasAnnotation;
 
@@ -254,6 +256,7 @@ bool MessageItem::hasAnnotation() const
 
 QString MessageItem::annotation() const
 {
+  Q_D( const MessageItem );
   if ( hasAnnotation() ) {
     Nepomuk::Resource resource( d->mAkonadiItem.url() );
     return resource.description();
@@ -263,6 +266,7 @@ QString MessageItem::annotation() const
 
 void MessageItem::editAnnotation()
 {
+  Q_D( MessageItem );
   MessageCore::AnnotationEditDialog *dialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem.url() );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
@@ -272,6 +276,7 @@ void MessageItem::editAnnotation()
 
 QString MessageItem::contentSummary() const
 {
+  Q_D( const MessageItem );
   Nepomuk::Resource mail( d->mAkonadiItem.url() );
   const QString content =
       mail.property( NepomukFast::Message::plainTextMessageContentUri() ).toString();
@@ -304,6 +309,7 @@ const MessageItem::Tag * MessageItemPrivate::findTagInternal( const QString &szT
 
 const MessageItem::Tag *MessageItem::findTag( const QString &szTagId ) const
 {
+  Q_D( const MessageItem );
   return d->findTagInternal( szTagId );
 }
 
@@ -322,16 +328,19 @@ QString MessageItem::tagListDescription() const
 
 void MessageItem::invalidateTagCache()
 {
+  Q_D( MessageItem );
   d->invalidateTagCache();
 }
 
 void MessageItem::invalidateAnnotationCache()
 {
+  Q_D( MessageItem );
   d->invalidateAnnotationCache();
 }
 
 QColor MessageItem::textColor() const
 {
+  Q_D( const MessageItem );
   QColor clr;
   Akonadi::MessageStatus messageStatus = status();
   if ( !messageStatus.isRead() ) {
@@ -352,6 +361,7 @@ QColor MessageItem::textColor() const
 
 QColor MessageItem::backgroundColor() const
 {
+  Q_D( const MessageItem );
   const Tag *bestTag = d->bestTag();
   if ( bestTag != 0 ) {
     return bestTag->backgroundColor();
@@ -362,6 +372,7 @@ QColor MessageItem::backgroundColor() const
 
 QFont MessageItem::font() const
 {
+  Q_D( const MessageItem );
   // for performance reasons we don't want font retrieval to trigger
   // full tags loading, as the font is used for geometry calculation
   // and thus this method called for each item
@@ -391,106 +402,127 @@ QFont MessageItem::font() const
 
 MessageItem::SignatureState MessageItem::signatureState() const
 {
+  Q_D( const MessageItem );
   return d->mSignatureState;
 }
 
 void MessageItem::setSignatureState( SignatureState state )
 {
+  Q_D( MessageItem );
   d->mSignatureState = state;
 }
 
 MessageItem::EncryptionState MessageItem::encryptionState() const
 {
+  Q_D( const MessageItem );
   return d->mEncryptionState;
 }
 
 void MessageItem::setEncryptionState( EncryptionState state )
 {
+  Q_D( MessageItem );
   d->mEncryptionState = state;
 }
 
 QByteArray MessageItem::messageIdMD5() const
 {
+  Q_D( const MessageItem );
   return d->mMessageIdMD5;
 }
 
 void MessageItem::setMessageIdMD5( const QByteArray &md5 )
 {
+  Q_D( MessageItem );
   d->mMessageIdMD5 = md5;
 }
 
 QByteArray MessageItem::inReplyToIdMD5() const
 {
+  Q_D( const MessageItem );
   return d->mInReplyToIdMD5;
 }
 
 void MessageItem::setInReplyToIdMD5( const QByteArray& md5 )
 {
+  Q_D( MessageItem );
   d->mInReplyToIdMD5 = md5;
 }
 
 QByteArray MessageItem::referencesIdMD5() const
 {
+  Q_D( const MessageItem );
   return d->mReferencesIdMD5;
 }
 
 void MessageItem::setReferencesIdMD5( const QByteArray& md5 )
 {
+  Q_D( MessageItem );
   d->mReferencesIdMD5 = md5;
 }
 
 void MessageItem::setSubjectIsPrefixed( bool subjectIsPrefixed )
 {
+  Q_D( MessageItem );
   d->mSubjectIsPrefixed = subjectIsPrefixed;
 }
 
 bool MessageItem::subjectIsPrefixed() const
 {
+  Q_D( const MessageItem );
   return d->mSubjectIsPrefixed;
 }
 
 QByteArray MessageItem::strippedSubjectMD5() const
 {
+  Q_D( const MessageItem );
   return d->mStrippedSubjectMD5;
 }
 
 void MessageItem::setStrippedSubjectMD5( const QByteArray& md5 )
 {
+  Q_D( MessageItem );
   d->mStrippedSubjectMD5 = md5;
 }
 
 bool MessageItem::aboutToBeRemoved() const
 {
+  Q_D( const MessageItem );
   return d->mAboutToBeRemoved;
 }
 
 void MessageItem::setAboutToBeRemoved( bool aboutToBeRemoved )
 {
+  Q_D( MessageItem );
   d->mAboutToBeRemoved = aboutToBeRemoved;
 }
 
 MessageItem::ThreadingStatus MessageItem::threadingStatus() const
 {
+  Q_D( const MessageItem );
   return d->mThreadingStatus;
 }
 
 void MessageItem::setThreadingStatus( ThreadingStatus threadingStatus )
 {
+  Q_D( MessageItem );
   d->mThreadingStatus = threadingStatus;
 }
 
 unsigned long MessageItem::uniqueId() const
 {
+  Q_D( const MessageItem );
   return d->mAkonadiItem.id();
 }
 
 Akonadi::Item MessageList::Core::MessageItem::akonadiItem() const
 {
+  Q_D( const MessageItem );
   return d->mAkonadiItem;
 }
 
 void MessageList::Core::MessageItem::setAkonadiItem(const Akonadi::Item& item)
 {
+  Q_D( MessageItem );
   d->mAkonadiItem = item;
 }
 

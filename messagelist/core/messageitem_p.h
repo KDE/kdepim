@@ -22,6 +22,7 @@
 #define MESSAGELIST_MESSAGEITEM_P_H
 
 #include "messageitem.h"
+#include "item_p.h"
 
 #include <Akonadi/Item>
 
@@ -34,11 +35,11 @@ class FakeItemPrivate
     QList<MessageItem::Tag*> mFakeTags;
 };
 
-class MessageItemPrivate
+class MessageItemPrivate : public ItemPrivate
 {
 public:
 
-  MessageItemPrivate();
+  MessageItemPrivate( MessageItem *qq );
   ~MessageItemPrivate();
 
   /**
@@ -73,8 +74,8 @@ public:
 
   bool mAboutToBeRemoved : 1;       ///< Set to true when this item is going to be deleted and shouldn't be selectable
   bool mSubjectIsPrefixed : 1;      ///< set only if we're doing subject based threading
-  bool mAnnotationStateChecked : 1; ///< The state of the annotation below has been checked
-  bool mHasAnnotation : 1;          ///< Cached value for hasAnnotation()
+  mutable bool mAnnotationStateChecked : 1; ///< The state of the annotation below has been checked
+  mutable bool mHasAnnotation : 1;          ///< Cached value for hasAnnotation()
 
   static QColor mColorNewMessage;
   static QColor mColorUnreadMessage;

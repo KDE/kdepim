@@ -200,7 +200,7 @@ public:
   static void setToDoMessageFont( const QFont &font );
 
 private:
-  MessageItemPrivate * const d;
+  Q_DECLARE_PRIVATE( MessageItem )
 };
 
 
