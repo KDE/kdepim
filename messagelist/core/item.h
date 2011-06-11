@@ -82,6 +82,7 @@ protected:
    * Creates an Item. Only derived classes and MessageList::Model should access this.
    */
   Item( Type type );
+  Item( Type type, ItemPrivate *dd );
 
 public:
   /**
@@ -402,8 +403,10 @@ public:
    * It should be used only when MessageList::Model is reset() afterwards.
    */
   void killAllChildItems();
-private:
-  ItemPrivate * const d;
+
+protected:
+  ItemPrivate * const d_ptr;
+  Q_DECLARE_PRIVATE( Item )
 };
 
 } // namespace Core
