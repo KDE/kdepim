@@ -263,13 +263,18 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
   return true;
 }
 
-static QString md5Encode( const QString &str )
+static QString md5Encode( const QByteArray &str )
 {
   if ( str.trimmed().isEmpty() ) return QString();
 
-  KMD5 md5( str.trimmed().toUtf8() );
+  KMD5 md5( str.trimmed() );
   static const int Base64EncodedMD5Len = 22;
-  return md5.base64Digest().left( Base64EncodedMD5Len );
+  return QString::fromLatin1( md5.base64Digest().left( Base64EncodedMD5Len ) );
+}
+
+static QString md5Encode( const QString &str )
+{
+  return md5Encode( str.toUtf8() );
 }
 
 void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem *mi,
