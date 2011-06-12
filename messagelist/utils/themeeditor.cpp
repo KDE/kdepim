@@ -193,7 +193,6 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
 
   mSampleGroupHeaderItem->setDate( time( 0 ) );
   mSampleGroupHeaderItem->setMaxDate( time( 0 ) + 31337 );
-  mSampleGroupHeaderItem->setSenderOrReceiver( i18n( "Sender/Receiver" ) );
   mSampleGroupHeaderItem->setSubject( i18n( "Very long subject very long subject very long subject very long subject very long subject very long" ) );
 
   mSampleMessageItem = new FakeItem();
@@ -201,7 +200,6 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
   mSampleMessageItem->setDate( time( 0 ) );
   mSampleMessageItem->setSize( 0x31337 );
   mSampleMessageItem->setMaxDate( time( 0 ) + 31337 );
-  mSampleMessageItem->setSenderOrReceiver( i18n( "Sender/Receiver" ) );
   mSampleMessageItem->setSender( i18n( "Sender" ) );
   mSampleMessageItem->setReceiver( i18n( "Receiver" ) );
   mSampleMessageItem->setSubject( i18n( "Very long subject very long subject very long subject very long subject very long subject very long" ) );

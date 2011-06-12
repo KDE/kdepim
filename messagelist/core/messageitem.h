@@ -40,6 +40,8 @@ namespace MessageList
 namespace Core
 {
 
+class MessageItemPrivate;
+
 class MESSAGELIST_EXPORT MessageItem : public Item, public ModelInvariantIndex
 {
 public:
@@ -140,25 +142,25 @@ public:
 
   void setEncryptionState( EncryptionState state );
 
-  QString messageIdMD5() const;
+  QByteArray messageIdMD5() const;
 
-  void setMessageIdMD5( const QString &md5 );
+  void setMessageIdMD5( const QByteArray &md5 );
 
-  QString inReplyToIdMD5() const;
+  QByteArray inReplyToIdMD5() const;
 
-  void setInReplyToIdMD5( const QString &md5 );
+  void setInReplyToIdMD5( const QByteArray &md5 );
 
-  QString referencesIdMD5() const;
+  QByteArray referencesIdMD5() const;
 
-  void setReferencesIdMD5( const QString &md5 );
+  void setReferencesIdMD5( const QByteArray &md5 );
 
   void setSubjectIsPrefixed( bool subjectIsPrefixed );
 
   bool subjectIsPrefixed() const;
 
-  QString strippedSubjectMD5() const;
+  QByteArray strippedSubjectMD5() const;
 
-  void setStrippedSubjectMD5( const QString &md5 );
+  void setStrippedSubjectMD5( const QByteArray &md5 );
 
   bool aboutToBeRemoved() const;
 
@@ -197,10 +199,14 @@ public:
   static void setImportantMessageFont( const QFont &font );
   static void setToDoMessageFont( const QFont &font );
 
+protected:
+  MessageItem( MessageItemPrivate* dd );
 private:
-  class Private;
-  Private * const d;
+  Q_DECLARE_PRIVATE( MessageItem )
 };
+
+
+class FakeItemPrivate;
 
 /// A message item that can have a fake tag list and a fake annotation
 class MESSAGELIST_EXPORT FakeItem : public MessageItem
@@ -220,9 +226,7 @@ class MESSAGELIST_EXPORT FakeItem : public MessageItem
     virtual bool hasAnnotation() const;
 
   private:
-
-    class Private;
-    Private * const d;
+    Q_DECLARE_PRIVATE( FakeItem )
 };
 
 } // namespace Core

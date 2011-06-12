@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2010 Thomas McGuire <thomas.mcguire@kdab.com>
+  Copyright (c) 2011 Volker Krause <vkrause@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -16,28 +16,32 @@
   Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
 */
-#include "util.h"
 
-#include <QFile>
-#include <QDebug>
+#include "../core/messageitem_p.h"
 
-KMime::Message::Ptr readAndParseMail( const QString &mailFile )
+#include <qtest_kde.h>
+#include <QObject>
+
+using namespace MessageList::Core;
+
+class ItemSizeTest : public QObject
 {
-  QFile file( QString( MAIL_DATA_DIR ) + '/' + mailFile );
-  bool ok = file.open( QIODevice::ReadOnly );
-  Q_ASSERT( ok );
-  QByteArray rawData;
-  while( !file.atEnd() ) {
-    char buf[1024];
-    qint64 lineLength = file.readLine(buf, sizeof(buf));
-    if(lineLength != -1) {
-      rawData.append( buf );
+  Q_OBJECT
+  private slots:
+
+    void testItemSize()
+    {
+      qDebug() << sizeof(Item);
+      QVERIFY( sizeof(Item) <= 16 );
+      qDebug() << sizeof(ItemPrivate);
+      QVERIFY( sizeof(ItemPrivate) <= 88 );
+      qDebug() << sizeof(MessageItem);
+      QVERIFY( sizeof(MessageItem) <= 32 );
+      qDebug() << sizeof(MessageItemPrivate);
+      QVERIFY( sizeof(MessageItemPrivate) <= 144 );
     }
-  }
-  const QByteArray data = KMime::CRLFtoLF( rawData );
-  Q_ASSERT( !data.isEmpty() );
-  KMime::Message::Ptr msg( new KMime::Message );
-  msg->setContent( data );
-  msg->parse();
-  return msg;
-}
+};
+
+QTEST_KDEMAIN( ItemSizeTest, GUI )
+
+#include "itemsizetest.moc"

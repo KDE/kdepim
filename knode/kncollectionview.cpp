@@ -132,6 +132,7 @@ void KNCollectionView::removeAccount( KNNntpAccount::Ptr a )
   while ( ( child = static_cast<KNCollectionViewItem*>( aitem->takeChild( 0 ) ) ) ) {
     removeGroup( boost::static_pointer_cast<KNGroup>( child->collection() ) );
   }
+
   delete aitem;
   a->setListItem(0);
 }
@@ -221,6 +222,8 @@ void KNCollectionView::removeFolder( KNFolder::Ptr f)
   while ( ( child = static_cast<KNCollectionViewItem*>( it->takeChild( 0 ) ) ) ) {
     removeFolder( boost::static_pointer_cast<KNFolder>( child->collection() ) );
   }
+
+  f->listItem()->setHidden( true ); // work around bug 248256
   delete f->listItem();
   f->setListItem(0);
 }
