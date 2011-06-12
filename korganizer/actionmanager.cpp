@@ -110,8 +110,8 @@ ActionManager::~ActionManager()
   mWindowList->removeWindow( mMainWindow );
 
   delete mCalendarView;
-
   delete mCalendar;
+  KOGroupware::destroy();
 
   kdDebug(5850) << "~ActionManager() done" << endl;
 }

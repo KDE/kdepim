@@ -66,6 +66,13 @@ KOGroupware *KOGroupware::create( CalendarView *view,
   return mInstance;
 }
 
+void KOGroupware::destroy()
+{
+  delete mInstance;
+  mInstance = 0;
+  mFreeBusyManager = 0; // mFreeBusyManager is already deleted when mInstance is deleted
+}
+
 KOGroupware *KOGroupware::instance()
 {
   // Doesn't create, that is the task of create()

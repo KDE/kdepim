@@ -67,6 +67,7 @@ class KOGroupware : public QObject
     Q_OBJECT
   public:
     static KOGroupware* create( CalendarView*, KCal::CalendarResources* );
+    static void destroy();
     static KOGroupware* instance();
 
     FreeBusyManager *freeBusyManager();
