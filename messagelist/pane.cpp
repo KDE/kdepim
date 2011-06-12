@@ -159,6 +159,12 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "view_message_list" ), d->mActionMenu );
     const Widget * const w = static_cast<Widget*>( currentWidget() );
     w->view()->fillViewMenu( d->mActionMenu->menu() );
+
+    KAction *action = new KAction( i18n("Create new tab"), this );
+    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_T ) );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
+    connect( action, SIGNAL( triggered( bool ) ), SLOT( onNewTabClicked() ) );
+    d->mActionMenu->addAction( action );
   }
 }
 
