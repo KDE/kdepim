@@ -142,7 +142,7 @@ static bool flushPart( QString &msg, QStringList &textParts,
     // Therefore, we write all of our text so far to the msg.
     if ( line.isEmpty() ) {
       if ( !text.isEmpty() )
-        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
+        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength ) + '\n';
       msg += indent + '\n';
     } else {
       if ( text.isEmpty() )
@@ -155,7 +155,7 @@ static bool flushPart( QString &msg, QStringList &textParts,
       // if false, and therefore we keep adding lines to our text, so they get ran together in the
       // next flowText call, as "text" contains several text parts/lines then.
       if ( ( text.length() < maxLength ) || ( line.length() < ( maxLength - 10 ) ) )
-        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
+        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength ) + '\n';
     }
   }
 
