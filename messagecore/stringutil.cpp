@@ -126,7 +126,6 @@ static QString splitLine( QString &line )
 static bool flushPart( QString &msg, QStringList &textParts,
                        const QString &indent, int maxLength )
 {
-  maxLength -= indent.length();
   if ( maxLength < 20 )
     maxLength = 20;
 
