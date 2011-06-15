@@ -78,7 +78,7 @@ void GroupwareUiDelegate::requestIncidenceEditor( const Akonadi::Item &item )
   }
 
   IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "KDE Calendar" ) );
+  editor->setWindowTitle( i18n( "Kontact Touch Calendar" ) );
   editor->load( item, QDate::currentDate() );
 
   editor->setIsCounterProposal( true );

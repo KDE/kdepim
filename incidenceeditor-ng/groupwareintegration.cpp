@@ -92,6 +92,8 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
                                                            incidence->type() );
       dialog->setIsCounterProposal( true );
       dialog->load( item, QDate::currentDate() );
+#else
+      Q_UNUSED( item );
 #endif
     }
 

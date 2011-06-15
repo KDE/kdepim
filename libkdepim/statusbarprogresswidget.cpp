@@ -219,6 +219,7 @@ void StatusbarProgressWidget::slotBusyIndicator()
 void StatusbarProgressWidget::slotProgressItemProgress( ProgressItem *item, unsigned int value )
 {
   Q_ASSERT( item == mCurrentItem); // the only one we should be connected to
+  Q_UNUSED( item );
   m_pProgressBar->setValue( value );
 }
 

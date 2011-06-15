@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Kontact Administration
+Name[bs]=Upravljanje kontaktima
 Name[ca]=Administració del Kontact
 Name[ca@valencia]=Administració del Kontact
 Name[cs]=Správa Kontactu
@@ -28,6 +29,8 @@ Name[pa]=ਕੇਸੰਪਰਕ ਪਰਸ਼ਾਸ਼ਨ
 Name[pl]=Administracja Kontact
 Name[pt]=Administração do Kontact
 Name[pt_BR]=Administração do Kontact
+Name[ro]=Administrare Kontact
+Name[ru]=Администрирование Kontact
 Name[sk]=Správa Kontactu
 Name[sl]=Upravljanje Kontacta
 Name[sv]=Administration av Kontact

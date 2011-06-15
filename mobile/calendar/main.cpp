@@ -49,7 +49,7 @@ int main( int argc, char **argv )
   SetCursor( LoadCursor( NULL, IDC_WAIT ) );
 #endif
   const QByteArray& ba = QByteArray( "korganizer-mobile" );
-  const KLocalizedString name = ki18n( "KOrganizer Mobile" );
+  const KLocalizedString name = ki18n( "Kontact Touch Calendar" );
 
   // NOTE: This is necessary to avoid a crash, but will result in an empty config.
   //       To make this really configurable do something like KOrganizerEditorConfig

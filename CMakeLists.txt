@@ -23,6 +23,7 @@ else(KDEPIM_BUILD_STATIC)
 endif(KDEPIM_BUILD_STATIC)
 
 add_definitions( -DDISABLE_NEPOMUK_LEGACY )
+add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 
 if(KDEPIM_NO_NEPOMUK)
   add_definitions(-DKDEPIM_NO_NEPOMUK)
@@ -116,10 +117,10 @@ endif()
 #    3.2 alpha1
 
 if (NOT DEFINED KDEPIM_DEV_VERSION)
-    set( KDEPIM_DEV_VERSION "beta5" )
+    set( KDEPIM_DEV_VERSION "pre" )
 endif (NOT DEFINED KDEPIM_DEV_VERSION)
 
-set( KDEPIM_VERSION "4.6 ${KDEPIM_DEV_VERSION}" )
+set( KDEPIM_VERSION "4.7 ${KDEPIM_DEV_VERSION}" )
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
 ############### search packages used by KDE ###############
@@ -134,16 +135,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.5.63 REQUIRED)
-
-### remove the following when requiring kdelibs 4.5 ###
-if ( NOT KDE4_KCMUTILS_LIBS )
-  set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
-endif()
-if ( NOT KDE4_KEMOTICONS_LIBS )
-  set( KDE4_KEMOTICONS_LIBS ${KDE4_KUTILS_LIBS} )
-endif()
-### end of 4.4 compat code ###
+find_package(KdepimLibs 4.6.41 REQUIRED)
 
 ############### Load the CTest options ###############
 
@@ -220,7 +212,7 @@ else(KDEPIM_ONLY_KLEO)
   find_package(QGpgme)
   macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  set(SDO_MIN_VERSION 0.2)
+  set(SDO_MIN_VERSION 0.6.51)
   set(SOPRANO_MIN_VERSION 2.3.70)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
@@ -231,7 +223,7 @@ else(KDEPIM_ONLY_KLEO)
   include(SopranoAddOntology)
 
   find_package(Grantlee QUIET NO_MODULE)
-  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
+  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots and KaddressBook." )
 
 if(NOT KDEPIM_NO_NEPOMUK)
   find_package(Nepomuk)

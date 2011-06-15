@@ -43,7 +43,7 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/selectionproxymodel.h>
 #include <akonadi/standardactionmanager.h>
-#include <akonadi_next/kviewstatemaintainer.h>
+#include <kviewstatemaintainer.h>
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
 #include <kselectionproxymodel.h>
@@ -333,7 +333,7 @@ void KDeclarativeMainView::setItemNaigationAndActionSelectionModels( QItemSelect
 {
   d->mItemNavigationSelectionModel = itemNavigationSelectionModel;
 
-  d->mItemViewStateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
+  d->mItemViewStateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
   d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
 
   d->mItemActionSelectionModel = itemActionSelectionModel;
@@ -742,8 +742,12 @@ void KDeclarativeMainView::openDocumentation( const QString &relativePath )
 
 void KDeclarativeMainView::openLicenses()
 {
+#ifdef Q_WS_MAEMO_5
+  d->openHtml( KGlobal::dirs()->findResource( "data", "kontact-touch/licenses.html" ) );
+#else
   KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", "kontact-touch/licenses.pdf" ),
                                         QLatin1String( "application/pdf" ) );
+#endif
 }
 
 void KDeclarativeMainView::openAttachment( const QString &url, const QString &mimeType )

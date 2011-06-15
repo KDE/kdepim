@@ -45,6 +45,7 @@
 #include "templatemenuaction.h"
 #include "templatepickdlg.h"
 #include "traywindow.h"
+#include "wakedlg.h"
 
 #include <libkdepim/maillistdrag.h>
 #include <kmime/kmime_content.h>
@@ -456,28 +457,29 @@ void MainWindow::initActions()
     mActionNew = new NewAlarmAction(false, i18nc("@action", "&New"), this);
     actions->addAction(QLatin1String("new"), mActionNew);
 
-    mActionNewDisplay = mActionNew->displayAlarmAction();
-    actions->addAction(QLatin1String("newDisplay"), mActionNewDisplay);
-    mActionNewDisplay->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
-    connect(mActionNewDisplay, SIGNAL(triggered(bool)), SLOT(slotNewDisplay()));
+    KAction* action = mActionNew->displayAlarmAction();
+    actions->addAction(QLatin1String("newDisplay"), action);
+    action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotNewDisplay()));
 
-    mActionNewCommand = mActionNew->commandAlarmAction();
-    actions->addAction(QLatin1String("newCommand"), mActionNewCommand);
-    mActionNewCommand->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
-    connect(mActionNewCommand, SIGNAL(triggered(bool)), SLOT(slotNewCommand()));
+    action = mActionNew->commandAlarmAction();
+    actions->addAction(QLatin1String("newCommand"), action);
+    action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotNewCommand()));
 
-    mActionNewEmail = mActionNew->emailAlarmAction();
-    actions->addAction(QLatin1String("newEmail"), mActionNewEmail);
-    mActionNewEmail->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
-    connect(mActionNewEmail, SIGNAL(triggered(bool)), SLOT(slotNewEmail()));
+    action = mActionNew->emailAlarmAction();
+    actions->addAction(QLatin1String("newEmail"), action);
+    action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotNewEmail()));
 
-    mActionNewAudio = mActionNew->audioAlarmAction();
-    actions->addAction(QLatin1String("newAudio"), mActionNewAudio);
-    mActionNewAudio->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
-    connect(mActionNewAudio, SIGNAL(triggered(bool)), SLOT(slotNewAudio()));
+    action = mActionNew->audioAlarmAction();
+    actions->addAction(QLatin1String("newAudio"), action);
+    action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotNewAudio()));
 
-    mActionNewFromTemplate = KAlarm::createNewFromTemplateAction(i18nc("@action", "New &From Template"), actions, QLatin1String("newFromTempl"));
-    connect(mActionNewFromTemplate, SIGNAL(selected(const KAEvent*)), SLOT(slotNewFromTemplate(const KAEvent*)));
+    action = mActionNew->fromTemplateAlarmAction();
+    actions->addAction(QLatin1String("newFromTemplate"), action);
+    connect(action, SIGNAL(selected(const KAEvent*)), SLOT(slotNewFromTemplate(const KAEvent*)));
 
     mActionCreateTemplate = new KAction(i18nc("@action", "Create Tem&plate..."), this);
     actions->addAction(QLatin1String("createTemplate"), mActionCreateTemplate);
@@ -514,7 +516,11 @@ void MainWindow::initActions()
     mActionEnable->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_B));
     connect(mActionEnable, SIGNAL(triggered(bool)), SLOT(slotEnable()));
 
-    KAction* action = KAlarm::createStopPlayAction(this);
+    action = new KAction(i18nc("@action", "Wake From Suspend"), this);
+    actions->addAction(QLatin1String("wakeSuspend"), action);
+    connect(action, SIGNAL(triggered(bool)), SLOT(slotWakeFromSuspend()));
+
+    action = KAlarm::createStopPlayAction(this);
     actions->addAction(QLatin1String("stopAudio"), action);
     action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
 
@@ -696,14 +702,34 @@ void MainWindow::selectEvent(const QString& eventId)
     mListView->clearSelection();
 #ifdef USE_AKONADI
     QModelIndex index = mListFilterModel->eventIndex(eventId);
-#else
-    QModelIndex index = EventListModel::alarms()->eventIndex(eventId);
-#endif
     if (index.isValid())
     {
         mListView->select(index);
         mListView->scrollTo(index);
     }
+#else
+    mListView->select(eventId, true);
+#endif
+}
+
+/******************************************************************************
+* Return the single selected alarm in the displayed list.
+*/
+#ifdef USE_AKONADI
+KAEvent MainWindow::selectedEvent() const
+#else
+KAEvent* MainWindow::selectedEvent() const
+#endif
+{
+    return mListView->selectedEvent();
+}
+
+/******************************************************************************
+* Deselect all alarms in the displayed list.
+*/
+void MainWindow::clearSelection()
+{
+    mListView->clearSelection();
 }
 
 /******************************************************************************
@@ -958,6 +984,14 @@ void MainWindow::slotShowArchived()
 void MainWindow::slotSpreadWindowsShortcut()
 {
     mActionSpreadWindows->trigger();
+}
+
+/******************************************************************************
+* Called when the Wake From Suspend menu option is selected.
+*/
+void MainWindow::slotWakeFromSuspend()
+{
+    (WakeFromSuspendDlg::create(this))->show();
 }
 
 /******************************************************************************
@@ -1514,13 +1548,8 @@ void MainWindow::slotCalendarStatusChanged()
         MainWindow* w = mWindowList[i];
         w->mActionImportAlarms->setEnabled(active || templat);
         w->mActionImportBirthdays->setEnabled(active);
-        w->mActionNew->setEnabled(active);
-#ifdef USE_AKONADI
-        w->mActionNewFromTemplate->setEnabled(active && TemplateListModel::all()->haveEvents());
-#else
-        w->mActionNewFromTemplate->setEnabled(active && EventListModel::templates()->haveEvents());
-#endif
         w->mActionCreateTemplate->setEnabled(templat);
+        // Note: w->mActionNew enabled status is set in the NewAlarmAction class.
         w->slotSelection();
     }
 }
@@ -1541,6 +1570,7 @@ void MainWindow::slotSelection()
     if (!count)
     {
         selectionCleared();    // disable actions
+        emit selectionChanged();
         return;
     }
 
@@ -1604,6 +1634,8 @@ void MainWindow::slotSelection()
     mActionEnable->setEnabled(active && !readOnly && (enableEnable || enableDisable));
     if (enableEnable || enableDisable)
         setEnableText(enableEnable);
+
+    emit selectionChanged();
 }
 
 /******************************************************************************

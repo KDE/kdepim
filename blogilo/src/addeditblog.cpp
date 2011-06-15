@@ -228,7 +228,7 @@ void AddEditBlog::gotHtml( KJob *job )
     while (textUrl.endsWith(QChar('/'))) {
     textUrl.remove(textUrl.length()-1, 1);
     }
-    KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet( textUrl + "/xmlrpc.php",
+    KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet( QString(textUrl + QLatin1String("/xmlrpc.php")),
                                                             KIO::NoReload, KIO::HideProgressInfo );
 
     connect( testXmlRpcJob, SIGNAL( result( KJob* ) ), this, SLOT( gotXmlRpcTest( KJob* ) ) );

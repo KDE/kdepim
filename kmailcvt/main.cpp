@@ -20,13 +20,14 @@
 #include <klocale.h>
 
 #include "kmailcvt.h"
+#include "kdepim-version.h"
 
 int main(int argc, char *argv[])
 {
   KLocale::setMainCatalog("kmailcvt");
 
   KAboutData aboutData( "kmailcvt", 0, ki18n("KMailCVT"),
-    "3", ki18n("Mail Import Tool"), KAboutData::License_GPL_V2,
+    KDEPIM_VERSION, ki18n("Mail Import Tool"), KAboutData::License_GPL_V2,
     ki18n("Copyright © 2000–2010 KMailCVT authors"));
   aboutData.addAuthor(ki18n("Hans Dijkema"),ki18n("Original author"), "kmailcvt@hum.org");
   aboutData.addAuthor(ki18n("Danny Kukawka"), ki18n("Maintainer & New filters"), "danny.kukawka@web.de");

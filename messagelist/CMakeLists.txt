@@ -1,11 +1,13 @@
 project(messagelist)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+add_definitions( "-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
 
 option(KDEPIM_FOLDEROPEN_PROFILE "Enable debug output for timing folder loading" FALSE)
 configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messagelist.h)
 
 add_subdirectory(pics)
+add_subdirectory(tests)
 
 include_directories(
     ${Boost_INCLUDE_DIRS}

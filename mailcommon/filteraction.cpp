@@ -652,6 +652,8 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
 
       KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-UID", aMsg.get(), uid, "utf-8" );
       aMsg->setHeader( header );
+
+      new Akonadi::ItemModifyJob( item, FilterIf->filterManager() ); //TODO: check for errors
     } else {
       qDeleteAll( atmList );
       atmList.clear();

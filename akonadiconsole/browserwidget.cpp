@@ -45,7 +45,7 @@
 #include <akonadi/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadi/statisticsproxymodel.h>
-#include <akonadi_next/kviewstatemaintainer.h>
+#include <kviewstatemaintainer.h>
 
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
@@ -198,7 +198,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
   Nepomuk::ResourceManager::instance()->init();
 
-  m_stateMaintainer = new Future::KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group("CollectionViewState"), this );
+  m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group("CollectionViewState"), this );
   m_stateMaintainer->setView( mCollectionView );
 
   m_stateMaintainer->restoreState();

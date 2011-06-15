@@ -126,12 +126,14 @@ set(kalarm_bin_SRCS ${libkalarm_SRCS}
     templatepickdlg.cpp
     templatedlg.cpp
     templatemenuaction.cpp
+    wakedlg.cpp
 )
 if(KALARM_USE_AKONADI)
 set(kalarm_bin_SRCS ${kalarm_bin_SRCS}
     akonadimodel.cpp
     collectionmodel.cpp
     itemlistmodel.cpp
+    calendarmigrator.cpp
    )
 else(KALARM_USE_AKONADI)
 set(kalarm_bin_SRCS ${kalarm_bin_SRCS}
@@ -143,6 +145,10 @@ set(kalarm_bin_SRCS ${kalarm_bin_SRCS}
    )
 endif(KALARM_USE_AKONADI)
 
+kde4_add_ui_files(kalarm_bin_SRCS
+    wakedlg.ui
+)
+
 qt4_add_dbus_adaptor(kalarm_bin_SRCS org.kde.kalarm.kalarm.xml dbushandler.h DBusHandler)
 if (KMAIL_SUPPORTED)
     qt4_add_dbus_interfaces(kalarm_bin_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml)
@@ -150,6 +156,10 @@ endif (KMAIL_SUPPORTED)
 qt4_add_dbus_interfaces(kalarm_bin_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.KSpeech.xml)
 
 if(KALARM_USE_AKONADI)
+    kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/akonadi/kalarm/kalarmresource.kcfg org.kde.Akonadi.KAlarm.Settings)
+    qt4_add_dbus_interface(kalarm_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/akonadi/kalarm/org.kde.Akonadi.KAlarm.Settings.xml kalarmsettings KAlarmSettings)
+
+    kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/akonadi/kalarmdir/kalarmdirresource.kcfg org.kde.Akonadi.KAlarmDir.Settings)
     qt4_add_dbus_interface(kalarm_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/akonadi/kalarmdir/org.kde.Akonadi.KAlarmDir.Settings.xml kalarmdirsettings KAlarmDirSettings)
 endif()
 
@@ -165,9 +175,43 @@ endif (KMAIL_SUPPORTED)
 set_target_properties(kalarm_bin PROPERTIES OUTPUT_NAME kalarm)
 
 if(KALARM_USE_AKONADI)
-    target_link_libraries(kalarm_bin kalarm_calendar ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} akonadi_next ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_CONTACT_LIBS} ${KDEPIMLIBS_KHOLIDAYS_LIBS} ${KDEPIMLIBS_KPIMUTILS_LIBS} kdepim ${KDE4_KCMUTILS_LIBS} ${KDE4_PHONON_LIBS} ${X11_X11_LIB})
+    target_link_libraries(kalarm_bin
+        kalarm_calendar
+        ${KDEPIMLIBS_KCALCORE_LIBS}
+        ${KDEPIMLIBS_KCALUTILS_LIBS}
+        ${KDEPIMLIBS_KABC_LIBS}
+        ${KDEPIMLIBS_KMIME_LIBS}
+        ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+        ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+        ${KDEPIMLIBS_AKONADI_LIBS}
+        ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+        ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+        ${KDEPIMLIBS_KHOLIDAYS_LIBS}
+        ${KDEPIMLIBS_KPIMUTILS_LIBS}
+        kdepim
+        ${KDE4_KCMUTILS_LIBS}
+        ${KDE4_PHONON_LIBS}
+        ${X11_X11_LIB}
+    )
 else(KALARM_USE_AKONADI)
-    target_link_libraries(kalarm_bin kalarm_resources kalarm_calendar ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_CONTACT_LIBS} ${KDEPIMLIBS_KHOLIDAYS_LIBS} ${KDEPIMLIBS_KPIMUTILS_LIBS} kdepim ${KDE4_KCMUTILS_LIBS} ${KDE4_PHONON_LIBS} ${X11_X11_LIB})
+    target_link_libraries(kalarm_bin
+        kalarm_resources
+        kalarm_calendar
+        ${KDEPIMLIBS_KCAL_LIBS}
+        ${KDEPIMLIBS_KABC_LIBS}
+        ${KDEPIMLIBS_KMIME_LIBS}
+        ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+        ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+        ${KDEPIMLIBS_AKONADI_LIBS}
+        ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+        ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+        ${KDEPIMLIBS_KHOLIDAYS_LIBS}
+        ${KDEPIMLIBS_KPIMUTILS_LIBS}
+        kdepim
+        ${KDE4_KCMUTILS_LIBS}
+        ${KDE4_PHONON_LIBS}
+        ${X11_X11_LIB}
+    )
 endif(KALARM_USE_AKONADI)
 
 install(TARGETS kalarm_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -182,3 +226,11 @@ install(FILES kalarmui.rc DESTINATION ${DATA_INSTALL_DIR}/kalarm)
 install(FILES org.kde.kalarm.kalarm.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 install(FILES kalarm.upd DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
 install(PROGRAMS kalarm-version.pl kalarm-1.2.1-general.pl kalarm-1.9.5-defaults.pl kalarm-2.0.2-general.pl kalarm-2.1.5-general.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+
+########### KAuth helper ###############
+
+kde4_add_executable(kalarm_helper rtcwakeaction.cpp)
+target_link_libraries(kalarm_helper ${KDE4_KDECORE_LIBS})
+install(TARGETS kalarm_helper DESTINATION ${LIBEXEC_INSTALL_DIR})
+kde4_install_auth_helper_files(kalarm_helper org.kde.kalarmrtcwake root)
+kde4_install_auth_actions(org.kde.kalarmrtcwake rtcwakeaction.actions)

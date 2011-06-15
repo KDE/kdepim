@@ -25,6 +25,10 @@ add_subdirectory(about)
 add_subdirectory(tests)
 add_subdirectory(pics)
 
+if(DEBUG_SIGNATURE)
+   add_definitions(-DDEBUG_SIGNATURE)
+endif(DEBUG_SIGNATURE)
+
 if(KDEPIM_NO_WEBKIT)
   set(_mailwebview_cpp mailwebview_textbrowser.cpp )
   set(_mailwebview_lib )

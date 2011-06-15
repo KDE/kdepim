@@ -149,8 +149,8 @@ QVariant JobTrackerModel::data(const QModelIndex & idx, int role) const
       if ( idx.column() == 0 )
         return info.id;
       if ( idx.column() == 1 )
-        return KGlobal::locale()->formatTime( info.timestamp.time(), true )
-          + QString::fromLatin1( ".%1" ).arg( info.timestamp.time().msec(), 3, 10, QLatin1Char('0') );
+        return QString(KGlobal::locale()->formatTime( info.timestamp.time(), true )
+          + QString::fromLatin1( ".%1" ).arg( info.timestamp.time().msec(), 3, 10, QLatin1Char('0') ) );
       if ( idx.column() == 2 )
         return info.type;
       if ( idx.column() == 3 )

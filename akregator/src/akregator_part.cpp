@@ -44,6 +44,7 @@
 #include "dummystorage/storagefactorydummyimpl.h"
 
 #include <libkdepim/broadcaststatus.h>
+#include "kdepim-version.h"
 
 #include <KActionCollection>
 #include <knotifyconfigwidget.h>
@@ -125,10 +126,15 @@ namespace {
         dot.setAttribute("xmlUrl","http://www.kde.org/dotkdeorg.rdf");
         mainFolder.appendChild(dot);
 
-        QDomElement plan = doc.createElement( "outline" );
-        plan.setAttribute("text",i18n("Planet KDE"));
-        plan.setAttribute("xmlUrl","http://planetkde.org/rss20.xml");
-        mainFolder.appendChild(plan);
+        QDomElement planetkde = doc.createElement( "outline" );
+        planetkde.setAttribute("text",i18n("Planet KDE"));
+        planetkde.setAttribute("xmlUrl","http://planetkde.org/rss20.xml");
+        mainFolder.appendChild(planetkde);
+
+        QDomElement planetkdepim = doc.createElement( "outline" );
+        planetkdepim.setAttribute("text",i18n("Planet KDE PIM"));
+        planetkdepim.setAttribute("xmlUrl","http://pim.planetkde.org/rss20.xml");
+        mainFolder.appendChild(planetkdepim);
 
         QDomElement apps = doc.createElement( "outline" );
         apps.setAttribute("text",i18n("KDE Apps"));
@@ -258,7 +264,7 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
     connect(m_autosaveTimer, SIGNAL(timeout()), this, SLOT(slotSaveFeedList()));
     m_autosaveTimer->start(5*60*1000); // 5 minutes
 
-    QString useragent = QString( "Akregator/%1; syndication" ).arg( AKREGATOR_VERSION );
+    QString useragent = QString( "Akregator/%1; syndication" ).arg( KDEPIM_VERSION );
 
     if( !Settings::customUserAgent().isEmpty() )
         useragent = Settings::customUserAgent();

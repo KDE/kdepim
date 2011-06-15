@@ -68,6 +68,7 @@ using namespace KCal;
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <kauth.h>
 #include <ksystemtimezone.h>
 #include <kstandardguiitem.h>
 #include <kstandardshortcut.h>
@@ -153,14 +154,9 @@ MainWindow* displayMainWindowSelected(const QString& eventId)
     else
     {
         // There is already a main window, so make it the active window
-        bool visible = win->isVisible();
-        if (visible)
-            win->hide();        // in case it's on a different desktop
-        if (!visible  ||  win->isMinimized())
-        {
-            win->setWindowState(win->windowState() & ~Qt::WindowMinimized);
-            win->show();
-        }
+        win->hide();        // in case it's on a different desktop
+        win->setWindowState(win->windowState() & ~Qt::WindowMinimized);
+        win->show();
         win->raise();
         win->activateWindow();
     }
@@ -209,22 +205,6 @@ KToggleAction* createSpreadWindowsAction(QObject* parent)
     QObject::connect(action, SIGNAL(triggered(bool)), theApp(), SLOT(spreadWindows(bool)));
     // The following line ensures that all instances are kept in the same state
     QObject::connect(theApp(), SIGNAL(spreadWindowsToggled(bool)), action, SLOT(setChecked(bool)));
-    return action;
-}
-
-/******************************************************************************
-* Create a New From Template action.
-*/
-TemplateMenuAction* createNewFromTemplateAction(const QString& label, KActionCollection* actions, const QString& name)
-{
-    TemplateMenuAction* action = new TemplateMenuAction(KIcon(QLatin1String("document-new-from-template")), label, actions, name);
-#ifdef USE_AKONADI
-    QObject::connect(TemplateListModel::all(), SIGNAL(haveEventsStatus(bool)), action, SLOT(setEnabled(bool)));
-    action->setEnabled(TemplateListModel::all()->haveEvents());
-#else
-    QObject::connect(EventListModel::templates(), SIGNAL(haveEventsStatus(bool)), action, SLOT(setEnabled(bool)));
-    action->setEnabled(EventListModel::templates()->haveEvents());
-#endif
     return action;
 }
 
@@ -548,7 +528,7 @@ UpdateStatus modifyEvent(KAEvent& oldEvent, KAEvent& newEvent, QWidget* msgParen
 
 #ifndef USE_AKONADI
                 // Update the window lists
-                EventListModel::alarms()->addEvent(&newEvent);
+                EventListModel::alarms()->addEvent(newev);
 #endif
             }
         }
@@ -698,6 +678,15 @@ UpdateStatus deleteEvents(KAEvent::List& events, bool archive, QWidget* msgParen
         {
             status = UPDATE_ERROR;
             ++warnErr;
+        }
+
+        // Remove any wake-from-suspend scheduled for this alarm
+        QStringList wakeup = checkRtcWakeConfig();
+        if (!wakeup.isEmpty()  &&  wakeup[0] == id)
+        {
+            // setRtcWakeTime will only work with a parent window specified
+            setRtcWakeTime(0, (msgParent ? msgParent : MainWindow::mainMainWindow()));
+            deleteRtcWakeConfig();
         }
 
         // Remove "Don't show error messages again" for this alarm
@@ -1248,6 +1237,84 @@ void editNewTemplate(EditAlarmDlg::Type type, QWidget* parent)
 void editNewTemplate(const KAEvent* preset, QWidget* parent)
 {
     ::editNewTemplate(EditAlarmDlg::Type(0), preset, parent);
+}
+
+/******************************************************************************
+* Check the config as to whether there is a wake-on-suspend alarm pending, and
+* if so, delete it from the config if it has expired.
+* Reply = config entry: [0] = event ID, [1] = trigger time (time_t).
+*       = empty list if none or expired.
+*/
+QStringList checkRtcWakeConfig()
+{
+    KConfigGroup config(KGlobal::config(), "General");
+    QStringList params = config.readEntry("RtcWake", QStringList());
+    if (params.count() == 2  &&  params[1].toUInt() > KDateTime::currentUtcDateTime().toTime_t())
+        return params;                   // config entry is valid
+#ifdef __GNUC__
+#warning Should delete if calendar disabled or removed, or event id no longer exists
+#endif
+    if (!params.isEmpty())
+        config.deleteEntry("RtcWake");   // delete the expired config entry
+    return QStringList();
+}
+
+/******************************************************************************
+* Delete any wake-on-suspend alarm from the config.
+*/
+void deleteRtcWakeConfig()
+{
+    KConfigGroup config(KGlobal::config(), "General");
+    config.deleteEntry("RtcWake");
+}
+
+/******************************************************************************
+* Set the wakeup time for the system.
+* Set 'triggerTime' to zero to cancel the wakeup.
+* Reply = true if successful.
+*/
+bool setRtcWakeTime(unsigned triggerTime, QWidget* parent)
+{
+    QVariantMap args;
+    args["time"] = triggerTime;
+    KAuth::Action action("org.kde.kalarmrtcwake.settimer");
+    action.setHelperID("org.kde.kalarmrtcwake");
+    action.setParentWidget(parent);
+    action.setArguments(args);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+    {
+        QString errmsg = reply.errorDescription();
+        kDebug() << "Error code=" << reply.errorCode() << errmsg;
+        if (errmsg.isEmpty())
+        {
+            int errcode = reply.errorCode();
+            switch (reply.type())
+            {
+                case KAuth::ActionReply::KAuthError:
+                    kDebug() << "Authorisation error:" << errcode;
+                    switch (errcode)
+                    {
+                        case KAuth::ActionReply::AuthorizationDenied:
+                        case KAuth::ActionReply::UserCancelled:
+                            return false;   // the user should already know about this
+                        default:
+                            break;
+                    }
+                    break;
+                case KAuth::ActionReply::HelperError:
+                    kDebug() << "Helper error:" << errcode;
+                    errcode += 100;    // make code distinguishable from KAuthError type
+                    break;
+                default:
+                    break;
+            }
+            errmsg = i18nc("@info", "Error obtaining authorization (%1)", errcode);
+        }
+        KMessageBox::information(parent, errmsg);
+        return false;
+    }
+    return true;
 }
 
 } // namespace KAlarm

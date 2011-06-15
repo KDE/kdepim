@@ -199,7 +199,7 @@ int main( int argc, char *argv[] )
   bool change = false;
   bool del = false;
   bool create = false;
-  bool calendarFile = false;
+  //bool calendarFile = false;
   bool importFile = false;
 
   QString option;
@@ -614,7 +614,7 @@ int main( int argc, char *argv[] )
   KonsoleKalendar *konsolekalendar = new KonsoleKalendar( &variables );
 
   if ( args->isSet( "file" ) ) {
-    calendarFile = true;
+    // calendarFile = true;
     option = args->getOption( "file" );
     variables.setCalendarFile( option );
 

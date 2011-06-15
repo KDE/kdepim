@@ -46,8 +46,9 @@ public:
       mChildItems( 0 ),
       mParent( 0 ),
       mThisItemIndexGuess( 0 ),
+      mInitialExpandStatus( Item::NoExpandNeeded ),
       mIsViewable( false ),
-      mInitialExpandStatus( Item::NoExpandNeeded )
+      mUseReceiver( false )
   {
   }
 
@@ -235,7 +236,6 @@ public:
 
   Item * const q;
 
-  Item::Type mType;                                 ///< The type of this item
   QList< Item * > *mChildItems;               ///< List of children, may be 0
   Item * mParent;                             ///< The parent view item
   time_t mMaxDate;                            ///< The maximum date in the subtree
@@ -243,15 +243,13 @@ public:
   size_t mSize;                               ///< The size of the message in bytes
   QString mSender;                            ///< The sender of the message (or group sender)
   QString mReceiver;                          ///< The receiver of the message (or group receiver)
-  QString mSenderOrReceiver;                  ///< Depending on the folder setting: sender or receiver
   int mThisItemIndexGuess;                    ///< The guess for the index in the parent's child list
   QString mSubject;                           ///< The subject of the message (or group subject)
-  bool mIsViewable;                           ///< Is this item attacched to the viewable root ?
-  Item::InitialExpandStatus mInitialExpandStatus;   ///< The expand status we have to honor when we attach to the viewable root
-  QString mFormattedSize;                     ///< The size above formatted as string, this is done only on request
-  QString mFormattedDate;                     ///< The formatted date of the message, formatting takes time so it is done only on request
-  QString mFormattedMaxDate;                  ///< The maximum date above formatted (lazily)
-  Akonadi::MessageStatus mStatus;                ///< The status of the message (may be extended to groups in the future)
+  Akonadi::MessageStatus mStatus;             ///< The status of the message (may be extended to groups in the future)
+  Item::Type mType : 4;                       ///< The type of this item
+  Item::InitialExpandStatus mInitialExpandStatus : 4; ///< The expand status we have to honor when we attach to the viewable root
+  bool mIsViewable : 1;                       ///< Is this item attacched to the viewable root ?
+  bool mUseReceiver : 1;                      ///< senderOrReceiver() returns receiver rather than sender
 };
 
 /**

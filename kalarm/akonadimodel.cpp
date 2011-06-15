@@ -1,6 +1,3 @@
-#ifdef __GNUC__
-#warning Editing the directory path of a calendar produces errors
-#endif
 /*
  *  akonadimodel.cpp  -  KAlarm calendar file access using Akonadi
  *  Program:  kalarm
@@ -24,7 +21,9 @@
 #include "akonadimodel.h"
 #include "alarmtext.h"
 #include "autoqpointer.h"
+#include "calendarmigrator.h"
 #include "collectionattribute.h"
+#include "compatibilityattribute.h"
 #include "eventattribute.h"
 #include "preferences.h"
 #include "synchtimer.h"
@@ -55,6 +54,7 @@
 
 using namespace Akonadi;
 using KAlarm::CollectionAttribute;
+using KAlarm::CompatibilityAttribute;
 using KAlarm::EventAttribute;
 
 static Collection::Rights writableRights = Collection::CanChangeItem | Collection::CanCreateItem | Collection::CanDeleteItem;
@@ -105,6 +105,7 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
     monitor->itemFetchScope().fetchAttribute<EventAttribute>();
 
     AttributeFactory::registerAttribute<CollectionAttribute>();
+    AttributeFactory::registerAttribute<CompatibilityAttribute>();
     AttributeFactory::registerAttribute<EventAttribute>();
 
     if (!mTextIcon)
@@ -131,6 +132,27 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
     connect(this, SIGNAL(rowsInserted(const QModelIndex&, int, int)), SLOT(slotRowsInserted(const QModelIndex&, int, int)));
     connect(this, SIGNAL(rowsAboutToBeRemoved(const QModelIndex&, int, int)), SLOT(slotRowsAboutToBeRemoved(const QModelIndex&, int, int)));
     connect(monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QSet<QByteArray>&)), SLOT(slotMonitoredItemChanged(const Akonadi::Item&, const QSet<QByteArray>&)));
+
+    // Check whether there are any KAlarm resources configured
+    bool found = false;
+    AgentInstance::List agents = AgentManager::self()->instances();
+    foreach (const AgentInstance& agent, agents)
+    {
+        QString type = agent.type().identifier();
+        if (type == QLatin1String("akonadi_kalarm_resource")
+        ||  type == QLatin1String("akonadi_kalarm_dir_resource"))
+        {
+            found = true;
+            break;
+        }
+    }
+    if (!found)
+    {
+        // There are no KAlarm Akonadi resources.
+        // Migrate any KResources alarm calendars from pre-Akonadi versions of KAlarm,
+        // or create default calendars.
+        CalendarMigrator::execute();
+    }
 }
 
 /******************************************************************************
@@ -203,7 +225,8 @@ QVariant AkonadiModel::data(const QModelIndex& index, int role) const
             case AlarmTypeRole:
                 return static_cast<int>(types(collection));
             case IsStandardRole:
-                if (!collection.hasAttribute<CollectionAttribute>())
+                if (!collection.hasAttribute<CollectionAttribute>()
+                ||  !isCompatible(collection))
                     return 0;
                 return static_cast<int>(collection.attribute<CollectionAttribute>()->standard());
             default:
@@ -491,7 +514,8 @@ if (attr) { kDebug()<<"Set enabled:"<<types<<", was="<<attr->enabled(); } else {
                 break;
             }
             case IsStandardRole:
-                if (collection.hasAttribute<CollectionAttribute>())
+                if (collection.hasAttribute<CollectionAttribute>()
+                &&  isCompatible(collection))
                 {
                     KAlarm::CalEvent::Types types = static_cast<KAlarm::CalEvent::Types>(value.value<int>());
 CollectionAttribute* attr = collection.attribute<CollectionAttribute>();
@@ -1567,6 +1591,7 @@ void AkonadiModel::slotRowsInserted(const QModelIndex& parent, int start, int en
         if (collection.isValid())
         {
             // A collection has been inserted
+            kDebug() << "Collection" << collection.id() << collection.name();
             QSet<QByteArray> attrs;
             attrs += CollectionAttribute::name();
             slotCollectionChanged(collection, attrs);
@@ -1597,7 +1622,11 @@ void AkonadiModel::slotRowsAboutToBeRemoved(const QModelIndex& parent, int start
     kDebug() << start << "-" << end << "(parent =" << parent << ")";
     EventList events = eventList(parent, start, end);
     if (!events.isEmpty())
+    {
+        foreach (const Event& event, events)
+            kDebug() << "Collection:" << event.collection.id() << ", Event ID:" << event.event.id();
         emit eventsToBeRemoved(events);
+    }
 }
 
 /******************************************************************************
@@ -1622,6 +1651,7 @@ AkonadiModel::EventList AkonadiModel::eventList(const QModelIndex& parent, int s
 */
 void AkonadiModel::slotCollectionChanged(const Collection& collection, const QSet<QByteArray>& attributeNames)
 {
+    // Check for a read/write permission change
     Collection::Rights oldRights = mCollectionRights.value(collection.id(), Collection::AllRights);
     Collection::Rights newRights = collection.rights() & writableRights;
     if (newRights != oldRights)
@@ -1630,6 +1660,18 @@ void AkonadiModel::slotCollectionChanged(const Collection& collection, const QSe
         emit collectionStatusChanged(collection, ReadOnly, (newRights != writableRights));
     }
 
+    // Check for a change in content mime types
+    // (e.g. when a collection is first created at startup).
+    KAlarm::CalEvent::Types oldAlarmTypes = mCollectionAlarmTypes.value(collection.id(), KAlarm::CalEvent::EMPTY);
+    KAlarm::CalEvent::Types newAlarmTypes = KAlarm::CalEvent::types(collection.contentMimeTypes());
+    if (newAlarmTypes != oldAlarmTypes)
+    {
+        kDebug() << "Collection" << collection.id() << ": alarm types ->" << newAlarmTypes;
+        mCollectionAlarmTypes[collection.id()] = newAlarmTypes;
+        emit collectionStatusChanged(collection, AlarmTypes, static_cast<int>(newAlarmTypes));
+    }
+
+    // Check for the collection being enabled/disabled
     if (attributeNames.contains(CollectionAttribute::name()))
     {
         static bool first = true;
@@ -1638,7 +1680,7 @@ kDebug()<<"COLLECTION ATTRIBUTE changed";
         KAlarm::CalEvent::Types newEnabled = collection.hasAttribute<CollectionAttribute>() ? collection.attribute<CollectionAttribute>()->enabled() : KAlarm::CalEvent::EMPTY;
         if (first  ||  newEnabled != oldEnabled)
         {
-            kDebug() << "enabled ->" << newEnabled;
+            kDebug() << "Collection" << collection.id() << ": enabled ->" << newEnabled;
             first = false;
             mCollectionEnabled[collection.id()] = newEnabled;
             emit collectionStatusChanged(collection, Enabled, static_cast<int>(newEnabled));
@@ -1773,6 +1815,12 @@ Collection AkonadiModel::collectionForItem(Item::Id id) const
     if (!ix.isValid())
         return Collection();
     return ix.data(ParentCollectionRole).value<Collection>();
+}
+
+bool AkonadiModel::isCompatible(const Collection& collection)
+{
+    return collection.hasAttribute<CompatibilityAttribute>()
+       &&  collection.attribute<CompatibilityAttribute>()->compatibility() == KAlarm::Calendar::Current;
 }
 
 KAlarm::CalEvent::Types AkonadiModel::types(const Collection& collection)

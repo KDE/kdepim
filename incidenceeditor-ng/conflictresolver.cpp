@@ -179,7 +179,7 @@ bool ConflictResolver::tryDate( const KCalCore::FreeBusy::Ptr &fb,
     } else {
       // the current busy period blocks the try period, try
       // after the end of the current busy period
-      int secsDuration = tryFrom.secsTo( tryTo );
+      const int secsDuration = tryFrom.secsTo( tryTo );
       tryFrom = ( *it ).end();
       tryTo = tryFrom.addSecs( secsDuration );
       // try again with the new try period
@@ -207,7 +207,7 @@ bool ConflictResolver::findFreeSlot( const KCalCore::Period &dateTimeRange )
   KDateTime now = KDateTime::currentUtcDateTime();
   if ( tryFrom < now ) {
     // The slot to look for is at least partially in the past.
-    int secs = tryFrom.secsTo( tryTo );
+    const int secs = tryFrom.secsTo( tryTo );
     tryFrom = now;
     tryTo = tryFrom.addSecs( secs );
   }
@@ -355,8 +355,8 @@ void ConflictResolver::findAllFreeSlots()
   QVector<int> fbArray( range );
   fbArray.fill( 0 ); // initialize to zero
   for ( int slot = 0; slot < fbArray.size(); ++slot ) {
-    KDateTime dateTime = begin.addSecs( slot * mSlotResolutionSeconds );
-    int dayOfWeek = calSys->dayOfWeek( dateTime.date() ) - 1; // bitarray is 0 indexed
+    const KDateTime dateTime = begin.addSecs( slot * mSlotResolutionSeconds );
+    const int dayOfWeek = calSys->dayOfWeek( dateTime.date() ) - 1; // bitarray is 0 indexed
     if ( !mWeekdays[dayOfWeek] ) {
       fbArray[slot] = 1;
     }
@@ -404,8 +404,8 @@ void ConflictResolver::findAllFreeSlots()
         // convert from our timeslot interval back into to normal seconds
         // then calculate the date times of the free block based on
         // our initial timeframe
-        KDateTime freeBegin = begin.addSecs( free_start_i * mSlotResolutionSeconds );
-        KDateTime freeEnd =
+        const KDateTime freeBegin = begin.addSecs( free_start_i * mSlotResolutionSeconds );
+        const KDateTime freeEnd =
           freeBegin.addSecs( ( free_end_i - free_start_i ) * mSlotResolutionSeconds );
         // push the free block onto the list
         mAvailableSlots << KCalCore::Period( freeBegin, freeEnd );
@@ -452,7 +452,7 @@ void ConflictResolver::calculateConflicts()
 {
   KDateTime start = mTimeframeConstraint.start();
   KDateTime end = mTimeframeConstraint.end();
-  int count = tryDate( start, end );
+  const int count = tryDate( start, end );
   emit conflictsDetected( count );
 
   if ( !mCalculateTimer.isActive() ) {

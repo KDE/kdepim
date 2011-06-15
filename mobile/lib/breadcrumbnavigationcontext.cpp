@@ -25,7 +25,7 @@
 #include "kbreadcrumbselectionmodel.h"
 #include "klinkitemselectionmodel.h"
 #include "kmodelindexproxymapper.h"
-#include "libkdepim/kdescendantsproxymodel_p.h"
+#include <kdescendantsproxymodel.h>
 #include "kselectionproxymodel.h"
 #include "qmlcheckableproxymodel.h"
 #include "qmllistselectionmodel.h"

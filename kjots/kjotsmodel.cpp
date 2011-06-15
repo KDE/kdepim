@@ -206,6 +206,8 @@ bool KJotsModel::setData( const QModelIndex& index, const QVariant& value, int r
     bool isRichText = KPIMTextEdit::TextUtils::containsFormatting( document );
 
     note->contentType()->setMimeType( isRichText ? "text/html" : "text/plain" );
+    note->contentType()->setCharset("utf-8");
+    note->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
     note->mainBodyPart()->fromUnicodeString( isRichText ? document->toHtml() : document->toPlainText() );
     note->assemble();
     item.setPayload<KMime::Message::Ptr>( note );
@@ -242,12 +244,11 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
 
     KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
     QTextDocument *document = new QTextDocument;
-    if ( note->contentType()->asUnicodeString() == "text/html" )
+    if ( note->contentType()->isHTMLText() )
       document->setHtml( note->mainBodyPart()->decodedText() );
-    else if ( note->contentType()->asUnicodeString() == "text/plain" )
-    {
+    else
       document->setPlainText( note->mainBodyPart()->decodedText() );
-    }
+
     m_documents.insert( itemId, document );
     return QVariant::fromValue( document );
   }

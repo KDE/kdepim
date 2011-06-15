@@ -1,7 +1,7 @@
 /*
  *  mainwindow.h  -  main application window
  *  Program:  kalarm
- *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -80,11 +80,14 @@ class MainWindow : public MainWindowBase, public KCal::Calendar::CalendarObserve
         bool               showingArchived() const      { return mShowArchived; }
 #ifdef USE_AKONADI
         void               selectEvent(Akonadi::Item::Id);
+        KAEvent            selectedEvent() const;
         void               editAlarm(EditAlarmDlg*, const KAEvent&);
 #else
         void               selectEvent(const QString& eventID);
+        KAEvent*           selectedEvent() const;
         void               editAlarm(EditAlarmDlg*, const KAEvent&, AlarmResource*);
 #endif
+        void               clearSelection();
         virtual bool       eventFilter(QObject*, QEvent*);
 
         static void        refresh();
@@ -103,6 +106,9 @@ class MainWindow : public MainWindowBase, public KCal::Calendar::CalendarObserve
 
     public slots:
         virtual void   show();
+
+    signals:
+        void           selectionChanged();
 
     protected:
         virtual void   resizeEvent(QResizeEvent*);
@@ -146,6 +152,7 @@ class MainWindow : public MainWindowBase, public KCal::Calendar::CalendarObserve
         void           slotShowTimeTo();
         void           slotShowArchived();
         void           slotSpreadWindowsShortcut();
+        void           slotWakeFromSuspend();
         void           updateKeepArchived(int days);
         void           slotUndo();
         void           slotUndoItem(QAction* id);
@@ -200,11 +207,6 @@ class MainWindow : public MainWindowBase, public KCal::Calendar::CalendarObserve
         KAction*             mActionImportBirthdays;
         KAction*             mActionTemplates;
         NewAlarmAction*      mActionNew;
-        KAction*             mActionNewDisplay;
-        KAction*             mActionNewCommand;
-        KAction*             mActionNewEmail;
-        KAction*             mActionNewAudio;
-        TemplateMenuAction*  mActionNewFromTemplate;
         KAction*             mActionCreateTemplate;
         KAction*             mActionCopy;
         KAction*             mActionModify;

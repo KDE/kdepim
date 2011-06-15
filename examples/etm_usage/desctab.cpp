@@ -31,7 +31,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/entityrightsfiltermodel.h>
-#include <libkdepim/kdescendantsproxymodel_p.h>
+#include <kdescendantsproxymodel.h>
 
 #include <QTimer>
 

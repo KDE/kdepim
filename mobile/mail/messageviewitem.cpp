@@ -26,7 +26,7 @@
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsSceneMouseEvent>
 
-#include <kdescendantsproxymodel_p.h>
+#include <kdescendantsproxymodel.h>
 
 #include <messageviewer/headerstyle.h>
 #include <messageviewer/headerstrategy.h>

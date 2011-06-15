@@ -21,8 +21,6 @@
 
 #include "kalarmresource.h"
 #include "kalarmresourcecommon.h"
-#include "collectionattribute.h"
-#include "eventattribute.h"
 #include "kacalendar.h"
 #include "kaevent.h"
 
@@ -39,8 +37,6 @@
 using namespace Akonadi;
 using namespace Akonadi_KAlarm_Resource;
 using KAlarmResourceCommon::errorMessage;
-using KAlarm::CollectionAttribute;
-using KAlarm::EventAttribute;
 
 
 KAlarmResource::KAlarmResource(const QString& id)
@@ -49,7 +45,8 @@ KAlarmResource::KAlarmResource(const QString& id)
 {
     kDebug() << id;
     KAlarmResourceCommon::initialise(this);
-    initialise(KAlarmResourceCommon::mimeTypes(id), "kalarm");
+    initialise(mSettings->alarmTypes(), "kalarm");
+    connect(mSettings, SIGNAL(configChanged()), SLOT(settingsChanged()));
 }
 
 KAlarmResource::~KAlarmResource()
@@ -82,6 +79,7 @@ void KAlarmResource::customizeConfigDialog(SingleFileResourceConfigDialog<Settin
 */
 bool KAlarmResource::readFromFile(const QString& fileName)
 {
+    kDebug() << fileName;
     if (!ICalResourceBase::readFromFile(fileName))
         return false;
     if (calendar()->incidences().isEmpty())
@@ -99,6 +97,7 @@ bool KAlarmResource::readFromFile(const QString& fileName)
 */
 bool KAlarmResource::writeToFile(const QString& fileName)
 {
+    kDebug() << fileName;
 #ifdef __GNUC__
 #warning Crashes if not a local file
 #endif
@@ -147,6 +146,18 @@ bool KAlarmResource::doRetrieveItem(const Akonadi::Item& item, const QSet<QByteA
     Item newItem = KAlarmResourceCommon::retrieveItem(item, event);
     itemRetrieved(newItem);
     return true;
+}
+
+/******************************************************************************
+* Called when the resource settings have changed.
+* Update the supported mime types if the AlarmTypes setting has changed.
+*/
+void KAlarmResource::settingsChanged()
+{
+    kDebug();
+    QStringList mimeTypes = mSettings->alarmTypes();
+    if (mimeTypes != mSupportedMimetypes)
+        mSupportedMimetypes = mimeTypes;
 }
 
 /******************************************************************************
@@ -245,6 +256,8 @@ void KAlarmResource::itemChanged(const Akonadi::Item& item, const QSet<QByteArra
 */
 void KAlarmResource::doRetrieveItems(const Akonadi::Collection& collection)
 {
+    kDebug();
+
     // Set the collection's compatibility status
     KAlarmResourceCommon::setCollectionCompatibility(collection, mCompatibility);
 

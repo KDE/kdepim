@@ -55,12 +55,14 @@ class KAlarmDirResource : public Akonadi::ResourceBase, public Akonadi::AgentBas
         void    fileCreated(const QString& path);
         void    fileChanged(const QString& path);
         void    fileDeleted(const QString& path);
-        bool    loadFiles();
+        void    loadFiles()         { loadFiles(true); }
         void    collectionsReceived(const Akonadi::Collection::List&);
         void    collectionFetchResult(KJob*);
         void    jobDone(KJob*);
 
     private:
+        void   changeAlarmTypes(KAlarm::CalEvent::Types removed);
+        bool    loadFiles(bool sync);
         KAEvent loadFile(const QString& path, const QString& file);
         KAEvent loadNextFile(const QString& eventId, const QString& file);
         QString directoryName() const;
@@ -71,8 +73,10 @@ class KAlarmDirResource : public Akonadi::ResourceBase, public Akonadi::AgentBas
         bool    cancelIfReadOnly();
         bool    writeToFile(const KAEvent&);
         void    setCompatibility(bool writeAttr = true);
+        void    removeEvent(const QString& eventId, bool deleteFile);
         void    addEventFile(const KAEvent&, const QString& file);
         QString removeEventFile(const QString& eventId, const QString& file, KAEvent* = 0);
+        bool    createItemAndIndex(const QString& path, const QString& file);
         bool    createItem(const KAEvent&);
         bool    modifyItem(const KAEvent&);
         void    deleteItem(const KAEvent&);

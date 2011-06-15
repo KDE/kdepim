@@ -23,7 +23,7 @@
 #include "utils.h"
 
 #include "libkdepimdbusinterfaces/urihandler.h"
-#include "akonadi_next/incidenceattachmentmodel.h"
+#include "incidenceattachmentmodel.h"
 
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/ItemFetchScope>
@@ -120,7 +120,7 @@ class IncidenceViewer::Private
     bool mDelayedClear;
     Akonadi::Collection mParentCollection;
     Akonadi::CollectionFetchJob *mParentCollectionFetchJob;
-    Akonadi::IncidenceAttachmentModel *mAttachmentModel;
+    IncidenceAttachmentModel *mAttachmentModel;
 };
 
 IncidenceViewer::IncidenceViewer( QWidget *parent )
@@ -160,7 +160,7 @@ QAbstractItemModel *IncidenceViewer::attachmentModel() const
 {
   if ( !d->mAttachmentModel ) {
     d->mAttachmentModel =
-      new Akonadi::IncidenceAttachmentModel( const_cast<IncidenceViewer*>( this ) );
+      new IncidenceAttachmentModel( const_cast<IncidenceViewer*>( this ) );
   }
   return d->mAttachmentModel;
 }
@@ -191,6 +191,7 @@ void IncidenceViewer::setIncidence( const Akonadi::Item &incidence, const QDate 
 void IncidenceViewer::itemChanged( const Akonadi::Item &item )
 {
   if ( !item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+    d->mBrowser->clear();
     return;
   }
 

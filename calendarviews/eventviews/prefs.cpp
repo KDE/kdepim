@@ -32,6 +32,61 @@
 
 using namespace EventViews;
 
+QSet<EventViews::EventView::ItemIcon> iconArrayToSet( const QByteArray &array )
+{
+  QSet<EventViews::EventView::ItemIcon> set;
+  for( int i=0; i<array.count(); ++i ) {
+    if ( i >= EventViews::EventView::IconCount ) {
+      kWarning() << "Icon array is too big: " << array.count();
+      return set;
+    }
+    if ( array[i] != 0 )
+      set.insert( static_cast<EventViews::EventView::ItemIcon>( i ) );
+  }
+  return set;
+}
+
+QByteArray iconSetToArray( const QSet<EventViews::EventView::ItemIcon> &set )
+{
+  QByteArray array;
+  for( int i=0; i<EventViews::EventView::IconCount; ++i ) {
+    const bool contains = set.contains( static_cast<EventViews::EventView::ItemIcon>( i ) );
+    array.append( contains ? 1 : 0 ) ;
+  }
+
+  return array;
+}
+
+QByteArray agendaViewIconDefaults()
+{
+  QByteArray iconDefaults;
+
+  iconDefaults[EventViews::EventView::CalendarCustomIcon] = 1;
+  iconDefaults[EventViews::EventView::TaskIcon]           = 1;
+  iconDefaults[EventViews::EventView::JournalIcon]        = 1;
+  iconDefaults[EventViews::EventView::RecurringIcon]      = 1;
+  iconDefaults[EventViews::EventView::ReminderIcon]       = 1;
+  iconDefaults[EventViews::EventView::ReadOnlyIcon]       = 1;
+  iconDefaults[EventViews::EventView::ReplyIcon]          = 0;
+
+  return iconDefaults;
+}
+
+QByteArray monthViewIconDefaults()
+{
+  QByteArray iconDefaults;
+
+  iconDefaults[EventViews::EventView::CalendarCustomIcon] = 1;
+  iconDefaults[EventViews::EventView::TaskIcon]           = 1;
+  iconDefaults[EventViews::EventView::JournalIcon]        = 1;
+  iconDefaults[EventViews::EventView::RecurringIcon]      = 0;
+  iconDefaults[EventViews::EventView::ReminderIcon]       = 0;
+  iconDefaults[EventViews::EventView::ReadOnlyIcon]       = 1;
+  iconDefaults[EventViews::EventView::ReplyIcon]          = 0;
+
+  return iconDefaults;
+}
+
 class BaseConfig : public PrefsBase
 {
   public:
@@ -51,6 +106,9 @@ class BaseConfig : public PrefsBase
 
     KDateTime::Spec mTimeSpec;
     QStringList mTimeScaleTimeZones;
+
+    QSet<EventViews::EventView::ItemIcon> mAgendaViewIcons;
+    QSet<EventViews::EventView::ItemIcon> mMonthViewIcons;
 
   protected:
     void usrSetDefaults();
@@ -138,6 +196,14 @@ void BaseConfig::usrReadConfig()
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
 
+  KConfigGroup monthViewConfig( config(), "Month View" );
+  KConfigGroup agendaViewConfig( config(), "Agenda View" );
+  const QByteArray agendaIconArray = agendaViewConfig.readEntry<QByteArray>( "agendaViewItemIcons", agendaViewIconDefaults() );
+  const QByteArray monthIconArray = monthViewConfig.readEntry<QByteArray>( "monthViewItemIcons", monthViewIconDefaults() );
+
+  mAgendaViewIcons = iconArrayToSet( agendaIconArray );
+  mMonthViewIcons = iconArrayToSet( monthIconArray );
+
   KConfigSkeleton::usrReadConfig();
 }
 
@@ -163,6 +229,15 @@ void BaseConfig::usrWriteConfig()
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   timeScaleConfig.writeEntry( "Timescale Timezones", timeScaleTimezones() );
+
+  KConfigGroup monthViewConfig( config(), "Month View" );
+  KConfigGroup agendaViewConfig( config(), "Agenda View" );
+
+  const QByteArray agendaIconArray = iconSetToArray( mAgendaViewIcons );
+  const QByteArray monthIconArray = iconSetToArray( mMonthViewIcons );
+
+  agendaViewConfig.writeEntry<QByteArray>( "agendaViewItemIcons", agendaIconArray );
+  monthViewConfig.writeEntry<QByteArray>( "monthViewItemIcons", monthIconArray );
 
   KConfigSkeleton::usrWriteConfig();
 }
@@ -695,6 +770,16 @@ bool Prefs::enableMonthItemIcons() const
   return d->getBool( d->mBaseConfig.enableMonthItemIconsItem() );
 }
 
+bool Prefs::showTimeInMonthView() const
+{
+  return d->getBool( d->mBaseConfig.showTimeInMonthViewItem() );
+}
+
+void Prefs::setShowTimeInMonthView( bool show )
+{
+  d->setBool( d->mBaseConfig.showTimeInMonthViewItem(), show );
+}
+
 bool Prefs::showTodosMonthView() const
 {
   return d->getBool( d->mBaseConfig.showTodosMonthViewItem() );
@@ -940,6 +1025,26 @@ void Prefs::setDecorationsAtAgendaViewTop( const QStringList &decorations )
 void Prefs::setDecorationsAtAgendaViewBottom( const QStringList &decorations )
 {
   d->mBaseConfig.setDecorationsAtAgendaViewBottom( decorations );
+}
+
+QSet<EventViews::EventView::ItemIcon> Prefs::agendaViewIcons() const
+{
+  return d->mBaseConfig.mAgendaViewIcons;
+}
+
+void Prefs::setAgendaViewIcons( const QSet<EventViews::EventView::ItemIcon> &icons )
+{
+  d->mBaseConfig.mAgendaViewIcons = icons;
+}
+
+QSet<EventViews::EventView::ItemIcon> Prefs::monthViewIcons() const
+{
+  return d->mBaseConfig.mMonthViewIcons;
+}
+
+void Prefs::setMonthViewIcons( const QSet<EventViews::EventView::ItemIcon> &icons )
+{
+  d->mBaseConfig.mMonthViewIcons = icons;
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

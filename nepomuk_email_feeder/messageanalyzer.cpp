@@ -246,7 +246,7 @@ void MessageAnalyzer::processFlags(const Akonadi::Item::Flags& flags)
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( flags );
 
-  m_email.setIsReads( QList<bool>() << status.isRead() );
+  m_email.setIsRead( status.isRead() );
 
   if ( status.isImportant() )
     addTranslatedTag( "important", i18n("Important"), "mail-mark-important" );

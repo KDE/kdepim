@@ -126,7 +126,6 @@ static QString splitLine( QString &line )
 static bool flushPart( QString &msg, QStringList &textParts,
                        const QString &indent, int maxLength )
 {
-  maxLength -= indent.length();
   if ( maxLength < 20 )
     maxLength = 20;
 
@@ -141,27 +140,30 @@ static bool flushPart( QString &msg, QStringList &textParts,
     // An empty line in the input means that an empty line should be in the output as well.
     // Therefore, we write all of our text so far to the msg.
     if ( line.isEmpty() ) {
-      if ( !text.isEmpty() )
-        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
+      if ( !text.isEmpty() ) {
+        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength ) + '\n';
+      }
       msg += indent + '\n';
     } else {
-      if ( text.isEmpty() )
+      if ( text.isEmpty() ) {
         text = line;
-      else
+      } else {
         text += ' ' + line.trimmed();
-
+      }
       // If the line doesn't need to be wrapped at all, just write it out as-is.
       // When a line exceeds the maximum length and therefore needs to be broken, this statement
       // if false, and therefore we keep adding lines to our text, so they get ran together in the
       // next flowText call, as "text" contains several text parts/lines then.
-      if ( ( text.length() < maxLength ) || ( line.length() < ( maxLength - 10 ) ) )
-        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
+      if ( ( text.length() < maxLength ) || ( line.length() < ( maxLength - 10 ) ) ) {
+        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength ) + '\n';
+      }
     }
   }
 
   // Write out pending text to the msg
-  if ( !text.isEmpty() )
+  if ( !text.isEmpty() ) {
     msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
+  }
 
   const bool appendEmptyLine = !textParts.isEmpty();
   textParts.clear();

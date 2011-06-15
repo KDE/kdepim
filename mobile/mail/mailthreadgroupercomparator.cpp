@@ -378,4 +378,3 @@ KMime::Message::Ptr MailThreadGrouperComparator::messageForItem( const Akonadi::
   return message;
 }
 
-#include "mailthreadgroupercomparator.moc"

@@ -34,20 +34,21 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi_next/kcolumnfilterproxymodel.h>
-#include <akonadi_next/kviewstatemaintainer.h>
 
 #include <KCalCore/Todo>
 #include <KCalCore/CalFilter>
 
 #include <KCalUtils/RecurrenceActions>
+#include <Akonadi/EntityDisplayAttribute>
 
 #include <akonadi/etmviewstatesaver.h>
 
 #include <KHolidays/Holidays>
 #include <KGuiItem>
 #include <KLocale>
+#include <kcheckableproxymodel.h>
+#include <kviewstatemaintainer.h>
 
 #include <QApplication>
 #include <QKeyEvent>
@@ -658,6 +659,16 @@ void EventView::removeFilteredOccurrences( const KCalCore::Todo::Ptr &todo, QLis
   }
 }
 
+/** static */
+QString EventView::iconForItem( const Akonadi::Item &item )
+{
+  QString iconName;
+  const Akonadi::Collection collection = item.parentCollection();
+  if ( collection.isValid() && collection.hasAttribute<Akonadi::EntityDisplayAttribute>() )
+    iconName = collection.attribute<Akonadi::EntityDisplayAttribute>()->iconName();
+
+  return iconName;
+}
 
 #include "eventview.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;

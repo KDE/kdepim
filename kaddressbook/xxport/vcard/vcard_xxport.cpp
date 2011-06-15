@@ -107,7 +107,7 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 
   bool ok = true;
   if ( list.count() == 1 ) {
-    url = KFileDialog::getSaveUrl( list[ 0 ].givenName() + '_' + list[ 0 ].familyName() + ".vcf" );
+    url = KFileDialog::getSaveUrl( QString(list[ 0 ].givenName() + QLatin1Char('_') + list[ 0 ].familyName() + QLatin1String(".vcf") ) );
     if ( url.isEmpty() ) // user canceled export
       return true;
 

@@ -47,7 +47,7 @@
 #include <QHeaderView>
 #include <QItemSelectionModel>
 
-#include <akonadi_next/kcheckableproxymodel.h>
+#include <kcheckableproxymodel.h>
 
 #include <akonadi/calendar/standardcalendaractionmanager.h>
 #include <akonadi/collection.h>
@@ -70,8 +70,6 @@
 #include <QHash>
 #include <QStyledItemDelegate>
 #include <QPainter>
-
-using namespace Future;
 
 AkonadiCollectionViewFactory::AkonadiCollectionViewFactory( CalendarView *view )
   : mView( view ), mAkonadiCollectionView( 0 )
@@ -160,6 +158,11 @@ namespace {
         }
        return QSortFilterProxyModel::data( index, role );
      }
+
+     /* reimp */ Qt::ItemFlags flags( const QModelIndex& index ) const
+     {
+       return Qt::ItemIsSelectable | QSortFilterProxyModel::flags( index );
+     }
   private:
     mutable bool mInitDefaultCalendar;
   };
@@ -215,7 +218,7 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView* view, bool hasContex
   collectionproxymodel->setObjectName( "Only show collections" );
   collectionproxymodel->setDynamicSortFilter( true );
   collectionproxymodel->addMimeTypeFilter( QString::fromLatin1( "text/calendar" ) );
-  //collectionproxymodel->addExcludedSpecialResources(Akonadi::Collection::SearchResource);
+  collectionproxymodel->setExcludeVirtualCollections( true );
 
   ColorProxyModel* colorProxy = new ColorProxyModel( this );
   colorProxy->setObjectName( "Show calendar colors" );
@@ -238,9 +241,6 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView* view, bool hasContex
   mCollectionview->setModel( filterTreeViewModel );
 
   //connect( searchCol, SIGNAL( textChanged(QString) ), filterTreeViewModel, SLOT( setFilterFixedString(QString) ) );
-
-  connect( mCollectionview->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           this, SLOT(selectionChanged()) );
 
   connect( mBaseModel, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
            this, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
@@ -268,13 +268,15 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView* view, bool hasContex
     mActionManager->setContextText( Akonadi::StandardActionManager::CollectionProperties, Akonadi::StandardActionManager::DialogTitle,
                                     i18nc( "@title:window", "Properties of Calendar Folder %1" ) );
 
+    mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setProperty( "ContentMimeTypes", QStringList( KCalCore::Event::eventMimeType() ) );
+
     const QStringList pages = QStringList() << QLatin1String( "CalendarSupport::CollectionGeneralPage" )
                                             << QLatin1String( "Akonadi::CachePolicyPage" );
 
     mActionManager->setCollectionPropertiesPageNames( pages );
 
     mDisableColor = new KAction( mCollectionview );
-    mDisableColor->setText( "&Disable Color");
+    mDisableColor->setText( i18n( "&Disable Color" ) );
     mDisableColor->setEnabled( false );
     xmlclient->actionCollection()->addAction( QString::fromLatin1( "disable_color" ), mDisableColor );
     connect( mDisableColor, SIGNAL( triggered( bool ) ), this, SLOT(disableColor() ) );

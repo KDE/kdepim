@@ -164,7 +164,7 @@ ContactGroupEditorView::ContactGroupEditorView( QWidget *parent )
     d( new Private( this ) )
 {
   setAttribute(Qt::WA_DeleteOnClose);
-  setWindowTitle( i18n( "KDE Contacts" ) );
+  setWindowTitle( i18n( "Kontact Touch Contacts" ) );
 }
 
 void ContactGroupEditorView::doDelayedInit()
