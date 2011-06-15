@@ -223,7 +223,7 @@ else(KDEPIM_ONLY_KLEO)
   include(SopranoAddOntology)
 
   find_package(Grantlee QUIET NO_MODULE)
-  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
+  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots and KaddressBook." )
 
 if(NOT KDEPIM_NO_NEPOMUK)
   find_package(Nepomuk)
