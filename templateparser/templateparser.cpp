@@ -846,8 +846,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: ODATE";
         i += strlen( "ODATE");
         if ( mOrigMsg ) {
-          QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-          QString str = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
+          const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
+          const QString str = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
           body.append( str );
         }
 
@@ -855,8 +855,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: ODOW";
         i += strlen( "ODOW");
         if ( mOrigMsg ) {
-          QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-          QString str = KGlobal::locale()->calendar()->weekDayName( date.date(),
+          const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
+          const QString str = KGlobal::locale()->calendar()->weekDayName( date.date(),
                         KCalendarSystem::LongDayName );
           body.append( str );
         }
@@ -865,9 +865,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTIMELONGEN";
         i += strlen( "OTIMELONGEN");
         if ( mOrigMsg ) {
-          QDateTime date = mOrigMsg->date()->dateTime().dateTime();
+          const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
           KLocale locale( "C");
-          QString str = locale.formatTime( date.time(), true );
+          const QString str = locale.formatTime( date.time(), true );
           body.append( str );
         }
 
@@ -875,8 +875,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTIMELONG";
         i += strlen( "OTIMELONG");
         if ( mOrigMsg ) {
-          QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-          QString str = KGlobal::locale()->formatTime( date.time(), true );
+          const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
+          const QString str = KGlobal::locale()->formatTime( date.time(), true );
           body.append( str );
         }
 
@@ -884,8 +884,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTIME";
         i += strlen( "OTIME");
         if ( mOrigMsg ) {
-          QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-          QString str = KGlobal::locale()->formatTime( date.time(), false );
+          const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
+          const QString str = KGlobal::locale()->formatTime( date.time(), false );
           body.append( str );
         }
 
