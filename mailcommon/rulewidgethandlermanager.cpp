@@ -1761,4 +1761,3 @@ namespace {
 
 } // anonymous namespace for NumericRuleWidgetHandler
 
-#include "rulewidgethandlermanager.moc"
