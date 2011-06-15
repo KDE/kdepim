@@ -151,8 +151,8 @@ QVariant NotificationModel::data(const QModelIndex& index, int role) const
     const NotificationBlock block = m_data.at( index.row() );
     if ( role == Qt::DisplayRole ) {
       if ( index.column() == 0 ) {
-        return KGlobal::locale()->formatTime( block.timestamp.time(), true )
-          + QString::fromLatin1( ".%1" ).arg( block.timestamp.time().msec(), 3, 10, QLatin1Char('0') );
+        return QString(KGlobal::locale()->formatTime( block.timestamp.time(), true )
+          + QString::fromLatin1( ".%1" ).arg( block.timestamp.time().msec(), 3, 10, QLatin1Char('0') ) );
       } else if ( index.column() == 1 ) {
         return block.msgs.size();
       }
