@@ -94,7 +94,7 @@ MailFilter::MailFilter( const MailFilter & aFilter )
 
   mAccounts.clear();
   QStringList::ConstIterator it2;
-  for ( it2 = aFilter.mAccounts.begin() ; it2 != aFilter.mAccounts.end() ; ++it2 )
+  for ( it2 = aFilter.mAccounts.constBegin() ; it2 != aFilter.mAccounts.constEnd() ; ++it2 )
     mAccounts.append( *it2 );
 }
 
@@ -108,7 +108,7 @@ MailFilter::ReturnCode MailFilter::execActions( const Akonadi::Item &item, bool&
   ReturnCode status = NoResult;
 
   QList<FilterAction*>::const_iterator it( mActions.begin() );
-  for ( ; it != mActions.end() ; ++it ) {
+  for ( ; it != mActions.constEnd() ; ++it ) {
 
     if ( FilterLog::instance()->isLogging() ) {
       const QString logText( i18n( "<b>Applying filter action:</b> %1",
@@ -243,7 +243,7 @@ void MailFilter::readConfig(const KConfigGroup & config)
     KMessageBox::information( 0, i18n("<qt>Too many filter actions in filter rule <b>%1</b>.</qt>", mPattern.name() ) );
   }
 
-  for ( int i=0 ; i < numActions ; i++ ) {
+  for ( int i=0 ; i < numActions ; ++i ) {
     actName.sprintf("action-name-%d", i);
     argsName.sprintf("action-args-%d", i);
     // get the action description...
@@ -303,7 +303,7 @@ void MailFilter::writeConfig(KConfigGroup & config) const
   int i;
 
   QList<FilterAction*>::const_iterator it;
-  for ( i=0, it = mActions.begin() ; it != mActions.end() ; ++it, ++i ) {
+  for ( i=0, it = mActions.constBegin() ; it != mActions.constEnd() ; ++it, ++i ) {
     config.writeEntry( key.sprintf("action-name-%d", i),
                         (*it)->name() );
     config.writeEntry( key.sprintf("action-args-%d", i),

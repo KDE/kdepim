@@ -176,7 +176,7 @@ void Kernel::slotDefaultCollectionsChanged()
 void Kernel::emergencyExit( const QString& reason )
 {
   QString mesg;
-  if ( reason.length() == 0 ) {
+  if ( reason.isEmpty() ) {
     mesg = i18n("KMail encountered a fatal error and will terminate now");
   }
   else {
@@ -292,9 +292,9 @@ bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
 
 bool Kernel::folderIsInbox( const Akonadi::Collection& collection )
 {
-  if ( collection.remoteId().toLower() == "inbox" ||
-       collection.remoteId().toLower() == "/inbox"||
-       collection.remoteId().toLower() == ".inbox" )
+  if ( collection.remoteId().toLower() == QLatin1String("inbox") ||
+       collection.remoteId().toLower() == QLatin1String("/inbox") ||
+       collection.remoteId().toLower() == QLatin1String(".inbox") )
     return true;
 
   return false;
