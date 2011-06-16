@@ -199,8 +199,14 @@ bool VCardOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
             break;
     }
 
-    QString vcard = m_converter->createVCard(addressee, version);
-    stream << fromUnicode(m_codec, vcard).constData();
+    QByteArray vcard = m_converter->createVCard(addressee, version);
+
+    // vcard is in UTF-8, only need conversion if output codec is different
+    if (m_codec == QTextCodec::codecForName("UTF-8")) {
+      vcard = fromUnicode(m_codec, QString::fromUtf8(vcard));
+    }
+
+    stream << vcard.constData();
 
     return !stream.bad();
 }
@@ -230,8 +236,14 @@ bool VCardOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
             break;
     }
 
-    QString vcards = m_converter->createVCards(addresseeList, version);
-    stream << fromUnicode(m_codec, vcards).constData();
+    QByteArray vcards = m_converter->createVCards(addresseeList, version);
+
+    // vcards is in UTF-8, only need conversion if output codec is different
+    if (m_codec == QTextCodec::codecForName("UTF-8")) {
+      vcards = fromUnicode(m_codec, QString::fromUtf8(vcards));
+    }
+
+    stream << vcards.constData();
 
     return !stream.bad();
 }
