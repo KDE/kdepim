@@ -445,6 +445,7 @@ private:
   void setupFolderView();
 
   void removeFolder(KMFolder *folder);
+  void removeFolders(const QValueList<QGuardedPtr<KMFolder> > &folders);
 
 private slots:
   void slotRequestFullSearchFromQuickSearch();

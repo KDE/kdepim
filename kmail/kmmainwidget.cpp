@@ -1193,10 +1193,7 @@ void KMMainWidget::slotRemoveFolder()
   const QValueList<QGuardedPtr<KMFolder> > folders = folderTree()->selectedFolders();
 
   if ( folders.count() > 1 ) {
-    for ( int i = 0; i < folders.count(); ++i ) {
-      QGuardedPtr<KMFolder> folder = folders[ i ];
-      removeFolder( folder );
-    }
+    removeFolders( folders );
   } else {
     removeFolder( mFolder );
   }
@@ -1205,7 +1202,6 @@ void KMMainWidget::slotRemoveFolder()
 void KMMainWidget::removeFolder(KMFolder *folder)
 {
   QString str;
-  QDir dir;
 
   if ( !folder ) return;
   if ( folder->isSystemFolder() ) return;
@@ -1263,6 +1259,47 @@ void KMMainWidget::removeFolder(KMFolder *folder)
       == KMessageBox::Continue)
   {
     KMail::FolderUtil::deleteFolder( folder, this );
+  }
+}
+
+void KMMainWidget::removeFolders(const QValueList<QGuardedPtr<KMFolder> > &folders)
+{
+  QValueList<QGuardedPtr<KMFolder> > targetFolders;
+  for ( int i = 0; i < folders.count(); ++i ) {
+    const QGuardedPtr<KMFolder> folder = folders[ i ];
+    if ( !folder )
+      continue;
+
+    if ( folder->isSystemFolder() )
+      continue;
+
+    if ( folder->isReadOnly() )
+      continue;
+
+    if ( folder->mailCheckInProgress() ) {
+      KMessageBox::sorry( this, i18n( "It is not possible to delete folder <b>%1</b> right now because it "
+                                      "is being syncronized. Please wait until the syncronization of "
+                                      "this folder is complete and then try again." ).arg( folder->label() ),
+                                i18n( "Unable to delete folder" ) );
+      continue;
+    }
+
+    targetFolders.append( folder );
+  }
+
+  const QString title = i18n("Delete Folders");
+  const QString str = i18n("<qt>Are you sure you want to delete all selected folders "
+                           "and all their subfolders, discarding their contents? "
+                           "<p><b>Beware</b> that discarded messages are not saved "
+                           "into your Trash folder and are permanently deleted.</qt>");
+
+  if (KMessageBox::warningContinueCancel(this, str, title,
+                                         KGuiItem( i18n("&Delete"), "editdelete"))
+      == KMessageBox::Continue)
+  {
+    for ( int i = 0; i < targetFolders.count(); ++i ) {
+      KMail::FolderUtil::deleteFolder( targetFolders[ i ], this );
+    }
   }
 }
 
