@@ -1265,6 +1265,7 @@ void KMMainWidget::removeFolder(KMFolder *folder)
 void KMMainWidget::removeFolders(const QValueList<QGuardedPtr<KMFolder> > &folders)
 {
   QValueList<QGuardedPtr<KMFolder> > targetFolders;
+  QStringList removeList;
   for ( int i = 0; i < folders.count(); ++i ) {
     const QGuardedPtr<KMFolder> folder = folders[ i ];
     if ( !folder )
@@ -1285,6 +1286,7 @@ void KMMainWidget::removeFolders(const QValueList<QGuardedPtr<KMFolder> > &folde
     }
 
     targetFolders.append( folder );
+    removeList.append( QStyleSheet::escape( folder->label() ) );
   }
 
   const QString title = i18n("Delete Folders");
@@ -1293,8 +1295,11 @@ void KMMainWidget::removeFolders(const QValueList<QGuardedPtr<KMFolder> > &folde
                            "<p><b>Beware</b> that discarded messages are not saved "
                            "into your Trash folder and are permanently deleted.</qt>");
 
-  if (KMessageBox::warningContinueCancel(this, str, title,
-                                         KGuiItem( i18n("&Delete"), "editdelete"))
+  if (KMessageBox::warningContinueCancelList(this,
+                                             str,
+                                             removeList,
+                                             title,
+                                             KGuiItem( i18n("&Delete"), "editdelete"))
       == KMessageBox::Continue)
   {
     for ( int i = 0; i < targetFolders.count(); ++i ) {
