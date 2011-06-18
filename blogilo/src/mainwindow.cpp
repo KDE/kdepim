@@ -574,11 +574,13 @@ void MainWindow::postManipulationDone( bool isError, const QString &customMessag
         KMessageBox::detailedError(this, i18n("Submitting post failed"), customMessage);
     } else {
         PostEntry *entry = qobject_cast<PostEntry*>(sender());
-        if(entry && KMessageBox::questionYesNo(this, i18n("%1\nDo you want to keep the post open?", customMessage),
+        if(entry){
+          if (KMessageBox::questionYesNo(this, i18n("%1\nDo you want to keep the post open?", customMessage),
                     QString(), KStandardGuiItem::yes(), KStandardGuiItem::no(), "KeepPostOpen") == KMessageBox::No ) {
             slotRemovePostEntry( tabPosts->indexOf( entry ) );
-        } else {
+          } else {
             toolbox->setFieldsValue(entry->currentPost());
+          }
         }
         toolbox->slotLoadEntriesFromDB( mCurrentBlogId );
     }
