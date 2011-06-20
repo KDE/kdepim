@@ -41,6 +41,7 @@
 #include "mailutil_p.h"
 
 #include "imapsettings.h"
+#include "pop3settings.h"
 #include "mailkernel.h"
 #include "calendarinterface.h"
 
@@ -81,6 +82,11 @@
 OrgKdeAkonadiImapSettingsInterface *MailCommon::Util::createImapSettingsInterface( const QString &ident )
 {
   return new OrgKdeAkonadiImapSettingsInterface("org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
+}
+
+OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface( const QString &ident )
+{
+  return new OrgKdeAkonadiPOP3SettingsInterface("org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
 }
 
 

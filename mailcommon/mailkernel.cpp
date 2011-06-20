@@ -31,6 +31,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 #include <imapsettings.h>
+#include <pop3settings.h>
 
 namespace MailCommon {
 
@@ -296,6 +297,21 @@ bool Kernel::folderIsInbox( const Akonadi::Collection& collection )
        collection.remoteId().toLower() == "/inbox"||
        collection.remoteId().toLower() == ".inbox" )
     return true;
+  const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
+  foreach ( const Akonadi::AgentInstance& type, lst ) {
+    if ( type.status() == Akonadi::AgentInstance::Broken )
+      continue;
+    if ( type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
+      OrgKdeAkonadiPOP3SettingsInterface *iface = MailCommon::Util::createPop3SettingsInterface( type.identifier() );
+      if ( iface->isValid() ) {
+        if ( iface->targetCollection() == collection.id() ) {
+          delete iface;
+          return true;
+        }
+      }
+      delete iface;
+    }
+  }
 
   return false;
 }
