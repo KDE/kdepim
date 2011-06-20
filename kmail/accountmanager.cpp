@@ -227,7 +227,8 @@ void AccountManager::processNextCheck( bool _newMail )
 
   curAccount->setCheckingMail( true );
   mAcctChecking.append( curAccount );
-  kmkernel->filterMgr()->ref();
+  if( kmkernel->filterMgr() )
+      kmkernel->filterMgr()->ref();
   curAccount->processNewMail( mInteractive );
 }
 
