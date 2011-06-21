@@ -43,7 +43,7 @@ using KPIM::BroadcastStatus;
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/itemmovejob.h>
-
+#include <akonadi/itemdeletejob.h>
 // Look at this number of messages in each slotDoWork call
 #define EXPIREJOB_NRMESSAGES 100
 // And wait this number of milliseconds before calling it again
@@ -162,7 +162,7 @@ void ExpireJob::done()
       kDebug() << "ExpireJob: finished expiring in folder"
                     << mSrcFolder.name()
                     << count << "messages to remove.";
-      Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( mRemovedMsgs, Kernel::self()->trashCollectionFolder(), this );
+      Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( mRemovedMsgs, this );
       connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMessagesMoved(KJob*)) );
       moving = true;
       str = i18np( "Removing 1 old message from folder %2...",
