@@ -33,6 +33,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kmdcodec.h>
 #include <kpopupmenu.h>
 
 #include <qcursor.h>
@@ -70,6 +71,8 @@ void KOEventViewer::message( const QString &link )
     tmp.remove( QRegExp( "^ATTACH://" ) );
     QString uid = tmp.section( ':', 0, 0 );
     QString name = tmp.section( ':', -1, -1 );
+    const QCString decodedName = KCodecs::base64Decode(name.utf8());
+    name = QString::fromUtf8(decodedName.data(), decodedName.length());
     ttStr = i18n( "View attachment \"%1\"" ).arg( name );
     mAttachLink = link;
   } else {  // no special URI, let KDE handle it

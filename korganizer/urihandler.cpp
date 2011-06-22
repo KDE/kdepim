@@ -39,6 +39,7 @@ using namespace KCal;
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kfiledialog.h>
+#include <kmdcodec.h>
 #include <kmessagebox.h>
 #include <kmimetype.h>
 #include <kprocess.h>
@@ -54,6 +55,8 @@ QString UriHandler::attachmentNameFromUri( const QString &uri )
   QString tmp;
   if ( uri.startsWith( "ATTACH:" ) ) {
     tmp = uri.mid( 9 ).section( ':', -1, -1 );
+    const QCString decodedName = KCodecs::base64Decode(tmp.utf8());
+    tmp = QString::fromUtf8(decodedName.data(), decodedName.length());
   }
   return tmp;
 }

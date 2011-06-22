@@ -50,6 +50,7 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kcalendarsystem.h>
+#include <kmdcodec.h>
 #include <kmimetype.h>
 
 #include <qbuffer.h>
@@ -475,7 +476,8 @@ static QString displayViewFormatAttachments( Incidence *incidence )
       }
       tmpStr += htmlAddLink( (*it)->uri(), name );
     } else {
-      tmpStr += htmlAddLink( "ATTACH:" + incidence->uid() + ':' + (*it)->label(),
+      const QCString encodedLabel = KCodecs::base64Encode((*it)->label().utf8());
+      tmpStr += htmlAddLink( "ATTACH:" + incidence->uid() + ':' + QString::fromUtf8(encodedLabel.data(), encodedLabel.length()),
                              (*it)->label(), false );
     }
     if ( count < as.count() ) {
@@ -2467,7 +2469,8 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
       if ( !iconPath.isEmpty() ) {
         tmpStr += "<img valign=\"top\" src=\"" + iconPath + "\">";
       }
-      tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
+      const QCString encodedLabel = KCodecs::base64Encode(a->label().utf8());
+      tmpStr += helper->makeLink( "ATTACH:" + QString::fromUtf8(encodedLabel.data(), encodedLabel.length()), a->label() );
       tmpStr += "</li>";
     }
     tmpStr += "</ol>";

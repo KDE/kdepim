@@ -875,8 +875,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
 
       if ( path.startsWith( "ATTACH:" ) ) {
-        QString name = path;
-        name.remove( QRegExp( "^ATTACH:" ) );
+        QString name = path.mid( 9 ).section( ':', -1, -1 );
+        const QCString decodedName = KCodecs::base64Decode(name.utf8());
+        name = QString::fromUtf8(decodedName.data(), decodedName.length());
         result = AttachmentHandler::view( 0, name, icalToMessage( iCal ) );
       }
 
@@ -895,7 +896,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       QString name = path;
       if ( path.startsWith( "ATTACH:" ) ) {
-        name.remove( QRegExp( "^ATTACH:" ) );
+        QString name = path.mid( 9 ).section( ':', -1, -1 );
+        const QCString decodedName = KCodecs::base64Decode(name.utf8());
+        name = QString::fromUtf8(decodedName.data(), decodedName.length());
       } else {
         return false; //because it isn't an attachment inviation
       }
@@ -958,9 +961,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( path == "cancel" )
           return i18n( "Remove invitation from my calendar" );
         if ( path.startsWith( "ATTACH:" ) ) {
-          QString name = path;
-          return i18n( "Open attachment \"%1\"" ).
-            arg( name.remove( QRegExp( "^ATTACH:" ) ) );
+          QString name = path.mid( 9 ).section( ':', -1, -1 );
+          const QCString decodedName = KCodecs::base64Decode(name.utf8());
+          name = QString::fromUtf8(decodedName.data(), decodedName.length());
+          return i18n( "Open attachment \"%1\"" ).arg( name );
         }
       }
 
