@@ -938,7 +938,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       body.append( c );
     }
   }
-  QString htmlBody = "<b> TEST </b> <br />";
+  QString htmlBody;
   addProcessedBodyToMessage( body, htmlBody );
 }
 
