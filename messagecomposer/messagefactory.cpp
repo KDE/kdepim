@@ -334,6 +334,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
   MessageReply reply;
   reply.msg = msg;
   reply.replyAll = replyAll;
+  kDebug()<<"reply message before returned"<<reply.msg->encodedContent();
   return reply;
 }
 

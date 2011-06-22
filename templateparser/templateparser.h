@@ -184,7 +184,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * Otherwise, the content of the old message is deleted and replaced with @p body.
      * Attachments of the original message are also added back to the new message.
      */
-    void addProcessedBodyToMessage( const QString &body );
+    void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody );
 
     /**
      * Determines whether the signature should be stripped when getting the text of the original
@@ -239,11 +239,21 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
                                        MessageViewer::ObjectTreeParser *otp, bool stripSignature,
                                        bool allowDecryption );
 
-  /** @return the UOID of the identity for this message.
+    /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,
       searches with KPIMIdentities::IdentityManager::identityForAddress()
-   **/
-  uint identityUoid(const KMime::Message::Ptr &msg );
+    **/
+    uint identityUoid(const KMime::Message::Ptr &msg );
+
+    /**
+     *  assemble plain part
+     **/
+    KMime::Content* assemblePlainPart( const QString &plainBody );
+
+    /**
+     * assemble HTML part
+     * */
+    KMime::Content* assembleMultipartAlternative( const QString &plainBody, const QString &htmlBody );
 
 };
 

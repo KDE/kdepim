@@ -938,8 +938,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       body.append( c );
     }
   }
-
-  addProcessedBodyToMessage( body );
+  QString htmlBody = "<b> TEST </b> <br />";
+  addProcessedBodyToMessage( body, htmlBody );
 }
 
 QString TemplateParser::getSignature() const
@@ -996,7 +996,7 @@ KMime::Content* TemplateParser::parsedObjectTree()
   return mOrigRoot;
 }
 
-void TemplateParser::addProcessedBodyToMessage( const QString &body )
+void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody )
 {
 
   // Get the attachments of the original mail
@@ -1017,22 +1017,35 @@ void TemplateParser::addProcessedBodyToMessage( const QString &body )
   if ( !mCC.isEmpty() )
     mMsg->cc()->fromUnicodeString( mMsg->cc()->asUnicodeString() + ',' + mCC, "utf-8" );
 
+  KMime::Content *textPart, *multipart;
+
   // If we have no attachment, simply create a text/plain part and
   // set the processed template text as the body
-  if ( ac.attachments().empty() || mMode != Forward ) {
+  if ( ac.attachments().empty() ) {
+    if ( htmlBody.isEmpty() ) {
     mMsg->contentType()->clear(); // to get rid of old boundary
     mMsg->contentType()->setMimeType( "text/plain" );
-    QByteArray charset = selectCharset( m_charsets, body );
+    QByteArray charset = selectCharset( m_charsets, plainBody );
     QByteArray encodedBody;
     QTextCodec* codec = KGlobal::charsets()->codecForName( charset );
     if( codec ) {
-      encodedBody = codec->fromUnicode( body );
+      encodedBody = codec->fromUnicode( plainBody );
     } else {
-      encodedBody = body.toUtf8();
+      encodedBody = plainBody.toUtf8();
       charset = "utf-8";
     }
     mMsg->contentType()->setCharset( charset );
+    mMsg->contentTransferEncoding(true)->setEncoding( KMime::Headers::CE7Bit );
     mMsg->setBody( encodedBody );
+    } else {
+      mMsg->contentType()->clear(); // to get rid of old boundary
+      multipart = assembleMultipartAlternative( plainBody, htmlBody );
+      multipart->assemble();
+      mMsg->setBody( multipart->encodedBody() );
+      mMsg->setHeader( multipart->contentType() );
+      mMsg->setHeader( multipart->contentTransferEncoding(true) );
+      //mMsg->addContent( multipart );// do it manually
+    }
     mMsg->assemble();
   }
 
@@ -1044,10 +1057,13 @@ void TemplateParser::addProcessedBodyToMessage( const QString &body )
     mMsg->contentType()->setMimeType( "multipart/mixed" );
     mMsg->contentType()->setBoundary( boundary );
 
-    KMime::Content *textPart = new KMime::Content( mMsg.get() );
-    textPart->contentType()->setMimeType( "text/plain" );
-    textPart->fromUnicodeString( body );
-    mMsg->addContent( textPart );
+    if ( htmlBody.isEmpty() ) {
+      textPart = assemblePlainPart( plainBody );
+      mMsg->addContent( textPart );
+    } else {
+      multipart = assembleMultipartAlternative( plainBody, htmlBody );
+      mMsg->addContent( multipart );
+    }
 
     int attachmentNumber = 1;
     foreach( KMime::Content *attachment, ac.attachments() ) {
@@ -1066,6 +1082,40 @@ void TemplateParser::addProcessedBodyToMessage( const QString &body )
   }
 
 }
+
+KMime::Content* TemplateParser::assemblePlainPart(const QString& plainBody)
+{
+    KMime::Content *textPart = new KMime::Content( mMsg.get() );
+    textPart->contentType()->setMimeType( "text/plain" );
+    textPart->fromUnicodeString( plainBody );
+    QByteArray charset = selectCharset( m_charsets, plainBody );
+    textPart->contentType()->setCharset( charset );
+    textPart->contentTransferEncoding(true)->setEncoding( KMime::Headers::CE7Bit );
+    return textPart;
+}
+
+
+KMime::Content* TemplateParser::assembleMultipartAlternative( const QString& plainBody, const QString& htmlBody )
+{
+  KMime::Content *multipartAlternative = new KMime::Content( mMsg.get() );
+  multipartAlternative->contentType()->setMimeType( "multipart/alternative" );
+  const QByteArray boundary = KMime::multiPartBoundary();
+  multipartAlternative->contentType()->setBoundary( boundary );
+
+  KMime::Content *textPart = assemblePlainPart( plainBody );
+  multipartAlternative->addContent( textPart );
+  
+  KMime::Content *htmlPart = new KMime::Content( mMsg.get() );
+  htmlPart->contentType()->setMimeType( "text/html" );
+  QByteArray charset = selectCharset( m_charsets, htmlBody );
+  htmlPart->contentType()->setCharset( charset );
+  htmlPart->fromUnicodeString( htmlBody );
+  htmlPart->contentTransferEncoding(true)->setEncoding( KMime::Headers::CE7Bit );
+  multipartAlternative->addContent(htmlPart);
+  
+  return multipartAlternative;
+}
+
 
 QString TemplateParser::findCustomTemplate( const QString &tmplName )
 {
