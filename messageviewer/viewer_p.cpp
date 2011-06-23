@@ -654,7 +654,7 @@ void ViewerPrivate::displaySplashPage( const QString &info )
   content = content.arg( "" ); // infopage stylesheet
   content = content.arg( "" ); // rtl infopage stylesheet
 #else
-  const QString location = KStandardDirs::locate( "data", "kmail/about/main.html" ); //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
+  const QString location = KStandardDirs::locate( "data", "kmail2/about/main.html" ); //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
   QString content = KPIMUtils::kFileToByteArray( location );
   content = content.arg( KStandardDirs::locate( "data", "kdeui/about/kde_infopage.css" ) );
   if ( QApplication::isRightToLeft() )
