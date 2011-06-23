@@ -236,6 +236,9 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
   const QString incidenceDescription = i18n( "From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
                                              msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
 
+  QStringList attachmentLabels;
+  attachmentLabels << msg->subject()->asUnicodeString();
+
   QStringList attachmentMimeTypes;
   attachmentMimeTypes << QLatin1String( "message/rfc822" );
 
@@ -320,6 +323,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
                                                                     attachmentUris,
                                                                     QStringList() /* attendees */,
                                                                     attachmentMimeTypes,
+                                                                    attachmentLabels,
                                                                     isInlineAttachment,
                                                                     Akonadi::Collection(),
                                                                     true /* cleanup temp files */ );
@@ -330,6 +334,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
                                                                    attachmentUris,
                                                                    QStringList() /* attendees */,
                                                                    attachmentMimeTypes,
+                                                                   attachmentLabels,
                                                                    isInlineAttachment,
                                                                    Akonadi::Collection(),
                                                                    true /* cleanup temp files */ );
