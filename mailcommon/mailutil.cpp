@@ -264,7 +264,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
 
   switch ( action ) {
     case IncidenceEditorNG::GlobalSettings::Link:
-      attachmentUris << mailItem.url().url();
+      attachmentUris << mailItem.url( Akonadi::Item::UrlWithMimeType ).url();
       isInlineAttachment = false;
       break;
     case IncidenceEditorNG::GlobalSettings::InlineFull:
