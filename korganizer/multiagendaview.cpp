@@ -75,6 +75,7 @@ MultiAgendaView::MultiAgendaView( Calendar * cal, CalendarView *calendarView,
   mScrollView->setVScrollBarMode( QScrollView::AlwaysOff );
   mScrollView->setFrameShape( QFrame::NoFrame );
   topLevelLayout->addWidget( mScrollView, 100 );
+  mScrollView->viewport()->setEraseColor( palette().color( QPalette::Normal, QColorGroup::Background ) );
   mTopBox = new QHBox( mScrollView->viewport() );
   mScrollView->addChild( mTopBox );
 
@@ -107,6 +108,7 @@ void MultiAgendaView::recreateViews()
   mPendingChanges = false;
 
   deleteViews();
+  mTopBox->resize(0, 0);
 
   CalendarResources *calres = dynamic_cast<CalendarResources*>( calendar() );
   if ( !calres ) {
