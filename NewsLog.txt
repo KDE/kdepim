@@ -1,4 +1,16 @@
 
+Friday 24 June 2011
+
+Problems addressed
+------------------
+
+* kolab/issue3924: Side-by-side calender view: Unwanted extra scrollbar, even if there is enough space. (rt#5876)
+* kolab/issue3954: A group of selected folders cannot be deleted (rt#5895)
+* kolab/issue4005: Attachments should open in read-only folders (rt#5915)
+* kolab/issue4479: Change used kontact plugins crash (Kontact::MainWindow::addPlugin at mainwindow.cpp:719) (rt#6193)
+
+
+
 Friday 03 June 2011
 
 Problems addressed
