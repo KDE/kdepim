@@ -1142,7 +1142,18 @@ void KMMainWidget::createWidgets()
   connect( kmkernel->folderCollectionMonitor(), SIGNAL( collectionChanged( const Akonadi::Collection &, const QSet<QByteArray> &) ), SLOT( slotCollectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ) );
   connect( FilterIf->filterManager(), SIGNAL( itemNotMoved( Akonadi::Item ) ),
            SLOT( slotItemNotMovedByFilters( Akonadi::Item ) ) );
+  
+  connect( kmkernel->folderCollectionMonitor(), SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics &) ), SLOT( slotCollectionChanged( const Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 
+}
+
+void KMMainWidget::slotCollectionChanged( const Akonadi::Collection::Id col, const Akonadi::CollectionStatistics& statistic )
+{
+  if (  ( col == CommonKernel->outboxCollectionFolder().id() ) ) {
+    const qint64 nbMsgOutboxCollection = statistic.count();  
+    actionCollection()->action( "send_queued" )->setEnabled( nbMsgOutboxCollection > 0 );
+    actionCollection()->action( "send_queued_via" )->setEnabled( nbMsgOutboxCollection > 0 );
+  }
 
 }
 
@@ -1184,7 +1195,6 @@ void KMMainWidget::slotItemRemoved( const Akonadi::Item & item)
 
 void KMMainWidget::slotItemMoved( Akonadi::Item item, Akonadi::Collection from, Akonadi::Collection to )
 {
-  kDebug()<<" slotItemMoved from :"<<from.id()<<" to "<<to.id();
   if( item.isValid() && ( ( from.id() == CommonKernel->outboxCollectionFolder().id() )
                           || to.id() == CommonKernel->outboxCollectionFolder().id() ) )
   {
@@ -3529,6 +3539,7 @@ void KMMainWidget::startUpdateMessageActionsTimer()
   // FIXME: This delay effectively CAN make the actions to be in an incoherent state
   //        Maybe we should mark actions as "dirty" here and check it in every action handler...
   updateMessageActions( true );
+  
   menutimer->stop();
   menutimer->start( 500 );
 }
