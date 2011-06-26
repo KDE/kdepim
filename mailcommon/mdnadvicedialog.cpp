@@ -34,6 +34,8 @@
 #include <Akonadi/ItemFetchJob>
 #include <KLocale>
 #include <messagecore/messagehelpers.h>
+#include <messageviewer/globalsettings.h>
+
 
 using namespace MailCommon;
 using MessageComposer::MessageFactory;
@@ -127,8 +129,6 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo( cons
 {
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
 
-  KConfigGroup mdnConfig( KernelIf->config(), "MDN" );
-
   // RFC 2298: At most one MDN may be issued on behalf of each
   // particular recipient by their user agent.  That is, once an MDN
   // has been issued on behalf of a recipient, no further MDNs may be
@@ -139,13 +139,12 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo( cons
     // if already dealt with, don't do it again.
     return QPair< bool, KMime::MDN::SendingMode >( false, KMime::MDN::SentAutomatically );
   }
-
   MessageCore::MDNStateAttribute *mdnStateAttr = new MessageCore::MDNStateAttribute( MessageCore::MDNStateAttribute::MDNStateUnknown );
 
   KMime::MDN::SendingMode s = KMime::MDN::SentAutomatically; // set to manual if asked user
   bool doSend = false;
   // default:
-  int mode = mdnConfig.readEntry( "default-policy", 0 );
+  int mode = MessageViewer::GlobalSettings::self()->defaultPolicy();
   if ( !mode || mode < 0 || mode > 3 ) {
     // early out for ignore:
     mdnStateAttr->setMDNState( MessageCore::MDNStateAttribute::MDNIgnore );
@@ -207,7 +206,6 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo( cons
   i.addAttribute( mdnStateAttr );
   Akonadi::ItemModifyJob* modify = new Akonadi::ItemModifyJob( i );
   modify->setIgnorePayload( true );
-
   return QPair< bool, KMime::MDN::SendingMode >( doSend, s);
 }
 
