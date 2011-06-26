@@ -95,6 +95,11 @@ KMSystemTray::KMSystemTray(QObject *parent)
 
   connect( kmkernel->folderCollectionMonitor(), SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics &) ), SLOT( slotCollectionChanged( const Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 
+  connect( kmkernel->folderCollectionMonitor(), SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ), this, SLOT( slotCollectionAddedRemoved() ) );
+  connect( kmkernel->folderCollectionMonitor(), SIGNAL( collectionRemoved( const Akonadi::Collection& ) ), this, SLOT( slotCollectionAddedRemoved() ) );
+
+  initListOfCollection();
+
 }
 
 void KMSystemTray::buildPopupMenu()
@@ -382,6 +387,11 @@ void KMSystemTray::unreadMail( const QAbstractItemModel *model, const QModelInde
 }
 
 void KMSystemTray::slotCollectionChanged( const Akonadi::Collection::Id, const Akonadi::CollectionStatistics& )
+{
+  initListOfCollection();
+}
+
+void KMSystemTray::slotCollectionAddedRemoved()
 {
   initListOfCollection();
 }
