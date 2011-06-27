@@ -1,4 +1,13 @@
 
+Monday 27 June 2011
+
+Problems addressed
+------------------
+
+* kolab/issue3954: A group of selected folders cannot be deleted (rt#5895)
+
+
+
 Friday 24 June 2011
 
 Problems addressed
