@@ -1277,6 +1277,12 @@ void KMMainWidget::removeFolders(const QValueList<QGuardedPtr<KMFolder> > &folde
     if ( folder->isReadOnly() )
       continue;
 
+    if ( folders[i]->parent() ) {
+      const QGuardedPtr<KMFolder> p = folders[i]->parent()->owner();
+      if ( p && folders.contains( p ) )
+        continue;
+    }
+
     if ( folder->mailCheckInProgress() ) {
       KMessageBox::sorry( this, i18n( "It is not possible to delete folder <b>%1</b> right now because it "
                                       "is being syncronized. Please wait until the syncronization of "
