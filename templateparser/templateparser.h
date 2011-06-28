@@ -179,9 +179,13 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * Called by processWithTemplate(). This adds the completely processed body to
      * the message.
      *
+     * This function creates plain text message or multipart/alternative message,
+     * depending on whether the processed body has @p htmlBody or not.
+     *
      * In append mode, this will simply append the text to the body.
      *
-     * Otherwise, the content of the old message is deleted and replaced with @p body.
+     * Otherwise, the content of the old message is deleted and replaced with @p plainBody
+     * and @p htmlBody.
      * Attachments of the original message are also added back to the new message.
      */
     void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody );
@@ -246,14 +250,22 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     uint identityUoid(const KMime::Message::Ptr &msg );
 
     /**
-     *  assemble plain part
-     **/
-    KMime::Content* assemblePlainPart( const QString &plainBody );
+     * Returns KMime content of the plain text part of the message after setting its mime type,
+     * charset and CTE.
+     * This function is called by:-
+     * 1) TemplateParser::addProcessedBodyToMessage(), which uses this content to simply create
+     *    the text/plain message
+     *
+     * 2) TemplateParser::createMultipartAlternativeContent() which adds this content to create
+     *    multipart/alternative message.
+     */
+    KMime::Content* createPlainPartContent( const QString &plainBody ) const;
 
     /**
-     * assemble HTML part
-     * */
-    KMime::Content* assembleMultipartAlternative( const QString &plainBody, const QString &htmlBody );
+     * Returns KMime content of the multipart/alternative part of the message after setting the
+     * mime type, charset and CTE of its respective text/plain part and text/html part.
+     */
+    KMime::Content* createMultipartAlternativeContent( const QString &plainBody, const QString &htmlBody ) const;
 
 };
 
