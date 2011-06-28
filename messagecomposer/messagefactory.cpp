@@ -660,6 +660,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   };
 
   receipt->to()->fromUnicodeString( receiptTo, "utf-8" );
+  //Laurent: We don't translate subject ?
   receipt->subject()->from7BitString( "Message Disposition Notification" );
   KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo( receipt.get(), m_origMsg->messageID()->asUnicodeString(), "utf-8" );
   receipt->setHeader( header );
