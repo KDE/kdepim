@@ -387,6 +387,11 @@ protected:
   virtual void mouseMoveEvent( QMouseEvent * e );
 
   /**
+   * Reimplemented in order to handle context menu request via keyboard
+   */
+  virtual void contextMenuEvent( QContextMenuEvent* e );
+
+  /**
    * Reimplemented in order to handle message DnD
    */
   virtual void dragEnterEvent( QDragEnterEvent * e );

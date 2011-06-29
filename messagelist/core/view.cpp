@@ -2153,6 +2153,33 @@ void View::mouseMoveEvent( QMouseEvent * e )
   d->mWidget->viewStartDragRequest();
 }
 
+void View::contextMenuEvent( QContextMenuEvent * e )
+{
+  QModelIndex index = currentIndex();
+  if ( index.isValid() ) {
+    QRect indexRect = this->visualRect( index );
+    QPoint pos;
+
+    if ( ( indexRect.isValid() ) && ( indexRect.bottom() > 0 ) ) {
+      if ( indexRect.bottom() > viewport()->height() ) {
+        if ( indexRect.top() <= viewport()->height() ) {
+          pos = indexRect.topLeft();
+        }
+      } else {
+        pos = indexRect.bottomLeft();
+      }
+    }
+
+    Item *item = static_cast< Item * >( index.internalPointer() );
+    if ( item ) {
+      if ( item->type() == Item::GroupHeader )
+        d->mWidget->viewGroupHeaderContextPopupRequest( static_cast< GroupHeaderItem * >( item ), viewport()->mapToGlobal( pos ) );
+      else if ( !selectionEmpty() )
+        d->mWidget->viewMessageListContextPopupRequest( selectionAsMessageItemList(), viewport()->mapToGlobal( pos ) );
+    }
+  }
+}
+
 void View::dragEnterEvent( QDragEnterEvent * e )
 {
   d->mWidget->viewDragEnterEvent( e );
