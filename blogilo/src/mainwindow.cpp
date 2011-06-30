@@ -72,12 +72,7 @@ MainWindow::MainWindow()
     tabPosts = new KTabWidget( this );
     tabPosts->setElideMode( Qt::ElideRight );
     tabPosts->setTabsClosable( true );
-// #if KDE_IS_VERSION( 4, 5, 80 )
-///  does not build with KDE 4.5.80: Compile Error: ‘QTabBar* QTabWidget::tabBar() const’ is protected
-//     tabPosts->tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
-// #else
-    tabPosts->setTabCloseActivatePrevious( true );
-// #endif
+    tabPosts->tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
     tabPosts->setDocumentMode(true);
     connect( tabPosts, SIGNAL( tabCloseRequested( int ) ), this, SLOT( slotRemovePostEntry( int ) ) );
     setCentralWidget( tabPosts );

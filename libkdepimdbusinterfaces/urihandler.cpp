@@ -85,6 +85,18 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
     org::kde::knode knode(
       "org.kde.knode", "/KNode", QDBusConnection::sessionBus() );
     knode.openURL( uri );
+  } else if ( uri.startsWith( QLatin1String( "akonadi:" ) ) ) {
+    const KUrl url( uri );
+    const QString mimeType = url.queryItem( QLatin1String( "type" ) );
+    if ( mimeType.toLower() == QLatin1String( "message/rfc822" ) ) {
+      // make sure kmail is running or the part is shown
+      KToolInvocation::startServiceByDesktopPath( "kmail" );
+
+      org::kde::kmail::kmail kmail(
+        "org.kde.kmail", "/KMail", QDBusConnection::sessionBus() );
+      kmail.viewMessage( uri );
+      return true;
+    }
   } else {  // no special URI, let KDE handle it
     new KRun( KUrl( uri ), 0 );
   }

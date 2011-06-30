@@ -120,7 +120,7 @@ if (NOT DEFINED KDEPIM_DEV_VERSION)
     set( KDEPIM_DEV_VERSION "pre" )
 endif (NOT DEFINED KDEPIM_DEV_VERSION)
 
-set( KDEPIM_VERSION "4.7 ${KDEPIM_DEV_VERSION}" )
+set( KDEPIM_VERSION "4.8 ${KDEPIM_DEV_VERSION}" )
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
 ############### search packages used by KDE ###############
