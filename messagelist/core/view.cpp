@@ -2113,15 +2113,22 @@ void View::mousePressEvent( QMouseEvent * e )
       switch ( e->button() )
       {
         case Qt::LeftButton:
-          if ( !d->mDelegate->hitContentItem() )
-            return;
-
-          if ( d->mDelegate->hitContentItem()->type() == Theme::ContentItem::ExpandedStateIcon )
           {
-            if ( groupHeaderItem->childItemCount() > 0 )
+            QModelIndex index = d->mModel->index( groupHeaderItem, 0 );
+
+            if ( index.isValid() )
+              setCurrentIndex( index );
+
+            if ( !d->mDelegate->hitContentItem() )
+              return;
+
+            if ( d->mDelegate->hitContentItem()->type() == Theme::ContentItem::ExpandedStateIcon )
             {
-              // toggle expanded state
-              setExpanded( d->mDelegate->hitIndex(), !isExpanded( d->mDelegate->hitIndex() ) );
+              if ( groupHeaderItem->childItemCount() > 0 )
+              {
+                // toggle expanded state
+                setExpanded( d->mDelegate->hitIndex(), !isExpanded( d->mDelegate->hitIndex() ) );
+              }
             }
           }
         break;
