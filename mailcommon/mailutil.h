@@ -50,7 +50,7 @@ class QModelIndex;
 class QString;
 
 class OrgKdeAkonadiImapSettingsInterface;
-
+class OrgKdeAkonadiPOP3SettingsInterface;
 namespace Akonadi {
   class Collection;
   class Item;
@@ -71,6 +71,7 @@ namespace MailCommon
 namespace Util {
 
     MAILCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
+    MAILCOMMON_EXPORT OrgKdeAkonadiPOP3SettingsInterface *createPop3SettingsInterface( const QString &ident );
 
     MAILCOMMON_EXPORT bool isVirtualCollection(const Akonadi::Collection & col);
 

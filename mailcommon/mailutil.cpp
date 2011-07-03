@@ -41,6 +41,7 @@
 #include "mailutil_p.h"
 
 #include "imapsettings.h"
+#include "pop3settings.h"
 #include "mailkernel.h"
 #include "calendarinterface.h"
 
@@ -81,6 +82,11 @@
 OrgKdeAkonadiImapSettingsInterface *MailCommon::Util::createImapSettingsInterface( const QString &ident )
 {
   return new OrgKdeAkonadiImapSettingsInterface("org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
+}
+
+OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface( const QString &ident )
+{
+  return new OrgKdeAkonadiPOP3SettingsInterface("org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
 }
 
 
@@ -230,6 +236,9 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
   const QString incidenceDescription = i18n( "From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
                                              msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
 
+  QStringList attachmentLabels;
+  attachmentLabels << msg->subject()->asUnicodeString();
+
   QStringList attachmentMimeTypes;
   attachmentMimeTypes << QLatin1String( "message/rfc822" );
 
@@ -255,7 +264,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
 
   switch ( action ) {
     case IncidenceEditorNG::GlobalSettings::Link:
-      attachmentUris << mailItem.url().url();
+      attachmentUris << mailItem.url( Akonadi::Item::UrlWithMimeType ).url();
       isInlineAttachment = false;
       break;
     case IncidenceEditorNG::GlobalSettings::InlineFull:
@@ -314,6 +323,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
                                                                     attachmentUris,
                                                                     QStringList() /* attendees */,
                                                                     attachmentMimeTypes,
+                                                                    attachmentLabels,
                                                                     isInlineAttachment,
                                                                     Akonadi::Collection(),
                                                                     true /* cleanup temp files */ );
@@ -324,6 +334,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
                                                                    attachmentUris,
                                                                    QStringList() /* attendees */,
                                                                    attachmentMimeTypes,
+                                                                   attachmentLabels,
                                                                    isInlineAttachment,
                                                                    Akonadi::Collection(),
                                                                    true /* cleanup temp files */ );

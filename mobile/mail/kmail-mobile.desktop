@@ -2,7 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=Kontact Touch Mail
-Name[ca]=Correu del Kontact tàctil
+Name[ca]=Correu del Kontact Touch
 Name[ca@valencia]=Correu del Kontact tàctil
 Name[da]=Kontact Touch E-mail
 Name[de]=Mail-Modul für Kontact Touch
@@ -11,6 +11,7 @@ Name[et]=Kontact Touchi e-post
 Name[gl]=Correco Touch do Kontact
 Name[ia]=Posta de Touch de Kontact
 Name[it]=Kontact Touch Mail
+Name[ja]=Kontact Touch メール
 Name[kk]=Kontact Touch поштасы
 Name[km]=សំបុត្រ​របស់ Kontact Touch
 Name[nb]=Kontact Touch e-post

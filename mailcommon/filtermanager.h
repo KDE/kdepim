@@ -150,7 +150,7 @@ class MAILCOMMON_EXPORT FilterManager: public QObject
     /**
      * Applies the filters on the given @p messages.
      */
-    void applyFilters( const QList<Akonadi::Item> &messages );
+    void applyFilters( const QList<Akonadi::Item> &messages, FilterSet set = Explicit );
 
     /**
      * Should be called at the beginning of an filter list update.

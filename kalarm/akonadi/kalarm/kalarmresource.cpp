@@ -21,6 +21,7 @@
 
 #include "kalarmresource.h"
 #include "kalarmresourcecommon.h"
+#include "alarmtyperadiowidget.h"
 #include "kacalendar.h"
 #include "kaevent.h"
 
@@ -33,6 +34,8 @@
 
 #include <klocale.h>
 #include <kdebug.h>
+
+#include <QGroupBox>
 
 using namespace Akonadi;
 using namespace Akonadi_KAlarm_Resource;
@@ -59,17 +62,39 @@ KAlarmResource::~KAlarmResource()
 void KAlarmResource::customizeConfigDialog(SingleFileResourceConfigDialog<Settings>* dlg)
 {
     ICalResourceBase::customizeConfigDialog(dlg);
+    mTypeSelector = new AlarmTypeRadioWidget(dlg);
+    QStringList types = mSettings->alarmTypes();
+    KAlarm::CalEvent::Type alarmType = KAlarm::CalEvent::ACTIVE;
+    if (!types.isEmpty())
+        alarmType = KAlarm::CalEvent::type(types[0]);
+    mTypeSelector->setAlarmType(alarmType);
+    dlg->appendWidget(mTypeSelector);
     dlg->setMonitorEnabled(false);
     QString title;
-    if (identifier().contains("_active"))
-        title = i18nc("@title:window", "Select Active Alarm Calendar");
-    else if (identifier().contains("_archived"))
-        title = i18nc("@title:window", "Select Archived Alarm Calendar");
-    else if (identifier().contains("_template"))
-        title = i18nc("@title:window", "Select Alarm Template Calendar");
-    else
-        return;
+    switch (alarmType)
+    {
+        case KAlarm::CalEvent::ACTIVE:
+            title = i18nc("@title:window", "Select Active Alarm Calendar");
+            break;
+        case KAlarm::CalEvent::ARCHIVED:
+            title = i18nc("@title:window", "Select Archived Alarm Calendar");
+            break;
+        case KAlarm::CalEvent::TEMPLATE:
+            title = i18nc("@title:window", "Select Alarm Template Calendar");
+            break;
+        default:
+            return;
+    }
     dlg->setCaption(title);
+}
+
+/******************************************************************************
+* Save extra settings after the configuration dialog has been accepted.
+*/
+void KAlarmResource::configDialogAcceptedActions(SingleFileResourceConfigDialog<Settings>*)
+{
+    mSettings->setAlarmTypes(KAlarm::CalEvent::mimeTypes(mTypeSelector->alarmType()));
+    mSettings->writeConfig();
 }
 
 /******************************************************************************

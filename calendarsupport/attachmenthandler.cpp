@@ -27,7 +27,6 @@
   @author Allen Winter \<winter@kde.org\>
 */
 #include "attachmenthandler.h"
-#include "akonadicalendar.h"
 #include "next/incidencesearchjob.h"
 
 #include <KFileDialog>

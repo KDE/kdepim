@@ -560,9 +560,9 @@ void CSVImportDialog::saveTemplate()
   if ( name.isEmpty() )
     return;
 
-  const QString fileName = KStandardDirs::locateLocal( "data", "kaddressbook/csv-templates/"
-                                                       + QUuid::createUuid()
-                                                       + ".desktop" );
+  const QString fileName = KStandardDirs::locateLocal( "data", QString("kaddressbook/csv-templates/"
+                                                       + QString(QUuid::createUuid())
+                                                       + ".desktop" ) );
 
   KConfig config( fileName  );
   KConfigGroup generalGroup( &config, "General" );

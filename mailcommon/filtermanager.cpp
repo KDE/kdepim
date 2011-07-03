@@ -123,7 +123,7 @@ void FilterManager::Private::slotInitialItemsFetched( const Akonadi::Item::List 
      unreadItems << item;
   }
 
-  q->applyFilters( unreadItems );
+  q->applyFilters( unreadItems, FilterManager::Inbound );
 }
 
 void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::List &items )
@@ -135,6 +135,8 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
     progressItem = 0;
     kWarning() << "Got invalid progress item for slotItemsFetchedFromFilter! Something went wrong...";
   }
+
+  const FilterManager::FilterSet filterSet = static_cast<FilterManager::FilterSet>(q->sender()->property( "filterSet" ).toInt());
 
   foreach ( const Akonadi::Item &item, items ) {
     if ( progressItem ) {
@@ -152,7 +154,7 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
       }
     }
 
-    const int filterResult = q->process( item, FilterManager::Explicit );
+    const int filterResult = q->process( item, filterSet );
     if ( filterResult == 2 ) {
       // something went horribly wrong (out of space?)
       CommonKernel->emergencyExit( i18n( "Unable to process messages: " ) + QString::fromLocal8Bit( strerror( errno ) ) );
@@ -534,7 +536,7 @@ void FilterManager::dump() const
 }
 #endif
 
-void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages )
+void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, FilterSet filterSet )
 {
   const int msgCountToFilter = selectedMessages.size();
 
@@ -552,6 +554,7 @@ void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages )
     itemFetchJob->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header, true );
   itemFetchJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   itemFetchJob->setProperty( "progressItem", QVariant::fromValue( static_cast<QObject*>( progressItem ) ) );
+  itemFetchJob->setProperty( "filterSet", QVariant::fromValue( static_cast<int>( filterSet ) ) );
 
   connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
            this, SLOT( slotItemsFetchedForFilter( const Akonadi::Item::List& ) ) );

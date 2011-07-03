@@ -166,7 +166,7 @@ static bool has_parent_div_with_id( const QWebElement & start, const QString & i
   if ( start.isNull() )
     return false;
 
-  if ( start.tagName().toLower() == "div" ) {
+  if ( start.tagName().toLower() == QLatin1String("div") ) {
     if ( start.attribute( "id", "" ) == id )
       return true;
   }

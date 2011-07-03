@@ -247,9 +247,10 @@ CollectionCheckListModel::CollectionCheckListModel(KAlarm::CalEvent::Type type, 
     setSelectionModel(mSelectionModel);
     connect(mSelectionModel, SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
                              SLOT(selectionChanged(const QItemSelection&, const QItemSelection&)));
+    connect(mModel, SIGNAL(rowsAboutToBeInserted(const QModelIndex&, int, int)), SIGNAL(layoutAboutToBeChanged()));
     connect(mModel, SIGNAL(rowsInserted(const QModelIndex&, int, int)), SLOT(slotRowsInserted(const QModelIndex&, int, int)));
-    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&)),
-                                      SLOT(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&)));
+    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&, bool)),
+                                      SLOT(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&, bool)));
 }
 
 /******************************************************************************
@@ -319,15 +320,15 @@ bool CollectionCheckListModel::setData(const QModelIndex& index, const QVariant&
             {
                 QString errmsg;
                 QWidget* messageParent = qobject_cast<QWidget*>(QObject::parent());
-                if (attr->standard() != KAlarm::CalEvent::EMPTY
+                if (attr->isStandard(mAlarmType)
                 &&  AkonadiModel::isCompatible(collection))
                 {
                     // It's the standard collection for some alarm type.
-                    if (attr->isStandard(KAlarm::CalEvent::ACTIVE))
+                    if (mAlarmType == KAlarm::CalEvent::ACTIVE)
                     {
                         errmsg = i18nc("@info", "You cannot disable your default active alarm calendar.");
                     }
-                    else if (attr->isStandard(KAlarm::CalEvent::ARCHIVED)  &&  Preferences::archivedKeepDays())
+                    else if (mAlarmType == KAlarm::CalEvent::ARCHIVED  &&  Preferences::archivedKeepDays())
                     {
                         // Only allow the archived alarms standard collection to be disabled if
                         // we're not saving expired alarms.
@@ -363,6 +364,7 @@ void CollectionCheckListModel::slotRowsInserted(const QModelIndex& parent, int s
         if (collection.isValid())
             setSelectionStatus(collection, ix);
     }
+    emit layoutChanged();   // this is needed to make CollectionFilterCheckListModel update
 }
 
 /******************************************************************************
@@ -384,9 +386,9 @@ void CollectionCheckListModel::selectionChanged(const QItemSelection& selected, 
 * If the collection's alarm types have been reconfigured, ensure that the
 * model views are updated to reflect this.
 */
-void CollectionCheckListModel::collectionStatusChanged(const Collection& collection, AkonadiModel::Change change, const QVariant&)
+void CollectionCheckListModel::collectionStatusChanged(const Collection& collection, AkonadiModel::Change change, const QVariant&, bool inserted)
 {
-    if (!collection.isValid())
+    if (inserted  ||  !collection.isValid())
         return;
     switch (change)
     {
@@ -399,7 +401,7 @@ void CollectionCheckListModel::collectionStatusChanged(const Collection& collect
         default:
             return;
     }
-    QModelIndex ix = mapFromSource(mModel->collectionIndex(collection));
+    QModelIndex ix = mModel->collectionIndex(collection);
     if (ix.isValid())
         setSelectionStatus(collection, ix);
     if (change == AkonadiModel::AlarmTypes)
@@ -409,12 +411,12 @@ void CollectionCheckListModel::collectionStatusChanged(const Collection& collect
 /******************************************************************************
 * Select or deselect an index according to its enabled status.
 */
-void CollectionCheckListModel::setSelectionStatus(const Collection& collection, const QModelIndex& ix)
+void CollectionCheckListModel::setSelectionStatus(const Collection& collection, const QModelIndex& sourceIndex)
 {
     QItemSelectionModel::SelectionFlags sel = (collection.hasAttribute<CollectionAttribute>()
                                                &&  collection.attribute<CollectionAttribute>()->isEnabled(mAlarmType))
                                             ? QItemSelectionModel::Select : QItemSelectionModel::Deselect;
-    mSelectionModel->select(ix, sel);
+    mSelectionModel->select(sourceIndex, sel);
 }
 
 
@@ -627,8 +629,8 @@ CollectionControlModel::CollectionControlModel(QObject* parent)
     findEnabledCollections(filter, QModelIndex(), collections);
     setCollections(collections);
 
-    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&)),
-                                      SLOT(statusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&)));
+    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&, bool)),
+                                      SLOT(statusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&, bool)));
 }
 
 /******************************************************************************
@@ -673,7 +675,7 @@ void CollectionControlModel::setEnabled(const Collection& collection, KAlarm::Ca
         alarmTypes |= static_cast<KAlarm::CalEvent::Types>(types & KAlarm::CalEvent::ALL);
     else
         alarmTypes &= ~types;
-    instance()->statusChanged(collection, AkonadiModel::Enabled, static_cast<int>(alarmTypes));
+    instance()->statusChanged(collection, AkonadiModel::Enabled, static_cast<int>(alarmTypes), false);
 }
 
 /******************************************************************************
@@ -681,7 +683,7 @@ void CollectionControlModel::setEnabled(const Collection& collection, KAlarm::Ca
 * If it's the enabled status, add or remove the collection to/from the enabled
 * list.
 */
-void CollectionControlModel::statusChanged(const Collection& collection, AkonadiModel::Change change, const QVariant& value)
+void CollectionControlModel::statusChanged(const Collection& collection, AkonadiModel::Change change, const QVariant& value, bool inserted)
 {
     if (!collection.isValid())
         return;
@@ -710,10 +712,13 @@ void CollectionControlModel::statusChanged(const Collection& collection, Akonadi
         else
             removeCollection(collection);
 
-        // Update the collection's status
-        AkonadiModel* model = static_cast<AkonadiModel*>(sourceModel());
-        if (!model->isCollectionBeingDeleted(collection.id()))
-            model->setData(model->collectionIndex(collection), static_cast<int>(enabled), AkonadiModel::EnabledRole);
+        if (!inserted)
+        {
+            // Update the collection's status
+            AkonadiModel* model = static_cast<AkonadiModel*>(sourceModel());
+            if (!model->isCollectionBeingDeleted(collection.id()))
+                model->setData(model->collectionIndex(collection), static_cast<int>(enabled), AkonadiModel::EnabledRole);
+        }
     }
 }
 

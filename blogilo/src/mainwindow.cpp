@@ -71,13 +71,10 @@ MainWindow::MainWindow()
 
     tabPosts = new KTabWidget( this );
     tabPosts->setElideMode( Qt::ElideRight );
-// #if KDE_IS_VERSION( 4, 5, 80 )
-///  does not build with KDE 4.5.80: Compile Error: ‘QTabBar* QTabWidget::tabBar() const’ is protected
-//     tabPosts->tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
-// #else
-    tabPosts->setTabCloseActivatePrevious( true );
-// #endif
+    tabPosts->setTabsClosable( true );
+    tabPosts->tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
     tabPosts->setDocumentMode(true);
+    connect( tabPosts, SIGNAL( tabCloseRequested( int ) ), this, SLOT( slotRemovePostEntry( int ) ) );
     setCentralWidget( tabPosts );
 //     this->setDockOptions( QMainWindow::ForceTabbedDocks);
 
@@ -90,11 +87,11 @@ MainWindow::MainWindow()
     toolboxDock->setWidget( toolbox );
     this->addDockWidget( Qt::RightDockWidgetArea, toolboxDock );
 
-    btnRemovePost = new QToolButton( tabPosts );
-    btnRemovePost->setIcon( KIcon( "tab-close" ) );
-    btnRemovePost->setToolTip( i18n( "Close tab" ) );
-    tabPosts->setCornerWidget( btnRemovePost, Qt::TopRightCorner );
-    connect( btnRemovePost, SIGNAL( clicked( bool ) ), this, SLOT( slotRemovePostEntry() ) );
+    //btnRemovePost = new QToolButton( tabPosts );
+    //btnRemovePost->setIcon( KIcon( "tab-close" ) );
+    //btnRemovePost->setToolTip( i18n( "Close tab" ) );
+    //tabPosts->setCornerWidget( btnRemovePost, Qt::TopRightCorner );
+    //connect( btnRemovePost, SIGNAL( clicked( bool ) ), this, SLOT( slotRemovePostEntry() ) );
 
     // then, setup our actions
     setupActions();
@@ -470,9 +467,12 @@ void MainWindow::slotPublishPost()
     activePost->submitPost( mCurrentBlogId, *activePost->currentPost() );
 }
 
-void MainWindow::slotRemovePostEntry( PostEntry *widget )
+void MainWindow::slotRemovePostEntry( int pos )
 {
     kDebug();
+
+    PostEntry *widget = qobject_cast<PostEntry*>( tabPosts->widget( pos ) );
+    
     if( !widget ) {
         if( activePost )
             widget = activePost;
@@ -553,7 +553,7 @@ void MainWindow::keyPressEvent( QKeyEvent * event )
                 toolbox->setCurrentPage( 4 );
                 break;
             case Qt::Key_W:
-                slotRemovePostEntry();
+                slotRemovePostEntry( tabPosts->currentIndex() );
                 break;
             default:
                 KXmlGuiWindow::keyPressEvent( event );
@@ -569,11 +569,13 @@ void MainWindow::postManipulationDone( bool isError, const QString &customMessag
         KMessageBox::detailedError(this, i18n("Submitting post failed"), customMessage);
     } else {
         PostEntry *entry = qobject_cast<PostEntry*>(sender());
-        if(entry && KMessageBox::questionYesNo(this, i18n("%1\nDo you want to keep the post open?", customMessage),
+        if(entry){
+          if (KMessageBox::questionYesNo(this, i18n("%1\nDo you want to keep the post open?", customMessage),
                     QString(), KStandardGuiItem::yes(), KStandardGuiItem::no(), "KeepPostOpen") == KMessageBox::No ) {
-            slotRemovePostEntry(entry);
-        } else {
+            slotRemovePostEntry( tabPosts->indexOf( entry ) );
+          } else {
             toolbox->setFieldsValue(entry->currentPost());
+          }
         }
         toolbox->slotLoadEntriesFromDB( mCurrentBlogId );
     }

@@ -1272,8 +1272,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
-        QString name = path;
-        name.remove( QRegExp( "^ATTACH:" ) );
+        const QString name = QString::fromUtf8( QByteArray::fromBase64( path.mid( 7 ).toUtf8() ) );
         result = openAttachment( name, iCal );
       }
 
@@ -1296,7 +1295,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
     {
       QString name = path;
       if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
-        name.remove( QRegExp( "^ATTACH:" ) );
+        name = QString::fromUtf8( QByteArray::fromBase64( path.mid( 7 ).toUtf8() ) );
       } else {
         return false; //because it isn't an attachment inviation
       }
@@ -1372,8 +1371,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
           return i18n( "Remove invitation from my calendar" );
         }
         if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
-          QString name = path;
-          return i18n( "Open attachment \"%1\"", name.remove( QRegExp( "^ATTACH:" ) ) );
+          const QString name = QString::fromUtf8( QByteArray::fromBase64( path.mid( 7 ).toUtf8() ) );
+          return i18n( "Open attachment \"%1\"", name );
         }
       }
 

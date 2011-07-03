@@ -95,7 +95,7 @@ InvitationSettings::~InvitationSettings()
 void InvitationSettings::slotLegacyBodyInvitesToggled( bool on )
 {
   if ( on ) {
-    QString txt = i18n( "<qt>Invitations are normally sent as attachments to "
+    const QString txt = i18n( "<qt>Invitations are normally sent as attachments to "
                         "a mail. This switch changes the invitation mails to "
                         "be sent in the text of the mail instead; this is "
                         "necessary to send invitations and replies to "

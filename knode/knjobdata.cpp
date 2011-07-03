@@ -141,9 +141,9 @@ void KNJobData::setupKIOJob( KIO::Job *job )
       else
         job->addMetaData( "tls", "off" );
     }
-  }
   job->setUiDelegate(0);
   setupKJob( job );
+  }
 }
 
 void KNJobData::createProgressItem()
