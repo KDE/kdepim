@@ -129,6 +129,14 @@ public:
   MessageItem * currentMessageItem( bool selectIfNeeded = true ) const;
 
   /**
+   * Returns the current Item (that is bound to current StorageModel).
+   * May return 0 if there is no current item or no current StorageModel.
+   * If the current item isn't currently selected (so is only focused)
+   * then it's selected when this function is called.
+   */
+  Item * currentItem() const;
+
+  /**
    * Sets the current message item.
    */
   void setCurrentMessageItem( MessageItem * it, bool center = false );

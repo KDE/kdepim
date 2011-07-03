@@ -800,22 +800,28 @@ void View::slotHeaderContextMenuTriggered( QAction * act )
   applyThemeColumns();
 }
 
-MessageItem * View::currentMessageItem( bool selectIfNeeded ) const
+Item* View::currentItem() const
 {
   QModelIndex idx = currentIndex();
   if ( !idx.isValid() )
     return 0;
   Item * it = static_cast< Item * >( idx.internalPointer() );
   Q_ASSERT( it );
-  if ( it->type() != Item::Message )
+  return it;
+}
+
+MessageItem * View::currentMessageItem( bool selectIfNeeded ) const
+{
+  Item *it = currentItem();
+  if ( !it || ( it->type() != Item::Message ) )
     return 0;
 
   if ( selectIfNeeded )
   {
     // Keep things coherent, if the user didn't select it, but acted on it via
     // a shortcut, do select it now.
-    if ( !selectionModel()->isSelected( idx ) )
-      selectionModel()->select( idx, QItemSelectionModel::Select | QItemSelectionModel::Current | QItemSelectionModel::Rows );
+    if ( !selectionModel()->isSelected( currentIndex() ) )
+      selectionModel()->select( currentIndex(), QItemSelectionModel::Select | QItemSelectionModel::Current | QItemSelectionModel::Rows );
   }
 
   return static_cast< MessageItem * >( it );
