@@ -955,24 +955,32 @@ void View::Private::expandFullThread( const QModelIndex & index )
 
 void View::setCurrentThreadExpanded( bool expand )
 {
-  MessageItem * message = currentMessageItem();
-  if ( !message )
+  Item *it = currentItem();
+  if (!it)
     return;
 
-  while ( message->parent() )
-  {
-    if ( message->parent()->type() != Item::Message )
-      break;
-    message = static_cast< MessageItem * >( message->parent() );
-  }
+  if ( it->type() == Item::GroupHeader ) {
+    setExpanded( currentIndex(), expand );
+  } else if ( it->type() == Item::Message ) {
+    MessageItem * message = static_cast< MessageItem *>( it );
+    if ( !message )
+      return;
 
-  if ( expand )
-  {
-    setExpanded( d->mModel->index( message, 0 ), true );
-    setChildrenExpanded( message, true );
-  } else {
-    setChildrenExpanded( message, false );
-    setExpanded( d->mModel->index( message, 0 ), false );
+    while ( message->parent() )
+    {
+      if ( message->parent()->type() != Item::Message )
+        break;
+      message = static_cast< MessageItem * >( message->parent() );
+    }
+
+    if ( expand )
+    {
+      setExpanded( d->mModel->index( message, 0 ), true );
+      setChildrenExpanded( message, true );
+    } else {
+      setChildrenExpanded( message, false );
+      setExpanded( d->mModel->index( message, 0 ), false );
+    }
   }
 }
 
