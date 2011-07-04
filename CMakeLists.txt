@@ -119,7 +119,7 @@ if (NOT DEFINED KDEPIM_DEV_VERSION)
     set( KDEPIM_DEV_VERSION "" )
 endif (NOT DEFINED KDEPIM_DEV_VERSION)
 
-set( KDEPIM_VERSION "4.6.0" )
+set( KDEPIM_VERSION "4.6.1" )
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
 ############### search packages used by KDE ###############
