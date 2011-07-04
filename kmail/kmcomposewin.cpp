@@ -129,9 +129,7 @@
 #include <kwindowsystem.h>
 #include <kzip.h>
 #include <sonnet/dictionarycombobox.h>
-#include <kencodingprober.h>
-#include <kio/jobuidelegate.h>
-#include <kio/scheduler.h>
+#include <krun.h>
 
 // Qt includes
 #include <QClipboard>
@@ -1956,7 +1954,7 @@ void KMComposeWin::setCharset( const QByteArray &charset )
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotAddrBook()
 {
-  KToolInvocation::startServiceByDesktopName( "kaddressbook" );
+  KRun::runCommand("kaddressbook", topLevelWidget());
 }
 
 //-----------------------------------------------------------------------------
