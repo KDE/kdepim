@@ -2015,9 +2015,6 @@ void KMMainWidget::setMessageSetStatus( const QList<Akonadi::Item> &select,
         const Akonadi::MessageStatus &status,
         bool toggle )
 {
-  if ( select.isEmpty() )
-    return;
-
   KMCommand *command = new KMSetStatusCommand( status, select, toggle );
   command->start();
 }
