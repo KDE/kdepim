@@ -1954,7 +1954,7 @@ void KMComposeWin::setCharset( const QByteArray &charset )
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotAddrBook()
 {
-  KRun::runCommand("kaddressbook", topLevelWidget());
+  KRun::runCommand("kaddressbook", window());
 }
 
 //-----------------------------------------------------------------------------
