@@ -151,9 +151,9 @@ void FindBar::searchText( bool backward, bool isAutoSearch )
 
   if ( !found && !isAutoSearch ) {
     if ( backward ) {
-      KMessageBox::information( this, QString( "Beginning of message reached.\nPhrase '%1' could not be found." ).arg( mLastSearchStr ) ); //TODO: i18n after string freeze
+      KMessageBox::information( this, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) ); 
     } else {
-      KMessageBox::information( this, QString( "End of message reached.\nPhrase '%1' could not be found." ).arg( mLastSearchStr ) ); //TODO: i18n after string freeze
+      KMessageBox::information( this, i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ) ); 
     }
   }
 }
