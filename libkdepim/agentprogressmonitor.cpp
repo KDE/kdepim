@@ -23,7 +23,7 @@
 
 #include <KDebug>
 
-#include <QtCore/QPointer>
+#include <QWeakPointer>
 
 using namespace Akonadi;
 using namespace KPIM;
@@ -45,7 +45,7 @@ class AgentProgressMonitor::Private
 
     AgentProgressMonitor *const q;
     AgentInstance agent;
-    QPointer<ProgressItem> const item;
+    QWeakPointer<ProgressItem> const item;
 };
 
 void AgentProgressMonitor::Private::abort()
@@ -55,35 +55,36 @@ void AgentProgressMonitor::Private::abort()
 
 void AgentProgressMonitor::Private::instanceProgressChanged( const AgentInstance &instance )
 {
-  if ( !item )
+  if ( !item.data() )
     return;
 
   if ( agent == instance ) {
     agent = instance;
     if ( agent.progress() >= 0 ) {
-      item->setProgress( agent.progress() );
+      item.data()->setProgress( agent.progress() );
     }
   }
 }
 
 void AgentProgressMonitor::Private::instanceStatusChanged( const AgentInstance &instance )
 {
-  if ( !item )
+  if ( !item.data() )
     return;
 
   if ( agent == instance ) {
     agent = instance;
-    item->setStatus( agent.statusMessage() );
+    item.data()->setStatus( agent.statusMessage() );
     switch ( agent.status() ) {
       case AgentInstance::Idle:
-        item->setComplete();
+        item.data()->setComplete();
         break;
       case AgentInstance::Running:
         break;
       case AgentInstance::Broken: 
-        item->disconnect( q ); // avoid abort call
-        item->cancel();
-        item->setComplete();
+        item.data()->disconnect( q ); // avoid abort call
+        item.data()->cancel();
+	if( item.data() )
+           item.data()->setComplete();
         break;
       default:
         Q_ASSERT( false );
