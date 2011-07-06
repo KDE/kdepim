@@ -2440,7 +2440,8 @@ void ViewerPrivate::slotSaveMessage()
 
   const QString initialFileName = MessageCore::StringUtil::cleanFileName(
                                            mMessage->subject()->asUnicodeString().trimmed() );
-  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( initialFileName ), "*.mbox", mMainWindow );
+  const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( initialFileName ), filter, mMainWindow );
 
   if ( url.isEmpty() )
     return;
