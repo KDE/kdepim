@@ -1,5 +1,8 @@
 KAlarm Change Log
 
+=== Version 2.6.4 --- 6 July 2011 ===
+- Include Content-Transfer-Encoding header in emails to allow correct display.
+
 === Version 2.6.3 --- 27 April 2011 ===
 - Add option to not notify execution errors for pre-alarm actions.
 - Set environment variable KALARM_UID to event UID for pre- & post-alarm actions.
