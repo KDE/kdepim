@@ -34,7 +34,7 @@
 
 #include "akonadi/contact/contactviewer.h"
 #include "messageviewer/viewer.h"
-#include <calendarsupport/incidenceviewer.h>
+#include <calendarsupport/next/incidenceviewer.h>
 
 #include "noteviewer.h"
 #include "itemselection.h"

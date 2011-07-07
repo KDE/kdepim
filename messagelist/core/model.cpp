@@ -1332,7 +1332,8 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
       } else if ( calendar->year( dDate ) == calendar->year( mTodayDate ) ) { // GroupByDateRange within this year
         groupLabel = calendar->monthName( dDate );
       } else { // GroupByDateRange in previous years
-        groupLabel = i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ), calendar->yearString( dDate ) );
+        groupLabel = i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ),
+                            calendar->formatDate( dDate, KLocale::Year, KLocale::LongNumber ) );
       }
       break;
     }

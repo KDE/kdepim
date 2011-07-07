@@ -200,7 +200,7 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
                Qt::AlignCenter,
                i18nc( "monthname year", "%1 %2",
                       calSys->monthName( mMonthView->averageDate() ),
-                      calSys->yearString( mMonthView->averageDate() ) ) );
+                      calSys->formatDate( mMonthView->averageDate(), KLocale::Year, KLocale::LongNumber ) ) );
 
   font.setPixelSize( dayLabelsHeight - 10 );
   p->setFont( font );

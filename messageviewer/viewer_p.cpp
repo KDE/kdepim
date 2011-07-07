@@ -331,10 +331,9 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
 
   const QString filenameText = NodeHelper::fileName( node );
 
-  QPointer<AttachmentDialog> dialog = new AttachmentDialog( mMainWindow, filenameText, offer ? offer->name() : QString(),
+  AttachmentDialog dialog ( mMainWindow, filenameText, offer ? offer->name() : QString(),
                            QString::fromLatin1( "askSave_" ) + mimetype->name() );
-  const int choice = dialog->exec();
-  delete dialog;
+  const int choice = dialog.exec();
 
   if ( choice == AttachmentDialog::Save ) {
     Util::saveContents( mMainWindow, KMime::Content::List() << node );
@@ -2441,7 +2440,8 @@ void ViewerPrivate::slotSaveMessage()
 
   const QString initialFileName = MessageCore::StringUtil::cleanFileName(
                                            mMessage->subject()->asUnicodeString().trimmed() );
-  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( initialFileName ), "*.mbox", mMainWindow );
+  const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( initialFileName ), filter, mMainWindow );
 
   if ( url.isEmpty() )
     return;
