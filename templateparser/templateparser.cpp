@@ -951,6 +951,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
     }
   }
   addProcessedBodyToMessage( body, htmlBody, root );
+  delete root;
 }
 
 QString TemplateParser::getSignature() const
