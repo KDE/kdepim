@@ -1,6 +1,7 @@
 /*   -*- mode: C++; c-file-style: "gnu" -*-
  *   kmail: KDE mail client
  *   Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
+ *   Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -117,12 +118,13 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      *  text. They are tried in order until one matches, or utf-8 as a fallback.
      */
     void setCharsets( const QStringList& charsets );
-  
+
     virtual void process( const KMime::Message::Ptr &aorig_msg,
                           const Akonadi::Collection& afolder = Akonadi::Collection() );
     virtual void process( const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
                          const Akonadi::Collection& afolder = Akonadi::Collection() );
-    virtual void processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,const Akonadi::Collection& afolder = Akonadi::Collection() );
+    virtual void processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,
+                                      const Akonadi::Collection& afolder = Akonadi::Collection() );
 
     virtual void processWithTemplate( const QString &tmpl );
 
@@ -160,22 +162,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QStringList m_charsets;
 
     /**
-     * If there was a text selection set in the constructor, that will be returned.
-     * Otherwise, returns the plain text of the original message, as in KMMessage::asPlainText().
-     * The only difference is that this uses the cached object tree from parsedObjectTree()
-     *
-     * @param allowSelectionOnly if false, it will always return the complete mail text
-     */
-    QString messageText( bool allowSelectionOnly );
-
-    /**
-     * Returns the parsed object tree of the original message.
-     * The result is cached in mOrigRoot, therefore calling this multiple times will only parse
-     * the tree once.
-     */
-    KMime::Content* parsedObjectTree();
-
-    /**
      * Called by processWithTemplate(). This adds the completely processed body to
      * the message.
      *
@@ -188,7 +174,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * and @p htmlBody.
      * Attachments of the original message are also added back to the new message.
      */
-    void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody );
+    void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody, KMime::Content *root );
 
     /**
      * Determines whether the signature should be stripped when getting the text of the original
@@ -204,14 +190,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * Return the text signature used the by current identity.
      */
     QString getSignature() const;
-
-  /** Returns a decoded body part string to be further processed
-    by function asQuotedString().
-    THIS FUNCTION WILL BE REPLACED ONCE KMime IS FULLY INTEGRATED
-    (khz, June 05 2002)*/ //TODO Review if we can get rid of it
-    void parseTextStringFromContent( KMime::Content * root,
-                                     QString& parsedString,
-                                     bool& isHTML ) const;
 
     /**
       * Returns message body indented by the
@@ -229,19 +207,20 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
                             bool aStripSignature=true,
                             bool allowDecryption=true);
 
-    /** Return the textual content of the message as plain text,
-        converting HTML to plain text if necessary. */
-    QString asPlainText( const KMime::Message::Ptr &msg, bool stripSignature, bool allowDecryption );
-
     /**
-    * Same as asPlainText(), only that this method expects an already parsed object tree as
-    * parameter.
-    * By passing an already parsed objecttree, this allows to share the objecttree and therefore
-    * reduce the amount of parsing (which can include decrypting, which can include a passphrase dialog)
-    */
-    QString asPlainTextFromObjectTree( const KMime::Message::Ptr &msg, KMime::Content *root,
-                                       MessageViewer::ObjectTreeParser *otp, bool stripSignature,
-                                       bool allowDecryption );
+     * This function return the plain text part from the OTP.
+     * For HTML only mails. It returns the converted plain text
+     * from the OTP.
+     * @param allowSelectionOnly takes care that if a reply/forward
+     * is made to a selected part of message, then the selection is
+     * returned as it is without going through th OTP
+     * @param aStripSignature strips the signature out of the message
+     *
+     */
+    QString plainMessageText( const KMime::Message::Ptr &msg,
+                              MessageViewer::ObjectTreeParser *otp,
+                              bool aStripSignature, bool allowDecryption,
+                              bool allowSelectionOnly = false );
 
     /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,

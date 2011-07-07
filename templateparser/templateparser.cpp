@@ -1,6 +1,7 @@
 /*   -*- mode: C++; c-file-style: "gnu" -*-
  *   kmail: KDE mail client
  *   Copyright (C) 2006 Dmitry Morozhnikov <dmiceman@mail.ru>
+ *   Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -281,6 +282,16 @@ void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &
 void TemplateParser::processWithTemplate( const QString &tmpl )
 {
   QString body, htmlBody;
+
+  KMime::Content *root = new KMime::Content;
+  root->setContent( mOrigMsg->encodedContent() );
+  root->parse();
+
+  MessageViewer::EmptySource emptySource;
+  MessageViewer::ObjectTreeParser otp( &emptySource ); // all defaults are ok
+  otp.setAllowAsync( false );
+  otp.parseObjectTree( root );
+
   int tmpl_len = tmpl.length();
   bool dnl = false;
   for ( int i = 0; i < tmpl_len; ++i ) {
@@ -368,7 +379,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
           QString str =
-              pipe( pipe_cmd, messageText( false ) );
+              pipe( pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
           QString quote = asQuotedString( mOrigMsg, mQuoteString, str,
                                           shouldStripSignature(), mAllowDecryption );
           if ( quote.endsWith( '\n' ) )
@@ -380,8 +391,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: QUOTE";
         i += strlen( "QUOTE" );
         if ( mOrigMsg ) {
-          QString quote = asQuotedString( mOrigMsg, mQuoteString, messageText( true ),
-                                                    shouldStripSignature(), mAllowDecryption );
+          QString quote = asQuotedString( mOrigMsg, mQuoteString,
+                                          plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption, true ),
+                                          shouldStripSignature(), mAllowDecryption );
           if ( quote.endsWith( '\n' ) )
             quote.chop( 1 );
           body.append( quote );
@@ -415,7 +427,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString str = pipe(pipe_cmd, messageText( false ) );
+          QString str = pipe(pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
           body.append( str );
         }
 
@@ -458,7 +470,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: TEXT";
         i += strlen( "TEXT" );
         if ( mOrigMsg ) {
-          QString quote = messageText( false );
+          QString quote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption, true );
           body.append( quote );
         }
 
@@ -474,7 +486,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTEXT";
         i += strlen( "OTEXT" );
         if ( mOrigMsg ) {
-          QString quote = messageText( false );
+          QString quote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
           body.append( quote );
         }
 
@@ -938,7 +950,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       body.append( c );
     }
   }
-  addProcessedBodyToMessage( body, htmlBody );
+  addProcessedBodyToMessage( body, htmlBody, root );
 }
 
 QString TemplateParser::getSignature() const
@@ -960,46 +972,9 @@ QString TemplateParser::getSignature() const
   }
 }
 
-QString TemplateParser::messageText( bool allowSelectionOnly )
+void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody, KMime::Content *root )
 {
-  if ( !mSelection.isEmpty() && allowSelectionOnly )
-    return mSelection;
-  // FIXME
-  // No selection text, therefore we need to parse the object tree ourselves to get
-  //KMime::Content *root = parsedObjectTree();
-
-  // ### temporary hack to uncrash reply/forward
-  mOrigRoot = new KMime::Content;
-  mOrigRoot->setContent( mOrigMsg->encodedContent() );
-  mOrigRoot->parse();
-
-  MessageViewer::EmptySource emptySource;
-  MessageViewer::ObjectTreeParser otp( &emptySource ); // all defaults are ok
-  otp.setAllowAsync( false );
-  otp.parseObjectTree( mOrigRoot );
-
-  return asPlainTextFromObjectTree( mOrigMsg, mOrigRoot, &otp, shouldStripSignature(), mAllowDecryption );
-}
-
-KMime::Content* TemplateParser::parsedObjectTree()
-{
-  if ( mOrigRoot )
-    return mOrigRoot;
-  mOrigRoot = new KMime::Content;
-  mOrigRoot->setContent( mMsg->encodedContent() );
-
-  MessageViewer::EmptySource emptySource;
-  MessageViewer::ObjectTreeParser otp(&emptySource); // all defaults are ok
-  otp.parseObjectTree( mOrigRoot );
-
-  return mOrigRoot;
-}
-
-void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody )
-{
-
   // Get the attachments of the original mail
-  KMime::Content *root = parsedObjectTree();
   MessageCore::AttachmentCollector ac;
   ac.collectAttachmentsFrom( root );
 
@@ -1277,88 +1252,31 @@ QString TemplateParser::pipe( const QString &cmd, const QString &buf )
     return QString();
 }
 
-void TemplateParser::parseTextStringFromContent( KMime::Content * root,
-                                                 QString& parsedString,
-                                                 bool& isHTML ) const
-{
-  if ( !root )
-    return;
-
-  isHTML = false;
-  KMime::Content * curNode = root->textContent();
-  kDebug() << ( curNode ? "text part found!\n" : "sorry, no text node!\n" );
-  if( curNode ) {
-    isHTML = curNode->contentType()->isHTMLText();
-    // now parse the TEXT message part we want to quote
-    MessageViewer::EmptySource emptySource;
-    MessageViewer::ObjectTreeParser otp( &emptySource, 0, 0, true, true );
-    otp.parseObjectTree( curNode );
-    parsedString = otp.convertedTextContent();
-  }
-}
-
-QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &msg,
-                                                   KMime::Content *root,
-                                                   MessageViewer::ObjectTreeParser *otp,
-                                                   bool aStripSignature, bool allowDecryption )
-{
-  Q_ASSERT( root );
-  Q_ASSERT( otp->nodeHelper()->nodeProcessed( root ) );
-
-  QString parsedString;
-  bool isHTML = false;
-
-  if ( !root )
-    return QString();
-
-  /*
-   * FIXME
-   * The below is weird. It tries to find a text node, then uses
-   * that for the reply string, instead of relying on the OTP to
-   * provide one.
-   */
-
-  // first try if we have a text node
-  parseTextStringFromContent( root, parsedString, isHTML );
-
-  // otherwise check what the OTP thinks we should use
-  if ( parsedString.isEmpty() ) {
-    // extract the already parsed reply string from the OTP
-    parsedString = otp->convertedTextContent();
-  }
-
-  if ( parsedString.isEmpty() )
-    return QString();
-
-  QString result = parsedString;
-
-  // strip the signature (footer):
-  if ( aStripSignature )
-    return MessageCore::StringUtil::stripSignature( result );
-  else
-    return result;
-}
-
 void TemplateParser::setWordWrap(bool wrap, int wrapColWidth)
 {
   mWrap = wrap;
   mColWrap = wrapColWidth;
 }
 
-QString TemplateParser::asPlainText( const KMime::Message::Ptr &msg,
-                                     bool aStripSignature, bool allowDecryption )
+QString TemplateParser::plainMessageText( const KMime::Message::Ptr &msg,
+                                          MessageViewer::ObjectTreeParser *otp,
+                                          bool aStripSignature, bool allowDecryption,
+                                          bool allowSelectionOnly )
 {
+  if ( !mSelection.isEmpty() && allowSelectionOnly )
+    return mSelection;
+
   if ( !msg )
     return QString();
 
-  KMime::Content *root = new KMime::Content;
-  root->setContent( msg->encodedContent() );
-  root->parse();
-  MessageViewer::EmptySource emptySource;
-  MessageViewer::ObjectTreeParser otp(&emptySource);
-  otp.parseObjectTree( root );
-  QString result = asPlainTextFromObjectTree( msg, root, &otp, aStripSignature, allowDecryption );
-  delete root;
+  QString result = otp->plainTextContent();
+
+  if ( result.isEmpty() ) //HTML-only mails
+    result = otp->convertedTextContent();
+
+  if ( aStripSignature )
+    MessageCore::StringUtil::stripSignature( result );
+
   return result;
 }
 
@@ -1370,8 +1288,7 @@ QString TemplateParser::asQuotedString( const KMime::Message::Ptr &msg, const QS
   if ( !msg )
     return QString();
 
-  QString content = selection.isEmpty() ?
-    asPlainText( msg, aStripSignature, allowDecryption ) : selection ;
+  QString content = selection;
 
   // Remove blank lines at the beginning:
   const int firstNonWS = content.indexOf( QRegExp( "\\S" ) );
