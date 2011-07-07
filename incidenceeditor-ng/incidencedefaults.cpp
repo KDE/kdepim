@@ -245,6 +245,7 @@ IncidenceDefaults &IncidenceDefaults::operator=( const IncidenceDefaults &other 
 
 void IncidenceDefaults::setAttachments( const QStringList &attachments,
                                         const QStringList &attachmentMimetypes,
+                                        const QStringList &attachmentLabels,
                                         bool inlineAttachment )
 {
   Q_D( IncidenceDefaults );
@@ -268,6 +269,8 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
             const QByteArray data = f.readAll();
             f.close();
             attachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( data.toBase64(), mimeType ) );
+            if ( i < attachmentLabels.count() )
+              attachment->setLabel( attachmentLabels[ i ] );
           } else {
             kError() << "Error opening " << *it;
           }
@@ -284,6 +287,8 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
 
       } else {
         attachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( *it, mimeType ) );
+        if ( i < attachmentLabels.count() )
+          attachment->setLabel( attachmentLabels[ i ] );
       }
 
       if ( attachment ) {

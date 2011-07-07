@@ -20,6 +20,8 @@
 */
 
 #include "incidenceviewer.h"
+#include "incidenceviewer_p.h"
+#include "attachmenthandler.h"
 #include "utils.h"
 
 #include "libkdepimdbusinterfaces/urihandler.h"
@@ -38,33 +40,34 @@
 
 using namespace CalendarSupport;
 
-class TextBrowser : public KTextBrowser
+TextBrowser::TextBrowser( QWidget *parent )
+  : KTextBrowser( parent )
 {
-  public:
-    TextBrowser( QWidget *parent = 0 )
-      : KTextBrowser( parent )
-    {
 #ifdef KDEPIM_MOBILE_UI
-      setFrameStyle( QFrame::NoFrame );
+  setFrameStyle( QFrame::NoFrame );
 #endif
-    }
+}
 
-    void setSource( const QUrl &name )
-    {
-      QString uri = name.toString();
-      // QTextBrowser for some reason insists on putting // or / in links,
-      // this is a crude workaround
-      if ( uri.startsWith( QLatin1String( "uid:" ) ) ||
-           uri.startsWith( QLatin1String( "kmail:" ) ) ||
-           uri.startsWith( QString( "urn:x-ical" ).section( ':', 0, 0 ) ) ||
-           uri.startsWith( QLatin1String( "news:" ) ) ||
-           uri.startsWith( QLatin1String( "mailto:" ) ) ) {
-        uri.replace( QRegExp( "^([^:]+:)/+" ), "\\1" );
-      }
+void TextBrowser::setSource( const QUrl &name )
+{
+  QString uri = name.toString();
+  // QTextBrowser for some reason insists on putting // or / in links,
+  // this is a crude workaround
+  if ( uri.startsWith( QLatin1String( "uid:" ) ) ||
+       uri.startsWith( QLatin1String( "kmail:" ) ) ||
+       uri.startsWith( QString( "urn:x-ical" ).section( ':', 0, 0 ) ) ||
+       uri.startsWith( QLatin1String( "news:" ) ) ||
+       uri.startsWith( QLatin1String( "mailto:" ) ) ) {
+    uri.replace( QRegExp( "^([^:]+:)/+" ), "\\1" );
+  }
 
-      UriHandler::process( uri );
-    }
-};
+  if ( uri.startsWith( QLatin1String( "ATTACH:" ) ) ) {
+    emit attachmentUrlClicked( uri );
+  } else {
+    UriHandler::process( uri );
+  }
+}
+
 
 class IncidenceViewer::Private
 {
@@ -73,7 +76,10 @@ class IncidenceViewer::Private
       : mParent( parent ), mDelayedClear( false ), mParentCollectionFetchJob( 0 ),
         mAttachmentModel( 0 )
     {
+      mAttachmentHandler = new AttachmentHandler( parent );
       mBrowser = new TextBrowser;
+      parent->connect( mBrowser, SIGNAL( attachmentUrlClicked( const QString& ) ),
+                       parent, SLOT( slotAttachmentUrlClicked( const QString& ) ) );
     }
 
     void updateView()
@@ -111,6 +117,12 @@ class IncidenceViewer::Private
       updateView();
     }
 
+    void slotAttachmentUrlClicked( const QString &uri )
+    {
+      const QString attachmentName = QString::fromUtf8( QByteArray::fromBase64( uri.mid( 7 ).toUtf8() ) );
+      mAttachmentHandler->view( attachmentName, CalendarSupport::incidence( mCurrentItem ) );
+    }
+
     IncidenceViewer *mParent;
     TextBrowser *mBrowser;
     Akonadi::Item mCurrentItem;
@@ -121,6 +133,7 @@ class IncidenceViewer::Private
     Akonadi::Collection mParentCollection;
     Akonadi::CollectionFetchJob *mParentCollectionFetchJob;
     IncidenceAttachmentModel *mAttachmentModel;
+    AttachmentHandler *mAttachmentHandler;
 };
 
 IncidenceViewer::IncidenceViewer( QWidget *parent )
@@ -221,3 +234,4 @@ void IncidenceViewer::itemRemoved()
 }
 
 #include "incidenceviewer.moc"
+#include "incidenceviewer_p.moc"
