@@ -1363,19 +1363,23 @@ QString TemplateParser::plainMessageText( const KMime::Message::Ptr &msg,
                                           bool aStripSignature,
                                           bool allowSelectionOnly ) const
 {
-  if ( !mSelection.isEmpty() && allowSelectionOnly )
+  if ( !mSelection.isEmpty() && allowSelectionOnly ) {
     return mSelection;
+  }
 
-  if ( !msg )
+  if ( !msg ) {
     return QString();
+  }
 
   QString result = otp->plainTextContent();
 
-  if ( result.isEmpty() ) //HTML-only mails
+  if ( result.isEmpty() ) { //HTML-only mails
     result = otp->convertedTextContent();
+  }
 
-  if ( aStripSignature )
+  if ( aStripSignature ) {
     result = MessageCore::StringUtil::stripSignature( result );
+  }
 
   return result;
 }
@@ -1424,8 +1428,9 @@ QString TemplateParser::quotedPlainText( const KMime::Message::Ptr &msg, const Q
   const QString indentStr = MessageCore::StringUtil::formatString( aIndentStr,
                                                                    msg->from()->asUnicodeString() );
 #ifndef Q_OS_WINCE
-  if ( GlobalSettings::self()->smartQuote() && mWrap)
+  if ( GlobalSettings::self()->smartQuote() && mWrap) {
     polishedContent = MessageCore::StringUtil::smartQuote( polishedContent, mColWrap - indentStr.length() );
+  }
 #endif
   polishedContent.replace( '\n', '\n' + indentStr );
   polishedContent.prepend( indentStr );
