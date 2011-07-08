@@ -266,9 +266,9 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     KMime::Content* createMultipartAlternativeContent( const QString &plainBody, const QString &htmlBody ) const;
 
     /**
-     * Returns the message after the blank lines are removed from the selection
+     * Remove any blank lines from the selection
      */
-    QString clearBlankLines( const KMime::Message::Ptr &msg, const QString& selection  ) const;
+    QString clearBlankLines( const QString& selection  ) const;
 
 };
 

@@ -1423,7 +1423,7 @@ QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
 QString TemplateParser::quotedPlainText( const KMime::Message::Ptr &msg, const QString& aIndentStr,
                                          const QString& selection /*.clear() */) const
 {
-  QString polishedContent = clearBlankLines( msg, selection );
+  QString polishedContent = clearBlankLines( selection );
 
   const QString indentStr = MessageCore::StringUtil::formatString( aIndentStr,
                                                                    msg->from()->asUnicodeString() );
@@ -1442,23 +1442,20 @@ QString TemplateParser::quotedPlainText( const KMime::Message::Ptr &msg, const Q
 QString TemplateParser::quotedHtmlText( const KMime::Message::Ptr &msg,
                                         const QString& selection /*.clear() */) const
 {
-  QString polishedContent = clearBlankLines( msg, selection );
+  QString polishedContent = clearBlankLines( selection );
 //FIXME implement vertical bar for quoted HTML mail
   return polishedContent;
 }
 
-QString TemplateParser::clearBlankLines(const KMime::Message::Ptr& msg, const QString& selection) const
+QString TemplateParser::clearBlankLines(const QString& selection) const
 {
-  if ( !msg )
-    return QString();
-
   QString content = selection;
 
   // Remove blank lines at the beginning:
   const int firstNonWS = content.indexOf( QRegExp( "\\S" ) );
   const int lineStart = content.lastIndexOf( '\n', firstNonWS );
   if ( lineStart >= 0 )
-    content.remove( 0, static_cast<unsigned int>( lineStart ) );
+    content = content.remove( 0, static_cast<unsigned int>( lineStart ) );
 
   return content;
 }
