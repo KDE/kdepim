@@ -1451,7 +1451,7 @@ QString TemplateParser::clearBlankLines(const QString& selection) const
   const int firstNonWS = content.indexOf( QRegExp( "\\S" ) );
   const int lineStart = content.lastIndexOf( '\n', firstNonWS );
   if ( lineStart >= 0 )
-    content = content.remove( 0, static_cast<unsigned int>( lineStart ) );
+    content.remove( 0, static_cast<unsigned int>( lineStart ) );
 
   return content;
 }
