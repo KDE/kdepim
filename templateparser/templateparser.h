@@ -201,11 +201,26 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
       * smart quoting is turned on. Signed or encrypted texts
       * get converted to plain text when allowDecryption is true.
     */
-    QString asQuotedString( const KMime::Message::Ptr &msg,
+    QString quotedPlainText( const KMime::Message::Ptr &msg,
                             const QString &indentStr,
                             const QString & election=QString(),
                             bool aStripSignature=true,
                             bool allowDecryption=true);
+
+    /**
+      * Returns HTML message body.
+      * This is suitable for including the message
+      * in another message of for replies, forwards.
+      *
+      * No attachments are handled if includeAttach is false.
+      * The signature is stripped if aStripSignature is true and
+      * smart quoting is turned on. Signed or encrypted texts
+      * get converted to plain text when allowDecryption is true.
+    */
+    QString quotedHtmlText( const KMime::Message::Ptr &msg,
+                            const QString& selection /*.clear() */,
+                            bool aStripSignature /* = true */,
+                            bool allowDecryption /* = true */);
 
     /**
      * This function return the plain text part from the OTP.
@@ -221,6 +236,14 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
                               MessageViewer::ObjectTreeParser *otp,
                               bool aStripSignature, bool allowDecryption,
                               bool allowSelectionOnly = false );
+
+    /**
+     * Returns the HTML content of the message as plain text
+     */
+    QString htmlMessageText( const KMime::Message::Ptr &msg,
+                             MessageViewer::ObjectTreeParser *otp,
+                             bool aStripSignature, bool allowDecryption,
+                             bool allowSelectionOnly = false );
 
     /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,
@@ -245,6 +268,11 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * mime type, charset and CTE of its respective text/plain part and text/html part.
      */
     KMime::Content* createMultipartAlternativeContent( const QString &plainBody, const QString &htmlBody ) const;
+
+    /**
+     * Returns the message after the blank lines are removed from the selection
+     */
+    QString clearBlankLines( const KMime::Message::Ptr &msg, const QString& selection  );
 
 };
 

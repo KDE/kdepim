@@ -51,6 +51,8 @@
 #include <kshell.h>
 #include <kcharsets.h>
 #include <QString>
+#include <QWebPage>
+#include <QWebFrame>
 #include <QDateTime>
 #include <QRegExp>
 #include <QFile>
@@ -281,8 +283,6 @@ void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &
 
 void TemplateParser::processWithTemplate( const QString &tmpl )
 {
-  QString body, htmlBody;
-
   KMime::Content *root = new KMime::Content;
   root->setContent( mOrigMsg->encodedContent() );
   root->parse();
@@ -291,6 +291,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
   MessageViewer::ObjectTreeParser otp( &emptySource ); // all defaults are ok
   otp.setAllowAsync( false );
   otp.parseObjectTree( root );
+
+  QString plainBody, htmlBody;
 
   int tmpl_len = tmpl.length();
   bool dnl = false;
@@ -330,11 +332,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( file.open( QIODevice::ReadOnly ) ) {
           QByteArray content = file.readAll();
           QString str = QString::fromLocal8Bit( content, content.size() );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         } else if ( mDebug ) {
-          KMessageBox::error( 0,
-                              i18nc( "@info:status", "Cannot insert content from file %1: %2",
-                                    path, file.errorString() ) );
+          KMessageBox::error( 0, i18nc( "@info:status", "Cannot insert content from file %1: %2", path, file.errorString() ) );
         }
 
       } else if ( cmd.startsWith( QLatin1String("SYSTEM=") ) ) {
@@ -345,7 +346,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString pipe_cmd = q;
         QString str = pipe( pipe_cmd, "" );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("PUT=") ) ) {
         // insert content of specified file as is
@@ -363,11 +365,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         QFile file( path );
         if ( file.open( QIODevice::ReadOnly ) ) {
           QByteArray content = file.readAll();
-          body.append( QString::fromLocal8Bit( content, content.size() ) );
+          plainBody.append( QString::fromLocal8Bit( content, content.size() ) );
+          htmlBody.append( QString::fromLocal8Bit( content, content.size() ) );
         } else if ( mDebug ) {
-          KMessageBox::error( 0,
-                              i18nc( "@info:status", "Cannot insert content from file %1: %2",
-                                    path, file.errorString() ));
+          KMessageBox::error( 0, i18nc( "@info:status", "Cannot insert content from file %1: %2", path, file.errorString() ));
         }
 
       } else if ( cmd.startsWith( QLatin1String("QUOTEPIPE=") ) ) {
@@ -378,37 +379,59 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString str =
-              pipe( pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
-          QString quote = asQuotedString( mOrigMsg, mQuoteString, str,
-                                          shouldStripSignature(), mAllowDecryption );
-          if ( quote.endsWith( '\n' ) )
-            quote.chop( 1 );
-          body.append( quote );
+          QString plainStr = pipe( pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
+          QString plainQuote = quotedPlainText( mOrigMsg, mQuoteString, plainStr, shouldStripSignature(), mAllowDecryption );
+          if ( plainQuote.endsWith( '\n' ) ) {
+            plainQuote.chop( 1 );
+          }
+          plainBody.append( plainQuote );
+
+          QString htmlStr = pipe( pipe_cmd, htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
+          QString htmlQuote = quotedHtmlText( mOrigMsg, htmlStr, shouldStripSignature(), mAllowDecryption );
+          if ( htmlQuote.endsWith( '\n' ) ) {
+            htmlQuote.chop( 1 );
+          }
+          htmlBody.append( htmlQuote );
         }
 
       } else if ( cmd.startsWith( QLatin1String("QUOTE") ) ) {
         kDebug() << "Command: QUOTE";
         i += strlen( "QUOTE" );
         if ( mOrigMsg ) {
-          QString quote = asQuotedString( mOrigMsg, mQuoteString,
-                                          plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption, true ),
-                                          shouldStripSignature(), mAllowDecryption );
-          if ( quote.endsWith( '\n' ) )
-            quote.chop( 1 );
-          body.append( quote );
+          QString plainQuote = quotedPlainText( mOrigMsg, mQuoteString,
+                                                plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption, true ),
+                                                shouldStripSignature(), mAllowDecryption );
+          if ( plainQuote.endsWith( '\n' ) ) {
+            plainQuote.chop( 1 );
+          }
+          plainBody.append( plainQuote );
+
+          QString htmlQuote = quotedHtmlText( mOrigMsg,
+                                              htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption, true ),
+                                              shouldStripSignature(), mAllowDecryption );
+          if ( htmlQuote.endsWith( '\n' ) ) {
+            htmlQuote.chop( 1 );
+          }
+          htmlBody.append( htmlQuote );
         }
 
       } else if ( cmd.startsWith( QLatin1String("QHEADERS") ) ) {
         kDebug() << "Command: QHEADERS";
         i += strlen( "QHEADERS" );
         if ( mOrigMsg ) {
-          QString quote = asQuotedString( mOrigMsg, mQuoteString,
-                                                    MessageCore::StringUtil::headerAsSendableString( mOrigMsg ),
-                                                    false, false );
-          if ( quote.endsWith( '\n' ) )
-               quote.chop( 1 );
-          body.append( quote );
+          QString plainQuote = quotedPlainText( mOrigMsg, mQuoteString,
+                                                MessageCore::StringUtil::headerAsSendableString( mOrigMsg ), false, false );
+          if ( plainQuote.endsWith( '\n' ) ) {
+               plainQuote.chop( 1 );
+          }
+          plainBody.append( plainQuote );
+
+          QString htmlQuote = quotedHtmlText( mOrigMsg, MessageCore::StringUtil::headerAsSendableString( mOrigMsg ),
+                                              false, false );
+          if ( htmlQuote.endsWith( '\n' ) ) {
+               htmlQuote.chop( 1 );
+          }
+          htmlBody.append( htmlQuote );
         }
 
       } else if ( cmd.startsWith( QLatin1String("HEADERS") ) ) {
@@ -416,7 +439,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "HEADERS" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::headerAsSendableString( mOrigMsg );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("TEXTPIPE=") ) ) {
@@ -427,8 +451,11 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString str = pipe(pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
-          body.append( str );
+          QString plainStr = pipe( pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
+          plainBody.append( plainStr );
+
+          QString htmlStr = pipe( pipe_cmd, htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
+          htmlBody.append( htmlStr );
         }
 
       } else if ( cmd.startsWith( QLatin1String("MSGPIPE=") ) ) {
@@ -439,8 +466,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString str = pipe(pipe_cmd, mOrigMsg->encodedContent() );
-          body.append( str );
+          QString str = pipe( pipe_cmd, mOrigMsg->encodedContent() );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("BODYPIPE=") ) ) {
@@ -450,8 +478,11 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         int len = parseQuotes( "BODYPIPE=", cmd, q );
         i += len;
         QString pipe_cmd = q;
-        QString str = pipe( pipe_cmd, body );
-        body.append( str );
+        QString plainStr = pipe( pipe_cmd, plainBody );
+        plainBody.append( plainStr );
+
+        QString htmlStr = pipe( pipe_cmd, htmlBody );
+        htmlBody.append( htmlStr );
 
       } else if ( cmd.startsWith( QLatin1String("CLEARPIPE=") ) ) {
         // pipe message body generated so far through command and
@@ -461,8 +492,12 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         int len = parseQuotes( "CLEARPIPE=", cmd, q );
         i += len;
         QString pipe_cmd = q;
-        QString str = pipe( pipe_cmd, body );
-        body = str;
+        QString plainStr = pipe( pipe_cmd, plainBody );
+        plainBody = plainStr;
+
+        QString htmlStr = pipe( pipe_cmd, htmlBody );
+        htmlBody = htmlStr;
+
         KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-CursorPos", mMsg.get(), QString::number( 0 ), "utf-8" );
         mMsg->setHeader( header );
 
@@ -470,8 +505,11 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: TEXT";
         i += strlen( "TEXT" );
         if ( mOrigMsg ) {
-          QString quote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption, true );
-          body.append( quote );
+          QString plainQuote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
+          plainBody.append( plainQuote );
+
+          QString htmlQuote = htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
+          htmlBody.append( htmlQuote );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTEXTSIZE") ) ) {
@@ -479,15 +517,19 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OTEXTSIZE" );
         if ( mOrigMsg ) {
           QString str = QString( "%1" ).arg( mOrigMsg->body().length() );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTEXT") ) ) {
         kDebug() << "Command: OTEXT";
         i += strlen( "OTEXT" );
         if ( mOrigMsg ) {
-          QString quote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
-          body.append( quote );
+          QString plainQuote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
+          plainBody.append( plainQuote );
+
+          QString htmlQuote = htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
+          htmlBody.append( htmlQuote );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OADDRESSEESADDR") ) ) {
@@ -496,109 +538,131 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QString to = mOrigMsg->to()->asUnicodeString();
           const QString cc = mOrigMsg->cc()->asUnicodeString();
-          if ( !to.isEmpty() )
-            body.append( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
-          if ( !to.isEmpty() && !cc.isEmpty() )
-            body.append( QLatin1Char( '\n' ) );
-          if ( !cc.isEmpty() )
-            body.append( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
+          if ( !to.isEmpty() ) {
+            plainBody.append( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
+            htmlBody.append( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
+          }
+          if ( !to.isEmpty() && !cc.isEmpty() ) {
+            plainBody.append( QLatin1Char( '\n' ) );
+            htmlBody.append( QLatin1Char( '\n' ) );
+          }
+          if ( !cc.isEmpty() ) {
+            plainBody.append( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
+            htmlBody.append( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
+          }
 	}
 
       } else if ( cmd.startsWith( QLatin1String("CCADDR") ) ) {
         kDebug() << "Command: CCADDR";
         i += strlen( "CCADDR" );
         QString str = mMsg->cc()->asUnicodeString();
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("CCNAME") ) ) {
         kDebug() << "Command: CCNAME";
         i += strlen( "CCNAME" );
         QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString() );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("CCFNAME") ) ) {
         kDebug() << "Command: CCFNAME";
         i += strlen( "CCFNAME" );
         QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString() );;
-        body.append( getFName( str ) );
+        plainBody.append( getFName( str ) );
+        htmlBody.append( getFName( str ) );
 
       } else if ( cmd.startsWith( QLatin1String("CCLNAME") ) ) {
         kDebug() << "Command: CCLNAME";
         i += strlen( "CCLNAME" );
         QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString() );
-        body.append( getLName( str ) );
+        plainBody.append( getLName( str ) );
+        htmlBody.append( getLName( str ) );
 
       } else if ( cmd.startsWith( QLatin1String("TOADDR") ) ) {
         kDebug() << "Command: TOADDR";
         i += strlen( "TOADDR" );
         QString str = mMsg->to()->asUnicodeString();
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("TONAME") ) ) {
         kDebug() << "Command: TONAME";
         i += strlen( "TONAME" );
         QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString() );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("TOFNAME") ) ) {
         kDebug() << "Command: TOFNAME";
         i += strlen( "TOFNAME" );
         QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString() );
-        body.append( getFName( str ) );
+        plainBody.append( getFName( str ) );
+        htmlBody.append( getFName( str ) );
 
       } else if ( cmd.startsWith( QLatin1String("TOLNAME") ) ) {
         kDebug() << "Command: TOLNAME";
         i += strlen( "TOLNAME" );
         QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString() );
-        body.append( getLName( str ) );
+        plainBody.append( getLName( str ) );
+        htmlBody.append( getLName( str ) );
 
       } else if ( cmd.startsWith( QLatin1String("TOLIST") ) ) {
         kDebug() << "Command: TOLIST";
         i += strlen( "TOLIST" );
         QString str = mMsg->to()->asUnicodeString();
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("FROMADDR") ) ) {
         kDebug() << "Command: FROMADDR";
         i += strlen( "FROMADDR" );
         QString str = mMsg->from()->asUnicodeString();
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("FROMNAME") ) ) {
         kDebug() << "Command: FROMNAME";
         i += strlen( "FROMNAME" );
         QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString() );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("FROMFNAME") ) ) {
         kDebug() << "Command: FROMFNAME";
         i += strlen( "FROMFNAME" );
         QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString() );
-        body.append( getFName( str ) );
+        plainBody.append( getFName( str ) );
+        htmlBody.append( getFName( str ) );
 
       } else if ( cmd.startsWith( QLatin1String("FROMLNAME") ) ) {
         kDebug() << "Command: FROMLNAME";
         i += strlen( "FROMLNAME" );
         QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString() );
-        body.append( getLName( str ) );
+        plainBody.append( getLName( str ) );
+        htmlBody.append( getLName( str ) );
 
       } else if ( cmd.startsWith( QLatin1String("FULLSUBJECT") ) ) {
         kDebug() << "Command: FULLSUBJECT";
         i += strlen( "FULLSUBJECT" );
         QString str = mMsg->subject()->asUnicodeString();
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("FULLSUBJ") ) ) {
         kDebug() << "Command: FULLSUBJ";
         i += strlen( "FULLSUBJ" );
         QString str = mMsg->subject()->asUnicodeString();
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("MSGID") ) ) {
         kDebug() << "Command: MSGID";
         i += strlen( "MSGID" );
         QString str = mMsg->messageID()->asUnicodeString();
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("OHEADER=") ) ) {
         // insert specified content of header from original message
@@ -609,7 +673,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           QString hdr = q;
           QString str = mOrigMsg->headerByType(hdr.toLocal8Bit() ) ? mOrigMsg->headerByType(hdr.toLocal8Bit() )->asUnicodeString() : "";
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("HEADER=") ) ) {
@@ -620,7 +685,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString hdr = q;
         QString str = mMsg->headerByType(hdr.toLocal8Bit() ) ? mMsg->headerByType(hdr.toLocal8Bit() )->asUnicodeString() : "";
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("HEADER( ") ) ) {
         // insert specified content of header from current message
@@ -635,7 +701,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           i += re.matchedLength();
           QString hdr = re.cap( 1 );
           QString str = mMsg->headerByType( hdr.toLocal8Bit() ) ? mMsg->headerByType( hdr.toLocal8Bit() )->asUnicodeString() : "";
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OCCADDR") ) ) {
@@ -643,7 +710,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OCCADDR" );
         if ( mOrigMsg ) {
           QString str = mOrigMsg->cc()->asUnicodeString();
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OCCNAME") ) ) {
@@ -651,7 +719,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OCCNAME" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString() );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OCCFNAME") ) ) {
@@ -659,7 +728,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OCCFNAME" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString() );
-          body.append( getFName( str ) );
+          plainBody.append( getFName( str ) );
+          htmlBody.append( getFName( str ) );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OCCLNAME") ) ) {
@@ -667,7 +737,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OCCLNAME" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString() );
-          body.append( getLName( str ) );
+          plainBody.append( getLName( str ) );
+          htmlBody.append( getLName( str ) );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTOADDR") ) ) {
@@ -675,7 +746,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OTOADDR" );
         if ( mOrigMsg ) {
           QString str = mOrigMsg->to()->asUnicodeString();
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTONAME") ) ) {
@@ -683,7 +755,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OTONAME" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString() );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTOFNAME") ) ) {
@@ -691,7 +764,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OTOFNAME" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString() );
-          body.append( getFName( str ) );
+          plainBody.append( getFName( str ) );
+          htmlBody.append( getFName( str ) );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTOLNAME") ) ) {
@@ -699,7 +773,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OTOLNAME" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString() );
-          body.append( getLName( str ) );
+          plainBody.append( getLName( str ) );
+          htmlBody.append( getLName( str ) );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTOLIST") ) ) {
@@ -707,7 +782,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OTOLIST" );
         if ( mOrigMsg ) {
           QString str = mOrigMsg->to()->asUnicodeString();
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTO") ) ) {
@@ -715,7 +791,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OTO" );
         if ( mOrigMsg ) {
           QString str = mOrigMsg->to()->asUnicodeString();
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OFROMADDR") ) ) {
@@ -723,7 +800,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OFROMADDR" );
         if ( mOrigMsg ) {
           QString str = mOrigMsg->from()->asUnicodeString();
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OFROMNAME") ) ) {
@@ -731,7 +809,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OFROMNAME" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OFROMFNAME") ) ) {
@@ -739,7 +818,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OFROMFNAME" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
-          body.append( getFName( str ) );
+          plainBody.append( getFName( str ) );
+          htmlBody.append( getFName( str ) );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OFROMLNAME") ) ) {
@@ -747,7 +827,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OFROMLNAME" );
         if ( mOrigMsg ) {
           QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
-          body.append( getLName( str ) );
+          plainBody.append( getLName( str ) );
+          htmlBody.append( getLName( str ) );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OFULLSUBJECT") ) ) {
@@ -755,7 +836,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OFULLSUBJECT" );
         if ( mOrigMsg ) {
           QString str = mOrigMsg->subject()->asUnicodeString();
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OFULLSUBJ") ) ) {
@@ -763,7 +845,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OFULLSUBJ" );
         if ( mOrigMsg ) {
           QString str = mOrigMsg->subject()->asUnicodeString();
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OMSGID") ) ) {
@@ -771,7 +854,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "OMSGID" );
         if ( mOrigMsg ) {
           QString str = mOrigMsg->messageID()->asUnicodeString();
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("DATEEN") ) ) {
@@ -780,21 +864,24 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         QDateTime date = QDateTime::currentDateTime();
         KLocale locale( "C" );
         QString str = locale.formatDate( date.date(), KLocale::LongDate );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("DATESHORT") ) ) {
         kDebug() << "Command: DATESHORT";
         i += strlen( "DATESHORT" );
         QDateTime date = QDateTime::currentDateTime();
         QString str = KGlobal::locale()->formatDate( date.date(), KLocale::ShortDate );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("DATE") ) ) {
         kDebug() << "Command: DATE";
         i += strlen( "DATE" );
         QDateTime date = QDateTime::currentDateTime();
         QString str = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("DOW") ) ) {
         kDebug() << "Command: DOW";
@@ -802,7 +889,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         QDateTime date = QDateTime::currentDateTime();
         QString str = KGlobal::locale()->calendar()->weekDayName( date.date(),
                       KCalendarSystem::LongDayName );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("TIMELONGEN") ) ) {
         kDebug() << "Command: TIMELONGEN";
@@ -810,21 +898,24 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         QDateTime date = QDateTime::currentDateTime();
         KLocale locale( "C");
         QString str = locale.formatTime( date.time(), true );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("TIMELONG") ) ) {
         kDebug() << "Command: TIMELONG";
         i += strlen( "TIMELONG" );
         QDateTime date = QDateTime::currentDateTime();
         QString str = KGlobal::locale()->formatTime( date.time(), true );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("TIME") ) ) {
         kDebug() << "Command: TIME";
         i += strlen( "TIME" );
         QDateTime date = QDateTime::currentDateTime();
         QString str = KGlobal::locale()->formatTime( date.time(), false );
-        body.append( str );
+        plainBody.append( str );
+        htmlBody.append( str );
 
       } else if ( cmd.startsWith( QLatin1String("ODATEEN") ) ) {
         kDebug() << "Command: ODATEEN";
@@ -833,7 +924,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           QDateTime date = mOrigMsg->date()->dateTime().dateTime();
           KLocale locale( "C");
           QString str = locale.formatDate( date.date(), KLocale::LongDate );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("ODATESHORT")) ) {
@@ -842,7 +934,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           QDateTime date = mOrigMsg->date()->dateTime().dateTime();
           QString str = KGlobal::locale()->formatDate( date.date(), KLocale::ShortDate );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("ODATE")) ) {
@@ -851,7 +944,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
           const QString str = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("ODOW")) ) {
@@ -859,9 +953,9 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "ODOW");
         if ( mOrigMsg ) {
           const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-          const QString str = KGlobal::locale()->calendar()->weekDayName( date.date(),
-                        KCalendarSystem::LongDayName );
-          body.append( str );
+          const QString str = KGlobal::locale()->calendar()->weekDayName( date.date(), KCalendarSystem::LongDayName );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTIMELONGEN")) ) {
@@ -871,7 +965,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
           KLocale locale( "C");
           const QString str = locale.formatTime( date.time(), true );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTIMELONG")) ) {
@@ -880,7 +975,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
           const QString str = KGlobal::locale()->formatTime( date.time(), true );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("OTIME")) ) {
@@ -889,7 +985,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         if ( mOrigMsg ) {
           const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
           const QString str = KGlobal::locale()->formatTime( date.time(), false );
-          body.append( str );
+          plainBody.append( str );
+          htmlBody.append( str );
         }
 
       } else if ( cmd.startsWith( QLatin1String("BLANK") ) ) {
@@ -906,7 +1003,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         // clear body buffer; not too useful yet
         kDebug() << "Command: CLEAR";
         i += strlen( "CLEAR" );
-        body = "";
+        plainBody = "";
+        htmlBody = "";
         KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-CursorPos", mMsg.get(), QString::number( 0 ), "utf-8" );
         mMsg->setHeader( header );
       } else if ( cmd.startsWith( QLatin1String("DEBUGOFF") ) ) {
@@ -925,16 +1023,19 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         // turn on debug
         kDebug() << "Command: CURSOR";
         i += strlen( "CURSOR" );
-        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-CursorPos", mMsg.get(), QString::number( body.length()-1 ), "utf-8" );
+        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-CursorPos", mMsg.get(), QString::number( plainBody.length()-1 ), "utf-8" );
         mMsg->setHeader( header );
+        //FIXME HTML part for header remaining
       } else if ( cmd.startsWith( QLatin1String( "SIGNATURE" ) ) ) {
         kDebug() << "Command: SIGNATURE";
         i += strlen( "SIGNATURE" );
-        body.append( getSignature() );
+        plainBody.append( getSignature() );
+        htmlBody.append( getSignature() );
 
       } else {
         // wrong command, do nothing
-        body.append( c );
+        plainBody.append( c );
+        htmlBody.append( c );
       }
 
     } else if ( dnl && ( c == '\n' || c == '\r') ) {
@@ -947,10 +1048,11 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       }
       dnl = false;
     } else {
-      body.append( c );
+      plainBody.append( c );
+      htmlBody.append( c );
     }
   }
-  addProcessedBodyToMessage( body, htmlBody, root );
+  addProcessedBodyToMessage( plainBody, htmlBody, root );
   delete root;
 }
 
@@ -1281,10 +1383,72 @@ QString TemplateParser::plainMessageText( const KMime::Message::Ptr &msg,
   return result;
 }
 
-QString TemplateParser::asQuotedString( const KMime::Message::Ptr &msg, const QString& aIndentStr,
+QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
+                                         MessageViewer::ObjectTreeParser *otp,
+                                         bool aStripSignature, bool allowDecryption,
+                                         bool allowSelectionOnly )
+{
+  if ( !mSelection.isEmpty() && allowSelectionOnly )
+    return mSelection;
+
+  if ( !msg )
+    return QString();
+
+  QString htmlElement = otp->htmlContent();
+
+  QWebPage page;
+
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+  page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
+  page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+
+  page.currentFrame()->setHtml( htmlElement );
+
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
+
+  QString bodyElement = page.currentFrame()->evaluateJavaScript(
+    "document.getElementsByTagName('body')[0].innerHTML()").toString();
+
+  page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+
+  QString result = bodyElement.isEmpty() ? htmlElement : bodyElement;
+
+  if ( aStripSignature )
+    MessageCore::StringUtil::stripSignature( result );
+
+  return result;
+}
+
+QString TemplateParser::quotedPlainText( const KMime::Message::Ptr &msg, const QString& aIndentStr,
+                                         const QString& selection /*.clear() */, bool aStripSignature /* = true */,
+                                         bool allowDecryption /* = true */)
+{
+  QString polishedContent = clearBlankLines( msg, selection );
+
+  const QString indentStr = MessageCore::StringUtil::formatString( aIndentStr,
+                                                                   msg->from()->asUnicodeString() );
+#ifndef Q_OS_WINCE
+  if ( GlobalSettings::self()->smartQuote() && mWrap)
+    polishedContent = MessageCore::StringUtil::smartQuote( polishedContent, mColWrap - indentStr.length() );
+#endif
+  polishedContent.replace( '\n', '\n' + indentStr );
+  polishedContent.prepend( indentStr );
+  polishedContent += '\n';
+
+  return polishedContent;
+}
+
+QString TemplateParser::quotedHtmlText( const KMime::Message::Ptr &msg,
                                         const QString& selection /*.clear() */,
                                         bool aStripSignature /* = true */,
                                         bool allowDecryption /* = true */)
+{
+  QString polishedContent = clearBlankLines( msg, selection );
+//FIXME implement vertical bar for quoted HTML mail
+  return polishedContent;
+}
+
+QString TemplateParser::clearBlankLines(const KMime::Message::Ptr& msg, const QString& selection)
 {
   if ( !msg )
     return QString();
@@ -1296,16 +1460,6 @@ QString TemplateParser::asQuotedString( const KMime::Message::Ptr &msg, const QS
   const int lineStart = content.lastIndexOf( '\n', firstNonWS );
   if ( lineStart >= 0 )
     content.remove( 0, static_cast<unsigned int>( lineStart ) );
-
-  const QString indentStr = MessageCore::StringUtil::formatString( aIndentStr,
-                                                                   msg->from()->asUnicodeString() );
-#ifndef Q_OS_WINCE
-  if ( GlobalSettings::self()->smartQuote() && mWrap)
-    content = MessageCore::StringUtil::smartQuote( content, mColWrap - indentStr.length() );
-#endif
-  content.replace( '\n', '\n' + indentStr );
-  content.prepend( indentStr );
-  content += '\n';
 
   return content;
 }
