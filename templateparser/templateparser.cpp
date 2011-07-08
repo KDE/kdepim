@@ -1389,12 +1389,6 @@ QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
                                          bool aStripSignature,
                                          bool allowSelectionOnly ) const
 {
-  if ( !mSelection.isEmpty() && allowSelectionOnly )
-    return mSelection;
-
-  if ( !msg )
-    return QString();
-
   const QString htmlElement = otp->htmlContent();
 
   QWebPage page;
@@ -1406,18 +1400,20 @@ QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
   page.currentFrame()->setHtml( htmlElement );
 
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
-
   const QString bodyElement = page.currentFrame()->evaluateJavaScript(
     "document.getElementsByTagName('body')[0].innerHTML()").toString();
 
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
 
-  QString result = bodyElement.isEmpty() ? htmlElement : bodyElement;
+  if( !bodyElement.isEmpty() && allowSelectionOnly ) {
+    return bodyElement;
+  }
 
-  if ( aStripSignature )
-    result = MessageCore::StringUtil::stripSignature( result );
+  if ( aStripSignature ) {
+    return MessageCore::StringUtil::stripSignature( htmlElement );
+  }
 
-  return result;
+  return htmlElement;
 }
 
 QString TemplateParser::quotedPlainText( const KMime::Message::Ptr &msg, const QString& aIndentStr,
