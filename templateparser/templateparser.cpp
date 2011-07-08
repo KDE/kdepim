@@ -1378,7 +1378,7 @@ QString TemplateParser::plainMessageText( const KMime::Message::Ptr &msg,
     result = otp->convertedTextContent();
 
   if ( aStripSignature )
-    MessageCore::StringUtil::stripSignature( result );
+    result = MessageCore::StringUtil::stripSignature( result );
 
   return result;
 }
@@ -1414,7 +1414,7 @@ QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
   QString result = bodyElement.isEmpty() ? htmlElement : bodyElement;
 
   if ( aStripSignature )
-    MessageCore::StringUtil::stripSignature( result );
+    result = MessageCore::StringUtil::stripSignature( result );
 
   return result;
 }
