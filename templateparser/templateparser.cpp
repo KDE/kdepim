@@ -1144,7 +1144,7 @@ KMime::Content* TemplateParser::createPlainPartContent( const QString& plainBody
     textPart->fromUnicodeString( plainBody );
     QByteArray charset = selectCharset( m_charsets, plainBody );
     textPart->contentType()->setCharset( charset );
-    textPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );//FIXME wont work
+    textPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );//FIXME doesn't work
     return textPart;
 }
 
@@ -1163,7 +1163,7 @@ KMime::Content* TemplateParser::createMultipartAlternativeContent( const QString
   QByteArray charset = selectCharset( m_charsets, htmlBody );
   htmlPart->contentType()->setCharset( charset );
   htmlPart->fromUnicodeString( htmlBody );
-  htmlPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit ); //FIXME wont work
+  htmlPart->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit ); //FIXME doesn't work
   multipartAlternative->addContent( htmlPart );
 
   return multipartAlternative;
@@ -1397,7 +1397,7 @@ QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
   QString htmlElement = otp->htmlContent();
 
   QWebPage page;
-
+  //TODO to be tested/verified if this is not an issue
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
   page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
   page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
@@ -1448,7 +1448,7 @@ QString TemplateParser::quotedHtmlText( const KMime::Message::Ptr &msg,
   return polishedContent;
 }
 
-QString TemplateParser::clearBlankLines(const KMime::Message::Ptr& msg, const QString& selection)
+QString TemplateParser::clearBlankLines(const KMime::Message::Ptr& msg, const QString& selection) const
 {
   if ( !msg )
     return QString();

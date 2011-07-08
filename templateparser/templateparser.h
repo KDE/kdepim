@@ -272,7 +272,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     /**
      * Returns the message after the blank lines are removed from the selection
      */
-    QString clearBlankLines( const KMime::Message::Ptr &msg, const QString& selection  );
+    QString clearBlankLines( const KMime::Message::Ptr &msg, const QString& selection  ) const;
 
 };
 
