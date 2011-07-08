@@ -203,9 +203,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     */
     QString quotedPlainText( const KMime::Message::Ptr &msg,
                             const QString &indentStr,
-                            const QString & election=QString(),
-                            bool aStripSignature=true,
-                            bool allowDecryption=true);
+                            const QString & election=QString() ) const;
 
     /**
       * Returns HTML message body.
@@ -218,9 +216,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
       * get converted to plain text when allowDecryption is true.
     */
     QString quotedHtmlText( const KMime::Message::Ptr &msg,
-                            const QString& selection /*.clear() */,
-                            bool aStripSignature /* = true */,
-                            bool allowDecryption /* = true */);
+                            const QString& selection /*.clear() */ ) const;
 
     /**
      * This function return the plain text part from the OTP.
@@ -234,22 +230,22 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      */
     QString plainMessageText( const KMime::Message::Ptr &msg,
                               MessageViewer::ObjectTreeParser *otp,
-                              bool aStripSignature, bool allowDecryption,
-                              bool allowSelectionOnly = false );
+                              bool aStripSignature,
+                              bool allowSelectionOnly ) const;
 
     /**
      * Returns the HTML content of the message as plain text
      */
     QString htmlMessageText( const KMime::Message::Ptr &msg,
                              MessageViewer::ObjectTreeParser *otp,
-                             bool aStripSignature, bool allowDecryption,
-                             bool allowSelectionOnly = false );
+                             bool aStripSignature,
+                             bool allowSelectionOnly ) const;
 
     /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,
       searches with KPIMIdentities::IdentityManager::identityForAddress()
     **/
-    uint identityUoid(const KMime::Message::Ptr &msg );
+    uint identityUoid(const KMime::Message::Ptr &msg ) const;
 
     /**
      * Returns KMime content of the plain text part of the message after setting its mime type,

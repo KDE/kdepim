@@ -380,14 +380,14 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
           QString plainStr = pipe( pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
-          QString plainQuote = quotedPlainText( mOrigMsg, mQuoteString, plainStr, shouldStripSignature(), mAllowDecryption );
+          QString plainQuote = quotedPlainText( mOrigMsg, mQuoteString, plainStr );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
           }
           plainBody.append( plainQuote );
 
           QString htmlStr = pipe( pipe_cmd, htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
-          QString htmlQuote = quotedHtmlText( mOrigMsg, htmlStr, shouldStripSignature(), mAllowDecryption );
+          QString htmlQuote = quotedHtmlText( mOrigMsg, htmlStr );
           if ( htmlQuote.endsWith( '\n' ) ) {
             htmlQuote.chop( 1 );
           }
@@ -399,16 +399,14 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "QUOTE" );
         if ( mOrigMsg ) {
           QString plainQuote = quotedPlainText( mOrigMsg, mQuoteString,
-                                                plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption, true ),
-                                                shouldStripSignature(), mAllowDecryption );
+                                                plainMessageText( mOrigMsg, &otp, shouldStripSignature(), true ) );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
           }
           plainBody.append( plainQuote );
 
           QString htmlQuote = quotedHtmlText( mOrigMsg,
-                                              htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption, true ),
-                                              shouldStripSignature(), mAllowDecryption );
+                                              htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), true ) );
           if ( htmlQuote.endsWith( '\n' ) ) {
             htmlQuote.chop( 1 );
           }
@@ -420,14 +418,13 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "QHEADERS" );
         if ( mOrigMsg ) {
           QString plainQuote = quotedPlainText( mOrigMsg, mQuoteString,
-                                                MessageCore::StringUtil::headerAsSendableString( mOrigMsg ), false, false );
+                                                MessageCore::StringUtil::headerAsSendableString( mOrigMsg ) );
           if ( plainQuote.endsWith( '\n' ) ) {
                plainQuote.chop( 1 );
           }
           plainBody.append( plainQuote );
 
-          QString htmlQuote = quotedHtmlText( mOrigMsg, MessageCore::StringUtil::headerAsSendableString( mOrigMsg ),
-                                              false, false );
+          QString htmlQuote = quotedHtmlText( mOrigMsg, MessageCore::StringUtil::headerAsSendableString( mOrigMsg ) );
           if ( htmlQuote.endsWith( '\n' ) ) {
                htmlQuote.chop( 1 );
           }
@@ -1363,8 +1360,8 @@ void TemplateParser::setWordWrap(bool wrap, int wrapColWidth)
 
 QString TemplateParser::plainMessageText( const KMime::Message::Ptr &msg,
                                           MessageViewer::ObjectTreeParser *otp,
-                                          bool aStripSignature, bool allowDecryption,
-                                          bool allowSelectionOnly )
+                                          bool aStripSignature,
+                                          bool allowSelectionOnly ) const
 {
   if ( !mSelection.isEmpty() && allowSelectionOnly )
     return mSelection;
@@ -1385,8 +1382,8 @@ QString TemplateParser::plainMessageText( const KMime::Message::Ptr &msg,
 
 QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
                                          MessageViewer::ObjectTreeParser *otp,
-                                         bool aStripSignature, bool allowDecryption,
-                                         bool allowSelectionOnly )
+                                         bool aStripSignature,
+                                         bool allowSelectionOnly ) const
 {
   if ( !mSelection.isEmpty() && allowSelectionOnly )
     return mSelection;
@@ -1394,7 +1391,7 @@ QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
   if ( !msg )
     return QString();
 
-  QString htmlElement = otp->htmlContent();
+  const QString htmlElement = otp->htmlContent();
 
   QWebPage page;
   //TODO to be tested/verified if this is not an issue
@@ -1406,7 +1403,7 @@ QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
 
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
 
-  QString bodyElement = page.currentFrame()->evaluateJavaScript(
+  const QString bodyElement = page.currentFrame()->evaluateJavaScript(
     "document.getElementsByTagName('body')[0].innerHTML()").toString();
 
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
@@ -1420,8 +1417,7 @@ QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
 }
 
 QString TemplateParser::quotedPlainText( const KMime::Message::Ptr &msg, const QString& aIndentStr,
-                                         const QString& selection /*.clear() */, bool aStripSignature /* = true */,
-                                         bool allowDecryption /* = true */)
+                                         const QString& selection /*.clear() */) const
 {
   QString polishedContent = clearBlankLines( msg, selection );
 
@@ -1439,9 +1435,7 @@ QString TemplateParser::quotedPlainText( const KMime::Message::Ptr &msg, const Q
 }
 
 QString TemplateParser::quotedHtmlText( const KMime::Message::Ptr &msg,
-                                        const QString& selection /*.clear() */,
-                                        bool aStripSignature /* = true */,
-                                        bool allowDecryption /* = true */)
+                                        const QString& selection /*.clear() */) const
 {
   QString polishedContent = clearBlankLines( msg, selection );
 //FIXME implement vertical bar for quoted HTML mail
@@ -1464,7 +1458,7 @@ QString TemplateParser::clearBlankLines(const KMime::Message::Ptr& msg, const QS
   return content;
 }
 
-uint TemplateParser::identityUoid( const KMime::Message::Ptr &msg )
+uint TemplateParser::identityUoid( const KMime::Message::Ptr &msg ) const
 {
   QString idString;
   if ( msg->headerByType("X-KMail-Identity") )
