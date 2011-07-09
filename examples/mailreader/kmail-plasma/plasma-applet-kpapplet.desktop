@@ -75,6 +75,7 @@ Name[zh_CN]=KMail
 Name[zh_TW]=郵件管理_KMail
 # ctxt: KMail plasma widget's comment, NOT translators' e-mail addresses.
 Comment=Your emails
+Comment[ca]=Els vostres correus
 Comment[da]=Dine e-mails
 Comment[de]=Ihre E-Mails
 Comment[es]=Sus direcciones de correo
@@ -101,7 +102,7 @@ Comment[sv]=Dina brev
 Comment[ug]=UKIJ@yahoogroups.com
 Comment[uk]=Ваші поштові скриньки
 Comment[x-test]=xxYour emailsxx
-Comment[zh_TW]=franklin at goodhorse dot idv dot tw
+Comment[zh_TW]=您的電子郵件地址
 Icon=kmail
 Type=Service
 X-KDE-ServiceTypes=Plasma/Applet
