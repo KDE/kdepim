@@ -75,6 +75,7 @@ Name[zh_CN]=KMail
 Name[zh_TW]=郵件管理_KMail
 # ctxt: KMail plasma widget's comment, NOT translators' e-mail addresses.
 Comment=Your emails
+Comment[ca]=sps@sastia.com,antonibella5@orange.es,astals11@terra.es,txemaq@gmail.com,manutortosa@chakra-project.org
 Comment[da]=Dine e-mails
 Comment[de]=Ihre E-Mails
 Comment[es]=Sus direcciones de correo
