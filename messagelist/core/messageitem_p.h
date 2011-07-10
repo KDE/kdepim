@@ -80,6 +80,11 @@ public:
   static QFont mFontUnreadMessage;
   static QFont mFontImportantMessage;
   static QFont mFontToDoMessage;
+  static QString mFontKey;
+  static QString mFontNewMessageKey;
+  static QString mFontUnreadMessageKey;
+  static QString mFontImportantMessageKey;
+  static QString mFontToDoMessageKey;
 
 private:
 

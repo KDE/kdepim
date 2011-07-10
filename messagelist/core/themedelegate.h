@@ -44,6 +44,8 @@ class Item;
  */
 class ThemeDelegate : public QStyledItemDelegate
 {
+  Q_OBJECT
+
 public:
   ThemeDelegate( QAbstractItemView * parent );
   ~ThemeDelegate();
@@ -51,6 +53,7 @@ public:
 private:
   const Theme * mTheme; ///< Shallow pointer to the current theme
   QAbstractItemView * mItemView;
+  static QString mGeneralFontKey;
 
   QColor mGroupHeaderBackgroundColor; // cache
 
@@ -194,6 +197,9 @@ public:
   /// return the font to paint given item with, checking global kmail settings and theme settings
   static QFont itemFont( const Theme::ContentItem *ci, const Item *item );
 
+  /// return the font key to paint given item with, checking global kmail settings and theme settings
+  static QString itemFontKey( const Theme::ContentItem *ci, const Item *item );
+
 protected:
   /**
    * Returns the Item for the specified model index. Pure virtual: must be reimplemented
@@ -211,6 +217,11 @@ protected:
    */
   QSize sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 
+private slots:
+  /**
+   * Called when the global fonts change (from systemsettings)
+   */
+  void slotGeneralFontChanged();
 };
 
 } // namespace Core
