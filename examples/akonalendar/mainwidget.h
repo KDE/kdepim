@@ -31,7 +31,7 @@
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include "calendarsupport/kcalmodel.h"
-#include "calendarsupport/incidenceviewer.h"
+#include "calendarsupport/next/incidenceviewer.h"
 
 class MainWindow;
 

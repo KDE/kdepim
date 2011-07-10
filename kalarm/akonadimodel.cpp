@@ -1,3 +1,8 @@
+#ifdef __GNUC__
+#warning Update a calendar format, enable the calendar, copy old version on top -> crash
+#warning Add a directory resource containing 2 alarm types, right click on it -> crash
+#warning Set default template calendar to read-only -> crash
+#endif
 /*
  *  akonadimodel.cpp  -  KAlarm calendar file access using Akonadi
  *  Program:  kalarm
@@ -23,9 +28,11 @@
 #include "autoqpointer.h"
 #include "calendarmigrator.h"
 #include "collectionattribute.h"
+#include "compatibilityattribute.h"
 #include "eventattribute.h"
 #include "preferences.h"
 #include "synchtimer.h"
+#include "kalarmsettings.h"
 #include "kalarmdirsettings.h"
 
 #include <akonadi/agentfilterproxymodel.h>
@@ -53,6 +60,7 @@
 
 using namespace Akonadi;
 using KAlarm::CollectionAttribute;
+using KAlarm::CompatibilityAttribute;
 using KAlarm::EventAttribute;
 
 static Collection::Rights writableRights = Collection::CanChangeItem | Collection::CanCreateItem | Collection::CanDeleteItem;
@@ -103,6 +111,7 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
     monitor->itemFetchScope().fetchAttribute<EventAttribute>();
 
     AttributeFactory::registerAttribute<CollectionAttribute>();
+    AttributeFactory::registerAttribute<CompatibilityAttribute>();
     AttributeFactory::registerAttribute<EventAttribute>();
 
     if (!mTextIcon)
@@ -120,6 +129,7 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
 #endif
     connect(monitor, SIGNAL(collectionChanged(const Akonadi::Collection&, const QSet<QByteArray>&)), SLOT(slotCollectionChanged(const Akonadi::Collection&, const QSet<QByteArray>&)));
     connect(monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)), SLOT(slotCollectionRemoved(const Akonadi::Collection&)));
+    connect(CalendarMigrator::instance(), SIGNAL(creating(const QString&, bool)), SLOT(slotCollectionBeingCreated(const QString&, bool)));
     MinuteTimer::connect(this, SLOT(slotUpdateTimeTo()));
     Preferences::connect(SIGNAL(archivedColourChanged(const QColor&)), this, SLOT(slotUpdateArchivedColour(const QColor&)));
     Preferences::connect(SIGNAL(disabledColourChanged(const QColor&)), this, SLOT(slotUpdateDisabledColour(const QColor&)));
@@ -222,9 +232,14 @@ QVariant AkonadiModel::data(const QModelIndex& index, int role) const
             case AlarmTypeRole:
                 return static_cast<int>(types(collection));
             case IsStandardRole:
-                if (!collection.hasAttribute<CollectionAttribute>())
+                if (!collection.hasAttribute<CollectionAttribute>()
+                ||  !isCompatible(collection))
                     return 0;
                 return static_cast<int>(collection.attribute<CollectionAttribute>()->standard());
+            case KeepFormatRole:
+                if (!collection.hasAttribute<CollectionAttribute>())
+                    return false;
+                return collection.attribute<CollectionAttribute>()->keepFormat();
             default:
                 break;
         }
@@ -502,15 +517,16 @@ bool AkonadiModel::setData(const QModelIndex& index, const QVariant& value, int 
             {
                 KAlarm::CalEvent::Types types = static_cast<KAlarm::CalEvent::Types>(value.value<int>());
                 CollectionAttribute* attr = collection.attribute<CollectionAttribute>(Entity::AddIfMissing);
-if (attr) { kDebug()<<"Set enabled:"<<types<<", was="<<attr->enabled(); } else { kDebug()<<"Set enabled:"<<types<<", no attribute"; }
                 if (attr->enabled() == types)
                     return true;   // no change
+                kDebug() << "Set enabled:" << types << ", was=" << attr->enabled();
                 attr->setEnabled(types);
                 updateCollection = true;
                 break;
             }
             case IsStandardRole:
-                if (collection.hasAttribute<CollectionAttribute>())
+                if (collection.hasAttribute<CollectionAttribute>()
+                &&  isCompatible(collection))
                 {
                     KAlarm::CalEvent::Types types = static_cast<KAlarm::CalEvent::Types>(value.value<int>());
 CollectionAttribute* attr = collection.attribute<CollectionAttribute>();
@@ -519,6 +535,16 @@ kDebug()<<"Set standard:"<<types<<", was="<<attr->standard();
                     updateCollection = true;
                 }
                 break;
+            case KeepFormatRole:
+            {
+                bool keepFormat = value.value<bool>();
+                CollectionAttribute* attr = collection.attribute<CollectionAttribute>(Entity::AddIfMissing);
+                if (attr->keepFormat() == keepFormat)
+                    return true;   // no change
+                attr->setKeepFormat(keepFormat);
+                updateCollection = true;
+                break;
+            }
             default:
                 break;
         }
@@ -1042,84 +1068,6 @@ QString AkonadiModel::whatsThisText(int column) const
 }
 
 /******************************************************************************
-* Add a new collection. The user will be prompted to enter its configuration.
-*/
-AgentInstanceCreateJob* AkonadiModel::addCollection(KAlarm::CalEvent::Type type, QWidget* parent)
-{
-    // Use AutoQPointer to guard against crash on application exit while
-    // the dialogue is still open. It prevents double deletion (both on
-    // deletion of parent, and on return from this function).
-    AutoQPointer<AgentTypeDialog> dlg = new AgentTypeDialog(parent);
-    QString mimeType;
-    switch (type)
-    {
-        case KAlarm::CalEvent::ACTIVE:
-            mimeType = KAlarm::MIME_ACTIVE;
-            break;
-        case KAlarm::CalEvent::ARCHIVED:
-            mimeType = KAlarm::MIME_ARCHIVED;
-            break;
-        case KAlarm::CalEvent::TEMPLATE:
-            mimeType = KAlarm::MIME_TEMPLATE;
-            break;
-        default:
-            return 0;
-    }
-    dlg->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
-    dlg->agentFilterProxyModel()->addCapabilityFilter(QLatin1String("Resource"));
-    if (dlg->exec() != QDialog::Accepted)
-        return 0;
-    const AgentType agentType = dlg->agentType();
-    if (!agentType.isValid())
-        return 0;
-    AgentInstanceCreateJob* job = new AgentInstanceCreateJob(agentType, parent);
-    if (agentType.identifier() == QLatin1String("akonadi_kalarm_dir_resource"))
-        mPendingColCreateJobs[job] = CollTypeData(type, parent);
-    else
-        job->configure(parent);    // cause the user to be prompted for configuration
-    connect(job, SIGNAL(result(KJob*)), SLOT(addCollectionJobDone(KJob*)));
-    job->start();
-    return job;
-}
-
-/******************************************************************************
-* Called when an agent creation job has completed.
-* Checks for any error.
-*/
-void AkonadiModel::addCollectionJobDone(KJob* j)
-{
-    AgentInstanceCreateJob* job = static_cast<AgentInstanceCreateJob*>(j);
-    if (j->error())
-    {
-        kError() << "Failed to create new calendar resource:" << j->errorString();
-        KMessageBox::error(0, i18nc("@info", "%1<nl/>(%2)", i18nc("@info/plain", "Failed to create new calendar resource"), j->errorString()));
-        emit collectionAdded(job, false);
-    }
-    else
-    {
-        QMap<KJob*, CollTypeData>::iterator it = mPendingColCreateJobs.find(j);
-        if (it != mPendingColCreateJobs.end())
-        {
-            // Set the default alarm type for a directory resource config dialog
-            AgentInstance agent = static_cast<AgentInstanceCreateJob*>(job)->instance();
-            OrgKdeAkonadiKAlarmDirSettingsInterface *iface = new OrgKdeAkonadiKAlarmDirSettingsInterface("org.freedesktop.Akonadi.Resource." + agent.identifier(),
-                    "/Settings", QDBusConnection::sessionBus(), this);
-            if (!iface->isValid())
-                kError() << "Error creating D-Bus interface for KAlarmDir configuration.";
-            else
-            {
-                iface->setAlarmTypes(KAlarm::CalEvent::mimeTypes(it.value().alarmType));
-                iface->writeConfig();
-                agent.reconfigure();
-            }
-            agent.configure(it.value().parent);
-            delete iface;
-        }
-        emit collectionAdded(job, true);
-    }
-}
-
-/******************************************************************************
 * Remove a collection from Akonadi. The calendar file is not removed.
 */
 bool AkonadiModel::removeCollection(const Akonadi::Collection& collection)
@@ -1211,15 +1159,21 @@ void AkonadiModel::reload()
 void AkonadiModel::modifyCollectionJobDone(KJob* j)
 {
     Collection collection = static_cast<CollectionModifyJob*>(j)->collection();
+    Collection::Id id = collection.id();
     if (j->error())
     {
-        emit collectionModified(collection.id(), false);
-        QString errMsg = i18nc("@info", "Failed to update calendar <resource>%1</resource>.", displayName(collection));
-        kError() << errMsg << ":" << j->errorString();
-        KMessageBox::error(0, i18nc("@info", "%1<nl/>(%2)", errMsg, j->errorString()));
+        emit collectionModified(id, false);
+        if (mCollectionsDeleted.contains(id))
+            mCollectionsDeleted.removeAll(id);
+        else
+        {
+            QString errMsg = i18nc("@info", "Failed to update calendar <resource>%1</resource>.", displayName(collection));
+            kError() << "Id:" << collection.id() << errMsg << ":" << j->errorString();
+            KMessageBox::error(0, i18nc("@info", "%1<nl/>(%2)", errMsg, j->errorString()));
+        }
     }
     else
-        emit collectionModified(collection.id(), true);
+        emit collectionModified(id, true);
 }
 
 /******************************************************************************
@@ -1586,10 +1540,18 @@ void AkonadiModel::slotRowsInserted(const QModelIndex& parent, int start, int en
         if (collection.isValid())
         {
             // A collection has been inserted
+            kDebug() << "Collection" << collection.id() << collection.name();
+
             QSet<QByteArray> attrs;
             attrs += CollectionAttribute::name();
-            slotCollectionChanged(collection, attrs);
+            setCollectionChanged(collection, attrs, true);
             emit collectionAdded(collection);
+
+            if (!mCollectionsBeingCreated.contains(collection.remoteId()))
+            {
+                // Update to current KAlarm format if necessary, and if the user agrees
+                CalendarMigrator::updateToCurrentFormat(collection, false, this);
+            }
         }
         else
         {
@@ -1641,30 +1603,42 @@ AkonadiModel::EventList AkonadiModel::eventList(const QModelIndex& parent, int s
 
 /******************************************************************************
 * Called when a monitored collection's properties or content have changed.
-* Emits a signal if the writable property has changed.
+* Optionally emits a signal if properties of interest have changed.
 */
-void AkonadiModel::slotCollectionChanged(const Collection& collection, const QSet<QByteArray>& attributeNames)
+void AkonadiModel::setCollectionChanged(const Collection& collection, const QSet<QByteArray>& attributeNames, bool rowInserted)
 {
+    // Check for a read/write permission change
     Collection::Rights oldRights = mCollectionRights.value(collection.id(), Collection::AllRights);
     Collection::Rights newRights = collection.rights() & writableRights;
     if (newRights != oldRights)
     {
         mCollectionRights[collection.id()] = newRights;
-        emit collectionStatusChanged(collection, ReadOnly, (newRights != writableRights));
+        emit collectionStatusChanged(collection, ReadOnly, (newRights != writableRights), rowInserted);
     }
 
+    // Check for a change in content mime types
+    // (e.g. when a collection is first created at startup).
+    KAlarm::CalEvent::Types oldAlarmTypes = mCollectionAlarmTypes.value(collection.id(), KAlarm::CalEvent::EMPTY);
+    KAlarm::CalEvent::Types newAlarmTypes = KAlarm::CalEvent::types(collection.contentMimeTypes());
+    if (newAlarmTypes != oldAlarmTypes)
+    {
+        kDebug() << "Collection" << collection.id() << ": alarm types ->" << newAlarmTypes;
+        mCollectionAlarmTypes[collection.id()] = newAlarmTypes;
+        emit collectionStatusChanged(collection, AlarmTypes, static_cast<int>(newAlarmTypes), rowInserted);
+    }
+
+    // Check for the collection being enabled/disabled
     if (attributeNames.contains(CollectionAttribute::name()))
     {
         static bool first = true;
-kDebug()<<"COLLECTION ATTRIBUTE changed";
         KAlarm::CalEvent::Types oldEnabled = mCollectionEnabled.value(collection.id(), KAlarm::CalEvent::EMPTY);
         KAlarm::CalEvent::Types newEnabled = collection.hasAttribute<CollectionAttribute>() ? collection.attribute<CollectionAttribute>()->enabled() : KAlarm::CalEvent::EMPTY;
         if (first  ||  newEnabled != oldEnabled)
         {
-            kDebug() << "enabled ->" << newEnabled;
+            kDebug() << "Collection" << collection.id() << ": enabled ->" << newEnabled;
             first = false;
             mCollectionEnabled[collection.id()] = newEnabled;
-            emit collectionStatusChanged(collection, Enabled, static_cast<int>(newEnabled));
+            emit collectionStatusChanged(collection, Enabled, static_cast<int>(newEnabled), rowInserted);
         }
     }
 }
@@ -1674,9 +1648,24 @@ kDebug()<<"COLLECTION ATTRIBUTE changed";
 */
 void AkonadiModel::slotCollectionRemoved(const Collection& collection)
 {
-    kDebug() << collection.id();
-    mCollectionRights.remove(collection.id());
-    mCollectionsDeleting.removeAll(collection.id());
+    Collection::Id id = collection.id();
+    kDebug() << id;
+    mCollectionRights.remove(id);
+    mCollectionsDeleting.removeAll(id);
+    while (mCollectionsDeleted.count() > 20)   // don't let list grow indefinitely
+        mCollectionsDeleted.removeFirst();
+    mCollectionsDeleted << id;
+}
+
+/******************************************************************************
+* Called when a collection creation is about to start, or has completed.
+*/
+void AkonadiModel::slotCollectionBeingCreated(const QString& path, bool finished)
+{
+    if (finished)
+        mCollectionsBeingCreated.removeAll(path);
+    else
+        mCollectionsBeingCreated << path;
 }
 
 /******************************************************************************
@@ -1798,46 +1787,15 @@ Collection AkonadiModel::collectionForItem(Item::Id id) const
     return ix.data(ParentCollectionRole).value<Collection>();
 }
 
-KAlarm::CalEvent::Types AkonadiModel::types(const Collection& collection)
+bool AkonadiModel::isCompatible(const Collection& collection)
 {
-    KAlarm::CalEvent::Types types = 0;
-    QStringList mimeTypes = collection.contentMimeTypes();
-    if (mimeTypes.contains(KAlarm::MIME_ACTIVE))
-        types |= KAlarm::CalEvent::ACTIVE;
-    if (mimeTypes.contains(KAlarm::MIME_ARCHIVED))
-        types |= KAlarm::CalEvent::ARCHIVED;
-    if (mimeTypes.contains(KAlarm::MIME_TEMPLATE))
-        types |= KAlarm::CalEvent::TEMPLATE;
-    return types;
+    return collection.hasAttribute<CompatibilityAttribute>()
+       &&  collection.attribute<CompatibilityAttribute>()->compatibility() == KAlarm::Calendar::Current;
 }
 
-/******************************************************************************
-* Check whether the alarm types in a calendar correspond with a collection's
-* mime types.
-* Reply = true if at least 1 alarm is the right type.
-*/
-bool AkonadiModel::checkAlarmTypes(const Akonadi::Collection& collection, KCalCore::Calendar::Ptr& calendar)
+KAlarm::CalEvent::Types AkonadiModel::types(const Collection& collection)
 {
-    KAlarm::CalEvent::Types etypes = types(collection);
-    if (etypes)
-    {
-        bool have = false;
-        bool other = false;
-        const KCalCore::Event::List events = calendar->rawEvents();
-        for (int i = 0, iend = events.count();  i < iend;  ++i)
-        {
-            KAlarm::CalEvent::Type s = KAlarm::CalEvent::status(events[i]);
-            if (etypes & s)
-                have = true;
-            else
-                other = true;
-            if (have && other)
-                break;
-        }
-        if (!have  &&  other)
-            return false;   // contains only wrong alarm types
-    }
-    return true;
+    return KAlarm::CalEvent::types(collection.contentMimeTypes());
 }
 
 // vim: et sw=4:

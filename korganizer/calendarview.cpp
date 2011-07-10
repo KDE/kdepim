@@ -69,7 +69,7 @@
 #include <calendarsupport/mailscheduler.h>
 #include <calendarsupport/dndfactory.h>
 #include <calendarsupport/incidencechanger.h>
-#include <calendarsupport/incidenceviewer.h>
+#include <calendarsupport/next/incidenceviewer.h>
 #include <calendarsupport/kcalprefs.h>
 
 #include <akonadi/control.h>
@@ -1209,7 +1209,7 @@ void CalendarView::newEvent( const QString &summary, const QString &description,
     defaults.setEndDateTime( KDateTime( endDt ) );
     // if attach or attendee list is empty, these methods don't do anything, so
     // it's safe to call them in every case
-    defaults.setAttachments( attachments, attachmentMimetypes, inlineAttachment );
+    defaults.setAttachments( attachments, attachmentMimetypes, QStringList(), inlineAttachment );
     defaults.setAttendees( attendees );
 
     Event::Ptr event( new Event );
@@ -1231,7 +1231,7 @@ void CalendarView::newTodo( const QString &summary, const QString &description,
     Akonadi::Collection defaultCol = defaultCollection( Todo::todoMimeType() );
 
     IncidenceDialogFactory::createTodoEditor( summary, description, attachments,
-                                              attendees, attachmentMimetypes,
+                                              attendees, attachmentMimetypes, QStringList() /* attachment labels */,
                                               inlineAttachment, defaultCol,
                                               this /* parent */ );
   }
@@ -1658,6 +1658,8 @@ void CalendarView::copyIncidenceToResource( const Akonadi::Item &item, const QSt
       i18nc( "@title:window", "Copying Failed" ) );
   }
 #else
+  Q_UNUSED( resourceId );
+  Q_UNUSED( item );
   kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 }
@@ -1742,6 +1744,8 @@ void CalendarView::moveIncidenceToResource( const Akonadi::Item &item, const QSt
       i18nc( "@title:window", "Moving Failed" ) );
   }
 #else
+  Q_UNUSED( resourceId );
+  Q_UNUSED( item );
   kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 }
@@ -2366,7 +2370,7 @@ Akonadi::Item CalendarView::selectedTodo()
   return Akonadi::Item();
 }
 
-void CalendarView::dialogClosing( const Akonadi::Item &item )
+void CalendarView::dialogClosing( const Akonadi::Item & )
 {
 }
 
@@ -2484,6 +2488,7 @@ void CalendarView::showIncidenceContext( const Akonadi::Item &item )
 
 bool CalendarView::editIncidence( const Akonadi::Item &item, bool isCounter )
 {
+  Q_UNUSED( isCounter );
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( !incidence ) {
     kDebug() << "Empty Incidence";

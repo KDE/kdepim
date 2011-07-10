@@ -20,7 +20,7 @@
  */
 
 #include "kalarmresourcecommon.h"
-#include "collectionattribute.h"
+#include "compatibilityattribute.h"
 #include "eventattribute.h"
 
 #include <akonadi/attributefactory.h>
@@ -35,7 +35,7 @@
 
 using namespace Akonadi;
 using namespace KCalCore;
-using KAlarm::CollectionAttribute;
+using KAlarm::CompatibilityAttribute;
 using KAlarm::EventAttribute;
 
 
@@ -67,7 +67,7 @@ void initialise(QObject* parent)
     // Set a default start-of-day time for date-only alarms.
     KAEvent::setStartOfDay(QTime(0,0,0));
 
-    AttributeFactory::registerAttribute<CollectionAttribute>();
+    AttributeFactory::registerAttribute<CompatibilityAttribute>();
     AttributeFactory::registerAttribute<EventAttribute>();
 
     KGlobal::locale()->insertCatalog("akonadi_kalarm_resource_common");
@@ -91,37 +91,23 @@ QStringList mimeTypes(const QString& id)
     return mimes;
 }
 
-#if 0
 /******************************************************************************
-* Customize the configuration dialog before it is displayed.
+* Find the compatibility of an existing calendar file, and convert it in
+* memory to the current KAlarm format (if possible).
 */
-void customizeConfigDialog(SingleFileResourceConfigDialog<Settings>* dlg)
-{
-    ICalResourceBase::customizeConfigDialog(dlg);
-    dlg->setMonitorEnabled(false);
-    QString title;
-    if (identifier().contains("_active"))
-        title = i18nc("@title:window", "Select Active Alarm Calendar");
-    else if (identifier().contains("_archived"))
-        title = i18nc("@title:window", "Select Archived Alarm Calendar");
-    else if (identifier().contains("_template"))
-        title = i18nc("@title:window", "Select Alarm Template Calendar");
-    else
-        return;
-    dlg->setCaption(title);
-}
-#endif
-
-/******************************************************************************
-* Find the compatibility of an existing calendar file.
-*/
-KAlarm::Calendar::Compat getCompatibility(const FileStorage::Ptr& fileStorage)
+KAlarm::Calendar::Compat getCompatibility(const FileStorage::Ptr& fileStorage, int& version)
 {
     QString versionString;
-    int version = KAlarm::Calendar::checkCompatibility(fileStorage, versionString);
-    return (version < 0) ? KAlarm::Calendar::Incompatible  // calendar is not in KAlarm format, or is in a future format
-         : (version > 0) ? KAlarm::Calendar::Convertible   // calendar is in an out of date format
-         :                 KAlarm::Calendar::Current;      // calendar is in the current format
+    version = KAlarm::Calendar::updateVersion(fileStorage, versionString);
+    switch (version)
+    {
+        case KAlarm::Calendar::IncompatibleFormat:
+            return KAlarm::Calendar::Incompatible;  // calendar is not in KAlarm format, or is in a future format
+        case KAlarm::Calendar::CurrentFormat:
+            return KAlarm::Calendar::Current;       // calendar is in the current format
+        default:
+            return KAlarm::Calendar::Convertible;   // calendar is in an out of date format
+    }
 }
 
 /******************************************************************************
@@ -169,12 +155,18 @@ KAEvent checkItemChanged(const Akonadi::Item& item, QString& errorMsg)
 
 /******************************************************************************
 * Set a collection's compatibility attribute.
+* Note that because this parameter is set asynchronously by the resource, it
+* can't be stored in the same attribute as other collection parameters which
+* are written by the application. This avoids the resource and application
+* overwriting each other's changes if they attempt simultaneous updates.
 */
-void setCollectionCompatibility(const Collection& collection, KAlarm::Calendar::Compat compatibility)
+void setCollectionCompatibility(const Collection& collection, KAlarm::Calendar::Compat compatibility, int version)
 {
+    kDebug() << "->" << compatibility;
     Collection col = collection;
-    CollectionAttribute* attr = col.attribute<CollectionAttribute>(Collection::AddIfMissing);
+    CompatibilityAttribute* attr = col.attribute<CompatibilityAttribute>(Collection::AddIfMissing);
     attr->setCompatibility(compatibility);
+    attr->setVersion(version);
     Q_ASSERT(Private::mInstance);
     CollectionModifyJob* job = new CollectionModifyJob(col, Private::mInstance->parent());
     Private::mInstance->connect(job, SIGNAL(result(KJob*)), SLOT(modifyCollectionJobDone(KJob*)));
@@ -208,6 +200,7 @@ QString errorMessage(ErrorCode code, const QString& param)
 */
 void Private::modifyCollectionJobDone(KJob* j)
 {
+    kDebug();
     if (j->error())
     {
         Collection collection = static_cast<CollectionModifyJob*>(j)->collection();

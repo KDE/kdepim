@@ -42,3 +42,5 @@ class AlarmTypeWidget : public QWidget
 };
 
 #endif // ALARMTYPEWIDGET_H
+
+// vim: et sw=4:

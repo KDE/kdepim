@@ -22,7 +22,7 @@
 #ifndef CALENDARSUPPORT_INCIDENCEVIEWER_H
 #define CALENDARSUPPORT_INCIDENCEVIEWER_H
 
-#include "calendarsupport_export.h"
+#include "../calendarsupport_export.h"
 
 #include <Akonadi/ItemMonitor>
 
@@ -130,6 +130,7 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void slotParentCollectionFetched( KJob * ) )
+    Q_PRIVATE_SLOT( d, void slotAttachmentUrlClicked( const QString& ) )
     //@endcond
 };
 

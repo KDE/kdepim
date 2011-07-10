@@ -201,7 +201,7 @@ MainWindow::MainWindow(bool restored)
     connect(mListView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,const QItemSelection&)), SLOT(slotSelection()));
     connect(mListView, SIGNAL(contextMenuRequested(const QPoint&)), SLOT(slotContextMenuRequested(const QPoint&)));
 #ifdef USE_AKONADI
-    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&)),
+    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&, bool)),
                        SLOT(slotCalendarStatusChanged()));
 #else
     connect(resources, SIGNAL(resourceStatusChanged(AlarmResource*, AlarmResources::Change)),
@@ -715,13 +715,21 @@ void MainWindow::selectEvent(const QString& eventId)
 /******************************************************************************
 * Return the single selected alarm in the displayed list.
 */
-KAEvent MainWindow::selectedEvent() const
-{
 #ifdef USE_AKONADI
-    return mListView->selectedEvent();
+KAEvent MainWindow::selectedEvent() const
 #else
-    return *mListView->selectedEvent();
+KAEvent* MainWindow::selectedEvent() const
 #endif
+{
+    return mListView->selectedEvent();
+}
+
+/******************************************************************************
+* Deselect all alarms in the displayed list.
+*/
+void MainWindow::clearSelection()
+{
+    mListView->clearSelection();
 }
 
 /******************************************************************************

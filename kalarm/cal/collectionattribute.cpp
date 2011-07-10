@@ -29,7 +29,7 @@ CollectionAttribute::CollectionAttribute(const CollectionAttribute& rhs)
     : mBackgroundColour(rhs.mBackgroundColour),
       mEnabled(rhs.mEnabled),
       mStandard(rhs.mStandard),
-      mCompatibility(rhs.mCompatibility)
+      mKeepFormat(rhs.mKeepFormat)
 {
 }
 
@@ -101,9 +101,9 @@ void CollectionAttribute::setStandard(KAlarm::CalEvent::Types types)
 
 QByteArray CollectionAttribute::serialized() const
 {
-    QByteArray v = QByteArray::number(mCompatibility) + ' '
-                 + QByteArray::number(mEnabled) + ' '
+    QByteArray v = QByteArray::number(mEnabled) + ' '
                  + QByteArray::number(mStandard) + ' '
+                 + QByteArray(mKeepFormat ? "1" : "0") + ' '
                  + QByteArray(mBackgroundColour.isValid() ? "1" : "0");
     if (mBackgroundColour.isValid())
         v += ' '
@@ -120,8 +120,8 @@ void CollectionAttribute::deserialize(const QByteArray& data)
     // Set default values
     mEnabled          = KAlarm::CalEvent::EMPTY;
     mStandard         = KAlarm::CalEvent::EMPTY;
-    mCompatibility    = KAlarm::Calendar::Incompatible;
     mBackgroundColour = QColor();
+    mKeepFormat       = false;
 
     bool ok;
     int c[4];
@@ -131,22 +131,7 @@ void CollectionAttribute::deserialize(const QByteArray& data)
 kDebug(5950)<<"Size="<<count<<", data="<<data;
     if (count > index)
     {
-        // 0: calendar format compatibility
-        c[0] = items[index++].toInt(&ok);
-        if (!ok
-        ||  (c[0] != KAlarm::Calendar::Incompatible
-          && c[0] != KAlarm::Calendar::Current
-          && c[0] != KAlarm::Calendar::Convertible
-          && c[0] != KAlarm::Calendar::ByEvent))
-        {
-            kError() << "Invalid compatibility:" << c[0];
-            return;
-        }
-        mCompatibility = static_cast<KAlarm::Calendar::Compat>(c[0]);
-    }
-    if (count > index)
-    {
-        // 1: type(s) of alarms for which the collection is enabled
+        // 0: type(s) of alarms for which the collection is enabled
         c[0] = items[index++].toInt(&ok);
         if (!ok  ||  (c[0] & ~(KAlarm::CalEvent::ACTIVE | KAlarm::CalEvent::ARCHIVED | KAlarm::CalEvent::TEMPLATE)))
         {
@@ -157,15 +142,23 @@ kDebug(5950)<<"Size="<<count<<", data="<<data;
     }
     if (count > index)
     {
-        // 2: type(s) of alarms for which the collection is the standard collection
+        // 1: type(s) of alarms for which the collection is the standard collection
         c[0] = items[index++].toInt(&ok);
         if (!ok  ||  (c[0] & ~KAlarm::CalEvent::ALL))
         {
             kError() << "Invalid alarm types:" << c[0];
             return;
         }
-        if (mEnabled  &&  mCompatibility == KAlarm::Calendar::Current)
+        if (mEnabled)
             mStandard = static_cast<KAlarm::CalEvent::Types>(c[0]);
+    }
+    if (count > index)
+    {
+        // 2: keep old calendar storage format
+        c[0] = items[index++].toInt(&ok);
+        if (!ok)
+            return;
+        mKeepFormat = c[0];
     }
     if (count > index)
     {

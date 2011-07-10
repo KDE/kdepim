@@ -419,7 +419,7 @@ void MainView::openIncidenceEditor( const QString &summary,
   IncidenceEditorNG::IncidenceDefaults defaults = IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults( attachmentsAreInline );
   // if attach or attendee list is empty, these methods don't do anything, so
   // it's safe to call them in every case
-  defaults.setAttachments( attachmentUris, attachmentMimeTypes, attachmentsAreInline );
+  defaults.setAttachments( attachmentUris, attachmentMimeTypes, QStringList(), attachmentsAreInline );
   defaults.setAttendees( attendees );
 
   KCalCore::Incidence::Ptr incidence;

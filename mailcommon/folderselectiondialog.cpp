@@ -109,8 +109,6 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   d->mUseGlobalSettings = !( options & NotUseGlobalSettings );
   readConfig();
 
-  d->folderTreeWidget->folderTreeView()->expandAll();
-  d->folderTreeWidget->folderTreeView()->setFocus();
 }
 
 FolderSelectionDialog::~FolderSelectionDialog()
@@ -118,6 +116,20 @@ FolderSelectionDialog::~FolderSelectionDialog()
   writeConfig();
   delete d;
 }
+
+void FolderSelectionDialog::focusTreeView()
+{
+  d->folderTreeWidget->folderTreeView()->expandAll();
+  d->folderTreeWidget->folderTreeView()->setFocus();
+}
+
+void FolderSelectionDialog::showEvent( QShowEvent*event )
+{
+  if ( !event->spontaneous () )
+    focusTreeView();
+  KDialog::showEvent( event );
+}
+
 
 void FolderSelectionDialog::rowsInserted( const QModelIndex&, int, int )
 {

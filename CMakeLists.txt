@@ -23,6 +23,7 @@ else(KDEPIM_BUILD_STATIC)
 endif(KDEPIM_BUILD_STATIC)
 
 add_definitions( -DDISABLE_NEPOMUK_LEGACY )
+add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 
 if(KDEPIM_NO_NEPOMUK)
   add_definitions(-DKDEPIM_NO_NEPOMUK)
@@ -119,7 +120,7 @@ if (NOT DEFINED KDEPIM_DEV_VERSION)
     set( KDEPIM_DEV_VERSION "pre" )
 endif (NOT DEFINED KDEPIM_DEV_VERSION)
 
-set( KDEPIM_VERSION "4.7 ${KDEPIM_DEV_VERSION}" )
+set( KDEPIM_VERSION "4.8 ${KDEPIM_DEV_VERSION}" )
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
 ############### search packages used by KDE ###############
@@ -222,7 +223,7 @@ else(KDEPIM_ONLY_KLEO)
   include(SopranoAddOntology)
 
   find_package(Grantlee QUIET NO_MODULE)
-  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
+  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots and KaddressBook." )
 
 if(NOT KDEPIM_NO_NEPOMUK)
   find_package(Nepomuk)
@@ -363,9 +364,9 @@ endif (NOT WINCE)
     macro_optional_add_subdirectory(knode)
   endif(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY AND KDEPIM_BUILD_DESKTOP)
 
-  if (QT_QT3SUPPORT_FOUND AND KDEPIM_BUILD_DESKTOP)
+  if (KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(akregator)
-  endif (QT_QT3SUPPORT_FOUND AND KDEPIM_BUILD_DESKTOP)
+  endif (KDEPIM_BUILD_DESKTOP)
   macro_optional_add_subdirectory(akonadiconsole)
   if (KDEPIMLIBS_KCAL_LIBRARY AND KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(blogilo)

@@ -621,7 +621,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   // text/plain part:
   KMime::Content* firstMsgPart = new KMime::Content( m_origMsg.get() );
   firstMsgPart->contentType()->setMimeType( "text/plain" );
-  firstMsgPart->contentType()->setCharset( "us-ascii" );
+  firstMsgPart->contentType()->setCharset( "utf-8" );
   firstMsgPart->contentTransferEncoding()->from7BitString( "7bit" );
   firstMsgPart->setBody( description.toUtf8() );
   receipt->addContent( firstMsgPart );
@@ -630,6 +630,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   KMime::Content* secondMsgPart = new KMime::Content( m_origMsg.get() );
   secondMsgPart->contentType()->setMimeType( "message/disposition-notification" );
   //secondMsgPart.setCharset( "us-ascii" );
+
   secondMsgPart->contentTransferEncoding()->from7BitString( "7bit" );
   secondMsgPart->setBody( KMime::MDN::dispositionNotificationBodyContent(
                             finalRecipient,
@@ -659,6 +660,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   };
 
   receipt->to()->fromUnicodeString( receiptTo, "utf-8" );
+  //Laurent: We don't translate subject ?
   receipt->subject()->from7BitString( "Message Disposition Notification" );
   KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo( receipt.get(), m_origMsg->messageID()->asUnicodeString(), "utf-8" );
   receipt->setHeader( header );

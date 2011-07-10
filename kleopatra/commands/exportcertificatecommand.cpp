@@ -213,8 +213,8 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
                                                          "imp",
                                                          proposedFileName,
                                                          protocol == GpgME::OpenPGP
-                                                         ? i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg *.pgp)"
-                                                         : i18n( "S/MIME Certificates" )  + " (*.pem *.der)" );
+                                                         ? QString(i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg *.pgp)")
+                                                         : QString(i18n( "S/MIME Certificates" )  + " (*.pem *.der)" ));
     fileNames[protocol] = fname;
     return !fname.isEmpty();
 }

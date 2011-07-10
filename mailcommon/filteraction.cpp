@@ -39,6 +39,8 @@
 #include <messagecore/stringutil.h>
 #include <messagecomposer/messagefactory.h>
 #include <messagecomposer/messagesender.h>
+#include <messageviewer/globalsettings.h>
+
 #ifndef KDEPIM_NO_NEPOMUK
 #include <nepomuk/tag.h>
 #endif
@@ -124,9 +126,7 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
 
   const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, type );
   if ( mdnSend.first ) {
-    const KConfigGroup mdnConfig( KernelIf->config(), "MDN" );
-    const int quote = mdnConfig.readEntry<int>( "quote-message", 0 );
-
+    const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
     MessageFactory factory( msg, Akonadi::Item().id() );
     factory.setIdentityManager( KernelIf->identityManager() );
 
@@ -652,6 +652,8 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( const Akonadi:
 
       KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-UID", aMsg.get(), uid, "utf-8" );
       aMsg->setHeader( header );
+
+      new Akonadi::ItemModifyJob( item, FilterIf->filterManager() ); //TODO: check for errors
     } else {
       qDeleteAll( atmList );
       atmList.clear();

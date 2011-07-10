@@ -150,7 +150,7 @@ class CALENDARSUPPORT_EXPORT FreeBusyManager : public QObject, public KCalCore::
     Q_PRIVATE_SLOT( d_ptr, void checkFreeBusyUrl() )
     Q_PRIVATE_SLOT( d_ptr, void processFreeBusyDownloadResult( KJob * ) )
     Q_PRIVATE_SLOT( d_ptr, void processFreeBusyUploadResult( KJob * ) )
-    Q_PRIVATE_SLOT( d_ptr, bool processRetrieveQueue() )
+    Q_PRIVATE_SLOT( d_ptr, void processRetrieveQueue() )
     Q_PRIVATE_SLOT( d_ptr, void uploadFreeBusy() )
 };
 

@@ -1,7 +1,7 @@
 /*
  *  kamail.cpp  -  email functions
  *  Program:  kalarm
- *  Copyright © 2002-2010 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2011 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -209,17 +209,17 @@ int KAMail::send(JobData& jobdata, QStringList& errmsgs)
         return -1;
     }
 
-        MailTransport::MessageQueueJob* mailjob = new MailTransport::MessageQueueJob(kapp);
-        mailjob->setMessage(message);
-        mailjob->transportAttribute().setTransportId(transport->id());
-        mailjob->addressAttribute().setFrom(jobdata.from);
-        mailjob->addressAttribute().setTo(static_cast<QStringList>(jobdata.event.emailAddresses()));
+    MailTransport::MessageQueueJob* mailjob = new MailTransport::MessageQueueJob(kapp);
+    mailjob->setMessage(message);
+    mailjob->transportAttribute().setTransportId(transport->id());
+    mailjob->addressAttribute().setFrom(jobdata.from);
+    mailjob->addressAttribute().setTo(static_cast<QStringList>(jobdata.event.emailAddresses()));
     if (!jobdata.bcc.isEmpty())
-            mailjob->addressAttribute().setBcc(QStringList(KPIMUtils::extractEmailAddress(jobdata.bcc)));
-        MailTransport::SentBehaviourAttribute::SentBehaviour sentAction =
+        mailjob->addressAttribute().setBcc(QStringList(KPIMUtils::extractEmailAddress(jobdata.bcc)));
+    MailTransport::SentBehaviourAttribute::SentBehaviour sentAction =
                          (Preferences::emailClient() == Preferences::kmail || Preferences::emailCopyToKMail())
                          ? MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection : MailTransport::SentBehaviourAttribute::Delete;
-        mailjob->sentBehaviourAttribute().setSentBehaviour(sentAction);
+    mailjob->sentBehaviourAttribute().setSentBehaviour(sentAction);
     mJobs.enqueue(mailjob);
     mJobData.enqueue(jobdata);
     if (mJobs.count() == 1)
@@ -331,12 +331,15 @@ QString KAMail::appendBodyAttachments(KMime::Message& message, JobData& data)
         message.contentType()->setMimeType("text/plain");
         message.contentType()->setCharset("utf-8");
         message.fromUnicodeString(data.event.message());
+        QList<KMime::Headers::contentEncoding> encodings = KMime::encodingsForData(message.body());
+        encodings.removeAll(KMime::Headers::CE8Bit);  // not handled by KMime
+        message.contentTransferEncoding()->setEncoding(encodings[0]);
         message.assemble();
     }
     else
     {
         // There are attachments, so the message must be in MIME format
-            message.contentType()->setMimeType("multipart/mixed");
+        message.contentType()->setMimeType("multipart/mixed");
         message.contentType()->setBoundary(KMime::multiPartBoundary());
 
         if (!data.event.message().isEmpty())
@@ -346,6 +349,9 @@ QString KAMail::appendBodyAttachments(KMime::Message& message, JobData& data)
             content->contentType()->setMimeType("text/plain");
             content->contentType()->setCharset("utf-8");
             content->fromUnicodeString(data.event.message());
+            QList<KMime::Headers::contentEncoding> encodings = KMime::encodingsForData(content->body());
+            encodings.removeAll(KMime::Headers::CE8Bit);  // not handled by KMime
+            content->contentTransferEncoding()->setEncoding(encodings[0]);
             content->assemble();
             message.addContent(content);
         }

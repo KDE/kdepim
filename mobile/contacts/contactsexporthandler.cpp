@@ -96,7 +96,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
 
   bool ok = true;
   if ( contacts.count() == 1 ) {
-    fileName = KFileDialog::getSaveFileName( contactFileName( contacts.first() ) + QLatin1String( ".vcf" ), QLatin1String( "*.vcf" )  );
+    fileName = KFileDialog::getSaveFileName( QString(contactFileName( contacts.first() ) + QLatin1String( ".vcf" )), QLatin1String( "*.vcf" )  );
     if ( fileName.isEmpty() ) // user canceled export
       return true;
 

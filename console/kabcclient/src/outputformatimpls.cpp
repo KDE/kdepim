@@ -40,11 +40,11 @@ using namespace KABC;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-static const char* fromUnicode(QTextCodec* codec, const QString& text)
+QByteArray fromUnicode(QTextCodec* codec, const QString& text)
 {
-    if (codec == 0) return "";
+    if (codec == 0) return QByteArray();
 
-    return codec->fromUnicode(text).data();
+    return codec->fromUnicode(text);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ bool UIDOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& s
 {
     if (stream.bad()) return false;
 
-    stream << fromUnicode(m_codec, addressee.uid());
+    stream << fromUnicode(m_codec, addressee.uid()).constData();
 
     return !stream.bad();
 }
@@ -199,8 +199,14 @@ bool VCardOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
             break;
     }
 
-    QString vcard = m_converter->createVCard(addressee, version);
-    stream << fromUnicode(m_codec, vcard);
+    QByteArray vcard = m_converter->createVCard(addressee, version);
+
+    // vcard is in UTF-8, only need conversion if output codec is different
+    if (m_codec == QTextCodec::codecForName("UTF-8")) {
+      vcard = fromUnicode(m_codec, QString::fromUtf8(vcard));
+    }
+
+    stream << vcard.constData();
 
     return !stream.bad();
 }
@@ -230,8 +236,14 @@ bool VCardOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
             break;
     }
 
-    QString vcards = m_converter->createVCards(addresseeList, version);
-    stream << fromUnicode(m_codec, vcards);
+    QByteArray vcards = m_converter->createVCards(addresseeList, version);
+
+    // vcards is in UTF-8, only need conversion if output codec is different
+    if (m_codec == QTextCodec::codecForName("UTF-8")) {
+      vcards = fromUnicode(m_codec, QString::fromUtf8(vcards));
+    }
+
+    stream << vcards.constData();
 
     return !stream.bad();
 }
@@ -318,7 +330,7 @@ bool EmailOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
         {
             if (!(*it).isEmpty())
             {
-                stream << fromUnicode(m_codec, decorateEmail(addressee, *it));
+                stream << fromUnicode(m_codec, decorateEmail(addressee, *it)).constData();
                 if (stream.bad()) return false;
             }
 
@@ -327,7 +339,7 @@ bool EmailOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
                 if ((*it).isEmpty()) continue;
 
                 stream << std::endl
-                       << fromUnicode(m_codec, decorateEmail(addressee, *it));
+                       << fromUnicode(m_codec, decorateEmail(addressee, *it)).constData();
 
                 if (stream.bad()) return false;
             }
@@ -337,7 +349,7 @@ bool EmailOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
     {
         if (!addressee.preferredEmail().isEmpty())
         {
-            stream << fromUnicode(m_codec, decorateEmail(addressee, addressee.preferredEmail()));
+            stream << fromUnicode(m_codec, decorateEmail(addressee, addressee.preferredEmail())).constData();
         }
     }
 
@@ -481,16 +493,16 @@ bool MuttOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& 
             {
                 if (m_queryFormat)
                 {
-                    stream << fromUnicode(m_codec, *it) << "\t"
-                           << fromUnicode(m_codec, addressee.givenName()) << " "
-                           << fromUnicode(m_codec, addressee.familyName());
+                    stream << fromUnicode(m_codec, *it).constData() << "\t"
+                           << fromUnicode(m_codec, addressee.givenName()).constData() << " "
+                           << fromUnicode(m_codec, addressee.familyName()).constData();
                 }
                 else
                 {
-                    stream << "alias " << fromUnicode(m_codec, keyString) << "\t";
-                    stream << fromUnicode(m_codec, addressee.givenName()) << " "
-                           << fromUnicode(m_codec, addressee.familyName())<< " <"
-                           << fromUnicode(m_codec, *it)                   << ">";
+                    stream << "alias " << fromUnicode(m_codec, keyString).constData() << "\t";
+                    stream << fromUnicode(m_codec, addressee.givenName()).constData() << " "
+                           << fromUnicode(m_codec, addressee.familyName()).constData()<< " <"
+                           << fromUnicode(m_codec, *it).constData()                   << ">";
                 }
 
                 if (stream.bad()) return false;
@@ -503,24 +515,24 @@ bool MuttOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& 
 
                 if (m_queryFormat && count == 1)
                 {
-                    stream << "\t" << fromUnicode(m_codec, i18n("preferred"));
+                    stream << "\t" << fromUnicode(m_codec, i18n("preferred")).constData();
                 }
 
                 stream << std::endl;
                 if (m_queryFormat)
                 {
-                    stream << fromUnicode(m_codec, *it) << "\t"
-                           << fromUnicode(m_codec,  addressee.givenName()) << " "
-                           << fromUnicode(m_codec, addressee.familyName()) << "\t"
+                    stream << fromUnicode(m_codec, *it).constData() << "\t"
+                           << fromUnicode(m_codec,  addressee.givenName()).constData() << " "
+                           << fromUnicode(m_codec, addressee.familyName()).constData() << "\t"
                            << "#" << count;
                 }
                 else
                 {
-                    stream << "alias " << fromUnicode(m_codec, keyString)
+                    stream << "alias " << fromUnicode(m_codec, keyString).constData()
                            << count << "\t";
-                    stream << fromUnicode(m_codec, addressee.givenName())  << " "
-                           << fromUnicode(m_codec, addressee.familyName()) << " <"
-                           << fromUnicode(m_codec, *it)                    << ">";
+                    stream << fromUnicode(m_codec, addressee.givenName()).constData()  << " "
+                           << fromUnicode(m_codec, addressee.familyName()).constData() << " <"
+                           << fromUnicode(m_codec, *it).constData()                    << ">";
                 }
 
                 if (stream.bad()) return false;
@@ -533,16 +545,16 @@ bool MuttOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& 
         {
             if (m_queryFormat)
             {
-                stream << fromUnicode(m_codec, addressee.preferredEmail()) << "\t"
-                       << fromUnicode(m_codec, addressee.givenName())      << " "
-                       << fromUnicode(m_codec, addressee.familyName());
+                stream << fromUnicode(m_codec, addressee.preferredEmail()).constData() << "\t"
+                       << fromUnicode(m_codec, addressee.givenName()).constData()      << " "
+                       << fromUnicode(m_codec, addressee.familyName()).constData();
             }
             else
             {
-                stream << "alias " << fromUnicode(m_codec, key(addressee)) << "\t";
-                stream << fromUnicode(m_codec, addressee.givenName())      << " "
-                       << fromUnicode(m_codec, addressee.familyName())     << " <"
-                       << fromUnicode(m_codec, addressee.preferredEmail()) << ">";
+                stream << "alias " << fromUnicode(m_codec, key(addressee)).constData() << "\t";
+                stream << fromUnicode(m_codec, addressee.givenName()).constData()      << " "
+                       << fromUnicode(m_codec, addressee.familyName()).constData()     << " <"
+                       << fromUnicode(m_codec, addressee.preferredEmail()).constData() << ">";
             }
         }
     }
@@ -681,7 +693,7 @@ bool CSVOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& s
         columns.append(m_template->quote() + text + m_template->quote());
     }
 
-    stream << fromUnicode(m_codec, columns.join(m_template->delimiter()));
+    stream << fromUnicode(m_codec, columns.join(m_template->delimiter())).constData();
 
     return !stream.bad();
 }

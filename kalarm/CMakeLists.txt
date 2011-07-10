@@ -120,7 +120,6 @@ set(kalarm_bin_SRCS ${libkalarm_SRCS}
     find.cpp
     pickfileradio.cpp
     newalarmaction.cpp
-    calendarcompat.cpp
     commandoptions.cpp
     resourceselector.cpp
     templatepickdlg.cpp
@@ -131,12 +130,14 @@ set(kalarm_bin_SRCS ${libkalarm_SRCS}
 if(KALARM_USE_AKONADI)
 set(kalarm_bin_SRCS ${kalarm_bin_SRCS}
     akonadimodel.cpp
+    akonadiresourcecreator.cpp
     collectionmodel.cpp
     itemlistmodel.cpp
     calendarmigrator.cpp
    )
 else(KALARM_USE_AKONADI)
 set(kalarm_bin_SRCS ${kalarm_bin_SRCS}
+    calendarcompat.cpp
     eventlistmodel.cpp
     alarmlistfiltermodel.cpp
     resourceconfigdialog.cpp
@@ -161,6 +162,9 @@ if(KALARM_USE_AKONADI)
 
     kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/akonadi/kalarmdir/kalarmdirresource.kcfg org.kde.Akonadi.KAlarmDir.Settings)
     qt4_add_dbus_interface(kalarm_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/akonadi/kalarmdir/org.kde.Akonadi.KAlarmDir.Settings.xml kalarmdirsettings KAlarmDirSettings)
+
+    qt4_add_dbus_interfaces(kalarm_bin_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml)
+#    qt4_add_dbus_adaptor(kalarm_bin_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase controladaptor Akonadi__ControlAdaptor)
 endif()
 
 kde4_add_kcfg_files(kalarm_bin_SRCS GENERATE_MOC kalarmconfig.kcfgc)
@@ -168,6 +172,9 @@ kde4_add_kcfg_files(kalarm_bin_SRCS GENERATE_MOC kalarmconfig.kcfgc)
 #if (UNIX)
 kde4_add_app_icon(kalarm_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/appicons/ox*-app-kalarm.png")
 kde4_add_executable(kalarm_bin ${kalarm_bin_SRCS})
+if(KALARM_USE_AKONADI)
+    add_dependencies(kalarm_bin kalarm_resource_xml kalarmdir_resource_xml)
+endif(KALARM_USE_AKONADI)
 if (KMAIL_SUPPORTED)
     add_dependencies(kalarm_bin kmail_xml)
 endif (KMAIL_SUPPORTED)

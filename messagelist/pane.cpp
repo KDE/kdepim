@@ -30,6 +30,7 @@
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QTabBar>
 #include <QtGui/QToolButton>
+#include <QtGui/QMouseEvent>
 
 #include "storagemodel.h"
 #include "widget.h"
@@ -50,6 +51,7 @@ public:
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void onNewTabClicked();
   void onCloseTabClicked();
+  void closeTab( QWidget * );
   void onCurrentTabChanged();
   void onTabContextMenuRequest( const QPoint &pos );
 
@@ -80,7 +82,7 @@ using namespace MessageList;
 
 
 Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
-  : QTabWidget( parent ), d( new Private( this ) )
+  : KTabWidget( parent ), d( new Private( this ) )
 {
   d->mModel = model;
   d->mSelectionModel = selectionModel;
@@ -134,6 +136,10 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
 
   connect( Core::Settings::self(), SIGNAL(configChanged()),
            this, SLOT(updateTabControls()) );
+
+  connect( this, SIGNAL(mouseMiddleClick( QWidget * )),
+           this, SLOT(closeTab( QWidget * )) );
+  tabBar()->installEventFilter( this );
 }
 
 Pane::~Pane()
@@ -159,6 +165,12 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "view_message_list" ), d->mActionMenu );
     const Widget * const w = static_cast<Widget*>( currentWidget() );
     w->view()->fillViewMenu( d->mActionMenu->menu() );
+
+    KAction *action = new KAction( i18n("Create new tab"), this );
+    action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_T ) );
+    d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
+    connect( action, SIGNAL( triggered( bool ) ), SLOT( onNewTabClicked() ) );
+    d->mActionMenu->addAction( action );
   }
 }
 
@@ -356,13 +368,28 @@ void Pane::Private::onNewTabClicked()
 
 void Pane::Private::onCloseTabClicked()
 {
-  Widget *w = static_cast<Widget*>( q->currentWidget() );
+  closeTab( q->currentWidget() );
+}
+
+void Pane::Private::closeTab( QWidget *w )
+{
   if ( !w || (q->count() < 2) ) {
     return;
   }
 
   delete w;
   updateTabControls();
+}
+
+bool Pane::eventFilter( QObject *object, QEvent *event )
+{
+  if ( event->type() == QEvent::MouseButtonPress ) {
+    QMouseEvent * const mouseEvent = static_cast<QMouseEvent *>( event );
+    if ( mouseEvent->button() == Qt::MidButton ) {
+      return true;
+    }
+  }
+  return KTabWidget::eventFilter( object, event );
 }
 
 void Pane::Private::onCurrentTabChanged()

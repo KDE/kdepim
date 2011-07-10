@@ -25,9 +25,9 @@
 #include "collectionmodel.h"
 #else
 #include "alarmresources.h"
+#include "calendarcompat.h"
 #include "eventlistmodel.h"
 #endif
-#include "calendarcompat.h"
 #include "filedialog.h"
 #include "functions.h"
 #include "kalarmapp.h"
@@ -158,8 +158,8 @@ AlarmCalendar::AlarmCalendar()
     connect(model, SIGNAL(eventsAdded(const AkonadiModel::EventList&)), SLOT(slotEventsAdded(const AkonadiModel::EventList&)));
     connect(model, SIGNAL(eventsToBeRemoved(const AkonadiModel::EventList&)), SLOT(slotEventsToBeRemoved(const AkonadiModel::EventList&)));
     connect(model, SIGNAL(eventChanged(const AkonadiModel::Event&)), SLOT(slotEventChanged(const AkonadiModel::Event&)));
-    connect(model, SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&)),
-                   SLOT(slotCollectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&)));
+    connect(model, SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&, bool)),
+                   SLOT(slotCollectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&, bool)));
 #else
     AlarmResources* resources = AlarmResources::instance();
     resources->setCalIDFunction(&KAlarm::Calendar::setKAlarmVersion);
@@ -347,7 +347,7 @@ int AlarmCalendar::load()
             KIO::NetAccess::removeTempFile(mLocalFile);   // removes it only if it IS a temporary file
         mLocalFile = tmpFile;
 #ifdef USE_AKONADI
-        CalendarCompat::fix(mCalendarStorage);   // convert events to current KAlarm format for when calendar is saved
+        KAlarm::Calendar::fix(mCalendarStorage);   // convert events to current KAlarm format for when calendar is saved
         updateKAEvents(Collection());
 #else
         CalendarCompat::fix(*calendar, mLocalFile);   // convert events to current KAlarm format for when calendar is saved
@@ -682,9 +682,9 @@ void AlarmCalendar::removeKAEvents(AlarmResource* key, bool closing)
 * Called when the enabled or read-only status of a collection has changed.
 * If the collection is now disabled, remove its events from the calendar.
 */
-void AlarmCalendar::slotCollectionStatusChanged(const Collection& collection, AkonadiModel::Change change, const QVariant& value)
+void AlarmCalendar::slotCollectionStatusChanged(const Collection& collection, AkonadiModel::Change change, const QVariant& value, bool inserted)
 {
-    if (change == AkonadiModel::Enabled)
+    if (!inserted  &&  change == AkonadiModel::Enabled)
     {
         // For each alarm type which has been disabled, remove the collection's
         // events from the map, but not from AkonadiModel.
@@ -886,7 +886,7 @@ bool AlarmCalendar::importAlarms(QWidget* parent, AlarmResource* resource)
     else
     {
 #ifdef USE_AKONADI
-        KAlarm::Calendar::Compat caltype = CalendarCompat::fix(calStorage);
+        KAlarm::Calendar::Compat caltype = KAlarm::Calendar::fix(calStorage);
         KAlarm::CalEvent::Types wantedTypes = collection && collection->isValid() ? KAlarm::CalEvent::types(collection->contentMimeTypes()) : KAlarm::CalEvent::EMPTY;
         Collection activeColl, archiveColl, templateColl;
 #else

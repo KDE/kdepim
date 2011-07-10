@@ -79,6 +79,7 @@ using KMail::MailServiceImpl;
 #include <Akonadi/Session>
 #include <Akonadi/EntityTreeModel>
 #include <akonadi/entitymimetypefiltermodel.h>
+#include <Akonadi/CollectionStatisticsJob>
 
 #include <QByteArray>
 #include <QDir>
@@ -462,7 +463,7 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
     return false;
 
   if ( viewOnly )
-    viewMessage( messageFile );
+    viewMessage( messageFile.url() );
   else
     action( mailto, checkMail, to, cc, bcc, subj, body, messageFile,
             attachURLs, customHeaders );
@@ -834,9 +835,9 @@ QDBusObjectPath KMKernel::newMessage( const QString &to,
   return QDBusObjectPath( win->dbusObjectPath() );
 }
 
-int KMKernel::viewMessage( const KUrl & messageFile )
+int KMKernel::viewMessage( const QString & messageFile )
 {
-  KMOpenMsgCommand *openCommand = new KMOpenMsgCommand( 0, messageFile );
+  KMOpenMsgCommand *openCommand = new KMOpenMsgCommand( 0, KUrl( messageFile ) );
 
   openCommand->start();
   return 1;
@@ -1232,8 +1233,11 @@ void KMKernel::cleanup(void)
   Akonadi::Collection trashCollection = CommonKernel->trashCollectionFolder();
   if ( trashCollection.isValid() ) {
     if ( GlobalSettings::self()->emptyTrashOnExit() ) {
-      if ( trashCollection.statistics().count() > 0 ) {
-        mFolderCollectionMonitor->expunge( trashCollection );
+      Akonadi::CollectionStatisticsJob *jobStatistics = new Akonadi::CollectionStatisticsJob( trashCollection );
+      if ( jobStatistics->exec() ) {
+        if ( jobStatistics->statistics().count() > 0 ) {
+          mFolderCollectionMonitor->expunge( trashCollection, true /*sync*/ );
+        }
       }
     }
   }
@@ -1347,7 +1351,7 @@ QString KMKernel::localDataPath()
 
 //-------------------------------------------------------------------------------
 
-bool KMKernel::haveSystemTrayApplet()
+bool KMKernel::haveSystemTrayApplet() const
 {
   return !systemTrayApplets.isEmpty();
 }
@@ -1432,6 +1436,9 @@ KSharedConfig::Ptr KMKernel::config()
     MessageComposer::MessageComposerSettings::self()->readConfig();
     MessageCore::GlobalSettings::self()->setSharedConfig( mySelf->mConfig );
     MessageCore::GlobalSettings::self()->readConfig();
+    MessageViewer::GlobalSettings::self()->setSharedConfig( mySelf->mConfig );
+    MessageViewer::GlobalSettings::self()->readConfig();
+
   }
   return mySelf->mConfig;
 }
@@ -1475,7 +1482,7 @@ KMMainWidget *KMKernel::getKMMainWidget()
   QWidget *wid;
 
   Q_FOREACH( wid, l ) {
-    QList<KMMainWidget*> l2 = wid->topLevelWidget()->findChildren<KMMainWidget*>();
+    QList<KMMainWidget*> l2 = wid->window()->findChildren<KMMainWidget*>();
     if ( !l2.isEmpty() && l2.first() )
       return l2.first();
   }
@@ -1631,7 +1638,7 @@ void KMKernel::instanceStatusChanged( Akonadi::AgentInstance instance )
     if ( instance.status() == Akonadi::AgentInstance::Running ) {
 
       if ( mResourcesBeingChecked.isEmpty() ) {
-        kDebug() << "A Resource started to syncronize, starting a mail check.";
+        kDebug() << "A Resource started to synchronize, starting a mail check.";
         emit startCheckMail();
       }
 

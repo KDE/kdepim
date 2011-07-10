@@ -1157,10 +1157,10 @@ void ModelPrivate::attachGroup( GroupHeaderItem *ghi )
       switch( mSortOrder->groupSortDirection() ) \
       { \
         case SortOrder::Ascending: \
-          mRootItem->d->insertChildItem< _ItemComparator, true >( mModelForItemFunctions, ghi ); \
+          mRootItem->d_ptr->insertChildItem< _ItemComparator, true >( mModelForItemFunctions, ghi ); \
         break; \
         case SortOrder::Descending: \
-          mRootItem->d->insertChildItem< _ItemComparator, false >( mModelForItemFunctions, ghi ); \
+          mRootItem->d_ptr->insertChildItem< _ItemComparator, false >( mModelForItemFunctions, ghi ); \
         break; \
         default: /* should never happen... */ \
           mRootItem->appendChildItem( mModelForItemFunctions, ghi ); \
@@ -1332,7 +1332,8 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
       } else if ( calendar->year( dDate ) == calendar->year( mTodayDate ) ) { // GroupByDateRange within this year
         groupLabel = calendar->monthName( dDate );
       } else { // GroupByDateRange in previous years
-        groupLabel = i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ), calendar->yearString( dDate ) );
+        groupLabel = i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName( dDate ),
+                            calendar->formatDate( dDate, KLocale::Year, KLocale::LongNumber ) );
       }
       break;
     }
@@ -1371,7 +1372,7 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
     // not found
 
     ghi = new GroupHeaderItem( groupLabel );
-    ghi->initialSetup( date, mi->size(), mi->sender(), mi->receiver(), mi->senderOrReceiver() );
+    ghi->initialSetup( date, mi->size(), mi->sender(), mi->receiver(), mi->useReceiver() );
 
     switch( mAggregation->groupExpandPolicy() )
     {
@@ -1443,7 +1444,7 @@ MessageItem * ModelPrivate::findMessageParent( MessageItem * mi )
   // we have the ID in the "In-Reply-To" field. This is actually done by using
   // MD5 caches of the message ids because of speed. Collisions are very unlikely.
 
-  QString md5 = mi->inReplyToIdMD5();
+  QByteArray md5 = mi->inReplyToIdMD5();
   if ( !md5.isEmpty() )
   {
     // have an In-Reply-To field MD5
@@ -1660,11 +1661,11 @@ MessageItem * ModelPrivate::guessMessageParent( MessageItem * mi )
 
 
   // Do subject based threading
-  QString md5 = mi->strippedSubjectMD5();
+  const QByteArray md5 = mi->strippedSubjectMD5();
   if ( !md5.isEmpty() )
   {
     QList< MessageItem * > * messagesWithTheSameStrippedSubject =
-        mThreadingCacheMessageSubjectMD5ToMessageItem.value( mi->strippedSubjectMD5(), 0 );
+        mThreadingCacheMessageSubjectMD5ToMessageItem.value( md5, 0 );
 
     if ( messagesWithTheSameStrippedSubject )
     {
@@ -1811,28 +1812,28 @@ bool ModelPrivate::handleItemPropertyChanges( int propertyChangeMask, Item * par
         case SortOrder::SortMessagesByDateTime:
           if ( propertyChangeMask & DateChanged ) // date changed
           {
-            if ( messageItemNeedsReSorting< ItemDateComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+            if ( messageItemNeedsReSorting< ItemDateComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
               attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
           } // else date changed, but it doesn't match sorting order: no need to re-sort
         break;
         case SortOrder::SortMessagesByDateTimeOfMostRecent:
           if ( propertyChangeMask & MaxDateChanged ) // max date changed
           {
-            if ( messageItemNeedsReSorting< ItemMaxDateComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+            if ( messageItemNeedsReSorting< ItemMaxDateComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
               attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
           } // else max date changed, but it doesn't match sorting order: no need to re-sort
         break;
         case SortOrder::SortMessagesByActionItemStatus:
           if ( propertyChangeMask & ActionItemStatusChanged ) // todo status changed
           {
-            if ( messageItemNeedsReSorting< ItemActionItemStatusComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+            if ( messageItemNeedsReSorting< ItemActionItemStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
               attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
           } // else to do status changed, but it doesn't match sorting order: no need to re-sort
         break;
         case SortOrder::SortMessagesByUnreadStatus:
           if ( propertyChangeMask & UnreadStatusChanged ) // new / unread status changed
           {
-            if ( messageItemNeedsReSorting< ItemUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+            if ( messageItemNeedsReSorting< ItemUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
               attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
           } // else new/unread status changed, but it doesn't match sorting order: no need to re-sort
     break;
@@ -1886,28 +1887,28 @@ bool ModelPrivate::handleItemPropertyChanges( int propertyChangeMask, Item * par
     case SortOrder::SortMessagesByDateTime:
       if ( propertyChangeMask & DateChanged ) // date changed
       {
-        if ( messageItemNeedsReSorting< ItemDateComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+        if ( messageItemNeedsReSorting< ItemDateComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
           attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
       } // else date changed, but it doesn't match sorting order: no need to re-sort
     break;
     case SortOrder::SortMessagesByDateTimeOfMostRecent:
       if ( propertyChangeMask & MaxDateChanged ) // max date changed
       {
-        if ( messageItemNeedsReSorting< ItemMaxDateComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+        if ( messageItemNeedsReSorting< ItemMaxDateComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
           attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
       } // else max date changed, but it doesn't match sorting order: no need to re-sort
     break;
     case SortOrder::SortMessagesByActionItemStatus:
       if ( propertyChangeMask & ActionItemStatusChanged ) // todo status changed
       {
-        if ( messageItemNeedsReSorting< ItemActionItemStatusComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+        if ( messageItemNeedsReSorting< ItemActionItemStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
           attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
       } // else to do status changed, but it doesn't match sorting order: no need to re-sort
     break;
     case SortOrder::SortMessagesByUnreadStatus:
       if ( propertyChangeMask & UnreadStatusChanged ) // new / unread status changed
       {
-        if ( messageItemNeedsReSorting< ItemUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+        if ( messageItemNeedsReSorting< ItemUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
           attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
       } // else new/unread status changed, but it doesn't match sorting order: no need to re-sort
     break;
@@ -2148,11 +2149,11 @@ void ModelPrivate::attachMessageToParent( Item *pParent, MessageItem *mi )
   if ( ( mSortOrder->messageSortDirection() == SortOrder::Ascending ) \
     || ( pParent->type() == Item::Message ) ) \
   { \
-    pParent->d->insertChildItem< _ItemComparator, true >( mModelForItemFunctions, mi ); \
+    pParent->d_ptr->insertChildItem< _ItemComparator, true >( mModelForItemFunctions, mi ); \
   } \
   else \
   { \
-    pParent->d->insertChildItem< _ItemComparator, false >( mModelForItemFunctions, mi ); \
+    pParent->d_ptr->insertChildItem< _ItemComparator, false >( mModelForItemFunctions, mi ); \
   }
 
   // If pParent is viewable then the insertion call will also set the child state to viewable.
@@ -2358,10 +2359,10 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass5
           switch ( mSortOrder->groupSortDirection() ) \
           { \
             case SortOrder::Ascending: \
-              needsReSorting = ( *it )->parent()->d->childItemNeedsReSorting< _ItemDateComparator, true >( *it ); \
+              needsReSorting = ( *it )->parent()->d_ptr->childItemNeedsReSorting< _ItemDateComparator, true >( *it ); \
             break; \
             case SortOrder::Descending: \
-              needsReSorting = ( *it )->parent()->d->childItemNeedsReSorting< _ItemDateComparator, false >( *it ); \
+              needsReSorting = ( *it )->parent()->d_ptr->childItemNeedsReSorting< _ItemDateComparator, false >( *it ); \
             break; \
             default: /* should never happen */ \
               needsReSorting = false; \
@@ -2825,7 +2826,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
       // we have the ID in the "In-Reply-To" field. This is actually done by using
       // MD5 caches of the message ids because of speed. Collisions are very unlikely.
 
-      QString md5 = mi->inReplyToIdMD5();
+      const QByteArray md5 = mi->inReplyToIdMD5();
 
       if ( !md5.isEmpty() )
       {

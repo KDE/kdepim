@@ -73,9 +73,9 @@ protected slots:
     void slotPublishPost();
 
     /**
-     * Remove @p widget from main tab wigdet (if it's NULL current Post entry will be removed)
+     * Remove widget at position @p pos from main tab wigdet
      */
-    void slotRemovePostEntry( PostEntry *widget=0 );
+    void slotRemovePostEntry( int post );
 
     void slotSavePostLocally();
 //     void slotSaveAsDraft();

@@ -140,6 +140,7 @@ void AmazingCompleter::setModel(QAbstractItemModel* model)
 void AmazingCompleter::setView(QAbstractItemView* view, ViewHandler handler)
 {
   Q_D(AmazingCompleter);
+  Q_UNUSED( handler );
 
   d->m_view = view;
 

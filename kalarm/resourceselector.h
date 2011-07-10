@@ -52,10 +52,10 @@ class KMenu;
 class ResourceView;
 #ifdef USE_AKONADI
 class AkonadiModel;
+class AkonadiResourceCreator;
 class CollectionFilterCheckListModel;
 namespace Akonadi {
     class Collection;
-    class AgentInstanceCreateJob;
 }
 #else
 using KCal::ResourceCalendar;
@@ -88,6 +88,9 @@ class ResourceSelector : public QFrame
         void  alarmTypeSelected();
         void  addResource();
         void  editResource();
+#ifdef USE_AKONADI
+        void  updateResource();
+#endif
         void  removeResource();
         void  selectionChanged();
         void  contextMenuRequested(const QPoint&);
@@ -101,9 +104,8 @@ class ResourceSelector : public QFrame
         void  showInfo();
         void  archiveDaysChanged(int days);
 #ifdef USE_AKONADI
-        void  resourceAdded(Akonadi::AgentInstanceCreateJob*, bool success);
+        void  resourceAdded(AkonadiResourceCreator*, bool success);
         void  slotCollectionAdded(const Akonadi::Collection&);
-        void  slotStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&);
 #else
         void  slotStatusChanged(AlarmResource*, AlarmResources::Change);
 #endif
@@ -113,9 +115,9 @@ class ResourceSelector : public QFrame
         KAlarm::CalEvent::Type currentResourceType() const;
 #ifdef USE_AKONADI
         Akonadi::Collection currentResource() const;
+        static QString typeListForDisplay(KAlarm::CalEvent::Types);
 
         CollectionView* mListView;
-        QList<Akonadi::AgentInstanceCreateJob*> mAddJobs;   // AkonadiModel::addCollection() jobs pending
         QList<Akonadi::AgentInstance> mAddAgents;   // agent added by addResource()
 #else
         AlarmResource*  currentResource() const;
@@ -135,6 +137,9 @@ class ResourceSelector : public QFrame
         KAction*        mActionSetColour;
         KAction*        mActionClearColour;
         KAction*        mActionEdit;
+#ifdef USE_AKONADI
+        KAction*        mActionUpdate;
+#endif
         KAction*        mActionRemove;
         KAction*        mActionImport;
         KAction*        mActionExport;

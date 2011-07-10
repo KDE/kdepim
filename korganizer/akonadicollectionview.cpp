@@ -158,6 +158,11 @@ namespace {
         }
        return QSortFilterProxyModel::data( index, role );
      }
+
+     /* reimp */ Qt::ItemFlags flags( const QModelIndex& index ) const
+     {
+       return Qt::ItemIsSelectable | QSortFilterProxyModel::flags( index );
+     }
   private:
     mutable bool mInitDefaultCalendar;
   };
@@ -263,13 +268,15 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView* view, bool hasContex
     mActionManager->setContextText( Akonadi::StandardActionManager::CollectionProperties, Akonadi::StandardActionManager::DialogTitle,
                                     i18nc( "@title:window", "Properties of Calendar Folder %1" ) );
 
+    mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setProperty( "ContentMimeTypes", QStringList( KCalCore::Event::eventMimeType() ) );
+
     const QStringList pages = QStringList() << QLatin1String( "CalendarSupport::CollectionGeneralPage" )
                                             << QLatin1String( "Akonadi::CachePolicyPage" );
 
     mActionManager->setCollectionPropertiesPageNames( pages );
 
     mDisableColor = new KAction( mCollectionview );
-    mDisableColor->setText( "&Disable Color");
+    mDisableColor->setText( i18n( "&Disable Color" ) );
     mDisableColor->setEnabled( false );
     xmlclient->actionCollection()->addAction( QString::fromLatin1( "disable_color" ), mDisableColor );
     connect( mDisableColor, SIGNAL( triggered( bool ) ), this, SLOT(disableColor() ) );

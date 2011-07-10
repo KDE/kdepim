@@ -32,7 +32,6 @@
 #include <akonadi/kmime/messagefolderattribute.h>
 #include <akonadi/selectionproxymodel.h>
 
-#include <KDE/KCodecs>
 #include <KDE/KLocale>
 #include <Nepomuk/ResourceManager>
 #include <Soprano/Statement>
@@ -47,6 +46,7 @@
 #include <QtCore/QScopedPointer>
 #include <QtGui/QItemSelectionModel>
 #include <QtCore/QMimeData>
+#include <QtCore/QCryptographicHash>
 
 namespace MessageList
 {
@@ -249,7 +249,7 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
   mi->initialSetup( mail->date()->dateTime().toTime_t(),
                     item.size(),
                     sender, receiver,
-                    bUseReceiver ? receiver : sender );
+                    bUseReceiver );
 
   QString subject = mail->subject()->asUnicodeString();
   if ( subject.isEmpty() ) {
@@ -263,13 +263,13 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
   return true;
 }
 
-static QString md5Encode( const QString &str )
+static QByteArray md5Encode( const QByteArray &str )
 {
-  if ( str.trimmed().isEmpty() ) return QString();
+  if ( str.trimmed().isEmpty() ) return QByteArray();
 
-  KMD5 md5( str.trimmed().toUtf8() );
-  static const int Base64EncodedMD5Len = 22;
-  return md5.base64Digest().left( Base64EncodedMD5Len );
+  QCryptographicHash c( QCryptographicHash::Md5 );
+  c.addData( str.trimmed() );
+  return c.result();
 }
 
 void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem *mi,
@@ -283,7 +283,7 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
   {
     const QString subject = mail->subject()->asUnicodeString();
     const QString strippedSubject = MessageCore::StringUtil::stripOffPrefixes( subject );
-    mi->setStrippedSubjectMD5( md5Encode( strippedSubject ) );
+    mi->setStrippedSubjectMD5( md5Encode( strippedSubject.toUtf8() ) );
     mi->setSubjectIsPrefixed( subject != strippedSubject );
     // fall through
   }

@@ -130,6 +130,8 @@ bool NoteViewer::eventFilter(QObject* watched, QEvent* event)
     QByteArray encoding = "utf-8";
 
     msg->subject()->fromUnicodeString( m_titleEdit->text(), encoding );
+    msg->contentType(true)->setCharset("utf-8");
+    msg->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
     msg->mainBodyPart()->fromUnicodeString( m_contentEdit->toPlainText() );
     msg->assemble();
     item.setPayload( msg );

@@ -21,8 +21,7 @@
 
 #include "kalarmresource.h"
 #include "kalarmresourcecommon.h"
-#include "collectionattribute.h"
-#include "eventattribute.h"
+#include "alarmtyperadiowidget.h"
 #include "kacalendar.h"
 #include "kaevent.h"
 
@@ -39,17 +38,17 @@
 using namespace Akonadi;
 using namespace Akonadi_KAlarm_Resource;
 using KAlarmResourceCommon::errorMessage;
-using KAlarm::CollectionAttribute;
-using KAlarm::EventAttribute;
 
 
 KAlarmResource::KAlarmResource(const QString& id)
     : ICalResourceBase(id),
-      mCompatibility(KAlarm::Calendar::Incompatible)
+      mCompatibility(KAlarm::Calendar::Incompatible),
+      mVersion(KAlarm::Calendar::MixedFormat)
 {
     kDebug() << id;
     KAlarmResourceCommon::initialise(this);
     initialise(KAlarmResourceCommon::mimeTypes(id), "kalarm");
+    connect(mSettings, SIGNAL(configChanged()), SLOT(settingsChanged()));
 }
 
 KAlarmResource::~KAlarmResource()
@@ -62,17 +61,39 @@ KAlarmResource::~KAlarmResource()
 void KAlarmResource::customizeConfigDialog(SingleFileResourceConfigDialog<Settings>* dlg)
 {
     ICalResourceBase::customizeConfigDialog(dlg);
+    mTypeSelector = new AlarmTypeRadioWidget(dlg);
+    QStringList types = mSettings->alarmTypes();
+    KAlarm::CalEvent::Type alarmType = KAlarm::CalEvent::ACTIVE;
+    if (!types.isEmpty())
+        alarmType = KAlarm::CalEvent::type(types[0]);
+    mTypeSelector->setAlarmType(alarmType);
+    dlg->appendWidget(mTypeSelector);
     dlg->setMonitorEnabled(false);
     QString title;
-    if (identifier().contains("_active"))
-        title = i18nc("@title:window", "Select Active Alarm Calendar");
-    else if (identifier().contains("_archived"))
-        title = i18nc("@title:window", "Select Archived Alarm Calendar");
-    else if (identifier().contains("_template"))
-        title = i18nc("@title:window", "Select Alarm Template Calendar");
-    else
-        return;
+    switch (alarmType)
+    {
+        case KAlarm::CalEvent::ACTIVE:
+            title = i18nc("@title:window", "Select Active Alarm Calendar");
+            break;
+        case KAlarm::CalEvent::ARCHIVED:
+            title = i18nc("@title:window", "Select Archived Alarm Calendar");
+            break;
+        case KAlarm::CalEvent::TEMPLATE:
+            title = i18nc("@title:window", "Select Alarm Template Calendar");
+            break;
+        default:
+            return;
+    }
     dlg->setCaption(title);
+}
+
+/******************************************************************************
+* Save extra settings after the configuration dialog has been accepted.
+*/
+void KAlarmResource::configDialogAcceptedActions(SingleFileResourceConfigDialog<Settings>*)
+{
+    mSettings->setAlarmTypes(KAlarm::CalEvent::mimeTypes(mTypeSelector->alarmType()));
+    mSettings->writeConfig();
 }
 
 /******************************************************************************
@@ -82,6 +103,7 @@ void KAlarmResource::customizeConfigDialog(SingleFileResourceConfigDialog<Settin
 */
 bool KAlarmResource::readFromFile(const QString& fileName)
 {
+    kDebug() << fileName;
     if (!ICalResourceBase::readFromFile(fileName))
         return false;
     if (calendar()->incidences().isEmpty())
@@ -89,7 +111,9 @@ bool KAlarmResource::readFromFile(const QString& fileName)
         // It's a new file. Set up the KAlarm custom property.
         KAlarm::Calendar::setKAlarmVersion(calendar());
     }
-    mCompatibility = KAlarmResourceCommon::getCompatibility(fileStorage());
+    // Find the calendar file's compatibility with the current KAlarm format,
+    // and if necessary convert it in memory to the current version.
+    mCompatibility = KAlarmResourceCommon::getCompatibility(fileStorage(), mVersion);
     return true;
 }
 
@@ -99,6 +123,7 @@ bool KAlarmResource::readFromFile(const QString& fileName)
 */
 bool KAlarmResource::writeToFile(const QString& fileName)
 {
+    kDebug() << fileName;
 #ifdef __GNUC__
 #warning Crashes if not a local file
 #endif
@@ -147,6 +172,50 @@ bool KAlarmResource::doRetrieveItem(const Akonadi::Item& item, const QSet<QByteA
     Item newItem = KAlarmResourceCommon::retrieveItem(item, event);
     itemRetrieved(newItem);
     return true;
+}
+
+/******************************************************************************
+* Called when the resource settings have changed.
+* Update the supported mime types if the AlarmTypes setting has changed.
+* Update the storage format if UpdateStorageFormat setting = true.
+*/
+void KAlarmResource::settingsChanged()
+{
+    kDebug();
+    QStringList mimeTypes = mSettings->alarmTypes();
+    if (mimeTypes != mSupportedMimetypes)
+        mSupportedMimetypes = mimeTypes;
+
+    if (mSettings->updateStorageFormat())
+    {
+        // This is a flag to request that the backend calendar storage format should
+        // be updated to the current KAlarm format.
+        if (mCompatibility != KAlarm::Calendar::Convertible)
+            kWarning() << "Either incompatible storage format or nothing to update: compat=" << mCompatibility;
+        else if (mSettings->readOnly())
+            kWarning() << "Cannot update storage format for a read-only resource";
+        else
+        {
+            // Update the backend storage format to the current KAlarm format
+            KAlarm::Calendar::setKAlarmVersion(fileStorage()->calendar());
+            QString filename = fileStorage()->fileName();
+            if (!writeToFile(filename))
+                kWarning() << "Error updating calendar storage format";
+            else
+            {
+                // Prevent a new file read being triggered by writeToFile(), which
+                // would replace the current Collection by a new one.
+                mCurrentHash = calculateHash(filename);
+
+                mCompatibility = KAlarm::Calendar::Current;
+                const Collection c(collectionId());
+                if (c.isValid())
+                    KAlarmResourceCommon::setCollectionCompatibility(c, mCompatibility, 0);
+            }
+        }
+        mSettings->setUpdateStorageFormat(false);
+        mSettings->writeConfig();
+    }
 }
 
 /******************************************************************************
@@ -245,8 +314,10 @@ void KAlarmResource::itemChanged(const Akonadi::Item& item, const QSet<QByteArra
 */
 void KAlarmResource::doRetrieveItems(const Akonadi::Collection& collection)
 {
+    kDebug();
+
     // Set the collection's compatibility status
-    KAlarmResourceCommon::setCollectionCompatibility(collection, mCompatibility);
+    KAlarmResourceCommon::setCollectionCompatibility(collection, mCompatibility, mVersion);
 
     // Retrieve events from the calendar
     KCalCore::Event::List events = calendar()->events();
