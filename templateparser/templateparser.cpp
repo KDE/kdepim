@@ -1112,7 +1112,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody, const 
     mMsg->contentType()->setMimeType( "multipart/mixed" );
     mMsg->contentType()->setBoundary( boundary );
 
-    KMime::Content* const mainTextPart = htmlBody.isEmpty() ?
+    KMime::Content* const mainTextPart = htmlBody.length() < plainBody.length() ?
       createPlainPartContent( plainBody ) : createMultipartAlternativeContent( plainBody, htmlBody );
 
     mMsg->addContent( mainTextPart );
