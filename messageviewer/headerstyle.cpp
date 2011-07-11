@@ -1084,11 +1084,11 @@ HeaderStyle * HeaderStyle::create( Type type ) {
 
 HeaderStyle * HeaderStyle::create( const QString & type ) {
   const QString lowerType = type.toLower();
-  if ( lowerType == "brief" ) return brief();
-  if ( lowerType == "plain" )  return plain();
-  if ( lowerType == "enterprise" )  return enterprise();
-  if ( lowerType ==  "mobile" )  return mobile();
-  if ( lowerType ==  "mobileExtended" )  return mobileExtended();
+  if ( lowerType == QLatin1String("brief") ) return brief();
+  if ( lowerType == QLatin1String("plain") )  return plain();
+  if ( lowerType == QLatin1String("enterprise") )  return enterprise();
+  if ( lowerType == QLatin1String("mobile") )  return mobile();
+  if ( lowerType == QLatin1String( "mobileExtended") )  return mobileExtended();
   //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:
