@@ -81,6 +81,4 @@ private:
 
 } // namespace KRss
 
-Q_DECLARE_METATYPE(KRss::Item)
-
 #endif // KRSS_FEEDITEMMODEL_H
