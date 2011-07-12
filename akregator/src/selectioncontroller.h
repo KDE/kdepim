@@ -39,9 +39,7 @@ class KJob;
 
 namespace KRss {
     class FeedList;
-    class FeedListModel;
-    class ItemListing;
-    class ItemListJob;
+    class FeedItemModel;
     class TreeNode;
 }
 
@@ -78,9 +76,6 @@ public:
     void setFeedList( const boost::shared_ptr<KRss::FeedList>& feedList );
 
     //impl
-    void setTagProvider( const boost::shared_ptr<const KRss::TagProvider>& tagProvider );
-
-    //impl
     void setFolderExpansionHandler( Akregator::FolderExpansionHandler* handler );
 
 public Q_SLOTS:
@@ -93,28 +88,24 @@ public Q_SLOTS:
 
 private Q_SLOTS:
 
-    void selectedSubscriptionChanged( const QModelIndex& index );
+    void selectedSubscriptionChanged( const QModelIndex& );
     void itemSelectionChanged();
     void fullItemFetched( KJob* );
     void itemIndexDoubleClicked( const QModelIndex& index );
     void subscriptionContextMenuRequested( const QPoint& point );
-    void articleHeadersAvailable(KJob*);
 
 private:
+    void init();
 
+private:
     boost::shared_ptr<KRss::FeedList> m_feedList;
-    boost::shared_ptr<const KRss::TagProvider> m_tagProvider;
     QPointer<QAbstractItemView> m_feedSelector;
     Akregator::ArticleLister* m_articleLister;
     Akregator::SingleArticleDisplay* m_singleDisplay;
-    KRss::FeedListModel* m_feedListModel;
-    boost::shared_ptr<KRss::ItemListing> m_itemListing;
     Akregator::FolderExpansionHandler* m_folderExpansionHandler;
-    KRss::ItemModel* m_itemModel;
+    KRss::FeedItemModel* m_itemModel;
     boost::shared_ptr<KRss::TreeNode> m_selectedSubscription;
     QMap<boost::weak_ptr<const KRss::TreeNode>, QPoint> m_scrollBarPositions;
-    QPointer<KRss::ItemListJob> m_listJob;
-    QTime m_time;
 };
 
 } // namespace Akregator

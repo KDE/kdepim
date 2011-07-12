@@ -132,7 +132,7 @@ namespace {
     }
 }
 
-void ArticleListView::setItemModel( KRss::ItemModel* model )
+void ArticleListView::setItemModel( QAbstractItemModel* model )
 {
     if ( !model ) {
         setModel( model );

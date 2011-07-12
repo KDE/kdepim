@@ -29,15 +29,14 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
+class QAbstractItemModel;
 class QAbstractItemView;
 class QItemSelectionModel;
 class QPoint;
 
 namespace KRss {
-    class TagProvider;
     class FeedList;
     class Item;
-    class ItemModel;
     class TreeNode;
 }
 
@@ -60,7 +59,7 @@ public:
 
     virtual ~ArticleLister() {}
 
-    virtual void setItemModel( KRss::ItemModel* model ) = 0;
+    virtual void setItemModel( QAbstractItemModel* model ) = 0;
 
     virtual QItemSelectionModel* articleSelectionModel() const = 0;
 
@@ -105,8 +104,6 @@ public:
     virtual ~AbstractSelectionController();
 
     virtual void setFeedList( const boost::shared_ptr<KRss::FeedList>& list ) = 0;
-
-    virtual void setTagProvider( const boost::shared_ptr<const KRss::TagProvider>& tagProvider ) = 0;
 
     virtual void setFeedSelector( QAbstractItemView* feedSelector ) = 0;
 

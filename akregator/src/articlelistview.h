@@ -93,7 +93,7 @@ public:
     ~ArticleListView();
 
     //impl ArticleLister
-    void setItemModel( KRss::ItemModel* model );
+    void setItemModel( QAbstractItemModel* model );
 
     //impl ArticleLister
     QItemSelectionModel* articleSelectionModel() const;

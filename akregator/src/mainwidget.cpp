@@ -458,7 +458,6 @@ void Akregator::MainWidget::setTagProvider( const boost::shared_ptr<const KRss::
         return;
 
     m_tagProvider = tagProvider;
-    m_selectionController->setTagProvider( m_tagProvider );
 }
 
 void Akregator::MainWidget::addFeedToGroup(const QString& url, const QString& groupName)

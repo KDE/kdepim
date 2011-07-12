@@ -26,7 +26,7 @@
 #include "actionmanager.h"
 #include "progressmanager.h"
 
-#include <krss/feedlistmodel.h>
+#include <krss/feeditemmodel.h>
 #include <krss/feedlist.h>
 #include <krss/itemjobs.h>
 #include <krss/itemlisting.h>
@@ -36,7 +36,14 @@
 #include <krss/treenode.h>
 #include <krss/treenodevisitor.h>
 
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/EntityDisplayAttribute>
+#include <Akonadi/EntityMimeTypeFilterModel>
+#include <Akonadi/EntityTreeModel>
 #include <Akonadi/ItemFetchScope>
+#include <Akonadi/Session>
+
+#include <KSelectionProxyModel>
 #include <KDebug>
 
 #include <QAbstractItemView>
@@ -46,28 +53,28 @@
 
 using namespace boost;
 using namespace Akregator;
-using KRss::FeedListModel;
+using namespace KRss;
 
-namespace {
-    static KRss::Item itemForIndex( const QModelIndex& index )
-    {
-        return index.data( KRss::ItemModel::ItemRole ).value<KRss::Item>();
-    }
+static KRss::Item itemForIndex( const QModelIndex& index )
+{
+    return index.data( KRss::ItemModel::ItemRole ).value<KRss::Item>();
+}
 
-    static QList<KRss::Item> itemsForIndexes( const QModelIndexList& indexes )
-    {
-        QList<KRss::Item> items;
-        Q_FOREACH ( const QModelIndex& i, indexes )
-            items.append( itemForIndex( i ) );
+static QList<KRss::Item> itemsForIndexes( const QModelIndexList& indexes )
+{
+    QList<KRss::Item> items;
+    Q_FOREACH ( const QModelIndex& i, indexes )
+        items.append( itemForIndex( i ) );
 
-        return items;
-    }
-
-    static shared_ptr<KRss::TreeNode> subscriptionForIndex( const QModelIndex& index )
-    {
-        return index.data( FeedListModel::TreeNodeRole ).value<shared_ptr<KRss::TreeNode> >();
-    }
-} // anon namespace
+    return items;
+}
+static shared_ptr<KRss::TreeNode> subscriptionForIndex( const QModelIndex& index )
+{
+#ifdef KRSS_PORT_DISABLED
+    return index.data( FeedListModel::TreeNodeRole ).value<shared_ptr<KRss::TreeNode> >();
+#endif
+    return shared_ptr<KRss::TreeNode>();
+}
 
 Akregator::SelectionController::SelectionController( QObject* parent )
     : AbstractSelectionController( parent ),
@@ -75,11 +82,22 @@ Akregator::SelectionController::SelectionController( QObject* parent )
     m_feedSelector(),
     m_articleLister( 0 ),
     m_singleDisplay( 0 ),
-    m_feedListModel ( 0 ),
     m_folderExpansionHandler( 0 ),
     m_itemModel( 0 ),
     m_selectedSubscription()
 {
+    Akonadi::ItemFetchScope scope;
+    scope.fetchFullPayload( true );
+    scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
+
+    Akonadi::Session* session = new Akonadi::Session( QByteArray( "Akregator-" ) + QByteArray::number( qrand() ) );
+    Akonadi::ChangeRecorder* recorder = new Akonadi::ChangeRecorder;
+    recorder->setSession( session );
+    recorder->fetchCollection( true );
+    recorder->setItemFetchScope( scope );
+    recorder->setCollectionMonitored( Akonadi::Collection::root() );
+    recorder->setMimeTypeMonitored( QLatin1String( "application/rss+xml" ) );
+    m_itemModel = new FeedItemModel( recorder );
 }
 
 
@@ -95,16 +113,7 @@ void Akregator::SelectionController::setFeedSelector( QAbstractItemView* feedSel
 
     m_feedSelector = feedSelector;
 
-    if ( !m_feedSelector )
-        return;
-
-    m_feedSelector->setModel( m_feedListModel );
-
-    connect( m_feedSelector, SIGNAL(customContextMenuRequested(QPoint)),
-             this, SLOT(subscriptionContextMenuRequested(QPoint)) );
-    connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-             this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
-
+    init();
 }
 
 void Akregator::SelectionController::setArticleLister( Akregator::ArticleLister* lister )
@@ -118,10 +127,41 @@ void Akregator::SelectionController::setArticleLister( Akregator::ArticleLister*
         m_articleLister->itemView()->disconnect( this );
 
     m_articleLister = lister;
+    init();
+}
 
-    if ( m_articleLister && m_articleLister->itemView() )
-        connect( m_articleLister->itemView(), SIGNAL(doubleClicked(QModelIndex)),
-                 this, SLOT(itemIndexDoubleClicked(QModelIndex))  );
+void Akregator::SelectionController::init() {
+
+    if (  !m_feedSelector || !m_articleLister || !m_articleLister->itemView() )
+        return;
+
+    Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( m_feedSelector );
+    filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+    filterProxy->setSourceModel( m_itemModel );
+
+    m_feedSelector->setModel( filterProxy );
+
+    connect( m_feedSelector, SIGNAL(customContextMenuRequested(QPoint)),
+             this, SLOT(subscriptionContextMenuRequested(QPoint)) );
+    connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+             this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
+
+    KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( m_feedSelector->selectionModel() );
+    selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+    selectionProxy->setSourceModel( m_itemModel );
+
+    Akonadi::EntityMimeTypeFilterModel* filterProxy2 = new Akonadi::EntityMimeTypeFilterModel;
+    filterProxy2->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
+    filterProxy2->setSourceModel( selectionProxy );
+    filterProxy2->setSortRole( FeedItemModel::SortRole );
+    m_articleLister->setItemModel( filterProxy2 );
+
+    connect( m_articleLister->itemView(), SIGNAL(doubleClicked(QModelIndex)),
+             this, SLOT(itemIndexDoubleClicked(QModelIndex))  );
+}
+
+void Akregator::SelectionController::selectedSubscriptionChanged( const QModelIndex& ) {
+    emit currentSubscriptionChanged( selectedSubscription() );
 }
 
 void Akregator::SelectionController::setSingleArticleDisplay( Akregator::SingleArticleDisplay* display )
@@ -151,11 +191,6 @@ void Akregator::SelectionController::setFeedList( const shared_ptr<KRss::FeedLis
 
     m_feedList = feedList;
 
-    if ( !m_tagProvider )
-        return;
-
-    std::auto_ptr<KRss::FeedListModel> oldModel( m_feedListModel );
-    m_feedListModel = new KRss::FeedListModel( m_feedList, m_tagProvider, this );
 
 #ifdef KRSS_PORT_DISABLED
     if ( m_folderExpansionHandler ) {
@@ -165,36 +200,10 @@ void Akregator::SelectionController::setFeedList( const shared_ptr<KRss::FeedLis
 #endif
 
     if ( m_feedSelector ) {
-        m_feedSelector->setModel( m_feedListModel );
-        disconnect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-                    this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
-        connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-                 this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
-    }
-}
-
-void Akregator::SelectionController::setTagProvider( const shared_ptr<const KRss::TagProvider>& tagProvider )
-{
-    if ( m_tagProvider == tagProvider )
-        return;
-
-    m_tagProvider = tagProvider;
-
-    if ( !m_feedList )
-        return;
-
-    std::auto_ptr<KRss::FeedListModel> oldModel( m_feedListModel );
-    m_feedListModel = new KRss::FeedListModel( m_feedList, m_tagProvider, this );
-
-#ifdef KRSS_PORT_DISABLED
-    if ( m_folderExpansionHandler ) {
-        m_folderExpansionHandler->setFeedList( m_feedList );
-        m_folderExpansionHandler->setModel( m_subscriptionModel );
-    }
-#endif
-
-    if ( m_feedSelector ) {
-        m_feedSelector->setModel( m_feedListModel );
+        Akonadi::EntityMimeTypeFilterModel* filterProxy = new Akonadi::EntityMimeTypeFilterModel( m_feedSelector );
+        filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+        filterProxy->setSourceModel( m_itemModel );
+        m_feedSelector->setModel( filterProxy );
         disconnect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
                     this, SLOT(selectedSubscriptionChanged(QModelIndex)) );
         connect( m_feedSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
@@ -215,6 +224,7 @@ void Akregator::SelectionController::setFolderExpansionHandler( Akregator::Folde
 #endif
 }
 
+#ifdef KRSS_PORT_DISABLED
 void Akregator::SelectionController::articleHeadersAvailable( KJob* job )
 {
     assert( job );
@@ -245,48 +255,12 @@ void Akregator::SelectionController::articleHeadersAvailable( KJob* job )
 
     m_articleLister->setScrollBarPositions( m_scrollBarPositions.value( m_selectedSubscription ) );
 }
+#endif //KRSS_PORT_DISABLED
 
-
-void Akregator::SelectionController::selectedSubscriptionChanged( const QModelIndex& index )
-{
-    if ( !index.isValid() )
-        return;
-
-    if ( m_selectedSubscription && m_articleLister )
-        m_scrollBarPositions.insert( m_selectedSubscription, m_articleLister->scrollBarPositions() );
-
-    m_selectedSubscription = selectedSubscription();
-    emit currentSubscriptionChanged( m_selectedSubscription );
-
-    if ( m_listJob ) {
-        m_listJob->disconnect( this );
-        m_listJob->kill();
-        m_listJob = 0;
-    }
-
-    if ( !m_selectedSubscription )
-        return;
-
-    Akonadi::ItemFetchScope scope;
-    scope.fetchPayloadPart( KRss::Item::HeadersPart );
-    scope.fetchAllAttributes();
-    KRss::ItemListJob* const job = m_selectedSubscription->createItemListJob( m_feedList );
-    if ( !job )
-        return;
-    assert( job->capabilities().testFlag( KJob::Killable ) );
-    job->setFetchScope( scope );
-    connect( job, SIGNAL(finished(KJob*)),
-             this, SLOT(articleHeadersAvailable(KJob*)) );
-    m_listJob = job;
-#ifdef WITH_LIBKDEPIM
-    ProgressManager::self()->addJob( job );
-#endif
-    m_listJob->start();
-    m_time.start();
-}
 
 void Akregator::SelectionController::subscriptionContextMenuRequested( const QPoint& point )
 {
+#ifdef KRSS_PORT_DISABLED
     Q_ASSERT( m_feedSelector );
     const shared_ptr<const KRss::TreeNode> treeNode = ::subscriptionForIndex( m_feedSelector->indexAt( point ) );
     if ( !treeNode )
@@ -299,6 +273,7 @@ void Akregator::SelectionController::subscriptionContextMenuRequested( const QPo
         const QPoint globalPos = m_feedSelector->viewport()->mapToGlobal( point );
         popup->exec( globalPos );
     }
+#endif
 }
 
 void Akregator::SelectionController::itemSelectionChanged()
