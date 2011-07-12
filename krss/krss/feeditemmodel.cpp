@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+#include "feedcollection.h"
 #include "feeditemmodel.h"
 #include "rssitem.h"
 #include "person.h"
@@ -129,6 +129,11 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
 }
 
 QVariant FeedItemModel::entityData( const Collection &collection, int column, int role ) const {
+    if ( role == Qt::DisplayRole && column == FeedTitleColumn ) {
+        const QString title = FeedCollection( collection ).title();
+        if ( !title.isEmpty() )
+            return title;
+    }
     return EntityTreeModel::entityData( collection, column, role );
 }
 
