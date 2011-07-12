@@ -1586,7 +1586,11 @@ void KMailICalIfaceImpl::triggerKolabFreeBusy( const KURL& folderURL )
     path = path.mid( secondSlash );
   }
 
-  httpURL.setPath( "/freebusy/trigger/" + path + ".pfb" );
+  if ( path.startsWith( "/" ) )
+    httpURL.setPath( "/freebusy/trigger" + path + ".pfb" );
+  else
+    httpURL.setPath( "/freebusy/trigger/" + path + ".pfb" );
+
   httpURL.setQuery( QString::null );
   // Ensure that we encode everything with UTF8
   httpURL = KURL( httpURL.url(0,106), 106 );
