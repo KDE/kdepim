@@ -1595,9 +1595,17 @@ void KMailICalIfaceImpl::triggerKolabFreeBusy( const KURL& folderURL )
   // Ensure that we encode everything with UTF8
   httpURL = KURL( httpURL.url(0,106), 106 );
   kdDebug() << "Triggering PFB update for " << folderURL << " : getting " << httpURL << endl;
-  // "Fire and forget". No need for error handling, nor for explicit deletion.
-  // Maybe we should try to prevent launching it if it's already running (for this URL) though.
-  /*KIO::Job* job =*/ KIO::get( httpURL, false, false /*no progress info*/ );
+
+  KIO::Job* job = KIO::get( httpURL, false, false /*no progress info*/ );
+  job->addMetaData( "errorPage", "false" ); // we want an error in case of 404
+  connect( job, SIGNAL( result( KIO::Job* ) ), SLOT( slotFreeBusyTriggerResult( KIO::Job* ) ) );
+}
+
+void KMailICalIfaceImpl::slotFreeBusyTriggerResult( KIO::Job *job )
+{
+  if ( job->error() ) {
+    KMessageBox::sorry(0, i18n("Could not trigger Free/Busy information update: %1.").arg( job->errorText() ) );
+  }
 }
 
 void KMailICalIfaceImpl::slotFolderPropertiesChanged( KMFolder* folder )

@@ -51,6 +51,10 @@ class KMMessage;
 class KMFolderDir;
 class KMFolderTreeItem;
 
+namespace KIO {
+class Job;
+}
+
 namespace KMail {
 
   // Local helper class
@@ -247,6 +251,7 @@ private slots:
   void slotFolderLocationChanged( const QString&, const QString& );
   void slotFolderRenamed();
   void slotMessageRetrieved( KMMessage* );
+  void slotFreeBusyTriggerResult( KIO::Job* );
 
 private:
   /** Helper function for initFolders. Initializes a single folder. */
