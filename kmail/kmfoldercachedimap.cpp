@@ -677,10 +677,10 @@ ulong KMFolderCachedImap::lastUid()
 
 KMMsgBase* KMFolderCachedImap::findByUID( ulong uid )
 {
-  bool mapReloaded = false;
+  //bool mapReloaded = false;
   if( uidMapDirty ) {
     reloadUidMap();
-    mapReloaded = true;
+    //mapReloaded = true;
   }
 
   QMap<ulong,int>::Iterator it = uidMap.find( uid );
