@@ -2271,6 +2271,7 @@ void ViewerPrivate::slotAttachmentCopy()
 
 void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
 {
+#ifndef QT_NO_CLIPBOARD	
   if ( contents.isEmpty() )
     return;
 
@@ -2286,7 +2287,6 @@ void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
   if ( urls.isEmpty() )
     return;
 
-#ifndef QT_NO_CLIPBOARD
   QMimeData *mimeData = new QMimeData;
   mimeData->setUrls( urls );
   QApplication::clipboard()->setMimeData( mimeData, QClipboard::Clipboard );
