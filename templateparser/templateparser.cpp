@@ -388,7 +388,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
 
           QString htmlStr = pipe( pipe_cmd, htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
           QString htmlQuote = quotedHtmlText( mOrigMsg, htmlStr );
-          if ( htmlQuote.endsWith( '\n' ) ) {
+          if ( htmlQuote.endsWith( "<br />" ) ) {
             htmlQuote.chop( 1 );
           }
           htmlBody.append( htmlQuote );
@@ -407,7 +407,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
 
           QString htmlQuote = quotedHtmlText( mOrigMsg,
                                               htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), true ) );
-          if ( htmlQuote.endsWith( '\n' ) ) {
+          if ( htmlQuote.endsWith( "<br />" ) ) {
             htmlQuote.chop( 1 );
           }
           htmlBody.append( htmlQuote );
@@ -425,7 +425,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           plainBody.append( plainQuote );
 
           QString htmlQuote = quotedHtmlText( mOrigMsg, MessageCore::StringUtil::headerAsSendableString( mOrigMsg ) );
-          if ( htmlQuote.endsWith( '\n' ) ) {
+          if ( htmlQuote.endsWith( "<br />" ) ) {
                htmlQuote.chop( 1 );
           }
           htmlBody.append( htmlQuote );
