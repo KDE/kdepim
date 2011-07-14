@@ -1,5 +1,7 @@
 #ifdef __GNUC__
 #warning Update a calendar format, enable the calendar, copy old version on top -> crash
+#warning Add a directory resource containing 2 alarm types, right click on it -> crash
+#warning Set default template calendar to read-only -> crash
 #endif
 /*
  *  akonadimodel.cpp  -  KAlarm calendar file access using Akonadi
@@ -944,9 +946,9 @@ QString AkonadiModel::tooltip(const Collection& collection, KAlarm::CalEvent::Ty
     QString locn = url.pathOrUrl();
     bool inactive = !collection.hasAttribute<CollectionAttribute>()
                  || !(collection.attribute<CollectionAttribute>()->enabled() & types);
-    bool writable = (collection.rights() & writableRights) == writableRights;
     QString disabled = i18nc("@info/plain", "Disabled");
-    QString readonly = i18nc("@info/plain", "Read-only");
+    QString readonly = readOnlyTooltip(collection);
+    bool writable = readonly.isEmpty();
 //if (!collection.hasAttribute<CollectionAttribute>()) { kDebug()<<"Tooltip: no collection attribute"; } else { kDebug()<<"Tooltip: enabled="<<collection.attribute<CollectionAttribute>()->enabled(); } //disabled="<<inactive;
     if (inactive  &&  !writable)
         return i18nc("@info:tooltip",
@@ -964,6 +966,20 @@ QString AkonadiModel::tooltip(const Collection& collection, KAlarm::CalEvent::Ty
                  "%1"
                  "<nl/>%2: <filename>%3</filename>",
                  name, type, locn);
+}
+
+/******************************************************************************
+* Return the read-only status tooltip for a collection.
+* A null string is returned if the collection is fully writable.
+*/
+QString AkonadiModel::readOnlyTooltip(const Collection& collection)
+{
+    KAlarm::Calendar::Compat compat;
+    return AkonadiModel::isWritable(collection, compat)
+         ? QString()
+         : (compat == KAlarm::Calendar::Current)      ? i18nc("@info/plain", "Read-only")
+         : (compat == KAlarm::Calendar::Incompatible) ? i18nc("@info/plain", "Read-only (other format)")
+         :                                              i18nc("@info/plain", "Read-only (old format)");
 }
 
 /******************************************************************************
@@ -1661,9 +1677,9 @@ void AkonadiModel::slotCollectionRemoved(const Collection& collection)
 void AkonadiModel::slotCollectionBeingCreated(const QString& path, bool finished)
 {
     if (finished)
-        mCollectionsBeingCreated << path;
-    else
         mCollectionsBeingCreated.removeAll(path);
+    else
+        mCollectionsBeingCreated << path;
 }
 
 /******************************************************************************
@@ -1789,6 +1805,35 @@ bool AkonadiModel::isCompatible(const Collection& collection)
 {
     return collection.hasAttribute<CompatibilityAttribute>()
        &&  collection.attribute<CompatibilityAttribute>()->compatibility() == KAlarm::Calendar::Current;
+}
+
+/******************************************************************************
+* Return whether a collection is fully writable.
+*/
+bool AkonadiModel::isWritable(const Akonadi::Collection& collection)
+{
+    KAlarm::Calendar::Compat format;
+    return isWritable(collection, format);
+}
+
+bool AkonadiModel::isWritable(const Akonadi::Collection& collection, KAlarm::Calendar::Compat& format)
+{
+    format = KAlarm::Calendar::Current;
+    if (!collection.isValid())
+        return false;
+    Collection col = collection;
+    instance()->refresh(col);    // update with latest data
+    if ((col.rights() & writableRights) != writableRights)
+        return false;
+    if (!col.hasAttribute<CompatibilityAttribute>())
+    {
+        format = KAlarm::Calendar::Incompatible;
+        return false;
+    }
+    format = col.attribute<CompatibilityAttribute>()->compatibility();
+    if (format != KAlarm::Calendar::Current)
+        return false;
+    return true;
 }
 
 KAlarm::CalEvent::Types AkonadiModel::types(const Collection& collection)

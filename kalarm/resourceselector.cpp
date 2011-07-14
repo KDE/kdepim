@@ -147,8 +147,6 @@ ResourceSelector::ResourceSelector(AlarmResources* calendar, QWidget* parent)
     connect(mDeleteButton, SIGNAL(clicked()), SLOT(removeResource()));
 
 #ifdef USE_AKONADI
-    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&, bool)),
-                                      SLOT(slotStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, const QVariant&, bool)));
     connect(AkonadiModel::instance(), SIGNAL(collectionAdded(const Akonadi::Collection&)),
                                       SLOT(slotCollectionAdded(const Akonadi::Collection&)));
 #else
@@ -404,8 +402,9 @@ void ResourceSelector::removeResource()
         return;
     QString name = collection.name();
     // Check if it's the standard or only resource for at least one type.
+    KAlarm::CalEvent::Types allTypes      = AkonadiModel::types(collection);
     KAlarm::CalEvent::Types standardTypes = CollectionControlModel::standardTypes(collection, true);
-    bool std = standardTypes & KAlarm::CalEvent::ALL;
+    KAlarm::CalEvent::Type  currentType   = currentResourceType();
     KAlarm::CalEvent::Type stdType = (standardTypes & KAlarm::CalEvent::ACTIVE)   ? KAlarm::CalEvent::ACTIVE
                                    : (standardTypes & KAlarm::CalEvent::ARCHIVED) ? KAlarm::CalEvent::ARCHIVED
                                    : KAlarm::CalEvent::EMPTY;
@@ -431,12 +430,34 @@ void ResourceSelector::removeResource()
                                        "while expired alarms are configured to be kept."));
         return;
     }
-#ifdef __GNUC__
-#warning Akonadi: warn if calendar also contains other alarm types than the current list type
-#warning Akonadi: Prompt should show default calendar alarm type(s) if other than current list type
-#endif
+#ifdef USE_AKONADI
+    QString text;
+    if (standardTypes)
+    {
+        // It's a standard resource for at least one alarm type
+        if (allTypes != currentType)
+        {
+            // It also contains alarm types other than the currently displayed type
+            QString stdTypes = CollectionControlModel::typeListForDisplay(standardTypes);
+            QString otherTypes;
+            KAlarm::CalEvent::Types nonStandardTypes(allTypes & ~standardTypes);
+            if (nonStandardTypes != currentType)
+                otherTypes = i18nc("@info", "<para>It also contains:%1</para>", CollectionControlModel::typeListForDisplay(nonStandardTypes));
+            text = i18nc("@info", "<para><resource>%1</resource> is the default calendar for:%2</para>%3"
+                                  "<para>Do you really want to remove it from all calendar lists?</para>", name, stdTypes, otherTypes);
+        }
+        else
+            text = i18nc("@info", "Do you really want to remove your default calendar (<resource>%1</resource>) from the list?", name);
+    }
+    else if (allTypes != currentType)
+        text = i18nc("@info", "<para><resource>%1</resource> contains:%2</para><para>Do you really want to remove it from all calendar lists?</para>",
+                     name, CollectionControlModel::typeListForDisplay(allTypes));
+    else
+        text = i18nc("@info", "Do you really want to remove the calendar <resource>%1</resource> from the list?", name);
+#else
     QString text = std ? i18nc("@info", "Do you really want to remove your default calendar (<resource>%1</resource>) from the list?", name)
                        : i18nc("@info", "Do you really want to remove the calendar <resource>%1</resource> from the list?", name);
+#endif
     if (KMessageBox::warningContinueCancel(this, text, "", KStandardGuiItem::remove()) == KMessageBox::Cancel)
         return;
 
@@ -556,7 +577,7 @@ void ResourceSelector::contextMenuRequested(const QPoint& viewportPos)
         // Note: the CollectionControlModel functions call AkonadiModel::refresh(collection)
         active   = CollectionControlModel::isEnabled(collection, type);
         KAlarm::Calendar::Compat compatibility;
-        writable = CollectionControlModel::isWritable(collection, type, compatibility);
+        writable = CollectionControlModel::isWritableEnabled(collection, type, compatibility);
         if (!writable
         &&  (compatibility & ~KAlarm::Calendar::Converted)
         &&  !(compatibility & ~(KAlarm::Calendar::Convertible | KAlarm::Calendar::Converted)))
@@ -693,16 +714,12 @@ void ResourceSelector::setStandard()
 #endif
 }
 
+#ifndef USE_AKONADI
 /******************************************************************************
 * Called when a calendar status has changed.
 */
-#ifdef USE_AKONADI
-void ResourceSelector::slotStatusChanged(const Collection& collection, AkonadiModel::Change change, const QVariant& value, bool inserted)
-#else
 void ResourceSelector::slotStatusChanged(AlarmResource* resource, AlarmResources::Change change)
-#endif
 {
-#ifndef USE_AKONADI
     if (change == AlarmResources::WrongType  &&  resource->isWrongAlarmType())
     {
         QString text;
@@ -722,8 +739,8 @@ void ResourceSelector::slotStatusChanged(AlarmResource* resource, AlarmResources
         }
         KMessageBox::sorry(this, i18nc("@info", "<para>Calendar <resource>%1</resource> has been disabled:</para><para>%2</para>", resource->resourceName(), text));
     }
-#endif
 }
+#endif
 
 /******************************************************************************
 * Called from the context menu to merge alarms from an external calendar into
@@ -830,11 +847,9 @@ void ResourceSelector::showInfo()
             alarmTypes << i18nc("@info/plain", "Alarm templates");
         QString alarmTypeString = alarmTypes.join(i18nc("@info/plain List separator", ", "));
         KAlarm::Calendar::Compat compat;
-        QString perms = CollectionControlModel::isWritable(collection, alarmType, compat, true)
-                    ? i18nc("@info/plain", "Read-write")
-                    : (compat == KAlarm::Calendar::Current) ? i18nc("@info/plain", "Read-only")
-                    : (compat == KAlarm::Calendar::Incompatible) ? i18nc("@info/plain", "Read-only (other format)")
-                    : i18nc("@info/plain", "Read-only (old format)");
+        QString perms = AkonadiModel::readOnlyTooltip(collection);
+        if (perms.isEmpty())
+            perms = i18nc("@info/plain", "Read-write");
         QString enabled = CollectionControlModel::isEnabled(collection, alarmType)
                     ? i18nc("@info/plain", "Enabled")
                     : i18nc("@info/plain", "Disabled");

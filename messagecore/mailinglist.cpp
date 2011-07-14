@@ -26,7 +26,7 @@ static QString check_sender( const KMime::Message::Ptr &message,
   if ( header.isEmpty() )
     return QString();
 
-  if ( header.left( 6 ) == "owner-" ) {
+  if ( header.left( 6 ) == QLatin1String("owner-") ) {
     headerName = "Sender";
     headerValue = header;
     header = header.mid( 6, header.indexOf( '@' ) - 6 );

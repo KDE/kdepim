@@ -134,6 +134,8 @@ public:
 
   QFont font() const;
 
+  QString fontKey() const;
+
   SignatureState signatureState() const;
 
   void setSignatureState( SignatureState state );
