@@ -379,18 +379,15 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString plainStr = pipe( pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
+          QString plainStr = pipe( pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), NoSelectionAllowed ) );
           QString plainQuote = quotedPlainText( mOrigMsg, mQuoteString, plainStr );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
           }
           plainBody.append( plainQuote );
 
-          QString htmlStr = pipe( pipe_cmd, htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
+          QString htmlStr = pipe( pipe_cmd, htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), NoSelectionAllowed ) );
           QString htmlQuote = quotedHtmlText( mOrigMsg, htmlStr );
-          if ( htmlQuote.endsWith( "<br />" ) ) {
-            htmlQuote.chop( 1 );
-          }
           htmlBody.append( htmlQuote );
         }
 
@@ -399,17 +396,14 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += strlen( "QUOTE" );
         if ( mOrigMsg ) {
           QString plainQuote = quotedPlainText( mOrigMsg, mQuoteString,
-                                                plainMessageText( mOrigMsg, &otp, shouldStripSignature(), true ) );
+                                                plainMessageText( mOrigMsg, &otp, shouldStripSignature(), SelectionAllowed ) );
           if ( plainQuote.endsWith( '\n' ) ) {
             plainQuote.chop( 1 );
           }
           plainBody.append( plainQuote );
 
           QString htmlQuote = quotedHtmlText( mOrigMsg,
-                                              htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), true ) );
-          if ( htmlQuote.endsWith( "<br />" ) ) {
-            htmlQuote.chop( 1 );
-          }
+                                              htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), SelectionAllowed ) );
           htmlBody.append( htmlQuote );
         }
 
@@ -425,9 +419,6 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           plainBody.append( plainQuote );
 
           QString htmlQuote = quotedHtmlText( mOrigMsg, MessageCore::StringUtil::headerAsSendableString( mOrigMsg ) );
-          if ( htmlQuote.endsWith( "<br />" ) ) {
-               htmlQuote.chop( 1 );
-          }
           htmlBody.append( htmlQuote );
         }
 
@@ -448,10 +439,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         i += len;
         QString pipe_cmd = q;
         if ( mOrigMsg ) {
-          QString plainStr = pipe( pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
+          QString plainStr = pipe( pipe_cmd, plainMessageText( mOrigMsg, &otp, shouldStripSignature(), NoSelectionAllowed ) );
           plainBody.append( plainStr );
 
-          QString htmlStr = pipe( pipe_cmd, htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption ) );
+          QString htmlStr = pipe( pipe_cmd, htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), NoSelectionAllowed ) );
           htmlBody.append( htmlStr );
         }
 
@@ -502,10 +493,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: TEXT";
         i += strlen( "TEXT" );
         if ( mOrigMsg ) {
-          QString plainQuote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
+          QString plainQuote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), NoSelectionAllowed );
           plainBody.append( plainQuote );
 
-          QString htmlQuote = htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
+          QString htmlQuote = htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), NoSelectionAllowed );
           htmlBody.append( htmlQuote );
         }
 
@@ -522,10 +513,10 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTEXT";
         i += strlen( "OTEXT" );
         if ( mOrigMsg ) {
-          QString plainQuote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
+          QString plainQuote = plainMessageText( mOrigMsg, &otp, shouldStripSignature(), NoSelectionAllowed );
           plainBody.append( plainQuote );
 
-          QString htmlQuote = htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), mAllowDecryption );
+          QString htmlQuote = htmlMessageText( mOrigMsg, &otp, shouldStripSignature(), NoSelectionAllowed );
           htmlBody.append( htmlQuote );
         }
 
@@ -1361,9 +1352,9 @@ void TemplateParser::setWordWrap(bool wrap, int wrapColWidth)
 QString TemplateParser::plainMessageText( const KMime::Message::Ptr &msg,
                                           MessageViewer::ObjectTreeParser *otp,
                                           bool aStripSignature,
-                                          bool allowSelectionOnly ) const
+                                          AllowSelection isSelectionAllowed ) const//TODO mAllowDecryption
 {
-  if ( !mSelection.isEmpty() && allowSelectionOnly ) {
+  if ( !mSelection.isEmpty() && isSelectionAllowed == SelectionAllowed ) {
     return mSelection;
   }
 
@@ -1387,7 +1378,7 @@ QString TemplateParser::plainMessageText( const KMime::Message::Ptr &msg,
 QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
                                          MessageViewer::ObjectTreeParser *otp,
                                          bool aStripSignature,
-                                         bool allowSelectionOnly ) const
+                                         AllowSelection isSelectionAllowed ) const//TODO mAllowDecryption
 {
   const QString htmlElement = otp->htmlContent();
 
@@ -1405,7 +1396,7 @@ QString TemplateParser::htmlMessageText( const KMime::Message::Ptr &msg,
 
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
 
-  if( !bodyElement.isEmpty() && allowSelectionOnly ) {
+  if( !bodyElement.isEmpty() && isSelectionAllowed == NoSelectionAllowed ) {
     return bodyElement;
   }
 

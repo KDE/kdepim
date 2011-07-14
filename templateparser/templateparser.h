@@ -77,6 +77,11 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
       Forward
     };
 
+    enum AllowSelection {
+      SelectionAllowed,
+      NoSelectionAllowed
+    };
+
   public:
     TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode );
     ~TemplateParser();
@@ -160,6 +165,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     bool mWrap;
     int mColWrap;
     QStringList m_charsets;
+    AllowSelection isSelectionAllowed;
 
     /**
      * Called by processWithTemplate(). This adds the completely processed body to
@@ -231,7 +237,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QString plainMessageText( const KMime::Message::Ptr &msg,
                               MessageViewer::ObjectTreeParser *otp,
                               bool aStripSignature,
-                              bool allowSelectionOnly ) const;
+                              AllowSelection isSelectionAllowed ) const;
 
     /**
      * Returns the HTML content of the message as plain text
@@ -239,7 +245,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     QString htmlMessageText( const KMime::Message::Ptr &msg,
                              MessageViewer::ObjectTreeParser *otp,
                              bool aStripSignature,
-                             bool allowSelectionOnly ) const;
+                             AllowSelection isSelectionAllowed ) const;
 
     /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,
