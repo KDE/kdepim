@@ -207,9 +207,8 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
       * smart quoting is turned on. Signed or encrypted texts
       * get converted to plain text when allowDecryption is true.
     */
-    QString quotedPlainText( const KMime::Message::Ptr &msg,
-                            const QString &indentStr,
-                            const QString & election=QString() ) const;
+    QString quotedPlainText( const QString &indentStr,
+                             const QString & election=QString() ) const;
 
     /**
       * Returns HTML message body.
@@ -221,8 +220,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
       * smart quoting is turned on. Signed or encrypted texts
       * get converted to plain text when allowDecryption is true.
     */
-    QString quotedHtmlText( const KMime::Message::Ptr &msg,
-                            const QString& selection /*.clear() */ ) const;
+    QString quotedHtmlText( const QString& selection /*.clear() */ ) const;
 
     /**
      * This function return the plain text part from the OTP.
@@ -234,16 +232,14 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
      * @param aStripSignature strips the signature out of the message
      *
      */
-    QString plainMessageText( const KMime::Message::Ptr &msg,
-                              MessageViewer::ObjectTreeParser *otp,
+    QString plainMessageText( MessageViewer::ObjectTreeParser *otp,
                               bool aStripSignature,
                               AllowSelection isSelectionAllowed ) const;
 
     /**
      * Returns the HTML content of the message as plain text
      */
-    QString htmlMessageText( const KMime::Message::Ptr &msg,
-                             MessageViewer::ObjectTreeParser *otp,
+    QString htmlMessageText( MessageViewer::ObjectTreeParser *otp,
                              bool aStripSignature,
                              AllowSelection isSelectionAllowed ) const;
 
