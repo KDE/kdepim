@@ -1350,7 +1350,7 @@ QString TemplateParser::plainMessageText( MessageViewer::ObjectTreeParser *otp,
                                           bool aStripSignature,
                                           AllowSelection isSelectionAllowed ) const//TODO mAllowDecryption
 {
-  if ( !mSelection.isEmpty() && isSelectionAllowed == SelectionAllowed ) {
+  if ( !mSelection.isEmpty() && ( isSelectionAllowed == SelectionAllowed ) ) {
     return mSelection;
   }
 
@@ -1391,7 +1391,7 @@ QString TemplateParser::htmlMessageText( MessageViewer::ObjectTreeParser *otp,
 
   page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
 
-  if( !bodyElement.isEmpty() && isSelectionAllowed == NoSelectionAllowed ) {
+  if( !bodyElement.isEmpty() && ( isSelectionAllowed == NoSelectionAllowed ) ) {
     return bodyElement;
   }
 
