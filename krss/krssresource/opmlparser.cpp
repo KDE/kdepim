@@ -194,7 +194,7 @@ shared_ptr<ParsedFeed> ParsedFeed::fromAkonadiCollection( const Akonadi::Collect
 
 class ParsedFolder::Private {
 public:
-    QList<shared_ptr<ParsedNode> > children;
+    QList<shared_ptr<const ParsedNode> > children;
 };
 
 ParsedFolder::ParsedFolder() : d( new Private ) {
@@ -224,15 +224,15 @@ QList<shared_ptr<const ParsedFolder> > ParsedFolder::folders() const {
   return f;
 }
 
-QList<shared_ptr<ParsedNode> > ParsedFolder::children() const {
+QList<shared_ptr<const ParsedNode> > ParsedFolder::children() const {
     return d->children;
 }
 
-void ParsedFolder::setChildren( const QList<shared_ptr<ParsedNode> >& children ) {
+void ParsedFolder::setChildren( const QList<shared_ptr<const ParsedNode> >& children ) {
     d->children = children;
 }
 
-void ParsedFolder::addChild( const shared_ptr<ParsedNode>& child ) {
+void ParsedFolder::addChild( const shared_ptr<const ParsedNode>& child ) {
     d->children.push_back( child );
 }
 

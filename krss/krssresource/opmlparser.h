@@ -106,9 +106,9 @@ public:
     /* reimp */ QList<boost::shared_ptr<const ParsedFeed> > feeds() const;
     /* reimp */ QList<boost::shared_ptr<const ParsedFolder> > folders() const;
 
-    QList<boost::shared_ptr<ParsedNode> > children() const;
-    void setChildren( const QList<boost::shared_ptr<ParsedNode> >& children );
-    void addChild( const boost::shared_ptr<ParsedNode>& child );
+    QList<boost::shared_ptr<const ParsedNode> > children() const;
+    void setChildren( const QList<boost::shared_ptr<const ParsedNode> >& children );
+    void addChild( const boost::shared_ptr<const ParsedNode>& child );
 
 private:
     class Private;
