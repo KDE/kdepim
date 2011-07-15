@@ -1985,6 +1985,37 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
     if ( iamOrganizer( event ) ) {
       return i18n( "This invitation has been canceled" );
     } else {
+      const Event *existingEvent = dynamic_cast<Event*>( existingIncidence );
+      if ( existingEvent ) {
+        // We check if the CANCEL message contains all attendees from the original
+        // message, in this case we assume that the event has been canceled, otherwise
+        // only a subset of the attendees (including us) has been disinvited.
+        const Attendee::List oldAttendees = existingEvent->attendees();
+        const Attendee::List newAttendees = event->attendees();
+
+        bool hasAllAttendees = true;
+        for ( unsigned int i = 0; i < oldAttendees.count(); ++i ) {
+          bool containsAttendee = false;
+          for ( unsigned int j = 0; j < newAttendees.count(); j++ ) {
+            if ( oldAttendees[i]->email() == newAttendees[j]->email() ) {
+              containsAttendee = true;
+              break;
+            }
+          }
+
+          if ( !containsAttendee ) {
+            hasAllAttendees = false;
+            break;
+          }
+        }
+
+        if ( oldAttendees.count() != newAttendees.count() )
+          hasAllAttendees = false;
+
+        if ( hasAllAttendees )
+          return i18n( "The organizer has canceled the event" );
+      }
+
       return i18n( "The organizer has removed you from the invitation" );
     }
   case Scheduler::Add:
